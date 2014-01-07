@@ -19,7 +19,6 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
-use JMS\SecurityExtraBundle\Annotation as SEC;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 
 class AccessController extends Controller
@@ -44,7 +43,8 @@ class AccessController extends Controller
             $accessToken = $entityManager->getRepository('ClarolineCoreBundle:Oauth\AccessToken')->findOneBy($criteria);
             $entityManager->remove($accessToken);
 
-            $refreshToken = $entityManager->getRepository('ClarolineCoreBundle:Oauth\RefreshToken')->findOneBy($criteria);
+            $refreshToken = $entityManager->getRepository('ClarolineCoreBundle:Oauth\RefreshToken')
+                ->findOneBy($criteria);
             if (null !== $refreshToken) {
                 $entityManager->remove($refreshToken);
             }
@@ -55,13 +55,21 @@ class AccessController extends Controller
             }
 
             $entityManager->flush();
-
-            $this->get('session')->getFlashBag()->add('success', $translator->trans('application_revoked_success_message', array('%application%' => $client->getName()), 'api'));
+            $message = $translator->trans(
+                'application_revoked_success_message',
+                array('%application%' => $client->getName()),
+                'api'
+            );
+            $this->get('session')->getFlashBag()->add('success', $message);
         } catch (\Exception $exception) {
-            $this->get('session')->getFlashBag()->add('error', $translator->trans('application_revoked_error_message', array('%application%' => $client->getName()), 'api'));
+            $message = $translator->trans(
+                'application_revoked_error_message',
+                array('%application%' => $client->getName()),
+                'api'
+            );
+            $this->get('session')->getFlashBag()->add('error', $message);
         }
 
         return $this->redirect($this->generateUrl('claro_profile_applications'));
     }
 }
- 

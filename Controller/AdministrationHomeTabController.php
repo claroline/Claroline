@@ -254,8 +254,7 @@ class AdministrationHomeTabController extends Controller
 
             if (is_null($lastOrder['order_max'])) {
                 $homeTabConfig->setTabOrder(1);
-            }
-            else {
+            } else {
                 $homeTabConfig->setTabOrder($lastOrder['order_max'] + 1);
             }
             $this->homeTabManager->insertHomeTabConfig($homeTabConfig);
@@ -639,8 +638,7 @@ class AdministrationHomeTabController extends Controller
 
         if (is_null($lastOrder['order_max'])) {
             $widgetHomeTabConfig->setWidgetOrder(1);
-        }
-        else {
+        } else {
             $widgetHomeTabConfig->setWidgetOrder($lastOrder['order_max'] + 1);
         }
 

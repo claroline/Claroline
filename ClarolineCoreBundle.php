@@ -92,12 +92,14 @@ class ClarolineCoreBundle extends InstallableBundle implements AutoConfigurableI
             $config
                 ->addContainerResource($this->buildPath('fos_oauth_server_config'))
                 ->addRoutingResource($this->buildPath('fos_oauth_server_routing'));
+
             return $config;
         } elseif ($bundle instanceof NelmioApiDocBundle) {
             $config = new ConfigurationBuilder();
             $config
                 ->addContainerResource($this->buildPath('nelmio_api_doc_config'))
                 ->addRoutingResource($this->buildPath('nelmio_api_doc_routing'));
+
             return $config;
         } elseif (in_array($environment, array('dev', 'test'))) {
             if ($bundle instanceof \Symfony\Bundle\WebProfilerBundle\WebProfilerBundle) {

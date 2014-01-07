@@ -196,9 +196,6 @@
             .done(function (data) {
                 $(element).replaceWith(data);
 
-                $('.creator textarea').each(function () {
-                    home.resize(this);
-                });
                 $('.contents').trigger('ContentModified');
             })
             .error(function () {

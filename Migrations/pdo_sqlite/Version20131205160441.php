@@ -16,23 +16,23 @@ class Version20131205160441 extends AbstractMigration
     {
         $this->addSql("
             CREATE TABLE claro_api_client (
-                id INTEGER NOT NULL, 
-                random_id VARCHAR(255) NOT NULL, 
-                redirect_uris CLOB NOT NULL, 
-                secret VARCHAR(255) NOT NULL, 
-                allowed_grant_types CLOB NOT NULL, 
-                name VARCHAR(255) NOT NULL, 
+                id INTEGER NOT NULL,
+                random_id VARCHAR(255) NOT NULL,
+                redirect_uris CLOB NOT NULL,
+                secret VARCHAR(255) NOT NULL,
+                allowed_grant_types CLOB NOT NULL,
+                name VARCHAR(255) NOT NULL,
                 PRIMARY KEY(id)
             )
         ");
         $this->addSql("
             CREATE TABLE claro_api_access_token (
-                id INTEGER NOT NULL, 
-                client_id INTEGER NOT NULL, 
-                user_id INTEGER DEFAULT NULL, 
-                token VARCHAR(255) NOT NULL, 
-                expires_at INTEGER DEFAULT NULL, 
-                scope VARCHAR(255) DEFAULT NULL, 
+                id INTEGER NOT NULL,
+                client_id INTEGER NOT NULL,
+                user_id INTEGER DEFAULT NULL,
+                token VARCHAR(255) NOT NULL,
+                expires_at INTEGER DEFAULT NULL,
+                scope VARCHAR(255) DEFAULT NULL,
                 PRIMARY KEY(id)
             )
         ");
@@ -47,12 +47,12 @@ class Version20131205160441 extends AbstractMigration
         ");
         $this->addSql("
             CREATE TABLE claro_api_refresh_token (
-                id INTEGER NOT NULL, 
-                client_id INTEGER NOT NULL, 
-                user_id INTEGER DEFAULT NULL, 
-                token VARCHAR(255) NOT NULL, 
-                expires_at INTEGER DEFAULT NULL, 
-                scope VARCHAR(255) DEFAULT NULL, 
+                id INTEGER NOT NULL,
+                client_id INTEGER NOT NULL,
+                user_id INTEGER DEFAULT NULL,
+                token VARCHAR(255) NOT NULL,
+                expires_at INTEGER DEFAULT NULL,
+                scope VARCHAR(255) DEFAULT NULL,
                 PRIMARY KEY(id)
             )
         ");
@@ -67,13 +67,13 @@ class Version20131205160441 extends AbstractMigration
         ");
         $this->addSql("
             CREATE TABLE claro_api_auth_code (
-                id INTEGER NOT NULL, 
-                client_id INTEGER NOT NULL, 
-                user_id INTEGER DEFAULT NULL, 
-                token VARCHAR(255) NOT NULL, 
-                redirect_uri CLOB NOT NULL, 
-                expires_at INTEGER DEFAULT NULL, 
-                scope VARCHAR(255) DEFAULT NULL, 
+                id INTEGER NOT NULL,
+                client_id INTEGER NOT NULL,
+                user_id INTEGER DEFAULT NULL,
+                token VARCHAR(255) NOT NULL,
+                redirect_uri CLOB NOT NULL,
+                expires_at INTEGER DEFAULT NULL,
+                scope VARCHAR(255) DEFAULT NULL,
                 PRIMARY KEY(id)
             )
         ");

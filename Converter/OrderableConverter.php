@@ -64,7 +64,6 @@ class OrderableConverter implements ParamConverterInterface
             return true;
         }
 
-
         return false;
     }
 }

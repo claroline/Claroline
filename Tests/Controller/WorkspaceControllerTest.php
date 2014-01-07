@@ -17,7 +17,6 @@ use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Form\Factory\FormFactory;
 use Claroline\CoreBundle\Library\Testing\MockeryTestCase;
-use Mockery as m;
 
 class WorkspaceControllerTest extends MockeryTestCase
 {
@@ -215,7 +214,6 @@ class WorkspaceControllerTest extends MockeryTestCase
             ->andReturn($form);
         $form->shouldReceive('handleRequest')->once()->with($this->request);
         $form->shouldReceive('isValid')->once()->andReturn(true);
-
 
         $controller->createAction();
 

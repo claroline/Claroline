@@ -104,7 +104,7 @@ class AuthenticatedUserConverter implements ParamConverterInterface
 
         $options = $configuration->getOptions();
 
-        if (isset($options['authenticatedUser']) && ($options['authenticatedUser'] === true || $options['authenticatedUser'] === false )) {
+        if (isset($options['authenticatedUser']) && is_bool($options['authenticatedUser'])) {
             return true;
         }
 

@@ -82,4 +82,3 @@ class LoadResourceTypeData implements RequiredFixture
         $this->container = $container;
     }
 }
-

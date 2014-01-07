@@ -28,4 +28,3 @@ interface RulableInterface
      */
     public function getRestriction();
 }
- 

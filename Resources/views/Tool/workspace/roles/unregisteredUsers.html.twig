@@ -1,4 +1,4 @@
-{% macro renderPager(search, workspaceId, withUnregistered, pager, max, order) %}
+{% macro renderPager(search, workspaceId, pager, max, order) %}
     {% if search == '' %}
         {{
             pagerfanta(
@@ -63,7 +63,7 @@
     <div class="panel-body">
         <ul class="nav nav-tabs margin-bottom-md">
             <li class="active"><a href="{{ path('claro_workspace_registered_user_list', {'workspace': workspace.getId()}) }}"> {{'users'|trans({}, 'platform') }} </a> </li>
-            <li><a href="{{ path('claro_workspace_registered_group_list', {'workspace': workspace.getId() })~'?'~queryString }}"> {{'groups'|trans({}, 'platform') }} </a></li>
+            <li><a href="{{ path('claro_workspace_registered_group_list', {'workspace': workspace.getId() }) }}"> {{'groups'|trans({}, 'platform') }} </a></li>
             <li><a href="{{ path('claro_workspace_roles', {'workspace': workspace.getId()} ) }}">{{ 'roles'|trans({}, 'platform') }}</a></li>
         </ul>
         <h3>{{ 'users_registration_in_workspace'|trans({}, 'platform') }}</h3>
@@ -92,13 +92,7 @@
                                         <input
                                             class="chk-role hide" type="checkbox" value="{{ role.getId() }}"
                                             data-name="{{ role.getTranslationKey()|trans({}, 'platform') }}"
-                                            id="role-{{ role.getId() }}"
-                                            {% for toCheck in roles %}
-                                                {% if toCheck.getId() == role.getId() %}
-                                                    checked
-                                                {% endif %}
-                                            {% endfor %}
-                                            >
+                                            id="role-{{ role.getId() }}">
                                         <label for="role-{{ role.getId() }}">{{ role.getTranslationKey()|trans({}, 'platform') }}</label>
                                     </li>
                                 {% endfor %}
@@ -122,7 +116,7 @@
             </div>
             <div class="row">
                 <div div class="col-md-8">
-                    {{ renderPager(search, workspace.getId(), withUnregistered, pager, max, order) }}
+                    {{ renderPager(search, workspace.getId(), pager, max, order) }}
                 </div>
                 <div class="col-md-4">
                     <div class="input-group margin-md">
@@ -185,7 +179,7 @@
                     </tbody>
                 </table>
             </div>
-            {{ renderPager(search, workspace.getId(), withUnregistered,  pager, max, order) }}
+            {{ renderPager(search, workspace.getId(), pager, max, order) }}
         </div>
     </div>
 {% endblock %}

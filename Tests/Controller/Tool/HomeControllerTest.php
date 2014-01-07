@@ -141,8 +141,8 @@ class HomeControllerTest extends MockeryTestCase
         $this->eventDispatcher
             ->shouldReceive('dispatch')
             ->with(
-               'widget_widget_name_configuration_workspace',
-               'ConfigureWidgetWorkspace',
+                'widget_widget_name_configuration_workspace',
+                'ConfigureWidgetWorkspace',
                 array($workspace)
             )
             ->once()
@@ -189,8 +189,8 @@ class HomeControllerTest extends MockeryTestCase
         $this->eventDispatcher
             ->shouldReceive('dispatch')
             ->with(
-               'widget_widget_name_configuration_workspace',
-               'ConfigureWidgetWorkspace',
+                'widget_widget_name_configuration_workspace',
+                'ConfigureWidgetWorkspace',
                 array($workspace)
             )
             ->once()
@@ -318,8 +318,8 @@ class HomeControllerTest extends MockeryTestCase
         $this->eventDispatcher
             ->shouldReceive('dispatch')
             ->with(
-               'widget_widget_name_configuration_desktop',
-               'ConfigureWidgetDesktop',
+                'widget_widget_name_configuration_desktop',
+                'ConfigureWidgetDesktop',
                 array($user)
             )
             ->once()
@@ -366,8 +366,8 @@ class HomeControllerTest extends MockeryTestCase
         $this->eventDispatcher
             ->shouldReceive('dispatch')
             ->with(
-               'widget_widget_name_configuration_desktop',
-               'ConfigureWidgetDesktop',
+                'widget_widget_name_configuration_desktop',
+                'ConfigureWidgetDesktop',
                 array($user)
             )
             ->once()
@@ -582,7 +582,6 @@ class HomeControllerTest extends MockeryTestCase
             ->with(
                 m::on(
                     function (HomeTab $homeTab) {
-
                         return $homeTab->getType() === 'desktop';
                     }
                 )
@@ -598,7 +597,6 @@ class HomeControllerTest extends MockeryTestCase
             ->with(
                 m::on(
                     function (HomeTabConfig $homeTabConfig) {
-
                         return $homeTabConfig->getType() === 'desktop'
                             && $homeTabConfig->isVisible()
                             && !$homeTabConfig->isLocked()
@@ -890,7 +888,6 @@ class HomeControllerTest extends MockeryTestCase
     private function getController(array $mockedMethods = array())
     {
         if (count($mockedMethods) === 0) {
-
             return new HomeController(
                 $this->em,
                 $this->eventDispatcher,

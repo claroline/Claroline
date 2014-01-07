@@ -25,8 +25,8 @@ class MessageType extends AbstractType
     /**
      * Constructor.
      *
-     * @param string  $username
-     * @param string  $object
+     * @param string $username
+     * @param string $object
      */
     public function __construct($username = null, $object = null)
     {

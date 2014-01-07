@@ -12,13 +12,11 @@
 namespace Claroline\CoreBundle\Rule;
 
 use Claroline\CoreBundle\Rule\Constraints\OccurenceConstraint;
-use Claroline\CoreBundle\Rule\Constraints\ResourceConstraint;
 use Claroline\CoreBundle\Rule\Constraints\ResultConstraint;
 use Claroline\CoreBundle\Rule\Entity\Rule;
 use Claroline\CoreBundle\Rule\Rulable;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Log\Log;
-use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Claroline\CoreBundle\Repository\Log\LogRepository;
 use JMS\DiExtraBundle\Annotation as DI;
 
@@ -65,15 +63,13 @@ class Validator
 
                 if (false === $checkedLogs) {
                     $isChecked = false;
-                }
-                else {
+                } else {
                     foreach ($checkedLogs as $checkedLog) {
                         $return[] = $checkedLog;
                     }
                 }
             }
-        }
-        else {
+        } else {
             $isChecked = false;
         }
 
@@ -104,8 +100,7 @@ class Validator
             foreach ($constraints as $constraint) {
                 $isValid = $isValid && $constraint->validate();
             }
-        }
-        else {
+        } else {
             $isValid = false;
         }
 

@@ -395,8 +395,7 @@ class HomeController extends Controller
 
             if (is_null($lastOrder['order_max'])) {
                 $homeTabConfig->setTabOrder(1);
-            }
-            else {
+            } else {
                 $homeTabConfig->setTabOrder($lastOrder['order_max'] + 1);
             }
             $this->homeTabManager->insertHomeTabConfig($homeTabConfig);
@@ -716,8 +715,7 @@ class HomeController extends Controller
 
             if (is_null($lastOrder['order_max'])) {
                 $homeTabConfig->setTabOrder(1);
-            }
-            else {
+            } else {
                 $homeTabConfig->setTabOrder($lastOrder['order_max'] + 1);
             }
             $this->homeTabManager->insertHomeTabConfig($homeTabConfig);
@@ -878,8 +876,7 @@ class HomeController extends Controller
         if (!is_null($workspace)) {
             $this->checkWorkspaceAccess($workspace);
             $this->checkWorkspaceAccessForHomeTab($homeTab, $workspace);
-        }
-        else {
+        } else {
             $user = $this->securityContext->getToken()->getUser();
             $this->checkUserAccess();
             $this->checkUserAccessForAdminHomeTab($homeTab, $user);
@@ -919,8 +916,7 @@ class HomeController extends Controller
         if (!is_null($workspace)) {
             $this->checkWorkspaceAccess($workspace);
             $this->checkWorkspaceAccessForAdminHomeTab($homeTab, $workspace);
-        }
-        else {
+        } else {
             $this->checkUserAccess();
             $user = $this->securityContext->getToken()->getUser();
             $this->checkUserAccessForHomeTab($homeTab, $user);
@@ -977,8 +973,7 @@ class HomeController extends Controller
 
         if (is_null($lastOrder['order_max'])) {
             $widgetHomeTabConfig->setWidgetOrder(1);
-        }
-        else {
+        } else {
             $widgetHomeTabConfig->setWidgetOrder($lastOrder['order_max'] + 1);
         }
 
@@ -1035,8 +1030,7 @@ class HomeController extends Controller
 
         if (is_null($lastOrder['order_max'])) {
             $widgetHomeTabConfig->setWidgetOrder(1);
-        }
-        else {
+        } else {
             $widgetHomeTabConfig->setWidgetOrder($lastOrder['order_max'] + 1);
         }
 
@@ -1477,8 +1471,7 @@ class HomeController extends Controller
             $homeTabConfig = $this->homeTabManager
                 ->getAdminDesktopHomeTabConfigByHomeTab($homeTab);
             $isAdminUser = !(is_null($homeTabConfig) || $homeTabConfig->isLocked());
-        }
-        else {
+        } else {
             $homeTabConfig = $this->homeTabManager
                 ->getHomeTabConfigByHomeTabAndUser($homeTab, $user);
             $homeTabUser = is_null($homeTabConfig) ? null : $homeTabConfig->getUser();
@@ -1583,7 +1576,6 @@ class HomeController extends Controller
         $widgetUser = $widgetInstance->getUser();
 
         if (is_null($widgetUser) || ($widgetUser->getId() !== $user->getId())) {
-
             return false;
         }
 
@@ -1598,7 +1590,6 @@ class HomeController extends Controller
         $widgetWorkspace = $widgetInstance->getWorkspace();
 
         if (is_null($widgetWorkspace) || ($widgetWorkspace->getId() !== $workspace->getId())) {
-
             return false;
         }
 

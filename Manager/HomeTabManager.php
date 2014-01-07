@@ -225,8 +225,7 @@ class HomeTabManager
                 if ($adminHomeTabConfig->isVisible()) {
                     $adminHTC[] = $adminHomeTabConfig;
                 }
-            }
-            else {
+            } else {
                 $existingCustomHTC = $this->homeTabConfigRepo->findOneBy(
                     array(
                         'homeTab' => $adminHomeTabConfig->getHomeTab(),
@@ -240,8 +239,7 @@ class HomeTabManager
                         $user
                     );
                     $adminHTC[] = $customHTC;
-                }
-                else {
+                } else {
                     $adminHTC[] = $existingCustomHTC;
                 }
             }
@@ -276,7 +274,6 @@ class HomeTabManager
         );
 
         if (!is_null($adminHomeTabConfig)) {
-
             return $adminHomeTabConfig->isLocked();
         }
 
@@ -304,18 +301,12 @@ class HomeTabManager
         );
 
         if (is_null($adminHomeTabConfig) && is_null($userHomeTabConfig)) {
-
             return false;
-        }
-        elseif (is_null($userHomeTabConfig)) {
-
+        } elseif (is_null($userHomeTabConfig)) {
             return $adminHomeTabConfig->isVisible();
-        }
-        elseif (is_null($adminHomeTabConfig)) {
-
+        } elseif (is_null($adminHomeTabConfig)) {
             return true;
-        }
-        else {
+        } else {
             $visible = $adminHomeTabConfig->isLocked() ?
                 $adminHomeTabConfig->isVisible() :
                 true;
@@ -345,18 +336,12 @@ class HomeTabManager
         );
 
         if (is_null($adminHomeTabConfig) && is_null($userHomeTabConfig)) {
-
             return false;
-        }
-        elseif (is_null($userHomeTabConfig)) {
-
+        } elseif (is_null($userHomeTabConfig)) {
             return $adminHomeTabConfig->isVisible();
-        }
-        elseif (is_null($adminHomeTabConfig)) {
-
+        } elseif (is_null($adminHomeTabConfig)) {
             return $userHomeTabConfig->isVisible();
-        }
-        else {
+        } else {
             $visible = $adminHomeTabConfig->isLocked() ?
                 $adminHomeTabConfig->isVisible() :
                 $userHomeTabConfig->isVisible();
@@ -378,7 +363,6 @@ class HomeTabManager
         );
 
         if (is_null($homeTabConfig)) {
-
             return false;
         }
 
@@ -407,15 +391,13 @@ class HomeTabManager
                 $homeTab,
                 $widgetOrder
             );
-        }
-        elseif (is_null($workspace)) {
+        } elseif (is_null($workspace)) {
             $this->widgetHomeTabConfigRepo->updateWidgetHomeTabConfigByUser(
                 $homeTab,
                 $widgetOrder,
                 $user
             );
-        }
-        else {
+        } else {
             $this->widgetHomeTabConfigRepo->updateWidgetHomeTabConfigByWorkspace(
                 $homeTab,
                 $widgetOrder,
@@ -455,8 +437,7 @@ class HomeTabManager
 
                 return $direction;
             }
-        }
-        elseif (is_null($workspace)) {
+        } elseif (is_null($workspace)) {
             $lastWidgetOrder = $this->widgetHomeTabConfigRepo
                 ->findOrderOfLastWidgetInHomeTabByUser($homeTab, $user);
             $lastOrder = (count($lastWidgetOrder) > 0) ?
@@ -475,8 +456,7 @@ class HomeTabManager
 
                 return $direction;
             }
-        }
-        else {
+        } else {
             $lastWidgetOrder = $this->widgetHomeTabConfigRepo
                 ->findOrderOfLastWidgetInHomeTabByWorkspace($homeTab, $workspace);
             $lastOrder = (count($lastWidgetOrder) > 0) ?

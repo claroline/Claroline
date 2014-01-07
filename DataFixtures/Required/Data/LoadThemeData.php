@@ -44,4 +44,3 @@ class LoadThemeData implements RequiredFixture
         $this->container = $container;
     }
 }
-

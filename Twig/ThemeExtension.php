@@ -50,7 +50,7 @@ class ThemeExtension extends \Twig_Extension
      * @param \DateTime $start The initial time.
      *
      * @return \String
-     * @see Symfony\Component\Translation\Translator
+     *                 @see Symfony\Component\Translation\Translator
      */
     public function getThemePath($name)
     {

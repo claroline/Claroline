@@ -31,14 +31,14 @@
                         choicesTree[key] = {};
                         var newPathToNode = pathToNode.slice();
                         newPathToNode.push(key);
-                        var tempPreselectedPath = buildChoicesTree(choices[key], choicesTree[key], newPathToNode, preselectedValue);                        
+                        var tempPreselectedPath = buildChoicesTree(choices[key], choicesTree[key], newPathToNode, preselectedValue);
                         if (tempPreselectedPath != null) {
                             preselectedValuePath = tempPreselectedPath;
                         }
                     }
                 }
-                
-                return preselectedValuePath;                
+
+                return preselectedValuePath;
             }
         </script>
         <script src="{{ asset('bundles/frontend/jquery/plugin/jquery.optionTree.js') }}"></script>

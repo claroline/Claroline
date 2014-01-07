@@ -308,7 +308,6 @@ class WorkspaceManagerTest extends MockeryTestCase
             ->once()->with(array('ROLE_WS_TEST2_AAA'), $root)->andReturn(array());
         $this->maskManager->shouldReceive('decodeMask')->with(m::any(), $resourceType)->andReturn($perms);
 
-
         $result = $this->getManager()->exportRootPermsSection($workspace);
         $this->assertEquals($result, $expectedResult);
     }

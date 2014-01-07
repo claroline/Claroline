@@ -85,8 +85,10 @@ class MailManager
             'claro_security_reset_password',
             array('hash' => $hash)
         );
-
-        $body = $this->templating->render('ClarolineCoreBundle:Authentication:emailForgotPassword.html.twig',array('message' => $msg, 'link' => $link, 'user' => $user));
+        $body = $this->templating->render(
+            'ClarolineCoreBundle:Authentication:emailForgotPassword.html.twig',
+            array('message' => $msg, 'link' => $link, 'user' => $user)
+        );
         $subject = $this->translator->trans('reset_pwd', array(), 'platform');
 
         return $this->send($subject, $body, array($user));
@@ -113,7 +115,7 @@ class MailManager
      * @param string $subject
      * @param string $body
      * @param User[] $users
-     * @param User $from
+     * @param User   $from
      *
      * @return boolean
      */
@@ -144,4 +146,3 @@ class MailManager
         return false;
     }
 }
-

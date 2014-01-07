@@ -567,11 +567,19 @@ class Badge extends Rulable
     {
         $ds = DIRECTORY_SEPARATOR;
 
-        $uploadRootDir         = sprintf('%s%s..%s..%s..%s..%s..%s..%s..%sweb%s%s', __DIR__, $ds, $ds, $ds, $ds, $ds, $ds, $ds, $ds, $ds, $this->getUploadDir());
+        $uploadRootDir = sprintf(
+            '%s%s..%s..%s..%s..%s..%s..%s..%sweb%s%s',
+            __DIR__, $ds, $ds, $ds, $ds, $ds, $ds, $ds, $ds, $ds, $this->getUploadDir()
+        );
         $realpathUploadRootDir = realpath($uploadRootDir);
 
         if (false === $realpathUploadRootDir) {
-            throw new \Exception(sprintf("Invalid upload root dir '%s'for uploading badge images.", $uploadRootDir));
+            throw new \Exception(
+                sprintf(
+                    "Invalid upload root dir '%s'for uploading badge images.",
+                    $uploadRootDir
+                )
+            );
         }
 
         return $realpathUploadRootDir;
@@ -598,9 +606,10 @@ class Badge extends Rulable
         $enDescription = $enTranslation->getDescription();
         $enCriteria    = $enTranslation->getCriteria();
 
-        //Have to put all method call in variable because of empty doesn't support result of method as parameter (prior to PHP 5.5)
-        $hasFrTranslation = (!empty($frName) && !empty($frDescription) && !empty($frCriteria)) ? true : false;
-        $hasEnTranslation = (!empty($enName) && !empty($enDescription) && !empty($enCriteria)) ? true : false;
+        // Have to put all method call in variable because of empty doesn't
+        // support result of method as parameter (prior to PHP 5.5)
+        $hasFrTranslation = !empty($frName) && !empty($frDescription) && !empty($frCriteria);
+        $hasEnTranslation = !empty($enName) && !empty($enDescription) && !empty($enCriteria);
 
         if (!$hasFrTranslation && !$hasEnTranslation) {
             throw new \Exception('At least one translation must be defined on the badge');
@@ -613,8 +622,7 @@ class Badge extends Rulable
                     ->setName($frName)
                     ->setDescription($frDescription)
                     ->setCriteria($frCriteria);
-            }
-            elseif ($hasEnTranslation) {
+            } elseif ($hasEnTranslation) {
                 $frTranslation
                     ->setLocale('fr')
                     ->setName($enName)

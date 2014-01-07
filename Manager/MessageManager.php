@@ -57,10 +57,10 @@ class MessageManager
     }
 
     /**
-     * @param \Claroline\CoreBundle\Entity\User $sender
+     * @param \Claroline\CoreBundle\Entity\User    $sender
      * @param \Claroline\CoreBundle\Entity\Message $message
      * @param \Claroline\CoreBundle\Entity\Message $parent
-     * @param boolean setAsSent
+     *                                                      @param boolean setAsSent
      *
      * @return \Claroline\CoreBundle\Entity\Message
      */
@@ -133,8 +133,8 @@ class MessageManager
 
     /**
      * @param \Claroline\CoreBundle\Entity\User $receiver
-     * @param string $search
-     * @param integer $page
+     * @param string                            $search
+     * @param integer                           $page
      *
      * @return \PagerFanta\PagerFanta
      */
@@ -149,8 +149,8 @@ class MessageManager
 
     /**
      * @param \Claroline\CoreBundle\Entity\User $sender
-     * @param string $search
-     * @param integer $page
+     * @param string                            $search
+     * @param integer                           $page
      *
      * @return \PagerFanta\PagerFanta
      */
@@ -165,8 +165,8 @@ class MessageManager
 
     /**
      * @param \Claroline\CoreBundle\Entity\User $user
-     * @param string $search
-     * @param integer $page
+     * @param string                            $search
+     * @param integer                           $page
      *
      * @return \PagerFanta\PagerFanta
      */
@@ -200,7 +200,7 @@ class MessageManager
     }
 
     /**
-     * @param \Claroline\CoreBundle\Entity\User $user
+     * @param \Claroline\CoreBundle\Entity\User      $user
      * @param \Claroline\CoreBundle\Entity\Message[] $messages
      */
     public function markAsRead(User $user, array $messages)
@@ -283,10 +283,10 @@ class MessageManager
     {
         return $this->userMessageRepo->findBy($array);
     }
-    
+
     /**
      * @param \Claroline\CoreBundle\Entity\Message[] $userMessages
-     * @param string $flag
+     * @param string                                 $flag
      */
     private function markMessages(array $userMessages, $flag)
     {

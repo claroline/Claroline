@@ -23,7 +23,7 @@ class LoadResourceImagesData implements RequiredFixture
     /**
      * @param ObjectManager $manager
      */
-    public function load (ObjectManager $manager)
+    public function load(ObjectManager $manager)
     {
         $ds = DIRECTORY_SEPARATOR;
         $coreWebDir = "{$this->container->getParameter('kernel.root_dir')}{$ds}..{$ds}web{$ds}";

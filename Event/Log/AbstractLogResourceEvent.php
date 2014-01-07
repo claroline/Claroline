@@ -17,12 +17,17 @@ abstract class AbstractLogResourceEvent extends LogGenericEvent
 {
     /**
      * Constructor.
-     * LogResourceEvent is used by plugins for creating custom events when action occured on a resource, or child resource
-     * (e.g. post in forum, comment in blog, event in calendar etc.)
+     *
+     * LogResourceEvent is used by plugins for creating custom events when
+     * action occured on a resource, or child resource (e.g. post in forum,
+     * comment in blog, event in calendar etc.)
+     *
      * Possible changes over a resource's child are: creation, delete, update, published, unpublished, etc.
      *
-     * details is an array that contains all necessary info to describe indirect resource modification.
+     * "$details" is an array that contains all necessary info to describe indirect resource modification.
+     *
      * For example when a comment is published to a blog resource the details could be:
+     *
      * array(
      *      'comment' => array(
      *          'text' => 'Very useful post thx',
@@ -37,7 +42,7 @@ abstract class AbstractLogResourceEvent extends LogGenericEvent
      */
     public function __construct(ResourceNode $node, $details)
     {
-        $commenDetails = array(
+        $commonDetails = array(
             'resource' => array(
                 'name' => $node->getName(),
                 'path' => $node->getPathForDisplay()
@@ -51,11 +56,11 @@ abstract class AbstractLogResourceEvent extends LogGenericEvent
             )
         );
 
-        $detailsDatas = array_merge($commenDetails, $details);
+        $detailsData = array_merge($commonDetails, $details);
 
         parent::__construct(
             static::ACTION,
-            $detailsDatas,
+            $detailsData,
             null,
             null,
             $node,

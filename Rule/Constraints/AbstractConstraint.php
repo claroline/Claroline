@@ -27,7 +27,7 @@ abstract class AbstractConstraint implements ConstraintInterface
     protected $associatedLogs;
 
     /**
-     * @param Rule  $rule
+     * @param Rule $rule
      *
      * @param Log[] $associatedLogs
      *

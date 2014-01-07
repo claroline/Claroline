@@ -213,7 +213,7 @@ class DesktopAgendaController extends Controller
         $listEventsDesktop = $em->getRepository('ClarolineCoreBundle:Event')->findDesktop($usr, false);
         $listEvents = $em->getRepository('ClarolineCoreBundle:Event')->findByUserWithoutAllDay($usr, 5, $order);
 
-        return array('listEvents' => array_merge($listEvents,$listEventsDesktop));
+        return array('listEvents' => array_merge($listEvents, $listEventsDesktop));
     }
 
     private function convertEventoArray($listEvents)
@@ -223,7 +223,9 @@ class DesktopAgendaController extends Controller
         foreach ($listEvents as $key => $object) {
             $data[$key]['id'] = $object->getId();
             $workspace = $object->getWorkspace();
-            $data[$key]['title'] =  !is_null($workspace) ? $workspace->getName() : $this->translator->trans('desktop', array(), 'platform');
+            $data[$key]['title'] = !is_null($workspace) ?
+                $workspace->getName() :
+                $this->translator->trans('desktop', array(), 'platform');
             $data[$key]['title'] .= ' : ' . $object->getTitle();
             $data[$key]['allDay'] = $object->getAllDay();
             $data[$key]['start'] = $object->getStart()->getTimestamp();

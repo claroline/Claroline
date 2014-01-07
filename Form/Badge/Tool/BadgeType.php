@@ -42,7 +42,11 @@ class BadgeType extends AbstractType
      *     "translator"            = @DI\Inject("translator")
      * })
      */
-    public function __construct(BadgeRuleType $badgeRuleType, PlatformConfigurationHandler $platformConfigHandler, Translator $translator)
+    public function __construct(
+        BadgeRuleType $badgeRuleType,
+        PlatformConfigurationHandler $platformConfigHandler,
+        Translator $translator
+    )
     {
         $this->badgeRuleType         = $badgeRuleType;
         $this->platformConfigHandler = $platformConfigHandler;
@@ -54,34 +58,42 @@ class BadgeType extends AbstractType
         $builder
             ->add('frTranslation', new BadgeTranslationType())
             ->add('enTranslation', new BadgeTranslationType())
-            ->add('version', 'integer', array(
-                'data'  => 1,
-                'constraints' => new Assert\NotBlank(array(
-                    'message' => 'badge_need_version'
-                )),
-            ))
-            ->add('automatic_award', 'checkbox', array(
-                'required' => false
-            ))
-            ->add('file', 'file', array(
-                'label' => 'badge_form_image'
-            ))
-            ->add('expired_at', 'datepicker', array(
-                'read_only' => true,
-                'component' => true,
-                'autoclose' => true,
-                'language'  => $this->platformConfigHandler->getParameter('locale_language'),
-                'format'    => $this->translator->trans('date_form_format', array(), 'platform')
-            ))
-            ->add('rules', 'collection', array(
-                'type'          => $this->badgeRuleType,
-                'by_reference'  => false,
-                'attr'          => array('class' => 'rule-collections'),
-                'theme_options' => array('label_width' => 'col-md-3'),
-                'prototype'     => true,
-                'allow_add'     => true,
-                'allow_delete'  => true
-            ));
+            ->add(
+                'version',
+                'integer',
+                array(
+                    'data'  => 1,
+                    'constraints' => new Assert\NotBlank(
+                        array('message' => 'badge_need_version')
+                    )
+                )
+            )
+            ->add('automatic_award', 'checkbox', array('required' => false))
+            ->add('file', 'file', array('label' => 'badge_form_image'))
+            ->add(
+                'expired_at',
+                'datepicker',
+                array(
+                    'read_only' => true,
+                    'component' => true,
+                    'autoclose' => true,
+                    'language'  => $this->platformConfigHandler->getParameter('locale_language'),
+                    'format'    => $this->translator->trans('date_form_format', array(), 'platform')
+                )
+            )
+            ->add(
+                'rules',
+                'collection',
+                array(
+                    'type'          => $this->badgeRuleType,
+                    'by_reference'  => false,
+                    'attr'          => array('class' => 'rule-collections'),
+                    'theme_options' => array('label_width' => 'col-md-3'),
+                    'prototype'     => true,
+                    'allow_add'     => true,
+                    'allow_delete'  => true
+                )
+            );
     }
 
     public function getName()
@@ -91,8 +103,7 @@ class BadgeType extends AbstractType
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
-        $resolver
-        ->setDefaults(
+        $resolver->setDefaults(
             array(
                 'data_class'         => 'Claroline\CoreBundle\Entity\Badge\Badge',
                 'translation_domain' => 'badge',

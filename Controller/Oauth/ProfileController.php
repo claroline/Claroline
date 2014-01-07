@@ -26,13 +26,14 @@ class ProfileController extends Controller
      *
      * @Template()
      */
-    public function listAction(Request $request, User $user)
+    public function listAction(User $user)
     {
-        $clients = $this->getDoctrine()->getRepository('ClarolineCoreBundle:Oauth\Client')->findByUserWithAccessToken($user);
+        $clients = $this->getDoctrine()
+            ->getRepository('ClarolineCoreBundle:Oauth\Client')
+            ->findByUserWithAccessToken($user);
 
         return array(
             'clients' => $clients
         );
     }
 }
- 

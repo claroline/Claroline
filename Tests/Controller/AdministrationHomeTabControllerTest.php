@@ -61,7 +61,6 @@ class AdministrationHomeTabControllerTest extends MockeryTestCase
             ->with(
                 m::on(
                     function (HomeTab $newHomeTab) {
-
                         return $newHomeTab->getType() === 'admin_desktop';
                     }
                 )
@@ -76,7 +75,6 @@ class AdministrationHomeTabControllerTest extends MockeryTestCase
             ->with(
                 m::on(
                     function (HomeTabConfig $newHomeTabConfig) {
-
                         return $newHomeTabConfig->getType() === 'admin_desktop'
                             && $newHomeTabConfig->isVisible()
                             && !$newHomeTabConfig->isLocked()
@@ -127,7 +125,6 @@ class AdministrationHomeTabControllerTest extends MockeryTestCase
             ->with(
                 m::on(
                     function (HomeTab $newHomeTab) {
-
                         return $newHomeTab->getType() === 'admin_workspace';
                     }
                 )
@@ -142,7 +139,6 @@ class AdministrationHomeTabControllerTest extends MockeryTestCase
             ->with(
                 m::on(
                     function (HomeTabConfig $newHomeTabConfig) {
-
                         return $newHomeTabConfig->getType() === 'admin_workspace'
                             && $newHomeTabConfig->isVisible()
                             && !$newHomeTabConfig->isLocked()
@@ -389,7 +385,6 @@ class AdministrationHomeTabControllerTest extends MockeryTestCase
             ->with(
                 m::on(
                     function (WidgetHomeTabConfig $widgetHomeTabConfig) {
-
                         return $widgetHomeTabConfig->getType() === 'admin'
                             && $widgetHomeTabConfig->isVisible()
                             && !$widgetHomeTabConfig->isLocked()
@@ -530,7 +525,6 @@ class AdministrationHomeTabControllerTest extends MockeryTestCase
     private function getController(array $mockedMethods = array())
     {
         if (count($mockedMethods) === 0) {
-
             return new AdministrationHomeTabController(
                 $this->formFactory,
                 $this->homeTabManager,

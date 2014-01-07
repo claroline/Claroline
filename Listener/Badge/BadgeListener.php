@@ -53,7 +53,12 @@ class BadgeListener
      *     "ruleValidator"     = @DI\Inject("claroline.rule.validator")
      * })
      */
-    public function __construct(EntityManager $entityManager, BadgeManager $badgeManager, TwigEngine $templatingEngine, Validator $ruleValidator)
+    public function __construct(
+        EntityManager $entityManager,
+        BadgeManager $badgeManager,
+        TwigEngine $templatingEngine,
+        Validator $ruleValidator
+    )
     {
         $this->entityManager     = $entityManager;
         $this->badgeManager      = $badgeManager;
@@ -102,7 +107,8 @@ class BadgeListener
 
     private function workspace($workspaceId)
     {
-        $workspace = $this->entityManager->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->find($workspaceId);
+        $workspace = $this->entityManager->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')
+            ->find($workspaceId);
 
         $parameters = array(
             'badgePage'    => 1,
@@ -123,6 +129,9 @@ class BadgeListener
             ),
         );
 
-        return $this->templateingEngine->render('ClarolineCoreBundle:Badge:Tool\Workspace\list.html.twig', array('workspace' => $workspace, 'parameters' => $parameters));
+        return $this->templateingEngine->render(
+            'ClarolineCoreBundle:Badge:Tool\Workspace\list.html.twig',
+            array('workspace' => $workspace, 'parameters' => $parameters)
+        );
     }
 }

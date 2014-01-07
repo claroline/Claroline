@@ -34,14 +34,12 @@
         toolbar2: 'undo redo | forecolor backcolor emoticons | bullist numlist outdent indent | link image media print code',
         paste_preprocess: function (plugin, args) {
             var link = $('<div>' + args.content + '</div>').text().trim(); //inside div because a bug of jquery
-            var url = link.match(/^(((ftp|https?):\/\/)[\-\w@:%_\+.~#?,&\/\/=]+)|((mailto:)?[_.\w-]+@([\w][\w\-]+\.)+[a-zA-Z]{2,3})$/);
 
-            if (url) {
-                args.content = '<a href="' + link + '">' + link + '</a>';
+            home.isValidURL(link, function (data) {
                 home.generatedContent(link, function (data) {
                     insertContent(data);
                 }, false);
-            }
+            });
         },
         setup: function (editor) {
             editor.on('change', function () {

@@ -11,7 +11,6 @@
 
 namespace Claroline\CoreBundle\Controller;
 
-use \Mockery as m;
 use Claroline\CoreBundle\Library\Testing\MockeryTestCase;
 use Claroline\CoreBundle\Form\Factory\FormFactory;
 
@@ -126,7 +125,10 @@ class AuthenticationControllerTest extends MockeryTestCase
         $this->translator->shouldReceive('trans')->once()->with('login_failure', array(), 'platform')
             ->andReturn('message');
         $response = new $responseClass(array('message' => 'message'), 403);
-        $this->assertEquals($response->getContent(), $this->controller->postAuthenticationAction($format)->getContent());
+        $this->assertEquals(
+            $response->getContent(),
+            $this->controller->postAuthenticationAction($format)->getContent()
+        );
         $this->assertEquals($response->headers->get('content-type'), $header);
     }
 

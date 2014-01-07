@@ -151,7 +151,7 @@ class UserManager
      * $roleName must already exists.
      *
      * @param \Claroline\CoreBundle\Entity\User $user
-     * @param string $roleName
+     * @param string                            $roleName
      *
      * @return \Claroline\CoreBundle\Entity\User
      */
@@ -171,7 +171,7 @@ class UserManager
      * This user will have the additional roles $roles.
      * These roles must already exists.
      *
-     * @param \Claroline\CoreBundle\Entity\User $user
+     * @param \Claroline\CoreBundle\Entity\User            $user
      * @param \Doctrine\Common\Collections\ArrayCollection $roles
      */
     public function insertUserWithRoles(User $user, ArrayCollection $roles)
@@ -249,7 +249,7 @@ class UserManager
      * Sets an array of platform role to a user.
      *
      * @param \Claroline\CoreBundle\Entity\User $user
-     * @param ArrayCollection $roles
+     * @param ArrayCollection                   $roles
      */
     public function setPlatformRoles(User $user, ArrayCollection $roles)
     {
@@ -319,7 +319,7 @@ class UserManager
 
     /**
      * @param \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace $workspace
-     * @param \Claroline\CoreBundle\Entity\Role $role
+     * @param \Claroline\CoreBundle\Entity\Role                        $role
      *
      * @return User[]
      */
@@ -330,9 +330,9 @@ class UserManager
 
     /**
      * @param \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace $workspace
-     * @param string $search
-     * @param integer $page
-     * @param integer $max
+     * @param string                                                   $search
+     * @param integer                                                  $page
+     * @param integer                                                  $max
      *
      * @return \Pagerfanta\Pagerfanta;
      */
@@ -345,8 +345,8 @@ class UserManager
 
     /**
      * @param \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace $workspace
-     * @param integer $page
-     * @param integer $max
+     * @param integer                                                  $page
+     * @param integer                                                  $max
      *
      * @return \Pagerfanta\Pagerfanta;
      */
@@ -360,7 +360,7 @@ class UserManager
     /**
      * @param integer $page
      * @param integer $max
-     * @param string $orderedBy
+     * @param string  $orderedBy
      *
      * @return \Pagerfanta\Pagerfanta;
      */
@@ -372,7 +372,7 @@ class UserManager
     }
 
     /**
-     * @param string $search
+     * @param string  $search
      * @param integer $page
      * @param integer $max
      *
@@ -386,10 +386,10 @@ class UserManager
     }
 
     /**
-     * @param string $search
+     * @param string  $search
      * @param integer $page
      * @param integer $max
-     * @param string $orderedBy
+     * @param string  $orderedBy
      *
      * @return \Pagerfanta\Pagerfanta;
      */
@@ -402,9 +402,9 @@ class UserManager
 
     /**
      * @param \Claroline\CoreBundle\Entity\Group $group
-     * @param integer $page
-     * @param integer $max
-     * @param string  $orderedBy
+     * @param integer                            $page
+     * @param integer                            $max
+     * @param string                             $orderedBy
      *
      * @return \Pagerfanta\Pagerfanta;
      */
@@ -427,11 +427,11 @@ class UserManager
 
     /**
      *
-     * @param string $search
+     * @param string                             $search
      * @param \Claroline\CoreBundle\Entity\Group $group
-     * @param integer $page
-     * @param integer $max
-     * @param string  $orderedBy
+     * @param integer                            $page
+     * @param integer                            $max
+     * @param string                             $orderedBy
      *
      * @return \Pagerfanta\Pagerfanta
      */
@@ -444,8 +444,8 @@ class UserManager
 
     /**
      * @param \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace $workspace
-     * @param integer $page
-     * @param integer $max
+     * @param integer                                                  $page
+     * @param integer                                                  $max
      *
      * @return \Pagerfanta\Pagerfanta
      */
@@ -458,8 +458,8 @@ class UserManager
 
     /**
      * @param \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace[] $workspaces
-     * @param integer $page
-     * @param integer $max
+     * @param integer                                                    $page
+     * @param integer                                                    $max
      *
      * @return \Pagerfanta\Pagerfanta
      */
@@ -472,9 +472,9 @@ class UserManager
 
     /**
      * @param \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace[] $workspaces
-     * @param integer $page
-     * @param string $search
-     * @param integer $max
+     * @param integer                                                    $page
+     * @param string                                                     $search
+     * @param integer                                                    $max
      *
      * @return \Pagerfanta\Pagerfanta
      */
@@ -493,9 +493,9 @@ class UserManager
 
     /**
      * @param \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace $workspace
-     * @param string $search
-     * @param integer $page
-     * @param integer $max
+     * @param string                                                   $search
+     * @param integer                                                  $page
+     * @param integer                                                  $max
      *
      * @return \Pagerfanta\Pagerfanta
      */
@@ -520,9 +520,9 @@ class UserManager
 
     /**
      * @param \Claroline\CoreBundle\Entity\Group $group
-     * @param integer $page
-     * @param integer $max
-     * @param string $orderedBy
+     * @param integer                            $page
+     * @param integer                            $max
+     * @param string                             $orderedBy
      *
      * @return \Pagerfanta\Pagerfanta
      */
@@ -535,10 +535,10 @@ class UserManager
 
     /**
      * @param \Claroline\CoreBundle\Entity\Group $group
-     * @param integer $page
-     * @param string $search
-     * @param integer $max
-     * @param string $orderedBy
+     * @param integer                            $page
+     * @param string                             $search
+     * @param integer                            $max
+     * @param string                             $orderedBy
      *
      * @return \Pagerfanta\Pagerfanta
      */
@@ -670,7 +670,7 @@ class UserManager
     }
 
     /**
-     * @param Role[] $roles
+     * @param Role[]  $roles
      * @param integer $page
      * @param integer $max
      *
@@ -684,10 +684,10 @@ class UserManager
     }
 
     /**
-     * @param Role[] $roles
+     * @param Role[]                                                   $roles
      * @param \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace $workspace
-     * @param integer $page
-     * @param integer $max
+     * @param integer                                                  $page
+     * @param integer                                                  $max
      *
      * @return \Pagerfanta\Pagerfanta
      */
@@ -699,8 +699,8 @@ class UserManager
     }
 
     /**
-     * @param Role[] $roles
-     * @param string $name
+     * @param Role[]  $roles
+     * @param string  $name
      * @param integer $page
      * @param integer $max
      *
@@ -714,11 +714,11 @@ class UserManager
     }
 
     /**
-     * @param Role[] $roles
-     * @param string $name
+     * @param Role[]                                                   $roles
+     * @param string                                                   $name
      * @param \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace $workspace
-     * @param integer $page
-     * @param integer $max
+     * @param integer                                                  $page
+     * @param integer                                                  $max
      *
      * @return \Pagerfanta\Pagerfanta| \Doctrine\ORM\Query
      */
@@ -770,7 +770,7 @@ class UserManager
      * Set the user locale.
      *
      * @param \Claroline\CoreBundle\Entity\User $user
-     * @param String $locale Language with format en, fr, es, etc.
+     * @param String                            $locale Language with format en, fr, es, etc.
      */
     public function setLocale(User $user, $locale = 'en')
     {

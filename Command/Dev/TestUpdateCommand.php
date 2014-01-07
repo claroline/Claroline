@@ -75,13 +75,13 @@ class TestUpdateCommand extends ContainerAwareCommand
             'claroline.plugin.installer' :
             'claroline.installation.manager';
         $installer = $this->getContainer()->get($installerType);
-        $installer->setLogger(function ($message) use ($output) {
-            $output->writeln($message);
-        });
+        $installer->setLogger(
+            function ($message) use ($output) {
+                $output->writeln($message);
+            }
+        );
         $from = $input->getArgument('from_version');
         $to = $input->getArgument('to_version');
         $installer->update($bundle, $from, $to);
     }
 }
-
-

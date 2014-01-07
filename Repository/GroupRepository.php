@@ -111,8 +111,8 @@ class GroupRepository extends EntityRepository
     /**
      * Returns the groups which are member of a workspace.
      *
-     * @param array     $workspace
-     * @param boolean   $executeQuery
+     * @param array   $workspace
+     * @param boolean $executeQuery
      *
      * @return array[Group]|Query
      */
@@ -138,8 +138,8 @@ class GroupRepository extends EntityRepository
      * Returns the groups which are member of a workspace
      * and whose name corresponds the search.
      *
-     * @param array     $workspace
-     * @param string    $search
+     * @param array  $workspace
+     * @param string $search
      *
      * @return array[Group]
      */
