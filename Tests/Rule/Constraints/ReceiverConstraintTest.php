@@ -19,56 +19,56 @@ use Claroline\CoreBundle\Entity\Badge\BadgeRule;
 use Claroline\CoreBundle\Entity\Log\Log;
 use \Mockery as m;
 
-class DoerConstraintTest extends MockeryTestCase
+class ReceiverConstraintTest extends MockeryTestCase
 {
     public function testIsNotApplicableToWrongUserType()
     {
         $badgeRule = new BadgeRule();
         $badgeRule
             ->setUser(new User())
-            ->setUserType(1);
+            ->setUserType(0);
 
-        $doerConstraint = new DoerConstraint();
+        $receiverConstraint = new ReceiverConstraint();
 
-        $this->assertFalse($doerConstraint->isApplicableTo($badgeRule));
+        $this->assertFalse($receiverConstraint->isApplicableTo($badgeRule));
     }
     public function testIsApplicableToNoUser()
     {
         $this->setExpectedException('RuntimeException');
 
         $badgeRule = new BadgeRule();
-        $badgeRule->setUserType(1);
+        $badgeRule->setUserType(0);
 
-        $doerConstraint = new DoerConstraint();
+        $receiverConstraint = new ReceiverConstraint();
 
-        $isApplicableTo = $doerConstraint->isApplicableTo($badgeRule);
+        $isApplicableTo = $receiverConstraint->isApplicableTo($badgeRule);
     }
 
     public function testIsApplicableTo()
     {
         $badgeRule = new BadgeRule();
         $badgeRule
-            ->setUserType(0)
+            ->setUserType(1)
             ->setUser(new User());
 
-        $doerConstraint = new DoerConstraint();
+        $receiverConstraint = new ReceiverConstraint();
 
-        $this->assertTrue($doerConstraint->isApplicableTo($badgeRule));
+        $this->assertTrue($receiverConstraint->isApplicableTo($badgeRule));
     }
 
     public function testValidateNoLog()
     {
-        $doerConstraint = new DoerConstraint();
-        $doerConstraint->setAssociatedLogs(array());
+        $receiverConstraint = new ReceiverConstraint();
+        $receiverConstraint->setAssociatedLogs(array());
 
-        $this->assertFalse($doerConstraint->validate());
+        $this->assertFalse($receiverConstraint->validate());
     }
 
     public function testValidateOneLog()
     {
-        $doerConstraint = new DoerConstraint();
-        $doerConstraint->setAssociatedLogs(array(new Log()));
+        $receiverConstraint = new ReceiverConstraint();
+        $receiverConstraint->setAssociatedLogs(array(new Log()));
 
-        $this->assertTrue($doerConstraint->validate());
+        $this->assertTrue($receiverConstraint->validate());
     }
 }
