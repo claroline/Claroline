@@ -6,6 +6,7 @@ use Symfony\Component\DependencyInjection\ContainerAware;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
+use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Event\OpenResourceEvent;
 use Claroline\CoreBundle\Event\DeleteResourceEvent;
 use Claroline\CoreBundle\Event\CreateFormResourceEvent;
@@ -13,6 +14,7 @@ use Claroline\CoreBundle\Event\CreateResourceEvent;
 use Claroline\CoreBundle\Event\DisplayToolEvent;
 
 use Innova\PathBundle\Entity\Path;
+use Innova\PathBundle\Entity\Step2ResourceNode;
 
 class ToolListener extends ContainerAware
 {
@@ -112,5 +114,16 @@ class ToolListener extends ContainerAware
 
     public function onPathDelete(DeleteResourceEvent $event){
     	$event->stopPropagation();
+    }
+
+    public function onNonDigitalResourceDelete(DeleteResourceEvent $event){
+    	$ndr = $event->getResource();
+
+    	$em = $this->container->get('doctrine.orm.entity_manager');
+    	$step2resourceNodes = $em->getRepository('InnovaPathBundle:Step2ResourceNode')->findByResourceNode($ndr->getResourceNode());
+
+    	if(count($step2resourceNodes) > 0){
+    		throw new \Exception('The resource you want to delete is used.');
+       	}
     }
 }

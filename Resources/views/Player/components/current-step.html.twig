@@ -1,5 +1,4 @@
-{# Affichage d'une ressource #}
-{% macro displayResource(resource, step) %}
+{% macro displayCollecticiel(resource, step) %}
     {% import _self as resourcesMacro %}
     <a target="_blank" href="{{ path('claro_resource_open', {'node': resource.resourceNode.id, 'resourceType': resource.resourceNode.resourceType.name }) }}" class="btn btn-default btn-xs"> 
         <span rel="tooltip" data-original-title="{{ step.name }}" class="lvl-{{ step.lvl + 1 }} lvl-indicator">&nbsp;</span>
@@ -24,14 +23,14 @@
                             {% set thisResourceIsExcluded = true %}
                         {% endfor %}
                         {% if thisResourceIsExcluded == false and resource.resourceNode.resourceType.name == "icap_dropzone" %}
-                            {{ resourcesMacro.displayResource(resource, parent) }}
+                            {{ resourcesMacro.displayCollecticiel(resource, parent) }}
                         {% endif %}
                     {% endfor %}
                 {% endfor %}
 
                 {# Gestion des ressources locales #}
                 {% for resource in currentStep.step2ResourceNodes if resource.excluded == false and resource.resourceNode.resourceType.name == "icap_dropzone" %}
-                {{ resourcesMacro.displayResource(resource, currentStep) }}
+                {{ resourcesMacro.displayCollecticiel(resource, currentStep) }}
                 {% endfor %}
                 </span>
             {# End Demande de JJ... #}
