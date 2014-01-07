@@ -72,7 +72,7 @@
 
         <hr/>
 
-        {% if ((isAdmin == 1)) %}
+        {% if isAdmin == 1 and  papers is not empty %}
             {{ 'searchUserPaper' | trans }} :
             <div class="input-group">
                 <input type="text" class="form-control" id="nameUser" placeholder="{{ 'search'|trans({}, 'platform') }}"
