@@ -14,7 +14,6 @@ namespace Claroline\CoreBundle\Features\Context;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Behat\Symfony2Extension\Context\KernelAwareInterface;
 use Behat\MinkExtension\Context\MinkContext;
-use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Installation\Settings\SettingChecker;
 
 /**
@@ -52,14 +51,6 @@ class FeatureContext extends MinkContext implements KernelAwareInterface
     }
 
     /**
-     * @Given /^I have a user "([^"]*)"$/
-     */
-    public function iHaveAUser($username)
-    {
-        $this->visit($this->getBaseUrl() . "/app_dev.php/dev/create/user/{$username}/ROLE_ADMIN");
-    }
-
-    /**
      * @Given /^the database does not exists$/
      */
     public function theDatabaseIsEmpty()
@@ -83,7 +74,6 @@ class FeatureContext extends MinkContext implements KernelAwareInterface
     public function operationXmlIsInitialized()
     {
         $ds = DIRECTORY_SEPARATOR;
-
         $operationFile = $this->kernel->getRootDir() . $ds . 'config' . $ds . 'operations.xml';
 
         if (!file_exists($operationFile)) {
@@ -178,14 +168,17 @@ class FeatureContext extends MinkContext implements KernelAwareInterface
      */
     public function theUserIsCreated($username)
     {
-        $user = new \Claroline\CoreBundle\Entity\User();
-        $user->setUsername($username);
-        $user->setPlainPassword($username);
-        $user->setFirstName($username);
-        $user->setLastName($username);
-        $user->setMail($username . '@claroline.net');
-        $this->getContainer()->get('claroline.manager.user_manager')->createUserWithRole($user, 'ROLE_ADMIN');
+        $this->visit($this->getBaseUrl() . "/app_dev.php/dev/user/create/{$username}/ROLE_ADMIN");
     }
+
+    /**
+     * @Given /^the workspace "([^"]*)" is created by "([^"]*)"$/
+     */
+    public function theWorkspaceIsCreatedBy($workspaceName, $username)
+    {
+        $this->visit($this->getBaseUrl() . "/app_dev.php/dev/workspace/create/{$workspaceName}/{$username}");
+    }
+
 
     private function getBaseUrl()
     {

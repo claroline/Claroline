@@ -16,6 +16,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Doctrine\Common\DataFixtures\ReferenceRepository;
 use Symfony\Component\HttpFoundation\Response;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Library\Workspace\Configuration;
 
 class DevController extends Controller
 {
@@ -77,6 +78,9 @@ class DevController extends Controller
      * )
      * @EXT\Method("GET")
      *
+     * @param $username
+     * @param $role
+     *
      * @return Response
      */
     public function createUser($username, $role)
@@ -91,6 +95,34 @@ class DevController extends Controller
         $userManager->createUserWithRole($user, $role);
 
         return new Response('done');
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/workspace/create/{workspaceName}/{username}"
+     * )
+     * @EXT\Method("GET")
+     *
+     * @param $workspaceName
+     * @param $username
+     *
+     * @return Response
+     */
+    public function createWorkspace($workspaceName, $username)
+    {
+        $ds = DIRECTORY_SEPARATOR;
+        $workspaceManager = $this->container->get('claroline.manager.workspace_manager');
+        $template = $this->container
+            ->getParameter('claroline.param.templates_directory') . $ds . 'default.zip';
+        $config = new Configuration($template);
+        $config->setWorkspaceName($workspaceName);
+        $config->setWorkspaceCode($workspaceName);
+        $em = $this->get('doctrine.orm.entity_manager');
+        $user = $em->getRepository('ClarolineCoreBundle:User')->findOneByUsername($username);
+        $workspaceManager->create($config, $user);
+
+        return new Response('done');
+
     }
 
     private function getContainer()

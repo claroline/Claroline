@@ -42,7 +42,7 @@ Feature: Administration
         Then the platform should have "10" "User"
 
     Scenario: Fails to create users from csv
-        Given I am on "/admin/user/management/import/form"
+        Given I am on "/admin/user/management/import/form"/home/vostro/documents/claroline/Claroline/vendor/claroline/core-bundle/Claroline/CoreBundle/Features/use/administration.feature
         When I attach the file "users_error.txt" to "File"
         And I press "Ok"
         Then the platform should have "1" "User"
@@ -62,9 +62,21 @@ Feature: Administration
         When I fill in "Name" with " "
         And I press "Ok"
         Then the platform should have "0" "Group"
+#
+#    Scenario: Sucessfully edit user settings through the user list
+#        Given the user "user" is created
+#        And I am on "/users/page/1/max/50/order"
+#        And I follow "user"
+#        And I fill in "Username" with "modifiedname"
+#        And I press "Ok"
+#        Then the response should contain "modifiedname"
 
+    Scenario: The administrator can see every non personal workspaces
+        Given the user "user" is created
+        And the workspace "workspace_1" is created by "user"
+        When I am on "/workspaces/"
+        Then the response should contain "workspace_1"
 
-    #Scenario: Sucessfully edit group settings
     #Scenario: Fail to edit group settings
     #Scenario: Sucessfully edit user properties
     #Scenario: Fail to edit user properties
