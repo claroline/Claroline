@@ -47,16 +47,16 @@
     <script type="text/javascript" src="{{ asset('bundles/frontend/jquery/plugin/table-sorter/jquery.metadata.js') }}"></script>
     <script type="text/javascript" src="{{ asset('bundles/clarolinecore/js/tool/calendarDatePicker.js') }}"></script>
     <script type="text/javascript">
-    $(document).ready(function()
-            {
-                $("#mytable").tablesorter( {
-                    sortList: [[0,0], [1,0],[2,0],[4,0]],
-                    dateFormat : "ddmmyyyy",
-                    headers: {
-                        2: { sorter: "shortDate" }
-                    }
-                });
+
+    $(document).ready(function() {
+        $("#mytable").tablesorter( {
+            sortList: [[0,0], [1,0],[2,0],[4,0]],
+            dateFormat : "ddmmyyyy",
+            headers: {
+                2: { sorter: "shortDate" }
             }
-    );
+        });
+    }
+ );
 </script>
 {% endblock javascripts %}

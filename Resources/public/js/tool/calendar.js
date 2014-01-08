@@ -318,7 +318,7 @@
             $('#agenda_form_start').val($.fullCalendar.formatDate( pickedDate,'dd-MM-yyyy'));
             $('#agenda_form_startHours').val($.fullCalendar.formatDate( pickedDate,'HH:mm'));
             console.debug(calEvent.end);
-            if (calEvent.end === null){
+            if (calEvent.end === null) {
                 $('#agenda_form_end').val($.fullCalendar.formatDate( pickedDate,'dd-MM-yyyy'));
                 $('#agenda_form_endHours').val('00:00');
             } else {

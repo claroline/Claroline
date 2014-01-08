@@ -262,8 +262,7 @@ class WorkspaceAgendaController extends Controller
         $repository = $this->om->getRepository('ClarolineCoreBundle:Event');
         $event = $repository->find($postData['id']);
         // if is null = desktop event
-        if(!is_null($event->getWorkspace()))
-        {
+        if (!is_null($event->getWorkspace())) {
             $this->checkUserIsAllowed('agenda', $event->getWorkspace());
 
             if (!$this->checkUserIsAllowedtoWrite($event->getWorkspace())) {
