@@ -83,7 +83,10 @@
                             {% set roleId = resourceRight.getRole().getId() %}
                             <tr>
                                 <td>
-                                    {{ resourceRight.getRole().getTranslationKey()|trans({}, 'platform') }} <em> ({{ resourceRight.getRole().getWorkspace().getCode() }}) </em>
+                                    {{ resourceRight.getRole().getTranslationKey()|trans({}, 'platform') }}
+                                    {% if resourceRight.getRole().getWorkspace() is not null %}
+                                        <em> ({{ resourceRight.getRole().getWorkspace().getCode() }}) </em>
+                                    {% endif %}
                                     <input type="hidden" name="role_row[{{ roleId }}]" value="{{ roleId }}"/>
                                 </td>
                                 {% for decoder in resource.getResourceType().getMaskDecoders() %}
@@ -116,7 +119,7 @@
         </form>
     </div>
     <div class="tab-pane" id="advanced">
-        <input type="text" id="role-search-text" value="{{ search }}"/>
+        <input type="text" id="role-search-text" value="{% if search is defined %}{{ search }}{% endif %}"/>
         <input type="submit" value="{{ 'search'|trans({}, 'platform') }}" class="btn btn-primary search-role-btn">
         <div id="advanced-pane-content">
             <div id="role-list"></div>
