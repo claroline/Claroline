@@ -826,6 +826,16 @@ class ValidatorTest extends MockeryTestCase
         $this->assertFalse($ruleValidator->validateRule($rule));
     }
 
+    public function testValidateWithNoRule()
+    {
+        $badge         = new Badge();
+        $user          = new User();
+        $logRepository = $this->mock('Claroline\CoreBundle\Repository\Log\LogRepository');
+        $ruleValidator = new Validator($logRepository);
+
+        $this->assertFalse($ruleValidator->validate($badge, $user));
+    }
+
     public function testValidateWithTowRuleDoerActionMatchNoLog()
     {
         $badge     = new Badge();
