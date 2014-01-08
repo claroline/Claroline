@@ -11,6 +11,7 @@
 
 namespace Claroline\CoreBundle\Rule\Entity;
 
+use Claroline\CoreBundle\Entity\Badge\Badge;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Log\Log;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
@@ -93,6 +94,14 @@ abstract class Rule
      * @Expose
      */
     protected $userType;
+
+    /**
+     * @var Badge
+     *
+     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Badge\Badge")
+     * @ORM\JoinColumn(nullable=true)
+     */
+    protected $badge;
 
     /**
      * @var \Claroline\CoreBundle\Entity\User
@@ -287,5 +296,25 @@ abstract class Rule
     {
         return array(self::DOER_USER,
                      self::RECEIVER_USER);
+    }
+
+    /**
+     * @param \Claroline\CoreBundle\Entity\Badge\Badge $badge
+     *
+     * @return Rule
+     */
+    public function setBadge($badge)
+    {
+        $this->badge = $badge;
+
+        return $this;
+    }
+
+    /**
+     * @return \Claroline\CoreBundle\Entity\Badge\Badge
+     */
+    public function getBadge()
+    {
+        return $this->badge;
     }
 }
