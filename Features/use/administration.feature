@@ -42,7 +42,7 @@ Feature: Administration
         Then the platform should have "10" "User"
 
     Scenario: Fails to create users from csv
-        Given I am on "/admin/user/management/import/form"/home/vostro/documents/claroline/Claroline/vendor/claroline/core-bundle/Claroline/CoreBundle/Features/use/administration.feature
+        Given I am on "/admin/user/management/import/form"
         When I attach the file "users_error.txt" to "File"
         And I press "Ok"
         Then the platform should have "1" "User"

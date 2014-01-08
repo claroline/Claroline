@@ -14,18 +14,15 @@ namespace Claroline\CoreBundle\Form;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Claroline\CoreBundle\Manager\LocaleManager;
 
 class BaseProfileType extends AbstractType
 {
     private $langs;
 
-    public function __construct( array $langs)
+    public function __construct(LocaleManager $localeManager)
     {
-        if (!empty($langs)) {
-            $this->langs = $langs;
-        } else {
-            $this->langs = array('en' => 'en', 'fr' => 'fr');
-        }
+        $this->langs = $localeManager->getAvailableLocales();
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)

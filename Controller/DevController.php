@@ -92,6 +92,7 @@ class DevController extends Controller
         $user->setFirstName($username);
         $user->setLastName($username);
         $user->setMail($username . '@claroline.net');
+        $user->setLocale('en');
         $userManager->createUserWithRole($user, $role);
 
         return new Response('done');
