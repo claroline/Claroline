@@ -98,7 +98,7 @@ class ProfileController extends Controller
         $isAdmin = $this->get('security.context')->isGranted('ROLE_ADMIN');
 
         if ($user !== $loggedUser && !$isAdmin) {
-            throw new \Symfony\Component\Security\Core\Exception\AccessDeniedException();
+            throw new AccessDeniedException();
         }
 
         $roles = $this->roleManager->getPlatformRoles($user);
@@ -126,7 +126,7 @@ class ProfileController extends Controller
         $isAdmin = $this->get('security.context')->isGranted('ROLE_ADMIN');
 
         if ($user !== $loggedUser && !$isAdmin) {
-            throw new \Symfony\Component\Security\Core\Exception\AccessDeniedException();
+            throw new AccessDeniedException();
         }
 
         $roles = $this->roleManager->getPlatformRoles($loggedUser);
@@ -259,7 +259,7 @@ class ProfileController extends Controller
     public function editPasswordAction(User $user)
     {
         if ($this->get('security.context')->getToken()->getUser() !== $user) {
-            throw new \Symfony\Component\Security\Core\Exception\AccessDeniedException();
+            throw new AccessDeniedException();
         }
 
         $form = $this->createForm(new ResetPasswordType(), $user);
