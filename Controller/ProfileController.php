@@ -224,7 +224,7 @@ class ProfileController extends Controller
      *     "/password/form/{user}",
      *      name="claro_password_form"
      * )
-     * @EXT\Template("ClarolineCoreBundle:Profile:form_password.html.twig")
+     * @EXT\Template("ClarolineCoreBundle:Profile:passwordForm.html.twig")
      *
      * Displays the password reset form for a user.
      *
@@ -250,7 +250,7 @@ class ProfileController extends Controller
      *     "/password/edit/{user}",
      *      name="claro_password"
      * )
-     * @EXT\Template("ClarolineCoreBundle:Profile:form_password.html.twig")
+     * @EXT\Template("ClarolineCoreBundle:Profile:passwordForm.html.twig")
      *
      * Updates the password of a user.
      *
