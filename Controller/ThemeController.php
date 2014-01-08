@@ -49,7 +49,7 @@ class ThemeController extends Controller
     public function editAction($id = null)
     {
         $variables = array();
-        $file = null;
+        $path = null;
         $themeService = $this->get('claroline.common.theme_service');
         $themes = $themeService->getThemes();
 
@@ -57,12 +57,16 @@ class ThemeController extends Controller
 
             $variables['theme'] = $themes[$id];
 
-            $file = $themeService->getLessPath().str_replace(
+            $path = $themeService->getLessPath().str_replace(
                 ' ', '-', strtolower($themes[$id]->getName())
-            )."/variables.less";
+            );
+
+            $variables['themeLess'] = file_get_contents($path.'/theme.less');
+        } else {
+            $variables['themeLess'] = $themeService->getThemeLessContent();
         }
 
-        $variables['parameters'] = new ThemeParameters($file);
+        $variables['parameters'] = new ThemeParameters($path.'/variables.less');
 
         return $variables;
     }
@@ -95,7 +99,8 @@ class ThemeController extends Controller
             $this->get('claroline.common.theme_service')->editTheme(
                 $this->get('request')->get('variables'),
                 $this->get('request')->get('name'),
-                $this->get('request')->get('theme-id')
+                $this->get('request')->get('theme-id'),
+                $this->get('request')->get('theme-less')
             )
         );
     }
