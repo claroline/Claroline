@@ -36,3 +36,5 @@ path_not_found: Le parcours n'a pas été trouvé
 path_delete_success: Le parcours a été supprimé
 path_delete_error: Le parcours n'a pas pu être supprimé. Veuillez réessayer
 next: Suivant
+next_step: Etapes suivantes
+groupware: Collecticiel

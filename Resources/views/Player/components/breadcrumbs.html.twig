@@ -1,12 +1,12 @@
-{% macro breadcrumbItem(workspace, path, step, class, count) %}
-     <li class="lvl-{{ step.lvl + 1 }} {{ class }} {{ class ~ "-" ~ count }}">
+{% macro breadcrumbItem(workspace, path, step) %}
+     <li class="lvl-{{ step.lvl + 1 }}">
         <a class="step" href="{{ path('innova_path_player_index', { workspaceId: workspace.id, pathId: path.id, stepId: step.id }) }}">
         {{ step.name }}
         </a>
     </li>
 {% endmacro %}
 
-{% macro dropdownBreadcrumb(workspace, path, step) %}
+{% macro dropdownBreadcrumb(workspace, path, step, class, count) %}
     {% import _self as macros %}
 
     {% set isTerminalClass = "" %}
@@ -14,7 +14,7 @@
         {% set isTerminalClass = "terminal" %}
     {% endif %}
 
-    <li class="dropdown lvl-{{ step.lvl + 1 }} {{ isTerminalClass }}">
+    <li class="dropdown lvl-{{ step.lvl + 1 }} {{ isTerminalClass }} {{ class }}">
         <a class="dropdown-label" href="{{ path('innova_path_player_index', { workspaceId: workspace.id, pathId: path.id, stepId: step.id }) }}">
             {{ step.name }}
         </a>
@@ -60,10 +60,10 @@
     {{ macros.dropdownBreadcrumb(workspace, path, currentStep) }}
     
     {# Display children #}
-    {% if currentStep.children is not empty %}
+    {% if currentStep.children is not empty and ghost is empty %}
         <li class="dropdown">
             <a class="dropdown-label btn btn-default children" data-toggle="dropdown" href="#">
-                {{ 'next' | trans({}, 'innova_tools') }} 
+                {{ 'next_step' | trans({}, 'innova_tools') }}
                 <b class="caret"></b>
             </a>
             <ul class="dropdown-menu">
@@ -76,7 +76,7 @@
 
     {# Display previous path #}
     {% for i, step in ghost %}
-        {{ macros.breadcrumbItem(workspace, path, step, "ghost", i) }}
+        {{ macros.dropdownBreadcrumb(workspace, path, step, "ghost", i) }}
     {% endfor %}
 </ul>
 
