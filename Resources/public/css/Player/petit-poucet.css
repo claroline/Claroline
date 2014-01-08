@@ -2,6 +2,11 @@
 	width : 10px;
 	display:inline-block;
 	border-radius:2px;
-	margin-right:3px;
+	margin-right:5px;
+}
+
+.path-player .petit-poucet li{
+	list-style: none;
+	margin-bottom:5px;
 }
 

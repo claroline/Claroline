@@ -1,40 +1,22 @@
-{# Affichage d'une ressource #}
-{% macro displayResource(resource, step) %}
-	{% import _self as resourcesMacro %}
-	<li class="list-group-item"> 
-		<span rel="tooltip" data-original-title="{{ step.name }}" class="lvl-{{ step.lvl + 1 }} lvl-indicator">&nbsp;</span>
-		<a target="_blank" href="{{ path('claro_resource_open', {'node': resource.resourceNode.id, 'resourceType': resource.resourceNode.resourceType.name }) }}">{{ resource.resourceNode.name }}</a>
-	</li>
-{% endmacro %}
+{% import 'InnovaPathBundle::Player/components/macros.html.twig' as macros %}
 
-{% import _self as resourcesMacro %}
 
-<div class="panel panel-default">
-    <div class="panel-heading">
-        <h4 class="panel-title">
-            <span class="icon-folder-open"></span>
-            Ressources
-        </h4>
-    </div>
-	{# Gestion des ressources héritées #}
-	<ul class="list-group">
-	{% set allParents = currentStep.getParents() %}
-	{% for parent in allParents %}
-		{% for resource in parent.step2ResourceNodes if resource.propagated == true %}
-			{# todo - à revoir, y'a surement plus intelligent à faire... mais on est limité par le modèle de données un peu bancal ici #}
-			{% set thisResourceIsExcluded = false %}
-			{% for resourceCurrentStep in currentStep.step2ResourceNodes if resourceCurrentStep.excluded == true and resourceCurrentStep.resourceNode == resource.resourceNode %}
-					{% set thisResourceIsExcluded = true %}
-			{% endfor %}
-			{% if thisResourceIsExcluded == false and resource.resourceNode.resourceType.name != "icap_dropzone" %}
-				{{ resourcesMacro.displayResource(resource, parent) }}
-			{% endif %}
+{# Gestion des ressources héritées #}
+{% set allParents = currentStep.getParents() %}
+{% for parent in allParents %}
+	{% for resource in parent.step2ResourceNodes if resource.propagated == true %}
+		{# todo - à revoir, y'a surement plus intelligent à faire... mais on est limité par le modèle de données un peu bancal ici #}
+		{% set thisResourceIsExcluded = false %}
+		{% for resourceCurrentStep in currentStep.step2ResourceNodes if resourceCurrentStep.excluded == true and resourceCurrentStep.resourceNode == resource.resourceNode %}
+				{% set thisResourceIsExcluded = true %}
 		{% endfor %}
+		{% if thisResourceIsExcluded == false and resource.resourceNode.resourceType.name != "icap_dropzone" %}
+			{{ macros.displayResource(resource, parent) }}
+		{% endif %}
 	{% endfor %}
+{% endfor %}
 
-	{# Gestion des ressources locales #}
-	{% for resource in currentStep.step2ResourceNodes if resource.excluded == false and resource.resourceNode.resourceType.name != "icap_dropzone" %}
-			{{ resourcesMacro.displayResource(resource, currentStep) }}
-	{% endfor %}
-	</ul>
-</div>
+{# Gestion des ressources locales #}
+{% for resource in currentStep.step2ResourceNodes if resource.excluded == false and resource.resourceNode.resourceType.name != "icap_dropzone" %}
+		{{ macros.displayResource(resource, currentStep) }}
+{% endfor %}

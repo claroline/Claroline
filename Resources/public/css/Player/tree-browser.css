@@ -1,0 +1,20 @@
+.tree-browser .parent{
+	font-weight:bold;
+}
+
+.tree-browser ul{
+	list-style: none;
+}
+
+.tree-browser a{
+	margin-bottom:5px;
+	display:inline-block;
+}
+
+.path-player .tree-browser .lvl-indicator{
+	width : 8px;
+	height: 8px;
+	border-radius: 2px;
+	vertical-align: middle;
+	display:inline-block;
+}

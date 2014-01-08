@@ -1,18 +1,21 @@
-{% import _self as localMacros %}
-{% macro displayTreeItem(item) %}
-    {% import _self as localMacros %}
-    <li>
-        <a href="#">{{ item.name }}</a>
-        {% if item.children is not empty %}
-        <ul>
-            {% for child in item.children %}
-            {{ localMacros.displayTreeItem(child) }}
-            {% endfor %}
-        </ul>
-        {% endif %}
-    </li>
-{% endmacro %}
+{% import 'InnovaPathBundle::Player/components/macros.html.twig' as macros %}
 
-<ul>
-    {{ localMacros.displayTreeItem(path.getRootStep()) }}
-</ul>
+<div id="full-tree" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">Arborescence</h4>
+            </div>
+            <div class="modal-body">
+                <ul>
+                {% set parents = currentStep.getParents() %}
+                {{ macros.displayTreeItem(path.getRootStep(), parents, currentStep, path, workspace) }}
+                </ul>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->

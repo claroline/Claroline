@@ -7,30 +7,38 @@
 	<link rel="stylesheet" media="screen" href="{{ asset('bundles/innovapath/css/Player/petit-poucet.css') }}"/>
     <link rel="stylesheet" media="screen" href="{{ asset('bundles/innovapath/css/Player/resources.css') }}"/>
     <link rel="stylesheet" media="screen" href="{{ asset('bundles/innovapath/css/Player/current-step.css') }}"/>
+    <link rel="stylesheet" media="screen" href="{{ asset('bundles/innovapath/css/Player/tree-browser.css') }}"/>
 {% endblock %}
 
 {% block content %}
-<div class="path-player">
-    <div class="breadcrumbs">
-        {{ render(controller('innova.controller.path_player:displayBreadcrumbsAction', { 'workspace': workspace, 'path': path, 'currentStep': currentStep })) }}
-    </div>
-{#
-    <div class="tree-browser">
-        {{ render(controller('innova.controller.path_player:displayTreeBrowserAction', { 'path': path, 'currentStep': currentStep } )) }}
-    </div>
-#}
 
-    <div class="content row">
-        <div class="col-md-3">
-            <div class="resources">
-                {{ render(controller('innova.controller.path_player:displayResourcesAction', { 'currentStep': currentStep } )) }}
+<div class="path-player">
+    <div class="tree-browser">
+        {{ render(controller('innova.controller.path_player:displayTreeBrowserAction', { 'workspace': workspace, 'path': path, 'currentStep': currentStep } )) }}
+    </div>
+    <div class="petit-poucet">
+        {{ render(controller('innova.controller.path_player:displayPetitPoucetAction', { 'workspace': workspace, 'path': path, 'currentStep': currentStep })) }}
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="pull-left nav-buttons btn-group">
+                <a class="tree-browser btn btn-default" href="#" data-toggle="modal" data-target="#full-tree"> 
+                    <span class="icon-list"></span>  
+                </a>
+                <a class="btn btn-default" href="#" data-toggle="modal" data-target="#modal-history"> 
+                    <span class="icon-time"></span> 
+                </a>
             </div>
-            <div class="petit-poucet">
-                {{ render(controller('innova.controller.path_player:displayPetitPoucetAction', { 'workspace': workspace, 'path': path, 'currentStep': currentStep })) }}
+
+            <div class="breadcrumbs">
+                {{ render(controller('innova.controller.path_player:displayBreadcrumbsAction', { 'workspace': workspace, 'path': path, 'currentStep': currentStep })) }}
             </div>
         </div>
-        
-        <div class="current-step col-md-9">
+    </div>
+
+    <div class="content row">
+        <div class="current-step col-md-12">
             {{ render(controller('innova.controller.path_player:displayCurrentStepAction', { 'workspace': workspace, 'path': path, 'currentStep': currentStep } )) }}
         </div>
     </div>

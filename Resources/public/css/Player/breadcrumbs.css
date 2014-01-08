@@ -1,3 +1,11 @@
+.nav-buttons{
+    margin-right:5px;
+}
+
+.nav-buttons .btn{
+    padding:8px;
+}
+
 .path-player .breadcrumbs ul {
     border-radius: 3px;
     font-size: 0;

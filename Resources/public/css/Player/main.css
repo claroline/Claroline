@@ -3,43 +3,51 @@
     border-color: #4B4B4B;
 }
 
-.lvl-1, li.lvl-1 > a:hover{
+.panel-heading.lvl-1, .lvl-1, li.lvl-1 > a:hover{
     background-color: #4790aD;
     border-color: #17607D;
 }
 
-.lvl-2, li.lvl-2 > a:hover{
+.panel-heading.lvl-2, .lvl-2, li.lvl-2 > a:hover{
     background-color: #8C6796;
     border-color: #5C3766;
 }
 
-.lvl-3, li.lvl-3 > a:hover{
+.panel-heading.lvl-3, .lvl-3, li.lvl-3 > a:hover{
     background-color: #d86178;
     border-color: #a83148;
 }
 
-.lvl-4, li.lvl-4 > a:hover{
+.panel-heading.lvl-4, .lvl-4, li.lvl-4 > a:hover{
     background-color: #FF7A40;
     border-color: #CF4A30;
 }
 
-.lvl-5, li.lvl-5 > a:hover{
+.panel-heading.lvl-5, .lvl-5, li.lvl-5 > a:hover{
     background-color: #FDBE3E;
     border-color: #cD8E0E;
 }
 
-.lvl-6, li.lvl-6 > a:hover{
+.panel-heading.lvl-6, .lvl-6, li.lvl-6 > a:hover{
     background-color: #b8d855;
     border-color: #88A825;
 }
 
-.lvl-7, li.lvl-7 > a:hover{
+.panel-heading.lvl-7, .lvl-7, li.lvl-7 > a:hover{
     background-color: #47aD90;
     border-color: #177D60;
 }
 
-.lvl-8, li.lvl-8 > a:hover{
+.panel-heading.lvl-8, .lvl-8, li.lvl-8 > a:hover{
     background-color: #91deea;
     border-color: #61aeba;
+    
 }
 
+.panel-heading.lvl .title{
+    text-shadow:    -1px 0 0 rgba(0, 0, 0, 0.2), 
+                    1px 0 0 rgba(0, 0, 0, 0.7),
+                    0 -1px 0 rgba(0, 0, 0, 0.2),
+                    0 1px 0 rgba(0, 0, 0, 0.7);
+    color:white;
+}
