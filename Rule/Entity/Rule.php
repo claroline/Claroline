@@ -110,7 +110,7 @@ abstract class Rule
     /**
      * @param string $action
      *
-     * @return BadgeRule
+     * @return Rule
      */
     public function setAction($action)
     {
@@ -130,7 +130,7 @@ abstract class Rule
     /**
      * @param int $occurrence
      *
-     * @return BadgeRule
+     * @return Rule
      */
     public function setOccurrence($occurrence)
     {
@@ -150,7 +150,7 @@ abstract class Rule
     /**
      * @param string $result
      *
-     * @return BadgeRule
+     * @return Rule
      */
     public function setResult($result)
     {
@@ -170,7 +170,7 @@ abstract class Rule
     /**
      * @param integer $resultComparison
      *
-     * @return BadgeRule
+     * @return Rule
      */
     public function setResultComparison($resultComparison)
     {
@@ -200,9 +200,26 @@ abstract class Rule
     }
 
     /**
+     * @param string $comparisonType
+     *
+     * @throws \InvalidArgumentException
+     * @return integer
+     */
+    public static function getResultComparisonTypeValue($comparisonType)
+    {
+        $comparisonTypeValue = array_search($comparisonType, self::getResultComparisonTypes());
+
+        if (false === $comparisonTypeValue) {
+            throw new \InvalidArgumentException("Unknow comparison type.");
+        }
+
+        return $comparisonTypeValue;
+    }
+
+    /**
      * @param mixed $resource
      *
-     * @return BadgeRule
+     * @return Rule
      */
     public function setResource($resource)
     {

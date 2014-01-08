@@ -117,10 +117,7 @@ class Validator
             }
         }
 
-        $queryBuilder = $this->buildQuery($usedConstraints, $restrictions);
-
-        /** @var \Claroline\CoreBundle\Entity\Log\Log[] $associatedLogs */
-        $associatedLogs = $queryBuilder->getQuery()->getResult();
+        $associatedLogs = $this->getAssociatedLogs($usedConstraints, $restrictions);
 
         foreach ($usedConstraints as $usedConstraint) {
             $usedConstraint->setAssociatedLogs($associatedLogs);
@@ -154,5 +151,18 @@ class Validator
         }
 
         return $queryBuilder;
+    }
+
+    /**
+     * @param \Claroline\CoreBundle\Rule\Constraints\AbstractConstraint[] $constraints
+     * @param array $restrictions
+     *
+     * @return \Claroline\CoreBundle\Entity\Log\Log[]
+     */
+    protected function getAssociatedLogs(array $constraints, array $restrictions = null)
+    {
+        $queryBuilder = $this->buildQuery($constraints, $restrictions);
+
+        return $queryBuilder->getQuery()->getResult();
     }
 }
