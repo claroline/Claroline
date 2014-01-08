@@ -354,8 +354,7 @@ owner: Owner
 owner_s: Owner(s)
 parameters: Parameters
 password: Password
-password_email_message: 'You asked to reset your password click on this link to reset it'
-password_missmatch : 'passwords missmatched'
+password_mismatch : 'Passwords mismatch'
 password_ok : 'Your password has been changed, you can login now'
 paste: Paste
 path: Path

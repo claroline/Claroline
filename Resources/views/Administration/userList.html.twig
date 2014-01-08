@@ -26,7 +26,7 @@
     {% endif %}
 {% endmacro %}
 
-{% macro displayControls(workspaceId) %}
+{% macro displayControls() %}
     {% if app.user %}
         <button class="btn btn-default action-button" data-action="remove">
             <i class="icon-trash"></i>
@@ -84,7 +84,7 @@
         </div>
         <div class="search-bar row">
             <div class="col-md-8">
-                {{ displayControls(workspace.getId()) }}
+                {{ displayControls() }}
             </div>
             <div class="col-md-4">
                  <div class="input-group">
@@ -175,9 +175,9 @@
                 </tbody>
             </table>
         </div>
-        {{ renderPager(search, pager, max, order) }}
+            {{ renderPager(search, pager, max, order) }}
         <div>
-            {{ displayControls(workspace.getId()) }}
+            {{ displayControls() }}
         </div>
     </div>
 {% endblock %}
