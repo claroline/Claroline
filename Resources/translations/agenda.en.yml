@@ -13,18 +13,19 @@ confirm: "Are you sure about this change ?"
 end : "end"
 event_update : 'Updated'
 error: "An unexpeded error occured, please try again"
-new entry : "new entry"
-start date : "start date"
+new entry : "New entry"
+start_date : "Start date"
+end_date : "End date"
 non plan task : "non plan tasks"
 tasks: 'Tasks'
-title : "title"
+title : "Title"
 all day : "Task"
-high : "high"
-medium : "medium"
-modify : 'modify an event'
-low : "low"
+high : "High"
+medium : "Medium"
+modify : 'Modify an event'
+low : "Low"
 no event found : 'no event found'
-tasks: Tasks
+tasks: "Tasks"
 title : "Title can not be empty"
 update : "update"
 prev : '<'

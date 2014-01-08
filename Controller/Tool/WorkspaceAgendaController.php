@@ -261,10 +261,14 @@ class WorkspaceAgendaController extends Controller
         $postData = $this->request->request->all();
         $repository = $this->om->getRepository('ClarolineCoreBundle:Event');
         $event = $repository->find($postData['id']);
-        $this->checkUserIsAllowed('agenda', $event->getWorkspace());
+        // if is null = desktop event
+        if(!is_null($event->getWorkspace()))
+        {
+            $this->checkUserIsAllowed('agenda', $event->getWorkspace());
 
-        if (!$this->checkUserIsAllowedtoWrite($event->getWorkspace())) {
-            throw new AccessDeniedException();
+            if (!$this->checkUserIsAllowedtoWrite($event->getWorkspace())) {
+                throw new AccessDeniedException();
+            }
         }
 
         // timestamp 1h = 3600

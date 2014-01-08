@@ -37,6 +37,7 @@ $('.filterO').click(function () {
     $('.filterO:checkbox:checked').each(function () {
         selected.push($(this).attr('name'));
     });
+    console.debug(selected);
     //if all checkboxes or none checkboxes are checked display all events
     if ((totalCheckboxes - numberOfChecked === 0) || (numberOfChecked === 0)) {
         $('#calendar').fullCalendar('clientEvents', function (eventObject) {
@@ -47,12 +48,13 @@ $('.filterO').click(function () {
         for (var i = 0; i < selected.length; i++) {
             $('#calendar').fullCalendar('clientEvents', function (eventObject) {
                 var title = eventObject.owner;
-
-                if (selected.indexOf(title < 0)) {
-                    eventObject.visible = false;
+                console.debug(selected[i].indexOf(title));
+                if (selected[i].indexOf(title) > -1) {
+                    eventObject.visible = true;
+                    console.debug(eventObject.title);
                     return true;
                 } else {
-                    eventObject.visible = true;
+                    eventObject.visible = false;
                     return false;
                 }
             });

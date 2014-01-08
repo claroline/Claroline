@@ -71,7 +71,7 @@
         <div class="col-md-3">
          <h4> <u>{{'tasks'|trans({}, 'agenda')}} </u></h4>
             <div id="tasks">
-                {% render controller('ClarolineCoreBundle:Tool\\WorkspaceAgenda:tasks',{'workspace': workspace}) %}
+                {% render controller('ClarolineCoreBundle:Tool\\WorkspaceAgenda:tasks',{'workspaceId': workspace}) %}
             </div>
             <h4><u>{{ 'agenda_form_priority'|trans({}, 'agenda') }}</u></h4>
             <div>

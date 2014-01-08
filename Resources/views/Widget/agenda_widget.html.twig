@@ -4,7 +4,8 @@
         <tr>
             <th> {{ 'agenda_form_title'|trans({}, 'agenda') }} <i class="icon-resize-vertical"></i></th>
             <th> {{ 'workspace'|trans({}, 'agenda') }} <i class="icon-resize-vertical"></i></th>
-            <th> {{ 'length'|trans({}, 'agenda') }} <i class="icon-resize-vertical"></i></th>
+            <th> {{ 'start_date'|trans({}, 'agenda') }} <i class="icon-resize-vertical"></i></th>
+            <th> {{ 'end_date'|trans({}, 'agenda') }} <i class="icon-resize-vertical"></i></th>
             <th> {{ 'agenda_form_description'|trans({}, 'agenda') }} </th>
             <th> {{ 'agenda_form_priority'|trans({}, 'agenda') }} <i class="icon-resize-vertical"></i></th>
         </tr>
@@ -20,7 +21,8 @@
                 {{ 'desktop'|trans({}, 'platform') }}
             {% endif %}
         </td>
-        <td> {{ e.start|date("d/m/Y g:i")}}  -> {{ e.end|date("d/m/Y g:i") }} </td>
+        <td> {{ e.start|date("d/m/Y g:i")}} </td>
+        <td> {{ e.end|date("d/m/Y g:i") }} </td>
         <td>
             {% if e.description is not empty %}
                 {{ e.description |raw }}
@@ -29,7 +31,7 @@
         <td> {% if e.priority == '#848484' %}
                 {{ 'low'|trans({}, 'agenda') }}
             {% elseif e.priority == '#FF0000' %}
-                {{ 'agenda_form_priority_High'|trans({}, 'agenda') }}
+                {{ 'high'|trans({}, 'agenda') }}
             {% else %}
                 {{ 'medium'|trans({}, 'calendar') }}
             {% endif %}
@@ -41,11 +43,19 @@
     </tbody>
 </table>
 {% block javascripts %}
-    <script type="text/javascript" src="{{ asset('bundles/frontend/jquery/plugin/table-sorter/jquery.tablesorter.js') }}"></script> <script type="text/javascript" src="{{ asset('bundles/clarolinecore/js/tool/calendarDatePicker.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/frontend/jquery/plugin/table-sorter/jquery.tablesorter.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/frontend/jquery/plugin/table-sorter/jquery.metadata.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/clarolinecore/js/tool/calendarDatePicker.js') }}"></script>
     <script type="text/javascript">
     $(document).ready(function()
             {
-                $("#mytable").tablesorter( {sortList: [[0,0], [1,0],[2,0],[4,0]]} );
+                $("#mytable").tablesorter( {
+                    sortList: [[0,0], [1,0],[2,0],[4,0]],
+                    dateFormat : "ddmmyyyy",
+                    headers: {
+                        2: { sorter: "shortDate" }
+                    }
+                });
             }
     );
 </script>
