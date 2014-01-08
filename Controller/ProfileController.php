@@ -25,6 +25,7 @@ use Pagerfanta\Pagerfanta;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 
 /**
@@ -225,14 +226,18 @@ class ProfileController extends Controller
      * )
      * @EXT\Template("ClarolineCoreBundle:Profile:form_password.html.twig")
      *
-     * Displays the public profile of an user.
+     * Displays the password reset form for a user.
      *
      * @param \Claroline\CoreBundle\Entity\User $user
+     * @throws \Symfony\Component\Security\Core\Exception\AccessDeniedException
+     * @return array
      */
     public function editPasswordFormAction(User $user)
     {
-        if ($this->get('security.context')->getToken()->getUser() !== $user) {
-            throw new \Symfony\Component\Security\Core\Exception\AccessDeniedException();
+        $security = $this->get('security.context');
+
+        if ($security->getToken()->getUser() !== $user && !$security->isGranted('ROLE_ADMIN')) {
+            throw new AccessDeniedException();
         }
 
         $form = $this->createForm(new ResetPasswordType(), $user);
