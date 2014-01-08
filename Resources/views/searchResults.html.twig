@@ -25,7 +25,7 @@
 {% block title %}{{ 'search' | trans({}, 'platform') ~ ' (' ~ _resource.getResourceNode().getName() ~ ')' ~ ' - ' ~ parent() | striptags | raw  }}{% endblock %}
 
 {% block resourceBreadcrumb %}
-    <li><a href="{{ path('claro_forum_subjects', { 'forumId': _resource.getId() }) }}">{{ _resource.getResourceNode().getName() }}</a></li>
+    <li><a href="{{ path('claro_forum_categories', { 'forum': _resource.getId() }) }}">{{ _resource.getResourceNode().getName() }}</a></li>
     <li class="active">{{ 'search'|trans({}, 'platform')}}</li>
 {% endblock %}
 

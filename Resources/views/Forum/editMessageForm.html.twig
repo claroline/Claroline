@@ -9,8 +9,8 @@
 {% block title %}{{ 'edit' | trans({}, 'forum') ~ ' (' ~ subject.getTitle() ~ ')' ~ ' - ' ~ parent() | striptags | raw  }}{% endblock %}
 
 {% block resourceBreadcrumb %}
-    <li><a href="{{ path('claro_forum_subjects', { 'forumId': _resource.getId() }) }}">{{ _resource.getResourceNode().getName() }}</a></li>
-    <li><a href="{{ path('claro_forum_messages', {'subjectId': subject.getId()}) }}">{{ subject.getTitle() }}</a></li>
+    <li><a href="{{ path('claro_forum_subjects', { 'category': subject.getCategory().getId() }) }}">{{ _resource.getResourceNode().getName() }}</a></li>
+    <li><a href="{{ path('claro_forum_messages', {'subject': subject.getId()}) }}">{{ subject.getTitle() }}</a></li>
     <li class="active">{{ 'new_message'|trans({}, 'forum') }}</li>
 {% endblock %}
 
@@ -25,7 +25,7 @@
         </div>
         <div class="panel-footer">
             <button class="btn btn-primary" type="submit">{{ 'ok' | trans({}, 'platform' )}}</button>
-            <a class="btn btn-default" href="{{ path('claro_forum_messages', {'subjectId': subject.getId()}) }}">{{ 'cancel' | trans({}, 'platform' )}}</a>
+            <a class="btn btn-default" href="{{ path('claro_forum_messages', {'subject': subject.getId()}) }}">{{ 'cancel' | trans({}, 'platform' )}}</a>
         </div>
     </form>
 {% endblock %}

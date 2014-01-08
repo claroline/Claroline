@@ -12,31 +12,24 @@
 namespace Claroline\ForumBundle\Event\Log;
 
 use Claroline\CoreBundle\Event\Log\AbstractLogResourceEvent;
-use Claroline\ForumBundle\Entity\Subject;
+use Claroline\ForumBundle\Entity\Forum;
 
-class DeleteSubjectEvent extends AbstractLogResourceEvent
+class UnsubscribeForumEvent extends AbstractLogResourceEvent
 {
-    const ACTION = 'forum-delete-subject';
+    const ACTION = 'forum-unsubsribe';
 
     /**
-     * @param Subject $subject
+     * @param Forum $forum
      */
-    public function __construct(Subject $subject)
+    public function __construct(Forum $forum)
     {
         $details = array(
-            'subject' => array(
-                'id' => $subject->getId(),
-                'title' => $subject->getTitle()
-            ),
-            'category' => array(
-                'id' => $subject->getCategory()->getId()
-            ),
             'forum' => array(
-                'id' => $subject->getCategory()->getForum()->getId()
+                'forum' => $forum->getId()
             )
         );
 
-        parent::__construct($subject->getCategory()->getForum()->getResourceNode(), $details);
+        parent::__construct($forum->getResourceNode(), $details);
     }
 
     /**

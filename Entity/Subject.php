@@ -50,12 +50,12 @@ class Subject
 
     /**
      * @ORM\ManyToOne(
-     *     targetEntity="Claroline\ForumBundle\Entity\Forum",
+     *     targetEntity="Claroline\ForumBundle\Entity\Category",
      *     inversedBy="subjects"
      * )
      * @ORM\JoinColumn(onDelete="CASCADE")
      */
-    protected $forum;
+    protected $category;
 
     /**
      * @ORM\OneToMany(
@@ -74,6 +74,11 @@ class Subject
      * @ORM\JoinColumn(name="user_id")
      */
     protected $creator;
+
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    protected $isSticked = false;
 
     /**
      * Constructor.
@@ -103,15 +108,15 @@ class Subject
         $this->title = $title;
     }
 
-    public function setForum(Forum $forum)
+    public function setCategory(Category $category)
     {
-        $this->forum = $forum;
-        $forum->addSubject($this);
+        $this->category = $category;
+        $category->addSubject($this);
     }
 
-    public function getForum()
+    public function getCategory()
     {
-        return $this->forum;
+        return $this->category;
     }
 
     /**
@@ -137,5 +142,15 @@ class Subject
     public function getMessages()
     {
         return $this->messages;
+    }
+
+    public function setIsSticked($boolean)
+    {
+        $this->isSticked = $boolean;
+    }
+
+    public function isSticked()
+    {
+        return $this->isSticked;
     }
 }

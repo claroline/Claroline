@@ -18,12 +18,22 @@ use Claroline\ForumBundle\Entity\Forum;
 use Claroline\ForumBundle\Entity\Subject;
 use Claroline\ForumBundle\Entity\Message;
 use Claroline\ForumBundle\Entity\Notification;
+use Claroline\ForumBundle\Entity\Category;
 use Claroline\ForumBundle\Event\Log\CreateMessageEvent;
 use Claroline\ForumBundle\Event\Log\CreateSubjectEvent;
-use Claroline\ForumBundle\Event\Log\EditMessageEvent;
-use Claroline\ForumBundle\Event\Log\EditSubjectEvent;
+use Claroline\ForumBundle\Event\Log\CreateCategoryEvent;
 use Claroline\ForumBundle\Event\Log\DeleteMessageEvent;
 use Claroline\ForumBundle\Event\Log\DeleteSubjectEvent;
+use Claroline\ForumBundle\Event\Log\DeleteCategoryEvent;
+use Claroline\ForumBundle\Event\Log\SubscribeForumEvent;
+use Claroline\ForumBundle\Event\Log\UnsubscribeForumEvent;
+use Claroline\ForumBundle\Event\Log\StickSubjectEvent;
+use Claroline\ForumBundle\Event\Log\UnstickSubjectEvent;
+use Claroline\ForumBundle\Event\Log\MoveMessageEvent;
+use Claroline\ForumBundle\Event\Log\MoveSubjectEvent;
+use Claroline\ForumBundle\Event\Log\EditMessageEvent;
+use Claroline\ForumBundle\Event\Log\EditCategoryEvent;
+use Claroline\ForumBundle\Event\Log\EditSubjectEvent;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Pager\PagerFactory;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -90,27 +100,64 @@ class Manager
     }
 
     /**
+     * Subscribe a user to a forum. A mail will be sent to the user each time
+     * a message is posted.
+     *
      * @param \Claroline\ForumBundle\Entity\Forum $forum
      * @param \Claroline\CoreBundle\Entity\User $user
      */
     public function subscribe(Forum $forum, User $user)
     {
+        $this->om->startFlushSuite();
         $notification = new Notification();
         $notification->setUser($user);
         $notification->setForum($forum);
         $this->om->persist($notification);
-        $this->om->flush();
+        $this->dispatch(new SubscribeForumEvent($forum));
+        $this->om->endFlushSuite();
     }
 
     /**
+     * Unsubscribe a user from a forum.
+     *
      * @param \Claroline\ForumBundle\Entity\Forum $forum
      * @param \Claroline\CoreBundle\Entity\User $user
      */
     public function unsubscribe(Forum $forum, User $user)
     {
+        $this->om->startFlushSuite();
         $notification = $this->notificationRepo->findOneBy(array('forum' => $forum, 'user' => $user));
         $this->om->remove($notification);
-        $this->om->flush();
+        $this->dispatch(new UnsubscribeForumEvent($forum));
+        $this->om->endFlushSuite();
+    }
+
+    /**
+     * Create a category.
+     *
+     * @param \Claroline\ForumBundle\Entity\Forum $forum
+     * @param string $name The category name
+     */
+    public function createCategory(Forum $forum, $name)
+    {
+        $this->om->startFlushSuite();
+        $category = new Category();
+        $category->setName($name);
+        $category->setForum($forum);
+        $this->om->persist($category);
+        $this->dispatch(new CreateCategoryEvent($category));
+        $this->om->endFlushSuite();
+    }
+
+    /**
+     * @param \Claroline\ForumBundle\Entity\Category $category
+     */
+    public function deleteCategory(Category $category)
+    {
+        $this->om->startFlushSuite();
+        $this->om->remove($category);
+        $this->dispatch(new DeleteCategoryEvent($category));
+        $this->om->endFlushSuite();
     }
 
     /**
@@ -118,9 +165,10 @@ class Manager
      */
     public function createMessage(Message $message)
     {
+        $this->om->startFlushSuite();
         $this->om->persist($message);
-        $this->om->flush();
         $this->dispatch(new CreateMessageEvent($message));
+        $this->om->endFlushSuite();
         $this->sendMessageNotification($message, $message->getCreator());
     }
 
@@ -129,9 +177,10 @@ class Manager
      */
     public function deleteMessage(Message $message)
     {
+        $this->om->startFlushSuite();
         $this->om->remove($message);
-        $this->om->flush();
         $this->dispatch(new DeleteMessageEvent($message));
+        $this->om->endFlushSuite();
     }
 
     /**
@@ -139,9 +188,10 @@ class Manager
      */
     public function deleteSubject(Subject $subject)
     {
+        $this->om->startFlushSuite();
         $this->om->remove($subject);
-        $this->om->flush();
         $this->dispatch(new DeleteSubjectEvent($subject));
+        $this->om->endFlushSuite();
     }
 
     /**
@@ -149,15 +199,16 @@ class Manager
      */
     public function createSubject(Subject $subject)
     {
+        $this->om->startFlushSuite();
         $this->om->persist($subject);
-        $this->om->flush();
         $this->dispatch(new CreateSubjectEvent($subject));
+        $this->om->endFlushSuite();
     }
 
     /**
      * @param \Claroline\CoreBundle\Entity\User $user
      * @param \Claroline\ForumBundle\Entity\Forum $forum
-     * @return type
+     * @return boolean
      */
     public function hasSubscribed(User $user, Forum $forum)
     {
@@ -166,9 +217,15 @@ class Manager
         return count($notify) === 1 ? true: false;
     }
 
+    /**
+     * Send a notification to a user about a message.
+     *
+     * @param \Claroline\ForumBundle\Entity\Message $message
+     * @param \Claroline\CoreBundle\Entity\User $user
+     */
     public function sendMessageNotification(Message $message, User $user)
     {
-        $forum = $message->getSubject()->getForum();
+        $forum = $message->getSubject()->getCategory()->getForum();
         $notifications = $this->notificationRepo->findBy(array('forum' => $forum));
         $users = array();
 
@@ -183,7 +240,7 @@ class Manager
         );
 
         $url =  $link = $this->container->get('request')->server->get('HTTP_ORIGIN') .
-                $this->router->generate('claro_forum_subjects', array('forumId' => $forum->getId()));
+                $this->router->generate('claro_forum_subjects', array('category' => $message->getSubject()->getCategory()->getId()));
         $body = "<a href='{$url}'>{$title}</a><hr>{$message->getContent()}";
 
         $this->mailManager->send($title, $body, $users);
@@ -192,12 +249,19 @@ class Manager
 
     /**
      * @param integer $subjectId
+     *
+     * @return Subject
      */
     public function getSubject($subjectId)
     {
         return $this->subjectRepo->find($subjectId);
     }
 
+    /**
+     * @param integer $forumId
+     *
+     * @return Forum
+     */
     public function getForum($forumId)
     {
         return $this->forumRepo->find($forumId);
@@ -208,5 +272,155 @@ class Manager
         $this->dispatcher->dispatch('log', $event);
 
         return $this;
+    }
+
+    /**
+     * Move a message to an other subject.
+     *
+     * @param \Claroline\ForumBundle\Entity\Message $message
+     * @param \Claroline\ForumBundle\Entity\Subject $newSubject
+     */
+    public function moveMessage(Message $message, Subject $newSubject)
+    {
+        $this->om->startFlushSuite();
+        $oldSubject = $message->getSubject();
+        $message->setSubject($newSubject);
+        $this->om->persist($message);
+        $this->dispatch(new MoveMessageEvent($message, $oldSubject, $newSubject));
+        $this->om->endFlushSuite();
+    }
+
+    /**
+     * Move a subject to an other category.
+     *
+     * @param \Claroline\ForumBundle\Entity\Subject $subject
+     * @param \Claroline\ForumBundle\Entity\Category $newCategory
+     */
+    public function moveSubject(Subject $subject, Category $newCategory)
+    {
+        $this->om->startFlushSuite();
+        $oldCategory = $subject->getCategory();
+        $subject->setCategory($newCategory);
+        $this->om->persist($subject);
+        $this->dispatch(new MoveSubjectEvent($subject, $oldCategory, $newCategory));
+        $this->om->endFlushSuite();
+    }
+
+    /**
+     * Stick a subject at the top of the subject list.
+     *
+     * @param \Claroline\ForumBundle\Entity\Subject $subject
+     */
+    public function stickSubject(Subject $subject)
+    {
+        $this->om->startFlushSuite();
+        $subject->setIsSticked(true);
+        $this->om->persist($subject);
+        $this->dispatch(new StickSubjectEvent($subject));
+        $this->om->endFlushSuite();
+    }
+
+    /**
+     * Unstick a subject from the top of the subject list.
+     *
+     * @param \Claroline\ForumBundle\Entity\Subject $subject
+     */
+    public function unstickSubject(Subject $subject)
+    {
+        $this->om->startFlushSuite();
+        $subject->setIsSticked(false);
+        $this->om->persist($subject);
+        $this->dispatch(new UnstickSubjectEvent($subject));
+        $this->om->endFlushSuite();
+    }
+
+    /**
+     * Get the pager for the subject list of a category.
+     *
+     * @param \Claroline\ForumBundle\Entity\Category $category
+     * @param integer $page
+     * @param integer $max
+     *
+     * @return @return \Pagerfanta\Pagerfanta
+     */
+    public function getSubjectsPager(Category $category, $page = 1, $max = 20)
+    {
+        $subjects = $this->forumRepo->findSubjects($category);
+
+        return $this->pagerFactory->createPagerFromArray($subjects, $page, $max);
+    }
+
+    /**
+     * Get the pager for the message list of a subject.
+     *
+     * @param \Claroline\ForumBundle\Entity\Subject $subject
+     * @param integer $page
+     * @param integer $max
+     *
+     * @return \Pagerfanta\Pagerfanta
+     */
+    public function getMessagesPager(Subject $subject, $page = 1, $max = 20)
+    {
+        $messages = $this->messageRepo->findBySubject($subject);
+
+        return $this->pagerFactory->createPagerFromArray($messages, $page, $max);
+    }
+
+    /**
+     * Get the pager for the forum search.
+     *
+     * @param \Claroline\ForumBundle\Entity\Forum $forum
+     * @param string $search
+     * @param integer $page
+     *
+     * @return \Pagerfanta\Pagerfanta
+     */
+    public function searchPager(Forum $forum, $search, $page)
+    {
+        $query = $this->forumRepo->search($forum, $search);
+
+        return $this->pagerFactory->createPager($query, $page);
+    }
+
+    /**
+     * @param \Claroline\ForumBundle\Entity\Message $message
+     * @param string $oldContent
+     * @param string $newContent
+     */
+    public function editMessage(Message $message, $oldContent, $newContent)
+    {
+        $this->om->startFlushSuite();
+        $message->setContent($newContent);
+        $this->om->persist($message);
+        $this->dispatch(new EditMessageEvent($message, $oldContent, $newContent));
+        $this->om->endFlushSuite();
+    }
+
+    /**
+     * @param \Claroline\ForumBundle\Entity\Subject $subject
+     * @param string $oldTitle
+     * @param string $newTitle
+     */
+    public function editSubject(Subject $subject, $oldTitle, $newTitle)
+    {
+        $this->om->startFlushSuite();
+        $subject->setTitle($newTitle);
+        $this->om->persist($subject);
+        $this->dispatch(new EditSubjectEvent($subject, $oldTitle, $newTitle));
+        $this->om->endFlushSuite();
+    }
+
+    /**
+     * @param \Claroline\ForumBundle\Entity\Category $category
+     * @param string $oldName
+     * @param string $newName
+     */
+    public function editCategory(Category $category, $oldName, $newName)
+    {
+        $this->om->startFlushSuite();
+        $category->setName($newName);
+        $this->om->persist($category);
+        $this->dispatch(new EditCategoryEvent($category, $oldName, $newName));
+        $this->om->endFlushSuite();
     }
 }
