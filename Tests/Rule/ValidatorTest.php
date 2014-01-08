@@ -39,8 +39,8 @@ class ValidatorTest extends MockeryTestCase
     {
         $user      = new User();
         $action    = uniqid();
-        $badgeRule = new BadgeRule();
-        $badgeRule
+        $rule = new BadgeRule();
+        $rule
             ->setAction($action)
             ->setUser($user)
             ->setUserType(0);
@@ -61,7 +61,7 @@ class ValidatorTest extends MockeryTestCase
 
         $ruleValidator = new Validator($logRepository);
 
-        $this->assertFalse($ruleValidator->validateRule($badgeRule));
+        $this->assertFalse($ruleValidator->validateRule($rule));
     }
 
     public function testValidateRuleDoerActionMatchLog()
@@ -69,8 +69,8 @@ class ValidatorTest extends MockeryTestCase
         $log       = new Log();
         $user      = new User();
         $action    = uniqid();
-        $badgeRule = new BadgeRule();
-        $badgeRule
+        $rule = new BadgeRule();
+        $rule
             ->setAction($action)
             ->setUser($user)
             ->setUserType(0);
@@ -91,15 +91,15 @@ class ValidatorTest extends MockeryTestCase
 
         $ruleValidator = new Validator($logRepository);
 
-        $this->assertEquals(array($log), $ruleValidator->validateRule($badgeRule));
+        $this->assertEquals(array($log), $ruleValidator->validateRule($rule));
     }
     public function testValidateRuleDoerActionBadgeMatchNoLog()
     {
         $user      = new User();
         $action    = uniqid();
         $badge     = new Badge();
-        $badgeRule = new BadgeRule();
-        $badgeRule
+        $rule = new BadgeRule();
+        $rule
             ->setAction($action)
             ->setUser($user)
             ->setUserType(0)
@@ -123,7 +123,7 @@ class ValidatorTest extends MockeryTestCase
 
         $ruleValidator = new Validator($logRepository);
 
-        $this->assertFalse($ruleValidator->validateRule($badgeRule));
+        $this->assertFalse($ruleValidator->validateRule($rule));
     }
 
     public function testValidateRuleDoerActionBadgeMatchLog()
@@ -132,8 +132,8 @@ class ValidatorTest extends MockeryTestCase
         $user      = new User();
         $action    = uniqid();
         $badge     = new Badge();
-        $badgeRule = new BadgeRule();
-        $badgeRule
+        $rule = new BadgeRule();
+        $rule
             ->setAction($action)
             ->setUser($user)
             ->setUserType(0)
@@ -157,15 +157,15 @@ class ValidatorTest extends MockeryTestCase
 
         $ruleValidator = new Validator($logRepository);
 
-        $this->assertEquals(array($log), $ruleValidator->validateRule($badgeRule));
+        $this->assertEquals(array($log), $ruleValidator->validateRule($rule));
     }
 
     public function testValidateRuleReceiverActionMatchNoLog()
     {
         $user      = new User();
         $action    = uniqid();
-        $badgeRule = new BadgeRule();
-        $badgeRule
+        $rule = new BadgeRule();
+        $rule
             ->setAction($action)
             ->setUser($user)
             ->setUserType(1);
@@ -186,7 +186,7 @@ class ValidatorTest extends MockeryTestCase
 
         $ruleValidator = new Validator($logRepository);
 
-        $this->assertFalse($ruleValidator->validateRule($badgeRule));
+        $this->assertFalse($ruleValidator->validateRule($rule));
     }
 
     public function testValidateRuleReceiverActionMatchLog()
@@ -194,8 +194,8 @@ class ValidatorTest extends MockeryTestCase
         $log       = new Log();
         $user      = new User();
         $action    = uniqid();
-        $badgeRule = new BadgeRule();
-        $badgeRule
+        $rule = new BadgeRule();
+        $rule
             ->setAction($action)
             ->setUser($user)
             ->setUserType(1);
@@ -216,15 +216,15 @@ class ValidatorTest extends MockeryTestCase
 
         $ruleValidator = new Validator($logRepository);
 
-        $this->assertEquals(array($log), $ruleValidator->validateRule($badgeRule));
+        $this->assertEquals(array($log), $ruleValidator->validateRule($rule));
     }
 
     public function testValidateRuleDoerOccurenceActionMatchNoLog()
     {
         $user      = new User();
         $action    = uniqid();
-        $badgeRule = new BadgeRule();
-        $badgeRule
+        $rule = new BadgeRule();
+        $rule
             ->setAction($action)
             ->setUser($user)
             ->setUserType(0)
@@ -239,7 +239,7 @@ class ValidatorTest extends MockeryTestCase
             ->shouldReceive('andWhere')->once()->with(self::CONSTRAINT_DOER_WITH)->andReturn($queryBuilder)
             ->shouldReceive('setParameter')->once()->with(self::CONSTRAINT_ACTION_KEY, $action)->andReturn($queryBuilder)
             ->shouldReceive('setParameter')->once()->with(self::CONSTRAINT_DOER_KEY, $user)->andReturn($queryBuilder)
-            ->shouldReceive('setMaxResults')->once()->with($badgeRule->getOccurrence())->andReturn($queryBuilder)
+            ->shouldReceive('setMaxResults')->once()->with($rule->getOccurrence())->andReturn($queryBuilder)
             ->shouldReceive('getQuery')->once()->andReturn($query);
 
         $logRepository = $this->mock('Claroline\CoreBundle\Repository\Log\LogRepository');
@@ -247,7 +247,7 @@ class ValidatorTest extends MockeryTestCase
 
         $ruleValidator = new Validator($logRepository);
 
-        $this->assertFalse($ruleValidator->validateRule($badgeRule));
+        $this->assertFalse($ruleValidator->validateRule($rule));
     }
 
     public function testValidateRuleDoerOccurenceActionMatchLog()
@@ -255,14 +255,14 @@ class ValidatorTest extends MockeryTestCase
         $log       = new Log();
         $user      = new User();
         $action    = uniqid();
-        $badgeRule = new BadgeRule();
-        $badgeRule
+        $rule = new BadgeRule();
+        $rule
             ->setAction($action)
             ->setUser($user)
             ->setUserType(0)
             ->setOccurrence($occurence = rand(1, 5));
 
-        $associatedLogs = array_fill(1, $badgeRule->getOccurrence(), $log);
+        $associatedLogs = array_fill(1, $rule->getOccurrence(), $log);
 
         $query = $this->mock('Doctrine\ORM\AbstractQuery');
         $query->shouldReceive('getResult')->once()->andReturn($associatedLogs);
@@ -273,7 +273,7 @@ class ValidatorTest extends MockeryTestCase
             ->shouldReceive('andWhere')->once()->with(self::CONSTRAINT_DOER_WITH)->andReturn($queryBuilder)
             ->shouldReceive('setParameter')->once()->with(self::CONSTRAINT_ACTION_KEY, $action)->andReturn($queryBuilder)
             ->shouldReceive('setParameter')->once()->with(self::CONSTRAINT_DOER_KEY, $user)->andReturn($queryBuilder)
-            ->shouldReceive('setMaxResults')->once()->with($badgeRule->getOccurrence())->andReturn($queryBuilder)
+            ->shouldReceive('setMaxResults')->once()->with($rule->getOccurrence())->andReturn($queryBuilder)
             ->shouldReceive('getQuery')->once()->andReturn($query);
 
         $logRepository = $this->mock('Claroline\CoreBundle\Repository\Log\LogRepository');
@@ -281,7 +281,7 @@ class ValidatorTest extends MockeryTestCase
 
         $ruleValidator = new Validator($logRepository);
 
-        $this->assertEquals($associatedLogs, $ruleValidator->validateRule($badgeRule));
+        $this->assertEquals($associatedLogs, $ruleValidator->validateRule($rule));
     }
 
     public function testValidateRuleDoerOccurenceActionMatchWrongNumberOfLog()
@@ -289,14 +289,14 @@ class ValidatorTest extends MockeryTestCase
         $log       = new Log();
         $user      = new User();
         $action    = uniqid();
-        $badgeRule = new BadgeRule();
-        $badgeRule
+        $rule = new BadgeRule();
+        $rule
             ->setAction($action)
             ->setUser($user)
             ->setUserType(0)
             ->setOccurrence($occurence = rand(2, 5));
 
-        $associatedLogs = array_fill(1, $badgeRule->getOccurrence() - 1, $log);
+        $associatedLogs = array_fill(1, $rule->getOccurrence() - 1, $log);
 
         $query = $this->mock('Doctrine\ORM\AbstractQuery');
         $query->shouldReceive('getResult')->once()->andReturn($associatedLogs);
@@ -307,7 +307,7 @@ class ValidatorTest extends MockeryTestCase
             ->shouldReceive('andWhere')->once()->with(self::CONSTRAINT_DOER_WITH)->andReturn($queryBuilder)
             ->shouldReceive('setParameter')->once()->with(self::CONSTRAINT_ACTION_KEY, $action)->andReturn($queryBuilder)
             ->shouldReceive('setParameter')->once()->with(self::CONSTRAINT_DOER_KEY, $user)->andReturn($queryBuilder)
-            ->shouldReceive('setMaxResults')->once()->with($badgeRule->getOccurrence())->andReturn($queryBuilder)
+            ->shouldReceive('setMaxResults')->once()->with($rule->getOccurrence())->andReturn($queryBuilder)
             ->shouldReceive('getQuery')->once()->andReturn($query);
 
         $logRepository = $this->mock('Claroline\CoreBundle\Repository\Log\LogRepository');
@@ -315,15 +315,15 @@ class ValidatorTest extends MockeryTestCase
 
         $ruleValidator = new Validator($logRepository);
 
-        $this->assertFalse($ruleValidator->validateRule($badgeRule));
+        $this->assertFalse($ruleValidator->validateRule($rule));
     }
 
     public function testValidateRuleDoerActionResultEqualMatchNoLog()
     {
         $user      = new User();
         $action    = uniqid();
-        $badgeRule = new BadgeRule();
-        $badgeRule
+        $rule = new BadgeRule();
+        $rule
             ->setAction($action)
             ->setUser($user)
             ->setUserType(0)
@@ -346,7 +346,7 @@ class ValidatorTest extends MockeryTestCase
 
         $ruleValidator = new Validator($logRepository);
 
-        $this->assertFalse($ruleValidator->validateRule($badgeRule));
+        $this->assertFalse($ruleValidator->validateRule($rule));
     }
 
     public function testValidateRuleDoerActionResultNotEqualMatchNoLog()
@@ -357,8 +357,8 @@ class ValidatorTest extends MockeryTestCase
 
         $user      = new User();
         $action    = uniqid();
-        $badgeRule = new BadgeRule();
-        $badgeRule
+        $rule = new BadgeRule();
+        $rule
             ->setAction($action)
             ->setUser($user)
             ->setUserType(0)
@@ -381,7 +381,7 @@ class ValidatorTest extends MockeryTestCase
 
         $ruleValidator = new Validator($logRepository);
 
-        $this->assertFalse($ruleValidator->validateRule($badgeRule));
+        $this->assertFalse($ruleValidator->validateRule($rule));
     }
 
     public function testValidateRuleDoerActionResultEqualMatchLog()
@@ -392,8 +392,8 @@ class ValidatorTest extends MockeryTestCase
 
         $user      = new User();
         $action    = uniqid();
-        $badgeRule = new BadgeRule();
-        $badgeRule
+        $rule = new BadgeRule();
+        $rule
             ->setAction($action)
             ->setUser($user)
             ->setUserType(0)
@@ -416,7 +416,7 @@ class ValidatorTest extends MockeryTestCase
 
         $ruleValidator = new Validator($logRepository);
 
-        $this->assertEquals(array($log), $ruleValidator->validateRule($badgeRule));
+        $this->assertEquals(array($log), $ruleValidator->validateRule($rule));
     }
 
     public function testValidateRuleDoerActionResultSuperiorMatchLog()
@@ -426,8 +426,8 @@ class ValidatorTest extends MockeryTestCase
 
         $user      = new User();
         $action    = uniqid();
-        $badgeRule = new BadgeRule();
-        $badgeRule
+        $rule = new BadgeRule();
+        $rule
             ->setAction($action)
             ->setUser($user)
             ->setUserType(0)
@@ -450,7 +450,7 @@ class ValidatorTest extends MockeryTestCase
 
         $ruleValidator = new Validator($logRepository);
 
-        $this->assertEquals(array($log), $ruleValidator->validateRule($badgeRule));
+        $this->assertEquals(array($log), $ruleValidator->validateRule($rule));
     }
 
     public function testValidateRuleDoerActionResultSuperiorButInferiorMatchNoLog()
@@ -460,8 +460,8 @@ class ValidatorTest extends MockeryTestCase
 
         $user      = new User();
         $action    = uniqid();
-        $badgeRule = new BadgeRule();
-        $badgeRule
+        $rule = new BadgeRule();
+        $rule
             ->setAction($action)
             ->setUser($user)
             ->setUserType(0)
@@ -484,7 +484,7 @@ class ValidatorTest extends MockeryTestCase
 
         $ruleValidator = new Validator($logRepository);
 
-        $this->assertFalse($ruleValidator->validateRule($badgeRule));
+        $this->assertFalse($ruleValidator->validateRule($rule));
     }
 
     public function testValidateRuleDoerActionResultSuperiorButEqualMatchNoLog()
@@ -494,8 +494,8 @@ class ValidatorTest extends MockeryTestCase
 
         $user      = new User();
         $action    = uniqid();
-        $badgeRule = new BadgeRule();
-        $badgeRule
+        $rule = new BadgeRule();
+        $rule
             ->setAction($action)
             ->setUser($user)
             ->setUserType(0)
@@ -518,7 +518,7 @@ class ValidatorTest extends MockeryTestCase
 
         $ruleValidator = new Validator($logRepository);
 
-        $this->assertFalse($ruleValidator->validateRule($badgeRule));
+        $this->assertFalse($ruleValidator->validateRule($rule));
     }
 
     public function testValidateRuleDoerActionResultSuperiorEqualButSuperiorMatchLog()
@@ -528,8 +528,8 @@ class ValidatorTest extends MockeryTestCase
 
         $user      = new User();
         $action    = uniqid();
-        $badgeRule = new BadgeRule();
-        $badgeRule
+        $rule = new BadgeRule();
+        $rule
             ->setAction($action)
             ->setUser($user)
             ->setUserType(0)
@@ -552,7 +552,7 @@ class ValidatorTest extends MockeryTestCase
 
         $ruleValidator = new Validator($logRepository);
 
-        $this->assertEquals(array($log), $ruleValidator->validateRule($badgeRule));
+        $this->assertEquals(array($log), $ruleValidator->validateRule($rule));
     }
 
     public function testValidateRuleDoerActionResultSuperiorEqualButEqualMatchLog()
@@ -562,8 +562,8 @@ class ValidatorTest extends MockeryTestCase
 
         $user      = new User();
         $action    = uniqid();
-        $badgeRule = new BadgeRule();
-        $badgeRule
+        $rule = new BadgeRule();
+        $rule
             ->setAction($action)
             ->setUser($user)
             ->setUserType(0)
@@ -586,7 +586,7 @@ class ValidatorTest extends MockeryTestCase
 
         $ruleValidator = new Validator($logRepository);
 
-        $this->assertEquals(array($log), $ruleValidator->validateRule($badgeRule));
+        $this->assertEquals(array($log), $ruleValidator->validateRule($rule));
     }
 
     public function testValidateRuleDoerActionResultSuperiorEqualButInferiorMatchLog()
@@ -596,8 +596,8 @@ class ValidatorTest extends MockeryTestCase
 
         $user      = new User();
         $action    = uniqid();
-        $badgeRule = new BadgeRule();
-        $badgeRule
+        $rule = new BadgeRule();
+        $rule
             ->setAction($action)
             ->setUser($user)
             ->setUserType(0)
@@ -620,7 +620,7 @@ class ValidatorTest extends MockeryTestCase
 
         $ruleValidator = new Validator($logRepository);
 
-        $this->assertFalse($ruleValidator->validateRule($badgeRule));
+        $this->assertFalse($ruleValidator->validateRule($rule));
     }
 
     public function testValidateRuleDoerActionResultInferiorMatchLog()
@@ -630,8 +630,8 @@ class ValidatorTest extends MockeryTestCase
 
         $user      = new User();
         $action    = uniqid();
-        $badgeRule = new BadgeRule();
-        $badgeRule
+        $rule = new BadgeRule();
+        $rule
             ->setAction($action)
             ->setUser($user)
             ->setUserType(0)
@@ -654,7 +654,7 @@ class ValidatorTest extends MockeryTestCase
 
         $ruleValidator = new Validator($logRepository);
 
-        $this->assertEquals(array($log), $ruleValidator->validateRule($badgeRule));
+        $this->assertEquals(array($log), $ruleValidator->validateRule($rule));
     }
 
     public function testValidateRuleDoerActionResultInferiorButSuperiorMatchNoLog()
@@ -664,8 +664,8 @@ class ValidatorTest extends MockeryTestCase
 
         $user      = new User();
         $action    = uniqid();
-        $badgeRule = new BadgeRule();
-        $badgeRule
+        $rule = new BadgeRule();
+        $rule
             ->setAction($action)
             ->setUser($user)
             ->setUserType(0)
@@ -688,7 +688,7 @@ class ValidatorTest extends MockeryTestCase
 
         $ruleValidator = new Validator($logRepository);
 
-        $this->assertFalse($ruleValidator->validateRule($badgeRule));
+        $this->assertFalse($ruleValidator->validateRule($rule));
     }
 
     public function testValidateRuleDoerActionResultInferiorButEqualMatchNoLog()
@@ -698,8 +698,8 @@ class ValidatorTest extends MockeryTestCase
 
         $user      = new User();
         $action    = uniqid();
-        $badgeRule = new BadgeRule();
-        $badgeRule
+        $rule = new BadgeRule();
+        $rule
             ->setAction($action)
             ->setUser($user)
             ->setUserType(0)
@@ -722,7 +722,7 @@ class ValidatorTest extends MockeryTestCase
 
         $ruleValidator = new Validator($logRepository);
 
-        $this->assertFalse($ruleValidator->validateRule($badgeRule));
+        $this->assertFalse($ruleValidator->validateRule($rule));
     }
         public function testValidateRuleDoerActionResultInferiorEqualButInferiorMatchLog()
     {
@@ -731,8 +731,8 @@ class ValidatorTest extends MockeryTestCase
 
         $user      = new User();
         $action    = uniqid();
-        $badgeRule = new BadgeRule();
-        $badgeRule
+        $rule = new BadgeRule();
+        $rule
             ->setAction($action)
             ->setUser($user)
             ->setUserType(0)
@@ -755,7 +755,7 @@ class ValidatorTest extends MockeryTestCase
 
         $ruleValidator = new Validator($logRepository);
 
-        $this->assertEquals(array($log), $ruleValidator->validateRule($badgeRule));
+        $this->assertEquals(array($log), $ruleValidator->validateRule($rule));
     }
 
     public function testValidateRuleDoerActionResultInferiorEqualButEqualMatchLog()
@@ -765,8 +765,8 @@ class ValidatorTest extends MockeryTestCase
 
         $user      = new User();
         $action    = uniqid();
-        $badgeRule = new BadgeRule();
-        $badgeRule
+        $rule = new BadgeRule();
+        $rule
             ->setAction($action)
             ->setUser($user)
             ->setUserType(0)
@@ -789,7 +789,7 @@ class ValidatorTest extends MockeryTestCase
 
         $ruleValidator = new Validator($logRepository);
 
-        $this->assertEquals(array($log), $ruleValidator->validateRule($badgeRule));
+        $this->assertEquals(array($log), $ruleValidator->validateRule($rule));
     }
 
     public function testValidateRuleDoerActionResultInferiorEqualButSuperiorMatchLog()
@@ -799,8 +799,8 @@ class ValidatorTest extends MockeryTestCase
 
         $user      = new User();
         $action    = uniqid();
-        $badgeRule = new BadgeRule();
-        $badgeRule
+        $rule = new BadgeRule();
+        $rule
             ->setAction($action)
             ->setUser($user)
             ->setUserType(0)
@@ -823,6 +823,168 @@ class ValidatorTest extends MockeryTestCase
 
         $ruleValidator = new Validator($logRepository);
 
-        $this->assertFalse($ruleValidator->validateRule($badgeRule));
+        $this->assertFalse($ruleValidator->validateRule($rule));
+    }
+
+    public function testValidateWithTowRuleDoerActionMatchNoLog()
+    {
+        $badge     = new Badge();
+        $user      = new User();
+        $action    = uniqid();
+        $action2   = uniqid();
+
+        $rule = new BadgeRule();
+        $rule
+            ->setAction($action)
+            ->setUserType(0);
+
+        $rule2 = new BadgeRule();
+        $rule2
+            ->setAction($action2)
+            ->setUserType(0);
+
+        $badge->setRules(array($rule, $rule2));
+
+        $query = $this->mock('Doctrine\ORM\AbstractQuery');
+        $query->shouldReceive('getResult')->twice()->andReturn(array());
+
+        $queryBuilder = $this->mock('Doctrine\ORM\QueryBuilder');
+        $queryBuilder
+            ->shouldReceive('andWhere')->twice()->with(self::CONSTRAINT_ACTION_WITH)->andReturn($queryBuilder)
+            ->shouldReceive('andWhere')->twice()->with(self::CONSTRAINT_DOER_WITH)->andReturn($queryBuilder)
+            ->shouldReceive('setParameter')->once()->with(self::CONSTRAINT_ACTION_KEY, $action)->andReturn($queryBuilder)
+            ->shouldReceive('setParameter')->once()->with(self::CONSTRAINT_ACTION_KEY, $action2)->andReturn($queryBuilder)
+            ->shouldReceive('setParameter')->twice()->with(self::CONSTRAINT_DOER_KEY, $user)->andReturn($queryBuilder)
+            ->shouldReceive('getQuery')->twice()->andReturn($query);
+
+        $logRepository = $this->mock('Claroline\CoreBundle\Repository\Log\LogRepository');
+        $logRepository->shouldReceive('defaultQueryBuilderForBadge')->once()->andReturn($queryBuilder);
+
+        $ruleValidator = new Validator($logRepository);
+
+        $this->assertFalse($ruleValidator->validate($badge, $user));
+    }
+
+    public function testValidateWithTowRuleDoerActionMatchLogJustForTheFirstRule()
+    {
+        $badge     = new Badge();
+        $user      = new User();
+        $action    = uniqid();
+        $action2   = uniqid();
+        $log       = new Log();
+
+        $rule = new BadgeRule();
+        $rule
+            ->setAction($action)
+            ->setUserType(0);
+
+        $rule2 = new BadgeRule();
+        $rule2
+            ->setAction($action2)
+            ->setUserType(0);
+
+        $badge->setRules(array($rule, $rule2));
+
+        $query = $this->mock('Doctrine\ORM\AbstractQuery');
+        $query->shouldReceive('getResult')->once()->andReturn(array($log));
+        $query->shouldReceive('getResult')->once()->andReturn(array());
+
+        $queryBuilder = $this->mock('Doctrine\ORM\QueryBuilder');
+        $queryBuilder
+            ->shouldReceive('andWhere')->twice()->with(self::CONSTRAINT_ACTION_WITH)->andReturn($queryBuilder)
+            ->shouldReceive('andWhere')->twice()->with(self::CONSTRAINT_DOER_WITH)->andReturn($queryBuilder)
+            ->shouldReceive('setParameter')->once()->with(self::CONSTRAINT_ACTION_KEY, $action)->andReturn($queryBuilder)
+            ->shouldReceive('setParameter')->once()->with(self::CONSTRAINT_ACTION_KEY, $action2)->andReturn($queryBuilder)
+            ->shouldReceive('setParameter')->twice()->with(self::CONSTRAINT_DOER_KEY, $user)->andReturn($queryBuilder)
+            ->shouldReceive('getQuery')->twice()->andReturn($query);
+
+        $logRepository = $this->mock('Claroline\CoreBundle\Repository\Log\LogRepository');
+        $logRepository->shouldReceive('defaultQueryBuilderForBadge')->once()->andReturn($queryBuilder);
+
+        $ruleValidator = new Validator($logRepository);
+
+        $this->assertFalse($ruleValidator->validate($badge, $user));
+    }
+
+    public function testValidateWithTowRuleDoerActionMatchLogJustForTheSecondRule()
+    {
+        $badge     = new Badge();
+        $user      = new User();
+        $action    = uniqid();
+        $action2   = uniqid();
+        $log       = new Log();
+
+        $rule = new BadgeRule();
+        $rule
+            ->setAction($action)
+            ->setUserType(0);
+
+        $rule2 = new BadgeRule();
+        $rule2
+            ->setAction($action2)
+            ->setUserType(0);
+
+        $badge->setRules(array($rule, $rule2));
+
+        $query = $this->mock('Doctrine\ORM\AbstractQuery');
+        $query->shouldReceive('getResult')->once()->andReturn(array());
+        $query->shouldReceive('getResult')->once()->andReturn(array($log));
+
+        $queryBuilder = $this->mock('Doctrine\ORM\QueryBuilder');
+        $queryBuilder
+            ->shouldReceive('andWhere')->twice()->with(self::CONSTRAINT_ACTION_WITH)->andReturn($queryBuilder)
+            ->shouldReceive('andWhere')->twice()->with(self::CONSTRAINT_DOER_WITH)->andReturn($queryBuilder)
+            ->shouldReceive('setParameter')->once()->with(self::CONSTRAINT_ACTION_KEY, $action)->andReturn($queryBuilder)
+            ->shouldReceive('setParameter')->once()->with(self::CONSTRAINT_ACTION_KEY, $action2)->andReturn($queryBuilder)
+            ->shouldReceive('setParameter')->twice()->with(self::CONSTRAINT_DOER_KEY, $user)->andReturn($queryBuilder)
+            ->shouldReceive('getQuery')->twice()->andReturn($query);
+
+        $logRepository = $this->mock('Claroline\CoreBundle\Repository\Log\LogRepository');
+        $logRepository->shouldReceive('defaultQueryBuilderForBadge')->once()->andReturn($queryBuilder);
+
+        $ruleValidator = new Validator($logRepository);
+
+        $this->assertFalse($ruleValidator->validate($badge, $user));
+    }
+
+    public function testValidateWithTowRuleDoerActionMatchLogForBothRule()
+    {
+        $badge     = new Badge();
+        $user      = new User();
+        $action    = uniqid();
+        $action2   = uniqid();
+        $log       = new Log();
+
+        $rule = new BadgeRule();
+        $rule
+            ->setAction($action)
+            ->setUserType(0);
+
+        $rule2 = new BadgeRule();
+        $rule2
+            ->setAction($action2)
+            ->setUserType(0);
+
+        $badge->setRules(array($rule, $rule2));
+
+        $query = $this->mock('Doctrine\ORM\AbstractQuery');
+        $query->shouldReceive('getResult')->once()->andReturn(array($log));
+        $query->shouldReceive('getResult')->once()->andReturn(array($log));
+
+        $queryBuilder = $this->mock('Doctrine\ORM\QueryBuilder');
+        $queryBuilder
+            ->shouldReceive('andWhere')->twice()->with(self::CONSTRAINT_ACTION_WITH)->andReturn($queryBuilder)
+            ->shouldReceive('andWhere')->twice()->with(self::CONSTRAINT_DOER_WITH)->andReturn($queryBuilder)
+            ->shouldReceive('setParameter')->once()->with(self::CONSTRAINT_ACTION_KEY, $action)->andReturn($queryBuilder)
+            ->shouldReceive('setParameter')->once()->with(self::CONSTRAINT_ACTION_KEY, $action2)->andReturn($queryBuilder)
+            ->shouldReceive('setParameter')->twice()->with(self::CONSTRAINT_DOER_KEY, $user)->andReturn($queryBuilder)
+            ->shouldReceive('getQuery')->twice()->andReturn($query);
+
+        $logRepository = $this->mock('Claroline\CoreBundle\Repository\Log\LogRepository');
+        $logRepository->shouldReceive('defaultQueryBuilderForBadge')->once()->andReturn($queryBuilder);
+
+        $ruleValidator = new Validator($logRepository);
+
+        $this->assertEquals(array($log, $log), $ruleValidator->validate($badge, $user));
     }
 }
