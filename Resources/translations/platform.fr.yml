@@ -352,7 +352,6 @@ owner: Propriétaire
 owner_s: Propriétaire(s)
 parameters: Paramètres
 password: 'Mot de passe'
-password_email_message: 'Vous avez demandé la réinitialisation de votre mot de passe. CLiquez sur ce lien , si vous n''êtes pas l''origine de cette action, veuillez ignorer ce message.'
 password_mismatch: 'Les mots de passe ne correspondent pas.'
 password_ok : 'Votre mot de passe a été modifié. Vous pouvez maintenant vous connecter.'
 paste: Coller
