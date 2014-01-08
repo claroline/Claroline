@@ -50,7 +50,7 @@
                             <form method="post" action="{{ path('claro_desktop_agenda_add') }}" id="myForm" {{ form_enctype(form) }}>
                                 {{ form_widget(form) }}
                             </form>
-                            <a href="{{ path('claro_desktop_agenda_show', {workspaceId: workspace.getId()}) }}" id="link"></a>
+                            <a href="{{ path('claro_desktop_agenda_show') }}" id="link"></a>
                             <a href="{{ path('claro_workspace_agenda_move') }}" id="move"></a>
                             <a href="{{ path('claro_desktop_agenda_delete') }}" id="delete"></a>
                             <a href="{{ path('claro_desktop_agenda_update') }}" id="update"></a>

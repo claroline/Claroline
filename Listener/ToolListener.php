@@ -194,7 +194,6 @@ class ToolListener
             array(
                 'workspace' => $workspace,
                 'form' => $form->createView(),
-                'listEvents' => $listEvents,
                 'owners' => $owners
             )
         );
