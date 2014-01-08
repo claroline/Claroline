@@ -634,6 +634,28 @@ class exerciseServices
         return $infosPaper;
     }
 
+    public function getScoresUser($userId, $exoId)
+    {
+        $tabScoresUser = array();
+        $i = 0;
+
+        $papers = $this->doctrine
+                       ->getManager()
+                       ->getRepository('UJMExoBundle:Paper')
+                       ->getExerciseUserPapers($userId, $exoId);
+
+        foreach ($papers as $paper) {
+            $infosPaper = $this->getInfosPaper($paper);
+            $tabScoresUser[$i]['score']       = $infosPaper['scorePaper'];
+            $tabScoresUser[$i]['maxExoScore'] = $infosPaper['maxExoScore'];
+            $tabScoresUser[$i]['scoreTemp']   = $infosPaper['scoreTemp'];
+
+            $i++;
+        }
+
+        return $tabScoresUser;
+    }
+
     private function orderInteractions($interactions, $order)
     {
         $inter = array();
