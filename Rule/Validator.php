@@ -12,6 +12,7 @@
 namespace Claroline\CoreBundle\Rule;
 
 use Claroline\CoreBundle\Rule\Constraints\ActionConstraint;
+use Claroline\CoreBundle\Rule\Constraints\BadgeConstraint;
 use Claroline\CoreBundle\Rule\Constraints\DoerConstraint;
 use Claroline\CoreBundle\Rule\Constraints\OccurenceConstraint;
 use Claroline\CoreBundle\Rule\Constraints\ReceiverConstraint;
@@ -108,7 +109,8 @@ class Validator
             new ResourceConstraint(),
             new DoerConstraint(),
             new ReceiverConstraint(),
-            new ActionConstraint()
+            new ActionConstraint(),
+            new BadgeConstraint()
         );
 
         foreach ($existedConstraints as $existedConstraint) {
