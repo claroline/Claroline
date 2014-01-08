@@ -252,13 +252,17 @@ class ProfileController extends Controller
      * )
      * @EXT\Template("ClarolineCoreBundle:Profile:form_password.html.twig")
      *
-     * Displays the public profile of an user.
+     * Updates the password of a user.
      *
      * @param \Claroline\CoreBundle\Entity\User $user
+     * @throws \Symfony\Component\Security\Core\Exception\AccessDeniedException
+     * @return array|\Symfony\Component\HttpFoundation\RedirectResponse
      */
     public function editPasswordAction(User $user)
     {
-        if ($this->get('security.context')->getToken()->getUser() !== $user) {
+        $security = $this->get('security.context');
+
+        if ($security->getToken()->getUser() !== $user && !$security->isGranted('ROLE_ADMIN')) {
             throw new AccessDeniedException();
         }
 
@@ -267,8 +271,9 @@ class ProfileController extends Controller
 
         if ($form->isValid()) {
             $user = $form->getData();
-            $this->get('doctrine.orm.entity_manager')->persist($user);
-            $this->get('doctrine.orm.entity_manager')->flush();
+            $em = $this->get('doctrine.orm.entity_manager');
+            $em->persist($user);
+            $em->flush();
 
             return $this->redirect($this->generateUrl('claro_profile_view', array('userId' => $user->getId())));
         }
