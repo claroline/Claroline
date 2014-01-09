@@ -1,5 +1,6 @@
 # PathBundle
 
+![SensioLabs Insight][1]
 
 ## Installation
 
@@ -18,3 +19,5 @@ Install with composer :
 * Axel Penin (Elorfin)
 * Arnaud Bay (arnaudbey)
 * Eric Vincent (ericvincenterv)
+
+[1]: https://insight.sensiolabs.com/projects/91c3195e-8056-40e9-b1d3-e5cc10230e4f/small.png
