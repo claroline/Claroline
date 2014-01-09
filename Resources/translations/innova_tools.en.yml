@@ -38,3 +38,6 @@ path_delete_error: Le parcours has not been deleted due to technical problem. Pl
 next: Next
 next_step: Next steps
 groupware: Groupware
+close: Close
+full_tree: Full tree
+history: History

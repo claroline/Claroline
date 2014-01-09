@@ -38,3 +38,6 @@ path_delete_error: Le parcours n'a pas pu être supprimé. Veuillez réessayer
 next: Suivant
 next_step: Etapes suivantes
 groupware: Collecticiel
+close: Fermer
+full_tree: Arborescence
+history: Historique
