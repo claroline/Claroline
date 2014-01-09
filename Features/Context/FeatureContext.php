@@ -179,6 +179,24 @@ class FeatureContext extends MinkContext implements KernelAwareInterface
         $this->visit($this->getBaseUrl() . "/app_dev.php/dev/workspace/create/{$workspaceName}/{$username}");
     }
 
+    /**
+     * @Given /^self registration is allowed$/
+     */
+    public function selfRegistrationIsAllowed()
+    {
+        $configHandler = $this->getContainer()->get('claroline.config.platform_config_handler');
+        $configHandler->setParameters(array('allow_self_registration' => true));
+    }
+
+
+    /**
+     * @Given /^self registration is disabled$/
+     */
+    public function selfRegistrationIsDisabled()
+    {
+        $configHandler = $this->getContainer()->get('claroline.config.platform_config_handler');
+        $configHandler->setParameters(array('allow_self_registration' => false));
+    }
 
     private function getBaseUrl()
     {
