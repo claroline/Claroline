@@ -56,7 +56,7 @@
                         </div>
                         <div class="panel-body">
                             <div class="form-group row">
-                                <div class="col-md-9">{{ form_widget(form.html) }}</div>
+                                <div id="holeEditor" class="col-md-9">{{ form_widget(form.html) }}</div>
                             </div>
                         </div>
                     </div>
@@ -66,11 +66,8 @@
                             <h3 class="panel-title">{{ 'hole' | trans }}</h3>
                         </div>
                         <div class="panel-body">
-                            <a id="create_hole" class="btn btn-primary" onclick="createHole();">
+                            <a id="create_hole" class="btn btn-primary" onclick="createHole('{{ 'delete' | trans }}');">
                                 <i class="icon-plus"></i> {{ 'create hole' | trans }}
-                            </a>
-                            <a id="delete_hole" class="btn btn-primary" onclick="delHole();" style="display: none;">
-                                <i class="icon-trash"></i> {{ 'delete hole' | trans }}
                             </a>
                             </br></br>
                             {#{ form_row(form.holes) }#}
@@ -91,6 +88,8 @@
     </form>
 </div>
 
+<script type="text/javascript" src="{{ asset('bundles/frontend/jquery/jquery-ui-1.9.2/jquery-ui-1.9.2.js') }}"></script>
+<script type="text/javascript" src="{{ asset('bundles/ujmexo/js/ext/jquery-ui-touch-punch.js') }}"></script>
 <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/interactionHole.js') }}"></script>
 <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/category_pop.js') }}"></script>
 <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/hint.js') }}"></script>
@@ -99,13 +98,11 @@
 {% if error is defined %}
     <script type="text/javascript">
         newHintEdit('{{ 'hint' | trans }}', '{{ 'penalty' | trans }}', '{{ 'add hint' | trans }}', '{{ 'delete' | trans }}');
-        //insert_style();
-        addFormHole('{{ "add" | trans }}', '{{ "Response" | trans }}', '{{ "point" | trans }}', '{{ "Inter_Hole.size" | trans }}', '{{ "Inter_Hole.orthography" | trans }}', '{{ "Hole.selector" | trans }}', '{{ asset('bundles/ujmexo/images/ajouter_ligne.jpeg') }}');
+        addFormHole('{{ "add" | trans }}', '{{ "Response" | trans }}', '{{ "point" | trans }}', '{{ "Inter_Hole.size" | trans }}', '{{ "Inter_Hole.orthography" | trans }}', '{{ "delete" | trans }}', '{{ "Hole.selector" | trans }}', '{{ asset('bundles/ujmexo/images/ajouter_ligne.jpeg') }}');
     </script>
 {% else %}
     <script type="text/javascript">
         newHint('{{ 'hint' | trans }}', '{{ 'penalty' | trans }}', '{{ 'add hint' | trans }}', '{{ 'delete' | trans }}');
-        //insert_style();
-        addFormHole('{{ "add" | trans }}', '{{ "Response" | trans }}', '{{ "point" | trans }}', '{{ "Inter_Hole.size" | trans }}', '{{ "Inter_Hole.orthography" | trans }}', '{{ "Hole.selector" | trans }}', '{{ asset('bundles/ujmexo/images/ajouter_ligne.jpeg') }}');
+        addFormHole('{{ "add" | trans }}', '{{ "Response" | trans }}', '{{ "point" | trans }}', '{{ "Inter_Hole.size" | trans }}', '{{ "Inter_Hole.orthography" | trans }}', '{{ "delete" | trans }}', '{{ "Hole.selector" | trans }}', '{{ asset('bundles/ujmexo/images/ajouter_ligne.jpeg') }}');
     </script>
 {% endif %}
