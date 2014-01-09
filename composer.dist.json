@@ -26,7 +26,13 @@
     "require-dev": {
         "mockery/mockery": "dev-master@dev",
         "hamcrest/hamcrest": "~1.1.0",
-        "mikey179/vfsStream": "dev-master"
+        "mikey179/vfsStream": "dev-master",
+        "behat/mink-bundle": "dev-master",
+        "behat/mink-selenium2-driver": "*",
+        "phpunit/phpunit": "3.7.*",
+        "behat/behat": "*",
+        "behat/symfony2-extension": "*",
+        "behat/mink-extension": "*"
     },
     "repositories": [
         {
