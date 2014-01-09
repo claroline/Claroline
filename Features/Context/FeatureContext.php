@@ -11,6 +11,7 @@
 
 namespace Claroline\CoreBundle\Features\Context;
 
+use Behat\Behat\Exception\PendingException;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Behat\Symfony2Extension\Context\KernelAwareInterface;
 use Behat\MinkExtension\Context\MinkContext;
@@ -60,7 +61,6 @@ class FeatureContext extends MinkContext implements KernelAwareInterface
     {
         $this->visit($this->getBaseUrl() . '/app_dev.php/dev/reinstall');
     }
-
 
     /**
      * @Given /^the database does not exists$/
@@ -145,6 +145,10 @@ class FeatureContext extends MinkContext implements KernelAwareInterface
         $configHandler->setParameters(array('allow_self_registration' => false));
     }
 
+    /************/
+    /* Fixtures */
+    /************/
+
     /**
      * @Given /^the user "([^"]*)" is created$/
      */
@@ -154,16 +158,19 @@ class FeatureContext extends MinkContext implements KernelAwareInterface
     }
 
     /**
+     * @Given /^the group "([^"]*)" is created$/
+     */
+    public function theGroupIsCreated($name)
+    {
+        $this->visit($this->getBaseUrl() . "/app_dev.php/dev/group/create/{$name}");
+    }
+
+    /**
      * @Given /^the workspace "([^"]*)" is created by "([^"]*)"$/
      */
     public function theWorkspaceIsCreatedBy($workspaceName, $username)
     {
         $this->visit($this->getBaseUrl() . "/app_dev.php/dev/workspace/create/{$workspaceName}/{$username}");
-    }
-
-    private function getBaseUrl()
-    {
-        return str_replace('app.php/', '', $this->getMinkParameter('base_url'));
     }
 
     /***********/
@@ -178,6 +185,21 @@ class FeatureContext extends MinkContext implements KernelAwareInterface
         $script = "(function() { $('a:contains(\"{$label}\")')[0].click(); })();";
         $this->getSession()->evaluateScript($script);
     }
+
+    /**
+     * @Given /^I check the "([^"]*)" line$/
+     */
+    public function iCheckTheLine($text)
+    {
+        throw new PendingException();
+        /*
+        $script = "(function() {
+            var row = $('tr:contains(\"{$text}\")');
+            var checkbox = $('#' + row.attr('id') + 'td input:checkbox');
+        })();";
+        $this->getSession()->evaluateScript($script);*/
+    }
+
 
     /**************/
     /* Assertions */
@@ -225,5 +247,10 @@ class FeatureContext extends MinkContext implements KernelAwareInterface
     public function baseUrlIsWeb()
     {
         $this->setMinkParameter('base_url', $this->getBaseUrl());
+    }
+
+    private function getBaseUrl()
+    {
+        return str_replace('app.php/', '', $this->getMinkParameter('base_url'));
     }
 }

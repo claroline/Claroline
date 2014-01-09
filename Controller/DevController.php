@@ -11,12 +11,17 @@
 
 namespace Claroline\CoreBundle\Controller;
 
+use Claroline\CoreBundle\Library\PluginBundle;
+use Claroline\CoreBundle\Library\Workspace\TemplateBuilder;
+use Doctrine\Common\DataFixtures\Purger\ORMPurger;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Doctrine\Common\DataFixtures\ReferenceRepository;
 use Symfony\Component\HttpFoundation\Response;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Library\Workspace\Configuration;
+use Claroline\CoreBundle\DataFixtures\Required\LoadRequiredFixturesData;
 
 class DevController extends Controller
 {
@@ -29,34 +34,34 @@ class DevController extends Controller
      *
      * @return Response
      */
-    public function ReinstallAction()
+    public function reinstallAction()
     {
-        $kernel = $this->getContainer()->get('kernel');
+        $kernel = $this->container->get('kernel');
         $start = new \DateTime();
-        $om = $this->getContainer()->get('claroline.persistence.object_manager');
-        $purger = new \Doctrine\Common\DataFixtures\Purger\ORMPurger(
-            $this->getContainer()->get('doctrine.orm.entity_manager')
+        $om = $this->container->get('claroline.persistence.object_manager');
+        $purger = new ORMPurger(
+            $this->container->get('doctrine.orm.entity_manager')
         );
         $purger->purge();
 
         //load the required fixture
-        $fixture = new \Claroline\CoreBundle\DataFixtures\Required\LoadRequiredFixturesData();
+        $fixture = new LoadRequiredFixturesData();
         $referenceRepo = new ReferenceRepository($om);
         $fixture->setReferenceRepository($referenceRepo);
-        $fixture->setContainer($this->getContainer());
+        $fixture->setContainer($this->container);
         $fixture->load($om);
         $om->startFlushSuite();
 
         //reset default template
-        $defaultTemplatePath = $this->getContainer()->getParameter('kernel.root_dir') . '/../templates/default.zip';
-        \Claroline\CoreBundle\Library\Workspace\TemplateBuilder::buildDefault($defaultTemplatePath);
+        $defaultTemplatePath = $this->container->getParameter('kernel.root_dir') . '/../templates/default.zip';
+        TemplateBuilder::buildDefault($defaultTemplatePath);
 
         //install the plugins fixtures
         $bundles = $kernel->getBundles();
-        $installer = $this->getContainer()->get('claroline.plugin.installer');
+        $installer = $this->container->get('claroline.plugin.installer');
 
         foreach ($bundles as $bundle) {
-            if ($bundle instanceof \Claroline\CoreBundle\Library\PluginBundle) {
+            if ($bundle instanceof PluginBundle) {
                 //install the bundle !
                 $installer->install($bundle);
             }
@@ -85,7 +90,7 @@ class DevController extends Controller
      */
     public function createUser($username, $role)
     {
-        $userManager = $this->getContainer()->get('claroline.manager.user_manager');
+        $userManager = $this->container->get('claroline.manager.user_manager');
         $user = new User();
         $user->setUsername($username);
         $user->setPlainPassword($username);
@@ -94,6 +99,29 @@ class DevController extends Controller
         $user->setMail($username . '@claroline.net');
         $user->setLocale('en');
         $userManager->createUserWithRole($user, $role);
+
+        return new Response('done');
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/group/create/{name}",
+     *     name="claro_dev_create_group",
+     * )
+     * @EXT\Method("GET")
+     *
+     * @param $name
+     * @return Response
+     */
+    public function createGroup($name)
+    {
+        $groupManager = $this->container->get('claroline.manager.group_manager');
+        $group = new Group();
+        $group->setName($name);
+        $role = $this->get('doctrine.orm.entity_manager')->getRepository('ClarolineCoreBundle:Role')
+            ->findOneByName('ROLE_USER');
+        $group->addRole($role);
+        $groupManager->insertGroup($group);
 
         return new Response('done');
     }
@@ -123,11 +151,5 @@ class DevController extends Controller
         $workspaceManager->create($config, $user);
 
         return new Response('done');
-
-    }
-
-    private function getContainer()
-    {
-        return $this->container;
     }
 }

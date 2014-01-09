@@ -56,9 +56,14 @@ class LoadRequiredFixturesData extends AbstractFixture implements ContainerAware
             $sourceFile = $reflClass->getFileName();
 
             if (in_array($sourceFile, $includedFiles)) {
-                $fixture = new $className;
-                $fixture->setContainer($this->container);
-                $fixture->load($om);
+                if (in_array(
+                    'Claroline\CoreBundle\DataFixtures\Required\RequiredFixture',
+                    $reflClass->getInterfaceNames())
+                ) {
+                    $fixture = new $className;
+                    $fixture->setContainer($this->container);
+                    $fixture->load($om);
+                }
             }
         }
 

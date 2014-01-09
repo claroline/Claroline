@@ -36,7 +36,7 @@ Feature: Administration
         And I should see "Special characters are not allowed" in the ".help-block" element
         And the response should contain "This value is too short. It should have 4 characters or more."
 
-    Scenario: Sucessfully create users from csv
+    Scenario: Successfully create users from csv
         Given I am on "/admin/user/management/import/form"
         When I attach the file "users.txt" to "File"
         And I press "Ok"
@@ -52,7 +52,7 @@ Feature: Administration
         And the response should contain "The username usee5 was found at lines: 5, 6 "
         And the response should contain "The email ClaudiaTortelloni@claroline.net was found at lines: 5, 6 "
 
-    Scenario: Sucessfully create group
+    Scenario: Successfully create group
         Given I am on "/admin/group/form"
         When I fill in "Name" with "name"
         And I press "Ok"
@@ -64,9 +64,9 @@ Feature: Administration
         And I press "Ok"
         Then the platform should have "0" "Group"
 
-    Scenario: Sucessfully edit user settings through the user list
+    Scenario: Successfully edit user settings through the user list
         Given the user "user" is created
-        And I am on "/admin/users/page/1/max/50/order"
+        When I am on "/admin/users/page/1/max/50/order"
         And I follow "user"
         And I follow the hidden "Edit"
         And I fill in "Username" with "modifiedname"
@@ -74,32 +74,60 @@ Feature: Administration
         Then the response should contain "modifiedname"
         And I should be on "/admin/users/page/1/max/50/order"
 
-     Scenario: Fail to edit user settings
+    Scenario: Fail to edit user settings
+       Given the user "user" is created
+       When I am on "/admin/users/page/1/max/50/order"
+       And I follow "user"
+       And I follow the hidden "Edit"
+       And I fill in "Username" with "'ézvfds"
+       And I press "Ok"
+       Then I should see "Special characters are not allowed" in the ".help-block" element
+
+    Scenario: The administrator can see every non personal workspaces
         Given the user "user" is created
-        And I am on "/admin/users/page/1/max/50/order"
-        And I follow "user"
-        And I follow the hidden "Edit"
-        And I fill in "Username" with "'ézvfds"
+        And the workspace "workspace_1" is created by "user"
+        When I am on "/workspaces/"
+        Then the response should contain "workspace_1"
+
+    Scenario: Successfully edit group settings
+        Given the group "group" is created
+        When I am on "/admin/groups/page/1/max/50/order"
+        And I follow "Settings"
+        And I fill in "Name" with "newname"
         And I press "Ok"
-        Then I should see "Special characters are not allowed" in the ".help-block" element
+        Then the response should contain "newname"
 
-#    Scenario: The administrator can see every non personal workspaces
-#        Given the user "user" is created
-#        And the workspace "workspace_1" is created by "user"
-#        When I am on "/workspaces/"
-#        Then the response should contain "workspace_1"
+     Scenario: Fail to edit group settings
+         Given the group "group" is created
+         When I am on "/admin/groups/page/1/max/50/order"
+         And I follow "Settings"
+         And I fill in "Name" with " "
+         And I press "Ok"
+         Then the response should contain "This value should not be blank."
 
-    #Scenario: Fail to edit group settings
-    #Scenario: Sucessfully edit user properties
-    #Scenario: Fail to edit user properties
-    #Scenario: Search the plateform users
-    #Scenario: Display the plateform groups
-    #Scenario: Search the plateform groups
-    #Scenario: Display the group's users
+    Scenario: add users to a group
+        Given the group "group" is created
+        When I am on "/admin/groups/page/1/max/50/order"
+        And I follow "group"
+        And I follow "Add user"
+        And show last response
+        And I check the "root" line
+        Then show last response
+
+    #Scenario: remove users from a group
+
+    #Scenario: Search the platform users
+    #Scenario: Search the platform groups
     #Scenario: Search the group's users
-    #Scenario: Sucessfully edit the platform options
-    #Scenario: Sucessfully delete group
+    #Scenario: Successfully edit the platform options
+    #Scenario: Successfully delete group
     #Scenario: delete users
 
-    #Scenario: Display the plateform users
+    #Scenario: Display the platform users
       #Already tested through the edition
+    #Scenario: Display the platform groups
+      #Already tested through the edition
+    #Scenario: Display the group's users
+      #Already tested through adding users into a group
+
+  #show last response

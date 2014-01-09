@@ -3,7 +3,7 @@ Feature: Registration
   Background:
     Given the cache directory is writable
 
-    Scenario: Sucessfully registrate
+    Scenario: Successfully registrate
       Given self registration is allowed
       And the platform is initialized
       When I am on "/register/form"
