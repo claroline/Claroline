@@ -25,7 +25,7 @@ use Claroline\CoreBundle\Library\Security\Utilities;
 use Claroline\CoreBundle\Manager\WorkspaceManager;
 use Claroline\CoreBundle\Pager\PagerFactory;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\EventDispatcher\EventDispatcher;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
@@ -62,7 +62,7 @@ class AnnouncementController extends Controller
         FormFactoryInterface $formFactory,
         PagerFactory $pagerFactory,
         SecurityContextInterface $securityContext,
-        EventDispatcher $eventDispatcher,
+        EventDispatcherInterface $eventDispatcher,
         Translator $translator,
         Utilities $utils,
         WorkspaceManager $workspaceManager

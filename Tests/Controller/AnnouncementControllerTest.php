@@ -37,7 +37,7 @@ class AnnouncementControllerTest extends MockeryTestCase
         $this->formFactory = $this->mock('Symfony\Component\Form\FormFactoryInterface');
         $this->pagerFactory = $this->mock('Claroline\CoreBundle\Pager\PagerFactory');
         $this->securityContext = $this->mock('Symfony\Component\Security\Core\SecurityContextInterface');
-        $this->dispatcher = $this->mock('Symfony\Component\EventDispatcher\EventDispatcher');
+        $this->dispatcher = $this->mock('Symfony\Component\EventDispatcher\EventDispatcherInterface');
         $this->translator = $this->mock('Symfony\Component\Translation\Translator');
         $this->utils = $this->mock('Claroline\CoreBundle\Library\Security\Utilities');
         $this->workspaceManager = $this->mock('Claroline\CoreBundle\Manager\WorkspaceManager');
