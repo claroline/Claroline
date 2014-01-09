@@ -10,13 +10,13 @@
 		{% for resourceCurrentStep in currentStep.step2ResourceNodes if resourceCurrentStep.excluded == true and resourceCurrentStep.resourceNode == resource.resourceNode %}
 				{% set thisResourceIsExcluded = true %}
 		{% endfor %}
-		{% if thisResourceIsExcluded == false and resource.resourceNode.resourceType.name != "icap_dropzone" %}
+		{% if thisResourceIsExcluded == false %}
 			{{ macros.displayResource(resource, parent) }}
 		{% endif %}
 	{% endfor %}
 {% endfor %}
 
 {# Gestion des ressources locales #}
-{% for resource in currentStep.step2ResourceNodes if resource.excluded == false and resource.resourceNode.resourceType.name != "icap_dropzone" %}
+{% for resource in currentStep.step2ResourceNodes if resource.excluded == false %}
 		{{ macros.displayResource(resource, currentStep) }}
 {% endfor %}

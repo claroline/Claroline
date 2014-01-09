@@ -10,7 +10,7 @@
             </div>
             <div class="modal-body">
 				<ul>
-				{% for i, visitedStep in visitedSteps if i < 10 and i > 0 %}
+				{% for i, visitedStep in visitedSteps if i < 15 and i > 0 %}
 					{% for stepId, step in visitedStep %}
 						<li> 
 							<a href="{{ path('innova_path_player_index', { workspaceId: workspace.id, pathId: path.id, stepId: stepId }) }}">
