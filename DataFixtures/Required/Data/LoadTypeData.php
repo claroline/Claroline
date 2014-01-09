@@ -9,13 +9,13 @@
  * file that was distributed with this source code.
  */
 
-namespace Claroline\CoreBundle\DataFixtures\Required;
+namespace Claroline\CoreBundle\DataFixtures\Required\Data;
 
-use Doctrine\Common\Persistence\ObjectManager;
-use Doctrine\Common\DataFixtures\AbstractFixture;
+use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Home\Type;
+use Claroline\CoreBundle\DataFixtures\Required\RequiredFixture;
 
-class LoadTypeData extends AbstractFixture
+class LoadTypeData implements RequiredFixture
 {
     public function load(ObjectManager $manager)
     {
@@ -27,7 +27,10 @@ class LoadTypeData extends AbstractFixture
 
             $manager->persist($types[$i]);
         }
+    }
 
-        $manager->flush();
+    public function setContainer($container)
+    {
+        $this->container = $container;
     }
 }

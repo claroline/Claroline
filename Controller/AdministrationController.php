@@ -458,6 +458,7 @@ class AdministrationController extends Controller
      * Adds multiple user to a group.
      *
      * @param integer $groupId
+     * @param array $users
      *
      * @return Response
      */
@@ -1109,16 +1110,17 @@ class AdministrationController extends Controller
      *     name="claro_admin_registration_management_search",
      *     options = {"expose"=true}
      * )
+     * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
      * @EXT\Method("GET")
      *
      * @EXT\Template()
      *
      * @return Response
      */
-    public function registrationManagementAction($search)
+    public function registrationManagementAction($search, User $user)
     {
         if ($search === '') {
-            $datas = $this->workspaceTagManager->getDatasForWorkspaceList(false);
+            $datas = $this->workspaceTagManager->getDatasForWorkspaceList(false, $user);
 
             return array(
                 'workspaces' => $datas['workspaces'],
@@ -1130,7 +1132,7 @@ class AdministrationController extends Controller
                 'search' => ''
             );
         }
-        $pager = $this->workspaceManager->getDisplayableWorkspacesBySearchPager($search, 1);
+        $pager = $this->workspaceManager->getDisplayableWorkspacesBySearchPager($search, 1, $user);
 
         return array('workspaces' => $pager, 'search' => $search);
     }
