@@ -131,7 +131,6 @@ class ProfileType extends AbstractType
         $resolver->setDefaults(
             array(
                 'data_class' => 'Claroline\CoreBundle\Entity\User',
-                'validation_groups' => array('admin'),
                 'translation_domain' => 'platform'
             )
         );

@@ -45,8 +45,9 @@ class BaseProfileType extends AbstractType
         $resolver
         ->setDefaults(
             array(
-                'translation_domain' => 'platform'
-                )
+                'translation_domain' => 'platform',
+                'validation_groups' => array('registration', 'Default')
+            )
         );
     }
 }

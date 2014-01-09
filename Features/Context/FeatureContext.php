@@ -50,6 +50,18 @@ class FeatureContext extends MinkContext implements KernelAwareInterface
         return $this->kernel->getContainer();
     }
 
+    /******************/
+    /* Initialization */
+    /******************/
+    /**
+     * @Given /^the platform is initialized$/
+     */
+    public function thePlatformIsInitialized()
+    {
+        $this->visit($this->getBaseUrl() . '/app_dev.php/dev/reinstall');
+    }
+
+
     /**
      * @Given /^the database does not exists$/
      */
@@ -85,22 +97,6 @@ class FeatureContext extends MinkContext implements KernelAwareInterface
     }
 
     /**
-     * @Given /^base url is web$/
-     */
-    public function baseUrlIsWeb()
-    {
-        $this->setMinkParameter('base_url', $this->getBaseUrl());
-    }
-
-    /**
-     * @Given /^the platform is initialized$/
-     */
-    public function thePlatformIsInitialized()
-    {
-        $this->visit($this->getBaseUrl() . '/app_dev.php/dev/reinstall');
-    }
-
-    /**
      * @Given /^installation directories are writable$/
      */
     public function installationDirectoriesAreWritable()
@@ -112,6 +108,91 @@ class FeatureContext extends MinkContext implements KernelAwareInterface
         if ($checker->hasFailedRequirement()) {
             //todo show the directory list
             throw new \Exception('Failed requirements');
+        }
+    }
+
+    /**
+     * @Given /^the cache directory is writable$/
+     */
+    public function theCacheDirectoryIsWritable()
+    {
+        //It doesn't work
+        //throw new \Behat\Behat\Exception\PendingException('Does not work');
+
+        $dir = $this->kernel->getRootDir() . '/cache/prod/jms_diextra/metadata';
+        $res = is_writeable($dir);
+
+        if (!$res) {
+            throw new \Exception('The cache directory is not writable');
+        }
+    }
+
+    /**
+     * @Given /^self registration is allowed$/
+     */
+    public function selfRegistrationIsAllowed()
+    {
+        $configHandler = $this->getContainer()->get('claroline.config.platform_config_handler');
+        $configHandler->setParameters(array('allow_self_registration' => true));
+    }
+
+    /**
+     * @Given /^self registration is disabled$/
+     */
+    public function selfRegistrationIsDisabled()
+    {
+        $configHandler = $this->getContainer()->get('claroline.config.platform_config_handler');
+        $configHandler->setParameters(array('allow_self_registration' => false));
+    }
+
+    /**
+     * @Given /^the user "([^"]*)" is created$/
+     */
+    public function theUserIsCreated($username)
+    {
+        $this->visit($this->getBaseUrl() . "/app_dev.php/dev/user/create/{$username}/ROLE_ADMIN");
+    }
+
+    /**
+     * @Given /^the workspace "([^"]*)" is created by "([^"]*)"$/
+     */
+    public function theWorkspaceIsCreatedBy($workspaceName, $username)
+    {
+        $this->visit($this->getBaseUrl() . "/app_dev.php/dev/workspace/create/{$workspaceName}/{$username}");
+    }
+
+    private function getBaseUrl()
+    {
+        return str_replace('app.php/', '', $this->getMinkParameter('base_url'));
+    }
+
+    /***********/
+    /* Actions */
+    /***********/
+
+    /**
+     * @When /^I follow the hidden "([^"]*)"$/
+     */
+    public function iFollowTheHidden($label)
+    {
+        $script = "(function() { $('a:contains(\"{$label}\")')[0].click(); })();";
+        $this->getSession()->evaluateScript($script);
+    }
+
+    /**************/
+    /* Assertions */
+    /**************/
+
+    /**
+     * @Then /^the platform should have "([^"]*)" "([^"]*)"$/
+     */
+    public function thePlatformShouldHave($count, $entity)
+    {
+        $res = $this->getContainer()->get('claroline.persistence.object_manager')
+            ->count('ClarolineCoreBundle:' . $entity);
+
+        if ($res != $count) {
+            throw new \Exception('The plateform has ' . $res . ' ' . $entity);
         }
     }
 
@@ -134,72 +215,15 @@ class FeatureContext extends MinkContext implements KernelAwareInterface
         $em->getRepository('ClarolineCoreBundle:User')->findOneByUsername($username);
     }
 
-    /**
-     * @Given /^the cache directory is writable$/
-     */
-    public function theCacheDirectoryIsWritable()
-    {
-        //It doesn't work
-        //throw new \Behat\Behat\Exception\PendingException('Does not work');
-
-        $dir = $this->kernel->getRootDir() . '/cache/prod/jms_diextra/metadata';
-        $res = is_writeable($dir);
-
-        if (!$res) {
-            throw new \Exception('The cache directory is not writable');
-        }
-    }
+    /**********/
+    /* OTHERS */
+    /**********/
 
     /**
-     * @Then /^the platform should have "([^"]*)" "([^"]*)"$/
+     * @Given /^base url is web$/
      */
-    public function thePlatformShouldHave($count, $entity)
+    public function baseUrlIsWeb()
     {
-        $res = $this->getContainer()->get('claroline.persistence.object_manager')
-            ->count('ClarolineCoreBundle:' . $entity);
-
-        if ($res != $count) {
-            throw new \Exception('The plateform has ' . $res . ' ' . $entity);
-        }
-    }
-
-    /**
-     * @Given /^the user "([^"]*)" is created$/
-     */
-    public function theUserIsCreated($username)
-    {
-        $this->visit($this->getBaseUrl() . "/app_dev.php/dev/user/create/{$username}/ROLE_ADMIN");
-    }
-
-    /**
-     * @Given /^the workspace "([^"]*)" is created by "([^"]*)"$/
-     */
-    public function theWorkspaceIsCreatedBy($workspaceName, $username)
-    {
-        $this->visit($this->getBaseUrl() . "/app_dev.php/dev/workspace/create/{$workspaceName}/{$username}");
-    }
-
-    /**
-     * @Given /^self registration is allowed$/
-     */
-    public function selfRegistrationIsAllowed()
-    {
-        $configHandler = $this->getContainer()->get('claroline.config.platform_config_handler');
-        $configHandler->setParameters(array('allow_self_registration' => true));
-    }
-
-
-    /**
-     * @Given /^self registration is disabled$/
-     */
-    public function selfRegistrationIsDisabled()
-    {
-        $configHandler = $this->getContainer()->get('claroline.config.platform_config_handler');
-        $configHandler->setParameters(array('allow_self_registration' => false));
-    }
-
-    private function getBaseUrl()
-    {
-        return str_replace('app.php/', '', $this->getMinkParameter('base_url'));
+        $this->setMinkParameter('base_url', $this->getBaseUrl());
     }
 }

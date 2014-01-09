@@ -97,8 +97,8 @@ class User extends AbstractRoleSubject implements Serializable, UserInterface, E
     /**
      * @var string
      *
-     * @Assert\NotBlank()
-     * @Assert\Length(min="4", groups = {"Default"})
+     * @Assert\NotBlank(groups={"registration"})
+     * @Assert\Length(min="4", groups={"registration"})
      */
     protected $plainPassword;
 

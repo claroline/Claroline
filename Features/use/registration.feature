@@ -27,12 +27,14 @@ Feature: Registration
       And I fill in "Last name" with "lastName"
       And I fill in "First name" with "firstName"
       And I fill in "Username" with "é#fdsq585"
-      And I fill in "Password" with "t"
-      And I fill in "Verification" with "password"
+      And I fill in "Password" with " "
+      And I fill in "Verification" with " "
       And I fill in "Mail" with "mail@clar.oline"
       And I select "en" from "Language"
       And I press "Ok"
-      Then I should see "Special characters are not allowed" in the ".help-block" element
+      Then the response should contain "Special characters are not allowed"
+      Then the response should contain "This value is too short. It should have 4 characters or more."
+      And the response should contain "This value is too short"
 
     Scenario: Try to access the registration form when it's disabled
       Given self registration is disabled
