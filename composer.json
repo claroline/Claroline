@@ -30,11 +30,11 @@
         "symfony/assetic-bundle" : "~2.3",
         "claroline/core-bundle" : ">=1.0",
         "doctrine/doctrine-fixtures-bundle" : "2.2.0",
-        "innova/angular-js-bundle" : "1.*",
-        "innova/angular-ui-bootstrap-bundle" : "1.*",
-        "innova/angular-ui-tinymce-bundle" : "1.*",
-        "innova/angular-ui-pageslide-bundle" : "1.*",
-        "innova/angular-ui-sortable-bundle" : "1.*"
+        "innova/angular-js-bundle" : ">=1.0",
+        "innova/angular-ui-bootstrap-bundle" : ">=1.0",
+        "innova/angular-ui-tinymce-bundle" : ">=1.0",
+        "innova/angular-ui-pageslide-bundle" : ">=1.0",
+        "innova/angular-ui-sortable-bundle" : ">=1.0"
     },
     "autoload" : {
         "psr-0" : {
