@@ -87,6 +87,7 @@ class ProfileCreationType extends AbstractType
         $resolver->setDefaults(
             array(
                 'data_class' => 'Claroline\CoreBundle\Entity\User',
+                'validation_groups' => array('registration', 'Default'),
                 'translation_domain' => 'platform'
             )
         );

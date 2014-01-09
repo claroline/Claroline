@@ -9,17 +9,16 @@
  * file that was distributed with this source code.
  */
 
-namespace Claroline\CoreBundle\DataFixtures\Required;
+namespace Claroline\CoreBundle\DataFixtures\Required\Data;
 
 use Claroline\CoreBundle\Entity\Widget\Widget;
-use Doctrine\Common\DataFixtures\AbstractFixture;
-use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
-use Doctrine\Common\Persistence\ObjectManager;
+use Claroline\CoreBundle\Persistence\ObjectManager;
+use Claroline\CoreBundle\DataFixtures\Required\RequiredFixture;
 
 /**
  * Platform widgets data fixture.
  */
-class LoadWidgetData extends AbstractFixture implements OrderedFixtureInterface
+class LoadWidgetData implements RequiredFixture
 {
     /**
      * Loads the core widgets.
@@ -47,15 +46,10 @@ class LoadWidgetData extends AbstractFixture implements OrderedFixtureInterface
             $widget->setDisplayableInWorkspace($item[3]);
             $manager->persist($widget);
         }
-
-        $manager->flush();
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public function getOrder()
+    public function setContainer($container)
     {
-        return 5;
+        $this->container = $container;
     }
 }

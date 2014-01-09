@@ -370,6 +370,25 @@ class WorkspaceRepository extends EntityRepository
                 AND u.id = :userId
             )' :
             '';
+
+        $isAdmin = false;
+        if ($user) {
+            foreach ($user->getRoles() as $role) {
+                if ($role === 'ROLE_ADMIN') {
+                    $isAdmin = true;
+                }
+            }
+        }
+
+        if ($isAdmin) {
+            $additionalClause .= ' OR w.id IN (
+                SELECT w3.id  FROM Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace w3
+                JOIN w3.creator c2
+                JOIN c2.personalWorkspace pws
+                WHERE w3.id != pws.id
+            )';
+        }
+
         $dql = sprintf($dql, $additionalClause);
         $query = $this->_em->createQuery($dql);
 
@@ -415,18 +434,40 @@ class WorkspaceRepository extends EntityRepository
      *
      * @return array[AbstractWorkspace]
      */
-    public function findDisplayableWorkspacesBySearch($search)
+    public function findDisplayableWorkspacesBySearch($search, User $user)
     {
-        $dql = '
-            SELECT w
-            FROM Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace w
-            WHERE w.displayable = true
-            AND (
+        $isAdmin = false;
+        if ($user) {
+            foreach ($user->getRoles() as $role) {
+                if ($role === 'ROLE_ADMIN') {
+                    $isAdmin = true;
+                }
+            }
+        }
+
+        if ($isAdmin) {
+            $dql = 'SELECT w
+                FROM Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace w
+                JOIN w.creator c
+                JOIN c.personalWorkspace pws
+                WHERE (
                 UPPER(w.name) LIKE :search
                 OR UPPER(w.code) LIKE :search
-            )
-            ORDER BY w.name
-        ';
+                )
+                AND pws.id != w.id
+                ORDER BY w.name';
+        } else {
+            $dql = '
+                SELECT w
+                FROM Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace w
+                WHERE w.displayable = true
+                AND (
+                    UPPER(w.name) LIKE :search
+                    OR UPPER(w.code) LIKE :search
+                )
+                ORDER BY w.name
+            ';
+        }
         $search = strtoupper($search);
         $query = $this->_em->createQuery($dql);
         $query->setParameter('search', "%{$search}%");

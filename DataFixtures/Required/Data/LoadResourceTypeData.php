@@ -9,30 +9,19 @@
  * file that was distributed with this source code.
  */
 
-namespace Claroline\CoreBundle\DataFixtures\Required;
+namespace Claroline\CoreBundle\DataFixtures\Required\Data;
 
-use Doctrine\Common\DataFixtures\AbstractFixture;
-use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
-use Symfony\Component\DependencyInjection\ContainerAwareInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
-use Doctrine\Common\Persistence\ObjectManager;
+use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Resource\ResourceType;
 use Claroline\CoreBundle\Entity\Resource\MaskDecoder;
 use Claroline\CoreBundle\Entity\Resource\MenuAction;
+use Claroline\CoreBundle\DataFixtures\Required\RequiredFixture;
 
 /**
  * Resource types data fixture.
  */
-class LoadResourceTypeData extends AbstractFixture implements ContainerAwareInterface, OrderedFixtureInterface
+class LoadResourceTypeData implements RequiredFixture
 {
-    /** @var ContainerInterface $container */
-    private $container;
-
-    public function setContainer(ContainerInterface $container = null)
-    {
-        $this->container = $container;
-    }
-
     /**
      * Loads one meta type (document) and four resource types handled by the platform core :
      * - File
@@ -62,7 +51,6 @@ class LoadResourceTypeData extends AbstractFixture implements ContainerAwareInte
             $type->setExportable($attributes[1]);
             $manager->persist($type);
             $this->container->get('claroline.manager.mask_manager')->addDefaultPerms($type);
-            $this->addReference("resource_type/{$attributes[0]}", $type);
             $types[$attributes[0]] = $type;
         }
 
@@ -87,15 +75,10 @@ class LoadResourceTypeData extends AbstractFixture implements ContainerAwareInte
         $updateTextDecoder->setName('write');
         $updateTextDecoder->setResourceType($types['text']);
         $manager->persist($updateTextDecoder);
-
-        $manager->flush();
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public function getOrder()
+    public function setContainer($container)
     {
-        return 2;
+        $this->container = $container;
     }
 }
