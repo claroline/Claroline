@@ -1,25 +1,18 @@
-PathBundle
-==========
+# PathBundle
 
-### Install
-add to the Claroline composer.json
-```sh
-"innova/path-bundle": "dev-master" 
-```
 
-Then execute :
-```sh
-composer update --prefer-dist -o  
-php app/console claroline:update
-php app/console assets:install --symlink
-```
+## Installation
 
-### Uninstall 
-```sh
-php app/console claroline:plugin:uninstall InnovaPathBundle 
-```
+Install with composer :
 
-### Authors
+    $ composer require "innova/path-bundle" "1.*" 
+    $ php app/console claroline:plugin:install InnovaPathBundle
+
+## Uninstall 
+
+    $ php app/console claroline:plugin:uninstall InnovaPathBundle 
+
+## Authors
 
 * Donovan Tengblad (purplefish32)
 * Axel Penin (Elorfin)
