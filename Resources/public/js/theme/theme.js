@@ -15,9 +15,8 @@
     function save(id)
     {
         var ready = $.Deferred();
-
         var name = $('#theme-name').val();
-
+        var themeLess = $('#theme-less textarea').val();
         var variables = '';
 
         $('.theme-value input').each(function () {
@@ -26,6 +25,7 @@
 
         $.post(homePath + 'admin/theme/build', {
             'theme-id': id,
+            'theme-less': themeLess,
             'name': name,
             'variables': variables
         })
