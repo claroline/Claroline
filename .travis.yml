@@ -22,5 +22,5 @@ before_script:
   - cp composer.dist.json composer.json
   - rm composer.lock
   - composer --prefer-dist --dev install -o
-  - php app/console claroline:init_test_schema
+  - php app/console claroline:init_test_schema --env=test
 script: phpunit -c app
