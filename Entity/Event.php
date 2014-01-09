@@ -13,7 +13,6 @@ namespace Claroline\CoreBundle\Entity;
 
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Entity\Event;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
