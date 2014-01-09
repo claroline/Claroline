@@ -87,7 +87,7 @@ function ResourceFactory(PathFactory) {
             var inheritedResources = [];
 
             var path = PathFactory.getPath();
-            if (path) {
+            if (path && path.steps) {
                 for (var i = 0; i < path.steps.length; i++) {
                     var currentStep = path.steps[i];
                     stepFound = this.retrieveInheritedResources(stepToFind, currentStep, inheritedResources);

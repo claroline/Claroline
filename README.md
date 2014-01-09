@@ -18,3 +18,10 @@ php app/console assets:install --symlink
 ```sh
 php app/console claroline:plugin:uninstall InnovaPathBundle 
 ```
+
+### Authors
+
+* Donovan Tengblad (purpplefish32)
+* Axel Penin (Elorfin)
+* Arnaud Bay (arnaudbey)
+* Eric Vincent (ericvincenterv)

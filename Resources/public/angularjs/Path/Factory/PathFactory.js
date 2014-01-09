@@ -147,7 +147,7 @@ function PathFactory($http, $q) {
          */
         getMaxStepId: function() {
             maxStepId = 1;
-            if (null !== path && path.steps.length !== 0)
+            if (null !== path && undefined != path.steps && null != path.steps && path.steps.length !== 0)
             {
                 for (var i = 0; i < path.steps.length; i++) {
                     this.retrieveMaxStepId(path.steps[i]);

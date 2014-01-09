@@ -43,12 +43,12 @@
 
             <div ng-include="webDir + 'angularjs/Editor/Partial/navbar.html'"></div>
 
-            <div class="alerts col-md-12" ng-controller="AlertCtrl">
-                <div ng-repeat="alert in alerts" class="alert alert-dismissable alert-{% verbatim %}{{ alert.type }}{% endverbatim %}">
-                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true" ng-click="closeAlert({% verbatim %}{{ $index }}{% endverbatim %})">&times;</button>
-                    {% verbatim %}{{ alert.msg }}{% endverbatim %}
-                </div>
-            </div>
+{#             <div class="alerts col-md-12" ng-controller="AlertCtrl">#}
+{#                 <div ng-repeat="alert in alerts" class="alert alert-dismissable alert-{% verbatim %}{{ alert.type }}{% endverbatim %}">#}
+{#                     <button type="button" class="close" data-dismiss="alert" aria-hidden="true" ng-click="closeAlert({% verbatim %}{{ $index }}{% endverbatim %})">&times;</button>#}
+{#                     {% verbatim %}{{ alert.msg }}{% endverbatim %}#}
+{#                 </div>#}
+{#             </div>#}
 
             <div ng-view class="panel-body"></div>
         </div>
@@ -63,24 +63,30 @@
     {# Load translations #}
     <script type="text/javascript" src="{{ url('bazinga_exposetranslation_js') }}"></script>
 
-    {# Load Angular Libraries #}
-    <script type="text/javascript" src="{{ asset('bundles/innovaangularjs/js/angular.min.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('bundles/innovaangularjs/js/angular-cookies.min.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('bundles/innovaangularjs/js/angular-loader.min.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('bundles/innovaangularjs/js/angular-resource.min.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('bundles/innovaangularjs/js/angular-sanitize.min.js') }}"></script>
-
+    {# Angular #}
+    {% javascripts debug=false filter='jsmin' output='vendor/angular/angularjs.js'
+        '@InnovaAngularJSBundle/Resources/public/js/angular.min.js'
+        '@InnovaAngularJSBundle/Resources/public/js/angular-route.min.js'
+        '@InnovaAngularJSBundle/Resources/public/js/angular-animate.min.js'
+        '@InnovaAngularJSBundle/Resources/public/js/angular-cookies.min.js'
+        '@InnovaAngularJSBundle/Resources/public/js/angular-loader.min.js'
+        '@InnovaAngularJSBundle/Resources/public/js/angular-mocks.js'
+        '@InnovaAngularJSBundle/Resources/public/js/angular-resource.min.js'
+        '@InnovaAngularJSBundle/Resources/public/js/angular-sanitize.min.js'
+        '@InnovaAngularJSBundle/Resources/public/js/angular-scenario.js'
+        '@InnovaAngularJSBundle/Resources/public/js/angular-touch.min.js'
+    %}
+        <script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+    
     {# Angular UI #}
-    <script type="text/javascript" src="{{ asset('bundles/innovaangularui/js/ui-bootstrap-dev.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('bundles/innovaangularui/js/ui-bootstrap-tpls-dev.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('bundles/innovaangularpageslide/js/angular-pageslide-directive.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('bundles/innovaangulartinymce/js/angular-tinymce-directive.js') }}"></script>
-
-    {# jQuery UI #}
-    <script type="text/javascript" src="{{ asset('bundles/frontend/jquery/jquery-ui-1.9.2/jquery-ui-1.9.2.js') }}"></script>
-
-    {# ng-uisortable #}
-    <script type="text/javascript" src="{{ asset('bundles/innovaangularuisortable/js/sortable.js') }}"></script>
+    {% javascripts debug=false filter='jsmin' output='vendor/angular/angular-ui.js'
+        '@InnovaAngularUIBundle/Resources/public/js/*'
+        '@InnovaAngularUISortableBundle/Resources/public/js/sortable.js'
+        '@InnovaAngularPageslideBundle/Resources/public/js/angular-pageslide-directive.js'
+    %}
+        <script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
     
     {# Alert #}
     <script type="text/javascript" src="{{ asset('bundles/innovapath/angularjs/Alert/Factory/AlertFactory.js') }}"></script>
