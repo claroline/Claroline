@@ -12,12 +12,12 @@
 				<ul>
 				{% for i, visitedStep in visitedSteps if i < 15 and i > 0 %}
 					{% for stepId, step in visitedStep %}
-						<li> 
-							<a href="{{ path('innova_path_player_index', { workspaceId: workspace.id, pathId: path.id, stepId: stepId }) }}">
-								<span class="lvl-indicator lvl-{{  step["level"] + 1 }}">&nbsp;</span>
-								<span>{{ step["name"] }}</span>
-							</a>
-						</li>
+                        <li>
+                            <span class="lvl-indicator lvl-{{  step["level"] + 1 }}">&nbsp;</span>
+                            <a href="{{ path('innova_path_player_index', { workspaceId: workspace.id, pathId: path.id, stepId: stepId }) }}">
+                                {{ step["name"] }}
+                            </a>
+                        </li> 
 					{% endfor %}
 				{% endfor %}
 				</ul>
@@ -25,6 +25,8 @@
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
             </div>
-        </div><!-- /.modal-content -->
-    </div><!-- /.modal-dialog -->
-</div><!-- /.modal -->
+        </div>
+    </div>
+</div>
+
+

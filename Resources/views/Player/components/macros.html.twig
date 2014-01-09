@@ -7,19 +7,17 @@
 
 {% macro displayTreeItem(item, parents, currentStep, path, workspace) %}
     {% import _self as macros %}
-
     {% set class = "" %}
     {% if item in parents or item == currentStep %}
         {% set class = "parent" %}
     {% endif %}
-
     <li>
         <span class="lvl-{{ item.lvl + 1 }} lvl-indicator">&nbsp;</span>
         <a class="{{ class }}" href="{{ path('innova_path_player_index', { workspaceId: workspace.id, pathId: path.id, stepId: item.id }) }}">{{ item.name }}</a>
         {% if item.children is not empty %}
         <ul>
             {% for child in item.children %}
-            {{ macros.displayTreeItem(child, parents, currentStep, path, workspace) }}
+                {{ macros.displayTreeItem(child, parents, currentStep, path, workspace) }}
             {% endfor %}
         </ul>
         {% endif %}
