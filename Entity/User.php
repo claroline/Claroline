@@ -163,8 +163,7 @@ class User extends AbstractRoleSubject implements Serializable, UserInterface, E
      *
      * @ORM\OneToOne(
      *     targetEntity="Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace",
-     *     inversedBy="personalUser",
-     *     cascade={"remove"}
+     *     inversedBy="personalUser"
      * )
      * @ORM\JoinColumn(name="workspace_id", onDelete="SET NULL")
      */

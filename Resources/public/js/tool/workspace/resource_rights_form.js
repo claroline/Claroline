@@ -51,6 +51,7 @@
         var form = document.getElementById('form-node-creation-rights');
         var formData = new FormData(form);
         submitForm(formAction, formData);
+        $('#modal-check-node-right-box').modal('hide');
     });
 
     $('.search-role-btn').on('click', function (e) {

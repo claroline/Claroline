@@ -48,11 +48,11 @@ $('.filterO').click(function () {
             $('#calendar').fullCalendar('clientEvents', function (eventObject) {
                 var title = eventObject.owner;
 
-                if (selected.indexOf(title < 0)) {
-                    eventObject.visible = false;
+                if (selected[i].indexOf(title) > -1) {
+                    eventObject.visible = true;
                     return true;
                 } else {
-                    eventObject.visible = true;
+                    eventObject.visible = false;
                     return false;
                 }
             });

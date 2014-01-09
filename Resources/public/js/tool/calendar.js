@@ -234,7 +234,9 @@
             deleteClick(id);
         });
         $('#tasks').on('click','.update-task',function(e) {
+            $('#deleteBtn').show();
             $('#save').hide();
+            $('#updateBtn').show();
             task = 'task';
             var list = e.target.parentElement.children;
             $('#myModal').modal('show');
@@ -315,7 +317,8 @@
             var pickedDate = new Date(calEvent.start);
             $('#agenda_form_start').val($.fullCalendar.formatDate( pickedDate,'dd-MM-yyyy'));
             $('#agenda_form_startHours').val($.fullCalendar.formatDate( pickedDate,'HH:mm'));
-            if (calEvent.end === ''){
+            console.debug(calEvent.end);
+            if (calEvent.end === null) {
                 $('#agenda_form_end').val($.fullCalendar.formatDate( pickedDate,'dd-MM-yyyy'));
                 $('#agenda_form_endHours').val('00:00');
             } else {
@@ -426,8 +429,8 @@
                     content:  '<a href="#" data-target="#myModal" role="button" data-toggle="modal" class="launch" data-id='+event.id+'>'+
                         Translator.get('platform' + ':' + 'edit')+'</a>'+
                         ' <div>'+t('agenda_form_start') +' : '+
-                        $.fullCalendar.formatDate(event.start ,'dd-MM-yyyy') + '</div>'+
-                        '<div class="mypopo' + event.id + '">'+t('agenda_form_end') +':'  + $.fullCalendar.formatDate(event.end ,'dd-MM-yyyy') +'</div>' +'<br />Description: ' + event.description,
+                        $.fullCalendar.formatDate(event.start ,'dd-MM-yyyy hh:mm') + '</div>'+
+                        '<div class="mypopo' + event.id + '">'+t('agenda_form_end') +':'  + $.fullCalendar.formatDate(event.end ,'dd-MM-yyyy hh:mm') +'</div>' +'<br />Description: ' + event.description,
                     html:true,
                     container:'body'
                 });

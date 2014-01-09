@@ -24,7 +24,7 @@ class ResetPasswordType extends AbstractType
             'repeated',
             array(
                 'type' => 'password',
-                'required' => true
+                'invalid_message' => 'password_mismatch'
             )
         );
     }

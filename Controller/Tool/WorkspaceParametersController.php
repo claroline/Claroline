@@ -15,6 +15,7 @@ use Claroline\CoreBundle\Event\StrictDispatcher;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
@@ -25,6 +26,8 @@ use Claroline\CoreBundle\Entity\Tool\Tool;
 use Claroline\CoreBundle\Form\Factory\FormFactory;
 use Claroline\CoreBundle\Manager\WorkspaceManager;
 use Claroline\CoreBundle\Manager\WorkspaceTagManager;
+use Claroline\CoreBundle\Manager\LocaleManager;
+use Claroline\CoreBundle\Manager\UserManager;
 use JMS\DiExtraBundle\Annotation as DI;
 
 class WorkspaceParametersController extends Controller
@@ -36,15 +39,19 @@ class WorkspaceParametersController extends Controller
     private $formFactory;
     private $router;
     private $request;
+    private $localeManager;
+    private $userManager;
 
     /**
      * @DI\InjectParams({
-     *     "workspaceManager"   = @DI\Inject("claroline.manager.workspace_manager"),
-     *     "workspaceTagManager"   = @DI\Inject("claroline.manager.workspace_tag_manager"),
-     *     "security"           = @DI\Inject("security.context"),
-     *     "eventDispatcher"    = @DI\Inject("claroline.event.event_dispatcher"),
-     *     "formFactory"        = @DI\Inject("claroline.form.factory"),
-     *     "router"             = @DI\Inject("router")
+     *     "workspaceManager"    = @DI\Inject("claroline.manager.workspace_manager"),
+     *     "workspaceTagManager" = @DI\Inject("claroline.manager.workspace_tag_manager"),
+     *     "security"            = @DI\Inject("security.context"),
+     *     "eventDispatcher"     = @DI\Inject("claroline.event.event_dispatcher"),
+     *     "formFactory"         = @DI\Inject("claroline.form.factory"),
+     *     "router"              = @DI\Inject("router"),
+     *     "localeManager"       = @DI\Inject("claroline.common.locale_manager"),
+     *     "userManager"         = @DI\Inject("claroline.manager.user_manager")
      * })
      */
     public function __construct(
@@ -54,7 +61,9 @@ class WorkspaceParametersController extends Controller
         StrictDispatcher $eventDispatcher,
         FormFactory $formFactory,
         UrlGeneratorInterface $router,
-        Request $request
+        Request $request,
+        LocaleManager $localeManager,
+        UserManager $userManager
     )
     {
         $this->workspaceManager = $workspaceManager;
@@ -64,6 +73,8 @@ class WorkspaceParametersController extends Controller
         $this->formFactory = $formFactory;
         $this->router = $router;
         $this->request = $request;
+        $this->localeManager = $localeManager;
+        $this->userManager = $userManager;
     }
 
     /**
@@ -144,9 +155,20 @@ class WorkspaceParametersController extends Controller
         $this->checkAccess($workspace);
         $form = $this->formFactory->create(FormFactory::TYPE_WORKSPACE_EDIT, array(), $workspace);
 
+        if ($workspace->getSelfRegistration()) {
+            $url = $this->router->generate(
+                'claro_workspace_subscription_url_generate',
+                array('workspace' => $workspace->getId()),
+                true
+            );
+        } else {
+            $url = '';
+        }
+
         return array(
             'form' => $form->createView(),
-            'workspace' => $workspace
+            'workspace' => $workspace,
+            'url' => $url
         );
     }
 
@@ -200,7 +222,7 @@ class WorkspaceParametersController extends Controller
 
         return array(
             'form' => $form->createView(),
-            'workspace' => $workspace
+            'workspace' => $workspace,
         );
     }
 
@@ -225,6 +247,79 @@ class WorkspaceParametersController extends Controller
         );
 
         return new Response($event->getContent());
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/{workspace}/subscription/url/generate",
+     *     name="claro_workspace_subscription_url_generate"
+     * )
+     * @EXT\Method("GET")
+     *
+     * @EXT\Template("ClarolineCoreBundle:Tool\workspace\parameters:generate_url_subscription.html.twig")
+     *
+     * @param AbstractWorkspace $workspace
+     *
+     * @return Response
+     */
+    public function urlSubscriptionGenerateAction(AbstractWorkspace $workspace)
+    {
+        $user = $this->security->getToken()->getUser();
+
+        if ( $user === 'anon.') {
+            return $this->redirect(
+                $this->generateUrl(
+                    'claro_workspace_subscription_url_generate_anonymous',
+                    array(
+                        'workspace' => $workspace->getId(),
+                        'toolName' => 'home'
+                    )
+                )
+            );
+        }
+
+        $this->workspaceManager->addUserAction($workspace, $user);
+
+        return $this->redirect(
+            $this->generateUrl('claro_workspace_open_tool', array('workspaceId' => $workspace->getId(), 'toolName' => 'home'))
+        );
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/{workspace}/subscription/url/generate/anonymous",
+     *     name="claro_workspace_subscription_url_generate_anonymous"
+     * )
+     * @EXT\Method({"GET","POST"})
+     *
+     * @EXT\Template("ClarolineCoreBundle:Tool\workspace\parameters:generate_url_subscription_anonymous.html.twig")
+     *
+     * @param AbstractWorkspace $workspace
+     *
+     * @return Response
+     */
+    public function anonymousSubscriptionAction(AbstractWorkspace $workspace)
+    {
+        if (!$workspace->getSelfRegistration()) {
+            throw new AccessDeniedHttpException();
+        }
+        $form = $this->formFactory->create(
+            FormFactory::TYPE_USER_BASE_PROFILE,array($this->localeManager->getAvailableLocales())
+        );
+        $form->handleRequest($this->request);
+
+        if ($form->isValid()) {
+            $user = $form->getData();
+            $this->userManager->createUser($user);
+            $this->workspaceManager->addUserAction($workspace, $user);
+            return $this->redirect(
+                $this->generateUrl('claro_workspace_open_tool', array('workspaceId' => $workspace->getId(), 'toolName' => 'home')));
+        }
+
+        return array(
+            'form' => $form->createView(),
+            'workspace' => $workspace
+        );
     }
 
     private function checkAccess(AbstractWorkspace $workspace)
