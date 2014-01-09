@@ -26,6 +26,7 @@ class Updater020800
         $this->log('Removing old claro_link table...');
         $conn = $this->container->get('doctrine.dbal.default_connection');
         $conn->exec('DROP TABLE claro_link');
+        $conn->exec('DROP TABLE claro_resource_type_custom_action');
     }
 
     public function setLogger($logger)
