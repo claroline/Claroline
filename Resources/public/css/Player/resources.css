@@ -1,6 +1,4 @@
-.path-player .resources .lvl-indicator{
-	width : 10px;
-	display:inline-block;
-	border-radius:2px;
-	margin-right:3px;
+.path-player .resources li{
+	list-style: none;
+	margin-bottom:5px;
 }

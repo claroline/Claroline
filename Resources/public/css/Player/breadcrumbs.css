@@ -1,3 +1,11 @@
+.nav-buttons{
+    margin-right:5px;
+}
+
+.nav-buttons .btn{
+    padding:8px;
+}
+
 .path-player .breadcrumbs ul {
     border-radius: 3px;
     font-size: 0;
@@ -138,15 +146,3 @@
 .path-player .breadcrumbs ul > li.ghost:hover {
     opacity:1;   
 }
-
-/*
-.path-player .breadcrumbs ul > li.ghost-0{
-    border-top-left-radius:3px;
-    border-bottom-left-radius:3px;
-    margin-left:40px;
-}
-
-.path-player .breadcrumbs ul > li.ghost-0 a{
-    padding-left:16px;
-}
-*/

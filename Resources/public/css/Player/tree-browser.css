@@ -1,0 +1,12 @@
+.tree-browser .parent{
+	color:black;
+}
+
+.tree-browser ul{
+	list-style: none;
+}
+
+.tree-browser a{
+	margin-bottom:5px;
+	display:inline-block;
+}

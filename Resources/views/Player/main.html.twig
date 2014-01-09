@@ -7,30 +7,39 @@
 	<link rel="stylesheet" media="screen" href="{{ asset('bundles/innovapath/css/Player/petit-poucet.css') }}"/>
     <link rel="stylesheet" media="screen" href="{{ asset('bundles/innovapath/css/Player/resources.css') }}"/>
     <link rel="stylesheet" media="screen" href="{{ asset('bundles/innovapath/css/Player/current-step.css') }}"/>
+    <link rel="stylesheet" media="screen" href="{{ asset('bundles/innovapath/css/Player/tree-browser.css') }}"/>
 {% endblock %}
 
 {% block content %}
-<div class="path-player">
-    <div class="breadcrumbs">
-        {{ render(controller('innova.controller.path_player:displayBreadcrumbsAction', { 'workspace': workspace, 'path': path, 'currentStep': currentStep })) }}
-    </div>
-{#
-    <div class="tree-browser">
-        {{ render(controller('innova.controller.path_player:displayTreeBrowserAction', { 'path': path, 'currentStep': currentStep } )) }}
-    </div>
-#}
 
-    <div class="content row">
-        <div class="col-md-3">
-            <div class="resources">
-                {{ render(controller('innova.controller.path_player:displayResourcesAction', { 'currentStep': currentStep } )) }}
+<div id="path-main-container" class="path-player">
+    <div class="tree-browser">
+        {{ render(controller('innova.controller.path_player:displayTreeBrowserAction', { 'workspace': workspace, 'path': path, 'currentStep': currentStep } )) }}
+    </div>
+    <div class="petit-poucet">
+        {{ render(controller('innova.controller.path_player:displayPetitPoucetAction', { 'workspace': workspace, 'path': path, 'currentStep': currentStep })) }}
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="pull-left nav-buttons btn-group">
+                {# Arborescence #}
+                <a class="tree-browser btn btn-default nav-button" href="#" data-toggle="modal" data-target="#full-tree" rel="tooltip" data-original-title="{{ 'full_tree' | trans({}, 'innova_tools') }}"> 
+                    <span class="icon-list"></span>  
+                </a>
+                {# Historique #}
+                <a class="btn btn-default nav-button" href="#" data-toggle="modal" data-target="#modal-history" rel="tooltip" data-original-title="{{ 'history' | trans({}, 'innova_tools') }}"> 
+                    <span class="icon-time"></span> 
+                </a>
             </div>
-            <div class="petit-poucet">
-                {{ render(controller('innova.controller.path_player:displayPetitPoucetAction', { 'workspace': workspace, 'path': path, 'currentStep': currentStep })) }}
+            {# Fil d'ariane #}
+            <div class="breadcrumbs">
+                {{ render(controller('innova.controller.path_player:displayBreadcrumbsAction', { 'workspace': workspace, 'path': path, 'currentStep': currentStep })) }}
             </div>
         </div>
-        
-        <div class="current-step col-md-9">
+    </div>
+    <div class="content row">
+        {# Contenu de l'étape #}
+        <div class="current-step col-md-12">
             {{ render(controller('innova.controller.path_player:displayCurrentStepAction', { 'workspace': workspace, 'path': path, 'currentStep': currentStep } )) }}
         </div>
     </div>
@@ -39,5 +48,5 @@
 
 {% block javascripts %}
     {{ parent() }}
-    <script type="text/javascript" src="{{ asset('bundles/innovapath/js/Player/resources.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/innovapath/js/Player/player.js') }}"></script>
 {% endblock %}

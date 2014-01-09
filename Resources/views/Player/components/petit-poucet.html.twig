@@ -1,24 +1,32 @@
 {% set history = app.session.get('history') %}
 {% set visitedSteps = history[path.id] %}
 
-<div class="panel panel-default">
-	<div class="panel-heading">
-	  	<h4 class="panel-title">
-	    	<a data-toggle="collapse" href="#collapseOne">
-	      		<span class="icon-time"></span> Historique 
-	   		</a>
-	  	</h4>
-	</div>
-	<ul id="collapseOne" class="list-group collapse in">
-		{% for i, visitedStep in visitedSteps if i < 10 and i > 0 %}
-			{% for stepId, step in visitedStep %}
-				<li class="list-group-item"> 
-					<a href="{{ path('innova_path_player_index', { workspaceId: workspace.id, pathId: path.id, stepId: stepId }) }}">
-						<span class="lvl-indicator lvl-{{  step["level"] + 1 }}">&nbsp;</span>
-						<span>{{ step["name"] }}</span>
-					</a>
-				</li>
-			{% endfor %}
-		{% endfor %}
-	</ul>
- </div>
+ <div id="modal-history" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">{{ 'history' | trans({}, 'innova_tools') }}</h4>
+            </div>
+            <div class="modal-body">
+				<ul>
+				{% for i, visitedStep in visitedSteps if i < 15 and i > 0 %}
+					{% for stepId, step in visitedStep %}
+                        <li>
+                            <span class="lvl-indicator lvl-{{  step["level"] + 1 }}">&nbsp;</span>
+                            <a href="{{ path('innova_path_player_index', { workspaceId: workspace.id, pathId: path.id, stepId: stepId }) }}">
+                                {{ step["name"] }}
+                            </a>
+                        </li> 
+					{% endfor %}
+				{% endfor %}
+				</ul>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">{{ 'close' | trans({}, 'innova_tools') }}</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+

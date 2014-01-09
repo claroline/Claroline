@@ -1,63 +1,23 @@
-{% macro breadcrumbItem(workspace, path, step) %}
-     <li class="lvl-{{ step.lvl + 1 }}">
-        <a class="step" href="{{ path('innova_path_player_index', { workspaceId: workspace.id, pathId: path.id, stepId: step.id }) }}">
-        {{ step.name }}
-        </a>
-    </li>
-{% endmacro %}
-
-{% macro dropdownBreadcrumb(workspace, path, step, class, count) %}
-    {% import _self as macros %}
-
-    {% set isTerminalClass = "" %}
-    {% if step.children is empty %}
-        {% set isTerminalClass = "terminal" %}
-    {% endif %}
-
-    <li class="dropdown lvl-{{ step.lvl + 1 }} {{ isTerminalClass }} {{ class }}">
-        <a class="dropdown-label" href="{{ path('innova_path_player_index', { workspaceId: workspace.id, pathId: path.id, stepId: step.id }) }}">
-            {{ step.name }}
-        </a>
-        {% if step.getSiblings() is not empty %}
-            <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                <b class="caret"></b>
-            </a>
-            <ul class="dropdown-menu">
-            {% set currentStepDisplayed = false %}
-            {% for i, sibling in step.getSiblings() %}
-                {% if sibling.stepOrder == step.stepOrder + 1  %}
-                    {% set currentStepDisplayed = true %}
-                    {{ macros.breadcrumbItem(workspace, path, step) }}
-                {% endif %}
-                {{ macros.breadcrumbItem(workspace, path, sibling) }}
-            {% endfor %} 
-            {% if currentStepDisplayed == false %}
-                {{ macros.breadcrumbItem(workspace, path, step) }}
-            {% endif %}
-            </ul>
-        {% endif %}
-    </li>
-{% endmacro %}
-
-{% import _self as macros %}
+{% import 'InnovaPathBundle::Player/components/macros.html.twig' as macros %}
 
 <ul>
-    {# Current workspace #}
+    {# Current workspace 
     <li class="lvl-0">
         <a href="{{ path('claro_workspace_open_tool', { workspaceId: workspace.id, toolName: 'innova_path' }) }}">
             <span class="icon-book"></span>
-            {{ workspace.getName() ~ ' - ' ~ workspace.getCode() }}
+            {{ workspace.getName() }}
         </a>
     </li>
+    #}
     
     {# Display all step chain to current selected step #}
     {% set parents = currentStep.getParents() %}
     {% for parent in parents %}
-        {{ macros.dropdownBreadcrumb(workspace, path, parent) }}
+        {{ macros.dropdownBreadcrumb(workspace, path, parent, "") }}
     {% endfor %}
 
     {# Display current step and siblings #}
-    {{ macros.dropdownBreadcrumb(workspace, path, currentStep) }}
+    {{ macros.dropdownBreadcrumb(workspace, path, currentStep, "") }}
     
     {# Display children #}
     {% if currentStep.children is not empty and ghost is empty %}
@@ -75,9 +35,11 @@
     {% endif %}
 
     {# Display previous path #}
-    {% for i, step in ghost %}
-        {{ macros.dropdownBreadcrumb(workspace, path, step, "ghost", i) }}
-    {% endfor %}
+    {% if ghost is not empty %}
+        {% for ghostItem in ghost %}
+            {{ macros.dropdownBreadcrumb(workspace, path, ghostItem, "ghost") }}
+        {% endfor %}
+    {% endif %}
 </ul>
 
 

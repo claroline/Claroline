@@ -1,0 +1,77 @@
+{% macro displayResource(resource, step) %}
+    <a target="_blank" class="btn btn-default btn-xs" href="{{ path('claro_resource_open', {'node': resource.resourceNode.id, 'resourceType': resource.resourceNode.resourceType.name }) }}" > 
+        <span rel="tooltip" data-original-title="{{ step.name }}" class="lvl-{{ step.lvl + 1 }} lvl-indicator">&nbsp;</span>
+        {{ resource.resourceNode.name }}
+    </a>
+{% endmacro %}
+
+{% macro displayTreeItem(item, parents, currentStep, path, workspace) %}
+    {% import _self as macros %}
+    {% set class = "" %}
+    {% if item in parents or item == currentStep %}
+        {% set class = "parent" %}
+    {% endif %}
+    <li>
+        <span class="lvl-{{ item.lvl + 1 }} lvl-indicator">&nbsp;</span>
+        <a class="{{ class }}" href="{{ path('innova_path_player_index', { workspaceId: workspace.id, pathId: path.id, stepId: item.id }) }}">{{ item.name }}</a>
+        {% if item.children is not empty %}
+        <ul>
+            {% for child in item.children %}
+                {{ macros.displayTreeItem(child, parents, currentStep, path, workspace) }}
+            {% endfor %}
+        </ul>
+        {% endif %}
+    </li>
+{% endmacro %}
+
+
+{% macro displayCollecticiel(resource, step) %}
+    <a target="_blank" class="btn btn-default btn-xs" href="{{ path('claro_resource_open', {'node': resource.resourceNode.id, 'resourceType': resource.resourceNode.resourceType.name }) }}" > 
+        <span rel="tooltip" data-original-title="{{ step.name }}" class="lvl-{{ step.lvl + 1 }} lvl-indicator">&nbsp;</span>
+        {{ resource.resourceNode.name }}
+    </a>
+{% endmacro %}
+
+{% macro breadcrumbItem(workspace, path, step) %}
+    <li class="lvl-{{ step.lvl + 1 }}">
+        <a class="step" href="{{ path('innova_path_player_index', { workspaceId: workspace.id, pathId: path.id, stepId: step.id }) }}">
+        {{ step.name }}
+        </a>
+    </li>
+{% endmacro %}
+
+{% macro dropdownBreadcrumb(workspace, path, step, class) %}
+    {% import _self as macros %}
+
+    {% set isTerminalClass = "" %}
+    {% if step.children is empty %}
+        {% set isTerminalClass = "terminal" %}
+    {% endif %}
+
+    <li class="dropdown lvl-{{ step.lvl + 1 }} {{ isTerminalClass }} {{ class }}">
+        <a class="dropdown-label" href="{{ path('innova_path_player_index', { workspaceId: workspace.id, pathId: path.id, stepId: step.id }) }}">
+            {{ step.name }}
+        </a>
+        {% set siblings = step.siblings %}
+        {% if siblings is not empty %}
+            <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                <b class="caret"></b>
+            </a>
+            <ul class="dropdown-menu">
+            {% set currentStepDisplayed = false %}
+
+            {% for sibling in siblings %}
+                {% if sibling.stepOrder == step.stepOrder + 1  %}
+                    {% set currentStepDisplayed = true %}
+                    {{ macros.breadcrumbItem(workspace, path, step) }}
+                {% endif %}
+                {{ macros.breadcrumbItem(workspace, path, sibling) }}
+            {% endfor %} 
+
+            {% if currentStepDisplayed == false %}
+                {{ macros.breadcrumbItem(workspace, path, step) }}
+            {% endif %}
+            </ul>
+        {% endif %}
+    </li>
+{% endmacro %}

@@ -1,43 +1,19 @@
-{% macro displayCollecticiel(resource, step) %}
-    {% import _self as resourcesMacro %}
-    <a target="_blank" href="{{ path('claro_resource_open', {'node': resource.resourceNode.id, 'resourceType': resource.resourceNode.resourceType.name }) }}" class="btn btn-default btn-xs"> 
-        <span rel="tooltip" data-original-title="{{ step.name }}" class="lvl-{{ step.lvl + 1 }} lvl-indicator">&nbsp;</span>
-        <span>{{ resource.resourceNode.name }}</span>
-    </a>
-{% endmacro %}
-
-{% import _self as resourcesMacro %}
+{% import 'InnovaPathBundle::Player/components/macros.html.twig' as macros %}
 
 <div class="panel panel-default">
-    <div class="panel-heading">
+    <div class="panel-heading lvl lvl-{{ currentStep.lvl + 1 }}">
         <h4 class="panel-title">
-            {{ currentStep.name }}
-            {# Demande de JJ... #}
-                <span class="pull-right">
-                {% set allParents = currentStep.getParents() %}
-                {% for parent in allParents %}
-                    {% for resource in parent.step2ResourceNodes if resource.propagated == true %}
-                        {# todo - à revoir, y'a surement plus intelligent à faire... mais on est limité par le modèle de données un peu bancal ici #}
-                        {% set thisResourceIsExcluded = false %}
-                        {% for resourceCurrentStep in currentStep.step2ResourceNodes if resourceCurrentStep.excluded == true and resourceCurrentStep.resourceNode == resource.resourceNode %}
-                            {% set thisResourceIsExcluded = true %}
-                        {% endfor %}
-                        {% if thisResourceIsExcluded == false and resource.resourceNode.resourceType.name == "icap_dropzone" %}
-                            {{ resourcesMacro.displayCollecticiel(resource, parent) }}
-                        {% endif %}
-                    {% endfor %}
-                {% endfor %}
+            <span class="title">{{ currentStep.name }}</span>
 
-                {# Gestion des ressources locales #}
-                {% for resource in currentStep.step2ResourceNodes if resource.excluded == false and resource.resourceNode.resourceType.name == "icap_dropzone" %}
-                {{ resourcesMacro.displayCollecticiel(resource, currentStep) }}
-                {% endfor %}
-                </span>
-            {# End Demande de JJ... #}
+            <span class="resources pull-right">
+                {{ render(controller('innova.controller.path_player:displayResourcesAction', { 'currentStep': currentStep } )) }}
+            </span>
+
         </h4>
     </div>
     <div class="panel-body">
         {% if currentStep.children is not empty %}
+            {% if currentStep.instructions is null %}
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <h5 class="panel-title text-center">
@@ -56,9 +32,8 @@
                 {% endfor %}
                 </ul>
             </div>
+            {% endif %}
         {% endif %}
         {{ currentStep.instructions | raw }}
     </div>
 </div>
-
-
