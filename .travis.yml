@@ -21,6 +21,6 @@ before_script:
   - composer require claroline/bundle-recorder "~2.1" --prefer-dist
   - cp composer.dist.json composer.json
   - rm composer.lock
-  - composer --prefer-dist --dev install -o
+  - composer --prefer-source --dev install -o
   - php app/console claroline:init_test_schema --env=test
 script: phpunit -c app
