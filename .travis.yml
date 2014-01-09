@@ -1,7 +1,7 @@
 language: php
 php:
+  - "5.5"
   - "5.4"
-  - "5.3"
 env:
   - DB=mysql
   - DB=pgsql
@@ -15,10 +15,12 @@ postgres:
   database: claroline_test
   username: postgres
 before_script:
-  - cp app/config/local/parameters.yml.dist app/config/local/parameters.yml
-  - if [ "$DB" == "mysql" ]; then sed -i "s/root/travis/" app/config/local/parameters.yml; fi
-  - if [ "$DB" == "pgsql" ]; then sed -i "s/root/postgres/; s/pdo_mysql/pdo_pgsql/" app/config/local/parameters.yml; fi
-  - composer --prefer-source --dev install
-  - php app/console doctrine:database:create --env=test
-  - php app/console claroline:install --env=test
-script: phpunit -c app --testsuite core
+  - cp app/config/parameters.yml.dist app/config/parameters.yml
+  - if [ "$DB" == "mysql" ]; then sed -i "s/root/travis/" app/config/parameters.yml; fi
+  - if [ "$DB" == "pgsql" ]; then sed -i "s/root/postgres/; s/pdo_mysql/pdo_pgsql/" app/config/parameters.yml; fi
+  - composer require claroline/bundle-recorder "~2.1" --prefer-dist
+  - cp composer.dist.json composer.json
+  - rm composer.lock
+  - composer --prefer-dist --dev install -o
+  - php app/console claroline:init_test_schema --env=test
+script: phpunit -c app
