@@ -25,6 +25,7 @@ class AnnouncementControllerTest extends MockeryTestCase
     private $formFactory;
     private $pagerFactory;
     private $securityContext;
+    private $dispatcher;
     private $translator;
     private $utils;
     private $workspaceManager;
@@ -36,6 +37,7 @@ class AnnouncementControllerTest extends MockeryTestCase
         $this->formFactory = $this->mock('Symfony\Component\Form\FormFactoryInterface');
         $this->pagerFactory = $this->mock('Claroline\CoreBundle\Pager\PagerFactory');
         $this->securityContext = $this->mock('Symfony\Component\Security\Core\SecurityContextInterface');
+        $this->dispatcher = $this->mock('Symfony\Component\EventDispatcher\EventDispatcher');
         $this->translator = $this->mock('Symfony\Component\Translation\Translator');
         $this->utils = $this->mock('Claroline\CoreBundle\Library\Security\Utilities');
         $this->workspaceManager = $this->mock('Claroline\CoreBundle\Manager\WorkspaceManager');
@@ -198,13 +200,15 @@ class AnnouncementControllerTest extends MockeryTestCase
         );
     }
 
-    public function announcementEditAction(Announcement $announcement)
+    public function testAnnouncementEditAction()
     {
         $this->markTestSkipped('Will be tested later');
     }
 
     public function testAnnouncementDeleteAction()
     {
+        $this->markTestSkipped('Event dispatching must be mocked');
+
         $controller = $this->getController(array('checkAccess'));
         $announcement = $this->mock('Claroline\AnnouncementBundle\Entity\Announcement');
         $aggregate = new AnnouncementAggregate();
@@ -337,6 +341,7 @@ class AnnouncementControllerTest extends MockeryTestCase
                 $this->formFactory,
                 $this->pagerFactory,
                 $this->securityContext,
+                $this->dispatcher,
                 $this->translator,
                 $this->utils,
                 $this->workspaceManager
@@ -359,6 +364,7 @@ class AnnouncementControllerTest extends MockeryTestCase
                 $this->formFactory,
                 $this->pagerFactory,
                 $this->securityContext,
+                $this->dispatcher,
                 $this->translator,
                 $this->utils,
                 $this->workspaceManager
