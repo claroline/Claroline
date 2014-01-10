@@ -1110,17 +1110,16 @@ class AdministrationController extends Controller
      *     name="claro_admin_registration_management_search",
      *     options = {"expose"=true}
      * )
-     * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
      * @EXT\Method("GET")
      *
      * @EXT\Template()
      *
      * @return Response
      */
-    public function registrationManagementAction($search, User $user)
+    public function registrationManagementAction($search)
     {
         if ($search === '') {
-            $datas = $this->workspaceTagManager->getDatasForWorkspaceList(false, $user);
+            $datas = $this->workspaceTagManager->getDatasForWorkspaceList(false);
 
             return array(
                 'workspaces' => $datas['workspaces'],
@@ -1132,7 +1131,7 @@ class AdministrationController extends Controller
                 'search' => ''
             );
         }
-        $pager = $this->workspaceManager->getDisplayableWorkspacesBySearchPager($search, 1, $user);
+        $pager = $this->workspaceManager->getDisplayableWorkspacesBySearchPager($search, 1);
 
         return array('workspaces' => $pager, 'search' => $search);
     }

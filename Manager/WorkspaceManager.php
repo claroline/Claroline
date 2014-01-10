@@ -680,9 +680,9 @@ class WorkspaceManager
      *
      * @return \PagerFanta\PagerFanta
      */
-    public function getDisplayableWorkspacesBySearchPager($search, $page, User $user)
+    public function getDisplayableWorkspacesBySearchPager($search, $page)
     {
-        $workspaces = $this->workspaceRepo->findDisplayableWorkspacesBySearch($search, $user);
+        $workspaces = $this->workspaceRepo->findDisplayableWorkspacesBySearch($search);
 
         return $this->pagerFactory->createPagerFromArray($workspaces, $page);
     }
