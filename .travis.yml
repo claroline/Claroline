@@ -18,9 +18,9 @@ before_script:
   - cp app/config/parameters.yml.dist app/config/parameters.yml
   - if [ "$DB" == "mysql" ]; then sed -i "s/root/travis/" app/config/parameters.yml; fi
   - if [ "$DB" == "pgsql" ]; then sed -i "s/root/postgres/; s/pdo_mysql/pdo_pgsql/" app/config/parameters.yml; fi
-  - composer require claroline/bundle-recorder "~2.1" --prefer-dist
+  - composer require claroline/bundle-recorder "~2.1" --prefer-source
   - cp composer.dist.json composer.json
   - rm composer.lock
-  - composer --prefer-dist --dev install -o
+  - composer --prefer-source --dev install -o
   - php app/console claroline:init_test_schema --env=test
 script: phpunit -c app
