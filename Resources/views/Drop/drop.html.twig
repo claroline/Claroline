@@ -150,32 +150,14 @@
                 $('.add-document-pending').show();
             };
 
-            Claroline.ResourceManager.initialize({
-                "parentElement": $('#picker-wrapper'),
-                "isPickerMultiSelectAllowed": false,
-                "isPickerOnly": true,
-                "pickerCallback": function(nodes){callBack(nodes);},
-                "appPath": "{{ app.request.getBaseUrl }}",
-                "webPath": "{{ asset('') }}",
-                "resourceTypes": {
-                    {% for resourceType in resourceTypes %}
-                    "{{ resourceType.getName() }}": {
-                        "name": "{{ resourceType.getName()|trans({}, 'resource') }}",
-                        "customActions": {
-                            {% for customAction in resourceType.getCustomActions() %}
-                            "{{ customAction.getAction() }}": {
-                                "name": "{{ customAction.getAction() }}",
-                                "route": "{{ path('claro_resource_custom', {'resourceType': resourceType.getName(), 'action': customAction.getAction(), 'node': '_nodeId' }) }}",
-                                "async": {% if customAction.isAsync() %} 1 {% else %} 0 {% endif %}
-                            }
-                            {% if loop.last != true %},{% endif %}
-                            {% endfor %}
-                        }
-                    }
-                    {% if loop.last != true %},{% endif %}
-                    {% endfor %}
-                }
-            });
+            var config = {% include 'ClarolineCoreBundle:Resource:init.html.twig' %};
+            config.parentElement = $('#picker-wrapper');
+            config.isPickerMultiSelectAllowed = false;
+            config.isPickerOnly = true;
+            config.pickerCallback = function (nodes) {
+                callBack(nodes);
+            }
+            Claroline.ResourceManager.initialize(config);
 
             $('a.launch-inline').on('click', function (event) {
                 event.preventDefault();
