@@ -4,7 +4,7 @@
     {{ parent() }}
     {% stylesheets debug=false filter='cssmin'  output='vendor/innova/path/editor.css'
         '@InnovaPathBundle/Resources/public/css/Editor/*'
-        '@InnovaUIPageslideBundle/Resources/public/css/*'
+        '@InnovaAngularUIPageslideBundle/Resources/public/css/*'
     %}
         <link rel="stylesheet" href="{{ asset_url }}" screen="media" />
     {% endstylesheets %}
