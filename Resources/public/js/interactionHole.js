@@ -1,5 +1,14 @@
-var container = $('div#ujm_exobundle_interactionholetype_holes'); // Div which contain the dataprototype
+// div which contain the choices array
 var tableHoles = $('#tableHoles'); // div which contain the choices array
+
+// Div which contain the dataprototype
+var container = $('div#ujm_exobundle_interactionholetype_holes'); 
+
+//To find the prototype of wordReponse which is integrated in the prototye of hole
+tableHoles.append('<div id="prototypes" style="display:none"></div>');
+var containerWR = container.attr('data-prototype').valueOf();
+$('#prototypes').append(containerWR);
+containerWR = $('#ujm_exobundle_interactionholetype_holes___name___wordResponses').attr('data-prototype');
 
 function addFormHole(add, Response, point, size, orthography, del, selector, source_image_add)
 {
@@ -35,6 +44,7 @@ function addHole(indHole, valHole, del)
     var uniqChoiceID = false;
 
     var index = $('#newTable').find('tr:not(:first)').length;
+    var indexWR = 0;
     
     $('#newTable').find('tbody').append('<tr></tr>');
     
@@ -63,6 +73,14 @@ function addHole(indHole, valHole, del)
     container.remove();
     
     $('#newTable').find('tr:last').append('<td class="classic"></td>');
+    //alert(containerWR.valueOf());
+    containerWR.append(
+        $(containerWR.replace(/__name__/, index))
+    );
+    containerWR.append(
+        $(containerWR.replace(/__name__/, 8))
+    );
+    alert(containerWR.valueOf());
     
     // Add delete button
     $('#newTable').find('tr:last').append('<td class="classic"><a id="hole_'+index+'" href="#" class="btn btn-danger">'+del+'</a></td>');
