@@ -10,7 +10,6 @@ $( document ).ready(function() {
 		$("#popup").hide();
 		$("#popup-iframe").attr("src", "");
 	});
-
 });
 
 
