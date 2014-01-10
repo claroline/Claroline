@@ -87,7 +87,7 @@ class WorkspaceAgendaController extends Controller
                 $event->setWorkspace($workspace);
                 $event->setUser($this->security->getToken()->getUser());
                 $this->om->persist($event);
-                if ($event->getRecurring() > 0) {                    
+                if ($event->getRecurring() > 0) {
                     $this->calculRecurrency($event);
                 }
                 $this->om->flush();
@@ -261,15 +261,26 @@ class WorkspaceAgendaController extends Controller
         $postData = $this->request->request->all();
         $repository = $this->om->getRepository('ClarolineCoreBundle:Event');
         $event = $repository->find($postData['id']);
-        $this->checkUserIsAllowed('agenda', $event->getWorkspace());
-        if (!$this->checkUserIsAllowedtoWrite( $event->getWorkspace())) {
-            throw new AccessDeniedException();
+        // if is null = desktop event
+        if (!is_null($event->getWorkspace())) {
+            $this->checkUserIsAllowed('agenda', $event->getWorkspace());
+
+            if (!$this->checkUserIsAllowedtoWrite($event->getWorkspace())) {
+                throw new AccessDeniedException();
+            }
         }
+
         // timestamp 1h = 3600
-        $newStartDate = strtotime(''.$postData['dayDelta'].' day '.$postData['minuteDelta'].' minute', $event->getStart()->getTimestamp());
+        $newStartDate = strtotime(
+            $postData['dayDelta'] . ' day ' . $postData['minuteDelta'] . ' minute',
+            $event->getStart()->getTimestamp()
+        );
         $dateStart = new \DateTime(date('d-m-Y H:i', $newStartDate));
         $event->setStart($dateStart);
-        $newEndDate = strtotime(''.$postData['dayDelta'].' day '.$postData['minuteDelta'].' minute', $event->getEnd()->getTimestamp());
+        $newEndDate = strtotime(
+            $postData['dayDelta'] . ' day ' . $postData['minuteDelta'] . ' minute',
+            $event->getEnd()->getTimestamp()
+        );
         $dateEnd = new \DateTime(date('d-m-Y H:i', $newEndDate));
         $event->setStart($dateStart);
         $event->setEnd($dateEnd);
@@ -325,35 +336,35 @@ class WorkspaceAgendaController extends Controller
         $usr = $this->security->getToken()->getUser();
         $rm = $this->rm->getManagerRole($workspace);
         $ru = $this->rm->getWorkspaceRolesForUser($usr, $workspace);
-        if( !is_null($event))
-        {
-            if ($event->getUser()->getUsername()=== $usr->getUsername()) {
+        if ( !is_null($event)) {
+            if ($event->getUser()->getUsername() === $usr->getUsername()) {
                 return true;
             }
         }
-        foreach ($ru as $role )
-        {
+        foreach ($ru as $role) {
             if ($role->getTranslationKey() === $rm->getTranslationKey()) {
                 return true;
             }
+
             return false;
         }
     }
 
     private function calculRecurrency(Event $event)
     {
-        $listEvents =  array();
+        $listEvents = array();
+
         // it calculs by day for now
-        for ($i = 1; $i <= $event->getRecurring(); $i++) { 
+        for ($i = 1; $i <= $event->getRecurring(); $i++) {
             $temp = clone $event;
-            $newStartDate = $temp->getStart()->getTimestamp()+((3600 * 24 * $i));
-            $temp->setStart( new \DateTime(date('d-m-Y H:i', $newStartDate)));
-            $newEndDate = $temp->getEnd()->getTimestamp()+((3600 * 24 * $i));
-            $temp->setEnd( new \DateTime(date('d-m-Y H:i', $newEndDate)));
+            $newStartDate = $temp->getStart()->getTimestamp() + (3600 * 24 * $i);
+            $temp->setStart(new \DateTime(date('d-m-Y H:i', $newStartDate)));
+            $newEndDate = $temp->getEnd()->getTimestamp() + (3600 * 24 * $i);
+            $temp->setEnd(new \DateTime(date('d-m-Y H:i', $newEndDate)));
             $listEvents[$i] = $temp;
             $this->om->persist($listEvents[$i]);
 
-            return ($listEvents);
+            return $listEvents;
         }
     }
 }

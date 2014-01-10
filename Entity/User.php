@@ -97,8 +97,8 @@ class User extends AbstractRoleSubject implements Serializable, UserInterface, E
     /**
      * @var string
      *
-     * @Assert\NotBlank()
-     * @Assert\Length(min="4", groups = {"Default"})
+     * @Assert\NotBlank(groups={"registration"})
+     * @Assert\Length(min="4", groups={"registration"})
      */
     protected $plainPassword;
 
@@ -162,11 +162,9 @@ class User extends AbstractRoleSubject implements Serializable, UserInterface, E
      * @var Workspace\AbstractWorkspace
      *
      * @ORM\OneToOne(
-     *     targetEntity="Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace",
-     *     inversedBy="personalUser",
-     *     cascade={"remove"}
+     *     targetEntity="Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace"
      * )
-     * @ORM\JoinColumn(name="workspace_id", onDelete="SET NULL")
+     * @ORM\JoinColumn(name="workspace_id", onDelete="CASCADE")
      */
     protected $personalWorkspace;
 
@@ -315,7 +313,6 @@ class User extends AbstractRoleSubject implements Serializable, UserInterface, E
         return $this->locale;
     }
 
-
     /**
      * @return string
      */
@@ -387,7 +384,6 @@ class User extends AbstractRoleSubject implements Serializable, UserInterface, E
 
         return $this;
     }
-
 
     /**
      * @param string $plainPassword
@@ -769,20 +765,23 @@ class User extends AbstractRoleSubject implements Serializable, UserInterface, E
         $this->pictureFile = $pictureFile;
     }
 
-    public function setPicture($picture) {
+    public function setPicture($picture)
+    {
         $this->picture = $picture;
     }
 
-        public function getPicture()
+    public function getPicture()
     {
         return $this->picture;
     }
 
-    public function getDescription() {
+    public function getDescription()
+    {
         return $this->description;
     }
 
-    public function setDescription($description) {
+    public function setDescription($description)
+    {
         $this->description = $description;
     }
 

@@ -207,6 +207,11 @@ from: Depuis
 from_message: De
 general: Général
 general_parameters: 'Paramètres généraux'
+generate_url_subscription: 'Inscription à l''espace d''activité par un utilisateur'
+generate_url_subscription_anonyme: 'Inscription à l''espace d''activité par un anonyme'
+generate_url: 'Générer une url pour l''inscription des utilisateurs'
+generate_url_subscription_sucsess : 'Vous avez été ajouté à l''espace d''activité'
+generate_url_subscription_fail : 'Vous devez d''abord cochez la case de l''inscription publique avant de pouvoir voir l''url'
 group: Groupe
 group_configuration: 'Configuration du groupe'
 group_creation: 'Création d''un groupe'
@@ -347,9 +352,8 @@ owner: Propriétaire
 owner_s: Propriétaire(s)
 parameters: Paramètres
 password: 'Mot de passe'
-password_email_message: 'Vous avez demander de Réinitialiser votre mot de passe. CLiquez sur ce lien , si vous n''etes pas l''orgine de cette action , ignorez ce message'
-password_missmatch: 'les mots de passes ne correspondent pas'
-password_ok : 'Votre mot de passe à été modifié , vous pouvez vous connecter'
+password_mismatch: 'Les mots de passe ne correspondent pas.'
+password_ok : 'Votre mot de passe a été modifié. Vous pouvez maintenant vous connecter.'
 paste: Coller
 path: Emplacement
 permissions: Permissions
@@ -411,9 +415,9 @@ rename_category: 'Renommer la catégorie'
 rename_tool: 'Renommage d''un outil'
 rename_widget_instance: 'Renommage du Widget'
 reset: Réinitialiser
-reset_password: 'Réinitialiser mot de passe'
-reset_password_message: 'Etes vous sur de vouloir réinitialiser le mot de passe ?'
-reset_password_txt: 'Vous avez demandé la réinitiation de votre mot de passe. Si vous n''êtes pas l''origine de ce message, veuillez l''ignorer.'
+reset_password: 'Réinitialiser le mot de passe'
+reset_password_message: 'Êtes vous sur de vouloir réinitialiser le mot de passe ?'
+reset_password_txt: 'Vous avez demandé la réinitialisation de votre mot de passe. Si vous n''êtes pas à l''origine de cette action, veuillez ignorer ce message.'
 reset_pwd: 'Réinitialisation de votre mot de passe'
 reset_pwd_form_plainPassword_first: 'Nouveau mot de passe'
 reset_pwd_form_plainPassword_second : 'Répétez le mot de passe'
@@ -589,7 +593,7 @@ workspace_delete: 'Supprimer l''espace d''activités'
 workspace_delete_confirm_message: 'Etes-vous sûr de vouloir supprimer cet espace d''activités ?'
 workspace_delete_confirm_title: 'Confirmation de suppression'
 workspace_edit_form_code: Code
-workspace_edit_form_displayable: Public
+workspace_edit_form_displayable: Visible
 workspace_edit_form_name: Nom
 workspace_edit_form_selfRegistration: 'Inscription publique'
 workspace_edit_form_selfUnregistration: 'Désinscription publique'

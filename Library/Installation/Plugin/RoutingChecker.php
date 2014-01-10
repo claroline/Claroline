@@ -47,7 +47,7 @@ class RoutingChecker implements CheckerInterface
      *
      * Constructor.
      *
-     * @param Router $router
+     * @param Router                         $router
      * @param \Symfony\Component\Yaml\Parser $yamlParser
      */
     public function __construct(Router $router, Parser $yamlParser)

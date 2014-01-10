@@ -9,18 +9,13 @@
  * file that was distributed with this source code.
  */
 
-namespace Claroline\CoreBundle\DataFixtures\Required;
+namespace Claroline\CoreBundle\DataFixtures\Required\Data;
 
-use Doctrine\Common\Persistence\ObjectManager;
-use Doctrine\Common\DataFixtures\AbstractFixture;
-use Claroline\CoreBundle\Entity\Home\Content;
-use Claroline\CoreBundle\Entity\Home\SubContent;
+use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Home\Region;
-use Claroline\CoreBundle\Entity\Home\Content2Region;
-use Claroline\CoreBundle\Entity\Home\Type;
-use Claroline\CoreBundle\Entity\Home\Content2Type;
+use Claroline\CoreBundle\DataFixtures\Required\RequiredFixture;
 
-class LoadRegionData extends AbstractFixture
+class LoadRegionData implements RequiredFixture
 {
     public function load(ObjectManager $manager)
     {
@@ -33,7 +28,10 @@ class LoadRegionData extends AbstractFixture
 
             $manager->persist($region);
         }
+    }
 
-        $manager->flush();
+    public function setContainer($container)
+    {
+        $this->container = $container;
     }
 }

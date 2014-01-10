@@ -111,13 +111,13 @@ class ResourceManager
      * array('ROLE_WS_XXX' => array('open' => true, 'edit' => false, ...
      * 'create' => array('directory', ...), 'role' => $entity))
      *
-     * @param \Claroline\CoreBundle\Entity\Resource\AbstractResource $resource
-     * @param \Claroline\CoreBundle\Entity\Resource\ResourceType $resourceType
-     * @param \Claroline\CoreBundle\Entity\User $creator
+     * @param \Claroline\CoreBundle\Entity\Resource\AbstractResource   $resource
+     * @param \Claroline\CoreBundle\Entity\Resource\ResourceType       $resourceType
+     * @param \Claroline\CoreBundle\Entity\User                        $creator
      * @param \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace $workspace
-     * @param \Claroline\CoreBundle\Entity\Resource\ResourceNode $parent
-     * @param \Claroline\CoreBundle\Entity\Resource\ResourceIcon $icon
-     * @param array $rights
+     * @param \Claroline\CoreBundle\Entity\Resource\ResourceNode       $parent
+     * @param \Claroline\CoreBundle\Entity\Resource\ResourceIcon       $icon
+     * @param array                                                    $rights
      *
      * @return \Claroline\CoreBundle\Entity\Resource\AbstractResource
      */
@@ -316,9 +316,9 @@ class ResourceManager
     /**
      * Creates a shortcut.
      *
-     * @param \Claroline\CoreBundle\Entity\Resource\ResourceNode $target
-     * @param \Claroline\CoreBundle\Entity\Resource\ResourceNode $parent
-     * @param \Claroline\CoreBundle\Entity\User $creator
+     * @param \Claroline\CoreBundle\Entity\Resource\ResourceNode     $target
+     * @param \Claroline\CoreBundle\Entity\Resource\ResourceNode     $parent
+     * @param \Claroline\CoreBundle\Entity\User                      $creator
      * @param \Claroline\CoreBundle\Entity\Resource\ResourceShortcut $shortcut
      *
      * @return \Claroline\CoreBundle\Entity\Resource\ResourceShortcut
@@ -357,7 +357,7 @@ class ResourceManager
      *
      * @param \Claroline\CoreBundle\Entity\Resource\ResourceNode $node
      * @param \Claroline\CoreBundle\Entity\Resource\ResourceNode $parent
-     * @param array $rights
+     * @param array                                              $rights
      *
      * @throws RightsException
      */
@@ -385,7 +385,7 @@ class ResourceManager
      * 'create' => array('directory', ...), 'role' => $entity))
      *
      * @param \Claroline\CoreBundle\Entity\Resource\ResourceNode $node
-     * @param array $rights
+     * @param array                                              $rights
      */
     public function createRights(
         ResourceNode $node,
@@ -717,7 +717,7 @@ class ResourceManager
      *
      * @param \Claroline\CoreBundle\Entity\Resource\ResourceNode $node
      * @param \Claroline\CoreBundle\Entity\Resource\ResourceNode $parent
-     * @param \Claroline\CoreBundle\Entity\User $user
+     * @param \Claroline\CoreBundle\Entity\User                  $user
      *
      * @return \Claroline\CoreBundle\Entity\Resource\ResourceNode
      */
@@ -944,7 +944,7 @@ class ResourceManager
     /**
      * Returns every children of every resource (includes the startnode).
      *
-     * @param  \Claroline\CoreBundle\Entity\Resource\ResourceNode[] $nodes
+     * @param \Claroline\CoreBundle\Entity\Resource\ResourceNode[] $nodes
      *
      * @return \Claroline\CoreBundle\Entity\Resource\ResourceNode[]
      *
@@ -999,7 +999,7 @@ class ResourceManager
      * Renames a node.
      *
      * @param \Claroline\CoreBundle\Entity\Resource\ResourceNode $node
-     * @param string $name
+     * @param string                                             $name
      *
      * @return \Claroline\CoreBundle\Entity\Resource\ResourceNode
      */
@@ -1016,7 +1016,7 @@ class ResourceManager
     /**
      * Changes a node icon.
      *
-     * @param \Claroline\CoreBundle\Entity\Resource\ResourceNode $node
+     * @param \Claroline\CoreBundle\Entity\Resource\ResourceNode  $node
      * @param \Symfony\Component\HttpFoundation\File\UploadedFile $file
      *
      * @return \Claroline\CoreBundle\Entity\Resource\ResourceIcon
@@ -1117,8 +1117,8 @@ class ResourceManager
 
     /**
      * @param \Claroline\CoreBundle\Entity\Resource\ResourceNode $node
-     * @param string[] $roles
-     * @param boolean $isSorted
+     * @param string[]                                           $roles
+     * @param boolean                                            $isSorted
      *
      * @return array
      */
@@ -1131,7 +1131,7 @@ class ResourceManager
 
     /**
      * @param \Claroline\CoreBundle\Entity\Resource\ResourceNode $node
-     * @param boolean $includeStartNode
+     * @param boolean                                            $includeStartNode
      *
      * @return array
      */
@@ -1151,9 +1151,9 @@ class ResourceManager
     }
 
     /**
-     * @param string $mimeType
+     * @param string                                             $mimeType
      * @param \Claroline\CoreBundle\Entity\Resource\ResourceNode $parent
-     * @param string[]|RoleInterface[] $roles
+     * @param string[]|RoleInterface[]                           $roles
      *
      * @return array
      */
@@ -1176,9 +1176,9 @@ class ResourceManager
      * )
      *
      *
-     * @param array $criteria
+     * @param array                      $criteria
      * @param string[] | RoleInterface[] $userRoles
-     * @param boolean $isRecursive
+     * @param boolean                    $isRecursive
      *
      * @return array
      */
@@ -1247,7 +1247,7 @@ class ResourceManager
      *
      * @param \Claroline\CoreBundle\Entity\Resource\ResourceNode $node
      * @param \Claroline\CoreBundle\Entity\Resource\ResourceNode $newParent
-     * @param \Claroline\CoreBundle\Entity\User $user
+     * @param \Claroline\CoreBundle\Entity\User                  $user
      * @param \Claroline\CoreBundle\Entity\Resource\ResourceNode $last
      *
      * @return \Claroline\CoreBundle\Entity\Resource\ResourceNode

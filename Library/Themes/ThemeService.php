@@ -101,8 +101,8 @@ class ThemeService
     }
 
     /**
-     * @param array $filter The array that is used to filter an entity (example: array('id' => 3, 'name' => 'Claroline'))
-     *
+     * @param array $filter The array that is used to filter an entity
+     *                      (example: array('id' => 3, 'name' => 'Claroline'))
      * @return Theme|null
      */
     public function findTheme(array $filter)
@@ -127,7 +127,7 @@ class ThemeService
         return $search;
     }
 
-    public function editTheme($variables, $name = null, $id = null)
+    public function editTheme($variables, $name = null, $id = null, $themeLess)
     {
         if ($id) {
             $theme = $this->getTheme($id);
@@ -135,6 +135,10 @@ class ThemeService
             $theme = new Theme('', '');
             $this->em->persist($theme);
             $this->em->flush();
+        }
+
+        if (!$themeLess) {
+            $themeLess = $this->getThemeLessContent();
         }
 
         if ($name) {
@@ -147,12 +151,12 @@ class ThemeService
         $path = $this->lessPath . str_replace(' ', '-', strtolower($theme->getName()));
 
         if (!is_dir($path)) {
-            mkdir($path, 0777, true);
+            mkdir($path, 0755, true);
         }
 
         file_put_contents($path.'/variables.less', $variables);
         file_put_contents($path.'/common.less', $this->getCommonLessContent());
-        file_put_contents($path.'/theme.less', $this->getThemeLessContent());
+        file_put_contents($path.'/theme.less', $themeLess);
         file_put_contents($path.'/theme.html.twig', $this->renderThemeTemplate($theme->getName()));
 
         $this->compileRaw(array($theme->getName()));
@@ -193,8 +197,8 @@ class ThemeService
     /**
      * Compile Less Themes that are defined in a twig file with lessphp filter
      *
-     * @param mixed $themes An array of Theme entities or a string of the template with following syntax:
-     *                      'ClarolineCoreBundle:less:bootstrap-default/theme.html.twig'
+     * @param mixed  $themes  An array of Theme entities or a string of the template with following syntax:
+     *                        'ClarolineCoreBundle:less:bootstrap-default/theme.html.twig'
      * @param string $webPath
      *
      * @todo Find something better for web path
@@ -241,7 +245,7 @@ class ThemeService
             $folder = str_replace(' ', '-', strtolower($name));
 
             if (!file_exists($this->themePath.$folder)) {
-                mkdir($this->themePath.$folder, 0777, true);
+                mkdir($this->themePath.$folder, 0755, true);
             }
 
             $less = new \lessc;
@@ -252,23 +256,14 @@ class ThemeService
         }
     }
 
-    private function retrieveThemes()
+    public function getThemeLessContent()
     {
-        if ($this->themes === null) {
-            $this->themes = $this->em->getRepository('ClarolineCoreBundle:Theme\Theme')->findAll();
-        }
-
-        return $this->themes;
+        return file_get_contents(__DIR__ . '/../../Resources/views/Theme/templates/theme.less');
     }
 
-    private function getThemeLessContent()
+    public function getCommonLessContent()
     {
-        return file_get_contents(__DIR__ . '/../../Resources/views/Theme/templates/theme.less.twig');
-    }
-
-    private function getCommonLessContent()
-    {
-        return file_get_contents(__DIR__ . '/../../Resources/views/Theme/templates/common.less.twig');
+        return file_get_contents(__DIR__ . '/../../Resources/views/Theme/templates/common.less');
     }
 
     private function renderThemeTemplate($path)
@@ -277,5 +272,14 @@ class ThemeService
             'ClarolineCoreBundle:Theme:templates/theme.html.twig',
             array('dirname' => $path)
         );
+    }
+
+    private function retrieveThemes()
+    {
+        if ($this->themes === null) {
+            $this->themes = $this->em->getRepository('ClarolineCoreBundle:Theme\Theme')->findAll();
+        }
+
+        return $this->themes;
     }
 }

@@ -16,12 +16,12 @@ class Version20131205160441 extends AbstractMigration
     {
         $this->addSql("
             CREATE TABLE claro_api_client (
-                id SERIAL NOT NULL, 
-                random_id VARCHAR(255) NOT NULL, 
-                redirect_uris TEXT NOT NULL, 
-                secret VARCHAR(255) NOT NULL, 
-                allowed_grant_types TEXT NOT NULL, 
-                name VARCHAR(255) NOT NULL, 
+                id SERIAL NOT NULL,
+                random_id VARCHAR(255) NOT NULL,
+                redirect_uris TEXT NOT NULL,
+                secret VARCHAR(255) NOT NULL,
+                allowed_grant_types TEXT NOT NULL,
+                name VARCHAR(255) NOT NULL,
                 PRIMARY KEY(id)
             )
         ");
@@ -33,12 +33,12 @@ class Version20131205160441 extends AbstractMigration
         ");
         $this->addSql("
             CREATE TABLE claro_api_access_token (
-                id SERIAL NOT NULL, 
-                client_id INT NOT NULL, 
-                user_id INT DEFAULT NULL, 
-                token VARCHAR(255) NOT NULL, 
-                expires_at INT DEFAULT NULL, 
-                scope VARCHAR(255) DEFAULT NULL, 
+                id SERIAL NOT NULL,
+                client_id INT NOT NULL,
+                user_id INT DEFAULT NULL,
+                token VARCHAR(255) NOT NULL,
+                expires_at INT DEFAULT NULL,
+                scope VARCHAR(255) DEFAULT NULL,
                 PRIMARY KEY(id)
             )
         ");
@@ -53,12 +53,12 @@ class Version20131205160441 extends AbstractMigration
         ");
         $this->addSql("
             CREATE TABLE claro_api_refresh_token (
-                id SERIAL NOT NULL, 
-                client_id INT NOT NULL, 
-                user_id INT DEFAULT NULL, 
-                token VARCHAR(255) NOT NULL, 
-                expires_at INT DEFAULT NULL, 
-                scope VARCHAR(255) DEFAULT NULL, 
+                id SERIAL NOT NULL,
+                client_id INT NOT NULL,
+                user_id INT DEFAULT NULL,
+                token VARCHAR(255) NOT NULL,
+                expires_at INT DEFAULT NULL,
+                scope VARCHAR(255) DEFAULT NULL,
                 PRIMARY KEY(id)
             )
         ");
@@ -73,13 +73,13 @@ class Version20131205160441 extends AbstractMigration
         ");
         $this->addSql("
             CREATE TABLE claro_api_auth_code (
-                id SERIAL NOT NULL, 
-                client_id INT NOT NULL, 
-                user_id INT DEFAULT NULL, 
-                token VARCHAR(255) NOT NULL, 
-                redirect_uri TEXT NOT NULL, 
-                expires_at INT DEFAULT NULL, 
-                scope VARCHAR(255) DEFAULT NULL, 
+                id SERIAL NOT NULL,
+                client_id INT NOT NULL,
+                user_id INT DEFAULT NULL,
+                token VARCHAR(255) NOT NULL,
+                redirect_uri TEXT NOT NULL,
+                expires_at INT DEFAULT NULL,
+                scope VARCHAR(255) DEFAULT NULL,
                 PRIMARY KEY(id)
             )
         ");
@@ -93,33 +93,33 @@ class Version20131205160441 extends AbstractMigration
             CREATE INDEX IDX_9DFA457A76ED395 ON claro_api_auth_code (user_id)
         ");
         $this->addSql("
-            ALTER TABLE claro_api_access_token 
-            ADD CONSTRAINT FK_CE9482819EB6921 FOREIGN KEY (client_id) 
+            ALTER TABLE claro_api_access_token
+            ADD CONSTRAINT FK_CE9482819EB6921 FOREIGN KEY (client_id)
             REFERENCES claro_api_client (id) NOT DEFERRABLE INITIALLY IMMEDIATE
         ");
         $this->addSql("
-            ALTER TABLE claro_api_access_token 
-            ADD CONSTRAINT FK_CE94828A76ED395 FOREIGN KEY (user_id) 
+            ALTER TABLE claro_api_access_token
+            ADD CONSTRAINT FK_CE94828A76ED395 FOREIGN KEY (user_id)
             REFERENCES claro_user (id) NOT DEFERRABLE INITIALLY IMMEDIATE
         ");
         $this->addSql("
-            ALTER TABLE claro_api_refresh_token 
-            ADD CONSTRAINT FK_B1292B9019EB6921 FOREIGN KEY (client_id) 
+            ALTER TABLE claro_api_refresh_token
+            ADD CONSTRAINT FK_B1292B9019EB6921 FOREIGN KEY (client_id)
             REFERENCES claro_api_client (id) NOT DEFERRABLE INITIALLY IMMEDIATE
         ");
         $this->addSql("
-            ALTER TABLE claro_api_refresh_token 
-            ADD CONSTRAINT FK_B1292B90A76ED395 FOREIGN KEY (user_id) 
+            ALTER TABLE claro_api_refresh_token
+            ADD CONSTRAINT FK_B1292B90A76ED395 FOREIGN KEY (user_id)
             REFERENCES claro_user (id) NOT DEFERRABLE INITIALLY IMMEDIATE
         ");
         $this->addSql("
-            ALTER TABLE claro_api_auth_code 
-            ADD CONSTRAINT FK_9DFA45719EB6921 FOREIGN KEY (client_id) 
+            ALTER TABLE claro_api_auth_code
+            ADD CONSTRAINT FK_9DFA45719EB6921 FOREIGN KEY (client_id)
             REFERENCES claro_api_client (id) NOT DEFERRABLE INITIALLY IMMEDIATE
         ");
         $this->addSql("
-            ALTER TABLE claro_api_auth_code 
-            ADD CONSTRAINT FK_9DFA457A76ED395 FOREIGN KEY (user_id) 
+            ALTER TABLE claro_api_auth_code
+            ADD CONSTRAINT FK_9DFA457A76ED395 FOREIGN KEY (user_id)
             REFERENCES claro_user (id) NOT DEFERRABLE INITIALLY IMMEDIATE
         ");
     }
@@ -127,15 +127,15 @@ class Version20131205160441 extends AbstractMigration
     public function down(Schema $schema)
     {
         $this->addSql("
-            ALTER TABLE claro_api_access_token 
+            ALTER TABLE claro_api_access_token
             DROP CONSTRAINT FK_CE9482819EB6921
         ");
         $this->addSql("
-            ALTER TABLE claro_api_refresh_token 
+            ALTER TABLE claro_api_refresh_token
             DROP CONSTRAINT FK_B1292B9019EB6921
         ");
         $this->addSql("
-            ALTER TABLE claro_api_auth_code 
+            ALTER TABLE claro_api_auth_code
             DROP CONSTRAINT FK_9DFA45719EB6921
         ");
         $this->addSql("

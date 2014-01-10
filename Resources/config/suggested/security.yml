@@ -40,7 +40,7 @@ security:
             anonymous: ~
             logout: true
             switch_user: { role: ROLE_ADMIN, parameter: _switch }
-            
+
     acl:
         connection: default
         voter:

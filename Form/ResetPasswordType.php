@@ -24,7 +24,7 @@ class ResetPasswordType extends AbstractType
             'repeated',
             array(
                 'type' => 'password',
-                'required' => true
+                'invalid_message' => 'password_mismatch'
             )
         );
     }
@@ -36,9 +36,11 @@ class ResetPasswordType extends AbstractType
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
-        $resolver->setDefaults(array(
-            'data_class' => 'Claroline\CoreBundle\Entity\User',
-            'translation_domain' => 'platform'
-        ));
+        $resolver->setDefaults(
+            array(
+                'data_class' => 'Claroline\CoreBundle\Entity\User',
+                'translation_domain' => 'platform'
+            )
+        );
     }
 }

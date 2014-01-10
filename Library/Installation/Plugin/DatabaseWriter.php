@@ -12,7 +12,7 @@
 namespace Claroline\CoreBundle\Library\Installation\Plugin;
 
 use Claroline\CoreBundle\Entity\Resource\MaskDecoder;
-use Doctrine\ORM\EntityManager;
+use Claroline\CoreBundle\Persistence\ObjectManager;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Claroline\CoreBundle\Manager\MaskManager;
 use Claroline\CoreBundle\Library\PluginBundle;
@@ -49,7 +49,7 @@ class DatabaseWriter
      * Constructor.
      *
      * @DI\InjectParams({
-     *     "em"             = @DI\Inject("doctrine.orm.entity_manager"),
+     *     "em"             = @DI\Inject("claroline.persistence.object_manager"),
      *     "im"             = @DI\Inject("claroline.manager.icon_manager"),
      *     "mm"             = @DI\Inject("claroline.manager.mask_manager"),
      *     "fileSystem"     = @DI\Inject("filesystem"),
@@ -58,7 +58,7 @@ class DatabaseWriter
      * })
      */
     public function __construct(
-        EntityManager $em,
+        ObjectManager $em,
         IconManager $im,
         Filesystem $fileSystem,
         KernelInterface $kernel,
@@ -250,8 +250,9 @@ class DatabaseWriter
 
     private function updateResourceTypes($resource, $pluginEntity, $plugin)
     {
-        $resourceType           = $this->em->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findOneByName($resource['name']);
-        $isExistResourceType    = true;
+        $resourceType = $this->em->getRepository('ClarolineCoreBundle:Resource\ResourceType')
+            ->findOneByName($resource['name']);
+        $isExistResourceType = true;
 
         if (null === $resourceType) {
             $resourceType = new ResourceType();
@@ -355,7 +356,7 @@ class DatabaseWriter
         $newDecoders      = array();
 
         foreach ($actions as $action) {
-            $decoder = $decoderRepo->findOneBy(array('name'=> $action['name'], 'resourceType' => $resourceType));
+            $decoder = $decoderRepo->findOneBy(array('name' => $action['name'], 'resourceType' => $resourceType));
 
             if (!$decoder) {
                 if (array_key_exists($action['name'], $newDecoders)) {
@@ -389,7 +390,7 @@ class DatabaseWriter
         $newDecoders      = array();
 
         foreach ($actions as $action) {
-            $decoder = $decoderRepo->findOneBy(array('name'=> $action['name'], 'resourceType' => $resourceType));
+            $decoder = $decoderRepo->findOneBy(array('name' => $action['name'], 'resourceType' => $resourceType));
 
             if (!$decoder) {
                 if (array_key_exists($action['name'], $newDecoders)) {
@@ -408,7 +409,8 @@ class DatabaseWriter
             }
 
             if (isset($action['menu_name'])) {
-                $menuAction = $this->em->getRepository('ClarolineCoreBundle:Resource\MenuAction')->findOneByName($action['menu_name']);
+                $menuAction = $this->em->getRepository('ClarolineCoreBundle:Resource\MenuAction')
+                    ->findOneByName($action['menu_name']);
 
                 if (null === $menuAction) {
                     $menuAction = new MenuAction();
@@ -492,7 +494,6 @@ class DatabaseWriter
         }
 
         $this->em->persist($toolEntity);
-        $this->em->flush();
 
         if ($tool['is_displayable_in_workspace'] && $this->modifyTemplate) {
             $this->templateBuilder->addTool($tool['name'], $tool['name']);

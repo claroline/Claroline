@@ -26,7 +26,7 @@
     {% endif %}
 {% endmacro %}
 
-{% macro displayControls(workspaceId) %}
+{% macro displayControls() %}
     {% if app.user %}
         <button class="btn btn-default action-button" data-action="remove">
             <i class="icon-trash"></i>
@@ -68,8 +68,8 @@
                 'href': path('claro_admin_users_management')
             },
             {
-                'name':'users'|trans({}, 'platform'),
-                'href':''
+                'name': 'users'|trans({}, 'platform'),
+                'href': ''
             }
         ])
     }}
@@ -84,7 +84,7 @@
         </div>
         <div class="search-bar row">
             <div class="col-md-8">
-                {{ displayControls(workspace.getId()) }}
+                {{ displayControls() }}
             </div>
             <div class="col-md-4">
                  <div class="input-group">
@@ -144,7 +144,7 @@
                             {% endif %}
                             <td>{{ user.getId() }}</td>
                             <td>
-                                <a href="{{ path('claro_profile_view', {'userId': user.getId()}) }}"> {{user.getUsername()}}</a>
+                                <a href="{{ path('claro_profile_view', {'userId': user.getId()}) }}">{{ user.getUsername() }}</a>
                             </td>
                             <td>{{ user.getLastName() }}</td>
                             <td>{{ user.getFirstName() }}</td>
@@ -175,9 +175,9 @@
                 </tbody>
             </table>
         </div>
-        {{ renderPager(search, pager, max, order) }}
+            {{ renderPager(search, pager, max, order) }}
         <div>
-            {{ displayControls(workspace.getId()) }}
+            {{ displayControls() }}
         </div>
     </div>
 {% endblock %}

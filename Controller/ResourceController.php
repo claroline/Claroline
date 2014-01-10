@@ -329,7 +329,7 @@ class ResourceController
      *
      * Shows resource logs list
      *
-     * @param ResourceNode $node         the resource
+     * @param ResourceNode $node the resource
      *
      * @return Response
      * @throws \Exception

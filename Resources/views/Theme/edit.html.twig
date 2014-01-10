@@ -99,6 +99,18 @@
                             </div>
                         </div>
                     {% endfor %}
+                    <div class='panel panel-default'>
+                        <div class="panel-heading">
+                            <h3 class="panel-title">
+                                <a class="accordion-toggle" data-parent="#accordion" data-toggle="collapse" href="#theme-less">
+                                    {{ 'Additional style rules' | trans({}, 'platform') }}
+                                </a>
+                            </h3>
+                        </div>
+                        <div id="theme-less" class="collapse panel-body">
+                            <textarea rows="10">{{ themeLess }}</textarea>
+                        </div>
+                    </div>
                 </div>
             {% endif %}
         </div>

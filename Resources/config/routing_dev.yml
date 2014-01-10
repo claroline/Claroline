@@ -1,0 +1,7 @@
+imports:
+  resource: routing.yml
+
+claro_dev:
+  prefix: /dev
+  resource: "@ClarolineCoreBundle/Controller/DevController.php"
+  type: annotation

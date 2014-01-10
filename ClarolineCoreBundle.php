@@ -31,10 +31,11 @@ class ClarolineCoreBundle extends InstallableBundle implements AutoConfigurableI
     {
         $config = new ConfigurationBuilder();
         $configFile = $environment === 'test' ? 'config_test.yml' : 'config.yml';
+        $routingFile = $environment === 'dev' ? 'routing_dev.yml' : 'routing.yml';
 
         return $config
             ->addContainerResource(__DIR__ . "/Resources/config/app/{$configFile}")
-            ->addRoutingResource(__DIR__ . '/Resources/config/routing.yml');
+            ->addRoutingResource(__DIR__ . "/Resources/config/{$routingFile}");
     }
 
     public function suggestConfigurationFor(Bundle $bundle, $environment)
@@ -91,12 +92,14 @@ class ClarolineCoreBundle extends InstallableBundle implements AutoConfigurableI
             $config
                 ->addContainerResource($this->buildPath('fos_oauth_server_config'))
                 ->addRoutingResource($this->buildPath('fos_oauth_server_routing'));
+
             return $config;
         } elseif ($bundle instanceof NelmioApiDocBundle) {
             $config = new ConfigurationBuilder();
             $config
                 ->addContainerResource($this->buildPath('nelmio_api_doc_config'))
                 ->addRoutingResource($this->buildPath('nelmio_api_doc_routing'));
+
             return $config;
         } elseif (in_array($environment, array('dev', 'test'))) {
             if ($bundle instanceof \Symfony\Bundle\WebProfilerBundle\WebProfilerBundle) {

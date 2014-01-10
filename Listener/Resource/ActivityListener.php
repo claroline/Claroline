@@ -149,8 +149,8 @@ class ActivityListener implements ContainerAwareInterface
         $resourceDependencies = array();
 
         foreach ($resourceActivities as $resourceActivity) {
-            if ($resourceActivity->getResourceNode()->getWorkspace()
-                    === $resource->getResourceNode()->getWorkspace()) {
+            if ($resourceActivity->getResourceNode()->getWorkspace() ===
+                $resource->getResourceNode()->getWorkspace()) {
                 $resourceActivityConfig['id'] = $resourceActivity->getResourceNode()->getId();
                 $resourceActivityConfig['order'] = $resourceActivity->getSequenceOrder();
                 $config['resources'][] = $resourceActivityConfig;

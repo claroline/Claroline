@@ -21,6 +21,8 @@ low : "Basse"
 medium : "Normale"
 modify : "Modifier une entrée"
 new entry: "Nouvelle entrée"
+start_date : "Date de début"
+end_date : "Date de fin"
 tasks : 'Tâches'
 no event found : "Pas d'évènements"
 start date : "Date début"

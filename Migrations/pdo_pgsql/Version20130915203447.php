@@ -24,23 +24,23 @@ class Version20130915203447 extends AbstractMigration
     public function up(Schema $schema)
     {
         $this->addSql("
-            ALTER TABLE claro_log_workspace_widget_config 
+            ALTER TABLE claro_log_workspace_widget_config
             DROP CONSTRAINT FK_D301C70782D40A1F
         ");
         $this->addSql("
-            ALTER TABLE claro_log_workspace_widget_config 
-            ADD CONSTRAINT FK_D301C70782D40A1F FOREIGN KEY (workspace_id) 
-            REFERENCES claro_workspace (id) 
+            ALTER TABLE claro_log_workspace_widget_config
+            ADD CONSTRAINT FK_D301C70782D40A1F FOREIGN KEY (workspace_id)
+            REFERENCES claro_workspace (id)
             ON DELETE CASCADE NOT DEFERRABLE INITIALLY IMMEDIATE
         ");
         $this->addSql("
-            ALTER TABLE claro_widget_display 
+            ALTER TABLE claro_widget_display
             DROP CONSTRAINT FK_2D34DB3A76ED395
         ");
         $this->addSql("
-            ALTER TABLE claro_widget_display 
-            ADD CONSTRAINT FK_2D34DB3A76ED395 FOREIGN KEY (user_id) 
-            REFERENCES claro_user (id) 
+            ALTER TABLE claro_widget_display
+            ADD CONSTRAINT FK_2D34DB3A76ED395 FOREIGN KEY (user_id)
+            REFERENCES claro_user (id)
             ON DELETE CASCADE NOT DEFERRABLE INITIALLY IMMEDIATE
         ");
     }
@@ -48,21 +48,21 @@ class Version20130915203447 extends AbstractMigration
     public function down(Schema $schema)
     {
         $this->addSql("
-            ALTER TABLE claro_log_workspace_widget_config 
+            ALTER TABLE claro_log_workspace_widget_config
             DROP CONSTRAINT FK_D301C70782D40A1F
         ");
         $this->addSql("
-            ALTER TABLE claro_log_workspace_widget_config 
-            ADD CONSTRAINT FK_D301C70782D40A1F FOREIGN KEY (workspace_id) 
+            ALTER TABLE claro_log_workspace_widget_config
+            ADD CONSTRAINT FK_D301C70782D40A1F FOREIGN KEY (workspace_id)
             REFERENCES claro_workspace (id) NOT DEFERRABLE INITIALLY IMMEDIATE
         ");
         $this->addSql("
-            ALTER TABLE claro_widget_display 
+            ALTER TABLE claro_widget_display
             DROP CONSTRAINT FK_2D34DB3A76ED395
         ");
         $this->addSql("
-            ALTER TABLE claro_widget_display 
-            ADD CONSTRAINT FK_2D34DB3A76ED395 FOREIGN KEY (user_id) 
+            ALTER TABLE claro_widget_display
+            ADD CONSTRAINT FK_2D34DB3A76ED395 FOREIGN KEY (user_id)
             REFERENCES claro_user (id) NOT DEFERRABLE INITIALLY IMMEDIATE
         ");
     }

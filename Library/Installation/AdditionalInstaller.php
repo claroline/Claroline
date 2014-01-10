@@ -52,7 +52,7 @@ class AdditionalInstaller extends BaseInstaller
     public function postUpdate($currentVersion, $targetVersion)
     {
         $this->setLocale();
-        
+
         if (version_compare($currentVersion, '2.0', '<')  && version_compare($targetVersion, '2.0', '>=') ) {
             $updater020000 = new Updater\Updater020000($this->container);
             $updater020000->setLogger($this->logger);
@@ -93,10 +93,10 @@ class AdditionalInstaller extends BaseInstaller
             $updater020500->postUpdate();
         }
 
-        if (version_compare($currentVersion, '2.5.0', '<')) {
-            $updater020500 = new Updater\Updater020500($this->container);
-            $updater020500->setLogger($this->logger);
-            $updater020500->postUpdate();
+        if (version_compare($currentVersion, '2.8.0', '<')) {
+            $updater020800 = new Updater\Updater020800($this->container);
+            $updater020800->setLogger($this->logger);
+            $updater020800->postUpdate();
         }
     }
 

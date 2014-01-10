@@ -11,7 +11,6 @@
 
 namespace Claroline\CoreBundle\Listener;
 
-use Claroline\CoreBundle\Manager\LogManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use JMS\DiExtraBundle\Annotation as DI;
@@ -35,7 +34,6 @@ class ToolListener
     private $httpKernel;
     const R_U = "ROLE_USER";
     const R_A = "ROLE_ADMIN";
-
 
     /**
      * @DI\InjectParams({
@@ -171,7 +169,7 @@ class ToolListener
         $form = $this->formFactory->create(FormFactory::TYPE_AGENDA);
         $listEvents = $em->getRepository('ClarolineCoreBundle:Event')->findByWorkspaceId($workspaceId, true);
         $usr = $this->container->get('security.context')->getToken()->getUser();
-        $owners = $em->getRepository('ClarolineCoreBundle:Event')->findByUserWithoutAllDay($usr ,0 );
+        $owners = $em->getRepository('ClarolineCoreBundle:Event')->findByUserWithoutAllDay($usr, 0);
         $owner = array();
         foreach ($owners as $o) {
             $temp = $o->getUser()->getUserName();
@@ -196,7 +194,6 @@ class ToolListener
             array(
                 'workspace' => $workspace,
                 'form' => $form->createView(),
-                'listEvents' => $listEvents,
                 'owners' => $owners
             )
         );

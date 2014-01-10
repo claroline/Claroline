@@ -207,6 +207,11 @@ from: From
 from_message: From
 general: General
 general_parameters: 'General parameters'
+generate_url_subscription: 'Subscription to a workspace for a user'
+generate_url_subscription_anonyme: 'Subscription to a workspace for a anonymous'
+generate_url: 'Generate a subscription url for the users'
+generate_url_subscription_success : 'You have been added to the workspace'
+generate_url_subscription_fail: 'You must check "enable registration checkbow first to generate the url"'
 group: Group
 group_configuration: 'Group configuration'
 group_creation: 'Group creation'
@@ -349,8 +354,7 @@ owner: Owner
 owner_s: Owner(s)
 parameters: Parameters
 password: Password
-password_email_message: 'You asked to reset your password click on this link to reset it'
-password_missmatch : 'passwords missmatched'
+password_mismatch : 'Passwords mismatch'
 password_ok : 'Your password has been changed, you can login now'
 paste: Paste
 path: Path
@@ -594,7 +598,7 @@ workspace_delete: 'Delete the workspace'
 workspace_delete_confirm_message: 'Are you sure you want to delete this workspace ?'
 workspace_delete_confirm_title: 'Delete Confirm'
 workspace_edit_form_code: Code
-workspace_edit_form_displayable: Public
+workspace_edit_form_displayable: Displayable
 workspace_edit_form_name: Name
 workspace_edit_form_selfRegistration: 'Public registration'
 workspace_edit_form_selfUnregistration: 'Public unregistration'

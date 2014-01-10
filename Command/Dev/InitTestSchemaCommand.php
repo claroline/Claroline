@@ -15,10 +15,8 @@ use Claroline\MigrationBundle\Migrator\Migrator;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\NullOutput;
 use Symfony\Component\Console\Output\OutputInterface;
-use Doctrine\Bundle\DoctrineBundle\Command\DropDatabaseDoctrineCommand;
 use Doctrine\Bundle\DoctrineBundle\Command\CreateDatabaseDoctrineCommand;
 
 class InitTestSchemaCommand extends ContainerAwareCommand
@@ -57,9 +55,11 @@ class InitTestSchemaCommand extends ContainerAwareCommand
     private function createSchema(OutputInterface $output)
     {
         $migrator = $this->getContainer()->get('claroline.migration.manager');
-        $migrator->setLogger(function ($message) use ($output) {
-            $output->writeln($message);
-        });
+        $migrator->setLogger(
+            function ($message) use ($output) {
+                $output->writeln($message);
+            }
+        );
 
         foreach ($this->getContainer()->get('kernel')->getBundles() as $bundle) {
             if (count($migrator->getBundleStatus($bundle)[Migrator::STATUS_AVAILABLE]) > 1) {

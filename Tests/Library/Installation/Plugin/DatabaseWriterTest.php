@@ -15,7 +15,7 @@ use Claroline\CoreBundle\Library\Testing\MockeryTestCase;
 
 class DatabaseWriterTest extends MockeryTestCase
 {
-    private $em;
+    private $om;
     private $im;
     private $mm;
     private $fileSystem;
@@ -28,7 +28,7 @@ class DatabaseWriterTest extends MockeryTestCase
     {
         parent::setUp();
 
-        $this->em = $this->mock('Doctrine\ORM\EntityManager');
+        $this->om = $this->mock('Claroline\CoreBundle\Persistence\ObjectManager');
         $this->im = $this->mock('Claroline\CoreBundle\Manager\IconManager');
         $this->mm = $this->mock('Claroline\CoreBundle\Manager\MaskManager');
         $this->fileSystem = $this->mock('Symfony\Component\Filesystem\Filesystem');
@@ -38,7 +38,7 @@ class DatabaseWriterTest extends MockeryTestCase
         $this->kernel->shouldReceive('getEnvironment')->andReturn('test');
         $this->kernelRootDir = 'kernelRootDir';
         $this->dbWriter = new DatabaseWriter(
-            $this->em,
+            $this->om,
             $this->im,
             $this->fileSystem,
             $this->kernel,
@@ -56,7 +56,9 @@ class DatabaseWriterTest extends MockeryTestCase
         $decoderRepo = $this->mock('Doctrine\ORM\EntityRepository');
         $decoderRepo->shouldReceive('findBy')->with(array('resourceType' => $resourceType))
             ->andReturn(array($decoder));
-        $decoderRepo->shouldReceive('findOneBy')->with(array('name' => 'open', 'resourceType' => $resourceType))->andReturn($decoder);
+        $decoderRepo->shouldReceive('findOneBy')
+            ->with(array('name' => 'open', 'resourceType' => $resourceType))
+            ->andReturn($decoder);
         $this->em->shouldReceive('persist')->once();
     }
 

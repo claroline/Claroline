@@ -455,4 +455,16 @@ class HomeManager
 
         return $this->homeService->isDefinedPush($variables, 'father', $father);
     }
+
+    /**
+     * Check if a string is a valid URL
+     *
+     * @param $url the string to validate
+     *
+     * @return boolean
+     */
+    public function isValidUrl($url)
+    {
+        return (filter_var($url, FILTER_VALIDATE_URL) !== false);
+    }
 }

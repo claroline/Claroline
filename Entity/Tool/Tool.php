@@ -74,7 +74,7 @@ class Tool
     /**
      * @ORM\Column(type="boolean", name="is_configurable_in_desktop")
      */
-    protected $isConfigurableInDesktop= false;
+    protected $isConfigurableInDesktop = false;
 
     /**
      * Unmapped var used for the tool configuration.

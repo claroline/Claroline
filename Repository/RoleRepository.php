@@ -104,7 +104,7 @@ class RoleRepository extends EntityRepository
             ->createQueryBuilder('role')
             ->andWhere("role.type = :roleType")
             ->setParameter("roleType", Role::PLATFORM_ROLE);
-        $queryBuilder->andWhere($queryBuilder->expr()->not($queryBuilder->expr()->eq('role.name','?1')))
+        $queryBuilder->andWhere($queryBuilder->expr()->not($queryBuilder->expr()->eq('role.name', '?1')))
             ->setParameter(1, 'ROLE_ANONYMOUS');
         $query = $queryBuilder->getQuery();
 

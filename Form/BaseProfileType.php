@@ -14,16 +14,25 @@ namespace Claroline\CoreBundle\Form;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Claroline\CoreBundle\Manager\LocaleManager;
 
 class BaseProfileType extends AbstractType
 {
+    private $langs;
+
+    public function __construct(LocaleManager $localeManager)
+    {
+        $this->langs = $localeManager->getAvailableLocales();
+    }
+
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add('firstName', 'text')
             ->add('lastName', 'text')
             ->add('username', 'text')
-            ->add('plainPassword', 'repeated', array('type' => 'password', 'invalid_message' => 'password_missmatch'))
-            ->add('mail', 'email');
+            ->add('plainPassword', 'repeated', array('type' => 'password', 'invalid_message' => 'password_mismatch'))
+            ->add('mail', 'email')
+            ->add('locale', 'choice', array('choices' => $this->langs, 'required' => false, 'label' => 'Language'));
     }
 
     public function getName()
@@ -36,8 +45,9 @@ class BaseProfileType extends AbstractType
         $resolver
         ->setDefaults(
             array(
-                'translation_domain' => 'platform'
-                )
+                'translation_domain' => 'platform',
+                'validation_groups' => array('registration', 'Default')
+            )
         );
     }
 }

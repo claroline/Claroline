@@ -17,7 +17,6 @@ use Claroline\CoreBundle\Entity\Badge\BadgeRule;
 use Claroline\CoreBundle\Entity\Badge\BadgeTranslation;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Form\Badge\BadgeAwardType;
-use Claroline\CoreBundle\Form\Badge\BadgeType;
 use Pagerfanta\Adapter\DoctrineORMAdapter;
 use Pagerfanta\Pagerfanta;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -41,7 +40,12 @@ use JMS\DiExtraBundle\Annotation as DI;
 class AdminController extends Controller
 {
     /**
-     * @Route("/{badgePage}/{claimPage}", name="claro_admin_badges", requirements={"badgePage" = "\d+", "claimPage" = "\d+"}, defaults={"badgePage" = 1, "claimPage" = 1})
+     * @Route(
+     *     "/{badgePage}/{claimPage}",
+     *     name="claro_admin_badges",
+     *     requirements={"badgePage" = "\d+", "claimPage" = "\d+"},
+     *     defaults={"badgePage" = 1, "claimPage" = 1}
+     * )
      *
      * @Template
      */
@@ -65,6 +69,7 @@ class AdminController extends Controller
             'claim_link'       => 'claro_admin_manage_claim',
             'route_parameters' => array()
         );
+
         return array(
             'parameters'  => $parameters,
             'language'    => $platformConfigHandler->getParameter('locale_language')
@@ -98,22 +103,22 @@ class AdminController extends Controller
                 try {
                     /** @var \Doctrine\Common\Persistence\ObjectManager $entityManager */
                     $entityManager = $this->getDoctrine()->getManager();
-
                     $entityManager->persist($badge);
                     $entityManager->flush();
-
-                    $this->get('session')->getFlashBag()->add('success', $translator->trans('badge_add_success_message', array(), 'badge'));
+                    $this->get('session')
+                        ->getFlashBag()
+                        ->add('success', $translator->trans('badge_add_success_message', array(), 'badge'));
                 } catch (\Exception $exception) {
-                    $this->get('session')->getFlashBag()->add('error', $translator->trans('badge_add_error_message', array(), 'badge'));
+                    $this->get('session')
+                        ->getFlashBag()
+                        ->add('error', $translator->trans('badge_add_error_message', array(), 'badge'));
                 }
 
                 return $this->redirect($this->generateUrl('claro_admin_badges'));
             }
         }
 
-        return array(
-            'form' => $form->createView()
-        );
+        return array('form' => $form->createView());
     }
 
     /**
@@ -141,6 +146,7 @@ class AdminController extends Controller
 
         /** @var BadgeRule[] $originalRules */
         $originalRules = array();
+
         foreach ($badge->getRules() as $rule) {
             $originalRules[] = $rule;
         }
@@ -149,6 +155,7 @@ class AdminController extends Controller
 
         if ($request->isMethod('POST')) {
             $form->handleRequest($request);
+
             if ($form->isValid()) {
                 /** @var \Symfony\Bundle\FrameworkBundle\Translation\Translator $translator */
                 $translator = $this->get('translator');
@@ -173,9 +180,13 @@ class AdminController extends Controller
                     $entityManager->persist($badge);
                     $entityManager->flush();
 
-                    $this->get('session')->getFlashBag()->add('success', $translator->trans('badge_edit_success_message', array(), 'badge'));
+                    $this->get('session')
+                        ->getFlashBag()
+                        ->add('success', $translator->trans('badge_edit_success_message', array(), 'badge'));
                 } catch (\Exception $exception) {
-                    $this->get('session')->getFlashBag()->add('error', $translator->trans('badge_edit_error_message', array(), 'badge'));
+                    $this->get('session')
+                        ->getFlashBag()
+                        ->add('error', $translator->trans('badge_edit_error_message', array(), 'badge'));
                 }
 
                 return $this->redirect($this->generateUrl('claro_admin_badges'));
@@ -205,9 +216,13 @@ class AdminController extends Controller
             $entityManager->remove($badge);
             $entityManager->flush();
 
-            $this->get('session')->getFlashBag()->add('success', $translator->trans('badge_delete_success_message', array(), 'badge'));
+            $this->get('session')
+                ->getFlashBag()
+                ->add('success', $translator->trans('badge_delete_success_message', array(), 'badge'));
         } catch (\Exception $exception) {
-            $this->get('session')->getFlashBag()->add('error', $translator->trans('badge_delete_error_message', array(), 'badge'));
+            $this->get('session')
+                ->getFlashBag()
+                ->add('error', $translator->trans('badge_delete_error_message', array(), 'badge'));
         }
 
         return $this->redirect($this->generateUrl('claro_admin_badges'));
@@ -248,7 +263,8 @@ class AdminController extends Controller
                         }
                     } elseif (null !== $userName) {
                         list($firstName, $lastName) = explode(' ', $userName);
-                        $user = $doctrine->getRepository('ClarolineCoreBundle:User')->findOneBy(array('firstName' => $firstName, 'lastName' => $lastName));
+                        $user = $doctrine->getRepository('ClarolineCoreBundle:User')
+                            ->findOneBy(array('firstName' => $firstName, 'lastName' => $lastName));
 
                         if (null !== $user) {
                             $users[] = $user;
@@ -265,10 +281,18 @@ class AdminController extends Controller
                         $flashMessageType = 'success';
                     }
 
-                    $this->get('session')->getFlashBag()->add($flashMessageType, $translator->transChoice('badge_awarded_count_message', $awardedBadge, array('%awaredBadge%' => $awardedBadge), 'badge'));
+                    $message = $translator->transChoice(
+                        'badge_awarded_count_message',
+                        $awardedBadge,
+                        array('%awaredBadge%' => $awardedBadge),
+                        'badge'
+                    );
+                    $this->get('session')->getFlashBag()->add($flashMessageType, $message);
                 } catch (\Exception $exception) {
                     if (!$request->isXmlHttpRequest()) {
-                        $this->get('session')->getFlashBag()->add('error', $translator->trans('badge_award_error_message', array(), 'badge'));
+                        $this->get('session')
+                            ->getFlashBag()
+                            ->add('error', $translator->trans('badge_award_error_message', array(), 'badge'));
                     } else {
                         return new Response($exception->getMessage(), 500);
                     }
@@ -303,15 +327,20 @@ class AdminController extends Controller
             /** @var \Doctrine\ORM\EntityManager $entityManager */
             $entityManager = $doctrine->getManager();
 
-            $userBadge = $doctrine->getRepository('ClarolineCoreBundle:Badge\UserBadge')->findOneByBadgeAndUser($badge, $user);
+            $userBadge = $doctrine->getRepository('ClarolineCoreBundle:Badge\UserBadge')
+                ->findOneByBadgeAndUser($badge, $user);
 
             $entityManager->remove($userBadge);
             $entityManager->flush();
 
-            $this->get('session')->getFlashBag()->add('success', $translator->trans('badge_unaward_success_message', array(), 'badge'));
+            $this->get('session')
+                ->getFlashBag()
+                ->add('success', $translator->trans('badge_unaward_success_message', array(), 'badge'));
         } catch (\Exception $exception) {
             if (!$request->isXmlHttpRequest()) {
-                $this->get('session')->getFlashBag()->add('error', $translator->trans('badge_unaward_error_message', array(), 'badge'));
+                $this->get('session')
+                    ->getFlashBag()
+                    ->add('error', $translator->trans('badge_unaward_error_message', array(), 'badge'));
             } else {
                 return new Response($exception->getMessage(), 500);
             }

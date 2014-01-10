@@ -76,7 +76,8 @@ class MailingSettings extends AbstractValidator
             } elseif ($this->transport === 'gmail') {
                 $this->checkIsNotBlank('username', $this->transportOptions['username']);
                 $this->checkIsNotBlank('password', $this->transportOptions['password']);
-            } else { // smtp
+            } else {
+                // smtp
                 $this->checkIsNotBlank('host', $this->transportOptions['host']);
                 $this->checkIsValidMailEncryption('encryption', $this->transportOptions['encryption']);
                 $this->checkIsValidMailAuthMode('auth_mode', $this->transportOptions['auth_mode']);

@@ -65,12 +65,11 @@ class UserRepository extends EntityRepository implements UserProviderInterface
         }
 
         $dql = '
-            SELECT u, groups, group_roles, roles, ws, pwu FROM Claroline\CoreBundle\Entity\User u
+            SELECT u, groups, group_roles, roles, ws FROM Claroline\CoreBundle\Entity\User u
             LEFT JOIN u.groups groups
             LEFT JOIN groups.roles group_roles
             LEFT JOIN u.roles roles
             LEFT JOIN roles.workspace ws
-            LEFT JOIN ws.personalUser pwu
             WHERE u.id = :userId
         ';
         $query = $this->_em->createQuery($dql);
@@ -202,7 +201,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface
      * Returns all the users.
      *
      * @param boolean $executeQuery
-     * @param string $orderedBy
+     * @param string  $orderedBy
      *
      * @return User[]|Query
      */
@@ -210,12 +209,11 @@ class UserRepository extends EntityRepository implements UserProviderInterface
     {
         if (!$executeQuery) {
             $dql = "
-                SELECT u, pws, g, r , rws, urws from Claroline\CoreBundle\Entity\User u
+                SELECT u, pws, g, r , rws from Claroline\CoreBundle\Entity\User u
                 LEFT JOIN u.personalWorkspace pws
                 LEFT JOIN u.groups g
                 LEFT JOIN u.roles r
                 LEFT JOIN r.workspace rws
-                LEFT JOIN rws.personalUser urws
                 ORDER BY u.{$orderedBy}
             ";
             // the join on role is required because this method is only called in the administration
@@ -260,7 +258,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface
      *
      * @param string  $search
      * @param boolean $executeQuery
-     * @param string $orderedBy
+     * @param string  $orderedBy
      *
      * @return User[]|Query
      */
@@ -270,12 +268,11 @@ class UserRepository extends EntityRepository implements UserProviderInterface
         $upperSearch = trim($upperSearch);
         $upperSearch = preg_replace('/\s+/', ' ', $upperSearch);
         $dql = "
-            SELECT u, r, pws, g, rws, urws FROM Claroline\CoreBundle\Entity\User u
+            SELECT u, r, pws, g, rws FROM Claroline\CoreBundle\Entity\User u
             LEFT JOIN u.personalWorkspace pws
             LEFT JOIN u.groups g
             LEFT JOIN u.roles r
             LEFT JOIN r.workspace rws
-            LEFT JOIN rws.personalUser urws
             WHERE UPPER(u.lastName) LIKE :search
             OR UPPER(u.firstName) LIKE :search
             OR UPPER(u.username) LIKE :search
@@ -381,8 +378,8 @@ class UserRepository extends EntityRepository implements UserProviderInterface
      * Returns the users who are members of one of the given workspaces. Users's groups are not
      * taken into account.
      *
-     * @param array     $workspaces
-     * @param boolean   $executeQuery
+     * @param array   $workspaces
+     * @param boolean $executeQuery
      *
      * @return User[]|Query
      */
@@ -408,8 +405,8 @@ class UserRepository extends EntityRepository implements UserProviderInterface
      * Returns the users who are members of one of the given workspaces.
      * User list is filtered by a search on first name, last name and username
      *
-     * @param array     $workspaces
-     * @param string    $search
+     * @param array  $workspaces
+     * @param string $search
      *
      * @return User[]
      */
@@ -636,10 +633,10 @@ class UserRepository extends EntityRepository implements UserProviderInterface
 
     /**
      * Returns user Ids that are subscribed to one of the roles given
-     * @param array $roleNames
+     * @param  array $roleNames
      * @return array
      */
-    public function findUserIdsInRoles ($roleNames)
+    public function findUserIdsInRoles($roleNames)
     {
         $qb = $this->createQueryBuilder('user')
             ->select('user.id')
@@ -692,7 +689,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface
     }
 
     /**
-     * @param Role[] $roles
+     * @param Role[]  $roles
      * @param boolean $getQuery
      *
      * @return Query|User[]
@@ -738,8 +735,8 @@ class UserRepository extends EntityRepository implements UserProviderInterface
     }
 
     /**
-     * @param Role[] $roles
-     * @param string $name
+     * @param Role[]  $roles
+     * @param string  $name
      * @param boolean $getQuery
      *
      * @return Query|User[]
@@ -800,9 +797,9 @@ class UserRepository extends EntityRepository implements UserProviderInterface
      * This method should be renamed.
      * Find users who are outside the workspace and users whose role are in $roles.
      *
-     * @param Role[] $roles
+     * @param Role[]                                                   $roles
      * @param \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace $workspace
-     * @param boolean $getQuery
+     * @param boolean                                                  $getQuery
      *
      * @return Query|User[]
      */
@@ -837,10 +834,10 @@ class UserRepository extends EntityRepository implements UserProviderInterface
      * This method should be renamed.
      * Find users who are outside the workspace and users whose role are in $roles.
      *
-     * @param Role[] $roles
-     * @param string $name
+     * @param Role[]                                                   $roles
+     * @param string                                                   $name
      * @param \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace $workspace
-     * @param boolean $getQuery
+     * @param boolean                                                  $getQuery
      *
      * @return Query|User[]
      */

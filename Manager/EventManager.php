@@ -19,27 +19,22 @@ use Symfony\Component\Finder\Finder;
  */
 class EventManager
 {
-    const ALL = 'all';
-
     /**
      * @var \AppKernel
      */
     private $kernel;
 
-    /**
-     * @var \Symfony\Component\Translation\TranslatorInterface
-     */
     private $translator;
 
     /**
      * @DI\InjectParams({
-     *      "kernel"     = @DI\Inject("kernel"),
+     *      "kernel" = @DI\Inject("kernel"),
      *      "translator" = @DI\Inject("translator")
-     * }) 
+     * })
      */
     public function __construct($kernel, $translator)
     {
-        $this->kernel     = $kernel;
+        $this->kernel = $kernel;
         $this->translator = $translator;
     }
 
@@ -62,7 +57,10 @@ class EventManager
             if (file_exists($bundleEventLogDirectory)) {
                 $finder = new Finder();
                 $finder->files()->in($bundleEventLogDirectory)->sortByName();
-                $events = array_merge($events, $this->getEventsByBundle($finder, $bundle->getNamespace(), $suffixLogNamespace, $restriction));
+                $events = array_merge(
+                    $events,
+                    $this->getEventsByBundle($finder, $bundle->getNamespace(), $suffixLogNamespace, $restriction)
+                );
             }
         }
 
@@ -84,7 +82,8 @@ class EventManager
         $events             = array();
 
         foreach ($bundles as $bundle) {
-            if (0 === strpos($resourceClass, $bundle->getNamespace()) || 0 === strpos(get_class($this), $bundle->getNamespace())) {
+            if (0 === strpos($resourceClass, $bundle->getNamespace())
+                || 0 === strpos(get_class($this), $bundle->getNamespace())) {
                 if (0 !== strpos(get_class($this), $bundle->getNamespace())) {
                     array_push($events, null);
                 }
@@ -92,7 +91,10 @@ class EventManager
                 if (file_exists($bundleEventLogDirectory)) {
                     $finder = new Finder();
                     $finder->files()->in($bundleEventLogDirectory)->sortByName();
-                    $events = array_merge($events, $this->getEventsByBundle($finder, $bundle->getNamespace(), $suffixLogNamespace, $restriction));
+                    $events = array_merge(
+                        $events,
+                        $this->getEventsByBundle($finder, $bundle->getNamespace(), $suffixLogNamespace, $restriction)
+                    );
                 }
             }
         }
@@ -114,7 +116,11 @@ class EventManager
 
         /** @var \Symfony\Component\Finder\SplFileInfo $file */
         foreach ($finder as $file) {
-            $classNamespace = $bundleNamespace . $suffixLogNamespace . '\\' . $file->getBasename('.' . $file->getExtension());
+            $classNamespace = $bundleNamespace
+                . $suffixLogNamespace
+                . '\\'
+                . $file->getBasename('.' . $file->getExtension());
+
             if (in_array('Claroline\CoreBundle\Event\Log\LogGenericEvent', class_parents($classNamespace))) {
                 $events = array_merge($events, $this->getActionConstantsForClass($classNamespace, $restriction));
             }
@@ -146,8 +152,7 @@ class EventManager
                         }
                     }
                 }
-            }
-            else {
+            } else {
                 $classConstants  = $reflectionClass->getConstants();
                 foreach ($classConstants as $key => $classConstant) {
                     if (preg_match('/^ACTION/', $key)) {
@@ -171,54 +176,63 @@ class EventManager
 
         $sortedEvents = array();
         $genericResourceEvents = array();
-        $genericResourceEvents[self::ALL] = self::ALL;
-        $sortedEvents[self::ALL] = $this->translator->trans(self::ALL, array(), 'log');
+        $genericResourceEvents['all'] = 'all';
+        $sortedEvents['all'] = $this->translator->trans('all', array(), 'log');
         $tempResourceEvents = array();
 
         foreach ($textEvents as $textEvent) {
             $explodeTextEvents = explode('-', $textEvent);
-            if ($explodeTextEvents[0] == 'resource') {
-                $tempResourceEvents[self::ALL][$explodeTextEvents[0]] = $this->translator->trans(self::ALL, array(), 'log');
+            $shortTextEvent = $explodeTextEvents[0] . '-' . $explodeTextEvents[1];
+            $eventTrans = $this->translator->trans($explodeTextEvents[0], array(), 'platform');
+
+            if ($explodeTextEvents[0] === 'resource') {
+                $tempResourceEvents['all'][$explodeTextEvents[0]] = $this->translator->trans('all', array(), 'log');
+            } else {
+                $sortedEvents[$eventTrans][$explodeTextEvents[0]] = $this->translator->trans('all', array(), 'log');
             }
-            else {
-                $sortedEvents[$this->translator->trans($explodeTextEvents[0], array(), 'log')][$explodeTextEvents[0]] = $this->translator->trans(self::ALL, array(), 'log');
-            }
-            
-            if ($explodeTextEvents[0] == 'resource') {
-                if(isset($explodeTextEvents[2])) {
-                    $tempResourceEvents[$explodeTextEvents[1]][$explodeTextEvents[0] . '-' . $explodeTextEvents[1] . '-' . $explodeTextEvents[2]] = $this->translator->trans('log_' . $explodeTextEvents[0] . '-' . $explodeTextEvents[1] . '-' . $explodeTextEvents[2] . '_filter', array(), 'log');
+
+            if ($explodeTextEvents[0] === 'resource') {
+                if (isset($explodeTextEvents[2])) {
+                    $tempResourceEvents[$explodeTextEvents[1]][$textEvent] = $this->translator->trans(
+                        'log_' . $textEvent . '_filter', array(), 'log'
+                    );
+                } else {
+                    $genericResourceEvents[$explodeTextEvents[1]] = $shortTextEvent;
                 }
-                else {
-                    $genericResourceEvents[$explodeTextEvents[1]] = $explodeTextEvents[0] . '-' . $explodeTextEvents[1]; 
-                }
-            }
-            else if (isset($explodeTextEvents[2])) {
-                $sortedEvents[$this->translator->trans($explodeTextEvents[0], array(), 'log')][$explodeTextEvents[0] . '-' . $explodeTextEvents[1] . '-' . $explodeTextEvents[2]] = $this->translator->trans('log_' . $explodeTextEvents[0] . '-' . $explodeTextEvents[1] . '-' . $explodeTextEvents[2] . '_filter', array(), 'log');
-            }
-            else {
-                $sortedEvents[$this->translator->trans($explodeTextEvents[0], array(), 'log')][$explodeTextEvents[0] . '-' . $explodeTextEvents[1]] = $this->translator->trans('log_' . $explodeTextEvents[0] . '-' . $explodeTextEvents[1] . '_filter', array(), 'log');
+            } elseif (isset($explodeTextEvents[2])) {
+                $sortedEvents[$eventTrans][$textEvent] = $this->translator->trans(
+                    'log_' . $textEvent . '_filter', array(), 'log'
+                );
+            } else {
+                $sortedEvents[$eventTrans][$shortTextEvent] = $this->translator->trans(
+                    'log_' . $shortTextEvent . '_filter', array(), 'log'
+                );
             }
         }
 
-        $resourceTranslation = $this->translator->trans('resource', array(), 'platform');
+        $resourceTrans = $this->translator->trans('resource', array(), 'platform');
 
         foreach ($tempResourceEvents as $sortedKey => $sortedEvent) {
-            foreach ($genericResourceEvents as $genericKey => $genericEvent) {
-                $sortedKeyFilterTranslated = $this->translator->trans(($genericEvent === self::ALL) ? $genericEvent : ('log_' . $genericEvent . '_filter'), array(), 'log');
+            $keyTrans = $this->translator->trans($sortedKey, array(), 'resource');
+            $logTrans = $this->translator->trans(
+                $genericEvent === 'all' ? $genericEvent : 'log_' . $genericEvent . '_filter',
+                array(),
+                'log'
+            );
 
-                if ($sortedKey !== self::ALL){
-                    $sortedEvents[$resourceTranslation][$this->translator->trans($sortedKey, array(), 'resource')]['[[' . $sortedKey . ']]' . $genericEvent] = $sortedKeyFilterTranslated;
-                }
-                else {
-                    $sortedEvents[$resourceTranslation][$this->translator->trans($sortedKey, array(), 'log')][$genericEvent] = $sortedKeyFilterTranslated;
+            foreach ($genericResourceEvents as $genericKey => $genericEvent) {
+                if ($sortedKey !== 'all') {
+                    $sortedEvents[$resourceTrans][$keyTrans]['[[' . $sortedKey . ']]' . $genericEvent] = $logTrans;
+                } else {
+                    $altLogTrans = $this->translator->trans($sortedKey, array(), 'log');
+                    $sortedEvents[$resourceTrans][$altLogTrans][$genericEvent] = $logTrans;
                 }
             }
-            if ($sortedKey !== self::ALL){
-                foreach ($tempResourceEvents[$sortedKey] as $resourceEventKey => $resourceEventValue) {
-                    $sortedKeyTranslated = $this->translator->trans($sortedKey, array(), 'resource');
 
-                    $sortedEvents[$resourceTranslation][$sortedKeyTranslated]['null'] = null;
-                    $sortedEvents[$resourceTranslation][$sortedKeyTranslated][$resourceEventKey] = $resourceEventValue;
+            if ($sortedKey !== 'all') {
+                foreach ($tempResourceEvents[$sortedKey] as $resourceEventKey => $resourceEventValue) {
+                    $sortedEvents[$resourceTrans][$keyTrans]['null'] = null;
+                    $sortedEvents[$resourceTrans][$keyTrans][$resourceEventKey] = $resourceEventValue;
                 }
             }
         }
@@ -228,8 +242,6 @@ class EventManager
 
     /**
      * @param string|null $restriction
-     *
-     * @param string|null $resourceClass
      *
      * @return array
      */
@@ -241,8 +253,7 @@ class EventManager
         foreach ($textEvents as $textEvent) {
             if ($textEvent === null) {
                 $sortedEvents['null'] = null;
-            }
-            else if (0 === strpos($textEvent, 'resource')) {
+            } elseif (0 === strpos($textEvent, 'resource')) {
                 $sortedEvents[$textEvent] = 'log_' . $textEvent . '_filter';
             }
         }

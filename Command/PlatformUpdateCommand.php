@@ -12,12 +12,9 @@
 namespace Claroline\CoreBundle\Command;
 
 use Claroline\BundleRecorder\Operation;
-use Claroline\BundleRecorder\Handler\OperationHandler;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
-use Symfony\Component\Console\Input\InputOption;
-use Claroline\CoreBundle\Library\Workspace\TemplateBuilder;
 
 /**
  * Updates, installs or uninstalls the core and plugin bundles, following
@@ -37,9 +34,11 @@ class PlatformUpdateCommand extends ContainerAwareCommand
     {
         $output->writeln('Updating the platform...');
         $executor = $this->getContainer()->get('claroline.installation.operation_executor');
-        $executor->setLogger(function ($message) use ($output) {
-            $output->writeln($message);
-        });
+        $executor->setLogger(
+            function ($message) use ($output) {
+                $output->writeln($message);
+            }
+        );
         $executor->execute();
     }
 }
