@@ -5,13 +5,6 @@
     </a>
 {% endmacro %}
 
-{% macro displayResourcePopup(resource, step) %}
-    <a href="#" class="btn btn-default btn-xs popup" data-target="{{ path('claro_resource_open', {'node': resource.resourceNode.id, 'resourceType': resource.resourceNode.resourceType.name }) }}"> 
-        <span rel="tooltip" data-original-title="{{ step.name }}" class="lvl-{{ step.lvl + 1 }} lvl-indicator">&nbsp;</span>
-        {{ resource.resourceNode.name }}
-    </a>
-{% endmacro %}
-
 {% macro displayTreeItem(item, parents, currentStep, path, workspace) %}
     {% import _self as macros %}
     {% set class = "" %}
