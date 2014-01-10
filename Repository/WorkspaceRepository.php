@@ -49,7 +49,6 @@ class WorkspaceRepository extends EntityRepository
             SELECT w FROM Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace w
             WHERE w.id NOT IN (
                 SELECT w1.id FROM Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace w1
-                JOIN w1.personalUser pu
             )
             ORDER BY w.id
         ';

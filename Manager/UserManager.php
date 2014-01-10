@@ -140,8 +140,10 @@ class UserManager
      */
     public function deleteUser(User $user)
     {
+        $this->om->startFlushSuite();
+//        $this->workspaceManager->deleteWorkspace($user->getPersonalWorkspace());
         $this->om->remove($user);
-        $this->om->flush();
+        $this->om->endFlushSuite();
     }
 
     /**

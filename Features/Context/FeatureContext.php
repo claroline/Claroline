@@ -191,13 +191,13 @@ class FeatureContext extends MinkContext implements KernelAwareInterface
      */
     public function iCheckTheLine($text)
     {
-        throw new PendingException();
-        /*
         $script = "(function() {
             var row = $('tr:contains(\"{$text}\")');
-            var checkbox = $('#' + row.attr('id') + 'td input:checkbox');
+            var selector = '#' + row.attr('id') + ' input:checkbox';
+            var checkbox = $(selector);
+            $(checkbox).prop('checked', 'checked');
         })();";
-        $this->getSession()->evaluateScript($script);*/
+        $this->getSession()->evaluateScript($script);
     }
 
 
@@ -247,6 +247,14 @@ class FeatureContext extends MinkContext implements KernelAwareInterface
     public function baseUrlIsWeb()
     {
         $this->setMinkParameter('base_url', $this->getBaseUrl());
+    }
+
+    /**
+     * @Given /^I wait "([^"]*)" seconds$/
+     */
+    public function waitSeconds($seconds)
+    {
+        $this->getSession()->wait(1000*$seconds);
     }
 
     private function getBaseUrl()
