@@ -10,7 +10,7 @@
 				{% set thisResourceIsExcluded = true %}
 		{% endfor %}
 		{% if thisResourceIsExcluded == false %}
-			{{ macros.displayResourcePopup(resource, parent) }}
+			{{ macros.displayResource(resource, parent) }}
 		{% endif %}
 	{% endfor %}
 {% endfor %}
@@ -19,3 +19,4 @@
 {% for resource in currentStep.step2ResourceNodes if resource.excluded == false %}
 		{{ macros.displayResource(resource, currentStep) }}
 {% endfor %}
+
