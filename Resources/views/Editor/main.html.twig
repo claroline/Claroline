@@ -1,15 +1,17 @@
-{% extends "ClarolineCoreBundle::layout.html.twig" %}
+{% extends "ClarolineCoreBundle:Workspace:layout.html.twig" %}
 
 {% block stylesheets %}
     {{ parent() }}
-    <link rel="stylesheet" media="screen" href="{{ asset('bundles/innovapath/css/Editor/app.css') }}"/>
-    <link rel="stylesheet" media="screen" href="{{ asset('bundles/innovapath/css/Editor/step-edit.css') }}"/>
-    <link rel="stylesheet" media="screen" href="{{ asset('bundles/innovapath/css/Editor/navbar.css') }}"/>
-    <link rel="stylesheet" media="screen" href="{{ asset('bundles/innovapath/css/angular-pageslide.less.css') }}"/>
+    {% stylesheets debug=false filter='cssmin'  output='vendor/innova/path/editor.css'
+        '@InnovaPathBundle/Resources/public/css/Editor/*'
+        '@InnovaUIPageslideBundle/Resources/public/css/*'
+    %}
+        <link rel="stylesheet" href="{{ asset_url }}" screen="media" />
+    {% endstylesheets %}
 {% endblock %}
 
 {% block content %}
-<div ng-cloak class="col-md-12 section-content" ng-app="EditorApp">
+<div ng-cloak class="section-content" ng-app="EditorApp">
     <div ng-controller="MainCtrl">
         <div ng-show="templateSidebar.show">
             <a class="btn btn-default btn-templates" pageslide="left" ps-speed="0.5" href="#templates-sidebar">
@@ -61,7 +63,7 @@
     {{ parent() }}
 
     {# Load translations #}
-    <script type="text/javascript" src="{{ url('bazinga_exposetranslation_js') }}"></script>
+    <script type="text/javascript" src="{{ url('bazinga_exposetranslation_js', { 'domain_name': 'editor' }) }}"></script>
 
     {# Angular #}
     {% javascripts debug=false filter='jsmin' output='vendor/angular/angularjs.js'
@@ -81,9 +83,10 @@
     
     {# Angular UI #}
     {% javascripts debug=false filter='jsmin' output='vendor/angular/angular-ui.js'
-        '@InnovaAngularUIBundle/Resources/public/js/*'
-        '@InnovaAngularUISortableBundle/Resources/public/js/sortable.js'
-        '@InnovaAngularPageslideBundle/Resources/public/js/angular-pageslide-directive.js'
+        '@InnovaAngularUIBootstrapBundle/Resources/public/js/*'
+        '@InnovaAngularUISortableBundle/Resources/public/js/*'
+        '@InnovaAngularUIPageslideBundle/Resources/public/js/*'
+        '@InnovaAngularUITinyMCEBundle/Resources/public/js/*'
     %}
         <script type="text/javascript" src="{{ asset_url }}"></script>
     {% endjavascripts %}
@@ -138,6 +141,4 @@
         EditorApp.workspaceId = "{{ workspace.id }}";
         EditorApp.webDir = "{{ asset('bundles/innovapath/') }}";
     </script>
-    
-    <script type="text/javascript" src="/Claroline/web/bundles/stfalcontinymce/vendor/tinymce/tinymce.jquery.min.js"></script>
 {% endblock %}

@@ -1,8 +1,7 @@
 'use strict';
 
 // Declare app level module which depends on filters, and services
-//var EditorApp = angular.module('EditorApp', ['ngRoute', 'ui.bootstrap', 'pageslide-directive', 'ui.sortable', 'tinymce-directive']);
-var EditorApp = angular.module('EditorApp', ['ngRoute', 'ui.bootstrap', 'pageslide-directive', 'ui.sortable']);
+var EditorApp = angular.module('EditorApp', ['ngRoute', 'ui.bootstrap', 'ui.pageslide', 'ui.sortable', 'ui.tinymce']);
 
 // Declare routes
 EditorApp.config(['$routeProvider', function($routeProvider) {
