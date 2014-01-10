@@ -65,12 +65,11 @@ class UserRepository extends EntityRepository implements UserProviderInterface
         }
 
         $dql = '
-            SELECT u, groups, group_roles, roles, ws, pwu FROM Claroline\CoreBundle\Entity\User u
+            SELECT u, groups, group_roles, roles, ws FROM Claroline\CoreBundle\Entity\User u
             LEFT JOIN u.groups groups
             LEFT JOIN groups.roles group_roles
             LEFT JOIN u.roles roles
             LEFT JOIN roles.workspace ws
-            LEFT JOIN ws.personalUser pwu
             WHERE u.id = :userId
         ';
         $query = $this->_em->createQuery($dql);
@@ -210,12 +209,11 @@ class UserRepository extends EntityRepository implements UserProviderInterface
     {
         if (!$executeQuery) {
             $dql = "
-                SELECT u, pws, g, r , rws, urws from Claroline\CoreBundle\Entity\User u
+                SELECT u, pws, g, r , rws from Claroline\CoreBundle\Entity\User u
                 LEFT JOIN u.personalWorkspace pws
                 LEFT JOIN u.groups g
                 LEFT JOIN u.roles r
                 LEFT JOIN r.workspace rws
-                LEFT JOIN rws.personalUser urws
                 ORDER BY u.{$orderedBy}
             ";
             // the join on role is required because this method is only called in the administration
@@ -270,12 +268,11 @@ class UserRepository extends EntityRepository implements UserProviderInterface
         $upperSearch = trim($upperSearch);
         $upperSearch = preg_replace('/\s+/', ' ', $upperSearch);
         $dql = "
-            SELECT u, r, pws, g, rws, urws FROM Claroline\CoreBundle\Entity\User u
+            SELECT u, r, pws, g, rws FROM Claroline\CoreBundle\Entity\User u
             LEFT JOIN u.personalWorkspace pws
             LEFT JOIN u.groups g
             LEFT JOIN u.roles r
             LEFT JOIN r.workspace rws
-            LEFT JOIN rws.personalUser urws
             WHERE UPPER(u.lastName) LIKE :search
             OR UPPER(u.firstName) LIKE :search
             OR UPPER(u.username) LIKE :search

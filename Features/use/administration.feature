@@ -10,7 +10,7 @@ Feature: Administration
         And I fill in "password" with "root"
         And I press "Login"
 
-    Scenario: Successfully create a user
+    Scenario: Successfully create a user, search it, then remove it
         Given I am on "/admin/user/form"
         When I fill in "First name" with "firstname"
         And I fill in "Last name" with "lastName"
@@ -21,6 +21,17 @@ Feature: Administration
         And I fill in "Mail" with "mail@clar.oline"
         And I press "Ok"
         Then the platform should have "2" "User"
+        When I am on "/admin/users/page/1/max/50/order"
+        And I fill in "search-items-txt" with "us"
+        And I press "search-button"
+        Then I should see 2 "tr" elements
+        When I check the "user" line
+        And I press "Delete"
+        And I wait "0.1" seconds
+        And I press "Ok"
+        And I wait "0.3" seconds
+        And I go to "/admin/users/page/1/max/50/order"
+        Then I should see 2 "tr" elements
 
     Scenario: Fail to create a user
         Given I am on "/admin/user/form"
@@ -52,11 +63,19 @@ Feature: Administration
         And the response should contain "The username usee5 was found at lines: 5, 6 "
         And the response should contain "The email ClaudiaTortelloni@claroline.net was found at lines: 5, 6 "
 
-    Scenario: Successfully create group
+    Scenario: Successfully create group, search it and then removes it
         Given I am on "/admin/group/form"
-        When I fill in "Name" with "name"
+        When I fill in "Name" with "group"
         And I press "Ok"
         Then the platform should have "1" "Group"
+        When I fill in "search-items-txt" with "ro"
+        And I press "search-button"
+        Then I should see "group" in the ".row-group" element
+        And I check the "group" line
+        And I press "Delete"
+        And I press "Ok"
+        And I go to "/admin/groups/page/1/max/50/order"
+        Then the platform should have "0" "Group"
 
     Scenario: Fail to create group
         Given I am on "/admin/group/form"
@@ -105,29 +124,28 @@ Feature: Administration
          And I press "Ok"
          Then the response should contain "This value should not be blank."
 
-    Scenario: add users to a group
+    Scenario: add a user to a group, search that user in the group and removes it.
         Given the group "group" is created
         When I am on "/admin/groups/page/1/max/50/order"
         And I follow "group"
         And I follow "Add user"
-        And show last response
         And I check the "root" line
-        Then show last response
+        And I press "Add"
+        And I press "Ok"
+        And I go to "/admin/groups/page/1/max/50/order"
+        And I follow "group"
+        Then I should see "root" in the ".row-user" element
+        When I fill in "search-items-txt" with "ro"
+        And I press "search-button"
+        Then I should see "root" in the ".row-user" element
+        When I move backward one page
+        And I check the "root" line
+        And I press "Delete"
+        And I press "Ok"
+        And I go to "/admin/groups/page/1/max/50/order"
+        And I follow "group"
+        Then I should see 1 "tr" elements
 
-    #Scenario: remove users from a group
-
-    #Scenario: Search the platform users
-    #Scenario: Search the platform groups
-    #Scenario: Search the group's users
-    #Scenario: Successfully edit the platform options
-    #Scenario: Successfully delete group
-    #Scenario: delete users
-
-    #Scenario: Display the platform users
-      #Already tested through the edition
-    #Scenario: Display the platform groups
-      #Already tested through the edition
-    #Scenario: Display the group's users
-      #Already tested through adding users into a group
+  #Scenario: Successfully edit the platform options
 
   #show last response
