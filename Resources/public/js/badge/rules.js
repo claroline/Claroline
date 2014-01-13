@@ -53,18 +53,26 @@ $(function(){
 
     $(ruleDeleteConfirmSelector, ruleTabs).confirmModal({'confirmCallback': confirmDeleteRule});
 
+    $(".rules").on('change', ".action_panel select[id$='_action_']", function(event){
+        toggleDisplayBadgeField($(this));
+    });
 
+    // Display or not badge field form in edit form
+    $(".action_panel select[id$='_action_']", ".rules").each(function(){
+        toggleDisplayBadgeField($(this));
+    });
 
-    $(".rules").on('click', ".action_panel select[id$='_action_']", function(event){
-        var badgePanel = $(this).parents(".tab-pane").find(".badge_panel");
-        if ("badge" == $(this).val().toLowerCase()) {
+    function toggleDisplayBadgeField(badgeFieldForm)
+    {
+        var badgePanel = badgeFieldForm.parents(".tab-pane[id^=rule]").find(".badge_panel");
+        if ("badge" == badgeFieldForm.val().toLowerCase()) {
             badgePanel.removeClass("hide");
         }
         else {
             badgePanel.addClass("hide");
             $("select", badgePanel).val(null);
         }
-    })
+    }
 
     function confirmDeleteRule(element)
     {
