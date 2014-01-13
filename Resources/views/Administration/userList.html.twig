@@ -68,8 +68,8 @@
                 'href': path('claro_admin_users_management')
             },
             {
-                'name':'users'|trans({}, 'platform'),
-                'href':''
+                'name': 'users'|trans({}, 'platform'),
+                'href': ''
             }
         ])
     }}
@@ -144,7 +144,7 @@
                             {% endif %}
                             <td>{{ user.getId() }}</td>
                             <td>
-                                <a href="{{ path('claro_profile_view', {'userId': user.getId()}) }}"> {{user.getUsername()}}</a>
+                                <a href="{{ path('claro_profile_view', {'userId': user.getId()}) }}">{{ user.getUsername() }}</a>
                             </td>
                             <td>{{ user.getLastName() }}</td>
                             <td>{{ user.getFirstName() }}</td>

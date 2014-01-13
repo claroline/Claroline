@@ -458,6 +458,7 @@ class AdministrationController extends Controller
      * Adds multiple user to a group.
      *
      * @param integer $groupId
+     * @param array $users
      *
      * @return Response
      */

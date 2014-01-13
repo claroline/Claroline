@@ -128,11 +128,6 @@ class ResourceType
         return $this->plugin;
     }
 
-    public function getMetaTypes()
-    {
-        return $this->metaTypes;
-    }
-
     public function getActions()
     {
         return $this->actions;

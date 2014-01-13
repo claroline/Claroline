@@ -48,8 +48,8 @@ class WorkspaceRepository extends EntityRepository
         $dql = '
             SELECT w FROM Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace w
             WHERE w.id NOT IN (
-                SELECT w1.id FROM Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace w1
-                JOIN w1.personalUser pu
+                SELECT pws.id FROM Claroline\CoreBundle\Entity\User user
+                JOIN user.personalWorkspace pws
             )
             ORDER BY w.id
         ';
@@ -370,6 +370,7 @@ class WorkspaceRepository extends EntityRepository
                 AND u.id = :userId
             )' :
             '';
+
         $dql = sprintf($dql, $additionalClause);
         $query = $this->_em->createQuery($dql);
 
@@ -427,6 +428,7 @@ class WorkspaceRepository extends EntityRepository
             )
             ORDER BY w.name
         ';
+
         $search = strtoupper($search);
         $query = $this->_em->createQuery($dql);
         $query->setParameter('search', "%{$search}%");

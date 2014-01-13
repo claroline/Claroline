@@ -68,15 +68,7 @@ class AuthenticationSuccessListener
     public function onAuthenticationSuccess()
     {
         $user = $this->securityContext->getToken()->getUser();
-
         $this->eventDispatcher->dispatch('log', 'Log\LogUserLogin', array($user));
-
-        if ($user instanceof User && $user->getPersonalWorkspace() === null) {
-            $this->creator->setPersonalWorkspace($user);
-            $this->em->persist($user);
-            $this->em->flush();
-        }
-
         $token = new UsernamePasswordToken($user, null, 'main', $user->getRoles());
         $this->securityContext->setToken($token);
     }

@@ -31,10 +31,11 @@ class ClarolineCoreBundle extends InstallableBundle implements AutoConfigurableI
     {
         $config = new ConfigurationBuilder();
         $configFile = $environment === 'test' ? 'config_test.yml' : 'config.yml';
+        $routingFile = $environment === 'dev' ? 'routing_dev.yml' : 'routing.yml';
 
         return $config
             ->addContainerResource(__DIR__ . "/Resources/config/app/{$configFile}")
-            ->addRoutingResource(__DIR__ . '/Resources/config/routing.yml');
+            ->addRoutingResource(__DIR__ . "/Resources/config/{$routingFile}");
     }
 
     public function suggestConfigurationFor(Bundle $bundle, $environment)

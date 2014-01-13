@@ -676,6 +676,7 @@ class WorkspaceManager
     /**
      * @param string  $search
      * @param integer $page
+     * @param User $user
      *
      * @return \PagerFanta\PagerFanta
      */

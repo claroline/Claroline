@@ -103,14 +103,6 @@ abstract class AbstractWorkspace
     protected $roles;
 
     /**
-     * @ORM\OneToOne(
-     *     targetEntity="Claroline\CoreBundle\Entity\User",
-     *     mappedBy="personalWorkspace"
-     * )
-     */
-    protected $personalUser;
-
-    /**
      * @ORM\ManyToOne(
      *     targetEntity="Claroline\CoreBundle\Entity\User"
      * )
