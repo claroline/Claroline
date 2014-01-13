@@ -12,6 +12,7 @@
 
     var tinymce = window.tinymce;
     var home = window.Claroline.Home;
+    var translator = window.Translator;
 
     var language = home.locale.trim();
     var contentCSS = home.asset + 'bundles/clarolinecore/css/tinymce/tinymce.css';
@@ -30,7 +31,7 @@
             'insertdatetime media nonbreaking save table directionality',
             'template paste textcolor emoticons code'
         ],
-        toolbar1: 'styleselect | bold italic | alignleft aligncenter alignright alignjustify | preview fullscreen resourcePicker',
+        toolbar1: 'styleselect | bold italic | alignleft aligncenter alignright alignjustify | preview fullscreen resourcePicker fileUpload',
         toolbar2: 'undo redo | forecolor backcolor emoticons | bullist numlist outdent indent | link image media print code',
         paste_preprocess: function (plugin, args) {
             var link = $('<div>' + args.content + '</div>').text().trim(); //inside div because a bug of jquery
@@ -52,12 +53,21 @@
             });
             if ($(editor.getElement()).data('resource-picker') !== 'off') {
                 editor.addButton('resourcePicker', {
-                    'icon': 'newdocument',
+                    'icon': 'none icon-folder-open',
                     'classes': 'widget btn',
-                    'tooltip': 'Resources',
+                    'tooltip': translator.get('platform:resources'),
                     'onclick': function () {
                         tinymce.activeEditor = editor;
                         resourcePickerOpen();
+                    }
+                });
+                editor.addButton('fileUpload', {
+                    'icon': 'none icon-file',
+                    'classes': 'widget btn',
+                    'tooltip': translator.get('platform:upload'),
+                    'onclick': function () {
+                        tinymce.activeEditor = editor;
+                        home.modal('file/uploadmodal', 'uploadModal', editor);
                     }
                 });
             }
@@ -75,7 +85,7 @@
     {
         setTimeout(function () {
             editor.fire('change');
-        }, 200);
+        }, 500);
     }
 
     function insertContent(content)
@@ -153,6 +163,51 @@
     $('body').bind('DOMSubtreeModified', function () {
         clearTimeout(domChange);
         domChange = setTimeout(tinymceInit, 10);
+    });
+
+    $('body').on('click', '.modal#uploadModal .resourcePicker', function () {
+        resourcePickerOpen();
+    });
+
+    $('body').on('click', '.modal#uploadModal .filePicker', function () {
+        $('#file_form_file').click();
+    });
+
+    $('body').on('change', '.modal#uploadModal #file_form_file', function () {
+        var workspace = $(this).data('workspace');
+        var modal = $(this).parents('.modal#uploadModal').get(0);
+
+        $(this).upload(
+            home.path + 'resource/create/file/' + workspace,
+            function (done) {
+                if (done.getResponseHeader('Content-Type')  === 'application/json') {
+                    var resource = $.parseJSON(done.responseText)[0];
+                    var nodes = {};
+                    nodes[resource.id] = new Array(resource.name, resource.type, resource.mime_type);
+                    $(modal).modal('hide');
+                    callBack(nodes);
+                } else {
+                    $('.progress', modal).addClass('hide');
+                    $('.alert', modal).removeClass('hide');
+                    $('.progress-bar', modal).attr('aria-valuenow', 0).css('width', '0%').find('sr-only').text('0%');
+                }
+            },
+            function (progress) {
+                var percent = Math.round((progress.loaded * 100) / progress.totalSize);
+
+                $('.progress', modal).removeClass('hide');
+                $('.alert', modal).addClass('hide');
+                $('.progress-bar', modal)
+                .attr('aria-valuenow', percent)
+                .css('width', percent + '%')
+                .find('sr-only').text(percent + '%');
+            }
+        );
+
+    });
+
+    $('body').on('click', '.modal#uploadModal .panel-footer', function () {
+        console.log($(this).parents('.modal#uploadModal').first().data('element'));
     });
 
     $(document).ready(function () {
