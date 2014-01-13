@@ -24,7 +24,7 @@
     position: relative;
     font-size: 14px;
     margin: 0;
-    margin-bottom: 4px;
+    margin-bottom: 1px;
 }
 
 .path-player .breadcrumbs ul > li:first-child {
