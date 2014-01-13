@@ -50,10 +50,16 @@ badge_form_expired_at: 'Expiration date'
 badge_form_choose_image: "Choose badge image"
 badge_form_change_image: "Change badge image"
 badge_form_rules: "Awarding rules"
-badge_form_awarding_on_result_action: "Award on action result's"
-badge_form_execute: "Execute"
+badge_form_awarding_on_result_action: "When action's result is"
+badge_form_awarding_on_result_action_to: "to"
+badge_form_execute: "User validate the rule following executing an action on"
+badge_form_execute_times: "When he executed the action"
 badge_form_times: "times"
-badge_form_action: 'the action'
+badge_form_user_target_of_action: "User is the target of the action"
+badge_form_badge: "When the action is a badge awarding"
+badge_form_badge_help: "If compatible with the action"
+badge_form_badge_selection: "Select the badge"
+badge_form_advance_options: "Advance options"
 badge_award_form_group: 'Group'
 badge_award_form_user: 'User'
 badge_expired_on_date: 'Expire the %expirationDate%'
@@ -89,5 +95,6 @@ badge_validate_award_error_message: "An error occured while validating badge awa
 badge_reject_award_success_message: "Reject of badge awarding made with success."
 badge_reject_award_error_message: "An error occured while rejecting badge awarding."
 rule: 'Rule'
+rule_details: "Rule details"
 add_rule: 'Add a rule'
 no_rule: 'No rule'

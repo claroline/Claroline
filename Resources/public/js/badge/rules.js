@@ -53,10 +53,17 @@ $(function(){
 
     $(ruleDeleteConfirmSelector, ruleTabs).confirmModal({'confirmCallback': confirmDeleteRule});
 
-    $(".rules").on('change', '.badge_result_awarding', function(event){
-        var tab = $("#" + $(this).attr('data-tab-id'));
-        $(".rule_result", tab).toggleClass('hidden');
-        event.preventDefault();
+
+
+    $(".rules").on('click', ".action_panel select[id$='_action_']", function(event){
+        var badgePanel = $(this).parents(".tab-pane").find(".badge_panel");
+        if ("badge" == $(this).val().toLowerCase()) {
+            badgePanel.removeClass("hide");
+        }
+        else {
+            badgePanel.addClass("hide");
+            $("select", badgePanel).val(null);
+        }
     })
 
     function confirmDeleteRule(element)

@@ -1,8 +1,10 @@
 all: 'All'
 role: 'Role'
 group: 'Group'
+resource: 'Resource'
 user: 'User'
 workspace: "Workspace"
+badge: "Badge"
 Show actions for: 'Show actions for'
 for user: 'for user'
 log_default_user: 'Claroline Connect'

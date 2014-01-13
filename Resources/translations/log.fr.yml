@@ -1,6 +1,7 @@
 all: 'Tous'
 role: 'Rôle'
 group: 'Groupe'
+resource: 'Ressource'
 user: 'Utilisateur'
 workspace: "Espace d'activités"
 badge: "Badge"

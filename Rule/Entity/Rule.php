@@ -93,7 +93,7 @@ abstract class Rule
      * @ORM\Column(type="smallint", nullable=false)
      * @Expose
      */
-    protected $userType;
+    protected $userType = 0;
 
     /**
      * @var Badge

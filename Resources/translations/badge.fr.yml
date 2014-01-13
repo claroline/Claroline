@@ -50,10 +50,16 @@ badge_form_expired_at: "Date d'expiration"
 badge_form_choose_image: "Choisir l'image du badge"
 badge_form_change_image: "Changer l'image du badge"
 badge_form_rules: "Règles d'attribution"
-badge_form_awarding_on_result_action: "Attribuer en fonction du résultat de l'action"
-badge_form_execute: "Exécuter"
+badge_form_awarding_on_result_action: "Lorsque le résultat de l'action est"
+badge_form_awarding_on_result_action_to: "à"
+badge_form_execute: "L'utilisateur valide la règle suite à une action réalisée sur"
+badge_form_execute_times: "Quand il a effectué l'action"
 badge_form_times: "fois"
-badge_form_action: "l'action"
+badge_form_user_target_of_action: "L'utilisateur est la cible de l'action"
+badge_form_badge: "Lorsque l'action est l'attribution d'un badge"
+badge_form_badge_help: "Si compatible avec l'action"
+badge_form_badge_selection: "Sélectionner le badge"
+badge_form_advance_options: "Options avancées"
 badge_award_form_group: 'Groupe'
 badge_award_form_user: 'Utilisateur'
 badge_expired_on_date: 'Expire le %expirationDate%'
@@ -89,5 +95,6 @@ badge_validate_award_error_message: "Erreur lors de la validation l'attribution 
 badge_reject_award_success_message: "Refus de l'attribution du badge effectuée avec succès."
 badge_reject_award_error_message: "Erreur lors du refus d'attribution du badge."
 rule: 'Règle'
+rule_details: "Détails de la règle"
 add_rule: 'Ajouter une règle'
 no_rule: 'Aucune règle'
