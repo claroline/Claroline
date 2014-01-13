@@ -3,12 +3,11 @@
 <div class="panel panel-default">
     <div class="panel-heading lvl lvl-{{ currentStep.lvl + 1 }}">
         <h4 class="panel-title">
+            <span rel="tooltip" data-original-title="{{ step.name }}" class="lvl-{{ currentStep.lvl + 1 }} lvl-indicator-large">&nbsp;</span>
             <span class="title">{{ currentStep.name }}</span>
-
             <span class="resources pull-right">
                 {{ render(controller('innova.controller.path_player:displayResourcesAction', { 'currentStep': currentStep } )) }}
             </span>
-
         </h4>
     </div>
     <div class="panel-body">
@@ -34,6 +33,11 @@
             </div>
             {% endif %}
         {% endif %}
+
+        {% if currentStep == path.getRootStep %}
+            {% include 'InnovaPathBundle::Player/components/full-path-notice.html.twig' %}
+        {% endif %}
+
         {{ currentStep.instructions | raw }}
     </div>
 </div>
