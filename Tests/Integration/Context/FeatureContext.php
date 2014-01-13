@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Claroline\CoreBundle\Features\Context;
+namespace Claroline\CoreBundle\Tests\Integration\Context;
 
 use Behat\Behat\Exception\PendingException;
 use Symfony\Component\HttpKernel\KernelInterface;
@@ -126,6 +126,31 @@ class FeatureContext extends MinkContext implements KernelAwareInterface
             throw new \Exception('The cache directory is not writable');
         }
     }
+
+    /**
+     * @Given /^I fill in "([^"]*)" with database name$/
+     */
+    public function iFillInWithDatabaseName($field)
+    {
+        $this->fillField($field, 'claroline_prod');
+    }
+
+    /**
+     * @Given /^I fill in "([^"]*)" with database username$/
+     */
+    public function iFillInWithDatabaseUsername($field)
+    {
+        $this->fillField($field, 'root');
+    }
+
+    /**
+     * @Given /^I fill in "([^"]*)" with database password$/
+     */
+    public function iFillInWithDatabasePassword($field)
+    {
+        $this->fillField($field, 'vanille');
+    }
+
 
     /**
      * @Given /^self registration is allowed$/
