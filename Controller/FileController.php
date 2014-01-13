@@ -19,6 +19,7 @@ use Claroline\CoreBundle\Entity\Resource\File;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Resource\ResourceCollection;
+use Claroline\CoreBundle\Form\FileType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 
 class FileController extends Controller
@@ -98,6 +99,22 @@ class FileController extends Controller
         );
 
         return new JsonResponse(array($manager->toArray($file->getResourceNode())));
+    }
+
+    /**
+     *@EXT\Route("uploadmodal", name="claro_upload_modal")
+     *
+     *@EXT\Template("ClarolineCoreBundle:Resource:uploadModal.html.twig")
+     *
+     */
+    public function uploadModal()
+    {
+        return array(
+            'form' => $this->get('form.factory')->create(new FileType())->createView(),
+            'workspace' => $this->get('claroline.manager.resource_manager')->getWorkspaceRoot(
+                $this->get('claroline.manager.user_manager')->getCurrentUser()->getPersonalWorkspace()
+            )->getId()
+        );
     }
 
     /**

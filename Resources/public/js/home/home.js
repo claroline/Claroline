@@ -204,4 +204,49 @@
         });
     };
 
+    /**
+     * jQuery Upload HTML5
+     *
+     * example:
+     *
+     * $('input').upload(
+     *     home.path + 'resource/create/file/' + workspace,
+     *     function (res) {
+     *         console.log('done', res);
+     *     },
+     *     function (progress) {
+     *         $('.progress-bar').css('width', Math.round((progress.loaded * 100) / progress.totalSize) + '%')
+     *     }
+     * );
+     *
+     */
+    $.fn.upload = function (remote, successFn, progressFn) {
+        return this.each(function () {
+
+            var formData = new FormData($(this).parents('form').get(0));
+
+            $.ajax({
+                url: remote,
+                type: 'POST',
+                xhr: function () {
+                    var myXhr = $.ajaxSettings.xhr();
+                    if (myXhr.upload && progressFn) {
+                        myXhr.upload.addEventListener('progress', progressFn, false);
+                    }
+                    return myXhr;
+                },
+                data: formData,
+                name: 'test',
+                cache: false,
+                contentType: false,
+                processData: false,
+                complete : function (res) {
+                    if (successFn) {
+                        successFn(res);
+                    }
+                }
+            });
+        });
+    };
+
 }());
