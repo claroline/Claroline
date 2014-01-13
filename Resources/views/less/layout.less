@@ -12,18 +12,6 @@ body {
     padding: (@navbar-height + 20px) 0 (@navbar-height + 10px) 0;
 }
 
-#wrap {
-    min-height: 100%;
-    height: auto !important;
-    height: 100%;
-    /* Negative indent footer by it's height */
-    margin: 0 auto -@navbar-height;
-}
-
-#push {
-    height: 100%;
-}
-
 table th {
     background: @gray-lighter;
 
@@ -45,6 +33,25 @@ table th {
 
 body:not(.mce-content-body) video {
     background: @gray;
+}
+
+textarea {
+    border: 1px solid @gray-light;
+    width: 100%;
+    max-width: 100%;
+    padding: 5px;
+}
+
+#wrap {
+    min-height: 100%;
+    height: auto !important;
+    height: 100%;
+    /* Negative indent footer by it's height */
+    margin: 0 auto -@navbar-height;
+}
+
+#push {
+    height: 100%;
 }
 
 /*************/
