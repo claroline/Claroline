@@ -379,14 +379,15 @@ class LoadDemoFixture extends LoggableFixture implements ContainerAwareInterface
     {
         $kernel = $this->container->get('kernel');
 
-        if ($kernel->isClassInActiveBundle('Claroline\ForumBundle\Tests\DataFixtures\LoadForumData')) {
+        /*
+        if ($kernel->isClassInActiveBundle('Claroline\ForumBundle\DataFixtures\Demo\LoadForumData')) {
             $this->loadFixture(
                 new LoadForumData('Forum 1', 'JaneDoe', 5, 5, $this->getReference('directory/Cours 1'))
             );
             $this->loadFixture(
                 new LoadForumData('Forum doc', 'JaneDoe', 5, 5, $this->getReference('directory/Premier semestre'))
             );
-        }
+        }*/
 
         /*
           //The widget API changed.
