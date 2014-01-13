@@ -236,7 +236,6 @@
                     return myXhr;
                 },
                 data: formData,
-                name: 'test',
                 cache: false,
                 contentType: false,
                 processData: false,

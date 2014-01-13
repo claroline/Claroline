@@ -102,12 +102,12 @@ class FileController extends Controller
     }
 
     /**
-     *@EXT\Route("uploadmodal", name="claro_upload_modal")
+     * @EXT\Route("uploadmodal", name="claro_upload_modal")
      *
-     *@EXT\Template("ClarolineCoreBundle:Resource:uploadModal.html.twig")
+     * @EXT\Template("ClarolineCoreBundle:Resource:uploadModal.html.twig")
      *
      */
-    public function uploadModal()
+    public function uploadModalAction()
     {
         return array(
             'form' => $this->get('form.factory')->create(new FileType())->createView(),
