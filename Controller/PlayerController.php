@@ -58,26 +58,27 @@ class PlayerController extends ContainerAware
      */
     public function displayBreadcrumbsAction(AbstractWorkspace $workspace, Path $path, Step $currentStep)
     {
-        $ghost = array();
+        $ghost = array ();
         $session = $this->container->get('request')->getSession();
         $lastStepId = $session->get('lastStepId');
         $lastStep = $this->container->get('doctrine')->getManager()->getRepository("InnovaPathBundle:Step")->findOneById($lastStepId);
 
         if($lastStep){
             $currentStepLevel = $currentStep->getLvl();
-            $lastStepLevel = $lastStep->getLvl();
             $lastStepParents = $lastStep->getParents();
 
-            if (in_array($currentStep, $lastStepParents)) {
-                foreach ($lastStepParents as $lastStepParent) {
-                    if ($lastStepParent->getLvl() > $currentStepLevel) {
-                        $ghost[] = $lastStepParent;
+            if ($lastStepParents) {
+                if (in_array($currentStep, $lastStepParents)) {
+                    foreach ($lastStepParents as $lastStepParent) {
+                        if ($lastStepParent->getLvl() > $currentStepLevel) {
+                            $ghost[] = $lastStepParent;
+                        }
                     }
+                    $ghost[] = $lastStep;
                 }
-                $ghost[] = $lastStep;
             }
         }
-        
+
         $session->set('lastStepId', $currentStep->getId());
 
         return array (

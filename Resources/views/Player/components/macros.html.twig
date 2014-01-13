@@ -52,23 +52,23 @@
         <a class="dropdown-label" href="{{ path('innova_path_player_index', { workspaceId: workspace.id, pathId: path.id, stepId: step.id }) }}">
             {{ step.name }}
         </a>
-        {% set siblings = step.siblings %}
-        {% if siblings is not empty %}
+        {% set stepSiblings = step.siblings %}
+        {% if stepSiblings is not empty %}
             <a class="dropdown-toggle" data-toggle="dropdown" href="#">
                 <b class="caret"></b>
             </a>
             <ul class="dropdown-menu">
-            {% set currentStepDisplayed = false %}
+            {% set stepDisplayed = false %}
 
-            {% for sibling in siblings %}
-                {% if sibling.stepOrder == step.stepOrder + 1  %}
-                    {% set currentStepDisplayed = true %}
+            {% for sibling in stepSiblings %}
+                {% if sibling.stepOrder >= step.stepOrder + 1 and not stepDisplayed %}
+                    {% set stepDisplayed = true %}
                     {{ macros.breadcrumbItem(workspace, path, step) }}
                 {% endif %}
                 {{ macros.breadcrumbItem(workspace, path, sibling) }}
             {% endfor %} 
 
-            {% if currentStepDisplayed == false %}
+            {% if stepDisplayed == false %}
                 {{ macros.breadcrumbItem(workspace, path, step) }}
             {% endif %}
             </ul>

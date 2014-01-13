@@ -532,7 +532,7 @@ class Step
         $parent = $this->getParent();
         if (!empty($parent)) {
             // Current step has a parent
-            $siblings = $parent->getChildren();
+            $siblings = clone $parent->getChildren();
         
             // Remove current step from parent children
             $siblings->removeElement($this);

@@ -14,7 +14,7 @@
         {% if currentStep == path.getRootStep %}
             {% include 'InnovaPathBundle::Player/components/full-path-notice.html.twig' %}
         {% endif %}
-    
+
         {% if currentStep.children is not empty %}
             {% if currentStep.instructions is null %}
             <div class="panel panel-default">

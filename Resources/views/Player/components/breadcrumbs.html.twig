@@ -17,7 +17,7 @@
 
     {# Display current step and siblings #}
     {{ macros.dropdownBreadcrumb(workspace, path, currentStep, "") }}
-    
+
     {# Display children #}
     {% if currentStep.children is not empty and ghost is empty %}
         <li class="dropdown">
