@@ -74,14 +74,18 @@
                 </thead>
                 <tbody id="table-subjects-body">
                 {% for subject in pager.currentPageResults %}
-                    {% set messages = subject.getMessages() %}
-                    {% set lastMessage = messages[nbMessages - 1] %}
                     <tr class='row-subject'>
                         <td>
-                            {% if subject['isSticked'] == true %}
-                                <a href="{{ path('claro_subject_unstick', {'subject': subject['id']}) }}">unstick</a>
+                            {%  if isModerator %}
+                                {% if subject['isSticked'] == true %}
+                                    <a href="{{ path('claro_subject_unstick', {'subject': subject['id']}) }}">unstick</a>
+                                {% else %}
+                                    <a href="{{ path('claro_subject_stick', {'subject': subject['id']}) }}">stick</a>
+                                {% endif %}
                             {% else %}
-                                <a href="{{ path('claro_subject_stick', {'subject': subject['id']}) }}">stick</a>
+                                {% if subject['isSticked'] == true %}
+                                    sticked
+                                {% endif %}
                             {% endif %}
                         </td>
                         <td>

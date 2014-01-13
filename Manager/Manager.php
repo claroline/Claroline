@@ -147,6 +147,8 @@ class Manager
         $this->om->persist($category);
         $this->dispatch(new CreateCategoryEvent($category));
         $this->om->endFlushSuite();
+
+        return $category;
     }
 
     /**
@@ -170,6 +172,8 @@ class Manager
         $this->dispatch(new CreateMessageEvent($message));
         $this->om->endFlushSuite();
         $this->sendMessageNotification($message, $message->getCreator());
+
+        return $message;
     }
 
     /**
@@ -203,6 +207,8 @@ class Manager
         $this->om->persist($subject);
         $this->dispatch(new CreateSubjectEvent($subject));
         $this->om->endFlushSuite();
+
+        return $subject;
     }
 
     /**
