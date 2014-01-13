@@ -4,6 +4,9 @@ default:
   extensions:
     Behat\MinkExtension\Extension:
       base_url: http://localhost/claroline-behat/web/app.php/
+      #You'll have to change /var/www to match the path of you Claroline directory.
+      #%kernel.root_dir% can not be used in this file
+      files_path: '/var/www/Claroline/vendor/claroline/core-bundle/Claroline/CoreBundle/Tests/Stub'
       default_session: selenium2
       selenium2: ~
       show_cmd: firefox %s
