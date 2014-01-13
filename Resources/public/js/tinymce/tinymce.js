@@ -35,7 +35,7 @@
         paste_preprocess: function (plugin, args) {
             var link = $('<div>' + args.content + '</div>').text().trim(); //inside div because a bug of jquery
 
-            home.isValidURL(link, function (data) {
+            home.isValidURL(link, function () {
                 home.generatedContent(link, function (data) {
                     insertContent(data);
                 }, false);

@@ -9,14 +9,13 @@
  * file that was distributed with this source code.
  */
 
-namespace Claroline\CoreBundle\DataFixtures\Required;
+namespace Claroline\CoreBundle\DataFixtures\Required\Data;
 
-use Doctrine\Common\Persistence\ObjectManager;
-use Doctrine\Common\DataFixtures\AbstractFixture;
-use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
+use Claroline\CoreBundle\Persistence\ObjectManager;;
 use Claroline\CoreBundle\Entity\Theme\Theme;
+use Claroline\CoreBundle\DataFixtures\Required\RequiredFixture;
 
-class LoadThemeData extends AbstractFixture implements OrderedFixtureInterface
+class LoadThemeData implements RequiredFixture
 {
     public function load(ObjectManager $manager)
     {
@@ -38,12 +37,10 @@ class LoadThemeData extends AbstractFixture implements OrderedFixtureInterface
 
             $manager->persist($theme[$name]);
         }
-
-        $manager->flush();
     }
 
-    public function getOrder()
+    public function setContainer($container)
     {
-        return 8;
+        $this->container = $container;
     }
 }

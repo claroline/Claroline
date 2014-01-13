@@ -81,7 +81,8 @@ class RegistrationController extends Controller
     {
         $this->checkAccess();
         $user = new User();
-        $form = $this->get('form.factory')->create(new BaseProfileType(), $user);
+        $localeManager = $this->get('claroline.common.locale_manager');
+        $form = $this->get('form.factory')->create(new BaseProfileType($localeManager), $user);
 
         return array('form' => $form->createView());
     }
@@ -102,8 +103,8 @@ class RegistrationController extends Controller
     {
         $this->checkAccess();
         $user = new User();
-
-        $form = $this->get('form.factory')->create(new BaseProfileType(), $user);
+        $localeManager = $this->get('claroline.common.locale_manager');
+        $form = $this->get('form.factory')->create(new BaseProfileType($localeManager), $user);
 
         $form->handleRequest($this->get('request'));
 
