@@ -26,16 +26,16 @@ class AnnouncementWidgetListener
 
     /**
      * @DI\InjectParams({
-     *     "request"    = @DI\Inject("request_stack"),
-     *     "httpKernel" = @DI\Inject("http_kernel"),
+     *     "requeststack"   = @DI\Inject("request_stack"),
+     *     "httpKernel"     = @DI\Inject("http_kernel")
      * })
      */
     public function __construct(
-        RequestStack $request,
+        RequestStack $requeststack,
         HttpKernelInterface $httpKernel
     )
     {
-        $this->request = $request;
+        $this->request = $requeststack->getCurrentRequest();
         $this->httpKernel = $httpKernel;
     }
 
@@ -46,6 +46,10 @@ class AnnouncementWidgetListener
      */
     public function onDisplay(DisplayWidgetEvent $event)
     {
+        if (!$this->request) {
+            throw new \Exception("There is no request");
+        }
+
         $widgetInstance = $event->getInstance();
         $workspace = $widgetInstance->getWorkspace();
         $params = array();
