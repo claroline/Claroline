@@ -6,7 +6,6 @@ use Symfony\Component\DependencyInjection\ContainerAware;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
-use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Event\OpenResourceEvent;
 use Claroline\CoreBundle\Event\DeleteResourceEvent;
 use Claroline\CoreBundle\Event\CreateFormResourceEvent;
@@ -14,7 +13,6 @@ use Claroline\CoreBundle\Event\CreateResourceEvent;
 use Claroline\CoreBundle\Event\DisplayToolEvent;
 
 use Innova\PathBundle\Entity\Path;
-use Innova\PathBundle\Entity\Step2ResourceNode;
 
 class ToolListener extends ContainerAware
 {

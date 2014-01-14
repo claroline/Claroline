@@ -6,15 +6,8 @@ use Doctrine\ORM\EntityManager;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\SecurityContext;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-
-use Claroline\CoreBundle\Entity\Resource\ResourceNode;
-use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Claroline\CoreBundle\Manager\ResourceManager;
-
 use Innova\PathBundle\Entity\Path;
-use Innova\PathBundle\Entity\Step;
-use Innova\PathBundle\Entity\Step2ResourceNode;
-use Innova\PathBundle\Entity\NonDigitalResource;
 
 /**
  * Path Manager

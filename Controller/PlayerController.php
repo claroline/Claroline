@@ -11,8 +11,6 @@ use Innova\PathBundle\Entity\Path;
 use Innova\PathBundle\Entity\Step;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Symfony\Component\DependencyInjection\ContainerAware;
-use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\HttpFoundation\Session\Session;
 
 /**
  * Player controller
