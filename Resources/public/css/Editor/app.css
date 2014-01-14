@@ -1,27 +1,22 @@
 /* app css stylesheet */
+.path-editor .panel-heading + .collapse {
+    border-width: 0;
+}
+
+.path-editor .panel-heading + .collapse.in {
+    border-width: 1px;
+}
+
+.path-editor .panel-title a:hover {
+    text-decoration: none;
+}
+
 .modal-backdrop {
     z-index: 1;
 }
 
-.panel-path-editor {
-    position: relative;
-}
-
-.editor-buttons {
-    margin: 6px;
-    position: absolute;
-    top: 0;
-    right: 0;
-}
-
-.panel-path-editor .panel > .table {
-	margin-top: -1px;
-}
-
-.preview-step h3 {
-    font-size: 16px;
-    margin: 4px 0;
-    line-height: 20px;
+.action-bar {
+    margin-bottom: 20px;
 }
 
 li {
@@ -31,15 +26,6 @@ li {
 .tree-item {
     cursor: pointer;
     line-height: 24px;
-}
-
-.top-toolbar .divider {
-    display: inline-block;
-    line-height: 28px;
-    font-size: 24px;
-    padding: 0 4px;
-    margin-top: 2px;
-    margin-bottom: 2px;
 }
 
 #zone li{
@@ -61,25 +47,6 @@ form {
     margin-bottom: 15px;
 }
 
-.btn-templates {
-    position: fixed;
-    left: -42px;
-    top: 172px;
-    margin: 0;
-    
-    -webkit-border-top-left-radius: 0;
-    -webkit-border-top-right-radius: 0;
-    -moz-border-radius-topleft: 0;
-    -moz-border-radius-topright: 0;
-    border-top-left-radius: 0;
-    border-top-right-radius: 0;
-    
-    -webkit-transform: rotate(-90deg); 
-    -moz-transform: rotate(-90deg);
-    -o-transform: rotate(-90deg); 
-    filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=3);
-}
-
 table td.actions {
     text-align: right !important;
 }
@@ -87,45 +54,6 @@ table td.actions {
 table td.icon {
     width: 24px;
     text-align: center !important;
-}
-
-.preview-step .icons {
-    text-align: center;
-    background-color: #FFFFFF;
-    margin: 10px auto;
-    border-radius: 3px;
-    padding: 6px;
-    border: 1px solid rgb(227, 227, 227);
-    box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.05);
-    min-height: 32px;
-}
-
-.preview-step .icons img {
-    margin: 0 6px;
-}
-
-.preview-step p {
-	margin: 0;
-}
-
-.preview-step .icons .duration {
-    line-height: 24px;
-    font-size: 16px;
-    padding: 3px 8px;
-    padding-left: 26px;
-    background: url("../images/icons/time.png") no-repeat 6px center rgb(245, 245, 245);
-    display: inline-block;
-    border: 1px solid rgb(227, 227, 227);
-    box-shadow: inset 0px 1px 1px rgba(0, 0, 0, 0.05);
-    border-radius: 3px;
-}
-
-.preview-step .picture {
-    text-align: center;
-}
-
-.preview-step .panel-heading {
-	position: relative;
 }
 
 .excluded-resource {
@@ -139,25 +67,8 @@ table td.icon {
     font-weight: normal;
 }
 
-.preview-step .panel-heading a:hover,
-.panel-documents .panel-heading a:hover,
-.panel-tools .panel-heading a:hover {
-    text-decoration: none;
-}
-
 .indent {
     padding-right: 8px;
-}
-
-.step-buttons {
-    margin: 2px;
-    position: absolute;
-    top: 0;
-    right: 0;
-}
-
-.preview-step {
-    position: relative;
 }
 
 .tree {
@@ -219,11 +130,6 @@ input.form-control.ng-valid:focus {
 }
 
 .preview-step .panel:last-child {
-    margin-bottom: 0;
-}
-
-#panel-documents .panel-collapse .table,
-#panel-tools .panel-collapse .table {
     margin-bottom: 0;
 }
 

@@ -49,12 +49,6 @@ class PathManager
     protected $nonDigitalResourceManager;
 
     /**
-     * innova Step2ResourceNode manager
-     * @var \Innova\PathBundle\Manager\Step2ResourceNodeManager
-     */
-    protected $step2ResourceNodeManager;
-
-    /**
      * innova step manager
      * @var \Innova\PathBundle\Manager\StepManager
      */
@@ -78,12 +72,11 @@ class PathManager
      * @param SecurityContext $securityContext
      */
     public function __construct(
-                    EntityManager $entityManager, 
-                    SecurityContext $securityContext, 
-                    ResourceManager $resourceManager, 
-                    NonDigitalResourceManager $nonDigitalResourceManager,
-                    Step2ResourceNodeManager $step2ResourceNodeManager,
-                    StepManager $stepManager
+        EntityManager             $entityManager, 
+        SecurityContext           $securityContext, 
+        ResourceManager           $resourceManager, 
+        NonDigitalResourceManager $nonDigitalResourceManager,
+        StepManager               $stepManager
     )
     {
         $this->em = $entityManager;
@@ -91,7 +84,6 @@ class PathManager
         $this->stepManager = $stepManager;
         $this->security = $securityContext;
         $this->nonDigitalResourceManager = $nonDigitalResourceManager;
-        $this->step2ResourceNodeManager = $step2ResourceNodeManager;
         
         // Retrieve current user
         $this->user = $this->security->getToken()->getUser();
@@ -342,13 +334,13 @@ class PathManager
                 }
 
                 $excludedResourcesToResourceNodes[$resource->id] = $resource->resourceId;
-                $step2ressourceNode = $this->step2ResourceNodeManager->edit($currentStep, $resource->resourceId, false, $resource->propagateToChildren, $resourceOrder);
+                $step2ressourceNode = $this->stepManager->editResourceNodeRelation($currentStep, $resource->resourceId, false, $resource->propagateToChildren, $resourceOrder);
                 $step2resourceNodesToNotDelete[] = $step2ressourceNode->getId();
             }
 
             // Gestion des ressources exclues
             foreach ($step->excludedResources as $excludedResource) {
-                $step2ressourceNode = $this->step2ResourceNodeManager->edit($currentStep, $excludedResourcesToResourceNodes[$excludedResource], true, false, $resourceOrder);
+                $step2ressourceNode = $this->stepManager->editResourceNodeRelation($currentStep, $excludedResourcesToResourceNodes[$excludedResource], true, false, $resourceOrder);
                 $step2resourceNodesToNotDelete[] = $step2ressourceNode->getId();
             }
 
@@ -358,6 +350,7 @@ class PathManager
                     $this->em->remove($currentStep2resourceNode);
                 }
             }
+            
             $this->em->flush();
             // récursivité sur les enfants possibles.
             $this->JSONParser($step->children, $user, $workspace, $pathsDirectory, $lvl+1, $currentStep->getId(), 0, $path, $stepsToNotDelete, $excludedResourcesToResourceNodes);

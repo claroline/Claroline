@@ -1,0 +1,17 @@
+help: Help
+create: Create
+edit: Edit
+editor: Path editor
+undo: Undo
+redo: Redo
+save: Save
+back: Back to list
+step1: Step 1.
+step1_description: Defining general properties
+step2: Step 2.
+step2_description: Defining scenario and steps
+step3: Step 3.
+step3_description: Defining each step properties
+open_templates: Open templates
+edit_step: Edit step
+delete_step: Delete step

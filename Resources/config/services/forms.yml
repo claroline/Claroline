@@ -4,3 +4,12 @@ services:
         class: %innova_path.form.type.path.class%
         tags:
           - { name: form.type, alias: path }
+          
+    # Path handler
+    innova_path.form.handler.path:
+        class: %innova_path.form.handler.path.class%
+        arguments:
+            pathManager: @innova_path.manager.path
+        calls:
+            - [setRequest, [@request]]
+        scope: request

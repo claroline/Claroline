@@ -1,0 +1,15 @@
+help: Aide
+create: Création
+edit: Modification
+editor: Editeur de Parcours
+undo: Annuler
+redo: Retablir
+save: Sauvegarder
+back: Retour à la liste
+step1: Etape 1.
+step1_description: Définition des informations globales
+step2: Etape 2.
+step2_description: Création du scenario
+step3: Etape 3.
+step3_description: Définition des informations de chaque étape
+open_templates: Ouvrir les favoris

@@ -26,7 +26,7 @@
  * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * @category   Entity
- * @package    InnovaPathBundle
+ * @package    Innova
  * @subpackage PathBundle
  * @author     Innovalangues <contact@innovalangues.net>
  * @copyright  2013 Innovalangues
@@ -70,7 +70,7 @@ use Innova\PathBundle\Manager\PathManager;
  * @Route(
  *      "",
  *      name = "innova_path",
- *      service="innova.controller.path"
+ *      service="innova_path.controller.path"
  * )
  */
 class PathController

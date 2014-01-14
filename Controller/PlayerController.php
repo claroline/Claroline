@@ -21,7 +21,7 @@ use Symfony\Component\HttpFoundation\Session\Session;
  * @Route(
  *      "",
  *      name="innova_path_player",
- *      service="innova.controller.path_player"
+ *      service="innova_path.controller.path_player"
  * )
  */
 class PlayerController extends ContainerAware

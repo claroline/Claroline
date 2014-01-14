@@ -28,11 +28,11 @@ class InnovaPathExtension extends Extension
         $locator = new FileLocator(__DIR__ . '/../Resources/config/services');
         $loader = new YamlFileLoader($container, $locator);
     
-        $loader->load('services.yml');
         $loader->load('listeners.yml');
         $loader->load('managers.yml');
         $loader->load('controllers.yml');
         $loader->load('forms.yml');
+        $loader->load('twig.yml');
     
         return $this;
     }

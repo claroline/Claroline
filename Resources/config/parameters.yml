@@ -1,11 +1,19 @@
 parameters: 
     # Controllers
-    innova.controller.path.class:          Innova\PathBundle\Controller\PathController
-    innova.controller.step.class:          Innova\PathBundle\Controller\StepController
-    innova.controller.path_template.class: Innova\PathBundle\Controller\PathTemplateController
-    innova.controller.path_player.class:   Innova\PathBundle\Controller\PlayerController
+    innova_path.controller.path.class:          Innova\PathBundle\Controller\PathController
+    innova_path.controller.step.class:          Innova\PathBundle\Controller\StepController
+    innova_path.controller.path_template.class: Innova\PathBundle\Controller\PathTemplateController
+    innova_path.controller.path_player.class:   Innova\PathBundle\Controller\PlayerController
+    innova_path.controller.path_editor.class:   Innova\PathBundle\Controller\EditorController
     
     # Managers
-
+    innova_path.manager.path.class:                 Innova\PathBundle\Manager\PathManager
+    innova_path.manager.path_template.class:        Innova\PathBundle\Manager\PathTemplateManager
+    innova_path.manager.non_digital_resource.class: Innova\PathBundle\Manager\NonDigitalResourceManager
+    innova_path.manager.step.class:                 Innova\PathBundle\Manager\StepManager
+    
     # Form types
     innova_path.form.type.path.class: Innova\PathBundle\Form\Type\PathType
+    
+    # Form handlers
+    innova_path.form.handler.path.class: Innova\PathBundle\Form\Handler\PathHandler

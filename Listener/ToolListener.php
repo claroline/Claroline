@@ -21,61 +21,60 @@ class ToolListener extends ContainerAware
     public function onWorkspaceOpen(DisplayToolEvent $event)
     {
         $id = $event->getWorkspace()->getId();
-        $subRequest = $this->container->get('request')->duplicate(array('id' => $id), array(), array("_controller" => 'innova.controller.path:fromWorkspaceAction'));
+        $subRequest = $this->container->get('request')->duplicate(array('id' => $id), array(), array("_controller" => 'innova_path.controller.path:fromWorkspaceAction'));
         $response = $this->container->get('http_kernel')->handle($subRequest, HttpKernelInterface::SUB_REQUEST);
         $event->setContent($response->getContent());
     }
 
-   
     public function onPathOpen(OpenResourceEvent $event)
     {
         $path = $event->getResource();
-	    $route = $this->container
-	        ->get('router')
-	        ->generate(
-	            'innova_path_player_index',
-	            array(
-	            	'workspaceId' => $path->getResourceNode()->getWorkspace()->getId(),
-	            	'pathId' => $path->getId(),
-	            	'stepId' => $path->getRootStep()->getId()
-	            )
-	        );
-	    $event->setResponse(new RedirectResponse($route));
-		$event->stopPropagation();
+        $route = $this->container
+            ->get('router')
+            ->generate(
+                'innova_path_player_index',
+                array(
+                    'workspaceId' => $path->getResourceNode()->getWorkspace()->getId(),
+                    'pathId' => $path->getId(),
+                    'stepId' => $path->getRootStep()->getId()
+                )
+            );
+        
+        $event->setResponse(new RedirectResponse($route));
+        $event->stopPropagation();
     }
-
 
     public function onPathCreate(CreateResourceEvent $event)
     {
-    	// Create form
+        // Create form
         $form = $this->container->get('form.factory')->create('path', new Path());
         
-		// Try to prcess form
-		$request = $this->container->get('request');
-		$form->handleRequest($request);
+        // Try to prcess form
+        $request = $this->container->get('request');
+        $form->handleRequest($request);
 
-		if ($form->isValid()) {
-			$path = $form->getData();
+        if ($form->isValid()) {
+            $path = $form->getData();
 
-			$properties = array (
-				'name' => $path->getName(),
-				'description' => $path->getDescription(),
-			);
+            $properties = array (
+                'name' => $path->getName(),
+                'description' => $path->getDescription(),
+            );
 
-			$path->setPath(json_encode($properties));
-			$event->setResources(array ($path));
-		}
-		else {
-			$content = $this->container->get('templating')->render(
-	            'ClarolineCoreBundle:Resource:createForm.html.twig',
-	            array(
-	                'form' => $form->createView(),
-	                'resourceType' => 'path'
-	            )
-	        );
+            $path->setPath(json_encode($properties));
+            $event->setResources(array ($path));
+        }
+        else {
+            $content = $this->container->get('templating')->render(
+                'ClarolineCoreBundle:Resource:createForm.html.twig',
+                array(
+                    'form' => $form->createView(),
+                    'resourceType' => 'path'
+                )
+            );
 
-			$event->setErrorFormContent($content);
-		}
+            $event->setErrorFormContent($content);
+        }
         
         $event->stopPropagation();
     }
@@ -85,7 +84,7 @@ class ToolListener extends ContainerAware
         // Create form
         $form = $this->container->get('form.factory')->create('path', new Path());
         
-		$content = $this->container->get('templating')->render(
+        $content = $this->container->get('templating')->render(
             'ClarolineCoreBundle:Resource:createForm.html.twig',
             array(
                 'form' => $form->createView(),
@@ -93,37 +92,39 @@ class ToolListener extends ContainerAware
             )
         );
 
-		$event->setResponseContent($content);
+        $event->setResponseContent($content);
         $event->stopPropagation();
     }
 
-
-    public function onNonDigitalResourceOpen(OpenResourceEvent $event){
-    	$nonDigitalResource = $event->getResource();
-	    $route = $this->container
-	        ->get('router')
-	        ->generate(
-	            'innova_nondigitalresource_player',
-	            array(
-	            	'nonDigitalResourceId' => $nonDigitalResource->getId(),
-	            )
-	        );
-	    $event->setResponse(new RedirectResponse($route));
-	    $event->stopPropagation();
+    public function onNonDigitalResourceOpen(OpenResourceEvent $event)
+    {
+        $nonDigitalResource = $event->getResource();
+        $route = $this->container
+            ->get('router')
+            ->generate(
+                'innova_nondigitalresource_player',
+                array(
+                    'nonDigitalResourceId' => $nonDigitalResource->getId(),
+                )
+            );
+        $event->setResponse(new RedirectResponse($route));
+        $event->stopPropagation();
     }
 
-    public function onPathDelete(DeleteResourceEvent $event){
-    	$event->stopPropagation();
+    public function onPathDelete(DeleteResourceEvent $event)
+    {
+        $event->stopPropagation();
     }
 
-    public function onNonDigitalResourceDelete(DeleteResourceEvent $event){
-    	$ndr = $event->getResource();
+    public function onNonDigitalResourceDelete(DeleteResourceEvent $event)
+    {
+        $ndr = $event->getResource();
 
-    	$em = $this->container->get('doctrine.orm.entity_manager');
-    	$step2resourceNodes = $em->getRepository('InnovaPathBundle:Step2ResourceNode')->findByResourceNode($ndr->getResourceNode());
+        $em = $this->container->get('doctrine.orm.entity_manager');
+        $step2resourceNodes = $em->getRepository('InnovaPathBundle:Step2ResourceNode')->findByResourceNode($ndr->getResourceNode());
 
-    	if(count($step2resourceNodes) > 0){
-    		throw new \Exception('The resource you want to delete is used.');
-       	}
+        if(count($step2resourceNodes) > 0){
+            throw new \Exception('The resource you want to delete is used.');
+           }
     }
 }

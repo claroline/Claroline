@@ -65,7 +65,7 @@ use Innova\PathBundle\Entity\Step;
  * @Route(
  *      "",
  *      name = "innova_step",
- *      service="innova.controller.step"
+ *      service="innova_path.controller.step"
  * )
  */
 class StepController

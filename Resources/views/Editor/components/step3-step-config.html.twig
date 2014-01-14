@@ -1,0 +1,70 @@
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title">
+            <a data-toggle="collapse" href="#panel-step-config">
+                {{ 'step3'|trans({}, 'path_editor') }} <small>{{ 'step3_description'|trans({}, 'path_editor') }}</small>
+            </a>
+        </h3>
+    </div>
+    
+    <div id="panel-step-config" class="panel-body collapse in">
+        <div class="action-bar">
+            <button ng-click="editStep(previewStep)" class="btn btn-default btn-sm">
+                <span class="icon-pencil"></span> {{ 'edit_step'|trans({}, 'path_editor') }}
+            </button>
+            <button ng-hide="stepIsRootNode" class="btn btn-danger btn-sm" ng-click="remove(previewStep)">
+                <span class="icon-trash"></span> {{ 'delete_step'|trans({}, 'path_editor') }}
+            </button>
+        </div>
+        
+{#         <div class="icons">#}
+{#                     <img ng-show="previewStep.who != null && previewStep.who != ''" src="{{ webDir }}images/icons/who/{{ previewStep.who }}" alt="{{ whoList[previewStep.who] }}" tooltip="{{ whoList[previewStep.who] }}" />#}
+{#                     <img ng-show="previewStep.where != null && previewStep.where != ''" src="{{ webDir }}images/icons/where/{{ previewStep.where }}" alt="{{ whereList[previewStep.where] }}" tooltip="{{ whereList[previewStep.where] }}" />#}
+
+{#                     <img ng-show="previewStep.withComputer" src="{{ webDir }}images/icons/computer.png" alt="With computer" tooltip="With computer" />#}
+{#                     <img ng-show="!previewStep.withComputer" src="{{ webDir }}images/icons/no_computer.png" alt="Without computer" tooltip="Without computer" />#}
+
+{#                     <img ng-show="previewStep.withTutor" src="{{ webDir }}images/icons/tutor.png" alt="With tutor" tooltip="With tutor" />#}
+{#                     <img ng-show="!previewStep.withTutor" src="{{ webDir }}images/icons/no_tutor.png" alt="Without tutor" tooltip="Without tutor" />#}
+
+{#                     <span class="duration pull-right">{{ previewStep.durationHours || "0" }}h{{ previewStep.durationMinutes || "00" }}min</span>#}
+{#                 </div>#}
+
+{#                 <div class="picture">#}
+{#                     <img ng-show="previewStep.image != null && previewStep.image != ''" src="{{ webDir }}images/steps/{{ previewStep.image }}" />#}
+{#                 </div>#}
+
+{#                 <br/>#}
+
+{#                 <h3><span class="icon-info-sign"></span> Description</h3>#}
+{#                 <p ng-bind-html-unsafe="previewStep.instructions"></p>#}
+
+{#                 <br/>#}
+
+{#                 <button class="btn btn-xs btn-primary pull-right" ng-click="editResource('document')"><i class="icon-plus"></i></button>#}
+{#                 <h3><span class="icon-briefcase"></span> Resources</h3>#}
+
+{#                 <table class="table table-condensed table-hover">#}
+{#                     <!-- Inherited resources from parents -->#}
+{#                     <tr ng-repeat="resource in inheritedResources">#}
+{#                         <td class="icon"><img src="{{ webDir }}images/icons/{{ resource.type }}/16x16/{{ resource.subType }}.png" alt="{{ resource.subType }}" /></td>#}
+{#                         <td ng-class="{'excluded-resource': resource.isExcluded}">{{ resource.name | truncate }} <small>(from &lt;{{ resource.parentStep | truncate }}&gt;)</small></td>#}
+{#                         <td class="actions">#}
+{#                             <button ng-disabled="!resource.isExcluded" class="btn btn-xs btn-success" ng-click="includeParentResource(resource)"><i class="icon-eye-open"></i></button>#}
+{#                             <button ng-disabled="resource.isExcluded" class="btn btn-xs btn-danger" ng-click="excludeParentResource(resource)"><i class="icon-eye-close"></i></button>#}
+{#                         </td>#}
+{#                     </tr>#}
+                    
+{#                     <!-- Specific resources -->#}
+{#                     <tr ng-repeat="resource in previewStep.resources | filter: {type: 'document'}">#}
+{#                         <td class="icon"><img src="{{ webDir }}images/icons/{{ resource.type }}/16x16/{{ resource.subType }}.png" alt="{{ resource.subType }}" /></td>#}
+{#                         <td>{{ resource.name | truncate }}</td>#}
+{#                         <td class="actions">#}
+{#                             <button class="btn btn-xs btn-default" ng-click="editResource('document', resource)" tooltip="Edit"><i class="icon-edit"></i></button>#}
+{#                             <button class="btn btn-xs btn-danger" ng-click="removeResource(resource)" tooltip="Delete"><i class="icon-trash"></i></button>#}
+{#                         </td>#}
+{#                     </tr>#}
+{#                 </table>#}
+        
+    </div>
+</div>

@@ -48,28 +48,18 @@ function MainCtrl($scope, $http, $window, $location, $modal, HistoryFactory, Cli
             }
         };
     }
-    
-    // Set active tab
-    $scope.activeTab = 'Global';
-    $scope.$on('$routeChangeSuccess', function(event, current, previous) {
-        $scope.activeTab = current.activeTab;
-    });
 
-    // Hide templates by default (it's only used in scenario with the tree view)
-    $scope.templateSidebar = {};
-    $scope.templateSidebar.show = true;
-    
     $scope.alerts = AlertFactory.getAlerts();
     $scope.path = null;
-
-    // Init placeholderX
-    $scope.placeholderName = PathFactory.getPlaceholderName();
-    $scope.placeholderDescription = PathFactory.getPlaceholderDescription();
 
     $scope.pathName = {};
     $scope.pathName.isUnique = true;
     
     $scope.initPath = function(path) {
+        if (typeof path == 'undefined' || null == path || path.length === 0) {
+            var path = PathFactory.generateNewPath();
+        }
+        
         if (typeof(path.steps) == 'undefined' || undefined == path.steps || null == path.steps || path.steps.length === 0) {
             var newPath = jQuery.extend(true, {}, path);
             // Missing root step => add it
@@ -89,17 +79,6 @@ function MainCtrl($scope, $http, $window, $location, $modal, HistoryFactory, Cli
         if (-1 === HistoryFactory.getHistoryState()) {
             HistoryFactory.update($scope.path);
         }
-    };
-
-    /**
-     * Open Help modal
-     * @returns void
-     */
-    $scope.openHelp = function() {
-        var modalInstance = $modal.open({
-            templateUrl: EditorApp.webDir + 'angularjs/Help/Partial/help.html',
-            controller: 'HelpModalCtrl'
-        });
     };
 
     /**

@@ -15,10 +15,10 @@
 
 <div id="path-main-container" class="path-player">
     <div class="tree-browser">
-        {{ render(controller('innova.controller.path_player:displayTreeBrowserAction', { 'workspace': workspace, 'path': path, 'currentStep': currentStep } )) }}
+        {{ render(controller('innova_path.controller.path_player:displayTreeBrowserAction', { 'workspace': workspace, 'path': path, 'currentStep': currentStep } )) }}
     </div>
     <div class="petit-poucet">
-        {{ render(controller('innova.controller.path_player:displayPetitPoucetAction', { 'workspace': workspace, 'path': path, 'currentStep': currentStep })) }}
+        {{ render(controller('innova_path.controller.path_player:displayPetitPoucetAction', { 'workspace': workspace, 'path': path, 'currentStep': currentStep })) }}
     </div>
     <div class="row">
         <div class="col-md-12">
@@ -34,14 +34,14 @@
             </div>
             {# Fil d'ariane #}
             <div class="breadcrumbs">
-                {{ render(controller('innova.controller.path_player:displayBreadcrumbsAction', { 'workspace': workspace, 'path': path, 'currentStep': currentStep })) }}
+                {{ render(controller('innova_path.controller.path_player:displayBreadcrumbsAction', { 'workspace': workspace, 'path': path, 'currentStep': currentStep })) }}
             </div>
         </div>
     </div>
     <div class="content row">
         {# Contenu de l'étape #}
         <div class="current-step col-md-12">
-            {{ render(controller('innova.controller.path_player:displayCurrentStepAction', { 'workspace': workspace, 'path': path, 'currentStep': currentStep } )) }}
+            {{ render(controller('innova_path.controller.path_player:displayCurrentStepAction', { 'workspace': workspace, 'path': path, 'currentStep': currentStep } )) }}
         </div>
     </div>
 </div>

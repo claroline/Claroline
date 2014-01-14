@@ -1,42 +1,36 @@
 services:
     # Path manager
-    innova.manager.path_manager:
-        class: Innova\PathBundle\Manager\PathManager
+    innova_path.manager.path:
+        class: %innova_path.manager.path.class%
         arguments:
-            entityManager:   @doctrine.orm.entity_manager
-            securityContext: @security.context
-            resourceManager: @claroline.manager.resource_manager
-            nonDigitalResourceManager: @innova.manager.nondigitalresource_manager
-            Step2ResourceNodeManager: @innova.manager.step2resourcenode_manager
-            stepManager: @innova.manager.step_manager
+            entityManager:             @doctrine.orm.entity_manager
+            securityContext:           @security.context
+            resourceManager:           @claroline.manager.resource_manager
+            nonDigitalResourceManager: @innova_path.manager.non_digital_resource
+            stepManager:               @innova_path.manager.step
         calls:
             - [setRequest, ["@?request="]]
         scope: request
 
     # NonDigitalResource manager
-    innova.manager.nondigitalresource_manager:
-        class: Innova\PathBundle\Manager\NonDigitalResourceManager
+    innova_path.manager.non_digital_resource:
+        class: %innova_path.manager.non_digital_resource.class%
         arguments:
             entityManager:   @doctrine.orm.entity_manager
             securityContext: @security.context
             resourceManager: @claroline.manager.resource_manager
 
-    # step2resourceNode manager
-    innova.manager.step2resourcenode_manager:
-        class: Innova\PathBundle\Manager\Step2ResourceNodeManager
-        arguments:
-            entityManager:   @doctrine.orm.entity_manager
-
     # Path template manager
-    innova.manager.pathtemplate_manager:
-        class: Innova\PathBundle\Manager\PathTemplateManager
+    innova_path.manager.path_template:
+        class: %innova_path.manager.path_template.class%
         arguments:
-            entityManager:   @doctrine.orm.entity_manager
+            entityManager: @doctrine.orm.entity_manager
         calls:
             - [setRequest, ["@?request="]]
         scope: request
 
     # Step manager
-    innova.manager.step_manager: 
-        class: Innova\PathBundle\Manager\StepManager
-        arguments: ["@doctrine.orm.entity_manager"]
+    innova_path.manager.step: 
+        class: %innova_path.manager.step.class%
+        arguments: 
+            om: @doctrine.orm.entity_manager

@@ -64,7 +64,7 @@ use Innova\PathBundle\Entity\PathTemplate;
  * @Route(
  *      "",
  *      name = "innova_path_template",
- *      service="innova.controller.path_template"
+ *      service="innova_path.controller.path_template"
  * )
  */
 class PathTemplateController

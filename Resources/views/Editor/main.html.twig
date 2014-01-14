@@ -11,51 +11,41 @@
 {% endblock %}
 
 {% block content %}
-<div ng-cloak class="section-content" ng-app="EditorApp">
-    <div ng-controller="MainCtrl">
-        <div ng-show="templateSidebar.show">
-            <a class="btn btn-default btn-templates" pageslide="left" ps-speed="0.5" href="#templates-sidebar">
-                <span class="icon-heart"></span> Templates
-            </a>
-        </div>
-        
-        <div id="templates-sidebar" style="display:none" ng-controller="TemplateCtrl">
-            <a id="templates-sidebar-close" href="#" class="btn btn-default btn-xs pull-right"><i class="icon-remove"></i></a>
-            <div ng-include="'{{ asset('bundles/innovapath/angularjs/Template/Partial/templates-sidebar.html') }}'"></div>
-        </div>
-        
-        <div class="panel panel-default panel-path-editor">
-            <div class="panel-heading">
-                <h3 class="panel-title">
-                    <button class="btn btn-default btn-xs" ng-click="openHelp()" tooltip="Help">
-                        <span class="icon-question-sign"></span>
-                    </button>
-                    Editing Path : <strong>&lt;{% verbatim %}{{ path.name | truncate }}{% endverbatim %}&gt;</strong> in Workspace <strong>&lt;{{ workspace.name }}&gt;</strong>
-                </h3>
+    {% include 'InnovaPathBundle:Editor:components/breadcrumbs.html.twig' with {workspace: workspace} %}
 
-                <div class="editor-buttons">
-                    <div class="btn-group">
-                        <button class="btn btn-default btn-sm" ng-click="undo()" ng-disabled="undoDisabled" tooltip="Undo"><span class="icon-reply"></span></button>
-                        <button class="btn btn-default btn-sm" ng-click="redo()" ng-disabled="redoDisabled" tooltip="Redo"><span class="icon-share-alt"></span></button>
-                    </div>
-                    <button class="btn btn-sm btn-primary" ng-click="save(path)" tooltip="Save"><span class="icon-save"></span></button>
-                    <a href="{{ path('claro_workspace_open_tool', {workspaceId: workspace.id, toolName: 'innova_path'}) }}" class="btn btn-danger btn-sm" tooltip="Back to list"><span class="icon-remove"></span></a>
-                </div>
-            </div>
-
-            <div ng-include="webDir + 'angularjs/Editor/Partial/navbar.html'"></div>
-
-{#             <div class="alerts col-md-12" ng-controller="AlertCtrl">#}
+    <div ng-cloak="" ng-app="EditorApp" class="path-editor">
+        <div ng-controller="MainCtrl">
+{#             <div class="alerts" ng-controller="AlertCtrl">#}
 {#                 <div ng-repeat="alert in alerts" class="alert alert-dismissable alert-{% verbatim %}{{ alert.type }}{% endverbatim %}">#}
 {#                     <button type="button" class="close" data-dismiss="alert" aria-hidden="true" ng-click="closeAlert({% verbatim %}{{ $index }}{% endverbatim %})">&times;</button>#}
 {#                     {% verbatim %}{{ alert.msg }}{% endverbatim %}#}
 {#                 </div>#}
 {#             </div>#}
-
-            <div ng-view class="panel-body"></div>
+            
+            <div id="templates-sidebar" style="display:none" ng-controller="TemplateCtrl">
+                <a id="templates-sidebar-close" href="#" class="btn btn-default btn-xs pull-right"><i class="icon-remove"></i></a>
+                <div ng-include="'{{ asset('bundles/innovapath/angularjs/Template/Partial/templates-sidebar.html') }}'"></div>
+            </div>
+            
+            {% include 'InnovaPathBundle:Editor:components/action-bar.html.twig' with {workspace: workspace} %}
+            
+            <div ng-controller="GlobalCtrl" class="row">
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    {% include 'InnovaPathBundle:Editor:components/step1-global.html.twig' %}
+                </div>
+            </div>
+            
+            <div ng-controller="TreeCtrl" class="row">
+                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                    {% include 'InnovaPathBundle:Editor:components/step2-scenario.html.twig' %}
+                </div>
+                
+                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                    {% include 'InnovaPathBundle:Editor:components/step3-step-config.html.twig' %}
+                </div>
+            </div>
         </div>
     </div>
-</div>
 {% endblock %}
 
 {% block javascripts %}
@@ -63,10 +53,10 @@
     {{ parent() }}
 
     {# Load translations #}
-    <script type="text/javascript" src="{{ url('bazinga_exposetranslation_js', { 'domain_name': 'editor' }) }}"></script>
+    <script type="text/javascript" src="{{ url('bazinga_exposetranslation_js', { 'domain_name': 'path_editor' }) }}"></script>
 
     {# Angular #}
-    {% javascripts debug=false filter='jsmin' output='vendor/angular/angularjs.js'
+    {% javascripts debug=false filter='jsmin' output='vendor/angular/angular-js.js'
         '@InnovaAngularJSBundle/Resources/public/js/angular.min.js'
         '@InnovaAngularJSBundle/Resources/public/js/angular-route.min.js'
         '@InnovaAngularJSBundle/Resources/public/js/angular-animate.min.js'
@@ -91,50 +81,30 @@
         <script type="text/javascript" src="{{ asset_url }}"></script>
     {% endjavascripts %}
     
-    {# Alert #}
-    <script type="text/javascript" src="{{ asset('bundles/innovapath/angularjs/Alert/Factory/AlertFactory.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('bundles/innovapath/angularjs/Alert/Controller/AlertCtrl.js') }}"></script>
-
-    {# History #}
-    <script type="text/javascript" src="{{ asset('bundles/innovapath/angularjs/History/Factory/HistoryFactory.js') }}"></script>
-
-    {# Clipboard #}
-    <script type="text/javascript" src="{{ asset('bundles/innovapath/angularjs/Clipboard/Factory/ClipboardFactory.js') }}"></script>
-
-    {# Main #}
-    <script type="text/javascript" src="{{ asset('bundles/innovapath/angularjs/Editor/Controller/MainCtrl.js') }}"></script>
-
-    {# Help  #}
-    <script type="text/javascript" src="{{ asset('bundles/innovapath/angularjs/Help/Controller/HelpModalCtrl.js') }}"></script>
-
-    {# Path #}
-    <script type="text/javascript" src="{{ asset('bundles/innovapath/angularjs/Path/Factory/PathFactory.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('bundles/innovapath/angularjs/Editor/Controller/GlobalCtrl.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('bundles/innovapath/angularjs/Editor/Controller/SkillsCtrl.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('bundles/innovapath/angularjs/Editor/Controller/TreeCtrl.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('bundles/innovapath/angularjs/Editor/Controller/PlannerCtrl.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('bundles/innovapath/angularjs/Editor/Controller/ValidationCtrl.js') }}"></script>
-
-    {# Steps #}
-    <script type="text/javascript" src="{{ asset('bundles/innovapath/angularjs/Step/Factory/StepFactory.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('bundles/innovapath/angularjs/Step/Controller/StepModalCtrl.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('bundles/innovapath/angularjs/Step/Controller/SelectImageModalCtrl.js') }}"></script>
-
-    {# Resources #}
-    <script type="text/javascript" src="{{ asset('bundles/innovapath/angularjs/Resource/Factory/ResourceFactory.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('bundles/innovapath/angularjs/Resource/Controller/ResourceModalCtrl.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('bundles/innovapath/angularjs/Resource/Controller/ResourcePickerModalCtrl.js') }}"></script>
-
-    {# Templates #}
-    <script type="text/javascript" src="{{ asset('bundles/innovapath/angularjs/Template/Factory/TemplateFactory.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('bundles/innovapath/angularjs/Template/Controller/TemplateCtrl.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('bundles/innovapath/angularjs/Template/Controller/TemplateModalCtrl.js') }}"></script>
-
-    <script type="text/javascript" src="{{ asset('bundles/innovapath/angularjs/TruncateText/Filter/TruncateTextFilter.js') }}"></script>
-
-    {# Global APP #}
-    <script type="text/javascript" src="{{ asset('bundles/innovapath/angularjs/Editor/EditorApp.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('bundles/innovapath/angularjs/Editor/Controller/Page404Ctrl.js') }}"></script>
+    {% javascripts debug=false filter='jsmin' output='vendor/innovapath/path_editor.js'
+        '@InnovaPathBundle/Resources/public/angularjs/Alert/Factory/AlertFactory.js'
+        '@InnovaPathBundle/Resources/public/angularjs/Alert/Controller/AlertCtrl.js'
+        '@InnovaPathBundle/Resources/public/angularjs/History/Factory/HistoryFactory.js'
+        '@InnovaPathBundle/Resources/public/angularjs/Clipboard/Factory/ClipboardFactory.js'
+        '@InnovaPathBundle/Resources/public/angularjs/Editor/Controller/MainCtrl.js'
+        '@InnovaPathBundle/Resources/public/angularjs/Path/Factory/PathFactory.js'
+        '@InnovaPathBundle/Resources/public/angularjs/Editor/Controller/GlobalCtrl.js'
+        '@InnovaPathBundle/Resources/public/angularjs/Editor/Controller/TreeCtrl.js'
+        '@InnovaPathBundle/Resources/public/angularjs/Step/Factory/StepFactory.js'
+        '@InnovaPathBundle/Resources/public/angularjs/Step/Controller/StepModalCtrl.js'
+        '@InnovaPathBundle/Resources/public/angularjs/Step/Controller/SelectImageModalCtrl.js'
+        '@InnovaPathBundle/Resources/public/angularjs/Resource/Factory/ResourceFactory.js'
+        '@InnovaPathBundle/Resources/public/angularjs/Resource/Controller/ResourceModalCtrl.js'
+        '@InnovaPathBundle/Resources/public/angularjs/Resource/Controller/ResourcePickerModalCtrl.js'
+        '@InnovaPathBundle/Resources/public/angularjs/Template/Factory/TemplateFactory.js'
+        '@InnovaPathBundle/Resources/public/angularjs/Template/Controller/TemplateCtrl.js'
+        '@InnovaPathBundle/Resources/public/angularjs/Template/Controller/TemplateModalCtrl.js'
+        '@InnovaPathBundle/Resources/public/angularjs/TruncateText/Filter/TruncateTextFilter.js'
+        '@InnovaPathBundle/Resources/public/angularjs/Editor/EditorApp.js'
+    %}
+        <script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+    
     <script type="text/javascript">
         // TODO : find more beautiful
         EditorApp.pathId = "{{ pathId }}";

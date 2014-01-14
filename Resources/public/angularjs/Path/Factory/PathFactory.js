@@ -7,8 +7,6 @@ function PathFactory($http, $q) {
     var path = null;
     var maxStepId = 0;
     var maxResourceId = 0;
-    var placeholderName = 'My Path Name';
-    var placeholderDescription = 'This is the path description';
 
     return {
         /**
@@ -301,25 +299,6 @@ function PathFactory($http, $q) {
 
             return this;
         },
-
-        /**
-         * Get placeholderName
-         *
-         * @return string
-         */
-        getPlaceholderName: function() {
-            return placeholderName;
-        },
-
-        /**
-         * Get placeholderDescription
-         *
-         * @return string
-         */
-        getPlaceholderDescription: function() {
-            return placeholderDescription;
-        },
-
       
         /**
          * Remove references to specified resource in all path
