@@ -369,6 +369,7 @@ platform_parameters_form_localLanguage: 'Default Language'
 platform_parameters_form_name: 'Name of the platform'
 platform_parameters_form_selfRegistration: Auto-inscription
 platform_parameters_form_theme: Theme
+platform_parameters_form_cookie_lifetime: Session lifetime
 platform_plugins: 'Platform plugins'
 platform_role: 'Platform role'
 platform_widgets: 'Platform widgets'

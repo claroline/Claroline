@@ -36,6 +36,8 @@ same message when authentication has failed (no precise validation errors).
                         </label>
                         <input type="password" class="form-control" id="password" name="_password" placeholder="{{ 'password'|trans({}, 'platform') }}" tabindex="2">
                     </div>
+                    <label for="remember_me">Keep me logged in</label>
+                    <input type="checkbox" id="remember_me" name="_remember_me" />
                 </div>
                 <div class="panel-footer">
                     <button type="submit" class="btn btn-primary" tabindex="3">{{ 'login'|trans({}, 'platform') }}</button>

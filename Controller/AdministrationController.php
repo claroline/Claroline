@@ -672,7 +672,8 @@ class AdministrationController extends Controller
                         'support_email' => $form['support_email']->getData(),
                         'footer' => $form['footer']->getData(),
                         'logo' => $this->request->get('selectlogo'),
-                        'default_role' => $form['defaultRole']->getData()->getName()
+                        'default_role' => $form['defaultRole']->getData()->getName(),
+                        'cookie_lifetime' => $form['cookie_lifetime']->getData()
                     )
                 );
 
