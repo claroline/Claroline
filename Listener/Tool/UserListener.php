@@ -23,13 +23,13 @@ class UserListener
 {
     /**
      * @DI\InjectParams({
-     *     "request" = @DI\Inject("request_stack"),
-     *     "ed"      = @DI\Inject("http_kernel"),
+     *     "requeststack"   = @DI\Inject("request_stack"),
+     *     "ed"             = @DI\Inject("http_kernel"),
      * })
      */
-    public function __construct(RequestStack $request, HttpKernelInterface $httpKernel)
+    public function __construct(RequestStack $requeststack, HttpKernelInterface $httpKernel)
     {
-        $this->request = $request;
+        $this->request = $requeststack->getCurrentRequest();
         $this->httpKernel = $httpKernel;
     }
 
@@ -40,6 +40,10 @@ class UserListener
      */
     public function onDisplay(DisplayToolEvent $event)
     {
+        if (!$this->request) {
+            throw new \Exception("There is no request");
+        }
+
         $subRequest = $this->request->duplicate(
             array(),
             null,
