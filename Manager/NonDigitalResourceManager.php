@@ -4,15 +4,8 @@ namespace Innova\PathBundle\Manager;
 
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\Security\Core\SecurityContext;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-
-use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Claroline\CoreBundle\Manager\ResourceManager;
-
-use Innova\PathBundle\Entity\Path;
-use Innova\PathBundle\Entity\Step;
-use Innova\PathBundle\Entity\Step2ResourceNode;
 use Innova\PathBundle\Entity\NonDigitalResource;
 
 /**
@@ -70,7 +63,7 @@ class NonDigitalResourceManager
         $nonDigitalResource->setName($name);
         $this->em->persist($nonDigitalResource);
 
-        $resourceType = $this->em->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findOneByName("non_digital_resource");
+        $resourceType = $this->em->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findOneByName("innova_non_digital_resource");
         $parent = $this->em->getRepository('ClarolineCoreBundle:Resource\ResourceNode')->findWorkspaceRoot($workspace);
         
         $nonDigitalResource = $this->resourceManager->create($nonDigitalResource, $resourceType, $this->user, $workspace, $parent, null);

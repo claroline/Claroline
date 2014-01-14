@@ -38,17 +38,13 @@ namespace Innova\PathBundle\Controller;
 
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
 // Controller dependencies
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 use Innova\PathBundle\Manager\StepManager;
-
-use Innova\PathBundle\Entity\Step;
 
 /**
  * Class StepController
