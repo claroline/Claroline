@@ -12,22 +12,21 @@
 namespace Claroline\AnnouncementBundle\Listener;
 
 use Claroline\AnnouncementBundle\Entity\AnnouncementAggregate;
-//use Claroline\CoreBundle\Event\CopyResourceEvent;
 use Claroline\CoreBundle\Event\CreateFormResourceEvent;
 use Claroline\CoreBundle\Event\CreateResourceEvent;
 use Claroline\CoreBundle\Event\DeleteResourceEvent;
-//use Claroline\CoreBundle\Event\DownloadResourceEvent;
 use Claroline\CoreBundle\Event\OpenResourceEvent;
 use Claroline\CoreBundle\Form\Factory\FormFactory;
+use Claroline\CoreBundle\Listener\NoHttpRequestException;
 use Claroline\CoreBundle\Manager\ResourceManager;
 use Symfony\Bundle\TwigBundle\TwigEngine;
-use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use JMS\DiExtraBundle\Annotation as DI;
 
 /**
- * @DI\Service(scope="request")
+ * @DI\Service()
  */
 class AnnouncementListener
 {
@@ -40,7 +39,7 @@ class AnnouncementListener
     /**
      * @DI\InjectParams({
      *     "formFactory"        = @DI\Inject("claroline.form.factory"),
-     *     "request"            = @DI\Inject("request"),
+     *     "requestStack"       = @DI\Inject("request_stack"),
      *     "resourceManager"    = @DI\Inject("claroline.manager.resource_manager"),
      *     "router"             = @DI\Inject("router"),
      *     "templating"         = @DI\Inject("templating")
@@ -48,14 +47,14 @@ class AnnouncementListener
      */
     public function __construct(
         FormFactory $formFactory,
-        Request $request,
+        RequestStack $requestStack,
         ResourceManager $resourceManager,
         TwigEngine $templating,
         UrlGeneratorInterface $router
     )
     {
         $this->formFactory = $formFactory;
-        $this->request = $request;
+        $this->request = $requestStack->getCurrentRequest();
         $this->resourceManager = $resourceManager;
         $this->router = $router;
         $this->templating = $templating;
@@ -88,9 +87,14 @@ class AnnouncementListener
      * @DI\Observe("create_claroline_announcement_aggregate")
      *
      * @param CreateResourceEvent $event
+     * @throws \Claroline\CoreBundle\Listener\NoHttpRequestException
      */
     public function onCreate(CreateResourceEvent $event)
     {
+        if (!$this->request) {
+            throw new NoHttpRequestException();
+        }
+
         $form = $this->formFactory->create(
             FormFactory::TYPE_RESOURCE_RENAME,
             array(),
@@ -124,7 +128,7 @@ class AnnouncementListener
      */
     public function onDelete(DeleteResourceEvent $event)
     {
-//        $this->resourceManager->delete($event->getResource());
+        //$this->resourceManager->delete($event->getResource());
         $event->stopPropagation();
     }
 
