@@ -15,6 +15,7 @@ class PathRepository extends EntityRepository
         $query = $this->_em->createQuery($dql)
                 ->setParameter('workspace', $workspace)
                 ->setParameter('user', $user);
+
         return $query->getResult();
     }
 
@@ -25,6 +26,7 @@ class PathRepository extends EntityRepository
         $query = $this->_em->createQuery($dql)
                 ->setParameter('workspace', $workspace)
                 ->setParameter('user', $user);
+                
         return $query->getResult();
     }
 }
