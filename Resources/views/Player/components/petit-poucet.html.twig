@@ -10,7 +10,7 @@
             </div>
             <div class="modal-body">
                 <ul>
-                {% for step in petitPoucet %}
+                {% for i, step in petitPoucet %}
                     <li>
                         <span class="lvl-indicator lvl-{{  step.lvl + 1 }}">&nbsp;</span>
                         <a href="{{ path('innova_path_player_index', { workspaceId: workspace.id, pathId: path.id, stepId: step.id }) }}">
