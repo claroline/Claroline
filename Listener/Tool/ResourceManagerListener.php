@@ -11,6 +11,7 @@
 
 namespace Claroline\CoreBundle\Listener\Tool;
 
+use Claroline\CoreBundle\Listener\NoHttpRequestException;
 use JMS\DiExtraBundle\Annotation as DI;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Claroline\CoreBundle\Event\DisplayToolEvent;
@@ -20,10 +21,11 @@ use Claroline\CoreBundle\Manager\RightsManager;
 use Claroline\CoreBundle\Manager\WorkspaceManager;
 use Claroline\CoreBundle\Manager\WorkspaceTagManager;
 use Claroline\CoreBundle\Event\StrictDispatcher;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
- * @DI\Service(scope="request")
+ * @DI\Service()
  */
 class ResourceManagerListener
 {
@@ -38,7 +40,7 @@ class ResourceManagerListener
      *     "templating"             = @DI\Inject("templating"),
      *     "manager"                = @DI\Inject("claroline.manager.resource_manager"),
      *     "sc"                     = @DI\Inject("security.context"),
-     *     "request"                = @DI\Inject("request"),
+     *     "requestStack"           = @DI\Inject("request_stack"),
      *     "resourceManager"        = @DI\Inject("claroline.manager.resource_manager"),
      *     "rightsManager"          = @DI\Inject("claroline.manager.rights_manager"),
      *     "workspaceManager"       = @DI\Inject("claroline.manager.workspace_manager"),
@@ -51,7 +53,7 @@ class ResourceManagerListener
         $templating,
         $manager,
         $sc,
-        $request,
+        RequestStack $requestStack,
         ResourceManager $resourceManager,
         RightsManager $rightsManager,
         WorkspaceManager $workspaceManager,
@@ -63,7 +65,7 @@ class ResourceManagerListener
         $this->templating = $templating;
         $this->manager = $manager;
         $this->sc = $sc;
-        $this->request = $request;
+        $this->request = $requestStack->getCurrentRequest();
         $this->resourceManager = $resourceManager;
         $this->rightsManager = $rightsManager;
         $this->workspaceManager = $workspaceManager;
@@ -75,7 +77,7 @@ class ResourceManagerListener
      *
      * @param DisplayToolEvent $event
      */
-    public function onDisplayWorkspaceResouceManager(DisplayToolEvent $event)
+    public function onDisplayWorkspaceResourceManager(DisplayToolEvent $event)
     {
         $event->setContent($this->resourceWorkspace($event->getWorkspace()->getId()));
     }
@@ -105,10 +107,16 @@ class ResourceManagerListener
      *
      * @param integer $workspaceId
      *
+     * @throws \Claroline\CoreBundle\Listener\NoHttpRequestException
+     * @throws \Exception
      * @return string
      */
     public function resourceWorkspace($workspaceId)
     {
+        if (!$this->request) {
+            throw new NoHttpRequestException();
+        }
+
         $breadcrumbsIds = $this->request->query->get('_breadcrumbs');
 
         if ($breadcrumbsIds != null) {
@@ -164,6 +172,19 @@ class ResourceManagerListener
         );
     }
 
+    public function getZoom($zoom = 'zoom100')
+    {
+        if (!$this->request) {
+            throw new NoHttpRequestException();
+        }
+
+        if ($this->request->getSession()->get('resourceZoom')) {
+            $zoom = $this->request->getSession()->get('resourceZoom');
+        }
+
+        return $zoom;
+    }
+
     private function workspaceResourceRightsForm(AbstractWorkspace $workspace)
     {
         if (!$this->sc->isGranted('parameters', $workspace)) {
@@ -190,14 +211,5 @@ class ResourceManagerListener
                 'workspaceRoles' => $datas['workspaceRoles']
             )
         );
-    }
-
-    public function getZoom($zoom = "zoom100")
-    {
-        if ($this->request->getSession()->get('resourceZoom')) {
-            $zoom = $this->request->getSession()->get('resourceZoom');
-        }
-
-        return $zoom;
     }
 }
