@@ -4,8 +4,6 @@ namespace Innova\PathBundle\Manager;
 
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\Security\Core\SecurityContext;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Claroline\CoreBundle\Manager\ResourceManager;
 use Innova\PathBundle\Entity\NonDigitalResource;
