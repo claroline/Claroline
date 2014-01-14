@@ -10,11 +10,11 @@ plugin:
       
   resources:
     - class: Innova\PathBundle\Entity\Path
-      name: path
+      name: innova_path
       is_exportable: false
       icon: res_file.png
 
     - class: Innova\PathBundle\Entity\NonDigitalResource
-      name: non_digital_resource
+      name: innova_non_digital_resource
       is_exportable: false
       icon: res_file.png

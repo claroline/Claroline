@@ -67,7 +67,7 @@ class ToolListener extends ContainerAware
                 'ClarolineCoreBundle:Resource:createForm.html.twig',
                 array(
                     'form' => $form->createView(),
-                    'resourceType' => 'path'
+                    'resourceType' => 'innova_path'
                 )
             );
 
@@ -86,7 +86,7 @@ class ToolListener extends ContainerAware
             'ClarolineCoreBundle:Resource:createForm.html.twig',
             array(
                 'form' => $form->createView(),
-                'resourceType' => 'path'
+                'resourceType' => 'innova_path'
             )
         );
 

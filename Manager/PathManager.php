@@ -107,7 +107,7 @@ class PathManager
         $this->em->persist($newPath);
         $this->em->flush();
 
-        $resourceType = $this->em->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findOneByName("path");
+        $resourceType = $this->em->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findOneByName("innova_path");
         $workspace = $this->em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->findOneById($this->request->get('workspaceId'));
         $parent = $this->em->getRepository('ClarolineCoreBundle:Resource\ResourceNode')->findWorkspaceRoot($workspace);
         

@@ -63,7 +63,7 @@ class NonDigitalResourceManager
         $nonDigitalResource->setName($name);
         $this->em->persist($nonDigitalResource);
 
-        $resourceType = $this->em->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findOneByName("non_digital_resource");
+        $resourceType = $this->em->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findOneByName("innova_non_digital_resource");
         $parent = $this->em->getRepository('ClarolineCoreBundle:Resource\ResourceNode')->findWorkspaceRoot($workspace);
         
         $nonDigitalResource = $this->resourceManager->create($nonDigitalResource, $resourceType, $this->user, $workspace, $parent, null);
