@@ -26,13 +26,13 @@ class ForumWidgetListener
 
     /**
      * @DI\InjectParams({
-     *     "request"    = @DI\Inject("request_stack"),
+     *     "requeststack"    = @DI\Inject("request_stack"),
      *     "httpKernel" = @DI\Inject("http_kernel"),
      * })
      */
-    public function __construct(RequestStack $request, HttpKernelInterface $httpKernel)
+    public function __construct(RequestStack $requeststack, HttpKernelInterface $httpKernel)
     {
-        $this->request = $request;
+        $this->request = $requeststack->getCurrentRequest();
         $this->httpKernel = $httpKernel;
     }
 
@@ -43,6 +43,10 @@ class ForumWidgetListener
      */
     public function onDisplay(DisplayWidgetEvent $event)
     {
+        if (!$this->request) {
+            throw new \Exception("There is no request");
+        }
+
         $widgetInstance = $event->getInstance();
         $workspace = $widgetInstance->getWorkspace();
         $params = array();
