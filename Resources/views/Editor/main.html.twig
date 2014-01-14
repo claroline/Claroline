@@ -22,12 +22,11 @@
 {#                 </div>#}
 {#             </div>#}
             
-            <div id="templates-sidebar" style="display:none" ng-controller="TemplateCtrl">
-                <a id="templates-sidebar-close" href="#" class="btn btn-default btn-xs pull-right"><i class="icon-remove"></i></a>
-                <div ng-include="'{{ asset('bundles/innovapath/angularjs/Template/Partial/templates-sidebar.html') }}'"></div>
+            <div id="templates-sidebar" style="display:none;" ng-controller="TemplateCtrl">
+                {% include 'InnovaPathBundle:Editor:components/templates-sidebar.html.twig' %}
             </div>
             
-            {% include 'InnovaPathBundle:Editor:components/action-bar.html.twig' with {workspace: workspace} %}
+            {% include 'InnovaPathBundle:Editor:components/actions-bar.html.twig' with {workspace: workspace} %}
             
             <div ng-controller="GlobalCtrl" class="row">
                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">

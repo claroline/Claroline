@@ -1,10 +1,17 @@
-<h2><i class="icon-heart"></i> Templates</h2>
+<a id="templates-sidebar-close" href="#" class="btn btn-default btn-xs pull-right">
+    <span class="icon-remove"></span>
+    <span class="sr-only">Close</span>
+</a>
+
+<h2>
+    <span class="icon-heart"></span> Templates
+</h2>
 
 <table class="table table-condensed table-hover">
     <tr ng-repeat="template in templates">
-        <td>{{ template.name }}</td>
+        <td ng-bind="template.name"></td>
         <td class="text-right">
-            <button class="btn btn-xs btn-default" ng-click="copy(template.step)" tooltip="Copy"><i class="icon-copy"></i></button>
+            <button class="btn btn-xs btn-default" ng-click="copy(template.structure)" tooltip="Copy"><i class="icon-copy"></i></button>
             <button class="btn btn-xs btn-default" ng-click="edit(template)" tooltip="Edit"><i class="icon-edit"></i></button>
             <button class="btn btn-xs btn-danger" ng-click="remove(template)" tooltip="Delete"><i class="icon-trash"></i></button>
         </td>

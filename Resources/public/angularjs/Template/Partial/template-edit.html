@@ -23,7 +23,7 @@
                 </label>
             </div>
             
-            <input type="hidden" ng-model="formTemplate.step" value="{{ formTemplate.step }}" name="template-step" />
+            <input type="hidden" ng-model="formTemplate.structure" name="template-step" />
         </fieldset>
         
         <div class="row">
@@ -34,7 +34,7 @@
                     </div>
                     <div class="panel-body">
                         <ul class="tree">
-                            <li ng-include="webDir + 'angularjs/Template/Partial/tree-item.html'" onload="step = formTemplate.step"></li>
+                            <li ng-include="webDir + 'angularjs/Template/Partial/tree-item.html'" onload="step = formTemplate.structure"></li>
                         </ul>
                     </div>
                 </div>

@@ -15,6 +15,7 @@ function TemplateFactory() {
          */
         addTemplate: function(template) {
             templates.push(template);
+            
             return this;
         },
         
@@ -56,6 +57,7 @@ function TemplateFactory() {
          */
         setTemplates: function(data) {
             templates = data;
+            
             return this;
         },
         
@@ -74,6 +76,7 @@ function TemplateFactory() {
          */
         setCurrentTemplate: function(data) {
             currentTemplate = data;
+            
             return this;
         }
     };

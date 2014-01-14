@@ -75,12 +75,12 @@ function TemplateModalCtrl($scope, $http, $modalInstance, StepFactory, TemplateF
         
         if (!formTemplate.withResources) {
             // No need to save step resources => remove them
-            removeResources(formTemplate.step);
+            removeResources(formTemplate.structure);
         }
         
         var method = null;
         var route = null;
-        var data = 'name=' + formTemplate.name + '&description=' + formTemplate.description + '&structure=' + angular.toJson(formTemplate.step);
+        var data = 'name=' + formTemplate.name + '&description=' + formTemplate.description + '&structure=' + angular.toJson(formTemplate.structure);
         
         if (editTemplate) {
             // Update existing path

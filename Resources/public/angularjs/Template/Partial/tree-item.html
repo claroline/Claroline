@@ -1,6 +1,6 @@
 <span ng-show="step.image == null" class="icon-chevron-right"></span>
 <img ng-show="step.image != null" height="28" src="{{ webDir }}images/steps/{{ step.image }}" />
 <span class="step-name">{{ step.name }}</span>
-<ul ng-model="step.children">
+<ul>
     <li ng-repeat="step in step.children" ng-include="webDir + 'angularjs/Template/Partial/tree-item.html'"></li>
 </ul>

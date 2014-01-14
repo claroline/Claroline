@@ -11,6 +11,10 @@
     text-decoration: none;
 }
 
+#templates-sidebar {
+    margin-left: 40px;
+}
+
 .modal-backdrop {
     z-index: 1;
 }
