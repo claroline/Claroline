@@ -36,10 +36,6 @@
     <li class="lvl-{{ step.lvl + 1 }}">
         <a class="step" href="{{ path('innova_path_player_index', { workspaceId: workspace.id, pathId: path.id, stepId: step.id }) }}">
         {{ step.name }}
-        {% set childrenCount = step.children | length %}
-        {% if childrenCount > 0 %}
-        <span rel="tooltip" data-original-title="Nombre de sous-étapes" class="badge">{{ step.children | length }}</span>
-        {% endif %}
         </a>
     </li>
 {% endmacro %}
