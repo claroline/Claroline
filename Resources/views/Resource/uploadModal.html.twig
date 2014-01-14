@@ -1,0 +1,39 @@
+<div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h4>{{ "upload" | trans({}, "platform")}}</h4>
+        </div>
+        <div class="modal-body text-center">
+            <p>{{ 'Upload a file' | trans({}, 'platform') }}:</p>
+            <form enctype="multipart/form-data">
+                <input
+                    type="file"
+                    name='file_form[file]'
+                    id='file_form_file'
+                    style='position:absolute;top:-1000px;'
+                    data-workspace={{ workspace }}>
+                    {{ form_widget(form._token) }}
+            </form>
+            <button type="button" class="btn btn-primary btn-lg filePicker">
+                <i class='icon-file'></i>
+            </button>
+            <div class="progress margin-top-md hide">
+                <div role="progressbar" class="progress-bar" data-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+                    <span class="sr-only">0%</span>
+                </div>
+            </div>
+            <div class="alert alert-danger margin-top-md hide">
+                {{ 'An error has occurred, please check if the file size does not exceeds the permitted size' | trans({}, 'platform')}}
+            </div>
+            <hr>
+            <p>{{ 'Or choose an existing file from resource manager' | trans({}, 'platform') }}:</p>
+            <button type="button" data-dismiss="modal" class="btn btn-primary btn-lg resourcePicker">
+                <i class="icon-folder-open"></i>
+            </button>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-default" data-dismiss="modal" aria-hidden="true">{{ "cancel" | trans({}, "platform")}}</button>
+        </div>
+    </div>
+</div>

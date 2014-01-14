@@ -13,23 +13,23 @@ namespace Claroline\CoreBundle\Listener\Tool;
 
 use JMS\DiExtraBundle\Annotation as DI;
 use Claroline\CoreBundle\Event\DisplayToolEvent;
-use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 
 /**
- * @DI\Service("workspace_role_tool_config_listener", scope="request")
+ * @DI\Service("workspace_role_tool_config_listener")
  */
 class UserListener
 {
     /**
      * @DI\InjectParams({
-     *     "request" = @DI\Inject("request"),
-     *     "ed"      = @DI\Inject("http_kernel"),
+     *     "requeststack"   = @DI\Inject("request_stack"),
+     *     "ed"             = @DI\Inject("http_kernel"),
      * })
      */
-    public function __construct(Request $request, HttpKernelInterface $httpKernel)
+    public function __construct(RequestStack $requeststack, HttpKernelInterface $httpKernel)
     {
-        $this->request = $request;
+        $this->request = $requeststack->getCurrentRequest();
         $this->httpKernel = $httpKernel;
     }
 
@@ -40,6 +40,10 @@ class UserListener
      */
     public function onDisplay(DisplayToolEvent $event)
     {
+        if (!$this->request) {
+            throw new \Exception("There is no request");
+        }
+
         $subRequest = $this->request->duplicate(
             array(),
             null,

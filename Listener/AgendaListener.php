@@ -19,10 +19,10 @@ use Symfony\Component\Security\Core\SecurityContextInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
-use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
- *  @DI\Service(scope="request")
+ *  @DI\Service()
  */
 class AgendaListener
 {
@@ -41,7 +41,7 @@ class AgendaListener
      *     "sc"                = @DI\Inject("security.context"),
      *     "container"         = @DI\Inject("service_container"),
      *     "router"            = @DI\Inject("router"),
-     *     "request"           = @DI\Inject("request"),
+     *     "requeststack"           = @DI\Inject("request_stack"),
      *     "httpKernel"        = @DI\Inject("http_kernel"),
      * })
      * })
@@ -52,7 +52,7 @@ class AgendaListener
         SecurityContextInterface $sc,
         ContainerInterface $container,
         RouterInterface $router,
-        Request $request,
+        RequestStack $requeststack,
         HttpKernelInterface $httpKernel
     )
     {
@@ -61,7 +61,7 @@ class AgendaListener
         $this->sc = $sc;
         $this->container = $container;
         $this->router = $router;
-        $this->request = $request;
+        $this->request = $requeststack->getCurrentRequest();
         $this->httpKernel = $httpKernel;
     }
 
@@ -96,6 +96,10 @@ class AgendaListener
 
     public function desktopAgenda()
     {
+        if (!$this->request) {
+            throw new \Exception("There is no request");
+        }
+
         $params = array();
         $params['_controller'] = 'ClarolineCoreBundle:Tool\DesktopAgenda:widget';
         $subRequest = $this->request->duplicate(
