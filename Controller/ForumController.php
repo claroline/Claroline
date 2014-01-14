@@ -56,6 +56,7 @@ class ForumController extends Controller
         $isModerator = $sc->isGranted('moderate', new ResourceCollection(array($forum->getResourceNode())));
 
         return array(
+            'search' => null,
             '_resource' => $forum,
             'isModerator' => $isModerator,
             'categories' => $categories,
