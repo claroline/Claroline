@@ -35,7 +35,7 @@ class CookieLifetimeSetter
     /**
      * @DI\Observe("kernel.request")
      *
-     * Sets the platform language.
+     * Sets the platform session lifetime.
      *
      * @param GetResponseEvent $event
      */
