@@ -3,7 +3,7 @@
 <ul>
     {# Current workspace #}
     <li class="lvl-0">
-        <a rel="tooltip" data-original-title="Liste des parcours" href="{{ path('claro_workspace_open_tool', { workspaceId: workspace.id, toolName: 'innova_path' }) }}">
+        <a rel="tooltip" data-original-title="{{ 'paths_list' | trans({}, 'innova_tools') }}" href="{{ path('claro_workspace_open_tool', { workspaceId: workspace.id, toolName: 'innova_path' }) }}">
             <span class="icon-road"></span>
             {{ 'paths' | trans({}, 'innova_tools') }}
         </a>

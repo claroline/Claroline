@@ -15,6 +15,7 @@ class PathRepository extends EntityRepository
         $query = $this->_em->createQuery($dql)
                 ->setParameter('workspace', $workspace)
                 ->setParameter('user', $user);
+
         return $query->getResult();
     }
 
@@ -25,6 +26,17 @@ class PathRepository extends EntityRepository
         $query = $this->_em->createQuery($dql)
                 ->setParameter('workspace', $workspace)
                 ->setParameter('user', $user);
+
+        return $query->getResult();
+    }
+
+    public function findAllByWorkspace(AbstractWorkspace $workspace)
+    {
+        $dql = "SELECT p FROM Innova\PathBundle\Entity\Path p LEFT JOIN p.resourceNode rn WHERE rn.workspace = :workspace ORDER BY rn.name ASC";
+
+        $query = $this->_em->createQuery($dql)
+                ->setParameter('workspace', $workspace);
+
         return $query->getResult();
     }
 }

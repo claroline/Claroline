@@ -25,7 +25,7 @@ duration: Duration
 progression: Progression
 my_paths : My paths
 others_paths : Other paths
-play: Play
+play: Execute
 edit: Edit
 delete: Delete
 deploy: Deploy
@@ -43,3 +43,4 @@ full_tree: Full tree
 history: History
 full_path_notice_1: You can view the full structure of the path by clicking the button  
 full_path_notice_2: This button will be available on the top left at any stage of your progression.
+paths_list: Paths list

@@ -9,18 +9,16 @@
                 <h4 class="modal-title">{{ 'history' | trans({}, 'innova_tools') }}</h4>
             </div>
             <div class="modal-body">
-				<ul>
-				{% for i, visitedStep in visitedSteps if i < 15 and i > 0 %}
-					{% for stepId, step in visitedStep %}
-                        <li>
-                            <span class="lvl-indicator lvl-{{  step["level"] + 1 }}">&nbsp;</span>
-                            <a href="{{ path('innova_path_player_index', { workspaceId: workspace.id, pathId: path.id, stepId: stepId }) }}">
-                                {{ step["name"] }}
-                            </a>
-                        </li> 
-					{% endfor %}
-				{% endfor %}
-				</ul>
+                <ul>
+                {% for i, step in petitPoucet %}
+                    <li>
+                        <span class="lvl-indicator lvl-{{  step.lvl + 1 }}">&nbsp;</span>
+                        <a href="{{ path('innova_path_player_index', { workspaceId: workspace.id, pathId: path.id, stepId: step.id }) }}">
+                            {{ step.name }}
+                        </a>
+                    </li> 
+                {% endfor %}
+                </ul>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">{{ 'close' | trans({}, 'innova_tools') }}</button>

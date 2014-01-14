@@ -25,7 +25,7 @@ duration: Durée
 progression: Avancement
 my_paths : Mes parcours
 others_paths : Autres parcours
-play: Lire
+play: Exécuter
 edit: Editer
 delete: Supprimer
 deploy: Déployer
@@ -43,3 +43,4 @@ full_tree: Arborescence
 history: Historique
 full_path_notice_1: Vous pouvez afficher l'arborescence complète du parcours en cliquant sur le bouton 
 full_path_notice_2: Ce bouton sera accessible en haut à gauche à n'importe quelle étape de votre progression.
+paths_list: Liste des parcours

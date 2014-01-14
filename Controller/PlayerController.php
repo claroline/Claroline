@@ -97,26 +97,44 @@ class PlayerController extends ContainerAware
     {
         $session = $this->container->get('request')->getSession();
         $history = $session->get('history');
-        
-        if(!array_key_exists($path->getId(), $history)){
-            $history[$path->getId()] = array();
+
+        if(is_null($history)){
+            $history = array ();
         }
 
-        foreach($history[$path->getId()] as $order => $stepId){
-            if(array_key_exists($currentStep->getId(), $stepId)){
-                unset($history[$path->getId()][$order]);
-            }
+        if(!array_key_exists($path->getId(), $history)){
+            $history[$path->getId()] = array ();
+        } else {
+            reset( $history[$path->getId()] );
+            $lastStepId = key( $history[$path->getId()][0] );
         }
-        array_unshift($history[$path->getId()], array($currentStep->getId() => array("name" => $currentStep->getName(), "level" => $currentStep->getLvl())));
+
+        if(!isset($lastStepId) or $lastStepId != $currentStep->getId()){
+            array_unshift($history[$path->getId()], array($currentStep->getId() => array("name" => $currentStep->getName(), "level" => $currentStep->getLvl())));
+        }
+
         $session->set('history', $history);
+
+        /* Gestion du tableau d'objets qui sera passé à la vue */
+        $petitPoucet = array();
+        $i = 0;
+        foreach($history[$path->getId()] as $step){
+            if ($i <= 15){ 
+                $petitPoucet[] = $this->container->get('doctrine')->getManager()->getRepository("InnovaPathBundle:Step")->findOneById(key($step));
+            }
+            else{
+                break;
+            }
+            $i++;
+        }
 
         return array(
             'workspace' => $workspace,
             'path' => $path,
+            'petitPoucet' => $petitPoucet,
         );
     }
 
-    
     /**
      * @Method("GET")
      * @Template("InnovaPathBundle:Player:components/resources.html.twig")

@@ -98,6 +98,7 @@
 }
 
 .path-player .breadcrumbs ul.dropdown-menu li{
+    border-radius:3px;
     display:block;
 }
 
