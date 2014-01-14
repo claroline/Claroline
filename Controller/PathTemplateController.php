@@ -132,7 +132,7 @@ class PathTemplateController
             $template->id = $result->getId();
             $template->name = $result->getName();
             $template->description = $result->getDescription();
-            $template->step = json_decode($result->getStep());
+            $template->structure = json_decode($result->getStructure());
 
             $pathtemplates[] = $template;
         }
@@ -163,9 +163,9 @@ class PathTemplateController
         if (!empty($description))
             $pathTemplate->setDescription($description);
         
-        $step = $data->request->get('step');
-        if (!empty($step))
-            $pathTemplate->setStep($step);
+        $structure = $data->request->get('structure');
+        if (!empty($structure))
+            $pathTemplate->setStructure($structure);
 
         $this->entityManager->persist($pathTemplate);
         $this->entityManager->flush();
@@ -200,9 +200,9 @@ class PathTemplateController
             if (!empty($description))
                 $pathTemplate->setDescription($description);
         
-            $step = $data->request->get('step');
+            $structure = $data->request->get('structure');
             if (!empty($step))
-                $pathTemplate->setStep($step);
+                $pathTemplate->setStructure($structure);
             
             $this->entityManager->persist($pathTemplate);
             $this->entityManager->flush();

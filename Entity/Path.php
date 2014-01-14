@@ -31,11 +31,6 @@ class Path extends AbstractResource
     protected $steps;
 
     /**
-     * @ORM\OneToMany(targetEntity="User2Path", mappedBy="path")
-     */
-    protected $users;
-
-    /**
      * @var boolean
      *
      * @ORM\Column(name="deployed", type="boolean")
@@ -61,7 +56,6 @@ class Path extends AbstractResource
      */
     public function __construct()
     {
-        $this->users = new ArrayCollection();
         $this->steps = new ArrayCollection();
         $this->deployed = false;
         $this->modified = false;

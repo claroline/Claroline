@@ -80,7 +80,7 @@ function TemplateModalCtrl($scope, $http, $modalInstance, StepFactory, TemplateF
         
         var method = null;
         var route = null;
-        var data = 'name=' + formTemplate.name + '&description=' + formTemplate.description + '&step=' + angular.toJson(formTemplate.step);
+        var data = 'name=' + formTemplate.name + '&description=' + formTemplate.description + '&structure=' + angular.toJson(formTemplate.step);
         
         if (editTemplate) {
             // Update existing path

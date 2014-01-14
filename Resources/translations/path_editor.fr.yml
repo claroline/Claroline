@@ -13,7 +13,7 @@ step2_description: Création du scenario
 step3: Etape 3.
 step3_description: Définition des informations de chaque étape
 open_templates: Ouvrir les favoris
-edit_step: Modifier étape
-delete_step: Supprimer étape
+edit_step: Modifier l'étape
+delete_step: Supprimer l'étape
 path_name: Nom du parcours
 path_description: Description du parcours

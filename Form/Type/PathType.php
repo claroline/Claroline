@@ -12,6 +12,7 @@ class PathType extends AbstractType
     {
         $builder->add('name', 'text');
         $builder->add('description', 'text');
+        $builder->add('structure', 'hidden');
     }
 
     public function getName()

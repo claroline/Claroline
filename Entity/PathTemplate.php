@@ -38,13 +38,12 @@ class PathTemplate
     /**
      * @var string
      *
-     * @ORM\Column(name="step", type="text")
+     * @ORM\Column(name="structure", type="text")
      */
-    private $step;
+    private $structure;
 
     /**
      * Get id
-     *
      * @return integer
      */
     public function getId()
@@ -54,8 +53,7 @@ class PathTemplate
 
     /**
      * Set name
-     *
-     * @param  string       $name
+     * @param  string $name
      * @return PathTemplate
      */
     public function setName($name)
@@ -67,7 +65,6 @@ class PathTemplate
 
     /**
      * Get name
-     *
      * @return string
      */
     public function getName()
@@ -77,7 +74,6 @@ class PathTemplate
 
     /**
      * Set description
-     *
      * @param  string       $description
      * @return PathTemplate
      */
@@ -90,7 +86,6 @@ class PathTemplate
 
     /**
      * Get description
-     *
      * @return string
      */
     public function getDescription()
@@ -99,25 +94,23 @@ class PathTemplate
     }
 
     /**
-     * Set step
-     *
-     * @param  string       $step
+     * Set structure
+     * @param  string $structure
      * @return PathTemplate
      */
-    public function setstep($step)
+    public function setStructure($structure)
     {
-        $this->step = $step;
+        $this->structure = $structure;
 
         return $this;
     }
 
     /**
-     * Get step
-     *
+     * Get structure
      * @return string
      */
-    public function getstep()
+    public function getStructure()
     {
-        return $this->step;
+        return $this->structure;
     }
 }
