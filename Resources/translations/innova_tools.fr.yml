@@ -5,7 +5,7 @@ submit: Sauvegarder
 resources: Ressources
 heritated_from: Héritées de
 local: Locales
-instructions: Consignes
+description: Description
 informations: Informations
 back_to_paths_list: Retour à la liste des parcours
 current_position: Position courante

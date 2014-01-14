@@ -64,20 +64,13 @@ class Step
      * @ORM\OneToMany(targetEntity="Step", mappedBy="parent")
      */
     protected $children;
-    
-    /**
-     * @var boolean
-     *
-     * @ORM\Column(name="expanded", type="boolean")
-     */
-    protected $expanded;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="instructions", type="text", nullable=true)
+     * @ORM\Column(name="description", type="text", nullable=true)
      */
-    protected $instructions = null;
+    protected $description = null;
 
     /**
      * @var string
@@ -116,14 +109,6 @@ class Step
      * @ORM\JoinColumn(onDelete="CASCADE")
      */
     protected $path;
-
-    /**
-     * Type of the step
-     * @var \Innova\PathBundle\Entity\StepType
-     * 
-     * @ORM\ManyToOne(targetEntity="StepType", inversedBy="steps")
-     */
-    protected $stepType;
 
     /**
      * @ORM\ManyToOne(targetEntity="StepWho", inversedBy="steps")
@@ -200,47 +185,26 @@ class Step
     {
         return $this->lvl;
     }
-    
+
     /**
-     * Set expanded
-     * @param  boolean $expanded
+     * Set description
+     * @param  string $description
      * @return \Innova\PathBundle\Entity\Step
      */
-    public function setExpanded($expanded)
+    public function setDescription($description)
     {
-        $this->expanded = $expanded;
+        $this->description = $description;
 
         return $this;
     }
 
     /**
-     * Get expanded
-     * @return boolean
-     */
-    public function getExpanded()
-    {
-        return $this->expanded;
-    }
-
-    /**
-     * Set instructions
-     * @param  string $instructions
-     * @return \Innova\PathBundle\Entity\Step
-     */
-    public function setInstructions($instructions)
-    {
-        $this->instructions = $instructions;
-
-        return $this;
-    }
-
-    /**
-     * Get instructions
+     * Get description
      * @return string
      */
-    public function getInstructions()
+    public function getDescription()
     {
-        return $this->instructions;
+        return $this->description;
     }
 
     /**
@@ -346,27 +310,6 @@ class Step
     public function getStepOrder()
     {
         return $this->stepOrder;
-    }
-
-    /**
-     * Set type of the step
-     * @param  \Innova\PathBundle\Entity\StepType $stepType
-     * @return \Innova\PathBundle\Entity\Step
-     */
-    public function setStepType(\Innova\PathBundle\Entity\StepType $stepType = null)
-    {
-        $this->stepType = $stepType;
-
-        return $this;
-    }
-
-    /**
-     * Get stepType
-     * @return \Innova\PathBundle\Entity\StepType
-     */
-    public function getStepType()
-    {
-        return $this->stepType;
     }
 
     /**

@@ -16,7 +16,7 @@
         {% endif %}
 
         {% if currentStep.children is not empty %}
-            {% if currentStep.instructions is null %}
+            {% if currentStep.description is null %}
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <h5 class="panel-title text-center">
@@ -25,7 +25,7 @@
                         </a>
                     </h5>
                 </div>
-                <ul id="collapse-children" class="list-group collapse {% if currentStep.instructions is null %}in{% endif %}">
+                <ul id="collapse-children" class="list-group collapse {% if currentStep.description is null %}in{% endif %}">
                 {% for child in currentStep.children %}
                     <li class="list-group-item">
                         <a href="{{ path('innova_path_player_index', { workspaceId: workspace.id, pathId: path.id, stepId: child.id }) }}">
@@ -38,6 +38,6 @@
             {% endif %}
         {% endif %}
 
-        {{ currentStep.instructions | raw }}
+        {{ currentStep.description | raw }}
     </div>
 </div>

@@ -5,7 +5,7 @@ submit: Submit
 resources: Resources
 heritated_from: Heritated from
 local: Local
-instructions: Instructions
+description: Description
 informations: Informations
 back_to_paths_list: Back to paths list
 current_position: Current position

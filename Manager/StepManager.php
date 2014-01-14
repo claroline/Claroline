@@ -97,8 +97,6 @@ class StepManager
         $step->setPath($path);
         $step->setName($jsonStep->name);
         $step->setStepOrder($order);
-        $stepType = $this->om->getRepository('InnovaPathBundle:StepType')->findOneById($jsonStep->type);
-        $step->setStepType($stepType);
         $stepWho = $this->om->getRepository('InnovaPathBundle:StepWho')->findOneById($jsonStep->who);
         $step->setStepWho($stepWho);
         $stepWhere = $this->om->getRepository('InnovaPathBundle:StepWhere')->findOneById($jsonStep->where);
@@ -107,10 +105,9 @@ class StepManager
         $step->setLvl($lvl);
         $step->setStepWhere($stepWhere);
         $step->setDuration(new \DateTime("00-00-00 ".intval($jsonStep->durationHours).":".intval($jsonStep->durationMinutes).":00"));
-        $step->setExpanded($jsonStep->expanded);
         $step->setWithTutor($jsonStep->withTutor);
         $step->setWithComputer($jsonStep->withComputer);
-        $step->setInstructions($jsonStep->instructions);
+        $step->setDescription($jsonStep->description);
         $step->setImage($jsonStep->image);
 
         $this->om->persist($step);
