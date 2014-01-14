@@ -1,2 +1,0 @@
-imports:
-    - { resource: doctrine_prod.yml }

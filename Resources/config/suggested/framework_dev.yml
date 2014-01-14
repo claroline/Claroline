@@ -1,6 +1,0 @@
-imports:
-    - { resource: framework_prod.yml }
-
-framework:
-    profiler:
-        only_exceptions: false
