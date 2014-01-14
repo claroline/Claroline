@@ -120,7 +120,9 @@ class PlayerController extends ContainerAware
         $i = 0;
         foreach($history[$path->getId()] as $step){
             if ($i <= 15){ 
-                $petitPoucet[] = $this->container->get('doctrine')->getManager()->getRepository("InnovaPathBundle:Step")->findOneById(key($step));
+                if($step = $this->container->get('doctrine')->getManager()->getRepository("InnovaPathBundle:Step")->findOneById(key($step))){
+                    $petitPoucet[] = $step;
+                }
             }
             else{
                 break;
