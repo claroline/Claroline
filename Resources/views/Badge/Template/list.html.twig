@@ -76,7 +76,7 @@
                         <td>{{ badgeClaim.claimedAt|date('date_format'|trans({}, 'platform')) }}</td>
                         <td>
                             {% if (badgeClaim.badge.hasRules) %}
-                                {% if false == badgeRuleChecker.checkBadge(badgeClaim.badge, badgeClaim.user) %}
+                                {% if false == badgeRuleChecker.validate(badgeClaim.badge, badgeClaim.user) %}
                                 <span class="icon-exclamation-sign" data-toggle="tooltip" title="{{ 'badge_rules_not_respected'|trans({}, 'badge') }}"></span>
                                 {% else %}
                                 <span class="icon-ok-sign" data-toggle="tooltip" title="{{ 'badge_rules_respected'|trans({}, 'badge') }}"></span>

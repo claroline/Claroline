@@ -43,6 +43,25 @@ class ResultConstraintTest extends MockeryTestCase
         $this->assertFalse($resultConstraint->validate());
     }
 
+    public function testValidateNoLogNoResultInLogDetails()
+    {
+        $badgeRule = new BadgeRule();
+        $badgeRule
+            ->setResult(rand(13, PHP_INT_MAX))
+            ->setResultComparison(0);
+
+        $log = new Log();
+        $log->setDetails(array());
+
+        $associatedLogs   = array($log);
+        $resultConstraint = new ResultConstraint();
+        $resultConstraint
+            ->setRule($badgeRule)
+            ->setAssociatedLogs($associatedLogs);
+
+        $this->assertFalse($resultConstraint->validate());
+    }
+
     public function testValidateOneWrongLogResultEqual()
     {
         $badgeRule = new BadgeRule();

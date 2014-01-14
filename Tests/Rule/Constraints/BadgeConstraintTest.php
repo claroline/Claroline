@@ -48,9 +48,45 @@ class BadgeConstraintTest extends MockeryTestCase
 
     public function testValidateOneLog()
     {
+        $badge = new Badge();
+        $badge->setId(rand(0, PHP_INT_MAX));
+
+        $rule = new BadgeRule();
+        $rule->setBadge($badge);
+
+        $log = new Log();
+        $log->setDetails(array(
+            'badge' => array(
+                'id' => $badge->getId()
+            )
+        ));
         $badgeConstraint = new BadgeConstraint();
-        $badgeConstraint->setAssociatedLogs(array(new Log()));
+        $badgeConstraint
+            ->setRule($rule)
+            ->setAssociatedLogs(array($log));
 
         $this->assertTrue($badgeConstraint->validate());
+    }
+
+    public function testValidateNoLogWrongBadge()
+    {
+        $badge = new Badge();
+        $badge->setId(rand(PHP_INT_MAX / 2 + 1, PHP_INT_MAX));
+
+        $rule = new BadgeRule();
+        $rule->setBadge($badge);
+
+        $log = new Log();
+        $log->setDetails(array(
+            'badge' => array(
+                'id' => rand(0, PHP_INT_MAX / 2)
+            )
+        ));
+        $badgeConstraint = new BadgeConstraint();
+        $badgeConstraint
+            ->setRule($rule)
+            ->setAssociatedLogs(array($log));
+
+        $this->assertFalse($badgeConstraint->validate());
     }
 }

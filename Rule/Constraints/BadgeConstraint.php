@@ -23,11 +23,25 @@ class BadgeConstraint extends AbstractConstraint
      */
     public function validate()
     {
-        if(0 < count($this->getAssociatedLogs())) {
-            return true;
+        $isValid = true;
+
+        if (0 === count($this->getAssociatedLogs())) {
+            $isValid = false;
+        }
+        else {
+            foreach ($this->getAssociatedLogs() as $associatedLog) {
+                $associatedLogDetails = $associatedLog->getDetails();
+
+                if (isset($associatedLogDetails['badge'])) {
+                    $isValid = $isValid && ($this->getRule()->getBadge()->getId() === $associatedLogDetails['badge']['id']);
+                }
+                else {
+                    $isValid = false;
+                }
+            }
         }
 
-        return false;
+        return $isValid;
     }
 
     /**
@@ -47,8 +61,6 @@ class BadgeConstraint extends AbstractConstraint
      */
     public function getQuery(QueryBuilder $queryBuilder)
     {
-        return $queryBuilder
-                ->andWhere('l.badge = :badge')
-                ->setParameter('badge', $this->getRule()->getBadge());
+        return $queryBuilder;
     }
 }

@@ -28,12 +28,16 @@ class ResultConstraint extends AbstractConstraint
         if (0 === count($this->getAssociatedLogs())) {
             $isValid = false;
         }
+        else {
+            foreach ($this->getAssociatedLogs() as $associatedLog) {
+                $associatedLogDetails = $associatedLog->getDetails();
 
-        foreach ($this->getAssociatedLogs() as $associatedLog) {
-            $associatedLogDetails = $associatedLog->getDetails();
-
-            if (isset($associatedLogDetails['result'])) {
-                $isValid = $isValid && version_compare($associatedLogDetails['result'], $this->getRule()->getResult(), $resultComparisonTypes[$this->getRule()->getResultComparison()]);
+                if (isset($associatedLogDetails['result'])) {
+                    $isValid = $isValid && version_compare($associatedLogDetails['result'], $this->getRule()->getResult(), $resultComparisonTypes[$this->getRule()->getResultComparison()]);
+                }
+                else {
+                    $isValid = false;
+                }
             }
         }
 

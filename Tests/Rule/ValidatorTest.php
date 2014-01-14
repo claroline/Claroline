@@ -32,9 +32,6 @@ class ValidatorTest extends MockeryTestCase
     const CONSTRAINT_RECEIVER_WITH   = 'l.receiver = :receiver';
     const CONSTRAINT_RECEIVER_KEY    = 'receiver';
 
-    const CONSTRAINT_BADGE_WITH   = 'l.badge = :badge';
-    const CONSTRAINT_BADGE_KEY    = 'badge';
-
     public function testValidateRuleDoerActionMatchNoLog()
     {
         $user      = new User();
@@ -112,10 +109,8 @@ class ValidatorTest extends MockeryTestCase
         $queryBuilder
             ->shouldReceive('andWhere')->once()->with(self::CONSTRAINT_ACTION_WITH)->andReturn($queryBuilder)
             ->shouldReceive('andWhere')->once()->with(self::CONSTRAINT_DOER_WITH)->andReturn($queryBuilder)
-            ->shouldReceive('andWhere')->once()->with(self::CONSTRAINT_BADGE_WITH)->andReturn($queryBuilder)
             ->shouldReceive('setParameter')->once()->with(self::CONSTRAINT_ACTION_KEY, $action)->andReturn($queryBuilder)
             ->shouldReceive('setParameter')->once()->with(self::CONSTRAINT_DOER_KEY, $user)->andReturn($queryBuilder)
-            ->shouldReceive('setParameter')->once()->with(self::CONSTRAINT_BADGE_KEY, $badge)->andReturn($queryBuilder)
             ->shouldReceive('getQuery')->once()->andReturn($query);
 
         $logRepository = $this->mock('Claroline\CoreBundle\Repository\Log\LogRepository');
@@ -128,10 +123,18 @@ class ValidatorTest extends MockeryTestCase
 
     public function testValidateRuleDoerActionBadgeMatchLog()
     {
-        $log       = new Log();
         $user      = new User();
         $action    = uniqid();
         $badge     = new Badge();
+        $badge->setId(rand(0, PHP_INT_MAX));
+
+        $log       = new Log();
+        $log->setDetails(array(
+            'badge' => array(
+                'id' => $badge->getId()
+            )
+        ));
+
         $rule = new BadgeRule();
         $rule
             ->setAction($action)
@@ -146,10 +149,8 @@ class ValidatorTest extends MockeryTestCase
         $queryBuilder
             ->shouldReceive('andWhere')->once()->with(self::CONSTRAINT_ACTION_WITH)->andReturn($queryBuilder)
             ->shouldReceive('andWhere')->once()->with(self::CONSTRAINT_DOER_WITH)->andReturn($queryBuilder)
-            ->shouldReceive('andWhere')->once()->with(self::CONSTRAINT_BADGE_WITH)->andReturn($queryBuilder)
             ->shouldReceive('setParameter')->once()->with(self::CONSTRAINT_ACTION_KEY, $action)->andReturn($queryBuilder)
             ->shouldReceive('setParameter')->once()->with(self::CONSTRAINT_DOER_KEY, $user)->andReturn($queryBuilder)
-            ->shouldReceive('setParameter')->once()->with(self::CONSTRAINT_BADGE_KEY, $badge)->andReturn($queryBuilder)
             ->shouldReceive('getQuery')->once()->andReturn($query);
 
         $logRepository = $this->mock('Claroline\CoreBundle\Repository\Log\LogRepository');
@@ -158,6 +159,46 @@ class ValidatorTest extends MockeryTestCase
         $ruleValidator = new Validator($logRepository);
 
         $this->assertEquals(array($log), $ruleValidator->validateRule($rule));
+    }
+
+    public function testValidateRuleDoerActionBadgeMatchNoLogWrongBadge()
+    {
+        $user      = new User();
+        $action    = uniqid();
+        $badge     = new Badge();
+        $badge->setId(rand(PHP_INT_MAX / 2 + 1, PHP_INT_MAX));
+
+        $log       = new Log();
+        $log->setDetails(array(
+            'badge' => array(
+                'id' => rand(0, PHP_INT_MAX / 2)
+            )
+        ));
+
+        $rule = new BadgeRule();
+        $rule
+            ->setAction($action)
+            ->setUser($user)
+            ->setUserType(0)
+            ->setBadge($badge);
+
+        $query = $this->mock('Doctrine\ORM\AbstractQuery');
+        $query->shouldReceive('getResult')->once()->andReturn(array($log));
+
+        $queryBuilder = $this->mock('Doctrine\ORM\QueryBuilder');
+        $queryBuilder
+            ->shouldReceive('andWhere')->once()->with(self::CONSTRAINT_ACTION_WITH)->andReturn($queryBuilder)
+            ->shouldReceive('andWhere')->once()->with(self::CONSTRAINT_DOER_WITH)->andReturn($queryBuilder)
+            ->shouldReceive('setParameter')->once()->with(self::CONSTRAINT_ACTION_KEY, $action)->andReturn($queryBuilder)
+            ->shouldReceive('setParameter')->once()->with(self::CONSTRAINT_DOER_KEY, $user)->andReturn($queryBuilder)
+            ->shouldReceive('getQuery')->once()->andReturn($query);
+
+        $logRepository = $this->mock('Claroline\CoreBundle\Repository\Log\LogRepository');
+        $logRepository->shouldReceive('defaultQueryBuilderForBadge')->once()->andReturn($queryBuilder);
+
+        $ruleValidator = new Validator($logRepository);
+
+        $this->assertFalse($ruleValidator->validateRule($rule));
     }
 
     public function testValidateRuleReceiverActionMatchNoLog()

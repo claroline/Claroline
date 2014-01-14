@@ -174,3 +174,4 @@ log_workspace-create_filter: 'Workspace creation'
 log_workspace-delete_filter: "Workspace dleetion"
 log_workspace-update_filter: "Workspace update"
 log_workspace-tool_read_filter: 'Workspace tool open'
+log_badge-awarding_filter: "Badge awarding"
