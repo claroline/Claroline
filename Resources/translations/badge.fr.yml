@@ -94,6 +94,7 @@ badge_validate_award_success_message: "Validation de l'attribution du badge effe
 badge_validate_award_error_message: "Erreur lors de la validation l'attribution du badge."
 badge_reject_award_success_message: "Refus de l'attribution du badge effectuée avec succès."
 badge_reject_award_error_message: "Erreur lors du refus d'attribution du badge."
+badge_already_award_info_message: "Validation de l'attribution du badge inutile, l'utilisateur possède déjà ce badge."
 rule: 'Règle'
 rule_details: "Détails de la règle"
 add_rule: 'Ajouter une règle'

@@ -94,6 +94,7 @@ badge_validate_award_success_message: "Validation of badge awarding made with su
 badge_validate_award_error_message: "An error occured while validating badge awarding."
 badge_reject_award_success_message: "Reject of badge awarding made with success."
 badge_reject_award_error_message: "An error occured while rejecting badge awarding."
+badge_already_award_info_message: "Validation of badge awarding pointless, user already own this badge."
 rule: 'Rule'
 rule_details: "Rule details"
 add_rule: 'Add a rule'

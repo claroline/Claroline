@@ -88,7 +88,7 @@ class BadgeListener
                     $resources = $this->ruleValidator->validate($badge, $doer);
 
                     if ($resources) {
-                        $this->badgeManager->addBadgeToUsers($badge, array($doer));
+                        $this->badgeManager->addBadgeToUser($badge, $doer);
                     }
                 }
 
@@ -96,7 +96,7 @@ class BadgeListener
                     $resources = $this->ruleValidator->validate($badge, $receiver);
 
                     if ($resources) {
-                        $this->badgeManager->addBadgeToUsers($badge, array($receiver));
+                        $this->badgeManager->addBadgeToUser($badge, $receiver);
                     }
                 }
             }
