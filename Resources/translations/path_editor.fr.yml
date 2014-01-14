@@ -1,19 +1,39 @@
-help: Aide
+# b
+back: Retour à la liste
+
+# c
 create: Création
+
+# d
+delete_step: Supprimer l'étape
+
+# e
+edit_step: Modifier l'étape
 edit: Modification
 editor: Editeur de Parcours
-undo: Annuler
-redo: Retablir
+
+# h
+help: Aide
+
+# o
+open_templates: Ouvrir les favoris
+
+
+# p
+path_name: Nom du parcours
+path_description: Description du parcours
+
+# r
+redo: Rétablir
+
+# s
 save: Sauvegarder
-back: Retour à la liste
 step1: Etape 1.
 step1_description: Définition des informations globales
 step2: Etape 2.
 step2_description: Création du scenario
 step3: Etape 3.
 step3_description: Définition des informations de chaque étape
-open_templates: Ouvrir les favoris
-edit_step: Modifier l'étape
-delete_step: Supprimer l'étape
-path_name: Nom du parcours
-path_description: Description du parcours
+
+# u
+undo: Annuler

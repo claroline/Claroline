@@ -1,19 +1,39 @@
-help: Help
+# b
+back: Back to list
+
+# c
 create: Create
+
+# d
+delete_step: Delete step
+
+# e
 edit: Edit
 editor: Path editor
-undo: Undo
+edit_step: Edit step
+
+# h
+help: Help
+
+# o
+open_templates: Open templates
+
+
+# p
+path_name: Name of the path
+path_description: Description of the path
+
+# r
 redo: Redo
+
+# s
 save: Save
-back: Back to list
 step1: Step 1.
 step1_description: Defining general properties
 step2: Step 2.
 step2_description: Defining scenario and steps
 step3: Step 3.
 step3_description: Defining each step properties
-open_templates: Open templates
-edit_step: Edit step
-delete_step: Delete step
-path_name: Name of the path
-path_description: Description of the path
+
+# u
+undo: Undo
