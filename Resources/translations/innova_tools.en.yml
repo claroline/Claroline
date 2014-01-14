@@ -25,7 +25,7 @@ duration: Duration
 progression: Progression
 my_paths : My paths
 others_paths : Other paths
-play: Play
+play: Execute
 edit: Edit
 delete: Delete
 deploy: Deploy

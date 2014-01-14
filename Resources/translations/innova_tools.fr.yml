@@ -25,7 +25,7 @@ duration: Durée
 progression: Avancement
 my_paths : Mes parcours
 others_paths : Autres parcours
-play: Lire
+play: Exécuter
 edit: Editer
 delete: Supprimer
 deploy: Déployer
