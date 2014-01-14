@@ -255,6 +255,7 @@ class PathManager
         else{
             $paths["others"] = $this->em->getRepository('InnovaPathBundle:Path')->findAllByWorkspace($workspace);
         }
+        
         return $paths;
     }
 
