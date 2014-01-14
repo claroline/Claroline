@@ -571,6 +571,7 @@ user_form_username: Username
 user_parameters: 'User parameters'
 username: Username
 username_found_at: 'The username %username% was found at lines: %lines%'
+username_or_email: 'Username or email'
 users: Users
 users_connected_once: 'users connected at least once'
 users_import: 'Users import'
