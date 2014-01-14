@@ -12,12 +12,12 @@
 namespace Claroline\AnnouncementBundle\Listener;
 
 use Claroline\CoreBundle\Event\DisplayWidgetEvent;
-use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use JMS\DiExtraBundle\Annotation as DI;
 
 /**
- * @DI\Service(scope="request")
+ * @DI\Service()
  */
 class AnnouncementWidgetListener
 {
@@ -26,12 +26,12 @@ class AnnouncementWidgetListener
 
     /**
      * @DI\InjectParams({
-     *     "request"    = @DI\Inject("request"),
+     *     "request"    = @DI\Inject("request_stack"),
      *     "httpKernel" = @DI\Inject("http_kernel"),
      * })
      */
     public function __construct(
-        Request $request,
+        RequestStack $request,
         HttpKernelInterface $httpKernel
     )
     {
@@ -53,8 +53,7 @@ class AnnouncementWidgetListener
 
         if (is_null($workspace)) {
             $params['_controller'] = 'ClarolineAnnouncementBundle:Announcement:announcementsDesktopWidgetPager';
-        }
-        else {
+        } else {
             $params['_controller'] = 'ClarolineAnnouncementBundle:Announcement:announcementsWorkspaceWidgetPager';
             $params['workspaceId'] = $workspace->getId();
         }
