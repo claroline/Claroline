@@ -45,7 +45,7 @@ class ToolListener extends ContainerAware
     public function onPathCreate(CreateResourceEvent $event)
     {
         // Create form
-        $form = $this->container->get('form.factory')->create('path', new Path());
+        $form = $this->container->get('form.factory')->create('innova_path', new Path());
         
         // Try to prcess form
         $request = $this->container->get('request');
@@ -80,7 +80,7 @@ class ToolListener extends ContainerAware
     public function onPathCreateForm(CreateFormResourceEvent $event)
     {
         // Create form
-        $form = $this->container->get('form.factory')->create('path', new Path());
+        $form = $this->container->get('form.factory')->create('innova_path', new Path());
         
         $content = $this->container->get('templating')->render(
             'ClarolineCoreBundle:Resource:createForm.html.twig',

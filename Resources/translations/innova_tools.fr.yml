@@ -44,3 +44,5 @@ history: Historique
 full_path_notice_1: Vous pouvez afficher l'arborescence complète du parcours en cliquant sur le bouton 
 full_path_notice_2: Ce bouton sera accessible en haut à gauche à n'importe quelle étape de votre progression.
 paths_list: Liste des parcours
+innova_path_name: Nom du parcours
+innova_path_description: Description
