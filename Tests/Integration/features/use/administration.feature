@@ -6,8 +6,9 @@ Feature: Administration
         And the platform is initialized
         And the user "root" is created
         And I am on "/login"
-        And I fill in "username" with "root"
-        And I fill in "password" with "root"
+        And I fill in the following:
+          |username |root |
+          |password |root |
         And I press "Login"
 
     Scenario: Successfully create a user, search it, then remove it

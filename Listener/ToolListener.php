@@ -21,7 +21,7 @@ use Claroline\CoreBundle\Manager\ToolManager;
 use Claroline\CoreBundle\Manager\WorkspaceManager;
 
 /**
- * @DI\Service(scope="request")
+ * @DI\Service()
  */
 class ToolListener
 {
@@ -30,7 +30,6 @@ class ToolListener
     private $workspaceManager;
     private $formFactory;
     private $templating;
-    private $request;
     private $httpKernel;
     const R_U = "ROLE_USER";
     const R_A = "ROLE_ADMIN";
@@ -42,7 +41,6 @@ class ToolListener
      *     "workspaceManager" = @DI\Inject("claroline.manager.workspace_manager"),
      *     "formFactory" = @DI\Inject("claroline.form.factory"),
      *     "templating" = @DI\Inject("templating"),
-     *     "request" = @DI\Inject("request"),
      *     "httpKernel" = @DI\Inject("http_kernel")
      * })
      */
@@ -52,7 +50,6 @@ class ToolListener
         WorkspaceManager $workspaceManager,
         FormFactory $formFactory,
         $templating,
-        $request,
         $httpKernel
     )
     {
@@ -61,7 +58,6 @@ class ToolListener
         $this->workspaceManager = $workspaceManager;
         $this->formFactory = $formFactory;
         $this->templating = $templating;
-        $this->request = $request;
         $this->httpKernel = $httpKernel;
     }
 
@@ -248,13 +244,5 @@ class ToolListener
                 'cours' => array_unique($cours)
             )
         );
-    }
-
-    private function forward($controller, array $parameters = array())
-    {
-        $parameters['_controller'] = $controller;
-        $subRequest = $this->request->duplicate(array(), null, $parameters);
-
-        return $this->httpKernel->handle($subRequest, HttpKernelInterface::SUB_REQUEST);
     }
 }

@@ -17,7 +17,7 @@ use Symfony\Component\Security\Core\SecurityContextInterface;
 use JMS\DiExtraBundle\Annotation as DI;
 
 /**
- * @DI\Service(scope="request")
+ * @DI\Service()
  */
 class WorkspaceWidgetListener
 {

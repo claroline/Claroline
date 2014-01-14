@@ -221,6 +221,7 @@ class SettingChecker
             'app/logs' => 'directory',
             'composer.json' => 'file',
             'composer.lock' => 'file',
+            'templates' => 'directory',
             'vendor' => 'directory',
             'web' => 'directory',
             'web/bundles' => 'directory',

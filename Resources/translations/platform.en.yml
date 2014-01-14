@@ -5,6 +5,7 @@
 404: 'Page Not found'
 Action List: 'Action List'
 Actions per day: 'Actions per day'
+An error has occurred, please check if the file size does not exceeds the permitted size: 'An error has occurred, please check if the file size does not exceeds the permitted size'
 Choose visible actions in the widget: 'Choose visible actions in the widget'
 Choose workspaces displayed in the widget: 'Choose workspaces displayed in the widget'
 Draw an area on the graph to zoom, double-click to cancel: 'Draw an area on the graph to zoom, double-click to cancel'
@@ -12,12 +13,14 @@ Filter actions: 'Filter actions'
 Language: 'Language'
 Last action: '{1} Last action|[1,Inf] Last %logAmount% actions'
 None: 'None'
+Or choose an existing file from resource manager: 'Or choose an existing file from resource manager'
 Overview of all recent activities in %workspaceName% : 'Overview of all recent activities in %workspaceName%'
 Overview of recent activities in %workspaceName%: 'Overview of recent activities in %workspaceName%'
 Overview of recent activities of your workspaces: 'Overview of recent activities of your workspaces'
 See all: 'See all'
 Show actions: 'Show actions'
 The form is not valid: 'The form is not valid'
+Upload a file: 'Upload a file'
 Your changes have been saved: 'Your changes have been saved'
 account_created: 'Account created.'
 account_general_statistics: 'Account general statistics'
@@ -207,11 +210,11 @@ from: From
 from_message: From
 general: General
 general_parameters: 'General parameters'
+generate_url: 'Generate a subscription url for the users'
 generate_url_subscription: 'Subscription to a workspace for a user'
 generate_url_subscription_anonyme: 'Subscription to a workspace for a anonymous'
-generate_url: 'Generate a subscription url for the users'
-generate_url_subscription_success : 'You have been added to the workspace'
 generate_url_subscription_fail: 'You must check "enable registration checkbow first to generate the url"'
+generate_url_subscription_success : 'You have been added to the workspace'
 group: Group
 group_configuration: 'Group configuration'
 group_creation: 'Group creation'
@@ -251,6 +254,7 @@ internal_error : Internal server error. Please contact the administrator.
 invalid_csv_file: 'Invalid CSV file'
 is_already_in_category: 'is already in category'
 jqplot_date_output_format: '%m/%d/%Y'
+keep_me_logged_in: 'Keep me logged in'
 lastName: 'Last name'
 lastName: Last name
 last_30_days_activity: 'Activity over the last 30 days'
@@ -369,6 +373,7 @@ platform_parameters_form_localLanguage: 'Default Language'
 platform_parameters_form_name: 'Name of the platform'
 platform_parameters_form_selfRegistration: Auto-inscription
 platform_parameters_form_theme: Theme
+platform_parameters_form_cookie_lifetime: Session lifetime
 platform_plugins: 'Platform plugins'
 platform_role: 'Platform role'
 platform_widgets: 'Platform widgets'
