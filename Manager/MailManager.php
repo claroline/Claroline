@@ -12,8 +12,8 @@
 namespace Claroline\CoreBundle\Manager;
 
 use JMS\DiExtraBundle\Annotation as DI;
-use Symfony\Bundle\TwigBundle\TwigEngine;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Templating\EngineInterface;
 use Symfony\Component\Translation\Translator;
 use Claroline\CoreBundle\Entity\User;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -42,7 +42,7 @@ class MailManager
      */
     public function __construct(
         \Swift_Mailer $mailer,
-        TwigEngine $templating,
+        EngineInterface $templating,
         UrlGeneratorInterface $router,
         Translator $translator,
         PlatformConfigurationHandler $ch,
