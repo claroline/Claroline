@@ -248,10 +248,13 @@ class PathManager
     {
 
         $paths = array();
-
-        $paths["me"] = $this->em->getRepository('InnovaPathBundle:Path')->findAllByWorkspaceByUser($workspace, $this->user);
-        $paths["others"] = $this->em->getRepository('InnovaPathBundle:Path')->findAllByWorkspaceByNotUser($workspace, $this->user);
-        
+        if (is_object($this->user)){
+            $paths["me"] = $this->em->getRepository('InnovaPathBundle:Path')->findAllByWorkspaceByUser($workspace, $this->user);
+            $paths["others"] = $this->em->getRepository('InnovaPathBundle:Path')->findAllByWorkspaceByNotUser($workspace, $this->user);
+        }
+        else{
+            $paths["others"] = $this->em->getRepository('InnovaPathBundle:Path')->findAllByWorkspace($workspace);
+        }
         return $paths;
     }
 
