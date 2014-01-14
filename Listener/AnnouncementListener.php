@@ -17,6 +17,7 @@ use Claroline\CoreBundle\Event\CreateResourceEvent;
 use Claroline\CoreBundle\Event\DeleteResourceEvent;
 use Claroline\CoreBundle\Event\OpenResourceEvent;
 use Claroline\CoreBundle\Form\Factory\FormFactory;
+use Claroline\CoreBundle\Listener\NoHttpRequestException;
 use Claroline\CoreBundle\Manager\ResourceManager;
 use Symfony\Bundle\TwigBundle\TwigEngine;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -38,7 +39,7 @@ class AnnouncementListener
     /**
      * @DI\InjectParams({
      *     "formFactory"        = @DI\Inject("claroline.form.factory"),
-     *     "requeststack"       = @DI\Inject("request_stack"),
+     *     "requestStack"       = @DI\Inject("request_stack"),
      *     "resourceManager"    = @DI\Inject("claroline.manager.resource_manager"),
      *     "router"             = @DI\Inject("router"),
      *     "templating"         = @DI\Inject("templating")
@@ -46,14 +47,14 @@ class AnnouncementListener
      */
     public function __construct(
         FormFactory $formFactory,
-        RequestStack $requeststack,
+        RequestStack $requestStack,
         ResourceManager $resourceManager,
         TwigEngine $templating,
         UrlGeneratorInterface $router
     )
     {
         $this->formFactory = $formFactory;
-        $this->request = $requeststack->getCurrentRequest();
+        $this->request = $requestStack->getCurrentRequest();
         $this->resourceManager = $resourceManager;
         $this->router = $router;
         $this->templating = $templating;
@@ -86,11 +87,12 @@ class AnnouncementListener
      * @DI\Observe("create_claroline_announcement_aggregate")
      *
      * @param CreateResourceEvent $event
+     * @throws \Claroline\CoreBundle\Listener\NoHttpRequestException
      */
     public function onCreate(CreateResourceEvent $event)
     {
         if (!$this->request) {
-            throw new \Exception("There is no request");
+            throw new NoHttpRequestException();
         }
 
         $form = $this->formFactory->create(

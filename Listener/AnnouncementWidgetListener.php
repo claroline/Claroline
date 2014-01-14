@@ -12,6 +12,7 @@
 namespace Claroline\AnnouncementBundle\Listener;
 
 use Claroline\CoreBundle\Event\DisplayWidgetEvent;
+use Claroline\CoreBundle\Listener\NoHttpRequestException;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use JMS\DiExtraBundle\Annotation as DI;
@@ -26,16 +27,16 @@ class AnnouncementWidgetListener
 
     /**
      * @DI\InjectParams({
-     *     "requeststack"   = @DI\Inject("request_stack"),
+     *     "requestStack"   = @DI\Inject("request_stack"),
      *     "httpKernel"     = @DI\Inject("http_kernel")
      * })
      */
     public function __construct(
-        RequestStack $requeststack,
+        RequestStack $requestStack,
         HttpKernelInterface $httpKernel
     )
     {
-        $this->request = $requeststack->getCurrentRequest();
+        $this->request = $requestStack->getCurrentRequest();
         $this->httpKernel = $httpKernel;
     }
 
@@ -43,11 +44,12 @@ class AnnouncementWidgetListener
      * @DI\Observe("widget_claroline_announcement_widget")
      *
      * @param DisplayWidgetEvent $event
+     * @throws \Claroline\CoreBundle\Listener\NoHttpRequestException
      */
     public function onDisplay(DisplayWidgetEvent $event)
     {
         if (!$this->request) {
-            throw new \Exception("There is no request");
+            throw new NoHttpRequestException();
         }
 
         $widgetInstance = $event->getInstance();
