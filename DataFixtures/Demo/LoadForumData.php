@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Claroline\ForumBundle\Tests\DataFixtures;
+namespace Claroline\ForumBundle\DataFixtures\Demo;
 
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -76,6 +76,8 @@ class LoadForumData extends LoggableFixture implements ContainerAwareInterface
             $root
         );
 
+        $forumManager = $this->getContainer()->get('claroline.manager.forum_manager');
+        $category = $forumManager->createCategory($forum, $this->forumName);
         $this->log("forum {$forum->getName()} created");
 
         for ($i = 0; $i < $this->nbSubjects; $i++) {
@@ -85,7 +87,7 @@ class LoadForumData extends LoggableFixture implements ContainerAwareInterface
             $subject->setTitle($title);
             $subject->setCreator($user);
             $this->log("subject $title created");
-            $subject->setForum($forum);
+            $subject->setCategory($category);
             $manager->persist($subject);
 
             for ($j = 0; $j < $this->nbMessages; $j++) {
