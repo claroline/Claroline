@@ -13,14 +13,11 @@
         }
     ],
     "require": {
-        "php": ">=5.3.0",
-        "claroline/core-bundle": "~2.0"
+        "php": ">=5.4.1",
+        "claroline/core-bundle": "~2.8"
     },
     "autoload": {
         "psr-0": { "Claroline\\AnnouncementBundle": "" }
     },
-    "target-dir": "Claroline/AnnouncementBundle",
-    "extra": {
-        "dbVersion": "20130909095120"
-    }
+    "target-dir": "Claroline/AnnouncementBundle"
 }
