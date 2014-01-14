@@ -254,6 +254,7 @@ internal_error : 'Erreur interne du serveur. Veuillez contactez l''administrateu
 invalid_csv_file: 'Le fichier CSV n''est pas valide'
 is_already_in_category: 'est déjà dans la catégorie'
 jqplot_date_output_format: '%d-%m-%Y'
+keep_me_logged_in: 'Se souvenir de moi'
 lastName: Nom
 last_30_days_activity: 'Activités des 30 derniers jours'
 last_name: Nom

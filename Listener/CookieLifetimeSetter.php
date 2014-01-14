@@ -13,6 +13,7 @@ namespace Claroline\CoreBundle\Listener;
 
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use JMS\DiExtraBundle\Annotation as DI;
+use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 
 /**
  * @DI\Service
@@ -38,11 +39,11 @@ class CookieLifetimeSetter
      *
      * @param GetResponseEvent $event
      */
-    public function onKernelRequest($event)
+    public function onKernelRequest(GetResponseEvent $event)
     {
         $lifetime = $this->ch->getParameter('cookie_lifetime');
-        //A proper solution would need to use NativeSessionStorage but I don't know how to implement it.
-        //An other one would be to edit the framework.yml files directly.
-        session_set_cookie_params($lifetime);
+        $request = $event->getRequest();
+        $session = $request->getSession();
+        $session->migrate(false, $lifetime);
     }
 }

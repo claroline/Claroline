@@ -654,9 +654,10 @@ class AdministrationController extends Controller
     public function updatePlatformSettingsAction()
     {
         $platformConfig = $this->configHandler->getPlatformConfig();
+        $role = $this->roleManager->getRoleByName($platformConfig->getDefaultRole());
         $form = $this->formFactory->create(
             FormFactory::TYPE_PLATFORM_PARAMETERS,
-            array($this->getThemes(), $this->localeManager->getAvailableLocales()),
+            array($this->getThemes(), $this->localeManager->getAvailableLocales(), $role),
             $platformConfig
         );
         $form->handleRequest($this->request);
