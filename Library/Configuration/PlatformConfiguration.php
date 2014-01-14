@@ -20,6 +20,7 @@ class PlatformConfiguration
     private $theme;
     private $footer;
     private $role;
+    private $cookieLifetime;
 
     public function getSelfRegistration()
     {
@@ -89,5 +90,15 @@ class PlatformConfiguration
     public function getDefaultRole()
     {
         return $this->role;
+    }
+
+    public function setCookieLifetime($time)
+    {
+        $this->cookieLifetime = $time;
+    }
+
+    public function getCookieLifetime()
+    {
+        return $this->cookieLifetime;
     }
 }

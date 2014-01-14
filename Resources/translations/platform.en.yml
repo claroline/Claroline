@@ -254,6 +254,7 @@ internal_error : Internal server error. Please contact the administrator.
 invalid_csv_file: 'Invalid CSV file'
 is_already_in_category: 'is already in category'
 jqplot_date_output_format: '%m/%d/%Y'
+keep_me_logged_in: 'Keep me logged in'
 lastName: 'Last name'
 lastName: Last name
 last_30_days_activity: 'Activity over the last 30 days'
@@ -372,6 +373,7 @@ platform_parameters_form_localLanguage: 'Default Language'
 platform_parameters_form_name: 'Name of the platform'
 platform_parameters_form_selfRegistration: Auto-inscription
 platform_parameters_form_theme: Theme
+platform_parameters_form_cookie_lifetime: Session lifetime
 platform_plugins: 'Platform plugins'
 platform_role: 'Platform role'
 platform_widgets: 'Platform widgets'

@@ -40,7 +40,11 @@ security:
             anonymous: ~
             logout: true
             switch_user: { role: ROLE_ADMIN, parameter: _switch }
-
+            remember_me:
+                key:      "%secret%"
+                lifetime: 31536000 # 365 days
+                path:     /
+                domain:   ~
     acl:
         connection: default
         voter:
