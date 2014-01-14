@@ -323,7 +323,7 @@ class PathController
         $path = $this->entityManager->getRepository('InnovaPathBundle:Path')->findOneByResourceNode($id);
 
         if ($path) {
-            $jsonStructure = $path->getPath();
+            $jsonStructure = $path->getStructure();
             if (!empty($jsonStructure)) {
                 $newPath = json_decode($jsonStructure);
             } 

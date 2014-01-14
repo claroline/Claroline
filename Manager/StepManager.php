@@ -2,8 +2,9 @@
 
 namespace Innova\PathBundle\Manager;
 
-use Innova\PathBundle\Entity\Step;
 use Doctrine\Common\Persistence\ObjectManager;
+use Innova\PathBundle\Entity\Step;
+use Innova\PathBundle\Entity\Path;
 
 class StepManager
 {
@@ -24,7 +25,7 @@ class StepManager
 
     /**
      * Get all resource nodes linked to the step
-     * @param Step $step
+     * @param \Innova\PathBundle\Entity\Step $step
      * @return array
      */
     public function getStepResourceNodes(Step $step)
@@ -86,7 +87,7 @@ class StepManager
         return $step2ressourceNode;
     }
     
-    public function edit($id, $jsonStep, $path, $parent, $lvl, $order)
+    public function edit($id, $jsonStep, Path $path, $parent, $lvl, $order)
     {
         if ($id == null) {
             $step = new Step();

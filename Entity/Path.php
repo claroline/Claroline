@@ -18,9 +18,9 @@ class Path extends AbstractResource
      * JSON structure of the path
      * @var string
      *
-     * @ORM\Column(name="path", type="text")
+     * @ORM\Column(name="structure", type="text")
      */
-    private $path;
+    private $structure;
 
     /**
      * Steps linked to the path
@@ -68,24 +68,24 @@ class Path extends AbstractResource
     }
     
     /**
-     * Set path
+     * Set json structure
      * @param  string $path
      * @return \Innova\PathBundle\Entity\Path
      */
-    public function setPath($path)
+    public function setStructure($structure)
     {
-        $this->path = $path;
+        $this->structure = $structure;
 
         return $this;
     }
 
     /**
-     * Get path
+     * Get JSON structure
      * @return string
      */
-    public function getPath()
+    public function getStructure()
     {
-        return $this->path;
+        return $this->structure;
     }
 
     /**

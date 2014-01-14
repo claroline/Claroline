@@ -61,7 +61,7 @@ class ToolListener extends ContainerAware
                 'description' => $path->getDescription(),
             );
 
-            $path->setPath(json_encode($properties));
+            $path->setStructure(json_encode($properties));
             $event->setResources(array ($path));
         }
         else {

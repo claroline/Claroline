@@ -109,7 +109,7 @@ class PathManager
     {
         $newPath = new Path();
         $newPath->setName($this->request->get('pathName'));
-        $newPath->setPath($this->request->get('path'));
+        $newPath->setStructure($this->request->get('structure'));
         $newPath->setDescription($this->request->get('pathDescription'));
         $this->em->persist($newPath);
         $this->em->flush();
@@ -143,7 +143,7 @@ class PathManager
             $this->em->persist($resourceNode);
         
             // Update path
-            $path->setPath($this->request->get('path'));
+            $path->setStructure($this->request->get('structure'));
             $path->setDescription($this->request->get('pathDescription'));
             $path->setModified(true);
             $this->em->persist($path);
@@ -268,7 +268,7 @@ class PathManager
         $excludedResourcesToResourceNodes = array();
 
         // JSON string to Object - Récupération des childrens de la racine
-        $json = json_decode($path->getPath());
+        $json = json_decode($path->getStructure());
         $json_root_steps = $json->steps;
 
         // Récupération Workspace courant
@@ -287,7 +287,7 @@ class PathManager
 
         // Mise à jour des resourceNodeId dans la base.
         $json = json_encode($json);
-        $path->setPath($json);
+        $path->setStructure($json);
         $path->setDeployed(true);
         $path->setModified(false);
         $this->em->flush();
