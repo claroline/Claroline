@@ -15,3 +15,5 @@ step3_description: Defining each step properties
 open_templates: Open templates
 edit_step: Edit step
 delete_step: Delete step
+path_name: Name of the path
+path_description: Description of the path

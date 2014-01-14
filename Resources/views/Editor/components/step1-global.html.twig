@@ -8,14 +8,14 @@
     </div>
     <div id="panel-global" class="panel-body collapse in">
         <div class="form-group">
-            <label for="path-name">Name</label>
+            <label for="path-name">{{ 'path_name'|trans({}, 'path_editor') }}</label>
             <input ng-class="{'ng-invalid': !pathName.isUnique, 'ng-valid': pathName.isUnique}" type="text" class="form-control" ng-model="path.name" ng-change="checkNameIsUnique(); renameRootStep(); updateHistory();" />
-            <p class="help-block"><span ng-class="{'text-danger': !pathName.isUnique}">Name must be unique for current Workspace.</span></p>
+{#             <p class="help-block"><span ng-class="{'text-danger': !pathName.isUnique}">Name must be unique for current Workspace.</span></p>#}
         </div>
     
         <div class="form-group">
-            <label for="path-description">Description</label>
-            <textarea ui-tinymce="tinymceOptions" class="form-control" id="path-description" ng-model="path.description" ng-change="updateHistory()"></textarea>
+            <label for="path-description">{{ 'path_description'|trans({}, 'path_editor') }}</label>
+            <textarea class="form-control" id="path-description" ng-model="path.description" ng-change="updateHistory()"></textarea>
         </div>
     </div>
 </div>
