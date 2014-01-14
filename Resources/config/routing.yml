@@ -207,7 +207,7 @@ claro_file:
     prefix: file
 
 idci_exporter:
-    resource: "../../vendor/idci/exporter-bundle/IDCI/Bundle/ExporterBundle/Controller"
+    resource: "@ClarolineCoreBundle/Controller/ExporterController.php"
     type:     annotation
 
 # Badge routes
