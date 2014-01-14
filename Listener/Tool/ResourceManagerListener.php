@@ -21,9 +21,10 @@ use Claroline\CoreBundle\Manager\WorkspaceManager;
 use Claroline\CoreBundle\Manager\WorkspaceTagManager;
 use Claroline\CoreBundle\Event\StrictDispatcher;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
- * @DI\Service(scope="request")
+ * @DI\Service()
  */
 class ResourceManagerListener
 {
@@ -38,7 +39,7 @@ class ResourceManagerListener
      *     "templating"             = @DI\Inject("templating"),
      *     "manager"                = @DI\Inject("claroline.manager.resource_manager"),
      *     "sc"                     = @DI\Inject("security.context"),
-     *     "request"                = @DI\Inject("request"),
+     *     "request"                = @DI\Inject("request_stack"),
      *     "resourceManager"        = @DI\Inject("claroline.manager.resource_manager"),
      *     "rightsManager"          = @DI\Inject("claroline.manager.rights_manager"),
      *     "workspaceManager"       = @DI\Inject("claroline.manager.workspace_manager"),
@@ -51,7 +52,7 @@ class ResourceManagerListener
         $templating,
         $manager,
         $sc,
-        $request,
+        RequestStack $request,
         ResourceManager $resourceManager,
         RightsManager $rightsManager,
         WorkspaceManager $workspaceManager,

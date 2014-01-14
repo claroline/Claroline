@@ -19,10 +19,10 @@ use Symfony\Component\Security\Core\SecurityContextInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
-use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
- *  @DI\Service(scope="request")
+ *  @DI\Service()
  */
 class AgendaListener
 {
@@ -41,7 +41,7 @@ class AgendaListener
      *     "sc"                = @DI\Inject("security.context"),
      *     "container"         = @DI\Inject("service_container"),
      *     "router"            = @DI\Inject("router"),
-     *     "request"           = @DI\Inject("request"),
+     *     "request"           = @DI\Inject("request_stack"),
      *     "httpKernel"        = @DI\Inject("http_kernel"),
      * })
      * })
@@ -52,7 +52,7 @@ class AgendaListener
         SecurityContextInterface $sc,
         ContainerInterface $container,
         RouterInterface $router,
-        Request $request,
+        RequestStack $request,
         HttpKernelInterface $httpKernel
     )
     {
