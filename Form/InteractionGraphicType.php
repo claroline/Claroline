@@ -47,11 +47,13 @@ class InteractionGraphicType extends AbstractType
 {
 
     private $user;
+    private $catID;
     private $docID;
 
-    public function __construct(User $user, $docID=-1)
+    public function __construct(User $user, $catID = -1, $docID = -1)
     {
         $this->user  = $user;
+        $this->catID = $catID;
         $this->docID = $docID;
     }
 
@@ -61,7 +63,7 @@ class InteractionGraphicType extends AbstractType
 
         $builder
             ->add(
-                'interaction', new InteractionType($this->user)
+                'interaction', new InteractionType($this->user, $this->catID)
             )
             ->add(
                 'document', 'entity', array(

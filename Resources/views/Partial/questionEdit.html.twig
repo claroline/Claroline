@@ -66,9 +66,13 @@
         </div>
     </div>
     <div class="panel-footer">
-        <a class="btn btn-primary" onclick="openCat('{{ path('ujm_category_new_pop', {'edit': 1} ) }}');"><i class="icon-pencil"></i> {{ 'alter category' | trans }}</a>
-        <a class="btn btn-primary" onclick="openCat('{{ path('ujm_category_new_pop') }}');"><i class="icon-plus"></i> {{ 'create a new category' | trans }}</a>
-        <a id="linkedCategory" style="display: none;" class="btn btn-primary" id="lien_category_drop" onclick="dropCategory();"><i class="icon-trash"></i> {{ 'drop category' | trans }}</a>
+        {% if app.user.id == entity.interaction.question.user.id %}
+            <a class="btn btn-primary" onclick="openCat('{{ path('ujm_category_new_pop', {'edit': 1} ) }}');"><i class="icon-pencil"></i> {{ 'alter category' | trans }}</a>
+            <a class="btn btn-primary" onclick="openCat('{{ path('ujm_category_new_pop') }}');"><i class="icon-plus"></i> {{ 'create a new category' | trans }}</a>
+            <a id="linkedCategory" style="display: none;" class="btn btn-primary" id="lien_category_drop" onclick="dropCategory();"><i class="icon-trash"></i> {{ 'drop category' | trans }}</a>
+        {% else %}
+            {{ "only owner category" | trans }} 
+        {% endif %}
     </div>
 </div>
 

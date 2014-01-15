@@ -358,6 +358,8 @@ class QuestionController extends Controller
     {
         $question = $this->controlUserQuestion($id);
         $share    = $this->container->get('ujm.exercise_services')->controlUserSharedQuestion($id);
+        $user     = $this->container->get('security.context')->getToken()->getUser();
+        $catID    = -1;
 
         if(count($share) > 0) {
             $shareAllowEdit = $share[0]->getAllowToModify();
@@ -378,6 +380,10 @@ class QuestionController extends Controller
             $nbResponses = count($response);
 
             $linkedCategory = $this->getLinkedCategories();
+            
+            if ($user->getId() != $interaction[0]->getQuestion()->getUser()->getId()) {
+                $catID = $interaction[0]->getQuestion()->getCategory()->getId();
+            }
 
             switch ($typeInter) {
                 case "InteractionQCM":
@@ -393,7 +399,7 @@ class QuestionController extends Controller
                         $editForm = $this->createForm(
                             new InteractionQCMType(
                                 $this->container->get('security.context')
-                                    ->getToken()->getUser()
+                                    ->getToken()->getUser(), $catID
                             ), $interactionQCM[0]
                         );
                     } else {
@@ -427,14 +433,14 @@ class QuestionController extends Controller
                         )
                     );
 
-                    if ($this->container->get('security.context')->getToken()->getUser()->getId() != $interactionGraph[0]->getInteraction()->getQuestion()->getUser()->getId()) {
+                    if ($user->getId() != $interactionGraph[0]->getInteraction()->getQuestion()->getUser()->getId()) {
                         $docID = $interactionGraph[0]->getDocument()->getId();
                     }
 
                     $editForm = $this->createForm(
                         new InteractionGraphicType(
                             $this->container->get('security.context')
-                                ->getToken()->getUser(), $docID
+                                ->getToken()->getUser(), $catID, $docID
                         ), $interactionGraph[0]
                     );
 
@@ -464,7 +470,7 @@ class QuestionController extends Controller
                     $editForm = $this->createForm(
                         new InteractionHoleType(
                             $this->container->get('security.context')
-                                ->getToken()->getUser()
+                                ->getToken()->getUser(), $catID
                         ), $interactionHole[0]
                     );
                     $deleteForm = $this->createDeleteForm($interactionHole[0]->getId());
@@ -490,7 +496,7 @@ class QuestionController extends Controller
                     $editForm = $this->createForm(
                         new InteractionOpenType(
                             $this->container->get('security.context')
-                                ->getToken()->getUser()
+                                ->getToken()->getUser(), $catID
                         ), $interactionOpen[0]
                     );
                     $deleteForm = $this->createDeleteForm($interactionOpen[0]->getId());

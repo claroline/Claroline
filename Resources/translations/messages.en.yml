@@ -236,6 +236,8 @@ num_paper: Paper's number
 # O
 oneWord: One world
 onlyOnce: => The rights answers count only once.
+only owner category: Only the owner can change the category
+only owner graphic: Only the owner can change the picture
 open: Open
 open edition: Edition of a question of type open
 order: Order

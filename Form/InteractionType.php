@@ -47,10 +47,12 @@ class InteractionType extends AbstractType
 {
 
     private $user;
+    private $catID;
 
-    public function __construct(User $user)
+    public function __construct(User $user, $catID = -1)
     {
         $this->user = $user;
+        $this->catID = $catID;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
@@ -58,7 +60,7 @@ class InteractionType extends AbstractType
         $builder
             ->add(
                 'question', new QuestionType(
-                    $this->user
+                    $this->user, $this->catID
                 )
             )
             ->add('invite', 'tinymce', array(

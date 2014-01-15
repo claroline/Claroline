@@ -236,6 +236,8 @@ num_paper: Numéro de la copie
 # O
 oneWord: Un mot
 onlyOnce: => Les bonnes réponses ne sont comptabilisées qu'une seule fois.
+only owner category: Seul le propriétaire peut changer la catégorie
+only owner graphic: Seul le propriétaire peut changer l'image
 open: Ouverte
 open edition: Edition d'une question de type Ouverte
 order: Ordre

@@ -182,6 +182,9 @@ class InteractionQCMController extends Controller
      */
     public function editAction($id)
     {
+        $user  = $this->container->get('security.context')->getToken()->getUser();
+        $catID = -1;
+        
         $em = $this->getDoctrine()->getManager();
 
         $entity = $em->getRepository('UJMExoBundle:InteractionQCM')->find($id);
@@ -190,9 +193,14 @@ class InteractionQCMController extends Controller
             throw $this->createNotFoundException('Unable to find InteractionQCM entity.');
         }
 
+        if ($user->getId() != $entity->getInteraction()->getQuestion()->getUser()->getId()) {
+            $catID = $entity->getInteraction()->getQuestion()->getCategory()->getId();
+        }
+        
         $editForm = $this->createForm(
             new InteractionQCMType(
-                $this->container->get('security.context')->getToken()->getUser()
+                $this->container->get('security.context')->getToken()->getUser(),
+                $catID
             ), $entity
         );
         $deleteForm = $this->createDeleteForm($id);
@@ -213,6 +221,8 @@ class InteractionQCMController extends Controller
     public function updateAction($id)
     {
         $exoID = $this->container->get('request')->request->get('exercise');
+        $user  = $this->container->get('security.context')->getToken()->getUser();
+        $catID = -1;
 
         $em = $this->getDoctrine()->getManager();
 
@@ -222,9 +232,14 @@ class InteractionQCMController extends Controller
             throw $this->createNotFoundException('Unable to find InteractionQCM entity.');
         }
 
+        if ($user->getId() != $interQCM->getInteraction()->getQuestion()->getUser()->getId()) {
+            $catID = $interQCM->getInteraction()->getQuestion()->getCategory()->getId();
+        }
+        
         $editForm   = $this->createForm(
             new InteractionQCMType(
-                $this->container->get('security.context')->getToken()->getUser()
+                $this->container->get('security.context')->getToken()->getUser(),
+                $catID
             ), $interQCM
         );
         $formHandler = new InteractionQCMHandler(
