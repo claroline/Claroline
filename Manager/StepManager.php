@@ -88,7 +88,7 @@ class StepManager
         return $step2ressourceNode;
     }
     
-    public function edit($id, $jsonStep, Path $path, $parent, $lvl, $order)
+    public function edit($id, \stdClass $jsonStep, Path $path, $parent, $lvl, $order)
     {
         if ($id == null) {
             $step = new Step();

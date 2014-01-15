@@ -3,7 +3,6 @@
 namespace Innova\PathBundle\Listener;
 
 use Symfony\Component\DependencyInjection\ContainerAware;
-use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
 use Claroline\CoreBundle\Event\OpenResourceEvent;
