@@ -39,6 +39,14 @@ class ValidatorTest extends MockeryTestCase
         return $this->mock('Doctrine\ORM\AbstractQuery');
     }
 
+    protected function getLogRepository($queryBuilder)
+    {
+        $logRepository = $this->mock('Claroline\CoreBundle\Repository\Log\LogRepository');
+        $logRepository->shouldReceive('defaultQueryBuilderForBadge')->once()->andReturn($queryBuilder);
+
+        return $logRepository;
+    }
+
     public function testValidateRuleDoerActionMatchNoLog()
     {
         $user   = new User();
@@ -60,8 +68,7 @@ class ValidatorTest extends MockeryTestCase
             ->shouldReceive('setParameter')->once()->with(self::CONSTRAINT_DOER_KEY, $user)->andReturn($queryBuilder)
             ->shouldReceive('getQuery')->once()->andReturn($query);
 
-        $logRepository = $this->mock('Claroline\CoreBundle\Repository\Log\LogRepository');
-        $logRepository->shouldReceive('defaultQueryBuilderForBadge')->once()->andReturn($queryBuilder);
+        $logRepository = $this->getLogRepository($queryBuilder);
 
         $ruleValidator = new Validator($logRepository);
 
@@ -90,8 +97,7 @@ class ValidatorTest extends MockeryTestCase
             ->shouldReceive('setParameter')->once()->with(self::CONSTRAINT_DOER_KEY, $user)->andReturn($queryBuilder)
             ->shouldReceive('getQuery')->once()->andReturn($query);
 
-        $logRepository = $this->mock('Claroline\CoreBundle\Repository\Log\LogRepository');
-        $logRepository->shouldReceive('defaultQueryBuilderForBadge')->once()->andReturn($queryBuilder);
+        $logRepository = $this->getLogRepository($queryBuilder);
 
         $ruleValidator = new Validator($logRepository);
 
@@ -120,8 +126,7 @@ class ValidatorTest extends MockeryTestCase
             ->shouldReceive('setParameter')->once()->with(self::CONSTRAINT_DOER_KEY, $user)->andReturn($queryBuilder)
             ->shouldReceive('getQuery')->once()->andReturn($query);
 
-        $logRepository = $this->mock('Claroline\CoreBundle\Repository\Log\LogRepository');
-        $logRepository->shouldReceive('defaultQueryBuilderForBadge')->once()->andReturn($queryBuilder);
+        $logRepository = $this->getLogRepository($queryBuilder);
 
         $ruleValidator = new Validator($logRepository);
 
@@ -160,8 +165,7 @@ class ValidatorTest extends MockeryTestCase
             ->shouldReceive('setParameter')->once()->with(self::CONSTRAINT_DOER_KEY, $user)->andReturn($queryBuilder)
             ->shouldReceive('getQuery')->once()->andReturn($query);
 
-        $logRepository = $this->mock('Claroline\CoreBundle\Repository\Log\LogRepository');
-        $logRepository->shouldReceive('defaultQueryBuilderForBadge')->once()->andReturn($queryBuilder);
+        $logRepository = $this->getLogRepository($queryBuilder);
 
         $ruleValidator = new Validator($logRepository);
 
@@ -200,8 +204,7 @@ class ValidatorTest extends MockeryTestCase
             ->shouldReceive('setParameter')->once()->with(self::CONSTRAINT_DOER_KEY, $user)->andReturn($queryBuilder)
             ->shouldReceive('getQuery')->once()->andReturn($query);
 
-        $logRepository = $this->mock('Claroline\CoreBundle\Repository\Log\LogRepository');
-        $logRepository->shouldReceive('defaultQueryBuilderForBadge')->once()->andReturn($queryBuilder);
+        $logRepository = $this->getLogRepository($queryBuilder);
 
         $ruleValidator = new Validator($logRepository);
 
@@ -229,8 +232,7 @@ class ValidatorTest extends MockeryTestCase
             ->shouldReceive('setParameter')->once()->with(self::CONSTRAINT_RECEIVER_KEY, $user)->andReturn($queryBuilder)
             ->shouldReceive('getQuery')->once()->andReturn($query);
 
-        $logRepository = $this->mock('Claroline\CoreBundle\Repository\Log\LogRepository');
-        $logRepository->shouldReceive('defaultQueryBuilderForBadge')->once()->andReturn($queryBuilder);
+        $logRepository = $this->getLogRepository($queryBuilder);
 
         $ruleValidator = new Validator($logRepository);
 
@@ -259,8 +261,7 @@ class ValidatorTest extends MockeryTestCase
             ->shouldReceive('setParameter')->once()->with(self::CONSTRAINT_RECEIVER_KEY, $user)->andReturn($queryBuilder)
             ->shouldReceive('getQuery')->once()->andReturn($query);
 
-        $logRepository = $this->mock('Claroline\CoreBundle\Repository\Log\LogRepository');
-        $logRepository->shouldReceive('defaultQueryBuilderForBadge')->once()->andReturn($queryBuilder);
+        $logRepository = $this->getLogRepository($queryBuilder);
 
         $ruleValidator = new Validator($logRepository);
 
@@ -290,8 +291,7 @@ class ValidatorTest extends MockeryTestCase
             ->shouldReceive('setMaxResults')->once()->with($rule->getOccurrence())->andReturn($queryBuilder)
             ->shouldReceive('getQuery')->once()->andReturn($query);
 
-        $logRepository = $this->mock('Claroline\CoreBundle\Repository\Log\LogRepository');
-        $logRepository->shouldReceive('defaultQueryBuilderForBadge')->once()->andReturn($queryBuilder);
+        $logRepository = $this->getLogRepository($queryBuilder);
 
         $ruleValidator = new Validator($logRepository);
 
@@ -324,8 +324,7 @@ class ValidatorTest extends MockeryTestCase
             ->shouldReceive('setMaxResults')->once()->with($rule->getOccurrence())->andReturn($queryBuilder)
             ->shouldReceive('getQuery')->once()->andReturn($query);
 
-        $logRepository = $this->mock('Claroline\CoreBundle\Repository\Log\LogRepository');
-        $logRepository->shouldReceive('defaultQueryBuilderForBadge')->once()->andReturn($queryBuilder);
+        $logRepository = $this->getLogRepository($queryBuilder);
 
         $ruleValidator = new Validator($logRepository);
 
@@ -358,8 +357,7 @@ class ValidatorTest extends MockeryTestCase
             ->shouldReceive('setMaxResults')->once()->with($rule->getOccurrence())->andReturn($queryBuilder)
             ->shouldReceive('getQuery')->once()->andReturn($query);
 
-        $logRepository = $this->mock('Claroline\CoreBundle\Repository\Log\LogRepository');
-        $logRepository->shouldReceive('defaultQueryBuilderForBadge')->once()->andReturn($queryBuilder);
+        $logRepository = $this->getLogRepository($queryBuilder);
 
         $ruleValidator = new Validator($logRepository);
 
@@ -389,8 +387,7 @@ class ValidatorTest extends MockeryTestCase
             ->shouldReceive('setParameter')->once()->with(self::CONSTRAINT_DOER_KEY, $user)->andReturn($queryBuilder)
             ->shouldReceive('getQuery')->once()->andReturn($query);
 
-        $logRepository = $this->mock('Claroline\CoreBundle\Repository\Log\LogRepository');
-        $logRepository->shouldReceive('defaultQueryBuilderForBadge')->once()->andReturn($queryBuilder);
+        $logRepository = $this->getLogRepository($queryBuilder);
 
         $ruleValidator = new Validator($logRepository);
 
@@ -424,8 +421,7 @@ class ValidatorTest extends MockeryTestCase
             ->shouldReceive('setParameter')->once()->with(self::CONSTRAINT_DOER_KEY, $user)->andReturn($queryBuilder)
             ->shouldReceive('getQuery')->once()->andReturn($query);
 
-        $logRepository = $this->mock('Claroline\CoreBundle\Repository\Log\LogRepository');
-        $logRepository->shouldReceive('defaultQueryBuilderForBadge')->once()->andReturn($queryBuilder);
+        $logRepository = $this->getLogRepository($queryBuilder);
 
         $ruleValidator = new Validator($logRepository);
 
@@ -459,8 +455,7 @@ class ValidatorTest extends MockeryTestCase
             ->shouldReceive('setParameter')->once()->with(self::CONSTRAINT_DOER_KEY, $user)->andReturn($queryBuilder)
             ->shouldReceive('getQuery')->once()->andReturn($query);
 
-        $logRepository = $this->mock('Claroline\CoreBundle\Repository\Log\LogRepository');
-        $logRepository->shouldReceive('defaultQueryBuilderForBadge')->once()->andReturn($queryBuilder);
+        $logRepository = $this->getLogRepository($queryBuilder);
 
         $ruleValidator = new Validator($logRepository);
 
@@ -493,8 +488,7 @@ class ValidatorTest extends MockeryTestCase
             ->shouldReceive('setParameter')->once()->with(self::CONSTRAINT_DOER_KEY, $user)->andReturn($queryBuilder)
             ->shouldReceive('getQuery')->once()->andReturn($query);
 
-        $logRepository = $this->mock('Claroline\CoreBundle\Repository\Log\LogRepository');
-        $logRepository->shouldReceive('defaultQueryBuilderForBadge')->once()->andReturn($queryBuilder);
+        $logRepository = $this->getLogRepository($queryBuilder);
 
         $ruleValidator = new Validator($logRepository);
 
@@ -527,8 +521,7 @@ class ValidatorTest extends MockeryTestCase
             ->shouldReceive('setParameter')->once()->with(self::CONSTRAINT_DOER_KEY, $user)->andReturn($queryBuilder)
             ->shouldReceive('getQuery')->once()->andReturn($query);
 
-        $logRepository = $this->mock('Claroline\CoreBundle\Repository\Log\LogRepository');
-        $logRepository->shouldReceive('defaultQueryBuilderForBadge')->once()->andReturn($queryBuilder);
+        $logRepository = $this->getLogRepository($queryBuilder);
 
         $ruleValidator = new Validator($logRepository);
 
@@ -561,8 +554,7 @@ class ValidatorTest extends MockeryTestCase
             ->shouldReceive('setParameter')->once()->with(self::CONSTRAINT_DOER_KEY, $user)->andReturn($queryBuilder)
             ->shouldReceive('getQuery')->once()->andReturn($query);
 
-        $logRepository = $this->mock('Claroline\CoreBundle\Repository\Log\LogRepository');
-        $logRepository->shouldReceive('defaultQueryBuilderForBadge')->once()->andReturn($queryBuilder);
+        $logRepository = $this->getLogRepository($queryBuilder);
 
         $ruleValidator = new Validator($logRepository);
 
@@ -595,8 +587,7 @@ class ValidatorTest extends MockeryTestCase
             ->shouldReceive('setParameter')->once()->with(self::CONSTRAINT_DOER_KEY, $user)->andReturn($queryBuilder)
             ->shouldReceive('getQuery')->once()->andReturn($query);
 
-        $logRepository = $this->mock('Claroline\CoreBundle\Repository\Log\LogRepository');
-        $logRepository->shouldReceive('defaultQueryBuilderForBadge')->once()->andReturn($queryBuilder);
+        $logRepository = $this->getLogRepository($queryBuilder);
 
         $ruleValidator = new Validator($logRepository);
 
@@ -629,8 +620,7 @@ class ValidatorTest extends MockeryTestCase
             ->shouldReceive('setParameter')->once()->with(self::CONSTRAINT_DOER_KEY, $user)->andReturn($queryBuilder)
             ->shouldReceive('getQuery')->once()->andReturn($query);
 
-        $logRepository = $this->mock('Claroline\CoreBundle\Repository\Log\LogRepository');
-        $logRepository->shouldReceive('defaultQueryBuilderForBadge')->once()->andReturn($queryBuilder);
+        $logRepository = $this->getLogRepository($queryBuilder);
 
         $ruleValidator = new Validator($logRepository);
 
@@ -663,8 +653,7 @@ class ValidatorTest extends MockeryTestCase
             ->shouldReceive('setParameter')->once()->with(self::CONSTRAINT_DOER_KEY, $user)->andReturn($queryBuilder)
             ->shouldReceive('getQuery')->once()->andReturn($query);
 
-        $logRepository = $this->mock('Claroline\CoreBundle\Repository\Log\LogRepository');
-        $logRepository->shouldReceive('defaultQueryBuilderForBadge')->once()->andReturn($queryBuilder);
+        $logRepository = $this->getLogRepository($queryBuilder);
 
         $ruleValidator = new Validator($logRepository);
 
@@ -697,8 +686,7 @@ class ValidatorTest extends MockeryTestCase
             ->shouldReceive('setParameter')->once()->with(self::CONSTRAINT_DOER_KEY, $user)->andReturn($queryBuilder)
             ->shouldReceive('getQuery')->once()->andReturn($query);
 
-        $logRepository = $this->mock('Claroline\CoreBundle\Repository\Log\LogRepository');
-        $logRepository->shouldReceive('defaultQueryBuilderForBadge')->once()->andReturn($queryBuilder);
+        $logRepository = $this->getLogRepository($queryBuilder);
 
         $ruleValidator = new Validator($logRepository);
 
@@ -731,8 +719,7 @@ class ValidatorTest extends MockeryTestCase
             ->shouldReceive('setParameter')->once()->with(self::CONSTRAINT_DOER_KEY, $user)->andReturn($queryBuilder)
             ->shouldReceive('getQuery')->once()->andReturn($query);
 
-        $logRepository = $this->mock('Claroline\CoreBundle\Repository\Log\LogRepository');
-        $logRepository->shouldReceive('defaultQueryBuilderForBadge')->once()->andReturn($queryBuilder);
+        $logRepository = $this->getLogRepository($queryBuilder);
 
         $ruleValidator = new Validator($logRepository);
 
@@ -765,8 +752,7 @@ class ValidatorTest extends MockeryTestCase
             ->shouldReceive('setParameter')->once()->with(self::CONSTRAINT_DOER_KEY, $user)->andReturn($queryBuilder)
             ->shouldReceive('getQuery')->once()->andReturn($query);
 
-        $logRepository = $this->mock('Claroline\CoreBundle\Repository\Log\LogRepository');
-        $logRepository->shouldReceive('defaultQueryBuilderForBadge')->once()->andReturn($queryBuilder);
+        $logRepository = $this->getLogRepository($queryBuilder);
 
         $ruleValidator = new Validator($logRepository);
 
@@ -798,8 +784,7 @@ class ValidatorTest extends MockeryTestCase
             ->shouldReceive('setParameter')->once()->with(self::CONSTRAINT_DOER_KEY, $user)->andReturn($queryBuilder)
             ->shouldReceive('getQuery')->once()->andReturn($query);
 
-        $logRepository = $this->mock('Claroline\CoreBundle\Repository\Log\LogRepository');
-        $logRepository->shouldReceive('defaultQueryBuilderForBadge')->once()->andReturn($queryBuilder);
+        $logRepository = $this->getLogRepository($queryBuilder);
 
         $ruleValidator = new Validator($logRepository);
 
@@ -832,8 +817,7 @@ class ValidatorTest extends MockeryTestCase
             ->shouldReceive('setParameter')->once()->with(self::CONSTRAINT_DOER_KEY, $user)->andReturn($queryBuilder)
             ->shouldReceive('getQuery')->once()->andReturn($query);
 
-        $logRepository = $this->mock('Claroline\CoreBundle\Repository\Log\LogRepository');
-        $logRepository->shouldReceive('defaultQueryBuilderForBadge')->once()->andReturn($queryBuilder);
+        $logRepository = $this->getLogRepository($queryBuilder);
 
         $ruleValidator = new Validator($logRepository);
 
@@ -866,8 +850,7 @@ class ValidatorTest extends MockeryTestCase
             ->shouldReceive('setParameter')->once()->with(self::CONSTRAINT_DOER_KEY, $user)->andReturn($queryBuilder)
             ->shouldReceive('getQuery')->once()->andReturn($query);
 
-        $logRepository = $this->mock('Claroline\CoreBundle\Repository\Log\LogRepository');
-        $logRepository->shouldReceive('defaultQueryBuilderForBadge')->once()->andReturn($queryBuilder);
+        $logRepository = $this->getLogRepository($queryBuilder);
 
         $ruleValidator = new Validator($logRepository);
 
@@ -915,8 +898,7 @@ class ValidatorTest extends MockeryTestCase
             ->shouldReceive('setParameter')->twice()->with(self::CONSTRAINT_DOER_KEY, $user)->andReturn($queryBuilder)
             ->shouldReceive('getQuery')->twice()->andReturn($query);
 
-        $logRepository = $this->mock('Claroline\CoreBundle\Repository\Log\LogRepository');
-        $logRepository->shouldReceive('defaultQueryBuilderForBadge')->once()->andReturn($queryBuilder);
+        $logRepository = $this->getLogRepository($queryBuilder);
 
         $ruleValidator = new Validator($logRepository);
 
@@ -956,8 +938,7 @@ class ValidatorTest extends MockeryTestCase
             ->shouldReceive('setParameter')->twice()->with(self::CONSTRAINT_DOER_KEY, $user)->andReturn($queryBuilder)
             ->shouldReceive('getQuery')->twice()->andReturn($query);
 
-        $logRepository = $this->mock('Claroline\CoreBundle\Repository\Log\LogRepository');
-        $logRepository->shouldReceive('defaultQueryBuilderForBadge')->once()->andReturn($queryBuilder);
+        $logRepository = $this->getLogRepository($queryBuilder);
 
         $ruleValidator = new Validator($logRepository);
 
@@ -997,8 +978,7 @@ class ValidatorTest extends MockeryTestCase
             ->shouldReceive('setParameter')->twice()->with(self::CONSTRAINT_DOER_KEY, $user)->andReturn($queryBuilder)
             ->shouldReceive('getQuery')->twice()->andReturn($query);
 
-        $logRepository = $this->mock('Claroline\CoreBundle\Repository\Log\LogRepository');
-        $logRepository->shouldReceive('defaultQueryBuilderForBadge')->once()->andReturn($queryBuilder);
+        $logRepository = $this->getLogRepository($queryBuilder);
 
         $ruleValidator = new Validator($logRepository);
 
@@ -1038,8 +1018,7 @@ class ValidatorTest extends MockeryTestCase
             ->shouldReceive('setParameter')->twice()->with(self::CONSTRAINT_DOER_KEY, $user)->andReturn($queryBuilder)
             ->shouldReceive('getQuery')->twice()->andReturn($query);
 
-        $logRepository = $this->mock('Claroline\CoreBundle\Repository\Log\LogRepository');
-        $logRepository->shouldReceive('defaultQueryBuilderForBadge')->once()->andReturn($queryBuilder);
+        $logRepository = $this->getLogRepository($queryBuilder);
 
         $ruleValidator = new Validator($logRepository);
 
