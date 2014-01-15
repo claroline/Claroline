@@ -42,7 +42,7 @@ class ValidatorTest extends MockeryTestCase
     
     protected function getLogRepository($queryBuilder)
     {
-        $logRepository = $this->mock('Claroline\CoreBundle\Repository\Log\LogRepository');
+        $logRepository = $this->logRepository;
         $logRepository->shouldReceive('defaultQueryBuilderForBadge')->once()->andReturn($queryBuilder);
 
         return $logRepository;
