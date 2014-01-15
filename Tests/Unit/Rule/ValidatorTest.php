@@ -28,21 +28,31 @@ class ValidatorTest extends MockeryTestCase
 
     const CONSTRAINT_RECEIVER_WITH   = 'l.receiver = :receiver';
     const CONSTRAINT_RECEIVER_KEY    = 'receiver';
+    
+    protected function getQueryBuilder()
+    {
+        return $this->mock('Doctrine\ORM\QueryBuilder');
+    }
+
+    protected function getQuery()
+    {
+        return $this->mock('Doctrine\ORM\AbstractQuery');
+    }
 
     public function testValidateRuleDoerActionMatchNoLog()
     {
-        $user      = new User();
-        $action    = uniqid();
-        $rule = new BadgeRule();
+        $user   = new User();
+        $action = uniqid();
+        $rule   = new BadgeRule();
         $rule
             ->setAction($action)
             ->setUser($user)
             ->setUserType(0);
 
-        $query = $this->mock('Doctrine\ORM\AbstractQuery');
+        $query = $this->getQuery();
         $query->shouldReceive('getResult')->once()->andReturn(array());
 
-        $queryBuilder = $this->mock('Doctrine\ORM\QueryBuilder');
+        $queryBuilder = $this->getQueryBuilder();
         $queryBuilder
             ->shouldReceive('andWhere')->once()->with(self::CONSTRAINT_ACTION_WITH)->andReturn($queryBuilder)
             ->shouldReceive('andWhere')->once()->with(self::CONSTRAINT_DOER_WITH)->andReturn($queryBuilder)
@@ -69,10 +79,10 @@ class ValidatorTest extends MockeryTestCase
             ->setUser($user)
             ->setUserType(0);
 
-        $query = $this->mock('Doctrine\ORM\AbstractQuery');
+        $query = $this->getQuery();
         $query->shouldReceive('getResult')->once()->andReturn(array($log));
 
-        $queryBuilder = $this->mock('Doctrine\ORM\QueryBuilder');
+        $queryBuilder = $this->getQueryBuilder();
         $queryBuilder
             ->shouldReceive('andWhere')->once()->with(self::CONSTRAINT_ACTION_WITH)->andReturn($queryBuilder)
             ->shouldReceive('andWhere')->once()->with(self::CONSTRAINT_DOER_WITH)->andReturn($queryBuilder)
@@ -99,10 +109,10 @@ class ValidatorTest extends MockeryTestCase
             ->setUserType(0)
             ->setBadge($badge);
 
-        $query = $this->mock('Doctrine\ORM\AbstractQuery');
+        $query = $this->getQuery();
         $query->shouldReceive('getResult')->once()->andReturn(array());
 
-        $queryBuilder = $this->mock('Doctrine\ORM\QueryBuilder');
+        $queryBuilder = $this->getQueryBuilder();
         $queryBuilder
             ->shouldReceive('andWhere')->once()->with(self::CONSTRAINT_ACTION_WITH)->andReturn($queryBuilder)
             ->shouldReceive('andWhere')->once()->with(self::CONSTRAINT_DOER_WITH)->andReturn($queryBuilder)
@@ -139,10 +149,10 @@ class ValidatorTest extends MockeryTestCase
             ->setUserType(0)
             ->setBadge($badge);
 
-        $query = $this->mock('Doctrine\ORM\AbstractQuery');
+        $query = $this->getQuery();
         $query->shouldReceive('getResult')->once()->andReturn(array($log));
 
-        $queryBuilder = $this->mock('Doctrine\ORM\QueryBuilder');
+        $queryBuilder = $this->getQueryBuilder();
         $queryBuilder
             ->shouldReceive('andWhere')->once()->with(self::CONSTRAINT_ACTION_WITH)->andReturn($queryBuilder)
             ->shouldReceive('andWhere')->once()->with(self::CONSTRAINT_DOER_WITH)->andReturn($queryBuilder)
@@ -179,10 +189,10 @@ class ValidatorTest extends MockeryTestCase
             ->setUserType(0)
             ->setBadge($badge);
 
-        $query = $this->mock('Doctrine\ORM\AbstractQuery');
+        $query = $this->getQuery();
         $query->shouldReceive('getResult')->once()->andReturn(array($log));
 
-        $queryBuilder = $this->mock('Doctrine\ORM\QueryBuilder');
+        $queryBuilder = $this->getQueryBuilder();
         $queryBuilder
             ->shouldReceive('andWhere')->once()->with(self::CONSTRAINT_ACTION_WITH)->andReturn($queryBuilder)
             ->shouldReceive('andWhere')->once()->with(self::CONSTRAINT_DOER_WITH)->andReturn($queryBuilder)
@@ -208,10 +218,10 @@ class ValidatorTest extends MockeryTestCase
             ->setUser($user)
             ->setUserType(1);
 
-        $query = $this->mock('Doctrine\ORM\AbstractQuery');
+        $query = $this->getQuery();
         $query->shouldReceive('getResult')->once()->andReturn(array());
 
-        $queryBuilder = $this->mock('Doctrine\ORM\QueryBuilder');
+        $queryBuilder = $this->getQueryBuilder();
         $queryBuilder
             ->shouldReceive('andWhere')->once()->with(self::CONSTRAINT_ACTION_WITH)->andReturn($queryBuilder)
             ->shouldReceive('andWhere')->once()->with(self::CONSTRAINT_RECEIVER_WITH)->andReturn($queryBuilder)
@@ -238,10 +248,10 @@ class ValidatorTest extends MockeryTestCase
             ->setUser($user)
             ->setUserType(1);
 
-        $query = $this->mock('Doctrine\ORM\AbstractQuery');
+        $query = $this->getQuery();
         $query->shouldReceive('getResult')->once()->andReturn(array($log));
 
-        $queryBuilder = $this->mock('Doctrine\ORM\QueryBuilder');
+        $queryBuilder = $this->getQueryBuilder();
         $queryBuilder
             ->shouldReceive('andWhere')->once()->with(self::CONSTRAINT_ACTION_WITH)->andReturn($queryBuilder)
             ->shouldReceive('andWhere')->once()->with(self::CONSTRAINT_RECEIVER_WITH)->andReturn($queryBuilder)
@@ -268,10 +278,10 @@ class ValidatorTest extends MockeryTestCase
             ->setUserType(0)
             ->setOccurrence($occurence = rand(1, PHP_INT_MAX));
 
-        $query = $this->mock('Doctrine\ORM\AbstractQuery');
+        $query = $this->getQuery();
         $query->shouldReceive('getResult')->once()->andReturn(array());
 
-        $queryBuilder = $this->mock('Doctrine\ORM\QueryBuilder');
+        $queryBuilder = $this->getQueryBuilder();
         $queryBuilder
             ->shouldReceive('andWhere')->once()->with(self::CONSTRAINT_ACTION_WITH)->andReturn($queryBuilder)
             ->shouldReceive('andWhere')->once()->with(self::CONSTRAINT_DOER_WITH)->andReturn($queryBuilder)
@@ -302,10 +312,10 @@ class ValidatorTest extends MockeryTestCase
 
         $associatedLogs = array_fill(1, $rule->getOccurrence(), $log);
 
-        $query = $this->mock('Doctrine\ORM\AbstractQuery');
+        $query = $this->getQuery();
         $query->shouldReceive('getResult')->once()->andReturn($associatedLogs);
 
-        $queryBuilder = $this->mock('Doctrine\ORM\QueryBuilder');
+        $queryBuilder = $this->getQueryBuilder();
         $queryBuilder
             ->shouldReceive('andWhere')->once()->with(self::CONSTRAINT_ACTION_WITH)->andReturn($queryBuilder)
             ->shouldReceive('andWhere')->once()->with(self::CONSTRAINT_DOER_WITH)->andReturn($queryBuilder)
@@ -336,10 +346,10 @@ class ValidatorTest extends MockeryTestCase
 
         $associatedLogs = array_fill(1, $rule->getOccurrence() - 1, $log);
 
-        $query = $this->mock('Doctrine\ORM\AbstractQuery');
+        $query = $this->getQuery();
         $query->shouldReceive('getResult')->once()->andReturn($associatedLogs);
 
-        $queryBuilder = $this->mock('Doctrine\ORM\QueryBuilder');
+        $queryBuilder = $this->getQueryBuilder();
         $queryBuilder
             ->shouldReceive('andWhere')->once()->with(self::CONSTRAINT_ACTION_WITH)->andReturn($queryBuilder)
             ->shouldReceive('andWhere')->once()->with(self::CONSTRAINT_DOER_WITH)->andReturn($queryBuilder)
@@ -368,10 +378,10 @@ class ValidatorTest extends MockeryTestCase
             ->setResult(rand(0, PHP_INT_MAX))
             ->setResultComparison(Rule::getResultComparisonTypeValue(Rule::RESULT_EQUAL));
 
-        $query = $this->mock('Doctrine\ORM\AbstractQuery');
+        $query = $this->getQuery();
         $query->shouldReceive('getResult')->once()->andReturn(array());
 
-        $queryBuilder = $this->mock('Doctrine\ORM\QueryBuilder');
+        $queryBuilder = $this->getQueryBuilder();
         $queryBuilder
             ->shouldReceive('andWhere')->once()->with(self::CONSTRAINT_ACTION_WITH)->andReturn($queryBuilder)
             ->shouldReceive('andWhere')->once()->with(self::CONSTRAINT_DOER_WITH)->andReturn($queryBuilder)
@@ -403,10 +413,10 @@ class ValidatorTest extends MockeryTestCase
             ->setResult($result - 1)
             ->setResultComparison(Rule::getResultComparisonTypeValue(Rule::RESULT_EQUAL));
 
-        $query = $this->mock('Doctrine\ORM\AbstractQuery');
+        $query = $this->getQuery();
         $query->shouldReceive('getResult')->once()->andReturn(array($log));
 
-        $queryBuilder = $this->mock('Doctrine\ORM\QueryBuilder');
+        $queryBuilder = $this->getQueryBuilder();
         $queryBuilder
             ->shouldReceive('andWhere')->once()->with(self::CONSTRAINT_ACTION_WITH)->andReturn($queryBuilder)
             ->shouldReceive('andWhere')->once()->with(self::CONSTRAINT_DOER_WITH)->andReturn($queryBuilder)
@@ -438,10 +448,10 @@ class ValidatorTest extends MockeryTestCase
             ->setResult($result)
             ->setResultComparison(Rule::getResultComparisonTypeValue(Rule::RESULT_EQUAL));
 
-        $query = $this->mock('Doctrine\ORM\AbstractQuery');
+        $query = $this->getQuery();
         $query->shouldReceive('getResult')->once()->andReturn(array($log));
 
-        $queryBuilder = $this->mock('Doctrine\ORM\QueryBuilder');
+        $queryBuilder = $this->getQueryBuilder();
         $queryBuilder
             ->shouldReceive('andWhere')->once()->with(self::CONSTRAINT_ACTION_WITH)->andReturn($queryBuilder)
             ->shouldReceive('andWhere')->once()->with(self::CONSTRAINT_DOER_WITH)->andReturn($queryBuilder)
@@ -472,10 +482,10 @@ class ValidatorTest extends MockeryTestCase
             ->setResult(9)
             ->setResultComparison(Rule::getResultComparisonTypeValue(Rule::RESULT_SUPERIOR));
 
-        $query = $this->mock('Doctrine\ORM\AbstractQuery');
+        $query = $this->getQuery();
         $query->shouldReceive('getResult')->once()->andReturn(array($log));
 
-        $queryBuilder = $this->mock('Doctrine\ORM\QueryBuilder');
+        $queryBuilder = $this->getQueryBuilder();
         $queryBuilder
             ->shouldReceive('andWhere')->once()->with(self::CONSTRAINT_ACTION_WITH)->andReturn($queryBuilder)
             ->shouldReceive('andWhere')->once()->with(self::CONSTRAINT_DOER_WITH)->andReturn($queryBuilder)
@@ -506,10 +516,10 @@ class ValidatorTest extends MockeryTestCase
             ->setResult(42)
             ->setResultComparison(Rule::getResultComparisonTypeValue(Rule::RESULT_SUPERIOR));
 
-        $query = $this->mock('Doctrine\ORM\AbstractQuery');
+        $query = $this->getQuery();
         $query->shouldReceive('getResult')->once()->andReturn(array($log));
 
-        $queryBuilder = $this->mock('Doctrine\ORM\QueryBuilder');
+        $queryBuilder = $this->getQueryBuilder();
         $queryBuilder
             ->shouldReceive('andWhere')->once()->with(self::CONSTRAINT_ACTION_WITH)->andReturn($queryBuilder)
             ->shouldReceive('andWhere')->once()->with(self::CONSTRAINT_DOER_WITH)->andReturn($queryBuilder)
@@ -540,10 +550,10 @@ class ValidatorTest extends MockeryTestCase
             ->setResult(12)
             ->setResultComparison(Rule::getResultComparisonTypeValue(Rule::RESULT_SUPERIOR));
 
-        $query = $this->mock('Doctrine\ORM\AbstractQuery');
+        $query = $this->getQuery();
         $query->shouldReceive('getResult')->once()->andReturn(array($log));
 
-        $queryBuilder = $this->mock('Doctrine\ORM\QueryBuilder');
+        $queryBuilder = $this->getQueryBuilder();
         $queryBuilder
             ->shouldReceive('andWhere')->once()->with(self::CONSTRAINT_ACTION_WITH)->andReturn($queryBuilder)
             ->shouldReceive('andWhere')->once()->with(self::CONSTRAINT_DOER_WITH)->andReturn($queryBuilder)
@@ -574,10 +584,10 @@ class ValidatorTest extends MockeryTestCase
             ->setResult(9)
             ->setResultComparison(Rule::getResultComparisonTypeValue(Rule::RESULT_SUPERIOR_EQUAL));
 
-        $query = $this->mock('Doctrine\ORM\AbstractQuery');
+        $query = $this->getQuery();
         $query->shouldReceive('getResult')->once()->andReturn(array($log));
 
-        $queryBuilder = $this->mock('Doctrine\ORM\QueryBuilder');
+        $queryBuilder = $this->getQueryBuilder();
         $queryBuilder
             ->shouldReceive('andWhere')->once()->with(self::CONSTRAINT_ACTION_WITH)->andReturn($queryBuilder)
             ->shouldReceive('andWhere')->once()->with(self::CONSTRAINT_DOER_WITH)->andReturn($queryBuilder)
@@ -608,10 +618,10 @@ class ValidatorTest extends MockeryTestCase
             ->setResult(12)
             ->setResultComparison(Rule::getResultComparisonTypeValue(Rule::RESULT_SUPERIOR_EQUAL));
 
-        $query = $this->mock('Doctrine\ORM\AbstractQuery');
+        $query = $this->getQuery();
         $query->shouldReceive('getResult')->once()->andReturn(array($log));
 
-        $queryBuilder = $this->mock('Doctrine\ORM\QueryBuilder');
+        $queryBuilder = $this->getQueryBuilder();
         $queryBuilder
             ->shouldReceive('andWhere')->once()->with(self::CONSTRAINT_ACTION_WITH)->andReturn($queryBuilder)
             ->shouldReceive('andWhere')->once()->with(self::CONSTRAINT_DOER_WITH)->andReturn($queryBuilder)
@@ -642,10 +652,10 @@ class ValidatorTest extends MockeryTestCase
             ->setResult(12)
             ->setResultComparison(Rule::getResultComparisonTypeValue(Rule::RESULT_SUPERIOR_EQUAL));
 
-        $query = $this->mock('Doctrine\ORM\AbstractQuery');
+        $query = $this->getQuery();
         $query->shouldReceive('getResult')->once()->andReturn(array($log));
 
-        $queryBuilder = $this->mock('Doctrine\ORM\QueryBuilder');
+        $queryBuilder = $this->getQueryBuilder();
         $queryBuilder
             ->shouldReceive('andWhere')->once()->with(self::CONSTRAINT_ACTION_WITH)->andReturn($queryBuilder)
             ->shouldReceive('andWhere')->once()->with(self::CONSTRAINT_DOER_WITH)->andReturn($queryBuilder)
@@ -676,10 +686,10 @@ class ValidatorTest extends MockeryTestCase
             ->setResult(12)
             ->setResultComparison(Rule::getResultComparisonTypeValue(Rule::RESULT_INFERIOR));
 
-        $query = $this->mock('Doctrine\ORM\AbstractQuery');
+        $query = $this->getQuery();
         $query->shouldReceive('getResult')->once()->andReturn(array($log));
 
-        $queryBuilder = $this->mock('Doctrine\ORM\QueryBuilder');
+        $queryBuilder = $this->getQueryBuilder();
         $queryBuilder
             ->shouldReceive('andWhere')->once()->with(self::CONSTRAINT_ACTION_WITH)->andReturn($queryBuilder)
             ->shouldReceive('andWhere')->once()->with(self::CONSTRAINT_DOER_WITH)->andReturn($queryBuilder)
@@ -710,10 +720,10 @@ class ValidatorTest extends MockeryTestCase
             ->setResult(12)
             ->setResultComparison(Rule::getResultComparisonTypeValue(Rule::RESULT_INFERIOR));
 
-        $query = $this->mock('Doctrine\ORM\AbstractQuery');
+        $query = $this->getQuery();
         $query->shouldReceive('getResult')->once()->andReturn(array($log));
 
-        $queryBuilder = $this->mock('Doctrine\ORM\QueryBuilder');
+        $queryBuilder = $this->getQueryBuilder();
         $queryBuilder
             ->shouldReceive('andWhere')->once()->with(self::CONSTRAINT_ACTION_WITH)->andReturn($queryBuilder)
             ->shouldReceive('andWhere')->once()->with(self::CONSTRAINT_DOER_WITH)->andReturn($queryBuilder)
@@ -744,10 +754,10 @@ class ValidatorTest extends MockeryTestCase
             ->setResult(12)
             ->setResultComparison(Rule::getResultComparisonTypeValue(Rule::RESULT_INFERIOR));
 
-        $query = $this->mock('Doctrine\ORM\AbstractQuery');
+        $query = $this->getQuery();
         $query->shouldReceive('getResult')->once()->andReturn(array($log));
 
-        $queryBuilder = $this->mock('Doctrine\ORM\QueryBuilder');
+        $queryBuilder = $this->getQueryBuilder();
         $queryBuilder
             ->shouldReceive('andWhere')->once()->with(self::CONSTRAINT_ACTION_WITH)->andReturn($queryBuilder)
             ->shouldReceive('andWhere')->once()->with(self::CONSTRAINT_DOER_WITH)->andReturn($queryBuilder)
@@ -777,10 +787,10 @@ class ValidatorTest extends MockeryTestCase
             ->setResult(12)
             ->setResultComparison(Rule::getResultComparisonTypeValue(Rule::RESULT_INFERIOR_EQUAL));
 
-        $query = $this->mock('Doctrine\ORM\AbstractQuery');
+        $query = $this->getQuery();
         $query->shouldReceive('getResult')->once()->andReturn(array($log));
 
-        $queryBuilder = $this->mock('Doctrine\ORM\QueryBuilder');
+        $queryBuilder = $this->getQueryBuilder();
         $queryBuilder
             ->shouldReceive('andWhere')->once()->with(self::CONSTRAINT_ACTION_WITH)->andReturn($queryBuilder)
             ->shouldReceive('andWhere')->once()->with(self::CONSTRAINT_DOER_WITH)->andReturn($queryBuilder)
@@ -811,10 +821,10 @@ class ValidatorTest extends MockeryTestCase
             ->setResult(12)
             ->setResultComparison(Rule::getResultComparisonTypeValue(Rule::RESULT_SUPERIOR_EQUAL));
 
-        $query = $this->mock('Doctrine\ORM\AbstractQuery');
+        $query = $this->getQuery();
         $query->shouldReceive('getResult')->once()->andReturn(array($log));
 
-        $queryBuilder = $this->mock('Doctrine\ORM\QueryBuilder');
+        $queryBuilder = $this->getQueryBuilder();
         $queryBuilder
             ->shouldReceive('andWhere')->once()->with(self::CONSTRAINT_ACTION_WITH)->andReturn($queryBuilder)
             ->shouldReceive('andWhere')->once()->with(self::CONSTRAINT_DOER_WITH)->andReturn($queryBuilder)
@@ -845,10 +855,10 @@ class ValidatorTest extends MockeryTestCase
             ->setResult(9)
             ->setResultComparison(Rule::getResultComparisonTypeValue(Rule::RESULT_INFERIOR_EQUAL));
 
-        $query = $this->mock('Doctrine\ORM\AbstractQuery');
+        $query = $this->getQuery();
         $query->shouldReceive('getResult')->once()->andReturn(array($log));
 
-        $queryBuilder = $this->mock('Doctrine\ORM\QueryBuilder');
+        $queryBuilder = $this->getQueryBuilder();
         $queryBuilder
             ->shouldReceive('andWhere')->once()->with(self::CONSTRAINT_ACTION_WITH)->andReturn($queryBuilder)
             ->shouldReceive('andWhere')->once()->with(self::CONSTRAINT_DOER_WITH)->andReturn($queryBuilder)
@@ -893,10 +903,10 @@ class ValidatorTest extends MockeryTestCase
 
         $badge->setRules(array($rule, $rule2));
 
-        $query = $this->mock('Doctrine\ORM\AbstractQuery');
+        $query = $this->getQuery();
         $query->shouldReceive('getResult')->twice()->andReturn(array());
 
-        $queryBuilder = $this->mock('Doctrine\ORM\QueryBuilder');
+        $queryBuilder = $this->getQueryBuilder();
         $queryBuilder
             ->shouldReceive('andWhere')->twice()->with(self::CONSTRAINT_ACTION_WITH)->andReturn($queryBuilder)
             ->shouldReceive('andWhere')->twice()->with(self::CONSTRAINT_DOER_WITH)->andReturn($queryBuilder)
@@ -933,11 +943,11 @@ class ValidatorTest extends MockeryTestCase
 
         $badge->setRules(array($rule, $rule2));
 
-        $query = $this->mock('Doctrine\ORM\AbstractQuery');
+        $query = $this->getQuery();
         $query->shouldReceive('getResult')->once()->andReturn(array($log));
         $query->shouldReceive('getResult')->once()->andReturn(array());
 
-        $queryBuilder = $this->mock('Doctrine\ORM\QueryBuilder');
+        $queryBuilder = $this->getQueryBuilder();
         $queryBuilder
             ->shouldReceive('andWhere')->twice()->with(self::CONSTRAINT_ACTION_WITH)->andReturn($queryBuilder)
             ->shouldReceive('andWhere')->twice()->with(self::CONSTRAINT_DOER_WITH)->andReturn($queryBuilder)
@@ -974,11 +984,11 @@ class ValidatorTest extends MockeryTestCase
 
         $badge->setRules(array($rule, $rule2));
 
-        $query = $this->mock('Doctrine\ORM\AbstractQuery');
+        $query = $this->getQuery();
         $query->shouldReceive('getResult')->once()->andReturn(array());
         $query->shouldReceive('getResult')->once()->andReturn(array($log));
 
-        $queryBuilder = $this->mock('Doctrine\ORM\QueryBuilder');
+        $queryBuilder = $this->getQueryBuilder();
         $queryBuilder
             ->shouldReceive('andWhere')->twice()->with(self::CONSTRAINT_ACTION_WITH)->andReturn($queryBuilder)
             ->shouldReceive('andWhere')->twice()->with(self::CONSTRAINT_DOER_WITH)->andReturn($queryBuilder)
@@ -1015,11 +1025,11 @@ class ValidatorTest extends MockeryTestCase
 
         $badge->setRules(array($rule, $rule2));
 
-        $query = $this->mock('Doctrine\ORM\AbstractQuery');
+        $query = $this->getQuery();
         $query->shouldReceive('getResult')->once()->andReturn(array($log));
         $query->shouldReceive('getResult')->once()->andReturn(array($log));
 
-        $queryBuilder = $this->mock('Doctrine\ORM\QueryBuilder');
+        $queryBuilder = $this->getQueryBuilder();
         $queryBuilder
             ->shouldReceive('andWhere')->twice()->with(self::CONSTRAINT_ACTION_WITH)->andReturn($queryBuilder)
             ->shouldReceive('andWhere')->twice()->with(self::CONSTRAINT_DOER_WITH)->andReturn($queryBuilder)
