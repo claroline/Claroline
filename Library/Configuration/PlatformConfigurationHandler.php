@@ -33,7 +33,7 @@ class PlatformConfigurationHandler
         'locale_language' => 'fr',
         'theme' => 'claroline',
         'default_role' => 'ROLE_USER',
-        'cookie_lifetime' => 0
+        'cookie_lifetime' => 3600
     );
 
     public function __construct(array $configFiles)
