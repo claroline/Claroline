@@ -230,12 +230,20 @@
                                         {{ myQShare.question.user.firstName }} {{ myQShare.question.user.lastName }}
                                     </td>
                                     <td class="classic">
-                                        <a class="btn btn-default" data-toggle="tooltip" title="{{ 'delete' | trans }}"
-                                           href="{{ path('ujm_delete_shared_question', { 'id': myQShare.question.id,
-                                                'pageNow': pagerShared.currentPage, 'maxPage': pagerShared.maxPerPage,
-                                                'nbItem': pagerShared.getNbResults, 'lastPage': pagerShared.getNbPages }) }}">
-                                            <i class="icon-trash"></i>
-                                        </a>
+                                        {% if(shareRight[myQShare.id]) %}
+                                            {% if(questionWithResponse[myQShare.id] == 0) %}
+                                                <a class="btn btn-default" data-toggle="tooltip" title="{{ 'edit' | trans }}" 
+                                                   href="{{ path('ujm_question_edit', { 'id': myQShare.question.id }) }}">
+                                                    <i class="icon-pencil"></i>
+                                                </a>
+                                            {% else %}
+                                                <a class="btn btn-default" data-toggle="tooltip" title="{{ 'edit' | trans }}"
+                                                   href="{{ path('ujm_question_edit', { 'id': myQShare.question.id }) }}"
+                                                   style="color: red;">
+                                                    <i class="icon-pencil"></i>
+                                                </a>
+                                            {% endif %}
+                                        {% endif %}
                                     </td>
                                 </tr>
                             {% endfor %}

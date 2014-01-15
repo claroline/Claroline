@@ -80,6 +80,9 @@ class QuestionController extends Controller
     public function indexAction($pageNow = 0, $pageNowShared = 0, $categoryToFind = '', $titleToFind = '', $resourceId = -1)
     {
         $vars = array();
+        $sharedWithMe = array();
+        $shareRight = array();
+
         $em = $this->getDoctrine()->getManager();
 
         if ($resourceId != -1) {
@@ -136,13 +139,24 @@ class QuestionController extends Controller
         $shared = $em->getRepository('UJMExoBundle:Share')
             ->findBy(array('user' => $uid));
 
-        $sharedWithMe = array();
-
         $end = count($shared);
 
         for ($i = 0; $i < $end; $i++) {
-            $sharedWithMe[] = $em->getRepository('UJMExoBundle:Interaction')
-                ->findOneBy(array('question' => $shared[$i]->getQuestion()->getId()));
+
+            $inter = $em->getRepository('UJMExoBundle:Interaction')
+                    ->findOneBy(array('question' => $shared[$i]->getQuestion()->getId()));
+
+            $sharedWithMe[] = $inter;
+            $shareRight[$inter->getId()] = $shared[$i]->getAllowToModify();
+
+            $response = $em->getRepository('UJMExoBundle:Response')
+                ->findBy(array('interaction' => $inter->getId()));
+
+            if (count($response) > 0) {
+                $questionWithResponse[$inter->getId()] = 1;
+            } else {
+                $questionWithResponse[$inter->getId()] = 0;
+            }
         }
 
         if ($categoryToFind != '' && $titleToFind != '' && $categoryToFind != 'z' && $titleToFind != 'z') {
@@ -181,6 +195,7 @@ class QuestionController extends Controller
         $vars['sharedWithMe']         = $sharedWithMePager;
         $vars['pagerMy']              = $pagerfantaMy;
         $vars['pagerShared']          = $pagerfantaShared;
+        $vars['shareRight']           = $shareRight;
 
         return $this->render('UJMExoBundle:Question:index.html.twig', $vars);
     }
@@ -342,8 +357,13 @@ class QuestionController extends Controller
     public function editAction($exoID, $id, $form = null)
     {
         $question = $this->controlUserQuestion($id);
-
-        if (count($question) > 0) {
+        $share    = $this->controlUserSharedQuestion($id);
+        
+        if(count($share) > 0) {
+            $shareAllowEdit = $share[0]->getAllowToModify();
+        }
+        
+        if ( (count($question) > 0) || ($shareAllowEdit) ) {
             $interaction = $this->getDoctrine()
                 ->getManager()
                 ->getRepository('UJMExoBundle:Interaction')
@@ -492,7 +512,7 @@ class QuestionController extends Controller
                     break;
             }
         } else {
-            return $this->redirect($this->generateUrl('question'));
+            return $this->redirect($this->generateUrl('ujm_question_index'));
         }
     }
 
@@ -1143,48 +1163,31 @@ class QuestionController extends Controller
     {
 
         $request = $this->container->get('request');
-        $creator = $this->container->get('security.context')->getToken()->getUser(); // User who share his question
 
         if ($request->isXmlHttpRequest()) {
             $questionID = $request->request->get('questionID'); // Which question is shared
-            // With which user
-            $userName = $request->request->get('Uname');
-            $userFname = $request->request->get('Ufname');
+
+            $uid = $request->request->get('uid');
+            $allowToModify = $request->request->get('allowToModify');
 
             $em = $this->getDoctrine()->getManager();
-            $matchingName = $em->getRepository('ClarolineCoreBundle:User')->findByName($userName);
+
             $question = $em->getRepository('UJMExoBundle:Question')->findOneBy(array('id' => $questionID));
+            $user     = $em->getRepository('ClarolineCoreBundle:User')->find($uid);
 
-            $end = count($matchingName);
+            $share = $em->getRepository('UJMExoBundle:Share')->findOneBy(array('user' => $user, 'question' => $question));
 
-            for ($i = 0; $i < $end; $i++) {
-                if ($matchingName[$i]->getFirstName() == $userFname) {
-                    $user = $matchingName[$i];
-                    break;
-                }
+            if (!$share) {
+                $share = new Share($user, $question);
             }
 
-            // Share the question
-            $share = new Share($user, $question);
-            $share->setAllowToModify(0); // False
+            $share->setAllowToModify($allowToModify);
 
-            if ($creator->getId() == $user->getId()) {
-                $self = true;
-                $message = 'self;';
-            } else {
-                $self = false;
-                $message = 'yes;';
-            }
+            $em->persist($share);
+            $em->flush();
 
-            // If not shared with him-self or already shared, can persist the sharing else display message
-            if ($this->alreadySharedAction($share, $em) == false && $self == false) {
-                $em->persist($share);
-                $em->flush();
+            return new \Symfony\Component\HttpFoundation\Response('no;'.$this->generateUrl('ujm_question_index'));
 
-                return new \Symfony\Component\HttpFoundation\Response('no;'.$this->generateUrl('ujm_question_index'));
-            } else {
-                return new \Symfony\Component\HttpFoundation\Response($message);
-            }
         }
     }
 
