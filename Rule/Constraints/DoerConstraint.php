@@ -23,11 +23,7 @@ class DoerConstraint extends AbstractConstraint
      */
     public function validate()
     {
-        if(0 < count($this->getAssociatedLogs())) {
-            return true;
-        }
-
-        return false;
+        return 0 < count($this->getAssociatedLogs());
     }
 
     /**
