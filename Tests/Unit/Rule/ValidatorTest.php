@@ -48,6 +48,60 @@ class ValidatorTest extends MockeryTestCase
         return $logRepository;
     }
 
+    protected function getQueryBuilderForDoerAndActionConstraint($action, $user, $query)
+    {
+        $queryBuilder = $this->queryBuilder;
+        $queryBuilder
+            ->shouldReceive('andWhere')->once()->with(self::CONSTRAINT_ACTION_WITH)->andReturn($queryBuilder)
+            ->shouldReceive('andWhere')->once()->with(self::CONSTRAINT_DOER_WITH)->andReturn($queryBuilder)
+            ->shouldReceive('setParameter')->once()->with(self::CONSTRAINT_ACTION_KEY, $action)->andReturn($queryBuilder)
+            ->shouldReceive('setParameter')->once()->with(self::CONSTRAINT_DOER_KEY, $user)->andReturn($queryBuilder)
+            ->shouldReceive('getQuery')->once()->andReturn($query);
+
+        return $queryBuilder;
+    }
+
+    protected function getQueryBuilderForReceiverAndActionConstraint($action, $user, $query)
+    {
+        $queryBuilder = $this->queryBuilder;
+        $queryBuilder
+            ->shouldReceive('andWhere')->once()->with(self::CONSTRAINT_ACTION_WITH)->andReturn($queryBuilder)
+            ->shouldReceive('andWhere')->once()->with(self::CONSTRAINT_RECEIVER_WITH)->andReturn($queryBuilder)
+            ->shouldReceive('setParameter')->once()->with(self::CONSTRAINT_ACTION_KEY, $action)->andReturn($queryBuilder)
+            ->shouldReceive('setParameter')->once()->with(self::CONSTRAINT_RECEIVER_KEY, $user)->andReturn($queryBuilder)
+            ->shouldReceive('getQuery')->once()->andReturn($query);
+
+        return $queryBuilder;
+    }
+
+    protected function getQueryBuilderForDoerActionAndOccurenceConstraint($action, $user, $rule, $query)
+    {
+        $queryBuilder = $this->queryBuilder;
+        $queryBuilder
+            ->shouldReceive('andWhere')->once()->with(self::CONSTRAINT_ACTION_WITH)->andReturn($queryBuilder)
+            ->shouldReceive('andWhere')->once()->with(self::CONSTRAINT_DOER_WITH)->andReturn($queryBuilder)
+            ->shouldReceive('setParameter')->once()->with(self::CONSTRAINT_ACTION_KEY, $action)->andReturn($queryBuilder)
+            ->shouldReceive('setParameter')->once()->with(self::CONSTRAINT_DOER_KEY, $user)->andReturn($queryBuilder)
+            ->shouldReceive('setMaxResults')->once()->with($rule->getOccurrence())->andReturn($queryBuilder)
+            ->shouldReceive('getQuery')->once()->andReturn($query);
+
+        return $queryBuilder;
+    }
+
+    protected function getQueryBuilderForDoerTwoActionAndOccurenceConstraint($action, $action2, $user, $rule, $query)
+    {
+        $queryBuilder = $this->queryBuilder;
+        $queryBuilder
+            ->shouldReceive('andWhere')->twice()->with(self::CONSTRAINT_ACTION_WITH)->andReturn($queryBuilder)
+            ->shouldReceive('andWhere')->twice()->with(self::CONSTRAINT_DOER_WITH)->andReturn($queryBuilder)
+            ->shouldReceive('setParameter')->once()->with(self::CONSTRAINT_ACTION_KEY, $action)->andReturn($queryBuilder)
+            ->shouldReceive('setParameter')->once()->with(self::CONSTRAINT_ACTION_KEY, $action2)->andReturn($queryBuilder)
+            ->shouldReceive('setParameter')->twice()->with(self::CONSTRAINT_DOER_KEY, $user)->andReturn($queryBuilder)
+            ->shouldReceive('getQuery')->twice()->andReturn($query);
+
+        return $queryBuilder;
+    }
+
     public function testValidateRuleDoerActionMatchNoLog()
     {
         $user   = new User();
@@ -58,16 +112,9 @@ class ValidatorTest extends MockeryTestCase
             ->setUser($user)
             ->setUserType(0);
 
-        $query = $this->query;
-        $query->shouldReceive('getResult')->once()->andReturn(array());
+        $this->query->shouldReceive('getResult')->once()->andReturn(array());
 
-        $queryBuilder = $this->queryBuilder;
-        $queryBuilder
-            ->shouldReceive('andWhere')->once()->with(self::CONSTRAINT_ACTION_WITH)->andReturn($queryBuilder)
-            ->shouldReceive('andWhere')->once()->with(self::CONSTRAINT_DOER_WITH)->andReturn($queryBuilder)
-            ->shouldReceive('setParameter')->once()->with(self::CONSTRAINT_ACTION_KEY, $action)->andReturn($queryBuilder)
-            ->shouldReceive('setParameter')->once()->with(self::CONSTRAINT_DOER_KEY, $user)->andReturn($queryBuilder)
-            ->shouldReceive('getQuery')->once()->andReturn($query);
+        $queryBuilder = $this->getQueryBuilderForDoerAndActionConstraint($action, $user, $this->query);
 
         $logRepository = $this->getLogRepository($queryBuilder);
 
@@ -87,16 +134,9 @@ class ValidatorTest extends MockeryTestCase
             ->setUser($user)
             ->setUserType(0);
 
-        $query = $this->query;
-        $query->shouldReceive('getResult')->once()->andReturn(array($log));
+        $this->query->shouldReceive('getResult')->once()->andReturn(array($log));
 
-        $queryBuilder = $this->queryBuilder;
-        $queryBuilder
-            ->shouldReceive('andWhere')->once()->with(self::CONSTRAINT_ACTION_WITH)->andReturn($queryBuilder)
-            ->shouldReceive('andWhere')->once()->with(self::CONSTRAINT_DOER_WITH)->andReturn($queryBuilder)
-            ->shouldReceive('setParameter')->once()->with(self::CONSTRAINT_ACTION_KEY, $action)->andReturn($queryBuilder)
-            ->shouldReceive('setParameter')->once()->with(self::CONSTRAINT_DOER_KEY, $user)->andReturn($queryBuilder)
-            ->shouldReceive('getQuery')->once()->andReturn($query);
+        $queryBuilder = $this->getQueryBuilderForDoerAndActionConstraint($action, $user, $this->query);
 
         $logRepository = $this->getLogRepository($queryBuilder);
 
@@ -116,16 +156,9 @@ class ValidatorTest extends MockeryTestCase
             ->setUserType(0)
             ->setBadge($badge);
 
-        $query = $this->query;
-        $query->shouldReceive('getResult')->once()->andReturn(array());
+        $this->query->shouldReceive('getResult')->once()->andReturn(array());
 
-        $queryBuilder = $this->queryBuilder;
-        $queryBuilder
-            ->shouldReceive('andWhere')->once()->with(self::CONSTRAINT_ACTION_WITH)->andReturn($queryBuilder)
-            ->shouldReceive('andWhere')->once()->with(self::CONSTRAINT_DOER_WITH)->andReturn($queryBuilder)
-            ->shouldReceive('setParameter')->once()->with(self::CONSTRAINT_ACTION_KEY, $action)->andReturn($queryBuilder)
-            ->shouldReceive('setParameter')->once()->with(self::CONSTRAINT_DOER_KEY, $user)->andReturn($queryBuilder)
-            ->shouldReceive('getQuery')->once()->andReturn($query);
+        $queryBuilder = $this->getQueryBuilderForDoerAndActionConstraint($action, $user, $this->query);
 
         $logRepository = $this->getLogRepository($queryBuilder);
 
@@ -155,16 +188,9 @@ class ValidatorTest extends MockeryTestCase
             ->setUserType(0)
             ->setBadge($badge);
 
-        $query = $this->query;
-        $query->shouldReceive('getResult')->once()->andReturn(array($log));
+        $this->query->shouldReceive('getResult')->once()->andReturn(array($log));
 
-        $queryBuilder = $this->queryBuilder;
-        $queryBuilder
-            ->shouldReceive('andWhere')->once()->with(self::CONSTRAINT_ACTION_WITH)->andReturn($queryBuilder)
-            ->shouldReceive('andWhere')->once()->with(self::CONSTRAINT_DOER_WITH)->andReturn($queryBuilder)
-            ->shouldReceive('setParameter')->once()->with(self::CONSTRAINT_ACTION_KEY, $action)->andReturn($queryBuilder)
-            ->shouldReceive('setParameter')->once()->with(self::CONSTRAINT_DOER_KEY, $user)->andReturn($queryBuilder)
-            ->shouldReceive('getQuery')->once()->andReturn($query);
+        $queryBuilder = $this->getQueryBuilderForDoerAndActionConstraint($action, $user, $this->query);
 
         $logRepository = $this->getLogRepository($queryBuilder);
 
@@ -194,16 +220,9 @@ class ValidatorTest extends MockeryTestCase
             ->setUserType(0)
             ->setBadge($badge);
 
-        $query = $this->query;
-        $query->shouldReceive('getResult')->once()->andReturn(array($log));
+        $this->query->shouldReceive('getResult')->once()->andReturn(array($log));
 
-        $queryBuilder = $this->queryBuilder;
-        $queryBuilder
-            ->shouldReceive('andWhere')->once()->with(self::CONSTRAINT_ACTION_WITH)->andReturn($queryBuilder)
-            ->shouldReceive('andWhere')->once()->with(self::CONSTRAINT_DOER_WITH)->andReturn($queryBuilder)
-            ->shouldReceive('setParameter')->once()->with(self::CONSTRAINT_ACTION_KEY, $action)->andReturn($queryBuilder)
-            ->shouldReceive('setParameter')->once()->with(self::CONSTRAINT_DOER_KEY, $user)->andReturn($queryBuilder)
-            ->shouldReceive('getQuery')->once()->andReturn($query);
+        $queryBuilder = $this->getQueryBuilderForDoerAndActionConstraint($action, $user, $this->query);
 
         $logRepository = $this->getLogRepository($queryBuilder);
 
@@ -222,16 +241,9 @@ class ValidatorTest extends MockeryTestCase
             ->setUser($user)
             ->setUserType(1);
 
-        $query = $this->query;
-        $query->shouldReceive('getResult')->once()->andReturn(array());
+        $this->query->shouldReceive('getResult')->once()->andReturn(array());
 
-        $queryBuilder = $this->queryBuilder;
-        $queryBuilder
-            ->shouldReceive('andWhere')->once()->with(self::CONSTRAINT_ACTION_WITH)->andReturn($queryBuilder)
-            ->shouldReceive('andWhere')->once()->with(self::CONSTRAINT_RECEIVER_WITH)->andReturn($queryBuilder)
-            ->shouldReceive('setParameter')->once()->with(self::CONSTRAINT_ACTION_KEY, $action)->andReturn($queryBuilder)
-            ->shouldReceive('setParameter')->once()->with(self::CONSTRAINT_RECEIVER_KEY, $user)->andReturn($queryBuilder)
-            ->shouldReceive('getQuery')->once()->andReturn($query);
+        $queryBuilder = $this->getQueryBuilderForReceiverAndActionConstraint($action, $user, $this->query);
 
         $logRepository = $this->getLogRepository($queryBuilder);
 
@@ -251,16 +263,9 @@ class ValidatorTest extends MockeryTestCase
             ->setUser($user)
             ->setUserType(1);
 
-        $query = $this->query;
-        $query->shouldReceive('getResult')->once()->andReturn(array($log));
+        $this->query->shouldReceive('getResult')->once()->andReturn(array($log));
 
-        $queryBuilder = $this->queryBuilder;
-        $queryBuilder
-            ->shouldReceive('andWhere')->once()->with(self::CONSTRAINT_ACTION_WITH)->andReturn($queryBuilder)
-            ->shouldReceive('andWhere')->once()->with(self::CONSTRAINT_RECEIVER_WITH)->andReturn($queryBuilder)
-            ->shouldReceive('setParameter')->once()->with(self::CONSTRAINT_ACTION_KEY, $action)->andReturn($queryBuilder)
-            ->shouldReceive('setParameter')->once()->with(self::CONSTRAINT_RECEIVER_KEY, $user)->andReturn($queryBuilder)
-            ->shouldReceive('getQuery')->once()->andReturn($query);
+        $queryBuilder = $this->getQueryBuilderForReceiverAndActionConstraint($action, $user, $this->query);
 
         $logRepository = $this->getLogRepository($queryBuilder);
 
@@ -280,17 +285,9 @@ class ValidatorTest extends MockeryTestCase
             ->setUserType(0)
             ->setOccurrence($occurence = rand(1, PHP_INT_MAX));
 
-        $query = $this->query;
-        $query->shouldReceive('getResult')->once()->andReturn(array());
+        $this->query->shouldReceive('getResult')->once()->andReturn(array());
 
-        $queryBuilder = $this->queryBuilder;
-        $queryBuilder
-            ->shouldReceive('andWhere')->once()->with(self::CONSTRAINT_ACTION_WITH)->andReturn($queryBuilder)
-            ->shouldReceive('andWhere')->once()->with(self::CONSTRAINT_DOER_WITH)->andReturn($queryBuilder)
-            ->shouldReceive('setParameter')->once()->with(self::CONSTRAINT_ACTION_KEY, $action)->andReturn($queryBuilder)
-            ->shouldReceive('setParameter')->once()->with(self::CONSTRAINT_DOER_KEY, $user)->andReturn($queryBuilder)
-            ->shouldReceive('setMaxResults')->once()->with($rule->getOccurrence())->andReturn($queryBuilder)
-            ->shouldReceive('getQuery')->once()->andReturn($query);
+        $queryBuilder = $this->getQueryBuilderForDoerActionAndOccurenceConstraint($action, $user, $rule, $this->query);
 
         $logRepository = $this->getLogRepository($queryBuilder);
 
@@ -313,17 +310,9 @@ class ValidatorTest extends MockeryTestCase
 
         $associatedLogs = array_fill(1, $rule->getOccurrence(), $log);
 
-        $query = $this->query;
-        $query->shouldReceive('getResult')->once()->andReturn($associatedLogs);
+        $this->query->shouldReceive('getResult')->once()->andReturn($associatedLogs);
 
-        $queryBuilder = $this->queryBuilder;
-        $queryBuilder
-            ->shouldReceive('andWhere')->once()->with(self::CONSTRAINT_ACTION_WITH)->andReturn($queryBuilder)
-            ->shouldReceive('andWhere')->once()->with(self::CONSTRAINT_DOER_WITH)->andReturn($queryBuilder)
-            ->shouldReceive('setParameter')->once()->with(self::CONSTRAINT_ACTION_KEY, $action)->andReturn($queryBuilder)
-            ->shouldReceive('setParameter')->once()->with(self::CONSTRAINT_DOER_KEY, $user)->andReturn($queryBuilder)
-            ->shouldReceive('setMaxResults')->once()->with($rule->getOccurrence())->andReturn($queryBuilder)
-            ->shouldReceive('getQuery')->once()->andReturn($query);
+        $queryBuilder = $this->getQueryBuilderForDoerActionAndOccurenceConstraint($action, $user, $rule, $this->query);
 
         $logRepository = $this->getLogRepository($queryBuilder);
 
@@ -346,17 +335,9 @@ class ValidatorTest extends MockeryTestCase
 
         $associatedLogs = array_fill(1, $rule->getOccurrence() - 1, $log);
 
-        $query = $this->query;
-        $query->shouldReceive('getResult')->once()->andReturn($associatedLogs);
+        $this->query->shouldReceive('getResult')->once()->andReturn($associatedLogs);
 
-        $queryBuilder = $this->queryBuilder;
-        $queryBuilder
-            ->shouldReceive('andWhere')->once()->with(self::CONSTRAINT_ACTION_WITH)->andReturn($queryBuilder)
-            ->shouldReceive('andWhere')->once()->with(self::CONSTRAINT_DOER_WITH)->andReturn($queryBuilder)
-            ->shouldReceive('setParameter')->once()->with(self::CONSTRAINT_ACTION_KEY, $action)->andReturn($queryBuilder)
-            ->shouldReceive('setParameter')->once()->with(self::CONSTRAINT_DOER_KEY, $user)->andReturn($queryBuilder)
-            ->shouldReceive('setMaxResults')->once()->with($rule->getOccurrence())->andReturn($queryBuilder)
-            ->shouldReceive('getQuery')->once()->andReturn($query);
+        $queryBuilder = $this->getQueryBuilderForDoerActionAndOccurenceConstraint($action, $user, $rule, $this->query);
 
         $logRepository = $this->getLogRepository($queryBuilder);
 
@@ -377,16 +358,9 @@ class ValidatorTest extends MockeryTestCase
             ->setResult(rand(0, PHP_INT_MAX))
             ->setResultComparison(Rule::getResultComparisonTypeValue(Rule::RESULT_EQUAL));
 
-        $query = $this->query;
-        $query->shouldReceive('getResult')->once()->andReturn(array());
+        $this->query->shouldReceive('getResult')->once()->andReturn(array());
 
-        $queryBuilder = $this->queryBuilder;
-        $queryBuilder
-            ->shouldReceive('andWhere')->once()->with(self::CONSTRAINT_ACTION_WITH)->andReturn($queryBuilder)
-            ->shouldReceive('andWhere')->once()->with(self::CONSTRAINT_DOER_WITH)->andReturn($queryBuilder)
-            ->shouldReceive('setParameter')->once()->with(self::CONSTRAINT_ACTION_KEY, $action)->andReturn($queryBuilder)
-            ->shouldReceive('setParameter')->once()->with(self::CONSTRAINT_DOER_KEY, $user)->andReturn($queryBuilder)
-            ->shouldReceive('getQuery')->once()->andReturn($query);
+        $queryBuilder = $this->getQueryBuilderForDoerAndActionConstraint($action, $user, $this->query);
 
         $logRepository = $this->getLogRepository($queryBuilder);
 
@@ -411,16 +385,9 @@ class ValidatorTest extends MockeryTestCase
             ->setResult($result - 1)
             ->setResultComparison(Rule::getResultComparisonTypeValue(Rule::RESULT_EQUAL));
 
-        $query = $this->query;
-        $query->shouldReceive('getResult')->once()->andReturn(array($log));
+        $this->query->shouldReceive('getResult')->once()->andReturn(array($log));
 
-        $queryBuilder = $this->queryBuilder;
-        $queryBuilder
-            ->shouldReceive('andWhere')->once()->with(self::CONSTRAINT_ACTION_WITH)->andReturn($queryBuilder)
-            ->shouldReceive('andWhere')->once()->with(self::CONSTRAINT_DOER_WITH)->andReturn($queryBuilder)
-            ->shouldReceive('setParameter')->once()->with(self::CONSTRAINT_ACTION_KEY, $action)->andReturn($queryBuilder)
-            ->shouldReceive('setParameter')->once()->with(self::CONSTRAINT_DOER_KEY, $user)->andReturn($queryBuilder)
-            ->shouldReceive('getQuery')->once()->andReturn($query);
+        $queryBuilder = $this->getQueryBuilderForDoerAndActionConstraint($action, $user, $this->query);
 
         $logRepository = $this->getLogRepository($queryBuilder);
 
@@ -445,16 +412,9 @@ class ValidatorTest extends MockeryTestCase
             ->setResult($result)
             ->setResultComparison(Rule::getResultComparisonTypeValue(Rule::RESULT_EQUAL));
 
-        $query = $this->query;
-        $query->shouldReceive('getResult')->once()->andReturn(array($log));
+        $this->query->shouldReceive('getResult')->once()->andReturn(array($log));
 
-        $queryBuilder = $this->queryBuilder;
-        $queryBuilder
-            ->shouldReceive('andWhere')->once()->with(self::CONSTRAINT_ACTION_WITH)->andReturn($queryBuilder)
-            ->shouldReceive('andWhere')->once()->with(self::CONSTRAINT_DOER_WITH)->andReturn($queryBuilder)
-            ->shouldReceive('setParameter')->once()->with(self::CONSTRAINT_ACTION_KEY, $action)->andReturn($queryBuilder)
-            ->shouldReceive('setParameter')->once()->with(self::CONSTRAINT_DOER_KEY, $user)->andReturn($queryBuilder)
-            ->shouldReceive('getQuery')->once()->andReturn($query);
+        $queryBuilder = $this->getQueryBuilderForDoerAndActionConstraint($action, $user, $this->query);
 
         $logRepository = $this->getLogRepository($queryBuilder);
 
@@ -478,16 +438,9 @@ class ValidatorTest extends MockeryTestCase
             ->setResult(9)
             ->setResultComparison(Rule::getResultComparisonTypeValue(Rule::RESULT_SUPERIOR));
 
-        $query = $this->query;
-        $query->shouldReceive('getResult')->once()->andReturn(array($log));
+        $this->query->shouldReceive('getResult')->once()->andReturn(array($log));
 
-        $queryBuilder = $this->queryBuilder;
-        $queryBuilder
-            ->shouldReceive('andWhere')->once()->with(self::CONSTRAINT_ACTION_WITH)->andReturn($queryBuilder)
-            ->shouldReceive('andWhere')->once()->with(self::CONSTRAINT_DOER_WITH)->andReturn($queryBuilder)
-            ->shouldReceive('setParameter')->once()->with(self::CONSTRAINT_ACTION_KEY, $action)->andReturn($queryBuilder)
-            ->shouldReceive('setParameter')->once()->with(self::CONSTRAINT_DOER_KEY, $user)->andReturn($queryBuilder)
-            ->shouldReceive('getQuery')->once()->andReturn($query);
+        $queryBuilder = $this->getQueryBuilderForDoerAndActionConstraint($action, $user, $this->query);
 
         $logRepository = $this->getLogRepository($queryBuilder);
 
@@ -511,16 +464,9 @@ class ValidatorTest extends MockeryTestCase
             ->setResult(42)
             ->setResultComparison(Rule::getResultComparisonTypeValue(Rule::RESULT_SUPERIOR));
 
-        $query = $this->query;
-        $query->shouldReceive('getResult')->once()->andReturn(array($log));
+        $this->query->shouldReceive('getResult')->once()->andReturn(array($log));
 
-        $queryBuilder = $this->queryBuilder;
-        $queryBuilder
-            ->shouldReceive('andWhere')->once()->with(self::CONSTRAINT_ACTION_WITH)->andReturn($queryBuilder)
-            ->shouldReceive('andWhere')->once()->with(self::CONSTRAINT_DOER_WITH)->andReturn($queryBuilder)
-            ->shouldReceive('setParameter')->once()->with(self::CONSTRAINT_ACTION_KEY, $action)->andReturn($queryBuilder)
-            ->shouldReceive('setParameter')->once()->with(self::CONSTRAINT_DOER_KEY, $user)->andReturn($queryBuilder)
-            ->shouldReceive('getQuery')->once()->andReturn($query);
+        $queryBuilder = $this->getQueryBuilderForDoerAndActionConstraint($action, $user, $this->query);
 
         $logRepository = $this->getLogRepository($queryBuilder);
 
@@ -544,16 +490,9 @@ class ValidatorTest extends MockeryTestCase
             ->setResult(12)
             ->setResultComparison(Rule::getResultComparisonTypeValue(Rule::RESULT_SUPERIOR));
 
-        $query = $this->query;
-        $query->shouldReceive('getResult')->once()->andReturn(array($log));
+        $this->query->shouldReceive('getResult')->once()->andReturn(array($log));
 
-        $queryBuilder = $this->queryBuilder;
-        $queryBuilder
-            ->shouldReceive('andWhere')->once()->with(self::CONSTRAINT_ACTION_WITH)->andReturn($queryBuilder)
-            ->shouldReceive('andWhere')->once()->with(self::CONSTRAINT_DOER_WITH)->andReturn($queryBuilder)
-            ->shouldReceive('setParameter')->once()->with(self::CONSTRAINT_ACTION_KEY, $action)->andReturn($queryBuilder)
-            ->shouldReceive('setParameter')->once()->with(self::CONSTRAINT_DOER_KEY, $user)->andReturn($queryBuilder)
-            ->shouldReceive('getQuery')->once()->andReturn($query);
+        $queryBuilder = $this->getQueryBuilderForDoerAndActionConstraint($action, $user, $this->query);
 
         $logRepository = $this->getLogRepository($queryBuilder);
 
@@ -577,16 +516,9 @@ class ValidatorTest extends MockeryTestCase
             ->setResult(9)
             ->setResultComparison(Rule::getResultComparisonTypeValue(Rule::RESULT_SUPERIOR_EQUAL));
 
-        $query = $this->query;
-        $query->shouldReceive('getResult')->once()->andReturn(array($log));
+        $this->query->shouldReceive('getResult')->once()->andReturn(array($log));
 
-        $queryBuilder = $this->queryBuilder;
-        $queryBuilder
-            ->shouldReceive('andWhere')->once()->with(self::CONSTRAINT_ACTION_WITH)->andReturn($queryBuilder)
-            ->shouldReceive('andWhere')->once()->with(self::CONSTRAINT_DOER_WITH)->andReturn($queryBuilder)
-            ->shouldReceive('setParameter')->once()->with(self::CONSTRAINT_ACTION_KEY, $action)->andReturn($queryBuilder)
-            ->shouldReceive('setParameter')->once()->with(self::CONSTRAINT_DOER_KEY, $user)->andReturn($queryBuilder)
-            ->shouldReceive('getQuery')->once()->andReturn($query);
+        $queryBuilder = $this->getQueryBuilderForDoerAndActionConstraint($action, $user, $this->query);
 
         $logRepository = $this->getLogRepository($queryBuilder);
 
@@ -610,16 +542,9 @@ class ValidatorTest extends MockeryTestCase
             ->setResult(12)
             ->setResultComparison(Rule::getResultComparisonTypeValue(Rule::RESULT_SUPERIOR_EQUAL));
 
-        $query = $this->query;
-        $query->shouldReceive('getResult')->once()->andReturn(array($log));
+        $this->query->shouldReceive('getResult')->once()->andReturn(array($log));
 
-        $queryBuilder = $this->queryBuilder;
-        $queryBuilder
-            ->shouldReceive('andWhere')->once()->with(self::CONSTRAINT_ACTION_WITH)->andReturn($queryBuilder)
-            ->shouldReceive('andWhere')->once()->with(self::CONSTRAINT_DOER_WITH)->andReturn($queryBuilder)
-            ->shouldReceive('setParameter')->once()->with(self::CONSTRAINT_ACTION_KEY, $action)->andReturn($queryBuilder)
-            ->shouldReceive('setParameter')->once()->with(self::CONSTRAINT_DOER_KEY, $user)->andReturn($queryBuilder)
-            ->shouldReceive('getQuery')->once()->andReturn($query);
+        $queryBuilder = $this->getQueryBuilderForDoerAndActionConstraint($action, $user, $this->query);
 
         $logRepository = $this->getLogRepository($queryBuilder);
 
@@ -643,16 +568,9 @@ class ValidatorTest extends MockeryTestCase
             ->setResult(12)
             ->setResultComparison(Rule::getResultComparisonTypeValue(Rule::RESULT_SUPERIOR_EQUAL));
 
-        $query = $this->query;
-        $query->shouldReceive('getResult')->once()->andReturn(array($log));
+        $this->query->shouldReceive('getResult')->once()->andReturn(array($log));
 
-        $queryBuilder = $this->queryBuilder;
-        $queryBuilder
-            ->shouldReceive('andWhere')->once()->with(self::CONSTRAINT_ACTION_WITH)->andReturn($queryBuilder)
-            ->shouldReceive('andWhere')->once()->with(self::CONSTRAINT_DOER_WITH)->andReturn($queryBuilder)
-            ->shouldReceive('setParameter')->once()->with(self::CONSTRAINT_ACTION_KEY, $action)->andReturn($queryBuilder)
-            ->shouldReceive('setParameter')->once()->with(self::CONSTRAINT_DOER_KEY, $user)->andReturn($queryBuilder)
-            ->shouldReceive('getQuery')->once()->andReturn($query);
+        $queryBuilder = $this->getQueryBuilderForDoerAndActionConstraint($action, $user, $this->query);
 
         $logRepository = $this->getLogRepository($queryBuilder);
 
@@ -676,16 +594,9 @@ class ValidatorTest extends MockeryTestCase
             ->setResult(12)
             ->setResultComparison(Rule::getResultComparisonTypeValue(Rule::RESULT_INFERIOR));
 
-        $query = $this->query;
-        $query->shouldReceive('getResult')->once()->andReturn(array($log));
+        $this->query->shouldReceive('getResult')->once()->andReturn(array($log));
 
-        $queryBuilder = $this->queryBuilder;
-        $queryBuilder
-            ->shouldReceive('andWhere')->once()->with(self::CONSTRAINT_ACTION_WITH)->andReturn($queryBuilder)
-            ->shouldReceive('andWhere')->once()->with(self::CONSTRAINT_DOER_WITH)->andReturn($queryBuilder)
-            ->shouldReceive('setParameter')->once()->with(self::CONSTRAINT_ACTION_KEY, $action)->andReturn($queryBuilder)
-            ->shouldReceive('setParameter')->once()->with(self::CONSTRAINT_DOER_KEY, $user)->andReturn($queryBuilder)
-            ->shouldReceive('getQuery')->once()->andReturn($query);
+        $queryBuilder = $this->getQueryBuilderForDoerAndActionConstraint($action, $user, $this->query);
 
         $logRepository = $this->getLogRepository($queryBuilder);
 
@@ -709,16 +620,9 @@ class ValidatorTest extends MockeryTestCase
             ->setResult(12)
             ->setResultComparison(Rule::getResultComparisonTypeValue(Rule::RESULT_INFERIOR));
 
-        $query = $this->query;
-        $query->shouldReceive('getResult')->once()->andReturn(array($log));
+        $this->query->shouldReceive('getResult')->once()->andReturn(array($log));
 
-        $queryBuilder = $this->queryBuilder;
-        $queryBuilder
-            ->shouldReceive('andWhere')->once()->with(self::CONSTRAINT_ACTION_WITH)->andReturn($queryBuilder)
-            ->shouldReceive('andWhere')->once()->with(self::CONSTRAINT_DOER_WITH)->andReturn($queryBuilder)
-            ->shouldReceive('setParameter')->once()->with(self::CONSTRAINT_ACTION_KEY, $action)->andReturn($queryBuilder)
-            ->shouldReceive('setParameter')->once()->with(self::CONSTRAINT_DOER_KEY, $user)->andReturn($queryBuilder)
-            ->shouldReceive('getQuery')->once()->andReturn($query);
+        $queryBuilder = $this->getQueryBuilderForDoerAndActionConstraint($action, $user, $this->query);
 
         $logRepository = $this->getLogRepository($queryBuilder);
 
@@ -742,16 +646,9 @@ class ValidatorTest extends MockeryTestCase
             ->setResult(12)
             ->setResultComparison(Rule::getResultComparisonTypeValue(Rule::RESULT_INFERIOR));
 
-        $query = $this->query;
-        $query->shouldReceive('getResult')->once()->andReturn(array($log));
+        $this->query->shouldReceive('getResult')->once()->andReturn(array($log));
 
-        $queryBuilder = $this->queryBuilder;
-        $queryBuilder
-            ->shouldReceive('andWhere')->once()->with(self::CONSTRAINT_ACTION_WITH)->andReturn($queryBuilder)
-            ->shouldReceive('andWhere')->once()->with(self::CONSTRAINT_DOER_WITH)->andReturn($queryBuilder)
-            ->shouldReceive('setParameter')->once()->with(self::CONSTRAINT_ACTION_KEY, $action)->andReturn($queryBuilder)
-            ->shouldReceive('setParameter')->once()->with(self::CONSTRAINT_DOER_KEY, $user)->andReturn($queryBuilder)
-            ->shouldReceive('getQuery')->once()->andReturn($query);
+        $queryBuilder = $this->getQueryBuilderForDoerAndActionConstraint($action, $user, $this->query);
 
         $logRepository = $this->getLogRepository($queryBuilder);
 
@@ -774,16 +671,9 @@ class ValidatorTest extends MockeryTestCase
             ->setResult(12)
             ->setResultComparison(Rule::getResultComparisonTypeValue(Rule::RESULT_INFERIOR_EQUAL));
 
-        $query = $this->query;
-        $query->shouldReceive('getResult')->once()->andReturn(array($log));
+        $this->query->shouldReceive('getResult')->once()->andReturn(array($log));
 
-        $queryBuilder = $this->queryBuilder;
-        $queryBuilder
-            ->shouldReceive('andWhere')->once()->with(self::CONSTRAINT_ACTION_WITH)->andReturn($queryBuilder)
-            ->shouldReceive('andWhere')->once()->with(self::CONSTRAINT_DOER_WITH)->andReturn($queryBuilder)
-            ->shouldReceive('setParameter')->once()->with(self::CONSTRAINT_ACTION_KEY, $action)->andReturn($queryBuilder)
-            ->shouldReceive('setParameter')->once()->with(self::CONSTRAINT_DOER_KEY, $user)->andReturn($queryBuilder)
-            ->shouldReceive('getQuery')->once()->andReturn($query);
+        $queryBuilder = $this->getQueryBuilderForDoerAndActionConstraint($action, $user, $this->query);
 
         $logRepository = $this->getLogRepository($queryBuilder);
 
@@ -807,16 +697,9 @@ class ValidatorTest extends MockeryTestCase
             ->setResult(12)
             ->setResultComparison(Rule::getResultComparisonTypeValue(Rule::RESULT_SUPERIOR_EQUAL));
 
-        $query = $this->query;
-        $query->shouldReceive('getResult')->once()->andReturn(array($log));
+        $this->query->shouldReceive('getResult')->once()->andReturn(array($log));
 
-        $queryBuilder = $this->queryBuilder;
-        $queryBuilder
-            ->shouldReceive('andWhere')->once()->with(self::CONSTRAINT_ACTION_WITH)->andReturn($queryBuilder)
-            ->shouldReceive('andWhere')->once()->with(self::CONSTRAINT_DOER_WITH)->andReturn($queryBuilder)
-            ->shouldReceive('setParameter')->once()->with(self::CONSTRAINT_ACTION_KEY, $action)->andReturn($queryBuilder)
-            ->shouldReceive('setParameter')->once()->with(self::CONSTRAINT_DOER_KEY, $user)->andReturn($queryBuilder)
-            ->shouldReceive('getQuery')->once()->andReturn($query);
+        $queryBuilder = $this->getQueryBuilderForDoerAndActionConstraint($action, $user, $this->query);
 
         $logRepository = $this->getLogRepository($queryBuilder);
 
@@ -840,16 +723,9 @@ class ValidatorTest extends MockeryTestCase
             ->setResult(9)
             ->setResultComparison(Rule::getResultComparisonTypeValue(Rule::RESULT_INFERIOR_EQUAL));
 
-        $query = $this->query;
-        $query->shouldReceive('getResult')->once()->andReturn(array($log));
+        $this->query->shouldReceive('getResult')->once()->andReturn(array($log));
 
-        $queryBuilder = $this->queryBuilder;
-        $queryBuilder
-            ->shouldReceive('andWhere')->once()->with(self::CONSTRAINT_ACTION_WITH)->andReturn($queryBuilder)
-            ->shouldReceive('andWhere')->once()->with(self::CONSTRAINT_DOER_WITH)->andReturn($queryBuilder)
-            ->shouldReceive('setParameter')->once()->with(self::CONSTRAINT_ACTION_KEY, $action)->andReturn($queryBuilder)
-            ->shouldReceive('setParameter')->once()->with(self::CONSTRAINT_DOER_KEY, $user)->andReturn($queryBuilder)
-            ->shouldReceive('getQuery')->once()->andReturn($query);
+        $queryBuilder = $this->getQueryBuilderForDoerAndActionConstraint($action, $user, $this->query);
 
         $logRepository = $this->getLogRepository($queryBuilder);
 
@@ -887,17 +763,9 @@ class ValidatorTest extends MockeryTestCase
 
         $badge->setRules(array($rule, $rule2));
 
-        $query = $this->query;
-        $query->shouldReceive('getResult')->twice()->andReturn(array());
+        $this->query->shouldReceive('getResult')->twice()->andReturn(array());
 
-        $queryBuilder = $this->queryBuilder;
-        $queryBuilder
-            ->shouldReceive('andWhere')->twice()->with(self::CONSTRAINT_ACTION_WITH)->andReturn($queryBuilder)
-            ->shouldReceive('andWhere')->twice()->with(self::CONSTRAINT_DOER_WITH)->andReturn($queryBuilder)
-            ->shouldReceive('setParameter')->once()->with(self::CONSTRAINT_ACTION_KEY, $action)->andReturn($queryBuilder)
-            ->shouldReceive('setParameter')->once()->with(self::CONSTRAINT_ACTION_KEY, $action2)->andReturn($queryBuilder)
-            ->shouldReceive('setParameter')->twice()->with(self::CONSTRAINT_DOER_KEY, $user)->andReturn($queryBuilder)
-            ->shouldReceive('getQuery')->twice()->andReturn($query);
+        $queryBuilder = $this->getQueryBuilderForDoerTwoActionAndOccurenceConstraint($action, $action2, $user, $rule, $this->query);
 
         $logRepository = $this->getLogRepository($queryBuilder);
 
@@ -926,18 +794,10 @@ class ValidatorTest extends MockeryTestCase
 
         $badge->setRules(array($rule, $rule2));
 
-        $query = $this->query;
-        $query->shouldReceive('getResult')->once()->andReturn(array($log));
-        $query->shouldReceive('getResult')->once()->andReturn(array());
+        $this->query->shouldReceive('getResult')->once()->andReturn(array($log));
+        $this->query->shouldReceive('getResult')->once()->andReturn(array());
 
-        $queryBuilder = $this->queryBuilder;
-        $queryBuilder
-            ->shouldReceive('andWhere')->twice()->with(self::CONSTRAINT_ACTION_WITH)->andReturn($queryBuilder)
-            ->shouldReceive('andWhere')->twice()->with(self::CONSTRAINT_DOER_WITH)->andReturn($queryBuilder)
-            ->shouldReceive('setParameter')->once()->with(self::CONSTRAINT_ACTION_KEY, $action)->andReturn($queryBuilder)
-            ->shouldReceive('setParameter')->once()->with(self::CONSTRAINT_ACTION_KEY, $action2)->andReturn($queryBuilder)
-            ->shouldReceive('setParameter')->twice()->with(self::CONSTRAINT_DOER_KEY, $user)->andReturn($queryBuilder)
-            ->shouldReceive('getQuery')->twice()->andReturn($query);
+        $queryBuilder = $this->getQueryBuilderForDoerTwoActionAndOccurenceConstraint($action, $action2, $user, $rule, $this->query);
 
         $logRepository = $this->getLogRepository($queryBuilder);
 
@@ -966,18 +826,10 @@ class ValidatorTest extends MockeryTestCase
 
         $badge->setRules(array($rule, $rule2));
 
-        $query = $this->query;
-        $query->shouldReceive('getResult')->once()->andReturn(array());
-        $query->shouldReceive('getResult')->once()->andReturn(array($log));
+        $this->query->shouldReceive('getResult')->once()->andReturn(array());
+        $this->query->shouldReceive('getResult')->once()->andReturn(array($log));
 
-        $queryBuilder = $this->queryBuilder;
-        $queryBuilder
-            ->shouldReceive('andWhere')->twice()->with(self::CONSTRAINT_ACTION_WITH)->andReturn($queryBuilder)
-            ->shouldReceive('andWhere')->twice()->with(self::CONSTRAINT_DOER_WITH)->andReturn($queryBuilder)
-            ->shouldReceive('setParameter')->once()->with(self::CONSTRAINT_ACTION_KEY, $action)->andReturn($queryBuilder)
-            ->shouldReceive('setParameter')->once()->with(self::CONSTRAINT_ACTION_KEY, $action2)->andReturn($queryBuilder)
-            ->shouldReceive('setParameter')->twice()->with(self::CONSTRAINT_DOER_KEY, $user)->andReturn($queryBuilder)
-            ->shouldReceive('getQuery')->twice()->andReturn($query);
+        $queryBuilder = $this->getQueryBuilderForDoerTwoActionAndOccurenceConstraint($action, $action2, $user, $rule, $this->query);
 
         $logRepository = $this->getLogRepository($queryBuilder);
 
@@ -1006,18 +858,10 @@ class ValidatorTest extends MockeryTestCase
 
         $badge->setRules(array($rule, $rule2));
 
-        $query = $this->query;
-        $query->shouldReceive('getResult')->once()->andReturn(array($log));
-        $query->shouldReceive('getResult')->once()->andReturn(array($log));
+        $this->query->shouldReceive('getResult')->once()->andReturn(array($log));
+        $this->query->shouldReceive('getResult')->once()->andReturn(array($log));
 
-        $queryBuilder = $this->queryBuilder;
-        $queryBuilder
-            ->shouldReceive('andWhere')->twice()->with(self::CONSTRAINT_ACTION_WITH)->andReturn($queryBuilder)
-            ->shouldReceive('andWhere')->twice()->with(self::CONSTRAINT_DOER_WITH)->andReturn($queryBuilder)
-            ->shouldReceive('setParameter')->once()->with(self::CONSTRAINT_ACTION_KEY, $action)->andReturn($queryBuilder)
-            ->shouldReceive('setParameter')->once()->with(self::CONSTRAINT_ACTION_KEY, $action2)->andReturn($queryBuilder)
-            ->shouldReceive('setParameter')->twice()->with(self::CONSTRAINT_DOER_KEY, $user)->andReturn($queryBuilder)
-            ->shouldReceive('getQuery')->twice()->andReturn($query);
+        $queryBuilder = $this->getQueryBuilderForDoerTwoActionAndOccurenceConstraint($action, $action2, $user, $rule, $this->query);
 
         $logRepository = $this->getLogRepository($queryBuilder);
 
