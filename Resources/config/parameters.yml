@@ -14,6 +14,8 @@ parameters:
     
     # Form types
     innova_path.form.type.path.class: Innova\PathBundle\Form\Type\PathType
+    innova_path.form.type.non_digital_resource.class: Innova\PathBundle\Form\Type\NonDigitalResourceType
     
     # Form handlers
     innova_path.form.handler.path.class: Innova\PathBundle\Form\Handler\PathHandler
+    innova_path.form.handler.non_digital_resource.class: Innova\PathBundle\Form\Handler\NonDigitalResourceHandler
