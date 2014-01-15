@@ -82,7 +82,7 @@ class BadgeManager
         $userBadge       = $badgeRepository->findUserBadge($badge, $user);
 
         if (null === $userBadge) {
-            try{
+            try {
                 $userBadge = new UserBadge();
                 $userBadge
                     ->setBadge($badge)
@@ -96,7 +96,7 @@ class BadgeManager
                 $this->entityManager->flush();
 
                 $this->dispatchBadgeAwardingEvent($badge, $user);
-            } catch(\Exception $exception){
+            } catch(\Exception $exception) {
                 throw $exception;
             }
         }
