@@ -13,6 +13,7 @@
 {% block content %}
     {% include 'InnovaPathBundle:Editor:components/breadcrumbs.html.twig' with {workspace: workspace} %}
 
+    {{ form_start(form, {'attr': {'class': 'form-horizontal'}}) }}
     <div ng-cloak="" ng-app="EditorApp" class="path-editor">
         <div ng-controller="MainCtrl">
 {#             <div class="alerts" ng-controller="AlertCtrl">#}
@@ -45,6 +46,7 @@
             </div>
         </div>
     </div>
+    {{ form_end(form) }}
 {% endblock %}
 
 {% block javascripts %}
@@ -106,7 +108,7 @@
     
     <script type="text/javascript">
         // TODO : find more beautiful
-        EditorApp.pathId = "{{ pathId }}";
+        EditorApp.pathId = "{{ form.vars.value.id }}";
         EditorApp.workspaceId = "{{ workspace.id }}";
         EditorApp.webDir = "{{ asset('bundles/innovapath/') }}";
     </script>

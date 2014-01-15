@@ -2,7 +2,7 @@
 
 namespace Innova\PathBundle\Manager;
 
-use Doctrine\ORM\EntityManager;
+use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\SecurityContext;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -17,11 +17,13 @@ use Innova\PathBundle\Entity\Path;
  */
 class PathManager
 {
+    const DEFAULT_NAME = 'My path';
+    
     /**
      * Current entity manage for data persist
-     * @var \Doctrine\ORM\EntityManagerEntity Manager $em
+     * @var \Doctrine\Common\Persistence\ObjectManager $om
      */
-    protected $em;
+    protected $om;
     
     /**
      * Current request
@@ -65,14 +67,14 @@ class PathManager
      * @param SecurityContext $securityContext
      */
     public function __construct(
-        EntityManager             $entityManager, 
+        ObjectManager             $objectManager, 
         SecurityContext           $securityContext, 
         ResourceManager           $resourceManager, 
         NonDigitalResourceManager $nonDigitalResourceManager,
         StepManager               $stepManager
     )
     {
-        $this->em = $entityManager;
+        $this->om = $objectManager;
         $this->resourceManager = $resourceManager;
         $this->stepManager = $stepManager;
         $this->security = $securityContext;
@@ -91,7 +93,20 @@ class PathManager
     public function setRequest(Request $request = null)
     {
         $this->request = $request;
+        
         return $this;
+    }
+    
+    public function initNewPath($name = null)
+    {
+        $newPath = new Path();
+        if (empty($name)) {
+            $name = static::DEFAULT_NAME;
+        }
+        
+        $newPath->setName($name);
+        
+        return $newPath;
     }
     
     /**
@@ -104,12 +119,13 @@ class PathManager
         $newPath->setName($this->request->get('pathName'));
         $newPath->setStructure($this->request->get('structure'));
         $newPath->setDescription($this->request->get('pathDescription'));
-        $this->em->persist($newPath);
-        $this->em->flush();
+        
+        $this->om->persist($newPath);
+        $this->om->flush();
 
-        $resourceType = $this->em->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findOneByName("innova_path");
-        $workspace = $this->em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->findOneById($this->request->get('workspaceId'));
-        $parent = $this->em->getRepository('ClarolineCoreBundle:Resource\ResourceNode')->findWorkspaceRoot($workspace);
+        $resourceType = $this->om->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findOneByName("innova_path");
+        $workspace = $this->om->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->findOneById($this->request->get('workspaceId'));
+        $parent = $this->om->getRepository('ClarolineCoreBundle:Resource\ResourceNode')->findWorkspaceRoot($workspace);
         
         $path = $this->resourceManager->create($newPath, $resourceType, $this->user, $workspace, $parent, null);
         
@@ -127,22 +143,22 @@ class PathManager
         $pathId = null;
         
         // Load current path
-        $path = $this->em->getRepository('InnovaPathBundle:Path')->findOneByResourceNode($this->request->get('id'));
+        $path = $this->om->getRepository('InnovaPathBundle:Path')->findOneByResourceNode($this->request->get('id'));
         if ($path) {
             // Path found
             // Update resource node 
             $resourceNode = $path->getResourceNode();
             $resourceNode->setName($this->request->get('pathName'));
-            $this->em->persist($resourceNode);
+            $this->om->persist($resourceNode);
         
             // Update path
             $path->setStructure($this->request->get('structure'));
             $path->setDescription($this->request->get('pathDescription'));
             $path->setModified(true);
-            $this->em->persist($path);
+            $this->om->persist($path);
             
             // Write data into DB
-            $this->em->flush();
+            $this->om->flush();
         
             $pathId = $resourceNode->getId();
         }
@@ -165,7 +181,7 @@ class PathManager
         $isDeleted = false;
         
         // Load current path
-        $path = $this->em->getRepository('InnovaPathBundle:Path')->findOneByResourceNode($this->request->get('id'));
+        $path = $this->om->getRepository('InnovaPathBundle:Path')->findOneByResourceNode($this->request->get('id'));
         if (!empty($path)) {
             // Path found
             $pathCreator = $path->getResourceNode()->getCreator();
@@ -173,8 +189,8 @@ class PathManager
             // Check if current user can delete this path
             if ($pathCreator == $this->user) {
                 // User can delete current path
-                $this->em->remove($path->getResourceNode());
-                $this->em->flush();
+                $this->om->remove($path->getResourceNode());
+                $this->om->flush();
             
                 $isDeleted = true;
             }
@@ -206,7 +222,7 @@ class PathManager
         $dql .= 'WHERE r.creator = :user '; // Current User
         $dql .= '  AND w.id = :workspaceId '; // Current Workspace
         $dql .= '  AND r.name = :pathName ';
-        $query = $this->em->createQuery($dql);
+        $query = $this->om->createQuery($dql);
         
         // Set query parameters
         $query->setParameter('user', $this->user);
@@ -234,11 +250,11 @@ class PathManager
 
         $paths = array();
         if (is_object($this->user)){
-            $paths["me"] = $this->em->getRepository('InnovaPathBundle:Path')->findAllByWorkspaceByUser($workspace, $this->user);
-            $paths["others"] = $this->em->getRepository('InnovaPathBundle:Path')->findAllByWorkspaceByNotUser($workspace, $this->user);
+            $paths["me"] = $this->om->getRepository('InnovaPathBundle:Path')->findAllByWorkspaceByUser($workspace, $this->user);
+            $paths["others"] = $this->om->getRepository('InnovaPathBundle:Path')->findAllByWorkspaceByNotUser($workspace, $this->user);
         }
         else{
-            $paths["others"] = $this->em->getRepository('InnovaPathBundle:Path')->findAllByWorkspace($workspace);
+            $paths["others"] = $this->om->getRepository('InnovaPathBundle:Path')->findAllByWorkspace($workspace);
         }
         
         return $paths;
@@ -252,10 +268,10 @@ class PathManager
     {
         // Récupération vars HTTP
         $pathId = $this->request->get('pathId');
-        $path = $this->em->getRepository('InnovaPathBundle:Path')->findOneByResourceNode($pathId);
+        $path = $this->om->getRepository('InnovaPathBundle:Path')->findOneByResourceNode($pathId);
 
         // On récupère la liste des steps avant modification pour supprimer ceux qui ne sont plus utilisés. TO DO : suppression
-        $steps = $this->em->getRepository('InnovaPathBundle:Step')->findByPath($path->getId());
+        $steps = $this->om->getRepository('InnovaPathBundle:Step')->findByPath($path->getId());
         // initialisation array() de steps à ne pas supprimer. Sera rempli dans la function JSONParser
         $stepsToNotDelete = array();
         $excludedResourcesToResourceNodes = array();
@@ -266,7 +282,7 @@ class PathManager
 
         // Récupération Workspace courant
         $workspaceId = $this->request->get('workspaceId');
-        $workspace = $this->em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->findOneById($workspaceId);
+        $workspace = $this->om->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->findOneById($workspaceId);
 
         // lancement récursion
         $this->JSONParser($json_root_steps, $this->user, $workspace, $path->getResourceNode()->getParent(), 0, null, 0, $path, $stepsToNotDelete, $excludedResourcesToResourceNodes);
@@ -274,7 +290,7 @@ class PathManager
         // On nettoie la base des steps qui n'ont pas été réutilisé et les step2resourceNode associés
         foreach ($steps as $step) {
            if (!in_array($step->getId(),$stepsToNotDelete)) {
-                $this->em->remove($step);
+                $this->om->remove($step);
             }
         }
 
@@ -283,7 +299,7 @@ class PathManager
         $path->setStructure($json);
         $path->setDeployed(true);
         $path->setModified(false);
-        $this->em->flush();
+        $this->om->flush();
 
         return true;
     }
@@ -344,15 +360,15 @@ class PathManager
             // Suppression des Step2ResourceNode inutilisés
             foreach ($currentStep2resourceNodes as $currentStep2resourceNode) {
                 if (!in_array($currentStep2resourceNode->getId(),$step2resourceNodesToNotDelete)) {
-                    $this->em->remove($currentStep2resourceNode);
+                    $this->om->remove($currentStep2resourceNode);
                 }
             }
             
-            //$this->em->flush();
+            //$this->om->flush();
             // récursivité sur les enfants possibles.
             $this->JSONParser($step->children, $user, $workspace, $pathsDirectory, $lvl+1, $currentStep->getId(), 0, $path, $stepsToNotDelete, $excludedResourcesToResourceNodes);
         }
 
-        $this->em->flush();
+        $this->om->flush();
     }
 }

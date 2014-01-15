@@ -3,7 +3,7 @@ services:
     innova_path.manager.path:
         class: %innova_path.manager.path.class%
         arguments:
-            entityManager:             @doctrine.orm.entity_manager
+            objectManager:             @doctrine.orm.entity_manager
             securityContext:           @security.context
             resourceManager:           @claroline.manager.resource_manager
             nonDigitalResourceManager: @innova_path.manager.non_digital_resource

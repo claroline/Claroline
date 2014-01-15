@@ -39,3 +39,13 @@ services:
         class: %innova_path.controller.path_player.class%
         calls:
           - [setContainer, ["@service_container"]]
+          
+    # Editor controller
+    innova_path.controller.path_editor:
+        class: %innova_path.controller.path_editor.class%
+        arguments:
+            router:      @router
+            formFactory: @form.factory
+            pathManager: @innova_path.manager.path
+            pathHandler: @innova_path.form.handler.path
+        scope: request

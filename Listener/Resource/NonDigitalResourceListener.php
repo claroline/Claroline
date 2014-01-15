@@ -1,6 +1,6 @@
 <?php
 
-namespace Innova\PathBundle\Listener;
+namespace Innova\PathBundle\Listener\Resource;
 
 use Symfony\Component\DependencyInjection\ContainerAware;
 use Symfony\Component\HttpFoundation\RedirectResponse;

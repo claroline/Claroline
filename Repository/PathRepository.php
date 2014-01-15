@@ -10,32 +10,49 @@ class PathRepository extends EntityRepository
 {
     public function findAllByWorkspaceByUser(AbstractWorkspace $workspace, UserInterface $user)
     {
-        $dql = "SELECT p FROM Innova\PathBundle\Entity\Path p LEFT JOIN p.resourceNode rn WHERE rn.workspace = :workspace AND rn.creator = :user ORDER BY rn.name ASC";
-
-        $query = $this->_em->createQuery($dql)
-                ->setParameter('workspace', $workspace)
-                ->setParameter('user', $user);
+        $dql  = 'SELECT p ';
+        $dql .= 'FROM Innova\PathBundle\Entity\Path p ';
+        $dql .= 'LEFT JOIN p.resourceNode rn ';
+        $dql .= 'WHERE rn.workspace = :workspace ';
+        $dql .= '  AND rn.creator = :user ';
+        $dql .= 'ORDER BY rn.name ASC ';
+        
+        $query = $this->_em->createQuery($dql);
+        
+        $query->setParameter('workspace', $workspace);
+        $query->setParameter('user', $user);
 
         return $query->getResult();
     }
 
     public function findAllByWorkspaceByNotUser(AbstractWorkspace $workspace, UserInterface $user)
     {
-        $dql = "SELECT p FROM Innova\PathBundle\Entity\Path p LEFT JOIN p.resourceNode rn WHERE rn.workspace = :workspace AND rn.creator != :user ORDER BY rn.name ASC";
-
-        $query = $this->_em->createQuery($dql)
-                ->setParameter('workspace', $workspace)
-                ->setParameter('user', $user);
+        $dql  = 'SELECT p ';
+        $dql .= 'FROM Innova\PathBundle\Entity\Path p ';
+        $dql .= 'LEFT JOIN p.resourceNode rn ';
+        $dql .= 'WHERE rn.workspace = :workspace ';
+        $dql .= '  AND rn.creator != :user ';
+        $dql .= 'ORDER BY rn.name ASC';
+        
+        $query = $this->_em->createQuery($dql);
+        
+        $query->setParameter('workspace', $workspace);
+        $query->setParameter('user', $user);
 
         return $query->getResult();
     }
 
     public function findAllByWorkspace(AbstractWorkspace $workspace)
     {
-        $dql = "SELECT p FROM Innova\PathBundle\Entity\Path p LEFT JOIN p.resourceNode rn WHERE rn.workspace = :workspace ORDER BY rn.name ASC";
-
-        $query = $this->_em->createQuery($dql)
-                ->setParameter('workspace', $workspace);
+        $dql  = 'SELECT p ';
+        $dql .= 'FROM Innova\PathBundle\Entity\Path p ';
+        $dql .= 'LEFT JOIN p.resourceNode rn ';
+        $dql .= 'WHERE rn.workspace = :workspace ';
+        $dql .= 'ORDER BY rn.name ASC';
+        
+        $query = $this->_em->createQuery($dql);
+        
+        $query->setParameter('workspace', $workspace);
 
         return $query->getResult();
     }

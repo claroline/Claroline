@@ -7,7 +7,7 @@ services:
       - { name: kernel.event_listener, event: open_tool_workspace_innova_path, method: onWorkspaceOpen }
 
   innova.listener.non_digital_resource:
-    class: Innova\PathBundle\Listener\NonDigitalResourceListener
+    class: Innova\PathBundle\Listener\Resource\NonDigitalResourceListener
     calls:
       - [setContainer, ["@service_container"]]
     tags:
@@ -18,7 +18,7 @@ services:
       - { name: kernel.event_listener, event: copy_innova_non_digital_resource, method: onNonDigitalResourceCopy }
 
   innova.listener.path:
-    class: Innova\PathBundle\Listener\PathListener
+    class: Innova\PathBundle\Listener\Resource\PathListener
     calls:
       - [setContainer, ["@service_container"]]
     tags:

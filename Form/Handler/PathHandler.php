@@ -73,7 +73,9 @@ class PathHandler
             $this->form->handleRequest($this->request);
             
             if ( $this->form->isValid() ) {
-                $message = $this->form->getData();
+                $newPath = $this->form->getData();
+                
+                
                 
 //                 $parent = $message->getParent();
 //                 if (!empty($parent)) {

@@ -6,6 +6,7 @@ create: Création
 
 # d
 delete_step: Supprimer l'étape
+description_help: Saisir une courte description du parcours
 
 # e
 edit_step: Modifier l'étape

@@ -20,10 +20,12 @@ class PathType extends AbstractType
         return 'innova_path';
     }
     
-    public function getDefaultOptions()
+    public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
-        return array (
+        $resolver->setDefaults(array (
             'data_class' => 'Innova\PathBundle\Entity\Path',
-        );
+        ));
+        
+        return $this;
     }
 } 
