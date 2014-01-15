@@ -213,7 +213,7 @@ class QuestionController extends Controller
         }
 
         $question = $this->controlUserQuestion($id);
-        $sharedQuestion = $this->controlUserSharedQuestion($id);
+        $sharedQuestion = $this->container->get('ujm.exercise_services')->controlUserSharedQuestion($id);
 
         if (count($question) > 0 || count($sharedQuestion) > 0) {
             $interaction = $this->getDoctrine()
@@ -357,7 +357,7 @@ class QuestionController extends Controller
     public function editAction($exoID, $id, $form = null)
     {
         $question = $this->controlUserQuestion($id);
-        $share    = $this->controlUserSharedQuestion($id);
+        $share    = $this->container->get('ujm.exercise_services')->controlUserSharedQuestion($id);
         
         if(count($share) > 0) {
             $shareAllowEdit = $share[0]->getAllowToModify();
@@ -1773,22 +1773,6 @@ class QuestionController extends Controller
             ->getControlOwnerQuestion($user->getId(), $questionID);
 
         return $question;
-    }
-
-    /**
-     * To control the User's rights to this shared question
-     *
-     */
-    private function controlUserSharedQuestion($questionID)
-    {
-        $user = $this->container->get('security.context')->getToken()->getUser();
-
-        $questions = $this->getDoctrine()
-            ->getManager()
-            ->getRepository('UJMExoBundle:Share')
-            ->getControlSharedQuestion($user->getId(), $questionID);
-
-        return $questions;
     }
 
     /**

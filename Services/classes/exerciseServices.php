@@ -702,4 +702,21 @@ class exerciseServices
 
         return $resp;
     }
+    
+    /**
+     * To control the User's rights to this shared question
+     *
+     */
+    public function controlUserSharedQuestion($questionID)
+    {
+        $user = $this->securityContext->getToken()->getUser();
+
+        $questions = $this->doctrine
+                          ->getManager()
+                          ->getRepository('UJMExoBundle:Share')
+                          ->getControlSharedQuestion($user->getId(), $questionID);
+
+        return $questions;
+    }
+    
 }

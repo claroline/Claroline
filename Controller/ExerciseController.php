@@ -188,6 +188,8 @@ class ExerciseController extends Controller
      */
     public function showQuestionsAction($id, $pageNow, $categoryToFind, $titleToFind, $displayAll)
     {
+        $user = $this->container->get('security.context')->getToken()->getUser();
+        $allowEdit = array();
         $em = $this->getDoctrine()->getManager();
         $exercise = $em->getRepository('UJMExoBundle:Exercise')->find($id);
         $this->checkAccess($exercise);
@@ -219,6 +221,18 @@ class ExerciseController extends Controller
                 } else {
                     $questionWithResponse[] = 0;
                 }
+                
+                $share = $this->container->get('ujm.exercise_services')->controlUserSharedQuestion(
+                        $interaction->getQuestion()->getId());
+                
+                if ($user->getId() == $interaction->getQuestion()->getUser()->getId()) {
+                    $allowEdit[$interaction->getId()] = 1;
+                } else if(count($share) > 0) {
+                    $allowEdit[$interaction->getId()] = $share[0]->getAllowToModify();
+                } else {
+                    $allowEdit[$interaction->getId()] = 0;
+                }
+                
             }
 
             if ($categoryToFind != '' && $titleToFind != '' && $categoryToFind != 'z' && $titleToFind != 'z') {
@@ -258,6 +272,7 @@ class ExerciseController extends Controller
                     'questionWithResponse' => $questionWithResponse,
                     'pagerQuestion'        => $pagerQuestion,
                     'displayAll'           => $displayAll,
+                    'allowEdit'            => $allowEdit,
                     '_resource'            => $exercise
                 )
             );
