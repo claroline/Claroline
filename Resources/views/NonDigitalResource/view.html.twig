@@ -8,8 +8,7 @@
 			<h3 class="panel-title">{{ nonDigitalResource.resourceNode.name }}</h3>
 		</div>
 		<div class="panel-body">
-			{{ nonDigitalResource.description }}
+			{{ nonDigitalResource.description | raw }}
 		</div>
 	</div>
-
 {% endblock content %}

@@ -13,3 +13,18 @@ services:
         calls:
             - [setRequest, [@request]]
         scope: request
+
+    # NonDigitalResource type
+    innova_path.form.type.non_digital_resource:
+        class: %innova_path.form.type.non_digital_resource.class%
+        tags:
+          - { name: form.type, alias: innova_non_digital_resource }
+
+    # NonDigitalResource handler
+    innova_path.form.handler.non_digital_resource:
+        class: %innova_path.form.handler.non_digital_resource.class%
+        arguments:
+            pathManager: @innova_path.manager.non_digital_resource
+        calls:
+            - [setRequest, [@request]]
+        scope: request
