@@ -18,13 +18,11 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 class PlatformParametersType extends AbstractType
 {
-    private $themes;
     private $langs;
     private $role;
 
-    public function __construct(array $themes, array $langs, $role)
+    public function __construct(array $langs, $role)
     {
-        $this->themes = $themes;
         $this->role = $role;
 
         if (!empty($langs)) {
@@ -39,7 +37,6 @@ class PlatformParametersType extends AbstractType
         $builder
             ->add('name', 'text', array('required' => false))
             ->add('support_email', 'email', array('label' => 'support_email'))
-            ->add('footer', 'text', array('required' => false))
             ->add('selfRegistration', 'checkbox', array('required' => false))
             ->add(
                 'defaultRole',
@@ -65,7 +62,6 @@ class PlatformParametersType extends AbstractType
                     'choices' => $this->langs
                 )
             )
-            ->add('theme', 'choice', array('choices' => $this->themes))
             ->add('cookie_lifetime', 'number', array('required' => false));
    }
 

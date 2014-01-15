@@ -53,6 +53,7 @@ class FormFactory
     const TYPE_RESOURCE_TEXT = 'resource_text';
     const TYPE_USER_FULL = 'user_full';
     const TYPE_USER_BASE_PROFILE = 'user_base_profile';
+    const TYPE_PLATFORM_APPEARANCE_FORM = 'platform_appearance';
 
     private static $types = array(
         self::TYPE_MESSAGE => array(
@@ -178,6 +179,9 @@ class FormFactory
         self::TYPE_USER_BASE_PROFILE => array(
             'formType' => 'Claroline\CoreBundle\Form\BaseProfileType',
             'entity' => 'Claroline\CoreBundle\Entity\User'
+        ),
+        self:: TYPE_PLATFORM_APPEARANCE_FORM => array(
+            'formType' => 'Claroline\CoreBundle\Form\Administration\AppearanceType'
         )
     );
 

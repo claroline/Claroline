@@ -72,6 +72,7 @@ analytics_home: Home
 analytics_resources: Resources
 analytics_top: Top
 anonymous: Anonymous
+appearance: Appearance
 apply: Apply
 at_least_one_category_has_to_be_selected: 'At least one category has to be selected'
 available_widgets: 'Available widgets'
@@ -365,6 +366,7 @@ path: Path
 permissions: Permissions
 personal_workspace: 'Personal workspace'
 phone: Phone
+platform_appearance: Platform appearance
 platform_parameters: 'Platform parameters'
 platform_parameters_form_defaultRole: 'Default role'
 platform_parameters_form_footer: 'Footer'
