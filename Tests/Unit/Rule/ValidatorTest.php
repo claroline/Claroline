@@ -39,7 +39,7 @@ class ValidatorTest extends MockeryTestCase
         $this->queryBuilder  = $this->mock('Doctrine\ORM\QueryBuilder');
         $this->query         = $this->mock('Doctrine\ORM\AbstractQuery');
     }
-    
+
     protected function getLogRepository($queryBuilder)
     {
         $logRepository = $this->logRepository;
@@ -114,10 +114,8 @@ class ValidatorTest extends MockeryTestCase
 
         $this->query->shouldReceive('getResult')->once()->andReturn(array());
 
-        $queryBuilder = $this->getQueryBuilderForDoerAndActionConstraint($action, $user, $this->query);
-
+        $queryBuilder  = $this->getQueryBuilderForDoerAndActionConstraint($action, $user, $this->query);
         $logRepository = $this->getLogRepository($queryBuilder);
-
         $ruleValidator = new Validator($logRepository);
 
         $this->assertFalse($ruleValidator->validateRule($rule));
@@ -136,10 +134,8 @@ class ValidatorTest extends MockeryTestCase
 
         $this->query->shouldReceive('getResult')->once()->andReturn(array($log));
 
-        $queryBuilder = $this->getQueryBuilderForDoerAndActionConstraint($action, $user, $this->query);
-
+        $queryBuilder  = $this->getQueryBuilderForDoerAndActionConstraint($action, $user, $this->query);
         $logRepository = $this->getLogRepository($queryBuilder);
-
         $ruleValidator = new Validator($logRepository);
 
         $this->assertEquals(array($log), $ruleValidator->validateRule($rule));
@@ -158,10 +154,8 @@ class ValidatorTest extends MockeryTestCase
 
         $this->query->shouldReceive('getResult')->once()->andReturn(array());
 
-        $queryBuilder = $this->getQueryBuilderForDoerAndActionConstraint($action, $user, $this->query);
-
+        $queryBuilder  = $this->getQueryBuilderForDoerAndActionConstraint($action, $user, $this->query);
         $logRepository = $this->getLogRepository($queryBuilder);
-
         $ruleValidator = new Validator($logRepository);
 
         $this->assertFalse($ruleValidator->validateRule($rule));
@@ -190,10 +184,8 @@ class ValidatorTest extends MockeryTestCase
 
         $this->query->shouldReceive('getResult')->once()->andReturn(array($log));
 
-        $queryBuilder = $this->getQueryBuilderForDoerAndActionConstraint($action, $user, $this->query);
-
+        $queryBuilder  = $this->getQueryBuilderForDoerAndActionConstraint($action, $user, $this->query);
         $logRepository = $this->getLogRepository($queryBuilder);
-
         $ruleValidator = new Validator($logRepository);
 
         $this->assertEquals(array($log), $ruleValidator->validateRule($rule));
@@ -222,10 +214,8 @@ class ValidatorTest extends MockeryTestCase
 
         $this->query->shouldReceive('getResult')->once()->andReturn(array($log));
 
-        $queryBuilder = $this->getQueryBuilderForDoerAndActionConstraint($action, $user, $this->query);
-
+        $queryBuilder  = $this->getQueryBuilderForDoerAndActionConstraint($action, $user, $this->query);
         $logRepository = $this->getLogRepository($queryBuilder);
-
         $ruleValidator = new Validator($logRepository);
 
         $this->assertFalse($ruleValidator->validateRule($rule));
@@ -243,10 +233,8 @@ class ValidatorTest extends MockeryTestCase
 
         $this->query->shouldReceive('getResult')->once()->andReturn(array());
 
-        $queryBuilder = $this->getQueryBuilderForReceiverAndActionConstraint($action, $user, $this->query);
-
+        $queryBuilder  = $this->getQueryBuilderForReceiverAndActionConstraint($action, $user, $this->query);
         $logRepository = $this->getLogRepository($queryBuilder);
-
         $ruleValidator = new Validator($logRepository);
 
         $this->assertFalse($ruleValidator->validateRule($rule));
@@ -265,10 +253,8 @@ class ValidatorTest extends MockeryTestCase
 
         $this->query->shouldReceive('getResult')->once()->andReturn(array($log));
 
-        $queryBuilder = $this->getQueryBuilderForReceiverAndActionConstraint($action, $user, $this->query);
-
+        $queryBuilder  = $this->getQueryBuilderForReceiverAndActionConstraint($action, $user, $this->query);
         $logRepository = $this->getLogRepository($queryBuilder);
-
         $ruleValidator = new Validator($logRepository);
 
         $this->assertEquals(array($log), $ruleValidator->validateRule($rule));
@@ -287,10 +273,8 @@ class ValidatorTest extends MockeryTestCase
 
         $this->query->shouldReceive('getResult')->once()->andReturn(array());
 
-        $queryBuilder = $this->getQueryBuilderForDoerActionAndOccurenceConstraint($action, $user, $rule, $this->query);
-
+        $queryBuilder  = $this->getQueryBuilderForDoerActionAndOccurenceConstraint($action, $user, $rule, $this->query);
         $logRepository = $this->getLogRepository($queryBuilder);
-
         $ruleValidator = new Validator($logRepository);
 
         $this->assertFalse($ruleValidator->validateRule($rule));
@@ -312,10 +296,8 @@ class ValidatorTest extends MockeryTestCase
 
         $this->query->shouldReceive('getResult')->once()->andReturn($associatedLogs);
 
-        $queryBuilder = $this->getQueryBuilderForDoerActionAndOccurenceConstraint($action, $user, $rule, $this->query);
-
+        $queryBuilder  = $this->getQueryBuilderForDoerActionAndOccurenceConstraint($action, $user, $rule, $this->query);
         $logRepository = $this->getLogRepository($queryBuilder);
-
         $ruleValidator = new Validator($logRepository);
 
         $this->assertEquals($associatedLogs, $ruleValidator->validateRule($rule));
@@ -337,10 +319,8 @@ class ValidatorTest extends MockeryTestCase
 
         $this->query->shouldReceive('getResult')->once()->andReturn($associatedLogs);
 
-        $queryBuilder = $this->getQueryBuilderForDoerActionAndOccurenceConstraint($action, $user, $rule, $this->query);
-
+        $queryBuilder  = $this->getQueryBuilderForDoerActionAndOccurenceConstraint($action, $user, $rule, $this->query);
         $logRepository = $this->getLogRepository($queryBuilder);
-
         $ruleValidator = new Validator($logRepository);
 
         $this->assertFalse($ruleValidator->validateRule($rule));
@@ -360,10 +340,8 @@ class ValidatorTest extends MockeryTestCase
 
         $this->query->shouldReceive('getResult')->once()->andReturn(array());
 
-        $queryBuilder = $this->getQueryBuilderForDoerAndActionConstraint($action, $user, $this->query);
-
+        $queryBuilder  = $this->getQueryBuilderForDoerAndActionConstraint($action, $user, $this->query);
         $logRepository = $this->getLogRepository($queryBuilder);
-
         $ruleValidator = new Validator($logRepository);
 
         $this->assertFalse($ruleValidator->validateRule($rule));
@@ -387,10 +365,8 @@ class ValidatorTest extends MockeryTestCase
 
         $this->query->shouldReceive('getResult')->once()->andReturn(array($log));
 
-        $queryBuilder = $this->getQueryBuilderForDoerAndActionConstraint($action, $user, $this->query);
-
+        $queryBuilder  = $this->getQueryBuilderForDoerAndActionConstraint($action, $user, $this->query);
         $logRepository = $this->getLogRepository($queryBuilder);
-
         $ruleValidator = new Validator($logRepository);
 
         $this->assertFalse($ruleValidator->validateRule($rule));
@@ -414,10 +390,8 @@ class ValidatorTest extends MockeryTestCase
 
         $this->query->shouldReceive('getResult')->once()->andReturn(array($log));
 
-        $queryBuilder = $this->getQueryBuilderForDoerAndActionConstraint($action, $user, $this->query);
-
+        $queryBuilder  = $this->getQueryBuilderForDoerAndActionConstraint($action, $user, $this->query);
         $logRepository = $this->getLogRepository($queryBuilder);
-
         $ruleValidator = new Validator($logRepository);
 
         $this->assertEquals(array($log), $ruleValidator->validateRule($rule));
@@ -440,10 +414,8 @@ class ValidatorTest extends MockeryTestCase
 
         $this->query->shouldReceive('getResult')->once()->andReturn(array($log));
 
-        $queryBuilder = $this->getQueryBuilderForDoerAndActionConstraint($action, $user, $this->query);
-
+        $queryBuilder  = $this->getQueryBuilderForDoerAndActionConstraint($action, $user, $this->query);
         $logRepository = $this->getLogRepository($queryBuilder);
-
         $ruleValidator = new Validator($logRepository);
 
         $this->assertEquals(array($log), $ruleValidator->validateRule($rule));
@@ -466,10 +438,8 @@ class ValidatorTest extends MockeryTestCase
 
         $this->query->shouldReceive('getResult')->once()->andReturn(array($log));
 
-        $queryBuilder = $this->getQueryBuilderForDoerAndActionConstraint($action, $user, $this->query);
-
+        $queryBuilder  = $this->getQueryBuilderForDoerAndActionConstraint($action, $user, $this->query);
         $logRepository = $this->getLogRepository($queryBuilder);
-
         $ruleValidator = new Validator($logRepository);
 
         $this->assertFalse($ruleValidator->validateRule($rule));
@@ -492,10 +462,8 @@ class ValidatorTest extends MockeryTestCase
 
         $this->query->shouldReceive('getResult')->once()->andReturn(array($log));
 
-        $queryBuilder = $this->getQueryBuilderForDoerAndActionConstraint($action, $user, $this->query);
-
+        $queryBuilder  = $this->getQueryBuilderForDoerAndActionConstraint($action, $user, $this->query);
         $logRepository = $this->getLogRepository($queryBuilder);
-
         $ruleValidator = new Validator($logRepository);
 
         $this->assertFalse($ruleValidator->validateRule($rule));
@@ -518,10 +486,8 @@ class ValidatorTest extends MockeryTestCase
 
         $this->query->shouldReceive('getResult')->once()->andReturn(array($log));
 
-        $queryBuilder = $this->getQueryBuilderForDoerAndActionConstraint($action, $user, $this->query);
-
+        $queryBuilder  = $this->getQueryBuilderForDoerAndActionConstraint($action, $user, $this->query);
         $logRepository = $this->getLogRepository($queryBuilder);
-
         $ruleValidator = new Validator($logRepository);
 
         $this->assertEquals(array($log), $ruleValidator->validateRule($rule));
@@ -544,10 +510,8 @@ class ValidatorTest extends MockeryTestCase
 
         $this->query->shouldReceive('getResult')->once()->andReturn(array($log));
 
-        $queryBuilder = $this->getQueryBuilderForDoerAndActionConstraint($action, $user, $this->query);
-
+        $queryBuilder  = $this->getQueryBuilderForDoerAndActionConstraint($action, $user, $this->query);
         $logRepository = $this->getLogRepository($queryBuilder);
-
         $ruleValidator = new Validator($logRepository);
 
         $this->assertEquals(array($log), $ruleValidator->validateRule($rule));
@@ -570,10 +534,8 @@ class ValidatorTest extends MockeryTestCase
 
         $this->query->shouldReceive('getResult')->once()->andReturn(array($log));
 
-        $queryBuilder = $this->getQueryBuilderForDoerAndActionConstraint($action, $user, $this->query);
-
+        $queryBuilder  = $this->getQueryBuilderForDoerAndActionConstraint($action, $user, $this->query);
         $logRepository = $this->getLogRepository($queryBuilder);
-
         $ruleValidator = new Validator($logRepository);
 
         $this->assertFalse($ruleValidator->validateRule($rule));
@@ -596,10 +558,8 @@ class ValidatorTest extends MockeryTestCase
 
         $this->query->shouldReceive('getResult')->once()->andReturn(array($log));
 
-        $queryBuilder = $this->getQueryBuilderForDoerAndActionConstraint($action, $user, $this->query);
-
+        $queryBuilder  = $this->getQueryBuilderForDoerAndActionConstraint($action, $user, $this->query);
         $logRepository = $this->getLogRepository($queryBuilder);
-
         $ruleValidator = new Validator($logRepository);
 
         $this->assertEquals(array($log), $ruleValidator->validateRule($rule));
@@ -622,10 +582,8 @@ class ValidatorTest extends MockeryTestCase
 
         $this->query->shouldReceive('getResult')->once()->andReturn(array($log));
 
-        $queryBuilder = $this->getQueryBuilderForDoerAndActionConstraint($action, $user, $this->query);
-
+        $queryBuilder  = $this->getQueryBuilderForDoerAndActionConstraint($action, $user, $this->query);
         $logRepository = $this->getLogRepository($queryBuilder);
-
         $ruleValidator = new Validator($logRepository);
 
         $this->assertFalse($ruleValidator->validateRule($rule));
@@ -648,15 +606,14 @@ class ValidatorTest extends MockeryTestCase
 
         $this->query->shouldReceive('getResult')->once()->andReturn(array($log));
 
-        $queryBuilder = $this->getQueryBuilderForDoerAndActionConstraint($action, $user, $this->query);
-
+        $queryBuilder  = $this->getQueryBuilderForDoerAndActionConstraint($action, $user, $this->query);
         $logRepository = $this->getLogRepository($queryBuilder);
-
         $ruleValidator = new Validator($logRepository);
 
         $this->assertFalse($ruleValidator->validateRule($rule));
     }
-        public function testValidateRuleDoerActionResultInferiorEqualButInferiorMatchLog()
+
+    public function testValidateRuleDoerActionResultInferiorEqualButInferiorMatchLog()
     {
         $log    = new Log();
         $log->setDetails(array('result' => 9));
@@ -673,10 +630,8 @@ class ValidatorTest extends MockeryTestCase
 
         $this->query->shouldReceive('getResult')->once()->andReturn(array($log));
 
-        $queryBuilder = $this->getQueryBuilderForDoerAndActionConstraint($action, $user, $this->query);
-
+        $queryBuilder  = $this->getQueryBuilderForDoerAndActionConstraint($action, $user, $this->query);
         $logRepository = $this->getLogRepository($queryBuilder);
-
         $ruleValidator = new Validator($logRepository);
 
         $this->assertEquals(array($log), $ruleValidator->validateRule($rule));
@@ -699,10 +654,8 @@ class ValidatorTest extends MockeryTestCase
 
         $this->query->shouldReceive('getResult')->once()->andReturn(array($log));
 
-        $queryBuilder = $this->getQueryBuilderForDoerAndActionConstraint($action, $user, $this->query);
-
+        $queryBuilder  = $this->getQueryBuilderForDoerAndActionConstraint($action, $user, $this->query);
         $logRepository = $this->getLogRepository($queryBuilder);
-
         $ruleValidator = new Validator($logRepository);
 
         $this->assertEquals(array($log), $ruleValidator->validateRule($rule));
@@ -725,10 +678,8 @@ class ValidatorTest extends MockeryTestCase
 
         $this->query->shouldReceive('getResult')->once()->andReturn(array($log));
 
-        $queryBuilder = $this->getQueryBuilderForDoerAndActionConstraint($action, $user, $this->query);
-
+        $queryBuilder  = $this->getQueryBuilderForDoerAndActionConstraint($action, $user, $this->query);
         $logRepository = $this->getLogRepository($queryBuilder);
-
         $ruleValidator = new Validator($logRepository);
 
         $this->assertFalse($ruleValidator->validateRule($rule));
@@ -765,10 +716,8 @@ class ValidatorTest extends MockeryTestCase
 
         $this->query->shouldReceive('getResult')->twice()->andReturn(array());
 
-        $queryBuilder = $this->getQueryBuilderForDoerTwoActionAndOccurenceConstraint($action, $action2, $user, $rule, $this->query);
-
+        $queryBuilder  = $this->getQueryBuilderForDoerTwoActionAndOccurenceConstraint($action, $action2, $user, $rule, $this->query);
         $logRepository = $this->getLogRepository($queryBuilder);
-
         $ruleValidator = new Validator($logRepository);
 
         $this->assertFalse($ruleValidator->validate($badge, $user));
@@ -797,10 +746,8 @@ class ValidatorTest extends MockeryTestCase
         $this->query->shouldReceive('getResult')->once()->andReturn(array($log));
         $this->query->shouldReceive('getResult')->once()->andReturn(array());
 
-        $queryBuilder = $this->getQueryBuilderForDoerTwoActionAndOccurenceConstraint($action, $action2, $user, $rule, $this->query);
-
+        $queryBuilder  = $this->getQueryBuilderForDoerTwoActionAndOccurenceConstraint($action, $action2, $user, $rule, $this->query);
         $logRepository = $this->getLogRepository($queryBuilder);
-
         $ruleValidator = new Validator($logRepository);
 
         $this->assertFalse($ruleValidator->validate($badge, $user));
@@ -829,10 +776,8 @@ class ValidatorTest extends MockeryTestCase
         $this->query->shouldReceive('getResult')->once()->andReturn(array());
         $this->query->shouldReceive('getResult')->once()->andReturn(array($log));
 
-        $queryBuilder = $this->getQueryBuilderForDoerTwoActionAndOccurenceConstraint($action, $action2, $user, $rule, $this->query);
-
+        $queryBuilder  = $this->getQueryBuilderForDoerTwoActionAndOccurenceConstraint($action, $action2, $user, $rule, $this->query);
         $logRepository = $this->getLogRepository($queryBuilder);
-
         $ruleValidator = new Validator($logRepository);
 
         $this->assertFalse($ruleValidator->validate($badge, $user));
@@ -861,10 +806,8 @@ class ValidatorTest extends MockeryTestCase
         $this->query->shouldReceive('getResult')->once()->andReturn(array($log));
         $this->query->shouldReceive('getResult')->once()->andReturn(array($log));
 
-        $queryBuilder = $this->getQueryBuilderForDoerTwoActionAndOccurenceConstraint($action, $action2, $user, $rule, $this->query);
-
+        $queryBuilder  = $this->getQueryBuilderForDoerTwoActionAndOccurenceConstraint($action, $action2, $user, $rule, $this->query);
         $logRepository = $this->getLogRepository($queryBuilder);
-
         $ruleValidator = new Validator($logRepository);
 
         $this->assertEquals(array($log, $log), $ruleValidator->validate($badge, $user));
