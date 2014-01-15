@@ -1,46 +1,139 @@
+# a
+
+anywhere: Anywhere
+at_home: At home
+abstract_resources: Resource Type
+
+# b
+
+back_to_paths_list: Back to paths list
+back_to: Back to
+
+# c
+
+create_path: Create a path
+current_position: Current position
+class: The class
+classroom: In a classroom
+close: Close
+
+# d
+
+deploy_success: Path has been deployed
+deploy_error: The path has not been deployed due to a technical problem. Please try again
+description: Description
+duration: Duration
+delete: Delete
+deploy: Deploy
+
+
+# e
+
+edit: Edit
+
+# f
+
+full_tree: Full tree
+full_path_notice_1: You can view the full structure of the path by clicking the button  
+full_path_notice_2: This button will be available on the top left at any stage of your progression.
+
+
+# g
+
+groupware: Groupware
+group: In group
+
+# h
+
+heritated_from: Heritated from
+history: History
+
+# i
+
+informations: Informations
+
+# i
+
+
+
+# j
+
+
+
+# k
+
+
+
+# l
+
+local: Local
+library: In a library
+
+
+# m
+
+my_paths : My paths
+
+
+# n
+
+next: Next
+next_step: Next steps
+
+# o
+
+others_paths : Other paths
+
+# p
+
 paths: Paths
 path: Path
-abstract_resources: Resource Type
-submit: Submit
+path_not_found: Path not found
+path_delete_success: Path has been deleted
+path_delete_error: Le parcours has not been deleted due to technical problem. Please try again
+play: Execute
+paths_list: Paths list
+progression: Progression
+
+# q
+
+
+
+# r
+
 resources: Resources
-heritated_from: Heritated from
-local: Local
-description: Description
-informations: Informations
-back_to_paths_list: Back to paths list
-current_position: Current position
-back_to: Back to
-at_home: At home
-classroom: In a classroom
-library: In a library
-anywhere: Anywhere
+resources: Resources
+
+# s
+
+submit: Submit
 student: Individually
-group: In group
-class: The class
+
+# t
+
+
+
+# u
+
+
+
+# v
+
+
+
+# w
+
 with_computer: With a computer
 without_computer: Without a computer
 with_tutor: With a tutor
 without_tutor: Without a tutor
-duration: Duration
-progression: Progression
-my_paths : My paths
-others_paths : Other paths
-play: Execute
-edit: Edit
-delete: Delete
-deploy: Deploy
-create_path: Create a path
-deploy_success: Path has been deployed
-deploy_error: The path has not been deployed due to a technical problem. Please try again
-path_not_found: Path not found
-path_delete_success: Path has been deleted
-path_delete_error: Le parcours has not been deleted due to technical problem. Please try again
-next: Next
-next_step: Next steps
-groupware: Groupware
-close: Close
-full_tree: Full tree
-history: History
-full_path_notice_1: You can view the full structure of the path by clicking the button  
-full_path_notice_2: This button will be available on the top left at any stage of your progression.
-paths_list: Paths list
+
+# x
+
+
+
+# y
+
+
+
+# z

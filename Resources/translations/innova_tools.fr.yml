@@ -1,46 +1,125 @@
+# a
+
+abstract_resources: Ressource Type
+at_home: A la maison
+anywhere: N'importe où
+
+# b
+
+back_to_paths_list: Retour à la liste des parcours
+back_to: Revenir sur
+
+# c
+
+current_position: Position courante
+classroom: En classe
+create_path: Créer un parcours
+class: Toute la classe
+close: Fermer
+
+# d
+
+description: Description
+duration: Durée
+deploy_success: Le parcours a été déployé
+deploy: Déployer
+deploy_error: Le parcours n'a pas pu être déployé. Veuillez réessayer
+delete: Supprimer
+
+# e
+
+edit: Editer
+
+# f
+
+full_tree: Arborescence
+full_path_notice_1: Vous pouvez afficher l'arborescence complète du parcours en cliquant sur le bouton 
+full_path_notice_2: Ce bouton sera accessible en haut à gauche à n'importe quelle étape de votre progression.
+
+# g
+
+group: En groupe
+groupware: Collecticiel
+
+# h
+
+heritated_from: Héritées de
+history: Historique
+
+# i
+
+informations: Informations
+
+# i
+
+
+# j
+
+
+# k
+
+
+# l
+
+library: A la bibliothèque
+local: Locales
+
+# m
+
+my_paths : Mes parcours
+
+# n
+
+next: Suivant
+next_step: Etapes suivantes
+
+# o
+
+others_paths : Autres parcours
+
+# p
+
 paths: Parcours
 path: Parcours
-abstract_resources: Ressource Type
-submit: Sauvegarder
+progression: Avancement
+paths_list: Liste des parcours
+path_not_found: Le parcours n'a pas été trouvé
+play: Exécuter
+path_delete_success: Le parcours a été supprimé
+path_delete_error: Le parcours n'a pas pu être supprimé. Veuillez réessayer
+
+# q
+
+
+# r
+
 resources: Ressources
-heritated_from: Héritées de
-local: Locales
-description: Description
-informations: Informations
-back_to_paths_list: Retour à la liste des parcours
-current_position: Position courante
-back_to: Revenir sur
-at_home: A la maison
-classroom: En classe
-library: A la bibliothèque
-anywhere: N'importe où
+
+# s
+
+submit: Sauvegarder
 student: Individuellement
-group: En groupe
-class: Toute la classe
+
+# t
+
+
+# u
+
+
+# v
+
+
+# w
+
 with_computer: Avec un ordinateur
 without_computer: Sans ordinateur
 with_tutor: Avec un tuteur
 without_tutor: Sans tuteur
-duration: Durée
-progression: Avancement
-my_paths : Mes parcours
-others_paths : Autres parcours
-play: Exécuter
-edit: Editer
-delete: Supprimer
-deploy: Déployer
-create_path: Créer un parcours
-deploy_success: Le parcours a été déployé
-deploy_error: Le parcours n'a pas pu être déployé. Veuillez réessayer
-path_not_found: Le parcours n'a pas été trouvé
-path_delete_success: Le parcours a été supprimé
-path_delete_error: Le parcours n'a pas pu être supprimé. Veuillez réessayer
-next: Suivant
-next_step: Etapes suivantes
-groupware: Collecticiel
-close: Fermer
-full_tree: Arborescence
-history: Historique
-full_path_notice_1: Vous pouvez afficher l'arborescence complète du parcours en cliquant sur le bouton 
-full_path_notice_2: Ce bouton sera accessible en haut à gauche à n'importe quelle étape de votre progression.
-paths_list: Liste des parcours
+
+# x
+
+
+# y
+
+
+# z

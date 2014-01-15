@@ -17,7 +17,7 @@ class PathType extends AbstractType
 
     public function getName()
     {
-        return 'path';
+        return 'innova_path';
     }
     
     public function getDefaultOptions()

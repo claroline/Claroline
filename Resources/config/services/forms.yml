@@ -3,7 +3,7 @@ services:
     innova_path.form.type.path:
         class: %innova_path.form.type.path.class%
         tags:
-          - { name: form.type, alias: path }
+          - { name: form.type, alias: innova_path }
           
     # Path handler
     innova_path.form.handler.path:

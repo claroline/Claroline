@@ -5,12 +5,12 @@ services:
       - [setContainer, ["@service_container"]]
     tags:
       - { name: kernel.event_listener, event: open_tool_workspace_innova_path, method: onWorkspaceOpen }
-      - { name: kernel.event_listener, event: open_path, method: onPathOpen }
-      - { name: kernel.event_listener, event: open_non_digital_resource, method: onNonDigitalResourceOpen }
-      - { name: kernel.event_listener, event: create_form_path, method: onPathCreateForm }
-      - { name: kernel.event_listener, event: create_path, method: onPathCreate }
-      - { name: kernel.event_listener, event: delete_path, method: onPathDelete }
-      - { name: kernel.event_listener, event: delete_non_digital_resource, method: onNonDigitalResourceDelete }
+      - { name: kernel.event_listener, event: open_innova_path, method: onPathOpen }
+      - { name: kernel.event_listener, event: open_innova_non_digital_resource, method: onNonDigitalResourceOpen }
+      - { name: kernel.event_listener, event: create_form_innova_path, method: onPathCreateForm }
+      - { name: kernel.event_listener, event: create_innova_path, method: onPathCreate }
+      - { name: kernel.event_listener, event: delete_innova_path, method: onPathDelete }
+      - { name: kernel.event_listener, event: delete_innova_non_digital_resource, method: onNonDigitalResourceDelete }
 
 
 
