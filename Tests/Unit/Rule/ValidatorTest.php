@@ -123,10 +123,10 @@ class ValidatorTest extends MockeryTestCase
 
     public function testValidateRuleDoerActionMatchLog()
     {
-        $log       = new Log();
-        $user      = new User();
-        $action    = uniqid();
-        $rule = new BadgeRule();
+        $log    = new Log();
+        $user   = new User();
+        $action = uniqid();
+        $rule   = new BadgeRule();
         $rule
             ->setAction($action)
             ->setUser($user)
@@ -142,10 +142,10 @@ class ValidatorTest extends MockeryTestCase
     }
     public function testValidateRuleDoerActionBadgeMatchNoLog()
     {
-        $user      = new User();
-        $action    = uniqid();
-        $badge     = new Badge();
-        $rule = new BadgeRule();
+        $user   = new User();
+        $action = uniqid();
+        $badge  = new Badge();
+        $rule   = new BadgeRule();
         $rule
             ->setAction($action)
             ->setUser($user)
@@ -163,12 +163,12 @@ class ValidatorTest extends MockeryTestCase
 
     public function testValidateRuleDoerActionBadgeMatchLog()
     {
-        $user      = new User();
-        $action    = uniqid();
-        $badge     = new Badge();
+        $user   = new User();
+        $action = uniqid();
+        $badge  = new Badge();
         $badge->setId(rand(0, PHP_INT_MAX));
 
-        $log       = new Log();
+        $log = new Log();
         $log->setDetails(array(
             'badge' => array(
                 'id' => $badge->getId()
@@ -193,12 +193,12 @@ class ValidatorTest extends MockeryTestCase
 
     public function testValidateRuleDoerActionBadgeMatchNoLogWrongBadge()
     {
-        $user      = new User();
-        $action    = uniqid();
-        $badge     = new Badge();
+        $user   = new User();
+        $action = uniqid();
+        $badge  = new Badge();
         $badge->setId(rand(PHP_INT_MAX / 2 + 1, PHP_INT_MAX));
 
-        $log       = new Log();
+        $log = new Log();
         $log->setDetails(array(
             'badge' => array(
                 'id' => rand(0, PHP_INT_MAX / 2)
@@ -223,9 +223,9 @@ class ValidatorTest extends MockeryTestCase
 
     public function testValidateRuleReceiverActionMatchNoLog()
     {
-        $user      = new User();
-        $action    = uniqid();
-        $rule = new BadgeRule();
+        $user   = new User();
+        $action = uniqid();
+        $rule   = new BadgeRule();
         $rule
             ->setAction($action)
             ->setUser($user)
@@ -242,10 +242,10 @@ class ValidatorTest extends MockeryTestCase
 
     public function testValidateRuleReceiverActionMatchLog()
     {
-        $log       = new Log();
-        $user      = new User();
-        $action    = uniqid();
-        $rule = new BadgeRule();
+        $log    = new Log();
+        $user   = new User();
+        $action = uniqid();
+        $rule   = new BadgeRule();
         $rule
             ->setAction($action)
             ->setUser($user)
@@ -262,9 +262,9 @@ class ValidatorTest extends MockeryTestCase
 
     public function testValidateRuleDoerOccurenceActionMatchNoLog()
     {
-        $user      = new User();
-        $action    = uniqid();
-        $rule = new BadgeRule();
+        $user   = new User();
+        $action = uniqid();
+        $rule   = new BadgeRule();
         $rule
             ->setAction($action)
             ->setUser($user)
@@ -282,10 +282,10 @@ class ValidatorTest extends MockeryTestCase
 
     public function testValidateRuleDoerOccurenceActionMatchLog()
     {
-        $log       = new Log();
-        $user      = new User();
-        $action    = uniqid();
-        $rule = new BadgeRule();
+        $log    = new Log();
+        $user   = new User();
+        $action = uniqid();
+        $rule   = new BadgeRule();
         $rule
             ->setAction($action)
             ->setUser($user)
@@ -305,10 +305,10 @@ class ValidatorTest extends MockeryTestCase
 
     public function testValidateRuleDoerOccurenceActionMatchWrongNumberOfLog()
     {
-        $log       = new Log();
-        $user      = new User();
-        $action    = uniqid();
-        $rule = new BadgeRule();
+        $log    = new Log();
+        $user   = new User();
+        $action = uniqid();
+        $rule   = new BadgeRule();
         $rule
             ->setAction($action)
             ->setUser($user)
@@ -328,9 +328,9 @@ class ValidatorTest extends MockeryTestCase
 
     public function testValidateRuleDoerActionResultEqualMatchNoLog()
     {
-        $user      = new User();
-        $action    = uniqid();
-        $rule = new BadgeRule();
+        $user   = new User();
+        $action = uniqid();
+        $rule   = new BadgeRule();
         $rule
             ->setAction($action)
             ->setUser($user)
@@ -353,9 +353,9 @@ class ValidatorTest extends MockeryTestCase
         $log    = new Log();
         $log->setDetails(array('result' => $result));
 
-        $user      = new User();
-        $action    = uniqid();
-        $rule = new BadgeRule();
+        $user   = new User();
+        $action = uniqid();
+        $rule   = new BadgeRule();
         $rule
             ->setAction($action)
             ->setUser($user)
@@ -378,9 +378,9 @@ class ValidatorTest extends MockeryTestCase
         $log    = new Log();
         $log->setDetails(array('result' => $result));
 
-        $user      = new User();
-        $action    = uniqid();
-        $rule = new BadgeRule();
+        $user   = new User();
+        $action = uniqid();
+        $rule   = new BadgeRule();
         $rule
             ->setAction($action)
             ->setUser($user)
@@ -399,12 +399,12 @@ class ValidatorTest extends MockeryTestCase
 
     public function testValidateRuleDoerActionResultSuperiorMatchLog()
     {
-        $log    = new Log();
+        $log = new Log();
         $log->setDetails(array('result' => 12));
 
-        $user      = new User();
-        $action    = uniqid();
-        $rule = new BadgeRule();
+        $user   = new User();
+        $action = uniqid();
+        $rule   = new BadgeRule();
         $rule
             ->setAction($action)
             ->setUser($user)
@@ -423,12 +423,12 @@ class ValidatorTest extends MockeryTestCase
 
     public function testValidateRuleDoerActionResultSuperiorButInferiorMatchNoLog()
     {
-        $log    = new Log();
+        $log = new Log();
         $log->setDetails(array('result' => 12));
 
-        $user      = new User();
-        $action    = uniqid();
-        $rule = new BadgeRule();
+        $user   = new User();
+        $action = uniqid();
+        $rule   = new BadgeRule();
         $rule
             ->setAction($action)
             ->setUser($user)
@@ -447,12 +447,12 @@ class ValidatorTest extends MockeryTestCase
 
     public function testValidateRuleDoerActionResultSuperiorButEqualMatchNoLog()
     {
-        $log    = new Log();
+        $log = new Log();
         $log->setDetails(array('result' => 12));
 
-        $user      = new User();
-        $action    = uniqid();
-        $rule = new BadgeRule();
+        $user   = new User();
+        $action = uniqid();
+        $rule   = new BadgeRule();
         $rule
             ->setAction($action)
             ->setUser($user)
@@ -471,12 +471,12 @@ class ValidatorTest extends MockeryTestCase
 
     public function testValidateRuleDoerActionResultSuperiorEqualButSuperiorMatchLog()
     {
-        $log    = new Log();
+        $log = new Log();
         $log->setDetails(array('result' => 12));
 
-        $user      = new User();
-        $action    = uniqid();
-        $rule = new BadgeRule();
+        $user   = new User();
+        $action = uniqid();
+        $rule   = new BadgeRule();
         $rule
             ->setAction($action)
             ->setUser($user)
@@ -495,12 +495,12 @@ class ValidatorTest extends MockeryTestCase
 
     public function testValidateRuleDoerActionResultSuperiorEqualButEqualMatchLog()
     {
-        $log    = new Log();
+        $log = new Log();
         $log->setDetails(array('result' => 12));
 
-        $user      = new User();
-        $action    = uniqid();
-        $rule = new BadgeRule();
+        $user   = new User();
+        $action = uniqid();
+        $rule   = new BadgeRule();
         $rule
             ->setAction($action)
             ->setUser($user)
@@ -519,12 +519,12 @@ class ValidatorTest extends MockeryTestCase
 
     public function testValidateRuleDoerActionResultSuperiorEqualButInferiorMatchLog()
     {
-        $log    = new Log();
+        $log = new Log();
         $log->setDetails(array('result' => 9));
 
-        $user      = new User();
-        $action    = uniqid();
-        $rule = new BadgeRule();
+        $user   = new User();
+        $action = uniqid();
+        $rule   = new BadgeRule();
         $rule
             ->setAction($action)
             ->setUser($user)
@@ -543,12 +543,12 @@ class ValidatorTest extends MockeryTestCase
 
     public function testValidateRuleDoerActionResultInferiorMatchLog()
     {
-        $log    = new Log();
+        $log = new Log();
         $log->setDetails(array('result' => 9));
 
-        $user      = new User();
-        $action    = uniqid();
-        $rule = new BadgeRule();
+        $user   = new User();
+        $action = uniqid();
+        $rule   = new BadgeRule();
         $rule
             ->setAction($action)
             ->setUser($user)
@@ -567,12 +567,12 @@ class ValidatorTest extends MockeryTestCase
 
     public function testValidateRuleDoerActionResultInferiorButSuperiorMatchNoLog()
     {
-        $log    = new Log();
+        $log = new Log();
         $log->setDetails(array('result' => 42));
 
-        $user      = new User();
-        $action    = uniqid();
-        $rule = new BadgeRule();
+        $user   = new User();
+        $action = uniqid();
+        $rule   = new BadgeRule();
         $rule
             ->setAction($action)
             ->setUser($user)
@@ -591,12 +591,12 @@ class ValidatorTest extends MockeryTestCase
 
     public function testValidateRuleDoerActionResultInferiorButEqualMatchNoLog()
     {
-        $log    = new Log();
+        $log = new Log();
         $log->setDetails(array('result' => 12));
 
-        $user      = new User();
-        $action    = uniqid();
-        $rule = new BadgeRule();
+        $user   = new User();
+        $action = uniqid();
+        $rule   = new BadgeRule();
         $rule
             ->setAction($action)
             ->setUser($user)
@@ -615,12 +615,12 @@ class ValidatorTest extends MockeryTestCase
 
     public function testValidateRuleDoerActionResultInferiorEqualButInferiorMatchLog()
     {
-        $log    = new Log();
+        $log = new Log();
         $log->setDetails(array('result' => 9));
 
-        $user      = new User();
-        $action    = uniqid();
-        $rule = new BadgeRule();
+        $user   = new User();
+        $action = uniqid();
+        $rule   = new BadgeRule();
         $rule
             ->setAction($action)
             ->setUser($user)
@@ -639,12 +639,12 @@ class ValidatorTest extends MockeryTestCase
 
     public function testValidateRuleDoerActionResultInferiorEqualButEqualMatchLog()
     {
-        $log    = new Log();
+        $log = new Log();
         $log->setDetails(array('result' => 12));
 
-        $user      = new User();
-        $action    = uniqid();
-        $rule = new BadgeRule();
+        $user   = new User();
+        $action = uniqid();
+        $rule   = new BadgeRule();
         $rule
             ->setAction($action)
             ->setUser($user)
@@ -663,12 +663,12 @@ class ValidatorTest extends MockeryTestCase
 
     public function testValidateRuleDoerActionResultInferiorEqualButSuperiorMatchLog()
     {
-        $log    = new Log();
+        $log = new Log();
         $log->setDetails(array('result' => 12));
 
-        $user      = new User();
-        $action    = uniqid();
-        $rule = new BadgeRule();
+        $user   = new User();
+        $action = uniqid();
+        $rule   = new BadgeRule();
         $rule
             ->setAction($action)
             ->setUser($user)
@@ -697,10 +697,10 @@ class ValidatorTest extends MockeryTestCase
 
     public function testValidateWithTowRuleDoerActionMatchNoLog()
     {
-        $badge     = new Badge();
-        $user      = new User();
-        $action    = uniqid();
-        $action2   = uniqid();
+        $badge   = new Badge();
+        $user    = new User();
+        $action  = uniqid();
+        $action2 = uniqid();
 
         $rule = new BadgeRule();
         $rule
@@ -725,11 +725,11 @@ class ValidatorTest extends MockeryTestCase
 
     public function testValidateWithTowRuleDoerActionMatchLogJustForTheFirstRule()
     {
-        $badge     = new Badge();
-        $user      = new User();
-        $action    = uniqid();
-        $action2   = uniqid();
-        $log       = new Log();
+        $badge   = new Badge();
+        $user    = new User();
+        $action  = uniqid();
+        $action2 = uniqid();
+        $log     = new Log();
 
         $rule = new BadgeRule();
         $rule
@@ -755,11 +755,11 @@ class ValidatorTest extends MockeryTestCase
 
     public function testValidateWithTowRuleDoerActionMatchLogJustForTheSecondRule()
     {
-        $badge     = new Badge();
-        $user      = new User();
-        $action    = uniqid();
-        $action2   = uniqid();
-        $log       = new Log();
+        $badge   = new Badge();
+        $user    = new User();
+        $action  = uniqid();
+        $action2 = uniqid();
+        $log     = new Log();
 
         $rule = new BadgeRule();
         $rule
@@ -785,11 +785,11 @@ class ValidatorTest extends MockeryTestCase
 
     public function testValidateWithTowRuleDoerActionMatchLogForBothRule()
     {
-        $badge     = new Badge();
-        $user      = new User();
-        $action    = uniqid();
-        $action2   = uniqid();
-        $log       = new Log();
+        $badge   = new Badge();
+        $user    = new User();
+        $action  = uniqid();
+        $action2 = uniqid();
+        $log     = new Log();
 
         $rule = new BadgeRule();
         $rule
