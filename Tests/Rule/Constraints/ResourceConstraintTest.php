@@ -15,7 +15,6 @@ use Claroline\CoreBundle\Entity\Resource\Text;
 use Claroline\CoreBundle\Library\Testing\MockeryTestCase;
 use Claroline\CoreBundle\Entity\Badge\BadgeRule;
 use Claroline\CoreBundle\Entity\Log\Log;
-use \Mockery as m;
 
 class ResourceConstraintTest extends MockeryTestCase
 {

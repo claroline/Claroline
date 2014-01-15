@@ -22,7 +22,6 @@ use Claroline\CoreBundle\Rule\Entity\Rule;
 use Claroline\CoreBundle\Rule\Rulable;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Log\Log;
-use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Claroline\CoreBundle\Repository\Log\LogRepository;
 use JMS\DiExtraBundle\Annotation as DI;
 
@@ -58,9 +57,9 @@ class Validator
     }
 
     /**
-     * @param \Claroline\CoreBundle\Rule\Entity\Rule[]  $rules
-     * @param User  $user
-     * @param array $restriction
+     * @param \Claroline\CoreBundle\Rule\Entity\Rule[] $rules
+     * @param User                                     $user
+     * @param array                                    $restriction
      *
      * @return array|bool
      */
@@ -76,15 +75,13 @@ class Validator
 
                 if (false === $checkedLogs) {
                     $isChecked = false;
-                }
-                else {
+                } else {
                     foreach ($checkedLogs as $checkedLog) {
                         $return[] = $checkedLog;
                     }
                 }
             }
-        }
-        else {
+        } else {
             $isChecked = false;
         }
 
@@ -132,7 +129,6 @@ class Validator
 
     /**
      * @param \Claroline\CoreBundle\Rule\Constraints\AbstractConstraint[] $constraints
-     *
      * @param array                                                       $restrictions
      *
      * @return \Doctrine\ORM\QueryBuilder
@@ -157,7 +153,7 @@ class Validator
 
     /**
      * @param \Claroline\CoreBundle\Rule\Constraints\AbstractConstraint[] $constraints
-     * @param array $restrictions
+     * @param array                                                       $restrictions
      *
      * @return \Claroline\CoreBundle\Entity\Log\Log[]
      */

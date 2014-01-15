@@ -12,8 +12,6 @@
 namespace Claroline\CoreBundle\Rule\Constraints;
 
 use Claroline\CoreBundle\Rule\Entity\Rule;
-use Claroline\CoreBundle\Entity\Log\Log;
-use Claroline\CoreBundle\Rule\Rulable;
 use Doctrine\ORM\QueryBuilder;
 
 class OccurenceConstraint extends AbstractConstraint

@@ -11,8 +11,6 @@
 
 namespace Claroline\CoreBundle\Rule\Constraints;
 
-use Claroline\CoreBundle\Entity\Badge\BadgeRule;
-use Claroline\CoreBundle\Entity\Log\Log;
 use Claroline\CoreBundle\Rule\Entity\Rule;
 use Doctrine\ORM\QueryBuilder;
 
@@ -27,15 +25,13 @@ class BadgeConstraint extends AbstractConstraint
 
         if (0 === count($this->getAssociatedLogs())) {
             $isValid = false;
-        }
-        else {
+        } else {
             foreach ($this->getAssociatedLogs() as $associatedLog) {
                 $associatedLogDetails = $associatedLog->getDetails();
 
                 if (isset($associatedLogDetails['badge'])) {
                     $isValid = $isValid && ($this->getRule()->getBadge()->getId() === $associatedLogDetails['badge']['id']);
-                }
-                else {
+                } else {
                     $isValid = false;
                 }
             }

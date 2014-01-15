@@ -15,9 +15,6 @@ use Claroline\CoreBundle\Rule\Entity\Rule;
 use Claroline\CoreBundle\Entity\Badge\Badge;
 use Claroline\CoreBundle\Entity\Badge\BadgeRule;
 use Claroline\CoreBundle\Entity\Log\Log;
-use Claroline\CoreBundle\Entity\Resource\ResourceNode;
-use Claroline\CoreBundle\Entity\Workspace\SimpleWorkspace;
-use \Mockery as m;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Testing\MockeryTestCase;
 

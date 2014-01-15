@@ -13,11 +13,8 @@ namespace Claroline\CoreBundle\Rule\Entity;
 
 use Claroline\CoreBundle\Entity\Badge\Badge;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Entity\Log\Log;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
-use Claroline\CoreBundle\Entity\Resource\ResourceType;
 use Doctrine\ORM\Mapping as ORM;
-use Doctrine\Common\Collections\ArrayCollection;
 use JMS\Serializer\Annotation\ExclusionPolicy;
 use JMS\Serializer\Annotation\Expose;
 
@@ -266,6 +263,7 @@ abstract class Rule
         if (null === $this->user) {
             throw new \RuntimeException("No user given to the rule. Rule inevitably apply to a user, neither it's a doer or a receiver.");
         }
+
         return $this->user;
     }
 

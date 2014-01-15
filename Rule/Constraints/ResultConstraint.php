@@ -12,7 +12,6 @@
 namespace Claroline\CoreBundle\Rule\Constraints;
 
 use Claroline\CoreBundle\Rule\Entity\Rule;
-use Claroline\CoreBundle\Entity\Log\Log;
 use Doctrine\ORM\QueryBuilder;
 
 class ResultConstraint extends AbstractConstraint
@@ -27,15 +26,13 @@ class ResultConstraint extends AbstractConstraint
 
         if (0 === count($this->getAssociatedLogs())) {
             $isValid = false;
-        }
-        else {
+        } else {
             foreach ($this->getAssociatedLogs() as $associatedLog) {
                 $associatedLogDetails = $associatedLog->getDetails();
 
                 if (isset($associatedLogDetails['result'])) {
                     $isValid = $isValid && version_compare($associatedLogDetails['result'], $this->getRule()->getResult(), $resultComparisonTypes[$this->getRule()->getResultComparison()]);
-                }
-                else {
+                } else {
                     $isValid = false;
                 }
             }

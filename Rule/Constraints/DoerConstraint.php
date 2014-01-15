@@ -11,8 +11,6 @@
 
 namespace Claroline\CoreBundle\Rule\Constraints;
 
-use Claroline\CoreBundle\Entity\Badge\BadgeRule;
-use Claroline\CoreBundle\Entity\Log\Log;
 use Claroline\CoreBundle\Rule\Entity\Rule;
 use Doctrine\ORM\QueryBuilder;
 
