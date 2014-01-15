@@ -12,6 +12,7 @@
 namespace Claroline\CoreBundle;
 
 use FOS\OAuthServerBundle\FOSOAuthServerBundle;
+use IDCI\Bundle\ExporterBundle\IDCIExporterBundle;
 use Nelmio\ApiDocBundle\NelmioApiDocBundle;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 use Claroline\KernelBundle\Bundle\AutoConfigurableInterface;
@@ -65,7 +66,6 @@ class ClarolineCoreBundle extends InstallableBundle implements AutoConfigurableI
             'Stof\DoctrineExtensionsBundle\StofDoctrineExtensionsBundle'    => 'stof_doctrine_extensions',
             'BeSimple\SsoAuthBundle\BeSimpleSsoAuthBundle'                  => 'sso',
             'Stfalcon\Bundle\TinymceBundle\StfalconTinymceBundle'           => 'stfalcon_tinymce',
-            'IDCI\Bundle\ExporterBundle\IDCIExporterBundle'                 => 'idci_exporter',
             'Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle' => 'sensio_framework_extra',
             'FOS\RestBundle\FOSRestBundle'                                  => 'fos_rest'
         );
@@ -99,6 +99,13 @@ class ClarolineCoreBundle extends InstallableBundle implements AutoConfigurableI
             $config
                 ->addContainerResource($this->buildPath('nelmio_api_doc_config'))
                 ->addRoutingResource($this->buildPath('nelmio_api_doc_routing'));
+
+            return $config;
+        } elseif ($bundle instanceof IDCIExporterBundle) {
+            $config = new ConfigurationBuilder();
+            $config
+                ->addContainerResource($this->buildPath('idci_exporter'))
+                ->addRoutingResource($this->buildPath('idci_exporter_routing'));
 
             return $config;
         } elseif (in_array($environment, array('dev', 'test'))) {
