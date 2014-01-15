@@ -348,7 +348,7 @@ class PathManager
                 }
             }
             
-            $this->em->flush();
+            //$this->em->flush();
             // récursivité sur les enfants possibles.
             $this->JSONParser($step->children, $user, $workspace, $pathsDirectory, $lvl+1, $currentStep->getId(), 0, $path, $stepsToNotDelete, $excludedResourcesToResourceNodes);
         }
