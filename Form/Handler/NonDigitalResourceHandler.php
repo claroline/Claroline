@@ -56,7 +56,6 @@ class NonDigitalResourceHandler
             $this->form->handleRequest($this->request);
             
             if ( $this->form->isValid() ) {
-                $message = $this->form->getData();
 
                 return true;
             }
