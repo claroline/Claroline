@@ -5,8 +5,6 @@ namespace Innova\PathBundle\Form\Handler;
 use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\Request;
 
-use Innova\PathBundle\Manager\NonDigitalResourceManager;
-
 /**
  * Handles non digital resource form
  */
@@ -23,21 +21,6 @@ class NonDigitalResourceHandler
      * @var \Symfony\Component\HttpFoundation\Request
      */
     protected $request;
-    
-    /**
-     * Path manager
-     * @var \Innova\PathBundle\Manager\NonDigitalResourceManager
-     */
-    protected $nonDigitalResourceManager;
-    
-    /**
-     * Class constructor
-     * @param \Innova\PathBundle\Manager\PathManager $pathManager
-     */
-    public function __construct(PathManager $nonDigitalResourceManager)
-    {
-        $this->nonDigitalResourceManager = $nonDigitalResourceManager;
-    }
     
     /**
      * Set current request
