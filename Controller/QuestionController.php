@@ -358,11 +358,11 @@ class QuestionController extends Controller
     {
         $question = $this->controlUserQuestion($id);
         $share    = $this->container->get('ujm.exercise_services')->controlUserSharedQuestion($id);
-        
+
         if(count($share) > 0) {
             $shareAllowEdit = $share[0]->getAllowToModify();
         }
-        
+
         if ( (count($question) > 0) || ($shareAllowEdit) ) {
             $interaction = $this->getDoctrine()
                 ->getManager()
@@ -416,6 +416,7 @@ class QuestionController extends Controller
                     return $this->render('UJMExoBundle:InteractionQCM:edit.html.twig', $variables);
 
                 case "InteractionGraphic":
+                    $docID = -1;
                     $interactionGraph = $this->getDoctrine()
                         ->getManager()
                         ->getRepository('UJMExoBundle:InteractionGraphic')
@@ -426,10 +427,14 @@ class QuestionController extends Controller
                         )
                     );
 
+                    if ($this->container->get('security.context')->getToken()->getUser()->getId() != $interactionGraph[0]->getInteraction()->getQuestion()->getUser()->getId()) {
+                        $docID = $interactionGraph[0]->getDocument()->getId();
+                    }
+
                     $editForm = $this->createForm(
                         new InteractionGraphicType(
                             $this->container->get('security.context')
-                                ->getToken()->getUser()
+                                ->getToken()->getUser(), $docID
                         ), $interactionGraph[0]
                     );
 

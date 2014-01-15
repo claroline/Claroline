@@ -186,6 +186,7 @@ class InteractionGraphicController extends Controller
     public function editAction($id)
     {
         $em = $this->getDoctrine()->getManager();
+        $docID = -1;
 
         $entity = $em->getRepository('UJMExoBundle:InteractionGraphic')->find($id);
 
@@ -193,9 +194,14 @@ class InteractionGraphicController extends Controller
             throw $this->createNotFoundException('Unable to find InteractionGraphic entity.');
         }
 
+        if ($this->container->get('security.context')->getToken()->getUser()->getId() != $entity->getInteraction()->getQuestion()->getUser()->getId()) {
+            $docID = $entity->getDocument()->getId();
+        }
+
         $editForm = $this->createForm(
             new InteractionGraphicType(
-                $this->container->get('security.context')->getToken()->getUser()
+                $this->container->get('security.context')->getToken()->getUser(),
+                $docID
             ), $entity
         );
 
@@ -217,6 +223,7 @@ class InteractionGraphicController extends Controller
     public function updateAction($id)
     {
         $exoID = $this->container->get('request')->request->get('exercise');
+        $docID = -1;
 
         $em = $this->getDoctrine()->getManager();
 
@@ -226,9 +233,14 @@ class InteractionGraphicController extends Controller
             throw $this->createNotFoundException('Unable to find InteractionGraphic entity.');
         }
 
+        if ($this->container->get('security.context')->getToken()->getUser()->getId() != $entity->getInteraction()->getQuestion()->getUser()->getId()) {
+            $docID = $entity->getDocument()->getId();
+        }
+
         $editForm = $this->createForm(
             new InteractionGraphicType(
-                $this->container->get('security.context')->getToken()->getUser()
+                $this->container->get('security.context')->getToken()->getUser(),
+                $docID
             ), $entity
         );
 
@@ -257,7 +269,8 @@ class InteractionGraphicController extends Controller
         return $this->forward(
             'UJMExoBundle:Question:edit', array(
                 'id' => $entity->getInteraction()->getQuestion()->getId(),
-                'form' => $editForm
+                'form' => $editForm,
+                'exoID' => $exoID
             )
         );
     }
