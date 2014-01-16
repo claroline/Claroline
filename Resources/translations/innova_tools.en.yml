@@ -19,12 +19,13 @@ close: Close
 
 # d
 
-deploy_success: Path has been deployed
-deploy_error: The path has not been deployed due to a technical problem. Please try again
+deploy_success: Path has been published
+deploy_error: The path has not been published due to a technical problem. Please try again.
 description: Description
 duration: Duration
 delete: Delete
-deploy: Deploy
+deploy: Publish
+draft: Not published
 
 
 # e
@@ -55,11 +56,13 @@ library: In a library
 # m
 
 my_paths : My paths
+modified: (with pending changes)
 
 
 # n
 
 next: Next
+no_path_found: No path found
 
 # o
 
@@ -75,6 +78,7 @@ path_delete_error: Le parcours has not been deleted due to technical problem. Pl
 play: Execute
 paths_list: Paths list
 progression: Progression
+published: Published
 
 # r
 

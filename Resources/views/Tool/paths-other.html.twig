@@ -1,0 +1,25 @@
+<div class="panel panel-default">
+    <div class="panel-heading" data-toggle="collapse" href="#otherpaths">
+        <span class="icon-align-justify"></span>
+        {{ 'others_paths' | trans({}, 'innova_tools') }}
+    </div>
+    <table id="otherpaths" class="table table-hover in" style="margin-top: -1px;">
+        {% for path in paths["others"] %}
+            {% if path.deployed %}
+            <tr>
+                <td>
+                    <strong>{{ path.resourceNode.name }}</strong>
+                </td>
+                <td>
+                    {{ path.description | striptags | truncate(40, true, ' [...]') }}
+                </td>
+                <td align="right">
+                    <a href="{{ path('innova_path_player_index', {workspaceId: workspace.id, pathId: path.id, stepId: path.getRootStep().id}) }}" data-original-title="{{ 'play' | trans({}, 'innova_tools') }}" class="btn btn-xs btn-default" />
+                        <span class="icon-play"></span>
+                    </a>
+                </td>
+            </tr>
+            {% endif %}
+        {% endfor %}
+    </table>
+</div>

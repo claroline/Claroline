@@ -21,10 +21,11 @@ close: Fermer
 
 description: Description
 duration: Durée
-deploy_success: Le parcours a été déployé
-deploy: Déployer
-deploy_error: Le parcours n'a pas pu être déployé. Veuillez réessayer
+deploy_success: Le parcours a été publié
+deploy: Publier
+deploy_error: Le parcours n'a pas pu être publié. Veuillez réessayer.
 delete: Supprimer
+draft: Non publié
 
 # e
 
@@ -51,11 +52,13 @@ local: Locales
 
 # m
 
-my_paths : Mes parcours
+my_paths: Mes parcours
+modified: (avec des modifications en attente)
 
 # n
 
 next: Suivant
+no_path_found: Aucun parcours trouvé
 
 # o
 
@@ -71,6 +74,7 @@ path_not_found: Le parcours n'a pas été trouvé
 play: Exécuter
 path_delete_success: Le parcours a été supprimé
 path_delete_error: Le parcours n'a pas pu être supprimé. Veuillez réessayer
+published: Publié
 
 # r
 
