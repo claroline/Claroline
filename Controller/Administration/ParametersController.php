@@ -91,7 +91,7 @@ class ParametersController extends Controller
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function platformSettingsFormAction()
+    public function settingsFormAction()
     {
         $platformConfig = $this->configHandler->getPlatformConfig();
         $role = $this->roleManager->getRoleByName($platformConfig->getDefaultRole());
@@ -119,7 +119,7 @@ class ParametersController extends Controller
      *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
-    public function submitPlatformSettingsAction()
+    public function submitSettingsAction()
     {
         $platformConfig = $this->configHandler->getPlatformConfig();
         $role = $this->roleManager->getRoleByName($platformConfig->getDefaultRole());
@@ -181,7 +181,7 @@ class ParametersController extends Controller
     {
         $platformConfig = $this->configHandler->getPlatformConfig();
         $form = $this->formFactory->create(
-            FormFactory::TYPE_PLATFORM_APPEARANCE_FORM,
+            FormFactory::TYPE_PLATFORM_APPEARANCE,
             array($this->getThemes()),
             $platformConfig
         );
@@ -207,7 +207,7 @@ class ParametersController extends Controller
     {
         $platformConfig = $this->configHandler->getPlatformConfig();
         $form = $this->formFactory->create(
-            FormFactory::TYPE_PLATFORM_APPEARANCE_FORM,
+            FormFactory::TYPE_PLATFORM_APPEARANCE,
             array($this->getThemes()),
             $platformConfig
         );
@@ -241,6 +241,52 @@ class ParametersController extends Controller
 
                 return array('form_appearance' => $form->createView());
             }
+        }
+
+        return $this->redirect($this->generateUrl('claro_admin_index'));
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/mail",
+     *     name="claro_admin_parameters_mail",
+     *     options={"expose"=true}
+     * )
+     *
+     * @EXT\Template("ClarolineCoreBundle:Administration\platform:mail.html.twig")
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function mailFormAction()
+    {
+        $form = $this->formFactory->create(FormFactory::TYPE_PLATFORM_MAIL_SETTINGS);
+
+        return array(
+            'form_mail' => $form->createView(),
+            'logos' => $this->get('claroline.common.logo_service')->listLogos()
+        );
+    }
+
+
+    /**
+     * @EXT\Route(
+     *     "/mail/submit",
+     *     name="claro_admin_edit_parameters_mail"
+     * )
+     *
+     * @EXT\Template("ClarolineCoreBundle:Administration\platform:settings.html.twig")
+     *
+     * Updates the platform settings and redirects to the settings form.
+     *
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     */
+    public function submitMailAction()
+    {
+        $form = $this->formFactory->create(FormFactory::TYPE_PLATFORM_PARAMETERS);
+        $form->handleRequest($this->request);
+
+        if ($form->isValid()) {
+//            throw new \Exception('lolilol');
         }
 
         return $this->redirect($this->generateUrl('claro_admin_index'));

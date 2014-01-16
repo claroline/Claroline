@@ -33,8 +33,6 @@
         var element = $('#delete-logo').data('element');
         var logo = $(element).data('logo');
 
-
-
         if (logo && element) {
             $.ajax(home.path + 'admin/delete/logo/' + logo)
             .done(function (data) {
@@ -51,5 +49,4 @@
             });
         }
     });
-
 })();

@@ -21,6 +21,13 @@ class PlatformConfiguration
     private $footer;
     private $role;
     private $cookieLifetime;
+    private $mailerTransport;
+    private $mailerHost;
+    private $mailerUsername;
+    private $mailerPassword;
+    private $mailerAuthenticationMode;
+    private $mailerEncryption;
+    private $mailerPort;
 
     public function getSelfRegistration()
     {
@@ -100,5 +107,75 @@ class PlatformConfiguration
     public function getCookieLifetime()
     {
         return $this->cookieLifetime;
+    }
+
+    public function setMailerTransport($transport)
+    {
+        $this->mailerTransport = $transport;
+    }
+
+    public function getMailerTransport()
+    {
+        return $this->mailerTransport;
+    }
+
+    public function setMailerHost($host)
+    {
+        $this->mailerHost = $host;
+    }
+
+    public function getMailerHost()
+    {
+        return $this->mailerHost;
+    }
+
+    public function setMailerUsername($username)
+    {
+        $this->mailerUsername = $username;
+    }
+
+    public function getMailerUsername()
+    {
+        return $this->mailerUsername;
+    }
+
+    public function setMailerPassword($password)
+    {
+        $this->mailerPassword = $password;
+    }
+
+    public function getMailerPassword()
+    {
+        return $this->mailerPassword;
+    }
+
+    public function setMailerEncryption($encryption)
+    {
+        $this->mailerEncryption = $encryption;
+    }
+
+    public function getMailerEncryption()
+    {
+        return $this->mailerEncryption;
+    }
+
+    public function setMailerPort($port)
+    {
+        $this->mailerPort = $port;
+    }
+
+    public function getMailerPort()
+    {
+        return $this->mailerPort;
+    }
+
+    public function setMailerAuthenticationMode($mode)
+    {
+        $this->mailerAuthenticationMode = $mode;
+    }
+
+    public function getMailerAuthenticationMode()
+    {
+        return $this->mailerAuthenticationMode;
     }
 }
