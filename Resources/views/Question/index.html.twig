@@ -138,7 +138,7 @@
                                             <a class="btn btn-default" data-toggle="tooltip" title="{{ 'edit' | trans }}" href="{{ path('ujm_question_edit', { 'id': interaction.question.id }) }}">
                                                 <i class="icon-pencil"></i>
                                             </a>
-                                            <a class="btn btn-default" data-toggle="tooltip" title="{{ 'delete of my bank' | trans }}" href="{{ path('ujm_question_delete', {
+                                            <a class="btn btn-default" data-toggle="tooltip" title="{{ 'delete' | trans }}" href="{{ path('ujm_question_delete', {
                                             'id': interaction.question.id, 'pageNow': pagerMy.getCurrentPage, 'maxPage': pagerMy.maxPerPage,
                                             'nbItem': pagerMy.getNbResults, 'lastPage': pagerMy.getNbPages }) }}">
                                                 <i class="icon-trash"></i>
@@ -244,6 +244,13 @@
                                                 </a>
                                             {% endif %}
                                         {% endif %}
+                                        <a class="btn btn-default" data-toggle="tooltip" title="{{ 'delete of my bank' | trans }}"
+                                           href="{{ path('ujm_delete_shared_question', { 'qid': myQShare.question.id,
+                                                'uid': app.user.id,
+                                                'pageNow': pagerShared.currentPage, 'maxPage': pagerShared.maxPerPage,
+                                                'nbItem': pagerShared.getNbResults, 'lastPage': pagerShared.getNbPages }) }}">
+                                            <i class="icon-trash"></i>
+                                        </a>
                                     </td>
                                 </tr>
                             {% endfor %}

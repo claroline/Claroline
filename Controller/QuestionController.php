@@ -1718,10 +1718,10 @@ class QuestionController extends Controller
     /**
      * To delete the shared question of user's questions bank
      */
-    public function deleteSharedQuestionAction($id, $pageNow, $maxPage, $nbItem, $lastPage)
+    public function deleteSharedQuestionAction($qid, $uid, $pageNow, $maxPage, $nbItem, $lastPage)
     {
         $em = $this->getDoctrine()->getManager();
-        $sharedToDel = $em->getRepository('UJMExoBundle:Share')->findOneBy(array('question' => $id));
+        $sharedToDel = $em->getRepository('UJMExoBundle:Share')->findOneBy(array('question' => $qid, 'user' => $uid));
 
         if (!$sharedToDel) {
             throw $this->createNotFoundException('Unable to find Share entity.');

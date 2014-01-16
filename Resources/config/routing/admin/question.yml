@@ -79,7 +79,7 @@ ujm_Document_name_alreadyExist:
       _method: POST
 
 ujm_delete_shared_question:
-    pattern:  /{id}/delete/{pageNow}/{maxPage}/{nbItem}/{lastPage}
+    pattern:  /{qid}/{uid}/delete/{pageNow}/{maxPage}/{nbItem}/{lastPage}
     defaults: { _controller: UJMExoBundle:Question:deleteSharedQuestion, pageNow: 1, maxPage: 10, nbItem: 1, lastPage: 1 }
 
 ujm_see_shared:
