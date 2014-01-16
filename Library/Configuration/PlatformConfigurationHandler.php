@@ -32,7 +32,8 @@ class PlatformConfigurationHandler
         'allow_self_registration' => true,
         'locale_language' => 'fr',
         'theme' => 'claroline',
-        'default_role' => 'ROLE_USER'
+        'default_role' => 'ROLE_USER',
+        'terms_of_service' => true
     );
 
     public function __construct(array $configFiles)
@@ -88,9 +89,10 @@ class PlatformConfigurationHandler
         $config->setSupportEmail($this->parameters['support_email']);
         $config->setFooter($this->parameters['footer']);
         $config->setSelfRegistration($this->parameters['allow_self_registration']);
-        $config->setLocalLanguage($this->parameters['locale_language']);
+        $config->setLocaleLanguage($this->parameters['locale_language']);
         $config->setTheme($this->parameters['theme']);
         $config->setDefaultRole($this->parameters['default_role']);
+        $config->setTermsOfService($this->parameters['terms_of_service']);
 
         return $config;
     }

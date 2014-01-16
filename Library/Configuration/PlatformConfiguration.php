@@ -16,10 +16,11 @@ class PlatformConfiguration
     private $name;
     private $supportEmail;
     private $selfRegistration;
-    private $localLanguage;
+    private $localeLanguage;
     private $theme;
     private $footer;
     private $role;
+    private $termsOfService;
 
     public function getSelfRegistration()
     {
@@ -33,12 +34,12 @@ class PlatformConfiguration
 
     public function getLocalLanguage()
     {
-        return $this->localLanguage;
+        return $this->localeLanguage;
     }
 
-    public function setLocalLanguage($localLanguage)
+    public function setLocalLanguage($localeLanguage)
     {
-        $this->localLanguage = $localLanguage;
+        $this->localeLanguage = $localeLanguage;
     }
 
     public function getTheme()
@@ -89,5 +90,15 @@ class PlatformConfiguration
     public function getDefaultRole()
     {
         return $this->role;
+    }
+
+    public function setTermsOfService($termsOfService)
+    {
+        $this->termsOfService = $termsOfService;
+    }
+
+    public function getTermsOfService()
+    {
+        return $this->termsOfService;
     }
 }
