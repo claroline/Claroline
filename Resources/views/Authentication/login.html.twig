@@ -24,7 +24,7 @@ same message when authentication has failed (no precise validation errors).
             <form action="{{ path('claro_security_login_check') }}" method="post">
                 <div class="panel-body">
                     <div class="form-group">
-                        <label for="username">{{ 'username'|trans({}, 'platform') }}</label>
+                        <label for="username">{{ 'username_or_email'|trans({}, 'platform') }}</label>
                         <input type="text" class="form-control" id="username" name="_username" placeholder="{{ 'username'|trans({}, 'platform') }}" tabindex="1" autofocus>
                     </div>
                     <div class="form-group">
@@ -36,6 +36,8 @@ same message when authentication has failed (no precise validation errors).
                         </label>
                         <input type="password" class="form-control" id="password" name="_password" placeholder="{{ 'password'|trans({}, 'platform') }}" tabindex="2">
                     </div>
+                    <input type="checkbox" id="remember_me" name="_remember_me" />
+                    <label for="remember_me">{{ 'keep_me_logged_in'|trans({}, 'platform') }}</label>
                 </div>
                 <div class="panel-footer">
                     <button type="submit" class="btn btn-primary" tabindex="3">{{ 'login'|trans({}, 'platform') }}</button>

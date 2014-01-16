@@ -34,6 +34,7 @@ class PlatformConfigurationHandler
         'theme' => 'claroline',
         'default_role' => 'ROLE_USER',
         'terms_of_service' => true
+        'cookie_lifetime' => 3600
     );
 
     public function __construct(array $configFiles)
@@ -93,6 +94,7 @@ class PlatformConfigurationHandler
         $config->setTheme($this->parameters['theme']);
         $config->setDefaultRole($this->parameters['default_role']);
         $config->setTermsOfService($this->parameters['terms_of_service']);
+        $config->setCookieLifetime($this->parameters['cookie_lifetime']);
 
         return $config;
     }

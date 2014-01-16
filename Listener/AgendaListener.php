@@ -18,8 +18,8 @@ use Symfony\Bundle\TwigBundle\TwigEngine;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Routing\RouterInterface;
-use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\HttpKernel\HttpKernelInterface;
 
 /**
  *  @DI\Service()
@@ -36,14 +36,13 @@ class AgendaListener
 
     /**
      * @DI\InjectParams({
-     *     "formFactory"       = @DI\Inject("claroline.form.factory"),
-     *     "templating"        = @DI\Inject("templating"),
-     *     "sc"                = @DI\Inject("security.context"),
-     *     "container"         = @DI\Inject("service_container"),
-     *     "router"            = @DI\Inject("router"),
-     *     "requeststack"           = @DI\Inject("request_stack"),
-     *     "httpKernel"        = @DI\Inject("http_kernel"),
-     * })
+     *     "formFactory"    = @DI\Inject("claroline.form.factory"),
+     *     "templating"     = @DI\Inject("templating"),
+     *     "sc"             = @DI\Inject("security.context"),
+     *     "container"      = @DI\Inject("service_container"),
+     *     "router"         = @DI\Inject("router"),
+     *     "requestStack"   = @DI\Inject("request_stack"),
+     *     "httpKernel"     = @DI\Inject("http_kernel")
      * })
      */
     public function __construct(
@@ -52,7 +51,7 @@ class AgendaListener
         SecurityContextInterface $sc,
         ContainerInterface $container,
         RouterInterface $router,
-        RequestStack $requeststack,
+        RequestStack $requestStack,
         HttpKernelInterface $httpKernel
     )
     {
@@ -61,7 +60,7 @@ class AgendaListener
         $this->sc = $sc;
         $this->container = $container;
         $this->router = $router;
-        $this->request = $requeststack->getCurrentRequest();
+        $this->request = $requestStack->getCurrentRequest();
         $this->httpKernel = $httpKernel;
     }
 
@@ -80,7 +79,7 @@ class AgendaListener
         $event->stopPropagation();
     }
 
-    public function workspaceAgenda($workspaceId)
+    public function workspaceAgenda()
     {
         $em = $this->container->get('doctrine.orm.entity_manager');
         $usr = $this->container->get('security.context')->getToken()->getUser();
@@ -88,25 +87,19 @@ class AgendaListener
 
         return $this->templating->render(
             'ClarolineCoreBundle:Widget:agenda_widget.html.twig',
-            array(
-                'listEvents' => $owners,
-            )
+            array('listEvents' => $owners)
         );
     }
 
     public function desktopAgenda()
     {
         if (!$this->request) {
-            throw new \Exception("There is no request");
+            throw new NoHttpRequestException();
         }
 
         $params = array();
         $params['_controller'] = 'ClarolineCoreBundle:Tool\DesktopAgenda:widget';
-        $subRequest = $this->request->duplicate(
-            array(),
-            null,
-            $params
-        );
+        $subRequest = $this->request->duplicate(array(), null, $params);
         $response = $this->httpKernel->handle($subRequest, HttpKernelInterface::SUB_REQUEST);
 
         return $response->getContent();

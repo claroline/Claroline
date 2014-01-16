@@ -21,6 +21,7 @@ class PlatformConfiguration
     private $footer;
     private $role;
     private $termsOfService;
+    private $cookieLifetime;
 
     public function getSelfRegistration()
     {
@@ -100,5 +101,15 @@ class PlatformConfiguration
     public function getTermsOfService()
     {
         return $this->termsOfService;
+    }
+
+    public function setCookieLifetime($time)
+    {
+        $this->cookieLifetime = $time;
+    }
+
+    public function getCookieLifetime()
+    {
+        return $this->cookieLifetime;
     }
 }
