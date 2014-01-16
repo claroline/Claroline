@@ -53,6 +53,8 @@ class FormFactory
     const TYPE_RESOURCE_TEXT = 'resource_text';
     const TYPE_USER_FULL = 'user_full';
     const TYPE_USER_BASE_PROFILE = 'user_base_profile';
+    const TYPE_PLATFORM_APPEARANCE = 'platform_appearance';
+    const TYPE_PLATFORM_MAIL_SETTINGS = 'platform_mail_settings';
 
     private static $types = array(
         self::TYPE_MESSAGE => array(
@@ -80,7 +82,7 @@ class FormFactory
             'entity' => 'Claroline\CoreBundle\Entity\Group'
         ),
         self::TYPE_PLATFORM_PARAMETERS => array(
-            'formType' => 'Claroline\CoreBundle\Form\PlatformParametersType',
+            'formType' => 'Claroline\CoreBundle\Form\Administration\GeneralType',
             'entity' => 'Claroline\CoreBundle\Library\Configuration\PlatformConfiguration'
         ),
         self::TYPE_USER_IMPORT => array(
@@ -178,6 +180,12 @@ class FormFactory
         self::TYPE_USER_BASE_PROFILE => array(
             'formType' => 'Claroline\CoreBundle\Form\BaseProfileType',
             'entity' => 'Claroline\CoreBundle\Entity\User'
+        ),
+        self:: TYPE_PLATFORM_APPEARANCE => array(
+            'formType' => 'Claroline\CoreBundle\Form\Administration\AppearanceType'
+        ),
+        self:: TYPE_PLATFORM_MAIL_SETTINGS => array(
+            'formType' => 'Claroline\CoreBundle\Form\Administration\MailType'
         )
     );
 

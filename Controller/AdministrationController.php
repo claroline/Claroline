@@ -16,7 +16,6 @@ use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Event\StrictDispatcher;
 use Claroline\CoreBundle\Form\Factory\FormFactory;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
-use Claroline\CoreBundle\Library\Configuration\UnwritableException;
 use Claroline\CoreBundle\Manager\AnalyticsManager;
 use Claroline\CoreBundle\Manager\GroupManager;
 use Claroline\CoreBundle\Manager\LocaleManager;
@@ -29,7 +28,6 @@ use JMS\DiExtraBundle\Annotation as DI;
 use JMS\SecurityExtraBundle\Annotation as SEC;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -117,7 +115,10 @@ class AdministrationController extends Controller
     }
 
     /**
-     * @EXT\Template("ClarolineCoreBundle:Administration:index.html.twig")
+     * @EXT\Route(
+     *     "/index",
+     *     name="claro_admin_index"
+     * )
      *
      * Displays the administration section index.
      *
@@ -125,7 +126,7 @@ class AdministrationController extends Controller
      */
     public function indexAction()
     {
-        return array();
+        return $this->redirect($this->generateUrl('claro_admin_parameters_index'));
     }
 
     /**
@@ -607,101 +608,6 @@ class AdministrationController extends Controller
     }
 
     /**
-     * @EXT\Route(
-     *     "/platform/settings/form",
-     *     name="claro_admin_platform_settings_form"
-     * )
-     * @EXT\Route(
-     *     "/",
-     *     name="claro_admin_index",
-     *     options={"expose"=true}
-     * )
-     *
-     * @EXT\Template()
-     *
-     * Displays the platform settings.
-     *
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function platformSettingsFormAction()
-    {
-        $platformConfig = $this->configHandler->getPlatformConfig();
-        $role = $this->roleManager->getRoleByName($platformConfig->getDefaultRole());
-        $form = $this->formFactory->create(
-            FormFactory::TYPE_PLATFORM_PARAMETERS,
-            array($this->getThemes(), $this->localeManager->getAvailableLocales(), $role),
-            $platformConfig
-        );
-
-        return array(
-            'form_settings' => $form->createView(),
-            'logos' => $this->get('claroline.common.logo_service')->listLogos()
-        );
-    }
-
-    /**
-     * @EXT\Route(
-     *     "claro_admin_update_platform_settings",
-     *     name="claro_admin_update_platform_settings"
-     * )
-     *
-     * @EXT\Template("ClarolineCoreBundle:Administration:platformSettingsForm.html.twig")
-     *
-     * Updates the platform settings and redirects to the settings form.
-     *
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse
-     */
-    public function updatePlatformSettingsAction()
-    {
-        $platformConfig = $this->configHandler->getPlatformConfig();
-        $role = $this->roleManager->getRoleByName($platformConfig->getDefaultRole());
-        $form = $this->formFactory->create(
-            FormFactory::TYPE_PLATFORM_PARAMETERS,
-            array($this->getThemes(), $this->localeManager->getAvailableLocales(), $role),
-            $platformConfig
-        );
-        $form->handleRequest($this->request);
-
-        if ($form->isValid()) {
-            try {
-                $this->configHandler->setParameters(
-                    array(
-                        'allow_self_registration' => $form['selfRegistration']->getData(),
-                        'locale_language' => $form['localLanguage']->getData(),
-                        'theme' => $form['theme']->getData(),
-                        'name' => $form['name']->getData(),
-                        'support_email' => $form['support_email']->getData(),
-                        'footer' => $form['footer']->getData(),
-                        'logo' => $this->request->get('selectlogo'),
-                        'default_role' => $form['defaultRole']->getData()->getName(),
-                        'cookie_lifetime' => $form['cookie_lifetime']->getData()
-                    )
-                );
-
-                $logo = $this->request->files->get('logo');
-
-                if ($logo) {
-                    $this->get('claroline.common.logo_service')->createLogo($logo);
-                }
-            } catch (UnwritableException $e) {
-                $form->addError(
-                    new FormError(
-                        $this->translator->trans(
-                            'unwritable_file_exception',
-                            array('%path%' => $e->getPath()),
-                            'platform'
-                        )
-                    )
-                );
-
-                return array('form_settings' => $form->createView());
-            }
-        }
-
-        return $this->redirect($this->generateUrl('claro_admin_platform_settings_form'));
-    }
-
-    /**
      * @EXT\Route("delete/logo/{file}", name="claro_admin_delete_logo")
      *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
@@ -892,23 +798,6 @@ class AdministrationController extends Controller
         }
 
         return array('form' => $form->createView(), 'group' => $group);
-    }
-
-    /**
-     *  Get the list of themes availables.
-     *  @TODO use directory iterator
-     *
-     *  @return array with a list of the themes availables.
-     */
-    private function getThemes()
-    {
-        $tmp = array();
-
-        foreach ($this->get('claroline.common.theme_service')->getThemes() as $theme) {
-            $tmp[str_replace(' ', '-', strtolower($theme->getName()))] = $theme->getName();
-        }
-
-        return $tmp;
     }
 
     /**
