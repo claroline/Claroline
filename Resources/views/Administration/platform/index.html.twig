@@ -5,15 +5,15 @@
 {% block breadcrumb %}
 {{
     macros.breadcrumbs([
-    {
-    'icon': 'icon-cog',
-    'name': 'administration'|trans({}, 'platform'),
-    'href': path('claro_admin_parameters_index')
-    },
-    {
-    'name': 'parameters'|trans({}, 'platform'),
-    'href': ''
-    }
+        {
+            'icon': 'icon-cog',
+            'name': 'administration'|trans({}, 'platform'),
+            'href': path('claro_admin_parameters_index')
+        },
+        {
+            'name': 'parameters'|trans({}, 'platform'),
+            'href': ''
+        }
     ])
 }}
 {% endblock %}
@@ -30,8 +30,8 @@
         <a class="list-group-item" href="{{ path('claro_admin_parameters_appearance') }}">
             {{ 'appearance'|trans({}, 'platform') }}
         </a>
-        <a class="list-group-item" href="#">
-            {{ 'general_term_of_service'|trans({}, 'platform') }}
+        <a class="list-group-item" href="{{ path('claro_admin_edit_terms_of_service') }}">
+            {{ 'Terms of service' | trans({}, 'platform') }}
         </a>
         <a class="list-group-item" href="{{ path('claro_admin_parameters_mail_index') }}">
             {{ 'mail'|trans({}, 'platform') }}

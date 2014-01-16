@@ -56,7 +56,7 @@ class GeneralType extends AbstractType
                 )
             )
             ->add(
-                'localLanguage',
+                'localeLanguage',
                 'choice',
                 array(
                     'choices' => $this->langs

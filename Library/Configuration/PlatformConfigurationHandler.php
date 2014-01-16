@@ -40,7 +40,8 @@ class PlatformConfigurationHandler
         'mailer_password' => null,
         'mailer_auth_mode' => null,
         'mailer_encryption' => null,
-        'mailer_port' => null
+        'mailer_port' => null,
+        'terms_of_service' => true
     );
 
     public function __construct(array $configFiles)
@@ -96,9 +97,10 @@ class PlatformConfigurationHandler
         $config->setSupportEmail($this->parameters['support_email']);
         $config->setFooter($this->parameters['footer']);
         $config->setSelfRegistration($this->parameters['allow_self_registration']);
-        $config->setLocalLanguage($this->parameters['locale_language']);
+        $config->setLocaleLanguage($this->parameters['locale_language']);
         $config->setTheme($this->parameters['theme']);
         $config->setDefaultRole($this->parameters['default_role']);
+        $config->setTermsOfService($this->parameters['terms_of_service']);
         $config->setCookieLifetime($this->parameters['cookie_lifetime']);
         $config->setMailerAuthMode($this->parameters['mailer_auth_mode']);
         $config->setMailerEncryption($this->parameters['mailer_encryption']);

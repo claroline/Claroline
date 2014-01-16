@@ -1,15 +1,16 @@
-'Add a logo': 'Add a logo'
-'Audience/user visits': 'Audience/user visits'
-'Choose a logo': 'Choose a logo'
-'Select a Language': 'Select a Language'
 404: 'Page Not found'
 Action List: 'Action List'
 Actions per day: 'Actions per day'
+Activate the terms of service in the platform: 'Activate the terms of service in the platform'
+Add a logo: 'Add a logo'
 An error has occurred, please check if the file size does not exceeds the permitted size: 'An error has occurred, please check if the file size does not exceeds the permitted size'
+Audience/user visits: 'Audience/user visits'
+Choose a logo: 'Choose a logo'
 Choose visible actions in the widget: 'Choose visible actions in the widget'
 Choose workspaces displayed in the widget: 'Choose workspaces displayed in the widget'
 Draw an area on the graph to zoom, double-click to cancel: 'Draw an area on the graph to zoom, double-click to cancel'
 Filter actions: 'Filter actions'
+I accept the terms of service: 'I accept the terms of service'
 Language: 'Language'
 Last action: '{1} Last action|[1,Inf] Last %logAmount% actions'
 None: 'None'
@@ -18,7 +19,9 @@ Overview of all recent activities in %workspaceName% : 'Overview of all recent a
 Overview of recent activities in %workspaceName%: 'Overview of recent activities in %workspaceName%'
 Overview of recent activities of your workspaces: 'Overview of recent activities of your workspaces'
 See all: 'See all'
+Select a Language: 'Select a Language'
 Show actions: 'Show actions'
+Terms of service: 'Terms of service'
 The form is not valid: 'The form is not valid'
 Upload a file: 'Upload a file'
 Your changes have been saved: 'Your changes have been saved'
@@ -369,11 +372,17 @@ personal_workspace: 'Personal workspace'
 phone: Phone
 platform_appearance: Platform appearance
 platform_parameters: 'Platform parameters'
+platform_parameters_form_auth_mode: Authentication mode
+platform_parameters_form_cookie_lifetime: Session lifetime
 platform_parameters_form_defaultRole: 'Default role'
+platform_parameters_form_encryption: Encryption
 platform_parameters_form_footer: 'Footer'
+platform_parameters_form_host: Host
 platform_parameters_form_icon: 'Platform Icon'
-platform_parameters_form_localLanguage: 'Default Language'
+platform_parameters_form_localeLanguage: 'Default Language'
 platform_parameters_form_name: 'Name of the platform'
+platform_parameters_form_password: Password
+platform_parameters_form_port: Port
 platform_parameters_form_selfRegistration: Auto-inscription
 platform_parameters_form_theme: Theme
 platform_parameters_form_cookie_lifetime: Session lifetime

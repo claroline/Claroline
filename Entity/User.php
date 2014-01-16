@@ -243,6 +243,11 @@ class User extends AbstractRoleSubject implements Serializable, UserInterface, E
      */
     protected $description;
 
+    /**
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    protected $termsOfService;
+
     public function __construct()
     {
         parent::__construct();
@@ -783,6 +788,16 @@ class User extends AbstractRoleSubject implements Serializable, UserInterface, E
     public function setDescription($description)
     {
         $this->description = $description;
+    }
+
+    public function getTermsOfService()
+    {
+        return $this->termsOfService;
+    }
+
+    public function setTermsOfService($termsOfService)
+    {
+        $this->termsOfService = $termsOfService;
     }
 
     public function getOrderableFields()
