@@ -1,5 +1,5 @@
 <?php
-namespace Claroline\CoreBundle\Entity\Home;
+namespace Claroline\CoreBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Translatable\Entity\MappedSuperclass\AbstractTranslation;
