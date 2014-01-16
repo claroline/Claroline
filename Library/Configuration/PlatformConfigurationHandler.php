@@ -33,7 +33,14 @@ class PlatformConfigurationHandler
         'locale_language' => 'fr',
         'theme' => 'claroline',
         'default_role' => 'ROLE_USER',
-        'cookie_lifetime' => 0
+        'cookie_lifetime' => 0,
+        'mailer_transport' => null,
+        'mailer_host' => null,
+        'mailer_username' => null,
+        'mailer_password' => null,
+        'mailer_auth_mode' => null,
+        'mailer_encryption' => null,
+        'mailer_port' => null
     );
 
     public function __construct(array $configFiles)
@@ -93,6 +100,14 @@ class PlatformConfigurationHandler
         $config->setTheme($this->parameters['theme']);
         $config->setDefaultRole($this->parameters['default_role']);
         $config->setCookieLifetime($this->parameters['cookie_lifetime']);
+        $config->setMailerAuthMode($this->parameters['mailer_auth_mode']);
+        $config->setMailerEncryption($this->parameters['mailer_encryption']);
+        $config->setMailerHost($this->parameters['mailer_host']);
+        $config->setMailerPassword($this->parameters['mailer_password']);
+        $config->setMailerUsername($this->parameters['mailer_username']);
+        $config->setMailerPort($this->parameters['mailer_port']);
+        $config->setMailerHost($this->parameters['mailer_host']);
+        $config->setMailerTransport($this->parameters['mailer_transport']);
 
         return $config;
     }

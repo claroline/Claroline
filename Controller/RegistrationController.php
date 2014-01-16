@@ -115,7 +115,7 @@ class RegistrationController extends Controller
                 PlatformRoles::USER
             );
             $msg = $this->get('translator')->trans('account_created', array(), 'platform');
-            $this->getRequest()->getSession()->getFlashBag()->add('success', $msg);
+            $this->get('request')->getSession()->getFlashBag()->add('success', $msg);
         }
 
         return array('form' => $form->createView());

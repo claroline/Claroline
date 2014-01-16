@@ -169,12 +169,12 @@ class PlatformConfiguration
         return $this->mailerPort;
     }
 
-    public function setMailerAuthenticationMode($mode)
+    public function setMailerAuthMode($mode)
     {
         $this->mailerAuthenticationMode = $mode;
     }
 
-    public function getMailerAuthenticationMode()
+    public function getMailerAuthMode()
     {
         return $this->mailerAuthenticationMode;
     }

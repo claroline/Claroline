@@ -148,13 +148,16 @@ class AdministrationController extends Controller
         $form = $this->formFactory->create(
             FormFactory::TYPE_USER_FULL, array($roles, $this->localeManager->getAvailableLocales())
         );
-        if ($this->mailManager->isMailerAvailable()) {
-            return array('form_complete_user' => $form->createView());
+
+        $error = null;
+
+        if (!$this->mailManager->isMailerAvailable()) {
+            $error = 'Mail not available';
         }
 
         return array(
             'form_complete_user' => $form->createView(),
-            'error' => 'Mail not available'
+            'error' => $error
         );
     }
 
@@ -187,7 +190,16 @@ class AdministrationController extends Controller
             return $this->redirect($this->generateUrl('claro_admin_user_list'));
         }
 
-        return array('form_complete_user' => $form->createView());
+        $error = null;
+
+        if (!$this->mailManager->isMailerAvailable()) {
+            $error = 'Mail not available';
+        }
+
+        return array(
+            'form_complete_user' => $form->createView(),
+            'error' => $error
+        );
     }
 
     /**
