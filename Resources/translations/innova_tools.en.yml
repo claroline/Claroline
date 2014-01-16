@@ -31,12 +31,6 @@ deploy: Deploy
 
 edit: Edit
 
-# f
-
-full_tree: Full tree
-full_path_notice_1: You can view the full structure of the path by clicking the button  
-full_path_notice_2: This button will be available on the top left at any stage of your progression.
-
 
 # g
 
@@ -46,22 +40,10 @@ group: In group
 # h
 
 heritated_from: Heritated from
-history: History
 
 # i
 
 informations: Informations
-
-# i
-
-
-
-# j
-
-
-
-# k
-
 
 
 # l
@@ -78,7 +60,6 @@ my_paths : My paths
 # n
 
 next: Next
-next_step: Next steps
 
 # o
 
@@ -95,10 +76,6 @@ play: Execute
 paths_list: Paths list
 progression: Progression
 
-# q
-
-
-
 # r
 
 resources: Resources
@@ -109,17 +86,6 @@ resources: Resources
 submit: Submit
 student: Individually
 
-# t
-
-
-
-# u
-
-
-
-# v
-
-
 
 # w
 
@@ -128,12 +94,3 @@ without_computer: Without a computer
 with_tutor: With a tutor
 without_tutor: Without a tutor
 
-# x
-
-
-
-# y
-
-
-
-# z

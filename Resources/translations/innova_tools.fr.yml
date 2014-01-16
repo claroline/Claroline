@@ -30,12 +30,6 @@ delete: Supprimer
 
 edit: Editer
 
-# f
-
-full_tree: Arborescence
-full_path_notice_1: Vous pouvez afficher l'arborescence complète du parcours en cliquant sur le bouton 
-full_path_notice_2: Ce bouton sera accessible en haut à gauche à n'importe quelle étape de votre progression.
-
 # g
 
 group: En groupe
@@ -44,19 +38,10 @@ groupware: Collecticiel
 # h
 
 heritated_from: Héritées de
-history: Historique
 
 # i
 
 informations: Informations
-
-# i
-
-
-# j
-
-
-# k
 
 
 # l
@@ -71,7 +56,6 @@ my_paths : Mes parcours
 # n
 
 next: Suivant
-next_step: Etapes suivantes
 
 # o
 
@@ -88,9 +72,6 @@ play: Exécuter
 path_delete_success: Le parcours a été supprimé
 path_delete_error: Le parcours n'a pas pu être supprimé. Veuillez réessayer
 
-# q
-
-
 # r
 
 resources: Ressources
@@ -100,26 +81,9 @@ resources: Ressources
 submit: Sauvegarder
 student: Individuellement
 
-# t
-
-
-# u
-
-
-# v
-
-
 # w
 
 with_computer: Avec un ordinateur
 without_computer: Sans ordinateur
 with_tutor: Avec un tuteur
 without_tutor: Sans tuteur
-
-# x
-
-
-# y
-
-
-# z
