@@ -74,9 +74,10 @@ class BadgeRuleType extends AbstractType
                 'badge',
                 'entity',
                 array(
+                     'attr'        => array('class' => 'fullwidth'),
                      'class'       => 'ClarolineCoreBundle:Badge\badge',
                      'choices'     => $badgeChoices,
-                     'empty_value' => 'badge_form_badge_selection',
+                     'empty_value' => '',
                      'property'    => 'name'
                 )
             )

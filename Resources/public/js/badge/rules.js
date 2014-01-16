@@ -99,6 +99,18 @@ $(function(){
         var newTabContent = tabContentPrototype.replace(/__name__/g, tabIndex);
 
         $(".rules").append(newTabContent);
+
+        function format(state) {
+            console.log(state);
+            if (!state.id) return state.text; // optgroup
+            return state.text;
+        }
+        $("#badge_form_rules_" +tabIndex + "_badge").removeClass('form-control').select2({
+            placeholder:     Translator.get('badge:badge_form_badge_selection'),
+            allowClear:      true,
+            formatResult:    format,
+            formatSelection: format
+        });
     }
 
     function deleteRule(tabId)
