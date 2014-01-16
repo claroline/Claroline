@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Claroline\CoreBundle\Entity\Home;
+namespace Claroline\CoreBundle\Home;
 
 use Doctrine\ORM\Mapping as ORM;
 
