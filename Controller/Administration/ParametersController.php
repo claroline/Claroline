@@ -11,23 +11,25 @@
 
 namespace Claroline\CoreBundle\Controller\Administration;
 
-use Icap\BlogBundle\Controller\Controller;
-use JMS\DiExtraBundle\Annotation as DI;
-use JMS\SecurityExtraBundle\Annotation as SEC;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Claroline\CoreBundle\Form\Factory\FormFactory;
+use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Library\Configuration\UnwritableException;
-use Symfony\Component\Form\FormError;
 use Claroline\CoreBundle\Manager\LocaleManager;
 use Claroline\CoreBundle\Manager\RoleManager;
-use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
+use Claroline\CoreBundle\Manager\TermsOfServiceManager;
+use Icap\BlogBundle\Controller\Controller;
+use JMS\DiExtraBundle\Annotation as DI;
+use JMS\SecurityExtraBundle\Annotation\PreAuthorize;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
  * @DI\Tag("security.secure_service")
- * @SEC\PreAuthorize("hasRole('ADMIN')")
+ * @PreAuthorize("hasRole('ADMIN')")
  *
  * Controller of the platform parameters section.
  */
@@ -41,11 +43,12 @@ class ParametersController extends Controller
 
     /**
      * @DI\InjectParams({
-     *     "configHandler" = @DI\Inject("claroline.config.platform_config_handler"),
-     *     "roleManager"   = @DI\Inject("claroline.manager.role_manager"),
-     *     "formFactory"   = @DI\Inject("claroline.form.factory"),
-     *     "localeManager" = @DI\Inject("claroline.common.locale_manager"),
-     *     "request"       = @DI\Inject("request")
+     *     "configHandler"  = @DI\Inject("claroline.config.platform_config_handler"),
+     *     "roleManager"    = @DI\Inject("claroline.manager.role_manager"),
+     *     "formFactory"    = @DI\Inject("claroline.form.factory"),
+     *     "localeManager"  = @DI\Inject("claroline.common.locale_manager"),
+     *     "termsOfService" = @DI\Inject("claroline.common.terms_of_service_manager"),
+     *     "request"        = @DI\Inject("request")
      * })
      */
     public function __construct(
@@ -53,6 +56,7 @@ class ParametersController extends Controller
         RoleManager $roleManager,
         FormFactory $formFactory,
         LocaleManager $localeManager,
+        TermsOfServiceManager $termsOfService,
         Request $request
     )
     {
@@ -60,12 +64,13 @@ class ParametersController extends Controller
         $this->roleManager = $roleManager;
         $this->formFactory = $formFactory;
         $this->request = $request;
+        $this->termsOfService = $termsOfService;
         $this->localeManager = $localeManager;
     }
 
     /**
-     * @EXT\Template("ClarolineCoreBundle:Administration\platform:index.html.twig")
-     * @EXT\Route(
+     * @Template("ClarolineCoreBundle:Administration\platform:index.html.twig")
+     * @Route(
      *     "/index",
      *     name="claro_admin_parameters_index"
      * )
@@ -80,12 +85,12 @@ class ParametersController extends Controller
     }
 
     /**
-     * @EXT\Route(
+     * @Route(
      *     "/general",
      *     name="claro_admin_parameters_general",
      *     options={"expose"=true}
      * )
-     * @EXT\Template("ClarolineCoreBundle:Administration\platform:settings.html.twig")
+     * @Template("ClarolineCoreBundle:Administration\platform:settings.html.twig")
      *
      * Displays the platform settings.
      *
@@ -108,12 +113,12 @@ class ParametersController extends Controller
     }
 
     /**
-     * @EXT\Route(
+     * @Route(
      *     "/general/submit",
      *     name="claro_admin_edit_parameters_general"
      * )
      *
-     * @EXT\Template("ClarolineCoreBundle:Administration\platform:settings.html.twig")
+     * @Template("ClarolineCoreBundle:Administration\platform:settings.html.twig")
      *
      * Updates the platform settings and redirects to the settings form.
      *
@@ -135,7 +140,7 @@ class ParametersController extends Controller
                 $this->configHandler->setParameters(
                     array(
                         'allow_self_registration' => $form['selfRegistration']->getData(),
-                        'locale_language' => $form['localLanguage']->getData(),
+                        'locale_language' => $form['localeLanguage']->getData(),
                         'name' => $form['name']->getData(),
                         'support_email' => $form['support_email']->getData(),
                         'default_role' => $form['defaultRole']->getData()->getName(),
@@ -167,13 +172,13 @@ class ParametersController extends Controller
     }
 
     /**
-     * @EXT\Route(
+     * @Route(
      *     "/appearance",
      *     name="claro_admin_parameters_appearance",
      *     options={"expose"=true}
      * )
      *
-     * @EXT\Template("ClarolineCoreBundle:Administration\platform:appearance.html.twig")
+     * @Template("ClarolineCoreBundle:Administration\platform:appearance.html.twig")
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -193,7 +198,7 @@ class ParametersController extends Controller
     }
 
     /**
-     * @EXT\Route(
+     * @Route(
      *     "/appearance/submit",
      *     name="claro_admin_edit_parameters_appearance",
      *     options={"expose"=true}
@@ -247,13 +252,13 @@ class ParametersController extends Controller
     }
 
     /**
-     * @EXT\Route(
+     * @Route(
      *     "/mail",
      *     name="claro_admin_parameters_mail",
      *     options={"expose"=true}
      * )
      *
-     * @EXT\Template("ClarolineCoreBundle:Administration\platform:mail.html.twig")
+     * @Template("ClarolineCoreBundle:Administration\platform:mail.html.twig")
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -269,12 +274,12 @@ class ParametersController extends Controller
 
 
     /**
-     * @EXT\Route(
+     * @Route(
      *     "/mail/submit",
      *     name="claro_admin_edit_parameters_mail"
      * )
      *
-     * @EXT\Template("ClarolineCoreBundle:Administration\platform:settings.html.twig")
+     * @Template("ClarolineCoreBundle:Administration\platform:settings.html.twig")
      *
      * Updates the platform settings and redirects to the settings form.
      *
@@ -285,16 +290,55 @@ class ParametersController extends Controller
         $form = $this->formFactory->create(FormFactory::TYPE_PLATFORM_PARAMETERS);
         $form->handleRequest($this->request);
 
-        if ($form->isValid()) {
-//            throw new \Exception('lolilol');
+        /*if ($form->isValid()) {
+            throw new \Exception('lolilol');
+        }*/
+
+        return $this->redirect($this->generateUrl('claro_admin_index'));
+    }
+
+    /**
+     * @Route(
+     *     "/terms_of_service",
+     *     name="claro_admin_edit_terms_of_service"
+     * )
+     *
+     * @Template("ClarolineCoreBundle:Administration\platform:termsOfService.html.twig")
+     *
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     */
+    public function termsOfServiceAction()
+    {
+        return array(
+            'langs' => $this->localeManager->getAvailableLocales(),
+            'isActive' => $this->configHandler->getParameter('terms_of_service'),
+            'termsOfService' => $this->termsOfService->getAvailableTermsOfService()
+        );
+    }
+
+    /**
+     * Updates the platform settings and redirects to the settings form.
+     *
+     * @Route("/terms_of_service/submit", name="claro_admin_edit_terms_of_service_submit")
+     *
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     */
+    public function submitTermsOfServiceAction()
+    {
+        if ($this->request->get('isActive')) {
+            $this->configHandler->setParameter('terms_of_service', true);
+        } else {
+            $this->configHandler->setParameter('terms_of_service', false);
         }
+
+        /*$termOfService = $this->request->get('termOfService');
+        throw new \Exception(var_dump($termOfService));*/
 
         return $this->redirect($this->generateUrl('claro_admin_index'));
     }
 
     /**
      *  Get the list of themes availables.
-     *  @TODO use directory iterator
      *
      *  @return array with a list of the themes availables.
      */

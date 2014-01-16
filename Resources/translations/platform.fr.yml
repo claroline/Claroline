@@ -1,6 +1,7 @@
 404 : 'La page que vous cherchez n''existe pas.'
 Action List: 'Liste des actions'
 Actions per day: 'Nombre d''actions par jour'
+Activate the terms of service in the platform: 'Activez les conditions de service dans la plate-forme'
 Add a logo: 'Ajouter un logo'
 An error has occurred, please check if the file size does not exceeds the permitted size: 'Une erreur s''est produite, veuillez vérifier si la taille du fichier ne dépasse pas la taille autorisée'
 Audience/user visits: 'Audience/Visites utilisateurs'
@@ -368,21 +369,21 @@ personal_workspace: 'Espace personnel'
 phone: Téléphone
 platform_appearance: Apparence de la plateforme
 platform_parameters: 'Paramètres de la plateforme'
+platform_parameters_form_auth_mode: Mode d'authentification
+platform_parameters_form_cookie_lifetime: Durée de la session
 platform_parameters_form_defaultRole: 'Rôle par défaut'
+platform_parameters_form_encryption: Encryption
 platform_parameters_form_footer: 'Pied de page'
+platform_parameters_form_host: Host
 platform_parameters_form_icon: 'Icône de la plateforme'
-platform_parameters_form_localLanguage: 'Langue par défaut'
+platform_parameters_form_localeLanguage: 'Langue par défaut'
 platform_parameters_form_name: 'Nom de la plateforme'
+platform_parameters_form_password: Mot de passe
+platform_parameters_form_port: Port
 platform_parameters_form_selfRegistration: Auto-inscription
 platform_parameters_form_theme: Thème
-platform_parameters_form_cookie_lifetime: Durée de la session
 platform_parameters_form_transport: Transport
-platform_parameters_form_host: Host
 platform_parameters_form_username: Nom d'utilisateur
-platform_parameters_form_password: Mot de passe
-platform_parameters_form_auth_mode: Mode d'authentification
-platform_parameters_form_encryption: Encryption
-platform_parameters_form_port: Port
 platform_plugins: 'Plugins de la plateforme'
 platform_role: 'Rôle plateforme'
 platform_widgets: 'Widgets de la plateforme'
@@ -576,8 +577,8 @@ user_form_plainPassword_second: Vérification
 user_form_username: 'Nom d''utilisateur'
 user_parameters: 'Paramètres de l''utilisateur'
 username: 'Nom d''utilisateur'
-username_or_email: Nom d'utilisateur ou email
 username_found_at: 'Le nom d''utilisateur %username% a été trouvé aux lignes: %lines%'
+username_or_email: Nom d'utilisateur ou email
 users: Utilisateurs
 users_connected_once: 'utilisateurs connectés au moins 1 fois sur la plateforme'
 users_import: 'Importer des utilisateurs'

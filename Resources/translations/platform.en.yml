@@ -1,6 +1,7 @@
 404: 'Page Not found'
 Action List: 'Action List'
 Actions per day: 'Actions per day'
+Activate the terms of service in the platform: 'Activate the terms of service in the platform'
 Add a logo: 'Add a logo'
 An error has occurred, please check if the file size does not exceeds the permitted size: 'An error has occurred, please check if the file size does not exceeds the permitted size'
 Audience/user visits: 'Audience/user visits'
@@ -370,21 +371,21 @@ personal_workspace: 'Personal workspace'
 phone: Phone
 platform_appearance: Platform appearance
 platform_parameters: 'Platform parameters'
+platform_parameters_form_auth_mode: Authentication mode
+platform_parameters_form_cookie_lifetime: Session lifetime
 platform_parameters_form_defaultRole: 'Default role'
+platform_parameters_form_encryption: Encryption
 platform_parameters_form_footer: 'Footer'
+platform_parameters_form_host: Host
 platform_parameters_form_icon: 'Platform Icon'
-platform_parameters_form_localLanguage: 'Default Language'
+platform_parameters_form_localeLanguage: 'Default Language'
 platform_parameters_form_name: 'Name of the platform'
+platform_parameters_form_password: Password
+platform_parameters_form_port: Port
 platform_parameters_form_selfRegistration: Auto-inscription
 platform_parameters_form_theme: Theme
-platform_parameters_form_cookie_lifetime: Session lifetime
 platform_parameters_form_transport: Transport
-platform_parameters_form_host: Host
 platform_parameters_form_username: Username
-platform_parameters_form_password: Password
-platform_parameters_form_auth_mode: Authentication mode
-platform_parameters_form_encryption: Encryption
-platform_parameters_form_port: Port
 platform_plugins: 'Platform plugins'
 platform_role: 'Platform role'
 platform_widgets: 'Platform widgets'

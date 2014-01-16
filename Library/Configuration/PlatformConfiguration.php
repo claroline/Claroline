@@ -40,12 +40,12 @@ class PlatformConfiguration
         $this->selfRegistration = $selfRegistration;
     }
 
-    public function getLocalLanguage()
+    public function getLocaleLanguage()
     {
         return $this->localeLanguage;
     }
 
-    public function setLocalLanguage($localeLanguage)
+    public function setLocaleLanguage($localeLanguage)
     {
         $this->localeLanguage = $localeLanguage;
     }

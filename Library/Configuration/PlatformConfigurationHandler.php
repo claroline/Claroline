@@ -33,7 +33,7 @@ class PlatformConfigurationHandler
         'locale_language' => 'fr',
         'theme' => 'claroline',
         'default_role' => 'ROLE_USER',
-        'terms_of_service' => true
+        'terms_of_service' => true,
         'cookie_lifetime' => 3600
     );
 

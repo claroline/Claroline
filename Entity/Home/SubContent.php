@@ -31,13 +31,13 @@ class SubContent
     private $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Home\Content")
+     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Content")
      * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
      */
     private $father;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Home\Content")
+     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Content")
      * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
      */
     private $child;
@@ -118,7 +118,7 @@ class SubContent
     /**
      * Set father
      *
-     * @param  \Claroline\CoreBundle\Entity\Home\Content $father
+     * @param  \Claroline\CoreBundle\Entity\Content $father
      * @return SubContent
      */
     public function setFather(Content $father)
@@ -131,7 +131,7 @@ class SubContent
     /**
      * Get father
      *
-     * @return \Claroline\CoreBundle\Entity\Home\Content
+     * @return \Claroline\CoreBundle\Entity\Content
      */
     public function getFather()
     {
@@ -141,7 +141,7 @@ class SubContent
     /**
      * Set child
      *
-     * @param  \Claroline\CoreBundle\Entity\Home\Content $child
+     * @param  \Claroline\CoreBundle\Entity\Content $child
      * @return SubContent
      */
     public function setChild(Content $child)
@@ -154,7 +154,7 @@ class SubContent
     /**
      * Get child
      *
-     * @return \Claroline\CoreBundle\Entity\Home\Content
+     * @return \Claroline\CoreBundle\Entity\Content
      */
     public function getChild()
     {
@@ -164,7 +164,7 @@ class SubContent
     /**
      * Get child alias
      *
-     * @return \Claroline\CoreBundle\Entity\Home\Content
+     * @return \Claroline\CoreBundle\Entity\Content
      */
     public function getContent()
     {

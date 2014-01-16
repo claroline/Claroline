@@ -15,7 +15,7 @@ use JMS\DiExtraBundle\Annotation\InjectParams;
 use JMS\DiExtraBundle\Annotation\Inject;
 use JMS\DiExtraBundle\Annotation\Service;
 use Claroline\CoreBundle\Entity\Home\Type;
-use Claroline\CoreBundle\Entity\Home\Content;
+use Claroline\CoreBundle\Entity\Content;
 use Claroline\CoreBundle\Entity\Home\SubContent;
 use Claroline\CoreBundle\Entity\Home\Content2Type;
 use Claroline\CoreBundle\Entity\Home\Content2Region;
@@ -50,7 +50,7 @@ class HomeManager
         $this->homeService = $homeService;
         $this->type = $manager->getRepository('ClarolineCoreBundle:Home\Type');
         $this->region = $manager->getRepository('ClarolineCoreBundle:Home\Region');
-        $this->content = $manager->getRepository('ClarolineCoreBundle:Home\Content');
+        $this->content = $manager->getRepository('ClarolineCoreBundle:Content');
         $this->subContent = $manager->getRepository('ClarolineCoreBundle:Home\SubContent');
         $this->contentType = $manager->getRepository('ClarolineCoreBundle:Home\Content2Type');
         $this->contentRegion = $manager->getRepository('ClarolineCoreBundle:Home\Content2Region');

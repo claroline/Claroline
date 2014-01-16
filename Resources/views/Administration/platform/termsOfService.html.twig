@@ -1,0 +1,73 @@
+{% extends "ClarolineCoreBundle:Administration:layout.html.twig" %}
+
+{% block title %}{{ parent() ~ ' - ' ~ 'home' | trans({}, 'platform') | striptags | raw }}{% endblock %}
+
+{% block breadcrumb %}
+    {{
+        macros.breadcrumbs([
+            {
+                'icon': 'icon-cog',
+                'name': 'administration'|trans({}, 'platform'),
+                'href': path('claro_admin_index')
+            },
+            {
+                'name': 'parameters'|trans({}, 'platform'),
+                'href': path('claro_admin_index')
+            },
+            {
+                'name': 'Terms of service'|trans({}, 'platform'),
+                'href': ''
+            }
+        ])
+    }}
+{% endblock %}
+
+{% block section_content %}
+    <div class="panel-heading">
+        <h3 class="panel-title">{{ 'Terms of service'|trans({}, 'platform') }}</h3>
+    </div>
+    <form class='terms-of-service' action="{{ path('claro_admin_edit_terms_of_service_submit') }}" method="post">
+        <div class="panel-body">
+            <ul class="nav nav-tabs">
+                {% for lang in langs %}
+                    <li class="pointer-hand{% if loop.first %} active{% endif %}"><a>{{ lang | upper }}</a></li>
+                {% endfor %}
+            </ul>
+            {% for lang in langs %}
+                <div class="margin-top-md{% if not loop.first %} hide{% endif %}">
+                    <textarea name="termOfService[{{ lang }}]" class="hide claroline-tiny-mce">{% spaceless %}
+                        {% if lang in termsOfService | keys %}{{ termsOfService[lang] }}{% endif %}
+                    {% endspaceless %}</textarea>
+                </div>
+            {% endfor %}
+            <div class="checkbox">
+                <label>
+                    <input name='isActive' type="checkbox"{% if isActive %} checked{% endif %}>
+                    {{ 'Activate the terms of service in the platform' | trans({}, 'platform') }}
+                </label>
+            </div>
+        </div>
+        <div class="panel-footer">
+            <button type="submit" class="btn btn-primary">{{ 'ok'|trans({}, 'platform') }}</button>
+            <a href="{{ path('claro_admin_index') }}">
+                <button type="button" class="btn btn-default">{{ 'cancel'|trans({}, 'platform') }}</button>
+            </a>
+        </div>
+    </form>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        (function () {
+            'use strict';
+
+            $('body').on('click', '.terms-of-service .nav.nav-tabs a', function () {
+                $('.terms-of-service .nav.nav-tabs li').removeClass('active');
+                $(this).parent().addClass('active');
+                $('.terms-of-service textarea').parent().addClass('hide');
+                $('textarea[name="termOfService[' + $(this).text().toLowerCase() +']"]').parent().removeClass('hide');
+            });
+        }());
+    </script>
+{% endblock%}
