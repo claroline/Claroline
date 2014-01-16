@@ -251,6 +251,7 @@ import_user_file_file: 'Importer depuis fichier csv'
 import_users: 'Importer des utilisateurs'
 informations: Informations
 instructions: Consignes
+inscription_mail: Mail d'inscription
 internal_error : 'Erreur interne du serveur. Veuillez contactez l''administrateur de la plateforme.'
 invalid_csv_file: 'Le fichier CSV n''est pas valide'
 is_already_in_category: 'est déjà dans la catégorie'

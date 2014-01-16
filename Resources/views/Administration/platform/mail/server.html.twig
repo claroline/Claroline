@@ -16,6 +16,11 @@
     },
     {
     'name': 'mail'|trans({}, 'platform'),
+    'href': path('claro_admin_parameters_mail_index')
+    }
+    ,
+    {
+    'name': 'server'|trans({}, 'platform'),
     'href': ''
     }
     ])
@@ -28,7 +33,7 @@
     </div>
     {{ macros.flashBox() }}
     {% form_theme form_mail 'ClarolineCoreBundle::form_theme_no_translations.html.twig' %}
-    <form class="form-horizontal" action="{{ path('claro_admin_edit_parameters_mail') }}" method="post" {{ form_enctype(form_mail) }} id="form_settings" enctype='multipart/form-data'>
+    <form class="form-horizontal" action="{{ path('claro_admin_edit_parameters_mail_server') }}" method="post" {{ form_enctype(form_mail) }} id="form_settings" enctype='multipart/form-data'>
         <div class="panel-body">
             {{ form_widget(form_mail) }}
         </div>

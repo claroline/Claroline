@@ -251,6 +251,7 @@ import_user_file_file: Import from a csv file
 import_users: 'Import users'
 informations: Informations
 instructions: Instructions
+inscription_mail: Inscription mail
 internal_error : Internal server error. Please contact the administrator.
 invalid_csv_file: 'Invalid CSV file'
 is_already_in_category: 'is already in category'

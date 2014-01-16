@@ -3,7 +3,7 @@
 {% block title %}{{ parent() ~ ' - ' ~ 'parameters' | trans({}, 'platform') | striptags | raw }}{% endblock %}
 
 {% block breadcrumb %}
-{{
+    {{
     macros.breadcrumbs([
     {
     'icon': 'icon-cog',
@@ -12,10 +12,14 @@
     },
     {
     'name': 'parameters'|trans({}, 'platform'),
+    'href': path('claro_admin_parameters_index')
+    },
+    {
+    'name': 'mail'|trans({}, 'platform'),
     'href': ''
     }
     ])
-}}
+    }}
 {% endblock %}
 
 {% block section_content %}
@@ -24,17 +28,9 @@
         <h3 class="panel-title">{{ 'parameters'|trans({}, 'platform') }}</h3>
     </div>
     <div class="list-group">
-        <a class="list-group-item" href="{{ path('claro_admin_parameters_general') }}">
-            {{ 'general'|trans({}, 'platform') }}
+        <a class="list-group-item" href="{{ path('claro_admin_parameters_mail_server') }}">
+            {{ 'server'|trans({}, 'platform') }}
         </a>
-        <a class="list-group-item" href="{{ path('claro_admin_parameters_appearance') }}">
-            {{ 'appearance'|trans({}, 'platform') }}
-        </a>
-        <a class="list-group-item" href="#">
-            {{ 'general_term_of_service'|trans({}, 'platform') }}
-        </a>
-        <a class="list-group-item" href="{{ path('claro_admin_parameters_mail_index') }}">
-            {{ 'mail'|trans({}, 'platform') }}
         </a>
     </div>
 {% endblock %}

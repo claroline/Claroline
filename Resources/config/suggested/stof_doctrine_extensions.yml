@@ -5,3 +5,4 @@ stof_doctrine_extensions:
             blameable: true
             timestampable: true
             sluggable: true
+            translatable: true

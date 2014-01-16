@@ -256,11 +256,11 @@ class ParametersController extends Controller
     /**
      * @EXT\Route(
      *     "/mail",
-     *     name="claro_admin_parameters_mail",
+     *     name="claro_admin_parameters_mail_server",
      *     options={"expose"=true}
      * )
      *
-     * @EXT\Template("ClarolineCoreBundle:Administration\platform:mail.html.twig")
+     * @EXT\Template("ClarolineCoreBundle:Administration\platform\mail:server.html.twig")
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -273,20 +273,17 @@ class ParametersController extends Controller
             $platformConfig
         );
 
-        return array(
-            'form_mail' => $form->createView(),
-            'logos' => $this->get('claroline.common.logo_service')->listLogos()
-        );
+        return array('form_mail' => $form->createView());
     }
 
 
     /**
      * @EXT\Route(
      *     "/mail/submit",
-     *     name="claro_admin_edit_parameters_mail"
+     *     name="claro_admin_edit_parameters_mail_server"
      * )
      *
-     * @EXT\Template("ClarolineCoreBundle:Administration\platform:mail.html.twig")
+     * @EXT\Template("ClarolineCoreBundle:Administration\platform\mail:server.html.twig")
      *
      * Updates the platform settings and redirects to the settings form.
      *
@@ -349,6 +346,22 @@ class ParametersController extends Controller
         );
 
         return $this->redirect($this->generateUrl('claro_admin_index'));
+    }
+
+    /**
+     * @EXT\Template("ClarolineCoreBundle:Administration\platform\mail:index.html.twig")
+     * @EXT\Route(
+     *     "/mail/index",
+     *     name="claro_admin_parameters_mail_index"
+     * )
+     *
+     * Displays the administration section index.
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function mailIndexAction()
+    {
+        return array();
     }
 
     /**
