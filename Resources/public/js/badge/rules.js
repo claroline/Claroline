@@ -101,8 +101,6 @@ $(function(){
         $(".rules").append(newTabContent);
 
         function format(state) {
-            console.log(state);
-            if (!state.id) return state.text; // optgroup
             return state.text;
         }
         $("#badge_form_rules_" +tabIndex + "_badge").removeClass('form-control').select2({
