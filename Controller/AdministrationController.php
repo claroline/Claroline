@@ -905,7 +905,6 @@ class AdministrationController extends Controller
      *
      * Displays platform analytics home page
      *
-     *
      * @return Response
      *
      * @throws \Exception
@@ -938,7 +937,6 @@ class AdministrationController extends Controller
      * @EXT\Template("ClarolineCoreBundle:Administration:analytics_connections.html.twig")
      *
      * Displays platform analytics connections page
-     *
      *
      * @return Response
      *
@@ -988,7 +986,6 @@ class AdministrationController extends Controller
      * @EXT\Template("ClarolineCoreBundle:Administration:analytics_resources.html.twig")
      *
      * Displays platform analytics resources page
-     *
      *
      * @return Response
      *
@@ -1230,6 +1227,12 @@ class AdministrationController extends Controller
      *      class="ClarolineCoreBundle:User",
      *      options={"multipleIds" = true, "name" = "subjectIds"}
      * )
+     *
+     * @param string      $roleKey
+     * @param Workspace[] $workspaces
+     * @param User[]      $users
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function subscribeMultipleUsersToMultipleWorkspacesAction(
         $roleKey,
@@ -1283,6 +1286,12 @@ class AdministrationController extends Controller
      *      class="ClarolineCoreBundle:Group",
      *      options={"multipleIds" = true, "name" = "subjectIds"}
      * )
+     *
+     * @param string      $roleKey
+     * @param Workspace[] $workspaces
+     * @param Group[]     $groups
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function subscribeMultipleGroupsToMultipleWorkspacesAction(
         $roleKey,
@@ -1336,6 +1345,11 @@ class AdministrationController extends Controller
      *      class="ClarolineCoreBundle:User",
      *      options={"multipleIds" = true, "name" = "subjectIds"}
      * )
+     *
+     * @param Role[] $roles
+     * @param User[] $users
+     *
+     * @return Response
      */
     public function subscribeMultipleUsersToOneWorkspaceAction(
         array $roles,
@@ -1383,6 +1397,11 @@ class AdministrationController extends Controller
      *      class="ClarolineCoreBundle:Group",
      *      options={"multipleIds" = true, "name" = "subjectIds"}
      * )
+     *
+     * @param Role[] $roles
+     * @param Group[] $groups
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function subscribeMultipleGroupsToOneWorkspaceAction(
         array $roles,
