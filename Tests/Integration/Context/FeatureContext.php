@@ -233,10 +233,10 @@ class FeatureContext extends MinkContext
     */
     public function IHaveATokenForUser($user)
     {
-        $user = $this->getContainer()->get('doctrine')->getRepository('ClarolineCoreBundle:User')->loadUserByUsername($user);
+        $user            = $this->getContainer()->get('doctrine')->getRepository('ClarolineCoreBundle:User')->loadUserByUsername($user);
         $securityContext = $this->getContainer()->get('security.context');
-        $provider = 'main';
-        $token = new UsernamePasswordToken($user, null, $provider, $user->getRoles());
+        $provider        = 'main';
+        $token           = new UsernamePasswordToken($user, null, $provider, $user->getRoles());
         $securityContext->setToken($token);
     }
 
