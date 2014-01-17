@@ -1,10 +1,12 @@
 default:
-  context:
-    class: Claroline\CoreBundle\Tests\Integration\Context\FeatureContext
-  extensions:
-    Behat\MinkExtension\Extension:
-      base_url: http://localhost/claroline-behat/web/app.php/
-      default_session: selenium2
-      selenium2: ~
-      show_cmd: firefox %s
-    Behat\Symfony2Extension\Extension: ~
+    context:
+        class: Claroline\CoreBundle\Tests\Integration\Context\FeatureContext
+    extensions:
+        Behat\MinkExtension\Extension:
+            base_url: http://localhost/claroline-behat/web/app.php/
+            default_session: goutte
+            javascript_session: selenium2
+            selenium2: ~
+            goutte: ~
+            show_cmd: firefox %s
+        Behat\Symfony2Extension\Extension: ~
