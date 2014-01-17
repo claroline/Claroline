@@ -392,8 +392,8 @@ class ParametersController extends Controller
     }
 
     /**
-     * Template("ClarolineCoreBundle:Administration\platform\mail:index.html.twig")
-     * Route(
+     * @Template("ClarolineCoreBundle:Administration\platform\mail:index.html.twig")
+     * @Route(
      *     "/mail/index",
      *     name="claro_admin_parameters_mail_index"
      * )
