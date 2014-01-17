@@ -12,6 +12,7 @@
 namespace Claroline\CoreBundle\Entity\Home;
 
 use Doctrine\ORM\Mapping as ORM;
+use Claroline\CoreBundle\Entity\Content;
 
 /**
  * Content2Type

@@ -92,8 +92,7 @@ class ParametersController extends Controller
     /**
      * @Route(
      *     "/general",
-     *     name="claro_admin_parameters_general",
-     *     options={"expose"=true}
+     *     name="claro_admin_parameters_general"
      * )
      * @Template("ClarolineCoreBundle:Administration\platform:settings.html.twig")
      *
@@ -179,8 +178,7 @@ class ParametersController extends Controller
     /**
      * @Route(
      *     "/appearance",
-     *     name="claro_admin_parameters_appearance",
-     *     options={"expose"=true}
+     *     name="claro_admin_parameters_appearance"
      * )
      *
      * @Template("ClarolineCoreBundle:Administration\platform:appearance.html.twig")
@@ -205,8 +203,7 @@ class ParametersController extends Controller
     /**
      * @Route(
      *     "/appearance/submit",
-     *     name="claro_admin_edit_parameters_appearance",
-     *     options={"expose"=true}
+     *     name="claro_admin_edit_parameters_appearance"
      * )
      *
      * Displays the platform settings.
@@ -258,16 +255,15 @@ class ParametersController extends Controller
 
     /**
      * @Route(
-     *     "/mail",
-     *     name="claro_admin_parameters_mail_server",
-     *     options={"expose"=true}
+     *     "/mail/server",
+     *     name="claro_admin_parameters_mail_server"
      * )
      *
      * @Template("ClarolineCoreBundle:Administration\platform\mail:server.html.twig")
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function mailFormAction()
+    public function mailServerFormAction()
     {
         $platformConfig = $this->configHandler->getPlatformConfig();
         $form = $this->formFactory->create(
@@ -282,7 +278,7 @@ class ParametersController extends Controller
 
     /**
      * @Route(
-     *     "/mail/submit",
+     *     "/mail/server/submit",
      *     name="claro_admin_edit_parameters_mail_server"
      * )
      *
@@ -292,7 +288,7 @@ class ParametersController extends Controller
      *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
-    public function submitMailAction()
+    public function submitMailServerAction()
     {
         $platformConfig = $this->configHandler->getPlatformConfig();
         $form = $this->formFactory->create(
@@ -349,6 +345,36 @@ class ParametersController extends Controller
         );
 
         return $this->redirect($this->generateUrl('claro_admin_index'));
+    }
+
+    /**
+     * @Route(
+     *     "/mail/inscription",
+     *     name="claro_admin_parameters_mail_server"
+     * )
+     *
+     * @Template("ClarolineCoreBundle:Administration\platform\mail:inscription.html.twig")
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function inscriptionMailFormAction()
+    {
+
+    }
+
+    public function submitInscriptionMailAction()
+    {
+
+    }
+
+    public function mailLayoutFormAction()
+    {
+
+    }
+
+    public function submitMailLayoutAction()
+    {
+
     }
 
     /**
