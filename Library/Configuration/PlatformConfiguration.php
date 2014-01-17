@@ -21,6 +21,13 @@ class PlatformConfiguration
     private $footer;
     private $role;
     private $cookieLifetime;
+    private $mailerTransport;
+    private $mailerHost;
+    private $mailerPort;
+    private $mailerEncryption;
+    private $mailerUsername;
+    private $mailerPassword;
+    private $mailerAuthMode;
 
     public function getSelfRegistration()
     {
@@ -100,5 +107,75 @@ class PlatformConfiguration
     public function getCookieLifetime()
     {
         return $this->cookieLifetime;
+    }
+
+    public function getMailerTransport()
+    {
+        return $this->mailerTransport;
+    }
+
+    public function setMailerTransport($mailerTransport)
+    {
+        $this->mailerTransport = $mailerTransport;
+    }
+
+    public function setMailerAuthMode($mailerAuthMode)
+    {
+        $this->mailerAuthMode = $mailerAuthMode;
+    }
+
+    public function getMailerAuthMode()
+    {
+        return $this->mailerAuthMode;
+    }
+
+    public function setMailerEncryption($mailerEncryption)
+    {
+        $this->mailerEncryption = $mailerEncryption;
+    }
+
+    public function getMailerEncryption()
+    {
+        return $this->mailerEncryption;
+    }
+
+    public function setMailerHost($mailerHost)
+    {
+        $this->mailerHost = $mailerHost;
+    }
+
+    public function getMailerHost()
+    {
+        return $this->mailerHost;
+    }
+
+    public function setMailerPassword($mailerPassword)
+    {
+        $this->mailerPassword = $mailerPassword;
+    }
+
+    public function getMailerPassword()
+    {
+        return $this->mailerPassword;
+    }
+
+    public function setMailerPort($mailerPort)
+    {
+        $this->mailerPort = $mailerPort;
+    }
+
+    public function getMailerPort()
+    {
+        return $this->mailerPort;
+    }
+
+    public function setMailerUsername($mailerUsername)
+    {
+        $this->mailerUsername = $mailerUsername;
+    }
+
+    public function getMailerUsername()
+    {
+        return $this->mailerUsername;
     }
 }
