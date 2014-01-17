@@ -13,40 +13,34 @@ function ResourceFactory(PathFactory) {
         name                : null,
         description         : null,
         type                : null,
-        subType             : null,
         url                 : null,
         isDigital           : false,
         propagateToChildren : true
     };
     
-    var resourceSubTypes = {
-        document: [
-            {key: 'text',        label: 'Text'},
-            {key: 'sound',       label: 'Sound'},
-            {key: 'picture',     label: 'Picture'},
-            {key: 'video',       label: 'Video'},
-            {key: 'simulation',  label: 'Simulation'},
-            {key: 'test',        label: 'Test'},
-            {key: 'other',       label: 'Other'},
-            {key: 'indifferent', label: 'Indifferent'}
-        ],
-        tool: [
-            {key: 'chat',          label: 'Chat'},
-            {key: 'forum',         label: 'Forum'},
-            {key: 'deposit_files', label: 'Deposit files'},
-            {key: 'other',         label: 'Other'},
-            {key: 'indifferent',   label: 'Indifferent'}
-        ]
-    };
+    var resourceTypes = [
+        {key: 'text',        label: 'Text'},
+        {key: 'sound',       label: 'Sound'},
+        {key: 'picture',     label: 'Picture'},
+        {key: 'video',       label: 'Video'},
+        {key: 'simulation',  label: 'Simulation'},
+        {key: 'test',        label: 'Test'},
+        {key: 'other',       label: 'Other'},
+        {key: 'indifferent', label: 'Indifferent'}
+        {key: 'chat',          label: 'Chat'},
+        {key: 'forum',         label: 'Forum'},
+        {key: 'deposit_files', label: 'Deposit files'},
+        {key: 'other',         label: 'Other'},
+        {key: 'indifferent',   label: 'Indifferent'}
+    ];
     
     return {
         /**
          * 
-         * @param resourceType
          * @returns object
          */
-        getResourceSubTypes: function(resourceType) {
-            return resourceSubTypes[resourceType] || {};
+        getResourceTypes: function() {
+            return resourceTypes;
         },
         
         /**
@@ -74,6 +68,7 @@ function ResourceFactory(PathFactory) {
         generateNewResource: function() {
             var newResource = jQuery.extend(true, {}, baseResource);
             newResource.id = PathFactory.getNextResourceId();
+            
             return newResource;
         },
         

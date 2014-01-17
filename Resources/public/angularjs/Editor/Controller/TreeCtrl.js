@@ -4,7 +4,6 @@
  * Tree Controller
  */
 function TreeCtrl($scope, $modal, HistoryFactory, PathFactory, StepFactory, ResourceFactory) {
-    $scope.initPath(PathFactory.getPath());
     $scope.whoList = StepFactory.getWhoList();
     $scope.whereList = StepFactory.getWhereList();
     
@@ -120,7 +119,12 @@ function TreeCtrl($scope, $modal, HistoryFactory, PathFactory, StepFactory, Reso
      */
     $scope.addChild = function(step) {
         var newStep = StepFactory.generateNewStep(step);
+        
+        if (typeof step.children == undefined || null == step.children) {
+            step.children = [];
+        }
         step.children.push(newStep);
+        
         HistoryFactory.update($scope.path);
         $scope.updatePreviewStep();
     };
@@ -220,7 +224,7 @@ function TreeCtrl($scope, $modal, HistoryFactory, PathFactory, StepFactory, Reso
      * Open modal to modify specified resource properties
      * @returns void
      */
-    $scope.editResource = function(resourceType, resource) {
+    $scope.editResource = function(resource) {
         var editResource = false;
 
         if (resource) {
@@ -232,12 +236,7 @@ function TreeCtrl($scope, $modal, HistoryFactory, PathFactory, StepFactory, Reso
         var modalInstance = $modal.open({
             templateUrl: EditorApp.webDir + 'angularjs/Resource/Partial/resource-edit.html',
             controller: 'ResourceModalCtrl',
-            resolve: {
-                // Send resource type to form
-                resourceType: function() {
-                    return resourceType;
-                }
-            }
+
         });
 
         // Process modal results
@@ -280,7 +279,7 @@ function TreeCtrl($scope, $modal, HistoryFactory, PathFactory, StepFactory, Reso
     };
 
     /**
-     *
+     * Exclude a resource herited from parents
      * @returns void
      */
     $scope.excludeParentResource= function(resource) {
@@ -292,7 +291,7 @@ function TreeCtrl($scope, $modal, HistoryFactory, PathFactory, StepFactory, Reso
     };
 
     /**
-     *
+     * Include a resource herited from parents which has been excluded
      * @returns void
      */
     $scope.includeParentResource= function(resource) {

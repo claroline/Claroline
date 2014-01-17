@@ -14,6 +14,8 @@ use Claroline\CoreBundle\Entity\Resource\AbstractResource;
  */
 class Path extends AbstractResource
 {
+    const DEFAULT_NAME = 'My path';
+    
     /**
      * JSON structure of the path
      * @var string
@@ -206,5 +208,43 @@ class Path extends AbstractResource
         }
         
         return $root;
+    }
+    
+    /**
+     * Initialize a new path entity with required info and structure
+     * @param string $name
+     * @return \Innova\PathBundle\Entity\Path
+     */
+    public static function initialize($name = null)
+    {
+        $path = new Path();
+        if (empty($name)) {
+            $name = static::DEFAULT_NAME;
+        }
+    
+        $path->setName($name);
+    
+        // Init path structure
+        $structure = $path->initializeStructure();
+        $path->setStructure($structure);
+    
+        return $path;
+    }
+    
+    public function initializeStructure()
+    {
+        $structure = array (
+            'name' => $this->getName(),
+            'description' => $this->getDescription(),
+            'steps' =>
+            array (
+                array (
+                    'id' => 1,
+                    'name' => $this->getName(),
+                ),
+            ),
+        );
+    
+        return json_encode($structure);
     }
 }

@@ -39,21 +39,20 @@ namespace Innova\PathBundle\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\HttpFoundation\JsonResponse;
 
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 
 // Controller dependencies
-use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\Security\Core\SecurityContextInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 use Innova\PathBundle\Manager\PathManager;
+use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 
 /**
  * Class PathController
@@ -76,22 +75,10 @@ use Innova\PathBundle\Manager\PathManager;
 class PathController
 {
     /**
-     * Current entity manager for data persist
-     * @var \Doctrine\ORM\EntityManager
-     */
-    protected $entityManager;
-    
-    /**
      * Current session
      * @var \Symfony\Component\HttpFoundation\Session\SessionInterface
      */
     protected $session;
-    
-    /**
-     * Current security context
-     * @var \Symfony\Component\Security\Core\SecurityContextInterface
-     */
-    protected $securityContext;
     
     /**
      * Router manager
@@ -120,25 +107,19 @@ class PathController
     /**
      * Class constructor
      * Inject needed dependencies
-     * @param EntityManagerInterface   $entityManager
      * @param SessionInterface         $session
-     * @param SecurityContextInterface $securityContext
      * @param RouterInterface          $router
      * @param TranslatorInterface      $translator
      * @param PathManager              $pathManager
      */
     public function __construct(
-	    EntityManagerInterface   $entityManager,
         SessionInterface         $session,
-        SecurityContextInterface $securityContext,
         RouterInterface          $router,
         TranslatorInterface      $translator,
         PathManager              $pathManager
     )
     {
-        $this->entityManager   = $entityManager;
         $this->session         = $session;
-        $this->securityContext = $securityContext;
         $this->router          = $router;
         $this->translator      = $translator;
         $this->pathManager     = $pathManager;
@@ -154,69 +135,6 @@ class PathController
         $this->request = $request;
         
         return $this;
-    }
-    
-    
-    /**
-     * Default action when tool is opened from workspace
-     * Displays list of available paths for current worspace
-     * @return array workspace / paths
-     *
-     * @Route(
-     *     "/",
-     *     name = "innova_path_from_workspace"
-     * )
-     * @Method("GET")
-     * @Template("InnovaPathBundle::index.html.twig")
-     */
-    public function fromWorkspaceAction()
-    {
-        $id = $this->request->query->get('id');
-        $workspace = $this->entityManager->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->find($id);
-    
-        $paths = $this->pathManager->findAllFromWorkspace($workspace);
-    
-        return array (
-            'workspace' => $workspace, 
-            'paths' => $paths,
-        );
-    }
-    
-    /**
-     * Create a new path
-     * @return Response
-     *
-     * @Route(
-     *     "/path/add",
-     *     name = "innova_path_add_path",
-     *     options = {"expose"=true}
-     * )
-     * @Method("POST")
-     */
-    public function addAction()
-    {
-        $resourceNode = $this->pathManager->create();
-    
-        return new Response($resourceNode->getId());
-    }
-    
-    /**
-     * Edit an existing path
-     * @param string $path path of activity
-     * @return Response
-     *
-     * @Route(
-     *     "/path/edit/{id}",
-     *     name = "innova_path_edit_path",
-     *     options = {"expose"=true}
-     * )
-     * @Method("PUT")
-     */
-    public function editAction()
-    {
-        $pathId = $this->pathManager->edit();
-    
-        return new Response($pathId);
     }
     
     /**
@@ -265,83 +183,6 @@ class PathController
     }
     
     /**
-     * Display path editor wizard
-     * @return array|RedirectResponse
-     * 
-     * @Route(
-     *      "workspace/{workspaceId}/path/editor/{pathId}",
-     *      name = "innova_path_editor",
-     *      defaults={"pathId"= null},
-     *      options = {"expose"=true}
-     * )
-     * @Template("InnovaPathBundle:Editor:main.html.twig")
-     */
-    public function editorAction($workspaceId, $pathId = null)
-    {
-        $currentUser = $this->securityContext->getToken()->getUser();
-        $pathCreator = "";
-
-        if (!empty($pathId)) {
-            $pathCreator = $this->entityManager->getRepository('ClarolineCoreBundle:Resource\ResourceNode')->findOneById($pathId)->getCreator();
-        }
-
-        $workspace = $this->entityManager->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->findOneById($workspaceId);
-
-        if ($currentUser == $pathCreator || empty($pathId)) {
-            // Current user is allowed to edit this path
-            return array (
-                'workspace' => $workspace, 
-                'pathId' => $pathId,
-            );
-        }
-        else {
-            // Current user not allowed to acces editor for this path
-            $url = $url = $this->router->generate('claro_workspace_open_tool', array (
-                'workspaceId' => $workspaceId, 
-                'toolName' => 'innova_path',
-            ));
-            
-            return new RedirectResponse($url, 302);
-        }
-    }
-    
-    /**
-     * getPathAction function
-     * @param string $id
-     * @return JsonResponse
-     * @throws NotFoundHttpException
-     *
-     * @Route(
-     *     "/path/{id}",
-     *     name = "innova_path_get_path",
-     *     options = {"expose"=true}
-     * )
-     * @Method("GET")
-     */
-    public function getPathAction($id)
-    {
-        $path = $this->entityManager->getRepository('InnovaPathBundle:Path')->findOneByResourceNode($id);
-
-        if ($path) {
-            $jsonStructure = $path->getStructure();
-            if (!empty($jsonStructure)) {
-                $newPath = json_decode($jsonStructure);
-            } 
-            else {
-                $newPath = new \stdClass();
-            }
-
-            $newPath->id = $path->getId();
-            
-            return new JsonResponse($newPath);
-        }
-        else {
-            // Path not found
-            throw new NotFoundHttpException($this->translator->trans("path_not_found", array(), "innova_tools"));
-        }
-    }
-    
-    /**
      * Deploy path
      * Create all needed resources for path to be played
      * @return RedirectResponse
@@ -383,23 +224,5 @@ class PathController
         $url = $this->router->generate('claro_workspace_open_tool', array ('workspaceId' => $workspaceId, 'toolName' => 'innova_path'));
         
         return new RedirectResponse($url, 302);
-    }
-    
-    /**
-     * Check if path name is unique for current user and current workspace
-     * @return JsonResponse
-     * 
-     * @Route(
-     *      "/path/check_name",
-     *      name = "innova_path_check_unique_name",
-     *      options = {"expose" = true}
-     * )
-     * @Method("POST")
-     */
-    public function checkNameIsUniqueAction()
-    {
-        $isUnique = $this->pathManager->checkNameIsUnique($this->request->get('pathName'));
-        
-        return new JsonResponse($isUnique);
     }
 }

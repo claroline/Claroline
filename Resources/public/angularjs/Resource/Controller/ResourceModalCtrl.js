@@ -3,15 +3,13 @@
 /**
  * Resource Modal Controller
  */
-function ResourceModalCtrl($scope, $modal, $q, $http, $modalInstance, PathFactory, ResourceFactory, resourceType) {
-    $scope.resourceType = resourceType;
-    $scope.resourceSubTypes = ResourceFactory.getResourceSubTypes(resourceType);
+function ResourceModalCtrl($scope, $modal, $q, $http, $modalInstance, PathFactory, ResourceFactory) {
+    $scope.resourceTypes = ResourceFactory.getResourceTypes();
     
     var currentResource = ResourceFactory.getResource();
     if (null === currentResource) {
         // Create new document
         var newResource = ResourceFactory.generateNewResource();
-        newResource.type = resourceType;
         
         $scope.formResource = newResource;
     }
@@ -52,7 +50,7 @@ function ResourceModalCtrl($scope, $modal, $q, $http, $modalInstance, PathFactor
                     return undefined != typeof(currentResourceId) && null != currentResourceId && 0 != currentResourceId.length ? currentResourceId : null;
                 },
                 
-                // Send resource type to form
+                // Send resource to form
                 resources: function() {
                     var deferred = $q.defer();
                     $http.get(Routing.generate("innova_user_resources"))

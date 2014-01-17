@@ -22,7 +22,7 @@ function StepModalCtrl($scope, $modal, $modalInstance, PathFactory, StepFactory,
     $scope.isRootNode = false;
     var path = PathFactory.getPath();
     if (undefined != path.steps[0] && path.steps[0].id == localStep.id) {
-        // We are editing root node of tree => diable name field (it has the same name than path)
+        // We are editing root node of tree => disable name field (it has the same name than path)
         $scope.isRootNode = true;
     }
 

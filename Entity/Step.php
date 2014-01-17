@@ -112,11 +112,13 @@ class Step
 
     /**
      * @ORM\ManyToOne(targetEntity="StepWho", inversedBy="steps")
+     * @ORM\JoinColumn(name="stepWho_id", referencedColumnName="id", nullable=true)
      */
     protected $stepWho;
 
     /**
      * @ORM\ManyToOne(targetEntity="StepWhere", inversedBy="steps")
+     * @ORM\JoinColumn(name="stepWhere_id", referencedColumnName="id", nullable=true)
      */
     protected $stepWhere;
 
@@ -130,6 +132,9 @@ class Step
      */
     public function __construct()
     {
+        $this->withTutor = false;
+        $this->withComputer = true;
+        
         $this->children = new ArrayCollection();
         $this->step2ResourceNodes = new ArrayCollection();
     }

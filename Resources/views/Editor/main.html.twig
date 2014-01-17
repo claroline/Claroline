@@ -2,7 +2,7 @@
 
 {% block stylesheets %}
     {{ parent() }}
-    {% stylesheets debug=false filter='cssmin'  output='vendor/innova/path/editor.css'
+    {% stylesheets debug=false filter='cssmin'  output='vendor/innovapath/editor.css'
         '@InnovaPathBundle/Resources/public/css/Editor/*'
         '@InnovaAngularUIPageslideBundle/Resources/public/css/*'
     %}
@@ -13,7 +13,7 @@
 {% block content %}
     {% include 'InnovaPathBundle:Editor:components/breadcrumbs.html.twig' with {workspace: workspace} %}
 
-    {{ form_start(form, {'attr': {'class': 'form-horizontal'}}) }}
+    {{ form_start(form, {'attr': {'class': 'form-horizontal', 'novalidate': true}}) }}
     <div ng-cloak="" ng-app="EditorApp" class="path-editor">
         <div ng-controller="MainCtrl">
 {#             <div class="alerts" ng-controller="AlertCtrl">#}
@@ -52,7 +52,7 @@
 {% block javascripts %}
     {# Load Claroline JS #}
     {{ parent() }}
-
+    
     {# Load translations #}
     <script type="text/javascript" src="{{ url('bazinga_exposetranslation_js', { 'domain_name': 'path_editor' }) }}"></script>
 
@@ -83,6 +83,7 @@
     {% endjavascripts %}
     
     {% javascripts debug=false filter='jsmin' output='vendor/innovapath/path_editor.js'
+        '@InnovaPathBundle/Resources/public/angularjs/angular-json-object-directive.js'
         '@InnovaPathBundle/Resources/public/angularjs/Alert/Factory/AlertFactory.js'
         '@InnovaPathBundle/Resources/public/angularjs/Alert/Controller/AlertCtrl.js'
         '@InnovaPathBundle/Resources/public/angularjs/History/Factory/HistoryFactory.js'
@@ -106,10 +107,9 @@
         <script type="text/javascript" src="{{ asset_url }}"></script>
     {% endjavascripts %}
     
+    {# Set some vars needed by Angular parts #}
     <script type="text/javascript">
-        // TODO : find more beautiful
-        EditorApp.pathId = "{{ form.vars.value.id }}";
-        EditorApp.workspaceId = "{{ workspace.id }}";
+        EditorApp.currentPath = {{ form.vars.value.structure | raw }};
         EditorApp.webDir = "{{ asset('bundles/innovapath/') }}";
     </script>
 {% endblock %}

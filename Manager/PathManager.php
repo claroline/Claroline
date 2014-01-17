@@ -8,6 +8,7 @@ use Symfony\Component\Security\Core\SecurityContext;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Claroline\CoreBundle\Manager\ResourceManager;
 use Innova\PathBundle\Entity\Path;
+use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 
 /**
  * Path Manager
@@ -17,8 +18,6 @@ use Innova\PathBundle\Entity\Path;
  */
 class PathManager
 {
-    const DEFAULT_NAME = 'My path';
-    
     /**
      * Current entity manage for data persist
      * @var \Doctrine\Common\Persistence\ObjectManager $om
@@ -97,41 +96,35 @@ class PathManager
         return $this;
     }
     
-    public function initNewPath($name = null)
+    public function getResourceType()
     {
-        $newPath = new Path();
-        if (empty($name)) {
-            $name = static::DEFAULT_NAME;
-        }
-        
-        $newPath->setName($name);
-        
-        return $newPath;
+        return $this->om->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findOneByName('innova_path');
     }
     
     /**
      * Create a new path
-     * @return \Claroline\CoreBundle\Entity\Resource\ResourceNode
+     * @return \Innova\PathBundle\Manager\PathManager
      */
-    public function create()
+    public function create(Path $path, AbstractWorkspace $workspace)
     {
-        $newPath = new Path();
-        $newPath->setName($this->request->get('pathName'));
-        $newPath->setStructure($this->request->get('structure'));
-        $newPath->setDescription($this->request->get('pathDescription'));
+        // Check if JSON structure is built
+        $structure = $path->getStructure();
+        if (empty($structure)) {
+            // Initialize path structure
+            $structure = $path->initializeStructure();
+            $path->setStructure($structure);
+        }
         
-        $this->om->persist($newPath);
+        // Persist Path
+        $this->om->persist($path);
         $this->om->flush();
 
-        $resourceType = $this->om->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findOneByName("innova_path");
-        $workspace = $this->om->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->findOneById($this->request->get('workspaceId'));
+        // Create a new resource node
         $parent = $this->om->getRepository('ClarolineCoreBundle:Resource\ResourceNode')->findWorkspaceRoot($workspace);
+        $path = $this->resourceManager->create($path, $this->getResourceType(), $this->user, $workspace, $parent, null);
         
-        $path = $this->resourceManager->create($newPath, $resourceType, $this->user, $workspace, $parent, null);
-        
-        return $path->getResourceNode();
+        return $path;
     }
-    
     
     /**
      * Edit existing path
@@ -206,40 +199,6 @@ class PathManager
         
         return $isDeleted;
     }
-    
-    /**
-     * Check if wanted name is unique for current user and current Workspace
-     * @param string $name
-     * @return string
-     */
-    public function checkNameIsUnique($name)
-    {
-        // Create query
-        $dql  = 'SELECT COUNT(p) ';
-        $dql .= 'FROM Innova\PathBundle\Entity\Path AS p ';
-        $dql .= 'LEFT JOIN p.resourceNode AS r '; // Join to resource to access path name and creator
-        $dql .= 'LEFT JOIN r.workspace AS w ';
-        $dql .= 'WHERE r.creator = :user '; // Current User
-        $dql .= '  AND w.id = :workspaceId '; // Current Workspace
-        $dql .= '  AND r.name = :pathName ';
-        $query = $this->om->createQuery($dql);
-        
-        // Set query parameters
-        $query->setParameter('user', $this->user);
-        $query->setParameter('pathName', trim($name));
-        $query->setParameter('workspaceId', $this->request->get('workspaceId'));
-
-        // Get results
-        $count = $query->getSingleScalarResult();
-        
-        $return = true;
-        if (!empty($count) && $count > 0) {
-            // A path already have wanted name
-            $return = false;
-        }
-        
-        return $return;
-    }
 
     /**
      * Find all paths for a workspace
@@ -247,13 +206,12 @@ class PathManager
      */
     public function findAllFromWorkspace($workspace)
     {
-
         $paths = array();
-        if (is_object($this->user)){
+        if (is_object($this->user)) {
             $paths["me"] = $this->om->getRepository('InnovaPathBundle:Path')->findAllByWorkspaceByUser($workspace, $this->user);
             $paths["others"] = $this->om->getRepository('InnovaPathBundle:Path')->findAllByWorkspaceByNotUser($workspace, $this->user);
         }
-        else{
+        else {
             $paths["others"] = $this->om->getRepository('InnovaPathBundle:Path')->findAllByWorkspace($workspace);
         }
         

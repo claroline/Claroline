@@ -97,18 +97,33 @@ class StepManager
         }
 
         $step->setPath($path);
+        
         $step->setName($jsonStep->name);
         $step->setStepOrder($order);
-        $stepWho = $this->om->getRepository('InnovaPathBundle:StepWho')->findOneById($jsonStep->who);
-        $step->setStepWho($stepWho);
-        $stepWhere = $this->om->getRepository('InnovaPathBundle:StepWhere')->findOneById($jsonStep->where);
-        $parent = $this->om->getRepository('InnovaPathBundle:Step')->findOneById($parent);
+        
         $step->setParent($parent);
         $step->setLvl($lvl);
         $step->setStepWhere($stepWhere);
         $step->setDuration(new \DateTime("00-00-00 ".intval($jsonStep->durationHours).":".intval($jsonStep->durationMinutes).":00"));
-        $step->setWithTutor($jsonStep->withTutor);
-        $step->setWithComputer($jsonStep->withComputer);
+        
+        if (!empty($jsonStep->withTutor)) {
+            $step->setWithTutor($jsonStep->withTutor);
+        }
+        
+        if (!empty($jsonStep->withComputer)) {
+            $step->setWithComputer($jsonStep->withComputer);
+        }
+        
+        if (!empty($jsonStep->who)) {
+            $stepWho = $this->om->getRepository('InnovaPathBundle:StepWho')->findOneById($jsonStep->who);
+            $step->setStepWho($stepWho);
+        }
+        
+        if (!empty($jsonStep->where)) {
+            $stepWhere = $this->om->getRepository('InnovaPathBundle:StepWhere')->findOneById($jsonStep->where);
+            $parent = $this->om->getRepository('InnovaPathBundle:Step')->findOneById($parent);
+        }
+        
         $step->setDescription($jsonStep->description);
         $step->setImage($jsonStep->image);
 

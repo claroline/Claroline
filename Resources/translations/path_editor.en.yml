@@ -28,12 +28,10 @@ redo: Redo
 
 # s
 save: Save
-step1: Step 1.
-step1_description: Defining general properties
-step2: Step 2.
-step2_description: Defining scenario and steps
-step3: Step 3.
-step3_description: Defining each step properties
+step1: Defining general properties
+step2: Defining scenario and steps
+step3: Defining each step properties
+selected_step: Selected step
 
 # u
 undo: Undo

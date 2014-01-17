@@ -31,7 +31,7 @@
         </div>
 
 {#         <a href="{{ path('innova_path_editor', {workspaceId: workspace.id}) }}" class="btn btn-default"><span class="icon-pencil"></span> {{ 'create_path' | trans({}, 'innova_tools') }}</a>#}
-        <a href="{{ path('innova_path_editor_display', {workspaceId: workspace.id}) }}" class="btn btn-default">
+        <a href="{{ path('innova_path_editor_new', {workspaceId: workspace.id}) }}" class="btn btn-default">
             <span class="icon-pencil"></span>
             {{ 'create_path' | trans({}, 'innova_tools') }}
         </a>
@@ -64,7 +64,7 @@
                             <span class="icon-play"></span>
                         </a>
                     {% endif %}
-                        <a href="{{ path('innova_path_editor_display', {workspaceId: workspace.id, id: path.id}) }}" class="btn btn-xs btn-default">
+                        <a href="{{ path('innova_path_editor_edit', {workspaceId: workspace.id, id: path.id}) }}" class="btn btn-xs btn-default">
                             <span class="icon-pencil"></span>
                             <span class="sr-only">{{ 'edit' | trans({}, 'innova_tools') }}</span>
                         </a>

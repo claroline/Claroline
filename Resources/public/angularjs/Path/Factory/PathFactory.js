@@ -10,39 +10,6 @@ function PathFactory($http, $q) {
 
     return {
         /**
-         * Load path on page load
-         * @returns object
-         */
-        loadPath: function(pathId) {
-            var deferred = $q.defer();
-            if (null !== path) {
-                // Current path already loaded
-                return deferred.resolve(path);
-            }
-            else {
-                // Load path from AJAX if not creating a new path
-                if (pathId) {
-                    // Edit existing path
-                    $http.get(Routing.generate('innova_path_get_path', {id: EditorApp.pathId}))
-                         .success(function (data) {
-                            path = data;
-                            return deferred.resolve(path);
-                         })
-                         .error(function(data, status) {
-                             return deferred.reject('error loading path');
-                         });
-                }
-                else {
-                    // Create new path
-                    path = this.generateNewPath();
-                    return deferred.resolve(path);
-                }
-            }
-
-            return deferred.promise;
-        },
-
-        /**
          *
          * @returns PathFactory
          */
@@ -53,26 +20,6 @@ function PathFactory($http, $q) {
             maxResourceId = 0;
 
             return this;
-        },
-
-        /**
-         *
-         */
-        generateNewPath: function() {
-            var path = {
-                name: 'My path',
-                description: '',
-                steps: [],
-                progression: {
-                    global     : 'todo',
-                    skills     : 'todo',
-                    scenario   : 'todo',
-                    validation : 'todo',
-                    planner    : 'todo'
-                }
-            };
-
-            return path;
         },
 
         /**

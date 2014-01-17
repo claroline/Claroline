@@ -69,29 +69,16 @@ class PathHandler
      */
     public function process()
     {
-        if ($this->request->getMethod() == 'POST') {
+        if ($this->request->getMethod() == 'POST' || $this->request->getMethod() == 'PUT') {
             $this->form->handleRequest($this->request);
             
             if ( $this->form->isValid() ) {
-                $newPath = $this->form->getData();
+                $path = $this->form->getData();
                 
+                // Retrieve current Workspace
+                $workspaceId = $this->request->get('workspaceId');
                 
-                
-//                 $parent = $message->getParent();
-//                 if (!empty($parent)) {
-//                     // Get data from parent
-//                     $subject = $parent->getSubject();
-//                     $message->setSubject('Re: ' . $subject);
-                    
-//                     $receivers = $parent->getSentTo()->toArray();
-//                     $receivers[] = $parent->getSentBy();
-//                 }
-//                 else {
-//                     $receivers = $this->form->get('sentTo')->getData();
-//                     $receivers = $receivers->toArray();
-//                 }
-                
-//                 $this->messageManager->sendMessage($message, $receivers);
+                $this->pathManager->create($path);
                 
                 return true;
             }

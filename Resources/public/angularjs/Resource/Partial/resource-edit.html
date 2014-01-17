@@ -1,5 +1,5 @@
 <div class="modal-header">
-    <h4 class="modal-title"><i class="icon-pencil"></i> Editing {{ resourceType }} : &lt;<strong>{{ formResource.name }}</strong>&gt;</h4>
+    <h4 class="modal-title"><i class="icon-pencil"></i> Editing resource : &lt;<strong>{{ formResource.name }}</strong>&gt;</h4>
 </div>
 
 <div class="modal-body">
@@ -12,8 +12,8 @@
             
             <div class="form-group col-md-6">
                 <label for="resource-type">Type</label>
-                <select name="resource-type" id="resource-type" class="form-control" ng-model="formResource.subType" ng-options="subType.key as subType.label for subType in resourceSubTypes">
-                    <option value="">-- select {{ resourceType }} type --</option>
+                <select name="resource-type" id="resource-type" class="form-control" ng-model="formResource.type" ng-options="type.key as type.label for type in resourceTypes">
+                    <option value="">-- select resource type --</option>
                 </select>
             </div>
         </fieldset>

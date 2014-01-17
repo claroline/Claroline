@@ -10,9 +10,10 @@ class PathType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('name', 'text');
-        $builder->add('description', 'text');
-        $builder->add('structure', 'hidden');
+        $builder->add('name', 'text', array ('required' => true));
+        $builder->add('description', 'text', array ('required' => false));
+        
+        $builder->add('structure', 'hidden', array ('required' => true));
     }
 
     public function getName()

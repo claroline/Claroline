@@ -3,9 +3,7 @@ services:
     innova_path.controller.path:
         class: %innova_path.controller.path.class%
         arguments:
-            entityManager:   @doctrine.orm.entity_manager
             session:         @session
-            securityContext: @security.context
             router:          @router
             translator:      @translator
             pathManager:     @innova_path.manager.path
@@ -46,6 +44,5 @@ services:
         arguments:
             router:      @router
             formFactory: @form.factory
-            pathManager: @innova_path.manager.path
             pathHandler: @innova_path.form.handler.path
         scope: request

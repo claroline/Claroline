@@ -4,8 +4,6 @@
  * Global Controller
  */
 function GlobalCtrl($scope, $http, HistoryFactory, PathFactory) {
-    $scope.initPath(PathFactory.getPath());
-    
     /**
      * Update Root step when path name changes
      */

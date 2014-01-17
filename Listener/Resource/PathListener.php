@@ -15,22 +15,27 @@ use Innova\PathBundle\Entity\Path;
 
 class PathListener extends ContainerAware
 {
-
     public function onPathOpen(OpenResourceEvent $event)
     {
         $path = $event->getResource();
-        $route = $this->container
-            ->get('router')
-            ->generate(
-                'innova_path_player_index',
-                array(
-                    'workspaceId' => $path->getResourceNode()->getWorkspace()->getId(),
-                    'pathId' => $path->getId(),
-                    'stepId' => $path->getRootStep()->getId()
-                )
+        if ($path->isDeployed()) {
+            $route = $this->container
+                    ->get('router')
+                    ->generate(
+                    'innova_path_player_index',
+                    array(
+                                    'workspaceId' => $path->getResourceNode()->getWorkspace()->getId(),
+                                    'pathId' => $path->getId(),
+                                    'stepId' => $path->getRootStep()->getId()
+                    )
             );
+            
+            $event->setResponse(new RedirectResponse($route));
+        }
+        else {
+            throw new \Exception("Path cannot be played if it is not published.");
+        }
         
-        $event->setResponse(new RedirectResponse($route));
         $event->stopPropagation();
     }
 
@@ -46,12 +51,10 @@ class PathListener extends ContainerAware
         if ($form->isValid()) {
             $path = $form->getData();
 
-            $properties = array (
-                'name' => $path->getName(),
-                'description' => $path->getDescription(),
-            );
-
-            $path->setStructure(json_encode($properties));
+            $structure = $this->container->get('innova_path.manager.path')->initializePathStructure($path);
+            $path->setStructure($structure);
+            
+            // Send new path to dispatcher through event object
             $event->setResources(array ($path));
         }
         else {

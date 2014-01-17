@@ -19,7 +19,6 @@ help: Aide
 # o
 open_templates: Ouvrir les favoris
 
-
 # p
 path_name: Nom du parcours
 path_description: Description du parcours
@@ -29,12 +28,10 @@ redo: Rétablir
 
 # s
 save: Sauvegarder
-step1: Etape 1.
-step1_description: Définition des informations globales
-step2: Etape 2.
-step2_description: Création du scenario
-step3: Etape 3.
-step3_description: Définition des informations de chaque étape
+step1: Définition des informations globales
+step2: Création du scenario
+step3: Définition des informations de chaque étape
+selected_step: Etape sélectionnée
 
 # u
 undo: Annuler
