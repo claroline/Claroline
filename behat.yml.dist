@@ -9,4 +9,8 @@ default:
             selenium2: ~
             goutte: ~
             show_cmd: firefox %s
-        Behat\Symfony2Extension\Extension: ~
+        Behat\Symfony2Extension\Extension:
+            mink_driver: true
+            kernel:
+                env: test
+                debug: true
