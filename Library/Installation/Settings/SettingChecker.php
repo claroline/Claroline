@@ -68,25 +68,27 @@ class SettingChecker
     private function checkPhpConfiguration()
     {
         $category = new SettingCategory('PHP configuration');
+
+        $timezone = ini_get('date.timezone');
         $category->addRequirement(
             'Parameter date.timezone must be set in your php.ini',
             array(),
-            false !== ini_get('date.timezone')
+            false != $timezone // loose comparison is required
         );
 
         if (version_compare(phpversion(), self::REQUIRED_PHP_VERSION, '>=')) {
-            $timezones = array();
+            $supportedTimezones = array();
+
             foreach (\DateTimeZone::listAbbreviations() as $abbreviations) {
                 foreach ($abbreviations as $abbreviation) {
-                    $timezones[$abbreviation['timezone_id']] = true;
+                    $supportedTimezones[] = $abbreviation['timezone_id'];
                 }
             }
 
-            $timezone = date_default_timezone_get();
             $category->addRequirement(
                 'Your default timezone (%timezone%) is not supported',
                 array('timezone' => $timezone),
-                isset($timezones[$timezone])
+                in_array($timezone, $supportedTimezones)
             );
         }
 
