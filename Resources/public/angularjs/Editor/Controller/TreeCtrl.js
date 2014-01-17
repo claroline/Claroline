@@ -5,7 +5,7 @@
  */
 function TreeCtrl($scope, $modal, HistoryFactory, PathFactory, StepFactory, ResourceFactory) {
     $scope.whoList = StepFactory.getWhoList();
-    $sce.whereList = StepFactory.getWhereList();
+    $scope.whereList = StepFactory.getWhereList();
     
     $scope.currentEditingStep = null;
     

@@ -19,14 +19,12 @@ function ResourceFactory(PathFactory) {
     };
     
     var resourceTypes = [
-        {key: 'text',        label: 'Text'},
-        {key: 'sound',       label: 'Sound'},
-        {key: 'picture',     label: 'Picture'},
-        {key: 'video',       label: 'Video'},
-        {key: 'simulation',  label: 'Simulation'},
-        {key: 'test',        label: 'Test'},
-        {key: 'other',       label: 'Other'},
-        {key: 'indifferent', label: 'Indifferent'}
+        {key: 'text',          label: 'Text'},
+        {key: 'sound',         label: 'Sound'},
+        {key: 'picture',       label: 'Picture'},
+        {key: 'video',         label: 'Video'},
+        {key: 'simulation',    label: 'Simulation'},
+        {key: 'test',          label: 'Test'},
         {key: 'chat',          label: 'Chat'},
         {key: 'forum',         label: 'Forum'},
         {key: 'deposit_files', label: 'Deposit files'},
