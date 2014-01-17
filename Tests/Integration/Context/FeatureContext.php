@@ -11,18 +11,21 @@
 
 namespace Claroline\CoreBundle\Tests\Integration\Context;
 
+use Behat\Behat\Context\Step;
 use Behat\Behat\Exception\PendingException;
+use Behat\Symfony2Extension\Context\KernelDictionary;
 use Symfony\Component\HttpKernel\KernelInterface;
-use Behat\Symfony2Extension\Context\KernelAwareInterface;
 use Behat\MinkExtension\Context\MinkContext;
 use Claroline\CoreBundle\Library\Installation\Settings\SettingChecker;
+use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 
 /**
  * Feature context.
  */
-class FeatureContext extends MinkContext implements KernelAwareInterface
+class FeatureContext extends MinkContext
 {
-    private $kernel;
+    use KernelDictionary;
+
     private $parameters;
 
     /**
@@ -33,22 +36,6 @@ class FeatureContext extends MinkContext implements KernelAwareInterface
     public function __construct(array $parameters)
     {
         $this->parameters = $parameters;
-    }
-
-    /**
-     * Sets HttpKernel instance.
-     * This method will be automatically called by Symfony2Extension ContextInitializer.
-     *
-     * @param KernelInterface $kernel
-     */
-    public function setKernel(KernelInterface $kernel)
-    {
-        $this->kernel = $kernel;
-    }
-
-    public function getContainer()
-    {
-        return $this->kernel->getContainer();
     }
 
     /******************/
@@ -119,7 +106,7 @@ class FeatureContext extends MinkContext implements KernelAwareInterface
         //It doesn't work
         //throw new \Behat\Behat\Exception\PendingException('Does not work');
 
-        $dir = $this->kernel->getRootDir() . '/cache/prod/jms_diextra/metadata';
+        $dir = $this->kernel->getRootDir() . '/cache';
         $res = is_writeable($dir);
 
         if (!$res) {
@@ -225,6 +212,33 @@ class FeatureContext extends MinkContext implements KernelAwareInterface
         $this->getSession()->evaluateScript($script);
     }
 
+    /**
+     * Connect the user with login and password
+     *
+     * @Given /^I\'m connected with login "([^"]*)" and password "([^"]*)"$/
+     */
+    public function iMConnectedWithLoginAndPassword($login, $password)
+    {
+        return array(
+                new Step\When('I am on "/login"'),
+                new Step\When('I fill in "_username" with "'. $login . '"'),
+                new Step\When('I fill in "_password" with "'. $password . '"'),
+                new Step\When('I press "Connexion"'),
+                new Step\Then('I have a token for "' . $login . '" User')
+            );
+    }
+
+    /**
+    * @Then /^(?:|I) have a token for "([^"]*)" User$/
+    */
+    public function IHaveATokenForUser($user)
+    {
+        $user = $this->getContainer()->get('doctrine')->getRepository('ClarolineCoreBundle:User')->loadUserByUsername($user);
+        $securityContext = $this->getContainer()->get('security.context');
+        $provider = 'main';
+        $token = new UsernamePasswordToken($user, null, $provider, $user->getRoles());
+        $securityContext->setToken($token);
+    }
 
     /**************/
     /* Assertions */
