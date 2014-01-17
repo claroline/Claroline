@@ -39,11 +39,13 @@ class ContentManager
     /**
      * Get Content
      *
-     * Exameple: $contentManager->getContent(array('id' => $id, 'locale' => $locale));
+     * Example: $contentManager->getContent(array('id' => $id, 'locale' => $locale));
      *
-     * @return Claroline\CoreBundle\Entity\Content
+     * @param array $filter
+     *
+     * @return Content
      */
-    public function getContent($filter)
+    public function getContent(array $filter)
     {
         return $this->content->findOneBy($filter);
     }
@@ -51,7 +53,11 @@ class ContentManager
     /**
      * Create a new content.
      *
-     * @return The id of the new content.
+     * @param string $title
+     * @param string $text
+     * @param string $locale
+     *
+     * @return integer The id of the new content.
      */
     public function createContent($title, $text, $locale = null)
     {
@@ -74,7 +80,10 @@ class ContentManager
     /**
      * Update a content.
      *
-     * @return This function doesn't return anything.
+     * @param string $content
+     * @param string $title
+     * @param string $text
+     * @param string $locale
      */
     public function updateContent($content, $title = null, $text = null, $locale = null)
     {
@@ -98,9 +107,9 @@ class ContentManager
     /**
      * Delete a content
      *
-     * @return This function doesn't return anything.
+     * @param Content $content
      */
-    public function deleteContent($content)
+    public function deleteContent(Content $content)
     {
         $this->manager->remove($content);
         $this->manager->flush();

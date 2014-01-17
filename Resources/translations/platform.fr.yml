@@ -391,6 +391,7 @@ platform_parameters_form_mailer_password: Mot de passe
 platform_parameters_form_mailer_auth_mode: Mode d'authentification
 platform_parameters_form_mailer_encryption: Encryption
 platform_parameters_form_mailer_port: Port
+platform_parameters_form_content: Contenu
 platform_plugins: 'Plugins de la plateforme'
 platform_role: 'Rôle plateforme'
 platform_widgets: 'Widgets de la plateforme'

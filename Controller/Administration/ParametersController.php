@@ -267,7 +267,7 @@ class ParametersController extends Controller
     {
         $platformConfig = $this->configHandler->getPlatformConfig();
         $form = $this->formFactory->create(
-            FormFactory::TYPE_PLATFORM_MAIL_SETTINGS,
+            FormFactory::TYPE_PLATFORM_MAIL_SERVER,
             array($platformConfig->getMailerTransport()),
             $platformConfig
         );
@@ -292,7 +292,7 @@ class ParametersController extends Controller
     {
         $platformConfig = $this->configHandler->getPlatformConfig();
         $form = $this->formFactory->create(
-            FormFactory::TYPE_PLATFORM_MAIL_SETTINGS,
+            FormFactory::TYPE_PLATFORM_MAIL_SERVER,
             array($platformConfig->getMailerTransport()),
             $platformConfig
         );
@@ -355,14 +355,19 @@ class ParametersController extends Controller
      * )
      *
      * @Template("ClarolineCoreBundle:Administration\platform\mail:inscription.html.twig")
+     *
      * @param string locale
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function inscriptionMailFormAction($locale)
     {
+        $form = $this->formFactory->create(FormFactory::TYPE_PLATFORM_MAIL_INSCRIPTION);
+
         return array(
             'availableLocale' => $this->localeManager->getAvailableLocales(),
-            'currentLocale' => $locale
+            'currentLocale' => $locale,
+            'form' => $form->createView()
         );
     }
 
