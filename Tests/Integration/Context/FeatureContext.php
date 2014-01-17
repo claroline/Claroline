@@ -13,6 +13,7 @@ namespace Claroline\CoreBundle\Tests\Integration\Context;
 
 use Behat\Behat\Context\Step;
 use Behat\Behat\Exception\PendingException;
+use Behat\Gherkin\Node\TableNode;
 use Behat\Symfony2Extension\Context\KernelDictionary;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Behat\MinkExtension\Context\MinkContext;
@@ -275,6 +276,23 @@ class FeatureContext extends MinkContext
         $em = $this->getContainer()->get('doctrine.orm.entity_manager');
         $em->getRepository('ClarolineCoreBundle:User')->findOneByUsername($username);
     }
+
+    /**
+     * @Then /^test response status code for this url:$/
+     */
+    public function testResponseStatusCodeForThisUrl(TableNode $table)
+    {
+        $steps = array();
+        $hash  = $table->getHash();
+
+        foreach ($hash as $row) {
+            $steps[] = new Step\When('I am on "' . $row['url'] . '"');
+            $steps[] = new Step\When('the response status code should be ' . $row['code']);
+        }
+
+        return $steps;
+    }
+
 
     /**********/
     /* OTHERS */
