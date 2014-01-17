@@ -96,7 +96,7 @@ function StepFactory($http, $q, PathFactory) {
                 return deferred.promise;
             }
             else {
-                // Images already loaded => symply return it
+                // Images already loaded => simply return it
                 return images;
             }
         },

@@ -143,37 +143,6 @@ function TreeCtrl($scope, $modal, HistoryFactory, PathFactory, StepFactory, Reso
     $scope.closeEditStepName = function() {
         $scope.currentEditingStep = null;
     };
-    
-    /**
-     * Add a new sibling to specified step
-     * @returns void
-     */
-    $scope.addSibling = function(step) {
-        var newStep = StepFactory.generateNewStep(step);
-
-        function insertStep(steps) {
-            var stepInserted = false;
-            for (var i = 0; i < steps.length; i++) {
-                if (steps[i].id === step.id) {
-                    steps.splice(i+1, 0, newStep);
-                    stepInserted = true;
-                }
-                else {
-                    stepInserted = insertStep(steps[i].children);
-                }
-
-                if (stepInserted) {
-                    break;
-                }
-            }
-            return stepInserted;
-        }
-
-        insertStep($scope.path.steps);
-
-        HistoryFactory.update($scope.path);
-        $scope.updatePreviewStep();
-    };
 
     /**
      * Open modal to create a new template from specified step(s)

@@ -44,6 +44,7 @@ step_who: Qui ?
 step_where: Où ?
 step_computer: Avec ordinateur ?
 step_tutor: Avec tuteur ?
+step_no_resource: Il n'a aucune resource rattachée à cette étape.
 
 # u
 undo: Annuler

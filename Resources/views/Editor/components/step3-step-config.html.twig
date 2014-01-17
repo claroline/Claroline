@@ -25,14 +25,13 @@
         <div>
             <div class="row">
                 <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12 text-center">
-                    <img src="{% verbatim %}{{ webDir }}images/steps/{{ previewStep.image }}{% endverbatim %}" />
+                    <img ng-src="{% verbatim %}{{ webDir }}images/steps/{{ previewStep.image }}{% endverbatim %}" />
                 </div>
                 <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12">
                     <table class="table table-condensed">
                         <tr>
                             <td scope="row"><strong>{{ 'step_duration'|trans({}, 'path_editor') }}</strong></td>
                             <td class="text-right">
-                                <img src="{% verbatim %}{{ webDir }}images/icons/time.png{% endverbatim %}" />
                                 {% verbatim %}{{ previewStep.durationHours || "0" }}h{{ previewStep.durationMinutes || "00" }}min{% endverbatim %}
                             </td>
                         </tr>
@@ -68,7 +67,7 @@
                         <tr ng-show="previewStep.who != null && previewStep.who != ''">
                             <td scope="row"><strong>{{ 'step_who'|trans({}, 'path_editor') }}</strong></td>
                             <td class="text-right">
-                                <img src="{% verbatim %}{{ webDir }}images/icons/who/{{ previewStep.who }}{% endverbatim %}" 
+                                <img ng-src="{% verbatim %}{{ webDir }}images/icons/who/{{ previewStep.who }}{% endverbatim %}" 
                                      alt="{% verbatim %}{{ whoList[previewStep.who] }}{% endverbatim %}"
                                      tooltip="{% verbatim %}{{ whoList[previewStep.who] }}{% endverbatim %}" />
                             </td>
@@ -77,7 +76,7 @@
                         <tr ng-show="previewStep.where != null && previewStep.where != ''">
                             <td scope="row"><strong>{{ 'step_where'|trans({}, 'path_editor') }}</strong></td>
                             <td class="text-right">
-                                <img src="{% verbatim %}{{ webDir }}images/icons/where/{{ previewStep.where }}{% endverbatim %}" 
+                                <img ng-src="{% verbatim %}{{ webDir }}images/icons/where/{{ previewStep.where }}{% endverbatim %}" 
                                      alt="{% verbatim %}{{ whereList[previewStep.where] }}{% endverbatim %}" 
                                      tooltip="{% verbatim %}{{ whereList[previewStep.where] }}{% endverbatim %}" />
                             </td>
@@ -88,17 +87,8 @@
             
             <p ng-bind-html-unsafe="previewStep.description"></p>
             
-{#             <a href="#" class="btn btn-xs btn-primary pull-right" ng-click="editResource()">#}
-{#                 <span class="icon-plus"></span>#}
-{#                 {{ 'resource_add'|trans({}, 'path_editor') }}#}
-{#             </a>#}
-            
-{#             <h5 class="h4">#}
-                
-{#             </h5>#}
-            
             <table class="table table-condensed table-hover">
-                <caption class="h4 text-left">
+                <caption class="h4 text-left" style="margin-bottom: 10px;">
                     <span class="icon-folder-open"></span>
                     {{ 'resources'|trans({}, 'path_editor') }}
                     
@@ -107,6 +97,11 @@
                         {{ 'resource_add'|trans({}, 'path_editor') }}
                     </a>
                 </caption>
+                
+                <tr ng-show="(null == inheritedResources || inheritedResources.length == 0) && (null == previewStep.resources || previewStep.resources.length == 0)">
+                    <td colspan="2" class="text-center"><em>{{ 'step_no_resource'|trans({}, 'path_editor') }}</em></td>
+                </tr>
+                
                 <!-- Inherited resources from parents -->
                 <tr ng-repeat="resource in inheritedResources">
                     <td ng-class="{'excluded-resource': resource.isExcluded}">
