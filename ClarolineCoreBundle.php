@@ -11,8 +11,10 @@
 
 namespace Claroline\CoreBundle;
 
+use Claroline\CoreBundle\DependencyInjection\Compiler\DynamicConfigPass;
 use FOS\OAuthServerBundle\FOSOAuthServerBundle;
 use Nelmio\ApiDocBundle\NelmioApiDocBundle;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 use Claroline\KernelBundle\Bundle\AutoConfigurableInterface;
 use Claroline\KernelBundle\Bundle\ConfigurationProviderInterface;
@@ -22,6 +24,13 @@ use Claroline\CoreBundle\Library\Installation\AdditionalInstaller;
 
 class ClarolineCoreBundle extends InstallableBundle implements AutoConfigurableInterface, ConfigurationProviderInterface
 {
+    public function build(ContainerBuilder $container)
+    {
+        parent::build($container);
+
+        $container->addCompilerPass(new DynamicConfigPass());
+    }
+
     public function supports($environment)
     {
         return in_array($environment, array('prod', 'dev', 'test'));
