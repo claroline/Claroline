@@ -12,6 +12,7 @@
 namespace Claroline\CoreBundle\Entity\Home;
 
 use Doctrine\ORM\Mapping as ORM;
+use Claroline\CoreBundle\Entity\Content;
 
 /**
  * SubContent
@@ -95,7 +96,7 @@ class SubContent
     /**
      * Set size
      *
-     * @param  string     $size
+     * @param string $size
      * @return SubContent
      */
     public function setSize($size)
@@ -118,7 +119,7 @@ class SubContent
     /**
      * Set father
      *
-     * @param  \Claroline\CoreBundle\Entity\Content $father
+     * @param \Claroline\CoreBundle\Entity\Content $father
      * @return SubContent
      */
     public function setFather(Content $father)
@@ -141,7 +142,7 @@ class SubContent
     /**
      * Set child
      *
-     * @param  \Claroline\CoreBundle\Entity\Content $child
+     * @param \Claroline\CoreBundle\Entity\Content $child
      * @return SubContent
      */
     public function setChild(Content $child)
@@ -174,7 +175,7 @@ class SubContent
     /**
      * Set next
      *
-     * @param  \Claroline\CoreBundle\Entity\Home\SubContent $next
+     * @param \Claroline\CoreBundle\Entity\Home\SubContent $next
      * @return SubContent
      */
     public function setNext(SubContent $next = null)
@@ -197,7 +198,7 @@ class SubContent
     /**
      * Set back
      *
-     * @param  \Claroline\CoreBundle\Entity\Home\SubContent $back
+     * @param \Claroline\CoreBundle\Entity\Home\SubContent $back
      * @return SubContent
      */
     public function setBack(SubContent $back = null)
