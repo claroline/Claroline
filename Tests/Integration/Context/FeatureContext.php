@@ -15,7 +15,6 @@ use Behat\Behat\Context\Step;
 use Behat\Behat\Exception\PendingException;
 use Behat\Gherkin\Node\TableNode;
 use Behat\Symfony2Extension\Context\KernelDictionary;
-use Symfony\Component\HttpKernel\KernelInterface;
 use Behat\MinkExtension\Context\MinkContext;
 use Claroline\CoreBundle\Library\Installation\Settings\SettingChecker;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
@@ -195,7 +194,7 @@ class FeatureContext extends MinkContext
      */
     public function iFollowTheHidden($label)
     {
-        $script = "(function() { $('a:contains(\"{$label}\")')[0].click(); })();";
+        $script = "(function () { $('a:contains(\"{$label}\")')[0].click(); })();";
         $this->getSession()->evaluateScript($script);
     }
 
@@ -204,7 +203,7 @@ class FeatureContext extends MinkContext
      */
     public function iCheckTheLine($text)
     {
-        $script = "(function() {
+        $script = "(function () {
             var row = $('tr:contains(\"{$text}\")');
             var selector = '#' + row.attr('id') + ' input:checkbox';
             var checkbox = $(selector);
