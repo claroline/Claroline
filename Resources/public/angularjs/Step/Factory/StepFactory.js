@@ -11,7 +11,7 @@ function StepFactory($http, $q, PathFactory) {
     var baseStep = {
         id                : null,
         resourceId        : null,
-        image             : null,
+        image             : 'no_image.png',
         name              : 'Step',
         description       : null,
         durationHours     : null,
@@ -128,6 +128,7 @@ function StepFactory($http, $q, PathFactory) {
          */
         setStep: function(data) {
             step = data;
+            
             return this;
         },
         

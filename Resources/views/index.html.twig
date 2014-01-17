@@ -28,7 +28,6 @@
     <div class="panel-body">
         <div>{{ macros.flashBox() }}</div>
 
-{#         <a href="{{ path('innova_path_editor', {workspaceId: workspace.id}) }}" class="btn btn-default"><span class="icon-pencil"></span> {{ 'create_path' | trans({}, 'innova_tools') }}</a>#}
         <a href="{{ path('innova_path_editor_new', {workspaceId: workspace.id}) }}" class="btn btn-default">
             <span class="icon-pencil"></span>
             {{ 'create_path' | trans({}, 'innova_tools') }}

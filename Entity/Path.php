@@ -239,8 +239,10 @@ class Path extends AbstractResource
             'steps' =>
             array (
                 array (
-                    'id' => 1,
-                    'name' => $this->getName(),
+                    'id'    => 1,
+                    'name'  => $this->getName(),
+                    'image' => 'no_image.png',
+                    'withComputer' => true,
                 ),
             ),
         );

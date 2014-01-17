@@ -13,6 +13,9 @@ edit: Edit
 editor: Path editor
 edit_step: Edit step
 
+# f
+from: from
+
 # h
 help: Help
 
@@ -25,13 +28,28 @@ path_description: Description of the path
 
 # r
 redo: Redo
+resources: Resources
+resource_delete: Delete
+resource_edit: Edit
+resource_add: Add resource
 
 # s
 save: Save
 step1: Defining general properties
 step2: Defining scenario and steps
-step3: Defining each step properties
+step3: Defining step properties
 selected_step: Selected step
+step_duration: Duration
+step_who: Who ?
+step_where: Where ?
+step_computer: With Computer ?
+step_tutor: With tutor ?
 
 # u
 undo: Undo
+
+# w
+with_computer: With computer
+with_tutor: With tutor
+without_computer: Without computer
+without_tutor: Without tutor

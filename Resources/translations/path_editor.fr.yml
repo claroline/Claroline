@@ -13,6 +13,9 @@ edit_step: Modifier l'étape
 edit: Modification
 editor: Editeur de Parcours
 
+# f
+from: de
+
 # h
 help: Aide
 
@@ -25,13 +28,28 @@ path_description: Description du parcours
 
 # r
 redo: Rétablir
+resources: Resources
+resource_delete: Supprimer
+resource_edit: Modifier
+resource_add: Ajouter une resource
 
 # s
 save: Sauvegarder
 step1: Définition des informations globales
 step2: Création du scenario
-step3: Définition des informations de chaque étape
+step3: Définition des informations de l'étape
 selected_step: Etape sélectionnée
+step_duration: Durée
+step_who: Qui ?
+step_where: Où ?
+step_computer: Avec ordinateur ?
+step_tutor: Avec tuteur ?
 
 # u
 undo: Annuler
+
+# w
+with_computer: Avec ordinateur
+with_tutor: Avec tuteur
+without_computer: Sans ordinateur
+without_tutor: Sans tuteur

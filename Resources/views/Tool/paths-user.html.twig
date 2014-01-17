@@ -28,15 +28,10 @@
                     <span class="icon-play"></span>
                 </a>
             {% endif %}
-                <a href="{{ path('innova_path_editor_display', {workspaceId: workspace.id, id: path.id}) }}" data-original-title="{{ 'edit' | trans({}, 'innova_tools') }}" class="btn btn-xs btn-default">
+                <a href="{{ path('innova_path_editor_edit', {workspaceId: workspace.id, id: path.id}) }}" data-original-title="{{ 'edit' | trans({}, 'innova_tools') }}" class="btn btn-xs btn-default">
                     <span class="icon-pencil"></span>
                     <span class="sr-only">{{ 'edit' | trans({}, 'innova_tools') }}</span>
                 </a>
-{#                         <form action="{{ path('innova_path_editor', {workspaceId: workspace.id, pathId: path.resourceNode.id}) }}" method="post" style="display: inline-block">#}
-{#                             <input type="hidden" value="{{ workspace.id }}" name="workspaceId" />#}
-{#                             <input type="hidden" value="{{ path.resourceNode.id }}" name="id" />#}
-{#                             <button rel="tooltip" data-original-title="{{ 'edit' | trans({}, 'innova_tools') }}" class="btn btn-xs btn-default" type="submit"><span class="icon-pencil"></span></button>#}
-{#                         </form>#}
             {% if path.modified or not path.deployed %}
                 <form action="{{ path('innova_path_deploy') }}" method="post" style="display: inline-block">
                     <input type="hidden" value="{{ workspace.id }}" name="workspaceId" />
