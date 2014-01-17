@@ -145,7 +145,7 @@ class ActivityController extends Controller
      * Sets the order of the resource in an activity.
      * It takes an array of resourceIds as parameter (querystring: ids[]=1&ids[]=2 ...)
      *
-     * @param type $activityId the activity id
+     * @param Activity $activity the activity
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */

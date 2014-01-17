@@ -140,6 +140,8 @@ class AdministrationController extends Controller
      *
      * Displays the user creation form.
      *
+     * @param User $currentUser
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function userCreationFormAction(User $currentUser)
@@ -171,6 +173,8 @@ class AdministrationController extends Controller
      * @EXT\Template("ClarolineCoreBundle:Administration:userCreationForm.html.twig")
      *
      * Creates an user (and its personal workspace) and redirects to the user list.
+     *
+     * @param User $currentUser
      *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
@@ -217,6 +221,8 @@ class AdministrationController extends Controller
      *
      * Removes many users from the platform.
      *
+     * @param User[] $users
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function deleteUsersAction(array $users)
@@ -252,6 +258,13 @@ class AdministrationController extends Controller
      * )
      *
      * Displays the platform user list.
+     *
+     * @param integer $page
+     * @param string  $search
+     * @param integer $max
+     * @param string  $order
+     *
+     * @return array
      */
     public function userListAction($page, $search, $max, $order)
     {
@@ -280,6 +293,11 @@ class AdministrationController extends Controller
      * @EXT\Template()
      *
      * Displays the platform user list.
+     *
+     * @param integer $page
+     * @param string  $search
+     *
+     * @return array
      */
     public function userListPicsAction($page, $search)
     {
@@ -313,6 +331,13 @@ class AdministrationController extends Controller
      * )
      *
      * Returns the platform group list.
+     *
+     * @param integer $page
+     * @param string  $search
+     * @param integer $max
+     * @param string  $order
+     *
+     * @return array
      */
     public function groupListAction($page, $search, $max, $order)
     {
@@ -351,6 +376,14 @@ class AdministrationController extends Controller
      * )
      *
      * Returns the users of a group.
+     *
+     * @param Group   $group
+     * @param integer $page
+     * @param string  $search
+     * @param integer $max
+     * @param string  $order
+     *
+     * @return array
      */
     public function usersOfGroupListAction(Group $group, $page, $search, $max, $order)
     {
@@ -388,7 +421,16 @@ class AdministrationController extends Controller
      *     class="Claroline\CoreBundle\Entity\User",
      *     options={"orderable"=true}
      * )
+     *
      * Displays the user list with a control allowing to add them to a group.
+     *
+     * @param Group   $group
+     * @param integer $page
+     * @param string  $search
+     * @param integer $max
+     * @param string  $order
+     *
+     * @return array
      */
     public function outsideOfGroupUserListAction(Group $group, $page, $search, $max, $order)
     {
@@ -470,8 +512,8 @@ class AdministrationController extends Controller
      *
      * Adds multiple user to a group.
      *
-     * @param integer $groupId
-     * @param array $users
+     * @param Group     $group
+     * @param User[] $users
      *
      * @return Response
      */
@@ -507,7 +549,8 @@ class AdministrationController extends Controller
      *
      * Removes users from a group.
      *
-     * @param integer $groupId
+     * @param Group  $group
+     * @param User[] $users
      *
      * @return Response
      */
@@ -536,6 +579,8 @@ class AdministrationController extends Controller
      * )
      *
      * Deletes multiple groups.
+     *
+     * @param Group[] $groups
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -566,7 +611,7 @@ class AdministrationController extends Controller
      *
      * Displays an edition form for a group.
      *
-     * @param integer $groupId
+     * @param Group $group
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -595,7 +640,7 @@ class AdministrationController extends Controller
      *
      * Updates the settings of a group and redirects to the group list.
      *
-     * @param integer $groupId
+     * @param Group $group
      *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
@@ -621,6 +666,8 @@ class AdministrationController extends Controller
 
     /**
      * @EXT\Route("delete/logo/{file}", name="claro_admin_delete_logo")
+     *
+     * @param $file
      *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
@@ -663,7 +710,7 @@ class AdministrationController extends Controller
      * )
      * @EXT\Method("GET")
      *
-     * Redirects to the plugin mangagement page.
+     * Redirects to the plugin management page.
      *
      * @param string $domain
      *
@@ -760,6 +807,8 @@ class AdministrationController extends Controller
      *
      * @EXT\Template()
      *
+     * @param Group $group
+     *
      * @return Response
      */
     public function importUsersIntoGroupFormAction(Group $group)
@@ -782,6 +831,8 @@ class AdministrationController extends Controller
      * )
      *
      * @EXT\Template("ClarolineCoreBundle:Administration:importUsersIntoGroupForm.html.twig")
+     *
+     * @param Group $group
      *
      * @return Response
      */
@@ -970,6 +1021,9 @@ class AdministrationController extends Controller
      * Displays platform analytics top activity page
      *
      *
+     * @param Request $request
+     * @param $topType
+     *
      * @return Response
      *
      * @throws \Exception
@@ -1017,6 +1071,8 @@ class AdministrationController extends Controller
      *
      * @EXT\Template()
      *
+     * @param string search
+     *
      * @return Response
      */
     public function registrationManagementAction($search)
@@ -1054,6 +1110,8 @@ class AdministrationController extends Controller
      *
      * @EXT\Template()
      *
+     * @param Workspace[] $workspaces
+     *
      * @return Response
      */
     public function registrationManagementUserListAction(array $workspaces)
@@ -1077,6 +1135,8 @@ class AdministrationController extends Controller
      * )
      *
      * @EXT\Template()
+     *
+     * @param Workspace[] $workspaces
      *
      * @return Response
      */
@@ -1105,6 +1165,9 @@ class AdministrationController extends Controller
      * @EXT\Template()
      *
      * Renders the user list in a pager for registration.
+     *
+     * @param integer $page
+     * @param string  $search
      *
      * @return Response
      */
@@ -1135,6 +1198,9 @@ class AdministrationController extends Controller
      * @EXT\Template()
      *
      * Renders the group list in a pager for registration.
+     *
+     * @param integer $page
+     * @param string  $search
      *
      * @return Response
      */

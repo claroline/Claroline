@@ -349,29 +349,63 @@ class ParametersController extends Controller
 
     /**
      * @Route(
-     *     "/mail/inscription",
-     *     name="claro_admin_parameters_mail_server"
+     *     "/mail/inscription/{locale}",
+     *     name="claro_admin_mail_inscription",
+     *     defaults={"locale"="fr"}
+     * )
+     *
+     * @Template("ClarolineCoreBundle:Administration\platform\mail:inscription.html.twig")
+     * @param string locale
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function inscriptionMailFormAction($locale)
+    {
+        return array(
+            'availableLocale' => $this->localeManager->getAvailableLocales(),
+            'currentLocale' => $locale
+        );
+    }
+
+    /**
+     * @Route(
+     *     "/mail/inscription/submit",
+     *     name="claro_admin_edit_mail_inscription"
      * )
      *
      * @Template("ClarolineCoreBundle:Administration\platform\mail:inscription.html.twig")
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function inscriptionMailFormAction()
-    {
-
-    }
-
     public function submitInscriptionMailAction()
     {
 
     }
 
+    /**
+     * @Route(
+     *     "/mail/layout",
+     *     name="claro_admin_mail_layout"
+     * )
+     *
+     * @Template("ClarolineCoreBundle:Administration\platform\mail:layout.html.twig")
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
     public function mailLayoutFormAction()
     {
 
     }
 
+    /**
+     * @Route(
+     *     "/mail/layout/submit",
+     *     name="claro_admin_edit_mail_layout"
+     * )
+     *
+     * @Template("ClarolineCoreBundle:Administration\platform\mail:layout.html.twig")
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
     public function submitMailLayoutAction()
     {
 
