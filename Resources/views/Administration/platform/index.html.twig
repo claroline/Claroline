@@ -27,14 +27,14 @@
         <a class="list-group-item" href="{{ path('claro_admin_parameters_general') }}">
             {{ 'general'|trans({}, 'platform') }}
         </a>
-        <a class="list-group-item" href="{{ path('claro_admin_parameters_mail') }}">
-            {{ 'mail'|trans({}, 'platform') }}
-        </a>
         <a class="list-group-item" href="{{ path('claro_admin_parameters_appearance') }}">
             {{ 'appearance'|trans({}, 'platform') }}
         </a>
         <a class="list-group-item" href="{{ path('claro_admin_edit_terms_of_service') }}">
             {{ 'Terms of service' | trans({}, 'platform') }}
+        </a>
+        <a class="list-group-item" href="{{ path('claro_admin_parameters_mail_index') }}">
+            {{ 'mail'|trans({}, 'platform') }}
         </a>
     </div>
 {% endblock %}

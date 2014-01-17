@@ -9,17 +9,20 @@
  * file that was distributed with this source code.
  */
 
-namespace Claroline\CoreBundle\Home;
+namespace Claroline\CoreBundle\Entity;
 
+use Gedmo\Mapping\Annotation as Gedmo;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Translatable\Translatable;
 
 /**
  * Content
  *
  * @ORM\Entity()
  * @ORM\Table(name="claro_content")
+ * @Gedmo\TranslationEntity(class="Claroline\CoreBundle\Entity\ContentTranslation")
  */
-class Content
+class Content implements Translatable
 {
     /**
      * @var integer
@@ -32,14 +35,14 @@ class Content
 
     /**
      * @var string
-     *
+     * @Gedmo\Translatable
      * @ORM\Column(length=255, nullable=true)
      */
     private $title;
 
     /**
      * @var string
-     *
+     * @Gedmo\Translatable
      * @ORM\Column(type="text", nullable=true)
      */
     private $content;
@@ -57,6 +60,13 @@ class Content
      * @ORM\Column(type="datetime")
      */
     private $modified;
+
+    /**
+     * @Gedmo\Locale
+     * Used locale to override Translation listener`s locale
+     * this is not a mapped field of entity metadata, just a simple property
+     */
+    private $locale;
 
     /**
      * Get id
@@ -148,6 +158,16 @@ class Content
     public function getCreated()
     {
         return $this->created;
+    }
+
+    public function setTranslatableLocale($locale)
+    {
+        $this->locale = $locale;
+    }
+
+    public function getTranslatableLocale()
+    {
+        return $this->locale;
     }
 
     /**

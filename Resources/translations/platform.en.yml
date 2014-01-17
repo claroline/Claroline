@@ -254,6 +254,7 @@ import_user_file_file: Import from a csv file
 import_users: 'Import users'
 informations: Informations
 instructions: Instructions
+inscription_mail: Inscription mail
 internal_error : Internal server error. Please contact the administrator.
 invalid_csv_file: 'Invalid CSV file'
 is_already_in_category: 'is already in category'
@@ -384,8 +385,14 @@ platform_parameters_form_password: Password
 platform_parameters_form_port: Port
 platform_parameters_form_selfRegistration: Auto-inscription
 platform_parameters_form_theme: Theme
-platform_parameters_form_transport: Transport
-platform_parameters_form_username: Username
+platform_parameters_form_cookie_lifetime: Session lifetime
+platform_parameters_form_mailer_transport: Transport
+platform_parameters_form_mailer_host: Host
+platform_parameters_form_mailer_username: Username
+platform_parameters_form_mailer_password: Password
+platform_parameters_form_mailer_auth_mode: Authentication mode
+platform_parameters_form_mailer_encryption: Encryption
+platform_parameters_form_mailer_port: Port
 platform_plugins: 'Platform plugins'
 platform_role: 'Platform role'
 platform_widgets: 'Platform widgets'
@@ -651,3 +658,17 @@ ws_most_viewed: 'Most viewed workspaces'
 yes: 'yes'
 yesterday_activity: 'Yesterday''s activity'
 your_username : 'Your username is '
+not_blank_expected: 'This value should not be blank'
+positive_number_expected: 'This value should be a positive number'
+invalid_driver: 'This driver is not valid'
+invalid_email: 'This email address is not valid'
+invalid_url: 'This url is not valid'
+over_max_length: 'This value is too long'
+under_min_length: 'This value is too short'
+invalid_transport: 'Invalid transport'
+invalid_encryption: 'Invalid authentication mode'
+invalid_auth_mode: 'Invalid encryption'
+unable_to_start_transport: 'The mailing transport cannot be started. Please check that the parameters you provided are correct.'
+unable_to_start_sendmail: 'Sendmail or Postfix cannot be started. Please check that one of them is installed and correctly configured.'
+unable_to_start_gmail: 'The connection with Gmail SMTP service cannot be established. Please check that the credentials you provided are correct.'
+unable_to_start_smtp: 'The connection with the SMTP server cannot be established. Please check that the parameters you provided are correct.'

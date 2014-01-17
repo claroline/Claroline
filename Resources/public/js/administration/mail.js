@@ -38,17 +38,17 @@
     }
 
     function display() {
-        var transport = $('#platform_parameters_form_transport option:selected').val();
+        var transport = $('#platform_parameters_form_mailer_transport option:selected').val();
         var properties = formDisplay[transport];
         for (var item in properties) {
-            var formElement = $('#platform_parameters_form_' + item)[0].parentElement.parentElement;
+            var formElement = $('#platform_parameters_form_mailer_' + item)[0].parentElement.parentElement;
             properties[item] ? $(formElement).show():  $(formElement).hide();
         }
     }
 
     display();
 
-    $('#platform_parameters_form_transport').change(function() {
+    $('#platform_parameters_form_mailer_transport').change(function() {
         display();
     });
 })();
