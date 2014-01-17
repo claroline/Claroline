@@ -8,7 +8,7 @@ var container = $('div#ujm_exobundle_interactionholetype_holes');
 tableHoles.append('<div id="prototypes" style="display:none"></div>');
 var containerWR = container.attr('data-prototype').valueOf();
 $('#prototypes').append(containerWR);
-containerWR = $('#ujm_exobundle_interactionholetype_holes___name___wordResponses').attr('data-prototype');
+containerWR = $('#ujm_exobundle_interactionholetype_holes___name___wordResponses');
 
 function addFormHole(add, Response, point, size, orthography, del, selector, source_image_add)
 {
@@ -44,7 +44,7 @@ function addHole(indHole, valHole, del)
     var uniqChoiceID = false;
 
     var index = $('#newTable').find('tr:not(:first)').length;
-    var indexWR = 0;
+    var indexWR;
     
     $('#newTable').find('tbody').append('<tr></tr>');
     
@@ -72,15 +72,33 @@ function addHole(indHole, valHole, del)
     // Remove the useless fileds form
     container.remove();
     
-    $('#newTable').find('tr:last').append('<td class="classic"></td>');
-    //alert(containerWR.valueOf());
+    //wordResponse
+    uniqChoiceID = false;
+    $('#tabWR_'+index).find('tr:not(:first)').length;
+    
+    while (uniqChoiceID == false) {
+        if ($('#ujm_exobundle_interactionholetype_holes_' + index + 'wordResponses_' + indexWR + '__respons').length) {
+            indexWR++;
+        } else {
+            uniqChoiceID = true;
+        }
+    }
+    
+    $('#newTable').find('tr:last').append('<td class="classic"><table id="tabWR_'+index+'"><tbody></tbody></table></td>');
+    $('#tabWR_'+index).find('tbody').append('<tr></tr>');
     containerWR.append(
-        $(containerWR.replace(/__name__/, index))
-    );
-    containerWR.append(
-        $(containerWR.replace(/__name__/, 8))
-    );
-    alert(containerWR.valueOf());
+        $(containerWR.attr('data-prototype').replace(/holes___name__/g, 'holes_'+index))
+   );
+    /*containerWR.append(
+        $(containerWR.attr('data-prototype').replace(/__name__/, 8))
+    );*/
+        
+    containerWR.find('.row').each(function () {
+        if ($(this).find('input').length) {
+            $('#tabWR_'+index).find('tr:last').append('<td class="classic"></td>');
+            $('#tabWR_'+index).find('td:last').append($(this).find('input'));
+        }
+    });
     
     // Add delete button
     $('#newTable').find('tr:last').append('<td class="classic"><a id="hole_'+index+'" href="#" class="btn btn-danger">'+del+'</a></td>');
