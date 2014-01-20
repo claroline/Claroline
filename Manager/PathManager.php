@@ -295,25 +295,29 @@ class PathManager
             $currentStep2resourceNodes = $currentStep->getStep2ResourceNodes();
             $step2resourceNodesToNotDelete = array();
 
-            $resourceOrder = 0;
-            foreach ($step->resources as $resource) {
-                $resourceOrder++;
-                // Gestion des ressources non digitales
-                if (!$resource->isDigital) {
-                    $nonDigitalResource = $this->nonDigitalResourceManager->edit($workspace, $resource->resourceId, $resource->name, $resource->description, $resource->subType);
-                    // update JSON
-                    $resource->resourceId = $nonDigitalResource->getResourceNode()->getId();
+            if (!empty($step->resources)) {
+                $resourceOrder = 0;
+                foreach ($step->resources as $resource) {
+                    $resourceOrder++;
+                    // Gestion des ressources non digitales
+                    if (!$resource->isDigital) {
+                        $nonDigitalResource = $this->nonDigitalResourceManager->edit($workspace, $resource->resourceId, $resource->name, $resource->description, $resource->subType);
+                        // update JSON
+                        $resource->resourceId = $nonDigitalResource->getResourceNode()->getId();
+                    }
+                
+                    $excludedResourcesToResourceNodes[$resource->id] = $resource->resourceId;
+                    $step2ressourceNode = $this->stepManager->editResourceNodeRelation($currentStep, $resource->resourceId, false, $resource->propagateToChildren, $resourceOrder);
+                    $step2resourceNodesToNotDelete[] = $step2ressourceNode->getId();
                 }
-
-                $excludedResourcesToResourceNodes[$resource->id] = $resource->resourceId;
-                $step2ressourceNode = $this->stepManager->editResourceNodeRelation($currentStep, $resource->resourceId, false, $resource->propagateToChildren, $resourceOrder);
-                $step2resourceNodesToNotDelete[] = $step2ressourceNode->getId();
             }
 
-            // Gestion des ressources exclues
-            foreach ($step->excludedResources as $excludedResource) {
-                $step2ressourceNode = $this->stepManager->editResourceNodeRelation($currentStep, $excludedResourcesToResourceNodes[$excludedResource], true, false, $resourceOrder);
-                $step2resourceNodesToNotDelete[] = $step2ressourceNode->getId();
+            if (!empty($step->excludedResources)) {
+                // Gestion des ressources exclues
+                foreach ($step->excludedResources as $excludedResource) {
+                    $step2ressourceNode = $this->stepManager->editResourceNodeRelation($currentStep, $excludedResourcesToResourceNodes[$excludedResource], true, false, $resourceOrder);
+                    $step2resourceNodesToNotDelete[] = $step2ressourceNode->getId();
+                }
             }
 
             // Suppression des Step2ResourceNode inutilisés
@@ -323,9 +327,10 @@ class PathManager
                 }
             }
             
-            //$this->om->flush();
-            // récursivité sur les enfants possibles.
-            $this->JSONParser($step->children, $user, $workspace, $pathsDirectory, $lvl+1, $currentStep, 0, $path, $stepsToNotDelete, $excludedResourcesToResourceNodes);
+            if (!empty($step->children)) {
+                // récursivité sur les enfants possibles.
+                $this->JSONParser($step->children, $user, $workspace, $pathsDirectory, $lvl+1, $currentStep, 0, $path, $stepsToNotDelete, $excludedResourcesToResourceNodes);
+            }
         }
 
         $this->om->flush();
