@@ -1,18 +1,14 @@
+<h4> {{ 'my_paths' | trans({}, 'innova_tools') }} </h4>
 <div class="panel panel-default">
-    <div class="panel-heading" data-toggle="collapse" href="#mypaths">
-        <span class="icon-align-justify"></span>
-        {{ 'my_paths' | trans({}, 'innova_tools') }}
-    </div>
     <table id="mypaths" class="table table-hover in">
         <thead>
             <tr>
-                <td>{{ 'status' | trans({}, 'innova_tools') }}</td>
-                <td>{{ 'name' | trans({}, 'innova_tools') }}</td>
-                <td>{{ 'description' | trans({}, 'innova_tools') }}</td>
-                <td class="text-right">{{ 'available_actions' | trans({}, 'innova_tools') }}</td>
+                <th>{{ 'status' | trans({}, 'innova_tools') }}</th>
+                <th>{{ 'name' | trans({}, 'innova_tools') }}</th>
+                <th>{{ 'description' | trans({}, 'innova_tools') }}</th>
+                <th class="text-right">{{ 'available_actions' | trans({}, 'innova_tools') }}</th>
             </tr>
         </thead>
-        
         <tbody>
         {% for count, path in paths["me"] %}
             <tr>

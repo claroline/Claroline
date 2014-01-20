@@ -1,21 +1,29 @@
+<h4> {{ 'others_paths' | trans({}, 'innova_tools') }} </h4>
 <div class="panel panel-default">
-    <div class="panel-heading" data-toggle="collapse" href="#otherpaths">
-        <span class="icon-align-justify"></span>
-        {{ 'others_paths' | trans({}, 'innova_tools') }}
-    </div>
     <table id="otherpaths" class="table table-hover in" style="margin-top: -1px;">
         <thead>
             <tr>
-                <td>{{ 'name' | trans({}, 'innova_tools') }}</td>
-                <td>{{ 'description' | trans({}, 'innova_tools') }}</td>
-                <td class="text-right">{{ 'available_actions' | trans({}, 'innova_tools') }}</td>
+                <th>{{ 'status' | trans({}, 'innova_tools') }}</th>
+                <th>{{ 'name' | trans({}, 'innova_tools') }}</th>
+                <th>{{ 'description' | trans({}, 'innova_tools') }}</th>
+                <th class="text-right">{{ 'available_actions' | trans({}, 'innova_tools') }}</th>
             </tr>
         </thead>
-        
         <tbody>
         {% for path in paths["others"] %}
             {% if path.deployed %}
             <tr>
+                <td>
+                    {% if path.deployed %}
+                        {% if not path.modified %}
+                            <span class="text-success">[{{ 'published' | trans({}, 'innova_tools') }}]</span>
+                        {% else %}
+                            <span class="text-warning">
+                                [{{ 'published' | trans({}, 'innova_tools') }} {{ 'modified' | trans({}, 'innova_tools') }}]
+                            </span>
+                        {% endif %}
+                    {% endif %}
+                </td>
                 <td>
                     <strong>{{ path.resourceNode.name }}</strong>
                 </td>
