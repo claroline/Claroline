@@ -1,6 +1,6 @@
 <?php
 
-namespace Icap\NotificationBundle\Migrations\mysqli;
+namespace Icap\NotificationBundle\Migrations\sqlanywhere;
 
 use Doctrine\DBAL\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
@@ -8,43 +8,45 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2014/01/20 03:08:39
+ * Generation date: 2014/01/20 03:26:40
  */
-class Version20140120150837 extends AbstractMigration
+class Version20140120152636 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
         $this->addSql("
             CREATE TABLE icap__notification_follower_resource (
-                id INT AUTO_INCREMENT NOT NULL, 
+                id INT IDENTITY NOT NULL, 
                 hash VARCHAR(64) NOT NULL, 
                 resource_class VARCHAR(255) NOT NULL, 
                 resource_id INT NOT NULL, 
                 follower_id INT NOT NULL, 
-                PRIMARY KEY(id)
-            ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
+                PRIMARY KEY (id)
+            )
         ");
         $this->addSql("
             CREATE TABLE icap__notification (
-                id INT AUTO_INCREMENT NOT NULL, 
+                id INT IDENTITY NOT NULL, 
                 creation_date DATETIME NOT NULL, 
                 user_id INT DEFAULT NULL, 
                 resource_id INT DEFAULT NULL, 
                 icon_key VARCHAR(255) DEFAULT NULL, 
                 action_key VARCHAR(255) NOT NULL, 
                 target_url VARCHAR(255) NOT NULL, 
-                PRIMARY KEY(id)
-            ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
+                PRIMARY KEY (id)
+            )
         ");
         $this->addSql("
             CREATE TABLE icap__notification_viewer (
-                id INT AUTO_INCREMENT NOT NULL, 
+                id INT IDENTITY NOT NULL, 
                 notification_id INT NOT NULL, 
                 viewer_id INT NOT NULL, 
-                status TINYINT(1) DEFAULT NULL, 
-                INDEX IDX_DB60418BEF1A9D84 (notification_id), 
-                PRIMARY KEY(id)
-            ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
+                status BIT NULL DEFAULT NULL, 
+                PRIMARY KEY (id)
+            )
+        ");
+        $this->addSql("
+            CREATE INDEX IDX_DB60418BEF1A9D84 ON icap__notification_viewer (notification_id)
         ");
         $this->addSql("
             ALTER TABLE icap__notification_viewer 
