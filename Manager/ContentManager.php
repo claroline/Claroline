@@ -16,6 +16,7 @@ use JMS\DiExtraBundle\Annotation\Inject;
 use JMS\DiExtraBundle\Annotation\Service;
 use Claroline\CoreBundle\Entity\Content;
 use Claroline\CoreBundle\Entity\ContentTranslation;
+use Doctrine\ORM\Query;
 
 /**
  * @Service("claroline.manager.content_manager")
@@ -23,25 +24,28 @@ use Claroline\CoreBundle\Entity\ContentTranslation;
 class ContentManager
 {
     private $manager;
+    private $entityManager;
     private $content;
 
     /**
      * @InjectParams({
      *     "manager"        = @Inject("doctrine"),
+     *     "entityManager"  = @Inject("doctrine.orm.entity_manager"),
      *     "persistence"    = @Inject("claroline.persistence.object_manager")
      * })
      */
-    public function __construct($manager, $persistence)
+    public function __construct($manager, $entityManager, $persistence)
     {
         $this->manager = $persistence;
+        $this->entityManager = $entityManager;
         $this->content = $manager->getRepository('ClarolineCoreBundle:Content');
         $this->translations = $manager->getRepository('ClarolineCoreBundle:ContentTranslation');
     }
 
     /**
-     * Get Content
+     * Get Cont     ent
      *
-     * Example: $contentManager->getContent(array('id' => $id, 'locale' => $locale));
+     * Example: $contentManager->getContent(array('id' => $id));
      *
      * @param array $filter
      *
@@ -55,7 +59,9 @@ class ContentManager
     /**
      * Get translated Content
      *
-     * Exameple: $contentManager->getTranslatedContent(array('id' => $id, 'locale' => $locale));
+     * Example: $contentManager->getTranslatedContent(array('id' => $id));
+     *
+     * @param array $filter
      *
      * @return Array
      */
@@ -64,7 +70,21 @@ class ContentManager
         $content = $this->getContent($filter);
 
         if ($content instanceof Content) {
-            return $this->translations->findTranslations($content);
+
+            $en = $this->entityManager->createQueryBuilder()
+                ->select('content.content', 'content.title')
+                ->from('ClarolineCoreBundle:Content', 'content')
+                ->where('content.id = ' . $content->getId())
+                ->getQuery()
+                ->execute(
+                    compact('entityId', 'entityClass'),
+                    Query::HYDRATE_ARRAY
+                );
+
+            $translations = $this->translations->findTranslations($content);
+            $translations['en'] = $en[0];
+
+            return $translations;
         }
     }
 
