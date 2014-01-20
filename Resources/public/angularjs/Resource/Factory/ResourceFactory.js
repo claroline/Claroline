@@ -14,7 +14,7 @@ function ResourceFactory(PathFactory) {
         description         : null,
         type                : null,
         url                 : null,
-        isDigital           : false,
+        isDigital           : true,
         propagateToChildren : true
     };
     
