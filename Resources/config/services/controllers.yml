@@ -44,5 +44,7 @@ services:
         arguments:
             router:      @router
             formFactory: @form.factory
+            session:     @session
+            translator:  @translator
             pathHandler: @innova_path.form.handler.path
         scope: request

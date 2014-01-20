@@ -216,42 +216,4 @@ class PathTemplateController
             throw new NotFoundHttpException('The template does not exist');
         }
     }
-    
-    /**
-     * Delete template from database
-     * @return Response
-     * 
-     * @Route(
-     *     "/path_template/delete/{id}",
-     *     name = "innova_path_delete_pathtemplate",
-     *     options = {"expose"=true}
-     * )
-     * @Method("DELETE")
-     */
-    public function deleteAction(PathTemplate $pathTemplate)
-    {
-        $this->entityManager->remove($pathTemplate);
-        $this->entityManager->flush();
-
-        return new Response('ok');
-    }
-    
-    /**
-     * Check if template name is unique
-     * @return JsonResponse
-     *
-     * @Route(
-     *      "/path_template/check_name",
-     *      name = "innova_pathtemplate_check_unique_name",
-     *      options = {"expose" = true}
-     * )
-     * @Method("POST")
-     */
-    public function checkNameIsUniqueAction()
-    {
-        // TODO : Make search dependent of current user if templates become not share between all users (currently no ACL on templates)
-        $isUnique = $this->pathTemplateManager->checkNameIsUnique($this->request->get('pathTemplateName'));
-    
-        return new JsonResponse($isUnique);
-    }
 }

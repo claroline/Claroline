@@ -1,24 +1,21 @@
-# a
-
+# A
 anywhere: Anywhere
 at_home: At home
 abstract_resources: Resource Type
+available_actions: Available actions
 
-# b
-
+# B
 back_to_paths_list: Back to paths list
 back_to: Back to
 
-# c
-
+# C
 create_path: Create a path
 current_position: Current position
 class: The class
 classroom: In a classroom
 close: Close
 
-# d
-
+# D
 deploy_success: Path has been published
 deploy_error: The path has not been published due to a technical problem. Please try again.
 description: Description
@@ -27,49 +24,40 @@ delete: Delete
 deploy: Publish
 draft: Not published
 
-
-# e
-
+# E
 edit: Edit
 
-
-# g
-
+# G
 groupware: Groupware
 group: In group
 
-# h
+# H
 
 heritated_from: Heritated from
 
-# i
-
+# I
 informations: Informations
 
 
-# l
-
+# L
 local: Local
 library: In a library
 
 
-# m
-
+# M
 my_paths : My paths
-modified: (with pending changes)
+modified: with pending changes
 
 
-# n
-
+# N
 next: Next
 no_path_found: No path found
+name: Name of the path
 
-# o
-
+# O
 others_paths : Other paths
 
-# p
-
+# P
 paths: Paths
 path: Path
 path_not_found: Path not found
@@ -80,21 +68,17 @@ paths_list: Paths list
 progression: Progression
 published: Published
 
-# r
-
+# R
 resources: Resources
 resources: Resources
 
-# s
-
+# S
 submit: Submit
 student: Individually
+status: Status
 
-
-# w
-
+# W
 with_computer: With a computer
 without_computer: Without a computer
 with_tutor: With a tutor
 without_tutor: Without a tutor
-

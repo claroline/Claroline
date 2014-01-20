@@ -1,24 +1,21 @@
-# a
-
+# A
 abstract_resources: Ressource Type
 at_home: A la maison
 anywhere: N'importe où
+available_actions: Actions disponibles
 
-# b
-
+# B
 back_to_paths_list: Retour à la liste des parcours
 back_to: Revenir sur
 
-# c
-
+# C
 current_position: Position courante
 classroom: En classe
 create_path: Créer un parcours
 class: Toute la classe
 close: Fermer
 
-# d
-
+# D
 description: Description
 duration: Durée
 deploy_success: Le parcours a été publié
@@ -27,45 +24,36 @@ deploy_error: Le parcours n'a pas pu être publié. Veuillez réessayer.
 delete: Supprimer
 draft: Non publié
 
-# e
-
+# E
 edit: Editer
 
-# g
-
+# G
 group: En groupe
 groupware: Collecticiel
 
-# h
-
+# H
 heritated_from: Héritées de
 
-# i
-
+# I
 informations: Informations
 
-
-# l
-
+# L
 library: A la bibliothèque
 local: Locales
 
-# m
-
+# M
 my_paths: Mes parcours
-modified: (avec des modifications en attente)
+modified: avec des modifications en attente
 
-# n
-
+# N
 next: Suivant
 no_path_found: Aucun parcours trouvé
+name: Nom du parcours
 
-# o
-
+# O
 others_paths : Autres parcours
 
-# p
-
+# P
 paths: Parcours
 path: Parcours
 progression: Avancement
@@ -76,17 +64,15 @@ path_delete_success: Le parcours a été supprimé
 path_delete_error: Le parcours n'a pas pu être supprimé. Veuillez réessayer
 published: Publié
 
-# r
-
+# R
 resources: Ressources
 
-# s
-
+# S
 submit: Sauvegarder
 student: Individuellement
+status: Statut
 
-# w
-
+# W
 with_computer: Avec un ordinateur
 without_computer: Sans ordinateur
 with_tutor: Avec un tuteur

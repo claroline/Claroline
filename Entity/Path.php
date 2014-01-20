@@ -3,6 +3,7 @@
 namespace Innova\PathBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\Common\Collections\ArrayCollection;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 
@@ -17,12 +18,20 @@ class Path extends AbstractResource
     const DEFAULT_NAME = 'My path';
     
     /**
+     * Name of the path (only for forms)
+     * @var string
+     * 
+     * @Assert\NotBlank
+     */
+    protected $name;
+    
+    /**
      * JSON structure of the path
      * @var string
      *
      * @ORM\Column(name="structure", type="text")
      */
-    private $structure;
+    protected $structure;
 
     /**
      * Steps linked to the path
@@ -37,21 +46,21 @@ class Path extends AbstractResource
      *
      * @ORM\Column(name="deployed", type="boolean")
      */
-    private $deployed;
+    protected $deployed;
 
     /**
      * @var boolean
      *
      * @ORM\Column(name="modified", type="boolean")
      */
-    private $modified;
+    protected $modified;
 
     /**
      * @var string
      *
      * @ORM\Column(name="description", type="text", nullable=true)
      */
-    private $description;
+    protected $description;
     
     /**
      * Class constructor
@@ -223,14 +232,17 @@ class Path extends AbstractResource
         }
     
         $path->setName($name);
-    
+        
         // Init path structure
-        $structure = $path->initializeStructure();
-        $path->setStructure($structure);
+        $path->initializeStructure();
     
         return $path;
     }
     
+    /**
+     * Initialize JSON structure
+     * @return \Innova\PathBundle\Entity\Path
+     */
     public function initializeStructure()
     {
         $structure = array (
@@ -239,14 +251,18 @@ class Path extends AbstractResource
             'steps' =>
             array (
                 array (
-                    'id'    => 1,
-                    'name'  => $this->getName(),
-                    'image' => 'no_image.png',
+                    'id'           => 1,
+                    'resourceId'   => null,
+                    'name'         => $this->getName(),
+                    'image'        => 'no_image.png',
                     'withComputer' => true,
+                    'withTutor'    => false,
                 ),
             ),
         );
     
-        return json_encode($structure);
+        $this->setStructure(json_encode($structure));
+        
+        return $this;
     }
 }

@@ -1,5 +1,6 @@
 <div class="modal-header">
-    <h4 class="modal-title"><i class="icon-pencil"></i> Editing step : <strong>&lt;{{ formStep.name | truncate }}&gt;</strong></h4>
+    <h4 class="modal-title">
+        <span class="icon-pencil"></span> Editing step : <strong>&lt;{{ formStep.name | truncate }}&gt;</strong></h4>
 </div>
 
 <div class="modal-body">
@@ -87,10 +88,10 @@
 
     <div class="row">
         <div class="col-md-4">
-            <div class="panel-documents panel panel-default">
+            <div class="panel panel-default">
                 <div class="panel-heading">
                     <button class="btn btn-xs btn-primary pull-right" ng-click="editResource('document')"><i class="icon-plus"></i></button>
-                    <span class="icon-briefcase"></span> Documents
+                    <span class="icon-folder-open"></span> Documents
                 </div>
 
                 <table class="table table-condensed table-hover">
@@ -131,37 +132,6 @@
                     <br/>
                     <button class="btn btn-default btn-sm" ng-click="selectImage()"><i class="icon-picture"></i> Select image</button>
                 </div>
-            </div>
-        </div>
-
-        <div class="col-md-4">
-            <div class="panel-documents panel panel-default">
-                <div class="panel-heading">
-                    <button class="btn btn-xs btn-primary pull-right" ng-click="editResource('tool')"><i class="icon-plus"></i></button>
-                    <span class="icon-wrench"></span> Tools
-                </div>
-
-                <table class="table table-condensed table-hover">
-                    <!-- Inherited tools from parents -->
-                    <tr ng-repeat="resource in inheritedResources | filter: {type: 'tool'}">
-                        <td class="icon"><img src="{{ webDir }}images/icons/tool/16x16/{{ resource.subType }}.png" alt="{{ resource.subType }}" /></td>
-                        <td ng-class="{'excluded-resource': resource.isExcluded}">{{ resource.name | truncate }} <small>(from &lt;{{ resource.parentStep | truncate }}&gt;)</small></td>
-                        <td class="actions">
-                            <button ng-disabled="!resource.isExcluded" class="btn btn-xs btn-success" ng-click="includeParentResource(resource)"><i class="icon-eye-open"></i></button>
-                            <button ng-disabled="resource.isExcluded" class="btn btn-xs btn-danger" ng-click="excludeParentResource(resource)"><i class="icon-eye-close"></i></button>
-                        </td>
-                    </tr>
-                    
-                    <!-- Specific tools -->
-                    <tr ng-repeat="resource in formStep.resources | filter: {type: 'tool'}">
-                        <td class="icon"><img src="{{ webDir }}images/icons/tool/16x16/{{ resource.subType }}.png" alt="{{ resource.subType }}" /></td>
-                        <td>{{ resource.name | truncate }}</td>
-                        <td class="actions">
-                            <button class="btn btn-xs btn-default" ng-click="editResource('tool', resource)" tooltip="Edit"><i class="icon-edit"></i></button>
-                            <button class="btn btn-xs btn-danger" ng-click="removeResource(resource)" tooltip="Delete"><i class="icon-trash"></i></button>
-                        </td>
-                    </tr>
-                </table>
             </div>
         </div>
     </div>

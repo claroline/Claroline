@@ -25,6 +25,11 @@ open_templates: Ouvrir les favoris
 # p
 path_name: Nom du parcours
 path_description: Description du parcours
+resource_edit_form: Edition d'une resource
+resource_create_form: Création d'une resource
+path_save_success: La parcours a correctement été sauvegardé.
+path_template_save_success: Le favori a correctement été sauvegardé.
+path_template_save_error: Une erreur s'est produite lors de la sauvegarde du favori.
 
 # r
 redo: Rétablir
@@ -44,7 +49,15 @@ step_who: Qui ?
 step_where: Où ?
 step_computer: Avec ordinateur ?
 step_tutor: Avec tuteur ?
-step_no_resource: Il n'a aucune resource rattachée à cette étape.
+step_no_resource: Il n'y a aucune resource rattachée à cette étape.
+step_no_description: Il n'y a aucune description pour cette étape.
+
+# t
+templates: Favoris
+templates_sidebar_close: Fermer
+template_copy: Copier
+template_edit: Modifier
+template_delete: Supprimer
 
 # u
 undo: Annuler
@@ -54,3 +67,15 @@ with_computer: Avec ordinateur
 with_tutor: Avec tuteur
 without_computer: Sans ordinateur
 without_tutor: Sans tuteur
+
+text: Texte
+sound: Son
+picture: Image
+video: Vidéo
+simulation: Simulation
+test: Test
+chat: Chat
+forum: Forum
+deposit_files: Dépôt de fichier
+other: Autre
+indifferent: Indifférent

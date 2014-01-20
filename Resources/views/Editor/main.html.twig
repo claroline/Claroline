@@ -15,15 +15,12 @@
 
     {{ form_start(form, {'attr': {'class': 'form-horizontal', 'novalidate': true}}) }}
     <div ng-cloak="" ng-app="EditorApp" class="path-editor">
+        <div ng-controller="AlertCtrl" class="alerts">
+            {% include 'InnovaPathBundle:Editor:components/messages.html.twig' %}
+        </div>
+        
         <div ng-controller="MainCtrl">
-{#             <div class="alerts" ng-controller="AlertCtrl">#}
-{#                 <div ng-repeat="alert in alerts" class="alert alert-dismissable alert-{% verbatim %}{{ alert.type }}{% endverbatim %}">#}
-{#                     <button type="button" class="close" data-dismiss="alert" aria-hidden="true" ng-click="closeAlert({% verbatim %}{{ $index }}{% endverbatim %})">&times;</button>#}
-{#                     {% verbatim %}{{ alert.msg }}{% endverbatim %}#}
-{#                 </div>#}
-{#             </div>#}
-            
-            <div id="templates-sidebar" style="display:none;" ng-controller="TemplateCtrl">
+            <div ng-controller="TemplateCtrl" id="templates-sidebar" style="display:none;" >
                 {% include 'InnovaPathBundle:Editor:components/templates-sidebar.html.twig' %}
             </div>
             
@@ -36,11 +33,11 @@
             </div>
             
             <div ng-controller="TreeCtrl" class="row">
-                <div class="col-lg-5 col-md-5 col-sm-12 col-xs-12">
+                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                     {% include 'InnovaPathBundle:Editor:components/step2-scenario.html.twig' %}
                 </div>
                 
-                <div class="col-lg-7 col-md-7 col-sm-12 col-xs-12">
+                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                     {% include 'InnovaPathBundle:Editor:components/step3-step-config.html.twig' %}
                 </div>
             </div>

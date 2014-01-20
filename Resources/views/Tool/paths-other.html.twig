@@ -4,6 +4,15 @@
         {{ 'others_paths' | trans({}, 'innova_tools') }}
     </div>
     <table id="otherpaths" class="table table-hover in" style="margin-top: -1px;">
+        <thead>
+            <tr>
+                <td>{{ 'name' | trans({}, 'innova_tools') }}</td>
+                <td>{{ 'description' | trans({}, 'innova_tools') }}</td>
+                <td class="text-right">{{ 'available_actions' | trans({}, 'innova_tools') }}</td>
+            </tr>
+        </thead>
+        
+        <tbody>
         {% for path in paths["others"] %}
             {% if path.deployed %}
             <tr>
@@ -21,5 +30,6 @@
             </tr>
             {% endif %}
         {% endfor %}
+        </tbody>
     </table>
 </div>

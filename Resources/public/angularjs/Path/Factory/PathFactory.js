@@ -60,7 +60,7 @@ function PathFactory($http, $q) {
                 if (stepId === currentStep.id) {
                     step = currentStep;
                 }
-                else {
+                else if (typeof currentStep.children != 'undefined' && null != currentStep.children && currentStep.children.length !== 0) {
                     for (var i = 0; i < currentStep.children.length; i++) {
                         step = search(stepId, currentStep.children[i]);
                         if (null !== step) {
@@ -92,7 +92,7 @@ function PathFactory($http, $q) {
          */
         getMaxStepId: function() {
             maxStepId = 1;
-            if (null !== path && undefined != path.steps && null != path.steps && path.steps.length !== 0)
+            if (null !== path && typeof path.steps !== 'undefined' && null !== path.steps)
             {
                 for (var i = 0; i < path.steps.length; i++) {
                     this.retrieveMaxStepId(path.steps[i]);
@@ -114,7 +114,7 @@ function PathFactory($http, $q) {
             }
 
             // Check step children
-            if (step.children.length !== 0) {
+            if (typeof step.children != 'undefined' && null !== step.children) {
                 for (var i = 0; i < step.children.length; i++) {
                     this.retrieveMaxStepId(step.children[i]);
                 }
@@ -142,7 +142,7 @@ function PathFactory($http, $q) {
          */
         getMaxResourceId: function() {
             maxResourceId = 1;
-            if (null !== path && path.steps.length !== 0)
+            if (null !== path && typeof path.steps !== 'undefined' && null != path.steps)
             {
                 for (var i = 0; i < path.steps.length; i++) {
                     this.retrieveMaxResourceId(path.steps[i]);
@@ -158,7 +158,7 @@ function PathFactory($http, $q) {
          * @returns PathFactory
          */
         retrieveMaxResourceId: function(step) {
-            if (step.resources.length !== 0) {
+            if (typeof step.resources != 'undefined' && null !== step.resources) {
                 // Check current step resources
                 for (var i = 0; i < step.resources.length; i++) {
                     if (step.resources[i].id > maxResourceId) {
@@ -168,7 +168,7 @@ function PathFactory($http, $q) {
             }
 
             // Check step children
-            if (step.children.length !== 0) {
+            if (typeof step.children != 'undefined' && null !== step.children) {
                 for (var i = 0; i < step.children.length; i++) {
                     this.retrieveMaxResourceId(step.children[i]);
                 }
@@ -187,6 +187,7 @@ function PathFactory($http, $q) {
                 this.getMaxResourceId();
             }
             maxResourceId++;
+            
             return maxResourceId;
         },
 
@@ -196,7 +197,7 @@ function PathFactory($http, $q) {
          * @returns PathFactory
          */
         replaceStep: function(newStep) {
-            if (null !== path) {
+            if (null !== path && typeof path.steps !== 'undefined' && null !== path.steps) {
                 var stepFound = false;
                 for (var i = 0; i < path.steps.length; i++) {
                     stepFound = this.searchStepToReplace(path.steps[i], newStep);
@@ -221,7 +222,7 @@ function PathFactory($http, $q) {
                 stepFound = true;
                 this.updateStep(currentStep, newStep);
             }
-            else if (currentStep.children.length !== 0) {
+            else if (typeof currentStep.children != 'undefined' && null !== currentStep.children) {
                 for (var i = 0; i < currentStep.children.length; i++) {
                     stepFound = this.searchStepToReplace(currentStep.children[i], newStep);
                     if (stepFound) {
@@ -255,7 +256,7 @@ function PathFactory($http, $q) {
          */
         removeResource: function(resourceId) {
             function removeRefToResource(step) {
-                if (step.excludedResources.length !== 0) {
+                if (typeof step.excludedResources != 'undefined' && null !== step.excludedResources) {
                     // Loop through excluded resource to remove reference to needle
                     for (var i = 0; i < step.excludedResources.length; i++) {
                         if (resourceId == step.excludedResources[i]) {
@@ -264,13 +265,15 @@ function PathFactory($http, $q) {
                     }
                 }
                 
-                // Check children
-                for (var j = 0; j < step.children.length; j++) {
-                    removeRefToResource(step.children[j]);
+                if (typeof step.children != 'undefined' && null !== step.children) {
+                 // Check children
+                    for (var j = 0; j < step.children.length; j++) {
+                        removeRefToResource(step.children[j]);
+                    }
                 }
             }
             
-            if (path !== null) {
+            if (path !== null && typeof path.steps !== 'undefined') {
                 for (var i = 0; i < path.steps.length; i++) {
                     removeRefToResource(path.steps[i]);
                 }

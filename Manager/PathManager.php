@@ -101,9 +101,16 @@ class PathManager
         return $this->om->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findOneByName('innova_path');
     }
     
+    public function getWorkspace($workspaceId)
+    {
+        return $this->om->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->find($workspaceId);
+    }
+    
     /**
      * Create a new path
-     * @return \Innova\PathBundle\Manager\PathManager
+     * @param  \Innova\PathBundle\Entity\Path $path
+     * @param  \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace $workspace
+     * @return \Innova\PathBundle\Entity\Path
      */
     public function create(Path $path, AbstractWorkspace $workspace)
     {
@@ -111,8 +118,7 @@ class PathManager
         $structure = $path->getStructure();
         if (empty($structure)) {
             // Initialize path structure
-            $structure = $path->initializeStructure();
-            $path->setStructure($structure);
+            $path->initializeStructure();
         }
         
         // Persist Path
@@ -128,39 +134,33 @@ class PathManager
     
     /**
      * Edit existing path
-     * @return string|null
-     * @throws NotFoundHttpException
+     * @param  \Innova\PathBundle\Entity\Path $path
+     * @return \Innova\PathBundle\Entity\Path
      */
-    public function edit()
+    public function edit(Path $path)
     {
-        $pathId = null;
+        // Check if JSON structure is built
+        $structure = $path->getStructure();
+        if (empty($structure)) {
+            // Initialize path structure
+            $path->initializeStructure();
+        }
+
+        // Set path as modified (= need publishment to be able to play path with new modifs)
+        $path->setModified(true);
+        $this->om->persist($path);
         
-        // Load current path
-        $path = $this->om->getRepository('InnovaPathBundle:Path')->findOneByResourceNode($this->request->get('id'));
-        if ($path) {
-            // Path found
-            // Update resource node 
-            $resourceNode = $path->getResourceNode();
-            $resourceNode->setName($this->request->get('pathName'));
+        // Update resource node if needed
+        $resourceNode = $path->getResourceNode();
+        if ($path->getName() !== $resourceNode->getName()) {
+            // Path name as changed => rename linked resource node
+            $resourceNode->setName($path->getName());
             $this->om->persist($resourceNode);
-        
-            // Update path
-            $path->setStructure($this->request->get('structure'));
-            $path->setDescription($this->request->get('pathDescription'));
-            $path->setModified(true);
-            $this->om->persist($path);
-            
-            // Write data into DB
-            $this->om->flush();
-        
-            $pathId = $resourceNode->getId();
-        }
-        else {
-            // Path not found
-            throw new NotFoundHttpException('The path you want to edit does not exist.');
         }
         
-        return $pathId;
+        $this->om->flush();
+        
+        return $path;
     }
     
     /**
@@ -324,7 +324,7 @@ class PathManager
             
             //$this->om->flush();
             // récursivité sur les enfants possibles.
-            $this->JSONParser($step->children, $user, $workspace, $pathsDirectory, $lvl+1, $currentStep->getId(), 0, $path, $stepsToNotDelete, $excludedResourcesToResourceNodes);
+            $this->JSONParser($step->children, $user, $workspace, $pathsDirectory, $lvl+1, $currentStep, 0, $path, $stepsToNotDelete, $excludedResourcesToResourceNodes);
         }
 
         $this->om->flush();

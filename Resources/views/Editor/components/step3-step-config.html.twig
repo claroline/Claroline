@@ -64,7 +64,7 @@
                             </td>
                         </tr>
                         
-                        <tr ng-show="previewStep.who != null && previewStep.who != ''">
+                        <tr>
                             <td scope="row"><strong>{{ 'step_who'|trans({}, 'path_editor') }}</strong></td>
                             <td class="text-right">
                                 <img ng-src="{% verbatim %}{{ webDir }}images/icons/who/{{ previewStep.who }}{% endverbatim %}" 
@@ -73,7 +73,7 @@
                             </td>
                         </tr>
                         
-                        <tr ng-show="previewStep.where != null && previewStep.where != ''">
+                        <tr>
                             <td scope="row"><strong>{{ 'step_where'|trans({}, 'path_editor') }}</strong></td>
                             <td class="text-right">
                                 <img ng-src="{% verbatim %}{{ webDir }}images/icons/where/{{ previewStep.where }}{% endverbatim %}" 
@@ -85,9 +85,9 @@
                 </div>
             </div>
             
-            <p ng-bind-html-unsafe="previewStep.description"></p>
+            <p ng-bind-html-unsafe="previewStep.description" style="margin-bottom: 20px;"><em>{{ 'step_no_description'|trans({}, 'path_editor') }}</em></p>
             
-            <table class="table table-condensed table-hover">
+            <table class="table table-condensed table-hover" style="margin-bottom: 0;">
                 <caption class="h4 text-left" style="margin-bottom: 10px;">
                     <span class="icon-folder-open"></span>
                     {{ 'resources'|trans({}, 'path_editor') }}
@@ -104,6 +104,7 @@
                 
                 <!-- Inherited resources from parents -->
                 <tr ng-repeat="resource in inheritedResources">
+                    <td>{% verbatim %}{{ resourceTypeLabels[resource.type] }}{% endverbatim %}</td>
                     <td ng-class="{'excluded-resource': resource.isExcluded}">
                         {% verbatim %}{{ resource.name | truncate }}{% endverbatim %} 
                         <small>({{ 'from'|trans({}, 'path_editor') }} &lt;{% verbatim %}{{ resource.parentStep | truncate }}{% endverbatim %}&gt;)</small></td>
@@ -112,13 +113,14 @@
                         <a href="#" ng-disabled="resource.isExcluded" class="btn btn-xs btn-danger" ng-click="excludeParentResource(resource)"><span class="icon-eye-close"></span></a>
                     </td>
                 </tr>
-                    
+                
                 <!-- Specific resources -->
                 <tr ng-repeat="resource in previewStep.resources">
+                    <td>{% verbatim %}{{ resourceTypeLabels[resource.type] }}{% endverbatim %}</td>
                     <td>{% verbatim %}{{ resource.name | truncate }}{% endverbatim %} </td>
                     <td class="actions">
                         <a href="#" class="btn btn-xs btn-default" ng-click="editResource(resource)">
-                            <span class="icon-edit"></span>
+                            <span class="icon-pencil"></span>
                             <span class="sr-only">{{ 'resource_edit'|trans({}, 'path_editor') }}</span>
                         </a>
                         <a href="#" class="btn btn-xs btn-danger" ng-click="removeResource(resource)">

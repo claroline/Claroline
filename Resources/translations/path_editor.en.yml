@@ -25,6 +25,11 @@ open_templates: Open templates
 # p
 path_name: Name of the path
 path_description: Description of the path
+resource_edit_form: Editing resource
+resource_create_form: Creating resource
+path_save_success: The path has been successfully saved.
+path_template_save_success: The template has been successfully saved.
+path_template_save_error: An error occurred while saving template.
 
 # r
 redo: Redo
@@ -32,6 +37,8 @@ resources: Resources
 resource_delete: Delete
 resource_edit: Edit
 resource_add: Add resource
+resource_edit_form: Editing resource
+resource_create_form: Creating resource
 
 # s
 save: Save
@@ -45,6 +52,14 @@ step_where: Where ?
 step_computer: With Computer ?
 step_tutor: With tutor ?
 step_no_resource: There is no resource linked to this step.
+step_no_description: There is no description for this step.
+
+# t
+templates: Templates
+templates_sidebar_close: Close
+template_copy: Copy
+template_edit: Edit
+template_delete: Delete
 
 # u
 undo: Undo
@@ -54,3 +69,15 @@ with_computer: With computer
 with_tutor: With tutor
 without_computer: Without computer
 without_tutor: Without tutor
+
+text: Text
+sound: Sound
+picture: Picture
+video: Video
+simulation: Simulation
+test: Test
+chat: Chat
+forum: Forum
+deposit_files: Deposit files
+other: Other
+indifferent: Indifferent

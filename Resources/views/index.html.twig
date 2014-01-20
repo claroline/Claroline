@@ -37,7 +37,7 @@
         
         {% if paths["me"] is empty and paths["others"] is empty  %}
 
-            {{ 'no_path_found' | trans({}, 'innova_tools') }}
+            <em>{{ 'no_path_found' | trans({}, 'innova_tools') }}</em>
 
         {% else %}
 

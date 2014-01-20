@@ -4,7 +4,9 @@ namespace Innova\PathBundle\Controller;
 
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Routing\RouterInterface;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\Translation\TranslatorInterface;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -30,8 +32,8 @@ use Innova\PathBundle\Entity\Path;
  *
  * @Route(
  *      "workspaces/{workspaceId}/tool/path_editor",
- *      name = "innova_path_editor",
- *      service="innova_path.controller.path_editor"
+ *      name    = "innova_path_editor",
+ *      service = "innova_path.controller.path_editor"
  * )
  * @ParamConverter("workspace", class="ClarolineCoreBundle:Workspace\AbstractWorkspace", options={"mapping": {"workspaceId": "id"}})
  */
@@ -50,6 +52,18 @@ class EditorController
     protected $formFactory;
     
     /**
+     * Session
+     * @var \Symfony\Component\HttpFoundation\Session\SessionInterface
+     */
+    protected $session;
+    
+    /**
+     * Translator engine
+     * @var \Symfony\Component\Translation\TranslatorInterface
+     */
+    protected $translator;
+    
+    /**
      * Path form handler
      * @var \Innova\PathBundle\Form\Handler\PathHandler
      */
@@ -64,10 +78,14 @@ class EditorController
     public function __construct(
         RouterInterface      $router,
         FormFactoryInterface $formFactory,
+        SessionInterface     $session,
+        TranslatorInterface  $translator,
         PathHandler          $pathHandler)
     {
         $this->router      = $router;
         $this->formFactory = $formFactory;
+        $this->session     = $session;
+        $this->translator  = $translator;
         $this->pathHandler = $pathHandler;
     }
     
@@ -91,7 +109,13 @@ class EditorController
         // Try to process data
         $this->pathHandler->setForm($form);
         if ($this->pathHandler->process()) {
-            // Redirect to list
+            // Add user message
+            $this->session->getFlashBag()->add(
+                'success',
+                $this->translator->trans('path_save_success', array(), 'path_editor')
+            );
+            
+            // Redirect to edit
             $url = $this->router->generate('innova_path_editor_edit', array (
                 'workspaceId' => $workspace->getId(),
                 'id' => $path->getId(),
@@ -125,6 +149,12 @@ class EditorController
         // Try to process data
         $this->pathHandler->setForm($form);
         if ($this->pathHandler->process()) {
+            // Add user message
+            $this->session->getFlashBag()->add(
+                'success',
+                $this->translator->trans('path_save_success', array(), 'path_editor')
+            );
+            
             // Redirect to list
             $url = $this->router->generate('innova_path_editor_edit', array (
                 'workspaceId' => $workspace->getId(),

@@ -148,7 +148,7 @@ function StepFactory($http, $q, PathFactory) {
          * @returns StepFactory
          */
         replaceResource: function(newResource) {
-            if (null !== step) {
+            if (null !== step && typeof step.resources !== 'undefined' && null !== step.resources) {
                 for (var i = 0; i < step.resources.length; i++) {
                     if (newResource.id === step.resources[i].id) {
                         this.updateResource(oldResource, newResource);
@@ -183,6 +183,7 @@ function StepFactory($http, $q, PathFactory) {
          * @returns StepFactory
          */
         removeResource: function(step, resourceId) {
+            if (typeof step.resources !== 'undefined' && null !== step.resources)
             // Search resource to remove
             for (var i = 0; i < step.resources.length; i++) {
                 if (resourceId === step.resources[i].id) {

@@ -7,11 +7,7 @@ function TemplateModalCtrl($scope, $http, $modalInstance, StepFactory, TemplateF
     // Store symfony base partials route
     $scope.webDir = EditorApp.webDir;
     
-    $scope.pathTemplateName = {};
-    $scope.pathTemplateName.isUnique = false;
-    
     var editTemplate = false;
-    
     var currentTemplate = TemplateFactory.getCurrentTemplate();
     if (null === currentTemplate) {
         // Create new Template
@@ -20,34 +16,16 @@ function TemplateModalCtrl($scope, $http, $modalInstance, StepFactory, TemplateF
             id: null,
             name : 'Template ' + stepToSave.name,
             description : '',
-            step: stepToSave
+            structure: stepToSave
         };
     }
     else {
         // Edit existing template
         editTemplate = true;
         
-        // Name is unique because it comes from the db
-        $scope.pathTemplateName.isUnique = true;
-        
         TemplateFactory.setCurrentTemplate(null);
         $scope.formTemplate = jQuery.extend(true, {}, currentTemplate); // Create a copy to not affect original data before user save
     }
-    
-    /**
-     * Check if path template name is unique
-     */
-    $scope.checkTemplateNameIsUnique = function() {
-        $http({
-            method: 'POST',
-            headers: {'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'},
-            url: Routing.generate('innova_pathtemplate_check_unique_name'),
-            data: 'pathTemplateName=' + $scope.formTemplate.name
-        })
-        .success(function (data) {
-            $scope.pathTemplateName.isUnique = data == 'true' ? true : false;
-        });
-    };
     
     /**
      * Close template edit
@@ -100,21 +78,15 @@ function TemplateModalCtrl($scope, $http, $modalInstance, StepFactory, TemplateF
             data: data
         })
         .success(function (data) {
-            if (editTemplate) {
-                // Update success
-                AlertFactory.addAlert('success', 'Template updated.');
-            }
-            else {
-                // Create success
-                AlertFactory.addAlert('success', 'Template created.');
-                formTemplate.id = data;
-            }
-            
+            formTemplate.id = data;
             TemplateFactory.replaceTemplate(formTemplate);
+            
+            AlertFactory.addAlert('success', Translator.get('path_editor:path_template_save_success'));
+            
             $modalInstance.close();
         })
         .error(function(data, status) {
-            AlertFactory.addAlert('danger', 'Error while saving template.');
+            AlertFactory.addAlert('danger', Translator.get('path_editor:path_template_save_error'));
         });
     }
 }

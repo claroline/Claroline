@@ -6,6 +6,7 @@
 function TreeCtrl($scope, $modal, HistoryFactory, PathFactory, StepFactory, ResourceFactory) {
     $scope.whoList = StepFactory.getWhoList();
     $scope.whereList = StepFactory.getWhereList();
+    $scope.resourceTypeLabels = ResourceFactory.getResourceTypeLabels();
     
     $scope.currentEditingStep = null;
     
@@ -211,6 +212,10 @@ function TreeCtrl($scope, $modal, HistoryFactory, PathFactory, StepFactory, Reso
         // Process modal results
         modalInstance.result.then(function(resource) {
             if (resource) {
+                if (typeof $scope.previewStep.resources == 'undefined' || null == $scope.previewStep.resources) {
+                    $scope.previewStep.resources= [];
+                }
+                
                 // Save resource
                 if (editResource) {
                     // Edit existing resource
@@ -265,9 +270,12 @@ function TreeCtrl($scope, $modal, HistoryFactory, PathFactory, StepFactory, Reso
      */
     $scope.includeParentResource= function(resource) {
         resource.isExcluded = false;
-        for (var i = 0; i < $scope.previewStep.excludedResources.length; i++) {
-            if (resource.id == $scope.previewStep.excludedResources[i]) {
-                $scope.previewStep.excludedResources.splice(i, 1);
+        
+        if (typeof $scope.previewStep.excludedResources !== 'undefined' && null !== $scope.previewStep.excludedResources) {
+            for (var i = 0; i < $scope.previewStep.excludedResources.length; i++) {
+                if (resource.id == $scope.previewStep.excludedResources[i]) {
+                    $scope.previewStep.excludedResources.splice(i, 1);
+                }
             }
         }
 

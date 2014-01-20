@@ -88,7 +88,7 @@ class StepManager
         return $step2ressourceNode;
     }
     
-    public function edit($id, \stdClass $jsonStep, Path $path, $parent, $lvl, $order)
+    public function edit($id, \stdClass $jsonStep, Path $path, $parent = null, $lvl, $order)
     {
         if ($id == null) {
             $step = new Step();
@@ -99,12 +99,14 @@ class StepManager
         $step->setPath($path);
         
         $step->setName($jsonStep->name);
-        $step->setStepOrder($order);
-        
         $step->setParent($parent);
+        
+        $step->setStepOrder($order);
         $step->setLvl($lvl);
-        $step->setStepWhere($stepWhere);
-        $step->setDuration(new \DateTime("00-00-00 ".intval($jsonStep->durationHours).":".intval($jsonStep->durationMinutes).":00"));
+        
+        $durationHours = !empty($jsonStep->durationHours) ? intval($jsonStep->durationHours) : 0;
+        $durationMinutes = !empty($jsonStep->durationMinutes) ? intval($jsonStep->durationMinutes) : 0;
+        $step->setDuration(new \DateTime('00-00-00 ' . $durationHours . ':' . $durationMinutes . ':00'));
         
         if (!empty($jsonStep->withTutor)) {
             $step->setWithTutor($jsonStep->withTutor);
@@ -121,11 +123,16 @@ class StepManager
         
         if (!empty($jsonStep->where)) {
             $stepWhere = $this->om->getRepository('InnovaPathBundle:StepWhere')->findOneById($jsonStep->where);
-            $parent = $this->om->getRepository('InnovaPathBundle:Step')->findOneById($parent);
+            $step->setStepWhere($stepWhere);
         }
         
-        $step->setDescription($jsonStep->description);
-        $step->setImage($jsonStep->image);
+        if (!empty($jsonStep->description)) {
+            $step->setDescription($jsonStep->description);
+        }
+        
+        if (!empty($jsonStep->image)) {
+            $step->setImage($jsonStep->image);
+        }
 
         $this->om->persist($step);
         $this->om->flush();

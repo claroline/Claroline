@@ -27,8 +27,7 @@
         
         {{ form_row(form.structure, {
                 'attr': {
-                    'ng-json-input': true,
-                    'ng-model'     : 'path'
+                    'value' : '{{ path | json }}'
                 }
             }) 
         }}

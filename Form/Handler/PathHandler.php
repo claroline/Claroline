@@ -70,16 +70,27 @@ class PathHandler
     public function process()
     {
         if ($this->request->getMethod() == 'POST' || $this->request->getMethod() == 'PUT') {
+            // Correct HTTP method => try to process form
             $this->form->handleRequest($this->request);
             
             if ( $this->form->isValid() ) {
+                // Form is valid => create or update the path
                 $path = $this->form->getData();
                 
-                // Retrieve current Workspace
-                $workspaceId = $this->request->get('workspaceId');
-                
-                $this->pathManager->create($path);
-                
+                if ($this->request->getMethod() == 'POST') {
+                    // Create path
+                    
+                    // Retrieve current Workspace
+                    $workspaceId = $this->request->get('workspaceId');
+                    $workspace = $this->pathManager->getWorkspace($workspaceId);
+                    
+                    $this->pathManager->create($path, $workspace);
+                }
+                else {
+                    // Edit existing path
+                    $this->pathManager->edit($path);
+                }
+
                 return true;
             }
         }

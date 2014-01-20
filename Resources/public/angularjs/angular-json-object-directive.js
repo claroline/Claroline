@@ -9,6 +9,7 @@ angular.module('ngJsonInput', [])
                 }
 
                 function toJson(object) {
+                    alert('coucou');
                     return angular.toJson(object);
                 }
                 

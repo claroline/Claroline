@@ -5,7 +5,8 @@
  */
 function MainCtrl($scope, $http, $window, $location, $modal, HistoryFactory, ClipboardFactory, PathFactory, StepFactory, AlertFactory) {
     $scope.path = EditorApp.currentPath;
-    
+    PathFactory.setPath($scope.path);
+        
     // Store symfony base partials route
     $scope.webDir = EditorApp.webDir;
     
