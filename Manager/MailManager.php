@@ -110,12 +110,13 @@ class MailManager
         //placeholder for the username is %username%
         //placeholder for the password is %password%
 
-        $content = $this->getDefaultInscriptionMail('fr');
+        $locale = $user->getLocale();
+        $content = $this->getDefaultInscriptionMail($locale);
         $body = $content->getContent();
         $subject = $content->getTitle();
 
-        str_replace('%username%', $user->getUsername(), $body);
-        str_replace('%password%', $user->getPlainPassword(), $body);
+        $body = str_replace('%username%', $user->getUsername(), $body);
+        $body = str_replace('%password%', $user->getPlainPassword(), $body);
 
         return $this->send($subject, $body, array($user));
     }
@@ -162,6 +163,8 @@ class MailManager
 
     public function getDefaultInscriptionMail($locale)
     {
-        return $this->contentManager->getContent(array('title' => 'inscription_mail'));
+        $content = $this->contentManager->findByTypeAndLanguage('claro_mail_registration', 'fr');
+        var_dump($content->getContent());
+        throw new \Exception();
     }
 }

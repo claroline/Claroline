@@ -8,12 +8,28 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2014/01/15 02:38:24
+ * Generation date: 2014/01/20 11:09:08
  */
-class Version20140115143823 extends AbstractMigration
+class Version20140120110907 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
+        $this->addSql("
+            CREATE TABLE claro_content_translation (
+                id INTEGER NOT NULL, 
+                locale VARCHAR(8) NOT NULL, 
+                object_class VARCHAR(255) NOT NULL, 
+                field VARCHAR(32) NOT NULL, 
+                foreign_key VARCHAR(64) NOT NULL, 
+                content CLOB DEFAULT NULL, 
+                PRIMARY KEY(id)
+            )
+        ");
+        $this->addSql("
+            CREATE INDEX content_translation_idx ON claro_content_translation (
+                locale, object_class, field, foreign_key
+            )
+        ");
         $this->addSql("
             DROP INDEX UNIQ_EB8D2852F85E0677
         ");
@@ -109,10 +125,53 @@ class Version20140115143823 extends AbstractMigration
         $this->addSql("
             CREATE UNIQUE INDEX UNIQ_EB8D285282D40A1F ON claro_user (workspace_id)
         ");
+        $this->addSql("
+            ALTER TABLE claro_content 
+            ADD COLUMN type VARCHAR(255) DEFAULT NULL
+        ");
     }
 
     public function down(Schema $schema)
     {
+        $this->addSql("
+            DROP TABLE claro_content_translation
+        ");
+        $this->addSql("
+            CREATE TEMPORARY TABLE __temp__claro_content AS 
+            SELECT id, 
+            title, 
+            content, 
+            created, 
+            modified 
+            FROM claro_content
+        ");
+        $this->addSql("
+            DROP TABLE claro_content
+        ");
+        $this->addSql("
+            CREATE TABLE claro_content (
+                id INTEGER NOT NULL, 
+                title VARCHAR(255) DEFAULT NULL, 
+                content CLOB DEFAULT NULL, 
+                created DATETIME NOT NULL, 
+                modified DATETIME NOT NULL, 
+                PRIMARY KEY(id)
+            )
+        ");
+        $this->addSql("
+            INSERT INTO claro_content (
+                id, title, content, created, modified
+            ) 
+            SELECT id, 
+            title, 
+            content, 
+            created, 
+            modified 
+            FROM __temp__claro_content
+        ");
+        $this->addSql("
+            DROP TABLE __temp__claro_content
+        ");
         $this->addSql("
             DROP INDEX UNIQ_EB8D2852F85E0677
         ");

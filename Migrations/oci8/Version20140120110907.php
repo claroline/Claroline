@@ -1,6 +1,6 @@
 <?php
 
-namespace Claroline\CoreBundle\Migrations\pdo_oci;
+namespace Claroline\CoreBundle\Migrations\oci8;
 
 use Doctrine\DBAL\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
@@ -8,9 +8,9 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2014/01/16 04:39:27
+ * Generation date: 2014/01/20 11:09:08
  */
-class Version20140116163926 extends AbstractMigration
+class Version20140120110907 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
@@ -58,12 +58,52 @@ class Version20140116163926 extends AbstractMigration
                 locale, object_class, field, foreign_key
             )
         ");
+        $this->addSql("
+            ALTER TABLE claro_user 
+            ADD (
+                termsOfService NUMBER(1) DEFAULT NULL NULL
+            )
+        ");
+        $this->addSql("
+            ALTER TABLE claro_user 
+            DROP CONSTRAINT FK_EB8D285282D40A1F
+        ");
+        $this->addSql("
+            ALTER TABLE claro_user 
+            ADD CONSTRAINT FK_EB8D285282D40A1F FOREIGN KEY (workspace_id) 
+            REFERENCES claro_workspace (id) 
+            ON DELETE CASCADE
+        ");
+        $this->addSql("
+            ALTER TABLE claro_content 
+            ADD (
+                type VARCHAR2(255) DEFAULT NULL NULL
+            )
+        ");
     }
 
     public function down(Schema $schema)
     {
         $this->addSql("
             DROP TABLE claro_content_translation
+        ");
+        $this->addSql("
+            ALTER TABLE claro_content 
+            DROP (type)
+        ");
+        $this->addSql("
+            ALTER TABLE claro_user 
+            DROP (termsOfService)
+        ");
+        $this->addSql("
+            ALTER TABLE claro_user 
+            DROP CONSTRAINT FK_EB8D285282D40A1F
+        ");
+        $this->addSql("
+            ALTER TABLE claro_user 
+            ADD CONSTRAINT FK_EB8D285282D40A1F FOREIGN KEY (workspace_id) 
+            REFERENCES claro_workspace (id) 
+            ON DELETE SET NULL
         ");
     }
 }

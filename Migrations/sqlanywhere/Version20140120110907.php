@@ -8,12 +8,28 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2014/01/15 02:38:25
+ * Generation date: 2014/01/20 11:09:09
  */
-class Version20140115143823 extends AbstractMigration
+class Version20140120110907 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
+        $this->addSql("
+            CREATE TABLE claro_content_translation (
+                id INT IDENTITY NOT NULL, 
+                locale VARCHAR(8) NOT NULL, 
+                object_class VARCHAR(255) NOT NULL, 
+                field VARCHAR(32) NOT NULL, 
+                foreign_key VARCHAR(64) NOT NULL, 
+                content TEXT DEFAULT NULL, 
+                PRIMARY KEY (id)
+            )
+        ");
+        $this->addSql("
+            CREATE INDEX content_translation_idx ON claro_content_translation (
+                locale, object_class, field, foreign_key
+            )
+        ");
         $this->addSql("
             ALTER TABLE claro_user 
             ADD termsOfService BIT NULL DEFAULT NULL
@@ -28,10 +44,21 @@ class Version20140115143823 extends AbstractMigration
             REFERENCES claro_workspace (id) 
             ON DELETE CASCADE
         ");
+        $this->addSql("
+            ALTER TABLE claro_content 
+            ADD type VARCHAR(255) DEFAULT NULL
+        ");
     }
 
     public function down(Schema $schema)
     {
+        $this->addSql("
+            DROP TABLE claro_content_translation
+        ");
+        $this->addSql("
+            ALTER TABLE claro_content 
+            DROP type
+        ");
         $this->addSql("
             ALTER TABLE claro_user 
             DROP termsOfService
