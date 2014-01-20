@@ -223,21 +223,8 @@ class FeatureContext extends MinkContext
             new Step\When('I am on "/login"'),
             new Step\When('I fill in "Nom d\'utilisateur ou email" with "'. $login . '"'),
             new Step\When('I fill in "Mot de passe (Mot de passe oublié ?)" with "'. $password . '"'),
-            new Step\When('I press "Connexion"'),
-            new Step\Then('I have a token for "' . $login . '" User')
+            new Step\When('I press "Connexion"')
         );
-    }
-
-    /**
-    * @Then /^(?:|I) have a token for "([^"]*)" User$/
-    */
-    public function IHaveATokenForUser($user)
-    {
-        $user = $this->getContainer()->get('doctrine')->getRepository('ClarolineCoreBundle:User')->loadUserByUsername($user);
-        $securityContext = $this->getContainer()->get('security.context');
-        $provider = 'main';
-        $token = new UsernamePasswordToken($user, null, $provider, $user->getRoles());
-        $securityContext->setToken($token);
     }
 
     /**************/
