@@ -212,6 +212,7 @@ class PathManager
             $paths["others"] = $this->om->getRepository('InnovaPathBundle:Path')->findAllByWorkspaceByNotUser($workspace, $this->user);
         }
         else {
+            $paths["me"] = array();
             $paths["others"] = $this->om->getRepository('InnovaPathBundle:Path')->findAllByWorkspace($workspace);
         }
         
