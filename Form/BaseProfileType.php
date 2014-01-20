@@ -37,7 +37,9 @@ class BaseProfileType extends AbstractType
             ->add('mail', 'email')
             ->add('locale', 'choice', array('choices' => $this->langs, 'required' => false, 'label' => 'Language'));
 
-        if ($this->termsOfService->isActive() and $this->termsOfService->getTermsOfService()) {
+        $content = $this->termsOfService->getTermsOfService();
+
+        if ($this->termsOfService->isActive() and $content instanceof Content) {
 
             $builder->add(
                 'test',
@@ -47,7 +49,7 @@ class BaseProfileType extends AbstractType
                     'mapped' => false,
                     'label' => 'Terms of service',
                     'read_only' => true,
-                    'data' => $this->termsOfService->getTermsOfService()
+                    'data' => $content->getContent()
                 )
             )
             ->add('terms_of_service', 'checkbox', array('label' => 'I accept the terms of service'));

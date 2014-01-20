@@ -48,6 +48,12 @@ class Content implements Translatable
     private $content;
 
     /**
+     * @var string
+     * @ORM\Column(length=255, nullable=true)
+     */
+    private $type;
+
+    /**
      * @var \DateTime
      *
      * @ORM\Column(type="datetime")
@@ -135,6 +141,31 @@ class Content implements Translatable
     public function getContent()
     {
         return $this->content;
+    }
+
+    /**
+     * Set title
+     *
+     * @param  string  $title
+     * @return Content
+     */
+    public function setType($type)
+    {
+        if ($type !== null) {
+            $this->type = $type;
+        }
+
+        return $this;
+    }
+
+    /**
+     * Get title
+     *
+     * @return string
+     */
+    public function getType()
+    {
+        return $this->type;
     }
 
     /**

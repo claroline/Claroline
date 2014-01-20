@@ -15,6 +15,7 @@ use JMS\DiExtraBundle\Annotation\InjectParams;
 use JMS\DiExtraBundle\Annotation\Inject;
 use JMS\DiExtraBundle\Annotation\Service;
 use Claroline\CoreBundle\Entity\Content;
+use Claroline\CoreBundle\Entity\ContentTranslation;
 
 /**
  * @Service("claroline.manager.content_manager")
@@ -34,6 +35,7 @@ class ContentManager
     {
         $this->manager = $persistence;
         $this->content = $manager->getRepository('ClarolineCoreBundle:Content');
+        $this->translations = $manager->getRepository('ClarolineCoreBundle:ContentTranslation');
     }
 
     /**
@@ -48,6 +50,22 @@ class ContentManager
     public function getContent(array $filter)
     {
         return $this->content->findOneBy($filter);
+    }
+
+    /**
+     * Get translated Content
+     *
+     * Exameple: $contentManager->getTranslatedContent(array('id' => $id, 'locale' => $locale));
+     *
+     * @return Array
+     */
+    public function getTranslatedContent($filter)
+    {
+        $content = $this->getContent($filter);
+
+        if ($content instanceof Content) {
+            return $this->translations->findTranslations($content);
+        }
     }
 
     /**
@@ -103,7 +121,6 @@ class ContentManager
         $this->manager->flush();
     }
 
-
     /**
      * Delete a content
      *
@@ -113,5 +130,19 @@ class ContentManager
     {
         $this->manager->remove($content);
         $this->manager->flush();
+    }
+
+    /**
+     * Delete a translation of content
+     *
+     * @return This function doesn't return anything.
+     */
+    public function deleteTranslation($locale, $id)
+    {
+        $content = $this->translations->findOneBy(array('foreignKey' => $id, 'locale' => $locale));
+
+        if ($content instanceof ContentTranslation) {
+            $this->deleteContent($content);
+        }
     }
 }
