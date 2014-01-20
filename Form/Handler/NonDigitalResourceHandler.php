@@ -52,7 +52,7 @@ class NonDigitalResourceHandler
      */
     public function process()
     {
-        if ($this->request->getMethod() == 'POST' or $this->request->getMethod() == 'PUT') {
+        if ($this->request->getMethod() == 'POST' || $this->request->getMethod() == 'PUT') {
             $this->form->handleRequest($this->request);
             
             if ( $this->form->isValid() ) {

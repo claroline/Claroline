@@ -25,18 +25,18 @@ open_templates: Ouvrir les favoris
 # p
 path_name: Nom du parcours
 path_description: Description du parcours
-resource_edit_form: Edition d'une resource
-resource_create_form: Création d'une resource
+resource_edit_form: Edition d'une ressource
+resource_create_form: Création d'une ressource
 path_save_success: La parcours a correctement été sauvegardé.
 path_template_save_success: Le favori a correctement été sauvegardé.
 path_template_save_error: Une erreur s'est produite lors de la sauvegarde du favori.
 
 # r
 redo: Rétablir
-resources: Resources
+resources: Ressources
 resource_delete: Supprimer
 resource_edit: Modifier
-resource_add: Ajouter une resource
+resource_add: Ajouter une ressource
 
 # s
 save: Sauvegarder
@@ -49,7 +49,7 @@ step_who: Qui ?
 step_where: Où ?
 step_computer: Avec ordinateur ?
 step_tutor: Avec tuteur ?
-step_no_resource: Il n'y a aucune resource rattachée à cette étape.
+step_no_resource: Il n'y a aucune ressource rattachée à cette étape.
 step_no_description: Il n'y a aucune description pour cette étape.
 
 # t

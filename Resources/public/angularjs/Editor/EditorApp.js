@@ -3,6 +3,7 @@
 // Declare app level module which depends on filters, and services
 var EditorApp = angular.module('EditorApp', [
     'ngRoute', 
+    'ngSanitize',
     'ui.bootstrap', 
     'ui.pageslide', 
     'ui.sortable', 

@@ -1,5 +1,3 @@
-@CHARSET "UTF-8";
-
 /* START fix new modal width and enable use of grid system */
 .step-edit .modal-dialog {
 	width: auto;
@@ -51,24 +49,6 @@
     line-height: 20px;
     padding: 5px 4px;
     vertical-align: top;
-}
-
-.step-edit .panel .panel:last-child {
-	margin-bottom: 0;
-}
-
-.panel-documents,
-.panel-image,
-.panel-tools {
-	margin-bottom: 0;
-}
-
-.panel-image {
-    text-align: center;
-}
-
-.panel-documents h2 {
-    text-align: right;
 }
 
 .step-edit table {

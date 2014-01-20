@@ -85,7 +85,10 @@
                 </div>
             </div>
             
-            <p ng-bind-html-unsafe="previewStep.description" style="margin-bottom: 20px;"><em>{{ 'step_no_description'|trans({}, 'path_editor') }}</em></p>
+            <p ng-show="null == previewStep.description || '' == previewStep.description" style="margin-bottom: 20px;">
+                <em>{{ 'step_no_description'|trans({}, 'path_editor') }}</em>
+            </p>
+            <p ng-show="null != previewStep.description && '' != previewStep.description" ng-bind-html="previewStep.description" style="margin-bottom: 20px;"></p>
             
             <table class="table table-condensed table-hover" style="margin-bottom: 0;">
                 <caption class="h4 text-left" style="margin-bottom: 10px;">

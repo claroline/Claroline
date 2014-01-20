@@ -5,134 +5,155 @@
 
 <div class="modal-body">
     <form novalidate name="stepForm" id="stepForm">
-        <fieldset class="row">
+        <div class="row">
             <div ng-hide="isRootNode" class="form-group col-md-12">
-                <label>Name</label>
+                <label for="step-name">Name</label>
                 <input class="form-control" type="text" id="step-name" ng-model="formStep.name" value="{{ formStep.name }}" required />
             </div>
-
-            <div class="form-group col-md-12">
-                <textarea ui-tinymce="tinymceOptions" class="form-control" id="step-instructions" name="step-instructions" ng-model="formStep.description" placeholder="Tip step instructions here"></textarea>
+        </div>
+    
+        <div class="row">
+            <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12 text-center">
+                <img ng-hide="formStep.image == null" src="{{ webDir }}images/steps/{{ formStep.image }}" />
+                <em ng-hide="formStep.image != null">This step has no image.</em>
+                
+                <br/>
+                
+                <button class="btn btn-default btn-sm" ng-click="selectImage()">
+                    <span class="icon-picture"></span> Select image
+                </button>
             </div>
-
-            <div class="form-group col-md-2">
-                <label for="step-who">Who ?</label>
-                <select class="form-control" name="step-who" id="step-who" ng-model="formStep.who" ng-options="k as v for (k,v) in stepWho">
-                    <option value=""></option>
-                </select>
-            </div>
-
-            <div class="form-group col-md-2">
-                <label for="step-where">Where ?</label>
-                <select class="form-control" name="step-where" id="step-where" ng-model="formStep.where" ng-options="k as v for (k,v) in stepWhere">
-                    <option value=""></option>
-                </select>
-            </div>
-
-            <div class="step-duration form-group col-md-3">
-                <label for="step-duration-hours">Student duration (in hours)</label>
-                <div class="row">
-                    <div class="col-md-4">
-                        <select class="col-md-4 form-control" name="step-duration-hours" id="step-duration-hours" ng-model="formStep.durationHours">
-                            <option value="">00</option>
-                            <option value="1">01</option>
-                            <option value="2">02</option>
-                            <option value="3">03</option>
-                            <option value="4">04</option>
-                            <option value="5">05</option>
-                            <option value="6">06</option>
-                            <option value="7">07</option>
-                            <option value="8">08</option>
-                            <option value="9">09</option>
-                            <option value="10">10</option>
-                        </select>
-                    </div>
-                    <span class="col-md-1">h</span>
-                    <div class="col-md-4">
-                        <select class="col-md-4 form-control" name="step-duration-minutes" id="step-duration-minutes" ng-model="formStep.durationMinutes">
-                            <option value="">00</option>
-                            <option value="5">05</option>
-                            <option value="10">10</option>
-                            <option value="15">15</option>
-                            <option value="20">20</option>
-                            <option value="25">25</option>
-                            <option value="30">30</option>
-                            <option value="35">35</option>
-                            <option value="40">40</option>
-                            <option value="45">45</option>
-                            <option value="50">50</option>
-                            <option value="55">55</option>
-                        </select>
-                    </div>
-                    <span class="col-md-1">min</span>
-                </div>
-            </div>
-
-            <div class="form-group col-md-2">
-                <label>
-                     <input type="checkbox" name="with-tutor" id="with-tutor" ng-model="formStep.withTutor" />
-                     With tutor ?
-                </label>
-            </div>
-
-            <div class="form-group col-md-2">
-                <label>
-                    <input type="checkbox" name="with-computer" id="with-computer" ng-model="formStep.withComputer" />
-                    With computer ?
-                </label>
-            </div>
-        </fieldset>
-    </form>
-
-    <hr/>
-
-    <div class="row">
-        <div class="col-md-4">
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <button class="btn btn-xs btn-primary pull-right" ng-click="editResource('document')"><i class="icon-plus"></i></button>
-                    <span class="icon-folder-open"></span> Documents
-                </div>
-
-                <table class="table table-condensed table-hover">
-                    <!-- Inherited documents from parents -->
-                    <tr ng-repeat="resource in inheritedResources | filter: {type: 'document'}">
-                        <td class="icon"><img src="{{ webDir }}images/icons/document/16x16/{{ resource.subType }}.png" alt="{{ resource.subType }}" /></td>
-                        <td ng-class="{'excluded-resource': resource.isExcluded}">{{ resource.name | truncate }} <small>(from &lt;{{ resource.parentStep | truncate }}&gt;)</small></td>
-                        <td class="actions">
-                            <button ng-disabled="!resource.isExcluded" class="btn btn-xs btn-success" ng-click="includeParentResource(resource)"><i class="icon-eye-open"></i></button>
-                            <button ng-disabled="resource.isExcluded" class="btn btn-xs btn-danger" ng-click="excludeParentResource(resource)"><i class="icon-eye-close"></i></button>
+            
+            <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12">
+                <table class="table">
+                    <tr>
+                        <td>
+                            <label for="step-duration-hours">Student duration (in hours)</label>
+                        </td>
+                        <td class="step-duration">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <select class="col-md-4 form-control" name="step-duration-hours" id="step-duration-hours" ng-model="formStep.durationHours">
+                                        <option value="">00</option>
+                                        <option value="1">01</option>
+                                        <option value="2">02</option>
+                                        <option value="3">03</option>
+                                        <option value="4">04</option>
+                                        <option value="5">05</option>
+                                        <option value="6">06</option>
+                                        <option value="7">07</option>
+                                        <option value="8">08</option>
+                                        <option value="9">09</option>
+                                        <option value="10">10</option>
+                                    </select>
+                                </div>
+                                <span class="col-md-1">h</span>
+                                <div class="col-md-4">
+                                    <select class="col-md-4 form-control" name="step-duration-minutes" id="step-duration-minutes" ng-model="formStep.durationMinutes">
+                                        <option value="">00</option>
+                                        <option value="5">05</option>
+                                        <option value="10">10</option>
+                                        <option value="15">15</option>
+                                        <option value="20">20</option>
+                                        <option value="25">25</option>
+                                        <option value="30">30</option>
+                                        <option value="35">35</option>
+                                        <option value="40">40</option>
+                                        <option value="45">45</option>
+                                        <option value="50">50</option>
+                                        <option value="55">55</option>
+                                    </select>
+                                </div>
+                                <span class="col-md-1">min</span>
+                            </div>
                         </td>
                     </tr>
                     
-                    <!-- Specific documents -->
-                    <tr ng-repeat="resource in formStep.resources | filter: {type: 'document'}">
-                        <td class="icon"><img src="{{ webDir }}images/icons/document/16x16/{{ resource.subType }}.png" alt="{{ resource.subType }}" /></td>
-                        <td>{{ resource.name | truncate }}</td>
-                        <td class="actions">
-                            <button class="btn btn-xs btn-default" ng-click="editResource('document', resource)" tooltip="Edit"><i class="icon-edit"></i></button>
-                            <button class="btn btn-xs btn-danger" ng-click="removeResource(resource)" tooltip="Delete"><i class="icon-trash"></i></button>
+                    <tr>
+                        <td><label for="with-computer">With computer ?</label></td>
+                        <td><input type="checkbox" name="with-computer" id="with-computer" ng-model="formStep.withComputer" /></td>
+                    </tr>
+                    
+                    <tr>
+                        <td><label for="with-tutor">With tutor ?</label></td>
+                        <td><input type="checkbox" name="with-tutor" id="with-tutor" ng-model="formStep.withTutor" /></td>
+                    </tr>
+                    
+                    <tr>
+                        <td><label for="step-who">Who ?</label></td>
+                        <td>
+                            <select class="form-control" name="step-who" id="step-who" ng-model="formStep.who" ng-options="k as v for (k,v) in stepWho">
+                                <option value=""></option>
+                            </select>
+                        </td>
+                    </tr>
+                    
+                    <tr>
+                        <td><label for="step-where">Where ?</label></td>
+                        <td>
+                            <select class="form-control" name="step-where" id="step-where" ng-model="formStep.where" ng-options="k as v for (k,v) in stepWhere">
+                                <option value=""></option>
+                            </select>
                         </td>
                     </tr>
                 </table>
             </div>
         </div>
-
-        <div class="col-md-4">
-            <div class="panel-image panel panel-default">
-                <div class="panel-heading">
-                    <span class="icon-picture"></span> Image
-                </div>
-
-                <div class="panel-body">
-                    <div>
-                        <img ng-hide="formStep.image == null" src="{{ webDir }}images/steps/{{ formStep.image }}" />
-                        <em ng-hide="formStep.image != null">This step has no image.</em>
-                    </div>
-                    <br/>
-                    <button class="btn btn-default btn-sm" ng-click="selectImage()"><i class="icon-picture"></i> Select image</button>
-                </div>
+        
+        <br/>
+        
+        <div class="row">
+            <div class="form-group col-md-12">
+                <textarea ui-tinymce="tinymceOptions" class="form-control" name="step-description" ng-model="formStep.description" placeholder="Tip step instructions here"></textarea>
             </div>
+        </div>
+    </form>
+
+    <div class="row">
+        <div class="col-md-12">
+            <table class="table table-condensed table-hover" style="margin-bottom: 0;">
+                <caption class="h4 text-left" style="margin-bottom: 10px;">
+                    <span class="icon-folder-open"></span>
+                    Resources
+                    
+                    <a href="#" class="btn btn-xs btn-primary pull-right" ng-click="editResource()">
+                        <span class="icon-plus"></span>
+                        Add resource
+                    </a>
+                </caption>
+                
+                <tr ng-show="(null == inheritedResources || inheritedResources.length == 0) && (null == formStep.resources || formStep.resources == 0)">
+                    <td colspan="2" class="text-center"><em>There is no resource linked to this step.</em></td>
+                </tr>
+                
+                <!-- Inherited resources from parents -->
+                <tr ng-repeat="resource in inheritedResources">
+                    <td>{{ resource.type }}</td>
+                    <td ng-class="{'excluded-resource': resource.isExcluded}">{{ resource.name | truncate }} <small>(from &lt;{{ resource.parentStep | truncate }}&gt;)</small></td>
+                    <td class="actions">
+                        <button ng-disabled="!resource.isExcluded" class="btn btn-xs btn-success" ng-click="includeParentResource(resource)">
+                            <span class="icon-eye-open"></span>
+                        </button>
+                        <button ng-disabled="resource.isExcluded" class="btn btn-xs btn-danger" ng-click="excludeParentResource(resource)">
+                            <span class="icon-eye-close"></span>
+                        </button>
+                    </td>
+                </tr>
+                
+                <!-- Specific resources -->
+                <tr ng-repeat="resource in formStep.resources">
+                    <td>{{ resource.type }}</td>
+                    <td>{{ resource.name | truncate }}</td>
+                    <td class="actions">
+                        <button class="btn btn-xs btn-default" ng-click="editResource(resource)">
+                            <span class="icon-edit"></span>
+                        </button>
+                        <button class="btn btn-xs btn-danger" ng-click="removeResource(resource)">
+                            <span class="icon-trash"></span>
+                        </button>
+                    </td>
+                </tr>
+            </table>
         </div>
     </div>
 </div>
