@@ -11,6 +11,7 @@
 
 namespace Claroline\CoreBundle\Manager;
 
+use Claroline\CoreBundle\Persistence\ObjectManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Templating\EngineInterface;
@@ -18,6 +19,7 @@ use Symfony\Component\Translation\Translator;
 use Claroline\CoreBundle\Entity\User;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
+use Claroline\CoreBundle\Entity\Content;
 
 /**
  * @DI\Service("claroline.manager.mail_manager")
@@ -30,6 +32,7 @@ class MailManager
     private $translator;
     private $container;
     private $ch;
+    private $contentManager;
 
     /**
      * @DI\InjectParams({
@@ -37,6 +40,7 @@ class MailManager
      *     "mailer"         = @DI\Inject("mailer"),
      *     "templating"     = @Di\Inject("templating"),
      *     "ch"             = @DI\Inject("claroline.config.platform_config_handler"),
+     *     "contentManager" = @DI\Inject("claroline.manager.content_manager"),
      *     "container"      = @DI\Inject("service_container")
      * })
      */
@@ -46,7 +50,8 @@ class MailManager
         UrlGeneratorInterface $router,
         Translator $translator,
         PlatformConfigurationHandler $ch,
-        ContainerInterface $container
+        ContainerInterface $container,
+        ContentManager $contentManager
     )
     {
         $this->router = $router;
@@ -55,6 +60,7 @@ class MailManager
         $this->translator = $translator;
         $this->container = $container;
         $this->ch = $ch;
+        $this->contentManager = $contentManager;
     }
 
     /**
@@ -99,14 +105,17 @@ class MailManager
      *
      * @return boolean
      */
-    public function sendPlainPassword(User $user)
+    public function sendCreationMessage(User $user)
     {
-        $body = $this->translator->trans('admin_form_username', array(), 'platform').
-            ' : '.$user->getUsername().' '.
-            $this->translator->trans('admin_form_plainPassword_first', array(), 'platform').
-            ': '.$user->getPlainPassword();
+        //placeholder for the username is %username%
+        //placeholder for the password is %password%
 
-        $subject = $this->translator->trans('create_new_user_account', array(), 'platform');
+        $content = $this->getDefaultInscriptionMail('fr');
+        $body = $content->getContent();
+        $subject = $content->getTitle();
+
+        str_replace('%username%', $user->getUsername(), $body);
+        str_replace('%password%', $user->getPlainPassword(), $body);
 
         return $this->send($subject, $body, array($user));
     }
@@ -144,5 +153,15 @@ class MailManager
         }
 
         return false;
+    }
+
+    public function setDefaultInscriptionMail($title, $content, $locale)
+    {
+        $this->contentManager->createContent($title, $content, $locale);
+    }
+
+    public function getDefaultInscriptionMail($locale)
+    {
+        return $this->contentManager->getContent(array('title' => 'inscription_mail'));
     }
 }

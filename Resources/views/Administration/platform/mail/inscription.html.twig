@@ -32,7 +32,7 @@
         <h3 class="panel-title">{{ 'platform_parameters'|trans({}, 'platform') }}</h3>
     </div>
     {% form_theme form 'ClarolineCoreBundle::form_theme_vertical.html.twig' %}
-    <form class="form-horizontal" action="#" method="post" {{ form_enctype(form) }} id="form_settings" enctype='multipart/form-data'>
+    <form class="form-horizontal" action="{{ path('claro_admin_edit_mail_inscription') }}" method="post" {{ form_enctype(form) }} id="form_settings" enctype='multipart/form-data'>
         <div class="panel-body">
             {{ form_widget(form) }}
         </div>

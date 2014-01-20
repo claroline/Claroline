@@ -27,6 +27,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Translation\Translator;
+use Claroline\CoreBundle\Manager\MailManager;
 
 /**
  * @DI\Tag("security.secure_service")
@@ -42,16 +43,18 @@ class ParametersController extends Controller
     private $request;
     private $localeManager;
     private $translator;
+    private $mailManager;
 
     /**
      * @DI\InjectParams({
-     *     "configHandler" = @DI\Inject("claroline.config.platform_config_handler"),
-     *     "roleManager"   = @DI\Inject("claroline.manager.role_manager"),
-     *     "formFactory"   = @DI\Inject("claroline.form.factory"),
-     *     "localeManager" = @DI\Inject("claroline.common.locale_manager"),
-     *     "request"       = @DI\Inject("request"),
-     *     "translator"    = @DI\Inject("translator"),
-     *     "termsOfService" = @DI\Inject("claroline.common.terms_of_service_manager")
+     *     "configHandler"  = @DI\Inject("claroline.config.platform_config_handler"),
+     *     "roleManager"    = @DI\Inject("claroline.manager.role_manager"),
+     *     "formFactory"    = @DI\Inject("claroline.form.factory"),
+     *     "localeManager"  = @DI\Inject("claroline.common.locale_manager"),
+     *     "request"        = @DI\Inject("request"),
+     *     "translator"     = @DI\Inject("translator"),
+     *     "termsOfService" = @DI\Inject("claroline.common.terms_of_service_manager"),
+     *     "mailManager"    = @DI\Inject("claroline.manager.mail_manager")
      * })
      */
     public function __construct(
@@ -61,7 +64,8 @@ class ParametersController extends Controller
         LocaleManager $localeManager,
         Request $request,
         Translator $translator,
-        TermsOfServiceManager $termsOfService
+        TermsOfServiceManager $termsOfService,
+        MailManager $mailManager
     )
     {
         $this->configHandler = $configHandler;
@@ -71,6 +75,7 @@ class ParametersController extends Controller
         $this->termsOfService = $termsOfService;
         $this->localeManager = $localeManager;
         $this->translator = $translator;
+        $this->mailManager = $mailManager;
     }
 
     /**
@@ -349,31 +354,27 @@ class ParametersController extends Controller
 
     /**
      * @Route(
-     *     "/mail/inscription/{locale}",
-     *     name="claro_admin_mail_inscription",
-     *     defaults={"locale"="fr"}
+     *     "/mail/inscription",
+     *     name="claro_admin_mail_inscription"
      * )
      *
      * @Template("ClarolineCoreBundle:Administration\platform\mail:inscription.html.twig")
      *
-     * @param string locale
-     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function inscriptionMailFormAction($locale)
+    public function inscriptionMailFormAction()
     {
-        $form = $this->formFactory->create(FormFactory::TYPE_PLATFORM_MAIL_INSCRIPTION);
+        $locales = $this->localeManager->getAvailableLocales();
+        $form = $this->formFactory->create(FormFactory::TYPE_PLATFORM_MAIL_INSCRIPTION, array($locales));
 
         return array(
-            'availableLocale' => $this->localeManager->getAvailableLocales(),
-            'currentLocale' => $locale,
             'form' => $form->createView()
         );
     }
 
     /**
      * @Route(
-     *     "/mail/inscription/submit",
+     *     "/mail/submit/inscription",
      *     name="claro_admin_edit_mail_inscription"
      * )
      *
@@ -383,7 +384,22 @@ class ParametersController extends Controller
      */
     public function submitInscriptionMailAction()
     {
+        $locales = $this->localeManager->getAvailableLocales();
+        $form = $this->formFactory->create(FormFactory::TYPE_PLATFORM_MAIL_INSCRIPTION, array($locales));
 
+        $form->handleRequest($this->request);
+        //form sumbission
+
+        if ($form->isValid()) {
+            $content = $form->get('content')->getData();
+            $locale = $form->get('locale')->getData();
+            $title = $form->get('title')->getData();
+            $this->mailManager->setDefaultInscriptionMail($title, $content, $locale);
+        }
+
+        return array(
+            'form' => $form->createView()
+        );
     }
 
     /**

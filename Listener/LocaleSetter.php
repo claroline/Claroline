@@ -17,6 +17,8 @@ use JMS\DiExtraBundle\Annotation\InjectParams;
 use JMS\DiExtraBundle\Annotation\Observe;
 use JMS\DiExtraBundle\Annotation\Service;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
+use Gedmo\Translatable\TranslatableListener;
+use Stof\DoctrineExtensionsBundle\EventListener\LocaleListener;
 
 /**
  * @Service
@@ -26,15 +28,18 @@ use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 class LocaleSetter
 {
     private $localeManager;
+   // private $translatableListener;
+    //     "translatableListener" = @Inject("stof_doctrine_extensions.listener.translatable")
 
     /**
      * @InjectParams({
      *     "localeManager"  = @Inject("claroline.common.locale_manager")
      * })
      */
-    public function __construct(LocaleManager $localeManager)
+    public function __construct(LocaleManager $localeManager/*, TranslatableListener $translatableListener*/)
     {
         $this->localeManager = $localeManager;
+//        $this->translatableListener = $translatableListener;
     }
 
     /**
@@ -48,5 +53,6 @@ class LocaleSetter
     {
         $request = $event->getRequest();
         $request->setLocale($this->localeManager->getUserLocale($request));
+        //$this->translatableListener->setDefaultLocale("en");
     }
 }
