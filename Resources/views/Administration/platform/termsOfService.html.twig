@@ -35,8 +35,10 @@
             </ul>
             {% for lang in langs %}
                 <div class="margin-top-md{% if not loop.first %} hide{% endif %}">
-                    <textarea name="termOfService[{{ lang }}]" class="hide claroline-tiny-mce">{% spaceless %}
-                        {% if lang in termsOfService | keys %}{{ termsOfService[lang] }}{% endif %}
+                    <textarea name="termsOfService[{{ lang }}]" class="hide claroline-tiny-mce">{% spaceless %}
+                        {% if lang in termsOfService | keys %}
+                            {{ termsOfService[lang]['content'] }}
+                        {% endif %}
                     {% endspaceless %}</textarea>
                 </div>
             {% endfor %}
@@ -66,7 +68,7 @@
                 $('.terms-of-service .nav.nav-tabs li').removeClass('active');
                 $(this).parent().addClass('active');
                 $('.terms-of-service textarea').parent().addClass('hide');
-                $('textarea[name="termOfService[' + $(this).text().toLowerCase() +']"]').parent().removeClass('hide');
+                $('textarea[name="termsOfService[' + $(this).text().toLowerCase() +']"]').parent().removeClass('hide');
             });
         }());
     </script>

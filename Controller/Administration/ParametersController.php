@@ -392,7 +392,7 @@ class ParametersController extends Controller
         return array(
             'langs' => $this->localeManager->getAvailableLocales(),
             'isActive' => $this->configHandler->getParameter('terms_of_service'),
-            'termsOfService' => $this->termsOfService->getAvailableTermsOfService()
+            'termsOfService' => $this->termsOfService->getTermsOfService()
         );
     }
 
@@ -411,8 +411,16 @@ class ParametersController extends Controller
             $this->configHandler->setParameter('terms_of_service', false);
         }
 
-        /*$termOfService = $this->request->get('termOfService');
-        throw new \Exception(var_dump($termOfService));*/
+        $termsOfService = $this->request->get('termsOfService', array());
+
+        foreach ($termsOfService as $locale => $content) {
+
+            if ($content === "") {
+                $this->termsOfService->deleteTermsOfService($locale);
+            } else {
+                $this->termsOfService->setTermsOfService($locale, $content);
+            }
+        }
 
         return $this->redirect($this->generateUrl('claro_admin_index'));
     }

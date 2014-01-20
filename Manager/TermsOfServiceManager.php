@@ -12,7 +12,8 @@
 namespace Claroline\CoreBundle\Manager;
 
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
-use Claroline\CoreBundle\Manager\UserManager;
+use Claroline\CoreBundle\Manager\ContentManager;
+use Claroline\CoreBundle\Entity\Content;
 use JMS\DiExtraBundle\Annotation\Inject;
 use JMS\DiExtraBundle\Annotation\InjectParams;
 use JMS\DiExtraBundle\Annotation\Service;
@@ -27,23 +28,23 @@ class TermsOfServiceManager
     private $isActive;
     private $finder;
     private $termsOfService;
-    private $userManager;
+    private $content;
     private $request;
 
     /**
      * @InjectParams({
      *     "configHandler"  = @Inject("claroline.config.platform_config_handler"),
-     *     "userManager"    = @Inject("claroline.manager.user_manager"),
+     *     "content"        = @Inject("claroline.manager.content_manager"),
      *     "requestStack"   = @Inject("request_stack")
      * })
      */
     public function __construct(
         PlatformConfigurationHandler $configHandler,
-        UserManager $userManager,
+        ContentManager $content,
         RequestStack $requestStack
     )
     {
-        $this->userManager = $userManager;
+        $this->content = $content;
         $this->isActive = $configHandler->getParameter('terms_of_service');
         $this->finder = new Finder();
         $this->request = $requestStack->getCurrentRequest();
@@ -57,68 +58,28 @@ class TermsOfServiceManager
         return $this->isActive;
     }
 
-    /**
-     * Get a list of availables terms of service in the platform.
-     *
-     * @param $path The path of translations files
-     *
-     * @return Array
-     */
-    private function retriveAvailableTermsOfService($path = '/../../../../../../web/uploads/tos/')
-    {
-        $termsOfService = array();
-        $finder = $this->finder->files()->in(__DIR__.$path)->name('/termsOfService\.[^.]*\.txt/');
-
-        foreach ($finder as $file) {
-            $locale = str_replace(array('termsOfService.', '.txt'), '', $file->getRelativePathname());
-            $termsOfService[$locale] = file_get_contents($file->getRealpath());
-        }
-
-        return $termsOfService;
-    }
-
-    /**
-     * Get a list of availables terms of service in the platform.
-     *
-     * @return Array
-     */
-    public function getAvailableTermsOfService()
-    {
-        if (!$this->termsOfService) {
-            $this->termsOfService = $this->retriveAvailableTermsOfService();
-        }
-
-        return $this->termsOfService;
-    }
-
     public function getTermsOfService()
     {
-        if (!$this->request) {
-             throw new NoHttpRequestException();
+        return $this->content->getTranslatedContent(array('type' => 'termsOfService'));
+    }
+
+    public function setTermsOfService($locale, $content)
+    {
+        $termsOfService = $this->content->getContent(array('type' => 'termsOfService'));
+
+        if ($termsOfService instanceof Content) {
+            $this->content->updateContent($termsOfService, "Terms Of Service", $content, $locale);
+        } else {
+            $this->content->createContent("Terms Of Service", $content, $locale);
         }
+    }
 
-        $termsOfService = $this->getAvailableTermsOfService();
+    public function deleteTermsOfService($locale)
+    {
+        $termsOfService = $this->content->getContent(array('type' => 'termsOfService'));
 
-        if (!empty($termsOfService)) {
-            $preferred = explode('_', $this->request->getPreferredLanguage());
-            $currentLocale = $this->request->attributes->get('_locale');
-            $sessionLocale = $this->request->getSession()->get('_locale');
-
-            if ($currentLocale and isset($termsOfService[$currentLocale])) {
-                return $termsOfService[$currentLocale];
-            }
-
-            if ($sessionLocale and isset($termsOfService[$sessionLocale])) {
-                return $termsOfService[$sessionLocale];
-            }
-
-            if (isset($preferred[0]) and isset($termsOfService[$preferred[0]])) {
-                return $termsOfService[$preferred[0]];
-            }
-
-            return array_values($termsOfService)[0];
+        if ($termsOfService instanceof Content) {
+            $this->content->deleteTranslation($locale, $termsOfService->getId());
         }
-
-        return null;
     }
 }
