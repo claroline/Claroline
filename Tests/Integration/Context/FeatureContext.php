@@ -220,12 +220,12 @@ class FeatureContext extends MinkContext
     public function iMConnectedWithLoginAndPassword($login, $password)
     {
         return array(
-                new Step\When('I am on "/login"'),
-                new Step\When('I fill in "_username" with "'. $login . '"'),
-                new Step\When('I fill in "_password" with "'. $password . '"'),
-                new Step\When('I press "Connexion"'),
-                new Step\Then('I have a token for "' . $login . '" User')
-            );
+            new Step\When('I am on "/login"'),
+            new Step\When('I fill in "Nom d\'utilisateur ou email" with "'. $login . '"'),
+            new Step\When('I fill in "Mot de passe (Mot de passe oublié ?)" with "'. $password . '"'),
+            new Step\When('I press "Connexion"'),
+            new Step\Then('I have a token for "' . $login . '" User')
+        );
     }
 
     /**
