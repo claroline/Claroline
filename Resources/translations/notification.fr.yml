@@ -1,0 +1,18 @@
+enable_notifications: Activer les notifications
+disable_notifications: Desactiver les notifications
+
+now: Maintenant
+few_seconds_ago: "Il y a quelques secondes"
+yesterday: "Hier"
+seconds_ago: "{0} Il y a 0 secondes|{1} Il y a 1 seconde|]1,Inf] Il y a %count% secondes"
+minutes_ago: "{0} Il y a 0 minutes|{1} Il y a 1 minute|]1,Inf] Il y a %count% minutes"
+hours_ago: "{0} Il y a 0 heures|{1} Il y a 1 heure|]1,Inf] Il y a %count% heures"
+days_ago: "{0} Il y a 0 jours|{1} Il y a 1 jour|]1,Inf] Il y a %count% jours"
+date_format: "d/m/Y \\à H:i"
+day_format: "%day% %month%"
+hour_format: " \\à H:i"
+months: "Janvier, Février, Mars, Avril, Mai, Juin, Juillet, Aout, Septembre, Octobre, Novembre, Décembre"
+days: "Lundi, Mardi, Mercredi, Jeudi, Vendredi, Samedi, Dimanche"
+see_more: "Voir plus"
+zero_notifications: "Aucune notification"
+notifications_title: "Liste des notifications"

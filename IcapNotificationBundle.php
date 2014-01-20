@@ -19,7 +19,11 @@ class IcapNotificationBundle extends InstallableBundle implements AutoConfigurab
         $config = new ConfigurationBuilder();
 
         if (file_exists($routingFile = $this->getPath() . '/Resources/config/routing.yml')) {
-            $config->addRoutingResource($routingFile, null, strtolower($this->getName()));
+            $config->addRoutingResource($routingFile, null, 'icap_notification');
+        }
+
+        if (file_exists($containerFile = $this->getPath() . '/Resources/config/config.yml')) {
+            $config->addContainerResource($containerFile);
         }
 
         return $config;

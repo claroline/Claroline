@@ -1,0 +1,14 @@
+{% if pager.getNbResults() > 0 %}
+    <ul id="notification-list" class="list-group" data-count="{{ unviewedNotifications }}">
+    {% for notificationViewer in pager %}
+        {% set user = users[notificationViewer.notification.userId] %}
+        {% set resource = resources[notificationViewer.notification.resourceId] %}
+        {% include "IcapNotificationBundle:Templates:notification.html.twig" with {'user' : user, 'resource' : resource, 'notification' : notificationViewer.notification, 'status' : notificationViewer.status, 'systemName' : systemName } %}
+    {% endfor %}
+    </ul>
+    <div class="see-notifications-button active">
+        <a href="{{ path('icap_notification_view') }}"><i class="icon-align-justify"></i> {{ 'see_more'|trans({}, 'notification') }}</a>
+    </div>
+{% else %}
+    <div class="zero-notifications-found">{{ 'zero_notifications'|trans({},'notification') }}</div>
+{% endif %}

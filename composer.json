@@ -1,6 +1,14 @@
 {
     "name": "icap/notification-bundle",
     "description": "Notification bundle for Claroline Connect. See https://github.com/claroline/Claroline",
+    "keywords": ["Claroline", "Notification", "ICAP"],
+    "homepage": "http://www.claroline.net",
+    "authors": [
+        {
+            "name": "ICAP development team",
+            "homepage": "https://github.com/iCAPLyon1"
+        }
+    ],
     "require": {
         "php": ">=5.3.3",
         "claroline/core-bundle": ">=2.0.5,<3.0"

@@ -1,0 +1,59 @@
+{% extends layout %}
+
+{% block content %}
+    <div class="panel panel-notification">
+        <div class="panel-body">
+            <div class="notifications-header-text">
+                <h2>{{ 'notifications_title'|trans({},'notification') }}</h2>
+            </div>
+            {% if pager.haveToPaginate %}
+                <div>
+                    {{
+                    pagerfanta(
+                    pager,
+                    'twitter_bootstrap_translated',
+                    {
+                    'proximity' : 1,
+                    'routeName': 'icap_notification_view'
+                    }
+                    )
+                    }}
+                </div>
+            {%  endif %}
+
+            {% block notification_widget %}
+                {% if pager.getNbResults() > 0 %}
+                    <div class="notification-list-container">
+                        <ul id="notification-list" class="list-group">
+                            {% include "IcapNotificationBundle:Templates:notificationList.html.twig" with {'pager' : pager, 'systemName' : systemName } %}
+                        </ul>
+                    </div>
+                {% else %}
+                    <div class="zero-notifications-found">{{ 'zero_notifications'|trans({},'notification') }}</div>
+                {% endif %}
+
+            {% endblock %}
+
+            {% if pager.haveToPaginate %}
+                <div>
+                    {{
+                    pagerfanta(
+                    pager,
+                    'twitter_bootstrap_translated',
+                    {
+                    'proximity' : 1,
+                    'routeName': 'icap_notification_view'
+                    }
+                    )
+                    }}
+                </div>
+            {%  endif %}
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel='stylesheet' type='text/css' href='{{ asset('bundles/icapnotification/css/style.css') }}'/>
+{% endblock %}

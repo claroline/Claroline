@@ -1,0 +1,5 @@
+{% for notificationViewer in pager %}
+    {% set user = users[notificationViewer.notification.userId] %}
+    {% set resource = resources[notificationViewer.notification.resourceId] %}
+    {% include "IcapNotificationBundle:Templates:notification.html.twig" with {'user' : user, 'resource' : resource, 'notification' : notificationViewer.notification, 'status' : notificationViewer.status, 'systemName' : systemName } %}
+{% endfor %}

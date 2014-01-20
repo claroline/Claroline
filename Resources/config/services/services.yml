@@ -1,0 +1,10 @@
+services:
+    icap_notification.manager:
+        class: Icap\NotificationBundle\Service\Manager
+        arguments: [@doctrine.orm.entity_manager, @security.context]
+
+    icap_notification.twig.notification_extension:
+        class: Icap\NotificationBundle\Twig\NotificationExtension
+        arguments: [@translator]
+        tags:
+            - { name: twig.extension }
