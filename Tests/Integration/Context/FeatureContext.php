@@ -13,7 +13,6 @@ namespace Claroline\CoreBundle\Tests\Integration\Context;
 
 use Behat\Behat\Context\Step;
 use Behat\Behat\Exception\PendingException;
-use Behat\Gherkin\Node\TableNode;
 use Behat\Symfony2Extension\Context\KernelDictionary;
 use Behat\MinkExtension\Context\MinkContext;
 use Claroline\CoreBundle\Library\Installation\Settings\SettingChecker;
@@ -220,24 +219,11 @@ class FeatureContext extends MinkContext
     public function iMConnectedWithLoginAndPassword($login, $password)
     {
         return array(
-                new Step\When('I am on "/login"'),
-                new Step\When('I fill in "_username" with "'. $login . '"'),
-                new Step\When('I fill in "_password" with "'. $password . '"'),
-                new Step\When('I press "Connexion"'),
-                new Step\Then('I have a token for "' . $login . '" User')
-            );
-    }
-
-    /**
-    * @Then /^(?:|I) have a token for "([^"]*)" User$/
-    */
-    public function IHaveATokenForUser($user)
-    {
-        $user            = $this->getContainer()->get('doctrine')->getRepository('ClarolineCoreBundle:User')->loadUserByUsername($user);
-        $securityContext = $this->getContainer()->get('security.context');
-        $provider        = 'main';
-        $token           = new UsernamePasswordToken($user, null, $provider, $user->getRoles());
-        $securityContext->setToken($token);
+            new Step\When('I am on "/login"'),
+            new Step\When('I fill in "Nom d\'utilisateur ou email" with "'. $login . '"'),
+            new Step\When('I fill in "Mot de passe (Mot de passe oublié ?)" with "'. $password . '"'),
+            new Step\When('I press "Connexion"')
+        );
     }
 
     /**************/

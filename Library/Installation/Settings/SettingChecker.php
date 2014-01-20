@@ -223,13 +223,18 @@ class SettingChecker
             'app/logs' => 'directory',
             'composer.json' => 'file',
             'composer.lock' => 'file',
+            'files' => 'directory',
             'templates' => 'directory',
             'vendor' => 'directory',
             'web' => 'directory',
+            'web/js' => 'directory',
             'web/bundles' => 'directory',
             'web/themes' => 'directory',
             'web/thumbnails' => 'directory',
-            'web/uploads' => 'directory'
+            'web/uploads' => 'directory',
+            'web/uploads/badges' => 'directory',
+            'web/uploads/logos' => 'directory',
+            'web/uploads/vendor' => 'directory'
         );
 
         foreach ($writableElements as $element => $type) {
