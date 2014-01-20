@@ -16,7 +16,7 @@ use Claroline\ForumBundle\Entity\Category;
 
 class CreateCategoryEvent extends AbstractLogResourceEvent
 {
-    const ACTION = 'forum-create-category';
+    const ACTION = 'resource-claroline_forum-create-category';
 
     /**
      * @param \Claroline\ForumBundle\Entity\Category $category

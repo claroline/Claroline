@@ -6,7 +6,7 @@
 
 {% extends layout %}
 
-{% block title %}{{ 'new_message'|trans({}, 'forum') ~ '(' ~ subject.getTitle() ~ ')' ~ ' - ' ~ parent() | striptags | raw  }}{% endblock %}
+{% block title %}{{ 'new_category'|trans({}, 'forum') ~ ' (' ~  _resource.getResourceNode().getName() ~ ')' ~ ' - ' ~ parent() | striptags | raw  }}{% endblock %}
 
 {% block resourceBreadcrumb %}
     <li><a href="{{ path('claro_forum_categories', { 'forum': _resource.getId() }) }}">{{ _resource.getResourceNode().getName() }}</a></li>
@@ -17,7 +17,7 @@
         <h3 class="panel-title">{{ 'new_category'|trans({}, 'forum') }} </h3>
     </div>
     {% form_theme form 'ClarolineCoreBundle::form_theme.html.twig' %}
-    <form novalidate="novalidate" action="{{path('claro_forum_create_category',{'forum': _resource.getId() })}}" method="post" {{ form_enctype(form) }} id="message_form">
+    <form novalidate="novalidate" action="{{ path('claro_forum_create_category',{'forum': _resource.getId() }) }}" method="post" {{ form_enctype(form) }} id="message_form">
         <div class="panel-body">
             {{ form_widget(form) }}
         </div>
