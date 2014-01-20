@@ -34,5 +34,7 @@
         }}
     {% endset %}
 
+    {% set isDesktop = isDesktop is defined ? isDesktop : false %}
+
     {% include 'ClarolineCoreBundle:Log:tool_view_list.html.twig' with {'filterFormAction': filterFormAction, 'pagination': pagination, 'isDesktop': isDesktop} %}
 {% endblock %}
