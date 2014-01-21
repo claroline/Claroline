@@ -94,9 +94,7 @@ class ResourceRightsController
         $isDir = $node->getResourceType()->getName() === 'directory';
 
         if (!$role) {
-            $currentUser = $this->sc->getToken()->getUser();
-            $user = $currentUser instanceof User ? $currentUser : null;
-            $data = $this->wsTagManager->getDatasForWorkspaceList(true, $user);
+            $data = $this->wsTagManager->getDatasForWorkspaceList(true);
             $rolesRights = $this->rightsManager->getNonAdminRights($node);
             $data['resourceRights'] = $rolesRights;
             $data['resource'] = $node;

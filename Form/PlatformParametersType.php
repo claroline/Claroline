@@ -65,7 +65,8 @@ class PlatformParametersType extends AbstractType
                     'choices' => $this->langs
                 )
             )
-            ->add('theme', 'choice', array('choices' => $this->themes));
+            ->add('theme', 'choice', array('choices' => $this->themes))
+            ->add('cookie_lifetime', 'number', array('required' => false));
    }
 
     public function getName()

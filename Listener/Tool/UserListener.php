@@ -11,25 +11,26 @@
 
 namespace Claroline\CoreBundle\Listener\Tool;
 
+use Claroline\CoreBundle\Listener\NoHttpRequestException;
 use JMS\DiExtraBundle\Annotation as DI;
 use Claroline\CoreBundle\Event\DisplayToolEvent;
-use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 
 /**
- * @DI\Service("workspace_role_tool_config_listener", scope="request")
+ * @DI\Service("workspace_role_tool_config_listener")
  */
 class UserListener
 {
     /**
      * @DI\InjectParams({
-     *     "request" = @DI\Inject("request"),
-     *     "ed"      = @DI\Inject("http_kernel"),
+     *     "requestStack"   = @DI\Inject("request_stack"),
+     *     "ed"             = @DI\Inject("http_kernel")
      * })
      */
-    public function __construct(Request $request, HttpKernelInterface $httpKernel)
+    public function __construct(RequestStack $requestStack, HttpKernelInterface $httpKernel)
     {
-        $this->request = $request;
+        $this->request = $requestStack->getCurrentRequest();
         $this->httpKernel = $httpKernel;
     }
 
@@ -37,9 +38,14 @@ class UserListener
      * @DI\Observe("open_tool_workspace_users")
      *
      * @param DisplayToolEvent $event
+     * @throws \Claroline\CoreBundle\Listener\NoHttpRequestException
      */
     public function onDisplay(DisplayToolEvent $event)
     {
+        if (!$this->request) {
+            throw new NoHttpRequestException();
+        }
+
         $subRequest = $this->request->duplicate(
             array(),
             null,

@@ -5,6 +5,7 @@
 404 : 'La page que vous cherchez n''existe pas.'
 Action List: 'Liste des actions'
 Actions per day: 'Nombre d''actions par jour'
+An error has occurred, please check if the file size does not exceeds the permitted size: 'Une erreur s''est produite, veuillez vérifier si la taille du fichier ne dépasse pas la taille autorisée'
 Choose visible actions in the widget: 'Choisissez les actions visibles dans le widget'
 Choose workspaces displayed in the widget: 'Choisissez les espaces de travail affichés par le widget'
 Draw an area on the graph to zoom, double-click to cancel: 'Tracez une zone sur le graphique pour zoomer; double cliquez pour annuler'
@@ -12,6 +13,7 @@ Filter actions: 'Filtrer les actions'
 Language: 'Langue'
 Last action: '{1} Dernière action|[1,Inf] %logAmount% dernières actions'
 None: 'Aucun'
+Or choose an existing file from resource manager: 'Ou veuillez choisir un fichier existant dans gestionnaire de ressources'
 Overview of all recent activities in %workspaceName%: 'Aperçu de toutes les activités récentes de %workspaceName%'
 Overview of recent activities in %workspaceName%: 'Aperçu des activités récentes de %workspaceName%'
 Overview of recent activities of your workspaces: 'Aperçu des activités récentes de vos espaces de travail'
@@ -19,6 +21,7 @@ See all: 'Voir tous'
 Show actions: 'Afficher les actions'
 Show: Afficher
 The form is not valid: 'Le formulaire n''est pas valide'
+Upload a file: 'Télécharger un fichier'
 Your changes have been saved: 'Vos changements ont été sauvegardés'
 account_created: 'Compte créé'
 account_general_statistics: 'Statistiques générales sur les comptes'
@@ -207,11 +210,11 @@ from: Depuis
 from_message: De
 general: Général
 general_parameters: 'Paramètres généraux'
+generate_url: 'Générer une url pour l''inscription des utilisateurs'
 generate_url_subscription: 'Inscription à l''espace d''activité par un utilisateur'
 generate_url_subscription_anonyme: 'Inscription à l''espace d''activité par un anonyme'
-generate_url: 'Générer une url pour l''inscription des utilisateurs'
-generate_url_subscription_sucsess : 'Vous avez été ajouté à l''espace d''activité'
 generate_url_subscription_fail : 'Vous devez d''abord cochez la case de l''inscription publique avant de pouvoir voir l''url'
+generate_url_subscription_sucsess : 'Vous avez été ajouté à l''espace d''activité'
 group: Groupe
 group_configuration: 'Configuration du groupe'
 group_creation: 'Création d''un groupe'
@@ -251,6 +254,7 @@ internal_error : 'Erreur interne du serveur. Veuillez contactez l''administrateu
 invalid_csv_file: 'Le fichier CSV n''est pas valide'
 is_already_in_category: 'est déjà dans la catégorie'
 jqplot_date_output_format: '%d-%m-%Y'
+keep_me_logged_in: 'Se souvenir de moi'
 lastName: Nom
 last_30_days_activity: 'Activités des 30 derniers jours'
 last_name: Nom
@@ -367,6 +371,7 @@ platform_parameters_form_localLanguage: 'Langue par défaut'
 platform_parameters_form_name: 'Nom de la plateforme'
 platform_parameters_form_selfRegistration: Auto-inscription
 platform_parameters_form_theme: Thème
+platform_parameters_form_cookie_lifetime: Durée de la session
 platform_plugins: 'Plugins de la plateforme'
 platform_role: 'Rôle plateforme'
 platform_widgets: 'Widgets de la plateforme'
@@ -559,8 +564,9 @@ user_form_plainPassword_first: 'Mot de passe'
 user_form_plainPassword_second: Vérification
 user_form_username: 'Nom d''utilisateur'
 user_parameters: 'Paramètres de l''utilisateur'
-username: 'Nom d''utilisateur'
-username_found_at: 'Le nom d''utilisateur %username% a été trouvé aux lignes: %lines%'
+username: "Nom d'utilisateur"
+username_or_email: "Nom d'utilisateur ou email"
+username_found_at: "Le nom d'utilisateur %username% a été trouvé aux lignes: %lines%"
 users: Utilisateurs
 users_connected_once: 'utilisateurs connectés au moins 1 fois sur la plateforme'
 users_import: 'Importer des utilisateurs'

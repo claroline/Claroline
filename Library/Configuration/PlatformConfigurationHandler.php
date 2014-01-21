@@ -14,11 +14,12 @@ namespace Claroline\CoreBundle\Library\Configuration;
 use \RuntimeException;
 use Symfony\Component\Yaml\Yaml;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfiguration;
+use JMS\DiExtraBundle\Annotation as DI;
 
 /**
- * Service used for accessing or modifying the platform configuration parameters in prod/dev
- * environments. The service annotation cannot be used as the class is not the same in test
- * environment (see Library\Testing\PlatformTestConfigurationHandler).
+ * @DI\Service("claroline.config.platform_config_handler")
+ *
+ * Service used for accessing or modifying the platform configuration parameters.
  */
 class PlatformConfigurationHandler
 {
@@ -32,12 +33,25 @@ class PlatformConfigurationHandler
         'allow_self_registration' => true,
         'locale_language' => 'fr',
         'theme' => 'claroline',
-        'default_role' => 'ROLE_USER'
+        'default_role' => 'ROLE_USER',
+        'cookie_lifetime' => 3600,
+        'mailer_transport' => 'smtp',
+        'mailer_host' => null,
+        'mailer_port' => null,
+        'mailer_encryption' => null,
+        'mailer_username' => null,
+        'mailer_password' => null,
+        'mailer_auth_mode' => null
     );
 
-    public function __construct(array $configFiles)
+    /**
+     * @DI\InjectParams({
+     *     "configFile" = @DI\Inject("%claroline.param.platform_options_file%")
+     * })
+     */
+    public function __construct($configFile)
     {
-        $this->configFile = $configFiles['prod'];
+        $this->configFile = $configFile;
         $this->parameters = $this->mergeParameters();
     }
 
@@ -91,6 +105,13 @@ class PlatformConfigurationHandler
         $config->setLocalLanguage($this->parameters['locale_language']);
         $config->setTheme($this->parameters['theme']);
         $config->setDefaultRole($this->parameters['default_role']);
+        $config->setCookieLifetime($this->parameters['cookie_lifetime']);
+        $config->setMailerTransport($this->parameters['mailer_transport']);
+        $config->setMailerHost($this->parameters['mailer_host']);
+        $config->setMailerEncryption($this->parameters['mailer_encryption']);
+        $config->setMailerUsername($this->parameters['mailer_username']);
+        $config->setMailerPassword($this->parameters['mailer_password']);
+        $config->setMailerAuthMode($this->parameters['mailer_auth_mode']);
 
         return $config;
     }

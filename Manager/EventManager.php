@@ -214,13 +214,14 @@ class EventManager
 
         foreach ($tempResourceEvents as $sortedKey => $sortedEvent) {
             $keyTrans = $this->translator->trans($sortedKey, array(), 'resource');
-            $logTrans = $this->translator->trans(
-                $genericEvent === 'all' ? $genericEvent : 'log_' . $genericEvent . '_filter',
-                array(),
-                'log'
-            );
 
             foreach ($genericResourceEvents as $genericKey => $genericEvent) {
+                $logTrans = $this->translator->trans(
+                    $genericEvent === 'all' ? $genericEvent : 'log_' . $genericEvent . '_filter',
+                    array(),
+                    'log'
+                );
+
                 if ($sortedKey !== 'all') {
                     $sortedEvents[$resourceTrans][$keyTrans]['[[' . $sortedKey . ']]' . $genericEvent] = $logTrans;
                 } else {
