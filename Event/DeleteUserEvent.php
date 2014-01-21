@@ -17,7 +17,7 @@ use Claroline\CoreBundle\Entity\User;
 /**
  * Event dispatched when a user is deleted
  */
-class DeleteUserEvent extends Event implements MandatoryEventInterface
+class DeleteUserEvent extends Event
 {
     private $user;
 
