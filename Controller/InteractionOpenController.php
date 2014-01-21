@@ -156,7 +156,9 @@ class InteractionOpenController extends Controller
      */
     public function updateAction($id)
     {
+        $user  = $this->container->get('security.context')->getToken()->getUser();
         $exoID = $this->container->get('request')->request->get('exercise');
+        $catID = -1;
 
         $em = $this->getDoctrine()->getManager();
 
@@ -166,9 +168,14 @@ class InteractionOpenController extends Controller
             throw $this->createNotFoundException('Unable to find InteractionOpen entity.');
         }
 
+        if ($user->getId() != $interOpen->getInteraction()->getQuestion()->getUser()->getId()) {
+            $catID = $interOpen->getInteraction()->getQuestion()->getCategory()->getId();
+        }
+        
         $editForm = $this->createForm(
             new InteractionOpenType(
-                $this->container->get('security.context')->getToken()->getUser()
+                $this->container->get('security.context')->getToken()->getUser(),
+                $catID
             ), $interOpen
         );
 

@@ -122,9 +122,13 @@
                             </div>
                         </div>
                         <div class="panel-footer">
-                            <a class="btn btn-primary" onClick="addPicture('{{ path('ujm_interactiongraphic_SavePic') }}');">
-                                <i class="icon-picture"></i> {{ "add a new picture" | trans }}
-                            </a>
+                            {% if app.user.id == entity.interaction.question.user.id %}
+                                <a class="btn btn-primary" onClick="addPicture('{{ path('ujm_interactiongraphic_SavePic') }}');">
+                                    <i class="icon-picture"></i> {{ "add a new picture" | trans }}
+                                </a>
+                            {% else %}
+                                {{ "only owner graphic" | trans }}
+                            {% endif %}
                             <a class="btn btn-default" onclick="DisplayInstruction();" id="Order">
                                <i class="icon-question"></i> {{ 'show Instructions' | trans }}
                             </a>

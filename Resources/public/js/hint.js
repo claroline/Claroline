@@ -4,7 +4,7 @@ var index; // number of hints
 
 function newHint(label, penalty, addHint, deleteHint) {
 
-    $('.panel-body').find('a:contains("Add")').remove();
+    $('#divHint').find('.form-collection-add').remove();
 
     var begin = true;
 
@@ -87,6 +87,7 @@ function newHintEdit(label, penalty, addHint, deleteHint) {
 
 // Add a hint
 function addHints(container, deleteHint) {
+
      // change the "name" by the index and delete the symfony delete form button
     var contain = $(container.attr('data-prototype').replace(/__name__/g, index)
         .replace('<a class="btn btn-danger remove" href="#">Delete</a>', '')
@@ -114,14 +115,11 @@ function addHints(container, deleteHint) {
 
     // Add the delete button
     $('#newTable2').find('tr:last').append('<td class="classic"></td>');
-    $('#newTable2').find('td:last').append(container.find('a:contains("Supprimer")'));
+    $('#newTable2').find('td:last').append(container.find('a:contains("'+deleteHint+'")'));
 
     // Remove the useless fileds form
     container.remove();
     tableHints.next().remove();
-
-    // Increase number of hints
-    index++;
 }
 
 // Delete a hint

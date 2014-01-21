@@ -46,10 +46,12 @@ use Claroline\CoreBundle\Entity\User;
 class InteractionQCMType extends AbstractType
 {
     private $user;
+    private $catID;
 
-    public function __construct(User $user)
+    public function __construct(User $user, $catID = -1)
     {
-        $this->user = $user;
+        $this->user  = $user;
+        $this->catID = $catID;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
@@ -57,7 +59,7 @@ class InteractionQCMType extends AbstractType
         $builder
             ->add(
                 'interaction', new InteractionType(
-                    $this->user
+                    $this->user, $this->catID
                 )
             );
         $builder

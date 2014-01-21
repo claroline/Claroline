@@ -66,6 +66,7 @@
                             <i class="icon-chevron-down" id="downSp"  style="display: none;"></i>
                             {{ 'first_name'|trans({}, 'platform') }}
                         </th>
+                        <th class="classic">{{ 'allow to edit'|trans}}</th>
                         <th class="classic">{{ 'share'|trans}}</th>
                     </tr>
                 </thead>
@@ -74,8 +75,9 @@
                         <td class="classic">{{ user.userName }}</td>
                         <td class="classic">{{ user.lastName }}</td>
                         <td class="classic">{{ user.firstName }}</td>
+                        <td class="classic"><input id="allowToEditQ_{{ user.id }}" type="checkbox" /></td>
                         <td class="classic">
-                            <a href="#" onclick="shareQuestionUser('{{ path('ujm_question_shareQuestionUser') }}','{{ user.lastName }}','{{ user.firstName }}'
+                            <a href="#" onclick="shareQuestionUser('{{ path('ujm_question_shareQuestionUser') }}','{{ user.id }}'
                             ,'{{ 'already' | trans }} ...','{{ 'self' | trans }} ...');"><i class="icon-share"></i>
                             </a>
                         </td>
@@ -100,16 +102,22 @@
 
 <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/sortAndSearch.js') }}"></script>
 <script type="text/javascript">
-    function shareQuestionUser(path, name, fname, already, Self){
-        qId = document.getElementById('QID').innerHTML;
+    function shareQuestionUser(path, uid, already, Self){
+        var allowToModify = 0;
+        var qId = document.getElementById('QID').innerHTML;
+        
+        if ($('#allowToEditQ_'+uid).is(':checked'))
+        {
+                allowToModify = 1;
+        }
 
        $.ajax({
             type: 'POST',
             url: path,
             data: {
                 questionID : qId,
-                Uname : name,
-                Ufname : fname
+                uid : uid,
+                allowToModify: allowToModify
             },
            cache: false,
             success: function (data) {

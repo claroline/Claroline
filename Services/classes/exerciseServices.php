@@ -634,6 +634,28 @@ class exerciseServices
         return $infosPaper;
     }
 
+    public function getScoresUser($userId, $exoId)
+    {
+        $tabScoresUser = array();
+        $i = 0;
+
+        $papers = $this->doctrine
+                       ->getManager()
+                       ->getRepository('UJMExoBundle:Paper')
+                       ->getExerciseUserPapers($userId, $exoId);
+
+        foreach ($papers as $paper) {
+            $infosPaper = $this->getInfosPaper($paper);
+            $tabScoresUser[$i]['score']       = $infosPaper['scorePaper'];
+            $tabScoresUser[$i]['maxExoScore'] = $infosPaper['maxExoScore'];
+            $tabScoresUser[$i]['scoreTemp']   = $infosPaper['scoreTemp'];
+
+            $i++;
+        }
+
+        return $tabScoresUser;
+    }
+
     private function orderInteractions($interactions, $order)
     {
         $inter = array();
@@ -680,4 +702,21 @@ class exerciseServices
 
         return $resp;
     }
+    
+    /**
+     * To control the User's rights to this shared question
+     *
+     */
+    public function controlUserSharedQuestion($questionID)
+    {
+        $user = $this->securityContext->getToken()->getUser();
+
+        $questions = $this->doctrine
+                          ->getManager()
+                          ->getRepository('UJMExoBundle:Share')
+                          ->getControlSharedQuestion($user->getId(), $questionID);
+
+        return $questions;
+    }
+    
 }

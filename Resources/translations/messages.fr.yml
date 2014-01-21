@@ -46,6 +46,7 @@ administration: Administration
 after the last attempt: Après le dernier essai
 alert ending: Etes-vous sur de vouloir terminer ? (Vous ne pourrez plus modifier vos réponses)
 all: Tout
+allow to edit: Autoriser l'édition
 allQuestion: Toutes
 already: Cette question est déjà partagée avec cet utilisateur
 alreadyExist: Ce nom existe déjà.
@@ -77,7 +78,7 @@ chooseType: Choisissez le type de document à afficher
 close: Fermer
 color: Couleur
 comment: Commentaire
-compose: Composer
+compose: Répondre
 consult_hint: Consulter l\'indice entraîne une pénalité, voulez vous continuer
 containSearch: Dont la question contient
 correct: Correcte
@@ -239,6 +240,8 @@ num_paper: Numéro de la copie
 # O
 oneWord: Un mot
 onlyOnce: => Les bonnes réponses ne sont comptabilisées qu'une seule fois.
+only owner category: Seul le propriétaire peut changer la catégorie
+only owner graphic: Seul le propriétaire peut changer l'image
 open: Ouverte
 open edition: Edition d'une question de type Ouverte
 order: Ordre
@@ -247,6 +250,7 @@ orders: Consignes
 # P
 paper: Passage
 paper exo: Passage d'un test
+paperLegend: Copies nécessitant une correction manuelle
 paper list: Liste des copies
 partially: Partiellement correcte
 penalty: Pénalité

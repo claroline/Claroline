@@ -37,7 +37,27 @@ function creationQCM(expectedAnswer, response, point, comment, positionForce, ad
     });
 
     // Make the choices' table sortable with jquery ui plugin
-    $('tbody').sortable();
+    //$('tbody').sortable();
+
+    // Return a helper with preserved width of cells
+    var fixHelper = function(e, ui) {
+        ui.children().each(function() {
+                $(this).width($(this).width());
+        });
+        return ui;
+    };
+
+    $('tbody').sortable({
+        helper: fixHelper,
+        cancel: 'contenteditable',
+        stop: function (event, ui) {
+            $(ui.item).find('.claroline-tiny-mce').each(function () {
+                tinyMCE.get($(this).attr('id')).remove();
+                $(this).removeClass('tiny-mce-done');
+                $('body').trigger('DOMSubtreeModified');
+            });
+        }
+    });
 }
 
 // QCM Edition
@@ -89,13 +109,43 @@ function creationQCMEdit(expectedAnswer, response, point, comment, positionForce
     });
 
     // Make the choices' table sortable with jquery ui plugin
-    $('tbody').sortable();
+    //$('tbody').sortable();
+
+    // Return a helper with preserved width of cells
+    var fixHelper = function(e, ui) {
+        ui.children().each(function() {
+                $(this).width($(this).width());
+        });
+        return ui;
+    };
+
+    $('tbody').sortable({
+        helper: fixHelper,
+        cancel: 'contenteditable',
+        stop: function (event, ui) {
+            $(ui.item).find('.claroline-tiny-mce').each(function () {
+                tinyMCE.get($(this).attr('id')).remove();
+                $(this).removeClass('tiny-mce-done');
+                $('body').trigger('DOMSubtreeModified');
+            });
+        }
+    });
 }
 
 // Add a choice
 function addChoice(container, deleteChoice) {
+    var uniqChoiceID = false;
 
     var index = $('#newTable').find('tr:not(:first)').length;
+
+    while (uniqChoiceID == false) {
+        if ($('#ujm_exobundle_interactionqcmtype_choices_' + index + '_label').length) {
+            index++;
+        } else {
+            uniqChoiceID = true;
+        }
+    }
+
     // change the "name" by the index and delete the symfony delete form button
     var contain = $(container.attr('data-prototype').replace(/__name__label__/g, 'Choice n°' + (index))
         .replace(/__name__/g, index)
@@ -115,14 +165,11 @@ function addChoice(container, deleteChoice) {
 
     // Add the delete button
     $('#newTable').find('tr:last').append('<td class="classic"></td>');
-    $('#newTable').find('td:last').append(container.find('a:contains("Supprimer")'));
+    $('#newTable').find('td:last').append(contain.find('a:contains("'+deleteChoice+'")'));
 
     // Remove the useless fileds form
     container.remove();
     tableChoices.next().remove();
-
-    // Increase number of choices
-    index++;
 
     whichChecked();
 }

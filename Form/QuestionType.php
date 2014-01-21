@@ -49,10 +49,12 @@ class QuestionType extends AbstractType
 {
 
     private $user;
+    private $catID;
 
-    public function __construct(User $user)
+    public function __construct(User $user, $catID = -1)
     {
-        $this->user = $user;
+        $this->user  = $user;
+        $this->catID = $catID;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
@@ -70,7 +72,13 @@ class QuestionType extends AbstractType
                     'class' => 'UJM\\ExoBundle\\Entity\\Category',
                     'label' => 'Category.value',
                     'query_builder' => function (CategoryRepository $cr) use ($uid) {
-                                          return $cr->getUserCategory($uid);
+                        if ($this->catID == -1) {
+                            return $cr->getUserCategory($uid);
+                        } else {
+                            return $cr->createQueryBuilder('c')
+                                ->where('c.id = ?1')
+                                ->setParameter(1, $this->catID);
+                        }
                     }
                 )
             )

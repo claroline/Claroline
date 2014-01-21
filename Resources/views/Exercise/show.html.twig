@@ -128,6 +128,16 @@
                             </td>
                         </tr>
                         <tr class="hiddencells">
+                            <th class="classic">{{ 'Exercise.keepSameQuestion' | trans }}</th>
+                            <td class="classic">
+                                {% if entity.keepSameQuestion == 0 %}
+                                    <i class="icon-remove-sign"></i>
+                                {% else %}
+                                    <i class="icon-ok-sign"></i>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        <tr class="hiddencells">
                             <th class="classic">{{ 'creationDate' | trans }}</th>
                             <td class="classic">{{ entity.dateCreate|date('d/m/Y \\- H\\hi\\ms\\s') }}</td>
                         </tr>
@@ -232,7 +242,7 @@
                 </a>
             {% endif %}
             <a class="btn btn-primary" href="{{ path('ujm_paper_list', { 'exoID': entity.id }) }}">
-                <i class="icon-list"></i> {{ 'paper list' | trans }}
+                <i class="icon-list"></i> {{ 'result' | trans }}
             </a>
         </div>
     </div>

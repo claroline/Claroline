@@ -130,7 +130,7 @@
                                 {{ FindQuestion.question.user.firstName }} {{ FindQuestion.question.user.lastName }}
                             </td>
                             <td class="classic">
-                                <a href="{{ path('ujm_delete_shared_question', { 'id': FindQuestion.question.id, 'pageNow': pagerSearch.currentPage,
+                                <a href="{{ path('ujm_delete_shared_question', { 'qid': FindQuestion.question.id, 'uid': app.user.id, 'pageNow': pagerSearch.currentPage,
                                     'maxPage': pagerSearch.maxPerPage,'nbItem': pagerSearch.getNbResults, 'lastPage': pagerSearch.getNbPages }) }}"
                                    <i class="icon-trash"></i>
                                 </a>

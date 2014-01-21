@@ -101,15 +101,18 @@ function LoadPic(path, prefx, iddoc) {
     sendData(select, path, prefx);
 
     // New picture load, initialization vars and remove previous answer zones
+
+    for (j = 0 ; j < grade ; j++) {
+        if ($('#dragContainer' + j)) {
+            $('#dragContainer' + j).remove();
+
+            $('#AlreadyPlacedArray').find('tr:not(:first)').remove();
+        }
+    }
+
     value = 0;
     grade = 0;
     point = {};
-
-    for (j = 0 ; j < grade ; j++) {
-        if ($('#img' + j)) {
-            $('#img' + j).remove();
-        }
-    }
 }
 
 $(function () {

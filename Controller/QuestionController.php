@@ -80,6 +80,9 @@ class QuestionController extends Controller
     public function indexAction($pageNow = 0, $pageNowShared = 0, $categoryToFind = '', $titleToFind = '', $resourceId = -1)
     {
         $vars = array();
+        $sharedWithMe = array();
+        $shareRight = array();
+
         $em = $this->getDoctrine()->getManager();
 
         if ($resourceId != -1) {
@@ -136,13 +139,24 @@ class QuestionController extends Controller
         $shared = $em->getRepository('UJMExoBundle:Share')
             ->findBy(array('user' => $uid));
 
-        $sharedWithMe = array();
-
         $end = count($shared);
 
         for ($i = 0; $i < $end; $i++) {
-            $sharedWithMe[] = $em->getRepository('UJMExoBundle:Interaction')
-                ->findOneBy(array('question' => $shared[$i]->getQuestion()->getId()));
+
+            $inter = $em->getRepository('UJMExoBundle:Interaction')
+                    ->findOneBy(array('question' => $shared[$i]->getQuestion()->getId()));
+
+            $sharedWithMe[] = $inter;
+            $shareRight[$inter->getId()] = $shared[$i]->getAllowToModify();
+
+            $response = $em->getRepository('UJMExoBundle:Response')
+                ->findBy(array('interaction' => $inter->getId()));
+
+            if (count($response) > 0) {
+                $questionWithResponse[$inter->getId()] = 1;
+            } else {
+                $questionWithResponse[$inter->getId()] = 0;
+            }
         }
 
         if ($categoryToFind != '' && $titleToFind != '' && $categoryToFind != 'z' && $titleToFind != 'z') {
@@ -181,6 +195,7 @@ class QuestionController extends Controller
         $vars['sharedWithMe']         = $sharedWithMePager;
         $vars['pagerMy']              = $pagerfantaMy;
         $vars['pagerShared']          = $pagerfantaShared;
+        $vars['shareRight']           = $shareRight;
 
         return $this->render('UJMExoBundle:Question:index.html.twig', $vars);
     }
@@ -198,7 +213,7 @@ class QuestionController extends Controller
         }
 
         $question = $this->controlUserQuestion($id);
-        $sharedQuestion = $this->controlUserSharedQuestion($id);
+        $sharedQuestion = $this->container->get('ujm.exercise_services')->controlUserSharedQuestion($id);
 
         if (count($question) > 0 || count($sharedQuestion) > 0) {
             $interaction = $this->getDoctrine()
@@ -342,8 +357,15 @@ class QuestionController extends Controller
     public function editAction($exoID, $id, $form = null)
     {
         $question = $this->controlUserQuestion($id);
+        $share    = $this->container->get('ujm.exercise_services')->controlUserSharedQuestion($id);
+        $user     = $this->container->get('security.context')->getToken()->getUser();
+        $catID    = -1;
 
-        if (count($question) > 0) {
+        if(count($share) > 0) {
+            $shareAllowEdit = $share[0]->getAllowToModify();
+        }
+
+        if ( (count($question) > 0) || ($shareAllowEdit) ) {
             $interaction = $this->getDoctrine()
                 ->getManager()
                 ->getRepository('UJMExoBundle:Interaction')
@@ -358,6 +380,10 @@ class QuestionController extends Controller
             $nbResponses = count($response);
 
             $linkedCategory = $this->getLinkedCategories();
+            
+            if ($user->getId() != $interaction[0]->getQuestion()->getUser()->getId()) {
+                $catID = $interaction[0]->getQuestion()->getCategory()->getId();
+            }
 
             switch ($typeInter) {
                 case "InteractionQCM":
@@ -373,7 +399,7 @@ class QuestionController extends Controller
                         $editForm = $this->createForm(
                             new InteractionQCMType(
                                 $this->container->get('security.context')
-                                    ->getToken()->getUser()
+                                    ->getToken()->getUser(), $catID
                             ), $interactionQCM[0]
                         );
                     } else {
@@ -396,6 +422,7 @@ class QuestionController extends Controller
                     return $this->render('UJMExoBundle:InteractionQCM:edit.html.twig', $variables);
 
                 case "InteractionGraphic":
+                    $docID = -1;
                     $interactionGraph = $this->getDoctrine()
                         ->getManager()
                         ->getRepository('UJMExoBundle:InteractionGraphic')
@@ -406,10 +433,14 @@ class QuestionController extends Controller
                         )
                     );
 
+                    if ($user->getId() != $interactionGraph[0]->getInteraction()->getQuestion()->getUser()->getId()) {
+                        $docID = $interactionGraph[0]->getDocument()->getId();
+                    }
+
                     $editForm = $this->createForm(
                         new InteractionGraphicType(
                             $this->container->get('security.context')
-                                ->getToken()->getUser()
+                                ->getToken()->getUser(), $catID, $docID
                         ), $interactionGraph[0]
                     );
 
@@ -439,7 +470,7 @@ class QuestionController extends Controller
                     $editForm = $this->createForm(
                         new InteractionHoleType(
                             $this->container->get('security.context')
-                                ->getToken()->getUser()
+                                ->getToken()->getUser(), $catID
                         ), $interactionHole[0]
                     );
                     $deleteForm = $this->createDeleteForm($interactionHole[0]->getId());
@@ -465,7 +496,7 @@ class QuestionController extends Controller
                     $editForm = $this->createForm(
                         new InteractionOpenType(
                             $this->container->get('security.context')
-                                ->getToken()->getUser()
+                                ->getToken()->getUser(), $catID
                         ), $interactionOpen[0]
                     );
                     $deleteForm = $this->createDeleteForm($interactionOpen[0]->getId());
@@ -492,7 +523,7 @@ class QuestionController extends Controller
                     break;
             }
         } else {
-            return $this->redirect($this->generateUrl('question'));
+            return $this->redirect($this->generateUrl('ujm_question_index'));
         }
     }
 
@@ -904,10 +935,10 @@ class QuestionController extends Controller
             }
 
             if (count($response) > 0) {
-                $questionWithResponse[] = 1;
+                $questionWithResponse[$entity[$i]->getInteraction()->getId()] = 1;
                 $dontdisplay = 1;
             } else {
-                $questionWithResponse[] = 0;
+                $questionWithResponse[$entity[$i]->getInteraction()->getId()] = 0;
             }
 
             if (count($paper) > 0) {
@@ -1143,48 +1174,31 @@ class QuestionController extends Controller
     {
 
         $request = $this->container->get('request');
-        $creator = $this->container->get('security.context')->getToken()->getUser(); // User who share his question
 
         if ($request->isXmlHttpRequest()) {
             $questionID = $request->request->get('questionID'); // Which question is shared
-            // With which user
-            $userName = $request->request->get('Uname');
-            $userFname = $request->request->get('Ufname');
+
+            $uid = $request->request->get('uid');
+            $allowToModify = $request->request->get('allowToModify');
 
             $em = $this->getDoctrine()->getManager();
-            $matchingName = $em->getRepository('ClarolineCoreBundle:User')->findByName($userName);
+
             $question = $em->getRepository('UJMExoBundle:Question')->findOneBy(array('id' => $questionID));
+            $user     = $em->getRepository('ClarolineCoreBundle:User')->find($uid);
 
-            $end = count($matchingName);
+            $share = $em->getRepository('UJMExoBundle:Share')->findOneBy(array('user' => $user, 'question' => $question));
 
-            for ($i = 0; $i < $end; $i++) {
-                if ($matchingName[$i]->getFirstName() == $userFname) {
-                    $user = $matchingName[$i];
-                    break;
-                }
+            if (!$share) {
+                $share = new Share($user, $question);
             }
 
-            // Share the question
-            $share = new Share($user, $question);
-            $share->setAllowToModify(0); // False
+            $share->setAllowToModify($allowToModify);
 
-            if ($creator->getId() == $user->getId()) {
-                $self = true;
-                $message = 'self;';
-            } else {
-                $self = false;
-                $message = 'yes;';
-            }
+            $em->persist($share);
+            $em->flush();
 
-            // If not shared with him-self or already shared, can persist the sharing else display message
-            if ($this->alreadySharedAction($share, $em) == false && $self == false) {
-                $em->persist($share);
-                $em->flush();
+            return new \Symfony\Component\HttpFoundation\Response('no;'.$this->generateUrl('ujm_question_index'));
 
-                return new \Symfony\Component\HttpFoundation\Response('no;'.$this->generateUrl('ujm_question_index'));
-            } else {
-                return new \Symfony\Component\HttpFoundation\Response($message);
-            }
         }
     }
 
@@ -1704,10 +1718,10 @@ class QuestionController extends Controller
     /**
      * To delete the shared question of user's questions bank
      */
-    public function deleteSharedQuestionAction($id, $pageNow, $maxPage, $nbItem, $lastPage)
+    public function deleteSharedQuestionAction($qid, $uid, $pageNow, $maxPage, $nbItem, $lastPage)
     {
         $em = $this->getDoctrine()->getManager();
-        $sharedToDel = $em->getRepository('UJMExoBundle:Share')->findOneBy(array('question' => $id));
+        $sharedToDel = $em->getRepository('UJMExoBundle:Share')->findOneBy(array('question' => $qid, 'user' => $uid));
 
         if (!$sharedToDel) {
             throw $this->createNotFoundException('Unable to find Share entity.');
@@ -1770,22 +1784,6 @@ class QuestionController extends Controller
             ->getControlOwnerQuestion($user->getId(), $questionID);
 
         return $question;
-    }
-
-    /**
-     * To control the User's rights to this shared question
-     *
-     */
-    private function controlUserSharedQuestion($questionID)
-    {
-        $user = $this->container->get('security.context')->getToken()->getUser();
-
-        $questions = $this->getDoctrine()
-            ->getManager()
-            ->getRepository('UJMExoBundle:Share')
-            ->getControlSharedQuestion($user->getId(), $questionID);
-
-        return $questions;
     }
 
     /**
