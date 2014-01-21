@@ -935,10 +935,10 @@ class QuestionController extends Controller
             }
 
             if (count($response) > 0) {
-                $questionWithResponse[] = 1;
+                $questionWithResponse[$entity[$i]->getInteraction()->getId()] = 1;
                 $dontdisplay = 1;
             } else {
-                $questionWithResponse[] = 0;
+                $questionWithResponse[$entity[$i]->getInteraction()->getId()] = 0;
             }
 
             if (count($paper) > 0) {

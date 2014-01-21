@@ -217,9 +217,9 @@ class ExerciseController extends Controller
                 $response = $em->getRepository('UJMExoBundle:Response')
                     ->findBy(array('interaction' => $interaction->getId()));
                 if (count($response) > 0) {
-                    $questionWithResponse[] = 1;
+                    $questionWithResponse[$interaction->getId()] = 1;
                 } else {
-                    $questionWithResponse[] = 0;
+                    $questionWithResponse[$interaction->getId()] = 0;
                 }
                 
                 $share = $this->container->get('ujm.exercise_services')->controlUserSharedQuestion(
