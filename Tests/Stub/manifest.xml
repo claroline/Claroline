@@ -1,0 +1,104 @@
+<?xml version="1.0"?>
+<workspace>
+    <!-- mandatory -->
+    <properties>
+        <name>Anglais</name>
+        <code>EN</code>
+        <visible>true</visible><!--access for anonyme -->
+        <selfregistration>true</selfregistration>
+    </properties>
+
+    <!-- optional -->
+    <customRoles>
+        <role></role>
+        <role></role>
+        <role></role>
+    </customRoles>
+
+    <!-- mandatory -->
+    <owner><!--workspace creator -->
+        <first_name>esdras2</first_name>
+        <last_name>ngongo6</last_name>
+        <username>ezs7</username>
+        <password>pass3</password>
+        <locale>fr</locale>
+        <administrive_code>7</administrive_code>
+        <phone>7</phone>
+        <picture>1</picture>
+    </owner>
+
+    <!-- inject roles into importer -->
+    <members>
+
+        <!-- optional (importer will need custom roles list, if any) -->
+        <groups>
+            <group>
+                <name></name>
+                <users>
+                    <user></user>
+                    <user></user>
+                    <user></user>
+                </users>
+            </group>
+            <group>
+                <name></name>
+                <users>
+                    <user></user>
+                    <user></user>
+                    <user></user>
+                </users>
+            </group>
+        </groups>
+        <users>
+            <user>
+                <name></name>
+                <mail></mail>
+            </user>
+        </users>
+    </members>
+
+    <!-- optional -->
+    <!-- outside other tools -->
+    <!-- inject member and roles and workspace properties -->
+
+    <resources>
+        <directories>
+            <directory name="foo" creator="bar" parent="papa">
+                <rights>
+                    <role name="foo">
+                        <open>true</open>
+                        <edit>false</edit>
+                        <create>
+                            <resource></resource>
+                        </create>
+                    </role>
+                </rights>
+            </directory>
+        </directories>
+        <!-- inject directories -->
+        <!-- every items has access to the previously created items -->
+        <items>
+            <item name="foo" creator="bar" parent="papa" type="baz">
+                <rights>
+                    <role name="foo">
+                        <open>true</open>
+                        <edit>false</edit>
+                    </role>
+                </rights>
+            </item>
+            <content>
+
+            </content>
+        </items>
+    </resources>
+
+    <!-- optional -->
+    <tools>
+        <!-- inject member and roles and resources -->
+        <tool name="home"/>
+        <tool name="agenda"/>
+        <tool name="badges"/>
+    </tools>
+
+
+</workspace>

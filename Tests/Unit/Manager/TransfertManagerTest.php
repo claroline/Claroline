@@ -12,8 +12,7 @@
 namespace Claroline\CoreBundle\Manager;
 
 
-
-use Claroline\MigrationBundle\Tests\MockeryTestCase;
+use Claroline\CoreBundle\Library\Testing\MockeryTestCase;
 
 class TransfertManagerTest extends MockeryTestCase
 {
@@ -26,9 +25,12 @@ class TransfertManagerTest extends MockeryTestCase
 
     public function testSupport()
     {
-        $importer = $this->mock('Claroline\CoreBundle\Library\Transfert\ImporterInterface');
+        $userManager = $this->mock('Claroline\CoreBundle\Manager\UserManager');
+        $importer = $this->mock('Claroline\CoreBundle\Library\Transfert\WorkspacePropertiesImporter');
         $importer->shouldReceive('supports')->once()->with('user')->andReturn(false);
+        $importer->shouldReceive('valid')->once();
+        $importer->shouldReceive('import')->once();
         $this->manager->addImporter($importer);
-        $this->manager->importWorkspace();
+        $this->manager->importWorkspace(__DIR__.'/../../Stub/manifest.xml');
     }
 } 
