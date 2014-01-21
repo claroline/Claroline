@@ -5,7 +5,7 @@ namespace Innova\PathBundle\Manager;
 use Doctrine\Common\Persistence\ObjectManager;
 use Innova\PathBundle\Entity\Step;
 use Innova\PathBundle\Entity\Path;
-use Innova\PathBundle\Entity\Path\Step2ResourceNode;
+use Innova\PathBundle\Entity\Step2ResourceNode;
 
 class StepManager
 {
