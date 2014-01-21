@@ -345,38 +345,19 @@ class WorkspaceRepository extends EntityRepository
     }
 
     /**
-     * Returns the workspaces which are marked as displayable. If a user is passed in, non
-     * displayable workspaces whose that user is a member will be added to the list.
-     *
-     * @param \Claroline\CoreBundle\Entity\User $user
+     * Returns the workspaces which are marked as displayable.
      *
      * @return array[AbstractWorkspace]
      */
-    public function findDisplayableWorkspaces(User $user = null)
+    public function findDisplayableWorkspaces()
     {
         $dql = '
             SELECT w
             FROM Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace w
             WHERE w.displayable = true
-            %s
             ORDER BY w.name
         ';
-        $additionalClause = $user ?
-            'OR w.id IN (
-                SELECT w2.id FROM Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace w2
-                JOIN w2.roles r
-                JOIN r.users u
-                WHERE w.displayable = false
-                AND u.id = :userId
-            )' :
-            '';
-
-        $dql = sprintf($dql, $additionalClause);
         $query = $this->_em->createQuery($dql);
-
-        if ($user) {
-            $query->setParameter('userId', $user->getId());
-        }
 
         return $query->getResult();
     }
