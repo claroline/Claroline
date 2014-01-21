@@ -7,8 +7,7 @@ var EditorApp = angular.module('EditorApp', [
     'ui.bootstrap', 
     'ui.pageslide', 
     'ui.sortable', 
-    'ui.tinymce',
-    'ngJsonInput'
+    'ui.tinymce'
 ]);
 
 // History
