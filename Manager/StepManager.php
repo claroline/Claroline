@@ -66,7 +66,7 @@ class StepManager
 
     public function editResourceNodeRelation(Step $step, $resourceNodeId, $excluded, $propagated, $order)
     {
-        $step2ressourceNode = $this->em->getRepository('InnovaPathBundle:Step2ResourceNode')->findOneBy(array (
+        $step2ressourceNode = $this->om->getRepository('InnovaPathBundle:Step2ResourceNode')->findOneBy(array (
             'step' => $step,
             'resourceNode' => $resourceNodeId,
             'excluded' => $excluded,
