@@ -13,6 +13,7 @@ namespace Claroline\CoreBundle\Entity;
 
 use Claroline\CoreBundle\Entity\Badge\Badge;
 use \Serializable;
+use Symfony\Component\Security\Core\User\AdvancedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\EquatableInterface;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -33,7 +34,7 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
  *
  * @todo implement AdvancedUserInterface
  */
-class User extends AbstractRoleSubject implements Serializable, UserInterface, EquatableInterface, OrderableInterface
+class User extends AbstractRoleSubject implements Serializable, AdvancedUserInterface, EquatableInterface, OrderableInterface
 {
     /**
      * @var integer
@@ -242,6 +243,11 @@ class User extends AbstractRoleSubject implements Serializable, UserInterface, E
      * @ORM\Column(type="text", nullable=true)
      */
     protected $description;
+
+    /**
+     * @ORM\Column(name="is_enabled", type="boolean")
+     */
+    protected $isEnabled = true;
 
     public function __construct()
     {
@@ -788,5 +794,30 @@ class User extends AbstractRoleSubject implements Serializable, UserInterface, E
     public function getOrderableFields()
     {
         return array('id', 'username', 'lastName', 'firstName', 'mail');
+    }
+
+    public function isAccountNonExpired()
+    {
+        return true;
+    }
+
+    public function isAccountNonLocked()
+    {
+        return true;
+    }
+
+    public function isCredentialsNonExpired()
+    {
+        return true;
+    }
+
+    public function isEnabled()
+    {
+        return $this->isEnabled;
+    }
+
+    public function setIsEnabled($isEnabled)
+    {
+        $this->isEnabled = $isEnabled;
     }
 }

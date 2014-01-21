@@ -140,8 +140,18 @@ class UserManager
      */
     public function deleteUser(User $user)
     {
-        $this->om->remove($user);
-        $this->om->flush();
+        //soft delete~
+        $user->setMail('removed');
+        $user->setFirstName('first name removed');
+        $user->setLastName('last name removed');
+        $user->setPlainPassword(uniqid());
+        $user->setUsername('user_removed#' . $user->getId());
+        $user->setIsEnabled(false);
+
+        $this->ed->dispatch(
+            'delete_user', 'DeleteUser',
+            array($user)
+        );
     }
 
     /**
