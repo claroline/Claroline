@@ -296,6 +296,7 @@ class WorkspaceParametersController extends Controller
      *
      * @param AbstractWorkspace $workspace
      *
+     * @throws \Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException
      * @return Response
      */
     public function anonymousSubscriptionAction(AbstractWorkspace $workspace)
@@ -303,8 +304,9 @@ class WorkspaceParametersController extends Controller
         if (!$workspace->getSelfRegistration()) {
             throw new AccessDeniedHttpException();
         }
+
         $form = $this->formFactory->create(
-            FormFactory::TYPE_USER_BASE_PROFILE,array($this->localeManager->getAvailableLocales())
+            FormFactory::TYPE_USER_BASE_PROFILE, array($this->localeManager)
         );
         $form->handleRequest($this->request);
 

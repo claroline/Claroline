@@ -599,9 +599,15 @@ user_form_plainPassword_first: 'Mot de passe'
 user_form_plainPassword_second: Vérification
 user_form_username: 'Nom d''utilisateur'
 user_parameters: 'Paramètres de l''utilisateur'
+<<<<<<< HEAD
 username: 'Nom d''utilisateur'
 username_found_at: 'Le nom d''utilisateur %username% a été trouvé aux lignes: %lines%'
 username_or_email: 'Nom d''utilisateur ou email'
+=======
+username: "Nom d'utilisateur"
+username_or_email: "Nom d'utilisateur ou email"
+username_found_at: "Le nom d'utilisateur %username% a été trouvé aux lignes: %lines%"
+>>>>>>> 47f673c9776853f2c6b5326c0d717ed2cbbdf271
 users: Utilisateurs
 users_connected_once: 'utilisateurs connectés au moins 1 fois sur la plateforme'
 users_import: 'Importer des utilisateurs'
