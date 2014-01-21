@@ -1,7 +1,11 @@
+contextual_edit : Edition contextuelle
+
 full_tree: Arborescence
 full_path_notice_1: Vous pouvez afficher l'arborescence complète du parcours en cliquant sur le bouton 
 full_path_notice_2: Ce bouton sera accessible en haut à gauche à n'importe quelle étape de votre progression.
 
 history: Historique
+
+my_favorites: Mes favoris
 
 next_step: Etapes suivantes
