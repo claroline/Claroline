@@ -673,3 +673,6 @@ unable_to_start_transport: 'The mailing transport cannot be started. Please chec
 unable_to_start_sendmail: 'Sendmail or Postfix cannot be started. Please check that one of them is installed and correctly configured.'
 unable_to_start_gmail: 'The connection with Gmail SMTP service cannot be established. Please check that the credentials you provided are correct.'
 unable_to_start_smtp: 'The connection with the SMTP server cannot be established. Please check that the parameters you provided are correct.'
+server: Server
+layout: Layout
+registration: Registration

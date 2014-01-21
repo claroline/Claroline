@@ -358,9 +358,9 @@ class WorkspaceRepository extends EntityRepository
             SELECT w
             FROM Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace w
             WHERE w.displayable = true
-            %s
             ORDER BY w.name
         ';
+
         $additionalClause = $user ?
             'OR w.id IN (
                 SELECT w2.id FROM Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace w2

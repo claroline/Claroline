@@ -358,7 +358,7 @@ class ParametersController extends Controller
      *     name="claro_admin_mail_inscription"
      * )
      *
-     * @Template("ClarolineCoreBundle:Administration\platform\mail:inscription.html.twig")
+     * @Template("ClarolineCoreBundle:Administration\platform\mail:registration.html.twig")
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -378,7 +378,7 @@ class ParametersController extends Controller
      *     name="claro_admin_edit_mail_inscription"
      * )
      *
-     * @Template("ClarolineCoreBundle:Administration\platform\mail:inscription.html.twig")
+     * @Template("ClarolineCoreBundle:Administration\platform\mail:registration.html.twig")
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */

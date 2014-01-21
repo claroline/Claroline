@@ -668,3 +668,6 @@ unable_to_start_transport: La connexion avec le serveur de mails ne peut pas êt
 unable_to_start_sendmail: La connexion avec Sendmail ou Postfix ne peut pas être établie. Veuillez vérifier qu'un de ces logiciels est installé et correctement configuré.
 unable_to_start_gmail: La connexion avec le service SMTP de Gmail ne peut pas être établie. Veuillez vérifier que le nom d`utilisateur et le mot de passe que vous avez renseignés sont corrects.
 unable_to_start_smtp: La connexion avec le serveur SMTP ne peut pas être établie. Veuillez vérifier que les paramètres que vous avez renseignés sont corrects.
+server: Serveur
+layout: Layout
+registration: Inscription

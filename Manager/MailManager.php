@@ -107,16 +107,15 @@ class MailManager
      */
     public function sendCreationMessage(User $user)
     {
-        //placeholder for the username is %username%
-        //placeholder for the password is %password%
-
         $locale = $user->getLocale();
-        $content = $this->getDefaultInscriptionMail($locale);
-        $body = $content->getContent();
-        $subject = $content->getTitle();
+        $content = $this->contentManager->getTranslatedContent(array('type' => 'claro_mail_registration'));
+        $displayedLocale = isset($content[$locale]) ? $locale: $this->ch->getParameter('locale_language');
+        $body = $content[$displayedLocale]['content'];
+        $subject =  $content[$displayedLocale]['title'];
 
         $body = str_replace('%username%', $user->getUsername(), $body);
         $body = str_replace('%password%', $user->getPlainPassword(), $body);
+        $subject = str_replace('%platform_name%', $this->ch->getParameter('name'), $subject);
 
         return $this->send($subject, $body, array($user));
     }
@@ -132,8 +131,20 @@ class MailManager
     public function send($subject, $body, array $users, $from = null)
     {
         if ($this->isMailerAvailable()) {
+            $layout = $this->contentManager->getTranslatedContent(array('type' => 'claro_mail_layout'));
+
             $from = ($from === null) ? $this->ch->getParameter('support_email'): $from->getMail();
             $to = array();
+
+            $locale = count($users) === 1 ? $users[0]->getLocale(): $this->ch->getParameter('locale_language');
+
+            if (!$locale) {
+                $locale = $this->ch->getParameter('locale_language');
+            }
+
+            $usedLayout = $layout[$locale]['content'];
+            $body = str_replace('%content%', $body, $usedLayout);
+            $body = str_replace('%platform_name%', $this->ch->getParameter('name'), $body);
 
             foreach ($users as $user) {
                 $to[] = $user->getMail();
@@ -154,17 +165,5 @@ class MailManager
         }
 
         return false;
-    }
-
-    public function setDefaultInscriptionMail($title, $content, $locale)
-    {
-        $this->contentManager->createContent($title, $content, $locale);
-    }
-
-    public function getDefaultInscriptionMail($locale)
-    {
-        $content = $this->contentManager->findByTypeAndLanguage('claro_mail_registration', 'fr');
-        var_dump($content->getContent());
-        throw new \Exception();
     }
 }

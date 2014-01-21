@@ -76,6 +76,7 @@ class ContentManager
                 ->from('ClarolineCoreBundle:Content', 'content')
                 ->where('content.id = ' . $content->getId())
                 ->getQuery()
+                ->setHint(\Gedmo\Translatable\TranslatableListener::HINT_TRANSLATABLE_LOCALE, 'fr')
                 ->execute(
                     compact('entityId', 'entityClass'),
                     Query::HYDRATE_ARRAY
@@ -154,6 +155,9 @@ class ContentManager
 
     /**
      * Delete a translation of content
+     *
+     * @param $locale
+     * @param $id
      *
      * @return This function doesn't return anything.
      */
