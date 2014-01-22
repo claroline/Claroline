@@ -98,12 +98,19 @@ class ContentManager
      *
      * @return integer The id of the new content.
      */
-    public function createContent($title, $text, $locale = null)
+    public function createContent($title, $text, $locale = null, $type = null)
     {
         if ($title or $text) {
             $content = new Content();
             $content->setTitle($title);
             $content->setContent($text);
+
+            if ($type) {
+                $content->setType($type);
+            }
+
+            $this->manager->persist($content);
+            $this->manager->flush();
 
             if ($locale) {
                 $content->setTranslatableLocale($locale);
@@ -163,9 +170,13 @@ class ContentManager
      */
     public function deleteTranslation($locale, $id)
     {
-        $content = $this->translations->findOneBy(array('foreignKey' => $id, 'locale' => $locale));
+        if ($locale === 'en') {
+            $content = $this->content->findOneBy(array('id' => $id));
+        } else {
+            $content = $this->translations->findOneBy(array('foreignKey' => $id, 'locale' => $locale));
+        }
 
-        if ($content instanceof ContentTranslation) {
+        if ($content instanceof ContentTranslation or $content instanceof Content) {
             $this->deleteContent($content);
         }
     }

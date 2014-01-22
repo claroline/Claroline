@@ -58,9 +58,13 @@ class TermsOfServiceManager
         return $this->isActive;
     }
 
-    public function getTermsOfService()
+    public function getTermsOfService($translations = true)
     {
-        return $this->content->getTranslatedContent(array('type' => 'termsOfService'));
+        if ($translations) {
+            return $this->content->getTranslatedContent(array('type' => 'termsOfService'));
+        }
+
+        return $this->content->getContent(array('type' => 'termsOfService'));
     }
 
     public function setTermsOfService($locale, $content)
@@ -70,7 +74,7 @@ class TermsOfServiceManager
         if ($termsOfService instanceof Content) {
             $this->content->updateContent($termsOfService, "Terms Of Service", $content, $locale);
         } else {
-            $this->content->createContent("Terms Of Service", $content, $locale);
+            $this->content->createContent("Terms Of Service", $content, $locale, 'termsOfService');
         }
     }
 

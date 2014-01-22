@@ -16,6 +16,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Claroline\CoreBundle\Manager\LocaleManager;
 use Claroline\CoreBundle\Manager\TermsOfServiceManager;
+use Claroline\CoreBundle\Entity\Content;
 
 class BaseProfileType extends AbstractType
 {
@@ -37,18 +38,15 @@ class BaseProfileType extends AbstractType
             ->add('mail', 'email')
             ->add('locale', 'choice', array('choices' => $this->langs, 'required' => false, 'label' => 'Language'));
 
-        $content = $this->termsOfService->getTermsOfService();
+        $content = $this->termsOfService->getTermsOfService(false);
 
         if ($this->termsOfService->isActive() and $content instanceof Content) {
 
             $builder->add(
-                'test',
-                'textarea',
+                'scroll',
+                'scroll',
                 array(
-                    'attr' => array('class' => 'form-control', 'rows' => '10'),
-                    'mapped' => false,
                     'label' => 'Terms of service',
-                    'read_only' => true,
                     'data' => $content->getContent()
                 )
             )
