@@ -11,7 +11,6 @@
 
 namespace Claroline\CoreBundle\Controller\Administration;
 
-use Claroline\CoreBundle\Form\Factory\FormFactory;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Library\Configuration\UnwritableException;
 use Claroline\CoreBundle\Manager\LocaleManager;
@@ -25,8 +24,10 @@ use JMS\SecurityExtraBundle\Annotation\PreAuthorize;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\Form\FormError;
+use Symfony\Component\Form\FormFactory;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Translation\Translator;
+use Claroline\CoreBundle\Form\Administration as AdminForm;
 
 /**
  * @DI\Tag("security.secure_service")
@@ -45,12 +46,12 @@ class ParametersController extends Controller
 
     /**
      * @DI\InjectParams({
-     *     "configHandler" = @DI\Inject("claroline.config.platform_config_handler"),
-     *     "roleManager"   = @DI\Inject("claroline.manager.role_manager"),
-     *     "formFactory"   = @DI\Inject("claroline.form.factory"),
-     *     "localeManager" = @DI\Inject("claroline.common.locale_manager"),
-     *     "request"       = @DI\Inject("request"),
-     *     "translator"    = @DI\Inject("translator"),
+     *     "configHandler"  = @DI\Inject("claroline.config.platform_config_handler"),
+     *     "roleManager"    = @DI\Inject("claroline.manager.role_manager"),
+     *     "formFactory"    = @DI\Inject("form.factory"),
+     *     "localeManager"  = @DI\Inject("claroline.common.locale_manager"),
+     *     "request"        = @DI\Inject("request"),
+     *     "translator"     = @DI\Inject("translator"),
      *     "termsOfService" = @DI\Inject("claroline.common.terms_of_service_manager")
      * })
      */
@@ -105,8 +106,7 @@ class ParametersController extends Controller
         $platformConfig = $this->configHandler->getPlatformConfig();
         $role = $this->roleManager->getRoleByName($platformConfig->getDefaultRole());
         $form = $this->formFactory->create(
-            FormFactory::TYPE_PLATFORM_PARAMETERS,
-            array($this->localeManager->getAvailableLocales(), $role),
+            new AdminForm\GeneralType($this->localeManager->getAvailableLocales(), $role),
             $platformConfig
         );
 
@@ -133,8 +133,7 @@ class ParametersController extends Controller
         $platformConfig = $this->configHandler->getPlatformConfig();
         $role = $this->roleManager->getRoleByName($platformConfig->getDefaultRole());
         $form = $this->formFactory->create(
-            FormFactory::TYPE_PLATFORM_PARAMETERS,
-            array($this->localeManager->getAvailableLocales(), $role),
+            new AdminForm\GeneralType($this->localeManager->getAvailableLocales(), $role),
             $platformConfig
         );
         $form->handleRequest($this->request);
@@ -189,8 +188,7 @@ class ParametersController extends Controller
     {
         $platformConfig = $this->configHandler->getPlatformConfig();
         $form = $this->formFactory->create(
-            FormFactory::TYPE_PLATFORM_APPEARANCE,
-            array($this->getThemes()),
+            new AdminForm\ApperanceType($this->getThemes()),
             $platformConfig
         );
 
@@ -214,8 +212,7 @@ class ParametersController extends Controller
     {
         $platformConfig = $this->configHandler->getPlatformConfig();
         $form = $this->formFactory->create(
-            FormFactory::TYPE_PLATFORM_APPEARANCE,
-            array($this->getThemes()),
+            new AdminForm\ApperanceType($this->getThemes()),
             $platformConfig
         );
         $form->handleRequest($this->request);
@@ -267,8 +264,7 @@ class ParametersController extends Controller
     {
         $platformConfig = $this->configHandler->getPlatformConfig();
         $form = $this->formFactory->create(
-            FormFactory::TYPE_PLATFORM_MAIL_SETTINGS,
-            array($platformConfig->getMailerTransport()),
+            new AdminForm\MailType($platformConfig->getMailerTransport()),
             $platformConfig
         );
 
@@ -292,8 +288,7 @@ class ParametersController extends Controller
     {
         $platformConfig = $this->configHandler->getPlatformConfig();
         $form = $this->formFactory->create(
-            FormFactory::TYPE_PLATFORM_MAIL_SETTINGS,
-            array($platformConfig->getMailerTransport()),
+            new AdminForm\MailType($platformConfig->getMailerTransport()),
             $platformConfig
         );
         $form->handleRequest($this->request);
@@ -389,10 +384,13 @@ class ParametersController extends Controller
      */
     public function termsOfServiceAction()
     {
+        $form = $this->formFactory->create(
+            new AdminForm\TermsOfServiceType($this->configHandler->getParameter('terms_of_service')),
+            $this->termsOfService->getTermsOfService(false)
+        );
+
         return array(
-            'langs' => $this->localeManager->getAvailableLocales(),
-            'isActive' => $this->configHandler->getParameter('terms_of_service'),
-            'termsOfService' => $this->termsOfService->getTermsOfService()
+            'form' => $form->createView(),
         );
     }
 

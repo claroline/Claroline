@@ -52,3 +52,43 @@
     {% endif %}
     {{ parent() | replace({'form-control': ''}) | raw }}
 {% endblock checkbox_widget %}
+
+{% block scroll_widget %}
+    {% spaceless %}
+        <div {{ block('widget_container_attributes') }}>
+            {{ value | raw }}
+        </div>
+    {% endspaceless %}
+{% endblock %}
+
+{% block content_widget %}
+    <div {{ block('widget_container_attributes') }}>
+        <div class="content-menu float-right-top">
+            <button type="button" class="btn btn-primary btn-sm dropdown-toggle" data-toggle="dropdown">
+                <span>{{ app.request.locale | upper }}</span>&nbsp;<i class="icon-caret-down"></i>
+            </button>
+            <ul class="dropdown-menu pull-right" role="menu">
+                {% for lang in langs %}
+                    <li class="pointer-hand{% if app.request.locale == lang %} active{% endif %}">
+                        <a>{{ lang | upper }}</a>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% for lang in langs %}
+            <div data-lang="{{ lang | upper }}"{% if lang == app.request.locale %} class="hide"{% endif %}>
+                {% if contentTitle %}
+                    {{
+                        form_widget(form['title_' ~ lang], {
+                            'attr': {
+                                'class': 'margin-bottom-md',
+                                'placeholder': 'Optional title' | trans({}, 'home') ~ '...'
+                            }
+                        })
+                    }}
+                {% endif %}
+                {{ form_widget(form['content_' ~ lang]) }}
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}
