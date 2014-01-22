@@ -1,6 +1,6 @@
 <?php
 
-namespace Claroline\CoreBundle\Migrations\sqlanywhere;
+namespace Claroline\CoreBundle\Migrations\pdo_pgsql;
 
 use Doctrine\DBAL\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
@@ -8,21 +8,21 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2014/01/20 11:09:09
+ * Generation date: 2014/01/22 05:19:08
  */
-class Version20140120110907 extends AbstractMigration
+class Version20140122171908 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
         $this->addSql("
             CREATE TABLE claro_content_translation (
-                id INT IDENTITY NOT NULL, 
+                id SERIAL NOT NULL, 
                 locale VARCHAR(8) NOT NULL, 
                 object_class VARCHAR(255) NOT NULL, 
                 field VARCHAR(32) NOT NULL, 
                 foreign_key VARCHAR(64) NOT NULL, 
                 content TEXT DEFAULT NULL, 
-                PRIMARY KEY (id)
+                PRIMARY KEY(id)
             )
         ");
         $this->addSql("
@@ -32,17 +32,21 @@ class Version20140120110907 extends AbstractMigration
         ");
         $this->addSql("
             ALTER TABLE claro_user 
-            ADD termsOfService BIT NULL DEFAULT NULL
+            DROP CONSTRAINT FK_EB8D285282D40A1F
         ");
         $this->addSql("
             ALTER TABLE claro_user 
-            DROP FOREIGN KEY FK_EB8D285282D40A1F
+            ADD termsOfService BOOLEAN DEFAULT NULL
+        ");
+        $this->addSql("
+            ALTER TABLE claro_user 
+            ADD is_enabled BOOLEAN NOT NULL
         ");
         $this->addSql("
             ALTER TABLE claro_user 
             ADD CONSTRAINT FK_EB8D285282D40A1F FOREIGN KEY (workspace_id) 
             REFERENCES claro_workspace (id) 
-            ON DELETE CASCADE
+            ON DELETE CASCADE NOT DEFERRABLE INITIALLY IMMEDIATE
         ");
         $this->addSql("
             ALTER TABLE claro_content 
@@ -61,17 +65,21 @@ class Version20140120110907 extends AbstractMigration
         ");
         $this->addSql("
             ALTER TABLE claro_user 
+            DROP CONSTRAINT FK_EB8D285282D40A1F
+        ");
+        $this->addSql("
+            ALTER TABLE claro_user 
             DROP termsOfService
         ");
         $this->addSql("
             ALTER TABLE claro_user 
-            DROP FOREIGN KEY FK_EB8D285282D40A1F
+            DROP is_enabled
         ");
         $this->addSql("
             ALTER TABLE claro_user 
             ADD CONSTRAINT FK_EB8D285282D40A1F FOREIGN KEY (workspace_id) 
             REFERENCES claro_workspace (id) 
-            ON DELETE SET NULL
+            ON DELETE SET NULL NOT DEFERRABLE INITIALLY IMMEDIATE
         ");
     }
 }

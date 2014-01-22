@@ -1,6 +1,6 @@
 <?php
 
-namespace Claroline\CoreBundle\Migrations\mysqli;
+namespace Claroline\CoreBundle\Migrations\drizzle_pdo_mysql;
 
 use Doctrine\DBAL\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
@@ -8,9 +8,9 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2014/01/20 11:09:09
+ * Generation date: 2014/01/22 05:19:09
  */
-class Version20140120110907 extends AbstractMigration
+class Version20140122171908 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
@@ -21,12 +21,12 @@ class Version20140120110907 extends AbstractMigration
                 object_class VARCHAR(255) NOT NULL, 
                 field VARCHAR(32) NOT NULL, 
                 foreign_key VARCHAR(64) NOT NULL, 
-                content LONGTEXT DEFAULT NULL, 
+                content TEXT DEFAULT NULL, 
+                PRIMARY KEY(id), 
                 INDEX content_translation_idx (
                     locale, object_class, field, foreign_key
-                ), 
-                PRIMARY KEY(id)
-            ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
+                )
+            )
         ");
         $this->addSql("
             ALTER TABLE claro_user 
@@ -34,7 +34,8 @@ class Version20140120110907 extends AbstractMigration
         ");
         $this->addSql("
             ALTER TABLE claro_user 
-            ADD termsOfService TINYINT(1) DEFAULT NULL
+            ADD termsOfService BOOLEAN DEFAULT NULL, 
+            ADD is_enabled BOOLEAN NOT NULL
         ");
         $this->addSql("
             ALTER TABLE claro_user 
@@ -63,7 +64,8 @@ class Version20140120110907 extends AbstractMigration
         ");
         $this->addSql("
             ALTER TABLE claro_user 
-            DROP termsOfService
+            DROP termsOfService, 
+            DROP is_enabled
         ");
         $this->addSql("
             ALTER TABLE claro_user 

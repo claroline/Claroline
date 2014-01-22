@@ -8,9 +8,9 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2014/01/20 11:09:09
+ * Generation date: 2014/01/22 05:19:09
  */
-class Version20140120110907 extends AbstractMigration
+class Version20140122171908 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
@@ -33,6 +33,10 @@ class Version20140120110907 extends AbstractMigration
         $this->addSql("
             ALTER TABLE claro_user 
             ADD termsOfService BIT
+        ");
+        $this->addSql("
+            ALTER TABLE claro_user 
+            ADD is_enabled BIT NOT NULL
         ");
         $this->addSql("
             ALTER TABLE claro_user 
@@ -62,6 +66,10 @@ class Version20140120110907 extends AbstractMigration
         $this->addSql("
             ALTER TABLE claro_user 
             DROP COLUMN termsOfService
+        ");
+        $this->addSql("
+            ALTER TABLE claro_user 
+            DROP COLUMN is_enabled
         ");
         $this->addSql("
             ALTER TABLE claro_user 
