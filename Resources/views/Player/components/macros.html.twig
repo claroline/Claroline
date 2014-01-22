@@ -1,8 +1,8 @@
 {% macro displayResource(resource, step) %}
-    <a target="_blank" class="btn btn-default btn-xs" href="{{ path('claro_resource_open', {'node': resource.resourceNode.id, 'resourceType': resource.resourceNode.resourceType.name }) }}" > 
-        <span rel="tooltip" data-original-title="{{ step.name }}" class="lvl-{{ step.lvl + 1 }} lvl-indicator">&nbsp;</span>
-        {{ resource.resourceNode.name }}
-    </a>
+        <a class="btn btn-sm btn-default player-tab" target="_blank" href="{{ path('claro_resource_open', {'node': resource.resourceNode.id, 'resourceType': resource.resourceNode.resourceType.name }) }}" > 
+            <span rel="tooltip" data-original-title="{{ step.name }}" class="lvl-{{ step.lvl + 1 }} lvl-indicator">&nbsp;</span>
+            {{ resource.resourceNode.name }}
+        </a>
 {% endmacro %}
 
 {% macro displayTreeItem(item, parents, currentStep, path, workspace) %}

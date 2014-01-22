@@ -14,15 +14,26 @@
 {% import 'InnovaPathBundle::Player/components/macros.html.twig' as macros %}
 
 <div id="path-main-container" class="path-player">
+
+    {# Favoris #}
+    {% include 'InnovaPathBundle::Player/components/my-favorites.html.twig' %}
+
+    {# Edit #}
+    {% include 'InnovaPathBundle::Player/components/edit-step.html.twig' %}
+
     <div class="tree-browser">
         {{ render(controller('innova_path.controller.path_player:displayTreeBrowserAction', { 'workspace': workspace, 'path': path, 'currentStep': currentStep } )) }}
     </div>
     <div class="petit-poucet">
         {{ render(controller('innova_path.controller.path_player:displayPetitPoucetAction', { 'workspace': workspace, 'path': path, 'currentStep': currentStep })) }}
     </div>
+
     <div class="row">
         <div class="col-md-12">
             <div class="pull-left nav-buttons btn-group">
+                <a class="btn btn-default nav-button" href="#" data-toggle="modal" data-target="#my-favorites" rel="tooltip" data-original-title="{{ 'my_favorites' | trans({}, 'path_player') }}"> 
+                    <span class="icon-heart"></span>
+                </a>
                 {# Arborescence #}
                 <a class="tree-browser btn btn-default nav-button" href="#" data-toggle="modal" data-target="#full-tree" rel="tooltip" data-original-title="{{ 'full_tree' | trans({}, 'path_player') }}"> 
                     <span class="icon-list"></span>  
@@ -38,6 +49,13 @@
             </div>
         </div>
     </div>
+
+    <div class="row resources">
+        <div class="col-md-12">
+                    {{ render(controller('innova_path.controller.path_player:displayResourcesAction', { 'currentStep': currentStep } )) }}
+        </div>
+    </div>
+
     <div class="content row">
         {# Contenu de l'étape #}
         <div class="current-step col-md-12">
