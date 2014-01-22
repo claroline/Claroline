@@ -75,7 +75,7 @@ Feature:
         And I should see 0 "#badges .badge" elements
         And I should see "Badge supprimé avec succès."
 
-    @javascript @current
+    @javascript
     Scenario: Successful creation of a badge with rules
         Given I'm connected with login "JohnDoe" and password "JohnDoe"
         And I go to "/admin/badges"
