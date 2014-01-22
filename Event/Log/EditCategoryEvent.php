@@ -16,7 +16,7 @@ use Claroline\ForumBundle\Entity\Category;
 
 class EditCategoryEvent extends AbstractLogResourceEvent
 {
-    const ACTION = 'forum-edit-category';
+    const ACTION = 'resource-claroline_forum-edit_category';
 
     /**
      * @param \Claroline\ForumBundle\Entity\Category $category

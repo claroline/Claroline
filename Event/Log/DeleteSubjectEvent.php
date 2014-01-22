@@ -16,7 +16,7 @@ use Claroline\ForumBundle\Entity\Subject;
 
 class DeleteSubjectEvent extends AbstractLogResourceEvent
 {
-    const ACTION = 'forum-delete-subject';
+    const ACTION = 'resource-claroline_forum-delete_subject';
 
     /**
      * @param Subject $subject

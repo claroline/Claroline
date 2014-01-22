@@ -17,7 +17,7 @@ use Claroline\ForumBundle\Entity\Message;
 
 class MoveMessageEvent extends AbstractLogResourceEvent
 {
-    const ACTION = 'forum-move-message';
+    const ACTION = 'resource-claroline_forum-move_message';
 
     /**
      * @param \Claroline\ForumBundle\Entity\Message $message

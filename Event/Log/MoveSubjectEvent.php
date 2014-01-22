@@ -17,7 +17,7 @@ use Claroline\ForumBundle\Entity\Subject;
 
 class MoveSubjectEvent extends AbstractLogResourceEvent
 {
-    const ACTION = 'forum-move-subject';
+    const ACTION = 'resource-claroline_forum-move_subject';
 
     /**
      * @param \Claroline\ForumBundle\Entity\Subject $subject

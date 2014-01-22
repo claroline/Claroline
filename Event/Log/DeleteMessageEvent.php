@@ -16,7 +16,7 @@ use Claroline\ForumBundle\Entity\Message;
 
 class DeleteMessageEvent extends AbstractLogResourceEvent
 {
-    const ACTION = 'forum-delete-message';
+    const ACTION = 'resource-claroline_forum-delete_message';
 
     /**
      * @param \Claroline\ForumBundle\Entity\Message $message

@@ -16,7 +16,7 @@ use Claroline\ForumBundle\Entity\Subject;
 
 class StickSubjectEvent extends AbstractLogResourceEvent
 {
-    const ACTION = 'forum-stick-subject';
+    const ACTION = 'resource-claroline_forum-stick_subject';
 
     /**
      * @param Subject $subject

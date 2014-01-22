@@ -16,7 +16,7 @@ use Claroline\ForumBundle\Entity\Subject;
 
 class EditSubjectEvent extends AbstractLogResourceEvent
 {
-    const ACTION = 'forum-edit-subject';
+    const ACTION = 'resource-claroline_forum-edit_subject';
 
     /**
      * @param \Claroline\ForumBundle\Entity\Subject $subject
