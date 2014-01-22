@@ -693,7 +693,7 @@ class Badge extends Rulable
     public function postRemove()
     {
         $filePath = $this->getAbsolutePath();
-        if (null !== $filePath) {
+        if (null !== $filePath && is_file($filePath)) {
             unlink($filePath);
         }
     }

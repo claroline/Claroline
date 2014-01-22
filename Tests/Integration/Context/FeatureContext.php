@@ -13,9 +13,13 @@ namespace Claroline\CoreBundle\Tests\Integration\Context;
 
 use Behat\Behat\Context\Step;
 use Behat\Behat\Exception\PendingException;
+use Behat\Gherkin\Node\TableNode;
+use Behat\Mink\Exception\ElementNotFoundException;
+use Behat\Mink\Exception\ExpectationException;
 use Behat\Symfony2Extension\Context\KernelDictionary;
 use Behat\MinkExtension\Context\MinkContext;
 use Claroline\CoreBundle\Library\Installation\Settings\SettingChecker;
+use org\bovigo\vfs\example\ExampleTestCaseOldWay;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 
 /**
@@ -218,12 +222,52 @@ class FeatureContext extends MinkContext
      */
     public function iMConnectedWithLoginAndPassword($login, $password)
     {
+        $login    = $this->fixStepArgument($login);
+        $password = $this->fixStepArgument($password);
         return array(
             new Step\When('I am on "/login"'),
             new Step\When('I fill in "Nom d\'utilisateur ou email" with "'. $login . '"'),
             new Step\When('I fill in "Mot de passe (Mot de passe oublié ?)" with "'. $password . '"'),
             new Step\When('I press "Connexion"')
         );
+    }
+
+    /**
+     * Clicks element with specified css.
+     *
+     * @When /^(?:|I )click on "(?P<element>(?:[^"]|\\")*)"$/
+     */
+    public function iClickOn($locator)
+    {
+        $locator = $this->fixStepArgument($locator);
+        $element = $this->getSession()->getPage()->find('css', $locator);
+
+        if (null === $element) {
+            throw new ElementNotFoundException($this->getSession(), 'element', 'id|title|alt|text', $locator);
+        }
+
+        $element->click();
+    }
+
+    /**
+     * Fills in tinymce field with specified id
+     *
+     * @Given /^I fill in tinymce "([^"]*)" with "([^"]*)"$/
+     */
+    public function iFillInTinymceWith($locator, $value)
+    {
+        $locator = $this->fixStepArgument($locator) . '_ifr';
+        $value   = $this->fixStepArgument($value);
+
+        // Just checking if the iframe exists
+        $this->getSession()->switchToIFrame($locator);
+        $this->getSession()->switchToIFrame(null);
+
+        $script = <<<EOL
+var iframe = document.getElementById('$locator');
+iframe.contentWindow.document.body.innerHTML = "$value";
+EOL;
+        $this->getSession()->executeScript($script);
     }
 
     /**************/
