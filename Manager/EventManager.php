@@ -72,6 +72,8 @@ class EventManager
      *
      * @param string|null $restriction
      *
+     * @param string      $resourceClass
+     *
      * @return array
      */
     public function getEventsForBundle($restriction = null, $resourceClass)
@@ -223,6 +225,8 @@ class EventManager
                         'log'
                     );
 
+                $genericEvent = ('all' == $genericEvent) ? 'resource' : $genericEvent;
+
                 if ($sortedKey !== 'all') {
                     $sortedEvents[$resourceTrans][$keyTrans]['[[' . $sortedKey . ']]' . $genericEvent] = $logTrans;
                 } else {
@@ -243,6 +247,8 @@ class EventManager
 
     /**
      * @param string|null $restriction
+     *
+     * @param string|null $resourceClass
      *
      * @return array
      */
