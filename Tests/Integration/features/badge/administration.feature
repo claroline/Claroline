@@ -26,6 +26,7 @@ Feature:
         And I should see 1 "#badges .badge" elements
         Then I click on "#badges .badge .badge_menu_link"
         And I follow "Supprimer"
+        And I wait "1" seconds
         And I should see "Suppression d'un badge"
         And I should see "Etes-vous sûr de vouloir supprimer le badge Badge de test ?"
         Then I press "Supprimer"
@@ -66,6 +67,7 @@ Feature:
         And I should see 1 "#badges .badge" elements
         Then I click on "#badges .badge .badge_menu_link"
         And I follow "Supprimer"
+        And I wait "1" seconds
         And I should see "Suppression d'un badge"
         And I should see "Etes-vous sûr de vouloir supprimer le badge Badge de test ?"
         Then I press "Supprimer"
@@ -94,6 +96,7 @@ Feature:
         And I should see 1 "#badges .badge" elements
         Then I click on "#badges .badge .badge_menu_link"
         And I follow "Supprimer"
+        And I wait "1" seconds
         And I should see "Suppression d'un badge"
         And I should see "Etes-vous sûr de vouloir supprimer le badge Badge de test ?"
         Then I press "Supprimer"
