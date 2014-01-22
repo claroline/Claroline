@@ -403,7 +403,7 @@ class ParametersController extends Controller
      */
     public function submitTermsOfServiceAction()
     {
-        if ($this->request->get('isActive')) {
+        if ($this->request->get('terms_of_service_form_active')) {
             $this->configHandler->setParameter('terms_of_service', true);
         } else {
             $this->configHandler->setParameter('terms_of_service', false);

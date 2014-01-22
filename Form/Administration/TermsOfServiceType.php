@@ -33,6 +33,7 @@ class TermsOfServiceType extends AbstractType
             'termsOfService',
             'content',
             array(
+                'required' => false,
                 'data' => $builder->getData(),
                 'theme_options' => array('contentTitle' => false),
                 'label' => 'Terms of service'
@@ -42,6 +43,7 @@ class TermsOfServiceType extends AbstractType
             'active',
             'checkbox',
             array(
+                'required' => false,
                 'mapped' => false,
                 'data' => $this->active,
                 'label' => 'Activate the terms of service in the platform'
