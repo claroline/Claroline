@@ -27,6 +27,7 @@ class LocaleManager
     private $finder;
     private $locales;
     private $userManager;
+    private static $locale;
 
     /**
      * @InjectParams({
@@ -114,5 +115,16 @@ class LocaleManager
         $request->getSession()->set('_locale', $locale);
 
         return $locale;
+    }
+
+
+    public static function setCurrentLocale($locale)
+    {
+        self::$locale = $locale;
+    }
+
+    public static function getCurrentLocale()
+    {
+        return self::$locale;
     }
 }
