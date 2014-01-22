@@ -94,3 +94,15 @@
 
     {{ self.breadcrumbs(finalElements) }}
 {% endmacro %}
+
+{% macro displayUser(user) %}
+    {% if user.isEnabled %}
+        <a href="{{path('claro_profile_view', {'userId':user.getId()})}}">
+            {{ user.getFirstName() }} {{ user.getLastName() }}
+        </a>
+    {% else %}
+        <div>
+            {{ 'user_removed'|trans({}, 'platform') }}
+        </div>
+    {% endif %}
+{% endmacro %}

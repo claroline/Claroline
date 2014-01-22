@@ -569,6 +569,7 @@ user_form_plainPassword_first: Password
 user_form_plainPassword_second: Verification
 user_form_username: Username
 user_parameters: 'User parameters'
+user_removed: 'User removed'
 username: Username
 username_found_at: 'The username %username% was found at lines: %lines%'
 username_or_email: 'Username or email'

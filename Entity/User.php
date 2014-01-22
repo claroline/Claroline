@@ -277,12 +277,6 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
      */
     public function getFirstName()
     {
-        if (!$this->isEnabled) {
-            $locale = LocaleManager::getCurrentLocale();
-
-            return $this->getRemovedTranslation($locale);
-        }
-
         return $this->firstName;
     }
 
@@ -291,12 +285,6 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
      */
     public function getLastName()
     {
-        if (!$this->isEnabled) {
-            $locale = LocaleManager::getCurrentLocale();
-
-            return $this->getRemovedTranslation($locale);
-        }
-
         return $this->lastName;
     }
 
@@ -305,12 +293,6 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
      */
     public function getUsername()
     {
-        if (!$this->isEnabled) {
-            $locale = LocaleManager::getCurrentLocale();
-
-            return $this->getRemovedTranslation($locale);
-        }
-
         return $this->username;
     }
 
@@ -838,15 +820,5 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
     public function setIsEnabled($isEnabled)
     {
         $this->isEnabled = $isEnabled;
-    }
-
-    public function getRemovedTranslation($locale)
-    {
-        $translations = array(
-            'en' => 'User removed',
-            'fr' => 'Utilisateur supprimé'
-        );
-
-        return $translations[$locale];
     }
 }

@@ -49,6 +49,5 @@ class LocaleSetter
         $request = $event->getRequest();
         $locale = $this->localeManager->getUserLocale($request);
         $request->setLocale($locale);
-        LocaleManager::setCurrentLocale($locale);
     }
 }
