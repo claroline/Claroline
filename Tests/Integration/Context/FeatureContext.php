@@ -15,11 +15,9 @@ use Behat\Behat\Context\Step;
 use Behat\Behat\Exception\PendingException;
 use Behat\Gherkin\Node\TableNode;
 use Behat\Mink\Exception\ElementNotFoundException;
-use Behat\Mink\Exception\ExpectationException;
 use Behat\Symfony2Extension\Context\KernelDictionary;
 use Behat\MinkExtension\Context\MinkContext;
 use Claroline\CoreBundle\Library\Installation\Settings\SettingChecker;
-use org\bovigo\vfs\example\ExampleTestCaseOldWay;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 
 /**
