@@ -120,6 +120,16 @@ class MailManager
         return $this->send($subject, $body, array($user));
     }
 
+    public function getInscriptionMail()
+    {
+        return $this->contentManager->getContent(array('type' => 'claro_mail_registration'));
+    }
+
+    public function getLayoutMail()
+    {
+        return $this->contentManager->getContent(array('type' => 'claro_mail_layout'));
+    }
+
     /**
      * @param string $subject
      * @param string $body

@@ -671,3 +671,27 @@ yes: yes
 yesterday_activity: 'Yesterday''s activity'
 your_username: 'Your username is '
 404: 'Page Not found'
+layout_mail_requirements: >
+  <p>
+  You can redefine the layout used when a mail is sent.
+  </p>
+  <p>
+  2 placeholders exists for this form:</br>
+  %content% : This placeholder is required and will be replaced by the actual mail content</br>
+  %platform_name% : This placeholder is optional and will be replaced by your platform name
+  </p>
+
+  <p>
+  You can use the full version of the text editor to include html.
+  </p>
+registration_mail_requirements: >
+  <p>You can redefine the content of the registration mail here. </p>
+  <p>
+  The first entry contains the mail subject. You can use the %platform_name% placeholder
+  wich will be replaced by your platform name.
+  </p>
+  <p>
+  The second entry is the mail content. You must use 2 placeholders here: </br>
+  %username% : will display the username </br>
+  %password% : will display the password
+  </p>

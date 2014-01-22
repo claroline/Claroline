@@ -76,7 +76,7 @@
             </ul>
         </div>
         {% for lang in langs %}
-            <div data-lang="{{ lang | upper }}"{% if lang == app.request.locale %} class="hide"{% endif %}>
+            <div data-lang="{{ lang | upper }}"{% if lang != app.request.locale %} class="hide"{% endif %}>
                 {% if contentTitle %}
                     {{
                         form_widget(form['title_' ~ lang], {

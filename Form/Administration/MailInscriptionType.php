@@ -18,20 +18,16 @@ use Claroline\CoreBundle\Validator\Constraints\InscriptionMail;
 
 class MailInscriptionType extends AbstractType
 {
-    public function __construct (array $langs)
-    {
-        if (!empty($langs)) {
-            $this->langs = $langs;
-        } else {
-            $this->langs = array('en' => 'en', 'fr' => 'fr');
-        }
-    }
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder
-            ->add('title', 'text')
-            ->add('content', 'tinymce', array('constraints' => array(new InscriptionMail())))
-            ->add('locale', 'choice', array('choices' => $this->langs, 'required' => false, 'label' => 'Language'));
+        $builder->add(
+            'content',
+            'content',
+            array(
+                'data' => $builder->getData(),
+                'constraints' => array(new InscriptionMail()),
+            )
+        );
 
     }
 
@@ -39,6 +35,7 @@ class MailInscriptionType extends AbstractType
     {
         return 'platform_parameters_form';
     }
+    
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(array('translation_domain' => 'platform'));

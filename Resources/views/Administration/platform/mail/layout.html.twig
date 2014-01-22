@@ -20,7 +20,7 @@
     }
     ,
     {
-    'name': 'registration'|trans({}, 'platform'),
+    'name': 'layout'|trans({}, 'platform'),
     'href': ''
     }
     ])
@@ -32,10 +32,10 @@
         <h3 class="panel-title">{{ 'platform_parameters'|trans({}, 'platform') }}</h3>
     </div>
     <div class="panel-body alert-warning">
-        {{ 'registration_mail_requirements'|trans({}, 'platform')|raw }}
+        {{ 'layout_mail_requirements'|trans({}, 'platform')|raw }}
     </div>
     {% form_theme form 'ClarolineCoreBundle::form_theme_no_label.html.twig' %}
-    <form class="form-horizontal" action="{{ path('claro_admin_edit_mail_registration') }}" method="post" {{ form_enctype(form) }} id="form_settings" enctype='multipart/form-data'>
+    <form class="form-horizontal" action="{{ path('claro_admin_edit_mail_layout') }}" method="post" {{ form_enctype(form) }} id="form_settings" enctype='multipart/form-data'>
         <div class="panel-body">
             {{ form_widget(form) }}
         </div>

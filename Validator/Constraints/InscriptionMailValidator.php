@@ -23,6 +23,7 @@ class InscriptionMailValidator extends ConstraintValidator
 {
     public function validate($value, Constraint $constraint)
     {
+        print_r($value);
         //must contain %username% and %password%
     }
 }

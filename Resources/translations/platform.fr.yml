@@ -670,3 +670,28 @@ yes: oui
 yesterday_activity: 'Activité de la veille'
 your_username: 'Votre nom d''utilisateur est '
 404: 'La page que vous cherchez n''existe pas.'
+layout_mail_requirements: >
+  <p>
+  C'est ici qui vous pouvez redéfinir le layout des emails envoyés par la plateforme.
+  </p>
+  <p>
+  2 placeholders existent pour ce formulaire:</br>
+  %content% : Ce placeholder est requis et sera replacé par le contenu du mail</br>
+  %platform_name% : Ce placeholder est optionnel et sera remplacé par le nom de la plateforme
+  </p>
+
+  <p>
+  Vous pouvez utiliser la version avancée de l'éditeur afin d'y inclure du html.
+  </p>
+registration_mail_requirements: >
+  <p>C'est ici qui vous pouvez redéfinir le contenu du mail d'inscription. </p>
+  <p>
+  La première entrée est le sujet du mail. Vous pouvez y utiliser le placeholder %platform_name% qui
+  sera remplacé par le nom de votre plateforme.
+  </p>
+  <p>
+  La seconde entrée est le contenu du mail. Vous devez y utiliser 2 placeholders: </br>
+  %username% : qui affichera le nom de l'utilisateur </br>
+  %password% : qui affichera le mot de passe de l'utilisateur
+  </p>
+mail_layout: Mise en page des emails.

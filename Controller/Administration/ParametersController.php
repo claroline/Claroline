@@ -349,8 +349,8 @@ class ParametersController extends Controller
 
     /**
      * @Route(
-     *     "/mail/inscription",
-     *     name="claro_admin_mail_inscription"
+     *     "/mail/registration",
+     *     name="claro_admin_mail_registration"
      * )
      *
      * @Template("ClarolineCoreBundle:Administration\platform\mail:registration.html.twig")
@@ -359,18 +359,18 @@ class ParametersController extends Controller
      */
     public function inscriptionMailFormAction()
     {
-        $locales = $this->localeManager->getAvailableLocales();
-        $form = $this->formFactory->create(FormFactory::TYPE_PLATFORM_MAIL_INSCRIPTION, array($locales));
-
-        return array(
-            'form' => $form->createView()
+        $form = $this->formFactory->create(
+            new AdminForm\MailInscriptionType(),
+            $this->mailManager->getInscriptionMail()
         );
+
+        return array('form' => $form->createView());
     }
 
     /**
      * @Route(
-     *     "/mail/submit/inscription",
-     *     name="claro_admin_edit_mail_inscription"
+     *     "/mail/submit/registration",
+     *     name="claro_admin_edit_mail_registration"
      * )
      *
      * @Template("ClarolineCoreBundle:Administration\platform\mail:registration.html.twig")
@@ -379,22 +379,22 @@ class ParametersController extends Controller
      */
     public function submitInscriptionMailAction()
     {
-        $locales = $this->localeManager->getAvailableLocales();
-        $form = $this->formFactory->create(FormFactory::TYPE_PLATFORM_MAIL_INSCRIPTION, array($locales));
+        $form = $this->formFactory->create(
+            new AdminForm\MailInscriptionType(),
+            $this->mailManager->getInscriptionMail()
+        );
 
         $form->handleRequest($this->request);
         //form sumbission
 
         if ($form->isValid()) {
             $content = $form->get('content')->getData();
-            $locale = $form->get('locale')->getData();
-            $title = $form->get('title')->getData();
-            $this->mailManager->setDefaultInscriptionMail($title, $content, $locale);
+
+            throw new \Exception('No implementation yet.');
         }
 
-        return array(
-            'form' => $form->createView()
-        );
+        throw new \Exception('Validation failed.');
+
     }
 
     /**
@@ -409,7 +409,12 @@ class ParametersController extends Controller
      */
     public function mailLayoutFormAction()
     {
+        $form = $this->formFactory->create(
+            new AdminForm\MailLayoutType(),
+            $this->mailManager->getLayoutMail()
+        );
 
+        return array('form' => $form->createView());
     }
 
     /**
