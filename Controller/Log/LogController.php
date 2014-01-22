@@ -14,7 +14,7 @@ namespace Claroline\CoreBundle\Controller\Log;
 use Claroline\CoreBundle\Event\Log\LogCreateDelegateViewEvent;
 use Claroline\CoreBundle\Entity\Widget\WidgetInstance;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\EventDispatcher\EventDispatcher;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 use Symfony\Component\Translation\Translator;
@@ -53,7 +53,7 @@ class LogController extends Controller
     public function __construct(
         ToolManager $toolManager,
         WorkspaceManager $workspaceManager,
-        EventDispatcher $eventDispatcher,
+        EventDispatcherInterface $eventDispatcher,
         SecurityContextInterface $security,
         FormFactory $formFactory,
         Translator $translator

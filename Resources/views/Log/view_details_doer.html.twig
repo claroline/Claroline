@@ -9,7 +9,7 @@
                 <dt>{{ ('first_name')|trans({}, 'platform') }}</dt>
                     <dd>{{ log.getDetails().doer.lastName }}</dd>
 
-                {% if is_granted('ROLE_ADMIN') and log.getDetails().doer.sessionId %}
+                {% if is_granted('ROLE_ADMIN') and log.getDetails().doer.sessionId is defined %}
                     <dt>{{ ('session_id')|trans({}, 'platform') }}</dt>
                     <dd>{{ log.doerSessionId }}</dd>
                 {% endif %}

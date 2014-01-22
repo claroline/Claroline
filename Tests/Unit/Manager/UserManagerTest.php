@@ -83,8 +83,17 @@ class UserManagerTest extends MockeryTestCase
     public function testDeleteUser()
     {
         $user = $this->mock('Claroline\CoreBundle\Entity\User');
-        $this->om->shouldReceive('remove')->with($user)->once();
-        $this->om->shouldReceive('flush')->once();
+        $user->shouldReceive('setMail')->once();
+        $user->shouldReceive('setFirstName')->once();
+        $user->shouldReceive('setLastName')->once();
+        $user->shouldReceive('setPlainPassword')->once();
+        $user->shouldReceive('setUsername')->once();
+        $user->shouldReceive('setIsEnabled')->once()->with(false);
+        $user->shouldReceive('getId')->andReturn('1');
+        $this->strictDispatcher->shouldReceive('dispatch')->with('delete_user', 'DeleteUser', array($user))->once();
+        $this->om->shouldReceive('persist')->once()->with($user);
+        $this->om->shouldReceive('flush');
+
         $this->getManager()->deleteUser($user);
     }
 
