@@ -83,7 +83,7 @@
                                     {% endif %}
                                 </a>
                             </td>
-                            <td>{{ userMessage.getMessage().getSenderUsername() }}</td>
+                            <td>{{ macros.displayUser(userMessage.getMessage().getSender()) }}</td>
                             <td>{{ userMessage.getMessage().getDate()|intl_date_format }}</td>
                             <td>
                                 {% if userMessage.isRead() %}

@@ -587,6 +587,8 @@ upload_fail: 'Echec du téléchargement'
 url_invalid: 'Le code n''est pas correct, n''essayez pas de changer l''adresse'
 user: Utilisateur
 user_accounts: 'Comptes utilisateur'
+user_removed: 'Utilisateur supprimé'
+user_accounts: Comptes utilisateur
 user_creation: 'Création d''un utilisateur'
 user_form_administrativeCode: 'Code administratif'
 user_form_firstName: Nom

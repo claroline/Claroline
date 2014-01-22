@@ -25,7 +25,7 @@ class PlatformConfigurationHandlerTest extends \PHPUnit_Framework_TestCase
     {
         vfsStream::setup('configDir', null, array('platform_options.yml' => ''));
         $this->configFile = vfsStream::url('configDir/platform_options.yml');
-        $this->handler = new PlatformConfigurationHandler(array('prod' => $this->configFile));
+        $this->handler = new PlatformConfigurationHandler($this->configFile);
     }
 
     /**

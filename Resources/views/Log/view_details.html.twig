@@ -14,6 +14,7 @@
         <div class="panel-body">
             <p>
                 {% block logDetailsSubtitle %}
+                    {% set isDesktop = isDesktop is defined and isDesktop == true %}
                     {% include 'ClarolineCoreBundle:Log:view_list_item.html.twig' with {'isDesktop': isDesktop} %}
                 {% endblock %}
             </p>
