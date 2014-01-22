@@ -50,7 +50,7 @@ class ParametersController extends Controller
      * @DI\InjectParams({
      *     "configHandler"  = @DI\Inject("claroline.config.platform_config_handler"),
      *     "roleManager"    = @DI\Inject("claroline.manager.role_manager"),
-     *     "formFactory"    = @DI\Inject("claroline.form.factory"),
+     *     "formFactory"    = @DI\Inject("form.factory"),
      *     "localeManager"  = @DI\Inject("claroline.common.locale_manager"),
      *     "request"        = @DI\Inject("request"),
      *     "translator"     = @DI\Inject("translator"),
@@ -269,7 +269,7 @@ class ParametersController extends Controller
     {
         $platformConfig = $this->configHandler->getPlatformConfig();
         $form = $this->formFactory->create(
-            new AdminForm\MailType($platformConfig->getMailerTransport()),
+            new AdminForm\MailServerType($platformConfig->getMailerTransport()),
             $platformConfig
         );
 
@@ -293,7 +293,7 @@ class ParametersController extends Controller
     {
         $platformConfig = $this->configHandler->getPlatformConfig();
         $form = $this->formFactory->create(
-            new AdminForm\MailType($platformConfig->getMailerTransport()),
+            new AdminForm\MailServerType($platformConfig->getMailerTransport()),
             $platformConfig
         );
         $form->handleRequest($this->request);
