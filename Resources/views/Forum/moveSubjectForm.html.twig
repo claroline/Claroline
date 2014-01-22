@@ -16,7 +16,7 @@
 
 {% block section_content %}
     <div class="panel-heading">
-        <h3 class="panel-title">{{ subject.getTitle() }} ({{ 'move_subject'|trans({}, 'forum') }})</h3>
+        <h3 class="panel-title">{{ 'move_subject'|trans({}, 'forum') }}</h3>
     </div>
     <div class="panel-body">
         <table class="table table-striped table-bordered table-condensed">
@@ -29,8 +29,12 @@
             <tbody>
                 {% for category in categories %}
                     <tr>
-                        <td> {{ category.getName() }} </td>
-                        <td> <a href="{{ path('claro_subject_move', {'subject': subject.getId(), 'newCategory': category.getId()}) }}"> {{ 'move'|trans({}, 'platform') }} </a></td>
+                        <td>{{ category.getName() }}</td>
+                        <td>
+                            <a href="{{ path('claro_subject_move', {'subject': subject.getId(), 'newCategory': category.getId()}) }}">
+                                <i class="icon-arrow-right"></i> {{ 'move'|trans({}, 'platform') }}
+                            </a>
+                        </td>
                     <tr>
                 {% endfor %}
             </tbody>

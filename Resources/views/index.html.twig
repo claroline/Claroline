@@ -16,7 +16,7 @@
     </div>
     <div class="panel-body">
         <div class="navbar row">
-            <div class="col-md-6">
+            <div class="col-md-8">
                 {% if isModerator %}
                 <a class="btn btn-primary" href="{{ _path('claro_forum_form_category_creation', {'forum': _resource.getId()}) }}">
                     <i class="icon-plus"></i> {{ 'new_category'|trans({}, 'forum') }}
@@ -34,7 +34,7 @@
                     {% endif %}
                 {% endif %}
             </div>
-            <div class="col-md-6">
+            <div class="col-md-4">
                  <div class="input-group">
                    <input class="form-control" type="text" id="search-items-txt" placeholder="{{ 'search'|trans({}, 'platform') }}" value="{{ search }}">
                     <span class="input-group-btn">
