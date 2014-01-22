@@ -11,7 +11,7 @@
 
 namespace Claroline\CoreBundle\Library\Installation\Updater;
 
-class Updater021000
+class Updater020900
 {
     private $container;
     private $logger;
