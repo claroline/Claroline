@@ -1,10 +1,8 @@
 services:
   innova.listener.path_tool:
     class: Innova\PathBundle\Listener\ToolListener
-    arguments:
-        templating:  @templating
-        pathManager: @innova_path.manager.path
-    scope: request
+    calls:
+      - [setContainer, ["@service_container"]]
     tags:
       - { name: kernel.event_listener, event: open_tool_workspace_innova_path, method: onWorkspaceOpen }
 
