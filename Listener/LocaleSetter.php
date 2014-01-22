@@ -47,6 +47,7 @@ class LocaleSetter
     public function onKernelRequest(GetResponseEvent $event)
     {
         $request = $event->getRequest();
-        $request->setLocale($this->localeManager->getUserLocale($request));
+        $locale = $this->localeManager->getUserLocale($request);
+        $request->setLocale($locale);
     }
 }

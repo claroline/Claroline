@@ -417,7 +417,6 @@ class ResourceController
      * is returned.
      *
      * @param ResourceNode $node the directory node
-     * @param User         $user the user
      *
      * @return \Symfony\Component\HttpFoundation\Response
      *

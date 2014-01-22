@@ -204,6 +204,8 @@ class AdministrationController extends Controller
      *
      * Removes many users from the platform.
      *
+     * @param User[] $users
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function deleteUsersAction(array $users)
