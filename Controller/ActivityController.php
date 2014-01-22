@@ -145,7 +145,7 @@ class ActivityController extends Controller
      * Sets the order of the resource in an activity.
      * It takes an array of resourceIds as parameter (querystring: ids[]=1&ids[]=2 ...)
      *
-     * @param type $activityId the activity id
+     * @param Activity $activity the activity
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -250,7 +250,7 @@ class ActivityController extends Controller
      * Each step is a resource.
      *
      * @param Activity $activity
-     * @param integer  $countItems
+     * @param integer  $countSteps
      *
      * @return integer
      */
@@ -300,10 +300,9 @@ class ActivityController extends Controller
      * This will be used to create the left menus href where each activity in an activity can
      * be considered as a chapter.
      *
-     * /!\ pointer usage
-     * @param Activity activity
-     * @param $step    the current step (recursive function)
-     * @param $items   the current items (recursive function)
+     * @param Activity $activity
+     * @param integer $step
+     * @param array $items the current items (recursive function)
      *
      * @return array
      */

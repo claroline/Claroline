@@ -27,6 +27,7 @@ use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormFactory;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Translation\Translator;
+use Claroline\CoreBundle\Manager\MailManager;
 use Claroline\CoreBundle\Form\Administration as AdminForm;
 
 /**
@@ -43,6 +44,7 @@ class ParametersController extends Controller
     private $request;
     private $localeManager;
     private $translator;
+    private $mailManager;
 
     /**
      * @DI\InjectParams({
@@ -52,7 +54,8 @@ class ParametersController extends Controller
      *     "localeManager"  = @DI\Inject("claroline.common.locale_manager"),
      *     "request"        = @DI\Inject("request"),
      *     "translator"     = @DI\Inject("translator"),
-     *     "termsOfService" = @DI\Inject("claroline.common.terms_of_service_manager")
+     *     "termsOfService" = @DI\Inject("claroline.common.terms_of_service_manager"),
+     *     "mailManager"    = @DI\Inject("claroline.manager.mail_manager")
      * })
      */
     public function __construct(
@@ -62,7 +65,8 @@ class ParametersController extends Controller
         LocaleManager $localeManager,
         Request $request,
         Translator $translator,
-        TermsOfServiceManager $termsOfService
+        TermsOfServiceManager $termsOfService,
+        MailManager $mailManager
     )
     {
         $this->configHandler = $configHandler;
@@ -72,6 +76,7 @@ class ParametersController extends Controller
         $this->termsOfService = $termsOfService;
         $this->localeManager = $localeManager;
         $this->translator = $translator;
+        $this->mailManager = $mailManager;
     }
 
     /**
@@ -264,7 +269,7 @@ class ParametersController extends Controller
     {
         $platformConfig = $this->configHandler->getPlatformConfig();
         $form = $this->formFactory->create(
-            new AdminForm\MailType($platformConfig->getMailerTransport()),
+            new AdminForm\MailServerType($platformConfig->getMailerTransport()),
             $platformConfig
         );
 
@@ -288,7 +293,7 @@ class ParametersController extends Controller
     {
         $platformConfig = $this->configHandler->getPlatformConfig();
         $form = $this->formFactory->create(
-            new AdminForm\MailType($platformConfig->getMailerTransport()),
+            new AdminForm\MailServerType($platformConfig->getMailerTransport()),
             $platformConfig
         );
         $form->handleRequest($this->request);
@@ -344,29 +349,84 @@ class ParametersController extends Controller
 
     /**
      * @Route(
-     *     "/mail/inscription",
-     *     name="claro_admin_parameters_mail_server"
+     *     "/mail/registration",
+     *     name="claro_admin_mail_registration"
      * )
      *
-     * @Template("ClarolineCoreBundle:Administration\platform\mail:inscription.html.twig")
+     * @Template("ClarolineCoreBundle:Administration\platform\mail:registration.html.twig")
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function inscriptionMailFormAction()
     {
+        $form = $this->formFactory->create(
+            new AdminForm\MailInscriptionType(),
+            $this->mailManager->getInscriptionMail()
+        );
 
+        return array('form' => $form->createView());
     }
 
+    /**
+     * @Route(
+     *     "/mail/submit/registration",
+     *     name="claro_admin_edit_mail_registration"
+     * )
+     *
+     * @Template("ClarolineCoreBundle:Administration\platform\mail:registration.html.twig")
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
     public function submitInscriptionMailAction()
     {
+        $form = $this->formFactory->create(
+            new AdminForm\MailInscriptionType(),
+            $this->mailManager->getInscriptionMail()
+        );
+
+        $form->handleRequest($this->request);
+        //form sumbission
+
+        if ($form->isValid()) {
+            $content = $form->get('content')->getData();
+
+            throw new \Exception('No implementation yet.');
+        }
+
+        throw new \Exception('Validation failed.');
 
     }
 
+    /**
+     * @Route(
+     *     "/mail/layout",
+     *     name="claro_admin_mail_layout"
+     * )
+     *
+     * @Template("ClarolineCoreBundle:Administration\platform\mail:layout.html.twig")
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
     public function mailLayoutFormAction()
     {
+        $form = $this->formFactory->create(
+            new AdminForm\MailLayoutType(),
+            $this->mailManager->getLayoutMail()
+        );
 
+        return array('form' => $form->createView());
     }
 
+    /**
+     * @Route(
+     *     "/mail/layout/submit",
+     *     name="claro_admin_edit_mail_layout"
+     * )
+     *
+     * @Template("ClarolineCoreBundle:Administration\platform\mail:layout.html.twig")
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
     public function submitMailLayoutAction()
     {
 

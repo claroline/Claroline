@@ -34,8 +34,8 @@ class TranslationCheckerCommand extends ContainerAwareCommand
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $ds = DIRECTORY_SEPARATOR;
-        $projectDir = $this->getContainer()->getParameter('kernel.root_dir')."{$ds}..{$ds}src";
-        $routingFolder = "{$projectDir}{$ds}core/Claroline/CoreBundle/Resources/translations";
+        $projectDir = $this->getContainer()->getParameter('kernel.root_dir')."{$ds}..{$ds}vendor{$ds}claroline{$ds}core-bundle";
+        $routingFolder = "{$projectDir}{$ds}Claroline/CoreBundle/Resources/translations";
         $fileName = $input->getOption('file');
 
         if ($fileName == null) {

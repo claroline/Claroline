@@ -1,78 +1,76 @@
-add_event : "Ajouter un évènement"
-all day: "Toute la journée"
-end : "Fin"
-error: "Une erreure s'est produite, veuillez réessayer"
-agenda_form_title : Titre
-agenda_form_end : "Date de fin"
-agenda_form_start : "Date de début"
-agenda_form_startHours : "Heure de début"
-agenda_form_endHours : "Heure de fin"
-agenda_form_description : "Description"
-agenda_form_allDay : "Tâche"
-agenda_form_priority_High : "Haute"
-agenda_form_priority : "Priorité"
-agenda_form_recurring: "Récurrence"
-close : Fermer
-confirm : "Êtes-vous sûr"
-date_invalid : "Une erreur s'est produite, verifiez que la date début soit plus petit que la date de fin"
-event_update : "Mise à jour reussie"
-high : "Haute"
-low : "Basse"
-medium : "Normale"
-modify : "Modifier une entrée"
-new entry: "Nouvelle entrée"
-start_date : "Date de début"
-end_date : "Date de fin"
-tasks : 'Tâches'
-no event found : "Pas d'évènements"
-start date : "Date début"
-title : "Titre de l'évènement ne peut pas être vide"
-update : "mettre à jour"
-prev : '<'
-next : '>'
-prevYear : '<<'
-nextYear : '>>'
-today : 'auj'
-month : 'mois'
-week : 'semaine'
-day: 'jour'
-january: 'Janvier'
-february: 'Février'
-mars: 'Mars'
-april: 'Avril'
-may: 'Mai'
-june: 'Juin'
-july: 'Juillet'
-august: 'Août'
-september: 'Septembre'
-october: 'Octobre'
-november: 'Novembre'
-december: 'Décembre'
-jan: 'Janv'
-feb: 'Févr'
-mars: 'Mars'
-apr: 'Avr'
-may: 'Mai'
-jun: 'Juin'
-jul: 'Juil'
-aug: 'Août'
-sep: 'Sept'
-oct: 'Oct'
-nov: 'Nov'
-dec: 'Déc'
-monday: 'Lundi'
-tuesday: 'Mardi'
-wednesday: 'Mercredi'
-thursday: 'Jeudi'
-friday: 'Vendredi'
-saturday: 'Samedi'
-sunday: 'Dimanche'
-mon: 'Lun'
-tue: 'Mar'
-wed: 'Mer'
-thu: 'Jeud'
-fri: 'Ven'
-sat: 'Sam'
-sun: 'Dim'
-length: 'Durée'
+add_event: 'Ajouter un évènement'
+agenda_form_allDay: Tâche
+agenda_form_description: Description
+agenda_form_end: 'Date de fin'
+agenda_form_endHours: 'Heure de fin'
+agenda_form_priority: Priorité
+agenda_form_priority_High: Haute
+agenda_form_recurring: Récurrence
+agenda_form_start: 'Date de début'
+agenda_form_startHours: 'Heure de début'
+agenda_form_title: Titre
+'all day': 'Toute la journée'
+apr: Avr
+april: Avril
+aug: Août
+august: Août
+close: Fermer
+confirm: 'Êtes-vous sûr'
+date_invalid: 'Une erreur s''est produite, verifiez que la date début soit plus petit que la date de fin'
+day: jour
+dec: Déc
+december: Décembre
+end: Fin
+end_date: 'Date de fin'
+error: 'Une erreure s''est produite, veuillez réessayer'
+event_update: 'Mise à jour reussie'
+feb: Févr
+february: Février
+fri: Ven
+friday: Vendredi
+high: Haute
+jan: Janv
+january: Janvier
+jul: Juil
+july: Juillet
+jun: Juin
+june: Juin
+length: Durée
+low: Basse
+mars: Mars
+may: Mai
+medium: Normale
+modify: 'Modifier une entrée'
+mon: Lun
+monday: Lundi
+month: mois
+'new entry': 'Nouvelle entrée'
+next: '>'
+nextYear: '>>'
+'no event found': 'Pas d''évènements'
+nov: Nov
+november: Novembre
+oct: Oct
+october: Octobre
+prev: '<'
+prevYear: '<<'
+sat: Sam
+saturday: Samedi
+sep: Sept
+september: Septembre
+'start date': 'Date début'
+start_date: 'Date de début'
+sun: Dim
+sunday: Dimanche
+tasks: Tâches
+thu: Jeud
+thursday: Jeudi
+title: 'Titre de l''évènement ne peut pas être vide'
+today: auj
+tue: Mar
+tuesday: Mardi
+update: 'mettre à jour'
+wed: Mer
+wednesday: Mercredi
+week: semaine
 workspace: 'Espace d''activités'
