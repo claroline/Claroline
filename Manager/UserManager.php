@@ -116,7 +116,7 @@ class UserManager
         $this->om->endFlushSuite();
 
         if ($this->mailManager->isMailerAvailable()) {
-            $this->mailManager->sendPlainPassword($user);
+            $this->mailManager->sendCreationMessage($user);
         }
 
         return $user;

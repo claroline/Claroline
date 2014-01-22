@@ -23,11 +23,8 @@ class Updater020800
 
     public function postUpdate()
     {
-        $this->log('Removing old claro_link table...');
-        $conn = $this->container->get('doctrine.dbal.default_connection');
-        $conn->exec('DROP TABLE claro_link');
-        $this->log('Removing old claro_resource_type_custom_action...');
-        $conn->exec('DROP TABLE claro_resource_type_custom_action');
+        $this->dropOldTables();
+        $this->copyMailerParameters();
     }
 
     public function setLogger($logger)
@@ -40,5 +37,30 @@ class Updater020800
         if ($log = $this->logger) {
             $log('    ' . $message);
         }
+    }
+
+    private function dropOldTables()
+    {
+        $this->log('Removing old claro_link table...');
+        $conn = $this->container->get('doctrine.dbal.default_connection');
+        $conn->exec('DROP TABLE claro_link');
+        $this->log('Removing old claro_resource_type_custom_action...');
+        $conn->exec('DROP TABLE claro_resource_type_custom_action');
+    }
+
+    private function copyMailerParameters()
+    {
+        $this->log('Copying mailer parameters...');
+        $configHandler = $this->container->get('claroline.config.platform_config_handler');
+        $copyParameter = function ($shortParameterName, $shortOptionName) use ($configHandler) {
+            $parameterValue = $this->container->getParameter("mailer_{$shortParameterName}");
+            $configHandler->setParameter("mailer_{$shortOptionName}", $parameterValue);
+        };
+        $copyParameter('transport', 'transport');
+        $copyParameter('encryption', 'encryption');
+        $copyParameter('host', 'host');
+        $copyParameter('user', 'username');
+        $copyParameter('password', 'password');
+        $copyParameter('auth_mode', 'auth_mode');
     }
 }

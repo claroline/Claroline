@@ -54,7 +54,8 @@ class FormFactory
     const TYPE_USER_FULL = 'user_full';
     const TYPE_USER_BASE_PROFILE = 'user_base_profile';
     const TYPE_PLATFORM_APPEARANCE = 'platform_appearance';
-    const TYPE_PLATFORM_MAIL_SETTINGS = 'platform_mail_settings';
+    const TYPE_PLATFORM_MAIL_SERVER = 'platform_mail_server';
+    const TYPE_PLATFORM_MAIL_INSCRIPTION = 'platform_mail_inscription';
 
     private static $types = array(
         self::TYPE_MESSAGE => array(
@@ -184,8 +185,11 @@ class FormFactory
         self:: TYPE_PLATFORM_APPEARANCE => array(
             'formType' => 'Claroline\CoreBundle\Form\Administration\AppearanceType'
         ),
-        self:: TYPE_PLATFORM_MAIL_SETTINGS => array(
-            'formType' => 'Claroline\CoreBundle\Form\Administration\MailType'
+        self:: TYPE_PLATFORM_MAIL_SERVER => array(
+            'formType' => 'Claroline\CoreBundle\Form\Administration\MailServerType'
+        ),
+        self:: TYPE_PLATFORM_MAIL_INSCRIPTION => array(
+            'formType' => 'Claroline\CoreBundle\Form\Administration\MailInscriptionType'
         )
     );
 

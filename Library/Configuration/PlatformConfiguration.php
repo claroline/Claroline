@@ -24,11 +24,11 @@ class PlatformConfiguration
     private $cookieLifetime;
     private $mailerTransport;
     private $mailerHost;
+    private $mailerPort;
+    private $mailerEncryption;
     private $mailerUsername;
     private $mailerPassword;
-    private $mailerAuthenticationMode;
-    private $mailerEncryption;
-    private $mailerPort;
+    private $mailerAuthMode;
 
     public function getSelfRegistration()
     {
@@ -120,49 +120,29 @@ class PlatformConfiguration
         return $this->cookieLifetime;
     }
 
-    public function setMailerTransport($transport)
-    {
-        $this->mailerTransport = $transport;
-    }
-
     public function getMailerTransport()
     {
         return $this->mailerTransport;
     }
 
-    public function setMailerHost($host)
+    public function setMailerTransport($mailerTransport)
     {
-        $this->mailerHost = $host;
+        $this->mailerTransport = $mailerTransport;
     }
 
-    public function getMailerHost()
+    public function setMailerAuthMode($mailerAuthMode)
     {
-        return $this->mailerHost;
+        $this->mailerAuthMode = $mailerAuthMode;
     }
 
-    public function setMailerUsername($username)
+    public function getMailerAuthMode()
     {
-        $this->mailerUsername = $username;
+        return $this->mailerAuthMode;
     }
 
-    public function getMailerUsername()
+    public function setMailerEncryption($mailerEncryption)
     {
-        return $this->mailerUsername;
-    }
-
-    public function setMailerPassword($password)
-    {
-        $this->mailerPassword = $password;
-    }
-
-    public function getMailerPassword()
-    {
-        return $this->mailerPassword;
-    }
-
-    public function setMailerEncryption($encryption)
-    {
-        $this->mailerEncryption = $encryption;
+        $this->mailerEncryption = $mailerEncryption;
     }
 
     public function getMailerEncryption()
@@ -170,9 +150,29 @@ class PlatformConfiguration
         return $this->mailerEncryption;
     }
 
-    public function setMailerPort($port)
+    public function setMailerHost($mailerHost)
     {
-        $this->mailerPort = $port;
+        $this->mailerHost = $mailerHost;
+    }
+
+    public function getMailerHost()
+    {
+        return $this->mailerHost;
+    }
+
+    public function setMailerPassword($mailerPassword)
+    {
+        $this->mailerPassword = $mailerPassword;
+    }
+
+    public function getMailerPassword()
+    {
+        return $this->mailerPassword;
+    }
+
+    public function setMailerPort($mailerPort)
+    {
+        $this->mailerPort = $mailerPort;
     }
 
     public function getMailerPort()
@@ -180,13 +180,13 @@ class PlatformConfiguration
         return $this->mailerPort;
     }
 
-    public function setMailerAuthMode($mode)
+    public function setMailerUsername($mailerUsername)
     {
-        $this->mailerAuthenticationMode = $mode;
+        $this->mailerUsername = $mailerUsername;
     }
 
-    public function getMailerAuthMode()
+    public function getMailerUsername()
     {
-        return $this->mailerAuthenticationMode;
+        return $this->mailerUsername;
     }
 }

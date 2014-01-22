@@ -62,7 +62,7 @@ class WidgetHomeTabConfig
     protected $workspace;
 
     /**
-     * @ORM\Column(name="widget_order")
+     * @ORM\Column(name="widget_order", type="integer")
      */
     protected $widgetOrder;
 
