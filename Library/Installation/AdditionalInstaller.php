@@ -100,9 +100,9 @@ class AdditionalInstaller extends BaseInstaller
         }
 
         if (version_compare($currentVersion, '2.9.0', '<')) {
-            $updater020800 = new Updater\Updater020900($this->container);
-            $updater020800->setLogger($this->logger);
-            $updater020800->postUpdate();
+            $updater020900 = new Updater\Updater020900($this->container);
+            $updater020900->setLogger($this->logger);
+            $updater020900->postUpdate();
         }
     }
 
