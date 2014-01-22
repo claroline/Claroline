@@ -133,14 +133,6 @@
 
 {% block javascripts %}
     {{ parent() }}
-  <!--  <script>
-        $('#max-select').val({{ max }});
-
-        $('#search-button').on('click', function (event) {
-            var route = Routing.generate('claro_forum_messages', {'subject': {{ subject.getId()}}, 'max': $('#max-select').val() });
-            window.location.href = route;
-        });
-    </script>-->
     {% if canAnswer %}
         <script>
             (function () {
