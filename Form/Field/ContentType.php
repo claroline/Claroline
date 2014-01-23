@@ -54,6 +54,8 @@ class ContentType extends AbstractType
             $translatedContent = $this->contentManager->getTranslatedContent(
                 array('id' => $builder->getData()->getId())
             );
+        } elseif (is_array($builder->getData())) {
+            $translatedContent = $builder->getData();
         }
 
         if (!empty($this->langs)) {

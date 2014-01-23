@@ -696,3 +696,4 @@ registration_mail_requirements: >
   %username% : will display the username </br>
   %password% : will display the password
   </p>
+get_mail_notifications: I want to be notified by email on %adress%.

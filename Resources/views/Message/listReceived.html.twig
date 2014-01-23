@@ -56,11 +56,13 @@
                 </span>
             </div>
             <div>
-                <input value="1" id="check-notifications" type="checkbox">
-                    {{ 'get_mail_notifications'|trans({}, 'platform') }}
+                <input id="check-notifications" type="checkbox"
+                   {%  if app.user.isMailNotified() %}
+                       checked
+                   {%  endif %}
+                >
+                    {{ 'get_mail_notifications'|trans({'%adress%': app.user.getMail() }, 'platform') }}
                 </input>
-                </br>
-                ({{ app.user.getMail() }})
             </div>
         </div>
     </div>
@@ -141,8 +143,15 @@
     <script>
         //notifications
         $('#check-notifications').on('change', function() {
-           alert('yolooooooooooooooooooooo');
-            akle
+            var val = ($('#check-notifications').attr('checked')) ? 1: 0;
+            $.ajax({
+                type: 'POST',
+                url: Routing.generate('claro_message_notification', {'isNotified': val}),
+                success: function() {
+                    //show me the modal
+                    alert('show flash message');
+                }
+            })
         });
     </script>
 {% endblock %}

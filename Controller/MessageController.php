@@ -458,7 +458,7 @@ class MessageController
      *     options={"expose"=true}
      * )
      *
-     * @EXT\Method("GET")
+     * @EXT\Method("POST")
      * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
      *
      * @param boolean $isNotified
@@ -468,7 +468,7 @@ class MessageController
      */
     public function setMailNotificationAction($isNotified, User $user)
     {
-        $this->userManager->setMailNotified($user, $isNotified);
+        $this->userManager->setIsMailNotified($user, $isNotified);
 
         return new JsonResponse(array('success' => 'success'));
     }
