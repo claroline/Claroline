@@ -156,7 +156,7 @@ Feature:
         And I should see 0 "#badges .badge" elements
         And I should see "Badge supprimé avec succès."
 
-    @javascript @current
+    @javascript
     Scenario: Creation of a badge awarding demand with validation of the awarding
         Given I'm connected with login "JohnDoe" and password "JohnDoe"
         And I go to "/admin/badges"
@@ -228,3 +228,61 @@ Feature:
         Then I should be on "/admin/badges"
         And I should see 0 "#badges .badge" elements
         And I should see "Badge supprimé avec succès."
+
+    @javascript
+    Scenario: Automatic badge awarding
+        Given I'm connected with login "JohnDoe" and password "JohnDoe"
+        And I go to "/admin/badges"
+        And I follow "Ajouter un badge"
+        And I click on "#add_rule"
+        Then I should see 1 "#ruleTabs li[id^=tabrule]" elements
+        And I should see "Règle 1"
+        And I should see "Détails de la règle"
+        And I select "Ressource" from "badge_form_rules_0_action_"
+        And I select "Blog" from "badge_form_rules_0_action__"
+        And I select "Création d'un article dans un blog" from "badge_form_rules_0_action___"
+        And I attach the file "vendor/claroline/core-bundle/Claroline/CoreBundle/Resources/public/images/test/html5_logo.png" to "badge_form_file"
+        And I fill in "badge_form_frTranslation_name" with "Badge de test"
+        And I fill in "badge_form_frTranslation_description" with "C'est un badge de test"
+        And I fill in tinymce "badge_form_frTranslation_criteria" with "Pour avoir ce badge de test il faut créer un article sur un blog."
+        And I check "badge_form_automatic_award"
+        And I press "Ajouter"
+        Then I should see "Badge ajouté avec succès."
+        And I go to "/workspaces/1/open/tool/resource_manager"
+        And I wait "1" seconds
+        Then I click on ".resource-manager li.dropdown a.dropdown-toggle"
+        And I click on "#icap_blog"
+        And I wait for the popup to appear
+        And I fill in "icap_blog_form_name" with "Blog de test"
+        And I press "Ok"
+        And I wait "2" seconds
+        And I click on ".node-element[data-type=icap_blog]"
+        Then I should see "Blog de test"
+        Then I should see "Aucun article."
+        And I follow "Nouvel article"
+        Then I should see "Ajout d'un article"
+        And I fill in "icap_blog_post_form_title" with "Article de test"
+        And I fill in tinymce "icap_blog_post_form_content" with "Cet article n'est qu'un simple test."
+        And I press "Ajouter"
+        Then I should see "Article ajouté avec succès"
+        And I should see "Article de test"
+        And I go to "/profile/badge"
+        Then I should see 1 ".badge_list li.node" elements
+        And I should see "Badge de test"
+        And I go to "/admin/badges"
+        Then I click on "#badges .badge .badge_menu_link"
+        And I follow "Supprimer"
+        And I wait for the popup to appear
+        And I should see "Suppression d'un badge"
+        And I should see "Etes-vous sûr de vouloir supprimer le badge Badge de test ?"
+        Then I press "Supprimer"
+        Then I should be on "/admin/badges"
+        And I should see 0 "#badges .badge" elements
+        And I should see "Badge supprimé avec succès."
+        And I go to "/workspaces/1/open/tool/resource_manager"
+        And I wait "1" seconds
+        And I click on ".nodes .dropdown[title='Blog de test'] a"
+        And I wait "1" seconds
+        Then I click on ".nodes .dropdown[title='Blog de test'] .node-menu-action[data-action=delete]"
+        And I wait for the popup to appear
+        Then I click on "#confirm-ok"
