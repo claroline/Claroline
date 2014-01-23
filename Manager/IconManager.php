@@ -91,7 +91,6 @@ class IconManager
                 $relativeUrl = "thumbnails/{$thumbnailName}";
                 $icon = $this->om->factory('Claroline\CoreBundle\Entity\Resource\ResourceIcon');
                 $icon->setMimeType('custom');
-                $icon->setIconLocation($thumbnailPath);
                 $icon->setRelativeUrl($relativeUrl);
                 $icon->setShortcut(false);
                 $this->om->persist($icon);
@@ -146,15 +145,16 @@ class IconManager
         $this->om->startFlushSuite();
 
         $ds = DIRECTORY_SEPARATOR;
+
         try {
-            $shortcutLocation = $this->creator->shortcutThumbnail($icon->getIconLocation());
+            $originalIconLocation = "{$this->rootDir}{$ds}..{$ds}web{$ds}{$icon->getRelativeUrl()}";
+            $shortcutLocation = $this->creator->shortcutThumbnail($originalIconLocation);
         } catch (\Exception $e) {
             $shortcutLocation = "{$this->rootDir}{$ds}.."
             . "{$ds}web{$ds}bundles{$ds}clarolinecore{$ds}images{$ds}resources{$ds}icons{$ds}shortcut-default.png";
         }
 
         $shortcutIcon = $this->om->factory('Claroline\CoreBundle\Entity\Resource\ResourceIcon');
-        $shortcutIcon->setIconLocation($shortcutLocation);
 
         if (strstr($shortcutLocation, "bundles")) {
             $tmpRelativeUrl = strstr($shortcutLocation, "bundles");
@@ -188,14 +188,12 @@ class IconManager
     public function createCustomIcon(UploadedFile $file)
     {
         $this->om->startFlushSuite();
-        $ds = DIRECTORY_SEPARATOR;
         $iconName = $file->getClientOriginalName();
         $extension = pathinfo($iconName, PATHINFO_EXTENSION);
         $hashName = $this->ut->generateGuid() . "." . $extension;
         $file->move($this->thumbDir, $hashName);
         //entity creation
         $icon = $this->om->factory('Claroline\CoreBundle\Entity\Resource\ResourceIcon');
-        $icon->setIconLocation("{$this->thumbDir}{$ds}{$hashName}");
         $icon->setRelativeUrl("thumbnails/{$hashName}");
         $icon->setMimeType('custom');
         $icon->setShortcut(false);
@@ -248,12 +246,13 @@ class IconManager
     {
         if ($icon->getMimeType() === 'custom') {
             $shortcut = $icon->getShortcutIcon();
-            $this->removeImageFromThumbDir($icon);
-            $this->removeImageFromThumbDir($shortcut);
             $this->om->remove($shortcut);
             $this->om->remove($icon);
             $this->om->flush();
         }
+
+        $this->removeImageFromThumbDir($icon);
+        $this->removeImageFromThumbDir($icon->getShortcutIcon());
     }
 
     /**
@@ -281,10 +280,12 @@ class IconManager
      */
     public function removeImageFromThumbDir(ResourceIcon $icon)
     {
-        $pathName = $this->thumbDir . DIRECTORY_SEPARATOR . $icon->getIconLocation();
+        if (preg_match('#^thumbnails#', $icon->getRelativeUrl())) {
+            $pathName = $this->rootDir . '/../web/' . $icon->getRelativeUrl();
 
-        if (file_exists($pathName)) {
-            unlink($pathName);
+            if (file_exists($pathName)) {
+                unlink($pathName);
+            }
         }
     }
 }
