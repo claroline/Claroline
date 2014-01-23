@@ -193,7 +193,7 @@ class ParametersController extends Controller
     {
         $platformConfig = $this->configHandler->getPlatformConfig();
         $form = $this->formFactory->create(
-            new AdminForm\ApperanceType($this->getThemes()),
+            new AdminForm\AppearanceType($this->getThemes()),
             $platformConfig
         );
 
@@ -217,7 +217,7 @@ class ParametersController extends Controller
     {
         $platformConfig = $this->configHandler->getPlatformConfig();
         $form = $this->formFactory->create(
-            new AdminForm\ApperanceType($this->getThemes()),
+            new AdminForm\AppearanceType($this->getThemes()),
             $platformConfig
         );
         $form->handleRequest($this->request);
