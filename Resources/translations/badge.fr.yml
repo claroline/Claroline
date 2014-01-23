@@ -21,6 +21,7 @@ badge_unaward_confirm_title: "Désattribution d'un badge"
 badge_unaward_confirm_message: 'Etes-vous sûr de vouloir désattribuer le badge <strong>%badgeName%</strong> à <strong>%user%</strong>?'
 no_badges: 'Aucun badge.'
 add_badge: 'Ajouter un badge'
+view_badge: "Badge '%badge_name%'"
 edit_badge: "Modification du badge '%badge_name%'"
 award: 'Attribuer'
 dont_award: 'Ne pas attribuer'

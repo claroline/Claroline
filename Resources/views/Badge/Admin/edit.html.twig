@@ -4,7 +4,7 @@
 
 {% trans_default_domain "badge" %}
 
-{% block title %}{{ parent() ~ ' - ' ~ 'edit_badge' | trans | striptags | raw }}{% endblock %}
+{% block title %}{{ parent() ~ ' - ' ~ 'view_badge' | trans({'%badge_name%' : badge.name}) | striptags | raw }}{% endblock %}
 
 {% block collection_widget %}
     {% spaceless %}
@@ -14,7 +14,7 @@
         <div class="row badges_rules" {{ block('widget_container_attributes') }}>
             <p class="row">{{ form_label(form) }}</p>
             {{ form_errors(form) }}
-            {% set tabPrototype = '<li id="tabrule__name__"><a href="#rule__name__" data-toggle="tab">' ~ "rule"|trans ~ ' __name__ <span class="btn btn-sm btn-danger icon-trash delete_rule delete_rule_no_confirm pull-right" data-id-tab="rule__name__" style="display: none;"></span></a></li>' %}
+            {% set tabPrototype = '<li id="tabrule__name__"><a href="#rule__name__" data-toggle="tab">' ~ "rule"|trans ~ ' __indexname__ <span class="btn btn-sm btn-danger icon-trash delete_rule delete_rule_no_confirm pull-right" data-id-tab="rule__name__" style="display: none;"></span></a></li>' %}
             <ul class="nav nav-tabs nav-stacked col-md-2" id="ruleTabs" data-tab-prototype="{{ tabPrototype|e }}">
                 {% for rows in form %}
                     <li id="tabrule{{ loop.index }}">
@@ -209,14 +209,14 @@
                 'href': path('claro_admin_badges')
             },
             {
-                'name': 'edit_badge'|trans({'%badge_name%': badge.name}, 'badge'),
+                'name': 'view_badge'|trans({'%badge_name%': badge.name}, 'badge'),
                 'href': ''
             }
         ])
     }}
 {% endblock %}
 
-{% block section_title %}{{ 'edit_badge'|trans({'%badge_name%': badge.name}, 'badge') }}{% endblock %}
+{% block section_title %}{{ 'view_badge'|trans({'%badge_name%': badge.name}, 'badge') }}{% endblock %}
 
 {% block section_body %}
     <ul class="nav nav-tabs">
@@ -226,7 +226,7 @@
     <div class="tab-content view_badge">
         <div class="tab-pane active" id="view">
             <h3 class="sub-section-header">
-                {{ 'badge'|trans }} "{{ badge.name }}"
+                {{ badge.name }}
                 {% if badge.expiredAt is not null %}
                 <small>{{ 'badge_expired_on_date'|trans({'%expirationDate%': badge.expiredAt|date('date_format'|trans({}, 'platform'))}) }}</small>
                 {% endif %}

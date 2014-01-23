@@ -85,7 +85,11 @@ Feature:
         Then I should be on "/admin/badges/add"
         And I click on "#add_rule"
         Then I should see 1 "#ruleTabs li[id^=tabrule]" elements
+        And I should see "Règle 1"
         And I should see "Détails de la règle"
+        And I select "Ressource" from "badge_form_rules_0_action_"
+        And I select "Blog" from "badge_form_rules_0_action__"
+        And I select "Création d'un article dans un blog" from "badge_form_rules_0_action___"
         And I attach the file "vendor/claroline/core-bundle/Claroline/CoreBundle/Resources/public/images/test/html5_logo.png" to "badge_form_file"
         And I fill in "badge_form_frTranslation_name" with "Badge de test"
         And I fill in "badge_form_frTranslation_description" with "C'est un badge de test"
@@ -94,9 +98,22 @@ Feature:
         Then I should be on "/admin/badges"
         And I should see "Badge ajouté avec succès."
         And I should see 1 "#badges .badge" elements
-        Then I click on "#badges .badge .badge_menu_link"
+        And I follow "Badge de test"
+        Then I should see "Badge 'Badge de test'"
+        And I should see "Badge attribué à :"
+        And I follow "Modifier"
+        Then I should see "Modification du badge 'Badge de test'"
+        And I should see "Traduction française"
+        Then I should see 1 "#ruleTabs li[id^=tabrule]" elements
+        And I should see "Règle 1"
+        And I should see "Détails de la règle"
+        And the "badge_form_frTranslation_name" field should contain "Badge de test"
+        And the "badge_form_frTranslation_description" field should contain "C'est un badge de test"
+        And the "badge_form_rules_0_action_" field should contain "Ressource"
+        And the "badge_form_rules_0_action__" field should contain "Blog"
+        And the "badge_form_rules_0_action___" field should contain "Création d'un article dans un blog"
         And I follow "Supprimer"
-        And I wait "1" seconds
+        Then I wait "1" seconds
         And I should see "Suppression d'un badge"
         And I should see "Etes-vous sûr de vouloir supprimer le badge Badge de test ?"
         Then I press "Supprimer"

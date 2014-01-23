@@ -21,6 +21,7 @@ badge_unaward_confirm_title: "Removing of a badge"
 badge_unaward_confirm_message: 'Are you sure you want to remove the badge <strong>%badgeName%</strong> to <strong>%user%</strong>?'
 no_badges: 'No badge.'
 add_badge: 'Add a badge'
+view_badge: "Badge '%badge_name%'"
 edit_badge: "Edition of the badge '%badge_name%'"
 award: 'Award'
 dont_award: "Don't award"

@@ -82,14 +82,17 @@ $(function(){
     function addRule()
     {
         var countExistingTabs = $("a[data-toggle='tab']", ruleTabs).length;
-        addRuleTab(++countExistingTabs);
+        addRuleTab(countExistingTabs);
         addRuleTabContent(countExistingTabs);
         $("a[href=#rule" + countExistingTabs + "]", ruleTabs).tab('show');
+        countExistingTabs++;
     }
 
     function addRuleTab(tabIndex)
     {
         var newTab = tabPrototype.replace(/__name__/g, tabIndex);
+        console.log('pouet');
+        newTab = newTab.replace(/__indexname__/g, tabIndex + 1);
 
         $("#add_rule", ruleTabs).before(newTab);
     }
