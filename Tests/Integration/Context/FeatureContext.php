@@ -15,6 +15,7 @@ use Behat\Behat\Context\Step;
 use Behat\Behat\Exception\PendingException;
 use Behat\Gherkin\Node\TableNode;
 use Behat\Mink\Exception\ElementNotFoundException;
+use Behat\Mink\Exception\ExpectationException;
 use Behat\Symfony2Extension\Context\KernelDictionary;
 use Behat\MinkExtension\Context\MinkContext;
 use Claroline\CoreBundle\Library\Installation\Settings\SettingChecker;
@@ -241,10 +242,29 @@ class FeatureContext extends MinkContext
         $element = $this->getSession()->getPage()->find('css', $locator);
 
         if (null === $element) {
-            throw new ElementNotFoundException($this->getSession(), 'element', 'id|title|alt|text', $locator);
+            throw new ElementNotFoundException($this->getSession(), 'element', 'css', $locator);
         }
 
         $element->click();
+    }
+
+    /**
+     * @Given /^I click on the (\d+)(st|nd|rd|th) "([^"]*)"$/
+     */
+    public function iClickOnTheNth($index, $position, $locator)
+    {
+        $locator  = $this->fixStepArgument($locator);
+        $elements = $this->getSession()->getPage()->findAll('css', $locator);
+
+        if (0 === count($elements)) {
+            throw new ElementNotFoundException($this->getSession(), 'elements', 'css', $locator);
+        }
+
+        if (!isset($elements[$index - 1])) {
+            throw new ExpectationException(sprintf("The %s%s '%s' element was not found in the page.", $index, $position, $locator), $this->getSession());
+        }
+
+        $elements[$index - 1]->click();
     }
 
     /**
@@ -266,6 +286,28 @@ var iframe = document.getElementById('$locator');
 iframe.contentWindow.document.body.innerHTML = "$value";
 EOL;
         $this->getSession()->executeScript($script);
+    }
+
+    /**
+     * @Given /^I fill in "([^"]*)" with "([^"]*)" for autocomplete$/
+     */
+    public function iFillInWithForAutocomplete($locator, $value)
+    {
+        $field = $this->getSession()->getPage()->findField($locator);
+
+        $field->focus();
+
+        $this->fillField($locator, $value);
+    }
+
+    /**
+     * @Given /^I wait for the suggestion box to appear$/
+     */
+    public function iWaitForTheSuggestionBoxToAppear()
+    {
+        $this->getSession()->wait(5000,
+            "$('.ui-autocomplete').children().length > 0"
+        );
     }
 
     /**************/
