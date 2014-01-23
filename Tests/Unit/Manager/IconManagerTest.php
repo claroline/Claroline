@@ -66,7 +66,6 @@ class IconManagerTest extends MockeryTestCase
         $file->shouldReceive('getHashName')->once()->andReturn('ABCDEFG.mp4');
         $icon = $this->mock('Claroline\CoreBundle\Entity\Resource\ResourceIcon');
         $icon->shouldReceive('setMimeType')->once()->with('custom');
-        $icon->shouldReceive('setIconLocation')->once()->with('path/to/thumbnail');
         $icon->shouldReceive('setRelativeUrl')->once()->with('thumbnails/thumbnail');
         $icon->shouldReceive('setShortcut')->once()->with(false);
         $manager->shouldReceive('createFromFile')->once()
@@ -114,7 +113,6 @@ class IconManagerTest extends MockeryTestCase
         $this->om->shouldReceive('startFlushSuite')->once();
         $this->thumbnailCreator->shouldReceive('shortcutThumbnail')->once()->with('/path/to/icon/location')
             ->andReturn('/path/to/bundles/shortcut/location');
-        $shortcutIcon->shouldReceive('setIconLocation')->with('/path/to/bundles/shortcut/location')->once();
         $shortcutIcon->shouldReceive('setRelativeUrl')->with('bundles/shortcut/location');
         $shortcutIcon->shouldReceive('setMimeType')->once()->with('video/mp4');
         $shortcutIcon->shouldReceive('setShortcut')->once()->with(true);
@@ -138,8 +136,6 @@ class IconManagerTest extends MockeryTestCase
         $file->shouldReceive('getClientOriginalName')->once()->andReturn('original/name.ext');
         $this->ut->shouldReceive('generateGuid')->andReturn('ABCDEF')->once();
         $file->shouldReceive('move')->once()->with($this->thumbDir, 'ABCDEF.ext');
-        $icon->shouldReceive('setIconLocation')->once()
-            ->with($this->thumbDir . DIRECTORY_SEPARATOR . 'ABCDEF.ext');
         $icon->shouldReceive('setRelativeUrl')->once()
             ->with('thumbnails' . DIRECTORY_SEPARATOR . 'ABCDEF.ext');
         $icon->shouldReceive('setMimeType')->once()->with('custom');

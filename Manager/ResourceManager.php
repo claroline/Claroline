@@ -812,7 +812,8 @@ class ResourceManager
     /**
      * Removes a resource.
      *
-     * @param \Claroline\CoreBundle\Entity\Resource\ResourceNode $resource
+     * @param \Claroline\CoreBundle\Entity\Resource\ResourceNode $node
+     * @throws \LogicException
      */
     public function delete(ResourceNode $node)
     {
@@ -849,6 +850,8 @@ class ResourceManager
                     unlink($file);
                 }
 
+                $this->iconManager->delete($node->getIcon());
+
                 /*
                  * If the child isn't removed here aswell, doctrine will fail to remove $resChild
                  * because it still has $resChild in its UnitOfWork or something (I have no idea
@@ -860,6 +863,7 @@ class ResourceManager
             }
         }
 
+        $this->iconManager->delete($node->getIcon());
         $this->om->remove($node);
         $this->om->endFlushSuite();
     }
