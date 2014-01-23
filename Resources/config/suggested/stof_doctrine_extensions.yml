@@ -7,5 +7,5 @@ stof_doctrine_extensions:
             sluggable: true
             translatable: true
 
-#    class:
-#        translatable: Claroline\CoreBundle\Listener\LocaleSetter
+    class:
+        translatable: Claroline\CoreBundle\Listener\LocaleListener
