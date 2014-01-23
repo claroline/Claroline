@@ -51,8 +51,7 @@ class PathListener extends ContainerAware
         if ($form->isValid()) {
             $path = $form->getData();
 
-            $structure = $this->container->get('innova_path.manager.path')->initializePathStructure($path);
-            $path->setStructure($structure);
+            $path->initializeStructure();
             
             // Send new path to dispatcher through event object
             $event->setResources(array ($path));
