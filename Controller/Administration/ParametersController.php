@@ -15,6 +15,7 @@ use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Library\Configuration\UnwritableException;
 use Claroline\CoreBundle\Manager\LocaleManager;
 use Claroline\CoreBundle\Manager\RoleManager;
+use Claroline\CoreBundle\Manager\ContentManager;
 use Claroline\CoreBundle\Library\Installation\Settings\MailingSettings;
 use Claroline\CoreBundle\Library\Installation\Settings\MailingChecker;
 use Claroline\CoreBundle\Manager\TermsOfServiceManager;
@@ -45,6 +46,7 @@ class ParametersController extends Controller
     private $localeManager;
     private $translator;
     private $mailManager;
+    private $contentManager;
 
     /**
      * @DI\InjectParams({
@@ -55,7 +57,8 @@ class ParametersController extends Controller
      *     "request"        = @DI\Inject("request"),
      *     "translator"     = @DI\Inject("translator"),
      *     "termsOfService" = @DI\Inject("claroline.common.terms_of_service_manager"),
-     *     "mailManager"    = @DI\Inject("claroline.manager.mail_manager")
+     *     "mailManager"    = @DI\Inject("claroline.manager.mail_manager"),
+     *     "contentManager" = @DI\Inject("claroline.manager.content_manager")
      * })
      */
     public function __construct(
@@ -66,7 +69,8 @@ class ParametersController extends Controller
         Request $request,
         Translator $translator,
         TermsOfServiceManager $termsOfService,
-        MailManager $mailManager
+        MailManager $mailManager,
+        ContentManager $contentManager
     )
     {
         $this->configHandler = $configHandler;
@@ -77,6 +81,7 @@ class ParametersController extends Controller
         $this->localeManager = $localeManager;
         $this->translator = $translator;
         $this->mailManager = $mailManager;
+        $this->contentManager = $contentManager;
     }
 
     /**
@@ -379,22 +384,17 @@ class ParametersController extends Controller
      */
     public function submitInscriptionMailAction()
     {
-        $form = $this->formFactory->create(
-            new AdminForm\MailInscriptionType(),
-            $this->mailManager->getInscriptionMail()
-        );
+        //validation must be added
+        $isValid = true;
+        $form = $this->request->get('platform_parameters_form');
 
-        $form->handleRequest($this->request);
-        //form sumbission
+        if ($isValid) {
+            if (isset($form['content'])) {
+                $this->contentManager->updateContent($this->mailManager->getInscriptionMail(), $form['content']);
+            }
 
-        if ($form->isValid()) {
-            $content = $form->get('content')->getData();
-
-            throw new \Exception('No implementation yet.');
+            return $this->redirect($this->generateUrl('claro_admin_index'));
         }
-
-        throw new \Exception('Validation failed.');
-
     }
 
     /**
@@ -429,7 +429,16 @@ class ParametersController extends Controller
      */
     public function submitMailLayoutAction()
     {
+        $isValid = true;
+        $form = $this->request->get('platform_parameters_form');
 
+        if ($isValid) {
+            if (isset($form['content'])) {
+                $this->contentManager->updateContent($this->mailManager->getLayoutMail(), $form['content']);
+            }
+
+            return $this->redirect($this->generateUrl('claro_admin_index'));
+        }
     }
 
     /**

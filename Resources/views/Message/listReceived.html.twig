@@ -55,6 +55,13 @@
                     </button>
                 </span>
             </div>
+            <div>
+                <input value="1" id="check-notifications" type="checkbox">
+                    {{ 'get_mail_notifications'|trans({}, 'platform') }}
+                </input>
+                </br>
+                ({{ app.user.getMail() }})
+            </div>
         </div>
     </div>
     {{ renderPager(search, pager) }}
@@ -129,6 +136,13 @@
                     $(e.target).attr('class', 'icon-ok-sign');
                 }
             });
+        });
+    </script>
+    <script>
+        //notifications
+        $('#check-notifications').on('change', function() {
+           alert('yolooooooooooooooooooooo');
+            akle
         });
     </script>
 {% endblock %}

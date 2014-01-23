@@ -12,6 +12,7 @@
 namespace Claroline\CoreBundle\Controller;
 
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -123,6 +124,9 @@ class MessageController
      * @EXT\Template("ClarolineCoreBundle:Message:show.html.twig")
      *
      * Handles the message form submission.
+     *
+     * @param User    $sender
+     * @param Message $parent
      *
      * @return Response
      */
@@ -263,7 +267,9 @@ class MessageController
      *
      * Displays a message.
      *
-     * @param integer $messageId the message id
+     * @param User    $user
+     * @param array   $receivers
+     * @param Message $message
      *
      * @return Response
      */
@@ -407,6 +413,7 @@ class MessageController
      *
      * @param integer $page
      * @param string  $search
+     * @param User    $user
      *
      * @return Response
      */
@@ -446,6 +453,28 @@ class MessageController
 
     /**
      * @EXT\Route(
+     *     "/notification/{isNotified}",
+     *     name="claro_message_notification",
+     *     options={"expose"=true}
+     * )
+     *
+     * @EXT\Method("GET")
+     * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
+     *
+     * @param boolean $isNotified
+     * @param User    $user
+     *
+     * @return Response
+     */
+    public function setMailNotificationAction($isNotified, User $user)
+    {
+        $this->userManager->setMailNotified($user, $isNotified);
+
+        return new JsonResponse(array('success' => 'success'));
+    }
+
+    /**
+     * @EXT\Route(
      *     "/contactable/groups/page/{page}",
      *     name="claro_message_contactable_groups",
      *     options={"expose"=true},
@@ -468,6 +497,7 @@ class MessageController
      *
      * @param integer $page
      * @param string  $search
+     * @param User    $user
      *
      * @return Response
      */
