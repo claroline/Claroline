@@ -68,18 +68,16 @@
                 <span>{{ app.request.locale | upper }}</span>&nbsp;<i class="icon-caret-down"></i>
             </button>
             <ul class="dropdown-menu pull-right" role="menu">
-                {% for lang in langs %}
-                    <li class="pointer-hand{% if app.request.locale == lang %} active{% endif %}">
-                        <a>{{ lang | upper }}</a>
-                    </li>
+                {% for child in form %}
+                    <li class="pointer-hand"><a>{{ child.vars.name | upper }}</a></li>
                 {% endfor %}
             </ul>
         </div>
-        {% for lang in langs %}
-            <div data-lang="{{ lang | upper }}"{% if lang != app.request.locale %} class="hide"{% endif %}>
+        {% for child in form %}
+            <div data-lang="{{ child.vars.name | upper }}"{% if app.request.locale != child.vars.name %} class="hide"{% endif %}>
                 {% if contentTitle %}
                     {{
-                        form_widget(form['title_' ~ lang], {
+                        form_widget(child['title'], {
                             'attr': {
                                 'class': 'margin-bottom-md',
                                 'placeholder': 'Optional title' | trans({}, 'home') ~ '...'
@@ -87,7 +85,7 @@
                         })
                     }}
                 {% endif %}
-                {{ form_widget(form['content_' ~ lang]) }}
+                {{ form_widget(child['content']) }}
             </div>
         {% endfor %}
     </div>

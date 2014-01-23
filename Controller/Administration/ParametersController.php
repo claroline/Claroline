@@ -463,20 +463,17 @@ class ParametersController extends Controller
      */
     public function submitTermsOfServiceAction()
     {
-        if ($this->request->get('isActive')) {
-            $this->configHandler->setParameter('terms_of_service', true);
-        } else {
-            $this->configHandler->setParameter('terms_of_service', false);
-        }
 
-        $termsOfService = $this->request->get('termsOfService', array());
+        if ($termsOfService = $this->request->get('terms_of_service_form')) {
 
-        foreach ($termsOfService as $locale => $content) {
-
-            if ($content === "") {
-                $this->termsOfService->deleteTermsOfService($locale);
+            if (isset($termsOfService['active'])) {
+                $this->configHandler->setParameter('terms_of_service', true);
             } else {
-                $this->termsOfService->setTermsOfService($locale, $content);
+                $this->configHandler->setParameter('terms_of_service', false);
+            }
+
+            if (isset($termsOfService['termsOfService'])) {
+                $this->termsOfService->setTermsOfService($termsOfService['termsOfService']);
             }
         }
 

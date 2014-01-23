@@ -48,7 +48,7 @@ class ContentType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $content = array();
+        $translatedContent = array();
 
         if ($builder->getData() instanceof Content) {
             $translatedContent = $this->contentManager->getTranslatedContent(
@@ -59,20 +59,11 @@ class ContentType extends AbstractType
         if (!empty($this->langs)) {
 
             foreach ($this->langs as $lang) {
-
-                $title = '';
-                $content = '';
-
-                if (isset($translatedContent[$lang]) and isset($translatedContent[$lang]['title'])) {
-                    $title = $translatedContent[$lang]['title'];
+                if (isset($translatedContent[$lang])) {
+                    $builder->add($lang, 'base_content', array('data' => $translatedContent[$lang]));
+                } else {
+                    $builder->add($lang, 'base_content');
                 }
-
-                if (isset($translatedContent[$lang]) and isset($translatedContent[$lang]['content'])) {
-                    $content = $translatedContent[$lang]['content'];
-                }
-
-                $builder->add('title_'.$lang, 'text', array('mapped' => false, 'data' => $title));
-                $builder->add('content_'.$lang, 'tinymce', array('mapped' => false, 'data' => $content));
             }
         }
     }
@@ -100,10 +91,6 @@ class ContentType extends AbstractType
 
         if (isset($options['theme_options']) and isset($options['theme_options']['contentTitle'])) {
             $view->vars['contentTitle'] = $options['theme_options']['contentTitle'];
-        }
-
-        if (!empty($this->langs)) {
-            $view->vars['langs'] = $this->langs;
         }
     }
 }
