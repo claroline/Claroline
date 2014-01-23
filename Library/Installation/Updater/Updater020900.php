@@ -1,4 +1,4 @@
-<?
+<?php
 
 /*
  * This file is part of the Claroline Connect package.
@@ -62,4 +62,4 @@ class Updater020900
 
         $this->om->endFlushSuite();
     }
-} 
+}
