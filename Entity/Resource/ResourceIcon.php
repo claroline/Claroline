@@ -28,11 +28,6 @@ class ResourceIcon
     protected $id;
 
     /**
-     * @ORM\Column(name="icon_location", nullable=true)
-     */
-    protected $iconLocation;
-
-    /**
      * @ORM\Column()
      */
     protected $mimeType;
@@ -66,16 +61,6 @@ class ResourceIcon
     public function getId()
     {
         return $this->id;
-    }
-
-    public function getIconLocation()
-    {
-        return $this->iconLocation;
-    }
-
-    public function setIconLocation($iconLocation)
-    {
-        $this->iconLocation = $iconLocation;
     }
 
     public function getMimeType()
