@@ -120,3 +120,38 @@ Feature:
         Then I should be on "/admin/badges"
         And I should see 0 "#badges .badge" elements
         And I should see "Badge supprimé avec succès."
+
+    @javascript
+    Scenario: Successful creation of a badge with rule on badge awarding
+        Given I'm connected with login "JohnDoe" and password "JohnDoe"
+        And I go to "/admin/badges"
+        Then I should see "Gestion des badges"
+        And I should see 0 "#badges .badge" elements
+        And I follow "Ajouter un badge"
+        Then I should be on "/admin/badges/add"
+        And I click on "#add_rule"
+        Then I should see 1 "#ruleTabs li[id^=tabrule]" elements
+        And I should see "Règle 1"
+        And I should see "Détails de la règle"
+        And I select "Badge" from "badge_form_rules_0_action_"
+        Then I should see "Lorsque l'action est l'attribution d'un badge"
+        And I select "Attribution d'un badge" from "badge_form_rules_0_action__"
+        And I click on "#s2id_badge_form_rules_0_badge a"
+        Then I should see "Aucun résultat trouvé"
+        And I attach the file "vendor/claroline/core-bundle/Claroline/CoreBundle/Resources/public/images/test/html5_logo.png" to "badge_form_file"
+        And I fill in "badge_form_frTranslation_name" with "Badge de test"
+        And I fill in "badge_form_frTranslation_description" with "C'est un badge de test"
+        And I fill in tinymce "badge_form_frTranslation_criteria" with "Pour avoir ce badge de test il faut se le voir attribuer."
+        And I press "Ajouter"
+        Then I should be on "/admin/badges"
+        And I should see "Badge ajouté avec succès."
+        And I should see 1 "#badges .badge" elements
+        And I click on "#badges .badge .badge_menu_link"
+        Then I follow "Supprimer"
+        And I wait "1" seconds
+        And I should see "Suppression d'un badge"
+        And I should see "Etes-vous sûr de vouloir supprimer le badge Badge de test ?"
+        Then I press "Supprimer"
+        Then I should be on "/admin/badges"
+        And I should see 0 "#badges .badge" elements
+        And I should see "Badge supprimé avec succès."

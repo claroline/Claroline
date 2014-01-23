@@ -91,7 +91,6 @@ $(function(){
     function addRuleTab(tabIndex)
     {
         var newTab = tabPrototype.replace(/__name__/g, tabIndex);
-        console.log('pouet');
         newTab = newTab.replace(/__indexname__/g, tabIndex + 1);
 
         $("#add_rule", ruleTabs).before(newTab);
