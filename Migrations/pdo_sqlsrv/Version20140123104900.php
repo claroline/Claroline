@@ -1,6 +1,6 @@
 <?php
 
-namespace Claroline\CoreBundle\Migrations\sqlsrv;
+namespace Claroline\CoreBundle\Migrations\pdo_sqlsrv;
 
 use Doctrine\DBAL\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
@@ -8,9 +8,9 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2014/01/20 11:09:09
+ * Generation date: 2014/01/23 10:49:01
  */
-class Version20140120110907 extends AbstractMigration
+class Version20140123104900 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
@@ -33,6 +33,10 @@ class Version20140120110907 extends AbstractMigration
         $this->addSql("
             ALTER TABLE claro_user 
             ADD termsOfService BIT
+        ");
+        $this->addSql("
+            ALTER TABLE claro_user 
+            ADD is_enabled BIT NOT NULL
         ");
         $this->addSql("
             ALTER TABLE claro_user 
@@ -62,6 +66,10 @@ class Version20140120110907 extends AbstractMigration
         $this->addSql("
             ALTER TABLE claro_user 
             DROP COLUMN termsOfService
+        ");
+        $this->addSql("
+            ALTER TABLE claro_user 
+            DROP COLUMN is_enabled
         ");
         $this->addSql("
             ALTER TABLE claro_user 

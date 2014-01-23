@@ -1,6 +1,6 @@
 <?php
 
-namespace Claroline\CoreBundle\Migrations\sqlanywhere;
+namespace Claroline\CoreBundle\Migrations\pdo_mysql;
 
 use Doctrine\DBAL\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
@@ -8,35 +8,34 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2014/01/20 11:09:09
+ * Generation date: 2014/01/23 10:49:01
  */
-class Version20140120110907 extends AbstractMigration
+class Version20140123104900 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
         $this->addSql("
             CREATE TABLE claro_content_translation (
-                id INT IDENTITY NOT NULL, 
+                id INT AUTO_INCREMENT NOT NULL, 
                 locale VARCHAR(8) NOT NULL, 
                 object_class VARCHAR(255) NOT NULL, 
                 field VARCHAR(32) NOT NULL, 
                 foreign_key VARCHAR(64) NOT NULL, 
-                content TEXT DEFAULT NULL, 
-                PRIMARY KEY (id)
-            )
-        ");
-        $this->addSql("
-            CREATE INDEX content_translation_idx ON claro_content_translation (
-                locale, object_class, field, foreign_key
-            )
-        ");
-        $this->addSql("
-            ALTER TABLE claro_user 
-            ADD termsOfService BIT NULL DEFAULT NULL
+                content LONGTEXT DEFAULT NULL, 
+                INDEX content_translation_idx (
+                    locale, object_class, field, foreign_key
+                ), 
+                PRIMARY KEY(id)
+            ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
         ");
         $this->addSql("
             ALTER TABLE claro_user 
             DROP FOREIGN KEY FK_EB8D285282D40A1F
+        ");
+        $this->addSql("
+            ALTER TABLE claro_user 
+            ADD termsOfService TINYINT(1) DEFAULT NULL, 
+            ADD is_enabled TINYINT(1) NOT NULL
         ");
         $this->addSql("
             ALTER TABLE claro_user 
@@ -61,11 +60,12 @@ class Version20140120110907 extends AbstractMigration
         ");
         $this->addSql("
             ALTER TABLE claro_user 
-            DROP termsOfService
+            DROP FOREIGN KEY FK_EB8D285282D40A1F
         ");
         $this->addSql("
             ALTER TABLE claro_user 
-            DROP FOREIGN KEY FK_EB8D285282D40A1F
+            DROP termsOfService, 
+            DROP is_enabled
         ");
         $this->addSql("
             ALTER TABLE claro_user 

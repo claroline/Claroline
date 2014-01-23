@@ -76,8 +76,8 @@ class TextListener implements ContainerAwareInterface
         $request = $this->container->get('request');
         $em = $this->container->get('doctrine.orm.entity_manager');
         $user = $this->container->get('security.context')->getToken()->getUser();
-        //wtf !
-        $id = array_pop(array_keys($request->request->all()));
+        $keys = array_keys($request->request->all());
+        $id = array_pop($keys);
         $form = $this->container->get('claroline.form.factory')->create(FormFactory::TYPE_RESOURCE_TEXT, array($id));
         $form->handleRequest($request);
 

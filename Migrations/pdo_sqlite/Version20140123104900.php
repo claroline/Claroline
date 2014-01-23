@@ -8,9 +8,9 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2014/01/20 11:09:08
+ * Generation date: 2014/01/23 10:49:01
  */
-class Version20140120110907 extends AbstractMigration
+class Version20140123104900 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
@@ -81,6 +81,7 @@ class Version20140120110907 extends AbstractMigration
                 description CLOB DEFAULT NULL, 
                 locale VARCHAR(255) DEFAULT NULL, 
                 termsOfService BOOLEAN DEFAULT NULL, 
+                is_enabled BOOLEAN NOT NULL, 
                 PRIMARY KEY(id), 
                 CONSTRAINT FK_EB8D285282D40A1F FOREIGN KEY (workspace_id) 
                 REFERENCES claro_workspace (id) 

@@ -8,9 +8,9 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2014/01/20 11:09:08
+ * Generation date: 2014/01/23 10:49:01
  */
-class Version20140120110907 extends AbstractMigration
+class Version20140123104900 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
@@ -36,7 +36,8 @@ class Version20140120110907 extends AbstractMigration
         ");
         $this->addSql("
             ALTER TABLE claro_user 
-            ADD COLUMN termsOfService SMALLINT DEFAULT NULL
+            ADD COLUMN termsOfService SMALLINT DEFAULT NULL 
+            ADD COLUMN is_enabled SMALLINT NOT NULL WITH DEFAULT
         ");
         $this->addSql("
             ALTER TABLE claro_user 
@@ -68,7 +69,8 @@ class Version20140120110907 extends AbstractMigration
         ");
         $this->addSql("
             ALTER TABLE claro_user 
-            DROP COLUMN termsOfService
+            DROP COLUMN termsOfService 
+            DROP COLUMN is_enabled
         ");
         $this->addSql("
             CALL SYSPROC.ADMIN_CMD ('REORG TABLE claro_user')
