@@ -310,6 +310,16 @@ EOL;
         );
     }
 
+    /**
+     * @Given /^I wait for the popup to appear$/
+     */
+    public function iWaitForThePopupToAppear()
+    {
+        $this->getSession()->wait(5000,
+            "$('#modal-form').css('display') == 'block'"
+        );
+    }
+
     /**************/
     /* Assertions */
     /**************/
