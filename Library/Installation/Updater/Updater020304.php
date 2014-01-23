@@ -33,7 +33,6 @@ class Updater020304
         $em = $this->container->get('doctrine.orm.entity_manager');
         $this->log('Update images...');
         $rimg = new ResourceIcon();
-        $rimg->setIconLocation($coreIconWebDir . $resourceImage[0]);
         $rimg->setRelativeUrl($coreIconWebDirRelativePath . $resourceImage[0]);
         $rimg->setMimeType($resourceImage[1]);
         $rimg->setShortcut(false);
