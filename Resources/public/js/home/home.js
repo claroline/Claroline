@@ -252,8 +252,6 @@
         var translatable = $(this).parents('.content-translatable').first();
         var lang = $(this).text();
         $('.content-menu button span', translatable).text(lang);
-        $('.content-menu .dropdown-menu li', translatable).removeClass('active');
-        $(this).parent().addClass('active');
         $('textarea', translatable).parent().each(function () {
             if ($(this).data('lang') === lang) {
                 $(this).removeClass('hide');

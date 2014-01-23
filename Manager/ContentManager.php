@@ -43,7 +43,7 @@ class ContentManager
     }
 
     /**
-     * Get Cont     ent
+     * Get Content
      *
      * Example: $contentManager->getContent(array('id' => $id));
      *
@@ -92,61 +92,44 @@ class ContentManager
     /**
      * Create a new content.
      *
-     * @param string $title
-     * @param string $text
-     * @param string $locale
+     * @param string $translatedContent array('content_fr' => 'foo', 'content_en' => 'foo')
+     * @param string $type A type of content
      *
      * @return integer The id of the new content.
      */
-    public function createContent($title, $text, $locale = null, $type = null)
+    public function createContent($translatedContent, $type = null)
     {
-        if ($title or $text) {
-            $content = new Content();
-            $content->setTitle($title);
-            $content->setContent($text);
+        $content = new Content();
+        $content->setType($type);
 
-            if ($type) {
-                $content->setType($type);
-            }
+        $this->updateContent($content, $translatedContent);
 
-            $this->manager->persist($content);
-            $this->manager->flush();
-
-            if ($locale) {
-                $content->setTranslatableLocale($locale);
-            }
-
-            $this->manager->persist($content);
-            $this->manager->flush();
-
-            return $content->getId();
-        }
+        return $content->getId();
     }
 
     /**
      * Update a content.
      *
-     * @param string $content
-     * @param string $title
-     * @param string $text
-     * @param string $locale
+     * @param string $translatedContent array('content_fr' => 'foo', 'content_en' => 'foo')
+     * @param string $content Content Entity
      */
-    public function updateContent($content, $title = null, $text = null, $locale = null)
+    public function updateContent($content, $translatedContents)
     {
-        if ($title) {
-            $content->setTitle($title);
-        }
+        foreach ($translatedContents as $lang => $translatedContent) {
+            if (isset($translatedContent["title"]) and $translatedContent["title"] !== '' or
+                isset($translatedContent["content"]) and $translatedContent["content"] !== '') {
+                if (isset($translatedContent["title"])) {
+                    $content->setTitle($translatedContent["title"]);
+                }
+                if (isset($translatedContent["content"])) {
+                    $content->setContent($translatedContent["content"]);
+                }
 
-        if ($text) {
-            $content->setContent($text);
+                $content->setTranslatableLocale($lang);
+                $this->manager->persist($content);
+                $this->manager->flush();
+            }
         }
-
-        if ($locale) {
-            $content->setTranslatableLocale($locale);
-        }
-
-        $this->manager->persist($content);
-        $this->manager->flush();
     }
 
     /**
