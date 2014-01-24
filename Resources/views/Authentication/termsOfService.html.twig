@@ -1,0 +1,23 @@
+{% extends "ClarolineCoreBundle::layout.html.twig" %}
+
+{% block title %}{{ parent() ~ ' - ' ~ 'Terms of service' | trans({}, 'platform') | striptags | raw }}{% endblock %}
+
+{% block content %}
+    <div class='panel panel-default'>
+        <div class="panel-heading">
+            <h3 class="panel-title">{{ 'Terms of service'|trans({}, 'platform') }}</h3>
+        </div>
+        <form action="{{ path(app.request.attributes.get('_route'), app.request.attributes.get('_route_params')) }}"
+              method="post" id="terms_of_service_form">
+            <div class="panel-body">
+                 {{ form_widget(form) }}
+            </div>
+            <div class="panel-footer">
+                <button type="submit" class="btn btn-primary">{{ 'ok'|trans({}, 'platform') }}</button>
+                <a href="{{ path('claro_admin_index') }}">
+                    <button type="button" class="btn btn-default">{{ 'cancel'|trans({}, 'platform') }}</button>
+                </a>
+            </div>
+        </form>
+    </div>
+{% endblock %}

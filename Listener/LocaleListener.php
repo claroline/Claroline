@@ -32,17 +32,14 @@ class LocaleListener extends TranslatableListener
             // translate object's translatable properties
             foreach ($config['fields'] as $field) {
                 $translated = '';
-                foreach ((array)$result as $entry) {
+                foreach ($result as $entry) {
                     if ($entry['field'] == $field) {
                         $translated = $entry['content'];
                         break;
                     }
                 }
                 // update translation
-                if ($translated
-                    || (!$this->getTranslationFallback() && (!isset($config['fallback'][$field]) || !$config['fallback'][$field]))
-                    || ($this->getTranslationFallback() && isset($config['fallback'][$field]) && !$config['fallback'][$field])
-                ) {
+                if ($this->isTranslatable($translated, $config)) {
                     if ($translated !== '') {
                         $ea->setTranslationValue($object, $field, $translated);
                         // ensure clean changeset
@@ -55,6 +52,17 @@ class LocaleListener extends TranslatableListener
                     }
                 }
             }
+        }
+    }
+
+    private function isTranslatable($translated, $config)
+    {
+        if ($translated ||
+            (!$this->getTranslationFallback() && (!isset($config['fallback'][$field]) ||
+            !$config['fallback'][$field])) || ($this->getTranslationFallback() &&
+            isset($config['fallback'][$field]) && !$config['fallback'][$field])
+        ) {
+            return true;
         }
     }
 }

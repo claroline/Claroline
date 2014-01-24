@@ -92,7 +92,7 @@ class ContentManager
     /**
      * Create a new content.
      *
-     * @param string $translatedContent array('content_fr' => 'foo', 'content_en' => 'foo')
+     * @param string $translatedContent array('en' => array('content' => 'foo', 'title' => 'foo'))
      * @param string $type A type of content
      *
      * @return integer The id of the new content.
@@ -110,7 +110,7 @@ class ContentManager
     /**
      * Update a content.
      *
-     * @param string $translatedContent array('content_fr' => 'foo', 'content_en' => 'foo')
+     * @param string $translatedContent array('en' => array('content' => 'foo', 'title' => 'foo'))
      * @param string $content Content Entity
      */
     public function updateContent($content, $translatedContents)
