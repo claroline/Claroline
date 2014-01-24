@@ -20,16 +20,16 @@ use Symfony\Component\HttpKernel\Event\GetResponseEvent;
  */
 class CookieLifetimeSetter
 {
-    private $ch;
+    private $configurationHandler;
 
     /**
      * @DI\InjectParams({
-     *     "ch" = @DI\Inject("claroline.config.platform_config_handler")
+     *     "configurationHandler" = @DI\Inject("claroline.config.platform_config_handler")
      * })
      */
-    public function __construct(PlatformConfigurationHandler $ch)
+    public function __construct(PlatformConfigurationHandler $configurationHandler)
     {
-        $this->ch = $ch;
+        $this->configurationHandler = $configurationHandler;
     }
 
     /**
@@ -41,7 +41,7 @@ class CookieLifetimeSetter
      */
     public function onKernelRequest(GetResponseEvent $event)
     {
-        $lifetime = $this->ch->getParameter('cookie_lifetime');
+        $lifetime = $this->configurationHandler->getParameter('cookie_lifetime');
         $request = $event->getRequest();
         $session = $request->getSession();
         $session->migrate(false, $lifetime);
