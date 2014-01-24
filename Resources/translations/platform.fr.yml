@@ -701,3 +701,5 @@ get_mail_notifications: Je veux recevoir les notifications sur %adress%.
 missing_%content%: Le placeholder %content% est manquant pour la langue "%language%".
 missing_%username%: Le placeholder %username% est manquant pour la langue "%language%".
 missing_%password%: Le placeholder %password% est manquant pour la langue "%language%".
+notification_activated: Notifications activées.
+notification_deactivated: Notifications désactivées.

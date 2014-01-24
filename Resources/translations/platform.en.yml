@@ -697,3 +697,8 @@ registration_mail_requirements: >
   %password% : will display the password
   </p>
 get_mail_notifications: I want to be notified by email on %adress%.
+missing_%content%: The placeholder %content% is missing for "%language%".
+missing_%username%: The placeholder %username% is missing for "%language%".
+missing_%password%: The placeholder %password% is missing for "%language%".
+notification_activated: Notifications activated.
+notification_deactivated: Notifications deactivated.
