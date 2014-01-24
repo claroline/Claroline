@@ -17,10 +17,11 @@
             {% set tabPrototype = '<li id="tabrule__name__"><a href="#rule__name__" data-toggle="tab">' ~ "rule"|trans ~ ' __indexname__ <span class="btn btn-sm btn-danger icon-trash delete_rule delete_rule_no_confirm pull-right" data-id-tab="rule__name__" style="display: none;"></span></a></li>' %}
             <ul class="nav nav-tabs nav-stacked col-md-2" id="ruleTabs" data-tab-prototype="{{ tabPrototype|e }}">
                 {% for rows in form %}
-                    <li id="tabrule{{ loop.index }}">
-                        <a href="#rule{{ loop.index }}" data-toggle="tab">{{ 'rule'|trans }} {{ loop.index }}
+                    {% set loopIndex = loop.index - 1 %}
+                    <li id="tabrule{{ loopIndex }}">
+                        <a href="#rule{{ loopIndex }}" data-toggle="tab">{{ 'rule'|trans }} {{ loop.index }}
                             {% if allow_delete %}
-                            <span class="btn btn-sm btn-danger icon-trash delete_rule delete_rule_confirm pull-right" data-id-tab="rule{{ loop.index }}" data-confirm-title="{{ 'badge_rule_delete_confirm_title'|trans }}" data-confirm-message="{{ 'badge_rule_delete_confirm_message'|trans }}" data-confirm-ok="{{ 'delete'|trans({}, 'platform') }}" data-confirm-cancel="{{ 'cancel'|trans({}, 'platform') }}" data-confirm-style="danger"></span>
+                            <span class="btn btn-sm btn-danger icon-trash delete_rule delete_rule_confirm pull-right" data-id-tab="rule{{ loopIndex }}" data-confirm-title="{{ 'badge_rule_delete_confirm_title'|trans }}" data-confirm-message="{{ 'badge_rule_delete_confirm_message'|trans }}" data-confirm-ok="{{ 'delete'|trans({}, 'platform') }}" data-confirm-cancel="{{ 'cancel'|trans({}, 'platform') }}" data-confirm-style="danger"></span>
                             {% endif %}
                         </a>
                     </li>
@@ -31,7 +32,8 @@
             </ul>
             <div class="tab-content rules col-md-10">
                 {% for rows in form %}
-                    <div class="tab-pane" id="rule{{ loop.index }}">
+                    {% set loopIndex = loop.index - 1 %}
+                    <div class="tab-pane" id="rule{{ loopIndex }}">
                         <h4>{{ 'rule_details'|trans }}</h4>
 
                         <div class="row">
@@ -75,16 +77,16 @@
                         <div class="row">
                             <p><small><strong>* </strong><span class="text-muted">{{ 'badge_form_badge_help'|trans }}</span></small></p>
                         </div>
-                        <div class="panel-group" id="advancedOptionsAccordion{{ loop.index }}">
+                        <div class="panel-group" id="advancedOptionsAccordion{{ loopIndex }}">
                             <div class="panel panel-default">
                                 <div class="panel-heading">
                                     <h4 class="panel-title">
-                                        <a data-toggle="collapse" data-parent="#advancedOptionsAccordion{{ loop.index }}" href="#advancedOptions{{ loop.index }}">
+                                        <a data-toggle="collapse" data-parent="#advancedOptionsAccordion{{ loopIndex }}" href="#advancedOptions{{ loopIndex }}">
                                             <span class="icon-gear"></span> {{ 'badge_form_advance_options'|trans }}
                                         </a>
                                     </h4>
                                 </div>
-                                <div id="advancedOptions{{ loop.index }}" class="panel-collapse collapse">
+                                <div id="advancedOptions{{ loopIndex }}" class="panel-collapse collapse">
                                     <div class="panel-body">
                                         <div class="row">
                                             <div class="col-md-4">
@@ -392,8 +394,16 @@
     </div>
 {% endblock %}
 
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('bundles/frontend/jquery/plugin/select2/select2.css') }}" screen="media" />
+{% endblock %}
+
+
 {% block javascripts %}
 {{ parent() }}
+<script type="text/javascript" src="{{ asset('bundles/frontend/jquery/plugin/select2/select2.min.js') }}"></script>
+<script type="text/javascript" src="{{ asset('bundles/frontend/jquery/plugin/select2/select2_locale_' ~ app.request.locale ~ '.js') }}"></script>
 <script type="text/javascript" src="{{ asset('bundles/frontend/jquery/plugin/jquery.optionTree.js') }}"></script>
 <script type="text/javascript" src='{{ asset('bundles/frontend/jquery/plugin/confirm-bootstrap/confirm-bootstrap.js') }}'></script>
 <script type="text/javascript" src='{{ asset('bundles/clarolinecore/js/badge/edit.js') }}'></script>

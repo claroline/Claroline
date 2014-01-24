@@ -58,8 +58,14 @@ $(function(){
     });
 
     // Display or not badge field form in edit form
-    $(".action_panel select[id$='_action_']", ".rules").each(function(){
+    $(".action_panel select[id$='_action_']", ".rules").each(function(index){
         toggleDisplayBadgeField($(this));
+        $("#badge_form_rules_" + index + "_badge").removeClass('form-control').select2({
+            placeholder:     Translator.get('badge:badge_form_badge_selection'),
+            allowClear:      true,
+            formatResult:    format,
+            formatSelection: format
+        });
     });
 
     function toggleDisplayBadgeField(badgeFieldForm)
@@ -102,15 +108,16 @@ $(function(){
 
         $(".rules").append(newTabContent);
 
-        function format(state) {
-            return state.text;
-        }
         $("#badge_form_rules_" +tabIndex + "_badge").removeClass('form-control').select2({
             placeholder:     Translator.get('badge:badge_form_badge_selection'),
             allowClear:      true,
             formatResult:    format,
             formatSelection: format
         });
+    }
+
+    function format(state) {
+        return state.text;
     }
 
     function deleteRule(tabId)
