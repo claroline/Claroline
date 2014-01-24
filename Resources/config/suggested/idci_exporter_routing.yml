@@ -1,0 +1,4 @@
+idci_exporter:
+    resource: "@IDCIExporterBundle/Controller/ApiController.php"
+    type: annotation
+    prefix: exporter

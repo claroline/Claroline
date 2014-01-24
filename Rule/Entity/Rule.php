@@ -11,6 +11,8 @@
 
 namespace Claroline\CoreBundle\Rule\Entity;
 
+use Claroline\CoreBundle\Entity\Badge\Badge;
+use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation\ExclusionPolicy;
@@ -27,6 +29,9 @@ abstract class Rule
     const RESULT_INFERIOR_EQUAL = '<=';
     const RESULT_SUPERIOR       = '>';
     const RESULT_SUPERIOR_EQUAL = '>=';
+
+    const DOER_USER             = 'doer';
+    const RECEIVER_USER         = 'receiver';
 
     /**
      * @var integer
@@ -75,8 +80,30 @@ abstract class Rule
      *
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceNode")
      * @ORM\JoinColumn(nullable=true)
+     * @Expose
      */
     protected $resource;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(type="smallint", nullable=false)
+     * @Expose
+     */
+    protected $userType = 0;
+
+    /**
+     * @var Badge
+     *
+     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Badge\Badge")
+     * @ORM\JoinColumn(nullable=true)
+     */
+    protected $badge;
+
+    /**
+     * @var \Claroline\CoreBundle\Entity\User
+     */
+    protected $user;
 
     /**
      * @return int
@@ -89,7 +116,7 @@ abstract class Rule
     /**
      * @param string $action
      *
-     * @return BadgeRule
+     * @return Rule
      */
     public function setAction($action)
     {
@@ -109,7 +136,7 @@ abstract class Rule
     /**
      * @param int $occurrence
      *
-     * @return BadgeRule
+     * @return Rule
      */
     public function setOccurrence($occurrence)
     {
@@ -129,7 +156,7 @@ abstract class Rule
     /**
      * @param string $result
      *
-     * @return BadgeRule
+     * @return Rule
      */
     public function setResult($result)
     {
@@ -147,9 +174,9 @@ abstract class Rule
     }
 
     /**
-     * @param string $resultComparison
+     * @param integer $resultComparison
      *
-     * @return BadgeRule
+     * @return Rule
      */
     public function setResultComparison($resultComparison)
     {
@@ -159,7 +186,7 @@ abstract class Rule
     }
 
     /**
-     * @return string
+     * @return integer
      */
     public function getResultComparison()
     {
@@ -179,9 +206,26 @@ abstract class Rule
     }
 
     /**
+     * @param string $comparisonType
+     *
+     * @throws \InvalidArgumentException
+     * @return integer
+     */
+    public static function getResultComparisonTypeValue($comparisonType)
+    {
+        $comparisonTypeValue = array_search($comparisonType, self::getResultComparisonTypes());
+
+        if (false === $comparisonTypeValue) {
+            throw new \InvalidArgumentException("Unknow comparison type.");
+        }
+
+        return $comparisonTypeValue;
+    }
+
+    /**
      * @param mixed $resource
      *
-     * @return BadgeRule
+     * @return Rule
      */
     public function setResource($resource)
     {
@@ -196,5 +240,79 @@ abstract class Rule
     public function getResource()
     {
         return $this->resource;
+    }
+
+    /**
+     * @param \Claroline\CoreBundle\Entity\User $user
+     *
+     * @return Rule
+     */
+    public function setUser(User $user)
+    {
+        $this->user = $user;
+
+        return $this;
+    }
+
+    /**
+     * @throws \RuntimeException
+     * @return \Claroline\CoreBundle\Entity\User
+     */
+    public function getUser()
+    {
+        if (null === $this->user) {
+            throw new \RuntimeException("No user given to the rule. Rule inevitably apply to a user, neither it's a doer or a receiver.");
+        }
+
+        return $this->user;
+    }
+
+    /**
+     * @param integer $userType
+     *
+     * @return Rule
+     */
+    public function setUserType($userType)
+    {
+        $this->userType = $userType;
+
+        return $this;
+    }
+
+    /**
+     * @return integer
+     */
+    public function getUserType()
+    {
+        return $this->userType;
+    }
+
+    /**
+     * @return array
+     */
+    public static function getUserTypes()
+    {
+        return array(self::DOER_USER,
+                     self::RECEIVER_USER);
+    }
+
+    /**
+     * @param \Claroline\CoreBundle\Entity\Badge\Badge $badge
+     *
+     * @return Rule
+     */
+    public function setBadge($badge)
+    {
+        $this->badge = $badge;
+
+        return $this;
+    }
+
+    /**
+     * @return \Claroline\CoreBundle\Entity\Badge\Badge
+     */
+    public function getBadge()
+    {
+        return $this->badge;
     }
 }

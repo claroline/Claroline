@@ -249,7 +249,7 @@
                             <div class="tab-pane active{% if '' != frErrorClass %} {{ frErrorClass }}{% endif %}" id="fr">
                                 {{ form_errors(form.frTranslation) }}
                                 <div class="form-group">
-                                    <label class="required" for="badge_form_frTranslation_description">{{ 'badge_form_name'|trans }} :</label>
+                                    <label class="required" for="badge_form_frTranslation_name">{{ 'badge_form_name'|trans }} :</label>
                                     {{ form_errors(form.frTranslation.name) }}
                                     {{ form_widget(form.frTranslation.name) }}
                                 </div>
@@ -259,7 +259,7 @@
                                     {{ form_widget(form.frTranslation.description) }}
                                 </div>
                                 <div class="form-group">
-                                    <label class="required" for="badge_form_frTranslation_description">{{ 'badge_form_criteria'|trans }} :</label>
+                                    <label class="required" for="badge_form_frTranslation_criteria">{{ 'badge_form_criteria'|trans }} :</label>
                                     {{ form_errors(form.frTranslation.criteria) }}
                                     {{ form_widget(form.frTranslation.criteria) }}
                                 </div>
@@ -268,7 +268,7 @@
                             <div class="tab-pane{% if '' != enErrorClass %} {{ enErrorClass }}{% endif %}" id="en">
                                 {{ form_errors(form.enTranslation) }}
                                 <div class="form-group">
-                                    <label class="required" for="badge_form_frTranslation_description">{{ 'badge_form_name'|trans }} :</label>
+                                    <label class="required" for="badge_form_frTranslation_name">{{ 'badge_form_name'|trans }} :</label>
                                     {{ form_errors(form.enTranslation.name) }}
                                     {{ form_widget(form.enTranslation.name) }}
                                 </div>
@@ -278,7 +278,7 @@
                                     {{ form_widget(form.enTranslation.description) }}
                                 </div>
                                 <div class="form-group">
-                                    <label class="required" for="badge_form_frTranslation_description">{{ 'badge_form_criteria'|trans }} :</label>
+                                    <label class="required" for="badge_form_frTranslation_criteria">{{ 'badge_form_criteria'|trans }} :</label>
                                     {{ form_errors(form.enTranslation.criteria) }}
                                     {{ form_widget(form.enTranslation.criteria) }}
                                 </div>

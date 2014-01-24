@@ -91,13 +91,16 @@ class ProfileController extends Controller
      */
     public function badgeAction(Badge $badge, User $user)
     {
+        /** @var \Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler $platformConfigHandler */
         $platformConfigHandler = $this->get('claroline.config.platform_config_handler');
+        
         $badge->setLocale($platformConfigHandler->getParameter('locale_language'));
-        $validateLogs = $this->get('claroline.rule.validator')
-            ->validate($badge, $user);
-        $userBadge = $this->getDoctrine()
-            ->getRepository('ClarolineCoreBundle:Badge\UserBadge')
-            ->findOneBy(array('badge' => $badge, 'user' => $user));
+
+        /** @var \Claroline\CoreBundle\Rule\Validator $badgeRuleValidator */
+        $badgeRuleValidator = $this->get("claroline.rule.validator");
+        $validateLogs       = $badgeRuleValidator->validate($badge, $user);
+
+        $userBadge = $this->getDoctrine()->getRepository('ClarolineCoreBundle:Badge\UserBadge')->findOneBy(array('badge' => $badge, 'user' => $user));
 
         return array(
             'userBadge'   => $userBadge,
@@ -131,7 +134,8 @@ class ProfileController extends Controller
         return array(
             'pager'         => $pager,
             'badgeClaims'   => $badgeClaims,
-            'language'      => $platformConfigHandler->getParameter('locale_language')
+            'language'      => $platformConfigHandler->getParameter('locale_language'),
+            'user'          => $user
         );
     }
 }

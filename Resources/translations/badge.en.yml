@@ -21,6 +21,7 @@ badge_unaward_confirm_title: "Removing of a badge"
 badge_unaward_confirm_message: 'Are you sure you want to remove the badge <strong>%badgeName%</strong> to <strong>%user%</strong>?'
 no_badges: 'No badge.'
 add_badge: 'Add a badge'
+view_badge: "Badge '%badge_name%'"
 edit_badge: "Edition of the badge '%badge_name%'"
 award: 'Award'
 dont_award: "Don't award"
@@ -49,11 +50,17 @@ badge_form_automatic_award: 'Automatic awarding, if rules are respected'
 badge_form_expired_at: 'Expiration date'
 badge_form_choose_image: "Choose badge image"
 badge_form_change_image: "Change badge image"
-badge_form_badgeRules: "Awarding rules"
-badge_form_awarding_on_result_action: "Award on action result's"
-badge_form_execute: "Execute"
+badge_form_rules: "Awarding rules"
+badge_form_awarding_on_result_action: "When action's result is"
+badge_form_awarding_on_result_action_to: "to"
+badge_form_execute: "User validate the rule following executing an action on"
+badge_form_execute_times: "When he executed the action"
 badge_form_times: "times"
-badge_form_action: 'the action'
+badge_form_user_target_of_action: "User is the target of the action"
+badge_form_badge: "When the action is a badge awarding"
+badge_form_badge_help: "If compatible with the action"
+badge_form_badge_selection: "Select the badge"
+badge_form_advance_options: "Advance options"
 badge_award_form_group: 'Group'
 badge_award_form_user: 'User'
 badge_expired_on_date: 'Expire the %expirationDate%'
@@ -88,6 +95,8 @@ badge_validate_award_success_message: "Validation of badge awarding made with su
 badge_validate_award_error_message: "An error occured while validating badge awarding."
 badge_reject_award_success_message: "Reject of badge awarding made with success."
 badge_reject_award_error_message: "An error occured while rejecting badge awarding."
+badge_already_award_info_message: "Validation of badge awarding pointless, user already own this badge."
 rule: 'Rule'
+rule_details: "Rule details"
 add_rule: 'Add a rule'
 no_rule: 'No rule'

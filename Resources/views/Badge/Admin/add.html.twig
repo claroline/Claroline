@@ -14,7 +14,7 @@
         <div class="row badges_rules" {{ block('widget_container_attributes') }}>
             <p class="row">{{ form_label(form) }}</p>
             {{ form_errors(form) }}
-            {% set tabPrototype = '<li id="tabrule__name__"><a href="#rule__name__" data-toggle="tab">' ~ "rule"|trans ~ ' __name__ <span class="btn btn-sm btn-danger icon-trash delete_rule delete_rule_no_confirm pull-right" data-id-tab="rule__name__" style="display: none;"></span></a></li>' %}
+            {% set tabPrototype = '<li id="tabrule__name__"><a href="#rule__name__" data-toggle="tab">' ~ "rule"|trans ~ ' __indexname__ <span class="btn btn-sm btn-danger icon-trash delete_rule delete_rule_no_confirm pull-right" data-id-tab="rule__name__" style="display: none;"></span></a></li>' %}
             <ul class="nav nav-tabs nav-stacked col-md-2" id="ruleTabs" data-tab-prototype="{{ tabPrototype|e }}">
                 {% if allow_add %}
                 <li id="add_rule"><a href="#"><span class="icon-plus"></span>{{ 'add_rule'|trans }}</a></li>
@@ -35,11 +35,30 @@
 {% macro collection_prototype_row(rows) %}
     {% spaceless %}
         <div class="tab-pane" id="rule__name__">
-            <h4>{{ 'rule'|trans }} __name__</h4>
+            <h4>{{ 'rule_details'|trans }}</h4>
 
             <div class="row">
-                <div class="col-md-2">
-                    <p class="form-control-static">{{ 'badge_form_execute'|trans }}</p>
+                <div class="col-md-12">
+                    <p class="form-control-static">{{ 'badge_form_execute'|trans }} : </p>
+                </div>
+            </div>
+            <div class="row action_panel">
+                <div class="col-md-12">
+                    {{ form_widget(rows.children.action) }}
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-5">
+                    <div class="checkbox" style="margin-left: 20px;">
+                        <label>
+                            <input type="checkbox">{{ 'badge_form_user_target_of_action'|trans }}<strong> *</strong>
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-3">
+                    <p class="form-control-static">{{ 'badge_form_execute_times'|trans }} </p>
                 </div>
                 <div class="col-md-2">
                     {{ form_widget(rows.children.occurrence, {'attr': {'value': 1}}) }}
@@ -48,29 +67,44 @@
                     <p class="form-control-static">{{ 'badge_form_times'|trans }}</p>
                 </div>
             </div>
-            <div class="row">
-                <div class="col-md-2">
-                    <p class="form-control-static">{{ 'badge_form_action'|trans }}</p>
+            <div class="row hide badge_panel">
+                <div class="col-md-5">
+                    <p class="form-control-static">{{ 'badge_form_badge'|trans }} </p>
                 </div>
-                <div class="col-md-10">
-                    {{ form_widget(rows.children.action) }}
+                <div class="col-md-5">
+                    {{ form_widget(rows.children.badge) }}
                 </div>
             </div>
             <div class="row">
-                <div class="col-md-6">
-                    <div class="checkbox">
-                        <label>
-                            <input type="checkbox" class="badge_result_awarding" data-tab-id="rule__name__"> {{ 'badge_form_awarding_on_result_action'|trans }}
-                        </label>
+                <p><small><strong>* </strong><span class="text-muted">{{ 'badge_form_badge_help'|trans }}</span></small></p>
+            </div>
+            <div class="panel-group" id="advancedOptionsAccordion__name__">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h4 class="panel-title">
+                            <a data-toggle="collapse" data-parent="#advancedOptionsAccordion__name__" href="#advancedOptions__name__">
+                                <span class="icon-gear"></span> {{ 'badge_form_advance_options'|trans }}
+                            </a>
+                        </h4>
                     </div>
-                </div>
-            </div>
-            <div class="row rule_result hidden">
-                <div class="col-md-2 col-md-offset-1">
-                    {{ form_widget(rows.children.resultComparison) }}
-                </div>
-                <div class="col-md-2">
-                    {{ form_widget(rows.children.result) }}
+                    <div id="advancedOptions__name__" class="panel-collapse collapse">
+                        <div class="panel-body">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <p class="form-control-static">{{ 'badge_form_awarding_on_result_action'|trans }} </p>
+                                </div>
+                                <div class="col-md-2">
+                                    {{ form_widget(rows.children.resultComparison) }}
+                                </div>
+                                <div class="col-md-1">
+                                    <p class="form-control-static text-center">{{ 'badge_form_awarding_on_result_action_to'|trans }}</p>
+                                </div>
+                                <div class="col-md-2">
+                                    {{ form_widget(rows.children.result) }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -109,11 +143,14 @@
             {% endfor %}
         {% endif %}
         <div class="row badges_infos">
-            <div class="col-md-2 text-center{% if 0 < form.file.vars.errors|length %} has-error{% endif %}">
-                <a href="#" class="thumbnail upload_image_placeholder">
-                    <img title="{{ 'badge_form_choose_image'|trans }}" class="badge_image" src="{{ asset('bundles/clarolinecore/images/upload-placeholder.jpg') }}">
-                </a>
+            <div class="col-md-2 file_upload text-center{% if 0 < form.file.vars.errors|length %} has-error{% endif %}">
                 {{ form_errors(form.file) }}
+                <p class="text-center">
+                    <a href="#" class="thumbnail upload_image_placeholder">
+                        <span class="icon-picture"></span><br />
+                        {{ 'badge_form_choose_image'|trans }}
+                    </a>
+                </p>
                 {{ form_widget(form.file) }}
             </div>
             <div class="col-md-10">
@@ -128,7 +165,7 @@
                     <div class="tab-pane active{% if '' != frErrorClass %} {{ frErrorClass }}{% endif %}" id="fr">
                         {{ form_errors(form.frTranslation) }}
                         <div class="form-group{% if 0 < form.frTranslation.name.vars.errors|length %} has-error{% endif %}">
-                            <label class="required" for="badge_form_frTranslation_description">{{ 'badge_form_name'|trans }} :</label>
+                            <label class="required" for="badge_form_frTranslation_name">{{ 'badge_form_name'|trans }} :</label>
                             {{ form_errors(form.frTranslation.name) }}
                             {{ form_widget(form.frTranslation.name) }}
                         </div>
@@ -138,7 +175,7 @@
                             {{ form_widget(form.frTranslation.description) }}
                         </div>
                         <div class="form-group{% if 0 < form.frTranslation.criteria.vars.errors|length %} has-error{% endif %}">
-                            <label class="required" for="badge_form_frTranslation_description">{{ 'badge_form_criteria'|trans }} :</label>
+                            <label class="required" for="badge_form_frTranslation_criteria">{{ 'badge_form_criteria'|trans }} :</label>
                             {{ form_errors(form.frTranslation.criteria) }}
                             {{ form_widget(form.frTranslation.criteria) }}
                         </div>
@@ -147,7 +184,7 @@
                     <div class="tab-pane{% if '' != enErrorClass %} {{ enErrorClass }}{% endif %}" id="en">
                         {{ form_errors(form.enTranslation) }}
                         <div class="form-group{% if 0 < form.enTranslation.name.vars.errors|length %} has-error{% endif %}">
-                            <label class="required" for="badge_form_frTranslation_description">{{ 'badge_form_name'|trans }} :</label>
+                            <label class="required" for="badge_form_frTranslation_name">{{ 'badge_form_name'|trans }} :</label>
                             {{ form_errors(form.enTranslation.name) }}
                             {{ form_widget(form.enTranslation.name) }}
                         </div>
@@ -157,7 +194,7 @@
                             {{ form_widget(form.enTranslation.description) }}
                         </div>
                         <div class="form-group{% if 0 < form.enTranslation.criteria.vars.errors|length %} has-error{% endif %}">
-                            <label class="required" for="badge_form_frTranslation_description">{{ 'badge_form_criteria'|trans }} :</label>
+                            <label class="required" for="badge_form_frTranslation_criteria">{{ 'badge_form_criteria'|trans }} :</label>
                             {{ form_errors(form.enTranslation.criteria) }}
                             {{ form_widget(form.enTranslation.criteria) }}
                         </div>
@@ -190,15 +227,22 @@
 
         {{ form_rest(form) }}
         <div class="form-actions">
-            <button type="submit" class="btn btn-primary">{{ 'add'|trans({}, 'platform') }}</button>
+            <button type="submit" class="btn btn-primary" title="{{ 'add'|trans({}, 'platform') }}">{{ 'add'|trans({}, 'platform') }}</button>
             <a href="{{ path('claro_admin_badges') }}" title="{{ 'cancel'|trans({}, 'platform') }}" class="btn btn-danger">{{ 'cancel'|trans({}, 'platform') }}</a>
         </div>
 
     </form>
 {% endblock %}
 
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('bundles/frontend/jquery/plugin/select2/select2.css') }}" screen="media" />
+{% endblock %}
+
 {% block javascripts %}
 {{ parent() }}
+<script type="text/javascript" src="{{ asset('bundles/frontend/jquery/plugin/select2/select2.min.js') }}"></script>
+<script type="text/javascript" src="{{ asset('bundles/frontend/jquery/plugin/select2/select2_locale_' ~ app.request.locale ~ '.js') }}"></script>
 <script type="text/javascript" src="{{ asset('bundles/frontend/jquery/plugin/jquery.optionTree.js') }}"></script>
 <script type="text/javascript" src='{{ asset('bundles/frontend/jquery/plugin/confirm-bootstrap/confirm-bootstrap.js') }}'></script>
 <script type="text/javascript" src='{{ asset('bundles/clarolinecore/js/badge/add.js') }}'></script>

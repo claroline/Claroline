@@ -1,9 +1,10 @@
 all: 'All'
-resource: 'Resource'
 role: 'Role'
 group: 'Group'
+resource: 'Resource'
 user: 'User'
 workspace: "Workspace"
+badge: "Badge"
 Show actions for: 'Show actions for'
 for user: 'for user'
 log_default_user: 'Claroline Connect'
@@ -142,6 +143,7 @@ log_workspace-create_title: 'Workspace creation'
 log_workspace-delete_title: "Workspace dleetion"
 log_workspace-update_title: "Workspace update"
 log_workspace-tool_read_title: 'Workspace tool open'
+log_badge-awarding_title: "Badge awarding"
 log_group-add_user_filter: 'Adding user to group'
 log_group-create_filter: 'Group creation'
 log_group-delete_filter: 'Group delete'
@@ -173,3 +175,4 @@ log_workspace-create_filter: 'Workspace creation'
 log_workspace-delete_filter: "Workspace dleetion"
 log_workspace-update_filter: "Workspace update"
 log_workspace-tool_read_filter: 'Workspace tool open'
+log_badge-awarding_filter: "Badge awarding"
