@@ -521,36 +521,10 @@ class LogRepository extends EntityRepository
     }
 
     /**
-     * @param Rule  $rule
-     * @param User  $user
-     * @param array $restrictions
-     * @param bool  $executeQuery
-     *
-     * @return array|QueryBuilder
+     * @return QueryBuilder
      */
-    public function findByRuleAndUser(Rule $rule, User $user, array $restrictions, $executeQuery = true)
+    public function defaultQueryBuilderForBadge()
     {
-        $queryBuilder = $this->createQueryBuilder('l')
-            ->where('l.action = :action')
-            ->andWhere('l.doer = :doer')
-            ->orderBy('l.dateLog')
-            ->setMaxResults($rule->getOccurrence())
-            ->setParameter('action', $rule->getAction())
-            ->setParameter('doer', $user);
-
-        $ruleResource = $rule->getResource();
-        if (null !== $ruleResource) {
-            $queryBuilder
-                ->andWhere('l.resourceNode = :resourceNode')
-                ->setParameter('resourceNode', $ruleResource->getResourceNode());
-        }
-
-        foreach ($restrictions as $key => $restriction) {
-            $queryBuilder
-                ->andWhere(sprintf("l.%s = :%s", $key, $key))
-                ->setParameter($key, $restriction);
-        }
-
-        return $executeQuery ? $queryBuilder->getQuery()->getResult(): $queryBuilder;
+        return $this->createQueryBuilder('l')->orderBy('l.dateLog');
     }
 }

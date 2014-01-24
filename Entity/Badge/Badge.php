@@ -113,7 +113,7 @@ class Badge extends Rulable
     /**
      * @var ArrayCollection|BadgeRule[]
      *
-     * @ORM\OneToMany(targetEntity="Claroline\CoreBundle\Entity\Badge\BadgeRule", mappedBy="badge", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="Claroline\CoreBundle\Entity\Badge\BadgeRule", mappedBy="associatedBadge", cascade={"persist"})
      * @Expose
      */
     protected $badgeRules;
@@ -482,7 +482,7 @@ class Badge extends Rulable
     public function setRules($badgeRules)
     {
         foreach ($badgeRules as $rule) {
-            $rule->setBadge($this);
+            $rule->setAssociatedBadge($this);
         }
 
         $this->badgeRules = $badgeRules;
@@ -693,7 +693,7 @@ class Badge extends Rulable
     public function postRemove()
     {
         $filePath = $this->getAbsolutePath();
-        if (null !== $filePath) {
+        if (null !== $filePath && is_file($filePath)) {
             unlink($filePath);
         }
     }

@@ -1,14 +1,13 @@
 'Show actions for': 'Afficher les actions suivantes :'
 all: Tous
+badge: Badge
 'for user': 'Filtrer sur l''utilisateur :'
 group: Groupe
-log_add_user: 'Ajout d''un utilisateur'
-log_change_right: 'Changement de droit'
+log_badge-awarding_filter: 'Attribution d''un badge'
+log_badge-awarding_title: 'Attribution d''un badge'
 log_change_set: 'Liste des propriétés modifiées'
 log_context: 'Contexte :'
-log_copy: Copie
 log_copy_source: 'Source de la copie'
-log_create: Création
 log_default_user: 'Claroline Connect'
 log_delete: Suppression
 log_doer: 'Auteur de l''action'
@@ -148,24 +147,17 @@ log_workspace-role-subscribe_user_shortname: Inscription
 log_workspace-role-subscribe_user_title: 'Inscription d''un utilisateur à un rôle (espace d''activités)'
 log_workspace-role-unsubscribe_group_filter: 'Retrait d''un groupe d''un rôle'
 log_workspace-role-unsubscribe_group_sentence: 'a désinscrit %receiver_group% du rôle %role% dans %workspace%'
-log_workspace-role-unsubscribe_group_shortname: Désinscription
 log_workspace-role-unsubscribe_group_title: 'Retrait d''un groupe d''un rôle (espace d''activités)'
 log_workspace-role-unsubscribe_user_filter: 'Retrait d''un utilisateur d''un rôle'
-log_workspace-role-unsubscribe_user_sentence: 'a désinscrit %receiver_user% du rôle %role% dans %workspace%'
-log_workspace-role-unsubscribe_user_shortname: Désinscription
 log_workspace-role-unsubscribe_user_title: 'Retrait d''un utilisateur d''un rôle (espace d''activités)'
 log_workspace-role-update_filter: 'Mise à jour d''un rôle'
 log_workspace-role-update_sentence: 'a modifié un rôle dans %workspace%'
-log_workspace-role-update_shortname: Modification
 log_workspace-role-update_title: 'Mise à jour d''un rôle (espace d''activités)'
 log_workspace-tool-read_filter: 'Ouverture d''un outil'
 log_workspace-tool-read_sentence: 'a ouvert l''outil %tool% dans %workspace%'
-log_workspace-tool-read_shortname: Ouverture
 log_workspace-tool-read_title: 'Ouverture d''un outil dans un espace d''activités'
 log_workspace-update_filter: 'Mise à jour'
-log_workspace-update_shortname: Modification
 log_workspace-update_title: 'Mise à jour d''un espace d''activités'
-log_workspace_read: 'Entrée dans l''espace d''activités'
 log_workspace_roles: 'Rôles espace d''activités'
 log_workspace_source: 'Espace d''activités source'
 resource: Ressource

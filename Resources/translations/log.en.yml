@@ -1,8 +1,11 @@
 'Show actions for': 'Show actions for'
 all: All
+badge: Badge
 'for user': 'for user'
 group: Group
 log_add_user: 'Add user'
+log_badge-awarding_filter: 'Badge awarding'
+log_badge-awarding_title: 'Badge awarding'
 log_change_right: 'Change rights'
 log_change_set: 'List of modified properties'
 log_context: 'Context:'
@@ -157,15 +160,8 @@ log_workspace-role-update_sentence: 'has updated a role in the workspace %worksp
 log_workspace-role-update_shortname: Update
 log_workspace-role-update_title: 'Update a role for a workspace'
 log_workspace-tool_read_filter: 'Workspace tool open'
-log_workspace-tool_read_sentence: 'has opened the tool %tool% in the workspace %workspace%'
-log_workspace-tool_read_shortname: Open
 log_workspace-tool_read_title: 'Workspace tool open'
-log_workspace-update_filter: 'Workspace update'
-log_workspace-update_shortname: Update
 log_workspace-update_title: 'Workspace update'
-log_workspace_read: 'Workspace entries'
-log_workspace_roles: 'Workspace roles'
-log_workspace_source: 'Workspace source'
 resource: Resource
 role: Role
 user: User

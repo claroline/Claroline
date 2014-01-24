@@ -10,6 +10,7 @@ back_to_users_badge: 'Retour à la liste des utilisateurs'
 badge: Badge
 badge_add_error_message: 'Erreur lors de l''ajout du badge.'
 badge_add_success_message: 'Badge ajouté avec succès.'
+badge_already_award_info_message: 'Validation de l''attribution du badge inutile, l''utilisateur possède déjà ce badge.'
 badge_already_award_message: 'Vous ne pouvez faire une demande d''attribution pour un badge que vous possédez déjà.'
 badge_already_claim_message: 'Vous avez déjà effectué une demande d''attribution pour ce badge.'
 badge_award_confirm_message: 'Etes-vous sûr de vouloir attribuer le badge <strong>%badgeName%</strong> à l''utilisateur <strong>%user%</strong> ?'
@@ -20,10 +21,7 @@ badge_award_form_user: Utilisateur
 badge_award_info_no_group_message: 'Aucun groupe sélectionné pour l''attribution'
 badge_awarded_automatically_on: 'Badge attribué automatiquement le %awardingDate%'
 badge_awarded_count_message: '%awaredBadge% attribution de badge effectuée.|%awaredBadge% attributions de badge effectuées.'
-badge_awarded_on_by: 'Badge attribué le %awardingDate% par %awardingIssuer%'
-badge_awarded_to: 'Badge attribué à'
 badge_awarding_rules_not_respected: 'Règle d''attribution du badge non respectées'
-badge_check_state: 'Conditions vérifiées'
 badge_claim_error_message: 'Erreur lors de la demande d''attribution de badge.'
 badge_claim_form_badge: 'Nom du badge à réclamer'
 badge_claim_success_message: 'Demande d''attribution de badge effectué avec succès.'
@@ -38,20 +36,28 @@ badge_edit_error_message: 'Erreur lors de la modification du badge.'
 badge_edit_success_message: 'Badge modifié avec succès.'
 badge_expired_on_date: 'Expire le %expirationDate%'
 badge_form_action: 'l''action'
+badge_form_advance_options: 'Options avancées'
 badge_form_automatic_award: 'Attribution automatique, si les règles sont respectées'
 badge_form_awarding_on_result_action: 'Attribuer en fonction du résultat de l''action'
+badge_form_awarding_on_result_action_to: à
+badge_form_badge: 'Lorsque l''action est l''attribution d''un badge'
 badge_form_badgeRules: 'Règles d''attribution'
+badge_form_badge_help: 'Si compatible avec l''action'
+badge_form_badge_selection: 'Sélectionner le badge'
 badge_form_change_image: 'Changer l''image du badge'
 badge_form_choose_image: 'Choisir l''image du badge'
 badge_form_criteria: 'Critères d''obtention'
 badge_form_description: Description
 badge_form_enTranslation: 'Traduction anglaise'
 badge_form_execute: Exécuter
+badge_form_execute_times: 'Quand il a effectué l''action'
 badge_form_expired_at: 'Date d''expiration'
 badge_form_frTranslation: 'Traduction française'
 badge_form_image: Image
 badge_form_name: Nom
+badge_form_rules: 'Règles d''attribution'
 badge_form_times: fois
+badge_form_user_target_of_action: 'L''utilisateur est la cible de l''action'
 badge_form_version: Version
 badge_no_rules_check_manually: 'Aucune règle, vérifier manuellement'
 badge_not_found_with_name: 'Aucun badge avec le nom ''%badgeName%'' n''a pu être retrouvé.'
@@ -77,17 +83,14 @@ bagde_awarded_to_none_user: 'Badge attribué à aucun utilisateur'
 claim: Réclamer
 claim_badge: 'Réclamer un badge'
 claim_badge_form: 'Formulaire de demande d''attribution de badge'
-claim_date: 'Date de la demande'
-claiming: 'Demande d''attribution|Demandes d''attribution'
-day: jour
 dont_award: 'Ne pas attribuer'
 edit_badge: 'Modification du badge ''%badge_name%'''
-month: mois
-no_badge_claim: 'Aucune demande d''attribution.'
 no_badges: 'Aucun badge.'
 no_rule: 'Aucune règle'
 rule: Règle
+rule_details: 'Détails de la règle'
 unaward: Désattribuer
+view_badge: 'Badge ''%badge_name%'''
 week: semaine
 workspace_badges: 'Badges de l''espace de travail'
 year: année

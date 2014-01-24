@@ -67,10 +67,23 @@
     #current_image {
         background-color: #f5f5f5;
     }
+    .file_upload {
+        position: relative;
+        overflow: hidden;
+
+        input[type=file] {
+            position: absolute;
+            top: 128px;
+            right: 0;
+            cursor: pointer;
+            opacity: 0;
+            filter: alpha(opacity=0);
+        }
+    }
 }
 .thumbnail {
     height:      128px;
-    padding-top: 20px;
+    padding-top: 30px;
     & > img {
         height: 64px;
     }
@@ -185,6 +198,7 @@ form{
     .rules {
         border:           1px solid #ddd;
         padding-top:      15px;
+        padding-bottom:   15px;
         background-color: #f5f5f5;
         select {
             display: inline-block;
@@ -228,4 +242,8 @@ form{
     .alert {
         margin-top: 20px;
     }
+}
+
+.fullwidth {
+    width: 100%;
 }

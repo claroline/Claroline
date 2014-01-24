@@ -12,6 +12,7 @@
 namespace Claroline\CoreBundle\Rule\Constraints;
 
 use Claroline\CoreBundle\Rule\Entity\Rule;
+use Doctrine\ORM\QueryBuilder;
 
 class ResultConstraint extends AbstractConstraint
 {
@@ -20,26 +21,39 @@ class ResultConstraint extends AbstractConstraint
      */
     public function validate()
     {
-        $isValid = true;
+        $isValid               = true;
         $resultComparisonTypes = Rule::getResultComparisonTypes();
 
         if (0 === count($this->getAssociatedLogs())) {
             $isValid = false;
-        }
+        } else {
+            foreach ($this->getAssociatedLogs() as $associatedLog) {
+                $associatedLogDetails = $associatedLog->getDetails();
 
-        foreach ($this->getAssociatedLogs() as $associatedLog) {
-            $associatedLogDetails = $associatedLog->getDetails();
-
-            if (isset($associatedLogDetails['result'])) {
-                $isVersionValid = version_compare(
-                    $associatedLogDetails['result'],
-                    $this->getRule()->getResult(),
-                    $resultComparisonTypes[$this->getRule()->getResultComparison()]
-                );
-                $isValid = $isValid && $isVersionValid;
+                if (isset($associatedLogDetails['result'])) {
+                    $isValid = $isValid && version_compare($associatedLogDetails['result'], $this->getRule()->getResult(), $resultComparisonTypes[$this->getRule()->getResultComparison()]);
+                } else {
+                    $isValid = false;
+                }
             }
         }
 
         return $isValid;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function isApplicableTo(Rule $rule)
+    {
+        return (null !== $rule->getResult());
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getQuery(QueryBuilder $queryBuilder)
+    {
+        return $queryBuilder;
     }
 }
