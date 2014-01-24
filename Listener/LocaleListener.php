@@ -39,7 +39,7 @@ class LocaleListener extends TranslatableListener
                     }
                 }
                 // update translation
-                if ($this->isTranslatable($translated, $config)) {
+                if ($this->isTranslatable($translated, $config, $field)) {
                     if ($translated !== '') {
                         $ea->setTranslationValue($object, $field, $translated);
                         // ensure clean changeset
@@ -55,7 +55,7 @@ class LocaleListener extends TranslatableListener
         }
     }
 
-    private function isTranslatable($translated, $config)
+    private function isTranslatable($translated, $config, $field)
     {
         if ($translated ||
             (!$this->getTranslationFallback() && (!isset($config['fallback'][$field]) ||
