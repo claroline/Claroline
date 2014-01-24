@@ -101,9 +101,33 @@ class PathManager
         return $this->om->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findOneByName('innova_path');
     }
     
+    /**
+     * Get a workspace from id
+     * @param integer $workspaceId
+     * @return \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace
+     */
     public function getWorkspace($workspaceId)
     {
         return $this->om->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->find($workspaceId);
+    }
+    
+    /**
+     * Find all paths for a workspace
+     * @return array
+     */
+    public function findAllFromWorkspace($workspace)
+    {
+        $paths = array();
+        if (!empty($this->user)) {
+            $paths["me"] = $this->om->getRepository('InnovaPathBundle:Path')->findAllByWorkspaceByUser($workspace, $this->user);
+            $paths["others"] = $this->om->getRepository('InnovaPathBundle:Path')->findAllByWorkspaceByNotUser($workspace, $this->user);
+        }
+        else {
+            $paths["me"] = array();
+            $paths["others"] = $this->om->getRepository('InnovaPathBundle:Path')->findAllByWorkspace($workspace);
+        }
+    
+        return $paths;
     }
     
     /**
@@ -165,104 +189,133 @@ class PathManager
     
     /**
      * Delete path
+     * @param  \Innova\PathBundle\Entity\Path $path
      * @return boolean
      * @throws \Exception
-     * @throws NotFoundHttpException
      */
-    public function delete()
+    public function delete(Path $path)
     {
-        $isDeleted = false;
+        $pathCreator = $path->getResourceNode()->getCreator();
         
-        // Load current path
-        $path = $this->om->getRepository('InnovaPathBundle:Path')->findOneByResourceNode($this->request->get('id'));
-        if (!empty($path)) {
-            // Path found
-            $pathCreator = $path->getResourceNode()->getCreator();
-            
-            // Check if current user can delete this path
-            if ($pathCreator == $this->user) {
-                // User can delete current path
-                $this->om->remove($path->getResourceNode());
-                $this->om->flush();
-            
-                $isDeleted = true;
-            }
-            else {
-                // User can't delete path from other users
-                throw new \Exception('You can delete only your own paths.');
-            }
+        // Check if current user can delete this path
+        if ($pathCreator == $this->user) {
+            // User can delete current path
+            $this->om->remove($path->getResourceNode());
+            $this->om->flush();
         }
         else {
-            // Path not found
-            throw new NotFoundHttpException('The path you want to delete can not be found.');
+            // User can't delete path from other users
+            throw new \Exception('You can delete only your own paths.');
         }
         
-        return $isDeleted;
+        return $this;
     }
 
     /**
-     * Find all paths for a workspace
-     * @return array
+     * Publish path
+     * @param  \Innova\PathBundle\Entity\Path $path
+     * @throws \Exception
      */
-    public function findAllFromWorkspace($workspace)
+    public function publish(Path $path)
     {
-        $paths = array();
-        if (is_object($this->user)) {
-            $paths["me"] = $this->om->getRepository('InnovaPathBundle:Path')->findAllByWorkspaceByUser($workspace, $this->user);
-            $paths["others"] = $this->om->getRepository('InnovaPathBundle:Path')->findAllByWorkspaceByNotUser($workspace, $this->user);
-        }
-        else {
-            $paths["me"] = array();
-            $paths["others"] = $this->om->getRepository('InnovaPathBundle:Path')->findAllByWorkspace($workspace);
+        // Get the path structure
+        $pathStructure = $path->getStructure();
+        if (empty($pathStructure)) {
+            throw new \Exception('Unable to find JSON structure of the path. Publication aborted.');
         }
         
-        return $paths;
-    }
-
-    /**
-     * Deploy a Path
-     * @return boolean
-     */
-    public function deploy()
-    {
-        // Récupération vars HTTP
-        $pathId = $this->request->get('pathId');
-        $path = $this->om->getRepository('InnovaPathBundle:Path')->findOneByResourceNode($pathId);
-
-        // On récupère la liste des steps avant modification pour supprimer ceux qui ne sont plus utilisés. TO DO : suppression
-        $steps = $this->om->getRepository('InnovaPathBundle:Step')->findByPath($path->getId());
-        // initialisation array() de steps à ne pas supprimer. Sera rempli dans la function JSONParser
-        $stepsToNotDelete = array();
-        $excludedResourcesToResourceNodes = array();
-
-        // JSON string to Object - Récupération des childrens de la racine
-        $json = json_decode($path->getStructure());
-        $json_root_steps = $json->steps;
-
-        // Récupération Workspace courant
-        $workspaceId = $this->request->get('workspaceId');
-        $workspace = $this->om->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->findOneById($workspaceId);
-
-        // lancement récursion
-        $this->JSONParser($json_root_steps, $this->user, $workspace, $path->getResourceNode()->getParent(), 0, null, 0, $path, $stepsToNotDelete, $excludedResourcesToResourceNodes);
-
-        // On nettoie la base des steps qui n'ont pas été réutilisé et les step2resourceNode associés
-        foreach ($steps as $step) {
-           if (!in_array($step->getId(),$stepsToNotDelete)) {
-                $this->om->remove($step);
-            }
+        // Decode structure
+        $pathStructure = json_decode($pathStructure);
+        
+        // Store existing steps to remove steps which no longer exist
+        $existingSteps = $path->getSteps();
+        $existingSteps = $existingSteps->toArray();
+        
+        // Publish steps for this path
+        $publishedSteps = $this->publishSteps($path, 0, !empty($pathStructure->steps) ? $pathStructure->steps : array ());
+        
+        // Clean steps to remove
+        $toRemove = array_diff($existingSteps, $publishedSteps);
+        foreach ($toRemove as $stepToRemove) {
+            $path->removeStep($stepToRemove);
         }
-
-        // Mise à jour des resourceNodeId dans la base.
-        $json = json_encode($json);
-        $path->setStructure($json);
+        
+        // Re encode updated structure and update Path
+        $path->setStructure(json_encode($pathStructure));
+        
+        // Mark Path as published
         $path->setDeployed(true);
         $path->setModified(false);
+        
+        // Persist data
+        $this->om->persist($path);
         $this->om->flush();
-
-        return true;
+        
+        return $this;
     }
-
+    
+    protected function publishSteps(Path $path, $level = 0, Step $parent = null, array $steps = array ())
+    {
+        $currentOrder = 0;
+        $processedSteps = array();
+        
+        // Retrieve existing steps for this path
+        $existingSteps = $path->getSteps();
+        foreach ($steps as $stepStructure) {
+            if (empty($stepStructure->resourceId) || !$existingSteps->containsKey($stepStructure->resourceId)) {
+                // Current step has never been published or step entity has been deleted => create it
+                $step = $this->stepManager->create($path, $level, $parent, $currentOrder, $stepStructure);
+                
+                // Update json structure with new resource ID
+                $stepStructure->resourceId = $step->getId();
+            }
+            else {
+                // Step already exists => update it
+                $step = $existingSteps->get($stepStructure->resourceId);
+                $step = $this->stepManager->edit($path, $level, $parent, $currentOrder, $stepStructure, $step);
+            }
+            
+            // Store existing resources to remove resource relations which no longer exist
+            $existingResources = $step->getStep2ResourceNodes();
+            $existingResources = $existingResources->toArray();
+            
+            // Process resources
+            $publishedResources = $this->publishResources($step);
+            
+            // Store step to know it doesn't have to be deleted when we will clean the path
+            $processedSteps[] = $step;
+            
+            // Process children of current step
+            if (!empty($stepStructure->children)) {
+                $childrenSteps = $this->publishSteps($path, $level++, $step, $stepStructure->children);
+                
+                // Store children steps
+                $processedSteps = array_merge($processedSteps, $childrenSteps);
+            }
+            
+            $currentOrder++;
+        }
+        
+        return $processedSteps;
+    }
+    
+    protected function publishResources(Step $step, array $resources = array(), array $excludedResources = array())
+    {
+        $processedResources = array ();
+        
+        // Process available resources of current step
+        foreach ($resources as $resource) {
+            
+        }
+        
+        // Process resources which have to be excluded for this step
+        foreach($excludedResources as $excludedResource) {
+            
+        }
+        
+        return $processedResources;
+    }
+    
     /**
      * private _jsonParser function
      *
@@ -280,16 +333,16 @@ class PathManager
     private function JSONParser($steps, $user, $workspace, $pathsDirectory, $lvl, $parent, $order, $path, &$stepsToNotDelete, &$excludedResourcesToResourceNodes)
     {
         foreach ($steps as $step) {
-            $order++;
+//             $order++;
 
             //  mise à jour du step 
-            $currentStep = $this->stepManager->edit($step->resourceId, $step, $path, $parent, $lvl, $order);
+//             $currentStep = $this->stepManager->edit($step->resourceId, $step, $path, $parent, $lvl, $order);
 
             // STEPSTONOT DELETE ARRAY UPDATE  - le step ne sera pas supprimé.
-            $stepsToNotDelete[] = $currentStep->getId();
+//             $stepsToNotDelete[] = $currentStep->getId();
 
             // mise à jour du step dans le JSON
-            $step->resourceId = $currentStep->getId();
+//             $step->resourceId = $currentStep->getId();
 
             // STEP'S RESOURCES MANAGEMENT
             $currentStep2resourceNodes = $currentStep->getStep2ResourceNodes();
