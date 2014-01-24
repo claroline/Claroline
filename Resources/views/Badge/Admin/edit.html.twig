@@ -300,8 +300,10 @@
                 {{ form_errors(form) }}
                 <div class="row badges_infos">
                     <div class="col-md-2{% if form.file.vars.errors|length > 0 %} has-error{% endif %}">
-                        <button type="button" id="change_image" class="btn btn-xs btn-default"><span class="icon-edit">{{ 'badge_form_change_image'|trans }}</span></button>
-                        <a href="#" class="thumbnail" id="upload_image_placeholder">
+                        <button type="button" id="change_image" class="btn btn-xs btn-default">
+                            <span class="icon-edit">{{ 'badge_form_change_image'|trans }}</span>
+                        </button>
+                        <a href="#" class="thumbnail upload_image_placeholder">
                             <img src="{{ asset(badge.webPath) }}" id="current_image" class="badge_image" />
                         </a>
                         {{ form_errors(form.file) }}
