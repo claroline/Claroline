@@ -1,6 +1,6 @@
 <?php
 
-namespace Claroline\CoreBundle\Migrations\sqlsrv;
+namespace Claroline\CoreBundle\Migrations\drizzle_pdo_mysql;
 
 use Doctrine\DBAL\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
@@ -8,26 +8,21 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2014/01/08 02:44:04
+ * Generation date: 2014/01/24 11:28:07
  */
-class Version20140108144400 extends AbstractMigration
+class Version20140124112805 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
         $this->addSql("
             ALTER TABLE claro_badge_rule 
-            ADD associated_badge INT NOT NULL
+            DROP FOREIGN KEY FK_805FCB8FF7A2C2FC
         ");
         $this->addSql("
             ALTER TABLE claro_badge_rule 
-            ADD userType SMALLINT NOT NULL
-        ");
-        $this->addSql("
-            ALTER TABLE claro_badge_rule ALTER COLUMN badge_id INT
-        ");
-        $this->addSql("
-            ALTER TABLE claro_badge_rule 
-            DROP CONSTRAINT FK_805FCB8FF7A2C2FC
+            ADD associated_badge INT NOT NULL, 
+            ADD userType INT NOT NULL, 
+            CHANGE badge_id badge_id INT DEFAULT NULL
         ");
         $this->addSql("
             ALTER TABLE claro_badge_rule 
@@ -49,32 +44,20 @@ class Version20140108144400 extends AbstractMigration
     {
         $this->addSql("
             ALTER TABLE claro_badge_rule 
-            DROP COLUMN associated_badge
+            DROP FOREIGN KEY FK_805FCB8F16F956BA
         ");
         $this->addSql("
             ALTER TABLE claro_badge_rule 
-            DROP COLUMN userType
+            DROP FOREIGN KEY FK_805FCB8FF7A2C2FC
         ");
         $this->addSql("
-            ALTER TABLE claro_badge_rule ALTER COLUMN badge_id INT NOT NULL
-        ");
-        $this->addSql("
-            ALTER TABLE claro_badge_rule 
-            DROP CONSTRAINT FK_805FCB8F16F956BA
-        ");
-        $this->addSql("
-            ALTER TABLE claro_badge_rule 
-            DROP CONSTRAINT FK_805FCB8FF7A2C2FC
-        ");
-        $this->addSql("
-            IF EXISTS (
-                SELECT * 
-                FROM sysobjects 
-                WHERE name = 'IDX_805FCB8F16F956BA'
-            ) 
-            ALTER TABLE claro_badge_rule 
-            DROP CONSTRAINT IDX_805FCB8F16F956BA ELSE 
             DROP INDEX IDX_805FCB8F16F956BA ON claro_badge_rule
+        ");
+        $this->addSql("
+            ALTER TABLE claro_badge_rule 
+            DROP associated_badge, 
+            DROP userType, 
+            CHANGE badge_id badge_id INT NOT NULL
         ");
         $this->addSql("
             ALTER TABLE claro_badge_rule 
