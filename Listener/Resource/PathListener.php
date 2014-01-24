@@ -4,7 +4,6 @@ namespace Innova\PathBundle\Listener\Resource;
 
 use Symfony\Component\DependencyInjection\ContainerAware;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-
 use Claroline\CoreBundle\Event\OpenResourceEvent;
 use Claroline\CoreBundle\Event\DeleteResourceEvent;
 use Claroline\CoreBundle\Event\CreateFormResourceEvent;
@@ -15,6 +14,9 @@ use Innova\PathBundle\Entity\Path;
 
 class PathListener extends ContainerAware
 {
+
+
+
     public function onPathOpen(OpenResourceEvent $event)
     {
         $path = $event->getResource();
@@ -24,18 +26,32 @@ class PathListener extends ContainerAware
                     ->generate(
                     'innova_path_player_index',
                     array(
-                                    'workspaceId' => $path->getResourceNode()->getWorkspace()->getId(),
-                                    'pathId' => $path->getId(),
-                                    'stepId' => $path->getRootStep()->getId()
+                        'workspaceId' => $path->getResourceNode()->getWorkspace()->getId(),
+                        'pathId' => $path->getId(),
+                        'stepId' => $path->getRootStep()->getId()
                     )
             );
             
             $event->setResponse(new RedirectResponse($route));
         }
         else {
-            throw new \Exception("Path cannot be played if it is not published.");
+
+            $route = $this->container
+                    ->get('router')
+                    ->generate(
+                    'claro_workspace_open_tool',
+                    array(
+                        'workspaceId' => $path->getResourceNode()->getWorkspace()->getId(),
+                        'toolName' => 'innova_path'
+                    )
+            );
+            $this->container->get('session')->getFlashBag()->add(
+                    'warning',
+                    $this->container->get('translator')->trans("path_open_not_published_error", array(), "innova_tools")
+                );
         }
         
+        $event->setResponse(new RedirectResponse($route));
         $event->stopPropagation();
     }
 

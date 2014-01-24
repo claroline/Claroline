@@ -67,9 +67,9 @@ play: Execute
 paths_list: Paths list
 progression: Progression
 published: Published
+path_open_not_published_error: The path you wanted to open has not been published yet by its owner.
 
 # R
-resources: Resources
 resources: Resources
 
 # S

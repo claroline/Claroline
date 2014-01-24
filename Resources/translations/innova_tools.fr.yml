@@ -63,6 +63,7 @@ play: Exécuter
 path_delete_success: Le parcours a été supprimé
 path_delete_error: Le parcours n'a pas pu être supprimé. Veuillez réessayer
 published: Publié
+path_open_not_published_error: Le parcours que vous vouliez ouvrir n'a pas encore été publié par son propriétaire. 
 
 # R
 resources: Ressources
