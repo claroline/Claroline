@@ -55,15 +55,17 @@
                     </button>
                 </span>
             </div>
-            <div>
-                <input id="check-notifications" type="checkbox"
-                   {%  if app.user.isMailNotified() %}
-                       checked
-                   {%  endif %}
-                >
-                    {{ 'get_mail_notifications'|trans({'%adress%': app.user.getMail() }, 'platform') }}
-                </input>
-            </div>
+            {% if isMailerAvailable %}
+                <div>
+                    <input id="check-notifications" type="checkbox"
+                       {%  if app.user.isMailNotified() %}
+                           checked
+                       {%  endif %}
+                    >
+                        {{ 'get_mail_notifications'|trans({'%adress%': app.user.getMail() }, 'platform') }}
+                    </input>
+                </div>
+            {% endif %}
         </div>
     </div>
     {{ renderPager(search, pager) }}

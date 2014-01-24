@@ -696,7 +696,8 @@ registration_mail_requirements: >
   %username% : qui affichera le nom de l'utilisateur </br>
   %password% : qui affichera le mot de passe de l'utilisateur
   </p>
-mail_layout: Mise en page des emails.get_mail_notifications: Je veux recevoir les notifications sur %.
+mail_layout: Mise en page des emails.
+get_mail_notifications: Je veux recevoir les notifications sur %adress%.
 missing_%content%: Le placeholder %content% est manquant pour la langue "%language%".
 missing_%username%: Le placeholder %username% est manquant pour la langue "%language%".
 missing_%password%: Le placeholder %password% est manquant pour la langue "%language%".
