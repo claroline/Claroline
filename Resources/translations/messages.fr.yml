@@ -175,6 +175,7 @@ interactionOpen creation: Création d'une question Ouverte
 inValidMark: Note invalide
 
 # K
+key word: Mot clé
 kind of question: Quel type de question
 
 # L
@@ -422,6 +423,7 @@ Never: jamais
 
 Planning.end_time: Date de fin
 Planning.start_time: Date de début
+Points: Points
 
 Question_creation: Création d'une question
 Question.description: Description de la question (facultatif)

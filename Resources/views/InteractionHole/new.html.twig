@@ -66,7 +66,7 @@
                             <h3 class="panel-title">{{ 'hole' | trans }}</h3>
                         </div>
                         <div class="panel-body">
-                            <a id="create_hole" class="btn btn-primary" onclick="createHole('{{ 'delete' | trans }}');">
+                            <a id="create_hole" class="btn btn-primary" onclick="createHole();">
                                 <i class="icon-plus"></i> {{ 'create hole' | trans }}
                             </a>
                             </br></br>
@@ -98,11 +98,11 @@
 {% if error is defined %}
     <script type="text/javascript">
         newHintEdit('{{ 'hint' | trans }}', '{{ 'penalty' | trans }}', '{{ 'add hint' | trans }}', '{{ 'delete' | trans }}');
-        addFormHole('{{ "add" | trans }}', '{{ "Response" | trans }}', '{{ "point" | trans }}', '{{ "Inter_Hole.size" | trans }}', '{{ "Inter_Hole.orthography" | trans }}', '{{ "delete" | trans }}', '{{ "Hole.selector" | trans }}', '{{ asset('bundles/ujmexo/images/ajouter_ligne.jpeg') }}');
+        addFormHole('{{ "add" | trans }}', '{{ "Response" | trans }}', '{{ "point" | trans }}', '{{ "Inter_Hole.size" | trans }}', '{{ "Inter_Hole.orthography" | trans }}', '{{ "delete" | trans }}', '{{ "Hole.selector" | trans }}', '{{ asset('bundles/ujmexo/images/ajouter_ligne.jpeg') }}', '{{ "key word" | trans }}', '{{ "points" | trans  }}');
     </script>
 {% else %}
     <script type="text/javascript">
         newHint('{{ 'hint' | trans }}', '{{ 'penalty' | trans }}', '{{ 'add hint' | trans }}', '{{ 'delete' | trans }}');
-        addFormHole('{{ "add" | trans }}', '{{ "Response" | trans }}', '{{ "point" | trans }}', '{{ "Inter_Hole.size" | trans }}', '{{ "Inter_Hole.orthography" | trans }}', '{{ "delete" | trans }}', '{{ "Hole.selector" | trans }}', '{{ asset('bundles/ujmexo/images/ajouter_ligne.jpeg') }}');
+        addFormHole('{{ "add" | trans }}', '{{ "Response" | trans }}', '{{ "point" | trans }}', '{{ "Inter_Hole.size" | trans }}', '{{ "Inter_Hole.orthography" | trans }}', '{{ "delete" | trans }}', '{{ "Hole.selector" | trans }}', '{{ asset('bundles/ujmexo/images/ajouter_ligne.jpeg') }}', '{{ "key word" | trans  }}', '{{ "points" | trans  }}');
     </script>
 {% endif %}

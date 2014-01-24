@@ -175,6 +175,7 @@ interactionOpen creation: interactionOpen creation
 inValidMark: Invalid score
 
 # K
+key word: Key word
 kind of question: What kind of question
 
 # L
@@ -422,6 +423,7 @@ Never: Never
 
 Planning.end_time: End Date
 Planning.start_time: Start date
+Points: Points
 
 Question_creation: Question creation
 Question.description: Description of the question (optional)

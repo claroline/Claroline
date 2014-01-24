@@ -46,7 +46,7 @@ class WordResponseType extends AbstractType
     {
         $builder
             ->add('response', 'text')
-            ->add('score', 'text')
+            ->add('score', 'text', array('attr' => array('style' => 'width:50px; text-align: end;')))
             //->add('interactionopen')
             //->add('hole')
         ;
