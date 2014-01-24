@@ -1,6 +1,6 @@
 <?php
 
-namespace Claroline\CoreBundle\Migrations\oci8;
+namespace Claroline\CoreBundle\Migrations\pdo_sqlsrv;
 
 use Doctrine\DBAL\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
@@ -8,23 +8,22 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2014/01/08 02:44:03
+ * Generation date: 2014/01/24 11:28:07
  */
-class Version20140108144400 extends AbstractMigration
+class Version20140124112805 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
         $this->addSql("
             ALTER TABLE claro_badge_rule 
-            ADD (
-                associated_badge NUMBER(10) NOT NULL, 
-                userType NUMBER(5) NOT NULL
-            )
+            ADD associated_badge INT NOT NULL
         ");
         $this->addSql("
-            ALTER TABLE claro_badge_rule MODIFY (
-                badge_id NUMBER(10) DEFAULT NULL NULL
-            )
+            ALTER TABLE claro_badge_rule 
+            ADD userType SMALLINT NOT NULL
+        ");
+        $this->addSql("
+            ALTER TABLE claro_badge_rule ALTER COLUMN badge_id INT
         ");
         $this->addSql("
             ALTER TABLE claro_badge_rule 
@@ -49,13 +48,15 @@ class Version20140108144400 extends AbstractMigration
     public function down(Schema $schema)
     {
         $this->addSql("
-            ALTER TABLE claro_badge_rule MODIFY (
-                badge_id NUMBER(10) NOT NULL
-            )
+            ALTER TABLE claro_badge_rule 
+            DROP COLUMN associated_badge
         ");
         $this->addSql("
             ALTER TABLE claro_badge_rule 
-            DROP (associated_badge, userType)
+            DROP COLUMN userType
+        ");
+        $this->addSql("
+            ALTER TABLE claro_badge_rule ALTER COLUMN badge_id INT NOT NULL
         ");
         $this->addSql("
             ALTER TABLE claro_badge_rule 
@@ -66,7 +67,14 @@ class Version20140108144400 extends AbstractMigration
             DROP CONSTRAINT FK_805FCB8FF7A2C2FC
         ");
         $this->addSql("
-            DROP INDEX IDX_805FCB8F16F956BA
+            IF EXISTS (
+                SELECT * 
+                FROM sysobjects 
+                WHERE name = 'IDX_805FCB8F16F956BA'
+            ) 
+            ALTER TABLE claro_badge_rule 
+            DROP CONSTRAINT IDX_805FCB8F16F956BA ELSE 
+            DROP INDEX IDX_805FCB8F16F956BA ON claro_badge_rule
         ");
         $this->addSql("
             ALTER TABLE claro_badge_rule 
