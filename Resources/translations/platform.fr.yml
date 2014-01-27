@@ -218,6 +218,7 @@ generate_url_subscription: 'Inscription à l''espace d''activité par un utilisa
 generate_url_subscription_anonyme: 'Inscription à l''espace d''activité par un anonyme'
 generate_url_subscription_fail: 'Vous devez d''abord cochez la case de l''inscription publique avant de pouvoir voir l''url'
 generate_url_subscription_sucsess: 'Vous avez été ajouté à l''espace d''activité'
+get_mail_notifications: 'Je veux recevoir les notifications sur %adress%.'
 group: Groupe
 group_configuration: 'Configuration du groupe'
 group_creation: 'Création d''un groupe'
@@ -269,6 +270,7 @@ lastName: Nom
 last_30_days_activity: 'Activités des 30 derniers jours'
 last_name: Nom
 layout: Layout
+layout_mail_requirements: "<p> C'est ici qui vous pouvez redéfinir le layout des emails envoyés par la plateforme. </p> <p> 2 placeholders existent pour ce formulaire:</br> %content% : Ce placeholder est requis et sera replacé par le contenu du mail</br> %platform_name% : Ce placeholder est optionnel et sera remplacé par le nom de la plateforme </p>\n\n<p> Vous pouvez utiliser la version avancée de l'éditeur afin d'y inclure du html. </p>\n"
 left: Gauche
 line_number: 'Ligne %line%:'
 line_per_page: 'Lignes par page'
@@ -289,6 +291,7 @@ mail_form_content: Contenu
 mail_form_object: Objet
 mail_form_receiver: destinataire(s)
 mail_invalid: 'Le format de votre email n''est pas valide'
+mail_layout: 'Mise en page des emails.'
 mail_login: 'Cliquez sur le lien'
 mail_message: 'Vous avez demandé la réinitialisation de votre mot de passe. Cliquez sur lien ci-dessous pour le réinitialiser. Si vous n''êtes pas à l''origine de cette action, veuillez ignorer ce message.'
 mail_not_available: 'La fonction d''envoi de mail n''est pas disponible'
@@ -311,6 +314,9 @@ messages_removed: 'Messages supprimés'
 messages_sent: 'Messages envoyés'
 messages_sent_removed: 'Messages envoyés supprimés'
 misc: Divers
+missing_%content%: 'Le placeholder %content% est manquant pour la langue "%language%".'
+missing_%password%: 'Le placeholder %password% est manquant pour la langue "%language%".'
+missing_%username%: 'Le placeholder %username% est manquant pour la langue "%language%".'
 month.April: Avril
 month.August: Août
 month.December: Décembre
@@ -353,6 +359,8 @@ none: Aucun
 not_allowed_message: 'Vous n''êtes pas autorisé(e) à effectuer cette action.'
 not_blank_expected: 'Cette valeur ne peut pas être vide'
 note: Note
+notification_activated: 'Notifications activées.'
+notification_deactivated: 'Notifications désactivées.'
 object: Objet
 ok: Ok
 only_for_workspace_creation: 'Seulement pour la création d''un espace d''activités'
@@ -434,6 +442,7 @@ registered: Inscrit
 registered_groups: 'Groupes enregistrés'
 registered_users: 'Utilisateurs enregistrés'
 registration: Inscription
+registration_mail_requirements: "<p>C'est ici qui vous pouvez redéfinir le contenu du mail d'inscription. </p> <p> La première entrée est le sujet du mail. Vous pouvez y utiliser le placeholder %platform_name% qui sera remplacé par le nom de votre plateforme. </p> <p> La seconde entrée est le contenu du mail. Vous devez y utiliser 2 placeholders: </br> %username% : qui affichera le nom de l'utilisateur </br> %password% : qui affichera le mot de passe de l'utilisateur </p>\n"
 registration_to_workspaces: 'Inscription à des espaces d''activités'
 remove_group_confirm_message: 'Êtes-vous sûr de vouloir supprimer ce groupe ?'
 remove_group_s_confirm_message: 'Êtes-vous sûr de vouloir supprimer ces %count% groupes?'
@@ -587,8 +596,6 @@ upload_fail: 'Echec du téléchargement'
 url_invalid: 'Le code n''est pas correct, n''essayez pas de changer l''adresse'
 user: Utilisateur
 user_accounts: 'Comptes utilisateur'
-user_removed: 'Utilisateur supprimé'
-user_accounts: Comptes utilisateur
 user_creation: 'Création d''un utilisateur'
 user_form_administrativeCode: 'Code administratif'
 user_form_firstName: Nom
@@ -601,6 +608,7 @@ user_form_plainPassword_first: 'Mot de passe'
 user_form_plainPassword_second: Vérification
 user_form_username: 'Nom d''utilisateur'
 user_parameters: 'Paramètres de l''utilisateur'
+user_removed: 'Utilisateur supprimé'
 username: 'Nom d''utilisateur'
 username_found_at: 'Le nom d''utilisateur %username% a été trouvé aux lignes: %lines%'
 username_or_email: 'Nom d''utilisateur ou email'
@@ -672,28 +680,3 @@ yes: oui
 yesterday_activity: 'Activité de la veille'
 your_username: 'Votre nom d''utilisateur est '
 404: 'La page que vous cherchez n''existe pas.'
-layout_mail_requirements: >
-  <p>
-  C'est ici qui vous pouvez redéfinir le layout des emails envoyés par la plateforme.
-  </p>
-  <p>
-  2 placeholders existent pour ce formulaire:</br>
-  %content% : Ce placeholder est requis et sera replacé par le contenu du mail</br>
-  %platform_name% : Ce placeholder est optionnel et sera remplacé par le nom de la plateforme
-  </p>
-
-  <p>
-  Vous pouvez utiliser la version avancée de l'éditeur afin d'y inclure du html.
-  </p>
-registration_mail_requirements: >
-  <p>C'est ici qui vous pouvez redéfinir le contenu du mail d'inscription. </p>
-  <p>
-  La première entrée est le sujet du mail. Vous pouvez y utiliser le placeholder %platform_name% qui
-  sera remplacé par le nom de votre plateforme.
-  </p>
-  <p>
-  La seconde entrée est le contenu du mail. Vous devez y utiliser 2 placeholders: </br>
-  %username% : qui affichera le nom de l'utilisateur </br>
-  %password% : qui affichera le mot de passe de l'utilisateur
-  </p>
-mail_layout: Mise en page des emails.

@@ -122,6 +122,12 @@ class UserManager
         return $user;
     }
 
+    /**
+     * Rename a user.
+     *
+     * @param User $user
+     * @param $username
+     */
     public function rename(User $user, $username)
     {
         $user->setUsername($username);
@@ -129,6 +135,13 @@ class UserManager
             ' - ' . $user->getUsername();
         $pws = $user->getPersonalWorkspace();
         $this->workspaceManager->rename($pws, $personalWorkspaceName);
+        $this->om->persist($user);
+        $this->om->flush();
+    }
+
+    public function setIsMailNotified(User $user, $isNotified)
+    {
+        $user->setIsMailNotified($isNotified);
         $this->om->persist($user);
         $this->om->flush();
     }

@@ -15,6 +15,7 @@ use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Library\Configuration\UnwritableException;
 use Claroline\CoreBundle\Manager\LocaleManager;
 use Claroline\CoreBundle\Manager\RoleManager;
+use Claroline\CoreBundle\Manager\ContentManager;
 use Claroline\CoreBundle\Library\Installation\Settings\MailingSettings;
 use Claroline\CoreBundle\Library\Installation\Settings\MailingChecker;
 use Claroline\CoreBundle\Manager\TermsOfServiceManager;
@@ -45,6 +46,7 @@ class ParametersController extends Controller
     private $localeManager;
     private $translator;
     private $mailManager;
+    private $contentManager;
 
     /**
      * @DI\InjectParams({
@@ -55,7 +57,8 @@ class ParametersController extends Controller
      *     "request"        = @DI\Inject("request"),
      *     "translator"     = @DI\Inject("translator"),
      *     "termsOfService" = @DI\Inject("claroline.common.terms_of_service_manager"),
-     *     "mailManager"    = @DI\Inject("claroline.manager.mail_manager")
+     *     "mailManager"    = @DI\Inject("claroline.manager.mail_manager"),
+     *     "contentManager" = @DI\Inject("claroline.manager.content_manager")
      * })
      */
     public function __construct(
@@ -66,7 +69,8 @@ class ParametersController extends Controller
         Request $request,
         Translator $translator,
         TermsOfServiceManager $termsOfService,
-        MailManager $mailManager
+        MailManager $mailManager,
+        ContentManager $contentManager
     )
     {
         $this->configHandler = $configHandler;
@@ -77,6 +81,7 @@ class ParametersController extends Controller
         $this->localeManager = $localeManager;
         $this->translator = $translator;
         $this->mailManager = $mailManager;
+        $this->contentManager = $contentManager;
     }
 
     /**
@@ -376,25 +381,35 @@ class ParametersController extends Controller
      * @Template("ClarolineCoreBundle:Administration\platform\mail:registration.html.twig")
      *
      * @return \Symfony\Component\HttpFoundation\Response
+     *
+     * @todo add csfr protection
      */
     public function submitInscriptionMailAction()
     {
-        $form = $this->formFactory->create(
-            new AdminForm\MailInscriptionType(),
-            $this->mailManager->getInscriptionMail()
-        );
+        $form = $this->request->get('platform_parameters_form');
+        $errors = $this->mailManager->validateInscriptionMail($form['content']);
 
-        $form->handleRequest($this->request);
-        //form sumbission
+        if (count($errors) === 0) {
+            if (isset($form['content'])) {
+                $this->contentManager->updateContent($this->mailManager->getInscriptionMail(), $form['content']);
+            }
 
-        if ($form->isValid()) {
-            $content = $form->get('content')->getData();
-
-            throw new \Exception('No implementation yet.');
+            return $this->redirect($this->generateUrl('claro_admin_index'));
         }
 
-        throw new \Exception('Validation failed.');
+        $formWithErrors = $this->formFactory->create(
+            new AdminForm\MailInscriptionType(),
+            $form['content']
+        );
 
+        foreach ($errors as $language => $errors) {
+            foreach ($errors['content'] as $error) {
+                $trans = $this->translator->trans($error, array('%language%' => $language), 'platform');
+                $formWithErrors->get('content')->addError(new FormError($trans));
+            }
+        }
+
+        return array('form' => $formWithErrors->createView());
     }
 
     /**
@@ -426,10 +441,33 @@ class ParametersController extends Controller
      * @Template("ClarolineCoreBundle:Administration\platform\mail:layout.html.twig")
      *
      * @return \Symfony\Component\HttpFoundation\Response
+     *
+     * @todo add csfr protection
      */
     public function submitMailLayoutAction()
     {
+        $form = $this->request->get('platform_parameters_form');
+        $errors = $this->mailManager->validateLayoutMail($form['content']);
 
+        if (count($errors) === 0) {
+            if (isset($form['content'])) {
+                $this->contentManager->updateContent($this->mailManager->getLayoutMail(), $form['content']);
+            }
+
+            return $this->redirect($this->generateUrl('claro_admin_index'));
+        }
+
+        $formWithErrors = $this->formFactory->create(
+            new AdminForm\MailLayoutType(),
+            $form['content']
+        );
+
+        foreach ($errors as $language => $error) {
+            $trans = $this->translator->trans($error['content'], array('%language%' => $language), 'platform');
+            $formWithErrors->get('content')->addError(new FormError($trans));
+        }
+
+        return array('form' => $formWithErrors->createView());
     }
 
     /**

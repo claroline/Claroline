@@ -255,6 +255,11 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
      */
     protected $isEnabled = true;
 
+    /**
+     * @ORM\Column(name="is_mail_notified", type="boolean")
+     */
+    protected $isMailNotified = false;
+
     public function __construct()
     {
         parent::__construct();
@@ -835,5 +840,15 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
     public function setIsEnabled($isEnabled)
     {
         $this->isEnabled = $isEnabled;
+    }
+
+    public function setIsMailNotified($isMailNotified)
+    {
+        $this->isMailNotified = $isMailNotified;
+    }
+
+    public function isMailNotified()
+    {
+        return $this->isMailNotified;
     }
 }

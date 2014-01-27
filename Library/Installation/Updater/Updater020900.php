@@ -98,6 +98,7 @@ class Updater020900
             $user = $users[$i];
             $this->log('updating ' . $user->getUsername() . '...');
             $user->setIsEnabled(true);
+            $user->setIsMailNotified(false);
             $this->om->persist($user);
 
             if ($i % 200 === 0) {

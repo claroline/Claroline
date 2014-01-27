@@ -9,6 +9,7 @@ class LocaleListener extends TranslatableListener
 {
     public function postLoad(EventArgs $args)
     {
+        $this->setLocale();
         $ea = $this->getEventAdapter($args);
         $om = $ea->getObjectManager();
         $object = $ea->getObject();
@@ -63,6 +64,17 @@ class LocaleListener extends TranslatableListener
             isset($config['fallback'][$field]) && !$config['fallback'][$field])
         ) {
             return true;
+        }
+    }
+
+    //override the locale for the term of services
+    //@todo it's not very pretty so we should an other way to do it.
+    private function setLocale()
+    {
+        if (isset($_SESSION['_sf2_attributes'])) {
+            if (isset($_SESSION['_sf2_attributes']['_locale'])) {
+                $this->setTranslatableLocale($_SESSION['_sf2_attributes']['_locale']);
+            }
         }
     }
 }

@@ -176,4 +176,46 @@ class MailManager
 
         return false;
     }
+
+    /**
+     * @param $translatedContents
+     *
+     * @return array
+     */
+    public function validateInscriptionMail(array $translatedContents)
+    {
+        $languages = array_keys($translatedContents);
+        $errors = array();
+
+        foreach ($languages as $language) {
+            if (!strpos($translatedContents[$language]['content'], '%username%')) {
+                $errors[$language]['content'][] = 'missing_%username%';
+            }
+            if (!strpos($translatedContents[$language]['content'], '%password%')) {
+                $errors[$language]['content'][] = 'missing_%password%';
+            }
+        }
+
+        return $errors;
+    }
+
+    /**
+     * @param $translatedContents
+     *
+     * @return array
+     */
+    public function validateLayoutMail(array $translatedContents)
+    {
+        $languages = array_keys($translatedContents);
+        $errors = array();
+
+        foreach ($languages as $language) {
+            if (!strpos($translatedContents[$language]['content'], '%content%')) {
+                $errors[$language]['content'] = 'missing_%content%';
+            }
+        }
+
+        return $errors;
+    }
+
 }
