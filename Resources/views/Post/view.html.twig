@@ -47,6 +47,7 @@
                             {% set author = (null == comment.author) ? 'anonymous'|trans({}, 'platform') : comment.author.firstname ~ ' ' ~ comment.author.lastname %}
                             <li>{% if authorPicture is null %}<span class="icon-user"></span>{% else %}<img src="{{ asset('uploads/pictures/') ~ authorPicture }}" alt="{{ author }}" class="img-rounded user_picture">{% endif %}&nbsp;{% if null == comment.author %}{{ author }}{% else %}<a href="{{ path('claro_profile_view', {'userId': comment.author.id}) }}" title="{{ author }}">{{ author }}</a>{% endif %}</li>
                             {% if isPublished %}<li><span class="icon-calendar"></span>  {{ comment.publicationDate|date('date_format'|trans({}, 'platform')) }}</li>{% endif %}
+                            <a name="comment-{{ comment.id }}"></a>
                         </ul>
                     </div>
                     <div class="panel-body">

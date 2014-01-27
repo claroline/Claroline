@@ -27,6 +27,7 @@ class LogCommentCreateEvent extends AbstractLogResourceEvent
                 'slug'  => $post->getSlug()
             ),
             'comment' => array(
+                'id'      => $comment->getId(),
                 'content' => $comment->getMessage()
             )
         );

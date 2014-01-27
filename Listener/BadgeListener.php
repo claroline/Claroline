@@ -3,6 +3,8 @@
 namespace Icap\BlogBundle\Listener;
 
 use Claroline\CoreBundle\Event\Badge\BadgeCreateValidationLinkEvent;
+use Icap\BlogBundle\Event\Log\LogCommentCreateEvent;
+use Icap\BlogBundle\Event\Log\LogCommentDeleteEvent;
 use Icap\BlogBundle\Event\Log\LogPostCreateEvent;
 use Icap\BlogBundle\Event\Log\LogPostDeleteEvent;
 use Icap\BlogBundle\Event\Log\LogPostReadEvent;
@@ -35,6 +37,8 @@ class BadgeListener
      * @DI\Observe("badge-resource-icap_blog-post_delete-generate_validation_link")
      * @DI\Observe("badge-resource-icap_blog-post_read-generate_validation_link")
      * @DI\Observe("badge-resource-icap_blog-post_update-generate_validation_link")
+     * @DI\Observe("badge-resource-icap_blog-comment_create-generate_validation_link")
+     * @DI\Observe("badge-resource-icap_blog-comment_delete-generate_validation_link")
      */
     public function onBagdeCreateValidationLink(BadgeCreateValidationLinkEvent $event)
     {
@@ -56,6 +60,19 @@ class BadgeListener
                 $url     = $this->router->generate('icap_blog_post_view', $parameters, UrlGeneratorInterface::ABSOLUTE_PATH);
                 $title   = $logDetails['post']['title'];
                 $content = sprintf('<a href="%s" title="%s">%s</a>', $url, $title, $title);
+                break;
+            case LogCommentCreateEvent::ACTION:
+            case LogCommentDeleteEvent::ACTION:
+                $logDetails = $event->getLog()->getDetails();
+                $parameters = array(
+                    'blogId'   => $logDetails['post']['blog'],
+                    'postSlug' => $logDetails['post']['slug']
+                );
+
+                $url     = $this->router->generate('icap_blog_post_view', $parameters, UrlGeneratorInterface::ABSOLUTE_PATH);
+                $title   = $logDetails['post']['title'];
+                $anchor  = isset($logDetails['comment']['id']) ? '#comment-' . $logDetails['comment']['id'] : '';
+                $content = sprintf('<a href="%s%s" title="%s">%s</a>', $url, $anchor, $title, $title);
                 break;
         }
 

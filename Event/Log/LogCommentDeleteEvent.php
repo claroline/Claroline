@@ -35,6 +35,7 @@ class LogCommentDeleteEvent extends AbstractLogResourceEvent
                 'slug'  => $post->getSlug()
             ),
             'comment' => array(
+                'id'      => $comment->getId(),
                 'author'  => $author,
                 'content' => $comment->getMessage()
             )
