@@ -102,21 +102,23 @@ class ProfileController extends Controller
         $validateLogs       = $badgeRuleValidator->validate($badge, $user);
         $validateLogsLink   = array();
 
-        foreach ($validateLogs as $validateLog) {
-            $validationLink = null;
-            $eventLogName   = sprintf('badge-%s-generate_validation_link', $validateLog->getAction());
+        if (false !== $validateLogs) {
+            foreach ($validateLogs as $validateLog) {
+                $validationLink = null;
+                $eventLogName   = sprintf('badge-%s-generate_validation_link', $validateLog->getAction());
 
-            $eventDispatcher = $this->get('event_dispatcher');
-            if ($eventDispatcher->hasListeners($eventLogName)) {
-                $event = $eventDispatcher->dispatch(
-                    $eventLogName,
-                    new BadgeCreateValidationLinkEvent($validateLog)
-                );
+                $eventDispatcher = $this->get('event_dispatcher');
+                if ($eventDispatcher->hasListeners($eventLogName)) {
+                    $event = $eventDispatcher->dispatch(
+                        $eventLogName,
+                        new BadgeCreateValidationLinkEvent($validateLog)
+                    );
 
-                $validationLink = $event->getContent();
+                    $validationLink = $event->getContent();
 
-                if (null !== $validationLink) {
-                    $validateLogsLink[$validateLog->getId()] = $event->getContent();
+                    if (null !== $validationLink) {
+                        $validateLogsLink[$validateLog->getId()] = $event->getContent();
+                    }
                 }
             }
         }
