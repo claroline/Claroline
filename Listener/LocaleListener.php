@@ -68,7 +68,7 @@ class LocaleListener extends TranslatableListener
     }
 
     //override the locale for the term of services
-    //@todo it's not very pretty so we should an other way to do it.
+    //@todo it's not very pretty so we should find an other way to do it.
     private function setLocale()
     {
         if (isset($_SESSION['_sf2_attributes'])) {
