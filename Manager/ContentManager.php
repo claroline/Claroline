@@ -73,22 +73,7 @@ class ContentManager
         $content = $this->getContent($filter);
 
         if ($content instanceof Content) {
-
-            $en = $this->entityManager->createQueryBuilder()
-                ->select('content.content', 'content.title')
-                ->from('ClarolineCoreBundle:Content', 'content')
-                ->where('content.id = ' . $content->getId())
-                ->getQuery()
-                ->setHint(\Gedmo\Translatable\TranslatableListener::HINT_TRANSLATABLE_LOCALE, 'fr')
-                ->execute(
-                    compact('entityId', 'entityClass'),
-                    Query::HYDRATE_ARRAY
-                );
-
-            $translations = $this->translations->findTranslations($content);
-            $translations['en'] = $en[0];
-
-            return $translations;
+            return $this->translations->findTranslations($content);
         }
     }
 
