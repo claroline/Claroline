@@ -26,7 +26,7 @@
     {% endif %}
 {% endmacro %}
 
-{% macro displayControls(workspaceId) %}
+{% macro displayControls() %}
     {% if app.user %}
         <button class="btn btn-default action-button" data-action="remove">
             <i class="icon-trash"></i>
@@ -78,7 +78,7 @@
     <div class="panel-body">
         <div class="search-bar row">
             <div class="col-md-8">
-                {{ displayControls(workspace.getId()) }}
+                {{ displayControls() }}
             </div>
             <div class="col-md-4">
                  <div class="input-group">
@@ -134,7 +134,8 @@
                                 </a>
                             </td>
                             <td>
-                                <a class="btn btn-default" href="{{ path('claro_admin_group_settings_form', {'groupId': group.getId()}) }}" id="link-settings-{{ group.getId() }}"  data-toggle="tooltip" data-placement="bottom" title="{{ 'settings'|trans({}, 'platform') }}" data-original-title="{{ 'settings'|trans({}, 'platform') }}">
+                                <a class="btn btn-default"
+                                   href="{{ path('claro_admin_group_settings_form', {'groupId': group.getId()}) }}" id="link-settings-{{ group.getId() }}"  data-toggle="tooltip" data-placement="bottom" title="{{ 'settings'|trans({}, 'platform') }}" alt="{{ 'settings'|trans({}, 'platform') }}">
                                     <i class="icon-cog"></i>
                                 </a>
                             </td>
@@ -146,7 +147,7 @@
         {{ renderPager(search, pager, max, order) }}
 
         <div>
-            {{ displayControls(workspace.getId()) }}
+            {{ displayControls() }}
         </div>
     </div>
 {% endblock %}

@@ -12,7 +12,7 @@
 namespace Claroline\CoreBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpFoundation\Request;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Form\BaseProfileType;
@@ -172,9 +172,9 @@ class RegistrationController extends Controller
      * Checks if a user is allowed to register.
      * ie: if the self registration is disabled, he can't.
      *
+     * @throws \Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException
      * @return Respone
      *
-     * @throws AccessDeniedException
      */
     private function checkAccess()
     {
@@ -186,6 +186,6 @@ class RegistrationController extends Controller
             return;
         }
 
-        throw new AccessDeniedException();
+        throw new AccessDeniedHttpException();
     }
 }
