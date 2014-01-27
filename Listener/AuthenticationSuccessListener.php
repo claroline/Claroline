@@ -19,7 +19,7 @@ use Claroline\CoreBundle\Manager\TermsOfServiceManager;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use Doctrine\ORM\EntityManager;
 use JMS\DiExtraBundle\Annotation as DI;
-use Symfony\Bundle\TwigBundle\Debug\TimedTwigEngine;
+use Symfony\Component\Templating\EngineInterface;
 use Symfony\Component\Form\FormFactory;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
@@ -55,7 +55,7 @@ class AuthenticationSuccessListener
         SecurityContextInterface $context,
         StrictDispatcher $eventDispatcher,
         PlatformConfigurationHandler $configurationHandler,
-        TimedTwigEngine $templating,
+        EngineInterface $templating,
         FormFactory $formFactory,
         TermsOfServiceManager $termsOfService,
         ObjectManager $manager
@@ -124,7 +124,8 @@ class AuthenticationSuccessListener
             $token = $this->securityContext->getToken() and
             $user = $token->getUser() and
             $user instanceof User and
-            !$user->getTermsOfService()
+            !$user->getTermsOfService() and
+            !$this->securityContext->isGranted('ROLE_PREVIOUS_ADMIN')
         ) {
             return $user;
         }

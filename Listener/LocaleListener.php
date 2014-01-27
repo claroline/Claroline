@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of the Claroline Connect package.
+ *
+ * (c) Claroline Consortium <consortium@claroline.net>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace Claroline\CoreBundle\Listener;
 
 use Gedmo\Translatable\TranslatableListener;
@@ -34,7 +43,7 @@ class LocaleListener extends TranslatableListener
             foreach ($config['fields'] as $field) {
                 $translated = '';
                 foreach ($result as $entry) {
-                    if ($entry['field'] == $field) {
+                    if ($entry['field'] === $field) {
                         $translated = $entry['content'];
                         break;
                     }
@@ -58,17 +67,19 @@ class LocaleListener extends TranslatableListener
 
     private function isTranslatable($translated, $config, $field)
     {
-        if ($translated ||
+        return (
+            $translated ||
             (!$this->getTranslationFallback() && (!isset($config['fallback'][$field]) ||
             !$config['fallback'][$field])) || ($this->getTranslationFallback() &&
             isset($config['fallback'][$field]) && !$config['fallback'][$field])
-        ) {
-            return true;
-        }
+        );
     }
 
-    //override the locale for the term of services
-    //@todo it's not very pretty so we should an other way to do it.
+    /**
+     * Override the locale for the term of services
+     *
+     * @todo it's not very pretty so we should find an other way to do it.
+     */
     private function setLocale()
     {
         if (isset($_SESSION['_sf2_attributes'])) {
