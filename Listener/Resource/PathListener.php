@@ -4,6 +4,7 @@ namespace Innova\PathBundle\Listener\Resource;
 
 use Symfony\Component\DependencyInjection\ContainerAware;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+
 use Claroline\CoreBundle\Event\OpenResourceEvent;
 use Claroline\CoreBundle\Event\DeleteResourceEvent;
 use Claroline\CoreBundle\Event\CreateFormResourceEvent;
@@ -12,11 +13,17 @@ use Claroline\CoreBundle\Event\CopyResourceEvent;
 
 use Innova\PathBundle\Entity\Path;
 
+/**
+ * Path Event Listener
+ * Used to integrate Path to Claroline resource manager
+ */
 class PathListener extends ContainerAware
 {
-
-
-
+    /**
+     * Fired when a new ResourceNode of type Path is opened
+     * @param  \Claroline\CoreBundle\Event\OpenResourceEvent $event
+     * @throws \Exception
+     */
     public function onPathOpen(OpenResourceEvent $event)
     {
         $path = $event->getResource();
@@ -31,8 +38,6 @@ class PathListener extends ContainerAware
                         'stepId' => $path->getRootStep()->getId()
                     )
             );
-            
-            $event->setResponse(new RedirectResponse($route));
         }
         else {
 
@@ -55,6 +60,10 @@ class PathListener extends ContainerAware
         $event->stopPropagation();
     }
 
+    /**
+     * Fired when a new ResourceNode of type Path is opened
+     * @param \Claroline\CoreBundle\Event\CreateResourceEvent $event
+     */
     public function onPathCreate(CreateResourceEvent $event)
     {
         // Create form
@@ -87,6 +96,10 @@ class PathListener extends ContainerAware
         $event->stopPropagation();
     }
 
+    /**
+     * Fired when the form to create a new ResourceNode is displayed
+     * @param \Claroline\CoreBundle\Event\CreateFormResourceEvent $event
+     */
     public function onPathCreateForm(CreateFormResourceEvent $event)
     {
         // Create form
@@ -104,12 +117,20 @@ class PathListener extends ContainerAware
         $event->stopPropagation();
     }
 
+    /**
+     * Fired when a ResourceNode of type Path is deleted
+     * @param \Claroline\CoreBundle\Event\DeleteResourceEvent $event
+     */
     public function onPathDelete(DeleteResourceEvent $event)
     {
 
         $event->stopPropagation();
     }
 
+    /**
+     * Fired when a ResourceNode of type Path is duplicated
+     * @param \Claroline\CoreBundle\Event\DeleteResourceEvent $event
+     */
     public function onPathCopy(CopyResourceEvent $event)
     {
 

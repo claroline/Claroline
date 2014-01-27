@@ -31,7 +31,7 @@ use Innova\PathBundle\Entity\Path;
  * @link       http://innovalangues.net
  *
  * @Route(
- *      "workspaces/{workspaceId}/tool/path_editor",
+ *      "workspaces/{workspaceId}/tool/path",
  *      name    = "innova_path_editor",
  *      service = "innova_path.controller.path_editor"
  * )
@@ -92,7 +92,7 @@ class EditorController
     /**
      * Create a new path
      * @Route(
-     *      "/",
+     *      "/new",
      *      name    = "innova_path_editor_new",
      *      options = {"expose" = true}
      * )
@@ -133,7 +133,7 @@ class EditorController
     /**
      * Edit an existing path
      * @Route(
-     *      "/{id}",
+     *      "/edit/{id}",
      *      name         = "innova_path_editor_edit",
      *      requirements = {"id" = "\d+"},
      *      options      = {"expose" = true}

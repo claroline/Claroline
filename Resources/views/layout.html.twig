@@ -1,0 +1,6 @@
+{% extends "ClarolineCoreBundle:Workspace:layout.html.twig" %}
+
+{# Display Favorites bar #}
+{% block rightbar %}
+    {{ render(controller('innova_favorite.controller.sidebar:displayAction')) }}
+{% endblock %}

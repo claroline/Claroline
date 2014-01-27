@@ -88,55 +88,76 @@ class StepManager
         return $step2ressourceNode;
     }
     
-    public function edit($id, \stdClass $jsonStep, Path $path, $parent = null, $lvl, $order)
+    /**
+     * Create a new step from JSON structure
+     * @param  \Innova\PathBundle\Entity\Path $path          Parent path of the step
+     * @param  integer                        $level         Depth of the step in the path
+     * @param  \Innova\PathBundle\Entity\Step $parent        Parent step of the step
+     * @param  integer                        $order         Order of the step relative to its siblings
+     * @param  \stdClass                      $stepStructure Data about the step
+     * @return \Innova\PathBundle\Entity\Step                Edited step
+     */
+    public function create(Path $path, $level = 0, Step $parent = null, $order = 0, \stdClass $stepStructure)
     {
-        if ($id == null) {
-            $step = new Step();
-        } else {
-            $step = $this->om->getRepository('InnovaPathBundle:Step')->findOneById($id);
-        }
-
+        $step = new Step();
+        
+        return $this->edit($path, $level, $order, $stepStructure, $step);
+    }
+    
+    /**
+     * Update an existing step from JSON structure
+     * @param  \Innova\PathBundle\Entity\Path $path          Parent path of the step
+     * @param  integer                        $level         Depth of the step in the path
+     * @param  \Innova\PathBundle\Entity\Step $parent        Parent step of the step
+     * @param  integer                        $order         Order of the step relative to its siblings
+     * @param  \stdClass                      $stepStructure Data about the step
+     * @param  \Innova\PathBundle\Entity\Step $step          Current step to edit
+     * @return \Innova\PathBundle\Entity\Step                Edited step
+     */
+    public function edit(Path $path, $level = 0, Step $parent = null, $order = 0, \stdClass $stepStructure, Step $step)
+    {
+        // Update step properties
         $step->setPath($path);
-        
-        $step->setName($jsonStep->name);
         $step->setParent($parent);
+        $step->setLvl($level);
+        $step->setOrder($order);
         
-        $step->setStepOrder($order);
-        $step->setLvl($lvl);
+        // Grab data from structure
+        $name = !empty($stepStructure->name) ? $stepStructure->name : Step::DEFAULT_NAME;
+        $step->setName($name);
         
-        $durationHours = !empty($jsonStep->durationHours) ? intval($jsonStep->durationHours) : 0;
-        $durationMinutes = !empty($jsonStep->durationMinutes) ? intval($jsonStep->durationMinutes) : 0;
+        $image = !empty($stepStructure->image) ? $stepStructure->image : null;
+        $step->setImage($image);
+        
+        $description = !empty($stepStructure->description) ? $stepStructure->description : null;
+        $step->setDescription($description);
+        
+        $withTutor = !empty($stepStructure->withTutor) ? $stepStructure->withTutor : false;
+        $step->setWithTutor($withTutor);
+        
+        $withComputer = !empty($stepStructure->withComputer) ? $stepStructure->withComputer : false;
+        $step->setWithComputer($withComputer);
+        
+        $durationHours = !empty($stepStructure->durationHours) ? intval($stepStructure->durationHours) : 0;
+        $durationMinutes = !empty($jsonStep->durationMinutes) ? intval($stepStructure->durationMinutes) : 0;
         $step->setDuration(new \DateTime('00-00-00 ' . $durationHours . ':' . $durationMinutes . ':00'));
         
-        if (!empty($jsonStep->withTutor)) {
-            $step->setWithTutor($jsonStep->withTutor);
+        $stepWho = null;
+        if (!empty($stepStructure->who)) {
+            $stepWho = $this->om->getRepository('InnovaPathBundle:StepWho')->findOneById($stepStructure->who);
         }
+        $step->setStepWho($stepWho);
         
-        if (!empty($jsonStep->withComputer)) {
-            $step->setWithComputer($jsonStep->withComputer);
+        $stepWhere = null;
+        if (!empty($stepStructure->where)) {
+            $stepWhere = $this->om->getRepository('InnovaPathBundle:StepWhere')->findOneById($stepStructure->where);
         }
+        $step->setStepWhere($stepWhere);
         
-        if (!empty($jsonStep->who)) {
-            $stepWho = $this->om->getRepository('InnovaPathBundle:StepWho')->findOneById($jsonStep->who);
-            $step->setStepWho($stepWho);
-        }
-        
-        if (!empty($jsonStep->where)) {
-            $stepWhere = $this->om->getRepository('InnovaPathBundle:StepWhere')->findOneById($jsonStep->where);
-            $step->setStepWhere($stepWhere);
-        }
-        
-        if (!empty($jsonStep->description)) {
-            $step->setDescription($jsonStep->description);
-        }
-        
-        if (!empty($jsonStep->image)) {
-            $step->setImage($jsonStep->image);
-        }
-
+        // Save modifications
         $this->om->persist($step);
         $this->om->flush();
-
+        
         return $step;
     }
 }

@@ -36,11 +36,7 @@
  */
 namespace Innova\PathBundle\Controller;
 
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -67,10 +63,11 @@ use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
  * @link       http://innovalangues.net
  * 
  * @Route(
- *      "",
- *      name = "innova_path",
- *      service="innova_path.controller.path"
+ *      "workspaces/{workspaceId}/tool/path",
+ *      name    = "innova_path",
+ *      service = "innova_path.controller.path"
  * )
+ * @ParamConverter("workspace", class="ClarolineCoreBundle:Workspace\AbstractWorkspace", options={"mapping": {"workspaceId": "id"}})
  */
 class PathController
 {
@@ -91,13 +88,7 @@ class PathController
      * @var \Symfony\Component\Translation\TranslatorInterface
      */
     protected $translator;
-    
-    /**
-     * Current request
-     * @var \Symfony\Component\HttpFoundation\Request
-     */
-    protected $request;
-    
+
     /**
      * Current path manager
      * @var \Innova\PathBundle\Manager\PathManager
@@ -119,22 +110,10 @@ class PathController
         PathManager              $pathManager
     )
     {
-        $this->session         = $session;
-        $this->router          = $router;
-        $this->translator      = $translator;
-        $this->pathManager     = $pathManager;
-    }
-    
-    /**
-     * Inject current request into service
-     * @param Request $request
-     * @return \Innova\PathBundle\Controller\PathController
-     */
-    public function setRequest(Request $request = null)
-    {
-        $this->request = $request;
-        
-        return $this;
+        $this->session     = $session;
+        $this->router      = $router;
+        $this->translator  = $translator;
+        $this->pathManager = $pathManager;
     }
     
     /**
@@ -142,33 +121,25 @@ class PathController
      * @return RedirectResponse
      *
      * @Route(
-     *     "/path/delete",
-     *     name = "innova_path_delete_path",
-     *     options = {"expose"=true}
+     *     "/delete/{id}",
+     *     name         = "innova_path_delete_path",
+     *     requirements = {"id" = "\d+"},
+     *     options      = {"expose"=true}
      * )
      * @Method("DELETE")
      */
-    public function deleteAction()
+    public function deleteAction(AbstractWorkspace $workspace, Path $path)
     {
         try {
-            $isDeleted = $this->pathManager->delete();
-            if ($isDeleted) {
-                // Delete success
-                $this->session->getFlashBag()->add(
-                    'success',
-                    $this->translator->trans("path_delete_success", array(), "innova_tools")
-                );
-            }
-            else {
-                // Delete error
-                $this->session->getFlashBag()->add(
-                    'error',
-                    $this->translator->trans("path_delete_error", array(), "innova_tools")
-                );
-            }
+            $this->pathManager->delete($path);
+            
+            // Delete success
+            $this->session->getFlashBag()->add(
+                'success',
+                $this->translator->trans("path_delete_success", array(), "innova_tools")
+            );
         } catch (\Exception $e) {
-            // User is not authorized to delete current path
-            // or Path to delete is not found
+            // Error
             $this->session->getFlashBag()->add(
                 'error',
                 $e->getMessage()
@@ -176,52 +147,49 @@ class PathController
         }
     
         // Redirect to path list
-        $workspaceId = $this->request->get('workspaceId');
-        $url = $this->router->generate('claro_workspace_open_tool', array ('workspaceId' => $workspaceId, 'toolName' => 'innova_path'));
+        $url = $this->router->generate('claro_workspace_open_tool', array (
+            'workspaceId' => $workspace->getId(), 
+            'toolName' => 'innova_path'
+        ));
     
         return new RedirectResponse($url, 302);
     }
     
     /**
-     * Deploy path
+     * Publish path
      * Create all needed resources for path to be played
-     * @return RedirectResponse
-     *
+     * 
      * @Route(
-     *     "/innova_path_deploy",
-     *     name = "innova_path_deploy"
+     *     "/publish/{id}",
+     *     name         = "innova_path_deploy",
+     *     requirements = {"id" = "\d+"},
+     *     options      = {"expose" = true}
      * )
-     * @Method("POST")
+     * @Method("GET")
      */
-    public function deployAction()
+    public function publishAction(AbstractWorkspace $workspace, Path $path)
     {
         try {
-            $isDeployed = $this->pathManager->deploy();
-            if ($isDeployed) {
-                // Deploy success
-                $this->session->getFlashBag()->add(
-                    'success',
-                    $this->translator->trans("deploy_success", array(), "innova_tools")
-                );
-            }
-            else {
-                // Deploy error
-                $this->session->getFlashBag()->add(
-                    'error',
-                    $this->translator->trans("deploy_error", array(), "innova_tools")
-                );
-            }
+            $this->pathManager->publish($path);
+        
+            // Delete success
+            $this->session->getFlashBag()->add(
+                'success',
+                $this->translator->trans('deploy_success', array(), "innova_tools")
+            );
         } catch (\Exception $e) {
-            // Exception trows during deployement
+            // Error
             $this->session->getFlashBag()->add(
                 'error',
                 $e->getMessage()
             );
         }
-    
+        
         // Redirect to path list
-        $workspaceId = $this->request->get('workspaceId');
-        $url = $this->router->generate('claro_workspace_open_tool', array ('workspaceId' => $workspaceId, 'toolName' => 'innova_path'));
+        $url = $this->router->generate('claro_workspace_open_tool', array (
+            'workspaceId' => $workspace->getId(), 
+            'toolName' => 'innova_path'
+        ));
         
         return new RedirectResponse($url, 302);
     }
