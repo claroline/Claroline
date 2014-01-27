@@ -96,7 +96,7 @@ class AuthenticationSuccessListener
             if ($termsOfService = $event->getRequest()->get('accept_terms_of_service_form') and
                 isset($termsOfService['terms_of_service'])
             ) {
-                $user->setTermsOfService(true);
+                $user->setAcceptedTerms(true);
                 $this->manager->persist($user);
                 $this->manager->flush();
             } else {
@@ -124,8 +124,7 @@ class AuthenticationSuccessListener
             $token = $this->securityContext->getToken() and
             $user = $token->getUser() and
             $user instanceof User and
-            !$user->getTermsOfService() and
-            !$this->securityContext->isGranted('ROLE_PREVIOUS_ADMIN')
+            !$user->hasAcceptedTerms() 
         ) {
             return $user;
         }

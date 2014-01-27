@@ -123,7 +123,7 @@ class ContentManager
     /**
      * Delete a content
      *
-     * @param Content $content
+     * @param Content|ContentTranslation $content
      */
     public function deleteContent($content)
     {

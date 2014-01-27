@@ -248,7 +248,7 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
     /**
      * @ORM\Column(type="boolean", nullable=true)
      */
-    protected $termsOfService;
+    protected $hasAcceptedTerms;
 
     /**
      * @ORM\Column(name="is_enabled", type="boolean")
@@ -391,11 +391,11 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
     }
 
     /**
-     * @param string $password
+     * @param string $locale
      *
      * @return User
      */
-    public function setlocale($locale)
+    public function setLocale($locale)
     {
         $this->locale = $locale;
 
@@ -802,14 +802,14 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
         $this->description = $description;
     }
 
-    public function getTermsOfService()
+    public function hasAcceptedTerms()
     {
-        return $this->termsOfService;
+        return $this->hasAcceptedTerms;
     }
 
-    public function setTermsOfService($termsOfService)
+    public function setAcceptedTerms($boolean)
     {
-        $this->termsOfService = $termsOfService;
+        $this->hasAcceptedTerms = $boolean;
     }
 
     public function getOrderableFields()
