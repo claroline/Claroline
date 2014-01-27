@@ -11,6 +11,7 @@
 
 namespace Claroline\CoreBundle\Controller\Badge;
 
+use Claroline\CoreBundle\Event\Badge\BadgeCreateValidationLinkEvent;
 use Claroline\CoreBundle\Rule\Validator;
 use Claroline\CoreBundle\Entity\Badge\Badge;
 use Claroline\CoreBundle\Entity\Badge\UserBadge;
@@ -93,19 +94,40 @@ class ProfileController extends Controller
     {
         /** @var \Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler $platformConfigHandler */
         $platformConfigHandler = $this->get('claroline.config.platform_config_handler');
-        
+
         $badge->setLocale($platformConfigHandler->getParameter('locale_language'));
 
         /** @var \Claroline\CoreBundle\Rule\Validator $badgeRuleValidator */
         $badgeRuleValidator = $this->get("claroline.rule.validator");
         $validateLogs       = $badgeRuleValidator->validate($badge, $user);
+        $validateLogsLink   = array();
+
+        foreach ($validateLogs as $validateLog) {
+            $validationLink = null;
+            $eventLogName   = sprintf('badge-%s-generate_validation_link', $validateLog->getAction());
+
+            $eventDispatcher = $this->get('event_dispatcher');
+            if ($eventDispatcher->hasListeners($eventLogName)) {
+                $event = $eventDispatcher->dispatch(
+                    $eventLogName,
+                    new BadgeCreateValidationLinkEvent($validateLog)
+                );
+
+                $validationLink = $event->getContent();
+
+                if (null !== $validationLink) {
+                    $validateLogsLink[$validateLog->getId()] = $event->getContent();
+                }
+            }
+        }
 
         $userBadge = $this->getDoctrine()->getRepository('ClarolineCoreBundle:Badge\UserBadge')->findOneBy(array('badge' => $badge, 'user' => $user));
 
         return array(
-            'userBadge'   => $userBadge,
-            'badge'       => $badge,
-            'checkedLogs' => $validateLogs
+            'userBadge'    => $userBadge,
+            'badge'        => $badge,
+            'checkedLogs'  => $validateLogs,
+            'checkedLinks' => $validateLogsLink
         );
     }
 
