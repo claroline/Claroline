@@ -42,7 +42,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * UJM\ExoBundle\Entity\InteractionHole
  *
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="UJM\ExoBundle\Repository\InteractionHoleRepository")
  * @ORM\Table(name="ujm_interaction_hole")
  */
 class InteractionHole
@@ -64,7 +64,7 @@ class InteractionHole
     private $html;
 
     /**
-     * @ORM\OneToOne(targetEntity="UJM\ExoBundle\Entity\Interaction")
+     * @ORM\OneToOne(targetEntity="UJM\ExoBundle\Entity\Interaction", cascade={"remove"})
      */
     private $interaction;
     

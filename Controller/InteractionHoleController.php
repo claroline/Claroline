@@ -216,26 +216,24 @@ class InteractionHoleController extends Controller
     * Deletes a InteractionHole entity.
     *
     */
-    public function deleteAction($id)
+    public function deleteAction($id, $pageNow)
     {
         $form = $this->createDeleteForm($id);
         $request = $this->getRequest();
 
-        $form->bindRequest($request);
+        $form->handleRequest($request);
 
-        if ($form->isValid()) {
-            $em = $this->getDoctrine()->getEntityManager();
-            $entity = $em->getRepository('UJMExoBundle:InteractionHole')->find($id);
+        $em = $this->getDoctrine()->getManager();
+        $entity = $em->getRepository('UJMExoBundle:InteractionHole')->find($id);
 
-            if (!$entity) {
-                throw $this->createNotFoundException('Unable to find InteractionHole entity.');
-            }
-
-            $em->remove($entity);
-            $em->flush();
+        if (!$entity) {
+            throw $this->createNotFoundException('Unable to find InteractionQCM entity.');
         }
 
-        return $this->redirect($this->generateUrl('interactionhole'));
+        $em->remove($entity);
+        $em->flush();
+
+        return $this->redirect($this->generateUrl('ujm_question_index', array('pageNow' => $pageNow)));
     }
 
     private function createDeleteForm($id)
