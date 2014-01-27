@@ -7,7 +7,7 @@ var tableHoles = $('#tableHoles'); // div which contain the choices array
 var container = $('div#ujm_exobundle_interactionholetype_holes'); 
 
 //To find the prototype of wordReponse which is integrated in the prototye of hole
-tableHoles.append('<div id="prototypes" style="display:none"></div>');
+//tableHoles.append('<div id="prototypes" style="display:none"></div>');
 var containerWR = container.attr('data-prototype').valueOf();
 $('#prototypes').append(containerWR);
 containerWR = $('#ujm_exobundle_interactionholetype_holes___name___wordResponses');
@@ -144,7 +144,9 @@ function addWR(index)
     containerWR.append(
         $(containerWR.attr('data-prototype')
         .replace(/holes___name__/g, 'holes_'+index)
-        .replace(/wordResponses___name__/g, 'wordResponses_'+indexWR))
+        .replace(/wordResponses___name__/g, 'wordResponses_'+indexWR)
+        .replace(/\[holes\]\[__name__\]/g, '[holes]['+index+']')
+        .replace(/\[wordResponses\]\[__name__\]/g, '[wordResponses]['+indexWR+']'))
    );
     /*containerWR.append(
         $(containerWR.attr('data-prototype').replace(/__name__/, 8))
@@ -207,7 +209,7 @@ function setOrder() {
 
     var order = 1;
 
-    $('#newTable').find('tr:not(:first)').each(function () {
+    $('#newTable').find('.trhole').each(function () {
         $(this).find('input:first').val(order);
         order++;
     });

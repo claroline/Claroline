@@ -128,7 +128,7 @@ class InteractionHole
     {
         $this->holes[] = $hole;
 
-        $hole->setInteractionOpen($this);
+        $hole->setInteractionHole($this);
     }
 
     public function removeHole(\UJM\ExoBundle\Entity\Hole $hole)

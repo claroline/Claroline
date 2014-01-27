@@ -64,13 +64,6 @@ class Hole
     private $size;
 
     /**
-     * @var float $score
-     *
-     * @ORM\Column(name="score", type="float")
-     */
-    private $score;
-
-    /**
      * @var integer $position
      *
      * @ORM\Column(name="position", type="integer", nullable=true)
@@ -138,26 +131,6 @@ class Hole
     public function getSize()
     {
         return $this->size;
-    }
-
-    /**
-     * Set score
-     *
-     * @param integer $score
-     */
-    public function setScore($score)
-    {
-        $this->score = $score;
-    }
-
-    /**
-     * Get score
-     *
-     * @return float
-     */
-    public function getScore()
-    {
-        return $this->score;
     }
 
     /**
@@ -241,5 +214,5 @@ class Hole
     public function removeWordResponse(\UJM\ExoBundle\Entity\WordResponse $wordResponse)
     {
         
-    }
+    }    
 }
