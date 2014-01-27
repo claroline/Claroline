@@ -13,8 +13,17 @@ use Claroline\CoreBundle\Event\CopyResourceEvent;
 
 use Innova\PathBundle\Entity\Path;
 
+/**
+ * Path Event Listener
+ * Used to integrate Path to Claroline resource manager
+ */
 class PathListener extends ContainerAware
 {
+    /**
+     * Fired when a new ResourceNode of type Path is opened
+     * @param  \Claroline\CoreBundle\Event\OpenResourceEvent $event
+     * @throws \Exception
+     */
     public function onPathOpen(OpenResourceEvent $event)
     {
         $path = $event->getResource();
@@ -24,21 +33,26 @@ class PathListener extends ContainerAware
                     ->generate(
                     'innova_path_player_index',
                     array(
-                                    'workspaceId' => $path->getResourceNode()->getWorkspace()->getId(),
-                                    'pathId' => $path->getId(),
-                                    'stepId' => $path->getRootStep()->getId()
+                        'workspaceId' => $path->getResourceNode()->getWorkspace()->getId(),
+                        'pathId' => $path->getId(),
+                        'stepId' => $path->getRootStep()->getId()
                     )
             );
             
             $event->setResponse(new RedirectResponse($route));
         }
         else {
-            throw new \Exception("Path cannot be played if it is not published.");
+            // Path is not deployed => redirect to caller
+            throw new \Exception('Path cannot be played if it is not published.');
         }
         
         $event->stopPropagation();
     }
 
+    /**
+     * Fired when a new ResourceNode of type Path is opened
+     * @param \Claroline\CoreBundle\Event\CreateResourceEvent $event
+     */
     public function onPathCreate(CreateResourceEvent $event)
     {
         // Create form
@@ -71,6 +85,10 @@ class PathListener extends ContainerAware
         $event->stopPropagation();
     }
 
+    /**
+     * Fired when the form to create a new ResourceNode is displayed
+     * @param \Claroline\CoreBundle\Event\CreateFormResourceEvent $event
+     */
     public function onPathCreateForm(CreateFormResourceEvent $event)
     {
         // Create form
@@ -88,12 +106,19 @@ class PathListener extends ContainerAware
         $event->stopPropagation();
     }
 
+    /**
+     * Fired when a ResourceNode of type Path is deleted
+     * @param \Claroline\CoreBundle\Event\DeleteResourceEvent $event
+     */
     public function onPathDelete(DeleteResourceEvent $event)
     {
-
         $event->stopPropagation();
     }
 
+    /**
+     * Fired when a ResourceNode of type Path is duplicated
+     * @param \Claroline\CoreBundle\Event\DeleteResourceEvent $event
+     */
     public function onPathCopy(CopyResourceEvent $event)
     {
 

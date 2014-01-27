@@ -14,6 +14,8 @@ use Doctrine\Common\Collections\ArrayCollection;
  */
 class Step
 {
+    const DEFAULT_NAME = 'Step';
+    
     /**
      * Unique identifier of the step
      * @var integer
@@ -44,9 +46,9 @@ class Step
      * Order of the steps relative to his siblings in the path
      * @var integer
      *
-     * @ORM\Column(name="stepOrder", type="integer")
+     * @ORM\Column(name="step_order", type="integer")
      */
-    protected $stepOrder;
+    protected $order;
 
     /**
      * Parent step
@@ -297,24 +299,24 @@ class Step
     }
 
     /**
-     * Set stepOrder
-     * @param  integer $stepOrder
+     * Set order
+     * @param  integer $order
      * @return \Innova\PathBundle\Entity\Step
      */
-    public function setStepOrder($stepOrder)
+    public function setOrder($order)
     {
-        $this->stepOrder = $stepOrder;
+        $this->order = $order;
 
         return $this;
     }
 
     /**
-     * Get oreder of the step
+     * Get order of the step
      * @return integer
      */
-    public function getStepOrder()
+    public function getOrder()
     {
-        return $this->stepOrder;
+        return $this->order;
     }
 
     /**
@@ -488,10 +490,10 @@ class Step
             
             // Order siblings by stepOrder
             $sortSiblings = function ($a, $b) {
-                if ($a->getStepOrder() === $b->getStepOrder()) {
+                if ($a->getOrder() === $b->getOrder()) {
                     return 0;
                 }
-                return ($a->getStepOrder() < $b->getStepOrder()) ? -1 : 1;
+                return ($a->getOrder() < $b->getOrder()) ? -1 : 1;
             };
             
             uasort($siblings, $sortSiblings);
