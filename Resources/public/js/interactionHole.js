@@ -82,7 +82,7 @@ function addHole(indHole, valHole)
     // Remove the useless fileds form
     container.remove();
     
-    var addwr = '<a href="#" id="add_keyword" class="btn btn-primary"><i class="icon-plus"></i>&nbsp;'+langKeyWord+'</a>';
+    var addwr = '<a href="#" id="add_keyword_'+index+'" class="btn btn-primary"><i class="icon-plus"></i>&nbsp;'+langKeyWord+'</a>';
     $('#newTable').find('tr:last').append('<td class="classic"><table id="tabWR_'+index+'"><tbody></tbody></table>'+addwr+'</td>');
     
     addWR(index);
@@ -112,7 +112,7 @@ function addHole(indHole, valHole)
         return false;
     });
     
-    $('#add_keyword').click(function (e) {
+    $('#add_keyword_'+index).click(function (e) {
             addWR(index);
             e.preventDefault(); // prevent add # in the url
             return false;
