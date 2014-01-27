@@ -121,17 +121,6 @@ class ContentManager
     }
 
     /**
-     * Delete a content
-     *
-     * @param Content|ContentTranslation $content
-     */
-    public function deleteContent($content)
-    {
-        $this->manager->remove($content);
-        $this->manager->flush();
-    }
-
-    /**
      * Delete a translation of content
      *
      * @param $locale
@@ -148,7 +137,8 @@ class ContentManager
         }
 
         if ($content instanceof ContentTranslation or $content instanceof Content) {
-            $this->deleteContent($content);
+            $this->manager->remove($content);
+            $this->manager->flush();
         }
     }
 }
