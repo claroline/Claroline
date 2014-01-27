@@ -73,16 +73,23 @@ class Hole
     /**
      * @var integer $position
      *
-     * @ORM\Column(name="position", type="integer")
+     * @ORM\Column(name="position", type="integer", nullable=true)
      */
     private $position;
 
     /**
      * @var boolean $orthography
      *
-     * @ORM\Column(name="orthography", type="boolean")
+     * @ORM\Column(name="orthography", type="boolean", nullable=true)
      */
     private $orthography;
+    
+    /**
+     * @var boolean $selector
+     *
+     * @ORM\Column(name="selector", type="boolean", nullable=true)
+     */
+    private $selector;
 
     /**
      * @ORM\ManyToOne(targetEntity="UJM\ExoBundle\Entity\InteractionHole")
@@ -176,6 +183,24 @@ class Hole
     public function getOrthography()
     {
         return $this->orthography;
+    }
+    
+    /**
+     * Set selector
+     *
+     * @param integer $selector
+     */
+    public function setSelector($selector)
+    {
+        $this->selector = $selector;
+    }
+
+    /**
+     * Get selector
+     */
+    public function getSelector()
+    {
+        return $this->selector;
     }
 
     public function getInteractionHole()
