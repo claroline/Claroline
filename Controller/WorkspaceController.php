@@ -693,6 +693,7 @@ class WorkspaceController extends Controller
     public function workspaceListByTagPagerAction(WorkspaceTag $workspaceTag, $page = 1)
     {
         $relations = $this->tagManager->getPagerRelationByTag($workspaceTag, $page);
+        $relations = $this->tagManager->getPagerRelationByTag($workspaceTag, $page);
 
         return array(
             'workspaceTagId' => $workspaceTag->getId(),

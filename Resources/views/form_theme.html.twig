@@ -2,7 +2,9 @@
 
 {% block form_row %}
     {% spaceless %}
-        <div class="form-group row{% if errors|length > 0 %} has-error{% endif %}">
+        <div class="form-group row{% if errors|length > 0 %} has-error{% endif %}"
+            {% set display_row = theme_options.display_row is defined ? theme_options.display_row : true %}
+            {% if display_row == false %} style="display: none;" {% endif %}>
             {{ form_label(form, label|default(null)) }}
             {% set ctrl_width = theme_options.control_width is defined ? theme_options.control_width : 'col-md-10' %}
             <div class="{{ ctrl_width }}">
@@ -50,3 +52,41 @@
     {% endif %}
     {{ parent() | replace({'form-control': ''}) | raw }}
 {% endblock checkbox_widget %}
+
+{% block scroll_widget %}
+    {% spaceless %}
+        <div {{ block('widget_container_attributes') }}>
+            {{ value | raw }}
+        </div>
+    {% endspaceless %}
+{% endblock %}
+
+{% block content_widget %}
+    <div {{ block('widget_container_attributes') }}>
+        <div class="content-menu float-right-top">
+            <button type="button" class="btn btn-primary btn-sm dropdown-toggle" data-toggle="dropdown">
+                <span>{{ app.request.locale | upper }}</span>&nbsp;<i class="icon-caret-down"></i>
+            </button>
+            <ul class="dropdown-menu pull-right" role="menu">
+                {% for child in form %}
+                    <li class="pointer-hand"><a>{{ child.vars.name | upper }}</a></li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% for child in form %}
+            <div data-lang="{{ child.vars.name | upper }}"{% if app.request.locale != child.vars.name %} class="hide"{% endif %}>
+                {% if contentTitle %}
+                    {{
+                        form_widget(child['title'], {
+                            'attr': {
+                                'class': 'margin-bottom-md',
+                                'placeholder': 'Optional title' | trans({}, 'home') ~ '...'
+                            }
+                        })
+                    }}
+                {% endif %}
+                {{ form_widget(child['content']) }}
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}

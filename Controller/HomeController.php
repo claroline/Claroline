@@ -11,7 +11,7 @@
 
 namespace Claroline\CoreBundle\Controller;
 
-use Claroline\CoreBundle\Entity\Home\Content;
+use Claroline\CoreBundle\Entity\Content;
 use Claroline\CoreBundle\Entity\Home\Type;
 use Claroline\CoreBundle\Manager\HomeManager;
 use JMS\DiExtraBundle\Annotation\Inject;
@@ -61,8 +61,8 @@ class HomeController
      *     defaults={"type" = "home", "father" = null}
      * )
      *
-     * @ParamConverter("content", class = "ClarolineCoreBundle:Home\Content", options = {"id" = "content"})
-     * @ParamConverter("father", class = "ClarolineCoreBundle:Home\Content", options = {"id" = "father"})
+     * @ParamConverter("content", class = "ClarolineCoreBundle:Content", options = {"id" = "content"})
+     * @ParamConverter("father", class = "ClarolineCoreBundle:Content", options = {"id" = "father"})
      * @ParamConverter("type", class = "ClarolineCoreBundle:Home\Type", options = {"mapping" : {"type": "name"}})
      *
      * @return \Symfony\Component\HttpFoundation\Response
@@ -227,7 +227,7 @@ class HomeController
      *
      * @param string $content The id of the content or the entity object of a content.
      *
-     * @ParamConverter("content", class = "ClarolineCoreBundle:Home\Content", options = {"id" = "content"})
+     * @ParamConverter("content", class = "ClarolineCoreBundle:Content", options = {"id" = "content"})
      *
      * @Template("ClarolineCoreBundle:Home:regions.html.twig")
      *
@@ -312,7 +312,7 @@ class HomeController
      * @Route("/content/update/{content}", name="claroline_content_update")
      * @Secure(roles="ROLE_ADMIN")
      *
-     * @ParamConverter("content", class = "ClarolineCoreBundle:Home\Content", options = {"id" = "content"})
+     * @ParamConverter("content", class = "ClarolineCoreBundle:Content", options = {"id" = "content"})
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -347,8 +347,8 @@ class HomeController
      *
      * @ParamConverter("type", class = "ClarolineCoreBundle:Home\Type", options = {"mapping": {"type": "name"}})
      *
-     * @ParamConverter("a", class = "ClarolineCoreBundle:Home\Content", options = {"id" = "a"})
-     * @ParamConverter("b", class = "ClarolineCoreBundle:Home\Content", options = {"id" = "b"})
+     * @ParamConverter("a", class = "ClarolineCoreBundle:Content", options = {"id" = "a"})
+     * @ParamConverter("b", class = "ClarolineCoreBundle:Content", options = {"id" = "b"})
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -370,7 +370,7 @@ class HomeController
      * @Route("/content/delete/{content}", name="claroline_content_delete")
      * @Secure(roles="ROLE_ADMIN")
      *
-     * @ParamConverter("content", class = "ClarolineCoreBundle:Home\Content", options = {"id" = "content"})
+     * @ParamConverter("content", class = "ClarolineCoreBundle:Content", options = {"id" = "content"})
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -449,7 +449,7 @@ class HomeController
      * @Route("/region/{region}/{content}", requirements={"content" = "\d+"}, name="claroline_content_to_region")
      *
      * @ParamConverter("region", class = "ClarolineCoreBundle:Home\Region", options = {"mapping": {"region": "name"}})
-     * @ParamConverter("content", class = "ClarolineCoreBundle:Home\Content", options = {"id" = "content"})
+     * @ParamConverter("content", class = "ClarolineCoreBundle:Content", options = {"id" = "content"})
      *
      * @Secure(roles="ROLE_ADMIN")
      *

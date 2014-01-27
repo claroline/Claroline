@@ -13,7 +13,7 @@ namespace Claroline\CoreBundle\DataFixtures\Demo;
 
 use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\Common\DataFixtures\AbstractFixture;
-use Claroline\CoreBundle\Entity\Home\Content;
+use Claroline\CoreBundle\Entity\Content;
 use Claroline\CoreBundle\Entity\Home\Type;
 use Claroline\CoreBundle\Entity\Home\Content2Type;
 

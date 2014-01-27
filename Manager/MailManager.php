@@ -11,6 +11,7 @@
 
 namespace Claroline\CoreBundle\Manager;
 
+use Claroline\CoreBundle\Persistence\ObjectManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Templating\EngineInterface;
@@ -18,6 +19,7 @@ use Symfony\Component\Translation\Translator;
 use Claroline\CoreBundle\Entity\User;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
+use Claroline\CoreBundle\Entity\Content;
 
 /**
  * @DI\Service("claroline.manager.mail_manager")
@@ -30,6 +32,7 @@ class MailManager
     private $translator;
     private $container;
     private $ch;
+    private $contentManager;
 
     /**
      * @DI\InjectParams({
@@ -37,6 +40,7 @@ class MailManager
      *     "mailer"         = @DI\Inject("mailer"),
      *     "templating"     = @Di\Inject("templating"),
      *     "ch"             = @DI\Inject("claroline.config.platform_config_handler"),
+     *     "contentManager" = @DI\Inject("claroline.manager.content_manager"),
      *     "container"      = @DI\Inject("service_container")
      * })
      */
@@ -46,7 +50,8 @@ class MailManager
         UrlGeneratorInterface $router,
         Translator $translator,
         PlatformConfigurationHandler $ch,
-        ContainerInterface $container
+        ContainerInterface $container,
+        ContentManager $contentManager
     )
     {
         $this->router = $router;
@@ -55,6 +60,7 @@ class MailManager
         $this->translator = $translator;
         $this->container = $container;
         $this->ch = $ch;
+        $this->contentManager = $contentManager;
     }
 
     /**
@@ -99,16 +105,29 @@ class MailManager
      *
      * @return boolean
      */
-    public function sendPlainPassword(User $user)
+    public function sendCreationMessage(User $user)
     {
-        $body = $this->translator->trans('admin_form_username', array(), 'platform').
-            ' : '.$user->getUsername().' '.
-            $this->translator->trans('admin_form_plainPassword_first', array(), 'platform').
-            ': '.$user->getPlainPassword();
+        $locale = $user->getLocale();
+        $content = $this->contentManager->getTranslatedContent(array('type' => 'claro_mail_registration'));
+        $displayedLocale = isset($content[$locale]) ? $locale: $this->ch->getParameter('locale_language');
+        $body = $content[$displayedLocale]['content'];
+        $subject =  $content[$displayedLocale]['title'];
 
-        $subject = $this->translator->trans('create_new_user_account', array(), 'platform');
+        $body = str_replace('%username%', $user->getUsername(), $body);
+        $body = str_replace('%password%', $user->getPlainPassword(), $body);
+        $subject = str_replace('%platform_name%', $this->ch->getParameter('name'), $subject);
 
         return $this->send($subject, $body, array($user));
+    }
+
+    public function getMailInscription()
+    {
+        return $this->contentManager->getContent(array('type' => 'claro_mail_registration'));
+    }
+
+    public function getMailLayout()
+    {
+        return $this->contentManager->getContent(array('type' => 'claro_mail_layout'));
     }
 
     /**
@@ -122,8 +141,20 @@ class MailManager
     public function send($subject, $body, array $users, $from = null)
     {
         if ($this->isMailerAvailable()) {
+            $layout = $this->contentManager->getTranslatedContent(array('type' => 'claro_mail_layout'));
+
             $from = ($from === null) ? $this->ch->getParameter('support_email'): $from->getMail();
             $to = array();
+
+            $locale = count($users) === 1 ? $users[0]->getLocale(): $this->ch->getParameter('locale_language');
+
+            if (!$locale) {
+                $locale = $this->ch->getParameter('locale_language');
+            }
+
+            $usedLayout = $layout[$locale]['content'];
+            $body = str_replace('%content%', $body, $usedLayout);
+            $body = str_replace('%platform_name%', $this->ch->getParameter('name'), $body);
 
             foreach ($users as $user) {
                 $to[] = $user->getMail();
@@ -145,4 +176,46 @@ class MailManager
 
         return false;
     }
+
+    /**
+     * @param $translatedContents
+     *
+     * @return array
+     */
+    public function validateInscriptionMail(array $translatedContents)
+    {
+        $languages = array_keys($translatedContents);
+        $errors = array();
+
+        foreach ($languages as $language) {
+            if (!strpos($translatedContents[$language]['content'], '%username%')) {
+                $errors[$language]['content'][] = 'missing_%username%';
+            }
+            if (!strpos($translatedContents[$language]['content'], '%password%')) {
+                $errors[$language]['content'][] = 'missing_%password%';
+            }
+        }
+
+        return $errors;
+    }
+
+    /**
+     * @param $translatedContents
+     *
+     * @return array
+     */
+    public function validateLayoutMail(array $translatedContents)
+    {
+        $languages = array_keys($translatedContents);
+        $errors = array();
+
+        foreach ($languages as $language) {
+            if (!strpos($translatedContents[$language]['content'], '%content%')) {
+                $errors[$language]['content'] = 'missing_%content%';
+            }
+        }
+
+        return $errors;
+    }
+
 }

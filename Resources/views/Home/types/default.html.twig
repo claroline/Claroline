@@ -14,7 +14,7 @@
                 {% if content.content is defined and content.content != "" %}
                     <div class="text">{{ content.content | raw }}</div>
                 {% endif %}
-                {% if not region is defined %}<i class="text-muted">{{ content.created | timeAgo }}</i>{% endif %}
+                {% if region is empty %}<i class="text-muted">{{ content.created | timeAgo }}</i>{% endif %}
             </div>
         </div>
     </div>

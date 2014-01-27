@@ -12,6 +12,7 @@
 namespace Claroline\CoreBundle\Controller;
 
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -29,6 +30,7 @@ use Claroline\CoreBundle\Manager\GroupManager;
 use Claroline\CoreBundle\Manager\MessageManager;
 use Claroline\CoreBundle\Manager\UserManager;
 use Claroline\CoreBundle\Manager\WorkspaceManager;
+use Claroline\CoreBundle\Manager\MailManager;
 use Claroline\CoreBundle\Pager\PagerFactory;
 
 /**
@@ -47,6 +49,7 @@ class MessageController
     private $securityContext;
     private $utils;
     private $pagerFactory;
+    private $mailManager;
 
     /**
      * @DI\InjectParams({
@@ -59,7 +62,8 @@ class MessageController
      *     "workspaceManager"   = @DI\Inject("claroline.manager.workspace_manager"),
      *     "securityContext"    = @DI\Inject("security.context"),
      *     "utils"              = @DI\Inject("claroline.security.utilities"),
-     *     "pagerFactory"       = @DI\Inject("claroline.pager.pager_factory")
+     *     "pagerFactory"       = @DI\Inject("claroline.pager.pager_factory"),
+     *     "mailManager"        = @DI\Inject("claroline.manager.mail_manager")
      * })
      */
     public function __construct(
@@ -72,7 +76,8 @@ class MessageController
         WorkspaceManager $workspaceManager,
         SecurityContextInterface $securityContext,
         Utilities $utils,
-        PagerFactory $pagerFactory
+        PagerFactory $pagerFactory,
+        MailManager $mailManager
     )
     {
         $this->request = $request;
@@ -85,6 +90,7 @@ class MessageController
         $this->securityContext = $securityContext;
         $this->utils = $utils;
         $this->pagerFactory = $pagerFactory;
+        $this->mailManager = $mailManager;
     }
 
     /**
@@ -123,6 +129,9 @@ class MessageController
      * @EXT\Template("ClarolineCoreBundle:Message:show.html.twig")
      *
      * Handles the message form submission.
+     *
+     * @param User    $sender
+     * @param Message $parent
      *
      * @return Response
      */
@@ -174,7 +183,11 @@ class MessageController
     {
         $pager = $this->messageManager->getReceivedMessages($receiver, $search, $page);
 
-        return array('pager' => $pager, 'search' => $search);
+        return array(
+            'pager' => $pager,
+            'search' => $search,
+            'isMailerAvailable' => $this->mailManager->isMailerAvailable()
+        );
     }
 
     /**
@@ -263,7 +276,9 @@ class MessageController
      *
      * Displays a message.
      *
-     * @param integer $messageId the message id
+     * @param User    $user
+     * @param array   $receivers
+     * @param Message $message
      *
      * @return Response
      */
@@ -407,6 +422,7 @@ class MessageController
      *
      * @param integer $page
      * @param string  $search
+     * @param User    $user
      *
      * @return Response
      */
@@ -446,6 +462,28 @@ class MessageController
 
     /**
      * @EXT\Route(
+     *     "/notification/{isNotified}",
+     *     name="claro_message_notification",
+     *     options={"expose"=true}
+     * )
+     *
+     * @EXT\Method("POST")
+     * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
+     *
+     * @param boolean $isNotified
+     * @param User    $user
+     *
+     * @return Response
+     */
+    public function setMailNotificationAction($isNotified, User $user)
+    {
+        $this->userManager->setIsMailNotified($user, $isNotified);
+
+        return new JsonResponse(array('success' => 'success'));
+    }
+
+    /**
+     * @EXT\Route(
      *     "/contactable/groups/page/{page}",
      *     name="claro_message_contactable_groups",
      *     options={"expose"=true},
@@ -468,6 +506,7 @@ class MessageController
      *
      * @param integer $page
      * @param string  $search
+     * @param User    $user
      *
      * @return Response
      */

@@ -44,7 +44,7 @@ class HomeManagerTest extends MockeryTestCase
 
         $this->type = $this->mock('Claroline\CoreBundle\Entity\Home\Type');
         $this->region = $this->mock('Claroline\CoreBundle\Entity\Home\Region');
-        $this->content = $this->mock('Claroline\CoreBundle\Entity\Home\Content');
+        $this->content = $this->mock('Claroline\CoreBundle\Entity\Content');
         $this->subContent = $this->mock('Claroline\CoreBundle\Entity\Home\SubContent');
         $this->contentType = $this->mock('Claroline\CoreBundle\Entity\Home\Content2Type');
         $this->contentRegion = $this->mock('Claroline\CoreBundle\Entity\Home\Content2Region');

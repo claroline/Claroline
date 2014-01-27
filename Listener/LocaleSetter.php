@@ -26,7 +26,6 @@ use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 class LocaleSetter
 {
     private $localeManager;
-
     /**
      * @InjectParams({
      *     "localeManager"  = @Inject("claroline.common.locale_manager")

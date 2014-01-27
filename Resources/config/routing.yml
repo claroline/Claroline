@@ -232,6 +232,11 @@ claro_oauth:
     resource: "@ClarolineCoreBundle/Controller/Oauth"
     type: annotation
 
+claro_administration_parameters:
+    prefix: administration
+    resource: "@ClarolineCoreBundle/Controller/Administration/ParametersController.php"
+    type: annotation
+
 # Api routes
 claro_api:
     resource: "@ClarolineCoreBundle/Controller/Api"

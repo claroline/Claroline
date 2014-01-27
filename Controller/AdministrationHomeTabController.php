@@ -82,7 +82,9 @@ class AdministrationHomeTabController extends Controller
      *
      * Displays the admin homeTabs configuration page.
      *
-     * @return Response
+     * @param integer $homeTabId
+     *
+     * @return array
      */
     public function adminDesktopHomeTabsConfigAction($homeTabId = -1)
     {
@@ -140,7 +142,9 @@ class AdministrationHomeTabController extends Controller
      *
      * Displays the admin homeTabs configuration page.
      *
-     * @return Response
+     * @param integer $homeTabId
+     *
+     * @return array
      */
     public function adminWorkspaceHomeTabsConfigAction($homeTabId = -1)
     {
@@ -223,7 +227,9 @@ class AdministrationHomeTabController extends Controller
      *
      * Create a new admin homeTab.
      *
-     * @return Response
+     * @param string $homeTabType
+     *
+     * @return array|Response
      */
     public function adminHomeTabCreateAction($homeTabType)
     {
@@ -281,7 +287,11 @@ class AdministrationHomeTabController extends Controller
      *
      * Displays the admin homeTab name edition form.
      *
-     * @return Response
+     * @param HomeTab $homeTab
+     *
+     * @throws AccessDeniedException
+     *
+     * @return array
      */
     public function adminHomeTabEditFormAction(HomeTab $homeTab)
     {
@@ -315,7 +325,11 @@ class AdministrationHomeTabController extends Controller
      *
      * Edit the admin homeTab name.
      *
-     * @return Response
+     * @param HomeTab $homeTab
+     *
+     * @throws AccessDeniedException
+     *
+     * @return array
      */
     public function adminHomeTabEditAction(HomeTab $homeTab)
     {
@@ -355,6 +369,10 @@ class AdministrationHomeTabController extends Controller
      *
      * Delete the given homeTabConfig and corresponding homeTab.
      *
+     * @param HomeTabConfig $homeTabConfig
+     *
+     * @throws AccessDeniedException
+     *
      * @return Response
      */
     public function adminHomeTabConfigDeleteAction(HomeTabConfig $homeTabConfig)
@@ -386,6 +404,11 @@ class AdministrationHomeTabController extends Controller
      * )
      *
      * Configure visibility of an Home tab
+     *
+     * @param HomeTabConfig $homeTabConfig
+     * @param string        $visible
+     *
+     * @throws AccessDeniedException
      *
      * @return Response
      */
@@ -420,6 +443,11 @@ class AdministrationHomeTabController extends Controller
      *
      * Configure lock of an Home tab
      *
+     * @param HomeTabConfig $homeTabConfig
+     * @param string        $locked
+     *
+     * @throws AccessDeniedException
+     *
      * @return Response
      */
     public function adminHomeTabUpdateLockAction(
@@ -452,6 +480,11 @@ class AdministrationHomeTabController extends Controller
      * )
      *
      * Change order of the given homeTabConfig in the given direction.
+     *
+     * @param HomeTabConfig $homeTabConfig
+     * @param integer       $direction
+     *
+     * @throws AccessDeniedException
      *
      * @return Response
      */
@@ -502,6 +535,10 @@ class AdministrationHomeTabController extends Controller
      *
      * Delete the given widgetHomeTabConfig.
      *
+     * @param WidgetHomeTabConfig $widgetHomeTabConfig
+     *
+     * @throws AccessDeniedException
+     *
      * @return Response
      */
     public function adminWidgetHomeTabConfigDeleteAction(
@@ -533,7 +570,9 @@ class AdministrationHomeTabController extends Controller
      *
      * Displays the widget instance form.
      *
-     * @return Response
+     * @param string $homeTabType
+     *
+     * @return array
      */
     public function adminWidgetInstanceCreateFormAction($homeTabType)
     {
@@ -561,6 +600,8 @@ class AdministrationHomeTabController extends Controller
      * @EXT\Template("ClarolineCoreBundle:Administration:adminWidgetInstanceCreateForm.html.twig")
      *
      * Creates a widget instance.
+     *
+     * @param string $homeTabType
      *
      * @return Response
      */
@@ -611,6 +652,11 @@ class AdministrationHomeTabController extends Controller
      *
      * Associate given WidgetInstance to given Home tab.
      *
+     * @param HomeTab $homeTab
+     * @param WidgetInstance $widgetInstance
+     *
+     * @throws AccessDeniedException
+     *
      * @return Response
      */
     public function associateWidgetToHomeTabAction(
@@ -660,7 +706,9 @@ class AdministrationHomeTabController extends Controller
      * )
      * @EXT\Template("ClarolineCoreBundle:Administration:adminWidgetInstanceNameEditForm.html.twig")
      *
-     * @param \Claroline\CoreBundle\Entity\Widget\WidgetInstance $widgetInstance
+     * @param WidgetInstance $widgetInstance
+     *
+     * @throws AccessDeniedException
      *
      * @return array
      */
@@ -777,6 +825,10 @@ class AdministrationHomeTabController extends Controller
      *
      * Change visibility of the given widgetHomeTabConfig.
      *
+     * @param WidgetHomeTabConfig $widgetHomeTabConfig
+     *
+     * @throws AccessDeniedException
+     *
      * @return Response
      */
     public function adminWidgetHomeTabConfigChangeVisibilityAction(
@@ -810,6 +862,10 @@ class AdministrationHomeTabController extends Controller
      *
      * Change lock of the given widgetHomeTabConfig.
      *
+     * @param WidgetHomeTabConfig $widgetHomeTabConfig
+     *
+     * @throws AccessDeniedException
+     *
      * @return Response
      */
     public function adminWidgetHomeTabConfigChangeLockAction(
@@ -839,6 +895,8 @@ class AdministrationHomeTabController extends Controller
      * Asks a widget to render its configuration page.
      *
      * @param WidgetInstance $widgetInstance
+     *
+     * @throws AccessDeniedException
      *
      * @return Response
      */
