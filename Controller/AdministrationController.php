@@ -154,7 +154,7 @@ class AdministrationController extends Controller
         $error = null;
 
         if (!$this->mailManager->isMailerAvailable()) {
-            $error = 'Mail not available';
+            $error = 'mail_not_available';
         }
 
         return array(
@@ -197,7 +197,7 @@ class AdministrationController extends Controller
         $error = null;
 
         if (!$this->mailManager->isMailerAvailable()) {
-            $error = 'Mail not available';
+            $error = 'mail_not_available';
         }
 
         return array(
