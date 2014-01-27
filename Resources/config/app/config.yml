@@ -15,15 +15,5 @@ services:
             - "@claroline.common.theme_service"
             - %kernel.root_dir%/Resources
 
-#    gedmo.listener.translatable:
-#        class: Claroline\CoreBundle\Listener\LocaleListener
-        #parent: gedmo.listener.translatable
-#        tags:
-#            - { name: doctrine.event_subscriber, connection: default }
-#        calls:
-#            - [ setAnnotationReader, [ @annotation_reader ] ]
-#            - [ setDefaultLocale, [ %locale% ] ]
-#            - [ setTranslationFallback, [ false ] ]
-
 framework:
     test: true

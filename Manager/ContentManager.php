@@ -11,12 +11,15 @@
 
 namespace Claroline\CoreBundle\Manager;
 
-use JMS\DiExtraBundle\Annotation\InjectParams;
-use JMS\DiExtraBundle\Annotation\Inject;
-use JMS\DiExtraBundle\Annotation\Service;
 use Claroline\CoreBundle\Entity\Content;
 use Claroline\CoreBundle\Entity\ContentTranslation;
+use Claroline\CoreBundle\Persistence\ObjectManager;
+use Doctrine\Bundle\DoctrineBundle\Registry;
+use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Query;
+use JMS\DiExtraBundle\Annotation\Inject;
+use JMS\DiExtraBundle\Annotation\InjectParams;
+use JMS\DiExtraBundle\Annotation\Service;
 
 /**
  * @Service("claroline.manager.content_manager")
@@ -34,7 +37,7 @@ class ContentManager
      *     "persistence"    = @Inject("claroline.persistence.object_manager")
      * })
      */
-    public function __construct($manager, $entityManager, $persistence)
+    public function __construct(Registry $manager, EntityManager $entityManager, ObjectManager $persistence)
     {
         $this->manager = $persistence;
         $this->entityManager = $entityManager;
@@ -137,7 +140,7 @@ class ContentManager
      *
      * @param Content $content
      */
-    public function deleteContent(Content $content)
+    public function deleteContent($content)
     {
         $this->manager->remove($content);
         $this->manager->flush();

@@ -1,6 +1,6 @@
 'Action List': 'Liste des actions'
 'Actions per day': 'Nombre d''actions par jour'
-'Activate the terms of service in the platform': 'Activez les conditions de service dans la plate-forme'
+'Activate the terms of service in the platform': 'Activez les conditions d''utilisation dans la plate-forme'
 'Add a logo': 'Ajouter un logo'
 'An error has occurred, please check if the file size does not exceeds the permitted size': 'Une erreur s''est produite, veuillez vérifier si la taille du fichier ne dépasse pas la taille autorisée'
 'Audience/user visits': 'Audience/Visites utilisateurs'
@@ -9,7 +9,7 @@
 'Choose workspaces displayed in the widget': 'Choisissez les espaces de travail affichés par le widget'
 'Draw an area on the graph to zoom, double-click to cancel': 'Tracez une zone sur le graphique pour zoomer; double cliquez pour annuler'
 'Filter actions': 'Filtrer les actions'
-'I accept the terms of service': 'J''accepte les termes de service'
+'I accept the terms of service': 'J''accepte les conditions d''utilisation'
 Language: Langue
 'Last action': '{1} Dernière action|[1,Inf] %logAmount% dernières actions'
 None: Aucun
@@ -21,7 +21,7 @@ None: Aucun
 'Select a Language': 'Sélectionnez une langue'
 Show: Afficher
 'Show actions': 'Afficher les actions'
-'Terms of service': 'Termes de service'
+'Terms of service': 'Conditions d''utilisation'
 'The form is not valid': 'Le formulaire n''est pas valide'
 'Upload a file': 'Télécharger un fichier'
 'Your changes have been saved': 'Vos changements ont été sauvegardés'
