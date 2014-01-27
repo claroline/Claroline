@@ -33,7 +33,7 @@ class HomeControllerTest extends MockeryTestCase
         parent::setUp();
         $this->type = $this->mock('Claroline\CoreBundle\Entity\Home\Type');
         $this->region = $this->mock('Claroline\CoreBundle\Entity\Home\Region');
-        $this->content = $this->mock('Claroline\CoreBundle\Entity\Home\Content');
+        $this->content = $this->mock('Claroline\CoreBundle\Entity\Content');
         $this->manager = $this->mock('Claroline\CoreBundle\Manager\HomeManager');
         $this->request = $this->mock('Symfony\Component\HttpFoundation\Request');
         $this->security = $this->mock('Symfony\Component\Security\Core\SecurityContextInterface');

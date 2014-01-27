@@ -246,9 +246,19 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
     protected $description;
 
     /**
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    protected $hasAcceptedTerms;
+
+    /**
      * @ORM\Column(name="is_enabled", type="boolean")
      */
     protected $isEnabled = true;
+
+    /**
+     * @ORM\Column(name="is_mail_notified", type="boolean")
+     */
+    protected $isMailNotified = false;
 
     public function __construct()
     {
@@ -381,11 +391,11 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
     }
 
     /**
-     * @param string $password
+     * @param string $locale
      *
      * @return User
      */
-    public function setlocale($locale)
+    public function setLocale($locale)
     {
         $this->locale = $locale;
 
@@ -792,6 +802,16 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
         $this->description = $description;
     }
 
+    public function hasAcceptedTerms()
+    {
+        return $this->hasAcceptedTerms;
+    }
+
+    public function setAcceptedTerms($boolean)
+    {
+        $this->hasAcceptedTerms = $boolean;
+    }
+
     public function getOrderableFields()
     {
         return array('id', 'username', 'lastName', 'firstName', 'mail');
@@ -820,5 +840,15 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
     public function setIsEnabled($isEnabled)
     {
         $this->isEnabled = $isEnabled;
+    }
+
+    public function setIsMailNotified($isMailNotified)
+    {
+        $this->isMailNotified = $isMailNotified;
+    }
+
+    public function isMailNotified()
+    {
+        return $this->isMailNotified;
     }
 }

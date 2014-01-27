@@ -16,10 +16,11 @@ class PlatformConfiguration
     private $name;
     private $supportEmail;
     private $selfRegistration;
-    private $localLanguage;
+    private $localeLanguage;
     private $theme;
     private $footer;
     private $role;
+    private $termsOfService;
     private $cookieLifetime;
     private $mailerTransport;
     private $mailerHost;
@@ -39,14 +40,14 @@ class PlatformConfiguration
         $this->selfRegistration = $selfRegistration;
     }
 
-    public function getLocalLanguage()
+    public function getLocaleLanguage()
     {
-        return $this->localLanguage;
+        return $this->localeLanguage;
     }
 
-    public function setLocalLanguage($localLanguage)
+    public function setLocaleLanguage($localeLanguage)
     {
-        $this->localLanguage = $localLanguage;
+        $this->localeLanguage = $localeLanguage;
     }
 
     public function getTheme()
@@ -97,6 +98,16 @@ class PlatformConfiguration
     public function getDefaultRole()
     {
         return $this->role;
+    }
+
+    public function setTermsOfService($termsOfService)
+    {
+        $this->termsOfService = $termsOfService;
+    }
+
+    public function getTermsOfService()
+    {
+        return $this->termsOfService;
     }
 
     public function setCookieLifetime($time)

@@ -130,6 +130,7 @@ class HomeController extends Controller
      * Asks a widget to render its configuration page for a workspace.
      *
      * @param WidgetInstance $widgetInstance
+     * @param AbstractWorkspace $workspace
      *
      * @return Response
      */
@@ -265,6 +266,8 @@ class HomeController extends Controller
      *
      * Displays the widget instance form.
      *
+     * @param AbstractWorkspace $workspace
+     *
      * @return Response
      */
     public function workspaceWidgetInstanceCreateFormAction(AbstractWorkspace $workspace)
@@ -299,6 +302,8 @@ class HomeController extends Controller
      * @EXT\Template("ClarolineCoreBundle:Tool\workspace\home:workspaceWidgetInstanceCreateForm.html.twig")
      *
      * Creates a widget instance.
+     *
+     * @param AbstractWorkspace $workspace
      *
      * @return Response
      */
@@ -422,6 +427,8 @@ class HomeController extends Controller
      *
      * Displays the homeTab edition form.
      *
+     * @param HomeTab $homeTab
+     *
      * @return Response
      */
     public function desktopHomeTabEditFormAction(HomeTab $homeTab)
@@ -453,6 +460,8 @@ class HomeController extends Controller
      * @EXT\Template("ClarolineCoreBundle:Tool\desktop\home:desktopHomeTabEditForm.html.twig")
      *
      * Edit the homeTab.
+     *
+     * @param HomeTab $homeTab
      *
      * @return Response
      */
@@ -492,6 +501,9 @@ class HomeController extends Controller
      *
      * Delete the given homeTab.
      *
+     * @param HomeTab $homeTab
+     * @param integer $tabOrder
+     *
      * @return Response
      */
     public function desktopHomeTabDeleteAction(HomeTab $homeTab, $tabOrder)
@@ -516,6 +528,8 @@ class HomeController extends Controller
      * @EXT\Template("ClarolineCoreBundle:Tool\desktop\home:desktopHomeTabsWithoutConfig.html.twig")
      *
      * Displays the Info desktop tab.
+     *
+     * @param integer $tabId
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -580,6 +594,8 @@ class HomeController extends Controller
      * @EXT\Template("ClarolineCoreBundle:Tool\desktop\home:desktopHomeTabsWithConfig.html.twig")
      *
      * Displays the Info desktop tab.
+     *
+     * @param integer $tabId
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */

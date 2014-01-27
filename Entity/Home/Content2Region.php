@@ -12,6 +12,7 @@
 namespace Claroline\CoreBundle\Entity\Home;
 
 use Doctrine\ORM\Mapping as ORM;
+use Claroline\CoreBundle\Entity\Content;
 
 /**
  * Content2Region
@@ -31,7 +32,7 @@ class Content2Region
     private $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Home\Content")
+     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Content")
      * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
      */
     private $content;
@@ -118,7 +119,7 @@ class Content2Region
     /**
      * Set content
      *
-     * @param  \Claroline\CoreBundle\Entity\Home\Content $content
+     * @param  \Claroline\CoreBundle\Entity\Content $content
      * @return Content2Region
      */
     public function setContent(Content $content)
@@ -131,7 +132,7 @@ class Content2Region
     /**
      * Get content
      *
-     * @return \Claroline\CoreBundle\Entity\Home\Content
+     * @return \Claroline\CoreBundle\Entity\Content
      */
     public function getContent()
     {

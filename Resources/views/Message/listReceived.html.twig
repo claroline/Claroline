@@ -55,7 +55,21 @@
                     </button>
                 </span>
             </div>
+            {% if isMailerAvailable %}
+                <div>
+                    <input id="check-notifications" type="checkbox"
+                       {%  if app.user.isMailNotified() %}
+                           checked
+                       {%  endif %}
+                    >
+                        {{ 'get_mail_notifications'|trans({'%adress%': app.user.getMail() }, 'platform') }}
+                    </input>
+                </div>
+            {% endif %}
         </div>
+    </div>
+    <div id="flashbox">
+
     </div>
     {{ renderPager(search, pager) }}
     <div class="table-responsive">
@@ -111,6 +125,7 @@
 {% block javascripts %}
     {{ parent() }}
     <script src='{{ asset('bundles/clarolinecore/js/table.js') }}' type="text/javascript"></script>
+    <script src='{{ asset('bundles/clarolinecore/js/message/listReceived.js') }}' type="text/javascript"></script>
     <script>
         parameters = {};
         parameters.route = {};

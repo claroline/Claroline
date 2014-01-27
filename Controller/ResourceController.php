@@ -167,7 +167,7 @@ class ResourceController
      *
      * Opens a resource.
      *
-     * @param ResourceNode $resource     the node
+     * @param ResourceNode $node     the node
      * @param string       $resourceType the resource type
      *
      * @return Response
@@ -278,7 +278,6 @@ class ResourceController
      * Handles any custom action (i.e. not defined in this controller) on a
      * resource of a given type.
      *
-     * @param string       $resourceType the resource type
      * @param string       $action       the action
      * @param ResourceNode $node         the resource
      *
@@ -330,6 +329,7 @@ class ResourceController
      * Shows resource logs list
      *
      * @param ResourceNode $node the resource
+     * @param integer      $page
      *
      * @return Response
      * @throws \Exception
@@ -494,10 +494,10 @@ class ResourceController
      * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
      *
      * Adds multiple resource resource to a workspace.
-     * Needs an array of ids to be functionnal (query string: "ids[]=1&ids[]=2" ...).
+     * Needs an array of ids to be functional (query string: "ids[]=1&ids[]=2" ...).
      *
      * @param ResourceNode $parent
-     * @param array        $resources
+     * @param array        $nodes
      * @param User         $user
      *
      * @return Response
@@ -573,8 +573,8 @@ class ResourceController
      * Takes an array of ids to be functionnal (query string: "ids[]=1&ids[]=2" ...).
      *
      * @param ResourceNode $parent    the new parent
-     * @param User         $user      the shortcut creator
-     * @param array        $resources the resources going to be linked
+     * @param User         $creator   the shortcut creator
+     * @param array        $nodes     the resources going to be linked
      *
      * @return Response
      */
@@ -601,7 +601,13 @@ class ResourceController
      * )
      *
      * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
-     * @param \Claroline\CoreBundle\Entity\Resource\ResourceNode $parent
+     *
+     * @param ResourceNode $parent
+     * @param User         $user
+     *
+     * @return Response
+     *
+     * @throws AccessDeniedException
      */
     public function restoreNodeOrderAction(ResourceNode $parent, User $user)
     {
@@ -616,8 +622,15 @@ class ResourceController
 
     /**
      * @EXT\Template("ClarolineCoreBundle:Resource:breadcrumbs.html.twig")
+     *
+     * @param ResourceNode $node
+     * @param integer[]    $_breadcrumbs
+     *
+     * @return array
+     *
+     * @throws Exception
      */
-    public function renderBreadcrumbsAction(ResourceNode $node, $_breadcrumbs)
+    public function renderBreadcrumbsAction(ResourceNode $node, array $_breadcrumbs)
     {
         $breadcrumbsAncestors = array();
 
@@ -664,7 +677,7 @@ class ResourceController
      *      options={"id" = "nextId", "strictId" = true}
      * )
      *
-     * @param ResourceNode $resource
+     * @param ResourceNode $node
      * @param ResourceNode $next
      * @param User         $user
      *
@@ -756,6 +769,8 @@ class ResourceController
 
     /**
      * @EXT\Route("/zoom/{zoom}", name="claro_resource_change_zoom", options={"expose"=true})
+     *
+     * @param $zoom
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
