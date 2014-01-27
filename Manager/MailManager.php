@@ -30,6 +30,7 @@ class MailManager
     private $translator;
     private $container;
     private $ch;
+    private $cacheManager;
 
     /**
      * @DI\InjectParams({
@@ -37,7 +38,8 @@ class MailManager
      *     "mailer"         = @DI\Inject("mailer"),
      *     "templating"     = @Di\Inject("templating"),
      *     "ch"             = @DI\Inject("claroline.config.platform_config_handler"),
-     *     "container"      = @DI\Inject("service_container")
+     *     "container"      = @DI\Inject("service_container"),
+     *     "cacheManager"   = @DI\Inject("claroline.manager.cache_manager")
      * })
      */
     public function __construct(
@@ -46,7 +48,8 @@ class MailManager
         UrlGeneratorInterface $router,
         Translator $translator,
         PlatformConfigurationHandler $ch,
-        ContainerInterface $container
+        ContainerInterface $container,
+        CacheManager $cacheManager
     )
     {
         $this->router = $router;
@@ -55,6 +58,7 @@ class MailManager
         $this->translator = $translator;
         $this->container = $container;
         $this->ch = $ch;
+        $this->cacheManager = $cacheManager;
     }
 
     /**
@@ -62,14 +66,23 @@ class MailManager
      */
     public function isMailerAvailable()
     {
-        try {
-            $this->mailer->getTransport()->start();
+        $isAvailable =  $this->cacheManager->getParameter('is_mailer_available');
 
-            return true;
+        if ($isAvailable === null) {
+            try {
+                $this->cacheManager->getParameter('is_mailer_available');
+                $this->mailer->getTransport()->start();
+                $this->cacheManager->setParameter('is_mailer_available', true);
 
-        } catch (\Swift_TransportException $e) {
-            return false;
+                return true;
+
+            } catch (\Swift_TransportException $e) {
+                $this->cacheManager->setParameter('is_mailer_available', false);
+                return false;
+            }
         }
+
+        return $isAvailable;
     }
 
     /**
