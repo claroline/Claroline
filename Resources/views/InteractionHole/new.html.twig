@@ -40,7 +40,7 @@
         <h3 class="panel-title">{{ 'hole creation' | trans }}</h3>
     </div>
 
-    <form action="{{ path('ujm_interactionhole_create') }}" method="post" {{ form_enctype(form) }}>
+    <form action="{{ path('ujm_interactionhole_create') }}" method="post" {{ form_enctype(form) }} novalidate>
         <div class="panel-body">
             {% include "UJMExoBundle:Partial:question.html.twig" %}
             
@@ -77,6 +77,9 @@
                             {{ form_errors(form.holes) }}
                         </div>
                     </div>
+                    
+                    <div style="display: none;">{{ form_rest(form) }}</div>
+                    {{ form_errors(form) }}
                     
                 </div>
             </div>

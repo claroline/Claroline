@@ -77,6 +77,8 @@ function addHole(indHole, valHole)
         }
     });
     
+    $('#newTable').find('tr:last').find('td:first').css('display', 'none');
+    
     $('#ujm_exobundle_interactionholetype_holes_'+index+'_size').val('15');
     
     // Remove the useless fileds form
@@ -198,4 +200,15 @@ function verticalAlignCenter()
 			$elem.css("margin-top", marginTop);
 		$elem.removeClass("vertical-align-center");
 	});
+}
+
+// Set the hole order
+function setOrder() {
+
+    var order = 1;
+
+    $('#newTable').find('tr:not(:first)').each(function () {
+        $(this).find('input:first').val(order);
+        order++;
+    });
 }

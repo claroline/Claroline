@@ -41,6 +41,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 use UJM\ExoBundle\Entity\InteractionHole;
 use UJM\ExoBundle\Form\InteractionHoleType;
+use UJM\ExoBundle\Form\InteractionHoleHandler;
 
 /**
 * InteractionHole controller.
@@ -92,23 +93,64 @@ class InteractionHoleController extends Controller
     */
     public function createAction()
     {
-        $entity = new InteractionHole();
-        $request = $this->getRequest();
-        $form = $this->createForm(new InteractionHoleType(), $entity);
-        $form->bindRequest($request);
+        $interHole  = new InteractionHole();
+        $form      = $this->createForm(
+            new InteractionHoleType(
+                $this->container->get('security.context')->getToken()->getUser()
+            ), $interHole
+        );
 
-        if ($form->isValid()) {
-            $em = $this->getDoctrine()->getEntityManager();
-            $em->persist($entity);
-            $em->flush();
+        $exoID = $this->container->get('request')->request->get('exercise');
 
-            return $this->redirect($this->generateUrl('interactionhole_show', array('id' => $entity->getId())));
+        $formHandler = new InteractionHoleHandler(
+            $form, $this->get('request'), $this->getDoctrine()->getManager(),
+            $this->container->get('security.context')->getToken()->getUser(), $exoID
+        );
+
+        if ($formHandler->processAdd()) {
+            $categoryToFind = $interHole->getInteraction()->getQuestion()->getCategory();
+            $titleToFind = $interHole->getInteraction()->getQuestion()->getTitle();
+
+            if ($exoID == -1) {
+                return $this->redirect(
+                    $this->generateUrl('ujm_question_index', array(
+                        'categoryToFind' => $categoryToFind, 'titleToFind' => $titleToFind)
+                    )
+                );
+            } else {
+                $em = $this->getDoctrine()->getManager();
+                $exercise = $em->getRepository('UJMExoBundle:Exercise')->find($exoID);
+
+                //To link the question in the exercise
+                if ($this->container->get('ujm.exercise_services')->isExerciseAdmin($exercise)) {
+                    $this->container->get('ujm.exercise_services')->setExerciseQuestion($exoID, $interHole);
+                }
+
+                return $this->redirect(
+                    $this->generateUrl('ujm_exercise_questions', array(
+                        'id' => $exoID, 'categoryToFind' => $categoryToFind, 'titleToFind' => $titleToFind)
+                    )
+                );
+            }
         }
 
-        return $this->render('UJMExoBundle:InteractionHole:new.html.twig', array(
-                             'entity' => $entity,
-                             'form' => $form->createView(),
-                             ));
+        $formWithError = $this->render(
+            'UJMExoBundle:InteractionHole:new.html.twig', array(
+            'entity' => $interHole,
+            'form'   => $form->createView(),
+            'error'  => true,
+            'exoID'  => $exoID
+            )
+        );
+
+        $formWithError = substr($formWithError, strrpos($formWithError, 'GMT') + 3);
+
+        return $this->render(
+            'UJMExoBundle:Question:new.html.twig', array(
+            'formWithError' => $formWithError,
+            'exoID'  => $exoID
+            )
+        );
     }
 
     /**

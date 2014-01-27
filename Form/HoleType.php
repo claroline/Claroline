@@ -12,6 +12,9 @@ class HoleType extends AbstractType
     {
         $builder
             ->add(
+                'position', 'text'
+            )
+            ->add(
                 'size', 'text'
             )
             //->add('position', 'text')

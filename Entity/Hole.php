@@ -96,7 +96,20 @@ class Hole
      * @ORM\JoinColumn(name="interaction_hole_id", referencedColumnName="id")
      */
     private $interactionHole;
+    
+    /**
+    * @ORM\OneToMany(targetEntity="UJM\ExoBundle\Entity\WordResponse", mappedBy="hole", cascade={"remove"})
+    */
+    private $wordResponses;
 
+    /**
+    * Constructs a new instance of choices
+    */
+    public function __construct()
+    {
+        $this->wordResponses = new \Doctrine\Common\Collections\ArrayCollection;
+    }
+    
     /**
      * Get id
      *
@@ -211,5 +224,22 @@ class Hole
     public function setInteractionHole(\UJM\ExoBundle\Entity\InteractionHole $interactionHole)
     {
         $this->interactionHole = $interactionHole;
+    }
+    
+    public function getWordResponses()
+    {
+        return $this->wordResponses;
+    }
+
+    public function addWordResponse(\UJM\ExoBundle\Entity\WordResponse $wordResponse)
+    {
+        $this->wordResponses[] = $wordResponse;
+
+        $wordResponse->setHole($this);
+    }
+
+    public function removeWordResponse(\UJM\ExoBundle\Entity\WordResponse $wordResponse)
+    {
+        
     }
 }
