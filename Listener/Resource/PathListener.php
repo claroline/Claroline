@@ -38,14 +38,25 @@ class PathListener extends ContainerAware
                         'stepId' => $path->getRootStep()->getId()
                     )
             );
-            
-            $event->setResponse(new RedirectResponse($route));
         }
         else {
-            // Path is not deployed => redirect to caller
-            throw new \Exception('Path cannot be played if it is not published.');
+
+            $route = $this->container
+                    ->get('router')
+                    ->generate(
+                    'claro_workspace_open_tool',
+                    array(
+                        'workspaceId' => $path->getResourceNode()->getWorkspace()->getId(),
+                        'toolName' => 'innova_path'
+                    )
+            );
+            $this->container->get('session')->getFlashBag()->add(
+                    'warning',
+                    $this->container->get('translator')->trans("path_open_not_published_error", array(), "innova_tools")
+                );
         }
         
+        $event->setResponse(new RedirectResponse($route));
         $event->stopPropagation();
     }
 
@@ -112,6 +123,7 @@ class PathListener extends ContainerAware
      */
     public function onPathDelete(DeleteResourceEvent $event)
     {
+
         $event->stopPropagation();
     }
 
