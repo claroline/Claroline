@@ -2,17 +2,11 @@
 
 namespace Icap\BlogBundle\Listener;
 
-use Claroline\CoreBundle\Event\CopyResourceEvent;
 use Claroline\CoreBundle\Event\CreateFormResourceEvent;
 use Claroline\CoreBundle\Event\CreateResourceEvent;
 use Claroline\CoreBundle\Event\CustomActionResourceEvent;
 use Claroline\CoreBundle\Event\DeleteResourceEvent;
-use Claroline\CoreBundle\Event\Log\LogCreateDelegateViewEvent;
 use Claroline\CoreBundle\Event\OpenResourceEvent;
-use Icap\BlogBundle\Entity\Blog;
-use Icap\BlogBundle\Entity\Comment;
-use Icap\BlogBundle\Entity\Post;
-use Icap\BlogBundle\Form\BlogType;
 use Symfony\Component\DependencyInjection\ContainerAware;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
