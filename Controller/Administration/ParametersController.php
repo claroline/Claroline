@@ -366,7 +366,7 @@ class ParametersController extends Controller
     {
         $form = $this->formFactory->create(
             new AdminForm\MailInscriptionType(),
-            $this->mailManager->getInscriptionMail()
+            $this->mailManager->getMailInscription()
         );
 
         return array('form' => $form->createView());
@@ -391,7 +391,7 @@ class ParametersController extends Controller
 
         if (count($errors) === 0) {
             if (isset($form['content'])) {
-                $this->contentManager->updateContent($this->mailManager->getInscriptionMail(), $form['content']);
+                $this->contentManager->updateContent($this->mailManager->getMailInscription(), $form['content']);
             }
 
             return $this->redirect($this->generateUrl('claro_admin_index'));
@@ -426,7 +426,7 @@ class ParametersController extends Controller
     {
         $form = $this->formFactory->create(
             new AdminForm\MailLayoutType(),
-            $this->mailManager->getLayoutMail()
+            $this->mailManager->getMailLayout()
         );
 
         return array('form' => $form->createView());
@@ -451,7 +451,7 @@ class ParametersController extends Controller
 
         if (count($errors) === 0) {
             if (isset($form['content'])) {
-                $this->contentManager->updateContent($this->mailManager->getLayoutMail(), $form['content']);
+                $this->contentManager->updateContent($this->mailManager->getMailLayout(), $form['content']);
             }
 
             return $this->redirect($this->generateUrl('claro_admin_index'));
