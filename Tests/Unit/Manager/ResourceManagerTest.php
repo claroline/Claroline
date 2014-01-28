@@ -436,6 +436,9 @@ class ResourceManagerTest extends MockeryTestCase
         $manager->shouldReceive('getDescendants')->once()->andReturn(array($descendant));
         $this->eventDispatcher->shouldReceive('dispatch')
             ->times(2);
+        $icon = $this->mock('Claroline\CoreBundle\Entity\Resource\ResourceIcon');
+        $node->shouldReceive('getIcon')->once()->andReturn($icon);
+        $this->iconManager->shouldReceive('delete')->once()->with($icon);
         $this->om->shouldReceive('remove')->once()->with($node);
         $this->om->shouldReceive('remove')->once()->with($descendant);
         $this->om->shouldReceive('remove')->times(2);
