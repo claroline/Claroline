@@ -11,6 +11,7 @@
 
 namespace Claroline\CoreBundle\Manager;
 
+use Claroline\CoreBundle\Library\Installation\Settings\MailingSettings;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -19,7 +20,8 @@ use Symfony\Component\Translation\Translator;
 use Claroline\CoreBundle\Entity\User;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
-use Claroline\CoreBundle\Entity\Content;
+use Claroline\CoreBundle\Library\CacheWarmerInterface;
+use Claroline\CoreBundle\Event\RefreshCacheEvent;
 
 /**
  * @DI\Service("claroline.manager.mail_manager")
@@ -67,28 +69,13 @@ class MailManager
         $this->contentManager = $contentManager;
     }
 
+
     /**
      * @return boolean
      */
     public function isMailerAvailable()
     {
-        $isAvailable =  $this->cacheManager->getParameter('is_mailer_available');
-
-        if ($isAvailable === null) {
-            try {
-                $this->cacheManager->getParameter('is_mailer_available');
-                $this->mailer->getTransport()->start();
-                $this->cacheManager->setParameter('is_mailer_available', true);
-
-                return true;
-
-            } catch (\Swift_TransportException $e) {
-                $this->cacheManager->setParameter('is_mailer_available', false);
-                return false;
-            }
-        }
-
-        return $isAvailable;
+        return $this->cacheManager->getParameter('is_mailer_available');
     }
 
     /**
@@ -231,4 +218,16 @@ class MailManager
         return $errors;
     }
 
+    /**
+     * @DI\Observe("refresh_cache")
+     */
+    public function refreshCache(RefreshCacheEvent $event)
+    {
+        try {
+            $this->mailer->getTransport()->start();
+            $event->addCacheParameter('is_mailer_available', true);
+        } catch (\Swift_TransportException $e) {
+            $event->addCacheParameter('is_mailer_available', false);
+        }
+    }
 }
