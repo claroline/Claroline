@@ -11,8 +11,8 @@ Notifies users on new events or activities. The idea was to develop a system whi
 Features
 ------------------------
 
-*	Independent system (separate Bundle)
-*	Works with Listeners to create and store new notifications
+*	Tied up with Log system (log events can generate notification)
+*	Works with Listeners to display notifications
 *	Builds a view template using the entity’s attributes
 *	Has its own translation domain (notification.lang.yml)
 *	To avoid system overload, only notifications that are less than 2 months old are stored.
@@ -26,7 +26,7 @@ Template
 A notification is divided in four parts:
 *	The avatar of the user whose action raised the notification (square 1)
 *	A short text describing the action (ex. John Doe enrolled you in “Anatomy” as “Student” if the doer is a user or if the doer is the platform: You have been enrolled as “Collaborator” in “Anatomy”)
-*	An icon depending on the notification type (blog icon if action refers to a blog resource, wiki icon if action refers to a wiki resource, platform icon if is a generic action etc.)
+*	An icon depending on the notification type (blog icon if action refers to a blog resource, wiki icon if action refers to a wiki resource, platform icon if is a generic action etc.). This icon is generated automatically using the name of plugin.
 *	The date the action took place (square 2), presented in a sort of “smart” format (3 hours ago, yesterday at 10:30, November 30 at 15:10 etc.) 
 
 Below it’s given a concrete example of the notification representation:
@@ -43,12 +43,9 @@ The actions that raise a notification can be divided in two categories, dependin
 
 A user receives a notification only if he is enrolled to the workspace.
 
-*	**Add a user to a group**: Notifies target user (the one that has been added to the group)
 *	**Enroll group to a workspace**: Notifies the group users
 *	**Enroll user to a workspace**: Notifies the target user
-*	**Create new resource**: Notifies all enrolled users to workspace that a new resource has been added
 *	**Give access to a resource**: Notifies users that they can access the resource
-*	**Move resource to another workspace**: Notifies users enrolled to the new workspace about the presence of a new resource
 
 
 ### Resource level notifications
