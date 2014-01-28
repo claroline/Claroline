@@ -1,6 +1,6 @@
 {% macro wiki_sections(sections, isAdmin, wikiId, wikiMode, user) %}
     {% for section in sections %}
-        {% if section.getDeleted() is empty and (isAdmin or section.visible) %}
+        {% if section.deleted is empty and (isAdmin or section.visible) %}
             {% set level = section.level + 1 %}
             {% set visibleClass = section.visible is sameas (true)?"":"invisible-wiki-section" %}
             {% set fontsize = 0 %}
@@ -16,19 +16,19 @@
                             <small class="wiki-actions">
                                 {% if section.visible is sameas (false) %}
                                     <span class="invisible-section-text">({{"invisible"|trans({},'icap_wiki')}})</span>
-                                {% endif %} 
+                                {% endif %}
                                 [
                                     <a href="{{ path('icap_wiki_new_section', { 'wikiId': wikiId, 'parentSectionId' : section.id }) }}" class="new-section" data-section="{{section.id}}" >
                                         {{ 'add_new_subsection'|trans({}, 'icap_wiki') }}
-                                    </a> 
-                                    | 
+                                    </a>
+                                    |
                                     <a href="{{ path('icap_wiki_edit_section', { 'wikiId': wikiId, 'sectionId' : section.id }) }}" class="edit-section" data-section="{{section.id}}" >
                                         {{ 'edit'|trans({}, 'icap_wiki') }}
-                                    </a> 
+                                    </a>
                                     |
                                     <a href="{{ path('icap_wiki_section_history', { 'wikiId': wikiId, 'sectionId' : section.id }) }}" class="history-section" data-section="{{section.id}}" >
                                         {{ 'history'|trans({}, 'icap_wiki') }}
-                                    </a> 
+                                    </a>
                                 ]
                             </small>
                         {% endif%}
