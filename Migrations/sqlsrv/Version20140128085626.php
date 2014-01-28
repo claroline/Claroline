@@ -8,9 +8,9 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2014/01/20 03:26:40
+ * Generation date: 2014/01/28 08:56:27
  */
-class Version20140120152636 extends AbstractMigration
+class Version20140128085626 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
@@ -32,9 +32,19 @@ class Version20140120152636 extends AbstractMigration
                 resource_id INT, 
                 icon_key NVARCHAR(255), 
                 action_key NVARCHAR(255) NOT NULL, 
-                target_url NVARCHAR(255) NOT NULL, 
+                details VARCHAR(MAX), 
                 PRIMARY KEY (id)
             )
+        ");
+        $this->addSql("
+            EXEC sp_addextendedproperty N 'MS_Description', 
+            N '(DC2Type:json_array)', 
+            N 'SCHEMA', 
+            dbo, 
+            N 'TABLE', 
+            icap__notification, 
+            N 'COLUMN', 
+            details
         ");
         $this->addSql("
             CREATE TABLE icap__notification_viewer (

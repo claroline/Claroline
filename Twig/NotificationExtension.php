@@ -24,7 +24,7 @@ class NotificationExtension extends \Twig_Extension
         if (!empty($resource)) {
             $actionMessage = $this->translator->trans(
                 $notification->getActionKey(),
-                array('%resourceName%'=>$resource->getName()),
+                array('%resourceName%'=>$resource['name']),
                 "notification"
             );
         }
@@ -34,12 +34,12 @@ class NotificationExtension extends \Twig_Extension
 
         if (!empty($user))
         {
-            $message = "<strong>".$user->getFirstName()." ".$user->getLastName()."</strong> ";
+            $message = "<strong>".$user['firstName']." ".$user['lastName']."</strong> ";
         } else {
             $message = "<strong>".$systemName."</strong> ";
         }
 
-        $message .= "<a href='".$notification->getTargetUrl()."'>".$actionMessage."</a>";
+        $message .= $actionMessage;
 
         return $message;
     }

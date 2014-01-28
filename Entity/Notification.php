@@ -45,9 +45,9 @@ class Notification
     protected $actionKey;
 
     /**
-     * @ORM\Column(type="string", name="target_url")
+     * @ORM\Column(type="json_array", nullable=true)
      */
-    protected $targetUrl;
+    protected $details;
 
     protected $iconColor = null;
 
@@ -164,29 +164,6 @@ class Notification
     }
 
     /**
-     * Set targetUrl
-     *
-     * @param string $targetUrl
-     * @return Notification
-     */
-    public function setTargetUrl($targetUrl)
-    {
-        $this->targetUrl = $targetUrl;
-
-        return $this;
-    }
-
-    /**
-     * Get $targetUrl
-     *
-     * @return string
-     */
-    public function getTargetUrl()
-    {
-        return $this->targetUrl;
-    }
-
-    /**
      * Get $iconColor
      *
      * @return string
@@ -220,5 +197,28 @@ class Notification
         }
 
         return $letter;
+    }
+
+    /**
+     * Set details
+     *
+     * @param  array $details
+     * @return Log
+     */
+    public function setDetails($details)
+    {
+        $this->details = $details;
+
+        return $this;
+    }
+
+    /**
+     * Get details
+     *
+     * @return array
+     */
+    public function getDetails()
+    {
+        return $this->details;
     }
 }

@@ -33,13 +33,6 @@ interface NotifiableInterface
     public function getDoer();
 
     /**
-     * Get date date.
-     *
-     * @return date
-     */
-    public function getDate();
-
-    /**
      * Get actionKey string.
      *
      * @return string
@@ -52,13 +45,6 @@ interface NotifiableInterface
      * @return string
      */
     public function getIconKey();
-
-    /**
-     * Get targetUrl string.
-     *
-     * @return string
-     */
-    public function getTargetUrl();
 
     /**
      * Get doerId integer
@@ -75,9 +61,23 @@ interface NotifiableInterface
     public function getResourceId();
 
     /**
-     * Get resourceClass
+     * Get resource class
      *
      * @return string
      */
     public function getResourceClass();
+
+    /**
+     * Get details
+     *
+     * @return array
+     */
+    public function getNotificationDetails();
+
+    /**
+     * Get if event is allowed to create notification or not
+     *
+     * @return boolean
+     */
+    public function isAllowedToNotify();
 }

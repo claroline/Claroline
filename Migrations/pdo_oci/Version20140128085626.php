@@ -1,6 +1,6 @@
 <?php
 
-namespace Icap\NotificationBundle\Migrations\oci8;
+namespace Icap\NotificationBundle\Migrations\pdo_oci;
 
 use Doctrine\DBAL\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
@@ -8,9 +8,9 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2014/01/20 03:26:40
+ * Generation date: 2014/01/28 08:56:27
  */
-class Version20140120152636 extends AbstractMigration
+class Version20140128085626 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
@@ -56,11 +56,11 @@ class Version20140120152636 extends AbstractMigration
             CREATE TABLE icap__notification (
                 id NUMBER(10) NOT NULL, 
                 creation_date TIMESTAMP(0) NOT NULL, 
-                user_id NUMBER(10) DEFAULT NULL, 
-                resource_id NUMBER(10) DEFAULT NULL, 
-                icon_key VARCHAR2(255) DEFAULT NULL, 
+                user_id NUMBER(10) DEFAULT NULL NULL, 
+                resource_id NUMBER(10) DEFAULT NULL NULL, 
+                icon_key VARCHAR2(255) DEFAULT NULL NULL, 
                 action_key VARCHAR2(255) NOT NULL, 
-                target_url VARCHAR2(255) NOT NULL, 
+                details CLOB DEFAULT NULL NULL, 
                 PRIMARY KEY(id)
             )
         ");
@@ -93,11 +93,14 @@ class Version20140120152636 extends AbstractMigration
             FROM DUAL; END LOOP; END IF; END;
         ");
         $this->addSql("
+            COMMENT ON COLUMN icap__notification.details IS '(DC2Type:json_array)'
+        ");
+        $this->addSql("
             CREATE TABLE icap__notification_viewer (
                 id NUMBER(10) NOT NULL, 
                 notification_id NUMBER(10) NOT NULL, 
                 viewer_id NUMBER(10) NOT NULL, 
-                status NUMBER(1) DEFAULT NULL, 
+                status NUMBER(1) DEFAULT NULL NULL, 
                 PRIMARY KEY(id)
             )
         ");

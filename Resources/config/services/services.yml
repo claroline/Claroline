@@ -1,7 +1,7 @@
 services:
     icap_notification.manager:
         class: Icap\NotificationBundle\Service\Manager
-        arguments: [@doctrine.orm.entity_manager, @security.context]
+        arguments: [@service_container]
 
     icap_notification.twig.notification_extension:
         class: Icap\NotificationBundle\Twig\NotificationExtension
