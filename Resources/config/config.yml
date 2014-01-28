@@ -13,9 +13,6 @@ plugin:
       name: innova_path
       is_exportable: false
       icon: res_file.png
-      actions:
-          - name: add_favorite
-            menu_name: add_favorite
 
     - class: Innova\PathBundle\Entity\NonDigitalResource
       name: innova_non_digital_resource
