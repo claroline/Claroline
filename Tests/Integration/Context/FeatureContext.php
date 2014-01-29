@@ -291,6 +291,6 @@ EOL;
 
     private function getUrl($path)
     {
-        return $this->getMinkParameter('base_url') . $path;
+        return $this->getMinkParameter('base_url') . '/' . $path;
     }
 }
