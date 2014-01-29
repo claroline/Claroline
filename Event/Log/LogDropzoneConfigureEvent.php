@@ -13,6 +13,7 @@ class LogDropzoneConfigureEvent extends AbstractLogResourceEvent {
 
     /**
      * @param Dropzone $dropzone
+     * @param array    $changeSet
      */
     public function __construct(Dropzone $dropzone, $changeSet)
     {

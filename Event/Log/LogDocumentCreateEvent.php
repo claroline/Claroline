@@ -14,7 +14,8 @@ class LogDocumentCreateEvent extends AbstractLogResourceEvent {
 
     /**
      * @param Dropzone $dropzone
-     * @param Drop $drop
+     * @param Drop     $drop
+     * @param Document $document
      */
     public function __construct(Dropzone $dropzone, Drop $drop, Document $document)
     {

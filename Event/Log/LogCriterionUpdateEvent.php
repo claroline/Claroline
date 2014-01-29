@@ -13,10 +13,10 @@ class LogCriterionUpdateEvent extends AbstractLogResourceEvent {
     const ACTION = 'resource-icap_dropzone-criterion_update';
 
     /**
-     * @param Dropzone $dropzone
-     * @param mixed $dropzoneChangeSet
-     * @param Drop $drop
-     * @param mixed $criterionChangeSet
+     * @param Dropzone  $dropzone
+     * @param mixed     $dropzoneChangeSet
+     * @param Criterion $criterion
+     * @param mixed     $criterionChangeSet
      */
     public function __construct(Dropzone $dropzone, $dropzoneChangeSet, Criterion $criterion, $criterionChangeSet)
     {
