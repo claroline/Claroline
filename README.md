@@ -5,6 +5,8 @@ Notification bundle for Claroline Connect. See https://github.com/claroline/Clar
 
 [Here](https://github.com/iCAPLyon1/NotificationBundle/blob/master/Resources/doc/system_description.md) is an analysis of what the Notification system does.
 
+![Notification dropdown](Resources/doc/img/notifications_dropdown.jpg "Notification dropdown")
+
 Installation
 -------------------------
 
@@ -32,7 +34,7 @@ In order to integrate and enable notifications in a Claroline connect plugin you
 
 1.  Add
     `{% render controller('IcapNotificationBundle:FollowerResource:renderForm', {'resourceId': _resource.resourceNode.id, 'resourceClass': _resource.resourceNode.class}) %}`
-    somewhere in your interface to render the button that allows user to enable and disable notifications for a resource.     As you can see, 2 parameters are required, the resource node id and the resource node class.
+    somewhere in your interface to render the button that allows user to enable and disable notifications for a resource.     As you can see, 2 parameters are required, the resource node id and the resource node class. ![enable notification button](Resources/doc/img/follow_button.jpg "enable notification button")
 2.  Any event that you want to generate a notification needs to implement the *NotifiableInterface*. This interface has 9 methods.
     -   getSendToFollowers() : returns true or false if event can notify the resource's followers
     -   getIncludeUserIds() : returns a list of User ids that will receive the notification (extra Users that are not necessarily in followers list)
