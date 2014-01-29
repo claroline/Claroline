@@ -74,4 +74,4 @@ The implementation of the notification system is achieved through the “Notifia
 
 This expansion is about adding a real time functionality to the Notification System. This functionality will be developed but it will stay optional, because for a real time system we need a “push” server (NodeJS or other). If a NodeJS server is installed then it would be possible to enable the functionality in the plugin’s parameters. The necessary files and functions would be present all the time, but loaded and called only if the real time option is enabled.
 
-A future expansion will also provide an API to receive User notifications.
+A future expansion will also provide with an API to receive User notifications.
