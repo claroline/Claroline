@@ -116,9 +116,9 @@
             </div>
 
             <div class="row">
-                <div class="col-md-3">{{ correction.startDate|date }}</div>
-                <div class="col-md-3">{{ correction.lastOpenDate|date }}</div>
-                <div class="col-md-3">{% if correction.endDate != null %}{{ correction.endDate|date }}{% else %}--{% endif %}</div>
+                <div class="col-md-3">{{ correction.startDate|date('formatDatetime'|trans({}, 'icap_dropzone')) }}</div>
+                <div class="col-md-3">{{ correction.lastOpenDate|date('formatDatetime'|trans({}, 'icap_dropzone')) }}</div>
+                <div class="col-md-3">{% if correction.endDate != null %}{{ correction.endDate|date('formatDatetime'|trans({}, 'icap_dropzone')) }}{% else %}--{% endif %}</div>
                 <div class="col-md-offset-1 col-md-2">{% if correction.totalGrade != null %}{{ correction.totalGrade|number_format(2) }}{% else %}--{% endif %}/20</div>
             </div>
             <hr/>

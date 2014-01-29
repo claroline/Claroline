@@ -147,7 +147,7 @@ class Correction {
     }
 
     /**
-     * @return mixed
+     * @return \DateTime
      */
     public function getEndDate()
     {
