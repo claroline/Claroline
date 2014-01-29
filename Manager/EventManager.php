@@ -72,6 +72,8 @@ class EventManager
      *
      * @param string|null $restriction
      *
+     * @param string      $resourceClass
+     *
      * @return array
      */
     public function getEventsForBundle($restriction = null, $resourceClass)
@@ -174,21 +176,22 @@ class EventManager
     {
         $textEvents = $this->getEvents($restriction);
 
-        $sortedEvents = array();
-        $genericResourceEvents = array();
+        $allTranslatedText            = $this->translator->trans('all', array(), 'log');
+        $sortedEvents                 = array();
+        $genericResourceEvents        = array();
         $genericResourceEvents['all'] = 'all';
-        $sortedEvents['all'] = $this->translator->trans('all', array(), 'log');
-        $tempResourceEvents = array();
+        $sortedEvents['all']          = $allTranslatedText;
+        $tempResourceEvents           = array();
 
         foreach ($textEvents as $textEvent) {
             $explodeTextEvents = explode('-', $textEvent);
             $shortTextEvent = $explodeTextEvents[0] . '-' . $explodeTextEvents[1];
-            $eventTrans = $this->translator->trans($explodeTextEvents[0], array(), 'platform');
+            $eventTrans = $this->translator->trans($explodeTextEvents[0], array(), 'log');
 
             if ($explodeTextEvents[0] === 'resource') {
-                $tempResourceEvents['all'][$explodeTextEvents[0]] = $this->translator->trans('all', array(), 'log');
+                $tempResourceEvents['all'][$explodeTextEvents[0]] = $allTranslatedText;
             } else {
-                $sortedEvents[$eventTrans][$explodeTextEvents[0]] = $this->translator->trans('all', array(), 'log');
+                $sortedEvents[$eventTrans][$explodeTextEvents[0]] = $allTranslatedText;
             }
 
             if ($explodeTextEvents[0] === 'resource') {
@@ -218,15 +221,16 @@ class EventManager
             foreach ($genericResourceEvents as $genericKey => $genericEvent) {
                 $logTrans = $this->translator->trans(
                     $genericEvent === 'all' ? $genericEvent : 'log_' . $genericEvent . '_filter',
-                    array(),
-                    'log'
-                );
+                        array(),
+                        'log'
+                    );
+
+                $genericEvent = ('all' == $genericEvent) ? 'resource' : $genericEvent;
 
                 if ($sortedKey !== 'all') {
                     $sortedEvents[$resourceTrans][$keyTrans]['[[' . $sortedKey . ']]' . $genericEvent] = $logTrans;
                 } else {
-                    $altLogTrans = $this->translator->trans($sortedKey, array(), 'log');
-                    $sortedEvents[$resourceTrans][$altLogTrans][$genericEvent] = $logTrans;
+                    $sortedEvents[$resourceTrans][$allTranslatedText][$genericEvent] = $logTrans;
                 }
             }
 
@@ -243,6 +247,8 @@ class EventManager
 
     /**
      * @param string|null $restriction
+     *
+     * @param string|null $resourceClass
      *
      * @return array
      */

@@ -53,11 +53,32 @@ $(function(){
 
     $(ruleDeleteConfirmSelector, ruleTabs).confirmModal({'confirmCallback': confirmDeleteRule});
 
-    $(".rules").on('change', '.badge_result_awarding', function(event){
-        var tab = $("#" + $(this).attr('data-tab-id'));
-        $(".rule_result", tab).toggleClass('hidden');
-        event.preventDefault();
-    })
+    $(".rules").on('change', ".action_panel select[id$='_action_']", function(event){
+        toggleDisplayBadgeField($(this));
+    });
+
+    // Display or not badge field form in edit form
+    $(".action_panel select[id$='_action_']", ".rules").each(function(index){
+        toggleDisplayBadgeField($(this));
+        $("#badge_form_rules_" + index + "_badge").removeClass('form-control').select2({
+            placeholder:     Translator.get('badge:badge_form_badge_selection'),
+            allowClear:      true,
+            formatResult:    format,
+            formatSelection: format
+        });
+    });
+
+    function toggleDisplayBadgeField(badgeFieldForm)
+    {
+        var badgePanel = badgeFieldForm.parents(".tab-pane[id^=rule]").find(".badge_panel");
+        if ("badge" == badgeFieldForm.val().toLowerCase()) {
+            badgePanel.removeClass("hide");
+        }
+        else {
+            badgePanel.addClass("hide");
+            $("select", badgePanel).val(null);
+        }
+    }
 
     function confirmDeleteRule(element)
     {
@@ -67,14 +88,16 @@ $(function(){
     function addRule()
     {
         var countExistingTabs = $("a[data-toggle='tab']", ruleTabs).length;
-        addRuleTab(++countExistingTabs);
+        addRuleTab(countExistingTabs);
         addRuleTabContent(countExistingTabs);
         $("a[href=#rule" + countExistingTabs + "]", ruleTabs).tab('show');
+        countExistingTabs++;
     }
 
     function addRuleTab(tabIndex)
     {
         var newTab = tabPrototype.replace(/__name__/g, tabIndex);
+        newTab = newTab.replace(/__indexname__/g, tabIndex + 1);
 
         $("#add_rule", ruleTabs).before(newTab);
     }
@@ -84,6 +107,17 @@ $(function(){
         var newTabContent = tabContentPrototype.replace(/__name__/g, tabIndex);
 
         $(".rules").append(newTabContent);
+
+        $("#badge_form_rules_" +tabIndex + "_badge").removeClass('form-control').select2({
+            placeholder:     Translator.get('badge:badge_form_badge_selection'),
+            allowClear:      true,
+            formatResult:    format,
+            formatSelection: format
+        });
+    }
+
+    function format(state) {
+        return state.text;
     }
 
     function deleteRule(tabId)

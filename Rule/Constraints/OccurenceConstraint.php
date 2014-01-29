@@ -12,6 +12,7 @@
 namespace Claroline\CoreBundle\Rule\Constraints;
 
 use Claroline\CoreBundle\Rule\Entity\Rule;
+use Doctrine\ORM\QueryBuilder;
 
 class OccurenceConstraint extends AbstractConstraint
 {
@@ -28,5 +29,21 @@ class OccurenceConstraint extends AbstractConstraint
         }
 
         return $isValid;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function isApplicableTo(Rule $rule)
+    {
+        return null !== $rule->getOccurrence();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getQuery(QueryBuilder $queryBuilder)
+    {
+        return $queryBuilder->setMaxResults($this->getRule()->getOccurrence());
     }
 }

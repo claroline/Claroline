@@ -166,7 +166,7 @@ class AdministrationControllerTest extends MockeryTestCase
             ->once()
             ->andReturn('mail');
         $this->mailManager
-            ->shouldReceive('sendPlainPassword')
+            ->shouldReceive('sendCreationMessage')
             ->with(
                 'noreply@claroline.net',
                 'mail',

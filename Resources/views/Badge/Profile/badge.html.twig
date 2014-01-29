@@ -49,10 +49,14 @@
                                 {% set action = 'log_' ~ checkedLog.action ~ '_title' %}
                                 <tr>
                                     <td>{{ action|trans({}, 'log') }}</td>
-                                    <td>{{ checkedLog.creationDate|date('date_format'|trans({}, 'platform')) }}</td>
+                                    <td>{{ checkedLog.dateLog|date('date_format'|trans({}, 'platform')) }}</td>
                                     <td>
-                                        {% if checkedLog.resourceNode != null %}
-                                            <a href="{{ path('claro_resource_open', {'resourceType': checkedLog.resourceType.name, 'action': 'open', 'node': checkedLog.resourceNode.id})}}">{{ checkedLog.resourceNode.path }}</a>
+                                        {% if checkedLinks[checkedLog.getId()] is defined %}
+                                            {{ checkedLinks[checkedLog.getId()]|raw }}
+                                        {% else %}
+                                            {% if checkedLog.resourceNode != null %}
+                                                <a href="{{ path('claro_resource_open', {'resourceType': checkedLog.resourceType.name, 'action': 'open', 'node': checkedLog.resourceNode.id})}}">{{ checkedLog.resourceNode.path }}</a>
+                                            {% endif %}
                                         {% endif %}
                                     </td>
                                 </tr>

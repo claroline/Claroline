@@ -23,10 +23,15 @@
 {% endblock %}
 
 {% block section_body %}
-    {{ render(controller('ClarolineCoreBundle:Badge/Badge:list', {'parameters': parameters, 'badgeClaims': badgeClaims})) }}
+    {{ render(controller('ClarolineCoreBundle:Badge/Badge:list', {'parameters': parameters})) }}
 {% endblock %}
 
 {% block javascripts %}
     {{ parent() }}
     <script type="text/javascript" src='{{ asset('bundles/frontend/jquery/plugin/confirm-bootstrap/confirm-bootstrap.js') }}'></script>
+    <script type="text/javascript">
+        $(function(){
+            $('.confirm').confirmModal();
+        });
+    </script>
 {% endblock %}

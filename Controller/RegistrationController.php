@@ -82,7 +82,8 @@ class RegistrationController extends Controller
         $this->checkAccess();
         $user = new User();
         $localeManager = $this->get('claroline.common.locale_manager');
-        $form = $this->get('form.factory')->create(new BaseProfileType($localeManager), $user);
+        $termsOfService = $this->get('claroline.common.terms_of_service_manager');
+        $form = $this->get('form.factory')->create(new BaseProfileType($localeManager, $termsOfService), $user);
 
         return array('form' => $form->createView());
     }
@@ -104,7 +105,8 @@ class RegistrationController extends Controller
         $this->checkAccess();
         $user = new User();
         $localeManager = $this->get('claroline.common.locale_manager');
-        $form = $this->get('form.factory')->create(new BaseProfileType($localeManager), $user);
+        $termsOfService = $this->get('claroline.common.terms_of_service_manager');
+        $form = $this->get('form.factory')->create(new BaseProfileType($localeManager, $termsOfService), $user);
 
         $form->handleRequest($this->get('request'));
 
@@ -115,7 +117,7 @@ class RegistrationController extends Controller
                 PlatformRoles::USER
             );
             $msg = $this->get('translator')->trans('account_created', array(), 'platform');
-            $this->getRequest()->getSession()->getFlashBag()->add('success', $msg);
+            $this->get('request')->getSession()->getFlashBag()->add('success', $msg);
         }
 
         return array('form' => $form->createView());

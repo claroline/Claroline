@@ -116,12 +116,18 @@ class UserManager
         $this->om->endFlushSuite();
 
         if ($this->mailManager->isMailerAvailable()) {
-            $this->mailManager->sendPlainPassword($user);
+            $this->mailManager->sendCreationMessage($user);
         }
 
         return $user;
     }
 
+    /**
+     * Rename a user.
+     *
+     * @param User $user
+     * @param $username
+     */
     public function rename(User $user, $username)
     {
         $user->setUsername($username);
@@ -129,6 +135,13 @@ class UserManager
             ' - ' . $user->getUsername();
         $pws = $user->getPersonalWorkspace();
         $this->workspaceManager->rename($pws, $personalWorkspaceName);
+        $this->om->persist($user);
+        $this->om->flush();
+    }
+
+    public function setIsMailNotified(User $user, $isNotified)
+    {
+        $user->setIsMailNotified($isNotified);
         $this->om->persist($user);
         $this->om->flush();
     }

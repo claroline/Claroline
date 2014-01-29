@@ -23,7 +23,7 @@ class PlayFileEvent extends Event
     /**
      * Constructor.
      *
-     * @param integer $resourceId
+     * @param File $resource
      */
     public function __construct(File $resource)
     {

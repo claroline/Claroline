@@ -47,7 +47,7 @@ $(function(){
             }
         );
 
-    var uploadImagePlaceholder = $("#upload_image_placeholder");
+    var uploadImagePlaceholder = $(".upload_image_placeholder");
     uploadImagePlaceholder
         .click(function(event) {
             event.preventDefault();
