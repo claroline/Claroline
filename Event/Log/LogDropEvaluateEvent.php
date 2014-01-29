@@ -13,7 +13,8 @@ class LogDropEvaluateEvent extends AbstractLogResourceEvent {
 
     /**
      * @param Dropzone $dropzone
-     * @param Drop $drop
+     * @param Drop     $drop
+     * @param string   $grade
      */
     public function __construct(Dropzone $dropzone, Drop $drop, $grade)
     {

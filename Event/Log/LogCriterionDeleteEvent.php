@@ -13,8 +13,8 @@ class LogCriterionDeleteEvent extends AbstractLogResourceEvent {
     const ACTION = 'resource-icap_dropzone-criterion_delete';
 
     /**
-     * @param Dropzone $dropzone
-     * @param Drop $drop
+     * @param Dropzone  $dropzone
+     * @param Criterion $criterion
      */
     public function __construct(Dropzone $dropzone, Criterion $criterion)
     {
