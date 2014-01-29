@@ -47,13 +47,6 @@ interface NotifiableInterface
     public function getIconKey();
 
     /**
-     * Get doerId integer
-     *
-     * @return integer
-     */
-    public function getDoerId();
-
-    /**
      * Get resourceId
      *
      * @return integer

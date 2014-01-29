@@ -111,20 +111,24 @@ class Manager
         $notification->setIconKey($notifiable->getIconKey());
         $notification->setResourceId($notifiable->getResourceId());
         $details = $notifiable->getNotificationDetails();
-        $doerId = $notifiable->getDoerId();
-        $loggedUser = $this->security->getToken()->getUser();
-        if (!isset($details['doer']) && !empty($loggedUser)) {
+        $doer = $notifiable->getDoer();
+        $doerId = null;
+
+        if ($doer === null) {
+            $doer = $this->security->getToken()->getUser();
+        }
+        if ($doer !== null) {
+            $doerId = $doer->getId();
+        }
+        if (!isset($details['doer']) && !empty($doerId)) {
             $details['doer'] = array(
-                'id' => $loggedUser->getId(),
-                'firstName' =>  $loggedUser->getFirstName(),
-                'lastName' => $loggedUser->getLastName(),
-                'avatar' => $loggedUser->getPicture()
+                'id' => $doerId,
+                'firstName' =>  $doer->getFirstName(),
+                'lastName' => $doer->getLastName(),
+                'avatar' => $doer->getPicture()
             );
         }
         $notification->setDetails($details);
-        if ($doerId === null && !empty($loggedUser)) {
-            $doerId = $loggedUser->getId();
-        }
         $notification->setUserId($doerId);
 
         $this->getEntityManager()->persist($notification);
@@ -160,11 +164,13 @@ class Manager
             $userIds = array_diff($userIds, $notifiable->getExcludeUserIds());
         }
 
-        //Remove doer from user list
-        /*$loggedUser = $this->security->getToken()->getUser();
-        if (!empty($loggedUser)) {
-            $userIds = array_diff($userIds, array($loggedUser->getId()));
-        }*/
+        //Remove doer from user list as long as the logged user
+        $loggedUser = $this->security->getToken()->getUser();
+        $removeUserIds = array($notification->getUserId());
+        if (!empty($loggedUser) && $loggedUser->getId() != $notification->getUserId()) {
+            array_push($removeUserIds, $loggedUser->getId());
+        }
+        $userIds = array_diff($userIds, $removeUserIds);
 
         if (count($userIds)>0) {
             foreach ($userIds as $userId) {

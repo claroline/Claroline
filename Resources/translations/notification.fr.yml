@@ -1,5 +1,7 @@
-enable_notifications: Activer les notifications
-disable_notifications: Desactiver les notifications
+enable_notifications: Suivre cette ressource
+enable_notifications_info: être notifié des nouveautés de cetter ressource
+disable_notifications: Ne pas suivre cette ressource
+disable_notifications_info: ne pas être notifié des nouveautés de cetter ressource
 
 now: Maintenant
 few_seconds_ago: "Il y a quelques secondes"
