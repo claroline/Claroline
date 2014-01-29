@@ -56,7 +56,9 @@ This notification category, contains all those notifications defined by inside e
 
 ### Structure (Entities, Relationships, Tables)
 
-In the diagram below it is shown the table structure for the Notification System. As we can see there is the Notification table (entity) linked though a many to one relationship with the user (doer, the one whose action resulted the notification) but also linked through a one to many relationship with the NotificationViewer table (entity). The NotificationViewer is essentially the intermediate entity that connects a user (viewer) to a notification (view) as a user can receive many notifications and a notification can be diffused to many users. There is a status attribute in the NotificationViewer class that changes when the notification has been seen by the user.
+In the diagram below it is shown the table structure for the Notification System. As we can see there is the Notification table (entity) linked though a many to one relationship with the user (doer, the one whose action resulted the notification) but also linked through a one to many relationship with the NotificationViewer table (entity). The NotificationViewer is essentially the intermediate entity that connects a user (viewer) to a notification (view) as a user can receive many notifications and a notification can be diffused to many different users. There is a status attribute in the NotificationViewer class that changes when the notification has been seen by the user. Thre is also the FollowerResource entity that connects a user to a resource and informs a system that a specific user follows a resource (has enabled notifications for this resource).
+
+The User and Resource entities are not defined inside the plugin. They are external entities used by the plugin. As such, they must provide methods with the following methods: getId(), getPicture(), getFirstName(), getLastName() for User entity and getId(), getClass() for Resource entity. 
 
 ![Notifications system UML](img/notifications_system_uml.jpg "Notifications system UML")
 
