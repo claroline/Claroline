@@ -25,6 +25,7 @@ class Correction {
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     protected $id;
+
     /**
      * @ORM\Column(name="total_grade", type="decimal", scale=2, nullable=true)
      * @Assert\Range(
@@ -33,44 +34,54 @@ class Correction {
      * )
      */
     protected $totalGrade = null;
+
     /**
      * @ORM\Column(type="text", nullable=true)
      */
     protected $comment = null;
+
     /**
      * @ORM\Column(type="boolean", nullable=false)
      */
     protected $valid = true;
+
     /**
      * @ORM\Column(name="start_date", type="datetime", nullable=false)
      * @Gedmo\Timestampable(on="create")
      */
     protected $startDate;
+
     /**
      * @ORM\Column(name="last_open_date", type="datetime", nullable=false)
      * @Gedmo\Timestampable(on="create")
      */
     protected $lastOpenDate;
+
     /**
      * @ORM\Column(name="end_date", type="datetime", nullable=true)
      */
     protected $endDate = null;
+
     /**
      * @ORM\Column(type="boolean", nullable=false)
      */
     protected $finished = false;
+
     /**
      * @ORM\Column(type="boolean", nullable=false)
      */
     protected $editable = false;
+
     /**
      * @ORM\Column(type="boolean", nullable=false)
      */
     protected $reporter = false;
+
     /**
      * @ORM\Column(type="text", nullable=true)
      */
     protected $reportComment = null;
+
     /**
      * @ORM\OneToMany(
      *      targetEntity="Icap\DropzoneBundle\Entity\Grade",
@@ -352,29 +363,31 @@ class Correction {
     }
 
     /**
-     * @return mixed
+     * @param bool $hydrateUser
+     *
+     * @return array
      */
-    public function toJson($hydrateUser)
+    public function toArray($hydrateUser)
     {
         $json = array(
-            'id' => $this->getId(),
+            'id'       => $this->getId(),
             'editable' => $this->getEditable(),
         );
 
         if ($this->getFinished() === true) {
-            $json['valid'] = $this->getValid();
-            $json['totalGrade'] = $this->getTotalGrade();
-            $json['comment'] = $this->getComment();
-            $json['reporter'] = $this->getReporter();
+            $json['valid']         = $this->getValid();
+            $json['totalGrade']    = $this->getTotalGrade();
+            $json['comment']       = $this->getComment();
+            $json['reporter']      = $this->getReporter();
             $json['reportComment'] = $this->getReportComment();
         }
 
         if ($hydrateUser === true) {
             $json['user'] = array (
-                'id' => $this->getUser()->getId(),
-                'lastName' => $this->getUser()->getLastName(),
+                'id'        => $this->getUser()->getId(),
+                'lastName'  => $this->getUser()->getLastName(),
                 'firstName' => $this->getUser()->getFirstName(),
-                'username' => $this->getUser()->getUsername(),
+                'username'  => $this->getUser()->getUsername(),
             );
         }
 

@@ -309,8 +309,8 @@ class DropController extends DropzoneBaseController
         return $this->addDropsStats($dropzone, array(
             'workspace' => $dropzone->getResourceNode()->getWorkspace(),
             '_resource' => $dropzone,
-            'dropzone' => $dropzone,
-            'pager' => $pager,
+            'dropzone'  => $dropzone,
+            'pager'     => $pager,
         ));
     }
 

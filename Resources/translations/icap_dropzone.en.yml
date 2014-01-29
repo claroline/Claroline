@@ -1,4 +1,4 @@
-formatDatetime: 'm/d/Y h:i'
+formatDatetime: 'm/d/Y H:i'
 Resource: 'Resource'
 dropzone_edit: 'Edit'
 Common: 'Common'
@@ -74,6 +74,7 @@ There are only nb minutes before the end of the peer review: 'one: There are onl
 nb correction remains: 'one: You have one copy to correct to complete this evaluation.|some: You have %count% copies to correct to complete this evaluation.'
 Correct a copy: 'Correct a copy'
 Finished! You have realized the nb corrections expected. Patience your copy is being corrected.: 'one: Finished! You have realized the expected correction. Patience your copy is being corrected.|some: Finished! You have realized the %count% corrections expected. Patience your copy is being corrected.'
+Finished! Patience your copy is being corrected.: 'Finished ! Patience your copy is being corrected.'
 Add at least one document: 'Add at least one document'
 Save and finished: 'Save and finished'
 Your correction has been saved: 'Your correction has been saved'
@@ -142,7 +143,7 @@ The evaluation has been successfully saved: 'The evaluation has been successfull
 Save criterion: 'Save criterion'
 Are you sure you want to delete the %number%: 'Are you sure you want to delete the #%number%'
 There are no evaluation criterion: 'There are no evaluation criterion'
-noCopyExpectedCorrection: 'one: No copy has received correction:|some: No copy has received the %count% correction expected.'
+noCopyExpectedCorrection: 'one: No copy has received correction.|some: No copy has received the %count% correction expected.'
 No copy was made: 'No copy was made'
 Evaluation finished: 'Evaluation finished'
 Keep this correction scored zero: 'Keep this correction scored zero'
@@ -219,3 +220,4 @@ Correct an evaluation requires authentication. Please login.: 'Correct an evalua
 Warning your peer review offers no criteria on which to base correct copies: 'Warning your peer review offers no criteria on which to base correct copies'
 Unrecognized type: 'Unrecognized type'
 reportComment: 'Report comment'
+No correction: "No correction."
