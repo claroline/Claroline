@@ -299,10 +299,17 @@ class Drop {
         /** @var Correction[] $corrections */
         $corrections = $this->getCorrections();
         /** @var \DateTime $date */
-        $date = $corrections->first();
+        /** @var Correction $firstCorrection */
+        $firstCorrection = $corrections->first();
+
+        $date = false;
+
+        if (false !== $firstCorrection) {
+            $date = $firstCorrection->getEndDate();
+        }
 
         foreach ($corrections as $correction) {
-            if ($date->getTimestamp() < $correction->getEndDate()) {
+            if ($date->getTimestamp() < $correction->getEndDate()->getTimestamp()) {
                 $date = $correction->getEndDate();
             }
         }

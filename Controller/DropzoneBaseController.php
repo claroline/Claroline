@@ -44,8 +44,6 @@ class DropzoneBaseController extends Controller
     protected function isAllowToEdit(Dropzone $dropzone)
     {
         $this->isAllow($dropzone, 'EDIT');
-//        $log = new LogResourceUpdateEvent($dropzone->getResourceNode(), array());
-//        $this->get('event_dispatcher')->dispatch('log', $log);
     }
 
     protected function isAllowToOpen(Dropzone $dropzone)

@@ -73,14 +73,15 @@ class TemporaryAccessResourceManager
     {
         $temporaryAccessArray = $this->container->get('request')->getSession()->get(TemporaryAccessResourceManager::RESOURCE_TEMPORARY_ACCESS_KEY);
 
-        if ($temporaryAccessArray == null) {
+        if ($temporaryAccessArray === null) {
             $temporaryAccessArray = array();
         }
 
-        $temporaryAccessIds = $temporaryAccessArray[$this->getUserKey($user)];
-        if ($temporaryAccessIds == null) {
-            $temporaryAccessIds = array();
+        $temporaryAccessIds = array();
+        if (isset($temporaryAccessArray[$this->getUserKey($user)])) {
+            $temporaryAccessIds = $temporaryAccessArray[$this->getUserKey($user)];
         }
+
         $alreadyIn = false;
         foreach ($temporaryAccessIds as $temporaryAccessId) {
             if ($temporaryAccessId == $node->getId()) {
@@ -93,10 +94,5 @@ class TemporaryAccessResourceManager
             $temporaryAccessArray[$this->getUserKey($user)] = $temporaryAccessIds;
         }
         $this->container->get('request')->getSession()->set(TemporaryAccessResourceManager::RESOURCE_TEMPORARY_ACCESS_KEY, $temporaryAccessArray);
-
-//        echo('<pre>');
-//        var_dump($temporaryAccessArray);
-//        echo('</pre>');
-//        die();
     }
 }
