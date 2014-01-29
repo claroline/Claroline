@@ -13,6 +13,7 @@
         {% if isAdmin %}
         <a href="{{ path('icap_wiki_configure', { 'wikiId': _resource.id }) }}" class="btn btn-default"><i class="icon-wrench"></i> {{'options'|trans({},'icap_wiki')}}</a>
         {% endif %}
+        {% render controller('IcapNotificationBundle:FollowerResource:renderForm', {'resourceId': _resource.resourceNode.id, 'resourceClass': _resource.resourceNode.class}) %}
     </div>
     {% endif %}
 {% endblock %}

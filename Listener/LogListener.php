@@ -2,13 +2,10 @@
 
 namespace Icap\WikiBundle\Listener;
 
-use Claroline\CoreBundle\Event\PluginOptionsEvent;
 use Claroline\CoreBundle\Event\Log\CreateFormResourceEvent;
 use Claroline\CoreBundle\Event\Log\LogCreateDelegateViewEvent;
 
 use Symfony\Component\DependencyInjection\ContainerAware;
-use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\HttpFoundation\Response;
 
 class LogListener extends ContainerAware
 {

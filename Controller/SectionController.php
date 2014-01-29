@@ -177,7 +177,7 @@ class SectionController extends Controller
      * @Method({"POST"})
      * @ParamConverter("wiki", class="IcapWikiBundle:Wiki", options={"id" = "wikiId"})
      */
-    public function moveSectionAction(Request $request, $wiki, $sectionId, $referenceSectionId, $isBrother)
+    public function moveSectionAction(Request $request, Wiki $wiki, $sectionId, $referenceSectionId, $isBrother)
     {
         $this->checkAccess("EDIT", $wiki);
         $section = $this->getSection($wiki, $sectionId);

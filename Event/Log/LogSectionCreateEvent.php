@@ -4,12 +4,15 @@ namespace Icap\WikiBundle\Event\Log;
 
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Event\Log\AbstractLogResourceEvent;
+use Icap\NotificationBundle\Entity\NotifiableInterface;
 use Icap\WikiBundle\Entity\Wiki;
 use Icap\WikiBundle\Entity\Section;
 
-class LogSectionCreateEvent extends AbstractLogResourceEvent
+class LogSectionCreateEvent extends AbstractLogResourceEvent implements NotifiableInterface
 {
     const ACTION = 'resource-icap_wiki-section_create';
+    protected $wiki;
+    protected $details;
 
 /**
  * @param Wiki $wiki
@@ -17,7 +20,8 @@ class LogSectionCreateEvent extends AbstractLogResourceEvent
  */
     public function __construct(Wiki $wiki, Section $section)
     {
-        $details = array(
+        $this->wiki = $wiki;
+        $this->details = array(
             'section' => array(
                 'wiki' => $wiki->getId(),
                 'id' => $section->getId(),
@@ -27,7 +31,7 @@ class LogSectionCreateEvent extends AbstractLogResourceEvent
             )
         );
 
-        parent::__construct($wiki->getResourceNode(), $details);
+        parent::__construct($wiki->getResourceNode(), $this->details);
     }
 
 /**
@@ -36,5 +40,82 @@ class LogSectionCreateEvent extends AbstractLogResourceEvent
     public static function getRestriction()
     {
         return array(self::DISPLAYED_WORKSPACE);
+    }
+
+    /**
+     * Get sendToFollowers boolean.
+     *
+     * @return boolean
+     */
+    public function getSendToFollowers()
+    {
+        return true;
+    }
+
+    /**
+     * Get includeUsers array of user ids.
+     *
+     * @return array
+     */
+    public function getIncludeUserIds()
+    {
+        return array();
+    }
+
+    /**
+     * Get excludeUsers array of user ids.
+     *
+     * @return array
+     */
+    public function getExcludeUserIds()
+    {
+        return array();
+    }
+
+    /**
+     * Get actionKey string.
+     *
+     * @return string
+     */
+    public function getActionKey()
+    {
+        return $this::ACTION;
+    }
+
+    /**
+     * Get iconTypeUrl string.
+     *
+     * @return string
+     */
+    public function getIconKey()
+    {
+        return "wiki";
+    }
+
+    /**
+     * Get details
+     *
+     * @return array
+     */
+    public function getNotificationDetails()
+    {
+        $notificationDetails = array_merge($this->details, array());
+        $notificationDetails['resource'] = array(
+            'id' => $this->wiki->getId(),
+            'name' => $this->resource->getName(),
+            'type' => $this->resource->getResourceType()->getName()
+        );
+
+        return $notificationDetails;
+    }
+
+    /**
+     * Get if event is allowed to create notification or not
+     *
+     * @return boolean
+     */
+    public function isAllowedToNotify()
+    {
+        return true;
     }
 }

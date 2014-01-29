@@ -42,6 +42,7 @@ class Controller extends BaseController
         $logEvent = new LogResourceReadEvent($wiki->getResourceNode());
         $this->get('event_dispatcher')->dispatch('log', $logEvent);
     }
+
     /**
      * @param string $permission
      *
