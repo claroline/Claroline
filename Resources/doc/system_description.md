@@ -65,11 +65,13 @@ The User and Resource entities are not defined inside the plugin. They are exter
 
 ### Implementation
 
-The implementation of the notification system is achieved through the “Notifiable” interface. Every log event that can raise a notification must implement the notifiable interface. This interface contains all the information about the users that need to be informed, (if the notification will be sent to the resource’s followers, it can include other users as well or even exclude ones). It also contains all necessary data to create a notification (date, action, icon, url etc.).
+The implementation of the notification system is achieved through the “Notifiable” interface. Every log event that can raise a notification must implement the notifiable interface. This interface contains all the information about the users that need to be informed, (if the notification will be sent to the resource’s followers, it can include other users as well or even exclude ones). It also contains all necessary data to create a notification (date, action, icon etc.).
 
 ![Notifiable class](img/notifiable_class.jpg "Notifiable class")
 
 
-### Future expansion (Real Time Notification Push)
+### Future expansion (Real Time Notification Push and API)
 
-This expansion is about adding a real time functionality to the Notification System. This functionality will be developed but it will stay optional, because for a real time system we need a “push” server (NodeJS or other). If a NodeJS server is installed then it would be possible to enable the functionality in the plugin’s parameters. The necessary files and functions would be present all the time, but loaded and called only if the real time option is enabled. 
+This expansion is about adding a real time functionality to the Notification System. This functionality will be developed but it will stay optional, because for a real time system we need a “push” server (NodeJS or other). If a NodeJS server is installed then it would be possible to enable the functionality in the plugin’s parameters. The necessary files and functions would be present all the time, but loaded and called only if the real time option is enabled.
+
+A future expansion will also provide an API to receive User notifications.
