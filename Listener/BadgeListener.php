@@ -24,7 +24,7 @@ class BadgeListener
 
     /**
      * @DI\InjectParams({
-     *     "router"     = @DI\Inject("router")
+     *     "router" = @DI\Inject("router")
      * })
      */
     public function __construct(Router $router)
