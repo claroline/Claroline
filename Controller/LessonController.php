@@ -81,6 +81,11 @@ class LessonController extends Controller
         if($chapter == null){
             $chapter = $this->getDoctrine()->getManager()->getRepository('IcapLessonBundle:Chapter')->getChapterBySlug($chapterId, $lesson->getId());
         }
+
+        if (null === $chapter) {
+            throw $this->createNotFoundException("Chapter not found.");
+        }
+
         return $this->getChapterView($lesson, $chapter);
 
     }

@@ -1,3 +1,5 @@
+{% import 'ClarolineCoreBundle::macros.html.twig' as macros %}
+
 <div class='panel-heading chapter_title'><h4>{{ 'Chapter Edition'|trans({}, 'icap_lesson') }}</h4></div>
 <form id='editchapterform' method="POST" action="{{ path('icap_lesson_update_chapter', { 'resourceId': _resource.id, 'chapterId': chapter.id }) }}" class="form-horizontal">
     <div class='chapter_content'>

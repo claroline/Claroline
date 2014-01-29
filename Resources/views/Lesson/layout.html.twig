@@ -11,7 +11,7 @@
 
 {% block resourceBreadcrumb %}
 {#    {{ parent() }}#}
-    {% if path != null and path is defined %}
+    {% if path is defined and path != null %}
         <li>
             <a href="{{ path('icap_lesson', { 'resourceId': _resource.id}) }}">{{ _resource.getResourceNode().getName() }}</a>
         </li>

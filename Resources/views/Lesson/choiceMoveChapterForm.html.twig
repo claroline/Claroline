@@ -1,3 +1,5 @@
+{% import 'ClarolineCoreBundle::macros.html.twig' as macros %}
+
 <div class='panel-heading chapter_title'><h4>{{ 'Chapter Move'|trans({}, 'icap_lesson') }}</h4></div>
 <form id='moveform' method="POST" action="{{ path('icap_lesson_move_chapter', { 'resourceId': _resource.id, 'chapterId': chapter.id }) }}" class="form-horizontal">
     <fieldset>

@@ -21,7 +21,7 @@ class LogChapterCreateEvent extends AbstractLogResourceEvent{
         $details = array(
             'chapter' => array(
                 'lesson'    => $lesson->getId(),
-                'chapter'    => $chapter->getId(),
+                'chapter'   => $chapter->getId(),
                 'title'     => $chapter->getTitle()
             )
         );

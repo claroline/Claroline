@@ -1,3 +1,5 @@
+{% import 'ClarolineCoreBundle::macros.html.twig' as macros %}
+
 <div class='panel-heading chapter_title'><h4>{{ 'Chapter Creation'|trans({}, 'icap_lesson') }}</h4></div>
 <form method="POST" id='createchapterform' action="{{ path('icap_lesson_add_chapter', { 'resourceId': _resource.id}) }}" class="form-horizontal">
     <div class='chapter_content'>

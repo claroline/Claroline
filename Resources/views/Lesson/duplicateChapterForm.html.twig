@@ -1,3 +1,5 @@
+{% import 'ClarolineCoreBundle::macros.html.twig' as macros %}
+
 <div class='panel-heading chapter_title'><h4>{{ 'chapter_duplicate'|trans({}, 'icap_lesson') }}</h4></div>
 <form id='duplicate_form' method="post" action="{{ path('icap_lesson_duplicate_chapter', { 'resourceId': _resource.id, 'chapterId': chapter.id }) }}" class="form-horizontal">
     <fieldset>

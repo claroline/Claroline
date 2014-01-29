@@ -1,3 +1,5 @@
+{% import 'ClarolineCoreBundle::macros.html.twig' as macros %}
+
 <form id='deleteChapterForm' method="POST" action="{{ path('icap_lesson_delete_chapter', { 'resourceId': lesson.id, 'chapterId': chapter.id }) }}" class="form-horizontal">
     <fieldset>
         <div class="control-group">
