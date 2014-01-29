@@ -1,6 +1,4 @@
 icap_notification:
-    user_class:       Claroline\CoreBundle\Entity\User
-    resource_class:   Claroline\CoreBundle\Entity\Resource\ResourceNode
     default_layout:   ClarolineCoreBundle::layout.html.twig
     max_per_page:     50
     dropdown_items:   10

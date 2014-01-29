@@ -47,18 +47,11 @@ interface NotifiableInterface
     public function getIconKey();
 
     /**
-     * Get resourceId
+     * Get resource Object
      *
-     * @return integer
+     * @return resource
      */
-    public function getResourceId();
-
-    /**
-     * Get resource class
-     *
-     * @return string
-     */
-    public function getResourceClass();
+    public function getResource();
 
     /**
      * Get details

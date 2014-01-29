@@ -109,7 +109,11 @@ class Manager
         $notification = new Notification();
         $notification->setActionKey($notifiable->getActionKey());
         $notification->setIconKey($notifiable->getIconKey());
-        $notification->setResourceId($notifiable->getResourceId());
+        $resourceId = null;
+        if ($notifiable->getResource() !== null) {
+            $resourceId = $notifiable->getResource()->getId();
+        }
+        $notification->setResourceId($resourceId);
         $details = $notifiable->getNotificationDetails();
         $doer = $notifiable->getDoer();
         $doerId = null;
@@ -147,10 +151,10 @@ class Manager
     public function notifyUsers (Notification $notification, NotifiableInterface $notifiable)
     {
         $userIds = array();
-        if ($notifiable->getSendToFollowers()) {
+        if ($notifiable->getSendToFollowers() && $notifiable->getResource() !== null) {
             $userIds = $this->getFollowersByResourceIdAndClass(
-                $notifiable->getResourceId(),
-                $notifiable->getResourceClass()
+                $notifiable->getResource()->getId(),
+                $notifiable->getResource()->getClass()
             );
         }
 
@@ -201,17 +205,6 @@ class Manager
         $this->notifyUsers($notification, $notifiable);
 
         return $notification;
-    }
-
-    /**
-     * Retrieves the notifications for a user
-     *
-     * @param $userId
-     * @return query
-     */
-    public function getUserNotificationsQuery($userId)
-    {
-        return $this->getNotificationViewerRepository()->findUserNotificationsQuery($userId);
     }
 
     /**
@@ -274,17 +267,6 @@ class Manager
 
     /**
      * @param $userId
-     * @param $max
-     *
-     * @return mixed
-     */
-    public function getUserLatestNotifications($userId, $max)
-    {
-        return $this->getNotificationViewerRepository()->findUserLatestNotifications($userId, $max);
-    }
-
-    /**
-     * @param $userId
      * @param $resourceId
      */
     public function getFollowerResource($userId, $resourceId, $resourceClass)
@@ -335,24 +317,6 @@ class Manager
         }
 
         return $followerResource;
-    }
-
-    /**
-     * @param $objectIds
-     * @param $objectClass
-     * @return array
-     */
-    public function getObjectsByClassAndIds ($objectIds, $objectClass)
-    {
-        $objectIds = array_unique($objectIds);
-        $objects = $this->getEntityManager()->getRepository($objectClass)->findBy(array('id'=>$objectIds));
-
-        $objectsHash = array();
-        foreach ($objects as $object) {
-            $objectsHash[$object->getId()] = $object;
-        }
-
-        return $objectsHash;
     }
 
     /**

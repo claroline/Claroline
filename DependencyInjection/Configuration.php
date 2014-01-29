@@ -18,8 +18,6 @@ class Configuration implements ConfigurationInterface
 
         $rootNode
             ->children()
-                ->scalarNode('user_class')->isRequired()->end()
-                ->scalarNode('resource_class')->isRequired()->end()
                 ->scalarNode('default_layout')->isRequired()->end()
                 ->integerNode('max_per_page')->defaultValue(50)->end()
                 ->integerNode('dropdown_items')->defaultValue(10)->end()

@@ -1,7 +1,8 @@
-#top_bar div.notifications-dropdown-list {margin: 0; padding: 0; left: -196px; right: auto; min-width: 340px;}
+#top_bar div.notifications-dropdown-list {margin: 0; padding: 0; }
 .notifications-dropdown-list .list-group { border-radius: 0; margin-bottom: 0; border-top: 1px solid #ddd;}
 .notifications-dropdown-list li.list-group-item {border-radius: 0;border: 0;border-bottom: 1px solid #ddd; margin-bottom: 0px; font-size:12px; padding: 2px;}
 .notifications-dropdown-list li.list-group-item a,  .notifications-dropdown-list li.list-group-item a:hover{color: #428BCA !important; padding-left: 0px !important; }
+
 .notifications-dropdown-list .notification-widget-date { color: #999999; font-size: 85%; }
 .notifications-dropdown-list .not-viewed-notification, .notification-widget li.list-group-item:hover { background-color: rgba(86,61,124,.15); }
 .notifications-dropdown-list div.see-notifications-button, .notification-widget li.see-notifications-button:hover { color: #fff; background-color: #428BCA; border-color: #428BCA; border-bottom-left-radius: 4px;
@@ -20,8 +21,13 @@
     right: 33%;
 }
 
-.notifications-dropdown-list .dropdown-notification-avatar {float: left; width: 11%; margin-right: 2%;}
+.notifications-dropdown-list .dropdown-notification-avatar {float: left; width: 11%; margin-right: 2%; max-width: 40px;}
 .notifications-dropdown-list .dropdown-notification-text {float: left; width: 85%;}
 .notifications-dropdown-list li.list-group-item span.notification-icon {width:16px; text-align: center; color: #fff; text-transform: uppercase; font-size: 11px; line-height: 16px; display: inline-block;}
 .notifications-dropdown-list li.list-group-item span.notification-icon.default-notification-icon {background-color: #dadedf; color: #686E72;}
 .notifications-dropdown-list div.zero-notifications-found {text-align: center; padding: 5px;}
+
+@media (min-width: 990px) {
+    #top_bar div.notifications-dropdown-list {left: -196px; right: auto; min-width: 340px;}
+    div.notifications-dropdown-list ul#notification-list {max-height: 170px; overflow: auto;}
+}
