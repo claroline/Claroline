@@ -128,7 +128,7 @@ class Document {
     /**
      * @return mixed
      */
-    public function toJson()
+    public function toArray()
     {
         $json = array(
             'id' => $this->getId(),
