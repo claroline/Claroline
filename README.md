@@ -3,6 +3,8 @@ NotificationBundle
 
 Notification bundle for Claroline Connect. See https://github.com/claroline/Claroline
 
+Here is an [analysis](https://github.com/iCAPLyon1/NotificationBundle/blob/master/Resources/doc/system_description.md) of what the Notification system does.
+
 Installation
 -------------------------
 
