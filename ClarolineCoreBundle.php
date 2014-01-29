@@ -41,7 +41,7 @@ class ClarolineCoreBundle extends InstallableBundle implements AutoConfigurableI
     {
         $config = new ConfigurationBuilder();
         $configFile = $environment === 'test' ? 'config_test.yml' : 'config.yml';
-        $routingFile = $environment === 'dev' ? 'routing_dev.yml' : 'routing.yml';
+        $routingFile = $environment === 'test' ? 'routing_test.yml' : 'routing.yml';
 
         return $config
             ->addContainerResource(__DIR__ . "/Resources/config/app/{$configFile}")

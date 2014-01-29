@@ -12,14 +12,14 @@
 namespace Claroline\CoreBundle\Tests\Integration\Context;
 
 use Behat\Behat\Context\Step;
-use Behat\Behat\Exception\PendingException;
+use Behat\Behat\Event\ScenarioEvent;
 use Behat\Gherkin\Node\TableNode;
 use Behat\Mink\Exception\ElementNotFoundException;
 use Behat\Mink\Exception\ExpectationException;
 use Behat\Symfony2Extension\Context\KernelDictionary;
 use Behat\MinkExtension\Context\MinkContext;
 use Claroline\CoreBundle\Library\Installation\Settings\SettingChecker;
-use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
+use Goutte\Client;
 
 /**
  * Feature context.
@@ -40,156 +40,72 @@ class FeatureContext extends MinkContext
         $this->parameters = $parameters;
     }
 
-    /******************/
-    /* Initialization */
-    /******************/
     /**
-     * @Given /^the platform is initialized$/
+     * @BeforeScenario
      */
-    public function thePlatformIsInitialized()
+    public function beforeScenario(ScenarioEvent $event)
     {
-        $this->visit($this->getBaseUrl() . '/app_dev.php/dev/reinstall');
-    }
-
-    /**
-     * @Given /^the database does not exists$/
-     */
-    public function theDatabaseIsEmpty()
-    {
-        $cn = $this->getContainer()->get('doctrine.dbal.default_connection');
-        $exists = true;
-        try {
-            $cn->query('SELECT 1');
-        } catch (\Doctrine\DBAL\Exception\AccessDeniedException $ex) {
-            $exists = false;
-        }
-
-        if ($exists) {
-            throw new \Exception('The database already exists and must be dropped');
+        if (in_array('javascript', $event->getScenario()->getTags())) {
+            $client = new Client();
+            $client->request('GET', $this->getUrl('test/reinstall'));
+        } else {
+            $this->visit('test/reinstall');
         }
     }
 
     /**
-     * @Given /^operation\.xml is initialized$/
+     * @Given /^the admin account "([^"]*)" is created$/
      */
-    public function operationXmlIsInitialized()
+    public function theAdminAccountIsCreated($username)
     {
-        $ds = DIRECTORY_SEPARATOR;
-        $operationFile = $this->kernel->getRootDir() . $ds . 'config' . $ds . 'operations.xml';
+        $this->loadFixture(
+            'Claroline\CoreBundle\DataFixtures\Test\LoadUserData',
+            array(array('username' => $username, 'role' => 'ROLE_ADMIN'))
+        );
+    }
 
-        if (!file_exists($operationFile)) {
-            file_put_contents(
-                $operationFile,
-                '<operations><install type="core">Claroline\CoreBundle\ClarolineCoreBundle</install></operations>'
-            );
+    /**
+     * @Given /^the following accounts are created:$/
+     */
+    public function theFollowingAccountsAreCreated(TableNode $table)
+    {
+        $users = array();
+
+        foreach ($table->getRows() as $row) {
+            $users[] = array('username' => $row[0], 'role' => $row[1]);
         }
+
+        $this->loadFixture('Claroline\CoreBundle\DataFixtures\Test\LoadUserData', $users);
     }
 
     /**
-     * @Given /^installation directories are writable$/
+     * @Given /^the following groups are created:$/
      */
-    public function installationDirectoriesAreWritable()
+    public function theFollowingGroupsAreCreated(TableNode $table)
     {
-        $checker = new SettingChecker();
-        //var_dump($checker->getSettingCategories());
-        //hasFailedRequirequirement() always return false. It's a problem.
+        $groups = array();
 
-        if ($checker->hasFailedRequirement()) {
-            //todo show the directory list
-            throw new \Exception('Failed requirements');
+        foreach ($table->getRows() as $row) {
+            $groups[] = array('name' => $row[0], 'role' => $row[1]);
         }
+
+        $this->loadFixture('Claroline\CoreBundle\DataFixtures\Test\LoadGroupData', $groups);
     }
 
     /**
-     * @Given /^the cache directory is writable$/
+     * Connects the user with login and password
+     *
+     * @Given /^I log in with "([^"]*)"\/"([^"]*)"$/
      */
-    public function theCacheDirectoryIsWritable()
+    public function iLogInWith($login, $password)
     {
-        //It doesn't work
-        //throw new \Behat\Behat\Exception\PendingException('Does not work');
-
-        $dir = $this->kernel->getRootDir() . '/cache';
-        $res = is_writeable($dir);
-
-        if (!$res) {
-            throw new \Exception('The cache directory is not writable');
-        }
+        return array(
+            new Step\When('I am on "/login"'),
+            new Step\When('I fill in "Username or email" with "'. $login . '"'),
+            new Step\When('I fill in "Password" with "'. $password . '"'),
+            new Step\When('I press "Login"')
+        );
     }
-
-    /**
-     * @Given /^I fill in "([^"]*)" with database name$/
-     */
-    public function iFillInWithDatabaseName($field)
-    {
-        $this->fillField($field, 'claroline_prod');
-    }
-
-    /**
-     * @Given /^I fill in "([^"]*)" with database username$/
-     */
-    public function iFillInWithDatabaseUsername($field)
-    {
-        $this->fillField($field, 'root');
-    }
-
-    /**
-     * @Given /^I fill in "([^"]*)" with database password$/
-     */
-    public function iFillInWithDatabasePassword($field)
-    {
-        $this->fillField($field, 'vanille');
-    }
-
-
-    /**
-     * @Given /^self registration is allowed$/
-     */
-    public function selfRegistrationIsAllowed()
-    {
-        $configHandler = $this->getContainer()->get('claroline.config.platform_config_handler');
-        $configHandler->setParameters(array('allow_self_registration' => true));
-    }
-
-    /**
-     * @Given /^self registration is disabled$/
-     */
-    public function selfRegistrationIsDisabled()
-    {
-        $configHandler = $this->getContainer()->get('claroline.config.platform_config_handler');
-        $configHandler->setParameters(array('allow_self_registration' => false));
-    }
-
-    /************/
-    /* Fixtures */
-    /************/
-
-    /**
-     * @Given /^the user "([^"]*)" is created$/
-     */
-    public function theUserIsCreated($username)
-    {
-        $this->visit($this->getBaseUrl() . "/app_dev.php/dev/user/create/{$username}/ROLE_ADMIN");
-    }
-
-    /**
-     * @Given /^the group "([^"]*)" is created$/
-     */
-    public function theGroupIsCreated($name)
-    {
-        $this->visit($this->getBaseUrl() . "/app_dev.php/dev/group/create/{$name}");
-    }
-
-    /**
-     * @Given /^the workspace "([^"]*)" is created by "([^"]*)"$/
-     */
-    public function theWorkspaceIsCreatedBy($workspaceName, $username)
-    {
-        $this->visit($this->getBaseUrl() . "/app_dev.php/dev/workspace/create/{$workspaceName}/{$username}");
-    }
-
-    /***********/
-    /* Actions */
-    /***********/
 
     /**
      * @When /^I follow the hidden "([^"]*)"$/
@@ -201,9 +117,9 @@ class FeatureContext extends MinkContext
     }
 
     /**
-     * @Given /^I check the "([^"]*)" line$/
+     * @Given /^I check the line containing "([^"]*)"$/
      */
-    public function iCheckTheLine($text)
+    public function iCheckTableLineContaining($text)
     {
         $script = "(function () {
             var row = $('tr:contains(\"{$text}\")');
@@ -320,40 +236,22 @@ EOL;
         );
     }
 
-    /**************/
-    /* Assertions */
-    /**************/
-
     /**
-     * @Then /^the platform should have "([^"]*)" "([^"]*)"$/
+     * @Given /^self registration is allowed$/
      */
-    public function thePlatformShouldHave($count, $entity)
+    public function selfRegistrationIsAllowed()
     {
-        $res = $this->getContainer()->get('claroline.persistence.object_manager')
-            ->count('ClarolineCoreBundle:' . $entity);
-
-        if ($res != $count) {
-            throw new \Exception('The plateform has ' . $res . ' ' . $entity);
-        }
+        $configHandler = $this->getContainer()->get('claroline.config.platform_config_handler');
+        $configHandler->setParameters(array('allow_self_registration' => true));
     }
 
     /**
-     * @Then /^database should exists$/
+     * @Given /^self registration is disabled$/
      */
-    public function databaseShouldExists()
+    public function selfRegistrationIsDisabled()
     {
-        $cn = $this->getContainer()->get('doctrine.dbal.default_connection');
-        $cn->query('SELECT 1');
-    }
-
-    /**
-     * @Then /^user "([^"]*)" should exists$/
-     */
-    public function userShouldExists($username)
-    {
-        throw new \Behat\Behat\Exception\PendingException('This assertion does not work. The table never exists');
-        $em = $this->getContainer()->get('doctrine.orm.entity_manager');
-        $em->getRepository('ClarolineCoreBundle:User')->findOneByUsername($username);
+        $configHandler = $this->getContainer()->get('claroline.config.platform_config_handler');
+        $configHandler->setParameters(array('allow_self_registration' => false));
     }
 
     /**
@@ -372,29 +270,27 @@ EOL;
         return $steps;
     }
 
-
-    /**********/
-    /* OTHERS */
-    /**********/
-
-    /**
-     * @Given /^base url is web$/
-     */
-    public function baseUrlIsWeb()
+    protected function loadFixture($fixtureFqcn, array $args = array())
     {
-        $this->setMinkParameter('base_url', $this->getBaseUrl());
+        $client = new Client();
+        $client->request(
+            'POST',
+            $this->getUrl('test/fixture/load'),
+            array('fqcn' => $fixtureFqcn, 'args' => $args)
+        );
+        $response = $client->getResponse();
+
+        if ($response->getStatus() !== 200 || preg_match('/Fatal error/i', $response->getContent())) {
+            throw new \Exception(
+                "Unable to load {$fixtureFqcn} fixture.\n"
+                . "Response status is: {$response->getStatus()}\n"
+                . "Response content is: {$response->getContent()}"
+            );
+        }
     }
 
-    /**
-     * @Given /^I wait "([^"]*)" seconds$/
-     */
-    public function waitSeconds($seconds)
+    private function getUrl($path)
     {
-        $this->getSession()->wait(1000*$seconds);
-    }
-
-    private function getBaseUrl()
-    {
-        return str_replace('app.php/', '', $this->getMinkParameter('base_url'));
+        return $this->getMinkParameter('base_url') . $path;
     }
 }
