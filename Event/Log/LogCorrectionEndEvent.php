@@ -15,8 +15,9 @@ class LogCorrectionEndEvent extends AbstractLogResourceEvent implements Potentia
     private $correction;
 
     /**
-     * @param Dropzone $dropzone
-     * @param Drop $drop
+     * @param Dropzone   $dropzone
+     * @param Drop       $drop
+     * @param Correction $correction
      */
     public function __construct(Dropzone $dropzone, Drop $drop, Correction $correction)
     {
@@ -41,7 +42,7 @@ class LogCorrectionEndEvent extends AbstractLogResourceEvent implements Potentia
                     'username' => $drop->getUser()->getUsername(),
                 )
             ),
-            'correction' => $correction->toJson(false)
+            'correction' => $correction->toArray(false)
         );
 
         parent::__construct($dropzone->getResourceNode(), $details);

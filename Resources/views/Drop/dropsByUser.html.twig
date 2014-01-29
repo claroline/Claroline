@@ -25,8 +25,8 @@
 
     <h3>{{ 'Evaluation finished'|trans({}, 'icap_dropzone') }}</h3>
 
-    <div class="container row">
-        {% if pager.haveToPaginate %}
+    {% if pager.haveToPaginate %}
+        <div class="container row">
             {{
                 pagerfanta(
                     pager,
@@ -38,8 +38,8 @@
                     }
                 )
             }}
-        {% endif %}
-    </div>
+        </div>
+    {% endif %}
 
     {% for drop in pager.currentPageResults %}
         <div class="panel {% if drop.reported %}panel-danger{% else %}panel-default{% endif %}">
@@ -87,11 +87,10 @@
                 {{ 'noCopyExpectedCorrection'|transchoice(dropzone.expectedTotalCorrection, {}, 'icap_dropzone') }}
             </div>
         </div>
-        <br/>
     {% endif %}
 
-    <div class="container row">
-        {% if pager.haveToPaginate %}
+    {% if pager.haveToPaginate %}
+        <div class="container row">
             {{
                 pagerfanta(
                     pager,
@@ -103,8 +102,8 @@
                     }
                 )
             }}
-        {% endif %}
-    </div>
+        </div>
+    {% endif %}
 {% endblock %}
 
 {% block javascripts %}

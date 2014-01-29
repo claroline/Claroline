@@ -2,6 +2,11 @@
 
 {% block stylesheets %}
     {{ parent() }}
+    {% stylesheets debug=false filter='lessphp'  output='bundles/icapdropzone/css/style.css'
+      "@IcapDropzoneBundle/Resources/views/less/style.less"
+    %}
+        <link rel="stylesheet" href="{{ asset_url }}" screen="media" />
+    {% endstylesheets %}
 {% endblock %}
 
 {% block section_content %}

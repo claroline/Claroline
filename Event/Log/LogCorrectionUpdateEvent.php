@@ -15,8 +15,9 @@ class LogCorrectionUpdateEvent extends AbstractLogResourceEvent implements Poten
     private $correction;
 
     /**
-     * @param Dropzone $dropzone
-     * @param Drop $drop
+     * @param Dropzone   $dropzone
+     * @param Drop       $drop
+     * @param Correction $correction
      */
     public function __construct(Dropzone $dropzone, Drop $drop, Correction $correction)
     {
@@ -41,7 +42,7 @@ class LogCorrectionUpdateEvent extends AbstractLogResourceEvent implements Poten
                     'username' => $drop->getUser()->getUsername(),
                 )
             ),
-            'correction' => $correction->toJson(true)
+            'correction' => $correction->toArray(true)
         );
 
         parent::__construct($dropzone->getResourceNode(), $details);

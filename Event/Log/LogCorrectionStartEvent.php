@@ -13,8 +13,9 @@ class LogCorrectionStartEvent extends AbstractLogResourceEvent {
     const ACTION = 'resource-icap_dropzone-correction_start';
 
     /**
-     * @param Dropzone $dropzone
-     * @param Drop $drop
+     * @param Dropzone   $dropzone
+     * @param Drop       $drop
+     * @param Correction $correction
      */
     public function __construct(Dropzone $dropzone, Drop $drop, Correction $correction)
     {
@@ -37,7 +38,7 @@ class LogCorrectionStartEvent extends AbstractLogResourceEvent {
                     'username' => $drop->getUser()->getUsername(),
                 )
             ),
-            'correction' => $correction->toJson(false)
+            'correction' => $correction->toArray(false)
         );
 
         parent::__construct($dropzone->getResourceNode(), $details);

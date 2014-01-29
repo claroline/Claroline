@@ -51,6 +51,7 @@ log_resource-icap_dropzone-drop_start_filter: 'Début d''une copie dans une éva
 log_resource-icap_dropzone-drop_end_shortname: 'Fin d''une copie'
 log_resource-icap_dropzone-drop_end_sentence: 'a rendu sa copie dans %resource%'
 log_resource-icap_dropzone-drop_end_title: 'Fin d''une copie dans une évaluation'
+log_resource-icap_dropzone-drop_end_filter: 'Fin d''une copie dans une évaluation'
 log_drop_documents: 'Documents'
 
 log_resource-icap_dropzone-document_create_shortname: 'Création d''un document'

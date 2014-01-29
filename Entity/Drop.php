@@ -250,6 +250,9 @@ class Drop {
         return $this->number;
     }
 
+    /**
+     * @return int|string
+     */
     public function getCalculatedGrade()
     {
         $grade = 0;
@@ -273,6 +276,9 @@ class Drop {
         return $grade;
     }
 
+    /**
+     * @return int
+     */
     public function countFinishedCorrections()
     {
         $nbFinishedCorrections = 0;
@@ -283,5 +289,24 @@ class Drop {
         }
 
         return $nbFinishedCorrections;
+    }
+
+    /**
+     * @return \DateTime|false
+     */
+    public function getLastCorrectionDate()
+    {
+        /** @var Correction[] $corrections */
+        $corrections = $this->getCorrections();
+        /** @var \DateTime $date */
+        $date = $corrections->first();
+
+        foreach ($corrections as $correction) {
+            if ($date->getTimestamp() < $correction->getEndDate()) {
+                $date = $correction->getEndDate();
+            }
+        }
+
+        return $date;
     }
 }

@@ -39,9 +39,8 @@
             </p>
         {% endif %}
 
-        <hr/>
-
-        {% if drop is not null and drop.finished == true %}
+        {% if drop is not null and drop.finished != true %}
+            <hr />
             <div>
                 {% set nbDocument = drop.documents|length %}
                 {{ 'nbDocumentsInThisEvaluation'|transchoice(drop.documents|length, {}, 'icap_dropzone') }}
@@ -55,6 +54,7 @@
             </div>
         {% endif %}
         {% if not dropzone.isAllowDrop and ((drop is null or drop.finished == false) and (dropzone.isPeerReview or dropzone.isFinished)) %}
+            <hr />
             <div class="row">
                 <div class="text-danger col-md-12">
                     {{ 'You have not made ​​a copy. It is too late to take part in this evaluation.'|trans({}, 'icap_dropzone') }}
@@ -64,6 +64,7 @@
 
         {% if dropzone.isAllowDrop %}
             {% if drop is null or drop.finished == false %}
+                <hr/>
                 <div class="row">
                     <div class="text-danger col-md-8">
                         {% if not dropzone.manualPlanning %}
@@ -122,6 +123,7 @@
         {% endif %}
         {% if dropzone.isPeerReview and expectedCorrections > 0 %}
             {% if drop is not null and drop.finished == true %}
+                <hr/>
                 {% if not dropzone.manualPlanning %}
                     <div class="row">
                         <div class="col-md-12 text-danger">
@@ -152,7 +154,6 @@
                 </div>
 
                 {% if hasUnfinishedCorrection == true %}
-                    <br/>
                     <div class="row">
                         <div class="col-md-9 text-danger">
                             {{ 'You have already begun a correction.'|trans({}, 'icap_dropzone') }}
@@ -162,7 +163,6 @@
                         </div>
                     </div>
                 {% elseif hasCopyToCorrect == false %}
-                    <br/>
                     <div class="row">
                         <div class="col-md-9 text-danger">
                             {{ 'Unfortunately there is no copy to correct for the moment. Please try again later'|trans({}, 'icap_dropzone') }}
@@ -209,7 +209,11 @@
                 {% else %}
                     <div class="col-md-12">
                         <strong>
-                            {{ 'Finished! You have realized the nb corrections expected. Patience your copy is being corrected.'|transchoice(dropzone.expectedTotalCorrection, {}, 'icap_dropzone') }}
+                            {% if dropzone.peerReview %}
+                                {{ 'Finished! You have realized the nb corrections expected. Patience your copy is being corrected.'|transchoice(dropzone.expectedTotalCorrection, {}, 'icap_dropzone') }}
+                            {% else %}
+                                {{ 'Finished! Patience your copy is being corrected.'|trans({}, 'icap_dropzone') }}
+                            {% endif %}
                         </strong>
                     </div>
                 {% endif %}
@@ -224,8 +228,6 @@
             <p>
                 {{ dropzone.instruction|raw }}
             </p>
-        {% else %}
-            <br/>
         {% endif %}
     </div>
 {% endblock %}
