@@ -32,7 +32,7 @@ class LogDocumentOpenEvent extends AbstractLogResourceEvent {
                     'username' => $drop->getUser()->getUsername(),
                 )
             ),
-            'document' => $document->toJson(),
+            'document' => $document->toArray(),
         );
 
         parent::__construct($dropzone->getResourceNode(), $details);

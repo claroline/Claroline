@@ -32,7 +32,7 @@ class LogDocumentCreateEvent extends AbstractLogResourceEvent {
                 'id' => $drop->getId(),
                 'documents' => $documentsDetails
             ),
-            'document' => $document->toJson(),
+            'document' => $document->toArray(),
         );
 
         parent::__construct($dropzone->getResourceNode(), $details);
