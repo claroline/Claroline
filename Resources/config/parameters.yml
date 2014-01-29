@@ -1,6 +1,7 @@
 parameters: 
     # Controllers
     innova_path.controller.path.class:          Innova\PathBundle\Controller\PathController
+    innova_path.controller.contextual_editor.class: Innova\PathBundle\Controller\ContextualEditorController
     innova_path.controller.step.class:          Innova\PathBundle\Controller\StepController
     innova_path.controller.path_template.class: Innova\PathBundle\Controller\PathTemplateController
     innova_path.controller.path_player.class:   Innova\PathBundle\Controller\PlayerController
@@ -15,7 +16,9 @@ parameters:
     # Form types
     innova_path.form.type.path.class: Innova\PathBundle\Form\Type\PathType
     innova_path.form.type.non_digital_resource.class: Innova\PathBundle\Form\Type\NonDigitalResourceType
+    innova_path.form.type.step.class: Innova\PathBundle\Form\Type\StepType
     
     # Form handlers
     innova_path.form.handler.path.class: Innova\PathBundle\Form\Handler\PathHandler
     innova_path.form.handler.non_digital_resource.class: Innova\PathBundle\Form\Handler\NonDigitalResourceHandler
+    innova_path.form.handler.step.class: Innova\PathBundle\Form\Handler\StepHandler

@@ -1,43 +1,52 @@
 {% import 'InnovaPathBundle::Player/components/macros.html.twig' as macros %}
-
 <div class="panel panel-default">
     <div class="panel-heading lvl lvl-{{ currentStep.lvl + 1 }}">
         <h4 class="panel-title">
-            <span class="lvl-{{ currentStep.lvl + 1 }} lvl-indicator-large">&nbsp;</span>
-            <span class="title">{{ currentStep.name }}</span>
-            <span id="edit-btn" class="btn btn-xs pull-right" href="#" data-toggle="modal" data-target="#edit-step" rel="tooltip" data-original-title="{{ 'contextual_edit' | trans({}, 'path_player') }}"> 
+            {% if edit == true %}
+                {{ form_start(form) }}
+                <span style="display:inline-block;width:50%" class="">
+                    {{ form_widget(form.name) }}
+                </span>
+            {% else %}
+                <span class="lvl-{{ currentStep.lvl + 1 }} lvl-indicator-large">&nbsp;</span>
+                <span class="title">{{ currentStep.name }}</span>
+                <a id="edit-btn" class="btn btn-xs pull-right" href="{{ path('innova_path_contextual_editor', { workspaceId: workspace.id, pathId: path.id, stepId: currentStep.id }) }}"  rel="tooltip" data-original-title="{{ 'contextual_edit' | trans({}, 'path_player') }}"> 
                 <span class="icon-pencil"></span>
-            </span>
+                </a>
+            {% endif %}
         </h4>
     </div>
     <div class="panel-body">
-        {% if currentStep == path.getRootStep %}
-            {% include 'InnovaPathBundle::Player/components/full-path-notice.html.twig' %}
-        {% endif %}
-
-        {% if currentStep.children is not empty %}
-            {% if currentStep.description is null %}
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <h5 class="panel-title text-center">
-                        <a data-toggle="collapse" href="#collapse-children">
-                        {{ 'next_step' | trans({}, 'path_player') }}
-                        </a>
-                    </h5>
+        {% if edit == true %}
+             {{ form_widget(form.description) }}
+             {{ form_widget(form.save, { 'label': 'Sauvegarder' }) }}
+             {{ form_end(form) }}
+        {% else %}
+            {% if currentStep.children is not empty %}
+                {% if currentStep.description is null %}
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h5 class="panel-title text-center">
+                            <a data-toggle="collapse" href="#collapse-children">
+                            {{ 'next_step' | trans({}, 'path_player') }}
+                            </a>
+                        </h5>
+                    </div>
+                    <ul id="collapse-children" class="list-group collapse {% if currentStep.description is null %}in{% endif %}">
+                    {% for child in currentStep.children %}
+                        <li class="list-group-item">
+                            <a href="{{ path('innova_path_player_index', { workspaceId: workspace.id, pathId: path.id, stepId: child.id }) }}">
+                            {{ child.name }}
+                            </a>
+                        </li>
+                    {% endfor %}
+                    </ul>
                 </div>
-                <ul id="collapse-children" class="list-group collapse {% if currentStep.description is null %}in{% endif %}">
-                {% for child in currentStep.children %}
-                    <li class="list-group-item">
-                        <a href="{{ path('innova_path_player_index', { workspaceId: workspace.id, pathId: path.id, stepId: child.id }) }}">
-                        {{ child.name }}
-                        </a>
-                    </li>
-                {% endfor %}
-                </ul>
-            </div>
+                {% endif %}
             {% endif %}
+
+            {{ currentStep.description | raw }}
         {% endif %}
 
-        {{ currentStep.description | raw }}
     </div>
 </div>

@@ -49,17 +49,21 @@
             </div>
         </div>
     </div>
+    
+    {% if currentStep == path.getRootStep %}
+            {% include 'InnovaPathBundle::Player/components/alerts.html.twig' %}
+    {% endif %}
 
     <div class="row resources">
         <div class="col-md-12">
-                    {{ render(controller('innova_path.controller.path_player:displayResourcesAction', { 'currentStep': currentStep } )) }}
+            {{ render(controller('innova_path.controller.path_player:displayResourcesAction', { 'currentStep': currentStep } )) }}
         </div>
     </div>
 
     <div class="content row">
         {# Contenu de l'étape #}
         <div class="current-step col-md-12">
-            {{ render(controller('innova_path.controller.path_player:displayCurrentStepAction', { 'workspace': workspace, 'path': path, 'currentStep': currentStep } )) }}
+            {{ render(controller('innova_path.controller.path_player:displayCurrentStepAction', { 'workspace': workspace, 'path': path, 'currentStep': currentStep, 'edit': edit } )) }}
         </div>
     </div>
 </div>

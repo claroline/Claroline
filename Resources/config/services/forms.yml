@@ -28,3 +28,19 @@ services:
         calls:
             - [setRequest, [@request]]
         scope: request
+
+    # Step type
+    innova_path.form.type.step:
+        class: %innova_path.form.type.step.class%
+        tags:
+          - { name: form.type, alias: innova_step }
+
+
+     # Step handler
+    innova_path.form.handler.step:
+        class: %innova_path.form.handler.step.class%
+        arguments:
+            stepManager: @innova_path.manager.step
+        calls:
+            - [setRequest, [@request]]
+        scope: request
