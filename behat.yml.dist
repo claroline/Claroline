@@ -1,13 +1,21 @@
 default:
-  context:
-    class: Claroline\CoreBundle\Tests\Integration\Context\FeatureContext
-  extensions:
-    Behat\MinkExtension\Extension:
-      base_url: http://localhost/claroline-behat/web/app.php/
-      #You'll have to change /var/www to match the path of you Claroline directory.
-      #%kernel.root_dir% can not be used in this file
-      files_path: '/var/www/Claroline/vendor/claroline/core-bundle/Claroline/CoreBundle/Tests/Stub'
-      default_session: selenium2
-      selenium2: ~
-      show_cmd: firefox %s
-    Behat\Symfony2Extension\Extension: ~
+    context:
+        class: Claroline\CoreBundle\Tests\Integration\Context\FeatureContext
+    extensions:
+        Behat\MinkExtension\Extension:
+            base_url: http:/path/to/web/app_test.php
+            files_path: /path/to/vendor/directory
+            default_session: goutte
+            javascript_session: selenium2
+            show_cmd: firefox %s
+            selenium2: ~
+            goutte:
+                guzzle_parameters:
+                    request.options:
+                        headers:
+                            Accept-Language: en
+        Behat\Symfony2Extension\Extension:
+            mink_driver: true
+            kernel:
+                env: test
+                debug: true
