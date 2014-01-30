@@ -20,15 +20,7 @@ class TransfertManager
 {
     private $listImporters;
 
-    /**
-     * Constructor.
-     *
-     * @DI\InjectParams({
-     *  "om"                     = @DI\Inject("claroline.persistence.object_manager"),
-     *  "roleManager"     = @DI\Inject("claroline.manager.role_manager"),
-     *  "userManager"        = @DI\Inject("claroline.manager.user_manager"),
-     * })
-     */
+
     public function __construct()
     {
         $this->listImporters = new ArrayCollection();
@@ -43,14 +35,17 @@ class TransfertManager
     {
         $manifestConfif = new ManifestConfiguration();
         $processor = new Processor();
-
         $doc = new \DOMDocument();
         $doc->load($path);
+        $data = XmlUtils::convertDomElementToArray($doc->documentElement);
+        $data = array('workspace' => $data);
 
         try {
             $processedConfiguration = $processor->processConfiguration($manifestConfif,$data);
+            var_dump($processedConfiguration);
         } catch (\Exception $e) {
-        var_dump(array($e->getMessage())) ;
+
+            var_dump(array($e->getMessage())) ;
         }
         $properties = $doc->getElementsByTagName('properties');
         $child = $properties->item(0);
