@@ -57,6 +57,7 @@
             "Claroline\\BundleRecorder\\ScriptHandler::prePlatformInstall"
         ],
         "pre-update-cmd": [
+            "Claroline\\CoreBundle\\MaintenanceHandler::enableMaintenance",
             "Claroline\\BundleRecorder\\ScriptHandler::prePlatformUpdate"
         ],
         "post-package-install": [

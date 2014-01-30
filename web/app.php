@@ -2,12 +2,14 @@
 
 require_once __DIR__.'/../app/bootstrap.php.cache';
 require_once __DIR__.'/../app/AppKernel.php';
-//require_once __DIR__.'/../app/bootstrap_cache.php.cache';
-//require_once __DIR__.'/../app/AppCache.php';
 
-use Symfony\Component\HttpFoundation\Request;
+$maintenanceMode = file_exists(__DIR__ . '/../.update');
 
-//$kernel = new AppCache(new AppKernel('prod', false));
-$kernel = new AppKernel('prod', false);
-$kernel->loadClassCache();
-$kernel->handle(Request::createFromGlobals())->send();
+if (!$maintenanceMode) {
+    $request = \Symfony\Component\HttpFoundation\Request::createFromGlobals();
+    $kernel = new AppKernel('prod', false);
+    $kernel->loadClassCache();
+    $kernel->handle($request)->send();
+} else {
+    header('Location:maintenance.html');
+}
