@@ -11,26 +11,18 @@
 
 namespace Claroline\CoreBundle\Library\Maintenance;
 
-use Symfony\Component\Yaml\Yaml;
-
 class MaintenanceHandler {
 
-    const REL_PATH = '/../../../../../../../app/config/platform_options.yml';
+    const REL_PATH = '/../../../../../../../.update';
 
     public static function enableMaintenance()
     {
-        $options = Yaml::parse(__DIR__ . self::REL_PATH);
-        $options['maintenance_mode'] = true;
-        $yaml = Yaml::dump($options);
-        file_put_contents(__DIR__ . self::REL_PATH, $yaml);
+        touch(__DIR__ . self::REL_PATH);
     }
 
     public static function disableMaintenance()
     {
-        $options = Yaml::parse(__DIR__ . self::REL_PATH);
-        $options['maintenance_mode'] = false;
-        $yaml = Yaml::dump($options);
-        file_put_contents(__DIR__ . self::REL_PATH, $yaml);
+        unlink(__DIR__ . self::REL_PATH);
     }
 
 } 

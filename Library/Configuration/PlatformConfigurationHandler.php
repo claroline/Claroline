@@ -42,8 +42,7 @@ class PlatformConfigurationHandler
         'mailer_username' => null,
         'mailer_password' => null,
         'mailer_auth_mode' => null,
-        'terms_of_service' => true,
-        'maintenance_mode' => false
+        'terms_of_service' => true
     );
 
     /**
@@ -115,7 +114,6 @@ class PlatformConfigurationHandler
         $config->setMailerUsername($this->parameters['mailer_username']);
         $config->setMailerPassword($this->parameters['mailer_password']);
         $config->setMailerAuthMode($this->parameters['mailer_auth_mode']);
-        $config->setMaintenanceMode($this->parameters['maintenance_mode']);
 
         return $config;
     }

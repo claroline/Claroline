@@ -29,7 +29,6 @@ class PlatformConfiguration
     private $mailerUsername;
     private $mailerPassword;
     private $mailerAuthMode;
-    private $maintenanceMode;
 
     public function getSelfRegistration()
     {
@@ -189,15 +188,5 @@ class PlatformConfiguration
     public function getMailerUsername()
     {
         return $this->mailerUsername;
-    }
-
-    public function setMaintenanceMode($maintenanceMode)
-    {
-        $this->maintenanceMode = $maintenanceMode;
-    }
-
-    public function getMaintenanceMode()
-    {
-        return $this->maintenanceMode;
     }
 }
