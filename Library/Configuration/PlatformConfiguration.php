@@ -29,6 +29,7 @@ class PlatformConfiguration
     private $mailerUsername;
     private $mailerPassword;
     private $mailerAuthMode;
+    private $googleMetaTag;
 
     public function getSelfRegistration()
     {
@@ -188,5 +189,15 @@ class PlatformConfiguration
     public function getMailerUsername()
     {
         return $this->mailerUsername;
+    }
+
+    public function setGoogleMetaTag($googleMetaTag)
+    {
+        $this->googleMetaTag = $googleMetaTag;
+    }
+
+    public function getGoogleMetaTag()
+    {
+        return $this->googleMetaTag;
     }
 }

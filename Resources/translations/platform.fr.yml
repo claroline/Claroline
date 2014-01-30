@@ -9,22 +9,29 @@
 'Choose workspaces displayed in the widget': 'Choisissez les espaces de travail affichés par le widget'
 'Draw an area on the graph to zoom, double-click to cancel': 'Tracez une zone sur le graphique pour zoomer; double cliquez pour annuler'
 'Filter actions': 'Filtrer les actions'
+'Google HTML tag validation': 'Balise HTML de validation Google'
 'I accept the terms of service': 'J''accepte les conditions d''utilisation'
-Language: Langue
+'Indexing': 'Referencement'
 'Last action': '{1} Dernière action|[1,Inf] %logAmount% dernières actions'
-None: Aucun
 'Or choose an existing file from resource manager': 'Ou veuillez choisir un fichier existant dans gestionnaire de ressources'
 'Overview of all recent activities in %workspaceName%': 'Aperçu de toutes les activités récentes de %workspaceName%'
 'Overview of recent activities in %workspaceName%': 'Aperçu des activités récentes de %workspaceName%'
 'Overview of recent activities of your workspaces': 'Aperçu des activités récentes de vos espaces de travail'
+'Paste here the meta tag provides by Google Webmaster': 'Collez ici la balise meta fournit par Google Webmaster'
 'See all': 'Voir tous'
 'Select a Language': 'Sélectionnez une langue'
-Show: Afficher
 'Show actions': 'Afficher les actions'
 'Terms of service': 'Conditions d''utilisation'
 'The form is not valid': 'Le formulaire n''est pas valide'
 'Upload a file': 'Télécharger un fichier'
 'Your changes have been saved': 'Vos changements ont été sauvegardés'
+'for period': 'sur la période du :'
+'select all': 'Tout sélectionner'
+'unique connections': 'Nb Cnx. uniques'
+404: 'La page que vous cherchez n''existe pas.'
+Language: Langue
+None: Aucun
+Show: Afficher
 account_created: 'Compte créé'
 account_general_statistics: 'Statistiques générales sur les comptes'
 action: Action
@@ -206,7 +213,6 @@ filter: Filtrer
 find_workspaces: 'Tous les espaces'
 firstName: Prénom
 first_name: Prénom
-'for period': 'sur la période du :'
 forgot_password: 'Mot de passe oublié ?'
 form_role: Rôle
 from: Depuis
@@ -506,7 +512,6 @@ search_user: 'Rechercher un utilisateur'
 search_workspace: 'Rechercher un espace d''activités'
 see: Voir
 see_more: 'Voir plus'
-'select all': 'Tout sélectionner'
 select_all: 'Tout sélectionner'
 select_category: 'Sélectionner une catégorie'
 select_contacts_title: 'Sélectionnez les destinataires'
@@ -582,7 +587,6 @@ unable_to_start_smtp: 'La connexion avec le serveur SMTP ne peut pas être étab
 unable_to_start_transport: 'La connexion avec le serveur de mails ne peut pas être établie. Veuillez vérifier que les paramètres que vous avez renseignés sont corrects.'
 unauthorized: 'Vous n''êtes pas autorisé à consulter cette page.'
 under_min_length: 'Cette valeur est trop courte'
-'unique connections': 'Nb Cnx. uniques'
 unregister: Désinscription
 unregister_from_a_workspace: 'Me désinscrire d''un espace'
 unregistered: 'Non inscrit'
@@ -635,9 +639,9 @@ widget_home_tab_delete_confirm_title: 'Suppression du widget de l''onglet'
 widget_settings: 'Paramètres des widgets'
 widgets: Widgets
 widgets_configuration: 'Configuration des widgets'
-workspace: 'Espace d''activités'
 workspace.create: 'Créer un nouvel espace d''activités'
 workspace.name_not_blank: 'Veuillez spécifier un nom pour ce workspace.'
+workspace: 'Espace d''activités'
 workspace_administration: Administration
 workspace_classification: 'Classification des espaces d''activités'
 workspace_delete: 'Supprimer l''espace d''activités'
@@ -679,4 +683,3 @@ ws_most_viewed: 'Espaces d''activités les plus consultés'
 yes: oui
 yesterday_activity: 'Activité de la veille'
 your_username: 'Votre nom d''utilisateur est '
-404: 'La page que vous cherchez n''existe pas.'

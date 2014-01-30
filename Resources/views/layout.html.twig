@@ -2,6 +2,13 @@
 
 {% import 'ClarolineCoreBundle::macros.html.twig' as macros %}
 
+{% block meta %}
+    {{ parent() }}
+    {% if config.getParameter('google_meta_tag') != '' %}
+       {{ config.getParameter('google_meta_tag') | raw }}
+    {% endif %}
+{% endblock %}
+
 {% block stylesheets %}
 
     {% if config.getParameter('theme') != '' %}

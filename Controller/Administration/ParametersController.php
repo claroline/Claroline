@@ -535,6 +535,43 @@ class ParametersController extends Controller
     }
 
     /**
+     * @Template("ClarolineCoreBundle:Administration\platform:indexing.html.twig")
+     * @Route(
+     *     "/indexing",
+     *     name="claro_admin_parameters_indexing"
+     * )
+     *
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     */
+    public function indexingAction()
+    {
+        return array(
+            'form' => $this->formFactory->create(
+                new AdminForm\IndexingType(), $this->configHandler
+            )->createView()
+        );
+    }
+
+    /**
+     * @Route(
+     *     "/indexing/submit",
+     *     name="claro_admin_parameters_submit_indexing"
+     * )
+     *
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     */
+    public function submitIndexingAction()
+    {
+        $indexing = $this->request->get('indexing_form');
+
+        if (isset($indexing['google']) and isset($indexing['google']) != "") {
+            $this->configHandler->setParameter('google_meta_tag', $indexing['google']);
+        }
+
+        return $this->redirect($this->generateUrl('claro_admin_index'));
+    }
+
+    /**
      *  Get the list of themes availables.
      *
      *  @return array with a list of the themes availables.
