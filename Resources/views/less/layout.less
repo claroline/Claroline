@@ -890,11 +890,16 @@ div.pagination {
         max-width: 100%;
     }
 
-    .content-menu button {
-        position: relative;
-        top: -1px;
-        right: -1px;
-        z-index: (@zindex-navbar-fixed - 1);
+    .content-menu {
+        button {
+            position: relative;
+            top: -1px;
+            right: -1px;
+            z-index: (@zindex-navbar-fixed - 1);
+        }
+        .dropdown-menu {
+            z-index: (@zindex-navbar-fixed);
+        }
     }
 }
 
@@ -1175,7 +1180,8 @@ div.pagination {
     font-size: larger;
 }
 
-body.mce-fullscreen .modal {
+//for tiny-mce inside modals
+body.mce-fullscreen .modal#myModal {
     overflow: hidden;
     .modal-dialog {
         width: 100%;

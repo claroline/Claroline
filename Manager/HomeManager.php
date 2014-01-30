@@ -19,6 +19,7 @@ use Claroline\CoreBundle\Entity\Content;
 use Claroline\CoreBundle\Entity\Home\SubContent;
 use Claroline\CoreBundle\Entity\Home\Content2Type;
 use Claroline\CoreBundle\Entity\Home\Content2Region;
+use Claroline\CoreBundle\Form\HomeContentType;
 
 /**
  * @Service("claroline.manager.home_manager")
@@ -34,20 +35,23 @@ class HomeManager
     private $subContent;
     private $contentType;
     private $contentRegion;
+    private $formFactory;
 
     /**
      * @InjectParams({
      *     "graph"          = @Inject("claroline.common.graph_service"),
      *     "homeService"    = @Inject("claroline.common.home_service"),
      *     "manager"        = @Inject("doctrine"),
-     *     "persistence"    = @Inject("claroline.persistence.object_manager")
+     *     "persistence"    = @Inject("claroline.persistence.object_manager"),
+     *     "formFactory"    = @Inject("form.factory")
      * })
      */
-    public function __construct($graph, $homeService, $manager, $persistence)
+    public function __construct($graph, $homeService, $manager, $persistence, $formFactory)
     {
         $this->graph = $graph;
         $this->manager = $persistence;
         $this->homeService = $homeService;
+        $this->formFactory = $formFactory;
         $this->type = $manager->getRepository('ClarolineCoreBundle:Home\Type');
         $this->region = $manager->getRepository('ClarolineCoreBundle:Home\Region');
         $this->content = $manager->getRepository('ClarolineCoreBundle:Content');
@@ -434,8 +438,11 @@ class HomeManager
         $variables = array('type' => $type);
 
         if ($id and !$content) {
-            $variables['content'] = $this->content->find($id);
+            $content = $this->content->find($id);
+            $variables['content'] = $content;
         }
+
+        $variables['form'] = $this->formFactory->create(new HomeContentType($id), $content)->createView();
 
         return $this->homeService->isDefinedPush($variables, 'father', $father);
     }
