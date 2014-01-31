@@ -15,7 +15,12 @@ require_once __DIR__.'/../app/AppKernel.php';
 
 $maintenanceMode = file_exists(__DIR__ . '/../app/config/.update');
 
-if (!$maintenanceMode) {
+$clientIp = $_SERVER['REMOTE_ADDR'];
+$fileip = __DIR__ . '/../app/config/ips';
+$authorizedIps = file($fileip, FILE_IGNORE_NEW_LINES);
+$authorized = in_array($clientIp, $authorizedIps);
+
+if (!$maintenanceMode || $authorized) {
     $request = \Symfony\Component\HttpFoundation\Request::createFromGlobals();
     $kernel = new AppKernel('prod', false);
     $kernel->loadClassCache();
