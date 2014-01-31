@@ -11,9 +11,6 @@
         </h2>
         {{ macros.flashBox() }}
 
-        {#<p><span class="text-muted">{{ 'Copies evaluated_'|trans }}</span> {{ nbDropCorrected }}</p>#}
-        {#<p><span class="text-muted">{{ 'Total copies_'|trans }}</span> {{ nbDrop }}</p>#}
-
         {% block dropzone_content_drops %}
         {% endblock %}
     </div>
