@@ -13,7 +13,7 @@ $apcLoader->register(true);
 
 require_once __DIR__.'/../app/AppKernel.php';
 
-$maintenanceMode = file_exists(__DIR__ . '/../.update');
+$maintenanceMode = file_exists(__DIR__ . '/../app/config/.update');
 
 if (!$maintenanceMode) {
     $request = \Symfony\Component\HttpFoundation\Request::createFromGlobals();

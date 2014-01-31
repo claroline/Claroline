@@ -2,7 +2,8 @@
     "name": "claroline/claroline",
     "description": "Claroline Connect",
     "autoload": {
-        "psr-0": { "": "src/" }
+        "psr-0": { "": "src/" },
+        "files": ["app/config/MaintenanceHandler.php"]
     },
     "require": {
         "php": ">=5.4.1",
@@ -58,7 +59,6 @@
             "Claroline\\BundleRecorder\\ScriptHandler::prePlatformInstall"
         ],
         "pre-update-cmd": [
-            "Claroline\\CoreBundle\\MaintenanceHandler::enableMaintenance",
             "Claroline\\BundleRecorder\\ScriptHandler::prePlatformUpdate"
         ],
         "post-package-install": [
