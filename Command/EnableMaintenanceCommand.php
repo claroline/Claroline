@@ -14,7 +14,6 @@ namespace Claroline\CoreBundle\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
-use Claroline\CoreBundle\Library\Maintenance\MaintenanceHandler;
 
 class EnableMaintenanceCommand extends ContainerAwareCommand
 {
@@ -26,6 +25,6 @@ class EnableMaintenanceCommand extends ContainerAwareCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        MaintenanceHandler::enableMaintenance();
+        \MaintenanceHandler::enableMaintenance();
     }
 }

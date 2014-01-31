@@ -11,11 +11,9 @@
 
 namespace Claroline\CoreBundle\Command;
 
-use Claroline\BundleRecorder\Operation;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
-use Claroline\CoreBundle\Library\Maintenance\MaintenanceHandler;
 
 /**
  * Updates, installs or uninstalls the core and plugin bundles, following
@@ -41,6 +39,6 @@ class PlatformUpdateCommand extends ContainerAwareCommand
             }
         );
         $executor->execute();
-        MaintenanceHandler::disableMaintenance();
+        \MaintenanceHandler::disableMaintenance();
     }
 }
