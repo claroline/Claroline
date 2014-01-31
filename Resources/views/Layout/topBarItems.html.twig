@@ -1,18 +1,18 @@
-{% macro item(name, href, icon, route, title, dropdown, badge) %}
-    <li class="{% if dropdown is not empty %}dropdown{% endif %}{{ route | default(' ') | compareRoute(' active') | raw }}">
+{% macro item(params) %}
+    <li {% if params.id is defined and params.id is not empty %} id="{{ params.id }}" {% endif %}class="{% if params.dropdown is defined and params.dropdown is not empty %}dropdown{% endif %}{{ params.route | default(' ') | compareRoute(' active') | raw }}">
         <a
-            {% if dropdown is not empty %}class="pointer-hand dropdown-toggle" data-toggle="dropdown"{% endif %}
-            {% if href is not empty %}href="{{ href }}"{% endif %}
-            {% if title is not empty %}title="{{ title }}"{% endif %}
-        >
-            {% if icon is not empty %}<i class="icon-{{ icon }}"></i> {% endif %}
-            {{ name | trans({}, 'platform') }}
-            {% if badge is not empty %}&nbsp;<span class="badge">{{ badge }}</span>{% endif %}
-            {% if dropdown is not empty %}<i class="caret"></i>{% endif %}
+                {% if params.dropdown is defined and params.dropdown is not empty %}class="pointer-hand dropdown-toggle" data-toggle="dropdown"{% endif %}
+                {% if params.href is defined and params.href is not empty %}href="{{ params.href }}"{% endif %}
+                {% if params.title is defined and params.title is not empty %}title="{{ params.title }}"{% endif %}
+                >
+            {% if params.icon is defined and params.icon is not empty %}<i class="icon-{{ params.icon }}"></i> {% endif %}
+            {% if params.badge is defined and params.badge is not empty %}<span class="badge">{{ params.badge }}</span>{% endif %}
+            {% if params.name is defined %} {{ params.name | trans({}, 'platform') }} {% endif %}
+            {% if (params.dropdown is defined and params.dropdown is not empty) and (params.hideArrow is not defined or params.hideArrow is empty) %}<i class="caret"></i>{% endif %}
         </a>
-        {% if dropdown is not empty %}
+        {% if params.dropdown is defined and params.dropdown is not empty %}
             <ul class="dropdown-menu">
-                {{ dropdown | raw }}
+                {{ params.dropdown | raw }}
             </ul>
         {% endif %}
     </li>
@@ -23,16 +23,24 @@
     {% block leftSide %}
         {% import _self as topbar %}
         {% if config.getParameter('name') == "" and config.getParameter('logo') == "" %}
-            {{ topbar.item('home', path('claro_index'), 'home') }}
+            {{ topbar.item({'name':'home', 'href':path('claro_index'), 'icon':'home'}) }}
         {% endif %}
-        {{ topbar.item('desktop', path('claro_desktop_open'), 'briefcase', '/desktop/tool/') }}
+        {{ topbar.item({'name':'desktop', 'href':path('claro_desktop_open'), 'icon':'briefcase', 'route':'/desktop/tool/'}) }}
         {% if is_granted('ROLE_ADMIN') %}
-            {{ topbar.item('administration', path('claro_admin_index'), 'cog', '/admin/') }}
+            {{ topbar.item({'name':'administration', 'href':path('claro_admin_index'), 'icon':'cog', 'route':'/admin/'}) }}
         {% endif %}
         {% if countUnreadMessages > 0 %}
-            {{ topbar.item('messages', path('claro_message_list_received'), 'envelope', '/message/', 'new_message_alert' | trans({'%count%': countUnreadMessages}, 'platform'), null, countUnreadMessages) }}
+            {{ topbar.item({'name':'messages', 'href':path('claro_message_list_received'), 'icon':'envelope', 'route':'/message/', 'title':'new_message_alert' | trans({'%count%': countUnreadMessages}, 'platform'), 'badge' : countUnreadMessages }) }}
         {% else %}
-            {{ topbar.item('messages', path('claro_message_list_received'), 'envelope', '/message/', 'new_message_alert' | trans({'%count%': countUnreadMessages}, 'platform')) }}
+            {{ topbar.item({'name':'messages', 'href':path('claro_message_list_received'), 'icon':'envelope', 'route':'/message/', 'title':'new_message_alert' | trans({'%count%': countUnreadMessages}, 'platform')}) }}
+        {% endif %}
+        {% if countUnviewedNotifications > 0 %}
+            {{ topbar.item({'id':'notification-topbar-item', 'href':path('icap_notification_view'), 'icon':'bell', 'route':'/icap_notification/', 'title':'notifications', 'badge' : countUnviewedNotifications}) }}
+        {% else %}
+            {{ topbar.item({'id':'notification-topbar-item', 'href':path('icap_notification_view'), 'icon':'bell', 'route':'/icap_notification/', 'title':'notifications'}) }}
+        {% endif %}
+        {% if '/icap_notification/'|compareRoute('true') is empty %}
+            {% include "IcapNotificationBundle:Notification:dropdownScript.html.twig" with {'notificationElementId':'notification-topbar-item'} %}
         {% endif %}
     {% endblock leftSide %}
 
@@ -43,22 +51,22 @@
         {% else %}
             {% set workspacesName =  'workspaces' %}
         {% endif %}
-        {{ topbar.item(workspacesName, null, 'book', '/workspaces/', null, block('dropdownWorkspace')) }}
+        {{ topbar.item({'name':workspacesName, 'icon':'book', 'route':'/workspaces/', 'dropdown':block('dropdownWorkspace')}) }}
     {% endblock rightSide %}
 
     {% block login %}
         {% import _self as topbar %}
         {% if register_target is empty %}
-            {{ topbar.item('login', login_target, 'user', '/login') }}
+            {{ topbar.item({'name':'login', 'href':login_target, 'icon':'user', 'route':'/login'}) }}
         {% else %}
-            {{ topbar.item('login', null, 'user', '/login', null, block('dropdowLogin')) }}
+            {{ topbar.item({'name':'login', 'icon':'user', 'route':'/login', 'dropdown':block('dropdowLogin')}) }}
         {% endif %}
     {% endblock login %}
 
     {% block logged %}
         {% import _self as topbar %}
         {% set user = username | length > 16 ? username | slice(0, 16) ~ '...' : username %}
-        {{ topbar.item(user, null, 'user', '/profile', null, block('dropdownLogged')) }}
+        {{ topbar.item({'name':username, 'icon':'user', 'route':'/profile', 'dropdown':block('dropdownLogged')}) }}
     {% endblock logged %}
 
     {% block dropdownWorkspace %}
@@ -67,18 +75,18 @@
             {% if not workspaces is empty %}
                 <li class="dropdown-header">{{ 'history'|trans({}, 'platform') }}</li>
                 {% for workspace in workspaces %}
-                    {{ topbar.item(workspace.getName() ~ ' (' ~ workspace.getCode() ~ ')', path('claro_workspace_open', {'workspaceId': workspace.getId()})) }}
+                    {{ topbar.item({'name':workspace.getName() ~ ' (' ~ workspace.getCode() ~ ')', 'href':path('claro_workspace_open', {'workspaceId': workspace.getId()})}) }}
                 {% endfor %}
                 <li class="divider"></li>
             {% endif %}
-            {{ topbar.item('my_workspaces', path('claro_workspace_by_user'), 'book') }}
-            {{ topbar.item('find_workspaces', path('claro_workspace_list'), 'book') }}
+            {{ topbar.item({'name':'my_workspaces', 'href':path('claro_workspace_by_user'), 'icon':'book'}) }}
+            {{ topbar.item({'name':'find_workspaces', 'href':path('claro_workspace_list'), 'icon':'book'}) }}
             {% if is_granted('ROLE_WS_CREATOR') %}
-            <li class="divider"></li>
-            {{ topbar.item('create_workspace', path('claro_workspace_creation_form'), 'pencil') }}
+                <li class="divider"></li>
+                {{ topbar.item({'name':'create_workspace', 'href':path('claro_workspace_creation_form'), 'icon':'pencil'}) }}
             {% endif %}
         {% else %}
-            {{ topbar.item('find_workspaces', path('claro_workspace_list'), 'book') }}
+            {{ topbar.item({'name':'find_workspaces', 'href':path('claro_workspace_list'), 'icon':'book'}) }}
         {% endif %}
     {% endblock dropdownWorkspace %}
 
@@ -97,22 +105,22 @@
     {% endblock dropdowLogin %}
 
     {% block dropdownLogged %}
-        {{ topbar.item('my_account', path('claro_profile_view', {'userId': app.user.id}), 'user') }}
+        {{ topbar.item({'name':'my_account', 'href':path('claro_profile_view', {'userId': app.user.id}), 'icon':'user'}) }}
         <li class="divider"></li>
         {% if personalWs is not null %}
-            {{ topbar.item('my_workspace', path('claro_workspace_open_tool', {'workspaceId': personalWs.getId(), 'toolName': 'home'}), 'book') }}
+            {{ topbar.item({'name':'my_workspace', 'href':path('claro_workspace_open_tool', {'workspaceId': personalWs.getId(), 'toolName': 'home'}), 'icon':'book'}) }}
         {% endif %}
-        {{ topbar.item('my_agenda', path('claro_desktop_open_tool', {'toolName': 'agenda' }), 'calendar') }}
-        {{ topbar.item('my_resources', path('claro_desktop_open_tool', {'toolName': 'resource_manager'}) ~ '#resources/0', 'folder-close') }}
-        {{ topbar.item('my_badges', path('claro_profile_view_badges'), 'trophy') }}
-        {{ topbar.item('my_applications', path('claro_profile_applications'), 'puzzle-piece') }}
+        {{ topbar.item({'name':'my_agenda', 'href':path('claro_desktop_open_tool', {'toolName': 'agenda' }), 'icon':'calendar'}) }}
+        {{ topbar.item({'name':'my_resources', 'href':path('claro_desktop_open_tool', {'toolName': 'resource_manager'}) ~ '#resources/0', 'icon':'folder-close'}) }}
+        {{ topbar.item({'name':'my_badges', 'href':path('claro_profile_view_badges'), 'icon':'trophy'}) }}
+        {{ topbar.item({'name':'my_applications', 'href':path('claro_profile_applications'), 'icon':'puzzle-piece'}) }}
         <li class="divider"></li>
         {% if isImpersonated %}
             {% set logoutPath = path('claro_desktop_open', {'_switch': '_exit'}) %}
         {% else %}
             {% set logoutPath = path('claro_security_logout') %}
         {% endif %}
-        {{ topbar.item('logout', logoutPath, 'off') }}
+        {{ topbar.item({'name':'logout', 'href':logoutPath, 'icon':'off'}) }}
 
     {% endblock dropdownLogged %}
 

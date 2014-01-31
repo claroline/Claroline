@@ -98,6 +98,17 @@ class Group extends AbstractRoleSubject implements OrderableInterface
         return $this->users;
     }
 
+    public function getUserIds()
+    {
+        $users = $this->getUsers();
+        $userIds = array();
+        foreach ($users as $user) {
+            array_push($userIds, $user->getId());
+        }
+
+        return $userIds;
+    }
+
     public function getPlatformRole()
     {
         $roles = $this->getEntityRoles();
