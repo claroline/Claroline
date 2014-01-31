@@ -34,18 +34,21 @@ class MessageManager
     private $userRepo;
     private $messageRepo;
     private $userMessageRepo;
+    private $mailManager;
 
     /**
      * Constructor.
      *
      * @DI\InjectParams({
      *     "om"             = @DI\Inject("claroline.persistence.object_manager"),
-     *     "pagerFactory"   = @DI\Inject("claroline.pager.pager_factory")
+     *     "pagerFactory"   = @DI\Inject("claroline.pager.pager_factory"),
+     *     "mailManager"    = @DI\Inject("claroline.manager.mail_manager")
      * })
      */
     public function __construct(
         ObjectManager $om,
-        PagerFactory $pagerFactory
+        PagerFactory $pagerFactory,
+        MailManager $mailManager
     )
     {
         $this->om = $om;
@@ -54,6 +57,7 @@ class MessageManager
         $this->messageRepo = $om->getRepository('ClarolineCoreBundle:Message');
         $this->userMessageRepo = $om->getRepository('ClarolineCoreBundle:UserMessage');
         $this->pagerFactory = $pagerFactory;
+        $this->mailManager = $mailManager;
     }
 
     /**
@@ -108,11 +112,17 @@ class MessageManager
             $this->om->persist($userMessage);
         }
 
+        $mailNotifiedUsers = array();
+
         foreach ($userReceivers as $userReceiver) {
             $userMessage = $this->om->factory('Claroline\CoreBundle\Entity\UserMessage');
             $userMessage->setUser($userReceiver);
             $userMessage->setMessage($message);
             $this->om->persist($userMessage);
+
+            if ($userReceiver->isMailNotified()) {
+                $mailNotifiedUsers[] = $userReceiver;
+            }
         }
 
         foreach ($groupReceivers as $groupReceiver) {
@@ -123,9 +133,14 @@ class MessageManager
                 $userMessage->setUser($user);
                 $userMessage->setMessage($message);
                 $this->om->persist($userMessage);
+
+                if ($user->isMailNotified) {
+                    $mailNotifiedUsers[] = $userReceiver;
+                }
             }
         }
 
+        $this->mailManager->send($message->getObject(), $message->getContent(), $mailNotifiedUsers );
         $this->om->flush();
 
         return $message;

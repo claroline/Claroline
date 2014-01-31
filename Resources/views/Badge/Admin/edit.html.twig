@@ -4,7 +4,7 @@
 
 {% trans_default_domain "badge" %}
 
-{% block title %}{{ parent() ~ ' - ' ~ 'edit_badge' | trans | striptags | raw }}{% endblock %}
+{% block title %}{{ parent() ~ ' - ' ~ 'view_badge' | trans({'%badge_name%' : badge.name}) | striptags | raw }}{% endblock %}
 
 {% block collection_widget %}
     {% spaceless %}
@@ -14,13 +14,14 @@
         <div class="row badges_rules" {{ block('widget_container_attributes') }}>
             <p class="row">{{ form_label(form) }}</p>
             {{ form_errors(form) }}
-            {% set tabPrototype = '<li id="tabrule__name__"><a href="#rule__name__" data-toggle="tab">' ~ "rule"|trans ~ ' __name__ <span class="btn btn-sm btn-danger icon-trash delete_rule delete_rule_no_confirm pull-right" data-id-tab="rule__name__" style="display: none;"></span></a></li>' %}
+            {% set tabPrototype = '<li id="tabrule__name__"><a href="#rule__name__" data-toggle="tab">' ~ "rule"|trans ~ ' __indexname__ <span class="btn btn-sm btn-danger icon-trash delete_rule delete_rule_no_confirm pull-right" data-id-tab="rule__name__" style="display: none;"></span></a></li>' %}
             <ul class="nav nav-tabs nav-stacked col-md-2" id="ruleTabs" data-tab-prototype="{{ tabPrototype|e }}">
                 {% for rows in form %}
-                    <li id="tabrule{{ loop.index }}">
-                        <a href="#rule{{ loop.index }}" data-toggle="tab">{{ 'rule'|trans }} {{ loop.index }}
+                    {% set loopIndex = loop.index - 1 %}
+                    <li id="tabrule{{ loopIndex }}">
+                        <a href="#rule{{ loopIndex }}" data-toggle="tab">{{ 'rule'|trans }} {{ loop.index }}
                             {% if allow_delete %}
-                            <span class="btn btn-sm btn-danger icon-trash delete_rule delete_rule_confirm pull-right" data-id-tab="rule{{ loop.index }}" data-confirm-title="{{ 'badge_rule_delete_confirm_title'|trans }}" data-confirm-message="{{ 'badge_rule_delete_confirm_message'|trans }}" data-confirm-ok="{{ 'delete'|trans({}, 'platform') }}" data-confirm-cancel="{{ 'cancel'|trans({}, 'platform') }}" data-confirm-style="danger"></span>
+                            <span class="btn btn-sm btn-danger icon-trash delete_rule delete_rule_confirm pull-right" data-id-tab="rule{{ loopIndex }}" data-confirm-title="{{ 'badge_rule_delete_confirm_title'|trans }}" data-confirm-message="{{ 'badge_rule_delete_confirm_message'|trans }}" data-confirm-ok="{{ 'delete'|trans({}, 'platform') }}" data-confirm-cancel="{{ 'cancel'|trans({}, 'platform') }}" data-confirm-style="danger"></span>
                             {% endif %}
                         </a>
                     </li>
@@ -31,12 +32,32 @@
             </ul>
             <div class="tab-content rules col-md-10">
                 {% for rows in form %}
-                    <div class="tab-pane" id="rule{{ loop.index }}">
-                        <h4>{{ 'rule'|trans }} {{ loop.index }}</h4>
+                    {% set loopIndex = loop.index - 1 %}
+                    <div class="tab-pane" id="rule{{ loopIndex }}">
+                        <h4>{{ 'rule_details'|trans }}</h4>
 
                         <div class="row">
-                            <div class="col-md-2">
-                                <p class="form-control-static">{{ 'badge_form_execute'|trans }}</p>
+                            <div class="col-md-12">
+                                <p class="form-control-static">{{ 'badge_form_execute'|trans }} : </p>
+                            </div>
+                        </div>
+                        <div class="row action_panel">
+                            <div class="col-md-12">
+                                {{ form_widget(rows.children.action) }}
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-5">
+                                <div class="checkbox" style="margin-left: 20px;">
+                                    <label>
+                                        <input type="checkbox">{{ 'badge_form_user_target_of_action'|trans }}<strong> *</strong>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-3">
+                                <p class="form-control-static">{{ 'badge_form_execute_times'|trans }} </p>
                             </div>
                             <div class="col-md-2">
                                 {{ form_widget(rows.children.occurrence) }}
@@ -45,29 +66,44 @@
                                 <p class="form-control-static">{{ 'badge_form_times'|trans }}</p>
                             </div>
                         </div>
-                        <div class="row">
-                            <div class="col-md-2">
-                                <p class="form-control-static">{{ 'badge_form_action'|trans }}</p>
+                        <div class="row hide badge_panel">
+                            <div class="col-md-5">
+                                <p class="form-control-static">{{ 'badge_form_badge'|trans }} </p>
                             </div>
-                            <div class="col-md-10">
-                                {{ form_widget(rows.children.action) }}
+                            <div class="col-md-5">
+                                {{ form_widget(rows.children.badge) }}
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-md-6">
-                                <div class="checkbox">
-                                    <label>
-                                        <input type="checkbox" class="badge_result_awarding" data-tab-id="rule{{ loop.index }}" {% if '' != rows.children.result.vars.value %}checked="checked" {% endif %}/> {{ 'badge_form_awarding_on_result_action'|trans }}
-                                    </label>
+                            <p><small><strong>* </strong><span class="text-muted">{{ 'badge_form_badge_help'|trans }}</span></small></p>
+                        </div>
+                        <div class="panel-group" id="advancedOptionsAccordion{{ loopIndex }}">
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <h4 class="panel-title">
+                                        <a data-toggle="collapse" data-parent="#advancedOptionsAccordion{{ loopIndex }}" href="#advancedOptions{{ loopIndex }}">
+                                            <span class="icon-gear"></span> {{ 'badge_form_advance_options'|trans }}
+                                        </a>
+                                    </h4>
                                 </div>
-                            </div>
-                        </div>
-                        <div class="row rule_result{% if '' == rows.children.result.vars.value %} hidden{% endif %}">
-                            <div class="col-md-2 col-md-offset-1">
-                                {{ form_widget(rows.children.resultComparison) }}
-                            </div>
-                            <div class="col-md-2">
-                                {{ form_widget(rows.children.result) }}
+                                <div id="advancedOptions{{ loopIndex }}" class="panel-collapse collapse">
+                                    <div class="panel-body">
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <p class="form-control-static">{{ 'badge_form_awarding_on_result_action'|trans }} </p>
+                                            </div>
+                                            <div class="col-md-2">
+                                                {{ form_widget(rows.children.resultComparison) }}
+                                            </div>
+                                            <div class="col-md-1">
+                                                <p class="form-control-static text-center">{{ 'badge_form_awarding_on_result_action_to'|trans }}</p>
+                                            </div>
+                                            <div class="col-md-2">
+                                                {{ form_widget(rows.children.result) }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -86,11 +122,30 @@
 {% macro collection_prototype_row(rows) %}
     {% spaceless %}
         <div class="tab-pane" id="rule__name__">
-            <h4>{{ 'rule'|trans }} __name__</h4>
+            <h4>{{ 'rule_details'|trans }}</h4>
 
             <div class="row">
-                <div class="col-md-2">
-                    <p class="form-control-static">{{ 'badge_form_execute'|trans }}</p>
+                <div class="col-md-12">
+                    <p class="form-control-static">{{ 'badge_form_execute'|trans }} : </p>
+                </div>
+            </div>
+            <div class="row action_panel">
+                <div class="col-md-12">
+                    {{ form_widget(rows.children.action) }}
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-5">
+                    <div class="checkbox" style="margin-left: 20px;">
+                        <label>
+                            <input type="checkbox">{{ 'badge_form_user_target_of_action'|trans }}<strong> *</strong>
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-3">
+                    <p class="form-control-static">{{ 'badge_form_execute_times'|trans }} </p>
                 </div>
                 <div class="col-md-2">
                     {{ form_widget(rows.children.occurrence, {'attr': {'value': 1}}) }}
@@ -99,29 +154,44 @@
                     <p class="form-control-static">{{ 'badge_form_times'|trans }}</p>
                 </div>
             </div>
-            <div class="row">
-                <div class="col-md-2">
-                    <p class="form-control-static">{{ 'badge_form_action'|trans }}</p>
+            <div class="row hide badge_panel">
+                <div class="col-md-5">
+                    <p class="form-control-static">{{ 'badge_form_badge'|trans }} </p>
                 </div>
-                <div class="col-md-10">
-                    {{ form_widget(rows.children.action) }}
+                <div class="col-md-5">
+                    {{ form_widget(rows.children.badge) }}
                 </div>
             </div>
             <div class="row">
-                <div class="col-md-6">
-                    <div class="checkbox">
-                        <label>
-                            <input type="checkbox" class="badge_result_awarding" data-tab-id="rule__name__"> {{ 'badge_form_awarding_on_result_action'|trans }}
-                        </label>
+                <p><small><strong>* </strong><span class="text-muted">{{ 'badge_form_badge_help'|trans }}</span></small></p>
+            </div>
+            <div class="panel-group" id="advancedOptionsAccordion__name__">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h4 class="panel-title">
+                            <a data-toggle="collapse" data-parent="#advancedOptionsAccordion__name__" href="#advancedOptions__name__">
+                                <span class="icon-gear"></span> {{ 'badge_form_advance_options'|trans }}
+                            </a>
+                        </h4>
                     </div>
-                </div>
-            </div>
-            <div class="row rule_result hidden">
-                <div class="col-md-2 col-md-offset-1">
-                    {{ form_widget(rows.children.resultComparison) }}
-                </div>
-                <div class="col-md-2">
-                    {{ form_widget(rows.children.result) }}
+                    <div id="advancedOptions__name__" class="panel-collapse collapse">
+                        <div class="panel-body">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <p class="form-control-static">{{ 'badge_form_awarding_on_result_action'|trans }} </p>
+                                </div>
+                                <div class="col-md-2">
+                                    {{ form_widget(rows.children.resultComparison) }}
+                                </div>
+                                <div class="col-md-1">
+                                    <p class="form-control-static text-center">{{ 'badge_form_awarding_on_result_action_to'|trans }}</p>
+                                </div>
+                                <div class="col-md-2">
+                                    {{ form_widget(rows.children.result) }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -141,14 +211,14 @@
                 'href': path('claro_admin_badges')
             },
             {
-                'name': 'edit_badge'|trans({'%badge_name%': badge.name}, 'badge'),
+                'name': 'view_badge'|trans({'%badge_name%': badge.name}, 'badge'),
                 'href': ''
             }
         ])
     }}
 {% endblock %}
 
-{% block section_title %}{{ 'edit_badge'|trans({'%badge_name%': badge.name}, 'badge') }}{% endblock %}
+{% block section_title %}{{ 'view_badge'|trans({'%badge_name%': badge.name}, 'badge') }}{% endblock %}
 
 {% block section_body %}
     <ul class="nav nav-tabs">
@@ -158,7 +228,7 @@
     <div class="tab-content view_badge">
         <div class="tab-pane active" id="view">
             <h3 class="sub-section-header">
-                {{ 'badge'|trans }} "{{ badge.name }}"
+                {{ badge.name }}
                 {% if badge.expiredAt is not null %}
                 <small>{{ 'badge_expired_on_date'|trans({'%expirationDate%': badge.expiredAt|date('date_format'|trans({}, 'platform'))}) }}</small>
                 {% endif %}
@@ -232,8 +302,10 @@
                 {{ form_errors(form) }}
                 <div class="row badges_infos">
                     <div class="col-md-2{% if form.file.vars.errors|length > 0 %} has-error{% endif %}">
-                        <button type="button" id="change_image" class="btn btn-xs btn-default"><span class="icon-edit">{{ 'badge_form_change_image'|trans }}</span></button>
-                        <a href="#" class="thumbnail" id="upload_image_placeholder">
+                        <button type="button" id="change_image" class="btn btn-xs btn-default">
+                            <span class="icon-edit">{{ 'badge_form_change_image'|trans }}</span>
+                        </button>
+                        <a href="#" class="thumbnail upload_image_placeholder">
                             <img src="{{ asset(badge.webPath) }}" id="current_image" class="badge_image" />
                         </a>
                         {{ form_errors(form.file) }}
@@ -251,7 +323,7 @@
                             <div class="tab-pane active{% if '' != frErrorClass %} {{ frErrorClass }}{% endif %}" id="fr">
                                 {{ form_errors(form.frTranslation) }}
                                 <div class="form-group">
-                                    <label class="required" for="badge_form_frTranslation_description">{{ 'badge_form_name'|trans }} :</label>
+                                    <label class="required" for="badge_form_frTranslation_name">{{ 'badge_form_name'|trans }} :</label>
                                     {{ form_errors(form.frTranslation.name) }}
                                     {{ form_widget(form.frTranslation.name) }}
                                 </div>
@@ -261,7 +333,7 @@
                                     {{ form_widget(form.frTranslation.description) }}
                                 </div>
                                 <div class="form-group">
-                                    <label class="required" for="badge_form_frTranslation_description">{{ 'badge_form_criteria'|trans }} :</label>
+                                    <label class="required" for="badge_form_frTranslation_criteria">{{ 'badge_form_criteria'|trans }} :</label>
                                     {{ form_errors(form.frTranslation.criteria) }}
                                     {{ form_widget(form.frTranslation.criteria) }}
                                 </div>
@@ -270,7 +342,7 @@
                             <div class="tab-pane{% if '' != enErrorClass %} {{ enErrorClass }}{% endif %}" id="en">
                                 {{ form_errors(form.enTranslation) }}
                                 <div class="form-group">
-                                    <label class="required" for="badge_form_frTranslation_description">{{ 'badge_form_name'|trans }} :</label>
+                                    <label class="required" for="badge_form_frTranslation_name">{{ 'badge_form_name'|trans }} :</label>
                                     {{ form_errors(form.enTranslation.name) }}
                                     {{ form_widget(form.enTranslation.name) }}
                                 </div>
@@ -280,7 +352,7 @@
                                     {{ form_widget(form.enTranslation.description) }}
                                 </div>
                                 <div class="form-group">
-                                    <label class="required" for="badge_form_frTranslation_description">{{ 'badge_form_criteria'|trans }} :</label>
+                                    <label class="required" for="badge_form_frTranslation_criteria">{{ 'badge_form_criteria'|trans }} :</label>
                                     {{ form_errors(form.enTranslation.criteria) }}
                                     {{ form_widget(form.enTranslation.criteria) }}
                                 </div>
@@ -322,8 +394,16 @@
     </div>
 {% endblock %}
 
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('bundles/frontend/jquery/plugin/select2/select2.css') }}" screen="media" />
+{% endblock %}
+
+
 {% block javascripts %}
 {{ parent() }}
+<script type="text/javascript" src="{{ asset('bundles/frontend/jquery/plugin/select2/select2.min.js') }}"></script>
+<script type="text/javascript" src="{{ asset('bundles/frontend/jquery/plugin/select2/select2_locale_' ~ app.request.locale ~ '.js') }}"></script>
 <script type="text/javascript" src="{{ asset('bundles/frontend/jquery/plugin/jquery.optionTree.js') }}"></script>
 <script type="text/javascript" src='{{ asset('bundles/frontend/jquery/plugin/confirm-bootstrap/confirm-bootstrap.js') }}'></script>
 <script type="text/javascript" src='{{ asset('bundles/clarolinecore/js/badge/edit.js') }}'></script>

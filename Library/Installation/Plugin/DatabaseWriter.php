@@ -293,7 +293,6 @@ class DatabaseWriter
                 "{$plugin->getImgFolder()}{$ds}{$resource['icon']}",
                 "{$webPluginIcoDir}{$ds}{$resource['icon']}"
             );
-            $resourceIcon->setIconLocation("{$webPluginIcoDir}{$ds}{$resource['icon']}");
             $resourceIcon->setRelativeUrl(
                 "bundles/{$plugin->getAssetsFolder()}/images/icons/{$resource['icon']}"
             );
@@ -301,7 +300,6 @@ class DatabaseWriter
             $defaultIcon = $this->em
                 ->getRepository('ClarolineCoreBundle:Resource\ResourceIcon')
                 ->findOneByMimeType('custom/default');
-            $resourceIcon->setIconLocation($defaultIcon->getIconLocation());
             $resourceIcon->setRelativeUrl($defaultIcon->getRelativeUrl());
         }
 
@@ -333,13 +331,11 @@ class DatabaseWriter
                 "{$plugin->getImgFolder()}{$ds}{$resource['icon']}",
                 "{$webPluginIcoDir}{$ds}{$resource['icon']}"
             );
-            $resourceIcon->setIconLocation("{$webPluginIcoDir}{$ds}{$resource['icon']}");
             $resourceIcon->setRelativeUrl("bundles/{$plugin->getAssetsFolder()}/images/icons/{$resource['icon']}");
         } else {
             $defaultIcon = $this->em
                 ->getRepository('ClarolineCoreBundle:Resource\ResourceIcon')
                 ->findOneByMimeType('custom/default');
-            $resourceIcon->setIconLocation($defaultIcon->getIconLocation());
             $resourceIcon->setRelativeUrl($defaultIcon->getRelativeUrl());
         }
 

@@ -315,6 +315,8 @@ class DesktopController extends Controller
      *
      * Opens the desktop.
      *
+     * @param User $user
+     *
      * @return Response
      */
     public function openAction(User $user)

@@ -21,7 +21,6 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
  */
 class LogoService
 {
-    private $container;
     private $path;
     private $fileTypes;
     private $finder;

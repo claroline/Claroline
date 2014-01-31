@@ -11,7 +11,11 @@
                 'href': path('claro_admin_index')
             },
             {
-                'name': 'home'|trans({}, 'platform'),
+                'name': 'parameters'|trans({}, 'platform'),
+                'href': path('claro_admin_index')
+            },
+            {
+                'name': 'appearance'|trans({}, 'platform'),
                 'href': ''
             }
         ])
@@ -20,20 +24,20 @@
 
 {% block section_content %}
     <div class="panel-heading">
-        <h3 class="panel-title">{{ 'platform_parameters'|trans({}, 'platform') }}</h3>
+        <h3 class="panel-title">{{ 'platform_appearance'|trans({}, 'platform') }}</h3>
     </div>
-    <form class="form-horizontal" action="{{path('claro_admin_update_platform_settings')}}" method="post" {{ form_enctype(form_settings) }} id="form_settings" enctype='multipart/form-data'>
+    <form class="form-horizontal" action="{{path('claro_admin_edit_parameters_appearance')}}" method="post" {{ form_enctype(form_appearance) }} id="form_settings" enctype='multipart/form-data'>
         <div class="panel-body">
-            {{ form_widget(form_settings) }}
+            {{ form_widget(form_appearance) }}
             <div class="form-group row">
                 <div class="col-md-9 col-md-offset-3">
                     <a href="{{ path("claroline_admin_theme_list") }}"><i class="icon-edit"></i> {{ "Theme Generator" | trans({}, "theme") }}</a>
                 </div>
             </div>
             <div class="form-group row">
-               <label class="control-label col-md-3">{{ "Choose a logo" | trans({}, "platform") }}</label>
+                <label class="control-label col-md-3">{{ "Choose a logo" | trans({}, "platform") }}</label>
                 <div class="col-md-9 logos">
-                     <div class="alert {% if config.getParameter('logo') == "" %}alert-info{% else %}alert-warning{% endif %} content-4 pointer-hand logo" data-logo="null">
+                    <div class="alert {% if config.getParameter('logo') == "" %}alert-info{% else %}alert-warning{% endif %} content-4 pointer-hand logo" data-logo="null">
                         <p style="height:35px;font-size:18px">{{ "None" | trans({}, "platform") }}</p>
                     </div>
                     {% for logo in logos %}
@@ -46,7 +50,7 @@
                 </div>
             </div>
             <div class="form-group row">
-               <label class="control-label col-md-3">{{ "Add a logo" | trans({}, "platform") }}</label>
+                <label class="control-label col-md-3">{{ "Add a logo" | trans({}, "platform") }}</label>
                 <div class="col-md-9">
                     <input type="file" class="form-control" name="logo">
                 </div>
@@ -60,6 +64,7 @@
         </div>
     </form>
 {% endblock %}
+
 {% block javascripts %}
     {{ parent() }}
     <script type="text/javascript" src="{{ asset('bundles/clarolinecore/js/administration/logos.js') }}"></script>

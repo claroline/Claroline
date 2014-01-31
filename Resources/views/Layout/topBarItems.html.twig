@@ -27,7 +27,7 @@
         {% endif %}
         {{ topbar.item({'name':'desktop', 'href':path('claro_desktop_open'), 'icon':'briefcase', 'route':'/desktop/tool/'}) }}
         {% if is_granted('ROLE_ADMIN') %}
-            {{ topbar.item({'name':'administration', 'href':path('claro_admin_index'), 'icon':'cog', 'route':'/admin/'}) }}
+            {{ topbar.item({'name':'administration', 'href':path('claro_admin_parameters_index'), 'icon':'cog', 'route':'/administration/index/'}) }}
         {% endif %}
         {% if countUnreadMessages > 0 %}
             {{ topbar.item({'name':'messages', 'href':path('claro_message_list_received'), 'icon':'envelope', 'route':'/message/', 'title':'new_message_alert' | trans({'%count%': countUnreadMessages}, 'platform'), 'badge' : countUnreadMessages }) }}

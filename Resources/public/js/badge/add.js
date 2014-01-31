@@ -9,7 +9,6 @@
 
 $(function(){
     var badgeFormFile = $("#badge_form_file");
-    badgeFormFile.hide();
 
     $(".nav-tabs a.has-error:first").tab("show");
 
@@ -25,7 +24,9 @@ $(function(){
             var reader = new FileReader();
 
             reader.onload = function (event) {
-                $("img", uploadImagePlaceholder).attr('src', event.target.result);
+                var previewImage = $('<img class="badge_image" src="">');
+                previewImage.attr('src', event.target.result);
+                uploadImagePlaceholder.html(previewImage);
             };
 
             reader.readAsDataURL(input.files[0]);

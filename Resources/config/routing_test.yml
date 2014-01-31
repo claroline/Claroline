@@ -1,0 +1,7 @@
+imports:
+  resource: routing.yml
+
+claro_dev:
+  prefix: /test
+  resource: "@ClarolineCoreBundle/Controller/Testing/RemoteTestingController.php"
+  type: annotation

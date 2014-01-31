@@ -55,8 +55,8 @@ class AdminController extends Controller
         $platformConfigHandler = $this->get('claroline.config.platform_config_handler');
 
         $parameters = array(
-            'badgePage'    => $badgePage,
-            'claimPage'    => $claimPage,
+            'badgePage'        => $badgePage,
+            'claimPage'        => $claimPage,
             'add_link'         => 'claro_admin_badges_add',
             'edit_link'        => array(
                 'url'    => 'claro_admin_badges_edit',
@@ -373,9 +373,9 @@ class AdminController extends Controller
 
                 /** @var \Claroline\CoreBundle\Manager\BadgeManager $badgeManager */
                 $badgeManager = $this->get('claroline.manager.badge');
-                $awardedBadge = $badgeManager->addBadgeToUsers($badgeClaim->getBadge(), array($badgeClaim->getUser()));
-                if (0 === $awardedBadge) {
-                    throw new \Exception('No badge were awarded.');
+                $awardedBadge = $badgeManager->addBadgeToUser($badgeClaim->getBadge(), $badgeClaim->getUser());
+                if (!$awardedBadge) {
+                    $successMessage = $translator->trans('badge_already_award_info_message', array(), 'badge');
                 }
             }
 
