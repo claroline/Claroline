@@ -63,7 +63,7 @@ function creationQCM(expectedAnswer, response, point, comment, positionForce, ad
 // QCM Edition
 function creationQCMEdit(expectedAnswer, response, point, comment, positionForce, addchoice, deleteChoice, nbResponses) {
 
-    var index;
+    var index = 0;
 
     tableChoicesCreation(expectedAnswer, response, point, comment, positionForce, addchoice, deleteChoice, nbResponses);
 
@@ -86,14 +86,18 @@ function creationQCMEdit(expectedAnswer, response, point, comment, positionForce
             $('#newTable').find('tr:last').append('<td class="classic"></td>');
             addDelete($('#newTable').find('td:last'), deleteChoice);
         }
+        
+        $('#ujm_exobundle_interactionqcmtype_choices_'+index+'_weight').click(function() {
+            $(this).focus();
+        });
+        
+        index++;
+        
     });
 
     // Remove the useless fields form
     container.remove();
     tableChoices.next().remove();
-
-    // Get the number of choices
-    index = $('#newTable').find('tr:not(:first)').length;
 
     whichChecked();
     whichChange();
@@ -172,6 +176,10 @@ function addChoice(container, deleteChoice) {
     tableChoices.next().remove();
 
     whichChecked();
+    
+    $('#ujm_exobundle_interactionqcmtype_choices_'+index+'_weight').click(function() {
+        $(this).focus();
+    });
 }
 
 // Delete a choice
