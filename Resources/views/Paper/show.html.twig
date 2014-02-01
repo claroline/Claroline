@@ -66,331 +66,333 @@
         {% set exoScoreMax = 0 %}
         {% set temporaryMark = false %}
 
-{#--------------------------------------------------- QCM -------------------------------------------------------------#}
+        {% if p >= 0 %}
+        {#--------------------------------------------------- QCM ----------------------------------------------------#}
 
-        {% if(interactions[p].type == 'InteractionQCM') %}
+            {% if(interactions[p].type == 'InteractionQCM') %}
 
-            {% set interInfo = getInterTwig(interactions[p].id, 'InteractionQCM') %}
-            {% set interQCM =  interInfo['question'] %}
-            {{ interQCM.sortChoices() }}
+                {% set interInfo = getInterTwig(interactions[p].id, 'InteractionQCM') %}
+                {% set interQCM =  interInfo['question'] %}
+                {{ interQCM.sortChoices() }}
 
-            <div class="panel-body">
+                <div class="panel-body">
 
-                {% if (display == 'all') %}
+                    {% if (display == 'all') %}
 
-                    <div class="panel panel-default">
-                        <div class="panel-heading">
-                            <h3>{{ 'nQuestion' | trans }}{{p + 1}} :</h3>
-                        </div>
-
-                        <div class="panel-body">
-                            <div class="panel panel-default">
-                                <div class="panel-heading"><h3 class="panel-title">{{ 'title' | trans }}</h3></div>
-                                <div class="panel-body">
-                                    {{ interQCM.interaction.question.title }}
-                                </div>
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h3>{{ 'nQuestion' | trans }}{{p + 1}} :</h3>
                             </div>
 
-                            {% if interQCM.interaction.question.description != '' %}
+                            <div class="panel-body">
                                 <div class="panel panel-default">
-                                    <div class="panel-heading"><h3 class="panel-title">{{ 'description' | trans }}</h3></div>
+                                    <div class="panel-heading"><h3 class="panel-title">{{ 'title' | trans }}</h3></div>
                                     <div class="panel-body">
-                                        {{ interQCM.interaction.question.description|raw }}
+                                        {{ interQCM.interaction.question.title }}
                                     </div>
                                 </div>
-                            {% endif %}
 
-                            <div class="panel panel-default">
-                                <div class="panel-heading"><h3 class="panel-title">{{ 'question' | trans }}</h3></div>
-                                <div class="panel-body">
-                                    {{ interQCM.interaction.invite|raw }}
+                                {% if interQCM.interaction.question.description != '' %}
+                                    <div class="panel panel-default">
+                                        <div class="panel-heading"><h3 class="panel-title">{{ 'description' | trans }}</h3></div>
+                                        <div class="panel-body">
+                                            {{ interQCM.interaction.question.description|raw }}
+                                        </div>
+                                    </div>
+                                {% endif %}
+
+                                <div class="panel panel-default">
+                                    <div class="panel-heading"><h3 class="panel-title">{{ 'question' | trans }}</h3></div>
+                                    <div class="panel-body">
+                                        {{ interQCM.interaction.invite|raw }}
+                                    </div>
                                 </div>
-                            </div>
 
-                            <div class="panel panel-default">
-                                <div class="panel-heading"><h3 class="panel-title">{{ 'response' | trans }}</h3></div>
-                                <div class="panel-body">
-                                    <table border="1" class="table table-striped table-bordered table-condensed">
-                                        <tr>
-                                            <th class="classic">{{ 'choice' | trans }}</th>
-                                            <th class="classic">{{ 'expected answer' | trans }}</th>
-                                            <th class="classic">{{ 'your answer' | trans }}</th>
-                                            <th class="classic">{{ 'feedback' | trans }}</th>
-                                        </tr>
-
-                                        {% for choice in interQCM.choices %}
+                                <div class="panel panel-default">
+                                    <div class="panel-heading"><h3 class="panel-title">{{ 'response' | trans }}</h3></div>
+                                    <div class="panel-body">
+                                        <table border="1" class="table table-striped table-bordered table-condensed">
                                             <tr>
-                                                <td class="classic">
-                                                    {{ choice.label|raw }}
-                                                </td>
-                                                <td class="classic">
-                                                    {% if choice.rightResponse %}
-                                                        <img src="{{ asset('bundles/ujmexo/images/checkbox_on.gif') }}">
-                                                    {% else %}
-                                                        <img src="{{ asset('bundles/ujmexo/images/checkbox_off.gif') }}">
-                                                    {% endif %}
-                                                </td>
-                                                <td class="classic">
-                                                    {% if regexTwig('/' ~ choice.id ~ ';/', responses[p].response) > 0 %}
-                                                        {# choice checked by student #}
+                                                <th class="classic">{{ 'choice' | trans }}</th>
+                                                <th class="classic">{{ 'expected answer' | trans }}</th>
+                                                <th class="classic">{{ 'your answer' | trans }}</th>
+                                                <th class="classic">{{ 'feedback' | trans }}</th>
+                                            </tr>
+
+                                            {% for choice in interQCM.choices %}
+                                                <tr>
+                                                    <td class="classic">
+                                                        {{ choice.label|raw }}
+                                                    </td>
+                                                    <td class="classic">
                                                         {% if choice.rightResponse %}
                                                             <img src="{{ asset('bundles/ujmexo/images/checkbox_on.gif') }}">
                                                         {% else %}
-                                                            <img src="{{ asset('bundles/ujmexo/images/checkbox_on_red.gif') }}">
+                                                            <img src="{{ asset('bundles/ujmexo/images/checkbox_off.gif') }}">
                                                         {% endif %}
-                                                    {% else %}
-                                                        <img src="{{ asset('bundles/ujmexo/images/checkbox_off.gif') }}">
-                                                    {% endif %}
-                                                </td>
-                                                <td class="classic">
-                                                    {% if choice.feedback is not empty %}
-                                                        {{ choice.feedback|raw }}
-                                                    {% else %}
-                                                        -
-                                                    {% endif %}
-                                                </td>
-                                            </tr>
-                                        {% endfor %}
-                                    </table>
+                                                    </td>
+                                                    <td class="classic">
+                                                        {% if regexTwig('/' ~ choice.id ~ ';/', responses[p].response) > 0 %}
+                                                            {# choice checked by student #}
+                                                            {% if choice.rightResponse %}
+                                                                <img src="{{ asset('bundles/ujmexo/images/checkbox_on.gif') }}">
+                                                            {% else %}
+                                                                <img src="{{ asset('bundles/ujmexo/images/checkbox_on_red.gif') }}">
+                                                            {% endif %}
+                                                        {% else %}
+                                                            <img src="{{ asset('bundles/ujmexo/images/checkbox_off.gif') }}">
+                                                        {% endif %}
+                                                    </td>
+                                                    <td class="classic">
+                                                        {% if choice.feedback is not empty %}
+                                                            {{ choice.feedback|raw }}
+                                                        {% else %}
+                                                            -
+                                                        {% endif %}
+                                                    </td>
+                                                </tr>
+                                            {% endfor %}
+                                        </table>
+                                    </div>
                                 </div>
-                            </div>
 
-                            {% if interQCM.interaction.feedback != '' %}
+                                {% if interQCM.interaction.feedback != '' %}
+                                    <div class="panel panel-default">
+                                        <div class="panel-heading"><h3 class="panel-title">{{ 'comment' | trans }}</h3></div>
+                                        <div class="panel-body">
+                                            {{ interQCM.interaction.feedback|raw }}
+                                        </div>
+                                    </div>
+                                {% endif %}
+
                                 <div class="panel panel-default">
-                                    <div class="panel-heading"><h3 class="panel-title">{{ 'comment' | trans }}</h3></div>
+                                    <div class="panel-heading"><h3 class="panel-title">{{ 'mark' | trans }}</h3></div>
                                     <div class="panel-body">
-                                        {{ interQCM.interaction.feedback|raw }}
-                                    </div>
-                                </div>
-                            {% endif %}
-
-                            <div class="panel panel-default">
-                                <div class="panel-heading"><h3 class="panel-title">{{ 'mark' | trans }}</h3></div>
-                                <div class="panel-body">
-                                {% for hv in hintViewed %}
-                                    {% if( hv.hint.interaction.id == interactions[p].id ) %}
-                                        {{ 'penalty' | trans }} : {{ hv.hint.penalty }}
-                                    {% endif %}
-                                {% endfor %}
-                                <br/>
-                                {{ 'mark' | trans }} : {{ responses[p].mark }} / {{ interInfo['maxScore'] }}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                {% endif %}
-            </div>
-
-{#------------------------------------------------- Graphic -----------------------------------------------------------#}
-
-        {% elseif(interactions[p].type == 'InteractionGraphic') %}
-
-            {% set interInfo = getInterTwig(interactions[p].id, 'InteractionGraphic') %}
-            {% set interG =  interInfo['question'] %}
-            {% set coords =  getCoordsGraphTwig(interG.id) %}
-            {% set maxScore = 0 %}
-
-            <div class="panel-body">
-
-                {% if (display == 'all') %}
-
-                    <div class="panel panel-default">
-                        <div class="panel-heading">
-                            <h3>{{ 'nQuestion' | trans }}{{p + 1}} :</h3>
-                        </div>
-
-
-                        <div class="panel-body">
-                            <div class="panel panel-default">
-                                <div class="panel-heading"><h3 class="panel-title">{{ 'title' | trans }}</h3></div>
-                                <div class="panel-body">
-                                    {{ interG.interaction.question.title }}
-                                </div>
-                            </div>
-
-                            {% if interG.interaction.question.description != '' %}
-                                <div class="panel panel-default">
-                                    <div class="panel-heading"><h3 class="panel-title">{{ 'description' | trans }}</h3></div>
-                                    <div class="panel-body">
-                                        {{ interG.interaction.question.description|raw }}
-                                    </div>
-                                </div>
-                            {% endif %}
-
-                            <div class="panel panel-default">
-                                <div class="panel-heading"><h3 class="panel-title">{{ 'question' | trans }}</h3></div>
-                                <div class="panel-body">
-                                    {{ interG.interaction.invite|raw }}
-                                </div>
-                            </div>
-
-                            <div class="panel panel-default">
-                                <div class="panel-heading"><h3 class="panel-title">{{ 'response' | trans }}</h3></div>
-                                <div class="panel-body">
-                                    <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/graphicOverview.js') }}"></script>
-
-                                    <div id="Answer" style="position: relative;">
-                                        <img src="{{asset (interG.document.url)}}" width="{{ interG.width }}" height="{{ interG.height }}"
-                                            alt="AnswerImage" id="AnswerImage{{ interaction.id }}"/>
-
-                                        {% set repco = responses[p].response|split(';') %}
-                                        {% set x = 0 %}
-
-                                        {% for c in coords %}
-
-                                            {% set maxScore = maxScore + coords[x].scoreCoords %}
-                                            {% set numb = coords[x].value|split(',') %}
-                                            {% set repcoX = repco[x]|split('-') %}
-
-                                            <img src="{{ asset('bundles/ujmexo/images/graphic/circlew.png') }}" id="{{ interaction.id }}ra{{ x }}"
-                                                 alt="RightAnswer{{ x }}" width="{{ coords[x].size }}"/>
-
-                                            <img src="{{ asset('bundles/ujmexo/images/graphic/answer.png') }}" id="{{ interaction.id }}cursor{{ x }}"
-                                                 alt="AnswerZone{{ x }}"/>
-
-                                            <script type="text/javascript">
-                                                whichImg('{{coords[x].shape}}', '{{coords[x].color}}', {{x}}, '{{ numb[0] }}', '{{ numb[1] }}',
-                                                '{{repcoX[0]}}', '{{repcoX[1]}}', '{{ asset('bundles/ujmexo/images/graphic/') }}',
-                                                '{{ coords[x].size }}', '{{interaction.id}}')
-                                            </script>
-
-                                            {% set x = x + 1 %}
-                                        {% endfor %}
-                                    </div>
-                                </div>
-                            </div>
-
-                            {% if interG.interaction.feedback != '' %}
-                                <div class="panel panel-default">
-                                    <div class="panel-heading"><h3 class="panel-title">{{ 'comment' | trans }}</h3></div>
-                                    <div class="panel-body">
-                                        {{ interG.interaction.feedback|raw }}
-                                    </div>
-                                </div>
-                            {% endif %}
-
-                            <div class="panel panel-default">
-                                <div class="panel-heading"><h3 class="panel-title">{{ 'mark' | trans }}</h3></div>
-                                <div class="panel-body">
                                     {% for hv in hintViewed %}
                                         {% if( hv.hint.interaction.id == interactions[p].id ) %}
                                             {{ 'penalty' | trans }} : {{ hv.hint.penalty }}
                                         {% endif %}
                                     {% endfor %}
                                     <br/>
-                                    {{ 'mark' | trans }} : {{ responses[p].mark }} / {{ maxScore }}
-
-                                    {% set point = responses[p].mark + hv.hint.penalty %}
-                                </div>
-                            </div>
-                        </div>
-                    {% else %}
-                        {% set x = 0 %}
-
-                        {% for c in coords %}
-                            {% set maxScore = maxScore + coords[x].scoreCoords %}
-                            {% set x = x + 1 %}
-                        {% endfor %}
-
-                    </div>
-                {% endif %}
-            </div>
-
-{#--------------------------------------------------- Hole ------------------------------------------------------------#}
-
-        {% elseif(interactions[p].type == 'InteractionHole') %}
-
-{#--------------------------------------------------- Open ------------------------------------------------------------#}
-
-        {% elseif(interactions[p].type == 'InteractionOpen') %}
-            {% set interInfo = getInterTwig(interactions[p].id, 'InteractionOpen') %}
-            {% set interOpen =  interInfo['question'] %}
-
-            <div class="panel-body">
-
-                {% if (display == 'all') %}
-
-                    <div class="panel panel-default">
-                        <div class="panel-heading">
-                            <h3>{{ 'nQuestion' | trans }}{{p + 1}} :</h3>
-                        </div>
-
-                        <div class="panel-body">
-                            <div class="panel panel-default">
-                                <div class="panel-heading"><h3 class="panel-title">{{ 'title' | trans }}</h3></div>
-                                <div class="panel-body">
-                                    {{ interOpen.interaction.question.title }}
-                                </div>
-                            </div>
-
-                            {% if interOpen.interaction.question.description != '' %}
-                                <div class="panel panel-default">
-                                    <div class="panel-heading"><h3 class="panel-title">{{ 'description' | trans }}</h3></div>
-                                    <div class="panel-body">
-                                        {{ interOpen.interaction.question.description|raw }}
+                                    {{ 'mark' | trans }} : {{ responses[p].mark }} / {{ interInfo['maxScore'] }}
                                     </div>
                                 </div>
-                            {% endif %}
+                            </div>
+                        </div>
+                    {% endif %}
+                </div>
 
-                            <div class="panel panel-default">
-                                <div class="panel-heading"><h3 class="panel-title">{{ 'question' | trans }}</h3></div>
-                                <div class="panel-body">
-                                    {{ interOpen.interaction.invite|raw }}
-                                </div>
+    {#------------------------------------------------- Graphic ------------------------------------------------------#}
+
+            {% elseif(interactions[p].type == 'InteractionGraphic') %}
+
+                {% set interInfo = getInterTwig(interactions[p].id, 'InteractionGraphic') %}
+                {% set interG =  interInfo['question'] %}
+                {% set coords =  getCoordsGraphTwig(interG.id) %}
+                {% set maxScore = 0 %}
+
+                <div class="panel-body">
+
+                    {% if (display == 'all') %}
+
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h3>{{ 'nQuestion' | trans }}{{p + 1}} :</h3>
                             </div>
 
-                            <div class="panel panel-default">
-                                <div class="panel-heading"><h3 class="panel-title">{{ 'response' | trans }}</h3></div>
-                                <div class="panel-body">
-                                    {% if interOpen.typeopenquestion == 'long' %}
-                                        {{ responses[p].response|raw}}
-                                    {% endif %}
-                                </div>
-                            </div>
 
-                            {% if interOpen.interaction.feedback != '' %}
+                            <div class="panel-body">
                                 <div class="panel panel-default">
-                                    <div class="panel-heading"><h3 class="panel-title">{{ 'comment' | trans }}</h3></div>
+                                    <div class="panel-heading"><h3 class="panel-title">{{ 'title' | trans }}</h3></div>
                                     <div class="panel-body">
-                                        {{ interOpen.interaction.feedback|raw }}
+                                        {{ interG.interaction.question.title }}
                                     </div>
                                 </div>
-                            {% endif %}
 
-                            <div class="panel panel-default">
-                                <div class="panel-heading"><h3 class="panel-title">{{ 'mark' | trans }}</h3></div>
-                                <div class="panel-body">
-                                    {% for hv in hintViewed %}
-                                        {% if( hv.hint.interaction.id == interactions[p].id ) %}
-                                            {{ 'penalty' | trans }} : {{ hv.hint.penalty }}
-                                        {% endif %}
-                                    {% endfor %}
-                                    <br/>
-                                    {% if responses[p].mark != -1 %}
-                                        {{ 'mark' | trans }} : <span id="open_mark_value_{{ responses[p].id }}">{{ responses[p].mark }} / {{ interInfo['maxScore'] }}</span>
-                                        {% set exoMark = exoMark + responses[p].mark %}
-                                    {% else %}
-                                        {{ 'mark' | trans }} : <span id="open_mark_value_{{ responses[p].id }}">{{ 'not yet mark' | trans }}</span>
-                                        {% set temporaryMark = true %}
-                                    {% endif %}
-                                    <br/>
-                                    {% if interOpen.typeopenquestion == 'long' and admin == 1 %}
-                                        {% if responses[p].id != '' %}
-                                            {% set url = path('ujm_paper_mark_open_question', {'respid': responses[p].id, 'maxScore': interInfo['maxScore']}) %}
+                                {% if interG.interaction.question.description != '' %}
+                                    <div class="panel panel-default">
+                                        <div class="panel-heading"><h3 class="panel-title">{{ 'description' | trans }}</h3></div>
+                                        <div class="panel-body">
+                                            {{ interG.interaction.question.description|raw }}
+                                        </div>
+                                    </div>
+                                {% endif %}
 
-                                            <input type="hidden" value="{{ responses[p].mark }}" id="currentOpenMark_{{ responses[p].id }}" />
-                                            <a id="open_mark_{{ responses[p].id }}"
-                                                onmouseover="body.style.cursor = 'pointer';" onmouseout="body.style.cursor = 'default';"
-                                                onClick="openMark('{{ url }}');"
-                                            >{{ 'mark this question' | trans }}</a>
+                                <div class="panel panel-default">
+                                    <div class="panel-heading"><h3 class="panel-title">{{ 'question' | trans }}</h3></div>
+                                    <div class="panel-body">
+                                        {{ interG.interaction.invite|raw }}
+                                    </div>
+                                </div>
+
+                                <div class="panel panel-default">
+                                    <div class="panel-heading"><h3 class="panel-title">{{ 'response' | trans }}</h3></div>
+                                    <div class="panel-body">
+                                        <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/graphicOverview.js') }}"></script>
+
+                                        <div id="Answer" style="position: relative;">
+                                            <img src="{{asset (interG.document.url)}}" width="{{ interG.width }}" height="{{ interG.height }}"
+                                                alt="AnswerImage" id="AnswerImage{{ interaction.id }}"/>
+
+                                            {% set repco = responses[p].response|split(';') %}
+                                            {% set x = 0 %}
+
+                                            {% for c in coords %}
+
+                                                {% set maxScore = maxScore + coords[x].scoreCoords %}
+                                                {% set numb = coords[x].value|split(',') %}
+                                                {% set repcoX = repco[x]|split('-') %}
+
+                                                <img src="{{ asset('bundles/ujmexo/images/graphic/circlew.png') }}" id="{{ interaction.id }}ra{{ x }}"
+                                                     alt="RightAnswer{{ x }}" width="{{ coords[x].size }}"/>
+
+                                                <img src="{{ asset('bundles/ujmexo/images/graphic/answer.png') }}" id="{{ interaction.id }}cursor{{ x }}"
+                                                     alt="AnswerZone{{ x }}"/>
+
+                                                <script type="text/javascript">
+                                                    whichImg('{{coords[x].shape}}', '{{coords[x].color}}', {{x}}, '{{ numb[0] }}', '{{ numb[1] }}',
+                                                    '{{repcoX[0]}}', '{{repcoX[1]}}', '{{ asset('bundles/ujmexo/images/graphic/') }}',
+                                                    '{{ coords[x].size }}', '{{interaction.id}}')
+                                                </script>
+
+                                                {% set x = x + 1 %}
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {% if interG.interaction.feedback != '' %}
+                                    <div class="panel panel-default">
+                                        <div class="panel-heading"><h3 class="panel-title">{{ 'comment' | trans }}</h3></div>
+                                        <div class="panel-body">
+                                            {{ interG.interaction.feedback|raw }}
+                                        </div>
+                                    </div>
+                                {% endif %}
+
+                                <div class="panel panel-default">
+                                    <div class="panel-heading"><h3 class="panel-title">{{ 'mark' | trans }}</h3></div>
+                                    <div class="panel-body">
+                                        {% for hv in hintViewed %}
+                                            {% if( hv.hint.interaction.id == interactions[p].id ) %}
+                                                {{ 'penalty' | trans }} : {{ hv.hint.penalty }}
+                                            {% endif %}
+                                        {% endfor %}
+                                        <br/>
+                                        {{ 'mark' | trans }} : {{ responses[p].mark }} / {{ maxScore }}
+
+                                        {% set point = responses[p].mark + hv.hint.penalty %}
+                                    </div>
+                                </div>
+                            </div>
+                        {% else %}
+                            {% set x = 0 %}
+
+                            {% for c in coords %}
+                                {% set maxScore = maxScore + coords[x].scoreCoords %}
+                                {% set x = x + 1 %}
+                            {% endfor %}
+
+                        </div>
+                    {% endif %}
+                </div>
+
+    {#--------------------------------------------------- Hole -------------------------------------------------------#}
+
+            {% elseif(interactions[p].type == 'InteractionHole') %}
+
+    {#--------------------------------------------------- Open -------------------------------------------------------#}
+
+            {% elseif(interactions[p].type == 'InteractionOpen') %}
+                {% set interInfo = getInterTwig(interactions[p].id, 'InteractionOpen') %}
+                {% set interOpen =  interInfo['question'] %}
+
+                <div class="panel-body">
+
+                    {% if (display == 'all') %}
+
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h3>{{ 'nQuestion' | trans }}{{p + 1}} :</h3>
+                            </div>
+
+                            <div class="panel-body">
+                                <div class="panel panel-default">
+                                    <div class="panel-heading"><h3 class="panel-title">{{ 'title' | trans }}</h3></div>
+                                    <div class="panel-body">
+                                        {{ interOpen.interaction.question.title }}
+                                    </div>
+                                </div>
+
+                                {% if interOpen.interaction.question.description != '' %}
+                                    <div class="panel panel-default">
+                                        <div class="panel-heading"><h3 class="panel-title">{{ 'description' | trans }}</h3></div>
+                                        <div class="panel-body">
+                                            {{ interOpen.interaction.question.description|raw }}
+                                        </div>
+                                    </div>
+                                {% endif %}
+
+                                <div class="panel panel-default">
+                                    <div class="panel-heading"><h3 class="panel-title">{{ 'question' | trans }}</h3></div>
+                                    <div class="panel-body">
+                                        {{ interOpen.interaction.invite|raw }}
+                                    </div>
+                                </div>
+
+                                <div class="panel panel-default">
+                                    <div class="panel-heading"><h3 class="panel-title">{{ 'response' | trans }}</h3></div>
+                                    <div class="panel-body">
+                                        {% if interOpen.typeopenquestion == 'long' %}
+                                            {{ responses[p].response|raw}}
                                         {% endif %}
-                                    {% endif %}
+                                    </div>
+                                </div>
+
+                                {% if interOpen.interaction.feedback != '' %}
+                                    <div class="panel panel-default">
+                                        <div class="panel-heading"><h3 class="panel-title">{{ 'comment' | trans }}</h3></div>
+                                        <div class="panel-body">
+                                            {{ interOpen.interaction.feedback|raw }}
+                                        </div>
+                                    </div>
+                                {% endif %}
+
+                                <div class="panel panel-default">
+                                    <div class="panel-heading"><h3 class="panel-title">{{ 'mark' | trans }}</h3></div>
+                                    <div class="panel-body">
+                                        {% for hv in hintViewed %}
+                                            {% if( hv.hint.interaction.id == interactions[p].id ) %}
+                                                {{ 'penalty' | trans }} : {{ hv.hint.penalty }}
+                                            {% endif %}
+                                        {% endfor %}
+                                        <br/>
+                                        {% if responses[p].mark != -1 %}
+                                            {{ 'mark' | trans }} : <span id="open_mark_value_{{ responses[p].id }}">{{ responses[p].mark }} / {{ interInfo['maxScore'] }}</span>
+                                            {% set exoMark = exoMark + responses[p].mark %}
+                                        {% else %}
+                                            {{ 'mark' | trans }} : <span id="open_mark_value_{{ responses[p].id }}">{{ 'not yet mark' | trans }}</span>
+                                            {% set temporaryMark = true %}
+                                        {% endif %}
+                                        <br/>
+                                        {% if interOpen.typeopenquestion == 'long' and admin == 1 %}
+                                            {% if responses[p].id != '' %}
+                                                {% set url = path('ujm_paper_mark_open_question', {'respid': responses[p].id, 'maxScore': interInfo['maxScore']}) %}
+
+                                                <input type="hidden" value="{{ responses[p].mark }}" id="currentOpenMark_{{ responses[p].id }}" />
+                                                <a id="open_mark_{{ responses[p].id }}"
+                                                    onmouseover="body.style.cursor = 'pointer';" onmouseout="body.style.cursor = 'default';"
+                                                    onClick="openMark('{{ url }}');"
+                                                >{{ 'mark this question' | trans }}</a>
+                                            {% endif %}
+                                        {% endif %}
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                {% endif %}
-            </div>
+                    {% endif %}
+                </div>
+            {% endif %}
         {% endif %}
 
         {% if p == -1 %}
