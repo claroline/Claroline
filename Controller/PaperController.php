@@ -38,8 +38,11 @@
 namespace UJM\ExoBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
+use UJM\ExoBundle\Entity\Exercise;
 use UJM\ExoBundle\Entity\Paper;
 //use UJM\ExoBundle\Entity\Response;
 use UJM\ExoBundle\Form\PaperType;
@@ -289,6 +292,54 @@ class PaperController extends Controller
                 'divResultSearch' => $divResultSearch
                 )
             );
+        }
+    }
+    
+    /**
+     * To export results in CSV
+     *
+     */
+    public function exportResCSVAction($exerciseId)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $exercise = $em->getRepository('UJMExoBundle:Exercise')->find($exerciseId);
+        
+        if ($this->container->get('ujm.exercise_services')->isExerciseAdmin($exercise)) {
+            $iterableResult = $this->getDoctrine()
+                                   ->getManager()
+                                   ->getRepository('UJMExoBundle:Paper')
+                                   ->getExerciseAllPapersIterator($exerciseId);
+            $handle = fopen('php://memory', 'r+');
+
+            while (false !== ($row = $iterableResult->next())) {
+                $rowCSV = array();
+                $infosPaper = $this->container->get('ujm.exercise_services')->getInfosPaper($row[0]);
+                $score = $infosPaper['scorePaper'] /  $infosPaper['maxExoScore'];
+                $score = $score * 20;
+                
+                $rowCSV[] = $row[0]->getUser()->getLastName() . '-' . $row[0]->getUser()->getFirstName();
+                $rowCSV[] = $row[0]->getNumPaper();
+                $rowCSV[] = $row[0]->getStart()->format('Y-m-d H:i:s');
+                $rowCSV[] = $row[0]->getEnd()->format('Y-m-d H:i:s');
+                $rowCSV[] = $row[0]->getInterupt();
+                $rowCSV[] = $this->container->get('ujm.exercise_services')->roundUpDown($score);
+                
+                fputcsv($handle, $rowCSV);
+                $em->detach($row[0]);
+            }
+
+            rewind($handle);
+            $content = stream_get_contents($handle);
+            fclose($handle);
+
+            return new Response($content, 200, array(
+                'Content-Type' => 'application/force-download',
+                'Content-Disposition' => 'attachment; filename="export.csv"'
+            ));
+            
+        } else {
+            
+            throw new \Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException();
         }
     }
 

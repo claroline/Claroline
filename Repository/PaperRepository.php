@@ -95,6 +95,23 @@ class PaperRepository extends EntityRepository
 
         return $qb->getQuery()->getResult();
     }
+    
+    /**
+     * Returns all papers for an exercise for CSV export
+     *
+     */
+    public function getExerciseAllPapersIterator($exerciseID)
+    {
+        $qb = $this->createQueryBuilder('p');
+        $qb->join('p.exercise', 'e')
+            ->join('p.user', 'u')
+            ->where($qb->expr()->in('e.id', $exerciseID))
+            ->orderBy('u.lastName', 'ASC')
+            ->addOrderBy('u.firstName', 'ASC')
+            ->addOrderBy('p.id', 'ASC');
+
+        return $qb->getQuery()->iterate();
+    }
 
     public function getPaperUser($userID)
     {

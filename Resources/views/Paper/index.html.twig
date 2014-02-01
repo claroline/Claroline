@@ -68,6 +68,10 @@
                class="btn btn-primary">
                 {{ 'docimology' | trans }}
             </a>
+            <a href="{{ path('ujm_paper_export_results', { 'exerciseId': exoID }) }}"
+               class="btn btn-primary">
+                {{ 'export CSV of results' | trans }}
+            </a>
         {% endif %}
 
         <hr/>

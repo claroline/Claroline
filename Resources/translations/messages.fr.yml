@@ -127,6 +127,7 @@ explainCoeffDis1: Analyse de la pertinence des questions, ce coefficient de corr
 explainCoeffDis2: Les questions dont le coefficient de discrimination se situe entre 0,35 et 0,65 maximisent la discrimination des étudiants.
 explainCoeffDis3: Les questions ayant un indice négatif signalent une incohérence, les meilleurs candidats échouent à ces questions tandis que les plus faibles réussissent.
 explainMeasureDifficulty: L'indice de difficulté équivaut à un pourcentage de réussite à la question
+export CSV of results: Export CSV des résultats
 
 # F
 feedback: Commentaire
