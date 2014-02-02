@@ -36,6 +36,14 @@ class GeneralType extends AbstractType
     {
         $builder
             ->add('name', 'text', array('required' => false))
+            ->add(
+                'description',
+                'content',
+                array(
+                    'label' => 'Description',
+                    'theme_options' => array('contentTitle' => false, 'tinymce' => false)
+                )
+            )
             ->add('support_email', 'email', array('label' => 'support_email'))
             ->add('selfRegistration', 'checkbox', array('required' => false))
             ->add(

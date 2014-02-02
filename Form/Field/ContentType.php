@@ -33,6 +33,7 @@ class ContentType extends AbstractType
 {
     private $langs;
     private $contentManager;
+    private $tinymce;
 
     /**
      * @InjectParams({
@@ -44,6 +45,7 @@ class ContentType extends AbstractType
     {
         $this->langs = $localeManager->getAvailableLocales();
         $this->contentManager = $contentManager;
+        $this->tinymce = true;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
@@ -58,13 +60,24 @@ class ContentType extends AbstractType
             $translatedContent = $builder->getData();
         }
 
+        if (isset($options['theme_options']['tinymce']) and !$options['theme_options']['tinymce']) {
+            $this->tinymce = false;
+        }
+
         if (!empty($this->langs)) {
 
             foreach ($this->langs as $lang) {
                 if (isset($translatedContent[$lang])) {
-                    $builder->add($lang, 'base_content', array('data' => $translatedContent[$lang]));
+                    $builder->add(
+                        $lang,
+                        'base_content',
+                        array(
+                            'theme_options' => array('tinymce' => $this->tinymce),
+                            'data' => $translatedContent[$lang]
+                        )
+                    );
                 } else {
-                    $builder->add($lang, 'base_content');
+                    $builder->add($lang, 'base_content', array('theme_options' => array('tinymce' => $this->tinymce)));
                 }
             }
         }
