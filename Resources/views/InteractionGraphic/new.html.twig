@@ -88,11 +88,11 @@ presently reading this means that you have had
                                 <a class="btn btn-primary" onClick="addPicture('{{ path('ujm_interactiongraphic_SavePic') }}');">
                                     <i class="icon-picture"></i> {{ "add a new picture" | trans }}
                                 </a>
-                                <a class="btn btn-default" onclick="DisplayInstruction();" id="Order">
+                                <a class="btn btn-default" onclick="DisplayInstruction();" id="showInstruct">
                                    <i class="icon-question"></i> {{ 'show Instructions' | trans }}
                                 </a>
 
-                                <a class="btn btn-default" onclick="HideInstruction();" id="hide">
+                                <a class="btn btn-default" onclick="HideInstruction();" id="hideInstruct">
                                     <i class="icon-question"></i> {{ 'hide Instructions' | trans }}
                                 </a>
                             </div>
@@ -197,6 +197,7 @@ presently reading this means that you have had
 <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/category_pop.js') }}"></script>
 <script type="text/javascript" src="{{ asset('bundles/frontend/jquery/jquery-ui-1.9.2/jquery-ui-1.9.2.js') }}"></script>
 <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/ext/jquery-ui-touch-punch.js') }}"></script>
+<script type="text/javascript" src="{{ asset('bundles/ujmexo/js/instructions.js') }}"></script>
 <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/graphic.js') }}"></script>
 <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/ext/malsup.js') }}"></script>
 

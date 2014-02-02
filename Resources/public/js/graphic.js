@@ -10,25 +10,6 @@ var scalex = 0; // Width of the image after resize
 var scaley = 0; // Height of the image after resize
 var value = 0; // Size of the resizing
 
-// Instructions aren't displayed (by default) for more visibility
-$('#Instructions').css({"display" : "none"});
-$('#Order').css({"display" : "inline-block"});
-$('#hide').css({"display" : "none"});
-
-// If click, instructions are displayed
-function DisplayInstruction() {
-    $('#Instructions').css({"display" : "inline-block"});
-    $('#Order').css({"display" : "none"});
-    $('#hide').css({"display" : "inline-block"});
-}
-
-// If click, instructions are hidden
-function HideInstruction() {
-    $('#Instructions').css({"display" : "none"});
-    $('#hide').css({"display" : "none"});
-    $('#Order').css({"display" : "inline-block"});
-}
-
 // Get the url's picture matching to the label in the list
 function sendData(select, path, prefx) {
 

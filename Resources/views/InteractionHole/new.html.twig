@@ -66,8 +66,21 @@
                             <h3 class="panel-title">{{ 'hole' | trans }}</h3>
                         </div>
                         <div class="panel-body">
+                            <div id="Instructions" class="alert alert-info">
+                                <a class="close" onclick="HideInstruction();">&times;</a>
+                                <p>TODO : translation</p>
+                                <p>Pour créer un trou, selectionnez le texte à trouer dans l'éditeur "Texte à trous", puis cliquer sur le bouton "Créer un blanc".</p>
+                                <hr/>
+                            </div>
+                            </br>
                             <a id="create_hole" class="btn btn-primary" onclick="createHole();">
                                 <i class="icon-plus"></i> {{ 'create hole' | trans }}
+                            </a>
+                            <a class="btn btn-default" onclick="DisplayInstruction();" id="showInstruct">
+                                <i class="icon-question"></i> {{ 'show Instructions' | trans }}
+                            </a>
+                            <a class="btn btn-default" onclick="HideInstruction();" id="hideInstruct">
+                                <i class="icon-question"></i> {{ 'hide Instructions' | trans }}
                             </a>
                             </br></br>
                             {#{ form_row(form.holes) }#}
@@ -94,6 +107,7 @@
 
 <script type="text/javascript" src="{{ asset('bundles/frontend/jquery/jquery-ui-1.9.2/jquery-ui-1.9.2.js') }}"></script>
 <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/ext/jquery-ui-touch-punch.js') }}"></script>
+<script type="text/javascript" src="{{ asset('bundles/ujmexo/js/instructions.js') }}"></script>
 <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/interactionHole.js') }}"></script>
 <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/category_pop.js') }}"></script>
 <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/hint.js') }}"></script>
