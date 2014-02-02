@@ -78,6 +78,7 @@ function addHole(indHole, valHole)
     });
     
     $('#newTable').find('tr:last').find('td:first').css('display', 'none');
+    $('#newTable').find('tr:last').find('td:first').find('input:first').val('0');
     
     $('#ujm_exobundle_interactionholetype_holes_'+index+'_size').val('15');
     
@@ -213,4 +214,13 @@ function setOrder() {
         $(this).find('input:first').val(order);
         order++;
     });
+}
+
+// Check if form is valid
+function check_form(nbHole) {
+    if (($('#newTable').find('tr:not(:first)').length) < 1) {
+        alert(nbHole);
+        return false;
+    }
+    
 }

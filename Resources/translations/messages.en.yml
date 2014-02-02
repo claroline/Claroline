@@ -209,6 +209,7 @@ my shared questions: My shared questions
 
 # N
 nameUser2Shared: Name of user to share the question
+nb_hole: It must have at least one hole
 nbr_choices: The number of choices must be greater than two
 need Correction: The red questions need correction
 never: Never

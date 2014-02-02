@@ -40,7 +40,7 @@
         <h3 class="panel-title">{{ 'hole creation' | trans }}</h3>
     </div>
 
-    <form action="{{ path('ujm_interactionhole_create') }}" method="post" {{ form_enctype(form) }} novalidate>
+    <form onsubmit="return check_form('{{ 'nb_hole' | trans }}')" action="{{ path('ujm_interactionhole_create') }}" method="post" {{ form_enctype(form) }}>
         <div class="panel-body">
             {% include "UJMExoBundle:Partial:question.html.twig" %}
             
@@ -68,9 +68,7 @@
                         <div class="panel-body">
                             <div id="Instructions" class="alert alert-info">
                                 <a class="close" onclick="HideInstruction();">&times;</a>
-                                <p>TODO : translation</p>
-                                <p>Pour créer un trou, selectionnez le texte à trouer dans l'éditeur "Texte à trous", puis cliquer sur le bouton "Créer un blanc".</p>
-                                <hr/>
+                                <p>{{ 'instruction add hole' | trans }}</p>
                             </div>
                             </br>
                             <a id="create_hole" class="btn btn-primary" onclick="createHole();">
