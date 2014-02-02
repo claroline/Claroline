@@ -169,6 +169,7 @@ isInterupt: Interupted
 image: Image
 import: Import
 import questions: Import questions
+instruction add hole : To add a blank, you must select the text in the editor "Text with hole", then click on the button "Create hole".
 interactionGraphic creation: InteractionGraphic creation
 interactionGraphic Edition: InteractionGraphic Edition
 interactionOpen creation: interactionOpen creation
@@ -410,7 +411,7 @@ Inter_QCM.ScoreFalseResponse: Points for wrong answer
 Inter_QCM.shuffle: Order of random selection
 Inter_QCM.weightChoice: Assign points by response
 
-Inter_Hole.html: Cloze
+Inter_Hole.html: Text with hole
 Inter_Hole.orthography: Allow misspellings
 Inter_Hole.score: Score
 Inter_Hole.size: Size
