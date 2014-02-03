@@ -6,4 +6,4 @@ badge_automatic_awarding_need_rules: 'Awarding rules should have been defined to
 badge_need_at_least_one_translation: 'At least one entire translation must be define on the badge'
 badge_need_image: 'An image must be define on the badge'
 password_mismatch: 'Passwords mismatch'
-special_char_not_allowed: 'Special characters are not allowed.'
+special_char_not_allowed: 'Special characters are not allowed (authorized characters are: a-z, A-Z, 0-9, _ and .)'
