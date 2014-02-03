@@ -232,7 +232,7 @@
 
                                         <div id="Answer" style="position: relative;">
                                             <img src="{{asset (interG.document.url)}}" width="{{ interG.width }}" height="{{ interG.height }}"
-                                                alt="AnswerImage" id="AnswerImage{{ interaction.id }}"/>
+                                                alt="AnswerImage" id="AnswerImage{{ interG.interaction.id }}"/>
 
                                             {% set repco = responses[p].response|split(';') %}
                                             {% set x = 0 %}
@@ -243,16 +243,16 @@
                                                 {% set numb = coords[x].value|split(',') %}
                                                 {% set repcoX = repco[x]|split('-') %}
 
-                                                <img src="{{ asset('bundles/ujmexo/images/graphic/circlew.png') }}" id="{{ interaction.id }}ra{{ x }}"
+                                                <img src="{{ asset('bundles/ujmexo/images/graphic/circlew.png') }}" id="{{ interG.interaction.id }}ra{{ x }}"
                                                      alt="RightAnswer{{ x }}" width="{{ coords[x].size }}"/>
 
-                                                <img src="{{ asset('bundles/ujmexo/images/graphic/answer.png') }}" id="{{ interaction.id }}cursor{{ x }}"
+                                                <img src="{{ asset('bundles/ujmexo/images/graphic/answer.png') }}" id="{{ interG.interaction.id }}cursor{{ x }}"
                                                      alt="AnswerZone{{ x }}"/>
 
                                                 <script type="text/javascript">
                                                     whichImg('{{coords[x].shape}}', '{{coords[x].color}}', {{x}}, '{{ numb[0] }}', '{{ numb[1] }}',
                                                     '{{repcoX[0]}}', '{{repcoX[1]}}', '{{ asset('bundles/ujmexo/images/graphic/') }}',
-                                                    '{{ coords[x].size }}', '{{interaction.id}}')
+                                                    '{{ coords[x].size }}', '{{interG.interaction.id}}')
                                                 </script>
 
                                                 {% set x = x + 1 %}
@@ -281,7 +281,6 @@
                                         <br/>
                                         {{ 'mark' | trans }} : {{ responses[p].mark }} / {{ maxScore }}
 
-                                        {% set point = responses[p].mark + hv.hint.penalty %}
                                     </div>
                                 </div>
                             </div>
