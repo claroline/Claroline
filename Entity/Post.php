@@ -6,6 +6,7 @@ use Claroline\CoreBundle\Entity\User;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
+use Icap\BlogBundle\Utils\String;
 
 /**
  * @ORM\Table(name="icap__blog_post")
@@ -118,6 +119,7 @@ class Post extends Statusable
      * Set title
      *
      * @param  string $title
+     *
      * @return Post
      */
     public function setTitle($title)
@@ -141,6 +143,7 @@ class Post extends Statusable
      * Set content
      *
      * @param  string $content
+     *
      * @return Post
      */
     public function setContent($content)
@@ -161,9 +164,22 @@ class Post extends Statusable
     }
 
     /**
+     * @param string $url
+     * @param string $text
+     *
+     * @return string
+     */
+    public function getShortContent($url, $text)
+    {
+        $readMoreText = sprintf('... <a href="%s" class="read_more">%s <span class="icon-long-arrow-right"></span></a>', $url, $text);
+        return String::resumeHtml($this->content, 400, $readMoreText);
+    }
+
+    /**
      * Set slug
      *
      * @param  string $slug
+     *
      * @return Post
      */
     public function setSlug($slug)
@@ -187,6 +203,7 @@ class Post extends Statusable
      * Set creationDate
      *
      * @param  \DateTime $creationDate
+     *
      * @return Post
      */
     public function setCreationDate($creationDate)
@@ -210,6 +227,7 @@ class Post extends Statusable
      * Set modificationDate
      *
      * @param  \DateTime $modificationDate
+     *
      * @return Post
      */
     public function setModificationDate($modificationDate)
@@ -233,6 +251,7 @@ class Post extends Statusable
      * Set publicationDate
      *
      * @param  \DateTime $publicationDate
+     *
      * @return Post
      */
     public function setPublicationDate($publicationDate)
@@ -256,6 +275,7 @@ class Post extends Statusable
      * Add comments
      *
      * @param  Comment $comments
+     *
      * @return Post
      */
     public function addComment(Comment $comments)
@@ -283,6 +303,7 @@ class Post extends Statusable
      * Set comments
      *
      * @param  ArrayCollection $comments
+     *
      * @return Post
      */
     public function setComments(ArrayCollection $comments)
@@ -311,6 +332,7 @@ class Post extends Statusable
      * Set author
      *
      * @param  User $author
+     *
      * @return Post
      */
     public function setAuthor(User $author = null)
@@ -334,6 +356,7 @@ class Post extends Statusable
      * Set blog
      *
      * @param  Blog $blog
+     *
      * @return Post
      */
     public function setBlog(Blog $blog = null)
@@ -407,7 +430,8 @@ class Post extends Statusable
         $countComments = 0;
 
         if ($countUnpublished) {
-            $countComments = $this->getComments()->count();
+            $countComments = $this->getComments()
+                    ->count();
         } else {
             foreach ($this->getComments() as $comment) {
                 if ($comment->isPublished()) {
@@ -428,7 +452,9 @@ class Post extends Statusable
 
         $currentTimestamp = time();
 
-        if ($isStatusPublished && (null !== $this->publicationDate && $currentTimestamp >= $this->publicationDate->getTimestamp())) {
+        if ($isStatusPublished && (null !== $this->publicationDate && $currentTimestamp >= $this->publicationDate->getTimestamp(
+                        ))
+        ) {
             return true;
         }
 

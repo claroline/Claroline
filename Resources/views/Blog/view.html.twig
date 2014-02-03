@@ -27,7 +27,7 @@
 
             {% include 'IcapBlogBundle:Post:postHeader.html.twig' with {'mode': 'blog_view'} %}
 
-            <div class="content">{{ post.content|raw }}</div>
+            <div class="content">{{ post.shortContent(path('icap_blog_post_view', {'blogId': _resource.id, 'postSlug': post.slug}), 'read_more'|trans)|raw }}</div>
 
             {% include 'IcapBlogBundle:Post:postFooter.html.twig' with {'mode': 'blog_view'} %}
         </article>
