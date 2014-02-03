@@ -25,7 +25,8 @@ if (!$maintenanceMode || $authorized) {
     $kernel = new AppKernel('prod', false);
     $kernel->loadClassCache();
     $kernel->handle($request)->send();
-    $kernel->terminate($request, $response);
+    //$kernel->terminate($request, $response);
 } else {
-    header('Location:maintenance.html');
+    $url = $_SERVER['HTTP_HOST'] . '/' . $_SERVER['SCRIPT_NAME'] . '/../maintenance.html';
+    header("Location: http://{$url}");
 }
