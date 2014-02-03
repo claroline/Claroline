@@ -545,30 +545,18 @@ class ParametersController extends Controller
      */
     public function indexingAction()
     {
-        return array(
-            'form' => $this->formFactory->create(
-                new AdminForm\IndexingType(), $this->configHandler
-            )->createView()
-        );
-    }
+        $form = $this->formFactory->create(new AdminForm\IndexingType(), $this->configHandler->getPlatformConfig());
 
-    /**
-     * @Route(
-     *     "/indexing/submit",
-     *     name="claro_admin_parameters_submit_indexing"
-     * )
-     *
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse
-     */
-    public function submitIndexingAction()
-    {
-        $indexing = $this->request->get('indexing_form');
+        if ($this->request->getMethod() == 'POST') {
+            $form->handleRequest($this->request);
 
-        if (isset($indexing['google']) and isset($indexing['google']) != "") {
-            $this->configHandler->setParameter('google_meta_tag', $indexing['google']);
+            if ($form->isValid()) {
+                $this->configHandler->setParameter('google_meta_tag', $form['google_meta_tag']->getData());
+                return $this->redirect($this->generateUrl('claro_admin_index'));
+            }
         }
 
-        return $this->redirect($this->generateUrl('claro_admin_index'));
+        return array('form' => $form->createView());
     }
 
     /**

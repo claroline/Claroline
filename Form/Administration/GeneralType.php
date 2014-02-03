@@ -40,6 +40,8 @@ class GeneralType extends AbstractType
                 'description',
                 'content',
                 array(
+                    'mapped' => false,
+                    'required' => false,
                     'label' => 'Description',
                     'theme_options' => array('contentTitle' => false, 'tinymce' => false)
                 )

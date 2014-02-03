@@ -20,11 +20,9 @@ class IndexingType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add(
-            'google',
+            'google_meta_tag',
             'text',
             array(
-                'data' => $builder->getData()->getParameter('google_meta_tag'),
-                'mapped' => false,
                 'label' => 'Google HTML tag validation'
             )
         );
