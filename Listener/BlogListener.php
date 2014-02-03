@@ -9,6 +9,9 @@ use Claroline\CoreBundle\Event\DeleteResourceEvent;
 use Claroline\CoreBundle\Event\OpenResourceEvent;
 use Symfony\Component\DependencyInjection\ContainerAware;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Icap\BlogBundle\Form\BlogType;
+use Icap\BlogBundle\Entity\Blog;
+use Icap\BlogBundle\Entity\Comment;
 
 class BlogListener extends ContainerAware
 {
@@ -17,8 +20,8 @@ class BlogListener extends ContainerAware
      */
     public function onCreateForm(CreateFormResourceEvent $event)
     {
-        $form = $this->container->get('form.factory')->create(new BlogType(), new Blog());
-        $content = $this->container->get('templating')->render(
+        $form        = $this->container->get('form.factory')->create(new BlogType(), new Blog());
+        $content     = $this->container->get('templating')->render(
             'ClarolineCoreBundle:Resource:createForm.html.twig',
             array(
                 'form' => $form->createView(),
@@ -35,7 +38,7 @@ class BlogListener extends ContainerAware
     public function onCreate(CreateResourceEvent $event)
     {
         $request = $this->container->get('request');
-        $form = $this->container->get('form.factory')->create(new BlogType(), new Blog());
+        $form    = $this->container->get('form.factory')->create(new BlogType(), new Blog());
         $form->bind($request);
 
         if ($form->isValid()) {
