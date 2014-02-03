@@ -11,14 +11,13 @@
 namespace Claroline\CoreBundle\Library\Installation\Updater;
 
 
-class MaintenancePageUpdater {
-
+class MaintenancePageUpdater
+{
     private $baseFile;
     private $displayedFile;
 
     public function __construct($rootDir)
     {
-        $ds = DIRECTORY_SEPARATOR;
         $this->baseFile = "{$rootDir}/../vendor/claroline/core-bundle/Claroline/CoreBundle/Resources/views/Maintenance/maintenance.html";
         $this->displayedFile = "{$rootDir}/../web/maintenance.html";
     }

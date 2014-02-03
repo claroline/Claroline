@@ -166,7 +166,7 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
      * @ORM\OneToOne(
      *     targetEntity="Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace"
      * )
-     * @ORM\JoinColumn(name="workspace_id", onDelete="CASCADE")
+     * @ORM\JoinColumn(name="workspace_id", onDelete="SET NULL")
      */
     protected $personalWorkspace;
 
