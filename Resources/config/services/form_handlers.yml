@@ -1,8 +1,8 @@
 services: 
     # AbstractPath handler
-    innova_path.form.handler.abstract_path:
+    innova_path.form.handler.abstract:
         abstract: true
-        class: %innova_path.form.handler.abstract_path.class%
+        class: %innova_path.form.handler.abstract.class%
         calls:
             - [setRequest, [@request]]
 
@@ -16,7 +16,7 @@ services:
     # PathTemplate handler
     innova_path.form.handler.path_template:
         class: %innova_path.form.handler.path_template.class%
-        parent: innova_path.form.handler.abstract_path
+        parent: innova_path.form.handler.abstract
         arguments: [@innova_path.manager.path_template]
         scope: request
 

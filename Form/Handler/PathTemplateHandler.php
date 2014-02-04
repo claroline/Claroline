@@ -7,7 +7,7 @@ use Innova\PathBundle\Manager\PathTemplateManager;
 /**
  * Handles path template form
  */
-class PathTemplateHandler extends AbstractPathHandler
+class PathTemplateHandler extends AbstractHandler
 {
     /**
      * Path manager

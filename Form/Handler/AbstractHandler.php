@@ -8,7 +8,7 @@ use Symfony\Component\HttpFoundation\Request;
 /**
  * Handles path form
  */
-abstract class AbstractPathHandler
+abstract class AbstractHandler
 {
     /**
      * Current data of the form

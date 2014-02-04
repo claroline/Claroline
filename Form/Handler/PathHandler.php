@@ -7,7 +7,7 @@ use Innova\PathBundle\Manager\PathManager;
 /**
  * Handles path form
  */
-class PathHandler extends AbstractPathHandler
+class PathHandler extends AbstractHandler
 {
     /**
      * Path manager

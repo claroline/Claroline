@@ -22,8 +22,8 @@ parameters:
     innova_path.form.type.step.class: Innova\PathBundle\Form\Type\StepType
     
     # Form handlers
-    innova_path.form.handler.abstract_path.class:        Innova\PathBundle\Form\Handler\AbstractPathHandler
+    innova_path.form.handler.abstract.class:             Innova\PathBundle\Form\Handler\AbstractPathHandler
     innova_path.form.handler.path.class:                 Innova\PathBundle\Form\Handler\PathHandler
     innova_path.form.handler.path_template.class:        Innova\PathBundle\Form\Handler\PathTemplateHandler
     innova_path.form.handler.non_digital_resource.class: Innova\PathBundle\Form\Handler\NonDigitalResourceHandler
-    innova_path.form.handler.step.class: Innova\PathBundle\Form\Handler\StepHandler
+    innova_path.form.handler.step.class:                 Innova\PathBundle\Form\Handler\StepHandler
