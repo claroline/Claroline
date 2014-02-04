@@ -123,11 +123,16 @@ class Manager
         $doerId = null;
 
         if ($doer === null) {
-            $doer = $this->security->getToken()->getUser();
+            $securityToken = $this->security->getToken();
+
+            if (null !== $securityToken) {
+                $doer = $securityToken->getUser();
+            }
         }
         if ($doer !== null) {
             $doerId = $doer->getId();
         }
+
         if (!isset($details['doer']) && !empty($doerId)) {
             $details['doer'] = array(
                 'id' => $doerId,
