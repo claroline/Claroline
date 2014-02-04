@@ -3,6 +3,7 @@
     "description": "Notification bundle for Claroline Connect. See https://github.com/claroline/Claroline",
     "keywords": ["Claroline", "Notification", "ICAP"],
     "homepage": "http://www.claroline.net",
+    "type": "claroline-core",
     "authors": [
         {
             "name": "ICAP development team",
