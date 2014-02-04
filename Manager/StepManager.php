@@ -187,4 +187,32 @@ class StepManager
         
         return $stepWheres;
     }
+
+	public function contextualUpdate($step)
+    {
+        $path = $step->getPath();
+        $json = json_decode($path->getStructure());
+        $json_root_steps = $json->steps;
+
+        $this->findAndUpdateJsonStep($json_root_steps, $step);
+
+        $json = json_encode($json);
+        $path->setStructure($json);
+       
+        $this->om->persist($path);
+        $this->om->persist($step);
+        $this->om->flush();
+    }
+
+    public function findAndUpdateJsonStep($jsonSteps, $step){
+        foreach($jsonSteps as $jsonStep){
+            echo $jsonStep->resourceId;
+            if($jsonStep->resourceId == $step->getId()){
+                $jsonStep->description = $step->getDescription();
+            }
+            elseif(!empty($jsonStep->children)) {
+                $this->findAndUpdateJsonStep($jsonStep->children, $step);
+            }
+        }
+    }
 }

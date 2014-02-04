@@ -30,8 +30,25 @@ services:
     # Player controller
     innova_path.controller.path_player:
         class: %innova_path.controller.path_player.class%
+        arguments:
+            session:     @session
+            translator:  @translator
         calls:
           - [setContainer, ["@service_container"]]
+
+    # Contextual Editor controller
+    innova_path.controller.path_contextual_editor:
+        class: %innova_path.controller.contextual_editor.class%
+        calls:
+          - [setContainer, ["@service_container"]]
+        arguments:
+            securityContext: @security.context
+            router:      @router
+            formFactory: @form.factory
+            session:     @session
+            translator:  @translator
+            stepHandler: @innova_path.form.handler.step
+        scope: request
           
     # Editor controller
     innova_path.controller.path_editor:

@@ -2,10 +2,13 @@
 
 namespace Innova\PathBundle\Controller;
 
+use Symfony\Component\Form\FormBuilderInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Component\Translation\TranslatorInterface;
 
 use Innova\PathBundle\Entity\Path\Path;
 use Innova\PathBundle\Entity\Step;
@@ -22,8 +25,35 @@ use Symfony\Component\DependencyInjection\ContainerAware;
  *      service="innova_path.controller.path_player"
  * )
  */
-class PlayerController extends ContainerAware
+class PlayerController extends ContainerAware 
 {
+    /**
+     * Translator engine
+     * @var \Symfony\Component\Translation\TranslatorInterface
+     */
+    protected $translator;
+
+    /**
+     * Session
+     * @var \Symfony\Component\HttpFoundation\Session\SessionInterface
+     */
+    protected $session;
+
+    /**
+     * Class constructor
+     * @param \Symfony\Component\Routing\RouterInterface   $router
+     * @param \Symfony\Component\Form\FormFactoryInterface $formFactory
+     * @param \Innova\PathBundle\Form\Handler\StepHandler  $stepHandler
+     */
+    public function __construct(
+        SessionInterface     $session,
+        TranslatorInterface  $translator)
+    {
+        $this->session     = $session;
+        $this->translator  = $translator;
+    }
+
+
     /**
      * Display path player
      * @param  Path $path
@@ -46,7 +76,8 @@ class PlayerController extends ContainerAware
         return array (
             'workspace' => $workspace,
             'path' => $path,
-            'currentStep' => $currentStep
+            'currentStep' => $currentStep,
+            'edit' => false,
         );
     }
     
@@ -165,13 +196,16 @@ class PlayerController extends ContainerAware
      * @Method("GET")
      * @Template("InnovaPathBundle:Player:components/current-step.html.twig")
      */
-    public function displayCurrentStepAction(AbstractWorkspace $workspace, Path $path, Step $currentStep)
+    public function displayCurrentStepAction(AbstractWorkspace $workspace, Path $path, Step $currentStep, $edit)
     {
-
+        $form = $this->container->get('form.factory')->create('innova_step', $currentStep, array ('method' => 'POST', 'action' => $this->container->get('router')->generate('innova_path_save_current_step', array( 'stepId' => $currentStep->getId(),'workspaceId' => $workspace->getId(),'pathId' => $path->getId()))));
+        
         return array (
             'workspace' => $workspace,
             'path' => $path,
             'currentStep' => $currentStep,
+            'edit' => $edit,
+            'form' => $form->createView()
         );
     }
 }

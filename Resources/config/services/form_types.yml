@@ -23,3 +23,9 @@ services:
         class: %innova_path.form.type.non_digital_resource.class%
         tags:
           - { name: form.type, alias: innova_non_digital_resource }
+          
+    # Step type
+    innova_path.form.type.step:
+        class: %innova_path.form.type.step.class%
+        tags:
+          - { name: form.type, alias: innova_step }

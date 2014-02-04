@@ -1,6 +1,7 @@
 {% import 'InnovaPathBundle::Player/components/macros.html.twig' as macros %}
 
-{# Gestion des ressources héritées #}
+{# Affichage des boutons #}
+
 {% set allParents = currentStep.getParents() %}
 {% for parent in allParents %}
 	{% for resource in parent.step2ResourceNodes if resource.propagated == true %}
@@ -9,13 +10,31 @@
 				{% set thisResourceIsExcluded = true %}
 		{% endfor %}
 		{% if thisResourceIsExcluded == false %}
-			{{ macros.displayResource(resource, parent) }}
+			{{ macros.displayResourceButton(resource, parent) }}
 		{% endif %}
 	{% endfor %}
 {% endfor %}
 
-{# Gestion des ressources locales #}
 {% for resource in currentStep.step2ResourceNodes if resource.excluded == false %}
-		{{ macros.displayResource(resource, currentStep) }}
+		{{ macros.displayResourceButton(resource, currentStep) }}
 {% endfor %}
 
+{# Affichage des Frames #}
+<div class="panel-group" id="resources-panel-group">
+{% set allParents = currentStep.getParents() %}
+{% for parent in allParents %}
+	{% for resource in parent.step2ResourceNodes if resource.propagated == true %}
+		{% set thisResourceIsExcluded = false %}
+		{% for resourceCurrentStep in currentStep.step2ResourceNodes if resourceCurrentStep.excluded == true and resourceCurrentStep.resourceNode == resource.resourceNode %}
+				{% set thisResourceIsExcluded = true %}
+		{% endfor %}
+		{% if thisResourceIsExcluded == false %}
+			{{ macros.displayResourceFrame(resource, parent) }}
+		{% endif %}
+	{% endfor %}
+{% endfor %}
+
+{% for resource in currentStep.step2ResourceNodes if resource.excluded == false %}
+		{{ macros.displayResourceFrame(resource, currentStep) }}
+{% endfor %}
+</div>

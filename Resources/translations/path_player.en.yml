@@ -9,3 +9,8 @@ history: History
 my_favorites: My favorites
 
 next_step: Next steps
+
+save_success: The step has been saved
+save_warning: A problem occured while saving step 
+save_already_modified: The path has already pending changes
+save_warning_not_owner: You don't have permission to edit this path
