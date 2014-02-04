@@ -2,10 +2,6 @@
 
 /**
  * History Factory
- * 
- * @todo remove reference to $rootScope
- * @todo replace jQuery.extend function by native js function
- * @todo remove dependence to path factory
  */ 
 function HistoryFactory($rootScope, PathFactory) {
     // Is redo function is disabled ?

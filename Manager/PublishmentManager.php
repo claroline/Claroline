@@ -4,7 +4,6 @@ namespace Innova\PathBundle\Manager;
 
 use Doctrine\Common\Persistence\ObjectManager;
 
-use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Innova\PathBundle\Entity\Path\Path;
 use Innova\PathBundle\Entity\Step;
 
@@ -159,10 +158,7 @@ class PublishmentManager
     {
         $currentOrder = 0;
         $processedSteps = array();
-    
-        // All resources of the path
-        $pathResources = array ();
-    
+        
         // Retrieve existing steps for this path
         $existingSteps = $this->path->getSteps();
         foreach ($steps as $stepStructure) {

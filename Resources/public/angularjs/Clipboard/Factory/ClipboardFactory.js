@@ -2,9 +2,6 @@
 
 /**
  * Clipboard Factory
- * 
- * @todo remove reference to $rootScope
- * @todo remove dependence to path factory
  */
 function ClipboardFactory($rootScope, PathFactory) {
     // Clipboard content
@@ -50,7 +47,6 @@ function ClipboardFactory($rootScope, PathFactory) {
          * 
          * @param step
          * @returns ClipboardFactory
-         * @todo modify reference to resources in array excludedResources
          */
         paste: function(step) {
             if (null !== clipboard) {

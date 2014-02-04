@@ -26,10 +26,6 @@ class PathTemplateHandler extends AbstractHandler
     
     public function create()
     {
-        // Retrieve current Workspace
-        $workspaceId = $this->request->get('workspaceId');
-        $workspace = $this->pathTemplateManager->getWorkspace($workspaceId);
-        
         $this->pathTemplateManager->create($this->data);
         
         return true;

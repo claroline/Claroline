@@ -34,9 +34,6 @@ class InnovaPathExtension extends Extension
         $loader->load('form_types.yml');
         $loader->load('form_handlers.yml');
         $loader->load('twig.yml');
-    
-        // Compile container
-//         $container->compile();
         
         return $this;
     }
