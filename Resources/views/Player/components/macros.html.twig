@@ -1,8 +1,17 @@
-{% macro displayResource(resource, step) %}
-        <a class="btn btn-default player-tab" target="_blank" href="{{ path('claro_resource_open', {'node': resource.resourceNode.id, 'resourceType': resource.resourceNode.resourceType.name }) }}" > 
+{% macro displayResourceButton(resource, step) %}
+    <li class="resource-tab">
+        <a href="#resource-tab-{{ resource.resourceNode.id }}" data-toggle="tab">
             <span rel="tooltip" data-original-title="{{ step.name }}" class="lvl-{{ step.lvl + 1 }} lvl-indicator">&nbsp;</span>
-            <span rel="tooltip" data-original-title="{{ resource.resourceNode.name }}">{{ resource.resourceNode.name }}</span>
+            {{ resource.resourceNode.name }}
         </a>
+    </li>
+{% endmacro %}
+
+{% macro displayResourceFrame(resource, step) %}
+    <div class="tab-pane" id="resource-tab-{{ resource.resourceNode.id }}">
+        <iframe seamless width="100%" class="resource-frame" data-resource-src="{{ path('claro_resource_open', {'node': resource.resourceNode.id, 'resourceType': resource.resourceNode.resourceType.name }) }}" src="">
+        </iframe>
+    </div>
 {% endmacro %}
 
 {% macro displayTreeItem(item, parents, currentStep, path, workspace) %}

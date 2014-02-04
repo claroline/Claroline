@@ -15,8 +15,6 @@ use Innova\PathBundle\Entity\Path;
 class PathListener extends ContainerAware
 {
 
-
-
     public function onPathOpen(OpenResourceEvent $event)
     {
         $path = $event->getResource();

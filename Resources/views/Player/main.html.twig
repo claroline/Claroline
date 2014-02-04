@@ -6,7 +6,6 @@
     <link rel="stylesheet" media="screen" href="{{ asset('bundles/innovapath/css/Player/breadcrumbs.css') }}"/>
 	<link rel="stylesheet" media="screen" href="{{ asset('bundles/innovapath/css/Player/petit-poucet.css') }}"/>
     <link rel="stylesheet" media="screen" href="{{ asset('bundles/innovapath/css/Player/resources.css') }}"/>
-    <link rel="stylesheet" media="screen" href="{{ asset('bundles/innovapath/css/Player/current-step.css') }}"/>
     <link rel="stylesheet" media="screen" href="{{ asset('bundles/innovapath/css/Player/tree-browser.css') }}"/>
 {% endblock %}
 
@@ -53,13 +52,7 @@
     {% if currentStep == path.getRootStep %}
             {% include 'InnovaPathBundle::Player/components/alerts.html.twig' %}
     {% endif %}
-
-    <div class="row resources">
-        <div class="col-md-12">
-            {{ render(controller('innova_path.controller.path_player:displayResourcesAction', { 'currentStep': currentStep } )) }}
-        </div>
-    </div>
-
+    
     <div class="content row">
         {# Contenu de l'étape #}
         <div class="current-step col-md-12">
