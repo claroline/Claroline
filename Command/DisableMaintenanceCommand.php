@@ -11,24 +11,21 @@
 
 namespace Claroline\CoreBundle\Command;
 
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Claroline\CoreBundle\Library\Maintenance\MaintenanceHandler;
 
-class RefreshCommand extends ContainerAwareCommand
+class DisableMaintenanceCommand extends ContainerAwareCommand
 {
     protected function configure()
     {
-        $this->setName('claroline:refresh')
-            ->setDescription('Installs/dumps the assets and empties the cache.');
+        $this->setName('claroline:maintenance:disable')
+            ->setDescription('Disable maintenance mode');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $refresher = $this->getContainer()->get('claroline.installation.refresher');
-        $refresher->setOutput($output);
-        $refresher->refresh($input->getOption('env'));
         MaintenanceHandler::disableMaintenance();
     }
 }

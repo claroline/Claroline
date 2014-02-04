@@ -36,6 +36,15 @@ class Updater020900
 
         //ignore the foreign keys for mysql
         $this->conn->query('truncate table claro_badge_rule');
+        $this->log('Refreshing web folder...');
+        $rootDir = $this->container->getParameter('kernel.root_dir');
+        $baseApp = "{$rootDir}/../vendor/claroline/core-bundle/Claroline/CoreBundle/Resources/web/app.php";
+        $webApp = "{$rootDir}/../web/app.php";
+        if (file_exists($webApp)) {
+            unlink($webApp);
+        }
+
+        copy($baseApp, $webApp);
     }
 
     public function postUpdate()

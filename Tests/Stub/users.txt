@@ -5,5 +5,5 @@ firstname4,lastname4,username4,password4,email4@claroline.net,code4
 firstname5,lastname5,username5,password5,ClaudiaTortelloni@claroline.net,code5
 Stéphane,Klein,stefk,stefk,stefk@claroline.net,stefk
 Nicolas,Fougère,fougeman,fougeman,nicolas.godfraind@gmail.com,fou
-Esdras,Ngongo,easyes,easyes,esdras@claroline.net,esdras
+Esdrôs,Ngongo,easyes,easyes,esdras@claroline.net,esdras
 Jorge,Solis,colombo,colombe,jorge@drugstore.com,drugman
