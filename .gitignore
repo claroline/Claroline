@@ -26,3 +26,4 @@ web/themes/*
 web/thumbnails/*
 web/uploads/*
 web/vendor/*
+web/maintenance.html

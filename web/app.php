@@ -1,8 +1,5 @@
 <?php
 
-use Symfony\Component\ClassLoader\ApcClassLoader;
-use Symfony\Component\HttpFoundation\Request;
-
 $loader = require_once __DIR__.'/../app/bootstrap.php.cache';
 
 // Use APC for autoloading to improve performance.
@@ -15,16 +12,21 @@ $apcLoader->register(true);
 */
 
 require_once __DIR__.'/../app/AppKernel.php';
-//require_once __DIR__.'/../app/AppCache.php';
 
-$kernel = new AppKernel('prod', false);
-$kernel->loadClassCache();
-//$kernel = new AppCache($kernel);
+$maintenanceMode = file_exists(__DIR__ . '/../app/config/.update');
 
-// When using the HttpCache, you need to call the method in your front controller instead of relying on the
-// configuration parameter
-// Request::enableHttpMethodParameterOverride();
-$request = Request::createFromGlobals();
-$response = $kernel->handle($request);
-$response->send();
-$kernel->terminate($request, $response);
+$clientIp = $_SERVER['REMOTE_ADDR'];
+$fileip = __DIR__ . '/../app/config/ips';
+$authorizedIps = file($fileip, FILE_IGNORE_NEW_LINES);
+$authorized = in_array($clientIp, $authorizedIps);
+
+if (!$maintenanceMode || $authorized) {
+    $request = \Symfony\Component\HttpFoundation\Request::createFromGlobals();
+    $kernel = new AppKernel('prod', false);
+    $kernel->loadClassCache();
+    $kernel->handle($request)->send();
+    //$kernel->terminate($request, $response);
+} else {
+    $url = $_SERVER['HTTP_HOST'] . $_SERVER['SCRIPT_NAME'] . '/../maintenance.html';
+    header("Location: http://{$url}");
+}
