@@ -44,7 +44,19 @@ class BaseContentType extends BaseType
         }
 
         $builder->add('title', 'text', array('mapped' => false, 'data' => $title));
-        $builder->add('content', 'tinymce', array('mapped' => false, 'data' => $content));
+        if (isset($options['theme_options']['tinymce']) and !$options['theme_options']['tinymce']) {
+            $builder->add(
+                'content',
+                'textarea',
+                array(
+                    'attr' => array('class' => 'form-control', 'rows' => '3'),
+                    'mapped' => false,
+                    'data' => $content
+                )
+            );
+        } else {
+            $builder->add('content', 'tinymce', array('mapped' => false, 'data' => $content));
+        }
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)

@@ -1,6 +1,6 @@
 {% extends "ClarolineCoreBundle:Administration:layout.html.twig" %}
 
-{% block title %}{{ parent() ~ ' - ' ~ 'general' | trans({}, 'platform') | striptags | raw }}{% endblock %}
+{% block title %}{{ parent() ~ ' - ' ~ 'Indexing' | trans({}, 'platform') | striptags | raw }}{% endblock %}
 
 {% block breadcrumb %}
     {{
@@ -15,7 +15,7 @@
                 'href': path('claro_admin_index')
             },
             {
-            'name': 'general'|trans({}, 'platform'),
+            'name': 'Indexing'|trans({}, 'platform'),
             'href': ''
             }
         ])
@@ -24,11 +24,17 @@
 
 {% block section_content %}
     <div class="panel-heading">
-        <h3 class="panel-title">{{ 'general'|trans({}, 'platform') }}</h3>
+        <h3 class="panel-title">{{ 'Indexing'|trans({}, 'platform') }}</h3>
     </div>
-    <form class="form-horizontal" action="{{path('claro_admin_edit_parameters_general')}}" method="post" {{ form_enctype(form_settings) }} id="form_settings" enctype='multipart/form-data'>
+    <form class="form-horizontal" action="{{path('claro_admin_parameters_indexing')}}"
+          method="post" {{ form_enctype(form) }}>
         <div class="panel-body">
-            {{ form_widget(form_settings) }}
+            {{ form_widget(form) }}
+            <div class="row">
+                <div class="col-md-9 col-md-offset-3 text-muted">
+                    {{ 'Paste here the meta tag provides by Google Webmaster' | trans({}, 'platform') }}
+                </div>
+            </div>
         </div>
         <div class="panel-footer">
             <button type="submit" class="btn btn-primary">{{ 'ok'|trans({}, 'platform') }}</button>
@@ -38,3 +44,4 @@
         </div>
     </form>
 {% endblock %}
+

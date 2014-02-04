@@ -15,25 +15,24 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
-class MailInscriptionType extends AbstractType
+class IndexingType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add(
-            'content',
-            'content',
+            'google_meta_tag',
+            'text',
             array(
-                'data' => $builder->getData()
+                'label' => 'Google HTML tag validation'
             )
         );
-
     }
 
     public function getName()
     {
-        return 'platform_parameters_form';
+        return 'indexing_form';
     }
-    
+
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(array('translation_domain' => 'platform'));
