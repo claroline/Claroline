@@ -3,6 +3,7 @@
 namespace Innova\PathBundle\Manager;
 
 use Doctrine\Common\Persistence\ObjectManager;
+use Innova\PathBundle\Entity\Path\PathTemplate;
 
 /**
  * Path templates Manager
@@ -49,7 +50,7 @@ class PathTemplateManager
         return $templates;
     }
     
-    public function create($pathTemplate)
+    public function create(PathTemplate $pathTemplate)
     {
         $this->om->persist($pathTemplate);
         $this->om->flush();

@@ -138,7 +138,7 @@ class PlayerController extends ContainerAware
             $lastStepId = key( $history[$path->getId()][0] );
         }
 
-        if(!isset($lastStepId) or $lastStepId != $currentStep->getId()){
+        if(!isset($lastStepId) || $lastStepId != $currentStep->getId()){
             array_unshift($history[$path->getId()], array($currentStep->getId() => array("name" => $currentStep->getName(), "level" => $currentStep->getLvl())));
         }
 
