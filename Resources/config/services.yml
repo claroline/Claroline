@@ -27,3 +27,13 @@ services:
         factory_method:  getRepository
         arguments:
             - Claroline\CoreBundle\Entity\Badge\Badge
+
+    #notification listeners
+    claroline.listener.core.notification_listener:
+        class: Claroline\CoreBundle\Listener\Notification\NotificationListener
+        calls:
+            - [setContainer, ["@service_container"]]
+        tags:
+            - { name: kernel.event_listener, event: create_notification_item_workspace-role-change_right, method: onCreateNotificationItem }
+            - { name: kernel.event_listener, event: create_notification_item_workspace-role-subscribe_user, method: onCreateNotificationItem }
+            - { name: kernel.event_listener, event: create_notification_item_workspace-role-subscribe_group, method: onCreateNotificationItem }
