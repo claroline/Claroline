@@ -72,8 +72,14 @@
         </div>
         <div class="hidden-xs">
             <div class="hide">
-                <div id="left-bar">
+                <div id="left-bar" class="sidebar">
                     {% block leftbar %}{% endblock %}
+                </div>
+            </div>
+            
+            <div class="hide">
+                <div id="right-bar" class="sidebar">
+                    {% block rightbar %}{% endblock %}
                 </div>
             </div>
         </div>
@@ -137,7 +143,7 @@
         '../vendor/twbs/bootstrap/js/tooltip.js'
         '../vendor/twbs/bootstrap/js/popover.js'
         '../vendor/twbs/bootstrap/js/affix.js'
-        '../vendor/claroline/core-bundle/Claroline/CoreBundle/Resources/public/js/leftbar.js'
+        '../vendor/claroline/core-bundle/Claroline/CoreBundle/Resources/public/js/sidebar.js'
         '../vendor/claroline/core-bundle/Claroline/CoreBundle/Resources/public/js/topbar.js'
         '../vendor/claroline/core-bundle/Claroline/CoreBundle/Resources/public/js/checkbox-dropdown.js'
         %}<script type="text/javascript" src="{{ asset_url }}"></script>

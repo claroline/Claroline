@@ -369,7 +369,7 @@ class RightsManager
         $uow->computeChangeSets();
         $changeSet = $uow->getEntityChangeSet($rights);
 
-        if (count($changeSet > 0)) {
+        if (count($changeSet) > 0) {
             $this->dispatcher->dispatch(
                 'log',
                 'Log\LogWorkspaceRoleChangeRight',

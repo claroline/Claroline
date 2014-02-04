@@ -186,7 +186,7 @@ class ResourceManager
      * If the name of the resource already exists here, ~*indice* will be happended
      * to its name
      *
-     * @param \Claroline\CoreBundle\Entity\Resource\ResourceNode $resource
+     * @param \Claroline\CoreBundle\Entity\Resource\ResourceNode $node
      * @param \Claroline\CoreBundle\Entity\Resource\ResourceNode $parent
      *
      * @return string
@@ -286,6 +286,8 @@ class ResourceManager
      * Sort an array of serialized resources. The chained list can have some "holes".
      *
      * @param array $nodes
+     *
+     * @throws \Exception
      *
      * @return array
      */
@@ -479,7 +481,7 @@ class ResourceManager
     /**
      * Insert the resource $resource before the target $next.
      *
-     * @param ResourceNode $resource
+     * @param ResourceNode $node
      * @param ResourceNode $next
      *
      * @return ResourceNode
@@ -533,6 +535,8 @@ class ResourceManager
      * @param ResourceNode $child
      * @param ResourceNode $parent
      *
+     * @throws ResourceMoveException
+     *
      * @return ResourceNode
      */
     public function move(ResourceNode $child, ResourceNode $parent)
@@ -561,6 +565,7 @@ class ResourceManager
      */
     public function setLastPosition(ResourceNode $parent, ResourceNode $node)
     {
+        /** @var \Claroline\CoreBundle\Entity\Resource\ResourceNode $lastChild */
         $lastChild = $this->resourceNodeRepo->findOneBy(array('parent' => $parent, 'next' => null));
 
         $node->setPrevious($lastChild);
@@ -827,18 +832,25 @@ class ResourceManager
         $nodes[] = $node;
 
         foreach ($nodes as $node) {
+
             $resource = $this->getResourceFromNode($node);
             /**
              * resChild can be null if a shortcut was removed
              * @todo: fix shortcut delete. If a target is removed, every link to the
-             * target should be removed aswell.
+             * target should be removed too.
              */
             if ($resource !== null) {
-                $event = $this->dispatcher->dispatch(
-                    "delete_{$node->getResourceType()->getName()}",
-                    'DeleteResource',
-                    array($resource)
-                );
+                if ($node->getClass() !== 'Claroline\CoreBundle\Entity\Resource\ResourceShortcut') {
+                    $event = $this->dispatcher->dispatch(
+                        "delete_{$node->getResourceType()->getName()}",
+                        'DeleteResource',
+                        array($resource)
+                    );
+
+                    foreach ($event->getFiles() as $file) {
+                        unlink($file);
+                    }
+                }
 
                 $this->dispatcher->dispatch(
                     "log",
@@ -846,17 +858,13 @@ class ResourceManager
                     array($node)
                 );
 
-                foreach ($event->getFiles() as $file) {
-                    unlink($file);
-                }
-
                 $this->iconManager->delete($node->getIcon());
 
                 /*
                  * If the child isn't removed here aswell, doctrine will fail to remove $resChild
                  * because it still has $resChild in its UnitOfWork or something (I have no idea
                  * how doctrine works tbh). So if you remove this line the suppression will
-                 * not work for direcotry containing children.
+                 * not work for directory containing children.
                  */
                 $this->om->remove($resource);
                 $this->om->remove($node);
@@ -871,7 +879,9 @@ class ResourceManager
     /**
      * Returns an archive with the required content.
      *
-     * @param \Claroline\CoreBundle\Entity\Resource\ResourceNode[] $nodes the nodes being exported
+     * @param array $nodes[] the nodes being exported
+     *
+     * @throws ExportResourceException
      *
      * @return array
      */
@@ -984,7 +994,7 @@ class ResourceManager
      * Gets the relative path between 2 instances (not optimized yet).
      *
      * @param ResourceNode $root
-     * @param ResourceNode $resourceInstance
+     * @param ResourceNode $node
      * @param string       $path
      *
      * @return string
@@ -1047,7 +1057,7 @@ class ResourceManager
         $uow->computeChangeSets();
         $changeSet = $uow->getEntityChangeSet($node);
 
-        if (count($changeSet > 0)) {
+        if (count($changeSet) > 0) {
             $this->dispatcher->dispatch(
                 'log',
                 'Log\LogResourceUpdate',
@@ -1194,7 +1204,7 @@ class ResourceManager
     /**
      * @todo define the array content
      *
-     * @param integer[]
+     * @param array $nodesIds
      *
      * @return array
      */

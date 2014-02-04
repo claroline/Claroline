@@ -11,6 +11,7 @@
 
 namespace Claroline\CoreBundle\Manager;
 
+use Claroline\CoreBundle\Library\Installation\Settings\MailingSettings;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -19,7 +20,8 @@ use Symfony\Component\Translation\Translator;
 use Claroline\CoreBundle\Entity\User;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
-use Claroline\CoreBundle\Entity\Content;
+use Claroline\CoreBundle\Library\CacheWarmerInterface;
+use Claroline\CoreBundle\Event\RefreshCacheEvent;
 
 /**
  * @DI\Service("claroline.manager.mail_manager")
@@ -32,6 +34,7 @@ class MailManager
     private $translator;
     private $container;
     private $ch;
+    private $cacheManager;
     private $contentManager;
 
     /**
@@ -40,8 +43,9 @@ class MailManager
      *     "mailer"         = @DI\Inject("mailer"),
      *     "templating"     = @Di\Inject("templating"),
      *     "ch"             = @DI\Inject("claroline.config.platform_config_handler"),
-     *     "contentManager" = @DI\Inject("claroline.manager.content_manager"),
-     *     "container"      = @DI\Inject("service_container")
+     *     "container"      = @DI\Inject("service_container"),
+     *     "cacheManager"   = @DI\Inject("claroline.manager.cache_manager"),
+     *     "contentManager" = @DI\Inject("claroline.manager.content_manager")
      * })
      */
     public function __construct(
@@ -51,6 +55,7 @@ class MailManager
         Translator $translator,
         PlatformConfigurationHandler $ch,
         ContainerInterface $container,
+        CacheManager $cacheManager,
         ContentManager $contentManager
     )
     {
@@ -60,22 +65,17 @@ class MailManager
         $this->translator = $translator;
         $this->container = $container;
         $this->ch = $ch;
+        $this->cacheManager = $cacheManager;
         $this->contentManager = $contentManager;
     }
+
 
     /**
      * @return boolean
      */
     public function isMailerAvailable()
     {
-        try {
-            $this->mailer->getTransport()->start();
-
-            return true;
-
-        } catch (\Swift_TransportException $e) {
-            return false;
-        }
+        return $this->cacheManager->getParameter('is_mailer_available');
     }
 
     /**
@@ -218,4 +218,16 @@ class MailManager
         return $errors;
     }
 
+    /**
+     * @DI\Observe("refresh_cache")
+     */
+    public function refreshCache(RefreshCacheEvent $event)
+    {
+        try {
+            $this->mailer->getTransport()->start();
+            $event->addCacheParameter('is_mailer_available', true);
+        } catch (\Swift_TransportException $e) {
+            $event->addCacheParameter('is_mailer_available', false);
+        }
+    }
 }

@@ -6,5 +6,5 @@ badge_automatic_awarding_need_rules: 'Des règles d''attribution doivent être d
 badge_need_at_least_one_translation: 'Au moins une traduction complète doit être fournie pour le badge'
 badge_need_image: 'Une image doit être définie sur le badge'
 password_mismatch: 'Les mots de passes ne correspondent pas'
-special_char_not_allowed: 'Les caractères spéciaux ne sont pas autorisés.'
+special_char_not_allowed: 'Les caractères spéciaux ne sont pas autorisés (les caractères autorisés sont : a-z, A-Z, 0-9, _ et .)'
 google_meta_tag_error: 'Le champ doit être une balise meta, exemple: <meta name="google-site-verification" content="XXX" />'

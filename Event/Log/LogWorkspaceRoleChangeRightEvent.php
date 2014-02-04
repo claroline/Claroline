@@ -12,10 +12,14 @@
 namespace Claroline\CoreBundle\Event\Log;
 
 use Claroline\CoreBundle\Event\MandatoryEventInterface;
+use Icap\NotificationBundle\Entity\NotifiableInterface;
 
-class LogWorkspaceRoleChangeRightEvent extends LogGenericEvent implements MandatoryEventInterface
+class LogWorkspaceRoleChangeRightEvent extends LogGenericEvent implements MandatoryEventInterface, NotifiableInterface
 {
     const ACTION = 'workspace-role-change_right';
+    protected $role;
+    protected $changeSet;
+    protected $details;
 
     /**
      * Constructor.
@@ -30,21 +34,25 @@ class LogWorkspaceRoleChangeRightEvent extends LogGenericEvent implements Mandat
      */
     public function __construct($role, $resource, $changeSet)
     {
+        $this->role = $role;
+        $this->changeSet = $changeSet;
+        $this->details = array(
+            'role' => array(
+                'name' => $role->getTranslationKey(),
+                'changeSet' => $changeSet
+            ),
+            'workspace' => array(
+                'name' => $resource->getWorkspace()->getName()
+            ),
+            'resource' => array(
+                'name' => $resource->getName(),
+                'path' => $resource->getPathForDisplay()
+            )
+        );
+
         parent::__construct(
             self::ACTION,
-            array(
-                'role' => array(
-                    'name' => $role->getTranslationKey(),
-                    'changeSet' => $changeSet
-                ),
-                'workspace' => array(
-                    'name' => $resource->getWorkspace()->getName()
-                ),
-                'resource' => array(
-                    'name' => $resource->getName(),
-                    'path' => $resource->getPathForDisplay()
-                )
-            ),
+            $this->details,
             null,
             null,
             $resource,
@@ -59,5 +67,94 @@ class LogWorkspaceRoleChangeRightEvent extends LogGenericEvent implements Mandat
     public static function getRestriction()
     {
         return array(self::DISPLAYED_WORKSPACE);
+    }
+
+    /**
+     * Get sendToFollowers boolean.
+     *
+     * @return boolean
+     */
+    public function getSendToFollowers()
+    {
+        return false;
+    }
+
+    /**
+     * Get includeUsers array of user ids.
+     *
+     * @return array
+     */
+    public function getIncludeUserIds()
+    {
+        $userIds = array();
+        $roleUsers = $this->role->getUsers();
+        foreach ($roleUsers as $user) {
+            array_push($userIds, $user->getId());
+        }
+        $roleGroups = $this->role->getGroups();
+        foreach ($roleGroups as $group) {
+            $userIds = array_merge($userIds, $group->getUserIds());
+        }
+        $userIds = array_unique($userIds);
+
+        return $userIds;
+    }
+
+    /**
+     * Get excludeUsers array of user ids.
+     *
+     * @return array
+     */
+    public function getExcludeUserIds()
+    {
+        return array();
+    }
+
+    /**
+     * Get actionKey string.
+     *
+     * @return string
+     */
+    public function getActionKey()
+    {
+        return $this::ACTION;
+    }
+
+    /**
+     * Get iconKey string.
+     *
+     * @return string
+     */
+    public function getIconKey()
+    {
+        return null;
+    }
+
+    /**
+     * Get if event is allowed to create notification or not
+     *
+     * @return boolean
+     */
+    public function isAllowedToNotify()
+    {
+        $oldState = $this->changeSet['mask'][0];
+        $newState = $this->changeSet['mask'][1];
+        if ($oldState%2 == 0 && $newState%2 ==1) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * Get details
+     *
+     * @return array
+     */
+    public function getNotificationDetails()
+    {
+        $notificationDetails = array_merge($this->details, array());
+
+        return $notificationDetails;
     }
 }

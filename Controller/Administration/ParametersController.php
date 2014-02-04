@@ -30,6 +30,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Translation\Translator;
 use Claroline\CoreBundle\Manager\MailManager;
 use Claroline\CoreBundle\Form\Administration as AdminForm;
+use Claroline\CoreBundle\Manager\CacheManager;
 
 /**
  * @DI\Tag("security.secure_service")
@@ -47,6 +48,7 @@ class ParametersController extends Controller
     private $translator;
     private $mailManager;
     private $contentManager;
+    private $cacheManager;
 
     /**
      * @DI\InjectParams({
@@ -58,6 +60,7 @@ class ParametersController extends Controller
      *     "translator"     = @DI\Inject("translator"),
      *     "termsOfService" = @DI\Inject("claroline.common.terms_of_service_manager"),
      *     "mailManager"    = @DI\Inject("claroline.manager.mail_manager"),
+     *     "cacheManager"   = @DI\Inject("claroline.manager.cache_manager"),
      *     "contentManager" = @DI\Inject("claroline.manager.content_manager")
      * })
      */
@@ -70,7 +73,8 @@ class ParametersController extends Controller
         Translator $translator,
         TermsOfServiceManager $termsOfService,
         MailManager $mailManager,
-        ContentManager $contentManager
+        ContentManager $contentManager,
+        CacheManager $cacheManager
     )
     {
         $this->configHandler = $configHandler;
@@ -82,6 +86,7 @@ class ParametersController extends Controller
         $this->translator = $translator;
         $this->mailManager = $mailManager;
         $this->contentManager = $contentManager;
+        $this->cacheManager = $cacheManager;
     }
 
     /**
@@ -360,6 +365,7 @@ class ParametersController extends Controller
                 'mailer_port' => $data['port']
             )
         );
+        $this->cacheManager->refresh();
 
         return $this->redirect($this->generateUrl('claro_admin_index'));
     }
