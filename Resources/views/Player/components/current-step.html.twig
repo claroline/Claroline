@@ -1,43 +1,82 @@
 {% import 'InnovaPathBundle::Player/components/macros.html.twig' as macros %}
-
-<div class="panel panel-default">
-    <div class="panel-heading lvl lvl-{{ currentStep.lvl + 1 }}">
-        <h4 class="panel-title">
+        
+<ul class="nav nav-tabs">
+    <li class="active">
+        <a href="#current-step-tab" data-toggle="tab">
             <span class="lvl-{{ currentStep.lvl + 1 }} lvl-indicator-large">&nbsp;</span>
-            <span class="title">{{ currentStep.name }}</span>
-            <span id="edit-btn" class="btn btn-xs pull-right" href="#" data-toggle="modal" data-target="#edit-step" rel="tooltip" data-original-title="{{ 'contextual_edit' | trans({}, 'path_player') }}"> 
-                <span class="icon-pencil"></span>
-            </span>
-        </h4>
-    </div>
-    <div class="panel-body">
-        {% if currentStep == path.getRootStep %}
-            {% include 'InnovaPathBundle::Player/components/full-path-notice.html.twig' %}
-        {% endif %}
+            {{ currentStep.name }}
+        </a>
+    </li>
 
-        {% if currentStep.children is not empty %}
-            {% if currentStep.description is null %}
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <h5 class="panel-title text-center">
-                        <a data-toggle="collapse" href="#collapse-children">
-                        {{ 'next_step' | trans({}, 'path_player') }}
-                        </a>
-                    </h5>
-                </div>
-                <ul id="collapse-children" class="list-group collapse {% if currentStep.description is null %}in{% endif %}">
-                {% for child in currentStep.children %}
-                    <li class="list-group-item">
-                        <a href="{{ path('innova_path_player_index', { workspaceId: workspace.id, pathId: path.id, stepId: child.id }) }}">
-                        {{ child.name }}
-                        </a>
-                    </li>
-                {% endfor %}
-                </ul>
-            </div>
+    {% set allParents = currentStep.getParents() %}
+    {% for parent in allParents %}
+        {% for resource in parent.step2ResourceNodes if resource.propagated == true %}
+            {% set thisResourceIsExcluded = false %}
+            {% for resourceCurrentStep in currentStep.step2ResourceNodes if resourceCurrentStep.excluded == true and resourceCurrentStep.resourceNode == resource.resourceNode %}
+                    {% set thisResourceIsExcluded = true %}
+            {% endfor %}
+            {% if thisResourceIsExcluded == false %}
+                {{ macros.displayResourceButton(resource, parent) }}
             {% endif %}
-        {% endif %}
+        {% endfor %}
+    {% endfor %}
 
-        {{ currentStep.description | raw }}
+    {% for resource in currentStep.step2ResourceNodes if resource.excluded == false %}
+            {{ macros.displayResourceButton(resource, currentStep) }}
+    {% endfor %}
+</ul>
+
+<div id='content' class="tab-content">
+    <div class="tab-pane active" id="current-step-tab">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                {% if edit == true %}
+                    {{ form_widget(form.description) }}
+                    {{ form_widget(form.save, { 'label': 'Sauvegarder' }) }}
+                    {{ form_end(form) }}
+                {% else %}
+                    {% if currentStep.children is not empty %}
+                        {% if currentStep.description is null %}
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <h5 class="panel-title text-center">
+                                        <a data-toggle="collapse" href="#collapse-children">
+                                        {{ 'next_step' | trans({}, 'path_player') }}
+                                        </a>
+                                    </h5>
+                                </div>
+                                <ul id="collapse-children" class="list-group collapse {% if currentStep.description is null %}in{% endif %}">
+                                {% for child in currentStep.children %}
+                                    <li class="list-group-item">
+                                    <a href="{{ path('innova_path_player_index', { workspaceId: workspace.id, pathId: path.id, stepId: child.id }) }}">
+                                    {{ child.name }}
+                                    </a>
+                                    </li>
+                                {% endfor %}
+                                </ul>
+                            </div>
+                        {% endif %}
+                    {% endif %}
+                    {{ currentStep.description | raw }}
+                {% endif %}
+            </div>
+        </div>
     </div>
+    
+    {% set allParents = currentStep.getParents() %}
+    {% for parent in allParents %}
+        {% for resource in parent.step2ResourceNodes if resource.propagated == true %}
+            {% set thisResourceIsExcluded = false %}
+            {% for resourceCurrentStep in currentStep.step2ResourceNodes if resourceCurrentStep.excluded == true and resourceCurrentStep.resourceNode == resource.resourceNode %}
+                    {% set thisResourceIsExcluded = true %}
+            {% endfor %}
+            {% if thisResourceIsExcluded == false %}
+                {{ macros.displayResourceFrame(resource, parent) }}
+            {% endif %}
+        {% endfor %}
+    {% endfor %}
+
+    {% for resource in currentStep.step2ResourceNodes if resource.excluded == false %}
+        {{ macros.displayResourceFrame(resource, currentStep) }}
+    {% endfor %}
 </div>

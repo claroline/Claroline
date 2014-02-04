@@ -11,7 +11,7 @@ class PathRepository extends EntityRepository
     public function findAllByWorkspaceByUser(AbstractWorkspace $workspace, UserInterface $user)
     {
         $dql  = 'SELECT p ';
-        $dql .= 'FROM Innova\PathBundle\Entity\Path p ';
+        $dql .= 'FROM Innova\PathBundle\Entity\Path\Path p ';
         $dql .= 'LEFT JOIN p.resourceNode rn ';
         $dql .= 'WHERE rn.workspace = :workspace ';
         $dql .= '  AND rn.creator = :user ';
@@ -28,7 +28,7 @@ class PathRepository extends EntityRepository
     public function findAllByWorkspaceByNotUser(AbstractWorkspace $workspace, UserInterface $user)
     {
         $dql  = 'SELECT p ';
-        $dql .= 'FROM Innova\PathBundle\Entity\Path p ';
+        $dql .= 'FROM Innova\PathBundle\Entity\Path\Path p ';
         $dql .= 'LEFT JOIN p.resourceNode rn ';
         $dql .= 'WHERE rn.workspace = :workspace ';
         $dql .= '  AND rn.creator != :user ';
@@ -45,7 +45,7 @@ class PathRepository extends EntityRepository
     public function findAllByWorkspace(AbstractWorkspace $workspace)
     {
         $dql  = 'SELECT p ';
-        $dql .= 'FROM Innova\PathBundle\Entity\Path p ';
+        $dql .= 'FROM Innova\PathBundle\Entity\Path\Path p ';
         $dql .= 'LEFT JOIN p.resourceNode rn ';
         $dql .= 'WHERE rn.workspace = :workspace ';
         $dql .= 'ORDER BY rn.name ASC';

@@ -48,7 +48,9 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 use Innova\PathBundle\Manager\PathManager;
+use Innova\PathBundle\Manager\PublishmentManager;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
+use Innova\PathBundle\Entity\Path\Path;
 
 /**
  * Class PathController
@@ -96,24 +98,32 @@ class PathController
     protected $pathManager;
     
     /**
+     * Current publishment manager
+     * @var \Innova\PathBundle\Manager\PublishmentManager
+     */
+    protected $publishmentManager;
+    
+    /**
      * Class constructor
      * Inject needed dependencies
      * @param SessionInterface         $session
      * @param RouterInterface          $router
      * @param TranslatorInterface      $translator
      * @param PathManager              $pathManager
+     * @param PublishmentManager       $publishmentManager
      */
     public function __construct(
         SessionInterface         $session,
         RouterInterface          $router,
         TranslatorInterface      $translator,
-        PathManager              $pathManager
-    )
+        PathManager              $pathManager,
+        PublishmentManager       $publishmentManager)
     {
         $this->session     = $session;
         $this->router      = $router;
         $this->translator  = $translator;
         $this->pathManager = $pathManager;
+        $this->publishmentManager = $publishmentManager;
     }
     
     /**
@@ -122,7 +132,7 @@ class PathController
      *
      * @Route(
      *     "/delete/{id}",
-     *     name         = "innova_path_delete_path",
+     *     name         = "innova_path_delete",
      *     requirements = {"id" = "\d+"},
      *     options      = {"expose"=true}
      * )
@@ -161,7 +171,7 @@ class PathController
      * 
      * @Route(
      *     "/publish/{id}",
-     *     name         = "innova_path_deploy",
+     *     name         = "innova_path_publish",
      *     requirements = {"id" = "\d+"},
      *     options      = {"expose" = true}
      * )
@@ -170,12 +180,12 @@ class PathController
     public function publishAction(AbstractWorkspace $workspace, Path $path)
     {
         try {
-            $this->pathManager->publish($path);
+            $this->publishmentManager->publish($path);
         
-            // Delete success
+            // Publish success
             $this->session->getFlashBag()->add(
                 'success',
-                $this->translator->trans('deploy_success', array(), "innova_tools")
+                $this->translator->trans('publish_success', array(), "innova_tools")
             );
         } catch (\Exception $e) {
             // Error

@@ -63,12 +63,12 @@ function TemplateModalCtrl($scope, $http, $modalInstance, StepFactory, TemplateF
         if (editTemplate) {
             // Update existing path
             method = 'PUT';
-            route = Routing.generate('innova_path_edit_pathtemplate', {id: formTemplate.id});
+            route = Routing.generate('innova_path_template_edit', {id: formTemplate.id});
         }
         else {
             // Create new path
             method = 'POST';
-            route = Routing.generate('innova_path_add_pathtemplate');
+            route = Routing.generate('innova_path_template_add');
         }
         
         $http({

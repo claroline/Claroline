@@ -9,7 +9,7 @@ plugin:
       is_displayable_in_desktop: false
       
   resources:
-    - class: Innova\PathBundle\Entity\Path
+    - class: Innova\PathBundle\Entity\Path\Path
       name: innova_path
       is_exportable: false
       icon: res_file.png

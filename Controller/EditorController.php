@@ -16,7 +16,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 
 use Innova\PathBundle\Form\Handler\PathHandler;
-use Innova\PathBundle\Entity\Path;
+use Innova\PathBundle\Entity\Path\Path;
 
 /**
  * Class EditorController

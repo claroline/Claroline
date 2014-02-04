@@ -1,3 +1,13 @@
+.current-step > .nav-tabs {
+    border-bottom: none;
+}
+
+#current-step-tab > .panel {
+    -webkit-border-top-left-radius: 0px;
+    -moz-border-radius-topleft: 0px;
+    border-top-left-radius: 0px;
+}
+
 .lvl-0, li.lvl-0 > a:hover{
     background-color: #7B7B7B;
     border-color: #4B4B4B;
@@ -53,7 +63,7 @@
 }
 
 .lvl-indicator-large{
-    width : 12px;
+    width : 20px;
     height: 100%;
     border-radius: 2px;
     display:inline-block;

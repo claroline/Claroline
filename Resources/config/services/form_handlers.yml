@@ -1,0 +1,37 @@
+services: 
+    # AbstractPath handler
+    innova_path.form.handler.abstract_path:
+        abstract: true
+        class: %innova_path.form.handler.abstract_path.class%
+        calls:
+            - [setRequest, [@request]]
+
+    # Path handler
+    innova_path.form.handler.path:
+        class: %innova_path.form.handler.path.class%
+        parent: innova_path.form.handler.abstract_path
+        arguments: [@innova_path.manager.path]
+        scope: request
+
+    # PathTemplate handler
+    innova_path.form.handler.path_template:
+        class: %innova_path.form.handler.path_template.class%
+        parent: innova_path.form.handler.abstract_path
+        arguments: [@innova_path.manager.path_template]
+        scope: request
+
+    # NonDigitalResource handler
+    innova_path.form.handler.non_digital_resource:
+        class: %innova_path.form.handler.non_digital_resource.class%
+        calls:
+            - [setRequest, [@request]]
+        scope: request
+        
+    # Step handler
+    innova_path.form.handler.step:
+        class: %innova_path.form.handler.step.class%
+        arguments:
+            stepManager: @innova_path.manager.step
+        calls:
+            - [setRequest, [@request]]
+        scope: request

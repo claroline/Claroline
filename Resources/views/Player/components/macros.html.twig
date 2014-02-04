@@ -1,8 +1,20 @@
-{% macro displayResource(resource, step) %}
-        <a class="btn btn-sm btn-default player-tab" target="_blank" href="{{ path('claro_resource_open', {'node': resource.resourceNode.id, 'resourceType': resource.resourceNode.resourceType.name }) }}" > 
+{% macro displayResourceButton(resource, step) %}
+    <li class="resource-tab">
+        <a href="#resource-tab-{{ resource.resourceNode.id }}" data-toggle="tab">
             <span rel="tooltip" data-original-title="{{ step.name }}" class="lvl-{{ step.lvl + 1 }} lvl-indicator">&nbsp;</span>
             {{ resource.resourceNode.name }}
         </a>
+    </li>
+{% endmacro %}
+
+{% macro displayResourceFrame(resource, step) %}
+    <div class="tab-pane" id="resource-tab-{{ resource.resourceNode.id }}">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <iframe seamless width="100%" class="resource-frame" data-resource-src="{{ path('claro_resource_open', {'node': resource.resourceNode.id, 'resourceType': resource.resourceNode.resourceType.name }) }}" src=""></iframe>
+            </div>
+        </div>
+    </div>
 {% endmacro %}
 
 {% macro displayTreeItem(item, parents, currentStep, path, workspace) %}
@@ -33,8 +45,14 @@
 {% endmacro %}
 
 {% macro breadcrumbItem(workspace, path, step) %}
-    <li class="lvl-{{ step.lvl + 1 }}">
-        <a class="step" href="{{ path('innova_path_player_index', { workspaceId: workspace.id, pathId: path.id, stepId: step.id }) }}">
+
+    {% set isTerminalClass = "" %}
+    {% if step.children is empty %}
+        {% set isTerminalClass = "terminal" %}
+    {% endif %}
+
+    <li class="lvl-{{ step.lvl + 1 }} {{ isTerminalClass }}">
+        <a rel="tooltip" data-original-title="{{ step.name }}" class="step" href="{{ path('innova_path_player_index', { workspaceId: workspace.id, pathId: path.id, stepId: step.id }) }}">
         {{ step.name }}
         </a>
     </li>
@@ -49,7 +67,7 @@
     {% endif %}
 
     <li class="dropdown lvl-{{ step.lvl + 1 }} {{ isTerminalClass }} {{ class }}">
-        <a class="dropdown-label" href="{{ path('innova_path_player_index', { workspaceId: workspace.id, pathId: path.id, stepId: step.id }) }}">
+        <a rel="tooltip" data-original-title="{{ step.name }}" class="dropdown-label" href="{{ path('innova_path_player_index', { workspaceId: workspace.id, pathId: path.id, stepId: step.id }) }}">
             {{ step.name }}
         </a>
         {% set stepSiblings = step.siblings %}
@@ -61,7 +79,7 @@
             {% set stepDisplayed = false %}
 
             {% for sibling in stepSiblings %}
-                {% if sibling.stepOrder >= step.stepOrder + 1 and not stepDisplayed %}
+                {% if sibling.order >= step.order + 1 and not stepDisplayed %}
                     {% set stepDisplayed = true %}
                     {{ macros.breadcrumbItem(workspace, path, step) }}
                 {% endif %}

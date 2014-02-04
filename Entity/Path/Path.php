@@ -1,11 +1,13 @@
 <?php
 
-namespace Innova\PathBundle\Entity;
+namespace Innova\PathBundle\Entity\Path;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\Common\Collections\ArrayCollection;
+
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
+use Innova\PathBundle\Entity\Step;
 
 /**
  * Path
@@ -13,7 +15,7 @@ use Claroline\CoreBundle\Entity\Resource\AbstractResource;
  * @ORM\Table(name="innova_path")
  * @ORM\Entity(repositoryClass="Innova\PathBundle\Repository\PathRepository")
  */
-class Path extends AbstractResource
+class Path extends AbstractResource implements PathInterface
 {
     const DEFAULT_NAME = 'My path';
     
@@ -37,16 +39,16 @@ class Path extends AbstractResource
      * Steps linked to the path
      * @var \Doctrine\Common\Collections\ArrayCollection
      * 
-     * @ORM\OneToMany(targetEntity="Step", mappedBy="path")
+     * @ORM\OneToMany(targetEntity="Innova\PathBundle\Entity\Step", mappedBy="path", indexBy="id")
      */
     protected $steps;
 
     /**
      * @var boolean
      *
-     * @ORM\Column(name="deployed", type="boolean")
+     * @ORM\Column(name="published", type="boolean")
      */
-    protected $deployed;
+    protected $published;
 
     /**
      * @var boolean
@@ -68,14 +70,14 @@ class Path extends AbstractResource
     public function __construct()
     {
         $this->steps = new ArrayCollection();
-        $this->deployed = false;
+        $this->published = false;
         $this->modified = false;
     }
     
     /**
      * Set json structure
      * @param  string $path
-     * @return \Innova\PathBundle\Entity\Path
+     * @return \Innova\PathBundle\Entity\Path\Path
      */
     public function setStructure($structure)
     {
@@ -94,30 +96,30 @@ class Path extends AbstractResource
     }
 
     /**
-     * Set deployed
-     * @param  boolean $deployed
-     * @return \Innova\PathBundle\Entity\Path
+     * Set published
+     * @param  boolean $published
+     * @return \Innova\PathBundle\Entity\Path\Path
      */
-    public function setDeployed($deployed)
+    public function setPublished($published)
     {
-        $this->deployed = $deployed;
+        $this->published = $published;
 
         return $this;
     }
 
     /**
-     * Is path already deployed
+     * Is path already published
      * @return boolean
      */
-    public function isDeployed()
+    public function isPublished()
     {
-        return $this->deployed;
+        return $this->published;
     }
 
     /**
      * Set modified
      * @param  boolean $modified
-     * @return \Innova\PathBundle\Entity\Path
+     * @return \Innova\PathBundle\Entity\Path\Path
      */
     public function setModified($modified)
     {
@@ -138,11 +140,11 @@ class Path extends AbstractResource
     /**
      * Add step
      * @param  \Innova\PathBundle\Entity\Step $step
-     * @return \Innova\PathBundle\Entity\Path
+     * @return \Innova\PathBundle\Entity\Path\Path
      */
     public function addStep(\Innova\PathBundle\Entity\Step $step)
     {
-        $this->steps[] = $step;
+        $this->steps->set($step->getId(), $step);
         $step->setPath($this);
         
         return $this;
@@ -155,6 +157,7 @@ class Path extends AbstractResource
     public function removeStep(\Innova\PathBundle\Entity\Step $step)
     {
         $this->steps->removeElement($step);
+        $step->setPath(null);
         
         return $this;
     }
@@ -180,7 +183,7 @@ class Path extends AbstractResource
     /**
      * Set description
      * @param string $description
-     * @return \Innova\PathBundle\Entity\Path
+     * @return \Innova\PathBundle\Entity\Path\Path
      */
     public function setDescription($description)
     {
@@ -222,7 +225,7 @@ class Path extends AbstractResource
     /**
      * Initialize a new path entity with required info and structure
      * @param string $name
-     * @return \Innova\PathBundle\Entity\Path
+     * @return \Innova\PathBundle\Entity\Path\Path
      */
     public static function initialize($name = null)
     {
@@ -241,7 +244,7 @@ class Path extends AbstractResource
     
     /**
      * Initialize JSON structure
-     * @return \Innova\PathBundle\Entity\Path
+     * @return \Innova\PathBundle\Entity\Path\Path
      */
     public function initializeStructure()
     {

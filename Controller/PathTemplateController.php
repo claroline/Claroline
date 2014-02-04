@@ -36,18 +36,17 @@
  */
 namespace Innova\PathBundle\Controller;
 
+use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 
 // Controller dependencies
-use Doctrine\ORM\EntityManagerInterface;
 use Innova\PathBundle\Manager\PathTemplateManager;
-use Innova\PathBundle\Entity\PathTemplate;
+use Innova\PathBundle\Entity\Path\PathTemplate;
+use Innova\PathBundle\Form\Handler\PathTemplateHandler;
 
 /**
  * Class PathTemplateController
@@ -62,53 +61,39 @@ use Innova\PathBundle\Entity\PathTemplate;
  * @link       http://innovalangues.net
  * 
  * @Route(
- *      "",
- *      name = "innova_path_template",
- *      service="innova_path.controller.path_template"
+ *      "/templates",
+ *      name    = "innova_path_template",
+ *      service = "innova_path.controller.path_template"
  * )
  */
 class PathTemplateController
 {
     /**
-     * Current entity manager for data persist
-     * @var \Doctrine\ORM\EntityManager
+     * Form factory
+     * @var \Symfony\Component\Form\FormFactoryInterface $formFactory
      */
-    protected $entityManager;
+    protected $formFactory;
     
     /**
      * Path template manager
      * @var \Innova\PathBundle\Manager\PathTemplateManager
      */
     protected $pathTemplateManager;
-    
-    /**
-     * Current request
-     * @var \Symfony\Component\HttpFoundation\Request
-     */
-    protected $request;
-    
+
     /**
      * Class constructor
      * Inject needed dependencies
-     * @param \Doctrine\ORM\EntityManagerInterface           $entityManager
+     * @param \Symfony\Component\Form\FormFactoryInterface   $formFactory
      * @param \Innova\PathBundle\Manager\PathTemplateManager $pathTemplateManager
      */
-    public function __construct(EntityManagerInterface $entityManager, PathTemplateManager $pathTemplateManager)
+    public function __construct(
+        FormFactoryInterface $formFactory,
+        PathTemplateManager  $pathTemplateManager,
+        PathTemplateHandler  $pathTemplateHandler)
     {
-        $this->entityManager = $entityManager;
+        $this->formFactory         = $formFactory;
         $this->pathTemplateManager = $pathTemplateManager;
-    }
-    
-    /**
-     * Inject current request into service
-     * @param Request $request
-     * @return \Innova\PathBundle\Controller\PathController
-     */
-    public function setRequest(Request $request = null)
-    {
-        $this->request = $request;
-    
-        return $this;
+        $this->pathTemplateHandler = $pathTemplateHandler;
     }
     
     /**
@@ -116,28 +101,17 @@ class PathTemplateController
      * @return JsonResponse
      * 
      * @Route(
-     *     "/path_templates",
-     *     name = "innova_path_get_pathtemplates",
+     *     "",
+     *     name    = "innova_path_template_list",
      *     options = {"expose"=true}
      * )
      * @Method("GET")
      */
-    public function getAllAction()
+    public function indexAction()
     {
-        $results = $this->entityManager->getRepository('InnovaPathBundle:PathTemplate')->findAll();
+        $templates = $this->pathTemplateManager->findAll();
 
-        $pathtemplates = array();
-        foreach ($results as $result) {
-            $template = new \stdClass();
-            $template->id = $result->getId();
-            $template->name = $result->getName();
-            $template->description = $result->getDescription();
-            $template->structure = json_decode($result->getStructure());
-
-            $pathtemplates[] = $template;
-        }
-
-        return new JsonResponse($pathtemplates);
+        return new JsonResponse($templates);
     }
     
     /**
@@ -145,31 +119,25 @@ class PathTemplateController
      * @return Response
      * 
      * @Route(
-     *     "/path_template/add",
-     *     name = "innova_path_add_pathtemplate",
+     *     "/add",
+     *     name    = "innova_path_template_add",
      *     options = {"expose"=true}
      * )
      * @Method("POST")
      */
-    public function addAction(Request $data)
+    public function addAction()
     {
-        $pathTemplate = new PathTemplate;
+        $pathTemplate = new PathTemplate();
         
-        $name = $data->request->get('name');
-        if (!empty($name))
-            $pathTemplate->setName($name);
+        // Create form to validate data
+        $form = $this->formFactory->create('innova_path_template', $pathTemplate);
         
-        $description = $data->request->get('description');
-        if (!empty($description))
-            $pathTemplate->setDescription($description);
+        $this->pathTemplateHandler->setForm($form);
+        if ($this->pathTemplateHandler->process()) {
+            // Success => modified data
+            $pathTemplate = $this->pathTemplateHandler->getData();
+        }
         
-        $structure = $data->request->get('structure');
-        if (!empty($structure))
-            $pathTemplate->setStructure($structure);
-
-        $this->entityManager->persist($pathTemplate);
-        $this->entityManager->flush();
-
         return new Response(
             $pathTemplate->getId()
         );
@@ -178,42 +146,53 @@ class PathTemplateController
     /**
      * Edit existing template
      * @return Response
-     * @throws NotFoundHttpException
      * 
      * @Route(
-     *     "/path_template/edit/{id}",
-     *     name = "innova_path_edit_pathtemplate",
+     *     "/edit/{id}",
+     *     name    = "innova_path_template_edit",
      *     options = {"expose"=true}
      * )
      * @Method("PUT")
      */
-    public function editAction($id, Request $data) 
+    public function editAction(PathTemplate $pathTemplate) 
     {
-        $pathTemplate = $this->entityManager->getRepository('InnovaPathBundle:PathTemplate')->find($id);
-        if ($pathTemplate) {
-            
-            $name = $data->request->get('name');
-            if (!empty($name))
-                $pathTemplate->setName($name);
+        // Create form to validate data
+        $form = $this->formFactory->create('innova_path_template', $pathTemplate, array ('method' => 'PUT'));
         
-            $description = $data->request->get('description');
-            if (!empty($description))
-                $pathTemplate->setDescription($description);
-        
-            $structure = $data->request->get('structure');
-            if (!empty($step))
-                $pathTemplate->setStructure($structure);
-            
-            $this->entityManager->persist($pathTemplate);
-            $this->entityManager->flush();
-        
-            return new Response(
-                $pathTemplate->getId()
-            );
+        $this->pathTemplateHandler->setForm($form);
+        if ($this->pathTemplateHandler->process()) {
+            // Success => modified data
+            $pathTemplate = $this->pathTemplateHandler->getData();
         }
-        else {
-            // Path template not found
-            throw new NotFoundHttpException('The template does not exist');
+        
+        return new Response(
+            $pathTemplate->getId()
+        );
+    }
+    
+    /**
+     * Delete template
+     * @return Response
+     *
+     * @Route(
+     *     "/delete/{id}",
+     *     name    = "innova_path_template_delete",
+     *     options = {"expose"=true}
+     * )
+     * @Method("DELETE")
+     */
+    public function deleteAction(PathTemplate $pathTemplate) 
+    {
+        try {
+            // Try to remove template
+            $this->pathTemplateManager->delete($pathTemplate);
+        
+            $success = true;
+        } catch (\Exception $e) {
+            // Error
+            $success = false;
         }
+        
+        return new Response($success);
     }
 }

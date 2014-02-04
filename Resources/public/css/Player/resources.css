@@ -1,4 +1,3 @@
-.path-player .resources li{
-	list-style: none;
-	margin-bottom:5px;
+.resource-frame{
+    border:none;
 }

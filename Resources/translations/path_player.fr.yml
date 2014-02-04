@@ -1,11 +1,16 @@
 contextual_edit : Edition contextuelle
 
 full_tree: Arborescence
-full_path_notice_1: Vous pouvez afficher l'arborescence complète du parcours en cliquant sur le bouton 
-full_path_notice_2: Ce bouton sera accessible en haut à gauche à n'importe quelle étape de votre progression.
+full_path_notice_1: Vous pouvez afficher l'arborescence du parcours en cliquant sur le bouton 
+full_path_notice_2: Il sera accessible en haut à gauche tout au long de votre progression.
 
 history: Historique
 
 my_favorites: Mes favoris
 
 next_step: Etapes suivantes
+
+save_success: L'étape a été sauvegardée
+save_warning: Problème lors de la sauvegarde de l'étape
+save_already_modified: Le parcours a déjà des modifications en attente
+save_warning_not_owner: Vous n'avez pas les droits d'édition sur ce parcours

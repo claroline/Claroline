@@ -7,7 +7,7 @@ function TemplateCtrl($scope, $http, $modal, TemplateFactory) {
     $scope.templates = [];
     
     // Load templates list from AJAX
-    $http.get(Routing.generate('innova_path_get_pathtemplates'))
+    $http.get(Routing.generate('innova_path_template_list'))
          .then(function(response) {
              TemplateFactory.setTemplates(response.data);
              $scope.templates = TemplateFactory.getTemplates();
@@ -32,7 +32,7 @@ function TemplateCtrl($scope, $http, $modal, TemplateFactory) {
     $scope.remove = function(template) {
         $http({
             method: 'DELETE',
-            url: Routing.generate('innova_path_delete_pathtemplate', {id: template.id})
+            url: Routing.generate('innova_path_template_delete', {id: template.id})
         })
         .success(function (data) {
             for (var i = 0; i < $scope.templates.length; i++) {

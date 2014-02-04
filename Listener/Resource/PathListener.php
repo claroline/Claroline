@@ -11,7 +11,7 @@ use Claroline\CoreBundle\Event\CreateFormResourceEvent;
 use Claroline\CoreBundle\Event\CreateResourceEvent;
 use Claroline\CoreBundle\Event\CopyResourceEvent;
 
-use Innova\PathBundle\Entity\Path;
+use Innova\PathBundle\Entity\Path\Path;
 
 /**
  * Path Event Listener
@@ -27,16 +27,16 @@ class PathListener extends ContainerAware
     public function onPathOpen(OpenResourceEvent $event)
     {
         $path = $event->getResource();
-        if ($path->isDeployed()) {
+        if ($path->isPublished()) {
             $route = $this->container
-                    ->get('router')
-                    ->generate(
-                    'innova_path_player_index',
-                    array(
-                        'workspaceId' => $path->getResourceNode()->getWorkspace()->getId(),
-                        'pathId' => $path->getId(),
-                        'stepId' => $path->getRootStep()->getId()
-                    )
+                ->get('router')
+                ->generate(
+                'innova_path_player_index',
+                array(
+                    'workspaceId' => $path->getResourceNode()->getWorkspace()->getId(),
+                    'pathId' => $path->getId(),
+                    'stepId' => $path->getRootStep()->getId()
+                )
             );
         }
         else {

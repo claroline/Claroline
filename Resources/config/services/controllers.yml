@@ -3,40 +3,52 @@ services:
     innova_path.controller.path:
         class: %innova_path.controller.path.class%
         arguments:
-            session:         @session
-            router:          @router
-            translator:      @translator
-            pathManager:     @innova_path.manager.path
-        calls:
-          - [setRequest, ["@?request="]]
-        scope: request
+            session:            @session
+            router:             @router
+            translator:         @translator
+            pathManager:        @innova_path.manager.path
+            publishmentManager: @innova_path.manager.publishment
         
     # Step controller
     innova_path.controller.step:
         class: %innova_path.controller.step.class%
         arguments:
+            kernelRoot:      %kernel.root_dir%
             entityManager:   @doctrine.orm.entity_manager
             securityContext: @security.context
             stepManager:     @innova_path.manager.step
-        calls:
-          - [setRequest, ["@?request="]]
-        scope: request
         
     # Path template controller
     innova_path.controller.path_template:
         class: %innova_path.controller.path_template.class%
         arguments:
-            entityManager:       @doctrine.orm.entity_manager
+            formFactory:         @form.factory
             pathTemplateManager: @innova_path.manager.path_template
-        calls:
-          - [setRequest, ["@?request="]]
+            pathTemplateHandler: @innova_path.form.handler.path_template
         scope: request
         
     # Player controller
     innova_path.controller.path_player:
         class: %innova_path.controller.path_player.class%
+        arguments:
+            session:     @session
+            translator:  @translator
         calls:
           - [setContainer, ["@service_container"]]
+
+    # Contextual Editor controller
+    innova_path.controller.path_contextual_editor:
+        class: %innova_path.controller.contextual_editor.class%
+        calls:
+          - [setContainer, ["@service_container"]]
+        arguments:
+            securityContext: @security.context
+            router:      @router
+            formFactory: @form.factory
+            session:     @session
+            translator:  @translator
+            stepHandler: @innova_path.form.handler.step
+        scope: request
           
     # Editor controller
     innova_path.controller.path_editor:
