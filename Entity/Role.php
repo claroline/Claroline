@@ -194,6 +194,11 @@ class Role implements RoleInterface
         }
     }
 
+    public function getGroups()
+    {
+        return $this->groups;
+    }
+
     /**
      * @todo check the type is a Role class constant
      */

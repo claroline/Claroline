@@ -121,6 +121,7 @@ class LayoutController extends Controller
         $workspaces = null;
         $personalWs = null;
         $isInAWorkspace = false;
+        $countUnviewedNotifications = 0;
 
         $token = $this->security->getToken();
         $user = $token->getUser();
@@ -140,6 +141,8 @@ class LayoutController extends Controller
             $username = $user->getFirstName() . ' ' . $user->getLastName();
             $personalWs = $user->getPersonalWorkspace();
             $workspaces = $this->findWorkspacesFromLogs();
+            $countUnviewedNotifications = $this->get('icap_notification.manager')->
+                countUnviewedNotifications($user->getId());
         } else {
             $username = $this->translator->trans('login', array(), 'platform');
             $workspaces = $this->workspaceManager->getWorkspacesByAnonymous();
@@ -161,7 +164,8 @@ class LayoutController extends Controller
             'personalWs' => $personalWs,
             "isImpersonated" => $this->isImpersonated(),
             'isInAWorkspace' => $isInAWorkspace,
-            'currentWorkspace' => $workspace
+            'currentWorkspace' => $workspace,
+            'countUnviewedNotifications' => $countUnviewedNotifications
         );
     }
 
