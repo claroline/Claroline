@@ -111,6 +111,7 @@ communication: Communication
 configuration: Configuration
 configure: Configurer
 connections: 'Nb Cnx.'
+cookie_lifetime: 'Durée de vie du cookie'
 copiable: Copiable
 copy: Copier
 create: Créer
@@ -135,6 +136,8 @@ csv_users_import_infos_required: Requis
 current_category: 'Catégorie courante'
 cut: Couper
 dashboard: 'Tableau de bord'
+data_col: 'Colonne des données'
+database_connection_failed: 'La connection à la base de donnée à échoué'
 date: Date
 date_form_format: dd/MM/yyyy
 date_format: d-m-Y
@@ -162,6 +165,7 @@ date_range.to: A
 date_range.today: 'Aujourd''hui'
 date_range.week: s
 date_range.yesterday: Hier
+db_table: 'Table de la base de donnée'
 deletable: Supprimable
 delete: Supprimer
 delete_category: 'Supprimer la catégorie'
@@ -184,6 +188,7 @@ download: Télécharger
 downloads: 'Nb tchgr.'
 drag_file_here: 'Déplacez le fichier ici'
 drop_file: 'Déposez le fichier'
+dsn: dsn
 edit: Modifier
 editable: Modifiable
 email_form_mail: 'Entrez votre adresse email'
@@ -249,6 +254,7 @@ home_tab_widgets_configuration: 'Configuration des widgets de l''onglet'
 home_tabs: 'Onglets de la page d''accueil'
 home_tabs_configuration: 'Configuration des onglets de la page d''accueil'
 id: Id
+id_col: 'Colonne des identifiants'
 import: Importer
 import_user_file_file: 'Importer depuis fichier csv'
 import_users: 'Importer des utilisateurs'
@@ -521,6 +527,7 @@ send_mail_form_content: Message
 send_mail_form_object: Objet
 send_message: 'Envoyer un message'
 server: Serveur
+session: Session
 session_id: 'Identifiant de session'
 settings: Paramètres
 sharable: Partageable
@@ -530,6 +537,7 @@ show_as_admin: 'Voir comme admin'
 show_as_user: 'Voir comme utilisateur'
 show_profile: 'Voir le profile'
 steal_session: 'Voler la session'
+storage_type: 'Type de stockage'
 subcategories: Sous-catégories
 subscribe_groups: 'Inscrire des groupes'
 subscribe_selected_groups: 'Inscrire les groupes sélectionnés'
@@ -553,6 +561,7 @@ text_form_text: Texte
 the_following_users_were_not_imported: 'Les utilisateurs suivant n''ont pas pu être importés:'
 the_workspace: 'L''espace d''activités'
 this_page_requires_authentication: 'Cette page requiert une authentification. Veuillez vous identifier.'
+time_col: 'Colonne des durées'
 to: Jusque
 to_message: A
 today: 'Aujourd''hui'

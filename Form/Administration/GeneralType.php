@@ -61,8 +61,7 @@ class GeneralType extends AbstractType
                 array(
                     'choices' => $this->langs
                 )
-            )
-            ->add('cookie_lifetime', 'number', array('required' => false));
+            );
    }
 
     public function getName()
