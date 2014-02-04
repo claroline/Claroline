@@ -1,4 +1,4 @@
-'Each row requires at least 5 parameters.': 'Chaque ligne nécessite au moins 5 paramètres (séparées par des virgules).'
+'Each row requires at least 5 parameters.': 'Chaque ligne nécessite au moins 5 paramètres (séparées par des point virgules).'
 'The code {{ code }} is already assigned to another workspace.': 'Le code {{ code }} est déjà attribué à un autre workspace.'
 'The name {{ name }} is already in use.': 'Le nom {{ name }} est déjà utilisé.'
 'The user or group {{ name }} does not exist.': 'L''utilisateur ou le groupe [{{ name }}] n''existe pas.'
