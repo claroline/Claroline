@@ -69,7 +69,7 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
      * @Assert\NotBlank()
      * @Assert\Length(min="3")
      * @Assert\Regex(
-     *     pattern="/^[\w]*$/",
+     *     pattern="/^[\w\.]*$/",
      *     message="special_char_not_allowed"
      * )
      */
