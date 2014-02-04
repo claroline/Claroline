@@ -11,7 +11,8 @@
 
 namespace Claroline\CoreBundle\Library\Maintenance;
 
-class MaintenanceHandler {
+class MaintenanceHandler 
+{
 
     const PATH = '/../../../../../../../app/config';
 
