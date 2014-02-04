@@ -14,9 +14,7 @@ namespace Claroline\CoreBundle\DependencyInjection\Compiler;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
-use Symfony\Component\DependencyInjection\DefinitionDecorator;
 use Symfony\Component\DependencyInjection\Reference;
-use Symfony\Component\DependencyInjection\Tests\DefinitionTest;
 
 class DynamicConfigPass implements CompilerPassInterface
 {
@@ -37,5 +35,8 @@ class DynamicConfigPass implements CompilerPassInterface
         $transport->setFactoryMethod('getTransport');
         $container->removeDefinition('swiftmailer.mailer.default.transport');
         $container->setDefinition('swiftmailer.mailer.default.transport', $transport);
+
+        $storage = $container->findDefinition('session.storage');
+        $storage->addMethodCall('setOptions', array(new Reference('claroline.session.storage_options')));
     }
 }

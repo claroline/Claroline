@@ -41,9 +41,9 @@ class CookieLifetimeSetter
      */
     public function onKernelRequest(GetResponseEvent $event)
     {
-        $lifetime = $this->configurationHandler->getParameter('cookie_lifetime');
-        $request = $event->getRequest();
-        $session = $request->getSession();
-        $session->migrate(false, $lifetime);
+//        $lifetime = $this->configurationHandler->getParameter('cookie_lifetime');
+//        $request = $event->getRequest();
+//        $session = $request->getSession();
+//        $session->migrate(false, $lifetime);
     }
 }
