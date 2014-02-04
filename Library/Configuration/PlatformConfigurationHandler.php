@@ -43,7 +43,7 @@ class PlatformConfigurationHandler
         'mailer_password' => null,
         'mailer_auth_mode' => null,
         'terms_of_service' => true,
-        'session_storage_type' => 'file',
+        'session_storage_type' => 'native',
         'session_db_table' => null,
         'session_db_id_col' => null,
         'session_db_data_col' => null,
