@@ -19,12 +19,9 @@ class WebUpdater
     {
         $baseMaintenance = "{$rootDir}/../vendor/claroline/core-bundle/Claroline/CoreBundle/Resources/views/Maintenance/maintenance.html";
         $webMaintenance = "{$rootDir}/../web/maintenance.html";
-        $baseApp = "{$rootDir}/../vendor/claroline/core-bundle/Claroline/CoreBundle/Resources/web/app.php";
-        $webApp = "{$rootDir}/../web/app.php";
 
         $this->files = array(
             $baseMaintenance => $webMaintenance,
-            $baseApp => $webApp
         );
 
     }
