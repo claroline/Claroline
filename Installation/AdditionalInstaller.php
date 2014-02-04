@@ -31,8 +31,19 @@ class AdditionalInstaller extends BaseInstaller
      */
     public function postUpdate($currentVersion, $targetVersion)
     {
-        if (version_compare($currentVersion, '1.1', '<')  && version_compare($targetVersion, '1.1', '>=') ) {
+        if ( version_compare($currentVersion, '1.1', '<') && version_compare($targetVersion, '1.1', '>=') ) {
             $this->insertNonDigitalResourceTypes();
+        }
+        
+        if ( version_compare($currentVersion, '1.2.9', '<') && version_compare($targetVersion, '1.2.9', '>=') ) {
+            // Update entity class name
+            $em = $this->container->get('doctrine.orm.entity_manager');
+            $query = $em->createQuery(
+                'UPDATE Claroline\CoreBundle\Entity\Resource\ResourceNode 
+                 SET class="Innova\PathBundle\Entity\Path\Path" 
+                 WHERE class="Innova\PathBundle\Entity\Path" '
+            );
+            $query->getResult();
         }
         
         return $this;

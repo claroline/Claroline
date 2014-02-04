@@ -6,17 +6,20 @@ services:
             objectManager:             @doctrine.orm.entity_manager
             securityContext:           @security.context
             resourceManager:           @claroline.manager.resource_manager
-            nonDigitalResourceManager: @innova_path.manager.non_digital_resource
+
+    # Publishment manager 
+    innova_path.manager.publishment:
+        class: %innova_path.manager.publishment.class%
+        arguments:
+            objectManager:             @doctrine.orm.entity_manager
             stepManager:               @innova_path.manager.step
-        calls:
-            - [setRequest, ["@?request="]]
-        scope: request
+            nonDigitalResourceManager: @innova_path.manager.non_digital_resource
 
     # NonDigitalResource manager
     innova_path.manager.non_digital_resource:
         class: %innova_path.manager.non_digital_resource.class%
         arguments:
-            entityManager:   @doctrine.orm.entity_manager
+            objectManager:   @doctrine.orm.entity_manager
             securityContext: @security.context
             resourceManager: @claroline.manager.resource_manager
 
@@ -24,11 +27,8 @@ services:
     innova_path.manager.path_template:
         class: %innova_path.manager.path_template.class%
         arguments:
-            entityManager: @doctrine.orm.entity_manager
-        calls:
-            - [setRequest, ["@?request="]]
-        scope: request
-
+            objectManager: @doctrine.orm.entity_manager
+        
     # Step manager
     innova_path.manager.step: 
         class: %innova_path.manager.step.class%

@@ -37,7 +37,6 @@
 namespace Innova\PathBundle\Controller;
 
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 
@@ -79,16 +78,16 @@ class StepController
     protected $securityContext;
     
     /**
-     * Current request
-     * @var \Symfony\Component\HttpFoundation\Request
+     * Current path manager
+     * @var \Innova\PathBundle\Manager\StepManager
      */
-    protected $request;
+    protected $stepManager;
     
     /**
-     * Current path manager
-     * @var \Innova\PathBundle\Manager\PathManager;
+     * Path to the kernel
+     * @var string
      */
-    protected $pathManager;
+    protected $kernelRoot;
     
     /**
      * Class constructor
@@ -98,26 +97,15 @@ class StepController
      * @param StepManager              $stepManager
      */
     public function __construct(
+        $kernelRoot,
 	    EntityManagerInterface   $entityManager,
         SecurityContextInterface $securityContext,
-        StepManager              $stepManager
-    )
+        StepManager              $stepManager) 
     {
+        $this->kernelRoot      = $kernelRoot;
         $this->entityManager   = $entityManager;
         $this->securityContext = $securityContext;
         $this->stepManager     = $stepManager;
-    }
-
-    /**
-     * Inject current request into service
-     * @param Request $request
-     * @return \Innova\PathBundle\Controller\StepController
-     */
-    public function setRequest(Request $request = null)
-    {
-        $this->request = $request;
-    
-        return $this;
     }
 
     /**
@@ -133,22 +121,22 @@ class StepController
      */
     public function getUserResourcesAction()
     {
-        // TODO : put it into a manager or repository
         $user = $this->securityContext->getToken()->getUser();
         $resourceNodes = $this->entityManager->getRepository('ClarolineCoreBundle:Resource\ResourceNode')->findByCreator($user);
         
         $resources = array();
 
         foreach ($resourceNodes as $resourceNode) {
-                $resource = new \stdClass();
-                $resource->id = $resourceNode->getId();
-                $resource->workspace = $resourceNode->getWorkspace()->getName();
-                $resource->name = $resourceNode->getName();
-                $resource->type = $resourceNode->getResourceType()->getName();
-                $resource->icon = $resourceNode->getIcon()->getIconLocation();
+            $resource = new \stdClass();
+            $resource->id = $resourceNode->getId();
+            $resource->workspace = $resourceNode->getWorkspace()->getName();
+            $resource->name = $resourceNode->getName();
+            $resource->type = $resourceNode->getResourceType()->getName();
+            $resource->icon = $resourceNode->getIcon()->getIconLocation();
 
-                $resources[] = $resource;
+            $resources[] = $resource;
         }
+        
         return new JsonResponse($resources);
     }
 
@@ -165,11 +153,10 @@ class StepController
      */
     public function getImagesAction() 
     {
-        // TODO : put it into a manager or repository
         $images = array ();
         
         $authorizedExtensions = array ('png', 'jpg', 'jpeg', 'tiff', 'gif');
-        $imagesPath = $this->request->server->get('DOCUMENT_ROOT') . $this->request->getBasePath() . '/bundles/innovapath/images/steps/';
+        $imagesPath = $this->kernelRoot . '/../web/bundles/innovapath/images/steps/';
         
         // Get all content of directory
         $imagesDir = dir($imagesPath);
@@ -205,15 +192,9 @@ class StepController
      */
     public function getStepWheresAction()
     {
-        // TODO : put it into a manager or repository
-        $results = $this->entityManager->getRepository('InnovaPathBundle:StepWhere')->findAll();
+        $wereList = $this->stepManager->getWhere();
     
-        $stepWheres = array();
-        foreach ($results as $result) {
-            $stepWheres[$result->getId()] = $result->getName();
-        }
-    
-        return new JsonResponse($stepWheres);
+        return new JsonResponse($wereList);
     }
     
     /**
@@ -229,14 +210,8 @@ class StepController
      */
     public function getStepWhosAction()
     {
-        // TODO : put it into a manager or repository
-        $results = $this->entityManager->getRepository('InnovaPathBundle:StepWho')->findAll();
+        $whoList = $this->stepManager->getWho();
     
-        $stepWhos = array();
-        foreach ($results as $result) {
-            $stepWhos[$result->getId()] = $result->getName();
-        }
-    
-        return new JsonResponse($stepWhos);
+        return new JsonResponse($whoList);
     }
 }

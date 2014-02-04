@@ -61,7 +61,7 @@
             {% set stepDisplayed = false %}
 
             {% for sibling in stepSiblings %}
-                {% if sibling.stepOrder >= step.stepOrder + 1 and not stepDisplayed %}
+                {% if sibling.order >= step.order + 1 and not stepDisplayed %}
                     {% set stepDisplayed = true %}
                     {{ macros.breadcrumbItem(workspace, path, step) }}
                 {% endif %}

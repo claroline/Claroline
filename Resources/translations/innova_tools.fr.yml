@@ -18,9 +18,9 @@ close: Fermer
 # D
 description: Description
 duration: Durée
-deploy_success: Le parcours a été publié
-deploy: Publier
-deploy_error: Le parcours n'a pas pu être publié. Veuillez réessayer.
+publish_success: Le parcours a été publié.
+publish: Publier
+publish_error: Le parcours n'a pas pu être publié. Veuillez réessayer.
 delete: Supprimer
 draft: Non publié
 

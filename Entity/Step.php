@@ -63,7 +63,7 @@ class Step
      * Children steps
      * @var \Doctrine\Common\Collections\ArrayCollection
      * 
-     * @ORM\OneToMany(targetEntity="Step", mappedBy="parent")
+     * @ORM\OneToMany(targetEntity="Step", mappedBy="parent", indexBy="id")
      */
     protected $children;
 
@@ -105,9 +105,9 @@ class Step
 
     /**
      * Path
-     * @var Innova\PathBundle\Entity\Path
+     * @var Innova\PathBundle\Entity\Path\Path
      * 
-     * @ORM\ManyToOne(targetEntity="Path", inversedBy="steps")
+     * @ORM\ManyToOne(targetEntity="Innova\PathBundle\Entity\Path\Path", inversedBy="steps")
      * @ORM\JoinColumn(onDelete="CASCADE")
      */
     protected $path;
@@ -125,7 +125,7 @@ class Step
     protected $stepWhere;
 
     /**
-     * @ORM\OneToMany(targetEntity="Step2ResourceNode", mappedBy="step")
+     * @ORM\OneToMany(targetEntity="Step2ResourceNode", mappedBy="step", indexBy="id")
      */
     protected $step2ResourceNodes;
 
@@ -363,10 +363,10 @@ class Step
 
     /**
      * Set path
-     * @param  \Innova\PathBundle\Entity\Path $path
+     * @param  \Innova\PathBundle\Entity\Path\Path $path
      * @return \Innova\PathBundle\Entity\
      */
-    public function setPath(\Innova\PathBundle\Entity\Path $path = null)
+    public function setPath(\Innova\PathBundle\Entity\Path\Path $path = null)
     {
         $this->path = $path;
 
@@ -375,7 +375,7 @@ class Step
 
     /**
      * Get path
-     * @return \Innova\PathBundle\Entity\Path
+     * @return \Innova\PathBundle\Entity\Path\Path
      */
     public function getPath()
     {
@@ -419,7 +419,7 @@ class Step
      */
     public function addChild(Step $step)
     {
-        $this->children->add($step);
+        $this->children->set($step->getId(), $step);
         $step->setParent($this);
         
         return $this;
@@ -445,8 +445,9 @@ class Step
      */
     public function addStep2ResourceNode(Step2ResourceNode $step2ResourceNodes)
     {
-        $this->step2ResourceNodes[] = $step2ResourceNodes;
-
+        $this->step2ResourceNodes->set($step2ResourceNodes->getId(), $step2ResourceNodes);
+        $step2ResourceNodes->setStep($this);
+        
         return $this;
     }
 
@@ -457,6 +458,7 @@ class Step
     public function removeStep2ResourceNode(Step2ResourceNode $step2ResourceNodes)
     {
         $this->step2ResourceNodes->removeElement($step2ResourceNodes);
+        $step2ResourceNodes->setStep(null);
         
         return $this;
     }

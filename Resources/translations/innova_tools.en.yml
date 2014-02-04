@@ -16,12 +16,12 @@ classroom: In a classroom
 close: Close
 
 # D
-deploy_success: Path has been published
-deploy_error: The path has not been published due to a technical problem. Please try again.
+publish_success: Path has been published
+publish_error: The path has not been published due to a technical problem. Please try again.
 description: Description
 duration: Duration
 delete: Delete
-deploy: Publish
+publish: Publish
 draft: Not published
 
 # E

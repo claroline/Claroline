@@ -4,7 +4,7 @@ namespace Innova\PathBundle\Manager;
 
 use Doctrine\Common\Persistence\ObjectManager;
 use Innova\PathBundle\Entity\Step;
-use Innova\PathBundle\Entity\Path;
+use Innova\PathBundle\Entity\Path\Path;
 use Innova\PathBundle\Entity\Step2ResourceNode;
 
 class StepManager
@@ -64,7 +64,7 @@ class StepManager
         return $resourceNodes;
     }
 
-    public function editResourceNodeRelation(Step $step, $resourceNodeId, $excluded, $propagated, $order)
+    public function editResourceNodeRelation(Step $step, $resourceNodeId, $excluded, $propagated, $order = null)
     {
         $step2ressourceNode = $this->om->getRepository('InnovaPathBundle:Step2ResourceNode')->findOneBy(array (
             'step' => $step,
@@ -80,7 +80,10 @@ class StepManager
         $step2ressourceNode->setStep($step);
         $step2ressourceNode->setExcluded($excluded);
         $step2ressourceNode->setPropagated($propagated);
-        $step2ressourceNode->setResourceOrder($order);
+        
+        if (!empty($order)) {
+            $step2ressourceNode->setResourceOrder($order);
+        }
     
         $this->om->persist($step2ressourceNode);
         $this->om->flush();
@@ -90,29 +93,29 @@ class StepManager
     
     /**
      * Create a new step from JSON structure
-     * @param  \Innova\PathBundle\Entity\Path $path          Parent path of the step
-     * @param  integer                        $level         Depth of the step in the path
-     * @param  \Innova\PathBundle\Entity\Step $parent        Parent step of the step
-     * @param  integer                        $order         Order of the step relative to its siblings
-     * @param  \stdClass                      $stepStructure Data about the step
-     * @return \Innova\PathBundle\Entity\Step                Edited step
+     * @param  \Innova\PathBundle\Entity\Path\Path $path          Parent path of the step
+     * @param  integer                             $level         Depth of the step in the path
+     * @param  \Innova\PathBundle\Entity\Step      $parent        Parent step of the step
+     * @param  integer                             $order         Order of the step relative to its siblings
+     * @param  \stdClass                           $stepStructure Data about the step
+     * @return \Innova\PathBundle\Entity\Step                     Edited step
      */
     public function create(Path $path, $level = 0, Step $parent = null, $order = 0, \stdClass $stepStructure)
     {
         $step = new Step();
         
-        return $this->edit($path, $level, $order, $stepStructure, $step);
+        return $this->edit($path, $level, $parent, $order, $stepStructure, $step);
     }
     
     /**
      * Update an existing step from JSON structure
-     * @param  \Innova\PathBundle\Entity\Path $path          Parent path of the step
-     * @param  integer                        $level         Depth of the step in the path
-     * @param  \Innova\PathBundle\Entity\Step $parent        Parent step of the step
-     * @param  integer                        $order         Order of the step relative to its siblings
-     * @param  \stdClass                      $stepStructure Data about the step
-     * @param  \Innova\PathBundle\Entity\Step $step          Current step to edit
-     * @return \Innova\PathBundle\Entity\Step                Edited step
+     * @param  \Innova\PathBundle\Entity\Path\Path $path          Parent path of the step
+     * @param  integer                             $level         Depth of the step in the path
+     * @param  \Innova\PathBundle\Entity\Step      $parent        Parent step of the step
+     * @param  integer                             $order         Order of the step relative to its siblings
+     * @param  \stdClass                           $stepStructure Data about the step
+     * @param  \Innova\PathBundle\Entity\Step      $step          Current step to edit
+     * @return \Innova\PathBundle\Entity\Step                     Edited step
      */
     public function edit(Path $path, $level = 0, Step $parent = null, $order = 0, \stdClass $stepStructure, Step $step)
     {
@@ -159,5 +162,29 @@ class StepManager
         $this->om->flush();
         
         return $step;
+    }
+    
+    public function getWho()
+    {
+        $results = $this->om->getRepository('InnovaPathBundle:StepWho')->findAll();
+        
+        $stepWhos = array();
+        foreach ($results as $result) {
+            $stepWhos[$result->getId()] = $result->getName();
+        }
+        
+        return $stepWhos;
+    }
+    
+    public function getWhere()
+    {
+        $results = $this->om->getRepository('InnovaPathBundle:StepWhere')->findAll();
+        
+        $stepWheres = array();
+        foreach ($results as $result) {
+            $stepWheres[$result->getId()] = $result->getName();
+        }
+        
+        return $stepWheres;
     }
 }

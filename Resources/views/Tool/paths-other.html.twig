@@ -11,10 +11,10 @@
         </thead>
         <tbody>
         {% for path in paths["others"] %}
-            {% if path.deployed %}
+            {% if path.published %}
             <tr>
                 <td>
-                    {% if path.deployed %}
+                    {% if path.published %}
                         {% if not path.modified %}
                             <span class="text-success">[{{ 'published' | trans({}, 'innova_tools') }}]</span>
                         {% else %}
@@ -33,6 +33,7 @@
                 <td align="right">
                     <a href="{{ path('innova_path_player_index', {workspaceId: workspace.id, pathId: path.id, stepId: path.getRootStep().id}) }}" data-original-title="{{ 'play' | trans({}, 'innova_tools') }}" class="btn btn-xs btn-default" />
                         <span class="icon-play"></span>
+                        {{ 'play' | trans({}, 'innova_tools') }}
                     </a>
                 </td>
             </tr>

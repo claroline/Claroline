@@ -2,28 +2,13 @@
 
 namespace Innova\PathBundle\Form\Handler;
 
-use Symfony\Component\Form\Form;
-use Symfony\Component\HttpFoundation\Request;
-
 use Innova\PathBundle\Manager\PathManager;
 
 /**
  * Handles path form
  */
-class PathHandler
+class PathHandler extends AbstractPathHandler
 {
-    /**
-     * Form to handle
-     * @var \Symfony\Component\Form\Form
-     */
-    protected $form;
-    
-    /**
-     * Current request
-     * @var \Symfony\Component\HttpFoundation\Request
-     */
-    protected $request;
-    
     /**
      * Path manager
      * @var \Innova\PathBundle\Manager\PathManager
@@ -39,62 +24,21 @@ class PathHandler
         $this->pathManager = $pathManager;
     }
     
-    /**
-     * Set current request
-     * @param  \Symfony\Component\HttpFoundation\Request $request
-     * @return \Innova\PathBundle\Form\Handler\PathHandler
-     */
-    public function setRequest(Request $request = null)
+    public function create()
     {
-        $this->request = $request;
+        // Retrieve current Workspace
+        $workspaceId = $this->request->get('workspaceId');
+        $workspace = $this->pathManager->getWorkspace($workspaceId);
         
-        return $this;
+        $this->pathManager->create($this->data, $workspace);
+        
+        return true;
     }
     
-    /**
-     * Set current form
-     * @param  \Symfony\Component\Form\Form $form
-     * @return \Innova\PathBundle\Form\Handler\PathHandler
-     */
-    public function setForm(Form $form)
+    public function edit()
     {
-        $this->form = $form;
-    
-        return $this;
-    }
-    
-    /**
-     * Process current form
-     * @return boolean
-     */
-    public function process()
-    {
-        if ($this->request->getMethod() == 'POST' || $this->request->getMethod() == 'PUT') {
-            // Correct HTTP method => try to process form
-            $this->form->handleRequest($this->request);
-            
-            if ( $this->form->isValid() ) {
-                // Form is valid => create or update the path
-                $path = $this->form->getData();
-                
-                if ($this->request->getMethod() == 'POST') {
-                    // Create path
-                    
-                    // Retrieve current Workspace
-                    $workspaceId = $this->request->get('workspaceId');
-                    $workspace = $this->pathManager->getWorkspace($workspaceId);
-                    
-                    $this->pathManager->create($path, $workspace);
-                }
-                else {
-                    // Edit existing path
-                    $this->pathManager->edit($path);
-                }
-
-                return true;
-            }
-        }
+        $this->pathManager->edit($this->data);
         
-        return false;
+        return true;
     }
 }

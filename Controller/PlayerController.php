@@ -7,7 +7,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 
-use Innova\PathBundle\Entity\Path;
+use Innova\PathBundle\Entity\Path\Path;
 use Innova\PathBundle\Entity\Step;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Symfony\Component\DependencyInjection\ContainerAware;
@@ -35,7 +35,7 @@ class PlayerController extends ContainerAware
      *      options={"expose" = true}
      * )
      * @ParamConverter("workspace", class="ClarolineCoreBundle:Workspace\AbstractWorkspace", options={"mapping": {"workspaceId": "id"}})
-     * @ParamConverter("path", class="InnovaPathBundle:Path", options={"mapping": {"pathId": "id"}})
+     * @ParamConverter("path", class="InnovaPathBundle:Path\Path", options={"mapping": {"pathId": "id"}})
      * @ParamConverter("currentStep", class="InnovaPathBundle:Step", options={"mapping": {"stepId": "id"}})
      * @Method("GET")
      * @Template("InnovaPathBundle:Player:main.html.twig")

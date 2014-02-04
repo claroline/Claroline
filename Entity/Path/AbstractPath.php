@@ -1,68 +1,54 @@
 <?php
 
-namespace Innova\PathBundle\Entity;
+namespace Innova\PathBundle\Entity\Path;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
-/**
- * PathTemplate
- *
- * @ORM\Table(name="innova_pathtemplate")
- * @ORM\Entity
+/** 
+ * Abstract path
+ *  
+ * @ORM\MappedSuperclass 
  */
-class PathTemplate
+class AbstractPath
 {
     /**
-     * @var integer
-     *
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
-    private $id;
-
-    /**
+     * Name of the path
      * @var string
      *
      * @ORM\Column(name="name", type="string", length=255)
+     * @Assert\NotBlank
      */
-    private $name;
-
+    protected $name;
+    
     /**
+     * Description of the path
      * @var string
      *
      * @ORM\Column(name="description", type="text", nullable=true)
      */
-    private $description;
-
+    protected $description;
+    
     /**
+     * JSON structure of the path
      * @var string
      *
      * @ORM\Column(name="structure", type="text")
      */
-    private $structure;
-
-    /**
-     * Get id
-     * @return integer
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
-
+    protected $structure;
+    
     /**
      * Set name
      * @param  string $name
-     * @return PathTemplate
+     * @return \Innova\PathBundle\Entity\Path\AbstractPath
      */
     public function setName($name)
     {
         $this->name = $name;
-
+    
         return $this;
     }
-
+    
     /**
      * Get name
      * @return string
@@ -71,19 +57,19 @@ class PathTemplate
     {
         return $this->name;
     }
-
+    
     /**
      * Set description
-     * @param  string       $description
-     * @return PathTemplate
+     * @param  string $description
+     * @return \Innova\PathBundle\Entity\Path\AbstractPath
      */
     public function setDescription($description)
     {
         $this->description = $description;
-
+    
         return $this;
     }
-
+    
     /**
      * Get description
      * @return string
@@ -92,19 +78,19 @@ class PathTemplate
     {
         return $this->description;
     }
-
+    
     /**
      * Set structure
      * @param  string $structure
-     * @return PathTemplate
+     * @return \Innova\PathBundle\Entity\Path\AbstractPath
      */
     public function setStructure($structure)
     {
         $this->structure = $structure;
-
+    
         return $this;
     }
-
+    
     /**
      * Get structure
      * @return string
