@@ -144,11 +144,12 @@ class Manager
     /**
      * Creates a notification viewer for every user in the list of people to be notified
      *
-     * @param Notification $notification
+     * @param Notification        $notification
      * @param NotifiableInterface $notifiable
      *
+     * @return \Icap\NotificationBundle\Entity\Notification
      */
-    public function notifyUsers (Notification $notification, NotifiableInterface $notifiable)
+    public function notifyUsers(Notification $notification, NotifiableInterface $notifiable)
     {
         $userIds = array();
         if ($notifiable->getSendToFollowers() && $notifiable->getResource() !== null) {
@@ -158,14 +159,16 @@ class Manager
             );
         }
 
-        if (!empty($notifiable->getIncludeUserIds())) {
-            $userIds = array_merge($userIds, $notifiable->getIncludeUserIds());
+        $includeUserIds = $notifiable->getIncludeUserIds();
+        if (!empty($userIds)) {
+            $userIds = array_merge($userIds, $includeUserIds);
         }
 
-        $userIds = array_unique($userIds);
+        $userIds        = array_unique($userIds);
+        $excludeUserIds = $notifiable->getExcludeUserIds();
 
-        if (!empty($notifiable->getExcludeUserIds())) {
-            $userIds = array_diff($userIds, $notifiable->getExcludeUserIds());
+        if (!empty($excludeUserIds)) {
+            $userIds = array_diff($userIds, $excludeUserIds);
         }
 
         //Remove doer from user list as long as the logged user
