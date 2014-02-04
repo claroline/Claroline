@@ -28,35 +28,39 @@
 
 <div id='content' class="tab-content">
     <div class="tab-pane active" id="current-step-tab">
-        {% if edit == true %}
-            {{ form_widget(form.description) }}
-            {{ form_widget(form.save, { 'label': 'Sauvegarder' }) }}
-            {{ form_end(form) }}
-        {% else %}
-            {% if currentStep.children is not empty %}
-                {% if currentStep.description is null %}
-                    <div class="panel panel-default">
-                        <div class="panel-heading">
-                            <h5 class="panel-title text-center">
-                                <a data-toggle="collapse" href="#collapse-children">
-                                {{ 'next_step' | trans({}, 'path_player') }}
-                                </a>
-                            </h5>
-                        </div>
-                        <ul id="collapse-children" class="list-group collapse {% if currentStep.description is null %}in{% endif %}">
-                        {% for child in currentStep.children %}
-                            <li class="list-group-item">
-                            <a href="{{ path('innova_path_player_index', { workspaceId: workspace.id, pathId: path.id, stepId: child.id }) }}">
-                            {{ child.name }}
-                            </a>
-                            </li>
-                        {% endfor %}
-                        </ul>
-                    </div>
+        <div class="panel panel-default">
+            <div class="panel-body">
+                {% if edit == true %}
+                    {{ form_widget(form.description) }}
+                    {{ form_widget(form.save, { 'label': 'Sauvegarder' }) }}
+                    {{ form_end(form) }}
+                {% else %}
+                    {% if currentStep.children is not empty %}
+                        {% if currentStep.description is null %}
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <h5 class="panel-title text-center">
+                                        <a data-toggle="collapse" href="#collapse-children">
+                                        {{ 'next_step' | trans({}, 'path_player') }}
+                                        </a>
+                                    </h5>
+                                </div>
+                                <ul id="collapse-children" class="list-group collapse {% if currentStep.description is null %}in{% endif %}">
+                                {% for child in currentStep.children %}
+                                    <li class="list-group-item">
+                                    <a href="{{ path('innova_path_player_index', { workspaceId: workspace.id, pathId: path.id, stepId: child.id }) }}">
+                                    {{ child.name }}
+                                    </a>
+                                    </li>
+                                {% endfor %}
+                                </ul>
+                            </div>
+                        {% endif %}
+                    {% endif %}
+                    {{ currentStep.description | raw }}
                 {% endif %}
-            {% endif %}
-            {{ currentStep.description | raw }}
-        {% endif %}
+            </div>
+        </div>
     </div>
     
     {% set allParents = currentStep.getParents() %}
@@ -73,6 +77,6 @@
     {% endfor %}
 
     {% for resource in currentStep.step2ResourceNodes if resource.excluded == false %}
-            {{ macros.displayResourceFrame(resource, currentStep) }}
+        {{ macros.displayResourceFrame(resource, currentStep) }}
     {% endfor %}
 </div>

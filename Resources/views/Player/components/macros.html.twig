@@ -9,8 +9,11 @@
 
 {% macro displayResourceFrame(resource, step) %}
     <div class="tab-pane" id="resource-tab-{{ resource.resourceNode.id }}">
-        <iframe seamless width="100%" class="resource-frame" data-resource-src="{{ path('claro_resource_open', {'node': resource.resourceNode.id, 'resourceType': resource.resourceNode.resourceType.name }) }}" src="">
-        </iframe>
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <iframe seamless width="100%" class="resource-frame" data-resource-src="{{ path('claro_resource_open', {'node': resource.resourceNode.id, 'resourceType': resource.resourceNode.resourceType.name }) }}" src=""></iframe>
+            </div>
+        </div>
     </div>
 {% endmacro %}
 
