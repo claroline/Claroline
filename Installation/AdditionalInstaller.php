@@ -39,9 +39,9 @@ class AdditionalInstaller extends BaseInstaller
             // Update entity class name
             $em = $this->container->get('doctrine.orm.entity_manager');
             $query = $em->createQuery(
-                'UPDATE Claroline\CoreBundle\Entity\Resource\ResourceNode 
-                 SET class="Innova\\PathBundle\\Entity\\Path\\Path" 
-                 WHERE class="Innova\\PathBundle\\Entity\\Path" '
+                "UPDATE Claroline\CoreBundle\Entity\Resource\ResourceNode AS rn
+                 SET rn.class='Innova\\PathBundle\\Entity\\Path\\Path' 
+                 WHERE rn.class='Innova\\PathBundle\\Entity\\Path' "
             );
             $query->getResult();
         }
