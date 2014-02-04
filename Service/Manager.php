@@ -12,7 +12,6 @@ use Pagerfanta\Adapter\DoctrineORMAdapter;
 use Pagerfanta\Exception\NotValidCurrentPageException;
 use Pagerfanta\Pagerfanta;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Symfony\Component\Security\Core\SecurityContext;
 use Icap\NotificationBundle\Entity\ColorChooser;
 use Symfony\Component\DependencyInjection\Container;
 
@@ -23,7 +22,7 @@ class Manager
     protected $container;
 
     /**
-     * @return Icap\NotificationBundle\Entity\Notification repository
+     * @return \Icap\NotificationBundle\Entity\Notification repository
      */
     protected function getNotificationRepository()
     {
@@ -31,7 +30,7 @@ class Manager
     }
 
     /**
-     * @return Icap\NotificationBundle\Entity\NotificationViewer repository
+     * @return \Icap\NotificationBundle\Entity\NotificationViewer repository
      */
     protected function getNotificationViewerRepository()
     {
@@ -39,7 +38,7 @@ class Manager
     }
 
     /**
-     * @return Icap\NotificationBundle\Entity\FollowerResource repository
+     * @return \Icap\NotificationBundle\Entity\FollowerResource repository
      */
     protected function getFollowerResourceRepository()
     {
@@ -49,14 +48,13 @@ class Manager
     /**
      * Constructor
      *
-     * @param Doctrine\ORM\EntityManager
-     * @param Symfony\Component\Form\FormFactory
+     * @param \Symfony\Component\DependencyInjection\Container $container
      */
     public function __construct(Container $container)
     {
         $this->container = $container;
-        $this->em = $container->get('doctrine.orm.entity_manager');
-        $this->security = $container->get('security.context');
+        $this->em        = $container->get('doctrine.orm.entity_manager');
+        $this->security  = $container->get('security.context');
     }
 
     /**
@@ -70,7 +68,9 @@ class Manager
     /**
      * Get Hash for a given object which must implement notifiable interface
      *
-     * @param Icap\NotificationBundle\Entity\NotifiableInterface $notifiable
+     * @param int    $resourceId
+     * @param string $resourceClass
+     *
      * @return string The generated hash
      */
     public function getHash($resourceId, $resourceClass)
@@ -84,7 +84,9 @@ class Manager
     }
 
     /**
-     * @param $resourceId
+     * @param int    $resourceId
+     * @param string $resourceClass
+     *
      * @return mixed
      */
     public function getFollowersByResourceIdAndClass($resourceId, $resourceClass)
@@ -95,14 +97,16 @@ class Manager
         foreach ($followerResults as $followerResult) {
             array_push($followerIds, $followerResult['id']);
         }
+
         return $followerIds;
     }
 
     /**
      * Create new Tag given its name
      *
-     * @param String $name
-     * @return Tag the generated Tag
+     * @param \Icap\NotificationBundle\Entity\NotifiableInterface $notifiable
+     *
+     * @return Notification
      */
     public function createNotification(NotifiableInterface $notifiable)
     {
@@ -199,7 +203,7 @@ class Manager
     /**
      * Creates a notification and notifies the concerned users
      *
-     * @param NotifiableInterface $notifiable
+     * @param  NotifiableInterface $notifiable
      * @return Notification
      */
     public function createNotificationAndNotify(NotifiableInterface $notifiable)
@@ -213,9 +217,9 @@ class Manager
     /**
      * Retrieves the notifications list
      *
-     * @param int $userId
-     * @param int $page
-     * @param int $maxResult
+     * @param  int   $userId
+     * @param  int   $page
+     * @param  int   $maxResult
      * @return query
      */
     public function getUserNotificationsList($userId, $page = 1, $maxResult = -1)
@@ -269,8 +273,11 @@ class Manager
     }
 
     /**
-     * @param $userId
-     * @param $resourceId
+     * @param int    $userId
+     * @param int    $resourceId
+     * @param string $resourceClass
+     *
+     * @return
      */
     public function getFollowerResource($userId, $resourceId, $resourceClass)
     {
@@ -325,7 +332,7 @@ class Manager
     /**
      * @param $notificationViewIds
      */
-    public function markNotificationsAsViewed ($notificationViewIds)
+    public function markNotificationsAsViewed($notificationViewIds)
     {
         if (!empty($notificationViewIds)) {
             $this->getNotificationViewerRepository()->markAsViewed($notificationViewIds);
@@ -333,14 +340,15 @@ class Manager
     }
 
     /**
-     * @param null $viewerId
+     * @param  null $viewerId
      * @return int
      */
-    public function countUnviewedNotifications ($viewerId = null)
+    public function countUnviewedNotifications($viewerId = null)
     {
         if (empty($viewerId)) {
             $viewerId = $this->security->getToken()->getUser()->getId();
         }
+
         return intval($this->getNotificationViewerRepository()->countUnviewedNotifications($viewerId)["total"]);
     }
 }
