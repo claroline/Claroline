@@ -113,10 +113,11 @@ class ParametersController extends Controller
      */
     public function settingsFormAction()
     {
+        $description = $this->contentManager->getTranslatedContent(array('type' => 'platformDescription'));
         $platformConfig = $this->configHandler->getPlatformConfig();
         $role = $this->roleManager->getRoleByName($platformConfig->getDefaultRole());
         $form = $this->formFactory->create(
-            new AdminForm\GeneralType($this->localeManager->getAvailableLocales(), $role),
+            new AdminForm\GeneralType($this->localeManager->getAvailableLocales(), $role, $description),
             $platformConfig
         );
 
@@ -140,10 +141,11 @@ class ParametersController extends Controller
      */
     public function submitSettingsAction()
     {
+        $description = $this->contentManager->getContent(array('type' => 'platformDescription'));
         $platformConfig = $this->configHandler->getPlatformConfig();
         $role = $this->roleManager->getRoleByName($platformConfig->getDefaultRole());
         $form = $this->formFactory->create(
-            new AdminForm\GeneralType($this->localeManager->getAvailableLocales(), $role),
+            new AdminForm\GeneralType($this->localeManager->getAvailableLocales(), $role, $description),
             $platformConfig
         );
         $form->handleRequest($this->request);
@@ -160,6 +162,16 @@ class ParametersController extends Controller
                         'cookie_lifetime' => $form['cookie_lifetime']->getData()
                     )
                 );
+
+                $content = $this->request->get('platform_parameters_form');
+
+                if (isset($content['description'])) {
+                    if ($description) {
+                        $this->contentManager->updateContent($description, $content['description']);
+                    } else {
+                        $this->contentManager->createContent($content['description'], 'platformDescription');
+                    }
+                }
 
                 $logo = $this->request->files->get('logo');
 

@@ -20,10 +20,12 @@ class GeneralType extends AbstractType
 {
     private $langs;
     private $role;
+    private $description;
 
-    public function __construct(array $langs, $role)
+    public function __construct(array $langs, $role, $description)
     {
         $this->role = $role;
+        $this->description = $description;
 
         if (!empty($langs)) {
             $this->langs = $langs;
@@ -40,6 +42,7 @@ class GeneralType extends AbstractType
                 'description',
                 'content',
                 array(
+                    'data' => $this->description,
                     'mapped' => false,
                     'required' => false,
                     'label' => 'Description',

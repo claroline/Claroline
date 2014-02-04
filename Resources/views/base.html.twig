@@ -12,7 +12,11 @@
 <html class="no-js" lang="{{ app.request.locale|default('fr') }}">
 <!--<![endif]-->
     <head>
+        {% set description = getContent('platformDescription') %}
         {% block meta %}
+            {% if not description is empty %}
+                <meta name="Description" content="{{ description.content | striptags }}">
+            {% endif %}
             <meta charset="utf-8">
             {# The following line is needed for unit testing as the DOMDocument
                used by the SF's crawler doesn't recognize the HTML5 charset meta tag.
@@ -27,7 +31,14 @@
             {% else %}
                 {% set pagetitle = 'Claroline Connect' %}
         {% endif %}
-        <title>{% block title %}{{ pagetitle | striptags | raw }}{% endblock %}</title>
+        <title>{% spaceless %}
+            {% block title %}
+                {{ pagetitle | striptags | raw }}
+                {% if not description is empty %}
+                    - {{ description.content | striptags | raw }}
+                {% endif %}
+            {% endblock %}
+        {% endspaceless %}</title>
         {% block stylesheets %}{% endblock %}
 
         {% block favicon %}
