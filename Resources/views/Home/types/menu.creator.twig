@@ -54,6 +54,7 @@
                 <input
                     class="form-control content-title"
                     placeholder="{% if father is defined %}{{ "Link title" | trans({}, 'home') }}{% else %}{{ "Menu title" | trans({}, 'home') }}{% endif %}..."
+                    {% if content is defined %}value="{{ content.title }}"{% endif %}
                     >
                 <div class="navbar navbar-default navbar-static-top">
                     <form class="navbar-form pull-right">

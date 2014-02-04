@@ -12,30 +12,6 @@
 
     var home = window.Claroline.Home;
 
-    $('body').on('mouseenter', '.content-element', function () {
-
-        if ($('.content-menu', this).get(0) !== undefined) {
-            $('.content-menu').each(function () {
-                if (!$(this).hasClass('hide')) {
-                    $(this).addClass('hide');
-                }
-                if ($(this).hasClass('open')) {
-                    $(this).removeClass('open');
-                }
-            });
-        }
-
-        $(this).find('.content-menu').first().removeClass('hide');
-
-    });
-
-    $('body').on('mouseleave', '.content-element', function () {
-        if (!$(this).find('.content-menu').first().hasClass('open')) {
-            $(this).find('.content-menu').first().removeClass('open');
-        }
-        $(this).find('.content-menu').first().addClass('hide');
-    });
-
     $('body').on('click', '.content-size', function (event) {
         var element = $(event.target).parents('.content-element').get(0);
         var size = (element.className.match(/\bcontent-\d+/g) || []).join(' ').substr(8);

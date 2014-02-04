@@ -14,18 +14,17 @@
     var home = window.Claroline.Home;
 
     home.path = $('#homePath').html(); //global
+    home.locale = $('#homeLocale').html(); //global
+    home.asset = $('#homeAsset').html(); //global
+
 
     if (!home.path) {
         home.path = './';
     }
 
-    home.locale = $('#homeLocale').html(); //global
-
     if (!home.locale) {
         home.locale = 'en';
     }
-
-    home.asset = $('#homeAsset').html(); //global
 
     if (!home.asset) {
         home.asset = './';
@@ -168,6 +167,18 @@
                 home.modal('content/error');
             });
         }
+    };
+
+    home.getForm = function ()
+    {
+        var contents = [];
+
+        $(event.target).parents('.creator').first().find('textarea').each(function () {
+            contents[$(this).parent().data('lang')] = [];
+            contents[$(this).parent().data('lang')]['content'] = $(this).val();
+        });
+
+        return contents;
     };
 
     /**
