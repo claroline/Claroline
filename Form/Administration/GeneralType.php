@@ -20,10 +20,12 @@ class GeneralType extends AbstractType
 {
     private $langs;
     private $role;
+    private $description;
 
-    public function __construct(array $langs, $role)
+    public function __construct(array $langs, $role, $description)
     {
         $this->role = $role;
+        $this->description = $description;
 
         if (!empty($langs)) {
             $this->langs = $langs;
@@ -36,6 +38,17 @@ class GeneralType extends AbstractType
     {
         $builder
             ->add('name', 'text', array('required' => false))
+            ->add(
+                'description',
+                'content',
+                array(
+                    'data' => $this->description,
+                    'mapped' => false,
+                    'required' => false,
+                    'label' => 'Description',
+                    'theme_options' => array('contentTitle' => false, 'tinymce' => false)
+                )
+            )
             ->add('support_email', 'email', array('label' => 'support_email'))
             ->add('selfRegistration', 'checkbox', array('required' => false))
             ->add(
