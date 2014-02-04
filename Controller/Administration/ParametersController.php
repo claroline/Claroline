@@ -559,7 +559,7 @@ class ParametersController extends Controller
     {
         $form = $this->formFactory->create(new AdminForm\IndexingType(), $this->configHandler->getPlatformConfig());
 
-        if ($this->request->getMethod() == 'POST') {
+        if ($this->request->getMethod() === 'POST') {
             $form->handleRequest($this->request);
 
             if ($form->isValid()) {
