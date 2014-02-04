@@ -9,7 +9,7 @@ services:
     # Path handler
     innova_path.form.handler.path:
         class: %innova_path.form.handler.path.class%
-        parent: innova_path.form.handler.abstract_path
+        parent: innova_path.form.handler.abstract
         arguments: [@innova_path.manager.path]
         scope: request
 
