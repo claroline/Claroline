@@ -117,6 +117,7 @@ communication: Communication
 configuration: Configuration
 configure: Configure
 connections: Connections
+cookie_lifetime: 'Cookie lifetime'
 copiable: Copiable
 copy: Copy
 create: Create
@@ -141,6 +142,8 @@ csv_users_import_infos_required: Required
 current_category: 'Current category'
 cut: Cut
 dashboard: Dashboard
+data_col: 'Database id column'
+database_connection_failed: 'Database connection failed'
 date: Date
 date_form_format: MM/dd/yyyy
 date_format: m-d-Y
@@ -168,6 +171,7 @@ date_range.to: To
 date_range.today: Today
 date_range.week: w
 date_range.yesterday: Yesterday
+db_table: 'Database table'
 deletable: Deletable
 delete: Delete
 delete_category: 'Delete category'
@@ -190,6 +194,7 @@ download: Download
 downloads: Downloads
 drag_file_here: 'Drag the file here'
 drop_file: 'Drop the file'
+dsn: dsn
 edit: Edit
 editable: Editable
 email_form_mail: 'Enter your email'
@@ -254,6 +259,7 @@ home_tab_widgets_configuration: 'Home tab widgets configuration'
 home_tabs: 'Home tabs'
 home_tabs_configuration: 'Home tabs configuration'
 id: Id
+id_col: 'Database data column'
 import: Import
 import_user_file_file: 'Import from a csv file'
 import_users: 'Import users'
@@ -527,6 +533,7 @@ send_mail_form_content: Message
 send_mail_form_object: Object
 send_message: 'Send a message'
 server: Server
+session: Session
 session_id: 'Session id'
 settings: Settings
 sharable: Sharable
@@ -535,6 +542,7 @@ show_as: 'Show as'
 show_as_admin: 'Show as admin'
 show_as_user: 'Show as user'
 show_profile: 'Show profile'
+storage_type: 'Storage type'
 subcategories: Subcategories
 subscribe_groups: 'Subscribe groups'
 subscribe_selected_groups: 'Subscribe selected groups'
@@ -558,6 +566,7 @@ text_form_text: Text
 the_following_users_were_not_imported: 'The following users were not imported.'
 the_workspace: Workspace
 this_page_requires_authentication: 'This page requires authentication. Please login.'
+time_col: 'Database time column'
 to: To
 to_message: To
 today: Today
