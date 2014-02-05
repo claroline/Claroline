@@ -4,6 +4,7 @@
  * Tree Controller
  */
 function TreeCtrl($scope, $modal, HistoryFactory, PathFactory, StepFactory, ResourceFactory) {
+    $scope.showButtons = null;
     $scope.whoList = StepFactory.getWhoList();
     $scope.whereList = StepFactory.getWhereList();
     $scope.resourceTypeLabels = ResourceFactory.getResourceTypeLabels();
