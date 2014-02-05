@@ -72,15 +72,16 @@ class AuthenticationSuccessListener
 
     /**
      * @DI\Observe("security.interactive_login")
-     *
-     * @param WorkspaceLogEvent $event
      */
-    public function onAuthenticationSuccess()
+    public function onAuthenticationSuccess($event)
     {
         $user = $this->securityContext->getToken()->getUser();
         $this->eventDispatcher->dispatch('log', 'Log\LogUserLogin', array($user));
         $token = new UsernamePasswordToken($user, null, 'main', $user->getRoles());
         $this->securityContext->setToken($token);
+        //redirect to the last visited workspace
+
+        $lastUri = $user->getLastUri();
     }
 
     /**
@@ -89,6 +90,27 @@ class AuthenticationSuccessListener
      * @param GetResponseEvent $event
      */
     public function onKernelRequest(GetResponseEvent $event)
+    {
+        $event = $this->showTermOfServices($event);
+        $this->saveLastUri($event);
+    }
+
+    public function saveLastUri(GetResponseEvent $event)
+    {
+        $user = $this->securityContext->getToken()->getUser();
+
+        if ($user !== 'anon.') {
+            $uri = $event->getRequest()->getRequestUri();
+            $event->getRequest()->
+            var_dump($event->getRequest());
+            //throw new \Exception($uri);
+            $user->setLastUri($uri);
+            $this->manager->persist($user);
+            $this->manager->flush();
+        }
+    }
+
+    private function showTermOfServices(GetResponseEvent $event)
     {
         if ($event->isMasterRequest() and
             $user = $this->getUser($event->getRequest()) and
@@ -109,6 +131,8 @@ class AuthenticationSuccessListener
                 $event->setResponse(new Response($response));
             }
         }
+
+        return $event;
     }
 
     /**

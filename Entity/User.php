@@ -260,6 +260,11 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
      */
     protected $isMailNotified = false;
 
+    /**
+     * @ORM\Column(name="last_uri", length=255, nullable=true)
+     */
+    protected $lastUri;
+
     public function __construct()
     {
         parent::__construct();
@@ -850,5 +855,15 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
     public function isMailNotified()
     {
         return $this->isMailNotified;
+    }
+
+    public function setLastUri($lastUri)
+    {
+        $this->lastUri = $lastUri;
+    }
+
+    public function getLastUri()
+    {
+        return $this->lastUri;
     }
 }
