@@ -104,7 +104,7 @@ class InteractionHoleController extends Controller
 
         $formHandler = new InteractionHoleHandler(
             $form, $this->get('request'), $this->getDoctrine()->getManager(),
-            $this->container->get('security.context')->getToken()->getUser(), $exoID
+            $this->container->get('security.context')->getToken()->getUser(), $this->get('validator'), $exoID
         );
 
         if ($formHandler->processAdd()) {

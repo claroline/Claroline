@@ -52,14 +52,16 @@ class InteractionHoleHandler {
     protected $em;
     protected $user;
     protected $exercise;
+    protected $validator;
 
-    public function __construct(Form $form, Request $request, EntityManager $em, User $user, $exercise=-1)
+    public function __construct(Form $form, Request $request, EntityManager $em, User $user, $validator, $exercise=-1)
     {
-        $this->form     = $form;
-        $this->request  = $request;
-        $this->em       = $em;
-        $this->user     = $user;
-        $this->exercise = $exercise;
+        $this->form      = $form;
+        $this->request   = $request;
+        $this->em        = $em;
+        $this->user      = $user;
+        $this->exercise  = $exercise;
+        $this->validator = $validator;
     }
     
      public function processAdd()
@@ -68,6 +70,15 @@ class InteractionHoleHandler {
             $this->form->handleRequest($this->request);
 
             if ( $this->form->isValid() ) {
+                foreach ($this->form->getData()->getHoles() as $h) {
+                    foreach ($h->getWordResponses() as $wr) {
+                        $errorList = $this->validator->validate($wr);
+                        /*if (count($errorList) > 0) {
+                            echo 'test : '.$errorList[0]->getMessage();die();
+                        }*/
+                        return false;
+                    }
+                }
                 $this->onSuccessAdd($this->form->getData());
 
                 return true;

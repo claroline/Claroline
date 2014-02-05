@@ -15,8 +15,13 @@ UJM\ExoBundle\Entity\Choice:
     properties:
         weight:
             - UJM\ExoBundle\Validator\Constraints\isValidQCMMark: ~
-
+            
 UJM\ExoBundle\Entity\InteractionOpen:
     properties:
         scoreMaxLongResp:
+            - UJM\ExoBundle\Validator\Constraints\isValidMark: ~
+            
+UJM\ExoBundle\Entity\WordResponse:
+    properties:
+        score:
             - UJM\ExoBundle\Validator\Constraints\isValidMark: ~

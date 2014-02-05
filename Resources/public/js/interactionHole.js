@@ -26,6 +26,35 @@ function addFormHole(add, Response, point, size, orthography, del, selector, sou
     $('tbody').sortable();
 }
 
+function addFormHoleEdit(add, Response, point, size, orthography, del, selector, source_image_add, wlangKeyWord, wlangPoint) {
+    var index;
+    
+    container.children().first().children('div').each(function () {
+
+        // Add a row to the table
+        $('#newTable').find('tbody').append('<tr></tr>');
+
+         $(this).find('.row').each(function () {
+
+            if ($(this).find('input').length) {
+                $('#newTable').find('tr:last').append('<td class="classic"></td>');
+                $('#newTable').find('td:last').append($(this).find('input'));
+            }
+
+            //fillChoicesArray($(this));
+
+            // Add the form errors
+            //$('#choiceError').append($(this).find('span'));
+        });
+
+        /*if (nbResponses == 0) {
+            // Add the delete button
+            $('#newTable').find('tr:last').append('<td class="classic"></td>');
+            addDelete($('#newTable').find('td:last'), deleteChoice);
+        }*/
+    });
+}
+
 function createHole()
 {
     var blank = tinyMCE.activeEditor.selection.getContent({format : 'text'});
