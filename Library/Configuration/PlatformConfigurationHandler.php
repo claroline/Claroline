@@ -43,7 +43,8 @@ class PlatformConfigurationHandler
         'mailer_password' => null,
         'mailer_auth_mode' => null,
         'terms_of_service' => true,
-        'google_meta_tag' => null
+        'google_meta_tag' => null,
+        'redirect_after_login' => false
     );
 
     /**
@@ -116,6 +117,7 @@ class PlatformConfigurationHandler
         $config->setMailerPassword($this->parameters['mailer_password']);
         $config->setMailerAuthMode($this->parameters['mailer_auth_mode']);
         $config->setGoogleMetaTag($this->parameters['google_meta_tag']);
+        $config->setRedirectAfterLogin($this->parameters['redirect_after_login']);
 
         return $config;
     }
