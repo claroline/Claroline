@@ -31,6 +31,8 @@ use Symfony\Bundle\FrameworkBundle\Translation\Translator;
 use Claroline\CoreBundle\Manager\MailManager;
 use Claroline\CoreBundle\Form\Administration as AdminForm;
 use Claroline\CoreBundle\Manager\CacheManager;
+use Claroline\CoreBundle\Manager\SessionManager;
+use Claroline\CoreBundle\Library\Installation\Refresher;
 
 /**
  * @DI\Tag("security.secure_service")
@@ -49,6 +51,8 @@ class ParametersController extends Controller
     private $mailManager;
     private $contentManager;
     private $cacheManager;
+    private $sessionManager;
+    private $refresher;
 
     /**
      * @DI\InjectParams({
@@ -61,7 +65,9 @@ class ParametersController extends Controller
      *     "termsOfService" = @DI\Inject("claroline.common.terms_of_service_manager"),
      *     "mailManager"    = @DI\Inject("claroline.manager.mail_manager"),
      *     "cacheManager"   = @DI\Inject("claroline.manager.cache_manager"),
-     *     "contentManager" = @DI\Inject("claroline.manager.content_manager")
+     *     "contentManager" = @DI\Inject("claroline.manager.content_manager"),
+     *     "sessionManager" = @DI\Inject("claroline.manager.session_manager"),
+     *     "refresher"     = @DI\Inject("claroline.installation.refresher")
      * })
      */
     public function __construct(
@@ -74,7 +80,9 @@ class ParametersController extends Controller
         TermsOfServiceManager $termsOfService,
         MailManager $mailManager,
         ContentManager $contentManager,
-        CacheManager $cacheManager
+        CacheManager $cacheManager,
+        SessionManager $sessionManager,
+        Refresher $refresher
     )
     {
         $this->configHandler = $configHandler;
@@ -87,6 +95,8 @@ class ParametersController extends Controller
         $this->mailManager = $mailManager;
         $this->contentManager = $contentManager;
         $this->cacheManager = $cacheManager;
+        $this->sessionManager = $sessionManager;
+        $this->refresher = $refresher;
     }
 
     /**
@@ -163,8 +173,7 @@ class ParametersController extends Controller
                         'locale_language' => $form['localeLanguage']->getData(),
                         'name' => $form['name']->getData(),
                         'support_email' => $form['support_email']->getData(),
-                        'default_role' => $form['defaultRole']->getData()->getName(),
-                        'cookie_lifetime' => $form['cookie_lifetime']->getData()
+                        'default_role' => $form['defaultRole']->getData()->getName()
                     )
                 );
 
@@ -571,6 +580,81 @@ class ParametersController extends Controller
             if ($form->isValid()) {
                 $this->configHandler->setParameter('google_meta_tag', $form['google_meta_tag']->getData());
                 return $this->redirect($this->generateUrl('claro_admin_index'));
+            }
+        }
+
+        return array('form' => $form->createView());
+    }
+
+    /**
+     * @Route(
+     *     "/session",
+     *     name="claro_admin_session"
+     * )
+     *
+     * @Template("ClarolineCoreBundle:Administration\platform:session.html.twig")
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function sessionAction()
+    {
+        $platformConfig = $this->configHandler->getPlatformConfig();
+
+        $form = $this->formFactory->create(
+            new AdminForm\SessionType(),
+            $platformConfig
+        );
+
+        return array(
+            'form' => $form->createView(),
+        );
+    }
+
+    /**
+     * @Route(
+     *     "/session/submit",
+     *     name="claro_admin_session_submit"
+     * )
+     *
+     * @Template("ClarolineCoreBundle:Administration\platform:session.html.twig")
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function submitSessionAction()
+    {
+        $platformConfig = $this->configHandler->getPlatformConfig();
+
+        $form = $this->formFactory->create(
+            new AdminForm\SessionType($this->configHandler->getParameter('session_storage_type')),
+            $platformConfig
+        );
+
+        $form->handleRequest($this->request);
+
+        if ($form->isValid()) {
+            $data = array(
+                'session_storage_type' => $form['session_storage_type']->getData(),
+                'session_db_table' => $form['session_db_table']->getData(),
+                'session_db_id_col' => $form['session_db_id_col']->getData(),
+                'session_db_data_col' => $form['session_db_data_col']->getData(),
+                'session_db_time_col' => $form['session_db_time_col']->getData(),
+                'session_db_dsn' => $form['session_db_dsn']->getData(),
+                'session_db_user' => $form['session_db_user']->getData(),
+                'session_db_password' => $form['session_db_password']->getData(),
+                'cookie_lifetime' => $form['cookie_lifetime']->getData()
+            );
+
+            $errors = $this->sessionManager->validate($data);
+
+            if (count($errors) === 0) {
+                $this->configHandler->setParameters($data);
+
+                return $this->redirect($this->generateUrl('claro_admin_index'));
+            }
+
+            foreach ($errors as  $error) {
+                $trans = $this->translator->trans($error, array(), 'platform');
+                $form->addError(new FormError($trans));
             }
         }
 
