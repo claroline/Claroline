@@ -1,78 +1,74 @@
-add_event: "Add an event"
-agenda_form_title : title
-agenda_form_end : "End date jj/mm/aaaa) or (jj-mm-aaaa)"
-agenda_form_start : "Start date"
-agenda_form_startHours : "Start hour"
-agenda_form_endHours : "End hour"
-agenda_form_description : "Description"
-agenda_form_allDay : " All day"
-agenda_form_priority : "Priority"
-agenda_form_recurring: "Recurrency"
-date_invalid : "An error occured. Please check if the start end date is bigger than the start date"
-confirm: "Are you sure about this change ?"
-end : "end"
-event_update : 'Updated'
-error: "An unexpeded error occured, please try again"
-new entry : "New entry"
-start_date : "Start date"
-end_date : "End date"
-non plan task : "non plan tasks"
-tasks: 'Tasks'
-title : "Title"
-all day : "Task"
-high : "High"
-medium : "Medium"
-modify : 'Modify an event'
-low : "Low"
-no event found : 'no event found'
-tasks: "Tasks"
-title : "Title can not be empty"
-update : "update"
-prev : '<'
-next : '>'
-prevYear : '<<'
-nextYear : '>>'
-today : 'today'
-month : 'month'
-week : 'week'
-day: 'day'
-january: 'January'
-february: 'February'
-mars: 'Mars'
-april: 'April'
-may: 'May'
-june: 'June'
-july: 'July'
-august: 'August'
-september: 'September'
-october: 'October'
-november: 'November'
-december: 'December'
-jan: 'Jan'
-feb: 'Feb'
-mars: 'Mars'
-apr: 'Apr'
-may: 'May'
-ju: 'Ju'
-jul: 'Jul'
-aug: 'Aug'
-sept: 'Sep'
-oct: 'Oct'
-nov: 'Nov'
-dec: 'Dec'
-monday: 'Monday'
-tuesday: 'Tuesday'
-wednesday: 'Wednesday'
-thursday: 'Thursday'
-friday: 'Friday'
-saturday: 'Saturday'
-sunday: 'Sunday'
-mon: 'Mon'
-tue: 'Tue'
-wed: 'Wed'
-thu: 'Thu'
-fri: 'Fri'
-sat: 'Satur'
-sun: 'Sun'
-length: 'Length'
-workspace: 'Workspace'
+add_event: 'Add new event'
+agenda_form_allDay: 'Task'
+agenda_form_description: Description
+agenda_form_end: 'End date'
+agenda_form_endHours: 'End hour'
+agenda_form_priority_High: High
+agenda_form_priority: Priority
+agenda_form_recurring: Repeats
+agenda_form_start: 'Start date'
+agenda_form_startHours: 'Start hour'
+agenda_form_title: title
+apr: Apr
+april: April
+aug: Aug
+august: August
+close: Close
+confirm: 'Confirm modification ?'
+date_invalid: 'An error occured. Please check that your event doesn''t end before it starts'
+day: day
+dec: Dec
+december: December
+end: end
+end_date: 'End date'
+error: 'An unexpeded error occured, please try again'
+event_update: 'Event modified'
+feb: Feb
+february: February
+fri: Fri
+friday: Friday
+high: High
+jan: Jan
+january: January
+jul: Jul
+july: July
+jun: Jun
+june: June
+length: Length
+low: Low
+mar: Mar
+march: Mar
+may: May
+medium: Medium
+modify: 'Modify an event'
+mon: Mon
+monday: Monday
+month: month
+next: '>'
+nextYear: '>>'
+'no event found': 'no event found'
+nov: Nov
+november: November
+oct: Oct
+october: October
+prev: '<'
+prevYear: '<<'
+sat: Sat
+saturday: Saturday
+sept: Sept
+september: September
+start_date: 'Start date'
+sun: Sun
+sunday: Sunday
+tasks: Tasks
+thu: Thu
+thursday: Thursday
+title: 'Title can not be empty'
+today: today
+tue: Tue
+tuesday: Tuesday
+update: modify
+wed: Wed
+wednesday: Wednesday
+week: week
+workspace: Workspace
