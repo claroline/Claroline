@@ -14,6 +14,8 @@ namespace Claroline\CoreBundle\Form\Administration;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\Validator\Constraints\GreaterThanOrEqual;
+use Symfony\Component\Validator\Constraints\NotBlank;
 
 class SessionType extends AbstractType
 {
@@ -63,53 +65,23 @@ class SessionType extends AbstractType
                 'session_storage_type',
                 'choice',
                 array(
-                    'choices' => array('native' => 'native', 'claro_pdo' => 'claro_pdo', 'pdo' => 'pdo'),
+                    'choices' => array(
+                        'native' => 'files',
+                        'claro_pdo' => 'database',
+                        'pdo' => 'external_pdo_database'
+                    ),
                     'label' => 'storage_type'
                 )
             );
 
-        $builder->add(
-            'session_db_table',
-            'text',
-            array(
-                'label' => 'db_table',
-                'required' => false,
-                'theme_options' => array('display_row' => $this->formDisplay[$this->sessionType]['session_db_table'])
-            )
-        )
-            ->add(
-                'session_db_id_col',
-                'text',
-                array(
-                    'label' => 'id_col',
-                    'required' => false,
-                    'theme_options' => array('display_row' => $this->formDisplay[$this->sessionType]['session_db_id_col'])
-                )
-            )
-            ->add(
-                'session_db_data_col',
-                'text',
-                array(
-                    'label' => 'data_col',
-                    'required' => false,
-                    'theme_options' => array('display_row' => $this->formDisplay[$this->sessionType]['session_db_data_col'])
-                )
-            )
-            ->add(
-                'session_db_time_col',
-                'text',
-                array(
-                    'label' => 'time_col',
-                    'required' => false,
-                    'theme_options' => array('display_row' => $this->formDisplay[$this->sessionType]['session_db_time_col'])
-                )
-            )
+        $builder
             ->add(
                 'session_db_dsn',
                 'text',
                 array(
-                    'label' => 'dsn',
+                    'label' => 'DSN',
                     'required' => false,
+                    'constraints' => new NotBlank(),
                     'theme_options' => array('display_row' => $this->formDisplay[$this->sessionType]['session_db_dsn'])
                 )
             )
@@ -119,6 +91,7 @@ class SessionType extends AbstractType
                 array(
                     'label' => 'user',
                     'required' => false,
+                    'constraints' => new NotBlank(),
                     'theme_options' => array('display_row' => $this->formDisplay[$this->sessionType]['session_db_user'])
                 )
             )
@@ -128,7 +101,48 @@ class SessionType extends AbstractType
                 array(
                     'label' => 'password',
                     'required' => false,
+                    'constraints' => new NotBlank(),
                     'theme_options' => array('display_row' => $this->formDisplay[$this->sessionType]['session_db_password'])
+                )
+            )
+            ->add(
+                'session_db_table',
+                'text',
+                array(
+                    'label' => 'db_table',
+                    'required' => false,
+                    'constraints' => new NotBlank(),
+                    'theme_options' => array('display_row' => $this->formDisplay[$this->sessionType]['session_db_table'])
+                )
+            )
+            ->add(
+                'session_db_id_col',
+                'text',
+                array(
+                    'label' => 'id_col',
+                    'required' => false,
+                    'constraints' => new NotBlank(),
+                    'theme_options' => array('display_row' => $this->formDisplay[$this->sessionType]['session_db_id_col'])
+                )
+            )
+            ->add(
+                'session_db_data_col',
+                'text',
+                array(
+                    'label' => 'data_col',
+                    'required' => false,
+                    'constraints' => new NotBlank(),
+                    'theme_options' => array('display_row' => $this->formDisplay[$this->sessionType]['session_db_data_col'])
+                )
+            )
+            ->add(
+                'session_db_time_col',
+                'text',
+                array(
+                    'label' => 'time_col',
+                    'required' => false,
+                    'constraints' => new NotBlank(),
+                    'theme_options' => array('display_row' => $this->formDisplay[$this->sessionType]['session_db_time_col'])
                 )
             );
 
@@ -136,8 +150,9 @@ class SessionType extends AbstractType
             'cookie_lifetime',
             'number',
             array(
-                'required' => false,
+                'required' => true,
                 'label' => 'cookie_lifetime',
+                'constraints' => new GreaterThanOrEqual(array('value' => 60)),
                 'theme_options' => array('display_row' => $this->formDisplay[$this->sessionType]['cookie_lifetime'])
             )
         );
@@ -152,4 +167,4 @@ class SessionType extends AbstractType
     {
         $resolver->setDefaults(array('translation_domain' => 'platform'));
     }
-} 
+}

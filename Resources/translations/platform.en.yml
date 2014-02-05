@@ -143,6 +143,7 @@ current_category: 'Current category'
 cut: Cut
 dashboard: Dashboard
 data_col: 'Database id column'
+database: Database
 database_connection_failed: 'Database connection failed'
 date: Date
 date_form_format: MM/dd/yyyy
@@ -204,8 +205,10 @@ enter_tag_name_message: 'Please enter a tag name'
 entries_per_day: 'Entries per day'
 export: Export
 exportable: Exportable
+external_pdo_database: External database (PDO)
 fast_answer: 'Fast answer'
 file: File
+file: Files
 file_form_file: File
 file_form_license: License
 file_form_name: Name
@@ -534,6 +537,15 @@ send_mail_form_object: Object
 send_message: 'Send a message'
 server: Server
 session: Session
+session_db_cannot_perform_operations: Cannot read or write in the specified table. Please check that the database user has sufficient permissions and that there isn't any special constraint on this table.
+session_db_id_col_must_be_pk: Id column (and only this column) must be the primary key.
+session_db_invalid_type_id_col: Id colum must be of type "string" (e.g. "VARCHAR").
+session_db_invalid_type_data_col: Data colum must be of type "text" (e.g. "LONGTEXT").
+session_db_invalid_type_time_col: Time colum must be of type "integer" (e.g. "INT").
+session_db_no_table: The specified table doesn't exist.
+session_db_no_data_col: Data column doesn't exist.
+session_db_no_id_col: Id column doesn't exist.
+session_db_no_time_col: Time column doesn't exist.
 session_id: 'Session id'
 settings: Settings
 sharable: Sharable

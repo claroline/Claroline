@@ -631,34 +631,31 @@ class ParametersController extends Controller
 
         $form->handleRequest($this->request);
 
-        // ensure cookie lifetime has a minimal value of 1 minute
-        $cookieLifetime = $form['cookie_lifetime']->getData() > 60 ?
-            $form['cookie_lifetime']->getData() :
-            60;
+        if ($form->isValid()) {
+            $data = array(
+                'session_storage_type' => $form['session_storage_type']->getData(),
+                'session_db_table' => $form['session_db_table']->getData(),
+                'session_db_id_col' => $form['session_db_id_col']->getData(),
+                'session_db_data_col' => $form['session_db_data_col']->getData(),
+                'session_db_time_col' => $form['session_db_time_col']->getData(),
+                'session_db_dsn' => $form['session_db_dsn']->getData(),
+                'session_db_user' => $form['session_db_user']->getData(),
+                'session_db_password' => $form['session_db_password']->getData(),
+                'cookie_lifetime' => $form['cookie_lifetime']->getData()
+            );
 
-        $data = array(
-            'session_storage_type' => $form['session_storage_type']->getData(),
-            'session_db_table' => $form['session_db_table']->getData(),
-            'session_db_id_col' => $form['session_db_id_col']->getData(),
-            'session_db_data_col' => $form['session_db_data_col']->getData(),
-            'session_db_time_col' => $form['session_db_time_col']->getData(),
-            'session_db_dsn' => $form['session_db_dsn']->getData(),
-            'session_db_user' => $form['session_db_user']->getData(),
-            'session_db_password' => $form['session_db_password']->getData(),
-            'cookie_lifetime' => $cookieLifetime
-        );
+            $errors = $this->sessionManager->validate($data);
 
-        $errors = $this->sessionManager->validate($data);
+            if (count($errors) === 0) {
+                $this->configHandler->setParameters($data);
 
-        if (count($errors) === 0) {
-            $this->configHandler->setParameters($data);
+                return $this->redirect($this->generateUrl('claro_admin_index'));
+            }
 
-            return $this->redirect($this->generateUrl('claro_admin_index'));
-        }
-
-        foreach ($errors as  $error) {
-            $trans = $this->translator->trans($error, array(), 'platform');
-            $form->addError(new FormError($trans));
+            foreach ($errors as  $error) {
+                $trans = $this->translator->trans($error, array(), 'platform');
+                $form->addError(new FormError($trans));
+            }
         }
 
         return array('form' => $form->createView());
