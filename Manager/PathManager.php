@@ -6,6 +6,7 @@ use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\Security\Core\SecurityContext;
 use Claroline\CoreBundle\Manager\ResourceManager;
 
+use Symfony\Component\Security\Core\User\UserInterface;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Innova\PathBundle\Entity\Path\Path;
 
@@ -86,7 +87,8 @@ class PathManager
     public function findAllFromWorkspace(AbstractWorkspace $workspace)
     {
         $paths = array();
-        if (!empty($this->user)) {
+        if (!empty($this->user) && $this->user instanceof UserInterface) {
+            // User is logged => get his paths
             $paths['me'] = $this->om->getRepository('InnovaPathBundle:Path\Path')->findAllByWorkspaceByUser($workspace, $this->user);
             $paths['others'] = $this->om->getRepository('InnovaPathBundle:Path\Path')->findAllByWorkspaceByNotUser($workspace, $this->user);
         }
