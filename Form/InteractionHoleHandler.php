@@ -73,10 +73,10 @@ class InteractionHoleHandler {
                 foreach ($this->form->getData()->getHoles() as $h) {
                     foreach ($h->getWordResponses() as $wr) {
                         $errorList = $this->validator->validate($wr);
-                        /*if (count($errorList) > 0) {
-                            echo 'test : '.$errorList[0]->getMessage();die();
-                        }*/
-                        return false;
+                        if (count($errorList) > 0) {
+                            //echo 'test : '.$errorList[0]->getMessage();die();
+                            return false;
+                        }
                     }
                 }
                 $this->onSuccessAdd($this->form->getData());
