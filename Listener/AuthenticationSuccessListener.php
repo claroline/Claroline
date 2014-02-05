@@ -19,17 +19,22 @@ use Claroline\CoreBundle\Manager\TermsOfServiceManager;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use Doctrine\ORM\EntityManager;
 use JMS\DiExtraBundle\Annotation as DI;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Templating\EngineInterface;
 use Symfony\Component\Form\FormFactory;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Security\Core\SecurityContextInterface;
+use Symfony\Component\Security\Http\Event\InteractiveLoginEvent;
+use Symfony\Component\Security\Http\Authentication\AuthenticationSuccessHandlerInterface;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 /**
- * @DI\Service
+ * @DI\Service("claroline.authentication_handler")
  */
-class AuthenticationSuccessListener
+class AuthenticationSuccessListener implements AuthenticationSuccessHandlerInterface
 {
     private $securityContext;
     private $eventDispatcher;
@@ -47,7 +52,7 @@ class AuthenticationSuccessListener
      *     "templating"             = @DI\Inject("templating"),
      *     "formFactory"            = @DI\Inject("form.factory"),
      *     "termsOfService"         = @DI\Inject("claroline.common.terms_of_service_manager"),
-     *     "manager"                = @DI\Inject("claroline.persistence.object_manager"),
+     *     "manager"                = @DI\Inject("claroline.persistence.object_manager")
      * })
      *
      */
@@ -73,15 +78,22 @@ class AuthenticationSuccessListener
     /**
      * @DI\Observe("security.interactive_login")
      */
-    public function onAuthenticationSuccess($event)
+    public function onLoginSuccess(InteractiveLoginEvent $event)
     {
         $user = $this->securityContext->getToken()->getUser();
         $this->eventDispatcher->dispatch('log', 'Log\LogUserLogin', array($user));
         $token = new UsernamePasswordToken($user, null, 'main', $user->getRoles());
         $this->securityContext->setToken($token);
-        //redirect to the last visited workspace
+    }
 
+    public function onAuthenticationSuccess(Request $request, TokenInterface $token)
+    {
+        $user = $this->securityContext->getToken()->getUser();
         $lastUri = $user->getLastUri();
+        $response = new RedirectResponse($lastUri);
+
+        var_dump($response->getContent());
+        return $response;
     }
 
     /**
@@ -92,21 +104,36 @@ class AuthenticationSuccessListener
     public function onKernelRequest(GetResponseEvent $event)
     {
         $event = $this->showTermOfServices($event);
+    }
+
+    /**
+     * @DI\Observe("kernel.response")
+     *
+     * @param GetResponseEvent $event
+     */
+    public function onKernelTerminate($event)
+    {
         $this->saveLastUri($event);
     }
 
-    public function saveLastUri(GetResponseEvent $event)
+    public function saveLastUri($event)
     {
-        $user = $this->securityContext->getToken()->getUser();
+        if (
+            $event->isMasterRequest() &&
+            !$event->getRequest()->isXmlHttpRequest() &&
+            !in_array($event->getRequest()->attributes->get('_route'), $this->getExcludedRoutes())
+        ) {
 
-        if ($user !== 'anon.') {
-            $uri = $event->getRequest()->getRequestUri();
-            $event->getRequest()->
-            var_dump($event->getRequest());
-            //throw new \Exception($uri);
-            $user->setLastUri($uri);
-            $this->manager->persist($user);
-            $this->manager->flush();
+            $token =  $this->securityContext->getToken();
+            if ($token) {
+                $user = $token->getUser();
+                if ($user !== 'anon.') {
+                    $uri = $event->getRequest()->getRequestUri();
+                    $user->setLastUri($uri);
+                    $this->manager->persist($user);
+                    $this->manager->flush();
+                }
+            }
         }
     }
 
@@ -152,5 +179,14 @@ class AuthenticationSuccessListener
         ) {
             return $user;
         }
+    }
+
+    private function getExcludedRoutes()
+    {
+        return array(
+            'bazinga_exposetranslation_js',
+            'login_check',
+            'login'
+        );
     }
 }
