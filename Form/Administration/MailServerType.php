@@ -118,6 +118,7 @@ class MailServerType extends AbstractType
     {
         return 'platform_parameters_form';
     }
+
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(array('translation_domain' => 'platform'));
