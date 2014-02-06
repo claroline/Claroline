@@ -8,7 +8,6 @@ use Icap\NotificationBundle\Entity\Notification;
 use Icap\NotificationBundle\Entity\NotificationViewer;
 use Doctrine\ORM\EntityManager;
 use Icap\NotificationBundle\Event\Notification\NotificationCreateDelegateViewEvent;
-use JMS\SecurityExtraBundle\Tests\Security\Authorization\Voter\IddqdVoterTest;
 use Pagerfanta\Adapter\DoctrineORMAdapter;
 use Pagerfanta\Exception\NotValidCurrentPageException;
 use Pagerfanta\Pagerfanta;
