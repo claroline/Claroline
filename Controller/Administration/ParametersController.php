@@ -173,7 +173,8 @@ class ParametersController extends Controller
                         'locale_language' => $form['localeLanguage']->getData(),
                         'name' => $form['name']->getData(),
                         'support_email' => $form['support_email']->getData(),
-                        'default_role' => $form['defaultRole']->getData()->getName()
+                        'default_role' => $form['defaultRole']->getData()->getName(),
+                        'redirect_after_login' => $form['redirect_after_login']->getData()
                     )
                 );
 

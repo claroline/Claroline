@@ -44,6 +44,7 @@ class PlatformConfigurationHandler
         'mailer_auth_mode' => null,
         'terms_of_service' => true,
         'google_meta_tag' => null,
+        'redirect_after_login' => false,
         'session_storage_type' => 'native',
         'session_db_table' => null,
         'session_db_id_col' => null,
@@ -124,6 +125,7 @@ class PlatformConfigurationHandler
         $config->setMailerPassword($this->parameters['mailer_password']);
         $config->setMailerAuthMode($this->parameters['mailer_auth_mode']);
         $config->setGoogleMetaTag($this->parameters['google_meta_tag']);
+        $config->setRedirectAfterLogin($this->parameters['redirect_after_login']);
         $config->setSessionStorageType($this->parameters['session_storage_type']);
         $config->setSessionDbTable($this->parameters['session_db_table']);
         $config->setSessionDbIdCol($this->parameters['session_db_id_col']);
