@@ -66,13 +66,16 @@
                     });
             }
 
-            $(newCollectionTemplate)
+            var newCollection = $(newCollectionTemplate);
+            newCollection
                 .droppable(dropOptions)
                 .hide()
                 .prependTo($("#collections_list"))
                 .show('fast')
                 .find(".collection_title")
                     .hide();
+
+            $(".btn-delete", newCollection).confirmModal({'confirmCallback': confirmDeleteCollection});
         });
 
         $(collectionsList).on('keydown', 'input',function(event){
@@ -93,6 +96,36 @@
             collectionTitleInput.hide();
 
             collectionContainer.removeClass('editing');
+        }
+
+        $(collectionsList).on('click', '.btn-edit',function(event){
+            makeCollectionTitleEditable($(event.target).parents('li.collection'));
+        });
+
+        function makeCollectionTitleEditable(collectionContainer) {
+            var collectionTitle      = $(".collection_title", collectionContainer);
+            var collectionTitleInput = $(".collection_title_input", collectionContainer);
+
+            collectionContainer.addClass('editing');
+            collectionTitle.hide();
+            collectionTitleInput.show();
+            collectionTitleInput.focus();
+        }
+
+        $(".btn-delete", collectionsList).confirmModal({'confirmCallback': confirmDeleteCollection});
+
+        function confirmDeleteCollection(element)
+        {
+            deleteCollection($(element).parents('li.collection'));
+        }
+
+        function deleteCollection(collectionContainer) {
+            collectionContainer.remove();
+
+            var existedCollection = $(".collection", collectionsList);
+            if (0 == existedCollection.length) {
+                noCollectionElement.show();
+            }
         }
     });
 })(jQuery);
