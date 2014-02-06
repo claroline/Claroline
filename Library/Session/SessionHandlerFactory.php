@@ -19,7 +19,7 @@ use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 /**
  * @DI\Service("claroline.session.handler_factory")
  */
-class ClarolineSessionHandlerFactory
+class SessionHandlerFactory
 {
     private $configHandler;
     private $sessionPath;
@@ -60,7 +60,6 @@ class ClarolineSessionHandlerFactory
         }
 
         if ($type === 'claro_pdo' || $type === 'pdo') {
-
             if ($type === 'pdo') {
                 $dsn = $this->configHandler->getParameter('session_db_dsn');
                 $username = $this->configHandler->getParameter('session_db_user');
