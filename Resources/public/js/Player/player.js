@@ -5,14 +5,12 @@ $( document ).ready(function() {
 
 	$('.resource-frame').on('load', function () {
         var frame = $(this);
-		frame.show();
         frame.css("height", frame.contents().find("#wrap").height() + 20);
     });
 
    $('.resource-tab a').on('click', function () {
    		var iframe = $($(this).attr("href") +" iframe");
    		if (iframe.attr("src") == ""){
-   			iframe.hide();
    			iframe.attr("src", iframe.attr("data-resource-src"));
    		}
    	});
