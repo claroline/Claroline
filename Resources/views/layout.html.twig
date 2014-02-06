@@ -41,6 +41,7 @@
         '../vendor/fortawesome/font-awesome/font/fontawesome-webfont.woff' %}
     {% endimage %}
     <link rel='stylesheet' type='text/css' href='{{ asset('bundles/frontend/jquery/plugin/datepicker/css/datepicker.css')}}'>
+    <link rel='stylesheet' type='text/css' href='{{ asset('bundles/clarolinecore/css/iframe/iframe.css')}}'>
 {% endblock %}
 
 {% block javascripts_header %}
@@ -130,6 +131,7 @@
 {% endblock %}
 
 {% block javascripts %}
+    <script type="text/javascript" src='{{ asset('bundles/clarolinecore/js/iframe/iframe.js') }}'></script>
     {% javascripts debug=false filter='jsmin' output='vendor/twbs/bootstrap/js/bootstrap.js'
         '../vendor/twbs/bootstrap/js/transition.js'
         '../vendor/twbs/bootstrap/js/alert.js'
