@@ -11,19 +11,24 @@
 
 namespace Claroline\CoreBundle\Library\Maintenance;
 
-class MaintenanceHandler 
+class MaintenanceHandler
 {
-
-    const PATH = '/../../../../../../../app/config';
-
     public static function enableMaintenance()
     {
-        touch(__DIR__ . self::PATH . '/.update');
+        if (!file_exists($file = self::getFlagPath())) {
+            touch($file);
+        }
     }
 
     public static function disableMaintenance()
     {
-        unlink(__DIR__ . self::PATH . '/.update');
+        if (file_exists($file = self::getFlagPath())) {
+            @unlink($file);
+        }
     }
 
-} 
+    private static function getFlagPath()
+    {
+        return __DIR__ . '/../../../../../../../app/config/.update';
+    }
+}
