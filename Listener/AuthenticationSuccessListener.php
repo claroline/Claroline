@@ -93,12 +93,14 @@ class AuthenticationSuccessListener implements AuthenticationSuccessHandlerInter
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token)
     {
-        if ($this->configurationHandler->getParameter('redirect_after_login')) {
-            $user = $this->securityContext->getToken()->getUser();
+        $user = $this->securityContext->getToken()->getUser();
+
+        if ($this->configurationHandler->getParameter('redirect_after_login') && $user->getLastUri() !== null) {
             $uri = $user->getLastUri();
         } else {
             $uri = $this->router->generate('claro_desktop_open');
         }
+
         $response = new RedirectResponse($uri);
 
         return $response;
@@ -116,8 +118,6 @@ class AuthenticationSuccessListener implements AuthenticationSuccessHandlerInter
 
     /**
      * @DI\Observe("kernel.response")
-     *
-     * @param GetResponseEvent $event
      */
     public function onKernelTerminate($event)
     {
@@ -129,7 +129,8 @@ class AuthenticationSuccessListener implements AuthenticationSuccessHandlerInter
         if (
             $event->isMasterRequest() &&
             !$event->getRequest()->isXmlHttpRequest() &&
-            !in_array($event->getRequest()->attributes->get('_route'), $this->getExcludedRoutes())
+            !in_array($event->getRequest()->attributes->get('_route'), $this->getExcludedRoutes()) &&
+            'GET' === $event->getRequest()->getMethod()
         ) {
 
             $token =  $this->securityContext->getToken();
