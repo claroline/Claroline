@@ -53,7 +53,7 @@ class Manager
     public function __construct(Container $container)
     {
         $this->container = $container;
-        $this->em        = $container->get('doctrine.orm.entity_manager');
+        $this->em        = $container->get('icap.notification.orm.entity_manager');
         $this->security  = $container->get('security.context');
     }
 
@@ -175,17 +175,24 @@ class Manager
 
         $userIds        = array_unique($userIds);
         $excludeUserIds = $notifiable->getExcludeUserIds();
+        $removeUserIds  = array();
 
         if (!empty($excludeUserIds)) {
             $userIds = array_diff($userIds, $excludeUserIds);
         }
 
-        //Remove doer from user list as long as the logged user
-        $loggedUser = $this->security->getToken()->getUser();
-        $removeUserIds = array($notification->getUserId());
-        if (!empty($loggedUser) && $loggedUser->getId() != $notification->getUserId()) {
-            array_push($removeUserIds, $loggedUser->getId());
+        $token = $this->security->getToken();
+
+        if ($token) {
+            //Remove doer from user list as long as the logged user
+            $loggedUser = $token->getUser();
+            $removeUserIds = array($notification->getUserId());
+
+            if (!empty($loggedUser) && $loggedUser->getId() != $notification->getUserId()) {
+                array_push($removeUserIds, $loggedUser->getId());
+            }
         }
+
         $userIds = array_diff($userIds, $removeUserIds);
 
         if (count($userIds)>0) {
