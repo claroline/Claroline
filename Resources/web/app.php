@@ -14,11 +14,12 @@ $apcLoader->register(true);
 require_once __DIR__.'/../app/AppKernel.php';
 
 $maintenanceMode = file_exists(__DIR__ . '/../app/config/.update');
+$authorized = false;
 
-$clientIp = $_SERVER['REMOTE_ADDR'];
-$fileip = __DIR__ . '/../app/config/ips';
-$authorizedIps = file($fileip, FILE_IGNORE_NEW_LINES);
-$authorized = in_array($clientIp, $authorizedIps);
+if (file_exists($file = __DIR__ . '/../app/config/ips')) {
+    $authorizedIps = file($file, FILE_IGNORE_NEW_LINES);
+    $authorized = in_array($_SERVER['REMOTE_ADDR'], $authorizedIps);
+}
 
 if (!$maintenanceMode || $authorized) {
     $request = \Symfony\Component\HttpFoundation\Request::createFromGlobals();
