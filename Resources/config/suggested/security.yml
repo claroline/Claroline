@@ -8,6 +8,17 @@ security:
         Claroline\CoreBundle\Entity\User: sha512
 
     firewalls:
+        secured_area:
+            anonymous: ~
+            oauth:
+                resource_owners:
+                    facebook:     "/login/check-facebook"
+                login_path:        /login
+                failure_path:      /login
+
+                oauth_user_provider:
+                  service: hwi_oauth.user.provider.entity
+
         install:
             pattern: ^/install
             security: false
