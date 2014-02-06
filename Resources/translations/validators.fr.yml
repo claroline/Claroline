@@ -1,9 +1,10 @@
-The user or group {{ name }} does not exist.: L'utilisateur ou le groupe [{{ name }}] n'existe pas.
-The name {{ name }} is already in use.: Le nom {{ name }} est déjà utilisé.
-'The code {{ code }} is already assigned to another workspace.': Le code {{ code }} est déjà attribué à un autre workspace.
-'special_char_not_allowed': 'Les caractères spéciaux ne sont pas autorisés.'
-'Each row requires at least 5 parameters.': 'Chaque ligne nécessite au moins 5 paramètres (séparées par des virgules).'
-badge_automatic_awarding_need_rules: "Des règles d'attribution doivent être définies pour pouvoir attribuer le badge automatiquement"
-badge_need_image: "Une image doit être définie sur le badge"
-badge_need_at_least_one_translation: "Au moins une traduction complète doit être fournie pour le badge"
+'Each row requires at least 5 parameters.': 'Chaque ligne nécessite au moins 5 paramètres (séparées par des point virgules).'
+'The code {{ code }} is already assigned to another workspace.': 'Le code {{ code }} est déjà attribué à un autre workspace.'
+'The name {{ name }} is already in use.': 'Le nom {{ name }} est déjà utilisé.'
+'The user or group {{ name }} does not exist.': 'L''utilisateur ou le groupe [{{ name }}] n''existe pas.'
+badge_automatic_awarding_need_rules: 'Des règles d''attribution doivent être définies pour pouvoir attribuer le badge automatiquement'
+badge_need_at_least_one_translation: 'Au moins une traduction complète doit être fournie pour le badge'
+badge_need_image: 'Une image doit être définie sur le badge'
 password_mismatch: 'Les mots de passes ne correspondent pas'
+special_char_not_allowed: 'Les caractères spéciaux ne sont pas autorisés (les caractères autorisés sont : a-z, A-Z, 0-9, _ et .)'
+google_meta_tag_error: 'Le champ doit être une balise meta, exemple: <meta name="google-site-verification" content="XXX" />'

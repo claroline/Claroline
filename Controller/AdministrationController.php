@@ -16,7 +16,6 @@ use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Event\StrictDispatcher;
 use Claroline\CoreBundle\Form\Factory\FormFactory;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
-use Claroline\CoreBundle\Library\Configuration\UnwritableException;
 use Claroline\CoreBundle\Manager\AnalyticsManager;
 use Claroline\CoreBundle\Manager\GroupManager;
 use Claroline\CoreBundle\Manager\LocaleManager;
@@ -29,7 +28,6 @@ use JMS\DiExtraBundle\Annotation as DI;
 use JMS\SecurityExtraBundle\Annotation as SEC;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -117,7 +115,10 @@ class AdministrationController extends Controller
     }
 
     /**
-     * @EXT\Template("ClarolineCoreBundle:Administration:index.html.twig")
+     * @EXT\Route(
+     *     "/index",
+     *     name="claro_admin_index"
+     * )
      *
      * Displays the administration section index.
      *
@@ -125,7 +126,7 @@ class AdministrationController extends Controller
      */
     public function indexAction()
     {
-        return array();
+        return $this->redirect($this->generateUrl('claro_admin_parameters_index'));
     }
 
     /**
@@ -139,6 +140,8 @@ class AdministrationController extends Controller
      *
      * Displays the user creation form.
      *
+     * @param User $currentUser
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function userCreationFormAction(User $currentUser)
@@ -147,13 +150,16 @@ class AdministrationController extends Controller
         $form = $this->formFactory->create(
             FormFactory::TYPE_USER_FULL, array($roles, $this->localeManager->getAvailableLocales())
         );
-        if ($this->mailManager->isMailerAvailable()) {
-            return array('form_complete_user' => $form->createView());
+
+        $error = null;
+
+        if (!$this->mailManager->isMailerAvailable()) {
+            $error = 'mail_not_available';
         }
 
         return array(
             'form_complete_user' => $form->createView(),
-            'error' => 'Mail not available'
+            'error' => $error
         );
     }
 
@@ -167,6 +173,8 @@ class AdministrationController extends Controller
      * @EXT\Template("ClarolineCoreBundle:Administration:userCreationForm.html.twig")
      *
      * Creates an user (and its personal workspace) and redirects to the user list.
+     *
+     * @param User $currentUser
      *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
@@ -186,7 +194,16 @@ class AdministrationController extends Controller
             return $this->redirect($this->generateUrl('claro_admin_user_list'));
         }
 
-        return array('form_complete_user' => $form->createView());
+        $error = null;
+
+        if (!$this->mailManager->isMailerAvailable()) {
+            $error = 'mail_not_available';
+        }
+
+        return array(
+            'form_complete_user' => $form->createView(),
+            'error' => $error
+        );
     }
 
     /**
@@ -203,6 +220,8 @@ class AdministrationController extends Controller
      * )
      *
      * Removes many users from the platform.
+     *
+     * @param User[] $users
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -239,6 +258,13 @@ class AdministrationController extends Controller
      * )
      *
      * Displays the platform user list.
+     *
+     * @param integer $page
+     * @param string  $search
+     * @param integer $max
+     * @param string  $order
+     *
+     * @return array
      */
     public function userListAction($page, $search, $max, $order)
     {
@@ -267,6 +293,11 @@ class AdministrationController extends Controller
      * @EXT\Template()
      *
      * Displays the platform user list.
+     *
+     * @param integer $page
+     * @param string  $search
+     *
+     * @return array
      */
     public function userListPicsAction($page, $search)
     {
@@ -300,6 +331,13 @@ class AdministrationController extends Controller
      * )
      *
      * Returns the platform group list.
+     *
+     * @param integer $page
+     * @param string  $search
+     * @param integer $max
+     * @param string  $order
+     *
+     * @return array
      */
     public function groupListAction($page, $search, $max, $order)
     {
@@ -338,6 +376,14 @@ class AdministrationController extends Controller
      * )
      *
      * Returns the users of a group.
+     *
+     * @param Group   $group
+     * @param integer $page
+     * @param string  $search
+     * @param integer $max
+     * @param string  $order
+     *
+     * @return array
      */
     public function usersOfGroupListAction(Group $group, $page, $search, $max, $order)
     {
@@ -375,7 +421,16 @@ class AdministrationController extends Controller
      *     class="Claroline\CoreBundle\Entity\User",
      *     options={"orderable"=true}
      * )
+     *
      * Displays the user list with a control allowing to add them to a group.
+     *
+     * @param Group   $group
+     * @param integer $page
+     * @param string  $search
+     * @param integer $max
+     * @param string  $order
+     *
+     * @return array
      */
     public function outsideOfGroupUserListAction(Group $group, $page, $search, $max, $order)
     {
@@ -457,8 +512,8 @@ class AdministrationController extends Controller
      *
      * Adds multiple user to a group.
      *
-     * @param integer $groupId
-     * @param array $users
+     * @param Group     $group
+     * @param User[] $users
      *
      * @return Response
      */
@@ -494,7 +549,8 @@ class AdministrationController extends Controller
      *
      * Removes users from a group.
      *
-     * @param integer $groupId
+     * @param Group  $group
+     * @param User[] $users
      *
      * @return Response
      */
@@ -523,6 +579,8 @@ class AdministrationController extends Controller
      * )
      *
      * Deletes multiple groups.
+     *
+     * @param Group[] $groups
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -553,7 +611,7 @@ class AdministrationController extends Controller
      *
      * Displays an edition form for a group.
      *
-     * @param integer $groupId
+     * @param Group $group
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -582,7 +640,7 @@ class AdministrationController extends Controller
      *
      * Updates the settings of a group and redirects to the group list.
      *
-     * @param integer $groupId
+     * @param Group $group
      *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
@@ -607,102 +665,9 @@ class AdministrationController extends Controller
     }
 
     /**
-     * @EXT\Route(
-     *     "/platform/settings/form",
-     *     name="claro_admin_platform_settings_form"
-     * )
-     * @EXT\Route(
-     *     "/",
-     *     name="claro_admin_index",
-     *     options={"expose"=true}
-     * )
-     *
-     * @EXT\Template()
-     *
-     * Displays the platform settings.
-     *
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function platformSettingsFormAction()
-    {
-        $platformConfig = $this->configHandler->getPlatformConfig();
-        $role = $this->roleManager->getRoleByName($platformConfig->getDefaultRole());
-        $form = $this->formFactory->create(
-            FormFactory::TYPE_PLATFORM_PARAMETERS,
-            array($this->getThemes(), $this->localeManager->getAvailableLocales(), $role),
-            $platformConfig
-        );
-
-        return array(
-            'form_settings' => $form->createView(),
-            'logos' => $this->get('claroline.common.logo_service')->listLogos()
-        );
-    }
-
-    /**
-     * @EXT\Route(
-     *     "claro_admin_update_platform_settings",
-     *     name="claro_admin_update_platform_settings"
-     * )
-     *
-     * @EXT\Template("ClarolineCoreBundle:Administration:platformSettingsForm.html.twig")
-     *
-     * Updates the platform settings and redirects to the settings form.
-     *
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse
-     */
-    public function updatePlatformSettingsAction()
-    {
-        $platformConfig = $this->configHandler->getPlatformConfig();
-        $role = $this->roleManager->getRoleByName($platformConfig->getDefaultRole());
-        $form = $this->formFactory->create(
-            FormFactory::TYPE_PLATFORM_PARAMETERS,
-            array($this->getThemes(), $this->localeManager->getAvailableLocales(), $role),
-            $platformConfig
-        );
-        $form->handleRequest($this->request);
-
-        if ($form->isValid()) {
-            try {
-                $this->configHandler->setParameters(
-                    array(
-                        'allow_self_registration' => $form['selfRegistration']->getData(),
-                        'locale_language' => $form['localLanguage']->getData(),
-                        'theme' => $form['theme']->getData(),
-                        'name' => $form['name']->getData(),
-                        'support_email' => $form['support_email']->getData(),
-                        'footer' => $form['footer']->getData(),
-                        'logo' => $this->request->get('selectlogo'),
-                        'default_role' => $form['defaultRole']->getData()->getName(),
-                        'cookie_lifetime' => $form['cookie_lifetime']->getData()
-                    )
-                );
-
-                $logo = $this->request->files->get('logo');
-
-                if ($logo) {
-                    $this->get('claroline.common.logo_service')->createLogo($logo);
-                }
-            } catch (UnwritableException $e) {
-                $form->addError(
-                    new FormError(
-                        $this->translator->trans(
-                            'unwritable_file_exception',
-                            array('%path%' => $e->getPath()),
-                            'platform'
-                        )
-                    )
-                );
-
-                return array('form_settings' => $form->createView());
-            }
-        }
-
-        return $this->redirect($this->generateUrl('claro_admin_platform_settings_form'));
-    }
-
-    /**
      * @EXT\Route("delete/logo/{file}", name="claro_admin_delete_logo")
+     *
+     * @param $file
      *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
@@ -745,7 +710,7 @@ class AdministrationController extends Controller
      * )
      * @EXT\Method("GET")
      *
-     * Redirects to the plugin mangagement page.
+     * Redirects to the plugin management page.
      *
      * @param string $domain
      *
@@ -814,10 +779,10 @@ class AdministrationController extends Controller
 
         if ($form->isValid()) {
             $file = $form->get('file')->getData();
-            $lines = str_getcsv(file_get_contents($file), PHP_EOL, ',');
+            $lines = str_getcsv(file_get_contents($file), PHP_EOL);
 
             foreach ($lines as $line) {
-                $users[] = str_getcsv($line);
+                $users[] = str_getcsv($line, ';');
             }
 
             $this->userManager->importUsers($users);
@@ -842,6 +807,8 @@ class AdministrationController extends Controller
      *
      * @EXT\Template()
      *
+     * @param Group $group
+     *
      * @return Response
      */
     public function importUsersIntoGroupFormAction(Group $group)
@@ -865,6 +832,8 @@ class AdministrationController extends Controller
      *
      * @EXT\Template("ClarolineCoreBundle:Administration:importUsersIntoGroupForm.html.twig")
      *
+     * @param Group $group
+     *
      * @return Response
      */
     public function importUsersIntoGroupAction(Group $group)
@@ -875,10 +844,10 @@ class AdministrationController extends Controller
 
         if ($form->isValid()) {
             $file = $form->get('file')->getData();
-            $lines = str_getcsv(file_get_contents($file), PHP_EOL, ',');
+            $lines = str_getcsv(file_get_contents($file), PHP_EOL);
 
             foreach ($lines as $line) {
-                $users[] = str_getcsv($line);
+                $users[] = str_getcsv($line, ';');
             }
 
             if ($validFile) {
@@ -892,23 +861,6 @@ class AdministrationController extends Controller
         }
 
         return array('form' => $form->createView(), 'group' => $group);
-    }
-
-    /**
-     *  Get the list of themes availables.
-     *  @TODO use directory iterator
-     *
-     *  @return array with a list of the themes availables.
-     */
-    private function getThemes()
-    {
-        $tmp = array();
-
-        foreach ($this->get('claroline.common.theme_service')->getThemes() as $theme) {
-            $tmp[str_replace(' ', '-', strtolower($theme->getName()))] = $theme->getName();
-        }
-
-        return $tmp;
     }
 
     /**
@@ -953,7 +905,6 @@ class AdministrationController extends Controller
      *
      * Displays platform analytics home page
      *
-     *
      * @return Response
      *
      * @throws \Exception
@@ -986,7 +937,6 @@ class AdministrationController extends Controller
      * @EXT\Template("ClarolineCoreBundle:Administration:analytics_connections.html.twig")
      *
      * Displays platform analytics connections page
-     *
      *
      * @return Response
      *
@@ -1037,7 +987,6 @@ class AdministrationController extends Controller
      *
      * Displays platform analytics resources page
      *
-     *
      * @return Response
      *
      * @throws \Exception
@@ -1068,6 +1017,9 @@ class AdministrationController extends Controller
      *
      * Displays platform analytics top activity page
      *
+     *
+     * @param Request $request
+     * @param $topType
      *
      * @return Response
      *
@@ -1116,6 +1068,8 @@ class AdministrationController extends Controller
      *
      * @EXT\Template()
      *
+     * @param string search
+     *
      * @return Response
      */
     public function registrationManagementAction($search)
@@ -1153,6 +1107,8 @@ class AdministrationController extends Controller
      *
      * @EXT\Template()
      *
+     * @param Workspace[] $workspaces
+     *
      * @return Response
      */
     public function registrationManagementUserListAction(array $workspaces)
@@ -1176,6 +1132,8 @@ class AdministrationController extends Controller
      * )
      *
      * @EXT\Template()
+     *
+     * @param Workspace[] $workspaces
      *
      * @return Response
      */
@@ -1204,6 +1162,9 @@ class AdministrationController extends Controller
      * @EXT\Template()
      *
      * Renders the user list in a pager for registration.
+     *
+     * @param integer $page
+     * @param string  $search
      *
      * @return Response
      */
@@ -1235,6 +1196,9 @@ class AdministrationController extends Controller
      *
      * Renders the group list in a pager for registration.
      *
+     * @param integer $page
+     * @param string  $search
+     *
      * @return Response
      */
     public function groupListPagerAction($page, $search)
@@ -1263,6 +1227,12 @@ class AdministrationController extends Controller
      *      class="ClarolineCoreBundle:User",
      *      options={"multipleIds" = true, "name" = "subjectIds"}
      * )
+     *
+     * @param string      $roleKey
+     * @param Workspace[] $workspaces
+     * @param User[]      $users
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function subscribeMultipleUsersToMultipleWorkspacesAction(
         $roleKey,
@@ -1316,6 +1286,12 @@ class AdministrationController extends Controller
      *      class="ClarolineCoreBundle:Group",
      *      options={"multipleIds" = true, "name" = "subjectIds"}
      * )
+     *
+     * @param string      $roleKey
+     * @param Workspace[] $workspaces
+     * @param Group[]     $groups
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function subscribeMultipleGroupsToMultipleWorkspacesAction(
         $roleKey,
@@ -1369,6 +1345,11 @@ class AdministrationController extends Controller
      *      class="ClarolineCoreBundle:User",
      *      options={"multipleIds" = true, "name" = "subjectIds"}
      * )
+     *
+     * @param Role[] $roles
+     * @param User[] $users
+     *
+     * @return Response
      */
     public function subscribeMultipleUsersToOneWorkspaceAction(
         array $roles,
@@ -1416,6 +1397,11 @@ class AdministrationController extends Controller
      *      class="ClarolineCoreBundle:Group",
      *      options={"multipleIds" = true, "name" = "subjectIds"}
      * )
+     *
+     * @param Role[] $roles
+     * @param Group[] $groups
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function subscribeMultipleGroupsToOneWorkspaceAction(
         array $roles,

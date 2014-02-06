@@ -23,30 +23,30 @@ use Doctrine\ORM\Mapping as ORM;
 class BadgeRule extends Rule
 {
     /**
-     * @var Badge[]
+     * @var Badge
      *
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Badge\Badge", inversedBy="badgeRules")
-     * @ORM\JoinColumn(name="badge_id", referencedColumnName="id", nullable=false, onDelete="CASCADE")
+     * @ORM\JoinColumn(name="associated_badge", referencedColumnName="id", nullable=false, onDelete="CASCADE")
      */
-    protected $badge;
+    protected $associatedBadge;
 
     /**
      * @param \Claroline\CoreBundle\Entity\Badge\Badge $badge
      *
      * @return BadgeRule
      */
-    public function setBadge($badge)
+    public function setAssociatedBadge($badge)
     {
-        $this->badge = $badge;
+        $this->associatedBadge = $badge;
 
         return $this;
     }
 
     /**
-     * @return \Claroline\CoreBundle\Entity\Badge\Badge[]|\Doctrine\Common\Collections\ArrayCollection
+     * @return \Claroline\CoreBundle\Entity\Badge\Badge|\Doctrine\Common\Collections\ArrayCollection
      */
-    public function getBadge()
+    public function getAssociatedBadge()
     {
-        return $this->badge;
+        return $this->associatedBadge;
     }
 }

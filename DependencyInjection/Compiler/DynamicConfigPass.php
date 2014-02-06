@@ -14,9 +14,7 @@ namespace Claroline\CoreBundle\DependencyInjection\Compiler;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
-use Symfony\Component\DependencyInjection\DefinitionDecorator;
 use Symfony\Component\DependencyInjection\Reference;
-use Symfony\Component\DependencyInjection\Tests\DefinitionTest;
 
 class DynamicConfigPass implements CompilerPassInterface
 {
@@ -31,11 +29,26 @@ class DynamicConfigPass implements CompilerPassInterface
      */
     public function process(ContainerBuilder $container)
     {
+        //mailing
         $transport = new Definition();
         $transport->setClass('Swift_Transport');
         $transport->setFactoryService('claroline.mailing.transport_factory');
         $transport->setFactoryMethod('getTransport');
         $container->removeDefinition('swiftmailer.mailer.default.transport');
         $container->setDefinition('swiftmailer.mailer.default.transport', $transport);
+
+        $storage = $container->findDefinition('session.storage');
+        $storage->addMethodCall('setOptions', array(new Reference('claroline.session.storage_options')));
+
+        //session storage
+        $handler = new Definition();
+        $handler->setClass('SessionHandlerInterface');
+        $handler->setFactoryService('claroline.session.handler_factory');
+        $handler->setFactoryMethod('getHandler');
+        $container->setDefinition('session.handler', $handler);
+
+        //cookie lifetime
+        $storage = $container->findDefinition('session.storage');
+        $storage->addMethodCall('setOptions', array(new Reference('claroline.session.storage_options')));
     }
 }

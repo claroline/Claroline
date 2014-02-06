@@ -158,17 +158,18 @@ class RoleManager
      */
     public function associateRole(AbstractRoleSubject $ars, Role $role)
     {
-        $ars->addRole($role);
-        $this->om->startFlushSuite();
+        if (!$ars->hasRole($role->getName())) {
+            $ars->addRole($role);
+            $this->om->startFlushSuite();
 
-        $this->dispatcher->dispatch(
-            'log',
-            'Log\LogRoleSubscribe',
-            array($role, $ars)
-        );
-
-        $this->om->persist($ars);
-        $this->om->endFlushSuite();
+            $this->dispatcher->dispatch(
+                'log',
+                'Log\LogRoleSubscribe',
+                array($role, $ars)
+            );
+            $this->om->persist($ars);
+            $this->om->endFlushSuite();
+        }
     }
 
     /**
@@ -177,17 +178,19 @@ class RoleManager
      */
     public function dissociateRole(AbstractRoleSubject $ars, Role $role)
     {
-        $ars->removeRole($role);
-        $this->om->startFlushSuite();
+        if ($ars->hasRole($role->getName())) {
+            $ars->removeRole($role);
+            $this->om->startFlushSuite();
 
-        $this->dispatcher->dispatch(
-            'log',
-            'Log\LogRoleUnsubscribe',
-            array($role, $ars)
-        );
+            $this->dispatcher->dispatch(
+                'log',
+                'Log\LogRoleUnsubscribe',
+                array($role, $ars)
+            );
 
-        $this->om->persist($ars);
-        $this->om->endFlushSuite();
+            $this->om->persist($ars);
+            $this->om->endFlushSuite();
+        }
     }
 
     /**

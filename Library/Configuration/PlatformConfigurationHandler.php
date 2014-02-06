@@ -41,7 +41,17 @@ class PlatformConfigurationHandler
         'mailer_encryption' => null,
         'mailer_username' => null,
         'mailer_password' => null,
-        'mailer_auth_mode' => null
+        'mailer_auth_mode' => null,
+        'terms_of_service' => true,
+        'google_meta_tag' => null,
+        'session_storage_type' => 'native',
+        'session_db_table' => null,
+        'session_db_id_col' => null,
+        'session_db_data_col' => null,
+        'session_db_time_col' => null,
+        'session_db_dsn' => null,
+        'session_db_user' => null,
+        'session_db_password' => null
     );
 
     /**
@@ -102,9 +112,10 @@ class PlatformConfigurationHandler
         $config->setSupportEmail($this->parameters['support_email']);
         $config->setFooter($this->parameters['footer']);
         $config->setSelfRegistration($this->parameters['allow_self_registration']);
-        $config->setLocalLanguage($this->parameters['locale_language']);
+        $config->setLocaleLanguage($this->parameters['locale_language']);
         $config->setTheme($this->parameters['theme']);
         $config->setDefaultRole($this->parameters['default_role']);
+        $config->setTermsOfService($this->parameters['terms_of_service']);
         $config->setCookieLifetime($this->parameters['cookie_lifetime']);
         $config->setMailerTransport($this->parameters['mailer_transport']);
         $config->setMailerHost($this->parameters['mailer_host']);
@@ -112,6 +123,15 @@ class PlatformConfigurationHandler
         $config->setMailerUsername($this->parameters['mailer_username']);
         $config->setMailerPassword($this->parameters['mailer_password']);
         $config->setMailerAuthMode($this->parameters['mailer_auth_mode']);
+        $config->setGoogleMetaTag($this->parameters['google_meta_tag']);
+        $config->setSessionStorageType($this->parameters['session_storage_type']);
+        $config->setSessionDbTable($this->parameters['session_db_table']);
+        $config->setSessionDbIdCol($this->parameters['session_db_id_col']);
+        $config->setSessionDbDataCol($this->parameters['session_db_data_col']);
+        $config->setSessionDbTimeCol($this->parameters['session_db_time_col']);
+        $config->setSessionDbDsn($this->parameters['session_db_dsn']);
+        $config->setSessionDbUser($this->parameters['session_db_user']);
+        $config->setSessionDbPassword($this->parameters['session_db_password']);
 
         return $config;
     }

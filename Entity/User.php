@@ -12,7 +12,9 @@
 namespace Claroline\CoreBundle\Entity;
 
 use Claroline\CoreBundle\Entity\Badge\Badge;
+use Claroline\CoreBundle\Manager\LocaleManager;
 use \Serializable;
+use Symfony\Component\Security\Core\User\AdvancedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\EquatableInterface;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -30,10 +32,8 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
  * @ORM\HasLifecycleCallbacks
  * @DoctrineAssert\UniqueEntity("username")
  * @DoctrineAssert\UniqueEntity("mail")
- *
- * @todo implement AdvancedUserInterface
  */
-class User extends AbstractRoleSubject implements Serializable, UserInterface, EquatableInterface, OrderableInterface
+class User extends AbstractRoleSubject implements Serializable, AdvancedUserInterface, EquatableInterface, OrderableInterface
 {
     /**
      * @var integer
@@ -67,7 +67,7 @@ class User extends AbstractRoleSubject implements Serializable, UserInterface, E
      * @Assert\NotBlank()
      * @Assert\Length(min="3")
      * @Assert\Regex(
-     *     pattern="/^[\w]*$/",
+     *     pattern="/^[\w\.]*$/",
      *     message="special_char_not_allowed"
      * )
      */
@@ -164,7 +164,7 @@ class User extends AbstractRoleSubject implements Serializable, UserInterface, E
      * @ORM\OneToOne(
      *     targetEntity="Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace"
      * )
-     * @ORM\JoinColumn(name="workspace_id", onDelete="CASCADE")
+     * @ORM\JoinColumn(name="workspace_id", onDelete="SET NULL")
      */
     protected $personalWorkspace;
 
@@ -242,6 +242,21 @@ class User extends AbstractRoleSubject implements Serializable, UserInterface, E
      * @ORM\Column(type="text", nullable=true)
      */
     protected $description;
+
+    /**
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    protected $hasAcceptedTerms;
+
+    /**
+     * @ORM\Column(name="is_enabled", type="boolean")
+     */
+    protected $isEnabled = true;
+
+    /**
+     * @ORM\Column(name="is_mail_notified", type="boolean")
+     */
+    protected $isMailNotified = false;
 
     public function __construct()
     {
@@ -374,11 +389,11 @@ class User extends AbstractRoleSubject implements Serializable, UserInterface, E
     }
 
     /**
-     * @param string $password
+     * @param string $locale
      *
      * @return User
      */
-    public function setlocale($locale)
+    public function setLocale($locale)
     {
         $this->locale = $locale;
 
@@ -785,8 +800,53 @@ class User extends AbstractRoleSubject implements Serializable, UserInterface, E
         $this->description = $description;
     }
 
+    public function hasAcceptedTerms()
+    {
+        return $this->hasAcceptedTerms;
+    }
+
+    public function setAcceptedTerms($boolean)
+    {
+        $this->hasAcceptedTerms = $boolean;
+    }
+
     public function getOrderableFields()
     {
         return array('id', 'username', 'lastName', 'firstName', 'mail');
+    }
+
+    public function isAccountNonExpired()
+    {
+        return true;
+    }
+
+    public function isAccountNonLocked()
+    {
+        return true;
+    }
+
+    public function isCredentialsNonExpired()
+    {
+        return true;
+    }
+
+    public function isEnabled()
+    {
+        return $this->isEnabled;
+    }
+
+    public function setIsEnabled($isEnabled)
+    {
+        $this->isEnabled = $isEnabled;
+    }
+
+    public function setIsMailNotified($isMailNotified)
+    {
+        $this->isMailNotified = $isMailNotified;
+    }
+
+    public function isMailNotified()
+    {
+        return $this->isMailNotified;
     }
 }

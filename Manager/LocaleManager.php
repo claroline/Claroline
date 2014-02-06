@@ -94,8 +94,6 @@ class LocaleManager
      * This methond returns the user locale and store it in session, if there is no user this method return default
      * language or the browser language if it is present in translations.
      *
-     * @param $request Symfony\Component\HttpFoundation\Request
-     *
      * @return string The locale string as en, fr, es, etc.
      */
     public function getUserLocale($request)

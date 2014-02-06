@@ -18,22 +18,24 @@
     var contentCSS = home.asset + 'bundles/clarolinecore/css/tinymce/tinymce.css';
 
     var configTinyMCE = {
-        relative_urls: false,
-        theme: 'modern',
-        language: language,
-        browser_spellcheck : true,
-        autoresize_min_height: 100,
-        autoresize_max_height: 500,
-        content_css: contentCSS,
-        plugins: [
+        'relative_urls': false,
+        'theme': 'modern',
+        'language': language,
+        'browser_spellcheck': true,
+        'autoresize_min_height': 100,
+        'autoresize_max_height': 500,
+        'content_css': contentCSS,
+        'plugins': [
             'autoresize advlist autolink lists link image charmap print preview hr anchor pagebreak',
             'searchreplace wordcount visualblocks visualchars fullscreen',
             'insertdatetime media nonbreaking save table directionality',
             'template paste textcolor emoticons code'
         ],
-        toolbar1: 'styleselect | bold italic | alignleft aligncenter alignright alignjustify | preview fullscreen resourcePicker fileUpload',
-        toolbar2: 'undo redo | forecolor backcolor emoticons | bullist numlist outdent indent | link image media print code',
-        paste_preprocess: function (plugin, args) {
+        'toolbar1': 'styleselect | bold italic | alignleft aligncenter alignright alignjustify | ' +
+                    'preview fullscreen resourcePicker fileUpload',
+        'toolbar2': 'undo redo | forecolor backcolor emoticons | bullist numlist outdent indent | ' +
+                    'link image media print code',
+        'paste_preprocess': function (plugin, args) {
             var link = $('<div>' + args.content + '</div>').text().trim(); //inside div because a bug of jquery
 
             home.isValidURL(link, function () {

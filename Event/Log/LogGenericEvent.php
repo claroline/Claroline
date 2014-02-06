@@ -69,7 +69,7 @@ abstract class LogGenericEvent extends Event implements RestrictionnableInterfac
         $this->workspace              = $workspace;
         $this->owner                  = $owner;
         $this->toolName               = $toolName;
-        $this->isWorkspaceEnterEvent = $isWorkspaceEnterEvent;
+        $this->isWorkspaceEnterEvent  = $isWorkspaceEnterEvent;
 
         $this->setVisibiltyFromRestriction();
     }

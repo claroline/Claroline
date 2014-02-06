@@ -116,12 +116,18 @@ class UserManager
         $this->om->endFlushSuite();
 
         if ($this->mailManager->isMailerAvailable()) {
-            $this->mailManager->sendPlainPassword($user);
+            $this->mailManager->sendCreationMessage($user);
         }
 
         return $user;
     }
 
+    /**
+     * Rename a user.
+     *
+     * @param User $user
+     * @param $username
+     */
     public function rename(User $user, $username)
     {
         $user->setUsername($username);
@@ -133,6 +139,13 @@ class UserManager
         $this->om->flush();
     }
 
+    public function setIsMailNotified(User $user, $isNotified)
+    {
+        $user->setIsMailNotified($isNotified);
+        $this->om->persist($user);
+        $this->om->flush();
+    }
+
     /**
      * Removes a user.
      *
@@ -140,7 +153,20 @@ class UserManager
      */
     public function deleteUser(User $user)
     {
-        $this->om->remove($user);
+        //soft delete~
+        $user->setMail('mail#' . $user->getId());
+        $user->setFirstName('firstname#' . $user->getId());
+        $user->setLastName('lastname#' . $user->getId());
+        $user->setPlainPassword(uniqid());
+        $user->setUsername('username#' . $user->getId());
+        $user->setIsEnabled(false);
+
+        $this->ed->dispatch(
+            'delete_user', 'DeleteUser',
+            array($user)
+        );
+
+        $this->om->persist($user);
         $this->om->flush();
     }
 

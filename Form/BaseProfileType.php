@@ -15,14 +15,18 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Claroline\CoreBundle\Manager\LocaleManager;
+use Claroline\CoreBundle\Manager\TermsOfServiceManager;
+use Claroline\CoreBundle\Entity\Content;
 
 class BaseProfileType extends AbstractType
 {
     private $langs;
+    private $termsOfService;
 
-    public function __construct(LocaleManager $localeManager)
+    public function __construct(LocaleManager $localeManager, TermsOfServiceManager $termsOfService)
     {
         $this->langs = $localeManager->getAvailableLocales();
+        $this->termsOfService = $termsOfService;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
@@ -33,6 +37,21 @@ class BaseProfileType extends AbstractType
             ->add('plainPassword', 'repeated', array('type' => 'password', 'invalid_message' => 'password_mismatch'))
             ->add('mail', 'email')
             ->add('locale', 'choice', array('choices' => $this->langs, 'required' => false, 'label' => 'Language'));
+
+        $content = $this->termsOfService->getTermsOfService(false);
+
+        if ($this->termsOfService->isActive() and $content instanceof Content) {
+
+            $builder->add(
+                'scroll',
+                'scroll',
+                array(
+                    'label' => 'Terms of service',
+                    'data' => $content->getContent()
+                )
+            )
+            ->add('terms_of_service', 'checkbox', array('label' => 'I accept the terms of service'));
+        }
     }
 
     public function getName()

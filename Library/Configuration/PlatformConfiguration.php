@@ -11,15 +11,18 @@
 
 namespace Claroline\CoreBundle\Library\Configuration;
 
+use Symfony\Component\Validator\Constraints as Assert;
+
 class PlatformConfiguration
 {
     private $name;
     private $supportEmail;
     private $selfRegistration;
-    private $localLanguage;
+    private $localeLanguage;
     private $theme;
     private $footer;
     private $role;
+    private $termsOfService;
     private $cookieLifetime;
     private $mailerTransport;
     private $mailerHost;
@@ -28,6 +31,159 @@ class PlatformConfiguration
     private $mailerUsername;
     private $mailerPassword;
     private $mailerAuthMode;
+    private $googleMetaTag;
+    private $sessionStorageType;
+    private $sessionDbTable;
+    private $sessionDbIdCol;
+    private $sessionDbDataCol;
+    private $sessionDbTimeCol;
+    private $sessionDbDsn;
+    private $sessionDbUser;
+    private $sessionDbPassword;
+
+    /**
+     * @param mixed $sessionDbDataCol
+     */
+    public function setSessionDbDataCol($sessionDbDataCol)
+    {
+        $this->sessionDbDataCol = $sessionDbDataCol;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSessionDbDataCol()
+    {
+        return $this->sessionDbDataCol;
+    }
+
+    /**
+     * @param mixed $sessionDbIdCol
+     */
+    public function setSessionDbIdCol($sessionDbIdCol)
+    {
+        $this->sessionDbIdCol = $sessionDbIdCol;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSessionDbIdCol()
+    {
+        return $this->sessionDbIdCol;
+    }
+
+    /**
+     * @param mixed $sessionDbPassword
+     */
+    public function setSessionDbPassword($sessionDbPassword)
+    {
+        $this->sessionDbPassword = $sessionDbPassword;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSessionDbPassword()
+    {
+        return $this->sessionDbPassword;
+    }
+
+    /**
+     * @param mixed $sessionDbTable
+     */
+    public function setSessionDbTable($sessionDbTable)
+    {
+        $this->sessionDbTable = $sessionDbTable;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSessionDbTable()
+    {
+        return $this->sessionDbTable;
+    }
+
+    /**
+     * @param mixed $sessionDbTimeCol
+     */
+    public function setSessionDbTimeCol($sessionDbTimeCol)
+    {
+        $this->sessionDbTimeCol = $sessionDbTimeCol;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSessionDbTimeCol()
+    {
+        return $this->sessionDbTimeCol;
+    }
+
+    /**
+     * @param mixed $sessionDbUser
+     */
+    public function setSessionDbUser($sessionDbUser)
+    {
+        $this->sessionDbUser = $sessionDbUser;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSessionDbUser()
+    {
+        return $this->sessionDbUser;
+    }
+
+    /**
+     * @param mixed $sessionStorageType
+     */
+    public function setSessionStorageType($sessionStorageType)
+    {
+        $this->sessionStorageType = $sessionStorageType;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSessionStorageType()
+    {
+        return $this->sessionStorageType;
+    }
+
+    /**
+     * @param mixed $sessionDbDsn
+     */
+    public function setSessionDbDsn($sessionDbDsn)
+    {
+        $this->sessionDbDsn = $sessionDbDsn;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSessionDbDsn()
+    {
+        return $this->sessionDbDsn;
+    }
+
+    /**
+     * @param mixed $role
+     */
+    public function setRole($role)
+    {
+        $this->role = $role;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRole()
+    {
+        return $this->role;
+    }
 
     public function getSelfRegistration()
     {
@@ -39,14 +195,14 @@ class PlatformConfiguration
         $this->selfRegistration = $selfRegistration;
     }
 
-    public function getLocalLanguage()
+    public function getLocaleLanguage()
     {
-        return $this->localLanguage;
+        return $this->localeLanguage;
     }
 
-    public function setLocalLanguage($localLanguage)
+    public function setLocaleLanguage($localeLanguage)
     {
-        $this->localLanguage = $localLanguage;
+        $this->localeLanguage = $localeLanguage;
     }
 
     public function getTheme()
@@ -97,6 +253,16 @@ class PlatformConfiguration
     public function getDefaultRole()
     {
         return $this->role;
+    }
+
+    public function setTermsOfService($termsOfService)
+    {
+        $this->termsOfService = $termsOfService;
+    }
+
+    public function getTermsOfService()
+    {
+        return $this->termsOfService;
     }
 
     public function setCookieLifetime($time)
@@ -177,5 +343,21 @@ class PlatformConfiguration
     public function getMailerUsername()
     {
         return $this->mailerUsername;
+    }
+
+    public function setGoogleMetaTag($googleMetaTag)
+    {
+        $this->googleMetaTag = $googleMetaTag;
+    }
+
+    /**
+     * @Assert\Regex(
+     *      "/^\<meta name=\x22google-site-verification\x22 content=\x22([a-zA-Z0-9-]){1,43}\x22( \/)?\>$/",
+     *      message = "google_meta_tag_error"
+     * )
+     */
+    public function getGoogleMetaTag()
+    {
+        return $this->googleMetaTag;
     }
 }

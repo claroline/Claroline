@@ -75,13 +75,30 @@
         }
     });
 
-    //Change this to a compile-time function.
+    // Change this to a compile-time function.
     Twig.setFunction('path', function (route, parameters) {
         return Routing.generate(route, parameters);
     });
 
-    //required for variables translations (the language can't be known at the compile time)
+    // Required for variables translations (the language can't be known at the compile time)
     Twig.setFilter('trans', function(name, parameters, domain) {
         return Translator.get(domain + ':' + name);
     });
+
+    // Without the next lines, the fixed top bar overlays content
+    // when jumping to a an internal anchor target
+    var shiftWindow = function() {
+        scrollBy(0, -50);
+    };
+    $(document).ready(function () {
+        if (location.hash) {
+            setTimeout(
+                function() {
+                    shiftWindow();
+                },
+                300
+            );
+        }
+    });
+    $(window).on('hashchange', shiftWindow);
 })();

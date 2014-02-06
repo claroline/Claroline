@@ -154,8 +154,8 @@
         parameters = {};
         parameters.route = {};
         parameters.route.action = {};
-        parameters.route.normal = {"route": "claro_workspace_registered_group_list", "parameters": {'workspace': {{  workspace.getId() }}, "order": "{{prder}}" }};
-        parameters.route.search = {"route": "claro_workspace_registered_group_list_search", "parameters": {'workspace': {{  workspace.getId() }}, "order": "{{prder}}" }};
+        parameters.route.normal = {"route": "claro_workspace_registered_group_list", "parameters": {'workspace': {{  workspace.getId() }}, "order": "{{order}}" }};
+        parameters.route.search = {"route": "claro_workspace_registered_group_list_search", "parameters": {'workspace': {{  workspace.getId() }}, "order": "{{order}}" }};
         Claroline.Table.initialize(parameters);
 
         $('.popover-block').popover();

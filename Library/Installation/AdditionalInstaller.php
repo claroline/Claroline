@@ -11,6 +11,7 @@
 
 namespace Claroline\CoreBundle\Library\Installation;
 
+use Claroline\CoreBundle\Library\Installation\Updater\MaintenancePageUpdater;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\NullOutput;
 use Symfony\Bundle\SecurityBundle\Command\InitAclCommand;
@@ -40,12 +41,21 @@ class AdditionalInstaller extends BaseInstaller
 
     public function preUpdate($currentVersion, $targetVersion)
     {
+        $maintenanceUpdater = new Updater\WebUpdater($this->container->getParameter('kernel.root_dir'));
+        $maintenanceUpdater->preUpdate();
+
         $this->setLocale();
 
         if (version_compare($currentVersion, '2.0', '<') && version_compare($targetVersion, '2.0', '>=') ) {
             $updater020000 = new Updater\Updater020000($this->container);
             $updater020000->setLogger($this->logger);
             $updater020000->preUpdate();
+        }
+
+        if (version_compare($currentVersion, '2.9.0', '<') ) {
+            $updater020900 = new Updater\Updater020900($this->container);
+            $updater020900->setLogger($this->logger);
+            $updater020900->preUpdate();
         }
     }
 
@@ -97,6 +107,12 @@ class AdditionalInstaller extends BaseInstaller
             $updater020800 = new Updater\Updater020800($this->container);
             $updater020800->setLogger($this->logger);
             $updater020800->postUpdate();
+        }
+
+        if (version_compare($currentVersion, '2.9.0', '<')) {
+            $updater020900 = new Updater\Updater020900($this->container);
+            $updater020900->setLogger($this->logger);
+            $updater020900->postUpdate();
         }
     }
 
