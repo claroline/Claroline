@@ -47,6 +47,8 @@ security:
         main:
             pattern: ^/
             form_login:
+                check-path: /login_check
+                success_handler: claroline.authentication_handler
                 failure_handler: claroline.security.ajax_authentication_failure_handler
             anonymous: ~
             logout: true

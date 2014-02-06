@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Claroline\CoreBundle\Manager;
+namespace Claroline\CoreBundle\Library\Session;
 
 use PDO;
 use Doctrine\DBAL\DriverManager;
@@ -18,9 +18,9 @@ use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\HttpFoundation\Session\Storage\Handler\PdoSessionHandler;
 
 /**
- * @DI\Service("claroline.manager.session_manager")
+ * @DI\Service("claroline.session.database_validator")
  */
-class SessionManager
+class DatabaseSessionValidator
 {
     public function validate(array $parameters)
     {

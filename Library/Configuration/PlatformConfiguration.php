@@ -32,6 +32,7 @@ class PlatformConfiguration
     private $mailerPassword;
     private $mailerAuthMode;
     private $googleMetaTag;
+    private $redirectAfterLogin;
     private $sessionStorageType;
     private $sessionDbTable;
     private $sessionDbIdCol;
@@ -359,5 +360,15 @@ class PlatformConfiguration
     public function getGoogleMetaTag()
     {
         return $this->googleMetaTag;
+    }
+
+    public function setRedirectAfterLogin($redirectAfterLogin)
+    {
+        $this->redirectAfterLogin = $redirectAfterLogin;
+    }
+
+    public function getRedirectAfterLogin()
+    {
+        return $this->redirectAfterLogin;
     }
 }

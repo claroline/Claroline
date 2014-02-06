@@ -11,37 +11,41 @@
 
 namespace Claroline\CoreBundle\Library\Session;
 
+use Symfony\Component\HttpFoundation\Session\Storage\Handler\NativeFileSessionHandler;
 use Symfony\Component\HttpFoundation\Session\Storage\Handler\PdoSessionHandler;
-use Symfony\Component\HttpFoundation\Session\Storage\Handler\NativeSessionHandler;
 use JMS\DiExtraBundle\Annotation as DI;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 
 /**
  * @DI\Service("claroline.session.handler_factory")
  */
-class ClarolineSessionHandlerFactory
+class SessionHandlerFactory
 {
     private $configHandler;
+    private $sessionPath;
     private $dbUsername;
     private $dbPassword;
     private $dbName;
 
     /**
      * @DI\InjectParams({
-     *     "configHandler" = @DI\Inject("claroline.config.platform_config_handler"),
-     *     "dbUsername" = @DI\Inject("%database_user%"),
-     *     "dbPassword" = @DI\Inject("%database_password%"),
-     *     "dbName" = @DI\Inject("%database_name%")
+     *     "configHandler"  = @DI\Inject("claroline.config.platform_config_handler"),
+     *     "sessionPath"    = @DI\Inject("%session.save_path%"),
+     *     "dbUsername"     = @DI\Inject("%database_user%"),
+     *     "dbPassword"     = @DI\Inject("%database_password%"),
+     *     "dbName"         = @DI\Inject("%database_name%")
      * })
      */
     public function __construct(
         PlatformConfigurationHandler $configHandler,
+        $sessionPath,
         $dbUsername,
         $dbPassword,
         $dbName
     )
     {
         $this->configHandler = $configHandler;
+        $this->sessionPath = $sessionPath;
         $this->dbPassword = $dbPassword;
         $this->dbUsername = $dbUsername;
         $this->dbName = $dbName;
@@ -52,11 +56,10 @@ class ClarolineSessionHandlerFactory
         $type = $this->configHandler->getParameter('session_storage_type');
 
         if ($type === 'native') {
-            return new NativeSessionHandler();
+            return new NativeFileSessionHandler($this->sessionPath);
         }
 
         if ($type === 'claro_pdo' || $type === 'pdo') {
-
             if ($type === 'pdo') {
                 $dsn = $this->configHandler->getParameter('session_db_dsn');
                 $username = $this->configHandler->getParameter('session_db_user');

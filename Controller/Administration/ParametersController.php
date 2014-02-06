@@ -13,6 +13,7 @@ namespace Claroline\CoreBundle\Controller\Administration;
 
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Library\Configuration\UnwritableException;
+use Claroline\CoreBundle\Library\Session\DatabaseSessionValidator;
 use Claroline\CoreBundle\Manager\LocaleManager;
 use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Manager\ContentManager;
@@ -31,7 +32,6 @@ use Symfony\Bundle\FrameworkBundle\Translation\Translator;
 use Claroline\CoreBundle\Manager\MailManager;
 use Claroline\CoreBundle\Form\Administration as AdminForm;
 use Claroline\CoreBundle\Manager\CacheManager;
-use Claroline\CoreBundle\Manager\SessionManager;
 use Claroline\CoreBundle\Library\Installation\Refresher;
 
 /**
@@ -51,23 +51,23 @@ class ParametersController extends Controller
     private $mailManager;
     private $contentManager;
     private $cacheManager;
-    private $sessionManager;
+    private $dbSessionValidator;
     private $refresher;
 
     /**
      * @DI\InjectParams({
-     *     "configHandler"  = @DI\Inject("claroline.config.platform_config_handler"),
-     *     "roleManager"    = @DI\Inject("claroline.manager.role_manager"),
-     *     "formFactory"    = @DI\Inject("form.factory"),
-     *     "localeManager"  = @DI\Inject("claroline.common.locale_manager"),
-     *     "request"        = @DI\Inject("request"),
-     *     "translator"     = @DI\Inject("translator"),
-     *     "termsOfService" = @DI\Inject("claroline.common.terms_of_service_manager"),
-     *     "mailManager"    = @DI\Inject("claroline.manager.mail_manager"),
-     *     "cacheManager"   = @DI\Inject("claroline.manager.cache_manager"),
-     *     "contentManager" = @DI\Inject("claroline.manager.content_manager"),
-     *     "sessionManager" = @DI\Inject("claroline.manager.session_manager"),
-     *     "refresher"     = @DI\Inject("claroline.installation.refresher")
+     *     "configHandler"      = @DI\Inject("claroline.config.platform_config_handler"),
+     *     "roleManager"        = @DI\Inject("claroline.manager.role_manager"),
+     *     "formFactory"        = @DI\Inject("form.factory"),
+     *     "localeManager"      = @DI\Inject("claroline.common.locale_manager"),
+     *     "request"            = @DI\Inject("request"),
+     *     "translator"         = @DI\Inject("translator"),
+     *     "termsOfService"     = @DI\Inject("claroline.common.terms_of_service_manager"),
+     *     "mailManager"        = @DI\Inject("claroline.manager.mail_manager"),
+     *     "cacheManager"       = @DI\Inject("claroline.manager.cache_manager"),
+     *     "contentManager"     = @DI\Inject("claroline.manager.content_manager"),
+     *     "sessionValidator"   = @DI\Inject("claroline.session.database_validator"),
+     *     "refresher"          = @DI\Inject("claroline.installation.refresher")
      * })
      */
     public function __construct(
@@ -81,7 +81,7 @@ class ParametersController extends Controller
         MailManager $mailManager,
         ContentManager $contentManager,
         CacheManager $cacheManager,
-        SessionManager $sessionManager,
+        DatabaseSessionValidator $sessionValidator,
         Refresher $refresher
     )
     {
@@ -95,7 +95,7 @@ class ParametersController extends Controller
         $this->mailManager = $mailManager;
         $this->contentManager = $contentManager;
         $this->cacheManager = $cacheManager;
-        $this->sessionManager = $sessionManager;
+        $this->dbSessionValidator = $sessionValidator;
         $this->refresher = $refresher;
     }
 
@@ -173,7 +173,8 @@ class ParametersController extends Controller
                         'locale_language' => $form['localeLanguage']->getData(),
                         'name' => $form['name']->getData(),
                         'support_email' => $form['support_email']->getData(),
-                        'default_role' => $form['defaultRole']->getData()->getName()
+                        'default_role' => $form['defaultRole']->getData()->getName(),
+                        'redirect_after_login' => $form['redirect_after_login']->getData()
                     )
                 );
 
@@ -644,7 +645,7 @@ class ParametersController extends Controller
                 'cookie_lifetime' => $form['cookie_lifetime']->getData()
             );
 
-            $errors = $this->sessionManager->validate($data);
+            $errors = $this->dbSessionValidator->validate($data);
 
             if (count($errors) === 0) {
                 $this->configHandler->setParameters($data);

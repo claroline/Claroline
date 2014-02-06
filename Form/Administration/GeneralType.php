@@ -74,7 +74,8 @@ class GeneralType extends AbstractType
                 array(
                     'choices' => $this->langs
                 )
-            );
+            )
+            ->add('redirect_after_login', 'checkbox', array('label' => 'redirect_after_login', 'required' => false));
    }
 
     public function getName()
