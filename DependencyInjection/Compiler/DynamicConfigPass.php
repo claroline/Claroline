@@ -50,5 +50,8 @@ class DynamicConfigPass implements CompilerPassInterface
         //cookie lifetime
         $storage = $container->findDefinition('session.storage');
         $storage->addMethodCall('setOptions', array(new Reference('claroline.session.storage_options')));
+
+        //notification
+        $container->setAlias('icap.notification.orm.entity_manager', 'claroline.persistence.object_manager');
     }
 }
