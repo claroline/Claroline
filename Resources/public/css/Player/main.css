@@ -3,52 +3,50 @@
 }
 
 #current-step-tab > .panel {
-    -webkit-border-top-left-radius: 0px;
-    -moz-border-radius-topleft: 0px;
     border-top-left-radius: 0px;
 }
 
-.lvl-0, li.lvl-0 > a:hover{
+.lvl-0, #current-step-nav-tab a.lvl-0, li.lvl-0 > a:hover{
     background-color: #7B7B7B;
     border-color: #4B4B4B;
 }
 
-.lvl-1, li.lvl-1 > a:hover{
+.lvl-1, #current-step-nav-tab a.lvl-1, li.lvl-1 > a:hover{
     background-color: #4790aD;
     border-color: #17607D;
 }
 
-.lvl-2, li.lvl-2 > a:hover{
+.lvl-2, #current-step-nav-tab a.lvl-2, li.lvl-2 > a:hover{
     background-color: #8C6796;
     border-color: #5C3766;
 }
 
-.lvl-3, li.lvl-3 > a:hover{
+.lvl-3, #current-step-nav-tab a.lvl-3, li.lvl-3 > a:hover{
     background-color: #d86178;
     border-color: #a83148;
 }
 
-.lvl-4, li.lvl-4 > a:hover{
+.lvl-4, #current-step-nav-tab a.lvl-4, li.lvl-4 > a:hover{
     background-color: #FF7A40;
     border-color: #CF4A30;
 }
 
-.lvl-5, li.lvl-5 > a:hover{
+.lvl-5, #current-step-nav-tab a.lvl-5, li.lvl-5 > a:hover{
     background-color: #FDBE3E;
     border-color: #cD8E0E;
 }
 
-.lvl-6, li.lvl-6 > a:hover{
+.lvl-6, #current-step-nav-tab a.lvl-6, li.lvl-6 > a:hover{
     background-color: #b8d855;
     border-color: #88A825;
 }
 
-.lvl-7, li.lvl-7 > a:hover{
+.lvl-7, #current-step-nav-tab a.lvl-7, li.lvl-7 > a:hover{
     background-color: #47aD90;
     border-color: #177D60;
 }
 
-.lvl-8, li.lvl-8 > a:hover{
+.lvl-8, #current-step-nav-tab a.lvl-8, li.lvl-8 > a:hover{
     background-color: #91deea;
     border-color: #61aeba;
     

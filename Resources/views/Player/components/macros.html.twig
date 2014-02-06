@@ -1,5 +1,5 @@
 {% macro displayResourceButton(resource, step) %}
-    <li class="resource-tab">
+    <li class="resource-tab pull-right">
         <a href="#resource-tab-{{ resource.resourceNode.id }}" data-toggle="tab">
             <span rel="tooltip" data-original-title="{{ step.name }}" class="lvl-{{ step.lvl + 1 }} lvl-indicator">&nbsp;</span>
             {{ resource.resourceNode.name }}

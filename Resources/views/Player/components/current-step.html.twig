@@ -1,9 +1,9 @@
 {% import 'InnovaPathBundle::Player/components/macros.html.twig' as macros %}
         
 <ul class="nav nav-tabs">
-    <li class="active">
-        <a href="#current-step-tab" data-toggle="tab">
-            <span class="lvl-{{ currentStep.lvl + 1 }} lvl-indicator-large">&nbsp;</span>
+    <li id="current-step-nav-tab" class="active">
+        <a href="#current-step-tab" data-toggle="tab" class="lvl-{{ currentStep.lvl + 1 }}">
+            {#<span class="lvl-{{ currentStep.lvl + 1 }} lvl-indicator-large">&nbsp;</span>#}
             {{ currentStep.name }}
         </a>
     </li>
