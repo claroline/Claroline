@@ -8,3 +8,8 @@ services:
         arguments: [@translator]
         tags:
             - { name: twig.extension }
+
+    icap.notification.orm.entity_manager:
+        alias: doctrine.orm.entity_manager
+
+
