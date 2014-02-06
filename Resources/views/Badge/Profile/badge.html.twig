@@ -8,7 +8,7 @@
     <div class="panel panel-default">
         <div class="panel-heading">
             <h3 class="panel-title">
-                <a href="{{ path('claro_profile_view_badges') }}" class="pull-right side_link" data-toggle="tooltip" data-placement="bottom" title="{{ 'back_to_my_badges'|trans }}"><i class="icon-reply"></i></a>
+                <a href="{{ path('claro_profile_view_badges') }}" class="pull-right" data-toggle="tooltip" data-placement="bottom" title="{{ 'back_to_my_badges'|trans }}"><i class="icon-reply"></i></a>
                 <span class="badge badge-info accordion-toggle" data-toggle="tooltip" title="{{ 'badge_form_version'|trans }} {{ badge.version }}">{{ badge.version }}</span>
                 {{ 'badge'|trans }} "{{ badge.name }}"
                 {% if badge.expiredAt is not null %}

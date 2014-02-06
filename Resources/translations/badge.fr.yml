@@ -100,3 +100,8 @@ view_badge: 'Badge ''%badge_name%'''
 week: semaine
 workspace_badges: 'Badges de l''espace de travail'
 year: année
+my_collections: "Mes collections"
+organize_badges_the_way_you_want: "Organisez vos badges à votre manière"
+no_collection: "Aucune collection."
+add_collection: "Ajouter une collection"
+collection_name: "Nom de la collection"

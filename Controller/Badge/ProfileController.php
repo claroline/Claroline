@@ -140,26 +140,16 @@ class ProfileController extends Controller
      */
     public function badgesAction($page, User $user)
     {
-        $query   = $this->getDoctrine()->getRepository('ClarolineCoreBundle:Badge\Badge')->findByUser($user, false);
-        $adapter = new DoctrineORMAdapter($query);
-        $pager   = new Pagerfanta($adapter);
-
-        try {
-            $pager->setCurrentPage($page);
-        } catch (NotValidCurrentPageException $exception) {
-            throw new NotFoundHttpException();
-        }
-
+        $badges      = $this->getDoctrine()->getRepository('ClarolineCoreBundle:Badge\Badge')->findByUser($user);
         $badgeClaims = $this->getDoctrine()->getRepository('ClarolineCoreBundle:Badge\BadgeClaim')->findByUser($user);
 
         /** @var \Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler $platformConfigHandler */
         $platformConfigHandler = $this->get('claroline.config.platform_config_handler');
 
         return array(
-            'pager'         => $pager,
+            'badges'         => $badges,
             'badgeClaims'   => $badgeClaims,
-            'language'      => $platformConfigHandler->getParameter('locale_language'),
-            'user'          => $user
+            'language'      => $platformConfigHandler->getParameter('locale_language')
         );
     }
 }

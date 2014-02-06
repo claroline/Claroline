@@ -9,10 +9,10 @@
 
     <div class="panel panel-default">
         <div class="panel-heading">
-            <h3 class="panel-title">
+            <h1 class="panel-title">
                 {{ 'my_badges'|trans({}, 'platform') }}
-                <a href="{{ path('claro_claim_badge') }}" class="btn btn-small" data-toggle="tooltip" data-placement="right" title="{{ 'claim_badge'|trans }}"><i class="icon-plus"></i></a>
-            </h3>
+                <a href="{{ path('claro_claim_badge') }}" class="btn btn-default btn-xs">{{ 'claim_badge'|trans }}</a>
+            </h1>
         </div>
         <div class="panel-body">
             {% if 0 < badgeClaims|length %}
@@ -36,7 +36,60 @@
             </div>
             {% endif %}
 
-            {% include 'ClarolineCoreBundle:Badge/Badge:display.html.twig' with {'badgeUrl': 'claro_profile_view_badge', 'paginationurl': 'claro_profile_view_badges', 'routeParams': {}} %}
+            <div class="badge_management_container">
+                <div class="col-md-3 collections_container">
+                    <h3>
+                        {{ 'my_collections'|trans }}<br />
+                        <small>{{ 'organize_badges_the_way_you_want'|trans }}</small>
+
+                    </h3>
+                    <hr />
+                    <div class="text-center">
+                        <button type="button" class="btn btn-xs btn-success" id="add_collection">{{ 'add_collection'|trans }}</button>
+                    </div>
+                    {% set collectionTemplate = '<li class="collection well editing">
+                            <header>
+                                <div class="btn-group btn-group-xs pull-right">
+                                    <button type="button" class="btn btn-primary"><span class="icon-pencil" data-toggle="tooltip" data-placement="top" data-container="body" data-title="' ~ 'edit'|trans({}, 'platform') ~ '"></span></button>
+                                    <button type="button" class="btn btn-danger"><span class="icon-remove" data-toggle="tooltip" data-placement="top" data-container="body" data-title="' ~ 'delete'|trans({}, 'platform') ~ '"></span></button>
+                                </div>
+                                <h4 class="collection_title">' ~ 'collection_name'|trans ~ '</h4>
+                                <input type="text" class="form-control collection_title_input" name="collection_title" value="' ~ 'collection_name'|trans ~ '" />
+                            </header>
+                            <ul class="list-inline badges">
+                                <li class="no_badge">' ~ 'no_badges'|trans ~ '</li>
+                            </ul>
+                        </li>' %}
+                    <ul class="list-unstyled collections_list" id="collections_list" data-collection-template="{{ collectionTemplate }}">
+                        <li class="no_collection well" id="no_collection">
+                            <p class="collection_title text-center">{{ 'no_collection'|trans }}</p>
+                        </li>
+                    </ul>
+                </div>
+                <div class="col-md-9">
+                    <ul class="nodes badge_list list-unstyled well">
+                    {% for badge in badges %}
+                        <li class="node-thumbnail badge_container">
+                            <a href="{{ path('claro_profile_view_badge', {'id': badge.id}) }}" title="{{ badge.name(language) }}" class="thumbnail">
+                                <img class="badge_image" src="{{ asset(badge.webPath) }}" alt="{{ badge.name(language) }}" />
+                                <p class="badge_name">{{ badge.name(language) }}</p>
+                            </a>
+                        </li>
+                        {% else %}
+                        <li>{{ 'no_badges'|trans({}, 'badge') }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
         </div>
     </div>
 {% endblock %}
+
+{% block javascripts %}
+{{ parent() }}
+<script type="text/javascript" src='{{ asset('bundles/frontend/jquery/jquery-ui-1.9.2/components/jquery.ui.droppable.min.js') }}'></script>
+<script type="text/javascript" src='{{ asset('bundles/frontend/jquery/jquery-ui-1.9.2/components/jquery.ui.draggable.min.js') }}'></script>
+<script type="text/javascript" src='{{ asset('bundles/frontend/jquery/plugin/confirm-bootstrap/confirm-bootstrap.js') }}'></script>
+<script type="text/javascript" src='{{ asset('bundles/clarolinecore/js/badge/profile.js') }}'></script>
+{% endblock %}
+

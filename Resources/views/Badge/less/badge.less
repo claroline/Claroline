@@ -12,12 +12,16 @@
 
 .badge_list {
     .node-thumbnail {
+        margin: 5px 0 0 5px;
         .thumbnail {
             width:           150px;
             height:          110px;
-            .node-name {
+            .badge_name {
                 color:           #333333;
-                text-decoration: none;
+                white-space:     nowrap;
+                overflow:        hidden;
+                text-overflow:   ellipsis;
+                text-align:      center;
             }
             &:hover {
                 color:           #333333;
@@ -42,10 +46,6 @@
     padding: 0;
 }
 
-.thumbnails.badge_user_list > li {
-    margin-left: 5px;
-}
-
 .badge_image {
     width:  64px;
     height: 64px;
@@ -56,6 +56,91 @@
     height: 128px;
 }
 
+.badge_management_container {
+    .collections_container {
+        padding-right: 0;
+        padding-left:  0;
+
+        h3 {
+            margin-top:  0;
+            margin-left: 10px;
+        }
+
+        .collections_list {
+            border-right:  1px solid #e3e3e3;
+            height:        400px;
+            overflow:      auto;
+            padding:       10px 10px 0 10px;
+
+            .collection {
+                padding-top:  0;
+                padding-left: 0;
+                padding-right: 0;
+
+                .badge_image_mini {
+                    width:  36px;
+                    height: 36px;
+                }
+                .collection_title {
+                    margin-bottom: 0;
+                    margin-top:    0;
+                    padding-top: 5px;
+                    padding-left: 5px;
+                    white-space:   nowrap;
+                    overflow:      hidden;
+                    text-overflow: ellipsis;
+                }
+                header {
+                    border-bottom: 1px solid #e3e3e3;
+                    height:        28px;
+
+                    .btn-group {
+                        .btn-primary {
+                            border-top-left-radius:    0;
+                            border-bottom-left-radius: 0;
+                        }
+                        .btn-danger {
+                            border-bottom-right-radius: 0;
+                        }
+                        .btn {
+                            padding: 4px 7px;
+                        }
+                    }
+                    .collection_title_input {
+                        width:  auto;
+                        height: 28px;
+                    }
+                }
+                .badges {
+                    margin-top:  10px;
+                    margin-left: 19px;
+                }
+            }
+
+            .no_collection {
+                .collection_title {
+                    margin-bottom: 0;
+                }
+            }
+
+            .collection_state_drag_start {
+                border: 2px dashed grey;
+            }
+
+            .collection_state_hover {
+                box-shadow: 0 0 12px #aaa inset;
+            }
+        }
+    }
+    .badge_list {
+        height:        500px;
+        overflow:      auto;
+        margin-bottom: 0;
+        padding:       5px;
+    }
+}
+
+/**** Form style ****/
 .badges_infos {
     .form-group {
         margin-left: 0;
@@ -159,16 +244,6 @@ ul.user_badges {
             visibility: hidden;
             margin-top: -10px;
         }
-    }
-}
-
-.badge_container {
-    padding-left: 10px;
-    .side_link {
-        border-left: 1px solid #eee;
-        text-decoration: none;
-        min-width: 41px;
-        text-align: center;
     }
 }
 
