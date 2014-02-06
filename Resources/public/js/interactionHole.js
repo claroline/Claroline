@@ -53,6 +53,7 @@ function addFormHoleEdit(add, response, point, size, orthography, del, selector,
         });
 
         $('#newTable').find('tr:last').find('td:first').css('display', 'none');
+        index = $('#newTable').find('tr:last').find('td:first').find('input:first').val();
 
         /*if (nbResponses == 0) {
             // Add the delete button
@@ -64,15 +65,18 @@ function addFormHoleEdit(add, response, point, size, orthography, del, selector,
         );
             
         $('#hole_' + index).click(function (e) {
-            var ind = $(this).parent('td').parent('tr').index();alert(ind);
+            var ind = $(this).attr('id');
+            ind = ind.replace('hole_', '');alert(ind);
             var val = tinyMCE.get('ujm_exobundle_interactionholetype_html').selection
-                             .select(tinyMCE.get('ujm_exobundle_interactionholetype_html').dom.select('.blank')[ind]).value;
+                             .select(tinyMCE.get('ujm_exobundle_interactionholetype_html').get(ind)).value;
             //alert(val);
             tinyMCE.get('ujm_exobundle_interactionholetype_html').selection.setContent(val);
             $(this).parent('td').parent('tr').remove();
             e.preventDefault();
             return false;
         });
+        
+        //index++;
     });
     
     indexWR = $('#tabWR_' + index).find('.trWR').length;
@@ -117,10 +121,10 @@ function createHole() {
 
     tinyMCE.activeEditor.selection.setNode(el);
 
-    addHole(indexHole - 1, blank);
+    addHole(indexHole, blank);
 }
 
-function addHole(indHole, valHole) {
+function addHole(orderHole, valHole) {
     var uniqChoiceID = false;
 
     var index = $('#newTable').find('.trHole').length;
@@ -148,7 +152,7 @@ function addHole(indHole, valHole) {
     });
 
     $('#newTable').find('tr:last').find('td:first').css('display', 'none');
-    $('#newTable').find('tr:last').find('td:first').find('input:first').val('0');
+    $('#newTable').find('tr:last').find('td:first').find('input:first').val(orderHole);
 
     $('#ujm_exobundle_interactionholetype_holes_' + index + '_size').val('15');
 
@@ -271,7 +275,7 @@ function verticalAlignCenter() {
 }
 
 // Set the hole order
-function setOrder() {
+/*function setOrder() {
 
     var order = 1;
 
@@ -279,7 +283,7 @@ function setOrder() {
         $(this).find('input:first').val(order);
         order++;
     });
-}
+}*/
 
 // Check if form is valid
 function check_form(nbHole) {
