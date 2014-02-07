@@ -66,9 +66,9 @@ function addFormHoleEdit(add, response, point, size, orthography, del, selector,
             
         $('#hole_' + index).click(function (e) {
             var ind = $(this).attr('id');
-            ind = ind.replace('hole_', '');alert(ind);
+            ind = ind.replace('hole_', '');
             var val = tinyMCE.get('ujm_exobundle_interactionholetype_html').selection
-                             .select(tinyMCE.get('ujm_exobundle_interactionholetype_html').get(ind)).value;
+                             .select(tinyMCE.get('ujm_exobundle_interactionholetype_html').dom.get(ind)).value;
             //alert(val);
             tinyMCE.get('ujm_exobundle_interactionholetype_html').selection.setContent(val);
             $(this).parent('td').parent('tr').remove();
@@ -173,18 +173,19 @@ function addHole(orderHole, valHole) {
 
     // Add delete button for hole
     $('#newTable').find('.trHole:last')
-        .append('<td class="classic"><a id="hole_' + index + '" href="#" class="btn btn-danger">' + langDel + '</a></td>'
+        .append('<td class="classic"><a id="hole_' + orderHole + '" href="#" class="btn btn-danger">' + langDel + '</a></td>'
     );
 
     // When click, delete the matching hole's row in the table
-    $('#hole_' + index).click(function (e) {
-        var ind = $(this).parent('td').parent('tr').index();
+    $('#hole_' + orderHole).click(function (e) {alert(orderHole);
+        //var ind = $(this).parent('td').parent('tr').index();
         var val = tinyMCE.get('ujm_exobundle_interactionholetype_html').selection
-                         .select(tinyMCE.get('ujm_exobundle_interactionholetype_html').dom.select('.blank')[ind]).value;
-        //alert(val);
-        tinyMCE.get('ujm_exobundle_interactionholetype_html').selection.setContent(val);
+                         .select(tinyMCE.get('ujm_exobundle_interactionholetype_html').dom.get(orderHole)).value;alert('2');
+
+        tinyMCE.get('ujm_exobundle_interactionholetype_html').selection.setContent(val);alert('3');
         $(this).parent('td').parent('tr').remove();
         e.preventDefault();
+                            
         return false;
     });
 
