@@ -130,7 +130,7 @@ class Manager
             }
         }
 
-        if ($doer instanceof Claroline\CoreBundle\Entity\User) {
+        if ($doer !== 'anon.') {
             $doerId = $doer->getId();
         }
 
