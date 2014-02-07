@@ -10,6 +10,8 @@ my_favorites: Mes favoris
 
 next_step: Etapes suivantes
 
+reload: Recharger
+
 save_success: L'étape a été sauvegardée
 save_warning: Problème lors de la sauvegarde de l'étape
 save_already_modified: Le parcours a déjà des modifications en attente

@@ -3,6 +3,7 @@ $( document ).ready(function() {
 
 	$('.resource-frame').on('load', function () {
         var frame = $(this);
+        //$("#loading-resource-" + frame.data("resource-id")).fadeOut(300);
         frame.animate({ height: frame.contents().find("#wrap").height() + 20}, 300, function() {});
     });
 
@@ -12,4 +13,9 @@ $( document ).ready(function() {
    			iframe.attr("src", iframe.attr("data-resource-src"));
    		}
    	});
+
+   $('.reload-resource').on('click', function () {
+      var iframe = $("#frame-resource-"+$(this).data('resource-id'));
+      iframe.attr("src", iframe.data("resource-src"));
+    });
 });

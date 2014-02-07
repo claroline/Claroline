@@ -10,6 +10,8 @@ my_favorites: My favorites
 
 next_step: Next steps
 
+reload: Reload
+
 save_success: The step has been saved
 save_warning: A problem occured while saving step 
 save_already_modified: The path has already pending changes

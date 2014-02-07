@@ -1,9 +1,13 @@
-.resource-frame{
+.resource-frame {
     border:none;
     overflow-x:hidden;
 }
 
-#current-step-nav-tab a{
+.iframe-resource-buttons {
+    margin-bottom: 10px;
+}
+
+#current-step-nav-tab a {
     font-weight: bold;
     color: #FFFFFF;
     text-shadow:    -1px 0 0 rgba(0, 0, 0, 0.2), 
