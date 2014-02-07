@@ -25,7 +25,7 @@ class LogCorrectionEndEvent extends AbstractLogResourceEvent implements Potentia
 
         $documentsDetails = array();
         foreach ($drop->getDocuments() as $document) {
-            $documentsDetails[] = $document->toJson();
+            $documentsDetails[] = $document->toArray();
         }
 
         $details = array(

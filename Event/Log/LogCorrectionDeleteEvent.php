@@ -25,7 +25,7 @@ class LogCorrectionDeleteEvent extends AbstractLogResourceEvent implements Poten
 
         $documentsDetails = array();
         foreach ($drop->getDocuments() as $document) {
-            $documentsDetails[] = $document->toJson();
+            $documentsDetails[] = $document->toArray();
         }
 
         $details = array(

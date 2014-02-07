@@ -91,7 +91,7 @@ class Drop {
     }
 
     /**
-     * @return Document
+     * @return Document[]
      */
     public function getDocuments()
     {
@@ -99,7 +99,7 @@ class Drop {
     }
 
     /**
-     * @param Document $documents
+     * @param Document[] $documents
      */
     public function setDocuments($documents)
     {
@@ -123,7 +123,7 @@ class Drop {
     }
 
     /**
-     * @param mixed $id
+     * @return int
      */
     public function getId()
     {
@@ -131,7 +131,7 @@ class Drop {
     }
 
     /**
-     * @param mixed $id
+     * @param int $id
      */
     public function setId($id)
     {

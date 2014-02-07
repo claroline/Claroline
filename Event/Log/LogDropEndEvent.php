@@ -20,7 +20,7 @@ class LogDropEndEvent extends AbstractLogResourceEvent {
     {
         $documentsDetails = array();
         foreach ($drop->getDocuments() as $document) {
-            $documentsDetails[] = $document->toJson();
+            $documentsDetails[] = $document->toArray();
         }
 
         $details = array(
