@@ -44,5 +44,43 @@ same message when authentication has failed (no precise validation errors).
                 </div>
             </form>
         </div>
+        <div id="fb-root"></div>
+        <script>
+            window.fbAsyncInit = function() {
+                // init the FB JS SDK
+                FB.init({
+                    appId      : '487751811261295',                    // App ID from the app dashboard
+                    status     : true,                                 // Check Facebook Login status
+                    xfbml      : true,
+                    cookie     : true
+                });
+            };
+
+            // Load the SDK asynchronously
+            (function(d, s, id){
+                var js, fjs = d.getElementsByTagName(s)[0];
+                if (d.getElementById(id)) {return;}
+                js = d.createElement(s); js.id = id;
+                js.src = "//connect.facebook.net/en_US/all.js";
+                fjs.parentNode.insertBefore(js, fjs);
+            }(document, 'script', 'facebook-jssdk'));
+
+            // Here we run a very simple test of the Graph API after login is successful.
+            // This testAPI() function is only called in those cases.
+            function testAPI() {
+                console.log('Welcome!  Fetching your information.... ');
+                FB.api('/me', function(response) {
+                    console.log('Good to see you, ' + response.name + '.');
+                });
+            }
+        </script>
+
+        <p>
+            <a href="#" onclick="fb_login();">Facebook Connect Button (Dialog)</a>
+        </p>
+
+        {# Bonus: Show all available login link in HWIOAuthBundle #}
+        {% render(controller('HWIOAuthBundle:Connect:connect')) %}
     </div>
+
 {% endblock %}

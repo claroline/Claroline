@@ -1,11 +1,12 @@
 hwi_oauth:
     # name of the firewall in which this bundle is active, this setting MUST be set
-    firewall_name: secured_area
+    firewall_name: main
     resource_owners:
-        any_name:
-            type:                facebook
-            client_id:           <client_id>
-            client_secret:       <client_secret>
+        facebook:
+            type:          facebook
+            client_id:     "<client_id>"
+            client_secret: "<client_secret>"
+            scope:         "email"
 
     # an optional setting to configure a query string parameter which can be used to redirect
     # the user after authentication, e.g. /connect/facebook?_destination=/my/destination will

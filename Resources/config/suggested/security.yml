@@ -8,17 +8,6 @@ security:
         Claroline\CoreBundle\Entity\User: sha512
 
     firewalls:
-        secured_area:
-            anonymous: ~
-            oauth:
-                resource_owners:
-                    facebook:     "/login/check-facebook"
-                login_path:        /login
-                failure_path:      /login
-
-                oauth_user_provider:
-                  service: hwi_oauth.user.provider.entity
-
         install:
             pattern: ^/install
             security: false
@@ -58,6 +47,13 @@ security:
                 lifetime: 31536000 # 365 days
                 path:     /
                 domain:   ~
+            oauth:
+                resource_owners:
+                    facebook: /login_facebook
+                login_path: /login
+                failure_path: /login
+                oauth_user_provider:
+                    service: hwi_oauth.user.provider.entity
     acl:
         connection: default
         voter:
@@ -69,3 +65,5 @@ security:
     access_control:
         - { path: ^/oauth/v2/auth_login$, role: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/api,                  role: IS_AUTHENTICATED_FULLY }
+        - { path: ^/login, role: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/connect, role: IS_AUTHENTICATED_ANONYMOUSLY }
