@@ -40,6 +40,7 @@ class BadgeRepository extends EntityRepository
 
         return $executeQuery ? $query->getResult(): $query;
     }
+
     /**
      * @param Badge $badge
      * @param User $user

@@ -65,28 +65,43 @@
         $(".collection").droppable(dropOptions);
 
         addCollectionButton.click(function(event) {
-            var existedCollection = $(".collection", collectionsList);
-            if (0 == existedCollection.length) {
-                noCollectionElement.hide();
-            }
-            else {
-                existedCollection
-                    .filter(".editing")
-                    .each(function(index, element) {
-                        updateCollectionTitle($(element));
-                    });
-            }
+            var addButton = $(this);
+            addButton.button('loading');
 
-            var newCollection = $(newCollectionTemplate);
-            newCollection
-                .droppable(dropOptions)
-                .hide()
-                .prependTo($("#collections_list"))
-                .show('fast')
-                .find(".collection_title")
-                    .hide();
+            var url  = addButton.attr("data-action-url");
+            var collectionCreationRequest = $.post(url,{'badge_collection_form[name]': "John"});
 
-            $(".btn-delete", newCollection).confirmModal({'confirmCallback': confirmDeleteCollection});
+            collectionCreationRequest
+                .success(function(data) {
+                    var existedCollection = $(".collection", collectionsList);
+                    if (0 == existedCollection.length) {
+                        noCollectionElement.addClass("hidden");
+                    }
+                    else {
+                        existedCollection
+                            .filter(".editing")
+                            .each(function(index, element) {
+                                updateCollectionTitle($(element));
+                            });
+                    }
+
+                    var newCollection = $(newCollectionTemplate);
+                    newCollection
+                        .droppable(dropOptions)
+                        .hide()
+                        .prependTo($("#collections_list"))
+                        .show('fast')
+                        .find(".collection_title")
+                            .hide();
+
+                    $(".btn-delete", newCollection).confirmModal({'confirmCallback': confirmDeleteCollection});
+                })
+                .fail(function() {
+                    console.log("error");
+                })
+                .always(function () {
+                    addButton.button('reset');
+                });
         });
 
         $(collectionsList).on('keydown', 'input',function(event){
@@ -142,7 +157,7 @@
 
             var existedCollection = $(".collection", collectionsList);
             if (0 == existedCollection.length) {
-                noCollectionElement.show();
+                noCollectionElement.removeClass("hidden");
             }
         }
     });

@@ -11,7 +11,9 @@
 
 namespace Claroline\CoreBundle\Controller\Badge;
 
+use Claroline\CoreBundle\Entity\Badge\BadgeCollection;
 use Claroline\CoreBundle\Event\Badge\BadgeCreateValidationLinkEvent;
+use Claroline\CoreBundle\Form\Badge\BadgeCollectionType;
 use Claroline\CoreBundle\Rule\Validator;
 use Claroline\CoreBundle\Entity\Badge\Badge;
 use Claroline\CoreBundle\Entity\Badge\UserBadge;
@@ -134,22 +136,24 @@ class ProfileController extends Controller
     }
 
     /**
-     * @Route("/{page}", name="claro_profile_view_badges", requirements={"page" = "\d+"}, defaults={"page" = 1})
+     * @Route("/", name="claro_profile_view_badges")
      * @ParamConverter("user", options={"authenticatedUser" = true})
      * @Template()
      */
-    public function badgesAction($page, User $user)
+    public function badgesAction(User $user)
     {
-        $badges      = $this->getDoctrine()->getRepository('ClarolineCoreBundle:Badge\Badge')->findByUser($user);
-        $badgeClaims = $this->getDoctrine()->getRepository('ClarolineCoreBundle:Badge\BadgeClaim')->findByUser($user);
+        $badges           = $this->getDoctrine()->getRepository('ClarolineCoreBundle:Badge\Badge')->findByUser($user);
+        $badgeClaims      = $this->getDoctrine()->getRepository('ClarolineCoreBundle:Badge\BadgeClaim')->findByUser($user);
+        $badgeCollections = $this->getDoctrine()->getRepository('ClarolineCoreBundle:Badge\BadgeCollection')->findByUser($user);
 
         /** @var \Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler $platformConfigHandler */
         $platformConfigHandler = $this->get('claroline.config.platform_config_handler');
 
         return array(
-            'badges'         => $badges,
-            'badgeClaims'   => $badgeClaims,
-            'language'      => $platformConfigHandler->getParameter('locale_language')
+            'badges'           => $badges,
+            'badgeClaims'      => $badgeClaims,
+            'badgeCollections' => $badgeCollections,
+            'language'         => $platformConfigHandler->getParameter('locale_language')
         );
     }
 }
