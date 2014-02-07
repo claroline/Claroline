@@ -14,7 +14,8 @@ use Claroline\CoreBundle\Library\Transfert\ManifestConfiguration;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Config\Definition\Processor;
 use Symfony\Component\Config\Util\XmlUtils;
-
+use Symfony\Component\Yaml\Parser;
+use Symfony\Component\Yaml\Yaml;
 
 class TransfertManager
 {
@@ -35,24 +36,12 @@ class TransfertManager
     {
         $manifestConfif = new ManifestConfiguration();
         $processor = new Processor();
-        $doc = new \DOMDocument();
-        $doc->load($path);
-        $data = XmlUtils::convertDomElementToArray($doc->documentElement);
-        $data = array('workspace' => $data);
-
+        $data = Yaml::parse(file_get_contents($path));
         try {
             $processedConfiguration = $processor->processConfiguration($manifestConfif,$data);
             var_dump($processedConfiguration);
         } catch (\Exception $e) {
-
             var_dump(array($e->getMessage())) ;
         }
-        $properties = $doc->getElementsByTagName('properties');
-        $child = $properties->item(0);
-
-        if($properties->length > 0) {
-            //$this->addImporter('properties',new WorkspacePropertiesImporter($um));
-        }
-
     }
 } 

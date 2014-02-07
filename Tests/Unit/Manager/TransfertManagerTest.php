@@ -31,6 +31,6 @@ class TransfertManagerTest extends MockeryTestCase
         $importer->shouldReceive('valid')->once();
         $importer->shouldReceive('import')->once();
         $this->manager->addImporter($importer);
-        $this->manager->importWorkspace(__DIR__.'/../../Stub/manifest.xml');
+        $this->manager->importWorkspace(__DIR__.'/../../Stub/manifest.yml');
     }
 } 

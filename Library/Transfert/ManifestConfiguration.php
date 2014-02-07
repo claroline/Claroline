@@ -24,18 +24,8 @@ class ManifestConfiguration implements ConfigurationInterface {
         $this->addPropertiesSection($rootNode);
         $this->addCustomeRolesSection($rootNode);
         $this->addmembersSection($rootNode);
-/*        $rootNode
-              ->children()
-                     ->arrayNode('users')
-                     ->fixXMLConfig('users','user')
-                         ->children()
-                             ->arrayNode('user')
-                                  ->prototype('scalar')->end()
-                             ->end()
-                         ->end()
-                     ->end()
-                 ->end()
-            ->end();*/
+        $this->addResourceSection($rootNode);
+        $this->addToolsSection($rootNode);
 
         return $treeBuilder;
     }
@@ -60,17 +50,16 @@ class ManifestConfiguration implements ConfigurationInterface {
         $rootNode
             ->children()
                 ->arrayNode('customRoles')
-                    ->fixXmlConfig('role')
+                    ->prototype('array')
                     ->children()
-                        ->arrayNode('roles')
-                            ->prototype('scalar')->end()
-                        ->end()
+                        ->scalarNode('role')->end()
+                    ->end()
                     ->end()
                 ->end()
             ->end();
     }
 
-    private function addmembersSection($rootNode)
+    private function addMembersSection($rootNode)
     {
         $rootNode
             ->children()
@@ -90,51 +79,110 @@ class ManifestConfiguration implements ConfigurationInterface {
                     ->end()
                     ->children()
                         ->arrayNode('platformGroups')
-                            ->fixXMLConfig('platformGroups','group')
-                            ->children()
-                                ->arrayNode('group')
-                                    ->fixXMLConfig('group','name')
-                                    ->children()
-                                        ->prototype('scalar')->end()
-                                        //->scalarNode('name')->end()
-                                        /*->arrayNode('users')
-                                            ->children()
-                                                ->arrayNode('user')
+                            ->prototype('array')
+                                ->children()
+                                    ->arrayNode('group')
+                                        ->children()
+                                            ->scalarNode('name')->end()
+                                            ->arrayNode('users')
+                                                ->prototype('scalar')->end()
+                                                    ->children()
+                                                        ->scalarNode('user')->end()
+                                                    ->end()
+                                            ->end()
+                                        ->end()
+                                    ->end()
+                                ->end()
+                            ->end()
+                        ->end()
+                    ->end()
+                    ->children()
+                            ->arrayNode('users')
+                                ->children()
+                                    ->scalarNode('user')
+                                ->end()
+                            ->end()
+                        ->end()
+                    ->end()
+                ->end()
+            ->end()
+        ->end();
+    }
+
+    private function addResourceSection($rootNode)
+    {
+        $rootNode
+        ->children()
+            ->arrayNode('resources')
+                ->children()
+                    ->arrayNode('directories')
+                        ->children()
+                            ->arrayNode('directory')
+                                ->children()
+                                    ->scalarNode('name')->end()
+                                    ->scalarNode('creator')->end()
+                                    ->scalarNode('parent')->end()
+                                    ->arrayNode('rights')
+                                        ->children()
+                                            ->arrayNode('role')
+                                                ->children()
+                                                    ->scalarNode('name')->end()
+                                                    ->scalarNode('open')->end()
+                                                    ->scalarNode('edit')->end()
+                                                    ->arrayNode('create')
+                                                        ->children()
+                                                            ->scalarNode('resource')->end()
+                                                        ->end()
+                                                    ->end()
                                                 ->end()
                                             ->end()
-                                        ->end()*/
+                                        ->end()
                                     ->end()
                                 ->end()
                             ->end()
                         ->end()
                     ->end()
                 ->end()
-            ->end();
-                                //->fixXMLConfig('users','user')
-/*                                    ->children()
-                                        ->scalarNode('name')->end()
-                                        ->arrayNode('users')*/
-                                           // ->children()
-                                                //->arrayNode('user')
-                                                    /*->children()
-                                                        ->scalarNode('first_name')->isRequired()->end()
-                                                        ->scalarNode('last_name')->isRequired()->end()
-                                                        ->scalarNode('username')->isRequired()->end()
-                                                        ->scalarNode('locale')->isRequired()->end()
-                                                        ->scalarNode('administrative_code')->end()
-                                                        ->scalarNode('phone')->end()
-                                                        ->scalarNode('picture')->end()
-                                                    ->end()*/
-                                                  //  ->prototype('scalar')->end()
-                                                //->end()
-                                            //->end()
-//                                        /->end()
-                                    //->end()
-/*                                ->end()
+                ->children()
+                     ->arrayNode('items')
+                         ->children()
+                            ->arrayNode('item')
+                                ->children()
+                                    ->scalarNode('name')->end()
+                                    ->scalarNode('creator')->end()
+                                    ->scalarNode('parent')->end()
+                                    ->scalarNode('type')->end()
+                                ->end()
+                            ->children()
+                                ->arrayNode('rights')
+                                    ->children()
+                                        ->arrayNode('role')
+                                        ->children()
+                                            ->scalarNode('name')->end()
+                                            ->scalarNode('foo')->end()
+                                            ->scalarNode('open')->end()
+                                            ->scalarNode('edit')->end()
+                                        ->end()
+                                    ->end()
+                                ->end()
                             ->end()
                         ->end()
                     ->end()
                 ->end()
-            ->end();*/
+            ->end()
+        ->end();
+    }
+
+    public function addToolsSection($rootNode)
+    {
+        $rootNode
+            ->children()
+                ->arrayNode('tools')
+                    ->prototype('array')
+                        ->children()
+                            ->scalarNode('name')->end()
+                        ->end()
+                ->end()
+            ->end();
     }
 } 

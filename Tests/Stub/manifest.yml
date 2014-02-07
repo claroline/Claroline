@@ -1,0 +1,76 @@
+workspace:
+    properties:
+        name: Anglais
+        code: EN
+        visible: true
+        selfregistration: true
+
+    customRoles:
+        - role: x
+        - role: B
+
+    members:
+        owner:
+            first_name: esdras
+            last_name: ngongo
+            username: ezs
+            locale: fr
+            administrative_code: 7
+            phone:
+            picture: url
+        platformGroups:
+            - group:
+                name: blabla
+                users:
+                -  user: coucou
+                -  user: bonjour
+                -  user: salut
+                -  user: null
+            - group:
+                name: blabla
+                users:
+                    user: null
+                    user: null
+                    user: null
+                    user: null
+        users:
+            user: null
+            user: null
+            user: null
+
+    resources:
+        directories:
+            directory:
+                name: foo
+                creator: bar
+                parent: papa
+                rights:
+                    role:
+                        name: foo
+                        open: true
+                        edit: false
+                        create:
+                            resource: 'hello'
+        items:
+            item:
+                name: 'foo'
+                creator: 'bar'
+                parent: 'papa'
+                type: 'baz'
+                rights:
+                      role:
+                          name: 'foo'
+                          open: true
+                          edit: true
+    tools:
+        - name: 'home'
+        - name: 'agenda'
+        - name: 'badges'
+
+
+
+
+
+
+
+

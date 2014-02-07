@@ -39,6 +39,10 @@
                 </users>-->
             </group>
             <group>
+                <!--<name></name>-->
+            </group>
+
+            <group>
                 <name></name>
                 <!--<users>
                     <user></user>
@@ -47,58 +51,58 @@
                 </users>-->
             </group>
         </platformGroups>
-<!--        <users>
+        <users>
             <user>
                 blavla
             </user>
             <user>
                 ok
             </user>
-        </users>-->
+        </users>
     </members>
 
-    <!--&lt;!&ndash; optional &ndash;&gt;-->
-    <!--&lt;!&ndash; outside other tools &ndash;&gt;-->
-    <!--&lt;!&ndash; inject member and roles and workspace properties &ndash;&gt;-->
+    <!-- optional -->
+    <!-- outside other tools -->
+    <!-- inject member and roles and workspace properties -->
 
-    <!--<resources>-->
-        <!--<directories>-->
-            <!--<directory name="foo" creator="bar" parent="papa">-->
-                <!--<rights>-->
-                    <!--<role name="foo">-->
-                        <!--<open>true</open>-->
-                        <!--<edit>false</edit>-->
-                        <!--<create>-->
-                            <!--<resource></resource>-->
-                        <!--</create>-->
-                    <!--</role>-->
-                <!--</rights>-->
-            <!--</directory>-->
-        <!--</directories>-->
-        <!--&lt;!&ndash; inject directories &ndash;&gt;-->
-        <!--&lt;!&ndash; every items has access to the previously created items &ndash;&gt;-->
-        <!--<items>-->
-            <!--<item name="foo" creator="bar" parent="papa" type="baz">-->
-                <!--<rights>-->
-                    <!--<role name="foo">-->
-                        <!--<open>true</open>-->
-                        <!--<edit>false</edit>-->
-                    <!--</role>-->
-                <!--</rights>-->
-            <!--</item>-->
-            <!--<content>-->
+    <resources>
+        <directories>
+            <directory name="foo" creator="bar" parent="papa">
+                <rights>
+                    <role name="foo">
+                        <open>true</open>
+                        <edit>false</edit>
+                        <create>
+                            <resource></resource>
+                        </create>
+                    </role>
+                </rights>
+            </directory>
+        </directories>
+        <!-- inject directories -->
+        <!-- every items has access to the previously created items -->
+        <items>
+            <item name="foo" creator="bar" parent="papa" type="baz">
+                <rights>
+                    <role name="foo">
+                        <open>true</open>
+                        <edit>false</edit>
+                    </role>
+                </rights>
+            </item>
+            <content>
 
-            <!--</content>-->
-        <!--</items>-->
-    <!--</resources>-->
+            </content>
+        </items>
+    </resources>
 
-    <!--&lt;!&ndash; optional &ndash;&gt;-->
-    <!--<tools>-->
-        <!--&lt;!&ndash; inject member and roles and resources &ndash;&gt;-->
-        <!--<tool name="home"/>-->
-        <!--<tool name="agenda"/>-->
-        <!--<tool name="badges"/>-->
-    <!--</tools>-->
+    <!-- optional -->
+    <tools>
+        <!-- inject member and roles and resources -->
+        <tool name="home"/>
+        <tool name="agenda"/>
+        <tool name="badges"/>
+    </tools>
 
 
 </workspace>
