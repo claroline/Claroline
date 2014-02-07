@@ -665,7 +665,7 @@ class Badge extends Rulable
 
         $this->file->move($this->getUploadRootDir(), $this->imagePath);
 
-        if (null !== $this->olfFileName) {
+        if (null !== $this->olfFileName && is_file($this->olfFileName)) {
             unlink($this->getUploadRootDir() . DIRECTORY_SEPARATOR . $this->olfFileName);
             $this->olfFileName = null;
         }

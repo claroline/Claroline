@@ -51,7 +51,9 @@
                             <header>
                                 <div class="btn-group btn-group-xs pull-right">
                                     <button type="button" class="btn btn-success btn-edit"><span class="icon-pencil" data-toggle="tooltip" data-placement="top" data-container="body" data-title="' ~ 'edit'|trans({}, 'platform') ~ '"></span></button>
-                                    <button type="button" class="btn btn-danger btn-delete"><span class="icon-remove" data-toggle="tooltip" data-placement="top" data-container="body" data-title="' ~ 'delete'|trans({}, 'platform') ~ '"></span></button>
+                                    <button type="button" class="btn btn-danger btn-delete" data-toggle="tooltip" data-placement="top" data-container="body" data-title="' ~ 'delete'|trans({}, 'platform') ~ '" data-confirm-title="' ~ 'badge_collection_delete_confirm_title'|trans ~ '" data-confirm-message="' ~ 'badge_collection_delete_confirm_message'|trans ~ '" data-confirm-ok="' ~ 'delete'|trans({}, 'platform') ~ '" data-confirm-cancel="' ~ 'cancel'|trans({}, 'platform') ~ '" data-confirm-style="danger">
+                                        <span class="icon-remove"></span>
+                                    </button>
                                 </div>
                                 <h4 class="collection_title">' ~ 'collection_name'|trans ~ '</h4>
                                 <input type="text" class="form-control collection_title_input" name="collection_title" value="' ~ 'collection_name'|trans ~ '" />
@@ -69,7 +71,8 @@
                 <div class="col-md-9">
                     <ul class="nodes badge_list list-unstyled well">
                     {% for badge in badges %}
-                        <li class="node-thumbnail badge_container">
+                        {% set dataImage = '<img class="badge_image_mini" src="' ~ asset(badge.webPath) ~ '" alt="' ~ badge.name(language) ~ '" />' %}
+                        <li class="node-thumbnail badge_container" data-image="{{ dataImage }}" data-id="{{ badge.id }}">
                             <a href="{{ path('claro_profile_view_badge', {'id': badge.id}) }}" title="{{ badge.name(language) }}" class="thumbnail">
                                 <img class="badge_image" src="{{ asset(badge.webPath) }}" alt="{{ badge.name(language) }}" />
                                 <p class="badge_name">{{ badge.name(language) }}</p>
@@ -87,6 +90,8 @@
 
 {% block javascripts %}
 {{ parent() }}
+<script type="text/javascript" src='{{ asset('bundles/frontend/jquery/jquery-ui-1.9.2/components/jquery.ui.effect.min.js') }}'></script>
+<script type="text/javascript" src='{{ asset('bundles/frontend/jquery/jquery-ui-1.9.2/components/jquery.ui.effect-highlight.min.js') }}'></script>
 <script type="text/javascript" src='{{ asset('bundles/frontend/jquery/jquery-ui-1.9.2/components/jquery.ui.droppable.min.js') }}'></script>
 <script type="text/javascript" src='{{ asset('bundles/frontend/jquery/jquery-ui-1.9.2/components/jquery.ui.draggable.min.js') }}'></script>
 <script type="text/javascript" src='{{ asset('bundles/frontend/jquery/plugin/confirm-bootstrap/confirm-bootstrap.js') }}'></script>

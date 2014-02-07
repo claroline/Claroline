@@ -47,8 +47,19 @@
                 updateCollectionTitle(droppingZone);
             }
 
-            $("ul", droppingZone).append('<li class="clarobadge"><img class="badge_image_mini" src="/claroline/uploads/badges/html5_badge_256.png" alt="Création d\'une section dans un wiki"></li>');
+            $(ui.draggable).each(function(index, element) {
+                var element = $(element);
 
+                var existingBadgeInCollection = $(".clarobadge[data-id=" + element.attr("data-id") + "]", droppingZone);
+                if (0 == existingBadgeInCollection.length) {
+                    $("ul", droppingZone).append('<li class="clarobadge" data-id="' + element.attr("data-id") + '">' + element.attr("data-image") + '</li>');
+                }
+                else {
+                    existingBadgeInCollection.each(function(index, element) {
+                        $(element).effect("highlight", {color: '#5bc0de'}, 1500);
+                    });
+                }
+            });
         }
 
         $(".collection").droppable(dropOptions);
