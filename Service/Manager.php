@@ -129,7 +129,8 @@ class Manager
                 $doer = $securityToken->getUser();
             }
         }
-        if ($doer !== null) {
+
+        if ($doer instanceof Claroline\CoreBundle\Entity\User) {
             $doerId = $doer->getId();
         }
 
@@ -188,8 +189,10 @@ class Manager
             $loggedUser = $token->getUser();
             $removeUserIds = array($notification->getUserId());
 
-            if (!empty($loggedUser) && $loggedUser->getId() != $notification->getUserId()) {
-                array_push($removeUserIds, $loggedUser->getId());
+            if ($loggedUser instanceof Claroline\CoreBundle\Entity\User) {
+                if (!empty($loggedUser) && $loggedUser->getId() != $notification->getUserId()) {
+                    array_push($removeUserIds, $loggedUser->getId());
+                }
             }
         }
 
