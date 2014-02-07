@@ -68,8 +68,8 @@
             var addButton = $(this);
             addButton.button('loading');
 
-            var url  = addButton.attr("data-action-url");
-            var collectionCreationRequest = $.post(url,{'badge_collection_form[name]': "John"});
+            var url  = collectionsList.attr("data-action-url");
+            var collectionCreationRequest = $.post(url, {'badge_collection_form[name]': "John"});
 
             collectionCreationRequest
                 .success(function(data) {
@@ -111,7 +111,41 @@
             }
         });
 
+        $(collectionsList)
+            .on('click', '.btn-edit',function(event){
+                makeCollectionTitleEditable($(event.target).parents('li.collection'));
+            })
+            .on('click', '.btn-success',function(event){
+                var collectionContainer = $(event.target).parents('li.collection');
+                $(".btn-success", collectionContainer).button('loading');
+                updateCollectionTitle(collectionContainer);
+            });
+
         function updateCollectionTitle(collectionContainer) {
+            var url  = collectionsList.attr("data-action-url");
+
+            var collectionUpdateRequest = $.ajax({
+                url: url + collectionContainer.attr("data-id"),
+                type: 'PUT',
+                data: {
+                    'badge_collection_form[name]': $(".collection_title_input", collectionContainer).val()
+                }
+            });
+            var editButton = $(".btn-success", collectionContainer);
+
+            collectionUpdateRequest
+                .success(function(data) {
+                    doUpdateCollectionTitle(collectionContainer);
+                })
+                .fail(function() {
+                    console.log("error");
+                })
+                .always(function () {
+                    editButton.button('reset');
+                });
+        }
+
+        function doUpdateCollectionTitle(collectionContainer) {
             var collectionTitle      = $(".collection_title", collectionContainer);
             var collectionTitleInput = $(".collection_title_input", collectionContainer);
 
@@ -124,14 +158,6 @@
 
             $(".btn-edit", collectionContainer).removeClass('btn-success').addClass('btn-primary');
         }
-
-        $(collectionsList)
-            .on('click', '.btn-edit',function(event){
-                makeCollectionTitleEditable($(event.target).parents('li.collection'));
-            })
-            .on('click', '.btn-success',function(event){
-                updateCollectionTitle($(event.target).parents('li.collection'));
-            });
 
         function makeCollectionTitleEditable(collectionContainer) {
             var collectionTitle      = $(".collection_title", collectionContainer);

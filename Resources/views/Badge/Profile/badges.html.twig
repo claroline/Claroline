@@ -45,7 +45,7 @@
                     </h3>
                     <hr />
                     <div class="text-center">
-                        <button type="button" class="btn btn-xs btn-success" id="add_collection" data-action-url="{{ path('claro_badge_collection_add') }}" data-loading-text="{{ 'add_collection_in_progress'|trans }}">{{ 'add_collection'|trans }}</button>
+                        <button type="button" class="btn btn-xs btn-success" id="add_collection" data-loading-text="{{ 'add_collection_in_progress'|trans }}">{{ 'add_collection'|trans }}</button>
                     </div>
                     {% set collectionTemplate = '<li class="collection well editing">
                             <header>
@@ -62,18 +62,18 @@
                                 <li class="no_badge">' ~ 'no_badges'|trans ~ '</li>
                             </ul>
                         </li>' %}
-                    <ul class="list-unstyled collections_list" id="collections_list" data-collection-template="{{ collectionTemplate }}">
+                    <ul class="list-unstyled collections_list" id="collections_list" data-collection-template="{{ collectionTemplate }}" data-action-url="{{ path('claro_badge_collection_add') }}">
                         {% for collection in badgeCollections %}
-                            <li class="collection well">
+                            <li class="collection well" data-id="{{ collection.id }}">
                                 <header>
                                     <div class="btn-group btn-group-xs pull-right">
-                                        <button type="button" class="btn btn-primary btn-edit"><span class="icon-pencil" data-toggle="tooltip" data-placement="top" data-container="body" data-title="{{ 'edit'|trans({}, 'platform') }}"></span></button>
+                                        <button type="button" class="btn btn-primary btn-edit" data-loading-text="..."><span class="icon-pencil" data-toggle="tooltip" data-placement="top" data-container="body" data-title="{{ 'edit'|trans({}, 'platform') }}"></span></button>
                                         <button type="button" class="btn btn-danger btn-delete" data-toggle="tooltip" data-placement="top" data-container="body" data-title="{{ 'delete'|trans({}, 'platform') }}" data-confirm-title="{{ 'badge_collection_delete_confirm_title'|trans }}" data-confirm-message="{{ 'badge_collection_delete_confirm_message'|trans }}" data-confirm-ok="{{ 'delete'|trans({}, 'platform') }}" data-confirm-cancel="{{ 'cancel'|trans({}, 'platform') }}" data-confirm-style="danger">
                                             <span class="icon-remove"></span>
                                         </button>
                                     </div>
-                                    <h4 class="collection_title">{{ 'collection_name'|trans }}</h4>
-                                    <input type="text" class="form-control collection_title_input" style="display: none" name="badge_collection_form[name]" value="{{ 'collection_name'|trans }}" />
+                                    <h4 class="collection_title">{{ collection.name }}</h4>
+                                    <input type="text" class="form-control collection_title_input" style="display: none" name="badge_collection_form[name]" value="{{ collection.name }}" />
                                 </header>
                                 <ul class="list-inline badges">
                                     <li class="no_badge">{{ 'no_badges'|trans }}</li>

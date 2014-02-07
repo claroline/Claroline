@@ -12,6 +12,7 @@
 namespace Claroline\CoreBundle\Controller\Badge\Api;
 
 use Claroline\CoreBundle\Entity\Badge\BadgeCollection;
+use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Form\Badge\BadgeCollectionType;
 use FOS\RestBundle\View\View;
 use FOS\RestBundle\View\ViewHandler;
@@ -33,19 +34,28 @@ class CollectionController extends Controller
      * @Method({"POST"})
      * @ParamConverter("user", options={"authenticatedUser" = true})
      */
-    public function newAction(Request $request, $user)
+    public function newAction(Request $request, User $user)
     {
         $collection = new BadgeCollection();
         $collection->setUser($user);
 
-        return $this->processForm($request, $collection);
+        return $this->processForm($request, $collection, "POST");
+    }
+    /**
+     * @Route("/{id}", name="claro_badge_collection_edit", defaults={"_format" = "json"})
+     * @Method({"PUT"})
+     * @ParamConverter("user", options={"authenticatedUser" = true})
+     */
+    public function editAction(Request $request, User $user, BadgeCollection $collection)
+    {
+        return $this->processForm($request, $collection, "PUT");
     }
 
-    private function processForm(Request $request, BadgeCollection $collection)
+    private function processForm(Request $request, BadgeCollection $collection, $method)
     {
         $statusCode = (null === $collection->getId()) ? 201 : 204;
 
-        $form = $this->createForm(new BadgeCollectionType(), $collection);
+        $form = $this->createForm(new BadgeCollectionType(), $collection, array("method" => $method));
         $form->handleRequest($request);
 
         if ($form->isValid()) {
