@@ -1,11 +1,9 @@
 $( document ).ready(function() {
-
 	$("*").tooltip({placement:'top'});
-
 
 	$('.resource-frame').on('load', function () {
         var frame = $(this);
-        frame.css("height", frame.contents().find("#wrap").height() + 20);
+        frame.animate({ height: frame.contents().find("#wrap").height() + 20}, 300, function() {});
     });
 
    $('.resource-tab a').on('click', function () {

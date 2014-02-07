@@ -66,3 +66,13 @@
     border-radius: 2px;
     display:inline-block;
 }
+
+.lvl-indicator-right{
+    width : 8px;
+    height: 8px;
+    position:absolute;
+    top:2px;
+    right:2px;
+    border-radius: 50%;
+    display:inline-block;
+}
