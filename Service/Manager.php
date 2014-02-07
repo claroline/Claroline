@@ -130,7 +130,7 @@ class Manager
             }
         }
 
-        if ($doer !== 'anon.') {
+        if ($doer instanceof Claroline\CoreBundle\Entity\User) {
             $doerId = $doer->getId();
         }
 
@@ -189,7 +189,7 @@ class Manager
             $loggedUser = $token->getUser();
             $removeUserIds = array($notification->getUserId());
 
-            if ($loggedUser !== 'anon.') {
+            if ($loggedUser instanceof Claroline\CoreBundle\Entity\User) {
                 if (!empty($loggedUser) && $loggedUser->getId() != $notification->getUserId()) {
                     array_push($removeUserIds, $loggedUser->getId());
                 }
