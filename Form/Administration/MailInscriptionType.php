@@ -14,7 +14,6 @@ namespace Claroline\CoreBundle\Form\Administration;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
-use Claroline\CoreBundle\Validator\Constraints\InscriptionMail;
 
 class MailInscriptionType extends AbstractType
 {
@@ -24,8 +23,7 @@ class MailInscriptionType extends AbstractType
             'content',
             'content',
             array(
-                'data' => $builder->getData(),
-                'constraints' => array(new InscriptionMail()),
+                'data' => $builder->getData()
             )
         );
 

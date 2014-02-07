@@ -32,8 +32,6 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
  * @ORM\HasLifecycleCallbacks
  * @DoctrineAssert\UniqueEntity("username")
  * @DoctrineAssert\UniqueEntity("mail")
- *
- * @todo implement AdvancedUserInterface
  */
 class User extends AbstractRoleSubject implements Serializable, AdvancedUserInterface, EquatableInterface, OrderableInterface
 {
@@ -166,7 +164,7 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
      * @ORM\OneToOne(
      *     targetEntity="Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace"
      * )
-     * @ORM\JoinColumn(name="workspace_id", onDelete="CASCADE")
+     * @ORM\JoinColumn(name="workspace_id", onDelete="SET NULL")
      */
     protected $personalWorkspace;
 
@@ -259,6 +257,11 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
      * @ORM\Column(name="is_mail_notified", type="boolean")
      */
     protected $isMailNotified = false;
+
+    /**
+     * @ORM\Column(name="last_uri", length=255, nullable=true)
+     */
+    protected $lastUri;
 
     public function __construct()
     {
@@ -850,5 +853,15 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
     public function isMailNotified()
     {
         return $this->isMailNotified;
+    }
+
+    public function setLastUri($lastUri)
+    {
+        $this->lastUri = $lastUri;
+    }
+
+    public function getLastUri()
+    {
+        return $this->lastUri;
     }
 }

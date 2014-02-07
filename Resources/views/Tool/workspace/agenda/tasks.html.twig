@@ -1,5 +1,5 @@
     <div class="span3">
-        <h4> <u>{{'tasks'|trans({}, 'calendar') }} </u></h4>
+        <h4> <u>{{'tasks'|trans({}, 'agenda') }} </u></h4>
         {% for e in listEvents  %}
         <div class="border">
             <button type="button" class="delete-task close" data-event-id="{{e.id}}" data-dismiss="alert">&times;</button>
@@ -15,5 +15,5 @@
             </ul>
         </div>
         {% else %}
-        <li>{{ 'no event found'|trans({}, 'calendar') }}</li>
+        <li>{{ 'no event found'|trans({}, 'agenda') }}</li>
         {% endfor %}

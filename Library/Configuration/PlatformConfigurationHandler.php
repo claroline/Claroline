@@ -42,7 +42,17 @@ class PlatformConfigurationHandler
         'mailer_username' => null,
         'mailer_password' => null,
         'mailer_auth_mode' => null,
-        'terms_of_service' => true
+        'terms_of_service' => true,
+        'google_meta_tag' => null,
+        'redirect_after_login' => false,
+        'session_storage_type' => 'native',
+        'session_db_table' => null,
+        'session_db_id_col' => null,
+        'session_db_data_col' => null,
+        'session_db_time_col' => null,
+        'session_db_dsn' => null,
+        'session_db_user' => null,
+        'session_db_password' => null
     );
 
     /**
@@ -114,6 +124,16 @@ class PlatformConfigurationHandler
         $config->setMailerUsername($this->parameters['mailer_username']);
         $config->setMailerPassword($this->parameters['mailer_password']);
         $config->setMailerAuthMode($this->parameters['mailer_auth_mode']);
+        $config->setGoogleMetaTag($this->parameters['google_meta_tag']);
+        $config->setRedirectAfterLogin($this->parameters['redirect_after_login']);
+        $config->setSessionStorageType($this->parameters['session_storage_type']);
+        $config->setSessionDbTable($this->parameters['session_db_table']);
+        $config->setSessionDbIdCol($this->parameters['session_db_id_col']);
+        $config->setSessionDbDataCol($this->parameters['session_db_data_col']);
+        $config->setSessionDbTimeCol($this->parameters['session_db_time_col']);
+        $config->setSessionDbDsn($this->parameters['session_db_dsn']);
+        $config->setSessionDbUser($this->parameters['session_db_user']);
+        $config->setSessionDbPassword($this->parameters['session_db_password']);
 
         return $config;
     }

@@ -1,29 +1,28 @@
-add_event: 'Ajouter un évènement'
-agenda_form_allDay: Tâche
+add_event: 'Ajouter un événement'
+agenda_form_allDay: 'Tâche'
 agenda_form_description: Description
 agenda_form_end: 'Date de fin'
 agenda_form_endHours: 'Heure de fin'
 agenda_form_priority: Priorité
 agenda_form_priority_High: Haute
-agenda_form_recurring: Récurrence
+agenda_form_recurring: Répétition
 agenda_form_start: 'Date de début'
 agenda_form_startHours: 'Heure de début'
 agenda_form_title: Titre
-'all day': 'Toute la journée'
 apr: Avr
 april: Avril
 aug: Août
 august: Août
 close: Fermer
-confirm: 'Êtes-vous sûr'
-date_invalid: 'Une erreur s''est produite, verifiez que la date début soit plus petit que la date de fin'
+confirm: 'Êtes-vous sûr ?'
+date_invalid: 'Une erreur s''est produite, vérifiez que la date début se situe avant la date de fin'
 day: jour
 dec: Déc
 december: Décembre
 end: Fin
 end_date: 'Date de fin'
-error: 'Une erreure s''est produite, veuillez réessayer'
-event_update: 'Mise à jour reussie'
+error: 'Une erreur s''est produite, veuillez réessayer'
+event_update: 'Modification enregistrée'
 feb: Févr
 february: Février
 fri: Ven
@@ -37,17 +36,17 @@ jun: Juin
 june: Juin
 length: Durée
 low: Basse
-mars: Mars
+mar: Mars
+march: Mars
 may: Mai
 medium: Normale
-modify: 'Modifier une entrée'
+modify: 'Modifier un événement'
 mon: Lun
 monday: Lundi
 month: mois
-'new entry': 'Nouvelle entrée'
 next: '>'
 nextYear: '>>'
-'no event found': 'Pas d''évènements'
+'no event found': 'Pas d''événements'
 nov: Nov
 november: Novembre
 oct: Oct
@@ -58,18 +57,17 @@ sat: Sam
 saturday: Samedi
 sep: Sept
 september: Septembre
-'start date': 'Date début'
 start_date: 'Date de début'
 sun: Dim
 sunday: Dimanche
 tasks: Tâches
-thu: Jeud
+thu: Jeu
 thursday: Jeudi
-title: 'Titre de l''évènement ne peut pas être vide'
+title: 'Le titre est obligatoire'
 today: auj
 tue: Mar
 tuesday: Mardi
-update: 'mettre à jour'
+update: modifier
 wed: Mer
 wednesday: Mercredi
 week: semaine

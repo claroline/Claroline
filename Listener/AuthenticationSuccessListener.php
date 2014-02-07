@@ -19,17 +19,23 @@ use Claroline\CoreBundle\Manager\TermsOfServiceManager;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use Doctrine\ORM\EntityManager;
 use JMS\DiExtraBundle\Annotation as DI;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Templating\EngineInterface;
 use Symfony\Component\Form\FormFactory;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Security\Core\SecurityContextInterface;
+use Symfony\Component\Security\Http\Event\InteractiveLoginEvent;
+use Symfony\Component\Security\Http\Authentication\AuthenticationSuccessHandlerInterface;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Symfony\Component\Routing\Router;
 
 /**
- * @DI\Service
+ * @DI\Service("claroline.authentication_handler")
  */
-class AuthenticationSuccessListener
+class AuthenticationSuccessListener implements AuthenticationSuccessHandlerInterface
 {
     private $securityContext;
     private $eventDispatcher;
@@ -38,6 +44,7 @@ class AuthenticationSuccessListener
     private $formFactory;
     private $termsOfService;
     private $manager;
+    private $router;
 
     /**
      * @DI\InjectParams({
@@ -48,6 +55,7 @@ class AuthenticationSuccessListener
      *     "formFactory"            = @DI\Inject("form.factory"),
      *     "termsOfService"         = @DI\Inject("claroline.common.terms_of_service_manager"),
      *     "manager"                = @DI\Inject("claroline.persistence.object_manager"),
+     *     "router"                 = @DI\Inject("router")
      * })
      *
      */
@@ -58,7 +66,8 @@ class AuthenticationSuccessListener
         EngineInterface $templating,
         FormFactory $formFactory,
         TermsOfServiceManager $termsOfService,
-        ObjectManager $manager
+        ObjectManager $manager,
+        Router $router
     )
     {
         $this->securityContext = $context;
@@ -68,19 +77,33 @@ class AuthenticationSuccessListener
         $this->formFactory = $formFactory;
         $this->termsOfService = $termsOfService;
         $this->manager = $manager;
+        $this->router = $router;
     }
 
     /**
      * @DI\Observe("security.interactive_login")
-     *
-     * @param WorkspaceLogEvent $event
      */
-    public function onAuthenticationSuccess()
+    public function onLoginSuccess(InteractiveLoginEvent $event)
     {
         $user = $this->securityContext->getToken()->getUser();
         $this->eventDispatcher->dispatch('log', 'Log\LogUserLogin', array($user));
         $token = new UsernamePasswordToken($user, null, 'main', $user->getRoles());
         $this->securityContext->setToken($token);
+    }
+
+    public function onAuthenticationSuccess(Request $request, TokenInterface $token)
+    {
+        $user = $this->securityContext->getToken()->getUser();
+
+        if ($this->configurationHandler->getParameter('redirect_after_login') && $user->getLastUri() !== null) {
+            $uri = $user->getLastUri();
+        } else {
+            $uri = $this->router->generate('claro_desktop_open');
+        }
+
+        $response = new RedirectResponse($uri);
+
+        return $response;
     }
 
     /**
@@ -89,6 +112,41 @@ class AuthenticationSuccessListener
      * @param GetResponseEvent $event
      */
     public function onKernelRequest(GetResponseEvent $event)
+    {
+        $event = $this->showTermOfServices($event);
+    }
+
+    /**
+     * @DI\Observe("kernel.response")
+     */
+    public function onKernelTerminate($event)
+    {
+        $this->saveLastUri($event);
+    }
+
+    public function saveLastUri($event)
+    {
+        if (
+            $event->isMasterRequest() &&
+            !$event->getRequest()->isXmlHttpRequest() &&
+            !in_array($event->getRequest()->attributes->get('_route'), $this->getExcludedRoutes()) &&
+            'GET' === $event->getRequest()->getMethod()
+        ) {
+
+            $token =  $this->securityContext->getToken();
+            if ($token) {
+                $user = $token->getUser();
+                if ($user !== 'anon.') {
+                    $uri = $event->getRequest()->getRequestUri();
+                    $user->setLastUri($uri);
+                    $this->manager->persist($user);
+                    $this->manager->flush();
+                }
+            }
+        }
+    }
+
+    private function showTermOfServices(GetResponseEvent $event)
     {
         if ($event->isMasterRequest() and
             $user = $this->getUser($event->getRequest()) and
@@ -109,6 +167,8 @@ class AuthenticationSuccessListener
                 $event->setResponse(new Response($response));
             }
         }
+
+        return $event;
     }
 
     /**
@@ -128,5 +188,14 @@ class AuthenticationSuccessListener
         ) {
             return $user;
         }
+    }
+
+    private function getExcludedRoutes()
+    {
+        return array(
+            'bazinga_exposetranslation_js',
+            'login_check',
+            'login'
+        );
     }
 }

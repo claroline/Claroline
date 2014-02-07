@@ -779,10 +779,10 @@ class AdministrationController extends Controller
 
         if ($form->isValid()) {
             $file = $form->get('file')->getData();
-            $lines = str_getcsv(file_get_contents($file), PHP_EOL, ',');
+            $lines = str_getcsv(file_get_contents($file), PHP_EOL);
 
             foreach ($lines as $line) {
-                $users[] = str_getcsv($line);
+                $users[] = str_getcsv($line, ';');
             }
 
             $this->userManager->importUsers($users);
@@ -844,10 +844,10 @@ class AdministrationController extends Controller
 
         if ($form->isValid()) {
             $file = $form->get('file')->getData();
-            $lines = str_getcsv(file_get_contents($file), PHP_EOL, ',');
+            $lines = str_getcsv(file_get_contents($file), PHP_EOL);
 
             foreach ($lines as $line) {
-                $users[] = str_getcsv($line);
+                $users[] = str_getcsv($line, ';');
             }
 
             if ($validFile) {

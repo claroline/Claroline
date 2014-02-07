@@ -11,8 +11,6 @@
 
 namespace Claroline\CoreBundle\Manager;
 
-use Claroline\CoreBundle\Library\Installation\Settings\MailingSettings;
-use Claroline\CoreBundle\Persistence\ObjectManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Templating\EngineInterface;

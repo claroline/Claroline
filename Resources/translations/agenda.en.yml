@@ -1,27 +1,28 @@
-add_event: 'Add an event'
-agenda_form_allDay: ' All day'
+add_event: 'Add new event'
+agenda_form_allDay: 'Task'
 agenda_form_description: Description
-agenda_form_end: 'End date jj/mm/aaaa) or (jj-mm-aaaa)'
+agenda_form_end: 'End date'
 agenda_form_endHours: 'End hour'
+agenda_form_priority_High: High
 agenda_form_priority: Priority
-agenda_form_recurring: Recurrency
+agenda_form_recurring: Repeats
 agenda_form_start: 'Start date'
 agenda_form_startHours: 'Start hour'
 agenda_form_title: title
-'all day': Task
 apr: Apr
 april: April
 aug: Aug
 august: August
-confirm: 'Are you sure about this change ?'
-date_invalid: 'An error occured. Please check if the start end date is bigger than the start date'
+close: Close
+confirm: 'Confirm modification ?'
+date_invalid: 'An error occured. Please check that your event doesn''t end before it starts'
 day: day
 dec: Dec
 december: December
 end: end
 end_date: 'End date'
 error: 'An unexpeded error occured, please try again'
-event_update: Updated
+event_update: 'Event modified'
 feb: Feb
 february: February
 fri: Fri
@@ -29,33 +30,32 @@ friday: Friday
 high: High
 jan: Jan
 january: January
-ju: Ju
 jul: Jul
 july: July
+jun: Jun
 june: June
 length: Length
 low: Low
-mars: Mars
+mar: Mar
+march: Mar
 may: May
 medium: Medium
 modify: 'Modify an event'
 mon: Mon
 monday: Monday
 month: month
-'new entry': 'New entry'
 next: '>'
 nextYear: '>>'
 'no event found': 'no event found'
-'non plan task': 'non plan tasks'
 nov: Nov
 november: November
 oct: Oct
 october: October
 prev: '<'
 prevYear: '<<'
-sat: Satur
+sat: Sat
 saturday: Saturday
-sept: Sep
+sept: Sept
 september: September
 start_date: 'Start date'
 sun: Sun
@@ -67,7 +67,7 @@ title: 'Title can not be empty'
 today: today
 tue: Tue
 tuesday: Tuesday
-update: update
+update: modify
 wed: Wed
 wednesday: Wednesday
 week: week

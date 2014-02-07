@@ -28,6 +28,14 @@ services:
         arguments:
             - Claroline\CoreBundle\Entity\Badge\Badge
 
+    # pseudo-services used for dynamic parameter injection
+    # (see Claroline\CoreBundle\DependencyInjection\Compiler\DynamicConfigPass
+    claroline.session.storage_options:
+        class: stdClass
+        factory_service: claroline.session.storage_options_factory
+        factory_method: getOptions
+
+
     #notification listeners
     claroline.listener.core.notification_listener:
         class: Claroline\CoreBundle\Listener\Notification\NotificationListener

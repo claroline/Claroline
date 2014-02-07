@@ -1,4 +1,4 @@
-'Each row requires at least 5 parameters.': 'Each row requires at least 5 parameters (separated by commas).'
+'Each row requires at least 5 parameters.': 'Each row requires at least 5 parameters (separated by semicolons).'
 'The code {{ code }} is already assigned to another workspace.': 'The code {{ code }} is already assigned to another workspace.'
 'The name {{ name }} is already in use.': 'The name {{ name }} is already in use.'
 'The user or group {{ name }} does not exist.': 'The user or group [{{ name }}] does not exist.'
@@ -7,3 +7,4 @@ badge_need_at_least_one_translation: 'At least one entire translation must be de
 badge_need_image: 'An image must be define on the badge'
 password_mismatch: 'Passwords mismatch'
 special_char_not_allowed: 'Special characters are not allowed (authorized characters are: a-z, A-Z, 0-9, _ and .)'
+google_meta_tag_error: 'The field must be an meta tag, example: <meta name="google-site-verification" content="XXX" />'
