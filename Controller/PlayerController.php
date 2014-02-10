@@ -118,54 +118,7 @@ class PlayerController extends ContainerAware
         );
     }
 
-    /**
-     * @Method("GET")
-     * @Template("InnovaPathBundle:Player:components/petit-poucet.html.twig")
-     */
-    public function displayPetitPoucetAction(AbstractWorkspace $workspace, Path $path, Step $currentStep)
-    {
-        $session = $this->container->get('request')->getSession();
-        $history = $session->get('history');
-
-        if(is_null($history)){
-            $history = array ();
-        }
-
-        if(!array_key_exists($path->getId(), $history)){
-            $history[$path->getId()] = array ();
-        } else {
-            reset( $history[$path->getId()] );
-            $lastStepId = key( $history[$path->getId()][0] );
-        }
-
-        if(!isset($lastStepId) || $lastStepId != $currentStep->getId()){
-            array_unshift($history[$path->getId()], array($currentStep->getId() => array("name" => $currentStep->getName(), "level" => $currentStep->getLvl())));
-        }
-
-        $session->set('history', $history);
-
-        /* Gestion du tableau d'objets qui sera passé à la vue */
-        $petitPoucet = array();
-        $i = 0;
-        foreach($history[$path->getId()] as $step){
-            if ($i <= 15){ 
-                if($step = $this->container->get('doctrine')->getManager()->getRepository("InnovaPathBundle:Step")->findOneById(key($step))){
-                    $petitPoucet[] = $step;
-                }
-            }
-            else{
-                break;
-            }
-            $i++;
-        }
-
-        return array(
-            'workspace' => $workspace,
-            'path' => $path,
-            'petitPoucet' => $petitPoucet,
-        );
-    }
-
+    
     /**
      * @Method("GET")
      * @Template("InnovaPathBundle:Player:components/resources.html.twig")

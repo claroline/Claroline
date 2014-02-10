@@ -19,9 +19,6 @@
     <div class="tree-browser">
         {{ render(controller('innova_path.controller.path_player:displayTreeBrowserAction', { 'workspace': workspace, 'path': path, 'currentStep': currentStep } )) }}
     </div>
-    <div class="petit-poucet">
-        {{ render(controller('innova_path.controller.path_player:displayPetitPoucetAction', { 'workspace': workspace, 'path': path, 'currentStep': currentStep })) }}
-    </div>
 
     <div class="row">
         <div class="col-md-12">
@@ -29,10 +26,6 @@
                 {# Arborescence #}
                 <a class="tree-browser btn btn-default nav-button" href="#" data-toggle="modal" data-target="#full-tree" rel="tooltip" data-original-title="{{ 'full_tree' | trans({}, 'path_player') }}"> 
                     <span class="icon-list"></span>  
-                </a>
-                {# Historique #}
-                <a class="btn btn-default nav-button" href="#" data-toggle="modal" data-target="#modal-history" rel="tooltip" data-original-title="{{ 'history' | trans({}, 'path_player') }}"> 
-                    <span class="icon-time"></span> 
                 </a>
             </div>
             {# Fil d'ariane #}
