@@ -57,7 +57,7 @@
                 }
                 else {
                     existingBadgeInCollection.each(function(index, element) {
-                        $(element).effect("highlight", {color: '#5bc0de'}, 1500);
+                        $(element).effect("highlight", {color: '#d9534f'}, 1500);
                     });
                 }
             });
@@ -115,12 +115,16 @@
                 makeCollectionTitleEditable($(event.target).parents('li.collection'));
             })
             .on('click', '.btn-success',function(event){
-                var collectionContainer = $(event.target).parents('li.collection');
-                $(".btn-success", collectionContainer).button('loading');
-                updateCollectionTitle(collectionContainer);
+                updateCollectionTitle($(event.target).parents('li.collection'));
             });
 
         function updateCollectionTitle(collectionContainer) {
+            var editButton = $(".btn-success", collectionContainer);
+            editButton.button('loading');
+
+            var collectionTitleInput = $(".collection_title_input", collectionContainer);
+            collectionTitleInput.attr('disabled','disabled');
+
             var collectionUpdateRequest = $.ajax({
                 url: apiUrl + collectionContainer.attr("data-id"),
                 type: 'PUT',
@@ -128,7 +132,6 @@
                     'badge_collection_form[name]': $(".collection_title_input", collectionContainer).val()
                 }
             });
-            var editButton = $(".btn-success", collectionContainer);
 
             collectionUpdateRequest
                 .success(function(data) {
@@ -139,6 +142,7 @@
                 })
                 .always(function () {
                     editButton.button('reset');
+                    collectionTitleInput.removeAttr('disabled');
                 });
         }
 
