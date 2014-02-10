@@ -1,11 +1,7 @@
-category: Catégorie
-messages: Messages
-category_form_name: Catégorie
-new_message: Répondre
-new_subject: Ajouter un sujet
-new_category: Ajouter une catégorie
-responses: Réponses
 author: Auteur
+category: Catégorie
+category_form_name: Catégorie
+edit_message: Éditer un message
 field_content_required: Le champ contenu est requis.
 forum: Forum
 forum_category_edit: 'Modifier la catégorie'
@@ -21,13 +17,23 @@ forum_options_form_messages: Messages par page
 forum_subject_title_form_title: Titre
 forum_new_message: Un nouveau message a été ajouté dans le sujet "%subject%" du forum "%forum%".
 forum_new_subject: Un nouveau sujet a été ajouté dans le forum "%forum%".
-subscribe_mail_list: Recevoir les notifications
-unsubscribe_mail_list: Ne plus recevoir les notifications
-subject: Sujet
 last_message: Dernier message
-started_by: Initié par
-remove_subjects_confirm_message: Êtes vous sûr de vouloir supprimer ces %count% sujets ?
-remove_subject_confirm_message: Êtes vous sûr de vouloir supprimer ce sujet.
-remove_category_confirm_message: Êtes vous sûr de vouloir supprimer cette catégorie ?
+messages: Messages
 messages_per_page: Messages par page
+move_message: Déplacer un message
+move_subject: Déplacer un sujet
+new_category: Ajouter une catégorie
+new_message: Répondre
+new_subject: Ajouter un sujet
+remove_category_confirm_message: Êtes vous sûr de vouloir supprimer cette catégorie ?
+remove_subject_confirm_message: Êtes vous sûr de vouloir supprimer ce sujet ?
+remove_subjects_confirm_message: Êtes vous sûr de vouloir supprimer ces %count% sujet(s) ?
+responses: Réponses
+started_by: Initié par
+stick: Épingler
+stuck: Épinglé
+subject: Sujet
 subjets_per_page: Sujets par page
+subscribe_mail_list: Recevoir les notifications
+unstick: Désépingler
+unsubscribe_mail_list: Ne plus recevoir les notifications

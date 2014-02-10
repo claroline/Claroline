@@ -16,7 +16,7 @@ use Claroline\ForumBundle\Entity\Category;
 
 class DeleteCategoryEvent extends AbstractLogResourceEvent
 {
-    const ACTION = 'forum-delete-category';
+    const ACTION = 'resource-claroline_forum-delete_category';
 
     /**
      * @param \Claroline\ForumBundle\Entity\Category $category

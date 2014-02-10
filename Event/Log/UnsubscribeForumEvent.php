@@ -16,7 +16,7 @@ use Claroline\ForumBundle\Entity\Forum;
 
 class UnsubscribeForumEvent extends AbstractLogResourceEvent
 {
-    const ACTION = 'forum-unsubsribe';
+    const ACTION = 'resource-claroline_forum-unsubscribe';
 
     /**
      * @param Forum $forum

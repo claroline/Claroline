@@ -16,7 +16,7 @@ use Claroline\ForumBundle\Entity\Forum;
 
 class SubscribeForumEvent extends AbstractLogResourceEvent
 {
-    const ACTION = 'forum-subsribe';
+    const ACTION = 'resource-claroline_forum-subscribe';
 
     /**
      * @param Forum $forum

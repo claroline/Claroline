@@ -16,7 +16,7 @@ use Claroline\ForumBundle\Entity\Message;
 
 class EditMessageEvent extends AbstractLogResourceEvent
 {
-    const ACTION = 'forum-edit-message';
+    const ACTION = 'resource-claroline_forum-edit_message';
 
     /**
      * @param \Claroline\ForumBundle\Entity\Message $message

@@ -16,7 +16,7 @@ use Claroline\ForumBundle\Entity\Subject;
 
 class CreateSubjectEvent extends AbstractLogResourceEvent
 {
-    const ACTION = 'forum-create-subject';
+    const ACTION = 'resource-claroline_forum-create_subject';
 
     /**
      * @param Subject $subject

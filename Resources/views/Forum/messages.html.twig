@@ -12,7 +12,14 @@
     }}
 {% endmacro %}
 
+{% macro renderOptions(options, selectedOption) %}
+    {% for option in options %}
+        <option {{ option == selectedOption ? 'selected' : '' }}>{{ option }}</option>
+    {% endfor %}
+{% endmacro %}
+
 {% from _self import renderPager %}
+{% from _self import renderOptions %}
 
 {% set layout = "ClarolineCoreBundle:Workspace:layout.html.twig" %}
 
@@ -32,26 +39,19 @@
 
 {% block section_content %}
     <div class="panel-heading">
-        <h3 class="panel-title">{{ _resource.getResourceNode().getName() }} ({{ subject.getTitle() }})</h3>
+        <h3 class="panel-title">{{ _resource.getResourceNode().getName() }}</h3>
     </div>
     <div class="panel-body">
-        <div class="navbar row">
-            <div class="col-md-6">
+        <div class="row">
+            <div class="col-md-9">
                 {{ renderPager(subject.getId(), pager, max) }}
             </div>
-            <div>
+            <div class="col-md-3">
                 <div class="input-group margin-md">
                     <select class="form-control input-md" id="max-select">
-                        <option>20</option>
-                        <option>50</option>
-                        <option>100</option>
-                        <option>200</option>
-                        <option>500</option>
+                        {{ renderOptions([20, 50, 100, 200, 500], max is defined ? max : 20) }}
                     </select>
                     <span class="input-group-addon">{{ 'messages_per_page'|trans({}, 'forum') }}</span>
-                    <button class="filter btn btn-default" type="button" id="search-button">
-                        <i class="icon-search"></i>
-                    </button>
                 </div>
             </div>
         </div>
@@ -81,7 +81,6 @@
                         <div>
                             {{ message.getCreationDate()|intl_date_format() }}
                         </div>
-                        <p>{{ message.getCreator().getFirstName() }} {{ message.getCreator().getLastName() }}</p>
                     </td>
                     <td>
                         <p>{{ message.getContent()|raw }}</p>
@@ -89,11 +88,17 @@
                         <hr>
                         <div class="pull-right clearfix">
                         {% if isModerator or app.security.token.user == message.getCreator() %}
-                            <a class="btn btn-default" href="{{ path('claro_forum_edit_message_form', {'message': message.getId()}) }}"> <i class="icon-pencil"></i> {{ 'edit'|trans({}, 'platform') }} </a>
+                            <a class="btn btn-default" href="{{ path('claro_forum_edit_message_form', {'message': message.getId()}) }}">
+                                <i class="icon-pencil"></i> {{ 'edit'|trans({}, 'platform') }}
+                            </a>
                         {% endif %}
                         {% if isModerator %}
-                            <a id="move-message" class="btn btn-default" href="{{ path('claro_message_move_form', {'message': message.getId()}) }}"> {{ 'move'|trans({}, 'platform') }} </a>
-                            <a id="delete-message" class="btn btn-default" href="{{ path('claro_forum_delete_message', {'message': message.getId()}) }}"> <i class="icon-remove"></i> {{ 'delete'|trans({}, 'platform') }} </a>
+                            <a id="move-message" class="btn btn-default" href="{{ path('claro_message_move_form', {'message': message.getId()}) }}">
+                                <i class="icon-arrow-right"></i> {{ 'move'|trans({}, 'platform') }}
+                            </a>
+                            <a id="delete-message" class="btn btn-default" href="{{ path('claro_forum_delete_message', {'message': message.getId()}) }}">
+                                <i class="icon-remove"></i> {{ 'delete'|trans({}, 'platform') }}
+                            </a>
                         {% endif %}
                         </div>
                      </td>
@@ -104,14 +109,14 @@
         <div>
             {{ renderPager(subject.getId(), pager, max) }}
         </div>
-        {% if canAnswer %}<h4><i class="icon-reply"></i> {{ 'new_message' | trans({}, 'forum') }}:</h4>{% endif %}
+        {% if canAnswer %}
+            <h4><i class="icon-reply"></i> {{ 'new_message' | trans({}, 'forum') }}</h4>
+            <div>
+                <textarea class="forum-answer claroline-tiny-mce hide"></textarea>
+                {{ form_widget(form._token) }}
+            </div>
+        {% endif %}
     </div>
-    {% if canAnswer %}
-        <div class='creator'>
-            <textarea class="forum-answer claroline-tiny-mce hide"></textarea>
-            {{ form_widget(form._token) }}
-        </div>
-    {% endif %}
     <div class="panel-footer clearfix">
         <div class="pull-right">
             <a class="btn btn-default" href='{{ path('claro_forum_subjects', { 'category': category.getId() }) }}'>
@@ -128,20 +133,12 @@
 
 {% block javascripts %}
     {{ parent() }}
-
-    <script>
-        $('#max-select').val({{ max }});
-        $('#search-button').on('click', function(event) {
-            var route = Routing.generate('claro_forum_messages', {'subject': {{ subject.getId()}}, 'max': $('#max-select').val() });
-            window.location.href = route;
-        });
-    </script>
     {% if canAnswer %}
         <script>
             (function () {
                 'use strict';
                 //id="forum_message_form_content" name="forum_message_form[content]"
-                $('body').on('click', '.panel-footer .btn-primary', function() {
+                $('body').on('click', '.panel-footer .btn-primary', function () {
                     var content = $('textarea.claroline-tiny-mce').val();
                     var token = $('#forum_message_form__token').val();
 
@@ -165,13 +162,12 @@
                         );
                     }
                 });
-
             })();
         </script>
     {% endif %}
     {% if isModerator %}
         <script>
-           function createValidationBox() {
+            function createValidationBox() {
                 var html = Twig.render(
                     ModalWindow,
                     {'footer': Twig.render(ValidationFooter), 'isHidden': true, 'modalId': 'confirm-modal', 'body': Twig.render(removeMessageConfirm, {'nbItems': 1})}
@@ -198,6 +194,12 @@
                         $(tmpEl)[0].parentElement.parentElement.parentElement.remove();
                     }
                 });
+            });
+            $('#max-select').on('change', function () {
+                window.location.href = Routing.generate(
+                    'claro_forum_messages',
+                    {'subject': {{ subject.getId()}}, 'max': $(this).val()}
+                );
             });
         </script>
     {% endif %}

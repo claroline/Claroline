@@ -6,7 +6,7 @@
             {
                 'proximity' : 1,
                 'routeName': 'claro_forum_search',
-                'routeParams': {'forum': forum.getId(), 'search': search, 'page': page }
+                'routeParams': {'forum': forum.getId(), 'search': search, 'page': page is defined ? page : 1}
             }
         )
     }}
@@ -106,12 +106,12 @@
         parameters.route.search = {"route": "claro_forum_search", "parameters": {'forum': {{ _resource.getId() }} }};
         Claroline.Table.initialize(parameters);
 
-        function hightlight(element, text) {
+        function highLight(element, text) {
             element.innerHTML = element.innerHTML.replace(new RegExp("(" +text+ ")", "ig"), '<span style="background-color: #FFFF00">$1</span>');
         }
 
         $('.message-content').each(function(){
-            hightlight($(this).get(0), "{{ search }}");
+            highLight($(this).get(0), "{{ search }}");
         });
     </script>
 {% endblock %}

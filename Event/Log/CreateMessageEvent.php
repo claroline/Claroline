@@ -16,7 +16,7 @@ use Claroline\ForumBundle\Entity\Message;
 
 class CreateMessageEvent extends AbstractLogResourceEvent
 {
-    const ACTION = 'forum-create-message';
+    const ACTION = 'resource-claroline_forum-create_message';
 
     /**
      * @param Message $message
