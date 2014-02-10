@@ -1,13 +1,6 @@
 {% import 'InnovaPathBundle::Player/components/macros.html.twig' as macros %}
         
 <ul class="nav nav-tabs">
-    <li id="current-step-nav-tab" class="active">
-        <a href="#current-step-tab" data-toggle="tab" class="lvl-{{ currentStep.lvl + 1 }}">
-            {#<span class="lvl-{{ currentStep.lvl + 1 }} lvl-indicator-large">&nbsp;</span>#}
-            {{ currentStep.name }}
-        </a>
-    </li>
-
     {% set allParents = currentStep.getParents() %}
     {% for parent in allParents %}
         {% for resource in parent.step2ResourceNodes if resource.propagated == true %}
@@ -25,41 +18,40 @@
             {{ macros.displayResourceButton(resource, currentStep) }}
     {% endfor %}
 </ul>
-
-<div id='content' class="tab-content">
-    <div class="tab-pane active" id="current-step-tab">
-        <div class="panel panel-default">
-            <div class="panel-body">
-                {% if edit == true %}
-                    {{ form_widget(form.description) }}
-                    {{ form_widget(form.save, { 'label': 'Sauvegarder' }) }}
-                    {{ form_end(form) }}
-                {% else %}
-                    {% if currentStep.children is not empty %}
-                        {% if currentStep.description is null %}
-                            <div class="panel panel-default">
-                                <div class="panel-heading">
-                                    <h5 class="panel-title text-center">
-                                        <a data-toggle="collapse" href="#collapse-children">
-                                        {{ 'next_step' | trans({}, 'path_player') }}
-                                        </a>
-                                    </h5>
-                                </div>
-                                <ul id="collapse-children" class="list-group collapse {% if currentStep.description is null %}in{% endif %}">
-                                {% for child in currentStep.children %}
-                                    <li class="list-group-item">
-                                    <a href="{{ path('innova_path_player_index', { workspaceId: workspace.id, pathId: path.id, stepId: child.id }) }}">
-                                    {{ child.name }}
-                                    </a>
-                                    </li>
-                                {% endfor %}
-                                </ul>
-                            </div>
-                        {% endif %}
-                    {% endif %}
-                    {{ currentStep.description | raw }}
+<div class="panel panel-default">
+    <div id="step-title" class="panel-heading">
+        <div class="lvl-{{ currentStep.lvl + 1 }} lvl-indicator-xlarge">&nbsp;</div>
+        <h4>{{ currentStep.name }}</h4>
+    </div>
+    <div class="panel-body">
+        {% if edit == true %}
+            {{ form_widget(form.description) }}
+            {{ form_widget(form.save, { 'label': 'Sauvegarder' }) }}
+            {{ form_end(form) }}
+        {% else %}
+            {% if currentStep.children is not empty %}
+                {% if currentStep.description is null %}
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h5 class="panel-title text-center">
+                                <a data-toggle="collapse" href="#collapse-children">
+                                {{ 'next_step' | trans({}, 'path_player') }}
+                                </a>
+                            </h5>
+                        </div>
+                        <ul id="collapse-children" class="list-group collapse {% if currentStep.description is null %}in{% endif %}">
+                        {% for child in currentStep.children %}
+                            <li class="list-group-item">
+                            <a href="{{ path('innova_path_player_index', { workspaceId: workspace.id, pathId: path.id, stepId: child.id }) }}">
+                            {{ child.name }}
+                            </a>
+                            </li>
+                        {% endfor %}
+                        </ul>
+                    </div>
                 {% endif %}
-            </div>
-        </div>
+            {% endif %}
+            {{ currentStep.description | raw }}
+        {% endif %}
     </div>
 </div>

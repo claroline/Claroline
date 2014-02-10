@@ -2,10 +2,6 @@
     border-bottom: none;
 }
 
-#current-step-tab > .panel {
-    border-top-left-radius: 0px;
-}
-
 .lvl-0, #current-step-nav-tab a.lvl-0, li.lvl-0 > a:hover{
     background-color: #7B7B7B;
     border-color: #4B4B4B;
@@ -76,3 +72,4 @@
     border-radius: 50%;
     display:inline-block;
 }
+

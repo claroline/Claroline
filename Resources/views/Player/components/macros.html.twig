@@ -1,5 +1,5 @@
 {% macro displayResourceButton(resource, step) %}
-    <li class="resource-tab pull-right">
+    <li class="resource-tab">
         <a target="_blank" href="{{ path('claro_resource_open', {'node': resource.resourceNode.id, 'resourceType': resource.resourceNode.resourceType.name }) }}"  data-resource-id = "{{ resource.resourceNode.id }}">
             <span rel="tooltip" data-original-title="{{ step.name }}" class="lvl-{{ step.lvl + 1 }} lvl-indicator-right">&nbsp;</span>
             <img rel="tooltip" data-original-title="{{ resource.resourceNode.resourceType.name | trans({}, 'resource') }}" height="20px" src="{{ asset(resource.resourceNode.icon.relativeUrl) }}" />
