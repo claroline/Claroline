@@ -45,7 +45,7 @@
             }
 
             if (droppingZone.hasClass('editing')) {
-                updateCollectionTitle(droppingZone);
+                doUpdateCollectionTitle(droppingZone);
             }
 
             $(ui.draggable).each(function(index, element) {
