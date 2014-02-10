@@ -39,7 +39,7 @@ class BadgeCollection
     /**
      * @var \Claroline\CoreBundle\Entity\User
      *
-     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\User", cascade={"all"})
+     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\User")
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
      */
     protected $user;
