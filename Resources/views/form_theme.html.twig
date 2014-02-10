@@ -99,3 +99,21 @@
         {% endfor %}
     </div>
 {% endblock %}
+
+{% block form_errors %}
+    {% if errors|length > 0 %}
+        {% spaceless %}
+            <div class="help-block">
+                {% if errors|length == 1 %}
+                    {{ errors[0].message }}
+                {% else %}
+                    <ul>
+                        {% for error in errors %}
+                            <li>{{ error.message }}</li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            </div>
+        {% endspaceless %}
+    {% endif %}
+{% endblock form_errors %}

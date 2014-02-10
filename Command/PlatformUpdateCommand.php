@@ -11,7 +11,6 @@
 
 namespace Claroline\CoreBundle\Command;
 
-use Claroline\BundleRecorder\Operation;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;

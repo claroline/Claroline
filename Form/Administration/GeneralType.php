@@ -75,7 +75,7 @@ class GeneralType extends AbstractType
                     'choices' => $this->langs
                 )
             )
-            ->add('cookie_lifetime', 'number', array('required' => false));
+            ->add('redirect_after_login', 'checkbox', array('label' => 'redirect_after_login', 'required' => false));
    }
 
     public function getName()

@@ -11,6 +11,7 @@
 
 namespace Claroline\CoreBundle\Library\Installation;
 
+use Claroline\CoreBundle\Library\Installation\Updater\MaintenancePageUpdater;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\NullOutput;
 use Symfony\Bundle\SecurityBundle\Command\InitAclCommand;
@@ -40,6 +41,9 @@ class AdditionalInstaller extends BaseInstaller
 
     public function preUpdate($currentVersion, $targetVersion)
     {
+        $maintenanceUpdater = new Updater\WebUpdater($this->container->getParameter('kernel.root_dir'));
+        $maintenanceUpdater->preUpdate();
+
         $this->setLocale();
 
         if (version_compare($currentVersion, '2.0', '<') && version_compare($targetVersion, '2.0', '>=') ) {
