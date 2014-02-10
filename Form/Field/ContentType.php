@@ -102,10 +102,19 @@ class ContentType extends AbstractType
     {
         parent::finishView($view, $form, $options);
 
-        $view->vars['contentTitle'] = true;
+        $themeOptions = array(
+            'contentTitle' => true,
+            'contentText' => true,
+            'titlePlaceHolder' => 'Optional title',
+            'textPlaceHolder' => 'Create a content'
+        );
 
-        if (isset($options['theme_options']) and isset($options['theme_options']['contentTitle'])) {
-            $view->vars['contentTitle'] = $options['theme_options']['contentTitle'];
+        foreach ($themeOptions as $option => $defaultValue) {
+            if (isset($options['theme_options']) and isset($options['theme_options'][$option])) {
+                $view->vars[$option] = $options['theme_options'][$option];
+            } else {
+                $view->vars[$option] = $defaultValue;
+            }
         }
     }
 }

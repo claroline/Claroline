@@ -28,7 +28,7 @@
         var element = $('#sizes').data('element');
 
         if (id && type && element) {
-            $.post(home.path + 'content/update/' + id, { 'size': size, 'type': type })
+            $.post(home.path + 'content/update/' + id + '/' + size+ '/' + type)
             .done(function (data) {
                 if (data === 'true') {
                     $(element).removeClass(function (index, css) {
@@ -180,7 +180,8 @@
         }
     });
 
-    $('body').on('click', '.creator-button', function (event) {
+
+   $('body').on('click', '.creator-button', function (event) {
         home.creator(event.target);
     });
 
@@ -189,7 +190,7 @@
         var id = $(element).data('id');
 
         if (element && id) {
-            home.creator(event.target, id);
+            home.creator(event.target, id, true);
         }
     });
 

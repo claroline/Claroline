@@ -19,17 +19,50 @@ use Claroline\CoreBundle\Entity\Content;
 class HomeContentType extends AbstractType
 {
     private $name = 'content';
+    private $type;
+    private $father;
 
-    public function __construct($id)
+    public function __construct($id, $type = null, $father = null)
     {
         if ($id) {
             $this->name .= $id;
         }
+
+        $this->type = $type;
+        $this->father = $father;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add($this->name, 'content', array('data' => $builder->getData()));
+        if ($this->type === "menu" and !$this->father) {
+            $builder->add(
+                $this->name,
+                'content',
+                array(
+                    'data' => $builder->getData(),
+                    'theme_options' => array(
+                        'titlePlaceHolder' => 'Menu title',
+                        'contentText' => false,
+                        'tinymce' => false
+                    )
+                )
+            );
+        } else if($this->type === "menu") {
+            $builder->add(
+                $this->name,
+                'content',
+                array(
+                    'data' => $builder->getData(),
+                    'theme_options' => array(
+                        'titlePlaceHolder' => 'Link title',
+                        'textPlaceHolder' => 'Link address',
+                        'tinymce' => false
+                    )
+                )
+            );
+        } else {
+            $builder->add($this->name, 'content', array('data' => $builder->getData()));
+        }
     }
 
     public function getName()

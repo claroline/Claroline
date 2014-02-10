@@ -114,6 +114,7 @@ class ContentManager
                 }
 
                 $content->setTranslatableLocale($lang);
+                $content->setModified();
                 $this->manager->persist($content);
                 $this->manager->flush();
             }

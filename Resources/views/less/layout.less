@@ -921,10 +921,24 @@ form .help-block {
             position: relative;
             top: -1px;
             right: -1px;
-            z-index: (@zindex-navbar-fixed - 1);
+            z-index: (@zindex-navbar-fixed - 2);
         }
         .dropdown-menu {
-            z-index: (@zindex-navbar-fixed);
+            z-index: (@zindex-navbar-fixed - 1);
+        }
+
+        .btn.btn-primary {
+            border-color: lighten(@gray-light, 15%);
+            background: lighten(@gray-light, 15%);
+            text-decoration: none;
+        }
+
+         .btn.btn-link {
+            background: @panel-bg;
+            color: lighten(@gray-light, 15%);
+            text-decoration: none;
+            .border-top-radius(@border-radius-base);
+            .border-bottom-radius(@border-radius-base);
         }
     }
 }
@@ -942,18 +956,18 @@ form .help-block {
 }
 
 .creator {
-    .panel {
-        padding: 0;
+    &.creator-menu .form-control, textarea.form-control {
+        .border-bottom-radius(0);
+        margin: 0;
+        border-bottom: none;
+    }
 
-        .form-control {
-            .border-bottom-radius(0);
-            border: none;
-        }
+    .panel {
+        .border-top-radius(0);
     }
 
     .navbar.navbar-static-top {
         z-index: (@zindex-dropdown - 10);
-        border-top: 1px solid @input-border;
         .border-bottom-radius(@border-radius-base);
         margin: 0;
 
@@ -970,12 +984,6 @@ form .help-block {
         overflow: hidden;
         resize: none;
         .transition(all .2s linear);
-    }
-
-    .generated {
-        background: lighten(@state-success-bg, 5%);
-        padding: 0;
-        margin: 0;
     }
 }
 

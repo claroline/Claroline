@@ -130,7 +130,7 @@ class HomeController
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function typesAction()
-
+    {
         $types = $this->manager->getTypes();
 
         return array(
@@ -287,19 +287,19 @@ class HomeController
      * Create new content by POST method. This is used by ajax.
      * The response is the id of the new content in success, otherwise the response is the false word in a string.
      *
-     * @Route("/content/create", name="claroline_content_create")
+     * @Route(
+     *     "/content/create/{type}/{father}",
+     *     name="claroline_content_create",
+     *     defaults={"type" = "home", "father" = null}
+     * )
+     *
      * @Secure(roles="ROLE_ADMIN")
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function createAction()
+    public function createAction($type = null, $father = null)
     {
-        if ($id = $this->manager->createContent(
-            $this->request->get('title'),
-            $this->request->get('text'),
-            $this->request->get('type'),
-            $this->request->get('father')
-        )) {
+        if ($id = $this->manager->createContent($this->request->get('home_content_form'), $type, $father)) {
             return new Response($id);
         }
 
@@ -310,23 +310,21 @@ class HomeController
      * Update a content by POST method. This is used by ajax.
      * The response is the word true in a string in success, otherwise false.
      *
-     * @Route("/content/update/{content}", name="claroline_content_update")
+     * @Route(
+     *     "/content/update/{content}/{size}/{type}",
+     *     name="claroline_content_update",
+     *     defaults={"size" = null, "type" = null}
+     * )
      * @Secure(roles="ROLE_ADMIN")
      *
      * @ParamConverter("content", class = "ClarolineCoreBundle:Content", options = {"id" = "content"})
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function updateAction($content)
+    public function updateAction($content, $size = null, $type = null)
     {
         try {
-            $this->manager->UpdateContent(
-                $content,
-                $this->request->get('title'),
-                $this->request->get('text'),
-                $this->request->get('size'),
-                $this->request->get('type')
-            );
+            $this->manager->UpdateContent($content, $this->request->get('home_content_form'), $size, $type);
 
             return new Response('true');
         } catch (\Exeption $e) {

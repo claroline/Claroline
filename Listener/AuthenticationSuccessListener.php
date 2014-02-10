@@ -121,10 +121,11 @@ class AuthenticationSuccessListener
         if ($this->configurationHandler->getParameter('terms_of_service') and
             $request->get('_route') !== 'claroline_locale_change' and
             $request->get('_route') !== 'claroline_locale_select' and
+            $request->get('_route') !== 'bazinga_exposetranslation_js' and
             $token = $this->securityContext->getToken() and
             $user = $token->getUser() and
             $user instanceof User and
-            !$user->hasAcceptedTerms() 
+            !$user->hasAcceptedTerms()
         ) {
             return $user;
         }
