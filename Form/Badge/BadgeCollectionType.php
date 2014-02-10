@@ -11,15 +11,57 @@
 
 namespace Claroline\CoreBundle\Form\Badge;
 
+use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
+use Claroline\CoreBundle\Repository\Badge\BadgeRepository;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use JMS\DiExtraBundle\Annotation as DI;
 
+/**
+ * @DI\Service("claroline.form.badge.collection")
+ */
 class BadgeCollectionType extends AbstractType
 {
+    /** @var  \Claroline\CoreBundle\Repository\Badge\BadgeRepository */
+    private $badgeRepository;
+
+    /** @var \Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler */
+    private $platformConfigHandler;
+
+    /**
+     * @DI\InjectParams({
+     *     "badgeRepository"       = @DI\Inject("claroline.repository.badge"),
+     *     "platformConfigHandler" = @DI\Inject("claroline.config.platform_config_handler")
+     * })
+     */
+    public function __construct(BadgeRepository $badgeRepository, PlatformConfigurationHandler $platformConfigHandler)
+    {
+        $this->badgeRepository       = $badgeRepository;
+        $this->platformConfigHandler = $platformConfigHandler;
+    }
+
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('name', 'text');
+        /** @var \Claroline\CoreBundle\Entity\Badge\Badge[] $badgeChoices */
+        $badgeChoices  = $this->badgeRepository->findOrderedByName($this->platformConfigHandler->getParameter('locale_language'));
+
+        foreach ($badgeChoices as $badgeChoice) {
+            $badgeChoice->setLocale($this->platformConfigHandler->getParameter('locale_language'));
+        }
+
+        $builder
+            ->add('name', 'text')
+            ->add('badges', 'entity',
+                array(
+                     'class'       => 'ClarolineCoreBundle:Badge\Badge',
+                     'choices'     => $badgeChoices,
+                     'empty_value' => '',
+                     'property'    => 'name',
+                     'multiple'    => true,
+                     'expanded'    => true
+                )
+            );
     }
 
     public function getName()

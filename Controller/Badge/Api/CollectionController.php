@@ -76,7 +76,7 @@ class CollectionController extends Controller
     {
         $statusCode = (null === $collection->getId()) ? 201 : 204;
 
-        $form = $this->createForm(new BadgeCollectionType(), $collection, array("method" => $method));
+        $form = $this->createForm($this->get("claroline.form.badge.collection"), $collection, array("method" => $method));
         $form->handleRequest($request);
 
         if ($form->isValid()) {

@@ -39,11 +39,6 @@
 
         function onDrop(event, ui) {
             var droppingZone = $(event.target);
-            var nbBadges     = droppingZone.find(".clarobadge").length;
-
-            if (0 == nbBadges) {
-                droppingZone.find(".no_badge").hide();
-            }
 
             if (droppingZone.hasClass('editing')) {
                 doUpdateCollectionTitle(droppingZone);
@@ -54,7 +49,7 @@
 
                 var existingBadgeInCollection = $(".clarobadge[data-id=" + element.attr("data-id") + "]", droppingZone);
                 if (0 == existingBadgeInCollection.length) {
-                    $("ul", droppingZone).append('<li class="clarobadge" data-id="' + element.attr("data-id") + '">' + element.attr("data-image") + '</li>');
+                    addBadgeToCollection(droppingZone, element);
                 }
                 else {
                     existingBadgeInCollection.each(function(index, element) {
@@ -62,6 +57,40 @@
                     });
                 }
             });
+        }
+
+        function addBadgeToCollection(collectionContainer, badgeElement) {
+            var badges = {0: badgeElement.attr("data-id")};
+            $(".badges .clarobadge", collectionContainer).each(function(index, element) {
+                badges[index + 1] = $(element).attr("data-id");
+            });
+
+            var collectionUpdateRequest = $.ajax({
+                url: apiUrl + collectionContainer.attr("data-id"),
+                type: 'PUT',
+                data: {
+                    'badge_collection_form[name]':   $(".collection_title_input", collectionContainer).val(),
+                    'badge_collection_form[badges]': badges
+                }
+            });
+
+            collectionUpdateRequest
+                .success(function(data) {
+                    doAddBadgeToCollection(collectionContainer, badgeElement);
+                })
+                .fail(function() {
+                    console.log("error adding badge to collection");
+                });
+        }
+
+        function doAddBadgeToCollection(collectionContainer, badgeElement) {
+            var nbBadges = collectionContainer.find(".clarobadge").length;
+
+            if (0 == nbBadges) {
+                collectionContainer.find(".no_badge").hide();
+            }
+
+            $("ul", collectionContainer).append('<li class="clarobadge" data-id="' + badgeElement.attr("data-id") + '">' + badgeElement.attr("data-image") + '</li>');
         }
 
         $(".collection").droppable(dropOptions);
