@@ -37,9 +37,6 @@ class DynamicConfigPass implements CompilerPassInterface
         $container->removeDefinition('swiftmailer.mailer.default.transport');
         $container->setDefinition('swiftmailer.mailer.default.transport', $transport);
 
-        $storage = $container->findDefinition('session.storage');
-        $storage->addMethodCall('setOptions', array(new Reference('claroline.session.storage_options')));
-
         //session storage
         $handler = new Definition();
         $handler->setClass('SessionHandlerInterface');
@@ -50,5 +47,8 @@ class DynamicConfigPass implements CompilerPassInterface
         //cookie lifetime
         $storage = $container->findDefinition('session.storage');
         $storage->addMethodCall('setOptions', array(new Reference('claroline.session.storage_options')));
+
+        //notification
+        $container->setAlias('icap.notification.orm.entity_manager', 'claroline.persistence.object_manager');
     }
 }
