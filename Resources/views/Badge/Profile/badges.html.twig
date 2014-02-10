@@ -53,9 +53,10 @@
                     {% set collectionTemplate = '<li class="collection well editing" data-id="__collectionId__" style="display: none">
                             <header>
                                 <div class="btn-group btn-group-xs pull-right">
-                                    <button type="button" class="btn btn-success btn-edit">
-                                        <span class="icon-pencil" data-toggle="tooltip" data-placement="top"
-                                            data-container="body" data-title="' ~ 'edit'|trans({}, 'platform') ~ '"></span>
+                                    <button type="button" class="btn btn-success btn-edit" data-loading-text="..."
+                                            data-toggle="tooltip" data-placement="top" data-container="body"
+                                            data-title="' ~ 'edit'|trans({}, 'platform') ~ '">
+                                        <span class="icon-pencil"></span>
                                             </button>
                                     <button type="button" class="btn btn-danger btn-delete" data-toggle="tooltip"
                                             data-placement="top" data-container="body"

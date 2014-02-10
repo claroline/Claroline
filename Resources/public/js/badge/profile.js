@@ -86,6 +86,8 @@
                             });
                     }
 
+                    $(newCollection).attr("data-id", data.collection.id);
+
                     newCollection
                         .droppable(dropOptions)
                         .prependTo($("#collections_list"))

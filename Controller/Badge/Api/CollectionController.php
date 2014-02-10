@@ -84,7 +84,20 @@ class CollectionController extends Controller
             $entityManager->persist($collection);
             $entityManager->flush();
 
-            $view = View::create(array('status' => 'ok'), $statusCode);
+            $view = View::create();
+            $view->setStatusCode($statusCode);
+
+            if (201 === $statusCode) {
+                $data = array(
+                    'collection' => array(
+                        'id'   => $collection->getId(),
+                        'name' => $collection->getName()
+                    )
+                );
+
+                $view->setData($data);
+            }
+
             return $this->get("fos_rest.view_handler")->handle($view);
         }
 
