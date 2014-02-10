@@ -928,18 +928,24 @@ form .help-block {
         }
 
         .btn.btn-primary {
-            border-color: lighten(@gray-light, 15%);
-            background: lighten(@gray-light, 15%);
+            background: @navbar-default-bg;
+            border-color: @btn-default-border;
+            color: @btn-default-color;
+            font-weight: bold;
             text-decoration: none;
         }
 
-         .btn.btn-link {
-            background: @panel-bg;
-            color: lighten(@gray-light, 15%);
+        .btn.btn-link {
+            background: @panel-footer-bg;
+            color: lighten(@gray-light, 10%);
             text-decoration: none;
             .border-top-radius(@border-radius-base);
             .border-bottom-radius(@border-radius-base);
         }
+    }
+
+    .list-group.menu .list-group-item .btn.btn-link {
+        background: @list-group-bg;
     }
 }
 
