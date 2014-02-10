@@ -49,6 +49,7 @@ class ForumListener extends ContainerAware
 
         if ($form->isValid()) {
             $forum = $form->getData();
+            $this->container->get('claroline.manager.forum_manager')->createCategory($forum, $forum->getName(), false);
             $event->setResources(array($forum));
             $event->stopPropagation();
 

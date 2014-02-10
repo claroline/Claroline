@@ -137,15 +137,26 @@ class Manager
      *
      * @param \Claroline\ForumBundle\Entity\Forum $forum
      * @param string $name The category name
+     * @param boolean $autolog
+     *
+     * @return \Claroline\ForumBundle\Entity\Category
      */
-    public function createCategory(Forum $forum, $name)
+    public function createCategory(Forum $forum, $name, $autolog = true)
     {
         $this->om->startFlushSuite();
         $category = new Category();
         $category->setName($name);
         $category->setForum($forum);
         $this->om->persist($category);
-        $this->dispatch(new CreateCategoryEvent($category));
+
+        //required for the default category
+        $this->om->persist($forum);
+
+        //default category is not logged because the resource node doesn't exist yet
+        if ($autolog) {
+            $this->dispatch(new CreateCategoryEvent($category));
+        }
+
         $this->om->endFlushSuite();
 
         return $category;
