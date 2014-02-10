@@ -63,7 +63,7 @@ class InteractionHoleHandler {
         $this->exercise  = $exercise;
         $this->validator = $validator;
     }
-    
+
      public function processAdd()
     {
         if ( $this->request->getMethod() == 'POST' ) {
@@ -75,7 +75,7 @@ class InteractionHoleHandler {
                         $errorList = $this->validator->validate($wr);
                         if (count($errorList) > 0) {
                             //echo 'test : '.$errorList[0]->getMessage();die();
-                            return false;
+                            return $errorList[0]->getMessage();
                         }
                     }
                 }
@@ -95,7 +95,7 @@ class InteractionHoleHandler {
         $interHole->getInteraction()->setType('InteractionHole');
 
         $ord = 1;
-        
+
         foreach ($interHole->getHoles() as $hole) {
             foreach ($hole->getWordResponses() as $wr) {
                 $hole->addWordResponse($wr);
@@ -110,7 +110,7 @@ class InteractionHoleHandler {
         $this->em->persist($interHole);
         $this->em->persist($interHole->getInteraction()->getQuestion());
         $this->em->persist($interHole->getInteraction());
-        
+
         foreach ($interHole->getInteraction()->getHints() as $hint) {
             $hint->setPenalty(ltrim($hint->getPenalty(), '-'));
             $interHole->getInteraction()->addHint($hint);

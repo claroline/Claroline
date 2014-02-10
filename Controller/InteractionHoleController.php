@@ -38,6 +38,7 @@
 namespace UJM\ExoBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\Form\FormError;
 
 use UJM\ExoBundle\Entity\InteractionHole;
 use UJM\ExoBundle\Form\InteractionHoleType;
@@ -107,7 +108,8 @@ class InteractionHoleController extends Controller
             $this->container->get('security.context')->getToken()->getUser(), $this->get('validator'), $exoID
         );
 
-        if ($formHandler->processAdd()) {
+        $holeHandler = $formHandler->processAdd();
+        if ( $holeHandler === true) {
             $categoryToFind = $interHole->getInteraction()->getQuestion()->getCategory();
             $titleToFind = $interHole->getInteraction()->getQuestion()->getTitle();
 
@@ -132,6 +134,10 @@ class InteractionHoleController extends Controller
                     )
                 );
             }
+        }
+
+        if ($holeHandler != false) {
+            $form->addError(new FormError($holeHandler));
         }
 
         $formWithError = $this->render(
