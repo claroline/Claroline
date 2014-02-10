@@ -14,6 +14,7 @@
         var addCollectionButton   = $("#add_collection");
         var collectionsList       = $("#collections_list");
         var newCollectionTemplate = collectionsList.attr("data-collection-template");
+        var apiUrl                = collectionsList.attr("data-action-url");
         var noCollectionElement   = $("#no_collection");
 
         $(".badge_container").draggable({
@@ -68,8 +69,8 @@
             var addButton = $(this);
             addButton.button('loading');
 
-            var url  = collectionsList.attr("data-action-url");
-            var collectionCreationRequest = $.post(url, {'badge_collection_form[name]': "John"});
+            var newCollection             = $(newCollectionTemplate);
+            var collectionCreationRequest = $.post(apiUrl, {'badge_collection_form[name]': $(".collection_title_input", newCollection).val()});
 
             collectionCreationRequest
                 .success(function(data) {
@@ -81,18 +82,14 @@
                         existedCollection
                             .filter(".editing")
                             .each(function(index, element) {
-                                updateCollectionTitle($(element));
+                                doUpdateCollectionTitle($(element));
                             });
                     }
 
-                    var newCollection = $(newCollectionTemplate);
                     newCollection
                         .droppable(dropOptions)
-                        .hide()
                         .prependTo($("#collections_list"))
-                        .show('fast')
-                        .find(".collection_title")
-                            .hide();
+                        .show('fast');
 
                     $(".btn-delete", newCollection).confirmModal({'confirmCallback': confirmDeleteCollection});
                 })
@@ -122,10 +119,8 @@
             });
 
         function updateCollectionTitle(collectionContainer) {
-            var url  = collectionsList.attr("data-action-url");
-
             var collectionUpdateRequest = $.ajax({
-                url: url + collectionContainer.attr("data-id"),
+                url: apiUrl + collectionContainer.attr("data-id"),
                 type: 'PUT',
                 data: {
                     'badge_collection_form[name]': $(".collection_title_input", collectionContainer).val()
@@ -175,7 +170,19 @@
 
         function confirmDeleteCollection(element)
         {
-            deleteCollection($(element).parents('li.collection'));
+            var collectionContainer     = $(element).parents('li.collection');
+            var collectionUpdateRequest = $.ajax({
+                url:  apiUrl + collectionContainer.attr("data-id"),
+                type: 'DELETE'
+            });
+
+            collectionUpdateRequest
+                .success(function(data) {
+                    deleteCollection(collectionContainer);
+                })
+                .fail(function() {
+                    console.log("error");
+                });
         }
 
         function deleteCollection(collectionContainer) {

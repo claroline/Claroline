@@ -34,13 +34,14 @@ class CollectionController extends Controller
      * @Method({"POST"})
      * @ParamConverter("user", options={"authenticatedUser" = true})
      */
-    public function newAction(Request $request, User $user)
+    public function addAction(Request $request, User $user)
     {
         $collection = new BadgeCollection();
         $collection->setUser($user);
 
         return $this->processForm($request, $collection, "POST");
     }
+
     /**
      * @Route("/{id}", name="claro_badge_collection_edit", defaults={"_format" = "json"})
      * @Method({"PUT"})
@@ -49,6 +50,26 @@ class CollectionController extends Controller
     public function editAction(Request $request, User $user, BadgeCollection $collection)
     {
         return $this->processForm($request, $collection, "PUT");
+    }
+
+    /**
+     * @Route("/{id}", name="claro_badge_collection_delete", defaults={"_format" = "json"})
+     * @Method({"DELETE"})
+     * @ParamConverter("user", options={"authenticatedUser" = true})
+     */
+    public function deleteAction(Request $request, User $user, BadgeCollection $collection)
+    {
+        if ($collection->getUser() !== $user) {
+            throw $this->createNotFoundException("Collection not found.");
+        }
+
+        $entityManager = $this->getDoctrine()->getManager();
+        $entityManager->remove($collection);
+        $entityManager->flush();
+
+        $view = View::create();
+        $view->setStatusCode(204);
+        return $this->get("fos_rest.view_handler")->handle($view);
     }
 
     private function processForm(Request $request, BadgeCollection $collection, $method)
