@@ -11,11 +11,12 @@
     "use strict";
 
     $(function() {
-        var addCollectionButton   = $("#add_collection");
-        var collectionsList       = $("#collections_list");
-        var newCollectionTemplate = collectionsList.attr("data-collection-template");
-        var apiUrl                = collectionsList.attr("data-action-url");
-        var noCollectionElement   = $("#no_collection");
+        var addCollectionButton       = $("#add_collection");
+        var collectionsList           = $("#collections_list");
+        var newCollectionTemplate     = collectionsList.attr("data-collection-template");
+        var apiUrl                    = collectionsList.attr("data-action-url");
+        var noCollectionElement       = $("#no_collection");
+        var deletingCollectionElement = $("#deleting_collection");
 
         $(".badge_container").draggable({
             helper: 'clone',
@@ -76,7 +77,7 @@
                 .success(function(data) {
                     var existedCollection = $(".collection", collectionsList);
                     if (0 == existedCollection.length) {
-                        noCollectionElement.addClass("hidden");
+                        noCollectionElement.hide();
                     }
                     else {
                         existedCollection
@@ -96,7 +97,7 @@
                     $(".btn-delete", newCollection).confirmModal({'confirmCallback': confirmDeleteCollection});
                 })
                 .fail(function() {
-                    console.log("error");
+                    console.log("error adding collection");
                 })
                 .always(function () {
                     addButton.button('reset');
@@ -138,7 +139,7 @@
                     doUpdateCollectionTitle(collectionContainer);
                 })
                 .fail(function() {
-                    console.log("error");
+                    console.log("error update collection");
                 })
                 .always(function () {
                     editButton.button('reset');
@@ -176,18 +177,34 @@
 
         function confirmDeleteCollection(element)
         {
-            var collectionContainer     = $(element).parents('li.collection');
-            var collectionUpdateRequest = $.ajax({
+            var collectionContainer = $(element).parents('li.collection');
+
+            collectionContainer.after(deletingCollectionElement);
+            var newHeight = (parseFloat(collectionContainer.css("height")) + 12) + "px";
+            var newWidth  = (parseFloat(collectionContainer.css("width")) + 2) + "px";
+            deletingCollectionElement.css({
+                height: newHeight,
+                width:  newWidth,
+                top:    collectionContainer.position().top + "px"
+            })
+
+            deletingCollectionElement.show();
+
+            var collectionDeleteRequest = $.ajax({
                 url:  apiUrl + collectionContainer.attr("data-id"),
                 type: 'DELETE'
             });
 
-            collectionUpdateRequest
+            collectionDeleteRequest
                 .success(function(data) {
+                    collectionContainer.hide();
                     deleteCollection(collectionContainer);
                 })
                 .fail(function() {
-                    console.log("error");
+                    console.log("error delete collection");
+                })
+                .always(function() {
+                    deletingCollectionElement.hide("fast");
                 });
         }
 
@@ -196,7 +213,7 @@
 
             var existedCollection = $(".collection", collectionsList);
             if (0 == existedCollection.length) {
-                noCollectionElement.removeClass("hidden");
+                noCollectionElement.show();
             }
         }
     });
