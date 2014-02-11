@@ -128,6 +128,10 @@ class AdminController extends Controller
      */
     public function editAction(Request $request, Badge $badge, $page = 1)
     {
+        if (null !== $badge->getWorkspace()) {
+            throw $this->createNotFoundException("No badge found.");
+        }
+
         /** @var \Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler $platformConfigHandler */
         $platformConfigHandler = $this->get('claroline.config.platform_config_handler');
         $badge->setLocale($platformConfigHandler->getParameter('locale_language'));
@@ -207,6 +211,10 @@ class AdminController extends Controller
      */
     public function deleteAction(Badge $badge)
     {
+        if (null !== $badge->getWorkspace()) {
+            throw $this->createNotFoundException("No badge found.");
+        }
+
         /** @var \Symfony\Bundle\FrameworkBundle\Translation\Translator $translator */
         $translator = $this->get('translator');
         try {
@@ -235,6 +243,10 @@ class AdminController extends Controller
      */
     public function awardAction(Request $request, Badge $badge)
     {
+        if (null !== $badge->getWorkspace()) {
+            throw $this->createNotFoundException("No badge found.");
+        }
+
         $form = $this->createForm(new BadgeAwardType());
 
         if ($request->isMethod('POST')) {
@@ -320,6 +332,10 @@ class AdminController extends Controller
      */
     public function unawardAction(Request $request, Badge $badge, User $user)
     {
+        if (null !== $badge->getWorkspace()) {
+            throw $this->createNotFoundException("No badge found.");
+        }
+
         /** @var \Symfony\Bundle\FrameworkBundle\Translation\Translator $translator */
         $translator = $this->get('translator');
         try {
@@ -355,12 +371,15 @@ class AdminController extends Controller
 
     /**
      * @Route("/claim/manage/{id}/{validate}", name="claro_admin_manage_claim")
-     * @ParamConverter("user", options={"mapping": {"username": "username"}})
      *
      * @Template()
      */
     public function manageClaimAction(Request $request, BadgeClaim $badgeClaim, $validate = false)
     {
+        if (null !== $badgeClaim->getBadge()->getWorkspace()) {
+            throw $this->createNotFoundException("No badge found.");
+        }
+
         /** @var \Symfony\Bundle\FrameworkBundle\Translation\Translator $translator */
         $translator = $this->get('translator');
         try {
