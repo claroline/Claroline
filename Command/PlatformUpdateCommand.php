@@ -32,12 +32,12 @@ class PlatformUpdateCommand extends ContainerAwareCommand
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $output->writeln('Updating the platform...');
-        $executor = $this->getContainer()->get('claroline.installation.operation_executor');
-        $executor->setLogger(
+        $installer = $this->getContainer()->get('claroline.installation.platform_installer');
+        $installer->setLogger(
             function ($message) use ($output) {
                 $output->writeln($message);
             }
         );
-        $executor->execute();
+        $installer->installFromOperationFile();
     }
 }
