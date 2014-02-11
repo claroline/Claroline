@@ -14,12 +14,12 @@
 {% endblock %}
 
 {% block section_content %}
-    <div id="config-value-div" config-value="{{ withConfig }}"></div>
+    <div id="config-value-div" config-value="{% if withConfig is defined and not withConfig is empty %}{{ withConfig }}{% endif %}"></div>
     <div id="hometab-id-div" hometab-id="{{ tabId }}"></div>
 
     <div class="panel-heading relative">
         <h3 class="panel-title">
-            {{ 'home'|trans({}, 'tools') }}
+            {{ 'home' | trans({}, 'tools') }}
         </h3>
         <div class="float-right-top">
             <a class="btn btn-primary" href="{{ path( 'claro_display_desktop_home_tabs_without_config', {'tabId': tabId}) }}">
@@ -31,63 +31,64 @@
     <div class="panel-body">
         <ul class="nav nav-tabs margin-bottom-md">
             {% for adminHomeTabConfig in adminHomeTabConfigs %}
-            {% set adminHomeTab = adminHomeTabConfig.getHomeTab() %}
-            <li class="hometab-element {% if adminHomeTab.getId() == tabId %} active {% endif %}"
-                hometab-config-id="{{ adminHomeTabConfig.getId() }}"
-                hometab-id="{{ adminHomeTab.getId() }}"
-            >
-                <a href="{{
-                    path(
-                        'claro_display_desktop_home_tabs_with_config',
-                        {'tabId': adminHomeTab.getId()}
-                    )
-                    }}"
-                    class="hometab-link"
+                {% set adminHomeTab = adminHomeTabConfig.getHomeTab() %}
+                <li class="hometab-element {% if adminHomeTab.getId() == tabId %} active {% endif %}"
+                    hometab-config-id="{{ adminHomeTabConfig.getId() }}"
+                    hometab-id="{{ adminHomeTabConfig.getId() }}"
                 >
-                    {{ adminHomeTab.getName() }}
-
-                    {% if adminHomeTabConfig.isLocked() %}
-                        <i class="icon-lock"></i>
-                    {% else %}
-                        <i class="hometab-visibility-btn pointer-hand
-                            {% if adminHomeTabConfig.isVisible() %} icon-eye-open {% else %} icon-eye-close {% endif %}"
-                            visiblility-value="{% if adminHomeTabConfig.isVisible() %} visible {% else %} invisible {% endif %}"
-                            id="visible-hometab-id-{{ adminHomeTab.getId() }}"
-                        ></i>
-                    {% endif %}
-                </a>
-            </li>
+                    <a href="{{ path('claro_display_desktop_home_tabs_with_config', {'tabId': adminHomeTab.getId()})}}" class="hometab-link{% if not adminHomeTabConfig.isVisible() %} strike{% endif %}">
+                        {{ adminHomeTab.getName() }}
+                        {% if adminHomeTabConfig.isLocked() %}
+                            <i class="icon-lock"></i>
+                        {% else %}
+                            <div class="dropdown">
+                                <i class="icon-chevron-down pointer-hand" data-toggle="dropdown"></i>
+                                <ul class="dropdown-menu">
+                                    <li>
+                                        {% if adminHomeTabConfig.isVisible() %}
+                                            <i class="hometab-visibility-btn icon-eye-close" visiblility-value="visible"
+                                                id="visible-hometab-id-{{ adminHomeTab.getId() }}"> {{ "hide" | trans({}, 'platform') }}</i>
+                                        {% else %}
+                                            <i class="hometab-visibility-btn icon-eye-open" visiblility-value="invisible"
+                                            id="visible-hometab-id-{{ adminHomeTab.getId() }}"> {{ "display" | trans({}, 'platform') }}</i>
+                                        {% endif %}
+                                    </li>
+                                </ul>
+                            </div>
+                        {% endif %}
+                    </a>
+                </li>
             {% endfor %}
             {% for userHomeTabConfig in userHomeTabConfigs %}
-            {% set userHomeTab = userHomeTabConfig.getHomeTab() %}
-            <li class="hometab-element {% if userHomeTab.getId() == tabId %} active {% endif %}"
-                hometab-config-id="{{ userHomeTabConfig.getId() }}"
-                hometab-id="{{ userHomeTab.getId() }}"
-                hometab-order="{{ userHomeTabConfig.getTabOrder() }}"
-            >
-                <a href="{{ path('claro_display_desktop_home_tabs_with_config', {'tabId': userHomeTab.getId()})}}" class="hometab-link{% if not userHomeTabConfig.isVisible() %} strike{% endif %}">
-                    {{ userHomeTab.getName() }}
-                    <div class="dropdown">
-                      <i class="icon-chevron-down pointer-hand" data-toggle="dropdown"></i>
-                      <ul class="dropdown-menu">
-                            <li><i class="hometab-reorder-left-btn icon-arrow-left"> {{ "left" | trans({}, 'platform') }}</i></li>
-                            <li><i class="hometab-reorder-right-btn icon-arrow-right"> {{ "right" | trans({}, 'platform') }}</i></li>
-                            <li class="divider"></li>
-                            <li><i class="hometab-rename-btn icon-pencil"> {{ "rename" | trans({}, 'platform') }}</i></li>
-                            <li>
-                                {% if userHomeTabConfig.isVisible() %}
-                                    <i class="hometab-visibility-btn icon-eye-close" visiblility-value="visible"
-                                    id="visible-hometab-id-{{ userHomeTab.getId() }}"> {{ "hide" | trans({}, 'platform') }}</i>
-                                 {% else %}
-                                    <i class="hometab-visibility-btn icon-eye-open" visiblility-value="invisible"
-                                    id="visible-hometab-id-{{ userHomeTab.getId() }}"> {{ "display" | trans({}, 'platform') }}</i>
-                                 {% endif %}
-                            </li>
-                            <li><i class="hometab-delete-btn icon-trash"> {{ "delete" | trans({}, 'platform') }}</i></li>
-                      </ul>
-                    </div>
-                </a>
-            </li>
+                {% set userHomeTab = userHomeTabConfig.getHomeTab() %}
+                <li class="hometab-element {% if userHomeTab.getId() == tabId %} active {% endif %}"
+                    hometab-config-id="{{ userHomeTabConfig.getId() }}"
+                    hometab-id="{{ userHomeTab.getId() }}"
+                    hometab-order="{{ userHomeTabConfig.getTabOrder() }}"
+                >
+                    <a href="{{ path('claro_display_desktop_home_tabs_with_config', {'tabId': userHomeTab.getId()})}}" class="hometab-link{% if not userHomeTabConfig.isVisible() %} strike{% endif %}">
+                        {{ userHomeTab.getName() }}
+                        <div class="dropdown">
+                          <i class="icon-chevron-down pointer-hand" data-toggle="dropdown"></i>
+                          <ul class="dropdown-menu">
+                                <li><i class="hometab-reorder-left-btn icon-arrow-left"> {{ "left" | trans({}, 'platform') }}</i></li>
+                                <li><i class="hometab-reorder-right-btn icon-arrow-right"> {{ "right" | trans({}, 'platform') }}</i></li>
+                                <li class="divider"></li>
+                                <li><i class="hometab-rename-btn icon-pencil"> {{ "rename" | trans({}, 'platform') }}</i></li>
+                                <li>
+                                    {% if userHomeTabConfig.isVisible() %}
+                                        <i class="hometab-visibility-btn icon-eye-close" visiblility-value="visible"
+                                        id="visible-hometab-id-{{ userHomeTab.getId() }}"> {{ "hide" | trans({}, 'platform') }}</i>
+                                     {% else %}
+                                        <i class="hometab-visibility-btn icon-eye-open" visiblility-value="invisible"
+                                        id="visible-hometab-id-{{ userHomeTab.getId() }}"> {{ "display" | trans({}, 'platform') }}</i>
+                                     {% endif %}
+                                </li>
+                                <li><i class="hometab-delete-btn icon-trash"> {{ "delete" | trans({}, 'platform') }}</i></li>
+                          </ul>
+                        </div>
+                    </a>
+                </li>
             {% endfor %}
             <li id="add-hometab-btn">
                 <a class="pointer-hand">

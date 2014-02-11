@@ -4,7 +4,6 @@
     <div class="content-element  {{ size }}" data-id="{{ content.id }}" data-type="{{ type }}">
         <div class="panel panel-default relative">
             {% render controller("ClarolineCoreBundle:Home:menu", { 'id': content.id, 'size': size, 'type': type, 'father': father, 'region': region }) %}
-
             {% if content.title != "" %}
                 <div class="panel-heading">
                     <h3 class="panel-title">{{ content.title }}</h3>
