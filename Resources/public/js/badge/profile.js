@@ -19,23 +19,26 @@
         var deletingCollectionElement = $("#deleting_collection");
 
         $(".badge_container").draggable({
-            helper: 'clone',
-            revert: "invalid"
+            helper: "clone",
+            revert: "invalid",
+            scroll: false,
+            cursor: "move",
+            zIndex: 100
+        });
+        $(".clarobadge").draggable({
+            helper: "clone",
+            scroll: false,
+            cursor: "move",
+            zIndex: 100
         });
 
-        $(".badge_container")
-            .on("dragstart", function(event, ui) {
-                $(".collection").addClass("collection_state_drag_start");
-            })
-            .on("dragstop", function(event, ui) {
-                $(".collection").removeClass("collection_state_drag_start");
-            });
-
         var dropOptions = {
-            activeClass: "collection_state_default",
-            hoverClass: "collection_state_hover",
-            drop: onDrop
+            activeClass: "collection_state_drag_start",
+            hoverClass:  "collection_state_hover",
+            drop:        onDrop,
+            accept:      ".badge_container"
         };
+
 
         function onDrop(event, ui) {
             var droppingZone = $(event.target);
@@ -98,7 +101,19 @@
 
         function doAddBadgeToCollection(collectionContainer, badgeElement) {
             $(".loading_badge", collectionContainer).fadeOut("fast", function() {
-                $(this).before('<li class="clarobadge" data-id="' + badgeElement.attr("data-id") + '">' + badgeElement.attr("data-image") + '</li>')
+                var badgeTemplate = $('<li class="clarobadge" data-id="' + badgeElement.attr("data-id") + '">' + badgeElement.attr("data-image") + '</li>');
+
+//                badgeTemplate.hover(function(event) {
+//                    console.log('hover in');
+//                }, function(event) {
+//                    console.log('hover out');
+//                });
+                badgeTemplate.draggable({
+                    helper: 'clone',
+                    revert: "invalid"
+                });
+
+                $(this).before(badgeTemplate);
             });
         }
 
