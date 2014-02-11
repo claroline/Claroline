@@ -119,6 +119,37 @@ class InteractionHoleHandler {
 
         $this->em->flush();
     }
+    
+    public function processUpdate(InteractionHole $originalInterHole)
+    {
+        $originalHoles = array();
+        $originalHints = array();
+
+        // Create an array of the current Choice objects in the database
+        foreach ($originalInterHole->getHoles() as $hole) {
+            $originalHoles[] = $hole;
+        }
+        foreach ($originalInterHole->getInteraction()->getHints() as $hint) {
+            $originalHints[] = $hint;
+        }
+
+        if ( $this->request->getMethod() == 'POST' ) {
+            $this->form->handleRequest($this->request);
+
+            if ( $this->form->isValid() ) {
+                $this->onSuccessUpdate($this->form->getData(), $originalHoles, $originalHints);
+
+                return true;
+            }
+        }
+
+        return false;
+    }
+    
+    private function onSuccessUpdate(InteractionHole $interHole, $originalHoles, $originalHints)
+    {
+        die('tin tin tin ...');
+    }
 }
 
 ?>

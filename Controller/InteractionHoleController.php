@@ -189,33 +189,56 @@ class InteractionHoleController extends Controller
     */
     public function updateAction($id)
     {
-        $em = $this->getDoctrine()->getEntityManager();
+        $exoID = $this->container->get('request')->request->get('exercise');
+        $user  = $this->container->get('security.context')->getToken()->getUser();
+        $catID = -1;
 
-        $entity = $em->getRepository('UJMExoBundle:InteractionHole')->find($id);
+        $em = $this->getDoctrine()->getManager();
 
-        if (!$entity) {
+        $interHole = $em->getRepository('UJMExoBundle:InteractionHole')->find($id);
+
+        if (!$interHole) {
             throw $this->createNotFoundException('Unable to find InteractionHole entity.');
         }
 
-        $editForm = $this->createForm(new InteractionHoleType(), $entity);
-        $deleteForm = $this->createDeleteForm($id);
+        if ($user->getId() != $interHole->getInteraction()->getQuestion()->getUser()->getId()) {
+            $catID = $interHole->getInteraction()->getQuestion()->getCategory()->getId();
+        }
+        
+        $editForm   = $this->createForm(
+            new InteractionHoleType(
+                $this->container->get('security.context')->getToken()->getUser(), $this->get('validator')
+            ), $interHole
+        );
+        $formHandler = new InteractionHoleHandler(
+            $editForm, $this->get('request'), $this->getDoctrine()->getManager(),
+            $this->container->get('security.context')->getToken()->getUser(), $this->get('validator'), $exoID
+        );
 
-        $request = $this->getRequest();
+        if ($formHandler->processUpdate($interHole)) {
+            if ($exoID == -1) {
 
-        $editForm->bindRequest($request);
+                return $this->redirect($this->generateUrl('ujm_question_index'));
+            } else {
 
-        if ($editForm->isValid()) {
-            $em->persist($entity);
-            $em->flush();
-
-            return $this->redirect($this->generateUrl('interactionhole_edit', array('id' => $id)));
+                return $this->redirect(
+                    $this->generateUrl(
+                        'ujm_exercise_questions',
+                        array(
+                            'id' => $exoID,
+                        )
+                    )
+                );
+            }
         }
 
-        return $this->render('UJMExoBundle:InteractionHole:edit.html.twig', array(
-                             'entity' => $entity,
-                             'edit_form' => $editForm->createView(),
-                             'delete_form' => $deleteForm->createView(),
-                             ));
+        return $this->forward(
+            'UJMExoBundle:Question:edit', array(
+                'exoID' => $exoID,
+                'id' => $interHole->getInteraction()->getQuestion()->getId(),
+                'form' => $editForm
+            )
+        );
     }
 
     /**
