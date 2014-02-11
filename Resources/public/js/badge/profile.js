@@ -113,26 +113,7 @@
 
             collectionCreationRequest
                 .success(function(data) {
-                    var existedCollection = $(".collection", collectionsList);
-                    if (0 == existedCollection.length) {
-                        noCollectionElement.hide();
-                    }
-                    else {
-                        existedCollection
-                            .filter(".editing")
-                            .each(function(index, element) {
-                                doUpdateCollectionTitle($(element));
-                            });
-                    }
-
-                    $(newCollection).attr("data-id", data.collection.id);
-
-                    newCollection
-                        .droppable(dropOptions)
-                        .prependTo($("#collections_list"))
-                        .show('fast');
-
-                    $(".btn-delete", newCollection).confirmModal({'confirmCallback': confirmDeleteCollection});
+                    addCollection(newCollection, data)
                 })
                 .fail(function() {
                     console.log("error adding collection");
@@ -141,6 +122,31 @@
                     addButton.button('reset');
                 });
         });
+
+        function addCollection(newCollection, data) {
+            var existedCollection = $(".collection", collectionsList);
+            if (0 == existedCollection.length) {
+                noCollectionElement.hide();
+            }
+            else {
+                existedCollection
+                    .filter(".editing")
+                    .each(function(index, element) {
+                        doUpdateCollectionTitle($(element));
+                    });
+            }
+
+            $(newCollection).attr("data-id", data.collection.id);
+
+            newCollection
+                .droppable(dropOptions)
+                .appendTo($("#collections_list"))
+                .show('fast');
+
+            collectionsList.animate({scrollTop: newCollection.offset().top}, 500,'easeInOutCubic');
+
+            $(".btn-delete", newCollection).confirmModal({'confirmCallback': confirmDeleteCollection});
+        }
 
         $(collectionsList).on('keydown', 'input',function(event){
             if (event.which == 13) {
