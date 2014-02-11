@@ -25,12 +25,14 @@
             cursor: "move",
             zIndex: 100
         });
-        $(".clarobadge").draggable({
+
+        var clarobadgeDragOptions = {
             helper: "clone",
             scroll: false,
             cursor: "move",
             zIndex: 100
-        });
+        };
+        $(".clarobadge").draggable(clarobadgeDragOptions);
 
         var dropOptions = {
             activeClass: "collection_state_drag_start",
@@ -103,15 +105,7 @@
             $(".loading_badge", collectionContainer).fadeOut("fast", function() {
                 var badgeTemplate = $('<li class="clarobadge" data-id="' + badgeElement.attr("data-id") + '">' + badgeElement.attr("data-image") + '</li>');
 
-//                badgeTemplate.hover(function(event) {
-//                    console.log('hover in');
-//                }, function(event) {
-//                    console.log('hover out');
-//                });
-                badgeTemplate.draggable({
-                    helper: 'clone',
-                    revert: "invalid"
-                });
+                badgeTemplate.draggable(clarobadgeDragOptions);
 
                 $(this).before(badgeTemplate);
             });
