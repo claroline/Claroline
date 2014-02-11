@@ -170,6 +170,9 @@
             })
             .on('click', '.btn-success',function(event){
                 updateCollectionTitle($(event.target).parents('li.collection'));
+            })
+            .on('click', '.btn-edit-cancel',function(event){
+                doUpdateCollectionTitle($(event.target).parents('li.collection'));
             });
 
         function updateCollectionTitle(collectionContainer) {
@@ -212,6 +215,8 @@
             collectionContainer.removeClass('editing');
 
             $(".btn-edit", collectionContainer).removeClass('btn-success').addClass('btn-primary');
+            $(".btn-edit-cancel", collectionContainer).hide();
+            $(".btn-delete", collectionContainer).show();
         }
 
         function makeCollectionTitleEditable(collectionContainer) {
@@ -224,6 +229,8 @@
             collectionTitleInput.focus();
 
             $(".btn-edit", collectionContainer).removeClass('btn-primary').addClass('btn-success');
+            $(".btn-delete", collectionContainer).hide();
+            $(".btn-edit-cancel", collectionContainer).show();
         }
 
         $(".btn-delete", collectionsList).confirmModal({'confirmCallback': confirmDeleteCollection});
