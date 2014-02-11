@@ -67,7 +67,7 @@
 {% block section_content %}
 
     <form onsubmit="return check_form('{{ 'nb_hole' | trans }}')" 
-          action="{{ path('ujm_interactionqcm_update', { 'id': entity.id }) }}" 
+          action="{{ path('ujm_interactionhole_update', { 'id': entity.id }) }}" 
           method="post" {{ form_enctype(edit_form) }}>
         <div class="panel-body">
             {% include "UJMExoBundle:Partial:questionEdit.html.twig" %}
