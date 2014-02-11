@@ -266,8 +266,9 @@ class InteractionQCMController extends Controller
 
         return $this->forward(
             'UJMExoBundle:Question:edit', array(
-                'id' => $interQCM->getInteraction()->getQuestion()->getId(),
-                'form' => $editForm
+                'exoID' => $exoID,
+                'id'    => $interQCM->getInteraction()->getQuestion()->getId(),
+                'form'  => $editForm
             )
         );
     }
