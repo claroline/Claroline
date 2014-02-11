@@ -916,11 +916,36 @@ form .help-block {
         max-width: 100%;
     }
 
-    .content-menu button {
-        position: relative;
-        top: -1px;
-        right: -1px;
-        z-index: (@zindex-navbar-fixed - 1);
+    .content-menu {
+        button {
+            position: relative;
+            top: -1px;
+            right: -1px;
+            z-index: (@zindex-navbar-fixed - 2);
+        }
+        .dropdown-menu {
+            z-index: (@zindex-navbar-fixed - 1);
+        }
+
+        .btn.btn-primary {
+            background: @navbar-default-bg;
+            border-color: @btn-default-border;
+            color: @btn-default-color;
+            font-weight: bold;
+            text-decoration: none;
+        }
+
+        .btn.btn-link {
+            background: @panel-footer-bg;
+            color: lighten(@gray-light, 10%);
+            text-decoration: none;
+            .border-top-radius(@border-radius-base);
+            .border-bottom-radius(@border-radius-base);
+        }
+    }
+
+    .list-group.menu .list-group-item .btn.btn-link {
+        background: transparent;
     }
 }
 
@@ -937,18 +962,18 @@ form .help-block {
 }
 
 .creator {
-    .panel {
-        padding: 0;
+    &.creator-menu .form-control, textarea.form-control {
+        .border-bottom-radius(0);
+        margin: 0;
+        border-bottom: none;
+    }
 
-        .form-control {
-            .border-bottom-radius(0);
-            border: none;
-        }
+    .panel {
+        .border-top-radius(0);
     }
 
     .navbar.navbar-static-top {
         z-index: (@zindex-dropdown - 10);
-        border-top: 1px solid @input-border;
         .border-bottom-radius(@border-radius-base);
         margin: 0;
 
@@ -965,12 +990,6 @@ form .help-block {
         overflow: hidden;
         resize: none;
         .transition(all .2s linear);
-    }
-
-    .generated {
-        background: lighten(@state-success-bg, 5%);
-        padding: 0;
-        margin: 0;
     }
 }
 
@@ -1201,7 +1220,8 @@ form .help-block {
     font-size: larger;
 }
 
-body.mce-fullscreen .modal {
+//for tiny-mce inside modals
+body.mce-fullscreen .modal#myModal {
     overflow: hidden;
     .modal-dialog {
         width: 100%;
