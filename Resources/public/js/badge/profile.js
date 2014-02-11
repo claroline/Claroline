@@ -126,7 +126,7 @@
         function addCollection(newCollection, data) {
             var existedCollection = $(".collection", collectionsList);
             if (0 == existedCollection.length) {
-                noCollectionElement.hide();
+                noCollectionElement.hide("fast");
             }
             else {
                 existedCollection
@@ -241,7 +241,6 @@
 
             collectionDeleteRequest
                 .success(function(data) {
-                    collectionContainer.hide();
                     deleteCollection(collectionContainer);
                 })
                 .fail(function() {
@@ -253,12 +252,14 @@
         }
 
         function deleteCollection(collectionContainer) {
-            collectionContainer.remove();
+            collectionContainer.hide("fast", function() {
+                $(this).remove();
 
-            var existedCollection = $(".collection", collectionsList);
-            if (0 == existedCollection.length) {
-                noCollectionElement.show();
-            }
+                var existedCollection = $(".collection", collectionsList);
+                if (0 == existedCollection.length) {
+                    noCollectionElement.show();
+                }
+            });
         }
     });
 })(jQuery);

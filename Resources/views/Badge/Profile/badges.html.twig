@@ -73,7 +73,7 @@
                                 <input type="text" class="form-control collection_title_input" name="badge_collection_form[name]" value="' ~ 'collection_name'|trans ~ '" />
                             </header>
                             <ul class="list-inline badges">
-                                <li class="loading_badge" style="display: none"><img src="' ~ asset('bundles/clarolinecore/images/loading.gif') ~ '" alt="Loading"/></li>
+                                <li class="loading_badge" style="display: none"><img src="' ~ asset('bundles/clarolinecore/images/loading.gif') ~ '" alt="Loading" /></li>
                                 <li class="no_badge">' ~ 'no_badges'|trans ~ '</li>
                             </ul>
                         </li>' %}
@@ -107,7 +107,7 @@
                                     {% for badge in collection.badges %}
                                         <li class="clarobadge" data-id="{{ badge.id }}"><img class="badge_image_mini" src="{{ asset(badge.webPath) }}" alt="{{ badge.name(language) }}" /></li>
                                     {% endfor %}
-                                    <li class="loading_badge" style="display: none"><img src="{{ asset('bundles/clarolinecore/images/loading.gif') }}" alt="Loading"/></li>
+                                    <li class="loading_badge" style="display: none"><img src="{{ asset('bundles/clarolinecore/images/loading.gif') }}" alt="Loading" /></li>
                                     <li class="no_badge"{% if 0 < collection.badges|length %} style="display: none"{% endif %}>{{ 'no_badges'|trans }}</li>
                                 </ul>
                             </li>
@@ -116,7 +116,7 @@
                             <p class="collection_title text-center">{{ 'no_collection'|trans }}</p>
                         </li>
                         <li class="deleting_collection well" id="deleting_collection" style="display: none">
-                            <p class="collection_title text-center">Suppression...</p>
+                            <p class="collection_title text-center"><img src="{{ asset('bundles/clarolinecore/images/loading.gif') }}" alt="Loading" /></p>
                         </li>
                     </ul>
                 </div>
