@@ -3,16 +3,20 @@
 /**
  * Tree Controller
  */
-function TreeCtrl($scope, $modal, HistoryFactory, PathFactory, StepFactory, ResourceFactory) {
+function ScenarioCtrl($scope, $modal, HistoryFactory, PathFactory, StepFactory, ResourceFactory) {
+    // Show action buttons for a step in the tree (contains the ID of the step)
     $scope.showButtons = null;
+    
     $scope.whoList = StepFactory.getWhoList();
     $scope.whereList = StepFactory.getWhereList();
     $scope.resourceTypeLabels = ResourceFactory.getResourceTypeLabels();
     
     $scope.currentEditingStep = null;
     
+    // Current displayed step in preview zone
     $scope.previewStep = null;
     
+    // Configure Tree of steps sortable feature
     $scope.sortableOptions = {
         update: function(e, ui) { $scope.applyTreeChanges(); },
         placeholder: 'placeholder',
@@ -20,7 +24,7 @@ function TreeCtrl($scope, $modal, HistoryFactory, PathFactory, StepFactory, Reso
     };
 
     /**
-     *
+     * Display step in the preview zone
      * @returns void
      */
     $scope.setPreviewStep = function(step) {

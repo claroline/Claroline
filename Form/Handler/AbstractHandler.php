@@ -70,7 +70,7 @@ abstract class AbstractHandler
         $success = false;
         if ($this->request->getMethod() == 'POST' || $this->request->getMethod() == 'PUT') {
             // Correct HTTP method => try to process form
-            $this->form->handleRequest($this->request);
+            $this->form->submit($this->request);
             
             if ( $this->form->isValid() ) {
                 // Form is valid => create or update the path

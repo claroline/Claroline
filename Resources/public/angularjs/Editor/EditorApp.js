@@ -26,7 +26,7 @@ EditorApp.controller('MainCtrl', MainCtrl);
 // Path
 EditorApp.factory('PathFactory', PathFactory);
 EditorApp.controller('GlobalCtrl', GlobalCtrl);
-EditorApp.controller('TreeCtrl', TreeCtrl);
+EditorApp.controller('ScenarioCtrl', ScenarioCtrl);
 
 // Steps
 EditorApp.factory('StepFactory', StepFactory);

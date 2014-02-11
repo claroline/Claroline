@@ -130,17 +130,21 @@ class PathTemplateController
         $pathTemplate = new PathTemplate();
         
         // Create form to validate data
-        $form = $this->formFactory->create('innova_path_template', $pathTemplate);
+        $form = $this->formFactory->create('innova_path_template', $pathTemplate, array (
+            'csrf_protection' => false,
+        ));
         
         $this->pathTemplateHandler->setForm($form);
         if ($this->pathTemplateHandler->process()) {
             // Success => modified data
             $pathTemplate = $this->pathTemplateHandler->getData();
+            
+            return new Response(
+                $pathTemplate->getId()
+            );
         }
         
-        return new Response(
-            $pathTemplate->getId()
-        );
+        return new Response('error');
     }
 
     /**
@@ -157,17 +161,22 @@ class PathTemplateController
     public function editAction(PathTemplate $pathTemplate) 
     {
         // Create form to validate data
-        $form = $this->formFactory->create('innova_path_template', $pathTemplate, array ('method' => 'PUT'));
+        $form = $this->formFactory->create('innova_path_template', $pathTemplate, array (
+            'method' => 'PUT',
+            'csrf_protection' => false,
+        ));
         
         $this->pathTemplateHandler->setForm($form);
         if ($this->pathTemplateHandler->process()) {
             // Success => modified data
             $pathTemplate = $this->pathTemplateHandler->getData();
+            
+            return new Response(
+                $pathTemplate->getId()
+            );
         }
         
-        return new Response(
-            $pathTemplate->getId()
-        );
+        return new Response('error');
     }
     
     /**
@@ -187,12 +196,12 @@ class PathTemplateController
             // Try to remove template
             $this->pathTemplateManager->delete($pathTemplate);
         
-            $success = true;
+            $processed = 'success';
         } catch (\Exception $e) {
             // Error
-            $success = false;
+            $processed = 'error';
         }
         
-        return new Response($success);
+        return new Response($processed);
     }
 }

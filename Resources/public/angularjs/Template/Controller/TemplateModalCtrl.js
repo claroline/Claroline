@@ -58,7 +58,12 @@ function TemplateModalCtrl($scope, $http, $modalInstance, StepFactory, TemplateF
         
         var method = null;
         var route = null;
-        var data = 'name=' + formTemplate.name + '&description=' + formTemplate.description + '&structure=' + angular.toJson(formTemplate.structure);
+        
+        var data = '';
+        data += 'innova_path_template[name]=' + formTemplate.name;
+        data += '&innova_path_template[description]=' + formTemplate.description;
+        data += '&innova_path_template[structure]=' + angular.toJson(formTemplate.structure);
+        
         
         if (editTemplate) {
             // Update existing path
@@ -78,10 +83,17 @@ function TemplateModalCtrl($scope, $http, $modalInstance, StepFactory, TemplateF
             data: data
         })
         .success(function (data) {
-            formTemplate.id = data;
-            TemplateFactory.replaceTemplate(formTemplate);
-            
-            AlertFactory.addAlert('success', Translator.get('path_editor:path_template_save_success'));
+            if ('error' != data) {
+                // No error
+                formTemplate.id = data;
+                TemplateFactory.replaceTemplate(formTemplate);
+                
+                AlertFactory.addAlert('success', Translator.get('path_editor:path_template_save_success'));
+            }
+            else {
+                // Server error while saving
+                AlertFactory.addAlert('danger', Translator.get('path_editor:path_template_save_error'));
+            }
             
             $modalInstance.close();
         })
