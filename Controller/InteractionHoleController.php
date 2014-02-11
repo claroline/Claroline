@@ -215,7 +215,8 @@ class InteractionHoleController extends Controller
             $this->container->get('security.context')->getToken()->getUser(), $this->get('validator'), $exoID
         );
 
-        if ($formHandler->processUpdate($interHole)) {
+        $holeHandler = $formHandler->processUpdate($interHole);
+        if ($holeHandler === true) {
             if ($exoID == -1) {
 
                 return $this->redirect($this->generateUrl('ujm_question_index'));
@@ -230,6 +231,10 @@ class InteractionHoleController extends Controller
                     )
                 );
             }
+        }
+        
+        if ($holeHandler != false) {
+            $editForm->addError(new FormError($holeHandler));
         }
 
         return $this->forward(

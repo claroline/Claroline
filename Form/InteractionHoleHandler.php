@@ -119,7 +119,7 @@ class InteractionHoleHandler {
 
         $this->em->flush();
     }
-    
+
     public function processUpdate(InteractionHole $originalInterHole)
     {
         $originalHoles = array();
@@ -137,6 +137,15 @@ class InteractionHoleHandler {
             $this->form->handleRequest($this->request);
 
             if ( $this->form->isValid() ) {
+                foreach ($this->form->getData()->getHoles() as $h) {
+                    foreach ($h->getWordResponses() as $wr) {
+                        $errorList = $this->validator->validate($wr);
+                        if (count($errorList) > 0) {
+                            //echo 'test : '.$errorList[0]->getMessage();die();
+                            return $errorList[0]->getMessage();
+                        }
+                    }
+                }
                 $this->onSuccessUpdate($this->form->getData(), $originalHoles, $originalHints);
 
                 return true;
@@ -145,10 +154,66 @@ class InteractionHoleHandler {
 
         return false;
     }
-    
+
     private function onSuccessUpdate(InteractionHole $interHole, $originalHoles, $originalHints)
     {
-        die('tin tin tin ...');
+        // filter $originalHoles to contain hole no longer present
+        foreach ($interHole->getHoles() as $hole) {
+            foreach ($originalHoles as $key => $toDel) {
+                if ($toDel->getId() == $hole->getId()) {
+                    unset($originalHoles[$key]);
+                }
+            }
+        }
+
+        // remove the relationship between the hole and the interactionhole
+        foreach ($originalHoles as $hole) {
+            // remove the hole from the interactionhole
+            $interHole->getHoles()->removeElement($hole);
+
+            // if you wanted to delete the Hole entirely, you can also do that
+            $this->em->remove($hole);
+        }
+
+        // filter $originalHints to contain hint no longer present
+        foreach ($interHole->getInteraction()->getHints() as $hint) {
+            foreach ($originalHints as $key => $toDel) {
+                if ($toDel->getId() == $hint->getId()) {
+                    unset($originalHints[$key]);
+                }
+            }
+        }
+
+        // remove the relationship between the hint and the interactionhole
+        foreach ($originalHints as $hint) {
+            // remove the Hint from the interactionhole
+            $interHole->getInteraction()->getHints()->removeElement($hint);
+
+            // if you wanted to delete the Hint entirely, you can also do that
+            $this->em->remove($hint);
+        }
+
+        $this->em->persist($interHole);
+        $this->em->persist($interHole->getInteraction()->getQuestion());
+        $this->em->persist($interHole->getInteraction());
+
+        // On persiste tous les holes de l'interaction hole.
+        foreach ($interHole->getHoles() as $hole) {
+            foreach ($hole->getWordResponses() as $wr) {
+                $hole->addWordResponse($wr);
+                $this->em->persist($wr);
+            }
+            $interHole->addHole($hole);
+            $this->em->persist($hole);
+        }
+
+        //On persite tous les hints de l'entité interaction
+        foreach ($interHole->getInteraction()->getHints() as $hint) {
+            $interHole->getInteraction()->addHint($hint);
+            $this->em->persist($hint);
+        }
+
+        $this->em->flush();
     }
 }
 
