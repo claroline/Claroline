@@ -1,0 +1,150 @@
+{#
+ # ExoOnLine
+ # Copyright or © or Copr. Université Jean Monnet (France), 2012
+ # dsi.dev@univ-st-etienne.fr
+ #
+ # This software is a computer program whose purpose is to [describe
+ # functionalities and technical features of your software].
+ #
+ # This software is governed by the CeCILL license under French law and
+ # abiding by the rules of distribution of free software.  You can  use,
+ # modify and/ or redistribute the software under the terms of the CeCILL
+ # license as circulated by CEA, CNRS and INRIA at the following URL
+ # "http://www.cecill.info".
+ #
+ # As a counterpart to the access to the source code and  rights to copy,
+ # modify and redistribute granted by the license, users are provided only
+ # with a limited warranty  and the software's author,  the holder of the
+ # economic rights,  and the successive licensors  have only  limited
+ # liability.
+ #
+ # In this respect, the user's attention is drawn to the risks associated
+ # with loading,  using,  modifying and/or developing or reproducing the
+ # software by the user in light of its specific status of free software,
+ # that may mean  that it is complicated to manipulate,  and  that  also
+ # therefore means  that it is reserved for developers  and  experienced
+ # professionals having in-depth computer knowledge. Users are therefore
+ # encouraged to load and test the software's suitability as regards their
+ # requirements in conditions enabling the security of their systems and/or
+ # data to be ensured and,  more generally, to use and operate it in the
+ # same conditions as regards security.
+ #
+ # The fact that you are presently reading this means that you have had
+ # knowledge of the CeCILL license and that you accept its terms.
+#}
+
+{% set layout = "ClarolineCoreBundle:Workspace:layout.html.twig" %}
+
+{% if isDesktop() %}
+    {% set layout = "ClarolineCoreBundle:Desktop:layout.html.twig" %}
+    {% block breadcrumb %}
+        {{
+            macros.breadcrumbs([
+                {
+                    'icon': 'icon-briefcase',
+                    'name': 'desktop'|trans({}, 'platform'),
+                    'href': path('claro_desktop_open')
+                },
+                {
+                    'name': 'qcm edition' | trans,
+                    'href': ''
+                }
+            ])
+        }}
+    {% endblock %}
+{% endif %}
+
+{% extends layout %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link href="{{ asset('bundles/ujmexo/css/errorValidation.css') }}" type="text/css" rel="stylesheet" />
+    <link href="{{ asset('bundles/ujmexo/css/tableLayout.css') }}" type="text/css" rel="stylesheet"/>
+{% endblock %}
+
+{% block title %} {{ 'edit a question' | trans }} {% endblock %}
+
+{% block section_content %}
+
+    <form onsubmit="return check_form('{{ 'nb_hole' | trans }}')" action="#" method="post" {{ form_enctype(edit_form) }}>
+        <div class="panel-body">
+            {% include "UJMExoBundle:Partial:questionEdit.html.twig" %}
+
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">{{ 'response' | trans }}</h3>
+                </div>
+                <div class="panel-body">
+
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">{{ 'Inter_Hole.html' | trans }}</h3>
+                        </div>
+                        <div class="panel-body">
+                            <div class="form-group row">
+                                <div id="holeEditor" class="col-md-9">{{ form_widget(edit_form.html) }}</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">{{ 'hole' | trans }}</h3>
+                        </div>
+                        <div class="panel-body">
+                            <div id="Instructions" class="alert alert-info">
+                                <a class="close" onclick="HideInstruction();">&times;</a>
+                                <p>{{ 'instruction add hole' | trans }}</p>
+                            </div>
+                            </br>
+                            <a id="create_hole" class="btn btn-primary" onclick="createHole();">
+                                <i class="icon-plus"></i> {{ 'create hole' | trans }}
+                            </a>
+                            <a class="btn btn-default" onclick="DisplayInstruction();" id="showInstruct">
+                                <i class="icon-question"></i> {{ 'show Instructions' | trans }}
+                            </a>
+                            <a class="btn btn-default" onclick="HideInstruction();" id="hideInstruct">
+                                <i class="icon-question"></i> {{ 'hide Instructions' | trans }}
+                            </a>
+                            </br></br>
+                            {#{ form_row(form.holes) }#}
+                            <div id="holeError"></div>
+                            <div id="tableHoles"></div>
+                            {{ form_widget(edit_form.holes) }}
+                            {{ form_errors(edit_form.holes) }}
+                        </div>
+                    </div>
+
+                    <div style="display: none;">{{ form_rest(edit_form) }}</div>
+                    {{ form_errors(edit_form) }}
+
+                </div>
+            </div>
+        </div>
+        <div class="panel-footer">
+            <input type="hidden" name="exercise" value="{{ exoID }}" />
+            <button type="submit" id="button_submit" class="btn btn-primary">{{ 'create' | trans }}</button>
+        </div>
+    </form>
+    <div id="prototypes" style="display:none"></div>
+
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+
+    <script type="text/javascript" src="{{ asset('bundles/frontend/jquery/jquery-ui-1.9.2/jquery-ui-1.9.2.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/ext/jquery-ui-touch-punch.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/instructions.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/interactionHole.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/hint.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/category_pop.js') }}"></script>
+
+    {# add form choice #}
+    <script type="text/javascript">
+        $(document).ready(function() {
+            addFormHoleEdit('{{ "add" | trans }}', '{{ "response" | trans }}', '{{ "point" | trans }}', '{{ "Inter_Hole.size" | trans }}', '{{ "Inter_Hole.orthography" | trans }}', '{{ "delete" | trans }}', '{{ "Hole.selector" | trans }}', '{{ asset('bundles/ujmexo/images/ajouter_ligne.jpeg') }}', '{{ "key word" | trans }}', '{{ "points" | trans  }}');
+            newHintEdit('{{ 'hint' | trans }}', '{{ 'penalty' | trans }}', '{{ 'add hint' | trans }}', '{{ 'delete' | trans }}');
+        });
+    </script>
+{% endblock %}
