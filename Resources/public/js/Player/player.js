@@ -18,4 +18,6 @@ $( document ).ready(function() {
       var iframe = $("#frame-resource-"+$(this).data('resource-id'));
       iframe.attr("src", iframe.data("resource-src"));
     });
+
+   $('#current-step-text a').attr('target','_blank');
 });
