@@ -1,28 +1,11 @@
 {% macro displayResourceButton(resource, step) %}
-    <li class="resource-tab pull-right">
-        <a href="#resource-tab-{{ resource.resourceNode.id }}" data-toggle="tab" data-resource-id = "{{ resource.resourceNode.id }}">
+    <li class="resource-tab">
+        <a target="_blank" href="{{ path('claro_resource_open', {'node': resource.resourceNode.id, 'resourceType': resource.resourceNode.resourceType.name }) }}"  data-resource-id = "{{ resource.resourceNode.id }}">
             <span rel="tooltip" data-original-title="{{ step.name }}" class="lvl-{{ step.lvl + 1 }} lvl-indicator-right">&nbsp;</span>
             <img rel="tooltip" data-original-title="{{ resource.resourceNode.resourceType.name | trans({}, 'resource') }}" height="20px" src="{{ asset(resource.resourceNode.icon.relativeUrl) }}" />
             <span >{{ resource.resourceNode.name }}</span>
         </a>
     </li>
-{% endmacro %}
-
-{% macro displayResourceFrame(resource, step) %}
-    <div class="tab-pane" id="resource-tab-{{ resource.resourceNode.id }}">
-        <div class="panel panel-default">
-            <div class="panel-body">
-                
-                <div class="iframe-resource-buttons pull-right">
-                    <a class="btn btn-default btn-sm reload-resource" data-resource-id="{{ resource.resourceNode.id }}">
-                        <span class="icon-refresh"></span>
-                        {{ 'reload' | trans({}, 'path_player') }} {{ resource.resourceNode.name }}
-                    </a>
-                </div>
-                <iframe id="frame-resource-{{ resource.resourceNode.id }}" seamless width="100%" class="resource-frame" data-resource-id="{{ resource.resourceNode.id }}" data-resource-src="{{ path('claro_resource_open', {'node': resource.resourceNode.id, 'resourceType': resource.resourceNode.resourceType.name }) }}" src=""></iframe>
-            </div>
-        </div>
-    </div>
 {% endmacro %}
 
 {% macro displayTreeItem(item, parents, currentStep, path, workspace) %}

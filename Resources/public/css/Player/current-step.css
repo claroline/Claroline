@@ -1,0 +1,13 @@
+.lvl-indicator-xlarge{
+    display:inline-block;
+    position:absolute;
+    width:15px;
+    left:0px;
+    top:0px;
+    bottom:0px;
+}
+
+#step-title{
+    position:relative;
+    padding-left:20px;
+}
