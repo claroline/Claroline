@@ -60,6 +60,15 @@
         }
 
         function addBadgeToCollection(collectionContainer, badgeElement) {
+            var nbBadges = collectionContainer.find(".clarobadge").length;
+
+            if (0 == nbBadges) {
+                collectionContainer.find(".no_badge").hide();
+            }
+
+            var loadingBadge = $(".loading_badge", collectionContainer);
+            loadingBadge.show("fast");
+
             var badges = {0: badgeElement.attr("data-id")};
             $(".badges .clarobadge", collectionContainer).each(function(index, element) {
                 badges[index + 1] = $(element).attr("data-id");
@@ -79,18 +88,18 @@
                     doAddBadgeToCollection(collectionContainer, badgeElement);
                 })
                 .fail(function() {
+                    if (0 == nbBadges) {
+                        collectionContainer.find(".no_badge").show();
+                    }
+                    loadingBadge.hide();
                     console.log("error adding badge to collection");
                 });
         }
 
         function doAddBadgeToCollection(collectionContainer, badgeElement) {
-            var nbBadges = collectionContainer.find(".clarobadge").length;
-
-            if (0 == nbBadges) {
-                collectionContainer.find(".no_badge").hide();
-            }
-
-            $("ul", collectionContainer).append('<li class="clarobadge" data-id="' + badgeElement.attr("data-id") + '">' + badgeElement.attr("data-image") + '</li>');
+            $(".loading_badge", collectionContainer).fadeOut("fast", function() {
+                $(this).before('<li class="clarobadge" data-id="' + badgeElement.attr("data-id") + '">' + badgeElement.attr("data-image") + '</li>')
+            });
         }
 
         $(".collection").droppable(dropOptions);
