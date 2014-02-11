@@ -131,7 +131,7 @@ class ResourceManagerListener
         $path = array();
 
         foreach ($ancestors as $ancestor) {
-            $path[] = $this->manager->toArray($ancestor);
+            $path[] = $this->manager->toArray($ancestor, $this->sc->getToken());
         }
 
         $jsonPath = json_encode($path);

@@ -92,8 +92,7 @@ class WorkspaceManager
      *     "om"              = @DI\Inject("claroline.persistence.object_manager"),
      *     "ut"              = @DI\Inject("claroline.utilities.misc"),
      *     "templateDir"     = @DI\Inject("%claroline.param.templates_directory%"),
-     *     "pagerFactory"    = @DI\Inject("claroline.pager.pager_factory"),
-     *     "security"        = @DI\Inject("security.context")
+     *     "pagerFactory"    = @DI\Inject("claroline.pager.pager_factory")
      * })
      */
     public function __construct(
@@ -106,8 +105,7 @@ class WorkspaceManager
         ObjectManager $om,
         ClaroUtilities $ut,
         $templateDir,
-        PagerFactory $pagerFactory,
-        SecurityContextInterface $security
+        PagerFactory $pagerFactory
     )
     {
         $this->homeTabManager = $homeTabManager;
@@ -129,7 +127,6 @@ class WorkspaceManager
         $this->workspaceRepo = $om->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace');
         $this->workspaceFavouriteRepo = $om->getRepository('ClarolineCoreBundle:Workspace\WorkspaceFavourite');
         $this->pagerFactory = $pagerFactory;
-        $this->security = $security;
     }
 
     /**
@@ -783,8 +780,10 @@ class WorkspaceManager
                 array($role, $user)
             );
         }
+        /*
         $token = new UsernamePasswordToken($user, null, 'main', $user->getRoles());
         $this->security->setToken($token);
+        */
 
         return $user;
     }

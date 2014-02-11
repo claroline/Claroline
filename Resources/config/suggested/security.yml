@@ -49,11 +49,12 @@ security:
                 domain:   ~
             oauth:
                 resource_owners:
-                    facebook: /login_facebook
+                    facebook: /login/check_facebook
                 login_path: /login
                 failure_path: /login
+                use_forward: false
                 oauth_user_provider:
-                    service: hwi_oauth.user.provider.entity
+                    service: claroline.facebook_provider
     acl:
         connection: default
         voter:
