@@ -162,6 +162,24 @@ class InteractionHoleHandler {
             foreach ($originalHoles as $key => $toDel) {
                 if ($toDel->getId() == $hole->getId()) {
                     unset($originalHoles[$key]);
+                    //todo del wr no yet used
+                    $originalWRs[] = $toDel->getWordResponses();
+                    $wrs[] = $hole->getWordResponses();
+                    foreach ($wrs as $wr) {
+                        foreach ($originalWRs as $key => $toDel) {
+                            if ($toDel->getId() == $wr->getId()) {
+                                unset($originalWRs[$key]);
+                            }
+                        }
+                    }
+                    // remove the relationship between the wr and hole
+                    foreach ($originalWRs as $wr) {
+                        // remove the hole from the interactionhole
+                        $hole->getWordResponses()->removeElement($wr);
+
+                        // if you wanted to delete the wr entirely, you can also do that
+                        $this->em->remove($wr);
+                    }
                 }
             }
         }

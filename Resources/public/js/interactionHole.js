@@ -30,14 +30,15 @@ function addFormHoleEdit(add, response, point, size, orthography, del, selector,
     langPoint   = wlangPoint;
     langDel     = del;
     var index;
+    var i = 0;
 
-    tableHoles.append('<table id="newTable" class="table table-striped table-bordered table-condensed"><thead><tr style="background-color: lightsteelblue;"><th class="classic">' + size + '</th><th class="classic">' + orthography + '</th><th class="classic">' + selector + '</th><th class="classic">' + response + '</th><th class="classic">' + del + '</th></tr></thead><tbody></tbody></table>');
+    tableHoles.append('<table id="newTable" class="table table-striped table-bordered table-condensed"><thead><tr style="background-color: lightsteelblue;"><th class="classic">' + size + '</th><th class="classic">' + orthography + '</th><th class="classic">' + selector + '</th><th class="classic">' + response + '</th><th class="classic">' + del + '</th></tr></thead><tbody class="bodyHole"></tbody></table>');
     $('tbody').sortable();
 
     container.children().first().children('div').each(function () {
 
         // Add a row to the table
-        $('#newTable').find('tbody').append('<tr class="trHole"></tr>');
+        $('#newTable').find('.bodyHole').append('<tr class="trHole"></tr>');
 
          $(this).find('.row').each(function () {
 
@@ -46,10 +47,6 @@ function addFormHoleEdit(add, response, point, size, orthography, del, selector,
                 $('#newTable').find('td:last').append($(this).find('input'));
             }
 
-            //fillChoicesArray($(this));
-
-            // Add the form errors
-            //$('#choiceError').append($(this).find('span'));
         });
 
         $('#newTable').find('tr:last').find('td:first').css('display', 'none');
@@ -60,7 +57,56 @@ function addFormHoleEdit(add, response, point, size, orthography, del, selector,
             $('#newTable').find('tr:last').append('<td class="classic"></td>');
             addDelete($('#newTable').find('td:last'), deleteChoice);
         }*/
-         $('#newTable').find('.trHole:last')
+        
+        //******For Key words********
+        var addwr = '<a href="#" id="add_keyword_' + index + '" class="btn btn-primary"><i class="icon-plus"></i>&nbsp;' + langKeyWord + '</a>';
+        
+        $('#newTable').find('.trHole:last').find('td:last')
+            .append('<table id="tabWR_' + index + '"><tbody></tbody></table>' + addwr);
+    
+        $('#add_keyword_' + index).click(function (e) {
+            var ind = $(this).parents(".trHole").index();
+            var idTabWR = $(this).attr('id');
+            idTabWR = idTabWR.replace('add_keyword_', '');
+            
+            addWR(ind, idTabWR);
+            e.preventDefault(); // prevent add # in the url
+            return false;
+        });
+         
+        $('#newTable').find('.trHole:last').find('td:last').find('input').each(function () {
+            if (i == 0) {
+                $('#tabWR_'+index).find('tbody').append('<tr class="trWR"></tr>');
+            } else if (i>1) {
+                i = 0;
+                $('#tabWR_'+index).find('tbody').append('<tr class="trWR"></tr>');
+            }
+             
+            $('#tabWR_' + index).find('tr:last').append('<td class="classic"></td>');
+            $(this).appendTo($('#tabWR_' + index).find('tr:last').find('td:last'));
+            i++;
+            
+            //add buton delete for a key word
+            if ( (i>1) && ($('#tabWR_' + index).find('.trWR').length > 1)) {
+                $('#tabWR_' + index).find('tr:last').append('<td class="classic"></td>');
+                $('#tabWR_' + index).find('td:last').append(
+                    '<a id="wr_' + index + '_' + $('#tabWR_' + index).find('.trWR').length + '" href="#" class="btn btn-danger">' + langDel + '</a>'
+                );
+
+                // When click, delete the matching keyword's row in the table
+                $('#wr_' + index + '_' + $('#tabWR_' + index).find('.trWR').length).click(function(e) {
+                    $(this).parent('td').parent('tr').remove();
+                    addClassVAlign();
+                    verticalAlignCenter();
+                    e.preventDefault();
+                    return false;
+                });
+            }
+            
+        });
+        //***************************
+         
+        $('#newTable').find('.trHole:last')
             .append('<td class="classic"><a id="hole_' + index + '" href="#" class="btn btn-danger">' + langDel + '</a></td>'
         );
             
@@ -78,28 +124,7 @@ function addFormHoleEdit(add, response, point, size, orthography, del, selector,
             return false;
         });
         
-        //index++;
     });
-    
-    indexWR = $('#tabWR_' + index).find('.trWR').length;
-    
-    
-        
-    if (indexWR > 0) {
-        $('#tabWR_' + index).find('tr:last').append('<td class="classic"></td>');
-        $('#tabWR_' + index).find('td:last').append(
-            '<a id="wr_' + index + '_' + indexWR + '" href="#" class="btn btn-danger">' + langDel + '</a>'
-        );
-
-        // When click, delete the matching keyword's row in the table
-        $('#wr_' + index + '_' + indexWR).click(function(e) {
-            $(this).parent('td').parent('tr').remove();
-            addClassVAlign();
-            verticalAlignCenter();
-            e.preventDefault();
-            return false;
-        });
-    }
     
     container.remove();
     $('#prototypes').remove();
@@ -108,29 +133,29 @@ function addFormHoleEdit(add, response, point, size, orthography, del, selector,
 function createHole() {
     var blank = tinyMCE.activeEditor.selection.getContent({format : 'text'});
     var nbHole = tinyMCE.activeEditor.dom.select('.blank').length;
-    var indexHole = 1;
+    var indexBlank = 1;
 
     if (nbHole > 0) {
         tinymce.each(tinyMCE.activeEditor.dom.select('.blank'), function (n) {
-            if (indexHole <= n.id) {
-                indexHole = parseInt(n.id) + 1;
+            if (indexBlank <= n.id) {
+                indexBlank = parseInt(n.id) + 1;
             }
         });
     }
 
     var el = tinyMCE.activeEditor.dom
-        .create('input', {'id' : indexHole, 'type' : 'text', 'size' : '15', 'value' : blank, 'class' : 'blank'});
+        .create('input', {'id' : indexBlank, 'type' : 'text', 'size' : '15', 'value' : blank, 'class' : 'blank'});
 
     tinyMCE.activeEditor.selection.setNode(el);
 
-    addHole(indexHole, blank);
+    addHole(indexBlank, blank);
 }
 
-function addHole(orderHole, valHole) {
+function addHole(indexBlank, valHole) {
     var uniqChoiceID = false;
 
     var index = $('#newTable').find('.trHole').length;
-    var indexWR;
+    //var index = indexBlank;
 
     $('#newTable').find('tbody').append('<tr class="trHole"></tr>');
 
@@ -154,7 +179,7 @@ function addHole(orderHole, valHole) {
     });
 
     $('#newTable').find('tr:last').find('td:first').css('display', 'none');
-    $('#newTable').find('tr:last').find('td:first').find('input:first').val(orderHole);
+    $('#newTable').find('tr:last').find('td:first').find('input:first').val(indexBlank);
 
     $('#ujm_exobundle_interactionholetype_holes_' + index + '_size').val('15');
 
@@ -164,7 +189,7 @@ function addHole(orderHole, valHole) {
     var addwr = '<a href="#" id="add_keyword_' + index + '" class="btn btn-primary"><i class="icon-plus"></i>&nbsp;' + langKeyWord + '</a>';
     $('#newTable').find('tr:last').append('<td class="classic"><table id="tabWR_' + index + '"><tbody></tbody></table>' + addwr + '</td>');
 
-    addWR(index);
+    addWR(index, index);
 
     $('#ujm_exobundle_interactionholetype_holes_' + index + '_wordResponses_0_response').val(valHole);
     //$('#ujm_exobundle_interactionholetype_holes_'+index+'_wordResponses_0_response').attr("readonly", true);
@@ -175,13 +200,13 @@ function addHole(orderHole, valHole) {
 
     // Add delete button for hole
     $('#newTable').find('.trHole:last')
-        .append('<td class="classic"><a id="hole_' + orderHole + '" href="#" class="btn btn-danger">' + langDel + '</a></td>'
+        .append('<td class="classic"><a id="hole_' + indexBlank + '" href="#" class="btn btn-danger">' + langDel + '</a></td>'
     );
 
     // When click, delete the matching hole's row in the table
-    $('#hole_' + orderHole).click(function (e) {
+    $('#hole_' + indexBlank).click(function (e) {
         nodeblank = tinyMCE.get('ujm_exobundle_interactionholetype_html').selection
-                .select(tinyMCE.get('ujm_exobundle_interactionholetype_html').dom.select('#' + orderHole)[0]);
+                .select(tinyMCE.get('ujm_exobundle_interactionholetype_html').dom.select('#' + indexBlank)[0]);
 
         tinyMCE.get('ujm_exobundle_interactionholetype_html').selection.setContent(nodeblank.value);
         
@@ -192,35 +217,35 @@ function addHole(orderHole, valHole) {
     });
 
     $('#add_keyword_' + index).click(function (e) {
-        addWR(index);
+        addWR(index, index);
         e.preventDefault(); // prevent add # in the url
         return false;
     });
 }
 
-function addWR(index) {
+function addWR(indexHole, idTabWR) {
     addClassVAlign();
 
     //wordResponse
     uniqChoiceID = false;
-    indexWR = $('#tabWR_' + index).find('.trWR').length;
+    indexWR = $('#tabWR_' + idTabWR).find('.trWR').length;
 
     while (uniqChoiceID == false) {
-        if ($('#ujm_exobundle_interactionholetype_holes_' + index + '_wordResponses_' + indexWR + '_response').length) {
+        if ($('#ujm_exobundle_interactionholetype_holes_' + indexHole + '_wordResponses_' + indexWR + '_response').length) {
             indexWR++;
         } else {
             uniqChoiceID = true;
         }
     }
 
-    $('#tabWR_'+index).find('tbody').append('<tr class="trWR"></tr>');
+    $('#tabWR_'+idTabWR).find('tbody').append('<tr class="trWR"></tr>');
 
     //alert(containerWR.attr('data-prototype').valueOf());
     containerWR.append(
         $(containerWR.attr('data-prototype')
-        .replace(/holes___name__/g, 'holes_' + index)
+        .replace(/holes___name__/g, 'holes_' + indexHole)
         .replace(/wordResponses___name__/g, 'wordResponses_' + indexWR)
-        .replace(/\[holes\]\[__name__\]/g, '[holes][' + index + ']')
+        .replace(/\[holes\]\[__name__\]/g, '[holes][' + indexHole + ']')
         .replace(/\[wordResponses\]\[__name__\]/g, '[wordResponses][' + indexWR + ']'))
    );
     /*containerWR.append(
@@ -229,19 +254,19 @@ function addWR(index) {
 
     containerWR.find('.row').each(function () {
         if ($(this).find('input').length) {
-            $('#tabWR_'+index).find('tr:last').append('<td class="classic"></td>');
-            $('#tabWR_'+index).find('td:last').append($(this).find('input'));
+            $('#tabWR_'+idTabWR).find('tr:last').append('<td class="classic"></td>');
+            $('#tabWR_'+idTabWR).find('td:last').append($(this).find('input'));
         }
     });
 
     if (indexWR > 0) {
-        $('#tabWR_' + index).find('tr:last').append('<td class="classic"></td>');
-        $('#tabWR_' + index).find('td:last').append(
-            '<a id="wr_' + index + '_' + indexWR + '" href="#" class="btn btn-danger">' + langDel + '</a>'
+        $('#tabWR_' + idTabWR).find('tr:last').append('<td class="classic"></td>');
+        $('#tabWR_' + idTabWR).find('td:last').append(
+            '<a id="wr_' + indexHole + '_' + indexWR + '" href="#" class="btn btn-danger">' + langDel + '</a>'
         );
 
         // When click, delete the matching keyword's row in the table
-        $('#wr_' + index + '_' + indexWR).click(function(e) {
+        $('#wr_' + indexHole + '_' + indexWR).click(function(e) {
             $(this).parent('td').parent('tr').remove();
             addClassVAlign();
             verticalAlignCenter();
@@ -250,8 +275,8 @@ function addWR(index) {
         });
     }
 
-    $('#ujm_exobundle_interactionholetype_holes_' + index + '_wordResponses_' + indexWR + '_response').attr("placeholder", langKeyWord);
-    $('#ujm_exobundle_interactionholetype_holes_' + index + '_wordResponses_' + indexWR + '_score').attr("placeholder", langPoint);
+    $('#ujm_exobundle_interactionholetype_holes_' + indexHole + '_wordResponses_' + indexWR + '_response').attr("placeholder", langKeyWord);
+    $('#ujm_exobundle_interactionholetype_holes_' + indexHole + '_wordResponses_' + indexWR + '_score').attr("placeholder", langPoint);
 
     verticalAlignCenter();
 }
