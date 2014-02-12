@@ -19,6 +19,7 @@ use Claroline\RssReaderBundle\Library\RssManager;
 use Symfony\Component\Form\FormFactory;
 use Claroline\RssReaderBundle\Library\ReaderProvider;
 use JMS\DiExtraBundle\Annotation as DI;
+use Claroline\RssReaderBundle\Entity\Config;
 
 
 /**
