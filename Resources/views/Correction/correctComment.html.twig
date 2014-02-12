@@ -24,7 +24,6 @@
                     {% endif %}
                     {% if edit %}
                         <div class="form-group">
-
                     {{ form_row(form.comment, {'label_col_size': ' ', 'input_col_size': 'col-md-12', 'label_attr': {'style': 'display:none;'}, 'required':false}) }}
                     </div>
                 {% else %}
@@ -64,7 +63,7 @@
 {% endblock %}
 
 {% block javascripts %}
-    {{ parent() }}}
+    {{ parent() }}
     {% render controller('ClarolineCoreBundle:ResourceType:initPicker') %}
     {{ tinymce_init() }}
     <script>
@@ -77,4 +76,5 @@
             });
         });
     </script>
+
 {% endblock %}
