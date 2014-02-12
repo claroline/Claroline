@@ -254,8 +254,7 @@
             console.debug(t('no_description'));
             $('#agenda_form_description').val(description);
             console.debug( $(e.target.parentElement.parentElement.children));
-            if( $(list[1])[0].innerHTML == 1)
-            {
+            if ($(list[1])[0].innerHTML == 1) {
                 $('#agenda_form_allDay').attr('checked', true);
                 $('#agenda_form_start').attr('disabled','disabled');
                 $('#agenda_form_startHours').attr('disabled','disabled');
