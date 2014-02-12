@@ -46,10 +46,7 @@
                     </div>
                     <div class="modal-body">
                         <div class='clearfix'>
-                            <button class="btn btn-danger" id="deleteBtn" >
-                                {{ 'delete'|trans({}, 'platform') }}
-                            </button>
-                            <form method="post" action="{{ path('claro_workspace_agenda_add_event', {workspaceId: workspace.getId()}) }}" id="myForm" {{ form_enctype(form) }}>
+                                <form method="post" action="{{ path('claro_workspace_agenda_add_event', {workspaceId: workspace.getId()}) }}" id="myForm" {{ form_enctype(form) }}>
                                 <div id="text" class="col-md-10 filters"> </div>
                                 {{ form_widget(form) }}
                             </form>
@@ -61,9 +58,10 @@
                         <a href="{{ path('claro_workspace_agenda_tasks', {workspaceId: workspace.getId()}) }}" id="taska"></a>
                     </div>
                     <div class="modal-footer">
-                        <button class="btn btn-default" data-dismiss="modal" aria-hidden="true">{{'close'|trans({}, 'agenda') }}</button>
+                        <button class="btn btn-default" data-dismiss="modal" aria-hidden="true">{{'cancel'|trans({}, 'agenda') }}</button>
                         <button class="btn btn-primary" id="save">{{ 'add_event'|trans({}, 'agenda') }}</button>
                         <button class="btn btn-info" id="updateBtn" > {{ 'update'|trans({}, 'agenda') }}</button>
+                        <button class="btn btn-danger" id="deleteBtn" >{{ 'delete'|trans({}, 'platform') }} </button>
                     </div>
                 </div>
             </div>

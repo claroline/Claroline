@@ -44,9 +44,6 @@
                             <h4 id="myModalLabel"> {{ 'add_event'|trans({}, 'agenda') }}</h4>
                         </div>
                         <div class="modal-body">
-                            <button class="btn btn-danger" id="deleteBtn" >
-                                {{ 'delete'|trans({}, 'platform') }}
-                            </button>
                             <form method="post" action="{{ path('claro_desktop_agenda_add') }}" id="myForm" {{ form_enctype(form) }}>
                                 {{ form_widget(form) }}
                             </form>
@@ -57,9 +54,10 @@
                             <a href="{{ path('claro_desktop_agenda_tasks') }}" id="taska"></a>
                         </div>
                         <div class="modal-footer">
-                            <button class="btn btn-default" data-dismiss="modal" aria-hidden="true">{{'close'|trans({}, 'agenda') }}</button>
+                            <button class="btn btn-default" data-dismiss="modal" aria-hidden="true">{{'cancel'|trans({}, 'agenda') }}</button>
                             <button class="btn btn-primary" id="save">{{ 'add_event'|trans({}, 'agenda') }}</button>
                             <button class="btn btn-info" id="updateBtn" > {{ 'update'|trans({}, 'agenda') }}</button>
+                            <button class="btn btn-danger" id="deleteBtn" >{{ 'delete'|trans({}, 'platform') }}</button>
                         </div>
                     </div>
                 </div>

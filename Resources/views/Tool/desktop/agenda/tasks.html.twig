@@ -3,12 +3,12 @@
             <button type="button" class="delete-task close" data-event-id="{{e.id}}" data-dismiss="alert">&times;</button>
             <h5 data-event-title="{{e.title}}"> {{ e.title }}</h5>
             <ul>
-                <li> {{ e.start|date("d-m-Y h:i")}} </li>
-                <li> {{ e.end|date("d-m-Y h:i") }} </li>
                 {% if e.description is not empty %}
                     <li>{{ e.description |raw }}</li>
+                {% else %}
+                   <li> {{ 'no_description'|trans({}, 'agenda') }} </li>
                 {% endif %}
-                <li class="hidden"> {{e.allDay}}</li>
+                <li class="hidden" data-task="{{e.allDay}}"> {{e.allDay}}</li>
                 <li class="hidden"> {{e.priority}}</li>
                 <li class="hidden"> {{e.id}}</li>
                 <a href="#myModal" class="update-task" role="button">{{'update'|trans({}, 'agenda')}}</a> </p>

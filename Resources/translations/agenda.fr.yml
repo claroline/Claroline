@@ -13,6 +13,7 @@ apr: Avr
 april: Avril
 aug: Août
 august: Août
+cancel: Annuler
 close: Fermer
 confirm: 'Êtes-vous sûr ?'
 date_invalid: 'Une erreur s''est produite, vérifiez que la date début se situe avant la date de fin'
@@ -47,6 +48,7 @@ month: mois
 next: '>'
 nextYear: '>>'
 'no event found': 'Pas d''événements'
+no_description: 'Pas de description'
 nov: Nov
 november: Novembre
 oct: Oct

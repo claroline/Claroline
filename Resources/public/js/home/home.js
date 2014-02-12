@@ -151,21 +151,41 @@
             route ='content/update/' + id;
         }
 
-        $.post(home.path + route, form)
-        .done(function (data) {
-            if (!isNaN(data) && data !== '') {
-                home.insertContent(creatorElement, data, type, father);
-                home.emptyContent(creatorElement);
-            } else if (data === 'true') {
-                home.insertContent(creatorElement, id, type, father, update);
-            } else {
+        if (!home.creatorIsEmpty(form)) {
+            $.post(home.path + route, form)
+            .done(function (data) {
+                if (!isNaN(data) && data !== '') {
+                    home.insertContent(creatorElement, data, type, father);
+                    home.emptyContent(creatorElement);
+                } else if (data === 'true') {
+                    home.insertContent(creatorElement, id, type, father, update);
+                } else {
+                    home.modal('content/error');
+                }
+            })
+            .error(function () {
                 home.modal('content/error');
-            }
-        })
-        .error(function () {
-            home.modal('content/error');
-        });
+            });
+        }
     };
+
+    /**
+     * check if a translated contentn form is empty
+     *
+     * @param form A serializeArray of a form element
+     */
+    home.creatorIsEmpty = function(form)
+    {
+        if (form instanceof Array) {
+            for (var lang in form) {
+                if (form.hasOwnProperty(lang) && form[lang].value !== undefined && form[lang].value !== '') {
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
 
     /**
      * Get content from a external url and put it in a creator of contents.
