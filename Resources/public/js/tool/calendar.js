@@ -251,10 +251,8 @@
             $('#agenda_form_title')
                 .attr('value', $(e.target.parentElement.parentElement.children)[1].innerHTML);
             var description = $(list[0])[0].innerHTML == t('no_description') ? '' : $(list[0])[0].innerHTML;
-            console.debug(t('no_description'));
             $('#agenda_form_description').val(description);
-            console.debug( $(e.target.parentElement.parentElement.children));
-            if ($(list[1])[0].innerHTML == 1) {
+            if ($(list[1])[0].innerHTML === 1) {
                 $('#agenda_form_allDay').attr('checked', true);
                 $('#agenda_form_start').attr('disabled','disabled');
                 $('#agenda_form_startHours').attr('disabled','disabled');
