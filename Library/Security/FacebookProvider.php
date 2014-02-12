@@ -11,7 +11,7 @@ use JMS\DiExtraBundle\Annotation\Inject;
 use JMS\DiExtraBundle\Annotation\Service;
 use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
-use Claroline\CoreBundle\Persistence\ObjectManager;
+use Claroline\CoreBundle\Entity\User;
 
 /**
  * @Service("claroline.facebook_provider")
@@ -19,18 +19,18 @@ use Claroline\CoreBundle\Persistence\ObjectManager;
 class FacebookProvider implements OAuthAwareUserProviderInterface, UserProviderInterface
 {
     
-    private $om;
+    private $em;
     private $userManager;
-	
+
     /**
      * @InjectParams({
-     *   "om"          = @Inject("doctrine.orm.entity_manager"),
+     *   "em"          = @Inject("doctrine.orm.entity_manager"),
      *   "userManager" = @Inject("claroline.manager.user_manager")
      * })
      */ 
-    public function __construct($om, $userManager)
+    public function __construct($em, $userManager)
     {
-        $this->om = $om;
+        $this->em = $em;
         $this->userManager = $userManager;
     }
 
@@ -42,7 +42,7 @@ class FacebookProvider implements OAuthAwareUserProviderInterface, UserProviderI
         $dql = 'SELECT u FROM Claroline\CoreBundle\Entity\User u
 	    WHERE u.username LIKE :username
 	    OR u.mail LIKE :username';
-        $query = $this->om->createQuery($dql);
+        $query = $this->em->createQuery($dql);
         $query->setParameter('username', $username);
 
         try {
@@ -53,7 +53,7 @@ class FacebookProvider implements OAuthAwareUserProviderInterface, UserProviderI
             );
         }
 
-	return $user;
+        return $user;
     }
 
     /**
@@ -63,18 +63,18 @@ class FacebookProvider implements OAuthAwareUserProviderInterface, UserProviderI
     {
         try {
             $user = $this->loadUserByUsername($response->getEmail());
-	} catch(UsernameNotFoundException $e) {
-	    //create new User
+        } catch (\Exception $e) {
+
             $user = new User();
             $user->setFirstName($response->getRealname());
-	    $user->setLastName($response->getRealname());
+            $user->setLastName($response->getNickname());
             $user->setUsername($response->getUsername());
-	    $user->setPlainPassword('trololol');
-	    $user->setMail($response->getEmail());
-	    $this->userManager->createUser($user);
-	}		
+            $user->setPlainPassword('trololol');
+            $user->setMail($response->getEmail());
+            $this->userManager->createUser($user);
+        }
 
-	return $user;
+        return $user;
     }
 
     /**

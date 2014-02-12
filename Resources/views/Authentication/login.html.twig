@@ -16,7 +16,6 @@ same message when authentication has failed (no precise validation errors).
                 {{ 'login_failure'|trans({}, 'platform') }}
             </div>
         {% endif %}
-
         <div class='content-element panel panel-default'>
             <div class="panel-heading">
                 <h3 class="panel-title">{{ 'login' | trans({}, "platform")}}</h3>
@@ -41,63 +40,32 @@ same message when authentication has failed (no precise validation errors).
                 </div>
                 <div class="panel-footer">
                     <button type="submit" class="btn btn-primary" tabindex="3">{{ 'login'|trans({}, 'platform') }}</button>
+                    <div
+                        onlogin="fb_login();"
+                        class="fb-login-button"
+                        data-max-rows="1"
+                        data-size="large"
+                        data-show-faces="false"
+                        data-auto-logout-link="false">
+                    </div>
                 </div>
             </form>
         </div>
-        <div id="fb-root"></div>
         <script>
-            window.fbAsyncInit = function() {
-                // init the FB JS SDK
-                FB.init({
-                    appId      : '487751811261295',                    // App ID from the app dashboard
-                    status     : true,                                 // Check Facebook Login status
-                    xfbml      : true,
-                    cookie     : true
-                });
-            };
-
-            // Load the SDK asynchronously
-            (function(d, s, id){
-                var js, fjs = d.getElementsByTagName(s)[0];
-                if (d.getElementById(id)) {return;}
-                js = d.createElement(s); js.id = id;
-                js.src = "//connect.facebook.net/en_US/all.js";
-                fjs.parentNode.insertBefore(js, fjs);
-            }(document, 'script', 'facebook-jssdk'));
-
-            // Here we run a very simple test of the Graph API after login is successful.
-            // This testAPI() function is only called in those cases.
-            function testAPI() {
-                console.log('Welcome!  Fetching your information.... ');
-                FB.api('/me', function(response) {
-                    console.log('Good to see you, ' + response.name + '.');
-                });
-            }
-
           function fb_login() {
             FB.getLoginStatus(function(response) {
                 if (response.status === 'connected') {
-                    // connected
-                    alert('Already connected, redirect to login page to create token.');
                     document.location = "{{ url("hwi_oauth_service_redirect", {service: "facebook"}) }}";
                 } else {
-                    // not_authorized
                     FB.login(function(response) {
                         if (response.authResponse) {
                             document.location = "{{ url("hwi_oauth_service_redirect", {service: "facebook"}) }}";
-                        } else {
-                            alert('Cancelled.');
                         }
-                    }, {scope: 'email'});
+                    });
                 }
             });
           }
         </script>
-
-        <p>
-            <a href="#" onclick="fb_login();">Facebook Connect Button (Dialog)</a>
-        </p>
-        {% render(controller('HWIOAuthBundle:Connect:connect')) %}
     </div>
 
 {% endblock %}
