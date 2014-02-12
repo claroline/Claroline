@@ -133,6 +133,10 @@
                     </ul>
                 </div>
                 <div class="col-md-9">
+                    <div class="alert alert-danger" id="error_container" style="display: none">
+                        <button type="button" class="close" aria-hidden="true">&times;</button>
+                        <p></p>
+                    </div>
                     <ul class="nodes badge_list list-unstyled well">
                         {% for badge in badges %}
                             {% set dataImage = '<img class="badge_image_mini" src="' ~ asset(badge.webPath) ~ '" alt="' ~ badge.name(language) ~ '" />' %}

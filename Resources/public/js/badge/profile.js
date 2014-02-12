@@ -18,6 +18,15 @@
         var noCollectionElement            = $("#no_collection");
         var deletingCollectionElement      = $("#deleting_collection");
         var deletingCollectionBadgeElement = $(collectionsList.attr("data-delete-collection-badge-template"));
+        var errorContainer                 = $("#error_container");
+
+        $("button.close", errorContainer).click(function(event) {
+            errorContainer.hide();
+        })
+
+        $(".badge_management_container").ajaxSend(function() {
+            errorContainer.hide();
+        });
 
         $(".badge_container").draggable({
             helper: "clone",
@@ -187,7 +196,7 @@
                     addCollection(newCollection, data)
                 })
                 .fail(function() {
-                    console.log("error adding collection");
+                    displayError('add_collection_error');
                 })
                 .always(function () {
                     addButton.button('reset');
@@ -338,6 +347,11 @@
                     noCollectionElement.show();
                 }
             });
+        }
+
+        function displayError(messageKey) {
+            $("p", errorContainer).text(Translator.get('badge:' + messageKey));
+            errorContainer.show();
         }
     });
 })(jQuery);
