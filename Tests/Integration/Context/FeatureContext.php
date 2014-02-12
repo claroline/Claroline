@@ -48,9 +48,15 @@ class FeatureContext extends MinkContext
         if (in_array('javascript', $event->getScenario()->getTags())) {
             $client = new Client();
             $client->request('GET', $this->getUrl('test/reinstall'));
+            $status = $client->getResponse()->getStatus();
+            $content = $client->getResponse()->getContent();
         } else {
             $this->visit('test/reinstall');
+            $status  = $this->getSession()->getStatusCode();
+            $content = $this->getSession()->getPage()->getContent();
         }
+
+        $this->checkForResponseError($status, $content, 'Unable to init platform');
     }
 
     /**
@@ -278,19 +284,30 @@ EOL;
             $this->getUrl('test/fixture/load'),
             array('fqcn' => $fixtureFqcn, 'args' => $args)
         );
-        $response = $client->getResponse();
-
-        if ($response->getStatus() !== 200 || preg_match('/Fatal error/i', $response->getContent())) {
-            throw new \Exception(
-                "Unable to load {$fixtureFqcn} fixture.\n"
-                . "Response status is: {$response->getStatus()}\n"
-                . "Response content is: {$response->getContent()}"
-            );
-        }
+        $this->checkForResponseError(
+            $client->getResponse()->getStatus(),
+            $client->getResponse()->getContent(),
+            "Unable to load {$fixtureFqcn} fixture"
+        );
     }
 
     private function getUrl($path)
     {
         return $this->getMinkParameter('base_url') . '/' . $path;
+    }
+
+    private function checkForResponseError($status, $content, $exceptionMsg)
+    {
+        if (preg_match('#<title>([^<]+)#', $content, $matches)) {
+            $content = $matches[1];
+        }
+
+        if ($status !== 200 || preg_match('/Fatal error/i', $content)) {
+            throw new \Exception(
+                "{$exceptionMsg}.\n"
+                . "Response status is: {$status}\n"
+                . "Response content is: {$content}"
+            );
+        }
     }
 }
