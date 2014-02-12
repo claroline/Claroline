@@ -663,6 +663,72 @@ class ParametersController extends Controller
     }
 
     /**
+     * @Template("ClarolineCoreBundle:Administration\platform\oauth:index.html.twig")
+     * @Route(
+     *     "/oauth/index",
+     *     name="claro_admin_parameters_oauth_index"
+     * )
+     *
+     * Displays the administration section index.
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function oauthIndexAction()
+    {
+        return array();
+    }
+
+    /**
+     * @Template("ClarolineCoreBundle:Administration\platform\oauth:facebook.html.twig")
+     * @Route(
+     *     "/oauth/facebook/form",
+     *     name="claro_admin_facebook_form"
+     * )
+     *
+     * Displays the administration section index.
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function facebookSettingsFormAction()
+    {
+        $platformConfig = $this->configHandler->getPlatformConfig();
+        $form = $this->formFactory->create(new AdminForm\FacebookType(), $platformConfig);
+
+        return array('form' => $form->createView());
+    }
+
+    /**
+     * @Template("ClarolineCoreBundle:Administration\platform\oauth:facebook.html.twig")
+     * @Route(
+     *     "/oauth/facebook/submit",
+     *     name="claro_admin_facebook_form_submit"
+     * )
+     *
+     * Displays the administration section index.
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function facebookSettingsSubmitAction()
+    {
+        $platformConfig = $this->configHandler->getPlatformConfig();
+        $form = $this->formFactory->create(new AdminForm\FacebookType(), $platformConfig);
+        $form->handleRequest($this->request);
+
+        if ($form->isValid()) {
+            $data = array(
+                'facebook_client_id' => $form['facebook_client_id']->getData(),
+                'facebook_client_secret' => $form['facebook_client_secret']->getData()
+            );
+
+            $this->configHandler->setParameters($data);
+
+            return $this->redirect($this->generateUrl('claro_admin_index'));
+        }
+
+        return array('form' => $form->createView());
+    }
+
+    /**
      *  Get the list of themes availables.
      *
      *  @return array with a list of the themes availables.

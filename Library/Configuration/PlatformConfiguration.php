@@ -41,6 +41,8 @@ class PlatformConfiguration
     private $sessionDbDsn;
     private $sessionDbUser;
     private $sessionDbPassword;
+    private $facebookClientId;
+    private $facebookClientSecret;
 
     /**
      * @param mixed $sessionDbDataCol
@@ -370,5 +372,37 @@ class PlatformConfiguration
     public function getRedirectAfterLogin()
     {
         return $this->redirectAfterLogin;
+    }
+
+    /**
+     * @param integer $facebookClientId
+     */
+    public function setFacebookClientId($facebookClientId)
+    {
+        $this->facebookClientId = $facebookClientId;
+    }
+
+    /**
+     * @return integer
+     */
+    public function getFacebookClientId()
+    {
+        return $this->facebookClientId;
+    }
+
+    /**
+     * @param integer $facebookClientSecret
+     */
+    public function setFacebookClientSecret($facebookClientSecret)
+    {
+        $this->facebookClientSecret = $facebookClientSecret;
+    }
+
+    /**
+     * @return integer
+     */
+    public function getFacebookClientSecret()
+    {
+        return $this->facebookClientSecret;
     }
 }
