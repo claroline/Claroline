@@ -8,7 +8,7 @@ interface ImporterInterface {
 
     public function supports($type);
 
-    public function valid(\DOMNodeList $node);
+    public function valid($array);
 
     public function import( $objects);
 

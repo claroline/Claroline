@@ -39,7 +39,6 @@ class TransfertManager
         $data = Yaml::parse(file_get_contents($path));
         try {
             $processedConfiguration = $processor->processConfiguration($manifestConfif,$data);
-            var_dump($processedConfiguration);
         } catch (\Exception $e) {
             var_dump(array($e->getMessage())) ;
         }

@@ -40,49 +40,34 @@ class WorkspacePropertiesImporter implements ImporterInterface{
         return true;
     }
 
-    public function valid(\DOMNodeList $node)
+    public function valid($array)
     {
         $expectedKeys = array('name','code','owner','visible','selfregistration');
         $errors = array();
-        $child = $node->item(0)->childNodes;
-        foreach ($child as $value)
+
+        foreach ($array as $i => $value)
         {
-            if (!in_array($value->nodeName,$expectedKeys)) {
-                $errors[] = $value->nodeName;
+            if (!array_key_exists($value[$i],$expectedKeys[$i])) {
+                $errors[$i] = $expectedKeys[$i];
             }
         }
     }
 
-    public function import($path)
+    public function import($array)
     {
         $workspace = new SimpleWorkspace();
         $workspaceAttributes = array();
         $user = new User();
-        $userAttributes = array();
-        $doc = new \DOMDocument();
-        $doc->load($path);
-        $properties = $doc->getElementsByTagName('properties');
-        $child = $properties->item(0);
+        $user->setFirstName($array['first_name']);
+        $user->setLastName($array['last_name']);
+        $user->setAdministrativeCode($array['administrative_code']);
+        $user->setMail($array['mail']);
 
-        foreach ($child as $value)
-        {
-           $workspaceAttributes = $value->nodeValue;
-        }
         $workspace->setName($workspaceAttributes[0]);
         $workspace->setCode($workspaceAttributes[1]);
         $workspace->set($workspaceAttributes[2]);
         $workspace->setCode($workspaceAttributes[3]);
-        $u = $child->getElementsByTagName('owner')->item(0); // get user creator
-        foreach ($u as $node )
-        {
-            $userAttributes[] = $node->nodeValue;
-        }
-        $user->setFirstName($userAttributes[0]);
-        $user->setLastName($userAttributes[1]);
-        $user->setUsername($userAttributes[2]);
-        $user->setMail($userAttributes[3]);
-        $user->setPassword($userAttributes[4]);
-        $user->setlocale($userAttributes[5]);
+
         $newUser = $this->userManager->createUser($user);
         $workspace->setCreator($newUser);
     }

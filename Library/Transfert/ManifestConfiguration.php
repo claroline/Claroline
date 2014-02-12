@@ -70,7 +70,7 @@ class ManifestConfiguration implements ConfigurationInterface {
                                 ->scalarNode('first_name')->isRequired()->end()
                                 ->scalarNode('last_name')->isRequired()->end()
                                 ->scalarNode('username')->isRequired()->end()
-                                ->scalarNode('locale')->isRequired()->end()
+                                ->scalarNode('mail')->isRequired()->end()
                                 ->scalarNode('administrative_code')->end()
                                 ->scalarNode('phone')->end()
                                 ->scalarNode('picture')->end()
