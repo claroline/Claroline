@@ -38,6 +38,9 @@
             collectionContainer.after(deletingCollectionBadgeElement);
             deletingCollectionBadgeElement.show();
         };
+        clarobadgeDragOptions.stop = function(event, ui) {
+            deletingCollectionBadgeElement.hide("fast");
+        };
         $(".clarobadge").draggable(clarobadgeDragOptions);
 
         var clarobagdeDeleteDropOptions = {
