@@ -302,7 +302,7 @@ class Drop {
         $date = false;
         $validCorrectionFound = false;
         foreach ($corrections as $correction) {
-            // if an ended  correction (withgi a endDate value) has not been found
+            // if an ended  correction (with a endDate value) has not been found
             if( $validCorrectionFound == false) {
                 // if its a valid correction.
                 if( $correction->getEndDate()!== NULL)  {
