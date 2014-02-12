@@ -39,9 +39,6 @@ class TestCommand extends ContainerAwareCommand
         $fromRepo = new InstalledFilesystemRepository($installedFile);
         $toRepo = new ArrayRepository();
 
-        //$fromRepo->addPackage(new Package('behat/mink', '1.5.0.0', '1.5.0'));
-        //$fromRepo->addPackage(new Package('behat/mink-browserkit-driver', '1.1.0.0', '1.1.0'));
-
         $pool = new Pool();
         $pool->addRepository($fromRepo);
         $pool->addRepository(new PlatformRepository());

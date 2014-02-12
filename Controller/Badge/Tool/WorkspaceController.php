@@ -156,6 +156,10 @@ class WorkspaceController extends Controller
      */
     public function editAction(Request $request, AbstractWorkspace $workspace, Badge $badge, $page = 1)
     {
+        if (null === $badge->getWorkspace()) {
+            throw $this->createNotFoundException("No badge found.");
+        }
+
         $this->checkUserIsAllowed($workspace);
 
         /** @var \Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler $platformConfigHandler */
@@ -242,6 +246,10 @@ class WorkspaceController extends Controller
      */
     public function deleteAction($workspace, Badge $badge)
     {
+        if (null === $badge->getWorkspace()) {
+            throw $this->createNotFoundException("No badge found.");
+        }
+
         $this->checkUserIsAllowed($workspace);
 
         /** @var \Symfony\Bundle\FrameworkBundle\Translation\Translator $translator */
@@ -278,6 +286,10 @@ class WorkspaceController extends Controller
      */
     public function awardAction(Request $request, AbstractWorkspace $workspace, Badge $badge)
     {
+        if (null === $badge->getWorkspace()) {
+            throw $this->createNotFoundException("No badge found.");
+        }
+
         $this->checkUserIsAllowed($workspace);
 
         $form = $this->createForm(new BadgeAwardType());
@@ -375,6 +387,10 @@ class WorkspaceController extends Controller
      */
     public function unawardAction(Request $request, AbstractWorkspace $workspace, Badge $badge, User $user)
     {
+        if (null === $badge->getWorkspace()) {
+            throw $this->createNotFoundException("No badge found.");
+        }
+
         $this->checkUserIsAllowed($workspace);
 
         /** @var \Symfony\Bundle\FrameworkBundle\Translation\Translator $translator */
@@ -422,13 +438,14 @@ class WorkspaceController extends Controller
      *     class="ClarolineCoreBundle:Workspace\AbstractWorkspace",
      *     options={"id" = "workspaceId"}
      * )
-     * @ParamConverter("user", options={"mapping": {"username": "username"}})
      * @Template
-     *
-     * @todo There's a problem regarding this method's signature and its param converters.
      */
     public function manageClaimAction(AbstractWorkspace $workspace, BadgeClaim $badgeClaim, $validate = false)
     {
+        if (null === $badgeClaim->getBadge()->getWorkspace()) {
+            throw $this->createNotFoundException("No badge found.");
+        }
+
         $this->checkUserIsAllowed($workspace);
 
         /** @var \Symfony\Bundle\FrameworkBundle\Translation\Translator $translator */

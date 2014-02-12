@@ -43,7 +43,7 @@ class BaseContentType extends BaseType
             }
         }
 
-        $builder->add('title', 'text', array('mapped' => false, 'data' => $title));
+        $builder->add('title', 'text', array('data' => $title));
         if (isset($options['theme_options']['tinymce']) and !$options['theme_options']['tinymce']) {
             $builder->add(
                 'content',
@@ -55,12 +55,12 @@ class BaseContentType extends BaseType
                 )
             );
         } else {
-            $builder->add('content', 'tinymce', array('mapped' => false, 'data' => $content));
+            $builder->add('content', 'tinymce', array('data' => $content));
         }
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
-        $resolver->setDefaults(array('mapped' => false));
+        $resolver->setDefaults(array('required' => false, 'mapped' => false));
     }
 }

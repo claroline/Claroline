@@ -1,30 +1,21 @@
 <div class="creator content-12" data-type="{{ type }}" {% if content is defined %}data-id="{{ content.id }}"{% endif %}>
-    <input
-    type="text"
-    placeholder="{{ "Optional title" | trans({}, 'home') }}..."
-    class="form-control content-title"
-    {% if content is defined %}value="{{ content.title }}"{% endif %}
-    >
-    <br>
-    <div class="panel panel-default">
-        <textarea
-            class="claroline-tiny-mce hide content-text"
-            placeholder="{{ "Create" | trans({}, 'home') }} {{ "a content" | trans({}, 'home') }}..."
-            data-resource-picker='off'
-            >{% if content is defined %}{{ content.content }}{% endif %}</textarea>
-        <div class="navbar navbar-default navbar-static-top">
-            <ul class="nav navbar-nav">
-                <li><a class="pointer-hand addlink"><i class="icon-link"></i> {{ "Add a link" | trans({}, 'home') }}</a></li>
-                <li class="divider-vertical"></li>
-            </ul>
-            <form class="navbar-form pull-right">
-                {% if content is defined %}
-                    <a class="cancel-button btn btn-default">{{ 'Cancel' | trans({}, 'home') }}</a>
-                    <a class="edit-button btn btn-primary">{{ 'Edit' | trans({}, 'home') }}</a>
-                {% else %}
-                    <a class="creator-button btn btn-primary">{{ 'Create' | trans({}, 'home') }}</a>
-                {% endif %}
-            </form>
+    <form action="{{ path('claroline_content_create') }}" method="post">
+        {{ form_widget(form | first) }}
+        <div class="panel panel-default">
+            <div class="navbar navbar-default navbar-static-top">
+                <ul class="nav navbar-nav">
+                    <li><a class="pointer-hand addlink"><i class="icon-link"></i> {{ "Add a link" | trans({}, 'home') }}</a></li>
+                    <li class="divider-vertical"></li>
+                </ul>
+                <div class="navbar-form pull-right">
+                    {% if content is defined %}
+                        <a class="cancel-button btn btn-default">{{ 'Cancel' | trans({}, 'home') }}</a>
+                        <a class="edit-button btn btn-primary">{{ 'Edit' | trans({}, 'home') }}</a>
+                    {% else %}
+                        <a class="creator-button btn btn-primary">{{ 'Create' | trans({}, 'home') }}</a>
+                    {% endif %}
+                </div>
+            </div>
         </div>
-    </div>
+    </form>
 </div>

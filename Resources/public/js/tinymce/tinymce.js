@@ -208,10 +208,6 @@
 
     });
 
-    $('body').on('click', '.modal#uploadModal .panel-footer', function () {
-        console.log($(this).parents('.modal#uploadModal').first().data('element'));
-    });
-
     $(document).ready(function () {
         tinymceInit();
     });
