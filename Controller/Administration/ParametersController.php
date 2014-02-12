@@ -729,6 +729,7 @@ class ParametersController extends Controller
 
             if (count($errors) === 0) {
                 $this->configHandler->setParameters($data);
+                $this->cacheManager->refresh();
 
                 return $this->redirect($this->generateUrl('claro_admin_index'));
             }

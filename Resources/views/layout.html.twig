@@ -211,6 +211,7 @@
             selector: '[data-toggle=tooltip]'
         });
     </script>
+    {% if is_facebook_available() %}
     <script>
         (function(d, s, id){
             var js, fjs = d.getElementsByTagName(s)[0];
@@ -222,7 +223,7 @@
         window.fbAsyncInit = function() {
             // init the FB JS SDK
             FB.init({
-                appId      : '487751811261295',                    // App ID from the app dashboard
+                appId      : '{{ get_facebook_app_id() }}',                    // App ID from the app dashboard
                 status     : true,                                 // Check Facebook Login status
                 xfbml      : true,
                 cookie     : true
@@ -232,4 +233,5 @@
             })
         };
     </script>
+    {% endif %}
 {% endblock %}

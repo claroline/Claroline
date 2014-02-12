@@ -40,17 +40,20 @@ same message when authentication has failed (no precise validation errors).
                 </div>
                 <div class="panel-footer">
                     <button type="submit" class="btn btn-primary" tabindex="3">{{ 'login'|trans({}, 'platform') }}</button>
-                    <div
-                        onlogin="fb_login();"
-                        class="fb-login-button"
-                        data-max-rows="1"
-                        data-size="large"
-                        data-show-faces="false"
-                        data-auto-logout-link="false">
-                    </div>
+                    {% if is_facebook_available() %}
+                        <div
+                            onlogin="fb_login();"
+                            class="fb-login-button"
+                            data-max-rows="1"
+                            data-size="large"
+                            data-show-faces="false"
+                            data-auto-logout-link="false">
+                        </div>
+                    {% endif %}
                 </div>
             </form>
         </div>
+        {% if is_facebook_available() %}
         <script>
           function fb_login() {
             FB.getLoginStatus(function(response) {
@@ -66,6 +69,7 @@ same message when authentication has failed (no precise validation errors).
             });
           }
         </script>
+        {% endif %}
     </div>
 
 {% endblock %}
