@@ -33,6 +33,7 @@ use Claroline\CoreBundle\Manager\MailManager;
 use Claroline\CoreBundle\Form\Administration as AdminForm;
 use Claroline\CoreBundle\Manager\CacheManager;
 use Claroline\CoreBundle\Library\Installation\Refresher;
+use Claroline\CoreBundle\Manager\HwiManager;
 
 /**
  * @DI\Tag("security.secure_service")
@@ -53,6 +54,7 @@ class ParametersController extends Controller
     private $cacheManager;
     private $dbSessionValidator;
     private $refresher;
+    private $hwiManager;
 
     /**
      * @DI\InjectParams({
@@ -67,7 +69,8 @@ class ParametersController extends Controller
      *     "cacheManager"       = @DI\Inject("claroline.manager.cache_manager"),
      *     "contentManager"     = @DI\Inject("claroline.manager.content_manager"),
      *     "sessionValidator"   = @DI\Inject("claroline.session.database_validator"),
-     *     "refresher"          = @DI\Inject("claroline.installation.refresher")
+     *     "refresher"          = @DI\Inject("claroline.installation.refresher"),
+     *     "hwiManager"         = @DI\Inject("claroline.manager.hwi_manager")
      * })
      */
     public function __construct(
@@ -82,7 +85,8 @@ class ParametersController extends Controller
         ContentManager $contentManager,
         CacheManager $cacheManager,
         DatabaseSessionValidator $sessionValidator,
-        Refresher $refresher
+        Refresher $refresher,
+        HwiManager $hwiManager
     )
     {
         $this->configHandler = $configHandler;
@@ -97,6 +101,7 @@ class ParametersController extends Controller
         $this->cacheManager = $cacheManager;
         $this->dbSessionValidator = $sessionValidator;
         $this->refresher = $refresher;
+        $this->hwiManager = $hwiManager;
     }
 
     /**
@@ -720,9 +725,18 @@ class ParametersController extends Controller
                 'facebook_client_secret' => $form['facebook_client_secret']->getData()
             );
 
-            $this->configHandler->setParameters($data);
+            $errors = $this->hwiManager->validateFacebook($data['facebook_client_id'], $data['facebook_client_secret']);
 
-            return $this->redirect($this->generateUrl('claro_admin_index'));
+            if (count($errors) === 0) {
+                $this->configHandler->setParameters($data);
+
+                return $this->redirect($this->generateUrl('claro_admin_index'));
+            }
+
+            foreach ($errors as  $error) {
+                $trans = $this->translator->trans($error, array(), 'platform');
+                $form->addError(new FormError($trans));
+            }
         }
 
         return array('form' => $form->createView());
