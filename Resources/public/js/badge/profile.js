@@ -43,12 +43,16 @@
         };
         clarobadgeDragOptions.start = function(event, ui) {
             var collectionContainer = $(event.target).parents('li.collection');
-            $(event.target).before(collectionContainer.find(".loading_badge"));
+            $(event.target)
+                .before(collectionContainer.find(".loading_badge"))
+                .data("dropped", false);
             collectionContainer.after(deletingCollectionBadgeElement);
             deletingCollectionBadgeElement.show();
         };
         clarobadgeDragOptions.stop = function(event, ui) {
-            deletingCollectionBadgeElement.hide("fast");
+            if (!$(event.target).data("dropped")) {
+                deletingCollectionBadgeElement.hide("fast");
+            }
         };
         $(".clarobadge").draggable(clarobadgeDragOptions);
 
@@ -57,7 +61,8 @@
             accept:      ".clarobadge"
         };
         clarobagdeDeleteDropOptions.drop = function(event, ui) {
-            deleteBadgeFromCollection($(event.target), $(ui.draggable));
+            var draggable = $(ui.draggable).data("dropped", true);
+            deleteBadgeFromCollection($(event.target), draggable);
         };
         deletingCollectionBadgeElement.droppable(clarobagdeDeleteDropOptions);
         deletingCollectionBadgeElement.hide();
@@ -94,7 +99,7 @@
                     });
                 })
                 .fail(function() {
-                    console.log("error removing badge to collection");
+                    displayError('remove_badge_from_collection_error');
                     draggable.animate({'top':'0px', 'left': '0px'}, 500, 'easeInOutCubic');
                     draggable.effect("highlight", {color: '#d9534f'}, 1500);
                     $("img", droppingZone).hide();
@@ -166,11 +171,11 @@
                     doAddBadgeToCollection(collectionContainer, badgeElement);
                 })
                 .fail(function() {
+                    displayError('add_badge_to_collection_error');
                     if (0 == nbBadges) {
                         collectionContainer.find(".no_badge").show();
                     }
                     loadingBadge.hide();
-                    console.log("error adding badge to collection");
                 });
         }
 
@@ -266,7 +271,7 @@
                     doUpdateCollectionTitle(collectionContainer);
                 })
                 .fail(function() {
-                    console.log("error update collection");
+                    displayError('edit_title_collection_error');
                 })
                 .always(function () {
                     editButton.button('reset');
@@ -331,7 +336,7 @@
                     deleteCollection(collectionContainer);
                 })
                 .fail(function() {
-                    console.log("error delete collection");
+                    displayError('delete_collection_error');
                 })
                 .always(function() {
                     deletingCollectionElement.hide("fast");
