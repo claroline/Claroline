@@ -11,12 +11,13 @@
     "use strict";
 
     $(function() {
-        var addCollectionButton       = $("#add_collection");
-        var collectionsList           = $("#collections_list");
-        var newCollectionTemplate     = collectionsList.attr("data-collection-template");
-        var apiUrl                    = collectionsList.attr("data-action-url");
-        var noCollectionElement       = $("#no_collection");
-        var deletingCollectionElement = $("#deleting_collection");
+        var addCollectionButton            = $("#add_collection");
+        var collectionsList                = $("#collections_list");
+        var newCollectionTemplate          = collectionsList.attr("data-collection-template");
+        var apiUrl                         = collectionsList.attr("data-action-url");
+        var noCollectionElement            = $("#no_collection");
+        var deletingCollectionElement      = $("#deleting_collection");
+        var deletingCollectionBadgeElement = $(collectionsList.attr("data-delete-collection-badge-template"));
 
         $(".badge_container").draggable({
             helper: "clone",
@@ -27,22 +28,80 @@
         });
 
         var clarobadgeDragOptions = {
-            helper: "clone",
             scroll: false,
-            cursor: "move",
-            zIndex: 100
+            revert: "invalid",
+            cursor: "move"
+        };
+        clarobadgeDragOptions.start = function(event, ui) {
+            var collectionContainer = $(event.target).parents('li.collection');
+            $(event.target).before(collectionContainer.find(".loading_badge"));
+            collectionContainer.after(deletingCollectionBadgeElement);
+            deletingCollectionBadgeElement.show();
         };
         $(".clarobadge").draggable(clarobadgeDragOptions);
+
+        var clarobagdeDeleteDropOptions = {
+            hoverClass:  "drag_hover",
+            accept:      ".clarobadge"
+        };
+        clarobagdeDeleteDropOptions.drop = function(event, ui) {
+            deleteBadgeFromCollection($(event.target), $(ui.draggable));
+        };
+        deletingCollectionBadgeElement.droppable(clarobagdeDeleteDropOptions);
+        deletingCollectionBadgeElement.hide();
+
+        function deleteBadgeFromCollection(droppingZone, draggable) {
+            $("span", droppingZone).hide();
+            $("img", droppingZone).show();
+            var collectionContainer = $(".collection[data-id=" + draggable.attr("data-collection-id") + "]");
+
+            var badges = {};
+            $(".badges .clarobadge", collectionContainer).each(function(index, element) {
+                badges[index + 1] = $(element).attr("data-id");
+            });
+            delete badges[draggable.attr("data-id")];
+
+            var collectionUpdateRequest = $.ajax({
+                url: apiUrl + collectionContainer.attr("data-id"),
+                type: 'PUT',
+                data: {
+                    'badge_collection_form[name]':   $(".collection_title_input", collectionContainer).val(),
+                    'badge_collection_form[badges]': badges
+                }
+            });
+
+            collectionUpdateRequest
+                .success(function(data) {
+                    draggable.hide("fast", function() {
+                        $(this).remove();
+
+                        var nbBadges = $(".badges .clarobadge", collectionContainer).length;
+                        if (0 == nbBadges) {
+                            $(".no_badge", collectionContainer).show();
+                        }
+                    });
+                })
+                .fail(function() {
+                    console.log("error removing badge to collection");
+                    draggable.animate({'top':'0px', 'left': '0px'}, 500, 'easeInOutCubic');
+                    draggable.effect("highlight", {color: '#d9534f'}, 1500);
+                    $("img", droppingZone).hide();
+                    $("span", droppingZone).show();
+                })
+                .always(function() {
+                    $("img", droppingZone).hide();
+                    $("span", droppingZone).show();
+                    deletingCollectionBadgeElement.hide("slow");
+                });
+        }
 
         var dropOptions = {
             activeClass: "collection_state_drag_start",
             hoverClass:  "collection_state_hover",
-            drop:        onDrop,
             accept:      ".badge_container"
         };
 
-
-        function onDrop(event, ui) {
+        dropOptions.drop = function (event, ui) {
             var droppingZone = $(event.target);
 
             if (droppingZone.hasClass('editing')) {
@@ -63,6 +122,8 @@
                 }
             });
         }
+
+        $(".collection").droppable(dropOptions);
 
         function addBadgeToCollection(collectionContainer, badgeElement) {
             var nbBadges = collectionContainer.find(".clarobadge").length;
@@ -103,15 +164,13 @@
 
         function doAddBadgeToCollection(collectionContainer, badgeElement) {
             $(".loading_badge", collectionContainer).fadeOut("fast", function() {
-                var badgeTemplate = $('<li class="clarobadge" data-id="' + badgeElement.attr("data-id") + '">' + badgeElement.attr("data-image") + '</li>');
+                var badgeTemplate = $('<li class="clarobadge" data-id="' + badgeElement.attr("data-id") + '" data-collection-id="' + collectionContainer.attr("data-id") + '">' + badgeElement.attr("data-image") + '</li>');
 
                 badgeTemplate.draggable(clarobadgeDragOptions);
 
                 $(this).before(badgeTemplate);
             });
         }
-
-        $(".collection").droppable(dropOptions);
 
         addCollectionButton.click(function(event) {
             var addButton = $(this);
@@ -152,7 +211,7 @@
                 .appendTo($("#collections_list"))
                 .show('fast');
 
-            collectionsList.animate({scrollTop: newCollection.offset().top}, 500,'easeInOutCubic');
+            collectionsList.animate({scrollTop: newCollection.offset().top}, 500, 'easeInOutCubic');
 
             $(".btn-delete", newCollection).confirmModal({'confirmCallback': confirmDeleteCollection});
         }

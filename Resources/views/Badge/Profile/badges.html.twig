@@ -82,8 +82,10 @@
                                 <li class="no_badge">' ~ 'no_badges'|trans ~ '</li>
                             </ul>
                         </li>' %}
+                    {% set deleteCollectionBadgeTemplate = '<li class="deleting_collection_badge well" id="deleting_collection_badge"><p class="text-center"><span class="icon-trash"></span><img src="' ~ asset('bundles/clarolinecore/images/loading.gif') ~ '" alt="Loading" style="display: none"/></p></li>' %}
                     <ul class="list-unstyled collections_list" id="collections_list"
                         data-collection-template="{{ collectionTemplate }}"
+                        data-delete-collection-badge-template="{{ deleteCollectionBadgeTemplate }}"
                         data-action-url="{{ path('claro_badge_collection_add') }}">
                         {% for collection in badgeCollections %}
                             <li class="collection well" data-id="{{ collection.id }}">
@@ -115,7 +117,7 @@
                                 </header>
                                 <ul class="list-inline badges">
                                     {% for badge in collection.badges %}
-                                        <li class="clarobadge" data-id="{{ badge.id }}"><img class="badge_image_mini" src="{{ asset(badge.webPath) }}" alt="{{ badge.name(language) }}" /></li>
+                                        <li class="clarobadge" data-id="{{ badge.id }}" data-collection-id="{{ collection.id }}"><img class="badge_image_mini" src="{{ asset(badge.webPath) }}" alt="{{ badge.name(language) }}" /></li>
                                     {% endfor %}
                                     <li class="loading_badge" style="display: none"><img src="{{ asset('bundles/clarolinecore/images/loading.gif') }}" alt="Loading" /></li>
                                     <li class="no_badge"{% if 0 < collection.badges|length %} style="display: none"{% endif %}>{{ 'no_badges'|trans }}</li>
@@ -126,7 +128,7 @@
                             <p class="collection_title text-center">{{ 'no_collection'|trans }}</p>
                         </li>
                         <li class="deleting_collection well" id="deleting_collection" style="display: none">
-                            <p class="collection_title text-center"><img src="{{ asset('bundles/clarolinecore/images/loading.gif') }}" alt="Loading" /></p>
+                            <p class="text-center"><img src="{{ asset('bundles/clarolinecore/images/loading.gif') }}" alt="Loading" /></p>
                         </li>
                     </ul>
                 </div>
