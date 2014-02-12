@@ -57,14 +57,17 @@
         });
 
         var dayClickWorkspace = function (date) {
+            $('#myModalLabel').text(Translator.get('agenda' + ':' + 'add_event'));
             clickedDate = date;
             $('#deleteBtn').hide();
             $('#save').show();
             $('#updateBtn').hide();
             $('#agenda_form').find('input:text, input:password, input:file, select, textarea').val('');
+            $('#agenda_form').find('input:text, input:password, input:file, select, textarea').removeAttr('disabled');
             $('#agenda_form').find('input:radio, input:checkbox')
                 .removeAttr('checked')
-                .removeAttr('selected');
+                .removeAttr('selected')
+                .removeAttr('disabled');
             $('#myModalLabel').text(Translator.get('agenda' + ':' + 'add_event'));
             $('.hours').each(function() {
                 $(this).val('00:00');
@@ -72,13 +75,16 @@
             $('#myModal').modal();
         };
         var dayClickDesktop = function (date) {
+            $('#myModalLabel').text(Translator.get('agenda' + ':' + 'add_event'));
             $('#deleteBtn').hide();
             $('#save').show();
             $('#updateBtn').hide();
             $('#agenda_form').find('input:text, input:password, input:file, select, textarea').val('');
+            $('#agenda_form').find('input:text, input:password, input:file, select, textarea').removeAttr('disabled');
             $('#agenda_form').find('input:radio, input:checkbox')
                 .removeAttr('checked')
-                .removeAttr('selected');
+                .removeAttr('selected')
+                .removeAttr('disabled');
             $('.hours').each(function() {
                 $(this).val('00:00');
             });
@@ -174,7 +180,6 @@
                 var allDay = $('#agenda_form_allDay').attr('checked') === 'checked' ? 1 : 0;
                 data.append('agenda_form[allDay]', allDay);
                 url = $('a#update').attr('href');
-                //$('.popover').popover('hide');
                 $.ajax({
                     'url': url,
                     'type': 'POST',
@@ -240,25 +245,24 @@
             task = 'task';
             var list = e.target.parentElement.children;
             $('#myModal').modal('show');
-            id = $(list[5])[0].innerHTML;
+            id = $(list[3])[0].innerHTML;
             $('#agenda_form').find('input:text, input:password, input:file, select, textarea').val('');
             $('#myModalLabel').text(Translator.get('agenda' + ':' + 'modify'));
             $('#agenda_form_title')
                 .attr('value', $(e.target.parentElement.parentElement.children)[1].innerHTML);
-            var hours = $(list[0])[0].innerHTML;
-            hours = hours.split(' ');
-            $('#agenda_form_start').val(hours[1]);
-            $('#agenda_form_startHours').val(hours[2]);
-            hours = $(list[1])[0].innerHTML;
-            hours = hours.split(' ');
-            $('#agenda_form_end').val(hours[1]);
-            $('#agenda_form_endHours').val(hours[2]);
-            $('#agenda_form_description').val($(list[2])[0].innerHTML);
-            if( $(list[3])[0].innerHTML == 1)
+            var description = $(list[0])[0].innerHTML == t('no_description') ? '' : $(list[0])[0].innerHTML;
+            console.debug(t('no_description'));
+            $('#agenda_form_description').val(description);
+            console.debug( $(e.target.parentElement.parentElement.children));
+            if( $(list[1])[0].innerHTML == 1)
             {
                 $('#agenda_form_allDay').attr('checked', true);
+                $('#agenda_form_start').attr('disabled','disabled');
+                $('#agenda_form_startHours').attr('disabled','disabled');
+                $('#agenda_form_endHours').attr('disabled','disabled');
+                $('#agenda_form_end').attr('disabled','disabled');
             }
-            $('#agenda_form_priority option[value=' + $(list[3])[0].innerHTML + ']').attr('selected', 'selected');
+            $('#agenda_form_priority option[value=' + $(list[2])[0].innerHTML + ']').attr('selected', 'selected');
         });
         function dropEvent(event, dayDelta, minuteDelta) {
             $.ajax({
@@ -304,8 +308,7 @@
             }
             $('#myModalLabel').text(Translator.get('agenda' + ':' + 'modify'));
             var title = calEvent.title;
-            if (context === 'desktop')
-            {
+            if (context === 'desktop') {
                 var reg = new RegExp('[:]+', 'g');
                 title = title.split(reg);
                 $('#agenda_form_title').attr('value', title[1]);
@@ -317,7 +320,6 @@
             var pickedDate = new Date(calEvent.start);
             $('#agenda_form_start').val($.fullCalendar.formatDate( pickedDate,'dd-MM-yyyy'));
             $('#agenda_form_startHours').val($.fullCalendar.formatDate( pickedDate,'HH:mm'));
-            console.debug(calEvent.end);
             if (calEvent.end === null) {
                 $('#agenda_form_end').val($.fullCalendar.formatDate( pickedDate,'dd-MM-yyyy'));
                 $('#agenda_form_endHours').val('00:00');
@@ -429,8 +431,8 @@
                     content:  '<a href="#" data-target="#myModal" role="button" data-toggle="modal" class="launch" data-id='+event.id+'>'+
                         Translator.get('platform' + ':' + 'edit')+'</a>'+
                         ' <div>'+t('agenda_form_start') +' : '+
-                        $.fullCalendar.formatDate(event.start ,'dd-MM-yyyy hh:mm') + '</div>'+
-                        '<div class="mypopo' + event.id + '">'+t('agenda_form_end') +':'  + $.fullCalendar.formatDate(event.end ,'dd-MM-yyyy hh:mm') +'</div>' +'<br />Description: ' + event.description,
+                        $.fullCalendar.formatDate(event.start ,'dd-MM-yyyy HH:mm') + '</div>'+
+                        '<div class="mypopo' + event.id + '">'+t('agenda_form_end') +':'  + $.fullCalendar.formatDate(event.end ,'dd-MM-yyyy HH:mm') +'</div>' +'<br />Description: ' + event.description,
                     html:true,
                     container:'body'
                 });

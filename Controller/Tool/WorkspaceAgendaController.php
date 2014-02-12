@@ -91,14 +91,15 @@ class WorkspaceAgendaController extends Controller
                     $this->calculRecurrency($event);
                 }
                 $this->om->flush();
+                $start = is_null($event->getStart())? null : $event->getStart()->getTimestamp();
+                $end = is_null($event->getEnd())? null : $event->getEnd()->getTimestamp();
                 $data = array(
                     'id' => $event->getId(),
                     'title' => $event->getTitle(),
-                    'start' => $event->getStart()->getTimestamp(),
-                    'end' => $event->getEnd()->getTimestamp(),
+                    'start' => $start,
+                    'end' => $end,
                     'color' => $event->getPriority(),
-                    'allDay' => $event->getAllDay(),
-                    'description' => $event->getDescription()
+                    'allDay' => $event->getAllDay()
                 );
 
                 return new Response(
