@@ -32,6 +32,7 @@
         "behat/mink-goutte-driver": "1.0.*",
         "phpunit/phpunit": "3.7.*",
         "behat/behat": "*",
+        "behat/mink": "~1.5.0",
         "behat/symfony2-extension": "*",
         "behat/mink-extension": "~1.3"
     },
