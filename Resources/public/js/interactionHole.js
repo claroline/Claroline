@@ -65,7 +65,10 @@ function addFormHoleEdit(add, response, point, size, orthography, del, selector,
             .append('<table id="tabWR_' + index + '"><tbody></tbody></table>' + addwr);
     
         $('#add_keyword_' + index).click(function (e) {
-            var ind = $(this).parents(".trHole").index();
+            //var ind = $(this).parents(".trHole").index();
+            var ind = $(this).parents(".trHole").find('td:first').find('input:first').attr('id').valueOf();
+            ind = ind.replace('ujm_exobundle_interactionholetype_holes_', '');
+            ind = ind.replace('_position', '');
             var idTabWR = $(this).attr('id');
             idTabWR = idTabWR.replace('add_keyword_', '');
             
@@ -154,18 +157,18 @@ function createHole() {
 function addHole(indexBlank, valHole) {
     var uniqChoiceID = false;
 
-    var index = $('#newTable').find('.trHole').length;
-    //var index = indexBlank;
+    //var index = $('#newTable').find('.trHole').length;
+    var index = indexBlank;
 
     $('#newTable').find('tbody').append('<tr class="trHole"></tr>');
 
-    while (uniqChoiceID == false) {
+    /*while (uniqChoiceID == false) {
         if ($('#ujm_exobundle_interactionholetype_holes_' + index + '_label').length) {
             index++;
         } else {
             uniqChoiceID = true;
         }
-    }
+    }*/
 
     container.append(
         $(container.attr('data-prototype').replace(/__name__/g, index))

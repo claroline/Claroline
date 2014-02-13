@@ -44,7 +44,7 @@ use Doctrine\ORM\EntityManager;
 use Claroline\CoreBundle\Entity\User;
 
 use UJM\ExoBundle\Entity\InteractionHole;
-use UJM\ExoBundle\Entity\Exercise;
+use UJM\ExoBundle\Entity\WordResponse;
 
 class InteractionHoleHandler {
     protected $form;
@@ -124,10 +124,14 @@ class InteractionHoleHandler {
     {
         $originalHoles = array();
         $originalHints = array();
+        $originalWRs   = array();
 
         // Create an array of the current Choice objects in the database
         foreach ($originalInterHole->getHoles() as $hole) {
             $originalHoles[] = $hole;
+            foreach($hole->getWordResponses() as $wr){
+                $originalWRs[$hole->getId()][] = $wr->getId();
+            }
         }
         foreach ($originalInterHole->getInteraction()->getHints() as $hint) {
             $originalHints[] = $hint;
@@ -146,7 +150,7 @@ class InteractionHoleHandler {
                         }
                     }
                 }
-                $this->onSuccessUpdate($this->form->getData(), $originalHoles, $originalHints);
+                $this->onSuccessUpdate($this->form->getData(), $originalHoles, $originalWRs, $originalHints);
 
                 return true;
             }
@@ -155,7 +159,7 @@ class InteractionHoleHandler {
         return false;
     }
 
-    private function onSuccessUpdate(InteractionHole $interHole, $originalHoles, $originalHints)
+    private function onSuccessUpdate(InteractionHole $interHole, $originalHoles, $originalWRs, $originalHints)
     {
         // filter $originalHoles to contain hole no longer present
         foreach ($interHole->getHoles() as $hole) {
@@ -163,17 +167,19 @@ class InteractionHoleHandler {
                 if ($toDel->getId() == $hole->getId()) {
                     unset($originalHoles[$key]);
                     //todo del wr no yet used
-                    $originalWRs[] = $toDel->getWordResponses();
-                    $wrs[] = $hole->getWordResponses();
+                    $originalWRsColl = $originalWRs[$toDel->getId()];
+                    $wrs = $hole->getWordResponses();
                     foreach ($wrs as $wr) {
-                        foreach ($originalWRs as $key => $toDel) {
-                            if ($toDel->getId() == $wr->getId()) {
-                                unset($originalWRs[$key]);
+                        foreach ($originalWRsColl as $key => $toDel) {
+                            if ($toDel == $wr->getId()) {
+                                unset($originalWRsColl[$key]);
                             }
                         }
                     }
+                    
                     // remove the relationship between the wr and hole
-                    foreach ($originalWRs as $wr) {
+                    foreach ($originalWRsColl as $wrID) {
+                        $wr = $this->em->getRepository('UJMExoBundle:WordResponse')->find($wrID);
                         // remove the hole from the interactionhole
                         $hole->getWordResponses()->removeElement($wr);
 
