@@ -48,6 +48,7 @@ class InstallationManager
 
     public function install(InstallableInterface $bundle, $requiredOnly = true)
     {
+        $this->log("<comment>Installing {$bundle->getName()}...</comment>");
         $additionalInstaller = $this->getAdditionalInstaller($bundle);
 
         if ($additionalInstaller) {
@@ -78,6 +79,7 @@ class InstallationManager
 
     public function update(InstallableInterface $bundle, $currentVersion, $targetVersion)
     {
+        $this->log("<comment>Updating {$bundle->getName()}...</comment>");
         $additionalInstaller = $this->getAdditionalInstaller($bundle);
 
         if ($additionalInstaller) {
@@ -98,6 +100,7 @@ class InstallationManager
 
     public function uninstall(InstallableInterface $bundle)
     {
+        $this->log("<comment>Uninstalling {$bundle->getName()}...</comment>");
         $additionalInstaller = $this->getAdditionalInstaller($bundle);
 
         if ($additionalInstaller) {
