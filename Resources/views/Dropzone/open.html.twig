@@ -191,6 +191,10 @@
                                     Note : {% include 'IcapDropzoneBundle:Drop:dropsTotalGrade.html.twig' %}
                                 </div>
                             {% endif %}
+                            {% if dropzone.diplayCorrectionsToLearners %}
+                                <a href="{{ path('',{'ressourceId': dropzone.id}) }}" class="">{{ 'See Corrections'|trans({},'icap_dropzone') }}</a>
+                            {% endif %}
+
                         </div>
                     {% else %}
                         <div class='text-danger'>

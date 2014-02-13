@@ -404,6 +404,53 @@ class DropController extends DropzoneBaseController
 
     /**
      * @Route(
+     *      "/{resourceId}/drop/detail/{dropId}",
+     *      name="icap_dropzone_drop_detail_by_user",
+     *      requirements={"resourceId" = "\d+", "dropId" = "\d+"}
+     * )
+     * @ParamConverter("dropzone", class="IcapDropzoneBundle:Dropzone", options={"id" = "resourceId"})
+     * @ParamConverter("drop", class="IcapDropzoneBundle:Drop", options={"id" = "dropId"})
+     * @Template()
+     */
+    public function dropDetailAction($dropzone,$drop)
+    {
+        // check  if the User is allowed to open the dropZone.
+        $this->isAllowToOpen($dropzone);
+        // getting the userId to check if the current drop owner match with the loggued user.
+        $userId = $this->get('security.context')->getToken()->getUser()->getId();
+
+        // getting the data
+        $drop = $this->getDoctrine()
+            ->getRepository('IcapDropzoneBundle:Drop')
+            ->getDropAndValidEndedCorrectionsAndDocumentsByUser($dropzone,$drop->getId(),$userId);
+
+        // if there is no result ( user is not the owner, or the drop has not ended Corrections , show 404)
+        if(count($drop) == 0)
+        {
+            throw new NotFoundHttpException(); 
+        }else
+        {
+            $drop = $drop[0];
+        }
+        /*
+        $corrections = $drop->getCorrections();
+        echo count($corrections);
+        var_dump($corrections);
+        die;
+        */
+        return array(
+            'workspace' => $dropzone->getResourceNode()->getWorkspace(),
+            '_resource' => $dropzone,
+            'dropzone' => $dropzone,
+            'drop' => $drop
+        );
+    }
+
+
+
+
+    /**
+     * @Route(
      *      "/{resourceId}/report/drop/{dropId}/{correctionId}",
      *      name="icap_dropzone_report_drop",
      *      requirements={"resourceId" = "\d+", "dropId" = "\d+", "correctionId" = "\d+"}

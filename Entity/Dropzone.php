@@ -105,6 +105,15 @@ class Dropzone extends AbstractResource {
      * @ORM\Column(name="allow_comment_in_correction", type="boolean", nullable=false)
      */
     protected $allowCommentInCorrection = false;
+
+    /**
+     * @var bool
+     * @ORM\Column(name="visibleCorrections",type="boolean",nullable=false)
+     *
+     * Defini si oui ou non les corrections faites par les pairs sont visibles par le possesseur de la copie corrigé.
+     * les corrections devront cependant rester anonyme.
+     */
+    protected $diplayCorrectionsToLearners= false;
     /**
      * @ORM\Column(name="total_criteria_column", type="smallint", nullable=false)
      * @Assert\LessThanOrEqual(value=10)
@@ -435,6 +444,23 @@ class Dropzone extends AbstractResource {
     public function setDisplayNotationToLearners($displayNotationToLearners)
     {
         $this->displayNotationToLearners = $displayNotationToLearners;
+    }
+
+
+    /**
+     * @return mixed
+     */
+    public function getDiplayCorrectionsToLearners()
+    {
+        return $this->diplayCorrectionsToLearners;
+    }
+
+    /**
+     * @param mixed $displayNotationToLearners
+     */
+    public function setDiplayCorrectionsToLearners($diplayCorrectionsToLearners)
+    {
+        $this->diplayCorrectionsToLearners = $diplayCorrectionsToLearners;
     }
 
     /**

@@ -54,6 +54,14 @@ class DropzoneBaseController extends Controller
         $this->dispatch($event);
     }
 
+    protected function isAllowToOpenDrop(Drop $drop)
+    {
+        $collection = new ResourceCollection(array($drop->getResourceNode()));
+        if (false === $this->get('security.context')->isGranted('OPEN', $collection)) {
+            throw new AccessDeniedException();
+        }
+    }
+
     protected function dispatch($event)
     {
         if (

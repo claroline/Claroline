@@ -481,6 +481,8 @@ class CorrectionController extends DropzoneBaseController
         );
     }
 
+
+
     /**
      * @Route(
      *      "/{resourceId}/drops/detail/correction/standard/{state}/{correctionId}",
@@ -573,13 +575,13 @@ class CorrectionController extends DropzoneBaseController
      * @Route(
      *      "/{resourceId}/drops/detail/correction/{state}/{correctionId}",
      *      name="icap_dropzone_drops_detail_correction",
-     *      requirements={"resourceId" = "\d+", "correctionId" = "\d+", "state" = "show|edit"},
+     *      requirements={"resourceId" = "\d+", "correctionId" = "\d+", "state" = "show|edit|preview"},
      *      defaults={"page" = 1}
      * )
      * @Route(
      *      "/{resourceId}/drops/detail/correction/{state}/{correctionId}/{page}",
      *      name="icap_dropzone_drops_detail_correction_paginated",
-     *      requirements={"resourceId" = "\d+", "correctionId" = "\d+", "page" = "\d+", "state" = "show|edit"}
+     *      requirements={"resourceId" = "\d+", "correctionId" = "\d+", "page" = "\d+", "state" = "show|edit|preview"}
      * )
      * @ParamConverter("dropzone", class="IcapDropzoneBundle:Dropzone", options={"id" = "resourceId"})
      * @ParamConverter("user", options={
@@ -593,7 +595,11 @@ class CorrectionController extends DropzoneBaseController
     public function dropsDetailCorrectionAction(Dropzone $dropzone, $state, $correctionId, $page, $user)
     {
         $this->isAllowToOpen($dropzone);
-        $this->isAllowToEdit($dropzone);
+        if($state != 'preview')
+        {
+            $this->isAllowToEdit($dropzone);
+        }
+        
 
         if (!$dropzone->getPeerReview()) {
             return $this->redirect(
@@ -656,6 +662,8 @@ class CorrectionController extends DropzoneBaseController
         );
 
         if ($edit) {
+            var_dump($edit);
+            die;
             if ($this->getRequest()->isMethod('POST') and $correction !== null) {
                 $form->handleRequest($this->getRequest());
                 if ($form->isValid()) {
@@ -719,27 +727,47 @@ class CorrectionController extends DropzoneBaseController
 
         $view = 'IcapDropzoneBundle:Correction:correctCriteria.html.twig';
 
-        return $this->render(
-            $view,
-            array(
-                'workspace' => $dropzone->getResourceNode()->getWorkspace(),
-                '_resource' => $dropzone,
-                'dropzone' => $dropzone,
-                'correction' => $correction,
-                'pager' => $pager,
-                'form' => $form->createView(),
-                'admin' => true,
-                'edit' => $edit,
-                'state' => $state
-            )
-        );
+        if($state =='show')
+        {
+                return $this->render(
+                    $view,
+                    array(
+                        'workspace' => $dropzone->getResourceNode()->getWorkspace(),
+                        '_resource' => $dropzone,
+                        'dropzone' => $dropzone,
+                        'correction' => $correction,
+                        'pager' => $pager,
+                        'form' => $form->createView(),
+                        'admin' => true,
+                        'edit' => $edit,
+                        'state' => $state
+                    )
+                );
+        }else if( $state == 'preview')
+        {
+                return $this->render(
+                    $view,
+                    array(
+                        'workspace' => $dropzone->getResourceNode()->getWorkspace(),
+                        '_resource' => $dropzone,
+                        'dropzone' => $dropzone,
+                        'correction' => $correction,
+                        'pager' => $pager,
+                        'form' => $form->createView(),
+                        'admin' => false,
+                        'edit' => false,
+                        'state' => $state
+                    )
+                );           
+        }
+
     }
 
     /**
      * @Route(
      *      "/{resourceId}/drops/detail/correction/comment/{state}/{correctionId}",
      *      name="icap_dropzone_drops_detail_correction_comment",
-     *      requirements={"resourceId" = "\d+", "correctionId" = "\d+", "state" = "show|edit"}
+     *      requirements={"resourceId" = "\d+", "correctionId" = "\d+", "state" = "show|edit|preview"}
      * )
      * @ParamConverter("dropzone", class="IcapDropzoneBundle:Dropzone", options={"id" = "resourceId"})
      * @ParamConverter("user", options={
@@ -753,13 +781,15 @@ class CorrectionController extends DropzoneBaseController
     public function dropsDetailCorrectionCommentAction(Dropzone $dropzone, $state, $correctionId, $user)
     {
         $this->isAllowToOpen($dropzone);
-        $this->isAllowToEdit($dropzone);
+        if($state != 'preview')
+        {
+            $this->isAllowToEdit($dropzone);
+        }
 
         $correction = $this
             ->getDoctrine()
             ->getRepository('IcapDropzoneBundle:Correction')
             ->getCorrectionAndDropAndUserAndDocuments($dropzone, $correctionId);
-
         $edit = $state == 'edit';
 
         if ($edit === true and $correction->getEditable() === false) {
@@ -801,21 +831,41 @@ class CorrectionController extends DropzoneBaseController
         $view = 'IcapDropzoneBundle:Correction:correctComment.html.twig';
         $totalGrade = $this->calculateCorrectionTotalGrade($dropzone, $correction);
 
-        return $this->render(
-            $view,
-            array(
-                'workspace' => $dropzone->getResourceNode()->getWorkspace(),
-                '_resource' => $dropzone,
-                'dropzone' => $dropzone,
-                'correction' => $correction,
-                'form' => $form->createView(),
-                'nbPages' => $pager->getNbPages(),
-                'admin' => true,
-                'edit' => $edit,
-                'state' => $state,
-                'totalGrade' => $totalGrade,
-            )
-        );
+        if($state =='show')
+        {
+            return $this->render(
+                $view,
+                array(
+                    'workspace' => $dropzone->getResourceNode()->getWorkspace(),
+                    '_resource' => $dropzone,
+                    'dropzone' => $dropzone,
+                    'correction' => $correction,
+                    'form' => $form->createView(),
+                    'nbPages' => $pager->getNbPages(),
+                    'admin' => true,
+                    'edit' => $edit,
+                    'state' => $state,
+                    'totalGrade' => $totalGrade,
+                    )
+                );
+        }else if( $state == 'preview')
+        {
+            return $this->render(
+                $view,
+                array(
+                    'workspace' => $dropzone->getResourceNode()->getWorkspace(),
+                    '_resource' => $dropzone,
+                    'dropzone' => $dropzone,
+                    'correction' => $correction,
+                    'form' => $form->createView(),
+                    'nbPages' => $pager->getNbPages(),
+                    'admin' => false,
+                    'edit' => false,
+                    'state' => $state,
+                    'totalGrade' => $totalGrade,
+                    )
+                );           
+        }
     }
 
     /**

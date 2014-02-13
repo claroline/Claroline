@@ -87,7 +87,11 @@
         {% else %}
             <div class="row">
                 <div class="col-md-12">
-                    <h2>{{ 'Correcting a copy'|trans({}, 'icap_dropzone') }}</h2>
+                    {% if state =='preview' %}
+                        <h2>{{ 'Correction of your copy'|trans({}, 'icap_dropzone') }}</h2>
+                    {%  else %}
+                         <h2>{{ 'Correction'|trans({}, 'icap_dropzone') }}</h2>
+                    {% endif %}
                 </div>
             </div>
 
@@ -102,7 +106,7 @@
                                 {{ 'Relevant documents'|trans({}, 'icap_dropzone') }}
                             </div>
                             <div class="col-md-6">
-                                {%  if correction.dropzone.isPeerReview() and correction.dropzone.hasCriteria() %}
+                                {%  if correction.dropzone.isPeerReview() and correction.dropzone.hasCriteria() and state != 'preview' %}
                                     {% if correction.reporter == false %}
                                         <a href="{{ path('icap_dropzone_report_drop', {'resourceId': dropzone.id, 'dropId': correction.drop.id, 'correctionId': correction.id}) }}" class="btn btn-danger pull-right launch-modal">{{ 'Report'|trans({}, 'icap_dropzone') }}</a>
                                     {% else %}
@@ -113,7 +117,11 @@
                         </div>
                     </h3>
                 <p>
-                    {{ 'Here is the list of documents which you must correct'|trans({}, 'icap_dropzone') }}
+                    {%  if state == 'preview' %}
+                        {{ 'Here is the list of the corrected documents'|trans({}, 'icap_dropzone') }}
+                    {% else %}
+                        {{ 'Here is the list of documents which you must correct'|trans({}, 'icap_dropzone') }}
+                    {% endif %}
                 </p>
                 {% if correction.drop.documents|length > 0 %}
                     <ul>
@@ -132,6 +140,11 @@
             <div class="well">
                 {{ correction.reportComment|raw }}
             </div>
+            {% if state == 'preview' %}
+                <a href="{{ path('icap_dropzone_drop_detail_by_user', {'resourceId': dropzone.id,'dropId': correction.drop.id}) }}" class="btn btn-default">
+                    {{ 'Back to corrections'|trans({}, 'icap_dropzone') }}
+                </a>
+            {% endif %}
         {% else %}
             {% block dropzone_correct_content %}
             {% endblock %}
