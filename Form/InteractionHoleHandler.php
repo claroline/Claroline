@@ -107,6 +107,7 @@ class InteractionHoleHandler {
             $ord = $ord + 1;
         }
 
+        $this->htmlWithoutValue($interHole);
         $this->em->persist($interHole);
         $this->em->persist($interHole->getInteraction()->getQuestion());
         $this->em->persist($interHole->getInteraction());
@@ -217,6 +218,7 @@ class InteractionHoleHandler {
             $this->em->remove($hint);
         }
 
+        $this->htmlWithoutValue($interHole);
         $this->em->persist($interHole);
         $this->em->persist($interHole->getInteraction()->getQuestion());
         $this->em->persist($interHole->getInteraction());
@@ -238,6 +240,40 @@ class InteractionHoleHandler {
         }
 
         $this->em->flush();
+    }
+    
+    private function htmlWithoutValue($interHole)
+    {
+        $html = $interHole->getHtml();
+        $tabInputValue = explode('value="', $html);
+        $tabInputID = explode('id="', $html);
+        $tabHoles = array();
+
+        foreach($interHole->getHoles() as $hole)
+        {
+            $tabHoles[$hole->getPosition()] = $hole;
+        }
+        ksort($tabHoles);
+        
+        for( $i= 1; $i < count($tabInputValue); $i++)
+        {
+            if($tabHoles[$i]->getSelector() === false)
+            {
+                $inputValue = explode('"', $tabInputValue[$i]);
+                $regExpr = 'value="'.$inputValue[0].'"';
+                $html = str_replace($regExpr, 'value=""', $html);
+            }
+            else
+            {
+                $inputID = explode('"', $tabInputID[$i]);
+                $inputValue = explode('"', $tabInputValue[$i]);
+                $select = '<select id="'.$inputID[0].'"></select>';
+                $regExpr = '<input id="'.$inputID[0].'" class="blank" type="text" value="'.$inputValue[0].'" size="'.$tabHoles[$i]->getSize().'" />';
+                $html = str_replace($regExpr, $select, $html);
+            }
+        }
+        
+        $interHole->setHtmlWithoutValue($html);
     }
 }
 
