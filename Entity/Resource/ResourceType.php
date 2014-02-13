@@ -82,7 +82,7 @@ class ResourceType
     /**
      * @ORM\Column(type="integer")
      */
-    protected $defaultMask = 0;
+    protected $defaultMask = 1;
 
     /**
      * Constructor.
