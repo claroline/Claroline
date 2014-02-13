@@ -226,7 +226,8 @@
             newCollection
                 .droppable(dropOptions)
                 .appendTo($("#collections_list"))
-                .show('fast');
+                .show('fast')
+                .css("overflow", "visible"); // a bug in the jquery version we use add overflow hidden to the element at the end of the animation
 
             collectionsList.animate({scrollTop: newCollection.offset().top}, 500, 'easeInOutCubic');
 
