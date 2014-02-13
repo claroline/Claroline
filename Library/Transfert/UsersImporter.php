@@ -55,7 +55,7 @@ class UsersImporter implements ImporterInterface
         }
     }
 
-    public function valid(\DOMNodeList $node )
+    public function valid($array)
     {
 
     }
