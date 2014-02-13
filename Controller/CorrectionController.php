@@ -662,8 +662,6 @@ class CorrectionController extends DropzoneBaseController
         );
 
         if ($edit) {
-            var_dump($edit);
-            die;
             if ($this->getRequest()->isMethod('POST') and $correction !== null) {
                 $form->handleRequest($this->getRequest());
                 if ($form->isValid()) {
