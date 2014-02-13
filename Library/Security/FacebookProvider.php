@@ -21,17 +21,24 @@ class FacebookProvider implements OAuthAwareUserProviderInterface, UserProviderI
     
     private $em;
     private $userManager;
+    private $utilities;
 
     /**
      * @InjectParams({
      *   "em"          = @Inject("doctrine.orm.entity_manager"),
-     *   "userManager" = @Inject("claroline.manager.user_manager")
+     *   "userManager" = @Inject("claroline.manager.user_manager"),
+     *   "utilities"   = @Inject("claroline.utilities.misc")
      * })
      */ 
-    public function __construct($em, $userManager)
+    public function __construct(
+        $em,
+        $userManager,
+        $utilities
+    )
     {
         $this->em = $em;
         $this->userManager = $userManager;
+        $this->utilities = $utilities;
     }
 
     /**
@@ -64,14 +71,14 @@ class FacebookProvider implements OAuthAwareUserProviderInterface, UserProviderI
         try {
             $user = $this->loadUserByUsername($response->getEmail());
         } catch (\Exception $e) {
-
             $user = new User();
-            $user->setFirstName($response->getRealname());
-            $user->setLastName($response->getNickname());
-            $user->setUsername($response->getUsername());
-            $user->setPlainPassword('trololol');
+            $content = $response->getResponse();
+            $user->setFirstName($content['first_name']);
+            $user->setLastName($content['last_name']);
+            $user->setUsername($this->createUsername($response->getNickname()));
+            $user->setPlainPassword($this->utilities->generateGuid());
             $user->setMail($response->getEmail());
-            $this->userManager->createUser($user);
+            $user = $this->userManager->createUser($user);
         }
 
         return $user;
@@ -95,5 +102,16 @@ class FacebookProvider implements OAuthAwareUserProviderInterface, UserProviderI
     public function supportsClass($class)
     {
         return $this->getEntityName() === $class || is_subclass_of($class, $this->getEntityName());
+    }
+
+    private function createUsername($username)
+    {
+        $user = $this->em->getRepository('ClarolineCoreBundle:User')->findByName($username);
+
+        if (count($user) === 0) {
+            return ($username);
+        } else {
+            return $username . '#' . count($user);
+        }
     }
 }

@@ -68,7 +68,9 @@
         {% endif %}
     {% endspaceless %}
     </div>
-    <div id="fb-root"></div>
+    {% if is_facebook_available() %}
+        <div id="fb-root"></div>
+    {% endif %}
     <div id="wrap">
         <div class="please-wait">
             <h4><span class="label label-warning"> {{ 'please_wait'|trans({}, 'platform') }} </span></h4>
