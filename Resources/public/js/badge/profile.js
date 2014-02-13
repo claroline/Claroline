@@ -150,7 +150,7 @@
             }
 
             var loadingBadge = $(".loading_badge", collectionContainer);
-            loadingBadge.show("fast");
+            loadingBadge.appendTo(collectionContainer.find(".badges")).show("fast");
 
             var badges = {0: badgeElement.attr("data-id")};
             $(".badges .clarobadge", collectionContainer).each(function(index, element) {
