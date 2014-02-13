@@ -44,16 +44,18 @@ class Refresher
         $this->output = $output;
     }
 
-    public function refresh($environment)
+    public function refresh($environment, $clearCache = true)
     {
-        $output = $this->output ?: new NullOutput();
-        $this->installAssets($output);
-        $this->dumpAssets($environment, $output);
-        $this->compileGeneratedThemes($output);
-        $this->clearCache($environment, $output);
+        $this->installAssets();
+        $this->dumpAssets($environment);
+        $this->compileGeneratedThemes();
+
+        if ($clearCache) {
+            $this->clearCache($environment);
+        }
     }
 
-    public function installAssets(OutputInterface $output = null)
+    public function installAssets()
     {
         $webDir = "{$this->container->get('kernel')->getRootDir()}/../web";
         $args = array('target' => $webDir);
@@ -64,28 +66,33 @@ class Refresher
 
         $assetInstallCmd = new AssetsInstallCommand();
         $assetInstallCmd->setContainer($this->container);
-        $assetInstallCmd->run(new ArrayInput($args), $output ?: new NullOutput());
+        $assetInstallCmd->run(new ArrayInput($args), $this->output ?: new NullOutput());
     }
 
-    public function dumpAssets($environment, OutputInterface $output = null)
+    public function dumpAssets($environment)
     {
         $assetDumpCmd = new DumpCommand();
         $assetDumpCmd->setContainer($this->container);
         $assetDumpCmd->getDefinition()->addOption(
             new InputOption('--env', '-e', InputOption::VALUE_REQUIRED, 'Env', $environment)
         );
-        $assetDumpCmd->run(new ArrayInput(array()), $output ?: new NullOutput());
+        $assetDumpCmd->run(new ArrayInput(array()), $this->output ?: new NullOutput());
     }
 
-    public function clearCache($environment = null, OutputInterface $output = null)
+    public function clearCache($environment = null)
     {
-        if ($output) {
-            $output->writeln('Clearing the cache...');
+        if ($this->output) {
+            $this->output->writeln('Clearing the cache...');
         }
 
         $fileSystem = new Filesystem();
         $baseCacheDir = "{$this->container->get('kernel')->getRootDir()}/cache";
         $cacheDir = $environment === null ? $baseCacheDir : "{$baseCacheDir}/{$environment}";
+
+        if (!is_dir($cacheDir)) {
+            return;
+        }
+
         $cacheIterator = new \DirectoryIterator($cacheDir);
 
         foreach ($cacheIterator as $item) {
@@ -95,17 +102,17 @@ class Refresher
         }
     }
 
-    public function compileGeneratedThemes(OutputInterface $output = null)
+    public function compileGeneratedThemes()
     {
-        if ($output) {
-            $output->writeln('Re-compiling generated themes...');
+        if ($this->output) {
+            $this->output->writeln('Re-compiling generated themes...');
         }
 
         $themeService = $this->container->get('claroline.common.theme_service');
 
         foreach ($themeService->getThemes('less-generated') as $theme) {
-            if ($output) {
-                $output->writeln("    Compiling '{$theme->getName()}' theme...");
+            if ($this->output) {
+                $this->output->writeln("    Compiling '{$theme->getName()}' theme...");
             }
 
             $themeService->compileRaw(array($theme->getName()));
