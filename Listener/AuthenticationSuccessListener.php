@@ -131,7 +131,7 @@ class AuthenticationSuccessListener implements AuthenticationSuccessHandlerInter
             !$event->getRequest()->isXmlHttpRequest() &&
             !in_array($event->getRequest()->attributes->get('_route'), $this->getExcludedRoutes()) &&
             'GET' === $event->getRequest()->getMethod() &&
-            $event->getResponse()->getStatusCode() === 200
+            200 === $event->getResponse()->getStatusCode()
         ) {
 
             $token =  $this->securityContext->getToken();
