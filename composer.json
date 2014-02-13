@@ -47,13 +47,13 @@
         "natxet/CssMin": "dev-master",
         "werkint/jsmin": "dev-master",
         "nelmio/api-doc-bundle": "~2.4",
-
         "claroline/bundle-recorder": ">=2.0.2,<3.0",
         "claroline/kernel-bundle": "~1.0",
         "claroline/installation-bundle": ">=3.0.4,<4.0",
         "claroline/front-end-bundle": ">=1.0.8,<2.0",
         "claroline/migration-bundle": "~1.0",
-        "icap/notification-bundle": ">=1.0.0"
+        "icap/notification-bundle": ">=1.0.0",
+        "hwi/oauth-bundle": "0.4.*@dev"
     },
     "require-dev": {
         "mockery/mockery": "dev-master@dev",
