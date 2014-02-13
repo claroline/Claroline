@@ -243,7 +243,7 @@
                 <div id="award_users_container">
                     <h3 class="sub-section-header">
                         {{ 'badge_awarded_to'|trans }} :
-                        <a href="{{ path('claro_admin_badges_award', {'id': badge.id}) }}" id="awardUser" role="button" class="btn pull-right" data-toggle="tooltip" data-placement="left" title="{{ 'award_badge'|trans }}"><i class="icon-plus-sign"></i></a>
+                        <a href="{{ path('claro_workspace_tool_badges_award', {'workspaceId': workspace.id, 'id': badge.id}) }}" id="awardUser" role="button" class="btn pull-right" data-toggle="tooltip" data-placement="left" title="{{ 'award_badge'|trans }}"><i class="icon-plus-sign"></i></a>
                     </h3>
 
                     <table class="table">
@@ -287,7 +287,7 @@
                         {{ 'award_badge'|trans }} :
                     </h3>
 
-                    {{ render(controller('ClarolineCoreBundle:Badge/Tool/Workspace:award', { 'workspaceId': workspace.id, 'id': badge.id })) }}
+                    {{ render(controller('ClarolineCoreBundle:Badge/Tool/Workspace:award', {'workspaceId': workspace.id, 'id': badge.id })) }}
                 </div>
             </div>
         </div>

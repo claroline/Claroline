@@ -219,6 +219,6 @@ claro_oauth:
     type: annotation
 
 claro_administration_parameters:
-    prefix: administration
+    prefix: admin/parameters
     resource: "@ClarolineCoreBundle/Controller/Administration/ParametersController.php"
     type: annotation

@@ -13,6 +13,7 @@ apr: Apr
 april: April
 aug: Aug
 august: August
+cancel: cancel
 close: Close
 confirm: 'Confirm modification ?'
 date_invalid: 'An error occured. Please check that your event doesn''t end before it starts'
@@ -47,6 +48,7 @@ month: month
 next: '>'
 nextYear: '>>'
 'no event found': 'no event found'
+no_description: 'No description'
 nov: Nov
 november: November
 oct: Oct

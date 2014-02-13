@@ -24,38 +24,6 @@ class SessionType extends AbstractType
     public function __construct($sessionType = 'native')
     {
         $this->sessionType = $sessionType;
-        $this->formDisplay = array(
-            'native' => array(
-                'session_db_table' => false,
-                'session_db_id_col' => false,
-                'session_db_data_col' => false,
-                'session_db_dsn' => false,
-                'session_db_user' => false,
-                'session_db_password' => false,
-                'session_db_time_col' => false,
-                'cookie_lifetime' => true
-            ),
-            'claro_pdo' => array(
-                'session_db_table' => false,
-                'session_db_id_col' => false,
-                'session_db_data_col' => false,
-                'session_db_dsn' => false,
-                'session_db_user' => false,
-                'session_db_password' => false,
-                'session_db_time_col' => false,
-                'cookie_lifetime' => true
-            ),
-            'pdo' => array(
-                'session_db_table' => true,
-                'session_db_id_col' => true,
-                'session_db_data_col' => true,
-                'session_db_dsn' => true,
-                'session_db_user' => true,
-                'session_db_password' => true,
-                'session_db_time_col' => true,
-                'cookie_lifetime' => true
-            )
-        );
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
@@ -81,8 +49,8 @@ class SessionType extends AbstractType
                 array(
                     'label' => 'DSN',
                     'required' => false,
-                    'constraints' => new NotBlank(),
-                    'theme_options' => array('display_row' => $this->formDisplay[$this->sessionType]['session_db_dsn'])
+                    'constraints' => $this->notBlankIfPdo(),
+                    'theme_options' => $this->hiddenIfPdo()
                 )
             )
             ->add(
@@ -91,8 +59,8 @@ class SessionType extends AbstractType
                 array(
                     'label' => 'user',
                     'required' => false,
-                    'constraints' => new NotBlank(),
-                    'theme_options' => array('display_row' => $this->formDisplay[$this->sessionType]['session_db_user'])
+                    'constraints' => $this->notBlankIfPdo(),
+                    'theme_options' => $this->hiddenIfPdo()
                 )
             )
             ->add(
@@ -101,8 +69,7 @@ class SessionType extends AbstractType
                 array(
                     'label' => 'password',
                     'required' => false,
-                    'constraints' => new NotBlank(),
-                    'theme_options' => array('display_row' => $this->formDisplay[$this->sessionType]['session_db_password'])
+                    'theme_options' => $this->hiddenIfPdo()
                 )
             )
             ->add(
@@ -111,8 +78,8 @@ class SessionType extends AbstractType
                 array(
                     'label' => 'db_table',
                     'required' => false,
-                    'constraints' => new NotBlank(),
-                    'theme_options' => array('display_row' => $this->formDisplay[$this->sessionType]['session_db_table'])
+                    'constraints' => $this->notBlankIfPdo(),
+                    'theme_options' => $this->hiddenIfPdo()
                 )
             )
             ->add(
@@ -121,8 +88,8 @@ class SessionType extends AbstractType
                 array(
                     'label' => 'id_col',
                     'required' => false,
-                    'constraints' => new NotBlank(),
-                    'theme_options' => array('display_row' => $this->formDisplay[$this->sessionType]['session_db_id_col'])
+                    'constraints' => $this->notBlankIfPdo(),
+                    'theme_options' => $this->hiddenIfPdo()
                 )
             )
             ->add(
@@ -131,8 +98,8 @@ class SessionType extends AbstractType
                 array(
                     'label' => 'data_col',
                     'required' => false,
-                    'constraints' => new NotBlank(),
-                    'theme_options' => array('display_row' => $this->formDisplay[$this->sessionType]['session_db_data_col'])
+                    'constraints' => $this->notBlankIfPdo(),
+                    'theme_options' => $this->hiddenIfPdo()
                 )
             )
             ->add(
@@ -141,8 +108,8 @@ class SessionType extends AbstractType
                 array(
                     'label' => 'time_col',
                     'required' => false,
-                    'constraints' => new NotBlank(),
-                    'theme_options' => array('display_row' => $this->formDisplay[$this->sessionType]['session_db_time_col'])
+                    'constraints' => $this->notBlankIfPdo(),
+                    'theme_options' => $this->hiddenIfPdo()
                 )
             );
 
@@ -152,8 +119,7 @@ class SessionType extends AbstractType
             array(
                 'required' => true,
                 'label' => 'cookie_lifetime',
-                'constraints' => new GreaterThanOrEqual(array('value' => 60)),
-                'theme_options' => array('display_row' => $this->formDisplay[$this->sessionType]['cookie_lifetime'])
+                'constraints' => new GreaterThanOrEqual(array('value' => 60))
             )
         );
     }
@@ -166,5 +132,23 @@ class SessionType extends AbstractType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(array('translation_domain' => 'platform'));
+    }
+
+    private function notBlankIfPdo()
+    {
+        if ($this->sessionType === 'pdo') {
+            return new NotBlank();
+        }
+
+        return array();
+    }
+
+    private function hiddenIfPdo()
+    {
+        if ($this->sessionType === 'pdo') {
+            return array('display_row' => false);
+        }
+
+        return array();
     }
 }

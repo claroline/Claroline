@@ -101,8 +101,9 @@ class Role implements RoleInterface
 
     public function __construct()
     {
-        $this->users = new ArrayCollection();
+        $this->users           = new ArrayCollection();
         $this->resourceContext = new ArrayCollection();
+        $this->groups          = new ArrayCollection();
     }
 
     public function getId()
