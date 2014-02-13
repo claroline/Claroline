@@ -85,8 +85,11 @@ class MailManager
             'claro_security_reset_password',
             array('hash' => $hash)
         );
-        $body = "{$msg} {$link} {$user->getUsername()}";
         $subject = $this->translator->trans('reset_pwd', array(), 'platform');
+
+        $body =  "<div> {$this->translator->trans('reset_password_txt', array(), 'platform')} </div>";
+        $body .= "<div> {$this->translator->trans('your_username', array(), 'platform')} : {$user->getUsername()}</div>";
+        $body .= "<a href='{$link}'> {$msg} </a>";
 
         return $this->send($subject, $body, array($user));
     }
