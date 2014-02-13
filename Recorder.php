@@ -11,11 +11,19 @@
 
 namespace Claroline\BundleRecorder;
 
-use Composer\Package\PackageInterface;
 use Claroline\BundleRecorder\Detector\Detector;
 use Claroline\BundleRecorder\Handler\BundleHandler;
 use Claroline\BundleRecorder\Handler\OperationHandler;
 use Claroline\BundleRecorder\Operation;
+use Composer\DependencyResolver\DefaultPolicy;
+use Composer\DependencyResolver\Pool;
+use Composer\DependencyResolver\Request;
+use Composer\DependencyResolver\Solver;
+use Composer\Json\JsonFile;
+use Composer\Package\PackageInterface;
+use Composer\Repository\ArrayRepository;
+use Composer\Repository\InstalledFilesystemRepository;
+use Composer\Repository\PlatformRepository;
 
 class Recorder
 {
@@ -108,15 +116,40 @@ class Recorder
         }
     }
 
-    public function preInstallCheck()
+    public function updateBundlesOrder()
     {
-        $this->preUpdateCheck();
+        $installedFile = new JsonFile($this->vendorDir . '/composer/installed.json');
+        $fromRepo = new InstalledFilesystemRepository($installedFile);
+        $toRepo = new ArrayRepository();
+
+        $pool = new Pool();
+        $pool->addRepository($fromRepo);
+        $pool->addRepository(new PlatformRepository());
+        $request = new Request($pool);
+
+        foreach ($fromRepo->getPackages() as $package) {
+            $request->install($package->getName());
+        }
+
+        $solver = new Solver(new DefaultPolicy(), $pool, $toRepo);
+        $operations = $solver->solve($request);
+        $orderedBundles = array();
+
+        foreach ($operations as $operation) {
+            $bundles = $this->detector->detectBundles($operation->getPackage()->getPrettyName());
+
+            if (count($bundles) > 0) {
+                $orderedBundles = array_merge($orderedBundles, $bundles);
+            }
+        }
+
+        $this->bundleHandler->reorderBundles(array_unique($orderedBundles));
     }
 
-    public function preUpdateCheck()
+    public function checkForPreviousOperations()
     {
-        if (false === $this->operationHandler->isFileEmpty()) {
-            throw new \Exception("A non empty operation file is already present (assumed not executed).");
+        if (!$this->operationHandler->isFileEmpty()) {
+            throw new \Exception('A non empty operation file is already present (assumed not executed).');
         }
     }
 }

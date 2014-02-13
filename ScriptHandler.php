@@ -25,12 +25,17 @@ class ScriptHandler
 
     public static function prePlatformInstall(CommandEvent $event)
     {
-        static::getRecorder($event)->preInstallCheck();
+        static::getRecorder($event)->checkForPreviousOperations();
     }
 
     public static function prePlatformUpdate(CommandEvent $event)
     {
-        static::getRecorder($event)->preUpdateCheck();
+        static::getRecorder($event)->checkForPreviousOperations();
+    }
+
+    public static function postPlatformUpdate(CommandEvent $event)
+    {
+        static::getRecorder($event)->updateBundlesOrder();
     }
 
     public static function postPackageInstall(PackageEvent $event)

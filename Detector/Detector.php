@@ -23,6 +23,11 @@ class Detector
     public function detectBundles($path)
     {
         $path = $this->baseDir ? "{$this->baseDir}/{$path}" : $path;
+
+        if (!is_dir($path)) {
+            return array();
+        }
+
         $iterator = new \RecursiveDirectoryIterator($path, \RecursiveDirectoryIterator::SKIP_DOTS);
         $filter = new FilterIterator($iterator);
         $items = new \RecursiveIteratorIterator($filter, \RecursiveIteratorIterator::SELF_FIRST);

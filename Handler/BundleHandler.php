@@ -31,6 +31,21 @@ class BundleHandler extends BaseHandler
         $this->updateBundleFile($bundlesFqcns, 'remove');
     }
 
+    public function reorderBundles(array $bundleFqcns)
+    {
+        $orderedList = array();
+
+        foreach ($bundleFqcns as $bundleFqcn) {
+            $orderedList[$bundleFqcn] = $this->registeredBundles[$bundleFqcn];
+        }
+
+        if ($this->registeredBundles !== $orderedList) {
+            $this->log('Reordering bundles...');
+            $this->registeredBundles = $orderedList;
+            $this->writeBundleFile();
+        }
+    }
+
     private function updateBundleFile(array $bundlesFqcns, $action)
     {
         $hasChanges = false;
@@ -51,14 +66,19 @@ class BundleHandler extends BaseHandler
         }
 
         if ($hasChanges) {
-            $content = '';
-
-            foreach ($this->registeredBundles as $bundle => $isEnabled) {
-                $isEnabled = $isEnabled ? 'true' : 'false';
-                $content .= "{$bundle} = {$isEnabled}" . PHP_EOL;
-            }
-
-            file_put_contents($this->targetFile, $content);
+            $this->writeBundleFile();
         }
+    }
+
+    private function writeBundleFile()
+    {
+        $content = '';
+
+        foreach ($this->registeredBundles as $bundle => $isEnabled) {
+            $isEnabled = $isEnabled ? 'true' : 'false';
+            $content .= "{$bundle} = {$isEnabled}" . PHP_EOL;
+        }
+
+        file_put_contents($this->targetFile, $content);
     }
 }
