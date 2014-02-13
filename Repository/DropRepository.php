@@ -263,6 +263,25 @@ class DropRepository extends EntityRepository {
         return $qb->getQuery()->getResult()[0];
     }
 
+    public function getDropAndValidEndedCorrectionsAndDocumentsByUser($dropzone,$dropId,$userId)
+    {
+        $qb = $this->createQueryBuilder('drop')
+            ->select('drop,document,correction,user')
+            ->andWhere('drop.dropzone = :dropzone')
+            ->andWhere('drop.id = :dropId')
+            ->andWhere('user.id = :userId')
+            ->andWhere('correction.finished = 1')
+            ->andWhere('correction.valid = 1')
+            ->join('drop.user','user')
+            ->leftJoin('drop.documents','document')
+            ->leftJoin('drop.corrections','correction')
+            ->setParameter('dropzone',$dropzone)
+            ->setParameter('dropId',$dropId)
+            ->setParameter('userId',$userId);
+
+        return $qb->getQuery()->getResult();
+    }
+
     public function getLastNumber($dropzone)
     {
         $query = $this->getEntityManager()->createQuery(
