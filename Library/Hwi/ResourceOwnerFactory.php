@@ -13,9 +13,9 @@ namespace Claroline\CoreBundle\Library\Hwi;
 
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use JMS\DiExtraBundle\Annotation as DI;
-use \HWI\Bundle\OAuthBundle\OAuth\ResourceOwner\FacebookResourceOwner;
-use \Buzz\Client\Curl;
-use \HWI\Bundle\OAuthBundle\OAuth\RequestDataStorage\SessionStorage;
+use HWI\Bundle\OAuthBundle\OAuth\ResourceOwner\FacebookResourceOwner;
+use Buzz\Client\Curl;
+use HWI\Bundle\OAuthBundle\OAuth\RequestDataStorage\SessionStorage;
 
 /**
  * @DI\Service("claroline.hwi.resource_owner_factory")
@@ -40,7 +40,7 @@ class ResourceOwnerFactory
         $this->session = $session;
     }
 
-    public function getFacebook()
+    public function getFacebookResourceOwner()
     {
         $a = new Curl();
         $a->setVerifyPeer(true);

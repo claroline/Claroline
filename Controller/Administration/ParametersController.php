@@ -25,6 +25,7 @@ use JMS\DiExtraBundle\Annotation as DI;
 use JMS\SecurityExtraBundle\Annotation\PreAuthorize;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormFactory;
 use Symfony\Component\HttpFoundation\Request;
@@ -154,6 +155,7 @@ class ParametersController extends Controller
      * )
      *
      * @Template("ClarolineCoreBundle:Administration\platform:settings.html.twig")
+     * @Method("POST")
      *
      * Updates the platform settings and redirects to the settings form.
      *
@@ -246,6 +248,8 @@ class ParametersController extends Controller
      *     name="claro_admin_edit_parameters_appearance"
      * )
      *
+     * @Method("POST")
+     *
      * Displays the platform settings.
      *
      * @return \Symfony\Component\HttpFoundation\Response
@@ -321,6 +325,7 @@ class ParametersController extends Controller
      * )
      *
      * @Template("ClarolineCoreBundle:Administration\platform\mail:server.html.twig")
+     * @Method("POST")
      *
      * Updates the platform settings and redirects to the settings form.
      *
@@ -412,6 +417,7 @@ class ParametersController extends Controller
      * )
      *
      * @Template("ClarolineCoreBundle:Administration\platform\mail:registration.html.twig")
+     * @Method("POST")
      *
      * @return \Symfony\Component\HttpFoundation\Response
      *
@@ -472,6 +478,7 @@ class ParametersController extends Controller
      * )
      *
      * @Template("ClarolineCoreBundle:Administration\platform\mail:layout.html.twig")
+     * @Method("POST")
      *
      * @return \Symfony\Component\HttpFoundation\Response
      *
@@ -529,6 +536,7 @@ class ParametersController extends Controller
      * Updates the platform settings and redirects to the settings form.
      *
      * @Route("/terms_of_service/submit", name="claro_admin_edit_terms_of_service_submit")
+     * @Method("POST")
      *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
@@ -623,6 +631,7 @@ class ParametersController extends Controller
      * )
      *
      * @Template("ClarolineCoreBundle:Administration\platform:session.html.twig")
+     * @Method("POST")
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -708,6 +717,7 @@ class ParametersController extends Controller
      *     "/oauth/facebook/submit",
      *     name="claro_admin_facebook_form_submit"
      * )
+     * @Method("POST")
      *
      * Displays the administration section index.
      *

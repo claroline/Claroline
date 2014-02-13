@@ -44,8 +44,7 @@ class HwiManager
     public function refreshCache(RefreshCacheEvent $event)
     {
         $errors = $this->validateFacebook($this->ch->getParameter('facebook_client_id'), $this->ch->getParameter('facebook_client_secret'));
-        $boolean = count($errors) === 0 ? true: false;
-        $event->addCacheParameter('is_facebook_available', $boolean);
+        $event->addCacheParameter('is_facebook_available', count($errors) === 0);
     }
 
     public function isFacebookAvailable()

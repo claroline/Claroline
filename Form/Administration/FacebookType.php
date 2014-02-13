@@ -27,7 +27,7 @@ class FacebookType extends AbstractType
 
     public function getName()
     {
-        return 'platform_parameters_form';
+        return 'platform_facebook_application_form';
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)

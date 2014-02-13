@@ -4,8 +4,8 @@ hwi_oauth:
     resource_owners:
         facebook:
             type:          facebook
-            client_id:     "487751811261295"
-            client_secret: "571bf1838122258b9d714a9be99c7b34"
+            client_id:     <client_id>
+            client_secret: <client_secret>
             scope:         "email"
 
     # an optional setting to configure a query string parameter which can be used to redirect

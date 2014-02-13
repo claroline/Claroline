@@ -45,11 +45,8 @@ class DynamicConfigPass implements CompilerPassInterface
         $container->setDefinition('session.handler', $handler);
 
         //cookie lifetime
-
-        if ($container->getParameter('kernel.environment') !== 'test') {
-            $storage = $container->findDefinition('session.storage');
-            $storage->addMethodCall('setOptions', array(new Reference('claroline.session.storage_options')));
-        }
+        $storage = $container->findDefinition('session.storage');
+        $storage->addMethodCall('setOptions', array(new Reference('claroline.session.storage_options')));
 
         //notification
         $container->setAlias('icap.notification.orm.entity_manager', 'claroline.persistence.object_manager');
@@ -57,7 +54,7 @@ class DynamicConfigPass implements CompilerPassInterface
         //facebook
         $facebook = new Definition();
         $facebook->setFactoryService('claroline.hwi.resource_owner_factory');
-        $facebook->setFactoryMethod('getFacebook');
+        $facebook->setFactoryMethod('getFacebookResourceOwner');
         $facebook->setClass('FacebookResourceOwner');
         $container->removeDefinition('hwi_oauth.resource_owner.facebook');
         $container->setDefinition('hwi_oauth.resource_owner.facebook', $facebook);

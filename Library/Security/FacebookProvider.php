@@ -46,21 +46,7 @@ class FacebookProvider implements OAuthAwareUserProviderInterface, UserProviderI
      */
     public function loadUserByUsername($username)
     {
-        $dql = 'SELECT u FROM Claroline\CoreBundle\Entity\User u
-	    WHERE u.username LIKE :username
-	    OR u.mail LIKE :username';
-        $query = $this->em->createQuery($dql);
-        $query->setParameter('username', $username);
-
-        try {
-            $user = $query->getSingleResult();
-        } catch (NoResultException $e) {
-            throw new UsernameNotFoundException(
-                sprintf('Unable to find an active user identified by "%s".', $username)
-            );
-        }
-
-        return $user;
+        return $this->em->getRepository('ClarolineCoreBundle:User')->loadUserByUsername($username);
     }
 
     /**
