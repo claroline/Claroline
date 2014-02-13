@@ -7,7 +7,7 @@
     "require": {
         "php": ">=5.4.1",
         "sensio/distribution-bundle": "~2.3.4",
-        "claroline/bundle-recorder": "~2.1",
+        "claroline/bundle-recorder": "~2.2",
         "claroline/core-bundle": "~2.8",
         "claroline/web-installer": ">=1.0.6,<2.0",
         "claroline/activity-tool-bundle": ">=1.0.2,<2.0",
@@ -61,6 +61,9 @@
         "pre-update-cmd": [
             "Claroline\\BundleRecorder\\ScriptHandler::prePlatformUpdate",
             "Claroline\\CoreBundle\\Library\\Maintenance\\MaintenanceHandler::enableMaintenance"
+        ],
+        "post-update-cmd": [
+            "Claroline\\BundleRecorder\\ScriptHandler::postPlatformUpdate"
         ],
         "post-package-install": [
             "Claroline\\BundleRecorder\\ScriptHandler::postPackageInstall"
