@@ -35,15 +35,14 @@ $returnCode = require __DIR__ . '/check_settings';
 
 if ($returnCode === 0) {
     system("php {$rootDirectory}/app/console doctrine:database:drop --force");
-    system("php {$rootDirectory}/app/console doctrine:database:create");
     system("php {$rootDirectory}/app/console cache:clear --no-warmup");
-    system("php {$rootDirectory}/app/console claroline:install --with-plugins");
+    system("php {$rootDirectory}/app/console claroline:install --with-optional-fixtures");
     system("php {$rootDirectory}/app/console claroline:fixture:demo");
 
     system("php {$rootDirectory}/app/console doctrine:database:drop --force --env=test");
     system("php {$rootDirectory}/app/console doctrine:database:create --env=test");
     system("php {$rootDirectory}/app/console cache:clear --no-warmup --env=test");
-    system("php {$rootDirectory}/app/console claroline:install --env=test");
+    system("php {$rootDirectory}/app/console claroline:init_test_schema --env=test");
 
     system("php {$rootDirectory}/app/console cache:clear");
 }
