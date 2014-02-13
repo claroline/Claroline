@@ -11,40 +11,74 @@
 
 namespace Claroline\CoreBundle\Library\Installation;
 
+use Claroline\CoreBundle\Library\Installation\Plugin\Installer;
+use Claroline\CoreBundle\Library\PluginBundle;
+use Claroline\InstallationBundle\Bundle\InstallableInterface;
+use Claroline\InstallationBundle\Manager\InstallationManager;
 use Doctrine\Bundle\DoctrineBundle\Command\CreateDatabaseDoctrineCommand;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Bundle\SecurityBundle\Command\InitAclCommand;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\NullOutput;
+use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpKernel\KernelInterface;
 
 /**
  * @DI\Service("claroline.installation.platform_installer")
  *
- * Entry point of platform installation/update, ensuring that the minimal
- * environment (e.g. existing database) is set up before executing operations.
+ * Entry point of platform installation/update, ensuring that minimal requirements
+ * (e.g. existing database) are met before executing operations.
  */
 class PlatformInstaller
 {
     private $operationExecutor;
+    private $baseInstaller;
+    private $pluginInstaller;
+    private $refresher;
+    private $kernel;
     private $container;
     private $logger;
+    private $output;
 
     /**
      * @DI\InjectParams({
-     *     "opExecutor" = @DI\Inject("claroline.installation.operation_executor"),
-     *     "container"  = @DI\Inject("service_container")
+     *     "opExecutor"         = @DI\Inject("claroline.installation.operation_executor"),
+     *     "baseInstaller"      = @DI\Inject("claroline.installation.manager"),
+     *     "pluginInstaller"    = @DI\Inject("claroline.plugin.installer"),
+     *     "refresher"          = @DI\Inject("claroline.installation.refresher"),
+     *     "container"          = @DI\Inject("service_container")
      * })
      */
-    public function __construct(OperationExecutor $opExecutor, ContainerInterface $container)
+    public function __construct(
+        OperationExecutor $opExecutor,
+        InstallationManager $baseInstaller,
+        Installer $pluginInstaller,
+        Refresher $refresher,
+        KernelInterface $kernel,
+        ContainerInterface $container
+    )
     {
         $this->operationExecutor = $opExecutor;
+        $this->baseInstaller = $baseInstaller;
+        $this->pluginInstaller = $pluginInstaller;
+        $this->refresher = $refresher;
+        $this->kernel = $kernel;
         $this->container = $container;
     }
 
     public function setLogger(\Closure $logger)
     {
         $this->logger = $logger;
+        $this->operationExecutor->setLogger($logger);
+        $this->baseInstaller->setLogger($logger);
+        $this->pluginInstaller->setLogger($logger);
+    }
+
+    public function setOutput(OutputInterface $output)
+    {
+        $this->output = $output;
+        $this->refresher->setOutput($output);
     }
 
     public function installFromOperationFile($operationFile = null)
@@ -55,17 +89,34 @@ class PlatformInstaller
             $this->operationExecutor->setOperationFile($operationFile);
         }
 
-        if ($this->logger) {
-            $this->operationExecutor->setLogger($this->logger);
+        $this->operationExecutor->execute();
+        $this->launchPostInstallActions();
+    }
+
+    public function installFromKernel($withOptionalFixtures = true)
+    {
+        $this->launchPreInstallActions();
+
+        foreach ($this->kernel->getBundles() as $bundle) {
+            if ($bundle instanceof PluginBundle) {
+                $this->pluginInstaller->install($bundle);
+            } elseif ($bundle instanceof InstallableInterface) {
+                $this->baseInstaller->install($bundle, !$withOptionalFixtures);
+            }
         }
 
-        $this->operationExecutor->execute();
+        $this->launchPostInstallActions();
     }
 
     private function launchPreInstallActions()
     {
         $this->createDatabaseIfNotExists();
         $this->createAclTablesIfNotExist();
+    }
+
+    private function launchPostInstallActions()
+    {
+        $this->refresher->refresh($this->kernel->getEnvironment(), false);
     }
 
     private function createDatabaseIfNotExists()
@@ -81,7 +132,7 @@ class PlatformInstaller
             $this->log('Unable to connect to database: trying to create database...');
             $command = new CreateDatabaseDoctrineCommand();
             $command->setContainer($this->container);
-            $code = $command->run(new ArrayInput(array()), new NullOutput());
+            $code = $command->run(new ArrayInput(array()), $this->output ?: new NullOutput());
 
             if ($code !== 0) {
                 throw new \Exception(
@@ -98,7 +149,7 @@ class PlatformInstaller
         $this->log('Checking acl tables are initialized...');
         $command = new InitAclCommand();
         $command->setContainer($this->container);
-        $command->run(new ArrayInput(array()), new NullOutput());
+        $command->run(new ArrayInput(array()), $this->output ?: new NullOutput());
     }
 
     private function log($message)
