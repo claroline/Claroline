@@ -44,6 +44,20 @@ class BadgeCollection
      */
     protected $user;
 
+    /**
+     * @var bool
+     *
+     * @ORM\Column(name="is_public", type="boolean")
+     */
+    protected $isPublic = false;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="public_id", type="string", nullable=true)
+     */
+    protected $publicId;
+
     public function __construct()
     {
         $this->badges = new ArrayCollection();
@@ -127,6 +141,46 @@ class BadgeCollection
     public function getUser()
     {
         return $this->user;
+    }
+
+    /**
+     * @param bool $isPublic
+     *
+     * @return BadgeCollection
+     */
+    public function setIsPublic($isPublic)
+    {
+        $this->isPublic = $isPublic;
+
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function isPublic()
+    {
+        return $this->isPublic;
+    }
+
+    /**
+     * @param string $publicId
+     *
+     * @return BadgeCollection
+     */
+    public function setPublicId($publicId)
+    {
+        $this->publicId = $publicId;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPublicId()
+    {
+        return $this->publicId;
     }
 }
  
