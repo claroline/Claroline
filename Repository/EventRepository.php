@@ -62,7 +62,7 @@ class EventRepository extends EntityRepository
         return $query->getResult();
     }
 
-    public function findByWorkspaceId($workspaceId,$allDay)
+    public function findByWorkspaceId($workspaceId,$allDay,$limit = null)
     {
         $dql = "
             SELECT e
@@ -74,6 +74,9 @@ class EventRepository extends EntityRepository
         $query = $this->_em->createQuery($dql);
         $query->setParameter('workspaceId', $workspaceId);
         $query->setParameter('allDay', $allDay);
+        if ($limit > 0) {
+            $query->setMaxResults($limit);
+        }
 
         return $query->getResult();
     }
