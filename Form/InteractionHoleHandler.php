@@ -130,9 +130,6 @@ class InteractionHoleHandler {
         // Create an array of the current Choice objects in the database
         foreach ($originalInterHole->getHoles() as $hole) {
             $originalHoles[] = $hole;
-            foreach($hole->getWordResponses() as $wr){
-                $originalWRs[$hole->getId()][] = $wr->getId();
-            }
         }
         foreach ($originalInterHole->getInteraction()->getHints() as $hint) {
             $originalHints[] = $hint;
@@ -151,7 +148,7 @@ class InteractionHoleHandler {
                         }
                     }
                 }
-                $this->onSuccessUpdate($this->form->getData(), $originalHoles, $originalWRs, $originalHints);
+                $this->onSuccessUpdate($this->form->getData(), $originalHoles, $originalHints);
 
                 return true;
             }
@@ -160,33 +157,17 @@ class InteractionHoleHandler {
         return false;
     }
 
-    private function onSuccessUpdate(InteractionHole $interHole, $originalHoles, $originalWRs, $originalHints)
+    private function onSuccessUpdate(InteractionHole $interHole, $originalHoles, $originalHints)
     {
         // filter $originalHoles to contain hole no longer present
         foreach ($interHole->getHoles() as $hole) {
+            
+            //to remove key word not yet used
+            $this->delKeyWord($hole, $originalHoles);
+            
             foreach ($originalHoles as $key => $toDel) {
                 if ($toDel->getId() == $hole->getId()) {
                     unset($originalHoles[$key]);
-                    //todo del wr no yet used
-                    $originalWRsColl = $originalWRs[$toDel->getId()];
-                    $wrs = $hole->getWordResponses();
-                    foreach ($wrs as $wr) {
-                        foreach ($originalWRsColl as $key => $toDel) {
-                            if ($toDel == $wr->getId()) {
-                                unset($originalWRsColl[$key]);
-                            }
-                        }
-                    }
-                    
-                    // remove the relationship between the wr and hole
-                    foreach ($originalWRsColl as $wrID) {
-                        $wr = $this->em->getRepository('UJMExoBundle:WordResponse')->find($wrID);
-                        // remove the hole from the interactionhole
-                        $hole->getWordResponses()->removeElement($wr);
-
-                        // if you wanted to delete the wr entirely, you can also do that
-                        $this->em->remove($wr);
-                    }
                 }
             }
         }
@@ -242,6 +223,40 @@ class InteractionHoleHandler {
         $this->em->flush();
     }
     
+    private function delKeyWord($hole, $originalHoles)
+    {
+        $wordResponses = $hole->getWordResponses()->toArray();
+
+        foreach($originalHoles as $holeOrig)
+        {
+            $originalWords = $holeOrig->getwordResponses()->getSnapshot();
+            if($hole->getId() === $holeOrig->getId())
+            {
+                foreach($wordResponses as $word)
+                {
+                    foreach($originalWords as $key => $toDel)
+                    {
+                        if ($toDel->getId() === $word->getId())
+                        {
+                            unset($originalWords[$key]);
+                        }
+                    }
+                }
+                
+                // remove the relationship between the hole and the interactionhole
+                foreach ($originalWords as $word)
+                {
+                    // remove the wr from the wordResponse
+                    $hole->getWordResponses()->removeElement($word);
+
+                    // if you wanted to delete the Hole entirely, you can also do that
+                    $this->em->remove($word);
+                }
+            
+            }
+        }
+    }
+    
     private function htmlWithoutValue($interHole)
     {
         $html = $interHole->getHtml();
@@ -254,8 +269,9 @@ class InteractionHoleHandler {
             $tabHoles[$hole->getPosition()] = $hole;
         }
         ksort($tabHoles);
+        $tabHoles = array_values($tabHoles);
         
-        for( $i= 1; $i < count($tabInputValue); $i++)
+        for( $i= 0; $i < count($tabInputValue) - 1; $i++)
         {
             if($tabHoles[$i]->getSelector() === false)
             {
