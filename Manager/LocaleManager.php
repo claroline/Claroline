@@ -17,6 +17,7 @@ use JMS\DiExtraBundle\Annotation\Inject;
 use JMS\DiExtraBundle\Annotation\InjectParams;
 use JMS\DiExtraBundle\Annotation\Service;
 use Symfony\Component\Finder\Finder;
+use Symfony\Component\Security\Core\SecurityContextInterface;
 
 /**
  * @Service("claroline.common.locale_manager")
@@ -27,18 +28,21 @@ class LocaleManager
     private $finder;
     private $locales;
     private $userManager;
+    private $context;
 
     /**
      * @InjectParams({
      *     "configHandler"  = @Inject("claroline.config.platform_config_handler"),
-     *     "userManager"    = @Inject("claroline.manager.user_manager")
+     *     "userManager"    = @Inject("claroline.manager.user_manager"),
+     *     "context"        = @Inject("security.context")
      * })
      */
-    public function __construct(PlatformConfigurationHandler $configHandler, UserManager $userManager)
+    public function __construct(PlatformConfigurationHandler $configHandler, UserManager $userManager, SecurityContextInterface $context)
     {
         $this->userManager = $userManager;
         $this->defaultLocale = $configHandler->getParameter('locale_language');
         $this->finder = new Finder();
+        $this->context = $context;
     }
 
     /**
@@ -84,7 +88,7 @@ class LocaleManager
     {
         $locales = $this->getAvailableLocales();
 
-        if (isset($locales[$locale]) and ($user = $this->userManager->getCurrentUser())) {
+        if (isset($locales[$locale]) and ($user = $this->getCurrentUser())) {
 
             $this->userManager->setLocale($user, $locale);
         }
@@ -104,7 +108,7 @@ class LocaleManager
 
         switch (true) {
             case ($locale = $request->attributes->get('_locale')): break;
-            case (($user = $this->userManager->getCurrentUser()) and ($locale = $user->getLocale()) !== ''): break;
+            case (($user = $this->getCurrentUser()) and ($locale = $user->getLocale()) !== ''): break;
             case ($locale = $request->getSession()->get('_locale')): break;
             case (isset($preferred[0]) and isset($locales[$preferred[0]]) and ($locale = $preferred[0])): break;
         }
@@ -112,5 +116,17 @@ class LocaleManager
         $request->getSession()->set('_locale', $locale);
 
         return $locale;
+    }
+
+    /**
+     * Get Current User
+     *
+     * @return mixed Claroline\CoreBundle\Entity\User or null
+     */
+    private function getCurrentUser()
+    {
+        if (is_object($token = $this->context->getToken()) and is_object($user = $token->getUser())) {
+            return $user;
+        }
     }
 }

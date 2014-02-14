@@ -40,7 +40,6 @@ class RoleManager
     /** @var GroupRepository */
     private $groupRepo;
     private $dispatcher;
-    private $sc;
     private $om;
 
     /**
@@ -48,17 +47,15 @@ class RoleManager
      *
      * @DI\InjectParams({
      *     "roleRepo"   = @DI\Inject("role_repository"),
-     *     "sc"         = @DI\Inject("security.context"),
      *     "om"         = @DI\Inject("claroline.persistence.object_manager"),
      *     "dispatcher" = @DI\Inject("claroline.event.event_dispatcher")
      * })
      */
-    public function __construct(SecurityContextInterface $sc, ObjectManager $om, StrictDispatcher $dispatcher)
+    public function __construct(ObjectManager $om, StrictDispatcher $dispatcher)
     {
         $this->roleRepo = $om->getRepository('ClarolineCoreBundle:Role');
         $this->userRepo = $om->getRepository('ClarolineCoreBundle:User');
         $this->groupRepo = $om->getRepository('ClarolineCoreBundle:Group');
-        $this->sc = $sc;
         $this->om = $om;
         $this->dispatcher = $dispatcher;
     }
@@ -521,14 +518,6 @@ class RoleManager
     public function getRoleByTranslationKeyAndWorkspace($key, AbstractWorkspace $workspace)
     {
         return $this->roleRepo->findOneBy(array('translationKey' => $key, 'workspace' => $workspace));
-    }
-
-    /**
-     * @return string[]
-     */
-    public function getStringRolesFromCurrentUser()
-    {
-        return $this->getStringRolesFromToken($this->sc->getToken());
     }
 
     /**

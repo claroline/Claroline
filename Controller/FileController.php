@@ -98,7 +98,10 @@ class FileController extends Controller
             $parent
         );
 
-        return new JsonResponse(array($manager->toArray($file->getResourceNode())));
+        return new JsonResponse(
+            array($manager->toArray($file->getResourceNode(),
+            $this->get('security.context')->getToken()))
+        );
     }
 
     /**
@@ -112,7 +115,7 @@ class FileController extends Controller
         return array(
             'form' => $this->get('form.factory')->create(new FileType())->createView(),
             'workspace' => $this->get('claroline.manager.resource_manager')->getWorkspaceRoot(
-                $this->get('claroline.manager.user_manager')->getCurrentUser()->getPersonalWorkspace()
+                $this->getCurrentUser()->getPersonalWorkspace()
             )->getId()
         );
     }
@@ -135,6 +138,18 @@ class FileController extends Controller
     {
         if (!$this->get('security.context')->isGranted($permission, $collection)) {
             throw new AccessDeniedException($collection->getErrorsForDisplay());
+        }
+    }
+
+    /**
+     * Get Current User
+     *
+     * @return mixed Claroline\CoreBundle\Entity\User or null
+     */
+    private function getCurrentUser()
+    {
+        if (is_object($token = $this->get('security.context')->getToken()) and is_object($user = $token->getUser())) {
+            return $user;
         }
     }
 }

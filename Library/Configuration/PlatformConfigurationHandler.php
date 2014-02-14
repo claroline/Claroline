@@ -52,7 +52,9 @@ class PlatformConfigurationHandler
         'session_db_time_col' => null,
         'session_db_dsn' => null,
         'session_db_user' => null,
-        'session_db_password' => null
+        'session_db_password' => null,
+        'facebook_client_id' => null,
+        'facebook_client_secret' => null
     );
 
     /**
@@ -134,6 +136,8 @@ class PlatformConfigurationHandler
         $config->setSessionDbDsn($this->parameters['session_db_dsn']);
         $config->setSessionDbUser($this->parameters['session_db_user']);
         $config->setSessionDbPassword($this->parameters['session_db_password']);
+        $config->setFacebookClientId($this->parameters['facebook_client_id']);
+        $config->setFacebookClientSecret($this->parameters['facebook_client_secret']);
 
         return $config;
     }

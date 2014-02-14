@@ -20,6 +20,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  */
 class ClaroUtilities implements ContainerAwareInterface
 {
+    private $container;
+
     /**
      * @DI\InjectParams({
      *     "container" = @DI\Inject("service_container")

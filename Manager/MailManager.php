@@ -28,7 +28,6 @@ class MailManager
 {
     private $router;
     private $mailer;
-    private $templating;
     private $translator;
     private $container;
     private $ch;
@@ -39,7 +38,6 @@ class MailManager
      * @DI\InjectParams({
      *     "router"         = @DI\Inject("router"),
      *     "mailer"         = @DI\Inject("mailer"),
-     *     "templating"     = @Di\Inject("templating"),
      *     "ch"             = @DI\Inject("claroline.config.platform_config_handler"),
      *     "container"      = @DI\Inject("service_container"),
      *     "cacheManager"   = @DI\Inject("claroline.manager.cache_manager"),
@@ -48,7 +46,6 @@ class MailManager
      */
     public function __construct(
         \Swift_Mailer $mailer,
-        EngineInterface $templating,
         UrlGeneratorInterface $router,
         Translator $translator,
         PlatformConfigurationHandler $ch,
@@ -59,7 +56,6 @@ class MailManager
     {
         $this->router = $router;
         $this->mailer = $mailer;
-        $this->templating = $templating;
         $this->translator = $translator;
         $this->container = $container;
         $this->ch = $ch;
@@ -89,11 +85,11 @@ class MailManager
             'claro_security_reset_password',
             array('hash' => $hash)
         );
-        $body = $this->templating->render(
-            'ClarolineCoreBundle:Authentication:emailForgotPassword.html.twig',
-            array('message' => $msg, 'link' => $link, 'user' => $user)
-        );
         $subject = $this->translator->trans('reset_pwd', array(), 'platform');
+
+        $body =  "<div> {$this->translator->trans('reset_password_txt', array(), 'platform')} </div>";
+        $body .= "<div> {$this->translator->trans('your_username', array(), 'platform')} : {$user->getUsername()}</div>";
+        $body .= "<a href='{$link}'> {$msg} </a>";
 
         return $this->send($subject, $body, array($user));
     }
