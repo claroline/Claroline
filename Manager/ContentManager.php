@@ -77,7 +77,7 @@ class ContentManager
      *
      * @return Array
      */
-    public function getTranslatedContent($filter)
+    public function getTranslatedContent(array $filter)
     {
         $content = $this->getContent($filter);
 
@@ -94,7 +94,7 @@ class ContentManager
      *
      * @return integer The id of the new content.
      */
-    public function createContent(Array $translatedContent, $type = null)
+    public function createContent(array $translatedContent, $type = null)
     {
         $content = new Content();
         $content->setType($type);
@@ -117,7 +117,7 @@ class ContentManager
      * @param $translatedContent array('en' => array('content' => 'foo', 'title' => 'foo'))
      * @param $content Content Entity
      */
-    public function updateContent(Content $content, Array $translatedContents)
+    public function updateContent(Content $content, array $translatedContents)
     {
         $content = $this->resetContent($content, $translatedContents); // Gedmo bug #321
 
@@ -200,7 +200,7 @@ class ContentManager
      *
      * @return array('en' => array('content' => 'foo', 'title' => 'foo'))
      */
-    private function setDefault(Array $translatedContent, $field, $locale)
+    private function setDefault(array $translatedContent, $field, $locale)
     {
         if ($locale !== 'en') {
             if (isset($translatedContent['en'][$field]) and !strlen($translatedContent['en'][$field]) and
