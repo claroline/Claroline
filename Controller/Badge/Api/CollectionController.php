@@ -90,8 +90,10 @@ class CollectionController extends Controller
             if (201 === $statusCode) {
                 $data = array(
                     'collection' => array(
-                        'id'   => $collection->getId(),
-                        'name' => $collection->getName()
+                        'id'        => $collection->getId(),
+                        'name'      => $collection->getName(),
+                        'is_shared' => $collection->isIsShared(),
+                        'shared_id' => $collection->getSharedId()
                     )
                 );
 

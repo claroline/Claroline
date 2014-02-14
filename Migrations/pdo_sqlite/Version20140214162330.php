@@ -8,9 +8,9 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2014/02/13 04:26:19
+ * Generation date: 2014/02/14 04:23:32
  */
-class Version20140213162616 extends AbstractMigration
+class Version20140214162330 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
@@ -19,13 +19,16 @@ class Version20140213162616 extends AbstractMigration
                 id INTEGER NOT NULL, 
                 user_id INTEGER DEFAULT NULL, 
                 name VARCHAR(255) NOT NULL, 
-                is_public BOOLEAN NOT NULL, 
-                public_id VARCHAR(255) DEFAULT NULL, 
+                is_shared BOOLEAN NOT NULL, 
+                shared_id VARCHAR(255) DEFAULT NULL, 
                 PRIMARY KEY(id)
             )
         ");
         $this->addSql("
             CREATE INDEX IDX_BB3FD2DDA76ED395 ON claro_badge_collection (user_id)
+        ");
+        $this->addSql("
+            CREATE UNIQUE INDEX shared_id_idx ON claro_badge_collection (shared_id)
         ");
         $this->addSql("
             CREATE TABLE claro_badge_collection_badges (

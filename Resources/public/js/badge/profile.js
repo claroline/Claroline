@@ -221,6 +221,10 @@
                     });
             }
 
+            var sharedLink = $(".share_collection", newCollection);
+            var sharedUrl = sharedLink.attr("href");
+            sharedUrl = sharedUrl.replace("__sharedId__", data.collection.shared_id);
+            sharedLink.attr("href", sharedUrl)
             $(newCollection).attr("data-id", data.collection.id);
 
             newCollection
@@ -340,7 +344,7 @@
                     displayError('delete_collection_error');
                 })
                 .always(function() {
-                    deletingCollectionElement.hide("fast");
+                    deletingCollectionElement.hide();
                 });
         }
 
@@ -358,6 +362,55 @@
         function displayError(messageKey) {
             $("p", errorContainer).text(Translator.get('badge:' + messageKey));
             errorContainer.show();
+        }
+
+        $("#collections_list").on("click", ".sharedoptions .sharedoption", function(event) {
+            event.preventDefault();
+            var target = $(event.target);
+            var collectionContainer = target.parents('li.collection');
+
+            collectionContainer.find(".sharedoptions li.active").removeClass("active");
+
+            var sharedLink = collectionContainer.find(".shared_toggle");
+            sharedLink.html(sharedLink.attr("data-loading-state"));
+            target.parent().addClass("active");
+
+            var sharedState = target.attr("data-value");
+
+            var exitingCollection = $(".collection.editing", collectionsList);
+            exitingCollection
+                .each(function(index, element) {
+                    doUpdateCollectionTitle($(element));
+                });
+
+            var collectionUpdateRequest = $.ajax({
+                url: apiUrl + collectionContainer.attr("data-id"),
+                type: 'PUT',
+                data: {
+                    'badge_collection_form[name]':      $(".collection_title_input", collectionContainer).val(),
+                    'badge_collection_form[is_shared]': sharedState
+                }
+            });
+
+            collectionUpdateRequest
+                .success(function(data) {
+                    updateSharedState(sharedLink, sharedState);
+                })
+                .fail(function() {
+                    updateSharedState(sharedLink, (0 == sharedState)? 1 : 0);
+                    displayError('edit_is_shared_collection_error');
+                });
+        });
+
+        function updateSharedState(sharedLink, sharedState) {
+            if (0 == sharedState) {
+                sharedLink.html(sharedLink.attr("data-private-state"));
+                sharedLink.parent().find(".share_collection").hide();
+            }
+            else {
+                sharedLink.html(sharedLink.attr("data-shared-state"));
+                sharedLink.parent().find(".share_collection").show();
+            }
         }
     });
 })(jQuery);

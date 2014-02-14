@@ -70,7 +70,8 @@ class BadgeCollectionType extends AbstractType
                      'multiple'    => true,
                      'expanded'    => true
                 )
-            );
+            )
+            ->add('is_shared', 'checkbox');
     }
 
     public function getName()

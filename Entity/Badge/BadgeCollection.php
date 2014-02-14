@@ -4,12 +4,14 @@ namespace Claroline\CoreBundle\Entity\Badge;
 
 use Claroline\CoreBundle\Entity\User;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * @ORM\Table(name="claro_badge_collection")
+ * @ORM\Table(name="claro_badge_collection", uniqueConstraints={@ORM\UniqueConstraint(name="shared_id_idx", columns={"shared_id"})})
  * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\Badge\BadgeCollectionRepository")
+ * @ORM\HasLifecycleCallbacks
  */
 class BadgeCollection
 {
@@ -47,20 +49,28 @@ class BadgeCollection
     /**
      * @var bool
      *
-     * @ORM\Column(name="is_public", type="boolean")
+     * @ORM\Column(name="is_shared", type="boolean")
      */
-    protected $isPublic = false;
+    protected $isShared = false;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="public_id", type="string", nullable=true)
+     * @ORM\Column(name="shared_id", type="string", nullable=true)
      */
-    protected $publicId;
+    protected $sharedId;
 
     public function __construct()
     {
         $this->badges = new ArrayCollection();
+    }
+
+    /**
+     * @ORM\PrePersist()
+     */
+    public function prePersist(LifecycleEventArgs $event)
+    {
+        $this->sharedId = md5($this->getUser()->getUsername() . time() . $this->getName());
     }
 
     /**
@@ -144,13 +154,13 @@ class BadgeCollection
     }
 
     /**
-     * @param bool $isPublic
+     * @param bool $isShared
      *
      * @return BadgeCollection
      */
-    public function setIsPublic($isPublic)
+    public function setIsShared($isShared)
     {
-        $this->isPublic = $isPublic;
+        $this->isShared = $isShared;
 
         return $this;
     }
@@ -158,19 +168,19 @@ class BadgeCollection
     /**
      * @return mixed
      */
-    public function isPublic()
+    public function isIsShared()
     {
-        return $this->isPublic;
+        return $this->isShared;
     }
 
     /**
-     * @param string $publicId
+     * @param string $sharedId
      *
      * @return BadgeCollection
      */
-    public function setPublicId($publicId)
+    public function setSharedId($sharedId)
     {
-        $this->publicId = $publicId;
+        $this->sharedId = $sharedId;
 
         return $this;
     }
@@ -178,9 +188,9 @@ class BadgeCollection
     /**
      * @return string
      */
-    public function getPublicId()
+    public function getSharedId()
     {
-        return $this->publicId;
+        return $this->sharedId;
     }
 }
  

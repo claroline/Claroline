@@ -50,6 +50,9 @@
                         <button type="button" class="btn btn-xs btn-success" id="add_collection"
                                 data-loading-text="{{ 'add_collection_in_progress'|trans }}">{{ 'add_collection'|trans }}</button>
                     </div>
+                    {% set loadingState = '<img src="' ~ asset('bundles/clarolinecore/images/loading.gif') ~ '" alt="Loading" />' %}
+                    {% set sharedState = '<span class="icon-unlock-alt publish_collection"></span> ' ~ 'shared'|trans %}
+                    {% set privateState = '<span class="icon-lock publish_collection"></span> ' ~ 'private'|trans %}
                     {% set collectionTemplate = '<li class="collection well editing" data-id="__collectionId__" style="display: none">
                             <header>
                                 <div class="btn-group btn-group-xs pull-right">
@@ -81,6 +84,29 @@
                                 <li class="loading_badge" style="display: none"><img src="' ~ asset('bundles/clarolinecore/images/loading.gif') ~ '" alt="Loading" /></li>
                                 <li class="no_badge">' ~ 'no_badges'|trans ~ '</li>
                             </ul>
+                            <footer>
+                                <div class="dropdown">
+                                    <a href="' ~ path('claro_badge_collection_share_view', {'sharedId': '__sharedId__'}) ~ '" title="Voir la collection partagée" data-title="' ~ 'see_shared_collection'|trans ~ '"
+                                        data-toggle="tooltip" data-placement="top" data-container="body"
+                                        class="pull-right share_collection" style="display: none">
+                                            <span class="icon-share-alt"></span>
+                                    </a>
+                                    <a data-toggle="dropdown" href="#" title="' ~ 'private'|trans ~ '"
+                                        data-title="' ~ 'private'|trans ~ '" data-toggle="tooltip"
+                                        data-placement="top" data-container="body"  class="shared_toggle"
+                                        data-loading-state="' ~ loadingState|escape ~ '" data-shared-state="' ~ sharedState|escape ~ '" data-private-state="' ~ privateState|escape ~ '">
+                                            ' ~ privateState|raw ~ '
+                                    </a>
+                                    <ul class="dropdown-menu sharedoptions" role="menu" aria-labelledby="dLabel">
+                                        <li class="active">
+                                            <a role="menuitem" tabindex="-1" data-toggle="dropdown" href="#" class="sharedoption"><span class="icon-lock publish_collection"></span> ' ~ 'stop_share'|trans ~ '</a>
+                                        </li>
+                                        <li>
+                                            <a role="menuitem" tabindex="-1" data-toggle="dropdown" href="#" class="sharedoption"><span class="icon-unlock publish_collection"></span> ' ~ 'share'|trans ~ '</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </footer>
                         </li>' %}
                     {% set deleteCollectionBadgeTemplate = '<li class="deleting_collection_badge well" id="deleting_collection_badge"><p class="text-center"><span class="icon-trash"></span><img src="' ~ asset('bundles/clarolinecore/images/loading.gif') ~ '" alt="Loading" style="display: none"/></p></li>' %}
                     <ul class="list-unstyled collections_list" id="collections_list"
@@ -122,6 +148,36 @@
                                     <li class="loading_badge" style="display: none"><img src="{{ asset('bundles/clarolinecore/images/loading.gif') }}" alt="Loading" /></li>
                                     <li class="no_badge"{% if 0 < collection.badges|length %} style="display: none"{% endif %}>{{ 'no_badges'|trans }}</li>
                                 </ul>
+                                <footer>
+                                    <div class="dropdown">
+                                        {% set isCollectionShared = collection.isShared %}
+
+                                        <a href="{{ path('claro_badge_collection_share_view', {'sharedId': collection.sharedId}) }}"
+                                           title="{{ 'see_shared_collection'|trans }}" data-title="{{ 'see_shared_collection'|trans }}"
+                                           data-toggle="tooltip" data-placement="top" data-container="body"
+                                           class="pull-right share_collection"{% if false == isCollectionShared %} style="display: none"{% endif %}>
+                                            <span class="icon-share-alt"></span>
+                                        </a>
+                                        <a data-toggle="dropdown" href="#" title="{% if isCollectionShared %}{{ 'shared'|trans }}{% else %}{{ 'private'|trans }}{% endif %}"
+                                           data-title="{% if isCollectionShared %}{{ 'shared'|trans }}{% else %}{{ 'private'|trans }}{% endif %}" data-toggle="tooltip"
+                                           data-placement="top" data-container="body" class="shared_toggle"
+                                           data-loading-state="{{ loadingState }}" data-shared-state="{{ sharedState }}" data-private-state="{{ privateState }}">
+                                            {% if isCollectionShared %}
+                                                {{ sharedState|raw }}
+                                            {% else %}
+                                                {{ privateState|raw }}
+                                            {% endif %}
+                                        </a>
+                                        <ul class="dropdown-menu sharedoptions" role="menu" aria-labelledby="dLabel">
+                                            <li class="{% if false == isCollectionShared %} active{% endif %}">
+                                                <a role="menuitem" tabindex="-1" data-toggle="dropdown" href="#" class="sharedoption" data-value="0"><span class="icon-lock publish_collection"></span> {{ 'stop_share'|trans }}</a>
+                                            </li>
+                                            <li class="{% if isCollectionShared %} active{% endif %}">
+                                                <a role="menuitem" tabindex="-1" data-toggle="dropdown" href="#" class="sharedoption" data-value="1"><span class="icon-unlock publish_collection"></span> {{ 'share'|trans }}</a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </footer>
                             </li>
                         {% endfor %}
                         <li class="no_collection well"{% if 0 < badgeCollections|length %} style="display: none"{% endif %} id="no_collection">
@@ -158,16 +214,11 @@
 
 {% block javascripts %}
     {{ parent() }}
-    <script type="text/javascript"
-            src='{{ asset('bundles/frontend/jquery/jquery-ui-1.9.2/components/jquery.ui.effect.min.js') }}'></script>
-    <script type="text/javascript"
-            src='{{ asset('bundles/frontend/jquery/jquery-ui-1.9.2/components/jquery.ui.effect-highlight.min.js') }}'></script>
-    <script type="text/javascript"
-            src='{{ asset('bundles/frontend/jquery/jquery-ui-1.9.2/components/jquery.ui.droppable.min.js') }}'></script>
-    <script type="text/javascript"
-            src='{{ asset('bundles/frontend/jquery/jquery-ui-1.9.2/components/jquery.ui.draggable.min.js') }}'></script>
-    <script type="text/javascript"
-            src='{{ asset('bundles/frontend/jquery/plugin/confirm-bootstrap/confirm-bootstrap.js') }}'></script>
+    <script type="text/javascript" src='{{ asset('bundles/frontend/jquery/jquery-ui-1.9.2/components/jquery.ui.effect.min.js') }}'></script>
+    <script type="text/javascript" src='{{ asset('bundles/frontend/jquery/jquery-ui-1.9.2/components/jquery.ui.effect-highlight.min.js') }}'></script>
+    <script type="text/javascript" src='{{ asset('bundles/frontend/jquery/jquery-ui-1.9.2/components/jquery.ui.droppable.min.js') }}'></script>
+    <script type="text/javascript" src='{{ asset('bundles/frontend/jquery/jquery-ui-1.9.2/components/jquery.ui.draggable.min.js') }}'></script>
+    <script type="text/javascript" src='{{ asset('bundles/frontend/jquery/plugin/confirm-bootstrap/confirm-bootstrap.js') }}'></script>
     <script type="text/javascript" src='{{ asset('bundles/clarolinecore/js/badge/profile.js') }}'></script>
 {% endblock %}
 

@@ -113,3 +113,8 @@ add_badge_to_collection_error: "Une erreur est survenue lors de l'ajout du badge
 edit_title_collection_error: "Une erreur est survenue lors de la modification du nom de la collection."
 delete_collection_error: "Une erreur est survenue lors de la suppression de la collection."
 remove_badge_from_collection_error: "Une erreur est survenue lors de la suppression du badge de la collection."
+see_shared_collection: "Voir la collection partagée"
+share: "Partager"
+shared: "Partagée"
+stop_share: "Ne plus partager"
+private: "Privée"
