@@ -37,6 +37,8 @@ function addFormHoleEdit(add, response, point, size, orthography, del, selector,
 
     container.children().first().children('div').each(function () {
 
+        var nbHole = $('#newTable').find('.trHole').length;
+
         // Add a row to the table
         $('#newTable').find('.bodyHole').append('<tr class="trHole"></tr>');
 
@@ -126,6 +128,30 @@ function addFormHoleEdit(add, response, point, size, orthography, del, selector,
             
             $(this).parent('td').parent('tr').remove();
             e.preventDefault();
+            return false;
+        });
+
+        $('#ujm_exobundle_interactionholetype_holes_' + nbHole + '_selector').change(function (e) {
+            var ind = $(this).parent('td').parent('tr').find('td:first').find('input:first').val();
+
+            var node = tinyMCE.get('ujm_exobundle_interactionholetype_html').selection
+                    .select(tinyMCE.get('ujm_exobundle_interactionholetype_html').dom.select('#' + ind)[0]);
+
+            if ($(this).attr('checked')) {
+
+                if (node.tagName == 'INPUT') {
+                    nodeselect = '<select id="' + ind + '"><option>' + node.value + '</option></select>';
+                    tinyMCE.get('ujm_exobundle_interactionholetype_html').selection.setContent(nodeselect);
+                } 
+
+            } else {
+                if (node.tagName == 'SELECT') {
+                    size = $('#ujm_exobundle_interactionholetype_holes_' + ind + '_size').valueOf();
+                    nodeBlank = '<input type="text" value="' + node.value + '" size="' + size + '" class="blank" id="' + ind + '">';
+                    tinyMCE.get('ujm_exobundle_interactionholetype_html').selection.setContent(nodeBlank);
+                }
+            }
+            e.preventDefault(); // prevent add # in the url
             return false;
         });
         
@@ -231,6 +257,29 @@ function addHole(indexBlank, valHole) {
         e.preventDefault(); // prevent add # in the url
         return false;
     });
+    
+    $('#ujm_exobundle_interactionholetype_holes_' + index + '_selector').change(function (e) {
+        var node = tinyMCE.get('ujm_exobundle_interactionholetype_html').selection
+                .select(tinyMCE.get('ujm_exobundle_interactionholetype_html').dom.select('#' + indexBlank)[0]);
+        
+        if ($(this).attr('checked')) {
+        
+            if (node.tagName == 'INPUT') {
+                nodeselect = '<select id="' + indexBlank + '"><option>' + node.value + '</option></select>';
+                tinyMCE.get('ujm_exobundle_interactionholetype_html').selection.setContent(nodeselect);
+            } 
+            
+        } else {
+            if (node.tagName == 'SELECT') {
+                size = $('#ujm_exobundle_interactionholetype_holes_' + index + '_size').valueOf();
+                nodeBlank = '<input type="text" value="' + node.value + '" size="' + size + '" class="blank" id="' + index + '">';
+                tinyMCE.get('ujm_exobundle_interactionholetype_html').selection.setContent(nodeBlank);
+            }
+        }
+        e.preventDefault(); // prevent add # in the url
+        return false;
+    });
+    
 }
 
 function addWR(indexHole, idTabWR) {

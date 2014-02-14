@@ -262,34 +262,23 @@ class InteractionHoleHandler {
     {
         $html = $interHole->getHtml();
         $tabInputValue = explode('value="', $html);
-        $tabInputID = explode('id="', $html);
         $tabHoles = array();
 
         foreach($interHole->getHoles() as $hole)
         {
-            $tabHoles[$hole->getPosition()] = $hole;
+            if ($hole->getSelector() === false) {
+                $tabHoles[$hole->getPosition()] = $hole;
+            }
         }
         ksort($tabHoles);
         $tabHoles = array_values($tabHoles);
 
-        for( $i= 0; $i < count($tabInputValue) - 1; $i++)
+        for( $i= 0; $i < count($tabInputValue); $i++)
         {
-            if($tabHoles[$i]->getSelector() === false)
-            {
-                $inputValue = explode('"', $tabInputValue[$i]);
-                $regExpr = 'value="'.$inputValue[0].'"';
-                $html = str_replace($regExpr, 'value=""', $html);
-            }
-            else
-            {
-                $inputID = explode('"', $tabInputID[$i]);
-                $inputValue = explode('"', $tabInputValue[$i]);
-                $select = '<select id="'.$inputID[0].'"></select>';
-                $regExpr = '<input id="'.$inputID[0].'" class="blank" type="text" value="'.$inputValue[0].'" size="'.$tabHoles[$i]->getSize().'" />';
-                $html = str_replace($regExpr, $select, $html);
-            }
+            $inputValue = explode('"', $tabInputValue[$i]);
+            $regExpr = 'value="'.$inputValue[0].'"';
+            $html = str_replace($regExpr, 'value=""', $html);
         }
-
         $interHole->setHtmlWithoutValue($html);
     }
 }
