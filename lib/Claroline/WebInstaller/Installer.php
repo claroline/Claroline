@@ -46,6 +46,7 @@ class Installer
         $refresher->installAssets();
 
         $installer = $kernel->getContainer()->get('claroline.installation.platform_installer');
+        $installer->skipAssetsAction();
         $installer->installFromOperationFile();
 
         $userManager = $kernel->getContainer()->get('claroline.manager.user_manager');
