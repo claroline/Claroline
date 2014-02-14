@@ -94,7 +94,7 @@ class ContentManager
      *
      * @return integer The id of the new content.
      */
-    public function createContent($translatedContent, $type = null)
+    public function createContent(Array $translatedContent, $type = null)
     {
         $content = new Content();
         $content->setType($type);
@@ -117,9 +117,9 @@ class ContentManager
      * @param $translatedContent array('en' => array('content' => 'foo', 'title' => 'foo'))
      * @param $content Content Entity
      */
-    public function updateContent($content, $translatedContents)
+    public function updateContent(Content $content, Array $translatedContents)
     {
-        $content = $this->resetContent($content, $translatedContents); // we need to do this because a bug with gedmo
+        $content = $this->resetContent($content, $translatedContents); // Gedmo bug #321
 
         foreach ($translatedContents as $lang => $translatedContent) {
             $this->updateTranslation($content, $translatedContent, $lang);
@@ -130,16 +130,16 @@ class ContentManager
      * Delete a translation of content
      *
      * @param $locale
-     * @param $id
+     * @param $contentId
      *
      * @return This function doesn't return anything.
      */
-    public function deleteTranslation($locale, $id)
+    public function deleteTranslation($locale, $contentId)
     {
         if ($locale === 'en') {
-            $content = $this->content->findOneBy(array('id' => $id));
+            $content = $this->content->findOneBy(array('id' => $contentId));
         } else {
-            $content = $this->translations->findOneBy(array('foreignKey' => $id, 'locale' => $locale));
+            $content = $this->translations->findOneBy(array('foreignKey' => $contentId, 'locale' => $locale));
         }
 
         if ($content instanceof ContentTranslation or $content instanceof Content) {
@@ -156,7 +156,7 @@ class ContentManager
      *
      * @return Claroline\CoreBundle\Entity\Content
      */
-    private function resetContent($content, $translatedContents)
+    private function resetContent(Content $content, Array $translatedContents)
     {
         foreach ($translatedContents as $lang => $translatedContent) {
             $this->updateTranslation($content, $translatedContent, $lang, true);
@@ -175,7 +175,7 @@ class ContentManager
      * @param $locale A string with a locale value as 'en' or 'fr'
      * @param $reset A boolean in case of you whant to reset the values of the translation
      */
-    private function updateTranslation($content, $translation, $locale = 'en', $reset = false)
+    private function updateTranslation(Content $content, $translation, $locale = 'en', $reset = false)
     {
         if (isset($translation['title'])) {
             $content->setTitle(($reset ? null : $translation['title']));
@@ -200,7 +200,7 @@ class ContentManager
      *
      * @return array('en' => array('content' => 'foo', 'title' => 'foo'))
      */
-    private function setDefault($translatedContent, $field, $locale)
+    private function setDefault(Array $translatedContent, $field, $locale)
     {
         if ($locale !== 'en') {
             if (isset($translatedContent['en'][$field]) and !strlen($translatedContent['en'][$field]) and
