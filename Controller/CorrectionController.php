@@ -660,7 +660,6 @@ class CorrectionController extends DropzoneBaseController
                 'totalChoice' => $dropzone->getTotalCriteriaColumn()
             )
         );
-
         if ($edit) {
             if ($this->getRequest()->isMethod('POST') and $correction !== null) {
                 $form->handleRequest($this->getRequest());
@@ -725,7 +724,7 @@ class CorrectionController extends DropzoneBaseController
 
         $view = 'IcapDropzoneBundle:Correction:correctCriteria.html.twig';
 
-        if($state =='show')
+        if($state =='show' || $state =='edit')
         {
                 return $this->render(
                     $view,
@@ -740,7 +739,7 @@ class CorrectionController extends DropzoneBaseController
                         'edit' => $edit,
                         'state' => $state
                     )
-                );
+                    );
         }else if( $state == 'preview')
         {
                 return $this->render(
