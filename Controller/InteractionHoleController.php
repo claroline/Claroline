@@ -270,6 +270,33 @@ class InteractionHoleController extends Controller
         return $this->redirect($this->generateUrl('ujm_question_index', array('pageNow' => $pageNow)));
     }
 
+    /**
+     * To test the question with holes by the teacher
+     *
+     */
+    public function responseHoleAction()
+    {
+        $vars = array();
+        $request = $this->get('request');
+        $postVal = $req = $request->request->all();
+
+        if ($postVal['exoID'] != -1) {
+            $exercise = $this->getDoctrine()->getManager()->getRepository('UJMExoBundle:Exercise')->find($postVal['exoID']);
+            $vars['_resource'] = $exercise;
+        }
+
+        $exerciseSer = $this->container->get('ujm.exercise_services');
+        $res = $exerciseSer->responseHole($request);
+
+        $vars['score']     = $res['score'];
+        $vars['penalty']   = $res['penalty'];
+        $vars['interHole'] = $res['interHole'];
+        $vars['response']  = $res['response'];
+        $vars['exoID']     = $postVal['exoID'];
+
+        return $this->render('UJMExoBundle:InteractionHole:holeOverview.html.twig', $vars);
+    }
+    
     private function createDeleteForm($id)
     {
         return $this->createFormBuilder(array('id' => $id))

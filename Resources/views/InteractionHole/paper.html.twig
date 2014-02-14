@@ -1,0 +1,168 @@
+{#
+ # ExoOnLine
+ # Copyright or © or Copr. Université Jean Monnet (France), 2012
+ # dsi.dev@univ-st-etienne.fr
+ #
+ # This software is a computer program whose purpose is to [describe
+ # functionalities and technical features of your software].
+ #
+ # This software is governed by the CeCILL license under French law and
+ # abiding by the rules of distribution of free software.  You can  use,
+ # modify and/ or redistribute the software under the terms of the CeCILL
+ # license as circulated by CEA, CNRS and INRIA at the following URL
+ # "http://www.cecill.info".
+ #
+ # As a counterpart to the access to the source code and  rights to copy,
+ # modify and redistribute granted by the license, users are provided only
+ # with a limited warranty  and the software's author,  the holder of the
+ # economic rights,  and the successive licensors  have only  limited
+ # liability.
+ #
+ # In this respect, the user's attention is drawn to the risks associated
+ # with loading,  using,  modifying and/or developing or reproducing the
+ # software by the user in light of its specific status of free software,
+ # that may mean  that it is complicated to manipulate,  and  that  also
+ # therefore means  that it is reserved for developers  and  experienced
+ # professionals having in-depth computer knowledge. Users are therefore
+ # encouraged to load and test the software's suitability as regards their
+ # requirements in conditions enabling the security of their systems and/or
+ # data to be ensured and,  more generally, to use and operate it in the
+ # same conditions as regards security.
+ #
+ # The fact that you are presently reading this means that you have had
+ # knowledge of the CeCILL license and that you accept its terms.
+#}
+
+{% set layout = "ClarolineCoreBundle:Workspace:layout.html.twig" %}
+
+{% if isDesktop() %}
+    {% set layout = "ClarolineCoreBundle:Desktop:layout.html.twig" %}
+    {% block breadcrumb %}
+        {{
+            macros.breadcrumbs([
+                {
+                    'icon': 'icon-briefcase',
+                    'name': 'desktop'|trans({}, 'platform'),
+                    'href': path('claro_desktop_open')
+                },
+                {
+                    'name': 'bank of questions' | trans,
+                    'href': path('ujm_question_index')
+                },
+                {
+                    'name': 'paper' | trans,
+                    'href': ''
+                }
+            ])
+        }}
+    {% endblock %}
+{% else %}
+    {% block resourceBreadcrumb %}
+        <li><a href="{{ path('claro_resource_open', { 'resourceType': _resource.resourceNode.resourceType.name(), 'node': _resource.resourceNode.id }) }}">{{ _resource.getResourceNode().getName() }}</a></li>
+        <li class="active">{{ 'bank of questions' | trans }}</li>
+    {% endblock %}
+{% endif %}
+
+{% extends layout %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link href="{{ asset('bundles/ujmexo/css/tableLayout.css') }}" type="text/css" rel="stylesheet"/>
+{% endblock %}
+
+{% block title %} {{ 'paper' | trans }} {{ 'question' | trans }} {% endblock %}
+
+{% block section_content %}
+
+    <div class="panel-heading">
+        <h1>{{ 'paper' | trans }} {{ 'question' | trans }}</h1>
+    </div>
+
+    <div class="panel-body">
+        {% if exoID == -1 %}
+            <a class="btn btn-primary" href="{{ path('ujm_question_index') }}">
+                <i class="icon-arrow-left"></i> {{ 'back' | trans }}
+            </a>
+        {% else %}
+            <a class="btn btn-primary" href="{{ path('ujm_exercise_questions', { 'id': exoID }) }}">
+                <i class="icon-arrow-left"></i> {{ 'back' | trans }}
+            </a>
+        {% endif %}
+    </div>
+
+    <div class="list-group">
+        <div class="list-group-item">
+
+            <div class="panel panel-default">
+                <div class="panel-heading"><h3 class="panel-title">{{ 'title' | trans }}</h3></div>
+                <div class="panel-body">
+                    {{ interactionHole.interaction.question.title }}
+                </div>
+            </div>
+
+            {% if interactionHole.interaction.question.description != null %}
+                <div class="panel panel-default">
+                    <div class="panel-heading"><h3 class="panel-title">{{ 'description' | trans }}</h3></div>
+                    <div class="panel-body">
+                        {{ interactionHole.interaction.question.description|raw }}
+                    </div>
+                </div>
+            {% endif %}
+
+            <div class="panel panel-default">
+                <div class="panel-heading"><h3 class="panel-title">{{ 'question' | trans }}</h3></div>
+                <div class="panel-body">
+                    {{ interactionHole.interaction.invite|raw }}
+                </div>
+            </div>
+
+            <form action="{{ path('ujm_interactionhole_response') }}" method="post" {{ form_enctype(form) }}>
+                {{ form_widget(form) }}
+
+                <div class="panel panel-default">
+                    <div class="panel-heading"><h3 class="panel-title">{{ 'response' | trans }}</h3></div>
+                    <div class="panel-body">
+                        <p>todo : Pour les select récupérer les différents choix dans un ordre aléatoire, dans le handler ?</p>
+                        <div id="interHoleResponse">{{ interactionHole.htmlWithoutValue | raw }}</div>
+                    </div>
+                </div>
+
+                {% if interactionHole.interaction.hints is not empty %}
+                    <div class="panel panel-default">
+                        <div class="panel-heading"><h3 class="panel-title">{{ 'hints' | trans }}</h3></div>
+                        <div class="panel-body">
+                            <table>
+                                {% set nbr_hint = 1 %}
+                                {% for hint in interactionHole.interaction.hints %}
+                                    <tr>
+                                        <td class="classic">
+                                            <a href="#"  id="indice_popup" onclick="show_hint('{{hint.id}}',
+                                                '{{path('ujm_hint_show')}}', '{{ 'consult_hint' | trans }} ?',
+                                                '{{nbr_hint}}');event.preventDefault();">
+                                                    {{ 'hint' | trans }} {{nbr_hint}}
+                                            </a>
+                                        </td>
+                                        <td id="div_hint{{nbr_hint}}" class="classic"></td>
+                                    </tr>
+                                    {% set nbr_hint = nbr_hint + 1 %}
+                                {% endfor %}
+                            </table>
+                        </div>
+                    </div>
+                {% endif %}
+
+                <div class="panel-footer">
+                    <input type="hidden" name="testQCM" value="testQCM" />
+                    <input type="hidden" name="interactionQCMToValidated" value="{{ interactionHole.id }}" />
+                    <input type="hidden" name="exoID" value="{{ exoID }}" />
+                    <button type="submit" id="submit_response" class="btn btn-primary">{{ 'validate' | trans }}</button>
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/paper.js') }}"></script>
+{% endblock %}

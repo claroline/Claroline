@@ -3,9 +3,9 @@ ujm_interactionhole_create:
     defaults: { _controller: "UJMExoBundle:InteractionHole:create" }
     requirements: { _method: post }
 
-ujm_interactionohole_response:
+ujm_interactionhole_response:
     pattern: /testHole
-    defaults: { _controller: "UJMExoBundle:InteractionHole:responseOpen" }
+    defaults: { _controller: "UJMExoBundle:InteractionHole:responseHole" }
     requirements: { _method: post }
 
 ujm_interactionhole_update:
