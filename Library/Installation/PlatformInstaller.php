@@ -40,6 +40,7 @@ class PlatformInstaller
     private $container;
     private $logger;
     private $output;
+    private $skipAssets = false;
 
     /**
      * @DI\InjectParams({
@@ -81,6 +82,11 @@ class PlatformInstaller
         $this->refresher->setOutput($output);
     }
 
+    public function skipAssetsAction($skip = true)
+    {
+        $this->skipAssets = $skip;
+    }
+
     public function installFromOperationFile($operationFile = null)
     {
         $this->launchPreInstallActions();
@@ -90,7 +96,6 @@ class PlatformInstaller
         }
 
         $this->operationExecutor->execute();
-        $this->launchPostInstallActions();
     }
 
     public function installFromKernel($withOptionalFixtures = true)
@@ -104,19 +109,16 @@ class PlatformInstaller
                 $this->baseInstaller->install($bundle, !$withOptionalFixtures);
             }
         }
-
-        $this->launchPostInstallActions();
     }
 
     private function launchPreInstallActions()
     {
+        if (!$this->skipAssets) {
+            $this->refresher->refresh($this->kernel->getEnvironment(), false);
+        }
+
         $this->createDatabaseIfNotExists();
         $this->createAclTablesIfNotExist();
-    }
-
-    private function launchPostInstallActions()
-    {
-        $this->refresher->refresh($this->kernel->getEnvironment(), false);
     }
 
     private function createDatabaseIfNotExists()
