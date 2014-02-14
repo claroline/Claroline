@@ -27,13 +27,19 @@ class PlatformInstallCommand extends ContainerAwareCommand
     {
         parent::configure();
         $this->setName('claroline:install')
-            ->setDescription('Installs the platform packages listed in the application kernel.');
-        $this->addOption(
-            'with-optional-fixtures',
-            'wof',
-            InputOption::VALUE_NONE,
-            'When set to true, optional data fixtures will be loaded'
-        );
+            ->setDescription('Installs the platform packages listed in the application kernel.')
+            ->addOption(
+                'with-optional-fixtures',
+                null,
+                InputOption::VALUE_NONE,
+                'When set to true, optional data fixtures will be loaded'
+            )
+            ->addOption(
+                'skip-assets',
+                null,
+                InputOption::VALUE_NONE,
+                'When set to true, assets install/dump is skipped'
+            );
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -46,6 +52,11 @@ class PlatformInstallCommand extends ContainerAwareCommand
                 $output->writeln($message);
             }
         );
+
+        if ($input->getOption('skip-assets')) {
+            $installer->skipAssetsAction();
+        }
+
         $installer->installFromKernel($input->getOption('with-optional-fixtures'));
     }
 }
