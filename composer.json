@@ -12,7 +12,8 @@
         }
     ],
     "require": {
-        "php": ">=5.3.3"
+        "php": ">=5.3.3",
+        "composer/composer": "dev-master"
     },
     "autoload": {
         "psr-0": { "Claroline\\BundleRecorder": "" }
