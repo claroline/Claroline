@@ -90,24 +90,22 @@ class InteractionHoleHandler {
 
     private function onSuccessAdd(InteractionHole $interHole)
     {
+        // to avoid bug with code tinymce
+        $htmlTiny = $interHole->getHtml();
         $interHole->getInteraction()->getQuestion()->setDateCreate(new \Datetime());
         $interHole->getInteraction()->getQuestion()->setUser($this->user);
         $interHole->getInteraction()->setType('InteractionHole');
-
-        $ord = 1;
 
         foreach ($interHole->getHoles() as $hole) {
             foreach ($hole->getWordResponses() as $wr) {
                 $hole->addWordResponse($wr);
                 $this->em->persist($wr);
             }
-            $hole->setPosition($ord);
             $interHole->addHole($hole);
             $this->em->persist($hole);
-            $ord = $ord + 1;
         }
-
         $this->htmlWithoutValue($interHole);
+        $interHole->setHtml($htmlTiny);
         $this->em->persist($interHole);
         $this->em->persist($interHole->getInteraction()->getQuestion());
         $this->em->persist($interHole->getInteraction());
@@ -125,7 +123,6 @@ class InteractionHoleHandler {
     {
         $originalHoles = array();
         $originalHints = array();
-        $originalWRs   = array();
 
         // Create an array of the current Choice objects in the database
         foreach ($originalInterHole->getHoles() as $hole) {
@@ -159,12 +156,15 @@ class InteractionHoleHandler {
 
     private function onSuccessUpdate(InteractionHole $interHole, $originalHoles, $originalHints)
     {
+        // to avoid bug with code tinymce
+        $htmlTiny = $interHole->getHtml();
+
         // filter $originalHoles to contain hole no longer present
         foreach ($interHole->getHoles() as $hole) {
-            
+
             //to remove key word not yet used
             $this->delKeyWord($hole, $originalHoles);
-            
+
             foreach ($originalHoles as $key => $toDel) {
                 if ($toDel->getId() == $hole->getId()) {
                     unset($originalHoles[$key]);
@@ -200,6 +200,7 @@ class InteractionHoleHandler {
         }
 
         $this->htmlWithoutValue($interHole);
+        $interHole->setHtml($htmlTiny);
         $this->em->persist($interHole);
         $this->em->persist($interHole->getInteraction()->getQuestion());
         $this->em->persist($interHole->getInteraction());
@@ -222,7 +223,7 @@ class InteractionHoleHandler {
 
         $this->em->flush();
     }
-    
+
     private function delKeyWord($hole, $originalHoles)
     {
         $wordResponses = $hole->getWordResponses()->toArray();
@@ -242,7 +243,7 @@ class InteractionHoleHandler {
                         }
                     }
                 }
-                
+
                 // remove the relationship between the hole and the interactionhole
                 foreach ($originalWords as $word)
                 {
@@ -252,11 +253,11 @@ class InteractionHoleHandler {
                     // if you wanted to delete the Hole entirely, you can also do that
                     $this->em->remove($word);
                 }
-            
+
             }
         }
     }
-    
+
     private function htmlWithoutValue($interHole)
     {
         $html = $interHole->getHtml();
@@ -270,7 +271,7 @@ class InteractionHoleHandler {
         }
         ksort($tabHoles);
         $tabHoles = array_values($tabHoles);
-        
+
         for( $i= 0; $i < count($tabInputValue) - 1; $i++)
         {
             if($tabHoles[$i]->getSelector() === false)
@@ -288,7 +289,7 @@ class InteractionHoleHandler {
                 $html = str_replace($regExpr, $select, $html);
             }
         }
-        
+
         $interHole->setHtmlWithoutValue($html);
     }
 }
