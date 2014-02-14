@@ -101,8 +101,8 @@
 
         $.ajax(home.path + contentPath).done(function (data) {
             if (father && !update) {
-               $('.creator' + father).after(data);
-               $('.creator' + father).find('.collapse' + father).collapse('hide');
+                $('.creator' + father).after(data);
+                $('.creator' + father).find('.collapse' + father).collapse('hide');
             } else if (father && update) {
                 $(creatorElement).parents('.creator' + father).first().replaceWith(data);
             } else if (update) {
@@ -141,14 +141,14 @@
         var form = $('form', creatorElement).first().serializeArray();
         var type = $(creatorElement).data('type');
         var father = $(creatorElement).data('father');
-        var route ='content/create/' + type;
+        var route = 'content/create/' + type;
 
         if (father) {
             route += '/' + father;
         }
 
         if (update) {
-            route ='content/update/' + id;
+            route = 'content/update/' + id;
         }
 
         if (!home.creatorIsEmpty(form)) {
@@ -174,7 +174,7 @@
      *
      * @param form A serializeArray of a form element
      */
-    home.creatorIsEmpty = function(form)
+    home.creatorIsEmpty = function (form)
     {
         if (form instanceof Array) {
             for (var lang in form) {
@@ -185,7 +185,7 @@
         }
 
         return true;
-    }
+    };
 
     /**
      * Get content from a external url and put it in a creator of contents.
