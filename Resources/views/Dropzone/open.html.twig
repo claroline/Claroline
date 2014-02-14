@@ -191,11 +191,10 @@
                                     Note : {% include 'IcapDropzoneBundle:Drop:dropsTotalGrade.html.twig' %}
                                 </div>
                             {% endif %}
-                            {% if dropzone.diplayCorrectionsToLearners %}
-                                <a href="{{ path('',{'ressourceId': dropzone.id}) }}" class="">{{ 'See Corrections'|trans({},'icap_dropzone') }}</a>
-                            {% endif %}
-
                         </div>
+                        {% if dropzone.diplayCorrectionsToLearners %}
+                            <a href="{{ path('icap_dropzone_drop_detail_by_user',{'resourceId': dropzone.id,'dropId':drop.id}) }}" class="btn btn-primary ">{{ 'See Corrections'|trans({},'icap_dropzone') }}</a>
+                        {% endif %}
                     {% else %}
                         <div class='text-danger'>
                             {% if dropzone.displayNotationMessageToLearners %}
@@ -209,6 +208,9 @@
                                 </div>
                             {% endif %}
                         </div>
+                        {% if dropzone.diplayCorrectionsToLearners %}
+                            <a href="{{ path('icap_dropzone_drop_detail_by_user',{'resourceId': dropzone.id,'dropId':drop.id}) }}" class="btn btn-primary">{{ 'See Corrections'|trans({},'icap_dropzone') }}</a>
+                        {% endif %}
                     {% endif %}
                 {% else %}
                     <div class="col-md-12">
