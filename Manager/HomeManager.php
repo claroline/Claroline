@@ -444,7 +444,9 @@ class HomeManager
             $variables['content'] = $content;
         }
 
-        $variables['form'] = $this->formFactory->create(new HomeContentType($id, $type, $father), $content)->createView();
+        $variables['form'] = $this->formFactory->create(
+            new HomeContentType($id, $type, $father), $content
+        )->createView();
 
         return $this->homeService->isDefinedPush($variables, 'father', $father);
     }
