@@ -26,18 +26,22 @@ class PlatformUpdateCommand extends ContainerAwareCommand
     {
         parent::configure();
         $this->setName('claroline:update')
-            ->setDescription('Updates, installs or uninstalls the claroline packages brought by composer.');
+            ->setDescription(
+                'Updates, installs or uninstalls the platform packages '
+                . 'brought by composer (requires an operation file).'
+            );
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $output->writeln('Updating the platform...');
-        $executor = $this->getContainer()->get('claroline.installation.operation_executor');
-        $executor->setLogger(
+        $output->writeln('<comment>Updating the platform...</comment>');
+        $installer = $this->getContainer()->get('claroline.installation.platform_installer');
+        $installer->setOutput($output);
+        $installer->setLogger(
             function ($message) use ($output) {
                 $output->writeln($message);
             }
         );
-        $executor->execute();
+        $installer->installFromOperationFile();
     }
 }
