@@ -27,6 +27,7 @@ Project setup
 - PHP >= 5.4.1
 - PHP extensions:
     - fileinfo (for mime type detection)
+    - curl (for facebook authentication)
     - Optionaly:
         - [gd][1] (for simple icon creation)
         - [ffmpeg][2] (for video thumbnail creation)
@@ -53,11 +54,10 @@ Project setup
     - *web/themes*
     - *web/thumbnails*
 - Run the following commands:
-    - `$ composer require claroline/bundle-recorder "~2.1"`
+    - `$ composer require claroline/bundle-recorder "~2.2"`
     - `$ cp composer.dist.json composer.json`
     - `$ composer update --prefer-source`
     - `$ php app/console claroline:update`
-    - `$ php app/console claroline:refresh`
 
 You can then create a first admin user with:
 
@@ -87,7 +87,7 @@ You can install or uninstall a plugin by adding or removing the package in the
 *require* section of your composer.json and running:
 
 ```sh
-$ composer update vendor/plugin-name
+$ composer update vendor/plugin-name --prefer-source
 ```
 
 If the plugin package is already present in your project and if you simply want

@@ -7,9 +7,9 @@
     "require": {
         "php": ">=5.4.1",
         "sensio/distribution-bundle": "~2.3.4",
-        "claroline/bundle-recorder": "~2.1",
-        "claroline/core-bundle": "~2.8",
-        "claroline/web-installer": ">=1.0.6,<2.0",
+        "claroline/bundle-recorder": "~2.2",
+        "claroline/core-bundle": ">=2.9.2,<3.0",
+        "claroline/web-installer": ">=1.0.8,<2.0",
         "claroline/activity-tool-bundle": ">=1.0.2,<2.0",
         "claroline/announcement-bundle": ">=2.0.5,<3.0",
         "claroline/forum-bundle": ">=2.1.6,<3.0",
@@ -59,8 +59,7 @@
             "Claroline\\BundleRecorder\\ScriptHandler::prePlatformInstall"
         ],
         "pre-update-cmd": [
-            "Claroline\\BundleRecorder\\ScriptHandler::prePlatformUpdate",
-            "Claroline\\CoreBundle\\Library\\Maintenance\\MaintenanceHandler::enableMaintenance"
+            "Claroline\\BundleRecorder\\ScriptHandler::prePlatformUpdate"
         ],
         "post-package-install": [
             "Claroline\\BundleRecorder\\ScriptHandler::postPackageInstall"
@@ -75,15 +74,14 @@
             "Claroline\\BundleRecorder\\ScriptHandler::postPackageUninstall"
         ],
         "post-install-cmd": [
+            "Claroline\\CoreBundle\\Library\\Installation\\Refresher::deleteCache",
             "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::buildBootstrap",
-            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::clearCache",
-            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installAssets",
             "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installRequirementsFile"
         ],
         "post-update-cmd": [
+            "Claroline\\BundleRecorder\\ScriptHandler::postPlatformUpdate",
+            "Claroline\\CoreBundle\\Library\\Installation\\Refresher::deleteCache",
             "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::buildBootstrap",
-            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::clearCache",
-            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installAssets",
             "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installRequirementsFile"
         ]
     },
