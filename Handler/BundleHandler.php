@@ -40,7 +40,7 @@ class BundleHandler extends BaseHandler
         }
 
         if ($this->registeredBundles !== $orderedList) {
-            $this->log('Reordering bundles...');
+            $this->log('Reordering bundles...', '');
             $this->registeredBundles = $orderedList;
             $this->writeBundleFile();
         }

@@ -72,8 +72,8 @@ class ScriptHandler
             $io = $event->getIO();
             $vendorDir = realpath(rtrim($event->getComposer()->getConfig()->get('vendor-dir'), '/'));
             $configDir = realpath($vendorDir . '/../app/config');
-            $logger = function ($message) use ($io) {
-                $io->write("    {$message}");
+            $logger = function ($message, $indent = '    ') use ($io) {
+                $io->write($indent . $message);
             };
             static::$recorder = new Recorder(
                 new Detector($vendorDir),

@@ -26,10 +26,10 @@ class BaseHandler
         $this->logger = $logger;
     }
 
-    public function log($message)
+    public function log($message, $indent = '    ')
     {
         if ($log = $this->logger) {
-            $log($message);
+            $log($indent . $message);
         }
     }
 
