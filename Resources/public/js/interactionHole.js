@@ -133,6 +133,9 @@ function addFormHoleEdit(add, response, point, size, orthography, del, selector,
     
     container.remove();
     $('#prototypes').remove();
+    
+    addClassVAlign();
+    verticalAlignCenter();
 }
 
 function createHole() {
