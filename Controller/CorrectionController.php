@@ -827,10 +827,11 @@ class CorrectionController extends DropzoneBaseController
         }
 
         $view = 'IcapDropzoneBundle:Correction:correctComment.html.twig';
-        $totalGrade = $this->calculateCorrectionTotalGrade($dropzone, $correction);
+        
 
         if($state =='show')
         {
+            $totalGrade = $this->calculateCorrectionTotalGrade($dropzone, $correction);
             return $this->render(
                 $view,
                 array(
@@ -848,6 +849,7 @@ class CorrectionController extends DropzoneBaseController
                 );
         }else if( $state == 'preview')
         {
+            $totalGrade = $correction->getTotalGrade();
             return $this->render(
                 $view,
                 array(
