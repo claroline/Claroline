@@ -20,6 +20,7 @@ use Doctrine\ORM\Query;
 use JMS\DiExtraBundle\Annotation\Inject;
 use JMS\DiExtraBundle\Annotation\InjectParams;
 use JMS\DiExtraBundle\Annotation\Service;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * @Service("claroline.manager.content_manager")
@@ -27,19 +28,27 @@ use JMS\DiExtraBundle\Annotation\Service;
 class ContentManager
 {
     private $manager;
+    private $request;
     private $entityManager;
     private $content;
 
     /**
      * @InjectParams({
      *     "manager"        = @Inject("doctrine"),
+     *     "requestStack"   = @Inject("request_stack"),
      *     "entityManager"  = @Inject("doctrine.orm.entity_manager"),
      *     "persistence"    = @Inject("claroline.persistence.object_manager")
      * })
      */
-    public function __construct(Registry $manager, EntityManager $entityManager, ObjectManager $persistence)
+    public function __construct(
+        Registry $manager,
+        RequestStack $requestStack,
+        EntityManager $entityManager,
+        ObjectManager $persistence
+    )
     {
         $this->manager = $persistence;
+        $this->request = $requestStack->getCurrentRequest();
         $this->entityManager = $entityManager;
         $this->content = $manager->getRepository('ClarolineCoreBundle:Content');
         $this->translations = $manager->getRepository('ClarolineCoreBundle:ContentTranslation');
@@ -89,8 +98,15 @@ class ContentManager
     {
         $content = new Content();
         $content->setType($type);
-
-        $this->updateContent($content, $translatedContent);
+        $locale = $this->request->getSession()->get('_locale');
+        $this->updateContent(
+            $content,
+            $this->setDefault(
+                $this->setDefault($translatedContent, 'title', $locale),
+                'content',
+                $locale
+            )
+        );
 
         return $content->getId();
     }
@@ -98,26 +114,15 @@ class ContentManager
     /**
      * Update a content.
      *
-     * @param string $translatedContent array('en' => array('content' => 'foo', 'title' => 'foo'))
-     * @param string $content Content Entity
+     * @param $translatedContent array('en' => array('content' => 'foo', 'title' => 'foo'))
+     * @param $content Content Entity
      */
     public function updateContent($content, $translatedContents)
     {
-        foreach ($translatedContents as $lang => $translatedContent) {
-            if (isset($translatedContent["title"]) and $translatedContent["title"] !== '' or
-                isset($translatedContent["content"]) and $translatedContent["content"] !== '') {
-                if (isset($translatedContent["title"])) {
-                    $content->setTitle($translatedContent["title"]);
-                }
-                if (isset($translatedContent["content"])) {
-                    $content->setContent($translatedContent["content"]);
-                }
+        $content = $this->resetContent($content, $translatedContents); // we need to do this because a bug with gedmo
 
-                $content->setTranslatableLocale($lang);
-                $content->setModified();
-                $this->manager->persist($content);
-                $this->manager->flush();
-            }
+        foreach ($translatedContents as $lang => $translatedContent) {
+            $this->updateTranslation($content, $translatedContent, $lang);
         }
     }
 
@@ -141,5 +146,69 @@ class ContentManager
             $this->manager->remove($content);
             $this->manager->flush();
         }
+    }
+
+    /**
+     * Reset translated values of a content.
+     *
+     * @param $content A content entity
+     * @param $translatedContent array('en' => array('content' => 'foo', 'title' => 'foo'))
+     *
+     * @return Claroline\CoreBundle\Entity\Content
+     */
+    private function resetContent($content, $translatedContents)
+    {
+        foreach ($translatedContents as $lang => $translatedContent) {
+            $this->updateTranslation($content, $translatedContent, $lang, true);
+        }
+
+        $this->updateTranslation($content, $translatedContents['en']);
+
+        return $content;
+    }
+
+    /**
+     * Update a content translation.
+     *
+     * @param $content A content entity
+     * @param translation array('content' => 'foo', 'title' => 'foo')
+     * @param $locale A string with a locale value as 'en' or 'fr'
+     * @param $reset A boolean in case of you whant to reset the values of the translation
+     */
+    private function updateTranslation($content, $translation, $locale = 'en', $reset = false)
+    {
+        if (isset($translation['title'])) {
+            $content->setTitle(($reset ? null : $translation['title']));
+        }
+        if (isset($translation['content'])) {
+            $content->setContent(($reset ? null : $translation['content']));
+        }
+
+        $content->setTranslatableLocale($locale);
+        $content->setModified();
+        $this->manager->persist($content);
+        $this->manager->flush();
+    }
+
+    /**
+     * Create a content in another language not longer create this content in the default language,
+     * so this function is used for this purpose.
+     *
+     * @param $translatedContent array('en' => array('content' => 'foo', 'title' => 'foo'))
+     * @param $field The name of a fiel as 'title' or 'content'
+     * @param $locale A string with a locale value as 'en' or 'fr'
+     *
+     * @return array('en' => array('content' => 'foo', 'title' => 'foo'))
+     */
+    private function setDefault($translatedContent, $field, $locale)
+    {
+        if ($locale !== 'en') {
+            if (isset($translatedContent['en'][$field]) and !strlen($translatedContent['en'][$field]) and
+                isset($translatedContent[$locale][$field]) and strlen($translatedContent[$locale][$field])) {
+                $translatedContent['en'][$field] = $translatedContent[$locale][$field];
+            }
+        }
+
+        return $translatedContent;
     }
 }

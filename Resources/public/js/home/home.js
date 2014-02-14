@@ -170,7 +170,7 @@
     };
 
     /**
-     * check if a translated contentn form is empty
+     * check if a translated content form is empty
      *
      * @param form A serializeArray of a form element
      */
