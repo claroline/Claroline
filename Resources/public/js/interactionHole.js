@@ -120,7 +120,9 @@ function addFormHoleEdit(add, response, point, size, orthography, del, selector,
             nodeblank = tinyMCE.get('ujm_exobundle_interactionholetype_html').selection
                 .select(tinyMCE.get('ujm_exobundle_interactionholetype_html').dom.select('#' + ind)[0]);
 
-            tinyMCE.get('ujm_exobundle_interactionholetype_html').selection.setContent(nodeblank.value);
+            if(nodeblank) {
+                tinyMCE.get('ujm_exobundle_interactionholetype_html').selection.setContent(nodeblank.value);
+            }
             
             $(this).parent('td').parent('tr').remove();
             e.preventDefault();
@@ -211,7 +213,9 @@ function addHole(indexBlank, valHole) {
         nodeblank = tinyMCE.get('ujm_exobundle_interactionholetype_html').selection
                 .select(tinyMCE.get('ujm_exobundle_interactionholetype_html').dom.select('#' + indexBlank)[0]);
 
-        tinyMCE.get('ujm_exobundle_interactionholetype_html').selection.setContent(nodeblank.value);
+        if(nodeblank) {
+            tinyMCE.get('ujm_exobundle_interactionholetype_html').selection.setContent(nodeblank.value);
+        }
         
         $(this).parent('td').parent('tr').remove();
         e.preventDefault();
