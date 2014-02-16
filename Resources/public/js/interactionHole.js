@@ -140,7 +140,7 @@ function addFormHoleEdit(add, response, point, size, orthography, del, selector,
             if ($(this).attr('checked')) {
 
                 if (node.tagName == 'INPUT') {
-                    nodeselect = '<select id="' + ind + '"><option>' + node.value + '</option></select>';
+                    nodeselect = '<select class="blank" id="' + ind + '"><option>' + node.value + '</option></select>';
                     tinyMCE.get('ujm_exobundle_interactionholetype_html').selection.setContent(nodeselect);
                 } 
 
@@ -265,7 +265,7 @@ function addHole(indexBlank, valHole) {
         if ($(this).attr('checked')) {
         
             if (node.tagName == 'INPUT') {
-                nodeselect = '<select id="' + indexBlank + '"><option>' + node.value + '</option></select>';
+                nodeselect = '<select class="blank" id="' + indexBlank + '"><option>' + node.value + '</option></select>';
                 tinyMCE.get('ujm_exobundle_interactionholetype_html').selection.setContent(nodeselect);
             } 
             

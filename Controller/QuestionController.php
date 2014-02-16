@@ -380,7 +380,7 @@ class QuestionController extends Controller
             $nbResponses = count($response);
 
             $linkedCategory = $this->getLinkedCategories();
-            
+
             if ($user->getId() != $interaction[0]->getQuestion()->getUser()->getId()) {
                 $catID = $interaction[0]->getQuestion()->getCategory()->getId();
             }

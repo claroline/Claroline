@@ -98,13 +98,13 @@ class InteractionHoleHandler {
 
         foreach ($interHole->getHoles() as $hole) {
             foreach ($hole->getWordResponses() as $wr) {
-                $hole->addWordResponse($wr);
+                //$hole->addWordResponse($wr);
+                $wr->setHole($hole);
                 $this->em->persist($wr);
             }
             $interHole->addHole($hole);
             $this->em->persist($hole);
         }
-        $this->htmlWithoutValue($interHole);
         $interHole->setHtml($htmlTiny);
         $this->em->persist($interHole);
         $this->em->persist($interHole->getInteraction()->getQuestion());
@@ -115,6 +115,8 @@ class InteractionHoleHandler {
             $interHole->getInteraction()->addHint($hint);
             $this->em->persist($hint);
         }
+
+        $this->htmlWithoutValue($interHole);
 
         $this->em->flush();
     }
@@ -199,7 +201,6 @@ class InteractionHoleHandler {
             $this->em->remove($hint);
         }
 
-        $this->htmlWithoutValue($interHole);
         $interHole->setHtml($htmlTiny);
         $this->em->persist($interHole);
         $this->em->persist($interHole->getInteraction()->getQuestion());
@@ -208,7 +209,8 @@ class InteractionHoleHandler {
         // On persiste tous les holes de l'interaction hole.
         foreach ($interHole->getHoles() as $hole) {
             foreach ($hole->getWordResponses() as $wr) {
-                $hole->addWordResponse($wr);
+                //$hole->addWordResponse($wr);
+                $wr->setHole($hole);
                 $this->em->persist($wr);
             }
             $interHole->addHole($hole);
@@ -220,6 +222,8 @@ class InteractionHoleHandler {
             $interHole->getInteraction()->addHint($hint);
             $this->em->persist($hint);
         }
+
+        $this->htmlWithoutValue($interHole);
 
         $this->em->flush();
     }
@@ -260,6 +264,7 @@ class InteractionHoleHandler {
 
     private function htmlWithoutValue($interHole)
     {
+        //id hole in html = $hole->getPosition()
         $html = $interHole->getHtml();
         $tabInputValue = explode('value="', $html);
         $tabHoles = array();
@@ -268,6 +273,28 @@ class InteractionHoleHandler {
         {
             if ($hole->getSelector() === false) {
                 $tabHoles[$hole->getPosition()] = $hole;
+            } else {
+                $selectInHtml = explode('<select id="' . $hole->getPosition() . '" class="blank">', $html);
+                $selectInHtml = explode ('</select>', $selectInHtml[1]);
+                $html = str_replace($selectInHtml[0], '', $html);
+
+                $pos = $hole->getPosition();
+                $regExpr = "<select id=\"$pos\" class=\"blank\">";
+                $select = "<select id=\"$pos\" class=\"blank\">";
+
+                $wrs = array();
+                foreach ($hole->getWordResponses() as $wr) {
+                    $wrs[] = $wr;
+                }
+                shuffle($wrs);
+
+                foreach ($wrs as $wr) {
+                    $id = $wr->getId();
+                    $response = $wr->getResponse();
+                    $select .= "<option value=\"$id\">$response</option>";
+                }
+                $select .= '</select>';
+                $html = str_replace($regExpr, $select, $html);
             }
         }
         ksort($tabHoles);
@@ -280,6 +307,7 @@ class InteractionHoleHandler {
             $html = str_replace($regExpr, 'value=""', $html);
         }
         $interHole->setHtmlWithoutValue($html);
+
     }
 }
 

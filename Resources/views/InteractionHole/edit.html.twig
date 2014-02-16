@@ -66,69 +66,81 @@
 
 {% block section_content %}
 
-    <form onsubmit="return check_form('{{ 'nb_hole' | trans }}')" 
-          action="{{ path('ujm_interactionhole_update', { 'id': entity.id }) }}" 
-          method="post" {{ form_enctype(edit_form) }}>
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h1>{{'hole edition'|trans}}</h1>
+        </div>
+
         <div class="panel-body">
-            {% include "UJMExoBundle:Partial:questionEdit.html.twig" %}
+            <a href="{{ path('ujm_question_index') }}" class="btn btn-primary">
+                <i class="icon-arrow-left"></i> {{ 'back' | trans }}
+            </a>
+        </div>
+    
+        <form onsubmit="return check_form('{{ 'nb_hole' | trans }}')" 
+              action="{{ path('ujm_interactionhole_update', { 'id': entity.id }) }}" 
+              method="post" {{ form_enctype(edit_form) }}>
+            <div class="panel-body">
+                {% include "UJMExoBundle:Partial:questionEdit.html.twig" %}
 
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <h3 class="panel-title">{{ 'response' | trans }}</h3>
-                </div>
-                <div class="panel-body">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">{{ 'response' | trans }}</h3>
+                    </div>
+                    <div class="panel-body">
 
-                    <div class="panel panel-default">
-                        <div class="panel-heading">
-                            <h3 class="panel-title">{{ 'Inter_Hole.html' | trans }}</h3>
-                        </div>
-                        <div class="panel-body">
-                            <div class="form-group row">
-                                <div id="holeEditor" class="col-md-9">{{ form_widget(edit_form.html) }}</div>
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h3 class="panel-title">{{ 'Inter_Hole.html' | trans }}</h3>
+                            </div>
+                            <div class="panel-body">
+                                <div class="form-group row">
+                                    <div id="holeEditor" class="col-md-9">{{ form_widget(edit_form.html) }}</div>
+                                </div>
                             </div>
                         </div>
-                    </div>
 
-                    <div class="panel panel-default">
-                        <div class="panel-heading">
-                            <h3 class="panel-title">{{ 'hole' | trans }}</h3>
-                        </div>
-                        <div class="panel-body">
-                            <div id="Instructions" class="alert alert-info">
-                                <a class="close" onclick="HideInstruction();">&times;</a>
-                                <p>{{ 'instruction add hole' | trans }}</p>
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h3 class="panel-title">{{ 'hole' | trans }}</h3>
                             </div>
-                            </br>
-                            <a id="create_hole" class="btn btn-primary" onclick="createHole();">
-                                <i class="icon-plus"></i> {{ 'create hole' | trans }}
-                            </a>
-                            <a class="btn btn-default" onclick="DisplayInstruction();" id="showInstruct">
-                                <i class="icon-question"></i> {{ 'show Instructions' | trans }}
-                            </a>
-                            <a class="btn btn-default" onclick="HideInstruction();" id="hideInstruct">
-                                <i class="icon-question"></i> {{ 'hide Instructions' | trans }}
-                            </a>
-                            </br></br>
-                            {#{ form_row(form.holes) }#}
-                            <div id="holeError"></div>
-                            <div id="tableHoles"></div>
-                            {{ form_widget(edit_form.holes) }}
-                            {{ form_errors(edit_form.holes) }}
+                            <div class="panel-body">
+                                <div id="Instructions" class="alert alert-info">
+                                    <a class="close" onclick="HideInstruction();">&times;</a>
+                                    <p>{{ 'instruction add hole' | trans }}</p>
+                                </div>
+                                </br>
+                                <a id="create_hole" class="btn btn-primary" onclick="createHole();">
+                                    <i class="icon-plus"></i> {{ 'create hole' | trans }}
+                                </a>
+                                <a class="btn btn-default" onclick="DisplayInstruction();" id="showInstruct">
+                                    <i class="icon-question"></i> {{ 'show Instructions' | trans }}
+                                </a>
+                                <a class="btn btn-default" onclick="HideInstruction();" id="hideInstruct">
+                                    <i class="icon-question"></i> {{ 'hide Instructions' | trans }}
+                                </a>
+                                </br></br>
+                                {#{ form_row(form.holes) }#}
+                                <div id="holeError"></div>
+                                <div id="tableHoles"></div>
+                                {{ form_widget(edit_form.holes) }}
+                                {{ form_errors(edit_form.holes) }}
+                            </div>
                         </div>
+
+                        <div style="display: none;">{{ form_rest(edit_form) }}</div>
+                        {{ form_errors(edit_form) }}
+
                     </div>
-
-                    <div style="display: none;">{{ form_rest(edit_form) }}</div>
-                    {{ form_errors(edit_form) }}
-
                 </div>
             </div>
-        </div>
-        <div class="panel-footer">
-            <input type="hidden" name="exercise" value="{{ exoID }}" />
-            <button type="submit" id="button_submit" class="btn btn-primary">{{ 'save' | trans }}</button>
-        </div>
-    </form>
-    <div id="prototypes" style="display:none"></div>
+            <div class="panel-footer">
+                <input type="hidden" name="exercise" value="{{ exoID }}" />
+                <button type="submit" id="button_submit" class="btn btn-primary">{{ 'save' | trans }}</button>
+            </div>
+        </form>
+        <div id="prototypes" style="display:none"></div>
+    </div>
 
 {% endblock %}
 
