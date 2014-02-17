@@ -8,8 +8,8 @@
         "php": ">=5.4.1",
         "sensio/distribution-bundle": "~2.3.4",
         "claroline/bundle-recorder": "~2.2",
-        "claroline/core-bundle": ">=2.9.2,<3.0",
-        "claroline/web-installer": ">=1.0.8,<2.0",
+        "claroline/core-bundle": ">=2.9.3,<3.0",
+        "claroline/web-installer": ">=1.0.9,<2.0",
         "claroline/activity-tool-bundle": ">=1.0.2,<2.0",
         "claroline/announcement-bundle": ">=2.0.5,<3.0",
         "claroline/forum-bundle": ">=2.1.6,<3.0",
@@ -76,13 +76,15 @@
         "post-install-cmd": [
             "Claroline\\CoreBundle\\Library\\Installation\\Refresher::deleteCache",
             "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::buildBootstrap",
-            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installRequirementsFile"
+            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installRequirementsFile",
+            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installAssets"
         ],
         "post-update-cmd": [
             "Claroline\\BundleRecorder\\ScriptHandler::postPlatformUpdate",
             "Claroline\\CoreBundle\\Library\\Installation\\Refresher::deleteCache",
             "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::buildBootstrap",
-            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installRequirementsFile"
+            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installRequirementsFile",
+            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installAssets"
         ]
     },
     "config": {
