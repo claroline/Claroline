@@ -15,14 +15,34 @@ namespace Claroline\CoreBundle\Form\Administration;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\Validator\Constraints\GreaterThanOrEqual;
+use Symfony\Component\Validator\Constraints\NotBlank;
 
 class FacebookType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('facebook_client_id', 'integer', array('required' => false, 'label' => 'client_id'))
-            ->add('facebook_client_secret', 'text', array('required' => false, 'label' => 'client_secret'));
+            ->add(
+                'facebook_client_id',
+                'integer',
+                array(
+                    'constraints' => array(
+                        new NotBlank(),
+                        new GreaterThanOrEqual(array('value' => 0))
+                    ),
+                    'attr' => array('min' => 0),
+                    'label' => 'fb_client_id'
+                )
+            )
+            ->add(
+                'facebook_client_secret',
+                'text',
+                array(
+                    'constraints' => new NotBlank(),
+                    'label' => 'fb_client_secret'
+                )
+            );
     }
 
     public function getName()
@@ -34,4 +54,4 @@ class FacebookType extends AbstractType
     {
         $resolver->setDefaults(array('translation_domain' => 'platform'));
     }
-} 
+}

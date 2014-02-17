@@ -40,7 +40,6 @@ class PlatformInstaller
     private $container;
     private $logger;
     private $output;
-    private $skipAssets = false;
 
     /**
      * @DI\InjectParams({
@@ -82,11 +81,6 @@ class PlatformInstaller
         $this->refresher->setOutput($output);
     }
 
-    public function skipAssetsAction($skip = true)
-    {
-        $this->skipAssets = $skip;
-    }
-
     public function installFromOperationFile($operationFile = null)
     {
         $this->launchPreInstallActions();
@@ -113,10 +107,6 @@ class PlatformInstaller
 
     private function launchPreInstallActions()
     {
-        if (!$this->skipAssets) {
-            $this->refresher->refresh($this->kernel->getEnvironment(), false);
-        }
-
         $this->createDatabaseIfNotExists();
         $this->createAclTablesIfNotExist();
     }

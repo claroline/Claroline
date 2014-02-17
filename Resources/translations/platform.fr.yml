@@ -141,7 +141,7 @@ cut: Couper
 dashboard: 'Tableau de bord'
 data_col: 'Colonne des données'
 database: 'Base de données'
-database_connection_failed: 'La connexion à la base de données à échoué'
+database_connection_failed: 'La connexion à la base de données à échoué.'
 date: Date
 date_form_format: dd/MM/yyyy
 date_format: d-m-Y
@@ -204,8 +204,10 @@ export: Exporter
 exportable: Exportable
 external_pdo_database: 'Base de données externe (PDO)'
 facebook: Facebook
-facebook_application_validation_error: 'Les valeurs client_id et client_secret sont probablement invalides.'
+facebook_application_validation_error: 'Les identifiants fournis ne sont pas valides.'
 fast_answer: 'Réponse rapide'
+fb_client_id: Id de l'application
+fb_client_secret: Secret de l'application
 file: Fichier
 file_form_file: Fichier
 file_form_license: License
