@@ -13,15 +13,10 @@
     ],
     "require": {
         "php": ">=5.3.3",
-        "composer/composer": "dev-master"
+        "composer/composer": "*"
     },
     "autoload": {
         "psr-0": { "Claroline\\BundleRecorder": "" }
     },
-    "target-dir": "Claroline/BundleRecorder",
-    "extra": {
-        "branch-alias": {
-            "dev-master": "1.0.0-dev"
-        }
-    }
+    "target-dir": "Claroline/BundleRecorder"
 }
