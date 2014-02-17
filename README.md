@@ -77,7 +77,6 @@ To update your installation to the last stable state, use:
 ```sh
 $ composer update --prefer-source
 $ php app/console claroline:update
-$ php app/console claroline:refresh
 ```
 
 
