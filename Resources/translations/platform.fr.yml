@@ -206,6 +206,8 @@ external_pdo_database: 'Base de données externe (PDO)'
 facebook: Facebook
 facebook_application_validation_error: 'Les valeurs client_id et client_secret sont probablement invalides.'
 fast_answer: 'Réponse rapide'
+fb_client_id: Id de l'application
+fb_client_secret: Secret de l'application
 file: Fichier
 file_form_file: Fichier
 file_form_license: License
