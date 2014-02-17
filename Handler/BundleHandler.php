@@ -21,57 +21,28 @@ class BundleHandler extends BaseHandler
         $this->registeredBundles = parse_ini_file($this->targetFile);
     }
 
-    public function addBundles(array $bundlesFqcns)
+    public function writeBundleFile(array $bundleFqcns)
     {
-        $this->updateBundleFile($bundlesFqcns, 'add');
-    }
-
-    public function removeBundles(array $bundlesFqcns)
-    {
-        $this->updateBundleFile($bundlesFqcns, 'remove');
-    }
-
-    public function reorderBundles(array $bundleFqcns)
-    {
-        $orderedList = array();
+        $bundles = array();
 
         foreach ($bundleFqcns as $bundleFqcn) {
-            $orderedList[$bundleFqcn] = $this->registeredBundles[$bundleFqcn];
-        }
+            $isEnabled = true;
 
-        if ($this->registeredBundles !== $orderedList) {
-            $this->log('Reordering bundles...', '');
-            $this->registeredBundles = $orderedList;
-            $this->writeBundleFile();
-        }
-    }
-
-    private function updateBundleFile(array $bundlesFqcns, $action)
-    {
-        $hasChanges = false;
-
-        foreach ($bundlesFqcns as $bundleFqcn) {
-            $fqcnParts = explode('\\', $bundleFqcn);
-            $bundleName = array_pop($fqcnParts);
-
-            if ($action === 'add' && !isset($this->registeredBundles[$bundleFqcn])) {
-                $this->log("Adding {$bundleName} to the bundle file..." );
-                $this->registeredBundles[$bundleFqcn] = true;
-                $hasChanges = true;
-            } elseif ($action === 'remove' && isset($this->registeredBundles[$bundleFqcn])) {
-                $this->log("Removing {$bundleName} from the bundle file..." );
-                unset($this->registeredBundles[$bundleFqcn]);
-                $hasChanges = true;
+            if (isset($this->registeredBundles[$bundleFqcn])) {
+                $isEnabled = $this->registeredBundles[$bundleFqcn];
             }
+
+            $bundles[$bundleFqcn] = $isEnabled;
         }
 
-        if ($hasChanges) {
-            $this->writeBundleFile();
-        }
+        $this->registeredBundles = $bundles;
+        $this->doWriteBundleFile();
     }
 
-    private function writeBundleFile()
+    private function doWriteBundleFile()
     {
+        $this->log('Writing bundle file...', '');
+
         $content = '';
 
         foreach ($this->registeredBundles as $bundle => $isEnabled) {

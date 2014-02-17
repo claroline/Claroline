@@ -23,42 +23,85 @@ class ScriptHandler
 {
     private static $recorder;
 
-    public static function prePlatformInstall(CommandEvent $event)
+    /**
+     * Blocks the execution of install/update if an operation file is already
+     * present (i.e. prevents packages changes if previous updates were not
+     * properly performed).
+     *
+     * Should occur on "pre-install-cmd" and "pre-update-cmd" events.
+     *
+     * @param CommandEvent $event
+     */
+    public static function checkForPendingOperations(CommandEvent $event)
     {
-        static::getRecorder($event)->checkForPreviousOperations();
+        static::getRecorder($event)->checkForPendingOperations();
     }
 
-    public static function prePlatformUpdate(CommandEvent $event)
+    /**
+     * Adds an install instruction to the operation file if the package type
+     * is "claroline-core" or "claroline-plugin".
+     *
+     * Should occur on "post-package-install" event.
+     *
+     * @param PackageEvent $event
+     */
+    public static function logInstallOperation(PackageEvent $event)
     {
-        static::getRecorder($event)->checkForPreviousOperations();
+        static::getRecorder($event)->addInstallOperation($event->getOperation()->getPackage());
     }
 
-    public static function postPlatformUpdate(CommandEvent $event)
+    /**
+     * Adds an update instruction to the operation file if the package type
+     * is "claroline-core" or "claroline-plugin".
+     *
+     * Should occur on "post-package-update" event.
+     *
+     * @param PackageEvent $event
+     */
+    public static function logUpdateOperation(PackageEvent $event)
     {
-        static::getRecorder($event)->updateBundlesOrder();
-    }
-
-    public static function postPackageInstall(PackageEvent $event)
-    {
-        static::getRecorder($event)->install($event->getOperation()->getPackage());
-    }
-
-    public static function postPackageUpdate(PackageEvent $event)
-    {
-        static::getRecorder($event)->update(
+        static::getRecorder($event)->addUpdateOperation(
             $event->getOperation()->getTargetPackage(),
             $event->getOperation()->getInitialPackage()
         );
     }
 
-    public static function prePackageUninstall(PackageEvent $event)
+    /**
+     * Keeps track of a package before letting composer remove it, if the package
+     * type is "claroline-core" or "claroline-plugin".
+     *
+     * Should occur on "pre-package-uninstall" event.
+     *
+     * @param PackageEvent $event
+     */
+    public static function prepareUninstallOperation(PackageEvent $event)
     {
         static::getRecorder($event)->addRemovablePackage($event->getOperation()->getPackage());
     }
 
-    public static function postPackageUninstall(PackageEvent $event)
+    /**
+     * Adds an uninstall instruction to the operation file if the package type
+     * is "claroline-core" or "claroline-plugin".
+     *
+     * Should occur on "post-package-uninstall" event.
+     *
+     * @param PackageEvent $event
+     */
+    public static function logUninstallOperation(PackageEvent $event)
     {
-        static::getRecorder($event)->uninstall($event->getOperation()->getPackage());
+        static::getRecorder($event)->addUninstallOperation($event->getOperation()->getPackage());
+    }
+
+    /**
+     * Writes the list of available bundles, based on currently installed packages.
+     *
+     * Should occur on "post-install-cmd" and "post-update-cmd" events.
+     *
+     * @param CommandEvent $event
+     */
+    public static function buildBundleFile(CommandEvent $event)
+    {
+        static::getRecorder($event)->buildBundleFile();
     }
 
     /**

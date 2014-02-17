@@ -52,32 +52,28 @@ class Recorder
         $this->logger = $logger;
     }
 
-    public function install(PackageInterface $package)
+    public function checkForPendingOperations()
     {
-        $installableBundles = array();
-
-        if ($package->getType() === 'claroline-core' || $package->getType() === 'claroline-plugin') {
-            $bundle = $this->detector->detectBundle($package->getPrettyName());
-            $type = $package->getType() === 'claroline-core' ?
-                Operation::BUNDLE_CORE :
-                Operation::BUNDLE_PLUGIN;
-            $operation = new Operation(Operation::INSTALL, $bundle, $type);
-            $this->operationHandler->addOperation($operation);
-            $installableBundles[] = $bundle;
-        } else {
-            $installableBundles = $this->detector->detectBundles($package->getPrettyName());
+        if (!$this->operationHandler->isFileEmpty()) {
+            throw new \Exception('A non empty operation file is already present (assumed not executed).');
         }
-
-        $this->bundleHandler->addBundles($installableBundles);
     }
 
-    public function update(PackageInterface $target, PackageInterface $initial)
+    public function addInstallOperation(PackageInterface $package)
     {
-        if ($target->getType() === 'claroline-core' || $target->getType() === 'claroline-plugin') {
+        if ($this->isClarolinePackage($package)) {
+            $bundle = $this->detector->detectBundle($package->getPrettyName());
+            $type = $this->getOperationBundleType($package);
+            $operation = new Operation(Operation::INSTALL, $bundle, $type);
+            $this->operationHandler->addOperation($operation);
+        }
+    }
+
+    public function addUpdateOperation(PackageInterface $target, PackageInterface $initial)
+    {
+        if ($this->isClarolinePackage($target)) {
             $bundle = $this->detector->detectBundle($target->getPrettyName());
-            $type = $target->getType() === 'claroline-core' ?
-                Operation::BUNDLE_CORE :
-                Operation::BUNDLE_PLUGIN;
+            $type = $this->getOperationBundleType($target);
             $operation = new Operation(Operation::UPDATE, $bundle, $type);
             $operation->setFromVersion($initial->getVersion());
             $operation->setToVersion($target->getVersion());
@@ -87,36 +83,24 @@ class Recorder
 
     public function addRemovablePackage(PackageInterface $package)
     {
-        $bundles = $this->detector->detectBundles($package->getPrettyName());
-
-        foreach ($bundles as $bundleFqcn) {
+        if ($this->isClarolinePackage($package)) {
+            $bundleFqcn = $this->detector->detectBundle($package->getPrettyName());
             $this->removableBundles[$package->getPrettyName()][] = $bundleFqcn;
         }
     }
 
-    public function uninstall(PackageInterface $package)
+    public function addUninstallOperation(PackageInterface $package)
     {
         if (isset($this->removableBundles[$package->getPrettyName()])) {
-            if (is_dir($this->vendorDir . '/' . $package->getPrettyName())) {
-                return;
-            }
-
-            if ($package->getType() === 'claroline-core' || $package->getType() === 'claroline-plugin') {
-                foreach ($this->removableBundles[$package->getPrettyName()] as $bundleFqcn) {
-                    $type = $package->getType() === 'claroline-core' ?
-                        Operation::BUNDLE_CORE :
-                        Operation::BUNDLE_PLUGIN;
-                    $operation = new Operation(Operation::UNINSTALL, $bundleFqcn, $type);
-                    $this->operationHandler->addOperation($operation);
-                }
-            }
-
-            $this->bundleHandler->removeBundles($this->removableBundles[$package->getPrettyName()]);
+            $bundleFqcn = $this->removableBundles[$package->getPrettyName()];
+            $type = $this->getOperationBundleType($package);
+            $operation = new Operation(Operation::UNINSTALL, $bundleFqcn, $type);
+            $this->operationHandler->addOperation($operation);
             unset($this->removableBundles[$package->getPrettyName()]);
         }
     }
 
-    public function updateBundlesOrder()
+    public function buildBundleFile()
     {
         $installedFile = new JsonFile($this->vendorDir . '/composer/installed.json');
         $fromRepo = new InstalledFilesystemRepository($installedFile);
@@ -143,13 +127,18 @@ class Recorder
             }
         }
 
-        $this->bundleHandler->reorderBundles(array_unique($orderedBundles));
+        $this->bundleHandler->writeBundleFile(array_unique($orderedBundles));
     }
 
-    public function checkForPreviousOperations()
+    private function isClarolinePackage(PackageInterface $package)
     {
-        if (!$this->operationHandler->isFileEmpty()) {
-            throw new \Exception('A non empty operation file is already present (assumed not executed).');
-        }
+        return $package->getType() === 'claroline-core' || $package->getType() === 'claroline-plugin';
+    }
+
+    private function getOperationBundleType(PackageInterface $package)
+    {
+        return $package->getType() === 'claroline-core' ?
+            Operation::BUNDLE_CORE :
+            Operation::BUNDLE_PLUGIN;
     }
 }
