@@ -32,10 +32,7 @@ class FacebookType extends AbstractType
                         new GreaterThanOrEqual(array('value' => 0))
                     ),
                     'attr' => array('min' => 0),
-                    'label' => 'fb_client_id',
-
-
-                    'required' => false
+                    'label' => 'fb_client_id'
                 )
             )
             ->add(
