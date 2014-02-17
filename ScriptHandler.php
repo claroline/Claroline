@@ -67,7 +67,7 @@ class ScriptHandler
     }
 
     /**
-     * Keeps track of a package before letting composer remove it, if the package
+     * Keeps track of a package before composer removes it, if the package
      * type is "claroline-core" or "claroline-plugin".
      *
      * Should occur on "pre-package-uninstall" event.
