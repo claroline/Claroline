@@ -18,5 +18,10 @@
     "autoload": {
         "psr-0": { "Claroline\\BundleRecorder": "" }
     },
-    "target-dir": "Claroline/BundleRecorder"
+    "target-dir": "Claroline/BundleRecorder",
+    "extra": {
+        "branch-alias": {
+            "dev-master": "1.0.0-dev"
+        }
+    }
 }
