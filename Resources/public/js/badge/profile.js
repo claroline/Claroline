@@ -80,9 +80,8 @@
 
             var collectionUpdateRequest = $.ajax({
                 url: apiUrl + collectionContainer.attr("data-id"),
-                type: 'PUT',
+                type: 'PATCH',
                 data: {
-                    'badge_collection_form[name]':   $(".collection_title_input", collectionContainer).val(),
                     'badge_collection_form[badges]': badges
                 }
             });
@@ -159,9 +158,8 @@
 
             var collectionUpdateRequest = $.ajax({
                 url: apiUrl + collectionContainer.attr("data-id"),
-                type: 'PUT',
+                type: 'PATCH',
                 data: {
-                    'badge_collection_form[name]':   $(".collection_title_input", collectionContainer).val(),
                     'badge_collection_form[badges]': badges
                 }
             });
@@ -265,7 +263,7 @@
 
             var collectionUpdateRequest = $.ajax({
                 url: apiUrl + collectionContainer.attr("data-id"),
-                type: 'PUT',
+                type: 'PATCH',
                 data: {
                     'badge_collection_form[name]': $(".collection_title_input", collectionContainer).val()
                 }
@@ -385,9 +383,8 @@
 
             var collectionUpdateRequest = $.ajax({
                 url: apiUrl + collectionContainer.attr("data-id"),
-                type: 'PUT',
+                type: 'PATCH',
                 data: {
-                    'badge_collection_form[name]':      $(".collection_title_input", collectionContainer).val(),
                     'badge_collection_form[is_shared]': sharedState
                 }
             });
@@ -398,7 +395,11 @@
                 })
                 .fail(function() {
                     updateSharedState(sharedLink, (0 == sharedState)? 1 : 0);
-                    displayError('edit_is_shared_collection_error');
+                    var errorMessage = "edit_is_shared_collection_error";
+                    if (1 == sharedState) {
+                        errorMessage = "edit_is_unshared_collection_error";
+                    }
+                    displayError(errorMessage);
                 });
         });
 

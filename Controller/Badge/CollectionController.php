@@ -16,18 +16,28 @@ use Claroline\CoreBundle\Entity\User;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
 /**
- * @Route("/badge_collection")
+ * @Route("/badge/collection")
  */
 class CollectionController extends Controller
 {
     /**
-     * @Route("/{sharedId}", name="claro_badge_collection_share_view")
+     * @Route("/{sharedId}/{locale}", name="claro_badge_collection_share_view", defaults={"locale"= "fr"})
+     * @Template
      */
-    public function shareAction(BadgeCollection $badgeCollection)
+    public function shareViewAction(Request $request, BadgeCollection $collection, $locale)
     {
-        die("SSSSSTTTTTTOOOOOOPPPPPPP" . PHP_EOL);
+        $request->setLocale($locale);
+
+        if (!$collection->isIsShared()) {
+            throw $this->createNotFoundException("Collection not shared.");
+        }
+
+        return array(
+            'collection' => $collection,
+            'locale'     => $locale
+        );
     }
 }

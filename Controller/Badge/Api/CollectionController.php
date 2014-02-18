@@ -44,12 +44,12 @@ class CollectionController extends Controller
 
     /**
      * @Route("/{id}", name="claro_badge_collection_edit", defaults={"_format" = "json"})
-     * @Method({"PUT"})
+     * @Method({"PATCH"})
      * @ParamConverter("user", options={"authenticatedUser" = true})
      */
     public function editAction(Request $request, User $user, BadgeCollection $collection)
     {
-        return $this->processForm($request, $collection, "PUT");
+        return $this->processForm($request, $collection, "PATCH");
     }
 
     /**
@@ -72,12 +72,13 @@ class CollectionController extends Controller
         return $this->get("fos_rest.view_handler")->handle($view);
     }
 
-    private function processForm(Request $request, BadgeCollection $collection, $method)
+    private function processForm(Request $request, BadgeCollection $collection, $method = "PUT")
     {
         $statusCode = (null === $collection->getId()) ? 201 : 204;
 
         $form = $this->createForm($this->get("claroline.form.badge.collection"), $collection, array("method" => $method));
-        $form->handleRequest($request);
+//        $form->handleRequest($request);
+        $form->submit($request->request->get($form->getName()), 'PATCH' !== $method);
 
         if ($form->isValid()) {
             $entityManager = $this->getDoctrine()->getManager();

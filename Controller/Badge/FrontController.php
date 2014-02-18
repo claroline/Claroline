@@ -24,12 +24,18 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 class FrontController extends Controller
 {
     /**
-     * @Route("/view/{id}", name="claro_view_badge")
+     * @Route("/{slug}", name="claro_view_badge")
      *
      * @Template()
      */
-    public function viewAction(Badge $badge)
+    public function viewAction($slug)
     {
+        $badge = $this->getDoctrine()->getRepository('ClarolineCoreBundle:Badge\Badge')->findBySlug($slug);
+
+        if (null === $badge) {
+            throw $this->createNotFoundException("Unknow badge.");
+        }
+
         /** @var \Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler $platformConfigHandler */
         $platformConfigHandler = $this->get('claroline.config.platform_config_handler');
 
