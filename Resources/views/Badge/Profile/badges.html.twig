@@ -27,7 +27,7 @@
                             <ul class="list-group">
                                 {% for badgeClaim in badgeClaims %}
                                     <li class="list-group-item">
-                                        <a href="{{ path('claro_view_badge', {'id': badgeClaim.badge.id}) }}"
+                                        <a href="{{ path('claro_view_badge', {'slug': badgeClaim.badge.slug(language)}) }}"
                                            title="{{ badgeClaim.badge.name(language) }}">{{ badgeClaim.badge.name(language) }}</a>
                                         {{ badgeClaim.claimedAt|date('date_format'|trans({}, 'platform')) }}
                                     </li>
