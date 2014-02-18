@@ -274,13 +274,13 @@ class InteractionHoleHandler {
             if ($hole->getSelector() === false) {
                 $tabHoles[$hole->getPosition()] = $hole;
             } else {
-                $selectInHtml = explode('<select id="' . $hole->getPosition() . '" class="blank">', $html);
+                $selectInHtml = explode('<select id="' . $hole->getPosition() . '" class="blank" name="blank_' . $hole->getPosition() . '">', $html);
                 $selectInHtml = explode ('</select>', $selectInHtml[1]);
                 $html = str_replace($selectInHtml[0], '', $html);
 
                 $pos = $hole->getPosition();
-                $regExpr = "<select id=\"$pos\" class=\"blank\">";
-                $select = "<select id=\"$pos\" class=\"blank\">";
+                $regExpr = '<select id="'.$pos.'" class="blank" name="blank_'.$hole->getPosition().'">';
+                $select = '<select id="'.$pos.'" class="blank" name="blank_'.$hole->getPosition().'">';
 
                 $wrs = array();
                 foreach ($hole->getWordResponses() as $wr) {

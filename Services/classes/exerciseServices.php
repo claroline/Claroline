@@ -371,7 +371,107 @@ class exerciseServices
 
         return $res;
     }
+    
+    public function responseHole($request, $paperID = 0)
+    {
+        $em = $this->doctrine->getManager();
+        $res = array();
+        $interactionHoleID = $request->request->get('interactionHoleToValidated');
+        $tabResp = array();
 
+        $penalty = 0;
+        $session = $request->getSession();
+
+        $em = $this->doctrine->getManager();
+        $interHole = $em->getRepository('UJMExoBundle:InteractionHole')->find($interactionHoleID);
+
+        // Not assessment
+        if ($paperID == 0) {
+            if ($session->get('penalties')) {
+                foreach ($session->get('penalties') as $penal) {
+
+                    $signe = substr($penal, 0, 1); // In order to manage the symbol of the penalty
+
+                    if ($signe == '-') {
+                        $penalty += substr($penal, 1);
+                    } else {
+                        $penalty += $penal;
+                    }
+                }
+            }
+            $session->remove('penalties');
+        } else {
+            $penalty = $this->getPenalty($interHole->getInteraction(), $paperID);
+        }
+
+
+        //$score .= '/'.$this->holeMaxScore($interHole);
+        $score = $this->holeMark($interHole, $request->request, $penalty);
+        
+        foreach($interHole->getHoles() as $hole) {
+            $response = $request->get('blank_'.$hole->getPosition());
+            if ($hole->getSelector()) {
+                $wr = $em->getRepository('UJMExoBundle:WordResponse')->find($response);
+                $tabResp[$hole->getPosition()] = $wr->getResponse();
+            } else {
+                $tabResp[$hole->getPosition()] = $response;
+            }
+        }
+
+        $res = array(
+            'penalty'   => $penalty,
+            'interHole' => $interHole,
+            'response'  => $tabResp,
+            'score'     => $score
+        );
+
+        return $res;
+    }
+
+    public function holeMark($interHole, $request, $penalty)
+    {
+        $em = $this->doctrine->getManager();
+        $score = 0;
+        
+        foreach($interHole->getHoles() as $hole) {
+            $response = $request->get('blank_'.$hole->getPosition());
+            if ($hole->getSelector() == true) {
+                $wr = $em->getRepository('UJMExoBundle:WordResponse')->find($response);
+                $score += $wr->getScore();
+            } else {
+                foreach ($hole->getWordResponses() as $wr) {
+                    if ($wr->getResponse() == $response) {
+                        $score += $wr->getScore();
+                    }
+                }
+            }
+        }
+        
+        $scoreMax = $this->holeMaxScore($interHole);
+        if ($score < 0) {
+            $score = 0;
+        }
+        $score .= '/'.$scoreMax;
+        
+        return $score;
+        
+    }
+    
+    public function holeMaxScore($interHole) {
+        $scoreMax = 0;
+        foreach ($interHole->getHoles() as $hole) {
+            $scoretemp = 0;
+            foreach ($hole->getWordResponses() as $wr) {
+                if ($wr->getScore() > $scoretemp) {
+                    $scoretemp = $wr->getScore();
+                }
+            }
+            $scoreMax += $scoretemp;
+        }
+        
+        return $scoreMax;
+    }
+    
     // Check if the suggested answer zone isn't already right in order not to have points twice
     public function alreadyDone($coor, $verif, $z)
     {
@@ -426,6 +526,13 @@ class exerciseServices
                                       ->getRepository('UJMExoBundle:InteractionOpen')
                                       ->getInteractionOpen($interaction[0]->getId());
                     $scoreMax = $this->openMaxScore($interOpen[0]);
+                    break;
+                case 'InteractionHole':
+                    $interHole = $this->doctrine
+                                      ->getManager()
+                                      ->getRepository('UJMExoBundle:InteractionHole')
+                                      ->getInteractionHole($interaction[0]->getId());
+                    $scoreMax = $this->openMaxScore($interHole[0]);
                     break;
             }
 

@@ -152,9 +152,12 @@
 
                 <div class="panel-footer">
                     <input type="hidden" name="testQCM" value="testQCM" />
-                    <input type="hidden" name="interactionQCMToValidated" value="{{ interactionHole.id }}" />
+                    <input type="hidden" name="interactionHoleToValidated" value="{{ interactionHole.id }}" />
                     <input type="hidden" name="exoID" value="{{ exoID }}" />
-                    <button type="submit" id="submit_response" class="btn btn-primary">{{ 'validate' | trans }}</button>
+                    <input type="hidden" name="recResponse" value="" />
+                    <button type="submit" id="submit_response" class="btn btn-primary">
+                        {{ 'validate' | trans }}
+                    </button>
                 </div>
             </form>
         </div>

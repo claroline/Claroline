@@ -140,14 +140,14 @@ function addFormHoleEdit(add, response, point, size, orthography, del, selector,
             if ($(this).attr('checked')) {
 
                 if (node.tagName == 'INPUT') {
-                    nodeselect = '<select class="blank" id="' + ind + '"><option>' + node.value + '</option></select>';
+                    nodeselect = '<select class="blank" id="' + ind + '" name="blank_' + indexBlank + '"><option>' + node.value + '</option></select>';
                     tinyMCE.get('ujm_exobundle_interactionholetype_html').selection.setContent(nodeselect);
                 } 
 
             } else {
                 if (node.tagName == 'SELECT') {
-                    size = $('#ujm_exobundle_interactionholetype_holes_' + ind + '_size').valueOf();
-                    nodeBlank = '<input type="text" value="' + node.value + '" size="' + size + '" class="blank" id="' + ind + '">';
+                    size = $('#ujm_exobundle_interactionholetype_holes_' + ind + '_size').val();
+                    nodeBlank = '<input type="text" value="' + node.value + '" size="' + size + '" class="blank" id="' + ind + '" name="blank_' + indexBlank + '">';
                     tinyMCE.get('ujm_exobundle_interactionholetype_html').selection.setContent(nodeBlank);
                 }
             }
@@ -178,7 +178,7 @@ function createHole() {
     }
 
     var el = tinyMCE.activeEditor.dom
-        .create('input', {'id' : indexBlank, 'type' : 'text', 'size' : '15', 'value' : blank, 'class' : 'blank'});
+        .create('input', {'id' : indexBlank, 'name' : 'blank_'+indexBlank, 'type' : 'text', 'size' : '15', 'value' : blank, 'class' : 'blank'});
 
     tinyMCE.activeEditor.selection.setNode(el);
 
@@ -265,14 +265,14 @@ function addHole(indexBlank, valHole) {
         if ($(this).attr('checked')) {
         
             if (node.tagName == 'INPUT') {
-                nodeselect = '<select class="blank" id="' + indexBlank + '"><option>' + node.value + '</option></select>';
+                nodeselect = '<select class="blank" id="' + indexBlank + '" name="blank_' + indexBlank + '"><option>' + node.value + '</option></select>';
                 tinyMCE.get('ujm_exobundle_interactionholetype_html').selection.setContent(nodeselect);
             } 
             
         } else {
             if (node.tagName == 'SELECT') {
-                size = $('#ujm_exobundle_interactionholetype_holes_' + index + '_size').valueOf();
-                nodeBlank = '<input type="text" value="' + node.value + '" size="' + size + '" class="blank" id="' + index + '">';
+                size = $('#ujm_exobundle_interactionholetype_holes_' + index + '_size').val();
+                nodeBlank = '<input type="text" value="' + node.value + '" size="' + size + '" class="blank" id="' + index + '" name="blank_' + indexBlank + '">';
                 tinyMCE.get('ujm_exobundle_interactionholetype_html').selection.setContent(nodeBlank);
             }
         }
