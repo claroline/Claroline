@@ -108,12 +108,21 @@ class Dropzone extends AbstractResource {
 
     /**
      * @var bool
-     * @ORM\Column(name="visibleCorrections",type="boolean",nullable=false)
+     * @ORM\Column(name="visible_corrections",type="boolean",nullable=false)
      *
      * Defini si oui ou non les corrections faites par les pairs sont visibles par le possesseur de la copie corrigé.
      * les corrections devront cependant rester anonyme.
      */
     protected $diplayCorrectionsToLearners= false;
+
+
+    /**
+    * @var bool
+    * @ORM\Column(name="allow_correction_deny",type="boolean",nullable=false)
+    * Depend on diplayCorrectionsToLearners, need diplayCorrectionsToLearners to be true in order to work.
+    * Allow users to flag that they are not agree with the correction.
+    */
+    protected $allowCorrectionDeny = false;
     /**
      * @ORM\Column(name="total_criteria_column", type="smallint", nullable=false)
      * @Assert\LessThanOrEqual(value=10)
@@ -456,11 +465,25 @@ class Dropzone extends AbstractResource {
     }
 
     /**
-     * @param mixed $displayNotationToLearners
+     * @param bool $displayNotationToLearners
      */
     public function setDiplayCorrectionsToLearners($diplayCorrectionsToLearners)
     {
         $this->diplayCorrectionsToLearners = $diplayCorrectionsToLearners;
+    }
+
+    /**
+    * @return bool
+    **/
+    public function getAllowCorrectionDeny()
+    {
+        return $this->allowCorrectionDeny;
+    }
+
+
+    public function setAllowCorrectionDeny($allowCorrectionDeny)
+    {
+        $this->allowCorrectionDeny = $allowCorrectionDeny;
     }
 
     /**

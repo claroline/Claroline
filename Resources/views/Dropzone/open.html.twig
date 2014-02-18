@@ -5,7 +5,7 @@
 
 {% block dropzone_content %}
     <div class="container container-dropzone">
-        <h2>{{ dropzone.resourceNode.name|capitalize }}</h2>
+        <h2>{{ dropzone.resourceNode.name|capitalize }} </h2>
 
         {{ macros.flashBox() }}
 
@@ -205,6 +205,7 @@
                             {% if dropzone.displayNotationToLearners %}
                                 <div class="col-md-6">
                                     Note : {% include 'IcapDropzoneBundle:Drop:dropsTotalGrade.html.twig' %}
+                                    test
                                 </div>
                             {% endif %}
                         </div>
