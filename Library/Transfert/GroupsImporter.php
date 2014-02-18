@@ -11,30 +11,29 @@
 
 namespace Claroline\CoreBundle\Library\Transfert;
 
-use Claroline\CoreBundle\Manager\UserManager;
 use JMS\DiExtraBundle\Annotation as DI;
 
 /**
- * @DI\Service("claroline.importer.user")
+ * @DI\Service("claroline.importer.group")
  */
-class UsersImporter implements ImporterInterface
+class GroupsImporter implements ImporterInterface
 {
+    private $groupManager;
     public $types = array('yml');
-    private $userManager;
 
     /**
      * Constructor.
      *
      * @DI\InjectParams({
-     *  "userManager"        = @DI\Inject("claroline.manager.user_manager")
+     *   "groupManager" = @DI\Inject("claroline.manager.group_manager")
      * })
      */
 
     public function __construct(
-        UserManager $userManager
+        GroupManager $groupManager
     )
     {
-        $this->userManager = $userManager;
+        $this->groupManager = $groupManager;
     }
 
     /**
@@ -58,21 +57,8 @@ class UsersImporter implements ImporterInterface
     /**
      * @inheritdoc
      */
-    public function import(array $users)
+    public function import(array $groups)
     {
-        $array = array();
 
-        foreach ($users as $user) {
-
-            $indexedUser = array();
-
-            foreach ($user as $element) {
-                $indexedUser[] = $element;
-            }
-
-            $array[] = $indexedUser;
-        }
-
-        $this->userManager->importUsers($array);
     }
 } 

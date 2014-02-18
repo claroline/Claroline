@@ -11,12 +11,33 @@ namespace Claroline\CoreBundle\Library;
  * file that was distributed with this source code.
  */
 use Claroline\CoreBundle\Library\Testing\MockeryTestCase;
+use Claroline\CoreBundle\Library\Transfert\WorkspacePropertiesImporter;
 
 class WorkspacePropertiesImporterTest extends MockeryTestCase {
+    private $workspacePropertiesImporter;
+    private $userManager;
 
     protected function setUp(){
         parent::setUp();
-        $this->manager = new TransfertManager();
+        $this->userManager = $this->mock('Claroline\CoreBundle\Manager\UserManager');
+        $this->workspacePropertiesImporter = new WorkspacePropertiesImporter(
+            $this->userManager
+        );
+    }
+
+    public function testValidate()
+    {
+        $data = array(
+            'properties' => array(
+                'name' => 'Anglais',
+                'code' => 'EN',
+                'visible' => true,
+                'selfregistration' => true,
+                'owner' => 'ezs'
+            )
+        );
+        $result = $this->workspacePropertiesImporter->validate($data);
+        $this->assertEquals($result, true);
     }
 
 } 

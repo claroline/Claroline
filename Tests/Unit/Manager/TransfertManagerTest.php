@@ -13,24 +13,30 @@ namespace Claroline\CoreBundle\Manager;
 
 
 use Claroline\CoreBundle\Library\Testing\MockeryTestCase;
+use Symfony\Component\Yaml\Yaml;
 
 class TransfertManagerTest extends MockeryTestCase
 {
     private $manager;
+    private $listImporters;
+    private $workspaceImporter;
+    private $userImporter;
+    private $groupImporter;
 
     protected function setUp(){
         parent::setUp();
-        $this->manager = new TransfertManager();
+        $this->workspaceImporter = $this->mock('Claroline\CoreBundle\Library\Transfert\WorkspacePropertiesImporter');
+        $this->userImporter = $this->mock('Claroline\CoreBundle\Library\Transfert\UsersImporter');
+        $this->groupImporter = $this->mock('Claroline\CoreBundle\Library\Transfert\GroupsImporter');
+        $this->manager = new TransfertManager(
+            $this->workspaceImporter,
+            $this->userImporter,
+            $this->groupImporter
+        );
     }
 
-    public function testSupport()
+    public function testImportWorkspace()
     {
-        $userManager = $this->mock('Claroline\CoreBundle\Manager\UserManager');
-        $importer = $this->mock('Claroline\CoreBundle\Library\Transfert\WorkspacePropertiesImporter');
-        $importer->shouldReceive('supports')->once()->with('user')->andReturn(false);
-        $importer->shouldReceive('valid')->once();
-        $importer->shouldReceive('import')->once();
-        $this->manager->addImporter($importer);
-        $this->manager->importWorkspace(__DIR__.'/../../Stub/manifest.yml');
+        $this->manager->importWorkspace(__DIR__.'/../../Stub/transfert');
     }
 } 

@@ -15,7 +15,10 @@ use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Manager\UserManager;
 use Claroline\CoreBundle\Manager\WorkspaceManager;
 use Claroline\CoreBundle\Entity\Workspace\SimpleWorkspace;
-
+use JMS\DiExtraBundle\Annotation as DI;
+/**
+ * @DI\Service("claroline.importer.workspace_properties")
+ */
 class WorkspacePropertiesImporter implements ImporterInterface{
 
     private $userManager;
@@ -25,8 +28,7 @@ class WorkspacePropertiesImporter implements ImporterInterface{
      * Constructor.
      *
      * @DI\InjectParams({
-     *  "om"                 = @DI\Inject("claroline.persistence.object_manager"),
-     *  "userManager"        = @DI\Inject("claroline.manager.user_manager"),
+     *  "userManager"        = @DI\Inject("claroline.manager.user_manager")
      * })
      */
      public function __construct(
@@ -35,40 +37,48 @@ class WorkspacePropertiesImporter implements ImporterInterface{
      {
          $this->userManager = $userManager;
      }
+
+    /**
+     * @inheritdoc
+     */
     public function supports($type)
     {
         return true;
     }
 
-    public function valid($array)
+    /**
+     * @inheritdoc
+     */
+    public function validate(array $array)
     {
-        $expectedKeys = array('name','code','owner','visible','selfregistration');
-        $errors = array();
+        if (isset($array['owner'])) {
+            $username = $array['owner'];
+            $user = $this->userManager->getUserByUsername($username);
 
-        foreach ($array as $i => $value)
-        {
-            if (!array_key_exists($value[$i],$expectedKeys[$i])) {
-                $errors[$i] = $expectedKeys[$i];
+            if (!$user) {
+                return $error[] = "The user {$username} does not exists";
             }
         }
+
+        return true;
     }
 
-    public function import($array)
+    /**
+     * @inheritdoc
+     */
+    public function import(array $array)
     {
+        if (isset($array['owner'])) {
+            $username = $array['owner'];
+            $user = $this->userManager->getUserByUsername($username);
+        }
+
         $workspace = new SimpleWorkspace();
-        $workspaceAttributes = array();
-        $user = new User();
-        $user->setFirstName($array['first_name']);
-        $user->setLastName($array['last_name']);
-        $user->setAdministrativeCode($array['administrative_code']);
-        $user->setMail($array['mail']);
-
-        $workspace->setName($workspaceAttributes[0]);
-        $workspace->setCode($workspaceAttributes[1]);
-        $workspace->set($workspaceAttributes[2]);
-        $workspace->setCode($workspaceAttributes[3]);
-
-        $newUser = $this->userManager->createUser($user);
-        $workspace->setCreator($newUser);
+        $workspace->setCreator($user);
+        $workspace->setName($array['name']);
+        $workspace->setCode($array['code']);
+        $workspace->setDisplayable($array['visible']);
+        $workspace->setSelfRegistration($array['selfRegistration']);
+        $workspace->setSelfUnregistration($array['selfUnregistration']);
     }
 } 
