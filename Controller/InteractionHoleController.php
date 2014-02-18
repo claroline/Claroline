@@ -154,7 +154,8 @@ class InteractionHoleController extends Controller
         return $this->render(
             'UJMExoBundle:Question:new.html.twig', array(
             'formWithError' => $formWithError,
-            'exoID'  => $exoID
+            'exoID'  => $exoID,
+            'linkedCategory' =>  $this->container->get('ujm.exercise_services')->getLinkedCategories()
             )
         );
     }
@@ -177,10 +178,10 @@ class InteractionHoleController extends Controller
         $deleteForm = $this->createDeleteForm($id);
 
         return $this->render('UJMExoBundle:InteractionHole:edit.html.twig', array(
-                             'entity' => $entity,
-                             'edit_form' => $editForm->createView(),
-                             'delete_form' => $deleteForm->createView(),
-                             ));
+            'entity' => $entity,
+            'edit_form' => $editForm->createView(),
+            'delete_form' => $deleteForm->createView(),
+        ));
     }
 
     /**
@@ -204,7 +205,7 @@ class InteractionHoleController extends Controller
         if ($user->getId() != $interHole->getInteraction()->getQuestion()->getUser()->getId()) {
             $catID = $interHole->getInteraction()->getQuestion()->getCategory()->getId();
         }
-        
+
         $editForm   = $this->createForm(
             new InteractionHoleType(
                 $this->container->get('security.context')->getToken()->getUser(), $this->get('validator')
@@ -232,7 +233,7 @@ class InteractionHoleController extends Controller
                 );
             }
         }
-        
+
         if ($holeHandler != false) {
             $editForm->addError(new FormError($holeHandler));
         }
@@ -296,7 +297,7 @@ class InteractionHoleController extends Controller
 
         return $this->render('UJMExoBundle:InteractionHole:holeOverview.html.twig', $vars);
     }
-    
+
     private function createDeleteForm($id)
     {
         return $this->createFormBuilder(array('id' => $id))

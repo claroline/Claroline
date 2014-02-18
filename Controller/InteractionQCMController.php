@@ -171,7 +171,8 @@ class InteractionQCMController extends Controller
         return $this->render(
             'UJMExoBundle:Question:new.html.twig', array(
             'formWithError' => $formWithError,
-            'exoID'  => $exoID
+            'exoID'  => $exoID,
+            'linkedCategory' =>  $this->container->get('ujm.exercise_services')->getLinkedCategories()
             )
         );
     }
@@ -184,7 +185,7 @@ class InteractionQCMController extends Controller
     {
         $user  = $this->container->get('security.context')->getToken()->getUser();
         $catID = -1;
-        
+
         $em = $this->getDoctrine()->getManager();
 
         $entity = $em->getRepository('UJMExoBundle:InteractionQCM')->find($id);
@@ -196,7 +197,7 @@ class InteractionQCMController extends Controller
         if ($user->getId() != $entity->getInteraction()->getQuestion()->getUser()->getId()) {
             $catID = $entity->getInteraction()->getQuestion()->getCategory()->getId();
         }
-        
+
         $editForm = $this->createForm(
             new InteractionQCMType(
                 $this->container->get('security.context')->getToken()->getUser(),
@@ -235,7 +236,7 @@ class InteractionQCMController extends Controller
         if ($user->getId() != $interQCM->getInteraction()->getQuestion()->getUser()->getId()) {
             $catID = $interQCM->getInteraction()->getQuestion()->getCategory()->getId();
         }
-        
+
         $editForm   = $this->createForm(
             new InteractionQCMType(
                 $this->container->get('security.context')->getToken()->getUser(),

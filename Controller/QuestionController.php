@@ -310,7 +310,7 @@ class QuestionController extends Controller
     {
         $variables = array(
             'exoID' => $exoID,
-            'linkedCategory' => $this->getLinkedCategories()
+            'linkedCategory' =>  $this->container->get('ujm.exercise_services')->getLinkedCategories()
         );
 
         $em = $this->getDoctrine()->getManager();
@@ -345,7 +345,8 @@ class QuestionController extends Controller
         return $this->render(
             'UJMExoBundle:Question:new.html.twig', array(
             'entity' => $entity,
-            'form'   => $form->createView()
+            'form'   => $form->createView(),
+            'linkedCategory' =>  $this->container->get('ujm.exercise_services')->getLinkedCategories()
             )
         );
     }
@@ -354,7 +355,7 @@ class QuestionController extends Controller
      * Displays a form to edit an existing Question entity.
      *
      */
-    public function editAction($exoID, $id, $form = null)
+    public function editAction($id, $exoID, $form = null)
     {
         $question = $this->controlUserQuestion($id);
         $share    = $this->container->get('ujm.exercise_services')->controlUserSharedQuestion($id);
@@ -379,7 +380,7 @@ class QuestionController extends Controller
                 ->findBy(array('interaction' => $interaction[0]->getId()));
             $nbResponses = count($response);
 
-            $linkedCategory = $this->getLinkedCategories();
+            $linkedCategory = $this->container->get('ujm.exercise_services')->getLinkedCategories();
 
             if ($user->getId() != $interaction[0]->getQuestion()->getUser()->getId()) {
                 $catID = $interaction[0]->getQuestion()->getCategory()->getId();
@@ -1857,31 +1858,5 @@ class QuestionController extends Controller
         $doublePagination[3] = $pagerTwo;
 
         return $doublePagination;
-    }
-
-    private function getLinkedCategories()
-    {
-        $linkedCategory = array();
-        $repositoryCategory = $this->getDoctrine()
-                   ->getManager()
-                   ->getRepository('UJMExoBundle:Category');
-
-        $repositoryQuestion = $this->getDoctrine()
-                   ->getManager()
-                   ->getRepository('UJMExoBundle:Question');
-
-        $categoryList = $repositoryCategory->findAll();
-
-
-        foreach ($categoryList as $category) {
-          $questionLink = $repositoryQuestion->findOneBy(array('category' => $category->getId()));
-          if (!$questionLink) {
-              $linkedCategory[$category->getId()] = 0;
-          } else {
-              $linkedCategory[$category->getId()] = 1;
-          }
-        }
-
-        return $linkedCategory;
     }
 }

@@ -145,7 +145,8 @@ class InteractionOpenController extends Controller
         return $this->render(
             'UJMExoBundle:Question:new.html.twig', array(
             'formWithError' => $formWithError,
-            'exoID'  => $exoID
+            'exoID'  => $exoID,
+            'linkedCategory' =>  $this->container->get('ujm.exercise_services')->getLinkedCategories()
             )
         );
     }
@@ -171,7 +172,7 @@ class InteractionOpenController extends Controller
         if ($user->getId() != $interOpen->getInteraction()->getQuestion()->getUser()->getId()) {
             $catID = $interOpen->getInteraction()->getQuestion()->getCategory()->getId();
         }
-        
+
         $editForm = $this->createForm(
             new InteractionOpenType(
                 $this->container->get('security.context')->getToken()->getUser(),
