@@ -37,6 +37,7 @@ class PlatformUpdateCommand extends ContainerAwareCommand
     {
         $output->writeln('<comment>Updating the platform...</comment>');
         $installer = $this->getContainer()->get('claroline.installation.platform_installer');
+        $refresher = $this->getContainer()->get('claroline.installation.refresher');
         $installer->setOutput($output);
         $installer->setLogger(
             function ($message) use ($output) {
@@ -44,6 +45,7 @@ class PlatformUpdateCommand extends ContainerAwareCommand
             }
         );
         $installer->installFromOperationFile();
+        $refresher->dumpAssets($this->getContainer()->getParameter('kernel.environment'));
         MaintenanceHandler::disableMaintenance();
     }
 }
