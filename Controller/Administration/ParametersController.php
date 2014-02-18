@@ -25,6 +25,7 @@ use JMS\DiExtraBundle\Annotation as DI;
 use JMS\SecurityExtraBundle\Annotation\PreAuthorize;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormFactory;
 use Symfony\Component\HttpFoundation\Request;
@@ -33,6 +34,7 @@ use Claroline\CoreBundle\Manager\MailManager;
 use Claroline\CoreBundle\Form\Administration as AdminForm;
 use Claroline\CoreBundle\Manager\CacheManager;
 use Claroline\CoreBundle\Library\Installation\Refresher;
+use Claroline\CoreBundle\Manager\HwiManager;
 
 /**
  * @DI\Tag("security.secure_service")
@@ -53,6 +55,7 @@ class ParametersController extends Controller
     private $cacheManager;
     private $dbSessionValidator;
     private $refresher;
+    private $hwiManager;
 
     /**
      * @DI\InjectParams({
@@ -67,7 +70,8 @@ class ParametersController extends Controller
      *     "cacheManager"       = @DI\Inject("claroline.manager.cache_manager"),
      *     "contentManager"     = @DI\Inject("claroline.manager.content_manager"),
      *     "sessionValidator"   = @DI\Inject("claroline.session.database_validator"),
-     *     "refresher"          = @DI\Inject("claroline.installation.refresher")
+     *     "refresher"          = @DI\Inject("claroline.installation.refresher"),
+     *     "hwiManager"         = @DI\Inject("claroline.manager.hwi_manager")
      * })
      */
     public function __construct(
@@ -82,7 +86,8 @@ class ParametersController extends Controller
         ContentManager $contentManager,
         CacheManager $cacheManager,
         DatabaseSessionValidator $sessionValidator,
-        Refresher $refresher
+        Refresher $refresher,
+        HwiManager $hwiManager
     )
     {
         $this->configHandler = $configHandler;
@@ -97,6 +102,7 @@ class ParametersController extends Controller
         $this->cacheManager = $cacheManager;
         $this->dbSessionValidator = $sessionValidator;
         $this->refresher = $refresher;
+        $this->hwiManager = $hwiManager;
     }
 
     /**
@@ -149,6 +155,7 @@ class ParametersController extends Controller
      * )
      *
      * @Template("ClarolineCoreBundle:Administration\platform:settings.html.twig")
+     * @Method("POST")
      *
      * Updates the platform settings and redirects to the settings form.
      *
@@ -241,6 +248,8 @@ class ParametersController extends Controller
      *     name="claro_admin_edit_parameters_appearance"
      * )
      *
+     * @Method("POST")
+     *
      * Displays the platform settings.
      *
      * @return \Symfony\Component\HttpFoundation\Response
@@ -316,6 +325,7 @@ class ParametersController extends Controller
      * )
      *
      * @Template("ClarolineCoreBundle:Administration\platform\mail:server.html.twig")
+     * @Method("POST")
      *
      * Updates the platform settings and redirects to the settings form.
      *
@@ -407,6 +417,7 @@ class ParametersController extends Controller
      * )
      *
      * @Template("ClarolineCoreBundle:Administration\platform\mail:registration.html.twig")
+     * @Method("POST")
      *
      * @return \Symfony\Component\HttpFoundation\Response
      *
@@ -467,6 +478,7 @@ class ParametersController extends Controller
      * )
      *
      * @Template("ClarolineCoreBundle:Administration\platform\mail:layout.html.twig")
+     * @Method("POST")
      *
      * @return \Symfony\Component\HttpFoundation\Response
      *
@@ -524,6 +536,7 @@ class ParametersController extends Controller
      * Updates the platform settings and redirects to the settings form.
      *
      * @Route("/terms_of_service/submit", name="claro_admin_edit_terms_of_service_submit")
+     * @Method("POST")
      *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
@@ -618,6 +631,7 @@ class ParametersController extends Controller
      * )
      *
      * @Template("ClarolineCoreBundle:Administration\platform:session.html.twig")
+     * @Method("POST")
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -649,6 +663,83 @@ class ParametersController extends Controller
 
             if (count($errors) === 0) {
                 $this->configHandler->setParameters($data);
+
+                return $this->redirect($this->generateUrl('claro_admin_index'));
+            }
+
+            foreach ($errors as  $error) {
+                $trans = $this->translator->trans($error, array(), 'platform');
+                $form->addError(new FormError($trans));
+            }
+        }
+
+        return array('form' => $form->createView());
+    }
+
+    /**
+     * @Template("ClarolineCoreBundle:Administration\platform\oauth:index.html.twig")
+     * @Route(
+     *     "/oauth/index",
+     *     name="claro_admin_parameters_oauth_index"
+     * )
+     *
+     * Displays the administration section index.
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function oauthIndexAction()
+    {
+        return array();
+    }
+
+    /**
+     * @Template("ClarolineCoreBundle:Administration\platform\oauth:facebook.html.twig")
+     * @Route(
+     *     "/oauth/facebook/form",
+     *     name="claro_admin_facebook_form"
+     * )
+     *
+     * Displays the administration section index.
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function facebookSettingsFormAction()
+    {
+        $platformConfig = $this->configHandler->getPlatformConfig();
+        $form = $this->formFactory->create(new AdminForm\FacebookType(), $platformConfig);
+
+        return array('form' => $form->createView());
+    }
+
+    /**
+     * @Template("ClarolineCoreBundle:Administration\platform\oauth:facebook.html.twig")
+     * @Route(
+     *     "/oauth/facebook/submit",
+     *     name="claro_admin_facebook_form_submit"
+     * )
+     * @Method("POST")
+     *
+     * Displays the administration section index.
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function facebookSettingsSubmitAction()
+    {
+        $platformConfig = $this->configHandler->getPlatformConfig();
+        $form = $this->formFactory->create(new AdminForm\FacebookType(), $platformConfig);
+        $form->handleRequest($this->request);
+
+        if ($form->isValid()) {
+            $data = array(
+                'facebook_client_id' => $form['facebook_client_id']->getData(),
+                'facebook_client_secret' => $form['facebook_client_secret']->getData()
+            );
+
+            $errors = $this->hwiManager->validateFacebook($data['facebook_client_id'], $data['facebook_client_secret']);
+
+            if (count($errors) === 0) {
+                $this->configHandler->setParameters($data);
+                $this->cacheManager->refresh();
 
                 return $this->redirect($this->generateUrl('claro_admin_index'));
             }

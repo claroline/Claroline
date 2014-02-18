@@ -1,5 +1,5 @@
 add_event: 'Ajouter un événement'
-agenda_form_allDay: 'Tâche'
+agenda_form_allDay: Tâche
 agenda_form_description: Description
 agenda_form_end: 'Date de fin'
 agenda_form_endHours: 'Heure de fin'

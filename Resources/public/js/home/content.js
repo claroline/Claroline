@@ -232,9 +232,14 @@
 
         if (urls.length > 0) {
             home.generatedContent(urls[0], function (data) {
-                $('.content-text', creator).val(
-                    $('.content-text', creator).val() + '<p><a href="' + urls[0] + '">' + urls[0] + '</a></p>' + data
-                );
+                var editor = tinymce.get($('.lang:not(.hide) textarea', creator).attr('id'));
+                var newNode = tinymce.activeEditor.getDoc().createElement('div');
+
+                newNode.innerHTML = data;
+                editor.selection.getRng().insertNode(newNode);
+                setTimeout(function () {
+                    editor.fire('change');
+                }, 500);
             });
 
             $(modal).modal('hide');

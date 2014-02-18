@@ -66,7 +66,11 @@
         {% else %}
             en
         {% endif %}
-    {% endspaceless %}</div>
+    {% endspaceless %}
+    </div>
+    {% if is_facebook_available() %}
+        <div id="fb-root"></div>
+    {% endif %}
     <div id="wrap">
         <div class="please-wait">
             <h4><span class="label label-warning"> {{ 'please_wait'|trans({}, 'platform') }} </span></h4>
@@ -209,4 +213,27 @@
             selector: '[data-toggle=tooltip]'
         });
     </script>
+    {% if is_facebook_available() %}
+    <script>
+        (function(d, s, id){
+            var js, fjs = d.getElementsByTagName(s)[0];
+            if (d.getElementById(id)) {return;}
+            js = d.createElement(s); js.id = id;
+            js.src = "//connect.facebook.net/fr_FR/all.js";
+            fjs.parentNode.insertBefore(js, fjs);
+        }(document, 'script', 'facebook-jssdk'));
+        window.fbAsyncInit = function() {
+            // init the FB JS SDK
+            FB.init({
+                appId      : '{{ get_facebook_app_id() }}',                    // App ID from the app dashboard
+                status     : true,                                 // Check Facebook Login status
+                xfbml      : true,
+                cookie     : true
+            });
+            $('#btn-logout').on('click', function() {
+                FB.logout(function(respose){});
+            })
+        };
+    </script>
+    {% endif %}
 {% endblock %}

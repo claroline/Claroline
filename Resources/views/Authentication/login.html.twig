@@ -16,7 +16,6 @@ same message when authentication has failed (no precise validation errors).
                 {{ 'login_failure'|trans({}, 'platform') }}
             </div>
         {% endif %}
-
         <div class='content-element panel panel-default'>
             <div class="panel-heading">
                 <h3 class="panel-title">{{ 'login' | trans({}, "platform")}}</h3>
@@ -41,8 +40,36 @@ same message when authentication has failed (no precise validation errors).
                 </div>
                 <div class="panel-footer">
                     <button type="submit" class="btn btn-primary" tabindex="3">{{ 'login'|trans({}, 'platform') }}</button>
+                    {% if is_facebook_available() %}
+                        <div
+                            onlogin="fb_login();"
+                            class="fb-login-button"
+                            data-max-rows="1"
+                            data-size="large"
+                            data-show-faces="false"
+                            data-auto-logout-link="false">
+                        </div>
+                    {% endif %}
                 </div>
             </form>
         </div>
+        {% if is_facebook_available() %}
+        <script>
+          function fb_login() {
+            FB.getLoginStatus(function(response) {
+                if (response.status === 'connected') {
+                    document.location = "{{ url("hwi_oauth_service_redirect", {service: "facebook"}) }}";
+                } else {
+                    FB.login(function(response) {
+                        if (response.authResponse) {
+                            document.location = "{{ url("hwi_oauth_service_redirect", {service: "facebook"}) }}";
+                        }
+                    });
+                }
+            });
+          }
+        </script>
+        {% endif %}
     </div>
+
 {% endblock %}
