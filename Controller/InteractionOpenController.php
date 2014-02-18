@@ -204,8 +204,9 @@ class InteractionOpenController extends Controller
 
         return $this->forward(
             'UJMExoBundle:Question:edit', array(
-                'id' => $interOpen->getInteraction()->getQuestion()->getId(),
-                'form' => $editForm
+                'exoID' => $exoID,
+                'id'    => $interOpen->getInteraction()->getQuestion()->getId(),
+                'form'  => $editForm
             )
         );
     }
