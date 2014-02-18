@@ -20,18 +20,25 @@ class ContentTranslationRepository extends TranslationRepository
     {
         $translations = parent::findTranslations($content);
 
-        $en = $this->_em->createQueryBuilder()
+        $translations['en'] = $this->findOriginalContent($content->getId());
+
+        return $translations;
+    }
+
+    public function findOriginalContent($id)
+    {
+        $query = $this->_em->createQueryBuilder()
             ->select('content.content', 'content.title')
             ->from('ClarolineCoreBundle:Content', 'content')
-            ->where('content.id = ' . $content->getId())
+            ->where('content.id = ' . $id)
             ->getQuery()
             ->execute(
                 compact('entityId', 'entityClass'),
                 Query::HYDRATE_ARRAY
             );
 
-        $translations['en'] = $en[0];
-
-        return $translations;
+        if (isset($query[0])) {
+            return $query[0];
+        }
     }
 }

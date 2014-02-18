@@ -120,7 +120,7 @@
         {% else %}
             {% set logoutPath = path('claro_security_logout') %}
         {% endif %}
-        {{ topbar.item({'name':'logout', 'href':logoutPath, 'icon':'off'}) }}
+        {{ topbar.item({'name':'logout', 'href':logoutPath, 'icon':'off', id:"btn-logout"}) }}
 
     {% endblock dropdownLogged %}
 

@@ -74,18 +74,27 @@
             </ul>
         </div>
         {% for child in form %}
-            <div data-lang="{{ child.vars.name | upper }}"{% if app.request.locale != child.vars.name %} class="hide"{% endif %}>
+            <div data-lang="{{ child.vars.name | upper }}"
+                 class="lang{% if app.request.locale != child.vars.name %} hide{% endif %}">
                 {% if contentTitle %}
                     {{
                         form_widget(child['title'], {
                             'attr': {
-                                'class': 'margin-bottom-md',
-                                'placeholder': 'Optional title' | trans({}, 'home') ~ '...'
+                                'placeholder': titlePlaceHolder | trans({}, 'home') ~ '...'
                             }
                         })
                     }}
                 {% endif %}
-                {{ form_widget(child['content']) }}
+                {% if contentTitle and contentText%}<br>{% endif %}
+                {% if contentText %}
+                    {{
+                        form_widget(child['content'], {
+                            'attr': {
+                                'placeholder': textPlaceHolder | trans({}, 'home') ~ '...'
+                            }
+                        })
+                    }}
+                {% endif %}
             </div>
         {% endfor %}
     </div>
@@ -93,8 +102,9 @@
 
 {% block form_errors %}
     {% if errors|length > 0 %}
+        {% set errorClass = form.parent is empty ? 'global-error' : 'field-error' %}
         {% spaceless %}
-            <div class="help-block">
+            <div class="help-block {{ errorClass }}">
                 {% if errors|length == 1 %}
                     {{ errors[0].message }}
                 {% else %}

@@ -12,30 +12,6 @@
 
     var home = window.Claroline.Home;
 
-    $('body').on('mouseenter', '.content-element', function () {
-
-        if ($('.content-menu', this).get(0) !== undefined) {
-            $('.content-menu').each(function () {
-                if (!$(this).hasClass('hide')) {
-                    $(this).addClass('hide');
-                }
-                if ($(this).hasClass('open')) {
-                    $(this).removeClass('open');
-                }
-            });
-        }
-
-        $(this).find('.content-menu').first().removeClass('hide');
-
-    });
-
-    $('body').on('mouseleave', '.content-element', function () {
-        if (!$(this).find('.content-menu').first().hasClass('open')) {
-            $(this).find('.content-menu').first().removeClass('open');
-        }
-        $(this).find('.content-menu').first().addClass('hide');
-    });
-
     $('body').on('click', '.content-size', function (event) {
         var element = $(event.target).parents('.content-element').get(0);
         var size = (element.className.match(/\bcontent-\d+/g) || []).join(' ').substr(8);
@@ -52,7 +28,7 @@
         var element = $('#sizes').data('element');
 
         if (id && type && element) {
-            $.post(home.path + 'content/update/' + id, { 'size': size, 'type': type })
+            $.post(home.path + 'content/update/' + id + '/' + size+ '/' + type)
             .done(function (data) {
                 if (data === 'true') {
                     $(element).removeClass(function (index, css) {
@@ -204,7 +180,8 @@
         }
     });
 
-    $('body').on('click', '.creator-button', function (event) {
+
+   $('body').on('click', '.creator-button', function (event) {
         home.creator(event.target);
     });
 
@@ -213,7 +190,7 @@
         var id = $(element).data('id');
 
         if (element && id) {
-            home.creator(event.target, id);
+            home.creator(event.target, id, true);
         }
     });
 
@@ -255,9 +232,14 @@
 
         if (urls.length > 0) {
             home.generatedContent(urls[0], function (data) {
-                $('.content-text', creator).val(
-                    $('.content-text', creator).val() + '<p><a href="' + urls[0] + '">' + urls[0] + '</a></p>' + data
-                );
+                var editor = tinymce.get($('.lang:not(.hide) textarea', creator).attr('id'));
+                var newNode = tinymce.activeEditor.getDoc().createElement('div');
+
+                newNode.innerHTML = data;
+                editor.selection.getRng().insertNode(newNode);
+                setTimeout(function () {
+                    editor.fire('change');
+                }, 500);
             });
 
             $(modal).modal('hide');

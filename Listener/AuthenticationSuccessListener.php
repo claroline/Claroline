@@ -130,7 +130,8 @@ class AuthenticationSuccessListener implements AuthenticationSuccessHandlerInter
             $event->isMasterRequest() &&
             !$event->getRequest()->isXmlHttpRequest() &&
             !in_array($event->getRequest()->attributes->get('_route'), $this->getExcludedRoutes()) &&
-            'GET' === $event->getRequest()->getMethod()
+            'GET' === $event->getRequest()->getMethod() &&
+            200 === $event->getResponse()->getStatusCode()
         ) {
 
             $token =  $this->securityContext->getToken();
@@ -181,10 +182,11 @@ class AuthenticationSuccessListener implements AuthenticationSuccessHandlerInter
         if ($this->configurationHandler->getParameter('terms_of_service') and
             $request->get('_route') !== 'claroline_locale_change' and
             $request->get('_route') !== 'claroline_locale_select' and
+            $request->get('_route') !== 'bazinga_exposetranslation_js' and
             $token = $this->securityContext->getToken() and
             $user = $token->getUser() and
             $user instanceof User and
-            !$user->hasAcceptedTerms() 
+            !$user->hasAcceptedTerms()
         ) {
             return $user;
         }

@@ -17,7 +17,7 @@
 {% endblock %}
 
 {% block section_content %}
-    <div id="config-value-div" config-value="{{ withConfig }}"></div>
+    <div id="config-value-div" config-value="{% if withConfig is defined and not withConfig is empty %}{{ withConfig }}{% endif %}"></div>
     <div id="hometab-id-div" hometab-id="{{ tabId }}"></div>
     <div id="workspace-id-div" workspace-id="{{ workspace.getId() }}"></div>
 

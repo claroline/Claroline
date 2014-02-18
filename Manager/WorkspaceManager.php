@@ -36,6 +36,7 @@ use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 use Symfony\Component\Serializer\Normalizer\GetSetMethodNormalizer;
 use JMS\DiExtraBundle\Annotation as DI;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * @DI\Service("claroline.manager.workspace_manager")
@@ -77,7 +78,7 @@ class WorkspaceManager
     /** @var PagerFactory */
     private $pagerFactory;
     private $workspaceFavouriteRepo;
-    private $security;
+    private $container;
 
     /**
      * Constructor.
@@ -93,7 +94,7 @@ class WorkspaceManager
      *     "ut"              = @DI\Inject("claroline.utilities.misc"),
      *     "templateDir"     = @DI\Inject("%claroline.param.templates_directory%"),
      *     "pagerFactory"    = @DI\Inject("claroline.pager.pager_factory"),
-     *     "security"        = @DI\Inject("security.context")
+     *     "container"       = @DI\Inject("service_container")
      * })
      */
     public function __construct(
@@ -107,7 +108,7 @@ class WorkspaceManager
         ClaroUtilities $ut,
         $templateDir,
         PagerFactory $pagerFactory,
-        SecurityContextInterface $security
+        ContainerInterface $container
     )
     {
         $this->homeTabManager = $homeTabManager;
@@ -129,7 +130,7 @@ class WorkspaceManager
         $this->workspaceRepo = $om->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace');
         $this->workspaceFavouriteRepo = $om->getRepository('ClarolineCoreBundle:Workspace\WorkspaceFavourite');
         $this->pagerFactory = $pagerFactory;
-        $this->security = $security;
+        $this->container = $container;
     }
 
     /**
@@ -783,8 +784,9 @@ class WorkspaceManager
                 array($role, $user)
             );
         }
+
         $token = new UsernamePasswordToken($user, null, 'main', $user->getRoles());
-        $this->security->setToken($token);
+        $this->container->get('security.context')->setToken($token);
 
         return $user;
     }

@@ -14,18 +14,17 @@
     var home = window.Claroline.Home;
 
     home.path = $('#homePath').html(); //global
+    home.locale = $('#homeLocale').html(); //global
+    home.asset = $('#homeAsset').html(); //global
+
 
     if (!home.path) {
         home.path = './';
     }
 
-    home.locale = $('#homeLocale').html(); //global
-
     if (!home.locale) {
         home.locale = 'en';
     }
-
-    home.asset = $('#homeAsset').html(); //global
 
     if (!home.asset) {
         home.asset = './';
@@ -88,6 +87,44 @@
     };
 
     /**
+     * Insert the HTML of a new or edited content.
+     */
+    home.insertContent = function (creatorElement, data, type, father, update)
+    {
+        update = typeof(update) !== 'undefined' ? update : null;
+
+        var contentPath = 'content/' + data + '/' + type;
+
+        if (father) {
+            contentPath += '/' + father;
+        }
+
+        $.ajax(home.path + contentPath).done(function (data) {
+            if (father && !update) {
+               $('.creator' + father).after(data);
+               $('.creator' + father).find('.collapse' + father).collapse('hide');
+            } else if (father && update) {
+                $(creatorElement).parents('.creator' + father).first().replaceWith(data);
+            } else if (update) {
+                $(creatorElement).replaceWith(data);
+            } else {
+                $(creatorElement).next().prepend(data).hide().fadeIn('slow');
+            }
+
+            $('.contents').trigger('ContentModified');
+        });
+    };
+
+    /**
+     * Empty titles and contents in a creator for each languages.
+     */
+    home.emptyContent = function (creatorElement)
+    {
+        $('input', creatorElement).val('');
+        $('textarea', creatorElement).val('');
+    };
+
+    /**
      * Create and update an element by POST method with ajax.
      *
      * @param [DOM obj] element The .creator element
@@ -95,71 +132,33 @@
      *
      * @TODO Prevent multiple clicks
      */
-    home.creator = function (element, id)
+    home.creator = function (element, id, update)
     {
         id = typeof(id) !== 'undefined' ? id : null;
+        update = typeof(update) !== 'undefined' ? update : null;
 
         var creatorElement = $(element).parents('.creator').get(0);
-        var title = $('.content-title', creatorElement).get(0);
-        var text = $('.content-text', creatorElement).get(0);
+        var form = $('form', creatorElement).first().serializeArray();
         var type = $(creatorElement).data('type');
         var father = $(creatorElement).data('father');
-        var path = '';
-        var contentPath = '';
+        var route ='content/create/' + type;
 
-        if (id) {
-            path = 'content/update/' + id;
-        } else {
-            path = 'content/create';
+        if (father) {
+            route += '/' + father;
         }
 
-        if (text.value !== '' || title.value !== '') {
-            $.post(home.path + path, {
-                'title': title.value,
-                'text': text.value,
-                'type': type,
-                'father': father
-            })
+        if (update) {
+            route ='content/update/' + id;
+        }
+
+        if (!home.creatorIsEmpty(form)) {
+            $.post(home.path + route, form)
             .done(function (data) {
                 if (!isNaN(data) && data !== '') {
-                    contentPath = 'content/' + data + '/' + type;
-
-                    var insertElement = function (content) {
-                        $(creatorElement).next().prepend(content).hide().fadeIn('slow');
-                    };
-
-                    if (father) {
-                        contentPath = 'content/' + data + '/' + type + '/' + father;
-
-                        insertElement = function (content)
-                        {
-                            $('.creator' + father).after(content);
-                            $('.creator' + father).find('.collapse' + father).collapse('hide');
-                        };
-                    }
-
-                    $.ajax(home.path + contentPath)
-                    .done(function (data) {
-                        insertElement(data);
-                        $('.contents').trigger('ContentModified');
-                    });
-
-                    title.value = '';
-                    text.value = '';
+                    home.insertContent(creatorElement, data, type, father);
+                    home.emptyContent(creatorElement);
                 } else if (data === 'true') {
-
-                    contentPath = 'content/' + id + '/' + type;
-
-                    if (father) {
-                        creatorElement = $(creatorElement).parents('.creator' + father).get(0);
-                        contentPath = 'content/' + id + '/' + type + '/' + father;
-                    }
-
-                    $.ajax(home.path + contentPath)
-                    .done(function (data) {
-                        $(creatorElement).replaceWith(data);
-                        $('.contents').trigger('ContentModified');
-                    });
+                    home.insertContent(creatorElement, id, type, father, update);
                 } else {
                     home.modal('content/error');
                 }
@@ -169,6 +168,24 @@
             });
         }
     };
+
+    /**
+     * check if a translated content form is empty
+     *
+     * @param form A serializeArray of a form element
+     */
+    home.creatorIsEmpty = function(form)
+    {
+        if (form instanceof Array) {
+            for (var lang in form) {
+                if (form.hasOwnProperty(lang) && form[lang].value !== undefined && form[lang].value !== '') {
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
 
     /**
      * Get content from a external url and put it in a creator of contents.
@@ -252,7 +269,7 @@
         var translatable = $(this).parents('.content-translatable').first();
         var lang = $(this).text();
         $('.content-menu button span', translatable).text(lang);
-        $('textarea', translatable).parent().each(function () {
+        $('.lang', translatable).each(function () {
             if ($(this).data('lang') === lang) {
                 $(this).removeClass('hide');
             } else {
