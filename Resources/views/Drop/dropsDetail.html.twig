@@ -19,6 +19,7 @@
 {% endblock %}
 
 {% block dropzone_content %}
+
     <div class="container container-dropzone">
         <span class="{% if drop.reported and byUserMod == 0 %}text-danger{% endif %}">
             <h2>
@@ -131,6 +132,9 @@
                     {% endif %}
                     {% if correction.reporter %}
                         <span class="label label-danger">{{ 'Reported'|trans({}, 'icap_dropzone') }}</span>
+                    {% endif %}
+                    {% if correction.correctionDenied %}
+                        <span class="label label-danger">{{ 'Correction denied'|trans({}, 'icap_dropzone') }}</span>
                     {% endif %}
                     {% if not correction.valid %}
                         <span class="label label-danger">{{ 'Invalidated'|trans({}, 'icap_dropzone') }}</span>
