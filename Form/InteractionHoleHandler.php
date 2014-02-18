@@ -116,9 +116,9 @@ class InteractionHoleHandler {
             $this->em->persist($hint);
         }
 
-        $this->htmlWithoutValue($interHole);
-
         $this->em->flush();
+        
+        $this->htmlWithoutValue($interHole);
     }
 
     public function processUpdate(InteractionHole $originalInterHole)
@@ -223,9 +223,9 @@ class InteractionHoleHandler {
             $this->em->persist($hint);
         }
 
-        $this->htmlWithoutValue($interHole);
-
         $this->em->flush();
+        
+        $this->htmlWithoutValue($interHole);
     }
 
     private function delKeyWord($hole, $originalHoles)
@@ -307,6 +307,8 @@ class InteractionHoleHandler {
             $html = str_replace($regExpr, 'value=""', $html);
         }
         $interHole->setHtmlWithoutValue($html);
+        $this->em->persist($interHole);
+        $this->em->flush();
 
     }
 }
