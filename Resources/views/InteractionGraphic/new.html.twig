@@ -142,7 +142,7 @@ presently reading this means that you have had
                                                 </select>
                                             </td>
                                             <td class="classic">
-                                                <input class="form-control" type="TEXT" id="points" value="1" onblur="CheckScore('{{ 'wrongPoint' | trans }}');">
+                                                <input class="form-control" type="TEXT" id="points" value="1" onblur="CheckScore('{{ 'wrongPoint' | trans }}', 'default');">
                                             </td>
                                         </tr>
                                     </table>
@@ -187,7 +187,7 @@ presently reading this means that you have had
             </div>
 
             <div class="panel-footer">
-                <button type="submit" class="btn btn-primary">{{ 'create' | trans }}</button>
+                <button type="submit"  id="button_submit" class="btn btn-primary">{{ 'create' | trans }}</button>
             </form>
         </div>
     </div>

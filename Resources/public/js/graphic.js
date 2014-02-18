@@ -202,13 +202,23 @@ $(function () {
 });
 
 // Check if the score is a correct number
-function CheckScore(message) {
+function CheckScore(message, valueOfPoint) {
 
-    if (/^\d+(?:[.,]\d+)?$/.test($('#points').val()) == false) {
+    var valToTest = '';
+
+    if (valueOfPoint == 'default') {
+        valToTest = $('#points').val();
+    } else {
+        valToTest = valueOfPoint;
+    }
+
+    if (/^\d+(?:[.,]\d+)?$/.test(valToTest) == false) {
         alert(message);
         el.css({"visibility" : "hidden"}); // Answer zone not visible
+        $('#button_submit').css({"visibility" : "hidden"}); // Validate button not visible
     } else {
         el.css({"visibility" : "visible"});// Answer zone visible
+        $('#button_submit').css({"visibility" : "visible"}); // Validate button visible
     }
 }
 
@@ -520,10 +530,11 @@ function alterAlreadyPlaced(pathImg, alterSelect) {
 
 function changePoints(tradWrongPoint, targetChange) {
     var numChange = targetChange.id.substring(6);
-    var idImgToChange = 'img' + (parseInt(numChange) - 1);
+    var idImgToChange = 'img' + (parseInt(numChange));
 
     point[idImgToChange] = $('#points' + numChange).val();
-    CheckScore(tradWrongPoint);
+
+    CheckScore(tradWrongPoint, $('#points' + numChange).val());
 }
 
 function getImageInformations(src) {
