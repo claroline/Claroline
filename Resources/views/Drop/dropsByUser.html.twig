@@ -58,6 +58,14 @@
                 </div>
             </div>
             <div class="panel-body">
+                {% if drop.getHasDeniedCorrection %}
+                    <div class="row text-warning">
+                        <div class="col-md-12">
+                            <span class="glyphicon icon-warning-sign"></span>
+                            {{ 'This copy contain a denied correction'|trans({}, 'icap_dropzone') }}
+                        </div>
+                    </div>
+                {% endif  %}
                 <div class="row text-muted">
                     <div class="col-md-3">{{ 'Established on'|trans({}, 'icap_dropzone') }}</div>
                     <div class="col-md-3">{{ 'Last correction'|trans({}, 'icap_dropzone') }}</div>

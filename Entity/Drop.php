@@ -291,6 +291,19 @@ class Drop {
         return $nbFinishedCorrections;
     }
 
+    public function getHasDeniedCorrection()
+    {
+        $hasDeniedCorrection = false;
+        $corrections = $this->getCorrections();
+        foreach($corrections as $correction ) {
+            if($correction->getCorrectionDenied()) {
+                $hasDeniedCorrection = true;
+                break;
+            }
+        }
+        return $hasDeniedCorrection;
+    }
+
     /**
      * @return \DateTime|false
      */
