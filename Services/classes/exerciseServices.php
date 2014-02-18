@@ -198,32 +198,6 @@ class exerciseServices
         return count($papers);
     }
 
-    private function getPenalty($interaction, $paperID)
-    {
-        $penalty = 0;
-        $em = $this->doctrine->getManager();
-
-        $hints = $interaction->getHints();
-
-        foreach ($hints as $hint) {
-            $lhp = $this->doctrine
-                        ->getManager()
-                        ->getRepository('UJMExoBundle:LinkHintPaper')
-                        ->getLHP($hint->getId(), $paperID);
-            if (count($lhp) > 0) {
-                $signe = substr($hint->getPenalty(), 0, 1);
-
-                if ($signe == '-') {
-                    $penalty += substr($hint->getPenalty(), 1);
-                } else {
-                    $penalty += $hint->getPenalty();
-                }
-            }
-        }
-
-        return $penalty;
-    }
-
     public function responseGraphic($request, $paperID = 0)
     {
         $answers = $request->request->get('answers'); // Answer of the student
@@ -763,6 +737,74 @@ class exerciseServices
         return $tabScoresUser;
     }
 
+    /**
+     * To control the User's rights to this shared question
+     *
+     */
+    public function controlUserSharedQuestion($questionID)
+    {
+        $user = $this->securityContext->getToken()->getUser();
+
+        $questions = $this->doctrine
+                          ->getManager()
+                          ->getRepository('UJMExoBundle:Share')
+                          ->getControlSharedQuestion($user->getId(), $questionID);
+
+        return $questions;
+    }
+
+    public function getLinkedCategories()
+    {
+        $linkedCategory = array();
+        $repositoryCategory = $this->doctrine
+                   ->getManager()
+                   ->getRepository('UJMExoBundle:Category');
+
+        $repositoryQuestion = $this->doctrine
+                   ->getManager()
+                   ->getRepository('UJMExoBundle:Question');
+
+        $categoryList = $repositoryCategory->findAll();
+
+
+        foreach ($categoryList as $category) {
+          $questionLink = $repositoryQuestion->findOneBy(array('category' => $category->getId()));
+          if (!$questionLink) {
+              $linkedCategory[$category->getId()] = 0;
+          } else {
+              $linkedCategory[$category->getId()] = 1;
+          }
+        }
+
+        return $linkedCategory;
+    }
+
+    private function getPenalty($interaction, $paperID)
+    {
+        $penalty = 0;
+        $em = $this->doctrine->getManager();
+
+        $hints = $interaction->getHints();
+
+        foreach ($hints as $hint) {
+            $lhp = $this->doctrine
+                        ->getManager()
+                        ->getRepository('UJMExoBundle:LinkHintPaper')
+                        ->getLHP($hint->getId(), $paperID);
+            if (count($lhp) > 0) {
+                $signe = substr($hint->getPenalty(), 0, 1);
+
+                if ($signe == '-') {
+                    $penalty += substr($hint->getPenalty(), 1);
+                } else {
+                    $penalty += $hint->getPenalty();
+                }
+            }
+        }
+
+        return $penalty;
+    }
+
     private function orderInteractions($interactions, $order)
     {
         $inter = array();
@@ -809,21 +851,4 @@ class exerciseServices
 
         return $resp;
     }
-    
-    /**
-     * To control the User's rights to this shared question
-     *
-     */
-    public function controlUserSharedQuestion($questionID)
-    {
-        $user = $this->securityContext->getToken()->getUser();
-
-        $questions = $this->doctrine
-                          ->getManager()
-                          ->getRepository('UJMExoBundle:Share')
-                          ->getControlSharedQuestion($user->getId(), $questionID);
-
-        return $questions;
-    }
-    
 }

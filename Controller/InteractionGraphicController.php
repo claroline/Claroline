@@ -174,7 +174,8 @@ class InteractionGraphicController extends Controller
         return $this->render(
             'UJMExoBundle:Question:new.html.twig', array(
             'formWithError' => $formWithError,
-            'exoID'  => $exoID
+            'exoID'  => $exoID,
+            'linkedCategory' =>  $this->container->get('ujm.exercise_services')->getLinkedCategories()
             )
         );
     }
