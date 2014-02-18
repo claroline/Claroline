@@ -1,0 +1,99 @@
+properties:
+    name: Anglais
+    code: EN
+    visible: true
+    selfregistration: true
+    selfUnregistration: false
+    owner: 'ezs'
+
+members:
+    owner:
+        first_name: ffdgdf
+        last_name: sdfsd
+        username: moi
+        password: enclair
+        mail: moi@moi.com
+        code: USER01
+        roles:
+          - name: 'ROLE_1'
+          - name: 'ROLE_2'
+          - name: 'ROLE_3'
+
+    users:
+        - user:
+            first_name: ffdgdf
+            last_name: sdfsd
+            username: moi
+            password: enclair
+            mail: moi@moi.com
+            code: USER01
+            roles:
+              - name: 'ROLE_1'
+              - name: 'ROLE_2'
+              - name: 'ROLE_3'
+        - user:
+            first_name: d
+            last_name: ddsd
+            username: moi
+            password: enclair
+            mail: moi@moi.com
+            code: USER02
+
+    groups:
+        - group:
+            name: blabla
+            users:
+              - username: 'user1'
+              - username: 'user2'
+              - username: 'user3'
+            roles:
+              - name: 'ROLE_1'
+              - name: 'ROLE_2'
+              - name: 'ROLE_3'
+
+
+userfiles:
+    - path: users01.yml
+
+groupfiles:
+    - path: groups01.yml
+
+rolefiles:
+    - path: roles01.yml
+
+toolfiles:
+    - path: tools.yml
+
+
+roles:
+    - role:
+        name: 'role1'
+        translation: 'totottoo'
+        is_base_role: true
+    - role:
+        name: 'role1'
+        translation: 'totottoo'
+        is_base_role: false
+
+tools:
+    - tool:
+        name: 'home'
+        translation: 'accueil'
+        config: 'tools/home.yml'
+        roles:
+          - name: anonymous
+          - name: visitor
+          - name: collaborator
+          - name: manager
+    - tool:
+        name: 'agenda'
+        roles:
+           - name: visitor
+        translation: 'agenda'
+    - tool:
+        name: 'badges'
+    - tool:
+        name: 'resource_manager'
+        config: 'tools/resource_manager.yml'
+
+

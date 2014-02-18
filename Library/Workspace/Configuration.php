@@ -27,6 +27,7 @@ class Configuration
     private $displayable = false;
     private $selfRegistration = false;
     private $selfUnregistration = false;
+
     /**
      * If you want to use the role_anonymous from the platform, use
      * 'ROLE_ANONYMOUS'.
@@ -39,35 +40,25 @@ class Configuration
     private $permsRootConfig;
     private $templateFile;
 
-    public function __construct($template, $full = true)
-    {
-        if ($full) {
-            $this->templateFile = $template;
-            $this->workspaceType = self::TYPE_SIMPLE;
-            $archive = new \ZipArchive();
-
-            if (true === $code = $archive->open($template)) {
-                $parsedFile = Yaml::parse($archive->getFromName('config.yml'));
-                $archive->close();
-                $this->setCreatorRole($parsedFile['creator_role']);
-                $this->setRoles($parsedFile['roles']);
-                $this->setToolsPermissions($parsedFile['tools_infos']);
-                $this->setToolsConfiguration($parsedFile['tools']);
-                $this->setPermsRootConfiguration($parsedFile['root_perms']);
-            } else {
-                throw new \Exception(
-                    "Couldn't open template archive '{$template}' (error {$code})"
-                );
-            }
-        }
-    }
-
-    /**
-     * @todo this method is useless (constructor should be enough now)
-     */
     public static function fromTemplate($templateFile)
     {
-        return new self($templateFile);
+        $archive = new \ZipArchive();
+
+        if (true === $code = $archive->open($templateFile)) {
+            $parsedFile = Yaml::parse($archive->getFromName('config.yml'));
+            $archive->close();
+            $configuration = new self();
+            $configuration->setWorkspaceType(self::TYPE_SIMPLE);
+            $configuration->setCreatorRole($parsedFile['creator_role']);
+            $configuration->setRoles($parsedFile['roles']);
+            $configuration->setToolsPermissions($parsedFile['tools_infos']);
+            $configuration->setToolsConfiguration($parsedFile['tools']);
+            $configuration->setPermsRootConfiguration($parsedFile['root_perms']);
+
+            return $configuration;
+        }
+
+        throw new \Exception("Couldn't open template archive '{$templateFile}' (error {$code})");
     }
 
     public function setWorkspaceType($type)

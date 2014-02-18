@@ -1,0 +1,7 @@
+groups:
+    - group:
+        name: blabla
+        users:
+          - username: 'user1'
+          - username: 'user2'
+          - username: 'user3'

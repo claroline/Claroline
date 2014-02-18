@@ -1,0 +1,13 @@
+versions:
+  - version:
+    - locale:
+      - en:
+        - 'contenten'
+      - fr:
+        - 'contentfr'
+  - version:
+    - locale:
+      - en:
+        - 'contenten2'
+      - fr:
+        - 'contentfr2'

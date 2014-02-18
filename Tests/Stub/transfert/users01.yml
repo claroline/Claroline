@@ -1,0 +1,15 @@
+users:
+    - user:
+        first_name: ffdgdf
+        last_name: sdfsd
+        username: moi
+        password: enclair
+        mail: moi@moi.com
+        code: USER01
+    - user:
+        first_name: d
+        last_name: ddsd
+        username: moi
+        password: enclair
+        mail: moi@moi.com
+        code: USER02

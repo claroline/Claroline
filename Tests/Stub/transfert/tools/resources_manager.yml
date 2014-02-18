@@ -1,0 +1,171 @@
+resources:
+    directories:
+        root:
+            rights:
+                roles:
+                    - visitor:
+                        name: foo
+                        open: true
+                        edit: false
+                        create:
+                            resource: 'hello'
+        directory:
+            name: dir1
+            creator: bar
+            parent: root
+            rights:
+                roles:
+                    - visitor:
+                        name: foo
+                        open: true
+                        edit: false
+                        create:
+                            resource: 'hello'
+        directory:
+            name: dir2
+            creator: toto
+            parent: dir1
+            rights:
+                roles:
+                    - visitor:
+                        name: foo
+                        open: true
+                        edit: false
+                        create:
+                            resource: 'hello'
+    items:
+        item:
+            name: 'foo'
+            creator: 'bar'
+            parent: 'papa'
+            type: 'file'
+            config: 'tools/resources/files01.yml'
+            rights:
+                roles:
+                    - visitor:
+                        name: foo
+                        open: true
+                        edit: false
+        item:
+            name: 'foo2'
+            creator: 'bar'
+            parent: 'dir2'
+            type: 'text'
+            config: 'tools/resources/text01.yml'
+            rights:
+                roles:
+                    - visitor:
+                        name: foo
+                        open: true
+                        edit:
+        item:
+            name: 'foo3'
+            creator: 'bar'
+            parent: 'dir2'
+            type: 'shortcut'
+            config: 'tools/resources/shortcut01.yml'
+            rights:
+                roles:
+                    - visitor:
+                        name: foo
+                        open: true
+                        edit:
+        item:
+            name: 'foo4'
+            creator: 'bar'
+            parent: 'dir2'
+            type: 'activity'
+            config: 'tools/resources/activity01.yml'
+            rights:
+                roles:
+                    - visitor:
+                        name: foo
+                        open: true
+                        edit: false
+        item:
+            name: 'foo4'
+            creator: 'bar'
+            parent: 'dir2'
+            type: 'blog'
+            config: 'tools/resources/blog01.yml'
+            rights:
+                roles:
+                    - visitor:
+                        name: foo
+                        open: true
+                        edit: false
+        item:
+            name: 'foo5'
+            creator: 'bar'
+            parent: 'dir2'
+            type: 'evaluation'
+            config: 'tools/resources/evaluation01.yml'
+            rights:
+                roles:
+                    - visitor:
+                        name: foo
+                        open: true
+                        edit: false
+        item:
+            name: 'foo6'
+            creator: 'bar'
+            parent: 'dir2'
+            type: 'wiki'
+            config: 'tools/resources/wiki01.yml'
+            rights:
+                roles:
+                    - visitor:
+                        name: foo
+                        open: true
+                        edit: false
+        item:
+            name: 'foo7'
+            creator: 'bar'
+            parent: 'dir2'
+            type: 'exercice'
+            config: 'tools/resources/exercice01.yml'
+            rights:
+                roles:
+                    - visitor:
+                        name: foo
+                        open: true
+                        edit: false
+        item:
+            name: 'foo8'
+            creator: 'bar'
+            parent: 'dir2'
+            type: 'announcements'
+            config: 'tools/resources/announcements01.yml'
+            rights:
+                roles:
+                    - visitor:
+                        name: foo
+                        open: true
+                        edit: false
+        item:
+            name: 'foo8'
+            creator: 'bar'
+            parent: 'dir2'
+            type: 'lesson'
+            config: 'tools/resources/lesson01.yml'
+            rights:
+                roles:
+                    - visitor:
+                        name: foo
+                        open: true
+                        edit: false
+        item:
+            name: 'foo8'
+            creator: 'bar'
+            parent: 'dir2'
+            type: 'forum'
+            config: 'tools/resources/forum01.yml'
+            rights:
+                roles:
+                    - visitor:
+                        name: foo
+                        open: true
+                        edit: false
+
+
+

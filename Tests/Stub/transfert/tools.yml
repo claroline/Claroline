@@ -1,0 +1,23 @@
+tools:
+    - tool:
+        name: 'home'
+        translation: 'accueil'
+        data:
+          somedata: 'somedata'
+        config: 'tools/home.yml'
+        roles:
+          - name: anonymous
+          - name: visitor
+          - name: collaborator
+          - name: manager
+    - tool:
+        name: 'agenda'
+        roles:
+           - name: visitor
+        translation: 'agenda'
+    - tool:
+        name: 'badges'
+    - tool:
+        name: 'resource_manager'
+        config: 'tools/resource_manager.yml'
+
