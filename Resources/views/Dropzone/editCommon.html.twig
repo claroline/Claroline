@@ -59,6 +59,11 @@
             <div class="col-lg-offset-2 ">
                 {{ form_row(form.diplayCorrectionsToLearners, {'label_attr': { 'style': 'font-weight: normal;'}}) }}
             </div>
+            <div class="col-lg-offset-2 ">
+                <div id='allow-correction-deny' class='col-lg-8' style="text-align: left;" >
+                    {{ form_row(form.allowCorrectionDeny, {'label_attr': { 'style': 'font-weight: normal;'}}) }}
+                </div>
+            </div>
         </div>
         <h4>{{ 'Rating'|trans({}, 'icap_dropzone') }}</h4>
 
@@ -211,7 +216,23 @@
             } else {
                 datesPlanning();
             }
+
+            $('#icap_dropzone_common_form_diplayCorrectionsToLearners').click(function()
+            {
+                manageCorrectionDeny();
+            });
+            manageCorrectionDeny();
         });
+
+        function manageCorrectionDeny()
+        {
+            if($('#icap_dropzone_common_form_diplayCorrectionsToLearners').prop('checked')) {
+                $('#allow-correction-deny').show();
+            } else {
+                $('#icap_dropzone_common_form_allowCorrectionDeny').prop('checked',false);
+                $('#allow-correction-deny').hide();
+            } 
+        }
     </script>
 {% endblock %}
 
