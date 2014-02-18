@@ -51,6 +51,8 @@ class Badge extends Rulable
      *
      * @ORM\Column(type="smallint", nullable=false)
      * @Expose
+     * @Assert\NotBlank()
+     * @Assert\GreaterThan(value = 0)
      */
     protected $version;
 

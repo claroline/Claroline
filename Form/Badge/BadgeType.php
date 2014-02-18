@@ -61,10 +61,7 @@ class BadgeType extends AbstractType
                 'version',
                 'integer',
                 array(
-                    'data'  => 1,
-                    'constraints' => new Assert\NotBlank(
-                        array('message' => 'badge_need_version')
-                    ),
+                    'data' => 1
                 )
             )
             ->add('automatic_award', 'checkbox', array('required' => false))
@@ -107,7 +104,8 @@ class BadgeType extends AbstractType
                 'data_class'         => 'Claroline\CoreBundle\Entity\Badge\Badge',
                 'translation_domain' => 'badge',
                 'language'           => 'en',
-                'date_format'        => DateType::HTML5_FORMAT
+                'date_format'        => DateType::HTML5_FORMAT,
+                'cascade_validation' => true,
             )
         );
     }
