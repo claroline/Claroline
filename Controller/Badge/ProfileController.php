@@ -88,7 +88,7 @@ class ProfileController extends Controller
     }
 
     /**
-     * @Route("/view/{id}", name="claro_profile_view_badge")
+     * @Route("/{id}", name="claro_profile_view_badge")
      * @ParamConverter("user", options={"authenticatedUser" = true})
      * @Template()
      */

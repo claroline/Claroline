@@ -9,7 +9,7 @@
 
     <div class="alert alert-info">
         <strong>{{ 'page_public_look'|trans }}</strong>
-        <a href="#" title="Modifier cette page" class="btn btn-sm btn-primary pull-right">Modifier cette page</a>
+        <a href="#" title="{{ 'collection_edit_page'|trans }}" class="btn btn-sm btn-primary pull-right">{{ 'collection_edit_page'|trans }}</a>
     </div>
     <h1>{{ collection.name }}</h1>
     {% for badge in collection.badges %}
@@ -30,18 +30,20 @@
                         </colgroup>
                         <tbody>
                             <tr>
-                              <td class="section-head text-muted" colspan="2">Badge Details</td>
+                              <td class="section-head text-muted" colspan="2">{{ 'badge_details'|trans }}</td>
                             </tr>
                             <tr>
-                              <td class="fieldlabel">Name</td>
+                              <td class="fieldlabel">{{ 'badge_form_name'|trans }}</td>
                               <td>{{ badge.name(locale) }}</td>
                             </tr>
                             <tr>
-                              <td class="fieldlabel">Description</td>
-                              <td>{{ badge.description(locale) }}</td>
+                              <td class="fieldlabel">{{ 'badge_form_description'|trans }}</td>
+                              <td>
+                                  <p>{{ badge.description(locale) }}</p>
+                              </td>
                             </tr>
                             <tr>
-                              <td class="fieldlabel">Criteria</td>
+                              <td class="fieldlabel">{{ 'badge_form_criteria'|trans }}</td>
                               <td><a href="{{ path('claro_view_badge', {'slug': badge.slug(locale)}) }}">{{ url('claro_view_badge', {'slug': badge.slug(locale)}) }}</a></td>
                             </tr>
                         </tbody>
