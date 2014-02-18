@@ -122,16 +122,13 @@ class AdminController extends Controller
     }
 
     /**
-     * @Route("/edit/{id}/{page}", name="claro_admin_badges_edit")
+     * @Route("/edit/{slug}/{page}", name="claro_admin_badges_edit")
+     * @ParamConverter("badge", converter="badge_converter")
      *
      * @Template()
      */
     public function editAction(Request $request, Badge $badge, $page = 1)
     {
-        if (null !== $badge->getWorkspace()) {
-            throw $this->createNotFoundException("No badge found.");
-        }
-
         /** @var \Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler $platformConfigHandler */
         $platformConfigHandler = $this->get('claroline.config.platform_config_handler');
         $badge->setLocale($platformConfigHandler->getParameter('locale_language'));
@@ -205,7 +202,8 @@ class AdminController extends Controller
     }
 
     /**
-     * @Route("/delete/{id}", name="claro_admin_badges_delete")
+     * @Route("/delete/{slug}", name="claro_admin_badges_delete")
+     * @ParamConverter("badge", converter="badge_converter")
      *
      * @Template()
      */
@@ -237,7 +235,8 @@ class AdminController extends Controller
     }
 
     /**
-     * @Route("/award/{id}", name="claro_admin_badges_award")
+     * @Route("/award/{slug}", name="claro_admin_badges_award")
+     * @ParamConverter("badge", converter="badge_converter")
      *
      * @Template()
      */
@@ -325,8 +324,9 @@ class AdminController extends Controller
     }
 
     /**
-     * @Route("/unaward/{id}/{username}", name="claro_admin_badges_unaward")
+     * @Route("/unaward/{slug}/{username}", name="claro_admin_badges_unaward")
      * @ParamConverter("user", options={"mapping": {"username": "username"}})
+     * @ParamConverter("badge", converter="badge_converter")
      *
      * @Template()
      */

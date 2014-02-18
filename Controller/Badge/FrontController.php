@@ -15,6 +15,7 @@ use Claroline\CoreBundle\Entity\Badge\Badge;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;;
 
 /**
  * Controller of the badges.
@@ -25,17 +26,12 @@ class FrontController extends Controller
 {
     /**
      * @Route("/{slug}", name="claro_view_badge")
+     * @ParamConverter("badge", converter="badge_converter")
      *
      * @Template()
      */
-    public function viewAction($slug)
+    public function viewAction(Badge $badge)
     {
-        $badge = $this->getDoctrine()->getRepository('ClarolineCoreBundle:Badge\Badge')->findBySlug($slug);
-
-        if (null === $badge) {
-            throw $this->createNotFoundException("Unknow badge.");
-        }
-
         /** @var \Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler $platformConfigHandler */
         $platformConfigHandler = $this->get('claroline.config.platform_config_handler');
 
