@@ -35,9 +35,20 @@ class CollectionController extends Controller
             throw $this->createNotFoundException("Collection not shared.");
         }
 
+        if (!$this->container->get('security.context')->isGranted('IS_AUTHENTICATED_FULLY')) {
+            $showBanner = false;
+        }
+        else {
+            /** @var User|string $user */
+            $user = $this->getUser();
+
+            $showBanner = ($user === $collection->getUser());
+        }
+
         return array(
             'collection' => $collection,
-            'locale'     => $locale
+            'locale'     => $locale,
+            'showBanner' => $showBanner
         );
     }
 }

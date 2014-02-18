@@ -7,10 +7,11 @@
 {% block content %}
     {{ macros.flashBox() }}
 
+    {% if showBanner %}
     <div class="alert alert-info">
         <strong>{{ 'page_public_look'|trans }}</strong>
-        <a href="#" title="{{ 'collection_edit_page'|trans }}" class="btn btn-sm btn-primary pull-right">{{ 'collection_edit_page'|trans }}</a>
     </div>
+    {% endif %}
     <h1>{{ collection.name }}</h1>
     {% for badge in collection.badges %}
     <div class="panel panel-default">
