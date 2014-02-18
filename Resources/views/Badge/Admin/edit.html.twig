@@ -316,7 +316,7 @@
                             {% set frErrorClass = (not form.frTranslation.vars.valid) ? 'has-error' : null %}
                             {% set enErrorClass = (not form.enTranslation.vars.valid) ? 'has-error' : null %}
                             {% set frErrorClass = (not form.frTranslation.name.vars.valid or not form.frTranslation.description.vars.valid or not form.frTranslation.criteria.vars.valid) ? 'has-error' : '' %}
-                            {% set enErrorClass = (not form.enTranslation.name.vars.valid or not form.enTranslation.description.vars.evalid or not form.enTranslation.criteria.vars.valid) ? 'has-error' : '' %}
+                            {% set enErrorClass = (not form.enTranslation.name.vars.valid or not form.enTranslation.description.vars.valid or not form.enTranslation.criteria.vars.valid) ? 'has-error' : '' %}
                             <li class="active"><a href="#fr" {% if null != frErrorClass %} class="{{ frErrorClass }}"{% endif %} data-toggle="tab">{{ 'badge_form_frTranslation'|trans }}<img src="{{ asset('bundles/clarolinecore/images/lang/fr.png') }}" alt="fr" class="flag" /></a></li>
                             <li><a href="#en" {% if null != enErrorClass %} class="{{ enErrorClass }}"{% endif %} data-toggle="tab">{{ 'badge_form_enTranslation'|trans }}<img src="{{ asset('bundles/clarolinecore/images/lang/en.png') }}" alt="en" class="flag" /></a></li>
                         </ul>
