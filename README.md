@@ -54,7 +54,8 @@ Project setup
     - *web/themes*
     - *web/thumbnails*
 - Run the following commands:
-    - `$ composer require claroline/bundle-recorder "~2.2"`
+    - `$ composer require composer/composer dev-master`
+    - `$ composer require claroline/bundle-recorder "~3.0"`
     - `$ cp composer.dist.json composer.json`
     - `$ composer update --prefer-source`
     - `$ php app/console claroline:update`
