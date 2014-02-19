@@ -15,7 +15,11 @@
         "symfony/framework-bundle": "~2.4",
         "twig/twig": "*",
         "doctrine/orm": "~2.4.0",
-        "doctrine/doctrine-bundle": "1.2.0"
+        "doctrine/doctrine-bundle": "1.2.0",
+        "claroline/bundle-recorder": "~3.0",
+        "claroline/kernel-bundle": "~1.0",
+        "claroline/installation-bundle": "~3.1"
+        
     },
     "autoload": {
         "psr-0": { "Icap\\NotificationBundle": "" }
