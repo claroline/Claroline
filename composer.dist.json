@@ -59,7 +59,8 @@
             "Claroline\\BundleRecorder\\ScriptHandler::checkForPendingOperations"
         ],
         "pre-update-cmd": [
-            "Claroline\\BundleRecorder\\ScriptHandler::checkForPendingOperations"
+            "Claroline\\BundleRecorder\\ScriptHandler::checkForPendingOperations",
+            "Claroline\\CoreBundle\\Library\\Maintenance\\MaintenanceHandler::enableMaintenance"
         ],
         "post-package-install": [
             "Claroline\\BundleRecorder\\ScriptHandler::logInstallOperation"
