@@ -134,11 +134,19 @@
                 {% endif %}
             {% endif %}
         {% endif %}
-        {% if  state is defined and state == 'preview' %}
+        {% if  state is defined and state == 'preview' and dropzone.getAllowCorrectionDeny %}
 
            <div class="row">
                 <div class='col-md-12'>
-                    <a href="{{ path('icap_dropzone_drops_deny_correction', {'resourceId': dropzone.id,  'correctionId': correction.id}) }}" class="btn btn-warning btn-sm pull-right launch-modal">{{ 'Deny correction'|trans({},'icap_dropzone')}}</a>
+                    {% if correction.correctionDenied %}
+                    <span class="label label-danger btn-sm pull-right ">
+                        {{ 'Correction denied'|trans({},'icap_dropzone')}}
+                    </span>
+                    {% else %}
+                    <a href="{{ path('icap_dropzone_drops_deny_correction', {'resourceId': dropzone.id,  'correctionId': correction.id}) }}" class="btn btn-warning btn-sm pull-right launch-modal">
+                        {{ 'Deny correction'|trans({},'icap_dropzone')}}
+                    </a>
+                    {% endif %}
                 </div>
             </div>
         {% endif %}
