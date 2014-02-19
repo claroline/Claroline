@@ -246,6 +246,10 @@ class AdminController extends Controller
             throw $this->createNotFoundException("No badge found.");
         }
 
+        /** @var \Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler $platformConfigHandler */
+        $platformConfigHandler = $this->get('claroline.config.platform_config_handler');
+        $badge->setLocale($platformConfigHandler->getParameter('locale_language'));
+
         $form = $this->createForm(new BadgeAwardType());
 
         if ($request->isMethod('POST')) {
@@ -313,7 +317,7 @@ class AdminController extends Controller
                     return new JsonResponse(array('error' => false));
                 }
 
-                return $this->redirect($this->generateUrl('claro_admin_badges_edit', array('id' => $badge->getId())));
+                return $this->redirect($this->generateUrl('claro_admin_badges_edit', array('slug' => $badge->getSlug())));
             }
         }
 
@@ -335,6 +339,10 @@ class AdminController extends Controller
         if (null !== $badge->getWorkspace()) {
             throw $this->createNotFoundException("No badge found.");
         }
+
+        /** @var \Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler $platformConfigHandler */
+        $platformConfigHandler = $this->get('claroline.config.platform_config_handler');
+        $badge->setLocale($platformConfigHandler->getParameter('locale_language'));
 
         /** @var \Symfony\Bundle\FrameworkBundle\Translation\Translator $translator */
         $translator = $this->get('translator');
@@ -366,7 +374,7 @@ class AdminController extends Controller
             return new JsonResponse(array('error' => false));
         }
 
-        return $this->redirect($this->generateUrl('claro_admin_badges_edit', array('id' => $badge->getId())));
+        return $this->redirect($this->generateUrl('claro_admin_badges_edit', array('slug' => $badge->getSlug())));
     }
 
     /**

@@ -117,7 +117,7 @@ class BadgeRepository extends EntityRepository
     {
         $query = $this->getEntityManager()
             ->createQuery(
-                'SELECT b, t
+                'SELECT b
                 FROM ClarolineCoreBundle:Badge\Badge b
                 JOIN b.translations t
                 WHERE t.slug = :slug

@@ -7,7 +7,7 @@
         <ul class="nodes badge_list">
             {% for badge in badgePager %}
             <li class="node-thumbnail node badge">
-                <a href="{{ path(parameters.edit_link.url, {'id': badge.id}|merge(parameters.route_parameters)) }}" title="{{ badge.name(language) }}" class="thumbnail thumbnail_dropdown">
+                <a href="{{ path(parameters.edit_link.url, {'slug': badge.slug(language)}|merge(parameters.route_parameters)) }}" title="{{ badge.name(language) }}" class="thumbnail thumbnail_dropdown">
                     <img class="badge_image" src="{{ asset(badge.webPath) }}" alt="{{ badge.name(language) }}" />
                 </a>
                 <div class="dropdown">
@@ -16,17 +16,17 @@
                     </a>
                     <ul class="dropdown-menu" role="menu">
                         <li>
-                            <a href="{{ path(parameters.view_link, {'id': badge.id}|merge(parameters.route_parameters)) }}" class="node-menu-action">
+                            <a href="{{ path(parameters.view_link, {'slug': badge.slug(language)}|merge(parameters.route_parameters)) }}" class="node-menu-action">
                                 {{ 'view'|trans({}, 'platform') }}
                             </a>
                         </li>
                         <li>
-                            <a href="{{ path(parameters.edit_link.url, {'id': badge.id}|merge(parameters.route_parameters)) }}{{ parameters.edit_link.suffix }}" class="node-menu-action">
+                            <a href="{{ path(parameters.edit_link.url, {'slug': badge.slug(language)}|merge(parameters.route_parameters)) }}{{ parameters.edit_link.suffix }}" class="node-menu-action">
                                 {{ 'edit'|trans({}, 'platform') }}
                             </a>
                         </li>
                         <li>
-                            <a href="{{ path(parameters.delete_link, {'id': badge.id}|merge(parameters.route_parameters)) }}" class="node-menu-action confirm" data-confirm-title="{{ 'badge_delete_confirm_title'|trans({}, 'badge') }}" data-confirm-message="{{ 'badge_delete_confirm_message'|trans({'%badgeName%': badge.name(language)}, 'badge') }}" data-confirm-ok="{{ 'delete'|trans({}, 'platform') }}" data-confirm-cancel="{{ 'cancel'|trans({}, 'platform') }}" data-confirm-style="danger">
+                            <a href="{{ path(parameters.delete_link, {'slug': badge.slug(language)}|merge(parameters.route_parameters)) }}" class="node-menu-action confirm" data-confirm-title="{{ 'badge_delete_confirm_title'|trans({}, 'badge') }}" data-confirm-message="{{ 'badge_delete_confirm_message'|trans({'%badgeName%': badge.name(language)}, 'badge') }}" data-confirm-ok="{{ 'delete'|trans({}, 'platform') }}" data-confirm-cancel="{{ 'cancel'|trans({}, 'platform') }}" data-confirm-style="danger">
                                 {{ 'delete'|trans({}, 'platform') }}
                             </a>
                         </li>

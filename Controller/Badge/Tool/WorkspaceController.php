@@ -87,7 +87,7 @@ class WorkspaceController extends Controller
      * @ParamConverter(
      *     "workspace",
      *     class="ClarolineCoreBundle:Workspace\AbstractWorkspace",
-     *     options={"id"="workspaceId"}
+     *     options={"id" = "workspaceId"}
      * )
      * @Template()
      */
@@ -146,12 +146,13 @@ class WorkspaceController extends Controller
     }
 
     /**
-     * @Route("/edit/{id}/{page}", name="claro_workspace_tool_badges_edit")
+     * @Route("/edit/{slug}/{page}", name="claro_workspace_tool_badges_edit")
      * @ParamConverter(
      *     "workspace",
      *     class="ClarolineCoreBundle:Workspace\AbstractWorkspace",
      *     options={"id" = "workspaceId"}
      * )
+     * @ParamConverter("badge", converter="badge_converter")
      * @Template
      */
     public function editAction(Request $request, AbstractWorkspace $workspace, Badge $badge, $page = 1)
@@ -236,15 +237,16 @@ class WorkspaceController extends Controller
     }
 
     /**
-     * @Route("/delete/{id}", name="claro_workspace_tool_badges_delete")
+     * @Route("/delete/{slug}", name="claro_workspace_tool_badges_delete")
      * @ParamConverter(
      *     "workspace",
      *     class="ClarolineCoreBundle:Workspace\AbstractWorkspace",
      *     options={"id" = "workspaceId"}
      * )
+     * @ParamConverter("badge", converter="badge_converter")
      * @Template
      */
-    public function deleteAction($workspace, Badge $badge)
+    public function deleteAction(AbstractWorkspace $workspace, Badge $badge)
     {
         if (null === $badge->getWorkspace()) {
             throw $this->createNotFoundException("No badge found.");
@@ -276,12 +278,13 @@ class WorkspaceController extends Controller
     }
 
     /**
-     * @Route("/award/{id}", name="claro_workspace_tool_badges_award")
+     * @Route("/award/{slug}", name="claro_workspace_tool_badges_award")
      * @ParamConverter(
      *     "workspace",
      *     class="ClarolineCoreBundle:Workspace\AbstractWorkspace",
      *     options={"id" = "workspaceId"}
      * )
+     * @ParamConverter("badge", converter="badge_converter")
      * @Template
      */
     public function awardAction(Request $request, AbstractWorkspace $workspace, Badge $badge)
@@ -291,6 +294,10 @@ class WorkspaceController extends Controller
         }
 
         $this->checkUserIsAllowed($workspace);
+
+        /** @var \Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler $platformConfigHandler */
+        $platformConfigHandler = $this->get('claroline.config.platform_config_handler');
+        $badge->setLocale($platformConfigHandler->getParameter('locale_language'));
 
         $form = $this->createForm(new BadgeAwardType());
 
@@ -362,7 +369,7 @@ class WorkspaceController extends Controller
                 return $this->redirect(
                     $this->generateUrl(
                         'claro_workspace_tool_badges_edit',
-                        array('workspaceId' => $workspace->getId(), 'id' => $badge->getId())
+                        array('workspaceId' => $workspace->getId(), 'slug' => $badge->getSlug())
                     )
                 );
             }
@@ -392,6 +399,10 @@ class WorkspaceController extends Controller
         }
 
         $this->checkUserIsAllowed($workspace);
+
+        /** @var \Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler $platformConfigHandler */
+        $platformConfigHandler = $this->get('claroline.config.platform_config_handler');
+        $badge->setLocale($platformConfigHandler->getParameter('locale_language'));
 
         /** @var \Symfony\Bundle\FrameworkBundle\Translation\Translator $translator */
         $translator = $this->get('translator');
@@ -426,7 +437,7 @@ class WorkspaceController extends Controller
         return $this->redirect(
             $this->generateUrl(
                 'claro_workspace_tool_badges_edit',
-                array('workspaceId' => $workspace->getId(), 'id' => $badge->getId())
+                array('workspaceId' => $workspace->getId(), 'slug' => $badge->getSlug())
             )
         );
     }

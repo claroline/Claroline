@@ -1,7 +1,7 @@
 <ul class="nodes badge_list list-unstyled">
     {% for badge in pager.currentPageResults %}
     <li class="node-thumbnail">
-        <a href="{{ path(badgeUrl, {'id': badge.id}) }}" title="{{ badge.name(language) }}" class="thumbnail">
+        <a href="{{ path(badgeUrl, {'slug': badge.slug(language)}) }}" title="{{ badge.name(language) }}" class="thumbnail">
             <img class="badge_image" src="{{ asset(badge.webPath) }}" alt="{{ badge.name(language) }}" />
             <p class="badge_name">{{ badge.name(language) }}</p>
         </a>
