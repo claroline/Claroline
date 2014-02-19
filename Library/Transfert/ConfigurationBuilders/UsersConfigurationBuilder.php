@@ -41,7 +41,7 @@ class UsersConfigurationBuilder implements ConfigurationInterface
                             ->arrayNode('roles')
                                 ->prototype('array')
                                     ->children()
-                                    ->scalarNode('name')->isRequired()->end()
+                                        ->scalarNode('name')->isRequired()->end()
                                     ->end()
                                 ->end()
                             ->end()

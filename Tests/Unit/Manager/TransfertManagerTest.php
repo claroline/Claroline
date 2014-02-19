@@ -11,28 +11,20 @@
 
 namespace Claroline\CoreBundle\Manager;
 
-
 use Claroline\CoreBundle\Library\Testing\MockeryTestCase;
-use Symfony\Component\Yaml\Yaml;
+use Claroline\CoreBundle\Library\Transfert\ConfigurationBuilders\Tools\HomeImporter;
 
 class TransfertManagerTest extends MockeryTestCase
 {
     private $manager;
-    private $listImporters;
-    private $workspaceImporter;
-    private $userImporter;
-    private $groupImporter;
 
-    protected function setUp(){
+    protected function setUp()
+    {
         parent::setUp();
-        $this->workspaceImporter = $this->mock('Claroline\CoreBundle\Library\Transfert\WorkspacePropertiesImporter');
-        $this->userImporter = $this->mock('Claroline\CoreBundle\Library\Transfert\UsersImporter');
-        $this->groupImporter = $this->mock('Claroline\CoreBundle\Library\Transfert\GroupsImporter');
-        $this->manager = new TransfertManager(
-            $this->workspaceImporter,
-            $this->userImporter,
-            $this->groupImporter
-        );
+
+        $this->manager = new TransfertManager();
+        $homeConfigBuilder = new HomeImporter(array('roles & co'));
+        $this->manager->addImporter($homeConfigBuilder);
     }
 
     public function testImportWorkspace()

@@ -2,9 +2,22 @@ tools:
     - tool:
         name: 'home'
         translation: 'accueil'
-        data:
-          somedata: 'somedata'
         config: 'tools/home.yml'
+        data:
+          tabs:
+            - tab:
+                  name: tabname
+                  widgets:
+                   - widget:
+                       name: widgettext
+                       type: 'text'
+                       config: 'tools/widget/text01.yml'
+                   - widget:
+                       name: widgetrss
+                       type: 'rss'
+                       config: 'tools/widget/rss01.yml'
+            - tab:
+                  name: tabname02
         roles:
           - name: anonymous
           - name: visitor

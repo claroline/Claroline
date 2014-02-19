@@ -8,61 +8,47 @@
 
 namespace Claroline\CoreBundle\Manager;
 
-
-use Claroline\CoreBundle\Library\Transfert\ConfigurationBuilder;
-use Claroline\CoreBundle\Library\Transfert\ImporterInterface;
+use Claroline\CoreBundle\Library\Transfert\ToolImporter;
 use Claroline\CoreBundle\Library\Transfert\ManifestConfiguration;
-use Claroline\CoreBundle\Library\Transfert\WorkspacePropertiesImporter;
-use Claroline\CoreBundle\Library\Transfert\UsersImporter;
-use Claroline\CoreBundle\Library\Transfert\GroupsImporter;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Config\Definition\Processor;
-use Symfony\Component\Config\Util\XmlUtils;
-use Symfony\Component\Yaml\Parser;
 use Symfony\Component\Yaml\Yaml;
-use Claroline\CoreBundle\Event\StrictDispatcher;
 use Claroline\CoreBundle\Library\Transfert\ConfigurationBuilders\PropertiesConfigurationBuilder;
 use Claroline\CoreBundle\Library\Transfert\ConfigurationBuilders\OwnerConfigurationBuilder;
 use Claroline\CoreBundle\Library\Transfert\ConfigurationBuilders\UsersConfigurationBuilder;
 use Claroline\CoreBundle\Library\Transfert\ConfigurationBuilders\GroupsConfigurationBuilder;
 use Claroline\CoreBundle\Library\Transfert\ConfigurationBuilders\RolesConfigurationBuilder;
 use Claroline\CoreBundle\Library\Transfert\ConfigurationBuilders\ToolsConfigurationBuilder;
-use Claroline\CoreBundle\Library\Transfert\ConfigurationBuilders\HomeConfigurationBuilder;
+use JMS\DiExtraBundle\Annotation as DI;
 
+/**
+ * @DI\Service("claroline.manager.transfert_manager")
+ */
 class TransfertManager
 {
     private $listImporters;
     private $workspaceImporter;
     private $userImporter;
-    private $groupImporter;
     private $rootPath;
 
     /**
      * Constructor.
-     *
-     * @DI\InjectParams({
-     *  "workspaceImporter" = @DI\Inject("claroline.importer.workspace_properties"),
-     *  "userImporter"      = @DI\Inject("claroline.importer.user"),
-     *  "groupsImporter"    = @DI\Inject("claroline.importer.group"),
-     * })
      */
-    public function __construct(
-        WorkspacePropertiesImporter $workspaceImporter,
-        UsersImporter $userImporter,
-        GroupsImporter $groupsImporter
-    )
+    public function __construct()
     {
-        $this->userImporter = $userImporter;
-        $this->groupsImporter = $groupsImporter;
-        $this->workspaceImporter = $workspaceImporter;
         $this->listImporters = new ArrayCollection();
     }
 
-    public function addImporter(ImporterInterface $importer)
+    public function addImporter(ToolImporter $importer)
     {
         return $this->listImporters->add($importer);
     }
 
+    /**
+     * Import a workspace
+     *
+     * @param $path
+     */
     public function importWorkspace($path)
     {
         $this->setRootPath($path);
@@ -130,34 +116,51 @@ class TransfertManager
             //tools
             if (isset($data['tools'])) {
                 $tools['tools'] = $data['tools'];
-                $tools = $processor->processConfiguration($toolsConfigurationBuilder, $tools);
-
+                $processedConfiguration = $processor->processConfiguration($toolsConfigurationBuilder, $tools);
+                $this->validateToolsConfig($tools);
             }
             if (isset($data['toolfiles'])) {
                 foreach ($data['toolfiles'] as $toolpath) {
                     $filepath = $path . $ds . $toolpath['path'];
-                    $tooldata = Yaml::parse(file_get_contents($filepath));
-                    $processedConfiguration = $processor->processConfiguration($toolsConfigurationBuilder, $tooldata);
-                    $this->validateTools($tooldata);
-
+                    $toolsdata = Yaml::parse(file_get_contents($filepath));
+                    $processedConfiguration = $processor->processConfiguration($toolsConfigurationBuilder, $toolsdata);
+                    $this->validateToolsConfig($toolsdata);
                 }
             }
 
             //home
-            $builder = new HomeConfigurationBuilder();
-            $homepath = $path . $ds . 'tools' . $ds . 'home.yml';
-            $homedata = Yaml::parse(file_get_contents($homepath));
-            $processor->processConfiguration($builder, $homedata);
+
 
         } catch (\Exception $e) {
             var_dump(array($e->getMessage())) ;
         }
     }
 
-
-    private function validateTools($tooldata)
+    private function validateToolsConfig(array $tooldata)
     {
+        foreach ($tooldata['tools'] as $tool) {
+            $toolImporter = null;
 
+            foreach ($this->listImporters as $importer) {
+                if ($importer->getName() == $tool['tool']['name']) {
+                    $toolImporter = $importer;
+                    $toolImporter->setListImporters($this->listImporters);
+                }
+            }
+
+            if (isset ($tool['tool']['config']) && $toolImporter) {
+                $ds = DIRECTORY_SEPARATOR;
+                $filepath = $this->getRootPath() . $ds . $tool['tool']['config'];
+                //@todo error handling if path doesn't exists
+                $tooldata =  Yaml::parse(file_get_contents($filepath));
+                $importer->validate($tooldata);
+            }
+
+            if (isset($tool['tool']['data']) && $toolImporter) {
+                $tooldata = $tool['tool']['data'];
+                $importer->validate($tooldata);
+            }
+        }
     }
 
     private function setRootPath($rootPath)

@@ -11,8 +11,8 @@
 
 namespace Claroline\CoreBundle\Library\Transfert\ConfigurationBuilders;
 
-use Symfony\Component\Config\Definition\ConfigurationInterface;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
+use Symfony\Component\Config\Definition\ConfigurationInterface;
 
 class ToolsConfigurationBuilder implements ConfigurationInterface
 {
@@ -48,4 +48,4 @@ class ToolsConfigurationBuilder implements ConfigurationInterface
                 ->end()
             ->end();
     }
-} 
+}

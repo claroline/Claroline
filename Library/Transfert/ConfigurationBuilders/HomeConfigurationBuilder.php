@@ -28,27 +28,28 @@ class HomeConfigurationBuilder implements ConfigurationInterface
     public function addHomeSection($rootNode)
     {
         $rootNode
-        ->prototype('array')
-            ->children()
-                ->arrayNode('tab')
-                    ->children()
-                        ->scalarNode('name')->end()
-                        ->arrayNode('widgets')
-                            ->prototype('array')
-                                ->children()
-                                ->arrayNode('widget')
+            ->prototype('array')
+                ->children()
+                    ->arrayNode('tab')
+                        ->children()
+                            ->scalarNode('name')->end()
+                            ->arrayNode('widgets')
+                                ->prototype('array')
                                     ->children()
-                                        ->scalarNode('name')->isRequired()->end()
-                                        ->scalarNode('type')->end()
-                                        ->scalarNode('config')->end()
+                                        ->arrayNode('widget')
+                                            ->children()
+                                                ->scalarNode('name')->isRequired()->end()
+                                                ->scalarNode('type')->end()
+                                                ->scalarNode('config')->end()
+                                            ->end()
+                                        ->end()
                                     ->end()
                                 ->end()
                             ->end()
                         ->end()
                     ->end()
                 ->end()
-            ->end()
-        ->end();
+            ->end();
 
     }
 }
