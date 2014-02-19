@@ -105,7 +105,12 @@ class TwigExtensions extends \Twig_Extension
             break;
 
             case "InteractionHole":
-
+                $interHole = $this->doctrine
+                                  ->getManager()
+                                  ->getRepository('UJMExoBundle:InteractionHole')
+                                  ->getInteractionHole($interId);
+                $inter['question'] = $interHole[0];
+                $inter['maxScore'] = $this->getHoleScoreMax($interHole[0]);
             break;
 
             case "InteractionOpen":
@@ -144,5 +149,10 @@ class TwigExtensions extends \Twig_Extension
     private function getOpenScoreMax($interOpen)
     {
         return $this->exerciseSer->openMaxScore($interOpen);
+    }
+    
+    private function getHoleScoreMax($interHole)
+    {
+        return $this->exerciseSer->holeMaxScore($interHole);
     }
 }

@@ -118,39 +118,42 @@ function displayAnswersGraph(response) {
 
 function responseHole(response) {
     var tab = JSON.parse(response);
-    
+
     $('#yAnswer').find('.blank').each(function(){
         id = $(this).attr('id');
         $('#' + id).attr('id', 'yAnswer_' + id);
     });
-    
-     $.each(tab, function (key, value) {
-         if ($("#yAnswer_" + key).is("input")) {
-             $("#yAnswer_" + key).val(value);
-             $("#yAnswer_" + key).attr('readonly', true);
-         } else {
-             option = '<option>' + value + '</option>';
-             $("#yAnswer_" + key).find('option:first').remove();
-             $("#yAnswer_" + key).append(option);
-         }
-         if (value == $('#' + key).val()) {
-            $("#yAnswer_" + key).css("color", "#00E900");
-         } else {
-             $("#yAnswer_" + key).css("color", "#F30000");
-         }
-          $("#" + key).css("color", "#2289B5");
-     });
+
+    $.each(tab, function (key, value) {
+        if ($("#yAnswer_" + key).is("input")) {
+            $("#yAnswer_" + key).val(value);
+            $("#yAnswer_" + key).attr('readonly', true);
+        } else {
+            option = '<option>' + value + '</option>';
+            $("#yAnswer_" + key).find('option:first').remove();
+            $("#yAnswer_" + key).append(option);
+        }
+        if (value == $('#' + key).val()) {
+           $("#yAnswer_" + key).css("color", "#00E900");
+        } else {
+            $("#yAnswer_" + key).css("color", "#F30000");
+        }
+        $("#" + key).css("color", "#2289B5");
+        $("#" + key).attr('readonly', true);
+    });
 }
 
 function paperResponseHole(response) {
     var tab = $.parseJSON(response);
-    
-     $('#interHoleResponse').find('.blank').each(function(){
-         key = $(this).attr('id');
-         if ($(this).is("input")) {
-             $(this).val(tab[key]);
-         } else {
-             $(this).find('option:contains("'+tab[key]+'")').attr('selected', 'selected');
-         }
-     });
+
+    $('#interHoleResponse').find('.blank').each(function () {
+        key = $(this).attr('id');
+        if ($(this).is("input")) {
+            $(this).val(tab[key]);
+        } else {
+            $('#' + key).find('*').filter(function () {
+                return $(this).text() === tab[key];
+            }).attr('selected', 'selected');
+        }
+    });
 }

@@ -25,14 +25,18 @@ function addFormHole(add, response, point, size, orthography, del, selector, sou
     $('tbody').sortable();
 }
 
-function addFormHoleEdit(add, response, point, size, orthography, del, selector, source_image_add, wlangKeyWord, wlangPoint) {
+function addFormHoleEdit(add, response, point, size, orthography, del, selector, source_image_add, wlangKeyWord, wlangPoint, nbResponses) {
     langKeyWord = wlangKeyWord;
     langPoint   = wlangPoint;
     langDel     = del;
     var index;
     var i = 0;
 
-    tableHoles.append('<table id="newTable" class="table table-striped table-bordered table-condensed"><thead><tr style="background-color: lightsteelblue;"><th class="classic">' + size + '</th><th class="classic">' + orthography + '</th><th class="classic">' + selector + '</th><th class="classic">' + response + '</th><th class="classic">' + del + '</th></tr></thead><tbody class="bodyHole"></tbody></table>');
+    if (nbResponses == 0) {
+        tableHoles.append('<table id="newTable" class="table table-striped table-bordered table-condensed"><thead><tr style="background-color: lightsteelblue;"><th class="classic">' + size + '</th><th class="classic">' + orthography + '</th><th class="classic">' + selector + '</th><th class="classic">' + response + '</th><th class="classic">' + del + '</th></tr></thead><tbody class="bodyHole"></tbody></table>');
+    } else {
+        tableHoles.append('<table id="newTable" class="table table-striped table-bordered table-condensed"><thead><tr style="background-color: lightsteelblue;"><th class="classic">' + size + '</th><th class="classic">' + orthography + '</th><th class="classic">' + selector + '</th><th class="classic">' + response + '</th></tr></thead><tbody class="bodyHole"></tbody></table>');
+    }
     $('tbody').sortable();
 
     container.children().first().children('div').each(function () {
@@ -54,14 +58,11 @@ function addFormHoleEdit(add, response, point, size, orthography, del, selector,
         $('#newTable').find('tr:last').find('td:first').css('display', 'none');
         index = $('#newTable').find('tr:last').find('td:first').find('input:first').val();
 
-        /*if (nbResponses == 0) {
-            // Add the delete button
-            $('#newTable').find('tr:last').append('<td class="classic"></td>');
-            addDelete($('#newTable').find('td:last'), deleteChoice);
-        }*/
-        
         //******For Key words********
-        var addwr = '<a href="#" id="add_keyword_' + index + '" class="btn btn-primary"><i class="icon-plus"></i>&nbsp;' + langKeyWord + '</a>';
+        var addwr = '';
+        if (nbResponses == 0) {
+            addwr = '<a href="#" id="add_keyword_' + index + '" class="btn btn-primary"><i class="icon-plus"></i>&nbsp;' + langKeyWord + '</a>';
+        }
         
         $('#newTable').find('.trHole:last').find('td:last')
             .append('<table id="tabWR_' + index + '"><tbody></tbody></table>' + addwr);
@@ -92,7 +93,7 @@ function addFormHoleEdit(add, response, point, size, orthography, del, selector,
             i++;
             
             //add buton delete for a key word
-            if ( (i>1) && ($('#tabWR_' + index).find('.trWR').length > 1)) {
+            if ( (nbResponses == 0) && (i>1) && ($('#tabWR_' + index).find('.trWR').length > 1)) {
                 $('#tabWR_' + index).find('tr:last').append('<td class="classic"></td>');
                 $('#tabWR_' + index).find('td:last').append(
                     '<a id="wr_' + index + '_' + $('#tabWR_' + index).find('.trWR').length + '" href="#" class="btn btn-danger">' + langDel + '</a>'
@@ -111,25 +112,27 @@ function addFormHoleEdit(add, response, point, size, orthography, del, selector,
         });
         //***************************
          
-        $('#newTable').find('.trHole:last')
-            .append('<td class="classic"><a id="hole_' + index + '" href="#" class="btn btn-danger">' + langDel + '</a></td>'
-        );
-            
-        $('#hole_' + index).click(function (e) {
-            var ind = $(this).attr('id');
-            ind = ind.replace('hole_', '');
-                        
-            nodeblank = tinyMCE.get('ujm_exobundle_interactionholetype_html').selection
-                .select(tinyMCE.get('ujm_exobundle_interactionholetype_html').dom.select('#' + ind)[0]);
+        if (nbResponses == 0) {
+            $('#newTable').find('.trHole:last')
+                .append('<td class="classic"><a id="hole_' + index + '" href="#" class="btn btn-danger">' + langDel + '</a></td>'
+            );
 
-            if(nodeblank) {
-                tinyMCE.get('ujm_exobundle_interactionholetype_html').selection.setContent(nodeblank.value);
-            }
-            
-            $(this).parent('td').parent('tr').remove();
-            e.preventDefault();
-            return false;
-        });
+            $('#hole_' + index).click(function (e) {
+                var ind = $(this).attr('id');
+                ind = ind.replace('hole_', '');
+
+                nodeblank = tinyMCE.get('ujm_exobundle_interactionholetype_html').selection
+                    .select(tinyMCE.get('ujm_exobundle_interactionholetype_html').dom.select('#' + ind)[0]);
+
+                if(nodeblank) {
+                    tinyMCE.get('ujm_exobundle_interactionholetype_html').selection.setContent(nodeblank.value);
+                }
+
+                $(this).parent('td').parent('tr').remove();
+                e.preventDefault();
+                return false;
+            });
+        }
 
         $('#ujm_exobundle_interactionholetype_holes_' + nbHole + '_selector').change(function (e) {
             var ind = $(this).parent('td').parent('tr').find('td:first').find('input:first').val();
@@ -280,6 +283,7 @@ function addHole(indexBlank, valHole) {
         return false;
     });
     
+    disableNotYetReady();
 }
 
 function addWR(indexHole, idTabWR) {
@@ -379,3 +383,12 @@ function check_form(nbHole) {
         return false;
     }
 }
+
+//not yet implemented
+function disableNotYetReady() {
+    $('#newTable').find(('.trHole')).each(function () {
+        $(this).find('input').eq(1).attr("disabled", true);
+        $(this).find('input').eq(2).attr("disabled", true);
+    });
+}
+//*******************

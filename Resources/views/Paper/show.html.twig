@@ -299,6 +299,93 @@
     {#--------------------------------------------------- Hole -------------------------------------------------------#}
 
             {% elseif(interactions[p].type == 'InteractionHole') %}
+                {% set interInfo = getInterTwig(interactions[p].id, 'InteractionHole') %}
+                {% set interHole =  interInfo['question'] %}
+            
+                <div class="panel-body">
+
+                    {% if (display == 'all') %}
+
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h3>{{ 'nQuestion' | trans }}{{p + 1}} :</h3>
+                            </div>
+
+                            <div class="panel-body">
+                                <div class="panel panel-default">
+                                    <div class="panel-heading"><h3 class="panel-title">{{ 'title' | trans }}</h3></div>
+                                    <div class="panel-body">
+                                        {{ interHole.interaction.question.title }}
+                                    </div>
+                                </div>
+
+                                {% if interHole.interaction.question.description != '' %}
+                                    <div class="panel panel-default">
+                                        <div class="panel-heading"><h3 class="panel-title">{{ 'description' | trans }}</h3></div>
+                                        <div class="panel-body">
+                                            {{ interHole.interaction.question.description|raw }}
+                                        </div>
+                                    </div>
+                                {% endif %}
+
+                                <div class="panel panel-default">
+                                    <div class="panel-heading"><h3 class="panel-title">{{ 'question' | trans }}</h3></div>
+                                    <div class="panel-body">
+                                        {{ interHole.interaction.invite|raw }}
+                                    </div>
+                                </div>
+
+                                <div class="panel panel-default">
+                                    <div class="panel-heading"><h3 class="panel-title">{{ 'response' | trans }}</h3></div>
+                                    <div class="panel-body">
+                                        <div class="panel panel-default">
+                                            <div class="panel-heading"><h3 class="panel-title">{{ 'your answer' | trans }}</h3></div>
+                                            <div class="panel-body">
+                                                <div id="yAnswer">{{ interHole.html|raw }}</div>
+                                            </div>
+                                        </div>
+
+                                        <div class="panel panel-default">
+                                            <div class="panel-heading"><h3 class="panel-title">{{ 'expected answer' | trans }}</h3></div>
+                                            <div class="panel-body">
+                                                <div id="eAnswer">{{ interHole.html|raw }}</div>
+                                            </div>
+                                        </div>
+                                        
+                                        <script type="text/javascript">
+                                            $(document).ready(function() {
+                                                responseHole('{{ responses[p].response|raw }}');
+                                            });
+                                        </script>
+    
+                                    </div>
+                                </div>
+
+                                {% if interHole.interaction.feedback != '' %}
+                                    <div class="panel panel-default">
+                                        <div class="panel-heading"><h3 class="panel-title">{{ 'comment' | trans }}</h3></div>
+                                        <div class="panel-body">
+                                            {{ interHole.interaction.feedback|raw }}
+                                        </div>
+                                    </div>
+                                {% endif %}
+
+                                <div class="panel panel-default">
+                                    <div class="panel-heading"><h3 class="panel-title">{{ 'mark' | trans }}</h3></div>
+                                    <div class="panel-body">
+                                    {% for hv in hintViewed %}
+                                        {% if( hv.hint.interaction.id == interactions[p].id ) %}
+                                            {{ 'penalty' | trans }} : {{ hv.hint.penalty }}
+                                        {% endif %}
+                                    {% endfor %}
+                                    <br/>
+                                    {{ 'mark' | trans }} : {{ responses[p].mark }} / {{ interInfo['maxScore'] }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %}
+                </div>
 
     {#--------------------------------------------------- Open -------------------------------------------------------#}
 
@@ -505,6 +592,9 @@
                         {% elseif interaction.type == 'InteractionGraphic' %}
                             <li><a style="color: black;" href="{{ path('ujm_paper_show', { 'id': paperID, 'p': loop.index - 1 }) }}">
                                 {{ loop.index }}</a></li>
+                        {% elseif interaction.type == 'InteractionHole' %}
+                            <li><a style="color: blue;" href="{{ path('ujm_paper_show', { 'id': paperID, 'p': loop.index - 1 }) }}">
+                                {{ loop.index }}</a></li>
                         {% endif %}
                     {% else %}
                         <li class="active"><a href="#" onclick="event.preventDefault();">{{ loop.index }}</a></li>
@@ -548,7 +638,8 @@
                 (
                 <h6 style="color: black; display: inline;">{{ 'question graphic' | trans }}</h6>,
                 <h6 style="color: green; display: inline;">{{ 'question qcm' | trans }}</h6>,
-                <h6 style="color: purple; display: inline;">{{ 'question open' | trans }}</h6>
+                <h6 style="color: purple; display: inline;">{{ 'question open' | trans }}</h6>,
+                <h6 style="color: blue; display: inline;">{{ 'question hole' | trans }}</h6>
                 ).
             </div>
         {% endif %}
@@ -558,4 +649,5 @@
 {% block javascripts %}
     {{ parent() }}
     <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/markedOpenQuestion.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/paper.js') }}"></script>
 {% endblock %}

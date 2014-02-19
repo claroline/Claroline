@@ -345,7 +345,7 @@ class exerciseServices
 
         return $res;
     }
-    
+
     public function responseHole($request, $paperID = 0)
     {
         $em = $this->doctrine->getManager();
@@ -381,7 +381,7 @@ class exerciseServices
 
         //$score .= '/'.$this->holeMaxScore($interHole);
         $score = $this->holeMark($interHole, $request->request, $penalty);
-        
+
         foreach($interHole->getHoles() as $hole) {
             $response = $request->get('blank_'.$hole->getPosition());
             if ($hole->getSelector()) {
@@ -391,7 +391,7 @@ class exerciseServices
                 $tabResp[$hole->getPosition()] = $response;
             }
         }
-        
+
         $response = json_encode($tabResp);
 
         $res = array(
@@ -408,7 +408,7 @@ class exerciseServices
     {
         $em = $this->doctrine->getManager();
         $score = 0;
-        
+
         foreach($interHole->getHoles() as $hole) {
             $response = $request->get('blank_'.$hole->getPosition());
             if ($hole->getSelector() == true) {
@@ -422,17 +422,21 @@ class exerciseServices
                 }
             }
         }
-        
+
         $scoreMax = $this->holeMaxScore($interHole);
+
+        $score -= $penalty;
+
         if ($score < 0) {
             $score = 0;
         }
+
         $score .= '/'.$scoreMax;
-        
+
         return $score;
-        
+
     }
-    
+
     public function holeMaxScore($interHole) {
         $scoreMax = 0;
         foreach ($interHole->getHoles() as $hole) {
@@ -444,10 +448,10 @@ class exerciseServices
             }
             $scoreMax += $scoretemp;
         }
-        
+
         return $scoreMax;
     }
-    
+
     // Check if the suggested answer zone isn't already right in order not to have points twice
     public function alreadyDone($coor, $verif, $z)
     {
@@ -550,7 +554,11 @@ class exerciseServices
                     break;
 
                 case "InteractionHole":
-
+                    $interHole = $this->doctrine
+                                         ->getManager()
+                                         ->getRepository('UJMExoBundle:InteractionHole')
+                                         ->getInteractionHole($interaction->getId());
+                    $exercisePaperTotalScore += $this->holeMaxScore($interHole[0]);
                     break;
 
                 case "InteractionOpen":
