@@ -143,7 +143,7 @@ database: Database
 database_connection_failed: 'Database connection failed.'
 date: Date
 date_form_format: MM/dd/yyyy
-date_format: m-d-Y
+date_format: m/d/Y
 date_range.apply: Apply
 date_range.clear: Clear
 date_range.custom_range: 'Custom range'
