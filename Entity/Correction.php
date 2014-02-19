@@ -91,7 +91,7 @@ class Correction {
     /**
     * @ORM\Column(type="text",nullable=true)
     */
-    protected $correctionDeniedComment = 'null';
+    protected $correctionDeniedComment = null;
 
     /**
      * @ORM\OneToMany(
