@@ -240,7 +240,9 @@
                         <div class="panel panel-default">
                             <div class="panel-heading"><h3 class="panel-title">{{ 'response' | trans }}</h3></div>
                             <div class="panel-body">
-                                <textarea name="interOpenLong" class="claroline-tiny-mce hide" data-theme="advanced" data-resource-picker="off"></textarea>
+                                <textarea name="interOpenLong" class="claroline-tiny-mce hide" data-theme="advanced" data-resource-picker="off">
+                                    {{ response }}
+                                </textarea>
                             </div>
                         </div>
                     {% endif %}
@@ -257,6 +259,64 @@
             {#--------------------------------------------------- Hole ----------------------------------------------------------#}
 
             {% elseif interactionType == 'InteractionHole' %}
+            
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3>{{ 'nQuestion' | trans }}{{numQ}} :</h3>
+                    </div>
+                    <div class="panel-body">
+                        <div class="panel panel-default">
+                            <div class="panel-heading"><h3 class="panel-title">{{ 'title' | trans }}</h3></div>
+                            <div class="panel-body">
+                                {{ interactionToDisplayed.interaction.question.title }}
+
+                                <input class="form-control" type="hidden" name="interactionHoleToValidated" value="{{ interactionToDisplayed.id }}"/>
+                                <input class="form-control" type="hidden" name="interactionToValidated" value="{{ interactionToDisplayed.interaction.id }}"/>
+                                <input class="form-control" type="hidden" name="typeInteraction" value="InteractionHole"/>
+                            </div>
+                        </div>
+                        {% if interactionToDisplayed.interaction.question.description != null %}
+                            <div class="panel panel-default">
+                                <div class="panel-heading"><h3 class="panel-title">{{ 'description' | trans }}</h3></div>
+                                <div class="panel-body" name="description">
+                                    <p>{{ interactionToDisplayed.interaction.question.description|raw }}<p/>
+                                </div>
+                            </div>
+                        {% endif %}
+
+                        <div class="panel panel-default">
+                            <div class="panel-heading"><h3 class="panel-title">{{ 'question' | trans }}</h3></div>
+                            <div class="panel-body"  name="question">
+                                <p>{{ interactionToDisplayed.interaction.invite|raw }}<p/>
+                            </div>
+                        </div>
+
+                        <div class="panel panel-default">
+                            <div class="panel-heading"><h3 class="panel-title">{{ 'response' | trans }}</h3></div>
+                            <div class="panel-body">
+                                <div id="interHoleResponse">
+                                    {{ interactionToDisplayed.htmlWithoutValue | raw }}
+                                    {% if response != '' %}
+                                        <script type="text/javascript">
+                                            $(document).ready(function() {
+                                                paperResponseHole('{{ response|raw }}');
+                                            });
+                                        </script>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="panel panel-default">
+                            {% include "UJMExoBundle:Partial:hintPaper.html.twig" %}
+                        </div>
+                    </div>
+
+                    <input type="hidden" name="testQCM" value="testQCM" />
+                    <input type="hidden" name="interaction" value="{{ interactionToDisplayed.id }}"/>
+
+                </div>
+            
             {% endif %}
         </form>
     </div>
@@ -329,5 +389,6 @@
         <script type="text/javascript" src="{{ asset('bundles/frontend/jquery/jquery-ui-1.9.2/jquery-ui-1.9.2.js') }}"></script>
         <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/ext/jquery-ui-touch-punch.js') }}"></script>
         <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/graphicdisplay.js') }}"></script>
+        <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/paper.js') }}"></script>
     {% endif %}
 {% endblock %}

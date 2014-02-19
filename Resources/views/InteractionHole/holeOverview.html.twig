@@ -154,6 +154,6 @@
     {{ parent() }}
     <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/paper.js') }}"></script>
     <script type="text/javascript">
-        responseHole('{{ response|json_encode|raw }}');
+        responseHole('{{ response|raw }}');
     </script>
 {% endblock %}

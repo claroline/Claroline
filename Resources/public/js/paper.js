@@ -141,3 +141,16 @@ function responseHole(response) {
           $("#" + key).css("color", "#2289B5");
      });
 }
+
+function paperResponseHole(response) {
+    var tab = $.parseJSON(response);
+    
+     $('#interHoleResponse').find('.blank').each(function(){
+         key = $(this).attr('id');
+         if ($(this).is("input")) {
+             $(this).val(tab[key]);
+         } else {
+             $(this).find('option:contains("'+tab[key]+'")').attr('selected', 'selected');
+         }
+     });
+}

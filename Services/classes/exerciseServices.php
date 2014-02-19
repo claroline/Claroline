@@ -391,11 +391,13 @@ class exerciseServices
                 $tabResp[$hole->getPosition()] = $response;
             }
         }
+        
+        $response = json_encode($tabResp);
 
         $res = array(
             'penalty'   => $penalty,
             'interHole' => $interHole,
-            'response'  => $tabResp,
+            'response'  => $response,
             'score'     => $score
         );
 
