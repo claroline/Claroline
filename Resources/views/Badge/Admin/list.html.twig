@@ -2,7 +2,7 @@
 
 {% trans_default_domain "badge" %}
 
-{% block title %}{{ parent() ~ ' - ' ~ 'badges_management' | trans | striptags | raw }}{% endblock %}
+{% block title %}{{ parent() ~ ' - ' ~ 'badges_management' | trans({}, 'platform') | striptags | raw }}{% endblock %}
 
 {% block breadcrumb %}
     {{
@@ -20,7 +20,12 @@
     }}
 {% endblock %}
 
-{% block section_title %}{{ 'badges_management'|trans({}, 'platform') }}{% endblock %}
+{% block section_title %}
+    {{ 'badges_platform_list'|trans({}, 'badge') }}
+    <a href="{{ path(parameters.add_link) }}" title="{{ 'add_badge'|trans({}, 'badge') }}" class="add_button btn btn-default btn-sm">
+        <span class="icon-plus"></span> {{ 'add_badge'|trans({}, 'badge') }}
+    </a>
+{% endblock %}
 
 {% block section_body %}
     {{ render(controller('ClarolineCoreBundle:Badge/Badge:list', {'parameters': parameters})) }}

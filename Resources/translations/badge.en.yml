@@ -4,6 +4,7 @@ add_badge: 'Add a badge'
 add_rule: 'Add a rule'
 award: Award
 award_badge: 'Award the badge'
+badges_platform_list: "Platform badge list"
 back_to_badges_list: 'Back to badges list'
 back_to_my_badges: 'Back to my badges'
 back_to_users_badge: 'Back to users list'
@@ -29,6 +30,7 @@ badge_claim_error_message: 'An error occured while claiming a badge.'
 badge_claim_form_badge: 'Name of the claiming badge'
 badge_claim_success_message: 'Badge claimed with success.'
 badge_current_claimed_badges: '%claimedBadgeCount% claim for badge|%claimedBadgeCount% claims for badge'
+badge_current_claimed_badges_manage: '%claimedBadgeCount% claim for badge to examine|%claimedBadgeCount% claims for badge to examine'
 badge_delete_confirm_message: 'Are you sure you want to delete the badge <strong>%badgeName%</strong> ?'
 badge_delete_confirm_title: 'Deletion of a badge'
 badge_delete_error_message: 'An error occured while deleting badge.'
@@ -92,6 +94,7 @@ edit_badge: 'Edition of the badge ''%badge_name%'''
 month: month
 no_badge_claim: 'No claim for badge.'
 no_badges: 'No badge.'
+no_badges_create_to_motivate: 'No badge currently, you can <a href="%url%">create</a> some to motivate you user.'
 no_rule: 'No rule'
 rule: Rule
 rule_details: 'Rule details'
