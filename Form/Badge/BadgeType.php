@@ -61,7 +61,8 @@ class BadgeType extends AbstractType
                 'version',
                 'integer',
                 array(
-                    'data' => 1
+                    'data' => 1,
+                    'attr' => array('min' => 1)
                 )
             )
             ->add('automatic_award', 'checkbox', array('required' => false))
