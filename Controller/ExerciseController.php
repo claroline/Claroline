@@ -1411,7 +1411,10 @@ class ExerciseController extends Controller
                 break;
 
             case "InteractionHole":
-
+                $interHole = $em->getRepository('UJMExoBundle:InteractionHole')
+                                ->getInteractionHole($interaction[0]->getId());
+                $scoreMax = $exerciseSer->holeMaxScore($interHole[0]);
+                $responsesTab = $this->responseStatus($responses, $scoreMax);
                 break;
 
             case "InteractionOpen":

@@ -512,7 +512,7 @@ class exerciseServices
                                       ->getManager()
                                       ->getRepository('UJMExoBundle:InteractionHole')
                                       ->getInteractionHole($interaction[0]->getId());
-                    $scoreMax = $this->openMaxScore($interHole[0]);
+                    $scoreMax = $this->holeMaxScore($interHole[0]);
                     break;
             }
 
