@@ -63,9 +63,7 @@ class BadgeType extends AbstractType
                 'integer',
                 array(
                     'data'  => 1,
-                    'constraints' => new Assert\NotBlank(
-                        array('message' => 'badge_need_version')
-                    )
+                    'attr' => array('min' => 1)
                 )
             )
             ->add('automatic_award', 'checkbox', array('required' => false))
