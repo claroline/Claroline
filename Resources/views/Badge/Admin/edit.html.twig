@@ -226,25 +226,48 @@
         <li><a href="#edit" data-toggle="tab">{{ 'edit'|trans({}, 'platform') }}</a></li>
     </ul>
     <div class="tab-content view_badge">
-        <div class="tab-pane active" id="view">
-            <h3 class="sub-section-header">
-                {{ badge.name }}
-                {% if badge.expiredAt is not null %}
-                <small>{{ 'badge_expired_on_date'|trans({'%expirationDate%': badge.expiredAt|date('date_format'|trans({}, 'platform'))}) }}</small>
-                {% endif %}
-            </h3>
-            <div class="media">
-                <img class="pull-left media-object badge_image" src="{{ asset(badge.webPath) }}" alt="{{ badge.name }}" />
-                <div class="media-body">
-                    <h4 class="media-heading">{{ badge.description }}</h4>
-                    {{ badge.criteria|raw }}
+        <div class="tab-pane active view" id="view">
+            <div class="row">
+                <div class="col-md-2 text-center">
+                    <img src="{{ asset(badge.webPath) }}" alt="{{ badge.name }}" class="badge_image_informations" />
+                </div>
+                <div class="col-md-7">
+                    <table class="badge_informations table table-condensed">
+                        <colgroup>
+                            <col class="fieldLabelCol">
+                            <col class="dataCol">
+                        </colgroup>
+                        <tbody>
+                            <tr>
+                              <td class="section-head text-muted" colspan="2">{{ 'badge_details'|trans }}</td>
+                            </tr>
+                            <tr>
+                              <td class="fieldlabel">{{ 'badge_form_name'|trans }}</td>
+                              <td>{{ badge.name }}</td>
+                            </tr>
+                            {% if badge.expiredAt is not null %}
+                            <tr>
+                              <td class="fieldlabel">{{ 'badge_form_expired_at'|trans }}</td>
+                                <td>{{ badge.expiredAt|date('date_format'|trans({}, 'platform')) }}</td>
+                            </tr>
+                            {% endif %}
+                            <tr>
+                              <td class="fieldlabel">{{ 'badge_form_description'|trans }}</td>
+                              <td>{{ badge.description }}</td>
+                            </tr>
+                            <tr>
+                              <td class="fieldlabel">{{ 'badge_form_criteria'|trans }}</td>
+                              <td>{{ badge.criteria|raw }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
-            <div class="margin">
-                <div id="award_users_container">
-                    <h3 class="sub-section-header">
+            <div id="award_users_container" class="award_users_container">
+                {% if 0 < pager.currentPageResults|length %}
+                    <h3>
                         {{ 'badge_awarded_to'|trans }} :
-                        <a href="{{ path('claro_admin_badges_award', {'slug': badge.slug}) }}" id="awardUser" role="button" class="btn pull-right" data-toggle="tooltip" data-placement="left" title="{{ 'award_badge'|trans }}"><i class="icon-plus-sign"></i></a>
+                        <a href="{{ path('claro_admin_badges_award', {'slug': badge.slug}) }}" id="awardUser" role="button" class="btn btn-default pull-right" data-toggle="tooltip" data-placement="left" title="{{ 'award_badge'|trans }}"><span class="icon-plus-sign"></span></a>
                     </h3>
 
                     <table class="table">
@@ -259,7 +282,7 @@
                         {% for user in pager.currentPageResults %}
                             <tr>
                                 <td>
-                                    <a class="close delete" href="{{ path('claro_admin_badges_unaward', {'slug': badge.slug, 'username': user.username}) }}" data-toggle="tooltip" title="{{ 'badge_unaward_confirm_title'|trans }}" data-confirm-title="{{ 'badge_unaward_confirm_title'|trans }}" data-confirm-message="{{ 'badge_unaward_confirm_message'|trans({'%badgeName%': badge.name, '%user%': user.firstname ~ ' ' ~ user.lastname}) }}" data-confirm-ok="{{ 'unaward'|trans }}" data-confirm-cancel="{{ 'cancel'|trans({}, 'platform') }}"><i class="icon-remove-circle"></i></a>
+                                    <a class="close delete" href="{{ path('claro_admin_badges_unaward', {'slug': badge.slug, 'username': user.username}) }}" data-toggle="tooltip" title="{{ 'badge_unaward_confirm_title'|trans }}" data-confirm-title="{{ 'badge_unaward_confirm_title'|trans }}" data-confirm-message="{{ 'badge_unaward_confirm_message'|trans({'%badgeName%': badge.name, '%user%': user.firstname ~ ' ' ~ user.lastname}) }}" data-confirm-ok="{{ 'unaward'|trans }}" data-confirm-cancel="{{ 'cancel'|trans({}, 'platform') }}"><span class="icon-remove-circle"></span></a>
                                 </td>
                                 <td><a href="{{ path('claro_profile_view', {'userId': user.id}) }}" title="{{ user.firstname }} {{ user.lastname }}">{{ user.firstname }}</a></td>
                                 <td>{{ user.lastname }}</td>
@@ -282,14 +305,18 @@
                         )
                     }}
                     {% endif %}
-                </div>
-                <div id="award_form_container">
-                    <h3 class="sub-section-header">
-                        {{ 'award_badge'|trans }} :
-                    </h3>
+                {% else %}
+                    <p class="badge_not_awarded">
+                        Commencez à <a href="{{ path('claro_admin_badges_award', {'slug': badge.slug}) }}" id="awardUser" role="button">attribuer</a> ce badge.
+                    </p>
+                {% endif %}
+            </div>
+            <div id="award_form_container">
+                <h3 class="sub-section-header">
+                    {{ 'award_badge'|trans }} :
+                </h3>
 
-                    {{ render(controller('ClarolineCoreBundle:Badge/Admin:award', { 'slug': badge.slug })) }}
-                </div>
+                {{ render(controller('ClarolineCoreBundle:Badge/Admin:award', { 'slug': badge.slug })) }}
             </div>
         </div>
         <div class="tab-pane" id="edit">
@@ -397,6 +424,7 @@
 
 {% block javascripts %}
 {{ parent() }}
+<script type="text/javascript" src="{{ asset('bundles/zenstruckform/js/helper.js') }}"></script>
 <script type="text/javascript" src="{{ asset('bundles/frontend/jquery/plugin/select2/select2.min.js') }}"></script>
 <script type="text/javascript" src="{{ asset('bundles/frontend/jquery/plugin/select2/select2_locale_' ~ app.request.locale ~ '.js') }}"></script>
 <script type="text/javascript" src="{{ asset('bundles/frontend/jquery/plugin/jquery.optionTree.js') }}"></script>

@@ -296,7 +296,7 @@ class WorkspaceController extends Controller
         $platformConfigHandler = $this->get('claroline.config.platform_config_handler');
         $badge->setLocale($platformConfigHandler->getParameter('locale_language'));
 
-        $form = $this->createForm(new BadgeAwardType());
+        $form = $this->createForm($this->get('claroline.form.badge.award'));
 
         if ($request->isMethod('POST')) {
             $form->handleRequest($request);
@@ -309,27 +309,17 @@ class WorkspaceController extends Controller
                     /** @var \Doctrine\ORM\EntityManager $entityManager */
                     $entityManager = $doctrine->getManager();
 
-                    $groupName    = $form->get('group')->getData();
-                    $userName     = $form->get('user')->getData();
+                    $group        = $form->get('group')->getData();
+                    $user         = $form->get('user')->getData();
                     $awardedBadge = 0;
 
                     /** @var \Claroline\CoreBundle\Entity\User[] $users */
                     $users = array();
 
-                    if (null !== $groupName) {
-                        $group = $doctrine->getRepository('ClarolineCoreBundle:Group')->findOneByName($groupName);
-
-                        if (null !== $group) {
-                            $users = $doctrine->getRepository('ClarolineCoreBundle:User')->findByGroup($group);
-                        }
-                    } elseif (null !== $userName) {
-                        list($firstName, $lastName) = explode(' ', $userName);
-                        $user = $doctrine->getRepository('ClarolineCoreBundle:User')
-                            ->findOneBy(array('firstName' => $firstName, 'lastName' => $lastName));
-
-                        if (null !== $user) {
-                            $users[] = $user;
-                        }
+                    if (null !== $group) {
+                        $users = $doctrine->getRepository('ClarolineCoreBundle:User')->findByGroup($group);
+                    } elseif (null !== $user) {
+                        $users[] = $user;
                     }
 
                     /** @var \Claroline\CoreBundle\Manager\BadgeManager $badgeManager */

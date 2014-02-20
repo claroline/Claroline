@@ -19,6 +19,8 @@ $(function(){
 
     $("[data-toggle=popover]").popover();
 
+    ZenstruckFormHelper.initSelect2Helper();
+
     var awardFormContainer  = $("#award_form_container");
     var awardUsersContainer = $("#award_users_container");
 

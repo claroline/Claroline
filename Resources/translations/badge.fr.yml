@@ -18,7 +18,9 @@ badge_award_confirm_message: 'Etes-vous sûr de vouloir attribuer le badge <stro
 badge_award_confirm_title: 'Validation de l''attribution d''un badge'
 badge_award_error_message: 'Erreur lors de l''attribution du badge.'
 badge_award_form_group: Groupe
+badge_award_form_group_choose: "Sélectionner un groupe"
 badge_award_form_user: Utilisateur
+badge_award_form_user_choose: "Sélectionner un utilisateur"
 badge_award_info_no_group_message: 'Aucun groupe sélectionné pour l''attribution'
 badge_awarded_automatically_on: 'Badge attribué automatiquement le %awardingDate%'
 badge_awarded_count_message: '%awaredBadge% attribution de badge effectuée.|%awaredBadge% attributions de badge effectuées.'
