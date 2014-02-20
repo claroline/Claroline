@@ -157,7 +157,7 @@ function addFormHoleEdit(add, response, point, size, orthography, del, selector,
             e.preventDefault(); // prevent add # in the url
             return false;
         });
-        
+        changeSize($('#newTable').find('.trHole:last').index(), index);
     });
     
     container.remove();
@@ -283,6 +283,7 @@ function addHole(indexBlank, valHole) {
         return false;
     });
     
+    changeSize(index, index);
     disableNotYetReady();
 }
 
@@ -382,6 +383,21 @@ function check_form(nbHole) {
         alert(nbHole);
         return false;
     }
+}
+
+function changeSize (idSize, indexBlank) {
+    $('#ujm_exobundle_interactionholetype_holes_' + idSize + '_size').change(function (e) {
+        var blank = tinyMCE.get('ujm_exobundle_interactionholetype_html').selection
+                .select(tinyMCE.get('ujm_exobundle_interactionholetype_html').dom.select('#' + indexBlank)[0]);
+        
+        if (blank.tagName == 'INPUT') {
+            var newBlank = '<input type="text" value="' + blank.value + '" size="' + $(this).val() + '" class="blank" id="' + indexBlank + '" name="blank_' + indexBlank + '">';
+            tinyMCE.get('ujm_exobundle_interactionholetype_html').selection.setContent(newBlank);
+        }
+        
+        e.preventDefault(); // prevent add # in the url
+        return false;
+    });
 }
 
 //not yet implemented
