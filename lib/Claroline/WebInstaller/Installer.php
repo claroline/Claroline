@@ -14,6 +14,7 @@ namespace Claroline\WebInstaller;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Installation\Settings\FirstAdminSettings;
 use Claroline\CoreBundle\Library\Security\PlatformRoles;
+use Symfony\Component\Filesystem\Filesystem;
 
 class Installer
 {
@@ -37,6 +38,9 @@ class Installer
 
     public function install()
     {
+        // preventive clear in case the installer is launched twice
+        $this->clearCache();
+
         require_once $this->kernelFile;
 
         $kernel = new $this->kernelClass('prod', false);
@@ -58,8 +62,21 @@ class Installer
         $userManager->createUserWithRole($user, PlatformRoles::ADMIN);
 
         $refresher->dumpAssets('prod');
-        $refresher->clearCache();
 
         $this->writer->writeInstallFlag();
+    }
+
+    private function clearCache()
+    {
+        if (is_dir($directory = __DIR__ . '/../../../../../app/cache/prod')) {
+            $fileSystem = new Filesystem();
+            $cacheIterator = new \DirectoryIterator($directory);
+
+            foreach ($cacheIterator as $item) {
+                if (!$item->isDot()) {
+                    $fileSystem->remove($item->getPathname());
+                }
+            }
+        }
     }
 }
