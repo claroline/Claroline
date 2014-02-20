@@ -32,4 +32,6 @@ $(function(){
             reader.readAsDataURL(input.files[0]);
         }
     });
+
+    $("[data-toggle=popover]").popover();
 });

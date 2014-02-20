@@ -103,8 +103,10 @@ class AdminController extends Controller
                 try {
                     /** @var \Doctrine\Common\Persistence\ObjectManager $entityManager */
                     $entityManager = $this->getDoctrine()->getManager();
+
                     $entityManager->persist($badge);
                     $entityManager->flush();
+
                     $this->get('session')
                         ->getFlashBag()
                         ->add('success', $translator->trans('badge_add_success_message', array(), 'badge'));

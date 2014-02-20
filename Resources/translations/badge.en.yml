@@ -4,7 +4,7 @@ add_badge: 'Add a badge'
 add_rule: 'Add a rule'
 award: Award
 award_badge: 'Award the badge'
-badges_platform_list: "Platform badge list"
+badges_platform_list: "Platform badges"
 back_to_badges_list: 'Back to badges list'
 back_to_my_badges: 'Back to my badges'
 back_to_users_badge: 'Back to users list'
@@ -126,3 +126,4 @@ private: "Private"
 page_public_look: "This is how your page will look to the public."
 no_badge_in_collection: "There is no badge in this collection."
 badge_details: "Badge details"
+badge_expiration_date_explanation: "Date when the badge expires. If omitted, the badge never expires. The badge is not removed after the expiration date, a visual indicator that the badge is expired is displayed."

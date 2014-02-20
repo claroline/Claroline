@@ -58,14 +58,6 @@ class BadgeType extends AbstractType
         $builder
             ->add('frTranslation', new BadgeTranslationType())
             ->add('enTranslation', new BadgeTranslationType())
-            ->add(
-                'version',
-                'integer',
-                array(
-                    'data'  => 1,
-                    'attr' => array('min' => 1)
-                )
-            )
             ->add('automatic_award', 'checkbox', array('required' => false))
             ->add('file', 'file', array('label' => 'badge_form_image'))
             ->add(
@@ -106,7 +98,8 @@ class BadgeType extends AbstractType
                 'data_class'         => 'Claroline\CoreBundle\Entity\Badge\Badge',
                 'translation_domain' => 'badge',
                 'language'           => 'en',
-                'date_format'        => DateType::HTML5_FORMAT
+                'date_format'        => DateType::HTML5_FORMAT,
+                'cascade_validation' => true
             )
         );
     }

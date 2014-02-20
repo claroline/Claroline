@@ -54,7 +54,7 @@ class Badge extends Rulable
      * @Assert\NotBlank()
      * @Assert\GreaterThan(value = 0)
      */
-    protected $version;
+    protected $version = 1;
 
     /**
      * @var boolean

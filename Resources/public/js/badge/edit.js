@@ -17,6 +17,8 @@ $(function(){
 
     $('.delete').confirmModal();
 
+    $("[data-toggle=popover]").popover();
+
     var awardFormContainer  = $("#award_form_container");
     var awardUsersContainer = $("#award_users_container");
 

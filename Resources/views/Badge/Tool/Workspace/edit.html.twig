@@ -235,7 +235,6 @@
                 <img class="pull-left media-object badge_image" src="{{ asset(badge.webPath) }}" alt="{{ badge.name }}" />
                 <div class="media-body">
                     <h4 class="media-heading">{{ badge.description }}</h4>
-                    <p>{{ 'badge_form_version'|trans }} {{ badge.version }}</p>
                     {{ badge.criteria|raw }}
                 </div>
             </div>
@@ -358,12 +357,6 @@
                             </div>
                         </div>
 
-                        <div class="row">
-                            <div class="col-md-2 form-group">
-                                <label class="control-label required" for="badge_form_version">{{ 'badge_form_version'|trans }} :</label>
-                                {{ form_widget(form.version) }}
-                            </div>
-                        </div>
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">

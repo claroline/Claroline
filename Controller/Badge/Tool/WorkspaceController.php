@@ -105,9 +105,6 @@ class WorkspaceController extends Controller
             $badge->addTranslation($translation);
         }
 
-        /** @var \Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler $platformConfigHandler */
-        $platformConfigHandler = $this->get('claroline.config.platform_config_handler');
-
         $form = $this->createForm($this->get('claroline.form.tool.badge'), $badge);
 
         if ($request->isMethod('POST')) {
