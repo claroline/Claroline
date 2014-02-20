@@ -143,7 +143,7 @@
                         {{ 'Correction denied'|trans({},'icap_dropzone')}}
                     </span>
                     {% else %}
-                    <a href="{{ path('icap_dropzone_drops_deny_correction', {'resourceId': dropzone.id,  'correctionId': correction.id}) }}" class="btn btn-warning btn-sm pull-right launch-modal">
+                    <a href="{{ path('icap_dropzone_drops_deny_correction', {'resourceId': dropzone.id,  'correctionId': correction.id}) }}" class="btn btn-danger btn-sm pull-right launch-modal">
                         {{ 'Deny correction'|trans({},'icap_dropzone')}}
                     </a>
                     {% endif %}
@@ -161,9 +161,9 @@
                     <a href="{{ path('icap_dropzone_drop_detail_by_user', {'resourceId': dropzone.id,'dropId': correction.drop.id}) }}" class="btn btn-default">
                         {{ 'Back to corrections'|trans({}, 'icap_dropzone') }}
                     </a>
-                    <a href="{{ path('icap_dropzone_drop_detail_by_user', {'resourceId': dropzone.id,'dropId': correction.drop.id}) }}" class="btn btn-warning">
+{#                     <a href="{{ path('icap_dropzone_drop_detail_by_user', {'resourceId': dropzone.id,'dropId': correction.drop.id}) }}" class="btn btn-danger">
                         {{ 'Deny correction'|trans({}, 'icap_dropzone') }}
-                    </a>
+                    </a> #}
                 {% else %}
                      {# bouton désactivation du flag #}
                      <a href="{{ path('icap_dropzone_drop_detail_by_user', {'resourceId': dropzone.id,'dropId': correction.drop.id}) }}" class="btn btn-default">
