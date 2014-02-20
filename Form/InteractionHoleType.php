@@ -46,16 +46,22 @@ class InteractionHoleType extends AbstractType
 {
 
     private $user;
+    private $catID;
 
-    public function __construct(User $user)
+    public function __construct(User $user, $catID = -1)
     {
         $this->user = $user;
+        $this->catID = $catID;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('interaction', new InteractionType($this->user))
+            ->add('interaction', new InteractionType(
+                    $this->user,
+                    $this->catID
+                    )
+            )
             ->add('html','tinymce', array(
                     'label' => 'Inter_Hole.html'
                 )

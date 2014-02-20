@@ -387,7 +387,7 @@ function check_form(nbHole) {
 //not yet implemented
 function disableNotYetReady() {
     $('#newTable').find(('.trHole')).each(function () {
-        $(this).find('input').eq(1).attr("disabled", true);
+        //$(this).find('input').eq(1).attr("readonly", true);
         $(this).find('input').eq(2).attr("disabled", true);
     });
 }

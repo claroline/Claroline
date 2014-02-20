@@ -161,30 +161,6 @@ class InteractionHoleController extends Controller
     }
 
     /**
-    * Displays a form to edit an existing InteractionHole entity.
-    *
-    */
-    public function editAction($id)
-    {
-        $em = $this->getDoctrine()->getEntityManager();
-
-        $entity = $em->getRepository('UJMExoBundle:InteractionHole')->find($id);
-
-        if (!$entity) {
-            throw $this->createNotFoundException('Unable to find InteractionHole entity.');
-        }
-
-        $editForm = $this->createForm(new InteractionHoleType(), $entity);
-        $deleteForm = $this->createDeleteForm($id);
-
-        return $this->render('UJMExoBundle:InteractionHole:edit.html.twig', array(
-            'entity' => $entity,
-            'edit_form' => $editForm->createView(),
-            'delete_form' => $deleteForm->createView(),
-        ));
-    }
-
-    /**
     * Edits an existing InteractionHole entity.
     *
     */
@@ -208,7 +184,8 @@ class InteractionHoleController extends Controller
 
         $editForm   = $this->createForm(
             new InteractionHoleType(
-                $this->container->get('security.context')->getToken()->getUser(), $this->get('validator')
+                $this->container->get('security.context')->getToken()->getUser(),
+                $catID
             ), $interHole
         );
         $formHandler = new InteractionHoleHandler(
