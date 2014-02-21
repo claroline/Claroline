@@ -24,6 +24,7 @@ end: end
 end_date: 'End date'
 error: 'An unexpeded error occured, please try again'
 event_update: 'Event modified'
+export: 'Export events'
 feb: Feb
 february: February
 fri: Fri

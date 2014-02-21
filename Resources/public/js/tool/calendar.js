@@ -435,7 +435,7 @@
                         Translator.get('platform' + ':' + 'edit')+'</a>'+
                         ' <div>'+t('agenda_form_start') +' : '+
                         $.fullCalendar.formatDate(event.start ,'dd-MM-yyyy HH:mm') + '</div>'+
-                        '<div class="mypopo' + event.id + '">'+t('agenda_form_end') +':'  + $.fullCalendar.formatDate(event.end ,'dd-MM-yyyy HH:mm') +'</div>' +'<br />Description: ' + event.description,
+                        '<div class="mypopo' + event.id + '">'+t('agenda_form_end') +':'  + $.fullCalendar.formatDate(event.end ,'dd-MM-yyyy HH:mm') +'</div> <div style="word-break:break-all;">' +'Description: ' + event.description+'</div>',
                     html:true,
                     container:'body'
                 });

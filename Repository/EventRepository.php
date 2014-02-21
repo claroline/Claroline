@@ -43,7 +43,9 @@ class EventRepository extends EntityRepository
     }
 
     /**
-     * Get All the Desktop User's events
+     * @param User $user
+     * @param boolean $allDay
+     * @return array
      */
     public function findDesktop(User $user, $allDay)
     {
