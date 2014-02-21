@@ -162,13 +162,11 @@
                 event2.title = $('#agenda_form_title').val();
                 event2.start = $('#agenda_form_start').val()+' '+$('#agenda_form_startHours').val();
                 event2.end = $('#agenda_form_end').val()+' '+$('#agenda_form_endHours').val();
-               console.debug(event2.start);
                 event2.allDay = $('#agenda_form_allDay').attr('checked') === 'checked' ? 1 : 0;
                 event2.color = $('#agenda_form_priority').val();
                 event2.description = $('#agenda_form_description').val();
                 var event1 = $('#calendar').fullCalendar('clientEvents', id);
                 var compare = compareEvents(event1[0], event2 );
-               console.debug(compare);
            } else {
                 compare = 1;
            }
