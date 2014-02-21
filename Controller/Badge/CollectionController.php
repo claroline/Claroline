@@ -47,6 +47,7 @@ class CollectionController extends Controller
 
         return array(
             'collection' => $collection,
+            'user'       => $collection->getUser(),
             'locale'     => $locale,
             'showBanner' => $showBanner
         );

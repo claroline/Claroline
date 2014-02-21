@@ -1,6 +1,6 @@
 {% extends "ClarolineCoreBundle:Badge:layout.html.twig" %}
 
-{% block title %}{{ parent() ~ ' - ' ~ 'my_badges' | trans({}, 'platform') | striptags | raw }}{% endblock %}
+{% block title %}{{ collection.name }}{% endblock %}
 
 {% trans_default_domain "badge" %}
 
@@ -12,7 +12,8 @@
         <strong>{{ 'page_public_look'|trans }}</strong>
     </div>
     {% endif %}
-    <h1>{{ collection.name }}</h1>
+    <h1>{{ collection.name }} <small>{{ 'collection_owned_by_user'|trans({'%user%': user.firstname ~ ' ' ~ user.lastName}) }}</small></h1>
+    <p></p>
     {% for badge in collection.badges %}
     <div class="panel panel-default">
         <div class="panel-heading">
