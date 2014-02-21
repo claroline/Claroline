@@ -92,7 +92,7 @@
     "config": {
         "bin-dir": "bin",
         "github-protocols": ["https", "http", "git"],
-        "cache-files-ttl": "0"
+        "cache-files-ttl": 0
     },
     "minimum-stability": "dev",
     "extra": {
