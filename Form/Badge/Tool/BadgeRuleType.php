@@ -68,7 +68,7 @@ class BadgeRuleType extends AbstractType
                     'choices'            => $actionChoices
                 )
             )
-            ->add('occurrence', 'integer')
+            ->add('occurrence', 'integer', array('attr' => array('class' => 'input-sm')))
             ->add('result', 'text')
             ->add(
                 'badge',
