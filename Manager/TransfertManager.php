@@ -8,12 +8,11 @@
 
 namespace Claroline\CoreBundle\Manager;
 
-use Claroline\CoreBundle\Library\Transfert\ToolImporter;
+use Claroline\CoreBundle\Library\Transfert\Importer;
 use Claroline\CoreBundle\Library\Transfert\ManifestConfiguration;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Config\Definition\Processor;
 use Symfony\Component\Yaml\Yaml;
-use Claroline\CoreBundle\Library\Transfert\ConfigurationBuilders\PropertiesConfigurationBuilder;
 use Claroline\CoreBundle\Library\Transfert\ConfigurationBuilders\OwnerConfigurationBuilder;
 use Claroline\CoreBundle\Library\Transfert\ConfigurationBuilders\UsersConfigurationBuilder;
 use Claroline\CoreBundle\Library\Transfert\ConfigurationBuilders\GroupsConfigurationBuilder;
@@ -27,8 +26,6 @@ use JMS\DiExtraBundle\Annotation as DI;
 class TransfertManager
 {
     private $listImporters;
-    private $workspaceImporter;
-    private $userImporter;
     private $rootPath;
 
     /**
@@ -39,7 +36,7 @@ class TransfertManager
         $this->listImporters = new ArrayCollection();
     }
 
-    public function addImporter(ToolImporter $importer)
+    public function addImporter(Importer $importer)
     {
         return $this->listImporters->add($importer);
     }
@@ -49,18 +46,19 @@ class TransfertManager
      *
      * @param $path
      */
-    public function importWorkspace($path)
+    public function validate($path)
     {
-        $this->setRootPath($path);
         $ds = DIRECTORY_SEPARATOR;
         $processor = new Processor();
         $data = Yaml::parse(file_get_contents($path . $ds . 'manifest.yml'));
+        $this->setRootPath($path, $data);
+        $this->setImporters($path);
 
         try {
-            $usersConfigurationBuilder = new UsersConfigurationBuilder();
+            $usersConfigurationBuilder  = new UsersConfigurationBuilder();
             $groupsConfigurationBuilder = new GroupsConfigurationBuilder();
-            $rolesConfigurationBuilder = new RolesConfigurationBuilder();
-            $toolsConfigurationBuilder = new ToolsConfigurationBuilder();
+            $rolesConfigurationBuilder  = new RolesConfigurationBuilder();
+            $toolsConfigurationBuilder  = new ToolsConfigurationBuilder();
 
             //owner
             if (isset($data['members']['owner'])) {
@@ -68,10 +66,11 @@ class TransfertManager
                 $ownerConfigurationBuilder = new OwnerConfigurationBuilder();
                 $owner = $processor->processConfiguration($ownerConfigurationBuilder, $owner);
             }
+
             //properties
-            $propertiesConfigurationBuilder = new PropertiesConfigurationBuilder();
             $properties['properties'] = $data['properties'];
-            $properties = $processor->processConfiguration($propertiesConfigurationBuilder, $properties);
+            $importer = $this->getImporterByName('workspace_properties');
+            $importer->validate($properties);
 
             //roles
             if (isset($data['roles'])) {
@@ -127,13 +126,15 @@ class TransfertManager
                     $this->validateToolsConfig($toolsdata);
                 }
             }
-
-            //home
-
-
         } catch (\Exception $e) {
             var_dump(array($e->getMessage())) ;
         }
+    }
+
+    public function import($path)
+    {
+        $this->validate($path);
+        //do other things
     }
 
     private function validateToolsConfig(array $tooldata)
@@ -153,12 +154,12 @@ class TransfertManager
                 $filepath = $this->getRootPath() . $ds . $tool['tool']['config'];
                 //@todo error handling if path doesn't exists
                 $tooldata =  Yaml::parse(file_get_contents($filepath));
-                $importer->validate($tooldata);
+                $toolImporter->validate($tooldata);
             }
 
             if (isset($tool['tool']['data']) && $toolImporter) {
                 $tooldata = $tool['tool']['data'];
-                $importer->validate($tooldata);
+                $toolImporter->validate($tooldata);
             }
         }
     }
@@ -171,5 +172,30 @@ class TransfertManager
     private function getRootPath()
     {
         return $this->rootPath;
+    }
+
+    private function getImporterByName($name)
+    {
+        foreach ($this->listImporters as $importer) {
+            if ($importer->getName() === $name) {
+                return $importer;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Inject the rootPath
+     *
+     * @param $rootPath
+     * @param $manifest
+     */
+    private function setImporters($rootPath, $manifest)
+    {
+        foreach ($this->listImporters as $importer) {
+            $importer->setRootPath($rootPath);
+            $importer->setManifest($manifest);
+        }
     }
 }

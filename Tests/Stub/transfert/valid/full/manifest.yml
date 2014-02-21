@@ -10,7 +10,7 @@ members:
     owner:
         first_name: ffdgdf
         last_name: sdfsd
-        username: moi
+        username: 'ezs'
         password: enclair
         mail: moi@moi.com
         code: USER01

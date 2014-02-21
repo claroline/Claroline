@@ -9,11 +9,11 @@ tools:
                   name: tabname
                   widgets:
                    - widget:
-                       name: widgettext
+                       name: text
                        type: 'text'
                        config: 'tools/widget/text01.yml'
                    - widget:
-                       name: widgetrss
+                       name: rss
                        type: 'rss'
                        config: 'tools/widget/rss01.yml'
             - tab:

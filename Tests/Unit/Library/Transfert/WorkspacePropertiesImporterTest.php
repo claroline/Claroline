@@ -10,34 +10,98 @@ namespace Claroline\CoreBundle\Library;
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 use Claroline\CoreBundle\Library\Testing\MockeryTestCase;
-use Claroline\CoreBundle\Library\Transfert\WorkspacePropertiesImporter;
+use Mockery as m;
+use Claroline\CoreBundle\Library\Transfert\ConfigurationBuilders\WorkspacePropertiesImporter;
+use Symfony\Component\Yaml\Yaml;
 
-class WorkspacePropertiesImporterTest extends MockeryTestCase {
-    private $workspacePropertiesImporter;
-    private $userManager;
+class WorkspacePropertiesImporterTest extends MockeryTestCase
+{
+    private $om;
+    private $importer;
 
-    protected function setUp(){
+    protected function setUp()
+    {
         parent::setUp();
-        $this->userManager = $this->mock('Claroline\CoreBundle\Manager\UserManager');
-        $this->workspacePropertiesImporter = new WorkspacePropertiesImporter(
-            $this->userManager
-        );
+
+        $this->om = $this->mock('Claroline\CoreBundle\Persistence\ObjectManager');
+        $this->importer = new WorkspacePropertiesImporter($this->om);
     }
 
-    public function testValidate()
+    /**
+     * @dataProvider validateProvider
+     */
+    public function testValidate($path, $isExceptionExpected, $isUserInDatabase, $isFull)
     {
-        $data = array(
-            'properties' => array(
-                'name' => 'Anglais',
-                'code' => 'EN',
-                'visible' => true,
-                'selfregistration' => true,
-                'owner' => 'ezs'
+        $ds = DIRECTORY_SEPARATOR;
+        $data = Yaml::parse(file_get_contents($path . $ds . 'manifest.yml'));
+        $properties['properties'] = $data['properties'];
+
+        if ($isExceptionExpected) {
+            $this->setExpectedException('Exception');
+        }
+
+        m::getConfiguration()->allowMockingNonExistentMethods(true);
+
+        //init importer
+        $this->importer->setRootPath($path);
+        $this->importer->setManifest($data);
+        //objectManager
+        $wsRepo = $this->mock('Claroline\CoreBundle\Repository\WorkspaceRepository');
+        $this->om->shouldReceive('getRepository')
+            ->with('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace')
+            ->andReturn($wsRepo);
+        $wsRepo->shouldReceive('findOneByCode')->once()->with($properties['properties']['code']);
+
+        $userRepo = $this->mock('Claroline\CoreBundle\Repository\UserRepository');
+
+        if ($isUserInDatabase && !$isFull) {
+            $this->om->shouldReceive('getRepository')->andReturn($userRepo);
+            $userRepo->shouldReceive('findOneByUsername')->andReturn('user');
+        }
+
+        if (!$isUserInDatabase && !$isFull) {
+            $this->om->shouldReceive('getRepository')->andReturn($userRepo);
+            $userRepo->shouldReceive('findOneByUsername')->andThrow('Exception');
+        }
+
+        $this->importer->validate($properties);
+    }
+
+    public function validateProvider()
+    {
+        return array(
+            array(
+                'path' => __DIR__.'/../../../Stub/transfert/valid/full',
+                'isExceptionExpected' => false,
+                'isUserInDatabase' => false,
+                'isFull' => true
+            ),
+            array(
+                'path' => __DIR__.'/../../../Stub/transfert/valid/full',
+                'isExceptionExpected' => false,
+                'isUserInDatabase' => true,
+                'isFull' => true
+            ),
+            array(
+                'path' => __DIR__.'/../../../Stub/transfert/valid/minimal',
+                'isExceptionExpected' => false,
+                'isUserInDatabase' => true,
+                'isFull' => false
+            ),
+            array(
+                'path' => __DIR__.'/../../../Stub/transfert/valid/minimal',
+                'isExceptionExpected' => true,
+                'isUserInDatabase' => false,
+                'isFull' => false
+            ),
+            array(
+                'path' => __DIR__.'/../../../Stub/transfert/invalid/wrong_owner',
+                'isExceptionExpected' => true,
+                'isUserInDatabase' => true,
+                'isFull' => true
             )
         );
-        $result = $this->workspacePropertiesImporter->validate($data);
-        $this->assertEquals($result, true);
     }
-
-} 
+}

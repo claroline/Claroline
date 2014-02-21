@@ -4,19 +4,20 @@ namespace Claroline\CoreBundle\Library\Transfert;
 
 use Doctrine\Common\Collections\ArrayCollection;
 
-abstract class ToolImporter
+abstract class Importer
 {
-    private $roles;
+    private $listImporters;
     private $rootPath;
+    private $manifest;
 
-    public function setRole(array $roles)
+    public function setManifest($path)
     {
-        $this->roles = $roles;
+        $this->manifest = $path;
     }
 
-    public function getRoles()
+    public function getManifest()
     {
-        return $this->roles;
+        return $this->manifest;
     }
 
     public function setListImporters(ArrayCollection $importers)
@@ -35,4 +36,6 @@ abstract class ToolImporter
     }
 
     abstract function getName();
+
+    abstract function validate(array $data);
 } 

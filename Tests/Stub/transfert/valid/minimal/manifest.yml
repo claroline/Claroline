@@ -1,0 +1,7 @@
+properties:
+    name: Anglais
+    code: EN
+    visible: true
+    selfregistration: true
+    selfUnregistration: false
+    owner: 'ezs'

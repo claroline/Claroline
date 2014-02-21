@@ -1,5 +1,5 @@
-locale:
-  - en:
+text:
+    - locale: 'en'
       content: '<html> tototototototot </html>'
-  - fr:
+    - locale: 'fr'
       content: '<html> blablabla </html>'
