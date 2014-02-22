@@ -284,7 +284,7 @@ function addHole(indexBlank, valHole) {
     });
     
     changeSize(index, index);
-    disableNotYetReady();
+    disableNotYetReady();    
 }
 
 function addWR(indexHole, idTabWR) {
@@ -312,9 +312,6 @@ function addWR(indexHole, idTabWR) {
         .replace(/\[holes\]\[__name__\]/g, '[holes][' + indexHole + ']')
         .replace(/\[wordResponses\]\[__name__\]/g, '[wordResponses][' + indexWR + ']'))
    );
-    /*containerWR.append(
-        $(containerWR.attr('data-prototype').replace(/__name__/, 8))
-    );*/
 
     containerWR.find('.row').each(function () {
         if ($(this).find('input').length) {
@@ -366,17 +363,6 @@ function verticalAlignCenter() {
     });
 }
 
-// Set the hole order
-/*function setOrder() {
-
-    var order = 1;
-
-    $('#newTable').find('.trhole').each(function () {
-        $(this).find('input:first').val(order);
-        order++;
-    });
-}*/
-
 // Check if form is valid
 function check_form(nbHole) {
     if (($('#newTable').find('tr:not(:first)').length) < 1) {
@@ -399,6 +385,20 @@ function changeSize (idSize, indexBlank) {
         return false;
     });
 }
+
+$(document).ready(function() {
+   $('#holeEditor').bind("DOMSubtreeModified",function(e) {
+        
+     if (tinyMCE.activeEditor.selection.getContent() == '') {
+        $('#newTable').find(('.trHole')).each(function () {
+            index = $(this).find('td:first').find('input:first').val();
+            if ( (index) && (!tinyMCE.get('ujm_exobundle_interactionholetype_html').dom.select('#' + index)[0]) ) {
+                $(this).remove();
+            }
+        });
+      }
+   });
+});
 
 //not yet implemented
 function disableNotYetReady() {
