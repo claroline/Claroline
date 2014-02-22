@@ -143,14 +143,14 @@ function addFormHoleEdit(add, response, point, size, orthography, del, selector,
             if ($(this).attr('checked')) {
 
                 if (node.tagName == 'INPUT') {
-                    nodeselect = '<select class="blank" id="' + ind + '" name="blank_' + indexBlank + '"><option>' + node.value + '</option></select>';
+                    nodeselect = '<select class="blank" id="' + ind + '" name="blank_' + ind + '"><option>' + node.value + '</option></select>';
                     tinyMCE.get('ujm_exobundle_interactionholetype_html').selection.setContent(nodeselect);
                 } 
 
             } else {
                 if (node.tagName == 'SELECT') {
                     size = $('#ujm_exobundle_interactionholetype_holes_' + ind + '_size').val();
-                    nodeBlank = '<input type="text" value="' + node.value + '" size="' + size + '" class="blank" id="' + ind + '" name="blank_' + indexBlank + '">';
+                    nodeBlank = '<input type="text" value="' + node.value + '" size="' + size + '" class="blank" id="' + ind + '" name="blank_' + ind + '">';
                     tinyMCE.get('ujm_exobundle_interactionholetype_html').selection.setContent(nodeBlank);
                 }
             }
