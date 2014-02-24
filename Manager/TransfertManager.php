@@ -62,10 +62,9 @@ class TransfertManager
         $usersImporter  = $this->getImporterByName('user_importer');
         $groupsImporter = $this->getImporterByName('groups_importer');
         $rolesImporter  = $this->getImporterByName('roles_importer');
+        $toolsImporter  = $this->getImporterByName('tools_importer');
 
         try {
-            $toolsConfigurationBuilder  = new ToolsConfigurationBuilder();
-
             //owner
             if (isset($data['members']['owner'])) {
                 $owner['owner'] = $data['members']['owner'];
@@ -84,21 +83,10 @@ class TransfertManager
             $usersImporter->validate($users);
             $groups = $this->merger->mergeGroupConfigurations($path);
             $groupsImporter->validate($groups);
+            $tools = $this->merger->mergeToolConfigurations($path);
+            $toolsImporter->validate($tools);
+            $this->validateToolsConfig($tools);
 
-            //tools
-            if (isset($data['tools'])) {
-                $tools['tools'] = $data['tools'];
-                $processedConfiguration = $processor->processConfiguration($toolsConfigurationBuilder, $tools);
-                $this->validateToolsConfig($tools);
-            }
-            if (isset($data['toolfiles'])) {
-                foreach ($data['toolfiles'] as $toolpath) {
-                    $filepath = $path . $ds . $toolpath['path'];
-                    $toolsdata = Yaml::parse(file_get_contents($filepath));
-                    $processedConfiguration = $processor->processConfiguration($toolsConfigurationBuilder, $toolsdata);
-                    $this->validateToolsConfig($toolsdata);
-                }
-            }
         } catch (\Exception $e) {
             var_dump(get_class($e));
             var_dump(array($e->getMessage())) ;

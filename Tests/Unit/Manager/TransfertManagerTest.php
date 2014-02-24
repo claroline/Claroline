@@ -58,6 +58,13 @@ class TransfertManagerTest extends MockeryTestCase
                 array($this->om)
             );
 
+        //roles importer
+        $this->toolsImporter = $this
+            ->mock(
+                'Claroline\CoreBundle\Library\Transfert\ConfigurationBuilders\ToolsImporter',
+                array($this->om)
+            );
+
         $this->manager = new TransfertManager($merger);
         $homeImporter = new HomeImporter();
         $textImporter = new TextImporter();
@@ -70,6 +77,7 @@ class TransfertManagerTest extends MockeryTestCase
         $this->manager->addImporter($this->usersImporter);
         $this->manager->addImporter($this->rolesImporter);
         $this->manager->addImporter($this->groupsImporter);
+        $this->manager->addImporter($this->toolsImporter);
     }
 
     public function testValidateGoesWell()
@@ -106,6 +114,13 @@ class TransfertManagerTest extends MockeryTestCase
         $this->groupsImporter->shouldReceive('getName')->andReturn('groups_importer');
         $this->groupsImporter->shouldReceive('setRootPath')->once()->with($path);
         $this->groupsImporter->shouldReceive('setManifest')->once()->with($data);
+
+        //groups
+        //@todo check what does the validate get
+        $this->toolsImporter->shouldReceive('validate')->andReturn(true);
+        $this->toolsImporter->shouldReceive('getName')->andReturn('tools_importer');
+        $this->toolsImporter->shouldReceive('setRootPath')->once()->with($path);
+        $this->toolsImporter->shouldReceive('setManifest')->once()->with($data);
 
         $this->manager->validate($path);
     }

@@ -94,4 +94,29 @@ class Merger
 
         return $roles;
     }
+
+    public function mergeToolConfigurations($path)
+    {
+        $ds = DIRECTORY_SEPARATOR;
+        $data = Yaml::parse(file_get_contents($path . $ds . 'manifest.yml'));
+        $tools['tools'] = array();
+
+        if (isset($data['tools'])) {
+            $tools['tools'] = $data['tools'];
+        }
+
+        if (isset($data['toolfiles'])) {
+            foreach ($data['toolfiles'] as $toolpath) {
+                $filepath = $path . $ds . $toolpath['path'];
+                $tooldata = Yaml::parse(file_get_contents($filepath));
+                foreach ($tooldata as $tdata) {
+                    foreach ($tdata as $tool) {
+                        $tools['tools'][] = array('tool' => $tool['tool']);
+                    }
+                }
+            }
+        }
+
+        return $tools;
+    }
 } 
