@@ -116,9 +116,4 @@ class RolesImporter extends Importer implements ConfigurationInterface
 
         return false;
     }
-
-    public function validateProvider()
-    {
-
-    }
 }

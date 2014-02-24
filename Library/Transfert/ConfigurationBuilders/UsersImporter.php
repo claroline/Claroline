@@ -23,7 +23,7 @@ use Claroline\CoreBundle\Persistence\ObjectManager;
 //@todo exception content
 
 /**
- * @DI\Service("claroline.importer.properties_importer")
+ * @DI\Service("claroline.importer.users_importer")
  * @DI\Tag("claroline.importer")
  */
 class UsersImporter extends Importer implements ConfigurationInterface

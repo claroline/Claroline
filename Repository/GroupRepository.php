@@ -428,4 +428,12 @@ class GroupRepository extends EntityRepository
 
         return $result;
     }
+
+    public function findNames()
+    {
+        $dql = 'SELECT g.name as name FROM Claroline\CoreBundle\Entity\Group g';
+        $query = $this->_em->createQuery($dql);
+
+        return $query->getResult();
+    }
 }

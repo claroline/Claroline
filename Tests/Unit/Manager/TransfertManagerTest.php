@@ -15,19 +15,20 @@ use Claroline\CoreBundle\Library\Testing\MockeryTestCase;
 use Claroline\CoreBundle\Library\Transfert\ConfigurationBuilders\Tools\HomeImporter;
 use Claroline\CoreBundle\Library\Transfert\ConfigurationBuilders\Tools\Widgets\TextImporter;
 use Claroline\CoreBundle\Library\Transfert\ConfigurationBuilders\Tools\ResourceManagerImporter;
+use Claroline\CoreBundle\Library\Transfert\Merger;
 use Symfony\Component\Yaml\Yaml;
 
 class TransfertManagerTest extends MockeryTestCase
 {
     private $manager;
     private $om;
-    private $workspacePropertiesImporter;
 
     protected function setUp()
     {
         parent::setUp();
 
         $this->om = $this->mock('Claroline\CoreBundle\Persistence\ObjectManager');
+        $merger = new Merger();
 
         //workspace properties
         $this->workspacePropertiesImporter = $this
@@ -43,13 +44,21 @@ class TransfertManagerTest extends MockeryTestCase
                 array($this->om)
             );
 
+        //groups importer
+        $this->groupsImporter = $this
+            ->mock(
+                'Claroline\CoreBundle\Library\Transfert\ConfigurationBuilders\GroupsImporter',
+                array($this->om, $merger)
+            );
+
+        //roles importer
         $this->rolesImporter = $this
             ->mock(
                 'Claroline\CoreBundle\Library\Transfert\ConfigurationBuilders\RolesImporter',
                 array($this->om)
             );
 
-        $this->manager = new TransfertManager();
+        $this->manager = new TransfertManager($merger);
         $homeImporter = new HomeImporter();
         $textImporter = new TextImporter();
         $resourceImporter = new ResourceManagerImporter();
@@ -60,10 +69,12 @@ class TransfertManagerTest extends MockeryTestCase
         $this->manager->addImporter($this->workspacePropertiesImporter);
         $this->manager->addImporter($this->usersImporter);
         $this->manager->addImporter($this->rolesImporter);
+        $this->manager->addImporter($this->groupsImporter);
     }
 
     public function testValidateGoesWell()
     {
+        //@todo mock merger
         $ds = DIRECTORY_SEPARATOR;
         $path = __DIR__.'/../../Stub/transfert/valid/full';
         $data = Yaml::parse(file_get_contents($path . $ds . 'manifest.yml'));
@@ -88,5 +99,14 @@ class TransfertManagerTest extends MockeryTestCase
         $this->rolesImporter->shouldReceive('getName')->andReturn('roles_importer');
         $this->rolesImporter->shouldReceive('setRootPath')->once()->with($path);
         $this->rolesImporter->shouldReceive('setManifest')->once()->with($data);
+
+        //groups
+        //@todo check what does the validate get
+        $this->groupsImporter->shouldReceive('validate')->andReturn(true);
+        $this->groupsImporter->shouldReceive('getName')->andReturn('groups_importer');
+        $this->groupsImporter->shouldReceive('setRootPath')->once()->with($path);
+        $this->groupsImporter->shouldReceive('setManifest')->once()->with($data);
+
+        $this->manager->validate($path);
     }
 } 

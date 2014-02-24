@@ -7,7 +7,7 @@ groups:
           - username: 'user3'
 
     - group:
-        name: name2
+        name: name1
         users:
           - username: 'user1'
           - username: 'user2'

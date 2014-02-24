@@ -1,20 +1,23 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: ezs
- * Date: 13/01/14
- * Time: 15:41
+
+/*
+ * This file is part of the Claroline Connect package.
+ *
+ * (c) Claroline Consortium <consortium@claroline.net>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace Claroline\CoreBundle\Manager;
 
 use Claroline\CoreBundle\Library\Transfert\Importer;
+use Claroline\CoreBundle\Library\Transfert\Merger;
 use Claroline\CoreBundle\Library\Transfert\ManifestConfiguration;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Config\Definition\Processor;
 use Symfony\Component\Yaml\Yaml;
 use Claroline\CoreBundle\Library\Transfert\ConfigurationBuilders\OwnerConfigurationBuilder;
-use Claroline\CoreBundle\Library\Transfert\ConfigurationBuilders\UsersImporter;
 use Claroline\CoreBundle\Library\Transfert\ConfigurationBuilders\GroupsConfigurationBuilder;
 use Claroline\CoreBundle\Library\Transfert\ConfigurationBuilders\RolesConfigurationBuilder;
 use Claroline\CoreBundle\Library\Transfert\ConfigurationBuilders\ToolsConfigurationBuilder;
@@ -29,10 +32,13 @@ class TransfertManager
     private $rootPath;
 
     /**
-     * Constructor.
+     * @DI\InjectParams({
+     *     "merger"  = @DI\Inject("claroline.importer.merger")
+     * })
      */
-    public function __construct()
+    public function __construct(Merger $merger)
     {
+        $this->merger        = $merger;
         $this->listImporters = new ArrayCollection();
     }
 
@@ -53,11 +59,11 @@ class TransfertManager
         $data = Yaml::parse(file_get_contents($path . $ds . 'manifest.yml'));
         $this->setRootPath($path);
         $this->setImporters($path, $data);
+        $usersImporter  = $this->getImporterByName('user_importer');
+        $groupsImporter = $this->getImporterByName('groups_importer');
+        $rolesImporter  = $this->getImporterByName('roles_importer');
 
         try {
-            $usersImporter = $this->getImporterByName('user_importer');
-            $groupsConfigurationBuilder = new GroupsConfigurationBuilder();
-            $rolesConfigurationBuilder  = $this->getImporterByName('roles_importer');
             $toolsConfigurationBuilder  = new ToolsConfigurationBuilder();
 
             //owner
@@ -72,53 +78,12 @@ class TransfertManager
             $importer = $this->getImporterByName('workspace_properties');
             $importer->validate($properties);
 
-            //roles
-            if (isset($data['roles'])) {
-                $roles['roles'] = $data['roles'];
-                $roles = $processor->processConfiguration($rolesConfigurationBuilder, $roles);
-            }
-            if (isset($data['rolefiles'])) {
-                foreach ($data['rolefiles'] as $rolepath) {
-                    $filepath = $path . $ds . $rolepath['path'];
-                    $roledata = Yaml::parse(file_get_contents($filepath));
-                    $processedConfiguration = $processor->processConfiguration($rolesConfigurationBuilder, $roledata);
-                }
-            }
-
-            //users
-            $users['users'] = array();
-
-            if (isset($data['members']['users'])) {
-                $users['users'] = $data['members']['users'];
-            }
-
-            if (isset($data['userfiles'])) {
-                foreach ($data['userfiles'] as $userpath) {
-                    $filepath = $path . $ds . $userpath['path'];
-                    $userdata = Yaml::parse(file_get_contents($filepath));
-                    foreach ($userdata as $udata) {
-                        foreach ($udata as $user) {
-                            $users['users'][] = array('user' => $user['user']);
-                        }
-                    }
-                }
-            }
-
+            $roles = $this->merger->mergeRoleConfigurations($path);
+            $rolesImporter->validate($roles);
+            $users = $this->merger->mergeUserConfigurations($path);
             $usersImporter->validate($users);
-
-            //groups
-            if (isset($data['members']['groups'])) {
-                $groups['groups'] = $data['members']['groups'];
-                $users = $processor->processConfiguration($groupsConfigurationBuilder, $groups);
-
-            }
-            if (isset($data['groupfiles'])) {
-                foreach ($data['groupfiles'] as $grouppath) {
-                    $filepath = $path . $ds . $grouppath['path'];
-                    $groupdata = Yaml::parse(file_get_contents($filepath));
-                    $processedConfiguration = $processor->processConfiguration($groupsConfigurationBuilder, $groupdata);
-                }
-            }
+            $groups = $this->merger->mergeGroupConfigurations($path);
+            $groupsImporter->validate($groups);
 
             //tools
             if (isset($data['tools'])) {
