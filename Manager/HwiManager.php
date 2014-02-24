@@ -21,21 +21,21 @@ use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 class HwiManager
 {
     private $cacheManager;
-    private $ch;
+    private $platformConfigHandler;
 
     /**
      * @DI\InjectParams({
-     *     "cacheManager"   = @DI\Inject("claroline.manager.cache_manager"),
-     *     "ch"             = @DI\Inject("claroline.config.platform_config_handler")
+     *     "cacheManager"          = @DI\Inject("claroline.manager.cache_manager"),
+     *     "platformConfigHandler" = @DI\Inject("claroline.config.platform_config_handler")
      * })
      */
     public function __construct(
         CacheManager $cacheManager,
-        PlatformConfigurationHandler $ch
+        PlatformConfigurationHandler $platformConfigHandler
     )
     {
-        $this->cacheManager = $cacheManager;
-        $this->ch = $ch;
+        $this->cacheManager          = $cacheManager;
+        $this->platformConfigHandler = $platformConfigHandler;
     }
 
     /**
@@ -43,7 +43,7 @@ class HwiManager
      */
     public function refreshCache(RefreshCacheEvent $event)
     {
-        $errors = $this->validateFacebook($this->ch->getParameter('facebook_client_id'), $this->ch->getParameter('facebook_client_secret'));
+        $errors = $this->validateFacebook($this->platformConfigHandler->getParameter('facebook_client_id'), $this->platformConfigHandler->getParameter('facebook_client_secret'));
         $event->addCacheParameter('is_facebook_available', count($errors) === 0);
     }
 
@@ -54,6 +54,15 @@ class HwiManager
 
     public function validateFacebook($appId, $secret)
     {
+        if( !function_exists("curl_init") && !function_exists("curl_setopt") && !function_exists("curl_exec") &&
+          !function_exists("curl_close") ) {
+            return array('error' => 'curl_facebook_application_validation_error');
+        }
+
+        if (null === $appId || null === $secret) {
+            return array('error' => 'facebook_application_validation_error');
+        }
+
         $secretUrl = "https://graph.facebook.com/{$appId}?fields=roles&access_token={$appId}|{$secret}";
         $curl_handle = curl_init();
         curl_setopt($curl_handle, CURLOPT_URL, $secretUrl);

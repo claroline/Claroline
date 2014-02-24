@@ -36,20 +36,20 @@ class ResourceOwnerFactory
     public function __construct(PlatformConfigurationHandler $configHandler, $httpUtils, $session)
     {
         $this->configHandler = $configHandler;
-        $this->httpUtils = $httpUtils;
-        $this->session = $session;
+        $this->httpUtils     = $httpUtils;
+        $this->session       = $session;
     }
 
     public function getFacebookResourceOwner()
     {
-        $a = new Curl();
-        $a->setVerifyPeer(true);
-        $a->setTimeout(5);
-        $a->setMaxRedirects(5);
-        $a->setIgnoreErrors(true);
+        $httpClient = new Curl();
+        $httpClient->setVerifyPeer(true);
+        $httpClient->setTimeout(5);
+        $httpClient->setMaxRedirects(5);
+        $httpClient->setIgnoreErrors(true);
 
         $owner = new FacebookResourceOwner(
-            $a,
+            $httpClient,
             $this->httpUtils,
             array(
                 'client_id' => $this->configHandler->getParameter('facebook_client_id'),
