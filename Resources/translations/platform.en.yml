@@ -204,7 +204,7 @@ exportable: Exportable
 external_pdo_database: 'External database (PDO)'
 facebook: Facebook
 facebook_application_validation_error: 'Provided credentials are not valid.'
-facebook_application_validation_error: 'Server configuration avoids facebook connection.'
+curl_facebook_application_validation_error: 'Server configuration avoids facebook connection.'
 fast_answer: 'Fast answer'
 fb_client_id: Application id
 fb_client_secret: Application secret
