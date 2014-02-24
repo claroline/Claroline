@@ -18,6 +18,10 @@ use Symfony\Component\Config\Definition\Processor;
 use JMS\DiExtraBundle\Annotation as DI;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 
+//@todo check roles
+//@todo check owner
+//@todo exception content
+
 /**
  * @DI\Service("claroline.importer.properties_importer")
  * @DI\Tag("claroline.importer")

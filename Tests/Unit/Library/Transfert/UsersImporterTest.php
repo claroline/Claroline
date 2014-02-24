@@ -7,9 +7,6 @@ use Mockery as m;
 use Claroline\CoreBundle\Library\Transfert\ConfigurationBuilders\UsersImporter;
 use Symfony\Component\Yaml\Yaml;
 
-/**
- * @dataProvider validateProvider
- */
 class UsersImporterTest extends MockeryTestCase
 {
     private $om;
@@ -32,7 +29,6 @@ class UsersImporterTest extends MockeryTestCase
             $this->setExpectedException('Symfony\Component\Config\Definition\Exception\InvalidConfigurationException');
         }
 
-        m::getConfiguration()->allowMockingNonExistentMethods(true);
         $repo = $this->mock('Claroline\CoreBundle\Repository\UserRepository');
         $this->om->shouldReceive('getRepository')->with('Claroline\CoreBundle\Entity\User')->andReturn($repo);
 
