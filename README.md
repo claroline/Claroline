@@ -26,6 +26,10 @@ Project setup
 
 - PHP >= 5.4.1
 - PHP extensions:
+    - If you use PHP 5.5, you need to install the following extensions manually:
+        - php5-json
+        - php5-curl
+        - php5-intl
     - fileinfo (for mime type detection)
     - Optionaly:
         - [gd][1] (for simple icon creation)
