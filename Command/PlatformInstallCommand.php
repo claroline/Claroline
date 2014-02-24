@@ -27,13 +27,13 @@ class PlatformInstallCommand extends ContainerAwareCommand
     {
         parent::configure();
         $this->setName('claroline:install')
-            ->setDescription('Installs the platform packages listed in the application kernel.');
-        $this->addOption(
-            'with-optional-fixtures',
-            'wof',
-            InputOption::VALUE_NONE,
-            'When set to true, optional data fixtures will be loaded'
-        );
+            ->setDescription('Installs the platform packages listed in the application kernel.')
+            ->addOption(
+                'with-optional-fixtures',
+                null,
+                InputOption::VALUE_NONE,
+                'When set to true, optional data fixtures will be loaded'
+            );
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)

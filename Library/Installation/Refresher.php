@@ -11,6 +11,7 @@
 
 namespace Claroline\CoreBundle\Library\Installation;
 
+use Composer\Script\CommandEvent;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\ArrayInput;
@@ -85,21 +86,9 @@ class Refresher
             $this->output->writeln('Clearing the cache...');
         }
 
-        $fileSystem = new Filesystem();
         $baseCacheDir = "{$this->container->get('kernel')->getRootDir()}/cache";
         $cacheDir = $environment === null ? $baseCacheDir : "{$baseCacheDir}/{$environment}";
-
-        if (!is_dir($cacheDir)) {
-            return;
-        }
-
-        $cacheIterator = new \DirectoryIterator($cacheDir);
-
-        foreach ($cacheIterator as $item) {
-            if (!$item->isDot()) {
-                $fileSystem->remove($item->getPathname());
-            }
-        }
+        static::removeContentFrom($cacheDir);
     }
 
     public function compileGeneratedThemes()
@@ -116,6 +105,32 @@ class Refresher
             }
 
             $themeService->compileRaw(array($theme->getName()));
+        }
+    }
+
+    public static function deleteCache(CommandEvent $event)
+    {
+        $options = array_merge(
+            array('symfony-app-dir' => 'app'),
+            $event->getComposer()->getPackage()->getExtra()
+        );
+
+        $cacheDir = $options['symfony-app-dir'] . '/cache';
+        $event->getIO()->write('Clearing the cache...');
+        static::removeContentFrom($cacheDir);
+    }
+
+    private static function removeContentFrom($directory)
+    {
+        if (is_dir($directory)) {
+            $fileSystem = new Filesystem();
+            $cacheIterator = new \DirectoryIterator($directory);
+
+            foreach ($cacheIterator as $item) {
+                if (!$item->isDot()) {
+                    $fileSystem->remove($item->getPathname());
+                }
+            }
         }
     }
 }

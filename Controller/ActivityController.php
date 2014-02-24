@@ -23,6 +23,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Claroline\CoreBundle\Library\Resource\ResourceCollection;
 use JMS\DiExtraBundle\Annotation as DI;
+use Symfony\Component\Security\Core\SecurityContextInterface;
 
 /**
  * Controller of the user's desktop.
@@ -32,23 +33,27 @@ class ActivityController extends Controller
     private $resourceManager;
     private $request;
     private $translator;
+    private $sc;
 
     /**
      * @DI\InjectParams({
      *     "resourceManager" = @DI\Inject("claroline.manager.resource_manager"),
      *     "request"         = @DI\Inject("request"),
-     *     "translator"      = @DI\Inject("translator")
+     *     "translator"      = @DI\Inject("translator"),
+     *     "sc"              = @DI\Inject("security.context")
      * })
      */
     public function __construct(
         ResourceManager $resourceManager,
         Request $request,
-        Translator $translator
+        Translator $translator,
+        SecurityContextInterface $sc
     )
     {
         $this->resourceManager = $resourceManager;
         $this->request = $request;
         $this->translator = $translator;
+        $this->sc = $sc;
     }
 
     /**
@@ -95,7 +100,7 @@ class ActivityController extends Controller
         $em->persist($link);
         $em->flush();
 
-        return new JsonResponse(array($this->resourceManager->toArray($node)));
+        return new JsonResponse(array($this->resourceManager->toArray($node, $this->sc->getToken())));
     }
 
     /**

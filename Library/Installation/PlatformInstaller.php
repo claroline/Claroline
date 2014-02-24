@@ -90,7 +90,6 @@ class PlatformInstaller
         }
 
         $this->operationExecutor->execute();
-        $this->launchPostInstallActions();
     }
 
     public function installFromKernel($withOptionalFixtures = true)
@@ -104,19 +103,12 @@ class PlatformInstaller
                 $this->baseInstaller->install($bundle, !$withOptionalFixtures);
             }
         }
-
-        $this->launchPostInstallActions();
     }
 
     private function launchPreInstallActions()
     {
         $this->createDatabaseIfNotExists();
         $this->createAclTablesIfNotExist();
-    }
-
-    private function launchPostInstallActions()
-    {
-        $this->refresher->refresh($this->kernel->getEnvironment(), false);
     }
 
     private function createDatabaseIfNotExists()
