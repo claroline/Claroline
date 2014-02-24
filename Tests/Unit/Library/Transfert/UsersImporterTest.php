@@ -26,7 +26,8 @@ class UsersImporterTest extends MockeryTestCase
         parent::setUp();
 
         $this->om = $this->mock('Claroline\CoreBundle\Persistence\ObjectManager');
-        $this->importer = new UsersImporter($this->om);
+        $this->merger = $this->mock('Claroline\CoreBundle\Library\Transfert\Merger');
+        $this->importer = new UsersImporter($this->om, $this->merger);
     }
 
     /**
@@ -44,6 +45,7 @@ class UsersImporterTest extends MockeryTestCase
         $repo->shouldReceive('findUsernames')->andReturn($usernames);
         $repo->shouldReceive('findEmails')->andReturn($emails);
         $repo->shouldReceive('findCodes')->andReturn($codes);
+        $this->merger->shouldReceive('mergeRoleConfigurations')->andReturn($this->getMergedRoles());
 
         $data = Yaml::parse(file_get_contents($path));
         $users['users'] = $data['users'];
@@ -101,7 +103,32 @@ class UsersImporterTest extends MockeryTestCase
                 'emails' => array(),
                 'codes' => array(),
                 'isExceptionThrow' => true
+            ),
+            array(
+                'path' => __DIR__.'/../../../Stub/transfert/invalid/users/unknown_role.yml',
+                'usernames' => array(),
+                'emails' => array(),
+                'codes' => array(),
+                'isExceptionThrow' => true
             )
+        );
+    }
+
+    public function getMergedRoles()
+    {
+        return array(
+            'roles' =>
+                array(
+                    0 =>
+                        array(
+                            'role' =>
+                                array(
+                                    'name' => 'mergedrole',
+                                    'translation' => 'totottoo',
+                                    'is_base_role' => true,
+                                ),
+                        )
+                )
         );
     }
 } 

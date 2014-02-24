@@ -19,6 +19,8 @@ use JMS\DiExtraBundle\Annotation as DI;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Library\Transfert\Merger;
 
+//@todo check owner
+
 /**
  * @DI\Service("claroline.importer.groups_importer")
  * @DI\Tag("claroline.importer")
@@ -40,6 +42,7 @@ class GroupsImporter extends Importer implements ConfigurationInterface
         $this->om = $om;
         $this->merger = $merger;
     }
+
     public function  getConfigTreeBuilder()
     {
         $treeBuilder = new TreeBuilder();

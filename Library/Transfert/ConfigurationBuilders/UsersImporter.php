@@ -17,9 +17,8 @@ use Claroline\CoreBundle\Library\Transfert\Importer;
 use Symfony\Component\Config\Definition\Processor;
 use JMS\DiExtraBundle\Annotation as DI;
 use Claroline\CoreBundle\Persistence\ObjectManager;
+use Claroline\CoreBundle\Library\Transfert\Merger;
 
-//@todo check roles
-//@todo check owner
 //@todo exception content
 
 /**
@@ -33,12 +32,14 @@ class UsersImporter extends Importer implements ConfigurationInterface
 
     /**
      * @DI\InjectParams({
-     *     "om" = @DI\Inject("claroline.persistence.object_manager")
+     *     "om"      = @DI\Inject("claroline.persistence.object_manager"),
+     *     "merger"  = @DI\Inject("claroline.importer.merger")
      * })
      */
-    public function __construct(ObjectManager $om)
+    public function __construct(ObjectManager $om, Merger $merger)
     {
         $this->om = $om;
+        $this->merger = $merger;
     }
 
     public function  getConfigTreeBuilder()
@@ -50,9 +51,6 @@ class UsersImporter extends Importer implements ConfigurationInterface
         return $treeBuilder;
     }
 
-    /**
-     * @todo roles verification + exception content
-     */
     public function addUsersSection($rootNode)
     {
          $usernames = array();
@@ -74,6 +72,16 @@ class UsersImporter extends Importer implements ConfigurationInterface
         foreach($this->om->getRepository('Claroline\CoreBundle\Entity\User')->findCodes() as $code)
         {
             $codes[] = $code['code'];
+        }
+
+        $mergedRoles = $this->merger->mergeRoleConfigurations($this->getRootPath());
+
+        $availableRoleName = array();
+
+        foreach ($mergedRoles as $el) {
+            foreach ($el as $role) {
+                $availableRoleName[] = $role['role']['name'];
+            }
         }
 
         $rootNode
@@ -159,7 +167,18 @@ class UsersImporter extends Importer implements ConfigurationInterface
                             ->arrayNode('roles')
                                 ->prototype('array')
                                     ->children()
-                                        ->scalarNode('name')->isRequired()->end()
+                                        ->scalarNode('name')->isRequired()
+                                        ->validate()
+                                            ->ifTrue(
+                                                function ($v) use ($availableRoleName) {
+                                                    return call_user_func_array(
+                                                        __CLASS__ . '::roleNameExists',
+                                                        array($v, $availableRoleName)
+                                                    );
+                                                }
+                                            )
+                                            ->thenInvalid("The role name w/e doesn't exists")
+                                        ->end()
                                     ->end()
                                 ->end()
                             ->end()
@@ -268,5 +287,10 @@ class UsersImporter extends Importer implements ConfigurationInterface
     private static function getData()
     {
         return self::$data;
+    }
+
+    public static function roleNameExists($v, $roles)
+    {
+        return !in_array($v, $roles);
     }
 }
