@@ -29,6 +29,7 @@
 'select all': 'Tout sélectionner'
 'unique connections': 'Nb Cnx. uniques'
 404: 'La page que vous cherchez n''existe pas.'
+Create a new resource: 'Créer une nouvelle ressource'
 Language: Langue
 None: Aucun
 Show: Afficher
@@ -209,7 +210,6 @@ exportable: Exportable
 external_pdo_database: Base de données externe (PDO)
 fast_answer: 'Réponse rapide'
 file: Fichier
-files: Fichiers
 file_form_file: Fichier
 file_form_license: License
 file_form_name: Nom
@@ -539,12 +539,12 @@ server: Serveur
 session: Session
 session_db_cannot_perform_operations: L'écriture et/ou la lecture d'enregistrements dans la table renseignée est impossible. Veuillez vérifier que l'utilisateur de la base de données dispose de droits suffisants et qu'aucune contrainte particulière n'a été affectée à cette table.
 session_db_id_col_must_be_pk: La colonne des identifiants (et uniquement cette colonne) doit être la clé primaire de la table.
-session_db_invalid_type_id_col: La colonne des identifiants doit être de type "string" (e.g. "VARCHAR").
 session_db_invalid_type_data_col: La colonne des données doit être de type "text" (e.g. "LONGTEXT").
+session_db_invalid_type_id_col: La colonne des identifiants doit être de type "string" (e.g. "VARCHAR").
 session_db_invalid_type_time_col: La colonne des durées doit être de type "integer" (e.g. "INT").
-session_db_no_table: La table renseignée n'existe pas.
 session_db_no_data_col: La colonne des données n'existe pas.
 session_db_no_id_col: La colonne des identifiants n'existe pas.
+session_db_no_table: La table renseignée n'existe pas.
 session_db_no_time_col: La colonne des durées n'existe pas.
 session_id: 'Identifiant de session'
 settings: Paramètres
@@ -554,6 +554,7 @@ show_as: 'Voir en tant que'
 show_as_admin: 'Voir comme admin'
 show_as_user: 'Voir comme utilisateur'
 show_profile: 'Voir le profile'
+simple: 'Simple'
 steal_session: 'Voler la session'
 storage_type: 'Type de stockage'
 subcategories: Sous-catégories

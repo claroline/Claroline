@@ -23,7 +23,7 @@ use Claroline\CoreBundle\Manager\MaskManager;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use Symfony\Bundle\TwigBundle\TwigEngine;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Security\Core\SecurityContext;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use JMS\DiExtraBundle\Annotation as DI;
@@ -42,8 +42,8 @@ class ResourceRightsController
     /**
      * @DI\InjectParams({
      *     "rightsManager" = @DI\Inject("claroline.manager.rights_manager"),
-     *     "maskManager" = @DI\Inject("claroline.manager.mask_manager"),
-     *     "request"       = @DI\Inject("request"),
+     *     "maskManager"   = @DI\Inject("claroline.manager.mask_manager"),
+     *     "requestStack"  = @DI\Inject("request_stack"),
      *     "sc"            = @DI\Inject("security.context"),
      *     "wsTagManager"  = @DI\Inject("claroline.manager.workspace_tag_manager"),
      *     "templating"    = @DI\Inject("templating"),
@@ -54,7 +54,7 @@ class ResourceRightsController
     public function __construct(
         RightsManager $rightsManager,
         MaskManager $maskManager,
-        Request $request,
+        RequestStack $requestStack,
         SecurityContext $sc,
         WorkspaceTagManager $wsTagManager,
         TwigEngine $templating,
@@ -63,7 +63,7 @@ class ResourceRightsController
     )
     {
         $this->rightsManager = $rightsManager;
-        $this->request = $request;
+        $this->request = $requestStack;
         $this->sc = $sc;
         $this->wsTagManager = $wsTagManager;
         $this->templating = $templating;
@@ -82,7 +82,7 @@ class ResourceRightsController
      *
      * Displays the resource rights form.
      *
-     * @param ResourceNode                      $node
+     * @param ResourceNode $node
      * @param \Claroline\CoreBundle\Entity\Role $role
      *
      * @return Response
@@ -141,7 +141,7 @@ class ResourceRightsController
         $collection = new ResourceCollection(array($node));
         $this->checkAccess('EDIT', $collection);
         $datas = $this->getPermissionsFromRequest($node->getResourceType());
-        $isRecursive = $this->request->request->get('isRecursive');
+        $isRecursive = $this->request->getCurrentRequest()->request->get('isRecursive');
 
         foreach ($datas as $data) {
             $this->rightsManager->editPerms($data['permissions'], $data['role'], $node, $isRecursive);
@@ -204,8 +204,8 @@ class ResourceRightsController
     {
         $collection = new ResourceCollection(array($node));
         $this->checkAccess('EDIT', $collection);
-        $isRecursive = $this->request->request->get('isRecursive');
-        $ids = $this->request->request->get('resourceTypes');
+        $isRecursive = $this->request->getCurrentRequest()->request->get('isRecursive');
+        $ids = $this->request->getCurrentRequest()->request->get('resourceTypes');
         $resourceTypes = $ids === null ?
             array() :
             $this->om->findByIds('ClarolineCoreBundle:Resource\ResourceType', array_keys($ids));
@@ -217,8 +217,8 @@ class ResourceRightsController
     public function getPermissionsFromRequest(ResourceType $type)
     {
         $permsMap = $this->maskManager->getPermissionMap($type);
-        $roles = $this->request->request->get('roles');
-        $rows = $this->request->request->get('role_row');
+        $roles = $this->request->getCurrentRequest()->request->get('roles');
+        $rows = $this->request->getCurrentRequest()->request->get('role_row');
         $data = array();
 
         foreach (array_keys($rows) as $roleId) {

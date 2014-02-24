@@ -691,6 +691,58 @@ div.pagination {
 /* MISC */
 /********/
 
+.margin {
+    &-none { margin: 0 0 0 0 }
+    &-md { margin: 15px 15px 15px 15px }
+    &-sm { margin: 10px 10px 10px 10px}
+    &-top {
+        &-none { margin-top: 0 }
+        &-md { margin-top: 15px }
+        &-sm { margin-top: 10px }
+    }
+    &-right {
+        &-none { margin-right: 0 }
+        &-md { margin-right: 15px }
+        &-sm { margin-right: 10px }
+    }
+    &-bottom {
+        &-none { margin-bottom: 0 }
+        &-md { margin-bottom: 15px }
+        &-sm { margin-bottom: 10px }
+    }
+    &-left {
+        &-none { margin-left: 0 }
+        &-md { margin-left: 15px }
+        &-sm { margin-left: 10px }
+    }
+}
+
+.padding {
+    &-none { padding: 0 0 0 0 }
+    &-md { padding: 15px 15px 15px 15px }
+    &-sm { padding: 10px 10px 10px 10px}
+    &-top {
+        &-none { padding-top: 0 }
+        &-md { padding-top: 15px }
+        &-sm { padding-top: 10px }
+    }
+    &-right {
+        &-none { padding-right: 0 }
+        &-md { padding-right: 15px }
+        &-sm { padding-right: 10px }
+    }
+    &-bottom {
+        &-none { padding-bottom: 0 }
+        &-md { padding-bottom: 15px }
+        &-sm { padding-bottom: 10px }
+    }
+    &-left {
+        &-none { padding-left: 0 }
+        &-md { padding-left: 15px }
+        &-sm { padding-left: 10px }
+    }
+}
+
 form.has-error .help-block {
     .alert;
     .alert-danger;
@@ -720,32 +772,6 @@ form.has-error .help-block {
 .table-responsive {
     overflow-y: hidden;
     overflow-x: auto;
-}
-
-.margin-top-sm {
-    margin-top: 10px;
-}
-
-.margin-bottom-sm {
-    margin-bottom: 10px;
-}
-
-.margin-top-md {
-    margin-top: 15px;
-}
-
-.margin-bottom-md {
-    margin-bottom: 15px;
-}
-
-.margin-sm {
-    .margin-top-sm;
-    .margin-bottom-sm;
-}
-
-.margin-md {
-    .margin-top-md;
-    .margin-bottom-md;
 }
 
 .please-wait {
@@ -1221,9 +1247,9 @@ form.has-error .help-block {
 }
 
 //for tiny-mce inside modals
-body.mce-fullscreen .modal#myModal {
+body.mce-fullscreen .modal {
     overflow: hidden;
-    .modal-dialog {
+    .modal-dialog.withTinyMCE {
         width: 100%;
         height: 100%;
     }

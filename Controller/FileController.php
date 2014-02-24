@@ -102,7 +102,7 @@ class FileController extends Controller
     }
 
     /**
-     * @EXT\Route("uploadmodal", name="claro_upload_modal")
+     * @EXT\Route("uploadmodal", name="claro_upload_modal", options = {"expose" = true})
      *
      * @EXT\Template("ClarolineCoreBundle:Resource:uploadModal.html.twig")
      *

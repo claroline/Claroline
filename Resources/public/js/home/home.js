@@ -12,6 +12,7 @@
 
     window.Claroline.Home = {};
     var home = window.Claroline.Home;
+    var modal = window.Claroline.Modal;
 
     home.path = $('#homePath').html(); //global
     home.locale = $('#homeLocale').html(); //global
@@ -30,43 +31,13 @@
         home.asset = './';
     }
 
-    home.modal = function (url, id, element)
-    {
-        $('.modal').modal('hide');
-
-        id = typeof(id) !== 'undefined' ? id : null;
-        element = typeof(element) !== 'undefined' ? element : null;
-
-        $.ajax(home.path + url)
-        .done(function (data) {
-            var modal = document.createElement('div');
-            modal.className = 'modal fade';
-
-            if (id) {
-                modal.setAttribute('id', id);
-            }
-
-            if (element) {
-                $(modal).data('element', element);
-            }
-
-            modal.innerHTML = data;
-
-            $(modal).appendTo('body');
-
-            $(modal).modal('show');
-
-            $(modal).on('hidden.bs.modal', function () {
-                $(this).remove();
-            });
-
-        })
-        .error(function () {
-            alert('An error occurred!\n\nPlease try again later or check your internet connection');
-        });
-
-    };
-
+    /**
+     * Find urls ina text
+     *
+     * @param text A string
+     *
+     * @return An array with urls
+     */
     home.findUrls = function (text)
     {
         var source = (text || '').toString();
@@ -125,7 +96,7 @@
     };
 
     /**
-     * Create and update an element by POST method with ajax.
+     * Create or update an element by POST method with ajax.
      *
      * @param [DOM obj] element The .creator element
      * @param [String] id The id of the content, this parameter is optional.
@@ -160,11 +131,44 @@
                 } else if (data === 'true') {
                     home.insertContent(creatorElement, id, type, father, update);
                 } else {
-                    home.modal('content/error');
+                    modal.error();
                 }
             })
             .error(function () {
-                home.modal('content/error');
+                modal.error();
+            });
+        }
+    };
+
+    /**
+     * Delete a content or a content type.
+     *
+     * @param element The HTML elementof a content.
+     * @param type, in order to delete a type, make this parameter true
+     */
+    home.deleteContent = function (element, type)
+    {
+        var path = typeof(type) === 'undefined' || type === false ? 'delete' : 'deletetype';
+        var id = element.data('id');
+
+        if (id) {
+            $.ajax(home.path + 'content/' + path + '/' + id)
+            .done(function (data) {
+                if (data === 'true') {
+                    if (type) {
+                        element = element.parent();
+                    }
+
+                    element.hide('slow', function () {
+                        $(this).remove();
+                        $('.contents').trigger('ContentModified');
+                    });
+                } else {
+                    modal.error();
+                }
+            })
+            .error(function () {
+                modal.error();
             });
         }
     };
@@ -188,6 +192,56 @@
     };
 
     /**
+     * Change the size of a home page content.
+     *
+     * @param size The new size of the content, example: content-12
+     * @param id The id of the content
+     * @param type The type of the content
+     * @param element The html elment to change after modify the content.
+     */
+    home.changeSize = function (size, id, type, element) {
+        if (id && type && element) {
+            $.post(home.path + 'content/update/' + id + '/' + size + '/' + type)
+            .done(function (data) {
+                if (data === 'true') {
+                    $(element).removeClass(function (index, css) {
+                        return (css.match(/\bcontent-\d+/g) || []).join(' ');
+                    });
+                    modal.hide();
+                    $(element).addClass(size);
+                    $(element).trigger('DOMSubtreeModified'); //height resize event
+                    $('#sizes').modal('hide');
+                    $('.contents').trigger('ContentModified');
+
+                } else {
+                    modal.error();
+                }
+            })
+            .error(function () {
+                modal.error();
+            });
+        }
+    };
+
+    /**
+     * Put a content in a region (top, left, right, content and footer)
+     *
+     * @param name The name of the region
+     * @param id The id of the content to put in a region
+     */
+    home.changeRegion = function (name, id) {
+        if (name && id) {
+            $.ajax(home.path + 'region/' + name + '/' + id)
+            .done(function () {
+                location.reload();
+            })
+            .error(function () {
+                modal.error();
+            });
+        }
+    };
+
+    /**
      * Get content from a external url and put it in a creator of contents.
      *
      * @param url The url of a webpage.
@@ -204,7 +258,7 @@
         })
         .error(function () {
             if (error) {
-                home.modal('content/error');
+                modal.error();
             }
         });
     };
