@@ -6,6 +6,7 @@ stof_doctrine_extensions:
             timestampable: true
             sluggable: true
             translatable: true
+            softdeleteable: true
 
     class:
         translatable: Claroline\CoreBundle\Listener\LocaleListener

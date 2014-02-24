@@ -24,11 +24,14 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Claroline\CoreBundle\Form\Badge\Constraints as BadgeAssert;
 use JMS\Serializer\Annotation\ExclusionPolicy;
 use JMS\Serializer\Annotation\Expose;
+use Gedmo\Mapping\Annotation as Gedmo;
+use Gedmo\SoftDeleteable\Traits\SoftDeleteableEntity;
 
 /**
  * @ORM\Table(name="claro_badge")
  * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\Badge\BadgeRepository")
  * @ORM\HasLifecycleCallbacks
+ * @Gedmo\SoftDeleteable(fieldName="deletedAt", timeAware=false)
  * @BadgeAssert\AutomaticWithRules
  * @BadgeAssert\HasImage
  * @BadgeAssert\AtLeastOneTranslation
@@ -36,6 +39,8 @@ use JMS\Serializer\Annotation\Expose;
  */
 class Badge extends Rulable
 {
+    use SoftDeleteableEntity;
+
     /**
      * @var integer
      *

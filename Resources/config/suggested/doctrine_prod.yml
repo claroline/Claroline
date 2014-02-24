@@ -12,3 +12,7 @@ doctrine:
         auto_mapping: true
         mappings:
             StofDoctrineExtensionsBundle: false
+        filters:
+            softdeleteable:
+                class: Gedmo\SoftDeleteable\Filter\SoftDeleteableFilter
+                enabled: true
