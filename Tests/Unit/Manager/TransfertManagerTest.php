@@ -43,6 +43,12 @@ class TransfertManagerTest extends MockeryTestCase
                 array($this->om)
             );
 
+        $this->rolesImporter = $this
+            ->mock(
+                'Claroline\CoreBundle\Library\Transfert\ConfigurationBuilders\RolesImporter',
+                array($this->om)
+            );
+
         $this->manager = new TransfertManager();
         $homeImporter = new HomeImporter();
         $textImporter = new TextImporter();
@@ -53,6 +59,7 @@ class TransfertManagerTest extends MockeryTestCase
         $this->manager->addImporter($resourceImporter);
         $this->manager->addImporter($this->workspacePropertiesImporter);
         $this->manager->addImporter($this->usersImporter);
+        $this->manager->addImporter($this->rolesImporter);
     }
 
     public function testValidateGoesWell()
@@ -75,9 +82,11 @@ class TransfertManagerTest extends MockeryTestCase
         $this->usersImporter->shouldReceive('setRootPath')->once()->with($path);
         $this->usersImporter->shouldReceive('setManifest')->once()->with($data);
 
-
-        //users
-
-        $this->manager->validate($path);
+        //roles
+        //@todo check what does the validate get
+        $this->rolesImporter->shouldReceive('validate')->andReturn(true);
+        $this->rolesImporter->shouldReceive('getName')->andReturn('roles_importer');
+        $this->rolesImporter->shouldReceive('setRootPath')->once()->with($path);
+        $this->rolesImporter->shouldReceive('setManifest')->once()->with($data);
     }
 } 

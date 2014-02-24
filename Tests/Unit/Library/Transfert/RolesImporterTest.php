@@ -53,4 +53,9 @@ class RolesImporterTest extends MockeryTestCase
             )
         );
     }
+
+    public function getName()
+    {
+        return 'role_importer';
+    }
 }

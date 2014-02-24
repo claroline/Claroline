@@ -41,8 +41,6 @@ class TransfertManager
         return $this->listImporters->add($importer);
     }
 
-    
-
     /**
      * Import a workspace
      *
@@ -59,7 +57,7 @@ class TransfertManager
         try {
             $usersImporter = $this->getImporterByName('user_importer');
             $groupsConfigurationBuilder = new GroupsConfigurationBuilder();
-            $rolesConfigurationBuilder  = new RolesConfigurationBuilder();
+            $rolesConfigurationBuilder  = $this->getImporterByName('roles_importer');
             $toolsConfigurationBuilder  = new ToolsConfigurationBuilder();
 
             //owner
