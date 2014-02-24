@@ -25,14 +25,14 @@ class GroupsImporterTest extends MockeryTestCase
         parent::setUp();
 
         $this->om = $this->mock('Claroline\CoreBundle\Persistence\ObjectManager');
-        $merger = $this->mock('Claroline\CoreBundle\Library\Transfert\Merger');
-        $this->importer = new GroupsImporter($this->om, $merger);
+        $this->merger = $this->mock('Claroline\CoreBundle\Library\Transfert\Merger');
+        $this->importer = new GroupsImporter($this->om, $this->merger);
     }
 
     /**
      *  @dataProvider validateProvider
      */
-    public function testValidate($path, $isExceptionExpected, $usernames, $names)
+    public function testValidate($path, $isExceptionExpected, $databaseUsernames, $names)
     {
         if ($isExceptionExpected) {
             $this->setExpectedException('Symfony\Component\Config\Definition\Exception\InvalidConfigurationException');
@@ -44,7 +44,9 @@ class GroupsImporterTest extends MockeryTestCase
 
         $userRepo = $this->mock('Claroline\CoreBundle\Repository\UserRepository');
         $this->om->shouldReceive('getRepository')->with('Claroline\CoreBundle\Entity\User')->andReturn($userRepo);
-        $userRepo->shouldReceive('findUsernames')->andReturn($usernames);
+        $userRepo->shouldReceive('findUsernames')->andReturn($databaseUsernames);
+        $this->merger->shouldReceive('mergeUserConfigurations')->andReturn($this->getMergedUsers());
+        $this->merger->shouldReceive('mergeRoleConfigurations')->andReturn($this->getMergedRoles());
 
         $data = Yaml::parse(file_get_contents($path));
         $roles['groups'] = $data['groups'];
@@ -57,21 +59,78 @@ class GroupsImporterTest extends MockeryTestCase
             array(
                 'path' => __DIR__.'/../../../Stub/transfert/valid/full/groups01.yml',
                 'isExceptionExpected' => false,
-                'usernames' => array(),
+                'databaseUsernames' => array(array('username' => 'user1'), array('username' => 'user2'), array('username' => 'user3')),
                 'names' => array()
             ),
             array(
                 'path' => __DIR__.'/../../../Stub/transfert/invalid/groups/existing_name.yml',
                 'isExceptionExpected' => true,
-                'usernames' => array(),
+                'databaseUsernames' => array(array('username' => 'user1'), array('username' => 'user2'), array('username' => 'user3')),
                 'names' => array()
             ),
             array(
                 'path' => __DIR__.'/../../../Stub/transfert/valid/full/groups01.yml',
                 'isExceptionExpected' => true,
-                'usernames' => array(),
+                'databaseUsernames' => array(array('username' => 'user1'), array('username' => 'user2'), array('username' => 'user3')),
                 'names' => array('name1')
-            )
+            ),
+            array(
+                'path' => __DIR__.'/../../../Stub/transfert/valid/full/groups01.yml',
+                'isExceptionExpected' => true,
+                'databaseUsernames' => array(array('username' => 'user2'), array('username' => 'user3')),
+                'names' => array()
+            ),
+            array(
+                'path' => __DIR__.'/../../../Stub/transfert/valid/full/groups01.yml',
+                'isExceptionExpected' => false,
+                'databaseUsernames' => array(array('username' => 'user1'), array('username' => 'user2'), array('username' => 'user3')),
+                'names' => array()
+            ),
+            array(
+                'path' => __DIR__.'/../../../Stub/transfert/invalid/groups/unknown_role.yml',
+                'isExceptionExpected' => true,
+                'databaseUsernames' => array(array('username' => 'user1'), array('username' => 'user2'), array('username' => 'user3')),
+                'names' => array()
+            ),
+        );
+    }
+
+    public function getMergedUsers()
+    {
+        return array(
+            'users' =>
+                array(
+                    0 =>
+                        array(
+                            'user' =>
+                                array(
+                                    'first_name' => 'import',
+                                    'last_name' => 'import',
+                                    'username' => 'import',
+                                    'password' => 'IMPRT',
+                                    'mail' => 'imported@gmail.com',
+                                    'code' => 'IMPORTED'
+                                ),
+                        ),
+                ),
+        );
+    }
+
+    public function getMergedRoles()
+    {
+        return array(
+            'roles' =>
+                array(
+                    0 =>
+                        array(
+                            'role' =>
+                                array(
+                                    'name' => 'mergedrole',
+                                    'translation' => 'totottoo',
+                                    'is_base_role' => true,
+                                ),
+                        )
+                )
         );
     }
 } 

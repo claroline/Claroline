@@ -197,6 +197,7 @@ class UsersImporter extends Importer implements ConfigurationInterface
         $users = self::getData();
 
         $found = false;
+
         foreach ($users as $el) {
             foreach ($el as $user) {
                 if ($user['user']['username'] === $v) {

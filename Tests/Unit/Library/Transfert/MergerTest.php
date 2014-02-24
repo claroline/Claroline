@@ -201,6 +201,13 @@ class MergerTest extends MockeryTestCase
                                                     'username' => 'user3',
                                                 ),
                                         ),
+                                    'roles' =>
+                                        array(
+                                            0 =>
+                                                array(
+                                                    'name' => 'mergedrole',
+                                                ),
+                                        ),
                                 ),
                         ),
                 ),

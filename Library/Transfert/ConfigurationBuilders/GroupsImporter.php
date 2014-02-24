@@ -54,14 +54,28 @@ class GroupsImporter extends Importer implements ConfigurationInterface
         $names = $this->om->getRepository('Claroline\CoreBundle\Entity\Group')->findNames();
         $availableUsernames = array();
 
-        $databaseUsernames = $this->om->getRepository('Claroline\CoreBundle\Entity\User')->findUsernames();
-
         foreach ($this->om->getRepository('Claroline\CoreBundle\Entity\User')->findUsernames() as $username)
         {
             $availableUsernames[] = $username['username'];
         }
 
-        //add the usernames from the files
+        $mergedUsers = $this->merger->mergeUserConfigurations($this->getRootPath());
+
+        foreach ($mergedUsers as $el) {
+            foreach ($el as $user) {
+                $availableUsernames[] = $user['user']['username'];
+            }
+        }
+
+        $mergedRoles = $this->merger->mergeRoleConfigurations($this->getRootPath());
+
+        $availableRoleName = array();
+
+        foreach ($mergedRoles as $el) {
+            foreach ($el as $role) {
+                $availableRoleName[] = $role['role']['name'];
+            }
+        }
 
         $rootNode
             ->prototype('array')
@@ -70,42 +84,64 @@ class GroupsImporter extends Importer implements ConfigurationInterface
                         ->children()
                            ->scalarNode('name')->isRequired()
                                 ->validate()
-                                ->ifTrue(
-                                    function ($v) use ($names) {
-                                        return call_user_func_array(
-                                            __CLASS__ . '::nameAlreadyExistsInDatabase',
-                                            array($v, $names)
-                                        );
-                                    }
-                                )
-                                ->thenInvalid("The name w/e already exists in the database")
+                                    ->ifTrue(
+                                        function ($v) use ($names) {
+                                            return call_user_func_array(
+                                                __CLASS__ . '::nameAlreadyExistsInDatabase',
+                                                array($v, $names)
+                                            );
+                                        }
+                                    )
+                                    ->thenInvalid("The name w/e already exists in the database")
                                 ->end()
-                                ->validate()
-                                ->ifTrue(
-                                    function ($v) use ($names) {
-                                        return call_user_func_array(
-                                            __CLASS__ . '::nameAlreadyExistsInConfig',
-                                            array($v, $names)
-                                        );
-                                    }
-                                )
-                                ->thenInvalid("The name w/e already exists in the configuration")
+                                    ->validate()
+                                    ->ifTrue(
+                                        function ($v) use ($names) {
+                                            return call_user_func_array(
+                                                __CLASS__ . '::nameAlreadyExistsInConfig',
+                                                array($v, $names)
+                                            );
+                                        }
+                                    )
+                                    ->thenInvalid("The name w/e already exists in the configuration")
                                 ->end()
                            ->end()
                            ->arrayNode('users')
                                 ->prototype('array')
                                     ->children()
-                                        ->scalarNode('username')->end()
+                                        ->scalarNode('username')
+                                            ->validate()
+                                                ->ifTrue(
+                                                    function ($v) use ($availableUsernames) {
+                                                        return call_user_func_array(
+                                                            __CLASS__ . '::usernameExists',
+                                                            array($v, $availableUsernames)
+                                                        );
+                                                    }
+                                                )
+                                                ->thenInvalid("The username w/e doesn't exists")
+                                            ->end()
+                                        ->end()
                                     ->end()
                                 ->end()
                             ->end()
                         ->arrayNode('roles')
                             ->prototype('array')
                                 ->children()
-                                    ->scalarNode('name')->isRequired()->end()
+                                    ->scalarNode('name')->isRequired()
+                                        ->validate()
+                                        ->ifTrue(
+                                            function ($v) use ($availableRoleName) {
+                                                return call_user_func_array(
+                                                    __CLASS__ . '::roleNameExists',
+                                                    array($v, $availableRoleName)
+                                                );
+                                            }
+                                        )
+                                        ->thenInvalid("The role name w/e doesn't exists")
+                                    ->end()
                                 ->end()
                             ->end()
-                        ->end()
                         ->end()
                     ->end()
                 ->end()
@@ -162,5 +198,15 @@ class GroupsImporter extends Importer implements ConfigurationInterface
     public static function nameAlreadyExistsInDatabase($v, $groups)
     {
         return in_array($v, $groups);
+    }
+
+    public static function usernameExists($v, $usernames)
+    {
+        return !in_array($v, $usernames);
+    }
+
+    public static function roleNameExists($v, $roles)
+    {
+        return !in_array($v, $roles);
     }
 }
