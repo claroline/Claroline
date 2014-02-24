@@ -32,7 +32,7 @@ class WorkspacePropertiesImporterTest extends MockeryTestCase
     /**
      * @dataProvider validateProvider
      */
-    public function testValidate($path, $isExceptionExpected, $isUserInDatabase, $isFull)
+    public function testValidate($path, $isExceptionExpected, $isUserInDatabase, $isFull, $codeExists)
     {
         $ds = DIRECTORY_SEPARATOR;
         $data = Yaml::parse(file_get_contents($path . $ds . 'manifest.yml'));
@@ -52,7 +52,16 @@ class WorkspacePropertiesImporterTest extends MockeryTestCase
         $this->om->shouldReceive('getRepository')
             ->with('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace')
             ->andReturn($wsRepo);
-        $wsRepo->shouldReceive('findOneByCode')->once()->with($properties['properties']['code']);
+
+        if ($codeExists) {
+            $wsRepo->shouldReceive('findOneByCode')->once()
+                ->with($properties['properties']['code'])
+                ->andThrow('Exception');
+        } else {
+            $wsRepo->shouldReceive('findOneByCode')->once()
+                ->with($properties['properties']['code'])
+                ->andReturn('ws');
+        }
 
         $userRepo = $this->mock('Claroline\CoreBundle\Repository\UserRepository');
 
@@ -71,36 +80,50 @@ class WorkspacePropertiesImporterTest extends MockeryTestCase
 
     public function validateProvider()
     {
+        //isFull = with owner section
+
         return array(
             array(
                 'path' => __DIR__.'/../../../Stub/transfert/valid/full',
                 'isExceptionExpected' => false,
                 'isUserInDatabase' => false,
-                'isFull' => true
+                'isFull' => true,
+                'codeExists' => false
             ),
             array(
                 'path' => __DIR__.'/../../../Stub/transfert/valid/full',
                 'isExceptionExpected' => false,
                 'isUserInDatabase' => true,
-                'isFull' => true
+                'isFull' => true,
+                'codeExists' => false
             ),
             array(
                 'path' => __DIR__.'/../../../Stub/transfert/valid/minimal',
                 'isExceptionExpected' => false,
                 'isUserInDatabase' => true,
-                'isFull' => false
+                'isFull' => false,
+                'codeExists' => false
             ),
             array(
                 'path' => __DIR__.'/../../../Stub/transfert/valid/minimal',
                 'isExceptionExpected' => true,
                 'isUserInDatabase' => false,
-                'isFull' => false
+                'isFull' => false,
+                'codeExists' => false
             ),
             array(
                 'path' => __DIR__.'/../../../Stub/transfert/invalid/wrong_owner',
                 'isExceptionExpected' => true,
                 'isUserInDatabase' => true,
-                'isFull' => true
+                'isFull' => true,
+                'codeExists' => false
+            ),
+            array(
+                'path' => __DIR__.'/../../../Stub/transfert/valid/minimal',
+                'isExceptionExpected' => true,
+                'isUserInDatabase' => true,
+                'isFull' => false,
+                'codeExists' => true
             )
         );
     }

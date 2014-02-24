@@ -23,9 +23,9 @@ members:
         - user:
             first_name: ffdgdf
             last_name: sdfsd
-            username: moi
+            username: user1
             password: enclair
-            mail: moi@moi.com
+            mail: mail1@gmail.com
             code: USER01
             roles:
               - name: 'ROLE_1'
@@ -34,9 +34,9 @@ members:
         - user:
             first_name: d
             last_name: ddsd
-            username: moi
+            username: user1
             password: enclair
-            mail: moi@moi.com
+            mail: mail2@gmail.com
             code: USER02
 
     groups:

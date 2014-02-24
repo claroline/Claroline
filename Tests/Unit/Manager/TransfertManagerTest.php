@@ -36,14 +36,23 @@ class TransfertManagerTest extends MockeryTestCase
                 array($this->om)
             );
 
+        //users importer
+        $this->usersImporter = $this
+            ->mock(
+                'Claroline\CoreBundle\Library\Transfert\ConfigurationBuilders\UsersImporter',
+                array($this->om)
+            );
+
         $this->manager = new TransfertManager();
         $homeImporter = new HomeImporter();
         $textImporter = new TextImporter();
         $resourceImporter = new ResourceManagerImporter();
+
         $this->manager->addImporter($homeImporter);
         $this->manager->addImporter($textImporter);
         $this->manager->addImporter($resourceImporter);
         $this->manager->addImporter($this->workspacePropertiesImporter);
+        $this->manager->addImporter($this->usersImporter);
     }
 
     public function testValidateGoesWell()
@@ -57,6 +66,17 @@ class TransfertManagerTest extends MockeryTestCase
         $this->workspacePropertiesImporter->shouldReceive('validate')->with($properties)->andReturn(true);
         $this->workspacePropertiesImporter->shouldReceive('getName')->andReturn('workspace_properties');
         $this->workspacePropertiesImporter->shouldReceive('setRootPath')->once()->with($path);
+        $this->workspacePropertiesImporter->shouldReceive('setManifest')->once()->with($data);
+
+        //users
+        //@todo check what does the validate get
+        $this->usersImporter->shouldReceive('validate')->andReturn(true);
+        $this->usersImporter->shouldReceive('getName')->andReturn('user_importer');
+        $this->usersImporter->shouldReceive('setRootPath')->once()->with($path);
+        $this->usersImporter->shouldReceive('setManifest')->once()->with($data);
+
+
+        //users
 
         $this->manager->validate($path);
     }

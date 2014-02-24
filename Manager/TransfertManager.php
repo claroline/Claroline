@@ -14,7 +14,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Config\Definition\Processor;
 use Symfony\Component\Yaml\Yaml;
 use Claroline\CoreBundle\Library\Transfert\ConfigurationBuilders\OwnerConfigurationBuilder;
-use Claroline\CoreBundle\Library\Transfert\ConfigurationBuilders\UsersConfigurationBuilder;
+use Claroline\CoreBundle\Library\Transfert\ConfigurationBuilders\UsersImporter;
 use Claroline\CoreBundle\Library\Transfert\ConfigurationBuilders\GroupsConfigurationBuilder;
 use Claroline\CoreBundle\Library\Transfert\ConfigurationBuilders\RolesConfigurationBuilder;
 use Claroline\CoreBundle\Library\Transfert\ConfigurationBuilders\ToolsConfigurationBuilder;
@@ -41,6 +41,8 @@ class TransfertManager
         return $this->listImporters->add($importer);
     }
 
+    
+
     /**
      * Import a workspace
      *
@@ -51,11 +53,11 @@ class TransfertManager
         $ds = DIRECTORY_SEPARATOR;
         $processor = new Processor();
         $data = Yaml::parse(file_get_contents($path . $ds . 'manifest.yml'));
-        $this->setRootPath($path, $data);
-        $this->setImporters($path);
+        $this->setRootPath($path);
+        $this->setImporters($path, $data);
 
         try {
-            $usersConfigurationBuilder  = new UsersConfigurationBuilder();
+            $usersImporter = $this->getImporterByName('user_importer');
             $groupsConfigurationBuilder = new GroupsConfigurationBuilder();
             $rolesConfigurationBuilder  = new RolesConfigurationBuilder();
             $toolsConfigurationBuilder  = new ToolsConfigurationBuilder();
@@ -86,17 +88,25 @@ class TransfertManager
             }
 
             //users
+            $users['users'] = array();
+
             if (isset($data['members']['users'])) {
                 $users['users'] = $data['members']['users'];
-                $users = $processor->processConfiguration($usersConfigurationBuilder, $users);
             }
+
             if (isset($data['userfiles'])) {
                 foreach ($data['userfiles'] as $userpath) {
-                    $filepath = $path . $ds . $userpath['path'];;
+                    $filepath = $path . $ds . $userpath['path'];
                     $userdata = Yaml::parse(file_get_contents($filepath));
-                    $processedConfiguration = $processor->processConfiguration($usersConfigurationBuilder, $userdata);
+                    foreach ($userdata as $udata) {
+                        foreach ($udata as $user) {
+                            $users['users'][] = array('user' => $user['user']);
+                        }
+                    }
                 }
             }
+
+            $usersImporter->validate($users);
 
             //groups
             if (isset($data['members']['groups'])) {
@@ -127,6 +137,7 @@ class TransfertManager
                 }
             }
         } catch (\Exception $e) {
+            var_dump(get_class($e));
             var_dump(array($e->getMessage())) ;
         }
     }

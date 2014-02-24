@@ -13,3 +13,10 @@ users:
         password: bbbb
         mail: mail2@gmail.com
         code: USER02
+    - user:
+        first_name: aaaa
+        last_name: aaaa
+        username: user3
+        password: aaaa
+        mail: mail1@gmail.com
+        code: USER03

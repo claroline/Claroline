@@ -81,6 +81,8 @@ class WorkspacePropertiesImporter extends Importer implements ConfigurationInter
             ->findOneByCode($configuration['code']);
         //@todo exception handling
         $this->validateOwner($configuration['owner']);
+
+
     }
 
     function validateOwner($owner)
@@ -97,6 +99,7 @@ class WorkspacePropertiesImporter extends Importer implements ConfigurationInter
             }
         }
 
+        //throws no result exception
         $this->om->getRepository('Claroline\CoreBundle\Entity\User')->findOneByUsername($owner);
 
         return true;
