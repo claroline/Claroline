@@ -99,3 +99,6 @@ log_resource-icap_dropzone-correction_validation_change_shortname: 'Modification
 log_resource-icap_dropzone-correction_validation_change_sentence: 'a modifié la validité d''une correction dans  %resource%'
 log_resource-icap_dropzone-correction_validation_change_title: 'Modification de la validité d''une correction dans une évaluation'
 log_resource-icap_dropzone-correction_validation_change_filter: 'Modification de la validité d''une correction dans une évaluation'
+
+log_resource-icap_dropzone-drop_report_shortname: 'Copie signalée'
+log_resource-icap_dropzone-drop_report_sentence: 'a signalé une copie dans %resource%'

@@ -99,3 +99,6 @@ log_resource-icap_dropzone-correction_validation_change_shortname: 'Correction v
 log_resource-icap_dropzone-correction_validation_change_sentence: 'change validation for a correction in %resource%'
 log_resource-icap_dropzone-correction_validation_change_title: 'Evaluation correction validation change'
 log_resource-icap_dropzone-correction_validation_change_filter: 'Evaluation correction validation change'
+
+log_resource-icap_dropzone-drop_report_shortname: 'Copy reported '
+log_resource-icap_dropzone-drop_report_sentence: 'reported a copy in %resource%'
