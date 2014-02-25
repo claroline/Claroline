@@ -170,7 +170,7 @@ class Manager
         }
 
         $includeUserIds = $notifiable->getIncludeUserIds();
-        if (!empty($userIds)) {
+        if (!empty($includeUserIds)) {
             $userIds = array_merge($userIds, $includeUserIds);
         }
 
