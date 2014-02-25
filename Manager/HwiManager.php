@@ -54,12 +54,11 @@ class HwiManager
 
     public function validateFacebook($appId, $secret)
     {
-        if( !function_exists("curl_init") && !function_exists("curl_setopt") && !function_exists("curl_exec") &&
-          !function_exists("curl_close") ) {
+        if (!function_exists('curl_version')) {
             return array('error' => 'curl_facebook_application_validation_error');
         }
 
-        if (null === $appId || null === $secret) {
+        if (!$appId || !$secret) {
             return array('error' => 'facebook_application_validation_error');
         }
 
@@ -73,12 +72,10 @@ class HwiManager
         curl_close($curl_handle);
         $data = json_decode($json);
 
-        if (array_key_exists('error', $data)) {
+        if (!is_array($data) || array_key_exists('error', $data)) {
             return array('error' => 'facebook_application_validation_error');
         }
 
         return array();
     }
-
-
 }
