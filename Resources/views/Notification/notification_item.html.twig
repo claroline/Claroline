@@ -9,5 +9,7 @@
     {% endif %}
     {% if constant('Icap\\DropzoneBundle\\Event\\Log\\LogDropReportEvent::ACTION') == notification.actionKey %}
         {% include 'IcapDropzoneBundle:Notification:notification_drop_report.html.twig' %}
+    {% elseif constant('Icap\\DropzoneBundle\\Event\\Log\\LogCorrectionReportEvent::ACTION') == notification.actionKey %}
+        {% include 'IcapDropzoneBundle:Notification:notification_correction_report.html.twig' %}
     {% endif %}
 {% endblock %}

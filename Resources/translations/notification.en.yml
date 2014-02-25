@@ -1,1 +1,2 @@
 resource-icap_dropzone-drop_report: "a copy was reported  in  %dropzone%"
+resource-icap_dropzone-correction_report: "a correction was reported in %dropzone% "
