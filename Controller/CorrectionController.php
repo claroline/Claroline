@@ -18,6 +18,7 @@ use Icap\DropzoneBundle\Event\Log\LogCorrectionEndEvent;
 use Icap\DropzoneBundle\Event\Log\LogCorrectionStartEvent;
 use Icap\DropzoneBundle\Event\Log\LogCorrectionUpdateEvent;
 use Icap\DropzoneBundle\Event\Log\LogCorrectionValidationChangeEvent;
+use Icap\DropzoneBundle\Event\Log\LogCorrectionReportEvent;
 use Icap\DropzoneBundle\Form\CorrectionCommentType;
 use Icap\DropzoneBundle\Form\CorrectionCriteriaPageType;
 use Icap\DropzoneBundle\Form\CorrectionStandardType;
@@ -1064,6 +1065,7 @@ class CorrectionController extends DropzoneBaseController
         $form = $this->createForm(new CorrectionDenyType(), $correction);
         
         $dropUser = $correction->getDrop()->getUser();
+        $drop = $correction->getDrop();
         $dropId = $correction->getDrop()->getId();
         $dropzoneId = $dropzone->getId();
         // dropZone not in peerReview or corrections are not displayed to users or correction deny is not allowed 
@@ -1084,7 +1086,8 @@ class CorrectionController extends DropzoneBaseController
                 $em->persist($correction);
                 $em->flush();
 
-
+                //$drop = $correction->getDrop();
+                $this->dispatchCorrectionReportEvent($dropzone,$correction);
                 $this
                     ->getRequest()
                     ->getSession()
@@ -1118,6 +1121,14 @@ class CorrectionController extends DropzoneBaseController
             'form' => $form->createView(),
         ));
 
+    }
+
+    protected function dispatchCorrectionReportEvent(Dropzone $dropzone,Correction $correction)
+    {
+        $drop = $correction->getDrop();
+        $rm = $this->get('claroline.manager.role_manager');
+        $event = new LogCorrectionReportEvent($dropzone,$drop,$correction,$rm);
+        $this->get('event_dispatcher')->dispatch('log', $event);
     }
 
     /**
