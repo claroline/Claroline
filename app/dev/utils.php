@@ -28,7 +28,7 @@ function emptyDir($directory)
     $iterator = new DirectoryIterator($directory);
 
     foreach ($iterator as $item) {
-        if ($item->isFile() && $item->getFileName() !== 'placeholder' && $item->getFileName() !== '.gitempty') {
+        if ($item->isFile() && $item->getFileName() !== 'placeholder' && $item->getFileName() !== '.gitempty' && $item->getFileName() !== '.gitkeep') {
             unlink($item->getPathname());
         }
         if ($item->isDir() && !$item->isDot() && $item->getFilename() !== "tmp" && $item->getFilename() !== "thumbs") {
