@@ -72,10 +72,11 @@ class HwiManager
         curl_close($curl_handle);
         $data = json_decode($json);
 
-        if (!is_array($data) || array_key_exists('error', $data)) {
+        if (!$json || array_key_exists('error', $data)) {
             return array('error' => 'facebook_application_validation_error');
         }
 
         return array();
+
     }
 }
