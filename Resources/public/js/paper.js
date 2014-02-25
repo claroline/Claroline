@@ -1,12 +1,19 @@
-function show_hint(idHint, path_hint_show, confirm_hint, nbr_hint, paper) {
+function show_hint(idHint, path_hint_show, confirm_hint, nbr_hint, penalty, paper) {
     //"use strict";
 
-    if (confirm(confirm_hint)) {
-        show_hint2(idHint, path_hint_show, nbr_hint, paper);
+    if (penalty > 0) {
+
+        confirm_hint = confirm_hint.replace('X', String(penalty));
+
+        if (confirm(confirm_hint)) {
+            show_hint2(idHint, path_hint_show, nbr_hint, penalty, paper);
+        }
+    } else {
+        show_hint2(idHint, path_hint_show, nbr_hint, penalty, paper);
     }
 }
 
-function show_hint2(idHint, path_hint_show, nbr_hint, paper) {
+function show_hint2(idHint, path_hint_show, nbr_hint, penalty, paper) {
     $.ajax({
         type: "POST",
         url: path_hint_show,

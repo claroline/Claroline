@@ -138,27 +138,8 @@
                 </div>
 
                 {% if interactionQCM.interaction.hints is not empty %}
-                    <div class="panel panel-default">
-                        <div class="panel-heading"><h3 class="panel-title">{{ 'hints' | trans }}</h3></div>
-                        <div class="panel-body">
-                            <table>
-                                {% set nbr_hint = 1 %}
-                                {% for hint in interactionQCM.interaction.hints %}
-                                    <tr>
-                                        <td class="classic">
-                                            <a href="#"  id="indice_popup" onclick="show_hint('{{hint.id}}',
-                                                '{{path('ujm_hint_show')}}', '{{ 'consult_hint' | trans }} ?',
-                                                '{{nbr_hint}}');event.preventDefault();">
-                                                    {{ 'hint' | trans }} {{nbr_hint}}
-                                            </a>
-                                        </td>
-                                        <td id="div_hint{{nbr_hint}}" class="classic"></td>
-                                    </tr>
-                                    {% set nbr_hint = nbr_hint + 1 %}
-                                {% endfor %}
-                            </table>
-                        </div>
-                    </div>
+                    {% set tryInteraction = interactionQCM %}
+                    {% include "UJMExoBundle:Partial:hintTryInteraction.html.twig" %}
                 {% endif %}
 
                 <div class="panel-footer">

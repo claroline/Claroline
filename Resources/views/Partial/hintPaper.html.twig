@@ -19,7 +19,7 @@
 
                         <td class="classic"><a href="#"  id="indice_popup" onclick="show_hint('{{hint.id}}',
                                 '{{path('ujm_hint_show')}}', '{{ "consult_hint" | trans }} ?', '{{nbr_hint}}',
-                                '{{paper}}');event.preventDefault();">{{ "hint" | trans }} {{nbr_hint}}</a>
+                                '{{paper}}', {{hint.penalty}});event.preventDefault();">{{ "hint" | trans }} {{nbr_hint}}</a>
                         </td>
 
                     {% endif %}

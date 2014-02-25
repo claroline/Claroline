@@ -79,7 +79,7 @@ close: Fermer
 color: Couleur
 comment: Commentaire
 compose: Répondre
-consult_hint: Consulter l\'indice entraîne une pénalité, voulez vous continuer
+consult_hint: Consulter l\'indice entraîne une pénalité de X points, voulez vous continuer
 containSearch: Dont la question contient
 correct: Correcte
 correction: Correction

@@ -79,7 +79,7 @@ close: Close
 color: Color
 comment: Comment
 compose: Answer
-consult_hint: Consult the hint, results in a penalty, do you want to continue
+consult_hint: Consult the hint results in a penalty of X points, do you want to continue
 containSearch: Whose question contains
 correct: Correct
 correction: Correction
