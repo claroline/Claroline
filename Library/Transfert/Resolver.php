@@ -18,7 +18,7 @@ use Symfony\Component\Yaml\Yaml;
  * @DI\Service("claroline.importer.merger")
  * @todo: testme
  */
-class Merger
+class Resolver
 {
     public function mergeUserConfigurations($path)
     {
