@@ -164,16 +164,12 @@ class UserManager
         $ws->setCode($ws->getCode() . '#deleted_user#' . $user->getId());
         $ws->setPublic(false);
         $ws->setDisplayable(false);
+
         $this->om->persist($ws);
-        $this->om->flush();
-
-        $this->ed->dispatch(
-            'delete_user', 'DeleteUser',
-            array($user)
-        );
-
         $this->om->persist($user);
         $this->om->flush();
+
+        $this->ed->dispatch('log', 'Log\LogUserDelete', array($user));
     }
 
     /**
