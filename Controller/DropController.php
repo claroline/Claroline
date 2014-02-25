@@ -15,6 +15,7 @@ use Icap\DropzoneBundle\Entity\Dropzone;
 use Icap\DropzoneBundle\Event\Log\LogCorrectionUpdateEvent;
 use Icap\DropzoneBundle\Event\Log\LogDropEndEvent;
 use Icap\DropzoneBundle\Event\Log\LogDropStartEvent;
+use Icap\DropzoneBundle\Event\Log\LogDropReportEvent;
 use Icap\DropzoneBundle\Form\CorrectionReportType;
 use Icap\DropzoneBundle\Form\DropType;
 use Pagerfanta\Adapter\DoctrineORMAdapter;
@@ -469,6 +470,7 @@ class DropController extends DropzoneBaseController
         if ($this->getRequest()->isMethod('POST')) {
             $form->handleRequest($this->getRequest());
             if ($form->isValid()) {
+
                 $drop->setReported(true);
                 $correction->setReporter(true);
                 $correction->setEndDate(new \DateTime());
@@ -480,11 +482,13 @@ class DropController extends DropzoneBaseController
                 $em->persist($correction);
                 $em->flush();
 
+                $this->dispatchDropReportEvent($dropzone,$drop,$correction);
                 $this
                     ->getRequest()
                     ->getSession()
                     ->getFlashBag()
                     ->add('success', $this->get('translator')->trans('Your report has been saved', array(), 'icap_dropzone'));
+
 
                 return $this->redirect(
                     $this->generateUrl(
@@ -512,6 +516,13 @@ class DropController extends DropzoneBaseController
         ));
     }
 
+    protected function dispatchDropReportEvent(Dropzone $dropzone, Drop $drop,Correction $correction)
+    {
+        $rm = $this->get('claroline.manager.role_manager');
+        $event = new LogDropReportEvent($dropzone,$drop,$correction,$rm);
+        $this->get('event_dispatcher')->dispatch('log', $event);
+    }
+
     /**
      * @Route(
      *      "/{resourceId}/remove/report/{dropId}/{correctionId}/{invalidate}",
@@ -525,6 +536,7 @@ class DropController extends DropzoneBaseController
      */
     public function removeReportAction(Dropzone $dropzone, Drop $drop, Correction $correction, $invalidate)
     {
+
         $this->isAllowToOpen($dropzone);
         $this->isAllowToEdit($dropzone);
 

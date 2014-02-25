@@ -7,7 +7,12 @@
     <div class="container container-dropzone">
         <h2>
             {{ 'Edit evaluation'|trans({}, 'icap_dropzone') }}
-            <a class="btn btn-default pull-right" href="{{ path('icap_dropzone_drops', {'resourceId': dropzone.id}) }}"><span class="glyphicon icon-list"></span> {{ 'See copies'|trans({}, 'icap_dropzone') }}</a>
+            <div class="btn-group pull-right">
+          
+        
+            {% render controller('IcapNotificationBundle:FollowerResource:renderForm', {'resourceId': dropzone.resourceNode.id, 'resourceClass': dropzone.resourceNode.class}) %}
+            <a class="btn btn-default " href="{{ path('icap_dropzone_drops', {'resourceId': dropzone.id}) }}"><span class="glyphicon icon-list"></span> {{ 'See copies'|trans({}, 'icap_dropzone') }}</a>
+            </div>
         </h2>
         {{ macros.flashBox() }}
         {% block drop_zone_content_edit %}

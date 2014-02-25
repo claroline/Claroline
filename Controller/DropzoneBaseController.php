@@ -80,8 +80,10 @@ class DropzoneBaseController extends Controller
                 $event instanceof LogCorrectionUpdateEvent or
                 $event instanceof LogCorrectionDeleteEvent or
                 $event instanceof LogCorrectionValidationChangeEvent or
-                $event instanceof LogDropEvaluateEvent
+                $event instanceof LogDropEvaluateEvent or 
+                $event instanceof LogDropReportEvent
         ) {
+
             // Other logs are WIP.
             $this->get('event_dispatcher')->dispatch('log', $event);
         }
