@@ -84,7 +84,22 @@
             {% endif %}
             <div class="tab-pane active" id="simple">
                 <div class="{{ mode }}-body padding-top-none">
-                    toto
+                    <table class="table table-striped table-bordered table-condensed">
+                        <tr>
+                           <th colspan="2">{{ 'Grant the right to' | trans({}, 'platform')}}</th>
+                        </tr>
+                        <tr>
+                            <td>{{ 'Everyone' | trans({}, 'platform')}}</td>
+                            <td><input type="checkbox"></td>
+                        </tr>
+                        <tr>
+                            <td>{{ 'Members of work space' | trans({}, 'platform')}}</td>
+                            <td><input type="checkbox"></td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">{{ 'Some users' | trans({}, 'platform')}}</td>
+                        </tr>
+                    </table>
                 </div>
                 {% block formfooter %}
                    <div class="text-right {{ mode }}-footer margin-top-none">
