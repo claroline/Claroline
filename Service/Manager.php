@@ -200,12 +200,14 @@ class Manager
 
         if (count($userIds)>0) {
             foreach ($userIds as $userId) {
-                $notificationViewer = new NotificationViewer();
-                $notificationViewer->setNotification($notification);
-                $notificationViewer->setViewerId($userId);
-                $notificationViewer->setStatus(false);
-
-                $this->getEntityManager()->persist($notificationViewer);
+                if ($userId !== null) {
+                    $notificationViewer = new NotificationViewer();
+                    $notificationViewer->setNotification($notification);
+                    $notificationViewer->setViewerId($userId);
+                    $notificationViewer->setStatus(false);
+    
+                    $this->getEntityManager()->persist($notificationViewer);
+                }
             }
         } else {
             $this->getEntityManager()->remove($notification);
