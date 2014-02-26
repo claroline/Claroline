@@ -1,2 +1,4 @@
-path: files/toto.pdf
-mime_type: application/pdf
+files:
+  file:
+      - path: files/toto.pdf
+        mime_type: application/pdf

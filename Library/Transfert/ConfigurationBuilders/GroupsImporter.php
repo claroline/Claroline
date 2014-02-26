@@ -17,7 +17,6 @@ use Claroline\CoreBundle\Library\Transfert\Importer;
 use Symfony\Component\Config\Definition\Processor;
 use JMS\DiExtraBundle\Annotation as DI;
 use Claroline\CoreBundle\Persistence\ObjectManager;
-use Claroline\CoreBundle\Library\Transfert\Merger;
 
 //@todo check owner
 
@@ -33,14 +32,12 @@ class GroupsImporter extends Importer implements ConfigurationInterface
 
     /**
      * @DI\InjectParams({
-     *     "om"      = @DI\Inject("claroline.persistence.object_manager"),
-     *     "merger"  = @DI\Inject("claroline.importer.merger")
+     *     "om"      = @DI\Inject("claroline.persistence.object_manager")
      * })
      */
-    public function __construct(ObjectManager $om, Merger $merger)
+    public function __construct(ObjectManager $om)
     {
         $this->om = $om;
-        $this->merger = $merger;
     }
 
     public function  getConfigTreeBuilder()
@@ -62,22 +59,18 @@ class GroupsImporter extends Importer implements ConfigurationInterface
             $availableUsernames[] = $username['username'];
         }
 
-        $mergedUsers = $this->merger->mergeUserConfigurations($this->getRootPath());
+        $mergedUsers = $this->getConfiguration()['members']['users'];
 
         foreach ($mergedUsers as $el) {
-            foreach ($el as $user) {
-                $availableUsernames[] = $user['user']['username'];
-            }
+            $availableUsernames[] = $el['user']['username'];
         }
 
-        $mergedRoles = $this->merger->mergeRoleConfigurations($this->getRootPath());
+        $mergedRoles = $this->getConfiguration()['roles'];
 
         $availableRoleName = array();
 
         foreach ($mergedRoles as $el) {
-            foreach ($el as $role) {
-                $availableRoleName[] = $role['role']['name'];
-            }
+            $availableRoleName[] = $el['role']['name'];
         }
 
         $rootNode
@@ -95,7 +88,7 @@ class GroupsImporter extends Importer implements ConfigurationInterface
                                             );
                                         }
                                     )
-                                    ->thenInvalid("The name w/e already exists in the database")
+                                    ->thenInvalid("The name %s already exists in the database")
                                 ->end()
                                     ->validate()
                                     ->ifTrue(
@@ -106,7 +99,7 @@ class GroupsImporter extends Importer implements ConfigurationInterface
                                             );
                                         }
                                     )
-                                    ->thenInvalid("The name w/e already exists in the configuration")
+                                    ->thenInvalid("The name %s already exists in the configuration")
                                 ->end()
                            ->end()
                            ->arrayNode('users')
@@ -122,7 +115,7 @@ class GroupsImporter extends Importer implements ConfigurationInterface
                                                         );
                                                     }
                                                 )
-                                                ->thenInvalid("The username w/e doesn't exists")
+                                                ->thenInvalid("The username %s doesn't exists")
                                             ->end()
                                         ->end()
                                     ->end()
@@ -141,7 +134,7 @@ class GroupsImporter extends Importer implements ConfigurationInterface
                                                 );
                                             }
                                         )
-                                        ->thenInvalid("The role name w/e doesn't exists")
+                                        ->thenInvalid("The role name %s doesn't exists")
                                     ->end()
                                 ->end()
                             ->end()

@@ -13,4 +13,4 @@ groups:
           - username: 'user2'
           - username: 'user3'
         roles:
-          - name: 'mergedrole'
+          - name: 'role1'

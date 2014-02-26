@@ -43,7 +43,8 @@ resources:
             creator: 'bar'
             parent: 'papa'
             type: 'file'
-            config: 'tools/resources/files01.yml'
+            import:
+                - path: 'tools/resources/files01.yml'
             roles:
                 - role:
                     name: 'visitor'
@@ -57,7 +58,8 @@ resources:
             creator: 'bar'
             parent: 'dir2'
             type: 'text'
-            config: 'tools/resources/text01.yml'
+            import:
+                - path: 'tools/resources/text01.yml'
             roles:
                 - role:
                     name: 'visitor'
@@ -71,7 +73,6 @@ resources:
             creator: 'bar'
             parent: 'dir2'
             type: 'shortcut'
-            config: 'tools/resources/shortcut01.yml'
             roles:
                 - role:
                     name: 'visitor'
@@ -85,7 +86,6 @@ resources:
             creator: 'bar'
             parent: 'dir2'
             type: 'activity'
-            config: 'tools/resources/activity01.yml'
             roles:
                 - role:
                     name: 'visitor'
@@ -99,7 +99,6 @@ resources:
             creator: 'bar'
             parent: 'dir2'
             type: 'blog'
-            config: 'tools/resources/blog01.yml'
             roles:
                 - role:
                     name: 'visitor'
@@ -113,7 +112,6 @@ resources:
             creator: 'bar'
             parent: 'dir2'
             type: 'evaluation'
-            config: 'tools/resources/evaluation01.yml'
             roles:
                 - role:
                     name: 'visitor'
@@ -127,7 +125,6 @@ resources:
             creator: 'bar'
             parent: 'dir2'
             type: 'wiki'
-            config: 'tools/resources/wiki01.yml'
             roles:
                 - role:
                     name: 'visitor'
@@ -141,7 +138,6 @@ resources:
             creator: 'bar'
             parent: 'dir2'
             type: 'exercice'
-            config: 'tools/resources/exercice01.yml'
             roles:
                 - role:
                     name: 'visitor'
@@ -155,7 +151,6 @@ resources:
             creator: 'bar'
             parent: 'dir2'
             type: 'announcements'
-            config: 'tools/resources/announcements01.yml'
             roles:
                 - role:
                     name: 'visitor'
@@ -169,7 +164,6 @@ resources:
             creator: 'bar'
             parent: 'dir2'
             type: 'lesson'
-            config: 'tools/resources/lesson01.yml'
             roles:
                 - role:
                     name: 'visitor'
@@ -183,7 +177,6 @@ resources:
             creator: 'bar'
             parent: 'dir2'
             type: 'forum'
-            config: 'tools/resources/forum01.yml'
             roles:
                 - role:
                     name: 'visitor'

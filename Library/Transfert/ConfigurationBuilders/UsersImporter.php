@@ -32,14 +32,12 @@ class UsersImporter extends Importer implements ConfigurationInterface
 
     /**
      * @DI\InjectParams({
-     *     "om"      = @DI\Inject("claroline.persistence.object_manager"),
-     *     "merger"  = @DI\Inject("claroline.importer.merger")
+     *     "om"      = @DI\Inject("claroline.persistence.object_manager")
      * })
      */
-    public function __construct(ObjectManager $om, Merger $merger)
+    public function __construct(ObjectManager $om)
     {
         $this->om = $om;
-        $this->merger = $merger;
     }
 
     public function  getConfigTreeBuilder()
@@ -74,7 +72,7 @@ class UsersImporter extends Importer implements ConfigurationInterface
             $codes[] = $code['code'];
         }
 
-        $mergedRoles = $this->merger->mergeRoleConfigurations($this->getRootPath());
+        $mergedRoles = array();// get merged roles
 
         $availableRoleName = array();
 

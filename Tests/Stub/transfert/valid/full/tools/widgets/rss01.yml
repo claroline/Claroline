@@ -1,1 +1,2 @@
-url: path/to/rss.rss
+rss:
+  url: path/to/rss.rss

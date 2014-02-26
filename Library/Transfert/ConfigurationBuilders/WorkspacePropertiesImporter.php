@@ -87,7 +87,7 @@ class WorkspacePropertiesImporter extends Importer implements ConfigurationInter
 
     function validateOwner($owner)
     {
-        $manifest = $this->getManifest();
+        $manifest = $this->getConfiguration();
 
         if (isset ($manifest['members'])) {
             if (isset ($manifest['members']['owner'])) {

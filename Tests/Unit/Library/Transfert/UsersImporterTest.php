@@ -45,7 +45,6 @@ class UsersImporterTest extends MockeryTestCase
         $repo->shouldReceive('findUsernames')->andReturn($usernames);
         $repo->shouldReceive('findEmails')->andReturn($emails);
         $repo->shouldReceive('findCodes')->andReturn($codes);
-        $this->merger->shouldReceive('mergeRoleConfigurations')->andReturn($this->getMergedRoles());
 
         $data = Yaml::parse(file_get_contents($path));
         $users['users'] = $data['users'];
@@ -111,24 +110,6 @@ class UsersImporterTest extends MockeryTestCase
                 'codes' => array(),
                 'isExceptionThrow' => true
             )
-        );
-    }
-
-    public function getMergedRoles()
-    {
-        return array(
-            'roles' =>
-                array(
-                    0 =>
-                        array(
-                            'role' =>
-                                array(
-                                    'name' => 'mergedrole',
-                                    'translation' => 'totottoo',
-                                    'is_base_role' => true,
-                                ),
-                        )
-                )
         );
     }
 } 

@@ -20,103 +20,44 @@ use Symfony\Component\Yaml\Yaml;
  */
 class Resolver
 {
-    public function mergeUserConfigurations($path)
-    {
-        $ds = DIRECTORY_SEPARATOR;
-        $data = Yaml::parse(file_get_contents($path . $ds . 'manifest.yml'));
-        $users['users'] = array();
-
-        if (isset($data['members']['users'])) {
-            $users['users'] = $data['members']['users'];
-        }
-
-        if (isset($data['userfiles'])) {
-            foreach ($data['userfiles'] as $userpath) {
-                $filepath = $path . $ds . $userpath['path'];
-                $userdata = Yaml::parse(file_get_contents($filepath));
-                foreach ($userdata as $udata) {
-                    foreach ($udata as $user) {
-                        $users['users'][] = array('user' => $user['user']);
-                    }
-                }
-            }
-        }
-
-        return $users;
+    public function __construct($path) {
+        $this->path = $path;
     }
 
-    public function mergeGroupConfigurations($path)
+
+    public function resolve()
     {
         $ds = DIRECTORY_SEPARATOR;
-        $data = Yaml::parse(file_get_contents($path . $ds . 'manifest.yml'));
-        $groups['groups'] = array();
+        $data = Yaml::parse(file_get_contents($this->path . $ds . 'manifest.yml'));
+        $this->parse($data);
+        //parse all the include path and inject them into a single array
 
-        if (isset($data['members']['groups'])) {
-            $groups['groups'] = $data['members']['groups'];
-        }
-
-        if (isset($data['groupfiles'])) {
-            foreach ($data['groupfiles'] as $grouppath) {
-                $filepath = $path . $ds . $grouppath['path'];
-                $groupdata = Yaml::parse(file_get_contents($filepath));
-                foreach ($groupdata as $gdata) {
-                    foreach ($gdata as $group) {
-                        $groups['groups'][] = array('group' => $group['group']);
-                    }
-                }
-            }
-        }
-
-        return $groups;
+        return $data;
     }
 
-    public function mergeRoleConfigurations($path)
+    private function parse(&$data)
     {
         $ds = DIRECTORY_SEPARATOR;
-        $data = Yaml::parse(file_get_contents($path . $ds . 'manifest.yml'));
-        $roles['roles'] = array();
 
-        if (isset($data['roles'])) {
-            $roles['roles'] = $data['roles'];
-        }
+        if (is_array($data)) {
+            foreach ($data as $key => &$value) {
+                if ($key === 'import') {
+                    foreach ($value as $path) {
+                        $inject = Yaml::parse(file_get_contents($this->path . $ds . $path['path']));
 
-        if (isset($data['rolefiles'])) {
-            foreach ($data['rolefiles'] as $rolepath) {
-                $filepath = $path . $ds . $rolepath['path'];
-                $roledata = Yaml::parse(file_get_contents($filepath));
-                foreach ($roledata as $rdata) {
-                    foreach ($rdata as $role) {
-                        $roles['roles'][] = array('role' => $role['role']);
+                        foreach ($inject as $el) {
+                            foreach ($el as $item) {
+                                $data[array_keys($inject)[0]][] = $item;
+                                $this->parse($data[array_keys($inject)[0]]);
+                            }
+                        }
                     }
                 }
+
+                $this->parse($value);
             }
         }
 
-        return $roles;
-    }
-
-    public function mergeToolConfigurations($path)
-    {
-        $ds = DIRECTORY_SEPARATOR;
-        $data = Yaml::parse(file_get_contents($path . $ds . 'manifest.yml'));
-        $tools['tools'] = array();
-
-        if (isset($data['tools'])) {
-            $tools['tools'] = $data['tools'];
-        }
-
-        if (isset($data['toolfiles'])) {
-            foreach ($data['toolfiles'] as $toolpath) {
-                $filepath = $path . $ds . $toolpath['path'];
-                $tooldata = Yaml::parse(file_get_contents($filepath));
-                foreach ($tooldata as $tdata) {
-                    foreach ($tdata as $tool) {
-                        $tools['tools'][] = array('tool' => $tool['tool']);
-                    }
-                }
-            }
-        }
-
-        return $tools;
+        return $data;
     }
 } 

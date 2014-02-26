@@ -8,17 +8,7 @@ abstract class Importer
 {
     private $listImporters;
     private $rootPath;
-    private $manifest;
-
-    public function setManifest($path)
-    {
-        $this->manifest = $path;
-    }
-
-    public function getManifest()
-    {
-        return $this->manifest;
-    }
+    private $configuration;
 
     public function setListImporters(ArrayCollection $importers)
     {
@@ -33,6 +23,16 @@ abstract class Importer
     public function getRootPath()
     {
         return $this->rootPath;
+    }
+
+    public function setConfiguration($configuration)
+    {
+        $this->configuration = $configuration;
+    }
+
+    public function getConfiguration()
+    {
+        return $this->configuration;
     }
 
     abstract function getName();

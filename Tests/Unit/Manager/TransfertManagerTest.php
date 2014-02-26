@@ -15,7 +15,6 @@ use Claroline\CoreBundle\Library\Testing\MockeryTestCase;
 use Claroline\CoreBundle\Library\Transfert\ConfigurationBuilders\Tools\HomeImporter;
 use Claroline\CoreBundle\Library\Transfert\ConfigurationBuilders\Tools\Widgets\TextImporter;
 use Claroline\CoreBundle\Library\Transfert\ConfigurationBuilders\Tools\ResourceManagerImporter;
-use Claroline\CoreBundle\Library\Transfert\Merger;
 use Symfony\Component\Yaml\Yaml;
 
 class TransfertManagerTest extends MockeryTestCase
@@ -28,7 +27,6 @@ class TransfertManagerTest extends MockeryTestCase
         parent::setUp();
 
         $this->om = $this->mock('Claroline\CoreBundle\Persistence\ObjectManager');
-        $merger = new Merger();
 
         //workspace properties
         $this->workspacePropertiesImporter = $this
@@ -48,7 +46,7 @@ class TransfertManagerTest extends MockeryTestCase
         $this->groupsImporter = $this
             ->mock(
                 'Claroline\CoreBundle\Library\Transfert\ConfigurationBuilders\GroupsImporter',
-                array($this->om, $merger)
+                array($this->om)
             );
 
         //roles importer
@@ -65,7 +63,7 @@ class TransfertManagerTest extends MockeryTestCase
                 array($this->om)
             );
 
-        $this->manager = new TransfertManager($merger);
+        $this->manager = new TransfertManager();
         $homeImporter = new HomeImporter();
         $textImporter = new TextImporter();
         $resourceImporter = new ResourceManagerImporter();

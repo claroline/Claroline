@@ -1,13 +1,9 @@
-versions:
-  - version:
-    - locale:
-      - en:
-        - 'contenten'
-      - fr:
-        - 'contentfr'
-  - version:
-    - locale:
-      - en:
-        - 'contenten2'
-      - fr:
-        - 'contentfr2'
+texts:
+  - text:
+      - version:
+          - locale: en
+            content: 'contenten'
+            version_name: 1
+          - locale: fr
+            content: 'contentfr'
+            version_name: 2

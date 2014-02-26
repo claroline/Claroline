@@ -2,7 +2,8 @@ tools:
     - tool:
         name: 'home'
         translation: 'accueil'
-        config: 'tools/home.yml'
+        import:
+            - path: 'tools/home.yml'
         data:
           tabs:
             - tab:
@@ -11,11 +12,13 @@ tools:
                    - widget:
                        name: text
                        type: 'text'
-                       config: 'tools/widget/text01.yml'
+                       import:
+                          - path: 'tools/widgets/text01.yml'
                    - widget:
                        name: rss
                        type: 'rss'
-                       config: 'tools/widget/rss01.yml'
+                       import:
+                          - path: 'tools/widgets/rss01.yml'
             - tab:
                   name: tabname02
         roles:
@@ -30,7 +33,8 @@ tools:
         translation: 'agenda'
     - tool:
         name: 'badges'
-    - tool:
-        name: 'resource_manager'
-        config: 'tools/resource_manager.yml'
+#    - tool:
+#        name: 'resource_manager'
+#        import:
+#            - path: 'tools/resource_manager.yml'
 

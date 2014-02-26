@@ -14,6 +14,7 @@ use Claroline\CoreBundle\Library\Testing\MockeryTestCase;
 use Mockery as m;
 use Claroline\CoreBundle\Library\Transfert\ConfigurationBuilders\GroupsImporter;
 use Symfony\Component\Yaml\Yaml;
+use Claroline\CoreBundle\Library\Transfert\Resolver;
 
 class GroupsImporterTest extends MockeryTestCase
 {
@@ -25,8 +26,7 @@ class GroupsImporterTest extends MockeryTestCase
         parent::setUp();
 
         $this->om = $this->mock('Claroline\CoreBundle\Persistence\ObjectManager');
-        $this->merger = $this->mock('Claroline\CoreBundle\Library\Transfert\Merger');
-        $this->importer = new GroupsImporter($this->om, $this->merger);
+        $this->importer = new GroupsImporter($this->om);
     }
 
     /**
@@ -34,9 +34,15 @@ class GroupsImporterTest extends MockeryTestCase
      */
     public function testValidate($path, $isExceptionExpected, $databaseUsernames, $names)
     {
-        if ($isExceptionExpected) {
-            $this->setExpectedException('Symfony\Component\Config\Definition\Exception\InvalidConfigurationException');
-        }
+        //stub manifest
+
+        $stub =  __DIR__.'/../../../Stub/transfert/valid/full';
+        $resolver = new Resolver($stub);
+        $this->importer->setConfiguration($resolver->resolve());
+
+//        if ($isExceptionExpected) {
+//            $this->setExpectedException('Symfony\Component\Config\Definition\Exception\InvalidConfigurationException');
+//        }
 
         $groupRepo = $this->mock('Claroline\CoreBundle\Repository\GroupRepository');
         $this->om->shouldReceive('getRepository')->with('Claroline\CoreBundle\Entity\Group')->andReturn($groupRepo);
@@ -45,8 +51,6 @@ class GroupsImporterTest extends MockeryTestCase
         $userRepo = $this->mock('Claroline\CoreBundle\Repository\UserRepository');
         $this->om->shouldReceive('getRepository')->with('Claroline\CoreBundle\Entity\User')->andReturn($userRepo);
         $userRepo->shouldReceive('findUsernames')->andReturn($databaseUsernames);
-        $this->merger->shouldReceive('mergeUserConfigurations')->andReturn($this->getMergedUsers());
-        $this->merger->shouldReceive('mergeRoleConfigurations')->andReturn($this->getMergedRoles());
 
         $data = Yaml::parse(file_get_contents($path));
         $roles['groups'] = $data['groups'];
@@ -92,45 +96,6 @@ class GroupsImporterTest extends MockeryTestCase
                 'databaseUsernames' => array(array('username' => 'user1'), array('username' => 'user2'), array('username' => 'user3')),
                 'names' => array()
             ),
-        );
-    }
-
-    public function getMergedUsers()
-    {
-        return array(
-            'users' =>
-                array(
-                    0 =>
-                        array(
-                            'user' =>
-                                array(
-                                    'first_name' => 'import',
-                                    'last_name' => 'import',
-                                    'username' => 'import',
-                                    'password' => 'IMPRT',
-                                    'mail' => 'imported@gmail.com',
-                                    'code' => 'IMPORTED'
-                                ),
-                        ),
-                ),
-        );
-    }
-
-    public function getMergedRoles()
-    {
-        return array(
-            'roles' =>
-                array(
-                    0 =>
-                        array(
-                            'role' =>
-                                array(
-                                    'name' => 'mergedrole',
-                                    'translation' => 'totottoo',
-                                    'is_base_role' => true,
-                                ),
-                        )
-                )
         );
     }
 } 

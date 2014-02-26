@@ -12,7 +12,7 @@
 namespace Claroline\CoreBundle\Manager;
 
 use Claroline\CoreBundle\Library\Transfert\Importer;
-use Claroline\CoreBundle\Library\Transfert\Merger;
+use Claroline\CoreBundle\Library\Transfert\Resolver;
 use Claroline\CoreBundle\Library\Transfert\ManifestConfiguration;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Config\Definition\Processor;
@@ -30,15 +30,11 @@ class TransfertManager
 {
     private $listImporters;
     private $rootPath;
+    private $resolver;
 
-    /**
-     * @DI\InjectParams({
-     *     "merger"  = @DI\Inject("claroline.importer.merger")
-     * })
-     */
-    public function __construct(Merger $merger)
+
+    public function __construct()
     {
-        $this->merger        = $merger;
         $this->listImporters = new ArrayCollection();
     }
 
@@ -54,9 +50,12 @@ class TransfertManager
      */
     public function validate($path)
     {
+        $resolver = new Resolver($path);
+
         $ds = DIRECTORY_SEPARATOR;
         $processor = new Processor();
         $data = Yaml::parse(file_get_contents($path . $ds . 'manifest.yml'));
+        $data = $resolver->resolve();
         $this->setRootPath($path);
         $this->setImporters($path, $data);
         $usersImporter  = $this->getImporterByName('user_importer');
@@ -77,15 +76,15 @@ class TransfertManager
             $importer = $this->getImporterByName('workspace_properties');
             $importer->validate($properties);
 
-            $roles = $this->merger->mergeRoleConfigurations($path);
+            $roles['roles'] = $data['roles'];
+            $users['users'] = $data['members']['users'];
+            $groups['users'] = $data['members']['groups'];
+            $tools['tools'] = $data['tools'];
             $rolesImporter->validate($roles);
-            $users = $this->merger->mergeUserConfigurations($path);
             $usersImporter->validate($users);
-            $groups = $this->merger->mergeGroupConfigurations($path);
             $groupsImporter->validate($groups);
-            $tools = $this->merger->mergeToolConfigurations($path);
             $toolsImporter->validate($tools);
-            $this->validateToolsConfig($tools);
+            //$this->validateToolsConfig($tools);
 
         } catch (\Exception $e) {
             var_dump(get_class($e));
@@ -153,11 +152,11 @@ class TransfertManager
      * @param $rootPath
      * @param $manifest
      */
-    private function setImporters($rootPath, $manifest)
+    private function setImporters($rootPath, $configuration)
     {
         foreach ($this->listImporters as $importer) {
             $importer->setRootPath($rootPath);
-            $importer->setManifest($manifest);
+            $importer->setConfiguration($configuration);
         }
     }
 }

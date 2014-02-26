@@ -5,11 +5,13 @@ tabs:
          - widget:
              name: widgettext
              type: 'text'
-             config: 'tools/widget/text01.yml'
+             import:
+                - path: 'tools/widgets/text01.yml'
          - widget:
              name: widgetrss
              type: 'rss'
-             config: 'tools/widget/rss01.yml'
+             import:
+                - path: 'tools/widgets/rss01.yml'
   - tab:
         name: tabname02
 

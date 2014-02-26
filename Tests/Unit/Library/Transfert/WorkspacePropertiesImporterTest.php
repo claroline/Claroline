@@ -45,8 +45,8 @@ class WorkspacePropertiesImporterTest extends MockeryTestCase
         m::getConfiguration()->allowMockingNonExistentMethods(true);
 
         //init importer
-        $this->importer->setRootPath($path);
-        $this->importer->setManifest($data);
+//        $this->importer->setRootPath($path);
+//        $this->importer->setManifest($data);
         //objectManager
         $wsRepo = $this->mock('Claroline\CoreBundle\Repository\WorkspaceRepository');
         $this->om->shouldReceive('getRepository')

@@ -7,6 +7,9 @@ properties:
     owner: 'ezs'
 
 members:
+    import:
+      - path: users01.yml
+      - path: groups01.yml
     owner:
         first_name: ffdgdf
         last_name: sdfsd
@@ -51,19 +54,9 @@ members:
               - name: 'ROLE_2'
               - name: 'ROLE_3'
 
-
-userfiles:
-    - path: users01.yml
-
-groupfiles:
-    - path: groups01.yml
-
-rolefiles:
-    - path: roles01.yml
-
-toolfiles:
-    - path: tools.yml
-
+import:
+  - path: roles01.yml
+  - path: tools.yml
 
 roles:
     - role:
@@ -79,14 +72,15 @@ tools:
     - tool:
         name: 'home'
         translation: 'accueil'
-        config: 'tools/home.yml'
+        import:
+          - path: 'tools/home.yml'
         roles:
           - name: anonymous
           - name: visitor
           - name: collaborator
           - name: manager
     - tool:
-        name: 'agenda'
+        imname: 'agenda'
         roles:
            - name: visitor
         translation: 'agenda'
@@ -94,6 +88,6 @@ tools:
         name: 'badges'
     - tool:
         name: 'resource_manager'
-        config: 'tools/resource_manager.yml'
-
+        import:
+          - path: 'tools/resource_manager.yml'
 
