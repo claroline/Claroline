@@ -450,7 +450,20 @@ class ResourceController
 
             $path = $this->resourceManager->getAncestors($node);
             $nodes = $this->resourceManager->getChildren($node, $currentRoles);
-            //set "admin" mask if someone is the creator of a resource.
+
+            //set "admin" mask if someone is the creator of a resource or the resource workspace owner.
+            //if someone needs admin rights, the resource type list will go in this array
+            $adminTypes = [];
+
+            if ($this->resourceManager->isWorkspaceOwnerOf($node, $this->sc->getToken())) {
+                $resourceTypes = $this->resourceManager->getAllResourceTypes();
+
+                foreach ($resourceTypes as $resourceType) {
+                    $adminTypes[$resourceType->getName()] = $this->translator
+                        ->trans($resourceType->getName(), array(), 'resource');
+                }
+            }
+
             foreach ($nodes as $item) {
                 if ($user !== 'anon.') {
                     if ($item['creator_username'] === $user->getUsername()) {
@@ -459,7 +472,9 @@ class ResourceController
                 }
                 $nodesWithCreatorPerms[] = $item;
             }
+
             $creatableTypes = $this->rightsManager->getCreatableTypes($currentRoles, $node);
+            $creatableTypes = array_merge($creatableTypes, $adminTypes);
             $this->dispatcher->dispatch('log', 'Log\LogResourceRead', array($node));
         }
 
