@@ -102,6 +102,8 @@ log_resource-icap_dropzone-correction_validation_change_filter: 'Modification de
 
 log_resource-icap_dropzone-drop_report_shortname: 'Copie signalée'
 log_resource-icap_dropzone-drop_report_sentence: 'a signalé une copie dans %resource%'
+log_resource-icap_dropzone-drop_report_title: 'Une copie a été signalée'
 
 log_resource-icap_dropzone-correction_report_shortname: 'Correction signalée '
 log_resource-icap_dropzone-correction_report_sentence: 'a signalé une correction dans %resource%'
+log_resource-icap_dropzone-correction_report_title: 'Une correction a été signalée'
