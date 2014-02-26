@@ -72,7 +72,8 @@ class UsersImporter extends Importer implements ConfigurationInterface
             $codes[] = $code['code'];
         }
 
-        $mergedRoles = array();// get merged roles
+        $mergedRoles = array();
+        // get merged roles
 
         $availableRoleName = array();
 

@@ -12,6 +12,7 @@ namespace Claroline\CoreBundle\Library;
  */
 
 use Claroline\CoreBundle\Library\Testing\MockeryTestCase;
+use Claroline\CoreBundle\Library\Transfert\Resolver;
 use Mockery as m;
 use Claroline\CoreBundle\Library\Transfert\ConfigurationBuilders\WorkspacePropertiesImporter;
 use Symfony\Component\Yaml\Yaml;
@@ -45,8 +46,9 @@ class WorkspacePropertiesImporterTest extends MockeryTestCase
         m::getConfiguration()->allowMockingNonExistentMethods(true);
 
         //init importer
-//        $this->importer->setRootPath($path);
-//        $this->importer->setManifest($data);
+        $this->importer->setRootPath($path);
+        $resolver = new Resolver($path);
+        $this->importer->setConfiguration($resolver->resolve($data));
         //objectManager
         $wsRepo = $this->mock('Claroline\CoreBundle\Repository\WorkspaceRepository');
         $this->om->shouldReceive('getRepository')

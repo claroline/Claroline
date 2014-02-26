@@ -32,7 +32,7 @@ class GroupsImporter extends Importer implements ConfigurationInterface
 
     /**
      * @DI\InjectParams({
-     *     "om"      = @DI\Inject("claroline.persistence.object_manager")
+     *     "om" = @DI\Inject("claroline.persistence.object_manager")
      * })
      */
     public function __construct(ObjectManager $om)
