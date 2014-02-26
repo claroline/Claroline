@@ -38,6 +38,7 @@ use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Library\Utilities\ClaroUtilities;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 use JMS\DiExtraBundle\Annotation as DI;
+use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 /**
  * @DI\Service("claroline.manager.resource_manager")
@@ -76,8 +77,7 @@ class ResourceManager
      *     "rightsManager" = @DI\Inject("claroline.manager.rights_manager"),
      *     "dispatcher"    = @DI\Inject("claroline.event.event_dispatcher"),
      *     "om"            = @DI\Inject("claroline.persistence.object_manager"),
-     *     "ut"            = @DI\Inject("claroline.utilities.misc"),
-     *     "sc"            = @DI\Inject("security.context")
+     *     "ut"            = @DI\Inject("claroline.utilities.misc")
      * })
      */
     public function __construct (
@@ -86,8 +86,7 @@ class ResourceManager
         RightsManager $rightsManager,
         StrictDispatcher $dispatcher,
         ObjectManager $om,
-        ClaroUtilities $ut,
-        SecurityContextInterface $sc
+        ClaroUtilities $ut
     )
     {
         $this->resourceTypeRepo = $om->getRepository('ClarolineCoreBundle:Resource\ResourceType');
@@ -101,7 +100,6 @@ class ResourceManager
         $this->dispatcher = $dispatcher;
         $this->om = $om;
         $this->ut = $ut;
-        $this->sc = $sc;
     }
 
     /**
@@ -776,7 +774,7 @@ class ResourceManager
      *
      * @return array
      */
-    public function toArray(ResourceNode $node)
+    public function toArray(ResourceNode $node, TokenInterface $token)
     {
         $resourceArray = array();
         $resourceArray['id'] = $node->getId();
@@ -797,7 +795,7 @@ class ResourceManager
 
         $isAdmin = false;
 
-        $roles = $this->roleManager->getStringRolesFromCurrentUser();
+        $roles = $this->roleManager->getStringRolesFromToken($token);
 
         foreach ($roles as $role) {
             if ($role === 'ROLE_ADMIN') {
@@ -805,7 +803,7 @@ class ResourceManager
             }
         }
 
-        if ($isAdmin || $node->getCreator()->getUsername() === $this->sc->getToken()->getUser()->getUsername()) {
+        if ($isAdmin || $node->getCreator()->getUsername() === $token->getUser()->getUsername()) {
             $resourceArray['mask'] = 1023;
         } else {
             $resourceArray['mask'] = $this->resourceRightsRepo->findMaximumRights($roles, $node);

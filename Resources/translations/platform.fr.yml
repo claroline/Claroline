@@ -11,8 +11,10 @@
 'Filter actions': 'Filtrer les actions'
 'Google HTML tag validation': 'Balise HTML de validation Google'
 'I accept the terms of service': 'J''accepte les conditions d''utilisation'
-'Indexing': 'Référencement'
+Indexing: Référencement
+Language: Langue
 'Last action': '{1} Dernière action|[1,Inf] %logAmount% dernières actions'
+None: Aucun
 'Or choose an existing file from resource manager': 'Ou veuillez choisir un fichier existant dans gestionnaire de ressources'
 'Overview of all recent activities in %workspaceName%': 'Aperçu de toutes les activités récentes de %workspaceName%'
 'Overview of recent activities in %workspaceName%': 'Aperçu des activités récentes de %workspaceName%'
@@ -20,18 +22,12 @@
 'Paste here the meta tag provides by Google Webmaster': 'Collez ici la balise meta fournit par Google Webmaster'
 'See all': 'Voir tous'
 'Select a Language': 'Sélectionnez une langue'
+Show: Afficher
 'Show actions': 'Afficher les actions'
 'Terms of service': 'Conditions d''utilisation'
 'The form is not valid': 'Le formulaire n''est pas valide'
 'Upload a file': 'Télécharger un fichier'
 'Your changes have been saved': 'Vos changements ont été sauvegardés'
-'for period': 'sur la période du :'
-'select all': 'Tout sélectionner'
-'unique connections': 'Nb Cnx. uniques'
-404: 'La page que vous cherchez n''existe pas.'
-Language: Langue
-None: Aucun
-Show: Afficher
 account_created: 'Compte créé'
 account_general_statistics: 'Statistiques générales sur les comptes'
 action: Action
@@ -144,8 +140,8 @@ current_category: 'Catégorie courante'
 cut: Couper
 dashboard: 'Tableau de bord'
 data_col: 'Colonne des données'
-database: Base de données
-database_connection_failed: 'La connexion à la base de données à échoué'
+database: 'Base de données'
+database_connection_failed: 'La connexion à la base de données à échoué.'
 date: Date
 date_form_format: dd/MM/yyyy
 date_format: d-m-Y
@@ -206,10 +202,14 @@ enter_tag_name_message: 'Veuillez entrer un nom de Tag'
 entries_per_day: 'Nombre d''entrées par jour'
 export: Exporter
 exportable: Exportable
-external_pdo_database: Base de données externe (PDO)
+external_pdo_database: 'Base de données externe (PDO)'
+facebook: Facebook
+facebook_application_validation_error: 'Les identifiants fournis ne sont pas valides.'
+curl_facebook_application_validation_error: "Extension php curl manquante."
 fast_answer: 'Réponse rapide'
+fb_client_id: Id de l'application
+fb_client_secret: Secret de l'application
 file: Fichier
-files: Fichiers
 file_form_file: Fichier
 file_form_license: License
 file_form_name: Nom
@@ -221,6 +221,7 @@ filter: Filtrer
 find_workspaces: 'Tous les espaces'
 firstName: Prénom
 first_name: Prénom
+'for period': 'sur la période du :'
 forgot_password: 'Mot de passe oublié ?'
 form_role: Rôle
 from: Depuis
@@ -376,6 +377,7 @@ not_blank_expected: 'Cette valeur ne peut pas être vide'
 note: Note
 notification_activated: 'Notifications activées.'
 notification_deactivated: 'Notifications désactivées.'
+oauth: Oauth
 object: Objet
 ok: Ok
 only_for_workspace_creation: 'Seulement pour la création d''un espace d''activités'
@@ -450,7 +452,7 @@ public: Public
 public_workspace_empty: 'Il n''y a aucun espace d''activités public.'
 public_workspaces: 'Espaces d''activités publics'
 recursive_dir_action: 'Appliquer au contenu du répertoire et aux sous-répertoires'
-redirect_after_login: Rediriger vers la dernière page visitée
+redirect_after_login: 'Rediriger vers la dernière page visitée'
 register: Inscription
 register_to_a_public_workspace: 'Inscription à un espace d''activités public'
 register_to_a_workspace: 'M''inscrire à un espace'
@@ -522,6 +524,7 @@ search_user: 'Rechercher un utilisateur'
 search_workspace: 'Rechercher un espace d''activités'
 see: Voir
 see_more: 'Voir plus'
+'select all': 'Tout sélectionner'
 select_all: 'Tout sélectionner'
 select_category: 'Sélectionner une catégorie'
 select_contacts_title: 'Sélectionnez les destinataires'
@@ -537,15 +540,15 @@ send_mail_form_object: Objet
 send_message: 'Envoyer un message'
 server: Serveur
 session: Session
-session_db_cannot_perform_operations: L'écriture et/ou la lecture d'enregistrements dans la table renseignée est impossible. Veuillez vérifier que l'utilisateur de la base de données dispose de droits suffisants et qu'aucune contrainte particulière n'a été affectée à cette table.
-session_db_id_col_must_be_pk: La colonne des identifiants (et uniquement cette colonne) doit être la clé primaire de la table.
-session_db_invalid_type_id_col: La colonne des identifiants doit être de type "string" (e.g. "VARCHAR").
-session_db_invalid_type_data_col: La colonne des données doit être de type "text" (e.g. "LONGTEXT").
-session_db_invalid_type_time_col: La colonne des durées doit être de type "integer" (e.g. "INT").
-session_db_no_table: La table renseignée n'existe pas.
-session_db_no_data_col: La colonne des données n'existe pas.
-session_db_no_id_col: La colonne des identifiants n'existe pas.
-session_db_no_time_col: La colonne des durées n'existe pas.
+session_db_cannot_perform_operations: 'L''écriture et/ou la lecture d''enregistrements dans la table renseignée est impossible. Veuillez vérifier que l''utilisateur de la base de données dispose de droits suffisants et qu''aucune contrainte particulière n''a été affectée à cette table.'
+session_db_id_col_must_be_pk: 'La colonne des identifiants (et uniquement cette colonne) doit être la clé primaire de la table.'
+session_db_invalid_type_data_col: 'La colonne des données doit être de type "text" (e.g. "LONGTEXT").'
+session_db_invalid_type_id_col: 'La colonne des identifiants doit être de type "string" (e.g. "VARCHAR").'
+session_db_invalid_type_time_col: 'La colonne des durées doit être de type "integer" (e.g. "INT").'
+session_db_no_data_col: 'La colonne des données n''existe pas.'
+session_db_no_id_col: 'La colonne des identifiants n''existe pas.'
+session_db_no_table: 'La table renseignée n''existe pas.'
+session_db_no_time_col: 'La colonne des durées n''existe pas.'
 session_id: 'Identifiant de session'
 settings: Paramètres
 sharable: Partageable
@@ -609,6 +612,7 @@ unable_to_start_smtp: 'La connexion avec le serveur SMTP ne peut pas être étab
 unable_to_start_transport: 'La connexion avec le serveur de mails ne peut pas être établie. Veuillez vérifier que les paramètres que vous avez renseignés sont corrects.'
 unauthorized: 'Vous n''êtes pas autorisé à consulter cette page.'
 under_min_length: 'Cette valeur est trop courte'
+'unique connections': 'Nb Cnx. uniques'
 unregister: Désinscription
 unregister_from_a_workspace: 'Me désinscrire d''un espace'
 unregistered: 'Non inscrit'
@@ -661,9 +665,9 @@ widget_home_tab_delete_confirm_title: 'Suppression du widget de l''onglet'
 widget_settings: 'Paramètres des widgets'
 widgets: Widgets
 widgets_configuration: 'Configuration des widgets'
+workspace: 'Espace d''activités'
 workspace.create: 'Créer un nouvel espace d''activités'
 workspace.name_not_blank: 'Veuillez spécifier un nom pour ce workspace.'
-workspace: 'Espace d''activités'
 workspace_administration: Administration
 workspace_classification: 'Classification des espaces d''activités'
 workspace_delete: 'Supprimer l''espace d''activités'
@@ -705,3 +709,4 @@ ws_most_viewed: 'Espaces d''activités les plus consultés'
 yes: oui
 yesterday_activity: 'Activité de la veille'
 your_username: 'Votre nom d''utilisateur est '
+404: 'La page que vous cherchez n''existe pas.'

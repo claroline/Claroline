@@ -9,13 +9,11 @@
  * file that was distributed with this source code.
  */
 
-namespace Claroline\CoreBundle\DataFixtures\Demo;
+namespace Claroline\CoreBundle\DataFixtures\Demo\Main;
 
-use Doctrine\Common\DataFixtures\ReferenceRepository;
-use Doctrine\Common\Persistence\ObjectManager;
-use Doctrine\Common\DataFixtures\AbstractFixture;
-use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\DependencyInjection\ContainerAwareInterface;
+use Claroline\CoreBundle\DataFixtures\Demo\LoadContentData;
+use Claroline\CoreBundle\DataFixtures\Demo\LoadRegionData;
+use Claroline\CoreBundle\DataFixtures\Demo\LoadTypeData;
 use Claroline\CoreBundle\Library\Fixtures\LoggableFixture;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Claroline\CoreBundle\Entity\User;
@@ -29,6 +27,11 @@ use Claroline\CoreBundle\DataFixtures\Optional\LoadMessagesData;
 use Claroline\CoreBundle\DataFixtures\Optional\LoadActivityData;
 use Claroline\CoreBundle\DataFixtures\Optional\LoadShortcutData;
 use Claroline\ForumBundle\DataFixtures\Demo\LoadForumData;
+use Doctrine\Common\DataFixtures\ReferenceRepository;
+use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\Common\DataFixtures\AbstractFixture;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 
 class LoadDemoFixture extends LoggableFixture implements ContainerAwareInterface
 {

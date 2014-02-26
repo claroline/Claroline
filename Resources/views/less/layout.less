@@ -691,7 +691,7 @@ div.pagination {
 /* MISC */
 /********/
 
-form.has-error .help-block {
+form .global-error {
     .alert;
     .alert-danger;
 }
@@ -1226,5 +1226,24 @@ body.mce-fullscreen .modal#myModal {
     .modal-dialog {
         width: 100%;
         height: 100%;
+    }
+}
+
+/**********************/
+/**    Facebook      **/
+/**********************/
+
+.facebook-connect {
+    margin-left: 5px;
+    overflow: hidden;
+    position: absolute;
+    .fb-login-button {
+        opacity: 0;
+        position: absolute;
+        top: -5px;
+        left: 0
+    }
+    i{
+        font-size: 17px;
     }
 }

@@ -11,6 +11,7 @@
 
 namespace Claroline\CoreBundle\Command;
 
+use Claroline\CoreBundle\Library\Maintenance\MaintenanceHandler;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
@@ -26,18 +27,25 @@ class PlatformUpdateCommand extends ContainerAwareCommand
     {
         parent::configure();
         $this->setName('claroline:update')
-            ->setDescription('Updates, installs or uninstalls the claroline packages brought by composer.');
+            ->setDescription(
+                'Updates, installs or uninstalls the platform packages '
+                . 'brought by composer (requires an operation file).'
+            );
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $output->writeln('Updating the platform...');
+        $output->writeln('<comment>Updating the platform...</comment>');
         $installer = $this->getContainer()->get('claroline.installation.platform_installer');
+        $refresher = $this->getContainer()->get('claroline.installation.refresher');
+        $installer->setOutput($output);
         $installer->setLogger(
             function ($message) use ($output) {
                 $output->writeln($message);
             }
         );
         $installer->installFromOperationFile();
+        $refresher->dumpAssets($this->getContainer()->getParameter('kernel.environment'));
+        MaintenanceHandler::disableMaintenance();
     }
 }

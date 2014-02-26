@@ -76,7 +76,8 @@ class ClarolineCoreBundle extends InstallableBundle implements AutoConfigurableI
             'BeSimple\SsoAuthBundle\BeSimpleSsoAuthBundle'                  => 'sso',
             'Stfalcon\Bundle\TinymceBundle\StfalconTinymceBundle'           => 'stfalcon_tinymce',
             'Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle' => 'sensio_framework_extra',
-            'FOS\RestBundle\FOSRestBundle'                                  => 'fos_rest'
+            'FOS\RestBundle\FOSRestBundle'                                  => 'fos_rest',
+            'HWI\Bundle\OAuthBundle\HWIOAuthBundle'                         => 'hwi_oauth'
         );
         // one configuration file for every standard environment (prod, dev, test)
         $envConfigs = array(
@@ -137,7 +138,7 @@ class ClarolineCoreBundle extends InstallableBundle implements AutoConfigurableI
 
     public function getOptionalFixturesDirectory($environment)
     {
-        return $environment !== 'test' ? 'DataFixtures/Demo' : null;
+        return $environment !== 'test' ? 'DataFixtures/Demo/Main' : null;
     }
 
     public function getAdditionalInstaller()
