@@ -277,6 +277,7 @@ qcm creation: Création d'une question de type QCM
 qcm edition: Edition d'une question de type QCM
 question: Question
 question graphic: Question Graphique
+question hole : Question à trous
 question open: Question à Réponse Ouverte
 question qcm: Question QCM
 questions: Questions

@@ -12,14 +12,14 @@
 
                         <script type="text/javascript">
                             show_hint2('{{hint.id}}', '{{path('ujm_hint_show')}}',
-                                       '{{nbr_hint}}', '{{paper}}'
+                                       '{{nbr_hint}}', {{hint.penalty}}, '{{paper}}'
                                       );
                         </script>
                     {% else %}
 
                         <td class="classic"><a href="#"  id="indice_popup" onclick="show_hint('{{hint.id}}',
                                 '{{path('ujm_hint_show')}}', '{{ "consult_hint" | trans }} ?', '{{nbr_hint}}',
-                                '{{paper}}', {{hint.penalty}});event.preventDefault();">{{ "hint" | trans }} {{nbr_hint}}</a>
+                                {{hint.penalty}}, '{{paper}}');event.preventDefault();">{{ "hint" | trans }} {{nbr_hint}}</a>
                         </td>
 
                     {% endif %}

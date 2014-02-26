@@ -51,9 +51,9 @@
 {% block section_content %}
     <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/paper.js') }}"></script>
 
-     <div class="panel-heading">
-        <h1>{{'paper exo'|trans}}</h1>
-    </div>
+     <!--div class="panel-heading">
+        <h1>{#{'paper exo'|trans}#}</h1>
+    </div-->
     <div class="panel-body">
         <form action="{{ path('ujm_exercise_paper_nav') }}" method="post" name="formResponse" id="formResponse">
             <input type="hidden" name="numQuestionToDisplayed" id="numQuestionToDisplayed" value=""/>
@@ -62,13 +62,13 @@
 
             {% if interactionType == 'InteractionQCM' %}
 
-            <div class="panel panel-default">
+            <!--div class="panel panel-default">
                 <div class="panel-heading">
-                    <h3>{{ 'nQuestion' | trans }}{{numQ}} :</h3>
-                </div>
+                    <h3>{#{ 'nQuestion' | trans }}{{numQ}#} :</h3>
+                </div-->
                 <div class="panel-body">
                     <div class="panel panel-default">
-                        <div class="panel-heading"><h3 class="panel-title">{{ 'title' | trans }}</h3></div>
+                        <div class="panel-heading"><h3 class="panel-title">{{ 'title' | trans }} - {{ 'nQuestion' | trans }}{{numQ}}</h3></div>
                         <div class="panel-body">
                             {{ interactionToDisplayed.interaction.question.title }}
 
@@ -123,18 +123,18 @@
                 <input type="hidden" name="testQCM" value="testQCM" />
                 <input type="hidden" name="interaction" value="{{ interactionToDisplayed.id }}"/>
 
-            </div>
+            <!--/div-->
             {#------------------------------------------------- Graphic ---------------------------------------------------------#}
 
             {% elseif interactionType == 'InteractionGraphic' %}
 
-            <div class="panel panel-default">
+            <!--div class="panel panel-default">
                 <div class="panel-heading">
-                    <h3>{{ 'nQuestion' | trans }}{{numQ}} :</h3>
-                </div>
+                    <h3>{#{ 'nQuestion' | trans }}{{numQ}#} :</h3>
+                </div-->
                 <div class="panel-body">
                     <div class="panel panel-default">
-                        <div class="panel-heading"><h3 class="panel-title">{{ 'title' | trans }}</h3></div>
+                        <div class="panel-heading"><h3 class="panel-title">{{ 'title' | trans }} - {{ 'nQuestion' | trans }}{{numQ}}</h3></div>
                         <div class="panel-body">
                             {{ interactionToDisplayed.interaction.question.title }}
 
@@ -199,18 +199,18 @@
                     <input type="hidden" name="interaction" value="{{ interactionToDisplayed.id }}"/>
 
                 </div>
-            </div>
+            <!--/div-->
             {#-------------------------------------------------- OPEN -----------------------------------------------------------#}
 
             {% elseif interactionType == 'InteractionOpen' %}
 
-            <div class="panel panel-default">
+            <!--div class="panel panel-default">
                 <div class="panel-heading">
-                    <h3>{{ 'nQuestion' | trans }}{{numQ}} :</h3>
-                </div>
+                    <h3>{#{ 'nQuestion' | trans }}{{numQ}#} :</h3>
+                </div-->
                 <div class="panel-body">
                     <div class="panel panel-default">
-                        <div class="panel-heading"><h3 class="panel-title">{{ 'title' | trans }}</h3></div>
+                        <div class="panel-heading"><h3 class="panel-title">{{ 'title' | trans }} - {{ 'nQuestion' | trans }}{{numQ}}</h3></div>
                         <div class="panel-body">
                             {{ interactionToDisplayed.interaction.question.title }}
                             <input type="hidden" name="interactionOpenToValidated" value="{{ interactionToDisplayed.id }}"/>
@@ -255,18 +255,18 @@
                     <input type="hidden" name="interaction" value="{{ interactionToDisplayed.id }}"/>
 
                 </div>
-            </div>
+            <!--/div-->
             {#--------------------------------------------------- Hole ----------------------------------------------------------#}
 
             {% elseif interactionType == 'InteractionHole' %}
-            
-                <div class="panel panel-default">
+
+                <!--div class="panel panel-default">
                     <div class="panel-heading">
-                        <h3>{{ 'nQuestion' | trans }}{{numQ}} :</h3>
-                    </div>
+                        <h3>{#{ 'nQuestion' | trans }}{{numQ}#} :</h3>
+                    </div-->
                     <div class="panel-body">
                         <div class="panel panel-default">
-                            <div class="panel-heading"><h3 class="panel-title">{{ 'title' | trans }}</h3></div>
+                            <div class="panel-heading"><h3 class="panel-title">{{ 'title' | trans }} - {{ 'nQuestion' | trans }}{{numQ}}</h3></div>
                             <div class="panel-body">
                                 {{ interactionToDisplayed.interaction.question.title }}
 
@@ -315,8 +315,8 @@
                     <input type="hidden" name="testQCM" value="testQCM" />
                     <input type="hidden" name="interaction" value="{{ interactionToDisplayed.id }}"/>
 
-                </div>
-            
+                <!--/div-->
+
             {% endif %}
         </form>
     </div>
