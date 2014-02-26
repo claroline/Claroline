@@ -233,6 +233,7 @@
                 xfbml      : true,
                 cookie     : true
             });
+            $('.facebook-connect').removeClass('hide');
             $('#btn-logout').on('click', function() {
                 FB.logout(function(respose){});
             })

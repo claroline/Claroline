@@ -44,7 +44,7 @@ class ResourceOwnerFactory
     {
         $httpClient = new Curl();
         $httpClient->setVerifyPeer(true);
-        $httpClient->setTimeout(5);
+        $httpClient->setTimeout(10);
         $httpClient->setMaxRedirects(5);
         $httpClient->setIgnoreErrors(true);
 
@@ -65,4 +65,4 @@ class ResourceOwnerFactory
         return $owner;
 
     }
-} 
+}
