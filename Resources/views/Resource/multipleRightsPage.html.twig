@@ -2,47 +2,41 @@
     {% for tag in tagsList %}
         {% if displayable[tag.getId()] %}
         {% set currentIndex = index ~ "-" ~ tag.getId() %}
-        <div class="accordion-group">
-            <div class="accordion-heading">
-                <a  class="accordion-toggle"
-                    data-toggle="collapse"
-                    href="#collapse-{{ currentIndex }}"
-                >
-                    <i class="icon-align-justify"></i>
-                    {{ tag.getName() }}
-                    <i class="icon-chevron-down pull-right"></i>
-                </a>
+        <div class="panel panel-deafault">
+            <div class="panel-heading">
+                <h3 class="panle-title">
+                    <a data-toggle="collapse" href="#collapse-{{ currentIndex }}">
+                        <i class="icon-align-justify"></i>
+                        {{ tag.getName() }}
+                        <i class="icon-chevron-down pull-right"></i>
+                    </a>
+                </h3>
             </div>
-            <div id="collapse-{{ currentIndex }}" class="accordion-body collapse">
-                <div class="accordion-inner">
-                    {% if hierarchy[tag.getId()]|length > 0 %}
+            <div id="collapse-{{ currentIndex }}" class="panel-body collapse">
+                {% if hierarchy[tag.getId()]|length > 0 %}
                     {{ _self.showTag(hierarchy[tag.getId()], tagWorkspaces, hierarchy, currentIndex, displayable, workspaceRoles, resource) }}
-                    {% endif %}
-                    <ul>
-                        {% for relWorkspaceTag in tagWorkspaces[tag.id] %}
+                {% endif %}
+                {% for relWorkspaceTag in tagWorkspaces[tag.id] %}
+                    <div class="panel panel-default">
                         {% set workspace = relWorkspaceTag.getWorkspace() %}
-                        <div class="accordion-group">
-                            <div class="accordion-heading">
-                                <a class="accordion-toggle"
-                                   data-toggle="collapse"
-                                   href="#collapse-{{ currentIndex }}-{{ workspace.getCode() }}">
+                        <div class="panel-heading">
+                            <a data-toggle="collapse" href="#collapse-{{ currentIndex }}-{{ workspace.getCode() }}">
+                                <h3 class="panel-title">
                                     {{ workspace.getName() }}
                                     <span class="workspace-code">({{ workspace.getCode() }})</span>
-                                </a>
-                            </div>
-                            <div id="collapse-{{ currentIndex }}-{{ workspace.getCode() }}" class="accordion-body collapse">
-                                <div class="accordion-inner">
-                                    <ul>
-                                        {% for role in workspaceRoles[workspace.getCode()] %}
-                                            <a class="workspace-role-item" href="{{ path('claro_resource_right_form', {'node':resource.id, 'role':role.id}) }}">{{ role.getTranslationKey() }}</a><br/>
-                                        {% endfor %}
-                                    </ul>
-                                </div>
-                            </div>
+                                </h3>
+                            </a>
                         </div>
-                        {% endfor %}
-                    </ul>
-                </div>
+                        <div id="collapse-{{ currentIndex }}-{{ workspace.getCode() }}" class="list-group collapse">
+                            {% for role in workspaceRoles[workspace.getCode()] %}
+                                <a class="workspace-role-item list-group-item"
+                                   href="{{ path('claro_resource_right_form', {'node':resource.id, 'role':role.id}) }}">
+                                    {{ role.getTranslationKey() }}
+                                </a>
+                            {% endfor %}
+                        </div>
+                    </div>
+                {% endfor %}
             </div>
         </div>
         {% endif %}
@@ -86,10 +80,14 @@
                 <div class="{{ mode }}-body padding-top-none">
                     <table class="table table-striped table-bordered table-condensed">
                         <tr>
-                           <th colspan="2">{{ 'Grant the right to' | trans({}, 'platform')}}</th>
+                           <th colspan="2">{{ 'Grant the right to' | trans({}, 'platform')}}:</th>
                         </tr>
                         <tr>
                             <td>{{ 'Everyone' | trans({}, 'platform')}}</td>
+                            <td><input type="checkbox"></td>
+                        </tr>
+                        <tr>
+                            <td>{{ 'anonymous' | trans({}, 'platform')}}</td>
                             <td><input type="checkbox"></td>
                         </tr>
                         <tr>
@@ -97,7 +95,8 @@
                             <td><input type="checkbox"></td>
                         </tr>
                         <tr>
-                            <td colspan="2">{{ 'Some users' | trans({}, 'platform')}}</td>
+                            <td>{{ 'Members of platform' | trans({}, 'platform')}}</td>
+                            <td><input type="checkbox"></td>
                         </tr>
                     </table>
                 </div>
@@ -166,14 +165,14 @@
             </div>
             <div class="{{ mode }}-body padding-top-none tab-pane" id="advanced">
                 <div class="input-group">
-                    <input class="form-control" type="text" id="role-search-text" value="{% if search is defined %}{{ search }}{% endif %}"/>
+                    <input placeholder="{{ "administrative_code" | trans({}, "platform") }}" class="form-control" type="text" id="role-search-text" value="{% if search is defined %}{{ search }}{% endif %}"/>
                     <span class="input-group-btn">
                         <button type="submit" class="btn btn-primary search-role-btn">
                             <i class="icon-search"></i> {{ 'search'|trans({}, 'platform') }}
                         </button>
                     </span>
                 </div>
-
+                <br>
                 <div id="advanced-pane-content">
                     <div id="role-list"></div>
                     <div id="form-right-wrapper"></div>
@@ -181,50 +180,38 @@
             </div>
             <div class="{{ mode }}-body padding-top-none tab-pane" id="workspaces-list">
                 <div id="advanced-pane-content">
-                    <div class="accordion" id="accordion-all">
-                        <div class="accordion-group">
-                            <div class="accordion-heading">
-                                <a  class="accordion-toggle"
-                                    data-toggle="collapse"
-                                    data-parent="#accordion-all"
-                                    href="#collapse-all"
-                                >
+                    <div class="panel panel-default" id="accordion-all">
+                        <div class="panel-heading">
+                            <a data-toggle="collapse" data-parent="#accordion-all" href="#collapse-all">
+                                <h3 class="panel-title">
                                     <i class="icon-align-justify"></i>
                                     {{ 'all_workspaces'|trans({}, 'platform') }}
                                     <i class="icon-chevron-down pull-right"></i>
-                                </a>
-                            </div>
-                            <div id="collapse-all" class="accordion-body collapse {% if tags|length == 0 %}in{% endif %}">
-                                <div class="accordion-inner">
-                                    <ul>
-                                        {% for workspace in workspaces %}
-                                        <div class="accordion-group">
-                                            <div class="accordion-heading">
-                                                <a class="accordion-toggle"
-                                                   data-toggle="collapse"
-                                                   href="#collapse-all-{{ workspace.getCode() }}">
+                                </h3>
+                            </a>
+                        </div>
+                        <div id="collapse-all" class="panel-body collapse {% if tags|length == 0 %}in{% endif %}">
+                                {% for workspace in workspaces %}
+                                    <div class="panel panel-default">
+                                        <div class="panel-heading">
+                                            <a data-toggle="collapse" href="#collapse-all-{{ workspace.getCode() }}">
+                                                <h3 class="panel-title">
                                                     {{ workspace.getName() }}
                                                     <span class="workspace-code">({{ workspace.getCode() }})</span>
-                                                </a>
-                                            </div>
-                                            <div id="collapse-all-{{ workspace.getCode() }}" class="accordion-body collapse">
-                                                <div class="accordion-inner">
-                                                    <ul>
-                                                        {% for role in workspaceRoles[workspace.getCode()] %}
-                                                            <a class="workspace-role-item"
-                                                               href="{{ path('claro_resource_right_form', {'node':resource.id, 'role':role.id}) }}">
-                                                                {{ role.getTranslationKey()|trans({}, 'platform') }}
-                                                            </a><br/>
-                                                        {% endfor %}
-                                                    </ul>
-                                                </div>
-                                            </div>
+                                                </h3>
+                                            </a>
                                         </div>
-                                        {% endfor %}
-                                    </ul>
-                                </div>
-                                <div id="form-rights-tag-wrapper"></div>
-                            </div>
+                                        <div id="collapse-all-{{ workspace.getCode() }}" class="list-group collapse">
+                                            {% for role in workspaceRoles[workspace.getCode()] %}
+                                                <a class="workspace-role-item list-group-item"
+                                                   href="{{ path('claro_resource_right_form', {'node':resource.id, 'role':role.id}) }}">
+                                                    {{ role.getTranslationKey()|trans({}, 'platform') }}
+                                                </a>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            <div id="form-rights-tag-wrapper"></div>
                         </div>
                     </div>
                     {{ showTag(rootTags, tagWorkspaces, hierarchy, "0", displayable, workspaceRoles, resource) }}

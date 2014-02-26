@@ -1,23 +1,20 @@
 {% twig_js name="resourceRightsRoles" %}
 
-<div class="accordion" id="accordion">
 {% for key, workspace in workspaces %}
-<div class="accordion-group">
-    <div class="accordion-heading">
-        <a class="accordion-toggle"
-           data-toggle="collapse"
-           data-parent="#accordion"
-           href="#collapse-{{ key }}"> {{ key }} </a>
-    </div>
-    <div id="collapse-{{ key }}" class="accordion-body collapse">
-        <div class="accordion-inner">
-            <ul>
-                {% for roleName, role in workspace %}
-                    <a class="role-item" href="{{ path('claro_resource_right_form', {'role':role.id, 'node':nodeId}) }}">{{ role.translation_key }}</a><br/>
-                {% endfor %}
-            </ul>
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <a data-toggle="collapse" data-parent="#accordion" href="#collapse-{{ key }}">
+                <h3 class="panel-title">
+                    {{ key }}
+                </h3>
+            </a>
+        </div>
+        <div id="collapse-{{ key }}" class="list-group collapse">
+            {% for roleName, role in workspace %}
+                <a class="role-item list-group-item" href="{{ path('claro_resource_right_form', {'role':role.id, 'node':nodeId}) }}">
+                    {{ role.translation_key }}
+                </a>
+            {% endfor %}
         </div>
     </div>
-</div>
 {% endfor %}
-</div>
