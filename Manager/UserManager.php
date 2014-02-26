@@ -157,13 +157,19 @@ class UserManager
         $user->setUsername('username#' . $user->getId());
         $user->setIsEnabled(false);
 
-        $this->ed->dispatch(
-            'delete_user', 'DeleteUser',
-            array($user)
-        );
+        // keeping the user's workspace with its original code
+        // would prevent creating a user with the same username
+        // todo: workspace deletion should be an option
+        $ws = $user->getPersonalWorkspace();
+        $ws->setCode($ws->getCode() . '#deleted_user#' . $user->getId());
+        $ws->setPublic(false);
+        $ws->setDisplayable(false);
 
+        $this->om->persist($ws);
         $this->om->persist($user);
         $this->om->flush();
+
+        $this->ed->dispatch('log', 'Log\LogUserDelete', array($user));
     }
 
     /**
