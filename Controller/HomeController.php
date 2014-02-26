@@ -188,7 +188,7 @@ class HomeController
      * @param string $size The size (content-12) of the content.
      * @param string $type The type of the content.
      *
-     * @Route("/content/size/{id}/{size}/{type}", name="claroline_content_size")
+     * @Route("/content/size/{id}/{size}/{type}", name="claroline_content_size", options = {"expose" = true})
      *
      * @Template("ClarolineCoreBundle:Home:sizes.html.twig")
      *
@@ -224,7 +224,7 @@ class HomeController
     /**
      * Render the HTML of the regions.
      *
-     * @Route("/content/region/{content}", name="claroline_region")
+     * @Route("/content/region/{content}", name="claroline_content_region", options = {"expose" = true})
      *
      * @param string $content The id of the content or the entity object of a content.
      *

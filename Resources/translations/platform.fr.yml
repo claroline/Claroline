@@ -11,10 +11,7 @@
 'Filter actions': 'Filtrer les actions'
 'Google HTML tag validation': 'Balise HTML de validation Google'
 'I accept the terms of service': 'J''accepte les conditions d''utilisation'
-Indexing: Référencement
-Language: Langue
 'Last action': '{1} Dernière action|[1,Inf] %logAmount% dernières actions'
-None: Aucun
 'Or choose an existing file from resource manager': 'Ou veuillez choisir un fichier existant dans gestionnaire de ressources'
 'Overview of all recent activities in %workspaceName%': 'Aperçu de toutes les activités récentes de %workspaceName%'
 'Overview of recent activities in %workspaceName%': 'Aperçu des activités récentes de %workspaceName%'
@@ -22,12 +19,24 @@ None: Aucun
 'Paste here the meta tag provides by Google Webmaster': 'Collez ici la balise meta fournit par Google Webmaster'
 'See all': 'Voir tous'
 'Select a Language': 'Sélectionnez une langue'
-Show: Afficher
 'Show actions': 'Afficher les actions'
 'Terms of service': 'Conditions d''utilisation'
 'The form is not valid': 'Le formulaire n''est pas valide'
 'Upload a file': 'Télécharger un fichier'
 'Your changes have been saved': 'Vos changements ont été sauvegardés'
+'for period': 'sur la période du :'
+'select all': 'Tout sélectionner'
+'unique connections': 'Nb Cnx. uniques'
+404: 'La page que vous cherchez n''existe pas.'
+Create a new resource: 'Créer une nouvelle ressource'
+Everyone: 'Tout le monde'
+Grant the right to: 'Accorder des droit à'
+Indexing: Référencement
+Language: Langue
+Members of work space: 'Inscrits à l''espace d''activité'
+None: Aucun
+Show: Afficher
+Some users: 'Certains utilisateurs'
 account_created: 'Compte créé'
 account_general_statistics: 'Statistiques générales sur les comptes'
 action: Action
@@ -136,6 +145,7 @@ csv_users_import_infos_format_a: 'Les données d''un utilisateur doivent être d
 csv_users_import_infos_format_b: 'Notez que vous ne devez pas ajouter un en-tête de fichier'
 csv_users_import_infos_optional: Optionel
 csv_users_import_infos_required: Requis
+curl_facebook_application_validation_error: "Extension php curl manquante."
 current_category: 'Catégorie courante'
 cut: Couper
 dashboard: 'Tableau de bord'
@@ -205,7 +215,6 @@ exportable: Exportable
 external_pdo_database: 'Base de données externe (PDO)'
 facebook: Facebook
 facebook_application_validation_error: 'Les identifiants fournis ne sont pas valides.'
-curl_facebook_application_validation_error: "Extension php curl manquante."
 fast_answer: 'Réponse rapide'
 fb_client_id: Id de l'application
 fb_client_secret: Secret de l'application
@@ -221,7 +230,6 @@ filter: Filtrer
 find_workspaces: 'Tous les espaces'
 firstName: Prénom
 first_name: Prénom
-'for period': 'sur la période du :'
 forgot_password: 'Mot de passe oublié ?'
 form_role: Rôle
 from: Depuis
@@ -524,7 +532,6 @@ search_user: 'Rechercher un utilisateur'
 search_workspace: 'Rechercher un espace d''activités'
 see: Voir
 see_more: 'Voir plus'
-'select all': 'Tout sélectionner'
 select_all: 'Tout sélectionner'
 select_category: 'Sélectionner une catégorie'
 select_contacts_title: 'Sélectionnez les destinataires'
@@ -557,6 +564,7 @@ show_as: 'Voir en tant que'
 show_as_admin: 'Voir comme admin'
 show_as_user: 'Voir comme utilisateur'
 show_profile: 'Voir le profile'
+simple: 'Simple'
 steal_session: 'Voler la session'
 storage_type: 'Type de stockage'
 subcategories: Sous-catégories
@@ -612,7 +620,6 @@ unable_to_start_smtp: 'La connexion avec le serveur SMTP ne peut pas être étab
 unable_to_start_transport: 'La connexion avec le serveur de mails ne peut pas être établie. Veuillez vérifier que les paramètres que vous avez renseignés sont corrects.'
 unauthorized: 'Vous n''êtes pas autorisé à consulter cette page.'
 under_min_length: 'Cette valeur est trop courte'
-'unique connections': 'Nb Cnx. uniques'
 unregister: Désinscription
 unregister_from_a_workspace: 'Me désinscrire d''un espace'
 unregistered: 'Non inscrit'
@@ -665,9 +672,9 @@ widget_home_tab_delete_confirm_title: 'Suppression du widget de l''onglet'
 widget_settings: 'Paramètres des widgets'
 widgets: Widgets
 widgets_configuration: 'Configuration des widgets'
-workspace: 'Espace d''activités'
 workspace.create: 'Créer un nouvel espace d''activités'
 workspace.name_not_blank: 'Veuillez spécifier un nom pour ce workspace.'
+workspace: 'Espace d''activités'
 workspace_administration: Administration
 workspace_classification: 'Classification des espaces d''activités'
 workspace_delete: 'Supprimer l''espace d''activités'
@@ -709,4 +716,3 @@ ws_most_viewed: 'Espaces d''activités les plus consultés'
 yes: oui
 yesterday_activity: 'Activité de la veille'
 your_username: 'Votre nom d''utilisateur est '
-404: 'La page que vous cherchez n''existe pas.'

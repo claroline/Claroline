@@ -12,6 +12,7 @@
 
     var tinymce = window.tinymce;
     var home = window.Claroline.Home;
+    var modal = window.Claroline.Modal;
     var translator = window.Translator;
 
     var language = home.locale.trim();
@@ -40,7 +41,8 @@
 
             home.isValidURL(link, function () {
                 home.generatedContent(link, function (data) {
-                    insertContent(data);
+                    tinymce.activeEditor.insertContent('<div>' + data + '</div>');
+                    editorChange(tinymce.activeEditor);
                 }, false);
             });
         },
@@ -69,7 +71,17 @@
                     'tooltip': translator.get('platform:upload'),
                     'onclick': function () {
                         tinymce.activeEditor = editor;
-                        home.modal('file/uploadmodal', 'uploadModal', editor);
+                        modal.fromRoute('claro_upload_modal', null, function (element) {
+                            element.on('click', '.resourcePicker', function () {
+                                resourcePickerOpen();
+                            })
+                            .on('click', '.filePicker', function () {
+                                $('#file_form_file').click();
+                            })
+                            .on('change', '#file_form_file', function () {
+                                uploadfile(this, element);
+                            });
+                        });
                     }
                 });
             }
@@ -88,14 +100,6 @@
         setTimeout(function () {
             editor.fire('change');
         }, 500);
-    }
-
-    function insertContent(content)
-    {
-        var newNode = tinymce.activeEditor.getDoc().createElement('div');
-        newNode.innerHTML = content;
-        tinymce.activeEditor.selection.getRng().insertNode(newNode);
-        editorChange(tinymce.activeEditor);
     }
 
     function tinymceInit()
@@ -130,7 +134,7 @@
             editorChange(tinymce.activeEditor);
         })
         .error(function () {
-            home.modal('content/error');
+            modal.error();
         });
     }
 
@@ -149,37 +153,16 @@
                 Claroline.ResourceManager.picker('open');
             })
             .error(function () {
-                home.modal('content/error');
+                modal.error();
             });
         } else {
             Claroline.ResourceManager.picker('open');
         }
     }
 
-    var domChange;
-
-    $('body').bind('ajaxComplete', function () {
-        tinymceInit();
-    });
-
-    $('body').bind('DOMSubtreeModified', function () {
-        clearTimeout(domChange);
-        domChange = setTimeout(tinymceInit, 10);
-    });
-
-    $('body').on('click', '.modal#uploadModal .resourcePicker', function () {
-        resourcePickerOpen();
-    });
-
-    $('body').on('click', '.modal#uploadModal .filePicker', function () {
-        $('#file_form_file').click();
-    });
-
-    $('body').on('change', '.modal#uploadModal #file_form_file', function () {
-        var workspace = $(this).data('workspace');
-        var modal = $(this).parents('.modal#uploadModal').get(0);
-
-        $(this).upload(
+    function uploadfile(form, modal) {
+        var workspace = $(form).data('workspace');
+        $(form).upload(
             home.path + 'resource/create/file/' + workspace,
             function (done) {
                 if (done.getResponseHeader('Content-Type')  === 'application/json') {
@@ -205,7 +188,17 @@
                 .find('sr-only').text(percent + '%');
             }
         );
+    }
 
+    var domChange;
+
+    $('body').bind('ajaxComplete', function () {
+        tinymceInit();
+    });
+
+    $('body').bind('DOMSubtreeModified', function () {
+        clearTimeout(domChange);
+        domChange = setTimeout(tinymceInit, 10);
     });
 
     $(document).ready(function () {

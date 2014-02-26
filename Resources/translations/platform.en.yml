@@ -11,10 +11,7 @@
 'Filter actions': 'Filter actions'
 'Google HTML tag validation': 'Google HTML tag validation'
 'I accept the terms of service': 'I accept the terms of service'
-Indexing: Indexing
-Language: Language
 'Last action': '{1} Last action|[1,Inf] Last %logAmount% actions'
-None: None
 'Or choose an existing file from resource manager': 'Or choose an existing file from resource manager'
 'Overview of all recent activities in %workspaceName%': 'Overview of all recent activities in %workspaceName%'
 'Overview of recent activities in %workspaceName%': 'Overview of recent activities in %workspaceName%'
@@ -27,6 +24,18 @@ None: None
 'The form is not valid': 'The form is not valid'
 'Upload a file': 'Upload a file'
 'Your changes have been saved': 'Your changes have been saved'
+'for period': 'for period'
+'select all': 'Select all'
+'unique connections': 'Nb unique Cnx.'
+404: 'Page Not found'
+Create a new resource: 'Create a new resource'
+Everyone: 'Everyone'
+Grant the right to: 'Grant the right to'
+Indexing: Indexing
+Language: Language
+Members of work space: 'Members of work space'
+None: None
+Some users: 'Some users'
 account_created: 'Account created.'
 account_general_statistics: 'Account general statistics'
 action: Action
@@ -135,6 +144,7 @@ csv_users_import_infos_format_a: 'User informations must be defined in one line 
 csv_users_import_infos_format_b: 'Note that you must not add a file header'
 csv_users_import_infos_optional: Optional
 csv_users_import_infos_required: Required
+curl_facebook_application_validation_error: 'Curl extension is missing.'
 current_category: 'Current category'
 cut: Cut
 dashboard: Dashboard
@@ -204,7 +214,6 @@ exportable: Exportable
 external_pdo_database: 'External database (PDO)'
 facebook: Facebook
 facebook_application_validation_error: 'Provided credentials are not valid.'
-curl_facebook_application_validation_error: 'Curl extension is missing.'
 fast_answer: 'Fast answer'
 fb_client_id: Application id
 fb_client_secret: Application secret
@@ -220,7 +229,6 @@ filter: Filter
 find_workspaces: 'All workspaces'
 firstName: 'First name'
 first_name: 'First name'
-'for period': 'for period'
 forgot_password: 'Forgot your password ?'
 form_role: Role
 from: From
@@ -525,7 +533,6 @@ search_user: 'Search for an user'
 search_workspace: 'Search for a workspace'
 see: See
 see_more: 'See more'
-'select all': 'Select all'
 select_all: 'Select all'
 select_category: 'Select a category'
 select_contacts_title: 'Select receivers'
@@ -558,6 +565,7 @@ show_as: 'Show as'
 show_as_admin: 'Show as admin'
 show_as_user: 'Show as user'
 show_profile: 'Show profile'
+simple: 'Simple'
 storage_type: 'Storage type'
 subcategories: Subcategories
 subscribe_groups: 'Subscribe groups'
@@ -612,7 +620,6 @@ unable_to_start_smtp: 'The connection with the SMTP server cannot be established
 unable_to_start_transport: 'The mailing transport cannot be started. Please check that the parameters you provided are correct.'
 unauthorized: 'You are not authorized to see this page.'
 under_min_length: 'This value is too short'
-'unique connections': 'Nb unique Cnx.'
 unregister: Unregister
 unregister_from_a_workspace: 'Unregister from a workspace'
 unregistered: Unregistered
@@ -665,9 +672,9 @@ widget_home_tab_delete_confirm_title: 'Remove widget from Home tab'
 widget_settings: 'Widget settings'
 widgets: Widgets
 widgets_configuration: 'Widgets configuration'
-workspace: Workspace
 workspace.create: 'Create a new workspace'
 workspace.name_not_blank: 'The workspace''s name is required.'
+workspace: Workspace
 workspace_administration: Administration
 workspace_classification: 'Workspace classification'
 workspace_delete: 'Delete the workspace'
@@ -709,4 +716,3 @@ ws_most_viewed: 'Most viewed workspaces'
 yes: yes
 yesterday_activity: 'Yesterday''s activity'
 your_username: 'Your username is '
-404: 'Page Not found'
