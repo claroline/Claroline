@@ -219,6 +219,7 @@ class InteractionHoleHandler {
 
         //On persite tous les hints de l'entité interaction
         foreach ($interHole->getInteraction()->getHints() as $hint) {
+            $hint->setPenalty(ltrim($hint->getPenalty(), '-'));
             $interHole->getInteraction()->addHint($hint);
             $this->em->persist($hint);
         }

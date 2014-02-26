@@ -206,9 +206,9 @@ function CheckScore(message, valueOfPoint) {
 // Submit form without an empty field
 function Check(noTitle, noQuestion, noImg, noAnswerZone, questiontitle, invite) {
 
-    if ($("*[id$='_penalty']").length > 0) {
+    /*if ($("*[id$='_penalty']").length > 0) {
         $("*[id$='_penalty']").val($("*[id$='_penalty']").val().replace(/[-]/, ''));
-    }
+    }*/
 
     var empty = false; // Answer zone aren't defined
 

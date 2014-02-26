@@ -108,6 +108,14 @@ class InteractionGraphicHandler
         for ($i = 0; $i < $lengthCoord; $i++) {
             $this->em->persist($allCoords[$i]);
         }
+        
+         //On persite tous les hints de l'entité interaction
+        foreach ($interGraph->getInteraction()->getHints() as $hint) {
+            $hint->setPenalty(ltrim($hint->getPenalty(), '-'));
+            $interGraph->getInteraction()->addHint($hint);
+            $this->em->persist($hint);
+        }
+        
         $this->em->flush();
     }
 
@@ -169,6 +177,7 @@ class InteractionGraphicHandler
 
         //Persit all the  hints of entity Interaction
         foreach ($interGraphic->getInteraction()->getHints() as $hint) {
+            $hint->setPenalty(ltrim($hint->getPenalty(), '-'));
             $interGraphic->getInteraction()->addHint($hint);
             $this->em->persist($hint);
         }

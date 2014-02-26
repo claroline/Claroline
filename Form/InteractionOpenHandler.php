@@ -149,6 +149,7 @@ class InteractionOpenHandler
 
         //On persite tous les hints de l'entité interaction
         foreach ($interOpen->getInteraction()->getHints() as $hint) {
+            $hint->setPenalty(ltrim($hint->getPenalty(), '-'));
             $interOpen->getInteraction()->addHint($hint);
             $this->em->persist($hint);
         }

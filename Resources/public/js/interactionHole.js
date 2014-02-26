@@ -345,8 +345,8 @@ function addWR(indexHole, idTabWR) {
 function addClassVAlign() {
     $('#newTable').find('td').each(function () {
         $(this).children('input').addClass('vertical-align-center');
+        //$(this).children('a').addClass('vertical-align-center');
     });
-    $('#hole_' + index).addClass('vertical-align-center');
 }
 
 function verticalAlignCenter() {

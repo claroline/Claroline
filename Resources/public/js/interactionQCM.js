@@ -203,9 +203,9 @@ function addDelete(tr, deleteChoice) {
 function check_form(nbrChoices, answerCoched, labelEmpty, pointAnswers, pointAnswer, inviteQuestion) {
     //"use strict";
 
-    if ($("*[id$='_penalty']").length > 0) {
+    /*if ($("*[id$='_penalty']").length > 0) {
         $("*[id$='_penalty']").val($("*[id$='_penalty']").val().replace(/[-]/, ''));
-    }
+    }*/
 
     // If no question is asked
     if ($('#ujm_exobundle_interactionqcmtype_interaction_invite').val() == '') {

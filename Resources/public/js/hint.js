@@ -1,14 +1,11 @@
 var containerH = $('div#*[id$="_interaction_hints"]'); // Div which contain the dataprototype
 var tableHints = $('#tableHint'); // div which contain the hints array
-var index; // number of hints
 
 function newHint(label, penalty, addHint, deleteHint) {
 
     $('#divHint').find('.form-collection-add').remove();
 
     var begin = true;
-
-    index = 0;
 
     // create the button to add a hint
     var add = $('<a href="#" id="add_hint" class="btn btn-primary"><i class="icon-plus"></i>&nbsp;'+addHint+'</a>');
@@ -80,13 +77,22 @@ function newHintEdit(label, penalty, addHint, deleteHint) {
     // Remove the useless fields form
     containerH.remove();
     tableHints.next().remove();
-
-    // Get the number of hints
-    index = $('#newTable2').find('tr:not(:first)').length;
 }
 
 // Add a hint
 function addHints(container, deleteHint) {
+
+    var uniqChoiceID = false;
+
+    var index = $('#newTable2').find('tr:not(:first)').length;
+
+    while (uniqChoiceID == false) {
+        if ($('#ujm_exobundle_interactionopentype_interaction_hints_' + index + '_value').length) {
+            index++;
+        } else {
+            uniqChoiceID = true;
+        }
+    }
 
      // change the "name" by the index and delete the symfony delete form button
     var contain = $(container.attr('data-prototype').replace(/__name__/g, index)
