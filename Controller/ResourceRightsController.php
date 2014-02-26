@@ -95,7 +95,7 @@ class ResourceRightsController
 
         if (!$role) {
             $data = $this->wsTagManager->getDatasForWorkspaceList(true);
-            $rolesRights = $this->rightsManager->getNonAdminRights($node);
+            $rolesRights = $this->rightsManager->getConfigurableRights($node);
             $data['resourceRights'] = $rolesRights;
             $data['resource'] = $node;
             $data['isDir'] = $isDir;

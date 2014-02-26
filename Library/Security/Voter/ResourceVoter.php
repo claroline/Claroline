@@ -13,6 +13,7 @@ namespace Claroline\CoreBundle\Library\Security\Voter;
 
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
+use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Symfony\Component\Translation\Translator;
 use Claroline\CoreBundle\Manager\MaskManager;
 use Claroline\CoreBundle\Library\Security\Utilities;
@@ -66,10 +67,12 @@ class ResourceVoter implements VoterInterface
             if (strtolower($attributes[0]) == 'create') {
                 //there should be one one resource every time
                 //(you only create resource one at a time in a single directory
+                $targetWorkspace = $object->getResources()[0]->getWorkspace();
+
                 foreach ($object->getResources() as $resource) {
                     $errors = array_merge(
                         $errors,
-                        $this->checkCreation($object->getAttribute('type'), $resource, $token)
+                        $this->checkCreation($object->getAttribute('type'), $resource, $token, $targetWorkspace)
                     );
                 }
             } elseif (strtolower($attributes[0]) == 'move') {
@@ -142,8 +145,31 @@ class ResourceVoter implements VoterInterface
         return false;
     }
 
+    /**
+     * @todo remove array typing from $resources
+     *
+     * @param $action
+     * @param array $resources
+     * @param TokenInterface $token
+     * @return array
+     * @throws \Exception
+     */
     private function checkAction($action, array $resources, TokenInterface $token)
     {
+        $haveSameWorkspace = true;
+        $ws = $resources[0]->getWorkspace();
+
+        foreach ($resources as $resource) {
+            if ($resource->getWorkspace() !== $ws) {
+                $haveSameWorkspace = false;
+                break;
+            }
+        }
+
+        if ($haveSameWorkspace && $this->isWorkspaceManager($ws, $token)) {
+            return array();
+        }
+
         $isCreator = false;
 
         foreach ($resources as $resource) {
@@ -155,6 +181,8 @@ class ResourceVoter implements VoterInterface
         if ($isCreator) {
             return array();
         }
+
+
 
         $errors = array();
         $action = strtolower($action);
@@ -188,10 +216,15 @@ class ResourceVoter implements VoterInterface
      *
      * @return array
      */
-    private function checkCreation($types, ResourceNode $resource, TokenInterface $token)
+    private function checkCreation($types, ResourceNode $resource, TokenInterface $token, AbstractWorkspace $workspace)
     {
-        $rightsCreation = $this->repository->findCreationRights($this->ut->getRoles($token), $resource);
         $errors = array();
+
+        if ($this->isWorkspaceManager($workspace, $token)) {
+            return $errors;
+        }
+
+        $rightsCreation = $this->repository->findCreationRights($this->ut->getRoles($token), $resource);
 
         if (count($rightsCreation) == 0) {
             $errors[] = $this->translator
@@ -238,6 +271,26 @@ class ResourceVoter implements VoterInterface
      */
     private function checkMove(ResourceNode $parent, $resources, TokenInterface $token)
     {
+        //do the resources share the same workspace ?
+        //It doesn't cover every cases like moving a resource from a workspace to an other where the user
+        //is manager of both but it is a start.
+        //role manager verification
+        $haveSameWorkspace = true;
+        $ws = $parent->getWorkspace();
+
+        foreach ($resources as $resource) {
+            if ($resource->getWorkspace() !== $ws) {
+                $haveSameWorkspace = false;
+                break;
+            }
+        }
+
+        if ($haveSameWorkspace && $this->isWorkspaceManager($ws, $token)) {
+            return array();
+        }
+
+        //end of the role manager verification
+
         $errors = array();
         $rightsCreation = $this->repository
             ->findCreationRights($this->ut->getRoles($token), $parent);
@@ -295,6 +348,24 @@ class ResourceVoter implements VoterInterface
      */
     public function checkCopy(ResourceNode $parent, array $resources, TokenInterface $token)
     {
+        //do the resources share the same workspace ?
+        //It doesn't cover every cases like copying a resource from a workspace to an other where the user
+        //is manager of both but it is a start.
+        //role manager verification
+        $haveSameWorkspace = true;
+        $ws = $parent->getWorkspace();
+
+        foreach ($resources as $resource) {
+            if ($resource->getWorkspace() !== $ws) {
+                $haveSameWorkspace = false;
+                break;
+            }
+        }
+
+        if ($haveSameWorkspace && $this->isWorkspaceManager($ws, $token)) {
+            return array();
+        }
+
         $errors = array();
         $rightsCreation = $this->repository
             ->findCreationRights($this->ut->getRoles($token), $parent);
@@ -340,5 +411,12 @@ class ResourceVoter implements VoterInterface
                     ),
                 'platform'
             );
+    }
+
+    private function isWorkspaceManager(AbstractWorkspace $workspace, TokenInterface $token)
+    {
+        $managerRoleName = 'ROLE_WS_MANAGER_' . $workspace->getGuid();
+
+        return in_array($managerRoleName, $this->ut->getRoles($token)) ? true: false;
     }
 }

@@ -93,7 +93,17 @@ class ResourceNodeRepository extends MaterializedPathRepository
         $builder = new ResourceQueryBuilder();
         $children = array();
 
-        if (in_array('ROLE_ADMIN', $roles)) {
+        $isWorkspaceManager = false;
+        $ws = $parent->getWorkspace();
+        $managerRole = 'ROLE_WS_MANAGER_' . $ws->getGuid();
+        foreach ($roles as $role) {
+            if (in_array($managerRole, $roles)) {
+                $isWorkspaceManager = true;
+            }
+        }
+        //check if manager of the workspace.
+
+        if (in_array('ROLE_ADMIN', $roles) || $isWorkspaceManager) {
             $builder->selectAsArray()
                 ->whereParentIs($parent)
                 ->orderByName();

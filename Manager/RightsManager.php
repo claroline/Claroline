@@ -385,9 +385,9 @@ class RightsManager
      *
      * @return \Claroline\CoreBundle\Resource\ResourceRights[]ù
      */
-    public function getNonAdminRights(ResourceNode $node)
+    public function getConfigurableRights(ResourceNode $node)
     {
-        return $this->rightsRepo->findNonAdminRights($node);
+        return $this->rightsRepo->findConfigurableRights($node);
     }
 
     /**

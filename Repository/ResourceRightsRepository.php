@@ -105,7 +105,7 @@ class ResourceRightsRepository extends EntityRepository
     /**
      * @todo to be removed
      */
-    public function findNonAdminRights(ResourceNode $resource)
+    public function findConfigurableRights(ResourceNode $resource)
     {
         $dql = "
             SELECT rights
@@ -113,7 +113,7 @@ class ResourceRightsRepository extends EntityRepository
             JOIN rights.resourceNode resource
             JOIN rights.role role
             WHERE resource.id = {$resource->getId()}
-            AND role.name != 'ROLE_ADMIN'
+            AND role.name NOT LIKE 'ROLE_WS_MANAGER_%'
             ORDER BY role.name
         ";
 

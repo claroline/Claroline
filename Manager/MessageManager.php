@@ -134,7 +134,7 @@ class MessageManager
                 $userMessage->setMessage($message);
                 $this->om->persist($userMessage);
 
-                if ($user->isMailNotified) {
+                if ($user->isMailNotified()) {
                     $mailNotifiedUsers[] = $userReceiver;
                 }
             }

@@ -191,7 +191,7 @@ class ResourceManagerListener
             throw new AccessDeniedException();
         }
         $resource = $this->resourceManager->getWorkspaceRoot($workspace);
-        $roleRights = $this->rightsManager->getNonAdminRights($resource);
+        $roleRights = $this->rightsManager->getConfigurableRights($resource);
 
         $datas = $this->workspaceTagManager->getDatasForWorkspaceList(true);
 
