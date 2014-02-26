@@ -172,14 +172,6 @@ class TemplateBuilder
     {
         return array(
             'root_perms' => array(
-                'ROLE_WS_VISITOR' => array(
-                    'edit' => '0',
-                    'open' => '0',
-                    'delete' => '0',
-                    'copy' => '0',
-                    'export' => '0',
-                    'create' => array()
-                ),
                 'ROLE_WS_COLLABORATOR' => array(
                     'edit' => '0',
                     'open' => '1',
@@ -220,7 +212,6 @@ class TemplateBuilder
                 )
             ),
             'roles' => array(
-                'ROLE_WS_VISITOR' => 'visitor',
                 'ROLE_WS_COLLABORATOR' => 'collaborator',
                 'ROLE_WS_MANAGER' => 'manager'
             ),
@@ -228,7 +219,6 @@ class TemplateBuilder
             'tools_infos' => array(
                 'home' => array(
                     'perms' => array(
-                        0 => 'ROLE_WS_VISITOR',
                         1 => 'ROLE_WS_COLLABORATOR',
                         2 => 'ROLE_WS_MANAGER',
                     ),
@@ -262,14 +252,6 @@ class TemplateBuilder
     public function getDefaultResourcePerms()
     {
         return array(
-            'ROLE_WS_VISITOR' => array(
-                'edit' => '0',
-                'open' => '0',
-                'delete' => '0',
-                'copy' => '0',
-                'export' => '0',
-                'create' => array()
-            ),
             'ROLE_WS_COLLABORATOR' => array(
                 'edit' => '0',
                 'open' => '1',

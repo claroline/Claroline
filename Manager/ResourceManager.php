@@ -397,20 +397,17 @@ class ResourceManager
             $this->rightsManager->create($data, $data['role'], $node, false, $resourceTypes);
         }
 
-        $resourceTypes = $this->resourceTypeRepo->findAll();
-
-        /**@todo remove this line and grant edit requests in the resourceManager.*/
         $this->rightsManager->create(
-            31,
-            $this->roleRepo->findOneBy(array('name' => 'ROLE_ADMIN')),
+            0,
+            $this->roleRepo->findOneBy(array('name' => 'ROLE_ANONYMOUS')),
             $node,
             false,
-            $resourceTypes
+            array()
         );
 
         $this->rightsManager->create(
             0,
-            $this->roleRepo->findOneBy(array('name' => 'ROLE_ANONYMOUS')),
+            $this->roleRepo->findOneBy(array('name' => 'ROLE_USER')),
             $node,
             false,
             array()
