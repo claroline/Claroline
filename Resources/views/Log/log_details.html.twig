@@ -34,6 +34,7 @@
          {% include  'IcapDropzoneBundle:Log:log_details_drop_report.html.twig' %}
     {% elseif constant('Icap\\DropzoneBundle\\Event\\Log\\LogCorrectionReportEvent::ACTION') == log.action %}
          {% include  'IcapDropzoneBundle:Log:log_details_correction_report.html.twig' %}
+    {% elseif constant('Icap\\DropzoneBundle\\Event\\Log\\LogDropGradeAvailableEvent::ACTION') == log.action %}
+         {% include  'IcapDropzoneBundle:Log:log_details_drop_grade_available.html.twig' %}
     {% endif %}
-     
 {% endblock %}

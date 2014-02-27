@@ -208,6 +208,7 @@ common_explication: 'Cet outil met à disposition des apprenants un espace pour 
 criteria_explication: 'Veuillez créer ici le formulaire d''évaluation qui sera rempli par les correcteurs.<br/>Le nombre de critères n''est pas limité.<br/>Vous pouvez proposer une zone de commentaire libre au correcteur.'
 expected_total_correction: 'Trois conditions sont nécessaire pour qu''un étudiant valide son évaluation :<br/>- Il doit avoir rendu sa copie.<br/>- Il doit avoir corrigé N autre(s) copie(s).<br/>- Sa copie doit avoir reçu N correction(s).<br/><br/>Le tirage d''une copie lors d''une correction est fait de manière aléatoire et anonyme.'
 See corrections: 'Voir les corrections'
+See copy: 'Voir la copie'
 Delete copy: 'Supprimer la copie'
 Reported: 'A signalé'
 Invalidated: 'Invalidée'

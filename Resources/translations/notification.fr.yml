@@ -1,2 +1,3 @@
-resource-icap_dropzone-drop_report: " une copie a été signalée dans l'évaluation %dropzone%"
-resource-icap_dropzone-correction_report: " une correction a été signalée dans l'évaluation %dropzone%"
+resource-icap_dropzone-drop_report: ' une copie a été signalée dans l''évaluation %dropzone%'
+resource-icap_dropzone-correction_report: ' une correction a été signalée dans l''évaluation %dropzone%'
+resource-icap_dropzone-drop_grade_available: ' Votre copie a été corrigée et votre note est disponible dans l''évaluation %dropzone%'
