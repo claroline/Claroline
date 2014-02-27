@@ -23,48 +23,9 @@ function ScenarioCtrl($scope, $modal, HistoryFactory, PathFactory, StepFactory, 
         connectWith: '.ui-sortable'
     };
 
-    /**
-     * Display step in the preview zone
-     * @returns void
-     */
-    $scope.setPreviewStep = function(step) {
-        var isRootStep = false;
-        var rootStep = null;
-        if (undefined !== $scope.path && null !== $scope.path && undefined !== $scope.path.steps[0]) {
-            rootStep = $scope.path.steps[0];
-        }
-
-        if (step) {
-            $scope.previewStep = step;
-            if (step.id === rootStep.id) {
-                isRootStep = true;
-            }
-        }
-        else if (rootStep) {
-            $scope.previewStep = rootStep;
-            isRootStep = true;
-        }
-
-        $scope.stepIsRootNode = isRootStep;
-        $scope.inheritedResources = ResourceFactory.getInheritedResources($scope.previewStep);
-    };
-
     if (null === $scope.previewStep) {
         $scope.setPreviewStep();
     }
-
-    /**
-     * Reload preview step to apply last changes
-     * @returns void
-     */
-    $scope.updatePreviewStep = function() {
-        // Update preview step
-        var step = null;
-        if (null !== $scope.previewStep) {
-            step = PathFactory.getStepById($scope.previewStep.id);
-        }
-        $scope.setPreviewStep(step);
-    };
 
     /**
      * Update Path when Tree is modified with drag n drop
