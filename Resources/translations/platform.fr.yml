@@ -70,7 +70,7 @@ agenda: Agenda
 all: Tous
 all_available_workspaces: 'Tous les espaces d''activités disponibles'
 all_my_workspaces: 'Tous mes espaces d''activités'
-all_workspaces: 'Tous les espaces d''activités'
+all_workspaces: 'Tous les espaces d''activités (publiques)'
 already_existing_user: 'L''utilisateur existe déjà.'
 an_error_occured_message: 'Une erreur s''est produite. Veuillez contacter l''administrateur.'
 analytics_connections: 'Visites utilisateurs'
@@ -217,7 +217,7 @@ file_form_shareType_0: Oui
 file_form_shareType_1: Non
 files: Fichiers
 filter: Filtrer
-find_workspaces: 'Tous les espaces'
+find_workspaces: 'Tous les espaces publiques'
 firstName: Prénom
 first_name: Prénom
 'for period': 'sur la période du :'
@@ -702,6 +702,7 @@ workspace_tools: Outils
 workspace_unregistration_confirm_title: 'Voulez-vous vous désinscrire de cet espace d''activités ?'
 workspace_welcome: Accueil
 workspaces: 'Espaces d''activités'
+workspaces_management: 'Gestions des espaces d''activités '
 workspaces_included_in_category: 'Espaces d''activités enregistrés dans cette catégorie'
 ws_creator: 'Créateur d''espaces'
 ws_most_viewed: 'Espaces d''activités les plus consultés'
