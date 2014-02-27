@@ -12,6 +12,7 @@ use Claroline\CoreBundle\Event\Log\LogResourceReadEvent;
 use Claroline\CoreBundle\Event\Log\LogResourceUpdateEvent;
 use Icap\DropzoneBundle\Entity\Correction;
 use Icap\DropzoneBundle\Entity\Dropzone;
+use Icap\DropzoneBundle\Entity\Drop;
 use Icap\DropzoneBundle\Entity\Grade;
 use Icap\DropzoneBundle\Event\Log\LogCorrectionDeleteEvent;
 use Icap\DropzoneBundle\Event\Log\LogCorrectionEndEvent;
@@ -19,6 +20,7 @@ use Icap\DropzoneBundle\Event\Log\LogCorrectionStartEvent;
 use Icap\DropzoneBundle\Event\Log\LogCorrectionUpdateEvent;
 use Icap\DropzoneBundle\Event\Log\LogCorrectionValidationChangeEvent;
 use Icap\DropzoneBundle\Event\Log\LogCorrectionReportEvent;
+use Icap\DropzoneBundle\Event\Log\LogDropGradeAvailableEvent;
 use Icap\DropzoneBundle\Form\CorrectionCommentType;
 use Icap\DropzoneBundle\Form\CorrectionCriteriaPageType;
 use Icap\DropzoneBundle\Form\CorrectionStandardType;
@@ -184,6 +186,7 @@ class CorrectionController extends DropzoneBaseController
             $edit = true;
         }
 
+        $drop = $correction->getDrop();
         $correction->setEndDate(new \DateTime());
         $correction->setFinished(true);
         $totalGrade = $this->calculateCorrectionTotalGrade($dropzone, $correction);
@@ -205,6 +208,9 @@ class CorrectionController extends DropzoneBaseController
             $this->get('translator')->trans('Your correction has been saved', array(), 'icap_dropzone')
         );
 
+        // check if the drop owner can now access to his grade.
+        $this->checkUserGradeAvailableByDrop($drop);
+
         if ($admin === true) {
             return $this->redirect(
                 $this->generateUrl(
@@ -216,7 +222,7 @@ class CorrectionController extends DropzoneBaseController
                 )
             );
         } else {
-            return $this->redirect(
+            return $this->redirect( 
                 $this->generateUrl(
                     'icap_dropzone_open',
                     array(
@@ -227,6 +233,50 @@ class CorrectionController extends DropzoneBaseController
         }
 
     }
+
+    private function checkUserGradeAvailableByDrop(Drop $drop)
+    {
+        $user = $drop->getUser();
+        $dropzone = $drop->getDropzone();
+        $this->checkUserGradeAvailable($dropzone, $drop, $user);
+    }
+
+
+    /**
+     * Check the user's drop to see if he has corrected enought copy and if his copy is fully corrected
+     * in order to notify him that his grade is available.
+     * 
+     * */
+    private function checkUserGradeAvailable(Dropzone $dropzone,Drop $drop, $user)
+    {
+
+        // notification only in the PeerReview mode.
+        if($dropzone->getPeerReview() == 1)
+        {
+
+            $em = $this->getDoctrine()->getManager();
+            // copy corrected by user
+            $nbCorrectionByUser = $em->getRepository('IcapDropzoneBundle:Correction')->getAlreadyCorrectedDropIds($dropzone, $user);
+
+            // corrections on the user's copy
+            $nbCorrectionByOthersOnUsersCopy = $em->getRepository('IcapDropzoneBundle:Correction')->getCorrectionsIds($dropzone, $drop);
+
+
+            //Expected corrections 
+            $expectedCorrections = $dropzone->getExpectedTotalCorrection();
+
+            if($nbCorrectionByUser >=  $expectedCorrections || $nbCorrectionByUser >= $nbCorrectionByOthersOnUsersCopy )
+            {
+                //dispatchEvent.
+                $rm = $this->get('claroline.manager.role_manager');
+                $event = new LogDropGradeAvailableEvent($dropzone,$drop);
+                 $this->get('event_dispatcher')->dispatch('log', $event);
+            }
+
+        }
+
+    }
+
 
     private function calculateCorrectionTotalGrade(Dropzone $dropzone, Correction $correction)
     {
@@ -504,6 +554,7 @@ class CorrectionController extends DropzoneBaseController
         $this->isAllowToOpen($dropzone);
         $this->isAllowToEdit($dropzone);
 
+
         /** @var Correction $correction */
         $correction = $this
             ->getDoctrine()
@@ -601,6 +652,7 @@ class CorrectionController extends DropzoneBaseController
         {
             $this->isAllowToEdit($dropzone);
         }
+        $this->checkUserGradeAvailable($dropzone);
         
 
         if (!$dropzone->getPeerReview()) {

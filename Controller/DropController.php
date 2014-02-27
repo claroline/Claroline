@@ -523,12 +523,7 @@ class DropController extends DropzoneBaseController
         $this->get('event_dispatcher')->dispatch('log', $event);
     }
 
-    protected function dispatchCorrectionReportEvent(Dropzone $dropzone, Drop $drop,Correction $correction)
-    {
-        $rm = $this->get('claroline.manager.role_manager');
-        $event = new LogCorrectionReportEvent($dropzone,$drop,$correction,$rm);
-        $this->get('event_dispatcher')->dispatch('log', $event);
-    }
+
 
 
     /**

@@ -8,8 +8,13 @@
         <strong>{{ systemName }}</strong>
     {% endif %}
     {% if constant('Icap\\DropzoneBundle\\Event\\Log\\LogDropReportEvent::ACTION') == notification.actionKey %}
+        {#    DROP REPORT  #}
         {% include 'IcapDropzoneBundle:Notification:notification_drop_report.html.twig' %}
     {% elseif constant('Icap\\DropzoneBundle\\Event\\Log\\LogCorrectionReportEvent::ACTION') == notification.actionKey %}
+        {#    CORRECTION  REPORT  #}
         {% include 'IcapDropzoneBundle:Notification:notification_correction_report.html.twig' %}
+    {% elseif constant('Icap\\DropzoneBundle\\Event\\Log\\LogDropGradeAvailableEvent::ACTION') == notification.actionKey %}
+        {#    DROP GRADE AVAILABLE  #}
+        {% include 'IcapDropzoneBundle:Notification:notification_drop_grade_available.html.twig' %}
     {% endif %}
 {% endblock %}

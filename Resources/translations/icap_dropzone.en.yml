@@ -209,6 +209,7 @@ common_explication: 'This tool provides a space for students to file documents t
 criteria_explication: 'Please create here an evaluation form to be completed by the editors.<br/>The number of criteria is not limited.<br/>You can offer a free comment checker.'
 expected_total_correction: 'Three conditions are necessary for a student to valid his evaluation:<br/>- He must have made ​​a copy.<br/>- It must be corrected N other (s) copy (s).<br/>- The copy must be received N correction (s).<br/><br/>A draw for a copy during a correction is made ​​randomly and anonymously.'
 See corrections: 'See corrections'
+See copy: 'See copy'
 Delete copy: 'Delete copy'
 Reported: 'Reported'
 Invalidated: 'Invalidated'

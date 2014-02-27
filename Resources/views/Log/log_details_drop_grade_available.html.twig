@@ -1,0 +1,17 @@
+{% if log.details.drop is defined and log.details.drop.owner is defined %}
+    <h4>
+        {{ ('log_owner_drop')|trans({}, 'log') }}
+    </h4>
+    {% include 'IcapDropzoneBundle:Log:log_details_user.html.twig' with {'user': log.details.drop.owner} %}
+{% endif %}
+{% if log.details.dropId is defined %}  
+    <div class='list-group'>
+        <div class='list-group-item'> 
+            <dl>
+                <a href="{{ path('icap_dropzone_drops_detail', {'resourceId' : log.details.dropzoneId,'dropId' : log.details.dropId}) }}" target="_blank">
+                    {{ 'See copy'|trans({},'icap_dropzone') }}
+                </a>
+            </dl>
+        </div>
+    </div>
+{% endif %}

@@ -248,6 +248,17 @@ class DropRepository extends EntityRepository {
         return $qb->getQuery();
     }
 
+    public function getDropIdsByUser($dropzoneId,$userId)
+    {
+        $qb = $this->createQueryBuilder('drop')
+            ->select('drop.id')
+            ->andWhere('drop.dropzone = :dropzone')
+            ->andWhere('drop.user = :user')
+            ->setParameter('dropzone',$dropzoneId)
+            ->setParameter('user',$userId);
+        return $qb->getQuery()->getResult()[0];
+    }
+
     public function getDropAndCorrectionsAndDocumentsAndUser($dropzone, $dropId)
     {
         $qb = $this->createQueryBuilder('drop')

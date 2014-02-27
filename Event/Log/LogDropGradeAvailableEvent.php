@@ -10,31 +10,26 @@ use Icap\DropzoneBundle\Entity\Drop;
 use Icap\DropzoneBundle\Entity\Dropzone;
 use Icap\DropzoneBundle\Entity\Correction;
 
-class LogCorrectionReportEvent extends AbstractLogResourceEvent implements NotifiableInterface {
+class LogDropGradeAvailableEvent extends AbstractLogResourceEvent implements NotifiableInterface {
 
-    const ACTION = 'resource-icap_dropzone-correction_report';
+    const ACTION = 'resource-icap_dropzone-drop_grade_available';
     protected $dropzone;
+    protected $drop;
     protected $details;
-    private $role_manager;
 
     /**
      * @param Wiki $wiki
      * @param Section $section
      * @param Contribution $contribution
     */
-    public function __construct(Dropzone $dropzone, Drop $drop, Correction $correction, $roleManager)
+    public function __construct(Dropzone $dropzone, Drop $drop)
     {
         $this->dropzone = $dropzone;
-        $this->role_manager =  $roleManager;
+        $this->drop = $drop;
         $this->details = array(
-            'report' => array(
                 'drop' => $drop,
-                'correction' => $correction,
-                'report_comment' => $correction->getReportComment(),
                 'dropzoneId' => $dropzone->getId(),
                 'dropId' => $drop->getId(),
-                'correctionId' => $correction->getId()
-            )
         );
 
         parent::__construct($dropzone->getResourceNode(), $this->details);
@@ -55,7 +50,7 @@ class LogCorrectionReportEvent extends AbstractLogResourceEvent implements Notif
      */
     public function getSendToFollowers()
     {
-        //Reports are only reported to user witch have the manager role
+        // notify only the drop's owner.
         return false;
     }
 
@@ -66,20 +61,11 @@ class LogCorrectionReportEvent extends AbstractLogResourceEvent implements Notif
      */
     public function getIncludeUserIds()
     {
-        // In order to get users with the manager role.
-        //getting the  workspace.
-        
-        $ResourceNode = $this->dropzone->getResourceNode();
-        $workspace = $ResourceNode->getWorkspace();
-        // getting the  Manager role
-        $role = $this->role_manager->getManagerRole($workspace);
-
-        // to finaly have the users.
-        $users = $role->getUsers();
+        // notify only the drop's owner.
         $ids = array();
-        foreach ($users as $user) {
-           array_push($ids,$user->getId());
-        }
+        $id = $this->drop->getUser()->getId();
+        array_push($ids,$id);
+
         return $ids;
         
     }
