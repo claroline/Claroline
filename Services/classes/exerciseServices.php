@@ -388,7 +388,9 @@ class exerciseServices
                 $wr = $em->getRepository('UJMExoBundle:WordResponse')->find($response);
                 $tabResp[$hole->getPosition()] = $wr->getResponse();
             } else {
-                $tabResp[$hole->getPosition()] = $response;
+                $from = array("'", '"');
+                $to = array("\u0027","\u0022");
+                $tabResp[$hole->getPosition()] = str_replace($from, $to, $response);
             }
         }
 
