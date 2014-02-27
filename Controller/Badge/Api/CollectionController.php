@@ -77,8 +77,17 @@ class CollectionController extends Controller
         $statusCode = (null === $collection->getId()) ? 201 : 204;
 
         $form = $this->createForm($this->get("claroline.form.badge.collection"), $collection, array("method" => $method));
-//        $form->handleRequest($request);
-        $form->submit($request->request->get($form->getName()), 'PATCH' !== $method);
+
+        $formParameters = $request->request->get($form->getName());
+
+        // Patch for boolean value, parameters are only string and always true for boolean value
+        if (isset($formParameters['is_shared'])) {
+            if ('0' === $formParameters['is_shared']) {
+                $formParameters['is_shared'] = false;
+            }
+        }
+
+        $form->submit($formParameters, 'PATCH' !== $method);
 
         if ($form->isValid()) {
             $entityManager = $this->getDoctrine()->getManager();
