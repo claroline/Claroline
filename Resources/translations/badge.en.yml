@@ -56,7 +56,7 @@ badge_form_description: Description
 badge_form_enTranslation: 'English translation'
 badge_form_execute: 'User validate the rule following executing an action on'
 badge_form_execute_times: 'When he executed the action'
-badge_form_expired_at: 'Expiration date'
+badge_form_is_expiring: "Does the badge has a period of validity ?"
 badge_form_frTranslation: 'French translation'
 badge_form_image: Image
 badge_form_name: Name
@@ -129,4 +129,5 @@ page_public_look: "This is how your page will look to the public."
 no_badge_in_collection: "There is no badge in this collection."
 badge_details: "Badge details"
 collection_owned_by_user: "From user %user%"
-badge_expiration_date_explanation: "Date when the badge expires. If omitted, the badge never expires. The badge is not removed after the expiration date, a visual indicator that the badge is expired is displayed."
+badge_expiration_date_explanation: "Validity period of the badge. If omitted, the badge never expires. The badge is not removed after the expiration date, a visual indicator that the badge is expired is displayed."
+badge_validity_period: "Validity period of the badge"

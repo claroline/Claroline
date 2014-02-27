@@ -138,7 +138,8 @@ class WorkspaceController extends Controller
 
         return array(
             'workspace' => $workspace,
-            'form'      => $form->createView()
+            'form'      => $form->createView(),
+            'badge'     => $badge
         );
     }
 

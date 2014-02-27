@@ -56,7 +56,7 @@ badge_form_description: Description
 badge_form_enTranslation: 'Traduction anglaise'
 badge_form_execute: 'L''utilisateur valide la règle suite à une action réalisée sur'
 badge_form_execute_times: 'Quand il a effectué l''action'
-badge_form_expired_at: 'Date d''expiration'
+badge_form_is_expiring: "Le badge a-t-il une durée de validité ?"
 badge_form_frTranslation: 'Traduction française'
 badge_form_image: Image
 badge_form_name: Nom
@@ -129,4 +129,5 @@ page_public_look: "Voici comment s'affichera cette page pour les visiteurs."
 no_badge_in_collection: "Il n'y a aucun badge dans cette collection."
 badge_details: "Détails du badge"
 collection_owned_by_user: "De l'utilisateur %user%"
-badge_expiration_date_explanation: "Date d'expiration du badge. Si omis le badge n'expirera jamais. Le badge n'est pas supprimé de l'utilisateur après expiration, un indicateur visuel d'expiration est affiché."
+badge_expiration_date_explanation: "Durée de validité du badge. Si omis le badge n'expirera jamais. Le badge n'est pas supprimé de l'utilisateur après expiration, un indicateur visuel d'expiration est affiché."
+badge_validity_period: "Durée de validité du badge"

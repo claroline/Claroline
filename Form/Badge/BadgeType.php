@@ -59,15 +59,17 @@ class BadgeType extends AbstractType
             ->add('enTranslation', new BadgeTranslationType())
             ->add('automatic_award', 'checkbox', array('required' => false))
             ->add('file', 'file', array('label' => 'badge_form_image'))
-            ->add(
-                'expired_at',
-                'datepicker',
+            ->add('is_expiring', 'checkbox', array('required' => false))
+            ->add('expire_duration', 'integer', array('attr' =>
                 array(
-                    'read_only' => true,
-                    'component' => true,
-                    'autoclose' => true,
-                    'language'  => $this->platformConfigHandler->getParameter('locale_language'),
-                    'format'    => $this->translator->trans('date_form_format', array(), 'platform')
+                      'class' => 'input-sm',
+                      'min'   => 1
+                )
+            ))
+            ->add('expire_period', 'choice',
+                array(
+                    'choices'     => array('day', 'week', 'month', 'year'),
+                    'attr'        => array('class' => 'input-sm')
                 )
             )
             ->add(

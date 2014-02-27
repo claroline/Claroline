@@ -120,7 +120,10 @@ class AdminController extends Controller
             }
         }
 
-        return array('form' => $form->createView());
+        return array(
+            'form'  => $form->createView(),
+            'badge' => $badge
+        );
     }
 
     /**

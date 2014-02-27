@@ -34,4 +34,15 @@ $(function(){
     });
 
     $("[data-toggle=popover]").popover();
+
+    var expiringPeriodDurationBlock = $("#expiring_period_duration");
+
+    $('#badge_form_is_expiring').click(function(){
+        if (this.checked) {
+            expiringPeriodDurationBlock.show();
+        }
+        else {
+            expiringPeriodDurationBlock.hide();
+        }
+    });
 });

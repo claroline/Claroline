@@ -35,6 +35,7 @@ use Gedmo\SoftDeleteable\Traits\SoftDeleteableEntity;
  * @BadgeAssert\AutomaticWithRules
  * @BadgeAssert\HasImage
  * @BadgeAssert\AtLeastOneTranslation
+ * @BadgeAssert\CheckExpiringPeriod
  * @ExclusionPolicy("all")
  */
 class Badge extends Rulable
@@ -78,12 +79,26 @@ class Badge extends Rulable
     protected $imagePath;
 
     /**
-     * @var \DateTime
+     * @var boolean
      *
-     * @ORM\Column(name="expired_at", type="datetime", nullable=true)
-     * @Expose
+     * @ORM\Column(name="is_expiring", type="boolean", options={"default": 0})
      */
-    protected $expiredAt;
+    protected $isExpiring = false;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="expire_duration", type="integer", nullable=true)
+     * @Assert\GreaterThan(value = 0)
+     */
+    protected $expireDuration;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="expire_period", type="smallint", nullable=true)
+     */
+    protected $expirePeriod;
 
     /**
      * @var UploadedFile
@@ -295,26 +310,6 @@ class Badge extends Rulable
     }
 
     /**
-     * @param \DateTime $expiredAt
-     *
-     * @return Badge
-     */
-    public function setExpiredAt($expiredAt)
-    {
-        $this->expiredAt = $expiredAt;
-
-        return $this;
-    }
-
-    /**
-     * @return \DateTime
-     */
-    public function getExpiredAt()
-    {
-        return $this->expiredAt;
-    }
-
-    /**
      * @param int $id
      *
      * @return Badge
@@ -521,6 +516,74 @@ class Badge extends Rulable
     public function getWorkspace()
     {
         return $this->workspace;
+    }
+
+    /**
+     * @param boolean $isExpiring
+     *
+     * @return Badge
+     */
+    public function setIsExpiring($isExpiring)
+    {
+        $this->isExpiring = $isExpiring;
+
+        return $this;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function getIsExpiring()
+    {
+        return $this->isExpiring;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isExpiring()
+    {
+        return $this->getIsExpiring();
+    }
+
+    /**
+     * @param int $expireDuration
+     *
+     * @return Badge
+     */
+    public function setExpireDuration($expireDuration)
+    {
+        $this->expireDuration = $expireDuration;
+
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getExpireDuration()
+    {
+        return $this->expireDuration;
+    }
+
+    /**
+     * @param int $expirePeriod
+     *
+     * @return Badge
+     */
+    public function setExpirePeriod($expirePeriod)
+    {
+        $this->expirePeriod = $expirePeriod;
+
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getExpirePeriod()
+    {
+        return $this->expirePeriod;
     }
 
     /**
