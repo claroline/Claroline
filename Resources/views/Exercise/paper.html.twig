@@ -48,12 +48,14 @@
 
 {% block title %} {{ 'paper' | trans }} {% endblock %}
 
+{% block resourceBreadcrumb %}
+    <li><a href="{{ path('claro_resource_open', { 'resourceType': _resource.resourceNode.resourceType.name(), 'node': _resource.resourceNode.id }) }}">{{ _resource.getResourceNode().getName() }}</a></li>
+    <li class="active">{{ 'nQuestion' | trans }}{{numQ}} : {{ interactionToDisplayed.interaction.question.title }}</li>
+{% endblock %}
+    
 {% block section_content %}
     <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/paper.js') }}"></script>
 
-     <!--div class="panel-heading">
-        <h1>{#{'paper exo'|trans}#}</h1>
-    </div-->
     <div class="panel-body">
         <form action="{{ path('ujm_exercise_paper_nav') }}" method="post" name="formResponse" id="formResponse">
             <input type="hidden" name="numQuestionToDisplayed" id="numQuestionToDisplayed" value=""/>
@@ -62,36 +64,12 @@
 
             {% if interactionType == 'InteractionQCM' %}
 
-            <!--div class="panel panel-default">
-                <div class="panel-heading">
-                    <h3>{#{ 'nQuestion' | trans }}{{numQ}#} :</h3>
-                </div-->
                 <div class="panel-body">
-                    <div class="panel panel-default">
-                        <div class="panel-heading"><h3 class="panel-title">{{ 'title' | trans }} - {{ 'nQuestion' | trans }}{{numQ}}</h3></div>
-                        <div class="panel-body">
-                            {{ interactionToDisplayed.interaction.question.title }}
-
-                            <input class="form-control" type="hidden" name="interactionQCMToValidated" value="{{ interactionToDisplayed.id }}"/>
-                            <input class="form-control" type="hidden" name="interactionToValidated" value="{{ interactionToDisplayed.interaction.id }}"/>
-                            <input class="form-control" type="hidden" name="typeInteraction" value="InteractionQCM"/>
-                        </div>
-                    </div>
-                    {% if interactionToDisplayed.interaction.question.description != null %}
-                        <div class="panel panel-default">
-                            <div class="panel-heading"><h3 class="panel-title">{{ 'description' | trans }}</h3></div>
-                            <div class="panel-body" name="description">
-                                <p>{{ interactionToDisplayed.interaction.question.description|raw }}<p/>
-                            </div>
-                        </div>
-                    {% endif %}
-
-                    <div class="panel panel-default">
-                        <div class="panel-heading"><h3 class="panel-title">{{ 'question' | trans }}</h3></div>
-                        <div class="panel-body"  name="question">
-                            <p>{{ interactionToDisplayed.interaction.invite|raw }}<p/>
-                        </div>
-                    </div>
+                    <input class="form-control" type="hidden" name="interactionQCMToValidated" value="{{ interactionToDisplayed.id }}"/>
+                    <input class="form-control" type="hidden" name="interactionToValidated" value="{{ interactionToDisplayed.interaction.id }}"/>
+                    <input class="form-control" type="hidden" name="typeInteraction" value="InteractionQCM"/>
+                    
+                    {% include "UJMExoBundle:Partial:interactionPaper.html.twig" %}
 
                     <div class="panel panel-default">
                         <div class="panel-heading"><h3 class="panel-title">{{ 'response' | trans }}</h3></div>
@@ -115,48 +93,22 @@
                         </div>
                     </div>
 
-                    <div class="panel panel-default">
-                        {% include "UJMExoBundle:Partial:hintPaper.html.twig" %}
-                    </div>
+                    {% include "UJMExoBundle:Partial:hintPaper.html.twig" %}
+                    
                 </div>
 
                 <input type="hidden" name="testQCM" value="testQCM" />
                 <input type="hidden" name="interaction" value="{{ interactionToDisplayed.id }}"/>
 
-            <!--/div-->
             {#------------------------------------------------- Graphic ---------------------------------------------------------#}
 
             {% elseif interactionType == 'InteractionGraphic' %}
 
-            <!--div class="panel panel-default">
-                <div class="panel-heading">
-                    <h3>{#{ 'nQuestion' | trans }}{{numQ}#} :</h3>
-                </div-->
                 <div class="panel-body">
-                    <div class="panel panel-default">
-                        <div class="panel-heading"><h3 class="panel-title">{{ 'title' | trans }} - {{ 'nQuestion' | trans }}{{numQ}}</h3></div>
-                        <div class="panel-body">
-                            {{ interactionToDisplayed.interaction.question.title }}
-
-                            <input type="hidden" name="interactionToValidated" value="{{ interactionToDisplayed.interaction.id }}"/>
-                            <input type="hidden" name="typeInteraction" value="InteractionGraphic"/>
-                        </div>
-                    </div>
-                    {% if interactionToDisplayed.interaction.question.description != null %}
-                        <div class="panel panel-default">
-                            <div class="panel-heading"><h3 class="panel-title">{{ 'description' | trans }}</h3></div>
-                            <div class="panel-body" name="description">
-                                <p>{{ interactionToDisplayed.interaction.question.description|raw }}</p>
-                            </div>
-                        </div>
-                    {% endif %}
-
-                    <div class="panel panel-default">
-                        <div class="panel-heading"><h3 class="panel-title">{{ 'question' | trans }}</h3></div>
-                        <div class="panel-body" name="question">
-                            <p>{{ interactionToDisplayed.interaction.invite|raw }}</p>
-                        </div>
-                    </div>
+                    <input type="hidden" name="interactionToValidated" value="{{ interactionToDisplayed.interaction.id }}"/>
+                    <input type="hidden" name="typeInteraction" value="InteractionGraphic"/>
+                    
+                    {% include "UJMExoBundle:Partial:interactionPaper.html.twig" %}
 
                     <div class="panel panel-default">
                         <div class="panel-heading"><h3 class="panel-title">{{ 'response' | trans }}</h3></div>
@@ -192,49 +144,21 @@
                     <input type="hidden" id="answers" name="answers" value=""/>
                     <input type="hidden" id="graphId" name="graphId" value="{{ interactionToDisplayed.id }}"/>
 
-                    <div class="panel panel-default">
-                        {% include "UJMExoBundle:Partial:hintPaper.html.twig" %}
-                    </div>
+                    {% include "UJMExoBundle:Partial:hintPaper.html.twig" %}
 
                     <input type="hidden" name="interaction" value="{{ interactionToDisplayed.id }}"/>
 
                 </div>
-            <!--/div-->
             {#-------------------------------------------------- OPEN -----------------------------------------------------------#}
 
             {% elseif interactionType == 'InteractionOpen' %}
 
-            <!--div class="panel panel-default">
-                <div class="panel-heading">
-                    <h3>{#{ 'nQuestion' | trans }}{{numQ}#} :</h3>
-                </div-->
                 <div class="panel-body">
-                    <div class="panel panel-default">
-                        <div class="panel-heading"><h3 class="panel-title">{{ 'title' | trans }} - {{ 'nQuestion' | trans }}{{numQ}}</h3></div>
-                        <div class="panel-body">
-                            {{ interactionToDisplayed.interaction.question.title }}
-                            <input type="hidden" name="interactionOpenToValidated" value="{{ interactionToDisplayed.id }}"/>
-                            <input type="hidden" name="interactionToValidated" value="{{ interactionToDisplayed.interaction.id }}"/>
-                            <input type="hidden" name="typeInteraction" value="InteractionOpen"/>
-                        </div>
-                    </div>
+                    <input type="hidden" name="interactionOpenToValidated" value="{{ interactionToDisplayed.id }}"/>
+                    <input type="hidden" name="interactionToValidated" value="{{ interactionToDisplayed.interaction.id }}"/>
+                    <input type="hidden" name="typeInteraction" value="InteractionOpen"/>
 
-                    {% if interactionToDisplayed.interaction.question.description != null %}
-                        <div class="panel panel-default">
-                            <div class="panel-heading"><h3 class="panel-title">{{ 'description' | trans }}</h3></div>
-                            <div class="panel-body" name="description">
-                                <p>{{ interactionToDisplayed.interaction.question.description|raw }}<p/>
-                            </div>
-                        </div>
-                    {% endif %}
-
-                    <div class="panel panel-default">
-                        <div class="panel-heading"><h3 class="panel-title">{{ 'question' | trans }}</h3></div>
-                        <div class="panel-body" name="question">
-                            <p>{{ interactionToDisplayed.interaction.invite|raw }}<p/>
-                        </div>
-                    </div>
-
+                    {% include "UJMExoBundle:Partial:interactionPaper.html.twig" %}
 
                     {% if interactionToDisplayed.typeopenquestion == 'long' %}
                         <div class="panel panel-default">
@@ -247,49 +171,22 @@
                         </div>
                     {% endif %}
 
-                    <div class="panel panel-default">
-                        {% include "UJMExoBundle:Partial:hintPaper.html.twig" %}
-                    </div>
+                    {% include "UJMExoBundle:Partial:hintPaper.html.twig" %}
 
                     <input type="hidden" name="testOpen" value="testOpen" />
                     <input type="hidden" name="interaction" value="{{ interactionToDisplayed.id }}"/>
 
                 </div>
-            <!--/div-->
             {#--------------------------------------------------- Hole ----------------------------------------------------------#}
 
             {% elseif interactionType == 'InteractionHole' %}
 
-                <!--div class="panel panel-default">
-                    <div class="panel-heading">
-                        <h3>{#{ 'nQuestion' | trans }}{{numQ}#} :</h3>
-                    </div-->
                     <div class="panel-body">
-                        <div class="panel panel-default">
-                            <div class="panel-heading"><h3 class="panel-title">{{ 'title' | trans }} - {{ 'nQuestion' | trans }}{{numQ}}</h3></div>
-                            <div class="panel-body">
-                                {{ interactionToDisplayed.interaction.question.title }}
-
-                                <input class="form-control" type="hidden" name="interactionHoleToValidated" value="{{ interactionToDisplayed.id }}"/>
-                                <input class="form-control" type="hidden" name="interactionToValidated" value="{{ interactionToDisplayed.interaction.id }}"/>
-                                <input class="form-control" type="hidden" name="typeInteraction" value="InteractionHole"/>
-                            </div>
-                        </div>
-                        {% if interactionToDisplayed.interaction.question.description != null %}
-                            <div class="panel panel-default">
-                                <div class="panel-heading"><h3 class="panel-title">{{ 'description' | trans }}</h3></div>
-                                <div class="panel-body" name="description">
-                                    <p>{{ interactionToDisplayed.interaction.question.description|raw }}<p/>
-                                </div>
-                            </div>
-                        {% endif %}
-
-                        <div class="panel panel-default">
-                            <div class="panel-heading"><h3 class="panel-title">{{ 'question' | trans }}</h3></div>
-                            <div class="panel-body"  name="question">
-                                <p>{{ interactionToDisplayed.interaction.invite|raw }}<p/>
-                            </div>
-                        </div>
+                        <input class="form-control" type="hidden" name="interactionHoleToValidated" value="{{ interactionToDisplayed.id }}"/>
+                        <input class="form-control" type="hidden" name="interactionToValidated" value="{{ interactionToDisplayed.interaction.id }}"/>
+                        <input class="form-control" type="hidden" name="typeInteraction" value="InteractionHole"/>
+                        
+                        {% include "UJMExoBundle:Partial:interactionPaper.html.twig" %}
 
                         <div class="panel panel-default">
                             <div class="panel-heading"><h3 class="panel-title">{{ 'response' | trans }}</h3></div>
@@ -307,15 +204,13 @@
                             </div>
                         </div>
 
-                        <div class="panel panel-default">
-                            {% include "UJMExoBundle:Partial:hintPaper.html.twig" %}
-                        </div>
+                        {% include "UJMExoBundle:Partial:hintPaper.html.twig" %}
+                        
                     </div>
 
                     <input type="hidden" name="testQCM" value="testQCM" />
                     <input type="hidden" name="interaction" value="{{ interactionToDisplayed.id }}"/>
 
-                <!--/div-->
 
             {% endif %}
         </form>

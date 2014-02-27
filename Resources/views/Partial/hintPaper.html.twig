@@ -1,4 +1,5 @@
 {% if interactionToDisplayed.interaction.hints is not empty %}
+    <div class="panel panel-default">
     <div class="panel-heading"><h3 class="panel-title">{{ 'hints' | trans }}</h3></div>
     <div class="panel-body">
         <table>
@@ -28,5 +29,6 @@
                 {% set nbr_hint = nbr_hint + 1 %}
             {% endfor %}
         </table>
+    </div>
     </div>
 {% endif %}

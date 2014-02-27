@@ -659,7 +659,7 @@ class ExerciseController extends Controller
             $typeInter = $interactions[0]->getType();
 
             //To display selectioned question
-            return $this->displayQuestion(1, $interactions[0], $typeInter, $exercise->getDispButtonInterrupt(), $workspace);
+            return $this->displayQuestion(1, $interactions[0], $typeInter, $exercise->getDispButtonInterrupt(), $workspace, $paper);
         } else {
             return $this->redirect($this->generateUrl('ujm_paper_list', array('exoID' => $id)));
         }
@@ -773,7 +773,7 @@ class ExerciseController extends Controller
 
             return $this->displayQuestion(
                 $numQuestionToDisplayed, $interactionToDisplay, $typeInterToDisplayed,
-                $response->getPaper()->getExercise()->getDispButtonInterrupt(), $workspace
+                $response->getPaper()->getExercise()->getDispButtonInterrupt(), $workspace, $paper
             );
         }
     }
@@ -907,7 +907,7 @@ class ExerciseController extends Controller
      */
     private function displayQuestion(
         $numQuestionToDisplayed, $interactionToDisplay,
-        $typeInterToDisplayed, $dispButtonInterrupt, $workspace
+        $typeInterToDisplayed, $dispButtonInterrupt, $workspace, $paper
     )
     {
         $em = $this->getDoctrine()->getManager();
@@ -1014,6 +1014,7 @@ class ExerciseController extends Controller
         $array['paper']                  = $session->get('paper');
         $array['response']               = $responseGiven;
         $array['dispButtonInterrupt']    = $dispButtonInterrupt;
+        $array['_resource']              = $paper->getExercise();
 
         return $this->render(
             'UJMExoBundle:Exercise:paper.html.twig',
