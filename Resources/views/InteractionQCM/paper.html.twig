@@ -50,7 +50,7 @@
                     'href': path('ujm_question_index')
                 },
                 {
-                    'name': 'paper' | trans,
+                    'name': interactionToDisplayed.interaction.question.title,
                     'href': ''
                 }
             ])
@@ -74,10 +74,6 @@
 
 {% block section_content %}
 
-    <div class="panel-heading">
-        <h1>{{ 'paper' | trans }} {{ 'question' | trans }}</h1>
-    </div>
-
     <div class="panel-body">
         {% if exoID == -1 %}
             <a class="btn btn-primary" href="{{ path('ujm_question_index') }}">
@@ -93,28 +89,7 @@
     <div class="list-group">
         <div class="list-group-item">
 
-            <div class="panel panel-default">
-                <div class="panel-heading"><h3 class="panel-title">{{ 'title' | trans }}</h3></div>
-                <div class="panel-body">
-                    {{ interactionQCM.interaction.question.title }}
-                </div>
-            </div>
-
-            {% if interactionQCM.interaction.question.description != null %}
-                <div class="panel panel-default">
-                    <div class="panel-heading"><h3 class="panel-title">{{ 'description' | trans }}</h3></div>
-                    <div class="panel-body">
-                        {{ interactionQCM.interaction.question.description|raw }}
-                    </div>
-                </div>
-            {% endif %}
-
-            <div class="panel panel-default">
-                <div class="panel-heading"><h3 class="panel-title">{{ 'question' | trans }}</h3></div>
-                <div class="panel-body">
-                    {{ interactionQCM.interaction.invite|raw }}
-                </div>
-            </div>
+            {% include "UJMExoBundle:Partial:interactionPaper.html.twig" %}
 
             <form action="{{ path('ujm_interactionqcm_response') }}" method="post" {{ form_enctype(form) }}>
                 {{ form_widget(form) }}
@@ -123,10 +98,10 @@
                     <div class="panel-heading"><h3 class="panel-title">{{ 'response' | trans }}</h3></div>
                     <div class="panel-body">
                         <table class="table table-striped table-bordered table-condensed">
-                            {% for choice in interactionQCM.choices %}
+                            {% for choice in interactionToDisplayed.choices %}
                                 <tr>
                                     <td class="classic">{{ choice.label | raw }}</td>
-                                    {% if interactionQCM.typeQCM.id == 2 %}
+                                    {% if interactionToDisplayed.typeQCM.id == 2 %}
                                         <td class="classic"><INPUT type="radio" id="{{ choice.label }}" name="choice" value="{{ choice.id }}"/></td>
                                     {% else %}
                                         <td class="classic"><INPUT type="checkbox" id="{{ choice.label }}" name="choice[]" value="{{ choice.id }}"/></td>
@@ -137,14 +112,14 @@
                     </div>
                 </div>
 
-                {% if interactionQCM.interaction.hints is not empty %}
-                    {% set tryInteraction = interactionQCM %}
+                {% if interactionToDisplayed.interaction.hints is not empty %}
+                    {% set tryInteraction = interactionToDisplayed %}
                     {% include "UJMExoBundle:Partial:hintTryInteraction.html.twig" %}
                 {% endif %}
 
                 <div class="panel-footer">
                     <input type="hidden" name="testQCM" value="testQCM" />
-                    <input type="hidden" name="interactionQCMToValidated" value="{{ interactionQCM.id }}" />
+                    <input type="hidden" name="interactionQCMToValidated" value="{{ interactionToDisplayed.id }}" />
                     <input type="hidden" name="exoID" value="{{ exoID }}" />
                     <button type="submit" id="submit_response" class="btn btn-primary">{{ 'validate' | trans }}</button>
                 </div>

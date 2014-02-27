@@ -50,7 +50,7 @@
                     'href': path('ujm_question_index')
                 },
                 {
-                    'name': 'paper' | trans,
+                    'name': interactionToDisplayed.interaction.question.title,
                     'href': ''
                 }
             ])
@@ -73,10 +73,6 @@
 
 {% block section_content %}
 
-    <div class="panel-heading">
-        <h1>{{ 'paper' | trans }} {{ 'question' | trans }}</h1>
-    </div>
-
     <div class="panel-body">
         {% if exoID == -1 %}
             <a class="btn btn-primary" href="{{ path('ujm_question_index') }}">
@@ -92,28 +88,7 @@
     <div class="list-group">
         <div class="list-group-item">
 
-            <div class="panel panel-default">
-                <div class="panel-heading"><h3 class="panel-title">{{ 'title' | trans }}</h3></div>
-                <div class="panel-body">
-                    {{ interactionGraphic.interaction.question.title }}
-                </div>
-            </div>
-
-            {% if interactionGraphic.interaction.question.description != '' %}
-                <div class="panel panel-default">
-                    <div class="panel-heading"><h3 class="panel-title">{{ 'description' | trans }}</h3></div>
-                    <div class="panel-body">
-                        {{ interactionGraphic.interaction.question.description|raw }}
-                    </div>
-                </div>
-            {% endif %}
-
-            <div class="panel panel-default">
-                <div class="panel-heading"><h3 class="panel-title">{{ 'question' | trans }}</h3></div>
-                <div class="panel-body">
-                    <p>{{ interactionGraphic.interaction.invite|raw }}</p>
-                </div>
-            </div>
+            {% include "UJMExoBundle:Partial:interactionPaper.html.twig" %}
 
             <div class="panel panel-default">
                 <div class="panel-heading"><h3 class="panel-title">{{ 'response' | trans }}</h3></div>
@@ -132,8 +107,8 @@
                                 {% set i = i + 1 %}
                            {% endfor %}
                         </p><p>
-                           <img src="{{ asset(interactionGraphic.document.url) }}" alt="AnswerImg" id="AnswerImg"
-                                 width="{{ interactionGraphic.width }}" height="{{ interactionGraphic.height }}"
+                           <img src="{{ asset(interactionToDisplayed.document.url) }}" alt="AnswerImg" id="AnswerImg"
+                                 width="{{ interactionToDisplayed.width }}" height="{{ interactionToDisplayed.height }}"
                                 />
                         </p>
                     </div>
@@ -143,10 +118,10 @@
             <form name="ValidGraphic" id="ValidGraphic" action="{{ path('ujm_interactiongraphic_response') }}" method="post">
                 <input type="hidden" id="nbpointer" name="nbpointer" value="{{ i }}"/>
                 <input type="hidden" id="answers" name="answers" value=""/>
-                <input type="hidden" id="graphId" name="graphId" value="{{ interactionGraphic.id }}"/>
+                <input type="hidden" id="graphId" name="graphId" value="{{ interactionToDisplayed.id }}"/>
 
-                {% if interactionGraphic.interaction.hints is not empty %}
-                    {% set tryInteraction = interactionGraphic %}
+                {% if interactionToDisplayed.interaction.hints is not empty %}
+                    {% set tryInteraction = interactionToDisplayed %}
                     {% include "UJMExoBundle:Partial:hintTryInteraction.html.twig" %}
                 {% endif %}
 

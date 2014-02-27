@@ -240,7 +240,7 @@ class QuestionController extends Controller
 
                     $form   = $this->createForm(new ResponseType(), $response);
 
-                    $vars['interactionQCM'] = $interactionQCM[0];
+                    $vars['interactionToDisplayed'] = $interactionQCM[0];
                     $vars['form']           = $form->createView();
                     $vars['exoID']          = $exoID;
 
@@ -259,7 +259,7 @@ class QuestionController extends Controller
 
                     $listeCoords = $repository->findBy(array('interactionGraphic' => $interactionGraph[0]));
 
-                    $vars['interactionGraphic'] = $interactionGraph[0];
+                    $vars['interactionToDisplayed'] = $interactionGraph[0];
                     $vars['listeCoords']        = $listeCoords;
                     $vars['exoID']              = $exoID;
 
@@ -275,7 +275,7 @@ class QuestionController extends Controller
 
                     $form   = $this->createForm(new ResponseType(), $response);
 
-                    $vars['interactionHole'] = $interactionHole[0];
+                    $vars['interactionToDisplayed'] = $interactionHole[0];
                     $vars['form']            = $form->createView();
                     $vars['exoID']           = $exoID;
 
@@ -290,7 +290,7 @@ class QuestionController extends Controller
 
                     $form   = $this->createForm(new ResponseType(), $response);
 
-                    $vars['interactionOpen'] = $interactionOpen[0];
+                    $vars['interactionToDisplayed'] = $interactionOpen[0];
                     $vars['form']            = $form->createView();
                     $vars['exoID']           = $exoID;
 
