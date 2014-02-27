@@ -14,8 +14,6 @@
 {% import 'InnovaPathBundle::Player/components/macros.html.twig' as macros %}
 
 <div id="path-main-container" class="path-player">
-    {# Edit #}
-    {% include 'InnovaPathBundle::Player/components/edit-step.html.twig' %}
 
     <div class="tree-browser">
         {{ render(controller('innova_path.controller.path_player:displayTreeBrowserAction', { 'workspace': workspace, 'path': path, 'currentStep': currentStep } )) }}
@@ -41,6 +39,10 @@
     {% endif %}
     
     <div class="content row">
+        {# resource #}
+        <div class="col-md-12">
+            {% include 'InnovaPathBundle::Player/components/resources.html.twig' %}
+        </div>
         {# Contenu de l'étape #}
         <div class="current-step col-md-12">
             {{ render(controller('innova_path.controller.path_player:displayCurrentStepAction', { 'workspace': workspace, 'path': path, 'currentStep': currentStep, 'edit': edit } )) }}
