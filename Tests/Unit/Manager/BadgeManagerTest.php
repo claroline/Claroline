@@ -11,58 +11,91 @@
 
 namespace Claroline\CoreBundle\Manager;
 
-use Claroline\CoreBundle\Entity\Badge\Badge;
-use \Mockery as m;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Entity\Badge\Badge;
+use Claroline\CoreBundle\Entity\Badge\UserBadge;
 use Claroline\CoreBundle\Library\Testing\MockeryTestCase;
 
 class BadgeManagerTest extends MockeryTestCase
 {
-    /** @var BadgeManager */
-    private $manager;
+    /** @var \Doctrine\ORM\EntityManager */
+    private $entityManager;
+
+    /** @var \Symfony\Component\EventDispatcher\EventDispatcherInterface */
+    private $eventDispatcher;
+
+    /** @var \Claroline\CoreBundle\Repository\Badge\BadgeRepository */
+    private $badgeRepository;
 
     public function setUp()
     {
         parent::setUp();
-        $entityManager = m::mock(
-            'Doctrine\ORM\EntityManager',
-            function ($mock) {
-                $mock->shouldReceive('persist')
-                    ->andReturn(null)
-                    ->shouldReceive('flush')
-                    ->andReturn(null);
-            }
-        );
-        $this->manager = new BadgeManager($entityManager);
+
+        $this->badgeRepository = $this->mock('Claroline\CoreBundle\Repository\Badge\BadgeRepository');
+        $this->entityManager   = $this->mock('Doctrine\ORM\EntityManager');
+        $this->entityManager->shouldReceive('persist')
+            ->andReturn(null)
+            ->shouldReceive('flush')
+            ->andReturn(null);
+
+        $this->eventDispatcher = $this->mock('Symfony\Component\EventDispatcher\EventDispatcherInterface');
     }
 
     /**
      * @dataProvider userBadgeProvider
      *
-     * @param array $users
-     * @param $expectedBadgeAttributionCount
+     * @param Badge       $badge
+     * @param UserBadge[] $userBadges
+     * @param User[]      $users
+     * @param integer     $expectedBadgeAttributionCount
      */
-    public function testAddBadgeToUsers(array $users, $expectedBadgeAttributionCount)
+    public function testAddBadgeToUsers(Badge $badge, $userBadges, array $users, $expectedBadgeAttributionCount)
     {
-        $this->assertEquals($expectedBadgeAttributionCount, $this->manager->addBadgeToUsers(new Badge(), $users));
+        $badgeRepository = $this->badgeRepository;
+        $badgeRepository
+            ->shouldReceive('findUserBadge')->once()
+            ->with($badge, $users[0])
+            ->andReturn($userBadges[0])
+            ->shouldReceive('findUserBadge')->once()
+            ->with($badge, $users[1])
+            ->andReturn($userBadges[1])
+            ->shouldReceive('findUserBadge')->once()
+            ->with($badge, $users[2])
+            ->andReturn($userBadges[2]);
+
+        $entityManager = $this->entityManager;
+        $entityManager->shouldReceive('getRepository')
+            ->with('ClarolineCoreBundle:Badge\Badge')
+            ->andReturn($badgeRepository);
+
+        $eventDispatcher = $this->eventDispatcher;
+        $eventDispatcher
+            ->shouldReceive('dispatch')
+            ->andReturn(null);
+
+        $manager = new BadgeManager($entityManager, $eventDispatcher);
+
+        $this->assertEquals($expectedBadgeAttributionCount, $manager->addBadgeToUsers($badge, $users));
     }
 
     public function userBadgeProvider()
     {
-        return array(
-            array(array($this->mockUser(false), $this->mockUser(false), $this->mockUser(false)), 3),
-            array(array($this->mockUser(true), $this->mockUser(true), $this->mockUser(true)), 0),
-            array(array($this->mockUser(false), $this->mockUser(true), $this->mockUser(false)), 2)
-        );
-    }
+        $badge     = new Badge();
+        $user      = new User();
+        $userBadge = new UserBadge();
 
-    private function mockUser($hasBadge)
-    {
-        return m::mock(
-            'Claroline\CoreBundle\Entity\User[hasBadge]',
-            function ($mock) use ($hasBadge) {
-                $mock->shouldReceive('hasBadge')->andReturn($hasBadge);
-            }
+        return array(
+            array($badge, array(null, null, null), array($user, $user, $user), 3),
+
+            array($badge, array($userBadge, null, null), array($user, $user, $user), 2),
+            array($badge, array(null, $userBadge, null), array($user, $user, $user), 2),
+            array($badge, array(null, null, $userBadge), array($user, $user, $user), 2),
+
+            array($badge, array(null, $userBadge, $userBadge), array($user, $user, $user), 1),
+            array($badge, array($userBadge, null, $userBadge), array($user, $user, $user), 1),
+            array($badge, array($userBadge, $userBadge, null), array($user, $user, $user), 1),
+
+            array($badge, array($userBadge, $userBadge, $userBadge), array($user, $user, $user), 0)
         );
     }
 }
