@@ -20,7 +20,8 @@ use Symfony\Component\Security\Core\SecurityContextInterface;
 /**
  * @DI\Service("claroline.manager.agenda_manager")
  */
-class AgendaManager {
+class AgendaManager
+{
     private $om;
     private $security;
 
@@ -28,7 +29,7 @@ class AgendaManager {
      * @DI\InjectParams({
      *     "om"                 = @DI\Inject("claroline.persistence.object_manager"),
      *     "rootDir"            = @DI\Inject("%kernel.root_dir%"),
-     *      "security"           = @DI\Inject("security.context")
+     *      "security"          = @DI\Inject("security.context")
      * })
      */
     public function __construct(
@@ -77,13 +78,8 @@ class AgendaManager {
         return $event;
     }
 
-    private function writeEventObject($event)
-    {
-        return $this->writeEvent($event);
-    }
-
     /**
-     * @param $arrayEvents
+     * @param $array $events
      * @return strings file in ics format
      */
     private function writeCalendar($arrayEvents)
@@ -91,17 +87,16 @@ class AgendaManager {
         $date = new \Datetime();
         $tz = $date->getTimezone();
         $calendar = "BEGIN:VCALENDAR"."\n";
-        foreach( $arrayEvents as $value) {
 
+        foreach ($arrayEvents as $value) {
             $calendar .= "PRODID:-BayBuk\n";
             $calendar .= "VERSION:2.0\n";
             $calendar .= "CALSCALE:GREGORIAN\n";
             $calendar .= "METHOD:PUBLISH\n";
             $calendar .= "X-WR-CALNAME:".$value->getUser()->getUsername()."\n";
             $calendar .= "X-WR-TIMEZONE:".$tz->getName()."\n";
-            $calendar .= $this->writeEventObject($value);
+            $calendar .= $this->writeEvent($value);
         }
-
         $calendar .= "END:VCALENDAR";
         return $calendar;
     }

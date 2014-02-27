@@ -44,7 +44,7 @@ class DesktopAgendaController extends Controller
      *     "om"                 = @DI\Inject("claroline.persistence.object_manager"),
      *     "request"            = @DI\Inject("request"),
      *     "translator"         = @DI\Inject("translator"),
-     *      "agendaManager"      = @DI\Inject("claroline.manager.agenda_manager")
+     *      "agendaManager"     = @DI\Inject("claroline.manager.agenda_manager")
      * })
      */
     public function __construct(
@@ -232,7 +232,7 @@ class DesktopAgendaController extends Controller
      * @EXT\Method({"GET"})
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function ExportsEventIcs()
+    public function exportsEventIcs()
     {
         $file =  $this->agendaManager->export();
         $response = new StreamedResponse();

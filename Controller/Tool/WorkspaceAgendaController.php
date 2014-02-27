@@ -44,8 +44,8 @@ class WorkspaceAgendaController extends Controller
      *     "formFactory"        = @DI\Inject("claroline.form.factory"),
      *     "om"                 = @DI\Inject("claroline.persistence.object_manager"),
      *     "request"            = @DI\Inject("request"),
-     *     "rm"                =  @DI\Inject("claroline.manager.role_manager"),
-     *      "agendaManager"      = @DI\Inject("claroline.manager.agenda_manager")
+     *     "rm"                 =  @DI\Inject("claroline.manager.role_manager"),
+     *      "agendaManager"     = @DI\Inject("claroline.manager.agenda_manager")
      * })
      */
     public function __construct(
