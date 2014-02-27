@@ -8,12 +8,16 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2014/02/26 02:50:57
+ * Generation date: 2014/02/27 02:58:52
  */
-class Version20140226145055 extends AbstractMigration
+class Version20140227145848 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
+        $this->addSql("
+            ALTER TABLE claro_user_badge 
+            ADD expired_at DATETIME DEFAULT NULL
+        ");
         $this->addSql("
             ALTER TABLE claro_badge 
             ADD is_expiring TINYINT(1) DEFAULT '0' NOT NULL, 
@@ -31,6 +35,10 @@ class Version20140226145055 extends AbstractMigration
             DROP is_expiring, 
             DROP expire_duration, 
             DROP expire_period
+        ");
+        $this->addSql("
+            ALTER TABLE claro_user_badge 
+            DROP expired_at
         ");
     }
 }

@@ -42,7 +42,7 @@ class BadgeManagerTest extends MockeryTestCase
     }
 
     /**
-     * @dataProvider userBadgeProvider
+     * @dataProvider testAddBadgeToUsersProvider
      *
      * @param Badge       $badge
      * @param UserBadge[] $userBadges
@@ -78,7 +78,7 @@ class BadgeManagerTest extends MockeryTestCase
         $this->assertEquals($expectedBadgeAttributionCount, $manager->addBadgeToUsers($badge, $users));
     }
 
-    public function userBadgeProvider()
+    public function testAddBadgeToUsersProvider()
     {
         $badge     = new Badge();
         $user      = new User();
@@ -96,6 +96,74 @@ class BadgeManagerTest extends MockeryTestCase
             array($badge, array($userBadge, $userBadge, null), array($user, $user, $user), 1),
 
             array($badge, array($userBadge, $userBadge, $userBadge), array($user, $user, $user), 0)
+        );
+    }
+
+    /**
+     * @dataProvider testGenerateExpiredDateProvider
+     *
+     * @param Badge     $badge
+     * @param \DateTime $currentDate
+     * @param \DateTime $expecteDate
+     */
+    public function testGenerateExpiredDate($badge, $currentDate, $expecteDate)
+    {
+        $manager = new BadgeManager($this->entityManager, $this->eventDispatcher);
+
+        $this->assertEquals($expecteDate, $manager->generateExpireDate($badge, $currentDate));
+    }
+
+    public function testGenerateExpiredDateProvider()
+    {
+        $badge1 = new badge();
+        $badge1
+            ->setExpireDuration(1)
+            ->setExpirePeriod(Badge::EXPIRE_PERIOD_DAY);
+
+        $badge2 = new badge();
+        $badge2
+            ->setExpireDuration(2)
+            ->setExpirePeriod(Badge::EXPIRE_PERIOD_DAY);
+
+        $badge3 = new badge();
+        $badge3
+            ->setExpireDuration(1)
+            ->setExpirePeriod(Badge::EXPIRE_PERIOD_WEEK);
+
+        $badge4 = new badge();
+        $badge4
+            ->setExpireDuration(2)
+            ->setExpirePeriod(Badge::EXPIRE_PERIOD_WEEK);
+
+        $badge5 = new badge();
+        $badge5
+            ->setExpireDuration(1)
+            ->setExpirePeriod(Badge::EXPIRE_PERIOD_MONTH);
+
+        $badge6 = new badge();
+        $badge6
+            ->setExpireDuration(2)
+            ->setExpirePeriod(Badge::EXPIRE_PERIOD_MONTH);
+
+        $badge7 = new badge();
+        $badge7
+            ->setExpireDuration(1)
+            ->setExpirePeriod(Badge::EXPIRE_PERIOD_YEAR);
+
+        $badge8 = new badge();
+        $badge8
+            ->setExpireDuration(2)
+            ->setExpirePeriod(Badge::EXPIRE_PERIOD_YEAR);
+
+        return array(
+            array($badge1, new \DateTime('2014-02-02'), new \DateTime('2014-02-03')),
+            array($badge2, new \DateTime('2014-02-02'), new \DateTime('2014-02-04')),
+            array($badge3, new \DateTime('2014-02-02'), new \DateTime('2014-02-09')),
+            array($badge4, new \DateTime('2014-02-02'), new \DateTime('2014-02-16')),
+            array($badge5, new \DateTime('2014-02-02'), new \DateTime('2014-03-02')),
+            array($badge6, new \DateTime('2014-02-02'), new \DateTime('2014-04-02')),
+            array($badge7, new \DateTime('2014-02-02'), new \DateTime('2015-02-02')),
+            array($badge8, new \DateTime('2014-02-02'), new \DateTime('2016-02-02'))
         );
     }
 }
