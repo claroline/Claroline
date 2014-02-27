@@ -204,6 +204,7 @@ exportable: Exportable
 external_pdo_database: 'External database (PDO)'
 facebook: Facebook
 facebook_application_validation_error: 'Provided credentials are not valid.'
+curl_facebook_application_validation_error: 'Curl extension is missing.'
 fast_answer: 'Fast answer'
 fb_client_id: Application id
 fb_client_secret: Application secret
