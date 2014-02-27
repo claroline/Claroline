@@ -11,6 +11,7 @@
 
 namespace Claroline\CoreBundle\Form\Badge;
 
+use Claroline\CoreBundle\Entity\Badge\Badge;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Form\AbstractType;
@@ -68,7 +69,7 @@ class BadgeType extends AbstractType
             ))
             ->add('expire_period', 'choice',
                 array(
-                    'choices'     => array('day', 'week', 'month', 'year'),
+                    'choices'     => Badge::getExpirePeriodLabels(),
                     'attr'        => array('class' => 'input-sm')
                 )
             )

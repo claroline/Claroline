@@ -248,7 +248,7 @@
                             {% if badge.isExpiring %}
                             <tr>
                               <td class="fieldlabel">{{ 'badge_validity_period'|trans }}</td>
-                                <td>{{ badge.expireDuration ~ ' ' ~ badge.expirePeriod }}</td>
+                                <td>{{ badge.expireDuration ~ ' ' ~ badge.expirePeriodLabel|trans }}</td>
                             </tr>
                             {% endif %}
                             <tr>

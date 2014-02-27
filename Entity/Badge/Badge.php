@@ -42,6 +42,15 @@ class Badge extends Rulable
 {
     use SoftDeleteableEntity;
 
+    const EXPIRE_PERIOD_DAY       = 0;
+    const EXPIRE_PERIOD_DAY_LABEL = 'day';
+    const EXPIRE_PERIOD_WEEK       = 1;
+    const EXPIRE_PERIOD_WEEK_LABEL = 'week';
+    const EXPIRE_PERIOD_MONTH       = 2;
+    const EXPIRE_PERIOD_MONTH_LABEL = 'month';
+    const EXPIRE_PERIOD_YEAR       = 3;
+    const EXPIRE_PERIOD_YEAR_LABEL = 'year';
+
     /**
      * @var integer
      *
@@ -584,6 +593,53 @@ class Badge extends Rulable
     public function getExpirePeriod()
     {
         return $this->expirePeriod;
+    }
+
+    /**
+     * @return string
+     */
+    public function getExpirePeriodLabel()
+    {
+        return self::getExpirePeriodTypeLabel($this->expirePeriod);
+    }
+
+    /**
+     * @return array
+     */
+    public static function getExpirePeriodTypes()
+    {
+        return array(self::EXPIRE_PERIOD_DAY,
+                     self::EXPIRE_PERIOD_WEEK,
+                     self::EXPIRE_PERIOD_MONTH,
+                     self::EXPIRE_PERIOD_YEAR);
+    }
+
+    /**
+     * @return array
+     */
+    public static function getExpirePeriodLabels()
+    {
+        return array(self::EXPIRE_PERIOD_DAY_LABEL,
+                     self::EXPIRE_PERIOD_WEEK_LABEL,
+                     self::EXPIRE_PERIOD_MONTH_LABEL,
+                     self::EXPIRE_PERIOD_YEAR_LABEL);
+    }
+
+    /**
+     * @param integer $expirePeriodType
+     *
+     * @throws \InvalidArgumentException
+     * @return string
+     */
+    public static function getExpirePeriodTypeLabel($expirePeriodType)
+    {
+        $expirePeriodLabels = self::getExpirePeriodLabels();
+
+        if (!isset($expirePeriodLabels[$expirePeriodType])) {
+            throw new \InvalidArgumentException("Unknown expired period type.");
+        }
+
+        return $expirePeriodLabels[$expirePeriodType];
     }
 
     /**

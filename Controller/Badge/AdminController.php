@@ -16,8 +16,8 @@ use Claroline\CoreBundle\Entity\Badge\BadgeClaim;
 use Claroline\CoreBundle\Entity\Badge\BadgeRule;
 use Claroline\CoreBundle\Entity\Badge\BadgeTranslation;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Form\Badge\BadgeAwardType;
 use Pagerfanta\Adapter\DoctrineORMAdapter;
+use Pagerfanta\Exception\NotValidCurrentPageException;
 use Pagerfanta\Pagerfanta;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -65,7 +65,6 @@ class AdminController extends Controller
             'delete_link'      => 'claro_admin_badges_delete',
             'view_link'        => 'claro_admin_badges_edit',
             'current_link'     => 'claro_admin_badges',
-            'claim_link'       => 'claro_admin_manage_claim',
             'claim_link'       => 'claro_admin_manage_claim',
             'route_parameters' => array()
         );
@@ -147,7 +146,7 @@ class AdminController extends Controller
         try {
             $pager->setCurrentPage($page);
         } catch (NotValidCurrentPageException $exception) {
-            throw new NotFoundHttpException();
+            throw $this->createNotFoundException();
         }
 
         /** @var BadgeRule[] $originalRules */
@@ -265,12 +264,8 @@ class AdminController extends Controller
                 try {
                     $doctrine = $this->getDoctrine();
 
-                    /** @var \Doctrine\ORM\EntityManager $entityManager */
-                    $entityManager = $doctrine->getManager();
-
                     $group        = $form->get('group')->getData();
                     $user         = $form->get('user')->getData();
-                    $awardedBadge = 0;
 
                     /** @var \Claroline\CoreBundle\Entity\User[] $users */
                     $users = array();
@@ -377,18 +372,18 @@ class AdminController extends Controller
      *
      * @Template()
      */
-    public function manageClaimAction(Request $request, BadgeClaim $badgeClaim, $validate = false)
+    public function manageClaimAction(BadgeClaim $badgeClaim, $validate = false)
     {
         if (null !== $badgeClaim->getBadge()->getWorkspace()) {
             throw $this->createNotFoundException("No badge found.");
         }
 
         /** @var \Symfony\Bundle\FrameworkBundle\Translation\Translator $translator */
-        $translator = $this->get('translator');
-        try {
-            $successMessage = $translator->trans('badge_reject_award_success_message', array(), 'badge');
-            $errorMessage   = $translator->trans('badge_reject_award_error_message', array(), 'badge');
+        $translator     = $this->get('translator');
+        $successMessage = $translator->trans('badge_reject_award_success_message', array(), 'badge');
+        $errorMessage   = $translator->trans('badge_reject_award_error_message', array(), 'badge');
 
+        try {
             if ($validate) {
                 $successMessage = $translator->trans('badge_validate_award_success_message', array(), 'badge');
                 $errorMessage   = $translator->trans('badge_validate_award_error_message', array(), 'badge');

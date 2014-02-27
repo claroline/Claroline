@@ -15,10 +15,9 @@ use Claroline\CoreBundle\Entity\Badge\Badge;
 use Claroline\CoreBundle\Entity\Badge\BadgeClaim;
 use Claroline\CoreBundle\Entity\Badge\BadgeRule;
 use Claroline\CoreBundle\Entity\Badge\BadgeTranslation;
-use Claroline\CoreBundle\Entity\Badge\UserBadge;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
-use Claroline\CoreBundle\Form\Badge\BadgeAwardType;
+use Pagerfanta\Exception\NotValidCurrentPageException;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -69,7 +68,6 @@ class WorkspaceController extends Controller
             'view_link'    => 'claro_workspace_tool_badges_edit',
             'current_link' => 'claro_workspace_tool_badges',
             'claim_link'   => 'claro_workspace_tool_manage_claim',
-            'claim_link'   => 'claro_workspace_tool_manage_claim',
             'route_parameters' => array(
                 'workspaceId' => $workspace->getId()
             ),
@@ -105,7 +103,7 @@ class WorkspaceController extends Controller
             $badge->addTranslation($translation);
         }
 
-        $form = $this->createForm($this->get('claroline.form.tool.badge'), $badge);
+        $form = $this->createForm($this->get('claroline.form.badge'), $badge);
 
         if ($request->isMethod('POST')) {
             $form->handleRequest($request);
@@ -174,7 +172,7 @@ class WorkspaceController extends Controller
         try {
             $pager->setCurrentPage($page);
         } catch (NotValidCurrentPageException $exception) {
-            throw new NotFoundHttpException();
+            throw $this->createNotFoundException();
         }
 
         /** @var BadgeRule[] $originalRules */
@@ -183,7 +181,7 @@ class WorkspaceController extends Controller
             $originalRules[] = $rule;
         }
 
-        $form = $this->createForm($this->get('claroline.form.tool.badge'), $badge);
+        $form = $this->createForm($this->get('claroline.form.badge'), $badge);
 
         if ($request->isMethod('POST')) {
             $form->handleRequest($request);
@@ -307,12 +305,8 @@ class WorkspaceController extends Controller
                 try {
                     $doctrine = $this->getDoctrine();
 
-                    /** @var \Doctrine\ORM\EntityManager $entityManager */
-                    $entityManager = $doctrine->getManager();
-
                     $group        = $form->get('group')->getData();
                     $user         = $form->get('user')->getData();
-                    $awardedBadge = 0;
 
                     /** @var \Claroline\CoreBundle\Entity\User[] $users */
                     $users = array();
@@ -448,11 +442,11 @@ class WorkspaceController extends Controller
         $this->checkUserIsAllowed($workspace);
 
         /** @var \Symfony\Bundle\FrameworkBundle\Translation\Translator $translator */
-        $translator = $this->get('translator');
-        try {
-            $successMessage = $translator->trans('badge_reject_award_success_message', array(), 'badge');
-            $errorMessage   = $translator->trans('badge_reject_award_error_message', array(), 'badge');
+        $translator     = $this->get('translator');
+        $successMessage = $translator->trans('badge_reject_award_success_message', array(), 'badge');
+        $errorMessage   = $translator->trans('badge_reject_award_error_message', array(), 'badge');
 
+        try {
             if ($validate) {
                 $successMessage = $translator->trans('badge_validate_award_success_message', array(), 'badge');
                 $errorMessage   = $translator->trans('badge_validate_award_error_message', array(), 'badge');
