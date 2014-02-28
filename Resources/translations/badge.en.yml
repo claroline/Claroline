@@ -41,7 +41,8 @@ badge_dont_award_confirm_message: 'Are you sure you don''t want to award badge <
 badge_dont_award_confirm_title: 'Rejection of badge awarding'
 badge_edit_error_message: 'An error occured while editing badge.'
 badge_edit_success_message: 'Badge edited with success.'
-badge_expired_on_date: 'Expire the %expirationDate%'
+badge_expired_on_date: 'Has expired the %expirationDate%'
+badge_valid_for_period: "Valid %validityPeriod%"
 badge_form_advance_options: 'Advance options'
 badge_form_automatic_award: 'Automatic awarding, if rules are respected'
 badge_form_awarding_on_result_action: 'When action''s result is'

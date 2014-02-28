@@ -11,7 +11,7 @@
 }
 
 .badge_list {
-    .node-thumbnail {
+    .badge_container {
         margin: 5px 0 0 5px;
         .thumbnail {
             width:           150px;
@@ -29,15 +29,12 @@
 
             }
         }
-        .add_button {
-            height:       110px;
-            width: 150px;
-            border:       3px dashed #8F8F8F;
-            padding-top:  20px;
-            &:hover {
-                background-color: #f5f5f5;
-                border-color:     #428bca;
-            }
+        .expired {
+            position:   absolute;
+            right:      5px;
+            color:      red;
+            margin-top: 5px;
+            font-size:  18px;
         }
     }
 }

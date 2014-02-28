@@ -143,7 +143,7 @@ class ProfileController extends Controller
      */
     public function badgesAction(User $user)
     {
-        $badges           = $this->getDoctrine()->getRepository('ClarolineCoreBundle:Badge\Badge')->findByUser($user);
+        $userBadges       = $this->getDoctrine()->getRepository('ClarolineCoreBundle:Badge\UserBadge')->findByUser($user);
         $badgeClaims      = $this->getDoctrine()->getRepository('ClarolineCoreBundle:Badge\BadgeClaim')->findByUser($user);
         $badgeCollections = $this->getDoctrine()->getRepository('ClarolineCoreBundle:Badge\BadgeCollection')->findByUser($user);
 
@@ -151,7 +151,7 @@ class ProfileController extends Controller
         $platformConfigHandler = $this->get('claroline.config.platform_config_handler');
 
         return array(
-            'badges'           => $badges,
+            'userBadges'       => $userBadges,
             'badgeClaims'      => $badgeClaims,
             'badgeCollections' => $badgeCollections,
             'language'         => $platformConfigHandler->getParameter('locale_language')

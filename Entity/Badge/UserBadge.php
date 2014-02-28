@@ -170,4 +170,24 @@ class UserBadge
     {
         return $this->expiredAt;
     }
+
+    /**
+     * @return bool
+     */
+    public function isExpired()
+    {
+        if (null !== $this->expiredAt) {
+            return $this->expiredAt <= (new \DateTime());
+        }
+
+        return false;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isExpiring()
+    {
+        return null !== $this->expiredAt;
+    }
 }
