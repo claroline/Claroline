@@ -88,7 +88,7 @@
                     <tr>
                         <td class="classic">{{ FindQuestion.question.category.value }}</td>
                         <td class="classic"><a href="{{ path('ujm_question_show', { 'id': FindQuestion.question.id }) }}">{{ FindQuestion.question.title }}</a></td>
-                        <td class="classic">{{ FindQuestion.type }}</td>
+                        <td class="classic">{{ FindQuestion.type|trans }}</td>
                         <td class="classic">{{ FindQuestion.invite|raw }}</td>
                         {% if canDisplay == 'my' %}
                             <td class="classic">

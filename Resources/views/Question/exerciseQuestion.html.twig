@@ -112,7 +112,7 @@
                         <tr>
                             <td class="classic">{{ interaction.question.category.value }}</td>
                             <td class="classic"><a href="{{ path('ujm_question_show', { 'id': interaction.question.id, 'exoID': exerciseID }) }}">{{ interaction.question.title }}</a></td>
-                            <td class="classic">{{ interaction.type }}</td>
+                            <td class="classic">{{ interaction.type|trans }}</td>
                             <td class="classic">{{ interaction.invite|raw }}</td>
                             <td class="classic">
                                 {% if allowEdit[interaction.id] == 1 %}

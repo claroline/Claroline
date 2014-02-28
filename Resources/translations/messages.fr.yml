@@ -176,6 +176,12 @@ interactionGraphic Edition: Edition d'une question Graphique
 interactionOpen creation: Création d'une question Ouverte
 inValidMark: Note invalide
 
+# I Intraction type (data in the DB)
+InteractionGraphic: Graphique
+InteractionHole: Blanc
+InteractionOpen: Ouverte
+InteractionQCM: QCM
+
 # K
 key word: Mot clé
 kind of question: Quel type de question

@@ -176,6 +176,12 @@ interactionGraphic Edition: InteractionGraphic Edition
 interactionOpen creation: interactionOpen creation
 inValidMark: Invalid score
 
+# I Intraction type (data in the DB)
+InteractionGraphic: Graphic
+InteractionHole: Hole
+InteractionOpen: Open
+InteractionQCM: QCM
+
 # K
 key word: Key word
 kind of question: What kind of question

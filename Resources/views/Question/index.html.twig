@@ -128,7 +128,7 @@
                                 <tr>
                                     <td class="classic">{{ interaction.question.category.value }}</td>
                                     <td class="classic"><a href="{{ path('ujm_question_show', { 'id': interaction.question.id }) }}">{{ interaction.question.title }}</a></td>
-                                    <td class="classic">{{ interaction.type }}</td>
+                                    <td class="classic">{{ interaction.type|trans }}</td>
                                     <td class="classic">{{ interaction.invite|raw }}</td>
                                     <td class="classic">
                                         <a class="btn btn-default" data-toggle="tooltip" title="{{ 'share' | trans }}" href="{{ path('ujm_question_share', { 'questionID': interaction.question.id }) }}">
@@ -224,7 +224,7 @@
                                 <tr>
                                     <td class="classic">{{ myQShare.question.category.value }}</td>
                                     <td class="classic"><a href="{{ path('ujm_question_show', { 'id': myQShare.question.id }) }}">{{ myQShare.question.title }}</a></td>
-                                    <td class="classic">{{ myQShare.type }}</td>
+                                    <td class="classic">{{ myQShare.type|trans }}</td>
                                     <td class="classic">{{ myQShare.invite|raw }}</td>
                                     <td class="classic">
                                         {{ myQShare.question.user.firstName }} {{ myQShare.question.user.lastName }}
