@@ -74,27 +74,22 @@
                     
                     {% include "UJMExoBundle:Partial:interactionPaper.html.twig" %}
 
-                    <div class="panel panel-default">
-                        <div class="panel-heading"><h3 class="panel-title">{{ 'response' | trans }}</h3></div>
-                        <div class="panel-body">
-                            <table class="table table-striped table-bordered table-condensed">
-                                {% for choice in interactionToDisplayed.choices %}
-                                    {% set checked = "" %}
-                                    <tr>
-                                        <td class="classic">{{ choice.label|raw }}</td>
-                                        {% if regexTwig('/' ~ choice.id ~ ';/', response) > 0 %}
-                                            {% set checked = "checked" %}
-                                        {% endif %}
-                                        {% if interactionToDisplayed.typeQCM.id == 2 %}
-                                            <td class="classic"><INPUT type="radio" name="choice" value="{{ choice.id }}" {{ checked }}/></td>
-                                        {% else %}
-                                            <td class="classic"><INPUT type="checkbox" name="choice[]" value="{{ choice.id }}" {{ checked }}/></td>
-                                        {% endif %}
-                                    </tr>
-                                {% endfor %}
-                            </table>
-                        </div>
-                    </div>
+                    <table class="table table-striped table-bordered table-condensed">
+                        {% for choice in interactionToDisplayed.choices %}
+                            {% set checked = "" %}
+                            <tr>
+                                <td class="classic">{{ choice.label|raw }}</td>
+                                {% if regexTwig('/' ~ choice.id ~ ';/', response) > 0 %}
+                                    {% set checked = "checked" %}
+                                {% endif %}
+                                {% if interactionToDisplayed.typeQCM.id == 2 %}
+                                    <td class="classic"><INPUT type="radio" name="choice" value="{{ choice.id }}" {{ checked }}/></td>
+                                {% else %}
+                                    <td class="classic"><INPUT type="checkbox" name="choice[]" value="{{ choice.id }}" {{ checked }}/></td>
+                                {% endif %}
+                            </tr>
+                        {% endfor %}
+                    </table>
 
                     {% include "UJMExoBundle:Partial:hintPaper.html.twig" %}
                     
@@ -113,34 +108,29 @@
                     
                     {% include "UJMExoBundle:Partial:interactionPaper.html.twig" %}
 
-                    <div class="panel panel-default">
-                        <div class="panel-heading"><h3 class="panel-title">{{ 'response' | trans }}</h3></div>
-                        <div class="panel-body">
-                            <h5>{{ "consignes" | trans }} :</h5>
-                            <h6><em>{{ "position" | trans }}<br/>{{ "selection" | trans }}<br/>{{ "raz" | trans }}<br/>
-                                {{ "onlyOnce" | trans }}</em>
-                            </h6>
+                    <h5>{{ "consignes" | trans }} :</h5>
+                    <h6><em>{{ "position" | trans }}<br/>{{ "selection" | trans }}<br/>{{ "raz" | trans }}<br/>
+                        {{ "onlyOnce" | trans }}</em>
+                    </h6>
 
-                            <div style="position: relative;" id="Answer">
-                                <p id="ContainerCursorPaper">
-                                    {% set i = 1 %}
-                                    {% for coords in listCoords %}
-                                        <img src="{{ asset('bundles/ujmexo/images/graphic/answer.png') }}" alt="AnswerZone{{ i }}"
-                                            id="cursor{{ i }}" style="position: absolute;"/>
-                                        {% set i = i + 1 %}
-                                    {% endfor %}
-                                </p><p>
+                    <div style="position: relative;" id="Answer">
+                        <p id="ContainerCursorPaper">
+                            {% set i = 1 %}
+                            {% for coords in listCoords %}
+                                <img src="{{ asset('bundles/ujmexo/images/graphic/answer.png') }}" alt="AnswerZone{{ i }}"
+                                    id="cursor{{ i }}" style="position: absolute;"/>
+                                {% set i = i + 1 %}
+                            {% endfor %}
+                        </p><p>
 
-                                    {% if response is empty %}
-                                        {% set response = 'empty' %}
-                                    {% endif %}
+                            {% if response is empty %}
+                                {% set response = 'empty' %}
+                            {% endif %}
 
-                                    <img src="{{ asset(interactionToDisplayed.document.url) }}" alt="AnswerImg" id="AnswerImg"
-                                        width="{{ interactionToDisplayed.width }}" height="{{ interactionToDisplayed.height }}"
-                                        style="margin-top: 30px" onload="displayAnswersGraph('{{ response }}');"/>
-                                </p>
-                            </div>
-                        </div>
+                            <img src="{{ asset(interactionToDisplayed.document.url) }}" alt="AnswerImg" id="AnswerImg"
+                                width="{{ interactionToDisplayed.width }}" height="{{ interactionToDisplayed.height }}"
+                                style="margin-top: 30px" onload="displayAnswersGraph('{{ response }}');"/>
+                        </p>
                     </div>
 
                     <input type="hidden" id="nbpointer" name="nbpointer" value="{{ i }}"/>
@@ -164,14 +154,9 @@
                     {% include "UJMExoBundle:Partial:interactionPaper.html.twig" %}
 
                     {% if interactionToDisplayed.typeopenquestion == 'long' %}
-                        <div class="panel panel-default">
-                            <div class="panel-heading"><h3 class="panel-title">{{ 'response' | trans }}</h3></div>
-                            <div class="panel-body">
-                                <textarea name="interOpenLong" class="claroline-tiny-mce hide" data-theme="advanced" data-resource-picker="off">
-                                    {{ response }}
-                                </textarea>
-                            </div>
-                        </div>
+                        <textarea name="interOpenLong" class="claroline-tiny-mce hide" data-theme="advanced" data-resource-picker="off">
+                            {{ response }}
+                        </textarea>
                     {% endif %}
 
                     {% include "UJMExoBundle:Partial:hintPaper.html.twig" %}
@@ -191,20 +176,15 @@
                         
                         {% include "UJMExoBundle:Partial:interactionPaper.html.twig" %}
 
-                        <div class="panel panel-default">
-                            <div class="panel-heading"><h3 class="panel-title">{{ 'response' | trans }}</h3></div>
-                            <div class="panel-body">
-                                <div id="interHoleResponse">
-                                    {{ interactionToDisplayed.htmlWithoutValue | raw }}
-                                    {% if response != '' %}
-                                        <script type="text/javascript">
-                                            $(document).ready(function() {
-                                                paperResponseHole('{{ response|raw }}');
-                                            });
-                                        </script>
-                                    {% endif %}
-                                </div>
-                            </div>
+                        <div id="interHoleResponse">
+                            {{ interactionToDisplayed.htmlWithoutValue | raw }}
+                            {% if response != '' %}
+                                <script type="text/javascript">
+                                    $(document).ready(function() {
+                                        paperResponseHole('{{ response|raw }}');
+                                    });
+                                </script>
+                            {% endif %}
                         </div>
 
                         {% include "UJMExoBundle:Partial:hintPaper.html.twig" %}

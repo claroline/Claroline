@@ -1,15 +1,7 @@
 {% if interactionToDisplayed.interaction.question.description != null %}
-    <div class="panel panel-default">
-        <div class="panel-heading"><h3 class="panel-title">{{ 'description' | trans }}</h3></div>
-        <div class="panel-body" name="description">
-            <p>{{ interactionToDisplayed.interaction.question.description|raw }}<p/>
-        </div>
-    </div>
+    <p>{{ interactionToDisplayed.interaction.question.description|raw }}<p/>
+    <hr/>
 {% endif %}
 
-<div class="panel panel-default">
-    <div class="panel-heading"><h3 class="panel-title">{{ 'question' | trans }}</h3></div>
-    <div class="panel-body"  name="question">
-        <p>{{ interactionToDisplayed.interaction.invite|raw }}<p/>
-    </div>
-</div>
+<p>{{ interactionToDisplayed.interaction.invite|raw }}<p/>
+<hr/>

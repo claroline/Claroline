@@ -97,23 +97,18 @@
             <form action="{{ path('ujm_interactionqcm_response') }}" method="post" {{ form_enctype(form) }}>
                 {{ form_widget(form) }}
 
-                <div class="panel panel-default">
-                    <div class="panel-heading"><h3 class="panel-title">{{ 'response' | trans }}</h3></div>
-                    <div class="panel-body">
-                        <table class="table table-striped table-bordered table-condensed">
-                            {% for choice in interactionToDisplayed.choices %}
-                                <tr>
-                                    <td class="classic">{{ choice.label | raw }}</td>
-                                    {% if interactionToDisplayed.typeQCM.id == 2 %}
-                                        <td class="classic"><INPUT type="radio" id="{{ choice.label }}" name="choice" value="{{ choice.id }}"/></td>
-                                    {% else %}
-                                        <td class="classic"><INPUT type="checkbox" id="{{ choice.label }}" name="choice[]" value="{{ choice.id }}"/></td>
-                                    {% endif %}
-                                </tr>
-                            {% endfor %}
-                        </table>
-                    </div>
-                </div>
+                <table class="table table-striped table-bordered table-condensed">
+                    {% for choice in interactionToDisplayed.choices %}
+                        <tr>
+                            <td class="classic">{{ choice.label | raw }}</td>
+                            {% if interactionToDisplayed.typeQCM.id == 2 %}
+                                <td class="classic"><INPUT type="radio" id="{{ choice.label }}" name="choice" value="{{ choice.id }}"/></td>
+                            {% else %}
+                                <td class="classic"><INPUT type="checkbox" id="{{ choice.label }}" name="choice[]" value="{{ choice.id }}"/></td>
+                            {% endif %}
+                        </tr>
+                    {% endfor %}
+                </table>
 
                 {% if interactionToDisplayed.interaction.hints is not empty %}
                     {% set tryInteraction = interactionToDisplayed %}

@@ -93,29 +93,24 @@
 
             {% include "UJMExoBundle:Partial:interactionPaper.html.twig" %}
 
-            <div class="panel panel-default">
-                <div class="panel-heading"><h3 class="panel-title">{{ 'response' | trans }}</h3></div>
-                <div class="panel-body">
-                    <h5>{{ 'orders' | trans }} :</h5>
-                    <h6><em>{{ "position" | trans }}<br/>{{ "selection" | trans }}<br/>{{ "raz" | trans }}<br/>
-                        {{ "onlyOnce" | trans }}</em>
-                    </h6>
+            <h5>{{ 'orders' | trans }} :</h5>
+            <h6><em>{{ "position" | trans }}<br/>{{ "selection" | trans }}<br/>{{ "raz" | trans }}<br/>
+                {{ "onlyOnce" | trans }}</em>
+            </h6>
 
-                    <div id="Answer" style="position: relative;">
-                        <p id="ContainerCursor">
-                            {% set i = 1 %}
-                            {% for coords in listeCoords %}
-                                <img src="{{ asset('bundles/ujmexo/images/graphic/answer.png') }}" alt="AnswerZone{{ i }}" id="cursor{{ i }}"
-                                    />
-                                {% set i = i + 1 %}
-                           {% endfor %}
-                        </p><p>
-                           <img src="{{ asset(interactionToDisplayed.document.url) }}" alt="AnswerImg" id="AnswerImg"
-                                 width="{{ interactionToDisplayed.width }}" height="{{ interactionToDisplayed.height }}"
-                                />
-                        </p>
-                    </div>
-                </div>
+            <div id="Answer" style="position: relative;">
+                <p id="ContainerCursor">
+                    {% set i = 1 %}
+                    {% for coords in listeCoords %}
+                        <img src="{{ asset('bundles/ujmexo/images/graphic/answer.png') }}" alt="AnswerZone{{ i }}" id="cursor{{ i }}"
+                            />
+                        {% set i = i + 1 %}
+                   {% endfor %}
+                </p><p>
+                   <img src="{{ asset(interactionToDisplayed.document.url) }}" alt="AnswerImg" id="AnswerImg"
+                         width="{{ interactionToDisplayed.width }}" height="{{ interactionToDisplayed.height }}"
+                        />
+                </p>
             </div>
 
             <form name="ValidGraphic" id="ValidGraphic" action="{{ path('ujm_interactiongraphic_response') }}" method="post">
