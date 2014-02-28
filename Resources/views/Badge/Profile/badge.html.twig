@@ -23,11 +23,34 @@
                     <p class="alert alert-danger">{{ 'badge_expired_on_date'|trans({'%expirationDate%': userBadge.expiredAt|date('date_format'|trans({}, 'platform'))}) }}</p>
                 {% endif %}
             {% endif %}
-            <div class="media">
-                <img class="media-object pull-left badge_image_informations" src="{{ asset(badge.webPath) }}" alt="{{ badge.name }}" />
-                <div class="media-body">
-                    <h4 class="media-heading">{{ badge.description }}</h4>
-                    {{ badge.criteria|raw }}
+            <div class="row">
+                <div class="col-md-2 text-center">
+                    <img src="{{ asset(badge.webPath) }}" alt="{{ badge.name }}" class="media-object pull-left badge_image_informations" />
+                </div>
+                <div class="col-md-7">
+                    <table class="badge_informations table table-condensed">
+                        <colgroup>
+                            <col class="fieldLabelCol">
+                            <col class="dataCol">
+                        </colgroup>
+                        <tbody>
+                            <tr>
+                              <td class="section-head text-muted" colspan="2">{{ 'badge_details'|trans }}</td>
+                            </tr>
+                            <tr>
+                              <td class="fieldlabel">{{ 'badge_form_name'|trans }}</td>
+                              <td>{{ badge.name }}</td>
+                            </tr>
+                            <tr>
+                              <td class="fieldlabel">{{ 'badge_form_description'|trans }}</td>
+                              <td>{{ badge.description }}</td>
+                            </tr>
+                            <tr>
+                              <td class="fieldlabel">{{ 'badge_form_criteria'|trans }}</td>
+                              <td>{{ badge.criteria|raw }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
             {% if 0 < badge.rules|length %}
