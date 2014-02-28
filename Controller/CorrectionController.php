@@ -265,12 +265,15 @@ class CorrectionController extends DropzoneBaseController
             //Expected corrections 
             $expectedCorrections = $dropzone->getExpectedTotalCorrection();
 
-            if($nbCorrectionByUser >=  $expectedCorrections || $nbCorrectionByUser >= $nbCorrectionByOthersOnUsersCopy )
+
+            //if(count($nbCorrectionByUser) >=  $expectedCorrections && count($nbCorrectionByOthersOnUsersCopy) >= $expectedCorrections  )
+            // corrected copy only instead of corrected copy AND given corrections.
+            if( count($nbCorrectionByOthersOnUsersCopy) >= $expectedCorrections  )
             {
                 //dispatchEvent.
                 $rm = $this->get('claroline.manager.role_manager');
                 $event = new LogDropGradeAvailableEvent($dropzone,$drop);
-                 $this->get('event_dispatcher')->dispatch('log', $event);
+                $this->get('event_dispatcher')->dispatch('log', $event);
             }
 
         }
