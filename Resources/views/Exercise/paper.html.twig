@@ -67,7 +67,7 @@
 
             {% if interactionType == 'InteractionQCM' %}
 
-                <div class="panel-body">
+                <!--<div class="panel-body">-->
                     <input class="form-control" type="hidden" name="interactionQCMToValidated" value="{{ interactionToDisplayed.id }}"/>
                     <input class="form-control" type="hidden" name="interactionToValidated" value="{{ interactionToDisplayed.interaction.id }}"/>
                     <input class="form-control" type="hidden" name="typeInteraction" value="InteractionQCM"/>
@@ -93,7 +93,7 @@
 
                     {% include "UJMExoBundle:Partial:hintPaper.html.twig" %}
                     
-                </div>
+                <!--</div>-->
 
                 <input type="hidden" name="testQCM" value="testQCM" />
                 <input type="hidden" name="interaction" value="{{ interactionToDisplayed.id }}"/>
@@ -102,7 +102,7 @@
 
             {% elseif interactionType == 'InteractionGraphic' %}
 
-                <div class="panel-body">
+                <!--<div class="panel-body">-->
                     <input type="hidden" name="interactionToValidated" value="{{ interactionToDisplayed.interaction.id }}"/>
                     <input type="hidden" name="typeInteraction" value="InteractionGraphic"/>
                     
@@ -141,12 +141,12 @@
 
                     <input type="hidden" name="interaction" value="{{ interactionToDisplayed.id }}"/>
 
-                </div>
+                <!--</div>-->
             {#-------------------------------------------------- OPEN -----------------------------------------------------------#}
 
             {% elseif interactionType == 'InteractionOpen' %}
 
-                <div class="panel-body">
+                <!--<div class="panel-body">-->
                     <input type="hidden" name="interactionOpenToValidated" value="{{ interactionToDisplayed.id }}"/>
                     <input type="hidden" name="interactionToValidated" value="{{ interactionToDisplayed.interaction.id }}"/>
                     <input type="hidden" name="typeInteraction" value="InteractionOpen"/>
@@ -164,12 +164,12 @@
                     <input type="hidden" name="testOpen" value="testOpen" />
                     <input type="hidden" name="interaction" value="{{ interactionToDisplayed.id }}"/>
 
-                </div>
+                <!--</div>-->
             {#--------------------------------------------------- Hole ----------------------------------------------------------#}
 
             {% elseif interactionType == 'InteractionHole' %}
 
-                    <div class="panel-body">
+                    <!--<div class="panel-body">-->
                         <input class="form-control" type="hidden" name="interactionHoleToValidated" value="{{ interactionToDisplayed.id }}"/>
                         <input class="form-control" type="hidden" name="interactionToValidated" value="{{ interactionToDisplayed.interaction.id }}"/>
                         <input class="form-control" type="hidden" name="typeInteraction" value="InteractionHole"/>
@@ -189,7 +189,7 @@
 
                         {% include "UJMExoBundle:Partial:hintPaper.html.twig" %}
                         
-                    </div>
+                    <!--</div>-->
 
                     <input type="hidden" name="testQCM" value="testQCM" />
                     <input type="hidden" name="interaction" value="{{ interactionToDisplayed.id }}"/>
