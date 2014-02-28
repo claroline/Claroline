@@ -8,11 +8,11 @@
             {{ 'Edit a criterion'|trans({}, 'icap_dropzone') }}
         {% endif %}
     </h3>
-    {% include "IcapDropzoneBundle:Dropzone:editAddCriterionForm.html.twig" %}
+    {% include "IcapDropzoneBundle:Criterion:editAddCriterionForm.html.twig" %}
 {% endblock %}
 
 {% block javascripts %}
-    {{ parent() }}}
+    {{ parent() }}
     {% render controller('ClarolineCoreBundle:ResourceType:initPicker') %}
     {{ tinymce_init() }}
 {% endblock %}

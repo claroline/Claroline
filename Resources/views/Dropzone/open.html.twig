@@ -13,7 +13,7 @@
             <p class="text-muted">
                 {{ 'Evaluation not started'|trans({}, 'icap_dropzone') }}
                 {% if not dropzone.manualPlanning %}
-                     - {{ 'Start %date%'|trans({'%date%': dropzone.startAllowDrop|date('formatDatetime'|trans({}, 'icap_dropzone')) }) }}
+                     - {{ 'Start %date%'|trans({'%date%': dropzone.startAllowDrop|date('formatDatetime'|trans({}, 'icap_dropzone')) },'icap_dropzone') }}
                 {% endif %}
             </p>
         {% endif %}
