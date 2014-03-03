@@ -43,13 +43,6 @@ claro_theme_confirm:
         _controller: FrameworkBundle:Template:template
         template: 'ClarolineCoreBundle:Theme:confirm.html.twig'
 
-claro_content_error:
-    pattern: /content/error
-    options: { expose: true }
-    defaults:
-        _controller: FrameworkBundle:Template:template
-        template: 'ClarolineCoreBundle:Home:ajaxerror.html.twig'
-
 claro_content_typeerror:
     pattern: /content/typeerror
     options: { expose: true }
