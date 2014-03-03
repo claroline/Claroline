@@ -190,7 +190,6 @@ class AuthenticationSuccessListener implements AuthenticationSuccessHandlerInter
             $user = $token->getUser() and
             $user instanceof User
         ) {
-            //throw new \Exception(var_dump());
             return $user;
         }
     }
@@ -207,7 +206,6 @@ class AuthenticationSuccessListener implements AuthenticationSuccessHandlerInter
     public function isImpersonated()
     {
         if ($this->securityContext->isGranted('ROLE_PREVIOUS_ADMIN')) {
-            //$this->securityContext->getToken()->getRoles();
             foreach ($this->securityContext->getToken()->getRoles() as $role) {
                 if ($role instanceof SwitchUserRole) {
                     return true;
