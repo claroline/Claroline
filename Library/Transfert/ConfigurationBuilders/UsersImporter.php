@@ -49,6 +49,7 @@ class UsersImporter extends Importer implements ConfigurationInterface
         return $treeBuilder;
     }
 
+    //@todo include owner in the verification if this section exists
     public function addUsersSection($rootNode)
     {
          $usernames = array();
@@ -72,14 +73,15 @@ class UsersImporter extends Importer implements ConfigurationInterface
             $codes[] = $code['code'];
         }
 
-        $mergedRoles = array();
-        // get merged roles
 
+        $configuration = $this->getConfiguration();
         $availableRoleName = array();
 
-        foreach ($mergedRoles as $el) {
-            foreach ($el as $role) {
-                $availableRoleName[] = $role['role']['name'];
+        if (isset($configuration['roles'])) {
+            foreach ($configuration['roles'] as $el) {
+                foreach ($el as $role) {
+                    $availableRoleName[] = $role['role']['name'];
+                }
             }
         }
 
@@ -100,7 +102,7 @@ class UsersImporter extends Importer implements ConfigurationInterface
                                             );
                                         }
                                     )
-                                    ->thenInvalid("The username w/e already exists in the database")
+                                    ->thenInvalid("The username %s already exists in the database")
                                 ->end()
                                 ->validate()
                                     ->ifTrue(
@@ -111,7 +113,7 @@ class UsersImporter extends Importer implements ConfigurationInterface
                                             );
                                         }
                                     )
-                                    ->thenInvalid("The username w/e already exists in the configuration")
+                                    ->thenInvalid("The username %s already exists in the configuration")
                                 ->end()
                             ->end()
                             ->scalarNode('password')->isRequired()->end()
@@ -125,7 +127,7 @@ class UsersImporter extends Importer implements ConfigurationInterface
                                             );
                                         }
                                     )
-                                    ->thenInvalid("The email w/e already exists")
+                                    ->thenInvalid("The email %s already exists")
                                 ->end()
                                 ->validate()
                                     ->ifTrue(
@@ -136,7 +138,7 @@ class UsersImporter extends Importer implements ConfigurationInterface
                                             );
                                         }
                                     )
-                                    ->thenInvalid("The email w/e already exists in the configuration")
+                                    ->thenInvalid("The email %s already exists in the configuration")
                                 ->end()
                             ->end()
                             ->scalarNode('code')->isRequired()
@@ -149,7 +151,7 @@ class UsersImporter extends Importer implements ConfigurationInterface
                                             );
                                         }
                                     )
-                                    ->thenInvalid("The code w/e already exists")
+                                    ->thenInvalid("The code %s already exists")
                                 ->end()
                                 ->validate()
                                     ->ifTrue(
@@ -160,7 +162,7 @@ class UsersImporter extends Importer implements ConfigurationInterface
                                             );
                                         }
                                     )
-                                    ->thenInvalid("The code w/e already exists")
+                                    ->thenInvalid("The code %s already exists")
                                 ->end()
                             ->end()
                             ->arrayNode('roles')
@@ -176,7 +178,7 @@ class UsersImporter extends Importer implements ConfigurationInterface
                                                     );
                                                 }
                                             )
-                                            ->thenInvalid("The role name w/e doesn't exists")
+                                            ->thenInvalid("The role name %s doesn't exists")
                                         ->end()
                                     ->end()
                                 ->end()

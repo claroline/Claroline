@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file is part of the Claroline Connect package.
  *
@@ -12,54 +13,50 @@ namespace Claroline\CoreBundle\Library;
 
 use Claroline\CoreBundle\Library\Testing\MockeryTestCase;
 use Mockery as m;
-use Claroline\CoreBundle\Library\Transfert\ConfigurationBuilders\RolesImporter;
+use Claroline\CoreBundle\Library\Transfert\ConfigurationBuilders\Tools\Resources\FileImporter;
 use Symfony\Component\Yaml\Yaml;
 
-class RolesImporterTest extends MockeryTestCase
+class FileImporterTest extends MockeryTestCase
 {
-    private $om;
-    private $importer;
+    private $fileImporter;
 
     protected function setUp()
     {
         parent::setUp();
 
-        $this->om = $this->mock('Claroline\CoreBundle\Persistence\ObjectManager');
-        $this->importer = new RolesImporter($this->om);
+        $this->fileImporter = new FileImporter();
     }
 
     /**
      * @dataProvider validateProvider
      */
-    public function testValidate($path, $isExceptionExpected)
+    public function testValidate($basePath, $path, $isExceptionExpected)
     {
         if ($isExceptionExpected) {
             $this->setExpectedException('Symfony\Component\Config\Definition\Exception\InvalidConfigurationException');
         }
 
-        $data = Yaml::parse(file_get_contents($path));
-        $roles['roles'] = $data['roles'];
-        $this->importer->validate($roles);
+        $data = Yaml::parse(file_get_contents($basePath . '/'. $path));
+        $this->fileImporter->setRootPath($basePath);
+        $this->fileImporter->validate($data);
     }
 
+    /* @todo add validations */
     public function validateProvider()
     {
         return array(
-            //valid
+            //valid (the file path is correct)
             array(
-                'path' => __DIR__.'/../../../Stub/transfert/valid/full/roles01.yml',
+                'basePath' =>  __DIR__.'/../../../../Stub/transfert/valid/full',
+                'path' => 'tools/resources/files01.yml',
                 'isExceptionExpected' => false
             ),
-            //roles have the same name twice
+            //invalid (the file path is wrong)
             array(
-                'path' => __DIR__.'/../../../Stub/transfert/invalid/roles/existing_name.yml',
+                'basePath' =>  __DIR__.'/../../../../Stub/transfert/invalid/files',
+                'path' => 'nopath.yml',
                 'isExceptionExpected' => true
             )
         );
-    }
-
-    public function getName()
-    {
-        return 'role_importer';
     }
 }

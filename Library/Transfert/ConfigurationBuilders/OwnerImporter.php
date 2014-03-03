@@ -13,8 +13,9 @@ namespace Claroline\CoreBundle\Library\Transfert\ConfigurationBuilders;
 
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
+use Claroline\CoreBundle\Library\Transfert\Importer;
 
-class OwnerConfigurationBuilder implements ConfigurationInterface
+class OwnerImporter extends Importer implements ConfigurationInterface
 {
     public function  getConfigTreeBuilder()
     {
@@ -44,5 +45,36 @@ class OwnerConfigurationBuilder implements ConfigurationInterface
                 ->end()
             ->end()
         ->end();
+    }
+
+    /**
+     * Validate the workspace properties.
+     *
+     * @todo validate the owner~
+     * @param array $data
+     */
+    public function validate(array $data)
+    {
+        $processor = new Processor();
+        self::setData($data);
+        $processor->processConfiguration($this, $data);
+
+        //checks if the owner already exists~
+
+    }
+
+    private static function setData($data)
+    {
+        self::$data = $data;
+    }
+
+    private static function getData()
+    {
+        return self::$data;
+    }
+
+    public function getName()
+    {
+        return 'owner_importer';
     }
 }

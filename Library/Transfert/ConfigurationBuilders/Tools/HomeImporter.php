@@ -87,7 +87,7 @@ class HomeImporter extends Importer implements ConfigurationInterface
                 $toolImporter = null;
                 if (isset ($widgets['widgets'])) {
                     foreach ($widgets['widgets'] as $widget) {
-                        foreach ($this->listImporters as $importer) {
+                        foreach ($this->getListImporters() as $importer) {
                             if ($importer->getName() == $widget['widget']['type']) {
                                 $toolImporter = $importer;
                             }

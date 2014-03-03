@@ -14,7 +14,7 @@ namespace Claroline\CoreBundle\Library\Transfert\ConfigurationBuilders;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 
-class HomeConfigurationBuilder implements ConfigurationInterface
+class HomeImporter implements ConfigurationInterface
 {
     public function  getConfigTreeBuilder()
     {

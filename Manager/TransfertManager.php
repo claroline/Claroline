@@ -17,7 +17,6 @@ use Claroline\CoreBundle\Library\Transfert\ManifestConfiguration;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Config\Definition\Processor;
 use Symfony\Component\Yaml\Yaml;
-use Claroline\CoreBundle\Library\Transfert\ConfigurationBuilders\OwnerConfigurationBuilder;
 use Claroline\CoreBundle\Library\Transfert\ConfigurationBuilders\GroupsConfigurationBuilder;
 use Claroline\CoreBundle\Library\Transfert\ConfigurationBuilders\RolesConfigurationBuilder;
 use Claroline\CoreBundle\Library\Transfert\ConfigurationBuilders\ToolsConfigurationBuilder;
@@ -50,11 +49,8 @@ class TransfertManager
      */
     public function validate($path)
     {
-        $resolver = new Resolver($path);
-
         $ds = DIRECTORY_SEPARATOR;
-        $processor = new Processor();
-        $data = Yaml::parse(file_get_contents($path . $ds . 'manifest.yml'));
+        $resolver = new Resolver($path);
         $data = $resolver->resolve();
         $this->setRootPath($path);
         $this->setImporters($path, $data);
@@ -62,13 +58,13 @@ class TransfertManager
         $groupsImporter = $this->getImporterByName('groups_importer');
         $rolesImporter  = $this->getImporterByName('roles_importer');
         $toolsImporter  = $this->getImporterByName('tools_importer');
+        $ownerImporter = $this->getImporterByName('owner_importer');
 
         try {
             //owner
             if (isset($data['members']['owner'])) {
                 $owner['owner'] = $data['members']['owner'];
-                $ownerConfigurationBuilder = new OwnerConfigurationBuilder();
-                $owner = $processor->processConfiguration($ownerConfigurationBuilder, $owner);
+                $ownerImporter->validate($owner);
             }
 
             //properties
@@ -84,7 +80,6 @@ class TransfertManager
             $usersImporter->validate($users);
             $groupsImporter->validate($groups);
             $toolsImporter->validate($tools);
-            //$this->validateToolsConfig($tools);
 
         } catch (\Exception $e) {
             var_dump(get_class($e));
@@ -96,33 +91,6 @@ class TransfertManager
     {
         $this->validate($path);
         //do other things
-    }
-
-    private function validateToolsConfig(array $tooldata)
-    {
-        foreach ($tooldata['tools'] as $tool) {
-            $toolImporter = null;
-
-            foreach ($this->listImporters as $importer) {
-                if ($importer->getName() == $tool['tool']['name']) {
-                    $toolImporter = $importer;
-                    $toolImporter->setListImporters($this->listImporters);
-                }
-            }
-
-            if (isset ($tool['tool']['config']) && $toolImporter) {
-                $ds = DIRECTORY_SEPARATOR;
-                $filepath = $this->getRootPath() . $ds . $tool['tool']['config'];
-                //@todo error handling if path doesn't exists
-                $tooldata =  Yaml::parse(file_get_contents($filepath));
-                $toolImporter->validate($tooldata);
-            }
-
-            if (isset($tool['tool']['data']) && $toolImporter) {
-                $tooldata = $tool['tool']['data'];
-                $toolImporter->validate($tooldata);
-            }
-        }
     }
 
     private function setRootPath($rootPath)

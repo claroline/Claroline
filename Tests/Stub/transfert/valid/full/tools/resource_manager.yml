@@ -5,7 +5,7 @@ resources:
             uid: 1
             roles:
                 - role:
-                    name: 'visitor'
+                    name: 'role1'
                     rights:
                         open: true
                         edit: false
@@ -18,7 +18,7 @@ resources:
             parent: root
             roles:
                 - role:
-                    name: 'visitor'
+                    name: 'role1'
                     rights:
                         open: true
                         edit: false
@@ -31,7 +31,7 @@ resources:
             parent: dir1
             roles:
                 - role:
-                    name: 'visitor'
+                    name: 'role1'
                     rights:
                         open: true
                         edit: false
@@ -47,7 +47,7 @@ resources:
                 - path: 'tools/resources/files01.yml'
             roles:
                 - role:
-                    name: 'visitor'
+                    name: 'role1'
                     rights:
                         open: true
                         edit: false
@@ -62,129 +62,9 @@ resources:
                 - path: 'tools/resources/text01.yml'
             roles:
                 - role:
-                    name: 'visitor'
+                    name: 'role1'
                     rights:
                         open: true
                         edit: false
                         create:
                             resource: 'hello'
-        - item:
-            name: 'foo3'
-            creator: 'bar'
-            parent: 'dir2'
-            type: 'shortcut'
-            roles:
-                - role:
-                    name: 'visitor'
-                    rights:
-                        open: true
-                        edit: false
-                        create:
-                            resource: 'hello'
-        - item:
-            name: 'foo4'
-            creator: 'bar'
-            parent: 'dir2'
-            type: 'activity'
-            roles:
-                - role:
-                    name: 'visitor'
-                    rights:
-                        open: true
-                        edit: false
-                        create:
-                            resource: 'hello'
-        - item:
-            name: 'foo4'
-            creator: 'bar'
-            parent: 'dir2'
-            type: 'blog'
-            roles:
-                - role:
-                    name: 'visitor'
-                    rights:
-                        open: true
-                        edit: false
-                        create:
-                            resource: 'hello'
-        - item:
-            name: 'foo5'
-            creator: 'bar'
-            parent: 'dir2'
-            type: 'evaluation'
-            roles:
-                - role:
-                    name: 'visitor'
-                    rights:
-                        open: true
-                        edit: false
-                        create:
-                            resource: 'hello'
-        - item:
-            name: 'foo6'
-            creator: 'bar'
-            parent: 'dir2'
-            type: 'wiki'
-            roles:
-                - role:
-                    name: 'visitor'
-                    rights:
-                        open: true
-                        edit: false
-                        create:
-                            resource: 'hello'
-        - item:
-            name: 'foo7'
-            creator: 'bar'
-            parent: 'dir2'
-            type: 'exercice'
-            roles:
-                - role:
-                    name: 'visitor'
-                    rights:
-                        open: true
-                        edit: false
-                        create:
-                            resource: 'hello'
-        - item:
-            name: 'foo8'
-            creator: 'bar'
-            parent: 'dir2'
-            type: 'announcements'
-            roles:
-                - role:
-                    name: 'visitor'
-                    rights:
-                        open: true
-                        edit: false
-                        create:
-                            resource: 'hello'
-        - item:
-            name: 'foo8'
-            creator: 'bar'
-            parent: 'dir2'
-            type: 'lesson'
-            roles:
-                - role:
-                    name: 'visitor'
-                    rights:
-                        open: true
-                        edit: false
-                        create:
-                            resource: 'hello'
-        - item:
-            name: 'foo8'
-            creator: 'bar'
-            parent: 'dir2'
-            type: 'forum'
-            roles:
-                - role:
-                    name: 'visitor'
-                    rights:
-                        open: true
-                        edit: false
-                        create:
-                            resource: 'hello'
-
-
-

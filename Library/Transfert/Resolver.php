@@ -20,15 +20,16 @@ use Symfony\Component\Yaml\Yaml;
  */
 class Resolver
 {
-    public function __construct($path) {
+    public function __construct($path, $rootFile = 'manifest.yml') {
         $this->path = $path;
+        $this->rootFile = $rootFile;
     }
 
 
     public function resolve()
     {
         $ds = DIRECTORY_SEPARATOR;
-        $data = Yaml::parse(file_get_contents($this->path . $ds . 'manifest.yml'));
+        $data = Yaml::parse(file_get_contents($this->path . $ds . $this->rootFile));
         $this->parse($data);
         //parse all the include path and inject them into a single array
 

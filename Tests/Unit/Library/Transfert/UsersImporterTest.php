@@ -26,8 +26,8 @@ class UsersImporterTest extends MockeryTestCase
         parent::setUp();
 
         $this->om = $this->mock('Claroline\CoreBundle\Persistence\ObjectManager');
-        $this->merger = $this->mock('Claroline\CoreBundle\Library\Transfert\Merger');
-        $this->importer = new UsersImporter($this->om, $this->merger);
+        $this->importer = new UsersImporter($this->om);
+        $this->importer->setConfiguration(array());
     }
 
     /**
@@ -41,11 +41,9 @@ class UsersImporterTest extends MockeryTestCase
 
         $repo = $this->mock('Claroline\CoreBundle\Repository\UserRepository');
         $this->om->shouldReceive('getRepository')->with('Claroline\CoreBundle\Entity\User')->andReturn($repo);
-
         $repo->shouldReceive('findUsernames')->andReturn($usernames);
         $repo->shouldReceive('findEmails')->andReturn($emails);
         $repo->shouldReceive('findCodes')->andReturn($codes);
-
         $data = Yaml::parse(file_get_contents($path));
         $users['users'] = $data['users'];
         $this->importer->validate($users);
@@ -54,6 +52,7 @@ class UsersImporterTest extends MockeryTestCase
     public function validateProvider()
     {
         return array(
+            //valid
             array(
                 'path' => __DIR__.'/../../../Stub/transfert/valid/full/users01.yml',
                 'usernames' => array(),
@@ -61,6 +60,7 @@ class UsersImporterTest extends MockeryTestCase
                 'codes' => array(),
                 'isExceptionThrow' => false
             ),
+            //username is already in the database
             array(
                 'path' => __DIR__.'/../../../Stub/transfert/valid/full/users01.yml',
                 'usernames' => array(array('username' => 'user1')),
@@ -68,6 +68,7 @@ class UsersImporterTest extends MockeryTestCase
                 'codes' => array(),
                 'isExceptionThrow' => true
             ),
+            //email is already in the database
             array(
                 'path' => __DIR__.'/../../../Stub/transfert/valid/full/users01.yml',
                 'usernames' => array(),
@@ -75,6 +76,7 @@ class UsersImporterTest extends MockeryTestCase
                 'codes' => array(),
                 'isExceptionThrow' => true
             ),
+            //code is already in the database
             array(
                 'path' => __DIR__.'/../../../Stub/transfert/valid/full/users01.yml',
                 'usernames' => array(),
@@ -82,6 +84,7 @@ class UsersImporterTest extends MockeryTestCase
                 'codes' => array(array('code' => 'USER01')),
                 'isExceptionThrow' => true
             ),
+            //username found twice in the configuration
             array(
                 'path' => __DIR__.'/../../../Stub/transfert/invalid/users/existing_username.yml',
                 'usernames' => array(),
@@ -89,6 +92,7 @@ class UsersImporterTest extends MockeryTestCase
                 'codes' => array(),
                 'isExceptionThrow' => true
             ),
+            //email found twice in the configuration
             array(
                 'path' => __DIR__.'/../../../Stub/transfert/invalid/users/existing_email.yml',
                 'usernames' => array(),
@@ -96,6 +100,7 @@ class UsersImporterTest extends MockeryTestCase
                 'codes' => array(),
                 'isExceptionThrow' => true
             ),
+            //code found twice in the configuration
             array(
                 'path' => __DIR__.'/../../../Stub/transfert/invalid/users/existing_code.yml',
                 'usernames' => array(),
@@ -103,6 +108,7 @@ class UsersImporterTest extends MockeryTestCase
                 'codes' => array(),
                 'isExceptionThrow' => true
             ),
+            //role not found in the configuration
             array(
                 'path' => __DIR__.'/../../../Stub/transfert/invalid/users/unknown_role.yml',
                 'usernames' => array(),

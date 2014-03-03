@@ -85,6 +85,7 @@ class WorkspacePropertiesImporterTest extends MockeryTestCase
         //isFull = with owner section
 
         return array(
+            //full correct configuration, everything is the config file
             array(
                 'path' => __DIR__.'/../../../Stub/transfert/valid/full',
                 'isExceptionExpected' => false,
@@ -92,6 +93,7 @@ class WorkspacePropertiesImporterTest extends MockeryTestCase
                 'isFull' => true,
                 'codeExists' => false
             ),
+            //full correct configuration, owner is already in the database
             array(
                 'path' => __DIR__.'/../../../Stub/transfert/valid/full',
                 'isExceptionExpected' => false,
@@ -99,6 +101,7 @@ class WorkspacePropertiesImporterTest extends MockeryTestCase
                 'isFull' => true,
                 'codeExists' => false
             ),
+            //minimal correct configuration, owner is already in the database
             array(
                 'path' => __DIR__.'/../../../Stub/transfert/valid/minimal',
                 'isExceptionExpected' => false,
@@ -106,6 +109,7 @@ class WorkspacePropertiesImporterTest extends MockeryTestCase
                 'isFull' => false,
                 'codeExists' => false
             ),
+            //minimal configuration, no owner section, owner not in database
             array(
                 'path' => __DIR__.'/../../../Stub/transfert/valid/minimal',
                 'isExceptionExpected' => true,
@@ -113,6 +117,7 @@ class WorkspacePropertiesImporterTest extends MockeryTestCase
                 'isFull' => false,
                 'codeExists' => false
             ),
+            //full configuration, workspace owner and member owner missmatch
             array(
                 'path' => __DIR__.'/../../../Stub/transfert/invalid/wrong_owner',
                 'isExceptionExpected' => true,
@@ -120,6 +125,7 @@ class WorkspacePropertiesImporterTest extends MockeryTestCase
                 'isFull' => true,
                 'codeExists' => false
             ),
+            //minimal configuration, workspace code already exists
             array(
                 'path' => __DIR__.'/../../../Stub/transfert/valid/minimal',
                 'isExceptionExpected' => true,

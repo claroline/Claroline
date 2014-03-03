@@ -15,6 +15,11 @@ abstract class Importer
         $this->listImporters = $importers;
     }
 
+    public function getListImporters()
+    {
+        return $this->listImporters;
+    }
+
     public function setRootPath($rootpath)
     {
         $this->rootPath = $rootpath;
@@ -33,6 +38,17 @@ abstract class Importer
     public function getConfiguration()
     {
         return $this->configuration;
+    }
+
+    protected function getImporterByName($name)
+    {
+        foreach ($this->listImporters as $importer) {
+            if ($importer->getName() === $name) {
+                return $importer;
+            }
+        }
+
+        return null;
     }
 
     abstract function getName();

@@ -37,7 +37,7 @@ class ToolsImporter extends Importer implements ConfigurationInterface
                             ->scalarNode('translation')->end()
                             ->variableNode('data')->end()
                             ->arrayNode('import')
-                                ->childen()
+                                ->children()
                                     ->scalarNode('path')->end()
                                 ->end()
                             ->end()
@@ -57,7 +57,6 @@ class ToolsImporter extends Importer implements ConfigurationInterface
     /**
      * Validate the workspace properties.
      *
-     * @todo show the expected array
      * @param array $data
      */
     public function validate(array $data)
@@ -65,6 +64,31 @@ class ToolsImporter extends Importer implements ConfigurationInterface
         $processor = new Processor();
         self::setData($data);
         $processor->processConfiguration($this, $data);
+
+//        foreach ($data['tools'] as $tool) {
+//            $importer = $this->getImporterByName($tool['name']);
+//            $importer->validate($tool);
+//        }
+        //then validate each tools
+    }
+
+    private function validateTools($tool)
+    {
+        $toolImporter = null;
+        $toolImporter = $this->getImporterByName($tool['name']);
+
+        if (isset ($tool['tool']['config']) && $toolImporter) {
+            $ds = DIRECTORY_SEPARATOR;
+            $filepath = $this->getRootPath() . $ds . $tool['tool']['config'];
+            //@todo error handling if path doesn't exists
+            $tooldata =  Yaml::parse(file_get_contents($filepath));
+            $toolImporter->validate($tooldata);
+        }
+
+        if (isset($tool['tool']['data']) && $toolImporter) {
+            $tooldata = $tool['tool']['data'];
+            $toolImporter->validate($tooldata);
+        }
     }
 
     private static function setData($data)
