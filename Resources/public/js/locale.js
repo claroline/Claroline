@@ -10,7 +10,7 @@
 (function () {
     'use strict';
 
-    var routing = window.Claroline.Routing;
+    var routing = window.Routing;
     var modal = window.Claroline.Modal;
 
     $('body').on('click', '.locale-select', function () {
