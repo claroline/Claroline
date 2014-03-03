@@ -1,6 +1,6 @@
 <?php
 
-namespace Claroline\CoreBundle\Migrations\pdo_oci;
+namespace Claroline\CoreBundle\Migrations\oci8;
 
 use Doctrine\DBAL\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
@@ -8,9 +8,9 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2014/02/24 02:36:01
+ * Generation date: 2014/03/03 02:43:39
  */
-class Version20140224143558 extends AbstractMigration
+class Version20140303144336 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
@@ -19,8 +19,8 @@ class Version20140224143558 extends AbstractMigration
                 id NUMBER(10) NOT NULL, 
                 user_id NUMBER(10) DEFAULT NULL, 
                 name VARCHAR2(255) NOT NULL, 
+                slug VARCHAR2(128) NOT NULL, 
                 is_shared NUMBER(1) NOT NULL, 
-                shared_id VARCHAR2(255) DEFAULT NULL, 
                 PRIMARY KEY(id)
             )
         ");
@@ -56,7 +56,7 @@ class Version20140224143558 extends AbstractMigration
             CREATE INDEX IDX_BB3FD2DDA76ED395 ON claro_badge_collection (user_id)
         ");
         $this->addSql("
-            CREATE UNIQUE INDEX shared_id_idx ON claro_badge_collection (shared_id)
+            CREATE UNIQUE INDEX slug_idx ON claro_badge_collection (slug)
         ");
         $this->addSql("
             CREATE TABLE claro_badge_collection_badges (
@@ -99,10 +99,22 @@ class Version20140224143558 extends AbstractMigration
             ON DELETE SET NULL
         ");
         $this->addSql("
+            ALTER TABLE claro_user_badge 
+            ADD (
+                expired_at TIMESTAMP(0) DEFAULT NULL
+            )
+        ");
+        $this->addSql("
             ALTER TABLE claro_badge 
             ADD (
-                deletedAt TIMESTAMP(0) DEFAULT NULL
+                is_expiring NUMBER(1) DEFAULT '0' NOT NULL, 
+                expire_duration NUMBER(10) DEFAULT NULL, 
+                expire_period NUMBER(5) DEFAULT NULL
             )
+        ");
+        $this->addSql("
+            ALTER TABLE claro_badge 
+            DROP (expired_at)
         ");
     }
 
@@ -120,7 +132,15 @@ class Version20140224143558 extends AbstractMigration
         ");
         $this->addSql("
             ALTER TABLE claro_badge 
-            DROP (deletedAt)
+            ADD (
+                expired_at TIMESTAMP(0) DEFAULT NULL
+            )
+        ");
+        $this->addSql("
+            ALTER TABLE claro_badge 
+            DROP (
+                is_expiring, expire_duration, expire_period
+            )
         ");
         $this->addSql("
             ALTER TABLE claro_user 
@@ -131,6 +151,10 @@ class Version20140224143558 extends AbstractMigration
             ADD CONSTRAINT FK_EB8D285282D40A1F FOREIGN KEY (workspace_id) 
             REFERENCES claro_workspace (id) 
             ON DELETE CASCADE
+        ");
+        $this->addSql("
+            ALTER TABLE claro_user_badge 
+            DROP (expired_at)
         ");
     }
 }

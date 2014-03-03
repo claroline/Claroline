@@ -74,8 +74,6 @@ class CollectionController extends Controller
 
     private function processForm(Request $request, BadgeCollection $collection, $method = "PUT")
     {
-        $statusCode = (null === $collection->getId()) ? 201 : 204;
-
         $form = $this->createForm($this->get("claroline.form.badge.collection"), $collection, array("method" => $method));
 
         $formParameters = $request->request->get($form->getName());
@@ -90,25 +88,27 @@ class CollectionController extends Controller
         $form->submit($formParameters, 'PATCH' !== $method);
 
         if ($form->isValid()) {
+            if (!$collection->isIsShared()) {
+                $collection->setSlug(null);
+            }
+
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($collection);
             $entityManager->flush();
 
             $view = View::create();
-            $view->setStatusCode($statusCode);
+            $view->setStatusCode(201);
 
-            if (201 === $statusCode) {
-                $data = array(
-                    'collection' => array(
-                        'id'        => $collection->getId(),
-                        'name'      => $collection->getName(),
-                        'is_shared' => $collection->isIsShared(),
-                        'shared_id' => $collection->getSharedId()
-                    )
-                );
+            $data = array(
+                'collection' => array(
+                    'id'        => $collection->getId(),
+                    'name'      => $collection->getName(),
+                    'is_shared' => $collection->isIsShared(),
+                    'slug'      => $this->generateUrl("claro_badge_collection_share_view", array("slug" => $collection->getSlug()))
+                )
+            );
 
-                $view->setData($data);
-            }
+            $view->setData($data);
 
             return $this->get("fos_rest.view_handler")->handle($view);
         }

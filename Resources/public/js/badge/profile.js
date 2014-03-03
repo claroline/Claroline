@@ -219,10 +219,6 @@
                     });
             }
 
-            var sharedLink = $(".share_collection", newCollection);
-            var sharedUrl  = sharedLink.attr("href");
-            sharedUrl      = sharedUrl.replace("__sharedId__", data.collection.shared_id);
-            sharedLink.attr("href", sharedUrl);
             $(newCollection).attr("data-id", data.collection.id);
 
             newCollection
@@ -392,6 +388,10 @@
             collectionUpdateRequest
                 .success(function(data) {
                     updateSharedState(sharedLink, sharedState);
+
+                    if (1 == sharedState) {
+                        sharedLink.parent().find(".share_collection").attr("href", data.collection.slug);
+                    }
                 })
                 .fail(function() {
                     updateSharedState(sharedLink, (0 == sharedState)? 1 : 0);

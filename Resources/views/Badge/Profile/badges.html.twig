@@ -86,7 +86,7 @@
                             </ul>
                             <footer>
                                 <div class="dropdown">
-                                    <a href="' ~ path('claro_badge_collection_share_view', {'sharedId': '__sharedId__'}) ~ '" title="Voir la collection partagée" data-title="' ~ 'see_shared_collection'|trans ~ '"
+                                    <a href="" title="' ~ 'see_shared_collection'|trans ~ '" data-title="' ~ 'see_shared_collection'|trans ~ '"
                                         data-toggle="tooltip" data-placement="top" data-container="body"
                                         class="pull-right share_collection" style="display: none">
                                             <span class="icon-share-alt"></span>
@@ -99,10 +99,10 @@
                                     </a>
                                     <ul class="dropdown-menu sharedoptions" role="menu" aria-labelledby="dLabel">
                                         <li class="active">
-                                            <a role="menuitem" tabindex="-1" data-toggle="dropdown" href="#" class="sharedoption"><span class="icon-lock publish_collection"></span> ' ~ 'stop_share'|trans ~ '</a>
+                                            <a role="menuitem" tabindex="-1" data-toggle="dropdown" href="#" class="sharedoption" data-value="0"><span class="icon-lock publish_collection"></span> ' ~ 'stop_share'|trans ~ '</a>
                                         </li>
                                         <li>
-                                            <a role="menuitem" tabindex="-1" data-toggle="dropdown" href="#" class="sharedoption"><span class="icon-unlock publish_collection"></span> ' ~ 'share'|trans ~ '</a>
+                                            <a role="menuitem" tabindex="-1" data-toggle="dropdown" href="#" class="sharedoption" data-value="1"><span class="icon-unlock publish_collection"></span> ' ~ 'share'|trans ~ '</a>
                                         </li>
                                     </ul>
                                 </div>
@@ -152,7 +152,7 @@
                                     <div class="dropdown">
                                         {% set isCollectionShared = collection.isShared %}
 
-                                        <a href="{{ path('claro_badge_collection_share_view', {'sharedId': collection.sharedId}) }}"
+                                        <a href="{{ path('claro_badge_collection_share_view', {'slug': collection.slug}) }}"
                                            title="{{ 'see_shared_collection'|trans }}" data-title="{{ 'see_shared_collection'|trans }}"
                                            data-toggle="tooltip" data-placement="top" data-container="body"
                                            class="pull-right share_collection"{% if false == isCollectionShared %} style="display: none"{% endif %}>

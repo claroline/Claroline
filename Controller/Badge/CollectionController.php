@@ -24,7 +24,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 class CollectionController extends Controller
 {
     /**
-     * @Route("/{sharedId}/{locale}", name="claro_badge_collection_share_view", defaults={"locale"= "fr"})
+     * @Route("/{slug}/{locale}", name="claro_badge_collection_share_view", defaults={"locale"= "fr"})
      * @Template
      */
     public function shareViewAction(Request $request, BadgeCollection $collection, $locale)

@@ -7,11 +7,11 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
- * @ORM\Table(name="claro_badge_collection", uniqueConstraints={@ORM\UniqueConstraint(name="shared_id_idx", columns={"shared_id"})})
+ * @ORM\Table(name="claro_badge_collection", uniqueConstraints={@ORM\UniqueConstraint(name="slug_idx", columns={"slug"})})
  * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\Badge\BadgeCollectionRepository")
- * @ORM\HasLifecycleCallbacks
  */
 class BadgeCollection
 {
@@ -31,6 +31,14 @@ class BadgeCollection
      * @Assert\NotNull()
      */
     protected $name;
+
+    /**
+     * @var string $slug
+     *
+     * @Gedmo\Slug(fields={"name"}, updatable=false)
+     * @ORM\Column(type="string", length=128, nullable=false)
+     */
+    protected $slug;
 
     /**
      * @ORM\ManyToMany(targetEntity="Claroline\CoreBundle\Entity\Badge\Badge")
@@ -53,24 +61,9 @@ class BadgeCollection
      */
     protected $isShared = false;
 
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="shared_id", type="string", nullable=true)
-     */
-    protected $sharedId;
-
     public function __construct()
     {
         $this->badges = new ArrayCollection();
-    }
-
-    /**
-     * @ORM\PrePersist()
-     */
-    public function prePersist(LifecycleEventArgs $event)
-    {
-        $this->sharedId = md5($this->getUser()->getUsername() . time() . $this->getName());
     }
 
     /**
@@ -111,6 +104,26 @@ class BadgeCollection
     public function getName()
     {
         return $this->name;
+    }
+
+    /**
+     * @param string $slug
+     *
+     * @return BadgeCollection
+     */
+    public function setSlug($slug)
+    {
+        $this->slug = $slug;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getSlug()
+    {
+        return $this->slug;
     }
 
     /**
@@ -171,26 +184,6 @@ class BadgeCollection
     public function isIsShared()
     {
         return $this->isShared;
-    }
-
-    /**
-     * @param string $sharedId
-     *
-     * @return BadgeCollection
-     */
-    public function setSharedId($sharedId)
-    {
-        $this->sharedId = $sharedId;
-
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getSharedId()
-    {
-        return $this->sharedId;
     }
 }
  
