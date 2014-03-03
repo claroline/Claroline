@@ -36,7 +36,7 @@ class RolesImporter extends Importer implements ConfigurationInterface
     public function  getConfigTreeBuilder()
     {
         $treeBuilder = new TreeBuilder();
-        $rootNode = $treeBuilder->root('users');
+        $rootNode = $treeBuilder->root('roles');
         $this->addRolesSection($rootNode);
 
         return $treeBuilder;

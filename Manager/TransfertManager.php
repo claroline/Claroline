@@ -54,11 +54,11 @@ class TransfertManager
         $data = $resolver->resolve();
         $this->setRootPath($path);
         $this->setImporters($path, $data);
-        $usersImporter  = $this->getImporterByName('user_importer');
-        $groupsImporter = $this->getImporterByName('groups_importer');
-        $rolesImporter  = $this->getImporterByName('roles_importer');
-        $toolsImporter  = $this->getImporterByName('tools_importer');
-        $ownerImporter = $this->getImporterByName('owner_importer');
+        $usersImporter  = $this->getImporterByName('user');
+        $groupsImporter = $this->getImporterByName('groups');
+        $rolesImporter  = $this->getImporterByName('roles');
+        $toolsImporter  = $this->getImporterByName('tools');
+        $ownerImporter = $this->getImporterByName('owner');
 
         try {
             //owner

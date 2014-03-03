@@ -52,7 +52,7 @@ class TextImporter extends Importer implements ConfigurationInterface
 
     public function getName()
     {
-        return 'simple_text_importer';
+        return 'simple_text';
     }
 
     public function addTextSection($rootNode)

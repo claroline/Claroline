@@ -21,7 +21,7 @@ class HomeImporter extends Importer implements ConfigurationInterface
     public function  getConfigTreeBuilder()
     {
         $treeBuilder = new TreeBuilder();
-        $rootNode = $treeBuilder->root('tabs');
+        $rootNode = $treeBuilder->root('data');
         $this->addHomeSection($rootNode);
 
         return $treeBuilder;
@@ -66,6 +66,19 @@ class HomeImporter extends Importer implements ConfigurationInterface
     {
         $processor = new Processor();
         $this->result = $processor->processConfiguration($this, $data);
+
+        foreach ($data as $tabs) {
+            foreach ($tabs as $tab) {
+                if (isset($tab['tab']['widgets'])) {
+                    foreach ($tab['tab']['widgets'] as $widgets) {
+                        foreach ($widgets as $widget) {
+                            $importer = $this->getImporterByName($widget['type']);
+                            $importer->validate($widget['data']);
+                        }
+                    }
+                }
+            }
+        }
     }
 
     public function import(array $array)
@@ -75,7 +88,6 @@ class HomeImporter extends Importer implements ConfigurationInterface
 
     public function getName()
     {
-        return 'home_importer';
+        return 'home';
     }
-
 }

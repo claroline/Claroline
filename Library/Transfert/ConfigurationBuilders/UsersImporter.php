@@ -49,7 +49,7 @@ class UsersImporter extends Importer implements ConfigurationInterface
         return $treeBuilder;
     }
 
-    //@todo include owner in the verification if this section exists
+    //@todo include owner in the verification if this section exis
     public function addUsersSection($rootNode)
     {
          $usernames = array();
@@ -78,10 +78,8 @@ class UsersImporter extends Importer implements ConfigurationInterface
         $availableRoleName = array();
 
         if (isset($configuration['roles'])) {
-            foreach ($configuration['roles'] as $el) {
-                foreach ($el as $role) {
-                    $availableRoleName[] = $role['role']['name'];
-                }
+            foreach ($configuration['roles'] as $role) {
+                $availableRoleName[] = $role['role']['name'];
             }
         }
 

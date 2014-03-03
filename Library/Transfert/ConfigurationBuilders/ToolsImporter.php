@@ -14,9 +14,13 @@ namespace Claroline\CoreBundle\Library\Transfert\ConfigurationBuilders;
 use Claroline\CoreBundle\Library\Transfert\Importer;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
+use Symfony\Component\Config\Definition\Processor;
+use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 
 class ToolsImporter extends Importer implements ConfigurationInterface
 {
+    private static $data;
+
     public function  getConfigTreeBuilder()
     {
         $treeBuilder = new TreeBuilder();
@@ -28,23 +32,46 @@ class ToolsImporter extends Importer implements ConfigurationInterface
 
     public function addToolsSection($rootNode)
     {
+        $configuration = $this->getConfiguration();
+        $availableRoleName = array();
+
+        if (isset($configuration['roles'])) {
+            foreach ($configuration['roles'] as $role) {
+                $availableRoleName[] = $role['role']['name'];
+            }
+        }
+
         $rootNode
             ->prototype('array')
                 ->children()
                     ->arrayNode('tool')
                         ->children()
-                            ->scalarNode('name')->end()
+                            ->scalarNode('type')->end()
                             ->scalarNode('translation')->end()
                             ->variableNode('data')->end()
                             ->arrayNode('import')
-                                ->children()
-                                    ->scalarNode('path')->end()
+                                ->prototype('array')
+                                    ->children()
+                                        ->scalarNode('path')->end()
+                                    ->end()
                                 ->end()
                             ->end()
                             ->arrayNode('roles')
                                 ->prototype('array')
                                     ->children()
-                                        ->scalarNode('name')->end()
+                                        ->scalarNode('name')
+                                            ->validate()
+                                                ->ifTrue(
+                                                    function ($v) use ($availableRoleName) {
+                                                        return call_user_func_array(
+                                                            __CLASS__ . '::roleNameExists',
+                                                            array($v, $availableRoleName)
+                                                        );
+                                                    }
+                                                )
+                                                ->thenInvalid("The role name %s doesn't exists")
+                                            ->end()
+                                        ->end()
                                     ->end()
                                 ->end()
                             ->end()
@@ -62,47 +89,28 @@ class ToolsImporter extends Importer implements ConfigurationInterface
     public function validate(array $data)
     {
         $processor = new Processor();
-        self::setData($data);
         $processor->processConfiguration($this, $data);
 
-//        foreach ($data['tools'] as $tool) {
-//            $importer = $this->getImporterByName($tool['name']);
-//            $importer->validate($tool);
-//        }
-        //then validate each tools
-    }
+        foreach ($data['tools'] as $tool) {
+            $importer = $this->getImporterByName($tool['tool']['type']);
 
-    private function validateTools($tool)
-    {
-        $toolImporter = null;
-        $toolImporter = $this->getImporterByName($tool['name']);
+            if (!$importer) {
+                throw new InvalidConfigurationException('The importer ' . $tool['tool']['type'] . ' does not exist');
+            }
 
-        if (isset ($tool['tool']['config']) && $toolImporter) {
-            $ds = DIRECTORY_SEPARATOR;
-            $filepath = $this->getRootPath() . $ds . $tool['tool']['config'];
-            //@todo error handling if path doesn't exists
-            $tooldata =  Yaml::parse(file_get_contents($filepath));
-            $toolImporter->validate($tooldata);
+            if (isset($tool['tool']['data'])) {
+                $importer->validate($tool['tool']['data']);
+            }
         }
-
-        if (isset($tool['tool']['data']) && $toolImporter) {
-            $tooldata = $tool['tool']['data'];
-            $toolImporter->validate($tooldata);
-        }
-    }
-
-    private static function setData($data)
-    {
-        self::$data = $data;
-    }
-
-    private static function getData()
-    {
-        return self::$data;
     }
 
     public function getName()
     {
-        return 'tools_importer';
+        return 'tools';
+    }
+
+    public static function roleNameExists($v, $roles)
+    {
+        return !in_array($v, $roles);
     }
 }

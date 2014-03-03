@@ -75,6 +75,6 @@ class OwnerImporter extends Importer implements ConfigurationInterface
 
     public function getName()
     {
-        return 'owner_importer';
+        return 'owner';
     }
 }

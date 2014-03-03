@@ -6,6 +6,6 @@ groups:
           - username: 'user2'
           - username: 'user3'
         roles:
-          - name: 'ROLE_1'
+          - name: 'UNKNOWN_ROLE'
           - name: 'ROLE_2'
           - name: 'ROLE_3'

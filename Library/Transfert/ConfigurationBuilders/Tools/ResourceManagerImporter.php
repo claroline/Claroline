@@ -29,7 +29,7 @@ class ResourceManagerImporter extends Importer implements ConfigurationInterface
     public function  getConfigTreeBuilder()
     {
         $treeBuilder = new TreeBuilder();
-        $rootNode = $treeBuilder->root('resources');
+        $rootNode = $treeBuilder->root('data');
         $this->addResourceSection($rootNode);
 
         return $treeBuilder;
@@ -45,11 +45,11 @@ class ResourceManagerImporter extends Importer implements ConfigurationInterface
         $processor = new Processor();
         $this->result = $processor->processConfiguration($this, $data);
 
-        foreach ($data['resources']['items'] as $item) {
-            $importer = $this->getImporterByName($item['item']['type'] . '_importer');
+        foreach ($data['data']['items'] as $item) {
+            $importer = $this->getImporterByName($item['item']['type']);
 
             if (!$importer) {
-                throw new \Exception('The importer ' . $item['item']['type'] . '_importer does not exist');
+                throw new \Exception('The importer ' . $item['item']['type'] . ' does not exist');
             }
 
             if (isset($item['item']['data'])) {
@@ -72,7 +72,6 @@ class ResourceManagerImporter extends Importer implements ConfigurationInterface
     public function addResourceSection($rootNode)
     {
         $availableRoleName = [];
-
         $configuration = $this->getConfiguration();
 
         if (isset($configuration['roles'])) {

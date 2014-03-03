@@ -51,6 +51,7 @@ class GroupsImporter extends Importer implements ConfigurationInterface
 
     public function addGroupsSection($rootNode)
     {
+        $configuration = $this->getConfiguration();
         $names = $this->om->getRepository('Claroline\CoreBundle\Entity\Group')->findNames();
         $availableUsernames = array();
 
@@ -59,18 +60,18 @@ class GroupsImporter extends Importer implements ConfigurationInterface
             $availableUsernames[] = $username['username'];
         }
 
-        $mergedUsers = $this->getConfiguration()['members']['users'];
+        $mergedUsers = $configuration['members']['users'];
 
         foreach ($mergedUsers as $el) {
             $availableUsernames[] = $el['user']['username'];
         }
 
-        $mergedRoles = $this->getConfiguration()['roles'];
-
         $availableRoleName = array();
 
-        foreach ($mergedRoles as $el) {
-            $availableRoleName[] = $el['role']['name'];
+        if (isset($configuration['roles'])) {
+            foreach ($configuration['roles'] as $role) {
+                $availableRoleName[] = $role['role']['name'];
+            }
         }
 
         $rootNode
@@ -120,24 +121,25 @@ class GroupsImporter extends Importer implements ConfigurationInterface
                                         ->end()
                                     ->end()
                                 ->end()
-                            ->end()
-                        ->arrayNode('roles')
-                            ->prototype('array')
-                                ->children()
-                                    ->scalarNode('name')->isRequired()
-                                        ->validate()
-                                        ->ifTrue(
-                                            function ($v) use ($availableRoleName) {
-                                                return call_user_func_array(
-                                                    __CLASS__ . '::roleNameExists',
-                                                    array($v, $availableRoleName)
-                                                );
-                                            }
-                                        )
-                                        ->thenInvalid("The role name %s doesn't exists")
+                           ->end()
+                           ->arrayNode('roles')
+                               ->prototype('array')
+                                    ->children()
+                                        ->scalarNode('name')->isRequired()
+                                            ->validate()
+                                            ->ifTrue(
+                                                function ($v) use ($availableRoleName) {
+                                                    return call_user_func_array(
+                                                        __CLASS__ . '::roleNameExists',
+                                                        array($v, $availableRoleName)
+                                                    );
+                                                }
+                                            )
+                                            ->thenInvalid("The role name %s doesn't exists")
+                                        ->end()
                                     ->end()
-                                ->end()
-                            ->end()
+                               ->end()
+                           ->end()
                         ->end()
                     ->end()
                 ->end()
@@ -169,7 +171,7 @@ class GroupsImporter extends Importer implements ConfigurationInterface
 
     public function getName()
     {
-        return 'groups_importer';
+        return 'groups';
     }
 
     public static function nameAlreadyExistsInConfig($v)

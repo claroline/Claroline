@@ -36,9 +36,9 @@ class ResourceManagerImporterTest extends MockeryTestCase
         $this->importer->setConfiguration(Yaml::parse(file_get_contents($confFile)));
 
         $this->fileImporter = $this->mock('Claroline\CoreBundle\Library\Transfert\ConfigurationBuilders\Tools\Resources\FileImporter');
-        $this->fileImporter->shouldReceive('getName')->andReturn('file_importer');
+        $this->fileImporter->shouldReceive('getName')->andReturn('file');
         $this->textImporter = $this->mock('Claroline\CoreBundle\Library\Transfert\ConfigurationBuilders\Tools\Resources\TextImporter');
-        $this->textImporter->shouldReceive('getName')->andReturn('text_importer');
+        $this->textImporter->shouldReceive('getName')->andReturn('text');
 
         $this->importers = new ArrayCollection();
         $this->importers->add($this->fileImporter);
@@ -57,7 +57,7 @@ class ResourceManagerImporterTest extends MockeryTestCase
 
         $resolver = new Resolver($path, 'tools/resource_manager.yml');
         $data = $resolver->resolve();
-        $resources['resources'] = $data['resources'];
+        $resources['data'] = $data['data'];
 
         $this->fileImporter->shouldReceive('validate')->andReturn(true);
         $this->textImporter->shouldReceive('validate')->andReturn(true);
@@ -76,7 +76,7 @@ class ResourceManagerImporterTest extends MockeryTestCase
             )
             //roles don't exist
 
-            //sub importers not found
+            //unknown resource not found
 
             //parent don't exist
         );

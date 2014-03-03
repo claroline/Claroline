@@ -15,18 +15,28 @@ use Claroline\CoreBundle\Library\Testing\MockeryTestCase;
 use Mockery as m;
 use Claroline\CoreBundle\Library\Transfert\ConfigurationBuilders\HomeImporter;
 use Claroline\CoreBundle\Library\Transfert\Resolver;
-use Symfony\Component\Yaml\Yaml;
+use Doctrine\Common\Collections\ArrayCollection;
 
 class HomeImporterTest extends MockeryTestCase
 {
     private $om;
     private $importer;
+    private $importers;
 
     protected function setUp()
     {
         parent::setUp();
 
         $this->importer = new HomeImporter($this->om);
+
+        $simpleTextImporter = $this->mock('Claroline\CoreBundle\Library\Transfert\ConfigurationBuilders\Tools\Widgets\TextImporter');
+        $simpleTextImporter->shouldReceive('getName')->andReturn('simple_text');
+        $simpleTextImporter->shouldReceive('validate')->andReturn(true);
+
+        $this->importers = new ArrayCollection();
+        $this->importers->add($simpleTextImporter);
+
+        $this->importer->setListImporters($this->importers);
     }
 
     /**
@@ -34,14 +44,14 @@ class HomeImporterTest extends MockeryTestCase
      */
     public function testValidate($basePath, $configPath, $isExceptionExpected)
     {
+        $this->importer->setRootPath($basePath);
+
         if ($isExceptionExpected) {
             $this->setExpectedException('Symfony\Component\Config\Definition\Exception\InvalidConfigurationException');
         }
 
-        $fullpath = $basePath . '/' . $configPath;
         $resolver = new Resolver($basePath, $configPath);
         $data = $resolver->resolve();
-        $this->importer->setRootPath($basePath);
         $this->importer->validate($data);
     }
 

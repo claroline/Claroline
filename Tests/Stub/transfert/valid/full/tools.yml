@@ -1,9 +1,7 @@
 tools:
     - tool:
-        name: 'home'
+        type: 'home'
         translation: 'accueil'
-        import:
-            - path: 'tools/home.yml'
         data:
           tabs:
             - tab:
@@ -17,19 +15,6 @@ tools:
             - tab:
                   name: tabname02
         roles:
-          - name: anonymous
-          - name: visitor
-          - name: collaborator
-          - name: manager
-    - tool:
-        name: 'agenda'
-        roles:
-           - name: visitor
-        translation: 'agenda'
-    - tool:
-        name: 'badges'
-#    - tool:
-#        name: 'resource_manager'
-#        import:
-#            - path: 'tools/resource_manager.yml'
+          - name: ROLE_1
+          - name: ROLE_2
 

@@ -27,7 +27,9 @@ class UsersImporterTest extends MockeryTestCase
 
         $this->om = $this->mock('Claroline\CoreBundle\Persistence\ObjectManager');
         $this->importer = new UsersImporter($this->om);
-        $this->importer->setConfiguration(array());
+        $rolefile = __DIR__.'/../../../Stub/transfert/valid/full/roles01.yml';
+        $roles = Yaml::parse(file_get_contents($rolefile));
+        $this->importer->setConfiguration($roles);
     }
 
     /**
@@ -116,6 +118,7 @@ class UsersImporterTest extends MockeryTestCase
                 'codes' => array(),
                 'isExceptionThrow' => true
             )
+            //owner is included in the user list
         );
     }
 } 

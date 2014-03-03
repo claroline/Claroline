@@ -70,7 +70,7 @@ roles:
 
 tools:
     - tool:
-        name: 'home'
+        type: 'home'
         translation: 'accueil'
         import:
           - path: 'tools/home.yml'
@@ -80,14 +80,14 @@ tools:
           - name: collaborator
           - name: manager
     - tool:
-        imname: 'agenda'
+        type: 'agenda'
         roles:
            - name: visitor
         translation: 'agenda'
     - tool:
-        name: 'badges'
+        type: 'badges'
     - tool:
-        name: 'resource_manager'
+        type: 'resource_manager'
         import:
           - path: 'tools/resource_manager.yml'
 

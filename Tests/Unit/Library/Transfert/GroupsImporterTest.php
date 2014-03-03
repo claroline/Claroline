@@ -35,7 +35,9 @@ class GroupsImporterTest extends MockeryTestCase
     public function testValidate($path, $isExceptionExpected, $databaseUsernames, $names)
     {
         //stub manifest
-        $this->importer->setConfiguration(['members' => ['users' => array()], 'roles' => []]);
+        $rolefile = __DIR__.'/../../../Stub/transfert/valid/full/roles01.yml';
+        $roles = Yaml::parse(file_get_contents($rolefile));
+        $this->importer->setConfiguration(['members' => ['users' => array()], 'roles' => $roles['roles']]);
 
         if ($isExceptionExpected) {
             $this->setExpectedException('Symfony\Component\Config\Definition\Exception\InvalidConfigurationException');
@@ -50,8 +52,8 @@ class GroupsImporterTest extends MockeryTestCase
         $userRepo->shouldReceive('findUsernames')->andReturn($databaseUsernames);
 
         $data = Yaml::parse(file_get_contents($path));
-        $roles['groups'] = $data['groups'];
-        $this->importer->validate($roles);
+        $groups['groups'] = $data['groups'];
+        $this->importer->validate($groups);
     }
 
     public function validateProvider()

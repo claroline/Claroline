@@ -1,4 +1,4 @@
-resources:
+data:
     directories:
         - directory:
             name: 'root'
