@@ -19,6 +19,8 @@ use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\Security\Core\SecurityContextInterface;
+use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * @DI\Service("claroline.form.badge.rule")
@@ -28,35 +30,39 @@ class BadgeRuleType extends AbstractType
     /** @var \Claroline\CoreBundle\Manager\EventManager */
     private $eventManager;
 
-    /** @var  \Claroline\CoreBundle\Repository\Badge\BadgeRepository */
-    private $badgeRepository;
+    /** @var \Symfony\Component\Translation\TranslatorInterface */
+    private $translator;
 
     /** @var \Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler */
     private $platformConfigHandler;
 
+    private $securityContext;
+
     /**
      * @DI\InjectParams({
      *     "eventManager"          = @DI\Inject("claroline.event.manager"),
-     *     "badgeRepository"       = @DI\Inject("claroline.repository.badge"),
-     *     "platformConfigHandler" = @DI\Inject("claroline.config.platform_config_handler")
+     *     "translator"            = @DI\Inject("translator"),
+     *     "platformConfigHandler" = @DI\Inject("claroline.config.platform_config_handler"),
+     *     "securityContext"       = @DI\Inject("security.context")
      * })
      */
-    public function __construct(EventManager $eventManager, BadgeRepository $badgeRepository, PlatformConfigurationHandler $platformConfigHandler)
+    public function __construct(EventManager $eventManager, TranslatorInterface $translator,
+        PlatformConfigurationHandler $platformConfigHandler, SecurityContextInterface $securityContext)
     {
         $this->eventManager          = $eventManager;
-        $this->badgeRepository       = $badgeRepository;
+        $this->translator            = $translator;
         $this->platformConfigHandler = $platformConfigHandler;
+        $this->securityContext       = $securityContext;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $actionChoices = $this->eventManager->getSortedEventsForFilter();
-        /** @var \Claroline\CoreBundle\Entity\Badge\Badge[] $badgeChoices */
-        $badgeChoices  = $this->badgeRepository->findOrderedByName($this->platformConfigHandler->getParameter('locale_language'));
 
-        foreach ($badgeChoices as $badgeChoice) {
-            $badgeChoice->setLocale($this->platformConfigHandler->getParameter('locale_language'));
-        }
+        /** @var \Claroline\CoreBundle\Entity\User $user */
+        $user = $this->securityContext->getToken()->getUser();
+
+        $locale = (null === $user->getLocale()) ? $this->platformConfigHandler->getParameter("locale_language") : $user->getLocale();
 
         $builder
             ->add(
@@ -70,17 +76,14 @@ class BadgeRuleType extends AbstractType
             )
             ->add('occurrence', 'integer', array('attr' => array('class' => 'input-sm')))
             ->add('result', 'text')
-            ->add(
-                'badge',
-                'entity',
-                array(
-                     'attr'        => array('class' => 'fullwidth'),
-                     'class'       => 'ClarolineCoreBundle:Badge\Badge',
-                     'choices'     => $badgeChoices,
-                     'empty_value' => '',
-                     'property'    => 'name'
-                )
-            )
+            ->add('badge', 'zenstruck_ajax_entity', array(
+                'attr'           => array('class' => 'fullwidth'),
+                'placeholder'    => $this->translator->trans('badge_form_badge_selection', array(), 'badge'),
+                'class'          => 'ClarolineCoreBundle:Badge\Badge',
+                'use_controller' => true,
+                'property'       => sprintf("%sName", $locale),
+                'repo_method'    => sprintf('findByName%sForAjax', ucfirst($locale))
+            ))
             ->add(
                 'resultComparison',
                 'choice',

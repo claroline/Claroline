@@ -173,6 +173,50 @@ class BadgeRepository extends EntityRepository
     }
 
     /**
+     * @param string $search
+     *
+     * @return array
+     */
+    public function findByNameFrForAjax($search)
+    {
+        return $this->findByNameForAjax($search, 'fr');
+    }
+
+    /**
+     * @param string $search
+     *
+     * @return array
+     */
+    public function findByNameEnForAjax($search)
+    {
+        return $this->findByNameForAjax($search, 'en');
+    }
+
+    /**
+     * @param string $search
+     *
+     * @param string $locale
+     *
+     * @return array
+     */
+    public function findByNameForAjax($search, $locale)
+    {
+        $resultArray = array();
+
+        /** @var Badge[] $badges */
+        $badges = $this->findByNameAndLocale($search, $locale);
+
+        foreach ($badges as $badge) {
+            $resultArray[] = array(
+                'id'   => $badge->getId(),
+                'text' => $badge->getName($locale)
+            );
+        }
+
+        return $resultArray;
+    }
+
+    /**
      * @param  array           $params
      * @return ArrayCollection
      */

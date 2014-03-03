@@ -419,6 +419,22 @@ class Badge extends Rulable
     }
 
     /**
+     * @return string
+     */
+    public function getFrName()
+    {
+        return $this->getName('fr');
+    }
+
+    /**
+     * @return string
+     */
+    public function getEnName()
+    {
+        return $this->getName('en');
+    }
+
+    /**
      * @param string $locale
      *
      * @throws \InvalidArgumentException
