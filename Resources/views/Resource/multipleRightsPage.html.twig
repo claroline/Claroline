@@ -78,25 +78,23 @@
             {% endif %}
             <div class="tab-pane active" id="simple">
                 <div class="{{ mode }}-body padding-top-none">
+                    <h4>{{ 'Grant the right to' | trans({}, 'platform')}}:</h4>
                     <table class="table table-striped table-bordered table-condensed">
                         <tr>
-                           <th colspan="2">{{ 'Grant the right to' | trans({}, 'platform')}}:</th>
+                            <td><label for="everyone">{{ 'Everyone' | trans({}, 'platform')}}</label></td>
+                            <td><input id="everyone" type="checkbox"></td>
                         </tr>
                         <tr>
-                            <td>{{ 'Everyone' | trans({}, 'platform')}}</td>
-                            <td><input type="checkbox"></td>
+                            <td><label for="anonymous">{{ 'anonymous' | trans({}, 'platform')}}</label></td>
+                            <td><input id="anonymous" type="checkbox"></td>
                         </tr>
                         <tr>
-                            <td>{{ 'anonymous' | trans({}, 'platform')}}</td>
-                            <td><input type="checkbox"></td>
+                            <td><label for="workspace">{{ 'Members of work space' | trans({}, 'platform')}}</label></td>
+                            <td><input id="workspace" type="checkbox"></td>
                         </tr>
                         <tr>
-                            <td>{{ 'Members of work space' | trans({}, 'platform')}}</td>
-                            <td><input type="checkbox"></td>
-                        </tr>
-                        <tr>
-                            <td>{{ 'Members of platform' | trans({}, 'platform')}}</td>
-                            <td><input type="checkbox"></td>
+                            <td><label for="platform">{{ 'Members of platform' | trans({}, 'platform')}}</label></td>
+                            <td><input id="platform" type="checkbox"></td>
                         </tr>
                     </table>
                 </div>
@@ -132,7 +130,7 @@
                         <tbody>
                             {% for resourceRight in resourceRights %}
                                 {% set roleId = resourceRight.getRole().getId() %}
-                                <tr>
+                                <tr class="role {{ resourceRight.getRole().getName() | lower | replace({'role_': ''}) }}">
                                     <td>
                                         {{ resourceRight.getRole().getTranslationKey()|trans({}, 'platform') }}
                                         {% if resourceRight.getRole().getWorkspace() is not null %}
@@ -191,26 +189,26 @@
                             </a>
                         </div>
                         <div id="collapse-all" class="panel-body collapse {% if tags|length == 0 %}in{% endif %}">
-                                {% for workspace in workspaces %}
-                                    <div class="panel panel-default">
-                                        <div class="panel-heading">
-                                            <a data-toggle="collapse" href="#collapse-all-{{ workspace.getCode() }}">
-                                                <h3 class="panel-title">
-                                                    {{ workspace.getName() }}
-                                                    <span class="workspace-code">({{ workspace.getCode() }})</span>
-                                                </h3>
-                                            </a>
-                                        </div>
-                                        <div id="collapse-all-{{ workspace.getCode() }}" class="list-group collapse">
-                                            {% for role in workspaceRoles[workspace.getCode()] %}
-                                                <a class="workspace-role-item list-group-item"
-                                                   href="{{ path('claro_resource_right_form', {'node':resource.id, 'role':role.id}) }}">
-                                                    {{ role.getTranslationKey()|trans({}, 'platform') }}
-                                                </a>
-                                            {% endfor %}
-                                        </div>
+                            {% for workspace in workspaces %}
+                                <div class="panel panel-default">
+                                    <div class="panel-heading">
+                                        <a data-toggle="collapse" href="#collapse-all-{{ workspace.getCode() }}">
+                                            <h3 class="panel-title">
+                                                {{ workspace.getName() }}
+                                                <span class="workspace-code">({{ workspace.getCode() }})</span>
+                                            </h3>
+                                        </a>
                                     </div>
-                                {% endfor %}
+                                    <div id="collapse-all-{{ workspace.getCode() }}" class="list-group collapse">
+                                        {% for role in workspaceRoles[workspace.getCode()] %}
+                                            <a class="workspace-role-item list-group-item"
+                                                href="{{ path('claro_resource_right_form', {'node':resource.id, 'role':role.id}) }}">
+                                                {{ role.getTranslationKey()|trans({}, 'platform') }}
+                                            </a>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            {% endfor %}
                             <div id="form-rights-tag-wrapper"></div>
                         </div>
                     </div>
