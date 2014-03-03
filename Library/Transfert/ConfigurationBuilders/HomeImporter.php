@@ -11,10 +11,12 @@
 
 namespace Claroline\CoreBundle\Library\Transfert\ConfigurationBuilders;
 
+use Claroline\CoreBundle\Library\Transfert\Importer;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
+use Symfony\Component\Config\Definition\Processor;
 
-class HomeImporter implements ConfigurationInterface
+class HomeImporter extends Importer implements ConfigurationInterface
 {
     public function  getConfigTreeBuilder()
     {
@@ -40,7 +42,14 @@ class HomeImporter implements ConfigurationInterface
                                             ->children()
                                                 ->scalarNode('name')->isRequired()->end()
                                                 ->scalarNode('type')->end()
-                                                ->scalarNode('config')->end()
+                                                ->variableNode('data')->end()
+                                                ->arrayNode('import')
+                                                    ->prototype('array')
+                                                        ->children()
+                                                            ->scalarNode('path')->end()
+                                                        ->end()
+                                                    ->end()
+                                                ->end()
                                             ->end()
                                         ->end()
                                     ->end()
@@ -49,7 +58,24 @@ class HomeImporter implements ConfigurationInterface
                         ->end()
                     ->end()
                 ->end()
-            ->end();
+            ->end()
+        ->end();
+    }
+
+    public function validate(array $data)
+    {
+        $processor = new Processor();
+        $this->result = $processor->processConfiguration($this, $data);
+    }
+
+    public function import(array $array)
+    {
 
     }
+
+    public function getName()
+    {
+        return 'home_importer';
+    }
+
 }

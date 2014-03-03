@@ -3,15 +3,10 @@ tabs:
         name: tabname
         widgets:
          - widget:
-             name: widgettext
+             name: simple_text
              type: 'text'
              import:
                 - path: 'tools/widgets/text01.yml'
-         - widget:
-             name: widgetrss
-             type: 'rss'
-             import:
-                - path: 'tools/widgets/rss01.yml'
   - tab:
         name: tabname02
 

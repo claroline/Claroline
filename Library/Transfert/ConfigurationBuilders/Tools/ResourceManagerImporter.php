@@ -46,7 +46,6 @@ class ResourceManagerImporter extends Importer implements ConfigurationInterface
         $this->result = $processor->processConfiguration($this, $data);
 
         foreach ($data['resources']['items'] as $item) {
-
             $importer = $this->getImporterByName($item['item']['type'] . '_importer');
 
             if (!$importer) {

@@ -14,11 +14,6 @@ tools:
                        type: 'text'
                        import:
                           - path: 'tools/widgets/text01.yml'
-                   - widget:
-                       name: rss
-                       type: 'rss'
-                       import:
-                          - path: 'tools/widgets/rss01.yml'
             - tab:
                   name: tabname02
         roles:

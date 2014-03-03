@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Claroline\CoreBundle\Library\Transfert\ConfigurationBuilders\Tools\Widgets\Resources;
+namespace Claroline\CoreBundle\Library\Transfert\ConfigurationBuilders\Tools\Widgets;
 
 use Claroline\CoreBundle\Library\Transfert\Importer;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
@@ -28,7 +28,7 @@ class TextImporter extends Importer implements ConfigurationInterface
     public function  getConfigTreeBuilder()
     {
         $treeBuilder = new TreeBuilder();
-        $rootNode = $treeBuilder->root('text');
+        $rootNode = $treeBuilder->root('data');
         $this->addTextSection($rootNode);
 
         return $treeBuilder;
@@ -52,7 +52,7 @@ class TextImporter extends Importer implements ConfigurationInterface
 
     public function getName()
     {
-        return 'widget_text_importer';
+        return 'simple_text_importer';
     }
 
     public function addTextSection($rootNode)
