@@ -36,6 +36,7 @@ class BadgeRuleType extends AbstractType
     /** @var \Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler */
     private $platformConfigHandler;
 
+    /** @var \Symfony\Component\Security\Core\SecurityContextInterface */
     private $securityContext;
 
     /**
