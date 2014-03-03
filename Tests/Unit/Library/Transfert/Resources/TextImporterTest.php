@@ -13,10 +13,10 @@ namespace Claroline\CoreBundle\Library;
 
 use Claroline\CoreBundle\Library\Testing\MockeryTestCase;
 use Mockery as m;
-use Claroline\CoreBundle\Library\Transfert\ConfigurationBuilders\Tools\Resources\FileImporter;
+use Claroline\CoreBundle\Library\Transfert\ConfigurationBuilders\Tools\Resources\TextImporter;
 use Symfony\Component\Yaml\Yaml;
 
-class FileImporterTest extends MockeryTestCase
+class TextImporterTest extends MockeryTestCase
 {
     private $fileImporter;
 
@@ -24,7 +24,7 @@ class FileImporterTest extends MockeryTestCase
     {
         parent::setUp();
 
-        $this->fileImporter = new FileImporter();
+        $this->fileImporter = new TextImporter();
     }
 
     /**
@@ -48,14 +48,8 @@ class FileImporterTest extends MockeryTestCase
             //valid (the file path is correct)
             array(
                 'basePath' =>  __DIR__.'/../../../../Stub/transfert/valid/full',
-                'path' => 'tools/resources/files01.yml',
+                'path' => 'tools/resources/text01.yml',
                 'isExceptionExpected' => false
-            ),
-            //invalid (the file path is wrong)
-            array(
-                'basePath' =>  __DIR__.'/../../../../Stub/transfert/invalid/files',
-                'path' => 'nopath.yml',
-                'isExceptionExpected' => true
             )
         );
     }

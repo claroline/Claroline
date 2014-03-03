@@ -68,18 +68,14 @@ class WorkspacePropertiesImporter extends Importer implements ConfigurationInter
     /**
      * Validate the workspace properties.
      *
-     * @todo show the expected array
      * @param array $data
      */
     public function validate(array $data)
     {
         $processor = new Processor();
-        //@todo exception handling
         $configuration = $processor->processConfiguration($this, $data);
-        //@todo exception handling
         $this->om->getRepository('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace')
             ->findOneByCode($configuration['code']);
-        //@todo exception handling
         $this->validateOwner($configuration['owner']);
 
 

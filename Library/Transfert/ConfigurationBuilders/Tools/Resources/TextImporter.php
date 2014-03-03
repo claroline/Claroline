@@ -13,12 +13,33 @@ namespace Claroline\CoreBundle\Library\Transfert\ConfigurationBuilders\Tools\Res
 
 use Claroline\CoreBundle\Library\Transfert\Importer;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
+use Symfony\Component\Config\Definition\Processor;
+use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 
 class TextImporter extends Importer implements ConfigurationInterface
 {
     public function getConfigTreeBuilder()
     {
+        $treeBuilder = new TreeBuilder();
+        $rootNode = $treeBuilder->root('data');
+        $this->addTextSection($rootNode);
 
+        return $treeBuilder;
+    }
+
+    public function addTextSection($rootNode)
+    {
+        $rootNode
+            ->children()
+                ->arrayNode('text')
+                    ->prototype('array')
+                        ->children()
+                            ->scalarNode('content')->end()
+                        ->end()
+                    ->end()
+                ->end()
+            ->end()
+        ->end();
     }
 
     public function supports($type)
