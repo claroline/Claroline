@@ -655,7 +655,7 @@ class CorrectionController extends DropzoneBaseController
         {
             $this->isAllowToEdit($dropzone);
         }
-        $this->checkUserGradeAvailable($dropzone);
+        //$this->checkUserGradeAvailable($dropzone);
         
 
         if (!$dropzone->getPeerReview()) {
