@@ -19,8 +19,6 @@ use JMS\DiExtraBundle\Annotation as DI;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Library\Transfert\Merger;
 
-//@todo exception content
-
 /**
  * @DI\Service("claroline.importer.users_importer")
  * @DI\Tag("claroline.importer")

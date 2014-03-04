@@ -16,7 +16,6 @@ use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Config\Definition\Processor;
 use Claroline\CoreBundle\Library\Transfert\Importer;
-use Symfony\Component\Yaml\Yaml;
 use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 
 /**

@@ -18,6 +18,10 @@ use Symfony\Component\Config\Definition\Processor;
 use JMS\DiExtraBundle\Annotation as DI;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 
+/**
+ * @DI\Service("claroline.importer.role_importer")
+ * @DI\Tag("claroline.importer")
+ */
 class RolesImporter extends Importer implements ConfigurationInterface
 {
     private static $data;

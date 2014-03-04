@@ -15,7 +15,12 @@ use Claroline\CoreBundle\Library\Transfert\Importer;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\Processor;
+use JMS\DiExtraBundle\Annotation as DI;
 
+/**
+ * @DI\Service("claroline.importer.home_importer")
+ * @DI\Tag("claroline.importer")
+ */
 class HomeImporter extends Importer implements ConfigurationInterface
 {
     public function  getConfigTreeBuilder()
