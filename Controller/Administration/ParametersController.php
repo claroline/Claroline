@@ -103,7 +103,6 @@ class ParametersController extends Controller
         WorkspaceManager $workspaceManager,
         ObjectManager $om,
         StrictDispatcher $eventDispatcher
-
     )
     {
         $this->configHandler = $configHandler;
@@ -873,7 +872,6 @@ class ParametersController extends Controller
 
         return new Response('workspace(s) removed', 204);
     }
-
 
     /**
      *  Get the list of themes availables.
