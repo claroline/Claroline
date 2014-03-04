@@ -149,7 +149,6 @@ class GroupsImporter extends Importer implements ConfigurationInterface
     /**
      * Validate the workspace properties.
      *
-     * @todo show the expected array
      * @param array $data
      */
     public function validate(array $data)

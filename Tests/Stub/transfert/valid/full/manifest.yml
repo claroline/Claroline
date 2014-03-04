@@ -15,8 +15,8 @@ members:
         last_name: sdfsd
         username: 'ezs'
         password: enclair
-        mail: moi@moi.com
-        code: USER01
+        mail: owner@owner.com
+        code: OWNER
         roles:
           - name: 'ROLE_1'
           - name: 'ROLE_2'
@@ -60,7 +60,7 @@ import:
 
 roles:
     - role:
-        name: 'role1'
+        name: 'ROLE_1'
         translation: 'totottoo'
         is_base_role: true
     - role:

@@ -27,16 +27,16 @@ class UsersImporterTest extends MockeryTestCase
 
         $this->om = $this->mock('Claroline\CoreBundle\Persistence\ObjectManager');
         $this->importer = new UsersImporter($this->om);
-        $rolefile = __DIR__.'/../../../Stub/transfert/valid/full/roles01.yml';
-        $roles = Yaml::parse(file_get_contents($rolefile));
-        $this->importer->setConfiguration($roles);
     }
 
     /**
      * @dataProvider validateProvider
      */
-    public function testValidate($path, $usernames, $emails, $codes, $isExceptionThrown)
+    public function testValidate($path, $usernames, $emails, $codes, $isExceptionThrown, $manifest)
     {
+        $roles = Yaml::parse(file_get_contents($manifest));
+        $this->importer->setConfiguration($roles);
+
         if ($isExceptionThrown) {
             $this->setExpectedException('Symfony\Component\Config\Definition\Exception\InvalidConfigurationException');
         }
@@ -60,7 +60,8 @@ class UsersImporterTest extends MockeryTestCase
                 'usernames' => array(),
                 'emails' => array(),
                 'codes' => array(),
-                'isExceptionThrow' => false
+                'isExceptionThrow' => false,
+                'manifest' => __DIR__.'/../../../Stub/transfert/valid/full/roles01.yml'
             ),
             //username is already in the database
             array(
@@ -68,7 +69,8 @@ class UsersImporterTest extends MockeryTestCase
                 'usernames' => array(array('username' => 'user1')),
                 'emails' => array(),
                 'codes' => array(),
-                'isExceptionThrow' => true
+                'isExceptionThrow' => true,
+                'manifest' => __DIR__.'/../../../Stub/transfert/valid/full/roles01.yml'
             ),
             //email is already in the database
             array(
@@ -76,7 +78,8 @@ class UsersImporterTest extends MockeryTestCase
                 'usernames' => array(),
                 'emails' => array(array('mail' => 'mail1@gmail.com')),
                 'codes' => array(),
-                'isExceptionThrow' => true
+                'isExceptionThrow' => true,
+                'manifest' => __DIR__.'/../../../Stub/transfert/valid/full/roles01.yml'
             ),
             //code is already in the database
             array(
@@ -84,7 +87,8 @@ class UsersImporterTest extends MockeryTestCase
                 'usernames' => array(),
                 'emails' => array(),
                 'codes' => array(array('code' => 'USER01')),
-                'isExceptionThrow' => true
+                'isExceptionThrow' => true,
+                'manifest' => __DIR__.'/../../../Stub/transfert/valid/full/roles01.yml'
             ),
             //username found twice in the configuration
             array(
@@ -92,7 +96,8 @@ class UsersImporterTest extends MockeryTestCase
                 'usernames' => array(),
                 'emails' => array(),
                 'codes' => array(),
-                'isExceptionThrow' => true
+                'isExceptionThrow' => true,
+                'manifest' => __DIR__.'/../../../Stub/transfert/valid/full/roles01.yml'
             ),
             //email found twice in the configuration
             array(
@@ -100,7 +105,8 @@ class UsersImporterTest extends MockeryTestCase
                 'usernames' => array(),
                 'emails' => array(),
                 'codes' => array(),
-                'isExceptionThrow' => true
+                'isExceptionThrow' => true,
+                'manifest' => __DIR__.'/../../../Stub/transfert/valid/full/roles01.yml'
             ),
             //code found twice in the configuration
             array(
@@ -108,7 +114,8 @@ class UsersImporterTest extends MockeryTestCase
                 'usernames' => array(),
                 'emails' => array(),
                 'codes' => array(),
-                'isExceptionThrow' => true
+                'isExceptionThrow' => true,
+                'manifest' => __DIR__.'/../../../Stub/transfert/valid/full/roles01.yml'
             ),
             //role not found in the configuration
             array(
@@ -116,9 +123,18 @@ class UsersImporterTest extends MockeryTestCase
                 'usernames' => array(),
                 'emails' => array(),
                 'codes' => array(),
-                'isExceptionThrow' => true
-            )
+                'isExceptionThrow' => true,
+                'manifest' => __DIR__.'/../../../Stub/transfert/valid/full/roles01.yml'
+            ),
             //owner is included in the user list
+            array(
+                'path' => __DIR__.'/../../../Stub/transfert/invalid/users/owner_in_user_list.yml',
+                'usernames' => array(),
+                'emails' => array(),
+                'codes' => array(),
+                'isExceptionThrow' => true,
+                'manifest' => __DIR__.'/../../../Stub/transfert/valid/full/manifest.yml'
+            )
         );
     }
 } 

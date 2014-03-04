@@ -83,6 +83,12 @@ class UsersImporter extends Importer implements ConfigurationInterface
             }
         }
 
+        $owner = null;
+
+       if (isset($configuration['members']['owner']['username'])) {
+            $owner = $configuration['members']['owner']['username'];
+       }
+
         $rootNode
             ->prototype('array')
                 ->children()
@@ -112,6 +118,17 @@ class UsersImporter extends Importer implements ConfigurationInterface
                                         }
                                     )
                                     ->thenInvalid("The username %s already exists in the configuration")
+                                ->end()
+                                ->validate()
+                                    ->ifTrue(
+                                        function ($v) use ($owner) {
+                                            return call_user_func_array(
+                                                __CLASS__ . '::ownerAlreadyExists',
+                                                array($v, $owner)
+                                            );
+                                        }
+                                    )
+                                    ->thenInvalid("The owner %s already exists in the configuration")
                                 ->end()
                             ->end()
                             ->scalarNode('password')->isRequired()->end()
@@ -291,5 +308,10 @@ class UsersImporter extends Importer implements ConfigurationInterface
     public static function roleNameExists($v, $roles)
     {
         return !in_array($v, $roles);
+    }
+
+    public static function ownerAlreadyExists($v, $owner)
+    {
+        return $owner === $v ? true: false;
     }
 }
