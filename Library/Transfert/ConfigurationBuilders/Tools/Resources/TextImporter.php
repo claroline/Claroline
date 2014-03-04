@@ -34,7 +34,7 @@ class TextImporter extends Importer implements ConfigurationInterface
                 ->arrayNode('text')
                     ->prototype('array')
                         ->children()
-                            ->scalarNode('content')->end()
+                            ->scalarNode('content')->isRequired()->end()
                         ->end()
                     ->end()
                 ->end()

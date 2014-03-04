@@ -106,7 +106,7 @@ class GroupsImporter extends Importer implements ConfigurationInterface
                            ->arrayNode('users')
                                 ->prototype('array')
                                     ->children()
-                                        ->scalarNode('username')
+                                        ->scalarNode('username')->isRequired()
                                             ->validate()
                                                 ->ifTrue(
                                                     function ($v) use ($availableUsernames) {

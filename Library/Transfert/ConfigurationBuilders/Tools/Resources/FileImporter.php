@@ -39,7 +39,7 @@ class FileImporter extends Importer implements ConfigurationInterface
             ->children()
                 ->arrayNode('file')
                     ->children()
-                        ->scalarNode('path')
+                        ->scalarNode('path')->isRequired()
                             ->validate()
                                 ->ifTrue(
                                     function ($v) use ($rootPath) {
