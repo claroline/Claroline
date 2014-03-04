@@ -32,9 +32,6 @@ class ResourceManagerImporterTest extends MockeryTestCase
 
         $this->om = $this->mock('Claroline\CoreBundle\Persistence\ObjectManager');
         $this->importer = new ResourceManagerImporter($this->om);
-        $confFile = __DIR__.'/../../../Stub/transfert/valid/full/manifest.yml';
-        $this->importer->setConfiguration(Yaml::parse(file_get_contents($confFile)));
-
         $this->fileImporter = $this->mock('Claroline\CoreBundle\Library\Transfert\ConfigurationBuilders\Tools\Resources\FileImporter');
         $this->fileImporter->shouldReceive('getName')->andReturn('file');
         $this->textImporter = $this->mock('Claroline\CoreBundle\Library\Transfert\ConfigurationBuilders\Tools\Resources\TextImporter');
@@ -49,13 +46,15 @@ class ResourceManagerImporterTest extends MockeryTestCase
     /**
      * @dataProvider validateProvider
      */
-    public function testValidate($path, $isExceptionExpected)
+    public function testValidate($basePath, $isExceptionExpected, $rolefile, $managerPath)
     {
+        $this->importer->setConfiguration(Yaml::parse(file_get_contents($rolefile)));
+
         if ($isExceptionExpected) {
             $this->setExpectedException('Symfony\Component\Config\Definition\Exception\InvalidConfigurationException');
         }
 
-        $resolver = new Resolver($path, 'tools/resource_manager.yml');
+        $resolver = new Resolver($basePath, $managerPath);
         $data = $resolver->resolve();
         $resources['data'] = $data['data'];
 
@@ -71,14 +70,39 @@ class ResourceManagerImporterTest extends MockeryTestCase
         return array(
             //correct
             array(
-                'path' => __DIR__.'/../../../Stub/transfert/valid/full',
-                'isExceptionExpected' => false
-            )
+                'basePath' => __DIR__.'/../../../Stub/transfert/valid/full',
+                'isExceptionExpected' => false,
+                'rolefile' => __DIR__.'/../../../Stub/transfert/valid/full/roles01.yml',
+                'managerPath' => 'tools/resource_manager.yml'
+            ),
             //roles don't exist
-
-            //unknown resource not found
-
+            array(
+                'basePath' => __DIR__.'/../../../Stub/transfert/valid/full',
+                'isExceptionExpected' => true,
+                'rolefile' => __DIR__.'/../../../Stub/transfert/valid/full/roles02.yml',
+                'managerPath' => 'tools/resource_manager.yml'
+            ),
+            //unknown resource
+            array(
+                'basePath' => __DIR__.'/../../../Stub/transfert/invalid',
+                'isExceptionExpected' => true,
+                'rolefile' => __DIR__.'/../../../Stub/transfert/valid/full/roles01.yml',
+                'managerPath' => 'tools/unknown_resources.yml'
+            ),
             //parent don't exist
+            array(
+                'basePath' => __DIR__.'/../../../Stub/transfert/invalid',
+                'isExceptionExpected' => true,
+                'rolefile' => __DIR__.'/../../../Stub/transfert/valid/full/roles01.yml',
+                'managerPath' => 'tools/missing_parent.yml'
+            ),
+            //parent element is missing
+            array(
+                'basePath' => __DIR__.'/../../../Stub/transfert/invalid',
+                'isExceptionExpected' => true,
+                'rolefile' => __DIR__.'/../../../Stub/transfert/valid/full/roles01.yml',
+                'managerPath' => 'tools/missing_root.yml'
+            ),
         );
     }
 }

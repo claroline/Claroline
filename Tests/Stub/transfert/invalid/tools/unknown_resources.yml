@@ -11,9 +11,8 @@ data:
                         resource: 'hello'
     directories:
         - directory:
-            name: 'lolilol'
+            name: 'root'
             uid: 1
-            creator: ralf
             parent: 0
             roles:
                 - role:
@@ -40,7 +39,7 @@ data:
             name: dir2
             uid: 3
             creator: toto
-            parent: 2
+            parent: dir1
             roles:
                 - role:
                     name: 'ROLE_1'
@@ -53,25 +52,10 @@ data:
         - item:
             name: 'foo'
             creator: 'bar'
-            parent: 1
-            type: 'file'
-            import:
-                - path: 'tools/resources/files01.yml'
-            roles:
-                - role:
-                    name: 'ROLE_1'
-                    rights:
-                        open: true
-                        edit: false
-                        create:
-                            resource: 'hello'
-        - item:
-            name: 'foo2'
-            creator: 'bar'
-            parent: 2
-            type: 'text'
-            import:
-                - path: 'tools/resources/text01.yml'
+            parent: 'papa'
+            type: 'unknown'
+            data:
+              somedata: somevalue
             roles:
                 - role:
                     name: 'ROLE_1'

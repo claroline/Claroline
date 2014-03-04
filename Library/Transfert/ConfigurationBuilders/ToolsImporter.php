@@ -85,11 +85,16 @@ class ToolsImporter extends Importer implements ConfigurationInterface
      * Validate the workspace properties.
      *
      * @param array $data
+     * @throws InvalidConfigurationException
      */
     public function validate(array $data)
     {
         $processor = new Processor();
         $processor->processConfiguration($this, $data);
+
+        //root must exists
+
+        //and has no parent
 
         foreach ($data['tools'] as $tool) {
             $importer = $this->getImporterByName($tool['tool']['type']);

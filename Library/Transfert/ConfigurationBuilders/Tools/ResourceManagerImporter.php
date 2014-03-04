@@ -17,6 +17,7 @@ use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Config\Definition\Processor;
 use Claroline\CoreBundle\Library\Transfert\Importer;
 use Symfony\Component\Yaml\Yaml;
+use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 
 /**
  * @DI\Service("claroline.tool.resource_manager_importer")
@@ -25,6 +26,7 @@ use Symfony\Component\Yaml\Yaml;
 class ResourceManagerImporter extends Importer implements ConfigurationInterface
 {
     private $result;
+    private $data;
 
     public function  getConfigTreeBuilder()
     {
@@ -42,6 +44,7 @@ class ResourceManagerImporter extends Importer implements ConfigurationInterface
 
     public function validate(array $data)
     {
+        $this->setData($data);
         $processor = new Processor();
         $this->result = $processor->processConfiguration($this, $data);
 
@@ -49,7 +52,7 @@ class ResourceManagerImporter extends Importer implements ConfigurationInterface
             $importer = $this->getImporterByName($item['item']['type']);
 
             if (!$importer) {
-                throw new \Exception('The importer ' . $item['item']['type'] . ' does not exist');
+                throw new InvalidConfigurationException('The importer ' . $item['item']['type'] . ' does not exist');
             }
 
             if (isset($item['item']['data'])) {
@@ -73,6 +76,7 @@ class ResourceManagerImporter extends Importer implements ConfigurationInterface
     {
         $availableRoleName = [];
         $configuration = $this->getConfiguration();
+        $data = $this->getData();
 
         if (isset($configuration['roles'])) {
             foreach ($configuration['roles'] as $role) {
@@ -80,17 +84,68 @@ class ResourceManagerImporter extends Importer implements ConfigurationInterface
             }
         }
 
+        $availableParents = [];
+
+        foreach ($data['data']['directories'] as $directory) {
+            $availableParents[] = $directory['directory']['uid'];
+        }
+
+        if (isset($data['data']['root'])) {
+            $availableParents[] = $data['data']['root']['uid'];
+        }
+
         $rootNode
             ->children()
+                ->arrayNode('root')
+                    ->children()
+                        ->scalarNode('uid')->isRequired()->end()
+                        ->arrayNode('roles')
+                            ->prototype('array')
+                                ->children()
+                                    ->arrayNode('role')
+                                        ->children()
+                                            ->scalarNode('name')
+                                                ->validate()
+                                                    ->ifTrue(
+                                                        function ($v) use ($availableRoleName) {
+                                                            return call_user_func_array(
+                                                                __CLASS__ . '::roleNameExists',
+                                                                array($v, $availableRoleName)
+                                                            );
+                                                        }
+                                                    )
+                                                    ->thenInvalid("The role name %s doesn't exists")
+                                                ->end()
+                                            ->end()
+                                            ->variableNode('rights')->end()
+                                        ->end()
+                                    ->end()
+                                ->end()
+                            ->end()
+                        ->end()
+                    ->end()
+                ->end()
                 ->arrayNode('directories')
                     ->prototype('array')
                         ->children()
                             ->arrayNode('directory')
                                 ->children()
-                                    ->scalarNode('name')->end()
-                                    ->scalarNode('uid')->end()
-                                    ->scalarNode('creator')->end()
-                                    ->scalarNode('parent')->end()
+                                    ->scalarNode('name')->isRequired()->end()
+                                    ->scalarNode('uid')->isRequired()->end()
+                                    ->scalarNode('creator')->isRequired()->end()
+                                    ->scalarNode('parent')->isRequired()
+                                        ->validate()
+                                            ->ifTrue(
+                                                function ($v) use ($availableParents) {
+                                                    return call_user_func_array(
+                                                        __CLASS__ . '::parentExists',
+                                                        array($v, $availableParents)
+                                                    );
+                                                }
+                                            )
+                                            ->thenInvalid("The parent name %s doesn't exists")
+                                        ->end()
+                                    ->end()
                                     ->arrayNode('roles')
                                         ->prototype('array')
                                             ->children()
@@ -127,7 +182,19 @@ class ResourceManagerImporter extends Importer implements ConfigurationInterface
                                 ->children()
                                     ->scalarNode('name')->end()
                                     ->scalarNode('creator')->end()
-                                    ->scalarNode('parent')->end()
+                                    ->scalarNode('parent')
+                                        ->validate()
+                                        ->ifTrue(
+                                            function ($v) use ($availableParents) {
+                                                return call_user_func_array(
+                                                    __CLASS__ . '::parentExists',
+                                                    array($v, $availableParents)
+                                                );
+                                            }
+                                        )
+                                        ->thenInvalid("The parent uid %s doesn't exists")
+                                        ->end()
+                                    ->end()
                                     ->scalarNode('type')->end()
                                     ->variableNode('data')->end()
                                     ->arrayNode('import')
@@ -172,5 +239,20 @@ class ResourceManagerImporter extends Importer implements ConfigurationInterface
     public static function roleNameExists($v, $roles)
     {
         return !in_array($v, $roles);
+    }
+
+    public static function parentExists($v, $parents)
+    {
+        return !in_array($v, $parents);
+    }
+
+    public function setData($data)
+    {
+        $this->data = $data;
+    }
+
+    public function getData()
+    {
+        return $this->data;
     }
 } 
