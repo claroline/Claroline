@@ -19,8 +19,10 @@
     'use strict';
 
     window.Claroline = window.Claroline || {};
+
     var manager = window.Claroline.ResourceManager = {};
     var modal = window.Claroline.Modal;
+    var simpleRights = window.Claroline.SimpleRights;
     var routing = window.Routing;
     var translator = window.Translator;
 
@@ -607,6 +609,27 @@
         }),
         Form: Backbone.View.extend({
             events: {
+                'change #simple input': function (event) {
+                    var element = event.target;
+
+                    switch ($(element).attr('id')) {
+                        case 'everyone':
+                            simpleRights.everyone(element);
+                            break;
+                        case 'anonymous':
+                            simpleRights.anonymous(element);
+                            break;
+                        case 'workspace':
+                            simpleRights.workspace(element);
+                            break;
+                        case 'platform':
+                            simpleRights.platform(element);
+                            break;
+                    }
+                },
+                'change #general input': function (event) {
+                    simpleRights.checkAll(event.target);
+                },
                 'click #submit-default-rights-form-button': function (event) {
                     event.preventDefault();
                     var form = $(this.el).find('form')[0];
@@ -732,6 +755,7 @@
                     that.$el = element;
                     that.el = element.get();
                     that.delegateEvents(that.events);
+                    simpleRights.checkAll($('#simple', that.el));
                 });
             }
         })
