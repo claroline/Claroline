@@ -11,6 +11,7 @@
 
 namespace Claroline\CoreBundle\Controller\Administration;
 
+use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Library\Configuration\UnwritableException;
 use Claroline\CoreBundle\Library\Session\DatabaseSessionValidator;
@@ -37,6 +38,9 @@ use Claroline\CoreBundle\Form\Administration as AdminForm;
 use Claroline\CoreBundle\Manager\CacheManager;
 use Claroline\CoreBundle\Library\Installation\Refresher;
 use Claroline\CoreBundle\Manager\HwiManager;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
+use Symfony\Component\HttpFoundation\Response;
+use Claroline\CoreBundle\Event\StrictDispatcher;
 
 /**
  * @DI\Tag("security.secure_service")
@@ -59,6 +63,8 @@ class ParametersController extends Controller
     private $refresher;
     private $hwiManager;
     private $workspaceManager;
+    private $om;
+    private $eventDispatcher;
 
     /**
      * @DI\InjectParams({
@@ -75,7 +81,9 @@ class ParametersController extends Controller
      *     "sessionValidator"   = @DI\Inject("claroline.session.database_validator"),
      *     "refresher"          = @DI\Inject("claroline.installation.refresher"),
      *     "hwiManager"         = @DI\Inject("claroline.manager.hwi_manager"),
-     *      "workspaceManager"  = @DI\Inject("claroline.manager.workspace_manager")
+     *     "workspaceManager"   = @DI\Inject("claroline.manager.workspace_manager"),
+     *     "om"                 = @DI\Inject("claroline.persistence.object_manager"),
+     *     "eventDispatcher"     = @DI\Inject("claroline.event.event_dispatcher")
      * })
      */
     public function __construct(
@@ -92,7 +100,10 @@ class ParametersController extends Controller
         DatabaseSessionValidator $sessionValidator,
         Refresher $refresher,
         HwiManager $hwiManager,
-        WorkspaceManager $workspaceManager
+        WorkspaceManager $workspaceManager,
+        ObjectManager $om,
+        StrictDispatcher $eventDispatcher
+
     )
     {
         $this->configHandler = $configHandler;
@@ -109,6 +120,8 @@ class ParametersController extends Controller
         $this->refresher = $refresher;
         $this->hwiManager = $hwiManager;
         $this->workspaceManager = $workspaceManager;
+        $this->om = $om;
+        $this->eventDispatcher = $eventDispatcher;
     }
 
     /**
@@ -788,6 +801,79 @@ class ParametersController extends Controller
         return array('pager' => $pager, 'search' => $search, 'max' => $max, 'order' => $order);
 
     }
+
+    /**
+     * @Route(
+     *     "/workspacesManagement/visibility",
+     *      name="claro_admin_workspaces_management_visibility",
+     * )
+     *
+     * ajax method to set up visibility in workspace
+     *
+     * @return \Symfony\Component\HttpFoundation\Response with the css class to apply to the element
+     */
+    public function workspaceVisibility()
+    {
+        $postData = $this->request->request->all();
+        $workspace = $this->workspaceManager->getWorkspaceById($postData['id']);
+        $postData['visible'] == "1" ? $workspace->setDisplayable(false) : $workspace->setDisplayable(true);
+        $this->om->flush();
+
+        return new Response('', 200);
+    }
+    /**
+     * @Route(
+     *     "/workspacesManagement/registration",
+     *      name="claro_admin_workspaces_management_registration",
+     * )
+     *
+     * ajax method to set up sellf registration in workspace
+     *
+     * @return \Symfony\Component\HttpFoundation\Response with the css class to apply to the element
+     */
+    public function workspaceSelfRegistration()
+    {
+        $postData = $this->request->request->all();
+        $workspace = $this->workspaceManager->getWorkspaceById($postData['id']);
+        $postData['registration'] == "1" ? $workspace->setSelfRegistration(false) : $workspace->setSelfRegistration(true);
+        $this->om->flush();
+
+        return new Response('', 200);
+    }
+
+    /**
+     * @EXT\Route(
+     *     "//workspacesManagement/delete",
+     *     name="claro_admin_multipleworkspaces",
+     *     options = {"expose"=true}
+     * )
+     * @EXT\Method("DELETE")
+     * @EXT\ParamConverter(
+     *     "workspaces",
+     *      class="ClarolineCoreBundle:Workspace\AbstractWorkspace",
+     *      options={"multipleIds" = true}
+     * )
+     *
+     * Removes many workspaces from the platform.
+     *
+     * @param workspaces[] $workspaces
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function deleteWorkspacesAction(array $workspaces)
+    {
+        $workspace = array();
+        foreach ($workspaces as $w) {
+            $workspace[] = $this->workspaceManager->getWorkspaceById($w);
+        }
+        foreach ($workspace as $w) {
+            $this->eventDispatcher->dispatch('log', 'Log\LogWorkspaceDelete', array($w));
+            $this->workspaceManager->deleteWorkspace($w);
+        }
+
+        return new Response('workspace(s) removed', 204);
+    }
+
 
     /**
      *  Get the list of themes availables.

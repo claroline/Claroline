@@ -468,6 +468,8 @@ remove_message_s_confirm_message: 'Êtes-vous sûr de vouloir supprimer ces %cou
 remove_subcategory: 'Retirer la sous-catégorie'
 remove_user_confirm_message: 'Êtes-vous sûr de vouloir supprimer cet utilisateur ?'
 remove_user_s_confirm_message: 'Êtes-vous sûr de vouloir supprimer ces %count% utilisateurs?'
+remove_workspace_confirm: 'Êtes-vous sûr de vouloir supprimer cet espace d''activité ?'
+remove_workspaces_confirm: 'Êtes-vous sûr de vouloir supprimer ces %count% espace d''activité ?'
 remove_workspace_from_category_confirm_message: 'Êtes-vous sûr de vouloir retirer cet espace d''activités de cette catégorie ?'
 remove_workspace_from_category_confirm_title: 'Retrait d''un espace d''activités d''une catégorie'
 rename: Renommer

@@ -32,6 +32,10 @@
             <i class="icon-trash"></i>
             {{ 'delete'|trans({}, 'platform') }}
         </button>
+        <a href="{{ path('claro_workspace_creation_form') }}" class="btn btn-default action-button" >
+            <i class="icon-book"></i>
+            {{ 'create'|trans({}, 'platform') }}
+        </a>
     {% endif %}
 {% endmacro %}
 
@@ -126,25 +130,31 @@
                 <tbody id="user-table-body">
                 {% for w in pager.currentPageResults %}
                     <tr id="{{ w.getId() }}" class="row-user">
-                           <td> <input type="checkbox" value="{{ w.id }}" class="chk-item" align="center" /> </td>
+                        <td> <input type="checkbox" value="{{ w.id }}" class="chk-item" align="center" /> </td>
                         <td>{{ w.getId() }}</td>
                         <td>
                             <a href="{{ path('claro_workspace_open_tool', {'workspaceId': w.getId(), 'toolName': 'home'}) }}"> {{ w.getName() }} </a>
                         </td>
                         <td>{{ w.code() }}</td>
                         <td> {% if w.isDisplayable() == true %}
-                                <a href="#" id="{{ w.getId() }}" class="visible" data-visible="{{ w.isDisplayable() }}">
+                                <a href="{{ path('claro_admin_workspaces_management_visibility') }}" id="{{ w.getId() }}" class="visible" data-visible="1">
                                 <i class="icon-eye-open"></i>
                                 </a>
                               {% else %}
+                            <a href="{{ path('claro_admin_workspaces_management_visibility') }}" id="{{ w.getId() }}" class="visible" data-visible="0">
                                   <i class="icon-eye-close"></i>
+                            </a>
                             {% endif %}
                         </td>
                         <td>{{ w.creator().getUserName() }}</td>
                         <td>{% if w.selfRegistration() == true %}
+                                <a href="{{ path('claro_admin_workspaces_management_registration') }}" id="{{ w.getId() }}" class="registration" data-registration="1">
                                     <i class="icon-thumbs-up"></i>
+                                </a>
                                {% else %}
+                            <a href="{{ path('claro_admin_workspaces_management_registration') }}" id="{{ w.getId() }}" class="registration" data-registration="0">
                                    <i class="icon-thumbs-down"></i>
+                            </a>
                             {% endif %}
                         </td>
                         <td> <a href="{{ path('claro_workspace_edit_form', {'workspace':w.getId() }) }}"> <i class="icon-pencil"></i> </a></td>
@@ -169,13 +179,62 @@
         parameters.route.action = {};
         parameters.route.normal = {"route": "claro_admin_workspaces_management", "parameters": {'order': '{{ order }}' }};
         parameters.route.search = {"route": "claro_admin_workspaces_management_search", "parameters": {'order': '{{ order }}' }};
-        parameters.route.action.remove = {"route": "claro_admin_multidelete_user", "parameters": {}, "type": "DELETE", "confirmTemplate": removeUserConfirm, "delete": true};
+        parameters.route.action.remove = {"route": "claro_admin_multipleworkspaces", "parameters": {}, "type": "DELETE", "confirmTemplate": removeWorkspaceConfirm, "delete": true};
         Claroline.Table.initialize(parameters);
 
         $('.visible').on('click', function (e) {
+            e.preventDefault();
             var id = $(e.currentTarget).attr('id');
             var visible = $(e.currentTarget).attr('data-visible');
-            console.debug(visible);
+            var icon = e.target.parentElement.children;
+
+            $.ajax({
+                'url': $('.visible').attr('href'),
+                'type': 'POST',
+                'data': {
+                    'id': id,
+                    'visible': visible
+                },
+                'success': function (data, textStatus, xhr) {
+                    if (registration === '1') {
+                        $(icon[0]).removeClass('icon-eye-open');
+                        $(icon[0]).addClass('icon-eye-close');
+                        $(e.currentTarget).attr('data-visible','0');
+                    } else {
+                        $(icon[0]).removeClass('icon-eye-close');
+                        $(icon[0]).addClass('icon-eye-open');
+                        $(e.currentTarget).attr('data-visible', '1');
+                    }
+
+                }
+            });
+        });
+
+        $('.registration').on('click', function (e) {
+            e.preventDefault();
+            var id = $(e.currentTarget).attr('id');
+            var registration = $(e.currentTarget).attr('data-registration');
+            var icon = e.target.parentElement.children;
+
+            $.ajax({
+                'url': $('.registration').attr('href'),
+                'type': 'POST',
+                'data': {
+                    'id': id,
+                    'registration': registration
+                },
+                'success': function (data, textStatus, xhr) {
+                    if (registration === '1') {
+                        $(icon[0]).removeClass('icon-thumbs-up');
+                        $(icon[0]).addClass('icon-thumbs-down');
+                        $(e.currentTarget).attr('data-registration','0');
+                    } else {
+                        $(icon[0]).removeClass('icon-thumbs-down');
+                        $(icon[0]).addClass('icon-thumbs-up');
+                        $(e.currentTarget).attr('data-registration', '1');
+                    }
+                }
+            });
         });
     </script>
 {% endblock %}
