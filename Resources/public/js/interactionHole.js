@@ -168,24 +168,30 @@ function addFormHoleEdit(add, response, point, size, orthography, del, selector,
 }
 
 function createHole() {
-    var blank = tinyMCE.activeEditor.selection.getContent({format : 'text'});
-    var nbHole = tinyMCE.activeEditor.dom.select('.blank').length;
-    var indexBlank = 1;
+    var blank = $.trim(tinyMCE.activeEditor.selection.getContent({format : 'text'}));
+    
+    if (blank != '') {
+    
+        var nbHole = tinyMCE.activeEditor.dom.select('.blank').length;
+        var indexBlank = 1;
 
-    if (nbHole > 0) {
-        tinymce.each(tinyMCE.activeEditor.dom.select('.blank'), function (n) {
-            if (indexBlank <= n.id) {
-                indexBlank = parseInt(n.id) + 1;
-            }
-        });
+        if (nbHole > 0) {
+            tinymce.each(tinyMCE.activeEditor.dom.select('.blank'), function (n) {
+                if (indexBlank <= n.id) {
+                    indexBlank = parseInt(n.id) + 1;
+                }
+            });
+        }
+
+        var el = tinyMCE.activeEditor.dom
+            .create('input', {'id' : indexBlank, 'name' : 'blank_'+indexBlank, 'type' : 'text', 'size' : '15', 'value' : blank, 'class' : 'blank'});
+
+        tinyMCE.activeEditor.selection.setNode(el);
+
+        addHole(indexBlank, blank);
+    } else {
+        DisplayInstruction();
     }
-
-    var el = tinyMCE.activeEditor.dom
-        .create('input', {'id' : indexBlank, 'name' : 'blank_'+indexBlank, 'type' : 'text', 'size' : '15', 'value' : blank, 'class' : 'blank'});
-
-    tinyMCE.activeEditor.selection.setNode(el);
-
-    addHole(indexBlank, blank);
 }
 
 function addHole(indexBlank, valHole) {

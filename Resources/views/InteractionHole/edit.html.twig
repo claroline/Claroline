@@ -159,7 +159,13 @@
     {# add form choice #}
     <script type="text/javascript">
         $(document).ready(function() {
-            addFormHoleEdit('{{ "add" | trans }}', '{{ "response" | trans }}', '{{ "point" | trans }}', '{{ "Inter_Hole.size" | trans }}', '{{ "Inter_Hole.orthography" | trans }}', '{{ "delete" | trans }}', '{{ "Hole.selector" | trans }}', '{{ asset('bundles/ujmexo/images/ajouter_ligne.jpeg') }}', '{{ "key word" | trans }}', '{{ "points" | trans  }}', {{ nbResponses }});
+            addFormHoleEdit('{{ "add" | trans }}', '{{ "response" | trans }}', 
+            '{{ "point" | trans }}', '{{ "Inter_Hole.size" | trans }}', 
+            '{{ "Inter_Hole.orthography" | trans }}', '{{ "delete" | trans }}', 
+            '{{ "Hole.selector" | trans }}', '{{ asset('bundles/ujmexo/images/ajouter_ligne.jpeg') }}', 
+            '{{ "key word" | trans }}', '{{ "points" | trans  }}', 
+             {{ nbResponses }}, '{{ "instruction add hole" | trans  }}');
+            
             newHintEdit('{{ 'hint' | trans }}', '{{ 'penalty' | trans }}', '{{ 'add hint' | trans }}', '{{ 'delete' | trans }}');
             disableNotYetReady();
         });

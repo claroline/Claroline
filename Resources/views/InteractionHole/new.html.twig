@@ -113,12 +113,22 @@
 {# functions javascript #}
 {% if error is defined %}
     <script type="text/javascript">
-        addFormHoleEdit('{{ "add" | trans }}', '{{ "response" | trans }}', '{{ "point" | trans }}', '{{ "Inter_Hole.size" | trans }}', '{{ "Inter_Hole.orthography" | trans }}', '{{ "delete" | trans }}', '{{ "Hole.selector" | trans }}', '{{ asset('bundles/ujmexo/images/ajouter_ligne.jpeg') }}', '{{ "key word" | trans }}', '{{ "points" | trans  }}');
+        addFormHoleEdit('{{ "add" | trans }}', '{{ "response" | trans }}', 
+        '{{ "point" | trans }}', '{{ "Inter_Hole.size" | trans }}', *
+        '{{ "Inter_Hole.orthography" | trans }}', '{{ "delete" | trans }}', 
+        '{{ "Hole.selector" | trans }}', '{{ asset('bundles/ujmexo/images/ajouter_ligne.jpeg') }}', 
+        '{{ "key word" | trans }}', '{{ "points" | trans  }}');
+
         newHintEdit('{{ 'hint' | trans }}', '{{ 'penalty' | trans }}', '{{ 'add hint' | trans }}', '{{ 'delete' | trans }}');
     </script>
 {% else %}
     <script type="text/javascript">
-        addFormHole('{{ "add" | trans }}', '{{ "response" | trans }}', '{{ "point" | trans }}', '{{ "Inter_Hole.size" | trans }}', '{{ "Inter_Hole.orthography" | trans }}', '{{ "delete" | trans }}', '{{ "Hole.selector" | trans }}', '{{ asset('bundles/ujmexo/images/ajouter_ligne.jpeg') }}', '{{ "key word" | trans  }}', '{{ "points" | trans  }}');
-        newHint('{{ 'hint' | trans }}', '{{ 'penalty' | trans }}', '{{ 'add hint' | trans }}', '{{ 'delete' | trans }}');
+        addFormHole('{{ "add" | trans }}', '{{ "response" | trans }}', 
+        '{{ "point" | trans }}', '{{ "Inter_Hole.size" | trans }}', 
+        '{{ "Inter_Hole.orthography" | trans }}', '{{ "delete" | trans }}', 
+        '{{ "Hole.selector" | trans }}', '{{ asset('bundles/ujmexo/images/ajouter_ligne.jpeg') }}', 
+        '{{ "key word" | trans  }}', '{{ "points" | trans  }}');
+        
+    newHint('{{ 'hint' | trans }}', '{{ 'penalty' | trans }}', '{{ 'add hint' | trans }}', '{{ 'delete' | trans }}');
     </script>
 {% endif %}
