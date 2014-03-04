@@ -158,9 +158,11 @@
 
             $('#icap_dropzone_common_form_peerReview_0').on('click', function() {
                 enablePeerReviewOptions(false);
+                manageCorrectionVisibility(false);
             });
             $('#icap_dropzone_common_form_peerReview_1').on('click', function() {
                 enablePeerReviewOptions(true);
+                manageCorrectionVisibility(true);
             });
 
             var enablePeerReviewOptions = function (peerReviewEnabled) {
@@ -168,7 +170,7 @@
                     $('.peer-review-options').show();
                     $('#icap_dropzone_common_form_manualState_2').parent().show();
                     $('#icap_dropzone_common_form_manualState_3').parent().show();
-
+                    $('#icap_dropzone_common_form_diplayCorrectionsToLearners').show();
                     $('.submit_button').html('{{ 'Save and continue'|trans({}, 'icap_dropzone') }}');
                 } else {
                     $('.peer-review-options').hide();
@@ -178,13 +180,14 @@
                     if ($('#icap_dropzone_common_form_expectedTotalCorrection').val() < 1 || $('#icap_dropzone_common_form_expectedTotalCorrection').val() > 10) {
                         $('#icap_dropzone_common_form_expectedTotalCorrection').val(3);
                     }
-
+                    $('#icap_dropzone_common_form_diplayCorrectionsToLearners').hide();
                     $('#icap_dropzone_common_form_endReview_date').val(null);
                     $('#icap_dropzone_common_form_endReview_time').val(null);
                     $('#icap_dropzone_common_form_startReview_date').val(null);
                     $('#icap_dropzone_common_form_startReview_time').val(null);
 
                     $('.submit_button').html('{{ 'Save and finished'|trans({}, 'icap_dropzone') }}');
+
                 }
             }
 
@@ -231,6 +234,18 @@
                 $('#allow-correction-deny').hide();
             } 
         }
+
+        function manageCorrectionVisibility(peerReviewEnabled)
+        {
+            if(peerReviewEnabled)
+            {
+                $('#icap_dropzone_common_form_diplayCorrectionsToLearners').parent().show();
+            }else {
+                 $('#icap_dropzone_common_form_diplayCorrectionsToLearners').prop('checked',false).parent().hide();
+            }
+            manageCorrectionDeny();
+        }
+
     </script>
 {% endblock %}
 
