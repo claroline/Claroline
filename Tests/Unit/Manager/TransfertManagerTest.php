@@ -106,35 +106,35 @@ class TransfertManagerTest extends MockeryTestCase
         //owner
         $owner['owner'] = $data['members']['owner'];
         $this->ownerImporter->shouldReceive('validate')->with($owner)->andReturn(true);
-        $this->ownerImporter->shouldReceive('getName')->andReturn('owner_importer');
+        $this->ownerImporter->shouldReceive('getName')->andReturn('owner');
         $this->ownerImporter->shouldReceive('setRootPath')->once()->with($path);
         $this->ownerImporter->shouldReceive('setConfiguration')->once()->with($data);
 
         //users
         //@todo check what does the validate get
         $this->usersImporter->shouldReceive('validate')->andReturn(true);
-        $this->usersImporter->shouldReceive('getName')->andReturn('user_importer');
+        $this->usersImporter->shouldReceive('getName')->andReturn('user');
         $this->usersImporter->shouldReceive('setRootPath')->once()->with($path);
         $this->usersImporter->shouldReceive('setConfiguration')->once()->with($data);
 
         //roles
         //@todo check what does the validate get
         $this->rolesImporter->shouldReceive('validate')->andReturn(true);
-        $this->rolesImporter->shouldReceive('getName')->andReturn('roles_importer');
+        $this->rolesImporter->shouldReceive('getName')->andReturn('roles');
         $this->rolesImporter->shouldReceive('setRootPath')->once()->with($path);
         $this->rolesImporter->shouldReceive('setConfiguration')->once()->with($data);
 
         //groups
         //@todo check what does the validate get
         $this->groupsImporter->shouldReceive('validate')->andReturn(true);
-        $this->groupsImporter->shouldReceive('getName')->andReturn('groups_importer');
+        $this->groupsImporter->shouldReceive('getName')->andReturn('groups');
         $this->groupsImporter->shouldReceive('setRootPath')->once()->with($path);
         $this->groupsImporter->shouldReceive('setConfiguration')->once()->with($data);
 
         //groups
         //@todo check what does the validate get
         $this->toolsImporter->shouldReceive('validate')->andReturn(true);
-        $this->toolsImporter->shouldReceive('getName')->andReturn('tools_importer');
+        $this->toolsImporter->shouldReceive('getName')->andReturn('tools');
         $this->toolsImporter->shouldReceive('setRootPath')->once()->with($path);
         $this->toolsImporter->shouldReceive('setConfiguration')->once()->with($data);
 

@@ -18,8 +18,6 @@ use Symfony\Component\Config\Definition\Processor;
 use JMS\DiExtraBundle\Annotation as DI;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 
-//@todo check owner
-
 /**
  * @DI\Service("claroline.importer.groups_importer")
  * @DI\Tag("claroline.importer")
@@ -64,6 +62,10 @@ class GroupsImporter extends Importer implements ConfigurationInterface
 
         foreach ($mergedUsers as $el) {
             $availableUsernames[] = $el['user']['username'];
+        }
+
+        if (isset($configuration['members']['owner'])) {
+            $availableUsernames[] = $configuration['members']['owner']['username'];
         }
 
         $availableRoleName = array();

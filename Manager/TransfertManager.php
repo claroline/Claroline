@@ -58,7 +58,7 @@ class TransfertManager
         $groupsImporter = $this->getImporterByName('groups');
         $rolesImporter  = $this->getImporterByName('roles');
         $toolsImporter  = $this->getImporterByName('tools');
-        $ownerImporter = $this->getImporterByName('owner');
+        $ownerImporter  = $this->getImporterByName('owner');
 
         try {
             //owner

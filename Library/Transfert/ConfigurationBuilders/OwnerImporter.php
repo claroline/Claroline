@@ -16,7 +16,12 @@ use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Claroline\CoreBundle\Library\Transfert\Importer;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use Symfony\Component\Config\Definition\Processor;
+use JMS\DiExtraBundle\Annotation as DI;
 
+/**
+ * @DI\Service("claroline.importer.owner_importer")
+ * @DI\Tag("claroline.importer")
+ */
 class OwnerImporter extends Importer implements ConfigurationInterface
 {
     private $om;
