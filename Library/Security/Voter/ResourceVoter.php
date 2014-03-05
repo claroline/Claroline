@@ -212,13 +212,18 @@ class ResourceVoter implements VoterInterface
      * can be created in the directory $resource by the $token
      *
      * @param array $types
-     * @param ResourceNode $resource
+     * @param ResourceNode $node
      * @param TokenInterface $token
      * @param \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace $workspace
      *
      * @return array
      */
-    public function checkCreation(array $types, ResourceNode $resource, TokenInterface $token, AbstractWorkspace $workspace)
+    public function checkCreation(
+        array $types,
+        ResourceNode $node,
+        TokenInterface $token,
+        AbstractWorkspace $workspace
+    )
     {
         $errors = array();
 
@@ -226,14 +231,14 @@ class ResourceVoter implements VoterInterface
             return $errors;
         }
 
-        $rightsCreation = $this->repository->findCreationRights($this->ut->getRoles($token), $resource);
+        $rightsCreation = $this->repository->findCreationRights($this->ut->getRoles($token), $node);
 
         if (count($rightsCreation) == 0) {
             $errors[] = $this->translator
                 ->trans(
                     'resource_creation_wrong_type',
                     array(
-                        '%path%' => $resource->getPathForDisplay(),
+                        '%path%' => $node->getPathForDisplay(),
                         '%type%' => $this->translator->trans(
                             strtolower($types),
                             array(),
@@ -248,7 +253,7 @@ class ResourceVoter implements VoterInterface
                     ->trans(
                         'resource_creation_wrong_type',
                         array(
-                            '%path%' => $resource->getPathForDisplay(),
+                            '%path%' => $node->getPathForDisplay(),
                             '%type%' => $this->translator->trans(
                                 strtolower($types), array(), 'resource'
                             )

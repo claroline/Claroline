@@ -146,6 +146,40 @@ class ResourceVoterTest extends MockeryTestCase
         $this->assertEquals($countErrors, count($voter->checkAction($action, $resources, $token)));
     }
 
+    /**
+     * @dataProvider checkCreationProvider
+     */
+    public function testCheckCreation($countErrors, $isWorkspaceManager)
+    {
+        $voter = $this->getVoter(array('isWorkspaceManager'));
+        $voter->shouldReceive('isWorkspaceManager')->andReturn($isWorkspaceManager);
+
+        $types = array('type1', 'type2');
+        $node = $this->mock('Claroline\CoreBundle\Entity\Resource\ResourceNode');
+        $token = $this->mock('Symfony\Component\Security\Core\Authentication\Token\TokenInterface');
+        $workspace = new SimpleWorkspace();
+
+        $this->assertEquals(
+            count($voter->checkCreation($types , $node, $token, $workspace)),
+            $countErrors
+        );
+    }
+
+    public function checkCreationProvider()
+    {
+        return array(
+            //workspace manager can do w/e he wants
+            array(
+                'countErrors' => 0,
+                'isWorkspaceManager' => true,
+            ),
+            array(
+                'countErrors' => 0,
+                'isWorkspaceManager' => false
+            ),
+        );
+    }
+
     public function checkActionProvider()
     {
         $firstWorkspace = new SimpleWorkspace();
