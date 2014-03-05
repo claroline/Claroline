@@ -36,10 +36,8 @@
                 <input type="checkbox" name="{{o}}"  class="filterO" />
             {% endfor %}
         </div>
-         <form method="post" action="{{ path('claro_workspace_agenda_add_event', {workspaceId: workspace.getId()}) }}" id="myForm" {{ form_enctype(file) }}>
-                                <div id="text" class="col-md-10 filters"> </div>
-                                {{ form_widget(file) }}
-                            </form>
+         <form method="post" action="{{ path('claro_workspace_agenda_import', {workspaceId: workspace.getId()}) }}" id="myForm" {{ form_enctype(file) }}>
+         {{ form_widget(file) }} <input type="submit" class="submit"> </form>
         <a href="{{ path('claro_workspace_agenda_export',{workspaceId:workspace.getId()}) }}" class="btn btn-primary">{{ 'export'|trans({}, 'agenda') }} </a>
         <div id='calendar' class="col-md-9"></div>
         <div  id="myModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">

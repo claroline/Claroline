@@ -365,6 +365,37 @@ class WorkspaceAgendaController extends Controller
         return $response;
     }
 
+    /**
+     * @EXT\Route(
+     *     "/{workspaceId}/import",
+     *     name="claro_workspace_agenda_import"
+     * )
+     * @EXT\Method({"GET","POST"})
+     * @EXT\ParamConverter(
+     *      "workspace",
+     *      class="ClarolineCoreBundle:Workspace\AbstractWorkspace",
+     *      options={"id" = "workspaceId", "strictId" = true}
+     * )
+     * @param AbstractWorkspace $workspace
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function importsEventsIcsAction()
+    {
+        $form = $this->formFactory->create(FormFactory::TYPE_AGENDA_IMPORTER);
+        $form->handleRequest($this->request);
+
+        if ($form->isValid()) {
+            $file = $form->get('file')->getData();
+            $lines = file_get_contents($file);
+            var_dump($lines);
+            // foreach ($lines as $line) {
+            //     $users[] = str_getcsv($line, ';');
+            // }
+
+        }
+
+    }
+
     private function checkUserIsAllowed($permission, AbstractWorkspace $workspace)
     {
         if (!$this->security->isGranted($permission, $workspace)) {
