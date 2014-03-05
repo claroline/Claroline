@@ -23,6 +23,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
 /**
  * @Route("/internalapi/badge_collection")
@@ -60,7 +61,7 @@ class CollectionController extends Controller
     public function deleteAction(Request $request, User $user, BadgeCollection $collection)
     {
         if ($collection->getUser() !== $user) {
-            throw $this->createNotFoundException("Collection not found.");
+            throw new AccessDeniedHttpException();
         }
 
         $entityManager = $this->getDoctrine()->getManager();
