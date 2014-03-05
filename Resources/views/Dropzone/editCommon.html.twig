@@ -222,11 +222,13 @@
             {
                 manageCorrectionDeny();
             });
-            manageCorrectionDeny();
+            //manageCorrectionDeny(); // not needed anymore ( normaly called at line 194 => dependancy cascading of enablePeerReviewOptions method
         });
 
         function manageCorrectionDeny()
         {
+            // Set manageCorrectionDeny dependencies
+            // show option only if peerReview and CorrectionVisibility are Activated, set to false and desactivate if they are  not.
             if($('#icap_dropzone_common_form_diplayCorrectionsToLearners').prop('checked')) {
                 $('#allow-correction-deny').show();
             } else {
@@ -237,6 +239,9 @@
 
         function manageCorrectionVisibility(peerReviewEnabled)
         {
+            // Set PeerReview dependency
+            // show option only if peerReview is Activated, set to false and desactivate if it is not.
+            // call manageCorrectionDeny to cascade dependencies .
             if(peerReviewEnabled)
             {
                 $('#icap_dropzone_common_form_diplayCorrectionsToLearners').parent().show();
