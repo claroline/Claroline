@@ -192,7 +192,9 @@
                                 </div>
                             {% endif %}
                         </div>
+                        test
                         {% if dropzone.diplayCorrectionsToLearners %}
+
                             <a href="{{ path('icap_dropzone_drop_detail_by_user',{'resourceId': dropzone.id,'dropId':drop.id}) }}" class="btn btn-primary ">{{ 'See Corrections'|trans({},'icap_dropzone') }}</a>
                         {% endif %}
                     {% else %}
