@@ -69,7 +69,7 @@ agenda: Agenda
 all: All
 all_available_workspaces: 'All available workspaces'
 all_my_workspaces: 'All my workspaces'
-all_workspaces: 'All publics workspaces'
+all_workspaces: 'All public workspaces'
 already_existing_user: 'The user already exists'
 an_error_occured_message: 'An error occured. Please contact the administrator.'
 analytics_connections: Connections
@@ -216,7 +216,7 @@ file_form_shareType_0: Yes
 file_form_shareType_1: false
 files: Files
 filter: Filter
-find_workspaces: 'All publics workspaces'
+find_workspaces: 'All public workspaces'
 firstName: 'First name'
 first_name: 'First name'
 'for period': 'for period'
@@ -703,7 +703,7 @@ workspace_template_form_name: Name
 workspace_tools: Tools
 workspace_unregistration_confirm_title: 'Do you really want to unregister from this workspace ?'
 workspace_welcome: Welcome
-workspaces_management: 'Workspaces Managements'
+workspaces_management: 'Workspaces Management'
 workspaces: Workspaces
 workspaces_included_in_category: 'Workspaces included in this category'
 ws_creator: 'Workspace creator'

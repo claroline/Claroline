@@ -83,7 +83,7 @@ class ParametersController extends Controller
      *     "hwiManager"         = @DI\Inject("claroline.manager.hwi_manager"),
      *     "workspaceManager"   = @DI\Inject("claroline.manager.workspace_manager"),
      *     "om"                 = @DI\Inject("claroline.persistence.object_manager"),
-     *     "eventDispatcher"     = @DI\Inject("claroline.event.event_dispatcher")
+     *     "eventDispatcher"    = @DI\Inject("claroline.event.event_dispatcher")
      * })
      */
     public function __construct(
@@ -776,15 +776,14 @@ class ParametersController extends Controller
      * @Route(
      *     "/workspacesManagement/page/{page}/max/{max}/order/{order}",
      *     name="claro_admin_workspaces_management",
-     *      defaults={"page"=1, "search"="", "max"=50, "order"="id"},
+     *     defaults={"page"=1, "search"="", "max"=50, "order"="id"},
      *     options = {"expose"=true}
      * )
      * @Method("GET")
-     *
      * @Route(
      *     "/workspacesManagement/page/{page}/search/{search}/max/{max}/order/{order}",
      *     name="claro_admin_workspaces_management_search",
-     *      defaults={"page"=1, "search"="", "max"=50, "order"="id"},
+     *     defaults={"page"=1, "search"="", "max"=50, "order"="id"},
      *     options = {"expose"=true}
      * )
      * @Method("GET")
@@ -797,8 +796,8 @@ class ParametersController extends Controller
         $pager = $search === '' ?
             $this->workspaceManager->findAllWorkspaces($page, $max, $order) :
             $this->workspaceManager-> getWorkspaceByName($search, $page, $max, $order);
+        
         return array('pager' => $pager, 'search' => $search, 'max' => $max, 'order' => $order);
-
     }
 
     /**
@@ -811,7 +810,7 @@ class ParametersController extends Controller
      *
      * @return \Symfony\Component\HttpFoundation\Response with the css class to apply to the element
      */
-    public function workspaceVisibility()
+    public function setWorkspaceVisibilityAction()
     {
         $postData = $this->request->request->all();
         $workspace = $this->workspaceManager->getWorkspaceById($postData['id']);
@@ -842,7 +841,7 @@ class ParametersController extends Controller
 
     /**
      * @EXT\Route(
-     *     "//workspacesManagement/delete",
+     *     "/workspacesManagement/delete",
      *     name="claro_admin_multipleworkspaces",
      *     options = {"expose"=true}
      * )

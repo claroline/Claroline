@@ -196,7 +196,7 @@
                     'visible': visible
                 },
                 'success': function (data, textStatus, xhr) {
-                    if (registration === '1') {
+                    if (visible === '1') {
                         $(icon[0]).removeClass('icon-eye-open');
                         $(icon[0]).addClass('icon-eye-close');
                         $(e.currentTarget).attr('data-visible','0');
