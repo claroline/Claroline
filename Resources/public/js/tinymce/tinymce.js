@@ -208,6 +208,7 @@
 
     $('body').on('click', '.mce-widget.mce-btn[aria-label="Fullscreen"]', function () {
         toggleFullscreen(this);
+        window.dispatchEvent(new window.Event('resize'));
     });
 
     $('body').bind('DOMSubtreeModified', function () {
