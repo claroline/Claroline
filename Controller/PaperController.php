@@ -44,7 +44,6 @@ use Symfony\Component\HttpFoundation\StreamedResponse;
 
 use UJM\ExoBundle\Entity\Exercise;
 use UJM\ExoBundle\Entity\Paper;
-//use UJM\ExoBundle\Entity\Response;
 use UJM\ExoBundle\Form\PaperType;
 
 use Pagerfanta\Adapter\ArrayAdapter;
@@ -228,11 +227,11 @@ class PaperController extends Controller
         );
     }
 
-    public function markedOpenRecordAction()
+    public function markedOpenRecordAction(Request $request)
     {
-        $request = $this->container->get('request');
         if ($request->isXmlHttpRequest()) {
             $em = $this->getDoctrine()->getManager();
+            /** @var \UJM\ExoBundle\Entity\Response $response */
             $response = $em->getRepository('UJMExoBundle:Response')->find($request->get('respid'));
 
             $response->setMark($request->get('mark'));
@@ -240,9 +239,10 @@ class PaperController extends Controller
             $em->persist($response);
             $em->flush();
 
+            $this->container->get('ujm.exercise_services')->manageEndOfExercise($response->getPaper());
+
             return new Response($response->getId());
         } else {
-
             return new Response('Error');
         }
     }

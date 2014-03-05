@@ -64,14 +64,14 @@ class Paper
     private $numPaper;
 
     /**
-     * @var datetime $start
+     * @var \Datetime $start
      *
      * @ORM\Column(name="start", type="datetime")
      */
     private $start;
 
     /**
-     * @var datetime $end
+     * @var \Datetime $end
      *
      * @ORM\Column(name="end", type="datetime", nullable=true)
      */
@@ -148,7 +148,7 @@ class Paper
     /**
      * Set start
      *
-     * @param datetime $start
+     * @param \Datetime $start
      */
     public function setStart($start)
     {
@@ -158,7 +158,7 @@ class Paper
     /**
      * Get start
      *
-     * @return datetime
+     * @return \Datetime
      */
     public function getStart()
     {
@@ -168,7 +168,7 @@ class Paper
     /**
      * Set end
      *
-     * @param datetime $end
+     * @param \Datetime $end
      */
     public function setEnd($end)
     {
@@ -178,7 +178,7 @@ class Paper
     /**
      * Get end
      *
-     * @return datetime
+     * @return \Datetime
      */
     public function getEnd()
     {
