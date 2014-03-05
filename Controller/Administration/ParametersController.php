@@ -772,7 +772,7 @@ class ParametersController extends Controller
     }
 
     /**
-     * @Template("ClarolineCoreBundle:Administration:adminWorkspacesManagements.html.twig")
+     * @Template("ClarolineCoreBundle:Administration:workspacesManagements.html.twig")
      * @Route(
      *     "/workspacesManagement/page/{page}/max/{max}/order/{order}",
      *     name="claro_admin_workspaces_management",
