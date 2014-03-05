@@ -280,10 +280,10 @@ class RoleManager
     }
 
     /**
-     * @param \Claroline\CoreBundle\Entity\Role                        $roles
+     * @param array                                                    $roles
      * @param \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace $workspace
      *
-     * @return \Claroline\CoreBundle\Entity\Role
+     * @return array
      */
     public function initWorkspaceBaseRole(array $roles, AbstractWorkspace $workspace)
     {
@@ -292,16 +292,23 @@ class RoleManager
         $entityRoles = array();
 
         foreach ($roles as $name => $translation) {
-            $isReadOnly = (in_array($name, Role::getMandatoryWsRoles())) ? true: false;
             $role = $this->createWorkspaceRole(
                 "{$name}_{$workspace->getGuid()}",
                 $translation,
                 $workspace,
-                $isReadOnly
+                false
             );
             $entityRoles[$name] = $role;
         }
 
+        $role = $this->createWorkspaceRole(
+            "ROLE_WS_MANAGER_{$workspace->getGuid()}",
+            'manager',
+            $workspace,
+            true
+        );
+
+        $entityRoles['ROLE_WS_MANAGER'] = $role;
         $this->om->endFlushSuite();
 
         return $entityRoles;
@@ -375,9 +382,29 @@ class RoleManager
      */
     public function getWorkspaceRoles(AbstractWorkspace $workspace)
     {
+        return $this->roleRepo->findByWorkspace($workspace);
+    }
+
+    /**
+     * @param AbstractWorkspace $workspace
+     *
+     * @return \Claroline\CoreBundle\Entity\Role[]
+     */
+    public function getWorkspaceConfigurableRoles(AbstractWorkspace $workspace)
+    {
+        $roles = $this->roleRepo->findByWorkspace($workspace);
+        $configurableRoles = [];
+
+        foreach ($roles as $role) {
+            if ($role->getName() !== 'ROLE_WS_MANAGER_' . $workspace->getGuid()) {
+                $configurableRoles[] = $role;
+            }
+        }
+
         return array_merge(
-            $this->roleRepo->findByWorkspace($workspace),
-            $this->roleRepo->findBy(array('name' => 'ROLE_ANONYMOUS'))
+            $configurableRoles,
+            $this->roleRepo->findBy(array('name' => 'ROLE_ANONYMOUS')),
+            $this->roleRepo->findBy(array('name' => 'ROLE_USER'))
         );
     }
 

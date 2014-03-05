@@ -362,8 +362,15 @@ class WorkspaceController extends Controller
         }
 
         $currentRoles = $this->utils->getRoles($this->security->getToken());
+        $hasManagerAccess = true;
 
-        $orderedTools = $this->toolManager->getOrderedToolsByWorkspaceAndRoles($workspace, $currentRoles);
+        //if manager or admin, show every tools
+        if ($hasManagerAccess) {
+            $orderedTools = $this->toolManager->getOrderedToolsByWorkspace($workspace);
+        //otherwise only shows the relevant tools
+        } else {
+            $orderedTools = $this->toolManager->getOrderedToolsByWorkspaceAndRoles($workspace, $currentRoles);
+        }
 
         return array(
             'orderedTools' => $orderedTools,
@@ -560,15 +567,17 @@ class WorkspaceController extends Controller
      *
      * Open the first tool of a workspace.
      *
-     * @param integer $workspaceId
-     *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @param AbstractWorkspace $workspace
+     * @throws AccessDeniedException
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
     public function openAction(AbstractWorkspace $workspace)
     {
-        if ('anon.' != $this->security->getToken()->getUser()) {
-            $roles = $this->roleManager->getRolesByWorkspace($workspace);
+        if ($this->security->isGranted('OPEN', $workspace)) {
+
+            //get every roles of the user in the current $workspace
             $foundRoles = array();
+            $roles = $this->roleManager->getRolesByWorkspace($workspace);
 
             foreach ($roles as $wsRole) {
                 foreach ($this->security->getToken()->getUser()->getRoles() as $userRole) {
@@ -578,40 +587,72 @@ class WorkspaceController extends Controller
                 }
             }
 
-            $isAdmin = $this->security->getToken()->getUser()->hasRole('ROLE_ADMIN');
+            if (count($foundRoles) > 0) {
+                $openableTools = $this->toolManager->getDisplayedByRolesAndWorkspace($foundRoles, $workspace);
 
-            if (count($foundRoles) === 0 && !$isAdmin) {
-                throw new AccessDeniedException('No role found in that workspace');
-            }
+                if (count($openableTools) > 0) {
+                    $openedTool = $openableTools[0];
+                } else {
+                    $openedTool = $this->toolManager->getOneToolByName('home');
+                }
 
-            if ($isAdmin) {
-                //admin always open the home.
-                $openedTool = array($this->toolManager->getOneToolByName('home'));
             } else {
-                $openedTool = $this->toolManager->getDisplayedByRolesAndWorkspace(
-                    $foundRoles,
-                    $workspace
-                );
+                //this should be the 1st tool of the workspace tool list.
+                //@todo see the above comment
+                $openedTool = $this->toolManager->getOneToolByName('home');
             }
 
-        } else {
-            $foundRole = 'ROLE_ANONYMOUS';
-            $openedTool = $this->toolManager->getDisplayedByRolesAndWorkspace(
-                array('ROLE_ANONYMOUS'),
-                $workspace
+            $route = $this->router->generate(
+                'claro_workspace_open_tool',
+                array('workspaceId' => $workspace->getId(), 'toolName' => $openedTool->getName())
             );
+
+            return new RedirectResponse($route);
         }
 
-        if ($openedTool == null) {
-            throw new AccessDeniedException("No tool found for role {$foundRole}");
-        }
+        throw new AccessDeniedException("Access denied");
 
-        $route = $this->router->generate(
-            'claro_workspace_open_tool',
-            array('workspaceId' => $workspace->getId(), 'toolName' => $openedTool[0]->getName())
-        );
-
-        return new RedirectResponse($route);
+//        //if workspace manager, he his gr
+//        if ('anon.' != $this->security->getToken()->getUser()) {
+//            $roles = $this->roleManager->getRolesByWorkspace($workspace);
+//            $foundRoles = array();
+//
+//            foreach ($roles as $wsRole) {
+//                foreach ($this->security->getToken()->getUser()->getRoles() as $userRole) {
+//                    if ($userRole == $wsRole->getName()) {
+//                        $foundRoles[] = $userRole;
+//                    }
+//                }
+//            }
+//
+//            if (count($foundRoles) === 0 && !$isAdmin) {
+//                throw new AccessDeniedException('No role found in that workspace');
+//            }
+//
+//            if ($isAdmin) {
+//                //admin always open the home.
+//                $openedTool = array($this->toolManager->getOneToolByName('home'));
+//            } else {
+//
+//            }
+//        } else {
+//            $foundRole = 'ROLE_ANONYMOUS';
+//            $openedTool = $this->toolManager->getDisplayedByRolesAndWorkspace(
+//                array('ROLE_ANONYMOUS'),
+//                $workspace
+//            );
+//        }
+//
+//        if ($openedTool == null) {
+//            throw new AccessDeniedException("No tool found for role {$foundRole}");
+//        }
+//
+//        $route = $this->router->generate(
+//            'claro_workspace_open_tool',
+//            array('workspaceId' => $workspace->getId(), 'toolName' => $openedTool[0]->getName())
+//        );
+//
+//        return new RedirectResponse($route);
     }
 
     /**

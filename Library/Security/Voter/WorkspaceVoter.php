@@ -51,8 +51,18 @@ class WorkspaceVoter implements VoterInterface
 
     public function vote(TokenInterface $token, $object, array $attributes)
     {
-
         if ($object instanceof AbstractWorkspace) {
+
+            //Managers can do anything in their workspace.
+            $manager = $this->em->getRepository('ClarolineCoreBundle:Role')
+                ->findManagerRole($object);
+            $roles = $this->ut->getRoles($token);
+
+            foreach ($roles as $role) {
+                if ($role === $manager->getName()) {
+                    return VoterInterface::ACCESS_GRANTED;
+                }
+            }
 
             if (count($attributes) === 0) {
                 $roles = $this->ut->getRoles($token);
@@ -93,20 +103,8 @@ class WorkspaceVoter implements VoterInterface
      */
     private function canDo(AbstractWorkspace $workspace, TokenInterface $token, $action)
     {
-        $manager = $this->em->getRepository('ClarolineCoreBundle:Role')
-            ->findManagerRole($workspace);
-        $roles = $this->ut->getRoles($token);
-
-        if ($action === 'DELETE') {
-            foreach ($roles as $role) {
-                if ($role === $manager->getName()) {
-                    return true;
-                }
-            }
-
-            return false;
-        }
-
+        //If a the user role is linked to a tool, he can open the workspace.
+        //It may change in the future.
         $tools = $this->em
             ->getRepository('ClarolineCoreBundle:Tool\Tool')
             ->findDisplayedByRolesAndWorkspace($this->ut->getRoles($token), $workspace);
@@ -119,12 +117,14 @@ class WorkspaceVoter implements VoterInterface
             }
         }
 
+        //what is that ?
         foreach ($tools as $tool) {
             if ($tool->getName() === $action) {
                 return true;
             }
         }
 
+        //Authentication may be needed
         if ($token instanceof AnonymousToken) {
             throw new AuthenticationException('Insufficient permissions : authentication required');
         }
