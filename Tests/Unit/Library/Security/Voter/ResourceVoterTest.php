@@ -175,15 +175,74 @@ class ResourceVoterTest extends MockeryTestCase
         );
     }
 
-    public function testCanCreate()
+    /**
+     * @dataProvider checkMoveProvider
+     */
+    public function testCheckMove(
+        $countErrors,
+        $parentWorkspace,
+        $firstNodeWorkspace,
+        $secondNodeWorkspace,
+        $isParentWorkspaceManager
+    )
+    {
+        $this->markTestSkipped();
+        $voter = $this->getVoter(array('isWorkspaceManager'));
+        $this->ut->shouldReceive('getRoles')->andReturn(array());
+        $voter->shouldReceive('isWorkspaceManager')->andReturn($isParentWorkspaceManager);
+
+        $parent = $this->mock('Claroline\CoreBundle\Entity\Resource\ResourceNode');
+        $parent->shouldReceive('getWorkspace')->andReturn($parentWorkspace);
+        $firstNode = $this->mock('Claroline\CoreBundle\Entity\Resource\ResourceNode');
+        $secondNode = $this->mock('Claroline\CoreBundle\Entity\Resource\ResourceNode');
+        $firstNode->shouldReceive('getWorkspace')->andReturn($firstNodeWorkspace);
+        $secondNode->shouldReceive('getWorkspace')->andReturn($secondNodeWorkspace);
+        $resources = array($firstNode, $secondNode);
+        $token = $this->mock('Symfony\Component\Security\Core\Authentication\Token\TokenInterface');
+
+        $this->assertEquals(
+            count($voter->checkMove($parent, $resources, $token)),
+            $countErrors
+        );
+    }
+
+    public function testCopy(
+        $countErrors
+    )
     {
 
+    }
+
+    public function checkMoveProvider()
+    {
+        $parentWorkspace = new SimpleWorkspace();
+        $firstNodeWorkspace = new SimpleWorkspace();
+        $secondNodeWorkspace = new SimpleWorkspace();
+
+        return array(
+            array(
+                //manager can do w/e he wants
+                'countErrors' => 0,
+                'parentWorkspace' => $parentWorkspace,
+                'firstNodeWorkspace' => $parentWorkspace,
+                'secondNodeWorkspace' => $parentWorkspace,
+                'isParentWorkspaceManager' => true
+            ),
+            array(
+                //manager can do w/e he wants
+                'countErrors' => 0,
+                'parentWorkspace' => $parentWorkspace,
+                'firstNodeWorkspace' => $firstNodeWorkspace,
+                'secondNodeWorkspace' => $secondNodeWorkspace,
+                'isParentWorkspaceManager' => true
+            ),
+        );
     }
 
     public function checkCreationProvider()
     {
         return array(
-            //workspace manager can do w/e he wants
+            //workspace manager can do w/e he want
             array(
                 'countErrors' => 0,
                 'isWorkspaceManager' => true,
