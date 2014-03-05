@@ -1043,7 +1043,7 @@
         remove: function (nodeIds) {
             var trans = (nodeIds.length) > 1 ? 'resources_delete' : 'resource_delete';
             var modal = Twig.render(ModalWindow, {
-                'body': translator.get('platform' + ':' + trans),
+                'body': translator.get('platform:' + trans),
                 'confirmFooter': true,
                 'modalId': 'confirm-modal'
             });
@@ -1211,7 +1211,11 @@
             }
 
             var parentElementId = this.views.picker.$el[0].id;
-            $('#' + parentElementId + ' .modal').modal(action === 'open' ? 'show' : 'hide');
+            modal.parentHide();
+            $('#' + parentElementId + ' .modal').modal(action === 'open' ? 'show' : 'hide')
+            .on('hidden.bs.modal', function () {
+                modal.parentShow();
+            });
         }
     };
 

@@ -24,17 +24,50 @@
     };
 
     /**
+     * Hide parent modal when nested modals.
+     */
+    modal.parentHide = function () {
+        if (typeof(modal.parentModals) === 'undefined') {
+            modal.parentModals = [];
+        }
+
+        $('.modal.in:not(.parent-hide, .fullscreen), .modal-backdrop:not(.parent-hide, .fullscreen)')
+        .each(function () {
+            $(this).addClass('parent-hide');
+            modal.parentModals.push(this);
+        });
+    };
+
+    /**
+     * Show parent modal when close nested modals.
+     */
+    modal.parentShow = function ()
+    {
+        if (typeof(modal.parentModals) !== 'undefined') {
+            for (var object in modal.parentModals) {
+                if (modal.parentModals.hasOwnProperty(object)) {
+                    $(modal.parentModals[object]).removeClass('parent-hide');
+                }
+            }
+            modal.parentModals = [];
+        }
+    };
+
+    /**
      * Create a new modal that destroys itself when close.
      *
      * @param content The content to put inside this modal (this modal does not contain modal-digalog element)
      */
     modal.create = function (content)
     {
+        modal.parentHide();
+
         return modal.createElement('div', 'modal fade')
             .html(content)
             .appendTo('body')
             .modal('show')
             .on('hidden.bs.modal', function () {
+                modal.parentShow();
                 $(this).remove();
             });
     };

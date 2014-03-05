@@ -571,6 +571,15 @@ textarea {
 
     .node-thumbnail {
 
+        &.ui-state-default {
+            border: none;
+            background: none;
+            .node-name {
+                font-weight: normal;
+                color: @gray-dark;
+            }
+        }
+
         .node-element {
             background-position: center center;
             background-size: auto 100% ;
@@ -741,6 +750,10 @@ div.pagination {
         &-md { padding-left: 15px }
         &-sm { padding-left: 10px }
     }
+}
+
+.parent-hide {
+    opacity: 0 !important;
 }
 
 form .global-error {
