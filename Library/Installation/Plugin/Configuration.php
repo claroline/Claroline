@@ -228,6 +228,8 @@ class Configuration implements ConfigurationInterface
                         ->scalarNode('has_options')->defaultValue(false)->end()
                         ->scalarNode('is_configurable_in_workspace')->defaultValue(false)->end()
                         ->scalarNode('is_configurable_in_desktop')->defaultValue(false)->end()
+                        ->scalarNode('is_locked_for_admin')->defaultValue(false)->end()
+                        ->scalarNode('is_anonymous_excluded')->defaultValue(true)->end()
                     ->end()
                 ->end()
             ->end()

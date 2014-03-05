@@ -503,6 +503,8 @@ class DatabaseWriter
         $toolEntity->setExportable($tool['is_exportable']);
         $toolEntity->setIsConfigurableInWorkspace($tool['is_configurable_in_workspace']);
         $toolEntity->setIsConfigurableInDesktop($tool['is_configurable_in_desktop']);
+        $toolEntity->setIsLockedForAdmin($tool['is_locked_for_admin']);
+        $toolEntity->setIsAnonymousExcluded($tool['is_anonymous_excluded']);
 
         if (isset($tool['class'])) {
             $toolEntity->setClass(
