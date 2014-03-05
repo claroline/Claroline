@@ -208,10 +208,10 @@ class ResourceVoter implements VoterInterface
     }
 
     /**
-     * Checks if the a resource whole type is $type
+     * Checks if a resource whose type is $type
      * can be created in the directory $resource by the $token
      *
-     * @param array $types
+     * @param $type
      * @param ResourceNode $node
      * @param TokenInterface $token
      * @param \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace $workspace
@@ -219,7 +219,7 @@ class ResourceVoter implements VoterInterface
      * @return array
      */
     public function checkCreation(
-        array $types,
+        $type,
         ResourceNode $node,
         TokenInterface $token,
         AbstractWorkspace $workspace
@@ -233,34 +233,18 @@ class ResourceVoter implements VoterInterface
 
         $rightsCreation = $this->repository->findCreationRights($this->ut->getRoles($token), $node);
 
-        if (count($rightsCreation) == 0) {
+        if (!$this->canCreate($rightsCreation, $type)) {
             $errors[] = $this->translator
                 ->trans(
                     'resource_creation_wrong_type',
                     array(
                         '%path%' => $node->getPathForDisplay(),
                         '%type%' => $this->translator->trans(
-                            strtolower($types),
-                            array(),
-                            'resource'
+                            strtolower($type), array(), 'resource'
                         )
                     ),
                     'platform'
                 );
-        } else {
-            if (!$this->canCreate($rightsCreation, $types)) {
-                $errors[] = $this->translator
-                    ->trans(
-                        'resource_creation_wrong_type',
-                        array(
-                            '%path%' => $node->getPathForDisplay(),
-                            '%type%' => $this->translator->trans(
-                                strtolower($types), array(), 'resource'
-                            )
-                        ),
-                        'platform'
-                    );
-            }
         }
 
         return $errors;

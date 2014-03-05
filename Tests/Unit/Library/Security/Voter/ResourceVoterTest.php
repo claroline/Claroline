@@ -149,20 +149,35 @@ class ResourceVoterTest extends MockeryTestCase
     /**
      * @dataProvider checkCreationProvider
      */
-    public function testCheckCreation($countErrors, $isWorkspaceManager)
+    public function testCheckCreation(
+        $countErrors,
+        $isWorkspaceManager,
+        $creationRights
+    )
     {
         $voter = $this->getVoter(array('isWorkspaceManager'));
         $voter->shouldReceive('isWorkspaceManager')->andReturn($isWorkspaceManager);
 
-        $types = array('type1', 'type2');
+        $type = 'validType';
         $node = $this->mock('Claroline\CoreBundle\Entity\Resource\ResourceNode');
         $token = $this->mock('Symfony\Component\Security\Core\Authentication\Token\TokenInterface');
         $workspace = new SimpleWorkspace();
 
+        $node->shouldReceive('getPathForDisplay')->andReturn('path');
+        $this->translator->shouldReceive('trans')->andReturn('whatever');
+
+        $this->ut->shouldReceive('getRoles')->andReturn(array());
+        $this->repository->shouldReceive('findCreationRights')->andReturn($creationRights);
+
         $this->assertEquals(
-            count($voter->checkCreation($types , $node, $token, $workspace)),
+            count($voter->checkCreation($type , $node, $token, $workspace)),
             $countErrors
         );
+    }
+
+    public function testCanCreate()
+    {
+
     }
 
     public function checkCreationProvider()
@@ -172,11 +187,26 @@ class ResourceVoterTest extends MockeryTestCase
             array(
                 'countErrors' => 0,
                 'isWorkspaceManager' => true,
+                'creationRights' => array()
             ),
+            //There is no creationRights
+            array(
+                'countErrors' => 1,
+                'isWorkspaceManager' => false,
+                'creationRights' => array()
+            ),
+            //wrong creationRights
+            array(
+                'countErrors' => 1,
+                'isWorkspaceManager' => false,
+                'creationRights' => array(array('name' => 'invalid'), array('name' => 'notworking'))
+            ),
+            //that one should work
             array(
                 'countErrors' => 0,
-                'isWorkspaceManager' => false
-            ),
+                'isWorkspaceManager' => false,
+                'creationRights' =>  array(array('name' => 'invalid'), array('name' => 'validType'))
+            )
         );
     }
 
