@@ -14,20 +14,21 @@
 
     var env = $('#sf-environement').attr('data-env');
     var stackedRequests = 0;
+    var modal = window.Claroline.Modal;
+    var translator = window.Translator;
+
     var ajaxServerErrorHandler = function (statusCode, responseText) {
         if (env !== 'prod') {
             var w = window.open();
             $(w.document.body).html(responseText);
         } else {
             var msg = statusCode === 403 ? 'not_allowed' : 'an_error_occured';
-            alert(Translator.get('platform:' + msg + '_message'));
+            alert(translator.get('platform:' + msg + '_message'));
         }
     };
 
     var ajaxAuthenticationErrorHandler = function (form) {
-        $('#ajax-login-validation-box-body').append(form);
-        $('#ajax-login-modal').modal('show');
-        $('#login-form').submit(function (e) {
+        modal.create(form).on('submit', '#login-form', function (e) {
             var $this = $(e.currentTarget);
             var inputs = {};
             e.preventDefault();
@@ -45,7 +46,7 @@
                 data: inputs,
                 success: function (data) {
                     if (data.has_error) {
-                        alert(data.error);
+                        $('.form-group', $this).addClass('has-error');
                     } else {
                         window.location.reload();
                     }
@@ -81,19 +82,19 @@
     });
 
     // Required for variables translations (the language can't be known at the compile time)
-    Twig.setFilter('trans', function(name, parameters, domain) {
-        return Translator.get(domain + ':' + name);
+    Twig.setFilter('trans', function (name, parameters, domain) {
+        return translator.get(domain + ':' + name);
     });
 
     // Without the next lines, the fixed top bar overlays content
     // when jumping to a an internal anchor target
-    var shiftWindow = function() {
+    var shiftWindow = function () {
         scrollBy(0, -50);
     };
     $(document).ready(function () {
         if (location.hash) {
             setTimeout(
-                function() {
+                function () {
                     shiftWindow();
                 },
                 300
