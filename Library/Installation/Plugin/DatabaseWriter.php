@@ -507,13 +507,9 @@ class DatabaseWriter
         $toolEntity->setIsAnonymousExcluded($tool['is_anonymous_excluded']);
 
         if (isset($tool['class'])) {
-            $toolEntity->setClass(
-                "{$tool['class']}"
-            );
+            $toolEntity->setClass("{$tool['class']}");
         } else {
-            $toolEntity->setClass(
-                "icon-wrench"
-            );
+            $toolEntity->setClass("icon-wrench");
         }
 
         $this->em->persist($toolEntity);
