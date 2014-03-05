@@ -2,12 +2,18 @@
 
 {% block stylesheets %}
     {{ parent() }}
-    {% stylesheets debug=false filter='cssmin'  output='vendor/innovapath/editor.css'
+    <!-- {% stylesheets debug=false filter='cssmin'  output='vendor/innovapath/editor.css'
         '@InnovaPathBundle/Resources/public/css/Editor/*'
         '@InnovaAngularUIPageslideBundle/Resources/public/css/*'
     %}
         <link rel="stylesheet" href="{{ asset_url }}" screen="media" />
-    {% endstylesheets %}
+    {% endstylesheets %} -->
+
+    <link rel="stylesheet" href="{{ asset('bundles/innovapath/css/Editor/colors.css') }}" screen="media" />
+    <link rel="stylesheet" href="{{ asset('bundles/innovapath/css/Editor/app.css') }}" screen="media" />
+    <link rel="stylesheet" href="{{ asset('bundles/innovapath/css/Editor/step-edit.css') }}" screen="media" />
+    <link rel="stylesheet" href="{{ asset('bundles/innovapath/css/Editor/scenario.css') }}" screen="media" />
+    <link rel="stylesheet" href="{{ asset('bundles/innovapath/css/Editor/preview.css') }}" screen="media" />
 {% endblock %}
 
 {% block content %}

@@ -10,6 +10,7 @@ function StepFactory($http, $q, PathFactory) {
     // Base template used to append new step to tree
     var baseStep = {
         id                : null,
+        lvl               : 0,
         resourceId        : null,
         image             : 'no_image.png',
         name              : 'Step',
@@ -111,8 +112,9 @@ function StepFactory($http, $q, PathFactory) {
             var stepId = PathFactory.getNextStepId();
             var newStep = jQuery.extend(true, {}, baseStep);
             
-            if (undefined != step) {
+            if (undefined != step && null != step) {
                 newStep.name = 'Step' + '-' + stepId;
+                newStep.lvl = step.lvl + 1;
             }
             
             newStep.id = stepId;

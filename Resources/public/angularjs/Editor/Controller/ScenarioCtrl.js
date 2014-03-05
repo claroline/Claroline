@@ -11,11 +11,6 @@ function ScenarioCtrl($scope, $modal, HistoryFactory, PathFactory, StepFactory, 
     $scope.whereList = StepFactory.getWhereList();
     $scope.resourceTypeLabels = ResourceFactory.getResourceTypeLabels();
     
-    $scope.currentEditingStep = null;
-    
-    // Current displayed step in preview zone
-    $scope.previewStep = null;
-    
     // Configure Tree of steps sortable feature
     $scope.sortableOptions = {
         update: function(e, ui) { $scope.applyTreeChanges(); },
@@ -23,22 +18,15 @@ function ScenarioCtrl($scope, $modal, HistoryFactory, PathFactory, StepFactory, 
         connectWith: '.ui-sortable'
     };
 
-    if (null === $scope.previewStep) {
-        $scope.setPreviewStep();
-    }
-
     /**
      * Update Path when Tree is modified with drag n drop
      * @returns void
      */
     $scope.applyTreeChanges = function() {
-        var e, i, _i, _len, _ref;
-        _ref = $scope.path;
-        for (i = _i = 0, _len = _ref.length; _i < _len; i = ++_i) {
-            e = _ref[i];
-            e.pos = i;
-        }
-        HistoryFactory.update(_ref);
+        PathFactory.setPath($scope.path);
+        PathFactory.recalculateStepsLevel($scope.path);
+
+        HistoryFactory.update($scope.path);
         $scope.updatePreviewStep();
     };
 
@@ -94,21 +82,6 @@ function ScenarioCtrl($scope, $modal, HistoryFactory, PathFactory, StepFactory, 
         
         HistoryFactory.update($scope.path);
         $scope.updatePreviewStep();
-    };
-
-    /**
-     * Display input in tree for selected step in order to edit its name
-     * @returns void
-     */
-    $scope.editStepName = function(step) {
-        $scope.currentEditingStep = step.id;
-    };
-
-    /**
-     * Hide input displayed in tree
-     */
-    $scope.closeEditStepName = function() {
-        $scope.currentEditingStep = null;
     };
 
     /**

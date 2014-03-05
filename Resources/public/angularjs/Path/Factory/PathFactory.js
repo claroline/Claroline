@@ -15,7 +15,6 @@ function PathFactory($http, $q) {
          */
         clear: function() {
             path = null;
-            pathInstanciated = [];
             maxStepId = 0;
             maxResourceId = 0;
 
@@ -46,6 +45,28 @@ function PathFactory($http, $q) {
             this.getMaxResourceId();
 
             return this;
+        },
+
+        recalculateStepsLevel: function () {
+            if (path != null && path.steps != null && path.steps.length !== 0) {
+                var currentLevel = 0;
+                for (var i = 0; i < path.steps.length; i++) {
+                    var step = path.steps[i];
+                    this.updateStepLevel(step, currentLevel);
+                }
+            }
+        },
+
+        updateStepLevel: function (step, currentLevel) {
+            step.lvl = currentLevel;
+
+            if (step.children != null && step.children.length !== 0) {
+                var nextLevel = currentLevel + 1;
+                for (var i = 0; i < step.children.length; i++) {
+                    var nextStep = step.children[i];
+                    this.updateStepLevel(nextStep, nextLevel);
+                }
+            }
         },
 
         /**

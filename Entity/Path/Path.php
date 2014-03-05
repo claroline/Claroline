@@ -255,6 +255,7 @@ class Path extends AbstractResource implements PathInterface
             array (
                 array (
                     'id'           => 1,
+                    'lvl'          => 0,
                     'resourceId'   => null,
                     'name'         => $this->getName(),
                     'image'        => 'no_image.png',

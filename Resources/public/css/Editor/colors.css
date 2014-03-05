@@ -1,0 +1,138 @@
+.lvl {
+    width: 8px;
+    display: block;
+    height: 100%;
+    position: absolute;
+    left: 0;
+    top: 0;
+    border-radius: 3px 0 0 3px;
+    border: 1px solid #000;
+}
+
+.active-step .lvl {
+    border-right: none;
+    width: 6px;
+}
+
+.active-step .step {
+    padding-left: 28px;
+}
+
+.active-step .lvl:after {
+    content: "";
+    border-top: 14px solid rgba(0,0,0,0);
+    border-bottom: 14px solid rgba(0,0,0,0);
+    border-left: 14px solid #ddd;
+    position: absolute;
+    right: -14px;
+    top: 0;
+    z-index: 1;
+}
+
+.lvl-0 {
+    background-color: #7B7B7B;
+    border-color: #4B4B4B;
+}
+.active-step .lvl-0~.step {
+    border-color: #4B4B4B;
+    color: #4B4B4B;
+}
+.active-step .lvl-0:after {
+    border-left-color: #7B7B7B;
+}
+
+.lvl-1 {
+    background-color: #4790aD;
+    border-color: #17607D;
+}
+.active-step .lvl-1~.step {
+    border-color: #17607D;
+    color: #17607D;
+}
+.active-step .lvl-1:after {
+    border-left-color: #4790aD;
+}
+
+.lvl-2 {
+    background-color: #8C6796;
+    border-color: #5C3766;
+}
+.active-step .lvl-2~.step {
+    border-color: #5C3766;
+    color: #5C3766;
+}
+.active-step .lvl-2:after {
+    border-left-color: #8C6796;
+}
+
+.lvl-3 {
+    background-color: #d86178;
+    border-color: #a83148;
+}
+.active-step .lvl-3~.step {
+    border-color: #a83148;
+    color: #a83148;
+}
+.active-step .lvl-3:after {
+    border-left-color: #d86178;
+}
+
+.lvl-4 {
+    background-color: #FF7A40;
+    border-color: #CF4A30;
+}
+.active-step .lvl-4~.step {
+    border-color: #CF4A30;
+    color: #CF4A30;
+}
+.active-step .lvl-4:after {
+    border-left-color: #FF7A40;
+}
+
+.lvl-5 {
+    background-color: #FDBE3E;
+    border-color: #cD8E0E;
+}
+.active-step .lvl-5~.step {
+    border-color: #cD8E0E;
+    color: #cD8E0E;
+}
+.active-step .lvl-5:after {
+    border-left-color: #FDBE3E;
+}
+
+.lvl-6 {
+    background-color: #b8d855;
+    border-color: #88A825;
+}
+.active-step .lvl-6~.step {
+    border-color: #88A825;
+    color: #88A825;
+}
+.active-step .lvl-6:after {
+    border-left-color: #b8d855;
+}
+
+.lvl-7 {
+    background-color: #47aD90;
+    border-left-color: #177D60;
+}
+.active-step .lvl-7~.step {
+    border-color: #177D60;
+    color: #177D60;
+}
+.active-step .lvl-7:after {
+    border-color: #47aD90;
+}
+
+.lvl-8 {
+    background-color: #91deea;
+    border-color: #61aeba;
+}
+.active-step .lvl-8~.step {
+    border-color: #61aeba;
+    color: #61aeba;
+}
+.active-step .lvl-8:after {
+    border-left-color: #91deea;
+}
