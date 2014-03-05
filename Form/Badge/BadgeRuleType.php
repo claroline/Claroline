@@ -82,7 +82,7 @@ class BadgeRuleType extends AbstractType
                 'placeholder'    => $this->translator->trans('badge_form_resource_selection', array(), 'badge'),
                 'class'          => 'ClarolineCoreBundle:Resource\ResourceNode',
                 'use_controller' => true,
-                'property'       => 'name',
+                'property'       => 'pathForDisplay',
                 'repo_method'    => 'findByNameForAjax'
             ))
             ->add('badge', 'zenstruck_ajax_entity', array(
