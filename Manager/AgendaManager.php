@@ -29,7 +29,7 @@ class AgendaManager
      * @DI\InjectParams({
      *     "om"                 = @DI\Inject("claroline.persistence.object_manager"),
      *     "rootDir"            = @DI\Inject("%kernel.root_dir%"),
-     *      "security"          = @DI\Inject("security.context")
+     *     "security"           = @DI\Inject("security.context")
      * })
      */
     public function __construct(
@@ -49,14 +49,16 @@ class AgendaManager
      */
     public function export($workspaceId = null)
     {
+        $repo = $this->om->getRepository('ClarolineCoreBundle:Event');
         if (isset($workspaceId)) {
-            $listEvents = $this->om->getRepository('ClarolineCoreBundle:Event')->findByWorkspaceId($workspaceId, false);
+            $listEvents = $repo->findByWorkspaceId($workspaceId, false);
         } else {
             $usr = $this->security->getToken()->getUser();
-            $listDesktop = $this->om->getRepository('ClarolineCoreBundle:Event')->findDesktop($usr, 0);
-            $listEventsU = $this->om->getRepository('ClarolineCoreBundle:Event')->findByUser($usr, 0);
+            $listDesktop = $repo->findDesktop($usr, false);
+            $listEventsU = $repo->findByUser($usr, false);
             $listEvents = array_merge($listEventsU, $listDesktop);
         }
+        
         $calendar = $this->writeCalendar($listEvents);
         $fileName = $this->writeToICS($calendar, $workspaceId);
 
@@ -114,6 +116,4 @@ class AgendaManager
 
         return $fileName;
     }
-
-
 } 

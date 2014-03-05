@@ -45,7 +45,7 @@ class WorkspaceAgendaController extends Controller
      *     "om"                 = @DI\Inject("claroline.persistence.object_manager"),
      *     "request"            = @DI\Inject("request"),
      *     "rm"                 =  @DI\Inject("claroline.manager.role_manager"),
-     *      "agendaManager"     = @DI\Inject("claroline.manager.agenda_manager")
+     *     "agendaManager"      = @DI\Inject("claroline.manager.agenda_manager")
      * })
      */
     public function __construct(
@@ -345,7 +345,7 @@ class WorkspaceAgendaController extends Controller
      * @param AbstractWorkspace $workspace
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function ExportsEventIcs(AbstractWorkspace $workspaceId)
+    public function exportsEventIcsAction(AbstractWorkspace $workspaceId)
     {
         $file =  $this->agendaManager->export($workspaceId);
         $response = new StreamedResponse();
@@ -377,11 +377,13 @@ class WorkspaceAgendaController extends Controller
         $usr = $this->security->getToken()->getUser();
         $rm = $this->rm->getManagerRole($workspace);
         $ru = $this->rm->getWorkspaceRolesForUser($usr, $workspace);
-        if ( !is_null($event)) {
+        
+        if (!is_null($event)) {
             if ($event->getUser()->getUsername() === $usr->getUsername()) {
                 return true;
             }
         }
+        
         foreach ($ru as $role) {
             if ($role->getTranslationKey() === $rm->getTranslationKey()) {
                 return true;
