@@ -190,10 +190,24 @@
         );
     }
 
+    function toggleFullscreen(element) {
+        var modal = $(element).parents('.modal').first();
+
+        if (modal.hasClass('fullscreen')) {
+            modal.removeClass('fullscreen');
+        } else {
+            modal.addClass('fullscreen');
+        }
+    }
+
     var domChange;
 
     $('body').bind('ajaxComplete', function () {
         tinymceInit();
+    });
+
+    $('body').on('click', '.mce-widget.mce-btn[aria-label="Fullscreen"]', function () {
+        toggleFullscreen(this);
     });
 
     $('body').bind('DOMSubtreeModified', function () {
