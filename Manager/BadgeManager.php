@@ -88,6 +88,10 @@ class BadgeManager
                     ->setBadge($badge)
                     ->setUser($user);
 
+                if ($badge->isExpiring()) {
+                    $userBadge->setExpiredAt($this->generateExpireDate($badge));
+                }
+
                 $badge->addUserBadge($userBadge);
 
                 $badgeAwarded = true;
@@ -123,5 +127,21 @@ class BadgeManager
     protected function dispatch(LogGenericEvent $event)
     {
         $this->eventDispatcher->dispatch('log', $event);
+    }
+
+    /**
+     * @param Badge          $badge
+     * @param \DateTime|null $currentDate
+     *
+     * @return \DateTime
+     */
+    public function generateExpireDate(Badge $badge, \DateTime $currentDate = null)
+    {
+        if (null === $currentDate) {
+            $currentDate = new \DateTime();
+        }
+
+        $modifier = sprintf("+%d %s", $badge->getExpireDuration(), $badge->getExpirePeriodTypeLabel($badge->getExpirePeriod()));
+        return $currentDate->modify($modifier);
     }
 }

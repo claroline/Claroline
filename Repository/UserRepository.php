@@ -954,6 +954,27 @@ class UserRepository extends EntityRepository implements UserProviderInterface
     }
 
     /**
+     * @param string $search
+     *
+     * @return array
+     */
+    public function findByNameForAjax($search)
+    {
+        $resultArray = array();
+
+        $users = $this->findByName($search);
+
+        foreach ($users as $user) {
+            $resultArray[] = array(
+                'id'   => $user->getId(),
+                'text' => $user->getFirstName() . ' ' . $user->getLastName()
+            );
+        }
+
+        return $resultArray;
+    }
+
+    /**
      * @param array $params
      *
      * @return User[]
