@@ -20,7 +20,7 @@ badge_award_error_message: 'An error occured while awarding badge.'
 badge_award_form_group: Group
 badge_award_form_group_choose: "Choose a group"
 badge_award_form_user: User
-badge_award_form_user_choose: "Choose a userr"
+badge_award_form_user_choose: "Choose a user"
 badge_award_info_no_group_message: 'No selected group for attribution'
 badge_awarded_automatically_on: 'Badge automatically awarded on %awardingDate%'
 badge_awarded_count_message: '%awaredBadge% badge awarding made with success.|%awaredBadge% badge awardings made with success.'
