@@ -66,6 +66,14 @@
                                 <p class="form-control-static">{{ 'badge_form_times'|trans }}</p>
                             </div>
                         </div>
+                        <div class="row">
+                            <div class="col-md-3">
+                                <p class="form-control-static">{{ 'badge_form_resource'|trans }} </p>
+                            </div>
+                            <div class="col-md-8">
+                                {{ form_widget(rows.children.resource) }}
+                            </div>
+                        </div>
                         <div class="row hide badge_panel">
                             <div class="col-md-5">
                                 <p class="form-control-static">{{ 'badge_form_badge'|trans }} </p>
@@ -152,6 +160,14 @@
                 </div>
                 <div class="col-md-2">
                     <p class="form-control-static">{{ 'badge_form_times'|trans }}</p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-3">
+                    <p class="form-control-static">{{ 'badge_form_resource'|trans }} </p>
+                </div>
+                <div class="col-md-8">
+                    {{ form_widget(rows.children.resource) }}
                 </div>
             </div>
             <div class="row hide badge_panel">

@@ -77,6 +77,14 @@ class BadgeRuleType extends AbstractType
             )
             ->add('occurrence', 'integer', array('attr' => array('class' => 'input-sm')))
             ->add('result', 'text')
+            ->add('resource', 'zenstruck_ajax_entity', array(
+                'attr'           => array('class' => 'fullwidth'),
+                'placeholder'    => $this->translator->trans('badge_form_resource_selection', array(), 'badge'),
+                'class'          => 'ClarolineCoreBundle:Resource\ResourceNode',
+                'use_controller' => true,
+                'property'       => 'name',
+                'repo_method'    => 'findByNameForAjax'
+            ))
             ->add('badge', 'zenstruck_ajax_entity', array(
                 'attr'           => array('class' => 'fullwidth'),
                 'placeholder'    => $this->translator->trans('badge_form_badge_selection', array(), 'badge'),

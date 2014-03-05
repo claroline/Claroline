@@ -369,6 +369,49 @@ class ResourceNodeRepository extends MaterializedPathRepository
         );
     }
 
+    /**
+     * @param string $name
+     * @param bool   $executeQuery
+     *
+     * @return Query|array
+     */
+    public function findByName($name, $executeQuery = true)
+    {
+        $name  = strtoupper($name);
+        $query = $this->getEntityManager()
+            ->createQuery(
+                'SELECT rn
+                FROM ClarolineCoreBundle:Resource\ResourceNode rn
+                WHERE UPPER(rn.name) LIKE :name
+                ORDER BY rn.name ASC'
+            )
+            ->setParameter('name', "%{$name}%");
+
+        return $executeQuery ? $query->getResult(): $query;
+    }
+
+    /**
+     * @param string $search
+     *
+     * @return array
+     */
+    public function findByNameForAjax($search)
+    {
+        $resultArray = array();
+
+        /** @var ResourceNode[] $resourceNodes */
+        $resourceNodes = $this->findByName($search);
+
+        foreach ($resourceNodes as $resourceNode) {
+            $resultArray[] = array(
+                'id'   => $resourceNode->getId(),
+                'text' => $resourceNode->getPathForDisplay()
+            );
+        }
+
+        return $resultArray;
+    }
+
     private function addFilters(ResourceQueryBuilder $builder,  array $criteria, array $roles = null)
     {
         if ($roles) {
