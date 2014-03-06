@@ -40,6 +40,7 @@ class BadgeRepository extends EntityRepository
 
         return $executeQuery ? $query->getResult(): $query;
     }
+
     /**
      * @param Badge $badge
      * @param User $user
@@ -116,7 +117,7 @@ class BadgeRepository extends EntityRepository
     {
         $query = $this->getEntityManager()
             ->createQuery(
-                'SELECT b, t
+                'SELECT b
                 FROM ClarolineCoreBundle:Badge\Badge b
                 JOIN b.translations t
                 WHERE t.slug = :slug
@@ -169,6 +170,50 @@ class BadgeRepository extends EntityRepository
             ->setParameter('name', $name);
 
         return $query->getSingleResult();
+    }
+
+    /**
+     * @param string $search
+     *
+     * @return array
+     */
+    public function findByNameFrForAjax($search)
+    {
+        return $this->findByNameForAjax($search, 'fr');
+    }
+
+    /**
+     * @param string $search
+     *
+     * @return array
+     */
+    public function findByNameEnForAjax($search)
+    {
+        return $this->findByNameForAjax($search, 'en');
+    }
+
+    /**
+     * @param string $search
+     *
+     * @param string $locale
+     *
+     * @return array
+     */
+    public function findByNameForAjax($search, $locale)
+    {
+        $resultArray = array();
+
+        /** @var Badge[] $badges */
+        $badges = $this->findByNameAndLocale($search, $locale);
+
+        foreach ($badges as $badge) {
+            $resultArray[] = array(
+                'id'   => $badge->getId(),
+                'text' => $badge->getName($locale)
+            );
+        }
+
+        return $resultArray;
     }
 
     /**

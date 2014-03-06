@@ -15,6 +15,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use JMS\Serializer\Annotation\ExclusionPolicy;
 use JMS\Serializer\Annotation\Expose;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity
@@ -58,6 +59,7 @@ class BadgeTranslation
      *
      * @ORM\Column(type="string", length=128, nullable=false)
      * @Expose
+     * @Assert\Length(max = "128")
      */
     protected $name;
 
@@ -66,6 +68,7 @@ class BadgeTranslation
      *
      * @ORM\Column(type="string", length=128, nullable=false)
      * @Expose
+     * @Assert\Length(max = "128")
      */
     protected $description;
 

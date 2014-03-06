@@ -19,10 +19,12 @@ use Symfony\Component\Security\Core\SecurityContextInterface;
 use Claroline\CoreBundle\Entity\Event;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Claroline\CoreBundle\Manager\RoleManager;
+use Claroline\CoreBundle\Manager\AgendaManager;
 use Claroline\CoreBundle\Form\Factory\FormFactory;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use JMS\DiExtraBundle\Annotation as DI;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 /**
  * Controller of the agenda
@@ -34,6 +36,7 @@ class WorkspaceAgendaController extends Controller
     private $om;
     private $request;
     private $rm;
+    private $agendaManager;
 
     /**
      * @DI\InjectParams({
@@ -41,7 +44,8 @@ class WorkspaceAgendaController extends Controller
      *     "formFactory"        = @DI\Inject("claroline.form.factory"),
      *     "om"                 = @DI\Inject("claroline.persistence.object_manager"),
      *     "request"            = @DI\Inject("request"),
-     *     "rm"                =  @DI\Inject("claroline.manager.role_manager")
+     *     "rm"                 =  @DI\Inject("claroline.manager.role_manager"),
+     *     "agendaManager"      = @DI\Inject("claroline.manager.agenda_manager")
      * })
      */
     public function __construct(
@@ -49,7 +53,8 @@ class WorkspaceAgendaController extends Controller
         FormFactory $formFactory,
         ObjectManager $om,
         Request $request,
-        RoleManager $rm
+        RoleManager $rm,
+        AgendaManager $agendaManager
     )
     {
         $this->security = $security;
@@ -57,6 +62,7 @@ class WorkspaceAgendaController extends Controller
         $this->om = $om;
         $this->request = $request;
         $this->rm = $rm;
+        $this->agendaManager = $agendaManager;
     }
 
     /**
@@ -325,6 +331,40 @@ class WorkspaceAgendaController extends Controller
         return  array('listEvents' => $listEvents );
     }
 
+    /**
+     * @EXT\Route(
+     *     "/{workspaceId}/export",
+     *     name="claro_workspace_agenda_export"
+     * )
+     * @EXT\Method({"GET","POST"})
+     * @EXT\ParamConverter(
+     *      "workspace",
+     *      class="ClarolineCoreBundle:Workspace\AbstractWorkspace",
+     *      options={"id" = "workspaceId", "strictId" = true}
+     * )
+     * @param AbstractWorkspace $workspace
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function exportsEventIcsAction(AbstractWorkspace $workspaceId)
+    {
+        $file =  $this->agendaManager->export($workspaceId);
+        $response = new StreamedResponse();
+
+        $response->setCallBack(
+            function () use ($file) {
+                readfile($file);
+            }
+        );
+        $date = new \DateTime();
+        $response->headers->set('Content-Transfer-Encoding', 'octet-stream');
+        $response->headers->set('Content-Type', 'application/force-download');
+        $response->headers->set('Content-Disposition', 'attachment; filename='.$workspaceId->getName().'.ics');
+        $response->headers->set('Content-Type', ' text/calendar');
+        $response->headers->set('Connection', 'close');
+
+        return $response;
+    }
+
     private function checkUserIsAllowed($permission, AbstractWorkspace $workspace)
     {
         if (!$this->security->isGranted($permission, $workspace)) {
@@ -337,11 +377,13 @@ class WorkspaceAgendaController extends Controller
         $usr = $this->security->getToken()->getUser();
         $rm = $this->rm->getManagerRole($workspace);
         $ru = $this->rm->getWorkspaceRolesForUser($usr, $workspace);
-        if ( !is_null($event)) {
+        
+        if (!is_null($event)) {
             if ($event->getUser()->getUsername() === $usr->getUsername()) {
                 return true;
             }
         }
+        
         foreach ($ru as $role) {
             if ($role->getTranslationKey() === $rm->getTranslationKey()) {
                 return true;

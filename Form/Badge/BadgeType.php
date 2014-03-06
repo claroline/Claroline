@@ -11,6 +11,7 @@
 
 namespace Claroline\CoreBundle\Form\Badge;
 
+use Claroline\CoreBundle\Entity\Badge\Badge;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Form\AbstractType;
@@ -57,27 +58,19 @@ class BadgeType extends AbstractType
         $builder
             ->add('frTranslation', new BadgeTranslationType())
             ->add('enTranslation', new BadgeTranslationType())
-            ->add(
-                'version',
-                'integer',
-                array(
-                    'data'  => 1,
-                    'constraints' => new Assert\NotBlank(
-                        array('message' => 'badge_need_version')
-                    ),
-                )
-            )
             ->add('automatic_award', 'checkbox', array('required' => false))
             ->add('file', 'file', array('label' => 'badge_form_image'))
-            ->add(
-                'expired_at',
-                'datepicker',
+            ->add('is_expiring', 'checkbox', array('required' => false))
+            ->add('expire_duration', 'integer', array('attr' =>
                 array(
-                    'read_only' => true,
-                    'component' => true,
-                    'autoclose' => true,
-                    'language'  => $this->platformConfigHandler->getParameter('locale_language'),
-                    'format'    => $this->translator->trans('date_form_format', array(), 'platform')
+                      'class' => 'input-sm',
+                      'min'   => 1
+                )
+            ))
+            ->add('expire_period', 'choice',
+                array(
+                    'choices'     => Badge::getExpirePeriodLabels(),
+                    'attr'        => array('class' => 'input-sm')
                 )
             )
             ->add(
@@ -107,7 +100,8 @@ class BadgeType extends AbstractType
                 'data_class'         => 'Claroline\CoreBundle\Entity\Badge\Badge',
                 'translation_domain' => 'badge',
                 'language'           => 'en',
-                'date_format'        => DateType::HTML5_FORMAT
+                'date_format'        => DateType::HTML5_FORMAT,
+                'cascade_validation' => true
             )
         );
     }

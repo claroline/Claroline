@@ -40,6 +40,7 @@
         "twbs/bootstrap": "3.0.0",
         "fortawesome/font-awesome": "~3.2.1",
         "zenstruck/form-bundle": "dev-master",
+        "zendframework/zend-crypt": "~2.0,!=2.1.1",
         "besimple/sso-auth-bundle": "*",
         "composer/composer": "dev-master",
         "willdurand/js-translation-bundle": "1.2",

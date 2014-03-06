@@ -70,7 +70,7 @@ agenda: Agenda
 all: Tous
 all_available_workspaces: 'Tous les espaces d''activités disponibles'
 all_my_workspaces: 'Tous mes espaces d''activités'
-all_workspaces: 'Tous les espaces d''activités'
+all_workspaces: 'Tous les espaces d''activités (publics)'
 already_existing_user: 'L''utilisateur existe déjà.'
 an_error_occured_message: 'Une erreur s''est produite. Veuillez contacter l''administrateur.'
 analytics_connections: 'Visites utilisateurs'
@@ -144,7 +144,7 @@ database: 'Base de données'
 database_connection_failed: 'La connexion à la base de données à échoué.'
 date: Date
 date_form_format: dd/MM/yyyy
-date_format: d-m-Y
+date_format: d/m/Y
 date_range.apply: Appliquer
 date_range.clear: Effacer
 date_range.custom_range: 'Plage personnalisée'
@@ -218,7 +218,7 @@ file_form_shareType_0: Oui
 file_form_shareType_1: Non
 files: Fichiers
 filter: Filtrer
-find_workspaces: 'Tous les espaces'
+find_workspaces: 'Tous les espaces publics'
 firstName: Prénom
 first_name: Prénom
 'for period': 'sur la période du :'
@@ -469,6 +469,8 @@ remove_message_s_confirm_message: 'Êtes-vous sûr de vouloir supprimer ces %cou
 remove_subcategory: 'Retirer la sous-catégorie'
 remove_user_confirm_message: 'Êtes-vous sûr de vouloir supprimer cet utilisateur ?'
 remove_user_s_confirm_message: 'Êtes-vous sûr de vouloir supprimer ces %count% utilisateurs?'
+remove_workspace_confirm: 'Êtes-vous sûr de vouloir supprimer cet espace d''activités ?'
+remove_workspaces_confirm: 'Êtes-vous sûr de vouloir supprimer ces %count% espaces d''activités ?'
 remove_workspace_from_category_confirm_message: 'Êtes-vous sûr de vouloir retirer cet espace d''activités de cette catégorie ?'
 remove_workspace_from_category_confirm_title: 'Retrait d''un espace d''activités d''une catégorie'
 rename: Renommer
@@ -703,6 +705,7 @@ workspace_tools: Outils
 workspace_unregistration_confirm_title: 'Voulez-vous vous désinscrire de cet espace d''activités ?'
 workspace_welcome: Accueil
 workspaces: 'Espaces d''activités'
+workspaces_management: 'Gestions des espaces d''activités '
 workspaces_included_in_category: 'Espaces d''activités enregistrés dans cette catégorie'
 ws_creator: 'Créateur d''espaces'
 ws_most_viewed: 'Espaces d''activités les plus consultés'

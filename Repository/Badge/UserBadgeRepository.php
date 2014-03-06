@@ -39,9 +39,10 @@ class UserBadgeRepository extends EntityRepository
     {
         $query = $this->getEntityManager()
             ->createQuery(
-                'SELECT ub, b
+                'SELECT ub, b, bt
                 FROM ClarolineCoreBundle:Badge\UserBadge ub
                 JOIN ub.badge b
+                JOIN b.translations bt
                 WHERE ub.user = :userId'
             )
             ->setParameter('userId', $user->getId());
