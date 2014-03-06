@@ -7,33 +7,33 @@
     <div class="lvl lvl-{{ step.lvl }}"></div>
     <div class="step">{{ step.name | truncate }}</div>
 
-    <span ng-show="showButtons == step.id" class="step-actions">
-        <a href="#" role="button" class="btn btn-default btn-xs" ng-click="addChild(step)" tooltip="Add a child">
+    <span ng-show="showButtons == step.id || previewStep == step" class="step-actions btn-group">
+        <a href="#" role="button" class="btn btn-default btn-sm" ng-click="addChild(step)" tooltip="Add a child">
             <span class="icon-plus"></span>
             <span class="sr-only">Add child</span>
         </a>
 
-        <a href="#" role="button" class="btn btn-default btn-xs" ng-click="copy(step)" tooltip="Copy">
+        <a href="#" role="button" class="btn btn-default btn-sm" ng-click="copy(step)" tooltip="Copy">
             <span class="icon-copy"></span>
             <span class="sr-only">Copy</span>
         </a>
 
-        <a href="#" role="button" class="btn btn-default btn-xs" ng-click="paste(step)" ng-disabled="pasteDisabled" tooltip="Paste">
+        <a href="#" role="button" class="btn btn-default btn-sm" ng-click="paste(step)" ng-disabled="pasteDisabled" tooltip="Paste">
             <span class="icon-paste"></span>
             <span class="sr-only">Paste</span>
         </a>
 
-        <a href="#" role="button"  class="btn btn-info btn-xs" ng-click="editTemplate(step)" tooltip="Add to favorites">
+        <a href="#" role="button"  class="btn btn-info btn-sm" ng-click="editTemplate(step)" tooltip="Add to favorites">
             <span class="icon-heart"></span>
             <span class="sr-only">Add to favorites</span>
         </a>
 
-        <a href="#" role="button" ng-hide="isRootNode" class="btn btn-danger btn-xs" ng-click="remove(step)" tooltip="Delete">
+        <a href="#" role="button" ng-hide="isRootNode" class="btn btn-danger btn-sm" ng-click="remove(step)" tooltip="Delete">
             <span class="icon-trash"></span>
             <span class="sr-only">Delete</span>
         </a>
 
-        <a href="#" role="button" class="btn btn-danger btn-xs" ng-click="removeChildren(step)" ng-show="step.children.length > 0" tooltip="Delete children">
+        <a href="#" role="button" class="btn btn-danger btn-sm" ng-click="removeChildren(step)" ng-show="step.children.length > 0" tooltip="Delete children">
             <span class="icon-list"></span>
             <span class="sr-only">Delete children</span>
         </a>
