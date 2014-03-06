@@ -704,7 +704,7 @@ workspace_template_form_name: Name
 workspace_tools: Tools
 workspace_unregistration_confirm_title: 'Do you really want to unregister from this workspace ?'
 workspace_welcome: Welcome
-workspaces_management: 'Workspaces Management'
+workspaces_management: 'Workspaces management'
 workspaces: Workspaces
 workspaces_included_in_category: 'Workspaces included in this category'
 ws_creator: 'Workspace creator'
