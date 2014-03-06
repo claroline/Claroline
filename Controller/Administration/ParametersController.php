@@ -451,7 +451,7 @@ class ParametersController extends Controller
                 $this->contentManager->updateContent($this->mailManager->getMailInscription(), $form['content']);
             }
 
-            return $this->redirect($this->generateUrl('claro_admin_index'));
+            return $this->redirect($this->generateUrl('claro_admin_parameters_mail_index'));
         }
 
         $formWithErrors = $this->formFactory->create(
@@ -470,10 +470,7 @@ class ParametersController extends Controller
     }
 
     /**
-     * @Route(
-     *     "/mail/layout",
-     *     name="claro_admin_mail_layout"
-     * )
+     * @Route("/mail/layout", name="claro_admin_mail_layout")
      *
      * @Template("ClarolineCoreBundle:Administration\platform\mail:layout.html.twig")
      *
