@@ -220,19 +220,25 @@ Correct an evaluation requires authentication. Please login.: 'Corriger une éva
 Warning your peer review offers no criteria on which to base correct copies: 'Attention votre évaluation par les pairs ne propose aucun critères sur lesquelles se baser pour corriger les copies'
 Unrecognized type: 'Type non reconnu'
 reportComment: 'Commentaire du signalement'
-No correction: "Aucune correction."
-Diplay corrections to learners: "Afficher les corrections aux apprenants"
-See Corrections: "Voir les corrections"
-Details of your copy: "Détails de votre copie"
-Correction number %num%: "Correction n° %num%"
-Correction of your copy: "Correction de votre copie"
-Note assigned depends on the following criteria: "La note attribuée dépend des critères suivants :"
-Back to corrections: "Retour aux corrections"
-Here is the list of the corrected documents: "Voici la liste des documents corrigés :"
-Deny correction: "Dénoncer cette correction"
-Correction denied: "correction dénoncée"
-Allow correction deny: "Autoriser les apprenants à signaler une correction qu'ils trouvent injuste."
-You are about to report a correction. This action is not without consequence.: "Vous êtes sur le point de signaler une correction. Cette action n'est pas sans conséquence."
-Are you sure you want to do this?: "Êtes vous vraiment sur de vouloir faire cela ?"
-Confirm the correction report: "Valider le signalement"
-This copy contain a denied correction: "Cette copie contient une correction dénoncée."
+No correction: 'Aucune correction.'
+Diplay corrections to learners: 'Afficher les corrections aux apprenants'
+See Corrections: 'Voir les corrections'
+Details of your copy: 'Détails de votre copie'
+Correction number %num%: 'Correction n° %num%'
+Correction of your copy: 'Correction de votre copie'
+Note assigned depends on the following criteria: 'La note attribuée dépend des critères suivants :'
+Back to corrections: 'Retour aux corrections'
+Here is the list of the corrected documents: 'Voici la liste des documents corrigés :'
+Deny correction: 'Dénoncer cette correction'
+Correction denied: 'correction dénoncée'
+Allow correction deny: 'Autoriser les apprenants à signaler une correction qu''ils trouvent injuste.'
+You are about to report a correction. This action is not without consequence.: 'Vous êtes sur le point de signaler une correction. Cette action n''est pas sans conséquence.'
+Are you sure you want to do this?: 'Êtes vous vraiment sur de vouloir faire cela ?'
+Confirm the correction report: 'Valider le signalement'
+This copy contain a denied correction: 'Cette copie contient une correction dénoncée.'
+notStarted: ' non démarée'
+allowDrop:  ' dépots autorisés'
+allowDropAndPeerReview: 'dépots autorisés et corrections par les pairs'
+peerReview: ' correction par les pairs '
+finished :  ' Evaluation terminée'
+

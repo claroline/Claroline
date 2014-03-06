@@ -25,6 +25,7 @@ use Icap\DropzoneBundle\Event\Log\LogDropEndEvent;
 use Icap\DropzoneBundle\Event\Log\LogDropEvaluateEvent;
 use Icap\DropzoneBundle\Event\Log\LogDropStartEvent;
 use Icap\DropzoneBundle\Event\Log\LogDropzoneConfigureEvent;
+use Icap\DropzoneBundle\Event\Log\LogDropzoneManualStateChangedEvent;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
@@ -81,7 +82,8 @@ class DropzoneBaseController extends Controller
                 $event instanceof LogCorrectionDeleteEvent or
                 $event instanceof LogCorrectionValidationChangeEvent or
                 $event instanceof LogDropEvaluateEvent or 
-                $event instanceof LogDropReportEvent
+                $event instanceof LogDropReportEvent or
+                $event instanceof LogDropzoneManualStateChangedEvent
         ) {
 
             // Other logs are WIP.

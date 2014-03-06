@@ -5,38 +5,30 @@ namespace Icap\DropzoneBundle\Event\Log;
 use Claroline\CoreBundle\Event\Log\AbstractLogResourceEvent;
 use Claroline\CoreBundle\Event\Log\LogGenericEvent;
 use Icap\NotificationBundle\Entity\NotifiableInterface;
-use Icap\DropzoneBundle\Entity\Document;
-use Icap\DropzoneBundle\Entity\Drop;
 use Icap\DropzoneBundle\Entity\Dropzone;
-use Icap\DropzoneBundle\Entity\Correction;
 
-class LogDropReportEvent extends AbstractLogResourceEvent implements NotifiableInterface {
 
-    const ACTION = 'resource-icap_dropzone-drop_report';
+class LogDropzoneManualStateChangedEvent extends AbstractLogResourceEvent implements NotifiableInterface {
+
+    const ACTION = 'resource-icap_dropzone-dropzone_manual_state_changed';
     protected $dropzone;
+    protected $newState;
     protected $details;
-    private $role_manager;
+    private $userIds = array();
 
     /**
      * @param Wiki $wiki
      * @param Section $section
      * @param Contribution $contribution
     */
-    public function __construct(Dropzone $dropzone, Drop $drop, Correction $correction, $roleManager)
+    public function __construct(Dropzone $dropzone,$newstate,$userIds)
     {
         $this->dropzone = $dropzone;
-        $this->role_manager =  $roleManager;
+        $this->newState = $newstate;
+        $this->userIds = $userIds;
         $this->details = array(
-            'report' => array(
-                'drop' => $drop,
-                'correction' => $correction,
-                'report_comment' => $correction->getReportComment(),
-                'dropzoneId' => $dropzone->getId(),
-                'dropId' => $drop->getId(),
-                'correctionId' => $correction->getId()
-            )
+                'newState'=> $newstate
         );
-
         parent::__construct($dropzone->getResourceNode(), $this->details);
     }
 
@@ -47,6 +39,10 @@ class LogDropReportEvent extends AbstractLogResourceEvent implements NotifiableI
     {
         return array(self::DISPLAYED_WORKSPACE);
     }
+    public function getDropzone()
+    {
+        return $this->$dropzone;
+    }
 
     /**
      * Get sendToFollowers boolean.
@@ -55,33 +51,17 @@ class LogDropReportEvent extends AbstractLogResourceEvent implements NotifiableI
      */
     public function getSendToFollowers()
     {
-        //Reports are only reported to user witch have the manager role
-        return false;
+        return true;
     }
 
     /**
      * Get includeUsers array of user ids.
      * Reports are only reported to user witch have the manager role
-     * return array
+     * @return array
      */
     public function getIncludeUserIds()
     {
-        // In order to get users with the manager role.
-        //getting the  workspace.
-        
-        $ResourceNode = $this->dropzone->getResourceNode();
-        $workspace = $ResourceNode->getWorkspace();
-        // getting the  Manager role
-        $role = $this->role_manager->getManagerRole($workspace);
-
-        // to finaly have the users.
-        $users = $role->getUsers();
-        $ids = array();
-        foreach ($users as $user) {
-           array_push($ids,$user->getId());
-        }
-        return $ids;
-        
+       return $this->userIds; 
     }
 
     /**

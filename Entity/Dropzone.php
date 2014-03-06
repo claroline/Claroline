@@ -20,6 +20,13 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Dropzone extends AbstractResource {
 
+    const MANUAL_STATE_NOT_STARTED = "notStarted";
+    const MANUAL_STATE_PEER_REVIEW ="peerReview";
+    const MANUAL_STATE_ALLOW_DROP = "allowDrop";
+    const MANUAL_STATE_ALLOW_DROP_AND_PEER_REVIEW = "allowDropAndPeerReview";
+    const MANUAL_STATE_FINISHED = "finished";
+
+    
     /**
      * 1 = common
      * 2 = criteria
@@ -356,7 +363,17 @@ class Dropzone extends AbstractResource {
      */
     public function setManualState($manualState)
     {
-        $this->manualState = $manualState;
+        $ms_tab_values = array(
+            self::MANUAL_STATE_NOT_STARTED,
+            self::MANUAL_STATE_PEER_REVIEW,
+            self::MANUAL_STATE_ALLOW_DROP,
+            self::MANUAL_STATE_ALLOW_DROP_AND_PEER_REVIEW,
+            self::MANUAL_STATE_FINISHED);
+        if(array_search($manualState,$ms_tab_values) !== false)
+        {
+             $this->manualState = $manualState;
+        }
+       
     }
 
     /**
@@ -657,4 +674,5 @@ class Dropzone extends AbstractResource {
 
         return $this;
     }
+
 }
