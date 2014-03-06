@@ -1,6 +1,6 @@
 <?php
 
-namespace Claroline\CoreBundle\Migrations\pdo_sqlsrv;
+namespace Claroline\CoreBundle\Migrations\drizzle_pdo_mysql;
 
 use Doctrine\DBAL\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
@@ -8,41 +8,32 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2014/03/03 02:43:40
+ * Generation date: 2014/03/06 09:21:26
  */
-class Version20140303144336 extends AbstractMigration
+class Version20140306092123 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
         $this->addSql("
             CREATE TABLE claro_badge_collection (
-                id INT IDENTITY NOT NULL, 
-                user_id INT, 
-                name NVARCHAR(255) NOT NULL, 
-                slug NVARCHAR(128) NOT NULL, 
-                is_shared BIT NOT NULL, 
-                PRIMARY KEY (id)
+                id INT AUTO_INCREMENT NOT NULL, 
+                user_id INT DEFAULT NULL, 
+                name VARCHAR(255) NOT NULL, 
+                slug VARCHAR(128) NOT NULL, 
+                is_shared BOOLEAN NOT NULL, 
+                PRIMARY KEY(id), 
+                INDEX IDX_BB3FD2DDA76ED395 (user_id), 
+                UNIQUE INDEX slug_idx (slug)
             )
-        ");
-        $this->addSql("
-            CREATE INDEX IDX_BB3FD2DDA76ED395 ON claro_badge_collection (user_id)
-        ");
-        $this->addSql("
-            CREATE UNIQUE INDEX slug_idx ON claro_badge_collection (slug) 
-            WHERE slug IS NOT NULL
         ");
         $this->addSql("
             CREATE TABLE claro_badge_collection_badges (
                 badgecollection_id INT NOT NULL, 
                 badge_id INT NOT NULL, 
-                PRIMARY KEY (badgecollection_id, badge_id)
+                PRIMARY KEY(badgecollection_id, badge_id), 
+                INDEX IDX_FD258D74134B8A11 (badgecollection_id), 
+                INDEX IDX_FD258D74F7A2C2FC (badge_id)
             )
-        ");
-        $this->addSql("
-            CREATE INDEX IDX_FD258D74134B8A11 ON claro_badge_collection_badges (badgecollection_id)
-        ");
-        $this->addSql("
-            CREATE INDEX IDX_FD258D74F7A2C2FC ON claro_badge_collection_badges (badge_id)
         ");
         $this->addSql("
             ALTER TABLE claro_badge_collection 
@@ -63,7 +54,7 @@ class Version20140303144336 extends AbstractMigration
         ");
         $this->addSql("
             ALTER TABLE claro_user 
-            DROP CONSTRAINT FK_EB8D285282D40A1F
+            DROP FOREIGN KEY FK_EB8D285282D40A1F
         ");
         $this->addSql("
             ALTER TABLE claro_user 
@@ -72,28 +63,22 @@ class Version20140303144336 extends AbstractMigration
             ON DELETE SET NULL
         ");
         $this->addSql("
+            ALTER TABLE claro_workspace 
+            DROP is_public
+        ");
+        $this->addSql("
             ALTER TABLE claro_user_badge 
-            ADD expired_at DATETIME2(6)
+            ADD expired_at DATETIME DEFAULT NULL
+        ");
+        $this->addSql("
+            ALTER TABLE claro_event CHANGE description description TEXT DEFAULT NULL
         ");
         $this->addSql("
             ALTER TABLE claro_badge 
-            ADD is_expiring BIT NOT NULL
-        ");
-        $this->addSql("
-            ALTER TABLE claro_badge 
-            ADD CONSTRAINT DF_74F39F0F_869FAB69 DEFAULT '0' FOR is_expiring
-        ");
-        $this->addSql("
-            ALTER TABLE claro_badge 
-            ADD expire_duration INT
-        ");
-        $this->addSql("
-            ALTER TABLE claro_badge 
-            ADD expire_period SMALLINT
-        ");
-        $this->addSql("
-            ALTER TABLE claro_badge 
-            DROP COLUMN expired_at
+            ADD is_expiring BOOLEAN DEFAULT 'false' NOT NULL, 
+            ADD expire_duration INT DEFAULT NULL, 
+            ADD expire_period INT DEFAULT NULL, 
+            DROP expired_at
         ");
     }
 
@@ -101,7 +86,7 @@ class Version20140303144336 extends AbstractMigration
     {
         $this->addSql("
             ALTER TABLE claro_badge_collection_badges 
-            DROP CONSTRAINT FK_FD258D74134B8A11
+            DROP FOREIGN KEY FK_FD258D74134B8A11
         ");
         $this->addSql("
             DROP TABLE claro_badge_collection
@@ -111,23 +96,17 @@ class Version20140303144336 extends AbstractMigration
         ");
         $this->addSql("
             ALTER TABLE claro_badge 
-            ADD expired_at DATETIME2(6)
+            ADD expired_at DATETIME DEFAULT NULL, 
+            DROP is_expiring, 
+            DROP expire_duration, 
+            DROP expire_period
         ");
         $this->addSql("
-            ALTER TABLE claro_badge 
-            DROP COLUMN is_expiring
-        ");
-        $this->addSql("
-            ALTER TABLE claro_badge 
-            DROP COLUMN expire_duration
-        ");
-        $this->addSql("
-            ALTER TABLE claro_badge 
-            DROP COLUMN expire_period
+            ALTER TABLE claro_event CHANGE description description VARCHAR(255) DEFAULT NULL
         ");
         $this->addSql("
             ALTER TABLE claro_user 
-            DROP CONSTRAINT FK_EB8D285282D40A1F
+            DROP FOREIGN KEY FK_EB8D285282D40A1F
         ");
         $this->addSql("
             ALTER TABLE claro_user 
@@ -137,7 +116,11 @@ class Version20140303144336 extends AbstractMigration
         ");
         $this->addSql("
             ALTER TABLE claro_user_badge 
-            DROP COLUMN expired_at
+            DROP expired_at
+        ");
+        $this->addSql("
+            ALTER TABLE claro_workspace 
+            ADD is_public BOOLEAN NOT NULL
         ");
     }
 }

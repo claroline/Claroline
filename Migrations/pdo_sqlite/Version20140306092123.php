@@ -8,9 +8,9 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2014/03/03 02:43:38
+ * Generation date: 2014/03/06 09:21:25
  */
-class Version20140303144336 extends AbstractMigration
+class Version20140306092123 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
@@ -151,8 +151,171 @@ class Version20140303144336 extends AbstractMigration
             CREATE UNIQUE INDEX UNIQ_EB8D285282D40A1F ON claro_user (workspace_id)
         ");
         $this->addSql("
+            DROP INDEX UNIQ_D902854577153098
+        ");
+        $this->addSql("
+            DROP INDEX UNIQ_D90285452B6FCFB2
+        ");
+        $this->addSql("
+            DROP INDEX IDX_D9028545A76ED395
+        ");
+        $this->addSql("
+            DROP INDEX IDX_D9028545727ACA70
+        ");
+        $this->addSql("
+            CREATE TEMPORARY TABLE __temp__claro_workspace AS 
+            SELECT id, 
+            parent_id, 
+            user_id, 
+            name, 
+            code, 
+            displayable, 
+            guid, 
+            self_registration, 
+            self_unregistration, 
+            discr, 
+            lft, 
+            lvl, 
+            rgt, 
+            root 
+            FROM claro_workspace
+        ");
+        $this->addSql("
+            DROP TABLE claro_workspace
+        ");
+        $this->addSql("
+            CREATE TABLE claro_workspace (
+                id INTEGER NOT NULL, 
+                parent_id INTEGER DEFAULT NULL, 
+                user_id INTEGER DEFAULT NULL, 
+                name VARCHAR(255) NOT NULL, 
+                code VARCHAR(255) NOT NULL, 
+                displayable BOOLEAN NOT NULL, 
+                guid VARCHAR(255) NOT NULL, 
+                self_registration BOOLEAN NOT NULL, 
+                self_unregistration BOOLEAN NOT NULL, 
+                discr VARCHAR(255) NOT NULL, 
+                lft INTEGER DEFAULT NULL, 
+                lvl INTEGER DEFAULT NULL, 
+                rgt INTEGER DEFAULT NULL, 
+                root INTEGER DEFAULT NULL, 
+                PRIMARY KEY(id), 
+                CONSTRAINT FK_D9028545727ACA70 FOREIGN KEY (parent_id) 
+                REFERENCES claro_workspace (id) 
+                ON DELETE SET NULL NOT DEFERRABLE INITIALLY IMMEDIATE, 
+                CONSTRAINT FK_D9028545A76ED395 FOREIGN KEY (user_id) 
+                REFERENCES claro_user (id) 
+                ON DELETE SET NULL NOT DEFERRABLE INITIALLY IMMEDIATE
+            )
+        ");
+        $this->addSql("
+            INSERT INTO claro_workspace (
+                id, parent_id, user_id, name, code, 
+                displayable, guid, self_registration, 
+                self_unregistration, discr, lft, 
+                lvl, rgt, root
+            ) 
+            SELECT id, 
+            parent_id, 
+            user_id, 
+            name, 
+            code, 
+            displayable, 
+            guid, 
+            self_registration, 
+            self_unregistration, 
+            discr, 
+            lft, 
+            lvl, 
+            rgt, 
+            root 
+            FROM __temp__claro_workspace
+        ");
+        $this->addSql("
+            DROP TABLE __temp__claro_workspace
+        ");
+        $this->addSql("
+            CREATE UNIQUE INDEX UNIQ_D902854577153098 ON claro_workspace (code)
+        ");
+        $this->addSql("
+            CREATE UNIQUE INDEX UNIQ_D90285452B6FCFB2 ON claro_workspace (guid)
+        ");
+        $this->addSql("
+            CREATE INDEX IDX_D9028545A76ED395 ON claro_workspace (user_id)
+        ");
+        $this->addSql("
+            CREATE INDEX IDX_D9028545727ACA70 ON claro_workspace (parent_id)
+        ");
+        $this->addSql("
             ALTER TABLE claro_user_badge 
             ADD COLUMN expired_at DATETIME DEFAULT NULL
+        ");
+        $this->addSql("
+            DROP INDEX IDX_B1ADDDB582D40A1F
+        ");
+        $this->addSql("
+            DROP INDEX IDX_B1ADDDB5A76ED395
+        ");
+        $this->addSql("
+            CREATE TEMPORARY TABLE __temp__claro_event AS 
+            SELECT id, 
+            workspace_id, 
+            user_id, 
+            title, 
+            start_date, 
+            end_date, 
+            description, 
+            allday, 
+            priority 
+            FROM claro_event
+        ");
+        $this->addSql("
+            DROP TABLE claro_event
+        ");
+        $this->addSql("
+            CREATE TABLE claro_event (
+                id INTEGER NOT NULL, 
+                workspace_id INTEGER DEFAULT NULL, 
+                user_id INTEGER NOT NULL, 
+                title VARCHAR(50) NOT NULL, 
+                start_date INTEGER DEFAULT NULL, 
+                end_date INTEGER DEFAULT NULL, 
+                allday BOOLEAN DEFAULT NULL, 
+                priority VARCHAR(255) DEFAULT NULL, 
+                description CLOB DEFAULT NULL, 
+                PRIMARY KEY(id), 
+                CONSTRAINT FK_B1ADDDB582D40A1F FOREIGN KEY (workspace_id) 
+                REFERENCES claro_workspace (id) 
+                ON DELETE CASCADE NOT DEFERRABLE INITIALLY IMMEDIATE, 
+                CONSTRAINT FK_B1ADDDB5A76ED395 FOREIGN KEY (user_id) 
+                REFERENCES claro_user (id) 
+                ON DELETE CASCADE NOT DEFERRABLE INITIALLY IMMEDIATE
+            )
+        ");
+        $this->addSql("
+            INSERT INTO claro_event (
+                id, workspace_id, user_id, title, start_date, 
+                end_date, description, allday, priority
+            ) 
+            SELECT id, 
+            workspace_id, 
+            user_id, 
+            title, 
+            start_date, 
+            end_date, 
+            description, 
+            allday, 
+            priority 
+            FROM __temp__claro_event
+        ");
+        $this->addSql("
+            DROP TABLE __temp__claro_event
+        ");
+        $this->addSql("
+            CREATE INDEX IDX_B1ADDDB582D40A1F ON claro_event (workspace_id)
+        ");
+        $this->addSql("
+            CREATE INDEX IDX_B1ADDDB5A76ED395 ON claro_event (user_id)
         ");
         $this->addSql("
             DROP INDEX IDX_74F39F0F82D40A1F
@@ -256,6 +419,73 @@ class Version20140303144336 extends AbstractMigration
         ");
         $this->addSql("
             CREATE INDEX IDX_74F39F0F82D40A1F ON claro_badge (workspace_id)
+        ");
+        $this->addSql("
+            DROP INDEX IDX_B1ADDDB582D40A1F
+        ");
+        $this->addSql("
+            DROP INDEX IDX_B1ADDDB5A76ED395
+        ");
+        $this->addSql("
+            CREATE TEMPORARY TABLE __temp__claro_event AS 
+            SELECT id, 
+            workspace_id, 
+            user_id, 
+            title, 
+            start_date, 
+            end_date, 
+            description, 
+            allday, 
+            priority 
+            FROM claro_event
+        ");
+        $this->addSql("
+            DROP TABLE claro_event
+        ");
+        $this->addSql("
+            CREATE TABLE claro_event (
+                id INTEGER NOT NULL, 
+                workspace_id INTEGER DEFAULT NULL, 
+                user_id INTEGER NOT NULL, 
+                title VARCHAR(50) NOT NULL, 
+                start_date INTEGER DEFAULT NULL, 
+                end_date INTEGER DEFAULT NULL, 
+                allday BOOLEAN DEFAULT NULL, 
+                priority VARCHAR(255) DEFAULT NULL, 
+                description VARCHAR(255) DEFAULT NULL, 
+                PRIMARY KEY(id), 
+                CONSTRAINT FK_B1ADDDB582D40A1F FOREIGN KEY (workspace_id) 
+                REFERENCES claro_workspace (id) 
+                ON DELETE CASCADE NOT DEFERRABLE INITIALLY IMMEDIATE, 
+                CONSTRAINT FK_B1ADDDB5A76ED395 FOREIGN KEY (user_id) 
+                REFERENCES claro_user (id) 
+                ON DELETE CASCADE NOT DEFERRABLE INITIALLY IMMEDIATE
+            )
+        ");
+        $this->addSql("
+            INSERT INTO claro_event (
+                id, workspace_id, user_id, title, start_date, 
+                end_date, description, allday, priority
+            ) 
+            SELECT id, 
+            workspace_id, 
+            user_id, 
+            title, 
+            start_date, 
+            end_date, 
+            description, 
+            allday, 
+            priority 
+            FROM __temp__claro_event
+        ");
+        $this->addSql("
+            DROP TABLE __temp__claro_event
+        ");
+        $this->addSql("
+            CREATE INDEX IDX_B1ADDDB582D40A1F ON claro_event (workspace_id)
+        ");
+        $this->addSql("
+            CREATE INDEX IDX_B1ADDDB5A76ED395 ON claro_event (user_id)
         ");
         $this->addSql("
             DROP INDEX UNIQ_EB8D2852F85E0677
@@ -432,6 +662,10 @@ class Version20140303144336 extends AbstractMigration
         ");
         $this->addSql("
             CREATE UNIQUE INDEX user_badge_unique ON claro_user_badge (user_id, badge_id)
+        ");
+        $this->addSql("
+            ALTER TABLE claro_workspace 
+            ADD COLUMN is_public BOOLEAN NOT NULL
         ");
     }
 }
