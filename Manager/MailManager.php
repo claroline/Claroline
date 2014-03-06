@@ -80,16 +80,17 @@ class MailManager
     public function sendForgotPassword(User $user)
     {
         $hash = $user->getResetPasswordHash();
-        $msg = $this->translator->trans('mail_click', array(), 'platform');
+
         $link = $this->container->get('request')->server->get('HTTP_ORIGIN') . $this->router->generate(
             'claro_security_reset_password',
             array('hash' => $hash)
         );
+
         $subject = $this->translator->trans('reset_pwd', array(), 'platform');
 
-        $body =  "<div> {$this->translator->trans('reset_password_txt', array(), 'platform')} </div>";
-        $body .= "<div> {$this->translator->trans('your_username', array(), 'platform')} : {$user->getUsername()}</div>";
-        $body .= "<a href='{$link}'> {$msg} </a>";
+        $body = $this->container->get('templating')->render(
+            'ClarolineCoreBundle:Mail:forgotPassword.html.twig', array('user' => $user, 'link' => $link)
+        );
 
         return $this->send($subject, $body, array($user));
     }
@@ -103,10 +104,12 @@ class MailManager
     {
         $locale = $user->getLocale();
         $content = $this->contentManager->getTranslatedContent(array('type' => 'claro_mail_registration'));
-        $displayedLocale = isset($content[$locale]) ? $locale: $this->ch->getParameter('locale_language');
+        $displayedLocale = isset($content[$locale]) ? $locale : $this->ch->getParameter('locale_language');
         $body = $content[$displayedLocale]['content'];
-        $subject =  $content[$displayedLocale]['title'];
+        $subject = $content[$displayedLocale]['title'];
 
+        $body = str_replace('%first_name%', $user->getFirstName(), $body);
+        $body = str_replace('%last_name%', $user->getLastName(), $body);
         $body = str_replace('%username%', $user->getUsername(), $body);
         $body = str_replace('%password%', $user->getPlainPassword(), $body);
         $subject = str_replace('%platform_name%', $this->ch->getParameter('name'), $subject);
@@ -137,10 +140,10 @@ class MailManager
         if ($this->isMailerAvailable()) {
             $layout = $this->contentManager->getTranslatedContent(array('type' => 'claro_mail_layout'));
 
-            $from = ($from === null) ? $this->ch->getParameter('support_email'): $from->getMail();
+            $from = ($from === null) ? $this->ch->getParameter('support_email') : $from->getMail();
             $to = array();
 
-            $locale = count($users) === 1 ? $users[0]->getLocale(): $this->ch->getParameter('locale_language');
+            $locale = count($users) === 1 ? $users[0]->getLocale() : $this->ch->getParameter('locale_language');
 
             if (!$locale) {
                 $locale = $this->ch->getParameter('locale_language');
@@ -165,7 +168,7 @@ class MailManager
                 $message->setTo($to);
             }
 
-            return $this->mailer->send($message) ? true: false;
+            return $this->mailer->send($message) ? true : false;
         }
 
         return false;
@@ -182,9 +185,6 @@ class MailManager
         $errors = array();
 
         foreach ($languages as $language) {
-            if (!strpos($translatedContents[$language]['content'], '%username%')) {
-                $errors[$language]['content'][] = 'missing_%username%';
-            }
             if (!strpos($translatedContents[$language]['content'], '%password%')) {
                 $errors[$language]['content'][] = 'missing_%password%';
             }

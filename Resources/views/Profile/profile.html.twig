@@ -33,9 +33,9 @@
                          </a>
                     {% endif %}
                 <ul class="col-md-10">
-                    <li>{{'profile_form_firstName'|trans({}, 'platform') }}: {{user.getFirstName()}}</li>
-                    <li> {{'profile_form_lastName'|trans({}, 'platform') }}: {{user.getLastName()}}</li>
-                    <li> {{'profile_form_userName'|trans({}, 'platform') }}: {{user.getUsername()}}</li>
+                    <li>{{'First name' | trans({}, 'platform') }}: {{user.getFirstName()}}</li>
+                    <li> {{'Last name' | trans({}, 'platform') }}: {{user.getLastName()}}</li>
+                    <li> {{'User name' | trans({}, 'platform') }}: {{user.getUsername()}}</li>
                 </ul>
                     {% if user.getPhone() != "" %}
                         <i class="icon-phone"></i> {{ user.getPhone() }}
