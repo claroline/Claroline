@@ -12,6 +12,7 @@ use Claroline\CoreBundle\Event\Log\LogResourceReadEvent;
 use Claroline\CoreBundle\Event\Log\LogResourceUpdateEvent;
 use Icap\DropzoneBundle\Entity\Dropzone;
 use Icap\DropzoneBundle\Event\Log\LogDropzoneConfigureEvent;
+use Icap\DropzoneBundle\Event\Log\LogDropzoneManualStateChangedEvent;
 use Icap\DropzoneBundle\Form\DropzoneCommonType;
 use Icap\DropzoneBundle\Form\DropzoneCriteriaType;
 use Pagerfanta\Adapter\DoctrineORMAdapter;
@@ -49,12 +50,16 @@ class DropzoneController extends DropzoneBaseController
         $form = $this->createForm(new DropzoneCommonType(), $dropzone);
 
         if ($this->getRequest()->isMethod('POST')) {
+            // see if manual plannification option has changed.
+            $oldManualPlanning = $dropzone->getManualPlanning();
+            $oldManualPlanningOption = $dropzone->getManualState();
+
             $form->handleRequest($this->getRequest());
 
             /** @var Dropzone $dropzone */
             $dropzone = $form->getData();
 
-            if (!$dropzone->getPeerReview() and $dropzone->getManualState() == 'peerReview') {
+            if (!$dropzone->getPeerReview( )and $dropzone->getManualState() == 'peerReview') {
                 $dropzone->setManualState('notStarted');
             }
             if ($dropzone->getEditionState() < 2) {
@@ -124,6 +129,19 @@ class DropzoneController extends DropzoneBaseController
                     }
                 }
 
+
+
+                $manualStateChanged = false;
+                $newManualState;
+                if( $dropzone->getManualPlanning() == true)
+                {
+                    if($oldManualPlanning == false || $oldManualPlanningOption != $dropzone->getManualState())
+                    {
+                        $manualStateChanged = true;
+                        $newManualState = $dropzone->getManualState();
+                    }
+                }
+
                 $em = $this->getDoctrine()->getManager();
 
                 $unitOfWork = $em->getUnitOfWork();
@@ -133,6 +151,18 @@ class DropzoneController extends DropzoneBaseController
                 $em->persist($dropzone);
                 $em->flush();
 
+
+                // check if manual state has changed to send notification.
+                if($manualStateChanged)
+                {
+                    //getting the dropzoneManager
+                    $dropzoneManager = $this->get('icap.manager.dropzone_manager');
+                    $usersIds = $dropzoneManager->getDropzoneUsersIds($dropzone);
+
+                    $event = new LogDropzoneManualStateChangedEvent($dropzone,$newManualState,$usersIds);
+
+                    $this->get('event_dispatcher')->dispatch('log', $event);
+                }
                 $event = new LogDropzoneConfigureEvent($dropzone, $changeSet);
                 $this->dispatch($event);
 
