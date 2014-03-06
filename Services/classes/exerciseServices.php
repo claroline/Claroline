@@ -46,21 +46,28 @@ use Claroline\CoreBundle\Library\Resource\ResourceCollection;
 
 use Doctrine\Bundle\DoctrineBundle\Registry;
 
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 
 use UJM\ExoBundle\Entity\ExerciseQuestion;
+use UJM\ExoBundle\Entity\Paper;
+use UJM\ExoBundle\Event\Log\LogExerciseEvaluatedEvent;
 
 class exerciseServices
 {
     protected $doctrine;
     protected $securityContext;
 
-    public function __construct(Registry $doctrine, SecurityContextInterface $securityContext)
+    /** @var \Symfony\Component\EventDispatcher\EventDispatcherInterface */
+    protected $eventDispatcher;
+
+    public function __construct(Registry $doctrine, SecurityContextInterface $securityContext, EventDispatcherInterface $eventDispatcher)
     {
         $this->doctrine        = $doctrine;
         $this->securityContext = $securityContext;
+        $this->eventDispatcher = $eventDispatcher;
     }
 
     public function getIP()
@@ -763,6 +770,16 @@ class exerciseServices
                           ->getControlSharedQuestion($user->getId(), $questionID);
 
         return $questions;
+    }
+
+    public function manageEndOfExercise(Paper $paper)
+    {
+        $paperInfos = $this->getInfosPaper($paper);
+
+        if (!$paperInfos['scoreTemp']) {
+            $event = new LogExerciseEvaluatedEvent($paper->getExercise(), $paperInfos['scorePaper']);
+            $this->eventDispatcher->dispatch('log', $event);
+        }
     }
 
     public function getLinkedCategories()
