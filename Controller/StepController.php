@@ -132,7 +132,7 @@ class StepController
             $resource->workspace = $resourceNode->getWorkspace()->getName();
             $resource->name = $resourceNode->getName();
             $resource->type = $resourceNode->getResourceType()->getName();
-            $resource->icon = $resourceNode->getIcon()->getIconLocation();
+            $resource->icon = $resourceNode->getIcon()->getRelativeUrl();
 
             $resources[] = $resource;
         }

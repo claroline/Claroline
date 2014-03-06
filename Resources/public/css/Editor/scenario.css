@@ -1,0 +1,58 @@
+.action-bar {
+    margin-bottom: 15px;
+}
+
+.tree {
+	padding: 0;
+	margin: 0;
+}
+
+.tree li {
+    list-style: none;
+}
+
+.tree a:hover,
+.tree a:focus,
+.tree a:active {
+    text-decoration: none;
+}
+
+.placeholder {
+    background: #CCCCCC;
+    min-height: 12px;
+    border: 1px dashed #010101;
+    margin-bottom: 15px;
+}
+
+.tree-item {
+    cursor: pointer;
+    line-height: 24px;
+    position: relative;
+}
+
+.tree-item:hover {
+    background-color: rgb(235, 235, 235);
+}
+
+.children {
+    padding-top: 6px;
+}
+
+.children li:first-child {
+    margin-top: 0; 
+}
+
+.step {
+    padding: 2px 8px;
+    padding-left: 22px;
+    border: 1px solid #DDDDDD;
+    border-left: none;
+    border-radius: 3px;
+}
+
+.step-actions {
+	position: absolute;
+	right: 0;
+	top: 0;
+	padding: 2px 8px;
+}

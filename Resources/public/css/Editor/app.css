@@ -19,68 +19,13 @@
     z-index: 1;
 }
 
-.action-bar {
-    margin-bottom: 20px;
-}
-
-li {
-    list-style: none;
-}
-
-.tree-item {
-    cursor: pointer;
-    line-height: 24px;
-}
-
-#zone li{
-    position:relative;
-}
-
-ul {
-    min-height: 5px;
-}
-
 form {
     margin: 0 0 5px;
-}
-
-.placeholder {
-    background: #CCCCCC;
-    min-height: 10px;
-    border: 1px dashed #010101;
-    margin-bottom: 15px;
-}
-
-table td.actions {
-    text-align: right !important;
-}
-
-table td.icon {
-    width: 24px;
-    text-align: center !important;
 }
 
 .excluded-resource {
     text-decoration: line-through;
     color: #999;
-}
-
-.indent {
-    padding-right: 8px;
-}
-
-.tree {
-    padding-left: 0;
-}
-
-.tree a:hover,
-.tree a:focus,
-.tree a:active {
-    text-decoration: none;
-}
-
-.step-name {
-    margin-left: 4px;
 }
 
 #templates-sidebar {
@@ -92,15 +37,6 @@ table td.icon {
     margin: 4px 0;
     line-height: 22px;
     font-weight: normal;
-}
-
-.tree-item {
-    padding: 2px 8px;
-    border-radius: 4px;
-}
-
-.tree-item:hover {
-    background-color: rgb(235, 235, 235);
 }
 
 input.form-control.ng-invalid {
@@ -125,12 +61,4 @@ input.form-control.ng-valid:focus {
   border-color: #356635;
   -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 6px #7aba7b;
           box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 6px #7aba7b;
-}
-
-.active-step,
-.active-step:hover,
-.active-step:focus,
-.active-step:active {
-    background-color: rgb(66, 139, 202);
-    color: white;
 }

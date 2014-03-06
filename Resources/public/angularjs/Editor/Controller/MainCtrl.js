@@ -3,7 +3,7 @@
 /**
  * Main Controller
  */
-function MainCtrl($scope, $http, $window, $location, $modal, HistoryFactory, ClipboardFactory, PathFactory, StepFactory, AlertFactory) {
+function MainCtrl($scope, HistoryFactory, ClipboardFactory, PathFactory, AlertFactory, ResourceFactory) {
     $scope.path = EditorApp.currentPath;
     PathFactory.setPath($scope.path);
         
@@ -16,7 +16,7 @@ function MainCtrl($scope, $http, $window, $location, $modal, HistoryFactory, Cli
     }
     
     $scope.alerts = AlertFactory.getAlerts();
-
+    
     /**
      * Display step in the preview zone
      * @returns void
@@ -55,7 +55,13 @@ function MainCtrl($scope, $http, $window, $location, $modal, HistoryFactory, Cli
         }
         $scope.setPreviewStep(step);
     };
-    
+
+    // Current displayed step in preview zone
+    $scope.previewStep = null;
+    if (null === $scope.previewStep) {
+        $scope.setPreviewStep();
+    }
+
     /**
      * Copy data into clipboard
      * @returns void

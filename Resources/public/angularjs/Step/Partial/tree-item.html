@@ -4,27 +4,10 @@
       ng-mouseenter="showButtons = step.id" 
       ng-mouseleave="showButtons = null">
       
-    <img  ng-show="null == currentEditingStep || currentEditingStep != step.id" height="26" src="{{ webDir }}images/steps/{{ step.image }}" />
-    <span ng-show="null == currentEditingStep || currentEditingStep != step.id" class="step-name">{{ step.name | truncate }}</span>
+    <div class="lvl lvl-{{ step.lvl }}"></div>
+    <div class="step">{{ step.name | truncate }}</div>
 
-    <div ng-show="null != currentEditingStep && currentEditingStep == step.id"  class="input-group input-group-sm">
-        <input type="text" value="{{ step.name }}" ng-model="step.name" class="form-control" />
-        <span class="input-group-btn">
-            <a href="#" role="button" class="btn btn-default" type="button" ng-click="closeEditStepName()">
-                <span class="icon-ok"></span>
-                <span class="sr-only">OK</span>
-            </a>
-        </span>
-    </div>
-
-    <span ng-show="showButtons == step.id && currentEditingStep != step.id" class="pull-right">
-        <!-- Ajout du bouton pour l'édition. -->
-        <!-- Voir TreeCtrl.js pour editStepName -->
-        <a href="#" role="button" class="btn btn-default btn-xs" ng-click="editStepName(step)" tooltip="Edit step name" ng-hide="isRootNode" >
-            <span class="icon-pencil"></span>
-            <span class="sr-only">Edit name</span>
-        </a>
-
+    <span ng-show="showButtons == step.id" class="step-actions">
         <a href="#" role="button" class="btn btn-default btn-xs" ng-click="addChild(step)" tooltip="Add a child">
             <span class="icon-plus"></span>
             <span class="sr-only">Add child</span>
@@ -57,6 +40,6 @@
     </span>
 </div>
 
-<ul ui-sortable="sortableOptions" ng-model="step.children">
+<ul class="children" ui-sortable="sortableOptions" ng-model="step.children">
     <li ng-repeat="step in step.children" ng-include="webDir + 'angularjs/Step/Partial/tree-item.html'" onload="isRootNode = false"></li>
 </ul>
