@@ -677,14 +677,11 @@ widget_home_tab_delete_confirm_title: 'Remove widget from Home tab'
 widget_settings: 'Widget settings'
 widgets: Widgets
 widgets_configuration: 'Widgets configuration'
-<<<<<<< HEAD
-=======
 will be replaced by your platform name: 'will be replaced by your platform name'
 will display the password: 'will display the password'
 will display the user first name: 'will display the user first name'
 will display the user last name: 'will display the user last name'
 will display the username: 'will display the username'
->>>>>>> 0a463c31d925d59fc6a0bb39de08bf53a6e78883
 workspace.create: 'Create a new workspace'
 workspace.name_not_blank: 'The workspace''s name is required.'
 workspace: Workspace
