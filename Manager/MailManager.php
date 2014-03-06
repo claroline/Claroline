@@ -28,7 +28,6 @@ class MailManager
 {
     private $router;
     private $mailer;
-    private $templating;
     private $translator;
     private $container;
     private $ch;
@@ -42,7 +41,6 @@ class MailManager
      *     "ch"             = @DI\Inject("claroline.config.platform_config_handler"),
      *     "container"      = @DI\Inject("service_container"),
      *     "cacheManager"   = @DI\Inject("claroline.manager.cache_manager"),
-     *     "templating"     = @DI\Inject("templating"),
      *     "contentManager" = @DI\Inject("claroline.manager.content_manager")
      * })
      */
@@ -50,7 +48,6 @@ class MailManager
         \Swift_Mailer $mailer,
         UrlGeneratorInterface $router,
         Translator $translator,
-        TwigEngine $templating,
         PlatformConfigurationHandler $ch,
         ContainerInterface $container,
         CacheManager $cacheManager,
@@ -60,7 +57,6 @@ class MailManager
         $this->router = $router;
         $this->mailer = $mailer;
         $this->translator = $translator;
-        $this->templating = $templating;
         $this->container = $container;
         $this->ch = $ch;
         $this->cacheManager = $cacheManager;
@@ -92,7 +88,7 @@ class MailManager
 
         $subject = $this->translator->trans('reset_pwd', array(), 'platform');
 
-        $body = $this->templating->render(
+        $body = $this->container->get('templating')->render(
             'ClarolineCoreBundle:Mail:ForgotPassword.html.twig', array('user' => $user, 'link' => $link)
         );
 
