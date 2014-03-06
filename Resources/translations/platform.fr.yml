@@ -130,6 +130,7 @@ create_widget_instance: 'Créer un nouveau Widget'
 create_workspace: 'Créer un espace d''activités'
 creation: Création
 creation_date: 'Date de création'
+creator: Créateur
 csv_users_import_infos: 'Informations sur le format du fichier CSV'
 csv_users_import_infos_format: Format
 csv_users_import_infos_format_a: 'Les données d''un utilisateur doivent être définies sur une ligne et séparées par un point virgule'
@@ -449,6 +450,7 @@ profile_form_userName: 'Nom d''utilisateur'
 profile_form_username: 'Nom d''utilisateur'
 properties: Propriétés
 public: Public
+public_registration: Inscription publique
 public_workspace_empty: 'Il n''y a aucun espace d''activités public.'
 public_workspaces: 'Espaces d''activités publics'
 recursive_dir_action: 'Appliquer au contenu du répertoire et aux sous-répertoires'
@@ -656,6 +658,7 @@ validate: Valider
 view: Voir
 view_category_hierarchy: 'Visualiser la structure des catégories'
 views: 'Nb vues'
+visibility: Visibilité
 visible: Visible
 visitor: Visiteur
 warning_user_impersonation: 'Vous êtes connecté en tant que %user%.'

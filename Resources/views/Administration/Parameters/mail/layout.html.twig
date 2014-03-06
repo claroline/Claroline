@@ -1,0 +1,53 @@
+{% extends "ClarolineCoreBundle:Administration:layout.html.twig" %}
+
+{% block title %}{{ parent() ~ ' - ' ~ 'mail' | trans({}, 'platform') | striptags | raw }}{% endblock %}
+
+{% block breadcrumb %}
+    {{
+        macros.breadcrumbs([
+            {
+                'icon': 'icon-cog',
+                'name': 'administration'|trans({}, 'platform'),
+                'href': path('claro_admin_index')
+            },
+            {
+                'name': 'parameters'|trans({}, 'platform'),
+                'href': path('claro_admin_index')
+            },
+            {
+                'name': 'mail'|trans({}, 'platform'),
+                'href': path('claro_admin_parameters_mail_index')
+            },
+            {
+                'name': 'layout'|trans({}, 'platform'),
+                'href': ''
+            }
+        ])
+    }}
+{% endblock %}
+
+{% block section_content %}
+    <div class="panel-heading">
+        <h3 class="panel-title">{{ 'layout'|trans({}, 'platform') }}</h3>
+    </div>
+    <form class="form-horizontal" action="{{ path('claro_admin_edit_mail_layout') }}"
+          method="post" {{ form_enctype(form) }} id="form_settings" enctype='multipart/form-data'>
+        <div class="panel-body">
+            <div class="alert alert-warning">
+                {{ 'layout_mail_requirements'|trans({}, 'platform')|raw }}
+            </div>
+            {{ form_widget(form | first) }}
+        </div>
+        <div class="panel-footer">
+            <button type="submit" class="btn btn-primary">{{ 'ok'|trans({}, 'platform') }}</button>
+            <a href="{{ path('claro_admin_index') }}">
+            <button type="button" class="btn btn-default">{{ 'cancel'|trans({}, 'platform') }}</button>
+            </a>
+        </div>
+    </form>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript" src="{{ asset('bundles/clarolinecore/js/administration/mail.js') }}"></script>
+{% endblock%}

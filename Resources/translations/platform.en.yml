@@ -129,6 +129,7 @@ create_widget_instance: 'Create a widget'
 create_workspace: 'Create workspace'
 creation: Creation
 creation_date: 'Creation date'
+creator: Creator
 csv_users_import_infos: 'CSV file informations'
 csv_users_import_infos_format: Format
 csv_users_import_infos_format_a: 'User informations must be defined in one line and separated by semicolon'
@@ -447,6 +448,7 @@ profile_form_userName: 'User name'
 profile_form_username: Username
 properties: Properties
 public: Public
+public_registration: Public registration
 public_workspace_empty: 'There are no public workspaces.'
 public_workspaces: 'Public workspaces'
 recursive_dir_action: 'Apply to the contents of the directory and its subdirectories'
@@ -656,6 +658,7 @@ validate: Validate
 view: View
 view_category_hierarchy: 'View category hierarchy'
 views: Views
+visibility: Visibility
 visible: Visible
 visitor: Visitor
 warning_user_impersonation: 'You are connected as %user%.'

@@ -11,7 +11,6 @@
 
 namespace Claroline\CoreBundle\Controller\Administration;
 
-use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Library\Configuration\UnwritableException;
 use Claroline\CoreBundle\Library\Session\DatabaseSessionValidator;
@@ -21,14 +20,9 @@ use Claroline\CoreBundle\Manager\ContentManager;
 use Claroline\CoreBundle\Library\Installation\Settings\MailingSettings;
 use Claroline\CoreBundle\Library\Installation\Settings\MailingChecker;
 use Claroline\CoreBundle\Manager\TermsOfServiceManager;
-use Claroline\CoreBundle\Manager\WorkspaceManager;
-use Claroline\CoreBundle\Persistence\ObjectManager;
 use Icap\BlogBundle\Controller\Controller;
 use JMS\DiExtraBundle\Annotation as DI;
-use JMS\SecurityExtraBundle\Annotation\PreAuthorize;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use JMS\SecurityExtraBundle\Annotation as SEC;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormFactory;
 use Symfony\Component\HttpFoundation\Request;
@@ -40,11 +34,10 @@ use Claroline\CoreBundle\Library\Installation\Refresher;
 use Claroline\CoreBundle\Manager\HwiManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\Response;
-use Claroline\CoreBundle\Event\StrictDispatcher;
 
 /**
  * @DI\Tag("security.secure_service")
- * @PreAuthorize("hasRole('ADMIN')")
+ * @SEC\PreAuthorize("hasRole('ADMIN')")
  *
  * Controller of the platform parameters section.
  */
@@ -62,9 +55,6 @@ class ParametersController extends Controller
     private $dbSessionValidator;
     private $refresher;
     private $hwiManager;
-    private $workspaceManager;
-    private $om;
-    private $eventDispatcher;
 
     /**
      * @DI\InjectParams({
@@ -81,9 +71,6 @@ class ParametersController extends Controller
      *     "sessionValidator"   = @DI\Inject("claroline.session.database_validator"),
      *     "refresher"          = @DI\Inject("claroline.installation.refresher"),
      *     "hwiManager"         = @DI\Inject("claroline.manager.hwi_manager"),
-     *     "workspaceManager"   = @DI\Inject("claroline.manager.workspace_manager"),
-     *     "om"                 = @DI\Inject("claroline.persistence.object_manager"),
-     *     "eventDispatcher"    = @DI\Inject("claroline.event.event_dispatcher")
      * })
      */
     public function __construct(
@@ -99,10 +86,7 @@ class ParametersController extends Controller
         CacheManager $cacheManager,
         DatabaseSessionValidator $sessionValidator,
         Refresher $refresher,
-        HwiManager $hwiManager,
-        WorkspaceManager $workspaceManager,
-        ObjectManager $om,
-        StrictDispatcher $eventDispatcher
+        HwiManager $hwiManager
     )
     {
         $this->configHandler = $configHandler;
@@ -118,14 +102,11 @@ class ParametersController extends Controller
         $this->dbSessionValidator = $sessionValidator;
         $this->refresher = $refresher;
         $this->hwiManager = $hwiManager;
-        $this->workspaceManager = $workspaceManager;
-        $this->om = $om;
-        $this->eventDispatcher = $eventDispatcher;
     }
 
     /**
-     * @Template("ClarolineCoreBundle:Administration\platform:index.html.twig")
-     * @Route(
+     * @EXT\Template("ClarolineCoreBundle:Administration\platform:index.html.twig")
+     * @EXT\Route(
      *     "/index",
      *     name="claro_admin_parameters_index"
      * )
@@ -140,11 +121,11 @@ class ParametersController extends Controller
     }
 
     /**
-     * @Route(
+     * @EXT\Route(
      *     "/general",
      *     name="claro_admin_parameters_general"
      * )
-     * @Template("ClarolineCoreBundle:Administration\platform:settings.html.twig")
+     * @EXT\Template("ClarolineCoreBundle:Administration\platform:settings.html.twig")
      *
      * Displays the platform settings.
      *
@@ -167,13 +148,13 @@ class ParametersController extends Controller
     }
 
     /**
-     * @Route(
+     * @EXT\Route(
      *     "/general/submit",
      *     name="claro_admin_edit_parameters_general"
      * )
      *
-     * @Template("ClarolineCoreBundle:Administration\platform:settings.html.twig")
-     * @Method("POST")
+     * @EXT\Template("ClarolineCoreBundle:Administration\platform:settings.html.twig")
+     * @EXT\Method("POST")
      *
      * Updates the platform settings and redirects to the settings form.
      *
@@ -237,12 +218,12 @@ class ParametersController extends Controller
     }
 
     /**
-     * @Route(
+     * @EXT\Route(
      *     "/appearance",
      *     name="claro_admin_parameters_appearance"
      * )
      *
-     * @Template("ClarolineCoreBundle:Administration\platform:appearance.html.twig")
+     * @EXT\Template("ClarolineCoreBundle:Administration\platform:appearance.html.twig")
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -261,12 +242,12 @@ class ParametersController extends Controller
     }
 
     /**
-     * @Route(
+     * @EXT\Route(
      *     "/appearance/submit",
      *     name="claro_admin_edit_parameters_appearance"
      * )
      *
-     * @Method("POST")
+     * @EXT\Method("POST")
      *
      * Displays the platform settings.
      *
@@ -315,12 +296,12 @@ class ParametersController extends Controller
     }
 
     /**
-     * @Route(
+     * @EXT\Route(
      *     "/mail/server",
      *     name="claro_admin_parameters_mail_server"
      * )
      *
-     * @Template("ClarolineCoreBundle:Administration\platform\mail:server.html.twig")
+     * @EXT\Template("ClarolineCoreBundle:Administration\platform\mail:server.html.twig")
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -337,13 +318,13 @@ class ParametersController extends Controller
 
 
     /**
-     * @Route(
+     * @EXT\Route(
      *     "/mail/server/submit",
      *     name="claro_admin_edit_parameters_mail_server"
      * )
      *
-     * @Template("ClarolineCoreBundle:Administration\platform\mail:server.html.twig")
-     * @Method("POST")
+     * @EXT\Template("ClarolineCoreBundle:Administration\platform\mail:server.html.twig")
+     * @EXT\Method("POST")
      *
      * Updates the platform settings and redirects to the settings form.
      *
@@ -409,12 +390,12 @@ class ParametersController extends Controller
     }
 
     /**
-     * @Route(
+     * @EXT\Route(
      *     "/mail/registration",
      *     name="claro_admin_mail_registration"
      * )
      *
-     * @Template("ClarolineCoreBundle:Administration\platform\mail:registration.html.twig")
+     * @EXT\Template("ClarolineCoreBundle:Administration\platform\mail:registration.html.twig")
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -429,13 +410,13 @@ class ParametersController extends Controller
     }
 
     /**
-     * @Route(
+     * @EXT\Route(
      *     "/mail/submit/registration",
      *     name="claro_admin_edit_mail_registration"
      * )
      *
-     * @Template("ClarolineCoreBundle:Administration\platform\mail:registration.html.twig")
-     * @Method("POST")
+     * @EXT\Template("ClarolineCoreBundle:Administration\platform\mail:registration.html.twig")
+     * @EXT\Method("POST")
      *
      * @return \Symfony\Component\HttpFoundation\Response
      *
@@ -470,12 +451,12 @@ class ParametersController extends Controller
     }
 
     /**
-     * @Route(
+     * @EXT\Route(
      *     "/mail/layout",
      *     name="claro_admin_mail_layout"
      * )
      *
-     * @Template("ClarolineCoreBundle:Administration\platform\mail:layout.html.twig")
+     * @EXT\Template("ClarolineCoreBundle:Administration\platform\mail:layout.html.twig")
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -490,13 +471,13 @@ class ParametersController extends Controller
     }
 
     /**
-     * @Route(
+     * @EXT\Route(
      *     "/mail/layout/submit",
      *     name="claro_admin_edit_mail_layout"
      * )
      *
-     * @Template("ClarolineCoreBundle:Administration\platform\mail:layout.html.twig")
-     * @Method("POST")
+     * @EXT\Template("ClarolineCoreBundle:Administration\platform\mail:layout.html.twig")
+     * @EXT\Method("POST")
      *
      * @return \Symfony\Component\HttpFoundation\Response
      *
@@ -529,12 +510,12 @@ class ParametersController extends Controller
     }
 
     /**
-     * @Route(
+     * @EXT\Route(
      *     "/terms_of_service",
      *     name="claro_admin_edit_terms_of_service"
      * )
      *
-     * @Template("ClarolineCoreBundle:Administration\platform:termsOfService.html.twig")
+     * @EXT\Template("ClarolineCoreBundle:Administration\platform:termsOfService.html.twig")
      *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
@@ -553,8 +534,8 @@ class ParametersController extends Controller
     /**
      * Updates the platform settings and redirects to the settings form.
      *
-     * @Route("/terms_of_service/submit", name="claro_admin_edit_terms_of_service_submit")
-     * @Method("POST")
+     * @EXT\Route("/terms_of_service/submit", name="claro_admin_edit_terms_of_service_submit")
+     * @EXT\Method("POST")
      *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
@@ -578,8 +559,8 @@ class ParametersController extends Controller
     }
 
     /**
-     * @Template("ClarolineCoreBundle:Administration\platform\mail:index.html.twig")
-     * @Route(
+     * @EXT\Template("ClarolineCoreBundle:Administration\platform\mail:index.html.twig")
+     * @EXT\Route(
      *     "/mail/index",
      *     name="claro_admin_parameters_mail_index"
      * )
@@ -594,8 +575,8 @@ class ParametersController extends Controller
     }
 
     /**
-     * @Template("ClarolineCoreBundle:Administration\platform:indexing.html.twig")
-     * @Route(
+     * @EXT\Template("ClarolineCoreBundle:Administration\platform:indexing.html.twig")
+     * @EXT\Route(
      *     "/indexing",
      *     name="claro_admin_parameters_indexing"
      * )
@@ -619,12 +600,12 @@ class ParametersController extends Controller
     }
 
     /**
-     * @Route(
+     * @EXT\Route(
      *     "/session",
      *     name="claro_admin_session"
      * )
      *
-     * @Template("ClarolineCoreBundle:Administration\platform:session.html.twig")
+     * @EXT\Template("ClarolineCoreBundle:Administration\platform:session.html.twig")
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -643,13 +624,13 @@ class ParametersController extends Controller
     }
 
     /**
-     * @Route(
+     * @EXT\Route(
      *     "/session/submit",
      *     name="claro_admin_session_submit"
      * )
      *
-     * @Template("ClarolineCoreBundle:Administration\platform:session.html.twig")
-     * @Method("POST")
+     * @EXT\Template("ClarolineCoreBundle:Administration\platform:session.html.twig")
+     * @EXT\Method("POST")
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -695,8 +676,8 @@ class ParametersController extends Controller
     }
 
     /**
-     * @Template("ClarolineCoreBundle:Administration\platform\oauth:index.html.twig")
-     * @Route(
+     * @EXT\Template("ClarolineCoreBundle:Administration\platform\oauth:index.html.twig")
+     * @EXT\Route(
      *     "/oauth/index",
      *     name="claro_admin_parameters_oauth_index"
      * )
@@ -711,8 +692,8 @@ class ParametersController extends Controller
     }
 
     /**
-     * @Template("ClarolineCoreBundle:Administration\platform\oauth:facebook.html.twig")
-     * @Route(
+     * @EXT\Template("ClarolineCoreBundle:Administration\platform\oauth:facebook.html.twig")
+     * @EXT\Route(
      *     "/oauth/facebook/form",
      *     name="claro_admin_facebook_form"
      * )
@@ -730,12 +711,12 @@ class ParametersController extends Controller
     }
 
     /**
-     * @Template("ClarolineCoreBundle:Administration\platform\oauth:facebook.html.twig")
-     * @Route(
+     * @EXT\Template("ClarolineCoreBundle:Administration\platform\oauth:facebook.html.twig")
+     * @EXT\Route(
      *     "/oauth/facebook/submit",
      *     name="claro_admin_facebook_form_submit"
      * )
-     * @Method("POST")
+     * @EXT\Method("POST")
      *
      * Displays the administration section index.
      *
@@ -769,107 +750,6 @@ class ParametersController extends Controller
         }
 
         return array('form' => $form->createView());
-    }
-
-    /**
-     * @Template("ClarolineCoreBundle:Administration:workspacesManagements.html.twig")
-     * @Route(
-     *     "/workspacesManagement/page/{page}/max/{max}/order/{order}",
-     *     name="claro_admin_workspaces_management",
-     *     defaults={"page"=1, "search"="", "max"=50, "order"="id"},
-     *     options = {"expose"=true}
-     * )
-     * @Method("GET")
-     * @Route(
-     *     "/workspacesManagement/page/{page}/search/{search}/max/{max}/order/{order}",
-     *     name="claro_admin_workspaces_management_search",
-     *     defaults={"page"=1, "search"="", "max"=50, "order"="id"},
-     *     options = {"expose"=true}
-     * )
-     * @Method("GET")
-     * Displays the administration section index.
-     *
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function workspacesAdministrationAction($page, $search, $max, $order)
-    {
-        $pager = $search === '' ?
-            $this->workspaceManager->findAllWorkspaces($page, $max, $order) :
-            $this->workspaceManager-> getWorkspaceByName($search, $page, $max, $order);
-        
-        return array('pager' => $pager, 'search' => $search, 'max' => $max, 'order' => $order);
-    }
-
-    /**
-     * @Route(
-     *     "/workspacesManagement/visibility",
-     *      name="claro_admin_workspaces_management_visibility",
-     * )
-     *
-     * ajax method to set up visibility in workspace
-     *
-     * @return \Symfony\Component\HttpFoundation\Response with the css class to apply to the element
-     */
-    public function setWorkspaceVisibilityAction()
-    {
-        $postData = $this->request->request->all();
-        $workspace = $this->workspaceManager->getWorkspaceById($postData['id']);
-        $postData['visible'] == "1" ? $workspace->setDisplayable(false) : $workspace->setDisplayable(true);
-        $this->om->flush();
-
-        return new Response('', 200);
-    }
-    /**
-     * @Route(
-     *     "/workspacesManagement/registration",
-     *      name="claro_admin_workspaces_management_registration",
-     * )
-     *
-     * ajax method to set up sellf registration in workspace
-     *
-     * @return \Symfony\Component\HttpFoundation\Response with the css class to apply to the element
-     */
-    public function workspaceSelfRegistration()
-    {
-        $postData = $this->request->request->all();
-        $workspace = $this->workspaceManager->getWorkspaceById($postData['id']);
-        $postData['registration'] == "1" ? $workspace->setSelfRegistration(false) : $workspace->setSelfRegistration(true);
-        $this->om->flush();
-
-        return new Response('', 200);
-    }
-
-    /**
-     * @EXT\Route(
-     *     "/workspacesManagement/delete",
-     *     name="claro_admin_multipleworkspaces",
-     *     options = {"expose"=true}
-     * )
-     * @EXT\Method("DELETE")
-     * @EXT\ParamConverter(
-     *     "workspaces",
-     *      class="ClarolineCoreBundle:Workspace\AbstractWorkspace",
-     *      options={"multipleIds" = true}
-     * )
-     *
-     * Removes many workspaces from the platform.
-     *
-     * @param workspaces[] $workspaces
-     *
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function deleteWorkspacesAction(array $workspaces)
-    {
-        $workspace = array();
-        foreach ($workspaces as $w) {
-            $workspace[] = $this->workspaceManager->getWorkspaceById($w);
-        }
-        foreach ($workspace as $w) {
-            $this->eventDispatcher->dispatch('log', 'Log\LogWorkspaceDelete', array($w));
-            $this->workspaceManager->deleteWorkspace($w);
-        }
-
-        return new Response('workspace(s) removed', 204);
     }
 
     /**
