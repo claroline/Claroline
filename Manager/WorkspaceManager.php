@@ -166,7 +166,6 @@ class WorkspaceManager
         $workspace = $this->om->factory('Claroline\CoreBundle\Entity\Workspace\SimpleWorkspace');
         $workspace->setCreator($manager);
         $workspace->setName($config->getWorkspaceName());
-        $workspace->setPublic($config->isPublic());
         $workspace->setCode($config->getWorkspaceCode());
         $workspace->setGuid($this->ut->generateGuid());
         $workspace->setDisplayable($config->isDisplayable());
@@ -790,4 +789,34 @@ class WorkspaceManager
 
         return $user;
     }
+
+    /**
+     * @param integer $page
+     * @param integer $max
+     * @param string  $orderedBy
+     *
+     * @return \Pagerfanta\Pagerfanta;
+     */
+    public function findAllWorkspaces($page, $max = 20, $orderedBy = 'id')
+    {
+        $result = $this->workspaceRepo->findAll(false, $orderedBy);
+
+        return $this->pagerFactory->createPagerFromArray($result, $page, $max);
+    }
+
+    /**
+     * @param string  $search
+     * @param integer $page
+     * @param integer $max
+     * @param string  $orderedBy
+     *
+     * @return \Pagerfanta\Pagerfanta;
+     */
+    public function getWorkspaceByName($search, $page, $max = 20, $orderedBy = 'id')
+    {
+        $query = $this->workspaceRepo->findByName($search, false, $orderedBy);
+
+        return $this->pagerFactory->createPager($query, $page, $max);
+    }
+
 }

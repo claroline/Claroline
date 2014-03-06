@@ -40,7 +40,7 @@
     {% image debug=false output='vendor/fortawesome/font-awesome/font/fontawesome-webfont.woff'
         '../vendor/fortawesome/font-awesome/font/fontawesome-webfont.woff' %}
     {% endimage %}
-    <link rel='stylesheet' type='text/css' href='{{ asset('bundles/frontend/jquery/plugin/datepicker/css/datepicker.css')}}'>
+    <link rel='stylesheet' type='text/css' href='{{ asset('bundles/frontend/jquery/plugin/datepicker/css/datepicker3.css')}}'>
     <link rel='stylesheet' type='text/css' href='{{ asset('bundles/clarolinecore/css/iframe/iframe.css')}}'>
 {% endblock %}
 
@@ -175,6 +175,7 @@
         "@ClarolineCoreBundle/Resources/views/ConfirmationMessage/addUserConfirm.html.twigjs"
         "@ClarolineCoreBundle/Resources/views/Tool/workspace/roles/roleUserLabel.html.twigjs"
         "@ClarolineCoreBundle/Resources/views/Tool/workspace/roles/roleGroupLabel.html.twigjs"
+        "@ClarolineCoreBundle/Resources/views/ConfirmationMessage/removeWorkspacesConfirm.html.twigjs"
         %}<script type="text/javascript" src="{{ asset_url }}"></script>
     {% endjavascripts %}
     {% javascripts debug=false filter='jsmin' output='vendor/jquery/ui/jqueryui.js'

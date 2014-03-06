@@ -23,7 +23,6 @@ class Configuration
     private $workspaceType;
     private $workspaceName;
     private $workspaceCode;
-    private $isPublic = false;
     private $displayable = false;
     private $selfRegistration = false;
     private $selfUnregistration = false;
@@ -89,15 +88,7 @@ class Configuration
         return $this->workspaceName;
     }
 
-    public function setPublic($isPublic)
-    {
-        $this->isPublic = $isPublic;
-    }
 
-    public function isPublic()
-    {
-        return $this->isPublic;
-    }
 
     public function check()
     {

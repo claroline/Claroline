@@ -31,12 +31,21 @@
 Create a new resource: 'Créer une nouvelle ressource'
 Everyone: 'Tout le monde'
 Grant the right to: 'Accorder des droit à'
-Indexing: Référencement
-Language: Langue
 Members of the platform: 'Inscrits à la plateforme'
 Members of work space: 'Inscrits à l''espace d''activité'
+First name: Prénom
+Indexing: Référencement
+Language: Langue
+Last name: Nom
 None: Aucun
 Show: Afficher
+This variable is optional and will be replaced by your platform name: 'Ce variable est optionnel et sera remplacé par le nom de la plateforme'
+This variable is required and will be replaced by the actual mail content: 'Ce variable est requis et sera replacé par le contenu du mail'
+User name: 'Nom d''utilisateur'
+You can redefine the content of the registration mail here: 'C''est ici que vous pouvez redéfinir le contenu du mail d''inscription'
+You can redefine the layout used when a mail is sent: 'C''est ici que vous pouvez redéfinir le layout des emails envoyés par la plateforme'
+You can use the following variables in your form: 'Vous pouvez utiliser les variables suivantes dans votre formulaire'
+You can use the full screen version of the text editor to include HTML: 'Vous pouvez utiliser la version plein écran de l''éditeur afin d''y inclure du HTML'
 account_created: 'Compte créé'
 account_general_statistics: 'Statistiques générales sur les comptes'
 action: Action
@@ -79,7 +88,7 @@ agenda: Agenda
 all: Tous
 all_available_workspaces: 'Tous les espaces d''activités disponibles'
 all_my_workspaces: 'Tous mes espaces d''activités'
-all_workspaces: 'Tous les espaces d''activités'
+all_workspaces: 'Tous les espaces d''activités (publics)'
 already_existing_user: 'L''utilisateur existe déjà.'
 an_error_occured_message: 'Une erreur s''est produite. Veuillez contacter l''administrateur.'
 analytics_connections: 'Visites utilisateurs'
@@ -154,7 +163,7 @@ database: 'Base de données'
 database_connection_failed: 'La connexion à la base de données à échoué.'
 date: Date
 date_form_format: dd/MM/yyyy
-date_format: d-m-Y
+date_format: d/m/Y
 date_range.apply: Appliquer
 date_range.clear: Effacer
 date_range.custom_range: 'Plage personnalisée'
@@ -227,7 +236,7 @@ file_form_shareType_0: Oui
 file_form_shareType_1: Non
 files: Fichiers
 filter: Filtrer
-find_workspaces: 'Tous les espaces'
+find_workspaces: 'Tous les espaces publics'
 firstName: Prénom
 first_name: Prénom
 forgot_password: 'Mot de passe oublié ?'
@@ -294,7 +303,6 @@ lastName: Nom
 last_30_days_activity: 'Activités des 30 derniers jours'
 last_name: Nom
 layout: Layout
-layout_mail_requirements: "<p> C'est ici qui vous pouvez redéfinir le layout des emails envoyés par la plateforme. </p> <p> 2 placeholders existent pour ce formulaire:</br> %content% : Ce placeholder est requis et sera replacé par le contenu du mail</br> %platform_name% : Ce placeholder est optionnel et sera remplacé par le nom de la plateforme </p>\n\n<p> Vous pouvez utiliser la version avancée de l'éditeur afin d'y inclure du html. </p>\n"
 left: Gauche
 line_number: 'Ligne %line%:'
 line_per_page: 'Lignes par page'
@@ -338,9 +346,9 @@ messages_removed: 'Messages supprimés'
 messages_sent: 'Messages envoyés'
 messages_sent_removed: 'Messages envoyés supprimés'
 misc: Divers
-missing_%content%: 'Le placeholder %content% est manquant pour la langue "%language%".'
-missing_%password%: 'Le placeholder %password% est manquant pour la langue "%language%".'
-missing_%username%: 'Le placeholder %username% est manquant pour la langue "%language%".'
+missing_%content%: 'La variable %content% est manquant pour la langue "%language%".'
+missing_%password%: 'La variable %password% est manquant pour la langue "%language%".'
+missing_%username%: 'La variable %username% est manquant pour la langue "%language%".'
 month.April: Avril
 month.August: Août
 month.December: Décembre
@@ -443,8 +451,6 @@ profile_form_administrativeCode: 'Code administratif'
 profile_form_creation_plainPassword_first: 'Mot de passe'
 profile_form_creation_plainPassword_second: Vérification
 profile_form_description: Description
-profile_form_firstName: Prénom
-profile_form_lastName: Nom
 profile_form_mail: Mail
 profile_form_note: 'Note personnelle'
 profile_form_ownedRoles: Role(s)
@@ -453,8 +459,6 @@ profile_form_pictureFile: 'Photo de profil'
 profile_form_plainPassword_first: 'Mot de passe'
 profile_form_plainPassword_second: Vérification
 profile_form_platformRoles: Rôles
-profile_form_userName: 'Nom d''utilisateur'
-profile_form_username: 'Nom d''utilisateur'
 properties: Propriétés
 public: Public
 public_workspace_empty: 'Il n''y a aucun espace d''activités public.'
@@ -468,7 +472,6 @@ registered: Inscrit
 registered_groups: 'Groupes enregistrés'
 registered_users: 'Utilisateurs enregistrés'
 registration: Inscription
-registration_mail_requirements: "<p>C'est ici qui vous pouvez redéfinir le contenu du mail d'inscription. </p> <p> La première entrée est le sujet du mail. Vous pouvez y utiliser le placeholder %platform_name% qui sera remplacé par le nom de votre plateforme. </p> <p> La seconde entrée est le contenu du mail. Vous devez y utiliser 2 placeholders: </br> %username% : qui affichera le nom de l'utilisateur </br> %password% : qui affichera le mot de passe de l'utilisateur </p>\n"
 registration_to_workspaces: 'Inscription à des espaces d''activités'
 remove_group_confirm_message: 'Êtes-vous sûr de vouloir supprimer ce groupe ?'
 remove_group_s_confirm_message: 'Êtes-vous sûr de vouloir supprimer ces %count% groupes?'
@@ -477,6 +480,8 @@ remove_message_s_confirm_message: 'Êtes-vous sûr de vouloir supprimer ces %cou
 remove_subcategory: 'Retirer la sous-catégorie'
 remove_user_confirm_message: 'Êtes-vous sûr de vouloir supprimer cet utilisateur ?'
 remove_user_s_confirm_message: 'Êtes-vous sûr de vouloir supprimer ces %count% utilisateurs?'
+remove_workspace_confirm: 'Êtes-vous sûr de vouloir supprimer cet espace d''activités ?'
+remove_workspaces_confirm: 'Êtes-vous sûr de vouloir supprimer ces %count% espaces d''activités ?'
 remove_workspace_from_category_confirm_message: 'Êtes-vous sûr de vouloir retirer cet espace d''activités de cette catégorie ?'
 remove_workspace_from_category_confirm_title: 'Retrait d''un espace d''activités d''une catégorie'
 rename: Renommer
@@ -672,6 +677,14 @@ widget_home_tab_delete_confirm_title: 'Suppression du widget de l''onglet'
 widget_settings: 'Paramètres des widgets'
 widgets: Widgets
 widgets_configuration: 'Configuration des widgets'
+<<<<<<< HEAD
+=======
+will be replaced by your platform name: 'qui sera remplacé par le nom de votre plateforme'
+will display the password: 'qui affichera le mot de passe de l''utilisateur'
+will display the user first name: 'qui affichera le prénom de l''utilisateur'
+will display the user last name: 'qui affichera le nom de famille de l''utilisateur'
+will display the username: 'qui affichera le nom de l''utilisateur'
+>>>>>>> 0a463c31d925d59fc6a0bb39de08bf53a6e78883
 workspace.create: 'Créer un nouvel espace d''activités'
 workspace.name_not_blank: 'Veuillez spécifier un nom pour ce workspace.'
 workspace: 'Espace d''activités'
@@ -710,6 +723,7 @@ workspace_tools: Outils
 workspace_unregistration_confirm_title: 'Voulez-vous vous désinscrire de cet espace d''activités ?'
 workspace_welcome: Accueil
 workspaces: 'Espaces d''activités'
+workspaces_management: 'Gestions des espaces d''activités '
 workspaces_included_in_category: 'Espaces d''activités enregistrés dans cette catégorie'
 ws_creator: 'Créateur d''espaces'
 ws_most_viewed: 'Espaces d''activités les plus consultés'

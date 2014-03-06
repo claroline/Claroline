@@ -856,6 +856,18 @@ form .global-error {
     }
 }
 
+.two_level_select {
+    select {
+        .form-control;
+        .input-sm;
+        width:   auto;
+        display: inline-block;
+        &+ select {
+            margin-left: 5px;
+        }
+    }
+}
+
 /**********************/
 /***      HOME      ***/
 /**********************/
@@ -1255,6 +1267,10 @@ body.mce-fullscreen .modal {
     }
 }
 
+.white-space {
+    vertical-align: top;
+    white-space: nowrap;
+ }
 /**********************/
 /**    Facebook      **/
 /**********************/

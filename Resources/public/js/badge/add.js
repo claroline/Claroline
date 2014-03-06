@@ -12,6 +12,8 @@ $(function(){
 
     $(".nav-tabs a.has-error:first").tab("show");
 
+    ZenstruckFormHelper.initSelect2Helper();
+
     var uploadImagePlaceholder = $(".upload_image_placeholder");
     uploadImagePlaceholder.click(function(event) {
         badgeFormFile.click();
@@ -30,6 +32,19 @@ $(function(){
             };
 
             reader.readAsDataURL(input.files[0]);
+        }
+    });
+
+    $("[data-toggle=popover]").popover();
+
+    var expiringPeriodDurationBlock = $("#expiring_period_duration");
+
+    $('#badge_form_is_expiring').click(function(){
+        if (this.checked) {
+            expiringPeriodDurationBlock.show();
+        }
+        else {
+            expiringPeriodDurationBlock.hide();
         }
     });
 });
