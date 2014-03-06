@@ -992,7 +992,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface
 
     public function findCodes()
     {
-        $dql = "SELECT u.code as code FROM Claroline\CoreBundle\Entity\User u";
+        $dql = "SELECT u.administrativeCode as code FROM Claroline\CoreBundle\Entity\User u";
         $query = $this->_em->createQuery($dql);
 
         return $query->getResult();

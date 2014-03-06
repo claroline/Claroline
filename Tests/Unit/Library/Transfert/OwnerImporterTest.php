@@ -85,6 +85,14 @@ class OwnerImporterTest extends MockeryTestCase
                 'codes' => array(array('code' => 'OWNER')),
                 'isExceptionThrow' => true
             ),
+            //code exists
+            array(
+                'path' => __DIR__.'/../../../Stub/transfert/invalid/invalid_owner_mail.yml',
+                'usernames' => array(),
+                'emails' => array(),
+                'codes' => array(),
+                'isExceptionThrow' => true
+            ),
         );
     }
 } 

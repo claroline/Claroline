@@ -25,7 +25,6 @@ use JMS\DiExtraBundle\Annotation as DI;
 class WorkspacePropertiesImporter extends Importer implements ConfigurationInterface
 {
     private $om;
-    private $owner;
 
     /**
      * @DI\InjectParams({
@@ -50,14 +49,14 @@ class WorkspacePropertiesImporter extends Importer implements ConfigurationInter
     {
         $rootNode
             ->children()
-                ->scalarNode('name')->isRequired()->end()
-                ->scalarNode('code')->isRequired()->end()
-                ->booleanNode('visible')->isRequired()->end()
-                ->booleanNode('selfregistration')->isRequired()->end()
-                ->booleanNode('selfUnregistration')->isRequired()->end()
-                ->scalarNode('owner')->end()
-                ->end()
-            ->end();
+                ->scalarNode('name')->example('ANGLAIS 01')->isRequired()->end()
+                ->scalarNode('code')->example('AN01')->isRequired()->end()
+                ->booleanNode('visible')->defaultTrue()->example('true')->isRequired()->end()
+                ->booleanNode('self_registration')->defaultFalse()->example('true')->isRequired()->end()
+                ->booleanNode('self_unregistration')->defaultFalse()->example('true')->isRequired()->end()
+                ->scalarNode('owner')->info('The workspace owner username')->example('jdoe')->end()
+            ->end()
+        ->end();
     }
 
     public function getName()

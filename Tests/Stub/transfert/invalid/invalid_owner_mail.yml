@@ -15,7 +15,7 @@ members:
         last_name: sdfsd
         username: 'ezs'
         password: enclair
-        mail: owner@owner.com
+        mail: invalid@mailiswrong
         code: OWNER
         roles:
           - name: 'ROLE_1'

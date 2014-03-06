@@ -53,7 +53,7 @@ class RolesImporter extends Importer implements ConfigurationInterface
                 ->children()
                     ->arrayNode('role')
                         ->children()
-                            ->scalarNode('name')->isRequired()
+                            ->scalarNode('name')->example('ROLE_01')->isRequired()
                                 ->validate()
                                 ->ifTrue(
                                     function ($v) {
@@ -66,8 +66,8 @@ class RolesImporter extends Importer implements ConfigurationInterface
                                 ->thenInvalid("The name w/e already exists")
                                 ->end()
                             ->end()
-                            ->scalarNode('translation')->isRequired()->end()
-                            ->booleanNode('is_base_role')->isRequired()->end()
+                            ->scalarNode('translation')->info('The displayed role name')->example('student')->isRequired()->end()
+                            ->booleanNode('is_base_role')->defaultTrue()->isRequired()->end()
                         ->end()
                     ->end()
                 ->end()
@@ -76,7 +76,7 @@ class RolesImporter extends Importer implements ConfigurationInterface
 
     public function getName()
     {
-        return 'role_importer';
+        return 'roles';
     }
 
     /**

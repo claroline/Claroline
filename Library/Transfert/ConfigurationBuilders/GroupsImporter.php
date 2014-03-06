@@ -58,10 +58,12 @@ class GroupsImporter extends Importer implements ConfigurationInterface
             $availableUsernames[] = $username['username'];
         }
 
-        $mergedUsers = $configuration['members']['users'];
+        if (isset ($configuration['members']['users'])) {
+            $mergedUsers = $configuration['members']['users'];
 
-        foreach ($mergedUsers as $el) {
-            $availableUsernames[] = $el['user']['username'];
+            foreach ($mergedUsers as $el) {
+                $availableUsernames[] = $el['user']['username'];
+            }
         }
 
         if (isset($configuration['members']['owner'])) {
@@ -81,7 +83,7 @@ class GroupsImporter extends Importer implements ConfigurationInterface
                 ->children()
                     ->arrayNode('group')
                         ->children()
-                           ->scalarNode('name')->isRequired()
+                           ->scalarNode('name')->example('GROUP_01')->isRequired()
                                 ->validate()
                                     ->ifTrue(
                                         function ($v) use ($names) {
@@ -108,7 +110,7 @@ class GroupsImporter extends Importer implements ConfigurationInterface
                            ->arrayNode('users')
                                 ->prototype('array')
                                     ->children()
-                                        ->scalarNode('username')->isRequired()
+                                        ->scalarNode('username')->info('An existing username')->example('jdoe')->isRequired()
                                             ->validate()
                                                 ->ifTrue(
                                                     function ($v) use ($availableUsernames) {
@@ -127,7 +129,7 @@ class GroupsImporter extends Importer implements ConfigurationInterface
                            ->arrayNode('roles')
                                ->prototype('array')
                                     ->children()
-                                        ->scalarNode('name')->isRequired()
+                                        ->scalarNode('name')->info('An existing role')->example('ROLE_01')->isRequired()
                                             ->validate()
                                             ->ifTrue(
                                                 function ($v) use ($availableRoleName) {

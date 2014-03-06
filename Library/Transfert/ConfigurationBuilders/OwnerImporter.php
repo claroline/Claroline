@@ -45,6 +45,7 @@ class OwnerImporter extends Importer implements ConfigurationInterface
         return $treeBuilder;
     }
 
+    //@todo double check it's in the available user name (with ['members']['users']
     public function addOwnerSection($rootNode)
     {
         $usernames = array();
@@ -70,9 +71,9 @@ class OwnerImporter extends Importer implements ConfigurationInterface
 
         $rootNode
             ->children()
-                ->scalarNode('first_name')->isRequired()->end()
-                ->scalarNode('last_name')->isRequired()->end()
-                ->scalarNode('username')->isRequired()
+                ->scalarNode('first_name')->example('John')->isRequired()->end()
+                ->scalarNode('last_name')->example('Doe')->isRequired()->end()
+                ->scalarNode('username')->example('Jdoe')->isRequired()
                     ->validate()
                         ->ifTrue(
                             function ($v) use ($usernames) {
@@ -85,8 +86,8 @@ class OwnerImporter extends Importer implements ConfigurationInterface
                         ->thenInvalid("The username %s already exists")
                     ->end()
                 ->end()
-                ->scalarNode('password')->isRequired()->end()
-                ->scalarNode('mail')->isRequired()
+                ->scalarNode('password')->example('password')->isRequired()->end()
+                ->scalarNode('mail')->example('jdoe')->isRequired()
                     ->validate()
                         ->ifTrue(
                             function ($v) use ($emails) {
@@ -98,8 +99,19 @@ class OwnerImporter extends Importer implements ConfigurationInterface
                         )
                         ->thenInvalid("The email %s already exists")
                     ->end()
+                        ->validate()
+                        ->ifTrue(
+                            function ($v) use ($emails) {
+                                return call_user_func_array(
+                                    __CLASS__ . '::emailIsValid',
+                                    array($v, $emails)
+                                );
+                            }
+                        )
+                        ->thenInvalid("The email %s is invalid")
+                    ->end()
                 ->end()
-                ->scalarNode('code')->isRequired()
+                ->scalarNode('code')->example('user#223456789')->isRequired()
                     ->validate()
                         ->ifTrue(
                             function ($v) use ($codes) {
@@ -153,4 +165,10 @@ class OwnerImporter extends Importer implements ConfigurationInterface
     {
         return in_array($v, $usernames);
     }
+
+    public static function emailIsValid($v)
+    {
+        return !filter_var($v, FILTER_VALIDATE_EMAIL);
+    }
+
 }

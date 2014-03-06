@@ -15,11 +15,10 @@ use Claroline\CoreBundle\Library\Transfert\Importer;
 use Claroline\CoreBundle\Library\Transfert\Resolver;
 use Claroline\CoreBundle\Library\Transfert\ManifestConfiguration;
 use Doctrine\Common\Collections\ArrayCollection;
-use Symfony\Component\Config\Definition\Processor;
-use Symfony\Component\Yaml\Yaml;
 use Claroline\CoreBundle\Library\Transfert\ConfigurationBuilders\GroupsConfigurationBuilder;
 use Claroline\CoreBundle\Library\Transfert\ConfigurationBuilders\RolesConfigurationBuilder;
 use Claroline\CoreBundle\Library\Transfert\ConfigurationBuilders\ToolsConfigurationBuilder;
+use Symfony\Component\Config\Definition\Dumper\YamlReferenceDumper;
 use JMS\DiExtraBundle\Annotation as DI;
 
 /**
@@ -29,8 +28,6 @@ class TransfertManager
 {
     private $listImporters;
     private $rootPath;
-    private $resolver;
-
 
     public function __construct()
     {
@@ -49,7 +46,6 @@ class TransfertManager
      */
     public function validate($path)
     {
-        $ds = DIRECTORY_SEPARATOR;
         $resolver = new Resolver($path);
         $data = $resolver->resolve();
         $this->setRootPath($path);
@@ -98,11 +94,6 @@ class TransfertManager
         $this->rootPath = $rootPath;
     }
 
-    private function getRootPath()
-    {
-        return $this->rootPath;
-    }
-
     private function getImporterByName($name)
     {
         foreach ($this->listImporters as $importer) {
@@ -118,7 +109,7 @@ class TransfertManager
      * Inject the rootPath
      *
      * @param $rootPath
-     * @param $manifest
+     * @param $configuration
      */
     private function setImporters($rootPath, $configuration)
     {
@@ -126,5 +117,20 @@ class TransfertManager
             $importer->setRootPath($rootPath);
             $importer->setConfiguration($configuration);
         }
+    }
+
+    public function dumpConfiguration()
+    {
+        $dumper = new YamlReferenceDumper($this->importer);
+
+        $string = '';
+        $string .= $dumper->dump($this->getImporterByName('workspace_properties'));
+        $string .= $dumper->dump($this->getImporterByName('owner'));
+        $string .= $dumper->dump($this->getImporterByName('user'));
+        $string .= $dumper->dump($this->getImporterByName('groups'));
+        $string .= $dumper->dump($this->getImporterByName('roles'));
+        $string .= $dumper->dump($this->getImporterByName('tools'));
+
+        return $string;
     }
 }

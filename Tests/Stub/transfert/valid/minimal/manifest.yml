@@ -2,6 +2,6 @@ properties:
     name: Anglais
     code: EN
     visible: true
-    selfregistration: true
-    selfUnregistration: false
+    self_registration: true
+    self_unregistration: false
     owner: 'ezs'

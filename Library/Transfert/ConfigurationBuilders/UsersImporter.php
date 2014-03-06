@@ -47,7 +47,7 @@ class UsersImporter extends Importer implements ConfigurationInterface
         return $treeBuilder;
     }
 
-    //@todo include owner in the verification if this section exis
+    //@todo include owner in the verification if this section exists
     public function addUsersSection($rootNode)
     {
          $usernames = array();
@@ -92,9 +92,9 @@ class UsersImporter extends Importer implements ConfigurationInterface
                 ->children()
                     ->arrayNode('user')
                         ->children()
-                            ->scalarNode('first_name')->isRequired()->end()
-                            ->scalarNode('last_name')->isRequired()->end()
-                            ->scalarNode('username')->isRequired()
+                            ->scalarNode('first_name')->example('Jane')->isRequired()->end()
+                            ->scalarNode('last_name')->example('Doe')->isRequired()->end()
+                            ->scalarNode('username')->example('janedoe')->isRequired()
                                 ->validate()
                                     ->ifTrue(
                                         function ($v) use ($usernames) {
@@ -129,8 +129,8 @@ class UsersImporter extends Importer implements ConfigurationInterface
                                     ->thenInvalid("The owner %s already exists in the configuration")
                                 ->end()
                             ->end()
-                            ->scalarNode('password')->isRequired()->end()
-                            ->scalarNode('mail')->isRequired()
+                            ->scalarNode('password')->example('noidea')->isRequired()->end()
+                            ->scalarNode('mail')->example('jdoe@gmail.com')->isRequired()
                                 ->validate()
                                     ->ifTrue(
                                         function ($v) use ($emails) {
@@ -153,8 +153,19 @@ class UsersImporter extends Importer implements ConfigurationInterface
                                     )
                                     ->thenInvalid("The email %s already exists in the configuration")
                                 ->end()
+                                ->validate()
+                                    ->ifTrue(
+                                        function ($v) use ($emails) {
+                                            return call_user_func_array(
+                                                __CLASS__ . '::emailIsValid',
+                                                array($v, $emails)
+                                            );
+                                        }
+                                    )
+                                    ->thenInvalid("The email %s is invalid")
+                                ->end()
                             ->end()
-                            ->scalarNode('code')->isRequired()
+                            ->scalarNode('code')->example('usr#1234569789')->isRequired()
                                 ->validate()
                                     ->ifTrue(
                                         function ($v) use ($codes) {
@@ -181,7 +192,7 @@ class UsersImporter extends Importer implements ConfigurationInterface
                             ->arrayNode('roles')
                                 ->prototype('array')
                                     ->children()
-                                        ->scalarNode('name')->isRequired()
+                                        ->scalarNode('name')->example('collaborator')->isRequired()
                                         ->validate()
                                             ->ifTrue(
                                                 function ($v) use ($availableRoleName) {
@@ -204,7 +215,7 @@ class UsersImporter extends Importer implements ConfigurationInterface
 
     public function getName()
     {
-        return 'user_importer';
+        return 'user';
     }
 
     /**
@@ -286,6 +297,11 @@ class UsersImporter extends Importer implements ConfigurationInterface
     public static function emailAlreadyExistsInDatabase($v, $mails)
     {
         return in_array($v, $mails);
+    }
+
+    public static function emailIsValid($v)
+    {
+        return !filter_var($v, FILTER_VALIDATE_EMAIL);
     }
 
     public static function codeAlreadyExistsInDatabase($v, $code)

@@ -51,9 +51,9 @@ class ToolsImporter extends Importer implements ConfigurationInterface
                 ->children()
                     ->arrayNode('tool')
                         ->children()
-                            ->scalarNode('type')->isRequired()->end()
-                            ->scalarNode('translation')->isRequired()->end()
-                            ->variableNode('data')->end()
+                            ->scalarNode('type')->info('The tool type')->example('home')->isRequired()->end()
+                            ->scalarNode('translation')->info('The displayed tool name')->example('accueil')->isRequired()->end()
+                            ->variableNode('data')->info('The data needed to import the tool')->end()
                             ->arrayNode('import')
                                 ->prototype('array')
                                     ->children()
@@ -64,7 +64,7 @@ class ToolsImporter extends Importer implements ConfigurationInterface
                             ->arrayNode('roles')
                                 ->prototype('array')
                                     ->children()
-                                        ->scalarNode('name')->isRequired()
+                                        ->scalarNode('name')->info('An existing role name')->example('ROLE_01')->isRequired()
                                             ->validate()
                                                 ->ifTrue(
                                                     function ($v) use ($availableRoleName) {

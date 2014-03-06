@@ -134,6 +134,15 @@ class UsersImporterTest extends MockeryTestCase
                 'codes' => array(),
                 'isExceptionThrow' => true,
                 'manifest' => __DIR__.'/../../../Stub/transfert/valid/full/manifest.yml'
+            ),
+            //email is invalid
+            array(
+                'path' => __DIR__.'/../../../Stub/transfert/invalid/users/invalid_email.yml',
+                'usernames' => array(),
+                'emails' => array(),
+                'codes' => array(),
+                'isExceptionThrow' => true,
+                'manifest' => __DIR__.'/../../../Stub/transfert/valid/full/manifest.yml'
             )
         );
     }

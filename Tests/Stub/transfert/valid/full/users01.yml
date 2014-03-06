@@ -1,7 +1,7 @@
 users:
     - user:
-        first_name: aaaa
         last_name: aaaa
+        first_name: aaaa
         username: user1
         password: aaaa
         mail: mail1@gmail.com
@@ -20,3 +20,7 @@ users:
         password: bbbb
         mail: mail3@gmail.com
         code: USER03
+
+import:
+  - tools.resource_manager.file:
+

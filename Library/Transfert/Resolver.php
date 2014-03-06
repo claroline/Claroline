@@ -25,7 +25,6 @@ class Resolver
         $this->rootFile = $rootFile;
     }
 
-
     public function resolve()
     {
         $ds = DIRECTORY_SEPARATOR;
