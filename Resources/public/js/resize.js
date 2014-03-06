@@ -5,6 +5,11 @@ $(document).ready(function() {
     $(document).find('table').find('tr').find('td').find('iframe').each(function() {
        resize($(this));
     });
+    $(document).find('table').find('tr').find('td').find('object').each(function() {
+        $(this).find('embed').each(function() {
+            resize($(this));
+        });
+    });
     function resize(element) {
         var maxWidth = 20;
         var maxHeight = 20;
