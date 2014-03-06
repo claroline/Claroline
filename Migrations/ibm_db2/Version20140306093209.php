@@ -1,6 +1,6 @@
 <?php
 
-namespace Claroline\CoreBundle\Migrations\drizzle_pdo_mysql;
+namespace Claroline\CoreBundle\Migrations\ibm_db2;
 
 use Doctrine\DBAL\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
@@ -8,15 +8,15 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2014/03/03 02:44:38
+ * Generation date: 2014/03/06 09:32:12
  */
-class Version20140303144433 extends AbstractMigration
+class Version20140306093209 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
         $this->addSql("
             ALTER TABLE claro_badge 
-            ADD deletedAt DATETIME DEFAULT NULL
+            ADD COLUMN deletedAt TIMESTAMP(0) DEFAULT NULL
         ");
     }
 
@@ -24,7 +24,7 @@ class Version20140303144433 extends AbstractMigration
     {
         $this->addSql("
             ALTER TABLE claro_badge 
-            DROP deletedAt
+            DROP COLUMN deletedAt
         ");
     }
 }

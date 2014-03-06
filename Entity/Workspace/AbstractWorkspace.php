@@ -58,11 +58,6 @@ abstract class AbstractWorkspace
     protected $code;
 
     /**
-     * @ORM\Column(name="is_public", type="boolean")
-     */
-    protected $isPublic = true;
-
-    /**
      * @ORM\Column(type="boolean")
      */
     protected $displayable = false;
@@ -149,13 +144,6 @@ abstract class AbstractWorkspace
     public function setName($name)
     {
         $this->name = $name;
-    }
-
-    abstract public function setPublic($isPublic);
-
-    public function isPublic()
-    {
-        return $this->isPublic;
     }
 
     public function getEvents()

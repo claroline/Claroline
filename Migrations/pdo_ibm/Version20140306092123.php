@@ -8,9 +8,9 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2014/03/03 02:43:40
+ * Generation date: 2014/03/06 09:21:26
  */
-class Version20140303144336 extends AbstractMigration
+class Version20140306092123 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
@@ -71,8 +71,15 @@ class Version20140303144336 extends AbstractMigration
             ON DELETE SET NULL
         ");
         $this->addSql("
+            ALTER TABLE claro_workspace 
+            DROP COLUMN is_public
+        ");
+        $this->addSql("
             ALTER TABLE claro_user_badge 
             ADD COLUMN expired_at TIMESTAMP(0) DEFAULT NULL
+        ");
+        $this->addSql("
+            ALTER TABLE claro_event ALTER description description CLOB(1M) DEFAULT NULL
         ");
         $this->addSql("
             ALTER TABLE claro_badge 
@@ -103,6 +110,9 @@ class Version20140303144336 extends AbstractMigration
             DROP COLUMN expire_period
         ");
         $this->addSql("
+            ALTER TABLE claro_event ALTER description description VARCHAR(255) DEFAULT NULL
+        ");
+        $this->addSql("
             ALTER TABLE claro_user 
             DROP FOREIGN KEY FK_EB8D285282D40A1F
         ");
@@ -115,6 +125,10 @@ class Version20140303144336 extends AbstractMigration
         $this->addSql("
             ALTER TABLE claro_user_badge 
             DROP COLUMN expired_at
+        ");
+        $this->addSql("
+            ALTER TABLE claro_workspace 
+            ADD COLUMN is_public SMALLINT NOT NULL
         ");
     }
 }

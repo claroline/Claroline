@@ -1,6 +1,6 @@
 <?php
 
-namespace Claroline\CoreBundle\Migrations\sqlsrv;
+namespace Claroline\CoreBundle\Migrations\pdo_sqlsrv;
 
 use Doctrine\DBAL\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
@@ -8,9 +8,9 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2014/03/03 02:43:41
+ * Generation date: 2014/03/06 09:21:26
  */
-class Version20140303144336 extends AbstractMigration
+class Version20140306092123 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
@@ -72,8 +72,15 @@ class Version20140303144336 extends AbstractMigration
             ON DELETE SET NULL
         ");
         $this->addSql("
+            ALTER TABLE claro_workspace 
+            DROP COLUMN is_public
+        ");
+        $this->addSql("
             ALTER TABLE claro_user_badge 
             ADD expired_at DATETIME2(6)
+        ");
+        $this->addSql("
+            ALTER TABLE claro_event ALTER COLUMN description VARCHAR(MAX)
         ");
         $this->addSql("
             ALTER TABLE claro_badge 
@@ -126,6 +133,9 @@ class Version20140303144336 extends AbstractMigration
             DROP COLUMN expire_period
         ");
         $this->addSql("
+            ALTER TABLE claro_event ALTER COLUMN description NVARCHAR(255)
+        ");
+        $this->addSql("
             ALTER TABLE claro_user 
             DROP CONSTRAINT FK_EB8D285282D40A1F
         ");
@@ -138,6 +148,10 @@ class Version20140303144336 extends AbstractMigration
         $this->addSql("
             ALTER TABLE claro_user_badge 
             DROP COLUMN expired_at
+        ");
+        $this->addSql("
+            ALTER TABLE claro_workspace 
+            ADD is_public BIT NOT NULL
         ");
     }
 }
