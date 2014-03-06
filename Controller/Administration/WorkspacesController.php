@@ -24,7 +24,7 @@ use Symfony\Component\HttpFoundation\Response;
  * @DI\Tag("security.secure_service")
  * @SEC\PreAuthorize("hasRole('ADMIN')")
  */
-class WorkspaceController
+class WorkspacesController
 {
     private $workspaceManager;
     private $om;
@@ -55,19 +55,15 @@ class WorkspaceController
      *     defaults={"page"=1, "search"="", "max"=50, "order"="id"},
      *     options = {"expose"=true}
      * )
-     *
      * @EXT\Method("GET")
-     *
      * @EXT\Route(
      *     "/workspaces/page/{page}/search/{search}/max/{max}/order/{order}",
      *     name="claro_admin_workspaces_management_search",
      *     defaults={"page"=1, "search"="", "max"=50, "order"="id"},
      *     options = {"expose"=true}
      * )
-     *
      * @EXT\Method("GET")
-     *
-     * @EXT\Template()
+     * @EXT\Template
      *
      * @param $page
      * @param $search
@@ -116,7 +112,7 @@ class WorkspaceController
      */
     public function toggleWorkspacePublicRegistrationAction(Request $request)
     {
-        $postData = $request->all();
+        $postData = $request->request->all();
         $workspace = $this->workspaceManager->getWorkspaceById($postData['id']);
         $postData['registration'] === 'unlock' ?
             $workspace->setSelfRegistration(false) :
@@ -132,9 +128,7 @@ class WorkspaceController
      *     name="claro_admin_delete_workspaces",
      *     options = {"expose"=true}
      * )
-     *
      * @EXT\Method("DELETE")
-     *
      * @EXT\ParamConverter(
      *     "workspaces",
      *      class="ClarolineCoreBundle:Workspace\AbstractWorkspace",
@@ -143,19 +137,20 @@ class WorkspaceController
      *
      * Removes many workspaces from the platform.
      *
-     * @param workspaces[] $workspaces
-     *
+     * @param array $workspaces
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function deleteWorkspacesAction(array $workspaces)
     {
-        $workspace = array();
-        foreach ($workspaces as $w) {
-            $workspace[] = $this->workspaceManager->getWorkspaceById($w);
-        }
-        foreach ($workspace as $w) {
-            $this->eventDispatcher->dispatch('log', 'Log\LogWorkspaceDelete', array($w));
-            $this->workspaceManager->deleteWorkspace($w);
+        if (count($workspaces) > 0) {
+            $this->om->startFlushSuite();
+
+            foreach ($workspaces as $workspace) {
+                $this->eventDispatcher->dispatch('log', 'Log\LogWorkspaceDelete', array($workspace));
+                $this->workspaceManager->deleteWorkspace($workspace);
+            }
+
+            $this->om->endFlushSuite();
         }
 
         return new Response('Workspace(s) deleted', 204);
