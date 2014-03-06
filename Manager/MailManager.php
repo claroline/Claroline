@@ -89,7 +89,7 @@ class MailManager
         $subject = $this->translator->trans('reset_pwd', array(), 'platform');
 
         $body = $this->container->get('templating')->render(
-            'ClarolineCoreBundle:Mail:ForgotPassword.html.twig', array('user' => $user, 'link' => $link)
+            'ClarolineCoreBundle:Mail:forgotPassword.html.twig', array('user' => $user, 'link' => $link)
         );
 
         return $this->send($subject, $body, array($user));
