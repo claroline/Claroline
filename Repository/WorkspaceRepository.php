@@ -508,4 +508,22 @@ class WorkspaceRepository extends EntityRepository
 
         return null;
     }
+
+    public function findByName($search, $executeQuery = true, $orderedBy = 'id')
+    {
+        $upperSearch = strtoupper($search);
+        $upperSearch = trim($upperSearch);
+        $upperSearch = preg_replace('/\s+/', ' ', $upperSearch);
+        $dql = "
+            SELECT w
+            FROM Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace w
+            WHERE UPPER(w.name) LIKE :search
+            OR UPPER(w.code) LIKE :search
+            ORDER BY w.{$orderedBy}
+        ";
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('search', "%{$upperSearch}%");
+
+        return $executeQuery ? $query->getResult() : $query;
+    }
 }
