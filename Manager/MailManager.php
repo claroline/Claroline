@@ -28,6 +28,7 @@ class MailManager
 {
     private $router;
     private $mailer;
+    private $templating;
     private $translator;
     private $container;
     private $ch;
@@ -41,6 +42,7 @@ class MailManager
      *     "ch"             = @DI\Inject("claroline.config.platform_config_handler"),
      *     "container"      = @DI\Inject("service_container"),
      *     "cacheManager"   = @DI\Inject("claroline.manager.cache_manager"),
+     *     "templating"     = @DI\Inject("templating"),
      *     "contentManager" = @DI\Inject("claroline.manager.content_manager")
      * })
      */
@@ -48,6 +50,7 @@ class MailManager
         \Swift_Mailer $mailer,
         UrlGeneratorInterface $router,
         Translator $translator,
+        TwigEngine $templating,
         PlatformConfigurationHandler $ch,
         ContainerInterface $container,
         CacheManager $cacheManager,
@@ -57,6 +60,7 @@ class MailManager
         $this->router = $router;
         $this->mailer = $mailer;
         $this->translator = $translator;
+        $this->templating = $templating;
         $this->container = $container;
         $this->ch = $ch;
         $this->cacheManager = $cacheManager;
@@ -80,17 +84,17 @@ class MailManager
     public function sendForgotPassword(User $user)
     {
         $hash = $user->getResetPasswordHash();
-        $msg = $this->translator->trans('mail_click', array(), 'platform');
+
         $link = $this->container->get('request')->server->get('HTTP_ORIGIN') . $this->router->generate(
             'claro_security_reset_password',
             array('hash' => $hash)
         );
+
         $subject = $this->translator->trans('reset_pwd', array(), 'platform');
 
-        $body = "<div> {$this->translator->trans('reset_password_txt', array(), 'platform')} </div>";
-        $body .= "<div> {$this->translator->trans('your_username', array(), 'platform')} : {$user->getUsername()}".
-                 "</div>";
-        $body .= "<a href='{$link}'> {$msg} </a>";
+        $body = $this->templating->render(
+            'ClarolineCoreBundle:Mail:ForgotPassword.html.twig', array('user' => $user, 'link' => $link)
+        );
 
         return $this->send($subject, $body, array($user));
     }
