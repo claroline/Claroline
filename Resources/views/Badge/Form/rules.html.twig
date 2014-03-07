@@ -13,7 +13,7 @@
                 {% for rows in form %}
                     {% set loopIndex = loop.index - 1 %}
                     <li id="tabrule{{ loopIndex }}">
-                        <a href="#rule{{ loopIndex }}" data-toggle="tab">{{ 'rule'|trans }} {{ loopIndex }}
+                        <a href="#rule{{ loopIndex }}" data-toggle="tab">{{ 'rule'|trans }} {{ loopIndex + 1 }}
                             {% if allow_delete %}
                             <span class="btn btn-sm btn-danger icon-trash delete_rule delete_rule_confirm pull-right" data-id-tab="rule{{ loopIndex }}" data-confirm-title="{{ 'badge_rule_delete_confirm_title'|trans }}" data-confirm-message="{{ 'badge_rule_delete_confirm_message'|trans }}" data-confirm-ok="{{ 'delete'|trans({}, 'platform') }}" data-confirm-cancel="{{ 'cancel'|trans({}, 'platform') }}" data-confirm-style="danger"></span>
                             {% endif %}
