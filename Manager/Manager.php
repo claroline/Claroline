@@ -231,7 +231,7 @@ class Manager
     {
         $notify = $this->notificationRepo->findBy(array('user' => $user, 'forum' => $forum));
 
-        return count($notify) === 1 ? true: false;
+        return count($notify) === 1 ? true : false;
     }
 
     /**
@@ -256,8 +256,10 @@ class Manager
             'forum'
         );
 
-        $url =  $link = $this->container->get('request')->server->get('HTTP_ORIGIN') .
-                $this->router->generate('claro_forum_subjects', array('category' => $message->getSubject()->getCategory()->getId()));
+        $url = $this->router->generate(
+            'claro_forum_subjects', array('category' => $message->getSubject()->getCategory()->getId()), true
+        );
+
         $body = "<a href='{$url}'>{$title}</a><hr>{$message->getContent()}";
 
         $this->mailManager->send($title, $body, $users);
