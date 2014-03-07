@@ -43,6 +43,7 @@ class PlatformConfiguration
     private $sessionDbPassword;
     private $facebookClientId;
     private $facebookClientSecret;
+    private $facebookClientActive;
 
     /**
      * @param mixed $sessionDbDataCol
@@ -404,5 +405,21 @@ class PlatformConfiguration
     public function getFacebookClientSecret()
     {
         return $this->facebookClientSecret;
+    }
+
+    /**
+     * @param boolean $facebookClientActive
+     */
+    public function setFacebookClientActive($facebookClientActive)
+    {
+        $this->facebookClientActive = $facebookClientActive;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function isFacebookClientActive()
+    {
+        return $this->facebookClientActive;
     }
 }

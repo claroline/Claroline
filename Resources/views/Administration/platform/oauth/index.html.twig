@@ -4,21 +4,21 @@
 
 {% block breadcrumb %}
     {{
-    macros.breadcrumbs([
-    {
-    'icon': 'icon-cog',
-    'name': 'administration'|trans({}, 'platform'),
-    'href': path('claro_admin_parameters_index')
-    },
-    {
-    'name': 'parameters'|trans({}, 'platform'),
-    'href': path('claro_admin_parameters_index')
-    },
-    {
-    'name': 'oauth'|trans({}, 'platform'),
-    'href': ''
-    }
-    ])
+        macros.breadcrumbs([
+            {
+                'icon': 'icon-cog',
+                'name': 'administration'|trans({}, 'platform'),
+                'href': path('claro_admin_parameters_index')
+            },
+            {
+                'name': 'parameters'|trans({}, 'platform'),
+                'href': path('claro_admin_parameters_index')
+            },
+            {
+                'name': 'oauth'|trans({}, 'platform'),
+                'href': ''
+            }
+        ])
     }}
 {% endblock %}
 
@@ -29,7 +29,7 @@
     </div>
     <div class="list-group">
         <a class="list-group-item" href="{{ path('claro_admin_facebook_form') }}">
-            {{ 'facebook'|trans({}, 'platform') }}
+            {{ 'facebook' | trans({}, 'platform') }}
         </a>
     </div>
 {% endblock %}

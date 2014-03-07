@@ -590,6 +590,7 @@ class ParametersController extends Controller
 
             if ($form->isValid()) {
                 $this->configHandler->setParameter('google_meta_tag', $form['google_meta_tag']->getData());
+
                 return $this->redirect($this->generateUrl('claro_admin_index'));
             }
         }
@@ -664,7 +665,7 @@ class ParametersController extends Controller
                 return $this->redirect($this->generateUrl('claro_admin_index'));
             }
 
-            foreach ($errors as  $error) {
+            foreach ($errors as $error) {
                 $trans = $this->translator->trans($error, array(), 'platform');
                 $form->addError(new FormError($trans));
             }
@@ -729,10 +730,13 @@ class ParametersController extends Controller
         if ($form->isValid()) {
             $data = array(
                 'facebook_client_id' => $form['facebook_client_id']->getData(),
-                'facebook_client_secret' => $form['facebook_client_secret']->getData()
+                'facebook_client_secret' => $form['facebook_client_secret']->getData(),
+                'facebook_client_active' => $form['facebook_client_active']->getData()
             );
 
-            $errors = $this->hwiManager->validateFacebook($data['facebook_client_id'], $data['facebook_client_secret']);
+            $errors = $this->hwiManager->validateFacebook(
+                $data['facebook_client_id'], $data['facebook_client_secret']
+            );
 
             if (count($errors) === 0) {
                 $this->configHandler->setParameters($data);
@@ -741,7 +745,7 @@ class ParametersController extends Controller
                 return $this->redirect($this->generateUrl('claro_admin_index'));
             }
 
-            foreach ($errors as  $error) {
+            foreach ($errors as $error) {
                 $trans = $this->translator->trans($error, array(), 'platform');
                 $form->addError(new FormError($trans));
             }
