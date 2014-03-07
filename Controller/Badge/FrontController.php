@@ -15,6 +15,8 @@ use Claroline\CoreBundle\Entity\Badge\Badge;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use JMS\SecurityExtraBundle\Annotation as SEC;
 
 /**
  * Controller of the badges.
@@ -24,7 +26,10 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 class FrontController extends Controller
 {
     /**
-     * @Route("/view/{id}", name="claro_view_badge")
+     * @Route("/{slug}", name="claro_view_badge")
+     * @ParamConverter("badge", converter="badge_converter")
+     *
+     * @SEC\Secure(roles="ROLE_USER")
      *
      * @Template()
      */

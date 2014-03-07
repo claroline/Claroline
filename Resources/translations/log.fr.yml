@@ -6,6 +6,8 @@ group: Groupe
 log_add_user: 'Ajout d''un utilisateur'
 log_badge-awarding_filter: 'Attribution d''un badge'
 log_badge-awarding_title: 'Attribution d''un badge'
+log_badge-awarding_shortname: "Attribution d'un badge"
+log_badge-awarding_sentence: "s'est fait attribué un badge"
 log_change_right: 'Changement de droit'
 log_change_set: 'Liste des propriétés modifiées'
 log_context: 'Contexte :'

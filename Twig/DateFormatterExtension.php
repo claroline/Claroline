@@ -58,7 +58,7 @@ class DateFormatterExtension extends \Twig_Extension
      */
     public function intlDateFormat($date)
     {
-        if (extension_loaded('intl')) {
+        if (extension_loaded('intl') and $this->formatter instanceof \IntlDateFormatter) {
             return $this->formatter->format($date);
         } elseif ($date instanceof \DateTime) {
             return $date->format('d-m-Y');

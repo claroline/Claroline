@@ -216,22 +216,8 @@ claro_file:
     type: annotation
     prefix: file
 
-# Badge routes
-claro_badge_admin:
-    resource: "@ClarolineCoreBundle/Controller/Badge/AdminController.php"
-    type:     annotation
-
-claro_badge_front:
-    resource: "@ClarolineCoreBundle/Controller/Badge/FrontController.php"
-    type:     annotation
-
-claro_badge_profil:
-    resource: "@ClarolineCoreBundle/Controller/Badge/ProfileController.php"
-    type:     annotation
-
-claro_badge_workspace_tool:
-    resource: "@ClarolineCoreBundle/Controller/Badge/Tool/WorkspaceController.php"
-    type:     annotation
+claro_badge:
+    resource: "@ClarolineCoreBundle/Controller/Badge"
 
 claro_workspaces_widget:
     resource: "@ClarolineCoreBundle/Controller/Widget/MyWorkspacesWidgetController.php"
@@ -242,13 +228,12 @@ claro_oauth:
     resource: "@ClarolineCoreBundle/Controller/Oauth"
     type: annotation
 
-claro_administration_parameters:
+claro_admin_parameters:
     prefix: admin/parameters
     resource: "@ClarolineCoreBundle/Controller/Administration/ParametersController.php"
     type: annotation
 
-# Api routes
-claro_api:
-    resource: "@ClarolineCoreBundle/Controller/Api"
-    type:     annotation
-    prefix:   /api
+claro_admin_workspaces:
+    prefix: admin/workspaces
+    resource: "@ClarolineCoreBundle/Controller/Administration/WorkspacesController.php"
+    type: annotation

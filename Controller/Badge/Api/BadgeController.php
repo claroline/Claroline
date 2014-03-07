@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Claroline\CoreBundle\Controller\Api;
+namespace Claroline\CoreBundle\Controller\Badge\Api;
 
 use Claroline\CoreBundle\Entity\Badge\Badge;
 use Claroline\CoreBundle\Repository\Badge\BadgeRepository;
@@ -24,9 +24,7 @@ use JMS\DiExtraBundle\Annotation\InjectParams;
 use JMS\DiExtraBundle\Annotation\Service;
 
 /**
- * Controller of the badges.
- *
- * @Route("/badges", service="claroline.api.badge")
+ * @Route("/api/badges", service="claroline.api.badge")
  * @Service("claroline.api.badge")
  */
 class BadgeController

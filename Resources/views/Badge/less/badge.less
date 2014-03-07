@@ -11,13 +11,17 @@
 }
 
 .badge_list {
-    .node-thumbnail {
+    .badge_container {
+        margin: 5px 0 0 5px;
         .thumbnail {
             width:           150px;
             height:          110px;
-            .node-name {
+            .badge_name {
                 color:           #333333;
-                text-decoration: none;
+                white-space:     nowrap;
+                overflow:        hidden;
+                text-overflow:   ellipsis;
+                text-align:      center;
             }
             &:hover {
                 color:           #333333;
@@ -25,25 +29,18 @@
 
             }
         }
-        .add_button {
-            height:       110px;
-            width: 150px;
-            border:       3px dashed #8F8F8F;
-            padding-top:  20px;
-            &:hover {
-                background-color: #f5f5f5;
-                border-color:     #428bca;
-            }
+        .expired {
+            position:   absolute;
+            right:      5px;
+            color:      red;
+            margin-top: 5px;
+            font-size:  18px;
         }
     }
 }
 
 .nodes {
     padding: 0;
-}
-
-.thumbnails.badge_user_list > li {
-    margin-left: 5px;
 }
 
 .badge_image {
@@ -56,9 +53,175 @@
     height: 128px;
 }
 
+.badge_management_container {
+    .collections_container {
+        padding-right: 0;
+        padding-left:  0;
+
+        h3 {
+            margin-top:  0;
+            margin-left: 10px;
+        }
+
+        .collections_list {
+            border-right:  1px solid #e3e3e3;
+            height:        400px;
+            overflow:      auto;
+            padding:       10px 10px 0 10px;
+
+            .collection {
+                padding: 0;
+
+                .badge_image_mini {
+                    width:  36px;
+                    height: 36px;
+                }
+                .collection_title {
+                    margin-bottom: 0;
+                    margin-top:    0;
+                    padding-top: 5px;
+                    padding-left: 5px;
+                    white-space:   nowrap;
+                    overflow:      hidden;
+                    text-overflow: ellipsis;
+                }
+                header {
+                    border-bottom: 1px solid #e3e3e3;
+                    height:        28px;
+
+                    .btn-group {
+                        .btn-primary {
+                            border-top-left-radius:    0;
+                            border-bottom-left-radius: 0;
+                        }
+                        .btn-danger {
+                            border-bottom-right-radius: 0;
+                        }
+                        .btn {
+                            padding: 4px 7px;
+                        }
+                    }
+                    .collection_title_input {
+                        width:         auto;
+                        height:        28px;
+                        padding-right: 0;
+                    }
+                }
+                .badges {
+                    margin-top:  10px;
+                    margin-left: 19px;
+
+                    .clarobadge {
+                        padding:       5px;
+                        margin-bottom: 5px;
+                        border-radius: 4px;
+
+                        &:hover {
+                            cursor: pointer;
+                        }
+                    }
+                }
+                footer {
+                    p {
+                        margin-bottom: 0;
+                    }
+                    .publish_collection {
+                        margin-left: 5px;
+                    }
+                    .share_collection {
+                        margin-right: 5px;
+                        font-size:    16px;
+                    }
+                }
+            }
+
+            .no_collection {
+                .collection_title {
+                    margin-bottom: 0;
+                }
+            }
+
+            .deleting_collection {
+                position: absolute;
+                opacity:  0.7;
+                padding:  17px;
+            }
+
+            .deleting_collection_badge {
+                border:         1px dashed grey;
+                color:          grey;
+                font-size:      20px;
+                padding-top:    10px;
+                padding-bottom: 10px;
+
+                p {
+                    margin: 0;
+                }
+
+                &.drag_hover {
+                    box-shadow: 0 0 12px #aaa inset;
+                }
+            }
+
+            .collection_state_drag_start {
+                border: 2px dashed grey;
+            }
+
+            .collection_state_hover {
+                box-shadow: 0 0 12px #aaa inset;
+            }
+        }
+    }
+    .badge_list {
+        height:        500px;
+        overflow:      auto;
+        margin-bottom: 0;
+        padding:       5px;
+    }
+}
+
+div.alert-info {
+    overflow:    auto;
+    line-height: 30px;
+}
+
+table.badge_informations {
+    font-size: 13px;
+    tbody > tr > td {
+        border: 0;
+    }
+    td.section-head {
+        color:         #999;
+        border-bottom: 1px solid #ccc;
+        line-height:   1.5em;
+        padding-left:  0;
+    }
+    .fieldLabelCol {
+        width: 170px;
+    }
+}
+
+.view_badge {
+    .view {
+        padding-top: 25px;
+    }
+
+    .award_users_container {
+        .badge_not_awarded {
+            margin-top: 20px;
+            font-size: 16px;
+        }
+    }
+}
+
+/**** Form style ****/
 .badges_infos {
     .form-group {
-        margin-left: 0;
+        margin-left:   0;
+        margin-bottom: 5px;
+        .row {
+            margin-bottom: 5px;
+        }
     }
     #change_image {
         position: absolute;
@@ -75,11 +238,36 @@
 
         input[type=file] {
             position: absolute;
-            top: 128px;
-            right: 0;
-            cursor: pointer;
-            opacity: 0;
-            filter: alpha(opacity=0);
+            top:      128px;
+            right:    0;
+            cursor:   pointer;
+            opacity:  0;
+            filter:   alpha(opacity=0);
+        }
+
+        .upload_image_placeholder {
+            padding-top: 30px;
+        }
+
+        &.has-error {
+            .upload_image_placeholder {
+                border-color: #953b39;
+            }
+        }
+    }
+    .is_expiring {
+        label {
+            float:       left;
+            padding-top: 0;
+        }
+        .badge_help {
+            margin: 0;
+            .image_help {
+                font-size: 10px;
+            }
+        }
+        button.help {
+            border-radius: 10px;
         }
     }
 }
@@ -90,10 +278,6 @@
 
 .thumbnail_dropdown {
     padding-top: 25px;
-}
-
-.upload_image_placeholder {
-    padding-top: 30px;
 }
 
 #translationFormTabs {
@@ -159,16 +343,6 @@ ul.user_badges {
             visibility: hidden;
             margin-top: -10px;
         }
-    }
-}
-
-.badge_container {
-    padding-left: 10px;
-    .side_link {
-        border-left: 1px solid #eee;
-        text-decoration: none;
-        min-width: 41px;
-        text-align: center;
     }
 }
 

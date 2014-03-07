@@ -17,6 +17,21 @@ $(function(){
 
     $('.delete').confirmModal();
 
+    $("[data-toggle=popover]").popover();
+
+    ZenstruckFormHelper.initSelect2Helper();
+
+    var expiringPeriodDurationBlock = $("#expiring_period_duration");
+
+    $('#badge_form_is_expiring').click(function(){
+        if (this.checked) {
+            expiringPeriodDurationBlock.show();
+        }
+        else {
+            expiringPeriodDurationBlock.hide();
+        }
+    });
+
     var awardFormContainer  = $("#award_form_container");
     var awardUsersContainer = $("#award_users_container");
 

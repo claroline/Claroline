@@ -43,9 +43,9 @@ class ProfileCreationType extends AbstractType
     {
         parent::buildForm($builder, $options);
 
-            $builder->add('firstName', 'text', array('label' => 'profile_form_firstName'))
-                ->add('lastName', 'text', array('label' => 'profile_form_lastName'))
-                ->add('username', 'text', array('label' => 'profile_form_username'))
+            $builder->add('firstName', 'text', array('label' => 'First name'))
+                ->add('lastName', 'text', array('label' => 'Last name'))
+                ->add('username', 'text', array('label' => 'User name'))
                 ->add('plainPassword', 'repeated', array('type' => 'password', 'required' => true))
                 ->add(
                     'administrativeCode',

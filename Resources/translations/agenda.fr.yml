@@ -22,6 +22,7 @@ dec: Déc
 december: Décembre
 end: Fin
 end_date: 'Date de fin'
+export: 'Exporter les évènements'
 error: 'Une erreur s''est produite, veuillez réessayer'
 event_update: 'Modification enregistrée'
 feb: Févr

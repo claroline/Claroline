@@ -4,26 +4,25 @@
 
 {% block breadcrumb %}
     {{
-    macros.breadcrumbs([
-    {
-    'icon': 'icon-cog',
-    'name': 'administration'|trans({}, 'platform'),
-    'href': path('claro_admin_index')
-    },
-    {
-    'name': 'parameters'|trans({}, 'platform'),
-    'href': path('claro_admin_index')
-    },
-    {
-    'name': 'mail'|trans({}, 'platform'),
-    'href': path('claro_admin_parameters_mail_index')
-    }
-    ,
-    {
-    'name': 'server'|trans({}, 'platform'),
-    'href': ''
-    }
-    ])
+        macros.breadcrumbs([
+            {
+                'icon': 'icon-cog',
+                'name': 'administration'|trans({}, 'platform'),
+                'href': path('claro_admin_index')
+            },
+            {
+                'name': 'parameters'|trans({}, 'platform'),
+                'href': path('claro_admin_index')
+            },
+            {
+                'name': 'mail'|trans({}, 'platform'),
+                'href': path('claro_admin_parameters_mail_index')
+            },
+            {
+                'name': 'server'|trans({}, 'platform'),
+                'href': ''
+            }
+        ])
     }}
 {% endblock %}
 
