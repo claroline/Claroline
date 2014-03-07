@@ -256,9 +256,8 @@ class DatabaseWriter
 
         if (null === $resourceType) {
             $resourceType = new ResourceType();
-            $resourceType
-                ->setName($resource['name'])
-                ->setPlugin($pluginEntity);
+            $resourceType->setName($resource['name']);
+            $resourceType->setPlugin($pluginEntity);
 
             $isExistResourceType = false;
         }

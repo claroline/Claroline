@@ -19,9 +19,11 @@ use Symfony\Component\HttpFoundation\Request;
 use Claroline\CoreBundle\Entity\Event;
 use Claroline\CoreBundle\Form\Factory\FormFactory;
 use Claroline\CoreBundle\Persistence\ObjectManager;
+use Claroline\CoreBundle\Manager\AgendaManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Translation\Translator;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 /**
  * Controller of the Agenda
@@ -33,6 +35,7 @@ class DesktopAgendaController extends Controller
     private $om;
     private $request;
     private $translator;
+    private $agendaManager;
 
     /**
      * @DI\InjectParams({
@@ -40,7 +43,8 @@ class DesktopAgendaController extends Controller
      *     "formFactory"        = @DI\Inject("claroline.form.factory"),
      *     "om"                 = @DI\Inject("claroline.persistence.object_manager"),
      *     "request"            = @DI\Inject("request"),
-     *     "translator"          = @DI\Inject("translator"),
+     *     "translator"         = @DI\Inject("translator"),
+     *     "agendaManager"      = @DI\Inject("claroline.manager.agenda_manager")
      * })
      */
     public function __construct(
@@ -48,7 +52,8 @@ class DesktopAgendaController extends Controller
         FormFactory $formFactory,
         ObjectManager $om,
         Request $request,
-        Translator $translator
+        Translator $translator,
+        AgendaManager $agendaManager
     )
     {
         $this->security = $security;
@@ -56,6 +61,7 @@ class DesktopAgendaController extends Controller
         $this->om = $om;
         $this->request = $request;
         $this->translator = $translator;
+        $this->agendaManager = $agendaManager;
     }
     /**
      * @Route(
@@ -216,6 +222,34 @@ class DesktopAgendaController extends Controller
         $listEvents = $em->getRepository('ClarolineCoreBundle:Event')->findByUserWithoutAllDay($usr, 5, $order);
 
         return array('listEvents' => array_merge($listEvents, $listEventsDesktop));
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/export",
+     *     name="claro_desktop_agenda_export"
+     * )
+     * @EXT\Method({"GET"})
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function exportsEventIcsAction()
+    {
+        $file =  $this->agendaManager->export();
+        $response = new StreamedResponse();
+
+        $response->setCallBack(
+            function () use ($file) {
+                readfile($file);
+            }
+        );
+        $date = new \DateTime();
+        $response->headers->set('Content-Transfer-Encoding', 'octet-stream');
+        $response->headers->set('Content-Type', 'application/force-download');
+        $response->headers->set('Content-Disposition', 'attachment; filename= '.$date->getTimestamp().'desktop_events.ics');
+        $response->headers->set('Content-Type', ' text/calendar');
+        $response->headers->set('Connection', 'close');
+
+        return $response;
     }
 
     private function convertEventoArray($listEvents)

@@ -2,7 +2,9 @@
 
 {% block twolevelselect_widget %}
     {% spaceless %}
-        {{ block('hidden_widget') }}
+        <div class="two_level_select">
+            {{ block('hidden_widget') }}
+        </div>
         <script type="text/javascript">
             $(document).ready(function () {
                 var choices = {{form.vars['choices']|json_encode()|raw}};
