@@ -42,7 +42,8 @@ class FacebookType extends AbstractType
                     'constraints' => new NotBlank(),
                     'label' => 'fb_client_secret'
                 )
-            );
+            )
+            ->add('facebook_client_active', 'checkbox', array('label' => 'Active', 'required' => false));
     }
 
     public function getName()
