@@ -229,7 +229,12 @@ claro_oauth:
     resource: "@ClarolineCoreBundle/Controller/Oauth"
     type: annotation
 
-claro_administration_parameters:
+claro_admin_parameters:
     prefix: admin/parameters
     resource: "@ClarolineCoreBundle/Controller/Administration/ParametersController.php"
+    type: annotation
+
+claro_admin_workspaces:
+    prefix: admin/workspaces
+    resource: "@ClarolineCoreBundle/Controller/Administration/WorkspacesController.php"
     type: annotation

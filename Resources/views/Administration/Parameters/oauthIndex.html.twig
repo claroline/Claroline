@@ -4,26 +4,25 @@
 
 {% block breadcrumb %}
     {{
-    macros.breadcrumbs([
-    {
-    'icon': 'icon-cog',
-    'name': 'administration'|trans({}, 'platform'),
-    'href': path('claro_admin_parameters_index')
-    },
-    {
-    'name': 'parameters'|trans({}, 'platform'),
-    'href': path('claro_admin_parameters_index')
-    },
-    {
-    'name': 'oauth'|trans({}, 'platform'),
-    'href': ''
-    }
-    ])
+        macros.breadcrumbs([
+            {
+                'icon': 'icon-cog',
+                'name': 'administration'|trans({}, 'platform'),
+                'href': path('claro_admin_parameters_index')
+            },
+            {
+                'name': 'parameters'|trans({}, 'platform'),
+                'href': path('claro_admin_parameters_index')
+            },
+            {
+                'name': 'oauth'|trans({}, 'platform'),
+                'href': ''
+            }
+        ])
     }}
 {% endblock %}
 
 {% block section_content %}
-
     <div class="panel-heading">
         <h3 class="panel-title">{{ 'oauth'|trans({}, 'platform') }}</h3>
     </div>
