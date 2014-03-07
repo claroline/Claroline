@@ -21,7 +21,7 @@
                             {{ 'from_message'|trans({}, 'platform') }}:  {{ ancestor.getSenderUsername() }}
                         </p>
                         <div>
-                            {% if ancestor.getSender().getPicture() != "" %}
+                            {% if ancestor.getSender() and ancestor.getSender().getPicture() != "" %}
                                 <img src="{{ asset('uploads/pictures/') ~  ancestor.getSender().getPicture() }}" class="col-md-2">
                             {% endif %}
                         </div>

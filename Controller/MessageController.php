@@ -141,7 +141,10 @@ class MessageController
         $form->handleRequest($this->request);
 
         if ($form->isValid()) {
-            $message = $this->messageManager->send($sender, $form->getData(), $parent);
+            $message = $form->getData();
+            $message->setSender($sender);
+            $message->setParent($parent);
+            $message = $this->messageManager->send($message);
             $url = $this->router->generate('claro_message_show', array('message' => $message->getId()));
 
             return new RedirectResponse($url);

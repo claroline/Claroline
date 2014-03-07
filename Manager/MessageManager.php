@@ -61,15 +61,41 @@ class MessageManager
     }
 
     /**
-     * @param \Claroline\CoreBundle\Entity\User    $sender
+     * Create a message.
+     *
+     * @param $content      The message content
+     * @param $object       The message object
+     * @param User[] $users The users receiving the message
+     * @param null $sender  The user sending the message
+     * @param null $parent  The message parent (is it's a discussion)
+     *
+     * @return Message
+     */
+    public function create($content, $object, array $users, $sender = null, $parent = null)
+    {
+        $message = new Message();
+        $message->setContent($content);
+        $message->setParent($parent);
+        $message->setObject($object);
+        $message->setSender($sender);
+        $stringTo = '';
+
+        foreach ($users as $user) {
+            $stringTo .= $user->getUsername() . ';';
+        }
+
+        $message->setTo($stringTo);
+
+        return $message;
+    }
+
+    /**
      * @param \Claroline\CoreBundle\Entity\Message $message
-     * @param \Claroline\CoreBundle\Entity\Message $parent
-     *                                                      @param boolean setAsSent
+     * @param boolean setAsSent
      *
      * @return \Claroline\CoreBundle\Entity\Message
      */
-
-    public function send(User $sender, Message $message, $parent = null, $setAsSent = true)
+    public function send(Message $message, $setAsSent = true)
     {
         if (substr($receiversString = $message->getTo(), -1, 1) === ';') {
             $receiversString = substr_replace($receiversString, '', -1);
@@ -96,18 +122,12 @@ class MessageManager
             $groupReceivers = $this->groupRepo->findGroupsByNames($groupNames);
         }
 
-        $message->setSender($sender);
-
-        if (null !== $parent) {
-            $message->setParent($parent);
-        }
-
         $this->om->persist($message);
 
-        if ($setAsSent) {
+        if ($setAsSent && $message->getSender()) {
             $userMessage = $this->om->factory('Claroline\CoreBundle\Entity\UserMessage');
             $userMessage->setIsSent(true);
-            $userMessage->setUser($sender);
+            $userMessage->setUser($message->getSender());
             $userMessage->setMessage($message);
             $this->om->persist($userMessage);
         }
