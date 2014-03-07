@@ -263,58 +263,19 @@ class ResourceVoter implements VoterInterface
      */
     public function checkMove(ResourceNode $parent, $nodes, TokenInterface $token)
     {
-        $timesAllGranted = 0;
+        $errors = [];
 
-        //am I the almighty creator or manager of everything ?
+        //first I need to know if I can create
         foreach ($nodes as $node) {
-            if ($this->isWorkspaceManager($node->getWorkspace, $token) || $node->getCretor() === $token->getUser()) {
-                $timesAllGranted++;
-            }
+            $type = $node->getResourceType()->getName();
+            $errors = array_merge($errors, $this->checkCreation($type, $parent, $token, $parent->getWorkspace()));
         }
 
-        if ($this->isWorkspaceManager($parent->getWorkspace(), $token)) {
-            $timesAllGranted++;
-        }
+        //then I need to know if I can copy
+        $errors = array_merge($errors, $this->checkCopy($parent, $nodes, $token));
 
-        //if the previous commentary is true, then I bypass every verification
-        if ($timesAllGranted === count($nodes) + 1) {
-            return array();
-        }
-
-        //otherwise we'll have to check
-        //nope
-        $errors = array();
-        $rightsCreation = $this->repository
-            ->findCreationRights($this->ut->getRoles($token), $parent);
-
-        foreach ($nodes as $node) {
-            if (!$this->canCreate($rightsCreation, $node->getResourceType()->getName())) {
-                 $errors[] = $this->translator
-                     ->trans(
-                         'resource_creation_wrong_type',
-                         array(
-                             '%path%' => $parent->getPathForDisplay(),
-                             '%type%' => $this->translator->trans(
-                                 strtolower($node->getResourceType()->getName()),
-                                 array(),
-                                 'resource'
-                             )
-                         ),
-                         'platform'
-                     );
-            }
-
-            $mask = $this->repository->findMaximumRights($this->ut->getRoles($token), $node);
-            $grantCopy = $mask & MaskDecoder::COPY;
-            if ($grantCopy === 0) {
-                $errors[] = $this->getRoleActionDeniedMessage('copy', $node->getPathForDisplay());
-            }
-
-            $grantDelete = $mask & MaskDecoder::DELETE;
-            if ($grantDelete === 0) {
-                $errors[] = $this->getRoleActionDeniedMessage('delete', $node->getPathForDisplay());
-            }
-        }
+        //and finally I need to know if I can delete
+        $errors = array_merge($errors, $this->checkAction('DELETE', $nodes, $token));
 
         return $errors;
     }
@@ -323,8 +284,8 @@ class ResourceVoter implements VoterInterface
      * Checks if the array of resources can be copied to the resource $parent
      * by the $token.
      *
-     * @param \Claroline\CoreBundle\Entity\Resource\ResourceNode $parent
-     * @param array|\Claroline\CoreBundle\Library\Security\Voter\type $nodes
+     * @param \Claroline\CoreBundle\Entity\Resource\ResourceNode                   $parent
+     * @param array|\Claroline\CoreBundle\Library\Security\Voter\type              $nodes
      * @param \Symfony\Component\Security\Core\Authentication\Token\TokenInterface $token
      *
      * @return array
@@ -339,60 +300,8 @@ class ResourceVoter implements VoterInterface
             $errors = array_merge($errors, $this->checkCreation($type, $parent, $token, $parent->getWorkspace()));
         }
 
-        //then I need to know if I can copy these resources
-        foreach ($nodes as $node) {
-
-        }
-
-        /*
-        //do the resources share the same workspace ?
-        //It doesn't cover every cases like copying a resource from a workspace to an other where the user
-        //is manager of both but it is a start.
-        //role manager verification
-        $haveSameWorkspace = true;
-        $ws = $parent->getWorkspace();
-
-        foreach ($resources as $resource) {
-            if ($resource->getWorkspace() !== $ws) {
-                $haveSameWorkspace = false;
-            }
-        }
-
-        if ($haveSameWorkspace && $this->isWorkspaceManager($ws, $token)) {
-            return array();
-        }
-
-        $errors = array();
-        $rightsCreation = $this->repository
-            ->findCreationRights($this->ut->getRoles($token), $parent);
-
-        if (count($rightsCreation) == 0) {
-            $errors[] = $this->translator
-                ->trans(
-                    'resource_creation_denied',
-                    array('%path%' => $parent->getPathForDisplay()),
-                    'platform'
-                );
-        } else {
-            foreach ($resources as $resource) {
-                if (!$this->canCreate($rightsCreation, $resource->getResourceType()->getName())) {
-                    $errors[] = $this->translator
-                        ->trans(
-                            'resource_creation_wrong_type',
-                            array(
-                                '%path%' => $parent->getPathForDisplay(),
-                                '%type%' => $this->translator->trans(
-                                    strtolower($resource->getResourceType()->getName()),
-                                    array(),
-                                    'resource'
-                                )
-                            ),
-                            'platform'
-                        );
-                }
-            }
-        }
-        */
+        //then we need to know if we can copy
+        $errors = array_merge($errors, $this->checkAction('COPY', $nodes, $token));
 
         return $errors;
     }

@@ -180,61 +180,113 @@ class ResourceVoterTest extends MockeryTestCase
      */
     public function testCheckMove(
         $countErrors,
-        $parentWorkspace,
-        $firstNodeWorkspace,
-        $secondNodeWorkspace,
-        $isParentWorkspaceManager
+        $createErrors,
+        $copyErrors,
+        $deleteErrors
     )
     {
-        $this->markTestSkipped();
-        $voter = $this->getVoter(array('isWorkspaceManager'));
-        $this->ut->shouldReceive('getRoles')->andReturn(array());
-        $voter->shouldReceive('isWorkspaceManager')->andReturn($isParentWorkspaceManager);
-
+        $workspace = new SimpleWorkspace();
+        $resourceType = $this->mock('Claroline\CoreBundle\Entity\Resource\ResourceType');
+        $resourceType->shouldReceive('getName')->andReturn('type');
         $parent = $this->mock('Claroline\CoreBundle\Entity\Resource\ResourceNode');
-        $parent->shouldReceive('getWorkspace')->andReturn($parentWorkspace);
+        $parent->shouldReceive('getWorkspace')->andReturn($workspace);
         $firstNode = $this->mock('Claroline\CoreBundle\Entity\Resource\ResourceNode');
         $secondNode = $this->mock('Claroline\CoreBundle\Entity\Resource\ResourceNode');
-        $firstNode->shouldReceive('getWorkspace')->andReturn($firstNodeWorkspace);
-        $secondNode->shouldReceive('getWorkspace')->andReturn($secondNodeWorkspace);
-        $resources = array($firstNode, $secondNode);
+        $firstNode->shouldReceive('getResourceType')->andReturn($resourceType);
+        $secondNode->shouldReceive('getResourceType')->andReturn($resourceType);
         $token = $this->mock('Symfony\Component\Security\Core\Authentication\Token\TokenInterface');
+        $nodes = array($firstNode, $secondNode);
 
-        $this->assertEquals(
-            count($voter->checkMove($parent, $resources, $token)),
-            $countErrors
-        );
+        $voter = $this->getVoter(array('checkCreation', 'checkAction', 'checkCopy'));
+        $voter->shouldReceive('checkCreation')->andReturn($createErrors);
+        $voter->shouldReceive('checkAction')->andReturn($deleteErrors);
+        $voter->shouldReceive('checkCopy')->andReturn($copyErrors);
+
+        $this->assertEquals($countErrors, count($voter->checkMove($parent, $nodes, $token)));
     }
 
-    public function testCopy(
-        $countErrors
+    /**
+     * @dataProvider checkCopyProvider
+     */
+    public function testCheckCopy(
+        $countErrors,
+        $createErrors,
+        $copyErrors
     )
     {
+        $workspace = new SimpleWorkspace();
+        $resourceType = $this->mock('Claroline\CoreBundle\Entity\Resource\ResourceType');
+        $resourceType->shouldReceive('getName')->andReturn('type');
+        $parent = $this->mock('Claroline\CoreBundle\Entity\Resource\ResourceNode');
+        $parent->shouldReceive('getWorkspace')->andReturn($workspace);
+        $firstNode = $this->mock('Claroline\CoreBundle\Entity\Resource\ResourceNode');
+        $secondNode = $this->mock('Claroline\CoreBundle\Entity\Resource\ResourceNode');
+        $firstNode->shouldReceive('getResourceType')->andReturn($resourceType);
+        $secondNode->shouldReceive('getResourceType')->andReturn($resourceType);
+        $token = $this->mock('Symfony\Component\Security\Core\Authentication\Token\TokenInterface');
+        $nodes = array($firstNode, $secondNode);
 
+        $voter = $this->getVoter(array('checkCreation', 'checkAction'));
+        $voter->shouldReceive('checkCreation')->andReturn($createErrors);
+        $voter->shouldReceive('checkAction')->andReturn($copyErrors);
+
+        $this->assertEquals($countErrors, count($voter->checkCopy($parent, $nodes, $token)));
+    }
+
+    public function checkCopyProvider()
+    {
+        return array(
+            //valid
+            array(
+                'countErrors' => 0,
+                'copyErrors' => array(),
+                'createErrors' => array()
+            ),
+            //cannot copy
+            array(
+                'countErrors' => 2,
+                'copyErrors' => array('error'),
+                'createErrors' => array()
+            ),
+            //cannot create
+            array(
+                'countErrors' => 1,
+                'copyErrors' => array(),
+                'createErrors' => array('error')
+            )
+        );
     }
 
     public function checkMoveProvider()
     {
-        $parentWorkspace = new SimpleWorkspace();
-        $firstNodeWorkspace = new SimpleWorkspace();
-        $secondNodeWorkspace = new SimpleWorkspace();
-
         return array(
+            //valid
             array(
-                //manager can do w/e he wants
                 'countErrors' => 0,
-                'parentWorkspace' => $parentWorkspace,
-                'firstNodeWorkspace' => $parentWorkspace,
-                'secondNodeWorkspace' => $parentWorkspace,
-                'isParentWorkspaceManager' => true
+                'copyErrors' => array(),
+                'createErrors' => array(),
+                'deleteErrors' => array()
             ),
+            //cannot copy
             array(
-                //manager can do w/e he wants
-                'countErrors' => 0,
-                'parentWorkspace' => $parentWorkspace,
-                'firstNodeWorkspace' => $firstNodeWorkspace,
-                'secondNodeWorkspace' => $secondNodeWorkspace,
-                'isParentWorkspaceManager' => true
+                'countErrors' => 2,
+                'copyErrors' => array('error'),
+                'createErrors' => array(),
+                'deleteErrors' => array()
+            ),
+            //cannot create
+            array(
+                'countErrors' => 1,
+                'copyErrors' => array(),
+                'createErrors' => array('error'),
+                'deleteErrors' => array()
+            ),
+            //delete errors
+            array(
+                'countErrors' => 1,
+                'copyErrors' => array(),
+                'createErrors' => array(),
+                'deleteErrors' => array('error')
             ),
         );
     }
