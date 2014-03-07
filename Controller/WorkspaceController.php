@@ -341,9 +341,12 @@ class WorkspaceController extends Controller
      *
      * Renders the left tool bar. Not routed.
      *
-     * @param $_workspace
+     * @param AbstractWorkspace $workspace
+     * @param integer[] $_breadcrumbs
      *
-     * @return Response
+     * @throws \Symfony\Component\Security\Core\Exception\AccessDeniedException
+     *
+     * @return array
      */
     public function renderToolListAction(AbstractWorkspace $workspace, $_breadcrumbs)
     {
@@ -362,7 +365,20 @@ class WorkspaceController extends Controller
         }
 
         $currentRoles = $this->utils->getRoles($this->security->getToken());
-        $hasManagerAccess = true;
+
+        //do I need to display every tools.
+        $hasManagerAccess = false;
+        $managerRole = $this->roleManager->getManagerRole($workspace);
+
+        foreach ($currentRoles as $role) {
+            if ($managerRole->getName() === $role) {
+                $hasManagerAccess = true;
+            }
+        }
+
+        if ($this->security->isGranted('ROLE_ADMIN')) {
+            $hasManagerAccess = true;
+        }
 
         //if manager or admin, show every tools
         if ($hasManagerAccess) {
@@ -393,24 +409,27 @@ class WorkspaceController extends Controller
      *
      * Opens a tool.
      *
-     * @param type $toolName
-     * @param type $workspaceId
+     * @param string            $toolName
+     * @param AbstractWorkspace $workspace
      *
      * @return Response
      */
     public function openToolAction($toolName, AbstractWorkspace $workspace)
     {
         $this->assertIsGranted($toolName, $workspace);
+
         $event = $this->eventDispatcher->dispatch(
             'open_tool_workspace_' . $toolName,
             'DisplayTool',
             array($workspace)
         );
+
         $this->eventDispatcher->dispatch(
             'log',
             'Log\LogWorkspaceToolRead',
             array($workspace, $toolName)
         );
+
         $this->eventDispatcher->dispatch(
             'log',
             'Log\LogWorkspaceEnter',
@@ -437,7 +456,8 @@ class WorkspaceController extends Controller
      *
      * Display visible registered widgets.
      *
-     * @param integer $workspaceId
+     * @param AbstractWorkspace $workspace
+     * @param integer           $homeTabId
      *
      * @return \Symfony\Component\HttpFoundation\Response
      *
@@ -611,48 +631,6 @@ class WorkspaceController extends Controller
         }
 
         throw new AccessDeniedException("Access denied");
-
-//        //if workspace manager, he his gr
-//        if ('anon.' != $this->security->getToken()->getUser()) {
-//            $roles = $this->roleManager->getRolesByWorkspace($workspace);
-//            $foundRoles = array();
-//
-//            foreach ($roles as $wsRole) {
-//                foreach ($this->security->getToken()->getUser()->getRoles() as $userRole) {
-//                    if ($userRole == $wsRole->getName()) {
-//                        $foundRoles[] = $userRole;
-//                    }
-//                }
-//            }
-//
-//            if (count($foundRoles) === 0 && !$isAdmin) {
-//                throw new AccessDeniedException('No role found in that workspace');
-//            }
-//
-//            if ($isAdmin) {
-//                //admin always open the home.
-//                $openedTool = array($this->toolManager->getOneToolByName('home'));
-//            } else {
-//
-//            }
-//        } else {
-//            $foundRole = 'ROLE_ANONYMOUS';
-//            $openedTool = $this->toolManager->getDisplayedByRolesAndWorkspace(
-//                array('ROLE_ANONYMOUS'),
-//                $workspace
-//            );
-//        }
-//
-//        if ($openedTool == null) {
-//            throw new AccessDeniedException("No tool found for role {$foundRole}");
-//        }
-//
-//        $route = $this->router->generate(
-//            'claro_workspace_open_tool',
-//            array('workspaceId' => $workspace->getId(), 'toolName' => $openedTool[0]->getName())
-//        );
-//
-//        return new RedirectResponse($route);
     }
 
     /**

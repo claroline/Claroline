@@ -52,7 +52,6 @@ class WorkspaceVoter implements VoterInterface
     public function vote(TokenInterface $token, $object, array $attributes)
     {
         if ($object instanceof AbstractWorkspace) {
-
             //Managers can do anything in their workspace.
             $manager = $this->em->getRepository('ClarolineCoreBundle:Role')
                 ->findManagerRole($object);
@@ -64,6 +63,8 @@ class WorkspaceVoter implements VoterInterface
                 }
             }
 
+            //THIS SECTION SHOULD BE REMOVED
+            /*
             //if there is no attribute (ie $this->sc->isGranted($workspace))
             if (count($attributes) === 0) {
                 $roles = $this->ut->getRoles($token);
@@ -72,7 +73,7 @@ class WorkspaceVoter implements VoterInterface
                     ->findWorkspaceByWorkspaceAndRoles($object, $roles);
 
                 return (count($ws) === 0) ? VoterInterface::ACCESS_DENIED: VoterInterface::ACCESS_GRANTED;
-            }
+            }*/
 
             //otherwise we check if we can open the tool specified in the $attributes array
             return ($this->canDo($object, $token, $attributes[0])) ?
@@ -112,8 +113,7 @@ class WorkspaceVoter implements VoterInterface
             ->findDisplayedByRolesAndWorkspace($this->ut->getRoles($token), $workspace);
 
         //if the action is open, we see if tools can be opened
-        //@todo the action 'OPEN' should be removed
-        if ($action === strtolower('OPEN')) {
+        if (strtolower($action) === 'open') {
             return (count($tools) > 0) ? true: false;
         }
 
