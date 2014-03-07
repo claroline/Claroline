@@ -120,9 +120,9 @@ class AgendaManager
 
     /**
      * [importsEvents description]
-     * @param  UploadedFile $file      []
-     * @param  [AbstractWorkspace]       $workspace [description]
-     * @return [int]                  number of events saved
+     * @param  UploadedFile $file      
+     * @param  AbstractWorkspace $workspace 
+     * @return int number of events saved
      */
     public function importsEvents(UploadedFile $file, $workspace)
     {

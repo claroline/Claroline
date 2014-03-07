@@ -191,7 +191,7 @@ class ToolListener
             array(
                 'workspace' => $workspace,
                 'form' => $form->createView(),
-                'file' =>$file->createView(),
+                'file' => $file->createView(),
                 'owners' => $owners
             )
         );
