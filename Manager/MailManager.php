@@ -80,12 +80,7 @@ class MailManager
     public function sendForgotPassword(User $user)
     {
         $hash = $user->getResetPasswordHash();
-
-        $link = $this->container->get('request')->server->get('HTTP_ORIGIN') . $this->router->generate(
-            'claro_security_reset_password',
-            array('hash' => $hash)
-        );
-
+        $link = $this->router->generate('claro_security_reset_password', array('hash' => $hash), true);
         $subject = $this->translator->trans('reset_pwd', array(), 'platform');
 
         $body = $this->container->get('templating')->render(
