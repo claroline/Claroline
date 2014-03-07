@@ -445,7 +445,7 @@ class ParametersController extends Controller
     public function submitMailLayoutAction()
     {
         $formData = $this->request->get('platform_parameters_form');
-        $form = $this->formFactory->create( new AdminForm\MailLayoutType(), $formData['content']);
+        $form = $this->formFactory->create(new AdminForm\MailLayoutType(), $formData['content']);
         $errors = $this->mailManager->validateLayoutMail($formData['content']);
 
         if (count($errors) > 0) {
@@ -577,7 +577,7 @@ class ParametersController extends Controller
             if (count($errors) === 0) {
                 $this->configHandler->setParameters($data);
             } else {
-                foreach ($errors as  $error) {
+                foreach ($errors as $error) {
                     $msg = $this->translator->trans($error, array(), 'platform');
                     $form->addError(new FormError($msg));
                 }
@@ -643,7 +643,7 @@ class ParametersController extends Controller
                 $this->configHandler->setParameters($data);
                 $this->cacheManager->refresh();
             } else {
-                foreach ($errors as  $error) {
+                foreach ($errors as $error) {
                     $trans = $this->translator->trans($error, array(), 'platform');
                     $form->addError(new FormError($trans));
                 }
