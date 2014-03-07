@@ -28,22 +28,16 @@
 'select all': 'Tout sélectionner'
 'unique connections': 'Nb Cnx. uniques'
 404: 'La page que vous cherchez n''existe pas.'
-<<<<<<< HEAD
+Active: 'Actif'
 Create a new resource: 'Créer une nouvelle ressource'
 Everyone: 'Tout le monde'
+First name: Prénom
 Grant the right to: 'Accorder des droit à'
 Indexing: Référencement
 Language: Langue
+Last name: Nom
 Members of the platform: 'Inscrits à la plateforme'
 Members of work space: 'Inscrits à l''espace d''activité'
-None: Aucun
-Show: Afficher
-=======
-Active: 'Actif'
-First name: Prénom
-Indexing: Référencement
-Language: Langue
-Last name: Nom
 None: Aucun
 Show: Afficher
 This variable is optional and will be replaced by your platform name: 'Ce variable est optionnel et sera remplacé par le nom de la plateforme'
@@ -53,7 +47,6 @@ You can redefine the content of the registration mail here: 'Vous pouvez redéfi
 You can redefine the layout used when a mail is sent: 'Vous pouvez redéfinir ici le layout des emails envoyés par la plateforme'
 You can use the following variables in your form: 'Vous pouvez utiliser les variables suivantes dans votre formulaire'
 You can use the full screen version of the text editor to include HTML: 'Vous pouvez utiliser la version plein écran de l''éditeur afin d''y inclure du HTML'
->>>>>>> upstream/master
 account_created: 'Compte créé'
 account_general_statistics: 'Statistiques générales sur les comptes'
 action: Action
@@ -491,9 +484,9 @@ remove_subcategory: 'Retirer la sous-catégorie'
 remove_user_confirm_message: 'Êtes-vous sûr de vouloir supprimer cet utilisateur ?'
 remove_user_s_confirm_message: 'Êtes-vous sûr de vouloir supprimer ces %count% utilisateurs?'
 remove_workspace_confirm: 'Êtes-vous sûr de vouloir supprimer cet espace d''activités ?'
-remove_workspaces_confirm: 'Êtes-vous sûr de vouloir supprimer ces %count% espaces d''activités ?'
 remove_workspace_from_category_confirm_message: 'Êtes-vous sûr de vouloir retirer cet espace d''activités de cette catégorie ?'
 remove_workspace_from_category_confirm_title: 'Retrait d''un espace d''activités d''une catégorie'
+remove_workspaces_confirm: 'Êtes-vous sûr de vouloir supprimer ces %count% espaces d''activités ?'
 rename: Renommer
 rename_category: 'Renommer la catégorie'
 rename_tool: 'Renommage d''un outil'
@@ -688,14 +681,11 @@ widget_home_tab_delete_confirm_title: 'Suppression du widget de l''onglet'
 widget_settings: 'Paramètres des widgets'
 widgets: Widgets
 widgets_configuration: 'Configuration des widgets'
-<<<<<<< HEAD
-=======
 will be replaced by your platform name: 'qui sera remplacé par le nom de votre plateforme'
 will display the password: 'qui affichera le mot de passe de l''utilisateur'
 will display the user first name: 'qui affichera le prénom de l''utilisateur'
 will display the user last name: 'qui affichera le nom de famille de l''utilisateur'
 will display the username: 'qui affichera le nom de l''utilisateur'
->>>>>>> upstream/master
 workspace.create: 'Créer un nouvel espace d''activités'
 workspace.name_not_blank: 'Veuillez spécifier un nom pour ce workspace.'
 workspace: 'Espace d''activités'
@@ -734,8 +724,8 @@ workspace_tools: Outils
 workspace_unregistration_confirm_title: 'Voulez-vous vous désinscrire de cet espace d''activités ?'
 workspace_welcome: Accueil
 workspaces: 'Espaces d''activités'
-workspaces_management: 'Gestions des espaces d''activités '
 workspaces_included_in_category: 'Espaces d''activités enregistrés dans cette catégorie'
+workspaces_management: 'Gestions des espaces d''activités '
 ws_creator: 'Créateur d''espaces'
 ws_most_viewed: 'Espaces d''activités les plus consultés'
 yes: oui
