@@ -33,9 +33,9 @@ class WorkspaceVoter implements VoterInterface
 
     /**
      * @DI\InjectParams({
-     *     "em"             = @DI\Inject("doctrine.orm.entity_manager"),
-     *     "translator"     = @DI\Inject("translator"),
-     *     "ut"             = @DI\Inject("claroline.security.utilities")
+     *     "em"         = @DI\Inject("doctrine.orm.entity_manager"),
+     *     "translator" = @DI\Inject("translator"),
+     *     "ut"         = @DI\Inject("claroline.security.utilities")
      * })
      */
     public function __construct(
@@ -64,14 +64,17 @@ class WorkspaceVoter implements VoterInterface
                 }
             }
 
+            //if there is no attribute (ie $this->sc->isGranted($workspace))
             if (count($attributes) === 0) {
                 $roles = $this->ut->getRoles($token);
+                //we check if we were added to that workspace
                 $ws = $this->em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')
                     ->findWorkspaceByWorkspaceAndRoles($object, $roles);
 
                 return (count($ws) === 0) ? VoterInterface::ACCESS_DENIED: VoterInterface::ACCESS_GRANTED;
             }
 
+            //otherwise we check if we can open the tool specified in the $attributes array
             return ($this->canDo($object, $token, $attributes[0])) ?
                 VoterInterface::ACCESS_GRANTED:
                 VoterInterface::ACCESS_DENIED;
@@ -101,32 +104,24 @@ class WorkspaceVoter implements VoterInterface
      *
      * @throws \RuntimeException
      */
-    private function canDo(AbstractWorkspace $workspace, TokenInterface $token, $action)
+    public function canDo(AbstractWorkspace $workspace, TokenInterface $token, $action)
     {
-        //If a the user role is linked to a tool, he can open the workspace.
-        //It may change in the future.
+        //get a list of tools openable by the user
         $tools = $this->em
             ->getRepository('ClarolineCoreBundle:Tool\Tool')
             ->findDisplayedByRolesAndWorkspace($this->ut->getRoles($token), $workspace);
 
-        if ($action === 'OPEN') {
-            if (count($tools) > 0) {
-                return true;
-            } else {
-                return false;
-            }
+        //if the action is open, we see if tools can be opened
+        //@todo the action 'OPEN' should be removed
+        if ($action === strtolower('OPEN')) {
+            return (count($tools) > 0) ? true: false;
         }
 
-        //what is that ?
+        //otherwise, we check if the action is equal to the name of the tool
         foreach ($tools as $tool) {
             if ($tool->getName() === $action) {
                 return true;
             }
-        }
-
-        //Authentication may be needed
-        if ($token instanceof AnonymousToken) {
-            throw new AuthenticationException('Insufficient permissions : authentication required');
         }
 
         return false;
