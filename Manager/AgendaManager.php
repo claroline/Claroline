@@ -16,6 +16,7 @@ use Claroline\CoreBundle\Persistence\ObjectManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Config\Definition\Exception\Exception;
 use Symfony\Component\Security\Core\SecurityContextInterface;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
  * @DI\Service("claroline.manager.agenda_manager")
@@ -115,5 +116,37 @@ class AgendaManager
         file_put_contents($fileName, $text);
 
         return $fileName;
+    }
+
+    /**
+     * [importsEvents description]
+     * @param  UploadedFile $file      []
+     * @param  [AbstractWorkspace]       $workspace [description]
+     * @return [int]                  number of events saved
+     */
+    public function importsEvents(UploadedFile $file, $workspace)
+    {
+        $path = $this->rootDir.'/../web/uploads';
+        $ds = DIRECTORY_SEPARATOR;
+        $file->move($path);
+        $ical = new \ICal($path . $ds . $file->getClientOriginalName());
+        $events = $ical->events();
+        $this->om->startFlushSuite();
+        $count = 0;
+
+        foreach ($events as $i => $event) {
+            $e = $this->om->factory('Claroline\CoreBundle\Entity\Event');
+            $e->setTitle($event['SUMMARY']);
+            $e->setStart($ical->iCalDateToUnixTimestamp($event['DTSTART']));
+            $e->setEnd($ical->iCalDateToUnixTimestamp($event['DTEND']));
+            $e->setDescription($event['DESCRIPTION']);
+            $e->setWorkspace($workspace);
+            $e->setUser($this->security->getToken()->getUser());
+            $e->setPriority('#01A9DB');
+            $count = $i;
+        }
+        $this->om->endFlushSuite();     
+
+        return $i;
     }
 } 

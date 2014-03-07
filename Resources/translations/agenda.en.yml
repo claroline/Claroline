@@ -30,6 +30,7 @@ february: February
 fri: Fri
 friday: Friday
 high: High
+import_agenda_file_file: 'Import'
 jan: Jan
 january: January
 jul: Jul

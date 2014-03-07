@@ -25,6 +25,8 @@ use Claroline\CoreBundle\Persistence\ObjectManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\HttpFoundation\StreamedResponse;
+use Symfony\Component\Routing\RouterInterface;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 
 /**
  * Controller of the agenda
@@ -37,6 +39,7 @@ class WorkspaceAgendaController extends Controller
     private $request;
     private $rm;
     private $agendaManager;
+    private $router;
 
     /**
      * @DI\InjectParams({
@@ -45,7 +48,8 @@ class WorkspaceAgendaController extends Controller
      *     "om"                 = @DI\Inject("claroline.persistence.object_manager"),
      *     "request"            = @DI\Inject("request"),
      *     "rm"                 =  @DI\Inject("claroline.manager.role_manager"),
-     *     "agendaManager"      = @DI\Inject("claroline.manager.agenda_manager")
+     *     "agendaManager"      = @DI\Inject("claroline.manager.agenda_manager"),
+     *     "router"             = @DI\Inject("router")
      * })
      */
     public function __construct(
@@ -54,7 +58,8 @@ class WorkspaceAgendaController extends Controller
         ObjectManager $om,
         Request $request,
         RoleManager $rm,
-        AgendaManager $agendaManager
+        AgendaManager $agendaManager,
+        RouterInterface $router
     )
     {
         $this->security = $security;
@@ -63,6 +68,7 @@ class WorkspaceAgendaController extends Controller
         $this->request = $request;
         $this->rm = $rm;
         $this->agendaManager = $agendaManager;
+        $this->router = $router;
     }
 
     /**
@@ -191,7 +197,6 @@ class WorkspaceAgendaController extends Controller
      */
     public function deleteAction(AbstractWorkspace $workspace)
     {
-
         $this->checkUserIsAllowed('agenda', $workspace);
         $repository = $this->om->getRepository('ClarolineCoreBundle:Event');
         $postData = $this->request->request->all();
@@ -379,21 +384,17 @@ class WorkspaceAgendaController extends Controller
      * @param AbstractWorkspace $workspace
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function importsEventsIcsAction()
+    public function importsEventsIcsAction(AbstractWorkspace $workspace)
     {
         $form = $this->formFactory->create(FormFactory::TYPE_AGENDA_IMPORTER);
         $form->handleRequest($this->request);
+        $listEvents = array();
 
         if ($form->isValid()) {
             $file = $form->get('file')->getData();
-            $lines = file_get_contents($file);
-            var_dump($lines);
-            // foreach ($lines as $line) {
-            //     $users[] = str_getcsv($line, ';');
-            // }
-
+            $this->agendaManager->importsEvents($file, $workspace);
+            return new RedirectResponse($this->router->generate('claro_workspace_open_tool', array('toolName'=>'agenda', 'workspaceId' => $workspace->getId())));
         }
-
     }
 
     private function checkUserIsAllowed($permission, AbstractWorkspace $workspace)
