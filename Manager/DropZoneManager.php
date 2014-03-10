@@ -47,12 +47,14 @@ class DropzoneManager
     	$test = array();
     	// searching for roles with the 'open' right
     	foreach ($rights as $ressourceRight) {
-    		$role = $ressourceRight->getRole();
-    		$mask = $ressourceRight->getMask();
+    		$role = $ressourceRight->getRole(); //  current role
+    		$mask = $ressourceRight->getMask(); // current mask
 
+    		// getting decoded rights.
     		$decodedRights = $this->maskManager->decodeMask($mask,$ressourceNode->getResourceType());
-    		if(array_key_exists('open', $decodedRights) && $decodedRights['open'] == true && $role->getName() != 'ROLE_ADMIN')
-    		{
+    		// if this role is allowed to open and this role is not an Admin role
+    		if(array_key_exists('open', $decodedRights) && $decodedRights['open'] == true 
+    			&& $role->getName() != 'ROLE_ADMIN') {
     			// the role has the 'open' right
     			array_push($test,$role->getName());
     			$users = $role->getUsers();
