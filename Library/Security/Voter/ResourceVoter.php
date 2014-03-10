@@ -146,60 +146,60 @@ class ResourceVoter implements VoterInterface
     }
 
     /**
-     * @todo remove array typing from $resources
-     *
      * @param $action
-     * @param array $resources
+     * @param array $nodes
      * @param TokenInterface $token
      * @return array
      * @throws \Exception
      */
-    private function checkAction($action, array $resources, TokenInterface $token)
+    public function checkAction($action, array $nodes, TokenInterface $token)
     {
         $haveSameWorkspace = true;
-        $ws = $resources[0]->getWorkspace();
+        $ws = $nodes[0]->getWorkspace();
 
-        foreach ($resources as $resource) {
-            if ($resource->getWorkspace() !== $ws) {
+        foreach ($nodes as $node) {
+            if ($node->getWorkspace() !== $ws) {
                 $haveSameWorkspace = false;
                 break;
             }
         }
 
+        //the workspace manager he can do w/e he wants
         if ($haveSameWorkspace && $this->isWorkspaceManager($ws, $token)) {
             return array();
         }
 
-        $isCreator = false;
+        //the resource creator can do w/e he wants
+        $timesCreator = 0;
 
-        foreach ($resources as $resource) {
-            if ($resource->getCreator() === $token->getUser()) {
-                $isCreator = true;
+        foreach ($nodes as $node) {
+            if ($node->getCreator() === $token->getUser()) {
+                $timesCreator++;
             }
         }
 
-        if ($isCreator) {
+        if ($timesCreator == count($nodes)) {
             return array();
         }
 
-
-
+        //check if the action is possible on the node
         $errors = array();
         $action = strtolower($action);
 
-        foreach ($resources as $resource) {
-            $mask = $this->repository->findMaximumRights($this->ut->getRoles($token), $resource);
-            $type = $resource->getResourceType();
+        foreach ($nodes as $node) {
+            $mask = $this->repository->findMaximumRights($this->ut->getRoles($token), $node);
+            $type = $node->getResourceType();
             $decoder = $this->maskManager->getDecoder($type, $action);
 
+            //gotta check
             if (!$decoder) {
-                throw new \Exception('The permission ' . $action . ' does not exists for the type ' . $type->getName());
+                return array('The permission ' . $action . ' does not exists for the type ' . $type->getName());
             }
 
             $grant = $decoder ? $mask & $decoder->getValue(): 0;
 
             if ($decoder && $grant === 0) {
-                $errors[] = $this->getRoleActionDeniedMessage($action, $resource->getPathForDisplay());
+                $errors[] = $this->getRoleActionDeniedMessage($action, $node->getPathForDisplay());
             }
         }
 
@@ -207,53 +207,45 @@ class ResourceVoter implements VoterInterface
     }
 
     /**
-     * Checks if the a resource whole type is $type
+     * Checks if a resource whose type is $type
      * can be created in the directory $resource by the $token
      *
-     * @param string         $type
-     * @param ResourceNode   $resource
+     * @param $type
+     * @param ResourceNode $node
      * @param TokenInterface $token
+     * @param \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace $workspace
      *
      * @return array
      */
-    private function checkCreation($types, ResourceNode $resource, TokenInterface $token, AbstractWorkspace $workspace)
+    public function checkCreation(
+        $type,
+        ResourceNode $node,
+        TokenInterface $token,
+        AbstractWorkspace $workspace
+    )
     {
         $errors = array();
 
+        //if I am the manager, I can do whatever I want
         if ($this->isWorkspaceManager($workspace, $token)) {
-            return $errors;
+            return array();
         }
 
-        $rightsCreation = $this->repository->findCreationRights($this->ut->getRoles($token), $resource);
+        //otherwise we need to check
+        $rightsCreation = $this->repository->findCreationRights($this->ut->getRoles($token), $node);
 
-        if (count($rightsCreation) == 0) {
+        if (!$this->canCreate($rightsCreation, $type)) {
             $errors[] = $this->translator
                 ->trans(
                     'resource_creation_wrong_type',
                     array(
-                        '%path%' => $resource->getPathForDisplay(),
+                        '%path%' => $node->getPathForDisplay(),
                         '%type%' => $this->translator->trans(
-                            strtolower($types),
-                            array(),
-                            'resource'
+                            strtolower($type), array(), 'resource'
                         )
                     ),
                     'platform'
                 );
-        } else {
-            if (!$this->canCreate($rightsCreation, $types)) {
-                $errors[] = $this->translator
-                    ->trans(
-                        'resource_creation_wrong_type',
-                        array(
-                            '%path%' => $resource->getPathForDisplay(),
-                            '%type%' => $this->translator->trans(
-                                strtolower($types), array(), 'resource'
-                            )
-                        ),
-                        'platform'
-                    );
-            }
         }
 
         return $errors;
@@ -264,74 +256,26 @@ class ResourceVoter implements VoterInterface
      * by the $token.
      *
      * @param \Claroline\CoreBundle\Entity\Resource\ResourceNode                   $parent
-     * @param array                                                                $resources
+     * @param array                                                                $nodes
      * @param \Symfony\Component\Security\Core\Authentication\Token\TokenInterface $token
      *
      * @return array
      */
-    private function checkMove(ResourceNode $parent, $resources, TokenInterface $token)
+    public function checkMove(ResourceNode $parent, $nodes, TokenInterface $token)
     {
-        //do the resources share the same workspace ?
-        //It doesn't cover every cases like moving a resource from a workspace to an other where the user
-        //is manager of both but it is a start.
-        //role manager verification
-        $haveSameWorkspace = true;
-        $ws = $parent->getWorkspace();
+        $errors = [];
 
-        foreach ($resources as $resource) {
-            if ($resource->getWorkspace() !== $ws) {
-                $haveSameWorkspace = false;
-                break;
-            }
+        //first I need to know if I can create
+        foreach ($nodes as $node) {
+            $type = $node->getResourceType()->getName();
+            $errors = array_merge($errors, $this->checkCreation($type, $parent, $token, $parent->getWorkspace()));
         }
 
-        if ($haveSameWorkspace && $this->isWorkspaceManager($ws, $token)) {
-            return array();
-        }
+        //then I need to know if I can copy
+        $errors = array_merge($errors, $this->checkCopy($parent, $nodes, $token));
 
-        //end of the role manager verification
-
-        $errors = array();
-        $rightsCreation = $this->repository
-            ->findCreationRights($this->ut->getRoles($token), $parent);
-
-        if (count($rightsCreation) == 0) {
-            $errors[] = $this->translator
-                ->trans(
-                    'resource_creation_denied',
-                    array('%path%' => $parent->getPathForDisplay()),
-                    'platform'
-                );
-        } else {
-            foreach ($resources as $resource) {
-                if (!$this->canCreate($rightsCreation, $resource->getResourceType()->getName())) {
-                     $errors[] = $this->translator
-                         ->trans(
-                             'resource_creation_wrong_type',
-                             array(
-                                 '%path%' => $parent->getPathForDisplay(),
-                                 '%type%' => $this->translator->trans(
-                                     strtolower($resource->getResourceType()->getName()),
-                                     array(),
-                                     'resource'
-                                 )
-                             ),
-                             'platform'
-                         );
-                }
-
-                $mask = $this->repository->findMaximumRights($this->ut->getRoles($token), $resource);
-                $grantCopy = $mask & MaskDecoder::COPY;
-                if ($grantCopy === 0) {
-                    $errors[] = $this->getRoleActionDeniedMessage('copy', $resource->getPathForDisplay());
-                }
-
-                $grantDelete = $mask & MaskDecoder::DELETE;
-                if ($grantDelete === 0) {
-                    $errors[] = $this->getRoleActionDeniedMessage('delete', $resource->getPathForDisplay());
-                }
-            }
-        }
+        //and finally I need to know if I can delete
+        $errors = array_merge($errors, $this->checkAction('DELETE', $nodes, $token));
 
         return $errors;
     }
@@ -341,61 +285,23 @@ class ResourceVoter implements VoterInterface
      * by the $token.
      *
      * @param \Claroline\CoreBundle\Entity\Resource\ResourceNode                   $parent
-     * @param type                                                                 $resources
+     * @param array|\Claroline\CoreBundle\Library\Security\Voter\type              $nodes
      * @param \Symfony\Component\Security\Core\Authentication\Token\TokenInterface $token
      *
      * @return array
      */
-    public function checkCopy(ResourceNode $parent, array $resources, TokenInterface $token)
+    public function checkCopy(ResourceNode $parent, array $nodes, TokenInterface $token)
     {
-        //do the resources share the same workspace ?
-        //It doesn't cover every cases like copying a resource from a workspace to an other where the user
-        //is manager of both but it is a start.
-        //role manager verification
-        $haveSameWorkspace = true;
-        $ws = $parent->getWorkspace();
+        //first I need to know if I can create what I want in the parent directory
+        $errors = [];
 
-        foreach ($resources as $resource) {
-            if ($resource->getWorkspace() !== $ws) {
-                $haveSameWorkspace = false;
-                break;
-            }
+        foreach ($nodes as $node) {
+            $type = $node->getResourceType()->getName();
+            $errors = array_merge($errors, $this->checkCreation($type, $parent, $token, $parent->getWorkspace()));
         }
 
-        if ($haveSameWorkspace && $this->isWorkspaceManager($ws, $token)) {
-            return array();
-        }
-
-        $errors = array();
-        $rightsCreation = $this->repository
-            ->findCreationRights($this->ut->getRoles($token), $parent);
-
-        if (count($rightsCreation) == 0) {
-            $errors[] = $this->translator
-                ->trans(
-                    'resource_creation_denied',
-                    array('%path%' => $parent->getPathForDisplay()),
-                    'platform'
-                );
-        } else {
-            foreach ($resources as $resource) {
-                if (!$this->canCreate($rightsCreation, $resource->getResourceType()->getName())) {
-                    $errors[] = $this->translator
-                        ->trans(
-                            'resource_creation_wrong_type',
-                            array(
-                                '%path%' => $parent->getPathForDisplay(),
-                                '%type%' => $this->translator->trans(
-                                    strtolower($resource->getResourceType()->getName()),
-                                    array(),
-                                    'resource'
-                                )
-                            ),
-                            'platform'
-                        );
-                }
-            }
-        }
+        //then we need to know if we can copy
+        $errors = array_merge($errors, $this->checkAction('COPY', $nodes, $token));
 
         return $errors;
     }
@@ -413,7 +319,7 @@ class ResourceVoter implements VoterInterface
             );
     }
 
-    private function isWorkspaceManager(AbstractWorkspace $workspace, TokenInterface $token)
+    public function isWorkspaceManager(AbstractWorkspace $workspace, TokenInterface $token)
     {
         $managerRoleName = 'ROLE_WS_MANAGER_' . $workspace->getGuid();
 

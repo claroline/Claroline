@@ -23,9 +23,6 @@ use Claroline\CoreBundle\Repository\ResourceNodeRepository;
 use Claroline\CoreBundle\Repository\ResourceRightsRepository;
 use Claroline\CoreBundle\Repository\ResourceShortcutRepository;
 use Claroline\CoreBundle\Repository\RoleRepository;
-use Claroline\CoreBundle\Manager\RightsManager;
-use Claroline\CoreBundle\Manager\RoleManager;
-use Claroline\CoreBundle\Manager\IconManager;
 use Claroline\CoreBundle\Manager\Exception\MissingResourceNameException;
 use Claroline\CoreBundle\Manager\Exception\ResourceTypeNotFoundException;
 use Claroline\CoreBundle\Manager\Exception\RightsException;
@@ -1230,6 +1227,16 @@ class ResourceManager
     public function getAllResourceTypes()
     {
         return $this->resourceTypeRepo->findAll();
+    }
+
+    /**
+     * @param AbstractWorkspace $workspace
+     *
+     * @return \Claroline\CoreBundle\Entity\Resource\ResourceNode[]
+     */
+    public function getByWorkspace(AbstractWorkspace $workspace)
+    {
+        return $this->resourceNodeRepo->findBy(array('workspace' => $workspace));
     }
 
     /**

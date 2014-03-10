@@ -33,11 +33,12 @@ Create a new resource: 'Create a new resource'
 Everyone: 'Everyone'
 First name: 'First name'
 Grant the right to: 'Grant the right to'
+Members of the platform: 'Members of the platform'
+Members of work space: 'Members of work space'
+First name: 'First name'
 Indexing: Indexing
 Language: Language
 Last name: 'Last name'
-Members of the platform: 'Members of the platform'
-Members of work space: 'Members of work space'
 None: None
 This variable is optional and will be replaced by your platform name: 'This variable is optional and will be replaced by your platform name'
 This variable is required and will be replaced by the actual mail content: 'This variable is required and will be replaced by the actual mail content'

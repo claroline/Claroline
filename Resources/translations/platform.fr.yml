@@ -33,11 +33,12 @@ Create a new resource: 'Créer une nouvelle ressource'
 Everyone: 'Tout le monde'
 First name: Prénom
 Grant the right to: 'Accorder des droit à'
+Members of the platform: 'Inscrits à la plateforme'
+Members of work space: 'Inscrits à l''espace d''activité'
+First name: Prénom
 Indexing: Référencement
 Language: Langue
 Last name: Nom
-Members of the platform: 'Inscrits à la plateforme'
-Members of work space: 'Inscrits à l''espace d''activité'
 None: Aucun
 Show: Afficher
 This variable is optional and will be replaced by your platform name: 'Ce variable est optionnel et sera remplacé par le nom de la plateforme'

@@ -198,36 +198,33 @@ class TemplateBuilder
                 )
             ),
             'roles' => array(
-                'ROLE_WS_COLLABORATOR' => 'collaborator',
-                'ROLE_WS_MANAGER' => 'manager'
+                'ROLE_WS_COLLABORATOR' => 'collaborator'
             ),
-            'creator_role' => 'ROLE_WS_MANAGER',
             'tools_infos' => array(
                 'home' => array(
                     'perms' => array(
-                        1 => 'ROLE_WS_COLLABORATOR',
-                        2 => 'ROLE_WS_MANAGER',
+                        1 => 'ROLE_WS_COLLABORATOR'
                     ),
                     'name' => 'home'
                 ),
                 'resource_manager' => array(
-                    'perms' => array('ROLE_WS_COLLABORATOR', 'ROLE_WS_MANAGER'),
+                    'perms' => array('ROLE_WS_COLLABORATOR'),
                     'name' => 'resource_manager'
                 ),
                 'agenda' => array(
-                    'perms' => array('ROLE_WS_COLLABORATOR', 'ROLE_WS_MANAGER'),
+                    'perms' => array('ROLE_WS_COLLABORATOR'),
                     'name' => 'agenda'
                 ),
                 'parameters' => array(
-                    'perms' => array('ROLE_WS_MANAGER'),
+                    'perms' => array(),
                     'name' => 'parameters'
                 ),
                 'users' => array(
-                    'perms' => array('ROLE_WS_MANAGER'),
+                    'perms' => array(),
                     'name' => 'users'
                 ),
                 'logs' => array(
-                    'perms' => array('ROLE_WS_MANAGER'),
+                    'perms' => array(),
                     'name' => 'logs'
                 ),
             ),
