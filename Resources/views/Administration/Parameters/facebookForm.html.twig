@@ -4,26 +4,25 @@
 
 {% block breadcrumb %}
     {{
-    macros.breadcrumbs([
-    {
-    'icon': 'icon-cog',
-    'name': 'administration'|trans({}, 'platform'),
-    'href': path('claro_admin_index')
-    },
-    {
-    'name': 'parameters'|trans({}, 'platform'),
-    'href': path('claro_admin_index')
-    },
-    {
-    'name': 'oauth'|trans({}, 'platform'),
-    'href': path('claro_admin_parameters_oauth_index')
-    }
-    ,
-    {
-    'name': 'facebook'|trans({}, 'platform'),
-    'href': ''
-    }
-    ])
+        macros.breadcrumbs([
+            {
+                'icon': 'icon-cog',
+                'name': 'administration'|trans({}, 'platform'),
+                'href': path('claro_admin_index')
+            },
+            {
+                'name': 'parameters'|trans({}, 'platform'),
+                'href': path('claro_admin_index')
+            },
+            {
+                'name': 'oauth'|trans({}, 'platform'),
+                'href': path('claro_admin_parameters_oauth_index')
+            },
+            {
+                'name': 'facebook'|trans({}, 'platform'),
+                'href': ''
+            }
+        ])
     }}
 {% endblock %}
 

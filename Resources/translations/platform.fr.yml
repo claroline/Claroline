@@ -28,8 +28,10 @@
 'select all': 'Tout sélectionner'
 'unique connections': 'Nb Cnx. uniques'
 404: 'La page que vous cherchez n''existe pas.'
+Active: 'Actif'
 Create a new resource: 'Créer une nouvelle ressource'
 Everyone: 'Tout le monde'
+First name: Prénom
 Grant the right to: 'Accorder des droit à'
 Members of the platform: 'Inscrits à la plateforme'
 Members of work space: 'Inscrits à l''espace d''activité'
@@ -42,8 +44,8 @@ Show: Afficher
 This variable is optional and will be replaced by your platform name: 'Ce variable est optionnel et sera remplacé par le nom de la plateforme'
 This variable is required and will be replaced by the actual mail content: 'Ce variable est requis et sera replacé par le contenu du mail'
 User name: 'Nom d''utilisateur'
-You can redefine the content of the registration mail here: 'C''est ici que vous pouvez redéfinir le contenu du mail d''inscription'
-You can redefine the layout used when a mail is sent: 'C''est ici que vous pouvez redéfinir le layout des emails envoyés par la plateforme'
+You can redefine the content of the registration mail here: 'Vous pouvez redéfinir ici le contenu du mail d''inscription'
+You can redefine the layout used when a mail is sent: 'Vous pouvez redéfinir ici le layout des emails envoyés par la plateforme'
 You can use the following variables in your form: 'Vous pouvez utiliser les variables suivantes dans votre formulaire'
 You can use the full screen version of the text editor to include HTML: 'Vous pouvez utiliser la version plein écran de l''éditeur afin d''y inclure du HTML'
 account_created: 'Compte créé'
@@ -148,6 +150,7 @@ create_widget_instance: 'Créer un nouveau Widget'
 create_workspace: 'Créer un espace d''activités'
 creation: Création
 creation_date: 'Date de création'
+creator: Créateur
 csv_users_import_infos: 'Informations sur le format du fichier CSV'
 csv_users_import_infos_format: Format
 csv_users_import_infos_format_a: 'Les données d''un utilisateur doivent être définies sur une ligne et séparées par un point virgule'
@@ -346,9 +349,9 @@ messages_removed: 'Messages supprimés'
 messages_sent: 'Messages envoyés'
 messages_sent_removed: 'Messages envoyés supprimés'
 misc: Divers
-missing_%content%: 'La variable %content% est manquant pour la langue "%language%".'
-missing_%password%: 'La variable %password% est manquant pour la langue "%language%".'
-missing_%username%: 'La variable %username% est manquant pour la langue "%language%".'
+missing_%content%: 'La variable %content% est manquante pour la langue "%language%".'
+missing_%password%: 'La variable %password% est manquante pour la langue "%language%".'
+missing_%username%: 'La variable %username% est manquante pour la langue "%language%".'
 month.April: Avril
 month.August: Août
 month.December: Décembre
@@ -461,6 +464,7 @@ profile_form_plainPassword_second: Vérification
 profile_form_platformRoles: Rôles
 properties: Propriétés
 public: Public
+public_registration: Inscription publique
 public_workspace_empty: 'Il n''y a aucun espace d''activités public.'
 public_workspaces: 'Espaces d''activités publics'
 recursive_dir_action: 'Appliquer au contenu du répertoire et aux sous-répertoires'
@@ -481,9 +485,9 @@ remove_subcategory: 'Retirer la sous-catégorie'
 remove_user_confirm_message: 'Êtes-vous sûr de vouloir supprimer cet utilisateur ?'
 remove_user_s_confirm_message: 'Êtes-vous sûr de vouloir supprimer ces %count% utilisateurs?'
 remove_workspace_confirm: 'Êtes-vous sûr de vouloir supprimer cet espace d''activités ?'
-remove_workspaces_confirm: 'Êtes-vous sûr de vouloir supprimer ces %count% espaces d''activités ?'
 remove_workspace_from_category_confirm_message: 'Êtes-vous sûr de vouloir retirer cet espace d''activités de cette catégorie ?'
 remove_workspace_from_category_confirm_title: 'Retrait d''un espace d''activités d''une catégorie'
+remove_workspaces_confirm: 'Êtes-vous sûr de vouloir supprimer ces %count% espaces d''activités ?'
 rename: Renommer
 rename_category: 'Renommer la catégorie'
 rename_tool: 'Renommage d''un outil'
@@ -666,6 +670,7 @@ validate: Valider
 view: Voir
 view_category_hierarchy: 'Visualiser la structure des catégories'
 views: 'Nb vues'
+visibility: Visibilité
 visible: Visible
 visitor: Visiteur
 warning_user_impersonation: 'Vous êtes connecté en tant que %user%.'
@@ -720,8 +725,8 @@ workspace_tools: Outils
 workspace_unregistration_confirm_title: 'Voulez-vous vous désinscrire de cet espace d''activités ?'
 workspace_welcome: Accueil
 workspaces: 'Espaces d''activités'
-workspaces_management: 'Gestions des espaces d''activités '
 workspaces_included_in_category: 'Espaces d''activités enregistrés dans cette catégorie'
+workspaces_management: 'Gestions des espaces d''activités '
 ws_creator: 'Créateur d''espaces'
 ws_most_viewed: 'Espaces d''activités les plus consultés'
 yes: oui

@@ -28,8 +28,10 @@
 'select all': 'Select all'
 'unique connections': 'Nb unique Cnx.'
 404: 'Page Not found'
+Active: 'Active'
 Create a new resource: 'Create a new resource'
 Everyone: 'Everyone'
+First name: 'First name'
 Grant the right to: 'Grant the right to'
 Members of the platform: 'Members of the platform'
 Members of work space: 'Members of work space'
@@ -147,6 +149,7 @@ create_widget_instance: 'Create a widget'
 create_workspace: 'Create workspace'
 creation: Creation
 creation_date: 'Creation date'
+creator: Creator
 csv_users_import_infos: 'CSV file informations'
 csv_users_import_infos_format: Format
 csv_users_import_infos_format_a: 'User informations must be defined in one line and separated by semicolon'
@@ -459,6 +462,7 @@ profile_form_plainPassword_second: Verification
 profile_form_platformRoles: Roles
 properties: Properties
 public: Public
+public_registration: Public registration
 public_workspace_empty: 'There are no public workspaces.'
 public_workspaces: 'Public workspaces'
 recursive_dir_action: 'Apply to the contents of the directory and its subdirectories'
@@ -479,9 +483,9 @@ remove_subcategory: 'Remove subcategory'
 remove_user_confirm_message: 'Are you sure you want to delete this user ?'
 remove_user_s_confirm_message: 'Are you sure you want to delete these %count% users ?'
 remove_workspace_confirm_workspace: 'Are you sure you want to delete this workspace?'
-remove_workspaces_confirm_workspaces: 'Are you sure you want to delete these %count% workspaces ?'
 remove_workspace_from_category_confirm_message: 'Are you sure you want to remove the workspace from this category ?'
 remove_workspace_from_category_confirm_title: 'Remove workspace from category'
+remove_workspaces_confirm_workspaces: 'Are you sure you want to delete these %count% workspaces ?'
 rename: Rename
 rename_category: 'Rename category'
 rename_tool: 'Rename tool'
@@ -666,6 +670,7 @@ validate: Validate
 view: View
 view_category_hierarchy: 'View category hierarchy'
 views: Views
+visibility: Visibility
 visible: Visible
 visitor: Visitor
 warning_user_impersonation: 'You are connected as %user%.'
@@ -719,9 +724,9 @@ workspace_template_form_name: Name
 workspace_tools: Tools
 workspace_unregistration_confirm_title: 'Do you really want to unregister from this workspace ?'
 workspace_welcome: Welcome
-workspaces_management: 'Workspaces Management'
 workspaces: Workspaces
 workspaces_included_in_category: 'Workspaces included in this category'
+workspaces_management: 'Workspaces management'
 ws_creator: 'Workspace creator'
 ws_most_viewed: 'Most viewed workspaces'
 yes: yes

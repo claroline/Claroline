@@ -1,4 +1,10 @@
-{% extends 'ClarolineCoreBundle:Workspace:layout.html.twig' %}
+{% set layout = "ClarolineCoreBundle:Workspace:layout.html.twig" %}
+
+{% if isDesktop() %}
+    {% set layout = "ClarolineCoreBundle:Desktop:layout.html.twig" %}
+{% endif %}
+
+{% extends layout %}
 
 {% block title %}{{ _resource.resourceNode.name ~ ' - ' ~ "logs" | trans({}, "platform") | striptags | raw }}{% endblock %}
 
@@ -22,5 +28,5 @@
         }}
     {% endset %}
 
-    {% include 'ClarolineCoreBundle:Log:tool_view_list.html.twig' with {'filterFormAction': filterFormAction, 'pagination': pagination, 'isDesktop': isDesktop} %}
+    {% include 'ClarolineCoreBundle:Log:tool_view_list.html.twig' with {'filterFormAction': filterFormAction, 'pagination': pagination, 'isDesktop': isDesktop()} %}
 {% endblock %}
