@@ -1230,6 +1230,16 @@ class ResourceManager
     }
 
     /**
+     * @param AbstractWorkspace $workspace
+     *
+     * @return \Claroline\CoreBundle\Entity\Resource\ResourceNode[]
+     */
+    public function getByWorkspace(AbstractWorkspace $workspace)
+    {
+        return $this->resourceNodeRepo->findBy(array('workspace' => $workspace));
+    }
+
+    /**
      * @param integer[] $ids
      *
      * @return \Claroline\CoreBundle\Entity\Resource\ResourceNode[]

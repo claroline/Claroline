@@ -46,7 +46,6 @@ class RoleManager
      * Constructor.
      *
      * @DI\InjectParams({
-     *     "roleRepo"   = @DI\Inject("role_repository"),
      *     "om"         = @DI\Inject("claroline.persistence.object_manager"),
      *     "dispatcher" = @DI\Inject("claroline.event.event_dispatcher")
      * })

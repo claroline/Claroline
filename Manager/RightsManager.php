@@ -82,22 +82,23 @@ class RightsManager
     /**
      * Create a new ResourceRight
      *
-     * @param array|integer                                      $permissions
-     * @param boolean                                            $isRecursive
-     * @param \Claroline\CoreBundle\Entity\Role                  $role
+     * @param array|integer $permissions
+     * @param \Claroline\CoreBundle\Entity\Role $role
      * @param \Claroline\CoreBundle\Entity\Resource\ResourceNode $node
+     * @param boolean $isRecursive
+     * @param array $creations
      */
     public function create(
         $permissions,
         Role $role,
-        ResourceNode $resource,
+        ResourceNode $node,
         $isRecursive,
         array $creations = array()
     )
     {
         $isRecursive ?
-            $this->recursiveCreation($permissions, $role, $resource, $creations) :
-            $this->nonRecursiveCreation($permissions, $role, $resource, $creations);
+            $this->recursiveCreation($permissions, $role, $node, $creations) :
+            $this->nonRecursiveCreation($permissions, $role, $node, $creations);
     }
 
     /**
