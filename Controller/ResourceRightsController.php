@@ -113,7 +113,8 @@ class ResourceRightsController
                 array(
                     'resourceRights' => $resourceRights,
                     'isDir' => $isDir,
-                    'role' => $role
+                    'role' => $role,
+                    'node' => $node
                 )
             );
         }
