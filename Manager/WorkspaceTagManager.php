@@ -484,7 +484,7 @@ class WorkspaceTagManager
 
     public function getDatasForWorkspaceListByUser(User $user, array $roles)
     {
-        $workspaces = $this->workspaceManager->getWorkspacesByRoles($roles);
+        $workspaces = $this->workspaceManager->getOpenableWorkspacesByRoles($roles);
         $tags = $this->tagRepo->findNonEmptyTagsByUser($user);
         $relTagWorkspace = $this->relTagRepo->findByUser($user);
         $tagWorkspaces = array();

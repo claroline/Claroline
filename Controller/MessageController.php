@@ -441,7 +441,7 @@ class MessageController
             $users = array();
             $token = $this->securityContext->getToken();
             $roles = $this->utils->getRoles($token);
-            $workspaces = $this->workspaceManager->getWorkspacesByRoles($roles);
+            $workspaces = $this->workspaceManager->getOpenableWorkspacesByRoles($roles);
 
             if (count($workspaces) > 0) {
                 if ($trimmedSearch === '') {
