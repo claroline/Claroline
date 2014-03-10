@@ -56,21 +56,21 @@ class Updater021000
                 ->findBy(array('role' => $managerRole));
 
             foreach ($rights as $right) {
-                if ($right->getWorkspace() === $workspace) {
+                if ($right->getResourceNode()->getWorkspace() === $workspace) {
                     $this->om->remove($right);
                 }
             }
 
             //remove tools for managerRole
-            $tools = $this->om->getRepository('ClarolineCoreBundle:Tool\OrderedTool')
-                ->findBy(array('role' => $managerRole));
+            $tools = $this->container->get('claroline.manager.tool_manager')
+                ->getDisplayedByRolesAndWorkspace(array($roleAdmin->getName()), $workspace);
 
             foreach ($tools as $tool) {
-                if ($tool->getWorkspace() === $tool) {
-                    $this->om->remove($tool);
-                }
+                $this->om->remove($tool);
             }
         }
+
+        $this->om->flush();
     }
 
     public function updateDefaultPerms()
@@ -87,9 +87,12 @@ class Updater021000
         );
 
         foreach ($tools as $tool) {
-            $entity = $this->om->getRepository('ClarolineCoreBunde:Tool\Tool')->findOneByName($tool[0]);
-            $entity->setIsLockedForAdmin($tool[1]);
-            $entity->setIsAnonymousExcluded($tool[2]);
+            $entity = $this->om->getRepository('ClarolineCoreBundle:Tool\Tool')->findOneByName($tool[0]);
+
+            if ($entity) {
+                $entity->setIsLockedForAdmin($tool[1]);
+                $entity->setIsAnonymousExcluded($tool[2]);
+            }
         }
     }
 
