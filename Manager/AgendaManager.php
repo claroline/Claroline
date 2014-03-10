@@ -119,12 +119,12 @@ class AgendaManager
     }
 
     /**
-     * [importsEvents description]
+     * Import ical files type
      * @param  UploadedFile $file      
      * @param  AbstractWorkspace $workspace 
      * @return int number of events saved
      */
-    public function importsEvents(UploadedFile $file, $workspace)
+    public function importEvents(UploadedFile $file, $workspace)
     {
         $path = $this->rootDir.'/../web/uploads';
         $ds = DIRECTORY_SEPARATOR;
@@ -143,7 +143,6 @@ class AgendaManager
             $e->setWorkspace($workspace);
             $e->setUser($this->security->getToken()->getUser());
             $e->setPriority('#01A9DB');
-            $count = $i;
         }
         $this->om->endFlushSuite();     
 
