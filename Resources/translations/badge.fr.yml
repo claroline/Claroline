@@ -68,7 +68,6 @@ badge_form_times: fois
 badge_form_user_target_of_action: 'L''utilisateur est la cible de l''action'
 badge_form_version: Version
 badge_no_rules_check_manually: 'Aucune règle, vérifier manuellement'
-badge_not_found_with_name: 'Aucun badge avec le nom ''%badgeName%'' n''a pu être retrouvé.'
 badge_reject_award: 'Refuser l''attribution du badge'
 badge_reject_award_error_message: 'Erreur lors du refus d''attribution du badge.'
 badge_reject_award_short: Refuser

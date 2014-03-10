@@ -68,7 +68,6 @@ badge_form_times: times
 badge_form_user_target_of_action: 'User is the target of the action'
 badge_form_version: Version
 badge_no_rules_check_manually: 'No rules, check manually'
-badge_not_found_with_name: 'No badge found with the name ''%badgeName%''.'
 badge_reject_award: 'Reject badge awarding'
 badge_reject_award_error_message: 'An error occured while rejecting badge awarding.'
 badge_reject_award_short: Reject
@@ -82,7 +81,7 @@ badge_unaward_confirm_message: 'Are you sure you want to remove the badge <stron
 badge_unaward_confirm_title: 'Removing of a badge'
 badge_unaward_error_message: 'An error occured while removing awarded badge.'
 badge_unaward_success_message: 'Badge awarded remove with success.'
-badge_validate_award: 'Valide badge awarding'
+badge_validate_award: 'Validate badge awarding'
 badge_validate_award_error_message: 'An error occured while validating badge awarding.'
 badge_validate_award_short: Validate
 badge_validate_award_success_message: 'Validation of badge awarding made with success.'
