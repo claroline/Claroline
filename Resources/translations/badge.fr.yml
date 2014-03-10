@@ -50,6 +50,8 @@ badge_form_awarding_on_result_action_to: à
 badge_form_badge: 'Lorsque l''action est l''attribution d''un badge'
 badge_form_badge_help: 'Si compatible avec l''action'
 badge_form_badge_selection: 'Sélectionner le badge'
+badge_form_resource: "Sur la ressource"
+badge_form_resource_selection: 'Sélectionner la ressource'
 badge_form_change_image: 'Changer l''image du badge'
 badge_form_choose_image: 'Choisir l''image du badge'
 badge_form_criteria: 'Critères d''obtention'
