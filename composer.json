@@ -55,7 +55,8 @@
         "claroline/installation-bundle": "~3.1",
         "claroline/front-end-bundle": ">=1.0.10,<2.0",
         "claroline/migration-bundle": "~1.0",
-        "icap/notification-bundle": "~1.0"
+        "icap/notification-bundle": "~1.0",
+        "johngrogg/ics-parser": "dev-master"
     },
     "require-dev": {
         "mockery/mockery": "dev-master@dev",
