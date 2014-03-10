@@ -28,49 +28,7 @@ class Updater021000
 
     public function postUpdate()
     {
-        $this->updateRights();
         $this->updateDefaultPerms();
-    }
-
-    public function updateRights()
-    {
-
-        $this->log('Removing ROLE_ADMIN from the resources rights...');
-        //remove rights of ROLE_ADMIN.
-        $roleAdmin = $this->om->getRepository('ClarolineCoreBundle:Role')->findOneByName('ROLE_ADMIN');
-        $rights = $this->om->getRepository('ClarolineCoreBundle:Resource\ResourceRights')->findBy(array('role' => $roleAdmin));
-
-        foreach ($rights as $right) {
-            $this->om->remove($right);
-        }
-
-        $this->om->flush();
-
-        $workspaces = $this->om->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->findAll();
-
-        foreach ($workspaces as $workspace) {
-            $managerRole = $this->container->get('claroline.manager.role_manager')->getManagerRole($workspace);
-
-            //remove rights for managerRole
-            $rights = $this->om->getRepository('ClarolineCoreBundle:Resource\ResourceRights')
-                ->findBy(array('role' => $managerRole));
-
-            foreach ($rights as $right) {
-                if ($right->getResourceNode()->getWorkspace() === $workspace) {
-                    $this->om->remove($right);
-                }
-            }
-
-            //remove tools for managerRole
-            $tools = $this->container->get('claroline.manager.tool_manager')
-                ->getDisplayedByRolesAndWorkspace(array($roleAdmin->getName()), $workspace);
-
-            foreach ($tools as $tool) {
-                $this->om->remove($tool);
-            }
-        }
-
-        $this->om->flush();
     }
 
     public function updateDefaultPerms()
@@ -92,8 +50,11 @@ class Updater021000
             if ($entity) {
                 $entity->setIsLockedForAdmin($tool[1]);
                 $entity->setIsAnonymousExcluded($tool[2]);
+                $this->om->persist($entity);
             }
         }
+
+        $this->om->flush();
     }
 
 

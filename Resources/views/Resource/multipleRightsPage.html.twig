@@ -33,10 +33,12 @@
                         </div>
                         <div id="collapse-{{ currentIndex }}-{{ workspace.getCode() }}" class="list-group collapse">
                             {% for role in workspaceRoles[workspace.getCode()] %}
-                                <a class="workspace-role-item list-group-item"
-                                   href="{{ path('claro_resource_right_form', {'node':resource.id, 'role':role.id}) }}">
-                                    {{ role.getTranslationKey() }}
-                                </a>
+                                {% if role.getName() != 'ROLE_WS_MANAGER_' ~ workspace.getGuid() %}
+                                    <a class="workspace-role-item list-group-item"
+                                       href="{{ path('claro_resource_right_form', {'node':resource.id, 'role':role.id}) }}">
+                                        {{ role.getTranslationKey() }}
+                                    </a>
+                                {% endif %}
                             {% endfor %}
                         </div>
                     </div>
