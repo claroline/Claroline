@@ -99,6 +99,7 @@ class ResourceRightsController
             $data['resourceRights'] = $rolesRights;
             $data['resource'] = $node;
             $data['isDir'] = $isDir;
+            $data['isModal'] = true;
 
             return $this->templating->renderResponse(
                 'ClarolineCoreBundle:Resource:multipleRightsPage.html.twig',
