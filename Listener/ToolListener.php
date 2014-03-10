@@ -163,6 +163,7 @@ class ToolListener
         $em = $this->container->get('doctrine.orm.entity_manager');
         $workspace = $this->workspaceManager->getWorkspaceById($workspaceId);
         $form = $this->formFactory->create(FormFactory::TYPE_AGENDA);
+        $file = $this->formFactory->create(FormFactory::TYPE_AGENDA_IMPORTER);
         $listEvents = $em->getRepository('ClarolineCoreBundle:Event')->findByWorkspaceId($workspaceId, true);
         $usr = $this->container->get('security.context')->getToken()->getUser();
         $owners = $em->getRepository('ClarolineCoreBundle:Event')->findByUserWithoutAllDay($usr, 0);
@@ -190,6 +191,7 @@ class ToolListener
             array(
                 'workspace' => $workspace,
                 'form' => $form->createView(),
+                'file' => $file->createView(),
                 'owners' => $owners
             )
         );
