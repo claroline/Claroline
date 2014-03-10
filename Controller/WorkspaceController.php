@@ -217,7 +217,10 @@ class WorkspaceController extends Controller
      *
      * Renders the displayable workspace list with self-unregistration.
      *
-     * @return Response
+     * @param \Claroline\CoreBundle\Entity\User $currentUser
+     * @param int $page
+     *
+     * @return array
      */
     public function listWorkspacesWithSelfUnregistrationAction(User $currentUser, $page = 1)
     {
@@ -244,7 +247,7 @@ class WorkspaceController extends Controller
      *
      * Renders the workspace creation form.
      *
-     * @return Response
+     * @return array
      */
     public function creationFormAction()
     {
@@ -265,7 +268,7 @@ class WorkspaceController extends Controller
      *
      * @EXT\Template("ClarolineCoreBundle:Workspace:creationForm.html.twig")
      *
-     * @return RedirectResponse
+     * @return RedirectResponse | array
      */
     public function createAction()
     {
@@ -312,7 +315,7 @@ class WorkspaceController extends Controller
      *      options={"id" = "workspaceId", "strictId" = true}
      * )
      *
-     * @param integer $workspaceId
+     * @param AbstractWorkspace $workspace
      *
      * @return Response
      */
@@ -515,7 +518,8 @@ class WorkspaceController extends Controller
      *
      * Display registered widgets.
      *
-     * @param integer $workspaceId
+     * @param \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace $workspace
+     * @param integer $homeTabId
      *
      * @return \Symfony\Component\HttpFoundation\Response
      *
@@ -687,6 +691,7 @@ class WorkspaceController extends Controller
     public function addUserAction(AbstractWorkspace $workspace, User $user)
     {
         $this->workspaceManager->addUserAction($workspace, $user);
+
         return new JsonResponse($this->userManager->convertUsersToArray(array($user)));
     }
 
@@ -707,11 +712,13 @@ class WorkspaceController extends Controller
      *
      * Renders the workspace list associate to a tag in a pager.
      *
-     * @return Response
+     * @param \Claroline\CoreBundle\Entity\Workspace\WorkspaceTag $workspaceTag
+     * @param integer $page
+     *
+     * @return array
      */
     public function workspaceListByTagPagerAction(WorkspaceTag $workspaceTag, $page = 1)
     {
-        $relations = $this->tagManager->getPagerRelationByTag($workspaceTag, $page);
         $relations = $this->tagManager->getPagerRelationByTag($workspaceTag, $page);
 
         return array(
@@ -737,7 +744,10 @@ class WorkspaceController extends Controller
      *
      * Renders the workspace list with self-registration associate to a tag in a pager.
      *
-     * @return Response
+     * @param \Claroline\CoreBundle\Entity\Workspace\WorkspaceTag $workspaceTag
+     * @param integer $page
+     *
+     * @return array
      */
     public function workspaceListWithSelfRegByTagPagerAction(
         WorkspaceTag $workspaceTag,
@@ -761,12 +771,11 @@ class WorkspaceController extends Controller
      *     options={"expose"=true}
      * )
      * @EXT\Method("GET")
-     *
      * @EXT\Template()
      *
-     * Renders the workspace list in a pager.
+     * @param integer $page
      *
-     * @return Response
+     * @return array
      */
     public function workspaceCompleteListPagerAction($page = 1)
     {
@@ -790,7 +799,7 @@ class WorkspaceController extends Controller
      *
      * @param int $page
      *
-     * @return Response
+     * @return array
      */
     public function workspaceCompleteListWithSelfRegPagerAction($page = 1)
     {
@@ -882,7 +891,7 @@ class WorkspaceController extends Controller
      * @param \Claroline\CoreBundle\Entity\Workspace\WorkspaceTag $workspaceTag
      * @param int                                                 $page
      *
-     * @return Response
+     * @return array
      */
     public function workspaceListByTagRegistrationPagerAction(WorkspaceTag $workspaceTag, $page = 1)
     {
@@ -909,7 +918,7 @@ class WorkspaceController extends Controller
      *
      * @param int $page
      *
-     * @return Response
+     * @return array
      */
     public function workspaceCompleteListRegistrationPagerAction($page = 1)
     {
@@ -934,7 +943,7 @@ class WorkspaceController extends Controller
      * @param string $search
      * @param int    $page
      *
-     * @return Response
+     * @return array
      */
     public function workspaceSearchedListRegistrationPagerAction($search, $page = 1)
     {
@@ -959,7 +968,10 @@ class WorkspaceController extends Controller
      *
      * Displays the workspace home tab without config.
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @param \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace $workspace
+     * @param integer $tabId
+     *
+     * @return array
      */
     public function displayWorkspaceHomeTabsActionWithoutConfig(
         AbstractWorkspace $workspace,
@@ -1011,7 +1023,10 @@ class WorkspaceController extends Controller
      *
      * Displays the workspace home tab.
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @param \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace $workspace
+     * @param integer $tabId
+     *
+     * @return array
      */
     public function displayWorkspaceHomeTabsActionWithConfig(
         AbstractWorkspace $workspace,
@@ -1070,7 +1085,7 @@ class WorkspaceController extends Controller
      *
      * Adds a workspace to the favourite list.
      *
-     * @param type $workspaceId
+     * @param AbstractWorkspace $workspace
      *
      * @return Response
      */
