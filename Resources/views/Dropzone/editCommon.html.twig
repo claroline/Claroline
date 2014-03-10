@@ -158,11 +158,9 @@
 
             $('#icap_dropzone_common_form_peerReview_0').on('click', function() {
                 enablePeerReviewOptions(false);
-                manageCorrectionVisibility(false);
             });
             $('#icap_dropzone_common_form_peerReview_1').on('click', function() {
                 enablePeerReviewOptions(true);
-                manageCorrectionVisibility(true);
             });
 
             var enablePeerReviewOptions = function (peerReviewEnabled) {
@@ -180,7 +178,6 @@
                     if ($('#icap_dropzone_common_form_expectedTotalCorrection').val() < 1 || $('#icap_dropzone_common_form_expectedTotalCorrection').val() > 10) {
                         $('#icap_dropzone_common_form_expectedTotalCorrection').val(3);
                     }
-                    $('#icap_dropzone_common_form_diplayCorrectionsToLearners').hide();
                     $('#icap_dropzone_common_form_endReview_date').val(null);
                     $('#icap_dropzone_common_form_endReview_time').val(null);
                     $('#icap_dropzone_common_form_startReview_date').val(null);
@@ -189,6 +186,7 @@
                     $('.submit_button').html('{{ 'Save and finished'|trans({}, 'icap_dropzone') }}');
 
                 }
+                manageCorrectionVisibility(peerReviewEnabled);
             }
 
             enablePeerReviewOptions({{ dropzone.peerReview }});
@@ -229,12 +227,14 @@
         {
             // Set manageCorrectionDeny dependencies
             // show option only if peerReview and CorrectionVisibility are Activated, set to false and desactivate if they are  not.
-            if($('#icap_dropzone_common_form_diplayCorrectionsToLearners').prop('checked')) {
-                $('#allow-correction-deny').show();
+            if($('#icap_dropzone_common_form_peerReview_1:checked').length == 1 
+                && $('#icap_dropzone_common_form_diplayCorrectionsToLearners').prop('checked')) {
+                $('#allow-correction-deny').parent().show();
             } else {
                 $('#icap_dropzone_common_form_allowCorrectionDeny').prop('checked',false);
-                $('#allow-correction-deny').hide();
+                $('#allow-correction-deny').parent().hide();
             } 
+  
         }
 
         function manageCorrectionVisibility(peerReviewEnabled)
@@ -242,12 +242,13 @@
             // Set PeerReview dependency
             // show option only if peerReview is Activated, set to false and desactivate if it is not.
             // call manageCorrectionDeny to cascade dependencies .
-            if(peerReviewEnabled)
+           /* if(peerReviewEnabled)
             {
                 $('#icap_dropzone_common_form_diplayCorrectionsToLearners').parent().show();
             }else {
                  $('#icap_dropzone_common_form_diplayCorrectionsToLearners').prop('checked',false).parent().hide();
-            }
+            }*/
+            $('#icap_dropzone_common_form_diplayCorrectionsToLearners').parent().show();
             manageCorrectionDeny();
         }
 
