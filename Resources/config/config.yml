@@ -3,6 +3,6 @@ plugin:
 
   tools:
     - name: claroline_activity_tool
-      icon: icon-tasks
+      class: icon-tasks
       is_displayable_in_workspace: true
       is_displayable_in_desktop: true
