@@ -95,8 +95,6 @@
                                 <td><a href="{{ path('claro_profile_view', {'userId': user.id}) }}" title="{{ user.firstname }} {{ user.lastname }}">{{ user.firstname }}</a></td>
                                 <td>{{ user.lastname }}</td>
                             </tr>
-                        {% else %}
-                            <tr><td colspan="3">{{ 'bagde_awarded_to_none_user'|trans }}.</td></tr>
                         {% endfor %}
                         </tbody>
                     </table>
@@ -115,7 +113,7 @@
                     {% endif %}
                 {% else %}
                     <p class="badge_not_awarded">
-                        Commencez à <a href="{{ path('claro_admin_badges_award', {'slug': badge.slug}) }}" id="awardUser" role="button">attribuer</a> ce badge.
+                        {{ 'start_to_award_this_badge'|trans({'%url%': path('claro_admin_badges_award', {'slug': badge.slug})})|raw }}
                     </p>
                 {% endif %}
             </div>
@@ -260,7 +258,9 @@
 {{ parent() }}
 <script type="text/javascript" src="{{ asset('bundles/zenstruckform/js/helper.js') }}"></script>
 <script type="text/javascript" src="{{ asset('bundles/frontend/jquery/plugin/select2/select2.min.js') }}"></script>
+{% if 'en' != app.request.locale %}
 <script type="text/javascript" src="{{ asset('bundles/frontend/jquery/plugin/select2/select2_locale_' ~ app.request.locale ~ '.js') }}"></script>
+{% endif %}
 <script type="text/javascript" src="{{ asset('bundles/frontend/jquery/plugin/jquery.optionTree.js') }}"></script>
 <script type="text/javascript" src='{{ asset('bundles/frontend/jquery/plugin/confirm-bootstrap/confirm-bootstrap.js') }}'></script>
 <script type="text/javascript" src='{{ asset('bundles/clarolinecore/js/badge/edit.js') }}'></script>
