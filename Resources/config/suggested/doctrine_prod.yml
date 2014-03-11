@@ -16,3 +16,4 @@ doctrine:
             softdeleteable:
                 class: Gedmo\SoftDeleteable\Filter\SoftDeleteableFilter
                 enabled: true
+        entity_listener_resolver: claroline.doctrine.entity_listener_resolver

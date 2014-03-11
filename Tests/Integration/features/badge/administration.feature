@@ -29,7 +29,7 @@ Feature:
         And I should see 1 ".badge_list .badge" elements
         Then I click on ".badge_list .badge .badge_menu_link"
         And I follow "Delete"
-        And I wait for the popup to appear
+        And I wait for the confirm popup to appear
         And I should see "Deletion of a badge"
         And I should see "Are you sure you want to delete the badge Badge de test ?"
         Then I press "Delete"
@@ -71,7 +71,7 @@ Feature:
         And I should see 1 ".badge_list .badge" elements
         Then I click on ".badge_list .badge .badge_menu_link"
         And I follow "Delete"
-        And I wait for the popup to appear
+        And I wait for the confirm popup to appear
         And I should see "Deletion of a badge"
         And I should see "Are you sure you want to delete the badge Badge de test ?"
         Then I press "Delete"
@@ -118,7 +118,7 @@ Feature:
         And the "badge_form_rules_0_action__" field should contain "Blog"
         And the "badge_form_rules_0_action___" field should contain "Post creation in a blog"
         And I follow "Delete"
-        Then I wait for the popup to appear
+        Then I wait for the confirm popup to appear
         And I should see "Deletion of a badge"
         And I should see "Are you sure you want to delete the badge Badge de test ?"
         Then I press "Delete"
@@ -154,7 +154,7 @@ Feature:
         And I should see 1 ".badge_list .badge" elements
         And I click on ".badge_list .badge .badge_menu_link"
         Then I follow "Delete"
-        And I wait for the popup to appear
+        And I wait for the confirm popup to appear
         And I should see "Deletion of a badge"
         And I should see "Are you sure you want to delete the badge Badge de test ?"
         Then I press "Delete"
@@ -189,7 +189,7 @@ Feature:
         And I should see "Claim badge form"
         And I fill in "#badge_claim_form_badge" with "Badge" for autocomplete
         And I wait for the suggestion box to appear
-        Then I should see "Badge de test"
+        Then I should see "Badge de test" in the suggestion box
         And I click on the 1st ".select2-results li"
         And I press "Claim"
         Then I should see "Badge claimed with success."
@@ -200,7 +200,7 @@ Feature:
         Then I should see "1 claim for badge to examine"
         And I follow "1 claim for badge to examine"
         And I follow "Validate"
-        And I wait for the popup to appear
+        And I wait for the confirm popup to appear
         And I should see "Validation of badge awarding"
         And I should see "Are you sure you want to award badge"
         Then I press "Award"
@@ -215,7 +215,7 @@ Feature:
         And I should see 1 "#award_users_container table tbody tr" elements
         And I should not see "Start to award this badge."
         And I follow "Removing of a badge"
-        And I wait for the popup to appear
+        And I wait for the confirm popup to appear
         And I should see "Removing of a badge"
         And I should see "Are you sure you want to remove the badge"
         Then I press "Remove award"
@@ -227,7 +227,7 @@ Feature:
         And I go to "/admin/badges"
         Then I click on ".badge_list .badge .badge_menu_link"
         And I follow "Delete"
-        And I wait for the popup to appear
+        And I wait for the confirm popup to appear
         And I should see "Deletion of a badge"
         And I should see "Are you sure you want to delete the badge Badge de test ?"
         Then I press "Delete"
@@ -235,7 +235,7 @@ Feature:
         And I should see 0 ".badge_list .badge" elements
         And I should see "Badge deleted with success."
 
-    @javascript @current
+    @javascript
     Scenario: Automatic badge awarding
         Given the admin account "JohnDoe" is created
         When I log in with "JohnDoe"/"JohnDoe"

@@ -30,6 +30,7 @@ use Gedmo\SoftDeleteable\Traits\SoftDeleteableEntity;
 /**
  * @ORM\Table(name="claro_badge")
  * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\Badge\BadgeRepository")
+ * @ORM\EntityListeners({"Claroline\CoreBundle\Entity\Badge\Listener\BadgeListener"})
  * @ORM\HasLifecycleCallbacks
  * @Gedmo\SoftDeleteable(fieldName="deletedAt", timeAware=false)
  * @BadgeAssert\AutomaticWithRules

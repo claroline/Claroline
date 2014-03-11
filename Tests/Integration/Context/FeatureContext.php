@@ -60,6 +60,16 @@ class FeatureContext extends MinkContext
     }
 
     /**
+       * After each scenario, we close the browser
+       *
+       * @AfterScenario
+       */
+    public function closeBrowser()
+    {
+        $this->getSession()->stop();
+    }
+
+    /**
      * @Given /^the admin account "([^"]*)" is created$/
      */
     public function theAdminAccountIsCreated($username)
@@ -261,6 +271,27 @@ EOL;
             }
 
             return ($suggestionBox->isVisible());
+        });
+    }
+
+    /**
+     * @Then /^I should see "([^"]*)" in the suggestion box$/
+     */
+    public function iShouldSeeInTheSuggestionBox($value)
+    {
+        $this->spin(function($context) {
+            /** @var \Claroline\CoreBundle\Tests\Integration\Context\FeatureContext $context */
+            $suggestionBox = $context->getSession()->getPage()->findById('select2-drop');
+            if (null === $suggestionBox) {
+                return false;
+            }
+
+            $suggestions = $suggestionBox->find('css', '.select2-results li[class!=select2-searching]');
+            if (null === $suggestions) {
+                return false;
+            }
+
+            return ($suggestions->isVisible());
         });
     }
 
