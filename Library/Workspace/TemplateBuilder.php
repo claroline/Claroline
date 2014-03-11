@@ -49,11 +49,13 @@ class TemplateBuilder
     }
 
     /**
-     * @param mixed   $content  the file content
-     * @param string  $hashName the file hashname
-     * @param string  $fileName the file name
-     * @param integer $parentId the parent directory id (root = 1)
-     * @param integer $fileId   the file id
+     * @param $filePath
+     * @param $hashName
+     * @param $fileName
+     * @param $parentId
+     * @param $fileId
+     *
+     * @return $this
      */
     public function addFile($filePath, $hashName, $fileName, $parentId, $fileId)
     {
@@ -92,10 +94,7 @@ class TemplateBuilder
     public function addTool($name, $displayedName)
     {
         $toolsInfos = array(
-            'perms' => array(
-                'ROLE_WS_COLLABORATOR',
-                'ROLE_WS_MANAGER'
-            ),
+            'perms' => array('ROLE_WS_COLLABORATOR'),
             'name' => $displayedName
         );
 
