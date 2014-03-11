@@ -12,6 +12,7 @@
 namespace Claroline\CoreBundle\Repository;
 
 use Doctrine\ORM\AbstractQuery;
+use Doctrine\ORM\QueryBuilder;
 use Gedmo\Tree\Entity\Repository\MaterializedPathRepository;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
@@ -380,6 +381,58 @@ class ResourceNodeRepository extends MaterializedPathRepository
                 ':resourceType' => $resourceType
             )
         );
+    }
+
+    /**
+     * @param string $name
+     * @param array  $extraDatas
+     * @param bool   $executeQuery
+     *
+     * @return QueryBuilder|array
+     */
+    public function findByName($name, $extraDatas = array(), $executeQuery = true)
+    {
+        $name  = strtoupper($name);
+        /** @var \Doctrine\ORM\QueryBuilder $queryBuilder */
+        $queryBuilder = $this->createQueryBuilder('resourceNode');
+        $queryBuilder->where($queryBuilder->expr()->like('UPPER(resourceNode.name)', ':name'));
+
+        if (0 < count($extraDatas)) {
+            foreach ($extraDatas as $key => $extraData) {
+                $queryBuilder
+                    ->andWhere(sprintf('resourceNode.%s = :%s', $key, $key))
+                    ->setParameter(sprintf(':%s', $key), $extraData);
+            }
+        }
+
+        $queryBuilder
+            ->orderBy('resourceNode.name', 'ASC')
+            ->setParameter(':name', "%{$name}%");
+
+        return $executeQuery ? $queryBuilder->getQuery()->getResult(): $queryBuilder;
+    }
+
+    /**
+     * @param string $search
+     * @param array  $extraData
+     *
+     * @return array
+     */
+    public function findByNameForAjax($search, $extraData)
+    {
+        $resultArray = array();
+
+        /** @var ResourceNode[] $resourceNodes */
+        $resourceNodes = $this->findByName($search, $extraData);
+
+        foreach ($resourceNodes as $resourceNode) {
+            $resultArray[] = array(
+                'id'   => $resourceNode->getId(),
+                'text' => $resourceNode->getPathForDisplay()
+            );
+        }
+
+        return $resultArray;
     }
 
     private function addFilters(ResourceQueryBuilder $builder,  array $criteria, array $roles = null)

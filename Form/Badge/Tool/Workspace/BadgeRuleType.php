@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Claroline\CoreBundle\Form\Badge;
+namespace Claroline\CoreBundle\Form\Badge\Tool\Workspace;
 
 use Claroline\CoreBundle\Entity\Badge\BadgeRule;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
@@ -23,7 +23,7 @@ use Symfony\Component\Security\Core\SecurityContextInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**
- * @DI\Service("claroline.form.badge.rule")
+ * @DI\Service("claroline.form.badge.workspace.rule")
  */
 class BadgeRuleType extends AbstractType
 {
@@ -38,6 +38,9 @@ class BadgeRuleType extends AbstractType
 
     /** @var \Symfony\Component\Security\Core\SecurityContextInterface */
     private $securityContext;
+
+    /** @var integer */
+    public $workspace;
 
     /**
      * @DI\InjectParams({
@@ -83,7 +86,8 @@ class BadgeRuleType extends AbstractType
                 'class'          => 'ClarolineCoreBundle:Resource\ResourceNode',
                 'use_controller' => true,
                 'property'       => 'pathForDisplay',
-                'repo_method'    => 'findByNameForAjax'
+                'repo_method'    => 'findByNameForAjax',
+                'extra_data'     => array('workspace' => $this->workspace)
             ))
             ->add('badge', 'zenstruck_ajax_entity', array(
                 'attr'           => array('class' => 'fullwidth'),

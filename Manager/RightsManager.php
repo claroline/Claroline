@@ -84,9 +84,10 @@ class RightsManager
      *
      * @param array|integer $permissions
      * @param \Claroline\CoreBundle\Entity\Role $role
-     * @param \Claroline\CoreBundle\Entity\Resource\ResourceNode $node
+     * @param \Claroline\CoreBundle\Entity\Resource\ResourceNode $resource
      * @param boolean $isRecursive
      * @param array $creations
+     * @internal param \Claroline\CoreBundle\Entity\Resource\ResourceNode $node
      */
     public function create(
         $permissions,
@@ -107,7 +108,7 @@ class RightsManager
      * @param \Claroline\CoreBundle\Entity\Resource\ResourceNode $node
      * @param boolean                                            $isRecursive
      *
-     * @return \Claroline\CoreBundle\Entity\Resource\ResourceRight[] $arRights
+     * @return array|\Claroline\CoreBundle\Entity\Resource\ResourceRights[]
      */
     public function editPerms(
         $permissions,
@@ -117,15 +118,29 @@ class RightsManager
     )
     {
         //Bugfix: If the flushSuite is uncommented, doctrine returns an error
-        //(ResourceRights duplicata)
+        //(ResourceRights duplicate)
         //$this->om->startFlushSuite();
 
-        $arRights = ($isRecursive) ?
+        $arRights = $isRecursive ?
             $this->updateRightsTree($role, $node):
             array($this->getOneByRoleAndResource($role, $node));
 
         foreach ($arRights as $toUpdate) {
-            is_int($permissions) ? $toUpdate->setMask($permissions): $this->setPermissions($toUpdate, $permissions);
+            if ($isRecursive) {
+                if (is_int($permissions)) {
+                    $permissions = $this->mergeTypePermissions($permissions, $toUpdate->getMask());
+                } else {
+                    $resourceType = $toUpdate->getResourceNode()->getResourceType();
+                    $permissionsMask = $this->maskManager->encodeMask($permissions, $resourceType);
+                    $permissionsMask = $this->mergeTypePermissions($permissionsMask, $toUpdate->getMask());
+                    $permissions = $this->maskManager->decodeMask($permissionsMask, $resourceType);
+                }
+            }
+
+            is_int($permissions) ?
+                $toUpdate->setMask($permissions) :
+                $this->setPermissions($toUpdate, $permissions);
+
             $this->om->persist($toUpdate);
             $this->logChangeSet($toUpdate);
         }
@@ -419,5 +434,25 @@ class RightsManager
     public function getCreationRights(array $roles, ResourceNode $node)
     {
         return $this->rightsRepo->findCreationRights($roles, $node);
+    }
+
+    /**
+     * Merges permissions related to a specific resource type (i.e. "post" in a
+     * forum) with a directory mask. This allows directory permissions to be
+     * applied recursively without loosing particular permissions.
+     *
+     * @param int $dirMask          A directory mask
+     * @param int $resourceMask     A specific resource mask
+     * @return int
+     */
+    private function mergeTypePermissions($dirMask, $resourceMask)
+    {
+        // extract base permissions ("open", "edit", etc. -> i.e. 5 out of 32
+        // possible permissions) by getting the last 5 bits of the mask
+        $baseMask = $resourceMask % 32;
+        // keep only specific permissions
+        $typeMask = $resourceMask - $baseMask;
+
+        return $dirMask | $typeMask; // merge
     }
 }
