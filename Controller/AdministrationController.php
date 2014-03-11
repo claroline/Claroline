@@ -115,10 +115,7 @@ class AdministrationController extends Controller
     }
 
     /**
-     * @EXT\Route(
-     *     "/index",
-     *     name="claro_admin_index"
-     * )
+     * @EXT\Route("/", name="claro_admin_index")
      *
      * Displays the administration section index.
      *
@@ -130,10 +127,7 @@ class AdministrationController extends Controller
     }
 
     /**
-     * @EXT\Route(
-     *     "/user/form",
-     *     name="claro_admin_user_creation_form"
-     * )
+     * @EXT\Route("/users/form",  name="claro_admin_user_creation_form")
      * @EXT\Method("GET")
      * @EXT\ParamConverter("currentUser", options={"authenticatedUser" = true})
      * @EXT\Template()
@@ -164,10 +158,7 @@ class AdministrationController extends Controller
     }
 
     /**
-     * @EXT\Route(
-     *     "/user",
-     *     name="claro_admin_create_user"
-     * )
+     * @EXT\Route("/users", name="claro_admin_create_user")
      * @EXT\Method("POST")
      * @EXT\ParamConverter("currentUser", options={"authenticatedUser" = true})
      * @EXT\Template("ClarolineCoreBundle:Administration:userCreationForm.html.twig")
@@ -237,14 +228,14 @@ class AdministrationController extends Controller
 
     /**
      * @EXT\Route(
-     *     "users/page/{page}/max/{max}/order/{order}",
+     *     "/users/page/{page}/max/{max}/order/{order}",
      *     name="claro_admin_user_list",
      *     defaults={"page"=1, "search"="", "max"=50, "order"="id"},
      *     options = {"expose"=true}
      * )
      * @EXT\Method("GET")
      * @EXT\Route(
-     *     "users/page/{page}/search/{search}/max/{max}/order/{order}",
+     *     "/users/page/{page}/search/{search}/max/{max}/order/{order}",
      *     name="claro_admin_user_list_search",
      *     defaults={"page"=1, "max"=50, "order"="id"},
      *     options = {"expose"=true}
@@ -277,14 +268,14 @@ class AdministrationController extends Controller
 
     /**
      * @EXT\Route(
-     *     "users/page/{page}/pic",
+     *     "/users/page/{page}/pic",
      *     name="claro_admin_user_list_pics",
      *     defaults={"page"=1, "search"=""},
      *     options = {"expose"=true}
      * )
      * @EXT\Method("GET")
      * @EXT\Route(
-     *     "users/page/{page}/pic/search/{search}",
+     *     "/users/page/{page}/pic/search/{search}",
      *     name="claro_admin_user_list_search_pics",
      *     defaults={"page"=1},
      *     options = {"expose"=true}
@@ -317,7 +308,7 @@ class AdministrationController extends Controller
      * )
      * @EXT\Method("GET")
      * @EXT\Route(
-     *     "groups/page/{page}/search/{search}/max/{max}/order/{order}",
+     *     "/groups/page/{page}/search/{search}/max/{max}/order/{order}",
      *     name="claro_admin_group_list_search",
      *     defaults={"page"=1, "max"=50, "order"="id"},
      *     options = {"expose"=true}
@@ -350,14 +341,14 @@ class AdministrationController extends Controller
 
     /**
      * @EXT\Route(
-     *     "/group/{groupId}/users/page/{page}/max/{max}/order/{order}",
+     *     "/groups/{groupId}/users/page/{page}/max/{max}/order/{order}",
      *     name="claro_admin_user_of_group_list",
      *     options={"expose"=true},
      *     defaults={"page"=1, "search"="", "max"=50, "order"="id"}
      * )
      * @EXT\Method("GET")
      * @EXT\Route(
-     *     "/group/{groupId}/users/page/{page}/search/{search}/max/{max}/{order}",
+     *     "/groups/{groupId}/users/page/{page}/search/{search}/max/{max}/{order}",
      *     name="claro_admin_user_of_group_list_search",
      *     options={"expose"=true},
      *     defaults={"page"=1, "max"=50, "order"="id"}
@@ -396,7 +387,7 @@ class AdministrationController extends Controller
 
     /**
      * @EXT\Route(
-     *     "/group/add/{groupId}/page/{page}/max/{max}/order/{order}",
+     *     "/groups/add/{groupId}/page/{page}/max/{max}/order/{order}",
      *     name="claro_admin_outside_of_group_user_list",
      *     options={"expose"=true},
      *     defaults={"page"=1, "search"="", "max"=50, "order"="id"}
@@ -404,14 +395,14 @@ class AdministrationController extends Controller
      * @EXT\Method("GET")
      *
      * @EXT\Route(
-     *     "/group/add/{groupId}/page/{page}/search/{search}/max/{max}/order/{order}",
+     *     "/groups/add/{groupId}/page/{page}/search/{search}/max/{max}/order/{order}",
      *     name="claro_admin_outside_of_group_user_list_search",
      *     options={"expose"=true},
      *     defaults={"page"=1, "max"=50, "order"="id"}
      * )
      * @EXT\Method("GET")
      * @EXT\ParamConverter(
-     *      "group",
+     *      "groups",
      *      class="ClarolineCoreBundle:Group",
      *      options={"id" = "groupId", "strictId" = true}
      * )
@@ -443,7 +434,7 @@ class AdministrationController extends Controller
 
     /**
      * @EXT\Route(
-     *     "/group/form",
+     *     "/groups/form",
      *     name="claro_admin_group_creation_form"
      * )
      * @EXT\Method("GET")
@@ -462,7 +453,7 @@ class AdministrationController extends Controller
 
     /**
      * @EXT\Route(
-     *     "/group",
+     *     "/groups",
      *     name="claro_admin_create_group"
      * )
      * @EXT\Method("POST")
@@ -493,7 +484,7 @@ class AdministrationController extends Controller
 
     /**
      * @EXT\Route(
-     *     "/group/{groupId}/users",
+     *     "/groups/{groupId}/users",
      *     name="claro_admin_multiadd_user_to_group",
      *     requirements={"groupId"="^(?=.*[0-9].*$)\d*$"},
      *     options={"expose"=true}
@@ -530,7 +521,7 @@ class AdministrationController extends Controller
 
     /**
      * @EXT\Route(
-     *     "/group/{groupId}/users",
+     *     "/groups/{groupId}/users",
      *     name="claro_admin_multidelete_user_from_group",
      *     options={"expose"=true},
      *     requirements={"groupId"="^(?=.*[1-9].*$)\d*$"}
@@ -596,7 +587,7 @@ class AdministrationController extends Controller
 
     /**
      * @EXT\Route(
-     *     "/group/settings/form/{groupId}",
+     *     "/groups/settings/form/{groupId}",
      *     name="claro_admin_group_settings_form",
      *     requirements={"groupId"="^(?=.*[1-9].*$)\d*$"}
      * )
@@ -627,7 +618,7 @@ class AdministrationController extends Controller
 
     /**
      * @EXT\Route(
-     *     "/group/settings/update/{groupId}",
+     *     "/groups/settings/update/{groupId}",
      *     name="claro_admin_update_group_settings"
      * )
      * @EXT\ParamConverter(
@@ -727,13 +718,9 @@ class AdministrationController extends Controller
     }
 
     /**
-     * @EXT\Route(
-     *    "user/management",
-     *    name="claro_admin_users_management"
-     * )
+     * @EXT\Route("/users/management", name="claro_admin_users_management")
      * @EXT\Method("GET")
-     *
-     * @EXT\Template()
+     * @EXT\Template
      *
      * @return Response
      */
@@ -743,13 +730,9 @@ class AdministrationController extends Controller
     }
 
     /**
-     * @EXT\Route(
-     *    "user/management/import/form",
-     *     name="claro_admin_import_users_form"
-     * )
+     * @EXT\Route("/users/management/import/form", name="claro_admin_import_users_form")
      * @EXT\Method("GET")
-     *
-     * @EXT\Template()
+     * @EXT\Template
      *
      * @return Response
      */
@@ -761,13 +744,8 @@ class AdministrationController extends Controller
     }
 
     /**
-     * @EXT\Route(
-     *     "user/management/import",
-     *     name="claro_admin_import_users"
-     * )
-     *
+     * @EXT\Route("/users/management/import", name="claro_admin_import_users")
      * @EXT\Method({"POST", "GET"})
-     *
      * @EXT\Template("ClarolineCoreBundle:Administration:importUsersForm.html.twig")
      *
      * @return Response
@@ -795,7 +773,7 @@ class AdministrationController extends Controller
 
     /**
      * @EXT\Route(
-     *    "group/{groupId}/management/import/form",
+     *    "/groups/{groupId}/management/import/form",
      *     name="claro_admin_import_users_into_group_form"
      * )
      * @EXT\Method("GET")
@@ -804,8 +782,7 @@ class AdministrationController extends Controller
      *      class="ClarolineCoreBundle:Group",
      *      options={"id" = "groupId", "strictId" = true}
      * )
-     *
-     * @EXT\Template()
+     * @EXT\Template
      *
      * @param Group $group
      *
@@ -820,7 +797,7 @@ class AdministrationController extends Controller
 
     /**
      * @EXT\Route(
-     *    "group/{groupId}/management/import",
+     *    "/groups/{groupId}/management/import",
      *     name="claro_admin_import_users_into_group"
      * )
      * @EXT\Method({"POST", "GET"})
@@ -829,7 +806,6 @@ class AdministrationController extends Controller
      *      class="ClarolineCoreBundle:Group",
      *      options={"id" = "groupId", "strictId" = true}
      * )
-     *
      * @EXT\Template("ClarolineCoreBundle:Administration:importUsersIntoGroupForm.html.twig")
      *
      * @param Group $group
