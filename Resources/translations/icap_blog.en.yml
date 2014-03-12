@@ -41,6 +41,7 @@ icap_blog_comment_publish_error: 'An error occured while publishing comment'
 icap_blog_comment_unpublish_success: 'Comment unpublished with success'
 icap_blog_comment_unpublish_error: 'An error occured while unpublishing comment'
 icap_blog_post_need_validation_before_publishing: "Your post will need to be validated by an administrator before being publish."
+icap_blog_post_edit_need_validation_before_publishing: "Edition of your post will need to be validated by an administrator before being publish."
 icap_blog_post_comment_need_validation_before_publishing: "Your comment will need to be validated by an administrator before being publish."
 icap_blog_post_comment_need_authentication: "<a href='%connection_url%' title='Connection'>Log in</a> to comment this post."
 icap_blog_post_need_publishing: "Your post will need to be publish after validate."
