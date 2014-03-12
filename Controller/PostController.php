@@ -162,6 +162,10 @@ class PostController extends Controller
                     $unitOfWork->computeChangeSets();
                     $changeSet = $unitOfWork->getEntityChangeSet($post);
 
+                    if('update' === $action && !$this->get('security.context')->isGranted('EDIT', $blog)) {
+                        $post->unpublish();
+                    }
+
                     $entityManager->persist($post);
                     $entityManager->flush();
 
