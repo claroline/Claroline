@@ -66,7 +66,7 @@ badge_form_name: Name
 badge_form_rules: 'Awarding rules'
 badge_form_times: times
 badge_form_user_target_of_action: 'User is the target of the action'
-badge_form_version: Version
+badge_version: Version
 badge_no_rules_check_manually: 'No rules, check manually'
 badge_reject_award: 'Reject badge awarding'
 badge_reject_award_error_message: 'An error occured while rejecting badge awarding.'

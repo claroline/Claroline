@@ -66,7 +66,7 @@ badge_form_name: Nom
 badge_form_rules: 'Règles d''attribution'
 badge_form_times: fois
 badge_form_user_target_of_action: 'L''utilisateur est la cible de l''action'
-badge_form_version: Version
+badge_version: Version
 badge_no_rules_check_manually: 'Aucune règle, vérifier manuellement'
 badge_reject_award: 'Refuser l''attribution du badge'
 badge_reject_award_error_message: 'Erreur lors du refus d''attribution du badge.'
