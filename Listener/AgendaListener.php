@@ -15,6 +15,7 @@ use JMS\DiExtraBundle\Annotation as DI;
 use Claroline\CoreBundle\Form\Factory\FormFactory;
 use Claroline\CoreBundle\Event\DisplayWidgetEvent;
 use Symfony\Bundle\TwigBundle\TwigEngine;
+use Symfony\Component\Config\Definition\Exception\Exception;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Routing\RouterInterface;
@@ -72,9 +73,9 @@ class AgendaListener
     public function onDisplay(DisplayWidgetEvent $event)
     {
         if ($event->getInstance()->isDesktop()) {
-            $event->setContent($this->desktopAgenda($event->getInstance()));
+            $event->setContent($this->desktopAgenda());
         } else {
-            $event->setContent($this->workspaceAgenda($event->getInstance()));
+            $event->setContent($this->workspaceAgenda($event->getInstance()->getWorkspace()->getId()));
         }
         $event->stopPropagation();
     }
@@ -84,6 +85,7 @@ class AgendaListener
         $em = $this->container->get('doctrine.orm.entity_manager');
         $usr = $this->container->get('security.context')->getToken()->getUser();
         $owners = $em->getRepository('ClarolineCoreBundle:Event')->findByWorkspaceId($id, false, 5);
+
 
         return $this->templating->render(
             'ClarolineCoreBundle:Widget:agenda_widget.html.twig',
