@@ -23,6 +23,9 @@
     <div class="panel-heading">
         <h3 class="panel-title">{{ 'role_creation'|trans({}, 'platform') }}</h3>
     </div>
+    <div class="alert-warning">
+        {{ 'tool_roles_create_directory'|trans({}, 'platform') }}
+    </div>
     <form class="form-horizontal"
           action="{{ path('claro_workspace_role_create', {'workspace': workspace.getId()} ) }}"
           method="post" {{ form_enctype(form) }}
