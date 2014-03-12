@@ -30,9 +30,9 @@
             {{ topbar.item({'name':'administration', 'href':path('claro_admin_parameters_index'), 'icon':'cog', 'route':'/administration/index/'}) }}
         {% endif %}
         {% if countUnreadMessages > 0 %}
-            {{ topbar.item({'name':'messages', 'href':path('claro_message_list_received'), 'icon':'envelope', 'route':'/message/', 'title':'new_message_alert' | trans({'%count%': countUnreadMessages}, 'platform'), 'badge' : countUnreadMessages }) }}
+            {{ topbar.item({'name':'', 'href':path('claro_message_list_received'), 'icon':'envelope', 'route':'/message/', 'title':'new_message_alert' | trans({'%count%': countUnreadMessages}, 'platform'), 'badge' : countUnreadMessages }) }}
         {% else %}
-            {{ topbar.item({'name':'messages', 'href':path('claro_message_list_received'), 'icon':'envelope', 'route':'/message/', 'title':'new_message_alert' | trans({'%count%': countUnreadMessages}, 'platform')}) }}
+            {{ topbar.item({'name':'', 'href':path('claro_message_list_received'), 'icon':'envelope', 'route':'/message/', 'title':'new_message_alert' | trans({'%count%': countUnreadMessages}, 'platform')}) }}
         {% endif %}
         {% if countUnviewedNotifications > 0 %}
             {{ topbar.item({'id':'notification-topbar-item', 'href':path('icap_notification_view'), 'icon':'bell', 'route':'/icap_notification/', 'title':'notifications', 'badge' : countUnviewedNotifications}) }}

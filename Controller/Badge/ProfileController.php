@@ -87,11 +87,6 @@ class ProfileController extends Controller
      */
     public function badgeAction(Badge $badge, User $user)
     {
-        /** @var \Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler $platformConfigHandler */
-        $platformConfigHandler = $this->get('claroline.config.platform_config_handler');
-
-        $badge->setLocale($platformConfigHandler->getParameter('locale_language'));
-
         /** @var \Claroline\CoreBundle\Rule\Validator $badgeRuleValidator */
         $badgeRuleValidator = $this->get("claroline.rule.validator");
         $validateLogs       = $badgeRuleValidator->validate($badge, $user);
@@ -139,14 +134,10 @@ class ProfileController extends Controller
         $badgeClaims      = $this->getDoctrine()->getRepository('ClarolineCoreBundle:Badge\BadgeClaim')->findByUser($user);
         $badgeCollections = $this->getDoctrine()->getRepository('ClarolineCoreBundle:Badge\BadgeCollection')->findByUser($user);
 
-        /** @var \Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler $platformConfigHandler */
-        $platformConfigHandler = $this->get('claroline.config.platform_config_handler');
-
         return array(
             'userBadges'       => $userBadges,
             'badgeClaims'      => $badgeClaims,
-            'badgeCollections' => $badgeCollections,
-            'language'         => $platformConfigHandler->getParameter('locale_language')
+            'badgeCollections' => $badgeCollections
         );
     }
 }

@@ -101,7 +101,6 @@
                     <thead>
                         <tr>
                             <th> <input type="checkbox" name="all" id="check-all-items"></input> </th>
-                            <th><a href="{{ sortUrl(workspace.getId(), max, search, 'id') }}">{{ 'id'|trans({}, 'platform') }}</a></th>
                             <th><a href="{{ sortUrl(workspace.getId(), max, search, 'name') }}">{{ 'name'|trans({}, 'platform') }}</a></th>
                             <th>{{ 'role'|trans({}, 'platform') }}</th>
                         </tr>
@@ -110,7 +109,6 @@
                         {% for group in pager.currentPageResults %}
                             <tr id="row-{{ group.id }}" class="row-group" data-group-id="{{ group.getId() }}">
                                 <td> <input class="chk-grp" type="checkbox" value="{{ group.getId() }}"> </input></td>
-                                <td>{{ group.getId() }}</td>
                                 <td>  <a href="{{ path('claro_workspace_users_of_group', {'workspace': workspace.getId(), 'group': group.getId() }) }}"> {{ group.name }} </a> </td>
                                 <td>
                                     {% for role in group.getEntityRoles() %}

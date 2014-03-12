@@ -115,7 +115,11 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-md-8">{{ renderPager(search, workspace.getId(), pager, max, order) }}</div>
+                <div class="col-md-8">
+                {% if pager.getNbPages() > 1 %}
+                    {{ renderPager(search, workspace.getId(), pager, max, order) }}
+                {% endif %}
+                </div>
                 <div class="col-md-4">
                     {{ maxResultsSelectBox(max, "$('#search-button').trigger('click');") }}
                 </div>
@@ -125,7 +129,6 @@
                     <thead>
                         <tr>
                             <th> <input type="checkbox" name="all" id="check-all-items"></input> </th>
-                            <th><a href="{{ sortUrl(max, search, 'id', workspace.getId()) }}">{{ 'id'|trans({}, 'platform') }}</a></th>
                             <th><a href="{{ sortUrl(max, search, 'name', workspace.getId()) }}">{{ 'name'|trans({}, 'platform') }}</a></th>
                         </tr>
                     </thead>
@@ -133,14 +136,15 @@
                         {% for group in pager.currentPageResults %}
                             <tr id="row-{{ group.id }}" class="row-group" data-group-id="{{ group.getId() }}">
                                 <td> <input class="chk-grp chk-item" type="checkbox" value="{{ group.getId() }}"> </input></td>
-                                <td>  {{ group.id }} </td>
                                 <td>  {{ group.name }} </td>
                             </tr>
                         {% endfor %}
                     </tbody>
                 </table>
             </div>
-            {{ renderPager(search, workspace.getId(), pager, max, order) }}
+            {% if pager.getNbPages() > 1 %}
+                {{ renderPager(search, workspace.getId(), pager, max, order) }}
+            {% endif %}
         </div>
     </div>
 {% endblock %}
