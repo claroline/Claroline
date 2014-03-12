@@ -402,7 +402,7 @@ class AdministrationController extends Controller
      * )
      * @EXT\Method("GET")
      * @EXT\ParamConverter(
-     *      "groups",
+     *      "group",
      *      class="ClarolineCoreBundle:Group",
      *      options={"id" = "groupId", "strictId" = true}
      * )

@@ -120,7 +120,7 @@
                     {{ renderPager(search, workspace.getId(), pager, max, order) }}
                 </div>
                 <div class="col-md-4">
-                    {{ maxResultsSelectBox(max, "$('#search-button').trigger('click');") }}
+                    {{ maxResultsSelectBox(max, "$('#search-button').trigger('click');", 'users_per_page') }}
                 </div>
             </div>
             <div class="table-responsive">
