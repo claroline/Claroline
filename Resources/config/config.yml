@@ -1,0 +1,8 @@
+plugin:
+  has_options: false
+  icon: res_url.png
+  resources:
+      - class: Claroline\CoreBundle\Entity\Resource\File
+        name: claroline_web_resource
+        is_exportable: false
+        icon: res_url.png
