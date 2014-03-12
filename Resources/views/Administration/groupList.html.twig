@@ -46,6 +46,7 @@
 {% from _self import renderPager %}
 {% from _self import displayControls %}
 {% from _self import sortUrl %}
+{% from "ClarolineCoreBundle::macros.html.twig" import maxResultsSelectBox %}
 
 {% extends "ClarolineCoreBundle:Administration:layout.html.twig" %}
 
@@ -100,16 +101,7 @@
                 
             </div>
             <div class="col-md-4" style="margin-top: 15px;">
-                <div class="input-group margin-md">
-                    <select class="form-control input-md" id="max-select">
-                        <option>20</option>
-                        <option>50</option>
-                        <option>100</option>
-                        <option>200</option>
-                        <option>500</option>
-                    </select>
-                    <span class="input-group-addon">{{ 'line_per_page'|trans({}, 'platform') }}</span>
-                </div>
+                {{ maxResultsSelectBox(max, "$('#search-button').trigger('click');") }}
             </div>
         </div>
 
@@ -161,7 +153,6 @@
     {{ parent() }}
     <script src='{{ asset('bundles/clarolinecore/js/table.js') }}' type="text/javascript"></script>
     <script>
-        $('#max-select').val({{ max }});
         parameters = {};
         parameters.route = {};
         parameters.route.action = {};

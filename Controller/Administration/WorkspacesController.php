@@ -50,14 +50,14 @@ class WorkspacesController
 
     /**
      * @EXT\Route(
-     *     "/workspaces/page/{page}/max/{max}/order/{order}",
+     *     "/page/{page}/max/{max}/order/{order}",
      *     name="claro_admin_workspaces_management",
      *     defaults={"page"=1, "search"="", "max"=50, "order"="id"},
      *     options = {"expose"=true}
      * )
      * @EXT\Method("GET")
      * @EXT\Route(
-     *     "/workspaces/page/{page}/search/{search}/max/{max}/order/{order}",
+     *     "/page/{page}/search/{search}/max/{max}/order/{order}",
      *     name="claro_admin_workspaces_management_search",
      *     defaults={"page"=1, "search"="", "max"=50, "order"="id"},
      *     options = {"expose"=true}
@@ -82,7 +82,7 @@ class WorkspacesController
 
     /**
      * @EXT\Route(
-     *     "/workspaces/visibility",
+     *     "/visibility",
      *      name="claro_admin_workspaces_management_visibility",
      * )
      *
@@ -103,7 +103,7 @@ class WorkspacesController
 
     /**
      * @EXT\Route(
-     *     "/workspaces/registration",
+     *     "/registration",
      *      name="claro_admin_workspaces_management_registration",
      * )
      *
@@ -124,7 +124,7 @@ class WorkspacesController
 
     /**
      * @EXT\Route(
-     *     "/workspaces",
+     *     "/",
      *     name="claro_admin_delete_workspaces",
      *     options = {"expose"=true}
      * )

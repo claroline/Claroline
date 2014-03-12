@@ -20,6 +20,8 @@ use Claroline\CoreBundle\Persistence\ObjectManager;
 use Doctrine\ORM\EntityManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\StreamedResponse;
+use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 use Symfony\Component\Templating\EngineInterface;
 use Symfony\Component\Form\FormFactory;
 use Symfony\Component\HttpFoundation\Response;
@@ -119,25 +121,22 @@ class AuthenticationSuccessListener implements AuthenticationSuccessHandlerInter
     /**
      * @DI\Observe("kernel.response")
      */
-    public function onKernelTerminate($event)
+    public function onKernelResponse(FilterResponseEvent $event)
     {
         $this->saveLastUri($event);
     }
 
-    public function saveLastUri($event)
+    public function saveLastUri(FilterResponseEvent $event)
     {
-        if (
-            $event->isMasterRequest() &&
-            !$event->getRequest()->isXmlHttpRequest() &&
-            !in_array($event->getRequest()->attributes->get('_route'), $this->getExcludedRoutes()) &&
-            'GET' === $event->getRequest()->getMethod() &&
-            200 === $event->getResponse()->getStatusCode()
+        if ($event->isMasterRequest()
+            && !$event->getRequest()->isXmlHttpRequest()
+            && !in_array($event->getRequest()->attributes->get('_route'), $this->getExcludedRoutes())
+            && 'GET' === $event->getRequest()->getMethod()
+            && 200 === $event->getResponse()->getStatusCode()
+            && !$event->getResponse() instanceof StreamedResponse
         ) {
-
-            $token =  $this->securityContext->getToken();
-            if ($token) {
-                $user = $token->getUser();
-                if ($user !== 'anon.') {
+            if ($token =  $this->securityContext->getToken()) {
+                if ('anon.' !== $user = $token->getUser()) {
                     $uri = $event->getRequest()->getRequestUri();
                     $user->setLastUri($uri);
                     $this->manager->persist($user);
