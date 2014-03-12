@@ -98,7 +98,6 @@
                 <table class="table table-striped table-bordered table-condensed">
                     <thead>
                         <tr>
-                            <th><a href="{{ sortUrl(max, search, 'id', workspace.getId()) }}">{{ 'id'|trans({}, 'platform') }}</a></th>
                             <th><a href="{{ sortUrl(max, search, 'username', workspace.getId()) }}">{{ 'username'|trans({}, 'platform') }}</a></th>
                             <th><a href="{{ sortUrl(max, search, 'lastName', workspace.getId()) }}">{{ 'last_name'|trans({}, 'platform') }}</a></th>
                             <th><a href="{{ sortUrl(max, search, 'firstName', workspace.getId()) }}">{{ 'first_name'|trans({}, 'platform') }}</a></th>
@@ -109,7 +108,6 @@
                     <tbody id="user-table-body">
                         {% for user in pager.currentPageResults %}
                             <tr id="row-{{ user.id }}" class="row-user" data-user-id="{{ user.getId() }}">
-                                <td>{{ user.getId() }}</td>
                                 <td>
                                     <a href="{{ path('claro_profile_view', {'userId': user.getId()}) }}"> {{user.getUsername()}}</a>
                                 </td>

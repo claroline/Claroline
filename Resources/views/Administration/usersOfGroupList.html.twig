@@ -119,7 +119,6 @@
                 <thead>
                     <tr>
                         <th> <input type="checkbox" name="all" id="check-all-items"></input> </th>
-                        <th><a href="{{ sortUrl(max, search, group.getId(),  'id') }}">{{ 'id'|trans({}, 'platform') }}</a></th>
                         <th><a href="{{ sortUrl(max, search, group.getId(),  'username') }}">{{ 'username'|trans({}, 'platform') }}</a></th>
                         <th><a href="{{ sortUrl(max, search, group.getId(),  'lastName') }}">{{ 'last_name'|trans({}, 'platform') }}</a></th>
                         <th><a href="{{ sortUrl(max, search, group.getId(),  'firstName') }}">{{ 'first_name'|trans({}, 'platform') }}</a></th>
@@ -132,7 +131,6 @@
                             <td>
                                 <input type="checkbox" value="{{ user.id }}" class="chk-item" align="center"></input>
                             </td>
-                            <td>{{ user.getId() }}</td>
                             <td>{{ user.getUsername() }}</td>
                             <td>{{ user.getLastName() }}</td>
                             <td>{{ user.getFirstName() }}</td>
