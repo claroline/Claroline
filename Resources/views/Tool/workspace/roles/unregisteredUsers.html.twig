@@ -117,7 +117,9 @@
             </div>
             <div class="row">
                 <div div class="col-md-8">
-                    {{ renderPager(search, workspace.getId(), pager, max, order) }}
+            {% if pager.getNbPages() > 1 %}
+                {{ renderPager(search, workspace.getId(), pager, max, order) }}
+            {% endif %}
                 </div>
                 <div class="col-md-4">
                     {{ maxResultsSelectBox(max, "$('#search-button').trigger('click');") }}
@@ -169,7 +171,9 @@
                     </tbody>
                 </table>
             </div>
-            {{ renderPager(search, workspace.getId(), pager, max, order) }}
+            {% if pager.getNbPages() > 1 %}
+                {{ renderPager(search, workspace.getId(), pager, max, order) }}
+            {% endif %}
         </div>
     </div>
 {% endblock %}

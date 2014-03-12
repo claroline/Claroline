@@ -25,10 +25,10 @@
     }}
 {% endblock %}
 {% block section_content %}
- <div class="panel-heading">
-    <h3 class="panel-title">{{ 'agenda'|trans({}, 'platform') }}</h3>
- </div>
- <div class="panel-body">
+<div class="panel-heading">
+    <h3 class="panel-title">{{ 'agenda'|trans({}, 'platform') }} - {{workspace.getName()}}</h3>
+</div>
+<div class="panel-body">
         <div id="selectOwner">
             {% for o in owners %}
                 {{o}}
@@ -72,7 +72,7 @@
                         <button class="btn btn-default" data-dismiss="modal" aria-hidden="true">{{'cancel'|trans({}, 'agenda') }}</button>
                         <button class="btn btn-primary" id="save">{{ 'add_event'|trans({}, 'agenda') }}</button>
                         <button class="btn btn-info" id="updateBtn" > {{ 'update'|trans({}, 'agenda') }}</button>
-                        <button class="btn btn-danger" id="deleteBtn" >{{ 'delete'|trans({}, 'platform') }} </button>
+                        <button class="btn btn-primary" id="deleteBtn" >{{ 'delete'|trans({}, 'platform') }} </button>
                     </div>
                 </div>
             </div>
