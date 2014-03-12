@@ -63,7 +63,9 @@
     </div>
 
     <div>
+    {% if pager.getNbPages() > 1 %}
         {{ renderPager(search, pager) }}
+    {% endif %}
     </div>
     <div class="table-responsive">
         <table class="table table-striped table-bordered table-condensed" id="messages-table">
@@ -111,7 +113,9 @@
             </tbody>
         </table>
     </div>
-    {{ renderPager(search, pager) }}
+    {% if pager.getNbPages() > 1 %}
+        {{ renderPager(search, pager) }}
+    {% endif %}
     <div>{{ displayControls() }}</div>
 {% endblock %}
 
