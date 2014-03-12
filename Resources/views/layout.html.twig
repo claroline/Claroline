@@ -121,7 +121,7 @@
         </div>
         {% endif %}
         {% if blogOptions.isBannerActivate or (false == blogOptions.isBannerActivate and is_granted('EDIT', _resource)) %}
-        <div id="blog_banner" class="col-md-12 well blog_banner{% if false == blogOptions.isBannerActivate %} hidden{% endif %}" style="height: {{ blogOptions.bannerHeight }}px; background-color: {{ blogOptions.bannerBackgroundColor }}; background-image: {% if null == blogOptions.bannerBackgroundImageWebPath %}none{% else %}url({{ asset(blogOptions.bannerBackgroundImageWebPath) }}){% endif %}; background-position: {{ blogOptions.bannerBackgroundImagePosition }}; background-repeat: {{ blogOptions.bannerBackgroundImageRepeat }};">
+        <div id="blog_banner" class="col-md-12 well blog_banner{% if false == blogOptions.isBannerActivate %} hidden{% endif %}" style="height: {{ blogOptions.bannerHeight }}px; background-color: {{ blogOptions.bannerBackgroundColor }}; background-image: {% if null == blogOptions.bannerBackgroundImageWebPath %}none{% else %}url('{{ asset(blogOptions.bannerBackgroundImageWebPath) }}'){% endif %}; background-position: {{ blogOptions.bannerBackgroundImagePosition }}; background-repeat: {{ blogOptions.bannerBackgroundImageRepeat }};">
         </div>
         {% endif %}
         {{ macros.flashBox() }}

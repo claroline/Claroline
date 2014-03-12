@@ -448,7 +448,7 @@ class BlogOptions
     {
         $ds = DIRECTORY_SEPARATOR;
 
-        $uploadRootDir         = sprintf('%s%s..%s..%s..%s..%s..%s..%sweb%s%s', __DIR__, $ds, $ds, $ds, $ds, $ds, $ds, $ds, $ds, $this->getUploadDir());
+        $uploadRootDir = sprintf('%s%s..%s..%s..%s..%s..%s..%sweb%s%s', __DIR__, $ds, $ds, $ds, $ds, $ds, $ds, $ds, $ds, $this->getUploadDir());
 
         if (!is_dir($uploadRootDir)) {
             if (false === mkdir($uploadRootDir)) {
