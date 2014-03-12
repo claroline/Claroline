@@ -51,9 +51,6 @@ class AdminController extends Controller
      */
     public function listAction($badgePage, $claimPage)
     {
-        /** @var \Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler $platformConfigHandler */
-        $platformConfigHandler = $this->get('claroline.config.platform_config_handler');
-
         $parameters = array(
             'badgePage'        => $badgePage,
             'claimPage'        => $claimPage,
@@ -70,8 +67,7 @@ class AdminController extends Controller
         );
 
         return array(
-            'parameters'  => $parameters,
-            'language'    => $platformConfigHandler->getParameter('locale_language')
+            'parameters'  => $parameters
         );
     }
 
@@ -133,10 +129,6 @@ class AdminController extends Controller
      */
     public function editAction(Request $request, Badge $badge, $page = 1)
     {
-        /** @var \Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler $platformConfigHandler */
-        $platformConfigHandler = $this->get('claroline.config.platform_config_handler');
-        $badge->setLocale($platformConfigHandler->getParameter('locale_language'));
-
         $doctrine = $this->getDoctrine();
 
         $query   = $doctrine->getRepository('ClarolineCoreBundle:Badge\Badge')->findUsers($badge, false);
@@ -250,10 +242,6 @@ class AdminController extends Controller
             throw $this->createNotFoundException("No badge found.");
         }
 
-        /** @var \Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler $platformConfigHandler */
-        $platformConfigHandler = $this->get('claroline.config.platform_config_handler');
-        $badge->setLocale($platformConfigHandler->getParameter('locale_language'));
-
         $form = $this->createForm($this->get('claroline.form.badge.award'));
 
         if ($request->isMethod('POST')) {
@@ -329,10 +317,6 @@ class AdminController extends Controller
         if (null !== $badge->getWorkspace()) {
             throw $this->createNotFoundException("No badge found.");
         }
-
-        /** @var \Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler $platformConfigHandler */
-        $platformConfigHandler = $this->get('claroline.config.platform_config_handler');
-        $badge->setLocale($platformConfigHandler->getParameter('locale_language'));
 
         /** @var \Symfony\Bundle\FrameworkBundle\Translation\Translator $translator */
         $translator = $this->get('translator');
