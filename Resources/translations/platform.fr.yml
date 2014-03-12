@@ -730,3 +730,4 @@ users_per_page: Utilisateurs par page
 groups_per_page: Groupes par page
 tool_roles_create_directory: L'option créer un répertoire vous permet de créer automatiquement un répertoire dédié aux utilisateurs de ce groupe.
 my_profile: Mon profil
+send: envoyer
