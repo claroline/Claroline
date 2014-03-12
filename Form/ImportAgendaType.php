@@ -45,7 +45,7 @@ class ImportAgendaType extends AbstractType
         $resolver
         ->setDefaults(
             array(
-                'translation_domain' => 'platform'
+                'translation_domain' => 'agenda'
                 )
         );
     }

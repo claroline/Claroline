@@ -94,6 +94,7 @@ class WorkspaceController extends Controller
         $this->checkUserIsAllowed($workspace);
 
         $badge = new Badge();
+        $badge->setWorkspace($workspace);
 
         //@TODO Get locales from locale source (database etc...)
         $locales = array('fr', 'en');
@@ -103,7 +104,7 @@ class WorkspaceController extends Controller
             $badge->addTranslation($translation);
         }
 
-        $form = $this->createForm($this->get('claroline.form.badge'), $badge);
+        $form = $this->createForm($this->get('claroline.form.badge.workspace'), $badge);
 
         if ($request->isMethod('POST')) {
             $form->handleRequest($request);
@@ -113,8 +114,6 @@ class WorkspaceController extends Controller
                 try {
                     /** @var \Doctrine\Common\Persistence\ObjectManager $entityManager */
                     $entityManager = $this->getDoctrine()->getManager();
-
-                    $badge->setWorkspace($workspace);
 
                     $entityManager->persist($badge);
                     $entityManager->flush();
@@ -181,7 +180,7 @@ class WorkspaceController extends Controller
             $originalRules[] = $rule;
         }
 
-        $form = $this->createForm($this->get('claroline.form.badge'), $badge);
+        $form = $this->createForm($this->get('claroline.form.badge.workspace'), $badge);
 
         if ($request->isMethod('POST')) {
             $form->handleRequest($request);
