@@ -152,10 +152,25 @@ class ToolListener
             array('isConfigurableInDesktop' => true, 'isDisplayableInDesktop' => true)
         );
 
-        return $this->templating->render(
-            'ClarolineCoreBundle:Tool\desktop\parameters:parameters.html.twig',
-            array('tools' => $tools)
+
+        if (count($tools) > 1) {
+            return $this->templating->render(
+                'ClarolineCoreBundle:Tool\desktop\parameters:parameters.html.twig',
+                array('tools' => $tools)
+            );
+        }
+
+        //otherwise only parameters exists so we return the parameters page.
+        $params['_controller'] = 'ClarolineCoreBundle:Tool\DesktopParameters:desktopConfigureTool';
+
+        $subRequest = $this->container->get('request')->duplicate(
+            array(),
+            null,
+            $params
         );
+        $response = $this->httpKernel->handle($subRequest, HttpKernelInterface::SUB_REQUEST);
+
+        return $response->getContent();
     }
 
     public function workspaceAgenda($workspaceId)

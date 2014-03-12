@@ -63,6 +63,7 @@ class DesktopParametersController extends Controller
      *
      * Displays the tools configuration page.
      *
+     * @param \Claroline\CoreBundle\Entity\User $user
      * @return Response
      */
     public function desktopConfigureToolAction(User $user)
@@ -84,9 +85,9 @@ class DesktopParametersController extends Controller
      *
      * @param Tool $tool
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @param \Claroline\CoreBundle\Entity\User $user
      *
-     * @throws \Exception
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function desktopRemoveToolAction(Tool $tool, User $user)
     {
@@ -106,11 +107,12 @@ class DesktopParametersController extends Controller
      *
      * Add a tool to the desktop.
      *
-     * @param Tool $tool
+     * @param Tool                              $tool
+     * @param integer                           $position
+     * @param \Claroline\CoreBundle\Entity\User $user
      *
      * @return \Symfony\Component\HttpFoundation\Response
      *
-     * @throws \Exception
      */
     public function desktopAddToolAction(Tool $tool, $position, User $user)
     {
