@@ -86,7 +86,6 @@ class AgendaListener
         $usr = $this->container->get('security.context')->getToken()->getUser();
         $owners = $em->getRepository('ClarolineCoreBundle:Event')->findByWorkspaceId($id, false, 5);
 
-
         return $this->templating->render(
             'ClarolineCoreBundle:Widget:agenda_widget.html.twig',
             array('listEvents' => $owners)

@@ -37,7 +37,6 @@
     {% endif %}
 {% endmacro %}
 
-
 {% from _self import renderPager %}
 {% from _self import displayControls %}
 
@@ -61,7 +60,6 @@
             </div>
         </div>
     </div>
-
     <div>
     {% if pager.getNbPages() > 1 %}
         {{ renderPager(search, pager) }}
