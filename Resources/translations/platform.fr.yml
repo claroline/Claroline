@@ -726,3 +726,5 @@ ws_most_viewed: 'Espaces d''activités les plus consultés'
 yes: oui
 yesterday_activity: 'Activité de la veille'
 your_username: 'Votre nom d''utilisateur est '
+users_per_page: Utilisateurs par page
+groups_per_page: Groupes par page

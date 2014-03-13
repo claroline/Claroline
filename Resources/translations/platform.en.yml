@@ -726,3 +726,5 @@ ws_most_viewed: 'Most viewed workspaces'
 yes: yes
 yesterday_activity: 'Yesterday''s activity'
 your_username: 'Your username is '
+users_per_page: Users per page
+groups_per_page: Groups per page

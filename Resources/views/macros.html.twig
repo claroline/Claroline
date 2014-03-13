@@ -107,7 +107,7 @@
     {% endif %}
 {% endmacro %}
 
-{% macro maxResultsSelectBox(currentMax, onChangeHandler) %}
+{% macro maxResultsSelectBox(currentMax, onChangeHandler, label) %}
     <div class="input-group margin-md">
         <select class="form-control input-md" id="max-select" onchange="{{ onChangeHandler }}">
             <option{% if currentMax == 20 %} selected{% endif %}>20</option>
@@ -116,6 +116,10 @@
             <option{% if currentMax == 200 %} selected{% endif %}>200</option>
             <option{% if currentMax == 500 %} selected{% endif %}>500</option>
         </select>
-        <span class="input-group-addon">{{ 'line_per_page'|trans({}, 'platform') }}</span>
+        {% if label %}
+            <span class="input-group-addon">{{ label|trans({}, 'platform') }}</span>
+        {% else %}
+            <span class="input-group-addon">{{ 'line_per_page'|trans({}, 'platform') }}</span>
+        {% endif %}
     </div>
 {% endmacro %}
