@@ -99,7 +99,7 @@
                 {% endif %}            
             </div>
             <div class="col-md-4" style="margin-top: 15px;">
-                {{ maxResultsSelectBox(max, "$('#search-button').trigger('click');") }}
+                {{ maxResultsSelectBox(max, "$('#search-button').trigger('click');", 'groups_per_page') }}
             </div>
         </div>
 
@@ -109,7 +109,6 @@
                 <thead>
                     <tr>
                         <th> <input type="checkbox" name="all" id="check-all-items"></input> </th>
-                        <th><a href="{{ sortUrl(max, search, 'id') }}">{{ 'id'|trans({}, 'platform') }}</a></th>
                         <th><a href="{{ sortUrl(max, search, 'name') }}">{{ 'name'|trans({}, 'platform') }}</a></th>
                         <th>{{ 'actions'|trans({}, 'platform') }}</th>
                     </tr>
@@ -120,7 +119,6 @@
                             <td>
                                 <input type="checkbox" class="chk-item" value="{{ group.getId() }}"></input>
                             </td>
-                            <td>{{ group.getId() }}</td>
                             <td>
                                 <a href="{{ path('claro_admin_user_of_group_list', {'groupId': group.getId()}) }}" id="link-show-{{ group.getId() }}">
                                     {{ group.getName() }}

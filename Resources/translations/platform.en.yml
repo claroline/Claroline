@@ -4,6 +4,7 @@
 'Add a logo': 'Add a logo'
 'An error has occurred, please check if the file size does not exceeds the permitted size': 'An error has occurred, please check if the file size does not exceeds the permitted size'
 'Audience/user visits': 'Audience/user visits'
+answer: Answer
 'Choose a logo': 'Choose a logo'
 'Choose visible actions in the widget': 'Choose visible actions in the widget'
 'Choose workspaces displayed in the widget': 'Choose workspaces displayed in the widget'
@@ -725,3 +726,5 @@ ws_most_viewed: 'Most viewed workspaces'
 yes: yes
 yesterday_activity: 'Yesterday''s activity'
 your_username: 'Your username is '
+users_per_page: Users per page
+groups_per_page: Groups per page

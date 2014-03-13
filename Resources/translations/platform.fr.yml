@@ -4,6 +4,7 @@
 'Add a logo': 'Ajouter un logo'
 'An error has occurred, please check if the file size does not exceeds the permitted size': 'Une erreur s''est produite, veuillez vérifier si la taille du fichier ne dépasse pas la taille autorisée'
 'Audience/user visits': 'Audience/Visites utilisateurs'
+answer: Répondre
 'Choose a logo': 'Choisir un logo'
 'Choose visible actions in the widget': 'Choisissez les actions visibles dans le widget'
 'Choose workspaces displayed in the widget': 'Choisissez les espaces de travail affichés par le widget'
@@ -233,7 +234,7 @@ file_form_shareType_0: Oui
 file_form_shareType_1: Non
 files: Fichiers
 filter: Filtrer
-find_workspaces: 'Tous les espaces publics'
+find_workspaces: 'Tous les espaces d''activités publics'
 firstName: Prénom
 first_name: Prénom
 forgot_password: 'Mot de passe oublié ?'
@@ -514,7 +515,7 @@ resources_rights_management: 'Gestion des droits des ressources'
 resources_usage_list: 'Liste d''utilisation des ressources'
 resources_usage_ratio: 'Taux d''utilisation des resources'
 restore: Restaurer
-restore_messages_confirm_message: 'message(s) restaurés'
+restore_messages_confirm_message: 'message(s) restauré(s)'
 results: Résultats
 results_for_search_on: 'Résultats de la recherche sur'
 right: Droit
@@ -725,3 +726,5 @@ ws_most_viewed: 'Espaces d''activités les plus consultés'
 yes: oui
 yesterday_activity: 'Activité de la veille'
 your_username: 'Votre nom d''utilisateur est '
+users_per_page: Utilisateurs par page
+groups_per_page: Groupes par page

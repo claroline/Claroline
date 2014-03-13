@@ -106,7 +106,7 @@
                 {% endif %}   
             </div>
             <div class="col-md-4" style="margin-top: 15px;">
-                {{ maxResultsSelectBox(max, "$('#search-button').trigger('click');") }}
+                {{ maxResultsSelectBox(max, "$('#search-button').trigger('click');", 'users_per_page') }}
             </div>
         </div>
         <div class="table-responsive">
@@ -116,7 +116,6 @@
                         {% if is_granted('ROLE_ADMIN') %}
                             <th><input type="checkbox" name="all" id="check-all-items"></input></th>
                         {% endif %}
-                        <th><a href="{{ sortUrl(max, search, 'id') }}">{{ 'id'|trans({}, 'platform') }}</a></th>
                         <th><a href="{{ sortUrl(max, search, 'username') }}">{{ 'username'|trans({}, 'platform') }}</a></th>
                         <th><a href="{{ sortUrl(max, search, 'lastName') }}">{{ 'last_name'|trans({}, 'platform') }}</a></th>
                         <th><a href="{{ sortUrl(max, search, 'firstName') }}">{{ 'first_name'|trans({}, 'platform') }}</a></th>
@@ -135,7 +134,6 @@
                                     <input type="checkbox" value="{{ user.id }}" class="chk-item" align="center"></input>
                                 </td>
                             {% endif %}
-                            <td>{{ user.getId() }}</td>
                             <td>
                                 <a href="{{ path('claro_profile_view', {'userId': user.getId()}) }}">{{ user.getUsername() }}</a>
                             </td>
