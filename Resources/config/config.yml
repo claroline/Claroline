@@ -1,5 +1,6 @@
 plugin:
   has_options: false
+  icon: res_rss.png
 
   widgets:
     - name: claroline_rssreader
