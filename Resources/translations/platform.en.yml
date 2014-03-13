@@ -241,7 +241,7 @@ from: From
 from_message: From
 general: General
 general_parameters: 'General parameters'
-generate_url: 'Generate a subscription url for the users'
+generate_url: 'Public URL Subscription '
 generate_url_subscription: 'Subscription to a workspace for a user'
 generate_url_subscription_anonyme: 'Subscription to a workspace for a anonymous'
 generate_url_subscription_fail: 'You must check "enable registration checkbow first to generate the url"'
