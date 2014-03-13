@@ -46,6 +46,7 @@
 {% from _self import renderPager %}
 {% from _self import displayControls %}
 {% from _self import sortUrl %}
+{% from "ClarolineCoreBundle::macros.html.twig" import maxResultsSelectBox %}
 
 {% extends "ClarolineCoreBundle:Administration:layout.html.twig" %}
 
@@ -91,22 +92,14 @@
                 </div>
             </div>
         </div>
-
         <div class="row">
             <div class="col-md-8">
-                {{ renderPager(search, pager, max, order) }}
+                {% if pager.getNbPages() > 1 %}
+                     {{ renderPager(search, pager, max, order) }}
+                {% endif %}            
             </div>
             <div class="col-md-4" style="margin-top: 15px;">
-                <div class="input-group margin-md">
-                    <select class="form-control input-md" id="max-select">
-                        <option>20</option>
-                        <option>50</option>
-                        <option>100</option>
-                        <option>200</option>
-                        <option>500</option>
-                    </select>
-                    <span class="input-group-addon">{{ 'line_per_page'|trans({}, 'platform') }}</span>
-                </div>
+                {{ maxResultsSelectBox(max, "$('#search-button').trigger('click');", 'groups_per_page') }}
             </div>
         </div>
 
@@ -116,7 +109,6 @@
                 <thead>
                     <tr>
                         <th> <input type="checkbox" name="all" id="check-all-items"></input> </th>
-                        <th><a href="{{ sortUrl(max, search, 'id') }}">{{ 'id'|trans({}, 'platform') }}</a></th>
                         <th><a href="{{ sortUrl(max, search, 'name') }}">{{ 'name'|trans({}, 'platform') }}</a></th>
                         <th>{{ 'actions'|trans({}, 'platform') }}</th>
                     </tr>
@@ -127,7 +119,6 @@
                             <td>
                                 <input type="checkbox" class="chk-item" value="{{ group.getId() }}"></input>
                             </td>
-                            <td>{{ group.getId() }}</td>
                             <td>
                                 <a href="{{ path('claro_admin_user_of_group_list', {'groupId': group.getId()}) }}" id="link-show-{{ group.getId() }}">
                                     {{ group.getName() }}
@@ -144,8 +135,9 @@
                 </tbody>
             </table>
         </div>
-        {{ renderPager(search, pager, max, order) }}
-
+       {% if pager.getNbPages() > 1 %}
+            {{ renderPager(search, pager, max, order) }}
+       {% endif %}
         <div>
             {{ displayControls() }}
         </div>
@@ -156,7 +148,6 @@
     {{ parent() }}
     <script src='{{ asset('bundles/clarolinecore/js/table.js') }}' type="text/javascript"></script>
     <script>
-        $('#max-select').val({{ max }});
         parameters = {};
         parameters.route = {};
         parameters.route.action = {};

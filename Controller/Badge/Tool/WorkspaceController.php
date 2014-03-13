@@ -52,9 +52,6 @@ class WorkspaceController extends Controller
     {
         $this->checkUserIsAllowed($workspace);
 
-        /** @var \Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler $platformConfigHandler */
-        $platformConfigHandler = $this->get('claroline.config.platform_config_handler');
-
         $parameters = array(
             'badgePage'    => $badgePage,
             'claimPage'    => $claimPage,
@@ -75,8 +72,7 @@ class WorkspaceController extends Controller
 
         return array(
             'workspace'   => $workspace,
-            'parameters'  => $parameters,
-            'language'    => $platformConfigHandler->getParameter('locale_language')
+            'parameters'  => $parameters
         );
     }
 
@@ -94,6 +90,7 @@ class WorkspaceController extends Controller
         $this->checkUserIsAllowed($workspace);
 
         $badge = new Badge();
+        $badge->setWorkspace($workspace);
 
         //@TODO Get locales from locale source (database etc...)
         $locales = array('fr', 'en');
@@ -103,7 +100,7 @@ class WorkspaceController extends Controller
             $badge->addTranslation($translation);
         }
 
-        $form = $this->createForm($this->get('claroline.form.badge'), $badge);
+        $form = $this->createForm($this->get('claroline.form.badge.workspace'), $badge);
 
         if ($request->isMethod('POST')) {
             $form->handleRequest($request);
@@ -113,8 +110,6 @@ class WorkspaceController extends Controller
                 try {
                     /** @var \Doctrine\Common\Persistence\ObjectManager $entityManager */
                     $entityManager = $this->getDoctrine()->getManager();
-
-                    $badge->setWorkspace($workspace);
 
                     $entityManager->persist($badge);
                     $entityManager->flush();
@@ -159,10 +154,6 @@ class WorkspaceController extends Controller
 
         $this->checkUserIsAllowed($workspace);
 
-        /** @var \Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler $platformConfigHandler */
-        $platformConfigHandler = $this->get('claroline.config.platform_config_handler');
-        $badge->setLocale($platformConfigHandler->getParameter('locale_language'));
-
         $doctrine = $this->getDoctrine();
 
         $query   = $doctrine->getRepository('ClarolineCoreBundle:Badge\Badge')->findUsers($badge, false);
@@ -181,7 +172,7 @@ class WorkspaceController extends Controller
             $originalRules[] = $rule;
         }
 
-        $form = $this->createForm($this->get('claroline.form.badge'), $badge);
+        $form = $this->createForm($this->get('claroline.form.badge.workspace'), $badge);
 
         if ($request->isMethod('POST')) {
             $form->handleRequest($request);
@@ -291,10 +282,6 @@ class WorkspaceController extends Controller
 
         $this->checkUserIsAllowed($workspace);
 
-        /** @var \Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler $platformConfigHandler */
-        $platformConfigHandler = $this->get('claroline.config.platform_config_handler');
-        $badge->setLocale($platformConfigHandler->getParameter('locale_language'));
-
         $form = $this->createForm($this->get('claroline.form.badge.award'));
 
         if ($request->isMethod('POST')) {
@@ -381,10 +368,6 @@ class WorkspaceController extends Controller
         }
 
         $this->checkUserIsAllowed($workspace);
-
-        /** @var \Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler $platformConfigHandler */
-        $platformConfigHandler = $this->get('claroline.config.platform_config_handler');
-        $badge->setLocale($platformConfigHandler->getParameter('locale_language'));
 
         /** @var \Symfony\Bundle\FrameworkBundle\Translation\Translator $translator */
         $translator = $this->get('translator');

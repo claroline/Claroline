@@ -47,8 +47,8 @@ class ProfileType extends AbstractType
         parent::buildForm($builder, $options);
 
         if (!$this->isAdmin) {
-            $builder->add('firstName', 'text', array('read_only' => true, 'disabled' => true, 'label' => 'First name'))
-                ->add('lastName', 'text', array('read_only' => true, 'disabled' => true, 'label' => 'Last name'))
+            $builder->add('firstName', 'text', array('label' => 'First name'))
+                ->add('lastName', 'text', array('label' => 'Last name'))
                 ->add('username', 'text', array('read_only' => true, 'disabled' => true, 'label' => 'User name'))
                 ->add('administrativeCode', 'text', array('required' => false, 'read_only' => true, 'disabled' => true))
                 ->add('mail', 'email', array('required' => false))

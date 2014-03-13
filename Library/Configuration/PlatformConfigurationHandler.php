@@ -54,7 +54,8 @@ class PlatformConfigurationHandler
         'session_db_user' => null,
         'session_db_password' => null,
         'facebook_client_id' => null,
-        'facebook_client_secret' => null
+        'facebook_client_secret' => null,
+        'facebook_client_active' => null
     );
 
     /**
@@ -138,6 +139,7 @@ class PlatformConfigurationHandler
         $config->setSessionDbPassword($this->parameters['session_db_password']);
         $config->setFacebookClientId($this->parameters['facebook_client_id']);
         $config->setFacebookClientSecret($this->parameters['facebook_client_secret']);
+        $config->setFacebookClientActive($this->parameters['facebook_client_active']);
 
         return $config;
     }

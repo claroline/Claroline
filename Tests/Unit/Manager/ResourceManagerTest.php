@@ -124,27 +124,16 @@ class ResourceManagerTest extends MockeryTestCase
      */
     public function testGetUniqueName($childAName, $childBName, $generatedName)
     {
-        $manager = $this->getManager(array('getSiblings'));
+        $manager = $this->getManager();
         $resource = $this->mock('Claroline\CoreBundle\Entity\Resource\ResourceNode');
         $childA = $this->mock('Claroline\CoreBundle\Entity\Resource\ResourceNode');
         $childB = $this->mock('Claroline\CoreBundle\Entity\Resource\ResourceNode');
-        $manager->shouldReceive('getSiblings')->once()->andReturn(array($childA, $childB));
         $resource->shouldReceive('getName')->once()->andReturn('uniquename.txt');
         $childA->shouldReceive('getName')->once()->andReturn($childAName);
         $childB->shouldReceive('getName')->once()->andReturn($childBName);
 
         $uniquename = $manager->getUniqueName($resource);
         $this->assertEquals($uniquename, $generatedName);
-    }
-
-    public function testGetSiblings()
-    {
-        $parent = $this->mock('Claroline\CoreBundle\Entity\Resource\ResourceNode');
-        $parent->shouldReceive('getChildren')->once();
-        $this->getManager()->getSiblings($parent);
-
-        $this->resourceNodeRepo->shouldReceive('findBy')->once()->with(array('parent' => null));
-        $this->getManager()->getSiblings(null);
     }
 
     /**

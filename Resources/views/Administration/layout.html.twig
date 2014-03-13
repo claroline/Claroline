@@ -10,9 +10,11 @@
             <i class="icon-cog"></i>
             {{ 'platform_parameters'|trans({}, 'platform') }}
         </a>
-        <a class="list-group-item{{ '/admin/users'|compareRoute(' active') }}{{ '/admin/groups'|compareRoute(' active') }}"
+        <a class="list-group-item
+            {{ '/admin/users'|compareRoute(' active') }}
+            {{ '/admin/groups'|compareRoute(' active') }}"
            href="{{ path('claro_admin_users_management') }}"">
-            <i class="icon-user"></i>
+        <i class="icon-user"></i>
             {{ 'users_management'|trans({}, 'platform') }}
         </a>
         <a class="list-group-item{{ '/admin/workspaces'|compareRoute(' active') }}"
@@ -30,12 +32,12 @@
             {{ 'registration_to_workspaces'|trans({}, 'platform') }}
         </a>
         <a class="list-group-item{{ '/admin/plugin'|compareRoute(' active') }}"
-            href="{{ path('claro_admin_plugins') }}">
+           href="{{ path('claro_admin_plugins') }}">
             <i class="icon-wrench"></i>
             {{ 'platform_plugins'|trans({}, 'platform') }}
         </a>
         <a class="list-group-item{{ '/admin/home_tab'|compareRoute(' active') }}"
-            href="{{ path('claro_admin_home_tabs_configuration_menu') }}">
+           href="{{ path('claro_admin_home_tabs_configuration_menu') }}">
             <i class="icon-th-large"></i>
             {{ 'home_tabs'|trans({}, 'platform') }}
         </a>
@@ -50,7 +52,7 @@
             {{ 'admin_logs'|trans({}, 'platform') }}
         </a>
         <a class="list-group-item{{ '/admin/analytics'|compareRoute(' active') }}"
-            href="{{ path('claro_admin_analytics_show') }}">
+           href="{{ path('claro_admin_analytics_show') }}">
             <i class="icon-bar-chart"></i>
             {{ 'admin_analytics'|trans({}, 'platform') }}
         </a>
