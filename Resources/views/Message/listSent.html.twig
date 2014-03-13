@@ -75,7 +75,7 @@
             <tbody id="message-table-body">
                 {% if pager|length > 0 %}
                     {% for userMessage in  pager.currentPageResults %}
-                        <tr class="row-user-message">
+                        <tr class="row-user-message {% if userMessage.isRead() %} success {% endif %}">
                             <td><input class="chk-item" value="{{ userMessage.getId() }}" type="checkbox"></input></td>
                             <td>
                                 <a href="{{ path('claro_message_show', {'message': userMessage.getMessage().getId()}) }}">
@@ -130,6 +130,8 @@
                 success: function () {
                     $(e.target).css('color', 'green');
                     $(e.target).attr('class', 'icon-ok-sign');
+                    var row = $(e.target)[0].parentElement.parentElement.parentElement;
+                    $(row).addClass('success');
                 }
             });
         });
