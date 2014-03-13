@@ -23,22 +23,24 @@
     <div class="panel-heading">
         <h3 class="panel-title">{{ 'role_creation'|trans({}, 'platform') }}</h3>
     </div>
-    <div class="alert-warning">
-        {{ 'tool_roles_create_directory'|trans({}, 'platform') }}
-    </div>
-    <form class="form-horizontal"
-          action="{{ path('claro_workspace_role_create', {'workspace': workspace.getId()} ) }}"
-          method="post" {{ form_enctype(form) }}
-          id="workspace-role-creation">
-        <div class="panel-body">
-            {{ form_widget(form) }}
+    <div class="panel-body">
+        <div class="alert alert-info">
+            {{ 'tool_roles_create_directory'|trans({}, 'platform') }}
         </div>
-        <div class="panel-footer">
-            <button type="submit" class="btn btn-primary">{{ 'ok'|trans({}, 'platform') }}</button>
-            <a class="btn btn-default" href="{{ path('claro_workspace_roles', {'workspace': workspace.getId()}) }}">
-                {{ 'cancel'|trans({}, 'platform') }}
-            </a>
+        <form class="form-horizontal"
+              action="{{ path('claro_workspace_role_create', {'workspace': workspace.getId()} ) }}"
+              method="post" {{ form_enctype(form) }}
+              id="workspace-role-creation">
+            <div class="panel-body">
+                {{ form_widget(form) }}
             </div>
-    </form>
+            <div class="panel-footer">
+                <button type="submit" class="btn btn-primary">{{ 'ok'|trans({}, 'platform') }}</button>
+                <a class="btn btn-default" href="{{ path('claro_workspace_roles', {'workspace': workspace.getId()}) }}">
+                    {{ 'cancel'|trans({}, 'platform') }}
+                </a>
+                </div>
+        </form>
+    </div>
 
 {% endblock %}
