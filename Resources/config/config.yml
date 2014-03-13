@@ -13,6 +13,9 @@ plugin:
           #  The name will be passed to you by the Event manager.
         - name: post
         - name: moderate
+      default_rights:
+        - name: open
+        - name: post
 
   widgets:
      - name: claroline_forum_widget
