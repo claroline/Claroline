@@ -11,21 +11,22 @@
 
 namespace Claroline\WebResourceBundle\Listener;
 
-use Claroline\CoreBundle\Event\OpenResourceEvent;
+use Claroline\CoreBundle\Entity\Resource\File;
+use Claroline\CoreBundle\Event\CopyResourceEvent;
 use Claroline\CoreBundle\Event\CreateFormResourceEvent;
 use Claroline\CoreBundle\Event\CreateResourceEvent;
 use Claroline\CoreBundle\Event\DeleteResourceEvent;
-use Claroline\CoreBundle\Event\CopyResourceEvent;
-use Symfony\Component\DependencyInjection\ContainerAwareInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
+use Claroline\CoreBundle\Event\DownloadResourceEvent;
+use Claroline\CoreBundle\Event\OpenResourceEvent;
+use Claroline\CoreBundle\Form\FileType;
+use JMS\DiExtraBundle\Annotation\Inject;
+use JMS\DiExtraBundle\Annotation\InjectParams;
 use JMS\DiExtraBundle\Annotation\Observe;
 use JMS\DiExtraBundle\Annotation\Service;
-use JMS\DiExtraBundle\Annotation\InjectParams;
-use JMS\DiExtraBundle\Annotation\Inject;
-use Symfony\Component\HttpFoundation\Response;
-use Claroline\CoreBundle\Form\FileType;
-use Claroline\CoreBundle\Entity\Resource\File;
+use Symfony\Component\DependencyInjection\ContainerAwareInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Form\FormError;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * @Service
@@ -35,11 +36,7 @@ class WebResourceListener implements ContainerAwareInterface
     private $container;
     private $zip;
     private $zipPath;
-
-    public function __construct()
-    {
-        $this->zipPath = __DIR__ . '/../../../../../../web/uploads/webresource/';
-    }
+    private $filesPath;
 
     /**
      * @InjectParams({
@@ -51,6 +48,8 @@ class WebResourceListener implements ContainerAwareInterface
     public function setContainer(ContainerInterface $container = null)
     {
         $this->container = $container;
+        $this->zipPath = __DIR__ . '/../../../../../../web/uploads/webresource/';
+        $this->filesPath = $this->container->getParameter('claroline.param.files_directory') . DIRECTORY_SEPARATOR;
     }
 
     /**
@@ -86,14 +85,10 @@ class WebResourceListener implements ContainerAwareInterface
 
         if ($form->isValid()) {
             if (!$this->isZip($form->get('file')->getData())) {
-                $form->addError(
-                    new FormError(
-                        $this->container->get('translator')->trans('The file must be a zip', array(), 'resource')
-                    )
-                );
+                $error = $this->container->get('translator')->trans('not_a_zip', array(), 'resource');
+                $form->addError(new FormError($error));
             } else {
-                $file = $this->createResource($form);
-                $event->setResources(array($file));
+                $event->setResources(array($this->createResource($form)));
                 $event->stopPropagation();
 
                 return;
@@ -118,20 +113,18 @@ class WebResourceListener implements ContainerAwareInterface
      */
     public function onOpenWebResource(OpenResourceEvent $event)
     {
-        /*$path = $this->container->getParameter('claroline.param.files_directory')
-            . DIRECTORY_SEPARATOR
-            . $event->getResource()->getHashName();
-
         $content = $this->container->get('templating')->render(
             'ClarolineWebResourceBundle::webResource.html.twig',
             array(
                 'workspace' => $event->getResource()->getResourceNode()->getWorkspace(),
-                'path' => $path,
-                'resource' => $event->getResource()
+                'path' => $this->getIndexHTML($event->getResource()->getHashName()),
+                'resource' => $event->getResource(),
+                '_resource' => $event->getResource()
             )
-        );*/
+        );
 
-        $event->setResponse(new Response('titi'));
+        $event->setResponse(new Response($content));
+        $event->stopPropagation();
     }
 
     /**
@@ -141,10 +134,15 @@ class WebResourceListener implements ContainerAwareInterface
      */
     public function onDelete(DeleteResourceEvent $event)
     {
-        $file = $this->getFilesPath().$event->getResource()->getHashName();
+        $file = $this->filesPath.$event->getResource()->getHashName();
+        $unzipFile = $this->zipPath.$event->getResource()->getHashName();
 
         if (file_exists($file)) {
             $event->setFiles(array($file));
+        }
+
+        if (file_exists($unzipFile)) {
+            $this->unzipDelete($unzipFile);
         }
 
         $event->stopPropagation();
@@ -157,13 +155,47 @@ class WebResourceListener implements ContainerAwareInterface
      */
     public function onCopy(CopyResourceEvent $event)
     {
-        $newFile = $this->copy($event->getResource());
-        $event->setCopy($newFile);
+        $file = $this->copy($event->getResource());
+        $event->setCopy($file);
         $event->stopPropagation();
     }
 
     /**
+     * @Observe("download_claroline_web_resource")
      *
+     * @param DownloadResourceEvent $event
+     */
+    public function onDownload(DownloadResourceEvent $event)
+    {
+        $event->setItem($this->filesPath.$event->getResource()->getHashName());
+        $event->stopPropagation();
+    }
+
+    /**
+     * Get the HTML index file of a web resource.
+     *
+     * @param $path The path of a unziped web resource directory.
+     */
+    private function getIndexHTML($hash)
+    {
+        $files = [
+            '/web/SCO_0001/default.html',
+            '/web/SCO_0001/default.htm',
+            '/web/index.html',
+            '/web/index.htm',
+            '/index.html',
+            '/index.htm',
+        ];
+
+        foreach ($files as $file) {
+            if (file_exists($this->zipPath.$hash.$file)) {
+                return $hash.$file;
+            }
+        }
+    }
+
+    /**
+     * Get ZipArchive object.
      */
     private function getZip()
     {
@@ -175,15 +207,9 @@ class WebResourceListener implements ContainerAwareInterface
     }
 
     /**
+     * Get a new hash for a file.
      *
-     */
-    private function getFilesPath()
-    {
-        return $this->container->getParameter('claroline.param.files_directory') . DIRECTORY_SEPARATOR;
-    }
-
-    /**
-     *
+     * @param $mixed The extention of the file or an Claroline\CoreBundle\Entity\Resource\File
      */
     private function getHash($mixed)
     {
@@ -195,7 +221,11 @@ class WebResourceListener implements ContainerAwareInterface
     }
 
     /**
-     * @param $file Symfony\Component\HttpFoundation\File\UploadedFile
+     * Check if a UploadedFile is a zip and contains index.html file.
+     *
+     * @param $file Symfony\Component\HttpFoundation\File\UploadedFile.
+     *
+     * @return boolean.
      */
     private function isZip($file)
     {
@@ -210,25 +240,35 @@ class WebResourceListener implements ContainerAwareInterface
     }
 
     /**
+     * Create a Web Resource from a valid form containing the zip file.
      *
+     * @param $form a Symfony\Component\Form\Form
+     *
+     * @return Claroline\CoreBundle\Entity\Resource\File
      */
     private function createResource($form)
     {
         $file = $form->getData();
         $tmpFile = $form->get('file')->getData();
         $fileName = $tmpFile->getClientOriginalName();
-        $extension = pathinfo($fileName, PATHINFO_EXTENSION);
-        $hash = $this->getHash($extension);
+        $hash = $this->getHash(pathinfo($fileName, PATHINFO_EXTENSION));
         $file->setSize(filesize($tmpFile));
-        $file->setName(str_replace('.' . $extension, '', $fileName));
+        $file->setName($fileName);
         $file->setHashName($hash);
         $file->setMimeType($tmpFile->getClientMimeType());
-        $tmpFile->move($this->getFilesPath(), $hash);
+        $tmpFile->move($this->filesPath, $hash);
         $this->unzip($hash);
 
         return $file;
     }
 
+    /**
+     * Unzip files in web directory.
+     *
+     * Use first $this->getZip()->open($file) or $this->isZip($file)
+     *
+     * @param $hash The hash name of the reource.
+     */
     private function unzip($hash)
     {
         if (!file_exists($this->zipPath.$hash)) {
@@ -254,8 +294,28 @@ class WebResourceListener implements ContainerAwareInterface
         $file->setName($resource->getName());
         $file->setMimeType($resource->getMimeType());
         $file->setHashName($hash);
-        copy($this->getFilesPath().$resource->getHashName(), $this->getFilesPath().$hash);
+        copy($this->filesPath.$resource->getHashName(), $this->filesPath.$hash);
+        $this->getZip()->open($this->filesPath.$hash);
+        $this->unzip($hash);
 
         return $file;
+    }
+
+    /**
+     * Delete Web Resource unzip files and its contents.
+     *
+     * @param $dir The path to the directory to delete.
+     */
+    private function unzipDelete($dir)
+    {
+        foreach (glob($dir . '/*') as $file) {
+            if (is_dir($file)) {
+                $this->unzipDelete($file);
+            } else {
+                unlink($file);
+            }
+        }
+
+        rmdir($dir);
     }
 }

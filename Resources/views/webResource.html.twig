@@ -13,15 +13,20 @@
         <h3 class="panel-title"> {{ resource.getResourceNode().getName() }} </h3>
     </div>
     <div class="panel-body">
-        <div>
-            Test
-
-            <div class="float-right-top">
-                <a class="btn btn-default close pointer-hand" onClick="javascript:enterFullscreen(this.parentNode.parentNode)">
+        {% if not path is empty %}
+            <div class="text-right">
+                <a class="btn btn-primary pointer-hand" onClick="javascript:enterFullscreen()">
                     <i class="icon-resize-full"></i>
                 </a>
             </div>
-        </div>
+            <div style="width:100%;height:400px">
+                <iframe id="webresource" src="{{ asset("uploads/webresource/" ~ path) }}" width="100%" height="100%" frameborder="0"></iframe>
+            </div>
+        {% else %}
+            <div class="alert alert-danger">
+                {{ 'an_error_occured_message' | trans({}, 'platform') }}
+            </div>
+        {% endif %}
     </div>
     <div class="panel-footer">
         <a class="btn btn-primary" href="{{ path('claro_resource_download') }}?ids[]={{ _resource.getResourceNode().getId() }}">
@@ -34,43 +39,33 @@
     <script>
         function RunPrefixMethod(obj, method)
         {
-            var pfx = ["webkit", "moz", "ms", "o", ""];
+            var pfx = ['webkit', 'moz', 'ms', 'o', ''];
             var p = 0, m, t;
 
             while (p < pfx.length && !obj[m]) {
                 m = method;
-                if (pfx[p] == "") {
+                if (pfx[p] == '') {
                     m = m.substr(0,1).toLowerCase() + m.substr(1);
                 }
                 m = pfx[p] + m;
                 t = typeof obj[m];
-                if (t != "undefined") {
+                if (t != 'undefined') {
                     pfx = [pfx[p]];
-                    return (t == "function" ? obj[m]() : obj[m]);
+                    return (t == 'function' ? obj[m]() : obj[m]);
                 }
                 p++;
             }
         }
 
-        function enterFullscreen(element) {
-
-            if (RunPrefixMethod(document, "FullScreen") || RunPrefixMethod(document, "IsFullScreen")) {
-                RunPrefixMethod(document, "CancelFullScreen");
+        function enterFullscreen() {
+            if (RunPrefixMethod(document, 'FullScreen') || RunPrefixMethod(document, 'IsFullScreen')) {
+                $('#webresource').css('height', '400px');
+                RunPrefixMethod(document, 'CancelFullScreen');
             }
             else
             {
-                RunPrefixMethod(element, "RequestFullScreen");
+                RunPrefixMethod(document.getElementById('webresource'), 'RequestFullScreen');
             }
         }
-    </script>
-{% endblock %}
-{% block javascripts %}
-    {{ parent() }}
-    <script>
-        (function() {
-            "use strict";
-
-            console.log('done');
-        })();
     </script>
 {% endblock %}

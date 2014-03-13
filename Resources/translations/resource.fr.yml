@@ -1,2 +1,2 @@
 claroline_web_resource: 'Web Ressource'
-The file must be a zip: 'Le fichier doit être un zip'
+not_a_zip: 'Le fichier doit être un zip, et doit contenir un fichier HTML (index.htm or index.html)'
