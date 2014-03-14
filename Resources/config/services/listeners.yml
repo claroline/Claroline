@@ -1,7 +1,0 @@
-services:
-  claroline.listener.web_resource_listener:
-    class: Claroline\WebResourceBundle\Listener\WebResourceListener
-    calls:
-        - [setContainer, ["@service_container"]]
-    tags:
-        - { name: kernel.event_listener, event: play_file_web_resource, method: onOpenWebResource }

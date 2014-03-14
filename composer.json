@@ -1,7 +1,7 @@
 {
     "name": "claroline/web-resource-bundle",
-    "description": "Claroline web Resource",
-    "keywords": ["Claroline", "Plugin", "Web Resource"],
+    "description": "Claroline web resource plugin",
+    "keywords": ["Claroline", "Plugin", "Web resource"],
     "homepage": "http://www.claroline.net",
     "type": "claroline-plugin",
     "license": "GPL-3.0+",
@@ -13,7 +13,7 @@
         }
     ],
     "require": {
-        "php": ">=5.4",
+        "php": ">=5.4.1",
         "claroline/core-bundle": ">=1.0,<3.0"
     },
     "autoload": {
