@@ -262,8 +262,16 @@ function PathFactory($http, $q) {
          * @returns PathFactory
          */
         updateStep: function(oldStep, newStep) {
+            // Add all newStep properties
             for (var prop in newStep) {
                 oldStep[prop] = newStep[prop];
+            }
+
+            // Remove properties which no longer exists in new step
+            for (var prop in oldStep) {
+                if (typeof (newStep[prop]) == 'undefined') {
+                    delete oldStep[prop];
+                }
             }
 
             return this;

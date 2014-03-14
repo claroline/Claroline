@@ -6,6 +6,7 @@
     <div class="panel-body collapse in">
         {{ form_row(form.name, {
                 'attr': {
+                    'placeholder' : 'name_help'|trans({}, 'path_editor'),
                     'ng-model': 'path.name',
                     'ng-change': 'renameRootStep(); updateHistory();'
                 }

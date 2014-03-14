@@ -1,132 +1,232 @@
+<div class="row" ng-show="edit.preview">
+    <div class="col-md-12 text-right" style="margin-bottom: 15px;">
+        <a class="btn btn-sm btn-primary" href="#" role="button" ng-click="validateEditStep()">{{ 'validate'|trans({}, 'path_editor') }}</a>
+        <a class="btn btn-sm btn-default" href="#" role="button" ng-click="cancelEditStep()">{{ 'cancel'|trans({}, 'path_editor') }}</a>
+    </div>
+</div>
+
 <div class="panel panel-default">
+    {# Preview header #}
     <div class="panel-heading">
+        {# Step level #}
         <div class="preview-lvl lvl-{% verbatim %}{{ previewStep.lvl }}{% endverbatim %}"></div>
+        
+        {# Step name #}
         <h3 class="panel-title">
-            <strong ng-bind="previewStep.name" style="margin-left: 8px;"></strong>
-            
-            <!-- <div class="pull-right">
-                <a ng-click="editStep(previewStep)" class="btn btn-default btn-xs" href="#">
-                    <span class="icon-pencil"></span> {{ 'edit_step'|trans({}, 'path_editor') }}
-                </a>&nbsp;
-                <a ng-hide="stepIsRootNode" class="btn btn-danger btn-xs pull-right" ng-click="remove(previewStep)" href="#">
-                    <span class="icon-trash"></span> {{ 'delete_step'|trans({}, 'path_editor') }}
-                </a>
-            </div> -->
+            <strong ng-show="previewStep.lvl == 0 || !edit.preview" ng-bind="previewStep.name" style="margin-left: 8px;"></strong>            
         </h3>
+
+        {# Edit step name #}
+        <input type="text" style="margin-left: 8px;" class="form-control" name="step-name" ng-model="previewStep.name" ng-show="previewStep.lvl != 0 && edit.preview" />
     </div>
     
+    {# Preview info #}
     <div class="panel-body">
-        <div>
-            <div class="row">
-                <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12 text-center">
-                    <img ng-src="{% verbatim %}{{ webDir }}images/steps/{{ previewStep.image }}{% endverbatim %}" />
-                </div>
-                <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12">
-                    <table class="table table-condensed table-hover">
-                        <tr>
-                            <td scope="row"><strong>{{ 'step_duration'|trans({}, 'path_editor') }}</strong></td>
-                            <td class="text-right">
-                                {% verbatim %}{{ previewStep.durationHours || "0" }}h{{ previewStep.durationMinutes || "00" }}min{% endverbatim %}
-                            </td>
-                        </tr>
+        <div class="row">
+            {# Step properties #}
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 text-center">
+                <div class="row">
+                    {# Step image #}
+                    <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12 text-center">
+                        <img ng-src="{% verbatim %}{{ webDir }}images/steps/{{ previewStep.image }}{% endverbatim %}" />
+                        <a ng-show="edit.preview" href="#" class="btn btn-default btn-sm" ng-click="selectImage()" role="button">
+                            <span class="icon-picture"></span> {{ 'select_image'|trans({}, 'path_editor') }}
+                        </a>
+                    </div>
+                    
+                    <div class="col-md-8">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="panel panel-default">
+                                    <div class="panel-body">
+                                        <div class="row" ng-show="!edit.preview">
+                                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 text-center">
+                                                <span class="icon-user icon-large"></span> {% verbatim %}{{ whoList[previewStep.who] }}{% endverbatim %}
+                                            </div>
+
+                                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 text-center">
+                                                <span class="icon-map-marker icon-large"></span> {% verbatim %}{{ whereList[previewStep.where] }}{% endverbatim %}
+                                            </div>
+                                        </div>
+
+                                        <div class="row" ng-show="edit.preview">
+                                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                                                <div class="input-group">
+                                                    <span class="input-group-addon"><span class="icon-user"></span></span>
+                                                    <select class="form-control" name="step-who" ng-model="previewStep.who" ng-options="k as v for (k,v) in whoList">
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6 col-md-6 col-sm-6 col-xs-6">
+                                                <div class="input-group">
+                                                    <span class="input-group-addon"><span class="icon-map-marker"></span></span>
+                                                    <select class="form-control" name="step-where" ng-model="previewStep.where" ng-options="k as v for (k,v) in whereList">
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                         
-                        <tr>
-                            <td scope="row"><strong>{{ 'step_computer'|trans({}, 'path_editor') }}</strong></td>
-                            <td class="text-right">
-                                <span class="text-success" ng-show="previewStep.withComputer">
-                                    <span class="icon-ok"></span>
-                                    <span class="sr-only">{{ 'with_computer'|trans({}, 'path_editor') }}</span>
-                                </span>
-                                <span class="text-danger" ng-show="!previewStep.withComputer">
-                                    <span class="icon-remove"></span>
-                                    <span class="sr-only">{{ 'without_computer'|trans({}, 'path_editor') }}</span>
-                                </span>
-                            </td>
-                        </tr>
-                        
-                        <tr>
-                            <td scope="row"><strong>{{ 'step_tutor'|trans({}, 'path_editor') }}</strong></td>
-                            <td class="text-right">
-                                <span class="text-success" ng-show="previewStep.withTutor">
-                                    <span class="icon-ok"></span>
-                                    <span class="sr-only">{{ 'with_tutor'|trans({}, 'path_editor') }}</span>
-                                </span>
-                                <span class="text-danger" ng-show="!previewStep.withTutor">
-                                    <span class="icon-remove"></span>
-                                    <span class="sr-only">{{ 'without_tutor'|trans({}, 'path_editor') }}</span>
-                                </span>
-                            </td>
-                        </tr>
-                        
-                        <tr>
-                            <td scope="row"><strong>{{ 'step_who'|trans({}, 'path_editor') }}</strong></td>
-                            <td class="text-right">
-                                <img ng-src="{% verbatim %}{{ webDir }}images/icons/who/{{ previewStep.who }}{% endverbatim %}" 
-                                     alt="{% verbatim %}{{ whoList[previewStep.who] }}{% endverbatim %}"
-                                     tooltip="{% verbatim %}{{ whoList[previewStep.who] }}{% endverbatim %}" />
-                            </td>
-                        </tr>
-                        
-                        <tr>
-                            <td scope="row"><strong>{{ 'step_where'|trans({}, 'path_editor') }}</strong></td>
-                            <td class="text-right">
-                                <img ng-src="{% verbatim %}{{ webDir }}images/icons/where/{{ previewStep.where }}{% endverbatim %}" 
-                                     alt="{% verbatim %}{{ whereList[previewStep.where] }}{% endverbatim %}" 
-                                     tooltip="{% verbatim %}{{ whereList[previewStep.where] }}{% endverbatim %}" />
-                            </td>
-                        </tr>
-                    </table>
+                        <div class="row">
+                            {# Step duration #}
+                            <div class="col-lg-12 col-md-12 col-sm-12" ng-show="edit.preview || previewStep.hasDuration">
+                                <div class="panel panel-default">
+                                    <div class="panel-body">
+                                        <div ng-show="!edit.preview">
+                                            <span class="icon-time icon-large" style="vertical-align: middle;"></span>
+                                            <span style="vertical-align: middle;">
+                                                {% verbatim %}{{ previewStep.durationHours || "0" }}h{{ previewStep.durationMinutes || "00" }}min{% endverbatim %}
+                                            </span>
+                                        </div>
+                                        
+                                        <div class="row" ng-show="edit.preview" >
+                                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 text-left">
+                                                {# <label style="margin-bottom: 0;">
+                                                    <input type="checkbox" name="step-hasDuration" ng-model="previewStep.hasDuration" value="true"/>
+                                                    Durée
+                                                </label> #}
+                                                <div class="input-group">
+                                                    <span class="input-group-addon"><span class="icon-time"></span></span>
+                                                    <label style="margin-bottom: 0; vertical-align: middle; border: 1px solid #ccc; padding: 6px 12px; border-radius: 0 4px 4px 0;">
+                                                        <input type="checkbox" name="step-hasDuration" ng-model="previewStep.hasDuration" value="true" />
+                                                        l'étape a une durée
+                                                    </label>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6" ng-show="previewStep.hasDuration">
+                                                <br/>
+
+                                                <div class="input-group">
+                                                    <span class="input-group-addon">h</span>
+                                                    <input class="form-control text-right" type="text" ng-model="previewStep.durationHours" ng-change="correctDuration('hour')" size="1" />
+                                                    <div class="btn-group-vertical" style="display: table-cell;">
+                                                        <button ng-click="incrementDuration('hour')" type="button" class="btn btn-xs btn-default" style="font-size: 9px; border-top-left-radius: 0;">
+                                                            <span class="icon-chevron-up"></span>
+                                                        </button>
+                                                        <button ng-click="decrementDuration('hour')" type="button" class="btn btn-xs btn-default" style="font-size: 9px; border-bottom-left-radius: 0;">
+                                                            <span class="icon-chevron-down"></span>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6" ng-show="previewStep.hasDuration">
+                                                <br/>
+
+                                                <div class="input-group">
+                                                    <span class="input-group-addon">min</span>
+                                                    <input class="form-control text-right" type="text" ng-model="previewStep.durationMinutes" ng-change="correctDuration('minute')" size="1" />
+                                                    <div class="btn-group-vertical" style="display: table-cell">
+                                                        <button ng-click="incrementDuration('minute')" type="button" class="btn btn-xs btn-default" style="font-size: 9px; border-top-left-radius: 0;">
+                                                            <span class="icon-chevron-up"></span>
+                                                        </button>
+                                                        <button ng-click="decrementDuration('minute')" type="button" class="btn btn-xs btn-default" style="font-size: 9px; border-bottom-left-radius: 0;">
+                                                            <span class="icon-chevron-down"></span>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            {# Step with computer #}
+                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                                <div class="panel panel-default" ng-class="{'clickable-area': edit.preview}" ng-click="previewStep.withComputer = !previewStep.withComputer">
+                                    <div class="panel-body">
+                                        <span ng-show="!previewStep.withComputer" class="icon-stack">
+                                            <span class="icon-desktop"></span>
+                                            <span class="icon-ban-circle icon-stack-base text-danger"></span>
+                                        </span>
+                                        <span ng-show="previewStep.withComputer" class="icon-desktop icon-large"></span>
+                                        <br/>
+                                        <span ng-show="previewStep.withComputer">{{ 'with_computer'|trans({}, 'path_editor') }}</span>
+                                        <span ng-show="!previewStep.withComputer">{{ 'without_computer'|trans({}, 'path_editor') }}</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {# Step with tutor #}
+                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                                <div class="panel panel-default" ng-class="{'clickable-area': edit.preview}" ng-click="previewStep.withTutor = !previewStep.withTutor">
+                                    <div class="panel-body">
+                                        <span ng-show="!previewStep.withTutor" class="icon-stack">
+                                            <span class="icon-user"></span>
+                                            <span class="icon-ban-circle icon-stack-base text-danger"></span>
+                                        </span>
+                                        <span ng-show="previewStep.withTutor" class="icon-user icon-large"></span>
+                                        <br/>
+                                        <span ng-show="previewStep.withTutor">{{ 'with_tutor'|trans({}, 'path_editor') }}</span>
+                                        <span ng-show="!previewStep.withTutor">{{ 'without_tutor'|trans({}, 'path_editor') }}</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
                 </div>
             </div>
-            
-            <p ng-show="null == previewStep.description || '' == previewStep.description" style="margin-bottom: 20px;">
-                <em>{{ 'step_no_description'|trans({}, 'path_editor') }}</em>
-            </p>
-            <p ng-show="null != previewStep.description && '' != previewStep.description" ng-bind-html="previewStep.description" style="margin-bottom: 20px;"></p>
-            
-            <table class="table table-condensed table-hover" style="margin-bottom: 0;">
-                <caption class="h4 text-left" style="margin-bottom: 10px;">
-                    <span class="icon-folder-open"></span>
-                    {{ 'resources'|trans({}, 'path_editor') }}
-                    
-                    <a href="#" class="btn btn-xs btn-primary pull-right" ng-click="editResource()">
-                        <span class="icon-plus"></span>
-                        {{ 'resource_add'|trans({}, 'path_editor') }}
-                    </a>
-                </caption>
-                
-                <tr ng-show="(null == inheritedResources || inheritedResources.length == 0) && (null == previewStep.resources || previewStep.resources.length == 0)">
-                    <td colspan="2" class="text-center"><em>{{ 'step_no_resource'|trans({}, 'path_editor') }}</em></td>
-                </tr>
-                
-                <!-- Inherited resources from parents -->
-                <tr ng-repeat="resource in inheritedResources">
-                    <td>{% verbatim %}{{ resourceTypeLabels[resource.type] }}{% endverbatim %}</td>
-                    <td ng-class="{'excluded-resource': resource.isExcluded}">
-                        {% verbatim %}{{ resource.name | truncate }}{% endverbatim %} 
-                        <small>({{ 'from'|trans({}, 'path_editor') }} &lt;{% verbatim %}{{ resource.parentStep | truncate }}{% endverbatim %}&gt;)</small></td>
-                    <td class="text-right">
-                        <a href="#" ng-disabled="!resource.isExcluded" class="btn btn-xs btn-success" ng-click="includeParentResource(resource)"><span class="icon-eye-open"></span></a>
-                        <a href="#" ng-disabled="resource.isExcluded" class="btn btn-xs btn-danger" ng-click="excludeParentResource(resource)"><span class="icon-eye-close"></span></a>
-                    </td>
-                </tr>
-                
-                <!-- Specific resources -->
-                <tr ng-repeat="resource in previewStep.resources">
-                    <td>{% verbatim %}{{ resourceTypeLabels[resource.type] }}{% endverbatim %}</td>
-                    <td>{% verbatim %}{{ resource.name | truncate }}{% endverbatim %} </td>
-                    <td class="text-right">
-                        <a href="#" class="btn btn-xs btn-default" ng-click="editResource(resource)">
-                            <span class="icon-pencil"></span>
-                            <span class="sr-only">{{ 'resource_edit'|trans({}, 'path_editor') }}</span>
-                        </a>
-                        <a href="#" class="btn btn-xs btn-danger" ng-click="removeResource(resource)">
-                            <span class="icon-trash"></span>
-                            <span class="sr-only">{{ 'resource_delete'|trans({}, 'path_editor') }}</span>
-                        </a>
-                    </td>
-                </tr>
-            </table>
         </div>
+
+        <a ng-show="edit.preview" class="btn btn-sm btn-default" href="#" style="margin-bottom: 15px;">Modifier la description</a>
+        
+        <table class="table table-condensed table-hover" style="margin-bottom: 0;">
+            <caption class="h4 text-left" style="margin-bottom: 10px;">
+                <span class="icon-folder-open"></span>
+                {{ 'resources'|trans({}, 'path_editor') }}
+                
+                <a href="#" class="btn btn-xs btn-primary pull-right" ng-click="editResource()">
+                    <span class="icon-plus"></span>
+                    {{ 'resource_add'|trans({}, 'path_editor') }}
+                </a>
+            </caption>
+            
+            <tr ng-show="(null == inheritedResources || inheritedResources.length == 0) && (null == previewStep.resources || previewStep.resources.length == 0)">
+                <td colspan="2" class="text-center"><em>{{ 'step_no_resource'|trans({}, 'path_editor') }}</em></td>
+            </tr>
+            
+            <!-- Inherited resources from parents -->
+            <tr ng-repeat="resource in inheritedResources">
+                <td>{% verbatim %}{{ resourceTypeLabels[resource.type] }}{% endverbatim %}</td>
+                <td ng-class="{'excluded-resource': resource.isExcluded}">
+                    {% verbatim %}{{ resource.name | truncate }}{% endverbatim %} 
+                    <small>({{ 'from'|trans({}, 'path_editor') }} &lt;{% verbatim %}{{ resource.parentStep | truncate }}{% endverbatim %}&gt;)</small></td>
+                <td class="text-right">
+                    <a href="#" ng-disabled="!resource.isExcluded" class="btn btn-xs btn-success" ng-click="includeParentResource(resource)"><span class="icon-eye-open"></span></a>
+                    <a href="#" ng-disabled="resource.isExcluded" class="btn btn-xs btn-danger" ng-click="excludeParentResource(resource)"><span class="icon-eye-close"></span></a>
+                </td>
+            </tr>
+            
+            <!-- Specific resources -->
+            <tr ng-repeat="resource in previewStep.resources">
+                <td>{% verbatim %}{{ resourceTypeLabels[resource.type] }}{% endverbatim %}</td>
+                <td>{% verbatim %}{{ resource.name | truncate }}{% endverbatim %} </td>
+                <td class="text-right">
+                    <a href="#" class="btn btn-xs btn-default" ng-click="editResource(resource)">
+                        <span class="icon-pencil"></span>
+                        <span class="sr-only">{{ 'resource_edit'|trans({}, 'path_editor') }}</span>
+                    </a>
+                    <a href="#" class="btn btn-xs btn-danger" ng-click="removeResource(resource)">
+                        <span class="icon-trash"></span>
+                        <span class="sr-only">{{ 'resource_delete'|trans({}, 'path_editor') }}</span>
+                    </a>
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>
+
+<div class="row" ng-show="edit.preview">
+    <div class="col-md-12 text-right" style="margin-bottom: 15px;">
+        <a class="btn btn-sm btn-primary" href="#" role="button" ng-click="validateEditStep()">{{ 'validate'|trans({}, 'path_editor') }}</a>
+        <a class="btn btn-sm btn-default" href="#" role="button" ng-click="cancelEditStep()">{{ 'cancel'|trans({}, 'path_editor') }}</a>
     </div>
 </div>

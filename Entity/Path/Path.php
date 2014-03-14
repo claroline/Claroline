@@ -16,9 +16,7 @@ use Innova\PathBundle\Entity\Step;
  * @ORM\Entity(repositoryClass="Innova\PathBundle\Repository\PathRepository")
  */
 class Path extends AbstractResource implements PathInterface
-{
-    const DEFAULT_NAME = 'My path';
-    
+{   
     /**
      * Name of the path (only for forms)
      * @var string
@@ -230,11 +228,6 @@ class Path extends AbstractResource implements PathInterface
     public static function initialize($name = null)
     {
         $path = new Path();
-        if (empty($name)) {
-            $name = static::DEFAULT_NAME;
-        }
-    
-        $path->setName($name);
         
         // Init path structure
         $path->initializeStructure();
@@ -261,6 +254,8 @@ class Path extends AbstractResource implements PathInterface
                     'image'        => 'no_image.png',
                     'withComputer' => true,
                     'withTutor'    => false,
+                    'hasDuration'  => false,
+                    'children'     => array (),
                 ),
             ),
         );

@@ -1,8 +1,4 @@
 <div class="action-bar clearfix">
-    <button type="submit" class="btn btn-primary">
-        <span class="icon-save"></span> {{ 'save'|trans({}, 'path_editor') }}
-    </button>
-    
     <div class="btn-group">
         <a href="#" class="btn btn-default" ng-click="undo()" ng-disabled="undoDisabled">
             <span class="icon-reply"></span> {{ 'undo'|trans({}, 'path_editor') }}
@@ -14,8 +10,12 @@
     </div>
 
     <div class="pull-right">
-        <a href="{{ path('claro_workspace_open_tool', { workspaceId: workspace.id, toolName: 'innova_path' }) }}" class="btn btn-danger">
-            <span class="icon-remove"></span> {{ 'back'|trans({}, 'path_editor') }}
+        <button type="submit" class="btn btn-primary">
+            <span class="icon-save"></span> {{ 'save'|trans({}, 'path_editor') }}
+        </button>
+
+        <a href="{{ path('claro_workspace_open_tool', { workspaceId: workspace.id, toolName: 'innova_path' }) }}" class="btn btn-warning">
+            <span class="icon-remove-sign"></span> {{ 'back'|trans({}, 'path_editor') }}
         </a>
     </div>
 </div>

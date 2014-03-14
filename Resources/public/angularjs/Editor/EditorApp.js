@@ -27,10 +27,10 @@ EditorApp.controller('MainCtrl', MainCtrl);
 EditorApp.factory('PathFactory', PathFactory);
 EditorApp.controller('GlobalCtrl', GlobalCtrl);
 EditorApp.controller('ScenarioCtrl', ScenarioCtrl);
+EditorApp.controller('PreviewStepCtrl', PreviewStepCtrl);
 
 // Steps
 EditorApp.factory('StepFactory', StepFactory);
-EditorApp.controller('StepModalCtrl', StepModalCtrl);
 EditorApp.controller('SelectImageModalCtrl', SelectImageModalCtrl);
 
 // Resources

@@ -29,9 +29,16 @@ class StepWhere
     private $name;
 
     /**
-    * @ORM\OneToMany(targetEntity="Step", mappedBy="stepWhere")
-    */
+     * @ORM\OneToMany(targetEntity="Step", mappedBy="stepWhere")
+     */
     protected $steps;
+
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(name="is_default", type="boolean")
+     */
+    protected $default;
 
     /**
      * Get id
@@ -104,5 +111,26 @@ class StepWhere
     public function getSteps()
     {
         return $this->steps;
+    }
+
+    /**
+     * Is default
+     * @return boolean
+     */
+    public function isDefault()
+    {
+        return $this->default;
+    }
+
+    /**
+     * Set default
+     * @param boolean
+     * @return \Innova\PathBundle\Entity\StepWhere
+     */
+    public function setDefault($default)
+    {
+        $this->default = $default;
+
+        return $this;
     }
 }

@@ -33,4 +33,5 @@ services:
     innova_path.manager.step: 
         class: %innova_path.manager.step.class%
         arguments: 
-            om: @doctrine.orm.entity_manager
+            om:         @doctrine.orm.entity_manager
+            translator: @translator

@@ -2,22 +2,17 @@
 
 {% block stylesheets %}
     {{ parent() }}
-    <!-- {% stylesheets debug=false filter='cssmin'  output='vendor/innovapath/editor.css'
+
+    {% stylesheets debug=false filter='cssmin'  output='vendor/innovapath/editor.css'
         '@InnovaPathBundle/Resources/public/css/Editor/*'
         '@InnovaAngularUIPageslideBundle/Resources/public/css/*'
     %}
         <link rel="stylesheet" href="{{ asset_url }}" screen="media" />
-    {% endstylesheets %} -->
-
-    <link rel="stylesheet" href="{{ asset('bundles/innovapath/css/Editor/colors.css') }}" screen="media" />
-    <link rel="stylesheet" href="{{ asset('bundles/innovapath/css/Editor/app.css') }}" screen="media" />
-    <link rel="stylesheet" href="{{ asset('bundles/innovapath/css/Editor/step-edit.css') }}" screen="media" />
-    <link rel="stylesheet" href="{{ asset('bundles/innovapath/css/Editor/scenario.css') }}" screen="media" />
-    <link rel="stylesheet" href="{{ asset('bundles/innovapath/css/Editor/preview.css') }}" screen="media" />
+    {% endstylesheets %}
 {% endblock %}
 
 {% block content %}
-    {% include 'InnovaPathBundle:Editor:components/breadcrumbs.html.twig' with {workspace: workspace} %}
+    {% include 'InnovaPathBundle:Editor:components/breadcrumbs.html.twig' with { workspace: workspace } %}
 
     {{ form_start(form, {'attr': {'class': 'form-horizontal', 'novalidate': true}}) }}
     <div ng-cloak="" ng-app="EditorApp" class="path-editor">
@@ -30,7 +25,7 @@
                 {% include 'InnovaPathBundle:Editor:components/templates-sidebar.html.twig' %}
             </div>
             
-            {% include 'InnovaPathBundle:Editor:components/actions-bar.html.twig' with {workspace: workspace} %}
+            {% include 'InnovaPathBundle:Editor:components/actions-bar.html.twig' with { workspace: workspace } %}
             
             <div ng-controller="GlobalCtrl" class="row">
                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
@@ -38,12 +33,12 @@
                 </div>
             </div>
             
-            <div ng-controller="ScenarioCtrl" class="row">
-                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+            <div class="row">
+                <div ng-controller="ScenarioCtrl" class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                     {% include 'InnovaPathBundle:Editor:components/step2-scenario.html.twig' %}
                 </div>
                 
-                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                <div ng-controller="PreviewStepCtrl" class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                     {% include 'InnovaPathBundle:Editor:components/step3-step-config.html.twig' %}
                 </div>
             </div>
@@ -90,12 +85,12 @@
         '@InnovaPathBundle/Resources/public/angularjs/Alert/Controller/AlertCtrl.js'
         '@InnovaPathBundle/Resources/public/angularjs/History/Factory/HistoryFactory.js'
         '@InnovaPathBundle/Resources/public/angularjs/Clipboard/Factory/ClipboardFactory.js'
-        '@InnovaPathBundle/Resources/public/angularjs/Editor/Controller/MainCtrl.js'
         '@InnovaPathBundle/Resources/public/angularjs/Path/Factory/PathFactory.js'
+        '@InnovaPathBundle/Resources/public/angularjs/Editor/Controller/MainCtrl.js'
         '@InnovaPathBundle/Resources/public/angularjs/Editor/Controller/GlobalCtrl.js'
         '@InnovaPathBundle/Resources/public/angularjs/Editor/Controller/ScenarioCtrl.js'
+        '@InnovaPathBundle/Resources/public/angularjs/Editor/Controller/PreviewStepCtrl.js'
         '@InnovaPathBundle/Resources/public/angularjs/Step/Factory/StepFactory.js'
-        '@InnovaPathBundle/Resources/public/angularjs/Step/Controller/StepModalCtrl.js'
         '@InnovaPathBundle/Resources/public/angularjs/Step/Controller/SelectImageModalCtrl.js'
         '@InnovaPathBundle/Resources/public/angularjs/Resource/Factory/ResourceFactory.js'
         '@InnovaPathBundle/Resources/public/angularjs/Resource/Controller/ResourceModalCtrl.js'
