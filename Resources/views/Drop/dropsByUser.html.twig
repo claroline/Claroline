@@ -23,8 +23,9 @@
         <a href="{{ path('icap_dropzone_drops_by_date', {'resourceId': dropzone.id}) }}" class="btn btn-default btn-xs">{{ 'Sort by date'|trans({}, 'icap_dropzone') }}</a>
     </div>
 
-    <h3>{{ 'Evaluation finished'|trans({}, 'icap_dropzone') }}</h3>
-
+    <h3>{{ 'fully corrected copies'|trans({}, 'icap_dropzone') }}</h3>
+    {% include 'IcapDropzoneBundle:Drop:Listing/dropsListing.html.twig' %}
+    
     {% if pager.haveToPaginate %}
         <div class="container row">
             {{
@@ -41,6 +42,48 @@
         </div>
     {% endif %}
 
+    {# test tableau -----------------------------------------------------
+
+     <div class="table-responsive">
+            <table class="table   table-striped table-hover  ">
+                <thead>
+                    <th>{{'user'|trans({},'icap_dropzone')}}</th>
+                    <th>{{ 'Grade'|trans({}, 'icap_dropzone') }}</th>
+                    <th>{{ 'Established on'|trans({}, 'icap_dropzone') }}</th>
+                    <th>{{ 'Last correction'|trans({}, 'icap_dropzone') }}</th>
+                    <th>{{'tools'|trans({},'icap_dropzone')}}</th>
+                </thead>
+                <tbody>
+            {% for drop in pager.currentPageResults %}
+                <tr  >
+                    <td>{{ drop.user.firstName|capitalize }} {{ drop.user.lastName|upper }} </td>   
+                    <td >
+                        {% include 'IcapDropzoneBundle:Drop:dropsTotalGrade.html.twig' %}</td>
+                    <td>
+                        {{ drop.dropDate|date('formatDatetime'|trans({}, 'icap_dropzone')) }}
+                        {% if drop.reported %}
+                            <span class="text-danger glyphicon icon-warning-sign" data-toggle="tooltip" title="" data-original-title="{{ 'This copy has been reported'|trans({}, 'icap_dropzone') }}"></span> 
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% include 'IcapDropzoneBundle:Drop:dropsLastCorrectionDate.html.twig' %}
+                        {% if drop.getHasDeniedCorrection %}
+                             <span class="glyphicon icon-warning-sign" data-toggle="tooltip" title="" data-original-title="{{ 'This copy contain a denied correction'|trans({}, 'icap_dropzone') }}"></span>
+                        {% endif %}
+                    </td> 
+                    <td>
+                        <div class="btn-group ">
+                            <a href="{{ path('icap_dropzone_drops_detail', {'resourceId': dropzone.id, 'dropId': drop.id}) }}" type="button" class="btn btn-default btn-xs">{{ 'See copy'|trans({}, 'icap_dropzone') }}</a>
+                            <a href="{{ path('icap_dropzone_drops_delete', {'resourceId': dropzone.id, 'dropId': drop.id, 'tab': 0, 'page': pager.currentPage}) }}" class="btn btn-danger btn-xs launch-modal"><span class="glyphicon icon-trash"></span> {{ 'Delete copy'|trans({}, 'icap_dropzone') }}</a>
+                        </div>
+                    </td>
+                </tr>
+            {% endfor %}
+                </tbody>
+        </table>
+    </div> 
+    {#  FIN test tableau -----------------------------------------------------#}
+    {#}
     {% for drop in pager.currentPageResults %}
         <div class="panel {% if drop.reported %}panel-danger{% else %}panel-default{% endif %}">
             <div class="panel-heading">
@@ -88,7 +131,7 @@
             </div>
         </div>
     {% endfor %}
-
+    #}
     {% if pager.nbResults == 0 %}
         <div class="row">
             <div class="col-md-12">
@@ -112,6 +155,7 @@
             }}
         </div>
     {% endif %}
+    
 {% endblock %}
 
 {% block javascripts %}

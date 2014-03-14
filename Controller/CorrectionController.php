@@ -927,7 +927,6 @@ class CorrectionController extends DropzoneBaseController
                 );
         }else if( $state == 'preview')
         {
-
             $totalGrade = $correction->getTotalGrade();
             return $this->render(
                 $view,
@@ -1130,7 +1129,7 @@ class CorrectionController extends DropzoneBaseController
         // if loggued user is not the drop owner and is not admin.
         if (false === $this->get('security.context')->isGranted('ROLE_ADMIN')  &&   $this->get('security.context')->getToken()->getUser()->getId() != $dropUser->getId())
         {
-             throw new AccessDeniedException();
+            throw new AccessDeniedException();
         }
 
         if ($this->getRequest()->isMethod('POST')) {
