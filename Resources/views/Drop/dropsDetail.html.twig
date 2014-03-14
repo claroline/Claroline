@@ -79,90 +79,10 @@
 
         <h3>{{ 'List of corrections'|trans({}, 'icap_dropzone') }}</h3>
         <hr/>
-        {% if(byUserMod == 0) %}
-        <div class="container">
-            <div class="row">
-                <div class="btn-group">
-                    <a href="{{ path('icap_dropzone_drops_detail_add_correction', {'resourceId': dropzone.id, 'dropId': drop.id}) }}" type="button" class="btn btn-primary btn-sm">{{ 'Add a correction'|trans({}, 'icap_dropzone') }}</a>
-                    <a href="{{ path('icap_dropzone_drops_detail_invalidate_all_corrections', {'resourceId': dropzone.id, 'dropId': drop.id}) }}" type="button" class="btn btn-danger btn-sm">{{ 'Invalidate all corrections'|trans({}, 'icap_dropzone') }}</a>
-                </div>
-            </div>
-        </div>
-         <br>
-        {% endif %}
-        <br>
+
 
         {% include 'IcapDropzoneBundle:Correction:Listing/correctionListing.html.twig' %}
-        {#
-        {% for correction in drop.corrections %}
-            <div class="row">
-                <div class="col-md-12">
-                    <h4 style="text-decoration: underline;">
 
-                            {% if(byUserMod == 0) %}
-                                <a href="{{ path('icap_dropzone_drops_detail_correction', {'resourceId': dropzone.id, 'correctionId': correction.id, 'state': 'show'}) }}">
-                                {{ 'Correction by %firstName% %lastName%'|trans({'%firstName%': correction.user.firstName|capitalize, '%lastName%': correction.user.lastName|upper}, 'icap_dropzone') }}
-                            {% else %}
-                                <a href="{{ path('icap_dropzone_drops_detail_correction', {'resourceId': dropzone.id, 'correctionId': correction.id, 'state': 'preview'}) }}">
-                                {{ 'Correction number %num%'|trans({'%num%': loop.index}, 'icap_dropzone') }}
-                            {% endif %}
-                        </a>
-                        <div class="btn-group pull-right">
-                            {% if(byUserMod == 0) %}
-                                {% if dropzone.peerReview %}
-                                    <a href="{{ path('icap_dropzone_recalculate_score', {'resourceId': dropzone.id, 'correctionId': correction.id}) }}" class="btn btn-default btn-xs">{{ 'Recalculate the score'|trans({}, 'icap_dropzone') }}</a>
-                                {% endif %}
-                                {% if correction.editable %}
-                                    <a href="{{ path('icap_dropzone_drops_detail_correction', {'resourceId': dropzone.id, 'correctionId': correction.id, 'state': 'edit'}) }}" class="btn btn-default btn-xs">{{ 'dropzone_edit'|trans({}, 'icap_dropzone') }}</a>
-                                    <a href="{{ path('icap_dropzone_drops_detail_delete_correction', {'resourceId': dropzone.id, 'correctionId': correction.id}) }}" class="btn btn-danger btn-xs">{{ 'Delete'|trans({}, 'icap_dropzone') }}</a>
-                                {% endif %}
-                                {% if correction.finished %}
-                                    {% if correction.valid %}
-                                        <a href="{{ path('icap_dropzone_drops_detail_correction_validation', {'resourceId': dropzone.id, 'correctionId': correction.id, 'value': 'no'}) }}" class="btn btn-danger btn-xs">{{ 'Invalidate'|trans({}, 'icap_dropzone') }}</a>
-                                    {% else %}
-                                        <a href="{{ path('icap_dropzone_drops_detail_correction_validation', {'resourceId': dropzone.id, 'correctionId': correction.id, 'value': 'yes'}) }}" class="btn btn-default btn-xs">{{ 'revalidate'|trans({}, 'icap_dropzone') }}</a>
-                                    {% endif %}
-                                {% endif %}
-                             {% endif %}
-                        </div>
-                    </h4>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-12">
-                    {% if correction.editable and byUserMod == 0  %}
-                        <span class="label label-default">{{ 'created by a manager'|trans({}, 'icap_dropzone') }}</span>
-                    {% endif %}
-                    {% if correction.finished == false %}
-                        <span class="label label-warning">{{ 'Not finished'|trans({}, 'icap_dropzone') }}</span>
-                    {% endif %}
-                    {% if correction.reporter %}
-                        <span class="label label-danger">{{ 'Reported'|trans({}, 'icap_dropzone') }}</span>
-                    {% endif %}
-                    {% if correction.correctionDenied %}
-                        <span class="label label-danger">{{ 'Correction denied'|trans({}, 'icap_dropzone') }}</span>
-                    {% endif %}
-                    {% if not correction.valid %}
-                        <span class="label label-danger">{{ 'Invalidated'|trans({}, 'icap_dropzone') }}</span>
-                    {% endif %}
-                </div>
-            </div>
-            <div class="row text-muted">
-                <div class="col-md-3">{{ 'Started'|trans({}, 'icap_dropzone') }}</div>
-                <div class="col-md-3">{{ 'Last open'|trans({}, 'icap_dropzone') }}</div>
-                <div class="col-md-3">{{ 'Finished'|trans({}, 'icap_dropzone') }}</div>
-                <div class="col-md-offset-1 col-md-2">{{ 'Grade'|trans({}, 'icap_dropzone') }}</div>
-            </div>
-
-            <div class="row">
-                <div class="col-md-3">{{ correction.startDate|date('formatDatetime'|trans({}, 'icap_dropzone')) }}</div>
-                <div class="col-md-3">{{ correction.lastOpenDate|date('formatDatetime'|trans({}, 'icap_dropzone')) }}</div>
-                <div class="col-md-3">{% if correction.endDate != null %}{{ correction.endDate|date('formatDatetime'|trans({}, 'icap_dropzone')) }}{% else %}--{% endif %}</div>
-                <div class="col-md-offset-1 col-md-2">{% if correction.totalGrade != null %}{{ correction.totalGrade|number_format(2) }}{% else %}--{% endif %}/20</div>
-            </div>
-            <hr/>
-        {% endfor %}
-        #}
     </div>
 {% endblock %}
 
