@@ -23,7 +23,7 @@
 {% for relation in relations.currentPageResults() %}
     {% set workspace = relation.getWorkspace() %}
     <a class="list-group-item row-workspace row-workspace-id-{{ workspace.getId() }}"
-        {% set granted = has_access_to_workspace(workspace.getId(), app.security.getToken()) %}
+        {% set granted = has_access_to_workspace(workspace.getId()) %}
         {% if granted %}
             href="{{ path('claro_workspace_open',
             {'workspaceId': workspace.getId()}) }}"
