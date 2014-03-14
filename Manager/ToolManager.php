@@ -513,7 +513,7 @@ class ToolManager
      *
      * @param array $criterias
      *
-     * @return \Claroline\CoreBundle\Entity\Tool\Tool
+     * @return \Claroline\CoreBundle\Entity\Tool\Tool[]
      */
     public function getToolByCriterias(array $criterias)
     {
