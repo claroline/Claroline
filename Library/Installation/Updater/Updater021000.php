@@ -78,6 +78,28 @@ class Updater021000
             ");
         }
 
+        $this->log('updating resource rights...');
+
+        $this->log('removing administrator rights...');
+
+        $roleAdmin = $this->om->getRepository('ClarolineCoreBundle:Role')->findOneByName('ROLE_ADMIN');
+
+        $adminRights = $this->om->getRepository('ClarolineCoreBundle:Resource\ResourceRights')->findBy(array('role' => $roleAdmin));
+
+        foreach ($adminRights as $adminRight) {
+            $this->om->remove($adminRight);
+        }
+
+        $this->om->flush();
+        $this->log('adding user rights...');
+
+        $resourceNodes = $this->om->getRepository('ClarolineCoreBundle:Resource\ResourceNode')->findAll();
+        $roleUser = $this->om->getRepository('ClarolineCoreBundle:Role')->findOneByName('ROLE_USER');
+
+        foreach ($resourceNodes as $resourceNode) {
+            $rightsManager = $this->container->get('claroline.manager.rights_manager');
+            $rightsManager->create(0, $roleUser, $resourceNode, false);
+        }
     }
 
 
