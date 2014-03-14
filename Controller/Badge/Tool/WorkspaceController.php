@@ -52,9 +52,6 @@ class WorkspaceController extends Controller
     {
         $this->checkUserIsAllowed($workspace);
 
-        /** @var \Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler $platformConfigHandler */
-        $platformConfigHandler = $this->get('claroline.config.platform_config_handler');
-
         $parameters = array(
             'badgePage'    => $badgePage,
             'claimPage'    => $claimPage,
@@ -75,8 +72,7 @@ class WorkspaceController extends Controller
 
         return array(
             'workspace'   => $workspace,
-            'parameters'  => $parameters,
-            'language'    => $platformConfigHandler->getParameter('locale_language')
+            'parameters'  => $parameters
         );
     }
 
@@ -157,10 +153,6 @@ class WorkspaceController extends Controller
         }
 
         $this->checkUserIsAllowed($workspace);
-
-        /** @var \Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler $platformConfigHandler */
-        $platformConfigHandler = $this->get('claroline.config.platform_config_handler');
-        $badge->setLocale($platformConfigHandler->getParameter('locale_language'));
 
         $doctrine = $this->getDoctrine();
 
@@ -290,10 +282,6 @@ class WorkspaceController extends Controller
 
         $this->checkUserIsAllowed($workspace);
 
-        /** @var \Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler $platformConfigHandler */
-        $platformConfigHandler = $this->get('claroline.config.platform_config_handler');
-        $badge->setLocale($platformConfigHandler->getParameter('locale_language'));
-
         $form = $this->createForm($this->get('claroline.form.badge.award'));
 
         if ($request->isMethod('POST')) {
@@ -380,10 +368,6 @@ class WorkspaceController extends Controller
         }
 
         $this->checkUserIsAllowed($workspace);
-
-        /** @var \Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler $platformConfigHandler */
-        $platformConfigHandler = $this->get('claroline.config.platform_config_handler');
-        $badge->setLocale($platformConfigHandler->getParameter('locale_language'));
 
         /** @var \Symfony\Bundle\FrameworkBundle\Translation\Translator $translator */
         $translator = $this->get('translator');

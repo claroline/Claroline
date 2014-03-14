@@ -17,10 +17,12 @@ use Claroline\CoreBundle\Form\TermsOfServiceType;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Manager\TermsOfServiceManager;
 use Claroline\CoreBundle\Persistence\ObjectManager;
-use Doctrine\ORM\EntityManager;
 use JMS\DiExtraBundle\Annotation as DI;
-use Symfony\Component\Form\FormFactory;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\StreamedResponse;
+use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
+use Symfony\Component\Templating\EngineInterface;
+use Symfony\Component\Form\FormFactory;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
@@ -31,7 +33,6 @@ use Symfony\Component\Security\Core\Role\SwitchUserRole;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationSuccessHandlerInterface;
 use Symfony\Component\Security\Http\Event\InteractiveLoginEvent;
-use Symfony\Component\Templating\EngineInterface;
 
 /**
  * @DI\Service("claroline.authentication_handler")
@@ -120,24 +121,22 @@ class AuthenticationSuccessListener implements AuthenticationSuccessHandlerInter
     /**
      * @DI\Observe("kernel.response")
      */
-    public function onKernelTerminate($event)
+    public function onKernelResponse(FilterResponseEvent $event)
     {
         $this->saveLastUri($event);
     }
 
-    public function saveLastUri($event)
+    public function saveLastUri(FilterResponseEvent $event)
     {
-        if (
-            $event->isMasterRequest() &&
-            !$event->getRequest()->isXmlHttpRequest() &&
-            !in_array($event->getRequest()->attributes->get('_route'), $this->getExcludedRoutes()) &&
-            'GET' === $event->getRequest()->getMethod() &&
-            200 === $event->getResponse()->getStatusCode()
+        if ($event->isMasterRequest()
+            && !$event->getRequest()->isXmlHttpRequest()
+            && !in_array($event->getRequest()->attributes->get('_route'), $this->getExcludedRoutes())
+            && 'GET' === $event->getRequest()->getMethod()
+            && 200 === $event->getResponse()->getStatusCode()
+            && !$event->getResponse() instanceof StreamedResponse
         ) {
-            $token = $this->securityContext->getToken();
-            if ($token) {
-                $user = $token->getUser();
-                if ($user !== 'anon.') {
+            if ($token =  $this->securityContext->getToken()) {
+                if ('anon.' !== $user = $token->getUser()) {
                     $uri = $event->getRequest()->getRequestUri();
                     $user->setLastUri($uri);
                     $this->manager->persist($user);

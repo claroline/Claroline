@@ -11,9 +11,12 @@
         </div>
         <div id="collapse-{{ key }}" class="list-group collapse">
             {% for roleName, role in workspace %}
-                <a class="role-item list-group-item" href="{{ path('claro_resource_right_form', {'role':role.id, 'node':nodeId}) }}">
-                    {{ role.translation_key }}
-                </a>
+                {# only display non manager role #}
+                {% if 'ROLE_WS_MANAGER' not in roleName %}
+                    <a class="role-item list-group-item" href="{{ path('claro_resource_right_form', {'role':role.id, 'node':nodeId}) }}">
+                        {{ role.translation_key }}
+                    </a>
+                {% endif %}
             {% endfor %}
         </div>
     </div>

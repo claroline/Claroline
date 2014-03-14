@@ -6,9 +6,9 @@
     {% for tag in tagsList %}
         {% if displayable[tag.getId()] %}
         {% set currentIndex = index ~ "-" ~ tag.getId() %}
-        <div class="panel panel-deafault">
+        <div class="panel panel-default">
             <div class="panel-heading">
-                <h3 class="panle-title">
+                <h3 class="panel-title">
                     <a data-toggle="collapse" href="#collapse-{{ currentIndex }}">
                         <i class="icon-align-justify"></i>
                         {{ tag.getName() }}
@@ -17,9 +17,11 @@
                 </h3>
             </div>
             <div id="collapse-{{ currentIndex }}" class="panel-body collapse">
-                {% if hierarchy[tag.getId()]|length > 0 %}
-                    {{ _self.showTag(hierarchy[tag.getId()], tagWorkspaces, hierarchy, currentIndex, displayable, workspaceRoles, resource) }}
-                {% endif %}
+                {% if hierarchy %}
+                    {% if hierarchy[tag.getId()]|length > 0 %}
+                        {{ _self.showTag(hierarchy[tag.getId()], tagWorkspaces, hierarchy, currentIndex, displayable, workspaceRoles, resource) }}
+                    {% endif %}
+                {%  endif %}
                 {% for relWorkspaceTag in tagWorkspaces[tag.id] %}
                     <div class="panel panel-default">
                         {% set workspace = relWorkspaceTag.getWorkspace() %}
@@ -33,10 +35,12 @@
                         </div>
                         <div id="collapse-{{ currentIndex }}-{{ workspace.getCode() }}" class="list-group collapse">
                             {% for role in workspaceRoles[workspace.getCode()] %}
-                                <a class="workspace-role-item list-group-item"
-                                   href="{{ path('claro_resource_right_form', {'node':resource.id, 'role':role.id}) }}">
-                                    {{ role.getTranslationKey() }}
-                                </a>
+                                {% if role.getName() != 'ROLE_WS_MANAGER_' ~ workspace.getGuid() %}
+                                    <a class="workspace-role-item list-group-item"
+                                       href="{{ path('claro_resource_right_form', {'node':resource.id, 'role':role.id}) }}">
+                                        {{ role.getTranslationKey() }}
+                                    </a>
+                                {% endif %}
                             {% endfor %}
                         </div>
                     </div>
@@ -211,10 +215,13 @@
                                     </div>
                                     <div id="collapse-all-{{ workspace.getCode() }}" class="list-group collapse">
                                         {% for role in workspaceRoles[workspace.getCode()] %}
-                                            <a class="workspace-role-item list-group-item"
-                                                href="{{ path('claro_resource_right_form', {'node':resource.id, 'role':role.id}) }}">
-                                                {{ role.getTranslationKey()|trans({}, 'platform') }}
-                                            </a>
+                                            {# do not display the role manager of the current workspace #}
+                                            {% if role.getName() != 'ROLE_WS_MANAGER_' ~ workspace.getGuid() %}
+                                                <a class="workspace-role-item list-group-item"
+                                                    href="{{ path('claro_resource_right_form', {'node':resource.id, 'role':role.id}) }}">
+                                                    {{ role.getTranslationKey()|trans({}, 'platform') }}
+                                                </a>
+                                            {%  endif %}
                                         {% endfor %}
                                     </div>
                                 </div>

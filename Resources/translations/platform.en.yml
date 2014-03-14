@@ -4,6 +4,7 @@
 'Add a logo': 'Add a logo'
 'An error has occurred, please check if the file size does not exceeds the permitted size': 'An error has occurred, please check if the file size does not exceeds the permitted size'
 'Audience/user visits': 'Audience/user visits'
+answer: Answer
 'Choose a logo': 'Choose a logo'
 'Choose visible actions in the widget': 'Choose visible actions in the widget'
 'Choose workspaces displayed in the widget': 'Choose workspaces displayed in the widget'
@@ -247,7 +248,7 @@ from: From
 from_message: From
 general: General
 general_parameters: 'General parameters'
-generate_url: 'Generate a subscription url for the users'
+generate_url: 'Public URL Subscription '
 generate_url_subscription: 'Subscription to a workspace for a user'
 generate_url_subscription_anonyme: 'Subscription to a workspace for a anonymous'
 generate_url_subscription_fail: 'You must check "enable registration checkbow first to generate the url"'
@@ -732,3 +733,8 @@ ws_most_viewed: 'Most viewed workspaces'
 yes: yes
 yesterday_activity: 'Yesterday''s activity'
 your_username: 'Your username is '
+users_per_page: Users per page
+groups_per_page: Groups per page
+tool_roles_create_directory: The "Create a directory" option allow you to automatically create a directory for that group.
+my_profile: My profile
+send: send

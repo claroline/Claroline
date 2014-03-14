@@ -36,6 +36,7 @@
 
 {% from _self import renderPager %}
 {% from _self import sortUrl %}
+{% from "ClarolineCoreBundle::macros.html.twig" import maxResultsSelectBox %}
 
 {% extends 'ClarolineCoreBundle:Workspace:layout.html.twig' %}
 
@@ -91,11 +92,6 @@
                                             class="chk-role hide" type="checkbox" value="{{ role.getId() }}"
                                             data-name="{{ role.getTranslationKey()|trans({}, 'platform') }}"
                                             id="role-{{ role.getId() }}"
-                                            {% for toCheck in roles %}
-                                                {% if toCheck.getId() == role.getId() %}
-                                                    checked
-                                                {% endif %}
-                                            {% endfor %}
                                         >
                                         <label for="role-{{ role.getId() }}">{{ role.getTranslationKey()|trans({}, 'platform') }}</label>
                                     </li>
@@ -119,18 +115,13 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-md-8">{{ renderPager(search, workspace.getId(), pager, max, order) }}</div>
+                <div class="col-md-8">
+                {% if pager.getNbPages() > 1 %}
+                    {{ renderPager(search, workspace.getId(), pager, max, order) }}
+                {% endif %}
+                </div>
                 <div class="col-md-4">
-                    <div class="input-group margin-md">
-                        <select class="form-control input-md" id="max-select">
-                            <option>20</option>
-                            <option>50</option>
-                            <option>100</option>
-                            <option>200</option>
-                            <option>500</option>
-                        </select>
-                        <span class="input-group-addon">{{ 'line_per_page'|trans({}, 'platform') }}</span>
-                    </div>
+                    {{ maxResultsSelectBox(max, "$('#search-button').trigger('click');", 'groups_per_page') }}
                 </div>
             </div>
             <div class="table-responsive">
@@ -138,7 +129,6 @@
                     <thead>
                         <tr>
                             <th> <input type="checkbox" name="all" id="check-all-items"></input> </th>
-                            <th><a href="{{ sortUrl(max, search, 'id', workspace.getId()) }}">{{ 'id'|trans({}, 'platform') }}</a></th>
                             <th><a href="{{ sortUrl(max, search, 'name', workspace.getId()) }}">{{ 'name'|trans({}, 'platform') }}</a></th>
                         </tr>
                     </thead>
@@ -146,14 +136,15 @@
                         {% for group in pager.currentPageResults %}
                             <tr id="row-{{ group.id }}" class="row-group" data-group-id="{{ group.getId() }}">
                                 <td> <input class="chk-grp chk-item" type="checkbox" value="{{ group.getId() }}"> </input></td>
-                                <td>  {{ group.id }} </td>
                                 <td>  {{ group.name }} </td>
                             </tr>
                         {% endfor %}
                     </tbody>
                 </table>
             </div>
-            {{ renderPager(search, workspace.getId(), pager, max, order) }}
+            {% if pager.getNbPages() > 1 %}
+                {{ renderPager(search, workspace.getId(), pager, max, order) }}
+            {% endif %}
         </div>
     </div>
 {% endblock %}
@@ -161,11 +152,6 @@
     {{ parent() }}
     <script src='{{ asset('bundles/clarolinecore/js/table.js') }}' type="text/javascript"></script>
     <script>
-        $('#max-select').val({{ max }});
-        $('body').on('change', '#max-select', function() {
-            $('#search-button').trigger('click');
-        });
-
         createValidationBox();
         $('.popover-block').popover();
         parameters = {};

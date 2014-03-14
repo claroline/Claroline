@@ -255,11 +255,9 @@ class ToolManager
      */
     public function getWorkspaceToolsConfigurationArray(AbstractWorkspace $workspace)
     {
-        $missingTools = $this->addMissingWorkspaceTools($workspace);
-        $existingTools = $this->getWorkspaceExistingTools($workspace);
-        $tools = array_merge($existingTools, $missingTools);
+        $this->addMissingWorkspaceTools($workspace);
 
-        return $tools;
+        return $this->getWorkspaceExistingTools($workspace);
     }
 
     /**
@@ -515,7 +513,7 @@ class ToolManager
      *
      * @param array $criterias
      *
-     * @return \Claroline\CoreBundle\Entity\Tool\Tool
+     * @return \Claroline\CoreBundle\Entity\Tool\Tool[]
      */
     public function getToolByCriterias(array $criterias)
     {

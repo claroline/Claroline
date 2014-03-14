@@ -84,10 +84,9 @@ class RightsManager
      *
      * @param array|integer $permissions
      * @param \Claroline\CoreBundle\Entity\Role $role
-     * @param \Claroline\CoreBundle\Entity\Resource\ResourceNode $resource
+     * @param \Claroline\CoreBundle\Entity\Resource\ResourceNode $node
      * @param boolean $isRecursive
      * @param array $creations
-     * @internal param \Claroline\CoreBundle\Entity\Resource\ResourceNode $node
      */
     public function create(
         $permissions,
