@@ -154,10 +154,6 @@ class AdminController extends Controller
                 return $this->redirect($this->generateUrl('claro_admin_badges'));
             }
         } catch (\Exception $exception) {
-            echo "<pre>";
-            var_dump($exception->getMessage());
-            echo "</pre>" . PHP_EOL;
-            die("FFFFFUUUUUCCCCCKKKKK" . PHP_EOL);
             $sessionFlashBag->add('error', $translator->trans('badge_edit_error_message', array(), 'badge'));
 
             return $this->redirect($this->generateUrl('claro_admin_badges'));
