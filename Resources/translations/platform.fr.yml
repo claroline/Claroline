@@ -31,11 +31,6 @@ answer: Répondre
 404: 'La page que vous cherchez n''existe pas.'
 Active: 'Actif'
 Create a new resource: 'Créer une nouvelle ressource'
-Everyone: 'Tout le monde'
-First name: Prénom
-Grant the right to: 'Accorder des droit à'
-Members of the platform: 'Inscrits à la plateforme'
-Members of work space: 'Inscrits à l''espace d''activité'
 First name: Prénom
 Indexing: Référencement
 Language: Langue
@@ -255,6 +250,7 @@ generate_url_subscription_anonyme: 'Inscription à l''espace d''activité par un
 generate_url_subscription_fail: 'Vous devez d''abord cochez la case de l''inscription publique avant de pouvoir voir l''url'
 generate_url_subscription_sucsess: 'Vous avez été ajouté à l''espace d''activité'
 get_mail_notifications: 'Je veux recevoir les notifications sur %adress%.'
+grant_access: Donner l'accès
 group: Groupe
 group_configuration: 'Configuration du groupe'
 group_creation: 'Création d''un groupe'
@@ -309,7 +305,7 @@ last_name: Nom
 layout: Layout
 left: Gauche
 line_number: 'Ligne %line%:'
-line_per_page: 'Lignes par page'
+line_per_page: Résultats par page
 link: Lien
 link_outdated: 'le lien n''est plus valide'
 list_groups: 'Lister les groupes'
@@ -602,7 +598,11 @@ the_workspace: 'L''espace d''activités'
 this_page_requires_authentication: 'Cette page requiert une authentification. Veuillez vous identifier.'
 time_col: 'Colonne des durées'
 to: Jusque
-to_message: A
+to_anonymous: aux utilisateurs anonymes
+to_everyone: à tout le monde
+to_message: À
+to_platform_users: aux utilisateurs de la plateforme
+to_workspace_members: aux membres de cet espace
 today: 'Aujourd''hui'
 tool: Outil
 tool_form_displayName: 'Nom affiché'
