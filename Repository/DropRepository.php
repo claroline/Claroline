@@ -190,7 +190,7 @@ class DropRepository extends EntityRepository {
             ->join('drop.user', 'user')
             ->leftJoin('drop.documents', 'document')
             ->join('drop.corrections', 'correction')
-            ->orderBy('drop.reported desc, user.lastName, user.firstName')
+            ->orderBy('user.lastName, user.firstName')
             ->setParameter('dropIds', $dropIds)
             ->setParameter('dropzone', $dropzone)
             ->getQuery();
@@ -213,11 +213,60 @@ class DropRepository extends EntityRepository {
             ->join('drop.user', 'user')
             ->leftJoin('drop.documents', 'document')
             ->join('drop.corrections', 'correction')
+            ->orderBy('drop.dropDate')
+            ->setParameter('dropIds', $dropIds)
+            ->setParameter('dropzone', $dropzone)
+            ->getQuery();
+    }
+
+    public function getDropsFullyCorrectedOrderByReportAndDropDateQuery($dropzone)
+    {
+        $lines = $this->getDropIdsFullyCorrectedQuery($dropzone)->getResult();
+
+        $dropIds = array();
+        foreach($lines as $line) {
+            $dropIds[] = $line['did'];
+        }
+
+        return $this
+            ->createQueryBuilder('drop')
+            ->select('drop, document, correction, user')
+            ->andWhere('drop.id IN (:dropIds)')
+            ->andWhere('drop.dropzone = :dropzone')
+            ->join('drop.user', 'user')
+            ->leftJoin('drop.documents', 'document')
+            ->join('drop.corrections', 'correction')
             ->orderBy('drop.reported desc, drop.dropDate')
             ->setParameter('dropIds', $dropIds)
             ->setParameter('dropzone', $dropzone)
             ->getQuery();
     }
+
+    public function getDropsFullyCorrectedReportedQuery($dropzone)
+    {
+        $lines = $this->getDropIdsFullyCorrectedQuery($dropzone)->getResult();
+
+        $dropIds = array();
+        foreach($lines as $line) {
+            $dropIds[] = $line['did'];
+        }
+
+        return $this
+            ->createQueryBuilder('drop')
+            ->select('drop, document, correction, user')
+            ->andWhere('drop.id IN (:dropIds)')
+            ->andWhere('drop.dropzone = :dropzone')
+            ->andWhere('drop.reported = true or correction.correctionDenied = true ')
+            ->join('drop.user', 'user')
+            ->leftJoin('drop.documents', 'document')
+            ->join('drop.corrections', 'correction')
+            ->orderBy('drop.reported desc, correction.correctionDenied, drop.dropDate')
+            ->setParameter('dropIds', $dropIds)
+            ->setParameter('dropzone', $dropzone)
+            ->getQuery();
+    }
+
+
 
     public function getDropsAwaitingCorrectionQuery($dropzone)
     {

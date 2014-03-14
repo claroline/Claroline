@@ -151,12 +151,7 @@ class DropController extends DropzoneBaseController
     }
 
     /**
-     * @Route(
-     *      "/{resourceId}/drops",
-     *      name="icap_dropzone_drops",
-     *      requirements={"resourceId" = "\d+"},
-     *      defaults={"page" = 1}
-     * )
+     * 
      * @Route(
      *      "/{resourceId}/drops/by/user",
      *      name="icap_dropzone_drops_by_user",
@@ -179,6 +174,121 @@ class DropController extends DropzoneBaseController
 
         $dropRepo = $this->getDoctrine()->getManager()->getRepository('IcapDropzoneBundle:Drop');
         $dropsQuery = $dropRepo->getDropsFullyCorrectedOrderByUserQuery($dropzone);
+
+        $adapter = new DoctrineORMAdapter($dropsQuery);
+        $pager = new Pagerfanta($adapter);
+        $pager->setMaxPerPage(DropzoneBaseController::DROP_PER_PAGE);
+        try {
+            $pager->setCurrentPage($page);
+        } catch (NotValidCurrentPageException $e) {
+            if ($page > 0) {
+                return $this->redirect(
+                    $this->generateUrl(
+                        'icap_dropzone_drops_by_user_paginated',
+                        array(
+                            'resourceId' => $dropzone->getId(),
+                            'page' => $pager->getNbPages()
+                        )
+                    )
+                );
+            } else {
+                throw new NotFoundHttpException();
+            }
+        }
+
+        return $this->addDropsStats($dropzone, array(
+            'workspace' => $dropzone->getResourceNode()->getWorkspace(),
+            '_resource' => $dropzone,
+            'dropzone' => $dropzone,
+            'pager' => $pager
+        ));
+    }
+
+    /**
+     * @Route(
+     *      "/{resourceId}/drops",
+     *      name="icap_dropzone_drops",
+     *      requirements={"resourceId" = "\d+"},
+     *      defaults={"page" = 1}
+     * )
+     * @Route(
+     *      "/{resourceId}/drops/by/default",
+     *      name="icap_dropzone_drops_by_default",
+     *      requirements={"resourceId" = "\d+"},
+     *      defaults={"page" = 1}
+     * )
+     * @Route(
+     *      "/{resourceId}/drops/by/default/{page}",
+     *      name="icap_dropzone_drops_by_default_paginated",
+     *      requirements={"resourceId" = "\d+", "page" = "\d+"},
+     *      defaults={"page" = 1}
+     * )
+     * 
+     * @ParamConverter("dropzone", class="IcapDropzoneBundle:Dropzone", options={"id" = "resourceId"})
+     * @Template()
+     **/
+    public function dropsByDefaultAction($dropzone,$page)
+    {
+        $this->isAllowToOpen($dropzone);
+        $this->isAllowToEdit($dropzone);
+
+        $dropRepo = $this->getDoctrine()->getManager()->getRepository('IcapDropzoneBundle:Drop');
+        $dropsQuery = $dropRepo->getDropsFullyCorrectedOrderByReportAndDropDateQuery($dropzone);
+
+        $adapter = new DoctrineORMAdapter($dropsQuery);
+        $pager = new Pagerfanta($adapter);
+        $pager->setMaxPerPage(DropzoneBaseController::DROP_PER_PAGE);
+        try {
+            $pager->setCurrentPage($page);
+        } catch (NotValidCurrentPageException $e) {
+            if ($page > 0) {
+                return $this->redirect(
+                    $this->generateUrl(
+                        'icap_dropzone_drops_by_user_paginated',
+                        array(
+                            'resourceId' => $dropzone->getId(),
+                            'page' => $pager->getNbPages()
+                        )
+                    )
+                );
+            } else {
+                throw new NotFoundHttpException();
+            }
+        }
+
+        return $this->addDropsStats($dropzone, array(
+            'workspace' => $dropzone->getResourceNode()->getWorkspace(),
+            '_resource' => $dropzone,
+            'dropzone' => $dropzone,
+            'pager' => $pager
+        ));
+    }
+
+    /**
+     * 
+     * @Route(
+     *      "/{resourceId}/drops/by/report",
+     *      name="icap_dropzone_drops_by_report",
+     *      requirements={"resourceId" = "\d+"},
+     *      defaults={"page" = 1}
+     * )
+     * @Route(
+     *      "/{resourceId}/drops/by/report/{page}",
+     *      name="icap_dropzone_drops_by_report_paginated",
+     *      requirements={"resourceId" = "\d+", "page" = "\d+"},
+     *      defaults={"page" = 1}
+     * )
+     * 
+     * @ParamConverter("dropzone", class="IcapDropzoneBundle:Dropzone", options={"id" = "resourceId"})
+     * @Template()
+     */
+    public function dropsByReportAction($dropzone,$page)
+    {
+        $this->isAllowToOpen($dropzone);
+        $this->isAllowToEdit($dropzone);
+
+        $dropRepo = $this->getDoctrine()->getManager()->getRepository('IcapDropzoneBundle:Drop');
+        $dropsQuery = $dropRepo->getDropsFullyCorrectedReportedQuery($dropzone);
 
         $adapter = new DoctrineORMAdapter($dropsQuery);
         $pager = new Pagerfanta($adapter);
