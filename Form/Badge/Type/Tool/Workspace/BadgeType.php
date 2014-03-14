@@ -12,7 +12,7 @@
 namespace Claroline\CoreBundle\Form\Badge\Type\Tool\Workspace;
 
 use Claroline\CoreBundle\Entity\Badge\Badge;
-use Claroline\CoreBundle\Form\Badge\BadgeTranslationType;
+use Claroline\CoreBundle\Form\Badge\Type\BadgeTranslationType;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Form\AbstractType;
@@ -25,7 +25,7 @@ use Symfony\Bundle\FrameworkBundle\Translation\Translator;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * @DI\Service("claroline.form.badge.workspace")
+ * @DI\FormType(alias="badge_form_workspace")
  */
 class BadgeType extends AbstractType
 {
@@ -81,29 +81,32 @@ class BadgeType extends AbstractType
             /** @var \Claroline\CoreBundle\Entity\Badge\Badge $badge */
             $badge = $event->getData();
 
-            $this->badgeRuleType->workspace = $badge->getWorkspace()->getId();
+            if (null !== $badge) {
+                $this->badgeRuleType->workspace = $badge->getWorkspace()->getId();
 
-            $form  = $event->getForm();
-            $form
-                ->add(
-                    'rules',
-                    'collection',
-                    array(
-                        'type'          => $this->badgeRuleType,
-                        'by_reference'  => false,
-                        'attr'          => array('class' => 'rule-collections'),
-                        'theme_options' => array('label_width' => 'col-md-3'),
-                        'prototype'     => true,
-                        'allow_add'     => true,
-                        'allow_delete'  => true
-                    )
-                );
+                $form  = $event->getForm();
+                $form
+                    ->add(
+                        'rules',
+                        'collection',
+                        array(
+                            'type'          => $this->badgeRuleType,
+                            'by_reference'  => false,
+                            'attr'          => array('class' => 'rule-collections'),
+                            'theme_options' => array('label_width' => 'col-md-3'),
+                            'prototype'     => true,
+                            'allow_add'     => true,
+                            'allow_delete'  => true
+                        )
+                    );
+            }
+
         });
     }
 
     public function getName()
     {
-        return 'badge_form';
+        return 'badge_form_workspace';
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)

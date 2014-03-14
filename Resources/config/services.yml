@@ -34,14 +34,14 @@ services:
     # form
     claroline.form.badge:
         class: Symfony\Component\Form\Form
-        factory_method: create
+        factory_method: createNamed
         factory_service: form.factory
-        arguments: ["badge_form"]
+        arguments: ["badge_form", "badge_form"]
     claroline.form.badge.workspace:
         class: Symfony\Component\Form\Form
-        factory_method: create
+        factory_method: createNamed
         factory_service: form.factory
-        arguments: ["badge_form_workspace"]
+        arguments: ["badge_form", "badge_form_workspace"]
 
     # form handler
     claroline.form_handler.badge:
