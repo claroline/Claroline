@@ -11,6 +11,7 @@
 
 namespace Claroline\ForumBundle\Installation\Updater;
 
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class Updater020204
 {
@@ -19,7 +20,7 @@ class Updater020204
     /** @var  Connection */
     private $conn;
 
-    public function __construct($container)
+    public function __construct(ContainerInterface $container)
     {
         $this->container = $container;
     }
