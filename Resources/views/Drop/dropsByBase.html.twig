@@ -61,7 +61,9 @@
     {% if pager.nbResults == 0 %}
         <div class="row">
             <div class="col-md-12">
-                {{ 'noCopyExpectedCorrection'|transchoice(dropzone.expectedTotalCorrection, {}, 'icap_dropzone') }}
+                {% block dropzone_content_drops_by_no_result_exception %}
+                    {{ 'noCopyExpectedCorrection'|transchoice(dropzone.expectedTotalCorrection, {}, 'icap_dropzone') }}
+                {% endblock %}
             </div>
         </div>
         <br/>

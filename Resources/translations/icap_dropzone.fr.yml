@@ -251,4 +251,4 @@ revalidate: 'revalider'
 Need to be the author: 'Vous devez être l''auteur de la correction pour effectuer cette action'
 sort by reported: 'Signalées'
 default sort: 'Trier par défaut'
-
+no reported copies: 'Aucune copie signalée'
