@@ -6,7 +6,7 @@
 
 {% extends layout %}
 
-{% block title %}{{ resource.getResourceNode().getName() ~ ' - ' ~ parent() | striptags | raw }}{% endblock %}
+{% block title %}{{ resource.getResourceNode().getName() ~ ' - ' ~ parent()|striptags|raw }}{% endblock %}
 
 {% block section_content %}
     <div class="panel-heading">
@@ -15,12 +15,16 @@
     <div class="panel-body">
         {% if not path is empty %}
             <div class="text-right">
-                <a class="btn btn-primary pointer-hand" onClick="javascript:enterFullscreen()">
+                <a class="btn btn-primary pointer-hand" onClick="javascript:enterFullScreen()">
                     <i class="icon-resize-full"></i>
                 </a>
             </div>
-            <div style="width:100%;height:400px">
-                <iframe id="webresource" src="{{ asset("uploads/webresource/" ~ path) }}" width="100%" height="100%" frameborder="0"></iframe>
+            <div class="full-size">
+                <iframe id="web-resource-frame"
+                        class="full-size"
+                        src="{{ asset("uploads/webresource/" ~ path) }}"
+                        frameborder="0">
+                </iframe>
             </div>
         {% else %}
             <div class="alert alert-danger">
@@ -29,42 +33,50 @@
         {% endif %}
     </div>
     <div class="panel-footer">
-        <a class="btn btn-primary" href="{{ path('claro_resource_download') }}?ids[]={{ _resource.getResourceNode().getId() }}">
+        <a class="btn btn-primary"
+           href="{{ path('claro_resource_download') }}?ids[]={{ _resource.getResourceNode().getId() }}">
             <i class="icon-download"></i> {{ 'download'|trans({}, 'platform') }}
         </a>
     </div>
+    <style>
+        .full-size {
+            height: 100%;
+            width: 100%;
+        }
+    </style>
 {% endblock %}
 {% block javascripts_header %}
     {{ parent() }}
     <script>
-        function RunPrefixMethod(obj, method)
-        {
+        function runPrefixedMethod(obj, method) {
             var pfx = ['webkit', 'moz', 'ms', 'o', ''];
-            var p = 0, m, t;
+            var p = 0, m = null, t = null;
 
             while (p < pfx.length && !obj[m]) {
                 m = method;
+
                 if (pfx[p] == '') {
                     m = m.substr(0,1).toLowerCase() + m.substr(1);
                 }
+
                 m = pfx[p] + m;
-                t = typeof obj[m];
-                if (t != 'undefined') {
+
+                if ('undefined' !== (t = typeof obj[m])) {
                     pfx = [pfx[p]];
-                    return (t == 'function' ? obj[m]() : obj[m]);
+
+                    return t === 'function' ? obj[m]() : obj[m];
                 }
+
                 p++;
             }
         }
 
-        function enterFullscreen() {
-            if (RunPrefixMethod(document, 'FullScreen') || RunPrefixMethod(document, 'IsFullScreen')) {
-                $('#webresource').css('height', '400px');
-                RunPrefixMethod(document, 'CancelFullScreen');
+        function enterFullScreen() {
+            if (runPrefixedMethod(document, 'FullScreen') || runPrefixedMethod(document, 'IsFullScreen')) {
+                runPrefixedMethod(document, 'CancelFullScreen');
             }
-            else
-            {
-                RunPrefixMethod(document.getElementById('webresource'), 'RequestFullScreen');
+            else {
+                runPrefixedMethod(document.getElementById('web-resource-frame'), 'RequestFullScreen');
             }
         }
     </script>
