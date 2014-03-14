@@ -20,7 +20,6 @@ use Claroline\CoreBundle\Event\DownloadResourceEvent;
 use Claroline\CoreBundle\Event\OpenResourceEvent;
 use Claroline\CoreBundle\Form\FileType;
 use JMS\DiExtraBundle\Annotation as DI;
-use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormError;
@@ -30,7 +29,7 @@ use Symfony\Component\HttpFoundation\Response;
 /**
  * @DI\Service
  */
-class WebResourceListener implements ContainerAwareInterface
+class WebResourceListener
 {
     private $container;
     private $zip;
@@ -44,7 +43,7 @@ class WebResourceListener implements ContainerAwareInterface
      *
      * @param ContainerInterface $container
      */
-    public function setContainer(ContainerInterface $container = null)
+    public function __construct(ContainerInterface $container)
     {
         $this->container = $container;
         $this->zipPath = __DIR__ . '/../../../../../../web/uploads/webresource/';
