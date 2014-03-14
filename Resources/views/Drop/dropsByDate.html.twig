@@ -22,8 +22,9 @@
         <a href="#" class="btn btn-default btn-xs active">{{ 'Sort by date'|trans({}, 'icap_dropzone') }}</a>
     </div>
 
-    <h3>{{ 'Evaluation finished'|trans({}, 'icap_dropzone') }}</h3>
-
+    <h3>{{ 'fully corrected copies'|trans({}, 'icap_dropzone') }}</h3>
+    {% include 'IcapDropzoneBundle:Drop:Listing/dropsListing.html.twig' %}
+    
     <div class="container row">
         {% if pager.haveToPaginate %}
             {{
@@ -39,7 +40,7 @@
             }}
         {% endif %}
     </div>
-
+    {#
     {% for drop in pager.currentPageResults %}
         <div class="panel {% if drop.reported %}panel-danger{% else %}panel-default{% endif %}">
             <div class="panel-heading">
@@ -79,7 +80,7 @@
             </div>
         </div>
     {% endfor %}
-
+    #}
     {% if pager.nbResults == 0 %}
         <div class="row">
             <div class="col-md-12">
@@ -104,6 +105,7 @@
             }}
         {% endif %}
     </div>
+    
 {% endblock %}
 
 {% block javascripts %}

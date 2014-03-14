@@ -76,6 +76,9 @@
         </div>
 
         <br/>
+
+        <h3>{{ 'List of corrections'|trans({}, 'icap_dropzone') }}</h3>
+        <hr/>
         {% if(byUserMod == 0) %}
         <div class="container">
             <div class="row">
@@ -85,9 +88,12 @@
                 </div>
             </div>
         </div>
+         <br>
         {% endif %}
-        <hr/>
+        <br>
 
+        {% include 'IcapDropzoneBundle:Correction:Listing/correctionListing.html.twig' %}
+        {#
         {% for correction in drop.corrections %}
             <div class="row">
                 <div class="col-md-12">
@@ -114,7 +120,7 @@
                                     {% if correction.valid %}
                                         <a href="{{ path('icap_dropzone_drops_detail_correction_validation', {'resourceId': dropzone.id, 'correctionId': correction.id, 'value': 'no'}) }}" class="btn btn-danger btn-xs">{{ 'Invalidate'|trans({}, 'icap_dropzone') }}</a>
                                     {% else %}
-                                        <a href="{{ path('icap_dropzone_drops_detail_correction_validation', {'resourceId': dropzone.id, 'correctionId': correction.id, 'value': 'yes'}) }}" class="btn btn-default btn-xs">{{ 'Validate'|trans({}, 'icap_dropzone') }}</a>
+                                        <a href="{{ path('icap_dropzone_drops_detail_correction_validation', {'resourceId': dropzone.id, 'correctionId': correction.id, 'value': 'yes'}) }}" class="btn btn-default btn-xs">{{ 'revalidate'|trans({}, 'icap_dropzone') }}</a>
                                     {% endif %}
                                 {% endif %}
                              {% endif %}
@@ -156,7 +162,7 @@
             </div>
             <hr/>
         {% endfor %}
-
+        #}
     </div>
 {% endblock %}
 
