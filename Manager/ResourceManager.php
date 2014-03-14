@@ -194,31 +194,39 @@ class ResourceManager
      */
     public function getUniqueName(ResourceNode $node, ResourceNode $parent = null)
     {
-        $children = $this->getSiblings($parent);
-        $name = $node->getName();
-        $arName = explode('~', pathinfo($name, PATHINFO_FILENAME));
-        $baseName = $arName[0];
-        $nbName = 0;
+        $candidateName = $node->getName();
+        $parent = $parent ?: $node->getParent();
+        $sameLevelNodes = $parent ?
+            $parent->getChildren() :
+            $this->resourceNodeRepo->findBy(array('parent' => null));
+        $siblingNames = array();
 
-        if ($children) {
-            foreach ($children as $child) {
-                $arChildName = explode('~', pathinfo($child->getName(), PATHINFO_FILENAME));
-                if ($baseName === $arChildName[0]) {
-                    $nbName++;
-                }
+        foreach ($sameLevelNodes as $levelNode) {
+            if ($levelNode !== $node) {
+                $siblingNames[] = $levelNode->getName();
             }
         }
 
-        return (0 !== $nbName) ?  $baseName.'~'.$nbName.'.'.pathinfo($name, PATHINFO_EXTENSION): $name;
-    }
-
-    public function getSiblings(ResourceNode $parent = null)
-    {
-        if ($parent !== null) {
-            return $parent->getChildren();
+        if (!in_array($candidateName, $siblingNames)) {
+            return $candidateName;
         }
 
-        return $this->resourceNodeRepo->findBy(array('parent' => null));
+        $candidateRoot = pathinfo($candidateName, PATHINFO_FILENAME);
+        $candidateExt = ($ext = pathinfo($candidateName, PATHINFO_EXTENSION)) ? '.' . $ext : '';
+        $candidatePattern = '/^'
+            . preg_quote($candidateRoot)
+            . '~(\d+)'
+            . preg_quote($candidateExt)
+            . '$/';
+        $previousIndex = 0;
+
+        foreach ($siblingNames as $name) {
+            if (preg_match($candidatePattern, $name, $matches) && $matches[1] > $previousIndex) {
+                $previousIndex = $matches[1];
+            }
+        }
+
+        return $candidateRoot . '~' . ++$previousIndex . $candidateExt;
     }
 
     /**
@@ -1017,6 +1025,8 @@ class ResourceManager
      */
     public function rename(ResourceNode $node, $name)
     {
+        $node->setName($name);
+        $name = $this->getUniqueName($node, $node->getParent());
         $node->setName($name);
         $this->om->persist($node);
         $this->logChangeSet($node);

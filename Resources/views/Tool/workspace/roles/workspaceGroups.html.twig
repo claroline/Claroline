@@ -36,6 +36,7 @@
 
 {% from _self import sortUrl %}
 {% from _self import renderPager %}
+{% from "ClarolineCoreBundle::macros.html.twig" import maxResultsSelectBox %}
 
 {% extends 'ClarolineCoreBundle:Workspace:layout.html.twig' %}
 
@@ -91,16 +92,7 @@
             <div class="row">
                 <div class="col-md-8">{{ renderPager(search, workspace.getId(), pager, max, order) }}</div>
                 <div class="col-md-4">
-                    <div class="input-group margin-md">
-                        <select class="form-control input-md" id="max-select">
-                            <option>20</option>
-                            <option>50</option>
-                            <option>100</option>
-                            <option>200</option>
-                            <option>500</option>
-                        </select>
-                        <span class="input-group-addon">{{ 'line_per_page'|trans({}, 'platform') }}</span>
-                    </div>
+                    {{ maxResultsSelectBox(max, "$('#search-button').trigger('click');", 'groups_per_page') }}
                 </div>
             </div>
 
@@ -109,7 +101,6 @@
                     <thead>
                         <tr>
                             <th> <input type="checkbox" name="all" id="check-all-items"></input> </th>
-                            <th><a href="{{ sortUrl(workspace.getId(), max, search, 'id') }}">{{ 'id'|trans({}, 'platform') }}</a></th>
                             <th><a href="{{ sortUrl(workspace.getId(), max, search, 'name') }}">{{ 'name'|trans({}, 'platform') }}</a></th>
                             <th>{{ 'role'|trans({}, 'platform') }}</th>
                         </tr>
@@ -118,7 +109,6 @@
                         {% for group in pager.currentPageResults %}
                             <tr id="row-{{ group.id }}" class="row-group" data-group-id="{{ group.getId() }}">
                                 <td> <input class="chk-grp" type="checkbox" value="{{ group.getId() }}"> </input></td>
-                                <td>{{ group.getId() }}</td>
                                 <td>  <a href="{{ path('claro_workspace_users_of_group', {'workspace': workspace.getId(), 'group': group.getId() }) }}"> {{ group.name }} </a> </td>
                                 <td>
                                     {% for role in group.getEntityRoles() %}
@@ -146,11 +136,6 @@
     {{ parent() }}
     <script src='{{ asset('bundles/clarolinecore/js/table.js') }}' type="text/javascript"></script>
     <script>
-        $('#max-select').val({{ max }});
-        $('body').on('change', '#max-select', function() {
-            $('#search-button').trigger('click');
-        });
-
         parameters = {};
         parameters.route = {};
         parameters.route.action = {};
@@ -170,6 +155,5 @@
                 }
             });
         });
-
     </script>
 {% endblock %}

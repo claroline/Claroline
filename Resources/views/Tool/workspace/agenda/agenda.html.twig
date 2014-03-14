@@ -25,10 +25,10 @@
     }}
 {% endblock %}
 {% block section_content %}
- <div class="panel-heading">
-    <h3 class="panel-title">{{ 'agenda'|trans({}, 'platform') }}</h3>
- </div>
- <div class="panel-body">
+<div class="panel-heading">
+    <h3 class="panel-title">{{ 'agenda'|trans({}, 'platform') }} - {{workspace.getName()}}</h3>
+</div>
+<div class="panel-body">
         <div id="selectOwner">
             {% for o in owners %}
                 {{o}}
@@ -72,7 +72,7 @@
                         <button class="btn btn-default" data-dismiss="modal" aria-hidden="true">{{'cancel'|trans({}, 'agenda') }}</button>
                         <button class="btn btn-primary" id="save">{{ 'add_event'|trans({}, 'agenda') }}</button>
                         <button class="btn btn-info" id="updateBtn" > {{ 'update'|trans({}, 'agenda') }}</button>
-                        <button class="btn btn-danger" id="deleteBtn" >{{ 'delete'|trans({}, 'platform') }} </button>
+                        <button class="btn btn-primary" id="deleteBtn" >{{ 'delete'|trans({}, 'platform') }} </button>
                     </div>
                 </div>
             </div>
@@ -104,9 +104,7 @@
             });
 </script>
 <script type="text/javascript" src="{{ url('bazinga_exposetranslation_js', { 'domain_name': 'agenda' }) }}"></script>
-<script type="text/javascript" src="{{ asset('bundles/frontend/jquery/plugin/datepicker/js/bootstrap-datepicker.js') }}"> </script>
 <script type="text/javascript" src="{{ asset('bundles/clarolinecore/js/tool/calendarDatePicker.js') }}"> </script>
 <script type="text/javascript" src="{{ asset('bundles/frontend/jquery/jquery-ui-1.9.2/components/jquery.ui.draggable.min.js') }}"> </script>
 <script type="text/javascript" src="{{ asset('bundles/frontend/jquery/jquery-ui-1.9.2/components/jquery.ui.resizable.min.js') }}"> </script>
-
 {% endblock javascripts %}
