@@ -25,10 +25,7 @@ class LoadResourceImagesData implements RequiredFixture
      */
     public function load(ObjectManager $manager)
     {
-        $ds = DIRECTORY_SEPARATOR;
-        $coreWebDir = "{$this->container->getParameter('kernel.root_dir')}{$ds}..{$ds}web{$ds}";
         $coreIconWebDirRelativePath = "bundles/clarolinecore/images/resources/icons/";
-        $coreIconWebDir = "{$coreWebDir}bundles{$ds}clarolinecore{$ds}images{$ds}resources{$ds}icons{$ds}";
         $resourceImages = array(
             array('res_default.png', 'custom/default'),
             array('res_default.png', 'custom/activity'),
@@ -46,6 +43,11 @@ class LoadResourceImagesData implements RequiredFixture
             array('res_msword.png', 'application/vnd.oasis.opendocument.text'),
             array('res_pdf.png', 'application/pdf'),
             array('res_image.png', 'image'),
+            array('res_vector.png', 'application/postscript'),
+            array('res_vector.png', 'image/svg+xml'),
+            array('res_zip.png', 'application/x-gtar'),
+            array('res_zip.png', 'application/x-7z-compressed'),
+            array('res_zip.png', 'application/x-rar-compressed')
         );
 
         foreach ($resourceImages as $resourceImage) {
