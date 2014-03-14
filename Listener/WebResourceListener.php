@@ -22,7 +22,9 @@ use Claroline\CoreBundle\Form\FileType;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormError;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -106,7 +108,7 @@ class WebResourceListener implements ContainerAwareInterface
     /**
      * @DI\Observe("open_claroline_web_resource")
      *
-     * @param CreateResourceEvent $event
+     * @param \Claroline\CoreBundle\Event\CreateResourceEvent|\Claroline\CoreBundle\Event\OpenResourceEvent $event
      */
     public function onOpenWebResource(OpenResourceEvent $event)
     {
@@ -171,7 +173,9 @@ class WebResourceListener implements ContainerAwareInterface
     /**
      * Get the HTML index file of a web resource.
      *
-     * @param $path The path of a unziped web resource directory.
+     * @param $hash
+     * @return string
+     * @internal param \Claroline\WebResourceBundle\Listener\The $path path of a unziped web resource directory.
      */
     private function getIndexHTML($hash)
     {
@@ -204,9 +208,10 @@ class WebResourceListener implements ContainerAwareInterface
     }
 
     /**
-     * Get a new hash for a file.
+     * Returns a new hash for a file.
      *
-     * @param $mixed The extention of the file or an Claroline\CoreBundle\Entity\Resource\File
+     * @param mixed mixed The extension of the file or an Claroline\CoreBundle\Entity\Resource\File
+     * @return string
      */
     private function getHash($mixed)
     {
@@ -218,13 +223,13 @@ class WebResourceListener implements ContainerAwareInterface
     }
 
     /**
-     * Check if a UploadedFile is a zip and contains index.html file.
+     * Checks if a UploadedFile is a zip and contains index.html file.
      *
-     * @param $file Symfony\Component\HttpFoundation\File\UploadedFile.
+     * @param \Claroline\WebResourceBundle\Listener\Symfony\Component\HttpFoundation\File\UploadedFile|\Symfony\Component\HttpFoundation\File\UploadedFile $file Symfony\Component\HttpFoundation\File\UploadedFile.
      *
      * @return boolean.
      */
-    private function isZip($file)
+    private function isZip(UploadedFile $file)
     {
         return (
             $file->getClientMimeType() === 'application/zip' and
@@ -237,13 +242,13 @@ class WebResourceListener implements ContainerAwareInterface
     }
 
     /**
-     * Create a Web Resource from a valid form containing the zip file.
+     * Creates a web resource from a valid form containing the zip file.
      *
-     * @param $form a Symfony\Component\Form\Form
+     * @param \Claroline\WebResourceBundle\Listener\a|\Symfony\Component\Form\Form $form a Symfony\Component\Form\Form
      *
      * @return Claroline\CoreBundle\Entity\Resource\File
      */
-    private function createResource($form)
+    private function createResource(Form $form)
     {
         $file = $form->getData();
         $tmpFile = $form->get('file')->getData();
@@ -260,11 +265,11 @@ class WebResourceListener implements ContainerAwareInterface
     }
 
     /**
-     * Unzip files in web directory.
+     * Unzips files in web directory.
      *
      * Use first $this->getZip()->open($file) or $this->isZip($file)
      *
-     * @param $hash The hash name of the reource.
+     * @param string $hash The hash name of the resource.
      */
     private function unzip($hash)
     {
@@ -299,7 +304,7 @@ class WebResourceListener implements ContainerAwareInterface
     }
 
     /**
-     * Delete Web Resource unzip files and its contents.
+     * Deletes web resource unzipped files.
      *
      * @param $dir The path to the directory to delete.
      */
