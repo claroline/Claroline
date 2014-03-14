@@ -12,6 +12,7 @@
 namespace Claroline\CoreBundle\Library\Installation\Updater;
 
 use Claroline\CoreBundle\Persistence\ObjectManager;
+use Claroline\CoreBundle\Entity\Resource\ResourceIcon;
 
 class Updater021000
 {
@@ -107,6 +108,8 @@ class Updater021000
 
     public function updateIcons()
     {
+        $this->log('updating icons...');
+
         $coreIconWebDirRelativePath = "bundles/clarolinecore/images/resources/icons/";
         $resourceImages = array(
             array('res_vector.png', 'application/postscript'),
