@@ -19,17 +19,14 @@ use Claroline\CoreBundle\Event\DeleteResourceEvent;
 use Claroline\CoreBundle\Event\DownloadResourceEvent;
 use Claroline\CoreBundle\Event\OpenResourceEvent;
 use Claroline\CoreBundle\Form\FileType;
-use JMS\DiExtraBundle\Annotation\Inject;
-use JMS\DiExtraBundle\Annotation\InjectParams;
-use JMS\DiExtraBundle\Annotation\Observe;
-use JMS\DiExtraBundle\Annotation\Service;
+use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * @Service
+ * @DI\Service
  */
 class WebResourceListener implements ContainerAwareInterface
 {
@@ -39,8 +36,8 @@ class WebResourceListener implements ContainerAwareInterface
     private $filesPath;
 
     /**
-     * @InjectParams({
-     *     "container" = @Inject("service_container")
+     * @DI\InjectParams({
+     *     "container" = @DI\Inject("service_container")
      * })
      *
      * @param ContainerInterface $container
@@ -53,7 +50,7 @@ class WebResourceListener implements ContainerAwareInterface
     }
 
     /**
-     * @Observe("create_form_claroline_web_resource")
+     * @DI\Observe("create_form_claroline_web_resource")
      *
      * @param CreateFormResourceEvent $event
      */
@@ -73,7 +70,7 @@ class WebResourceListener implements ContainerAwareInterface
     }
 
     /**
-     * @Observe("create_claroline_web_resource")
+     * @DI\Observe("create_claroline_web_resource")
      *
      * @param CreateResourceEvent $event
      */
@@ -107,7 +104,7 @@ class WebResourceListener implements ContainerAwareInterface
     }
 
     /**
-     * @Observe("open_claroline_web_resource")
+     * @DI\Observe("open_claroline_web_resource")
      *
      * @param CreateResourceEvent $event
      */
@@ -128,7 +125,7 @@ class WebResourceListener implements ContainerAwareInterface
     }
 
     /**
-     * @Observe("delete_claroline_web_resource")
+     * @DI\Observe("delete_claroline_web_resource")
      *
      * @param DeleteResourceEvent $event
      */
@@ -149,7 +146,7 @@ class WebResourceListener implements ContainerAwareInterface
     }
 
     /**
-     * @Observe("copy_claroline_web_resource")
+     * @DI\Observe("copy_claroline_web_resource")
      *
      * @param CopyResourceEvent $event
      */
@@ -161,7 +158,7 @@ class WebResourceListener implements ContainerAwareInterface
     }
 
     /**
-     * @Observe("download_claroline_web_resource")
+     * @DI\Observe("download_claroline_web_resource")
      *
      * @param DownloadResourceEvent $event
      */
