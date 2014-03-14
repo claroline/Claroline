@@ -249,7 +249,7 @@ from: Depuis
 from_message: De
 general: Général
 general_parameters: 'Paramètres généraux'
-generate_url: 'Générer une url pour l''inscription des utilisateurs'
+generate_url: 'Inscription publique'
 generate_url_subscription: 'Inscription à l''espace d''activité par un utilisateur'
 generate_url_subscription_anonyme: 'Inscription à l''espace d''activité par un anonyme'
 generate_url_subscription_fail: 'Vous devez d''abord cochez la case de l''inscription publique avant de pouvoir voir l''url'
@@ -735,3 +735,6 @@ yesterday_activity: 'Activité de la veille'
 your_username: 'Votre nom d''utilisateur est '
 users_per_page: Utilisateurs par page
 groups_per_page: Groupes par page
+tool_roles_create_directory: L'option "Créer un répertoire" vous permet de créer automatiquement un répertoire dédié aux utilisateurs de ce groupe.
+my_profile: Mon profil
+send: envoyer

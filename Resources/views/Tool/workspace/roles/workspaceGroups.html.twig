@@ -56,7 +56,6 @@
     }}
 {% endblock %}
 
-
 {% block section_content %}
     <div class="panel-body">
         <ul class="nav nav-tabs margin-bottom-md">
@@ -90,12 +89,16 @@
             </div>
 
             <div class="row">
-                <div class="col-md-8">{{ renderPager(search, workspace.getId(), pager, max, order) }}</div>
+                <div class="col-md-8">
+                {% if pager.getNbPages() > 1 %}
+                    {{ renderPager(search, workspace.getId(), pager, max, order) }}
+                {% endif %}
+                </div>
                 <div class="col-md-4">
                     {{ maxResultsSelectBox(max, "$('#search-button').trigger('click');", 'groups_per_page') }}
                 </div>
             </div>
-
+            {% if pager.getNbResults() > 0 %}
             <div class="table-responsive">
                 <table class="table table-striped table-bordered table-condensed">
                     <thead>
@@ -105,30 +108,34 @@
                             <th>{{ 'role'|trans({}, 'platform') }}</th>
                         </tr>
                     </thead>
-                    <tbody id="user-table-body">
-                        {% for group in pager.currentPageResults %}
-                            <tr id="row-{{ group.id }}" class="row-group" data-group-id="{{ group.getId() }}">
-                                <td> <input class="chk-grp" type="checkbox" value="{{ group.getId() }}"> </input></td>
-                                <td>  <a href="{{ path('claro_workspace_users_of_group', {'workspace': workspace.getId(), 'group': group.getId() }) }}"> {{ group.name }} </a> </td>
-                                <td>
-                                    {% for role in group.getEntityRoles() %}
-                                        {% if role.getWorkspace() == workspace %}
-                                            <span class="label label-success" id="label-{{ role.getId () }}-{{ group.getId()}}">
-                                                {{ role.getTranslationKey()|trans({}, 'platform') }}
-                                                <i class="icon-remove-sign pointer-hand remove-role-button"
-                                                    href="{{ path('claro_workspace_remove_role_from_group', {'workspace': workspace.getId(), 'group': group.getId(), 'role': role.getId() } ) }}"
-                                                    >
-                                                </i>
-                                            </span>
-                                        {% endif %}
-                                    {% endfor %}
-                                </td>
-                            </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
-            {{ renderPager(search, workspace.getId(),  pager, max, order) }}
+                        <tbody id="user-table-body">
+                            {% for group in pager.currentPageResults %}
+                                <tr id="row-{{ group.id }}" class="row-group" data-group-id="{{ group.getId() }}">
+                                    <td> <input class="chk-grp" type="checkbox" value="{{ group.getId() }}"> </input></td>
+                                    <td>{{ group.getId() }}</td>
+                                    <td>  <a href="{{ path('claro_workspace_users_of_group', {'workspace': workspace.getId(), 'group': group.getId() }) }}"> {{ group.name }} </a> </td>
+                                    <td>
+                                        {% for role in group.getEntityRoles() %}
+                                            {% if role.getWorkspace() == workspace %}
+                                                <span class="label label-success" id="label-{{ role.getId () }}-{{ group.getId()}}">
+                                                    {{ role.getTranslationKey()|trans({}, 'platform') }}
+                                                    <i class="icon-remove-sign pointer-hand remove-role-button"
+                                                        href="{{ path('claro_workspace_remove_role_from_group', {'workspace': workspace.getId(), 'group': group.getId(), 'role': role.getId() } ) }}"
+                                                        >
+                                                    </i>
+                                                </span>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% endif %}
+            {% if pager.getNbPages() > 1 %}
+                {{ renderPager(search, workspace.getId(), pager, max, order) }}
+            {% endif %}
         </div>
     </div>
 {% endblock %}
