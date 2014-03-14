@@ -30,6 +30,12 @@ answer: Répondre
 'unique connections': 'Nb Cnx. uniques'
 404: 'La page que vous cherchez n''existe pas.'
 Active: 'Actif'
+Create a new resource: 'Créer une nouvelle ressource'
+Everyone: 'Tout le monde'
+First name: Prénom
+Grant the right to: 'Accorder des droit à'
+Members of the platform: 'Inscrits à la plateforme'
+Members of work space: 'Inscrits à l''espace d''activité'
 First name: Prénom
 Indexing: Référencement
 Language: Langue
@@ -480,9 +486,9 @@ remove_subcategory: 'Retirer la sous-catégorie'
 remove_user_confirm_message: 'Êtes-vous sûr de vouloir supprimer cet utilisateur ?'
 remove_user_s_confirm_message: 'Êtes-vous sûr de vouloir supprimer ces %count% utilisateurs?'
 remove_workspace_confirm: 'Êtes-vous sûr de vouloir supprimer cet espace d''activités ?'
-remove_workspaces_confirm: 'Êtes-vous sûr de vouloir supprimer ces %count% espaces d''activités ?'
 remove_workspace_from_category_confirm_message: 'Êtes-vous sûr de vouloir retirer cet espace d''activités de cette catégorie ?'
 remove_workspace_from_category_confirm_title: 'Retrait d''un espace d''activités d''une catégorie'
+remove_workspaces_confirm: 'Êtes-vous sûr de vouloir supprimer ces %count% espaces d''activités ?'
 rename: Renommer
 rename_category: 'Renommer la catégorie'
 rename_tool: 'Renommage d''un outil'
@@ -568,6 +574,7 @@ show_as: 'Voir en tant que'
 show_as_admin: 'Voir comme admin'
 show_as_user: 'Voir comme utilisateur'
 show_profile: 'Voir le profile'
+simple: 'Simple'
 steal_session: 'Voler la session'
 storage_type: 'Type de stockage'
 subcategories: Sous-catégories
@@ -719,8 +726,8 @@ workspace_tools: Outils
 workspace_unregistration_confirm_title: 'Voulez-vous vous désinscrire de cet espace d''activités ?'
 workspace_welcome: Accueil
 workspaces: 'Espaces d''activités'
-workspaces_management: 'Gestions des espaces d''activités '
 workspaces_included_in_category: 'Espaces d''activités enregistrés dans cette catégorie'
+workspaces_management: 'Gestions des espaces d''activités '
 ws_creator: 'Créateur d''espaces'
 ws_most_viewed: 'Espaces d''activités les plus consultés'
 yes: oui

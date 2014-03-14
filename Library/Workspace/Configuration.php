@@ -48,7 +48,6 @@ class Configuration
             if (true === $code = $archive->open($template)) {
                 $parsedFile = Yaml::parse($archive->getFromName('config.yml'));
                 $archive->close();
-                $this->setCreatorRole($parsedFile['creator_role']);
                 $this->setRoles($parsedFile['roles']);
                 $this->setToolsPermissions($parsedFile['tools_infos']);
                 $this->setToolsConfiguration($parsedFile['tools']);
@@ -100,30 +99,6 @@ class Configuration
         if (!is_string($this->workspaceName) || 0 === strlen($this->workspaceName)) {
             throw new RuntimeException('Workspace name must be a non empty string');
         }
-
-        $this->checkRoles($this->getRoles());
-    }
-
-    /**
-     * Require an array of role:
-     * array('ROLE_WS_COLLABORATOR' => 'translation')
-     * @param type $roles
-     */
-    public function checkRoles(array $roles)
-    {
-        $mandatoryRoles = \Claroline\CoreBundle\Entity\Role::getMandatoryWsRoles();
-        $manadatoryCount = count($mandatoryRoles);
-        $found = 0;
-
-        foreach (array_keys($roles) as $roleName) {
-            if (in_array($roleName, $mandatoryRoles)) {
-                $found++;
-            }
-        }
-
-        if ($found !== $manadatoryCount) {
-            throw new BaseRoleException('One or more base roles are missing');
-        }
     }
 
     public function setWorkspaceCode($workspaceCode)
@@ -164,16 +139,6 @@ class Configuration
     public function setToolsConfiguration(array $toolsConfig)
     {
         $this->toolsConfig = $toolsConfig;
-    }
-
-    public function setCreatorRole($role)
-    {
-        $this->creatorRole = $role;
-    }
-
-    public function getCreatorRole()
-    {
-        return $this->creatorRole;
     }
 
     public function setArchive($templateFile)

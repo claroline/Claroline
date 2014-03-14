@@ -20,14 +20,10 @@
     }}
 {% endblock %}
 {% block section_content %}
-    <div class="panel-heading">
-        <h3 class="panel-title">{{ 'resources_rights_management'|trans({}, 'platform') }}</h3>
+    <div class='panel-heading'>
+        <h3 class="panel-title">{{ 'resources_rights_management' | trans({}, 'platform') }}</h3>
     </div>
-    <div class="panel-body">
-        <div id="data" data-workspace-id="{{ workspace.getId() }}" data-node-id="{{ resource.getId() }}"></div>
-
-        {% include 'ClarolineCoreBundle:Tool\\workspace\\resource_manager:resourcesRightsForm.html.twig' %}
-    </div>
+    {% include 'ClarolineCoreBundle:Tool\\workspace\\resource_manager:resourcesRightsForm.html.twig' %}
     <div id="modal-check-node-right-box" class="modal fade">
         <div class="modal-dialog">
             <div class="modal-content">

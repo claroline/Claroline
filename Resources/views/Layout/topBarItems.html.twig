@@ -35,9 +35,9 @@
             {{ topbar.item({'name':'', 'href':path('claro_message_list_received'), 'icon':'envelope', 'route':'/message/', 'title':'new_message_alert' | trans({'%count%': countUnreadMessages}, 'platform')}) }}
         {% endif %}
         {% if countUnviewedNotifications > 0 %}
-            {{ topbar.item({'id':'notification-topbar-item', 'href':path('icap_notification_view'), 'icon':'bell', 'route':'/icap_notification/', 'title':'notifications', 'badge' : countUnviewedNotifications}) }}
+            {{ topbar.item({'id':'notification-topbar-item', 'href':path('icap_notification_view'), 'icon':'bell-alt', 'route':'/icap_notification/', 'title':'notifications', 'badge' : countUnviewedNotifications}) }}
         {% else %}
-            {{ topbar.item({'id':'notification-topbar-item', 'href':path('icap_notification_view'), 'icon':'bell', 'route':'/icap_notification/', 'title':'notifications'}) }}
+            {{ topbar.item({'id':'notification-topbar-item', 'href':path('icap_notification_view'), 'icon':'bell-alt', 'route':'/icap_notification/', 'title':'notifications'}) }}
         {% endif %}
         {% if '/icap_notification/'|compareRoute('true') is empty %}
             {% include "IcapNotificationBundle:Notification:dropdownScript.html.twig" with {'notificationElementId':'notification-topbar-item'} %}

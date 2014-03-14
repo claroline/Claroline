@@ -30,6 +30,12 @@ answer: Answer
 'unique connections': 'Nb unique Cnx.'
 404: 'Page Not found'
 Active: 'Active'
+Create a new resource: 'Create a new resource'
+Everyone: 'Everyone'
+First name: 'First name'
+Grant the right to: 'Grant the right to'
+Members of the platform: 'Members of the platform'
+Members of work space: 'Members of work space'
 First name: 'First name'
 Indexing: Indexing
 Language: Language
@@ -478,9 +484,9 @@ remove_subcategory: 'Remove subcategory'
 remove_user_confirm_message: 'Are you sure you want to delete this user ?'
 remove_user_s_confirm_message: 'Are you sure you want to delete these %count% users ?'
 remove_workspace_confirm_workspace: 'Are you sure you want to delete this workspace?'
-remove_workspaces_confirm_workspaces: 'Are you sure you want to delete these %count% workspaces ?'
 remove_workspace_from_category_confirm_message: 'Are you sure you want to remove the workspace from this category ?'
 remove_workspace_from_category_confirm_title: 'Remove workspace from category'
+remove_workspaces_confirm_workspaces: 'Are you sure you want to delete these %count% workspaces ?'
 rename: Rename
 rename_category: 'Rename category'
 rename_tool: 'Rename tool'
@@ -569,6 +575,7 @@ show_as: 'Show as'
 show_as_admin: 'Show as admin'
 show_as_user: 'Show as user'
 show_profile: 'Show profile'
+simple: 'Simple'
 storage_type: 'Storage type'
 subcategories: Subcategories
 subscribe_groups: 'Subscribe groups'
@@ -718,9 +725,9 @@ workspace_template_form_name: Name
 workspace_tools: Tools
 workspace_unregistration_confirm_title: 'Do you really want to unregister from this workspace ?'
 workspace_welcome: Welcome
-workspaces_management: 'Workspaces management'
 workspaces: Workspaces
 workspaces_included_in_category: 'Workspaces included in this category'
+workspaces_management: 'Workspaces management'
 ws_creator: 'Workspace creator'
 ws_most_viewed: 'Most viewed workspaces'
 yes: yes

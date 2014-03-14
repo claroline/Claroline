@@ -80,7 +80,7 @@ class ResourcePropertiesController extends Controller
         $this->checkAccess('EDIT', $collection);
         $form = $this->formFactory->create(FormFactory::TYPE_RESOURCE_RENAME, array(), $node);
 
-        return array('form' => $form->createView());
+        return array('form' => $form->createView(), 'nodeId' => $node->getId());
     }
 
     /**
@@ -110,7 +110,7 @@ class ResourcePropertiesController extends Controller
             return new JsonResponse(array($node->getName()));
         }
 
-        return array('form' => $form->createView());
+        return array('form' => $form->createView(), 'nodeId' => $node->getId());
     }
 
     /**
@@ -131,7 +131,7 @@ class ResourcePropertiesController extends Controller
     {
         $form = $this->formFactory->create(FormFactory::TYPE_RESOURCE_PROPERTIES, array(), $node);
 
-        return array('form' => $form->createView());
+        return array('form' => $form->createView(), 'nodeId' => $node->getId());
     }
 
     /**
@@ -172,7 +172,7 @@ class ResourcePropertiesController extends Controller
             return new JsonResponse($nodesArray);
         }
 
-        return array('form' => $form->createView());
+        return array('form' => $form->createView(), 'nodeId' => $node->getId());
     }
 
     /**

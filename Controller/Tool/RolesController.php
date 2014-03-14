@@ -28,6 +28,7 @@ use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Manager\UserManager;
 use Claroline\CoreBundle\Manager\GroupManager;
 use Claroline\CoreBundle\Manager\ResourceManager;
+use Claroline\CoreBundle\Manager\RightsManager;
 use JMS\DiExtraBundle\Annotation as DI;
 
 class RolesController extends Controller
@@ -36,6 +37,7 @@ class RolesController extends Controller
     private $userManager;
     private $groupManager;
     private $resourceManager;
+    private $rightsManager;
     private $security;
     private $formFactory;
     private $router;
@@ -45,8 +47,9 @@ class RolesController extends Controller
      * @DI\InjectParams({
      *     "roleManager"      = @DI\Inject("claroline.manager.role_manager"),
      *     "userManager"      = @DI\Inject("claroline.manager.user_manager"),
-     *     "groupManager"      = @DI\Inject("claroline.manager.group_manager"),
+     *     "groupManager"     = @DI\Inject("claroline.manager.group_manager"),
      *     "resourceManager"  = @DI\Inject("claroline.manager.resource_manager"),
+     *     "rightsManager"    = @DI\Inject("claroline.manager.rights_manager"),
      *     "security"         = @DI\Inject("security.context"),
      *     "formFactory"      = @DI\Inject("claroline.form.factory"),
      *     "router"           = @DI\Inject("router"),
@@ -58,6 +61,7 @@ class RolesController extends Controller
         UserManager $userManager,
         GroupManager $groupManager,
         ResourceManager $resourceManager,
+        RightsManager $rightsManager,
         SecurityContextInterface $security,
         FormFactory $formFactory,
         UrlGeneratorInterface $router,
@@ -68,6 +72,7 @@ class RolesController extends Controller
         $this->userManager = $userManager;
         $this->groupManager = $groupManager;
         $this->resourceManager = $resourceManager;
+        $this->rightsManager = $rightsManager;
         $this->security = $security;
         $this->formFactory = $formFactory;
         $this->router = $router;
@@ -125,6 +130,13 @@ class RolesController extends Controller
             $requireDir = $form->get('requireDir')->getData();
             $role = $this->roleManager
                 ->createWorkspaceRole('ROLE_WS_' . strtoupper($name) . '_' . $workspace->getGuid(), $name, $workspace);
+
+            //add the role to every resource of that workspace
+            $nodes = $this->resourceManager->getByWorkspace($workspace);
+
+            foreach ($nodes as $node) {
+                $this->rightsManager->create(0, $role, $node, false, array());
+            }
 
             if ($requireDir) {
                 $resourceTypes = $this->resourceManager->getAllResourceTypes();
@@ -346,11 +358,15 @@ class RolesController extends Controller
      *     class="ClarolineCoreBundle:User",
      *     options={"multipleIds"=true, "name"="userIds"}
      * )
-     *  @EXT\ParamConverter(
+     * @EXT\ParamConverter(
      *     "roles",
      *     class="ClarolineCoreBundle:Role",
      *     options={"multipleIds"=true, "name"="roleIds"}
      * )
+     *
+     * @param array $users
+     * @param array $roles
+     * @param \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace $workspace
      *
      * @return Response
      */

@@ -12,6 +12,7 @@
 (function () {
     'use strict';
 
+    var simpleRights = window.Claroline.SimpleRights;
     var submitForm = function (formAction, formData) {
         //change the redirection
         $.ajax({
@@ -26,6 +27,34 @@
             }
         });
     };
+
+    $('body').on('change', '#simple input', function () {
+        var element = this;
+
+        switch ($(this).attr('id')) {
+            case 'everyone':
+                simpleRights.everyone(element);
+                break;
+            case 'anonymous':
+                simpleRights.anonymous(element);
+                break;
+            case 'workspace':
+                simpleRights.workspace(element);
+                break;
+            case 'platform':
+                simpleRights.platform(element);
+                break;
+        }
+    });
+
+    $('body').on('change', '#general input', function () {
+        simpleRights.checkAll(this);
+    });
+
+    $(document).ready(function () {
+        simpleRights.checkAll($('.panel#general'));
+    });
+
 
     $('body').on('click', '#submit-default-rights-form-button', function (e) {
         e.preventDefault();

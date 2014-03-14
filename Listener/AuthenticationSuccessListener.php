@@ -17,22 +17,22 @@ use Claroline\CoreBundle\Form\TermsOfServiceType;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Manager\TermsOfServiceManager;
 use Claroline\CoreBundle\Persistence\ObjectManager;
-use Doctrine\ORM\EntityManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 use Symfony\Component\Templating\EngineInterface;
 use Symfony\Component\Form\FormFactory;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
-use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
-use Symfony\Component\Security\Core\SecurityContextInterface;
-use Symfony\Component\Security\Http\Event\InteractiveLoginEvent;
-use Symfony\Component\Security\Http\Authentication\AuthenticationSuccessHandlerInterface;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Routing\Router;
+use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
+use Symfony\Component\Security\Core\Role\SwitchUserRole;
+use Symfony\Component\Security\Core\SecurityContextInterface;
+use Symfony\Component\Security\Http\Authentication\AuthenticationSuccessHandlerInterface;
+use Symfony\Component\Security\Http\Event\InteractiveLoginEvent;
 
 /**
  * @DI\Service("claroline.authentication_handler")
@@ -150,7 +150,10 @@ class AuthenticationSuccessListener implements AuthenticationSuccessHandlerInter
     {
         if ($event->isMasterRequest() and
             $user = $this->getUser($event->getRequest()) and
-            $content = $this->termsOfService->getTermsOfService(false)) {
+            !$user->hasAcceptedTerms() and
+            !$this->isImpersonated()and
+            $content = $this->termsOfService->getTermsOfService(false)
+        ) {
             if ($termsOfService = $event->getRequest()->get('accept_terms_of_service_form') and
                 isset($termsOfService['terms_of_service'])
             ) {
@@ -184,8 +187,7 @@ class AuthenticationSuccessListener implements AuthenticationSuccessHandlerInter
             $request->get('_route') !== 'bazinga_exposetranslation_js' and
             $token = $this->securityContext->getToken() and
             $user = $token->getUser() and
-            $user instanceof User and
-            !$user->hasAcceptedTerms()
+            $user instanceof User
         ) {
             return $user;
         }
@@ -198,5 +200,16 @@ class AuthenticationSuccessListener implements AuthenticationSuccessHandlerInter
             'login_check',
             'login'
         );
+    }
+
+    public function isImpersonated()
+    {
+        if ($this->securityContext->isGranted('ROLE_PREVIOUS_ADMIN')) {
+            foreach ($this->securityContext->getToken()->getRoles() as $role) {
+                if ($role instanceof SwitchUserRole) {
+                    return true;
+                }
+            }
+        }
     }
 }

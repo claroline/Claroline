@@ -23,9 +23,6 @@ use Claroline\CoreBundle\Repository\ResourceNodeRepository;
 use Claroline\CoreBundle\Repository\ResourceRightsRepository;
 use Claroline\CoreBundle\Repository\ResourceShortcutRepository;
 use Claroline\CoreBundle\Repository\RoleRepository;
-use Claroline\CoreBundle\Manager\RightsManager;
-use Claroline\CoreBundle\Manager\RoleManager;
-use Claroline\CoreBundle\Manager\IconManager;
 use Claroline\CoreBundle\Manager\Exception\MissingResourceNameException;
 use Claroline\CoreBundle\Manager\Exception\ResourceTypeNotFoundException;
 use Claroline\CoreBundle\Manager\Exception\RightsException;
@@ -36,6 +33,7 @@ use Claroline\CoreBundle\Event\StrictDispatcher;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Library\Utilities\ClaroUtilities;
+use Claroline\CoreBundle\Library\Security\Utilities;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
@@ -67,6 +65,8 @@ class ResourceManager
     private $om;
     /** @var ClaroUtilities */
     private $ut;
+    /** @var Utilities */
+    private $secut;
 
     /**
      * Constructor.
@@ -77,7 +77,8 @@ class ResourceManager
      *     "rightsManager" = @DI\Inject("claroline.manager.rights_manager"),
      *     "dispatcher"    = @DI\Inject("claroline.event.event_dispatcher"),
      *     "om"            = @DI\Inject("claroline.persistence.object_manager"),
-     *     "ut"            = @DI\Inject("claroline.utilities.misc")
+     *     "ut"            = @DI\Inject("claroline.utilities.misc"),
+     *     "secut"         = @DI\Inject("claroline.security.utilities")
      * })
      */
     public function __construct (
@@ -86,7 +87,8 @@ class ResourceManager
         RightsManager $rightsManager,
         StrictDispatcher $dispatcher,
         ObjectManager $om,
-        ClaroUtilities $ut
+        ClaroUtilities $ut,
+        Utilities $secut
     )
     {
         $this->resourceTypeRepo = $om->getRepository('ClarolineCoreBundle:Resource\ResourceType');
@@ -100,6 +102,7 @@ class ResourceManager
         $this->dispatcher = $dispatcher;
         $this->om = $om;
         $this->ut = $ut;
+        $this->secut = $secut;
     }
 
     /**
@@ -405,20 +408,17 @@ class ResourceManager
             $this->rightsManager->create($data, $data['role'], $node, false, $resourceTypes);
         }
 
-        $resourceTypes = $this->resourceTypeRepo->findAll();
-
-        /**@todo remove this line and grant edit requests in the resourceManager.*/
         $this->rightsManager->create(
-            31,
-            $this->roleRepo->findOneBy(array('name' => 'ROLE_ADMIN')),
+            0,
+            $this->roleRepo->findOneBy(array('name' => 'ROLE_ANONYMOUS')),
             $node,
             false,
-            $resourceTypes
+            array()
         );
 
         $this->rightsManager->create(
             0,
-            $this->roleRepo->findOneBy(array('name' => 'ROLE_ANONYMOUS')),
+            $this->roleRepo->findOneBy(array('name' => 'ROLE_USER')),
             $node,
             false,
             array()
@@ -1240,6 +1240,16 @@ class ResourceManager
     }
 
     /**
+     * @param AbstractWorkspace $workspace
+     *
+     * @return \Claroline\CoreBundle\Entity\Resource\ResourceNode[]
+     */
+    public function getByWorkspace(AbstractWorkspace $workspace)
+    {
+        return $this->resourceNodeRepo->findBy(array('workspace' => $workspace));
+    }
+
+    /**
      * @param integer[] $ids
      *
      * @return \Claroline\CoreBundle\Entity\Resource\ResourceNode[]
@@ -1375,5 +1385,22 @@ class ResourceManager
     private function getEncoding()
     {
         return $this->ut->getDefaultEncoding();
+    }
+
+    /**
+     * Returns true of the token owns the workspace of the resource node.
+     *
+     * @param ResourceNode   $node
+     * @param TokenInterface $token
+     *
+     * @return boolean
+     */
+    public function isWorkspaceOwnerOf(ResourceNode $node, TokenInterface $token)
+    {
+        $workspace = $node->getWorkspace();
+        $managerRoleName = 'ROLE_WS_MANAGER_' . $workspace->getGuid();
+
+        return in_array($managerRoleName, $this->secut->getRoles($token)) ? true: false;
+
     }
 }
