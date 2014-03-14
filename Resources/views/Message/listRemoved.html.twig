@@ -128,13 +128,15 @@
         parameters.route.action.remove = {"route": "claro_message_delete", "parameters": {}, "btn": "action-delete-button", "type": "DELETE", 'confirmTemplate': removeMessageConfirm, "delete": true};
         parameters.route.action.restore = {"route": "claro_message_restore_from_trash", "parameters": {}, "btn": "action-restore-button", 'confirmTemplate': restoreMessageConfirm, "delete": true};
         Claroline.Table.initialize(parameters);
-        $(".pointer-hand").click(function() {
+
+        $('tr.pointer-hand').on('click', function() {
             var targetClass = event.target.className;
             if (targetClass !== 'chk-item' && targetClass !== 'icon-envelope') {
                 window.document.location = $(this).attr("href");
             }
         });
-        $('.mark-as-read').live('click', function (e) {
+
+        $('.mark-as-read').on('click', function (e) {
             e.preventDefault();
             $.ajax({
                 type: 'GET',
