@@ -45,9 +45,10 @@ class LoadResourceImagesData implements RequiredFixture
             array('res_image.png', 'image'),
             array('res_vector.png', 'application/postscript'),
             array('res_vector.png', 'image/svg+xml'),
-            array('res_zip.png', 'application/x-gtar'),
-            array('res_zip.png', 'application/x-7z-compressed'),
-            array('res_zip.png', 'application/x-rar-compressed')
+            array('res_zip.png', 'application/zip'),
+            array('res_zip.png', 'application/x-rar-compressed'),
+            array('res_archive.png', 'application/x-gtar'),
+            array('res_archive.png', 'application/x-7z-compressed')
         );
 
         foreach ($resourceImages as $resourceImage) {
