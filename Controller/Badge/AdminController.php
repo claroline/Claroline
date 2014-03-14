@@ -129,9 +129,7 @@ class AdminController extends Controller
      */
     public function editAction(Request $request, Badge $badge, $page = 1)
     {
-        $doctrine = $this->getDoctrine();
-
-        $query   = $doctrine->getRepository('ClarolineCoreBundle:Badge\Badge')->findUsers($badge, false);
+        $query   = $this->getDoctrine()->getRepository('ClarolineCoreBundle:Badge\Badge')->findUsers($badge, false);
         $adapter = new DoctrineORMAdapter($query);
         $pager   = new Pagerfanta($adapter);
 
