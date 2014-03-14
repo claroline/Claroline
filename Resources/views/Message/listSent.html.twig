@@ -124,13 +124,15 @@
         parameters.route.search = {"route": "claro_message_list_sent_search", "parameters": {}};
         parameters.route.action.remove = {"route": "claro_message_soft_delete", "parameters": {}, "confirmTemplate": removeMessageConfirm, "delete": true};
         Claroline.Table.initialize(parameters);
-        $(".pointer-hand").click(function() {
+
+        $('tr.pointer-hand').on('click', function() {
             var targetClass = event.target.className;
             if (targetClass !== 'chk-item' && targetClass !== 'icon-envelope') {
                 window.document.location = $(this).attr("href");
             }
         });
-        $('.mark-as-read').live('click', function (e) {
+
+        $('.mark-as-read').on('click', function (e) {
             e.preventDefault();
             $.ajax({
                 type: 'GET',

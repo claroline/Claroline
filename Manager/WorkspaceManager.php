@@ -519,6 +519,7 @@ class WorkspaceManager
     public function getOpenableWorkspacesByRoles(array $roles)
     {
         $workspaces = $this->workspaceRepo->findByRoles($roles);
+
         foreach ($roles as $role) {
 
             if (strpos('_' . $role, 'ROLE_WS_MANAGER')) {
@@ -827,5 +828,4 @@ class WorkspaceManager
 
         return $this->pagerFactory->createPager($query, $page, $max);
     }
-
 }

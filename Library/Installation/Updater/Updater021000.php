@@ -11,11 +11,13 @@
 
 namespace Claroline\CoreBundle\Library\Installation\Updater;
 
+use Claroline\CoreBundle\Persistence\ObjectManager;
 
 class Updater021000
 {
     private $container;
     private $logger;
+    /** @var ObjectManager */
     private $om;
     private $conn;
 
@@ -44,6 +46,8 @@ class Updater021000
             array('badges', false, true)
         );
 
+        $this->log('updating tools...');
+
         foreach ($tools as $tool) {
             $entity = $this->om->getRepository('ClarolineCoreBundle:Tool\Tool')->findOneByName($tool[0]);
 
@@ -54,7 +58,48 @@ class Updater021000
             }
         }
 
+        $this->log('updating resource types...');
+        $resourceTypes = $this->om->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findAll();
+
+        foreach ($resourceTypes as $resourceType) {
+            $resourceType->setDefaultMask(1);
+            $this->om->persist($resourceType);
+        }
+
         $this->om->flush();
+        $this->log('updating manager roles...');
+        $this->log('this may take a while...');
+        $managerRoles = $this->om->getRepository('ClarolineCoreBundle:Role')->searchByName('ROLE_WS_MANAGER');
+
+        foreach ($managerRoles as $role) {
+            $this->conn->query("
+                DELETE FROM claro_ordered_tool_role
+                WHERE role_id = {$role->getId()}
+            ");
+        }
+
+        $this->log('updating resource rights...');
+
+        $this->log('removing administrator rights...');
+
+        $roleAdmin = $this->om->getRepository('ClarolineCoreBundle:Role')->findOneByName('ROLE_ADMIN');
+
+        $adminRights = $this->om->getRepository('ClarolineCoreBundle:Resource\ResourceRights')->findBy(array('role' => $roleAdmin));
+
+        foreach ($adminRights as $adminRight) {
+            $this->om->remove($adminRight);
+        }
+
+        $this->om->flush();
+        $this->log('adding user rights...');
+
+        $resourceNodes = $this->om->getRepository('ClarolineCoreBundle:Resource\ResourceNode')->findAll();
+        $roleUser = $this->om->getRepository('ClarolineCoreBundle:Role')->findOneByName('ROLE_USER');
+
+        foreach ($resourceNodes as $resourceNode) {
+            $rightsManager = $this->container->get('claroline.manager.rights_manager');
+            $rightsManager->create(0, $roleUser, $resourceNode, false);
+        }
     }
 
 
