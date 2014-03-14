@@ -255,7 +255,7 @@ class WebResourceListener implements ContainerAwareInterface
         $file->setSize(filesize($tmpFile));
         $file->setName($fileName);
         $file->setHashName($hash);
-        $file->setMimeType($tmpFile->getClientMimeType());
+        $file->setMimeType('custom/claroline_web_resource');
         $tmpFile->move($this->filesPath, $hash);
         $this->unzip($hash);
 
