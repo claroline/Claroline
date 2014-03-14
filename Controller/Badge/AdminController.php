@@ -141,57 +141,30 @@ class AdminController extends Controller
             throw $this->createNotFoundException();
         }
 
-        /** @var BadgeRule[] $originalRules */
-        $originalRules = array();
+        /** @var \Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface $sessionFlashBag */
+        $sessionFlashBag = $this->get('session')->getFlashBag();
 
-        foreach ($badge->getRules() as $rule) {
-            $originalRules[] = $rule;
-        }
+        /** @var \Symfony\Bundle\FrameworkBundle\Translation\Translator $translator */
+        $translator = $this->get('translator');
 
-        $form = $this->createForm($this->get('claroline.form.badge'), $badge);
-
-        if ($request->isMethod('POST')) {
-            $form->handleRequest($request);
-
-            if ($form->isValid()) {
-                /** @var \Symfony\Bundle\FrameworkBundle\Translation\Translator $translator */
-                $translator = $this->get('translator');
-                try {
-                    /** @var \Doctrine\Common\Persistence\ObjectManager $entityManager */
-                    $entityManager = $doctrine->getManager();
-
-                    // Compute which rules was deleted
-                    foreach ($badge->getRules() as $rule) {
-                        foreach ($originalRules as $key => $originalRule) {
-                            if ($originalRule->getId() === $rule->getId()) {
-                                unset($originalRules[$key]);
-                            }
-                        }
-                    }
-
-                    // Delete rules
-                    foreach ($originalRules as $rule) {
-                        $entityManager->remove($rule);
-                    }
-
-                    $entityManager->persist($badge);
-                    $entityManager->flush();
-
-                    $this->get('session')
-                        ->getFlashBag()
-                        ->add('success', $translator->trans('badge_edit_success_message', array(), 'badge'));
-                } catch (\Exception $exception) {
-                    $this->get('session')
-                        ->getFlashBag()
-                        ->add('error', $translator->trans('badge_edit_error_message', array(), 'badge'));
-                }
+        try {
+            if ($this->get('claroline.form_handler.badge')->handle($badge)) {
+                $sessionFlashBag->add('success', $translator->trans('badge_edit_success_message', array(), 'badge'));
 
                 return $this->redirect($this->generateUrl('claro_admin_badges'));
             }
+        } catch (\Exception $exception) {
+            echo "<pre>";
+            var_dump($exception->getMessage());
+            echo "</pre>" . PHP_EOL;
+            die("FFFFFUUUUUCCCCCKKKKK" . PHP_EOL);
+            $sessionFlashBag->add('error', $translator->trans('badge_edit_error_message', array(), 'badge'));
+
+            return $this->redirect($this->generateUrl('claro_admin_badges'));
         }
 
         return array(
-            'form'  => $form->createView(),
+            'form'  => $this->get('claroline.form.badge')->createView(),
             'badge' => $badge,
             'pager' => $pager
         );

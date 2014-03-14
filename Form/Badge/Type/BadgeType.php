@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Claroline\CoreBundle\Form\Badge;
+namespace Claroline\CoreBundle\Form\Badge\Type;
 
 use Claroline\CoreBundle\Entity\Badge\Badge;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
@@ -22,11 +22,11 @@ use Symfony\Bundle\FrameworkBundle\Translation\Translator;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * @DI\Service("claroline.form.badge")
+ * @DI\FormType(alias="badge_form")
  */
 class BadgeType extends AbstractType
 {
-    /** @var \Claroline\CoreBundle\Form\Badge\BadgeRuleType */
+    /** @var \Claroline\CoreBundle\Form\Badge\Type\BadgeRuleType */
     private $badgeRuleType;
 
     /** @var \Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler */

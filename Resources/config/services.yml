@@ -28,6 +28,13 @@ services:
         arguments:
             - Claroline\CoreBundle\Entity\Badge\Badge
 
+    # form
+    claroline.form.badge:
+        class: Symfony\Component\Form\Form
+        factory_method: create
+        factory_service: form.factory
+        arguments: ["badge_form"]
+
     # pseudo-services used for dynamic parameter injection
     # (see Claroline\CoreBundle\DependencyInjection\Compiler\DynamicConfigPass
     claroline.session.storage_options:
