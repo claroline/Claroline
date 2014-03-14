@@ -6,12 +6,8 @@ use Claroline\CoreBundle\Entity\Badge\Badge;
 use Claroline\CoreBundle\Manager\BadgeManager;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\Form\FormInterface;
-use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\HttpFoundation\Request;
 
-/**
- * @DI\Service("claroline.form_handler.badge", scope="request")
- */
 class BadgeHandler
 {
     /**
@@ -34,14 +30,6 @@ class BadgeHandler
      */
     protected $badgeManager;
 
-    /**
-     * @DI\InjectParams({
-     *     "form"          = @DI\Inject("claroline.form.badge"),
-     *     "request"       = @DI\Inject("request"),
-     *     "entityManager" = @DI\Inject("doctrine.orm.entity_manager"),
-     *     "badgeManager"  = @DI\Inject("claroline.manager.badge")
-     * })
-     */
     public function __construct(FormInterface $form, Request $request, EntityManager $entityManager, BadgeManager $badgeManager)
     {
         $this->form          = $form;
@@ -51,13 +39,34 @@ class BadgeHandler
     }
 
     /**
-     * Process form
-     *
-     * @param  Badge  $badge
+     * @param  Badge $badge
      *
      * @return bool True on successfull processing, false otherwise
      */
-    public function handle(Badge $badge)
+    public function handleAdd(Badge $badge)
+    {
+        $this->form->setData($badge);
+
+        if ($this->request->isMethod('POST')) {
+            $this->form->submit($this->request);
+
+            if ($this->form->isValid()) {
+                $this->entityManager->persist($badge);
+                $this->entityManager->flush();
+
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * @param  Badge $badge
+     *
+     * @return bool True on successfull processing, false otherwise
+     */
+    public function handleEdit(Badge $badge)
     {
         $this->form->setData($badge);
 
