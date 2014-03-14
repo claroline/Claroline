@@ -1,4 +1,0 @@
-claro_image_player:
-    resource: "@ClarolineWebResourceBundle/Controller/WebResourceController.php"
-    type:     annotation
-    prefix:   /
