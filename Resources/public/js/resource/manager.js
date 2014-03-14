@@ -744,16 +744,17 @@
             replace: function (content) {
                 this.$el.html(content);
             },
+            replaceId: function (id) {
+                $('form', this.$el).attr('action', $('form', this.$el).attr('action').replace('_nodeId', id));
+            },
             render: function (url, targetNodeId, eventOnSubmit) {
                 this.targetNodeId = targetNodeId;
                 this.eventOnSubmit = eventOnSubmit;
                 var that = this;
                 modal.fromUrl(url, function (element) {
-                    $('form', element).attr(
-                        'action', $('form', element).attr('action').replace('_nodeId', targetNodeId)
-                    );
                     that.$el = element;
                     that.el = element.get();
+                    that.replaceId(targetNodeId);
                     that.delegateEvents(that.events);
                     simpleRights.checkAll($('#simple', that.el));
                 });
@@ -796,7 +797,7 @@
                 this.displayForm(event.type, event.node);
             },
             'create': function (event) {
-                this.create(event.action, event.data);
+                this.create(event.action, event.data, event.nodeId);
             },
             'delete': function (event) {
                 var ids = [];
@@ -1013,7 +1014,7 @@
                 this.views.form.render(urlMap[type], node.id, type);
             }
         },
-        create: function (formAction, formData) {
+        create: function (formAction, formData, parentDirectoryId) {
             $.ajax({
                 context: this,
                 url: formAction,
@@ -1026,6 +1027,7 @@
                         this.views.main.subViews.nodes.addThumbnails(data, this.views.form.close());
                     } else {
                         this.views.form.replace(data);
+                        this.views.form.replaceId(parentDirectoryId);
                     }
                 }
             });
@@ -1113,6 +1115,7 @@
                         );
                     } else {
                         this.views.form.replace(data);
+                        this.views.form.replaceId(nodeId);
                     }
                 }
             });
@@ -1144,6 +1147,7 @@
                         }
                     } else {
                         this.views.form.replace(data);
+                        this.views.form.replaceId(nodeId);
                     }
                 }
             });

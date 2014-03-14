@@ -95,7 +95,7 @@
      */
     simpleRights.checkRole = function (role, element)
     {
-        var mask = simpleRights.getMask();
+        var mask = simpleRights.getMask(element);
         var general = $('tr.' + role, simpleRights.getGeneral(element));
 
         if (simpleRights.getValue(element)) {
@@ -123,7 +123,7 @@
      * @return
      */
     simpleRights.checkGeneral = function (role, simple, element) {
-        var mask = simpleRights.getMask();
+        var mask = simpleRights.getMask(element);
 
         $('tr.' + role, simpleRights.getGeneral(element)).each(function () {
             var value = true;
@@ -159,8 +159,8 @@
      *
      * @TODO Get real backend mask
      */
-    simpleRights.getMask = function () {
-        return [true, false, true, false, false]; //
+    simpleRights.getMask = function (element) {
+        return $.parseJSON($('#mask', simpleRights.getTable(element)).html());
     };
 
     /**

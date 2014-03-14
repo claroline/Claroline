@@ -96,10 +96,15 @@ class ResourceRightsController
         if (!$role) {
             $data = $this->wsTagManager->getDatasForWorkspaceList(true);
             $rolesRights = $this->rightsManager->getConfigurableRights($node);
+            $mask = $this->maskManager->decodeMask(
+                $node->getResourceType()->getDefaultMask(), $node->getResourceType()
+            );
+
             $data['resourceRights'] = $rolesRights;
             $data['resource'] = $node;
             $data['isDir'] = $isDir;
             $data['isModal'] = true;
+            $data['mask'] = $mask;
 
             return $this->templating->renderResponse(
                 'ClarolineCoreBundle:Resource:multipleRightsPage.html.twig',
