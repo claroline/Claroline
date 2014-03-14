@@ -45,11 +45,11 @@
 {% block title %}{{ 'messages_removed' | trans({}, 'platform') | striptags | raw }}{% endblock %}
 
 {% block section_content %}
-    <div class="search-bar row">
-        <div class="col-md-8">
+    <div class="search-bar row margin-bottom-md">
+        <div class="col-md-6">
             {{ displayControls() }}
         </div>
-        <div class="col-md-4">
+        <div class="col-md-6">
              <div class="input-group">
                 <input class="form-control" type="text" id="search-items-txt" placeholder="{{ 'search'|trans({}, 'platform') }}" value={{search}}>
                 <span class="input-group-btn">
@@ -83,7 +83,7 @@
                             "row-user-message
                             {% if userMessage.isRead() %} active {% endif %}
                             {% if not userMessage.isRead() %} bold {% endif %}
-                            clickable-row
+                            pointer-hand
                             "
                             href="{{ path('claro_message_show', {'message': userMessage.getMessage().getId()}) }}"
                         >
@@ -128,8 +128,11 @@
         parameters.route.action.remove = {"route": "claro_message_delete", "parameters": {}, "btn": "action-delete-button", "type": "DELETE", 'confirmTemplate': removeMessageConfirm, "delete": true};
         parameters.route.action.restore = {"route": "claro_message_restore_from_trash", "parameters": {}, "btn": "action-restore-button", 'confirmTemplate': restoreMessageConfirm, "delete": true};
         Claroline.Table.initialize(parameters);
-        $(".clickable-row").click(function() {
-            window.document.location = $(this).attr("href");
+        $(".pointer-hand").click(function() {
+            var targetClass = event.target.className;
+            if (targetClass !== 'chk-item' && targetClass !== 'icon-envelope') {
+                window.document.location = $(this).attr("href");
+            }
         });
         $('.mark-as-read').live('click', function (e) {
             e.preventDefault();

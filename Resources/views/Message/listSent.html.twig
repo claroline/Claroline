@@ -42,11 +42,11 @@
 {% block title %}{{ 'messages_sent' | trans({}, 'platform') | striptags | raw }}{% endblock %}
 
 {% block section_content %}
-    <div class="search-bar row">
-        <div class="col-md-8">
+    <div class="search-bar row margin-bottom-md">
+        <div class="col-md-6">
             {{ displayControls() }}
         </div>
-        <div class="col-md-4">
+        <div class="col-md-6">
              <div class="input-group">
                 <input class="form-control" type="text" id="search-items-txt" placeholder="{{ 'search'|trans({}, 'platform') }}" value={{search}}>
                 <span class="input-group-btn">
@@ -79,7 +79,7 @@
                     {% for userMessage in  pager.currentPageResults %}
                         <tr class=
                             "row-user-message
-                            clickable-row
+                            pointer-hand
                             {% if not userMessage.isRead() %} bold {% endif %}
                             {% if userMessage.isRead() %} active {% endif %}"
                             href="{{ path('claro_message_show', {'message': userMessage.getMessage().getId()}) }}"
@@ -124,8 +124,11 @@
         parameters.route.search = {"route": "claro_message_list_sent_search", "parameters": {}};
         parameters.route.action.remove = {"route": "claro_message_soft_delete", "parameters": {}, "confirmTemplate": removeMessageConfirm, "delete": true};
         Claroline.Table.initialize(parameters);
-        $(".clickable-row").click(function() {
-            window.document.location = $(this).attr("href");
+        $(".pointer-hand").click(function() {
+            var targetClass = event.target.className;
+            if (targetClass !== 'chk-item' && targetClass !== 'icon-envelope') {
+                window.document.location = $(this).attr("href");
+            }
         });
         $('.mark-as-read').live('click', function (e) {
             e.preventDefault();
