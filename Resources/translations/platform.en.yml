@@ -31,11 +31,7 @@ answer: Answer
 404: 'Page Not found'
 Active: 'Active'
 Create a new resource: 'Create a new resource'
-Everyone: 'Everyone'
 First name: 'First name'
-Grant the right to: 'Grant the right to'
-Members of the platform: 'Members of the platform'
-Members of work space: 'Members of work space'
 First name: 'First name'
 Indexing: Indexing
 Language: Language
@@ -107,6 +103,7 @@ back: Back
 bad_request: 'The request is incorrect. If you arrived at this page via an internal link, please report the problem to the platform administrator.'
 badges_management: 'Badges management'
 by: by
+by_workspace: By workspace
 canCopy: 'Right to copy'
 canCreate: 'Create %type%'
 canDelete: 'Right to delete'
@@ -254,6 +251,7 @@ generate_url_subscription_anonyme: 'Subscription to a workspace for a anonymous'
 generate_url_subscription_fail: 'You must check "enable registration checkbow first to generate the url"'
 generate_url_subscription_success: 'You have been added to the workspace'
 get_mail_notifications: 'I want to be notified by email on %adress%.'
+grant_access: Grant access
 group: Group
 group_configuration: 'Group configuration'
 group_creation: 'Group creation'
@@ -308,7 +306,7 @@ last_name: 'Last name'
 layout: Layout
 left: Left
 line_number: 'Line %line%:'
-line_per_page: 'Row per page'
+line_per_page: 'Results per page'
 link: Link
 link_outdated: 'link is no more valid'
 list_groups: 'List groups'
@@ -602,7 +600,11 @@ the_workspace: Workspace
 this_page_requires_authentication: 'This page requires authentication. Please login.'
 time_col: 'Database time column'
 to: To
+to_anonymous: to anonymous users
+to_everyone: to everyone
 to_message: To
+to_platform_users: to platform users
+to_workspace_members: to the members of this workspace
 today: Today
 tool: Tool
 tool_form_displayName: 'Displayed tool name'
