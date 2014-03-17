@@ -601,6 +601,30 @@ class RolesController extends Controller
         return new Response($names, 200);
     }
 
+    /**
+     * @EXT\Route(
+     *     "/workspaces/names",
+     *     name="claro_names_from_workspaces",
+     *     options = {"expose"=true}
+     * )
+     * @EXT\Method({"GET"})
+     * @EXT\ParamConverter(
+     *     "workspaces",
+     *      class="ClarolineCoreBundle:Workspace\AbstractWorkspace",
+     *      options={"multipleIds" = true, "name" = "workspaceIds"}
+     * )
+     */
+    public function retrieveNamesFromWorkspacesAction(array $workspaces)
+    {
+        $names = '';
+
+        foreach ($workspaces as $workspace) {
+            $names .= '[' . $workspace->getCode() . '];';
+        }
+
+        return new Response($names, 200);
+    }
+
     private function checkAccess(AbstractWorkspace $workspace)
     {
         if (!$this->security->isGranted('users', $workspace)) {

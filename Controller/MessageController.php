@@ -567,6 +567,44 @@ class MessageController
         return array('groups' => $groups, 'search' => $search);
     }
 
+    /**
+     * @EXT\Route(
+     *     "/contactable/workspaces/page/{page}",
+     *     name="claro_message_contactable_workspaces",
+     *     options={"expose"=true},
+     *     defaults={"page"=1, "search"=""}
+     * )
+     * @EXT\Method("GET")
+     * @EXT\Route(
+     *     "/contactable/workspaces/page/{page}/search/{search}",
+     *     name="claro_message_contactable_workspaces_search",
+     *     options={"expose"=true},
+     *     defaults={"page"=1}
+     * )
+     * @EXT\Method("GET")
+     * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
+     * @EXT\Template()
+     *
+     *
+     * Displays the list of groups that the current user can send a message to,
+     * optionally filtered by a search on group name
+     *
+     * @param integer $page
+     * @param string  $search
+     * @param User    $user
+     *
+     * @return Response
+     */
+    public function contactableWorkspacesListAction(User $user, $page, $search)
+    {
+//        $trimmedSearch = trim($search);
+
+        $workspaces = $this->workspaceManager->getWorkspacesByManager($user);
+        $workspaces = $this->pagerFactory->createPagerFromArray($workspaces, $page);
+
+        return array('workspaces' => $workspaces, 'search' => $search);
+    }
+
     public function checkAccess(Message $message, User $user)
     {
         if ($message->getSenderUsername() === $user->getUsername()) {
