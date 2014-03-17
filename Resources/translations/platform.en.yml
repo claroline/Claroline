@@ -103,6 +103,7 @@ back: Back
 bad_request: 'The request is incorrect. If you arrived at this page via an internal link, please report the problem to the platform administrator.'
 badges_management: 'Badges management'
 by: by
+by_workspace: By workspace
 canCopy: 'Right to copy'
 canCreate: 'Create %type%'
 canDelete: 'Right to delete'

@@ -103,6 +103,7 @@ back: Retour
 bad_request: 'La requête est incorrecte. Si vous êtes arrivé sur cette page via un lien interne, veuillez signaler le problème à l''''administrateur de la plateforme.'
 badges_management: 'Gestion des badges'
 by: par
+by_workspace: Par espace
 canCopy: 'Droit de copier'
 canCreate: 'Creation de %type%'
 canDelete: 'Droit de supprimer'

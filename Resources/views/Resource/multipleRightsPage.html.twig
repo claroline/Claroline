@@ -76,9 +76,8 @@
         <div class='{{ mode }}-body padding-bottom-none'>
             <ul class="nav nav-tabs margin-bottom-md" id="rights-form-resource-nav-tabs">
                 <li class="active"><a href="#simple" data-toggle="tab">{{ 'simple'|trans({}, 'platform') }}</a></li>
-                <li><a href="#general" data-toggle="tab">{{ 'general'|trans({}, 'platform') }}</a></li>
-                <li><a href="#advanced" data-toggle="tab">{{ 'advanced'|trans({}, 'platform') }}</a></li>
-                <li><a href="#workspaces-list" data-toggle="tab">{{ 'all_workspaces'|trans({}, 'platform') }}</a></li>
+                <li><a href="#general" data-toggle="tab">{{ 'advanced'|trans({}, 'platform') }}</a></li>
+                <li><a href="#workspaces-list" data-toggle="tab">{{ 'by_workspace'|trans({}, 'platform') }}</a></li>
             </ul>
         </div>
         <div class="tab-content" id="rights-form-resource-tab-content">
@@ -174,21 +173,6 @@
                     {% endif %}
                 </div>
                 {{ block('formfooter') }}
-            </div>
-            <div class="{{ mode }}-body padding-top-none tab-pane" id="advanced">
-                <div class="input-group">
-                    <input placeholder="{{ "administrative_code" | trans({}, "platform") }}" class="form-control" type="text" id="role-search-text" value="{% if search is defined %}{{ search }}{% endif %}"/>
-                    <span class="input-group-btn">
-                        <button type="submit" class="btn btn-primary search-role-btn">
-                            <i class="icon-search"></i> {{ 'search'|trans({}, 'platform') }}
-                        </button>
-                    </span>
-                </div>
-                <br>
-                <div id="advanced-pane-content">
-                    <div id="role-list"></div>
-                    <div id="form-right-wrapper"></div>
-                </div>
             </div>
             <div class="{{ mode }}-body padding-top-none tab-pane" id="workspaces-list">
                 <div id="advanced-pane-content">
