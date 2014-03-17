@@ -37,6 +37,8 @@ badge_delete_confirm_message: 'Are you sure you want to delete the badge <strong
 badge_delete_confirm_title: 'Deletion of a badge'
 badge_delete_error_message: 'An error occured while deleting badge.'
 badge_delete_success_message: 'Badge deleted with success.'
+badge_edit_confirm_message: 'Are you sure you want to edit the badge <strong>%badgeName%</strong> ?'
+badge_edit_confirm_title: 'Edition of a badge'
 badge_dont_award_confirm_message: 'Are you sure you don''t want to award badge <strong>%badgeName%</strong> to the user <strong>%user%</strong> ?'
 badge_dont_award_confirm_title: 'Rejection of badge awarding'
 badge_edit_error_message: 'An error occured while editing badge.'
