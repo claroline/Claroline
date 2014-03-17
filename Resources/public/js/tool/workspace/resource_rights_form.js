@@ -52,7 +52,7 @@
     });
 
     $(document).ready(function () {
-        simpleRights.checkAll($('.panel#general'));
+        simpleRights.checkAll($('.panel #general input').first());
     });
 
 

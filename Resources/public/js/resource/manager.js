@@ -756,7 +756,7 @@
                     that.el = element.get();
                     that.replaceId(targetNodeId);
                     that.delegateEvents(that.events);
-                    simpleRights.checkAll($('#simple', that.el));
+                    simpleRights.checkAll($('#general input', that.el).first());
                 });
             }
         })

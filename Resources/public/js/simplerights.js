@@ -35,8 +35,8 @@
      */
     simpleRights.get = function (id, element)
     {
-        if (typeof(simpleRights[id]) !== 'undefined') {
-            simpleRights[id] = $(element).parents('#' + id).first();
+        if (typeof(simpleRights[id]) === 'undefined') {
+            simpleRights[id] = $(element).parents('#rights-form-resource-tab-content').first().find('#' + id).first();
         }
 
         return simpleRights[id];
@@ -116,16 +116,16 @@
     /**
      * This method check simple checkbox paramaters when general parameters changes for a given role.
      *
-     * @param role The selector of the html element for a general parameter group of checkbox (tr element)
-     * @param simple the selector of html element for a simple parameter checkbox
+     * @param selector The selector of the html element for a general parameter group of checkbox (tr element)
+     * @param role the selector of html element for a simple parameter checkbox
      * @param element The checkbox html element
      *
      * @return
      */
-    simpleRights.checkGeneral = function (role, simple, element) {
+    simpleRights.checkGeneral = function (selector, role, element) {
         var mask = simpleRights.getMask(element);
 
-        $('tr.' + role, simpleRights.getGeneral(element)).each(function () {
+        $('tr.' + selector, simpleRights.getGeneral(element)).each(function () {
             var value = true;
 
             for (var key in mask) {
@@ -136,7 +136,7 @@
                 }
             }
 
-            $('input#' + simple, simpleRights.getTable(element)).attr('checked', value);
+            $('input#' + role, simpleRights.getTable(element)).attr('checked', value);
         });
     };
 
@@ -160,7 +160,7 @@
      * @TODO Get real backend mask
      */
     simpleRights.getMask = function (element) {
-        return $.parseJSON($('#mask', simpleRights.getTable(element)).html());
+        return $.parseJSON($(simpleRights.get('mask', element)).html());
     };
 
     /**

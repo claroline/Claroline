@@ -12,6 +12,7 @@
 namespace Claroline\CoreBundle\Library\Installation\Updater;
 
 use Claroline\CoreBundle\Persistence\ObjectManager;
+use Claroline\CoreBundle\Entity\Resource\ResourceIcon;
 
 class Updater021000
 {
@@ -31,6 +32,7 @@ class Updater021000
     public function postUpdate()
     {
         $this->updateDefaultPerms();
+        $this->updateIcons();
     }
 
     public function updateDefaultPerms()
@@ -72,10 +74,10 @@ class Updater021000
         $managerRoles = $this->om->getRepository('ClarolineCoreBundle:Role')->searchByName('ROLE_WS_MANAGER');
 
         foreach ($managerRoles as $role) {
-            $this->conn->query("
-                DELETE FROM claro_ordered_tool_role
-                WHERE role_id = {$role->getId()}
-            ");
+            $this->conn->query(
+                "DELETE FROM claro_ordered_tool_role
+                WHERE role_id = {$role->getId()}"
+            );
         }
 
         $this->log('updating resource rights...');
@@ -84,7 +86,9 @@ class Updater021000
 
         $roleAdmin = $this->om->getRepository('ClarolineCoreBundle:Role')->findOneByName('ROLE_ADMIN');
 
-        $adminRights = $this->om->getRepository('ClarolineCoreBundle:Resource\ResourceRights')->findBy(array('role' => $roleAdmin));
+        $adminRights = $this->om->getRepository('ClarolineCoreBundle:Resource\ResourceRights')->findBy(
+            array('role' => $roleAdmin)
+        );
 
         foreach ($adminRights as $adminRight) {
             $this->om->remove($adminRight);
@@ -102,6 +106,30 @@ class Updater021000
         }
     }
 
+    public function updateIcons()
+    {
+        $this->log('updating icons...');
+
+        $coreIconWebDirRelativePath = "bundles/clarolinecore/images/resources/icons/";
+        $resourceImages = array(
+            array('res_vector.png', 'application/postscript'),
+            array('res_vector.png', 'image/svg+xml'),
+            array('res_zip.png', 'application/zip'),
+            array('res_zip.png', 'application/x-rar-compressed'),
+            array('res_archive.png', 'application/x-gtar'),
+            array('res_archive.png', 'application/x-7z-compressed')
+        );
+
+        foreach ($resourceImages as $resourceImage) {
+            $icon = new ResourceIcon();
+            $icon->setRelativeUrl($coreIconWebDirRelativePath . $resourceImage[0]);
+            $icon->setMimeType($resourceImage[1]);
+            $icon->setShortcut(false);
+            $this->om->persist($icon);
+
+            $this->container->get('claroline.manager.icon_manager')->createShortcutIcon($icon);
+        }
+    }
 
     public function setLogger($logger)
     {
@@ -114,4 +142,4 @@ class Updater021000
             $log('    ' . $message);
         }
     }
-} 
+}
