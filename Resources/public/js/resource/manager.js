@@ -641,13 +641,18 @@
                 },
                 'click .res-creation-options': function (event) {
                     event.preventDefault();
-                    if (event.currentTarget.getAttribute('data-toggle') !== 'tab') {
+                    this.render(
+                        event.currentTarget.getAttribute('href'),
+                        event.currentTarget.getAttribute('data-node-id'),
+                        'edit-rights-creation'
+                    );
+                    /*if (event.currentTarget.getAttribute('data-toggle') !== 'tab') {
                         this.views.form.render(
                             event.currentTarget.getAttribute('href'),
                             event.currentTarget.getAttribute('data-node-id'),
                             'edit-rights-creation'
                         );
-                    }
+                    }*/
                 },
                 'click .search-role-btn': function (event) {
                     event.preventDefault();

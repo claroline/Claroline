@@ -13,6 +13,7 @@
     'use strict';
 
     var simpleRights = window.Claroline.SimpleRights;
+    var modal = window.Claroline.Modal;
     var submitForm = function (formAction, formData) {
         //change the redirection
         $.ajax({
@@ -67,7 +68,6 @@
 
     $('body').on('click', '#submit-right-form-button', function (e) {
         e.preventDefault();
-        $('#modal-check-node-right-box').modal('hide');
         var formAction = $(e.currentTarget.parentElement.parentElement).attr('action');
         var form = document.getElementById('node-right-form');
         var formData = new FormData(form);
@@ -80,7 +80,6 @@
         var form = document.getElementById('form-node-creation-rights');
         var formData = new FormData(form);
         submitForm(formAction, formData);
-        $('#modal-check-node-right-box').modal('hide');
     });
 
     $('.search-role-btn').on('click', function (e) {
@@ -117,19 +116,7 @@
 
     $('.res-creation-options').live('click', function (event) {
         event.preventDefault();
-        if (event.currentTarget.getAttribute('data-toggle') !== 'tab') {
-            $.ajax({
-                url: event.currentTarget.getAttribute('href'),
-                type: 'POST',
-                processData: false,
-                contentType: false,
-                success: function (form) {
-                    $('#modal-check-role').empty();
-                    $('#modal-check-role').append(form);
-                    $('#modal-check-node-right-box').modal('show');
-                }
-            });
-        }
+        modal.fromUrl(event.currentTarget.getAttribute('href'));
     });
 
     $('.workspace-role-item').live('click', function (event) {
