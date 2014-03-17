@@ -1043,6 +1043,7 @@
         remove: function (nodeIds) {
             var trans = (nodeIds.length) > 1 ? 'resources_delete' : 'resource_delete';
             var modal = Twig.render(ModalWindow, {
+                'header': translator.get('platform:delete'),
                 'body': translator.get('platform:' + trans),
                 'confirmFooter': true,
                 'modalId': 'confirm-modal'
