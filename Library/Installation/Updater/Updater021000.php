@@ -111,7 +111,7 @@ class Updater021000
 
     public function updateIcons()
     {
-        $this->log('update icons...');
+        $this->log('updating icons...');
         $coreIconWebDirRelativePath = "bundles/clarolinecore/images/resources/icons/";
         $resourceImages = array(
             array('res_vector.png', 'application/postscript'),
