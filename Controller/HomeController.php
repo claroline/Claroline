@@ -472,7 +472,7 @@ class HomeController
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function canGenerateContent()
+    public function canGenerateContentAction()
     {
         if ($this->manager->isValidUrl($this->request->get('url'))) {
 
@@ -487,7 +487,7 @@ class HomeController
             }
         }
 
-        return new Response('false'); //useful in ajax
+        return new Response('false'); //in case is not valid URL
     }
 
     /**
