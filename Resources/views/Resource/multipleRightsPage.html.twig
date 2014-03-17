@@ -206,13 +206,10 @@
                                     </div>
                                     <div id="collapse-all-{{ workspace.getCode() }}" class="list-group collapse">
                                         {% for role in workspaceRoles[workspace.getCode()] %}
-                                            {# do not display the role manager of the current workspace #}
-                                            {% if role.getName() != 'ROLE_WS_MANAGER_' ~ workspace.getGuid() %}
-                                                <a class="workspace-role-item list-group-item"
-                                                   href="{{ path('claro_resource_right_form', {'node':resource.id, 'role':role.id}) }}">
-                                                    {{ role.getTranslationKey()|trans({}, 'platform') }}
-                                                </a>
-                                            {%  endif %}
+                                            <a class="workspace-role-item list-group-item"
+                                               href="{{ path('claro_resource_right_form', {'node':resource.id, 'role':role.id}) }}">
+                                                {{ role.getTranslationKey()|trans({}, 'platform') }}
+                                            </a>
                                         {% endfor %}
                                     </div>
                                 </div>
