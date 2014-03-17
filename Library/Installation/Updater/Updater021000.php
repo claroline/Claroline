@@ -95,7 +95,8 @@ class Updater021000
         }
 
         $this->om->flush();
-        $this->log('adding user rights...');
+        $this->log('adding user rights... ');
+        $this->log('it may take a while...');
 
         $resourceNodes = $this->om->getRepository('ClarolineCoreBundle:Resource\ResourceNode')->findAll();
         $roleUser = $this->om->getRepository('ClarolineCoreBundle:Role')->findOneByName('ROLE_USER');
@@ -104,12 +105,13 @@ class Updater021000
             $rightsManager = $this->container->get('claroline.manager.rights_manager');
             $rightsManager->create(0, $roleUser, $resourceNode, false);
         }
+
+        $this->om->flush();
     }
 
     public function updateIcons()
     {
         $this->log('updating icons...');
-
         $coreIconWebDirRelativePath = "bundles/clarolinecore/images/resources/icons/";
         $resourceImages = array(
             array('res_vector.png', 'application/postscript'),
