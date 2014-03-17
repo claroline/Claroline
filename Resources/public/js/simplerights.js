@@ -35,11 +35,7 @@
      */
     simpleRights.get = function (id, element)
     {
-        if (typeof(simpleRights[id]) === 'undefined') {
-            simpleRights[id] = $(element).parents('#rights-form-resource-tab-content').first().find('#' + id).first();
-        }
-
-        return simpleRights[id];
+        return $(element).parents('#rights-form-resource-tab-content').first().find('#' + id).first();
     };
 
     /**

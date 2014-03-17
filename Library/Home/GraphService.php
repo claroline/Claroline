@@ -36,7 +36,9 @@ class GraphService
             $content = file_get_contents($url);
             $content = mb_convert_encoding($content, 'HTML-ENTITIES', 'UTF-8');
 
-            $this->crawler = new Crawler($content);
+            $this->crawler = new Crawler();
+
+            $this->crawler->addHtmlContent($content);
 
             $this->openGraph();
             $this->twitter();
@@ -48,7 +50,11 @@ class GraphService
             }
 
             //for example in case of slideshare:presentation
-            $this->graph['type'] = str_replace(':', '-', $this->graph['type']);
+            if (isset($this->graph['type'])) {
+                $this->graph['type'] = str_replace(':', '-', $this->graph['type']);
+            } else {
+                $this->graph['type'] = 'default';
+            }
         }
 
         return $this->graph;
