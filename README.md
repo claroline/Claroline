@@ -1,13 +1,15 @@
 README
 ======
 
-This repository provides the basic application structure of the Claroline platform.
-It doesn't contain the sources nor the third-party libraries required to make the
-application fully functional. Those sources have to be installed following the
-procedure described below.
+This repository provides the basic application structure of the Claroline
+platform.
 
-If you want to contribute or directly browse the sources of the project, here is a
-(non-exhaustive) list of their dedicated repositories:
+It doesn't contain the sources nor the third-party libraries required to make
+the application fully functional. Those sources have to be installed following
+the procedure described below.
+
+If you want to contribute or directly browse the sources of the project, here
+is a (non-exhaustive) list of their dedicated repositories:
 
 - [CoreBundle][core]
 - [KernelBundle][kernel]
@@ -32,6 +34,8 @@ Project setup
         - php5-intl
     - fileinfo (for mime type detection)
     - curl (for facebook authentication)
+    - Check if you have a correct configuration of time zone in your php.ini as
+      "Europe/Brussels" (case sensitive).
     - Optionaly:
         - [gd][1] (for simple icon creation)
         - [ffmpeg][2] (for video thumbnail creation)
@@ -42,12 +46,13 @@ Project setup
 ### Development installation
 
 - Clone this repository
-- Create an *app/config/parameters.yml* file based on *app/config/parameters.yml.dist*
-  and fill at least the main db parameters (database doesn't have to exist, but if
-  it exists, it must be empty)
+- Create an *app/config/parameters.yml* file based on
+  *app/config/parameters.yml.dist*
+  and fill at least the main db parameters (database doesn't have to exist,
+  but if it exists, it must be empty)
 - Make the following directories (and their children) writable from the command
-  line and the web server (for further explanation on common permissions issues and
-  solutions with Symfony2, read [this][5]):
+  line and the web server (for further explanation on common permissions issues
+  and solutions with Symfony2, read [this][5]):
     - *app/cache*
     - *app/logs*
     - *app/config*
@@ -134,7 +139,8 @@ usage) or visit our continuous integration server [here][7].
 Documentation
 -------------
 
-For development documentation, see [Claroline/CoreBundle/Resources/doc/index.md][8].
+For development documentation, see
+[Claroline/CoreBundle/Resources/doc/index.md][8].
 
 
 [core]:         https://github.com/claroline/CoreBundle
