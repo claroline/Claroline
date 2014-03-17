@@ -263,13 +263,13 @@
         });
     };
 
-    home.isValidURL = function (url, action)
+    home.canGenerateContent = function (url, action)
     {
-        $.post(home.path + 'isvalidurl', {
+        $.post(home.path + 'cangeneratecontent', {
             'url': url
         })
-        .done(function (data) {
-            if (data.trim() === 'true') {
+        .success(function (data) {
+            if (data.trim() !== 'false') {
                 action(data);
             }
         });

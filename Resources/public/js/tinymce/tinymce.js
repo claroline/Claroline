@@ -39,11 +39,9 @@
         'paste_preprocess': function (plugin, args) {
             var link = $('<div>' + args.content + '</div>').text().trim(); //inside div because a bug of jquery
 
-            home.isValidURL(link, function () {
-                home.generatedContent(link, function (data) {
-                    tinymce.activeEditor.insertContent('<div>' + data + '</div>');
-                    editorChange(tinymce.activeEditor);
-                }, false);
+            home.canGenerateContent(link, function (data) {
+                tinymce.activeEditor.insertContent('<div>' + data + '</div>');
+                editorChange(tinymce.activeEditor);
             });
         },
         setup: function (editor) {
