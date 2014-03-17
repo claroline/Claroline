@@ -74,7 +74,7 @@ class BadgeHandler
         $originalRules = $badge->getRules();
 
         if ($this->request->isMethod('POST')) {
-            $this->form->submit($this->request);
+            $this->form->handleRequest($this->request);
 
             if ($this->form->isValid()) {
                 $badgeRules = $badge->getRules();
