@@ -468,18 +468,26 @@ class HomeController
     /**
      * Check if a string is a valid URL
      *
-     * @Route("/isvalidurl", name="claroline_is_valid_url")
+     * @Route("/cangeneratecontent", name="claroline_can_generate_content")
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function isValidUrl()
+    public function canGenerateContentAction()
     {
         if ($this->manager->isValidUrl($this->request->get('url'))) {
 
-            return new Response('true');
+            $graph = $this->manager->getGraph($this->request->get('url'));
+
+            if (isset($graph['type'])) {
+                return $this->render(
+                    'ClarolineCoreBundle:Home/graph:'.$graph['type'].'.html.twig',
+                    array('content' => $graph),
+                    true
+                );
+            }
         }
 
-        return new Response('false'); //useful in ajax
+        return new Response('false'); //in case is not valid URL
     }
 
     /**

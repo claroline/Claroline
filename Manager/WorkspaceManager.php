@@ -533,7 +533,15 @@ class WorkspaceManager
             }
         }
 
-        return $workspaces;
+        $ids = [];
+
+        return array_filter($workspaces, function ($workspace) use (&$ids) {
+            if (!in_array($workspace->getId(), $ids)) {
+                $ids[] = $workspace->getId();
+
+                return true;
+            }
+        });
     }
 
     /**
