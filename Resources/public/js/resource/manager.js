@@ -641,13 +641,11 @@
                 },
                 'click .res-creation-options': function (event) {
                     event.preventDefault();
-                    if (event.currentTarget.getAttribute('data-toggle') !== 'tab') {
-                        this.views.form.render(
-                            event.currentTarget.getAttribute('href'),
-                            event.currentTarget.getAttribute('data-node-id'),
-                            'edit-rights-creation'
-                        );
-                    }
+                    this.render(
+                        event.currentTarget.getAttribute('href'),
+                        event.currentTarget.getAttribute('data-node-id'),
+                        'edit-rights-creation'
+                    );
                 },
                 'click .search-role-btn': function (event) {
                     event.preventDefault();
@@ -1045,6 +1043,7 @@
         remove: function (nodeIds) {
             var trans = (nodeIds.length) > 1 ? 'resources_delete' : 'resource_delete';
             var modal = Twig.render(ModalWindow, {
+                'header': translator.get('platform:delete'),
                 'body': translator.get('platform:' + trans),
                 'confirmFooter': true,
                 'modalId': 'confirm-modal'

@@ -123,7 +123,7 @@
                                 {{ 'cancel'|trans({}, 'platform') }}
                             </a>
                         {% endif %}
-                        <button class="btn btn-primary" type="submit" id="submit-default-rights-form-button" >{{ 'ok'|trans({}, 'platform') }}</button>
+                        <button data-dismiss="modal" class="btn btn-primary" type="submit" id="submit-default-rights-form-button" >{{ 'ok'|trans({}, 'platform') }}</button>
                     </div>
                 {% endblock %}
             </div>
@@ -161,7 +161,6 @@
                                     {% if isDir %}
                                         <td>
                                             <a data-resource-id="{{ resource.getId() }}"
-                                               data-dismiss="modal"
                                                class="res-creation-options"
                                                href="{{ path('claro_resource_right_creation_form', {'node': resourceRight.getResourceNode().getId(), 'role': resourceRight.getRole().getId() }) }}">
                                                <i class="icon-cog"></i> {{ 'options'|trans({}, 'platform') }}
