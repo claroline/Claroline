@@ -27,6 +27,7 @@ class PlatformConfigurationHandler
     private $parameters;
     private $defaultParameters = array(
         'name' => null,
+        'nameActive' => true,
         'support_email' => null,
         'footer' => null,
         'logo' => 'clarolineconnect.png',
@@ -113,6 +114,7 @@ class PlatformConfigurationHandler
     {
         $config = new PlatformConfiguration();
         $config->setName($this->parameters['name']);
+        $config->setNameActive($this->parameters['nameActive']);
         $config->setSupportEmail($this->parameters['support_email']);
         $config->setFooter($this->parameters['footer']);
         $config->setSelfRegistration($this->parameters['allow_self_registration']);

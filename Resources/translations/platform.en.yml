@@ -569,6 +569,7 @@ session_id: 'Session id'
 settings: Settings
 sharable: Sharable
 show: Show
+Show the name of the platform in the top bar: 'Show the name of the platform in the top bar'
 show_as: 'Show as'
 show_as_admin: 'Show as admin'
 show_as_user: 'Show as user'
