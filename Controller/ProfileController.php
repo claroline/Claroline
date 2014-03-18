@@ -30,9 +30,6 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 
 /**
- * @DI\Tag("security.secure_service")
- * @SEC\PreAuthorize("hasRole('ROLE_USER')")
- *
  * Controller of the user profile.
  */
 class ProfileController extends Controller
@@ -87,6 +84,7 @@ class ProfileController extends Controller
      *     "/form/{user}",
      *     name="claro_profile_form"
      * )
+     * @SEC\Secure(roles="ROLE_USER")
      *
      * @EXT\Template("ClarolineCoreBundle:Profile:profileForm.html.twig")
      * @EXT\ParamConverter("loggedUser", options={"authenticatedUser" = true})
@@ -115,6 +113,7 @@ class ProfileController extends Controller
      *     "/update/{user}",
      *     name="claro_profile_update"
      * )
+     * @SEC\Secure(roles="ROLE_USER")
      *
      * @EXT\Template("ClarolineCoreBundle:Profile:profileForm.html.twig")
      * @EXT\ParamConverter("loggedUser", options={"authenticatedUser" = true})
@@ -187,46 +186,14 @@ class ProfileController extends Controller
 
     /**
      * @EXT\Route(
-     *     "/view/{userId}",
+     *     "/{publicUrl}",
      *      name="claro_profile_view"
      * )
-     * @EXT\ParamConverter(
-     *      "user",
-     *      class="ClarolineCoreBundle:User",
-     *      options={"id" = "userId", "strictId" = true}
-     * )
-     * @EXT\Template("ClarolineCoreBundle:Profile:profile.html.twig")
+     * @EXT\Template()
      *
      * Displays the profile of a user.
      */
-    public function viewAction(User $user, $page = 1)
-    {
-        $doctrine = $this->getDoctrine();
-        $doctrine->getManager()->getFilters()->disable('softdeleteable');
-
-        $query   = $doctrine->getRepository('ClarolineCoreBundle:Badge\UserBadge')->findByUser($user, false);
-        $adapter = new DoctrineORMAdapter($query);
-        $pager   = new Pagerfanta($adapter);
-
-        try {
-            $pager->setCurrentPage($page);
-        } catch (NotValidCurrentPageException $exception) {
-            throw new NotFoundHttpException();
-        }
-
-        return array(
-            'user'     => $user,
-            'pager'    => $pager
-        );
-    }
-
-    /**
-     * @EXT\Route("/{publicUrl}", name="claro_profile_public_view")
-     * @EXT\Template("ClarolineCoreBundle:Profile:publicProfile.html.twig")
-     *
-     * Displays the public profile of an user.
-     */
-    public function publicProfileAction($publicUrl)
+    public function viewAction($publicUrl)
     {
         $user = $this->getDoctrine()->getRepository('ClarolineCoreBundle:User')->findOneByPublicUrl($publicUrl);
         if (null === $user) {
@@ -234,7 +201,7 @@ class ProfileController extends Controller
         }
 
         return array(
-            'user' => $user
+            'user'  => $user
         );
     }
 
@@ -243,6 +210,7 @@ class ProfileController extends Controller
      *     "/password/form/{user}",
      *      name="claro_password_form"
      * )
+     * @SEC\Secure(roles="ROLE_USER")
      * @EXT\Template("ClarolineCoreBundle:Profile:passwordForm.html.twig")
      *
      * Displays the password reset form for a user.
@@ -269,6 +237,7 @@ class ProfileController extends Controller
      *     "/password/edit/{user}",
      *      name="claro_password"
      * )
+     * @SEC\Secure(roles="ROLE_USER")
      * @EXT\Template("ClarolineCoreBundle:Profile:passwordForm.html.twig")
      *
      * Updates the password of a user.
