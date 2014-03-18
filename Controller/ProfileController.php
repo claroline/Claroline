@@ -201,7 +201,10 @@ class ProfileController extends Controller
      */
     public function viewAction(User $user, $page = 1)
     {
-        $query   = $this->getDoctrine()->getRepository('ClarolineCoreBundle:Badge\UserBadge')->findByUser($user, false);
+        $doctrine = $this->getDoctrine();
+        $doctrine->getManager()->getFilters()->disable('softdeleteable');
+
+        $query   = $doctrine->getRepository('ClarolineCoreBundle:Badge\UserBadge')->findByUser($user, false);
         $adapter = new DoctrineORMAdapter($query);
         $pager   = new Pagerfanta($adapter);
 

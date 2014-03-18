@@ -457,6 +457,16 @@ class UserManager
     }
 
     /**
+     * @param AbstractWorkspace $workspace
+     *
+     * @return User[]
+     */
+    public function getByWorkspaceWithUsersFromGroup(AbstractWorkspace $workspace)
+    {
+        return $this->userRepo->findByWorkspaceWithUsersFromGroup($workspace);
+    }
+
+    /**
      *
      * @param string                             $search
      * @param \Claroline\CoreBundle\Entity\Group $group

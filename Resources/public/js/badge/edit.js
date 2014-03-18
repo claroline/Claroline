@@ -15,7 +15,12 @@ $(function(){
 
     $(".nav-tabs a.has-error:first").tab("show");
 
-    $('.delete').confirmModal();
+    function submitForm() {
+        $("#editBadgeForm").submit();
+    }
+
+    $('.confirm').confirmModal();
+    $('.edit-confirm').confirmModal({'confirmCallback': submitForm});
 
     $("[data-toggle=popover]").popover();
 

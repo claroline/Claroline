@@ -36,6 +36,7 @@ Indexing: Référencement
 Language: Langue
 Last name: Nom
 None: Aucun
+Show the name of the platform in the top bar: 'Afficher le nom de la plateforme dans la barre supérieure'
 Show: Afficher
 This variable is optional and will be replaced by your platform name: 'Ce variable est optionnel et sera remplacé par le nom de la plateforme'
 This variable is required and will be replaced by the actual mail content: 'Ce variable est requis et sera replacé par le contenu du mail'
@@ -739,3 +740,4 @@ groups_per_page: Groupes par page
 tool_roles_create_directory: L'option "Créer un répertoire" vous permet de créer automatiquement un répertoire dédié aux utilisateurs de ce groupe.
 my_profile: Mon profil
 send: envoyer
+send_message_to_workspace: Envoyer un message aux utilisateurs de l'espace

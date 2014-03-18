@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Claroline\CoreBundle\Form\Badge;
+namespace Claroline\CoreBundle\Form\Badge\Type;
 
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Repository\Badge\BadgeRepository;

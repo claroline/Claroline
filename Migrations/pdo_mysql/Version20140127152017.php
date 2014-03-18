@@ -59,14 +59,14 @@ class Version20140127152017 extends AbstractMigration
             CHANGE badge_id badge_id INT DEFAULT NULL
         ");
         $this->addSql("
-            ALTER TABLE claro_badge_rule 
-            ADD CONSTRAINT FK_805FCB8F16F956BA FOREIGN KEY (associated_badge) 
-            REFERENCES claro_badge (id) 
+            ALTER TABLE claro_badge_rule
+            ADD CONSTRAINT FK_805FCB8F16F956BA FOREIGN KEY (associated_badge)
+            REFERENCES claro_badge (id)
             ON DELETE CASCADE
         ");
         $this->addSql("
-            ALTER TABLE claro_badge_rule 
-            ADD CONSTRAINT FK_805FCB8FF7A2C2FC FOREIGN KEY (badge_id) 
+            ALTER TABLE claro_badge_rule
+            ADD CONSTRAINT FK_805FCB8FF7A2C2FC FOREIGN KEY (badge_id)
             REFERENCES claro_badge (id)
         ");
         $this->addSql("

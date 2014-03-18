@@ -37,6 +37,8 @@ badge_delete_confirm_message: 'Etes-vous sûr de vouloir supprimer le badge <str
 badge_delete_confirm_title: 'Suppression d''un badge'
 badge_delete_error_message: 'Erreur lors de la suppression du badge.'
 badge_delete_success_message: 'Badge supprimé avec succès.'
+badge_edit_confirm_message: 'Etes-vous sûr de vouloir modifier le badge <strong>%badgeName%</strong> ?'
+badge_edit_confirm_title: 'Modification d''un badge'
 badge_dont_award_confirm_message: 'Etes-vous sûr de ne pas vouloir attribuer le badge <strong>%badgeName%</strong> à l''utilisateur <strong>%user%</strong> ?'
 badge_dont_award_confirm_title: 'Refus d''attribution d''un badge'
 badge_edit_error_message: 'Erreur lors de la modification du badge.'
@@ -66,7 +68,7 @@ badge_form_name: Nom
 badge_form_rules: 'Règles d''attribution'
 badge_form_times: fois
 badge_form_user_target_of_action: 'L''utilisateur est la cible de l''action'
-badge_form_version: Version
+badge_version: Version
 badge_no_rules_check_manually: 'Aucune règle, vérifier manuellement'
 badge_reject_award: 'Refuser l''attribution du badge'
 badge_reject_award_error_message: 'Erreur lors du refus d''attribution du badge.'
@@ -133,3 +135,4 @@ collection_owned_by_user: "De l'utilisateur %user%"
 badge_expiration_date_explanation: "Durée de validité du badge. Si omis le badge n'expirera jamais. Le badge n'est pas supprimé de l'utilisateur après expiration, un indicateur visuel d'expiration est affiché."
 badge_validity_period: "Durée de validité du badge"
 start_to_award_this_badge: 'Commencez à <a href="%url%" id="awardUser" role="button">attribuer</a> ce badge.'
+badge_edit_create_new_version: "<strong>Attention!!!</strong> Ce badge a déjà été attribué. Modifier ses règles d'attribution entraînera la création d'une nouvelle version de ce badge."
