@@ -45,3 +45,5 @@ EditorApp.controller('TemplateCtrl', TemplateCtrl);
 EditorApp.controller('TemplateModalCtrl', TemplateModalCtrl);
 
 EditorApp.filter('truncate', TruncateTextFilter);
+EditorApp.filter('trans', TranslationFilter);
+EditorApp.filter('transChoice', TranslationChoiceFilter);

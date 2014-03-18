@@ -66,6 +66,8 @@ templates_sidebar_close: Close
 template_copy: Copy
 template_edit: Edit
 template_delete: Delete
+template_name: Name
+template_description: Description
 
 # u
 undo: Undo
