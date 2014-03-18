@@ -114,6 +114,18 @@ abstract class Rule
     }
 
     /**
+     * @param int $id
+     *
+     * @return Rule
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+
+        return $this;
+    }
+
+    /**
      * @param string $action
      *
      * @return Rule
