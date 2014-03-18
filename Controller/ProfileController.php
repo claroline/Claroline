@@ -81,7 +81,7 @@ class ProfileController extends Controller
 
     /**
      * @EXT\Route(
-     *     "/form/{user}",
+     *     "/edit/{user}",
      *     name="claro_profile_form"
      * )
      * @SEC\Secure(roles="ROLE_USER")
@@ -92,9 +92,13 @@ class ProfileController extends Controller
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function formAction(User $user, User $loggedUser)
+    public function formAction(User $loggedUser, User $user = null)
     {
         $isAdmin = $this->get('security.context')->isGranted('ROLE_ADMIN');
+
+        if (null === $user) {
+            $user = $loggedUser;
+        }
 
         if ($user !== $loggedUser && !$isAdmin) {
             throw new AccessDeniedException();
