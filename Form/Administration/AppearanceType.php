@@ -27,6 +27,11 @@ class AppearanceType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
+            ->add(
+                'name_active',
+                'checkbox',
+                array('required' => false, 'label' => 'Show the name of the platform in the top bar')
+            )
             ->add('footer', 'text', array('required' => false))
             ->add('theme', 'choice', array('choices' => $this->themes));
     }

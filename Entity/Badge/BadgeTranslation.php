@@ -227,4 +227,12 @@ class BadgeTranslation
     {
         return $this->slug;
     }
+
+    public function __clone()
+    {
+        if ($this->id) {
+            $this->id    = null;
+            $this->badge = null;
+        }
+    }
 }

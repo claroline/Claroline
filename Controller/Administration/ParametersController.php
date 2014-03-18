@@ -243,6 +243,7 @@ class ParametersController extends Controller
             try {
                 $this->configHandler->setParameters(
                     array(
+                        'nameActive' => $form['name_active']->getData(),
                         'theme' => $form['theme']->getData(),
                         'footer' => $form['footer']->getData(),
                         'logo' => $this->request->get('selectlogo'),

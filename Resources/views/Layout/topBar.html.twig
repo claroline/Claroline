@@ -15,7 +15,7 @@
                             {% if config.getParameter('name') != "" %}alt="{{ config.getParameter('name') }}"{% endif %}>
                     </a>
                 {% endif %}
-                {% if config.getParameter('name') != "" %}
+                {% if config.getParameter('name') != "" and config.getParameter('nameActive') %}
                     <a class="navbar-brand" href="{{ path('claro_index') }}">
                         {{ config.getParameter('name') }}
                     </a>

@@ -1,5 +1,8 @@
 # This file contains only services that cannot be defined using annotations.
 
+parameters:
+    claroline.form_handler.badge.class: Claroline\CoreBundle\Form\Badge\Handler\BadgeHandler
+
 services:
 
     # array injection with annotations is not supported
@@ -27,6 +30,36 @@ services:
         factory_method:  getRepository
         arguments:
             - Claroline\CoreBundle\Entity\Badge\Badge
+
+    # form
+    claroline.form.badge:
+        class: Symfony\Component\Form\Form
+        factory_method: createNamed
+        factory_service: form.factory
+        arguments: ["badge_form", "badge_form"]
+    claroline.form.badge.workspace:
+        class: Symfony\Component\Form\Form
+        factory_method: createNamed
+        factory_service: form.factory
+        arguments: ["badge_form", "badge_form_workspace"]
+
+    # form handler
+    claroline.form_handler.badge:
+        class: %claroline.form_handler.badge.class%
+        scope: request
+        arguments:
+            - @claroline.form.badge
+            - @request
+            - @doctrine.orm.entity_manager
+            - @claroline.manager.badge
+    claroline.form_handler.badge.workspace:
+        class: %claroline.form_handler.badge.class%
+        scope: request
+        arguments:
+            - @claroline.form.badge.workspace
+            - @request
+            - @doctrine.orm.entity_manager
+            - @claroline.manager.badge
 
     # pseudo-services used for dynamic parameter injection
     # (see Claroline\CoreBundle\DependencyInjection\Compiler\DynamicConfigPass

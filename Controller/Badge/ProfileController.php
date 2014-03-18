@@ -82,7 +82,7 @@ class ProfileController extends Controller
     /**
      * @Route("/{slug}", name="claro_profile_view_badge")
      * @ParamConverter("user", options={"authenticatedUser" = true})
-     * @ParamConverter("badge", converter="badge_converter")
+     * @ParamConverter("badge", converter="badge_converter", options={"check_deleted" = false})
      * @Template()
      */
     public function badgeAction(Badge $badge, User $user)
@@ -130,9 +130,11 @@ class ProfileController extends Controller
      */
     public function badgesAction(User $user)
     {
-        $userBadges       = $this->getDoctrine()->getRepository('ClarolineCoreBundle:Badge\UserBadge')->findByUser($user);
-        $badgeClaims      = $this->getDoctrine()->getRepository('ClarolineCoreBundle:Badge\BadgeClaim')->findByUser($user);
-        $badgeCollections = $this->getDoctrine()->getRepository('ClarolineCoreBundle:Badge\BadgeCollection')->findByUser($user);
+        $doctrine = $this->getDoctrine();
+        $doctrine->getManager()->getFilters()->disable('softdeleteable');
+        $userBadges       = $doctrine->getRepository('ClarolineCoreBundle:Badge\UserBadge')->findByUser($user);
+        $badgeClaims      = $doctrine->getRepository('ClarolineCoreBundle:Badge\BadgeClaim')->findByUser($user);
+        $badgeCollections = $doctrine->getRepository('ClarolineCoreBundle:Badge\BadgeCollection')->findByUser($user);
 
         return array(
             'userBadges'       => $userBadges,

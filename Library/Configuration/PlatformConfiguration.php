@@ -16,6 +16,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 class PlatformConfiguration
 {
     private $name;
+    private $nameActive;
     private $supportEmail;
     private $selfRegistration;
     private $localeLanguage;
@@ -421,5 +422,21 @@ class PlatformConfiguration
     public function isFacebookClientActive()
     {
         return $this->facebookClientActive;
+    }
+
+    /**
+     * @param boolean $nameActive
+     */
+    public function setNameActive($nameActive)
+    {
+        $this->nameActive = $nameActive;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function isNameActive()
+    {
+        return $this->nameActive;
     }
 }
