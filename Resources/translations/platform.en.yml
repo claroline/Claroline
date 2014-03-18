@@ -741,3 +741,7 @@ tool_roles_create_directory: The "Create a directory" option allow you to automa
 my_profile: My profile
 send: send
 send_message_to_workspace: Send a message to the users of the workspace.
+'This placeholder is required and will be replaced by the actual mail content': This placeholder is required and will be replaced by the actual mail content
+'This placeholder is optional and will be replaced by your platform name': This placeholder is optional and will be replaced by your platform name
+'This placeholder is optional and will be replaced by the author first name': This placeholder is optional and will be replaced by the author first name
+'This placeholder is optional and will be replaced by the author last name': This placeholder is optional and will be replaced by the author last name
