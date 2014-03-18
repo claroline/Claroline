@@ -88,25 +88,25 @@ function StepModalCtrl($scope, $modal, $modalInstance, PathFactory, StepFactory,
      * Select step image in library
      * @returns void
      */
-    $scope.selectImage = function() {
-        var modalInstance = $modal.open({
-            templateUrl: EditorApp.webDir + 'angularjs/Step/Partial/select-image.html',
-            controller: 'SelectImageModalCtrl',
-            resolve: {
-                // Send images to form
-                images: function() {
-                    return StepFactory.getImages();
-                }
-            }
-        });
+    // $scope.selectImage = function() {
+    //     var modalInstance = $modal.open({
+    //         templateUrl: EditorApp.webDir + 'angularjs/Step/Partial/select-image.html',
+    //         controller: 'SelectImageModalCtrl',
+    //         resolve: {
+    //             // Send images to form
+    //             images: function() {
+    //                 return StepFactory.getImages();
+    //             }
+    //         }
+    //     });
         
-        // Process modal results
-        modalInstance.result.then(function(image) {
-            if (image) {
-                $scope.formStep.image = image;
-            } 
-        });
-    };
+    //     // Process modal results
+    //     modalInstance.result.then(function(image) {
+    //         if (image) {
+    //             $scope.formStep.image = image;
+    //         } 
+    //     });
+    // };
     
     /**
      * Edit or add resource

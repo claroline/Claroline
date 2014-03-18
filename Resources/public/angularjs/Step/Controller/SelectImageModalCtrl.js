@@ -1,7 +1,7 @@
 'use strict';
 
 /**
- * Template Modal Controller
+ * Select image Modal Controller
  */
 function SelectImageModalCtrl($scope, $modalInstance, StepFactory) {
     $scope.images = StepFactory.getImages();

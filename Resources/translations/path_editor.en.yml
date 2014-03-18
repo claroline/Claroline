@@ -1,8 +1,9 @@
 # b
-back: Back to list
+back: Quit editor
 
 # c
 create: Create
+cancel: Cancel
 
 # d
 delete_step: Delete step
@@ -18,6 +19,9 @@ from: from
 
 # h
 help: Help
+
+# n
+name_help: Enter the name of the path
 
 # o
 open_templates: Open templates
@@ -39,11 +43,12 @@ resource_edit: Edit
 resource_add: Add resource
 resource_edit_form: Editing resource
 resource_create_form: Creating resource
+root_default_name: <untitled>
 
 # s
 save: Save
-step1: Defining general properties
-step2: Defining scenario and steps
+step1: General properties
+step2: Scenario and steps
 step3: Defining step properties
 selected_step: Selected step
 step_duration: Duration
@@ -53,6 +58,7 @@ step_computer: With Computer ?
 step_tutor: With tutor ?
 step_no_resource: There is no resource linked to this step.
 step_no_description: There is no description for this step.
+select_image: Select image
 
 # t
 templates: Templates
@@ -63,6 +69,9 @@ template_delete: Delete
 
 # u
 undo: Undo
+
+# v
+validate: Edit step
 
 # w
 with_computer: With computer

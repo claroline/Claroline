@@ -1,15 +1,12 @@
 <div class="panel panel-default">
     <div class="panel-heading">
-        <h3 class="panel-title">
-            <a data-toggle="collapse" href="#panel-global">
-                {{ 'step1'|trans({}, 'path_editor') }}
-            </a>
-        </h3>
+        <h3 class="panel-title">{{ 'step1'|trans({}, 'path_editor') }}</h3>
     </div>
     
-    <div id="panel-global" class="panel-body collapse in">
+    <div class="panel-body collapse in">
         {{ form_row(form.name, {
                 'attr': {
+                    'placeholder' : 'name_help'|trans({}, 'path_editor'),
                     'ng-model': 'path.name',
                     'ng-change': 'renameRootStep(); updateHistory();'
                 }

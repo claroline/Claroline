@@ -1,8 +1,9 @@
 # b
-back: Retour à la liste
+back: Quitter l'éditeur
 
 # c
 create: Création
+cancel: Annuler
 
 # d
 delete_step: Supprimer l'étape
@@ -19,8 +20,11 @@ from: de
 # h
 help: Aide
 
+# n
+name_help: Saisir le nom du parcours
+
 # o
-open_templates: Ouvrir les favoris
+open_templates: Ouvrir les modèles
 
 # p
 path_name: Nom du parcours
@@ -28,8 +32,8 @@ path_description: Description du parcours
 resource_edit_form: Edition d'une ressource
 resource_create_form: Création d'une ressource
 path_save_success: La parcours a correctement été sauvegardé.
-path_template_save_success: Le favori a correctement été sauvegardé.
-path_template_save_error: Une erreur s'est produite lors de la sauvegarde du favori.
+path_template_save_success: Le modèle a correctement été sauvegardé.
+path_template_save_error: Une erreur s'est produite lors de la sauvegarde du modèle.
 
 # r
 redo: Rétablir
@@ -37,11 +41,12 @@ resources: Ressources
 resource_delete: Supprimer
 resource_edit: Modifier
 resource_add: Ajouter une ressource
+root_default_name: <sans nom>
 
 # s
 save: Sauvegarder
-step1: Définition des informations globales
-step2: Création du scenario
+step1: Informations globales
+step2: Scénario
 step3: Définition des informations de l'étape
 selected_step: Etape sélectionnée
 step_duration: Durée
@@ -51,9 +56,10 @@ step_computer: Avec ordinateur ?
 step_tutor: Avec tuteur ?
 step_no_resource: Il n'y a aucune ressource rattachée à cette étape.
 step_no_description: Il n'y a aucune description pour cette étape.
+select_image: Choisir une image
 
 # t
-templates: Favoris
+templates: Modèles
 templates_sidebar_close: Fermer
 template_copy: Copier
 template_edit: Modifier
@@ -61,6 +67,9 @@ template_delete: Supprimer
 
 # u
 undo: Annuler
+
+# v
+validate: Modifier l'étape
 
 # w
 with_computer: Avec ordinateur

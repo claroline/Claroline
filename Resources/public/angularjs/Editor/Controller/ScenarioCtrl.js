@@ -1,15 +1,11 @@
 'use strict';
 
 /**
- * Tree Controller
+ * Scenario Controller
  */
-function ScenarioCtrl($scope, $modal, HistoryFactory, PathFactory, StepFactory, ResourceFactory) {
+function ScenarioCtrl($scope, $modal, HistoryFactory, PathFactory, StepFactory) {
     // Show action buttons for a step in the tree (contains the ID of the step)
     $scope.showButtons = null;
-    
-    $scope.whoList = StepFactory.getWhoList();
-    $scope.whereList = StepFactory.getWhereList();
-    $scope.resourceTypeLabels = ResourceFactory.getResourceTypeLabels();
     
     // Configure Tree of steps sortable feature
     $scope.sortableOptions = {
@@ -35,7 +31,7 @@ function ScenarioCtrl($scope, $modal, HistoryFactory, PathFactory, StepFactory, 
      * @returns void
      */
     $scope.remove = function(step) {
-        // Search step to remove
+        // Search step to remove function
         function walk(path) {
             var children = path.children;
             var i;
@@ -52,10 +48,28 @@ function ScenarioCtrl($scope, $modal, HistoryFactory, PathFactory, StepFactory, 
             }
         }
 
-        walk($scope.path.steps[0]);
+        StepFactory.setStep(step);
 
-        HistoryFactory.update($scope.path);
-        $scope.updatePreviewStep();
+        // Display confirm modal
+        var modalInstance = $modal.open({
+            templateUrl: EditorApp.webDir + 'angularjs/Step/Partial/confirm-delete.html',
+            controller: 'ConfirmDeleteModalCtrl',
+            resolve: {
+                step: function () {
+                    return ;
+                }
+            }
+        });
+
+        modalInstance.result.then(function() {
+            // Confirm
+            walk($scope.path.steps[0]);
+
+            HistoryFactory.update($scope.path);
+            $scope.updatePreviewStep();
+        }, function () {
+            // Cancel
+        });
     };
 
     /**
@@ -94,131 +108,12 @@ function ScenarioCtrl($scope, $modal, HistoryFactory, PathFactory, StepFactory, 
             templateUrl: EditorApp.webDir + 'angularjs/Template/Partial/template-edit.html',
             controller: 'TemplateModalCtrl'
         });
-    };
 
-    /**
-     * Open modal to modify specified step properties
-     * @returns void
-     */
-    $scope.editStep = function(step) {
-        StepFactory.setStep(step);
-
-        var modalInstance = $modal.open({
-            templateUrl: EditorApp.webDir + 'angularjs/Step/Partial/step-edit.html',
-            controller: 'StepModalCtrl',
-            windowClass: 'step-edit'
+        modalInstance.result.then(function() {
+            // Confirm
+            $scope.pageslideOpen();
+        }, function () {
+            // Cancel
         });
-
-        // Process modal results
-        modalInstance.result.then(function(step, removedResources) {
-            if (step) {
-                // Inject edited step in path
-                PathFactory.replaceStep(step);
-
-                if (typeof removedResources != undefined && null != removedResources && removedResources.length !== 0) {
-                    // There are resources to remove from path
-                    for (var i = 0; i < removedResources.length; i++) {
-                        PathFactory.removeResource(removedResource[i]);
-                    }
-                }
-
-                // Update history
-                HistoryFactory.update($scope.path);
-                $scope.updatePreviewStep();
-            }
-        });
-    };
-
-    /**
-     * Open modal to modify specified resource properties
-     * @returns void
-     */
-    $scope.editResource = function(resource) {
-        var editResource = false;
-
-        if (resource) {
-            editResource = true;
-            // Edit existing document
-            ResourceFactory.setResource(resource);
-        }
-
-        var modalInstance = $modal.open({
-            templateUrl: EditorApp.webDir + 'angularjs/Resource/Partial/resource-edit.html',
-            controller: 'ResourceModalCtrl',
-
-        });
-
-        // Process modal results
-        modalInstance.result.then(function(resource) {
-            if (resource) {
-                if (typeof $scope.previewStep.resources == 'undefined' || null == $scope.previewStep.resources) {
-                    $scope.previewStep.resources= [];
-                }
-                
-                // Save resource
-                if (editResource) {
-                    // Edit existing resource
-                    // Replace old resource by the new one
-                    for (var i = 0; i < $scope.previewStep.resources.length; i++) {
-                        if ($scope.previewStep.resources[i].id === resource.id) {
-                            $scope.previewStep.resources[i] = resource;
-                            break;
-                        }
-                    }
-                }
-                else {
-                    // Create new resource
-                    $scope.previewStep.resources.push(resource);
-                }
-
-                // Update history
-                HistoryFactory.update($scope.path);
-            }
-        });
-    };
-
-    /**
-     * Delete selected resource from path
-     * @returns void
-     */
-    $scope.removeResource = function(resource) {
-        StepFactory.removeResource($scope.previewStep, resource.id);
-
-        // Loop through path to remove reference to resource
-        PathFactory.removeResource(resource.id);
-
-        // Update history
-        HistoryFactory.update($scope.path);
-    };
-
-    /**
-     * Exclude a resource herited from parents
-     * @returns void
-     */
-    $scope.excludeParentResource= function(resource) {
-        resource.isExcluded = true;
-        $scope.previewStep.excludedResources.push(resource.id);
-
-        // Update history
-        HistoryFactory.update($scope.path);
-    };
-
-    /**
-     * Include a resource herited from parents which has been excluded
-     * @returns void
-     */
-    $scope.includeParentResource= function(resource) {
-        resource.isExcluded = false;
-        
-        if (typeof $scope.previewStep.excludedResources !== 'undefined' && null !== $scope.previewStep.excludedResources) {
-            for (var i = 0; i < $scope.previewStep.excludedResources.length; i++) {
-                if (resource.id == $scope.previewStep.excludedResources[i]) {
-                    $scope.previewStep.excludedResources.splice(i, 1);
-                }
-            }
-        }
-
-         // Update history
-         HistoryFactory.update($scope.path);
     };
 }

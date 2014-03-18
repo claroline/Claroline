@@ -6,7 +6,14 @@
 function MainCtrl($scope, HistoryFactory, ClipboardFactory, PathFactory, AlertFactory, ResourceFactory) {
     $scope.path = EditorApp.currentPath;
     PathFactory.setPath($scope.path);
-        
+    
+    if (null === $scope.path.name || $scope.path.name.length === 0) {
+        // Add default name to Root step
+        if (undefined != $scope.path.steps[0]) {
+            $scope.path.steps[0].name = Translator.get('path_editor:root_default_name');
+        }
+    }
+
     // Store symfony base partials route
     $scope.webDir = EditorApp.webDir;
     
@@ -57,10 +64,25 @@ function MainCtrl($scope, HistoryFactory, ClipboardFactory, PathFactory, AlertFa
     };
 
     // Current displayed step in preview zone
+    $scope.edit = {};
+    $scope.edit.preview = false;
     $scope.previewStep = null;
     if (null === $scope.previewStep) {
         $scope.setPreviewStep();
     }
+
+    // Store Preview step state before start editing to be able to cancel editing
+    $scope.previewStepBackup = {};
+
+    /**
+     * Display edit step form
+     * @returns void
+     */
+    $scope.editStep = function(step) {
+        // Backup step
+        $scope.previewStepBackup = jQuery.extend(true, {}, step);
+        $scope.edit.preview = true;
+    };
 
     /**
      * Copy data into clipboard

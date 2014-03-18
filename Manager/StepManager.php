@@ -3,6 +3,8 @@
 namespace Innova\PathBundle\Manager;
 
 use Doctrine\Common\Persistence\ObjectManager;
+use Symfony\Component\Translation\TranslatorInterface;
+
 use Innova\PathBundle\Entity\Step;
 use Innova\PathBundle\Entity\Path\Path;
 use Innova\PathBundle\Entity\Step2ResourceNode;
@@ -16,12 +18,22 @@ class StepManager
     protected $om;
 
     /**
-     * Class constructor
-     * @param \Doctrine\Common\Persistence\ObjectManager $om
+     * Translator engine
+     * @var \Symfony\Component\Translation\TranslatorInterface
      */
-    public function __construct(ObjectManager $om)
+    protected $translator;
+
+    /**
+     * Class constructor
+     * @param \Doctrine\Common\Persistence\ObjectManager         $om
+     * @param \Symfony\Component\Translation\TranslatorInterface $translator
+     */
+    public function __construct(
+        ObjectManager $om,
+        TranslatorInterface $translator)
     {
         $this->om = $om;
+        $this->translator = $translator;
     }
 
     /**
@@ -170,7 +182,7 @@ class StepManager
         
         $stepWhos = array();
         foreach ($results as $result) {
-            $stepWhos[$result->getId()] = $result->getName();
+            $stepWhos[$result->getId()] = $this->translator->trans($result->getName(), array(), 'innova_tools');
         }
         
         return $stepWhos;
@@ -182,7 +194,7 @@ class StepManager
         
         $stepWheres = array();
         foreach ($results as $result) {
-            $stepWheres[$result->getId()] = $result->getName();
+            $stepWheres[$result->getId()] = $this->translator->trans($result->getName(), array(), 'innova_tools');
         }
         
         return $stepWheres;

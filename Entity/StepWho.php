@@ -34,6 +34,13 @@ class StepWho
     protected $steps;
 
     /**
+     * @var boolean
+     *
+     * @ORM\Column(name="is_default", type="boolean")
+     */
+    protected $default;
+
+    /**
      * Get id
      *
      * @return integer
@@ -104,5 +111,26 @@ class StepWho
     public function getSteps()
     {
         return $this->steps;
+    }
+
+    /**
+     * Is default
+     * @return boolean
+     */
+    public function isDefault()
+    {
+        return $this->default;
+    }
+
+    /**
+     * Set default
+     * @param boolean
+     * @return \Innova\PathBundle\Entity\StepWhere
+     */
+    public function setDefault($default)
+    {
+        $this->default = $default;
+
+        return $this;
     }
 }

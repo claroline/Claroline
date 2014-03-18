@@ -15,8 +15,9 @@ function StepFactory($http, $q, PathFactory) {
         image             : 'no_image.png',
         name              : 'Step',
         description       : null,
-        durationHours     : null,
-        durationMinutes   : null,
+        hasDuration       : false,
+        durationHours     : 0,
+        durationMinutes   : 0,
         who               : null,
         where             : null,
         withTutor         : false,
@@ -26,59 +27,9 @@ function StepFactory($http, $q, PathFactory) {
         excludedResources : []
     };
     
-    var whoList = null;
-    var whereList = null;
     var images = null;
     
     return {
-        /**
-         * Load available values for Step field "who"
-         * @returns array
-         */
-        getWhoList: function() {
-            if (null == whoList || whoList.length === 0) {
-                // Load list from AJAX
-                var deferred = $q.defer();
-                $http.get(Routing.generate('innova_path_get_stepwho')).success(function(data) { 
-                    whoList = data; 
-                    return deferred.resolve(whoList);
-                })
-                .error(function(data, status) {
-                    return deferred.reject('error loading who list');
-                });
-                
-                return deferred.promise;
-            }
-            else {
-                // List already loaded => simply return it
-                return whoList;
-            }
-        },
-        
-        /**
-         * 
-         * @returns array
-         */
-        getWhereList: function() {
-            if (null == whereList || whereList.length === 0) {
-                // Load list from AJAX
-                var deferred = $q.defer();
-                $http.get(Routing.generate('innova_path_get_stepwhere')).success(function(data) { 
-                    whereList = data; 
-                    return deferred.resolve(whereList); 
-                })
-                .error(function(data, status) {
-                    return deferred.reject('error loading where list');
-                });
-                
-                return deferred.promise;
-            }
-            else {
-                // List already loaded => simply return it
-                return whereList;
-            }
-        },
-        
         /**
          * 
          */

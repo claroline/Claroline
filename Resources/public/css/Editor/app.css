@@ -40,25 +40,37 @@ form {
 }
 
 input.form-control.ng-invalid {
-  border-color: #b94a48;
-  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
-          box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+    border-color: #b94a48;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+            box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
 }
 
 input.form-control.ng-invalid:focus {
-  border-color: #953b39;
-  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 6px #d59392;
-          box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 6px #d59392;
+    border-color: #953b39;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 6px #d59392;
+            box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 6px #d59392;
 }
 
 input.form-control.ng-valid {
-  border-color: #468847;
-  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
-          box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+    border-color: #468847;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+            box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
 }
 
 input.form-control.ng-valid:focus {
-  border-color: #356635;
-  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 6px #7aba7b;
-          box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 6px #7aba7b;
+    border-color: #356635;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 6px #7aba7b;
+            box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 6px #7aba7b;
+}
+
+.tooltip {
+    white-space: nowrap;
+}
+
+.clickable-area {
+    cursor: pointer;
+}
+
+.clickable-area:hover {
+    border-color: #999;
 }
