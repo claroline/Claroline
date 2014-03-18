@@ -1,0 +1,83 @@
+{% extends "ClarolineCoreBundle::layout.html.twig" %}
+
+{% block title %}{{ user.getLastName() ~ ' ' ~ user.getFirstName() | striptags | raw }}{% endblock %}
+
+{% block content %}
+    <div class="panel panel-default panel-user">
+        <div class="panel-heading relative">
+            <h3 class="panel-title">
+                {{ user.getLastName() ~ ' ' ~ user.getFirstName() }}
+                <em class="muted"> ({{ user.getUsername() }})</em>
+            </h3>
+            {% if user.getId() == app.user.id or is_granted('ROLE_ADMIN') %}
+                <a href="{{ path('claro_profile_form', {'user': user.getId}) }}" class="btn btn-primary float-right-top">
+                    <i class="icon-edit"></i> {{ 'edit'|trans({}, 'platform') }}
+                </a>
+            {% endif %}
+        </div>
+        <div class="panel-body">
+            <div>
+                <div>
+                    {% if user.getPicture() != "" %}
+                        <img src="{{ asset('uploads/pictures/') ~  user.getPicture() }}" class="col-md-2">
+                    {% else %}
+                        <div class="col-md-2">
+                            <h1 ><i class="icon-user"></i><h1>
+                        </div>
+                    {% endif %}
+                </div>
+                <p>
+                    {% if user.getMail() != "" %}
+                       <a href="{{path('claro_mail_form', {'userId':user.getId()})}}"> <i class="icon-envelope"></i>
+                        {{ user.getMail() }}
+                         </a>
+                    {% endif %}
+                <ul class="col-md-10">
+                    <li>{{'First name' | trans({}, 'platform') }}: {{user.getFirstName()}}</li>
+                    <li> {{'Last name' | trans({}, 'platform') }}: {{user.getLastName()}}</li>
+                    <li> {{'User name' | trans({}, 'platform') }}: {{user.getUsername()}}</li>
+                </ul>
+                    {% if user.getPhone() != "" %}
+                        <i class="icon-phone"></i> {{ user.getPhone() }}
+                    {% endif %}
+                </p>
+                <p>{{ user.getDescription() |raw }} </p>
+                <p class="text-muted">{{ 'user'|trans({}, 'platform') }} {{ user.getCreationDate()| timeAgo }}</p>
+                <p>
+                    <a class="btn btn-default" href="{{path('claro_mail_form', {'userId':user.getId()})}}"><i class="icon-comment"></i> {{ 'send_mail'|trans({}, 'platform') }}</a>
+                    <a class="btn btn-default" href="{{path('claro_message_show', {'message': 0})}}?ids[]={{ user.getId() }}"><i class="icon-envelope"></i> {{ 'send_message'|trans({}, 'platform') }}</a>
+                </p>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {% if user.getId() == app.user.id or is_granted('ROLE_ADMIN') %}
+        <script type="text/javascript">
+            (function () {
+                "use strict";
+
+                $('body').on('mouseenter', '.panel-user', function () {
+                    $('.panel-heading', this).find('.btn').removeClass('hide');
+                });
+
+                $('body').on('mouseleave', '.panel-user', function () {
+                    $('.panel-heading', this).find('.btn').addClass('hide');
+                });
+
+            }());
+        </script>
+    {% endif %}
+{% endblock %}
+
+
+{% block stylesheets %}
+    {{ parent() }}
+    {% stylesheets debug=false filter='lessphp, cssmin'  output='bundles/clarolinecore/css/badge.css'
+      "@ClarolineCoreBundle/Resources/views/Badge/less/badge.less"
+    %}
+        <link rel="stylesheet" href="{{ asset_url }}" screen="media" />
+    {% endstylesheets %}
+{% endblock %}

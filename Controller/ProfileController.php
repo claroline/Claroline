@@ -46,12 +46,12 @@ class ProfileController extends Controller
 
     /**
      * @DI\InjectParams({
-     *     "userManager"        = @DI\Inject("claroline.manager.user_manager"),
-     *     "roleManager"        = @DI\Inject("claroline.manager.role_manager"),
-     *     "eventDispatcher"    = @DI\Inject("claroline.event.event_dispatcher"),
-     *     "security"           = @DI\Inject("security.context"),
-     *     "request"            = @DI\Inject("request"),
-     *     "localeManager"      = @DI\Inject("claroline.common.locale_manager")
+     *     "userManager"     = @DI\Inject("claroline.manager.user_manager"),
+     *     "roleManager"     = @DI\Inject("claroline.manager.role_manager"),
+     *     "eventDispatcher" = @DI\Inject("claroline.event.event_dispatcher"),
+     *     "security"        = @DI\Inject("security.context"),
+     *     "request"         = @DI\Inject("request"),
+     *     "localeManager"   = @DI\Inject("claroline.common.locale_manager")
      * })
      */
     public function __construct(
@@ -197,10 +197,7 @@ class ProfileController extends Controller
      * )
      * @EXT\Template("ClarolineCoreBundle:Profile:profile.html.twig")
      *
-     * Displays the public profile of an user.
-     *
-     * @param \Claroline\CoreBundle\Entity\User $user
-     * @param int                               $page
+     * Displays the profile of a user.
      */
     public function viewAction(User $user, $page = 1)
     {
@@ -214,13 +211,27 @@ class ProfileController extends Controller
             throw new NotFoundHttpException();
         }
 
-        /** @var \Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler $platformConfigHandler */
-        $platformConfigHandler = $this->get('claroline.config.platform_config_handler');
-
         return array(
             'user'     => $user,
-            'pager'    => $pager,
-            'language' => $platformConfigHandler->getParameter('locale_language')
+            'pager'    => $pager
+        );
+    }
+
+    /**
+     * @EXT\Route("/{publicUrl}", name="claro_profile_public_view")
+     * @EXT\Template("ClarolineCoreBundle:Profile:publicProfile.html.twig")
+     *
+     * Displays the public profile of an user.
+     */
+    public function publicProfileAction($publicUrl)
+    {
+        $user = $this->getDoctrine()->getRepository('ClarolineCoreBundle:User')->findOneByPublicUrl($publicUrl);
+        if (null === $user) {
+            throw $this->createNotFoundException("Unknown user.");
+        }
+
+        return array(
+            'user' => $user
         );
     }
 

@@ -263,6 +263,18 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
      */
     protected $lastUri;
 
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="public_url", type="string", nullable=true, unique=true)
+     */
+    protected $publicUrl;
+
+    /**
+     * @ORM\Column(name="has_tuned_public_url", type="boolean")
+     */
+    protected $hasTunedPublicUrl = false;
+
     public function __construct()
     {
         parent::__construct();
@@ -863,5 +875,45 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
     public function getLastUri()
     {
         return $this->lastUri;
+    }
+
+    /**
+     * @param string $publicUrl
+     *
+     * @return User
+     */
+    public function setPublicUrl($publicUrl)
+    {
+        $this->publicUrl = $publicUrl;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPublicUrl()
+    {
+        return $this->publicUrl;
+    }
+
+    /**
+     * @param mixed $hasTunedPublicUrl
+     *
+     * @return User
+     */
+    public function setHasTunedPublicUrl($hasTunedPublicUrl)
+    {
+        $this->hasTunedPublicUrl = $hasTunedPublicUrl;
+
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function hasTunedPublicUrl()
+    {
+        return $this->hasTunedPublicUrl;
     }
 }
