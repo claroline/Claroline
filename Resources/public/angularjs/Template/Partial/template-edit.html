@@ -1,12 +1,14 @@
 <div class="modal-header">
-    <h4 class="modal-title"><i class="icon-pencil"></i> Editing template : <strong>&lt;{{ formTemplate.name }}&gt;</strong></h4>
+    <h4 class="modal-title">
+        <span class="icon-pencil"></span> 
+        Editing template : <strong>&lt;{{ formTemplate.name }}&gt;</strong></h4>
 </div>
 
 <div class="modal-body">
     <form name="templateForm" role="form">
         <fieldset class="row">
             <div class="form-group col-md-12">
-                <label for="template-name">Name</label>
+                <label for="template-name">{{ 'template_name' | trans:{}:"path_editor" }}</label>
                 <input type="text" name="template-name" ng-model="formTemplate.name" class="form-control" value="{{ formTemplate.name }}" />
             </div>
             
