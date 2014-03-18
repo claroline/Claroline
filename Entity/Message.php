@@ -48,7 +48,7 @@ class Message
      *     targetEntity="Claroline\CoreBundle\Entity\User",
      *     cascade={"persist"}
      * )
-     * @ORM\JoinColumn(name="sender_id", onDelete="CASCADE", nullable=false)
+     * @ORM\JoinColumn(name="sender_id", onDelete="CASCADE", nullable=true)
      */
     protected $user;
 
@@ -117,7 +117,7 @@ class Message
     /**
      * @ORM\Column(name="sender_username")
      */
-    protected $senderUsername;
+    protected $senderUsername = 'claroline-connect';
 
     /**
      * @ORM\Column(name="receiver_string", length=1023)
@@ -208,7 +208,7 @@ class Message
         return $this->parent;
     }
 
-    public function setParent(Message $parent)
+    public function setParent($parent)
     {
         $this->parent = $parent;
     }
