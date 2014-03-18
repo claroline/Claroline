@@ -24,6 +24,7 @@ use JMS\SecurityExtraBundle\Annotation as SEC;
 use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\Message;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Claroline\CoreBundle\Form\Factory\FormFactory;
 use Claroline\CoreBundle\Library\Security\Utilities;
 use Claroline\CoreBundle\Manager\GroupManager;
@@ -109,6 +110,26 @@ class MessageController
     {
         $url = $this->router->generate('claro_message_show', array('message' => 0))
             . $this->messageManager->generateGroupQueryString($group);
+
+        return new RedirectResponse($url);
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/form/workspace/{workspace}",
+     *     name="claro_message_form_for_workspace"
+     * )
+     *
+     * Displays the message form with the "to" field filled with users of a group.
+     *
+     * @param AbstractWorkspace $workspace
+     *
+     * @return Response
+     */
+    public function formForWorkspaceAction(AbstractWorkspace $workspace)
+    {
+        $url = $this->router->generate('claro_message_show', array('message' => 0))
+            . $this->messageManager->generateWorkspaceQueryString($workspace);
 
         return new RedirectResponse($url);
     }

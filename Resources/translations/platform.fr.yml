@@ -739,3 +739,4 @@ groups_per_page: Groupes par page
 tool_roles_create_directory: L'option "Créer un répertoire" vous permet de créer automatiquement un répertoire dédié aux utilisateurs de ce groupe.
 my_profile: Mon profil
 send: envoyer
+send_message_to_workspace: Envoyer un message aux utilisateur de l'espace

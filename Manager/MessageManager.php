@@ -313,7 +313,7 @@ class MessageManager
      */
     public function generateWorkspaceQueryString(AbstractWorkspace $workspace)
     {
-        $users = $this->userRepo->getByWorkspaceWithUsersFromGroup($workspace);
+        $users = $this->userRepo->findByWorkspaceWithUsersFromGroup($workspace);
         $queryString = '?';
 
         for ($i = 0, $count = count($users); $i < $count; $i++) {

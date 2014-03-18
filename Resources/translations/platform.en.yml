@@ -740,3 +740,4 @@ groups_per_page: Groups per page
 tool_roles_create_directory: The "Create a directory" option allow you to automatically create a directory for that group.
 my_profile: My profile
 send: send
+send_message_to_workspace: Send a message to the users of the workspace.
