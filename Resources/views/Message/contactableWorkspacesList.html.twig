@@ -1,19 +1,19 @@
 {% macro renderPager(search, pager) %}
     {% if search == '' %}
         {{
-        pagerfanta(
-        pager,
-        'twitter_bootstrap_translated',
-        {}
-        )
+            pagerfanta(
+                pager,
+                'twitter_bootstrap_translated',
+                {}
+            )
         }}
     {% else %}
         {{
-        pagerfanta(
-        pager,
-        'twitter_bootstrap_translated',
-        {}
-        )
+            pagerfanta(
+                pager,
+                'twitter_bootstrap_translated',
+                {}
+            )
         }}
     {% endif %}
 {% endmacro %}

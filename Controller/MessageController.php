@@ -120,7 +120,7 @@ class MessageController
      *     name="claro_message_form_for_workspace"
      * )
      *
-     * Displays the message form with the "to" field filled with users of a group.
+     * Displays the message form with the "to" field filled with users of a workspace.
      *
      * @param AbstractWorkspace $workspace
      *
@@ -618,8 +618,6 @@ class MessageController
      */
     public function contactableWorkspacesListAction(User $user, $page, $search)
     {
-//        $trimmedSearch = trim($search);
-
         $workspaces = $this->workspaceManager->getWorkspacesByManager($user);
         $workspaces = $this->pagerFactory->createPagerFromArray($workspaces, $page);
 
