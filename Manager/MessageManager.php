@@ -163,7 +163,7 @@ class MessageManager
             $userMessage->setMessage($message);
             $this->om->persist($userMessage);
 
-            if ($user->isMailNotified()) {
+            if ($filteredUser->isMailNotified()) {
                 $mailNotifiedUsers[] = $filteredUser;
             }
         }
