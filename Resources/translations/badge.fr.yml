@@ -37,6 +37,8 @@ badge_delete_confirm_message: 'Etes-vous sûr de vouloir supprimer le badge <str
 badge_delete_confirm_title: 'Suppression d''un badge'
 badge_delete_error_message: 'Erreur lors de la suppression du badge.'
 badge_delete_success_message: 'Badge supprimé avec succès.'
+badge_edit_confirm_message: 'Etes-vous sûr de vouloir modifier le badge <strong>%badgeName%</strong> ?'
+badge_edit_confirm_title: 'Modification d''un badge'
 badge_dont_award_confirm_message: 'Etes-vous sûr de ne pas vouloir attribuer le badge <strong>%badgeName%</strong> à l''utilisateur <strong>%user%</strong> ?'
 badge_dont_award_confirm_title: 'Refus d''attribution d''un badge'
 badge_edit_error_message: 'Erreur lors de la modification du badge.'
@@ -50,6 +52,8 @@ badge_form_awarding_on_result_action_to: à
 badge_form_badge: 'Lorsque l''action est l''attribution d''un badge'
 badge_form_badge_help: 'Si compatible avec l''action'
 badge_form_badge_selection: 'Sélectionner le badge'
+badge_form_resource: "Sur la ressource"
+badge_form_resource_selection: 'Sélectionner la ressource'
 badge_form_change_image: 'Changer l''image du badge'
 badge_form_choose_image: 'Choisir l''image du badge'
 badge_form_criteria: 'Critères d''obtention'
@@ -64,9 +68,8 @@ badge_form_name: Nom
 badge_form_rules: 'Règles d''attribution'
 badge_form_times: fois
 badge_form_user_target_of_action: 'L''utilisateur est la cible de l''action'
-badge_form_version: Version
+badge_version: Version
 badge_no_rules_check_manually: 'Aucune règle, vérifier manuellement'
-badge_not_found_with_name: 'Aucun badge avec le nom ''%badgeName%'' n''a pu être retrouvé.'
 badge_reject_award: 'Refuser l''attribution du badge'
 badge_reject_award_error_message: 'Erreur lors du refus d''attribution du badge.'
 badge_reject_award_short: Refuser
@@ -85,7 +88,6 @@ badge_validate_award_error_message: 'Erreur lors de la validation l''attribution
 badge_validate_award_short: Valider
 badge_validate_award_success_message: 'Validation de l''attribution du badge effectuée avec succès.'
 badges: Badges
-bagde_awarded_to_none_user: 'Badge attribué à aucun utilisateur'
 claim: Réclamer
 claim_badge: 'Réclamer un badge'
 claim_badge_form: 'Formulaire de demande d''attribution de badge'
@@ -132,3 +134,5 @@ badge_details: "Détails du badge"
 collection_owned_by_user: "De l'utilisateur %user%"
 badge_expiration_date_explanation: "Durée de validité du badge. Si omis le badge n'expirera jamais. Le badge n'est pas supprimé de l'utilisateur après expiration, un indicateur visuel d'expiration est affiché."
 badge_validity_period: "Durée de validité du badge"
+start_to_award_this_badge: 'Commencez à <a href="%url%" id="awardUser" role="button">attribuer</a> ce badge.'
+badge_edit_create_new_version: "<strong>Attention!!!</strong> Ce badge a déjà été attribué. Modifier ses règles d'attribution entraînera la création d'une nouvelle version de ce badge."

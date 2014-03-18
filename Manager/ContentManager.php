@@ -130,16 +130,16 @@ class ContentManager
      * Delete a translation of content
      *
      * @param $locale
-     * @param $contentId
+     * @param $id
      *
      * @return This function doesn't return anything.
      */
-    public function deleteTranslation($locale, $contentId)
+    public function deleteTranslation($locale, $id)
     {
         if ($locale === 'en') {
-            $content = $this->content->findOneBy(array('id' => $contentId));
+            $content = $this->content->findOneBy(array('id' => $id));
         } else {
-            $content = $this->translations->findOneBy(array('foreignKey' => $contentId, 'locale' => $locale));
+            $content = $this->translations->findOneBy(array('foreignKey' => $id, 'locale' => $locale));
         }
 
         if ($content instanceof ContentTranslation or $content instanceof Content) {

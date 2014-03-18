@@ -19,7 +19,6 @@ use Claroline\CoreBundle\Entity\Badge\Badge;
 use Claroline\CoreBundle\Entity\Badge\UserBadge;
 use Claroline\CoreBundle\Entity\Badge\BadgeClaim;
 use Claroline\CoreBundle\Entity\User;
-use Doctrine\ORM\NoResultException;
 use Pagerfanta\Adapter\DoctrineORMAdapter;
 use Pagerfanta\Pagerfanta;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -55,9 +54,7 @@ class ProfileController extends Controller
 
                 try {
                     $entityManager = $this->getDoctrine()->getManager();
-                    $badgeName = $form->get('badge')->getData();
-                    $badge = $entityManager->getRepository('ClarolineCoreBundle:Badge\Badge')
-                        ->findOneByName($badgeName);
+                    $badge = $form->get('badge')->getData();
 
                     if ($user->hasBadge($badge)) {
                         $flashBag->add('error', $translator->trans('badge_already_award_message', array(), 'badge'));
@@ -69,11 +66,6 @@ class ProfileController extends Controller
                         $entityManager->flush();
                         $flashBag->add('success', $translator->trans('badge_claim_success_message', array(), 'badge'));
                     }
-                } catch (NoResultException $exception) {
-                    $flashBag->add(
-                        'error',
-                        $translator->trans('badge_not_found_with_name', array('%badgeName%' => $badgeName), 'badge')
-                    );
                 } catch (\Exception $exception) {
                     $flashBag->add('error', $translator->trans('badge_claim_error_message', array(), 'badge'));
                 }
@@ -90,16 +82,11 @@ class ProfileController extends Controller
     /**
      * @Route("/{slug}", name="claro_profile_view_badge")
      * @ParamConverter("user", options={"authenticatedUser" = true})
-     * @ParamConverter("badge", converter="badge_converter")
+     * @ParamConverter("badge", converter="badge_converter", options={"check_deleted" = false})
      * @Template()
      */
     public function badgeAction(Badge $badge, User $user)
     {
-        /** @var \Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler $platformConfigHandler */
-        $platformConfigHandler = $this->get('claroline.config.platform_config_handler');
-
-        $badge->setLocale($platformConfigHandler->getParameter('locale_language'));
-
         /** @var \Claroline\CoreBundle\Rule\Validator $badgeRuleValidator */
         $badgeRuleValidator = $this->get("claroline.rule.validator");
         $validateLogs       = $badgeRuleValidator->validate($badge, $user);
@@ -143,18 +130,16 @@ class ProfileController extends Controller
      */
     public function badgesAction(User $user)
     {
-        $userBadges       = $this->getDoctrine()->getRepository('ClarolineCoreBundle:Badge\UserBadge')->findByUser($user);
-        $badgeClaims      = $this->getDoctrine()->getRepository('ClarolineCoreBundle:Badge\BadgeClaim')->findByUser($user);
-        $badgeCollections = $this->getDoctrine()->getRepository('ClarolineCoreBundle:Badge\BadgeCollection')->findByUser($user);
-
-        /** @var \Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler $platformConfigHandler */
-        $platformConfigHandler = $this->get('claroline.config.platform_config_handler');
+        $doctrine = $this->getDoctrine();
+        $doctrine->getManager()->getFilters()->disable('softdeleteable');
+        $userBadges       = $doctrine->getRepository('ClarolineCoreBundle:Badge\UserBadge')->findByUser($user);
+        $badgeClaims      = $doctrine->getRepository('ClarolineCoreBundle:Badge\BadgeClaim')->findByUser($user);
+        $badgeCollections = $doctrine->getRepository('ClarolineCoreBundle:Badge\BadgeCollection')->findByUser($user);
 
         return array(
             'userBadges'       => $userBadges,
             'badgeClaims'      => $badgeClaims,
-            'badgeCollections' => $badgeCollections,
-            'language'         => $platformConfigHandler->getParameter('locale_language')
+            'badgeCollections' => $badgeCollections
         );
     }
 }

@@ -20,14 +20,14 @@ class LoadToolsData implements RequiredFixture
     public function load(ObjectManager $manager)
     {
         $tools = array(
-            array('home', 'icon-home', false, false, true, true, true, false, false),
-            array('parameters', 'icon-cog', false, false, true, true, false, false, false),
-            array('resource_manager', 'icon-folder-open', false, false, true, true, true, true, false),
-            array('agenda', 'icon-calendar', false, false, true, true, false, false, false),
-            array('logs', 'icon-list', false, false, true, false, false, false, false),
-            array('analytics', 'icon-bar-chart', false, false, true, false, false, false, false),
-            array('users', 'icon-user', true, false, true, false, false, false, false),
-            array('badges', 'icon-trophy', false, false, true, false, false, false, false)
+            array('home', 'icon-home', false, false, true, true, true, false, false, false, true),
+            array('parameters', 'icon-cog', false, false, true, true, false, false, false, true, true),
+            array('resource_manager', 'icon-folder-open', false, false, true, true, true, true, false, false, true),
+            array('agenda', 'icon-calendar', false, false, true, true, false, false, false, false, true),
+            array('logs', 'icon-list', false, false, true, false, false, false, false, false, true),
+            array('analytics', 'icon-bar-chart', false, false, true, false, false, false, false, false, true),
+            array('users', 'icon-user', true, false, true, false, false, false, false, false, true),
+            array('badges', 'icon-trophy', false, false, true, false, false, false, false, false, true)
         );
 
         foreach ($tools as $tool) {
@@ -41,6 +41,8 @@ class LoadToolsData implements RequiredFixture
             $entity->setExportable($tool[6]);
             $entity->setIsConfigurableInWorkspace($tool[7]);
             $entity->setIsConfigurableInDesktop($tool[8]);
+            $entity->setIsLockedForAdmin($tool[9]);
+            $entity->setIsAnonymousExcluded($tool[10]);
 
             $manager->persist($entity);
         }

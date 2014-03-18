@@ -17,6 +17,7 @@ class ResourceNodeRepositoryTest extends RepositoryTestCase
 {
     private static $repo;
     private static $time;
+    private static $roleManagerName;
 
     public static function setUpBeforeClass()
     {
@@ -27,8 +28,11 @@ class ResourceNodeRepositoryTest extends RepositoryTestCase
         self::createWorkspace('ws_2');
         self::createRole('ROLE_1', self::get('ws_1'));
         self::createRole('ROLE_2', self::get('ws_2'));
+        self::$roleManagerName = 'ROLE_WS_MANAGER_' . self::get('ws_1')->getGuid();
+        self::createRole(self::$roleManagerName);
         self::createUser('john', array(self::get('ROLE_1'), self::get('ROLE_2')));
         self::createUser('jane', array(self::get('ROLE_2')));
+        self::createUser('manager_ws_1', array(self::get(self::$roleManagerName)));
         self::createResourceType('t_dir');
         self::createResourceType('t_file');
         self::createResourceType('t_link', false);
@@ -65,6 +69,8 @@ class ResourceNodeRepositoryTest extends RepositoryTestCase
         self::createResourceRights(self::get('ROLE_2'), self::get('dir_2'), 3);
         self::createResourceRights(self::get('ROLE_1'), self::get('dir_2'), 6);
         self::createResourceRights(self::get('ROLE_2'), self::get('dir_5'), 1);
+
+        //add the role manager to~
     }
 
     public function testFindWorkspaceRoot()
@@ -95,6 +101,14 @@ class ResourceNodeRepositoryTest extends RepositoryTestCase
     public function testFindChildrenReturnsEverythingIfTheUserIsAdmin()
     {
         $children = self::$repo->findChildren(self::get('dir_1')->getResourceNode(), array('ROLE_ADMIN'));
+        $this->assertEquals(2, count($children));
+        $this->assertEquals('dir_2', $children[0]['name']);
+        $this->assertEquals('dir_3', $children[1]['name']);
+    }
+
+    public function testFindChildrenReturnsEverythingIfTheUserIsManager()
+    {
+        $children = self::$repo->findChildren(self::get('dir_1')->getResourceNode(), array(self::$roleManagerName));
         $this->assertEquals(2, count($children));
         $this->assertEquals('dir_2', $children[0]['name']);
         $this->assertEquals('dir_3', $children[1]['name']);

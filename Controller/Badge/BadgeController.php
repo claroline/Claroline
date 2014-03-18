@@ -46,10 +46,10 @@ class BadgeController extends Controller
         $badgeClaimQuery = $this->getDoctrine()
             ->getRepository('ClarolineCoreBundle:Badge\BadgeClaim')
             ->findByWorkspace($badgeClaimsWorkspace, false);
-        $language = $platformConfigHandler->getParameter('locale_language');
-        $pagerFactory = $this->get('claroline.pager.pager_factory');
-        $badgePager = $pagerFactory->createPager($badgeQueryBuilder->getQuery(), $parameters['badgePage'], 10);
-        $claimPager = $pagerFactory->createPager($badgeClaimQuery, $parameters['claimPage'], 10);
+
+        $pagerFactory       = $this->get('claroline.pager.pager_factory');
+        $badgePager         = $pagerFactory->createPager($badgeQueryBuilder->getQuery(), $parameters['badgePage'], 10);
+        $claimPager         = $pagerFactory->createPager($badgeClaimQuery, $parameters['claimPage'], 10);
         $badgeRuleValidator = $this->get("claroline.rule.validator");
 
         return $this->render(
@@ -57,7 +57,6 @@ class BadgeController extends Controller
             array(
                 'badgePager'       => $badgePager,
                 'claimPager'       => $claimPager,
-                'language'         => $language,
                 'parameters'       => $parameters,
                 'badgeRuleChecker' => $badgeRuleValidator
             )

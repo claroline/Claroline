@@ -11,6 +11,7 @@
 
 namespace Claroline\CoreBundle\Manager;
 
+use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use JMS\DiExtraBundle\Annotation as DI;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Group;
@@ -55,6 +56,7 @@ class MessageManager
         $this->groupRepo = $om->getRepository('ClarolineCoreBundle:Group');
         $this->userRepo = $om->getRepository('ClarolineCoreBundle:User');
         $this->messageRepo = $om->getRepository('ClarolineCoreBundle:Message');
+        $this->workspaceRepo = $om->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace');
         $this->userMessageRepo = $om->getRepository('ClarolineCoreBundle:UserMessage');
         $this->pagerFactory = $pagerFactory;
         $this->mailManager = $mailManager;
@@ -104,22 +106,41 @@ class MessageManager
         $receiversNames = explode(';', $receiversString);
         $usernames = array();
         $groupNames = array();
+        $workspaceCodes = array();
         $userReceivers = array();
         $groupReceivers = array();
+        $workspaceReceivers = array();
 
+        //split the string of target into different array.
         foreach ($receiversNames as $receiverName) {
             if (substr($receiverName, 0, 1) === '{') {
                 $groupNames[] = trim($receiverName, '{}');
             } else {
-                $usernames[] = $receiverName;
+                if (substr($receiverName, 0, 1) === '[') {
+                    $workspaceCodes[] = trim($receiverName, '[]');
+                } else {
+                    $usernames[] = $receiverName;
+                }
             }
         }
 
+        //get the different entities from the freshly created array.
         if (count($usernames) > 0) {
             $userReceivers = $this->userRepo->findByUsernames($usernames);
         }
+
         if (count($groupNames) > 0) {
             $groupReceivers = $this->groupRepo->findGroupsByNames($groupNames);
+        }
+
+        if (count($workspaceCodes) > 0) {
+            $workspaceReceivers = $this->workspaceRepo->findWorkspacesByCode($workspaceCodes);
+        }
+
+        $message->setSender($sender);
+
+        if (null !== $parent) {
+            $message->setParent($parent);
         }
 
         $this->om->persist($message);
@@ -134,29 +155,42 @@ class MessageManager
 
         $mailNotifiedUsers = array();
 
-        foreach ($userReceivers as $userReceiver) {
-            $userMessage = $this->om->factory('Claroline\CoreBundle\Entity\UserMessage');
-            $userMessage->setUser($userReceiver);
-            $userMessage->setMessage($message);
-            $this->om->persist($userMessage);
-
-            if ($userReceiver->isMailNotified()) {
-                $mailNotifiedUsers[] = $userReceiver;
-            }
-        }
-
+        //get every users which are going to be notified
         foreach ($groupReceivers as $groupReceiver) {
             $users = $this->userRepo->findByGroup($groupReceiver);
 
             foreach ($users as $user) {
-                $userMessage = $this->om->factory('Claroline\CoreBundle\Entity\UserMessage');
-                $userMessage->setUser($user);
-                $userMessage->setMessage($message);
-                $this->om->persist($userMessage);
+                $userReceivers[] = $user;
+            }
+        }
 
-                if ($user->isMailNotified()) {
-                    $mailNotifiedUsers[] = $userReceiver;
-                }
+        //workspaces are going to be notified
+        foreach ($workspaceReceivers as $workspaceReceiver) {
+            $users = $this->userRepo->findByWorkspaceWithUsersFromGroup($workspaceReceiver);
+
+            foreach ($users as $user) {
+                $userReceivers[] = $user;
+            }
+        }
+
+        $ids = [];
+
+        $filteredUsers = array_filter($userReceivers, function ($user) use (&$ids) {
+            if (!in_array($user->getId(), $ids)) {
+                $ids[] = $user->getId();
+
+                return true;
+            }
+        });
+
+        foreach ($filteredUsers as $filteredUser) {
+            $userMessage = $this->om->factory('Claroline\CoreBundle\Entity\UserMessage');
+            $userMessage->setUser($filteredUser);
+            $userMessage->setMessage($message);
+            $this->om->persist($userMessage);
+
+            if ($user->isMailNotified()) {
+                $mailNotifiedUsers[] = $filteredUser;
             }
         }
 
@@ -283,6 +317,29 @@ class MessageManager
     public function generateGroupQueryString(Group $group)
     {
         $users = $this->userRepo->findByGroup($group);
+        $queryString = '?';
+
+        for ($i = 0, $count = count($users); $i < $count; $i++) {
+            if ($i > 0) {
+                $queryString .= "&";
+            }
+
+            $queryString .= "ids[]={$users[$i]->getId()}";
+        }
+
+        return $queryString;
+    }
+
+    /**
+     * Generates a query string containing the list of user ids in a group.
+     *
+     * @param \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace $workspace
+     *
+     * @return string
+     */
+    public function generateWorkspaceQueryString(AbstractWorkspace $workspace)
+    {
+        $users = $this->userRepo->findByWorkspaceWithUsersFromGroup($workspace);
         $queryString = '?';
 
         for ($i = 0, $count = count($users); $i < $count; $i++) {

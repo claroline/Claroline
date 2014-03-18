@@ -110,3 +110,20 @@
         claroline-connect
     {% endif %}
 {% endmacro %}
+
+{% macro maxResultsSelectBox(currentMax, onChangeHandler, label) %}
+    <div class="input-group margin-md">
+        <select class="form-control input-md" id="max-select" onchange="{{ onChangeHandler }}">
+            <option{% if currentMax == 20 %} selected{% endif %}>20</option>
+            <option{% if currentMax == 50 %} selected{% endif %}>50</option>
+            <option{% if currentMax == 100 %} selected{% endif %}>100</option>
+            <option{% if currentMax == 200 %} selected{% endif %}>200</option>
+            <option{% if currentMax == 500 %} selected{% endif %}>500</option>
+        </select>
+        {% if label %}
+            <span class="input-group-addon">{{ label|trans({}, 'platform') }}</span>
+        {% else %}
+            <span class="input-group-addon">{{ 'line_per_page'|trans({}, 'platform') }}</span>
+        {% endif %}
+    </div>
+{% endmacro %}

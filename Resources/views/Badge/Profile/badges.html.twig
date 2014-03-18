@@ -27,8 +27,8 @@
                             <ul class="list-group">
                                 {% for badgeClaim in badgeClaims %}
                                     <li class="list-group-item">
-                                        <a href="{{ path('claro_view_badge', {'slug': badgeClaim.badge.slug(language)}) }}"
-                                           title="{{ badgeClaim.badge.name(language) }}">{{ badgeClaim.badge.name(language) }}</a>
+                                        <a href="{{ path('claro_view_badge', {'slug': badgeClaim.badge.slug}) }}"
+                                           title="{{ badgeClaim.badge.name }}">{{ badgeClaim.badge.name }}</a>
                                         {{ badgeClaim.claimedAt|date('date_format'|trans({}, 'platform')) }}
                                     </li>
                                 {% endfor %}
@@ -143,7 +143,7 @@
                                 </header>
                                 <ul class="list-inline badges">
                                     {% for badge in collection.badges %}
-                                        <li class="clarobadge" data-id="{{ badge.id }}" data-collection-id="{{ collection.id }}"><img class="badge_image_mini" src="{{ asset(badge.webPath) }}" alt="{{ badge.name(language) }}" /></li>
+                                        <li class="clarobadge" data-id="{{ badge.id }}" data-collection-id="{{ collection.id }}"><img class="badge_image_mini" src="{{ asset(badge.webPath) }}" alt="{{ badge.name }}" /></li>
                                     {% endfor %}
                                     <li class="loading_badge" style="display: none"><img src="{{ asset('bundles/clarolinecore/images/loading.gif') }}" alt="Loading" /></li>
                                     <li class="no_badge"{% if 0 < collection.badges|length %} style="display: none"{% endif %}>{{ 'no_badges'|trans }}</li>
@@ -196,15 +196,15 @@
                     <ul class="nodes badge_list list-unstyled well">
                         {% for userBadge in userBadges %}
                             {% set badge = userBadge.badge %}
-                            {% set dataImage = '<img class="badge_image_mini" src="' ~ asset(badge.webPath) ~ '" alt="' ~ badge.name(language) ~ '" />' %}
+                            {% set dataImage = '<img class="badge_image_mini" src="' ~ asset(badge.webPath) ~ '" alt="' ~ badge.name ~ '" />' %}
                             <li class="node-thumbnail badge_container" data-image="{{ dataImage }}" data-id="{{ badge.id }}">
                                 {% if userBadge.isExpired %}
                                     <span class="expired icon-exclamation-sign" data-title="Badge expiré"
                                            data-toggle="tooltip" data-placement="top" data-container="body"></span>
                                 {% endif %}
-                                <a href="{{ path('claro_profile_view_badge', {'slug': badge.slug(language)}) }}" title="{{ badge.name(language) }}" class="thumbnail">
-                                    <img class="badge_image" src="{{ asset(badge.webPath) }}" alt="{{ badge.name(language) }}"/>
-                                    <p class="badge_name">{{ badge.name(language) }}</p>
+                                <a href="{{ path('claro_profile_view_badge', {'slug': badge.slug}) }}" title="{{ badge.name }}" class="thumbnail">
+                                    <img class="badge_image" src="{{ asset(badge.webPath) }}" alt="{{ badge.name }}"/>
+                                    <p class="badge_name">{{ badge.name }}</p>
                                 </a>
                             </li>
                         {% else %}

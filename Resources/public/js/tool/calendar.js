@@ -69,6 +69,14 @@
                 .removeAttr('selected')
                 .removeAttr('disabled');
             $('#myModalLabel').text(Translator.get('agenda' + ':' + 'add_event'));
+            $('#agenda_form_start').val($.fullCalendar.formatDate(date,'dd-MM-yyyy'));
+            var currentDate = new Date();
+            if( clickedDate > currentDate) {
+                $('#agenda_form_end').val($.fullCalendar.formatDate(clickedDate,'dd-MM-yyyy'));
+            } else {
+                $('#agenda_form_end').val($.fullCalendar.formatDate(currentDate,'dd-MM-yyyy'));
+            }
+
             $('.hours').each(function() {
                 $(this).val('00:00');
             });
@@ -88,10 +96,15 @@
             $('.hours').each(function() {
                 $(this).val('00:00');
             });
+
+            if( clickedDate > currentDate) {
+                $('#agenda_form_end').val($.fullCalendar.formatDate(clickedDate,'dd-MM-yyyy'));
+            } else {
+                $('#agenda_form_end').val($.fullCalendar.formatDate(currentDate,'dd-MM-yyyy'));
+            }
             $('#myModal').modal();
         };
         var dayClickFunction = context === 'desktop' ? dayClickDesktop : dayClickWorkspace;
-
         $('#save').click(function () {
             if ($('#agenda_form_title').val() !== '') {
                 $('#save').attr('disabled', 'disabled');

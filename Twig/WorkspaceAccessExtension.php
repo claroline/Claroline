@@ -15,6 +15,7 @@ use JMS\DiExtraBundle\Annotation as DI;
 use Doctrine\ORM\EntityManager;
 use Claroline\CoreBundle\Library\Security\Utilities as SecurityUtilities;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Symfony\Component\Security\Core\SecurityContext;
 
 /**
  * @DI\Service
@@ -26,12 +27,14 @@ class WorkspaceAccessExtension extends \Twig_Extension
      * @DI\InjectParams({
      *     "em" = @DI\Inject("doctrine.orm.entity_manager"),
      *     "ut" = @DI\Inject("claroline.security.utilities"),
+     *     "sc" = @DI\Inject("security.context")
      * })
      */
-    public function __construct(EntityManager $em, SecurityUtilities $ut)
+    public function __construct(EntityManager $em, SecurityUtilities $ut, SecurityContext $sc)
     {
         $this->em = $em;
         $this->ut = $ut;
+        $this->sc = $sc;
     }
 
     /**
@@ -56,15 +59,12 @@ class WorkspaceAccessExtension extends \Twig_Extension
         return count($tools) > 0 ? true: false;
     }
 
-    public function hasAccess($workspaceId, TokenInterface $token)
+    public function hasAccess($workspaceId)
     {
-        $roles = $this->ut->getRoles($token);
         $workspace = $this->em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')
             ->find($workspaceId);
-        $repo = $this->em->getRepository('ClarolineCoreBundle:Tool\Tool');
-        $tools = $repo->findDisplayedByRolesAndWorkspace($roles, $workspace);
 
-        return count($tools) > 0 ? true: false;
+        return $this->sc->isGranted('OPEN', $workspace);
     }
 
     public function hasRoleInWorkspace($workspaceId, TokenInterface $token)

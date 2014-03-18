@@ -4,6 +4,7 @@
 'Add a logo': 'Ajouter un logo'
 'An error has occurred, please check if the file size does not exceeds the permitted size': 'Une erreur s''est produite, veuillez vérifier si la taille du fichier ne dépasse pas la taille autorisée'
 'Audience/user visits': 'Audience/Visites utilisateurs'
+answer: Répondre
 'Choose a logo': 'Choisir un logo'
 'Choose visible actions in the widget': 'Choisissez les actions visibles dans le widget'
 'Choose workspaces displayed in the widget': 'Choisissez les espaces de travail affichés par le widget'
@@ -28,17 +29,20 @@
 'select all': 'Tout sélectionner'
 'unique connections': 'Nb Cnx. uniques'
 404: 'La page que vous cherchez n''existe pas.'
+Active: 'Actif'
+Create a new resource: 'Créer une nouvelle ressource'
 First name: Prénom
 Indexing: Référencement
 Language: Langue
 Last name: Nom
 None: Aucun
+Show the name of the platform in the top bar: 'Afficher le nom de la plateforme dans la barre supérieure'
 Show: Afficher
 This variable is optional and will be replaced by your platform name: 'Ce variable est optionnel et sera remplacé par le nom de la plateforme'
 This variable is required and will be replaced by the actual mail content: 'Ce variable est requis et sera replacé par le contenu du mail'
 User name: 'Nom d''utilisateur'
-You can redefine the content of the registration mail here: 'C''est ici que vous pouvez redéfinir le contenu du mail d''inscription'
-You can redefine the layout used when a mail is sent: 'C''est ici que vous pouvez redéfinir le layout des emails envoyés par la plateforme'
+You can redefine the content of the registration mail here: 'Vous pouvez redéfinir ici le contenu du mail d''inscription'
+You can redefine the layout used when a mail is sent: 'Vous pouvez redéfinir ici le layout des emails envoyés par la plateforme'
 You can use the following variables in your form: 'Vous pouvez utiliser les variables suivantes dans votre formulaire'
 You can use the full screen version of the text editor to include HTML: 'Vous pouvez utiliser la version plein écran de l''éditeur afin d''y inclure du HTML'
 account_created: 'Compte créé'
@@ -100,6 +104,7 @@ back: Retour
 bad_request: 'La requête est incorrecte. Si vous êtes arrivé sur cette page via un lien interne, veuillez signaler le problème à l''''administrateur de la plateforme.'
 badges_management: 'Gestion des badges'
 by: par
+by_workspace: Par espace
 canCopy: 'Droit de copier'
 canCreate: 'Creation de %type%'
 canDelete: 'Droit de supprimer'
@@ -143,6 +148,7 @@ create_widget_instance: 'Créer un nouveau Widget'
 create_workspace: 'Créer un espace d''activités'
 creation: Création
 creation_date: 'Date de création'
+creator: Créateur
 csv_users_import_infos: 'Informations sur le format du fichier CSV'
 csv_users_import_infos_format: Format
 csv_users_import_infos_format_a: 'Les données d''un utilisateur doivent être définies sur une ligne et séparées par un point virgule'
@@ -231,7 +237,7 @@ file_form_shareType_0: Oui
 file_form_shareType_1: Non
 files: Fichiers
 filter: Filtrer
-find_workspaces: 'Tous les espaces publics'
+find_workspaces: 'Tous les espaces d''activités publics'
 firstName: Prénom
 first_name: Prénom
 forgot_password: 'Mot de passe oublié ?'
@@ -240,12 +246,13 @@ from: Depuis
 from_message: De
 general: Général
 general_parameters: 'Paramètres généraux'
-generate_url: 'Générer une url pour l''inscription des utilisateurs'
+generate_url: 'Inscription publique'
 generate_url_subscription: 'Inscription à l''espace d''activité par un utilisateur'
 generate_url_subscription_anonyme: 'Inscription à l''espace d''activité par un anonyme'
 generate_url_subscription_fail: 'Vous devez d''abord cochez la case de l''inscription publique avant de pouvoir voir l''url'
 generate_url_subscription_sucsess: 'Vous avez été ajouté à l''espace d''activité'
 get_mail_notifications: 'Je veux recevoir les notifications sur %adress%.'
+grant_access: Donner l'accès
 group: Groupe
 group_configuration: 'Configuration du groupe'
 group_creation: 'Création d''un groupe'
@@ -300,7 +307,7 @@ last_name: Nom
 layout: Layout
 left: Gauche
 line_number: 'Ligne %line%:'
-line_per_page: 'Lignes par page'
+line_per_page: Résultats par page
 link: Lien
 link_outdated: 'le lien n''est plus valide'
 list_groups: 'Lister les groupes'
@@ -341,9 +348,9 @@ messages_removed: 'Messages supprimés'
 messages_sent: 'Messages envoyés'
 messages_sent_removed: 'Messages envoyés supprimés'
 misc: Divers
-missing_%content%: 'La variable %content% est manquant pour la langue "%language%".'
-missing_%password%: 'La variable %password% est manquant pour la langue "%language%".'
-missing_%username%: 'La variable %username% est manquant pour la langue "%language%".'
+missing_%content%: 'La variable %content% est manquante pour la langue "%language%".'
+missing_%password%: 'La variable %password% est manquante pour la langue "%language%".'
+missing_%username%: 'La variable %username% est manquante pour la langue "%language%".'
 month.April: Avril
 month.August: Août
 month.December: Décembre
@@ -456,6 +463,7 @@ profile_form_plainPassword_second: Vérification
 profile_form_platformRoles: Rôles
 properties: Propriétés
 public: Public
+public_registration: Inscription publique
 public_workspace_empty: 'Il n''y a aucun espace d''activités public.'
 public_workspaces: 'Espaces d''activités publics'
 recursive_dir_action: 'Appliquer au contenu du répertoire et aux sous-répertoires'
@@ -476,9 +484,9 @@ remove_subcategory: 'Retirer la sous-catégorie'
 remove_user_confirm_message: 'Êtes-vous sûr de vouloir supprimer cet utilisateur ?'
 remove_user_s_confirm_message: 'Êtes-vous sûr de vouloir supprimer ces %count% utilisateurs?'
 remove_workspace_confirm: 'Êtes-vous sûr de vouloir supprimer cet espace d''activités ?'
-remove_workspaces_confirm: 'Êtes-vous sûr de vouloir supprimer ces %count% espaces d''activités ?'
 remove_workspace_from_category_confirm_message: 'Êtes-vous sûr de vouloir retirer cet espace d''activités de cette catégorie ?'
 remove_workspace_from_category_confirm_title: 'Retrait d''un espace d''activités d''une catégorie'
+remove_workspaces_confirm: 'Êtes-vous sûr de vouloir supprimer ces %count% espaces d''activités ?'
 rename: Renommer
 rename_category: 'Renommer la catégorie'
 rename_tool: 'Renommage d''un outil'
@@ -511,7 +519,7 @@ resources_rights_management: 'Gestion des droits des ressources'
 resources_usage_list: 'Liste d''utilisation des ressources'
 resources_usage_ratio: 'Taux d''utilisation des resources'
 restore: Restaurer
-restore_messages_confirm_message: 'message(s) restaurés'
+restore_messages_confirm_message: 'message(s) restauré(s)'
 results: Résultats
 results_for_search_on: 'Résultats de la recherche sur'
 right: Droit
@@ -564,6 +572,7 @@ show_as: 'Voir en tant que'
 show_as_admin: 'Voir comme admin'
 show_as_user: 'Voir comme utilisateur'
 show_profile: 'Voir le profile'
+simple: 'Simple'
 steal_session: 'Voler la session'
 storage_type: 'Type de stockage'
 subcategories: Sous-catégories
@@ -591,7 +600,11 @@ the_workspace: 'L''espace d''activités'
 this_page_requires_authentication: 'Cette page requiert une authentification. Veuillez vous identifier.'
 time_col: 'Colonne des durées'
 to: Jusque
-to_message: A
+to_anonymous: aux utilisateurs anonymes
+to_everyone: à tout le monde
+to_message: À
+to_platform_users: aux utilisateurs de la plateforme
+to_workspace_members: aux membres de cet espace
 today: 'Aujourd''hui'
 tool: Outil
 tool_form_displayName: 'Nom affiché'
@@ -660,6 +673,7 @@ validate: Valider
 view: Voir
 view_category_hierarchy: 'Visualiser la structure des catégories'
 views: 'Nb vues'
+visibility: Visibilité
 visible: Visible
 visitor: Visiteur
 warning_user_impersonation: 'Vous êtes connecté en tant que %user%.'
@@ -714,10 +728,20 @@ workspace_tools: Outils
 workspace_unregistration_confirm_title: 'Voulez-vous vous désinscrire de cet espace d''activités ?'
 workspace_welcome: Accueil
 workspaces: 'Espaces d''activités'
-workspaces_management: 'Gestions des espaces d''activités '
 workspaces_included_in_category: 'Espaces d''activités enregistrés dans cette catégorie'
+workspaces_management: 'Gestions des espaces d''activités '
 ws_creator: 'Créateur d''espaces'
 ws_most_viewed: 'Espaces d''activités les plus consultés'
 yes: oui
 yesterday_activity: 'Activité de la veille'
 your_username: 'Votre nom d''utilisateur est '
+users_per_page: Utilisateurs par page
+groups_per_page: Groupes par page
+tool_roles_create_directory: L'option "Créer un répertoire" vous permet de créer automatiquement un répertoire dédié aux utilisateurs de ce groupe.
+my_profile: Mon profil
+send: envoyer
+send_message_to_workspace: Envoyer un message aux utilisateurs de l'espace
+'This placeholder is required and will be replaced by the actual mail content': Ce placeholder est requis et sera remplacé par le contenu du mail
+'This placeholder is optional and will be replaced by your platform name': Ce placeholder est optionnel et sera remplacé par le nom de la plateforme
+'This placeholder is optional and will be replaced by the author first name': Ce placeholder est optionnel et sera remplacé par le prénom de l'auteur
+'This placeholder is optional and will be replaced by the author last name': Ce placeholder est optionnel et sera remplacé par le nom de l'auteur

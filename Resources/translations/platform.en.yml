@@ -4,6 +4,7 @@
 'Add a logo': 'Add a logo'
 'An error has occurred, please check if the file size does not exceeds the permitted size': 'An error has occurred, please check if the file size does not exceeds the permitted size'
 'Audience/user visits': 'Audience/user visits'
+answer: Answer
 'Choose a logo': 'Choose a logo'
 'Choose visible actions in the widget': 'Choose visible actions in the widget'
 'Choose workspaces displayed in the widget': 'Choose workspaces displayed in the widget'
@@ -28,6 +29,9 @@
 'select all': 'Select all'
 'unique connections': 'Nb unique Cnx.'
 404: 'Page Not found'
+Active: 'Active'
+Create a new resource: 'Create a new resource'
+First name: 'First name'
 First name: 'First name'
 Indexing: Indexing
 Language: Language
@@ -99,6 +103,7 @@ back: Back
 bad_request: 'The request is incorrect. If you arrived at this page via an internal link, please report the problem to the platform administrator.'
 badges_management: 'Badges management'
 by: by
+by_workspace: By workspace
 canCopy: 'Right to copy'
 canCreate: 'Create %type%'
 canDelete: 'Right to delete'
@@ -142,6 +147,7 @@ create_widget_instance: 'Create a widget'
 create_workspace: 'Create workspace'
 creation: Creation
 creation_date: 'Creation date'
+creator: Creator
 csv_users_import_infos: 'CSV file informations'
 csv_users_import_infos_format: Format
 csv_users_import_infos_format_a: 'User informations must be defined in one line and separated by semicolon'
@@ -239,12 +245,13 @@ from: From
 from_message: From
 general: General
 general_parameters: 'General parameters'
-generate_url: 'Generate a subscription url for the users'
+generate_url: 'Public URL Subscription '
 generate_url_subscription: 'Subscription to a workspace for a user'
 generate_url_subscription_anonyme: 'Subscription to a workspace for a anonymous'
 generate_url_subscription_fail: 'You must check "enable registration checkbow first to generate the url"'
 generate_url_subscription_success: 'You have been added to the workspace'
 get_mail_notifications: 'I want to be notified by email on %adress%.'
+grant_access: Grant access
 group: Group
 group_configuration: 'Group configuration'
 group_creation: 'Group creation'
@@ -299,7 +306,7 @@ last_name: 'Last name'
 layout: Layout
 left: Left
 line_number: 'Line %line%:'
-line_per_page: 'Row per page'
+line_per_page: 'Results per page'
 link: Link
 link_outdated: 'link is no more valid'
 list_groups: 'List groups'
@@ -454,6 +461,7 @@ profile_form_plainPassword_second: Verification
 profile_form_platformRoles: Roles
 properties: Properties
 public: Public
+public_registration: Public registration
 public_workspace_empty: 'There are no public workspaces.'
 public_workspaces: 'Public workspaces'
 recursive_dir_action: 'Apply to the contents of the directory and its subdirectories'
@@ -474,9 +482,9 @@ remove_subcategory: 'Remove subcategory'
 remove_user_confirm_message: 'Are you sure you want to delete this user ?'
 remove_user_s_confirm_message: 'Are you sure you want to delete these %count% users ?'
 remove_workspace_confirm_workspace: 'Are you sure you want to delete this workspace?'
-remove_workspaces_confirm_workspaces: 'Are you sure you want to delete these %count% workspaces ?'
 remove_workspace_from_category_confirm_message: 'Are you sure you want to remove the workspace from this category ?'
 remove_workspace_from_category_confirm_title: 'Remove workspace from category'
+remove_workspaces_confirm_workspaces: 'Are you sure you want to delete these %count% workspaces ?'
 rename: Rename
 rename_category: 'Rename category'
 rename_tool: 'Rename tool'
@@ -561,10 +569,12 @@ session_id: 'Session id'
 settings: Settings
 sharable: Sharable
 show: Show
+Show the name of the platform in the top bar: 'Show the name of the platform in the top bar'
 show_as: 'Show as'
 show_as_admin: 'Show as admin'
 show_as_user: 'Show as user'
 show_profile: 'Show profile'
+simple: 'Simple'
 storage_type: 'Storage type'
 subcategories: Subcategories
 subscribe_groups: 'Subscribe groups'
@@ -591,7 +601,11 @@ the_workspace: Workspace
 this_page_requires_authentication: 'This page requires authentication. Please login.'
 time_col: 'Database time column'
 to: To
+to_anonymous: to anonymous users
+to_everyone: to everyone
 to_message: To
+to_platform_users: to platform users
+to_workspace_members: to the members of this workspace
 today: Today
 tool: Tool
 tool_form_displayName: 'Displayed tool name'
@@ -660,6 +674,7 @@ validate: Validate
 view: View
 view_category_hierarchy: 'View category hierarchy'
 views: Views
+visibility: Visibility
 visible: Visible
 visitor: Visitor
 warning_user_impersonation: 'You are connected as %user%.'
@@ -713,11 +728,21 @@ workspace_template_form_name: Name
 workspace_tools: Tools
 workspace_unregistration_confirm_title: 'Do you really want to unregister from this workspace ?'
 workspace_welcome: Welcome
-workspaces_management: 'Workspaces Management'
 workspaces: Workspaces
 workspaces_included_in_category: 'Workspaces included in this category'
+workspaces_management: 'Workspaces management'
 ws_creator: 'Workspace creator'
 ws_most_viewed: 'Most viewed workspaces'
 yes: yes
 yesterday_activity: 'Yesterday''s activity'
 your_username: 'Your username is '
+users_per_page: Users per page
+groups_per_page: Groups per page
+tool_roles_create_directory: The "Create a directory" option allow you to automatically create a directory for that group.
+my_profile: My profile
+send: send
+send_message_to_workspace: Send a message to the users of the workspace.
+'This placeholder is required and will be replaced by the actual mail content': This placeholder is required and will be replaced by the actual mail content
+'This placeholder is optional and will be replaced by your platform name': This placeholder is optional and will be replaced by your platform name
+'This placeholder is optional and will be replaced by the author first name': This placeholder is optional and will be replaced by the author first name
+'This placeholder is optional and will be replaced by the author last name': This placeholder is optional and will be replaced by the author last name

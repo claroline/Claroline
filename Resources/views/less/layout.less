@@ -49,6 +49,9 @@ textarea {
     /* Negative indent footer by it's height */
     margin: 0 auto -@navbar-height;
 }
+.center-text {
+  text-align: center;
+}
 
 #push {
     height: 100%;
@@ -419,14 +422,14 @@ textarea {
     .resource-manager, .creator {
         .navbar {
 
-            > ul > li > a {
+            > ul > li {
                 float: left;
             }
 
             > .navbar-nav, > .navbar-form
             {
                 margin: 0;
-                border:none;
+                border: none;
             }
         }
     }
@@ -571,6 +574,15 @@ textarea {
 
     .node-thumbnail {
 
+        &.ui-state-default {
+            border: none;
+            background: none;
+            .node-name {
+                font-weight: normal;
+                color: @gray-dark;
+            }
+        }
+
         .node-element {
             background-position: center center;
             background-size: auto 100% ;
@@ -624,15 +636,15 @@ textarea {
 .dropzone {
     border-style: dotted;
     min-height: 100px;
-}
 
-.dropzone-text {
-    font-size: 15px;
-    font-weight: bold;
-    font-family: "Helvetica Neue";
-    text-align: center;
-    margin-top: -30px;
-    line-height: 30px;
+    &-text {
+        font-size: 15px;
+        font-weight: bold;
+        font-family: "Helvetica Neue";
+        text-align: center;
+        margin-top: -30px;
+        line-height: 30px;
+    }
 }
 
 .resources-progress-bar {
@@ -691,6 +703,66 @@ div.pagination {
 /* MISC */
 /********/
 
+.margin {
+    &-none { margin: 0 0 0 0 }
+    &-md { margin: 15px 15px 15px 15px }
+    &-sm { margin: 10px 10px 10px 10px}
+    &-top {
+        &-none { margin-top: 0 }
+        &-md { margin-top: 15px }
+        &-sm { margin-top: 10px }
+    }
+    &-right {
+        &-none { margin-right: 0 }
+        &-md { margin-right: 15px }
+        &-sm { margin-right: 10px }
+    }
+    &-bottom {
+        &-none { margin-bottom: 0 }
+        &-md { margin-bottom: 15px }
+        &-sm { margin-bottom: 10px }
+    }
+    &-left {
+        &-none { margin-left: 0 }
+        &-md { margin-left: 15px }
+        &-sm { margin-left: 10px }
+    }
+}
+
+.padding {
+    &-none { padding: 0 0 0 0 }
+    &-md { padding: 15px 15px 15px 15px }
+    &-sm { padding: 10px 10px 10px 10px}
+    &-top {
+        &-none { padding-top: 0 }
+        &-md { padding-top: 15px }
+        &-sm { padding-top: 10px }
+    }
+    &-right {
+        &-none { padding-right: 0 }
+        &-md { padding-right: 15px }
+        &-sm { padding-right: 10px }
+    }
+    &-bottom {
+        &-none { padding-bottom: 0 }
+        &-md { padding-bottom: 15px }
+        &-sm { padding-bottom: 10px }
+    }
+    &-left {
+        &-none { padding-left: 0 }
+        &-md { padding-left: 15px }
+        &-sm { padding-left: 10px }
+    }
+}
+
+.parent-hide {
+    opacity: 0 !important;
+}
+
+.bold {
+  font-weight: bold;
+}
+
 form .global-error {
     .alert;
     .alert-danger;
@@ -720,32 +792,6 @@ form .global-error {
 .table-responsive {
     overflow-y: hidden;
     overflow-x: auto;
-}
-
-.margin-top-sm {
-    margin-top: 10px;
-}
-
-.margin-bottom-sm {
-    margin-bottom: 10px;
-}
-
-.margin-top-md {
-    margin-top: 15px;
-}
-
-.margin-bottom-md {
-    margin-bottom: 15px;
-}
-
-.margin-sm {
-    .margin-top-sm;
-    .margin-bottom-sm;
-}
-
-.margin-md {
-    .margin-top-md;
-    .margin-bottom-md;
 }
 
 .please-wait {
@@ -1055,31 +1101,44 @@ form .global-error {
 /**     tinyMCE      **/
 /**********************/
 
-.mce-container.mce-panel.mce-abs-layout-item {
-    background: @modal-content-bg !important;
-    background-image: none !important;
-}
+.mce-container.mce-panel {
+    &.mce-abs-layout-item {
+        background: @modal-content-bg !important;
+        background-image: none !important;
+    }
 
-.mce-container.mce-panel.mce-foot {
-    background: @panel-default-heading-bg !important;
-    .mce-btn {
-        color: @btn-default-color !important;
-        background: @btn-default-bg !important;
-        border: 1px solid @btn-default-border !important;
-        font-weight: @btn-font-weight !important;
-        .border-top-radius(@input-border-radius);
-        .border-bottom-radius(@input-border-radius);
-        button {
-            text-shadow: none !important;
+    &.mce-foot {
+        background: @panel-default-heading-bg !important;
+        .mce-btn {
+            color: @btn-default-color !important;
+            background: @btn-default-bg !important;
+            border: 1px solid @btn-default-border !important;
+            font-weight: @btn-font-weight !important;
+            .border-top-radius(@input-border-radius);
+            .border-bottom-radius(@input-border-radius);
+
+            button {
+                text-shadow: none !important;
+            }
+
+            &.mce-primary {
+                background: @btn-primary-bg !important;
+                color: @btn-primary-color !important;
+                border: 1px solid @btn-primary-border !important;
+            }
         }
     }
 
-    .mce-btn.mce-primary {
-        background: @btn-primary-bg !important;
-        color: @btn-primary-color !important;
-        border: 1px solid @btn-primary-border !important;
+    &.mce-stack-layout-item {
+        overflow: auto;
+        clear:both;
+        background: @navbar-default-bg !important;
+        .border-top-radius(@input-border-radius);
+        .mce-container.mce-toolbar.mce-stack-layout-item {
+            float: left;
+            .border-top-radius(@input-border-radius);
+        }
     }
-
 }
 
 .mce-tinymce.mce-container.mce-panel {
@@ -1088,16 +1147,6 @@ form .global-error {
     border: 1px solid @input-border;
 }
 
-.mce-container.mce-panel.mce-stack-layout-item {
-    overflow: auto;
-    clear:both;
-    background: @navbar-default-bg !important;
-    .border-top-radius(@input-border-radius);
-    .mce-container.mce-toolbar.mce-stack-layout-item {
-        float: left;
-        .border-top-radius(@input-border-radius);
-    }
-}
 
 .mce-edit-area.mce-container.mce-panel.mce-stack-layout-item {
     .border-top-radius(0);
@@ -1224,7 +1273,7 @@ form .global-error {
 }
 
 .datepicker {
-    z-index: (@zindex-modal + 5);
+    z-index: (@zindex-modal + 5) !important;
 }
 
 .claroline-tag-highlight {
@@ -1233,7 +1282,7 @@ form .global-error {
 }
 
 //for tiny-mce inside modals
-body.mce-fullscreen .modal#myModal {
+body.mce-fullscreen .modal.fullscreen {
     overflow: hidden;
     .modal-dialog {
         width: 100%;
@@ -1259,7 +1308,7 @@ body.mce-fullscreen .modal#myModal {
         top: -5px;
         left: 0
     }
-    i{
+    i {
         font-size: 17px;
     }
 }

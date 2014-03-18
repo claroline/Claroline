@@ -24,6 +24,7 @@ use JMS\SecurityExtraBundle\Annotation as SEC;
 use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\Message;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Claroline\CoreBundle\Form\Factory\FormFactory;
 use Claroline\CoreBundle\Library\Security\Utilities;
 use Claroline\CoreBundle\Manager\GroupManager;
@@ -109,6 +110,26 @@ class MessageController
     {
         $url = $this->router->generate('claro_message_show', array('message' => 0))
             . $this->messageManager->generateGroupQueryString($group);
+
+        return new RedirectResponse($url);
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/form/workspace/{workspace}",
+     *     name="claro_message_form_for_workspace"
+     * )
+     *
+     * Displays the message form with the "to" field filled with users of a workspace.
+     *
+     * @param AbstractWorkspace $workspace
+     *
+     * @return Response
+     */
+    public function formForWorkspaceAction(AbstractWorkspace $workspace)
+    {
+        $url = $this->router->generate('claro_message_show', array('message' => 0))
+            . $this->messageManager->generateWorkspaceQueryString($workspace);
 
         return new RedirectResponse($url);
     }
@@ -444,7 +465,7 @@ class MessageController
             $users = array();
             $token = $this->securityContext->getToken();
             $roles = $this->utils->getRoles($token);
-            $workspaces = $this->workspaceManager->getWorkspacesByRoles($roles);
+            $workspaces = $this->workspaceManager->getOpenableWorkspacesByRoles($roles);
 
             if (count($workspaces) > 0) {
                 if ($trimmedSearch === '') {
@@ -568,6 +589,42 @@ class MessageController
         }
 
         return array('groups' => $groups, 'search' => $search);
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/contactable/workspaces/page/{page}",
+     *     name="claro_message_contactable_workspaces",
+     *     options={"expose"=true},
+     *     defaults={"page"=1, "search"=""}
+     * )
+     * @EXT\Method("GET")
+     * @EXT\Route(
+     *     "/contactable/workspaces/page/{page}/search/{search}",
+     *     name="claro_message_contactable_workspaces_search",
+     *     options={"expose"=true},
+     *     defaults={"page"=1}
+     * )
+     * @EXT\Method("GET")
+     * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
+     * @EXT\Template()
+     *
+     *
+     * Displays the list of groups that the current user can send a message to,
+     * optionally filtered by a search on group name
+     *
+     * @param integer $page
+     * @param string  $search
+     * @param User    $user
+     *
+     * @return Response
+     */
+    public function contactableWorkspacesListAction(User $user, $page, $search)
+    {
+        $workspaces = $this->workspaceManager->getWorkspacesByManager($user);
+        $workspaces = $this->pagerFactory->createPagerFromArray($workspaces, $page);
+
+        return array('workspaces' => $workspaces, 'search' => $search);
     }
 
     public function checkAccess(Message $message, User $user)

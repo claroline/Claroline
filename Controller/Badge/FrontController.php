@@ -27,7 +27,7 @@ class FrontController extends Controller
 {
     /**
      * @Route("/{slug}", name="claro_view_badge")
-     * @ParamConverter("badge", converter="badge_converter")
+     * @ParamConverter("badge", converter="badge_converter", options={"check_deleted" = false})
      *
      * @SEC\Secure(roles="ROLE_USER")
      *
@@ -35,11 +35,6 @@ class FrontController extends Controller
      */
     public function viewAction(Badge $badge)
     {
-        /** @var \Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler $platformConfigHandler */
-        $platformConfigHandler = $this->get('claroline.config.platform_config_handler');
-
-        $badge->setLocale($platformConfigHandler->getParameter('locale_language'));
-
         return array(
             'badge' => $badge
         );

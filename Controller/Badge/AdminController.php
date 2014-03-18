@@ -51,9 +51,6 @@ class AdminController extends Controller
      */
     public function listAction($badgePage, $claimPage)
     {
-        /** @var \Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler $platformConfigHandler */
-        $platformConfigHandler = $this->get('claroline.config.platform_config_handler');
-
         $parameters = array(
             'badgePage'        => $badgePage,
             'claimPage'        => $claimPage,
@@ -70,8 +67,7 @@ class AdminController extends Controller
         );
 
         return array(
-            'parameters'  => $parameters,
-            'language'    => $platformConfigHandler->getParameter('locale_language')
+            'parameters'  => $parameters
         );
     }
 
@@ -84,43 +80,33 @@ class AdminController extends Controller
     {
         $badge = new Badge();
 
-        //@TODO Get locales from locale source (database etc...)
-        $locales = array('fr', 'en');
+        $locales = $this->get('claroline.common.locale_manager')->getAvailableLocales();
         foreach ($locales as $locale) {
             $translation = new BadgeTranslation();
             $translation->setLocale($locale);
             $badge->addTranslation($translation);
         }
 
-        $form = $this->createForm($this->get('claroline.form.badge'), $badge);
+        /** @var \Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface $sessionFlashBag */
+        $sessionFlashBag = $this->get('session')->getFlashBag();
 
-        if ($request->isMethod('POST')) {
-            $form->handleRequest($request);
-            if ($form->isValid()) {
-                /** @var \Symfony\Bundle\FrameworkBundle\Translation\Translator $translator */
-                $translator = $this->get('translator');
-                try {
-                    /** @var \Doctrine\Common\Persistence\ObjectManager $entityManager */
-                    $entityManager = $this->getDoctrine()->getManager();
+        /** @var \Symfony\Bundle\FrameworkBundle\Translation\Translator $translator */
+        $translator = $this->get('translator');
 
-                    $entityManager->persist($badge);
-                    $entityManager->flush();
-
-                    $this->get('session')
-                        ->getFlashBag()
-                        ->add('success', $translator->trans('badge_add_success_message', array(), 'badge'));
-                } catch (\Exception $exception) {
-                    $this->get('session')
-                        ->getFlashBag()
-                        ->add('error', $translator->trans('badge_add_error_message', array(), 'badge'));
-                }
+        try {
+            if ($this->get('claroline.form_handler.badge')->handleAdd($badge)) {
+                $sessionFlashBag->add('success', $translator->trans('badge_add_success_message', array(), 'badge'));
 
                 return $this->redirect($this->generateUrl('claro_admin_badges'));
             }
+        } catch (\Exception $exception) {
+            $sessionFlashBag->add('error', $translator->trans('badge_add_error_message', array(), 'badge'));
+
+            return $this->redirect($this->generateUrl('claro_admin_badges'));
         }
 
         return array(
-            'form'  => $form->createView(),
+            'form'  => $this->get('claroline.form.badge')->createView(),
             'badge' => $badge
         );
     }
@@ -133,13 +119,7 @@ class AdminController extends Controller
      */
     public function editAction(Request $request, Badge $badge, $page = 1)
     {
-        /** @var \Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler $platformConfigHandler */
-        $platformConfigHandler = $this->get('claroline.config.platform_config_handler');
-        $badge->setLocale($platformConfigHandler->getParameter('locale_language'));
-
-        $doctrine = $this->getDoctrine();
-
-        $query   = $doctrine->getRepository('ClarolineCoreBundle:Badge\Badge')->findUsers($badge, false);
+        $query   = $this->getDoctrine()->getRepository('ClarolineCoreBundle:Badge\Badge')->findUsers($badge, false);
         $adapter = new DoctrineORMAdapter($query);
         $pager   = new Pagerfanta($adapter);
 
@@ -149,57 +129,26 @@ class AdminController extends Controller
             throw $this->createNotFoundException();
         }
 
-        /** @var BadgeRule[] $originalRules */
-        $originalRules = array();
+        /** @var \Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface $sessionFlashBag */
+        $sessionFlashBag = $this->get('session')->getFlashBag();
 
-        foreach ($badge->getRules() as $rule) {
-            $originalRules[] = $rule;
-        }
+        /** @var \Symfony\Bundle\FrameworkBundle\Translation\Translator $translator */
+        $translator = $this->get('translator');
 
-        $form = $this->createForm($this->get('claroline.form.badge'), $badge);
-
-        if ($request->isMethod('POST')) {
-            $form->handleRequest($request);
-
-            if ($form->isValid()) {
-                /** @var \Symfony\Bundle\FrameworkBundle\Translation\Translator $translator */
-                $translator = $this->get('translator');
-                try {
-                    /** @var \Doctrine\Common\Persistence\ObjectManager $entityManager */
-                    $entityManager = $doctrine->getManager();
-
-                    // Compute which rules was deleted
-                    foreach ($badge->getRules() as $rule) {
-                        foreach ($originalRules as $key => $originalRule) {
-                            if ($originalRule->getId() === $rule->getId()) {
-                                unset($originalRules[$key]);
-                            }
-                        }
-                    }
-
-                    // Delete rules
-                    foreach ($originalRules as $rule) {
-                        $entityManager->remove($rule);
-                    }
-
-                    $entityManager->persist($badge);
-                    $entityManager->flush();
-
-                    $this->get('session')
-                        ->getFlashBag()
-                        ->add('success', $translator->trans('badge_edit_success_message', array(), 'badge'));
-                } catch (\Exception $exception) {
-                    $this->get('session')
-                        ->getFlashBag()
-                        ->add('error', $translator->trans('badge_edit_error_message', array(), 'badge'));
-                }
+        try {
+            if ($this->get('claroline.form_handler.badge')->handleEdit($badge)) {
+                $sessionFlashBag->add('success', $translator->trans('badge_edit_success_message', array(), 'badge'));
 
                 return $this->redirect($this->generateUrl('claro_admin_badges'));
             }
+        } catch (\Exception $exception) {
+            $sessionFlashBag->add('error', $translator->trans('badge_edit_error_message', array(), 'badge'));
+
+            return $this->redirect($this->generateUrl('claro_admin_badges'));
         }
 
         return array(
-            'form'  => $form->createView(),
+            'form'  => $this->get('claroline.form.badge')->createView(),
             'badge' => $badge,
             'pager' => $pager
         );
@@ -249,10 +198,6 @@ class AdminController extends Controller
         if (null !== $badge->getWorkspace()) {
             throw $this->createNotFoundException("No badge found.");
         }
-
-        /** @var \Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler $platformConfigHandler */
-        $platformConfigHandler = $this->get('claroline.config.platform_config_handler');
-        $badge->setLocale($platformConfigHandler->getParameter('locale_language'));
 
         $form = $this->createForm($this->get('claroline.form.badge.award'));
 
@@ -329,10 +274,6 @@ class AdminController extends Controller
         if (null !== $badge->getWorkspace()) {
             throw $this->createNotFoundException("No badge found.");
         }
-
-        /** @var \Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler $platformConfigHandler */
-        $platformConfigHandler = $this->get('claroline.config.platform_config_handler');
-        $badge->setLocale($platformConfigHandler->getParameter('locale_language'));
 
         /** @var \Symfony\Bundle\FrameworkBundle\Translation\Translator $translator */
         $translator = $this->get('translator');

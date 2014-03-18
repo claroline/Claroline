@@ -49,4 +49,12 @@ class BadgeRule extends Rule
     {
         return $this->associatedBadge;
     }
+
+    public function __clone()
+    {
+        if ($this->id) {
+            $this->id              = null;
+            $this->associatedBadge = null;
+        }
+    }
 }

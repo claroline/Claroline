@@ -49,11 +49,13 @@ class TemplateBuilder
     }
 
     /**
-     * @param mixed   $content  the file content
-     * @param string  $hashName the file hashname
-     * @param string  $fileName the file name
-     * @param integer $parentId the parent directory id (root = 1)
-     * @param integer $fileId   the file id
+     * @param $filePath
+     * @param $hashName
+     * @param $fileName
+     * @param $parentId
+     * @param $fileId
+     *
+     * @return $this
      */
     public function addFile($filePath, $hashName, $fileName, $parentId, $fileId)
     {
@@ -92,10 +94,7 @@ class TemplateBuilder
     public function addTool($name, $displayedName)
     {
         $toolsInfos = array(
-            'perms' => array(
-                'ROLE_WS_COLLABORATOR',
-                'ROLE_WS_MANAGER'
-            ),
+            'perms' => array('ROLE_WS_COLLABORATOR'),
             'name' => $displayedName
         );
 
@@ -172,14 +171,6 @@ class TemplateBuilder
     {
         return array(
             'root_perms' => array(
-                'ROLE_WS_VISITOR' => array(
-                    'edit' => '0',
-                    'open' => '0',
-                    'delete' => '0',
-                    'copy' => '0',
-                    'export' => '0',
-                    'create' => array()
-                ),
                 'ROLE_WS_COLLABORATOR' => array(
                     'edit' => '0',
                     'open' => '1',
@@ -187,20 +178,6 @@ class TemplateBuilder
                     'copy' => '0',
                     'export' => '1',
                     'create' => array()
-                ),
-                'ROLE_WS_MANAGER' => array(
-                    'edit' => '1',
-                    'open' => '1',
-                    'delete' => '1',
-                    'copy' => '1',
-                    'export' => '1',
-                    'create' => array(
-                        0 => array('name' => 'file'),
-                        1 => array('name' => 'directory'),
-                        2 => array('name' => 'text'),
-                        3 => array('name' => 'resource_shortcut'),
-                        4 => array('name' => 'activity')
-                    )
                 )
             ),
             'tools' => array(
@@ -220,38 +197,33 @@ class TemplateBuilder
                 )
             ),
             'roles' => array(
-                'ROLE_WS_VISITOR' => 'visitor',
-                'ROLE_WS_COLLABORATOR' => 'collaborator',
-                'ROLE_WS_MANAGER' => 'manager'
+                'ROLE_WS_COLLABORATOR' => 'collaborator'
             ),
-            'creator_role' => 'ROLE_WS_MANAGER',
             'tools_infos' => array(
                 'home' => array(
                     'perms' => array(
-                        0 => 'ROLE_WS_VISITOR',
-                        1 => 'ROLE_WS_COLLABORATOR',
-                        2 => 'ROLE_WS_MANAGER',
+                        1 => 'ROLE_WS_COLLABORATOR'
                     ),
                     'name' => 'home'
                 ),
                 'resource_manager' => array(
-                    'perms' => array('ROLE_WS_COLLABORATOR', 'ROLE_WS_MANAGER'),
+                    'perms' => array('ROLE_WS_COLLABORATOR'),
                     'name' => 'resource_manager'
                 ),
                 'agenda' => array(
-                    'perms' => array('ROLE_WS_COLLABORATOR', 'ROLE_WS_MANAGER'),
+                    'perms' => array('ROLE_WS_COLLABORATOR'),
                     'name' => 'agenda'
                 ),
                 'parameters' => array(
-                    'perms' => array('ROLE_WS_MANAGER'),
+                    'perms' => array(),
                     'name' => 'parameters'
                 ),
                 'users' => array(
-                    'perms' => array('ROLE_WS_MANAGER'),
+                    'perms' => array(),
                     'name' => 'users'
                 ),
                 'logs' => array(
-                    'perms' => array('ROLE_WS_MANAGER'),
+                    'perms' => array(),
                     'name' => 'logs'
                 ),
             ),
@@ -262,14 +234,6 @@ class TemplateBuilder
     public function getDefaultResourcePerms()
     {
         return array(
-            'ROLE_WS_VISITOR' => array(
-                'edit' => '0',
-                'open' => '0',
-                'delete' => '0',
-                'copy' => '0',
-                'export' => '0',
-                'create' => array()
-            ),
             'ROLE_WS_COLLABORATOR' => array(
                 'edit' => '0',
                 'open' => '1',

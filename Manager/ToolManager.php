@@ -255,11 +255,9 @@ class ToolManager
      */
     public function getWorkspaceToolsConfigurationArray(AbstractWorkspace $workspace)
     {
-        $missingTools = $this->addMissingWorkspaceTools($workspace);
-        $existingTools = $this->getWorkspaceExistingTools($workspace);
-        $tools = array_merge($existingTools, $missingTools);
+        $this->addMissingWorkspaceTools($workspace);
 
-        return $tools;
+        return $this->getWorkspaceExistingTools($workspace);
     }
 
     /**
@@ -280,7 +278,7 @@ class ToolManager
     public function getWorkspaceExistingTools(AbstractWorkspace $workspace)
     {
         $ot = $this->orderedToolRepo->findBy(array('workspace' => $workspace), array('order' => 'ASC'));
-        $wsRoles = $this->roleManager->getWorkspaceRoles($workspace);
+        $wsRoles = $this->roleManager->getWorkspaceConfigurableRoles($workspace);
         $existingTools = array();
 
         foreach ($ot as $orderedTool) {
@@ -333,7 +331,7 @@ class ToolManager
         $initPos = $this->toolRepo->countDisplayedToolsByWorkspace($workspace);
         $initPos++;
         $missingTools = array();
-        $wsRoles = $this->roleManager->getWorkspaceRoles($workspace);
+        $wsRoles = $this->roleManager->getWorkspaceConfigurableRoles($workspace);
 
         foreach ($undisplayedTools as $undisplayedTool) {
             if ($undisplayedTool->isDisplayableInWorkspace()) {
@@ -515,7 +513,7 @@ class ToolManager
      *
      * @param array $criterias
      *
-     * @return \Claroline\CoreBundle\Entity\Tool\Tool
+     * @return \Claroline\CoreBundle\Entity\Tool\Tool[]
      */
     public function getToolByCriterias(array $criterias)
     {
@@ -551,11 +549,21 @@ class ToolManager
      * @param string[]                                                 $roles
      * @param \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace $workspace
      *
-     * @return \Claroline\CoreBundle\Entity\Tool\OrderedTool
+     * @return \Claroline\CoreBundle\Entity\Tool\OrderedTool[]
      */
     public function getOrderedToolsByWorkspaceAndRoles(AbstractWorkspace $workspace, array $roles)
     {
         return $this->orderedToolRepo->findByWorkspaceAndRoles($workspace, $roles);
+    }
+
+    /**
+     * @param \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace $workspace
+     *
+     * @return \Claroline\CoreBundle\Entity\Tool\OrderedTool[]
+     */
+    public function getOrderedToolsByWorkspace(AbstractWorkspace $workspace)
+    {
+        return $this->orderedToolRepo->findBy(array('workspace' => $workspace), array('order' => 'ASC'));
     }
 
     /**

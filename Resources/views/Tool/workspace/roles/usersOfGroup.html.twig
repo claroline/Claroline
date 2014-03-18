@@ -1,29 +1,29 @@
 {% macro renderPager(search, workspaceId, group, pager, max, order) %}
-{% if search == '' %}
-    {{
-        pagerfanta(
-        pager,
-        'twitter_bootstrap_translated',
-            {
-                'proximity' : 1,
-                'routeName': 'claro_workspace_users_of_group',
-                'routeParams': {'workspace': workspaceId, 'group': group.getId(), 'max': max, 'order': order}
-            }
-        )
-    }}
-{% else %}
-    {{
-        pagerfanta(
-        pager,
-        'twitter_bootstrap_translated',
-            {
-                'proximity' : 1,
-                'routeName': 'claro_workspace_users_of_group_search',
-                'routeParams': {'search': search, 'workspace': workspaceId, 'group': group.getId(), 'max': max, 'order': order}
-            }
-        )
-    }}
-{% endif %}
+    {% if search == '' %}
+        {{
+            pagerfanta(
+            pager,
+            'twitter_bootstrap_translated',
+                {
+                    'proximity' : 1,
+                    'routeName': 'claro_workspace_users_of_group',
+                    'routeParams': {'workspace': workspaceId, 'group': group.getId(), 'max': max, 'order': order}
+                }
+            )
+        }}
+    {% else %}
+        {{
+            pagerfanta(
+            pager,
+            'twitter_bootstrap_translated',
+                {
+                    'proximity' : 1,
+                    'routeName': 'claro_workspace_users_of_group_search',
+                    'routeParams': {'search': search, 'workspace': workspaceId, 'group': group.getId(), 'max': max, 'order': order}
+                }
+            )
+        }}
+    {% endif %}
 {% endmacro %}
 
 {% macro sortUrl(max, search, groupId, workspaceId, order) %}
@@ -38,6 +38,7 @@
 
 {% from _self import sortUrl %}
 {% from _self import renderPager %}
+{% from "ClarolineCoreBundle::macros.html.twig" import maxResultsSelectBox %}
 
 {% extends 'ClarolineCoreBundle:Workspace:layout.html.twig' %}
 
@@ -66,7 +67,6 @@
         ])
     }}
 {% endblock %}
-
 
 {% block section_content %}
     <div class="panel-body">
@@ -104,17 +104,8 @@
                 <div class="col-md-8">
                     {{ renderPager(search, workspace.getId(), group, pager, max, order) }}
                 </div>
-                <div class="col-md-4" style="margin-top: 15px;">
-                    <div class="input-group margin-md">
-                        <select class="form-control input-md" id="max-select">
-                            <option>20</option>
-                            <option>50</option>
-                            <option>100</option>
-                            <option>200</option>
-                            <option>500</option>
-                        </select>
-                        <span class="input-group-addon">{{ 'line_per_page'|trans({}, 'platform') }}</span>
-                    </div>
+                <div class="col-md-4">
+                    {{ maxResultsSelectBox(max, "$('#search-button').trigger('click');") }}
                 </div>
             </div>
             <div class="table-responsive">
@@ -149,12 +140,25 @@
     {{ parent() }}
     <script src='{{ asset('bundles/clarolinecore/js/table.js') }}' type="text/javascript"></script>
     <script>
-        $('#max-select').val({{ max }});
         parameters = {};
         parameters.route = {};
         parameters.route.action = {};
-        parameters.route.normal = {"route": "claro_workspace_users_of_group", "parameters": {'group': {{ group.getId() }}, 'workspace': {{  workspace.getId() }}, "order": "{{order}}" }};
-        parameters.route.search = {"route": "claro_workspace_users_of_group_search", "parameters": {'group': {{ group.getId() }}, 'workspace': {{  workspace.getId() }}, "order": "{{prder}}" }};
+        parameters.route.normal = {
+            "route": "claro_workspace_users_of_group",
+            "parameters": {
+                'group': {{ group.getId() }},
+                'workspace': {{  workspace.getId() }},
+                "order": "{{ order }}"
+            }
+        };
+        parameters.route.search = {
+            "route": "claro_workspace_users_of_group_search",
+            "parameters": {
+                'group': {{ group.getId() }},
+                'workspace': {{  workspace.getId() }},
+                "order": "{{ order }}"
+            }
+        };
         Claroline.Table.initialize(parameters);
     </script>
 {% endblock %}

@@ -1,0 +1,190 @@
+{% macro renderPager(search, pager, max, order) %}
+    {% if search == '' %}
+    {{
+        pagerfanta(
+            pager,
+            'twitter_bootstrap_translated',
+            {
+                'proximity' : 1,
+                'routeName': 'claro_admin_user_list',
+                'routeParams': {'max': max, 'order': order}
+            }
+        )
+    }}
+    {% else %}
+        {{
+            pagerfanta(
+                pager,
+                'twitter_bootstrap_translated',
+                {
+                    'proximity' : 1,
+                    'routeName': 'claro_admin_user_list_search',
+                    'routeParams': {'search': search, 'max': max, 'order': order}
+                }
+            )
+        }}
+    {% endif %}
+{% endmacro %}
+
+{% macro displayControls() %}
+    {% if app.user %}
+        <button class="btn btn-default action-button" data-action="remove">
+            <i class="icon-trash"></i>
+            {{ 'delete'|trans({}, 'platform') }}
+        </button>
+        <button class="btn btn-default action-button" data-action="password">
+            <i class="icon-refresh"></i>
+            {{ 'reset_password'|trans({}, 'platform') }}
+        </button>
+    {% endif %}
+{% endmacro %}
+
+{% macro sortUrl(max, search, order) %}
+    {% if search == '' %}
+        {{ path('claro_admin_user_list', {'max': max, 'order': order}) }}
+    {% else %}
+        {{ path('claro_admin_user_list_search', {'search': search, 'max': max, 'order': order}) }}
+    {% endif %}
+{% endmacro %}
+
+{% from _self import renderPager %}
+{% from _self import displayControls %}
+{% from _self import sortUrl %}
+{% from "ClarolineCoreBundle::macros.html.twig" import maxResultsSelectBox %}
+
+{% extends "ClarolineCoreBundle:Administration:layout.html.twig" %}
+
+{% block title %}{{ parent() ~ ' - ' ~ 'users' | trans({}, 'platform') | striptags | raw }}{% endblock %}
+
+{% block breadcrumb %}
+    {{
+        macros.breadcrumbs([
+            {
+                'icon': 'icon-cog',
+                'name': 'administration'|trans({}, 'platform'),
+                'href': path('claro_admin_index')
+            },
+            {
+                'name': 'users_management'|trans({}, 'platform'),
+                'href': path('claro_admin_users_management')
+            },
+            {
+                'name': 'users'|trans({}, 'platform'),
+                'href': ''
+            }
+        ])
+    }}
+{% endblock %}
+{% block section_content %}
+    <div class="panel-heading">
+        <h3 class="panel-title">{{ 'users_list'|trans({}, 'platform') }}</h3>
+    </div>
+    <div class="panel-body">
+        <div>
+            {{ macros.flashBox() }}
+        </div>
+        <div class="search-bar row">
+            <div class="col-md-8">
+                {{ displayControls() }}
+            </div>
+            <div class="col-md-4">
+                 <div class="input-group">
+                    <input class="form-control" type="text" id="search-items-txt" placeholder="{{ 'search'|trans({}, 'platform') }}" value={{search}}>
+                    <span class="input-group-btn">
+                        <button class="filter btn btn-default" type="button" id="search-button">
+                            <i class="icon-search"></i>
+                        </button>
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-8">
+                {% if pager.getNbPages() > 1 %}
+                    {{ renderPager(search, pager, max, order) }}
+                {% endif %}   
+            </div>
+            <div class="col-md-4" style="margin-top: 15px;">
+                {{ maxResultsSelectBox(max, "$('#search-button').trigger('click');", 'users_per_page') }}
+            </div>
+        </div>
+        <div class="table-responsive">
+            <table id="user-table"  class="table table-striped table-bordered table-condensed">
+                <thead>
+                    <tr>
+                        {% if is_granted('ROLE_ADMIN') %}
+                            <th><input type="checkbox" name="all" id="check-all-items"></input></th>
+                        {% endif %}
+                        <th><a href="{{ sortUrl(max, search, 'username') }}">{{ 'username'|trans({}, 'platform') }}</a></th>
+                        <th><a href="{{ sortUrl(max, search, 'lastName') }}">{{ 'last_name'|trans({}, 'platform') }}</a></th>
+                        <th><a href="{{ sortUrl(max, search, 'firstName') }}">{{ 'first_name'|trans({}, 'platform') }}</a></th>
+                        <th><a href="{{ sortUrl(max, search, 'mail') }}">{{ 'mail'|trans({}, 'platform') }}</a></th>
+                        <th>{{ 'role'|trans({}, 'platform') }}</th>
+                        {% if is_granted('ROLE_ADMIN') %}
+                            <th>{{ 'actions' | trans({}, 'platform') }}</th>
+                        {% endif %}
+                    </tr>
+                </thead>
+                <tbody id="user-table-body">
+                    {% for user in pager.currentPageResults %}
+                        <tr id="{{ user.getId() }}" class="row-user">
+                            {% if is_granted('ROLE_ADMIN') %}
+                                <td>
+                                    <input type="checkbox" value="{{ user.id }}" class="chk-item" align="center"></input>
+                                </td>
+                            {% endif %}
+                            <td>
+                                <a href="{{ path('claro_profile_view', {'userId': user.getId()}) }}">{{ user.getUsername() }}</a>
+                            </td>
+                            <td>{{ user.getLastName() }}</td>
+                            <td>{{ user.getFirstName() }}</td>
+                            <td>{{ user.getMail() }}</td>
+                            <td>
+                                <div>
+                                    {% for role in user.getEntityRoles() %}
+                                        {% if role.type == 1 %}
+                                            {{ role.getTranslationKey()|trans({}, 'platform')  }}{% if not loop.last %}, {% endif %}
+                                        {% endif %}
+                                    {% endfor %}
+                                </div>
+                            </td>
+                            {% if is_granted('ROLE_ADMIN') %}
+                                <td>
+                                    {% if user.getId() != app.user.id %}
+                                        <a class='btn btn-default' href="{{ path('claro_desktop_open', {'_switch': user.getUsername()}) }}" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="{{ 'show_as'|trans({}, 'platform') }}">
+                                            <i class='icon-eye-open'></i>
+                                        </a>
+                                    {% endif %}
+                                    <a class='btn btn-default' href="{{ path('claro_profile_form', {'user': user.getId()}) }}" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="{{ 'edit'|trans({}, 'platform') }}">
+                                        <i class='icon-pencil'></i>
+                                    </a>
+                                </td>
+                            {% endif %}
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+            {% if pager.getNbPages() > 1 %}
+                 {{ renderPager(search, pager, max, order) }}
+            {% endif %}
+        <div>
+            {{ displayControls() }}
+        </div>
+    </div>
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    <script src='{{ asset('bundles/clarolinecore/js/table.js') }}' type="text/javascript"></script>
+    <script>
+        parameters = {};
+        parameters.route = {};
+        parameters.route.action = {};
+        parameters.route.normal = {"route": "claro_admin_user_list", "parameters": {'order': '{{ order }}' }};
+        parameters.route.search = {"route": "claro_admin_user_list_search", "parameters": {'order': '{{ order }}' }};
+        parameters.route.action.remove = {"route": "claro_admin_multidelete_user", "parameters": {}, "type": "DELETE", "confirmTemplate": removeUserConfirm, "delete": true};
+        parameters.route.action.password = {"route": "claro_security_initialize_password", "parameters": {}, "type": "POST", "confirmTemplate": resetPasswordConfirm};
+        Claroline.Table.initialize(parameters);
+    </script>
+{% endblock %}
