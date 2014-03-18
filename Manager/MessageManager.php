@@ -137,10 +137,10 @@ class MessageManager
             $workspaceReceivers = $this->workspaceRepo->findWorkspacesByCode($workspaceCodes);
         }
 
-        $message->setSender($sender);
+        $message->setSender($message->getSender());
 
-        if (null !== $parent) {
-            $message->setParent($parent);
+        if (null !== $message->getParent()) {
+            $message->setParent($message->getParent());
         }
 
         $this->om->persist($message);
@@ -189,7 +189,7 @@ class MessageManager
             $userMessage->setMessage($message);
             $this->om->persist($userMessage);
 
-            if ($user->isMailNotified()) {
+            if ($filteredUser->isMailNotified()) {
                 $mailNotifiedUsers[] = $filteredUser;
             }
         }
