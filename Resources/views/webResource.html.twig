@@ -8,6 +8,20 @@
 
 {% block title %}{{ resource.getResourceNode().getName() ~ ' - ' ~ parent()|striptags|raw }}{% endblock %}
 
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        .full-size iframe {
+            width: 100%;
+            height: 100%;
+        }
+        .full-size {
+            width: 100%;
+            height: 400px;
+        }
+    </style>
+{% endblock %}
+
 {% block section_content %}
     <div class="panel-heading">
         <h3 class="panel-title"> {{ resource.getResourceNode().getName() }} </h3>
@@ -21,7 +35,6 @@
             </div>
             <div class="full-size">
                 <iframe id="web-resource-frame"
-                        class="full-size"
                         src="{{ asset("uploads/webresource/" ~ path) }}"
                         frameborder="0">
                 </iframe>
@@ -38,12 +51,6 @@
             <i class="icon-download"></i> {{ 'download'|trans({}, 'platform') }}
         </a>
     </div>
-    <style>
-        .full-size {
-            height: 100%;
-            width: 100%;
-        }
-    </style>
 {% endblock %}
 {% block javascripts_header %}
     {{ parent() }}
