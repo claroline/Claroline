@@ -503,6 +503,11 @@ class WorkspaceManager
         return $this->workspaceRepo->findByAnonymous();
     }
 
+    public function getWorkspacesByManager(User $user)
+    {
+        return $this->workspaceRepo->findWorkspacesByManager($user);
+    }
+
     /**
      * @return integer
      */
