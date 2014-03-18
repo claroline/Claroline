@@ -34,8 +34,10 @@ Project setup
         - php5-intl
     - fileinfo (for mime type detection)
     - curl (for facebook authentication)
-    - Check if you have a correct configuration of time zone in your php.ini as
-      "Europe/Brussels" (case sensitive).
+    - Check if you have a correct configuration of time zone in your php.ini,
+      you can find a list of supported timezones [here][9], for example
+      "Europe/Brussels" (this value is case sensitive, be sure to use correct
+      upper and lower case).
     - Optionaly:
         - [gd][1] (for simple icon creation)
         - [ffmpeg][2] (for video thumbnail creation)
@@ -160,3 +162,4 @@ For development documentation, see
 [6]: http://www.phpunit.de/manual/current/en/index.html
 [7]: http://dev.claroline.net:8080/job/Claronext/
 [8]: https://github.com/claroline/CoreBundle/blob/master/Resources/doc/index.md
+[9]: http://www.php.net/manual/en/timezones.php
