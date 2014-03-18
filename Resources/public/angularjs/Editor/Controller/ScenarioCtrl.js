@@ -31,7 +31,7 @@ function ScenarioCtrl($scope, $modal, HistoryFactory, PathFactory, StepFactory) 
      * @returns void
      */
     $scope.remove = function(step) {
-        // Search step to remove
+        // Search step to remove function
         function walk(path) {
             var children = path.children;
             var i;
@@ -48,10 +48,28 @@ function ScenarioCtrl($scope, $modal, HistoryFactory, PathFactory, StepFactory) 
             }
         }
 
-        walk($scope.path.steps[0]);
+        StepFactory.setStep(step);
 
-        HistoryFactory.update($scope.path);
-        $scope.updatePreviewStep();
+        // Display confirm modal
+        var modalInstance = $modal.open({
+            templateUrl: EditorApp.webDir + 'angularjs/Step/Partial/confirm-delete.html',
+            controller: 'ConfirmDeleteModalCtrl',
+            resolve: {
+                step: function () {
+                    return ;
+                }
+            }
+        });
+
+        modalInstance.result.then(function() {
+            // Confirm
+            walk($scope.path.steps[0]);
+
+            HistoryFactory.update($scope.path);
+            $scope.updatePreviewStep();
+        }, function () {
+            // Cancel
+        });
     };
 
     /**
@@ -89,6 +107,13 @@ function ScenarioCtrl($scope, $modal, HistoryFactory, PathFactory, StepFactory) 
         var modalInstance = $modal.open({
             templateUrl: EditorApp.webDir + 'angularjs/Template/Partial/template-edit.html',
             controller: 'TemplateModalCtrl'
+        });
+
+        modalInstance.result.then(function() {
+            // Confirm
+            $scope.pageslideOpen();
+        }, function () {
+            // Cancel
         });
     };
 }

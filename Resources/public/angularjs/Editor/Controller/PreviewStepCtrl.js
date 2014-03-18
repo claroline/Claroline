@@ -20,13 +20,7 @@ function PreviewStepCtrl($scope, $modal, $http, HistoryFactory, PathFactory, Ste
     $scope.selectImage = function() {
         var modalInstance = $modal.open({
             templateUrl: EditorApp.webDir + 'angularjs/Step/Partial/select-image.html',
-            controller: 'SelectImageModalCtrl',
-            resolve: {
-                // Send images to form
-                images: function() {
-                    return StepFactory.getImages();
-                }
-            }
+            controller: 'SelectImageModalCtrl'
         });
         
         // Process modal results

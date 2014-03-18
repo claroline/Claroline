@@ -32,6 +32,7 @@ EditorApp.controller('PreviewStepCtrl', PreviewStepCtrl);
 // Steps
 EditorApp.factory('StepFactory', StepFactory);
 EditorApp.controller('SelectImageModalCtrl', SelectImageModalCtrl);
+EditorApp.controller('ConfirmDeleteModalCtrl', ConfirmDeleteModalCtrl);
 
 // Resources
 EditorApp.factory('ResourceFactory', ResourceFactory);
