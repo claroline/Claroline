@@ -44,6 +44,7 @@ class SendToNamesValidator extends ConstraintValidator
         $names = explode(';', $to);
         $usernames = array();
         $groupNames = array();
+        $workspaceCodes = array();
 
         //split the string of target into different array.
         foreach ($names as $name) {
