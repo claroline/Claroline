@@ -32,7 +32,8 @@
         "innova/angular-ui-bootstrap-bundle" : ">=1.0",
         "innova/angular-ui-tinymce-bundle" : ">=1.0",
         "innova/angular-ui-pageslide-bundle" : ">=1.0",
-        "innova/angular-ui-sortable-bundle" : ">=1.0"
+        "innova/angular-ui-sortable-bundle" : ">=1.0",
+        "innova/angular-ui-translation-bundle" : "dev-master"
     },
     "autoload" : {
         "psr-0" : {
