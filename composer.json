@@ -27,7 +27,6 @@
     "require" : {
         "claroline/core-bundle" : ">=2.0.5",
         "doctrine/doctrine-fixtures-bundle" : "2.2.0",
-        "innova/favorite-bundle" : "dev-master",
         "innova/angular-js-bundle" : ">=1.0",
         "innova/angular-ui-bootstrap-bundle" : ">=1.0",
         "innova/angular-ui-tinymce-bundle" : ">=1.0",
