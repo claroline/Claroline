@@ -96,7 +96,7 @@
                         ">
                             <td><input class="chk-item" value="{{ userMessage.getId() }}" type="checkbox"></input></td>
                             <td> {{ userMessage.getMessage().getObject() }} </td>
-                            <td> {{ userMessage.getMessage().getSender().getUsername() }} </td>
+                            <td> {{ userMessage.getMessage().getSenderUsername() }} </td>
                             <td> {{ userMessage.getMessage().getDate()|intl_date_format }} </td>
                             <td>
                                 {% if userMessage.isRead() %}
