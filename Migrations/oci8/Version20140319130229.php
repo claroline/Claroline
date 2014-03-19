@@ -1,6 +1,6 @@
 <?php
 
-namespace Icap\DropzoneBundle\Migrations\pdo_oci;
+namespace Icap\DropzoneBundle\Migrations\oci8;
 
 use Doctrine\DBAL\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
@@ -8,9 +8,9 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2014/03/19 10:27:40
+ * Generation date: 2014/03/19 01:02:32
  */
-class Version20140319102737 extends AbstractMigration
+class Version20140319130229 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
@@ -21,6 +21,13 @@ class Version20140319102737 extends AbstractMigration
                 correctionDeniedComment CLOB DEFAULT NULL
             )
         ");
+        $this->addSql("
+            ALTER TABLE icap__dropzonebundle_dropzone 
+            ADD (
+                diplay_corrections_to_learners NUMBER(1) NOT NULL, 
+                allow_correction_deny NUMBER(1) NOT NULL
+            )
+        ");
     }
 
     public function down(Schema $schema)
@@ -29,6 +36,13 @@ class Version20140319102737 extends AbstractMigration
             ALTER TABLE icap__dropzonebundle_correction 
             DROP (
                 correctionDenied, correctionDeniedComment
+            )
+        ");
+        $this->addSql("
+            ALTER TABLE icap__dropzonebundle_dropzone 
+            DROP (
+                diplay_corrections_to_learners, 
+                allow_correction_deny
             )
         ");
     }
