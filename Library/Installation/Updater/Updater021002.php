@@ -31,7 +31,7 @@ class Updater021002
     protected function setPublicUrlOnUsers()
     {
         /** @var \Doctrine\ORM\EntityManager $entityManager */
-        $entityManager = $this->get('doctrine.orm.entity_manager');
+        $entityManager = $this->container->get('doctrine.orm.entity_manager');
 
         /** @var \Claroline\CoreBundle\Repository\UserRepository $userRepository */
         $userRepository = $entityManager->getRepository('ClarolineCoreBundle:User');
@@ -39,7 +39,7 @@ class Updater021002
         $users = $userRepository->findByPublicUrl(null);
 
         /** @var \Claroline\CoreBundle\Manager\UserManager $userManager */
-        $userManager = $this->get('claroline.manager.user_manager');
+        $userManager = $this->container->get('claroline.manager.user_manager');
 
         foreach ($users as $key => $user) {
             $publicUrl = $userManager->generatePublicUrl($user);
