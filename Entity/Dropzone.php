@@ -20,6 +20,13 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Dropzone extends AbstractResource {
 
+    const MANUAL_STATE_NOT_STARTED = "notStarted";
+    const MANUAL_STATE_PEER_REVIEW ="peerReview";
+    const MANUAL_STATE_ALLOW_DROP = "allowDrop";
+    const MANUAL_STATE_ALLOW_DROP_AND_PEER_REVIEW = "allowDropAndPeerReview";
+    const MANUAL_STATE_FINISHED = "finished";
+
+    
     /**
      * 1 = common
      * 2 = criteria
@@ -105,6 +112,24 @@ class Dropzone extends AbstractResource {
      * @ORM\Column(name="allow_comment_in_correction", type="boolean", nullable=false)
      */
     protected $allowCommentInCorrection = false;
+
+    /**
+     * @var bool
+     * @ORM\Column(name="visible_corrections",type="boolean",nullable=false)
+     *
+     * Defini si oui ou non les corrections faites par les pairs sont visibles par le possesseur de la copie corrigé.
+     * les corrections devront cependant rester anonyme.
+     */
+    protected $diplayCorrectionsToLearners= false;
+
+
+    /**
+    * @var bool
+    * @ORM\Column(name="allow_correction_deny",type="boolean",nullable=false)
+    * Depend on diplayCorrectionsToLearners, need diplayCorrectionsToLearners to be true in order to work.
+    * Allow users to flag that they are not agree with the correction.
+    */
+    protected $allowCorrectionDeny = false;
     /**
      * @ORM\Column(name="total_criteria_column", type="smallint", nullable=false)
      * @Assert\LessThanOrEqual(value=10)
@@ -338,7 +363,17 @@ class Dropzone extends AbstractResource {
      */
     public function setManualState($manualState)
     {
-        $this->manualState = $manualState;
+        $ms_tab_values = array(
+            self::MANUAL_STATE_NOT_STARTED,
+            self::MANUAL_STATE_PEER_REVIEW,
+            self::MANUAL_STATE_ALLOW_DROP,
+            self::MANUAL_STATE_ALLOW_DROP_AND_PEER_REVIEW,
+            self::MANUAL_STATE_FINISHED);
+        if(array_search($manualState,$ms_tab_values) !== false)
+        {
+             $this->manualState = $manualState;
+        }
+       
     }
 
     /**
@@ -435,6 +470,37 @@ class Dropzone extends AbstractResource {
     public function setDisplayNotationToLearners($displayNotationToLearners)
     {
         $this->displayNotationToLearners = $displayNotationToLearners;
+    }
+
+
+    /**
+     * @return mixed
+     */
+    public function getDiplayCorrectionsToLearners()
+    {
+        return $this->diplayCorrectionsToLearners;
+    }
+
+    /**
+     * @param bool $displayNotationToLearners
+     */
+    public function setDiplayCorrectionsToLearners($diplayCorrectionsToLearners)
+    {
+        $this->diplayCorrectionsToLearners = $diplayCorrectionsToLearners;
+    }
+
+    /**
+    * @return bool
+    **/
+    public function getAllowCorrectionDeny()
+    {
+        return $this->allowCorrectionDeny;
+    }
+
+
+    public function setAllowCorrectionDeny($allowCorrectionDeny)
+    {
+        $this->allowCorrectionDeny = $allowCorrectionDeny;
     }
 
     /**
@@ -608,4 +674,5 @@ class Dropzone extends AbstractResource {
 
         return $this;
     }
+
 }

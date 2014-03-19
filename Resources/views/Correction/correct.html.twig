@@ -87,7 +87,11 @@
         {% else %}
             <div class="row">
                 <div class="col-md-12">
-                    <h2>{{ 'Correcting a copy'|trans({}, 'icap_dropzone') }}</h2>
+                    {% if state is defined and state =='preview' %}
+                        <h2>{{ 'Correction of your copy'|trans({}, 'icap_dropzone') }}</h2>
+                    {%  else %}
+                         <h2>{{ 'Correction'|trans({}, 'icap_dropzone') }}</h2>
+                    {% endif %}
                 </div>
             </div>
 
@@ -102,7 +106,7 @@
                                 {{ 'Relevant documents'|trans({}, 'icap_dropzone') }}
                             </div>
                             <div class="col-md-6">
-                                {%  if correction.dropzone.isPeerReview() and correction.dropzone.hasCriteria() %}
+                                {%  if correction.dropzone.isPeerReview() and correction.dropzone.hasCriteria() and ((state is defined and state != 'preview') or (state is not defined )) %}
                                     {% if correction.reporter == false %}
                                         <a href="{{ path('icap_dropzone_report_drop', {'resourceId': dropzone.id, 'dropId': correction.drop.id, 'correctionId': correction.id}) }}" class="btn btn-danger pull-right launch-modal">{{ 'Report'|trans({}, 'icap_dropzone') }}</a>
                                     {% else %}
@@ -113,7 +117,11 @@
                         </div>
                     </h3>
                 <p>
-                    {{ 'Here is the list of documents which you must correct'|trans({}, 'icap_dropzone') }}
+                    {%  if state is defined and  state == 'preview' %}
+                        {{ 'Here is the list of the corrected documents'|trans({}, 'icap_dropzone') }}
+                    {% else %}
+                        {{ 'Here is the list of documents which you must correct'|trans({}, 'icap_dropzone') }}
+                    {% endif %}
                 </p>
                 {% if correction.drop.documents|length > 0 %}
                     <ul>
@@ -126,12 +134,43 @@
                 {% endif %}
             {% endif %}
         {% endif %}
+        {% if  state is defined and state == 'preview' and dropzone.getAllowCorrectionDeny %}
 
+           <div class="row">
+                <div class='col-md-12'>
+                    {% if correction.correctionDenied %}
+                    <span class="label label-danger btn-sm pull-right ">
+                        {{ 'Correction denied'|trans({},'icap_dropzone')}}
+                    </span>
+                    {% else %}
+                    <a href="{{ path('icap_dropzone_drops_deny_correction', {'resourceId': dropzone.id,  'correctionId': correction.id}) }}" class="btn btn-danger btn-sm pull-right launch-modal">
+                        {{ 'Deny correction'|trans({},'icap_dropzone')}}
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
+        {% endif %}
         {% if correction.reporter %}
            <h3>{{ 'Reason of reporting'|trans({}, 'icap_dropzone') }}</h3>
             <div class="well">
                 {{ correction.reportComment|raw }}
             </div>
+            {% if state == 'preview' %}
+                {% if correction.correctionDenied == false %}
+                    {# bouton d'activation du flag #}
+                    <a href="{{ path('icap_dropzone_drop_detail_by_user', {'resourceId': dropzone.id,'dropId': correction.drop.id}) }}" class="btn btn-default">
+                        {{ 'Back to corrections'|trans({}, 'icap_dropzone') }}
+                    </a>
+{#                     <a href="{{ path('icap_dropzone_drop_detail_by_user', {'resourceId': dropzone.id,'dropId': correction.drop.id}) }}" class="btn btn-danger">
+                        {{ 'Deny correction'|trans({}, 'icap_dropzone') }}
+                    </a> #}
+                {% else %}
+                     {# bouton désactivation du flag #}
+                     <a href="{{ path('icap_dropzone_drop_detail_by_user', {'resourceId': dropzone.id,'dropId': correction.drop.id}) }}" class="btn btn-default">
+                        {{ 'Back to corrections'|trans({}, 'icap_dropzone') }}
+                    </a>
+                {% endif %}
+            {% endif %}
         {% else %}
             {% block dropzone_correct_content %}
             {% endblock %}
@@ -140,5 +179,5 @@
 {% endblock %}
 
 {% block javascripts %}
-    {{ parent() }}}
+    {{ parent() }}
 {% endblock %}

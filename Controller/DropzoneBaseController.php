@@ -25,6 +25,7 @@ use Icap\DropzoneBundle\Event\Log\LogDropEndEvent;
 use Icap\DropzoneBundle\Event\Log\LogDropEvaluateEvent;
 use Icap\DropzoneBundle\Event\Log\LogDropStartEvent;
 use Icap\DropzoneBundle\Event\Log\LogDropzoneConfigureEvent;
+use Icap\DropzoneBundle\Event\Log\LogDropzoneManualStateChangedEvent;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
@@ -54,6 +55,14 @@ class DropzoneBaseController extends Controller
         $this->dispatch($event);
     }
 
+    protected function isAllowToOpenDrop(Drop $drop)
+    {
+        $collection = new ResourceCollection(array($drop->getResourceNode()));
+        if (false === $this->get('security.context')->isGranted('OPEN', $collection)) {
+            throw new AccessDeniedException();
+        }
+    }
+
     protected function dispatch($event)
     {
         if (
@@ -72,8 +81,11 @@ class DropzoneBaseController extends Controller
                 $event instanceof LogCorrectionUpdateEvent or
                 $event instanceof LogCorrectionDeleteEvent or
                 $event instanceof LogCorrectionValidationChangeEvent or
-                $event instanceof LogDropEvaluateEvent
+                $event instanceof LogDropEvaluateEvent or 
+                $event instanceof LogDropReportEvent or
+                $event instanceof LogDropzoneManualStateChangedEvent
         ) {
+
             // Other logs are WIP.
             $this->get('event_dispatcher')->dispatch('log', $event);
         }

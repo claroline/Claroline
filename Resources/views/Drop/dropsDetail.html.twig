@@ -1,34 +1,54 @@
 {% extends "IcapDropzoneBundle::layout.html.twig" %}
+{% if (byUserMod is not defined)%}
+    {% set byUserMod = 0 %}
+{% endif %}
+
 {% block resourceBreadcrumb %}
-    <li><a href="{{ path('icap_dropzone_drops', {'resourceId': dropzone.id}) }}"><span class="glyphicon icon-list"></span> {{ dropzone.resourceNode.name }}</a></li>
-    <li class="active">{{ 'Retail copy of %firstName% %lastName%'|trans({'%firstName%': drop.user.firstName, '%lastName%': drop.user.lastName}, 'icap_dropzone') }}</li>
+    <li>
+        <a href="{{ path('icap_dropzone_drops', {'resourceId': dropzone.id}) }}"><span class="glyphicon icon-list"></span> {{ dropzone.resourceNode.name }}</a></li>
+
+    <li class="active">
+        {% if byUserMod == 1 %}
+            {{ 'Details of your copy'|trans({}, 'icap_dropzone') }}
+        {% else %}
+            {{ 'Retail copy of %firstName% %lastName%'|trans({'%firstName%': drop.user.firstName, '%lastName%': drop.user.lastName}, 'icap_dropzone') }}
+        {% endif %}
+    </li>
+
+
 {% endblock %}
 
 {% block dropzone_content %}
+
     <div class="container container-dropzone">
-        <span class="{% if drop.reported %}text-danger{% endif %}">
+        <span class="{% if drop.reported and byUserMod == 0 %}text-danger{% endif %}">
             <h2>
-                {{ 'Retail copy of %firstName% %lastName%'|trans({'%firstName%': drop.user.firstName, '%lastName%': drop.user.lastName}, 'icap_dropzone') }}
+                {% if byUserMod == 1 %}
+                    {{ 'Details of your copy'|trans({}, 'icap_dropzone') }}
+                {% else %}
+                    {{ 'Retail copy of %firstName% %lastName%'|trans({'%firstName%': drop.user.firstName, '%lastName%': drop.user.lastName}, 'icap_dropzone') }}
+                {% endif %}
             </h2>
         </span>
-        <div class="row">
-            <div class="col-md-12">
-                <a class="btn btn-default btn-sm" href="{{ path('icap_dropzone_drops', {'resourceId': dropzone.id}) }}"><span class="glyphicon icon-angle-left"></span> {{ 'Return to copies'|trans({}, 'icap_dropzone') }}</a>
-            </div>
-        </div>
-
-        <br/>
-        {{ macros.flashBox() }}
-
-        {% if drop.reported %}
-            <div class="row text-danger">
+        {% if(byUserMod == 0) %}
+            <div class="row">
                 <div class="col-md-12">
-                    <span class="glyphicon icon-warning-sign"></span>
-                    {{ 'This copy has been reported'|trans({}, 'icap_dropzone') }}
+                    <a class="btn btn-default btn-sm" href="{{ path('icap_dropzone_drops', {'resourceId': dropzone.id}) }}"><span class="glyphicon icon-angle-left"></span> {{ 'Return to copies'|trans({}, 'icap_dropzone') }}</a>
                 </div>
             </div>
-        {% endif %}
 
+            <br/>
+            {{ macros.flashBox() }}
+
+            {% if drop.reported %}
+                <div class="row text-danger">
+                    <div class="col-md-12">
+                        <span class="glyphicon icon-warning-sign"></span>
+                        {{ 'This copy has been reported'|trans({}, 'icap_dropzone') }}
+                    </div>
+                </div>
+            {% endif %}
+        {%  endif %}
         <div class="row">
             <div class="text-muted col-md-4">{{ 'Documents'|trans({}, 'icap_dropzone') }}</div>
             <div class="col-md-8">
@@ -56,6 +76,10 @@
         </div>
 
         <br/>
+
+        <h3>{{ 'List of corrections'|trans({}, 'icap_dropzone') }}</h3>
+        <hr/>
+        {% if(byUserMod == 0) %}
         <div class="container">
             <div class="row">
                 <div class="btn-group">
@@ -64,37 +88,49 @@
                 </div>
             </div>
         </div>
-        <hr/>
+         <br>
+        {% endif %}
+        <br>
 
+        {% include 'IcapDropzoneBundle:Correction:Listing/correctionListing.html.twig' %}
+        {#
         {% for correction in drop.corrections %}
             <div class="row">
                 <div class="col-md-12">
                     <h4 style="text-decoration: underline;">
-                        <a href="{{ path('icap_dropzone_drops_detail_correction', {'resourceId': dropzone.id, 'correctionId': correction.id, 'state': 'show'}) }}">
-                            {{ 'Correction by %firstName% %lastName%'|trans({'%firstName%': correction.user.firstName|capitalize, '%lastName%': correction.user.lastName|upper}, 'icap_dropzone') }}
+
+                            {% if(byUserMod == 0) %}
+                                <a href="{{ path('icap_dropzone_drops_detail_correction', {'resourceId': dropzone.id, 'correctionId': correction.id, 'state': 'show'}) }}">
+                                {{ 'Correction by %firstName% %lastName%'|trans({'%firstName%': correction.user.firstName|capitalize, '%lastName%': correction.user.lastName|upper}, 'icap_dropzone') }}
+                            {% else %}
+                                <a href="{{ path('icap_dropzone_drops_detail_correction', {'resourceId': dropzone.id, 'correctionId': correction.id, 'state': 'preview'}) }}">
+                                {{ 'Correction number %num%'|trans({'%num%': loop.index}, 'icap_dropzone') }}
+                            {% endif %}
                         </a>
                         <div class="btn-group pull-right">
-                            {% if dropzone.peerReview %}
-                                <a href="{{ path('icap_dropzone_recalculate_score', {'resourceId': dropzone.id, 'correctionId': correction.id}) }}" class="btn btn-default btn-xs">{{ 'Recalculate the score'|trans({}, 'icap_dropzone') }}</a>
-                            {% endif %}
-                            {% if correction.editable %}
-                                <a href="{{ path('icap_dropzone_drops_detail_correction', {'resourceId': dropzone.id, 'correctionId': correction.id, 'state': 'edit'}) }}" class="btn btn-default btn-xs">{{ 'dropzone_edit'|trans({}, 'icap_dropzone') }}</a>
-                                <a href="{{ path('icap_dropzone_drops_detail_delete_correction', {'resourceId': dropzone.id, 'correctionId': correction.id}) }}" class="btn btn-danger btn-xs">{{ 'Delete'|trans({}, 'icap_dropzone') }}</a>
-                            {% endif %}
-                            {% if correction.finished %}
-                                {% if correction.valid %}
-                                    <a href="{{ path('icap_dropzone_drops_detail_correction_validation', {'resourceId': dropzone.id, 'correctionId': correction.id, 'value': 'no'}) }}" class="btn btn-danger btn-xs">{{ 'Invalidate'|trans({}, 'icap_dropzone') }}</a>
-                                {% else %}
-                                    <a href="{{ path('icap_dropzone_drops_detail_correction_validation', {'resourceId': dropzone.id, 'correctionId': correction.id, 'value': 'yes'}) }}" class="btn btn-default btn-xs">{{ 'Validate'|trans({}, 'icap_dropzone') }}</a>
+                            {% if(byUserMod == 0) %}
+                                {% if dropzone.peerReview %}
+                                    <a href="{{ path('icap_dropzone_recalculate_score', {'resourceId': dropzone.id, 'correctionId': correction.id}) }}" class="btn btn-default btn-xs">{{ 'Recalculate the score'|trans({}, 'icap_dropzone') }}</a>
                                 {% endif %}
-                            {% endif %}
+                                {% if correction.editable %}
+                                    <a href="{{ path('icap_dropzone_drops_detail_correction', {'resourceId': dropzone.id, 'correctionId': correction.id, 'state': 'edit'}) }}" class="btn btn-default btn-xs">{{ 'dropzone_edit'|trans({}, 'icap_dropzone') }}</a>
+                                    <a href="{{ path('icap_dropzone_drops_detail_delete_correction', {'resourceId': dropzone.id, 'correctionId': correction.id}) }}" class="btn btn-danger btn-xs">{{ 'Delete'|trans({}, 'icap_dropzone') }}</a>
+                                {% endif %}
+                                {% if correction.finished %}
+                                    {% if correction.valid %}
+                                        <a href="{{ path('icap_dropzone_drops_detail_correction_validation', {'resourceId': dropzone.id, 'correctionId': correction.id, 'value': 'no'}) }}" class="btn btn-danger btn-xs">{{ 'Invalidate'|trans({}, 'icap_dropzone') }}</a>
+                                    {% else %}
+                                        <a href="{{ path('icap_dropzone_drops_detail_correction_validation', {'resourceId': dropzone.id, 'correctionId': correction.id, 'value': 'yes'}) }}" class="btn btn-default btn-xs">{{ 'revalidate'|trans({}, 'icap_dropzone') }}</a>
+                                    {% endif %}
+                                {% endif %}
+                             {% endif %}
                         </div>
                     </h4>
                 </div>
             </div>
             <div class="row">
                 <div class="col-md-12">
-                    {% if correction.editable %}
+                    {% if correction.editable and byUserMod == 0  %}
                         <span class="label label-default">{{ 'created by a manager'|trans({}, 'icap_dropzone') }}</span>
                     {% endif %}
                     {% if correction.finished == false %}
@@ -102,6 +138,9 @@
                     {% endif %}
                     {% if correction.reporter %}
                         <span class="label label-danger">{{ 'Reported'|trans({}, 'icap_dropzone') }}</span>
+                    {% endif %}
+                    {% if correction.correctionDenied %}
+                        <span class="label label-danger">{{ 'Correction denied'|trans({}, 'icap_dropzone') }}</span>
                     {% endif %}
                     {% if not correction.valid %}
                         <span class="label label-danger">{{ 'Invalidated'|trans({}, 'icap_dropzone') }}</span>
@@ -123,6 +162,7 @@
             </div>
             <hr/>
         {% endfor %}
+        #}
     </div>
 {% endblock %}
 
@@ -131,5 +171,5 @@
 {% endblock %}
 
 {% block javascripts %}
-    {{ parent() }}}
+    {{ parent() }}
 {% endblock %}

@@ -1,0 +1,11 @@
+<div class='list-group'>
+	<div class='list-group-item'>
+		{% if log.details.report is defined and log.details.report.correction is defined and log.details.report.correction.correctionDeniedComment is defined %}
+		    <h4>{{ ('Reported copy')|trans({}, 'log') }}</h4>
+		    <dl class="dl-horizontal">
+		        <dt>{{ 'Report reason :'|trans({}, 'icap_dropzone') }}</dt>
+		        <dd>{{ log.details.report.correction.correctionDeniedComment|raw }}</dd>
+		    </dl>
+		{% endif %}
+	</div>
+</div>

@@ -83,6 +83,17 @@ class Correction {
     protected $reportComment = null;
 
     /**
+    * @ORM\Column(type="boolean",nullable=false)
+    * In the case where the student don't agree the correction, he can flag it ( as the corrector can report the copy)
+    */
+    protected $correctionDenied = false;
+
+    /**
+    * @ORM\Column(type="text",nullable=true)
+    */
+    protected $correctionDeniedComment = null;
+
+    /**
      * @ORM\OneToMany(
      *      targetEntity="Icap\DropzoneBundle\Entity\Grade",
      *      mappedBy="correction",
@@ -361,6 +372,53 @@ class Correction {
     {
         return $this->reportComment;
     }
+
+    /**
+     * Set correctionDenied
+     *
+     * @param boolean $correctionDenied
+     * @return Correction
+     */
+    public function setCorrectionDenied($correctionDenied)
+    {
+        $this->correctionDenied = $correctionDenied;
+    
+        return $this;
+    }
+
+    /**
+     * Get correctionDenied
+     *
+     * @return boolean 
+     */
+    public function getCorrectionDenied()
+    {
+        return $this->correctionDenied;
+    }
+
+    /**
+     * Set correctionDeniedComment
+     *
+     * @param string $correctionDeniedComment
+     * @return Correction
+     */
+    public function setCorrectionDeniedComment($correctionDeniedComment)
+    {
+        $this->correctionDeniedComment = $correctionDeniedComment;
+    
+        return $this;
+    }
+
+    /**
+     * Get correctionDeniedComment
+     *
+     * @return string 
+     */
+    public function getCorrectionDeniedComment()
+    {
+        return $this->correctionDeniedComment;
+    }
+
 
     /**
      * @param bool $hydrateUser

@@ -1,30 +1,10 @@
-{% extends "IcapDropzoneBundle:Drop:drops.html.twig" %}
+{% extends "IcapDropzoneBundle:Drop:dropsByBase.html.twig" %}
 
-{% block dropzone_content_drops %}
-    <div class="navbar navbar-default" role="navigation">
-        <div class="collapse navbar-collapse navbar-ex1-collapse">
-            <ul class="nav navbar-nav">
-                <li class="active">
-                    <a href="{{ path('icap_dropzone_drops_by_user', {'resourceId': dropzone.id}) }}">
-                        {{ 'Copies evaluation finished'|trans({}, 'icap_dropzone') }} <span class="badge">{{ nbDropCorrected }}</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="{{ path('icap_dropzone_drops_awaiting', {'resourceId': dropzone.id}) }}">
-                        {{ 'Copies being evaluated'|trans({}, 'icap_dropzone') }} <span class="badge">{{ nbDrop - nbDropCorrected }}</span>
-                    </a>
-                </li>
-            </ul>
-        </div>
-    </div>
-    <div class="btn-group pull-right">
-        <a href="{{ path('icap_dropzone_drops_by_user', {'resourceId': dropzone.id}) }}" class="btn btn-default btn-xs">{{ 'Sort by user'|trans({}, 'icap_dropzone') }}</a>
-        <a href="#" class="btn btn-default btn-xs active">{{ 'Sort by date'|trans({}, 'icap_dropzone') }}</a>
-    </div>
+{% block dropzone_content_drops_by_date %}  
+            <a href="#" class="btn btn-default btn-xs active">{{ 'Sort by date'|trans({}, 'icap_dropzone') }}</a>
+{% endblock %}
 
-    <h3>{{ 'Evaluation finished'|trans({}, 'icap_dropzone') }}</h3>
-
-    <div class="container row">
+{% block dropzone_content_drops_by_paginate_part %}
         {% if pager.haveToPaginate %}
             {{
             pagerfanta(
@@ -38,78 +18,4 @@
             )
             }}
         {% endif %}
-    </div>
-
-    {% for drop in pager.currentPageResults %}
-        <div class="panel {% if drop.reported %}panel-danger{% else %}panel-default{% endif %}">
-            <div class="panel-heading">
-                <div class="row">
-                    <h3 class="panel-title col-md-6">
-                        {% if drop.reported %}<span class="glyphicon icon-warning-sign" data-toggle="tooltip" title="" data-original-title="{{ 'This copy has been reported'|trans({}, 'icap_dropzone') }}"></span>{% endif %}
-                        {{ drop.dropDate|date('formatDatetime'|trans({}, 'icap_dropzone')) }}
-                    </h3>
-                    <div class="col-md-6">
-                        <div class="btn-group pull-right">
-                            <a href="{{ path('icap_dropzone_drops_detail', {'resourceId': dropzone.id, 'dropId': drop.id}) }}" type="button" class="btn btn-default btn-xs">{{ 'See corrections'|trans({}, 'icap_dropzone') }}</a>
-                            <a href="{{ path('icap_dropzone_drops_delete', {'resourceId': dropzone.id, 'dropId': drop.id, 'tab': 0, 'page': pager.currentPage}) }}" class="btn btn-danger btn-xs launch-modal"><span class="glyphicon icon-trash"></span> {{ 'Delete copy'|trans({}, 'icap_dropzone') }}</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="panel-body">
-                <div class="row text-muted">
-                    <div class="col-md-3">{{ 'Author'|trans({}, 'icap_dropzone') }}</div>
-                    <div class="col-md-3">{{ 'Last correction'|trans({}, 'icap_dropzone') }}</div>
-                    <div class="col-md-4">{{ 'Documents'|trans({}, 'icap_dropzone') }}</div>
-                    <div class="col-md-2">{{ 'Grade'|trans({}, 'icap_dropzone') }}</div>
-                </div>
-
-                <div class="row">
-                    <div class="col-md-3">{{ drop.user.firstName|capitalize }} {{ drop.user.lastName|upper }}</div>
-                    <div class="col-md-3">{% include 'IcapDropzoneBundle:Drop:dropsLastCorrectionDate.html.twig' %}</div>
-                    <div class="col-md-4">
-                        <ul>
-                            {% for document in drop.documents %}
-                                <li>{% include 'IcapDropzoneBundle:Document:simpleShowDocument.html.twig' %}</li>
-                            {% endfor %}
-                        </ul>
-                    </div>
-                    <div class="col-md-2">{% include 'IcapDropzoneBundle:Drop:dropsTotalGrade.html.twig' %}</div>
-                </div>
-            </div>
-        </div>
-    {% endfor %}
-
-    {% if pager.nbResults == 0 %}
-        <div class="row">
-            <div class="col-md-12">
-                {{ 'noCopyExpectedCorrection'|transchoice(dropzone.expectedTotalCorrection, {}, 'icap_dropzone') }}
-            </div>
-        </div>
-        <br/>
-    {% endif %}
-
-    <div class="container row">
-        {% if pager.haveToPaginate %}
-            {{
-            pagerfanta(
-            pager,
-            'twitter_bootstrap_translated',
-            {
-            'proximity' : 1,
-            'routeName': 'icap_dropzone_drops_by_date_paginated',
-            'routeParams': {'resourceId': dropzone.id}
-            }
-            )
-            }}
-        {% endif %}
-    </div>
-{% endblock %}
-
-{% block javascripts %}
-    {{ parent() }}}
-{% endblock %}
-
-{% block stylesheets %}
-    {{ parent() }}
 {% endblock %}
