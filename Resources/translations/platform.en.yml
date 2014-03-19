@@ -746,6 +746,8 @@ send_message_to_workspace: Send a message to the users of the workspace.
 'This placeholder is optional and will be replaced by your platform name': This placeholder is optional and will be replaced by your platform name
 'This placeholder is optional and will be replaced by the author first name': This placeholder is optional and will be replaced by the author first name
 'This placeholder is optional and will be replaced by the author last name': This placeholder is optional and will be replaced by the author last name
+workspace_list: Workspace list
+workspaces_per_page: Workspace per page
 workspace_registration_message: 'You have been registered to the workspace %workspace_name%'
 workspace_registration_message_object: 'Workspace registration'
 new_role_message: 'You received the role %name%'

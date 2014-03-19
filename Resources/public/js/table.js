@@ -57,12 +57,20 @@
         createValidationBox();
 
         $('#search-button').click(function () {
-            var search = document.getElementById('search-items-txt').value;
+            var search = document.getElementById('search-items-txt') ?
+                document.getElementById('search-items-txt').value :
+                '';
             var route;
 
             var max = findMaxPerPage();
+
             if (max) {
-               parameters.route.search.parameters.max = parameters.route.normal.parameters.max = max;
+                if (parameters.route.search) {
+                    parameters.route.search.parameters.max = max;
+                }
+                if (parameters.route.normal) {
+                    parameters.route.normal.parameters.max = max;
+                }
             }
 
             if (search !== '') {

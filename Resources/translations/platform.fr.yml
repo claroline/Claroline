@@ -745,6 +745,8 @@ send_message_to_workspace: Envoyer un message aux utilisateurs de l'espace
 'This placeholder is optional and will be replaced by your platform name': Ce placeholder est optionnel et sera remplacé par le nom de la plateforme
 'This placeholder is optional and will be replaced by the author first name': Ce placeholder est optionnel et sera remplacé par le prénom de l'auteur
 'This placeholder is optional and will be replaced by the author last name': Ce placeholder est optionnel et sera remplacé par le nom de l'auteur
+workspace_list: Liste des espaces d'activités
+workspaces_per_page: Espaces par page
 workspace_registration_message: 'Vous avez été inscrit à l''espace d''activité %workspace_name%'
 workspace_registration_message_object: 'Inscription à un espace d''activité'
 new_role_message: 'Vous venez de recevoir le role %name%'
