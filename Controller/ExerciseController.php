@@ -39,6 +39,8 @@ namespace UJM\ExoBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 use Claroline\CoreBundle\Library\Resource\ResourceCollection;
@@ -700,14 +702,13 @@ class ExerciseController extends Controller
      * To navigate in the Questions of the assessment
      *
      */
-    public function exercisePaperNavAction()
+    public function exercisePaperNavAction(Request $request)
     {
         $response = '';
         $em = $this->getDoctrine()->getManager();
-        $session = $this->getRequest()->getSession();
+        $session = $request->getSession();
         $paper = $em->getRepository('UJMExoBundle:Paper')->find($session->get('paper'));
         $workspace = $paper->getExercise()->getResourceNode()->getWorkspace();
-        $request = $this->getRequest();
         $typeInterToRecorded = $request->get('typeInteraction');
 
         $tabOrderInter = $session->get('tabOrderInter');
@@ -763,7 +764,7 @@ class ExerciseController extends Controller
         $numQuestionToDisplayed = $request->get('numQuestionToDisplayed');
 
         if ($numQuestionToDisplayed == 'finish') {
-            return $this->finishExercise();
+            return $this->finishExercise($session);
         } else if ($numQuestionToDisplayed == 'interupt') {
             return $this->interuptExercise();
         } else {
@@ -1026,18 +1027,20 @@ class ExerciseController extends Controller
      * To finish an assessment
      *
      */
-    private function finishExercise()
+    private function finishExercise(SessionInterface $session)
     {
         $em = $this->getDoctrine()->getManager();
-        $session = $this->getRequest()->getSession();
 
+        /** @var \UJM\ExoBundle\Entity\Paper $paper */
         $paper = $em->getRepository('UJMExoBundle:Paper')->find($session->get('paper'));
         $paper->setInterupt(0);
         $paper->setEnd(new \Datetime());
         $em->persist($paper);
         $em->flush();
 
-        $this->get('session')->remove('penalties');
+        $this->container->get('ujm.exercise_services')->manageEndOfExercise($paper);
+
+        $session->remove('penalties');
 
         return $this->forward('UJMExoBundle:Paper:show', array('id' => $paper->getId()));
     }
