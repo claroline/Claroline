@@ -1,6 +1,6 @@
 <?php
 
-namespace Icap\DropzoneBundle\Migrations\ibm_db2;
+namespace Icap\DropzoneBundle\Migrations\pdo_ibm;
 
 use Doctrine\DBAL\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
@@ -8,9 +8,9 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2014/03/19 10:27:41
+ * Generation date: 2014/03/19 01:02:32
  */
-class Version20140319102737 extends AbstractMigration
+class Version20140319130229 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
@@ -18,6 +18,11 @@ class Version20140319102737 extends AbstractMigration
             ALTER TABLE icap__dropzonebundle_correction 
             ADD COLUMN correctionDenied SMALLINT NOT NULL 
             ADD COLUMN correctionDeniedComment CLOB(1M) DEFAULT NULL
+        ");
+        $this->addSql("
+            ALTER TABLE icap__dropzonebundle_dropzone 
+            ADD COLUMN diplay_corrections_to_learners SMALLINT NOT NULL 
+            ADD COLUMN allow_correction_deny SMALLINT NOT NULL
         ");
     }
 
@@ -27,6 +32,11 @@ class Version20140319102737 extends AbstractMigration
             ALTER TABLE icap__dropzonebundle_correction 
             DROP COLUMN correctionDenied 
             DROP COLUMN correctionDeniedComment
+        ");
+        $this->addSql("
+            ALTER TABLE icap__dropzonebundle_dropzone 
+            DROP COLUMN diplay_corrections_to_learners 
+            DROP COLUMN allow_correction_deny
         ");
     }
 }

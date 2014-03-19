@@ -36,30 +36,37 @@ class Dropzone extends AbstractResource {
      * @ORM\Column(name="edition_state", type="smallint", nullable=false)
      */
     protected $editionState = 1;
+
     /**
      * @ORM\Column(type="text", nullable=true)
      */
     protected $instruction = null;
+
     /**
      * @ORM\Column(name="allow_workspace_resource", type="boolean", nullable=false)
      */
     protected $allowWorkspaceResource = false;
+
     /**
      * @ORM\Column(name="allow_upload", type="boolean", nullable=false)
      */
     protected $allowUpload = true;
+
     /**
      * @ORM\Column(name="allow_url", type="boolean", nullable=false)
      */
     protected $allowUrl = false;
+
     /**
      * @ORM\Column(name="allow_rich_text", type="boolean", nullable=false)
      */
     protected $allowRichText = false;
+
     /**
      * @ORM\Column(name="peer_review", type="boolean", nullable=false)
      */
     protected $peerReview = false;
+
     /**
      * @ORM\Column(name="expected_total_correction", type="smallint", nullable=false)
      * @Assert\Range(
@@ -68,14 +75,17 @@ class Dropzone extends AbstractResource {
      * )
      */
     protected $expectedTotalCorrection = 3;
+
     /**
      * @ORM\Column(name="display_notation_to_learners", type="boolean", nullable=false)
      */
     protected $displayNotationToLearners = true;
+
     /**
      * @ORM\Column(name="display_notation_message_to_learners", type="boolean", nullable=false)
      */
     protected $displayNotationMessageToLearners = false;
+
     /**
      * @ORM\Column(name="minimum_score_to_pass", type="float", nullable=false)
      * @Assert\Range(
@@ -84,58 +94,68 @@ class Dropzone extends AbstractResource {
      * )
      */
     protected $minimumScoreToPass = 10;
+
     /**
      * @ORM\Column(name="manual_planning", type="boolean", nullable=false)
      */
     protected $manualPlanning = true;
+
     /**
      * @ORM\Column(name="manual_state", type="string", nullable=false)
      */
     protected $manualState = 'notStarted';
+
     /**
      * @ORM\Column(name="start_allow_drop", type="datetime", nullable=true)
      */
     protected $startAllowDrop = null;
+
     /**
      * @ORM\Column(name="end_allow_drop", type="datetime", nullable=true)
      */
     protected $endAllowDrop = null;
+
     /**
      * @ORM\Column(name="start_review", type="datetime", nullable=true)
      */
     protected $startReview = null;
+
     /**
      * @ORM\Column(name="end_review", type="datetime", nullable=true)
      */
     protected $endReview = null;
+
     /**
      * @ORM\Column(name="allow_comment_in_correction", type="boolean", nullable=false)
      */
     protected $allowCommentInCorrection = false;
 
     /**
-     * @var bool
-     * @ORM\Column(name="visible_corrections",type="boolean",nullable=false)
-     *
      * Defini si oui ou non les corrections faites par les pairs sont visibles par le possesseur de la copie corrigé.
      * les corrections devront cependant rester anonyme.
+     * 
+     * @var bool
+     * @ORM\Column(name="diplay_corrections_to_learners",type="boolean",nullable=false)
+     *
      */
     protected $diplayCorrectionsToLearners= false;
 
-
     /**
-    * @var bool
-    * @ORM\Column(name="allow_correction_deny",type="boolean",nullable=false)
     * Depend on diplayCorrectionsToLearners, need diplayCorrectionsToLearners to be true in order to work.
     * Allow users to flag that they are not agree with the correction.
+    * 
+    * @var bool
+    * @ORM\Column(name="allow_correction_deny",type="boolean",nullable=false)
     */
     protected $allowCorrectionDeny = false;
+
     /**
      * @ORM\Column(name="total_criteria_column", type="smallint", nullable=false)
      * @Assert\LessThanOrEqual(value=10)
      * @Assert\GreaterThanOrEqual(value=3)
      */
     protected $totalCriteriaColumn = 4;
+
     /**
      * @var ArrayCollection
      *
@@ -147,6 +167,7 @@ class Dropzone extends AbstractResource {
      * )
      */
     protected $drops;
+    
     /**
      * @var ArrayCollection
      *
