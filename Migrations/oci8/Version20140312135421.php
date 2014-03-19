@@ -17,13 +17,13 @@ class Version20140312135421 extends AbstractMigration
         $this->addSql("
             ALTER TABLE innova_stepWho 
             ADD (
-                is_default NUMBER(1) NOT NULL
+                is_default NUMBER(1) NOT NULL DEFAULT 0
             )
         ");
         $this->addSql("
             ALTER TABLE innova_stepWhere 
             ADD (
-                is_default NUMBER(1) NOT NULL
+                is_default NUMBER(1) NOT NULL DEFAULT 0
             )
         ");
     }
