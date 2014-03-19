@@ -1,0 +1,7 @@
+	<a href="{{ path('icap_dropzone_open', {'resourceId' : notification.details.resource.id}) }}" target="_blank">
+		{{ notification.actionKey|trans({
+			'%dropzone%' : notification.details.resource.name, 
+			'%newState%' : notification.details.newState|trans({
+			},'icap_dropzone')
+		}, 'notification') }}
+	</a>

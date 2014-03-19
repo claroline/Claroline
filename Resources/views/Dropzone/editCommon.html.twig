@@ -54,6 +54,14 @@
                 </div>
                 {{ form_row(form.expectedTotalCorrection, {'input_col_size': 'col-lg-4', 'label_col_size': '', 'attr': {'style': 'width: 60px;'}, 'label_attr': {'style': 'display: none;'}}) }}
             </div>
+            <div class="col-lg-offset-2 ">
+                {{ form_row(form.diplayCorrectionsToLearners, {'label_attr': { 'style': 'font-weight: normal;'}}) }}
+            </div>
+            <div class="col-lg-offset-2 ">
+                <div id='allow-correction-deny' class='col-lg-8' style="text-align: left;" >
+                    {{ form_row(form.allowCorrectionDeny, {'label_attr': { 'style': 'font-weight: normal;'}}) }}
+                </div>
+            </div>
         </div>
         <h4>{{ 'Rating'|trans({}, 'icap_dropzone') }}</h4>
 
@@ -160,7 +168,7 @@
                     $('.peer-review-options').show();
                     $('#icap_dropzone_common_form_manualState_2').parent().show();
                     $('#icap_dropzone_common_form_manualState_3').parent().show();
-
+                    $('#icap_dropzone_common_form_diplayCorrectionsToLearners').show();
                     $('.submit_button').html('{{ 'Save and continue'|trans({}, 'icap_dropzone') }}');
                 } else {
                     $('.peer-review-options').hide();
@@ -170,14 +178,15 @@
                     if ($('#icap_dropzone_common_form_expectedTotalCorrection').val() < 1 || $('#icap_dropzone_common_form_expectedTotalCorrection').val() > 10) {
                         $('#icap_dropzone_common_form_expectedTotalCorrection').val(3);
                     }
-
                     $('#icap_dropzone_common_form_endReview_date').val(null);
                     $('#icap_dropzone_common_form_endReview_time').val(null);
                     $('#icap_dropzone_common_form_startReview_date').val(null);
                     $('#icap_dropzone_common_form_startReview_time').val(null);
 
                     $('.submit_button').html('{{ 'Save and finished'|trans({}, 'icap_dropzone') }}');
+
                 }
+                manageCorrectionVisibility(peerReviewEnabled);
             }
 
             enablePeerReviewOptions({{ dropzone.peerReview }});
@@ -206,7 +215,43 @@
             } else {
                 datesPlanning();
             }
+
+            $('#icap_dropzone_common_form_diplayCorrectionsToLearners').click(function()
+            {
+                manageCorrectionDeny();
+            });
+            //manageCorrectionDeny(); // not needed anymore ( normaly called at line 194 => dependancy cascading of enablePeerReviewOptions method
         });
+
+        function manageCorrectionDeny()
+        {
+            // Set manageCorrectionDeny dependencies
+            // show option only if peerReview and CorrectionVisibility are Activated, set to false and desactivate if they are  not.
+            if($('#icap_dropzone_common_form_peerReview_1:checked').length == 1 
+                && $('#icap_dropzone_common_form_diplayCorrectionsToLearners').prop('checked')) {
+                $('#allow-correction-deny').parent().show();
+            } else {
+                $('#icap_dropzone_common_form_allowCorrectionDeny').prop('checked',false);
+                $('#allow-correction-deny').parent().hide();
+            } 
+  
+        }
+
+        function manageCorrectionVisibility(peerReviewEnabled)
+        {
+            // Set PeerReview dependency
+            // show option only if peerReview is Activated, set to false and desactivate if it is not.
+            // call manageCorrectionDeny to cascade dependencies .
+           /* if(peerReviewEnabled)
+            {
+                $('#icap_dropzone_common_form_diplayCorrectionsToLearners').parent().show();
+            }else {
+                 $('#icap_dropzone_common_form_diplayCorrectionsToLearners').prop('checked',false).parent().hide();
+            }*/
+            $('#icap_dropzone_common_form_diplayCorrectionsToLearners').parent().show();
+            manageCorrectionDeny();
+        }
+
     </script>
 {% endblock %}
 

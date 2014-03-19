@@ -5,7 +5,7 @@
 
 {% block dropzone_content %}
     <div class="container container-dropzone">
-        <h2>{{ dropzone.resourceNode.name|capitalize }}</h2>
+        <h2>{{ dropzone.resourceNode.name|capitalize }} </h2>
 
         {{ macros.flashBox() }}
 
@@ -13,7 +13,7 @@
             <p class="text-muted">
                 {{ 'Evaluation not started'|trans({}, 'icap_dropzone') }}
                 {% if not dropzone.manualPlanning %}
-                     - {{ 'Start %date%'|trans({'%date%': dropzone.startAllowDrop|date('formatDatetime'|trans({}, 'icap_dropzone')) }) }}
+                     - {{ 'Start %date%'|trans({'%date%': dropzone.startAllowDrop|date('formatDatetime'|trans({}, 'icap_dropzone')) },'icap_dropzone') }}
                 {% endif %}
             </p>
         {% endif %}
@@ -192,6 +192,11 @@
                                 </div>
                             {% endif %}
                         </div>
+                        test
+                        {% if dropzone.diplayCorrectionsToLearners %}
+
+                            <a href="{{ path('icap_dropzone_drop_detail_by_user',{'resourceId': dropzone.id,'dropId':drop.id}) }}" class="btn btn-primary ">{{ 'See Corrections'|trans({},'icap_dropzone') }}</a>
+                        {% endif %}
                     {% else %}
                         <div class='text-danger'>
                             {% if dropzone.displayNotationMessageToLearners %}
@@ -202,9 +207,13 @@
                             {% if dropzone.displayNotationToLearners %}
                                 <div class="col-md-6">
                                     Note : {% include 'IcapDropzoneBundle:Drop:dropsTotalGrade.html.twig' %}
+                                    test
                                 </div>
                             {% endif %}
                         </div>
+                        {% if dropzone.diplayCorrectionsToLearners %}
+                            <a href="{{ path('icap_dropzone_drop_detail_by_user',{'resourceId': dropzone.id,'dropId':drop.id}) }}" class="btn btn-primary">{{ 'See Corrections'|trans({},'icap_dropzone') }}</a>
+                        {% endif %}
                     {% endif %}
                 {% else %}
                     <div class="col-md-12">
@@ -233,5 +242,5 @@
 {% endblock %}
 
 {% block javascripts %}
-    {{ parent() }}}
+    {{ parent() }}
 {% endblock %}

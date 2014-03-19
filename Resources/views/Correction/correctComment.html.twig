@@ -24,13 +24,13 @@
                     {% endif %}
                     {% if edit %}
                         <div class="form-group">
-                            {{ form_row(form.comment, {'label_col_size': ' ', 'input_col_size': 'col-md-12', 'label_attr': {'style': 'display:none;'}}) }}
-                        </div>
-                    {% else %}
-                        <div class="well">
-                            {{ correction.comment|raw }}
-                        </div>
-                    {% endif %}
+                    {{ form_row(form.comment, {'label_col_size': ' ', 'input_col_size': 'col-md-12', 'label_attr': {'style': 'display:none;'}, 'required':false}) }}
+                    </div>
+                {% else %}
+                    <div class="well">
+                        {{ correction.comment|raw }}
+                    </div>
+                {% endif %}
                 {% endif %}
 
 
@@ -43,12 +43,19 @@
                         {% else %}
                             <a href="{{ path('icap_dropzone_correct_paginated', {'resourceId': dropzone.id, 'page': nbPages}) }}" class="btn btn-default back-button">{{ 'Previous'|trans({}, 'icap_dropzone') }}</a>
                         {% endif %}
-                        <button type= "submit" class="btn btn-primary">{{ 'Save and finished'|trans({}, 'icap_dropzone') }}</button>
+                        <button type= "submit" class="btn btn-primary">
+                            {{ 'Save and finished'|trans({}, 'icap_dropzone') }}</button>
                     </div>
                 {% else %}
                     <div class="btn-group pull-right">
+                        {%  if state == 'preview' %}
+                            <a href="{{ path('icap_dropzone_drop_detail_by_user', {'resourceId': dropzone.id,'dropId': correction.drop.id}) }}" class="btn btn-default">
+                                {{ 'Back to corrections'|trans({}, 'icap_dropzone') }}
+                            </a>
+                        {% endif %}
                         <a href="{{ path('icap_dropzone_drops_detail_correction_paginated', {'resourceId': dropzone.id, 'state' : state, 'correctionId': correction.id, 'page': nbPages}) }}" class="btn btn-default">{{ 'Previous'|trans({}, 'icap_dropzone') }}</a>
                         <a href="#" class="btn btn-default disabled">{{ 'Next'|trans({}, 'icap_dropzone') }}</a>
+
                     </div>
                 {% endif %}
             </form>
@@ -63,7 +70,7 @@
 {% endblock %}
 
 {% block javascripts %}
-    {{ parent() }}}
+    {{ parent() }}
     {% render controller('ClarolineCoreBundle:ResourceType:initPicker') %}
     {{ tinymce_init() }}
     <script>
@@ -76,4 +83,5 @@
             });
         });
     </script>
+
 {% endblock %}

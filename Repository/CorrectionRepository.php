@@ -50,6 +50,22 @@ class CorrectionRepository extends EntityRepository {
         return null;
     }
 
+
+    public function getCorrectionsIds($dropzone, $drop)
+    {
+        return $this->createQueryBuilder('correction')
+            ->select('correction.id')
+            ->andWhere('correction.dropzone = :dropzone')
+            ->andWhere('correction.finished = true')
+            ->andWhere('correction.valid = true')
+            ->andWhere('correction.editable = false')
+            ->andWhere('correction.drop = :drop')
+            ->setParameter('dropzone',$dropzone)
+            ->setParameter('drop',$drop)
+            ->getQuery()
+            ->getResult();
+    }
+
     public function getAlreadyCorrectedDropIds($dropzone, $user)
     {
        return $this->createQueryBuilder('correction')

@@ -99,3 +99,15 @@ log_resource-icap_dropzone-correction_validation_change_shortname: 'Modification
 log_resource-icap_dropzone-correction_validation_change_sentence: 'a modifié la validité d''une correction dans  %resource%'
 log_resource-icap_dropzone-correction_validation_change_title: 'Modification de la validité d''une correction dans une évaluation'
 log_resource-icap_dropzone-correction_validation_change_filter: 'Modification de la validité d''une correction dans une évaluation'
+
+log_resource-icap_dropzone-drop_report_shortname: 'Copie signalée'
+log_resource-icap_dropzone-drop_report_sentence: 'a signalé une copie dans %resource%'
+log_resource-icap_dropzone-drop_report_title: 'Une copie a été signalée'
+
+log_resource-icap_dropzone-correction_report_shortname: 'Correction signalée '
+log_resource-icap_dropzone-correction_report_sentence: 'a signalé une correction dans %resource%'
+log_resource-icap_dropzone-correction_report_title: 'Une correction a été signalée'
+
+log_resource-icap_dropzone-drop_grade_available_shortname: 'Note disponible'
+log_resource-icap_dropzone-drop_grade_available_sentence: 'a éffectué la dernière correction d''une copie dans %resource%'
+log_resource-icap_dropzone-drop_grade_available_title: 'copie corrigée : note disponible'

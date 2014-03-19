@@ -1,0 +1,81 @@
+{% extends "IcapDropzoneBundle:Drop:drops.html.twig" %}
+
+{% block dropzone_content_drops %}
+    <div class="navbar navbar-default" role="navigation">
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            {% block dropzone_content_drops_by_navbar %}
+            <ul class="nav navbar-nav">
+                <li class="active">
+                    <a href="{{ path('icap_dropzone_drops_by_default', {'resourceId': dropzone.id}) }}">
+                        {{ 'Copies evaluation finished'|trans({}, 'icap_dropzone') }} <span class="badge">{{ nbDropCorrected }}</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ path('icap_dropzone_drops_awaiting', {'resourceId': dropzone.id}) }}">
+                        {{ 'Copies being evaluated'|trans({}, 'icap_dropzone') }} <span class="badge">{{ nbDrop - nbDropCorrected }}</span>
+                    </a>
+                </li>
+            </ul>
+            {% endblock %}
+        </div>
+    </div>
+    <div class="btn-group pull-right">
+        {% block dropzone_content_drops_by_default %}
+            <a href="{{ path('icap_dropzone_drops_by_default', {'resourceId': dropzone.id}) }}" class="btn btn-default btn-xs">{{ 'default sort'|trans({}, 'icap_dropzone') }}</a>
+        {% endblock %}
+        {% block dropzone_content_drops_by_user %}
+            <a href="{{ path('icap_dropzone_drops_by_user', {'resourceId': dropzone.id}) }}" class="btn btn-default btn-xs">{{ 'Sort by user'|trans({}, 'icap_dropzone') }}</a>
+        {% endblock %}
+        {% block dropzone_content_drops_by_date %}  
+            <a href="{{ path('icap_dropzone_drops_by_date', {'resourceId': dropzone.id}) }}" class="btn btn-default btn-xs">{{ 'Sort by date'|trans({}, 'icap_dropzone') }}</a>
+        {% endblock %}
+        {% block dropzone_content_drops_by_reported %}  
+            <a href="{{ path('icap_dropzone_drops_by_report', {'resourceId': dropzone.id}) }}" class="btn btn-default btn-xs">{{ 'sort by reported'|trans({}, 'icap_dropzone') }}</a>
+        {% endblock %}
+    </div>
+
+     <h3>{% block dropzone_content_drops_by_list_title %}{{ 'fully corrected copies'|trans({}, 'icap_dropzone') }}{% endblock %}</h3>
+
+    {% block dropzone_content_drops_by_Listing %}
+        {% include 'IcapDropzoneBundle:Drop:Listing/dropsListing.html.twig' %}
+    {% endblock %}
+    
+    <div class="container row">
+        {% block dropzone_content_drops_by_paginate_part %}
+            {% if pager.haveToPaginate %}
+                {{
+                pagerfanta(
+                pager,
+                'twitter_bootstrap_translated',
+                {
+                'proximity' : 1,
+                'routeName': 'icap_dropzone_drops_by_default_paginated',
+                'routeParams': {'resourceId': dropzone.id}
+                }
+                )
+                }}
+            {% endif %}
+        {% endblock %}
+    </div>
+
+    {% if pager.nbResults == 0 %}
+        <div class="row">
+            <div class="col-md-12">
+                {% block dropzone_content_drops_by_no_result_exception %}
+                    {{ 'noCopyExpectedCorrection'|transchoice(dropzone.expectedTotalCorrection, {}, 'icap_dropzone') }}
+                {% endblock %}
+            </div>
+        </div>
+        <br/>
+    {% endif %}
+
+
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+{% endblock %}
