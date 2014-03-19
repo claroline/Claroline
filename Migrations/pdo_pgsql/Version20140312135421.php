@@ -16,11 +16,11 @@ class Version20140312135421 extends AbstractMigration
     {
         $this->addSql("
             ALTER TABLE innova_stepWho 
-            ADD is_default BOOLEAN NOT NULL
+            ADD is_default BOOLEAN NOT NULL DEFAULT 0
         ");
         $this->addSql("
             ALTER TABLE innova_stepWhere 
-            ADD is_default BOOLEAN NOT NULL
+            ADD is_default BOOLEAN NOT NULL DEFAULT 0
         ");
     }
 
