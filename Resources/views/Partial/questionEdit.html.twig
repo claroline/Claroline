@@ -62,7 +62,10 @@
     <div class="panel-body">
         <div class="form-group row">
             <label class="label-control col-md-3">{{ 'choose' | trans }}</label>
-            <div class="col-md-9">{{ form_widget(edit_form.interaction.question.category) }}</div>
+            <div class="col-md-9">
+                {{ form_widget(edit_form.interaction.question.category) }}
+                {{ form_errors(edit_form.interaction.question.category) }}
+            </div>
         </div>
     </div>
     <div class="panel-footer">

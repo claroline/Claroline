@@ -25,3 +25,8 @@ UJM\ExoBundle\Entity\WordResponse:
     properties:
         score:
             - UJM\ExoBundle\Validator\Constraints\isValidMark: ~
+            
+UJM\ExoBundle\Entity\Question:
+    properties:
+        category:
+            - UJM\ExoBundle\Validator\Constraints\isNotEmpty: ~
