@@ -17,6 +17,13 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 class ResourcePropertiesType extends AbstractType
 {
+    private $creator;
+
+    public function __construct($creator)
+    {
+        $this->creator = $creator;
+    }
+
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add('name', 'text');
@@ -50,12 +57,10 @@ class ResourcePropertiesType extends AbstractType
         );
         $builder->add(
             'creator',
-            'entity',
+            'text',
             array(
-                'class' => 'Claroline\CoreBundle\Entity\User',
-                'expanded' => false,
-                'multiple' => false,
-                'property' => 'username',
+                'data' => $this->creator,
+                'mapped' => false,
                 'disabled' => true
             )
         );
