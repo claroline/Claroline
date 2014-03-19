@@ -745,3 +745,5 @@ send_message_to_workspace: Envoyer un message aux utilisateurs de l'espace
 'This placeholder is optional and will be replaced by your platform name': Ce placeholder est optionnel et sera remplacé par le nom de la plateforme
 'This placeholder is optional and will be replaced by the author first name': Ce placeholder est optionnel et sera remplacé par le prénom de l'auteur
 'This placeholder is optional and will be replaced by the author last name': Ce placeholder est optionnel et sera remplacé par le nom de l'auteur
+workspace_list: Liste d'espace d'activité
+workspaces_per_page: Espaces par page

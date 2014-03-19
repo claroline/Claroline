@@ -105,7 +105,7 @@ class WorkspaceRepository extends EntityRepository
             WHERE r.name = '{$roles[0]}'
         ";
 
-        for ($i = 1, $size = count($roles); $i < $size; $i++) {
+        for ($i = 1, $size = count($roles) - 1; $i < $size; $i++) {
             $dql .= " OR r.name = '{$roles[$i]}'";
         }
 

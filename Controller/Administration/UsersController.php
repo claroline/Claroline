@@ -18,6 +18,7 @@ use Claroline\CoreBundle\Manager\LocaleManager;
 use Claroline\CoreBundle\Manager\MailManager;
 use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Manager\UserManager;
+use Claroline\CoreBundle\Manager\WorkspaceManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use JMS\SecurityExtraBundle\Annotation as SEC;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
@@ -39,12 +40,14 @@ class UsersController extends Controller
     private $formFactory;
     private $request;
     private $mailManager;
+    private $workspaceManager;
     private $localeManager;
     private $router;
 
     /**
      * @DI\InjectParams({
      *     "userManager"        = @DI\Inject("claroline.manager.user_manager"),
+     *     "workspaceManager"   = @DI\Inject("claroline.manager.workspace_manager"),
      *     "roleManager"        = @DI\Inject("claroline.manager.role_manager"),
      *     "eventDispatcher"    = @DI\Inject("claroline.event.event_dispatcher"),
      *     "formFactory"        = @DI\Inject("claroline.form.factory"),
@@ -57,6 +60,7 @@ class UsersController extends Controller
     public function __construct(
         UserManager $userManager,
         RoleManager $roleManager,
+        WorkspaceManager $workspaceManager,
         StrictDispatcher $eventDispatcher,
         FormFactory $formFactory,
         Request $request,
@@ -73,6 +77,7 @@ class UsersController extends Controller
         $this->mailManager = $mailManager;
         $this->localeManager = $localeManager;
         $this->router = $router;
+        $this->workspaceManager = $workspaceManager;
     }
 
     /**
@@ -221,7 +226,7 @@ class UsersController extends Controller
     public function listAction($page, $search, $max, $order)
     {
         $pager = $search === '' ?
-            $this->userManager->getAllUsers($page, $max, $order) :
+            $this->userManager->getAllUsers($page, $max, $order):
             $this->userManager->getUsersByName($search, $page, $max, $order);
 
         return array('pager' => $pager, 'search' => $search, 'max' => $max, 'order' => $order);
@@ -254,7 +259,7 @@ class UsersController extends Controller
     public function listPicsAction($page, $search)
     {
         $pager = $search === '' ?
-            $this->userManager->getAllUsers($page) :
+            $this->userManager->getAllUsers($page):
             $this->userManager->getUsersByName($search, $page);
 
         return array('pager' => $pager, 'search' => $search);
@@ -272,6 +277,29 @@ class UsersController extends Controller
         $form = $this->formFactory->create(FormFactory::TYPE_USER_IMPORT);
 
         return array('form' => $form->createView());
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/user/{user}/workspaces/page/{page}/max/{max}",
+     *     name="claro_admin_user_workspaces",
+     *     defaults={"page"=1, "max"=50},
+     *     options={"expose"=true}
+     * )
+     * @EXT\Method("GET")
+     * @EXT\Template
+     *
+     * @param User    $user
+     * @param integer $page
+     * @param integer $max
+     *
+     * @return array
+     */
+    public function userWorkspaceListAction(User $user, $page, $max)
+    {
+        $pager = $this->workspaceManager->getOpenableWorkspacesByRolesPager($user->getRoles(), $page, $max);
+
+        return array('user' => $user, 'pager' => $pager, 'page' => $page, 'max' => $max);
     }
 
     /**

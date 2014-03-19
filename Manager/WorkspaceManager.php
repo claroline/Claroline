@@ -545,6 +545,20 @@ class WorkspaceManager
     }
 
     /**
+     * @param string[] $roles
+     * @param integer $page
+     * @param integer $max
+     *
+     * @return \PagerFanta\PagerFanta
+     */
+    public function getOpenableWorkspacesByRolesPager(array $roles, $page, $max)
+    {
+        $workspaces = $this->getOpenableWorkspacesByRoles($roles);
+
+        return $this->pagerFactory->createPagerFromArray($workspaces, $page, $max);
+    }
+
+    /**
      * @param string[] $roleNames
      * @param integer  $page
      *
