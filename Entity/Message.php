@@ -159,10 +159,10 @@ class Message
         return $this->user;
     }
 
-    public function setSender(User $sender)
+    public function setSender($sender)
     {
         $this->user = $sender;
-        $this->senderUsername = $sender->getUsername();
+        $this->senderUsername = ($sender) ? $sender->getUsername(): 'claroline-connect';
     }
 
     public function getDate()

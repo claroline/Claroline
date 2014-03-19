@@ -16,6 +16,7 @@ use JMS\DiExtraBundle\Annotation as DI;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\Message;
+use Claroline\CoreBundle\Entity\AbstractRoleSubject;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Pager\PagerFactory;
 
@@ -137,10 +138,10 @@ class MessageManager
             $workspaceReceivers = $this->workspaceRepo->findWorkspacesByCode($workspaceCodes);
         }
 
-        $message->setSender($sender);
+        $message->setSender($message->getSender());
 
-        if (null !== $parent) {
-            $message->setParent($parent);
+        if (null !== $message->getParent()) {
+            $message->setParent($message->getParent());
         }
 
         $this->om->persist($message);
@@ -189,12 +190,17 @@ class MessageManager
             $userMessage->setMessage($message);
             $this->om->persist($userMessage);
 
-            if ($user->isMailNotified()) {
+            if ($filteredUser->isMailNotified()) {
                 $mailNotifiedUsers[] = $filteredUser;
             }
         }
 
-        $this->mailManager->send($message->getObject(), $message->getContent(), $mailNotifiedUsers );
+        $this->mailManager->send(
+            $message->getObject(),
+            $message->getContent(),
+            $mailNotifiedUsers,
+            $message->getSender()
+        );
         $this->om->flush();
 
         return $message;
@@ -390,5 +396,23 @@ class MessageManager
         }
 
         $this->om->flush();
+    }
+
+    public function sendMessageToAbstractRoleSubject(AbstractRoleSubject $subject, $content, $object, $sender = null)
+    {
+        $users = array();
+
+        if ($subject instanceof \Claroline\CoreBundle\Entity\User) {
+            $users[] = $subject;
+        }
+
+        if ($subject instanceof \Claroline\CoreBundle\Entity\Group) {
+            foreach ($subject->getUsers() as $user) {
+                $users[] = $user;
+            }
+        }
+
+        $message = $this->create($content, $object, $users, $sender);
+        $this->send($message);
     }
 }

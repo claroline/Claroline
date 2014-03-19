@@ -11,6 +11,7 @@
 
 namespace Claroline\CoreBundle\Manager;
 
+use Claroline\CoreBundle\Entity\AbstractRoleSubject;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Templating\EngineInterface;
@@ -133,6 +134,8 @@ class MailManager
     public function send($subject, $body, array $users, $from = null)
     {
         if ($this->isMailerAvailable()) {
+            $to = [];
+
             $layout = $this->contentManager->getTranslatedContent(array('type' => 'claro_mail_layout'));
 
             $fromEmail = ($from === null) ? $this->ch->getParameter('support_email') : $from->getMail();
