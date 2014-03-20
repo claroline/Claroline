@@ -2,7 +2,7 @@
     {% if log.getDetails().doer is defined %}
         <strong>
             {% if log.getDoer() != null %}
-                <a href="{{ path('claro_profile_view', {'userId': log.getDoer().getPublicUrl()}) }}">
+                <a href="{{ path('claro_profile_view', {'publicUrl': log.getDoer().getPublicUrl()}) }}">
                     {{ log.getDetails().doer.firstName }} {{ log.getDetails().doer.lastName }}
                 </a>
             {% else %}
