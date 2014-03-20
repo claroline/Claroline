@@ -179,7 +179,7 @@
                                 {% elseif (entity.correctionMode == 2) %}
                                     {{ 'after the last attempt' | trans }}
                                 {% elseif (entity.correctionMode == 3) %}
-                                    {{ 'from' | trans }}
+                                    {{ 'from' | trans }} : {{ entity.dateCorrection|date('d/m/Y \\- H\\hi\\ms\\s') }}
                                 {% elseif (entity.correctionMode == 4) %}
                                     {{ 'never' | trans }}
                                 {% endif %}
