@@ -1,16 +1,16 @@
 {% macro renderPager(search, pager, max, order) %}
     {% if search == '' %}
-    {{
-        pagerfanta(
-            pager,
-            'twitter_bootstrap_translated',
-            {
-                'proximity' : 1,
-                'routeName': 'claro_admin_user_list',
-                'routeParams': {'max': max, 'order': order}
-            }
-        )
-    }}
+        {{
+            pagerfanta(
+                pager,
+                'twitter_bootstrap_translated',
+                {
+                    'proximity' : 1,
+                    'routeName': 'claro_admin_user_list',
+                    'routeParams': {'max': max, 'order': order}
+                }
+            )
+        }}
     {% else %}
         {{
             pagerfanta(
@@ -89,7 +89,7 @@
             </div>
             <div class="col-md-4">
                  <div class="input-group">
-                    <input class="form-control" type="text" id="search-items-txt" placeholder="{{ 'search'|trans({}, 'platform') }}" value={{search}}>
+                    <input class="form-control" type="text" id="search-items-txt" placeholder="{{ 'search'|trans({}, 'platform') }}" value={{ search }}>
                     <span class="input-group-btn">
                         <button class="filter btn btn-default" type="button" id="search-button">
                             <i class="icon-search"></i>
@@ -158,6 +158,9 @@
                                     {% endif %}
                                     <a class='btn btn-default' href="{{ path('claro_profile_form', {'user': user.getId()}) }}" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="{{ 'edit'|trans({}, 'platform') }}">
                                         <i class='icon-pencil'></i>
+                                    </a>
+                                    <a class='btn btn-default' href="{{ path('claro_admin_user_workspaces', {'user': user.getId()}) }}" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="{{ 'workspaces'|trans({}, 'platform') }}">
+                                        <i class='icon-book'></i>
                                     </a>
                                 </td>
                             {% endif %}

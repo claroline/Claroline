@@ -11,6 +11,7 @@
 
 namespace Claroline\CoreBundle\Manager;
 
+use Claroline\CoreBundle\Entity\AbstractRoleSubject;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Templating\EngineInterface;
@@ -133,11 +134,11 @@ class MailManager
     public function send($subject, $body, array $users, $from = null)
     {
         if ($this->isMailerAvailable()) {
+            $to = [];
+
             $layout = $this->contentManager->getTranslatedContent(array('type' => 'claro_mail_layout'));
 
-            $from = ($from === null) ? $this->ch->getParameter('support_email') : $from->getMail();
-            $to = array();
-
+            $fromEmail = ($from === null) ? $this->ch->getParameter('support_email') : $from->getMail();
             $locale = count($users) === 1 ? $users[0]->getLocale() : $this->ch->getParameter('locale_language');
 
             if (!$locale) {
@@ -148,13 +149,18 @@ class MailManager
             $body = str_replace('%content%', $body, $usedLayout);
             $body = str_replace('%platform_name%', $this->ch->getParameter('name'), $body);
 
+            if ($from) {
+                $body = str_replace('%first_name%', $from->getFirstName(), $body);
+                $body = str_replace('%last_name%', $from->getLastName(), $body);
+            }
+
             foreach ($users as $user) {
                 $to[] = $user->getMail();
             }
 
             $message = \Swift_Message::newInstance()
                 ->setSubject($subject)
-                ->setFrom($from)
+                ->setFrom($fromEmail)
                 ->setBody($body, 'text/html');
 
             if (count($to) > 1) {

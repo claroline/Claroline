@@ -16,6 +16,7 @@ use JMS\DiExtraBundle\Annotation as DI;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\Message;
+use Claroline\CoreBundle\Entity\AbstractRoleSubject;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Pager\PagerFactory;
 
@@ -63,15 +64,41 @@ class MessageManager
     }
 
     /**
-     * @param \Claroline\CoreBundle\Entity\User    $sender
+     * Create a message.
+     *
+     * @param $content      The message content
+     * @param $object       The message object
+     * @param User[] $users The users receiving the message
+     * @param null $sender  The user sending the message
+     * @param null $parent  The message parent (is it's a discussion)
+     *
+     * @return Message
+     */
+    public function create($content, $object, array $users, $sender = null, $parent = null)
+    {
+        $message = new Message();
+        $message->setContent($content);
+        $message->setParent($parent);
+        $message->setObject($object);
+        $message->setSender($sender);
+        $stringTo = '';
+
+        foreach ($users as $user) {
+            $stringTo .= $user->getUsername() . ';';
+        }
+
+        $message->setTo($stringTo);
+
+        return $message;
+    }
+
+    /**
      * @param \Claroline\CoreBundle\Entity\Message $message
-     * @param \Claroline\CoreBundle\Entity\Message $parent
-     *                                                      @param boolean setAsSent
+     * @param boolean setAsSent
      *
      * @return \Claroline\CoreBundle\Entity\Message
      */
-
-    public function send(User $sender, Message $message, $parent = null, $setAsSent = true)
+    public function send(Message $message, $setAsSent = true)
     {
         if (substr($receiversString = $message->getTo(), -1, 1) === ';') {
             $receiversString = substr_replace($receiversString, '', -1);
@@ -111,18 +138,18 @@ class MessageManager
             $workspaceReceivers = $this->workspaceRepo->findWorkspacesByCode($workspaceCodes);
         }
 
-        $message->setSender($sender);
+        $message->setSender($message->getSender());
 
-        if (null !== $parent) {
-            $message->setParent($parent);
+        if (null !== $message->getParent()) {
+            $message->setParent($message->getParent());
         }
 
         $this->om->persist($message);
 
-        if ($setAsSent) {
+        if ($setAsSent && $message->getSender()) {
             $userMessage = $this->om->factory('Claroline\CoreBundle\Entity\UserMessage');
             $userMessage->setIsSent(true);
-            $userMessage->setUser($sender);
+            $userMessage->setUser($message->getSender());
             $userMessage->setMessage($message);
             $this->om->persist($userMessage);
         }
@@ -163,12 +190,17 @@ class MessageManager
             $userMessage->setMessage($message);
             $this->om->persist($userMessage);
 
-            if ($user->isMailNotified()) {
+            if ($filteredUser->isMailNotified()) {
                 $mailNotifiedUsers[] = $filteredUser;
             }
         }
 
-        $this->mailManager->send($message->getObject(), $message->getContent(), $mailNotifiedUsers );
+        $this->mailManager->send(
+            $message->getObject(),
+            $message->getContent(),
+            $mailNotifiedUsers,
+            $message->getSender()
+        );
         $this->om->flush();
 
         return $message;
@@ -364,5 +396,23 @@ class MessageManager
         }
 
         $this->om->flush();
+    }
+
+    public function sendMessageToAbstractRoleSubject(AbstractRoleSubject $subject, $content, $object, $sender = null)
+    {
+        $users = array();
+
+        if ($subject instanceof \Claroline\CoreBundle\Entity\User) {
+            $users[] = $subject;
+        }
+
+        if ($subject instanceof \Claroline\CoreBundle\Entity\Group) {
+            foreach ($subject->getUsers() as $user) {
+                $users[] = $user;
+            }
+        }
+
+        $message = $this->create($content, $object, $users, $sender);
+        $this->send($message);
     }
 }
