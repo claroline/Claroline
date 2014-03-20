@@ -138,8 +138,6 @@ class MessageManager
             $workspaceReceivers = $this->workspaceRepo->findWorkspacesByCode($workspaceCodes);
         }
 
-        $message->setSender($message->getSender());
-
         if (null !== $message->getParent()) {
             $message->setParent($message->getParent());
         }
