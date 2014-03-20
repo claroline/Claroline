@@ -36,12 +36,12 @@ class ToolListener
 
     /**
      * @DI\InjectParams({
-     *     "container" = @DI\Inject("service_container"),
-     *     "toolManager" = @DI\Inject("claroline.manager.tool_manager"),
+     *     "container"        = @DI\Inject("service_container"),
+     *     "toolManager"      = @DI\Inject("claroline.manager.tool_manager"),
      *     "workspaceManager" = @DI\Inject("claroline.manager.workspace_manager"),
-     *     "formFactory" = @DI\Inject("claroline.form.factory"),
-     *     "templating" = @DI\Inject("templating"),
-     *     "httpKernel" = @DI\Inject("http_kernel")
+     *     "formFactory"      = @DI\Inject("claroline.form.factory"),
+     *     "templating"       = @DI\Inject("templating"),
+     *     "httpKernel"       = @DI\Inject("http_kernel")
      * })
      */
     public function __construct(
