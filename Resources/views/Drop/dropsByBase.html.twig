@@ -15,6 +15,11 @@
                         {{ 'Copies being evaluated'|trans({}, 'icap_dropzone') }} <span class="badge">{{ nbDrop - nbDropCorrected }}</span>
                     </a>
                 </li>
+                <li>
+                    <a href='{{ path('icap_dropzone_examiners', {'resourceId': dropzone.id}) }}'>
+                        {{ 'Examiners'|trans({}, 'icap_dropzone') }}
+                    </a>
+                </li>
             </ul>
             {% endblock %}
         </div>
@@ -41,6 +46,7 @@
     {% endblock %}
     
     <div class="container row">
+    {% block dropzone_content_drops_by_pager %}
         {% block dropzone_content_drops_by_paginate_part %}
             {% if pager.haveToPaginate %}
                 {{
@@ -69,7 +75,7 @@
         <br/>
     {% endif %}
 
-
+    {% endblock %}
 {% endblock %}
 
 {% block javascripts %}

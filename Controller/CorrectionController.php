@@ -26,6 +26,8 @@ use Icap\DropzoneBundle\Form\CorrectionCriteriaPageType;
 use Icap\DropzoneBundle\Form\CorrectionStandardType;
 use Icap\DropzoneBundle\Form\CorrectionDenyType;
 use Pagerfanta\Adapter\DoctrineORMAdapter;
+use Doctrine\DBAL\Query\QueryBuilder;
+use Pagerfanta\Adapter\DoctrineDbalSingleTableAdapter;
 use Pagerfanta\Exception\NotValidCurrentPageException;
 use Pagerfanta\Pagerfanta;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -1227,5 +1229,126 @@ class CorrectionController extends DropzoneBaseController
                 )
             )
         );
+    }
+
+
+    /**
+     * 
+     * @Route(
+     *      "/{resourceId}/examiners/{withDropOnly}",
+     *      name="icap_dropzone_examiners",
+     *      requirements ={"resourceId" ="\d+","withDropOnly"="^(withDropOnly|all|withoutDrops)$"},
+     *      defaults={"page" = 1, "withDropOnly" = "all" }
+     * )
+     * 
+     * @Route(
+     *      "/{resourceId}/examiners/{withDropOnly}/{page}",
+     *      name="icap_dropzone_examiners_paginated",
+     *      requirements ={"resourceId" ="\d+","withDropOnly"="^(withDropOnly|all|withoutDrops)$","page"="\d+"},
+     *      defaults={"page" = 1, "withDropOnly" = "all" }
+     * )
+     * 
+     * 
+     * @ParamConverter("dropzone",class="IcapDropzoneBundle:Dropzone",options={"id" = "resourceId"})
+     * @Template()
+     * 
+     * 
+     * **/
+    public function ExaminersByCorrectionMadeAction($dropzone,$page,$withDropOnly)
+    {
+        $this->isAllowToOpen($dropzone);
+        $this->isAllowToEdit($dropzone);
+
+        $dropRepo = $this->getDoctrine()->getManager()->getRepository('IcapDropzoneBundle:Drop');
+        $correctionRepo = $this->getDoctrine()->getManager()->getRepository('IcapDropzoneBundle:Correction');
+        $usersQuery = $correctionRepo->getUsersByDropzoneQuery($dropzone);
+
+        // page management.
+        $adapter = new DoctrineORMAdapter($usersQuery);
+        //$adapter = new DoctrineDbalSingleTableAdapter($usersQuery,'u.id');
+        $pager = new Pagerfanta($adapter);
+        $pager->setMaxPerPage(DropzoneBaseController::DROP_PER_PAGE);
+        try {
+            $pager->setCurrentPage($page);
+        } catch (NotValidCurrentPageException $e) {
+            if($page > 0) {
+                return $this->redirect(
+                    $this->generateUrl(
+                        'icap_dropzone_examiners_paginated',
+                        array(
+                            'resourceId' => $dropzone->getId(),
+                            'page' => $pager->getNbPages()
+                            )
+                    )
+                );
+            }else {
+                throw new NotFoundHttpException();
+            }
+        }
+
+
+        $users = $usersQuery->getResult();
+
+        /*
+        var_dump($users);
+        die;
+        */
+        $usersAndCorrectionCount = $this->addCorrectionCount($dropzone,$users);
+
+        $response = array(
+            'workspace' => $dropzone->getResourceNode()->getWorkspace(),
+            '_resource' => $dropzone,
+            'dropzone' => $dropzone,
+            'usersAndCorrectionCount' => $usersAndCorrectionCount,
+            'nbDropCorrected' =>  $dropRepo->countDropsFullyCorrected($dropzone),
+            'nbDrop' =>$dropRepo->countDrops($dropzone),
+            'pager' => $pager
+            );
+       
+        return $this->render(
+            'IcapDropzoneBundle:Drop:Examiners/ExaminersByName.htlm.twig',
+            $response
+        );
+
+    }
+
+    private function addCorrectionCount($dropzone,$users)
+    {
+        $correctionRepo = $this->getDoctrine()->getManager()->getRepository('IcapDropzoneBundle:Correction');
+        $dropRepo = $this->getDoctrine()->getManager()->getRepository('IcapDropzoneBundle:Drop');
+        $response = array();
+        foreach ($users as $user) {
+
+
+            
+            $reponseItem = array();
+            $responseItem['userId'] = $user->getId();
+            $corrections = $correctionRepo->getCorrectionsByUser($dropzone,  $user );
+            $count = count($corrections);
+            $responseItem['correction_count'] = $count;
+
+            $finishedCount = 0;
+            $reportsCount = 0;
+            $deniedCount = 0;
+            foreach ($corrections as $correction) {
+                if($correction->getCorrectionDenied()) {
+                    $deniedCount++;
+                }
+                if($correction->getReporter()) {
+                    $reportsCount ++;
+                }
+                if($correction->getFinished()) {
+                    $finishedCount ++;
+                }
+            }
+
+            //$dropCount = count($dropRepo->getDropIdsByUser($dropzone->getId(),$user->getId()));
+            //$responseItem['userDropCount']= $dropCount;
+            $responseItem['correction_deniedCount'] =  $deniedCount;
+            $responseItem['correction_reportCount'] = $reportsCount;
+            $responseItem['correction_finishedCount'] = $finishedCount;
+           $response[$user->getId()]=$responseItem;
+        }
+        return $response;
     }
 }
