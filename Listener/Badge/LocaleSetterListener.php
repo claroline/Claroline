@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Claroline\CoreBundle\Entity\Badge\Listener;
+namespace Claroline\CoreBundle\Listener\Badge;
 
 use Claroline\CoreBundle\Entity\Badge\Badge;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
@@ -21,7 +21,7 @@ use Symfony\Component\Security\Core\SecurityContext;
  * @DI\Service("claroline.entity_listener.badge")
  * @DI\Tag("doctrine.entity_listener")
  */
-class BadgeListener
+class LocaleSetterListener
 {
     /** @var \Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler */
     private $platformConfigHandler;
@@ -42,28 +42,22 @@ class BadgeListener
     }
 
     /**
+     * Sets the locale on a badge.
+     *
      * @param Badge              $badge
      * @param LifecycleEventArgs $event
      */
     public function postLoad(Badge $badge, LifecycleEventArgs $event)
     {
-        // Set the locale on tha badge
         $platformLocale = $this->platformConfigHandler->getParameter('locale_language');
+        $userLocale = null;
 
-        /** @var \Claroline\CoreBundle\Entity\User $user */
-        $user           = $this->securityContext->getToken()->getUser();
-        $userLocale     = null;
-
-        if ('anon.' !== $user) {
-            $userLocale = $user->getLocale();
+        if ($token = $this->securityContext->getToken()) {
+            if ('anon.' !== $user = $token->getUser()) {
+                $userLocale = $user->getLocale();
+            }
         }
 
-        $locale = $platformLocale;
-
-        if (null !== $userLocale) {
-            $locale = $userLocale;
-        }
-
-        $badge->setLocale($locale);
+        $badge->setLocale($userLocale ?: $platformLocale);
     }
 }
