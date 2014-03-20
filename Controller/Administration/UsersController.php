@@ -104,7 +104,7 @@ class UsersController extends Controller
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function creationFormAction(User $currentUser)
+    public function userCreationFormAction(User $currentUser)
     {
         $roles = $this->roleManager->getPlatformRoles($currentUser);
         $form = $this->formFactory->create(
