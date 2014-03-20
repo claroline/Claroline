@@ -32,33 +32,38 @@
             </h3>
         </div>
         <div class="panel-body">
-            <div>
-                <div class="col-md-2">
+            <div class="row">
+                <div class="col-md-2 profile_picture_container">
                     {% if user.getPicture() != "" %}
-                        <img src="{{ asset('uploads/pictures/') ~  user.getPicture() }}">
+                        <img src="{{ asset('uploads/pictures/') ~  user.getPicture() }}" class="profile_picture">
                     {% else %}
-                        <h1><i class="icon-user"></i></h1>
+                        <h1 class="profile_picture_placeholder"><i class="icon-user"></i></h1>
                     {% endif %}
                 </div>
-                <ul class="col-md-10">
-                    <li>{{'First name' | trans({}, 'platform') }}: {{user.getFirstName()}}</li>
-                    <li> {{'Last name' | trans({}, 'platform') }}: {{user.getLastName()}}</li>
-                    <li> {{'User name' | trans({}, 'platform') }}: {{user.getUsername()}}</li>
-                </ul>
-                    {% if user.getPhone() != "" %}
-                        <i class="icon-phone"></i> {{ user.getPhone() }}
-                    {% endif %}
-                </p>
-                <p>{{ user.getDescription() |raw }} </p>
-                <p class="text-muted">{{ 'user'|trans({}, 'platform') }} {{ user.getCreationDate()| timeAgo }}</p>
-                <p>
-                    <a class="btn btn-default" href="{{path('claro_mail_form', {'userId':user.getId()})}}">
-                        <i class="icon-comment"></i> {{ 'send_mail'|trans({}, 'platform') }}
-                    </a>
-                    <a class="btn btn-default" href="{{path('claro_message_show', {'message': 0})}}?ids[]={{ user.getId() }}">
-                        <i class="icon-envelope"></i> {{ 'send_message'|trans({}, 'platform') }}
-                    </a>
-                </p>
+                <div class="col-md-10">
+                    <ul class="list-unstyled">
+                        <li>{{'First name' | trans({}, 'platform') }}: {{user.getFirstName()}}</li>
+                        <li> {{'Last name' | trans({}, 'platform') }}: {{user.getLastName()}}</li>
+                        <li> {{'User name' | trans({}, 'platform') }}: {{user.getUsername()}}</li>
+                        {% if user.getPhone() is not null %}
+                            <li><i class="icon-phone"></i> {{ user.getPhone() }}</li>
+                        {% endif %}
+                    </ul>
+                    {% if '' != user.getDescription() %}<p>Description</p>: {{ user.getDescription() |raw }} </p>{% endif %}
+                    <p class="text-muted">{{ 'registered'|trans({}, 'platform') }} {{ user.getCreationDate()| timeAgo }}</p>
+                    <ul class="list-inline">
+                        <li>
+                            <a class="btn btn-default" href="{{path('claro_mail_form', {'userId':user.getId()})}}">
+                                <i class="icon-comment"></i> {{ 'send_mail'|trans({}, 'platform') }}
+                            </a>
+                        </li>
+                        <li>
+                            <a class="btn btn-default" href="{{path('claro_message_show', {'message': 0})}}?ids[]={{ user.getId() }}">
+                                <i class="icon-envelope"></i> {{ 'send_message'|trans({}, 'platform') }}
+                            </a>
+                        </li>
+                    </ul>
+                </div>
             </div>
         </div>
     </div>
