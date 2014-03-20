@@ -96,14 +96,18 @@
 {% endmacro %}
 
 {% macro displayUser(user) %}
-    {% if user.isEnabled %}
-        <a href="{{path('claro_profile_view', {'publicUrl': user.getPublicUrl()})}}">
-            {{ user.getUsername() }}
-        </a>
+    {% if user %}
+        {% if user.isEnabled %}
+            <a href="{{path('claro_profile_view', {'publicUrl': user.getPublicUrl()})}}">
+                {{ user.getUsername() }}
+            </a>
+        {% else %}
+            <div>
+                {{ 'user_removed'|trans({}, 'platform') }}
+            </div>
+        {% endif %}
     {% else %}
-        <div>
-            {{ 'user_removed'|trans({}, 'platform') }}
-        </div>
+        claroline-connect
     {% endif %}
 {% endmacro %}
 

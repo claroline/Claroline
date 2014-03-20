@@ -265,4 +265,17 @@ class RoleRepository extends EntityRepository
 
         return $query->getResult();
     }
+
+    public function findAll()
+    {
+        $dql = "
+            SELECT r, w
+            FROM Claroline\CoreBundle\Entity\Role r
+            LEFT JOIN r.workspace w
+        ";
+
+        $query = $this->_em->createQuery($dql);
+
+        return $query->getResult();
+    }
 }

@@ -373,7 +373,7 @@ class RolesController extends Controller
     public function addUsersToRolesAction(array $users, array $roles, AbstractWorkspace $workspace)
     {
         $this->checkAccess($workspace);
-        $this->roleManager->associateRolesToSubjects($users, $roles);
+        $this->roleManager->associateRolesToSubjects($users, $roles, true);
 
         return new Response('success');
     }
@@ -415,7 +415,7 @@ class RolesController extends Controller
     public function addGroupsToRolesAction(array $groups, array $roles, AbstractWorkspace $workspace)
     {
         $this->checkAccess($workspace);
-        $this->roleManager->associateRolesToSubjects($groups, $roles);
+        $this->roleManager->associateRolesToSubjects($groups, $roles, true);
 
         return new Response('success');
     }
