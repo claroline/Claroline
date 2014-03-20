@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Claroline\CoreBundle\Entity\Badge\Listener;
+namespace Claroline\CoreBundle\Listener\Badge;
 
 use Claroline\CoreBundle\Entity\Badge\Badge;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
@@ -21,7 +21,7 @@ use Symfony\Component\Security\Core\SecurityContext;
  * @DI\Service("claroline.entity_listener.badge")
  * @DI\Tag("doctrine.entity_listener")
  */
-class BadgeListener
+class LocaleSetterListener
 {
     /** @var \Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler */
     private $platformConfigHandler;
