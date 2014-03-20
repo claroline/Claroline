@@ -42,28 +42,22 @@ class BadgeListener
     }
 
     /**
+     * Sets the locale on a badge.
+     *
      * @param Badge              $badge
      * @param LifecycleEventArgs $event
      */
     public function postLoad(Badge $badge, LifecycleEventArgs $event)
     {
-        // Set the locale on tha badge
         $platformLocale = $this->platformConfigHandler->getParameter('locale_language');
+        $userLocale = null;
 
-        /** @var \Claroline\CoreBundle\Entity\User $user */
-        $user           = $this->securityContext->getToken()->getUser();
-        $userLocale     = null;
-
-        if ('anon.' !== $user) {
-            $userLocale = $user->getLocale();
+        if ($token = $this->securityContext->getToken()) {
+            if ('anon.' !== $user = $token->getUser()) {
+                $userLocale = $user->getLocale();
+            }
         }
 
-        $locale = $platformLocale;
-
-        if (null !== $userLocale) {
-            $locale = $userLocale;
-        }
-
-        $badge->setLocale($locale);
+        $badge->setLocale($userLocale ?: $platformLocale);
     }
 }
