@@ -74,19 +74,19 @@
                     
                     {% include "UJMExoBundle:Partial:interactionPaper.html.twig" %}
 
-                    <table class="table table-striped table-bordered table-condensed">
+                    <table cellspacing="5" cellpadding="2" border="0">
                         {% for choice in interactionToDisplayed.choices %}
                             {% set checked = "" %}
                             <tr>
-                                <td class="classic">{{ choice.label|raw }}</td>
                                 {% if regexTwig('/' ~ choice.id ~ ';/', response) > 0 %}
                                     {% set checked = "checked" %}
                                 {% endif %}
                                 {% if interactionToDisplayed.typeQCM.id == 2 %}
-                                    <td class="classic"><INPUT type="radio" name="choice" value="{{ choice.id }}" {{ checked }}/></td>
+                                    <td><p><INPUT type="radio" name="choice" value="{{ choice.id }}" {{ checked }}/></p></td>
                                 {% else %}
-                                    <td class="classic"><INPUT type="checkbox" name="choice[]" value="{{ choice.id }}" {{ checked }}/></td>
+                                    <td><p><INPUT type="checkbox" name="choice[]" value="{{ choice.id }}" {{ checked }}/></p></td>
                                 {% endif %}
+                                <td class="classic">{{ choice.label|raw }}</td>
                             </tr>
                         {% endfor %}
                     </table>

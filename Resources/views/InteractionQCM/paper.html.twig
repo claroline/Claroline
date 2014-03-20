@@ -97,17 +97,17 @@
             <form action="{{ path('ujm_interactionqcm_response') }}" method="post" {{ form_enctype(form) }}>
                 {{ form_widget(form) }}
 
-                <table class="table table-striped table-bordered table-condensed">
-                    {% for choice in interactionToDisplayed.choices %}
+                <table cellspacing="5" cellpadding="2" border="0">
+                     {% for choice in interactionToDisplayed.choices %}
                         <tr>
-                            <td class="classic">{{ choice.label | raw }}</td>
                             {% if interactionToDisplayed.typeQCM.id == 2 %}
-                                <td class="classic"><INPUT type="radio" id="{{ choice.label }}" name="choice" value="{{ choice.id }}"/></td>
+                            <td><p><INPUT type="radio" id="choice_{{ choice.id }}" name="choice" value="{{ choice.id }}"/></p></td>
                             {% else %}
-                                <td class="classic"><INPUT type="checkbox" id="{{ choice.label }}" name="choice[]" value="{{ choice.id }}"/></td>
+                            <td><p><INPUT type="checkbox" id="choice_{{ choice.id }}" name="choice[]" value="{{ choice.id }}"/></p></td>
                             {% endif %}
+                            <td>{{ choice.label | raw }}</td>
                         </tr>
-                    {% endfor %}
+                     {% endfor %}
                 </table>
 
                 {% if interactionToDisplayed.interaction.hints is not empty %}
