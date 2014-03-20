@@ -314,59 +314,15 @@ class MessageManager
     }
 
     /**
-     * Generates a query string containing the list of user ids in a group.
-     *
-     * @param \Claroline\CoreBundle\Entity\Group $group
-     *
-     * @return string
-     */
-    public function generateGroupQueryString(Group $group)
-    {
-        $users = $this->userRepo->findByGroup($group);
-        $queryString = '?';
-
-        for ($i = 0, $count = count($users); $i < $count; $i++) {
-            if ($i > 0) {
-                $queryString .= "&";
-            }
-
-            $queryString .= "ids[]={$users[$i]->getId()}";
-        }
-
-        return $queryString;
-    }
-
-    /**
-     * Generates a query string containing the list of user ids in a group.
-     *
-     * @param \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace $workspace
-     *
-     * @return string
-     */
-    public function generateWorkspaceQueryString(AbstractWorkspace $workspace)
-    {
-        $users = $this->userRepo->findByWorkspaceWithUsersFromGroup($workspace);
-        $queryString = '?';
-
-        for ($i = 0, $count = count($users); $i < $count; $i++) {
-            if ($i > 0) {
-                $queryString .= "&";
-            }
-
-            $queryString .= "ids[]={$users[$i]->getId()}";
-        }
-
-        return $queryString;
-    }
-
-    /**
      * Generates a string containing the usernames from a list of users.
      *
      * @param \Claroline\CoreBundle\Entity\User[] $receivers
+     * @param \Claroline\CoreBundle\Entity\Group[] $groups
+     * @param \Claroline\CoreBundle\Entity\Workspace[] $workspaces
      *
      * @return string
      */
-    public function generateStringTo(array $receivers)
+    public function generateStringTo(array $receivers, array $groups, array $workspaces)
     {
         $usernames = array();
 
@@ -374,7 +330,19 @@ class MessageManager
             $usernames[] = $receiver->getUsername();
         }
 
-        return implode(';', $usernames);
+        $string = implode(';', $usernames);
+
+        foreach ($groups as $group) {
+            $el = '{' . $group->getName() .'}';
+            $string .= $string === '' ? $el: ';' . $el;
+        }
+
+        foreach ($workspaces as $workspace) {
+            $el = '[' . $workspace->getCode() .']';
+            $string .= $string === '' ? $el: ';' . $el;
+        }
+
+        return $string;
     }
 
     public function getUserMessagesBy(array $array)
