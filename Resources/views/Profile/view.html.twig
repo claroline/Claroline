@@ -33,36 +33,54 @@
         </div>
         <div class="panel-body">
             <div class="row">
-                <div class="col-md-2 profile_picture_container">
-                    {% if user.getPicture() != "" %}
-                        <img src="{{ asset('uploads/pictures/') ~  user.getPicture() }}" class="profile_picture">
-                    {% else %}
-                        <h1 class="profile_picture_placeholder"><i class="icon-user"></i></h1>
-                    {% endif %}
-                </div>
-                <div class="col-md-10">
-                    <ul class="list-unstyled">
-                        <li>{{'First name' | trans({}, 'platform') }}: {{user.getFirstName()}}</li>
-                        <li> {{'Last name' | trans({}, 'platform') }}: {{user.getLastName()}}</li>
-                        <li> {{'User name' | trans({}, 'platform') }}: {{user.getUsername()}}</li>
-                        {% if user.getPhone() is not null %}
-                            <li><i class="icon-phone"></i> {{ user.getPhone() }}</li>
+                <aside class="col-md-2 profile_aside" role="complementary">
+                    <div class="avatar">
+                        {% if user.getPicture() != "" %}
+                            <img src="{{ asset('uploads/pictures/') ~  user.getPicture() }}" class="profile_picture">
+                        {% else %}
+                            <h1 class="profile_picture_placeholder"><i class="icon-user"></i></h1>
                         {% endif %}
-                    </ul>
-                    {% if '' != user.getDescription() %}<p>Description</p>: {{ user.getDescription() |raw }} </p>{% endif %}
-                    <p class="text-muted">{{ 'registered'|trans({}, 'platform') }} {{ user.getCreationDate()| timeAgo }}</p>
-                    <ul class="list-inline">
+                    </div>
+                    <ul class="nav nav-pills nav-stacked contact_methods">
                         <li>
-                            <a class="btn btn-default" href="{{path('claro_mail_form', {'userId':user.getId()})}}">
-                                <i class="icon-comment"></i> {{ 'send_mail'|trans({}, 'platform') }}
+                            <a href="{{path('claro_mail_form', {'userId':user.getId()})}}">
+                                <i class="icon-envelope"></i> {{ 'send_mail'|trans({}, 'platform') }}
                             </a>
                         </li>
                         <li>
-                            <a class="btn btn-default" href="{{path('claro_message_show', {'message': 0})}}?ids[]={{ user.getId() }}">
-                                <i class="icon-envelope"></i> {{ 'send_message'|trans({}, 'platform') }}
+                            <a href="{{path('claro_message_show', {'message': 0})}}?ids[]={{ user.getId() }}">
+                                <i class="icon-comment"></i> {{ 'send_message'|trans({}, 'platform') }}
                             </a>
                         </li>
                     </ul>
+                </aside>
+                <div class="col-md-10">
+                    <table class="table-condensed">
+                        <colgroup>
+                            <col class="fieldLabelCol">
+                            <col class="dataCol">
+                        </colgroup>
+                        <tbody>
+                            <tr>
+                                <td>{{ 'First name' | trans({}, 'platform') }}</td>
+                                <td>{{ user.getFirstName() }}</td>
+                            </tr>
+                            <tr>
+                                <td>{{'Last name' | trans({}, 'platform') }}</td>
+                                <td>{{ user.getLastName() }}</td>
+                            </tr>
+                            {% if user.getPhone() is not null %}
+                                <tr>
+                                    <td>{{ 'phone' | trans({}, 'platform') }}</td>
+                                    <td>{{ user.getPhone() }}</td>
+                                </tr>
+                            {% endif %}
+                            <tr>
+                                <td colspan="2"><span class="text-muted">{{ 'registered'|trans({}, 'platform') }} {{ user.getCreationDate()| timeAgo }}</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    {% if '' != user.getDescription() %}<p>Description:</p> {{ user.getDescription() |raw }} </p>{% endif %}
                 </div>
             </div>
         </div>
