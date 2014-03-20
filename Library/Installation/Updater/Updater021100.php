@@ -16,33 +16,56 @@ class Updater021100
 {
     private $container;
     private $logger;
-    private $om;
+    private $objectManager;
     private $conn;
 
     public function __construct($container)
     {
         $this->container = $container;
-        $this->om = $container->get('claroline.persistence.object_manager');
+        $this->objectManager = $container->get('claroline.persistence.object_manager');
         $this->conn = $container->get('doctrine.dbal.default_connection');
     }
 
     public function postUpdate()
     {
         $this->log('Updating default mails layout...');
-        $repository = $this->om->getRepository('Claroline\CoreBundle\Entity\ContentTranslation');
+        $repository = $this->objectManager->getRepository('Claroline\CoreBundle\Entity\ContentTranslation');
 
         $frLayout = '<div></div>%content%<div></hr><p>Ce mail vous a été envoyé par %first_name% %last_name%</p>';
         $frLayout .= '<p>Powered by %platform_name%</p></div>';
         $enLayout = '<div></div>%content%<div></hr><p>This mail was sent to you by %first_name% %last_name%</p>';
         $enLayout .= '<p>Powered by %platform_name%</p></div>';
 
-        $layout = $this->om->getRepository('ClarolineCoreBundle:Content')->findOneByType('claro_mail_layout');
+        $layout = $this->objectManager->getRepository('ClarolineCoreBundle:Content')->findOneByType('claro_mail_layout');
         $layout->setType('claro_mail_layout');
         $layout->setContent($enLayout);
         $repository->translate($layout, 'content', 'fr', $frLayout);
-        $this->om->persist($layout);
+        $this->objectManager->persist($layout);
 
-        $this->om->flush();
+        $this->objectManager->flush();
+
+        $this->setPublicUrlOnUsers();
+    }
+
+    protected function setPublicUrlOnUsers()
+    {
+        $this->log('Updating public url for users...');
+
+        /** @var \Claroline\CoreBundle\Repository\UserRepository $userRepository */
+        $userRepository = $this->objectManager->getRepository('ClarolineCoreBundle:User');
+        /** @var \CLaroline\CoreBundle\Entity\User[] $users */
+        $users = $userRepository->findByPublicUrl(null);
+
+        /** @var \Claroline\CoreBundle\Manager\UserManager $userManager */
+        $userManager = $this->container->get('claroline.manager.user_manager');
+
+        foreach ($users as $key => $user) {
+            $publicUrl = $userManager->generatePublicUrl($user);
+            $user->setPublicUrl($publicUrl);
+            $this->objectManager->persist($user);
+            $this->objectManager->flush();
+        }
+        $this->log('Public url for users updated.');
     }
 
     public function setLogger($logger)
