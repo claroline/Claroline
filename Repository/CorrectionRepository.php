@@ -143,23 +143,6 @@ class CorrectionRepository extends EntityRepository {
     public function getUsersByDropzoneQuery($dropzone)
     {
 
-        $dql = '
-        SELECT   u,c   from IcapDropzoneBundle:Correction c
-        JOIN c.user u
-        WHERE c.dropzone = :dropzoneId
-        GROUP BY u.id
-        ORDER BY u.firstName, u.lastName asc
-        ';
-
-         $dql = '
-        SELECT   u,c   from IcapDropzoneBundle:Drop d
-        LEFT JOIN IcapDropzoneBundle:Correction c
-        LEFT JOIN d.user u
-        WHERE c.dropzone = :dropzoneId
-        GROUP BY u.id
-        ORDER BY u.firstName, u.lastName asc
-        ';
-        
          $dql = '
         SELECT  DISTINCT u  FROM Claroline\CoreBundle\Entity\User u
         WHERE u IN (
@@ -175,13 +158,6 @@ class CorrectionRepository extends EntityRepository {
         ORDER BY u.firstName, u.lastName asc
         ';
 
-
-       /* $dql ='
-        SELECT u from Claroline\CoreBundle\Entity\User u
-        LEFT JOIN IcapDropzoneBundle:Correction c 
-        WHERE c.dropzone = :dropzoneId
-        group BY u.id 
-        ';*/
         $query = $this->_em->createQuery($dql);
 
 
