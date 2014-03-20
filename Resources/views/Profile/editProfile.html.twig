@@ -7,16 +7,15 @@
         <div class="panel-heading">
             <h3 class="panel-title">{{ user.getLastName() ~ ' ' ~ user.getFirstName() | striptags | raw }}</h3>
         </div>
-        <form class="form-horizontal" action="{{ path('claro_profile_update', {'user': user.getId()}) }}" method="post" {{ form_enctype(profile_form) }} id="profile_form">
+        {% set actionForm = editYourself ? path('claro_user_profile_edit') : path('claro_user_profile_edit', {'user': user.getId()}) %}
+        {% set cancelUrl  = editYourself ? path('claro_profile_view', {'publicUrl': app.user.publicUrl}) : path('claro_admin_user_list') %}
+        <form class="form-horizontal" action="{{ actionForm }}" method="post" {{ form_enctype(form) }} id="profile_form">
             <div class="panel-body">
-                {{ form_widget(profile_form) }}
+                {{ form_widget(form) }}
             </div>
             <div class="panel-footer">
                 <button type="submit" class="btn btn-primary">{{ 'ok'|trans({}, 'platform') }}</button>
-                <a href="{{ path('claro_profile_view', {'publicUrl': app.user.publicUrl}) }}" class="btn btn-default">
-                    {{ 'cancel' | trans({}, 'platform') }}
-                </a>
-                <a class="btn btn-default" href="{{ path('claro_password_form', {'user': user.getId()}) }}"> {{ 'reset_password'|trans({}, 'platform') }}</a>
+                <a href="{{ cancelUrl }}" class="btn btn-default">{{ 'cancel' | trans({}, 'platform') }}</a>
             </div>
         </form>
     </div>

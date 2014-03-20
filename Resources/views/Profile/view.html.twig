@@ -5,16 +5,31 @@
 {% set canEdit = (app.user is not null and user.getId() == app.user.getId()) or is_granted('ROLE_ADMIN') %}
 
 {% block content %}
+    {{ macros.flashBox() }}
     <div class="panel panel-default panel-user">
         <div class="panel-heading relative">
+            {% if canEdit %}
+                <div class="dropdown float-right-top">
+                    <a data-toggle="dropdown" href="#" class="btn btn-xs btn-primary">
+                        <span class="icon-edit"></span> Modifier <i class="caret"></i>
+                    </a>
+                    <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+                        <li>
+                            <a href="{{ path('claro_user_profile_edit') }}">
+                                {{ 'edit_profile'|trans({}, 'platform') }}
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ path('claro_user_password_edit') }}">
+                                {{ 'edit_password'|trans({}, 'platform') }}
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            {% endif %}
             <h3 class="panel-title">
                 {{ user.getLastName() ~ ' ' ~ user.getFirstName() }}
             </h3>
-            {% if canEdit %}
-                <a href="{{ path('claro_profile_form', {'user': user.getId}) }}" class="btn btn-primary float-right-top">
-                    <i class="icon-edit"></i> {{ 'edit'|trans({}, 'platform') }}
-                </a>
-            {% endif %}
         </div>
         <div class="panel-body">
             <div>
@@ -37,30 +52,14 @@
                 <p>{{ user.getDescription() |raw }} </p>
                 <p class="text-muted">{{ 'user'|trans({}, 'platform') }} {{ user.getCreationDate()| timeAgo }}</p>
                 <p>
-                    <a class="btn btn-default" href="{{path('claro_mail_form', {'userId':user.getId()})}}"><i class="icon-comment"></i> {{ 'send_mail'|trans({}, 'platform') }}</a>
-                    <a class="btn btn-default" href="{{path('claro_message_show', {'message': 0})}}?ids[]={{ user.getId() }}"><i class="icon-envelope"></i> {{ 'send_message'|trans({}, 'platform') }}</a>
+                    <a class="btn btn-default" href="{{path('claro_mail_form', {'userId':user.getId()})}}">
+                        <i class="icon-comment"></i> {{ 'send_mail'|trans({}, 'platform') }}
+                    </a>
+                    <a class="btn btn-default" href="{{path('claro_message_show', {'message': 0})}}?ids[]={{ user.getId() }}">
+                        <i class="icon-envelope"></i> {{ 'send_message'|trans({}, 'platform') }}
+                    </a>
                 </p>
             </div>
         </div>
     </div>
-{% endblock %}
-
-{% block javascripts %}
-    {{ parent() }}
-    {% if canEdit %}
-        <script type="text/javascript">
-            (function () {
-                "use strict";
-
-                $('body').on('mouseenter', '.panel-user', function () {
-                    $('.panel-heading', this).find('.btn').removeClass('hide');
-                });
-
-                $('body').on('mouseleave', '.panel-user', function () {
-                    $('.panel-heading', this).find('.btn').addClass('hide');
-                });
-
-            }());
-        </script>
-    {% endif %}
 {% endblock %}
