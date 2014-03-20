@@ -54,11 +54,7 @@ class LoadMessagesData extends LoggableFixture implements ContainerAwareInterfac
             $parent = isset($data['parent']) ?
                 $this->getReference('message/' . $data['parent']) :
                 null;
-            $messageManager->send(
-                $this->getReference('user/' . $data['from']),
-                $message,
-                $parent
-            );
+            $messageManager->send($message);
             $this->addReference('message/' . $data['object'], $message);
         }
 

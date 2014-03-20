@@ -129,7 +129,12 @@ class ResourcePropertiesController extends Controller
      */
     public function propertiesFormAction(ResourceNode $node)
     {
-        $form = $this->formFactory->create(FormFactory::TYPE_RESOURCE_PROPERTIES, array(), $node);
+        $username = $node->getCreator()->getUsername();
+        $form = $this->formFactory->create(
+            FormFactory::TYPE_RESOURCE_PROPERTIES,
+            array('creator' => $username),
+            $node
+        );
 
         return array('form' => $form->createView(), 'nodeId' => $node->getId());
     }
@@ -155,7 +160,11 @@ class ResourcePropertiesController extends Controller
              throw new AccessDeniedException("You're not the owner of this resource");
         }
 
-        $form = $this->formFactory->create(FormFactory::TYPE_RESOURCE_PROPERTIES, array(), $node);
+        $creatorUsername = $node->getCreator()->getUsername();
+        $form = $this->formFactory->create(
+            FormFactory::TYPE_RESOURCE_PROPERTIES,
+            array('creator' => $creatorUsername), $node
+        );
         $form->handleRequest($this->request);
 
         if ($form->isValid()) {

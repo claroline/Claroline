@@ -753,3 +753,4 @@ workspace_registration_message_object: 'Workspace registration'
 new_role_message: 'You received the role %name%'
 new_role_message_object: 'Your permissions on the platform have changed'
 captcha: Captcha
+no_role_selected_message: 'No role selected.'
