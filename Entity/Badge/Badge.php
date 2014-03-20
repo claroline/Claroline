@@ -30,7 +30,7 @@ use Gedmo\SoftDeleteable\Traits\SoftDeleteableEntity;
 /**
  * @ORM\Table(name="claro_badge")
  * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\Badge\BadgeRepository")
- * @ORM\EntityListeners({"Claroline\CoreBundle\Entity\Badge\Listener\BadgeListener"})
+ * @ORM\EntityListeners({"Claroline\CoreBundle\Listener\Badge\LocaleSetterListener"})
  * @ORM\HasLifecycleCallbacks
  * @Gedmo\SoftDeleteable(fieldName="deletedAt", timeAware=false)
  * @BadgeAssert\AutomaticWithRules
@@ -257,6 +257,18 @@ class Badge extends Rulable
     }
 
     /**
+     * @param ArrayCollection|BadgeTranslation[] $translations
+     *
+     * @return Badge
+     */
+    public function setTranslations($translations)
+    {
+        $this->translations = $translations;
+
+        return $this;
+    }
+
+    /**
      * @param string $locale
      *
      * @throws \InvalidArgumentException
@@ -287,11 +299,6 @@ class Badge extends Rulable
     public function getEnTranslation()
     {
         return $this->getTranslationForLocale('en');
-    }
-
-    public function setFrTranslation(BadgeTranslation $badgeTranslation)
-    {
-
     }
 
     /**
@@ -850,5 +857,31 @@ class Badge extends Rulable
         }
 
         return $restriction;
+    }
+
+    public function __clone()
+    {
+        if ($this->id) {
+            $this->id = null;
+
+            $newBagdeRules = new ArrayCollection();
+            foreach ($this->badgeRules as $badgeRule) {
+                $newBadgeRule = clone $badgeRule;
+                $newBadgeRule->setAssociatedBadge($this);
+                $newBagdeRules->add($newBadgeRule);
+            }
+            $this->badgeRules = $newBagdeRules;
+
+            $newTranslations = new ArrayCollection();
+            foreach ($this->translations as $translation) {
+                $newTranslation = clone $translation;
+                $newTranslation->setBadge($this);
+                $newTranslations->add($newTranslation);
+            }
+            $this->translations = $newTranslations;
+
+            $this->userBadges  = new ArrayCollection();
+            $this->badgeClaims = new ArrayCollection();
+        }
     }
 }

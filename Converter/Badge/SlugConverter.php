@@ -12,6 +12,7 @@
 namespace Claroline\CoreBundle\Converter\Badge;
 
 use Claroline\CoreBundle\Repository\Badge\BadgeRepository;
+use Doctrine\ORM\EntityManager;
 use Symfony\Bundle\FrameworkBundle\Translation\Translator;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -30,16 +31,23 @@ use Claroline\CoreBundle\Entity\User;
  */
 class SlugConverter implements ParamConverterInterface
 {
+    /**
+     * @var \Doctrine\ORM\EntityManager
+     */
+    protected $entityManager;
+
     /** @var \Claroline\CoreBundle\Repository\Badge\BadgeRepository */
     private $badgeRepository;
 
     /**
      * @DI\InjectParams({
-     *     "badgeRepository" = @DI\Inject("claroline.repository.badge")
+     *     "badgeRepository" = @DI\Inject("claroline.repository.badge"),
+     *     "entityManager"   = @DI\Inject("doctrine.orm.entity_manager")
      * })
      */
-    public function __construct(BadgeRepository $badgeRepository)
+    public function __construct(EntityManager $entityManager, BadgeRepository $badgeRepository)
     {
+        $this->entityManager   = $entityManager;
         $this->badgeRepository = $badgeRepository;
     }
 
@@ -52,6 +60,11 @@ class SlugConverter implements ParamConverterInterface
     public function apply(Request $request, ConfigurationInterface $configuration)
     {
         $slug = $request->attributes->get('slug');
+
+        $options = $configuration->getOptions();
+        if (isset($options['check_deleted']) && !$options['check_deleted']) {
+            $this->entityManager->getFilters()->disable('softdeleteable');
+        }
 
         $badge = $this->badgeRepository->findBySlug($slug);
 

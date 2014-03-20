@@ -78,9 +78,10 @@ class ResourceNodeRepository extends MaterializedPathRepository
     /**
      * Returns the immediate children of a resource that are openable by any of the given roles.
      *
-     * @param ResourceNode  $parent The id of the parent of the requested children
-     * @param array[string] $roles  An array of roles
+     * @param ResourceNode $parent The id of the parent of the requested children
+     * @param array $roles [string] $roles  An array of roles
      *
+     * @throws \RuntimeException
      * @throw InvalidArgumentException if the array of roles is empty
      *
      * @return array[array] An array of resources represented as arrays
@@ -94,7 +95,18 @@ class ResourceNodeRepository extends MaterializedPathRepository
         $builder = new ResourceQueryBuilder();
         $children = array();
 
-        if (in_array('ROLE_ADMIN', $roles)) {
+        //we just check the resource workspace here
+        $isWorkspaceManager = false;
+        $ws = $parent->getWorkspace();
+        $managerRole = 'ROLE_WS_MANAGER_' . $ws->getGuid();
+
+        if (in_array($managerRole, $roles)) {
+            $isWorkspaceManager = true;
+        }
+
+        //check if manager of the workspace.
+        //if it's true, show every children
+        if (in_array('ROLE_ADMIN', $roles) || $isWorkspaceManager) {
             $builder->selectAsArray()
                 ->whereParentIs($parent)
                 ->orderByName();
@@ -109,6 +121,7 @@ class ResourceNodeRepository extends MaterializedPathRepository
 
             return $children;
 
+        //otherwise only show visible children
         } else {
             $builder->selectAsArray(true)
                 ->whereParentIs($parent)

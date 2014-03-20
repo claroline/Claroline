@@ -15,11 +15,8 @@ use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Event\StrictDispatcher;
 use Claroline\CoreBundle\Form\Factory\FormFactory;
-use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Manager\AnalyticsManager;
 use Claroline\CoreBundle\Manager\GroupManager;
-use Claroline\CoreBundle\Manager\LocaleManager;
-use Claroline\CoreBundle\Manager\MailManager;
 use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Manager\UserManager;
 use Claroline\CoreBundle\Manager\WorkspaceManager;
@@ -49,16 +46,11 @@ class AdministrationController extends Controller
     private $groupManager;
     private $workspaceManager;
     private $workspaceTagManager;
-    private $security;
     private $eventDispatcher;
-    private $configHandler;
     private $formFactory;
     private $analyticsManager;
     private $translator;
     private $request;
-    private $mailManager;
-    private $localeManager;
-    private $router;
 
     /**
      * @DI\InjectParams({
@@ -67,16 +59,11 @@ class AdministrationController extends Controller
      *     "groupManager"        = @DI\Inject("claroline.manager.group_manager"),
      *     "workspaceManager"    = @DI\Inject("claroline.manager.workspace_manager"),
      *     "workspaceTagManager" = @DI\Inject("claroline.manager.workspace_tag_manager"),
-     *     "security"            = @DI\Inject("security.context"),
      *     "eventDispatcher"     = @DI\Inject("claroline.event.event_dispatcher"),
-     *     "configHandler"       = @DI\Inject("claroline.config.platform_config_handler"),
      *     "formFactory"         = @DI\Inject("claroline.form.factory"),
      *     "analyticsManager"    = @DI\Inject("claroline.manager.analytics_manager"),
      *     "translator"          = @DI\Inject("translator"),
-     *     "request"             = @DI\Inject("request"),
-     *     "mailManager"         = @DI\Inject("claroline.manager.mail_manager"),
-     *     "localeManager"       = @DI\Inject("claroline.common.locale_manager"),
-     *     "router"              = @DI\Inject("router")
+     *     "request"             = @DI\Inject("request")
      * })
      */
     public function __construct(
@@ -85,16 +72,11 @@ class AdministrationController extends Controller
         GroupManager $groupManager,
         WorkspaceManager $workspaceManager,
         WorkspaceTagManager $workspaceTagManager,
-        SecurityContextInterface $security,
         StrictDispatcher $eventDispatcher,
-        PlatformConfigurationHandler $configHandler,
         FormFactory $formFactory,
         AnalyticsManager $analyticsManager,
         Translator $translator,
-        Request $request,
-        MailManager $mailManager,
-        LocaleManager $localeManager,
-        RouterInterface $router
+        Request $request
     )
     {
         $this->userManager = $userManager;
@@ -102,20 +84,18 @@ class AdministrationController extends Controller
         $this->groupManager = $groupManager;
         $this->workspaceManager = $workspaceManager;
         $this->workspaceTagManager = $workspaceTagManager;
-        $this->security = $security;
         $this->eventDispatcher = $eventDispatcher;
-        $this->configHandler = $configHandler;
         $this->formFactory = $formFactory;
         $this->analyticsManager = $analyticsManager;
         $this->translator = $translator;
         $this->request = $request;
-        $this->mailManager = $mailManager;
-        $this->localeManager = $localeManager;
-        $this->router = $router;
     }
 
     /**
-     * @EXT\Route("/", name="claro_admin_index")
+     * @EXT\Route(
+     *     "/index",
+     *     name="claro_admin_index"
+     * )
      *
      * Displays the administration section index.
      *
@@ -127,6 +107,7 @@ class AdministrationController extends Controller
     }
 
     /**
+<<<<<<< HEAD
      * @EXT\Route("/users/form",  name="claro_admin_user_creation_form")
      * @EXT\Method("GET")
      * @EXT\ParamConverter("currentUser", options={"authenticatedUser" = true})
@@ -727,128 +708,6 @@ class AdministrationController extends Controller
         $event = $this->eventDispatcher->dispatch($eventName, 'PluginOptions', array());
 
         return $event->getResponse();
-    }
-
-    /**
-     * @EXT\Route("/users/management", name="claro_admin_users_management")
-     * @EXT\Method("GET")
-     * @EXT\Template
-     *
-     * @return Response
-     */
-    public function usersManagementAction()
-    {
-        return array();
-    }
-
-    /**
-     * @EXT\Route("/users/management/import/form", name="claro_admin_import_users_form")
-     * @EXT\Method("GET")
-     * @EXT\Template
-     *
-     * @return Response
-     */
-    public function importUsersFormAction()
-    {
-        $form = $this->formFactory->create(FormFactory::TYPE_USER_IMPORT);
-
-        return array('form' => $form->createView());
-    }
-
-    /**
-     * @EXT\Route("/users/management/import", name="claro_admin_import_users")
-     * @EXT\Method({"POST", "GET"})
-     * @EXT\Template("ClarolineCoreBundle:Administration:importUsersForm.html.twig")
-     *
-     * @return Response
-     */
-    public function importUsers()
-    {
-        $form = $this->formFactory->create(FormFactory::TYPE_USER_IMPORT);
-        $form->handleRequest($this->request);
-
-        if ($form->isValid()) {
-            $file = $form->get('file')->getData();
-            $lines = str_getcsv(file_get_contents($file), PHP_EOL);
-
-            foreach ($lines as $line) {
-                $users[] = str_getcsv($line, ';');
-            }
-
-            $this->userManager->importUsers($users);
-
-            return new RedirectResponse($this->router->generate('claro_admin_user_list'));
-        }
-
-        return array('form' => $form->createView());
-    }
-
-    /**
-     * @EXT\Route(
-     *    "/groups/{groupId}/management/import/form",
-     *     name="claro_admin_import_users_into_group_form"
-     * )
-     * @EXT\Method("GET")
-     * @EXT\ParamConverter(
-     *      "group",
-     *      class="ClarolineCoreBundle:Group",
-     *      options={"id" = "groupId", "strictId" = true}
-     * )
-     * @EXT\Template
-     *
-     * @param Group $group
-     *
-     * @return Response
-     */
-    public function importUsersIntoGroupFormAction(Group $group)
-    {
-        $form = $this->formFactory->create(FormFactory::TYPE_USER_IMPORT);
-
-        return array('form' => $form->createView(), 'group' => $group);
-    }
-
-    /**
-     * @EXT\Route(
-     *    "/groups/{groupId}/management/import",
-     *     name="claro_admin_import_users_into_group"
-     * )
-     * @EXT\Method({"POST", "GET"})
-     * @EXT\ParamConverter(
-     *      "group",
-     *      class="ClarolineCoreBundle:Group",
-     *      options={"id" = "groupId", "strictId" = true}
-     * )
-     * @EXT\Template("ClarolineCoreBundle:Administration:importUsersIntoGroupForm.html.twig")
-     *
-     * @param Group $group
-     *
-     * @return Response
-     */
-    public function importUsersIntoGroupAction(Group $group)
-    {
-        $validFile = true;
-        $form = $this->formFactory->create(FormFactory::TYPE_USER_IMPORT);
-        $form->handleRequest($this->request);
-
-        if ($form->isValid()) {
-            $file = $form->get('file')->getData();
-            $lines = str_getcsv(file_get_contents($file), PHP_EOL);
-
-            foreach ($lines as $line) {
-                $users[] = str_getcsv($line, ';');
-            }
-
-            if ($validFile) {
-                $this->userManager->importUsers($users);
-                $this->groupManager->importUsers($group, $users);
-
-                return new RedirectResponse(
-                    $this->router->generate('claro_admin_user_of_group_list', array('groupId' => $group->getId()))
-                );
-            }
-        }
-
-        return array('form' => $form->createView(), 'group' => $group);
     }
 
     /**

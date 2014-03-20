@@ -38,7 +38,7 @@ class LocaleController
     /**
      * Select a language
      *
-     * @Route("/locale/select", name="claroline_locale_select")
+     * @Route("/locale/select", name="claroline_locale_select", options = {"expose" = true})
      *
      * @Template("ClarolineCoreBundle:Locale:select.html.twig")
      *
@@ -52,7 +52,7 @@ class LocaleController
     /**
      * Change locale
      *
-     * @Route("/locale/change/{_locale}", name="claroline_locale_change")
+     * @Route("/locale/change/{_locale}", name="claroline_locale_change", options = {"expose" = true})
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */

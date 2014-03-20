@@ -74,6 +74,9 @@
                         <a href="{{ path('claro_workspace_unregistered_user_list', {'workspace': workspace.getId()}) }}" class="btn btn-default dropdown-toggle">
                             <i class="icon-plus"></i> {{ 'add_users'|trans({}, 'platform') }}
                         </a>
+                        <a href="{{ path('claro_message_form_for_workspace', {'workspace': workspace.getId()}) }}" class="btn btn-default dropdown-toggle">
+                            <i class="icon-envelope"></i> {{ 'send_message_to_workspace'|trans({}, 'platform') }}
+                        </a>
                     </div>
                 </div>
                 <div class="col-md-4">

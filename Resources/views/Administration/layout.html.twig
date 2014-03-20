@@ -6,14 +6,14 @@
     <div class="list-group menu">
         <div class="list-group-item disabled">{{ 'administration'|trans({}, 'platform') }}</div>
         <a class="list-group-item{{ '/admin/parameters'|compareRoute(' active') }}"
-           href="{{ path('claro_admin_parameters_index') }}">
+            href="{{ path('claro_admin_parameters_index') }}">
             <i class="icon-cog"></i>
             {{ 'platform_parameters'|trans({}, 'platform') }}
         </a>
         <a class="list-group-item
             {{ '/admin/users'|compareRoute(' active') }}
             {{ '/admin/groups'|compareRoute(' active') }}"
-           href="{{ path('claro_admin_users_management') }}"">
+            href="{{ path('claro_admin_users_management') }}">
         <i class="icon-user"></i>
             {{ 'users_management'|trans({}, 'platform') }}
         </a>
@@ -22,13 +22,13 @@
             <i class="icon-book"></i> {{ 'workspaces_management'|trans({}, 'platform') }}
         </a>
         <a class="list-group-item{{ '/admin/badges'|compareRoute(' active') }}"
-           href="{{ path('claro_admin_badges') }}">
+            href="{{ path('claro_admin_badges') }}">
             <i class="icon-trophy"></i>
             {{ 'badges_management'|trans({}, 'platform') }}
         </a>
         <a class="list-group-item{{ '/admin/registration'|compareRoute(' active') }}"
            href="{{ path('claro_admin_registration_management') }}">
-            <i class="icon-book"></i>
+           <i class="icon-book"></i>
             {{ 'registration_to_workspaces'|trans({}, 'platform') }}
         </a>
         <a class="list-group-item{{ '/admin/plugin'|compareRoute(' active') }}"
@@ -42,12 +42,12 @@
             {{ 'home_tabs'|trans({}, 'platform') }}
         </a>
         <a class="list-group-item{{ '/admin/tool'|compareRoute(' active') }}"
-           href="{{ path('claro_admin_tool_show') }}">
+            href="{{ path('claro_admin_tool_show') }}">
             <i class="icon-pencil"></i>
             {{ 'desktop_tools'|trans({}, 'platform') }}
         </a>
         <a class="list-group-item{{ '/admin/logs'|compareRoute(' active') }}"
-           href="{{ path('claro_admin_logs_show') }}">
+            href="{{ path('claro_admin_logs_show') }}">
             <i class="icon-reorder"></i>
             {{ 'admin_logs'|trans({}, 'platform') }}
         </a>
@@ -57,7 +57,7 @@
             {{ 'admin_analytics'|trans({}, 'platform') }}
         </a>
         <a class="list-group-item{{ '/admin/applications'|compareRoute(' active') }}"
-           href="{{ path('admin_application_list') }}">
+            href="{{ path('admin_application_list') }}">
             <i class="icon-puzzle-piece"></i>
             {{ 'admin_third_party_application'|trans({}, 'platform') }}
         </a>

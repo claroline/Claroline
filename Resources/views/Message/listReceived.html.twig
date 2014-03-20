@@ -42,11 +42,11 @@
 {% block title %}{{ 'messages_received' | trans({}, 'platform') | striptags | raw }}{% endblock %}
 
 {% block section_content %}
-    <div class="search-bar row">
-        <div class="col-md-8">
+    <div class="search-bar row margin-bottom-md">
+        <div class="col-md-6">
             {{ displayControls() }}
         </div>
-        <div class="col-md-4">
+        <div class="col-md-6">
              <div class="input-group">
                 <input class="form-control" type="text" id="search-items-txt" placeholder="{{ 'search'|trans({}, 'platform') }}" value={{search}}>
                 <span class="input-group-btn">
@@ -75,10 +75,8 @@
         {{ renderPager(search, pager) }}
     {% endif %}
     <div class="table-responsive">
-        <table class="table table-striped table-bordered table-condensed" id="messages-table">
-            <thead>
-                <tr>
-                    <th><input type="checkbox" name="all" id="check-all-items"></input></th>
+        <table class="table table-striped table-bordered table-condensed" id="messages-table"> <thead> <tr>
+            <th><input type="checkbox" name="all" id="check-all-items"></input></th>
                     <th>{{ 'object'|trans({}, 'platform') }}</th>
                     <th>{{ 'from_message'|trans({}, 'platform') }}</th>
                     <th>{{ 'date'|trans({}, 'platform') }}</th>
@@ -88,19 +86,18 @@
             <tbody id="message-table-body">
                 {% if pager|length > 0 %}
                     {% for userMessage in pager.currentPageResults %}
-                        <tr class="row-user-message">
+                        <tr
+                            class=
+                            "row-user-message
+                            {% if not userMessage.isRead() %} bold {% endif %}
+                            {% if userMessage.isRead() %} active {% endif %}
+                            pointer-hand"
+                            href="{{ path('claro_message_show', {'message': userMessage.getMessage().getId()}) }}"
+                        ">
                             <td><input class="chk-item" value="{{ userMessage.getId() }}" type="checkbox"></input></td>
-                            <td>
-                                <a href="{{ path('claro_message_show', {'message': userMessage.getMessage().getId()}) }}">
-                                    {% if userMessage.isRead() %}
-                                        {{ userMessage.getMessage().getObject() }}
-                                    {% else %}
-                                        <b>{{ userMessage.getMessage().getObject() }}</b>
-                                    {% endif %}
-                                </a>
-                            </td>
-                            <td>{{ macros.displayUser(userMessage.getMessage().getSender()) }}</td>
-                            <td>{{ userMessage.getMessage().getDate()|intl_date_format }}</td>
+                            <td> {{ userMessage.getMessage().getObject() }} </td>
+                            <td> {{ userMessage.getMessage().getSenderUsername() }} </td>
+                            <td> {{ userMessage.getMessage().getDate()|intl_date_format }} </td>
                             <td>
                                 {% if userMessage.isRead() %}
                                     <div style="color: green" class="icon-ok-sign"></div>
@@ -138,7 +135,15 @@
         parameters.route.search = {"route": "claro_message_list_received_search", "parameters": {}};
         parameters.route.action.remove = {"route": "claro_message_soft_delete", "parameters": {}, "confirmTemplate": removeMessageConfirm, "delete": true};
         Claroline.Table.initialize(parameters);
-        $('.mark-as-read').live('click', function (e) {
+
+        $('tr.pointer-hand').on('click', function(event) {
+            var targetClass = event.target.className;
+            if (targetClass !== 'chk-item' && targetClass !== 'icon-envelope') {
+                window.document.location = $(this).attr("href");
+            }
+        });
+
+        $('.mark-as-read').on('click', function (e) {
             e.preventDefault();
             $.ajax({
                 type: 'GET',
@@ -146,6 +151,8 @@
                 success: function () {
                     $(e.target).css('color', 'green');
                     $(e.target).attr('class', 'icon-ok-sign');
+                    var row = $(e.target)[0].parentElement.parentElement.parentElement;
+                    $(row).addClass('active');
                 }
             });
         });

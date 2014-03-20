@@ -53,25 +53,8 @@ class ProfileType extends AbstractType
                 ->add('administrativeCode', 'text', array('required' => false, 'read_only' => true, 'disabled' => true))
                 ->add('mail', 'email', array('required' => false))
                 ->add('phone', 'text', array('required' => false))
-                ->add('locale', 'choice', array('choices' => $this->langs, 'required' => false, 'label' => 'Language'))
-                ->add(
-                    'platformRoles',
-                    'entity',
-                    array(
-                        'mapped' => false,
-                        'data' => $this->platformRoles,
-                        'class' => 'Claroline\CoreBundle\Entity\Role',
-                        'expanded' => false,
-                        'multiple' => true,
-                        'property' => 'translationKey',
-                        'disabled' => true,
-                        'query_builder' => function (\Doctrine\ORM\EntityRepository $er) {
-                            return $er->createQueryBuilder('r')
-                                    ->where("r.type != " . Role::WS_ROLE)
-                                    ->andWhere("r.name != 'ROLE_ANONYMOUS'");
-                        }
-                    )
-                );
+                ->add('locale', 'choice', array('choices' => $this->langs, 'required' => false, 'label' => 'Language'));
+
         } else {
             $builder->add('firstName', 'text')
                 ->add('lastName', 'text')

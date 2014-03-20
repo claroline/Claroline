@@ -12,7 +12,6 @@
 namespace Claroline\CoreBundle\Listener\Badge;
 
 use Claroline\CoreBundle\Rule\Validator;
-use Claroline\CoreBundle\Entity\Log\Log;
 use Claroline\CoreBundle\Event\DisplayToolEvent;
 use Claroline\CoreBundle\Event\LogCreateEvent;
 use Claroline\CoreBundle\Manager\BadgeManager;

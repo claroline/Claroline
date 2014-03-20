@@ -249,4 +249,33 @@ class RoleRepository extends EntityRepository
 
         return $query->getSingleResult();
     }
+
+    public function searchByName($search)
+    {
+        $upperSearch = strtoupper(trim($search));
+
+        $dql = "
+            SELECT r
+            FROM Claroline\CoreBundle\Entity\Role r
+            WHERE UPPER(r.name) LIKE :search
+        ";
+
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('search', "%{$upperSearch}%");
+
+        return $query->getResult();
+    }
+
+    public function findAll()
+    {
+        $dql = "
+            SELECT r, w
+            FROM Claroline\CoreBundle\Entity\Role r
+            LEFT JOIN r.workspace w
+        ";
+
+        $query = $this->_em->createQuery($dql);
+
+        return $query->getResult();
+    }
 }

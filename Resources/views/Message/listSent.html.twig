@@ -42,11 +42,11 @@
 {% block title %}{{ 'messages_sent' | trans({}, 'platform') | striptags | raw }}{% endblock %}
 
 {% block section_content %}
-    <div class="search-bar row">
-        <div class="col-md-8">
+    <div class="search-bar row margin-bottom-md">
+        <div class="col-md-6">
             {{ displayControls() }}
         </div>
-        <div class="col-md-4">
+        <div class="col-md-6">
              <div class="input-group">
                 <input class="form-control" type="text" id="search-items-txt" placeholder="{{ 'search'|trans({}, 'platform') }}" value={{search}}>
                 <span class="input-group-btn">
@@ -77,19 +77,17 @@
             <tbody id="message-table-body">
                 {% if pager|length > 0 %}
                     {% for userMessage in  pager.currentPageResults %}
-                        <tr class="row-user-message">
+                        <tr class=
+                            "row-user-message
+                            pointer-hand
+                            {% if not userMessage.isRead() %} bold {% endif %}
+                            {% if userMessage.isRead() %} active {% endif %}"
+                            href="{{ path('claro_message_show', {'message': userMessage.getMessage().getId()}) }}"
+                        >
                             <td><input class="chk-item" value="{{ userMessage.getId() }}" type="checkbox"></input></td>
-                            <td>
-                                <a href="{{ path('claro_message_show', {'message': userMessage.getMessage().getId()}) }}">
-                                    {% if userMessage.isRead() %}
-                                        {{ userMessage.getMessage().getObject() }}
-                                    {% else %}
-                                        <b>{{ userMessage.getMessage().getObject() }}</b>
-                                    {% endif %}
-                                </a>
-                            </td>
-                            <td>{{ userMessage.getMessage().getTo() }}</td>
-                            <td>{{ userMessage.getMessage().getDate()|intl_date_format() }}</td>
+                            <td> {{ userMessage.getMessage().getObject() }} </td>
+                            <td> {{ userMessage.getMessage().getTo() }} </td>
+                            <td> {{ userMessage.getMessage().getDate()|intl_date_format() }} </td>
                             <td>
                                 {% if userMessage.isRead() %}
                                     <div style="color: green" class="icon-ok-sign"></div>
@@ -126,7 +124,15 @@
         parameters.route.search = {"route": "claro_message_list_sent_search", "parameters": {}};
         parameters.route.action.remove = {"route": "claro_message_soft_delete", "parameters": {}, "confirmTemplate": removeMessageConfirm, "delete": true};
         Claroline.Table.initialize(parameters);
-        $('.mark-as-read').live('click', function (e) {
+
+        $('tr.pointer-hand').on('click', function() {
+            var targetClass = event.target.className;
+            if (targetClass !== 'chk-item' && targetClass !== 'icon-envelope') {
+                window.document.location = $(this).attr("href");
+            }
+        });
+
+        $('.mark-as-read').on('click', function (e) {
             e.preventDefault();
             $.ajax({
                 type: 'GET',
@@ -134,6 +140,8 @@
                 success: function () {
                     $(e.target).css('color', 'green');
                     $(e.target).attr('class', 'icon-ok-sign');
+                    var row = $(e.target)[0].parentElement.parentElement.parentElement;
+                    $(row).addClass('active');
                 }
             });
         });

@@ -80,6 +80,11 @@ class ResourceType
     protected $rights;
 
     /**
+     * @ORM\Column(type="integer")
+     */
+    protected $defaultMask = 1;
+
+    /**
      * Constructor.
      */
     public function __construct()
@@ -161,5 +166,15 @@ class ResourceType
     public function getMaskDecoders()
     {
         return $this->maskDecoders;
+    }
+
+    public function setDefaultMask($mask)
+    {
+        $this->defaultMask = $mask;
+    }
+
+    public function getDefaultMask()
+    {
+        return $this->defaultMask;
     }
 }

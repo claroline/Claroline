@@ -466,7 +466,7 @@ class WorkspaceManagerTest extends MockeryTestCase
             ->andReturn($workspaces);
         m::getConfiguration()->allowMockingNonExistentMethods(false);
 
-        $this->assertEquals($workspaces, $this->getManager()->getWorkspacesByRoles($roles));
+        $this->assertEquals($workspaces, $this->getManager()->getOpenableWorkspacesByRoles($roles));
     }
 
     public function testGetWorkspaceIdsByUserAndRoleNames()

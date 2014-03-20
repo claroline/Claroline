@@ -44,15 +44,17 @@ class SendToNamesValidator extends ConstraintValidator
         $names = explode(';', $to);
         $usernames = array();
         $groupNames = array();
+        $workspaceCodes = array();
 
+        //split the string of target into different array.
         foreach ($names as $name) {
             if (substr($name, 0, 1) === '{') {
-                $groupNames[] = trim(trim($name), '{}');
+                $groupNames[] = trim($name, '{}');
             } else {
-                $username = trim($name);
-
-                if ($username !== '') {
-                    $usernames[] = $username;
+                if (substr($name, 0, 1) === '[') {
+                    $workspaceCodes[] = trim($name, '[]');
+                } else {
+                    $usernames[] = trim($name);
                 }
             }
         }
@@ -70,6 +72,15 @@ class SendToNamesValidator extends ConstraintValidator
 
             if ($group === null) {
                 $this->context->addViolation($constraint->message, array('{{ name }}' => $groupName));
+            }
+        }
+
+        foreach ($workspaceCodes as $workspaceCode) {
+            $ws = $this->em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')
+                ->findOneBy(array('code' => $workspaceCode));
+
+            if ($ws === null) {
+                $this->context->addViolation($constraint->message, array('{{ name }}' => $workspaceCode));
             }
         }
     }

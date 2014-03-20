@@ -200,9 +200,13 @@
                 i++;
             });
 
-            var html = Twig.render(confirmAddRole,
-                    {'nbItems': $('.chk-user:checked').length, 'roles': roles}
-            );
+            if (i > 0) {
+                var html = Twig.render(confirmAddRole,
+                        {'nbItems': $('.chk-user:checked').length, 'roles': roles}
+                );
+            } else {
+                var html = Twig.render(noRoleSelected);
+            }
             $('#table-modal .modal-body').html(html);
             $('#table-modal').modal('show');
         });
@@ -210,20 +214,28 @@
         $('#modal-valid-button').on('click', function () {
             var i = 0;
             var queryString = {};
-            var array = [];
+            var users = [];
             $('.chk-user:checked').each(function (index, element) {
-                array[i] = element.value;
+                users[i] = element.value;
                 i++;
             });
-            queryString.userIds = array;
+            queryString.userIds = users;
 
             var i = 0;
-            var array = [];
+            var roles = [];
             $('.chk-role:checked').each(function (index, element) {
-                array[i] = element.value;
+                roles[i] = element.value;
                 i++;
             });
-            queryString.roleIds = array;
+
+            if (i < 1) {
+                $('#table-modal').modal('hide');
+                $('.modal-body').empty();
+
+                return;
+            }
+
+            queryString.roleIds = roles;
 
             var route = Routing.generate('claro_workspace_add_roles_to_users', {'workspace': {{ workspace.getId() }} });
             route += '?' + $.param(queryString);
@@ -234,8 +246,26 @@
                     var flashbag = $('#custom-flashbag-ul');
                     flashbag.append('<li>' + Translator.get('platform:operation_done') + '</li>');
                     $('#custom-flashbag-div').removeClass('hide');
+
+                    //add each role to the user list
+                    for (i = 0; i < users.length; i++) {
+                        var td = $('#row-' + users[i] + " td:last-child");
+                        var cell = $(td[0]);
+                        var html = cell.html();
+
+                        for (var j = 0; j < roles.length; j++) {
+                            var roleLib = $('#role-' + roles[j]).attr('data-name');
+                            //only append the span if the role isn't already here
+                            if (html.indexOf(roleLib) === -1) {
+                                html += "<span class='label label-success'>" + roleLib + "</span>";
+                            }
+                        }
+
+                        cell.html(html);
+                    }
                 }
             });
+
             $('#table-modal').modal('hide');
             $('.modal-body').empty();
         });

@@ -19,7 +19,12 @@
     'use strict';
 
     window.Claroline = window.Claroline || {};
+
     var manager = window.Claroline.ResourceManager = {};
+    var modal = window.Claroline.Modal;
+    var simpleRights = window.Claroline.SimpleRights;
+    var routing = window.Routing;
+    var translator = window.Translator;
 
     manager.Views = {
         Master: Backbone.View.extend({
@@ -187,7 +192,7 @@
                         this.parameters.resourceZoom = zoom;
 
                         $.ajax({
-                            url: Routing.generate('claro_resource_change_zoom', {'zoom': zoom}),
+                            url: routing.generate('claro_resource_change_zoom', {'zoom': zoom}),
                             type: 'GET',
                             success: function () {
                                 $('.dropdown-menu.zoom li').removeClass('active');
@@ -520,7 +525,8 @@
             },
             renameThumbnail: function (nodeId, newName, successHandler) {
                 var displayableName = Claroline.Utilities.formatText(newName, 20, 2);
-                this.$('#' + nodeId + ' .node-name').html(displayableName);
+                this.$('#' + nodeId + ' .node-name')
+                .html(displayableName + ' ').append($(document.createElement('i')).addClass('icon-caret-down'));
                 this.$('#' + nodeId + ' .dropdown[rel=tooltip]').attr('title', newName);
 
                 if (successHandler) {
@@ -531,7 +537,7 @@
                 this.$('#node-element-' + nodeId).attr(
                     'style', 'background-image:url("' + this.parameters.webPath + newIconPath + '");'
                 );
-                console.debug(this.parameters.webPath + newIconPath);
+                //console.debug(this.parameters.webPath + newIconPath);
                 if (successHandler) {
                     successHandler();
                 }
@@ -602,8 +608,28 @@
             }
         }),
         Form: Backbone.View.extend({
-            className: 'node-form',
             events: {
+                'change #simple input': function (event) {
+                    var element = event.target;
+
+                    switch ($(element).attr('id')) {
+                        case 'everyone':
+                            simpleRights.everyone(element);
+                            break;
+                        case 'anonymous':
+                            simpleRights.anonymous(element);
+                            break;
+                        case 'workspace':
+                            simpleRights.workspace(element);
+                            break;
+                        case 'platform':
+                            simpleRights.platform(element);
+                            break;
+                    }
+                },
+                'change #general input': function (event) {
+                    simpleRights.checkAll(event.target);
+                },
                 'click #submit-default-rights-form-button': function (event) {
                     event.preventDefault();
                     var form = $(this.el).find('form')[0];
@@ -615,28 +641,17 @@
                 },
                 'click .res-creation-options': function (event) {
                     event.preventDefault();
-
-                    if (event.currentTarget.getAttribute('data-toggle') !== 'tab') {
-                        $.ajax({
-                            url: event.currentTarget.getAttribute('href'),
-                            type: 'POST',
-                            processData: false,
-                            contentType: false,
-                            success: function (form) {
-                                this.views.form.render(
-                                    form,
-                                    event.currentTarget.getAttribute('data-node-id'),
-                                    'edit-rights-creation'
-                                );
-                            }
-                        });
-                    }
+                    this.render(
+                        event.currentTarget.getAttribute('href'),
+                        event.currentTarget.getAttribute('data-node-id'),
+                        'edit-rights-creation'
+                    );
                 },
                 'click .search-role-btn': function (event) {
                     event.preventDefault();
                     var search = $('#role-search-text').val();
                     $.ajax({
-                        url: Routing.generate('claro_resource_find_role_by_code', {'code': search}),
+                        url: routing.generate('claro_resource_find_role_by_code', {'code': search}),
                         type: 'GET',
                         context: this,
                         processData: false,
@@ -707,10 +722,10 @@
                 },
                 'submit form': function (event) {
                     event.preventDefault();
-                    var form = $(this.el).find('form')[0];
+                    var form = this.$el.find('form');
                     this.dispatcher.trigger(this.eventOnSubmit, {
-                        action: form.getAttribute('action'),
-                        data: new FormData(form),
+                        action: form.attr('action'),
+                        data: new FormData(form[0]),
                         nodeId: this.targetNodeId
                     });
                 }
@@ -722,22 +737,25 @@
                 this.on('close', this.close, this);
             },
             close: function () {
-                $('#modal-form', this.el).modal('hide');
+                this.$el.modal('hide');
             },
-            render: function (form, targetNodeId, eventOnSubmit) {
+            replace: function (content) {
+                this.$el.html(content);
+            },
+            replaceId: function (id) {
+                $('form', this.$el).attr('action', $('form', this.$el).attr('action').replace('_nodeId', id));
+            },
+            render: function (url, targetNodeId, eventOnSubmit) {
                 this.targetNodeId = targetNodeId;
                 this.eventOnSubmit = eventOnSubmit;
-                form = form.replace('_nodeId', targetNodeId);
-                if ($('#modal-form').attr('id') === undefined) {
-                    $(this.el).html(Twig.render(ModalWindow, {
-                        'body': form,
-                        'modalId': 'modal-form'
-                    }));
-                    $('#modal-form', this.el).modal('show');
-                } else {
-                    $('.modal-body', this.el).html(form);
-                    $('#modal-form', this.el).modal('show');
-                }
+                var that = this;
+                modal.fromUrl(url, function (element) {
+                    that.$el = element;
+                    that.el = element.get();
+                    that.replaceId(targetNodeId);
+                    that.delegateEvents(that.events);
+                    simpleRights.checkAll($('#general input', that.el).first());
+                });
             }
         })
     };
@@ -946,7 +964,7 @@
 
                             if (ui.position !== ui.originalPosition) {
                                 $.ajax({
-                                    url: Routing.generate(
+                                    url: routing.generate(
                                         'claro_resource_insert_before',
                                         {'node': moved, 'nextId': nextId}
                                     )
@@ -977,10 +995,10 @@
                 });
             } else {
                 var urlMap = {
-                    'create': '/resource/form/' + node.type,
-                    'rename': '/resource/rename/form/' + node.id,
-                    'edit-properties': '/resource/properties/form/' + node.id,
-                    'edit-rights': '/resource/' + node.id + '/rights/form/role'
+                    'create': routing.generate('claro_resource_creation_form', {'resourceType': node.type}),
+                    'rename': routing.generate('claro_resource_rename_form', {'node': node.id}),
+                    'edit-properties': routing.generate('claro_resource_form_properties', {'node': node.id}),
+                    'edit-rights': routing.generate('claro_resource_right_form', {'node': node.id})
                 };
 
                 if (!urlMap[type]) {
@@ -991,18 +1009,7 @@
                     this.views.form = new manager.Views.Form(this.dispatcher);
                 }
 
-                $.ajax({
-                    context: this,
-                    url: this.parameters.appPath + urlMap[type],
-                    success: function (form) {
-                        this.views.form.render(form, node.id, type);
-
-                        if (!this.views.form.isAppended) {
-                            this.parameters.parentElement.append(this.views.form.el);
-                            this.views.form.isAppended = true;
-                        }
-                    }
-                });
+                this.views.form.render(urlMap[type], node.id, type);
             }
         },
         create: function (formAction, formData, parentDirectoryId) {
@@ -1017,7 +1024,8 @@
                     if (jqXHR.getResponseHeader('Content-Type') === 'application/json') {
                         this.views.main.subViews.nodes.addThumbnails(data, this.views.form.close());
                     } else {
-                        this.views.form.render(data, parentDirectoryId, 'create');
+                        this.views.form.replace(data);
+                        this.views.form.replaceId(parentDirectoryId);
                     }
                 }
             });
@@ -1035,7 +1043,8 @@
         remove: function (nodeIds) {
             var trans = (nodeIds.length) > 1 ? 'resources_delete' : 'resource_delete';
             var modal = Twig.render(ModalWindow, {
-                'body': Translator.get('platform' + ':' + trans),
+                'header': translator.get('platform:delete'),
+                'body': translator.get('platform:' + trans),
                 'confirmFooter': true,
                 'modalId': 'confirm-modal'
             });
@@ -1104,7 +1113,8 @@
                             this.views.form.close()
                         );
                     } else {
-                        this.views.form.render(data, nodeId);
+                        this.views.form.replace(data);
+                        this.views.form.replaceId(nodeId);
                     }
                 }
             });
@@ -1135,7 +1145,8 @@
                             );
                         }
                     } else {
-                        this.views.form.render(data, nodeId);
+                        this.views.form.replace(data);
+                        this.views.form.replaceId(nodeId);
                     }
                 }
             });
@@ -1203,7 +1214,11 @@
             }
 
             var parentElementId = this.views.picker.$el[0].id;
-            $('#' + parentElementId + ' .modal').modal(action === 'open' ? 'show' : 'hide');
+            modal.parentHide();
+            $('#' + parentElementId + ' .modal').modal(action === 'open' ? 'show' : 'hide')
+            .on('hidden.bs.modal', function () {
+                modal.parentShow();
+            });
         }
     };
 

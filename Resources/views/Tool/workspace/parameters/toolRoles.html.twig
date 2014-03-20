@@ -56,10 +56,13 @@
                                     <input type="checkbox"
                                            class="chk-tool-visible"
                                            value="1"
-                                        {% if toolPermission['tool'].isDesktopRequired()
-                                            or (toolPermission['tool'].getName() == 'parameters') %}
+                                        {% if toolPermission['tool'].isLockedForAdmin() %}
                                            disabled
                                         {% endif %}
+                                        {# The ROLE_ANONYMOUS key is 4 no matter what (see datafixtures) #}
+                                        {%  if key == 4 and toolPermission['tool'].isAnonymousExcluded() %}
+                                            disabled
+                                        {%  endif %}
                                         {% if isVisible %}
                                            checked
                                         {% endif %}
