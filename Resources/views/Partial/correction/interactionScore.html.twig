@@ -1,0 +1,25 @@
+{% if inter.interaction.feedback != '' %}
+    <hr/>
+    <p>{{ inter.interaction.feedback|raw }}</p>
+{% endif %}
+                            
+<hr/>
+{% for hv in hintViewed %}
+    {% if( hv.hint.interaction.id == interactions[p].id ) %}
+        {{ 'penalty' | trans }} : {{ hv.hint.penalty }}
+        <br/>
+    {% endif %}
+{% endfor %}
+<hr/>
+
+{% if (inter.interaction.type == 'InteractionOpen') %}
+    {% if responses[p].mark != -1 %}
+        {{ 'mark' | trans }} : <span id="open_mark_value_{{ responses[p].id }}">{{ responses[p].mark }} / {{ interInfo['maxScore'] }}</span>
+        {% set exoMark = exoMark + responses[p].mark %}
+    {% else %}
+        {{ 'mark' | trans }} : <span id="open_mark_value_{{ responses[p].id }}">{{ 'not yet mark' | trans }}</span>
+        {% set temporaryMark = true %}
+    {% endif %}
+{% else %}
+    {{ 'mark' | trans }} : {{ responses[p].mark }} / {{ interInfo['maxScore'] }}
+{% endif %}

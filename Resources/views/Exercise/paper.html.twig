@@ -86,7 +86,7 @@
                                 {% else %}
                                     <td><p><INPUT type="checkbox" name="choice[]" value="{{ choice.id }}" {{ checked }}/></p></td>
                                 {% endif %}
-                                <td class="classic">{{ choice.label|raw }}</td>
+                                <td>{{ choice.label|raw }}</td>
                             </tr>
                         {% endfor %}
                     </table>

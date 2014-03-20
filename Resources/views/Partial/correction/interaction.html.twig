@@ -1,0 +1,11 @@
+<hr/>
+<h3>{{ 'nQuestion' | trans }}{{p + 1}} : {{ inter.interaction.question.title }}</h3>
+<hr/>
+
+{% if inter.interaction.question.description != '' %}
+    <p>{{ inter.interaction.question.description|raw }}></p>
+    <hr/>
+{% endif %}
+
+{{ inter.interaction.invite|raw }}
+<hr/>
