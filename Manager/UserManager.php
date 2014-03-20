@@ -392,9 +392,9 @@ class UserManager
      *
      * @return \Pagerfanta\Pagerfanta;
      */
-    public function getAllUsers($page, $max = 20, $orderedBy = 'id')
+    public function getAllUsers($page, $max = 20, $orderedBy = 'id', $order = null)
     {
-        $query = $this->userRepo->findAll(false, $orderedBy);
+        $query = $this->userRepo->findAll(false, $orderedBy, $order);
 
         return $this->pagerFactory->createPager($query, $page, $max);
     }
@@ -662,9 +662,10 @@ class UserManager
      *
      * @return \Pagerfanta\Pagerfanta
      */
-    public function getByRolesIncludingGroups(array $roles, $page = 1, $max = 20, $orderedBy = 'id')
+    public function getByRolesIncludingGroups(array $roles, $page = 1, $max = 20, $orderedBy = 'id', $order= null)
     {
-        $res = $this->userRepo->findByRolesIncludingGroups($roles, true, $orderedBy);
+
+        $res = $this->userRepo->findByRolesIncludingGroups($roles, true, $orderedBy, $order);
 
         return $this->pagerFactory->createPager($res, $page, $max);
     }
@@ -678,9 +679,9 @@ class UserManager
      *
      * @return \Pagerfanta\Pagerfanta
      */
-    public function getByRolesAndNameIncludingGroups(array $roles, $search, $page = 1, $max = 20, $orderedBy = 'id')
+    public function getByRolesAndNameIncludingGroups(array $roles, $search, $page = 1, $max = 20, $orderedBy = 'id', $direction = null)
     {
-        $res = $this->userRepo->findByRolesAndNameIncludingGroups($roles, $search, true, $orderedBy);
+        $res = $this->userRepo->findByRolesAndNameIncludingGroups($roles, $search, true, $orderedBy, $direction);
 
         return $this->pagerFactory->createPager($res, $page, $max);
     }

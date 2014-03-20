@@ -228,16 +228,16 @@ class AdministrationController extends Controller
 
     /**
      * @EXT\Route(
-     *     "/users/page/{page}/max/{max}/order/{order}",
+     *     "/users/page/{page}/max/{max}/order/{order}/{direction}",
      *     name="claro_admin_user_list",
-     *     defaults={"page"=1, "search"="", "max"=50, "order"="id"},
+     *     defaults={"page"=1, "search"="", "max"=50, "order"="id","direction"="ASC"},
      *     options = {"expose"=true}
      * )
      * @EXT\Method("GET")
      * @EXT\Route(
-     *     "/users/page/{page}/search/{search}/max/{max}/order/{order}",
+     *     "/users/page/{page}/search/{search}/max/{max}/order/{order}/direction/{direction}",
      *     name="claro_admin_user_list_search",
-     *     defaults={"page"=1, "max"=50, "order"="id"},
+     *     defaults={"page"=1, "max"=50, "order"="id", "direction"= "ASC"},
      *     options = {"expose"=true}
      * )
      * @EXT\Method("GET")
@@ -257,13 +257,19 @@ class AdministrationController extends Controller
      *
      * @return array
      */
-    public function userListAction($page, $search, $max, $order)
+    public function userListAction($page, $search, $max, $order , $direction)
     {
         $pager = $search === '' ?
-            $this->userManager->getAllUsers($page, $max, $order) :
-            $this->userManager->getUsersByName($search, $page, $max, $order);
+            $this->userManager->getAllUsers($page, $max, $order, $direction) :
+            $this->userManager->getUsersByName($search, $page, $max, $order, $direction);
+        
+        switch ($direction) {
+            case '' : $direction = 'ASC'; break;
+            case 'ASC': $direction ='DESC'; break;
+            case 'DESC' :$direction = 'ASC'; break;
+        }
 
-        return array('pager' => $pager, 'search' => $search, 'max' => $max, 'order' => $order);
+        return array('pager' => $pager, 'search' => $search, 'max' => $max, 'order' => $order, 'direction' => $direction);
     }
 
     /**
@@ -301,16 +307,16 @@ class AdministrationController extends Controller
 
     /**
      * @EXT\Route(
-     *     "/groups/page/{page}/max/{max}/order/{order}",
+     *     "/groups/page/{page}/max/{max}/order/{order}/direction/{direction}",
      *     name="claro_admin_group_list",
      *     options={"expose"=true},
-     *     defaults={"page"=1, "search"="", "max"=50, "order"="id"}
+     *     defaults={"page"=1, "search"="", "max"=50, "order"="id", "direction"="ASC"}
      * )
      * @EXT\Method("GET")
      * @EXT\Route(
-     *     "/groups/page/{page}/search/{search}/max/{max}/order/{order}",
+     *     "/groups/page/{page}/search/{search}/max/{max}/order/{order}/direction/{direction}",
      *     name="claro_admin_group_list_search",
-     *     defaults={"page"=1, "max"=50, "order"="id"},
+     *     defaults={"page"=1, "max"=50, "order"="id", "direction"="ASC"},
      *     options = {"expose"=true}
      * )
      * @EXT\Method("GET")
@@ -330,13 +336,19 @@ class AdministrationController extends Controller
      *
      * @return array
      */
-    public function groupListAction($page, $search, $max, $order)
+    public function groupListAction($page, $search, $max, $order, $direction)
     {
         $pager = $search === '' ?
-            $this->groupManager->getGroups($page, $max, $order) :
-            $this->groupManager->getGroupsByName($search, $page, $max, $order);
+            $this->groupManager->getGroups($page, $max, $order, $direction) :
+            $this->groupManager->getGroupsByName($search, $page, $max, $order, $direction);
 
-        return array('pager' => $pager, 'search' => $search, 'max' => $max, 'order' => $order);
+         switch ($direction) {
+            case '' : $direction = 'ASC'; break;
+            case 'ASC': $direction ='DESC'; break;
+            case 'DESC' :$direction = 'ASC'; break;
+        }
+
+        return array('pager' => $pager, 'search' => $search, 'max' => $max, 'order' => $order, 'direction' => $direction);
     }
 
     /**

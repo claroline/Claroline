@@ -797,9 +797,11 @@ class WorkspaceManager
      *
      * @return \Pagerfanta\Pagerfanta;
      */
-    public function findAllWorkspaces($page, $max = 20, $orderedBy = 'id')
+    public function findAllWorkspaces($page, $max = 20, $orderedBy = 'id', $order = null)
     {
-        $result = $this->workspaceRepo->findAll(false, $orderedBy);
+        $order = $order === 'DESC' ? 'DESC' : 'ASC';
+        $tab = array($orderedBy => $order);
+        $result = $this->workspaceRepo->findBy(array(), array('id' => $order));
 
         return $this->pagerFactory->createPagerFromArray($result, $page, $max);
     }

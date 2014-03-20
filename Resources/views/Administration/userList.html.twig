@@ -1,4 +1,4 @@
-{% macro renderPager(search, pager, max, order) %}
+{% macro renderPager(search, pager, max, order, direction) %}
     {% if search == '' %}
     {{
         pagerfanta(
@@ -7,7 +7,7 @@
             {
                 'proximity' : 1,
                 'routeName': 'claro_admin_user_list',
-                'routeParams': {'max': max, 'order': order}
+                'routeParams': {'max': max, 'order': order, 'direction': direction}
             }
         )
     }}
@@ -39,9 +39,9 @@
     {% endif %}
 {% endmacro %}
 
-{% macro sortUrl(max, search, order) %}
+{% macro sortUrl(max, search, order, direction) %}
     {% if search == '' %}
-        {{ path('claro_admin_user_list', {'max': max, 'order': order}) }}
+        {{ path('claro_admin_user_list', {'max': max, 'order': order , 'direction': direction}) }}
     {% else %}
         {{ path('claro_admin_user_list_search', {'search': search, 'max': max, 'order': order}) }}
     {% endif %}
@@ -116,10 +116,10 @@
                         {% if is_granted('ROLE_ADMIN') %}
                             <th><input type="checkbox" name="all" id="check-all-items"></input></th>
                         {% endif %}
-                        <th><a href="{{ sortUrl(max, search, 'username') }}">{{ 'username'|trans({}, 'platform') }}</a></th>
-                        <th><a href="{{ sortUrl(max, search, 'lastName') }}">{{ 'last_name'|trans({}, 'platform') }}</a></th>
-                        <th><a href="{{ sortUrl(max, search, 'firstName') }}">{{ 'first_name'|trans({}, 'platform') }}</a></th>
-                        <th><a href="{{ sortUrl(max, search, 'mail') }}">{{ 'mail'|trans({}, 'platform') }}</a></th>
+                        <th><a href="{{ sortUrl(max, search, 'username', direction) }}">{{ 'username'|trans({}, 'platform') }}</a></th>
+                        <th><a href="{{ sortUrl(max, search, 'lastName',direction ) }}">{{ 'last_name'|trans({}, 'platform') }}</a></th>
+                        <th><a href="{{ sortUrl(max, search, 'firstName' , direction) }}">{{ 'first_name'|trans({}, 'platform') }}</a></th>
+                        <th><a href="{{ sortUrl(max, search, 'mail', direction) }}">{{ 'mail'|trans({}, 'platform') }}</a></th>
                         <th>{{ 'role'|trans({}, 'platform') }}</th>
                         {% if is_granted('ROLE_ADMIN') %}
                             <th>{{ 'actions' | trans({}, 'platform') }}</th>
