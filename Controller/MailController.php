@@ -80,9 +80,9 @@ class MailController extends Controller
      *
      * Displays the mail form.
      *
-     * @param integer $userId
+     * @param User $user
      *
-     * @return Response
+     * @return array
      */
     public function formAction(User $user)
     {
@@ -119,9 +119,12 @@ class MailController extends Controller
         if ($form->isValid()) {
             $data = $form->getData();
             $body = $data['content'];
-            $body .= '<hr> ' . $sender->getUsername() . ' (' . $sender->getMail() .
-                ') - ClarolineConnect - ' . $this->ch->getParameter('name');
-            $this->mailManager->send($data['object'], $body, array($user));
+            $this->mailManager->send(
+                $data['object'],
+                $body,
+                array($user),
+                $sender
+            );
         }
 
         return new RedirectResponse($this->router->generate('claro_profile_view', array('userId' => $user->getId())));

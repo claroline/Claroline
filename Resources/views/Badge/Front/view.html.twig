@@ -30,6 +30,10 @@
                               <td class="fieldlabel">{{ 'badge_form_name'|trans }}</td>
                               <td>{{ badge.name }}</td>
                             </tr>
+                            <tr>
+                              <td class="fieldlabel">{{ 'badge_version'|trans }}</td>
+                              <td>{{ badge.version }}</td>
+                            </tr>
                             {% if badge.isExpiring %}
                             <tr>
                               <td class="fieldlabel">{{ 'badge_validity_period'|trans }}</td>

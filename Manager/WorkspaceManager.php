@@ -503,6 +503,11 @@ class WorkspaceManager
         return $this->workspaceRepo->findByAnonymous();
     }
 
+    public function getWorkspacesByManager(User $user)
+    {
+        return $this->workspaceRepo->findWorkspacesByManager($user);
+    }
+
     /**
      * @return integer
      */
@@ -537,6 +542,20 @@ class WorkspaceManager
                 return true;
             }
         });
+    }
+
+    /**
+     * @param string[] $roles
+     * @param integer $page
+     * @param integer $max
+     *
+     * @return \PagerFanta\PagerFanta
+     */
+    public function getOpenableWorkspacesByRolesPager(array $roles, $page, $max)
+    {
+        $workspaces = $this->getOpenableWorkspacesByRoles($roles);
+
+        return $this->pagerFactory->createPagerFromArray($workspaces, $page, $max);
     }
 
     /**

@@ -27,7 +27,7 @@ class FrontController extends Controller
 {
     /**
      * @Route("/{slug}", name="claro_view_badge")
-     * @ParamConverter("badge", converter="badge_converter")
+     * @ParamConverter("badge", converter="badge_converter", options={"check_deleted" = false})
      *
      * @SEC\Secure(roles="ROLE_USER")
      *

@@ -11,15 +11,20 @@
 
 namespace Claroline\CoreBundle\Manager;
 
+use Claroline\CoreBundle\Entity\Badge\BadgeRule;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Badge\Badge;
 use Claroline\CoreBundle\Entity\Badge\UserBadge;
 use Claroline\CoreBundle\Library\Testing\MockeryTestCase;
+use Doctrine\Common\Collections\ArrayCollection;
 
 class BadgeManagerTest extends MockeryTestCase
 {
     /** @var \Doctrine\ORM\EntityManager */
     private $entityManager;
+
+    /** @var \Doctrine\ORM\UnitOfWork */
+    private $unitOfWork;
 
     /** @var \Symfony\Component\EventDispatcher\EventDispatcherInterface */
     private $eventDispatcher;
@@ -32,11 +37,17 @@ class BadgeManagerTest extends MockeryTestCase
         parent::setUp();
 
         $this->badgeRepository = $this->mock('Claroline\CoreBundle\Repository\Badge\BadgeRepository');
+        $this->unitOfWork      = $this->mock('Doctrine\ORM\UnitOfWork');
+        $this->unitOfWork
+            ->shouldReceive('computeChangeSets')
+                ->andReturn(null);
+
         $this->entityManager   = $this->mock('Doctrine\ORM\EntityManager');
-        $this->entityManager->shouldReceive('persist')
-            ->andReturn(null)
+        $this->entityManager
+            ->shouldReceive('persist')
+                ->andReturn(null)
             ->shouldReceive('flush')
-            ->andReturn(null);
+                ->andReturn(null);
 
         $this->eventDispatcher = $this->mock('Symfony\Component\EventDispatcher\EventDispatcherInterface');
     }
@@ -165,5 +176,82 @@ class BadgeManagerTest extends MockeryTestCase
             array($badge7, new \DateTime('2014-02-02'), new \DateTime('2015-02-02')),
             array($badge8, new \DateTime('2014-02-02'), new \DateTime('2016-02-02'))
         );
+    }
+
+    public function testIsRuleChangedWithOneRuleAndNoChange()
+    {
+        $rule1 = new BadgeRule();
+        $rule1->setId(rand(0, PHP_INT_MAX));
+
+        $rules = new ArrayCollection();
+        $rules->add($rule1);
+
+        $unitOfWork = $this->unitOfWork;
+        $unitOfWork
+            ->shouldReceive('getEntityChangeSet')->once()
+                ->with($rule1);
+        $entityManager = $this->entityManager;
+        $entityManager
+            ->shouldReceive('getUnitOfWork')
+                ->andReturn($unitOfWork);
+
+        $manager = new BadgeManager($entityManager, $this->eventDispatcher);
+
+        $this->assertFalse($manager->isRuleChanged($rules, $rules));
+    }
+
+    public function testIsRuleChangedWitOneRuleAndOneNewRule()
+    {
+        $originalRule1 = new BadgeRule();
+        $originalRule1->setId(rand(0, PHP_INT_MAX));
+
+        $originalRules = new ArrayCollection();
+        $originalRules->add($originalRule1);
+
+        $newRule1 = new BadgeRule();
+
+        $newRules = new ArrayCollection();
+        $newRules->add($originalRule1);
+        $newRules->add($newRule1);
+
+        $unitOfWork = $this->unitOfWork;
+        $unitOfWork
+            ->shouldReceive('getEntityChangeSet')->once()
+                ->with($originalRule1)
+                ->andReturn(array());
+        $entityManager = $this->entityManager;
+        $entityManager
+            ->shouldReceive('getUnitOfWork')
+                ->andReturn($unitOfWork);
+
+        $manager = new BadgeManager($entityManager, $this->eventDispatcher);
+
+        $this->assertTrue($manager->isRuleChanged($newRules, $originalRules));
+    }
+
+    public function testIsRuleChangedWitOneRuleChanged()
+    {
+        $originalRule1 = new BadgeRule();
+        $originalRule1->setId(rand(0, PHP_INT_MAX));
+
+        $originalRules = new ArrayCollection();
+        $originalRules->add($originalRule1);
+
+        $newRules = new ArrayCollection();
+        $newRules->add($originalRule1);
+
+        $unitOfWork = $this->unitOfWork;
+        $unitOfWork
+            ->shouldReceive('getEntityChangeSet')->once()
+                ->with($originalRule1)
+                ->andReturn(array('action' => array(uniqid(), uniqid())));
+        $entityManager = $this->entityManager;
+        $entityManager
+            ->shouldReceive('getUnitOfWork')
+                ->andReturn($unitOfWork);
+
+        $manager = new BadgeManager($entityManager, $this->eventDispatcher);
+
+        $this->assertTrue($manager->isRuleChanged($newRules, $originalRules));
     }
 }

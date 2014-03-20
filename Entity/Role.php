@@ -94,7 +94,10 @@ class Role implements RoleInterface
     protected $resourceRights;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace", inversedBy="roles")
+     * @ORM\ManyToOne(
+     *     targetEntity="Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace",
+     *     inversedBy="roles"
+     * )
      * @ORM\JoinColumn(onDelete="CASCADE")
      */
     protected $workspace;

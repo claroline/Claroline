@@ -101,12 +101,22 @@ class Updater021000
         $resourceNodes = $this->om->getRepository('ClarolineCoreBundle:Resource\ResourceNode')->findAll();
         $roleUser = $this->om->getRepository('ClarolineCoreBundle:Role')->findOneByName('ROLE_USER');
 
+
+        $this->om->startFlushSuite();
+        $i = 0;
+
         foreach ($resourceNodes as $resourceNode) {
             $rightsManager = $this->container->get('claroline.manager.rights_manager');
             $rightsManager->create(0, $roleUser, $resourceNode, false);
+            $i++;
+
+            if ($i % 200 === 0) {
+                $this->om->endFlushSuite();
+                $this->om->startFlushSuite();
+            }
         }
 
-        $this->om->flush();
+        $this->om->endFlushSuite();
     }
 
     public function updateIcons()

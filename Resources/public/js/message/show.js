@@ -24,8 +24,13 @@
     var currentType = 'user';
     var users = [];
     var groups = [];
-    var usersTemp = [];
-    var groupsTemp = [];
+    var workspaces = [];
+
+    var typeMap = {
+        'user': [],
+        'group': [],
+        'workspace': []
+    }
 
     function getPage(tab)
     {
@@ -61,46 +66,35 @@
 
     function initTempTab()
     {
-        usersTemp = users.slice();
-        groupsTemp = groups.slice();
+        typeMap['user'] = users.slice();
+        typeMap['group'] = groups.slice();
+        typeMap['workspace'] = workspaces.slice();
     }
 
     function displayCheckBoxStatus()
     {
-        if (currentType === 'user') {
-            $('.contact-chk').each(function () {
-                var contactId = $(this).attr('contact-id');
+        $('.contact-chk').each(function () {
+            var contactId = $(this).attr('contact-id');
 
-                if (usersTemp.indexOf(contactId) >= 0) {
-                    $(this).attr('checked', 'checked');
-                }
-            });
-        }
-        else {
-            $('.contact-chk').each(function () {
-                var contactId = $(this).attr('contact-id');
-
-                if (groupsTemp.indexOf(contactId) >= 0) {
-                    $(this).attr('checked', 'checked');
-                }
-            });
-        }
+            if (typeMap[currentType].indexOf(contactId) >= 0) {
+                $(this).attr('checked', 'checked');
+            }
+        });
     }
 
-    function displayUsers()
+    function displayPager(type, normalRoute, searchRoute)
     {
-        currentType = 'user';
+        currentType = type;
         var toList = $('#message_form_to').attr('value');
         var toListArray = toList.split(';');
         var search = toListArray[toListArray.length - 1].trim();
         var route;
 
         if (search === '') {
-            route = Routing.generate('claro_message_contactable_users');
+            route = Routing.generate(normalRoute);
         } else {
             route = Routing.generate(
-                'claro_message_contactable_users_search',
-                { 'search': search }
+                searchRoute, {'search': search}
             );
         }
 
@@ -108,8 +102,6 @@
             url: route,
             type: 'GET',
             success: function (datas) {
-                $('#groups-nav-tab').attr('class', '');
-                $('#users-nav-tab').attr('class', 'active');
                 $('#contacts-list').empty();
                 $('#contacts-list').append(datas);
                 displayCheckBoxStatus();
@@ -117,64 +109,13 @@
         });
     }
 
-    function displayGroups()
-    {
-        currentType = 'group';
-        var toList = $('#message_form_to').attr('value');
-        var toListArray = toList.split(';');
-        var search = toListArray[toListArray.length - 1].trim();
-        var route;
-
-        if (search === '') {
-            route = Routing.generate('claro_message_contactable_groups');
-        } else {
-            route = Routing.generate(
-                'claro_message_contactable_groups_search',
-                { 'search': search }
-            );
-        }
-
-        $.ajax({
-            url: route,
-            type: 'GET',
-            success: function (datas) {
-                $('#groups-nav-tab').attr('class', 'active');
-                $('#users-nav-tab').attr('class', '');
-                $('#contacts-list').empty();
-                $('#contacts-list').append(datas);
-                displayCheckBoxStatus();
-            }
-        });
-    }
-
-    function updateContactInput()
+    function getUsersFromInput(route, elements, queryStringKey)
     {
         var parameters = {};
-        var route;
 
-        if (users.length > 0) {
-            parameters.userIds = users;
-            route = Routing.generate('claro_usernames_from_users');
-            route += '?' + $.param(parameters);
-
-            $.ajax({
-                url: route,
-                statusCode: {
-                    200: function (datas) {
-                        $('#message_form_to').attr('value', datas);
-                    }
-                },
-                type: 'GET',
-                async: false
-            });
-        }
-        else {
-            $('#message_form_to').attr('value', '');
-        }
-
-        if (groups.length > 0) {
-            parameters.groupIds = groups;
-            route = Routing.generate('claro_names_from_groups');
+        if (elements.length > 0) {
+            parameters[queryStringKey] = elements;
+            route = Routing.generate(route);
             route += '?' + $.param(parameters);
 
             $.ajax({
@@ -186,28 +127,59 @@
                         $('#message_form_to').attr('value', currentValue);
                     }
                 },
-                type: 'GET'
+                type: 'GET',
+                async: false
             });
         }
     }
 
+    function updateContactInput()
+    {
+        getUsersFromInput('claro_usernames_from_users', users, 'userIds');
+        getUsersFromInput('claro_names_from_groups', groups, 'groupIds');
+        getUsersFromInput('claro_names_from_workspaces', workspaces, 'workspaceIds');
+    }
+
     $('#contacts-button').click(function () {
         initTempTab();
-        displayUsers();
+        displayPager(
+            'user',
+            'claro_message_contactable_users',
+            'claro_message_contactable_users_search'
+        );
         $('#contacts-box').modal('show');
     });
 
     $('#users-nav-tab').on('click', function () {
         $('#groups-nav-tab').attr('class', '');
         $(this).attr('class', 'active');
-        displayUsers();
+        displayPager(
+            'user',
+            'claro_message_contactable_users',
+            'claro_message_contactable_users_search'
+        );
     });
 
     $('#groups-nav-tab').on('click', function () {
         $('#users-nav-tab').attr('class', '');
         $(this).attr('class', 'active');
-        displayGroups();
+        displayPager(
+            'group',
+            'claro_message_contactable_groups',
+            'claro_message_contactable_groups_search'
+        );
     });
+
+    $('#workspaces-nav-tab').on('click', function () {
+        $('#workspaces-nav-tab').attr('class', '');
+        $(this).attr('class', 'active');
+        displayPager(
+            'workspace',
+            'claro_message_contactable_workspaces',
+            'claro_message_contactable_workspaces_search'
+        );
+    });
+
 
     $('body').on('click', '.pagination > ul > li > a', function (event) {
         event.preventDefault();
@@ -222,30 +194,21 @@
             var search = getSearch(urlTab);
 
             if (currentType === 'user') {
-                if (search !== '') {
-                    route = Routing.generate(
-                        'claro_message_contactable_users_search',
-                        {'page': page, 'search': search}
-                    );
-                } else {
-                    route = Routing.generate(
-                        'claro_message_contactable_users',
-                        {'page': page}
-                    );
-                }
+                route = (search !== '') ?
+                    Routing.generate('claro_message_contactable_users_search', {'page': page, 'search': search}):
+                    Routing.generate('claro_message_contactable_users', {'page': page});
             }
-            else {
-                if (search !== '') {
-                    route = Routing.generate(
-                        'claro_message_contactable_groups_search',
-                        {'page': page, 'search': search}
-                    );
-                } else {
-                    route = Routing.generate(
-                        'claro_message_contactable_groups',
-                        {'page': page}
-                    );
-                }
+
+            if (currentType === 'group') {
+                route = (search !== '') ?
+                    Routing.generate('claro_message_contactable_groups_search', {'page': page, 'search': search}):
+                    Routing.generate('claro_message_contactable_groups', {'page': page});
+            }
+
+            if (currentType === 'workspace') {
+                route = (search !== '') ?
+                    Routing.generate('claro_message_contactable_workspaces', {'page': page}):
+                    Routing.generate('claro_message_contactable_workspaces', {'page': page});
             }
 
             $.ajax({
@@ -263,45 +226,20 @@
     $('body').on('click', '.contact-chk', function () {
         var contactId = $(this).attr('contact-id');
         var checked = $(this).attr('checked');
-        var index;
+        var index = typeMap[currentType].indexOf(contactId);
 
-        if (currentType === 'user') {
-            if (checked === 'checked') {
-                index = usersTemp.indexOf(contactId);
-
-                if (index < 0) {
-                    usersTemp.push(contactId);
-                }
-            }
-            else {
-                index = usersTemp.indexOf(contactId);
-
-                if (index >= 0) {
-                    usersTemp.splice(index, 1);
-                }
-            }
+        if (checked === 'checked' && index < 0) {
+            typeMap[currentType].push(contactId);
         }
         else {
-            if (checked === 'checked') {
-                index = groupsTemp.indexOf(contactId);
-
-                if (index < 0) {
-                    groupsTemp.push(contactId);
-                }
-            }
-            else {
-                index = groupsTemp.indexOf(contactId);
-
-                if (index >= 0) {
-                    groupsTemp.splice(index, 1);
-                }
-            }
+            typeMap[currentType].splice(index, 1);
         }
     });
 
     $('#add-contacts-confirm-ok').click(function () {
-        users = usersTemp.slice();
-        groups = groupsTemp.slice();
+        users = typeMap['user'].slice();
+        groups = typeMap['group'].slice();
+        workspaces = typeMap['workspace'].slice();
         updateContactInput();
         $('#contacts-box').modal('hide');
     });

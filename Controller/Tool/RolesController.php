@@ -373,7 +373,7 @@ class RolesController extends Controller
     public function addUsersToRolesAction(array $users, array $roles, AbstractWorkspace $workspace)
     {
         $this->checkAccess($workspace);
-        $this->roleManager->associateRolesToSubjects($users, $roles);
+        $this->roleManager->associateRolesToSubjects($users, $roles, true);
 
         return new Response('success');
     }
@@ -415,7 +415,7 @@ class RolesController extends Controller
     public function addGroupsToRolesAction(array $groups, array $roles, AbstractWorkspace $workspace)
     {
         $this->checkAccess($workspace);
-        $this->roleManager->associateRolesToSubjects($groups, $roles);
+        $this->roleManager->associateRolesToSubjects($groups, $roles, true);
 
         return new Response('success');
     }
@@ -596,6 +596,30 @@ class RolesController extends Controller
 
         foreach ($groups as $group) {
             $names .= '{' . $group->getName() . '};';
+        }
+
+        return new Response($names, 200);
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/workspaces/names",
+     *     name="claro_names_from_workspaces",
+     *     options = {"expose"=true}
+     * )
+     * @EXT\Method({"GET"})
+     * @EXT\ParamConverter(
+     *     "workspaces",
+     *      class="ClarolineCoreBundle:Workspace\AbstractWorkspace",
+     *      options={"multipleIds" = true, "name" = "workspaceIds"}
+     * )
+     */
+    public function retrieveNamesFromWorkspacesAction(array $workspaces)
+    {
+        $names = '';
+
+        foreach ($workspaces as $workspace) {
+            $names .= '[' . $workspace->getCode() . '];';
         }
 
         return new Response($names, 200);
