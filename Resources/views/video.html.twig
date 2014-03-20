@@ -8,28 +8,50 @@
 
 {% block title %}{{ video.getResourceNode().getName() ~ ' - ' ~ parent() | striptags | raw }}{% endblock %}
 
-{% set tag = 'video' %}
-{% if "audio" in video.getResourceNode().getMimeType() %}
-    {% set tag = 'audio' %}
-{% endif %}
-
 {% block section_content %}
     <div class="panel-heading">
         <h3 class="panel-title">{{ video.getResourceNode().getName() }}</h3>
     </div>
     <div class="panel-body">
-        <{{ tag }} width="100%" controls="controls">
-            <source src="{{ path ('claro_stream_video', {'node': video.getResourceNode().getId()}) }}" type="{{ video.getResourceNode().getMimeType() }}">
-            <!-- In case of the browser does not support the video tag: -->
-            <object width="100%" height="400">
-                <param name="{{ tag }}" value="{{ path ('claro_stream_video', {'node': video.getResourceNode().getId()})}}">
-                <embed src="{{ path ('claro_stream_video', {'node': video.getResourceNode().getId()})}}"></embed>
+        {% set source = path ('claro_stream_video', {'node': video.getResourceNode().getId()}) %}
+        {% set mediaFlash = asset('bundles/frontend/mediaelement/build/flashmediaelement.swf') %}
+        {# next line is just for testing: poster should obviously be a dedicated image with larger dimensions #}
+        {% set poster = asset(video.getResourceNode().getIcon().getRelativeUrl()) %}
+
+        <!-- Default HTML5 player -->
+        <video width="100%" height="100%" poster="{{ poster }}" controls="controls" preload="none">
+            <source type="{{ video.getResourceNode().getMimeType() }}" src="{{ source }}" />
+
+            <!-- Fallback flash player for no-HTML5 browsers with JavaScript turned off -->
+            <object width="100%" height="100%" type="application/x-shockwave-flash" data="{{ mediaFlash }}">
+                <param name="movie" value="{{ mediaFlash }}" />
+                <param name="flashvars" value="controls=true&poster={{ poster }}&file={{ source }}" />
+
+                <!-- Image fall back for non-HTML5 browser with JavaScript turned off and no Flash player installed -->
+                <img src="{{ poster }}" width="100%" height="100%" title="No video playback capabilities" />
             </object>
-        </{{ tag }}>
+        </video>
     </div>
     <div class="panel-footer">
         <a class="btn btn-primary" href="{{ path('claro_resource_download') }}?ids[]={{ video.getResourceNode().getId() }}">
             <i class="icon-download"></i> {{ 'download'|trans({}, 'platform') }}
         </a>
     </div>
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('bundles/frontend/mediaelement/build/mediaelementplayer.css') }}" />
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('bundles/frontend/mediaelement/build/mediaelement-and-player.min.js') }}"></script>
+    <script>
+        $('audio,video').mediaelementplayer({
+            success: function(player, node) {
+                $('#' + node.id + '-mode').html('mode: ' + player.pluginType);
+            }
+        });
+    </script>
 {% endblock %}
