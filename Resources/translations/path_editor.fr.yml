@@ -13,6 +13,7 @@ description_help: Saisir une courte description du parcours
 edit_step: Modifier l'étape
 edit: Modification
 editor: Editeur de Parcours
+edit_description: Modifier la description
 
 # f
 from: de
@@ -57,6 +58,17 @@ step_tutor: Avec tuteur ?
 step_no_resource: Il n'y a aucune ressource rattachée à cette étape.
 step_no_description: Il n'y a aucune description pour cette étape.
 select_image: Choisir une image
+step_has_duration: l'étape a une durée
+step_delete_confirm: Êtes-vous sur de vouloir supprimer cette étape ?
+step_delete: Supprimer l'étape
+step_delete_title: Etape
+select_image_title: Sélectionner une image pour l'étape
+step_edit: Modifier l'étape
+step_add_child: Ajouter un enfant
+step_copy: Copier
+step_paste: Coller
+step_to_template: Sauvegarder comme modèle
+step_delete_children: Supprimer les enfants
 
 # t
 templates: Modèles
@@ -66,12 +78,15 @@ template_edit: Modifier
 template_delete: Supprimer
 template_name: Nom
 template_description: Description
+template_save: Sauvegarder le modèle
+template_edit_title: Modèle
+template_save_resources: Conserver les ressources liées
 
 # u
 undo: Annuler
 
 # v
-validate: Modifier l'étape
+validate: Valider
 
 # w
 with_computer: Avec ordinateur
