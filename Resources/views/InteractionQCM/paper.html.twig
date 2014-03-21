@@ -97,7 +97,7 @@
             <form action="{{ path('ujm_interactionqcm_response') }}" method="post" {{ form_enctype(form) }}>
                 {{ form_widget(form) }}
 
-                <table cellspacing="5" cellpadding="2" border="0">
+                <table class="table-striped" cellspacing="5" cellpadding="2" border="0">
                      {% for choice in interactionToDisplayed.choices %}
                         <tr>
                             {% if interactionToDisplayed.typeQCM.id == 2 %}
