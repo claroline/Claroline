@@ -32,6 +32,9 @@
 {% block dropzone_content_drops_by_list_title %}
     {{ 'List of examiners'|trans({}, 'icap_dropzone') }}
 {% endblock %}
+{% block dropzone_content_drops_by_list_subtitle %}
+    {{ 'People that have a copy in this dropzone'|trans({}, 'icap_dropzone') }}
+{% endblock %}
 
 {% block dropzone_content_drops_by_Listing %}
     {% include 'IcapDropzoneBundle:Drop:Listing/examinersListing.html.twig' %}
