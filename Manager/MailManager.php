@@ -167,7 +167,7 @@ class MailManager
                 ->setBody($body, 'text/html');
 
             if (count($to) > 1) {
-                $message->setCc($to);
+                $message->setBcc($to);
             } else {
                 $message->setTo($to);
             }
