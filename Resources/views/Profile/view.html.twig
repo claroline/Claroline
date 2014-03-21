@@ -11,7 +11,7 @@
             {% if canEdit %}
                 <div class="dropdown float-right-top">
                     <a data-toggle="dropdown" href="#" class="btn btn-xs btn-primary">
-                        <span class="icon-edit"></span> {{ 'edit' | trans({}, 'platform') }} <i class="caret"></i>
+                        {{ 'actions' | trans({}, 'platform') }} <span class="icon-gear"></span> <i class="caret"></i>
                     </a>
                     <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
                         <li>
@@ -61,6 +61,7 @@
                 </aside>
                 <div class="col-md-10">
                     <p>{{ user.getLastName() ~ ' ' ~ user.getFirstName() }}</p>
+                    <p><span class="icon-envelope"> <a href="mailto:{{ user.getmail() }}" title="{{ user.getmail() }}">{{ user.getmail() }}</a></span></p>
                     {% if user.getPhone() is not null %}
                         <p><span class="icon-phone-sign"> {{ user.getPhone() }}</span></p>
                     {% endif %}
