@@ -1256,18 +1256,37 @@ class CorrectionController extends DropzoneBaseController
      * **/
     public function ExaminersByCorrectionMadeAction($dropzone,$page,$withDropOnly)
     {
+        // check rights
         $this->isAllowToOpen($dropzone);
         $this->isAllowToEdit($dropzone);
 
+
+        // view only available in peerReview mode
+        if(! $dropzone->getPeerReview())
+        {
+            // redirection if the dropzone is not in PeerReview.
+            return $this->redirect(
+                    $this->generateUrl(
+                        'icap_dropzone_drop',
+                        array(
+                            'resourceId' => $dropzoneId
+                        )
+                    )
+                );
+        }
+
+        //getting the repos
         $dropRepo = $this->getDoctrine()->getManager()->getRepository('IcapDropzoneBundle:Drop');
         $correctionRepo = $this->getDoctrine()->getManager()->getRepository('IcapDropzoneBundle:Correction');
+        
+        // getting the Query of  users that have at least one correction.
         $usersQuery = $correctionRepo->getUsersByDropzoneQuery($dropzone);
 
-        // page management.
+        // pagitation management.
         $adapter = new DoctrineORMAdapter($usersQuery);
-        //$adapter = new DoctrineDbalSingleTableAdapter($usersQuery,'u.id');
         $pager = new Pagerfanta($adapter);
         $pager->setMaxPerPage(DropzoneBaseController::DROP_PER_PAGE);
+
         try {
             $pager->setCurrentPage($page);
         } catch (NotValidCurrentPageException $e) {
@@ -1286,13 +1305,9 @@ class CorrectionController extends DropzoneBaseController
             }
         }
 
-
+        // execute the query and get the users.
         $users = $usersQuery->getResult();
-
-        /*
-        var_dump($users);
-        die;
-        */
+        // add some count needed by the view.
         $usersAndCorrectionCount = $this->addCorrectionCount($dropzone,$users);
 
         $response = array(
@@ -1319,8 +1334,6 @@ class CorrectionController extends DropzoneBaseController
         $response = array();
         foreach ($users as $user) {
 
-
-            
             $reponseItem = array();
             $responseItem['userId'] = $user->getId();
             $corrections = $correctionRepo->getCorrectionsByUser($dropzone,  $user );
