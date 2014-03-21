@@ -8,12 +8,28 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2014/03/17 05:13:37
+ * Generation date: 2014/03/21 11:28:06
  */
-class Version20140317171333 extends AbstractMigration
+class Version20140321112802 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
+        $this->addSql("
+            CREATE TABLE claro_user_public_profile_preferences (
+                id INT AUTO_INCREMENT NOT NULL, 
+                user_id INT DEFAULT NULL, 
+                share_policy INT NOT NULL, 
+                display_phone_number BOOLEAN NOT NULL, 
+                display_email BOOLEAN NOT NULL, 
+                PRIMARY KEY(id), 
+                UNIQUE INDEX UNIQ_5CF2A583A76ED395 (user_id)
+            )
+        ");
+        $this->addSql("
+            ALTER TABLE claro_user_public_profile_preferences 
+            ADD CONSTRAINT FK_5CF2A583A76ED395 FOREIGN KEY (user_id) 
+            REFERENCES claro_user (id)
+        ");
         $this->addSql("
             ALTER TABLE claro_user 
             ADD public_url VARCHAR(255) DEFAULT NULL, 
@@ -26,6 +42,9 @@ class Version20140317171333 extends AbstractMigration
 
     public function down(Schema $schema)
     {
+        $this->addSql("
+            DROP TABLE claro_user_public_profile_preferences
+        ");
         $this->addSql("
             DROP INDEX UNIQ_EB8D2852181F3A64 ON claro_user
         ");

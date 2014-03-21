@@ -27,8 +27,8 @@ use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
- * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\UserRepository")
  * @ORM\Table(name="claro_user")
+ * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\UserRepository")
  * @ORM\HasLifecycleCallbacks
  * @DoctrineAssert\UniqueEntity("username")
  * @DoctrineAssert\UniqueEntity("mail")
@@ -274,6 +274,13 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
      * @ORM\Column(name="has_tuned_public_url", type="boolean")
      */
     protected $hasTunedPublicUrl = false;
+
+    /**
+     * @var UserPublicProfilePreferences
+     *
+     * @ORM\OneToOne(targetEntity="UserPublicProfilePreferences", mappedBy="user", cascade={"all"})
+     */
+    protected $publicProfilePreferences;
 
     public function __construct()
     {
@@ -915,5 +922,25 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
     public function hasTunedPublicUrl()
     {
         return $this->hasTunedPublicUrl;
+    }
+
+    /**
+     * @return \Claroline\CoreBundle\Entity\UserPublicProfilePreferences
+     */
+    public function getPublicProfilePreferences()
+    {
+        return $this->publicProfilePreferences;
+    }
+
+    /**
+     * @param \Claroline\CoreBundle\Entity\UserPublicProfilePreferences $publicProfilPreferences
+     *
+     * @return User
+     */
+    public function setPublicProfilePreferences(UserPublicProfilePreferences $publicProfilPreferences)
+    {
+        $this->publicProfilePreferences = $publicProfilPreferences;
+
+        return $this;
     }
 }

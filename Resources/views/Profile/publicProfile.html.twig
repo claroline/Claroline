@@ -8,32 +8,8 @@
     {{ macros.flashBox() }}
     <div class="panel panel-default panel-user">
         <div class="panel-heading relative">
-            {% if canEdit %}
-                <div class="dropdown float-right-top">
-                    <a data-toggle="dropdown" href="#" class="btn btn-xs btn-primary">
-                        {{ 'actions' | trans({}, 'platform') }} <span class="icon-gear"></span> <i class="caret"></i>
-                    </a>
-                    <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
-                        <li>
-                            <a href="{{ path('claro_user_profile_edit') }}">
-                                {{ 'edit_profile'|trans({}, 'platform') }}
-                            </a>
-                        </li>
-                        <li>
-                            <a href="{{ path('claro_user_password_edit') }}">
-                                {{ 'edit_password'|trans({}, 'platform') }}
-                            </a>
-                        </li>
-                        <li>
-                            <a href="{{ path('claro_user_public_profile_preferences') }}">
-                                {{ 'manage_public_profile_preferences'|trans({}, 'platform') }}
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-            {% endif %}
             <h3 class="panel-title">
-                {{ 'user_profile'|trans({}, 'platform') }}
+                {{ 'public_profile'|trans({}, 'platform') }}
             </h3>
         </div>
         <div class="panel-body">

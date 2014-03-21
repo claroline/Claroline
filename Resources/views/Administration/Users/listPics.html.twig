@@ -103,7 +103,7 @@
                 {{ user.getId() }}
 
                 {% if user.getPicture() != "" %}
-                <a href="{{ path('claro_profile_view', {'publicUrl':user.getPublicUrl()}) }}" class="thumbnail">
+                <a href="{{ path('claro_public_profile_view', {'publicUrl':user.getPublicUrl()}) }}" class="thumbnail">
                     <div class="user-picture" style="background-image:url('{{ asset('uploads/pictures/') ~  user.getPicture() }}');
                 "></div>
                 </a>
