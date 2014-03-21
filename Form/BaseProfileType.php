@@ -52,8 +52,6 @@ class BaseProfileType extends AbstractType
             )
             ->add('accepted_terms', 'checkbox', array('label' => 'I accept the terms of service'));
         }
-
-//        $builder->add('captcha', 'captcha', array('label' => 'captcha'));
     }
 
     public function getName()
