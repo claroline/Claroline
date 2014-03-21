@@ -41,6 +41,11 @@
                             <h1 class="profile_picture_placeholder"><i class="icon-user"></i></h1>
                         {% endif %}
                     </div>
+                    <div class="informations">
+                        <p class="text-center text-muted">
+                            {{ 'registered'|trans({}, 'platform') }} {{ user.getCreationDate()| timeAgo }}
+                        </p>
+                    </div>
                     <ul class="nav nav-pills nav-stacked contact_methods">
                         <li>
                             <a href="{{path('claro_mail_form', {'userId':user.getId()})}}">
@@ -55,32 +60,11 @@
                     </ul>
                 </aside>
                 <div class="col-md-10">
-                    <table class="table-condensed">
-                        <colgroup>
-                            <col class="fieldLabelCol">
-                            <col class="dataCol">
-                        </colgroup>
-                        <tbody>
-                            <tr>
-                                <td>{{ 'First name' | trans({}, 'platform') }}</td>
-                                <td>{{ user.getFirstName() }}</td>
-                            </tr>
-                            <tr>
-                                <td>{{'Last name' | trans({}, 'platform') }}</td>
-                                <td>{{ user.getLastName() }}</td>
-                            </tr>
-                            {% if user.getPhone() is not null %}
-                                <tr>
-                                    <td>{{ 'phone' | trans({}, 'platform') }}</td>
-                                    <td>{{ user.getPhone() }}</td>
-                                </tr>
-                            {% endif %}
-                            <tr>
-                                <td colspan="2"><span class="text-muted">{{ 'registered'|trans({}, 'platform') }} {{ user.getCreationDate()| timeAgo }}</span></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    {% if '' != user.getDescription() %}<p>Description:</p> {{ user.getDescription() |raw }} </p>{% endif %}
+                    <p>{{ user.getLastName() ~ ' ' ~ user.getFirstName() }}</p>
+                    {% if user.getPhone() is not null %}
+                        <p><span class="icon-phone-sign"> {{ user.getPhone() }}</span></p>
+                    {% endif %}
+                    {% if '' != user.getDescription() %}<div class="well">{{ user.getDescription() |raw }} </div>{% endif %}
                 </div>
             </div>
         </div>
