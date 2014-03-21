@@ -392,6 +392,7 @@ class UserManager
      * @param integer $page
      * @param integer $max
      * @param string  $orderedBy
+     * @param string  $order
      *
      * @return \Pagerfanta\Pagerfanta;
      */

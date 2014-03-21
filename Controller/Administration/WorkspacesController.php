@@ -76,12 +76,7 @@ class WorkspacesController
         $pager = $search === '' ?
             $this->workspaceManager->findAllWorkspaces($page, $max, $order, $direction) :
             $this->workspaceManager-> getWorkspaceByName($search, $page, $max, $order);
-
-    switch ($direction) {
-            case '' : $direction = 'ASC'; break;
-            case 'ASC': $direction ='DESC'; break;
-            case 'DESC' :$direction = 'ASC'; break;
-        }
+        $direction = $direction === 'DESC' ? 'ASC' : 'DESC';
 
         return array('pager' => $pager, 'search' => $search, 'max' => $max, 'order' => $order, 'direction' => $direction);
     }

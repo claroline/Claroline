@@ -294,11 +294,7 @@ class RolesController extends Controller
             $this->userManager->getAllUsers($page, $max, $order, $direction):
             $this->userManager->getUsersByName($search, $page, $max, $order, $direction);
 
-            switch ($direction) {
-            case '' : $direction = 'ASC'; break;
-            case 'ASC': $direction ='DESC'; break;
-            case 'DESC' :$direction = 'ASC'; break;
-        }
+        $direction = $direction === 'DESC' ? 'ASC' : 'DESC';
 
         return array(
             'workspace' => $workspace,
@@ -313,16 +309,16 @@ class RolesController extends Controller
 
     /**
      * @EXT\Route(
-     *     "/{workspace}/groups/unregistered/page/{page}/max/{max}/order/{order}",
+     *     "/{workspace}/groups/unregistered/page/{page}/max/{max}/order/{order}/direction/{direction}",
      *     name="claro_workspace_unregistered_group_list",
-     *     defaults={"page"=1, "search"="", "max"=50, "order"="id"},
+     *     defaults={"page"=1, "search"="", "max"=50, "order"="id", "direction"="ASC"},
      *     options = {"expose"=true}
      * )
      * @EXT\Method("GET")
      * @EXT\Route(
-     *     "/{workspace}/groups/unregistered/page/{page}/search/{search}/max/{max}/order/{order}",
+     *     "/{workspace}/groups/unregistered/page/{page}/search/{search}/max/{max}/order/{order}/direction/{direction}",
      *     name="claro_workspace_unregistered_group_list_search",
-     *     defaults={"page"=1, "max"=50, "order"="id"},
+     *     defaults={"page"=1, "max"=50, "order"="id", "direction"= "ASC"},
      *     options = {"expose"=true}
      * )
      * @EXT\Method("GET")
@@ -333,14 +329,14 @@ class RolesController extends Controller
      * )
      * @EXT\Template("ClarolineCoreBundle:Tool\workspace\roles:unregisteredGroups.html.twig")
      */
-    public function unregisteredGroupListAction($page, $search, AbstractWorkspace $workspace, $max, $order)
+    public function unregisteredGroupListAction($page, $search, AbstractWorkspace $workspace, $max, $order, $direction)
     {
         $this->checkAccess($workspace);
         $wsRoles = $this->roleManager->getRolesByWorkspace($workspace);
 
         $pager = ($search === '') ?
-            $this->groupManager->getGroups($page, $max, $order):
-            $this->groupManager->getGroupsByName($search, $page, $max, $order);
+            $this->groupManager->getGroups($page, $max, $order, $direction):
+            $this->groupManager->getGroupsByName($search, $page, $max, $order, $direction);
 
         return array(
             'workspace' => $workspace,
@@ -348,7 +344,8 @@ class RolesController extends Controller
             'search' => $search,
             'wsRoles' => $wsRoles,
             'max' => $max,
-            'order' => $order
+            'order' => $order,
+            'direction' => $direction
         );
     }
 
@@ -459,11 +456,7 @@ class RolesController extends Controller
             $this->userManager->getByRolesIncludingGroups($wsRoles, $page, $max, $order, $direction):
             $this->userManager->getByRolesAndNameIncludingGroups($wsRoles, $search, $page, $max, $order, $direction);
 
-            switch ($direction) {
-            case '' : $direction = 'ASC'; break;
-            case 'ASC': $direction ='DESC'; break;
-            case 'DESC' :$direction = 'ASC'; break;
-        }
+        $direction = $direction === 'DESC' ? 'ASC' : 'DESC';
 
         return array(
             'workspace' => $workspace,
@@ -512,11 +505,7 @@ class RolesController extends Controller
             $pager = $this->groupManager->getGroupsByRoles($wsRoles, $page, $max, $order, $direction):
             $pager = $this->groupManager->getGroupsByRolesAndName($wsRoles, $search, $page, $max, $order, $direction);
 
-            switch ($direction) {
-            case '' : $direction = 'ASC'; break;
-            case 'ASC': $direction ='DESC'; break;
-            case 'DESC' :$direction = 'ASC'; break;
-        }
+        $direction = $direction === 'DESC' ? 'ASC' : 'DESC';
 
         return array(
             'workspace' => $workspace,
@@ -562,8 +551,8 @@ class RolesController extends Controller
         $this->checkAccess($workspace);
 
         $pager = ($search === '') ?
-            $this->userManager->getUsersByGroup($group, $page, $max, $order) :
-            $this->userManager->getUsersByNameAndGroup($search, $group, $page, $max, $order);
+            $this->userManager->getUsersByGroup($group, $page, $max, $order, $direction) :
+            $this->userManager->getUsersByNameAndGroup($search, $group, $page, $max, $order, $direction);
 
         return array(
             'workspace' => $workspace,
@@ -571,7 +560,8 @@ class RolesController extends Controller
             'search' => $search,
             'group' => $group,
             'max' => $max,
-            'order' => $order
+            'order' => $order,
+            'direction' => $direction
         );
     }
 
