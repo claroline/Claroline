@@ -152,6 +152,9 @@ class MailManager
             if ($from) {
                 $body = str_replace('%first_name%', $from->getFirstName(), $body);
                 $body = str_replace('%last_name%', $from->getLastName(), $body);
+            } else {
+                $body = str_replace('%first_name%', $this->ch->getParameter('name'), $body);
+                $body = str_replace('%last_name%', '', $body);
             }
 
             foreach ($users as $user) {
