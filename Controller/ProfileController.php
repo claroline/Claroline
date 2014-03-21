@@ -130,10 +130,6 @@ class ProfileController extends Controller
 
                 $sessionFlashBag->add('success', $translator->trans('edit_public_profile_preferences_success', array(), 'platform'));
             } catch(\Exception $exception){
-                echo "<pre>";
-                var_dump($exception->getMessage());
-                echo "</pre>" . PHP_EOL;
-                die("FFFFFUUUUUCCCCCKKKKK" . PHP_EOL);
                 $sessionFlashBag->add('error', $translator->trans('edit_public_profile_preferences_error', array(), 'platform'));
             }
 
