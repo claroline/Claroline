@@ -12,6 +12,7 @@
                 {{ 'public_profile'|trans({}, 'platform') }}
             </h3>
         </div>
+    {% set publicProfilePreferences = user.publicProfilePreferences %}
         <div class="panel-body">
             <div class="row">
                 <aside class="col-md-2 profile_aside" role="complementary">
@@ -42,9 +43,13 @@
                 </aside>
                 <div class="col-md-6">
                     <p>{{ user.getLastName() ~ ' ' ~ user.getFirstName() }}</p>
+                    {% if publicProfilePreferences.displayEmail %}
                     <p><span class="icon-envelope"> <a href="mailto:{{ user.getmail() }}" title="{{ user.getmail() }}">{{ user.getmail() }}</a></span></p>
-                    {% if user.getPhone() is not null %}
-                        <p><span class="icon-phone-sign"> {{ user.getPhone() }}</span></p>
+                    {% endif %}
+                    {% if publicProfilePreferences.displayPhoneNumber %}
+                        {% if user.getPhone() is not null %}
+                            <p><span class="icon-phone-sign"> {{ user.getPhone() }}</span></p>
+                        {% endif %}
                     {% endif %}
                     {% if '' != user.getDescription() %}<div class="well">{{ user.getDescription() |raw }} </div>{% endif %}
                 </div>
