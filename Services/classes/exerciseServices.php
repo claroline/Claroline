@@ -807,7 +807,23 @@ class exerciseServices
 
         return $linkedCategory;
     }
-
+    
+    /**
+     * To control the max attemps
+     *
+     */
+    public function controlMaxAttemps($exercise, $user, $exoAdmin)
+    {
+        if (($exoAdmin != 1) && ($exercise->getMaxAttempts() > 0)
+            && ($exercise->getMaxAttempts() <= $this->container->get('ujm.exercise_services')
+                ->getNbPaper($user->getId(), $exercise->getId()))
+        ) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+    
     private function getPenalty($interaction, $paperID)
     {
         $penalty = 0;

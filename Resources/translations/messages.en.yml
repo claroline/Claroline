@@ -54,6 +54,10 @@ alreadyPlaced: Already placed answers.
 alter category: Alter this cataegory
 answer_coched: No response expected is checked
 answer zone: Answer zone
+attempt info1: You have
+attempt info2sing: attempt
+attempt info2plur: attempts
+attempt info3: Attempt N°
 at the end of assessment: At the end of assessment
 at the same time that the correction: At the same time that the correction
 availability of correction: Availability of correction

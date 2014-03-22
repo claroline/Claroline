@@ -54,6 +54,10 @@ alreadyPlaced: Réponses déjà placées
 alter category: Modifier cette catégorie
 answer_coched: Aucune réponse attendue n\'est cochée
 answer zone: Zone de réponse
+attempt info1: Vous avez droit à
+attempt info2sing: essai
+attempt info2plur: essais
+attempt info3: Essai N°
 at the end of assessment: A la fin du test
 at the same time that the correction: En même temps que la correction
 availability of correction: Disponibilité de la correction

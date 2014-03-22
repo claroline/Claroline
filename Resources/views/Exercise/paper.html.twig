@@ -57,7 +57,20 @@
     <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/paper.js') }}"></script>
 
     <div class="panel-heading">
-        <h3 class="panel-title">{{ interactionToDisplayed.interaction.question.title }}</h3>
+        <h3 class="panel-title">{{ _resource.getResourceNode().getName() }} - 
+            <span>
+                {% if(maxAttempsAllowed > 0) %}
+                    {{ "attempt info1" | trans }} {{ maxAttempsAllowed }}
+                    {% if(maxAttempsAllowed > 1) %}
+                        {{ "attempt info2plur" | trans }}
+                    {% else %}
+                        {{ "attempt info2sing" | trans }}
+                    {% endif %}
+                     - 
+                {% endif %}
+                {{ "attempt info3" | trans }} {{ numAttempt }}
+            </span>
+        </h3>
     </div>
     <div class="panel-body">
         <form action="{{ path('ujm_exercise_paper_nav') }}" method="post" name="formResponse" id="formResponse">
