@@ -57,8 +57,8 @@
     <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/paper.js') }}"></script>
 
     <div class="panel-heading">
-        <h3 class="panel-title">{{ _resource.getResourceNode().getName() }} - 
-            <span>
+        <h3 class="panel-title">{{ _resource.getResourceNode().getName() }}
+            <span style="float:right;">
                 {% if(maxAttempsAllowed > 0) %}
                     {{ "attempt info1" | trans }} {{ maxAttempsAllowed }}
                     {% if(maxAttempsAllowed > 1) %}
@@ -265,10 +265,12 @@
                 </li>
             {% endif %}
             <li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</li>
-            <li>
-                <input type="button" value="{{ "finish" | trans }}" onClick="finish('{{ interactionType }}', '{{ 'alert ending' | trans }}');"
-                    class="btn btn-primary"/>
-            </li>
+            {% if numQ == indexMax %}
+                <li>
+                    <input type="button" value="{{ "finish" | trans }}" onClick="finish('{{ interactionType }}', '{{ 'alert ending' | trans }}');"
+                        class="btn btn-primary"/>
+                </li>
+            {% endif %}
         </ul>
     </div>
 {% endblock %}
