@@ -108,32 +108,35 @@ class ProfileController extends Controller
     public function editPublicProfilePreferencesAction(User $loggedUser)
     {
         $form = $this->createForm(new UserPublicProfilePreferencesType(), $loggedUser->getPublicProfilePreferences());
-        $form->handleRequest($this->request);
 
-        if ($form->isValid()) {
-            /** @var \Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface $sessionFlashBag */
-            $sessionFlashBag = $this->get('session')->getFlashBag();
-            /** @var \Symfony\Bundle\FrameworkBundle\Translation\Translator $translator */
-            $translator = $this->get('translator');
+        if ($this->request->isMethod('POST')) {
+            $form->handleRequest($this->request);
 
-            try {
-                /** @var \Claroline\CoreBundle\Entity\UserPublicProfilePreferences $userPublicProfilePreferences */
-                $userPublicProfilePreferences = $form->getData();
+            if ($form->isValid()) {
+                /** @var \Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface $sessionFlashBag */
+                $sessionFlashBag = $this->get('session')->getFlashBag();
+                /** @var \Symfony\Bundle\FrameworkBundle\Translation\Translator $translator */
+                $translator = $this->get('translator');
 
-                if ($userPublicProfilePreferences !== $loggedUser->getPublicProfilePreferences()) {
-                    throw new \Exception();
+                try {
+                    /** @var \Claroline\CoreBundle\Entity\UserPublicProfilePreferences $userPublicProfilePreferences */
+                    $userPublicProfilePreferences = $form->getData();
+
+                    if ($userPublicProfilePreferences !== $loggedUser->getPublicProfilePreferences()) {
+                        throw new \Exception();
+                    }
+
+                    $entityManager = $this->get('doctrine.orm.entity_manager');
+                    $entityManager->persist($userPublicProfilePreferences);
+                    $entityManager->flush();
+
+                    $sessionFlashBag->add('success', $translator->trans('edit_public_profile_preferences_success', array(), 'platform'));
+                } catch(\Exception $exception){
+                    $sessionFlashBag->add('error', $translator->trans('edit_public_profile_preferences_error', array(), 'platform'));
                 }
 
-                $entityManager = $this->get('doctrine.orm.entity_manager');
-                $entityManager->persist($userPublicProfilePreferences);
-                $entityManager->flush();
-
-                $sessionFlashBag->add('success', $translator->trans('edit_public_profile_preferences_success', array(), 'platform'));
-            } catch(\Exception $exception){
-                $sessionFlashBag->add('error', $translator->trans('edit_public_profile_preferences_error', array(), 'platform'));
+                return $this->redirect($this->generateUrl('claro_user_public_profile_preferences'));
             }
-
-            return $this->redirect($this->generateUrl('claro_user_public_profile_preferences'));
         }
 
         return array(
