@@ -190,13 +190,32 @@ class StepController
      *
      * @Method("GET")
      */
-    public function getStepWheresAction()
+    public function getWheresAction()
     {
         $wereList = $this->stepManager->getWhere();
     
         return new JsonResponse($wereList);
     }
     
+    /**
+     * Load default value for step where property
+     * @return JsonResponse
+     * 
+     * @Route(
+     *     "/step/where_default",
+     *     name = "innova_path_get_stepwhere_default",
+     *     options = {"expose"=true}
+     * )
+     *
+     * @Method("GET")
+     */
+    public function getWhereDefaultAction()
+    {
+        $default = $this->stepManager->getWhereDefault();
+
+        return new JsonResponse($default);
+    }
+
     /**
      * Load available values for step who property
      * @return JsonResponse
@@ -208,10 +227,28 @@ class StepController
      * )
      * @Method("GET")
      */
-    public function getStepWhosAction()
+    public function getWhosAction()
     {
         $whoList = $this->stepManager->getWho();
     
         return new JsonResponse($whoList);
+    }
+
+    /**
+     * Load default value for step who property
+     * @return JsonResponse
+     * 
+     * @Route(
+     *     "/step/who_default",
+     *     name = "innova_path_get_stepwho_default",
+     *     options = {"expose"=true}
+     * )
+     * @Method("GET")
+     */
+    public function getWhoDefaultAction()
+    {
+        $default = $this->stepManager->getWhoDefault();
+
+        return new JsonResponse($default);
     }
 }

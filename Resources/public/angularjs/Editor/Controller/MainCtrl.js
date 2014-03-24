@@ -3,7 +3,7 @@
 /**
  * Main Controller
  */
-function MainCtrl($scope, HistoryFactory, ClipboardFactory, PathFactory, AlertFactory, ResourceFactory) {
+function MainCtrl($scope, HistoryFactory, ClipboardFactory, PathFactory, AlertFactory, StepFactory, ResourceFactory) {
     $scope.path = EditorApp.currentPath;
     PathFactory.setPath($scope.path);
     
@@ -81,6 +81,17 @@ function MainCtrl($scope, HistoryFactory, ClipboardFactory, PathFactory, AlertFa
     $scope.editStep = function(step) {
         // Backup step
         $scope.previewStepBackup = jQuery.extend(true, {}, step);
+
+        if (null === step.who || step.who.length === 0) {
+            var whoDefault = StepFactory.getWhoDefault();
+            step.who = whoDefault.id;
+        }
+
+        if (null === step.where || step.where.length === 0) {
+            var whereDefault = StepFactory.getWhereDefault();
+            step.where = whereDefault.id;
+        }
+
         $scope.edit.preview = true;
     };
 
@@ -108,6 +119,11 @@ function MainCtrl($scope, HistoryFactory, ClipboardFactory, PathFactory, AlertFa
     $scope.undo = function() {
         HistoryFactory.undo();
         $scope.path = PathFactory.getPath();
+
+        // Check if preview step still exists in path
+        if (!PathFactory.checkStepExists($scope.previewStep)) {
+            $scope.updatePreviewStep();
+        }
     };
 
     /**
@@ -117,6 +133,10 @@ function MainCtrl($scope, HistoryFactory, ClipboardFactory, PathFactory, AlertFa
     $scope.redo = function() {
         HistoryFactory.redo();
         $scope.path = PathFactory.getPath();
-        $scope.updatePreviewStep();
+
+        // Check if preview step still exists in path
+        if (!PathFactory.checkStepExists($scope.previewStep)) {
+            $scope.updatePreviewStep();
+        }
     };
 }

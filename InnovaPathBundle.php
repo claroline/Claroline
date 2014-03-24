@@ -36,7 +36,7 @@ class InnovaPathBundle extends PluginBundle implements AutoConfigurableInterface
         
     }
 
-     public function getAdditionalInstaller()
+    public function getAdditionalInstaller()
     {
         return new AdditionalInstaller();
     }

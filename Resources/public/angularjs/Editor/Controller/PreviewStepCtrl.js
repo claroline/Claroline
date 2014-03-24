@@ -8,9 +8,21 @@ function PreviewStepCtrl($scope, $modal, $http, HistoryFactory, PathFactory, Ste
         $scope.whoList = data; 
     });
 
+    // Load who default
+    $http.get(Routing.generate('innova_path_get_stepwho_default')).success(function(data) { 
+        StepFactory.setWhoDefault(data);
+        $scope.whoDefault = data; 
+    });
+
     // Load where list
     $http.get(Routing.generate('innova_path_get_stepwhere')).success(function(data) { 
         $scope.whereList = data; 
+    });
+
+    // Load where default
+    $http.get(Routing.generate('innova_path_get_stepwhere_default')).success(function(data) { 
+        StepFactory.setWhereDefault(data);
+        $scope.whereDefault = data; 
     });
 
     // Tiny MCE options

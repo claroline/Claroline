@@ -41,11 +41,11 @@
                                     <div class="panel-body">
                                         <div class="row" ng-show="!edit.preview">
                                             <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 text-center">
-                                                <span class="icon-user icon-large"></span> {% verbatim %}{{ whoList[previewStep.who] }}{% endverbatim %}
+                                                <span class="icon-user icon-large"></span> {% verbatim %}{{ whoList[previewStep.who] || whoDefault.name }}{% endverbatim %}
                                             </div>
 
                                             <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 text-center">
-                                                <span class="icon-map-marker icon-large"></span> {% verbatim %}{{ whereList[previewStep.where] }}{% endverbatim %}
+                                                <span class="icon-map-marker icon-large"></span> {% verbatim %}{{ whereList[previewStep.where] || whereDefault.name }}{% endverbatim %}
                                             </div>
                                         </div>
 
@@ -136,7 +136,7 @@
                         <div class="row">
                             {# Step with computer #}
                             <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
-                                <div class="panel panel-default" ng-class="{'clickable-area': edit.preview}" ng-click="previewStep.withComputer = !previewStep.withComputer">
+                                <div class="panel panel-default" ng-class="{'clickable-area': edit.preview}" ng-click="previewStep.withComputer = edit.preview ? !previewStep.withComputer : previewStep.withComputer">
                                     <div class="panel-body">
                                         <span ng-show="!previewStep.withComputer" class="icon-stack">
                                             <span class="icon-desktop"></span>
@@ -152,7 +152,7 @@
 
                             {# Step with tutor #}
                             <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
-                                <div class="panel panel-default" ng-class="{'clickable-area': edit.preview}" ng-click="previewStep.withTutor = !previewStep.withTutor">
+                                <div class="panel panel-default" ng-class="{'clickable-area': edit.preview}" ng-click="previewStep.withTutor = edit.preview ? !previewStep.withTutor : previewStep.withTutor">
                                     <div class="panel-body">
                                         <span ng-show="!previewStep.withTutor" class="icon-stack">
                                             <span class="icon-user"></span>
@@ -171,9 +171,9 @@
             </div>
         </div>
 
-        <p ng-show="!edit.preview" style="margin-bottom: 0;" ng-bind-html-unsafe="previewStep.description">
+        <div ng-show="!edit.preview" ng-bind-html="previewStep.description">
             <em>{{ 'step_no_description'|trans({}, 'path_editor') }}</em>
-        </p>
+        </div>
 
         <div ng-show="edit.preview">
             <textarea ui-tinymce="tinymceOptions" class="form-control" name="step-description" ng-model="previewStep.description"></textarea>

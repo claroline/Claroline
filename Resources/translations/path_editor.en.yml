@@ -88,7 +88,7 @@ template_save_resources: Keep linked resources
 undo: Undo
 
 # v
-validate: Validate
+validate: Validate modifications
 
 # w
 with_computer: With computer

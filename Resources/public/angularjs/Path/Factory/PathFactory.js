@@ -212,6 +212,32 @@ function PathFactory($http, $q) {
             return maxResourceId;
         },
 
+        checkStepExists: function(step) {
+            var stepFound = false;
+
+            function find(stepToFind, currentStep) {
+                if (currentStep.id === stepToFind.id) {
+                    return true;
+                }
+                else if (typeof currentStep.children != 'undefined' && null !== currentStep.children) {
+                    for (var i = 0; i < currentStep.children.length; i++) {
+                        var current = currentStep.children[i];
+
+                        return find(stepToFind, current);
+                    }
+                }
+            }
+
+            if (null !== path && typeof path.steps !== 'undefined' && null !== path.steps) {
+                for (var i = 0; i < path.steps.length; i++) {
+                    var current = path.steps[i];
+                    stepFound = find(step, current);
+                }
+            }
+
+            return stepFound;
+        },
+
         /**
          *
          * @param newStep

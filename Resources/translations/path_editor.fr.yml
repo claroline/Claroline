@@ -86,7 +86,7 @@ template_save_resources: Conserver les ressources liées
 undo: Annuler
 
 # v
-validate: Valider
+validate: Valider les modifications
 
 # w
 with_computer: Avec ordinateur
