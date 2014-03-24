@@ -507,6 +507,8 @@ edit_your_profile_success: 'Modification de votre profil effectué avec succès.
 edit_profile_error: 'Une erreur est survenue pendant la modification du profil.'
 edit_your_profile_error: 'Une erreur est survenue pendant la modification de votre profil.'
 manage_public_profile_preferences: 'Gérer les préférences du profil public'
+edit_public_profile_preferences_success: 'Préférences de votre profil public modifiées avec succès.'
+edit_public_profile_preferences_error: 'Une erreur est survenue lors de la modification des préférences de votre profil public.'
 edit_password: 'Modifier votre mot de passe'
 edit_password_success: 'Modification de votre mot de passe effectuée avec succès.'
 edit_password_error: 'Une erreur est survenue pendant la modification de votre mot de passe.'
