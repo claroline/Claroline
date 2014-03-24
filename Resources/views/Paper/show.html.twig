@@ -267,30 +267,24 @@
             {% endif %}
         {% endif %}
 
-        {% if (p == -1) and ((display == 'all' or display == 'score')) %}
-            <div class="panel-body">
-                <div class="panel panel-default">
-                    <div class="panel-heading"><h3>{{ 'mark' | trans }} :</h3></div>
-                    <div class="panel-body">
-                        {% set scoreFinal = scorePaper / maxExoScore %}
-                        {% set scoreFinal = scoreFinal * 20 %}
-                        <h4 id="finalLabel">
-                            {% if scoreTemp == true %}
-                                {{ "temporary mark" | trans }} :
-                            {% else %}
-                                {{ 'final mark' | trans }} :
-                            {% endif %}
-                        </h4>
-
-                        {% set scoreFinal = roundUpOrDown(scoreFinal) %}
-
-                        <div id="paperFinalScore">{{ scoreFinal }} / 20</div>
-                    </div>
-                </div>
-            </div>
-        {% endif %}
-
         {% if p == -2 %}
+            <hr/>
+            {% if (display == 'all' or display == 'score') %}
+                {% set scoreFinal = scorePaper / maxExoScore %}
+                {% set scoreFinal = scoreFinal * 20 %}
+                <h3 id="finalLabel">
+                    {% if scoreTemp == true %}
+                        {{ "temporary mark" | trans }} :
+                    {% else %}
+                        {{ 'final mark' | trans }} :
+                    {% endif %}
+                    <spa, id="paperFinalScore">{{ scoreFinal }} / 20</span>
+                </h3>
+
+                {% set scoreFinal = roundUpOrDown(scoreFinal) %}
+                <hr/>
+            {% endif %}
+        
             {% set needLegend = false %}
             <h3>{{ 'list of question' | trans }} :</h3>
                 <ol>
@@ -324,6 +318,7 @@
                     <hr/>
                     <h6 style="color: red;">( {{ 'need Correction' | trans }} ).</h6>
                 {% endif %}
+                    
         {% endif %}
     </div>
 
@@ -334,7 +329,7 @@
             {% if p != -2 %}
                 <li>
                     <a href="{{ path('ujm_paper_show', { 'id': paperID, 'p': -2 }) }}" class="btn btn-primary" style="background-color: #428BCA;">
-                        {{ 'list of question' |trans }}
+                        {{ 'score and list of question' |trans }}
                     </a>
                 </li>
             {% endif %}
@@ -400,7 +395,7 @@
                 {% endif %}
             {% endif %}
 
-            {% if (display == 'all' or display == 'score') %}
+            {#% if (display == 'all' or display == 'score') %}
 
                 {% if p != -1 %}
                     <li>
@@ -410,7 +405,7 @@
                         </a>
                     </li>
                 {% endif %}
-            {% endif %}
+            {% endif %#}
         </ul>
 
         {% if (display == 'all') %}
