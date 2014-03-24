@@ -1020,4 +1020,17 @@ class UserRepository extends EntityRepository implements UserProviderInterface
 
         return array();
     }
+
+    /**
+     * @param bool $executeQuery
+     *
+     * @return array|Query
+     */
+    public function findWithPublicProfilePreferences($executeQuery = true)
+    {
+        $queryBuilder = $this->createQueryBuilder('user')
+            ->leftJoin('user.publicProfilePreferences', 'uppf');
+
+        return $executeQuery ? $queryBuilder->getQuery()->getResult(): $queryBuilder->getQuery();
+    }
 }

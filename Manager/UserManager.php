@@ -14,6 +14,7 @@ namespace Claroline\CoreBundle\Manager;
 use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Entity\UserPublicProfilePreferences;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Claroline\CoreBundle\Event\StrictDispatcher;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
@@ -105,7 +106,11 @@ class UserManager
     {
         $this->objectManager->startFlushSuite();
         $this->setPersonalWorkspace($user);
-        $user->setPublicUrl($this->generatePublicUrl($user));
+
+        $user
+            ->setPublicUrl($this->generatePublicUrl($user))
+            ->setPublicProfilePreferences(new UserPublicProfilePreferences());
+
         $this->toolManager->addRequiredToolsToUser($user);
         $this->roleManager->setRoleToRoleSubject($user, PlatformRoles::USER);
         $this->objectManager->persist($user);

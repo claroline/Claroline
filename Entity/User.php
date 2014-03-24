@@ -939,6 +939,8 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
      */
     public function setPublicProfilePreferences(UserPublicProfilePreferences $publicProfilPreferences)
     {
+        $publicProfilPreferences->setUser($this);
+
         $this->publicProfilePreferences = $publicProfilPreferences;
 
         return $this;

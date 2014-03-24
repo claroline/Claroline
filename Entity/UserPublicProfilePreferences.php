@@ -10,7 +10,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Table(name="claro_user_public_profile_preferences")
- * @ORM\Entity(repositoryClass="Icap\BlogBundle\Repository\UserPublicProfilePreferencesRepository")
+ * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\UserPublicProfilePreferencesRepository")
  */
 class UserPublicProfilePreferences
 {
