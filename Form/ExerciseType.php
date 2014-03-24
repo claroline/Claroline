@@ -108,8 +108,8 @@ class ExerciseType extends AbstractType
                 'dateCorrection', 'datetime', array(
                     'widget' => 'single_text',
                     'input' => 'datetime',
-                    'format' => 'dd/MM/yyyy hh:mm:ss',
-                    'attr' => array('data-format' => 'dd/MM/yyyy hh:mm:ss'),
+                    'format' => 'dd/MM/yyyy H:mm:ss',
+                    'attr' => array('data-format' => 'dd/MM/yyyy H:mm:ss'),
                     'label' => 'correction date',
                 )
             )
@@ -126,8 +126,8 @@ class ExerciseType extends AbstractType
                 'start_date', 'datetime', array(
                 'widget' => 'single_text',
                 'input' => 'datetime',
-                'format' => 'dd/MM/yyyy hh:mm:ss',
-                'attr' => array('data-format' => 'dd/MM/yyyy hh:mm:ss'),
+                'format' => 'dd/MM/yyyy H:mm:ss',
+                'attr' => array('data-format' => 'dd/MM/yyyy H:mm:ss'),
                 'label' => 'start date',
                 )
             )
@@ -140,8 +140,8 @@ class ExerciseType extends AbstractType
                 'end_date', 'datetime', array(
                     'widget' => 'single_text',
                     'input' => 'datetime',
-                    'format' => 'dd/MM/yyyy hh:mm:ss',
-                    'attr' => array('data-format' => 'dd/MM/yyyy hh:mm:ss'),
+                    'format' => 'dd/MM/yyyy H:mm:ss',
+                    'attr' => array('data-format' => 'dd/MM/yyyy H:mm:ss'),
                     'label' => 'Exercise.end_date',
                 )
             )
