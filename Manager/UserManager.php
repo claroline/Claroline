@@ -535,6 +535,21 @@ class UserManager
     }
 
     /**
+     * @param \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace $workspace
+     * @param string                                                   $search
+     * @param integer                                                  $page
+     * @param integer                                                  $max
+     *
+     * @return \Pagerfanta\Pagerfanta
+     */
+    public function getAllUsersByWorkspaceAndName(AbstractWorkspace $workspace, $search, $page, $max = 20)
+    {
+        $query = $this->userRepo->findAllByWorkspaceAndName($workspace, $search, false);
+
+        return $this->pagerFactory->createPager($query, $page, $max);
+    }
+
+    /**
      * @param \Claroline\CoreBundle\Entity\Group $group
      * @param integer                            $page
      * @param integer                            $max
@@ -793,5 +808,24 @@ class UserManager
         $user->setLocale($locale);
         $this->om->persist($user);
         $this->om->flush();
+    }
+
+    public function toArrayForPicker($users)
+    {
+        $resultArray = array();
+
+        $resultArray['users'] = array();
+        if (count($users)>0) {
+            foreach ($users as $user) {
+                $userArray = array();
+                $userArray['id'] = $user->getId();
+                $userArray['name'] = $user->getFirstName()." ".$user->getLastName();
+                $userArray['mail'] = $user->getMail();
+                $userArray['avatar'] = $user->getPicture();
+                array_push($resultArray['users'], $userArray);
+            }
+        }
+
+        return $resultArray;
     }
 }

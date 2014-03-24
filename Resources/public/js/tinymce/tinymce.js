@@ -14,6 +14,10 @@
     var home = window.Claroline.Home;
     var translator = window.Translator;
 
+    //Load external plugins
+    tinymce.PluginManager.load('mention', home.asset + 'bundles/frontend/tinymce/plugins/mention/plugin.min.js');
+    tinymce.DOM.loadCSS(home.asset + 'bundles/frontend/tinymce/plugins/mention/css/autocomplete.css');
+
     var language = home.locale.trim();
     var contentCSS = home.asset + 'bundles/clarolinecore/css/tinymce/tinymce.css';
 
@@ -29,12 +33,13 @@
             'autoresize advlist autolink lists link image charmap print preview hr anchor pagebreak',
             'searchreplace wordcount visualblocks visualchars fullscreen',
             'insertdatetime media nonbreaking save table directionality',
-            'template paste textcolor emoticons code'
+            'template paste textcolor emoticons code -mention'
         ],
         'toolbar1': 'styleselect | bold italic | alignleft aligncenter alignright alignjustify | ' +
                     'preview fullscreen resourcePicker fileUpload',
         'toolbar2': 'undo redo | forecolor backcolor emoticons | bullist numlist outdent indent | ' +
                     'link image media print code',
+        'extended_valid_elements': 'user[id]',
         'paste_preprocess': function (plugin, args) {
             var link = $('<div>' + args.content + '</div>').text().trim(); //inside div because a bug of jquery
 
@@ -43,6 +48,31 @@
                     insertContent(data);
                 }, false);
             });
+        },
+        mentions: {
+            source: function (query, process, delimiter) {
+                if (!_.isUndefined(window.Workspace) && !_.isNull(window.Workspace.id)) {
+                    if (delimiter === '@' && query.length>0) {
+                        $.getJSON(home.path + 'user/searchInWorkspace/' + window.Workspace.id + '/' + query, function (data) {
+                            if(!_.isEmpty(data) && !_.isUndefined(data.users) && !_.isEmpty(data.users))process(data.users);
+                        });
+                    }
+                }
+            },
+            render: function(item) {
+                var avatar = '<i class="icon-user"></i>';
+                if(item.avatar != null) {
+                    avatar = '<img src="' + home.asset + 'uploads/pictures/' + item.avatar + '"/>';
+                }
+
+                return '<li>' +
+                           '<a href="javascript:;"><span class="user-picker-dropdown-avatar">' + avatar + '</span> <span class="user-picker-dropdown-name">' + item.name + '</span> <small class="user-picker-avatar-mail text-muted">('+item.mail+')</small></a>' +
+                       '</li>';
+            },
+            insert: function(item) {
+                return '<user id="' + item.id + '"><a href="' + home.path + 'profile/view/' + item.id + '">' + item.name + '</a></user>';
+            },
+            delay: 200
         },
         setup: function (editor) {
             editor.on('change', function () {

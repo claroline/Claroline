@@ -638,6 +638,7 @@ user_form_plainPassword_first: 'Mot de passe'
 user_form_plainPassword_second: Vérification
 user_form_username: 'Nom d''utilisateur'
 user_parameters: 'Paramètres de l''utilisateur'
+user_picker: 'Outil pour choisir un utilisateur'
 user_removed: 'Utilisateur supprimé'
 username: 'Nom d''utilisateur'
 username_found_at: 'Le nom d''utilisateur %username% a été trouvé aux lignes: %lines%'

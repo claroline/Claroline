@@ -217,6 +217,11 @@ claro_file:
     type: annotation
     prefix: file
 
+claro_user:
+    resource: "@ClarolineCoreBundle/Controller/UserController.php"
+    type: annotation
+    prefix: user
+
 # Badge routes
 claro_badge_admin:
     resource: "@ClarolineCoreBundle/Controller/Badge/AdminController.php"

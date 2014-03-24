@@ -58,3 +58,16 @@
         {% block section_after_content %}{% endblock %}
     </div>
 {% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript">
+        window.PickerPath = "{{ path('claro_upload_modal') }}";
+        window.Workspace = {};
+        {% if _resource is defined %}
+            window.Workspace.id = {{ _resource.getResourceNode().getWorkspace().getId() }};
+        {% else %}
+            window.Workspace.id = null;
+        {% endif %}
+    </script>
+{% endblock %}
