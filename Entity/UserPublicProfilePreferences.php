@@ -14,8 +14,8 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class UserPublicProfilePreferences
 {
-    const SHARE_POLICY_NO_ONE              = 0;
-    const SHARE_POLICY_NO_ONE_LABEL        = 'make_public_profile_visible_to_nobody';
+    const SHARE_POLICY_NOBODY              = 0;
+    const SHARE_POLICY_NOBODY_LABEL        = 'make_public_profile_visible_to_nobody';
     const SHARE_POLICY_PLATFORM_USER       = 1;
     const SHARE_POLICY_PLATFORM_USER_LABEL = 'make_public_profile_visible_to_platform_user';
     const SHARE_POLICY_EVERYBODY           = 2;
@@ -158,13 +158,18 @@ class UserPublicProfilePreferences
         return $this;
     }
 
+    public function isShared()
+    {
+        return $this->sharePolicy !== self::SHARE_POLICY_NOBODY;
+    }
+
     /**
      * @return array
      */
     public static function getSharePolicies()
     {
         return array(
-            self::SHARE_POLICY_NO_ONE        => self::SHARE_POLICY_NO_ONE_LABEL,
+            self::SHARE_POLICY_NOBODY        => self::SHARE_POLICY_NOBODY_LABEL,
             self::SHARE_POLICY_PLATFORM_USER => self::SHARE_POLICY_PLATFORM_USER_LABEL,
             self::SHARE_POLICY_EVERYBODY     => self::SHARE_POLICY_EVERYBODY_LABEL
         );
