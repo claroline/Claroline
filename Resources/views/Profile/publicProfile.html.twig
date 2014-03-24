@@ -12,7 +12,7 @@
                 {{ 'public_profile'|trans({}, 'platform') }}
             </h3>
         </div>
-    {% set publicProfilePreferences = user.publicProfilePreferences %}
+        {% set publicProfilePreferences = user.publicProfilePreferences %}
         <div class="panel-body">
             <div class="row">
                 <aside class="col-md-2 profile_aside" role="complementary">
@@ -48,7 +48,7 @@
                     {% endif %}
                     {% if publicProfilePreferences.displayPhoneNumber %}
                         {% if user.getPhone() is not null %}
-                            <p><span class="icon-phone-sign"> {{ user.getPhone() }}</span></p>
+                            <p><span class="icon-phone-sign"></span> {{ user.getPhone() }}</p>
                         {% endif %}
                     {% endif %}
                     {% if '' != user.getDescription() %}<div class="well">{{ user.getDescription() |raw }} </div>{% endif %}

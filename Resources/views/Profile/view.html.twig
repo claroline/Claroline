@@ -68,7 +68,7 @@
                     <p>{{ user.getLastName() ~ ' ' ~ user.getFirstName() }}</p>
                     <p><span class="icon-envelope"> <a href="mailto:{{ user.getmail() }}" title="{{ user.getmail() }}">{{ user.getmail() }}</a></span></p>
                     {% if user.getPhone() is not null %}
-                        <p><span class="icon-phone-sign"> {{ user.getPhone() }}</span></p>
+                        <p><span class="icon-phone-sign"></span> {{ user.getPhone() }}</p>
                     {% endif %}
                     {% if '' != user.getDescription() %}<div class="well">{{ user.getDescription() |raw }} </div>{% endif %}
                 </div>
