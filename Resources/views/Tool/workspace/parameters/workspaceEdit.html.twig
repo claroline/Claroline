@@ -1,6 +1,6 @@
 {% extends 'ClarolineCoreBundle:Workspace:layout.html.twig' %}
 
-{% block title %}{{ parent() ~ ' - ' ~ "general_parameters" | trans({}, "platform") | striptags | raw }}{% endblock %}
+{% block title %}{{ parent() ~ ' - ' ~ "general" | trans({}, "platform") | striptags | raw }}{% endblock %}
 
 {% block breadcrumb %}
     {{
@@ -22,7 +22,7 @@
 {% block section_content %}
 
     <div class="panel-heading">
-        <h3 class="panel-title">{{ 'general_parameters'|trans({}, 'platform') }}</h3>
+        <h3 class="panel-title">{{ 'general'|trans({}, 'platform') }}</h3>
     </div>
     <form class="form-horizontal" action="{{ path('claro_workspace_edit', {'workspace': workspace.getId()}) }}" method="post" {{ form_enctype(form) }}>
         <div class="panel-body">

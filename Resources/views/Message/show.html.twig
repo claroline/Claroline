@@ -21,7 +21,7 @@
                             {{ 'from_message'|trans({}, 'platform') }}:  {{ ancestor.getSenderUsername() }}
                         </p>
                         <div>
-                            {% if ancestor.getSender().getPicture() != "" %}
+                            {% if ancestor.getSender() and ancestor.getSender().getPicture() != "" %}
                                 <img src="{{ asset('uploads/pictures/') ~  ancestor.getSender().getPicture() }}" class="col-md-2">
                             {% endif %}
                         </div>
@@ -56,7 +56,7 @@
                         {{ form_rest(form) }}
                     </div>
                     <div class="panel-footer">
-                        <button id="submit-button" type="submit" class="btn btn-primary">{{ 'ok'|trans({}, 'platform') }}</button>
+                        <button id="submit-button" type="submit" class="btn btn-primary">{{ 'answer'|trans({}, 'platform') }}</button>
                     </div>
                 </form>
             </div>
@@ -80,6 +80,11 @@
                         <li id="groups-nav-tab">
                             <a href="#">
                                 {{ 'groups'|trans({}, 'platform') }}
+                            </a>
+                        </li>
+                        <li id="workspaces-nav-tab">
+                            <a href="#">
+                                {{ 'workspaces'|trans({}, 'platform') }}
                             </a>
                         </li>
                     </ul>

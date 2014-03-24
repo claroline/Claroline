@@ -8,7 +8,7 @@ agenda_form_priority_High: High
 agenda_form_recurring: Repeats
 agenda_form_start: 'Start date'
 agenda_form_startHours: 'Start hour'
-agenda_form_title: title
+agenda_form_title: 'Title'
 apr: Apr
 april: April
 aug: Aug
@@ -24,11 +24,13 @@ end: end
 end_date: 'End date'
 error: 'An unexpeded error occured, please try again'
 event_update: 'Event modified'
+export: 'Export events'
 feb: Feb
 february: February
 fri: Fri
 friday: Friday
 high: High
+import_agenda_file_file: 'Import'
 jan: Jan
 january: January
 jul: Jul
@@ -38,7 +40,7 @@ june: June
 length: Length
 low: Low
 mar: Mar
-march: Mar
+march: March
 may: May
 medium: Medium
 modify: 'Modify an event'

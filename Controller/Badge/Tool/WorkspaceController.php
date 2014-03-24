@@ -15,10 +15,9 @@ use Claroline\CoreBundle\Entity\Badge\Badge;
 use Claroline\CoreBundle\Entity\Badge\BadgeClaim;
 use Claroline\CoreBundle\Entity\Badge\BadgeRule;
 use Claroline\CoreBundle\Entity\Badge\BadgeTranslation;
-use Claroline\CoreBundle\Entity\Badge\UserBadge;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
-use Claroline\CoreBundle\Form\Badge\BadgeAwardType;
+use Pagerfanta\Exception\NotValidCurrentPageException;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -53,9 +52,6 @@ class WorkspaceController extends Controller
     {
         $this->checkUserIsAllowed($workspace);
 
-        /** @var \Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler $platformConfigHandler */
-        $platformConfigHandler = $this->get('claroline.config.platform_config_handler');
-
         $parameters = array(
             'badgePage'    => $badgePage,
             'claimPage'    => $claimPage,
@@ -69,7 +65,6 @@ class WorkspaceController extends Controller
             'view_link'    => 'claro_workspace_tool_badges_edit',
             'current_link' => 'claro_workspace_tool_badges',
             'claim_link'   => 'claro_workspace_tool_manage_claim',
-            'claim_link'   => 'claro_workspace_tool_manage_claim',
             'route_parameters' => array(
                 'workspaceId' => $workspace->getId()
             ),
@@ -77,8 +72,7 @@ class WorkspaceController extends Controller
 
         return array(
             'workspace'   => $workspace,
-            'parameters'  => $parameters,
-            'language'    => $platformConfigHandler->getParameter('locale_language')
+            'parameters'  => $parameters
         );
     }
 
@@ -87,7 +81,7 @@ class WorkspaceController extends Controller
      * @ParamConverter(
      *     "workspace",
      *     class="ClarolineCoreBundle:Workspace\AbstractWorkspace",
-     *     options={"id"="workspaceId"}
+     *     options={"id" = "workspaceId"}
      * )
      * @Template()
      */
@@ -96,62 +90,48 @@ class WorkspaceController extends Controller
         $this->checkUserIsAllowed($workspace);
 
         $badge = new Badge();
+        $badge->setWorkspace($workspace);
 
-        //@TODO Get locales from locale source (database etc...)
-        $locales = array('fr', 'en');
+        $locales = $this->get('claroline.common.locale_manager')->getAvailableLocales();
         foreach ($locales as $locale) {
             $translation = new BadgeTranslation();
             $translation->setLocale($locale);
             $badge->addTranslation($translation);
         }
 
-        /** @var \Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler $platformConfigHandler */
-        $platformConfigHandler = $this->get('claroline.config.platform_config_handler');
+        /** @var \Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface $sessionFlashBag */
+        $sessionFlashBag = $this->get('session')->getFlashBag();
 
-        $form = $this->createForm($this->get('claroline.form.tool.badge'), $badge);
+        /** @var \Symfony\Bundle\FrameworkBundle\Translation\Translator $translator */
+        $translator = $this->get('translator');
 
-        if ($request->isMethod('POST')) {
-            $form->handleRequest($request);
-            if ($form->isValid()) {
-                /** @var \Symfony\Bundle\FrameworkBundle\Translation\Translator $translator */
-                $translator = $this->get('translator');
-                try {
-                    /** @var \Doctrine\Common\Persistence\ObjectManager $entityManager */
-                    $entityManager = $this->getDoctrine()->getManager();
+        try {
+            if ($this->get('claroline.form_handler.badge.workspace')->handleAdd($badge)) {
+                $sessionFlashBag->add('success', $translator->trans('badge_add_success_message', array(), 'badge'));
 
-                    $badge->setWorkspace($workspace);
-
-                    $entityManager->persist($badge);
-                    $entityManager->flush();
-
-                    $this->get('session')
-                        ->getFlashBag()
-                        ->add('success', $translator->trans('badge_add_success_message', array(), 'badge'));
-                } catch (\Exception $exception) {
-                    $this->get('session')
-                        ->getFlashBag()
-                        ->add('error', $translator->trans('badge_add_error_message', array(), 'badge'));
-                }
-
-                return $this->redirect(
-                    $this->generateUrl('claro_workspace_tool_badges', array('workspaceId' => $workspace->getId()))
-                );
+                return $this->redirect($this->generateUrl('claro_workspace_tool_badges', array('workspaceId' => $workspace->getId())));
             }
+        } catch (\Exception $exception) {
+            $sessionFlashBag->add('error', $translator->trans('badge_add_error_message', array(), 'badge'));
+
+            return $this->redirect($this->generateUrl('claro_workspace_tool_badges', array('workspaceId' => $workspace->getId())));
         }
 
         return array(
             'workspace' => $workspace,
-            'form'      => $form->createView()
+            'form'  => $this->get('claroline.form.badge.workspace')->createView(),
+            'badge' => $badge
         );
     }
 
     /**
-     * @Route("/edit/{id}/{page}", name="claro_workspace_tool_badges_edit")
+     * @Route("/edit/{slug}/{page}", name="claro_workspace_tool_badges_edit")
      * @ParamConverter(
      *     "workspace",
      *     class="ClarolineCoreBundle:Workspace\AbstractWorkspace",
      *     options={"id" = "workspaceId"}
      * )
+     * @ParamConverter("badge", converter="badge_converter")
      * @Template
      */
     public function editAction(Request $request, AbstractWorkspace $workspace, Badge $badge, $page = 1)
@@ -162,89 +142,53 @@ class WorkspaceController extends Controller
 
         $this->checkUserIsAllowed($workspace);
 
-        /** @var \Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler $platformConfigHandler */
-        $platformConfigHandler = $this->get('claroline.config.platform_config_handler');
-        $badge->setLocale($platformConfigHandler->getParameter('locale_language'));
-
-        $doctrine = $this->getDoctrine();
-
-        $query   = $doctrine->getRepository('ClarolineCoreBundle:Badge\Badge')->findUsers($badge, false);
+        $query   = $this->getDoctrine()->getRepository('ClarolineCoreBundle:Badge\Badge')->findUsers($badge, false);
         $adapter = new DoctrineORMAdapter($query);
         $pager   = new Pagerfanta($adapter);
 
         try {
             $pager->setCurrentPage($page);
         } catch (NotValidCurrentPageException $exception) {
-            throw new NotFoundHttpException();
+            throw $this->createNotFoundException();
         }
 
-        /** @var BadgeRule[] $originalRules */
-        $originalRules = array();
-        foreach ($badge->getRules() as $rule) {
-            $originalRules[] = $rule;
-        }
+        /** @var \Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface $sessionFlashBag */
+        $sessionFlashBag = $this->get('session')->getFlashBag();
 
-        $form = $this->createForm($this->get('claroline.form.tool.badge'), $badge);
+        /** @var \Symfony\Bundle\FrameworkBundle\Translation\Translator $translator */
+        $translator = $this->get('translator');
 
-        if ($request->isMethod('POST')) {
-            $form->handleRequest($request);
-            if ($form->isValid()) {
-                /** @var \Symfony\Bundle\FrameworkBundle\Translation\Translator $translator */
-                $translator = $this->get('translator');
-                try {
-                    /** @var \Doctrine\Common\Persistence\ObjectManager $entityManager */
-                    $entityManager = $doctrine->getManager();
+        try {
+            if ($this->get('claroline.form_handler.badge.workspace')->handleEdit($badge)) {
+                $sessionFlashBag->add('success', $translator->trans('badge_edit_success_message', array(), 'badge'));
 
-                    // Compute which rules was deleted
-                    foreach ($badge->getRules() as $rule) {
-                        foreach ($originalRules as $key => $originalRule) {
-                            if ($originalRule->getId() === $rule->getId()) {
-                                unset($originalRules[$key]);
-                            }
-                        }
-                    }
-
-                    // Delete rules
-                    foreach ($originalRules as $rule) {
-                        $entityManager->remove($rule);
-                    }
-
-                    $entityManager->persist($badge);
-                    $entityManager->flush();
-
-                    $this->get('session')
-                        ->getFlashBag()
-                        ->add('success', $translator->trans('badge_edit_success_message', array(), 'badge'));
-                } catch (\Exception $exception) {
-                    $this->get('session')
-                        ->getFlashBag()
-                        ->add('error', $translator->trans('badge_edit_error_message', array(), 'badge'));
-                }
-
-                return $this->redirect(
-                    $this->generateUrl('claro_workspace_tool_badges', array('workspaceId' => $workspace->getId()))
-                );
+                return $this->redirect($this->generateUrl('claro_workspace_tool_badges', array('workspaceId' => $workspace->getId())));
             }
+        } catch (\Exception $exception) {
+            $sessionFlashBag->add('error', $translator->trans('badge_edit_error_message', array(), 'badge'));
+
+            return $this->redirect($this->generateUrl('claro_workspace_tool_badges', array('workspaceId' => $workspace->getId())));
         }
 
         return array(
             'workspace' => $workspace,
-            'form'      => $form->createView(),
+            'form'      => $this->get('claroline.form.badge.workspace')->createView(),
             'badge'     => $badge,
             'pager'     => $pager
         );
     }
 
     /**
-     * @Route("/delete/{id}", name="claro_workspace_tool_badges_delete")
+     * @Route("/delete/{slug}", name="claro_workspace_tool_badges_delete")
      * @ParamConverter(
      *     "workspace",
      *     class="ClarolineCoreBundle:Workspace\AbstractWorkspace",
      *     options={"id" = "workspaceId"}
      * )
+     * @ParamConverter("badge", converter="badge_converter")
      * @Template
      */
-    public function deleteAction($workspace, Badge $badge)
+    public function deleteAction(AbstractWorkspace $workspace, Badge $badge)
     {
         if (null === $badge->getWorkspace()) {
             throw $this->createNotFoundException("No badge found.");
@@ -276,12 +220,13 @@ class WorkspaceController extends Controller
     }
 
     /**
-     * @Route("/award/{id}", name="claro_workspace_tool_badges_award")
+     * @Route("/award/{slug}", name="claro_workspace_tool_badges_award")
      * @ParamConverter(
      *     "workspace",
      *     class="ClarolineCoreBundle:Workspace\AbstractWorkspace",
      *     options={"id" = "workspaceId"}
      * )
+     * @ParamConverter("badge", converter="badge_converter")
      * @Template
      */
     public function awardAction(Request $request, AbstractWorkspace $workspace, Badge $badge)
@@ -292,7 +237,7 @@ class WorkspaceController extends Controller
 
         $this->checkUserIsAllowed($workspace);
 
-        $form = $this->createForm(new BadgeAwardType());
+        $form = $this->createForm($this->get('claroline.form.badge.award'));
 
         if ($request->isMethod('POST')) {
             $form->handleRequest($request);
@@ -302,30 +247,16 @@ class WorkspaceController extends Controller
                 try {
                     $doctrine = $this->getDoctrine();
 
-                    /** @var \Doctrine\ORM\EntityManager $entityManager */
-                    $entityManager = $doctrine->getManager();
-
-                    $groupName    = $form->get('group')->getData();
-                    $userName     = $form->get('user')->getData();
-                    $awardedBadge = 0;
+                    $group        = $form->get('group')->getData();
+                    $user         = $form->get('user')->getData();
 
                     /** @var \Claroline\CoreBundle\Entity\User[] $users */
                     $users = array();
 
-                    if (null !== $groupName) {
-                        $group = $doctrine->getRepository('ClarolineCoreBundle:Group')->findOneByName($groupName);
-
-                        if (null !== $group) {
-                            $users = $doctrine->getRepository('ClarolineCoreBundle:User')->findByGroup($group);
-                        }
-                    } elseif (null !== $userName) {
-                        list($firstName, $lastName) = explode(' ', $userName);
-                        $user = $doctrine->getRepository('ClarolineCoreBundle:User')
-                            ->findOneBy(array('firstName' => $firstName, 'lastName' => $lastName));
-
-                        if (null !== $user) {
-                            $users[] = $user;
-                        }
+                    if (null !== $group) {
+                        $users = $doctrine->getRepository('ClarolineCoreBundle:User')->findByGroup($group);
+                    } elseif (null !== $user) {
+                        $users[] = $user;
                     }
 
                     /** @var \Claroline\CoreBundle\Manager\BadgeManager $badgeManager */
@@ -362,7 +293,7 @@ class WorkspaceController extends Controller
                 return $this->redirect(
                     $this->generateUrl(
                         'claro_workspace_tool_badges_edit',
-                        array('workspaceId' => $workspace->getId(), 'id' => $badge->getId())
+                        array('workspaceId' => $workspace->getId(), 'slug' => $badge->getSlug())
                     )
                 );
             }
@@ -426,7 +357,7 @@ class WorkspaceController extends Controller
         return $this->redirect(
             $this->generateUrl(
                 'claro_workspace_tool_badges_edit',
-                array('workspaceId' => $workspace->getId(), 'id' => $badge->getId())
+                array('workspaceId' => $workspace->getId(), 'slug' => $badge->getSlug())
             )
         );
     }
@@ -449,11 +380,11 @@ class WorkspaceController extends Controller
         $this->checkUserIsAllowed($workspace);
 
         /** @var \Symfony\Bundle\FrameworkBundle\Translation\Translator $translator */
-        $translator = $this->get('translator');
-        try {
-            $successMessage = $translator->trans('badge_reject_award_success_message', array(), 'badge');
-            $errorMessage   = $translator->trans('badge_reject_award_error_message', array(), 'badge');
+        $translator     = $this->get('translator');
+        $successMessage = $translator->trans('badge_reject_award_success_message', array(), 'badge');
+        $errorMessage   = $translator->trans('badge_reject_award_error_message', array(), 'badge');
 
+        try {
             if ($validate) {
                 $successMessage = $translator->trans('badge_validate_award_success_message', array(), 'badge');
                 $errorMessage   = $translator->trans('badge_validate_award_error_message', array(), 'badge');

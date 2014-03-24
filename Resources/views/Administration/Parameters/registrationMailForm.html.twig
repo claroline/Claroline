@@ -1,0 +1,67 @@
+{% extends "ClarolineCoreBundle:Administration:layout.html.twig" %}
+
+{% block title %}{{ parent() ~ ' - ' ~ 'registration' | trans({}, 'platform') | striptags | raw }}{% endblock %}
+
+{% block breadcrumb %}
+    {{
+    macros.breadcrumbs([
+    {
+    'icon': 'icon-cog',
+    'name': 'administration'|trans({}, 'platform'),
+    'href': path('claro_admin_index')
+    },
+    {
+    'name': 'parameters'|trans({}, 'platform'),
+    'href': path('claro_admin_index')
+    },
+    {
+    'name': 'mail'|trans({}, 'platform'),
+    'href': path('claro_admin_parameters_mail_index')
+    }
+    ,
+    {
+    'name': 'registration'|trans({}, 'platform'),
+    'href': ''
+    }
+    ])
+    }}
+{% endblock %}
+
+{% block section_content %}
+    <div class="panel-heading">
+        <h3 class="panel-title">{{ 'registration'|trans({}, 'platform') }}</h3>
+    </div>
+    <form class="form-horizontal" action="{{ path('claro_admin_edit_mail_registration') }}" method="post" {{ form_enctype(form) }} id="form_settings" enctype='multipart/form-data'>
+        <div class="panel-body">
+            <div class="alert alert-warning">
+                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                {{ 'You can redefine the content of the registration mail here' | trans({}, 'platform') }}.<br>
+                <br>
+                {{ 'You can use the following variables in your form' | trans({}, 'platform') }}:<br>
+                <br>
+                <ul>
+                    <li><strong>%platform_name%</strong> {{ 'will be replaced by your platform name' | trans({}, 'platform') }}.
+                    <li><strong>%username%</strong> {{ 'will display the username' | trans({}, 'platform') }}.
+                    <li><strong>%password%</strong> {{ 'will display the password' | trans({}, 'platform') }}.
+                    <li><strong>%first_name%</strong> {{ 'will display the user first name' | trans({}, 'platform') }}.
+                    <li><strong>%last_name%</strong> {{ 'will display the user last name' | trans({}, 'platform') }}.
+                </ul>
+                <br>
+                {{ 'You can use the full screen version of the text editor to include HTML' | trans({}, 'platform') }}.
+            </div>
+            {% form_theme form 'ClarolineCoreBundle::form_theme_no_label.html.twig' %}
+            {{ form_widget(form) }}
+        </div>
+        <div class="panel-footer">
+            <button type="submit" class="btn btn-primary">{{ 'ok'|trans({}, 'platform') }}</button>
+            <a href="{{ path('claro_admin_parameters_mail_index') }}">
+                <button type="button" class="btn btn-default">{{ 'cancel'|trans({}, 'platform') }}</button>
+            </a>
+        </div>
+    </form>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript" src="{{ asset('bundles/clarolinecore/js/administration/mail.js') }}"></script>
+{% endblock%}

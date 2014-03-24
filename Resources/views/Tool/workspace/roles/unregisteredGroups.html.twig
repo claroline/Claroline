@@ -36,6 +36,7 @@
 
 {% from _self import renderPager %}
 {% from _self import sortUrl %}
+{% from "ClarolineCoreBundle::macros.html.twig" import maxResultsSelectBox %}
 
 {% extends 'ClarolineCoreBundle:Workspace:layout.html.twig' %}
 
@@ -91,11 +92,6 @@
                                             class="chk-role hide" type="checkbox" value="{{ role.getId() }}"
                                             data-name="{{ role.getTranslationKey()|trans({}, 'platform') }}"
                                             id="role-{{ role.getId() }}"
-                                            {% for toCheck in roles %}
-                                                {% if toCheck.getId() == role.getId() %}
-                                                    checked
-                                                {% endif %}
-                                            {% endfor %}
                                         >
                                         <label for="role-{{ role.getId() }}">{{ role.getTranslationKey()|trans({}, 'platform') }}</label>
                                     </li>
@@ -119,18 +115,13 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-md-8">{{ renderPager(search, workspace.getId(), pager, max, order) }}</div>
+                <div class="col-md-8">
+                {% if pager.getNbPages() > 1 %}
+                    {{ renderPager(search, workspace.getId(), pager, max, order) }}
+                {% endif %}
+                </div>
                 <div class="col-md-4">
-                    <div class="input-group margin-md">
-                        <select class="form-control input-md" id="max-select">
-                            <option>20</option>
-                            <option>50</option>
-                            <option>100</option>
-                            <option>200</option>
-                            <option>500</option>
-                        </select>
-                        <span class="input-group-addon">{{ 'line_per_page'|trans({}, 'platform') }}</span>
-                    </div>
+                    {{ maxResultsSelectBox(max, "$('#search-button').trigger('click');", 'groups_per_page') }}
                 </div>
             </div>
             <div class="table-responsive">
@@ -138,22 +129,32 @@
                     <thead>
                         <tr>
                             <th> <input type="checkbox" name="all" id="check-all-items"></input> </th>
-                            <th><a href="{{ sortUrl(max, search, 'id', workspace.getId()) }}">{{ 'id'|trans({}, 'platform') }}</a></th>
                             <th><a href="{{ sortUrl(max, search, 'name', workspace.getId()) }}">{{ 'name'|trans({}, 'platform') }}</a></th>
+                            <th></th>
                         </tr>
                     </thead>
                     <tbody id="user-table-body">
                         {% for group in pager.currentPageResults %}
                             <tr id="row-{{ group.id }}" class="row-group" data-group-id="{{ group.getId() }}">
                                 <td> <input class="chk-grp chk-item" type="checkbox" value="{{ group.getId() }}"> </input></td>
-                                <td>  {{ group.id }} </td>
                                 <td>  {{ group.name }} </td>
+                                <td>
+                                    {% for role in group.getEntityRoles() %}
+                                        {% if role.getWorkspace() == workspace %}
+                                            <span class="label label-success" id="label-{{ role.getId () }}-{{ group.getId()}}">
+                                                {{ role.getTranslationKey()|trans({}, 'platform') }}
+                                            </span>
+                                        {% endif %}
+                                    {% endfor %}
+                                </td>
                             </tr>
                         {% endfor %}
                     </tbody>
                 </table>
             </div>
-            {{ renderPager(search, workspace.getId(), pager, max, order) }}
+            {% if pager.getNbPages() > 1 %}
+                {{ renderPager(search, workspace.getId(), pager, max, order) }}
+            {% endif %}
         </div>
     </div>
 {% endblock %}
@@ -161,11 +162,6 @@
     {{ parent() }}
     <script src='{{ asset('bundles/clarolinecore/js/table.js') }}' type="text/javascript"></script>
     <script>
-        $('#max-select').val({{ max }});
-        $('body').on('change', '#max-select', function() {
-            $('#search-button').trigger('click');
-        });
-
         createValidationBox();
         $('.popover-block').popover();
         parameters = {};
@@ -184,7 +180,12 @@
                 i++;
             });
 
-            var html = Twig.render(confirmAddRole, {'nbItems': $('.chk-grp:checked').length, 'roles': roles});
+            if (i > 0) {
+                var html = Twig.render(confirmAddRole, {'nbItems': $('.chk-grp:checked').length, 'roles': roles});
+            } else {
+                var html = Twig.render(noRoleSelected);
+            }
+
             $('#table-modal .modal-body').html(html);
             $('#table-modal').modal('show');
         });
@@ -192,20 +193,28 @@
          $('#modal-valid-button').on('click', function () {
             var i = 0;
             var queryString = {};
-            var array = [];
+            var groups = [];
             $('.chk-grp:checked').each(function (index, element) {
-                array[i] = element.value;
+                groups[i] = element.value;
                 i++;
             });
-            queryString.groupIds = array;
+            queryString.groupIds = groups;
 
             var i = 0;
-            var array = [];
+            var roles = [];
             $('.chk-role:checked').each(function (index, element) {
-                array[i] = element.value;
+                roles[i] = element.value;
                 i++;
             });
-            queryString.roleIds = array;
+
+             if (i < 1) {
+                 $('#table-modal').modal('hide');
+                 $('.modal-body').empty();
+
+                 return;
+             }
+
+            queryString.roleIds = roles;
 
             var route = Routing.generate('claro_workspace_add_roles_to_groups', {'workspace': {{ workspace.getId() }} });
             route += '?' + $.param(queryString);
@@ -216,6 +225,23 @@
                     var flashbag = $('#custom-flashbag-ul');
                     flashbag.append('<li>' +  Translator.get('platform:operation_done') + '</li>');
                     $('#custom-flashbag-div').removeClass('hide');
+
+                    //add each role to the group list
+                    for (i = 0; i < groups.length; i++) {
+                        var td = $('#row-' + groups[i] + " td:last-child");
+                        var cell = $(td[0]);
+                        var html = cell.html();
+
+                        for (var j = 0; j < roles.length; j++) {
+                            var roleLib = $('#role-' + roles[j]).attr('data-name');
+                            //only append the span if the role isn't already here
+                            if (html.indexOf(roleLib) === -1) {
+                                html += "<span class='label label-success'>" + roleLib + "</span>";
+                            }
+                        }
+
+                        cell.html(html);
+                    }
                 }
             });
 

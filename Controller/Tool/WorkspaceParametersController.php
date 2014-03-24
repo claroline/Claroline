@@ -248,7 +248,7 @@ class WorkspaceParametersController extends Controller
         $event = $this->eventDispatcher->dispatch(
             strtolower('configure_workspace_tool_' . $tool->getName()),
             'ConfigureWorkspaceTool',
-            array($tool,$workspace)
+            array($tool, $workspace)
         );
 
         return new Response($event->getContent());

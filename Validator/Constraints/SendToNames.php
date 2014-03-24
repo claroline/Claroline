@@ -18,7 +18,7 @@ use Symfony\Component\Validator\Constraint;
  */
 class SendToNames extends Constraint
 {
-    public $message = 'The user or group {{ name }} does not exist.';
+    public $message = 'The user, group or workspace {{ name }} does not exist.';
 
     public function validatedBy()
     {

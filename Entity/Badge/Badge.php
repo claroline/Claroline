@@ -24,20 +24,34 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Claroline\CoreBundle\Form\Badge\Constraints as BadgeAssert;
 use JMS\Serializer\Annotation\ExclusionPolicy;
 use JMS\Serializer\Annotation\Expose;
+use Gedmo\Mapping\Annotation as Gedmo;
+use Gedmo\SoftDeleteable\Traits\SoftDeleteableEntity;
 
 /**
- * Class Badge
- *
  * @ORM\Table(name="claro_badge")
  * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\Badge\BadgeRepository")
+ * @ORM\EntityListeners({"Claroline\CoreBundle\Listener\Badge\LocaleSetterListener"})
  * @ORM\HasLifecycleCallbacks
+ * @Gedmo\SoftDeleteable(fieldName="deletedAt", timeAware=false)
  * @BadgeAssert\AutomaticWithRules
  * @BadgeAssert\HasImage
  * @BadgeAssert\AtLeastOneTranslation
+ * @BadgeAssert\CheckExpiringPeriod
  * @ExclusionPolicy("all")
  */
 class Badge extends Rulable
 {
+    use SoftDeleteableEntity;
+
+    const EXPIRE_PERIOD_DAY       = 0;
+    const EXPIRE_PERIOD_DAY_LABEL = 'day';
+    const EXPIRE_PERIOD_WEEK       = 1;
+    const EXPIRE_PERIOD_WEEK_LABEL = 'week';
+    const EXPIRE_PERIOD_MONTH       = 2;
+    const EXPIRE_PERIOD_MONTH_LABEL = 'month';
+    const EXPIRE_PERIOD_YEAR       = 3;
+    const EXPIRE_PERIOD_YEAR_LABEL = 'year';
+
     /**
      * @var integer
      *
@@ -53,8 +67,10 @@ class Badge extends Rulable
      *
      * @ORM\Column(type="smallint", nullable=false)
      * @Expose
+     * @Assert\NotBlank()
+     * @Assert\GreaterThan(value = 0)
      */
-    protected $version;
+    protected $version = 1;
 
     /**
      * @var boolean
@@ -73,12 +89,26 @@ class Badge extends Rulable
     protected $imagePath;
 
     /**
-     * @var \DateTime
+     * @var boolean
      *
-     * @ORM\Column(name="expired_at", type="datetime", nullable=true)
-     * @Expose
+     * @ORM\Column(name="is_expiring", type="boolean", options={"default": 0})
      */
-    protected $expiredAt;
+    protected $isExpiring = false;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="expire_duration", type="integer", nullable=true)
+     * @Assert\GreaterThan(value = 0)
+     */
+    protected $expireDuration;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="expire_period", type="smallint", nullable=true)
+     */
+    protected $expirePeriod;
 
     /**
      * @var UploadedFile
@@ -227,6 +257,18 @@ class Badge extends Rulable
     }
 
     /**
+     * @param ArrayCollection|BadgeTranslation[] $translations
+     *
+     * @return Badge
+     */
+    public function setTranslations($translations)
+    {
+        $this->translations = $translations;
+
+        return $this;
+    }
+
+    /**
      * @param string $locale
      *
      * @throws \InvalidArgumentException
@@ -259,11 +301,6 @@ class Badge extends Rulable
         return $this->getTranslationForLocale('en');
     }
 
-    public function setFrTranslation(BadgeTranslation $badgeTranslation)
-    {
-
-    }
-
     /**
      * @param  BadgeTranslation $translation
      * @return Badge
@@ -287,26 +324,6 @@ class Badge extends Rulable
         $this->translations->removeElement($translation);
 
         return $this;
-    }
-
-    /**
-     * @param \DateTime $expiredAt
-     *
-     * @return Badge
-     */
-    public function setExpiredAt($expiredAt)
-    {
-        $this->expiredAt = $expiredAt;
-
-        return $this;
-    }
-
-    /**
-     * @return \DateTime
-     */
-    public function getExpiredAt()
-    {
-        return $this->expiredAt;
     }
 
     /**
@@ -407,6 +424,22 @@ class Badge extends Rulable
         }
 
         return $this->getTranslationForLocale($locale)->getName();
+    }
+
+    /**
+     * @return string
+     */
+    public function getFrName()
+    {
+        return $this->getName('fr');
+    }
+
+    /**
+     * @return string
+     */
+    public function getEnName()
+    {
+        return $this->getName('en');
     }
 
     /**
@@ -516,6 +549,121 @@ class Badge extends Rulable
     public function getWorkspace()
     {
         return $this->workspace;
+    }
+
+    /**
+     * @param boolean $isExpiring
+     *
+     * @return Badge
+     */
+    public function setIsExpiring($isExpiring)
+    {
+        $this->isExpiring = $isExpiring;
+
+        return $this;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function getIsExpiring()
+    {
+        return $this->isExpiring;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isExpiring()
+    {
+        return $this->getIsExpiring();
+    }
+
+    /**
+     * @param int $expireDuration
+     *
+     * @return Badge
+     */
+    public function setExpireDuration($expireDuration)
+    {
+        $this->expireDuration = $expireDuration;
+
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getExpireDuration()
+    {
+        return $this->expireDuration;
+    }
+
+    /**
+     * @param int $expirePeriod
+     *
+     * @return Badge
+     */
+    public function setExpirePeriod($expirePeriod)
+    {
+        $this->expirePeriod = $expirePeriod;
+
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getExpirePeriod()
+    {
+        return $this->expirePeriod;
+    }
+
+    /**
+     * @return string
+     */
+    public function getExpirePeriodLabel()
+    {
+        return self::getExpirePeriodTypeLabel($this->expirePeriod);
+    }
+
+    /**
+     * @return array
+     */
+    public static function getExpirePeriodTypes()
+    {
+        return array(self::EXPIRE_PERIOD_DAY,
+                     self::EXPIRE_PERIOD_WEEK,
+                     self::EXPIRE_PERIOD_MONTH,
+                     self::EXPIRE_PERIOD_YEAR);
+    }
+
+    /**
+     * @return array
+     */
+    public static function getExpirePeriodLabels()
+    {
+        return array(self::EXPIRE_PERIOD_DAY_LABEL,
+                     self::EXPIRE_PERIOD_WEEK_LABEL,
+                     self::EXPIRE_PERIOD_MONTH_LABEL,
+                     self::EXPIRE_PERIOD_YEAR_LABEL);
+    }
+
+    /**
+     * @param integer $expirePeriodType
+     *
+     * @throws \InvalidArgumentException
+     * @return string
+     */
+    public static function getExpirePeriodTypeLabel($expirePeriodType)
+    {
+        $expirePeriodLabels = self::getExpirePeriodLabels();
+
+        if (!isset($expirePeriodLabels[$expirePeriodType])) {
+            throw new \InvalidArgumentException("Unknown expired period type.");
+        }
+
+        return $expirePeriodLabels[$expirePeriodType];
     }
 
     /**
@@ -665,7 +813,7 @@ class Badge extends Rulable
 
         $this->file->move($this->getUploadRootDir(), $this->imagePath);
 
-        if (null !== $this->olfFileName) {
+        if (null !== $this->olfFileName && is_file($this->olfFileName)) {
             unlink($this->getUploadRootDir() . DIRECTORY_SEPARATOR . $this->olfFileName);
             $this->olfFileName = null;
         }
@@ -709,5 +857,31 @@ class Badge extends Rulable
         }
 
         return $restriction;
+    }
+
+    public function __clone()
+    {
+        if ($this->id) {
+            $this->id = null;
+
+            $newBagdeRules = new ArrayCollection();
+            foreach ($this->badgeRules as $badgeRule) {
+                $newBadgeRule = clone $badgeRule;
+                $newBadgeRule->setAssociatedBadge($this);
+                $newBagdeRules->add($newBadgeRule);
+            }
+            $this->badgeRules = $newBagdeRules;
+
+            $newTranslations = new ArrayCollection();
+            foreach ($this->translations as $translation) {
+                $newTranslation = clone $translation;
+                $newTranslation->setBadge($this);
+                $newTranslations->add($newTranslation);
+            }
+            $this->translations = $newTranslations;
+
+            $this->userBadges  = new ArrayCollection();
+            $this->badgeClaims = new ArrayCollection();
+        }
     }
 }

@@ -43,8 +43,14 @@ class HwiManager
      */
     public function refreshCache(RefreshCacheEvent $event)
     {
-        $errors = $this->validateFacebook($this->platformConfigHandler->getParameter('facebook_client_id'), $this->platformConfigHandler->getParameter('facebook_client_secret'));
-        $event->addCacheParameter('is_facebook_available', count($errors) === 0);
+        $errors = $this->validateFacebook(
+            $this->platformConfigHandler->getParameter('facebook_client_id'),
+            $this->platformConfigHandler->getParameter('facebook_client_secret')
+        );
+        $event->addCacheParameter(
+            'is_facebook_available',
+            (count($errors) === 0 and $this->platformConfigHandler->getParameter('facebook_client_active'))
+        );
     }
 
     public function isFacebookAvailable()
@@ -63,13 +69,13 @@ class HwiManager
         }
 
         $secretUrl = "https://graph.facebook.com/{$appId}?fields=roles&access_token={$appId}|{$secret}";
-        $curl_handle = curl_init();
-        curl_setopt($curl_handle, CURLOPT_URL, $secretUrl);
-        curl_setopt($curl_handle, CURLOPT_CONNECTTIMEOUT, 2);
-        curl_setopt($curl_handle, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($curl_handle, CURLOPT_USERAGENT, 'ClarolineConnect');
-        $json = curl_exec($curl_handle);
-        curl_close($curl_handle);
+        $curlHandle = curl_init();
+        curl_setopt($curlHandle, CURLOPT_URL, $secretUrl);
+        curl_setopt($curlHandle, CURLOPT_CONNECTTIMEOUT, 2);
+        curl_setopt($curlHandle, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($curlHandle, CURLOPT_USERAGENT, 'ClarolineConnect');
+        $json = curl_exec($curlHandle);
+        curl_close($curlHandle);
         $data = json_decode($json);
 
         if (!$json || array_key_exists('error', $data)) {
@@ -77,6 +83,5 @@ class HwiManager
         }
 
         return array();
-
     }
 }

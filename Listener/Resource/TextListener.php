@@ -131,6 +131,7 @@ class TextListener implements ContainerAwareInterface
         $resource = $event->getResource();
         $revisions = $resource->getRevisions();
         $copy = new Text();
+        $copy->setVersion($resource->getVersion());
 
         foreach ($revisions as $revision) {
             $rev = new Revision();
