@@ -278,10 +278,9 @@
                     {% else %}
                         {{ 'final mark' | trans }} :
                     {% endif %}
-                    <spa, id="paperFinalScore">{{ scoreFinal }} / 20</span>
+                    {% set scoreFinal = roundUpOrDown(scoreFinal) %}
+                    <span id="paperFinalScore">{{ scoreFinal }} / 20</span>
                 </h3>
-
-                {% set scoreFinal = roundUpOrDown(scoreFinal) %}
                 <hr/>
             {% endif %}
         
