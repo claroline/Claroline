@@ -509,6 +509,7 @@ edit_your_profile_error: 'Une erreur est survenue pendant la modification de vot
 manage_public_profile_preferences: 'Gérer les préférences du profil public'
 edit_public_profile_preferences_success: 'Préférences de votre profil public modifiées avec succès.'
 edit_public_profile_preferences_error: 'Une erreur est survenue lors de la modification des préférences de votre profil public.'
+user_public_profil_not_visible: 'Votre profil public n''est visible à personne. <br> Vous pouvez rendre votre profil visible pour les <span class="shared_policy_link">utilisateurs de la plateforme</span>, ou à <span class="shared_policy_link">tout le monde</span>.'
 edit_password: 'Modifier votre mot de passe'
 edit_password_success: 'Modification de votre mot de passe effectuée avec succès.'
 edit_password_error: 'Une erreur est survenue pendant la modification de votre mot de passe.'

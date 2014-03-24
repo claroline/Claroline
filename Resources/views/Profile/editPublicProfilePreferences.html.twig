@@ -10,9 +10,16 @@
                 {{ 'edit_public_profile'|trans({}, 'platform') }}
             </h3>
         </div>
+        {% set publicProfilePreferences = user.publicProfilePreferences %}
         <div class="panel-body">
             <div class="row">
-                <aside class="col-md-2 profile_aside" role="complementary">
+                {% set isProfilShared = publicProfilePreferences.isShared() %}
+                <div class="col-md-8{% if isProfilShared %} hidden{% endif %}">
+                    <p class="well text-center">
+                        {{ 'user_public_profil_not_visible'|trans({}, 'platform')|raw }}
+                    </p>
+                </div>
+                <aside class="col-md-2 profile_aside{% if false == isProfilShared %} hidden{% endif %}" role="complementary">
                     <div class="avatar">
                         {% if user.getPicture() != "" %}
                             <img src="{{ asset('uploads/pictures/') ~  user.getPicture() }}" class="profile_picture">
@@ -38,13 +45,11 @@
                         </li>
                     </ul>
                 </aside>
-                <div class="col-md-6">
+                <div class="col-md-6{% if false == isProfilShared %} hidden{% endif %}">
                     <p>{{ user.getLastName() ~ ' ' ~ user.getFirstName() }}</p>
-                    <p><span class="icon-envelope"> <a href="mailto:{{ user.getmail() }}" title="{{ user.getmail() }}">{{ user.getmail() }}</a></span></p>
-                    {% if user.getPhone() is not null %}
-                        <p><span class="icon-phone-sign"> {{ user.getPhone() }}</span></p>
-                    {% endif %}
-                    {% if '' != user.getDescription() %}<div class="well">{{ user.getDescription() |raw }} </div>{% endif %}
+                    <p{% if false == publicProfilePreferences.displayEmail %} class="hidden"{% endif %} id="mail"><span class="icon-envelope"> <a href="mailto:{{ user.getmail() }}" title="{{ user.getmail() }}">{{ user.getmail() }}</a></span></p>
+                    <p{% if false == publicProfilePreferences.displayPhoneNumber %} class="hidden"{% endif %} id="phone"><span class="icon-phone-sign"></span> {% if user.getPhone() is not null %}{{ user.getPhone() }}{% endif %}</p>
+                    {% if '' != user.getDescription() %}<p class="well">{{ user.getDescription() |raw }} </p>{% endif %}
                 </div>
                 <div class="col-md-4">
                     <div class="panel panel-default">
