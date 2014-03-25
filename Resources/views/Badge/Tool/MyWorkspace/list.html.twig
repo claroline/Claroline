@@ -1,0 +1,62 @@
+{% extends 'ClarolineCoreBundle:Badge/Tool:Workspace/layout.html.twig' %}
+
+{% trans_default_domain "badge" %}
+
+{% block title %}{{ parent() ~ ' - ' ~ 'badges' | trans | striptags | raw }}{% endblock %}
+
+{% block breadcrumb %}
+    {{
+        macros.workspaceBreadcrumbs(
+            workspace,
+            [
+                {
+                    'name': 'my_badges'|trans({}, 'badge'),
+                    'href': ''
+                }
+            ]
+        )
+    }}
+{% endblock %}
+
+{% block section_title %}
+    {{ 'my_badges'|trans({}, 'badge') }}
+{% endblock %}
+
+{% block section_body %}
+    <ul class="list-inline my_badges">
+        {% for badge in badgePager %}
+        <li class="col-md-6">
+            <div class="panel panel-default badge_panel">
+                <div class="panel-heading">
+                    <h3 class="panel-title">{{ badge.name }}</h3>
+                </div>
+                <div class="panel-body">
+                    <img src="{{ asset(badge.webPath) }}" alt="{{ badge.name }}" class="badge_image_informations" />
+                    {{ badge.description }}
+                </div>
+            </div>
+        </li>
+        {% else %}
+            <li class="node-thumbnail node">
+                {{ 'no_badges_in_workspace'|trans({}, 'badge')|raw }}
+            </li>
+        {% endfor %}
+    </ul>
+
+    {% if badgePager.haveToPaginate %}
+    <div>
+        {{
+            pagerfanta(
+                badgePager,
+                'twitter_bootstrap_translated',
+                {
+                    'proximity' :    1,
+                    'routeName':     parameters.current_link,
+                    'routeParams':   parameters.route_parameters,
+                    'pageParameter': '[badgePage]'
+                }
+            )
+        }}
+    </div>
+    {% endif %}
+{% endblock %}
