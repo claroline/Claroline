@@ -11,6 +11,8 @@
 
 namespace Claroline\CoreBundle\Listener\Badge;
 
+use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
+use Claroline\CoreBundle\Pager\PagerFactory;
 use Claroline\CoreBundle\Rule\Validator;
 use Claroline\CoreBundle\Event\DisplayToolEvent;
 use Claroline\CoreBundle\Event\LogCreateEvent;
@@ -45,24 +47,32 @@ class BadgeListener
     private $ruleValidator;
 
     /**
+     * @var \Claroline\CoreBundle\Pager\PagerFactory
+     */
+    private $pagerFactory;
+
+    /**
      * @DI\InjectParams({
      *     "entityManager"     = @DI\Inject("doctrine.orm.entity_manager"),
      *     "badgeManager"      = @DI\Inject("claroline.manager.badge"),
      *     "templatingEngine"  = @DI\Inject("templating"),
-     *     "ruleValidator"     = @DI\Inject("claroline.rule.validator")
+     *     "ruleValidator"     = @DI\Inject("claroline.rule.validator"),
+     *     "pagerFactory"      = @DI\Inject("claroline.pager.pager_factory")
      * })
      */
     public function __construct(
         EntityManager $entityManager,
         BadgeManager $badgeManager,
         TwigEngine $templatingEngine,
-        Validator $ruleValidator
+        Validator $ruleValidator,
+        PagerFactory $pagerFactory
     )
     {
         $this->entityManager     = $entityManager;
         $this->badgeManager      = $badgeManager;
         $this->templateingEngine = $templatingEngine;
         $this->ruleValidator     = $ruleValidator;
+        $this->pagerFactory      = $pagerFactory;
     }
 
     /**
@@ -107,16 +117,28 @@ class BadgeListener
      *
      * @param DisplayToolEvent $event
      */
-    public function onWorkspaceOpen(DisplayToolEvent $event)
+    public function onWorkspaceOpenBadges(DisplayToolEvent $event)
     {
-        $event->setContent($this->workspace($event->getWorkspace()->getId()));
+        $event->setContent($this->badgesManagement($event->getWorkspace()));
     }
 
-    private function workspace($workspaceId)
+    /**
+     * @DI\Observe("open_tool_workspace_my_badges")
+     *
+     * @param DisplayToolEvent $event
+     */
+    public function onWorkspaceOpenMybadges(DisplayToolEvent $event)
     {
-        $workspace = $this->entityManager->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')
-            ->find($workspaceId);
+        $event->setContent($this->myBadges($event->getWorkspace()));
+    }
 
+    /**
+     * @param \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace $workspace
+     *
+     * @return string
+     */
+    private function badgesManagement(AbstractWorkspace $workspace)
+    {
         $parameters = array(
             'badgePage'    => 1,
             'claimPage'    => 1,
@@ -139,6 +161,26 @@ class BadgeListener
         return $this->templateingEngine->render(
             'ClarolineCoreBundle:Badge:Tool\Workspace\list.html.twig',
             array('workspace' => $workspace, 'parameters' => $parameters)
+        );
+    }
+
+    /**
+     * @param \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace $workspace
+     *
+     * @return string
+     */
+    private function myBadges(AbstractWorkspace $workspace)
+    {
+        $userBadges = $this->entityManager->getRepository('ClarolineCoreBundle:Badge\Badge')->findByWorkspace($workspace);
+        $badgePager = $this->pagerFactory->createPagerFromArray($userBadges, 1, 10);
+
+        return $this->templateingEngine->render(
+            'ClarolineCoreBundle:Badge:Tool\MyWorkspace\list.html.twig',
+            array(
+                'badgePager' => $badgePager,
+                'workspace'  => $workspace,
+                'badgePage'  => 1
+            )
         );
     }
 }

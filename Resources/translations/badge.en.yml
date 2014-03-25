@@ -97,9 +97,11 @@ day: day
 dont_award: 'Don''t award'
 edit_badge: 'Edition of the badge ''%badge_name%'''
 month: month
+my_badges: My badges
 no_badge_claim: 'No claim for badge.'
 no_badges: 'No badge.'
 no_badges_create_to_motivate: 'No badge currently, you can <a href="%url%">create</a> some to motivate you user.'
+no_badges_in_workspace: 'At this time there is no badge to earn in this workspace.'
 no_rule: 'No rule'
 rule: Rule
 rule_details: 'Rule details'
