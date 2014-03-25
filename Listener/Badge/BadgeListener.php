@@ -171,8 +171,8 @@ class BadgeListener
      */
     private function myBadges(AbstractWorkspace $workspace)
     {
-        $userBadges = $this->entityManager->getRepository('ClarolineCoreBundle:Badge\Badge')->findByWorkspace($workspace);
-        $badgePager = $this->pagerFactory->createPagerFromArray($userBadges, 1, 10);
+        $badges     = $this->entityManager->getRepository('ClarolineCoreBundle:Badge\Badge')->findByWorkspace($workspace);
+        $badgePager = $this->pagerFactory->createPagerFromArray($badges, 1, 10);
 
         return $this->templateingEngine->render(
             'ClarolineCoreBundle:Badge:Tool\MyWorkspace\list.html.twig',

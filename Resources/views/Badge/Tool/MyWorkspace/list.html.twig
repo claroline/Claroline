@@ -31,8 +31,12 @@
                     <h3 class="panel-title">{{ badge.name }}</h3>
                 </div>
                 <div class="panel-body">
-                    <img src="{{ asset(badge.webPath) }}" alt="{{ badge.name }}" class="badge_image_informations" />
-                    {{ badge.description }}
+                    <div class="col-md-4">
+                        <img src="{{ asset(badge.webPath) }}" alt="{{ badge.name }}" class="badge_image_informations" />
+                    </div>
+                    <div class="col-md-8">
+                        <p>{{ badge.description }}</p>
+                    </div>
                 </div>
             </div>
         </li>
@@ -51,8 +55,8 @@
                 'twitter_bootstrap_translated',
                 {
                     'proximity' :    1,
-                    'routeName':     parameters.current_link,
-                    'routeParams':   parameters.route_parameters,
+                    'routeName':     'claro_workspace_tool_my_badges',
+                    'routeParams':   {'workspaceId': workspace.id},
                     'pageParameter': '[badgePage]'
                 }
             )
