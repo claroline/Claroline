@@ -43,22 +43,6 @@
         {% if drop.documents|length <= 0%}
             {{ 'no document added yet'|trans({},'icap_dropzone')}}
         {% endif %}
-        {#
-        {% if allowedTypes|length <= 0 %}
-            <span class="text-danger">{{ 'No document type allowed'|trans({}, 'icap_dropzone') }}</span>
-        {% elseif allowedTypes|length == 1 %}
-            <a class="btn btn-primary launch-inline disabled-during-add {% if allowedTypes.0 == 'resource' %}launch-resource-picker{% endif %}" href="{{ path('icap_dropzone_document', {'resourceId': dropzone.id, 'documentType': allowedTypes.0, 'dropId': drop.id}) }}">{{ 'Add a document'|trans({}, 'icap_dropzone') }}</a>
-        {% else %}
-            <div class="dropdown">
-                <a data-toggle="dropdown" class="btn btn-primary disabled-during-add" href="#">{{ 'Add a document'|trans({}, 'icap_dropzone') }}</a>
-                <ul id="menu1" class="dropdown-menu" role="menu" aria-labelledby="drop4">
-                    {% for allowedType in allowedTypes %}
-                        <li role="presentation"><a role="menuitem" tabindex="-1" class="launch-inline disabled-during-add {% if allowedType == 'resource' %}launch-resource-picker{% endif %}" href="{{ path('icap_dropzone_document', {'resourceId': dropzone.id, 'documentType': allowedType, 'dropId': drop.id}) }}">{{ allowedType|trans({}, 'icap_dropzone') }}</a></li>
-                    {% endfor %}
-                </ul>
-            </div>
-        {% endif %}
-        #}
         <br>
         {% for document in drop.documents %}
             <div class="row">
@@ -78,12 +62,26 @@
         </div>
 
         <div class='div-test'>
-            {% include 'IcapDropzoneBundle:Document:documentForm.html.twig' with {'form':form_url, 'documentType': 'url'}%}
-            {% include 'IcapDropzoneBundle:Document:documentForm.html.twig' with {'form':form_file, 'documentType': 'file'}%} 
+            {% if allowedTypes|length <= 0 %}
+                <span class="text-danger">{{ 'No document type allowed'|trans({}, 'icap_dropzone') }}</span>
+            {% else %}
 
-            {% include 'IcapDropzoneBundle:Document:documentForm.html.twig' with {'form':form_resource, 'documentType': 'resource'}%}
+                {% if 'url' in allowedTypes|keys %}
+                    {% include 'IcapDropzoneBundle:Document:documentForm.html.twig' with {'form':form_url, 'documentType': 'url'}%}
+                {% endif %}
 
-            {% include 'IcapDropzoneBundle:Document:documentForm.html.twig' with {'form':form_text, 'documentType': 'text'}%}
+                {% if 'file' in allowedTypes|keys %}
+                    {% include 'IcapDropzoneBundle:Document:documentForm.html.twig' with {'form':form_file, 'documentType': 'file'}%} 
+                {% endif %}
+
+                {% if 'resource' in allowedTypes|keys %}
+                    {% include 'IcapDropzoneBundle:Document:documentForm.html.twig' with {'form':form_resource, 'documentType': 'resource'}%}
+                {% endif %}
+
+                {% if 'text' in allowedTypes|keys %}
+                    {% include 'IcapDropzoneBundle:Document:documentForm.html.twig' with {'form':form_text, 'documentType': 'text'}%}
+                {% endif %}
+            {% endif %}
 
         </div>
 

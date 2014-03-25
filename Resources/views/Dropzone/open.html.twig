@@ -39,6 +39,16 @@
             </p>
         {% endif %}
 
+        {% if dropzone.instruction is not null %}
+            <hr/>
+            <p class="text-muted">
+                {{ 'Instruction_'|trans({}, 'icap_dropzone') }}
+            </p>
+            <p>
+                {{ dropzone.instruction|raw }}
+            </p>
+        {% endif %}
+
         {% if drop is not null and drop.finished != true %}
             <hr />
             <div>
@@ -61,6 +71,8 @@
                 </div>
             </div>
         {% endif %}
+
+
 
         {% if dropzone.isAllowDrop %}
             {% if drop is null or drop.finished == false %}
@@ -229,15 +241,7 @@
             </div>
         {% endif %}
 
-        {% if dropzone.instruction is not null %}
-            <hr/>
-            <p class="text-muted">
-                {{ 'Instruction_'|trans({}, 'icap_dropzone') }}
-            </p>
-            <p>
-                {{ dropzone.instruction|raw }}
-            </p>
-        {% endif %}
+
     </div>
 {% endblock %}
 
