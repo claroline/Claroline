@@ -20,6 +20,8 @@ EditorApp.factory('ClipboardFactory', ClipboardFactory);
 EditorApp.factory('AlertFactory', AlertFactory);
 EditorApp.controller('AlertCtrl', AlertCtrl);
 
+EditorApp.controller('ConfirmModalCtrl', ConfirmModalCtrl);
+
 // Main
 EditorApp.controller('MainCtrl', MainCtrl);
 
@@ -32,7 +34,6 @@ EditorApp.controller('PreviewStepCtrl', PreviewStepCtrl);
 // Steps
 EditorApp.factory('StepFactory', StepFactory);
 EditorApp.controller('SelectImageModalCtrl', SelectImageModalCtrl);
-EditorApp.controller('ConfirmDeleteModalCtrl', ConfirmDeleteModalCtrl);
 
 // Resources
 EditorApp.factory('ResourceFactory', ResourceFactory);

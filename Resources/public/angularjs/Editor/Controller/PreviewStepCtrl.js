@@ -29,7 +29,7 @@ function PreviewStepCtrl($scope, $modal, $http, HistoryFactory, PathFactory, Ste
     if (typeof(configTinyMCE) != 'undefined' && null != configTinyMCE && configTinyMCE.length != 0) {
         // App as a config for tinyMCE => use it
         $scope.tinymceOptions = configTinyMCE;
-    } 
+    }
     else {
         var home = window.Claroline.Home;
 
@@ -185,8 +185,7 @@ function PreviewStepCtrl($scope, $modal, $http, HistoryFactory, PathFactory, Ste
 
         var modalInstance = $modal.open({
             templateUrl: EditorApp.webDir + 'angularjs/Resource/Partial/resource-edit.html',
-            controller: 'ResourceModalCtrl',
-
+            controller: 'ResourceModalCtrl'
         });
 
         // Process modal results

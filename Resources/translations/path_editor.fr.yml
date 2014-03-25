@@ -61,7 +61,7 @@ select_image: Choisir une image
 step_has_duration: l'étape a une durée
 step_delete_confirm: Êtes-vous sur de vouloir supprimer cette étape ?
 step_delete: Supprimer l'étape
-step_delete_title: Etape
+step_delete_title: <span class="icon-trash"></span> Suppression de l'étape : <strong>&lt;%stepName%&gt;</strong>
 select_image_title: Sélectionner une image pour l'étape
 step_edit: Modifier l'étape
 step_add_child: Ajouter un enfant

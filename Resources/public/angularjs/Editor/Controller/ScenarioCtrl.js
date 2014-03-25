@@ -22,7 +22,6 @@ function ScenarioCtrl($scope, $modal, HistoryFactory, PathFactory, StepFactory) 
         PathFactory.recalculateStepsLevel($scope.path);
 
         HistoryFactory.update($scope.path);
-        $scope.updatePreviewStep();
     };
 
     /**
@@ -50,8 +49,13 @@ function ScenarioCtrl($scope, $modal, HistoryFactory, PathFactory, StepFactory) 
 
         // Display confirm modal
         var modalInstance = $modal.open({
-            templateUrl: EditorApp.webDir + 'angularjs/Step/Partial/confirm-delete.html',
-            controller: 'ConfirmDeleteModalCtrl'
+            templateUrl: EditorApp.webDir + 'angularjs/Confirm/Partial/confirm.html',
+            controller: 'ConfirmModalCtrl',
+            resolve: {
+                title: function () { return Translator.get('path_editor:step_delete_title', { stepName: step.name }) },
+                message: function () { return Translator.get('path_editor:step_delete_confirm') },
+                confirmButton: function () { return Translator.get('path_editor:step_delete') }
+            }
         });
 
         modalInstance.result.then(function() {
@@ -59,8 +63,7 @@ function ScenarioCtrl($scope, $modal, HistoryFactory, PathFactory, StepFactory) 
             walk($scope.path.steps[0]);
 
             HistoryFactory.update($scope.path);
-        }, function () {
-            // Cancel
+            $scope.updatePreviewStep();
         });
     };
 

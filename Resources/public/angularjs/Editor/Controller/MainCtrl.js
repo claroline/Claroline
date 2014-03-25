@@ -23,31 +23,44 @@ function MainCtrl($scope, HistoryFactory, ClipboardFactory, PathFactory, AlertFa
     }
     
     $scope.alerts = AlertFactory.getAlerts();
-    
+
+    // Flag to know if we are editing a step (need to use an object to can access this var in child controllers)
+    $scope.edit = {};
+    $scope.edit.preview = false;
+
+    // Store current previewed step
+    $scope.previewStep = null;
+
+    // Store Preview step state before start editing to be able to cancel editing
+    $scope.previewStepBackup = {};
+
     /**
      * Display step in the preview zone
      * @returns void
      */
     $scope.setPreviewStep = function(step) {
-        var isRootStep = false;
-        var rootStep = null;
-        if (undefined !== $scope.path && null !== $scope.path && undefined !== $scope.path.steps[0]) {
-            rootStep = $scope.path.steps[0];
-        }
+        if (!$scope.edit.preview) {
+            // We are not editing a step => we can change the preview
+            var isRootStep = false;
+            var rootStep = null;
+            if (undefined !== $scope.path && null !== $scope.path && undefined !== $scope.path.steps[0]) {
+                rootStep = $scope.path.steps[0];
+            }
 
-        if (step) {
-            $scope.previewStep = step;
-            if (step.id === rootStep.id) {
+            if (step) {
+                $scope.previewStep = step;
+                if (step.id === rootStep.id) {
+                    isRootStep = true;
+                }
+            }
+            else if (rootStep) {
+                $scope.previewStep = rootStep;
                 isRootStep = true;
             }
-        }
-        else if (rootStep) {
-            $scope.previewStep = rootStep;
-            isRootStep = true;
-        }
 
-        $scope.stepIsRootNode = isRootStep;
-        $scope.inheritedResources = ResourceFactory.getInheritedResources($scope.previewStep);
+            $scope.stepIsRootNode = isRootStep;
+            $scope.inheritedResources = ResourceFactory.getInheritedResources($scope.previewStep);
+        }
     };
     
     /**
@@ -63,33 +76,29 @@ function MainCtrl($scope, HistoryFactory, ClipboardFactory, PathFactory, AlertFa
         $scope.setPreviewStep(step);
     };
 
-    // Current displayed step in preview zone
-    $scope.edit = {};
-    $scope.edit.preview = false;
-    $scope.previewStep = null;
     if (null === $scope.previewStep) {
         $scope.setPreviewStep();
     }
-
-    // Store Preview step state before start editing to be able to cancel editing
-    $scope.previewStepBackup = {};
 
     /**
      * Display edit step form
      * @returns void
      */
     $scope.editStep = function(step) {
+        $scope.edit.preview = false;
+        $scope.setPreviewStep(step);
+
         // Backup step
         $scope.previewStepBackup = jQuery.extend(true, {}, step);
 
         if (null === step.who || step.who.length === 0) {
             var whoDefault = StepFactory.getWhoDefault();
-            step.who = whoDefault.id;
+            step.who = whoDefault.id + "";
         }
 
         if (null === step.where || step.where.length === 0) {
             var whereDefault = StepFactory.getWhereDefault();
-            step.where = whereDefault.id;
+            step.where = whereDefault.id + "";
         }
 
         $scope.edit.preview = true;
