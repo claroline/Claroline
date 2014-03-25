@@ -2,22 +2,15 @@
 
 {% block document_body %}
     <div class="row">
-        {{ form_row(form.document, {'label_col_size': ' ', 'input_col_size': 'col-md-12', 'attr': {'placeholder': (documentType~'_placeholder')|trans({}, 'icap_dropzone')}, 'label_attr': {'class': 'sr-only'} }) }}
-    </div>
-
-    <br/>
-
-    <div class="row">
-        <div class="col-md-12">
-            <div class="form-group pull-right">
-                <a href="{{ path('icap_dropzone_drop', {'resourceId': dropzone.id}) }}" class="btn btn-default cancel-inline">{{ 'Cancel'|trans({}, 'icap_dropzone') }}</a>
+        {{ form_row(form.document, {'label_col_size': ' ', 'input_col_size': 'col-md-8', 'attr': {'placeholder': (documentType~'_placeholder')|trans({}, 'icap_dropzone')}, 'label_attr': {'class': 'sr-only'},'id': 'icap_dropzone_document_file_form_text'}) }}
+        <div class="col-md-4 ">
+            <div class="form-group ">
                 <button type="submit" class="btn btn-primary">
                     {{ 'Add'|trans({}, 'icap_dropzone') }}
                 </button>
             </div>
         </div>
     </div>
-    {% render controller('ClarolineCoreBundle:ResourceType:initPicker') %}
-    {{ tinymce_init() }}
+
 {% endblock %}
 

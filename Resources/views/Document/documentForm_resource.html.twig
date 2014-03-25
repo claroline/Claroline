@@ -1,10 +1,19 @@
 {% extends "IcapDropzoneBundle:Document:documentFormDefault.html.twig" %}
 
 {% block document_body %}
+    
+    {% set id_input  ='icap_dropzone_document_file_form_resource' %}
+    {% if documentType == 'url' %}
+        {% set id_input  = 'icap_dropzone_document_file_form_url' %}
+    {% elseif documentType == 'url' %}
+         {% set id_input  = 'icap_dropzone_document_file_form_text' %}  
+    {% elseif documentType == 'file' %}
+        {% set id_input  = 'icap_dropzone_document_file_form_file' %}  
+    {% endif %}
     <div class="row">
-        {{ form_row(form.document) }}
+        {{ form_row(form.document,{'id': id_input}) }}
     </div>
-    <div class="row">
+    <div class="row dropzone_ressrouceSelected" style="display:none">
         <div class="col-md-3">
             <strong>{{ 'Resource selected'|trans({}, 'icap_dropzone') }}</strong>
         </div>
@@ -13,16 +22,21 @@
             <strong class="add-document-pending" style="display: none;"> {{ 'loading'|trans({}, 'icap_dropzone') }}</strong>
         </div>
     </div>
-
+    <div class="row dropzone_noRessourceSelected">
+        <div class='col-md-3'>
+            <a href='#' id='addRessourceButton' class='btn btn-primary'>{{ 'Add'|trans({}, 'icap_dropzone') }}</a>
+        </div>
+    </div>
+    
     <div class="row" style="display: none;">
         <div class="col-md-12">
             <div class="form-group pull-right">
-                <a href="{{ path('icap_dropzone_drop', {'resourceId': dropzone.id}) }}" class="btn btn-default cancel-inline">{{ 'Cancel'|trans({}, 'icap_dropzone') }}</a>
                 <button id="add-document-sumbit" disabled type="submit" class="btn btn-primary">
                     {{ 'Add'|trans({}, 'icap_dropzone') }}
                 </button>
             </div>
         </div>
     </div>
+    
 {% endblock %}
 
