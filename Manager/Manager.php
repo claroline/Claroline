@@ -48,7 +48,7 @@ class Manager
     /**
      * Generates bundle migrations classes for all the available driver platforms.
      *
-     * @param Symfony\Component\HttpKernel\Bundle\Bundle $bundle
+     * @param \Symfony\Component\HttpKernel\Bundle\Bundle $bundle
      */
     public function generateBundleMigration(Bundle $bundle)
     {
@@ -73,7 +73,7 @@ class Manager
      * Returns information about the migration status of a bundle. The return
      * value is the same than Migrator::getMigrationStatus().
      *
-     * @param Symfony\Component\HttpKernel\Bundle\Bundle $bundle
+     * @param \Symfony\Component\HttpKernel\Bundle\Bundle $bundle
      *
      * @return array
      */
@@ -86,8 +86,8 @@ class Manager
      * Upgrades a bundle to a specified version. The version can be either an
      * explicit version string or a Migrator::VERSION_* constant.
      *
-     * @param Symfony\Component\HttpKernel\Bundle\Bundle    $bundle
-     * @param string                                        $version
+     * @param \Symfony\Component\HttpKernel\Bundle\Bundle $bundle
+     * @param string                                      $version
      */
     public function upgradeBundle(Bundle $bundle, $version)
     {
@@ -98,7 +98,7 @@ class Manager
      * Upgrades a bundle to a specified version. The version can be either an
      * explicit version string or a Migrator::VERSION_* constant.
      *
-     * @param Symfony\Component\HttpKernel\Bundle\Bundle    $bundle
+     * @param \Symfony\Component\HttpKernel\Bundle\Bundle    $bundle
      * @param string                                        $version
      */
     public function downgradeBundle(Bundle $bundle, $version)
@@ -109,7 +109,7 @@ class Manager
     /**
      * Deletes migration classes which are above the current version of a bundle.
      *
-     * @param string $bundleName
+     * @param \Symfony\Component\HttpKernel\Bundle\Bundle $bundle
      */
     public function discardUpperMigrations(Bundle $bundle)
     {
