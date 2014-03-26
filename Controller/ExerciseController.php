@@ -591,7 +591,7 @@ class ExerciseController extends Controller
         $em = $this->getDoctrine()->getManager();
         $exercise = $em->getRepository('UJMExoBundle:Exercise')->find($id);
 
-        $exoAdmin = $this->container->get('ujm.exercise_services')->isExerciseAdmin($exercise);
+        $exoAdmin = $exerciseSer->isExerciseAdmin($exercise);
         $this->checkAccess($exercise);
 
         $workspace = $exercise->getResourceNode()->getWorkspace();
