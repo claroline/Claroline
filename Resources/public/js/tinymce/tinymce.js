@@ -17,6 +17,7 @@
 
     //Load external plugins
     tinymce.PluginManager.load('mention', home.asset + 'bundles/frontend/tinymce/plugins/mention/plugin.min.js');
+    tinymce.PluginManager.load('accordion', home.asset + 'bundles/frontend/tinymce/plugins/accordion/plugin.min.js');
     tinymce.DOM.loadCSS(home.asset + 'bundles/frontend/tinymce/plugins/mention/css/autocomplete.css');
 
     var language = home.locale.trim();
@@ -34,13 +35,13 @@
             'autoresize advlist autolink lists link image charmap print preview hr anchor pagebreak',
             'searchreplace wordcount visualblocks visualchars fullscreen',
             'insertdatetime media nonbreaking save table directionality',
-            'template paste textcolor emoticons code -mention'
+            'template paste textcolor emoticons code -mention -accordion'
         ],
         'toolbar1': 'styleselect | bold italic | alignleft aligncenter alignright alignjustify | ' +
-                    'preview fullscreen resourcePicker fileUpload',
+                    'preview fullscreen resourcePicker fileUpload accordion',
         'toolbar2': 'undo redo | forecolor backcolor emoticons | bullist numlist outdent indent | ' +
                     'link image media print code',
-        'extended_valid_elements': 'user[id]',
+        'extended_valid_elements': 'user[id], a[data-toggle|data-parent]',
         'paste_preprocess': function (plugin, args) {
             var link = $('<div>' + args.content + '</div>').text().trim(); //inside div because a bug of jquery
 
