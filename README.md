@@ -92,6 +92,7 @@ If you want to allow users to tag and notify other users then you should follow 
 
 2.  Add in `listeners.yml` file a line for the new event.
     Example:
+    
     ```
         - { name: kernel.event_listener, event: create_notification_item_resource-icap_wiki-user_tagged, method: onCreateNotificationItem }
     ```
