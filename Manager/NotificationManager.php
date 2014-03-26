@@ -1,6 +1,6 @@
 <?php
 
-namespace Icap\NotificationBundle\Service;
+namespace Icap\NotificationBundle\Manager;
 
 use Icap\NotificationBundle\Entity\FollowerResource;
 use Icap\NotificationBundle\Entity\NotifiableInterface;
@@ -15,7 +15,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Icap\NotificationBundle\Entity\ColorChooser;
 use Symfony\Component\DependencyInjection\Container;
 
-class Manager
+class NotificationManager
 {
     protected $em;
     protected $security;
@@ -43,6 +43,46 @@ class Manager
     protected function getFollowerResourceRepository()
     {
         return $this->getEntityManager()->getRepository('IcapNotificationBundle:FollowerResource');
+    }
+
+    protected function getUsersToNotifyForNotifiable(NotifiableInterface $notifiable)
+    {
+        $userIds = array();
+        if ($notifiable->getSendToFollowers() && $notifiable->getResource() !== null) {
+            $userIds = $this->getFollowersByResourceIdAndClass(
+                $notifiable->getResource()->getId(),
+                $notifiable->getResource()->getClass()
+            );
+        }
+
+        $includeUserIds = $notifiable->getIncludeUserIds();
+        if (!empty($includeUserIds)) {
+            $userIds = array_merge($userIds, $includeUserIds);
+        }
+
+        $userIds        = array_unique($userIds);
+        $excludeUserIds = $notifiable->getExcludeUserIds();
+        $removeUserIds  = array();
+
+        if (!empty($excludeUserIds)) {
+            $userIds = array_diff($userIds, $excludeUserIds);
+        }
+
+        $token = $this->security->getToken();
+
+        if ($token) {
+            //Remove logged user
+            $loggedUser = $token->getUser();
+            if (is_a($loggedUser, 'Claroline\CoreBundle\Entity\User')) {
+                if (!empty($loggedUser)) {
+                    array_push($removeUserIds, $loggedUser->getId());
+                }
+            }
+        }
+
+        $userIds = array_diff($userIds, $removeUserIds);
+
+        return $userIds;
     }
 
     /**
@@ -108,18 +148,13 @@ class Manager
      *
      * @return Notification
      */
-    public function createNotification(NotifiableInterface $notifiable)
+    public function createNotification($actionKey, $iconKey, $resourceId = null, $details = array(), $doer = null)
     {
         $notification = new Notification();
-        $notification->setActionKey($notifiable->getActionKey());
-        $notification->setIconKey($notifiable->getIconKey());
-        $resourceId = null;
-        if ($notifiable->getResource() !== null) {
-            $resourceId = $notifiable->getResource()->getId();
-        }
+        $notification->setActionKey($actionKey);
+        $notification->setIconKey($iconKey);
         $notification->setResourceId($resourceId);
-        $details = $notifiable->getNotificationDetails();
-        $doer = $notifiable->getDoer();
+        $details = $details;
         $doerId = null;
 
         if ($doer === null) {
@@ -130,7 +165,7 @@ class Manager
             }
         }
 
-        if ($doer instanceof Claroline\CoreBundle\Entity\User) {
+        if (is_a($doer,'Claroline\CoreBundle\Entity\User')) {
             $doerId = $doer->getId();
         }
 
@@ -159,45 +194,8 @@ class Manager
      *
      * @return \Icap\NotificationBundle\Entity\Notification
      */
-    public function notifyUsers(Notification $notification, NotifiableInterface $notifiable)
+    public function notifyUsers(Notification $notification, $userIds)
     {
-        $userIds = array();
-        if ($notifiable->getSendToFollowers() && $notifiable->getResource() !== null) {
-            $userIds = $this->getFollowersByResourceIdAndClass(
-                $notifiable->getResource()->getId(),
-                $notifiable->getResource()->getClass()
-            );
-        }
-
-        $includeUserIds = $notifiable->getIncludeUserIds();
-        if (!empty($includeUserIds)) {
-            $userIds = array_merge($userIds, $includeUserIds);
-        }
-
-        $userIds        = array_unique($userIds);
-        $excludeUserIds = $notifiable->getExcludeUserIds();
-        $removeUserIds  = array();
-
-        if (!empty($excludeUserIds)) {
-            $userIds = array_diff($userIds, $excludeUserIds);
-        }
-
-        $token = $this->security->getToken();
-
-        if ($token) {
-            //Remove doer from user list as long as the logged user
-            $loggedUser = $token->getUser();
-            $removeUserIds = array($notification->getUserId());
-
-            if ($loggedUser instanceof Claroline\CoreBundle\Entity\User) {
-                if (!empty($loggedUser) && $loggedUser->getId() != $notification->getUserId()) {
-                    array_push($removeUserIds, $loggedUser->getId());
-                }
-            }
-        }
-
-        $userIds = array_diff($userIds, $removeUserIds);
-
         if (count($userIds)>0) {
             foreach ($userIds as $userId) {
                 if ($userId !== null) {
@@ -209,8 +207,6 @@ class Manager
                     $this->getEntityManager()->persist($notificationViewer);
                 }
             }
-        } else {
-            $this->getEntityManager()->remove($notification);
         }
         $this->getEntityManager()->flush();
 
@@ -225,8 +221,23 @@ class Manager
      */
     public function createNotificationAndNotify(NotifiableInterface $notifiable)
     {
-        $notification = $this->createNotification($notifiable);
-        $this->notifyUsers($notification, $notifiable);
+        $userIds = $this->getUsersToNotifyForNotifiable($notifiable);
+        $notification = null;
+        if (count($userIds)>0) {
+            $resourceId = null;
+            if ($notifiable->getResource() !== null) {
+                $resourceId = $notifiable->getResource()->getId();
+            }
+
+            $notification = $this->createNotification(
+                $notifiable->getActionKey(),
+                $notifiable->getIconKey(),
+                $resourceId,
+                $notifiable->getNotificationDetails(),
+                $notifiable->getDoer()
+            );
+            $this->notifyUsers($notification, $userIds);
+        }
 
         return $notification;
     }
@@ -306,6 +317,11 @@ class Manager
         );
 
         return $followerResource;
+    }
+
+    public function getTaggedUsersFromText($text)
+    {
+
     }
 
     /**

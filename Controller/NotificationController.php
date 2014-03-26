@@ -37,11 +37,11 @@ class NotificationController extends Controller
             $maxResult = $this->container->getParameter('icap_notification.max_per_page');
         }
 
-        $result = $this->get("icap_notification.manager")
+        $result = $this->get("icap.notification.manager")
             ->getUserNotificationsList($user->getId(), $page, $maxResult);
 
         if ($request->isXMLHttpRequest()) {
-            $unviewedNotifications = $this->get('icap_notification.manager')->countUnviewedNotifications($user->getId());
+            $unviewedNotifications = $this->get('icap.notification.manager')->countUnviewedNotifications($user->getId());
             $result['unviewedNotifications'] = $unviewedNotifications;
 
             return $this->render(
