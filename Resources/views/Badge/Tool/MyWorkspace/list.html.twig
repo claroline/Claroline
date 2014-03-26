@@ -24,22 +24,42 @@
 
 {% block section_body %}
     <ul class="list-inline my_badges">
-        {% for badge in badgePager %}
-        <li class="col-md-6">
-            <div class="panel panel-default badge_panel">
-                <div class="panel-heading">
-                    <h3 class="panel-title">{{ badge.name }}</h3>
-                </div>
-                <div class="panel-body">
-                    <div class="col-md-4">
-                        <img src="{{ asset(badge.webPath) }}" alt="{{ badge.name }}" class="badge_image_informations" />
+        {% for workspaceBadge in badgePager %}
+            {% set badgeType = workspaceBadge.type %}
+            <li class="col-md-6">
+                {% if 'owned' == badgeType %}
+                    {% set badge     = workspaceBadge.badge.badge %}
+                    {% set userBadge = workspaceBadge.badge %}
+                    <div class="panel panel-default badge_panel owned_badge">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">{{ badge.name }}<small class="pull-right"><span class="icon-ok"></span> {{ 'badge_awarded_on'|trans({'%awardingDate%': userBadge.issuedAt|date('date_format'|trans({}, 'platform'))}, 'badge') }}</small></h3>
+                        </div>
+                        <div class="panel-body">
+                            <div class="col-md-4">
+                                <img src="{{ asset(badge.webPath) }}" alt="{{ badge.name }}" class="badge_image_informations" />
+                            </div>
+                            <div class="col-md-8">
+                                <p>{{ badge.description }}</p>
+                            </div>
+                        </div>
                     </div>
-                    <div class="col-md-8">
-                        <p>{{ badge.description }}</p>
+                {% else %}
+                    {% set badge = workspaceBadge.badge %}
+                    <div class="panel panel-default badge_panel">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">{{ badge.name }}</h3>
+                        </div>
+                        <div class="panel-body">
+                            <div class="col-md-4">
+                                <img src="{{ asset(badge.webPath) }}" alt="{{ badge.name }}" class="badge_image_informations" />
+                            </div>
+                            <div class="col-md-8">
+                                <p>{{ badge.description }}</p>
+                            </div>
+                        </div>
                     </div>
-                </div>
-            </div>
-        </li>
+                {% endif %}
+            </li>
         {% else %}
             <li class="node-thumbnail node">
                 {{ 'no_badges_in_workspace'|trans({}, 'badge')|raw }}

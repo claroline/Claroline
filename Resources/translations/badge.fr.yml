@@ -25,6 +25,7 @@ badge_award_info_no_group_message: 'Aucun groupe sélectionné pour l''attributi
 badge_awarded_automatically_on: 'Badge attribué automatiquement le %awardingDate%'
 badge_awarded_count_message: '%awaredBadge% attribution de badge effectuée.|%awaredBadge% attributions de badge effectuées.'
 badge_awarded_on_by: 'Badge attribué le %awardingDate% par %awardingIssuer%'
+badge_awarded_on: 'Badge attribué le %awardingDate%'
 badge_awarded_to: 'Badge attribué à'
 badge_awarding_rules_not_respected: 'Règle d''attribution du badge non respectées'
 badge_check_state: 'Conditions vérifiées'
