@@ -52,7 +52,7 @@
     <li><a href="{{ path('claro_resource_open', { 'resourceType': _resource.resourceNode.resourceType.name(), 'node': _resource.resourceNode.id }) }}">{{ _resource.getResourceNode().getName() }}</a></li>
     <li class="active">{{ 'nQuestion' | trans }}{{numQ}}</li>
 {% endblock %}
-    
+
 {% block section_content %}
     <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/paper.js') }}"></script>
 
@@ -66,7 +66,7 @@
                     {% else %}
                         {{ "attempt info2sing" | trans }}
                     {% endif %}
-                     - 
+                     -
                 {% endif %}
                 {{ "attempt info3" | trans }} {{ numAttempt }}
             </span>
@@ -84,7 +84,7 @@
                     <input class="form-control" type="hidden" name="interactionQCMToValidated" value="{{ interactionToDisplayed.id }}"/>
                     <input class="form-control" type="hidden" name="interactionToValidated" value="{{ interactionToDisplayed.interaction.id }}"/>
                     <input class="form-control" type="hidden" name="typeInteraction" value="InteractionQCM"/>
-                    
+
                     {% include "UJMExoBundle:Partial:interactionPaper.html.twig" %}
 
                     <table class="table-striped" cellspacing="5" cellpadding="2" border="0">
@@ -105,7 +105,7 @@
                     </table>
 
                     {% include "UJMExoBundle:Partial:hintPaper.html.twig" %}
-                    
+
                 <!--</div>-->
 
                 <input type="hidden" name="testQCM" value="testQCM" />
@@ -118,7 +118,7 @@
                 <!--<div class="panel-body">-->
                     <input type="hidden" name="interactionToValidated" value="{{ interactionToDisplayed.interaction.id }}"/>
                     <input type="hidden" name="typeInteraction" value="InteractionGraphic"/>
-                    
+
                     {% include "UJMExoBundle:Partial:interactionPaper.html.twig" %}
 
                     <h5>{{ "consignes" | trans }} :</h5>
@@ -186,7 +186,7 @@
                         <input class="form-control" type="hidden" name="interactionHoleToValidated" value="{{ interactionToDisplayed.id }}"/>
                         <input class="form-control" type="hidden" name="interactionToValidated" value="{{ interactionToDisplayed.interaction.id }}"/>
                         <input class="form-control" type="hidden" name="typeInteraction" value="InteractionHole"/>
-                        
+
                         {% include "UJMExoBundle:Partial:interactionPaper.html.twig" %}
 
                         <div id="interHoleResponse">
@@ -201,7 +201,7 @@
                         </div>
 
                         {% include "UJMExoBundle:Partial:hintPaper.html.twig" %}
-                        
+
                     <!--</div>-->
 
                     <input type="hidden" name="testQCM" value="testQCM" />
@@ -213,8 +213,8 @@
     </div>
     {#--------------------------------------------------- Pagination ----------------------------------------------------#}
 
-    <div class="text-center panel-footer">
-        {% set indexMax = 1 %}
+    <!--div class="text-center panel-footer">
+        {#% set indexMax = 1 %}
         <ul class="pagination">
             {% if numQ != 1 %}
                 <li>
@@ -270,7 +270,67 @@
                     <input type="button" value="{{ "finish" | trans }}" onClick="finish('{{ interactionType }}', '{{ 'alert ending' | trans }}');"
                         class="btn btn-primary"/>
                 </li>
+            {% endif %#}
+        </ul>
+    </div-->
+
+    <div class="text-center panel-footer">
+        {% set indexMax = 1 %}
+
+        {% for interactionID in tabOrderInter %}
+            {% set indexMax = loop.index %}
+        {% endfor %}
+
+        <ul class="pagination">
+            {% if numQ == 1 %}
+                <li class="disabled"><a href="#"><i class="icon-chevron-left"></i> &nbsp; {{ 'previous' | trans }}</a></li>
+                <li>
+                    <a href="#" onClick="submitForm({{ numQ+1 }}, '{{ interactionType }}');">
+                        {{ 'next' | trans }} &nbsp; <i class="icon-chevron-right"></i>
+                    </a>
+                </li>
+            {% elseif numQ == indexMax %}
+                <li>
+                    <a href="#" onClick="submitForm({{ numQ-1 }}, '{{ interactionType }}');">
+                        <i class="icon-chevron-left"></i> &nbsp; {{ 'previous' | trans }}
+                    </a>
+                </li>
+                <li class="disabled"><a href="#">{{ 'next' | trans }} &nbsp; <i class="icon-chevron-right"></i></a></li>
+                <li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</li>
+                <li>
+                    <input type="button" value="{{ "finish" | trans }}" onClick="finish('{{ interactionType }}', '{{ 'alert ending' | trans }}');"
+                        class="btn btn-primary"/>
+                </li>
+
+            {% elseif numQ != indexMax and numQ != 1 %}
+                <li>
+                    <a href="#" onClick="submitForm({{ numQ-1 }}, '{{ interactionType }}');">
+                        <i class="icon-chevron-left"></i> &nbsp; {{ 'previous' | trans }}
+                    </a>
+                </li>
+                <li>
+                    <a href="#" onClick="submitForm({{ numQ+1 }}, '{{ interactionType }}');">
+                        {{ 'next' | trans }} &nbsp; <i class="icon-chevron-right"></i>
+                    </a>
+                </li>
             {% endif %}
+
+
+            {% if dispButtonInterrupt %}
+                <li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</li>
+                <li>
+                    <input type="button" value="{{ "interupt" | trans }}" onClick="interupt('{{ interactionType }}');" class="btn btn-primary"/>
+                </li>
+            {% endif %}
+            <li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</li>
+
+            <li>
+                <select id="Qnumber" onchange="submitForm(this.options[this.selectedIndex].value, '{{ interactionType }}');">
+                    {% for interactionID in tabOrderInter %}
+                        <option value="{{ loop.index }}">{{ 'nQuestion' | trans }}{{ loop.index }} / {{ tabOrderInter | length }}</option>
+                    {% endfor %}
+                </select>
+            </li>
         </ul>
     </div>
 {% endblock %}
@@ -284,4 +344,10 @@
         <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/graphicdisplay.js') }}"></script>
         <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/paper.js') }}"></script>
     {% endif %}
+
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('#Qnumber option[value="' + {{ numQ }} + '"]').attr('selected', 'selected');
+        });
+    </script>
 {% endblock %}

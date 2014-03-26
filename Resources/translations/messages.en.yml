@@ -227,6 +227,7 @@ never: Never
 newCategoryName: New name of the category
 newName: New name of the document
 newDoc: New document
+next: Next
 no: No
 no answer: No answer
 noAnswerZone: There is no answer zone
@@ -279,6 +280,7 @@ pointInstruction: Points must be assigned before positioning each answer zone
 pointRightResponse: Right answer points
 position: => Place pointers below (red cross) on the picture. The pointer's center defines your answer.
 preview: Preview
+previous: Previous
 print paper: Print paper
 
 # Q

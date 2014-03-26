@@ -227,6 +227,7 @@ never: Jamais
 newCategoryName: Nouveau nom de la catégorie
 newName: Nouveau nom du document
 newDoc: Nouveau document
+next: Suivant
 no: Non
 no answer: Pas de réponse
 noAnswerZone: Vous n\'avez mis aucune zone de réponse
@@ -279,6 +280,7 @@ pointInstruction: Les points doivent être attribués avant le placement de chaq
 pointRightResponse: Points bonne réponse
 position: => Positionner le(s) pointeur(s) ci-dessous (croix rouge) sur l'image. La position du centre du pointeur défini votre réponse.
 preview: Aperçu
+previous: Précédent
 print paper: Imprimer la copie
 
 # Q
