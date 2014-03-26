@@ -815,8 +815,8 @@ class exerciseServices
     public function controlMaxAttemps($exercise, $user, $exoAdmin)
     {
         if (($exoAdmin != 1) && ($exercise->getMaxAttempts() > 0)
-            && ($exercise->getMaxAttempts() <= $this->container->get('ujm.exercise_services')
-                ->getNbPaper($user->getId(), $exercise->getId()))
+            && ($exercise->getMaxAttempts() <= $this->getNbPaper($user->getId(),
+            $exercise->getId()))
         ) {
             return false;
         } else {
