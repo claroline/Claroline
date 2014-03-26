@@ -71,19 +71,18 @@ If you want to allow users to tag and notify other users then you should follow 
         ```
     -   Develop a `@ORM\PrePersist` method that instanciates userPicker and swaps originalText with finalText.
 
-```
-    /**
-    * @ORM\PrePersist
-    */
-     public function createUserPicker(LifecycleEventArgs $event){
-         if ($this->getText() != null) {
-             $userPicker = new UserPickerContent($this->getText());
-             $this->setUserPicker($userPicker);
-             $this->setText($userPicker->getFinalText());
+        ```
+        /**
+        * @ORM\PrePersist
+        */
+         public function createUserPicker(LifecycleEventArgs $event){
+             if ($this->getText() != null) {
+                 $userPicker = new UserPickerContent($this->getText());
+                 $this->setUserPicker($userPicker);
+                 $this->setText($userPicker->getFinalText());
+             }
          }
-     }
-```
-
+        ```
     -   Create an entity listener class and associate it with your entity. Here is an example (for Contribution entity in WikiBundle):
         ```
             @ORM\EntityListeners({"Icap\WikiBundle\Listener\ContributionListener"})
