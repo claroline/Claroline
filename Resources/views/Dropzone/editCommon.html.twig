@@ -68,8 +68,17 @@
         <div class="form-group">
             {{ form_row(form.displayNotationToLearners, {'input_col_size': 'col-lg-offset-2 col-lg-10', 'label_attr': {'class': 'control-label', 'style': 'font-weight: normal;'}}) }}
             {{ form_row(form.displayNotationMessageToLearners, {'input_col_size': 'col-lg-offset-2 col-lg-10', 'label_attr': {'class': 'control-label', 'style': 'font-weight: normal;'}}) }}
+            <div id='dropzone-message-part' class='col-lg-offset-3 col-lg-7' {% if dropzone.displayNotationMessageToLearners == false %} style="display:none" {% endif %} >
+                {{ form_label(form.successMessage,null,{'label': 'successMessage'|trans({},'icap_dropzone'), 'label_attr': {'class': 'control-label','style':'font-weight:normal;'}}) }}
+                {{ form_widget(form.successMessage, {'label_attr': {'class': 'control-label', 'style': 'font-weight: normal;'}}) }}
+                {{ form_errors(form.successMessage) }}
+                 {{ form_label(form.failMessage,null,{'label': 'failMessage'|trans({},'icap_dropzone'), 'label_attr': {'class': 'control-label','style':'font-weight:normal;'}}) }}
+                {{ form_widget(form.failMessage, {'label_attr': {'class': 'control-label', 'style': 'font-weight: normal;'}}) }}
+                {{ form_errors(form.failMessage) }}
+
+                {{ form_row(form.minimumScoreToPass, {'input_col_size': 'col-lg-4', 'label_col_size': 'col-lg-7', 'attr': {'style': 'width: 60px;'}, 'label_attr': {'class': 'control-label', 'style': 'font-weight: normal;'}}) }}
+            </div>
             <div class="col-lg-offset-3 col-lg-9">
-                {{ form_row(form.minimumScoreToPass, {'input_col_size': 'col-lg-4', 'label_col_size': 'col-lg-8', 'attr': {'style': 'width: 60px;'}, 'label_attr': {'class': 'control-label', 'style': 'font-weight: normal;'}}) }}
             </div>
         </div>
 
@@ -163,6 +172,13 @@
                 enablePeerReviewOptions(true);
             });
 
+            manageSuccessFailMessagesVisibility( $('#icap_dropzone_common_form_displayNotationMessageToLearners'));
+            $('#icap_dropzone_common_form_displayNotationMessageToLearners').change(function()
+            {
+                manageSuccessFailMessagesVisibility($(this));
+            });
+            
+
             var enablePeerReviewOptions = function (peerReviewEnabled) {
                 if (peerReviewEnabled) {
                     $('.peer-review-options').show();
@@ -250,6 +266,17 @@
             }*/
             $('#icap_dropzone_common_form_diplayCorrectionsToLearners').parent().show();
             manageCorrectionDeny();
+        }
+
+        function manageSuccessFailMessagesVisibility($cb)
+        {
+            var $div = $('#dropzone-message-part');
+            if($cb.prop('checked')) {
+                $div.fadeIn();
+            }else {
+                $div.fadeOut();
+            }
+            console.log($cb.prop('checked'));
         }
 
     </script>

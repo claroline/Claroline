@@ -31,6 +31,11 @@
                 <br/>
             {% endif %}
 
+            {% if dropzone.correctionInstruction|default and dropzone.correctionInstruction != ''  and dropzone.correctionInstruction != '<p></p>' %}
+                {%  include 'IcapDropzoneBundle:Correction:correctionInstructions.html.twig' %}
+                <br/>
+            {% endif %}
+
             {% if correction.reporter %}
                 <div class="col-md-12">
                     <span class="text-danger"><span class="glyphicon icon-warning-sign"></span>{{ 'This correction has reported abuse'|trans({}, 'icap_dropzone') }}</span>
@@ -97,6 +102,11 @@
 
             {% if dropzone.instruction != null %}
                 {%  include 'IcapDropzoneBundle:Dropzone:recallInstruction.html.twig' %}
+            {% endif %}
+
+            {% if dropzone.correctionInstruction|default and dropzone.correctionInstruction != ''  and dropzone.correctionInstruction != '<p></p>' %}
+                {%  include 'IcapDropzoneBundle:Correction:correctionInstructions.html.twig' %}
+                <br/>
             {% endif %}
 
             {% if correction is not null %}

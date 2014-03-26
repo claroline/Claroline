@@ -213,25 +213,25 @@
                         <div class='text-success'>
                             {% if dropzone.displayNotationMessageToLearners %}
                                 <div class="col-md-6">
-                                    Bravo ! Vous avez reussi cette évaluation
+                                    {{ dropzone.successMessage|raw }}
                                 </div>
                             {% endif %}
                             {% if dropzone.displayNotationToLearners %}
-                                <div class="col-md-6">
+                                <div class="col-md-3">
                                     Note : {% include 'IcapDropzoneBundle:Drop:dropsTotalGrade.html.twig' %}
                                 </div>
                             {% endif %}
                         </div>
-                        test
                         {% if dropzone.diplayCorrectionsToLearners %}
-
+                        <div class='col-md-3'>
                             <a href="{{ path('icap_dropzone_drop_detail_by_user',{'resourceId': dropzone.id,'dropId':drop.id}) }}" class="btn btn-primary ">{{ 'See Corrections'|trans({},'icap_dropzone') }}</a>
                         {% endif %}
+                        </div>
                     {% else %}
                         <div class='text-danger'>
                             {% if dropzone.displayNotationMessageToLearners %}
                                 <div class="col-md-6">
-                                    Dommage... Vous avez echoué cette évaluation
+                                    {{ dropzone.failMessage|raw }}
                                 </div>
                             {% endif %}
                             {% if dropzone.displayNotationToLearners %}

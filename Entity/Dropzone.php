@@ -42,6 +42,22 @@ class Dropzone extends AbstractResource {
      */
     protected $instruction = null;
 
+
+    /**
+     * @ORM\Column(name="correction_instruction",type="text", nullable=true)
+     */
+    protected $correctionInstruction = null;
+
+    /**
+     * @ORM\Column(name="success_message",type="text", nullable=true)
+     */
+    protected $successMessage =null;
+
+    /**
+     * @ORM\Column(name="fail_message",type="text", nullable=true)
+     */
+    protected $failMessage = null;
+
     /**
      * @ORM\Column(name="allow_workspace_resource", type="boolean", nullable=false)
      */
@@ -353,6 +369,54 @@ class Dropzone extends AbstractResource {
     public function setInstruction($instruction)
     {
         $this->instruction = $instruction;
+    }
+
+   /**
+     * @return text
+     */
+    public function getCorrectionInstruction()
+    {
+        return $this->correctionInstruction;
+    }
+
+    /**
+     * @param text $instruction
+     */
+    public function setCorrectionInstruction($instruction)
+    {
+        $this->correctionInstruction = $instruction;
+    }
+
+    /**
+     * @return text
+     */
+    public function getSuccessMessage()
+    {
+        return $this->successMessage;
+    }
+
+    /**
+     * @param text $message
+     */
+    public function setSuccessMessage($message)
+    {
+        $this->successMessage = $message;
+    }
+
+    /**
+     * @return text
+     */
+    public function getFailMessage()
+    {
+        return $this->failMessage;
+    }
+
+    /**
+     * @param text $message
+     */
+    public function setFailMessage($message)
+    {
+        $this->failMessage = $message;
     }
 
     /**
