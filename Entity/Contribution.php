@@ -5,10 +5,16 @@ namespace Icap\WikiBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Claroline\CoreBundle\Entity\User;
+use Doctrine\ORM\Event\LifecycleEventArgs;
+use Icap\NotificationBundle\Entity\UserPickerContent;
+use JMS\DiExtraBundle\Annotation as DI;
+
 
 /**
-* @ORM\Entity(repositoryClass="Icap\WikiBundle\Repository\ContributionRepository")
-* @ORM\Table(name="icap__wiki_contribution")
+ * @ORM\Entity(repositoryClass="Icap\WikiBundle\Repository\ContributionRepository")
+ * @ORM\EntityListeners({"Icap\WikiBundle\Listener\ContributionListener"})
+ * @ORM\Table(name="icap__wiki_contribution")
+ * @ORM\HasLifecycleCallbacks()
 */
 class Contribution
 {
@@ -48,6 +54,8 @@ class Contribution
      * @ORM\JoinColumn(name="section_id", referencedColumnName="id", nullable=false, onDelete="CASCADE")
      */
     protected $section;
+
+    protected $userPicker = null;
 
     /**
      * Get id
@@ -115,7 +123,7 @@ class Contribution
      * Set contributor
      *
      * @param User $contributor
-     * @return Post
+     * @return Contribution
      */
     public function setContributor(User $contributor = null)
     {
@@ -138,7 +146,7 @@ class Contribution
      * Set section
      *
      * @param \Icap\WikiBundle\Entity\Section $section
-     * @return section
+     * @return contribution
      */
     public function setSection(\Icap\WikiBundle\Entity\Section $section)
     {
@@ -155,5 +163,35 @@ class Contribution
     public function getSection()
     {
         return $this->section;
+    }
+
+    /**
+     * @param UserPickerContent $userPicker
+     * @return $this
+     */
+    public function setUserPicker(UserPickerContent $userPicker)
+    {
+        $this->userPicker = $userPicker;
+
+        return $this;
+    }
+
+    /**
+     * @return \Icap\NotificationBundle\Entity\UserPickerContent
+     */
+    public function getUserPicker()
+    {
+        return $this->userPicker;
+    }
+
+    /**
+     * @ORM\PrePersist
+     */
+    public function createUserPicker(LifecycleEventArgs $event){
+        if ($this->getText() != null) {
+            $userPicker = new UserPickerContent($this->getText());
+            $this->setUserPicker($userPicker);
+            $this->setText($userPicker->getFinalText());
+        }
     }
 }
