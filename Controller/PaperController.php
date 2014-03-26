@@ -181,7 +181,7 @@ class PaperController extends Controller
             return $this->redirect($this->generateUrl('ujm_exercise_open', array('exerciseId' => $paper->getExercise()->getId())));
         }
 
-        $infosPaper = $exerciseSe->getInfosPaper($paper);
+        $infosPaper = $exerciseSer->getInfosPaper($paper);
 
         $hintViewed = $this->getDoctrine()
             ->getManager()
