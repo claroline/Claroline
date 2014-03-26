@@ -145,9 +145,18 @@ class PaperController extends Controller
      */
     public function showAction($id, $p = -2)
     {
+        $retryButton = false;
+        $exerciseSer = $this->container->get('ujm.exercise_services');
+        
         $user = $this->container->get('security.context')->getToken()->getUser();
         $em = $this->getDoctrine()->getManager();
         $paper = $em->getRepository('UJMExoBundle:Paper')->find($id);
+        $exercise = $paper->getExercise();
+        
+        if ($exerciseSer->controlMaxAttemps($exercise,
+                $user, $exerciseSer->isExerciseAdmin($exercise))) {
+            $retryButton = true;
+        }
 
         if ($this->container->get('ujm.exercise_services')->isExerciseAdmin($paper->getExercise())) {
             $admin = 1;
@@ -189,7 +198,8 @@ class PaperController extends Controller
                 '_resource'     => $paper->getExercise(),
                 'p'             => $p,
                 'nbMaxQuestion' => $nbMaxQuestion,
-                'paperID'       => $paper->getId()
+                'paperID'       => $paper->getId(),
+                'retryButton'   => $retryButton
             )
         );
     }
