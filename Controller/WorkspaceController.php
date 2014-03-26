@@ -331,6 +331,15 @@ class WorkspaceController extends Controller
 
         $this->tokenUpdater->cancelUsurpation($this->security->getToken());
 
+        $translator = $this->get('translator');
+        $sessionFlashBag = $this->get('session')->getFlashBag();
+        $sessionFlashBag->add('success', $translator->trans(
+            'workspace_delete_success_message', 
+            array('%workspaceName%' => $workspace->getName()), 
+            'platform'
+            )
+        );
+
         return new Response('success', 204);
     }
 
