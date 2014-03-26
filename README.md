@@ -57,6 +57,48 @@ In order to integrate and enable notifications in a Claroline connect plugin you
 
 You can find a complete example of these steps in [iCAPLyon1/WikiBundle](https://github.com/iCAPLyon1/WikiBundle)
 
-Please enable notification only for events that inform of content creation/addition. Not for content deletion. Otherwise a user will be lost in a "notification overload". 
+Please enable notification only for events that inform of content creation/addition. Not for content deletion. Otherwise a user will be lost in a "notification overload".
+
+
+#### Integrate user tagging in plugins
+
+If you want to allow users to tag and notify other users then you should follow these steps:
+
+1.  For every entity in your plugin that contains text, implemented by a tinymce editor (for example a post in a blog, a contribution in a wiki etc.) you need to create:
+    -   A protected variable to store the user picker object (contains the information about the original text, the final text, as long as the list of tagged users)
+        ```
+            protected $userPicker = null;
+        ```
+    -   Develop a `@ORM\PrePersist` method that instanciates userPicker and swaps originalText with finalText.
+        ```
+             /**
+              * @ORM\PrePersist
+              */
+             public function createUserPicker(LifecycleEventArgs $event){
+                 if ($this->getText() != null) {
+                     $userPicker = new UserPickerContent($this->getText());
+                     $this->setUserPicker($userPicker);
+                     $this->setText($userPicker->getFinalText());
+                 }
+             }
+        ```
+    -   Create an entity listener class and associate it with your entity. Here is an example (for Contribution entity in WikiBundle):
+        ```
+            @ORM\EntityListeners({"Icap\WikiBundle\Listener\ContributionListener"})
+        ```
+        This entity Listener is responsible to create a notification and notify every tagged user on entity's postPersist event.
+        [Here](https://github.com/iCAPLyon1/WikiBundle/blob/master/Listener/ContributionListener.php) is the example of the Contribution listener.
+
+2.  Add in `listeners.yml` file a line for the new event.
+    Example:
+    ```
+        - { name: kernel.event_listener, event: create_notification_item_resource-icap_wiki-user_tagged, method: onCreateNotificationItem }
+    ```
+3.  Handle the rendering of the new notification event. (Create dedicated view etc.)
+    [Here](https://github.com/iCAPLyon1/WikiBundle/blob/master/Resources/views/Notification/notification_user_tagged.html.twig) is this view for the wiki bundle and [here](https://github.com/iCAPLyon1/WikiBundle/blob/master/Resources/views/Notification/notification_item.html.twig)
+    is the modified notification_item view to include the new event.
+
+
+
 
 
