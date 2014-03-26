@@ -63,6 +63,9 @@ class PaperController extends Controller
      */
     public function indexAction($exoID, $page, $all)
     {
+        $retryButton = false;
+        $exerciseSer = $this->container->get('ujm.exercise_services');
+        
         $exoAdmin = false;
         $arrayMarkPapers = array();
 
@@ -74,7 +77,7 @@ class PaperController extends Controller
 
         $this->checkAccess($exercise);
 
-        if ($this->container->get('ujm.exercise_services')->isExerciseAdmin($exercise)) {
+        if ($exerciseSer->isExerciseAdmin($exercise)) {
 
             $exoAdmin = true;
         }
@@ -124,16 +127,22 @@ class PaperController extends Controller
             $arrayMarkPapers[$p->getId()] = $this->container->get('ujm.exercise_services')->getInfosPaper($p);
         }
 
+        if ($exerciseSer->controlMaxAttemps($exercise,
+                $user, $exerciseSer->isExerciseAdmin($exercise))) {
+            $retryButton = true;
+        }
+        
         return $this->render(
             'UJMExoBundle:Paper:index.html.twig',
             array(
-                'workspace' => $workspace,
-                'papers'    => $papers,
-                'isAdmin'   => $exoAdmin,
-                'pager'     => $pagerfanta,
-                'exoID'     => $exoID,
-                'display'   => $display,
-                '_resource' => $exercise,
+                'workspace'       => $workspace,
+                'papers'          => $papers,
+                'isAdmin'         => $exoAdmin,
+                'pager'           => $pagerfanta,
+                'exoID'           => $exoID,
+                'display'         => $display,
+                'retryButton'     => $retryButton,
+                '_resource'       => $exercise,
                 'arrayMarkPapers' => $arrayMarkPapers
             )
         );
@@ -172,7 +181,7 @@ class PaperController extends Controller
             return $this->redirect($this->generateUrl('ujm_exercise_open', array('exerciseId' => $paper->getExercise()->getId())));
         }
 
-        $infosPaper = $this->container->get('ujm.exercise_services')->getInfosPaper($paper);
+        $infosPaper = $exerciseSe->getInfosPaper($paper);
 
         $hintViewed = $this->getDoctrine()
             ->getManager()
