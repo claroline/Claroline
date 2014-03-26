@@ -20,6 +20,7 @@ use Claroline\CoreBundle\Manager\BadgeManager;
 use Doctrine\ORM\EntityManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Bundle\TwigBundle\TwigEngine;
+use Symfony\Component\Security\Core\SecurityContext;
 
 /**
  * @DI\Service
@@ -52,12 +53,18 @@ class BadgeListener
     private $pagerFactory;
 
     /**
+     * @var \Symfony\Component\Security\Core\SecurityContext
+     */
+    private $securityContext;
+
+    /**
      * @DI\InjectParams({
      *     "entityManager"     = @DI\Inject("doctrine.orm.entity_manager"),
      *     "badgeManager"      = @DI\Inject("claroline.manager.badge"),
      *     "templatingEngine"  = @DI\Inject("templating"),
      *     "ruleValidator"     = @DI\Inject("claroline.rule.validator"),
-     *     "pagerFactory"      = @DI\Inject("claroline.pager.pager_factory")
+     *     "pagerFactory"      = @DI\Inject("claroline.pager.pager_factory"),
+     *     "securityContext"   = @DI\Inject("security.context")
      * })
      */
     public function __construct(
@@ -65,7 +72,8 @@ class BadgeListener
         BadgeManager $badgeManager,
         TwigEngine $templatingEngine,
         Validator $ruleValidator,
-        PagerFactory $pagerFactory
+        PagerFactory $pagerFactory,
+        SecurityContext $securityContext
     )
     {
         $this->entityManager     = $entityManager;
@@ -73,6 +81,7 @@ class BadgeListener
         $this->templateingEngine = $templatingEngine;
         $this->ruleValidator     = $ruleValidator;
         $this->pagerFactory      = $pagerFactory;
+        $this->securityContext   = $securityContext;
     }
 
     /**
@@ -171,15 +180,13 @@ class BadgeListener
      */
     private function myBadges(AbstractWorkspace $workspace)
     {
-        $badges     = $this->entityManager->getRepository('ClarolineCoreBundle:Badge\Badge')->findByWorkspace($workspace);
-        $badgePager = $this->pagerFactory->createPagerFromArray($badges, 1, 10);
+        $user = $this->securityContext->getToken()->getUser();
 
         return $this->templateingEngine->render(
-            'ClarolineCoreBundle:Badge:Tool\MyWorkspace\list.html.twig',
+            'ClarolineCoreBundle:Badge:Tool\MyWorkspace\toolList.html.twig',
             array(
-                'badgePager' => $badgePager,
-                'workspace'  => $workspace,
-                'badgePage'  => 1
+                'workspace' => $workspace,
+                'user'      => $user
             )
         );
     }

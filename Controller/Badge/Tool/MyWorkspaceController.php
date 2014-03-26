@@ -53,50 +53,9 @@ class MyWorkspaceController extends Controller
     {
         $this->checkUserIsAllowed($workspace);
 
-        /** @var \Claroline\CoreBundle\Entity\Badge\Badge[] $workspaceBadges */
-        $workspaceBadges = $this->getDoctrine()->getManager()->getRepository('ClarolineCoreBundle:Badge\Badge')->findByWorkspace($workspace);
-
-        $ownedBadges = array();
-        $availableBadges = array();
-        $displayedBadges = array();
-
-        foreach ($workspaceBadges as $workspaceBadge) {
-            $isOwned = false;
-            foreach ($workspaceBadge->getUserBadges() as $userBadge) {
-                if ($loggedUser->getId() === $userBadge->getUser()->getId()) {
-                    $ownedBadges[] = $userBadge;
-                    $isOwned = true;
-                }
-            }
-
-            if (!$isOwned) {
-                $availableBadges[] = $workspaceBadge;
-            }
-        }
-
-        // Create badge list to display (owned badge first, then other badge)
-        $displayedBadges = array();
-        foreach ($ownedBadges as $ownedBadge) {
-            $displayedBadges[] = array(
-                'type'  => 'owned',
-                'badge' => $ownedBadge
-            );
-        }
-
-        foreach ($availableBadges as $availableBadge) {
-            $displayedBadges[] = array(
-                'type'  => 'available',
-                'badge' => $availableBadge
-            );
-        }
-
-        /** @var \Claroline\CoreBundle\Pager\PagerFactory $pagerFactory */
-        $pagerFactory = $this->get('claroline.pager.pager_factory');
-        $badgePager   = $pagerFactory->createPagerFromArray($displayedBadges, $badgePage, 10);
-
         return array(
-            'badgePager' => $badgePager,
             'workspace'  => $workspace,
+            'user'       => $loggedUser,
             'badgePage'  => $badgePage
         );
     }
