@@ -2,7 +2,7 @@
 
 {% trans_default_domain "badge" %}
 
-{% block title %}{{ parent() ~ ' - ' ~ 'badges' | trans | striptags | raw }}{% endblock %}
+{% block title %}{{ parent() ~ ' - ' ~ workspace.name ~ ' - ' ~ 'badges' | trans | striptags }}{% endblock %}
 
 {% block breadcrumb %}
     {{

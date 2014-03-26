@@ -115,6 +115,10 @@ class ProfileController extends Controller
 
         $userBadge = $this->getDoctrine()->getRepository('ClarolineCoreBundle:Badge\UserBadge')->findOneBy(array('badge' => $badge, 'user' => $user));
 
+        if (null === $userBadge) {
+            throw $this->createNotFoundException("User don't have this badge.");
+        }
+
         return array(
             'userBadge'    => $userBadge,
             'badge'        => $badge,
