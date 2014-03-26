@@ -213,7 +213,8 @@ class QuestionController extends Controller
             $exercise = $this->getDoctrine()->getManager()->getRepository('UJMExoBundle:Exercise')->find($exoID);
             $vars['_resource'] = $exercise;
 
-            if ($this->container->get('ujm.exercise_services')->isExerciseAdmin()) {
+            if ($this->container->get('ujm.exercise_services')
+                     ->isExerciseAdmin($exercise)) {
                 $allowToAccess = 1;
             }
         }
