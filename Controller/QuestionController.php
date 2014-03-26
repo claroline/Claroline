@@ -207,15 +207,21 @@ class QuestionController extends Controller
     public function showAction($id, $exoID)
     {
         $vars = array();
+        $allowToAccess = 0;
+
         if ($exoID != -1) {
             $exercise = $this->getDoctrine()->getManager()->getRepository('UJMExoBundle:Exercise')->find($exoID);
             $vars['_resource'] = $exercise;
+
+            if ($this->container->get('ujm.exercise_services')->isExerciseAdmin()) {
+                $allowToAccess = 1;
+            }
         }
 
         $question = $this->controlUserQuestion($id);
         $sharedQuestion = $this->container->get('ujm.exercise_services')->controlUserSharedQuestion($id);
 
-        if (count($question) > 0 || count($sharedQuestion) > 0) {
+        if (count($question) > 0 || count($sharedQuestion) > 0 || $allowToAccess == 1) {
             $interaction = $this->getDoctrine()
                 ->getManager()
                 ->getRepository('UJMExoBundle:Interaction')
