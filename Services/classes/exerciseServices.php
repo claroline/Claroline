@@ -43,6 +43,12 @@
 namespace UJM\ExoBundle\Services\classes;
 
 use Claroline\CoreBundle\Library\Resource\ResourceCollection;
+use Claroline\CoreBundle\Entity\Badge\Badge;
+use Claroline\CoreBundle\Entity\Badge\BadgeClaim;
+use Claroline\CoreBundle\Entity\Badge\BadgeCollection;
+use Claroline\CoreBundle\Entity\Badge\BadgeRule;
+use Claroline\CoreBundle\Entity\Badge\BadgeTranslation;
+use Gedmo\SoftDeleteable\Traits\SoftDeleteableEntity\SoftDeleteableEntity;
 
 use Doctrine\Bundle\DoctrineBundle\Registry;
 
@@ -830,10 +836,15 @@ class exerciseServices
      */
     public function getBadgeLinked($resourceId)
     {
+        $badges = array();
         $em = $this->doctrine->getManager();
-        $badges = $em->getRepository('ClarolineCoreBundle:Badge\BadgeRule')
-                     ->findBy(array('resource' => $resourceId));
+        $badgesRules = $em->getRepository('ClarolineCoreBundle:Badge\BadgeRule')
+                          ->findBy(array('resource' => $resourceId));
         
+        foreach ($badgesRules as $br) {
+            
+            $badges[] = $br->getAssociatedBadge();
+        }
         return $badges;
     }
     
@@ -849,26 +860,33 @@ class exerciseServices
         
         $exoBadges = $this->getBadgeLinked($resourceId);
         foreach($exoBadges as $badge) {
-            //if ($badge->getAssociatedBadge()->getDeletedAt()  != null ) {
-                $trans = $em->getRepository('ClarolineCoreBundle:Badge\BadgeTranslation')
-                            ->findOneBy(array(
-                                'badge'  => $badge->getId(),
-                                'locale' => $locale
-                         ));
-                $badgesInfoUser[$i]['badgeName'] = $trans->getName();
-
-                $userBadge = $em->getRepository('ClarolineCoreBundle:Badge\UserBadge')
+            //if ($badge->isDeleted()) {
+            
+                $brs = $em->getRepository('ClarolineCoreBundle:Badge\BadgeRule')
+                          ->findBy(array(
+                              'associatedBadge' => $badge->getId()
+                       ));
+                if (count($brs) == 1) {
+                    /*$trans = $em->getRepository('ClarolineCoreBundle:Badge\BadgeTranslation')
                                 ->findOneBy(array(
-                                    'user'  => $userId,
-                                    'badge' => $badge->getId()
-                             ));
-                if ($userBadge) {
-                    $badgesInfoUser[$i]['issued'] = $userBadge->getIssuedAt();
-                } else {
-                    $badgesInfoUser[$i]['issued'] = -1;
-                }
+                                    'badge'  => $badge->getId(),
+                                    'locale' => $locale
+                             ));*/
+                    $badgesInfoUser[$i]['badgeName'] = $badge->getName();
 
-                $i++;
+                    $userBadge = $em->getRepository('ClarolineCoreBundle:Badge\UserBadge')
+                                    ->findOneBy(array(
+                                        'user'  => $userId,
+                                        'badge' => $badge->getVersion()
+                                 ));
+                    if ($userBadge) {
+                        $badgesInfoUser[$i]['issued'] = $userBadge->getIssuedAt();
+                    } else {
+                        $badgesInfoUser[$i]['issued'] = -1;
+                    }
+
+                    $i++;
+                }
             //}
         }
 
