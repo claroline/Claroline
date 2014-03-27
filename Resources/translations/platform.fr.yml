@@ -70,6 +70,7 @@ add_widget_to_home_tab: 'Ajouter un widget à l''onglet'
 add_workspace: 'Ajouter un espace d''activités'
 admin: Administrateur
 admin_analytics: 'Statistiques plateforme'
+admin_analytics_no_data: 'Aucune donnée.'
 admin_form_firstName: Prénom
 admin_form_lastName: 'Nom de famille'
 admin_form_mail: 'Adresse email'

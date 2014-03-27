@@ -69,6 +69,7 @@ add_widget_to_home_tab: 'Add widget to Home tab'
 add_workspace: 'Add workspace'
 admin: Administrator
 admin_analytics: 'Platform analytics'
+admin_analytics_no_data: 'No data.'
 admin_form_firstName: 'first name'
 admin_form_lastName: Lastname
 admin_form_mail: 'Email adress'
