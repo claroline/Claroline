@@ -120,6 +120,8 @@
                 </div>
             </div>
         {% endif %}
+
+        {% include 'IcapDropzoneBundle:Drop:dropStatus.html.twig' %}
         
         {% if dropzone.instruction is not null %}
             <hr/>
@@ -257,7 +259,6 @@
                 {% endif %}
             </div>
         {% endif %}
-
 
     </div>
 {% endblock %}
