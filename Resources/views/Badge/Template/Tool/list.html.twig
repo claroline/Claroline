@@ -23,7 +23,7 @@
                 {% set badge = workspaceBadge.badge %}
                 <div class="panel panel-default badge_panel">
                     <div class="panel-heading">
-                        <h3 class="panel-title">{{ badge.name }}</h3>
+                        <h3 class="panel-title">{{ badge.name }}{% if 'inprogress' == badgeType %}<small class="pull-right">{{ 'badge_awarding_in_progress'|trans({}, 'badge') }}</small>{% endif %}</h3>
                     </div>
                     <div class="panel-body">
                         <div class="col-md-4">

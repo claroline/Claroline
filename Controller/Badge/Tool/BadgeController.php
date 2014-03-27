@@ -20,12 +20,16 @@ class BadgeController extends Controller
 {
     public function myWorkspaceBadgeAction(AbstractWorkspace $workspace, User $loggedUser, $badgePage)
     {
+        /** @var \Claroline\CoreBundle\Rule\Validator $badgeRuleValidator */
+        $badgeRuleValidator = $this->get("claroline.rule.validator");
+
         /** @var \Claroline\CoreBundle\Entity\Badge\Badge[] $workspaceBadges */
         $workspaceBadges = $this->getDoctrine()->getManager()->getRepository('ClarolineCoreBundle:Badge\Badge')->findByWorkspace($workspace);
 
-        $ownedBadges = array();
-        $availableBadges = array();
-        $displayedBadges = array();
+        $ownedBadges      = array();
+        $inProgressBadges = array();
+        $availableBadges  = array();
+        $displayedBadges  = array();
 
         foreach ($workspaceBadges as $workspaceBadge) {
             $isOwned = false;
@@ -37,16 +41,31 @@ class BadgeController extends Controller
             }
 
             if (!$isOwned) {
-                $availableBadges[] = $workspaceBadge;
+                $nbBadgeRules      = count($workspaceBadge->getRules());
+                $validatedRules    = $badgeRuleValidator->validate($workspaceBadge, $loggedUser);
+
+                if(0 < $nbBadgeRules && $nbBadgeRules >= $validatedRules['validRules']) {
+                    $inProgressBadges[] = $workspaceBadge;
+                }
+                else {
+                    $availableBadges[] = $workspaceBadge;
+                }
             }
         }
 
-        // Create badge list to display (owned badge first, then other badge)
+        // Create badge list to display (owned badges first, in progress badges and then other badges)
         $displayedBadges = array();
         foreach ($ownedBadges as $ownedBadge) {
             $displayedBadges[] = array(
                 'type'  => 'owned',
                 'badge' => $ownedBadge
+            );
+        }
+
+        foreach ($inProgressBadges as $inProgressBadge) {
+            $displayedBadges[] = array(
+                'type'  => 'inprogress',
+                'badge' => $inProgressBadge
             );
         }
 
