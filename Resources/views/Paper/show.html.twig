@@ -130,7 +130,7 @@
                         </table>
 
                         {% include "UJMExoBundle:Partial:correction/interactionScore.html.twig" %}
-                            
+
                     {% endif %}
                 </div>
 
@@ -149,8 +149,6 @@
 
                         {% include "UJMExoBundle:Partial:correction/interaction.html.twig" %}
 
-                        <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/graphicOverview.js') }}"></script>
-
                         <div id="Answer" style="position: relative;">
                             <img src="{{asset (inter.document.url)}}" width="{{ inter.width }}" height="{{ inter.height }}"
                                 alt="AnswerImage" id="AnswerImage{{ inter.interaction.id }}"/>
@@ -165,10 +163,12 @@
                                 {% set repcoX = repco[x]|split('-') %}
 
                                 <img src="{{ asset('bundles/ujmexo/images/graphic/circlew.png') }}" id="{{ inter.interaction.id }}ra{{ x }}"
-                                     alt="RightAnswer{{ x }}" width="{{ coords[x].size }}"/>
+                                     alt="RightAnswer{{ x }}" width="{{ coords[x].size }}" style="z-index: 2;"/>
 
                                 <img src="{{ asset('bundles/ujmexo/images/graphic/answer.png') }}" id="{{ inter.interaction.id }}cursor{{ x }}"
-                                     alt="AnswerZone{{ x }}"/>
+                                     alt="AnswerZone{{ x }}" style="z-index: 7;"/>
+
+                                <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/graphicOverview.js') }}"></script>
 
                                 <script type="text/javascript">
                                     whichImg('{{coords[x].shape}}', '{{coords[x].color}}', {{x}}, '{{ numb[0] }}', '{{ numb[1] }}',
@@ -209,7 +209,7 @@
             {% elseif(interactions[p].type == 'InteractionHole') %}
                 {% set interInfo = getInterTwig(interactions[p].id, 'InteractionHole') %}
                 {% set inter =  interInfo['question'] %}
-            
+
                 <div class="panel-body">
 
                     {% if (display == 'all') %}
@@ -221,7 +221,7 @@
 
                         <p><h3 class="panel-title">{{ 'expected answer' | trans }}</h3></p>
                         <div id="eAnswer">{{ inter.html|raw }}</div>
-                                        
+
                         <script type="text/javascript">
                             $(document).ready(function() {
                                 responseHole('{{ responses[p].response|raw }}');
@@ -229,7 +229,7 @@
                         </script>
 
                         {% include "UJMExoBundle:Partial:correction/interactionScore.html.twig" %}
-                            
+
                     {% endif %}
                 </div>
 
@@ -252,9 +252,9 @@
                             {% endif %}
                         </div>
 
-                        {% include "UJMExoBundle:Partial:correction/interactionScore.html.twig" %}    
+                        {% include "UJMExoBundle:Partial:correction/interactionScore.html.twig" %}
                         <br/>
-                                        
+
                         {% if inter.typeopenquestion == 'long' and admin == 1 %}
                             {% if responses[p].id != '' %}
                                 {% set url = path('ujm_paper_mark_open_question', {'respid': responses[p].id, 'maxScore': interInfo['maxScore']}) %}
@@ -266,7 +266,7 @@
                                 >{{ 'mark this question' | trans }}</a>
                             {% endif %}
                         {% endif %}
-                                
+
                     {% endif %}
                 </div>
             {% endif %}
@@ -288,7 +288,7 @@
                 </h3>
                 <hr/>
             {% endif %}
-        
+
             {% set needLegend = false %}
             <h3>{{ 'list of question' | trans }} :</h3>
                 <ol>
@@ -322,7 +322,7 @@
                     <hr/>
                     <h6 style="color: red;">( {{ 'need Correction' | trans }} ).</h6>
                 {% endif %}
-                    
+
         {% endif %}
     </div>
 
