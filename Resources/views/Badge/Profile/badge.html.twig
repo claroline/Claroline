@@ -57,9 +57,12 @@
                     </table>
                 </div>
             </div>
-            {% if 0 < badge.rules|length %}
-                {% if false == checkedLogs %}
+            {% set nbRules = badge.rules|length %}
+            {% if 0 < nbRules %}
+                {% if 0 == validatedRules.validRules %}
                 <div class="alert alert-danger">{{ 'badge_awarding_rules_not_respected'|trans({}, 'badge') }}.</div>
+                {% elseif validatedRules.validRules < nbRules %}
+                <div class="alert alert-info">{{ 'badge_awarding_some_rules_respected'|trans({'%nbvalidRules%': validatedRules.validRules, '%nbRules%': nbRules}, 'badge') }}.</div>
                 {% else %}
                 <div class="badge_rules_resources">
                     <h4>{{ 'actions_lead_to_badge_awarding'|trans({}, 'badge') }} :</h4>
@@ -73,21 +76,24 @@
                                 </tr>
                             </thead>
                             <tbody>
-                            {% for checkedLog in checkedLogs %}
-                                {% set action = 'log_' ~ checkedLog.action ~ '_title' %}
-                                <tr>
-                                    <td>{{ action|trans({}, 'log') }}</td>
-                                    <td>{{ checkedLog.dateLog|date('date_format'|trans({}, 'platform')) }}</td>
-                                    <td>
-                                        {% if checkedLinks[checkedLog.getId()] is defined %}
-                                            {{ checkedLinks[checkedLog.getId()]|raw }}
-                                        {% else %}
-                                            {% if checkedLog.resourceNode != null %}
-                                                <a href="{{ path('claro_resource_open', {'resourceType': checkedLog.resourceType.name, 'action': 'open', 'node': checkedLog.resourceNode.id})}}">{{ checkedLog.resourceNode.path }}</a>
+                            {% for validatedRule in validatedRules.rules %}
+                                {% for validatedLog in validatedRule.logs %}
+                                    {% set log    = validatedLog.log %}
+                                    {% set action = 'log_' ~ log.action ~ '_title' %}
+                                    <tr>
+                                        <td>{{ action|trans({}, 'log') }}</td>
+                                        <td>{{ log.dateLog|date('date_format'|trans({}, 'platform')) }}</td>
+                                        <td>
+                                            {% if validatedLog.url is not null %}
+                                                {{ validatedLog.url | raw }}
+                                            {% else %}
+                                                {% if log.resourceNode != null %}
+                                                    <a href="{{ path('claro_resource_open', {'resourceType': log.resourceType.name, 'action': 'open', 'node': log.resourceNode.id})}}">{{ log.resourceNode.path }}</a>
+                                                {% endif %}
                                             {% endif %}
-                                        {% endif %}
-                                    </td>
-                                </tr>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
                             {% endfor %}
                             </tbody>
                         </table>

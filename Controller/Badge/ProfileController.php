@@ -89,25 +89,32 @@ class ProfileController extends Controller
     {
         /** @var \Claroline\CoreBundle\Rule\Validator $badgeRuleValidator */
         $badgeRuleValidator = $this->get("claroline.rule.validator");
-        $validateLogs       = $badgeRuleValidator->validate($badge, $user);
+        $validatedRules       = $badgeRuleValidator->validate($badge, $user);
         $validateLogsLink   = array();
 
-        if (false !== $validateLogs) {
-            foreach ($validateLogs as $validateLog) {
-                $validationLink = null;
-                $eventLogName   = sprintf('badge-%s-generate_validation_link', $validateLog->getAction());
-
-                $eventDispatcher = $this->get('event_dispatcher');
-                if ($eventDispatcher->hasListeners($eventLogName)) {
-                    $event = $eventDispatcher->dispatch(
-                        $eventLogName,
-                        new BadgeCreateValidationLinkEvent($validateLog)
+        if (0 < $validatedRules['validRules']) {
+            foreach ($validatedRules['rules'] as $ruleIndex => $validatedRule) {
+                foreach ($validatedRule['logs'] as $logIndex => $validateLog) {
+                    $validatedRules['rules'][$ruleIndex]['logs'][$logIndex] = array(
+                        'log' => $validateLog,
+                        'url' => null
                     );
 
-                    $validationLink = $event->getContent();
+                    $validationLink = null;
+                    $eventLogName   = sprintf('badge-%s-generate_validation_link', $validateLog->getAction());
 
-                    if (null !== $validationLink) {
-                        $validateLogsLink[$validateLog->getId()] = $event->getContent();
+                    $eventDispatcher = $this->get('event_dispatcher');
+                    if ($eventDispatcher->hasListeners($eventLogName)) {
+                        $event = $eventDispatcher->dispatch(
+                            $eventLogName,
+                            new BadgeCreateValidationLinkEvent($validateLog)
+                        );
+
+                        $validationLink = $event->getContent();
+
+                        if (null !== $validationLink) {
+                            $validatedRules['rules'][$ruleIndex]['logs'][$logIndex]['url'] = $event->getContent();
+                        }
                     }
                 }
             }
@@ -120,10 +127,9 @@ class ProfileController extends Controller
         }
 
         return array(
-            'userBadge'    => $userBadge,
-            'badge'        => $badge,
-            'checkedLogs'  => $validateLogs,
-            'checkedLinks' => $validateLogsLink
+            'userBadge'      => $userBadge,
+            'badge'          => $badge,
+            'validatedRules' => $validatedRules
         );
     }
 
