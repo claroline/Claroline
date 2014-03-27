@@ -1,0 +1,5 @@
+{% if badgesInfoUser|length > 0 %}
+    {% for key,info in badgesInfoUser %}
+        {{ info.badgeName }} - {{ info.issued }}
+    {% endfor %}
+{% endif %}
