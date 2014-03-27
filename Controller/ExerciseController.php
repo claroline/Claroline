@@ -771,7 +771,7 @@ class ExerciseController extends Controller
         $numQuestionToDisplayed = $request->get('numQuestionToDisplayed');
 
         if ($numQuestionToDisplayed == 'finish') {
-            return $this->c($session);
+            return $this->finishExercise($session);
         } else if ($numQuestionToDisplayed == 'interupt') {
             return $this->interuptExercise();
         } else {
