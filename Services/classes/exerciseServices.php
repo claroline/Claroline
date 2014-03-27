@@ -872,12 +872,12 @@ class exerciseServices
                                     'badge'  => $badge->getId(),
                                     'locale' => $locale
                              ));*/
-                    $badgesInfoUser[$i]['badgeName'] = $badge->getName();
+                    $badgesInfoUser[$i]['badgeName'] = $badge->getId();//$badge->getName();
 
                     $userBadge = $em->getRepository('ClarolineCoreBundle:Badge\UserBadge')
                                     ->findOneBy(array(
                                         'user'  => $userId,
-                                        'badge' => $badge->getVersion()
+                                        'badge' => $badge->getId()
                                  ));
                     if ($userBadge) {
                         $badgesInfoUser[$i]['issued'] = $userBadge->getIssuedAt();
