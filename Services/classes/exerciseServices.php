@@ -824,6 +824,57 @@ class exerciseServices
         }
     }
     
+    /**
+     * 
+     * to return badges linked with the exercise
+     */
+    public function getBadgeLinked($resourceId)
+    {
+        $em = $this->doctrine->getManager();
+        $badges = $em->getRepository('ClarolineCoreBundle:Badge\BadgeRule')
+                     ->findBy(array('resource' => $resourceId));
+        
+        return $badges;
+    }
+    
+    /**
+     * 
+     * to return infos badges fon an exercise and an user
+     */
+    public function badgesInfoUser($userId, $resourceId, $locale)
+    {
+        $em = $this->doctrine->getManager();
+        $badgesInfoUser = array();
+        $i = 0;
+        
+        $exoBadges = $this->getBadgeLinked($resourceId);
+        foreach($exoBadges as $badge) {
+            //if ($badge->getAssociatedBadge()->getDeletedAt()  != null ) {
+                $trans = $em->getRepository('ClarolineCoreBundle:Badge\BadgeTranslation')
+                            ->findOneBy(array(
+                                'badge'  => $badge->getId(),
+                                'locale' => $locale
+                         ));
+                $badgesInfoUser[$i]['badgeName'] = $trans->getName();
+
+                $userBadge = $em->getRepository('ClarolineCoreBundle:Badge\UserBadge')
+                                ->findOneBy(array(
+                                    'user'  => $userId,
+                                    'badge' => $badge->getId()
+                             ));
+                if ($userBadge) {
+                    $badgesInfoUser[$i]['issued'] = $userBadge->getIssuedAt();
+                } else {
+                    $badgesInfoUser[$i]['issued'] = -1;
+                }
+
+                $i++;
+            //}
+        }
+
+        return $badgesInfoUser;
+    }
+    
     private function getPenalty($interaction, $paperID)
     {
         $penalty = 0;

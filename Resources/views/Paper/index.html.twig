@@ -80,7 +80,7 @@
         {% endif %}
 
         <hr/>
-
+        
         {% if isAdmin == 1 and  papers is not empty %}
             {{ 'searchUserPaper' | trans }} :
             <div class="input-group">
@@ -104,6 +104,8 @@
             <hr/>
         {% endif %}
 
+        {% include "UJMExoBundle:Partial:badgeInfos/infos.html.twig" %}
+            
         <h6 style="color: red; text-align: right;">({{ 'paperLegend' | trans }}).</h6>
 
         <div id="resultSearch">

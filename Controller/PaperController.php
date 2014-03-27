@@ -132,6 +132,10 @@ class PaperController extends Controller
             $retryButton = true;
         }
         
+        $badgesInfoUser = $exerciseSer->badgesInfoUser(
+                $user->getId(), $exercise->getResourceNode()->getId(),
+                $this->container->getParameter('locale'));
+        
         return $this->render(
             'UJMExoBundle:Paper:index.html.twig',
             array(
@@ -142,6 +146,7 @@ class PaperController extends Controller
                 'exoID'           => $exoID,
                 'display'         => $display,
                 'retryButton'     => $retryButton,
+                'badgesInfoUser'  => $badgesInfoUser,
                 '_resource'       => $exercise,
                 'arrayMarkPapers' => $arrayMarkPapers
             )
