@@ -23,8 +23,13 @@
         </div>
     </div>
     <div class="row dropzone_noRessourceSelected">
-        <div class='col-md-3'>
-            <a href='#' id='addRessourceButton' class='btn btn-primary'>{{ 'Add'|trans({}, 'icap_dropzone') }}</a>
+        <div class="col-md-8">
+            <div class='input-group'>
+                <input id='addRessourceInput' type="text" class='form-control' placeholder="{{ 'Choose a resource'|trans({},'icap_dropzone')}}"></input>
+                <span class='input-group-btn'>
+                     <a href='#' id='addRessourceButton' class='btn btn-primary'>{{ 'Add'|trans({}, 'icap_dropzone') }}</a>
+                </span>
+            </div>
         </div>
     </div>
     
@@ -37,6 +42,16 @@
             </div>
         </div>
     </div>
+
+    <script type="text/javascript">
+        $(document).ready(function()
+        {
+            $('#addRessourceInput').click(function()
+            {
+                $('#addRessourceButton').click();
+            });
+        })
+    </script>
     
 {% endblock %}
 

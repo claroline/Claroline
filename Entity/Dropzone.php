@@ -696,7 +696,14 @@ class Dropzone extends AbstractResource {
         } else {
             $now = new \DateTime();
 
-            return $now->getTimestamp() > $this->endAllowDrop->getTimestamp() and $now->getTimestamp() > $this->endReview->getTimestamp();
+            $finished = $allowDropEnd = $now->getTimestamp() > $this->endAllowDrop->getTimestamp();
+
+            if($this->isPeerReview())
+            {
+                $finished = $allowDropEnd && $now->getTimestamp() > $this->endReview->getTimestamp();
+            }
+           
+            return  $finished;
         }
     }
 

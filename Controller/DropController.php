@@ -135,6 +135,9 @@ class DropController extends DropzoneBaseController
 
         $resourceTypes = $this->getDoctrine()->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findAll();
 
+        $dropzoneManager = $this->get('icap.manager.dropzone_manager');
+        $dropzoneProgress = $dropzoneManager->getDropzoneProgressByUser($dropzone,$user);
+
         return array(
             'workspace' => $dropzone->getResourceNode()->getWorkspace(),
             '_resource' => $dropzone,
@@ -146,7 +149,8 @@ class DropController extends DropzoneBaseController
             'form_resource' => $form_resource->createView(),
             'form_text' => $form_text->createView(),
             'allowedTypes' => $allowedTypes,
-            'resourceTypes' => $resourceTypes
+            'resourceTypes' => $resourceTypes,
+            'dropzoneProgress' => $dropzoneProgress,
         );
     }
 

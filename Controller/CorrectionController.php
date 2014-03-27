@@ -427,6 +427,9 @@ class CorrectionController extends DropzoneBaseController
             }
         }
 
+        $dropzoneManager = $this->get('icap.manager.dropzone_manager');
+        $dropzoneProgress = $dropzoneManager->getDropzoneProgressByUser($dropzone,$user);
+
         $view = 'IcapDropzoneBundle:Correction:correctCriteria.html.twig';
 
         return $this->render(
@@ -439,7 +442,8 @@ class CorrectionController extends DropzoneBaseController
                 'pager' => $pager,
                 'form' => $form->createView(),
                 'admin' => false,
-                'edit' => true
+                'edit' => true,
+                'dropzoneProgress' => $dropzoneProgress,
             )
         );
     }
@@ -522,6 +526,9 @@ class CorrectionController extends DropzoneBaseController
         $view = 'IcapDropzoneBundle:Correction:correctComment.html.twig';
         $totalGrade = $this->calculateCorrectionTotalGrade($dropzone, $correction);
 
+        $dropzoneManager = $this->get('icap.manager.dropzone_manager');
+        $dropzoneProgress = $dropzoneManager->getDropzoneProgressByUser($dropzone,$user);
+
         return $this->render(
             $view,
             array(
@@ -534,6 +541,7 @@ class CorrectionController extends DropzoneBaseController
                 'admin' => false,
                 'edit' => true,
                 'totalGrade' => $totalGrade,
+                'dropzoneProgress' => $dropzoneProgress,
             )
         );
     }

@@ -33,6 +33,9 @@
 
         {{ macros.flashBox() }}
 
+        {# DROP STATUS BAR #}
+        {% include 'IcapDropzoneBundle:Drop:dropStatus.html.twig' %}
+
         {% if dropzone.instruction != null %}
             {%  include 'IcapDropzoneBundle:Dropzone:recallInstruction.html.twig' %}
             <br/>
@@ -48,10 +51,11 @@
             <div class="row">
                 <div class="col-md-8">
                     {% include 'IcapDropzoneBundle:Document:simpleShowDocument.html.twig' %}
-                </div>
+                
 
-                <div class="col-md-3">
+                <div class=" pull-right">
                     <a href="{{ path('icap_dropzone_delete_document', {'resourceId': dropzone.id, 'dropId': drop.id, 'documentId': document.id}) }}" class="btn btn-danger btn-sm  launch-modal"><span class="glyphicon icon-trash"></span> {{ 'Delete'|trans({}, 'icap_dropzone') }}</a>
+                </div>
                 </div>
             </div>
         {% endfor %}
