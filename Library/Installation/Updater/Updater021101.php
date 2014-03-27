@@ -50,6 +50,7 @@ class Updater021101
             $newBadgeTool
                 ->setName($myBadgesToolName)
                 ->setClass('icon-trophy')
+                ->setDisplayName('badges')
                 ->setIsWorkspaceRequired(false)
                 ->setIsDesktopRequired(false)
                 ->setDisplayableInWorkspace(true)
