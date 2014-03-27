@@ -282,39 +282,50 @@
         {% endfor %}
 
         <ul class="pagination">
-            {% if numQ == 1 %}
-                <li class="disabled"><a href="#"><i class="icon-chevron-left"></i> &nbsp; {{ 'previous' | trans }}</a></li>
-                <li>
-                    <a href="#" onClick="submitForm({{ numQ+1 }}, '{{ interactionType }}');">
-                        {{ 'next' | trans }} &nbsp; <i class="icon-chevron-right"></i>
-                    </a>
-                </li>
-            {% elseif numQ == indexMax %}
-                <li>
-                    <a href="#" onClick="submitForm({{ numQ-1 }}, '{{ interactionType }}');">
-                        <i class="icon-chevron-left"></i> &nbsp; {{ 'previous' | trans }}
-                    </a>
-                </li>
-                <li class="disabled"><a href="#">{{ 'next' | trans }} &nbsp; <i class="icon-chevron-right"></i></a></li>
-                <li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</li>
+
+            {% if numQ == indexMax and numQ == 1 %}
                 <li>
                     <input type="button" value="{{ "finish" | trans }}" onClick="finish('{{ interactionType }}', '{{ 'alert ending' | trans }}');"
                         class="btn btn-primary"/>
                 </li>
+            {% else %}
 
-            {% elseif numQ != indexMax and numQ != 1 %}
-                <li>
-                    <a href="#" onClick="submitForm({{ numQ-1 }}, '{{ interactionType }}');">
-                        <i class="icon-chevron-left"></i> &nbsp; {{ 'previous' | trans }}
-                    </a>
-                </li>
-                <li>
-                    <a href="#" onClick="submitForm({{ numQ+1 }}, '{{ interactionType }}');">
-                        {{ 'next' | trans }} &nbsp; <i class="icon-chevron-right"></i>
-                    </a>
-                </li>
+                {% if numQ == 1 %}
+                    <li class="disabled"><a href="#"><i class="icon-chevron-left"></i> &nbsp; {{ 'previous' | trans }}</a></li>
+                    <li>
+                        <a href="#" onClick="submitForm({{ numQ+1 }}, '{{ interactionType }}');">
+                            {{ 'next' | trans }} &nbsp; <i class="icon-chevron-right"></i>
+                        </a>
+                    </li>
+                {% endif %}
+
+                {% if numQ == indexMax %}
+                    <li>
+                        <a href="#" onClick="submitForm({{ numQ-1 }}, '{{ interactionType }}');">
+                            <i class="icon-chevron-left"></i> &nbsp; {{ 'previous' | trans }}
+                        </a>
+                    </li>
+                    <li class="disabled"><a href="#">{{ 'next' | trans }} &nbsp; <i class="icon-chevron-right"></i></a></li>
+                    <li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</li>
+                    <li>
+                        <input type="button" value="{{ "finish" | trans }}" onClick="finish('{{ interactionType }}', '{{ 'alert ending' | trans }}');"
+                            class="btn btn-primary"/>
+                    </li>
+                {% endif %}
+
+                {% if numQ != indexMax and numQ != 1 %}
+                    <li>
+                        <a href="#" onClick="submitForm({{ numQ-1 }}, '{{ interactionType }}');">
+                            <i class="icon-chevron-left"></i> &nbsp; {{ 'previous' | trans }}
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" onClick="submitForm({{ numQ+1 }}, '{{ interactionType }}');">
+                            {{ 'next' | trans }} &nbsp; <i class="icon-chevron-right"></i>
+                        </a>
+                    </li>
+                {% endif %}
             {% endif %}
-
 
             {% if dispButtonInterrupt %}
                 <li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</li>
