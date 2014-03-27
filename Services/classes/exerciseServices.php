@@ -233,11 +233,11 @@ class exerciseServices
                     list($xa,$ya) = explode("-", $coords[$j]); // Answers of the student
                     list($xr,$yr) = explode(",", $rightCoords[$i]->getValue()); // Right answers
 
-                    $valid = $rightCoords[$i]->getSize() / 2; // Size of the answer zone
+                    $valid = $rightCoords[$i]->getSize(); // Size of the answer zone
 
                     // If answer student is in right answer
-                    if ((($xa) < ($xr + $valid)) && (($xa) > ($xr - $valid)) && (($ya) < ($yr + $valid)) &&
-                        (($ya) > ($yr - $valid))
+                    if ((($xa + 8) < ($xr + $valid)) && (($xa + 8) > ($xr)) && 
+                        (($ya + 8) < ($yr + $valid)) && (($ya + 8) > ($yr))
                     ) {
                         // Not get points twice for one answer
                         if ($this->alreadyDone($rightCoords[$i]->getValue(), $verif, $z)) {
