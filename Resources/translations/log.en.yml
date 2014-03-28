@@ -141,22 +141,22 @@ log_workspace-role-delete_filter: 'Delete a role for a workspace'
 log_workspace-role-delete_sentence: 'has deleted a role for workspace %workspace%'
 log_workspace-role-delete_shortname: Delete
 log_workspace-role-delete_title: 'Delete a role for a workspace'
-log_workspace-role-subscribe_group_filter: 'Subscribe group to a workspace role'
-log_workspace-role-subscribe_group_sentence: 'has subscribed %receiver_group% to role %role% in %workspace%'
-log_workspace-role-subscribe_group_shortname: Subscribe
-log_workspace-role-subscribe_group_title: 'Subscribe group to a workspace role'
-log_workspace-role-subscribe_user_filter: 'Subscribe user to a workspace role'
+log_workspace-role-subscribe_group_filter: 'Assign a workspace role to a group'
+log_workspace-role-subscribe_group_sentence: 'has assigned role %role% to %receiver_group% in %workspace%'
+log_workspace-role-subscribe_group_shortname: Assign
+log_workspace-role-subscribe_group_title: 'Assign a workspace role to a group'
+log_workspace-role-subscribe_user_filter: 'Assign a workspace role to a user'
 log_workspace-role-subscribe_user_sentence: 'has subscribed %receiver_user% to role %role% in %workspace%'
-log_workspace-role-subscribe_user_shortname: Subscribe
-log_workspace-role-subscribe_user_title: 'Subscribe user to a workspace role'
-log_workspace-role-unsubscribe_group_filter: 'Unsubscribe group from a workspace role'
-log_workspace-role-unsubscribe_group_sentence: 'has unsubscribed %receiver_group% to role %role% in %workspace%'
-log_workspace-role-unsubscribe_group_shortname: Unsubscribe
-log_workspace-role-unsubscribe_group_title: 'Unsubscribe group from a workspace role'
-log_workspace-role-unsubscribe_user_filter: 'Unsubscribe user from a workspace role'
-log_workspace-role-unsubscribe_user_sentence: 'has unsubscribed %receiver_user% from role %role% in %workspace%'
-log_workspace-role-unsubscribe_user_shortname: Unsubscribe
-log_workspace-role-unsubscribe_user_title: 'Unsubscribe user from a workspace role'
+log_workspace-role-subscribe_user_shortname: Assign
+log_workspace-role-subscribe_user_title: 'Assign a workspace role to a user'
+log_workspace-role-unsubscribe_group_filter: 'Unassign a workspace role from a group'
+log_workspace-role-unsubscribe_group_sentence: 'has unassigned role %role% in %workspace% from %receiver_group%'
+log_workspace-role-unsubscribe_group_shortname: Unassign
+log_workspace-role-unsubscribe_group_title: 'Unassign a workspace role from a group'
+log_workspace-role-unsubscribe_user_filter: 'Unassign a workspace role from a user'
+log_workspace-role-unsubscribe_user_sentence: 'has unassigned  %receiver_user%  '
+log_workspace-role-unsubscribe_user_shortname: Unassign
+log_workspace-role-unsubscribe_user_title: 'Unassign a workspace role from a user'
 log_workspace-role-update_filter: 'Update a role for a workspace'
 log_workspace-role-update_sentence: 'has updated a role for workspace %workspace%'
 log_workspace-role-update_shortname: Update
