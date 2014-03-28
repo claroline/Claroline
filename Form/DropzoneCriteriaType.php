@@ -14,6 +14,7 @@ class DropzoneCriteriaType extends AbstractType
             ->add('goBack', 'hidden', array(
                 'mapped' => false
             ))
+            ->add('correctionInstruction','tinymce',array('required' => false))
             ->add('totalCriteriaColumn', 'number', array('required' => true))
             ->add('allowCommentInCorrection', 'checkbox', array('required' => false));
     }

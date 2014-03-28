@@ -340,19 +340,19 @@ class DropzoneController extends DropzoneBaseController
         $em = $this->getDoctrine()->getManager();
         $dropRepo = $em->getRepository('IcapDropzoneBundle:Drop');
         $drop = $dropRepo->findOneBy(array('dropzone' => $dropzone, 'user' => $user));
+        $dropzoneManager = $this->get('icap.manager.dropzone_manager');
 
-        $nbCorrections = $this
-            ->getDoctrine()
-            ->getManager()
+        $nbCorrections = $em
             ->getRepository('IcapDropzoneBundle:Correction')
             ->countFinished($dropzone, $user);
-        $hasCopyToCorrect = $this
-            ->getDoctrine()
-            ->getManager()
+        $hasCopyToCorrect = $em
             ->getRepository('IcapDropzoneBundle:Drop')
             ->hasCopyToCorrect($dropzone, $user);
         $hasUnfinishedCorrection = $em->getRepository('IcapDropzoneBundle:Correction')->getNotFinished($dropzone, $user) != null;
 
+
+
+        $dropzoneProgress = $dropzoneManager->getDrozponeProgress($dropzone,$drop,$nbCorrections);
         return array(
             'workspace' => $dropzone->getResourceNode()->getWorkspace(),
             '_resource' => $dropzone,
@@ -361,6 +361,10 @@ class DropzoneController extends DropzoneBaseController
             'nbCorrections' => $nbCorrections,
             'hasCopyToCorrect' => $hasCopyToCorrect,
             'hasUnfinishedCorrection' => $hasUnfinishedCorrection,
+            'dropzoneProgress' => $dropzoneProgress,
         );
     }
+
+
+
 }

@@ -18,6 +18,7 @@ use Icap\DropzoneBundle\Event\Log\LogDropStartEvent;
 use Icap\DropzoneBundle\Event\Log\LogDropReportEvent;
 use Icap\DropzoneBundle\Form\CorrectionReportType;
 use Icap\DropzoneBundle\Form\DropType;
+use Icap\DropzoneBundle\Form\DocumentType;
 use Pagerfanta\Adapter\DoctrineORMAdapter;
 use Pagerfanta\Exception\NotValidCurrentPageException;
 use Pagerfanta\Pagerfanta;
@@ -87,6 +88,10 @@ class DropController extends DropzoneBaseController
         }
 
         $form = $this->createForm(new DropType(), $notFinishedDrop);
+        $form_url = $this->createForm(new DocumentType(), null, array('documentType' => 'url'));
+        $form_file = $this->createForm(new DocumentType(), null, array('documentType' => 'file'));
+        $form_resource = $this->createForm(new DocumentType(), null, array('documentType' => 'resource'));
+        $form_text = $this->createForm(new DocumentType(), null, array('documentType' => 'text'));
         $drop = $notFinishedDrop;
 
         if ($this->getRequest()->isMethod('POST')) {
@@ -130,14 +135,22 @@ class DropController extends DropzoneBaseController
 
         $resourceTypes = $this->getDoctrine()->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findAll();
 
+        $dropzoneManager = $this->get('icap.manager.dropzone_manager');
+        $dropzoneProgress = $dropzoneManager->getDropzoneProgressByUser($dropzone,$user);
+
         return array(
             'workspace' => $dropzone->getResourceNode()->getWorkspace(),
             '_resource' => $dropzone,
             'dropzone' => $dropzone,
             'drop' => $drop,
             'form' => $form->createView(),
+            'form_url' => $form_url->createView(),
+            'form_file' => $form_file->createView(),
+            'form_resource' => $form_resource->createView(),
+            'form_text' => $form_text->createView(),
             'allowedTypes' => $allowedTypes,
-            'resourceTypes' => $resourceTypes
+            'resourceTypes' => $resourceTypes,
+            'dropzoneProgress' => $dropzoneProgress,
         );
     }
 

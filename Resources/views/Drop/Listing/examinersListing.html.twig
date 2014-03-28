@@ -1,0 +1,51 @@
+ <div class="table-responsive">
+        <table class="table   table-striped table-hover  ">
+            <thead>
+                <th>{{'user'|trans({},'icap_dropzone')}}</th>
+{#                 <th>{{'has a drop'|trans({}, 'icap_dropzone') }}</th> #}
+                <th>{{'Started Corrections'|trans({}, 'icap_dropzone') }}</th>
+                <th>{{'Complete Corrections'|trans({}, 'icap_dropzone') }}</th>
+                <th>{{'number of Report'|trans({},'icap_dropzone')}}</th>
+                <th>{{'was reported'|trans({},'icap_dropzone')}}</th>
+                <th>{{'tools'|trans({},'icap_dropzone')}}</th>
+            </thead>
+            <tbody>
+
+        {% for user in pager.currentPageResults %}
+            <tr  >
+                <td>
+                    {{ user.lastName|upper }} {{ user.firstName|capitalize }}
+                </td>
+{#                 <td>
+                    {{ attribute(usersAndCorrectionCount, user.id).userDropCount }}
+                </td> #}
+                <td>
+                   {{ attribute(usersAndCorrectionCount, user.id).correction_count }}
+                </td>   
+                <td>
+                   {{ attribute(usersAndCorrectionCount, user.id).correction_finishedCount }} / {{ dropzone.expectedTotalCorrection }}
+                </td>   
+                <td>
+                   {{ attribute(usersAndCorrectionCount, user.id).correction_reportCount }} / {{ attribute(usersAndCorrectionCount, user.id).correction_count }}
+                </td> 
+                <td >
+                   {{ attribute(usersAndCorrectionCount, user.id).correction_deniedCount }} / {{ attribute(usersAndCorrectionCount, user.id).correction_count }}
+                </td>
+               
+                <td>
+                    <div class="btn-group ">
+                        <a href="#" type="button" class="btn btn-default btn-xs">{{ 'See user s correction'|trans({}, 'icap_dropzone') }}</a>
+                       {#
+                        {%  if AwaitingMode is defined and  AwaitingMode == true %}
+                            <a href="{{ path('icap_dropzone_drops_detail_add_correction', {'resourceId': dropzone.id, 'dropId': drop.id}) }}" type="button" class="btn btn-default btn-xs">{{ 'Add a correction'|trans({}, 'icap_dropzone') }}</a>
+                        {% endif %}
+                        <a href="{{ path('icap_dropzone_drops_delete', {'resourceId': dropzone.id, 'dropId': drop.id, 'tab': 0, 'page': pager.currentPage}) }}" class="btn btn-danger btn-xs launch-modal"><span class="glyphicon icon-trash"></span> {{ 'Delete copy'|trans({}, 'icap_dropzone') }}</a>
+                         #}
+                    </div>
+                </td>
+            </tr>
+        {% endfor %}
+            </tbody>
+    </table>
+
+</div>
