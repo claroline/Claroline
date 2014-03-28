@@ -49,6 +49,7 @@ all: Tout
 allow to edit: Autoriser l'édition
 allQuestion: Toutes
 already: Cette question est déjà partagée avec cet utilisateur
+already answered: Vous avez déjà répondu à cet exercice
 alreadyExist: Ce nom existe déjà.
 alreadyPlaced: Réponses déjà placées
 alter category: Modifier cette catégorie

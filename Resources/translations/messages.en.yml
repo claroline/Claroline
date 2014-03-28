@@ -49,6 +49,7 @@ all: All
 allow to edit: Allow to edit
 allQuestion: All the questions
 already: This question is already shared with this user
+already answered: You have already answered at this exercise
 alreadyExist: This name exist already
 alreadyPlaced: Already placed answers.
 alter category: Alter this cataegory
