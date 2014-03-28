@@ -25,6 +25,11 @@
                             </a>
                         </li>
                         <li>
+                            <a href="{{ path('claro_public_profile_view', {'publicUrl': user.publicUrl}) }}">
+                                {{ 'see_public_profile'|trans({}, 'platform') }}
+                            </a>
+                        </li>
+                        <li>
                             <a href="{{ path('claro_user_public_profile_preferences') }}">
                                 {{ 'manage_public_profile_preferences'|trans({}, 'platform') }}
                             </a>
