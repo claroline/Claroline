@@ -14,12 +14,12 @@
         <div class="panel-body">
             <div class="row">
                 {% set isProfilShared = publicProfilePreferences.isShared() %}
-                <div class="col-md-8{% if isProfilShared %} hidden{% endif %}">
+                <div class="col-md-8{% if isProfilShared %} hidden{% endif %}" id="user_public_profile_not_visible">
                     <p class="well text-center">
-                        {{ 'user_public_profil_not_visible'|trans({}, 'platform')|raw }}
+                        {{ 'user_public_profile_not_visible'|trans({}, 'platform')|raw }}
                     </p>
                 </div>
-                <aside class="col-md-2 profile_aside{% if false == isProfilShared %} hidden{% endif %}" role="complementary">
+                <aside class="col-md-2 profile_aside profil_visible{% if false == isProfilShared %} hidden{% endif %}" role="complementary">
                     <div class="avatar">
                         {% if user.getPicture() != "" %}
                             <img src="{{ asset('uploads/pictures/') ~  user.getPicture() }}" class="profile_picture">
@@ -45,10 +45,10 @@
                         </li>
                     </ul>
                 </aside>
-                <div class="col-md-6{% if false == isProfilShared %} hidden{% endif %}">
+                <div class="col-md-6 profil_visible{% if false == isProfilShared %} hidden{% endif %}">
                     <p>{{ user.getLastName() ~ ' ' ~ user.getFirstName() }}</p>
-                    <p{% if false == publicProfilePreferences.displayEmail %} class="hidden"{% endif %} id="mail"><span class="icon-envelope"> <a href="mailto:{{ user.getmail() }}" title="{{ user.getmail() }}">{{ user.getmail() }}</a></span></p>
-                    <p{% if false == publicProfilePreferences.displayPhoneNumber %} class="hidden"{% endif %} id="phone"><span class="icon-phone-sign"></span> {{ user.getPhone() }}</p>
+                    <p{% if false == publicProfilePreferences.displayEmail %} class="hidden"{% endif %} id="email"><span class="icon-envelope"> <a href="mailto:{{ user.getmail() }}" title="{{ user.getmail() }}">{{ user.getmail() }}</a></span></p>
+                    <p{% if false == publicProfilePreferences.displayPhoneNumber %} class="hidden"{% endif %} id="phone_number"><span class="icon-phone-sign"></span> {{ user.getPhone() }}</p>
                     {% if '' != user.getDescription() %}<p class="well">{{ user.getDescription() |raw }} </p>{% endif %}
                 </div>
                 <div class="col-md-4">
@@ -75,12 +75,12 @@
                                     </div>
                                     <div class="checkbox">
                                         <label>
-                                            {{ form_widget(form.display_phone_number) }} {{ 'phone'|trans({}, 'platform') }}
+                                            {{ form_widget(form.display_email) }} {{ 'mail'|trans({}, 'platform') }}
                                         </label>
                                     </div>
                                     <div class="checkbox">
                                         <label>
-                                            {{ form_widget(form.display_email) }} {{ 'mail'|trans({}, 'platform') }}
+                                            {{ form_widget(form.display_phone_number) }} {{ 'phone'|trans({}, 'platform') }}
                                         </label>
                                     </div>
                                 </div>

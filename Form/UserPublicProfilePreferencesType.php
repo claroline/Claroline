@@ -5,6 +5,8 @@ namespace Claroline\CoreBundle\Form;
 use Claroline\CoreBundle\Entity\UserPublicProfilePreferences;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 class UserPublicProfilePreferencesType extends AbstractType
@@ -20,17 +22,40 @@ class UserPublicProfilePreferencesType extends AbstractType
                     'class' => 'share_policies'
                 )
             ))
-            ->add('display_base_informations', 'checkbox' , array(
-                'required' => false,
-                'mapped'   => false
+            ->add('display_email', 'checkbox', array(
+                'required' => false
             ))
             ->add('display_phone_number', 'checkbox', array(
                 'required' => false
             ))
-            ->add('display_email', 'checkbox', array(
-                'required' => false
-            ))
         ;
+
+        $builder->addEventListener(FormEvents::PRE_SET_DATA, function(FormEvent $event){
+            /** @var \Claroline\CoreBundle\Entity\UserPublicProfilePreferences $userPublicProfilePreferences */
+            $userPublicProfilePreferences = $event->getData();
+
+            if (null !== $userPublicProfilePreferences) {
+                $form                      = $event->getForm();
+                $baseInformationsIsChecked  = false;
+                $baseInformationsIsDisabled = false;
+
+                if (0 < $userPublicProfilePreferences->getSharePolicy()) {
+                    $baseInformationsIsChecked  = 'checked';
+                    $baseInformationsIsDisabled = 'disabled';
+                }
+
+                $form
+                    ->add('display_base_informations', 'checkbox' , array(
+                        'required' => false,
+                        'mapped'   => false,
+                        'attr'     => array(
+                            'checked'  => $baseInformationsIsChecked,
+                            'disabled' => $baseInformationsIsDisabled
+                        )
+                    ));
+            }
+
+        });
     }
 
     public function getName()
