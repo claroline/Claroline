@@ -58,6 +58,9 @@ attempt info1: You have
 attempt info2sing: attempt
 attempt info2plur: attempts
 attempt info3: Attempt N°
+attempt info4: You have
+attempt info5: in order to improve your score
+attempt info6: You do not have attempt
 at the end of assessment: At the end of assessment
 at the same time that the correction: At the same time that the correction
 availability of correction: Availability of correction
@@ -165,6 +168,7 @@ histoSuccess: Success' histogram
 hole: Hole
 hole creation: Creation of a question with holes
 hole edition: Edition of a question with holes
+home exercise: Home exercise
 
 # I
 infiny: Indefinite

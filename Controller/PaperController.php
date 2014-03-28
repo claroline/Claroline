@@ -64,6 +64,7 @@ class PaperController extends Controller
     public function indexAction($exoID, $page, $all)
     {
         $retryButton = false;
+        $nbAttemptAllowed = -1;
         $exerciseSer = $this->container->get('ujm.exercise_services');
         
         $exoAdmin = false;
@@ -132,6 +133,12 @@ class PaperController extends Controller
             $retryButton = true;
         }
         
+        if ($exercise->getMaxAttempts() > 0) {
+            if ($exoAdmin === false) {
+                $nbAttemptAllowed = $exercise->getMaxAttempts() - count($paper);
+            }
+        }
+        
         $badgesInfoUser = $exerciseSer->badgesInfoUser(
                 $user->getId(), $exercise->getResourceNode()->getId(),
                 $this->container->getParameter('locale'));
@@ -139,16 +146,17 @@ class PaperController extends Controller
         return $this->render(
             'UJMExoBundle:Paper:index.html.twig',
             array(
-                'workspace'       => $workspace,
-                'papers'          => $papers,
-                'isAdmin'         => $exoAdmin,
-                'pager'           => $pagerfanta,
-                'exoID'           => $exoID,
-                'display'         => $display,
-                'retryButton'     => $retryButton,
-                'badgesInfoUser'  => $badgesInfoUser,
-                '_resource'       => $exercise,
-                'arrayMarkPapers' => $arrayMarkPapers
+                'workspace'        => $workspace,
+                'papers'           => $papers,
+                'isAdmin'          => $exoAdmin,
+                'pager'            => $pagerfanta,
+                'exoID'            => $exoID,
+                'display'          => $display,
+                'retryButton'      => $retryButton,
+                'nbAttemptAllowed' => $nbAttemptAllowed,
+                'badgesInfoUser'   => $badgesInfoUser,
+                '_resource'        => $exercise,
+                'arrayMarkPapers'  => $arrayMarkPapers
             )
         );
     }
@@ -194,26 +202,31 @@ class PaperController extends Controller
             ->getHintViewed($paper->getId());
 
         $nbMaxQuestion = count($infosPaper['interactions']);
+        
+        $badgesInfoUser = $exerciseSer->badgesInfoUser(
+                $user->getId(), $exercise->getResourceNode()->getId(),
+                $this->container->getParameter('locale'));
 
         return $this->render(
             'UJMExoBundle:Paper:show.html.twig',
             array(
-                'workspace'     => $worspace,
-                'exoId'         => $paper->getExercise()->getId(),
-                'interactions'  => $infosPaper['interactions'],
-                'responses'     => $infosPaper['responses'],
-                'scorePaper'    => $infosPaper['scorePaper'],
-                'scoreTemp'     => $infosPaper['scoreTemp'],
-                'maxExoScore'   => $infosPaper['maxExoScore'],
-                'hintViewed'    => $hintViewed,
-                'correction'    => $paper->getExercise()->getCorrectionMode(),
-                'display'       => $display,
-                'admin'         => $admin,
-                '_resource'     => $paper->getExercise(),
-                'p'             => $p,
-                'nbMaxQuestion' => $nbMaxQuestion,
-                'paperID'       => $paper->getId(),
-                'retryButton'   => $retryButton
+                'workspace'      => $worspace,
+                'exoId'          => $paper->getExercise()->getId(),
+                'interactions'   => $infosPaper['interactions'],
+                'responses'      => $infosPaper['responses'],
+                'scorePaper'     => $infosPaper['scorePaper'],
+                'scoreTemp'      => $infosPaper['scoreTemp'],
+                'maxExoScore'    => $infosPaper['maxExoScore'],
+                'hintViewed'     => $hintViewed,
+                'correction'     => $paper->getExercise()->getCorrectionMode(),
+                'display'        => $display,
+                'admin'          => $admin,
+                'badgesInfoUser' => $badgesInfoUser,
+                '_resource'      => $paper->getExercise(),
+                'p'              => $p,
+                'nbMaxQuestion'  => $nbMaxQuestion,
+                'paperID'        => $paper->getId(),
+                'retryButton'    => $retryButton
             )
         );
     }
