@@ -47,8 +47,8 @@
                 </aside>
                 <div class="col-md-6 profil_visible{% if false == isProfilShared %} hidden{% endif %}">
                     <p>{{ user.getLastName() ~ ' ' ~ user.getFirstName() }}</p>
-                    <p{% if false == publicProfilePreferences.displayEmail %} class="hidden"{% endif %} id="email"><span class="icon-envelope"> <a href="mailto:{{ user.getmail() }}" title="{{ user.getmail() }}">{{ user.getmail() }}</a></span></p>
-                    <p{% if false == publicProfilePreferences.displayPhoneNumber %} class="hidden"{% endif %} id="phone_number"><span class="icon-phone-sign"></span> {{ user.getPhone() }}</p>
+                    <p{% if false == publicProfilePreferences.displayEmail %} class="hidden"{% endif %} id="display_email"><span class="icon-envelope"> <a href="mailto:{{ user.getmail() }}" title="{{ user.getmail() }}">{{ user.getmail() }}</a></span></p>
+                    <p{% if false == publicProfilePreferences.displayPhoneNumber %} class="hidden"{% endif %} id="display_phone_number"><span class="icon-phone-sign"></span> {{ user.getPhone() }}</p>
                     {% if '' != user.getDescription() %}<p class="well">{{ user.getDescription() |raw }} </p>{% endif %}
                 </div>
                 <div class="col-md-4">

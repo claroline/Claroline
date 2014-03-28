@@ -11,19 +11,22 @@
     "use strict";
 
     $(function() {
-        var form                             = $('#public_profile_preferences');
-        var formName                         = 'user_public_profile_preferences_form';
-        var basicInformationPublicProfile    = $('#user_public_profile_preferences_form_display_base_informations', form);
-        var userPublicProfileNotVisibleBlock = $('#user_public_profile_not_visible');
-        var userPublicProfileVisibleBlocks   = $(".profil_visible");
+        var form                                = $('#public_profile_preferences');
+        var formName                            = 'user_public_profile_preferences_form';
+        var basicInformationPublicProfile       = $('#user_public_profile_preferences_form_display_base_informations', form);
+        var userPublicProfileNotVisibleBlock    = $('#user_public_profile_not_visible');
+        var userPublicProfileVisibleBlocks      = $(".profil_visible");
+        var preferencesField                    = $('.preferences input[type=checkbox]');
+        var currentUserPublicProfilePreferences = {};
 
-        var displayPhoneNumberField = $('#' + formName + '_display_phone_number');
-        var displayEmailField       = $('#' + formName + '_display_email');
+        preferencesField.each(function() {
+            var preferenceName = parseFieldName($(this).attr('name'));
 
-        var currentUserPublicProfilePreferences = {
-            'display_phone_number': displayPhoneNumberField.attr('checked'),
-            'display_email':        displayEmailField.attr('checked')
-        };
+             if('display_base_informations' !== preferenceName) {
+                 currentUserPublicProfilePreferences[preferenceName] = $('#' + formName + '_' + preferenceName).attr('checked');
+             }
+        });
+
         var currentSharedPolicy = parseFormValue($(form).serializeArray()).share_policy;
 
         form.change(function() {
@@ -32,14 +35,21 @@
 
         function manageVisibility(data)
         {
-            if (data.share_policy != undefined && data.share_policy != currentSharedPolicy) {
-                sharedPolicyUpdated(data.share_policy);
-                currentSharedPolicy = data.share_policy;
+            if (data['share_policy'] != undefined && data['share_policy'] != currentSharedPolicy) {
+                sharedPolicyUpdated(data['share_policy']);
+                currentSharedPolicy = data['share_policy'];
 
+                preferencesField.each(function() {
+                    var preferenceName = parseFieldName($(this).attr('name'));
+                    updateFieldVisibility(preferenceName, currentUserPublicProfilePreferences[preferenceName]);
+                });
             }
-            updateFieldVisibility('base_informations', data.display_base_informations != undefined);
-            updateFieldVisibility('phone_number', data.display_phone_number != undefined);
-            updateFieldVisibility('email', data.display_email != undefined);
+            else {
+                preferencesField.each(function() {
+                    var preferenceName = parseFieldName($(this).attr('name'));
+                    updateFieldVisibility(preferenceName, data[preferenceName] != undefined);
+                });
+            }
         }
 
         function sharedPolicyUpdated(sharedPolicy) {
@@ -50,8 +60,10 @@
                 basicInformationPublicProfile
                     .attr('checked', false)
                     .attr('disabled', false);
-                displayPhoneNumberField.attr('checked', false);
-                displayEmailField.attr('checked', false);
+
+                preferencesField.each(function() {
+                    $(this).attr('checked', false);
+                });
             }
             else {
                 userPublicProfileVisibleBlocks.removeClass('hidden');
@@ -60,6 +72,10 @@
                 basicInformationPublicProfile
                     .attr('checked', 'checked')
                     .attr('disabled', 'disabled');
+
+                preferencesField.each(function() {
+                    $(this).attr('checked', currentUserPublicProfilePreferences[parseFieldName($(this).attr('name'))]);
+                });
             }
         }
 
@@ -87,6 +103,10 @@
             });
 
             return parsedFormValue;
-        };
+        }
+
+        function parseFieldName(name) {
+            return name.substring(formName.length + 1, name.length - 1)
+        }
     });
 })(jQuery);
