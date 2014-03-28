@@ -5,7 +5,6 @@
 {% set canEdit = (app.user is not null and user.getId() == app.user.getId()) or is_granted('ROLE_ADMIN') %}
 
 {% block content %}
-    {{ macros.flashBox() }}
     <div class="panel panel-default panel-user">
         <div class="panel-heading relative">
             <h3 class="panel-title">

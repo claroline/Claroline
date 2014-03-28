@@ -12,6 +12,7 @@
 namespace Claroline\CoreBundle\Controller;
 
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Entity\UserPublicProfilePreferences;
 use Claroline\CoreBundle\Form\UserPublicProfilePreferencesType;
 use Claroline\CoreBundle\Event\StrictDispatcher;
 use Claroline\CoreBundle\Form\ProfileType;
@@ -26,6 +27,7 @@ use Pagerfanta\Pagerfanta;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Security\Core\SecurityContextInterface;
@@ -150,18 +152,35 @@ class ProfileController extends Controller
      *     "/{publicUrl}",
      *      name="claro_public_profile_view"
      * )
-     * @EXT\Template()
      */
     public function publicProfileAction($publicUrl)
     {
+        /** @var \Claroline\CoreBundle\Entity\User $user */
         $user = $this->getDoctrine()->getRepository('ClarolineCoreBundle:User')->findOneByPublicUrl($publicUrl);
         if (null === $user) {
             throw $this->createNotFoundException("Unknown user.");
         }
 
-        return array(
-            'user'  => $user
-        );
+        $userPublicProfilePreferences = $user->getPublicProfilePreferences();
+
+        $publicProfileVisible = false;
+        $response             = new Response($this->renderView('ClarolineCoreBundle:Profile:publicProfile.html.twig', array('user' => $user)));
+
+        if (UserPublicProfilePreferences::SHARE_POLICY_EVERYBODY !== $userPublicProfilePreferences->getSharePolicy()) {
+            if(UserPublicProfilePreferences::SHARE_POLICY_NOBODY === $userPublicProfilePreferences->getSharePolicy()) {
+                $response = new Response($this->renderView('ClarolineCoreBundle:Profile:publicProfile.404.html.twig', array('publicUrl' => $publicUrl)), 404);
+            }
+            else {
+                $loggedUser = $this->getUser();
+
+                if (UserPublicProfilePreferences::SHARE_POLICY_PLATFORM_USER !== $userPublicProfilePreferences->getSharePolicy()
+                    || null === $loggedUser) {
+                    $response = new Response($this->renderView('ClarolineCoreBundle:Profile:publicProfile.401.html.twig', array('publicUrl' => $publicUrl)), 401);
+                }
+            }
+        }
+
+        return $response;
     }
 
     /**
