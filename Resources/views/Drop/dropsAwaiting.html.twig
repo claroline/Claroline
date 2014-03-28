@@ -14,6 +14,13 @@
                         {{ 'Copies being evaluated'|trans({}, 'icap_dropzone') }} <span class="badge">{{ nbDrop - nbDropCorrected }}</span>
                     </a>
                 </li>
+                {% if dropzone.peerReview %}
+                <li>
+                    <a href='{{ path('icap_dropzone_examiners', {'resourceId': dropzone.id}) }}'>
+                        {{ 'Examiners'|trans({}, 'icap_dropzone') }}
+                    </a>
+                </li>
+                {% endif %}
             </ul>
         </div>
     </div>
