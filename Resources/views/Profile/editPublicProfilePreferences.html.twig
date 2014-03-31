@@ -33,23 +33,30 @@
                         </p>
                     </div>
                     <ul class="nav nav-pills nav-stacked contact_methods">
-                        <li>
+                        <li{% if false == publicProfilePreferences.allowMailSending %} class="hidden"{% endif %} id="allow_mail_sending">
                             <a href="{{path('claro_mail_form', {'userId':user.getId()})}}">
                                 <i class="icon-envelope"></i> {{ 'send_mail'|trans({}, 'platform') }}
                             </a>
                         </li>
-                        <li>
+                        <li{% if false == publicProfilePreferences.allowMessageSending %} class="hidden"{% endif %} id="allow_message_sending">
                             <a href="{{path('claro_message_show', {'message': 0})}}?ids[]={{ user.getId() }}">
                                 <i class="icon-comment"></i> {{ 'send_message'|trans({}, 'platform') }}
                             </a>
                         </li>
                     </ul>
                 </aside>
-                <div class="col-md-6 profil_visible{% if false == isProfilShared %} hidden{% endif %}">
-                    <p>{{ user.getLastName() ~ ' ' ~ user.getFirstName() }}</p>
+                <div class="col-md-6 profile_informations profil_visible{% if false == isProfilShared %} hidden{% endif %}">
+                    <h2>{{ user.getLastName() ~ ' ' ~ user.getFirstName() }}</h2>
                     <p{% if false == publicProfilePreferences.displayEmail %} class="hidden"{% endif %} id="display_email"><span class="icon-envelope"> <a href="mailto:{{ user.getmail() }}" title="{{ user.getmail() }}">{{ user.getmail() }}</a></span></p>
                     <p{% if false == publicProfilePreferences.displayPhoneNumber %} class="hidden"{% endif %} id="display_phone_number"><span class="icon-phone-sign"></span> {{ user.getPhone() }}</p>
-                    {% if '' != user.getDescription() %}<p class="well">{{ user.getDescription() |raw }} </p>{% endif %}
+                    {% if '' != user.getDescription() %}
+                        <div class="description_block">
+                            <p class="lead">Description de {{ user.getLastName() ~ ' ' ~ user.getFirstName() }}</p>
+                            <div class="description">
+                                {{ user.getDescription() |raw }}
+                            </div>
+                        </div>
+                    {% endif %}
                 </div>
                 <div class="col-md-4">
                     <div class="panel panel-default">
@@ -81,6 +88,16 @@
                                     <div class="checkbox">
                                         <label>
                                             {{ form_widget(form.display_phone_number) }} {{ 'phone'|trans({}, 'platform') }}
+                                        </label>
+                                    </div>
+                                    <div class="checkbox">
+                                        <label>
+                                            {{ form_widget(form.allow_mail_sending) }} {{ 'public_profile_preferences_allow_mail_sending'|trans({}, 'platform') }}
+                                        </label>
+                                    </div>
+                                    <div class="checkbox">
+                                        <label>
+                                            {{ form_widget(form.allow_message_sending) }} {{ 'public_profile_preferences_allow_message_sending'|trans({}, 'platform') }}
                                         </label>
                                     </div>
                                 </div>

@@ -27,30 +27,43 @@
                             {{ 'registered'|trans({}, 'platform') }} {{ user.getCreationDate()| timeAgo }}
                         </p>
                     </div>
-                    <ul class="nav nav-pills nav-stacked contact_methods">
-                        <li>
-                            <a href="{{path('claro_mail_form', {'userId':user.getId()})}}">
-                                <i class="icon-envelope"></i> {{ 'send_mail'|trans({}, 'platform') }}
-                            </a>
-                        </li>
-                        <li>
-                            <a href="{{path('claro_message_show', {'message': 0})}}?ids[]={{ user.getId() }}">
-                                <i class="icon-comment"></i> {{ 'send_message'|trans({}, 'platform') }}
-                            </a>
-                        </li>
-                    </ul>
+                    {% if publicProfilePreferences.allowMailSending or publicProfilePreferences.allowMessageSending %}
+                        <ul class="nav nav-pills nav-stacked contact_methods">
+                            {% if publicProfilePreferences.allowMailSending %}
+                                <li>
+                                    <a href="{{path('claro_mail_form', {'userId':user.getId()})}}">
+                                        <i class="icon-envelope"></i> {{ 'send_mail'|trans({}, 'platform') }}
+                                    </a>
+                                </li>
+                            {% endif %}
+                            {% if publicProfilePreferences.allowMessageSending %}
+                                <li>
+                                    <a href="{{path('claro_message_show', {'message': 0})}}?ids[]={{ user.getId() }}">
+                                        <i class="icon-comment"></i> {{ 'send_message'|trans({}, 'platform') }}
+                                    </a>
+                                </li>
+                            {% endif %}
+                        </ul>
+                    {% endif %}
                 </aside>
-                <div class="col-md-6">
-                    <p>{{ user.getLastName() ~ ' ' ~ user.getFirstName() }}</p>
+                <div class="col-md-6 profile_informations">
+                    <h2>{{ user.getLastName() ~ ' ' ~ user.getFirstName() }}</h2>
                     {% if publicProfilePreferences.displayEmail %}
-                    <p><span class="icon-envelope"> <a href="mailto:{{ user.getmail() }}" title="{{ user.getmail() }}">{{ user.getmail() }}</a></span></p>
+                        <p><span class="icon-envelope"> <a href="mailto:{{ user.getmail() }}" title="{{ user.getmail() }}">{{ user.getmail() }}</a></span></p>
                     {% endif %}
                     {% if publicProfilePreferences.displayPhoneNumber %}
                         {% if user.getPhone() is not null %}
                             <p><span class="icon-phone-sign"></span> {{ user.getPhone() }}</p>
                         {% endif %}
                     {% endif %}
-                    {% if '' != user.getDescription() %}<div class="well">{{ user.getDescription() |raw }} </div>{% endif %}
+                    {% if '' != user.getDescription() %}
+                        <div class="description_block">
+                            <p class="lead">Description de {{ user.getLastName() ~ ' ' ~ user.getFirstName() }}</p>
+                            <div class="description">
+                                {{ user.getDescription() |raw }}
+                            </div>
+                        </div>
+                    {% endif %}
                 </div>
             </div>
         </div>

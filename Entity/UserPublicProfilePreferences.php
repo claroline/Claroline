@@ -59,6 +59,20 @@ class UserPublicProfilePreferences
     protected $displayEmail = false;
 
     /**
+     * @var bool
+     *
+     * @ORM\Column(type="boolean", name="allow_mail_sending")
+     */
+    protected $allowMailSending = false;
+
+    /**
+     * @var bool
+     *
+     * @ORM\Column(type="boolean", name="allow_message_sending")
+     */
+    protected $allowMessageSending = false;
+
+    /**
      * @return int
      */
     public function getId()
@@ -173,5 +187,45 @@ class UserPublicProfilePreferences
             self::SHARE_POLICY_PLATFORM_USER => self::SHARE_POLICY_PLATFORM_USER_LABEL,
             self::SHARE_POLICY_EVERYBODY     => self::SHARE_POLICY_EVERYBODY_LABEL
         );
+    }
+
+    /**
+     * @param boolean $allowMailSending
+     *
+     * @return UserPublicProfilePreferences
+     */
+    public function setAllowMailSending($allowMailSending)
+    {
+        $this->allowMailSending = $allowMailSending;
+
+        return $this;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function getAllowMailSending()
+    {
+        return $this->allowMailSending;
+    }
+
+    /**
+     * @param boolean $allowMessageSending
+     *
+     * @return UserPublicProfilePreferences
+     */
+    public function setAllowMessageSending($allowMessageSending)
+    {
+        $this->allowMessageSending = $allowMessageSending;
+
+        return $this;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function getAllowMessageSending()
+    {
+        return $this->allowMessageSending;
     }
 }

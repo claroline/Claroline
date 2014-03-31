@@ -1,6 +1,6 @@
 <?php
 
-namespace Claroline\CoreBundle\Migrations\sqlsrv;
+namespace Claroline\CoreBundle\Migrations\pdo_sqlsrv;
 
 use Doctrine\DBAL\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
@@ -8,9 +8,9 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2014/03/21 11:28:07
+ * Generation date: 2014/03/31 03:17:08
  */
-class Version20140321112802 extends AbstractMigration
+class Version20140331151703 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
@@ -21,6 +21,8 @@ class Version20140321112802 extends AbstractMigration
                 share_policy INT NOT NULL, 
                 display_phone_number BIT NOT NULL, 
                 display_email BIT NOT NULL, 
+                allow_mail_sending BIT NOT NULL, 
+                allow_message_sending BIT NOT NULL, 
                 PRIMARY KEY (id)
             )
         ");

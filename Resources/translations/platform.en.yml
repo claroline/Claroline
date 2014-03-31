@@ -488,6 +488,8 @@ profile_form_platformRoles: Roles
 properties: Properties
 public: Public
 public_profile: 'Public profile'
+public_profile_preferences_allow_mail_sending: 'Mail sending'
+public_profile_preferences_allow_message_sending: 'Message sending'
 public_profile_undiscoverable: 'Profile undiscoverable'
 public_profile_undiscoverable_anonymously: 'Mandatory connection to access the profile'
 public_profile_undiscoverable_anonymously_text: 'You must be <a href="%loginUrl%" title="Connection">connected</a> to the platform to access profile <strong>%publicUrl%</strong>'
