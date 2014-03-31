@@ -6,6 +6,7 @@
     {{ macros.flashBox() }}
     <div class="panel panel-default panel-user">
         <div class="panel-heading relative">
+            <a href="{{ path('claro_profile_view') }}" title="{{ 'back_to_profile'|trans({}, 'platform') }}" class="pull-right"><span class="icon-reply"></span> {{ 'back_to_profile'|trans({}, 'platform') }}</a>
             <h3 class="panel-title">
                 {{ 'edit_public_profile'|trans({}, 'platform') }}
             </h3>
