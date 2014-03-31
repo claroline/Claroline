@@ -604,9 +604,9 @@ class WorkspaceController extends Controller
             $roles = $this->roleManager->getRolesByWorkspace($workspace);
 
             foreach ($roles as $wsRole) {
-                foreach ($this->security->getToken()->getUser()->getRoles() as $userRole) {
-                    if ($userRole == $wsRole->getName()) {
-                        $foundRoles[] = $userRole;
+                foreach ($this->security->getToken()->getRoles() as $userRole) {
+                    if ($userRole->getRole() === $wsRole->getName()) {
+                        $foundRoles[] = $wsRole;
                     }
                 }
             }
