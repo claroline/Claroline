@@ -1,5 +1,13 @@
 {% if badgesInfoUser|length > 0 %}
     {% for key,info in badgesInfoUser %}
-        {#{ info.badgeName }} - {{ info.issued }#}
+        <span>
+            {% if(info.issued|date('d/m/Y \\- H\\hi\\ms\\s') == '01/01/1970 - 00h59m59s') %}
+                {{ 'badgeNoObtained'|trans }} : "{{ info.badgeName }}"
+            {% else %}
+                {{ 'badgeObtained'|trans }} : "{{ info.badgeName }}" - 
+                {{ info.issued|date('d/m/Y \\- H\\hi\\ms\\s') }}
+            {% endif %}
+        </span>
+        <br/>
     {% endfor %}
 {% endif %}

@@ -49,6 +49,7 @@ all: Tout
 allow to edit: Autoriser l'édition
 allQuestion: Toutes
 already: Cette question est déjà partagée avec cet utilisateur
+already answered: Vous avez déjà répondu à cet exercice
 alreadyExist: Ce nom existe déjà.
 alreadyPlaced: Réponses déjà placées
 alter category: Modifier cette catégorie
@@ -58,6 +59,9 @@ attempt info1: Vous avez droit à
 attempt info2sing: essai
 attempt info2plur: essais
 attempt info3: Essai N°
+attempt info4: Il vous reste
+attempt info5: afin d'améliorer votre note
+attempt info6: Il ne vous reste plus aucun essai
 at the end of assessment: A la fin du test
 at the same time that the correction: En même temps que la correction
 availability of correction: Disponibilité de la correction
@@ -165,6 +169,7 @@ histoSuccess: Histogramme de réussite
 hole: Blancs
 hole creation: Création d'une question à trous
 hole edition: Edition d'une question à trous
+home exercise: Accueil de l'exercice
 
 # I
 infiny: Infini

@@ -58,8 +58,11 @@
         <h3>{{ 'correction' | trans }}</h3>
     </div>
     <div class="panel-body">
+        <a class="btn btn-primary" href="{{ path('ujm_exercise_open', { 'exerciseId':  exoId }) }}">
+            <i class="icon-arrow-left"></i> {{ 'home exercise' | trans }}
+        </a>
         <a href="{{ path('ujm_paper_list', { 'exoID': exoId }) }}" class="btn btn-primary">
-            <i class="icon-arrow-left"></i> {{ 'back' | trans }}
+            <i class="icon-list"></i> {{ 'paper list' | trans }}
         </a>
         {% if retryButton %}
             <a class="btn btn-primary" href="{{ path('ujm_exercise_paper', { 'id': exoId }) }}">
@@ -286,6 +289,7 @@
                     {% set scoreFinal = roundUpOrDown(scoreFinal) %}
                     <span id="paperFinalScore">{{ scoreFinal }} / 20</span>
                 </h3>
+                {% include "UJMExoBundle:Partial:badgeInfos/infos.html.twig" %}
                 <hr/>
             {% endif %}
 
