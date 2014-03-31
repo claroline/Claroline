@@ -189,6 +189,7 @@ class ResourceNode
     public function __construct()
     {
         $this->rights = new ArrayCollection();
+        $this->children = new ArrayCollection();
     }
 
     /**
