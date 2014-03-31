@@ -45,10 +45,24 @@
                 });
             }
             else {
-                preferencesField.each(function() {
-                    var preferenceName = parseFieldName($(this).attr('name'));
-                    updateFieldVisibility(preferenceName, data[preferenceName] != undefined);
-                });
+                // Case where share policy is nobody but we want to display a field, changing shared policy to platform users
+                if (0 == data['share_policy']) {
+                    for (var currentUserPublicProfilePreferenceIndex in currentUserPublicProfilePreferences) {
+                        if (data[currentUserPublicProfilePreferenceIndex] == undefined) {
+                            currentUserPublicProfilePreferences[currentUserPublicProfilePreferenceIndex] = false;
+                        }
+                        else {
+                            currentUserPublicProfilePreferences[currentUserPublicProfilePreferenceIndex] = 'checked';
+                        }
+                    }
+                    $("input[name='" + formName + "[share_policy]'][value=1]", form).click();
+                }
+                else {
+                    preferencesField.each(function() {
+                        var preferenceName = parseFieldName($(this).attr('name'));
+                        updateFieldVisibility(preferenceName, data[preferenceName] != undefined);
+                    });
+                }
             }
         }
 
@@ -81,13 +95,15 @@
 
         function updateFieldVisibility(field, visibility) {
             var block = $('#' + field);
-            if (visibility) {
-                block.removeClass('hidden');
-                currentUserPublicProfilePreferences['display_' + field] = 'checked';
-            }
-            else {
-                block.addClass('hidden');
-                currentUserPublicProfilePreferences['display_' + field] = false;
+            if('display_base_informations' !== field) {
+                if (visibility) {
+                    block.removeClass('hidden');
+                    currentUserPublicProfilePreferences[field] = 'checked';
+                }
+                else {
+                    block.addClass('hidden');
+                    currentUserPublicProfilePreferences[field] = false;
+                }
             }
         }
 
