@@ -161,11 +161,14 @@ class UserManager
         // would prevent creating a user with the same username
         // todo: workspace deletion should be an option
         $ws = $user->getPersonalWorkspace();
-        $ws->setCode($ws->getCode() . '#deleted_user#' . $user->getId());
-        $ws->setPublic(false);
-        $ws->setDisplayable(false);
 
-        $this->om->persist($ws);
+        if ($ws) {
+            $ws->setCode($ws->getCode() . '#deleted_user#' . $user->getId());
+            $ws->setPublic(false);
+            $ws->setDisplayable(false);
+            $this->om->persist($ws);
+        }
+
         $this->om->persist($user);
         $this->om->flush();
 
@@ -457,6 +460,16 @@ class UserManager
     public function getUsersByGroupWithoutPager(Group $group)
     {
         return $this->userRepo->findByGroup($group);
+    }
+
+    /**
+     * @param AbstractWorkspace $workspace
+     *
+     * @return User[]
+     */
+    public function getByWorkspaceWithUsersFromGroup(AbstractWorkspace $workspace)
+    {
+        return $this->userRepo->findByWorkspaceWithUsersFromGroup($workspace);
     }
 
     /**

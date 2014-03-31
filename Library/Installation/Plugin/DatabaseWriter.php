@@ -256,9 +256,8 @@ class DatabaseWriter
 
         if (null === $resourceType) {
             $resourceType = new ResourceType();
-            $resourceType
-                ->setName($resource['name'])
-                ->setPlugin($pluginEntity);
+            $resourceType->setName($resource['name']);
+            $resourceType->setPlugin($pluginEntity);
 
             $isExistResourceType = false;
         }
@@ -376,6 +375,8 @@ class DatabaseWriter
                 $this->em->persist($rtca);
             }
         }
+
+        $this->em->flush();
     }
 
     private function updateCustomAction($actions, $resourceType)
@@ -419,6 +420,8 @@ class DatabaseWriter
                 }
             }
         }
+
+        $this->em->flush();
     }
 
     private function persistResourceTypes($resource, $pluginEntity, $plugin)
@@ -430,13 +433,34 @@ class DatabaseWriter
         $this->em->persist($resourceType);
         $this->mm->addDefaultPerms($resourceType);
         $this->persistCustomAction($resource['actions'], $resourceType);
+        $this->setResourceTypeDefaultMask($resource['default_rights'], $resourceType);
         $this->persistIcons($resource, $resourceType, $plugin);
+
+        //create default mask
 
         if ($this->modifyTemplate) {
             $this->templateBuilder->addResourceType($resource['name'], 'ROLE_WS_MANAGER');
         }
 
         return $resourceType;
+    }
+
+    private function setResourceTypeDefaultMask(array $rightsName, ResourceType $resourceType)
+    {
+        $mask = count($rightsName) === 0 ? 1: 0;
+        $permMap = $this->mm->getPermissionMap($resourceType);
+
+        foreach ($rightsName as $rights) {
+            foreach ($permMap as $value => $perm) {
+                if ($perm == $rights['name']) {
+                    $mask += $value;
+                }
+            }
+        }
+
+        $resourceType->setDefaultMask($mask);
+        $this->em->persist($resourceType);
+
     }
 
     private function persistWidget($widget, $pluginEntity, $plugin)
@@ -478,15 +502,13 @@ class DatabaseWriter
         $toolEntity->setExportable($tool['is_exportable']);
         $toolEntity->setIsConfigurableInWorkspace($tool['is_configurable_in_workspace']);
         $toolEntity->setIsConfigurableInDesktop($tool['is_configurable_in_desktop']);
+        $toolEntity->setIsLockedForAdmin($tool['is_locked_for_admin']);
+        $toolEntity->setIsAnonymousExcluded($tool['is_anonymous_excluded']);
 
         if (isset($tool['class'])) {
-            $toolEntity->setClass(
-                "{$tool['class']}"
-            );
+            $toolEntity->setClass("{$tool['class']}");
         } else {
-            $toolEntity->setClass(
-                "icon-wrench"
-            );
+            $toolEntity->setClass("icon-wrench");
         }
 
         $this->em->persist($toolEntity);

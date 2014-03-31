@@ -44,7 +44,7 @@ class Event
     private $end;
 
     /**
-     * @ORM\Column(nullable=true)
+     * @ORM\Column(nullable=true, type="text")
      */
     private $description;
 

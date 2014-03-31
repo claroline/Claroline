@@ -69,6 +69,13 @@ class UserBadge
     protected $issuer;
 
     /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="expired_at", type="datetime", nullable=true)
+     */
+    protected $expiredAt;
+
+    /**
      * @param int $id
      *
      * @return UserBadge
@@ -142,5 +149,45 @@ class UserBadge
     public function getIssuer()
     {
         return $this->issuer;
+    }
+
+    /**
+     * @param \DateTime $expiredAt
+     *
+     * @return UserBadge
+     */
+    public function setExpiredAt($expiredAt)
+    {
+        $this->expiredAt = $expiredAt;
+
+        return $this;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getExpiredAt()
+    {
+        return $this->expiredAt;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isExpired()
+    {
+        if (null !== $this->expiredAt) {
+            return $this->expiredAt <= (new \DateTime());
+        }
+
+        return false;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isExpiring()
+    {
+        return null !== $this->expiredAt;
     }
 }

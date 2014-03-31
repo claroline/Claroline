@@ -257,7 +257,7 @@ class GroupRepository extends EntityRepository
      * @param boolean $executeQuery
      * @param string  $orderedBy
      *
-     * @return array[Group]|Query
+     * @return \Claroline\CoreBundle\Entity\Group[]|Query
      */
     public function findByName($search, $executeQuery = true, $orderedBy = 'id')
     {
@@ -274,6 +274,26 @@ class GroupRepository extends EntityRepository
         $query->setParameter('search', "%{$search}%");
 
         return $executeQuery ? $query->getResult() : $query;
+    }
+
+    /**
+     * @param string $search
+     *
+     * @return array
+     */
+    public function findByNameForAjax($search)
+    {
+        $resultArray = array();
+        $groups      = $this->findByName($search);
+
+        foreach ($groups as $group) {
+            $resultArray[] = array(
+                'id'   => $group->getId(),
+                'text' => $group->getName()
+            );
+        }
+
+        return $resultArray;
     }
 
     /**

@@ -11,6 +11,27 @@
     'use strict';
 
     var home = window.Claroline.Home;
+    var modal = window.Claroline.Modal;
+
+    function deletelogo(element) {
+        var logo = $(element).data('logo');
+
+        if (logo && element) {
+            $.ajax(home.path + 'admin/delete/logo/' + logo)
+            .done(function (data) {
+                if (data === 'true') {
+                    $(element).hide('slow', function () {
+                        $(this).remove();
+                    });
+                } else {
+                    modal.error();
+                }
+            })
+            .error(function () {
+                modal.error();
+            });
+        }
+    }
 
     $('body').on('click', '.logos .logo', function () {
         $('.logos .logo').removeClass(function (index, css) {
@@ -25,28 +46,11 @@
 
     $('body').on('click', '.logos .logo .close', function (event) {
         event.stopPropagation();
-        var element = $(this).parents('.logo');
-        home.modal('content/confirm', 'delete-logo', element);
-    });
-
-    $('body').on('click', '#delete-logo .btn.delete', function () {
-        var element = $('#delete-logo').data('element');
-        var logo = $(element).data('logo');
-
-        if (logo && element) {
-            $.ajax(home.path + 'admin/delete/logo/' + logo)
-            .done(function (data) {
-                if (data === 'true') {
-                    $(element).hide('slow', function () {
-                        $(this).remove();
-                    });
-                } else {
-                    home.modal('content/error');
-                }
-            })
-            .error(function () {
-                home.modal('content/error');
+        var logo = $(this).parents('.logo');
+        modal.fromRoute('claro_content_confirm', null, function (element) {
+            element.on('click', '.btn.delete', function () {
+                deletelogo(logo);
             });
-        }
+        });
     });
 })();

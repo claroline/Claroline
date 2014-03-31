@@ -954,6 +954,53 @@ class UserRepository extends EntityRepository implements UserProviderInterface
     }
 
     /**
+     * @param AbstractWorkspace $workspace
+     *
+     * @return array
+     */
+    public function findByWorkspaceWithUsersFromGroup(AbstractWorkspace $workspace)
+    {
+        $dql = '
+            SELECT u
+            FROM Claroline\CoreBundle\Entity\User u
+            LEFT JOIN u.groups g
+            LEFT JOIN g.roles gr
+            LEFT JOIN gr.workspace grws
+            LEFT JOIN u.roles ur
+            LEFT JOIN ur.workspace uws
+            WHERE uws.id = :wsId
+            OR grws.id = :wsId
+         ';
+
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('wsId', $workspace->getId());
+        $res = $query->getResult();
+
+        return $res;
+    }
+
+    /**
+     * @param string $search
+     *
+     * @return array
+     */
+    public function findByNameForAjax($search)
+    {
+        $resultArray = array();
+
+        $users = $this->findByName($search);
+
+        foreach ($users as $user) {
+            $resultArray[] = array(
+                'id'   => $user->getId(),
+                'text' => $user->getFirstName() . ' ' . $user->getLastName()
+            );
+        }
+
+        return $resultArray;
+    }
+
+    /**
      * @param array $params
      *
      * @return User[]

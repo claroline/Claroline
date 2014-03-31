@@ -22,13 +22,15 @@ dec: Déc
 december: Décembre
 end: Fin
 end_date: 'Date de fin'
+export: 'Exporter les évènements'
 error: 'Une erreur s''est produite, veuillez réessayer'
 event_update: 'Modification enregistrée'
 feb: Févr
 february: Février
 fri: Ven
 friday: Vendredi
-high: Haute
+high: Haute (rouge)
+import_agenda_file_file: 'Importer'
 jan: Janv
 january: Janvier
 jul: Juil
@@ -36,11 +38,11 @@ july: Juillet
 jun: Juin
 june: Juin
 length: Durée
-low: Basse
+low: Basse (gris)
 mar: Mars
 march: Mars
 may: Mai
-medium: Normale
+medium: Normale (bleu)
 modify: 'Modifier un événement'
 mon: Lun
 monday: Lundi

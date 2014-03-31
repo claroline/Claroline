@@ -77,6 +77,16 @@ class Tool
     protected $isConfigurableInDesktop = false;
 
     /**
+     * @ORM\Column(type="boolean", name="is_locked_for_admin")
+     */
+    protected $isLockedForAdmin = false;
+
+    /**
+     * @ORM\Column(type="boolean", name="is_anonymous_excluded")
+     */
+    protected $isAnonymousExcluded = true;
+
+    /**
      * Unmapped var used for the tool configuration.
      *
      * @var boolean
@@ -225,5 +235,25 @@ class Tool
     public function isConfigurableInDesktop()
     {
         return $this->isConfigurableInDesktop;
+    }
+
+    public function setIsLockedForAdmin($isLockedForAdmin)
+    {
+        $this->isLockedForAdmin = $isLockedForAdmin;
+    }
+
+    public function isLockedForAdmin()
+    {
+        return $this->isLockedForAdmin;
+    }
+
+    public function setIsAnonymousExcluded($isAnonymousExcluded)
+    {
+        $this->isAnonymousExcluded = $isAnonymousExcluded;
+    }
+
+    public function isAnonymousExcluded()
+    {
+        return $this->isAnonymousExcluded;
     }
 }

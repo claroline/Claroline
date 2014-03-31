@@ -1,12 +1,20 @@
-<form novalidate="novalidate"
-      action="{{ path('claro_resource_rename', {'node': '_nodeId'}) }}"
-      method="post" {{ form_enctype(form) }}
-      id="resource-rename-form"
-      class="form-horizontal">
-   {{ form_errors(form) }}
-   {{ form_widget(form) }}
-    <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">{{ 'cancel'|trans({}, 'platform') }}</button>
-        <input type="submit" class="btn btn-primary" value="{{ 'ok'|trans({}, 'platform') }}"/>
-    </div>
-</form>
+<div class='modal-dialog'>
+    <form novalidate="novalidate"
+          action="{{ path('claro_resource_rename', {'node': nodeId}) }}"
+          method="post" {{ form_enctype(form) }}
+          id="resource-rename-form"
+          class="modal-content">
+        <div class='modal-header'>
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h4 class="modal-title">{{ 'rename' | trans({}, 'platform') }}</h4>
+        </div>
+        <div class='modal-body'>
+            {{ form_errors(form) }}
+            {{ form_widget(form) }}
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">{{ 'cancel'|trans({}, 'platform') }}</button>
+            <input type="submit" class="btn btn-primary" value="{{ 'ok'|trans({}, 'platform') }}"/>
+        </div>
+    </form>
+</div>

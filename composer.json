@@ -14,6 +14,7 @@
     ],
     "require": {
         "php": ">=5.4.1",
+        "ext-mcrypt": "*",
         "symfony/symfony": "2.4.0",
         "symfony/assetic-bundle": "~2.3",
         "symfony/swiftmailer-bundle": "~2.3",
@@ -40,9 +41,10 @@
         "twbs/bootstrap": "3.0.0",
         "fortawesome/font-awesome": "~3.2.1",
         "zenstruck/form-bundle": "dev-master",
+        "zendframework/zend-crypt": "~2.0,!=2.1.1",
         "besimple/sso-auth-bundle": "*",
         "composer/composer": "dev-master",
-        "willdurand/expose-translation-bundle": "1.2",
+        "willdurand/js-translation-bundle": "~1.2",
         "mrclay/minify": "dev-master",
         "natxet/CssMin": "dev-master",
         "werkint/jsmin": "dev-master",
@@ -54,7 +56,8 @@
         "claroline/installation-bundle": "~3.1",
         "claroline/front-end-bundle": ">=1.0.10,<2.0",
         "claroline/migration-bundle": "~1.0",
-        "icap/notification-bundle": "~1.0"
+        "icap/notification-bundle": "~1.0",
+        "johngrogg/ics-parser": "dev-master"
     },
     "require-dev": {
         "mockery/mockery": "dev-master@dev",

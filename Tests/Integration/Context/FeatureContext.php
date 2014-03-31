@@ -60,6 +60,16 @@ class FeatureContext extends MinkContext
     }
 
     /**
+       * After each scenario, we close the browser
+       *
+       * @AfterScenario
+       */
+    public function closeBrowser()
+    {
+        $this->getSession()->stop();
+    }
+
+    /**
      * @Given /^the admin account "([^"]*)" is created$/
      */
     public function theAdminAccountIsCreated($username)
@@ -109,7 +119,8 @@ class FeatureContext extends MinkContext
             new Step\When('I am on "/login"'),
             new Step\When('I fill in "Username or email" with "'. $login . '"'),
             new Step\When('I fill in "Password" with "'. $password . '"'),
-            new Step\When('I press "Login"')
+            new Step\When('I press "Login"'),
+            new Step\When('I should be on "/desktop/tool/open/home"')
         );
     }
 
@@ -134,23 +145,6 @@ class FeatureContext extends MinkContext
             $(checkbox).prop('checked', 'checked');
         })();";
         $this->getSession()->evaluateScript($script);
-    }
-
-    /**
-     * Connect the user with login and password
-     *
-     * @Given /^I\'m connected with login "([^"]*)" and password "([^"]*)"$/
-     */
-    public function iMConnectedWithLoginAndPassword($login, $password)
-    {
-        $login    = $this->fixStepArgument($login);
-        $password = $this->fixStepArgument($password);
-        return array(
-            new Step\When('I am on "/login"'),
-            new Step\When('I fill in "Nom d\'utilisateur ou email" with "'. $login . '"'),
-            new Step\When('I fill in "Mot de passe (Mot de passe oublié ?)" with "'. $password . '"'),
-            new Step\When('I press "Connexion"')
-        );
     }
 
     /**
@@ -211,25 +205,94 @@ EOL;
     }
 
     /**
+     * Step for testing select2 autocomplete field
+     *
      * @Given /^I fill in "([^"]*)" with "([^"]*)" for autocomplete$/
      */
     public function iFillInWithForAutocomplete($locator, $value)
     {
-        $field = $this->getSession()->getPage()->findField($locator);
+        $field = $this->getSession()->getPage()->find('css', $locator);
+        $fieldBlock = $field->getParent();
+        $fieldLink = $fieldBlock->find('css', ' a');
+        $fieldLink->click();
 
-        $field->focus();
-
-        $this->fillField($locator, $value);
+        $field = $this->getSession()->getPage()->find('css', '.select2-input');
+        $field->setValue($value);
     }
 
+    /**
+     * @Given /^I go to personal workspace of "([^"]*)"$/
+     */
+    public function iGoToPersonalWorkspaceOf($username)
+    {
+        /** @var \Claroline\CoreBundle\Repository\UserRepository $userRepository */
+        $userRepository = $this->getKernel()->getContainer()->get('doctrine')->getManager()->getRepository('ClarolineCoreBundle:User');
+        /** @var \Claroline\CoreBundle\Entity\User $user */
+        $user = $userRepository->findOneByUsername($username);
+
+        if (null === $user) {
+            throw new \InvalidArgumentException('Unknown username.');
+        }
+
+        $userPersonalWorkspace = $user->getPersonalWorkspace();
+
+        if (null === $userPersonalWorkspace) {
+            throw new \InvalidArgumentException("User doesn't have a personal workspace.");
+        }
+
+        $this->getSession()->visit($this->locatePath(sprintf('/workspaces/%d/open/tool/resource_manager', $userPersonalWorkspace->getId())));
+    }
+
+    /**
+     * @Given /^resource manager is loaded$/
+     */
+    public function resourceManagerIsLoaded()
+    {
+        $this->spin(function($context) {
+            /** @var \Claroline\CoreBundle\Tests\Integration\Context\FeatureContext $context */
+            $resourceManager = $context->getSession()->getPage()->findById('sortable');
+            if (null === $resourceManager) {
+                return false;
+            }
+
+            return ($resourceManager->isVisible());
+        });
+    }
     /**
      * @Given /^I wait for the suggestion box to appear$/
      */
     public function iWaitForTheSuggestionBoxToAppear()
     {
-        $this->getSession()->wait(5000,
-            "$('.ui-autocomplete').children().length > 0"
-        );
+        $this->spin(function($context) {
+            /** @var \Claroline\CoreBundle\Tests\Integration\Context\FeatureContext $context */
+            $suggestionBox = $context->getSession()->getPage()->findById('select2-drop');
+            if (null === $suggestionBox) {
+                return false;
+            }
+
+            return ($suggestionBox->isVisible());
+        });
+    }
+
+    /**
+     * @Then /^I should see "([^"]*)" in the suggestion box$/
+     */
+    public function iShouldSeeInTheSuggestionBox($value)
+    {
+        $this->spin(function($context) {
+            /** @var \Claroline\CoreBundle\Tests\Integration\Context\FeatureContext $context */
+            $suggestionBox = $context->getSession()->getPage()->findById('select2-drop');
+            if (null === $suggestionBox) {
+                return false;
+            }
+
+            $suggestions = $suggestionBox->find('css', '.select2-results li[class!=select2-searching]');
+            if (null === $suggestions) {
+                return false;
+            }
+
+            return ($suggestions->isVisible());
+        });
     }
 
     /**
@@ -237,9 +300,48 @@ EOL;
      */
     public function iWaitForThePopupToAppear()
     {
-        $this->getSession()->wait(5000,
-            "$('#modal-form').css('display') == 'block'"
-        );
+        $this->spin(function($context) {
+            /** @var \Claroline\CoreBundle\Tests\Integration\Context\FeatureContext $context */
+            $suggestionBox = $context->getSession()->getPage()->findById('modal-form');
+            if (null === $suggestionBox) {
+                return false;
+            }
+
+            return ($suggestionBox->isVisible());
+        });
+    }
+
+    /**
+     * @Given /^I wait for the confirm popup to appear$/
+     */
+    public function iWaitForTheConfirmPopupToAppear()
+    {
+        $this->spin(function($context) {
+            /** @var \Claroline\CoreBundle\Tests\Integration\Context\FeatureContext $context */
+            $suggestionBox = $context->getSession()->getPage()->find('css', '.modal[id^=confirm]');
+            if (null === $suggestionBox) {
+                return false;
+            }
+
+            return ($suggestionBox->isVisible());
+        });
+    }
+
+    /**
+     * @Given /^I click on "([^"]*)" in the resource manager$/
+     */
+    public function iClickOnInTheResourceManager($locator)
+    {
+        $this->spin(function($context) use($locator) {
+            /** @var \Claroline\CoreBundle\Tests\Integration\Context\FeatureContext $context */
+            $element = $context->getSession()->getPage()->find('css', $locator);
+            if (null === $element) {
+                return false;
+            }
+
+            $element->click();
+            return true;
+        });
     }
 
     /**
@@ -270,6 +372,7 @@ EOL;
 
         foreach ($hash as $row) {
             $steps[] = new Step\When('I am on "' . $row['url'] . '"');
+            $steps[] = new Step\When('I should be on "' . $row['url'] . '"');
             $steps[] = new Step\When('the response status code should be ' . $row['code']);
         }
 
@@ -309,5 +412,25 @@ EOL;
                 . "Response content is: {$content}"
             );
         }
+    }
+
+    public function spin($lambda, $wait = 5)
+    {
+        for ($i = 0; $i < $wait; $i++)
+        {
+            try {
+                if ($lambda($this)) {
+                    return true;
+                }
+            } catch (\Exception $e) {
+                // do nothing
+            }
+
+            sleep(1);
+        }
+
+        $backtrace = debug_backtrace();
+
+        throw new \Exception("Timeout thrown by " . $backtrace[1]['class'] . "::" . $backtrace[1]['function']);
     }
 }

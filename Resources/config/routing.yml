@@ -32,36 +32,35 @@ claro_theme:
 
 claro_theme_error:
     pattern: /admin/theme/error
+    options: { expose: true }
     defaults:
         _controller: FrameworkBundle:Template:template
         template: 'ClarolineCoreBundle:Theme:error.html.twig'
 
 claro_theme_confirm:
     pattern: /admin/theme/confirm
+    options: { expose: true }
     defaults:
         _controller: FrameworkBundle:Template:template
         template: 'ClarolineCoreBundle:Theme:confirm.html.twig'
 
-claro_content_error:
-    pattern: /content/error
-    defaults:
-        _controller: FrameworkBundle:Template:template
-        template: 'ClarolineCoreBundle:Home:ajaxerror.html.twig'
-
 claro_content_typeerror:
     pattern: /content/typeerror
+    options: { expose: true }
     defaults:
         _controller: FrameworkBundle:Template:template
         template: 'ClarolineCoreBundle:Home:typeerror.html.twig'
 
 claro_content_confirm:
     pattern: /content/confirm
+    options: { expose: true }
     defaults:
         _controller: FrameworkBundle:Template:template
         template: 'ClarolineCoreBundle:Home:confirm.html.twig'
 
 claro_content_link:
     pattern: /content/link
+    options: { expose: true }
     defaults:
         _controller: FrameworkBundle:Template:template
         template: 'ClarolineCoreBundle:Home:link.html.twig'
@@ -218,22 +217,8 @@ claro_file:
     type: annotation
     prefix: file
 
-# Badge routes
-claro_badge_admin:
-    resource: "@ClarolineCoreBundle/Controller/Badge/AdminController.php"
-    type:     annotation
-
-claro_badge_front:
-    resource: "@ClarolineCoreBundle/Controller/Badge/FrontController.php"
-    type:     annotation
-
-claro_badge_profil:
-    resource: "@ClarolineCoreBundle/Controller/Badge/ProfileController.php"
-    type:     annotation
-
-claro_badge_workspace_tool:
-    resource: "@ClarolineCoreBundle/Controller/Badge/Tool/WorkspaceController.php"
-    type:     annotation
+claro_badge:
+    resource: "@ClarolineCoreBundle/Controller/Badge"
 
 claro_workspaces_widget:
     resource: "@ClarolineCoreBundle/Controller/Widget/MyWorkspacesWidgetController.php"
@@ -244,13 +229,22 @@ claro_oauth:
     resource: "@ClarolineCoreBundle/Controller/Oauth"
     type: annotation
 
-claro_administration_parameters:
+claro_admin_parameters:
     prefix: admin/parameters
     resource: "@ClarolineCoreBundle/Controller/Administration/ParametersController.php"
     type: annotation
 
-# Api routes
-claro_api:
-    resource: "@ClarolineCoreBundle/Controller/Api"
-    type:     annotation
-    prefix:   /api
+claro_admin_workspaces:
+    prefix: admin/workspaces
+    resource: "@ClarolineCoreBundle/Controller/Administration/WorkspacesController.php"
+    type: annotation
+
+claro_admin_users:
+    prefix: admin/users
+    resource: "@ClarolineCoreBundle/Controller/Administration/UsersController.php"
+    type: annotation
+
+claro_admin_groups:
+    prefix: admin/groups
+    resource: "@ClarolineCoreBundle/Controller/Administration/GroupsController.php"
+    type: annotation

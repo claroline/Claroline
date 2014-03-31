@@ -25,6 +25,7 @@ use Pagerfanta\Pagerfanta;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 
@@ -142,8 +143,12 @@ class ProfileController extends Controller
             $unitOfWork = $em->getUnitOfWork();
             $unitOfWork->computeChangeSets();
             $changeSet = $unitOfWork->getEntityChangeSet($user);
-            $newRoles = $form['platformRoles']->getData();
-            $this->userManager->setPlatformRoles($user, $newRoles);
+            $newRoles = array();
+
+            if (isset($form['platformRoles'])) {
+                $newRoles = $form['platformRoles']->getData();
+                $this->userManager->setPlatformRoles($user, $newRoles);
+            }
 
             $rolesChangeSet = array();
             //Detect added
@@ -199,7 +204,10 @@ class ProfileController extends Controller
      */
     public function viewAction(User $user, $page = 1)
     {
-        $query = $this->getDoctrine()->getRepository('ClarolineCoreBundle:Badge\Badge')->findByUser($user, false);
+        $doctrine = $this->getDoctrine();
+        $doctrine->getManager()->getFilters()->disable('softdeleteable');
+
+        $query   = $doctrine->getRepository('ClarolineCoreBundle:Badge\UserBadge')->findByUser($user, false);
         $adapter = new DoctrineORMAdapter($query);
         $pager   = new Pagerfanta($adapter);
 

@@ -11,6 +11,7 @@
 
 namespace Claroline\CoreBundle;
 
+use Claroline\CoreBundle\DependencyInjection\Compiler\DoctrineEntityListenerPass;
 use Claroline\CoreBundle\DependencyInjection\Compiler\DynamicConfigPass;
 use Claroline\CoreBundle\DependencyInjection\Compiler\ImportersConfigPass;
 use FOS\OAuthServerBundle\FOSOAuthServerBundle;
@@ -23,6 +24,7 @@ use Claroline\KernelBundle\Bundle\ConfigurationProviderInterface;
 use Claroline\KernelBundle\Bundle\ConfigurationBuilder;
 use Claroline\InstallationBundle\Bundle\InstallableBundle;
 use Claroline\CoreBundle\Library\Installation\AdditionalInstaller;
+use Zenstruck\Bundle\FormBundle\ZenstruckFormBundle;
 
 class ClarolineCoreBundle extends InstallableBundle implements AutoConfigurableInterface, ConfigurationProviderInterface
 {
@@ -32,6 +34,7 @@ class ClarolineCoreBundle extends InstallableBundle implements AutoConfigurableI
 
         $container->addCompilerPass(new DynamicConfigPass());
         $container->addCompilerPass(new ImportersConfigPass());
+        $container->addCompilerPass(new DoctrineEntityListenerPass());
     }
 
     public function supports($environment)
@@ -73,7 +76,6 @@ class ClarolineCoreBundle extends InstallableBundle implements AutoConfigurableI
             'Symfony\Bundle\AsseticBundle\AsseticBundle'                    => 'assetic',
             'JMS\DiExtraBundle\JMSDiExtraBundle'                            => 'jms_di_extra',
             'JMS\SecurityExtraBundle\JMSSecurityExtraBundle'                => 'jms_security_extra',
-            'Zenstruck\Bundle\FormBundle\ZenstruckFormBundle'               => 'zenstruck_form',
             'Stof\DoctrineExtensionsBundle\StofDoctrineExtensionsBundle'    => 'stof_doctrine_extensions',
             'BeSimple\SsoAuthBundle\BeSimpleSsoAuthBundle'                  => 'sso',
             'Stfalcon\Bundle\TinymceBundle\StfalconTinymceBundle'           => 'stfalcon_tinymce',
@@ -118,6 +120,13 @@ class ClarolineCoreBundle extends InstallableBundle implements AutoConfigurableI
             $config
                 ->addContainerResource($this->buildPath('idci_exporter'))
                 ->addRoutingResource($this->buildPath('idci_exporter_routing'));
+
+            return $config;
+        } elseif ($bundle instanceof ZenstruckFormBundle) {
+            $config = new ConfigurationBuilder();
+            $config
+                ->addContainerResource($this->buildPath('zenstruck_form'))
+                ->addRoutingResource($this->buildPath('zenstruck_form_routing'));
 
             return $config;
         } elseif (in_array($environment, array('dev', 'test'))) {

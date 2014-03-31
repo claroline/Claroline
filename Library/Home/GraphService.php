@@ -25,19 +25,16 @@ class GraphService
     public function get($url)
     {
         $this->graph['url'] = $url;
-
         $headers = get_headers($url, 1);
-        $type = $headers['Content-Type'];
 
-        if (is_string($type) and strpos($type, 'image/') === 0) {
+        if ($headers and is_string($type = $headers['Content-Type']) and strpos($type, 'image/') === 0) {
             $this->graph['type'] = 'raw';
             $this->graph['images'][] = $url;
-        } else {
-            $content = file_get_contents($url);
+        } else if (false !== ($content = @file_get_contents($url))) {
             $content = mb_convert_encoding($content, 'HTML-ENTITIES', 'UTF-8');
 
-            $this->crawler = new Crawler($content);
-
+            $this->crawler = new Crawler();
+            $this->crawler->addHtmlContent($content);
             $this->openGraph();
             $this->twitter();
 
@@ -47,8 +44,12 @@ class GraphService
                 $this->html();
             }
 
-            //for example in case of slideshare:presentation
-            $this->graph['type'] = str_replace(':', '-', $this->graph['type']);
+            if (isset($this->graph['type'])) {
+                //for example in case of slideshare:presentation
+                $this->graph['type'] = str_replace(':', '-', $this->graph['type']);
+            } else {
+                $this->graph['type'] = 'default';
+            }
         }
 
         return $this->graph;

@@ -105,7 +105,7 @@ class WorkspaceRepository extends EntityRepository
             WHERE r.name = '{$roles[0]}'
         ";
 
-        for ($i = 1, $size = count($roles); $i < $size; $i++) {
+        for ($i = 1, $size = count($roles) - 1; $i < $size; $i++) {
             $dql .= " OR r.name = '{$roles[$i]}'";
         }
 
@@ -507,5 +507,63 @@ class WorkspaceRepository extends EntityRepository
         }
 
         return null;
+    }
+
+    public function findByName($search, $executeQuery = true, $orderedBy = 'id')
+    {
+        $upperSearch = strtoupper($search);
+        $upperSearch = trim($upperSearch);
+        $upperSearch = preg_replace('/\s+/', ' ', $upperSearch);
+        $dql = "
+            SELECT w
+            FROM Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace w
+            WHERE UPPER(w.name) LIKE :search
+            OR UPPER(w.code) LIKE :search
+            ORDER BY w.{$orderedBy}
+        ";
+
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('search', "%{$upperSearch}%");
+
+        return $executeQuery ? $query->getResult() : $query;
+    }
+
+    public function findWorkspacesByManager(User $user, $executeQuery = true)
+    {
+        $roles = $user->getRoles();
+        $managerRoles = [];
+
+        foreach ($roles as $role) {
+            if (strpos('_'.$role, 'ROLE_WS_MANAGER')) {
+                $managerRoles[] = $role;
+            }
+        }
+
+        $dql = "
+            SELECT w
+            FROM Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace w
+            JOIN w.roles r
+            WHERE r.name IN (:roleNames)
+
+        ";
+
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('roleNames', $managerRoles);
+
+        return $executeQuery ? $query->getResult() : $query;
+    }
+
+    public function findWorkspacesByCode(array $codes)
+    {
+        $dql = "
+            SELECT w
+            FROM Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace w
+            WHERE w.code IN (:codes)
+            ";
+
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('codes', $codes);
+
+        return $query->getResult();
     }
 }
