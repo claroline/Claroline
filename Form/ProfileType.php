@@ -54,11 +54,10 @@ class ProfileType extends AbstractType
                 ->add('mail', 'email', array('required' => false))
                 ->add('phone', 'text', array('required' => false))
                 ->add('locale', 'choice', array('choices' => $this->langs, 'required' => false, 'label' => 'Language'));
-
         } else {
-            $builder->add('firstName', 'text')
-                ->add('lastName', 'text')
-                ->add('username', 'text')
+            $builder->add('firstName', 'text', array('label' => 'First name'))
+                ->add('lastName', 'text', array('label' => 'Last name'))
+                ->add('username', 'text', array('label' => 'User name'))
                 ->add('administrativeCode', 'text', array('required' => false))
                 ->add('mail', 'email', array('required' => false))
                 ->add('phone', 'text', array('required' => false))
@@ -96,12 +95,8 @@ class ProfileType extends AbstractType
                 )
             )
         )
-
-        ->add(
-            'description',
-            'tinymce',
-            array('required' => false)
-        );
+        ->add('description', 'tinymce', array('required' => false))
+        ->add('isMailDisplayed', 'checkbox', array('label' => 'is_mail_displayed', 'required' => false));
     }
 
     public function getName()
