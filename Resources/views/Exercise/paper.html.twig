@@ -291,7 +291,7 @@
             {% else %}
 
                 {% if numQ == 1 %}
-                    <li class="disabled"><a href="#"><i class="icon-chevron-left"></i> &nbsp; {{ 'previous' | trans }}</a></li>
+                    <li class="disabled"><a href="#" onclick="event.preventDefault();"><i class="icon-chevron-left"></i> &nbsp; {{ 'previous' | trans }}</a></li>
                     <li>
                         <a href="#" onClick="submitForm({{ numQ+1 }}, '{{ interactionType }}');">
                             {{ 'next' | trans }} &nbsp; <i class="icon-chevron-right"></i>
@@ -305,7 +305,7 @@
                             <i class="icon-chevron-left"></i> &nbsp; {{ 'previous' | trans }}
                         </a>
                     </li>
-                    <li class="disabled"><a href="#">{{ 'next' | trans }} &nbsp; <i class="icon-chevron-right"></i></a></li>
+                    <li class="disabled"><a href="#" onclick="event.preventDefault();">{{ 'next' | trans }} &nbsp; <i class="icon-chevron-right"></i></a></li>
                     <li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</li>
                     <li>
                         <input type="button" value="{{ "finish" | trans }}" onClick="finish('{{ interactionType }}', '{{ 'alert ending' | trans }}');"
