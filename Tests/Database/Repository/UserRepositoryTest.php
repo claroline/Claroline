@@ -218,4 +218,14 @@ class UserRepositoryTest extends RepositoryTestCase
         $users = self::$repo->findOutsidersByWorkspaceRoles(array(self::get('ROLE_2')), self::get('ws_2'));
         $this->assertEquals(3, count($users));
     }
+
+    public function testFindUsernames()
+    {
+        $this->assertEquals(4, count(self::$repo->findUsernames()));
+    }
+
+    public function testFindEmails()
+    {
+        $this->assertEquals(4, count(self::$repo->findEmails()));
+    }
 }

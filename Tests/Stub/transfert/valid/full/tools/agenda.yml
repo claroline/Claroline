@@ -1,0 +1,8 @@
+events:
+  - event:
+    - title: 'name'
+      start: 01112223364 #timestamp
+      end: 5555555       #timestamp
+      description: 'blablabla'
+      priority: 'htmlcodecolors'
+      alldays: true
