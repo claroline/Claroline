@@ -1,18 +1,24 @@
 'Action List': 'Action List'
 'Actions per day': 'Actions per day'
 'Activate the terms of service in the platform': 'Activate the terms of service in the platform'
+Active: Active
 'Add a logo': 'Add a logo'
 'An error has occurred, please check if the file size does not exceeds the permitted size': 'An error has occurred, please check if the file size does not exceeds the permitted size'
 'Audience/user visits': 'Audience/user visits'
-answer: Answer
 'Choose a logo': 'Choose a logo'
 'Choose visible actions in the widget': 'Choose visible actions in the widget'
 'Choose workspaces displayed in the widget': 'Choose workspaces displayed in the widget'
+'Create a new resource': 'Create a new resource'
 'Draw an area on the graph to zoom, double-click to cancel': 'Draw an area on the graph to zoom, double-click to cancel'
 'Filter actions': 'Filter actions'
+'First name': 'First name'
 'Google HTML tag validation': 'Google HTML tag validation'
 'I accept the terms of service': 'I accept the terms of service'
+Indexing: Indexing
+Language: Language
 'Last action': '{1} Last action|[1,Inf] Last %logAmount% actions'
+'Last name': 'Last name'
+None: None
 'Or choose an existing file from resource manager': 'Or choose an existing file from resource manager'
 'Overview of all recent activities in %workspaceName%': 'Overview of all recent activities in %workspaceName%'
 'Overview of recent activities in %workspaceName%': 'Overview of recent activities in %workspaceName%'
@@ -20,30 +26,24 @@ answer: Answer
 'Paste here the meta tag provides by Google Webmaster': 'Paste here the meta tag provides by Google Webmaster'
 'See all': 'See all'
 'Select a Language': 'Select a Language'
+Show: Show
 'Show actions': 'Show actions'
+'Show the name of the platform in the top bar': 'Show the name of the platform in the top bar'
 'Terms of service': 'Terms of service'
 'The form is not valid': 'The form is not valid'
+'This placeholder is optional and will be replaced by the author first name': 'This placeholder is optional and will be replaced by the author first name'
+'This placeholder is optional and will be replaced by the author last name': 'This placeholder is optional and will be replaced by the author last name'
+'This placeholder is optional and will be replaced by your platform name': 'This placeholder is optional and will be replaced by your platform name'
+'This placeholder is required and will be replaced by the actual mail content': 'This placeholder is required and will be replaced by the actual mail content'
+'This variable is optional and will be replaced by your platform name': 'This variable is optional and will be replaced by your platform name'
+'This variable is required and will be replaced by the actual mail content': 'This variable is required and will be replaced by the actual mail content'
 'Upload a file': 'Upload a file'
+'User name': 'User name'
+'You can redefine the content of the registration mail here': 'You can redefine the content of the registration mail here'
+'You can redefine the layout used when a mail is sent': 'You can redefine the layout used when a mail is sent'
+'You can use the following variables in your form': 'You can use the following variables in your form'
+'You can use the full screen version of the text editor to include HTML': 'You can use the full screen version of the text editor to include HTML'
 'Your changes have been saved': 'Your changes have been saved'
-'for period': 'for period'
-'select all': 'Select all'
-'unique connections': 'Nb unique Cnx.'
-404: 'Page Not found'
-Active: 'Active'
-Create a new resource: 'Create a new resource'
-First name: 'First name'
-First name: 'First name'
-Indexing: Indexing
-Language: Language
-Last name: 'Last name'
-None: None
-This variable is optional and will be replaced by your platform name: 'This variable is optional and will be replaced by your platform name'
-This variable is required and will be replaced by the actual mail content: 'This variable is required and will be replaced by the actual mail content'
-User name: 'User name'
-You can redefine the content of the registration mail here: 'You can redefine the content of the registration mail here'
-You can redefine the layout used when a mail is sent: 'You can redefine the layout used when a mail is sent'
-You can use the following variables in your form: 'You can use the following variables in your form'
-You can use the full screen version of the text editor to include HTML: 'You can use the full screen version of the text editor to include HTML'
 account_created: 'Account created.'
 account_general_statistics: 'Account general statistics'
 action: Action
@@ -94,6 +94,7 @@ analytics_home: Home
 analytics_resources: Resources
 analytics_top: Top
 anonymous: Anonymous
+answer: Answer
 appearance: Appearance
 apply: Apply
 at_least_one_category_has_to_be_selected: 'At least one category has to be selected'
@@ -102,8 +103,9 @@ available_workspaces: 'Available workspaces'
 back: Back
 bad_request: 'The request is incorrect. If you arrived at this page via an internal link, please report the problem to the platform administrator.'
 badges_management: 'Badges management'
+base_informations: 'Basic information'
 by: by
-by_workspace: By workspace
+by_workspace: 'By workspace'
 canCopy: 'Right to copy'
 canCreate: 'Create %type%'
 canDelete: 'Right to delete'
@@ -213,6 +215,18 @@ drag_file_here: 'Drag the file here'
 drop_file: 'Drop the file'
 dsn: dsn
 edit: Edit
+edit_password: 'Edit your password'
+edit_password_error: 'An error occured while editing your password.'
+edit_password_message: 'Do you really want to update your passwords ?'
+edit_password_success: 'Your password has been edited with success.'
+edit_profile: 'Edit your profile'
+edit_profile_error: 'An error occured while editing the profile.'
+edit_profile_success: 'The profile has been edited with success.'
+edit_public_profile: 'Edit public profil'
+edit_public_profile_preferences_error: 'An error occured while editing your public profile preferences.'
+edit_public_profile_preferences_success: 'Your public profile preferences edited with success.'
+edit_your_profile_error: 'An error occured while editing your profile.'
+edit_your_profile_success: 'Your profile has been edited with success.'
 editable: Editable
 email_form_mail: 'Enter your email'
 email_found_at: 'The email %email% was found at lines: %lines%'
@@ -225,8 +239,8 @@ external_pdo_database: 'External database (PDO)'
 facebook: Facebook
 facebook_application_validation_error: 'Provided credentials are not valid.'
 fast_answer: 'Fast answer'
-fb_client_id: Application id
-fb_client_secret: Application secret
+fb_client_id: 'Application id'
+fb_client_secret: 'Application secret'
 file: Files
 file_form_file: File
 file_form_license: License
@@ -239,6 +253,7 @@ filter: Filter
 find_workspaces: 'All public workspaces'
 firstName: 'First name'
 first_name: 'First name'
+'for period': 'for period'
 forgot_password: 'Forgot your password ?'
 form_role: Role
 from: From
@@ -251,7 +266,7 @@ generate_url_subscription_anonyme: 'Subscription to a workspace for a anonymous'
 generate_url_subscription_fail: 'You must check "enable registration checkbow first to generate the url"'
 generate_url_subscription_success: 'You have been added to the workspace'
 get_mail_notifications: 'I want to be notified by email on %adress%.'
-grant_access: Grant access
+grant_access: 'Grant access'
 group: Group
 group_configuration: 'Group configuration'
 group_creation: 'Group creation'
@@ -261,6 +276,7 @@ group_form_platformRole: Role
 group_parameter: 'Group parameter'
 groups: Groups
 groups_list: 'Groups list'
+groups_per_page: 'Groups per page'
 groups_registration_in_workspace: 'Groups registration in workspace'
 has_been_put_in_category: 'has been put in category'
 has_been_suscribed_with_role: 'has been suscribed with role'
@@ -324,11 +340,16 @@ mail_form_content: Content
 mail_form_object: Object
 mail_form_receiver: Receiver(s)
 mail_invalid: 'Mail format is not valid'
+mail_layout: 'Mail layout.'
 mail_login: 'Your Claroline''s login'
 mail_message: 'You received this message because you asked for a new password. Please click on the link below to reset it. If you did not ask to reset your password please ignore this message.'
 mail_not_available: 'The mail function is not available'
 mail_not_exist: 'This mail does not exist'
 mail_sent: 'A email has been sent to your address, check your inbox mail and your spam box'
+make_public_profile_visible_to_everybody: 'to <strong>everybody</strong>'
+make_public_profile_visible_to_nobody: 'to <strong>nobody</strong>'
+make_public_profile_visible_to_platform_user: 'to <strong>platform users</strong>'
+manage_public_profile_preferences: 'Manage public profile preferences'
 manage_rights: 'Manage rights'
 manager: Manager
 max_size_is: 'The maximum size is %size%'
@@ -370,6 +391,7 @@ my_contacts: 'My contacts'
 my_favourite_workspaces: 'My favourite workspaces'
 my_notes: 'My notes'
 my_portfolio: 'My portfolio'
+my_profile: 'My profile'
 my_resources: 'My resources'
 my_workspace: 'My workspace'
 my_workspaces: 'My workspaces'
@@ -377,12 +399,15 @@ name: Name
 new: New
 new_message: 'New message'
 new_message_alert: 'You have %count% new message(s)'
+new_role_message: 'You received the role %name%'
+new_role_message_object: 'Your permissions on the platform have changed'
 no: no
 no_category: 'There is no category'
 no_email: 'No email found, check the spelling'
 no_group: 'No group'
 no_home_tab: 'There is no Home tab'
 no_message: 'No message'
+no_role_selected_message: 'No role selected.'
 no_search_results: 'Your search hasn''t returned any result.'
 no_tag: 'There is no tag'
 no_user: 'No user'
@@ -447,6 +472,7 @@ please_wait: 'Please wait...'
 position: Position
 positive_number_expected: 'This value should be a positive number'
 private: Private
+profil_edition: 'User profile edition'
 profile_form_administrativeCode: 'Administrative code'
 profile_form_creation_plainPassword_first: Password
 profile_form_creation_plainPassword_second: Verification
@@ -461,7 +487,12 @@ profile_form_plainPassword_second: Verification
 profile_form_platformRoles: Roles
 properties: Properties
 public: Public
-public_registration: Public registration
+public_profile: 'Public profile'
+public_profile_undiscoverable: 'Profile undiscoverable'
+public_profile_undiscoverable_anonymously: 'Mandatory connection to access the profile'
+public_profile_undiscoverable_anonymously_text: 'You must be <a href="%loginUrl%" title="Connection">connected</a> to the platform to access profile <strong>%publicUrl%</strong>'
+public_profile_undiscoverable_text: 'We didn''t find any profile corresponding to <strong>%publicUrl%</strong>'
+public_registration: 'Public registration'
 public_workspace_empty: 'There are no public workspaces.'
 public_workspaces: 'Public workspaces'
 recursive_dir_action: 'Apply to the contents of the directory and its subdirectories'
@@ -490,29 +521,6 @@ rename_category: 'Rename category'
 rename_tool: 'Rename tool'
 rename_widget_instance: 'Rename widget'
 reset: Reset
-profil_edition: 'User profile edition'
-user_profile: 'User profile'
-public_profile: 'Public profile'
-edit_public_profile: 'Edit public profil'
-tune_your_public_profile: 'Tune your public profile'
-make_public_profile_visible_to_nobody: 'to <strong>nobody</strong>'
-make_public_profile_visible_to_platform_user: 'to <strong>platform users</strong>'
-make_public_profile_visible_to_everybody: 'to <strong>everybody</strong>'
-base_informations: 'Basic information'
-edit_profile: 'Edit your profile'
-edit_profile_success: 'The profile has been edited with success.'
-edit_your_profile_success: 'Your profile has been edited with success.'
-edit_profile_error: 'An error occured while editing the profile.'
-edit_your_profile_error: 'An error occured while editing your profile.'
-see_public_profile: 'See my public profile'
-manage_public_profile_preferences: 'Manage public profile preferences'
-edit_public_profile_preferences_success: 'Your public profile preferences edited with success.'
-edit_public_profile_preferences_error: 'An error occured while editing your public profile preferences.'
-user_public_profile_not_visible: 'Your public profile is visible to nobody. <br> You can make it visible for the <span class="shared_policy_link">platform users</span>, or to <span class="shared_policy_link">everybody</span>.'
-edit_password: 'Edit your password'
-edit_password_success: 'Your password has been edited with success.'
-edit_password_error: 'An error occured while editing your password.'
-edit_password_message: 'Do you really want to update your passwords ?'
 reset_password_txt: 'You asked for your password reinitialisation. If you did not ask for it, please just ignore this message.'
 reset_pwd: 'Reset Your Password'
 reset_pwd_form_plainPassword_first: 'New password'
@@ -562,6 +570,8 @@ search_user: 'Search for an user'
 search_workspace: 'Search for a workspace'
 see: See
 see_more: 'See more'
+see_public_profile: 'See my public profile'
+'select all': 'Select all'
 select_all: 'Select all'
 select_category: 'Select a category'
 select_contacts_title: 'Select receivers'
@@ -571,10 +581,12 @@ select_users_for_registration_to_workspace: 'Select users to register'
 select_workspaces_for_registration: 'Select workspaces for registration'
 selected_workspaces_for_registration: 'Selected workspaces for registration'
 selected_workspaces_will_be_put_in_it: 'Selected workspaces will be put in it'
+send: send
 send_mail: 'Send a mail'
 send_mail_form_content: Message
 send_mail_form_object: Object
 send_message: 'Send a message'
+send_message_to_workspace: 'Send a message to the users of the workspace.'
 server: Server
 session: Session
 session_db_cannot_perform_operations: 'Cannot read or write in the specified table. Please check that the database user has sufficient permissions and that there isn''t any special constraint on this table.'
@@ -590,12 +602,12 @@ session_id: 'Session id'
 settings: Settings
 sharable: Sharable
 show: Show
-Show the name of the platform in the top bar: 'Show the name of the platform in the top bar'
 show_as: 'Show as'
 show_as_admin: 'Show as admin'
 show_as_user: 'Show as user'
 show_profile: 'Show profile'
-simple: 'Simple'
+simple: Simple
+steal_session: 'Steal the session'
 storage_type: 'Storage type'
 subcategories: Subcategories
 subscribe_groups: 'Subscribe groups'
@@ -622,16 +634,17 @@ the_workspace: Workspace
 this_page_requires_authentication: 'This page requires authentication. Please login.'
 time_col: 'Database time column'
 to: To
-to_anonymous: to anonymous users
-to_everyone: to everyone
+to_anonymous: 'to anonymous users'
+to_everyone: 'to everyone'
 to_message: To
-to_platform_users: to platform users
-to_workspace_members: to the members of this workspace
+to_platform_users: 'to platform users'
+to_workspace_members: 'to the members of this workspace'
 today: Today
 tool: Tool
 tool_form_displayName: 'Displayed tool name'
 tool_form_name: 'tool name'
 tool_parameters: 'Tool parameters'
+tool_roles_create_directory: 'The "Create a directory" option allow you to automatically create a directory for that group.'
 tools: Tools
 tools_rights_configuration: 'Tools rights configuration'
 top: Top
@@ -646,6 +659,7 @@ top_workspaces_connections: 'Top most visited workspaces'
 top_workspaces_resources: 'Top workspaces having the most resources'
 total: Total
 trash: Trash
+tune_your_public_profile: 'Tune your public profile'
 type: Type
 type_s: Type(s)
 unable_to_start_gmail: 'The connection with Gmail SMTP service cannot be established. Please check that the credentials you provided are correct.'
@@ -654,6 +668,7 @@ unable_to_start_smtp: 'The connection with the SMTP server cannot be established
 unable_to_start_transport: 'The mailing transport cannot be started. Please check that the parameters you provided are correct.'
 unauthorized: 'You are not authorized to see this page.'
 under_min_length: 'This value is too short'
+'unique connections': 'Nb unique Cnx.'
 unregister: Unregister
 unregister_from_a_workspace: 'Unregister from a workspace'
 unregistered: Unregistered
@@ -679,6 +694,8 @@ user_form_plainPassword_first: Password
 user_form_plainPassword_second: Verification
 user_form_username: Username
 user_parameters: 'User parameters'
+user_profile: 'User profile'
+user_public_profile_not_visible: 'Your public profile is visible to nobody. <br> You can make it visible for the <span class="shared_policy_link">platform users</span>, or to <span class="shared_policy_link">everybody</span>.'
 user_removed: 'User removed'
 username: Username
 username_found_at: 'The username %username% was found at lines: %lines%'
@@ -689,6 +706,7 @@ users_import: 'Users import'
 users_list: 'Users list'
 users_management: 'Users management'
 users_minimum_requirement_msg: 'Users validation has the following requirements: 3 chars username, 4 chars password, valid email.'
+users_per_page: 'Users per page'
 users_registration_in_workspace: 'Users registration in workspace'
 users_visits: 'Users'' connections'
 validate: Validate
@@ -707,14 +725,14 @@ widget_home_tab_delete_confirm_title: 'Remove widget from Home tab'
 widget_settings: 'Widget settings'
 widgets: Widgets
 widgets_configuration: 'Widgets configuration'
-will be replaced by your platform name: 'will be replaced by your platform name'
-will display the password: 'will display the password'
-will display the user first name: 'will display the user first name'
-will display the user last name: 'will display the user last name'
-will display the username: 'will display the username'
+'will be replaced by your platform name': 'will be replaced by your platform name'
+'will display the password': 'will display the password'
+'will display the user first name': 'will display the user first name'
+'will display the user last name': 'will display the user last name'
+'will display the username': 'will display the username'
+workspace: Workspace
 workspace.create: 'Create a new workspace'
 workspace.name_not_blank: 'The workspace''s name is required.'
-workspace: Workspace
 workspace_administration: Administration
 workspace_classification: 'Workspace classification'
 workspace_delete: 'Delete the workspace'
@@ -735,8 +753,11 @@ workspace_form_type: Type
 workspace_home_tab_creation: 'Workspace Home tab creation'
 workspace_home_tab_edition: 'Workspace Home tab edition'
 workspace_home_tabs: 'Workspace Home tabs'
+workspace_list: 'Workspace list'
 workspace_order_tool_edit_form_name: Name
 workspace_registration_confirm_title: 'Do you really want to register to this workspace ?'
+workspace_registration_message: 'You have been registered to the workspace %workspace_name%'
+workspace_registration_message_object: 'Workspace registration'
 workspace_remove_from_category_confirm_message: 'Do you really want to remove this workspace from this category ?'
 workspace_remove_from_category_confirm_title: 'Remove workspace from category'
 workspace_resource: Resources
@@ -752,29 +773,10 @@ workspace_welcome: Welcome
 workspaces: Workspaces
 workspaces_included_in_category: 'Workspaces included in this category'
 workspaces_management: 'Workspaces management'
+workspaces_per_page: 'Workspace per page'
 ws_creator: 'Workspace creator'
 ws_most_viewed: 'Most viewed workspaces'
 yes: yes
 yesterday_activity: 'Yesterday''s activity'
 your_username: 'Your username is '
-users_per_page: Users per page
-groups_per_page: Groups per page
-tool_roles_create_directory: The "Create a directory" option allow you to automatically create a directory for that group.
-my_profile: My profile
-send: send
-send_message_to_workspace: Send a message to the users of the workspace.
-'This placeholder is required and will be replaced by the actual mail content': This placeholder is required and will be replaced by the actual mail content
-'This placeholder is optional and will be replaced by your platform name': This placeholder is optional and will be replaced by your platform name
-'This placeholder is optional and will be replaced by the author first name': This placeholder is optional and will be replaced by the author first name
-'This placeholder is optional and will be replaced by the author last name': This placeholder is optional and will be replaced by the author last name
-workspace_list: Workspace list
-workspaces_per_page: Workspace per page
-workspace_registration_message: 'You have been registered to the workspace %workspace_name%'
-workspace_registration_message_object: 'Workspace registration'
-new_role_message: 'You received the role %name%'
-new_role_message_object: 'Your permissions on the platform have changed'
-no_role_selected_message: 'No role selected.'
-public_profile_undiscoverable: 'Profile undiscoverable'
-public_profile_undiscoverable_text: 'We didn''t find any profile corresponding to <strong>%publicUrl%</strong>'
-public_profile_undiscoverable_anonymously_text: 'You must be <a href="%loginUrl%" title="Connection">connected</a> to the platform to access profile <strong>%publicUrl%</strong>'
-public_profile_undiscoverable_anonymously: 'Mandatory connection to access the profile'
+404: 'Page Not found'
