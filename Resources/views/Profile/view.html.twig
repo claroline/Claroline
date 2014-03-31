@@ -69,13 +69,20 @@
                         </li>
                     </ul>
                 </aside>
-                <div class="col-md-6">
-                    <p>{{ user.getLastName() ~ ' ' ~ user.getFirstName() }}</p>
+                <div class="col-md-6 profile_informations">
+                    <h2>{{ user.getLastName() ~ ' ' ~ user.getFirstName() }}</h2>
                     <p><span class="icon-envelope"> <a href="mailto:{{ user.getmail() }}" title="{{ user.getmail() }}">{{ user.getmail() }}</a></span></p>
                     {% if user.getPhone() is not null %}
                         <p><span class="icon-phone-sign"></span> {{ user.getPhone() }}</p>
                     {% endif %}
-                    {% if '' != user.getDescription() %}<div class="well">{{ user.getDescription() |raw }} </div>{% endif %}
+                    {% if '' != user.getDescription() %}
+                        <div class="description_block">
+                            <p class="lead">Description de {{ user.getLastName() ~ ' ' ~ user.getFirstName() }}</p>
+                            <div class="description">
+                                {{ user.getDescription() |raw }}
+                            </div>
+                        </div>
+                    {% endif %}
                 </div>
             </div>
         </div>
