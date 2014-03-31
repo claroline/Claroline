@@ -491,6 +491,61 @@ class UserRepository extends EntityRepository implements UserProviderInterface
     }
 
     /**
+     * Returns the users of a workspace whose first name, last name or username
+     * match a given search string. Including users in groups
+     *
+     * @param AbstractWorkspace $workspace
+     * @param string            $search
+     * @param boolean           $executeQuery
+     *
+     * @return User[]|Query
+     */
+    public function findAllByWorkspaceAndName(AbstractWorkspace $workspace, $search, $executeQuery = true)
+    {
+        $upperSearch = strtoupper($search);
+        $dql = '
+            SELECT DISTINCT u FROM Claroline\CoreBundle\Entity\User u
+            WHERE u IN (
+            SELECT u1 FROM Claroline\CoreBundle\Entity\User u1
+            JOIN u1.roles r1 WITH r1 IN (
+                SELECT pr1 from Claroline\CoreBundle\Entity\Role pr1 WHERE pr1.type = ' . Role::WS_ROLE . '
+            )
+            LEFT JOIN r1.workspace wol1
+            WHERE wol1.id = :workspaceId AND u1 IN (
+                SELECT us1 FROM Claroline\CoreBundle\Entity\User us1
+                WHERE UPPER(us1.lastName) LIKE :search
+                OR UPPER(us1.firstName) LIKE :search
+                OR UPPER(us1.username) LIKE :search
+                OR CONCAT(UPPER(us1.firstName), CONCAT(\' \', UPPER(us1.lastName))) LIKE :search
+                OR CONCAT(UPPER(us1.lastName), CONCAT(\' \', UPPER(us1.firstName))) LIKE :search
+            )
+            AND u1.isEnabled = true
+            )
+            OR u IN (
+            SELECT u2 FROM Claroline\CoreBundle\Entity\User u2
+            JOIN u2.groups g2
+            JOIN g2.roles r2 WITH r2 IN (
+                SELECT pr2 from Claroline\CoreBundle\Entity\Role pr2 WHERE pr2.type = ' . Role::WS_ROLE . '
+            )
+            LEFT JOIN r2.workspace wol2
+            WHERE wol2.id = :workspaceId AND u IN (
+                SELECT us2 FROM Claroline\CoreBundle\Entity\User us2
+                WHERE UPPER(us2.lastName) LIKE :search
+                OR UPPER(us2.firstName) LIKE :search
+                OR UPPER(us2.username) LIKE :search
+                OR CONCAT(UPPER(us2.firstName), CONCAT(\' \', UPPER(us2.lastName))) LIKE :search
+                OR CONCAT(UPPER(us2.lastName), CONCAT(\' \', UPPER(us2.firstName))) LIKE :search
+            )
+            AND u2.isEnabled = true)
+        ';
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('workspaceId', $workspace->getId())
+            ->setParameter('search', "%{$upperSearch}%");
+
+        return $executeQuery ? $query->getResult() : $query;
+    }
+
+    /**
      * Returns the users who are not members of a group.
      *
      * @param Group   $group
