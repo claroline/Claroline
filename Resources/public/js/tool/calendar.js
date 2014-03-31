@@ -96,7 +96,7 @@
             $('.hours').each(function() {
                 $(this).val('00:00');
             });
-
+            var currentDate = new Date();
             if( clickedDate > currentDate) {
                 $('#agenda_form_end').val($.fullCalendar.formatDate(clickedDate,'dd-MM-yyyy'));
             } else {

@@ -116,16 +116,16 @@ class GroupsController extends Controller
 
     /**
      * @EXT\Route(
-     *     "/page/{page}/max/{max}/order/{order}",
+     *     "/page/{page}/max/{max}/order/{order}/direction/{direction}",
      *     name="claro_admin_group_list",
      *     options={"expose"=true},
-     *     defaults={"page"=1, "search"="", "max"=50, "order"="id"}
+     *     defaults={"page"=1, "search"="", "max"=50, "order"="id", "direction"="ASC"}
      * )
      * @EXT\Method("GET")
      * @EXT\Route(
-     *     "/page/{page}/search/{search}/max/{max}/order/{order}",
+     *     "/page/{page}/search/{search}/max/{max}/order/{order}/direction/{direction}",
      *     name="claro_admin_group_list_search",
-     *     defaults={"page"=1, "max"=50, "order"="id"},
+     *     defaults={"page"=1, "max"=50, "order"="id", "direction"="ASC"},
      *     options = {"expose"=true}
      * )
      * @EXT\Method("GET")
@@ -145,13 +145,14 @@ class GroupsController extends Controller
      *
      * @return array
      */
-    public function listAction($page, $search, $max, $order)
+    public function listAction($page, $search, $max, $order, $direction)
     {
         $pager = $search === '' ?
-            $this->groupManager->getGroups($page, $max, $order) :
-            $this->groupManager->getGroupsByName($search, $page, $max, $order);
+            $this->groupManager->getGroups($page, $max, $order, $direction) :
+            $this->groupManager->getGroupsByName($search, $page, $max, $order, $direction);
+        $direction = $direction === 'DESC' ? 'ASC' : 'DESC';
 
-        return array('pager' => $pager, 'search' => $search, 'max' => $max, 'order' => $order);
+        return array('pager' => $pager, 'search' => $search, 'max' => $max, 'order' => $order, 'direction' => $direction);
     }
 
     /**

@@ -1,4 +1,4 @@
-{% macro renderPager(search, workspaceId, pager, max, order) %}
+{% macro renderPager(search, workspaceId, pager, max, order, direction) %}
     {% if search == '' %}
         {{
             pagerfanta(
@@ -7,7 +7,7 @@
                 {
                     'proximity' : 1,
                     'routeName': 'claro_workspace_unregistered_group_list',
-                    'routeParams': {'workspace': workspaceId, 'max': max, 'order': order}
+                    'routeParams': {'workspace': workspaceId, 'max': max, 'order': order , 'direction':direction}
                 }
             )
         }}
@@ -19,18 +19,18 @@
                 {
                     'proximity' : 1,
                     'routeName': 'claro_workspace_registered_group_list_search',
-                    'routeParams': {'search': search, 'workspace': workspaceId, 'max': max, 'order': order}
+                    'routeParams': {'search': search, 'workspace': workspaceId, 'max': max, 'order': order, 'direction': direction}
                 }
             )
         }}
     {% endif %}
 {% endmacro %}
 
-{% macro sortUrl(max, search, order, workspaceId) %}
+{% macro sortUrl(max, search, order, workspaceId , direction) %}
     {% if search == '' %}
-        {{ path('claro_workspace_unregistered_group_list', {'workspace': workspaceId, 'max': max, 'order': order}) }}
+        {{ path('claro_workspace_unregistered_group_list', {'workspace': workspaceId, 'max': max, 'order': order, 'direction': direction }) }}
     {% else %}
-        {{ path('claro_workspace_registered_group_list_search', {'search': search, 'workspace': workspaceId, 'max': max, 'order': order}) }}
+        {{ path('claro_workspace_registered_group_list_search', {'search': search, 'workspace': workspaceId, 'max': max, 'order': order, 'direction': direction}) }}
     {% endif %}
 {% endmacro %}
 
@@ -117,7 +117,7 @@
             <div class="row">
                 <div class="col-md-8">
                 {% if pager.getNbPages() > 1 %}
-                    {{ renderPager(search, workspace.getId(), pager, max, order) }}
+                    {{ renderPager(search, workspace.getId(), pager, max, order, direction) }}
                 {% endif %}
                 </div>
                 <div class="col-md-4">
@@ -129,7 +129,7 @@
                     <thead>
                         <tr>
                             <th> <input type="checkbox" name="all" id="check-all-items"></input> </th>
-                            <th><a href="{{ sortUrl(max, search, 'name', workspace.getId()) }}">{{ 'name'|trans({}, 'platform') }}</a></th>
+                            <th><a href="{{ sortUrl(max, search, 'name', workspace.getId(), direction) }}">{{ 'name'|trans({}, 'platform') }}</a></th>
                             <th></th>
                         </tr>
                     </thead>
@@ -153,7 +153,7 @@
                 </table>
             </div>
             {% if pager.getNbPages() > 1 %}
-                {{ renderPager(search, workspace.getId(), pager, max, order) }}
+                {{ renderPager(search, workspace.getId(), pager, max, order, direction) }}
             {% endif %}
         </div>
     </div>
