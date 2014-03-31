@@ -1,0 +1,17 @@
+groups:
+    - group:
+        name: name1
+        users:
+          - username: 'user1'
+          - username: 'user2'
+          - username: 'user3'
+
+    - group:
+        name: name2
+        users:
+          - username: 'user1'
+          - username: 'user2'
+          - username: 'user3'
+        roles:
+          - name: ROLE_1
+          - name: ROLE_2

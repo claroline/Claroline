@@ -341,7 +341,13 @@ class UserManager
      */
     public function getUserByUsername($username)
     {
-        return $this->userRepo->loadUserByUsername($username);
+        try {
+            $user = $this->userRepo->loadUserByUsername($username);
+        } catch (\Exception $e)
+        {
+            $user = null;
+        }
+        return $user;
     }
 
     /**

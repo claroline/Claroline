@@ -1,0 +1,20 @@
+tools:
+    - tool:
+        type: 'home'
+        translation: 'accueil'
+        data:
+          tabs:
+            - tab:
+                  name: tabname
+                  widgets:
+                   - widget:
+                       name: text
+                       type: 'text'
+                       import:
+                          - path: 'tools/widgets/text01.yml'
+            - tab:
+                  name: tabname02
+        roles:
+          - name: ROLE_1
+          - name: ROLE_2
+
