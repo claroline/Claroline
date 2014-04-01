@@ -3,6 +3,7 @@
 namespace Innova\PathBundle\Controller;
 
 use Symfony\Component\Form\FormFactoryInterface;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -17,6 +18,9 @@ use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 
 use Innova\PathBundle\Form\Handler\PathHandler;
 use Innova\PathBundle\Entity\Path\Path;
+use Doctrine\Common\Persistence\ObjectManager;
+use Claroline\CoreBundle\Manager\ResourceManager;
+use Symfony\Component\Security\Core\SecurityContextInterface;
 
 /**
  * Class EditorController
@@ -39,6 +43,12 @@ use Innova\PathBundle\Entity\Path\Path;
  */
 class EditorController
 {
+    /**
+     * Object manager
+     * @var \Doctrine\Common\Persistence\ObjectManager
+     */
+    protected $om;
+
     /**
      * Router
      * @var \Symfony\Component\Routing\RouterInterface $router
@@ -68,27 +78,55 @@ class EditorController
      * @var \Innova\PathBundle\Form\Handler\PathHandler
      */
     protected $pathHandler;
-    
+
+    /**
+     * Current request
+     * @var \Symfony\Component\HttpFoundation\Request
+     */
+    protected $request;
+
+    /**
+     * Current security context
+     * @var \Symfony\Component\Security\Core\SecurityContextInterface
+     */
+    protected $security;
+
     /**
      * Class constructor
-     * @param \Symfony\Component\Routing\RouterInterface   $router
-     * @param \Symfony\Component\Form\FormFactoryInterface $formFactory
-     * @param \Innova\PathBundle\Form\Handler\PathHandler  $pathHandler
+     * @param \Doctrine\Common\Persistence\ObjectManager                $objectManager
+     * @param \Symfony\Component\Routing\RouterInterface                $router
+     * @param \Symfony\Component\Form\FormFactoryInterface              $formFactory
+     * @param \Innova\PathBundle\Form\Handler\PathHandler               $pathHandler
+     * @param \Claroline\CoreBundle\Manager\ResourceManager             $resourceManager
+     * @param \Symfony\Component\Security\Core\SecurityContextInterface $securityContext
      */
     public function __construct(
+        ObjectManager        $objectManager,
         RouterInterface      $router,
         FormFactoryInterface $formFactory,
         SessionInterface     $session,
         TranslatorInterface  $translator,
-        PathHandler          $pathHandler)
+        PathHandler          $pathHandler,
+        ResourceManager      $resourceManager,
+        SecurityContextInterface $securityContext)
     {
-        $this->router      = $router;
-        $this->formFactory = $formFactory;
-        $this->session     = $session;
-        $this->translator  = $translator;
-        $this->pathHandler = $pathHandler;
+        $this->om              = $objectManager;
+        $this->router          = $router;
+        $this->formFactory     = $formFactory;
+        $this->session         = $session;
+        $this->translator      = $translator;
+        $this->pathHandler     = $pathHandler;
+        $this->resourceManager = $resourceManager;
+        $this->security        = $securityContext;
     }
-    
+
+    public function setRequest(Request $request = null)
+    {
+        $this->request = $request;
+
+        return $this;
+    }
+
     /**
      * Create a new path
      * @Route(
@@ -123,10 +161,11 @@ class EditorController
         
             return new RedirectResponse($url);
         }
-        
+
         return array (
-            'workspace' => $workspace,
-            'form'      => $form->createView(),
+            'workspace'     => $workspace,
+            'wsDirectoryId' => $this->resourceManager->getWorkspaceRoot($workspace)->getId(),
+            'form'          => $form->createView(),
         );
     }
     
@@ -163,10 +202,25 @@ class EditorController
         
             return new RedirectResponse($url);
         }
-        
+
+        $wsDirectory = $this->resourceManager->getWorkspaceRoot($workspace);
+        $ancestors = $this->resourceManager->getAncestors($wsDirectory);
+
+        $resourceTypes = $this->om->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findAll();
+
+        /*$path = array();
+        foreach ($ancestors as $ancestor) {
+            $path[] = $this->resourceManager->toArray($ancestor, $this->security->getToken());
+        }*/
+
+        $jsonPath = json_encode($ancestors);
+
         return array (
-            'workspace' => $workspace,
-            'form'      => $form->createView(),
+            'workspace'          => $workspace,
+            'wsDirectoryId'      => $wsDirectory->getId(),
+            'wsDirectoryHistory' => $jsonPath,
+            'resourceTypes'      => $resourceTypes,
+            'form'               => $form->createView(),
         );
     }
 }

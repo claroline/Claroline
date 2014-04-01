@@ -129,10 +129,7 @@ function MainCtrl($scope, HistoryFactory, ClipboardFactory, PathFactory, AlertFa
         HistoryFactory.undo();
         $scope.path = PathFactory.getPath();
 
-        // Check if preview step still exists in path
-        if (!PathFactory.checkStepExists($scope.previewStep)) {
-            $scope.updatePreviewStep();
-        }
+        $scope.updatePreviewStep();
     };
 
     /**
@@ -143,9 +140,6 @@ function MainCtrl($scope, HistoryFactory, ClipboardFactory, PathFactory, AlertFa
         HistoryFactory.redo();
         $scope.path = PathFactory.getPath();
 
-        // Check if preview step still exists in path
-        if (!PathFactory.checkStepExists($scope.previewStep)) {
-            $scope.updatePreviewStep();
-        }
+        $scope.updatePreviewStep();
     };
 }

@@ -108,7 +108,30 @@
     
     {# Set some vars needed by Angular parts #}
     <script type="text/javascript">
-        EditorApp.currentPath = {{ form.vars.value.structure | raw }};
-        EditorApp.webDir = "{{ asset('bundles/innovapath/') }}";
+        EditorApp.currentPath   = {{ form.vars.value.structure | raw }};
+        EditorApp.appDir        = "{{ app.request.getBaseUrl }}";
+        EditorApp.webDir        = "{{ asset('') }}";
+        EditorApp.wsDirectoryId = {{ wsDirectoryId }};
+        EditorApp.wsDirectoryId = {{ wsDirectoryHistory | raw }};
+        EditorApp.resourceTypes = {
+            {% for resourceType in resourceTypes %}
+            "{{ resourceType.getName() }}": {
+                "name": "{{ resourceType.getName()|trans({}, 'resource') }}",
+                "actions": {
+                    {% for action in resourceType.getActions() %}
+                    "{{ action.getName() }}": {
+                        "name":     "{{ action.getName() }}",
+                        "route":    "{{ path('claro_resource_action', {'resourceType': resourceType.getName(), 'action': action.getName(), 'node': '_nodeId' }) }}",
+                        "async":    {% if action.isAsync() %} 1 {% else %} 0 {% endif %},
+                        "mask":     {{ action.getValue() }},
+                        "isCustom": {% if action.isCustom() %} "yes" {% else %} "no" {% endif %},
+                        "isForm":   {% if action.isForm() %} true {% else %} false {% endif %}
+                    }
+                    {% if loop.last != true %},{% endif %}
+                    {% endfor %}
+                }
+            }{% if loop.last != true %},{% endif %}
+            {% endfor %}
+        };
     </script>
 {% endblock %}

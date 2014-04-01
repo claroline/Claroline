@@ -28,7 +28,7 @@
                 <div class="row">
                     {# Step image #}
                     <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12 text-center">
-                        <img ng-src="{% verbatim %}{{ webDir }}images/steps/{{ previewStep.image }}{% endverbatim %}" />
+                        <img ng-src="{% verbatim %}{{ webDir }}bundles/innovapath/images/steps/{{ previewStep.image }}{% endverbatim %}" />
                         <a ng-show="edit.preview" href="#" class="btn btn-default btn-sm" ng-click="selectImage()" role="button">
                             <span class="icon-picture"></span> {{ 'select_image'|trans({}, 'path_editor') }}
                         </a>

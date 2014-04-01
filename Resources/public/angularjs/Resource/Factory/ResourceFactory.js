@@ -13,7 +13,6 @@ function ResourceFactory(PathFactory) {
         name                : null,
         description         : null,
         type                : null,
-        url                 : null,
         isDigital           : true,
         propagateToChildren : true
     };

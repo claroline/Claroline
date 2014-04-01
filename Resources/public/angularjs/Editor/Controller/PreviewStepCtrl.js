@@ -73,7 +73,7 @@ function PreviewStepCtrl($scope, $modal, $http, HistoryFactory, PathFactory, Ste
      */
     $scope.selectImage = function() {
         var modalInstance = $modal.open({
-            templateUrl: EditorApp.webDir + 'angularjs/Step/Partial/select-image.html',
+            templateUrl: EditorApp.webDir + 'bundles/innovapath/angularjs/Step/Partial/select-image.html',
             controller: 'SelectImageModalCtrl'
         });
         
@@ -163,7 +163,6 @@ function PreviewStepCtrl($scope, $modal, $http, HistoryFactory, PathFactory, Ste
                     $scope.previewStep.durationHours = 0;
                 }
 
-                console.log('coucou');
                 $scope.previewStep.durationHours += minutesToHours;
                 $scope.previewStep.durationMinutes = $scope.previewStep.durationMinutes % 60;
             }
@@ -175,7 +174,77 @@ function PreviewStepCtrl($scope, $modal, $http, HistoryFactory, PathFactory, Ste
      * @returns void
      */
     $scope.editResource = function(resource) {
-        var editResource = false;
+        if ($('#resourcePicker').get(0) === undefined) {
+            $('body').append('<div id="resourcePicker"></div>');
+        }
+
+        Claroline.ResourceManager.initialize({
+            parentElement: $('#resourcePicker'),
+            isPickerMultiSelectAllowed: true,
+            isPickerOnly: true,
+            isWorkspace: true,
+            webPath: EditorApp.webDir,
+            appPath: EditorApp.appDir,
+            directoryId: EditorApp.wsDirectoryId,
+            directoryHistory: EditorApp.wsDirectoryHistory,
+            resourceTypes: EditorApp.resourceTypes,
+            pickerCallback: function (nodes) {
+                if (typeof nodes === 'object' && nodes.length !== 0) {
+                    for (var nodeId in nodes) {
+                        var node = nodes[nodeId];
+
+                        if (typeof $scope.previewStep.resources != 'object') {
+                            $scope.previewStep.resources = [];
+                        }
+
+                        // Check if resource has already been linked to the the step
+                        var resourceExists = false;
+                        for (var i = 0; i < $scope.previewStep.resources.length; i++) {
+                            var res = $scope.previewStep.resources[i];
+                            if (res.resourceId === nodeId) {
+                                resourceExists = true;
+                                break;
+                            }
+                        }
+
+                        if (!resourceExists) {
+                            // Resource need to be linked
+                            var resource = ResourceFactory.generateNewResource();
+                            resource.name = node[0];
+                            resource.type = node[1];
+                            resource.resourceId = nodeId;
+
+                            $scope.previewStep.resources.push(resource);
+                        }
+                    }
+
+                    // Update history
+                    HistoryFactory.update($scope.path);
+
+                    // Reload preview step data
+                    $scope.updatePreviewStep();
+                }
+            }
+        });
+
+        Claroline.ResourceManager.picker('open');
+
+/*            $http({
+                method: 'GET',
+                url: Routing.generate('claro_resource_init')
+            })
+            .success(function (resourceInit) {*/
+
+            /*})
+            .error(function(data, status) {
+                modal.error();
+            });*/
+        /*} else {
+            Claroline.ResourceManager.picker('open');
+        }*/
+
+
+        /*var editResource = false;
 
         if (resource) {
             editResource = true;
@@ -184,7 +253,7 @@ function PreviewStepCtrl($scope, $modal, $http, HistoryFactory, PathFactory, Ste
         }
 
         var modalInstance = $modal.open({
-            templateUrl: EditorApp.webDir + 'angularjs/Resource/Partial/resource-edit.html',
+            templateUrl: EditorApp.webDir + 'bundles/innovapath/angularjs/Resource/Partial/resource-edit.html',
             controller: 'ResourceModalCtrl'
         });
 
@@ -214,7 +283,7 @@ function PreviewStepCtrl($scope, $modal, $http, HistoryFactory, PathFactory, Ste
                 // Update history
                 HistoryFactory.update($scope.path);
             }
-        });
+        });*/
     };
 
     /**
@@ -258,7 +327,7 @@ function PreviewStepCtrl($scope, $modal, $http, HistoryFactory, PathFactory, Ste
             }
         }
 
-         // Update history
-         HistoryFactory.update($scope.path);
+        // Update history
+        HistoryFactory.update($scope.path);
     };
 }

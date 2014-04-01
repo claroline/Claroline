@@ -49,7 +49,7 @@ function ScenarioCtrl($scope, $modal, HistoryFactory, PathFactory, StepFactory) 
 
         // Display confirm modal
         var modalInstance = $modal.open({
-            templateUrl: EditorApp.webDir + 'angularjs/Confirm/Partial/confirm.html',
+            templateUrl: EditorApp.webDir + 'bundles/innovapath/angularjs/Confirm/Partial/confirm.html',
             controller: 'ConfirmModalCtrl',
             resolve: {
                 title: function () { return Translator.get('path_editor:step_delete_title', { stepName: step.name }) },
@@ -95,7 +95,7 @@ function ScenarioCtrl($scope, $modal, HistoryFactory, PathFactory, StepFactory) 
     $scope.editTemplate = function(step) {
         StepFactory.setStep(step);
         var modalInstance = $modal.open({
-            templateUrl: EditorApp.webDir + 'angularjs/Template/Partial/template-edit.html',
+            templateUrl: EditorApp.webDir + 'bundles/innovapath/angularjs/Template/Partial/template-edit.html',
             controller: 'TemplateModalCtrl'
         });
 
