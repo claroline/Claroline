@@ -65,6 +65,11 @@ class WidgetVoter implements VoterInterface
             }
         } else {
             if ($workspace = $object->getWorkspace()) {
+                //if manager: always granted
+                if (in_array('ROLE_WS_MANAGER_' . $workspace->getGuid(), $roleStrings)) {
+                    return VoterInterface::ACCESS_GRANTED;
+                }
+                //else
                 $tools = $this->em
                     ->getRepository('ClarolineCoreBundle:Tool\Tool')
                     ->findDisplayedByRolesAndWorkspace($roleStrings, $workspace);
