@@ -162,20 +162,24 @@ class ProfileController extends Controller
         }
 
         $userPublicProfilePreferences = $user->getPublicProfilePreferences();
+        $publicProfileVisible         = false;
 
-        $publicProfileVisible = false;
-        $response             = new Response($this->renderView('ClarolineCoreBundle:Profile:publicProfile.html.twig', array('user' => $user)));
+        if ($this->get('security.context')->isGranted('ROLE_ADMIN')) {
+            $userPublicProfilePreferences = $this->get('claroline.manager.user_manager')->getUserPublicProfilePreferencesForAdmin();
+        }
+
+        $response = new Response($this->renderView('ClarolineCoreBundle:Profile:publicProfile.html.twig', array('user' => $user, 'publicProfilePreferences' => $userPublicProfilePreferences)));
 
         if (UserPublicProfilePreferences::SHARE_POLICY_EVERYBODY !== $userPublicProfilePreferences->getSharePolicy()) {
             if(UserPublicProfilePreferences::SHARE_POLICY_NOBODY === $userPublicProfilePreferences->getSharePolicy()) {
-                $response = new Response($this->renderView('ClarolineCoreBundle:Profile:publicProfile.404.html.twig', array('publicUrl' => $publicUrl)), 404);
+                $response = new Response($this->renderView('ClarolineCoreBundle:Profile:publicProfile.404.html.twig', array('user' => $user, 'publicUrl' => $publicUrl)), 404);
             }
             else {
                 $loggedUser = $this->getUser();
 
                 if (UserPublicProfilePreferences::SHARE_POLICY_PLATFORM_USER !== $userPublicProfilePreferences->getSharePolicy()
                     || null === $loggedUser) {
-                    $response = new Response($this->renderView('ClarolineCoreBundle:Profile:publicProfile.401.html.twig', array('publicUrl' => $publicUrl)), 401);
+                    $response = new Response($this->renderView('ClarolineCoreBundle:Profile:publicProfile.401.html.twig', array('user' => $user, 'publicUrl' => $publicUrl)), 401);
                 }
             }
         }
