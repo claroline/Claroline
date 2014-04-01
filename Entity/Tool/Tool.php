@@ -33,6 +33,9 @@ class Tool
 
     /**
      * @ORM\Column(name="display_name", nullable=true)
+     *
+     * Name that will be displayed in the user's desktop
+     * (can be edited in the administration section)
      */
     protected $displayName;
 
@@ -133,12 +136,7 @@ class Tool
 
     public function getDisplayName()
     {
-        $displayName = $this->displayName;
-        if (null === $displayName) {
-            $displayName = $this->name;
-        }
-
-        return $displayName;
+        return $this->displayName ?: $this->name;
     }
 
     public function setClass($class)
