@@ -17,6 +17,7 @@ use Claroline\CoreBundle\Form\UserPublicProfilePreferencesType;
 use Claroline\CoreBundle\Event\StrictDispatcher;
 use Claroline\CoreBundle\Form\ProfileType;
 use Claroline\CoreBundle\Form\ResetPasswordType;
+use Claroline\CoreBundle\Form\UserPublicProfileUrlType;
 use Claroline\CoreBundle\Manager\LocaleManager;
 use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Manager\UserManager;
@@ -109,7 +110,7 @@ class ProfileController extends Controller
      */
     public function editPublicProfilePreferencesAction(User $loggedUser)
     {
-        $form = $this->createForm(new UserPublicProfilePreferencesType(), $loggedUser->getPublicProfilePreferences());
+        $form    = $this->createForm(new UserPublicProfilePreferencesType(), $loggedUser->getPublicProfilePreferences());
 
         if ($this->request->isMethod('POST')) {
             $form->handleRequest($this->request);
@@ -346,7 +347,7 @@ class ProfileController extends Controller
      */
     public function editPublicUrlAction(User $loggedUser)
     {
-        $form = $this->createForm(new ResetPasswordType(), $loggedUser);
+        $form = $this->createForm(new UserPublicProfileUrlType(), $loggedUser);
         $form->handleRequest($this->request);
 
         if ($form->isValid()) {
@@ -365,9 +366,9 @@ class ProfileController extends Controller
                 $entityManager->persist($user);
                 $entityManager->flush();
 
-                $sessionFlashBag->add('success', $translator->trans('edit_public_url_success', array(), 'platform'));
+                $sessionFlashBag->add('success', $translator->trans('tune_public_url_success', array(), 'platform'));
             } catch(\Exception $exception){
-                $sessionFlashBag->add('error', $translator->trans('edit_public_url_error', array(), 'platform'));
+                $sessionFlashBag->add('error', $translator->trans('tune_public_url_error', array(), 'platform'));
             }
 
             return $this->redirect($this->generateUrl('claro_profile_view'));

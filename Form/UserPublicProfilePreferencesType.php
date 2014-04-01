@@ -72,10 +72,10 @@ class UserPublicProfilePreferencesType extends AbstractType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(array(
-           'translation_domain' => 'platform',
-            'data_class'        => 'Claroline\CoreBundle\Entity\UserPublicProfilePreferences',
-            'csrf_protection'   => true,
-            'intention'         => 'configure_public_profile_preferences'
+            'translation_domain' => 'platform',
+            'data_class'         => 'Claroline\CoreBundle\Entity\UserPublicProfilePreferences',
+            'csrf_protection'    => true,
+            'intention'          => 'configure_public_profile_preferences'
         ));
     }
 }

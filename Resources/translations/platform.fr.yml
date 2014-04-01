@@ -783,3 +783,8 @@ yes: oui
 yesterday_activity: 'Activité de la veille'
 your_username: 'Votre nom d''utilisateur est '
 404: 'La page que vous cherchez n''existe pas.'
+tune_your_public_profile_url: 'Personnalisez l''URL de votre profil public'
+tune: 'Personnaliser'
+make_my_public_profil_visible: 'Rendre mon profil public visible'
+tune_public_url_success: 'Personnalisez de l''URL de votre profil public effectuée avec succès.'
+tune_public_url_error: 'Une erreur s''est produite lors de la personnalisation de l''URL de votre profil public.'

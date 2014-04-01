@@ -29,6 +29,13 @@
                                 {{ 'see_public_profile'|trans({}, 'platform') }}
                             </a>
                         </li>
+                        {% if false == user.hasTunedPublicUrl %}
+                        <li>
+                            <a href="{{ path('claro_user_public_url_edit') }}">
+                                {{ 'tune_your_public_profile_url'|trans({}, 'platform') }}
+                            </a>
+                        </li>
+                        {% endif %}
                         <li>
                             <a href="{{ path('claro_user_public_profile_preferences') }}">
                                 {{ 'manage_public_profile_preferences'|trans({}, 'platform') }}

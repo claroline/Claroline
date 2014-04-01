@@ -783,3 +783,8 @@ yes: yes
 yesterday_activity: 'Yesterday''s activity'
 your_username: 'Your username is '
 404: 'Page Not found'
+tune_your_public_profile_url: 'Tune your public profile URL'
+tune: 'Tune'
+make_my_public_profil_visible: 'Make my public profile visible'
+tune_public_url_success: 'Tuning of your public profile URL made with success.'
+tune_public_url_error: 'An error occured while tuning your public profile URL.'

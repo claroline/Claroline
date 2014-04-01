@@ -68,7 +68,7 @@
                         </div>
                         <form action="{{ path('claro_user_public_profile_preferences') }}" method="post" id="public_profile_preferences" {{ form_enctype(form) }}>
                             <div class="panel-body">
-                                <p>Rendre mon profil public visible:</p>
+                                <p>{{ 'make_my_public_profil_visible'|trans({}, 'platform') }}:</p>
                                 {{ form_errors(form.share_policy) }}
                                 {{ form_widget(form.share_policy) }}
 
