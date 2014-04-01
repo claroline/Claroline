@@ -7,7 +7,7 @@ client_credentials_grant_type: 'Identifiants client'
 grant_types: 'Type d''accès'
 name: Nom
 no_app_connect_to_platform: 'Aucune application n''a accès à la plateforme.'
-no_app_connect_to_your_account: 'Aucune application lié à votre compte.'
+no_app_connect_to_your_account: 'Aucune application liée à votre compte.'
 no_grant_types: 'Aucun type d''accès.'
 no_redirect_urls: 'Aucune adresse.'
 oauth_app_ask_access: 'Demande d''accès à la plateforme'
