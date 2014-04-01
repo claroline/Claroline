@@ -1,6 +1,6 @@
 {% extends "ClarolineCoreBundle::layout.html.twig" %}
 
-{% block title %}{{ user.getLastName() ~ ' ' ~ user.getFirstName() | striptags | raw }}{% endblock %}
+{% block title %}{{ 'my_profile'|trans({}, 'platform') ~ ' - ' ~ user.getLastName() ~ ' ' ~ user.getFirstName() | striptags | raw }}{% endblock %}
 
 {% set canEdit = (app.user is not null and user.getId() == app.user.getId()) or is_granted('ROLE_ADMIN') %}
 
