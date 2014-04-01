@@ -7,7 +7,7 @@ log_add_user: 'Ajout d''un utilisateur'
 log_badge-awarding_filter: 'Attribution d''un badge'
 log_badge-awarding_title: 'Attribution d''un badge'
 log_badge-awarding_shortname: "Attribution d'un badge"
-log_badge-awarding_sentence: "s'est fait attribué un badge"
+log_badge-awarding_sentence: "a reçu un badge"
 log_change_right: 'Changement de droit'
 log_change_set: 'Liste des propriétés modifiées'
 log_context: 'Contexte :'
@@ -31,10 +31,10 @@ log_group-delete_filter: 'Suppression d''un groupe'
 log_group-delete_sentence: 'a supprimé le groupe %receiver_group%'
 log_group-delete_shortname: Suppression
 log_group-delete_title: 'Suppression d''un groupe'
-log_group-remove_user_filter: 'Retrait d''un utilisateur d''un groupe'
+log_group-remove_user_filter: 'Utilisateur retiré d''un groupe'
 log_group-remove_user_sentence: 'a retiré %receiver_user% du groupe %receiver_group%'
 log_group-remove_user_shortname: Retrait
-log_group-remove_user_title: 'Retrait d''un utilisateur d''un groupe'
+log_group-remove_user_title: 'Utilisateur retiré d''un groupe'
 log_group-update_filter: 'Mise à jour d''un groupe'
 log_group-update_sentence: 'a modifié le groupe %receiver_group%'
 log_group-update_shortname: Modification
@@ -45,7 +45,7 @@ log_himself: 'L''auteur lui-même'
 log_login: Connexion
 log_move: Déplacement
 log_new_values: 'Nouvelles valeurs'
-log_no_actions_found: 'Aucune action trouvé'
+log_no_actions_found: 'Aucune action trouvée'
 log_old_folder: 'Ancien dossier parent'
 log_old_values: 'Anciennes valeurs'
 log_old_workspace: 'Ancien espace d''activités'
@@ -117,7 +117,7 @@ log_user-update_filter: 'Mise à jour d''un utilisateur'
 log_user-update_sentence: 'a modifié le compte %receiver_user%'
 log_user-update_shortname: Modification
 log_user-update_title: 'Mise à jour d''un utilisateur'
-log_widget_config_amount: 'Nombre de ligne'
+log_widget_config_amount: 'Nombre de lignes'
 log_widget_config_restrictions: 'Actions à afficher'
 log_workspace-create_filter: Création
 log_workspace-create_sentence: 'a créé l''espace d''activités %workspace%'
@@ -128,7 +128,7 @@ log_workspace-delete_sentence: 'a supprimé l''espace d''activités %workspace%'
 log_workspace-delete_shortname: Suppression
 log_workspace-delete_title: 'Suppression d''un espace d''activités'
 log_workspace-enter_filter: 'Accès à un espace d''activités'
-log_workspace-enter_sentence: 'a accédé l''espace d''activités %workspace%'
+log_workspace-enter_sentence: 'a accédé à l''espace d''activités %workspace%'
 log_workspace-enter_shortname: Ouverture
 log_workspace-enter_title: 'Accès à un espace d''activités'
 log_workspace-role-change_right_filter: 'Changement des droits pour un rôle'
@@ -143,22 +143,22 @@ log_workspace-role-delete_filter: 'Suppression d''un rôle'
 log_workspace-role-delete_sentence: 'a supprimé un rôle dans %workspace%'
 log_workspace-role-delete_shortname: Suppression
 log_workspace-role-delete_title: 'Suppression d''un rôle (espace d''activités)'
-log_workspace-role-subscribe_group_filter: 'Inscription d''un groupe à un rôle'
-log_workspace-role-subscribe_group_sentence: 'a inscrit %receiver_group% au rôle %role% dans %workspace%'
-log_workspace-role-subscribe_group_shortname: Inscription
-log_workspace-role-subscribe_group_title: 'Inscription d''un groupe à un rôle (espace d''activités)'
-log_workspace-role-subscribe_user_filter: 'Inscription d''un utilisateur à un rôle'
-log_workspace-role-subscribe_user_sentence: 'a inscrit %receiver_user% au rôle %role% dans %workspace%'
-log_workspace-role-subscribe_user_shortname: Inscription
-log_workspace-role-subscribe_user_title: 'Inscription d''un utilisateur à un rôle (espace d''activités)'
-log_workspace-role-unsubscribe_group_filter: 'Retrait d''un groupe d''un rôle'
-log_workspace-role-unsubscribe_group_sentence: 'a désinscrit %receiver_group% du rôle %role% dans %workspace%'
-log_workspace-role-unsubscribe_group_shortname: Désinscription
-log_workspace-role-unsubscribe_group_title: 'Retrait d''un groupe d''un rôle (espace d''activités)'
-log_workspace-role-unsubscribe_user_filter: 'Retrait d''un utilisateur d''un rôle'
-log_workspace-role-unsubscribe_user_sentence: 'a désinscrit %receiver_user% du rôle %role% dans %workspace%'
-log_workspace-role-unsubscribe_user_shortname: Désinscription
-log_workspace-role-unsubscribe_user_title: 'Retrait d''un utilisateur d''un rôle (espace d''activités)'
+log_workspace-role-subscribe_group_filter: 'Attribution d''un rôle à un groupe'
+log_workspace-role-subscribe_group_sentence: 'a attribué le rôle %role% au groupe %receiver_group% dans %workspace%'
+log_workspace-role-subscribe_group_shortname: Attribution
+log_workspace-role-subscribe_group_title: 'Attribution d''un rôle à un groupe (espace d''activités)'
+log_workspace-role-subscribe_user_filter: 'Attribution d''un rôle à un utilisateur'
+log_workspace-role-subscribe_user_sentence: 'a attribué le rôle %role% à %receiver_user% dans %workspace%'
+log_workspace-role-subscribe_user_shortname: Attribution
+log_workspace-role-subscribe_user_title: 'Attribution d''un rôle à un utilisateur (espace d''activités)'
+log_workspace-role-unsubscribe_group_filter: 'Suppression d''un rôle pour un groupe'
+log_workspace-role-unsubscribe_group_sentence: 'a supprimé le rôle %role% pour le groupe %receiver_group% %workspace%'
+log_workspace-role-unsubscribe_group_shortname: Suppression
+log_workspace-role-unsubscribe_group_title: ' pour un groupe (espace d''activités)'
+log_workspace-role-unsubscribe_user_filter: 'Suppression d''un rôle pour un utilisateur'
+log_workspace-role-unsubscribe_user_sentence: 'a supprimé le rôle %role% pour %receiver_user% dans %workspace%'
+log_workspace-role-unsubscribe_user_shortname: Suppression
+log_workspace-role-unsubscribe_user_title: 'Suppression d''un rôle pour un utilisateur (espace d''activités)'
 log_workspace-role-update_filter: 'Mise à jour d''un rôle'
 log_workspace-role-update_sentence: 'a modifié un rôle dans %workspace%'
 log_workspace-role-update_shortname: Modification
@@ -170,7 +170,7 @@ log_workspace-tool-read_title: 'Ouverture d''un outil dans un espace d''activit�
 log_workspace-update_filter: 'Mise à jour'
 log_workspace-update_shortname: Modification
 log_workspace-update_title: 'Mise à jour d''un espace d''activités'
-log_workspace_read: 'Entrée dans l''espace d''activités'
+log_workspace_read: 'Accessions à l''espace d''activités'
 log_workspace_roles: 'Rôles espace d''activités'
 log_workspace_source: 'Espace d''activités source'
 resource: Ressource
