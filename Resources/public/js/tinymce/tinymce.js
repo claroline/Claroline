@@ -15,6 +15,11 @@
     var modal = window.Claroline.Modal;
     var translator = window.Translator;
 
+    //Load external plugins
+    tinymce.PluginManager.load('mention', home.asset + 'bundles/frontend/tinymce/plugins/mention/plugin.min.js');
+    tinymce.PluginManager.load('accordion', home.asset + 'bundles/frontend/tinymce/plugins/accordion/plugin.min.js');
+    tinymce.DOM.loadCSS(home.asset + 'bundles/frontend/tinymce/plugins/mention/css/autocomplete.css');
+
     /**
      * Claroline TinyMCE parameters and methods.
      */
@@ -67,7 +72,7 @@
                     tinymce.editors[id].isBeforeUnloadActive &&
                     tinymce.editors[id].getContent() !== '' &&
                     $(tinymce.editors[id].getElement()).data('saved')
-                ) {
+                    ) {
                     return true;
                 }
             }
@@ -114,13 +119,13 @@
         var mimeType = nodes[_.keys(nodes)][2] !== '' ? nodes[_.keys(nodes)][2] : 'unknown/mimetype';
 
         $.ajax(home.path + 'resource/embed/' + nodeId + '/' + mimeType)
-        .done(function (data) {
-            tinymce.activeEditor.insertContent(data);
-            tinymce.claroline.editorChange(tinymce.activeEditor);
-        })
-        .error(function () {
-            modal.error();
-        });
+            .done(function (data) {
+                tinymce.activeEditor.insertContent(data);
+                tinymce.claroline.editorChange(tinymce.activeEditor);
+            })
+            .error(function () {
+                modal.error();
+            });
     };
 
     /**
@@ -154,9 +159,9 @@
                 $('.progress', element).removeClass('hide');
                 $('.alert', element).addClass('hide');
                 $('.progress-bar', element)
-                .attr('aria-valuenow', percent)
-                .css('width', percent + '%')
-                .find('sr-only').text(percent + '%');
+                    .attr('aria-valuenow', percent)
+                    .css('width', percent + '%')
+                    .find('sr-only').text(percent + '%');
             }
         );
     };
@@ -170,18 +175,18 @@
         if ($('#resourcePicker').get(0) === undefined) {
             $('body').append('<div id="resourcePicker"></div>');
             $.ajax(home.path + 'resource/init')
-            .done(function (data) {
-                var resourceInit = JSON.parse(data);
-                resourceInit.parentElement = $('#resourcePicker');
-                resourceInit.isPickerMultiSelectAllowed = false;
-                resourceInit.isPickerOnly = true;
-                resourceInit.pickerCallback = function (nodes) { tinymce.claroline.callBack(nodes); };
-                Claroline.ResourceManager.initialize(resourceInit);
-                Claroline.ResourceManager.picker('open');
-            })
-            .error(function () {
-                modal.error();
-            });
+                .done(function (data) {
+                    var resourceInit = JSON.parse(data);
+                    resourceInit.parentElement = $('#resourcePicker');
+                    resourceInit.isPickerMultiSelectAllowed = false;
+                    resourceInit.isPickerOnly = true;
+                    resourceInit.pickerCallback = function (nodes) { tinymce.claroline.callBack(nodes); };
+                    Claroline.ResourceManager.initialize(resourceInit);
+                    Claroline.ResourceManager.picker('open');
+                })
+                .error(function () {
+                    modal.error();
+                });
         } else {
             Claroline.ResourceManager.picker('open');
         }
@@ -215,12 +220,12 @@
                         element.on('click', '.resourcePicker', function () {
                             tinymce.claroline.resourcePickerOpen();
                         })
-                        .on('click', '.filePicker', function () {
-                            $('#file_form_file').click();
-                        })
-                        .on('change', '#file_form_file', function () {
-                            tinymce.claroline.uploadfile(this, element);
-                        });
+                            .on('click', '.filePicker', function () {
+                                $('#file_form_file').click();
+                            })
+                            .on('change', '#file_form_file', function () {
+                                tinymce.claroline.uploadfile(this, element);
+                            });
                     });
                 }
             });
@@ -244,9 +249,9 @@
                 }
             }
         })
-        .on('LoadContent', function () {
-            tinymce.claroline.editorChange(editor);
-        });
+            .on('LoadContent', function () {
+                tinymce.claroline.editorChange(editor);
+            });
         tinymce.claroline.addResourcePicker(editor);
         tinymce.claroline.setBeforeUnloadActive(editor);
         $('body').bind('ajaxComplete', function () {
@@ -273,14 +278,40 @@
             'autoresize advlist autolink lists link image charmap print preview hr anchor pagebreak',
             'searchreplace wordcount visualblocks visualchars fullscreen',
             'insertdatetime media nonbreaking save table directionality',
-            'template paste textcolor emoticons code'
+            'template paste textcolor emoticons code -mention -accordion'
         ],
         'toolbar1': 'styleselect | bold italic | alignleft aligncenter alignright alignjustify | ' +
-                    'preview fullscreen resourcePicker fileUpload',
+            'preview fullscreen resourcePicker fileUpload  accordion',
         'toolbar2': 'undo redo | forecolor backcolor emoticons | bullist numlist outdent indent | ' +
-                    'link image media print code',
+            'link image media print code',
+        'extended_valid_elements': 'user[id], a[data-toggle|data-parent]',
         'paste_preprocess': tinymce.claroline.paste,
-        'setup': tinymce.claroline.setup
+        'setup': tinymce.claroline.setup,
+        'mentions': {
+            source: function (query, process, delimiter) {
+                if (!_.isUndefined(window.Workspace) && !_.isNull(window.Workspace.id)) {
+                    if (delimiter === '@' && query.length>0) {
+                        $.getJSON(home.path + 'user/searchInWorkspace/' + window.Workspace.id + '/' + query, function (data) {
+                            if(!_.isEmpty(data) && !_.isUndefined(data.users) && !_.isEmpty(data.users))process(data.users);
+                        });
+                    }
+                }
+            },
+            render: function(item) {
+                var avatar = '<i class="icon-user"></i>';
+                if(item.avatar != null) {
+                    avatar = '<img src="' + home.asset + 'uploads/pictures/' + item.avatar + '"/>';
+                }
+
+                return '<li>' +
+                    '<a href="javascript:;"><span class="user-picker-dropdown-avatar">' + avatar + '</span> <span class="user-picker-dropdown-name">' + item.name + '</span> <small class="user-picker-avatar-mail text-muted">('+item.mail+')</small></a>' +
+                    '</li>';
+            },
+            insert: function(item) {
+                return '<user id="' + item.id + '"><a href="' + home.path + 'profile/view/' + item.id + '">' + item.name + '</a></user>';
+            },
+            delay: 200
+        }
     };
 
     /**
@@ -292,13 +323,13 @@
             var element = this;
 
             $(element).tinymce(tinymce.claroline.configuration)
-            .on('remove', function () {
-                var editor = tinymce.get($(element).attr('id'));
-                if (editor) {
-                    editor.destroy();
-                }
-            })
-            .addClass('tiny-mce-done');
+                .on('remove', function () {
+                    var editor = tinymce.get($(element).attr('id'));
+                    if (editor) {
+                        editor.destroy();
+                    }
+                })
+                .addClass('tiny-mce-done');
         });
     };
 
@@ -307,17 +338,17 @@
     $('body').bind('ajaxComplete', function () {
         tinymce.claroline.initialization();
     })
-    .on('click', '.mce-widget.mce-btn[aria-label="Fullscreen"]', function () {
-        tinymce.claroline.toggleFullscreen(this);
-        window.dispatchEvent(new window.Event('resize'));
-    })
-    .bind('DOMSubtreeModified', function () {
-        clearTimeout(tinymce.claroline.domChange);
-        tinymce.claroline.domChange = setTimeout(tinymce.claroline.initialization, 10);
-    })
-    .on('click', 'form *[type=submit]', function () {
-        tinymce.claroline.disableBeforeUnload = true;
-    });
+        .on('click', '.mce-widget.mce-btn[aria-label="Fullscreen"]', function () {
+            tinymce.claroline.toggleFullscreen(this);
+            window.dispatchEvent(new window.Event('resize'));
+        })
+        .bind('DOMSubtreeModified', function () {
+            clearTimeout(tinymce.claroline.domChange);
+            tinymce.claroline.domChange = setTimeout(tinymce.claroline.initialization, 10);
+        })
+        .on('click', 'form *[type=submit]', function () {
+            tinymce.claroline.disableBeforeUnload = true;
+        });
 
     $(document).ready(function () {
         tinymce.claroline.initialization();

@@ -152,10 +152,18 @@ class MailManager
             if ($from) {
                 $body = str_replace('%first_name%', $from->getFirstName(), $body);
                 $body = str_replace('%last_name%', $from->getLastName(), $body);
+            } else {
+                $body = str_replace('%first_name%', $this->ch->getParameter('name'), $body);
+                $body = str_replace('%last_name%', '', $body);
             }
 
             foreach ($users as $user) {
-                $to[] = $user->getMail();
+
+                $mail = $user->getMail();
+
+                if (filter_var($mail, FILTER_VALIDATE_EMAIL)) {
+                    $to[] = $mail;
+                }
             }
 
             $message = \Swift_Message::newInstance()
@@ -164,7 +172,7 @@ class MailManager
                 ->setBody($body, 'text/html');
 
             if (count($to) > 1) {
-                $message->setCc($to);
+                $message->setBcc($to);
             } else {
                 $message->setTo($to);
             }

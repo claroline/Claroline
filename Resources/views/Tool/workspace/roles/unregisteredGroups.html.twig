@@ -1,4 +1,4 @@
-{% macro renderPager(search, workspaceId, pager, max, order) %}
+{% macro renderPager(search, workspaceId, pager, max, order, direction) %}
     {% if search == '' %}
         {{
             pagerfanta(
@@ -7,7 +7,7 @@
                 {
                     'proximity' : 1,
                     'routeName': 'claro_workspace_unregistered_group_list',
-                    'routeParams': {'workspace': workspaceId, 'max': max, 'order': order}
+                    'routeParams': {'workspace': workspaceId, 'max': max, 'order': order , 'direction':direction}
                 }
             )
         }}
@@ -19,18 +19,18 @@
                 {
                     'proximity' : 1,
                     'routeName': 'claro_workspace_registered_group_list_search',
-                    'routeParams': {'search': search, 'workspace': workspaceId, 'max': max, 'order': order}
+                    'routeParams': {'search': search, 'workspace': workspaceId, 'max': max, 'order': order, 'direction': direction}
                 }
             )
         }}
     {% endif %}
 {% endmacro %}
 
-{% macro sortUrl(max, search, order, workspaceId) %}
+{% macro sortUrl(max, search, order, workspaceId , direction) %}
     {% if search == '' %}
-        {{ path('claro_workspace_unregistered_group_list', {'workspace': workspaceId, 'max': max, 'order': order}) }}
+        {{ path('claro_workspace_unregistered_group_list', {'workspace': workspaceId, 'max': max, 'order': order, 'direction': direction }) }}
     {% else %}
-        {{ path('claro_workspace_registered_group_list_search', {'search': search, 'workspace': workspaceId, 'max': max, 'order': order}) }}
+        {{ path('claro_workspace_registered_group_list_search', {'search': search, 'workspace': workspaceId, 'max': max, 'order': order, 'direction': direction}) }}
     {% endif %}
 {% endmacro %}
 
@@ -117,7 +117,7 @@
             <div class="row">
                 <div class="col-md-8">
                 {% if pager.getNbPages() > 1 %}
-                    {{ renderPager(search, workspace.getId(), pager, max, order) }}
+                    {{ renderPager(search, workspace.getId(), pager, max, order, direction) }}
                 {% endif %}
                 </div>
                 <div class="col-md-4">
@@ -129,7 +129,8 @@
                     <thead>
                         <tr>
                             <th> <input type="checkbox" name="all" id="check-all-items"></input> </th>
-                            <th><a href="{{ sortUrl(max, search, 'name', workspace.getId()) }}">{{ 'name'|trans({}, 'platform') }}</a></th>
+                            <th><a href="{{ sortUrl(max, search, 'name', workspace.getId(), direction) }}">{{ 'name'|trans({}, 'platform') }}</a></th>
+                            <th></th>
                         </tr>
                     </thead>
                     <tbody id="user-table-body">
@@ -137,13 +138,22 @@
                             <tr id="row-{{ group.id }}" class="row-group" data-group-id="{{ group.getId() }}">
                                 <td> <input class="chk-grp chk-item" type="checkbox" value="{{ group.getId() }}"> </input></td>
                                 <td>  {{ group.name }} </td>
+                                <td>
+                                    {% for role in group.getEntityRoles() %}
+                                        {% if role.getWorkspace() == workspace %}
+                                            <span class="label label-success" id="label-{{ role.getId () }}-{{ group.getId()}}">
+                                                {{ role.getTranslationKey()|trans({}, 'platform') }}
+                                            </span>
+                                        {% endif %}
+                                    {% endfor %}
+                                </td>
                             </tr>
                         {% endfor %}
                     </tbody>
                 </table>
             </div>
             {% if pager.getNbPages() > 1 %}
-                {{ renderPager(search, workspace.getId(), pager, max, order) }}
+                {{ renderPager(search, workspace.getId(), pager, max, order, direction) }}
             {% endif %}
         </div>
     </div>
@@ -170,7 +180,12 @@
                 i++;
             });
 
-            var html = Twig.render(confirmAddRole, {'nbItems': $('.chk-grp:checked').length, 'roles': roles});
+            if (i > 0) {
+                var html = Twig.render(confirmAddRole, {'nbItems': $('.chk-grp:checked').length, 'roles': roles});
+            } else {
+                var html = Twig.render(noRoleSelected);
+            }
+
             $('#table-modal .modal-body').html(html);
             $('#table-modal').modal('show');
         });
@@ -178,20 +193,28 @@
          $('#modal-valid-button').on('click', function () {
             var i = 0;
             var queryString = {};
-            var array = [];
+            var groups = [];
             $('.chk-grp:checked').each(function (index, element) {
-                array[i] = element.value;
+                groups[i] = element.value;
                 i++;
             });
-            queryString.groupIds = array;
+            queryString.groupIds = groups;
 
             var i = 0;
-            var array = [];
+            var roles = [];
             $('.chk-role:checked').each(function (index, element) {
-                array[i] = element.value;
+                roles[i] = element.value;
                 i++;
             });
-            queryString.roleIds = array;
+
+             if (i < 1) {
+                 $('#table-modal').modal('hide');
+                 $('.modal-body').empty();
+
+                 return;
+             }
+
+            queryString.roleIds = roles;
 
             var route = Routing.generate('claro_workspace_add_roles_to_groups', {'workspace': {{ workspace.getId() }} });
             route += '?' + $.param(queryString);
@@ -202,6 +225,23 @@
                     var flashbag = $('#custom-flashbag-ul');
                     flashbag.append('<li>' +  Translator.get('platform:operation_done') + '</li>');
                     $('#custom-flashbag-div').removeClass('hide');
+
+                    //add each role to the group list
+                    for (i = 0; i < groups.length; i++) {
+                        var td = $('#row-' + groups[i] + " td:last-child");
+                        var cell = $(td[0]);
+                        var html = cell.html();
+
+                        for (var j = 0; j < roles.length; j++) {
+                            var roleLib = $('#role-' + roles[j]).attr('data-name');
+                            //only append the span if the role isn't already here
+                            if (html.indexOf(roleLib) === -1) {
+                                html += "<span class='label label-success'>" + roleLib + "</span>";
+                            }
+                        }
+
+                        cell.html(html);
+                    }
                 }
             });
 

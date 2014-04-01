@@ -109,7 +109,7 @@ class MessageController
     public function formForGroupAction(Group $group)
     {
         $url = $this->router->generate('claro_message_show', array('message' => 0))
-            . $this->messageManager->generateGroupQueryString($group);
+            . '?grpsIds[]=' . $group->getId();
 
         return new RedirectResponse($url);
     }
@@ -129,7 +129,7 @@ class MessageController
     public function formForWorkspaceAction(AbstractWorkspace $workspace)
     {
         $url = $this->router->generate('claro_message_show', array('message' => 0))
-            . $this->messageManager->generateWorkspaceQueryString($workspace);
+            . '?wsIds[]=' . $workspace->getId();
 
         return new RedirectResponse($url);
     }
@@ -290,7 +290,21 @@ class MessageController
      *     defaults={"message"=0}
      * )
      * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
-     * @EXT\ParamConverter("receivers", class="ClarolineCoreBundle:User", options={"multipleIds" = true})
+     * @EXT\ParamConverter(
+     *      "receivers",
+     *      class="ClarolineCoreBundle:User",
+     *      options={"multipleIds" = true}
+     * )
+     * @EXT\ParamConverter(
+     *      "workspaces",
+     *      class="ClarolineCoreBundle:Workspace\AbstractWorkspace",
+     *      options={"multipleIds" = true, "name"="wsIds"}
+     * )
+     * @EXT\ParamConverter(
+     *      "groups",
+     *      class="ClarolineCoreBundle:Group",
+     *      options={"multipleIds" = true, "name"="grpsIds"}
+     * )
      * @EXT\ParamConverter(
      *      "message",
      *      class="ClarolineCoreBundle:Message",
@@ -302,11 +316,19 @@ class MessageController
      *
      * @param User    $user
      * @param array   $receivers
+     * @param array   $groups
+     * @param array   $workspaces
      * @param Message $message
      *
      * @return Response
      */
-    public function showAction(User $user, array $receivers, Message $message = null)
+    public function showAction(
+        User $user,
+        array $receivers,
+        array $groups,
+        array $workspaces,
+        Message $message = null
+    )
     {
         if ($message) {
             $this->messageManager->markAsRead($user, array($message));
@@ -316,7 +338,7 @@ class MessageController
             $this->checkAccess($message, $user);
         } else {
             //datas from the post request
-            $sendString = $this->messageManager->generateStringTo($receivers);
+            $sendString = $this->messageManager->generateStringTo($receivers, $groups, $workspaces);
             $object = '';
             $ancestors = array();
         }

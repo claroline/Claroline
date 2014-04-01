@@ -59,7 +59,7 @@
 
     $('body').on('click', '#submit-default-rights-form-button', function (e) {
         e.preventDefault();
-        var formAction = $(e.currentTarget.parentElement.parentElement).attr('action');
+        var formAction = $(e.currentTarget).parents('form').first().attr('action');
         var form = document.getElementById('node-rights-form');
         var formData = new FormData(form);
         e.preventDefault();

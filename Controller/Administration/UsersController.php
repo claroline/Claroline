@@ -104,7 +104,7 @@ class UsersController extends Controller
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function creationFormAction(User $currentUser)
+    public function userCreationFormAction(User $currentUser)
     {
         $roles = $this->roleManager->getPlatformRoles($currentUser);
         $form = $this->formFactory->create(
@@ -194,16 +194,16 @@ class UsersController extends Controller
 
     /**
      * @EXT\Route(
-     *     "/page/{page}/max/{max}/order/{order}",
+     *     "/page/{page}/max/{max}/order/{order}/direction/{direction}",
      *     name="claro_admin_user_list",
-     *     defaults={"page"=1, "search"="", "max"=50, "order"="id"},
+     *     defaults={"page"=1, "search"="", "max"=50, "order"="id","direction"="ASC"},
      *     options = {"expose"=true}
      * )
      * @EXT\Method("GET")
      * @EXT\Route(
-     *     "/users/page/{page}/search/{search}/max/{max}/order/{order}",
+     *     "/users/page/{page}/search/{search}/max/{max}/order/{order}/direction/{direction}",
      *     name="claro_admin_user_list_search",
-     *     defaults={"page"=1, "max"=50, "order"="id"},
+     *     defaults={"page"=1, "max"=50, "order"="id","direction"="ASC"},
      *     options = {"expose"=true}
      * )
      * @EXT\Method("GET")
@@ -223,13 +223,15 @@ class UsersController extends Controller
      *
      * @return array
      */
-    public function listAction($page, $search, $max, $order)
+    public function listAction($page, $search, $max, $order, $direction)
     {
         $pager = $search === '' ?
-            $this->userManager->getAllUsers($page, $max, $order):
-            $this->userManager->getUsersByName($search, $page, $max, $order);
+            $this->userManager->getAllUsers($page, $max, $order, $direction):
+            $this->userManager->getUsersByName($search, $page, $max, $order, $direction);
+        
+        $direction = $direction === 'DESC' ? 'ASC' : 'DESC';
 
-        return array('pager' => $pager, 'search' => $search, 'max' => $max, 'order' => $order);
+        return array('pager' => $pager, 'search' => $search, 'max' => $max, 'order' => $order, 'direction' => $direction);
     }
 
     /**

@@ -108,4 +108,9 @@ class GroupRepositoryTest extends RepositoryTestCase
         );
         $this->assertEquals(1, count($groups));
     }
+
+    public function testFindNames()
+    {
+        $this->assertEquals(4, count(self::$repo->findNames()));
+    }
 }

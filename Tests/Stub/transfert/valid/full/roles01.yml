@@ -1,0 +1,13 @@
+roles:
+    - role:
+        name: 'ROLE_1'
+        translation: 'totottoo'
+        is_base_role: true
+    - role:
+        name: 'ROLE_2'
+        translation: 'totottoo'
+        is_base_role: false
+    - role:
+        name: 'ROLE_3'
+        translation: 'totottoo'
+        is_base_role: false

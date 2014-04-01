@@ -14,13 +14,13 @@ oauth_app_ask_access: 'Access demand to the platform'
 oauth_application_acceptance: 'Access confirmation'
 password_grant_type: Password
 refresh_token_grant_type: 'Refresh token'
-revoke: Révoquer
+revoke: 'Revoke'
 revoke_access: 'Revoke access'
-thrid_party_application_delete_confirm_message: 'Are you sure you want to remove the access to the platform for third-party application <strong>%application%</strong>?'
-thrid_party_application_delete_confirm_title: 'Access removing to the platform'
-thrid_party_application_delete_error_message: 'An error occured while removing access to the platform for third-party applciation ''%application%'''
-thrid_party_application_delete_success_message: 'Access to the platform has been removed for third-party application ''%application%''.'
+thrid_party_application_delete_confirm_message: 'Are you sure you want to revoke access to the platform for third-party application <strong>%application%</strong>?'
+thrid_party_application_delete_confirm_title: 'Revoking access to the platform'
+thrid_party_application_delete_error_message: 'An error occured while revoking access to the platform for third-party application ''%application%'''
+thrid_party_application_delete_success_message: 'Access to the platform has been revoked for third-party application ''%application%''.'
 token_grant_type: Token
 urls: Urls
-user_application_revoke_confirm_message: 'Are you sure you want to revoke the access to the application <strong>%application%</strong>?'
-user_application_revoke_confirm_title: 'Revokation of an application'
+user_application_revoke_confirm_message: 'Are you sure you want to revoke access to application <strong>%application%</strong>?'
+user_application_revoke_confirm_title: 'Revoke an application'
