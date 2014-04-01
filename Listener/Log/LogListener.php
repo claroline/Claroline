@@ -24,7 +24,7 @@ use Symfony\Component\Security\Core\SecurityContextInterface;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Icap\NotificationBundle\Entity\NotifiableInterface;
-use Icap\NotificationBundle\Service\Manager as NotificationManager;
+use Icap\NotificationBundle\Manager\NotificationManager as NotificationManager;
 
 /**
  * @DI\Service
@@ -43,7 +43,7 @@ class LogListener
      *     "context"                = @DI\Inject("security.context"),
      *     "container"              = @DI\Inject("service_container"),
      *     "roleManager"            = @DI\Inject("claroline.manager.role_manager"),
-     *     "notificationManager"    = @DI\Inject("icap_notification.manager")
+     *     "notificationManager"    = @DI\Inject("icap.notification.manager")
      * })
      */
     public function __construct(

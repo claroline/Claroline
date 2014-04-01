@@ -15,5 +15,12 @@ services:
             - "@claroline.common.theme_service"
             - %kernel.root_dir%/Resources
 
+    claroline.captcha_extension:
+        arguments:
+            - "@service_container"
+        class: Claroline\CoreBundle\Form\Extension\CaptchaExtension
+        tags:
+            - { name: form.type_extension, alias: form }
+
 framework:
     test: true

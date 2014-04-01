@@ -28,6 +28,12 @@ class Updater021200
 
     public function postUpdate()
     {
+        $this->updateUsers();
+        $this->updateTools();
+    }
+
+    public function updateUsers()
+    {
         $this->log('Updating users...');
         $users = $this->om->getRepository('ClarolineCoreBundle:User')->findAll();
         $this->om->startFlushSuite();
@@ -48,6 +54,45 @@ class Updater021200
         $this->om->endFlushSuite();
 
         $this->log('Done.');
+    }
+
+    public function updateTools()
+    {
+        $this->log('Updating existing badges tool...');
+        /** @var \Claroline\CoreBundle\Entity\Tool\Tool $badgesTool */
+        $badgesTool = $this->om->getRepository('Claroline\CoreBundle\Entity\Tool\Tool')->findOneByName('badges');
+        $badgesTool->setDisplayName('badges_management');
+
+        $this->om->persist($badgesTool);
+
+        $this->log('Existing badges tool updated.');
+
+        $myBadgesToolName = 'my_badges';
+        $myBadgesTool = $this->om->getRepository('ClarolineCoreBundle:Tool\Tool')->findOneByName($myBadgesToolName);
+
+        if (null === $myBadgesTool) {
+            $this->log('Creating new tool for displaying user badges in workspace...');
+            $newBadgeTool = new Tool();
+            $newBadgeTool
+                ->setName($myBadgesToolName)
+                ->setClass('icon-trophy')
+                ->setDisplayName('badges')
+                ->setIsWorkspaceRequired(false)
+                ->setIsDesktopRequired(false)
+                ->setDisplayableInWorkspace(true)
+                ->setDisplayableInDesktop(false)
+                ->setExportable(false)
+                ->setIsConfigurableInWorkspace(false)
+                ->setIsConfigurableInDesktop(false)
+                ->setIsLockedForAdmin(false)
+                ->setIsAnonymousExcluded(true);
+
+            $this->om->persist($newBadgeTool);
+
+            $this->log('New tool for displaying user badges in workspace created.');
+        }
+
+        $this->om->flush();
     }
 
     public function setLogger($logger)

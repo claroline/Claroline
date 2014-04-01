@@ -13,7 +13,7 @@ apr: Apr
 april: April
 aug: Aug
 august: August
-cancel: cancel
+cancel: Cancel
 close: Close
 confirm: 'Confirm modification ?'
 date_invalid: 'An error occured. Please check that your event doesn''t end before it starts'

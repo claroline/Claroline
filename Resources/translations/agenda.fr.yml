@@ -22,7 +22,7 @@ dec: Déc
 december: Décembre
 end: Fin
 end_date: 'Date de fin'
-export: 'Exporter les évènements'
+export: 'Exporter les événements'
 error: 'Une erreur s''est produite, veuillez réessayer'
 event_update: 'Modification enregistrée'
 feb: Févr
@@ -71,7 +71,7 @@ title: 'Le titre est obligatoire'
 today: auj
 tue: Mar
 tuesday: Mardi
-update: modifier
+update: Modifier
 wed: Mer
 wednesday: Mercredi
 week: semaine

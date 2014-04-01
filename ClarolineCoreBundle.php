@@ -13,6 +13,7 @@ namespace Claroline\CoreBundle;
 
 use Claroline\CoreBundle\DependencyInjection\Compiler\DoctrineEntityListenerPass;
 use Claroline\CoreBundle\DependencyInjection\Compiler\DynamicConfigPass;
+use Claroline\CoreBundle\DependencyInjection\Compiler\ImportersConfigPass;
 use FOS\OAuthServerBundle\FOSOAuthServerBundle;
 use IDCI\Bundle\ExporterBundle\IDCIExporterBundle;
 use Nelmio\ApiDocBundle\NelmioApiDocBundle;
@@ -32,6 +33,7 @@ class ClarolineCoreBundle extends InstallableBundle implements AutoConfigurableI
         parent::build($container);
 
         $container->addCompilerPass(new DynamicConfigPass());
+        $container->addCompilerPass(new ImportersConfigPass());
         $container->addCompilerPass(new DoctrineEntityListenerPass());
     }
 
@@ -79,7 +81,8 @@ class ClarolineCoreBundle extends InstallableBundle implements AutoConfigurableI
             'Stfalcon\Bundle\TinymceBundle\StfalconTinymceBundle'           => 'stfalcon_tinymce',
             'Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle' => 'sensio_framework_extra',
             'FOS\RestBundle\FOSRestBundle'                                  => 'fos_rest',
-            'HWI\Bundle\OAuthBundle\HWIOAuthBundle'                         => 'hwi_oauth'
+            'HWI\Bundle\OAuthBundle\HWIOAuthBundle'                         => 'hwi_oauth',
+            'Gregwar\CaptchaBundle\GregwarCaptchaBundle'                    => 'gregwar_captcha'
         );
         // one configuration file for every standard environment (prod, dev, test)
         $envConfigs = array(

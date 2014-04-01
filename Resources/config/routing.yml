@@ -1,4 +1,5 @@
 hwi_oauth_login:
+hwi_oauth_login:
     resource: "@HWIOAuthBundle/Resources/config/routing/login.xml"
     prefix:   /login/hwi
 
@@ -215,6 +216,11 @@ claro_file:
     resource: "@ClarolineCoreBundle/Controller/FileController.php"
     type: annotation
     prefix: file
+
+claro_user:
+    resource: "@ClarolineCoreBundle/Controller/UserController.php"
+    type: annotation
+    prefix: user
 
 claro_badge:
     resource: "@ClarolineCoreBundle/Controller/Badge"

@@ -69,6 +69,7 @@ add_widget_to_home_tab: 'Add widget to Home tab'
 add_workspace: 'Add workspace'
 admin: Administrator
 admin_analytics: 'Platform analytics'
+admin_analytics_no_data: 'No data.'
 admin_form_firstName: 'first name'
 admin_form_lastName: Lastname
 admin_form_mail: 'Email adress'
@@ -113,6 +114,7 @@ canOpen: 'Right to open'
 cancel: Cancel
 cannot_delete_unique_manager: 'Cannot remove the unique manager.'
 cannot_unsubscribe_from_workspace: 'Cannot unsubscribe from workspace'
+captcha: Captcha
 categories: Categories
 categories_organization: 'Categories organization'
 categorize: Categorize
@@ -658,6 +660,7 @@ user_form_plainPassword_first: Password
 user_form_plainPassword_second: Verification
 user_form_username: Username
 user_parameters: 'User parameters'
+user_picker: 'User picker'
 user_removed: 'User removed'
 username: Username
 username_found_at: 'The username %username% was found at lines: %lines%'
@@ -699,6 +702,7 @@ workspace_classification: 'Workspace classification'
 workspace_delete: 'Delete the workspace'
 workspace_delete_confirm_message: 'Are you sure you want to delete this workspace ?'
 workspace_delete_confirm_title: 'Delete Confirm'
+workspace_delete_success_message: 'Workspace "%workspaceName%" has been deleted.'
 workspace_edit_form_code: Code
 workspace_edit_form_displayable: Displayable
 workspace_edit_form_name: Name

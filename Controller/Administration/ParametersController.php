@@ -20,7 +20,7 @@ use Claroline\CoreBundle\Manager\ContentManager;
 use Claroline\CoreBundle\Library\Installation\Settings\MailingSettings;
 use Claroline\CoreBundle\Library\Installation\Settings\MailingChecker;
 use Claroline\CoreBundle\Manager\TermsOfServiceManager;
-use Icap\BlogBundle\Controller\Controller;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use JMS\DiExtraBundle\Annotation as DI;
 use JMS\SecurityExtraBundle\Annotation as SEC;
 use Symfony\Component\Form\FormError;

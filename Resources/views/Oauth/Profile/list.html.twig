@@ -2,8 +2,6 @@
 
 {% block title %}{{ parent() ~ ' - ' ~ 'my_applications' | trans({}, 'platform') | striptags | raw }}{% endblock %}
 
-{% trans_default_domain "badge" %}
-
 {% block content %}
     {{ macros.flashBox() }}
 
