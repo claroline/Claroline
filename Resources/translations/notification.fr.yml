@@ -1,3 +1,3 @@
-workspace-role-change_right: 'vous donne accès à la ressource ''%resource%'' de l''espace d''activités ''%workspace%'''
-workspace-role-subscribe_group: 'vous a inscrit au rôle ''%role%'' de l''espace d''activités ''%workspace%'''
-workspace-role-subscribe_user: 'vous a inscrit au rôle ''%role%'' de l''espace d''activités ''%workspace%'''
+workspace-role-change_right: 'vous donne accès à la ressource ''%resource%'' dans l''espace d''activités ''%workspace%'''
+workspace-role-subscribe_group: 'vous a attribué le rôle ''%role%'' dans l''espace d''activités ''%workspace%'''
+workspace-role-subscribe_user: 'vous a attribué le rôle ''%role%'' dans l''espace d''activités ''%workspace%'''

@@ -81,7 +81,8 @@ class ClarolineCoreBundle extends InstallableBundle implements AutoConfigurableI
             'Stfalcon\Bundle\TinymceBundle\StfalconTinymceBundle'           => 'stfalcon_tinymce',
             'Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle' => 'sensio_framework_extra',
             'FOS\RestBundle\FOSRestBundle'                                  => 'fos_rest',
-            'HWI\Bundle\OAuthBundle\HWIOAuthBundle'                         => 'hwi_oauth'
+            'HWI\Bundle\OAuthBundle\HWIOAuthBundle'                         => 'hwi_oauth',
+            'Gregwar\CaptchaBundle\GregwarCaptchaBundle'                    => 'gregwar_captcha'
         );
         // one configuration file for every standard environment (prod, dev, test)
         $envConfigs = array(

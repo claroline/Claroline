@@ -454,8 +454,9 @@ class ResourceController
             //set "admin" mask if someone is the creator of a resource or the resource workspace owner.
             //if someone needs admin rights, the resource type list will go in this array
             $adminTypes = [];
+            $isOwner = $this->resourceManager->isWorkspaceOwnerOf($node, $this->sc->getToken());
 
-            if ($this->resourceManager->isWorkspaceOwnerOf($node, $this->sc->getToken())) {
+            if ($isOwner || $this->sc->isGranted('ROLE_ADMIN')) {
                 $resourceTypes = $this->resourceManager->getAllResourceTypes();
 
                 foreach ($resourceTypes as $resourceType) {

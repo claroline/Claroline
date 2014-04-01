@@ -92,7 +92,7 @@
                         {% for user in pager.currentPageResults %}
                             <tr>
                                 <td>
-                                    <a class="close delete" href="{{ path('claro_workspace_tool_badges_unaward', {'workspaceId': workspace.id, 'id': badge.id, 'username': user.username}) }}" data-toggle="tooltip" title="{{ 'badge_unaward_confirm_title'|trans }}" data-confirm-title="{{ 'badge_unaward_confirm_title'|trans }}" data-confirm-message="{{ 'badge_unaward_confirm_message'|trans({'%badgeName%': badge.name, '%user%': user.firstname ~ ' ' ~ user.lastname}) }}" data-confirm-ok="{{ 'unaward'|trans }}" data-confirm-cancel="{{ 'cancel'|trans({}, 'platform') }}"><span class="icon-remove-circle"></span></a>
+                                    <a class="close confirm" href="{{ path('claro_workspace_tool_badges_unaward', {'workspaceId': workspace.id, 'id': badge.id, 'username': user.username}) }}" data-toggle="tooltip" title="{{ 'badge_unaward_confirm_title'|trans }}" data-confirm-title="{{ 'badge_unaward_confirm_title'|trans }}" data-confirm-message="{{ 'badge_unaward_confirm_message'|trans({'%badgeName%': badge.name, '%user%': user.firstname ~ ' ' ~ user.lastname}) }}" data-confirm-ok="{{ 'unaward'|trans }}" data-confirm-cancel="{{ 'cancel'|trans({}, 'platform') }}"><span class="icon-remove-circle"></span></a>
                                 </td>
                                 <td><a href="{{ path('claro_public_profile_view', {'public': user.publicUrl}) }}" title="{{ user.firstname }} {{ user.lastname }}">{{ user.firstname }}</a></td>
                                 <td>{{ user.lastname }}</td>

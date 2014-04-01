@@ -79,7 +79,9 @@ class BadgeHandler
             if ($this->form->isValid()) {
                 $badgeRules = $badge->getRules();
 
-                if ($this->badgeManager->isRuleChanged($badgeRules, $originalRules)) {
+                $userBadges = $badge->getUserBadges();
+
+                if (0 < count($userBadges) && $this->badgeManager->isRuleChanged($badgeRules, $originalRules)) {
                     /** @var \Doctrine\ORM\UnitOfWork $unitOfWork */
                     $unitOfWork = $this->entityManager->getUnitOfWork();
 

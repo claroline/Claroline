@@ -2,7 +2,7 @@ assetic:
     debug:          %kernel.debug%
     use_controller: false
     variables:
-        locale: [en, fr]
+        locale: [en, fr, es]
     filters:
         cssrewrite: ~
         lessphp:

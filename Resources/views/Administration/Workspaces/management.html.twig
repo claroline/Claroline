@@ -6,7 +6,7 @@
                 'twitter_bootstrap_translated',
                 {
                     'proximity' : 1,
-                    'routeName': 'claro_admin_user_list',
+                    'routeName': 'claro_admin_workspaces_management',
                     'routeParams': {'max': max, 'order': order}
                 }
             )
@@ -18,14 +18,13 @@
                 'twitter_bootstrap_translated',
                 {
                     'proximity' : 1,
-                    'routeName': 'claro_admin_user_list_search',
+                    'routeName': 'claro_admin_workspaces_management_search',
                     'routeParams': {'search': search, 'max': max, 'order': order}
                 }
             )
         }}
     {% endif %}
 {% endmacro %}
-
 {% macro displayControls() %}
     {% if app.user %}
         <button class="btn btn-default action-button" data-action="remove">
@@ -36,6 +35,13 @@
             <i class="icon-book"></i>
             {{ 'create'|trans({}, 'platform') }}
         </a>
+    {% endif %}
+{% endmacro %}
+{% macro sortUrl(max, search, order, direction) %}
+    {% if search == '' %}
+        {{ path('claro_admin_workspaces_management', {'max': max, 'order': order , 'direction': direction}) }}
+    {% else %}
+        {{ path('claro_admin_workspaces_management_search', {'search': search, 'max': max, 'order': order}) }}
     {% endif %}
 {% endmacro %}
 
@@ -112,11 +118,11 @@
                     <tr>
                         <th><input type="checkbox" name="all" id="check-all-items"></th>
                         <th>{{ 'id'|trans({}, 'platform') }}</th>
-                        <th>{{ 'name'|trans({}, 'platform') }}</th>
-                        <th>{{ 'code'|trans({}, 'platform') }}</th>
-                        <th>{{ 'creator'|trans({}, 'platform') }}</th>
-                        <th>{{ 'visibility'|trans({}, 'platform') }}</th>
-                        <th>{{ 'public_registration'|trans({}, 'platform') }}</th>
+                        <th><a href="{{ sortUrl(max, search, 'name', direction) }}">{{ 'name'|trans({}, 'platform') }} </a></th>
+                        <th><a href="{{ sortUrl(max, search, 'code', direction) }}"> {{ 'code'|trans({}, 'platform') }} </a></th>
+                        <th><a href="{{ sortUrl(max, search, 'creator', direction) }}"> {{ 'creator'|trans({}, 'platform') }} </a></th>
+                        <th><a href="{{ sortUrl(max, search, 'visibility', direction) }}"> {{ 'visibility'|trans({}, 'platform') }} </a></th>
+                        <th><a href="{{ sortUrl(max, search, 'displayble', direction) }}"> {{ 'public_registration'|trans({}, 'platform') }} </a></th>
                         <th>{{ 'edit'|trans({}, 'platform') }}</th>
                     </tr>
                 </thead>

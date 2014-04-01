@@ -92,7 +92,7 @@
     home.emptyContent = function (creatorElement)
     {
         $('input', creatorElement).val('');
-        $('textarea', creatorElement).val('');
+        $('textarea', creatorElement).val('').data('saved', 'true');
     };
 
     /**

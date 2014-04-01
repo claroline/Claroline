@@ -5,6 +5,7 @@ Active: Actif
 'Add a logo': 'Ajouter un logo'
 'An error has occurred, please check if the file size does not exceeds the permitted size': 'Une erreur s''est produite, veuillez vérifier si la taille du fichier ne dépasse pas la taille autorisée'
 'Audience/user visits': 'Audience/Visites utilisateurs'
+answer: Répondre
 'Choose a logo': 'Choisir un logo'
 'Choose visible actions in the widget': 'Choisissez les actions visibles dans le widget'
 'Choose workspaces displayed in the widget': 'Choisissez les espaces de travail affichés par le widget'
@@ -44,6 +45,26 @@ Show: Afficher
 'You can use the following variables in your form': 'Vous pouvez utiliser les variables suivantes dans votre formulaire'
 'You can use the full screen version of the text editor to include HTML': 'Vous pouvez utiliser la version plein écran de l''éditeur afin d''y inclure du HTML'
 'Your changes have been saved': 'Vos changements ont été sauvegardés'
+'for period': 'sur la période du :'
+'select all': 'Tout sélectionner'
+'unique connections': 'Nb Cnx. uniques'
+404: 'La page que vous cherchez n''existe pas.'
+Active: 'Actif'
+Create a new resource: 'Créer une nouvelle ressource'
+First name: Prénom
+Indexing: Référencement
+Language: Langue
+Last name: Nom
+None: Aucun
+Show the name of the platform in the top bar: 'Afficher le nom de la plateforme dans la barre supérieure'
+Show: Afficher
+This variable is optional and will be replaced by your platform name: 'Ce variable est optionnel et sera remplacé par le nom de la plateforme'
+This variable is required and will be replaced by the actual mail content: 'Ce variable est requis et sera replacé par le contenu du mail'
+User name: 'Nom d''utilisateur'
+You can redefine the content of the registration mail here: 'Vous pouvez redéfinir ici le contenu du mail d''inscription'
+You can redefine the layout used when a mail is sent: 'Vous pouvez redéfinir ici le layout des emails envoyés par la plateforme'
+You can use the following variables in your form: 'Vous pouvez utiliser les variables suivantes dans votre formulaire'
+You can use the full screen version of the text editor to include HTML: 'Vous pouvez utiliser la version plein écran de l''éditeur afin d''y inclure du HTML'
 account_created: 'Compte créé'
 account_general_statistics: 'Statistiques générales sur les comptes'
 action: Action
@@ -69,6 +90,7 @@ add_widget_to_home_tab: 'Ajouter un widget à l''onglet'
 add_workspace: 'Ajouter un espace d''activités'
 admin: Administrateur
 admin_analytics: 'Statistiques plateforme'
+admin_analytics_no_data: 'Aucune donnée.'
 admin_form_firstName: Prénom
 admin_form_lastName: 'Nom de famille'
 admin_form_mail: 'Adresse email'
@@ -115,7 +137,8 @@ canExport: 'Droit d''exporter'
 canOpen: 'Droit d''ouvrir'
 cancel: Annuler
 cannot_delete_unique_manager: 'Impossible de supprimer le seul gestionnaire.'
-cannot_unsubscribe_from_workspace: 'Impossible de vous désincrire de l''espace d''activités'
+cannot_unsubscribe_from_workspace: 'Impossible de vous désinscrire de l''espace d''activités'
+captcha: Captcha
 categories: Catégories
 categories_organization: 'Organisation des catégories'
 categorize: 'Classer par catégorie'
@@ -697,6 +720,7 @@ user_form_plainPassword_first: 'Mot de passe'
 user_form_plainPassword_second: Vérification
 user_form_username: 'Nom d''utilisateur'
 user_parameters: 'Paramètres de l''utilisateur'
+user_picker: 'Outil pour choisir un utilisateur'
 user_profile: 'Profil utilisateur'
 user_public_profile_not_visible: 'Votre profil public n''est visible à personne. <br> Vous pouvez rendre votre profil visible pour les <span class="shared_policy_link">utilisateurs de la plateforme</span>, ou à <span class="shared_policy_link">tout le monde</span>.'
 user_removed: 'Utilisateur supprimé'
@@ -741,6 +765,7 @@ workspace_classification: 'Classification des espaces d''activités'
 workspace_delete: 'Supprimer l''espace d''activités'
 workspace_delete_confirm_message: 'Etes-vous sûr de vouloir supprimer cet espace d''activités ?'
 workspace_delete_confirm_title: 'Confirmation de suppression'
+workspace_delete_success_message: 'L''espace d''activités "%workspaceName%" été supprimé.'
 workspace_edit_form_code: Code
 workspace_edit_form_displayable: Visible
 workspace_edit_form_name: Nom
@@ -782,6 +807,24 @@ ws_most_viewed: 'Espaces d''activités les plus consultés'
 yes: oui
 yesterday_activity: 'Activité de la veille'
 your_username: 'Votre nom d''utilisateur est '
+users_per_page: Utilisateurs par page
+groups_per_page: Groupes par page
+tool_roles_create_directory: L'option "Créer un répertoire" vous permet de créer automatiquement un répertoire dédié aux utilisateurs de ce groupe.
+my_profile: Mon profil
+send: envoyer
+send_message_to_workspace: Envoyer un message aux utilisateurs de l'espace
+'This placeholder is required and will be replaced by the actual mail content': Ce placeholder est requis et sera remplacé par le contenu du mail
+'This placeholder is optional and will be replaced by your platform name': Ce placeholder est optionnel et sera remplacé par le nom de la plateforme
+'This placeholder is optional and will be replaced by the author first name': Ce placeholder est optionnel et sera remplacé par le prénom de l'auteur
+'This placeholder is optional and will be replaced by the author last name': Ce placeholder est optionnel et sera remplacé par le nom de l'auteur
+workspace_list: Liste des espaces d'activités
+workspaces_per_page: Espaces par page
+workspace_registration_message: 'Vous avez été inscrit à l''espace d''activité %workspace_name%'
+workspace_registration_message_object: 'Inscription à un espace d''activité'
+new_role_message: 'Vous venez de recevoir le role %name%'
+new_role_message_object: 'Vos permissions sur la plateforme ont changé'
+no_role_selected_message: 'Aucun role sélectionné.'
+is_mail_displayed: 'Afficher l''email ?'
 404: 'La page que vous cherchez n''existe pas.'
 tune_your_public_profile_url: 'Personnalisez l''URL de votre profil public'
 tune: 'Personnaliser'

@@ -20,13 +20,13 @@ use Symfony\Component\Form\AbstractType;
 class ProfileCreationType extends AbstractType
 {
     private $platformRoles;
-    private $isAdmin;
     private $langs;
 
      /**
       * Constructor.
       *
       * @param Role[]  $platformRoles
+      * @param array   $langs
       */
     public function __construct(array $platformRoles, array $langs)
     {

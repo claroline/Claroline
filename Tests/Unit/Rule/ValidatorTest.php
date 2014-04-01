@@ -272,17 +272,17 @@ class ValidatorTest extends MockeryTestCase
             ->setResultComparison(Rule::getResultComparisonTypeValue(Rule::RESULT_INFERIOR_EQUAL));
 
         return array(
-            array($user, $action, $rule, array(), false),               //testValidateRuleDoerActionMatchNoLog
-            array($user, $action, $rule, array($log), array($log)),     //testValidateRuleDoerActionMatchLog
-            array($user, $action, $rule2, array($log2), array($log2)),  //testValidateRuleDoerActionBadgeMatchLog
-            array($user, $action, $rule2, array(), false),              //testValidateRuleDoerActionBadgeMatchNoLog
-            array($user, $action, $rule3, array($log3), false),         //testValidateRuleDoerActionBadgeMatchNoLogWrongBadge
-            array($user, $action, $rule4, array(), false),              //testValidateRuleDoerActionResultEqualMatchNoLog
-            array($user, $action, $rule5, array($log4), false),         //testValidateRuleDoerActionResultNotEqualMatchNoLog
-            array($user, $action, $rule6, array($log4), array($log4)),  //testValidateRuleDoerActionResultEqualMatchLog
-            array($user, $action, $rule7, array($log5), array($log5)),  //testValidateRuleDoerActionResultSuperiorMatchLog
-            array($user, $action, $rule8, array($log5), false),         //testValidateRuleDoerActionResultSuperiorButInferiorMatchNoLog
-            array($user, $action, $rule9, array($log5), false),         //testValidateRuleDoerActionResultSuperiorButEqualMatchNoLog
+            array($user, $action, $rule,   array(),      false),        //testValidateRuleDoerActionMatchNoLog
+            array($user, $action, $rule,   array($log),  array($log)),  //testValidateRuleDoerActionMatchLog
+            array($user, $action, $rule2,  array($log2), array($log2)), //testValidateRuleDoerActionBadgeMatchLog
+            array($user, $action, $rule2,  array(),      false),        //testValidateRuleDoerActionBadgeMatchNoLog
+            array($user, $action, $rule3,  array($log3), false),        //testValidateRuleDoerActionBadgeMatchNoLogWrongBadge
+            array($user, $action, $rule4,  array(),      false),        //testValidateRuleDoerActionResultEqualMatchNoLog
+            array($user, $action, $rule5,  array($log4), false),        //testValidateRuleDoerActionResultNotEqualMatchNoLog
+            array($user, $action, $rule6,  array($log4), array($log4)), //testValidateRuleDoerActionResultEqualMatchLog
+            array($user, $action, $rule7,  array($log5), array($log5)), //testValidateRuleDoerActionResultSuperiorMatchLog
+            array($user, $action, $rule8,  array($log5), false),        //testValidateRuleDoerActionResultSuperiorButInferiorMatchNoLog
+            array($user, $action, $rule9,  array($log5), false),        //testValidateRuleDoerActionResultSuperiorButEqualMatchNoLog
             array($user, $action, $rule10, array($log5), array($log5)), //testValidateRuleDoerActionResultSuperiorEqualButSuperiorMatchLog
             array($user, $action, $rule11, array($log5), array($log5)), //testValidateRuleDoerActionResultSuperiorEqualButEqualMatchLog
             array($user, $action, $rule12, array($log6), false),        //testValidateRuleDoerActionResultSuperiorEqualButInferiorMatchLog
@@ -321,15 +321,8 @@ class ValidatorTest extends MockeryTestCase
             ->setUser($user)
             ->setUserType(1);
 
-        $rule2 = new BadgeRule();
-        $rule2
-            ->setAction($action)
-            ->setUser($user)
-            ->setUserType(0)
-            ->setOccurrence($occurence = rand(1, PHP_INT_MAX));
-
         return array(
-            array($user, $action, $rule, array(), false),              //testValidateRuleReceiverActionMatchNoLog
+            array($user, $action, $rule, array(),     false),          //testValidateRuleReceiverActionMatchNoLog
             array($user, $action, $rule, array($log), array($log)),    //testValidateRuleReceiverActionMatchLog
         );
     }
@@ -391,7 +384,7 @@ class ValidatorTest extends MockeryTestCase
         $logRepository = $this->mock('Claroline\CoreBundle\Repository\Log\LogRepository');
         $ruleValidator = new Validator($logRepository);
 
-        $this->assertFalse($ruleValidator->validate($badge, $user));
+        $this->assertEquals(array('validRules' => 0, 'rules' => array()), $ruleValidator->validate($badge, $user));
     }
 
     /**
@@ -431,11 +424,16 @@ class ValidatorTest extends MockeryTestCase
 
         $badge->setRules(array($rule, $rule2));
 
+        $validateRule  = array('validRules' => 0, 'rules' => array());
+        $validateRule2 = array('validRules' => 1, 'rules' => array(array('rule' => $rule, 'logs' => array($log))));
+        $validateRule3 = array('validRules' => 1, 'rules' => array(array('rule' => $rule2, 'logs' => array($log))));
+        $validateRule4 = array('validRules' => 2, 'rules' => array(array('rule' => $rule,  'logs' => array($log)), array('rule' => $rule2, 'logs' => array($log))));
+
         return array(
-            array($badge, $user, $action, $action2, array(), array(), false),                     //testValidateWithTowRuleDoerActionMatchNoLog
-            array($badge, $user, $action, $action2, array($log), array(), false),                 //testValidateWithTowRuleDoerActionMatchLogJustForTheFirstRule
-            array($badge, $user, $action, $action2, array(), array($log), false),                 //testValidateWithTowRuleDoerActionMatchLogJustForTheSecondRule
-            array($badge, $user, $action, $action2, array($log), array($log), array($log, $log)), //testValidateWithTowRuleDoerActionMatchLogForBothRule
+            array($badge, $user, $action, $action2, array(),     array(),     $validateRule),  //testValidateWithTowRuleDoerActionMatchNoLog
+            array($badge, $user, $action, $action2, array($log), array(),     $validateRule2), //testValidateWithTowRuleDoerActionMatchLogJustForTheFirstRule
+            array($badge, $user, $action, $action2, array(),     array($log), $validateRule3), //testValidateWithTowRuleDoerActionMatchLogJustForTheSecondRule
+            array($badge, $user, $action, $action2, array($log), array($log), $validateRule4), //testValidateWithTowRuleDoerActionMatchLogForBothRule
         );
     }
 }

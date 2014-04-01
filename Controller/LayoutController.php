@@ -141,7 +141,7 @@ class LayoutController extends Controller
             $username = $user->getFirstName() . ' ' . $user->getLastName();
             $personalWs = $user->getPersonalWorkspace();
             $workspaces = $this->findWorkspacesFromLogs();
-            $countUnviewedNotifications = $this->get('icap_notification.manager')->
+            $countUnviewedNotifications = $this->get('icap.notification.manager')->
                 countUnviewedNotifications($user->getId());
         } else {
             $username = $this->translator->trans('login', array(), 'platform');

@@ -19,7 +19,7 @@
         "symfony/assetic-bundle": "~2.3",
         "symfony/swiftmailer-bundle": "~2.3",
         "symfony/monolog-bundle": "~2.3",
-        "doctrine/orm": "~2.4.0",
+        "doctrine/orm": "2.4.2",
         "doctrine/doctrine-bundle": "1.2.0",
         "twig/extensions": "~1.0.0",
         "sensio/distribution-bundle": "~2.3.4",
@@ -50,14 +50,14 @@
         "werkint/jsmin": "dev-master",
         "nelmio/api-doc-bundle": "~2.4",
         "hwi/oauth-bundle": "0.4.*@dev",
-
         "claroline/bundle-recorder": "~3.0",
         "claroline/kernel-bundle": "~1.0",
         "claroline/installation-bundle": "~3.1",
         "claroline/front-end-bundle": ">=1.0.10,<2.0",
         "claroline/migration-bundle": "~1.0",
         "icap/notification-bundle": "~1.0",
-        "johngrogg/ics-parser": "dev-master"
+        "johngrogg/ics-parser": "dev-master",
+        "gregwar/captcha-bundle": "dev-master"
     },
     "require-dev": {
         "mockery/mockery": "dev-master@dev",
