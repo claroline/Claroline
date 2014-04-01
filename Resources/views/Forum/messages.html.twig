@@ -139,6 +139,7 @@
                 'use strict';
                 //id="forum_message_form_content" name="forum_message_form[content]"
                 $('body').on('click', '.panel-footer .btn-primary', function () {
+                    tinymce.claroline.disableBeforeUnload = true;
                     var content = $('textarea.claroline-tiny-mce').val();
                     var token = $('#forum_message_form__token').val();
 
