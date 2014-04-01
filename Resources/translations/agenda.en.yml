@@ -22,7 +22,7 @@ dec: Dec
 december: December
 end: end
 end_date: 'End date'
-error: 'An unexpeded error occured, please try again'
+error: 'An unexpected error occurred, please try again'
 event_update: 'Event modified'
 export: 'Export events'
 feb: Feb
