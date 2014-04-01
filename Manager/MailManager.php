@@ -158,7 +158,12 @@ class MailManager
             }
 
             foreach ($users as $user) {
-                $to[] = $user->getMail();
+
+                $mail = $user->getMail();
+
+                if (filter_var($mail, FILTER_VALIDATE_EMAIL)) {
+                    $to[] = $mail;
+                }
             }
 
             $message = \Swift_Message::newInstance()
