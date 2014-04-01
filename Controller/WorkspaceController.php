@@ -353,11 +353,6 @@ class WorkspaceController extends Controller
     }
 
     /**
-     * @EXT\ParamConverter(
-     *      "workspace",
-     *      class="ClarolineCoreBundle:Workspace\AbstractWorkspace",
-     *      options={"id" = "workspaceId", "strictId" = true}
-     * )
      * @EXT\Template()
      *
      * Renders the left tool bar. Not routed.
@@ -381,12 +376,7 @@ class WorkspaceController extends Controller
             $workspace = $this->resourceManager->getNode($rootId)->getWorkspace();
         }
 
-        if (!$this->security->isGranted('OPEN', $workspace)) {
-            throw new AccessDeniedException();
-        }
-
         $currentRoles = $this->utils->getRoles($this->security->getToken());
-
         //do I need to display every tools.
         $hasManagerAccess = false;
         $managerRole = $this->roleManager->getManagerRole($workspace);

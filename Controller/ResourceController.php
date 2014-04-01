@@ -457,7 +457,7 @@ class ResourceController
             $isOwner = $this->resourceManager->isWorkspaceOwnerOf($node, $this->sc->getToken());
 
             if ($isOwner || $this->sc->isGranted('ROLE_ADMIN')) {
-                $resourceTypes = $this->resourceManager->getAllResourceTypes();
+                $resourceTypes = $this->resourceManager->getAllResourceTypes(true);
 
                 foreach ($resourceTypes as $resourceType) {
                     $adminTypes[$resourceType->getName()] = $this->translator
