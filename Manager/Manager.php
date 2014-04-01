@@ -175,6 +175,8 @@ class Manager
 
     /**
      * @param \Claroline\ForumBundle\Entity\Message $message
+     *
+     * @return \Claroline\ForumBundle\Entity\Message
      */
     public function createMessage(Message $message)
     {
@@ -211,6 +213,8 @@ class Manager
 
     /**
      * @param \Claroline\ForumBundle\Entity\Subject $subject
+     *
+     * @return \Claroline\ForumBundle\Entity\Subject $subject
      */
     public function createSubject(Subject $subject)
     {
@@ -360,7 +364,7 @@ class Manager
      * @param integer $page
      * @param integer $max
      *
-     * @return @return \Pagerfanta\Pagerfanta
+     * @return \Pagerfanta\Pagerfanta
      */
     public function getSubjectsPager(Category $category, $page = 1, $max = 20)
     {
