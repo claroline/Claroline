@@ -40,9 +40,8 @@ class Updater021200
         $this->om->startFlushSuite();
         $i = 0;
 
-        foreach ($users as $user)
-        {
-            $user->setIsMailDisplayed(true);
+        foreach ($users as $user) {
+            $user->setIsMailDisplayed(false);
             $this->om->persist($user);
             $i++;
 
