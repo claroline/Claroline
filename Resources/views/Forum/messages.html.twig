@@ -145,6 +145,7 @@
                     if (content != undefined && content != '') {
                         tinymce.claroline.disableBeforeUnload = true;
                         var home = window.Claroline.Home;
+                        var modal = window.Claroline.Modal;
                         $.post(home.path + 'forum/create/message/{{ subject.getId() }}',
                             {
                                 'forum_message_form[_token]': token,
@@ -158,7 +159,7 @@
                         )
                         .error(
                             function () {
-                                home.modal('content/error');
+                                modal.error();
                             }
                         );
                     }
