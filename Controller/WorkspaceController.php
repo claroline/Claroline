@@ -16,11 +16,13 @@ use Claroline\CoreBundle\Event\StrictDispatcher;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Translation\TranslatorInterface;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Claroline\CoreBundle\Entity\Workspace\WorkspaceTag;
@@ -64,6 +66,8 @@ class WorkspaceController extends Controller
     private $widgetManager;
     private $request;
     private $templateDir;
+    private $translator;
+    private $session;
 
     /**
      * @DI\InjectParams({
@@ -82,7 +86,9 @@ class WorkspaceController extends Controller
      *     "tokenUpdater"       = @DI\Inject("claroline.security.token_updater"),
      *     "widgetManager"      = @DI\Inject("claroline.manager.widget_manager"),
      *     "request"            = @DI\Inject("request"),
-     *     "templateDir"        = @DI\Inject("%claroline.param.templates_directory%")
+     *     "templateDir"        = @DI\Inject("%claroline.param.templates_directory%"),
+     *     "translator"         = @DI\Inject("translator"),
+     *     "session"            = @DI\Inject("session")
      * })
      */
     public function __construct(
@@ -101,7 +107,9 @@ class WorkspaceController extends Controller
         TokenUpdater $tokenUpdater,
         WidgetManager $widgetManager,
         Request $request,
-        $templateDir
+        $templateDir,
+        TranslatorInterface $translator,
+        SessionInterface $session
     )
     {
         $this->homeTabManager = $homeTabManager;
@@ -120,6 +128,8 @@ class WorkspaceController extends Controller
         $this->widgetManager = $widgetManager;
         $this->request = $request;
         $this->templateDir = $templateDir;
+        $this->translator = $translator;
+        $this->session = $session;
     }
 
     /**
@@ -331,6 +341,14 @@ class WorkspaceController extends Controller
 
         $this->tokenUpdater->cancelUsurpation($this->security->getToken());
 
+        $sessionFlashBag = $this->session->getFlashBag();
+        $sessionFlashBag->add('success', $this->translator->trans(
+            'workspace_delete_success_message', 
+            array('%workspaceName%' => $workspace->getName()), 
+            'platform'
+            )
+        );
+
         return new Response('success', 204);
     }
 
@@ -440,7 +458,7 @@ class WorkspaceController extends Controller
         );
 
         if ($toolName === 'resource_manager') {
-            $this->get('session')->set('isDesktop', false);
+            $this->session->set('isDesktop', false);
         }
 
         return new Response($event->getContent());
