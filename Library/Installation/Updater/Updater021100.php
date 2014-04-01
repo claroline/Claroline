@@ -11,39 +11,37 @@
 
 namespace Claroline\CoreBundle\Library\Installation\Updater;
 
-use Claroline\CoreBundle\Entity\UserPublicProfilePreferences;
-
 class Updater021100
 {
     private $container;
     private $logger;
-    private $objectManager;
+    private $om;
     private $conn;
 
     public function __construct($container)
     {
         $this->container = $container;
-        $this->objectManager = $container->get('claroline.persistence.object_manager');
+        $this->om = $container->get('claroline.persistence.object_manager');
         $this->conn = $container->get('doctrine.dbal.default_connection');
     }
 
     public function postUpdate()
     {
         $this->log('Updating default mails layout...');
-        $repository = $this->objectManager->getRepository('Claroline\CoreBundle\Entity\ContentTranslation');
+        $repository = $this->om->getRepository('Claroline\CoreBundle\Entity\ContentTranslation');
 
         $frLayout = '<div></div>%content%<div></hr><p>Ce mail vous a été envoyé par %first_name% %last_name%</p>';
         $frLayout .= '<p>Powered by %platform_name%</p></div>';
         $enLayout = '<div></div>%content%<div></hr><p>This mail was sent to you by %first_name% %last_name%</p>';
         $enLayout .= '<p>Powered by %platform_name%</p></div>';
 
-        $layout = $this->objectManager->getRepository('ClarolineCoreBundle:Content')->findOneByType('claro_mail_layout');
+        $layout = $this->om->getRepository('ClarolineCoreBundle:Content')->findOneByType('claro_mail_layout');
         $layout->setType('claro_mail_layout');
         $layout->setContent($enLayout);
         $repository->translate($layout, 'content', 'fr', $frLayout);
-        $this->objectManager->persist($layout);
+        $this->om->persist($layout);
 
-        $this->objectManager->flush();
+        $this->om->flush();
     }
 
     public function setLogger($logger)
