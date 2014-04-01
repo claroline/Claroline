@@ -92,6 +92,11 @@ class ProfileController extends Controller
      * @EXT\ParamConverter("loggedUser", options={"authenticatedUser" = true})
      * Displays an editable form of the current user's profile.
      *
+     * @param \Claroline\CoreBundle\Entity\User $user
+     * @param \Claroline\CoreBundle\Entity\User $loggedUser
+     *
+     * @throws \Symfony\Component\Security\Core\Exception\AccessDeniedException
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function formAction(User $user, User $loggedUser)
@@ -119,6 +124,11 @@ class ProfileController extends Controller
      * @EXT\Template("ClarolineCoreBundle:Profile:profileForm.html.twig")
      * @EXT\ParamConverter("loggedUser", options={"authenticatedUser" = true})
      * Updates the user's profile and redirects to the profile form.
+     *
+     * @param \Claroline\CoreBundle\Entity\User $user
+     * @param \Claroline\CoreBundle\Entity\User $loggedUser
+     *
+     * @throws \Symfony\Component\Security\Core\Exception\AccessDeniedException
      *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
@@ -200,7 +210,11 @@ class ProfileController extends Controller
      * Displays the public profile of an user.
      *
      * @param \Claroline\CoreBundle\Entity\User $user
-     * @param int                               $page
+     * @param int $page
+     *
+     * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
+     *
+     * @return array
      */
     public function viewAction(User $user, $page = 1)
     {
