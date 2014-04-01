@@ -173,6 +173,7 @@ class UserManager
         $this->om->flush();
 
         $this->ed->dispatch('log', 'Log\LogUserDelete', array($user));
+        $this->ed->dispatch('delete_user', 'DeleteUser', array($user));
     }
 
     /**
