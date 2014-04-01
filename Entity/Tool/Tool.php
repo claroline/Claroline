@@ -115,6 +115,8 @@ class Tool
     public function setName($name)
     {
         $this->name = $name;
+
+        return $this;
     }
 
     public function getName()
@@ -125,16 +127,25 @@ class Tool
     public function setDisplayName($displayName)
     {
         $this->displayName = $displayName;
+
+        return $this;
     }
 
     public function getDisplayName()
     {
-        return $this->displayName;
+        $displayName = $this->displayName;
+        if (null === $displayName) {
+            $displayName = $this->name;
+        }
+
+        return $displayName;
     }
 
     public function setClass($class)
     {
         $this->class = $class;
+
+        return $this;
     }
 
     public function getClass()
@@ -145,6 +156,8 @@ class Tool
     public function setIsWorkspaceRequired($bool)
     {
         $this->isWorkspaceRequired = $bool;
+
+        return $this;
     }
 
     public function isWorkspaceRequired()
@@ -155,6 +168,8 @@ class Tool
     public function setIsDesktopRequired($bool)
     {
         $this->isDesktopRequired = $bool;
+
+        return $this;
     }
 
     public function isDesktopRequired()
@@ -165,6 +180,8 @@ class Tool
     public function setVisible($bool)
     {
         $this->isVisible = $bool;
+
+        return $this;
     }
 
     public function isVisible()
@@ -175,6 +192,8 @@ class Tool
     public function setPlugin($plugin)
     {
         $this->plugin = $plugin;
+
+        return $this;
     }
 
     public function getPlugin()
@@ -185,6 +204,8 @@ class Tool
     public function setDisplayableInWorkspace($bool)
     {
         $this->isDisplayableInWorkspace = $bool;
+
+        return $this;
     }
 
     public function isDisplayableInWorkspace()
@@ -195,6 +216,8 @@ class Tool
     public function setDisplayableInDesktop($bool)
     {
         $this->isDisplayableInDesktop = $bool;
+
+        return $this;
     }
 
     public function isDisplayableInDesktop()
@@ -205,6 +228,8 @@ class Tool
     public function setExportable($isExportable)
     {
         $this->isExportable = $isExportable;
+
+        return $this;
     }
 
     public function isExportable()
@@ -220,6 +245,8 @@ class Tool
     public function setIsConfigurableInWorkspace($bool)
     {
         $this->isConfigurableInWorkspace = $bool;
+
+        return $this;
     }
 
     public function isConfigurableInWorkspace()
@@ -230,6 +257,8 @@ class Tool
     public function setIsConfigurableInDesktop($bool)
     {
         $this->isConfigurableInDesktop = $bool;
+
+        return $this;
     }
 
     public function isConfigurableInDesktop()
@@ -240,6 +269,8 @@ class Tool
     public function setIsLockedForAdmin($isLockedForAdmin)
     {
         $this->isLockedForAdmin = $isLockedForAdmin;
+
+        return $this;
     }
 
     public function isLockedForAdmin()
@@ -250,6 +281,8 @@ class Tool
     public function setIsAnonymousExcluded($isAnonymousExcluded)
     {
         $this->isAnonymousExcluded = $isAnonymousExcluded;
+
+        return $this;
     }
 
     public function isAnonymousExcluded()

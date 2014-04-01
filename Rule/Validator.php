@@ -65,27 +65,23 @@ class Validator
      */
     protected function validateRules($rules, User $user, array $restriction)
     {
-        $return    = array();
-        $isChecked = true;
+        $return    = array('validRules' => 0, 'rules' => array());
 
         if (0 < count($rules)) {
             foreach ($rules as $rule) {
                 $rule->setUser($user);
                 $checkedLogs = $this->validateRule($rule, $restriction);
 
-                if (false === $checkedLogs) {
-                    $isChecked = false;
-                } else {
-                    foreach ($checkedLogs as $checkedLog) {
-                        $return[] = $checkedLog;
-                    }
+                if (false !== $checkedLogs) {
+                    $return['validRules']++;
+                    $return['rules'][] = array(
+                        'rule' => $rule, 'logs' => $checkedLogs
+                    );
                 }
             }
-        } else {
-            $isChecked = false;
         }
 
-        return (false === $isChecked) ? false : $return;
+        return $return;
     }
 
     /**
@@ -136,7 +132,7 @@ class Validator
     protected function buildQuery(array $constraints, array $restrictions = null)
     {
         /** @var \Doctrine\ORM\QueryBuilder $queryBuilder */
-        $queryBuilder = $queryBuilder = $this->logRepository->defaultQueryBuilderForBadge();
+        $queryBuilder = $this->logRepository->defaultQueryBuilderForBadge();
 
         foreach ($restrictions as $key => $restriction) {
             $queryBuilder

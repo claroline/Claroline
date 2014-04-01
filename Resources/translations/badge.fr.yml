@@ -25,8 +25,11 @@ badge_award_info_no_group_message: 'Aucun groupe sélectionné pour l''attributi
 badge_awarded_automatically_on: 'Badge attribué automatiquement le %awardingDate%'
 badge_awarded_count_message: '%awaredBadge% attribution de badge effectuée.|%awaredBadge% attributions de badge effectuées.'
 badge_awarded_on_by: 'Badge attribué le %awardingDate% par %awardingIssuer%'
+badge_awarded_on: 'Badge attribué le %awardingDate%'
 badge_awarded_to: 'Badge attribué à'
 badge_awarding_rules_not_respected: 'Règle d''attribution du badge non respectées'
+badge_awarding_some_rules_respected: '%nbvalidRules% règle d''attribution du badge respectées sur %nbRules%'
+badge_awarding_in_progress: 'En cours'
 badge_check_state: 'Conditions vérifiées'
 badge_claim_error_message: 'Erreur lors de la demande d''attribution de badge.'
 badge_claim_form_badge: 'Nom du badge à réclamer'
@@ -97,9 +100,11 @@ day: jour
 dont_award: 'Ne pas attribuer'
 edit_badge: 'Modification du badge ''%badge_name%'''
 month: mois
+my_badges: Mes badges
 no_badge_claim: 'Aucune demande d''attribution.'
 no_badges: 'Aucun badge.'
 no_badges_create_to_motivate: 'Aucun badge actuellement, vous pouvez en <a href="%url%">créer</a> pour motiver vos utilisateurs.'
+no_badges_in_workspace: 'Il n''y a pour l''instant aucun badge à obtenir dans cet espace de travail.'
 no_rule: 'Aucune règle'
 rule: Règle
 rule_details: 'Détails de la règle'
@@ -136,3 +141,4 @@ badge_expiration_date_explanation: "Durée de validité du badge. Si omis le bad
 badge_validity_period: "Durée de validité du badge"
 start_to_award_this_badge: 'Commencez à <a href="%url%" id="awardUser" role="button">attribuer</a> ce badge.'
 badge_edit_create_new_version: "<strong>Attention!!!</strong> Ce badge a déjà été attribué. Modifier ses règles d'attribution entraînera la création d'une nouvelle version de ce badge."
+consult_my_badge_details: 'Consulter mon badge en détails'

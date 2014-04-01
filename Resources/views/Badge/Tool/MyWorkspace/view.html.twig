@@ -1,14 +1,32 @@
-{% extends "ClarolineCoreBundle:Badge:layout.html.twig" %}
-
-{% block title %}{{ parent() ~ ' - ' ~ badge.name | striptags | raw }}{% endblock %}
+{% extends 'ClarolineCoreBundle:Badge/Tool:Workspace/layout.html.twig' %}
 
 {% trans_default_domain "badge" %}
+
+{% block title %}{{ parent() ~ ' - ' ~ workspace.name ~ ' - ' ~ 'badge' | trans | striptags ~ ' ' ~ badge.name | striptags }}{% endblock %}
+
+{% block breadcrumb %}
+    {{
+        macros.workspaceBreadcrumbs(
+            workspace,
+            [
+                {
+                    'name': 'my_badges'|trans({}, 'badge'),
+                    'href': path('claro_workspace_tool_my_badges', {'workspaceId': workspace.id})
+                },
+                {
+                    'name': badge.name,
+                    'href': ''
+                }
+            ]
+        )
+    }}
+{% endblock %}
 
 {% block content %}
     <div class="panel panel-default">
         <div class="panel-heading">
             <h3 class="panel-title">
-                <a href="{{ path('claro_profile_view_badges') }}" class="pull-right" data-toggle="tooltip" data-placement="bottom" title="{{ 'back_to_my_badges'|trans }}"><i class="icon-reply"></i></a>
+                <a href="{{ path('claro_workspace_tool_my_badges', {'workspaceId': workspace.id}) }}" class="pull-right" data-toggle="tooltip" data-placement="bottom" title="{{ 'back_to_my_badges'|trans }}"><i class="icon-reply"></i></a>
                 {{ 'badge'|trans }} "{{ badge.name }}"
             </h3>
         </div>
