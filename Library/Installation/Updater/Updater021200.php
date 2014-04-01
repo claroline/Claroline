@@ -11,6 +11,7 @@
 
 namespace Claroline\CoreBundle\Library\Installation\Updater;
 
+use Claroline\CoreBundle\Entity\Tool\Tool;
 
 class Updater021200
 {
