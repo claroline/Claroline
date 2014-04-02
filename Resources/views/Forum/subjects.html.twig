@@ -128,7 +128,7 @@
                                     <a id="dLabel-{{ subject.id }}" role="button" data-toggle="dropdown" data-target="#" href="#">
                                     {{ 'move_to' | trans({}, 'forum') }} <span class="caret"></span>
                                     </a>
-                                    <ul class="dropdown-menu move-subject-dropdown" role="menu" aria-labelledby="dLabel">
+                                    <ul class="dropdown-menu move-subject-dropdown" role="menu" aria-labelledby="dLabel-{{ subject.id }}">
                                         {% for  cat in _resource.categories %}
                                             {% if cat != category %}                                           
                                             <li>
