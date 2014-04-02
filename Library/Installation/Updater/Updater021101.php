@@ -32,15 +32,6 @@ class Updater021101
 
     public function postUpdate()
     {
-        $this->log('Updating existing badges tool...');
-        /** @var \Claroline\CoreBundle\Entity\Tool\Tool $badgesTool */
-        $badgesTool = $this->objectManager->getRepository('Claroline\CoreBundle\Entity\Tool\Tool')->findOneByName('badges');
-        $badgesTool->setDisplayName('badges_management');
-
-        $this->objectManager->persist($badgesTool);
-
-        $this->log('Existing badges tool updated.');
-
         $myBadgesToolName = 'my_badges';
         $myBadgesTool = $this->objectManager->getRepository('ClarolineCoreBundle:Tool\Tool')->findOneByName($myBadgesToolName);
 
@@ -50,7 +41,6 @@ class Updater021101
             $newBadgeTool
                 ->setName($myBadgesToolName)
                 ->setClass('icon-trophy')
-                ->setDisplayName('badges')
                 ->setIsWorkspaceRequired(false)
                 ->setIsDesktopRequired(false)
                 ->setDisplayableInWorkspace(true)
@@ -80,4 +70,4 @@ class Updater021101
             $log('    ' . $message);
         }
     }
-} 
+}
