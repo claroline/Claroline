@@ -359,6 +359,7 @@ class ProfileController extends Controller
      */
     public function editPublicUrlAction(User $loggedUser)
     {
+        $currentPublicUrl = $loggedUser->getPublicUrl();
         $form = $this->createForm(new UserPublicProfileUrlType(), $loggedUser);
         $form->handleRequest($this->request);
 
@@ -387,8 +388,9 @@ class ProfileController extends Controller
         }
 
         return array(
-            'form' => $form->createView(),
-            'user' => $loggedUser
+            'form'             => $form->createView(),
+            'user'             => $loggedUser,
+            'currentPublicUrl' => $currentPublicUrl
         );
     }
 

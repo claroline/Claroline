@@ -20,18 +20,20 @@
                     {{ 'public_profile_url_tuning_only_once'|trans({}, 'platform') }}.
                 </p>
 
+                {{ form_errors(form) }}
+                {{ form_errors(form.public_url) }}
                 <div class="form-group public_profile_url">
-                    {{ form_errors(form.public_url) }}
                     <label class="col-md-3 control-label">{{ path('claro_profile_view') }}</label>
                     <div class="col-md-4">
                         {{ form_widget(form.public_url) }}
+                        <input type="hidden" value="{{ currentPublicUrl }}" id="current_public_profile_url">
                         <div class="feedback">
                             <img src="{{ asset('bundles/clarolinecore/images/loading.gif') }}" alt="Loading" class="loading hidden">
                             <span class="icon-ok"></span>
                             <span class="icon-remove hidden"></span>
                         </div>
                         <small class="help-block">
-                            Note : Votre URL personnalisée doit comprendre entre 5 et 30 lettres ou chiffres.
+                            Note : Votre URL personnalisée doit comprendre au maximum 30 lettres ou chiffres.
                             Ne pas utiliser d'espaces, de symboles ou de caractères spéciaux.
                         </small>
                     </div>

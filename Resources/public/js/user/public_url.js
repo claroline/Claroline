@@ -13,7 +13,7 @@
     $(function() {
         var urlForm          = $('#public_profile_url');
         var urlField         = $('#user_public_profile_url_form_public_url', urlForm);
-        var currentPublicUrl = urlField.val()
+        var currentPublicUrl = $('#current_public_profile_url').val();
         var loadingBlock     = $('.feedback .loading', urlForm);
         var okBlock          = $('.feedback .icon-ok', urlForm);
         var koBlock          = $('.feedback .icon-remove', urlForm);
@@ -29,7 +29,7 @@
             var publicUrl = urlField.val()
             loadingState();
 
-            if ('' == publicUrl) {
+            if ('' == publicUrl || /\s/g.test(publicUrl)) {
                 koState();
             }
             else if (currentPublicUrl != publicUrl) {
@@ -53,6 +53,10 @@
                 tuneButton.attr('disabled', 'disabled');
             }
         };
+
+        if (currentPublicUrl != urlField.val()) {
+            search();
+        }
 
         function loadingState()
         {

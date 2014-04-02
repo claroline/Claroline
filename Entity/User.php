@@ -25,6 +25,7 @@ use Claroline\CoreBundle\Entity\AbstractRoleSubject;
 use Claroline\CoreBundle\Entity\Role;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\Validator\ExecutionContextInterface;
 
 /**
  * @ORM\Table(name="claro_user")
@@ -32,6 +33,7 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
  * @ORM\HasLifecycleCallbacks
  * @DoctrineAssert\UniqueEntity("username")
  * @DoctrineAssert\UniqueEntity("mail")
+ * @Assert\Callback(methods={"isPublicUrlValid"})
  */
 class User extends AbstractRoleSubject implements Serializable, AdvancedUserInterface, EquatableInterface, OrderableInterface
 {
@@ -944,5 +946,13 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
         $this->publicProfilePreferences = $publicProfilPreferences;
 
         return $this;
+    }
+
+    public function isPublicUrlValid(ExecutionContextInterface $context)
+    {
+        // Search for whitespaces
+        if (preg_match("/\s/", $this->getPublicUrl())) {
+            $context->addViolationAt('publicUrl', 'public_profile_url_not_valid', array(), null);
+        }
     }
 }
