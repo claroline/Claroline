@@ -27,6 +27,7 @@ use Pagerfanta\Adapter\DoctrineORMAdapter;
 use Pagerfanta\Pagerfanta;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -389,5 +390,26 @@ class ProfileController extends Controller
             'form' => $form->createView(),
             'user' => $loggedUser
         );
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/publicurl/check",
+     *      name="claro_user_public_url_check"
+     * )
+     * @SEC\Secure(roles="ROLE_USER")
+     * @EXT\Method({"POST"})
+     */
+    public function checkPublicUrlAction(Request $request)
+    {
+        $existedUser = $this->getDoctrine()->getRepository('ClarolineCoreBundle:User')->findOneByPublicUrl($request->request->get('publicUrl'));
+        $data = array('check' => false);
+
+        if (null === $existedUser) {
+            $data['check'] = true;
+        }
+
+        $response = new JsonResponse($data);
+        return $response;
     }
 }

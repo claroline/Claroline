@@ -11,13 +11,13 @@
                 {{ 'tune_your_public_profile_url'|trans({}, 'platform') }}
             </h3>
         </div>
-        <form action="{{ path('claro_user_public_url_edit') }}" method="post" class="form-horizontal" role="form" id="public_profile_url" {{ form_enctype(form) }}>
+        <form action="{{ path('claro_user_public_url_edit') }}" data-ajax-action="{{ path('claro_user_public_url_check') }}" method="post" class="form-horizontal" role="form" id="public_profile_url" {{ form_enctype(form) }}>
             <div class="panel-body">
                 <p>
-                    Votre URL actuelle <strong><a href="{{ path('claro_public_profile_view', {'publicUrl': user.publicUrl}) }}">{{ path('claro_public_profile_view', {'publicUrl': user.publicUrl}) }}</a></strong>.
+                    {{ 'your_current_url'|trans({}, 'platform') }} <strong><a href="{{ path('claro_public_profile_view', {'publicUrl': user.publicUrl}) }}" title="{{ 'public_profile'|trans({}, 'platform') }}">{{ path('claro_public_profile_view', {'publicUrl': user.publicUrl}) }}</a></strong>.
                 </p>
                 <p class="alert alert-warning">
-                    La personnalisation de l'URL de votre profil public n'est possible qu'une seule fois.
+                    {{ 'public_profile_url_tuning_only_once'|trans({}, 'platform') }}.
                 </p>
 
                 <div class="form-group public_profile_url">
@@ -25,10 +25,18 @@
                     <label class="col-md-3 control-label">{{ path('claro_profile_view') }}</label>
                     <div class="col-md-4">
                         {{ form_widget(form.public_url) }}
+                        <div class="feedback">
+                            <img src="{{ asset('bundles/clarolinecore/images/loading.gif') }}" alt="Loading" class="loading hidden">
+                            <span class="icon-ok"></span>
+                            <span class="icon-remove hidden"></span>
+                        </div>
                         <small class="help-block">
                             Note : Votre URL personnalisée doit comprendre entre 5 et 30 lettres ou chiffres.
                             Ne pas utiliser d'espaces, de symboles ou de caractères spéciaux.
                         </small>
+                    </div>
+                    <div class="col-md-1">
+
                     </div>
                 </div>
 
@@ -46,5 +54,5 @@
 
 {% block javascripts %}
 {{ parent() }}
-<script type="text/javascript" src='{{ asset('bundles/clarolinecore/js/user/profile.js') }}'></script>
+<script type="text/javascript" src='{{ asset('bundles/clarolinecore/js/user/public_url.js') }}'></script>
 {% endblock %}

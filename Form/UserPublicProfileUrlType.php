@@ -16,6 +16,10 @@ class UserPublicProfileUrlType extends AbstractType
         $builder
             ->add('public_url', 'text', array(
                 'required' => true,
+                'attr'     => array(
+                    'maxlength' => 30,
+                    'class'     => 'check-ok'
+                )
             ));
     }
 
