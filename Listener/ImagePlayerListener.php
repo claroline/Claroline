@@ -22,7 +22,7 @@ class ImagePlayerListener extends ContainerAware
         $images = $this->container->get('claroline.manager.resource_manager')->getByMimeTypeAndParent(
             'image',
             $event->getResource()->getResourceNode()->getParent(),
-            $this->container->get('security.context')->getToken()->getUser()->getRoles()
+            $this->container->get('security.context')->getToken()->getRoles()
         );
 
         $path = $this->container->getParameter('claroline.param.files_directory')
