@@ -41,7 +41,7 @@
                         }
                     })
                     .fail(function() {
-                        alert('error');
+                        koState();
                     });
             }
             else {
