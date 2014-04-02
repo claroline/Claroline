@@ -171,6 +171,9 @@ class ExerciseController extends Controller
         }
 
         $nbQuestions = $em->getRepository('UJMExoBundle:ExerciseQuestion')->getCountQuestion($exerciseId);
+        
+        $nbUserPaper = $exerciseSer->getNbPaper($user->getId(),
+                                                $exercise->getId());
 
         return $this->render(
             'UJMExoBundle:Exercise:show.html.twig',
@@ -181,6 +184,7 @@ class ExerciseController extends Controller
                 'allowToCompose' => $allowToCompose,
                 'userId'         => $user->getId(),
                 'nbQuestion'     => $nbQuestions['nbq'],
+                'nbUserPaper'    => $nbUserPaper,
                 '_resource'      => $exercise
             )
         );

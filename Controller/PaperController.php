@@ -63,6 +63,7 @@ class PaperController extends Controller
      */
     public function indexAction($exoID, $page, $all)
     {
+        $nbUserPaper = 0;
         $retryButton = false;
         $nbAttemptAllowed = -1;
         $exerciseSer = $this->container->get('ujm.exercise_services');
@@ -92,11 +93,14 @@ class PaperController extends Controller
                             ->getManager()
                             ->getRepository('UJMExoBundle:Paper')
                             ->getExerciseAllPapers($exoID);
+            $nbUserPaper = $exerciseSer->getNbPaper($user->getId(),
+                                                    $exercise->getId());
         } else {
             $paper = $this->getDoctrine()
                             ->getManager()
                             ->getRepository('UJMExoBundle:Paper')
                             ->getExerciseUserPapers($user->getId(), $exoID);
+            $nbUserPaper = count($paper);
         }
 
         // Pagination of the paper list
@@ -155,6 +159,7 @@ class PaperController extends Controller
                 'retryButton'      => $retryButton,
                 'nbAttemptAllowed' => $nbAttemptAllowed,
                 'badgesInfoUser'   => $badgesInfoUser,
+                'nbUserPaper'      => $nbUserPaper,
                 '_resource'        => $exercise,
                 'arrayMarkPapers'  => $arrayMarkPapers
             )
@@ -210,12 +215,10 @@ class PaperController extends Controller
         
         if ($exercise->getMaxAttempts() > 0) {
             if (!$exerciseSer->isExerciseAdmin($exercise)) {
-                $papers = $this->getDoctrine()
-                               ->getManager()
-                               ->getRepository('UJMExoBundle:Paper')
-                               ->getExerciseUserPapers($user->getId(),
-                                                      $exercise->getId());
-                $nbAttemptAllowed = $exercise->getMaxAttempts() - count($papers);
+                $nbpaper = $exerciseSer->getNbPaper($user->getId(),
+                                                    $exercise->getId());
+                
+                $nbAttemptAllowed = $exercise->getMaxAttempts() - $nbpaper;
             }
         }
 

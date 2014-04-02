@@ -63,7 +63,7 @@
         <a href="{{ path('ujm_exercise_open', { 'exerciseId': exoID }) }}" class="btn btn-primary">
             <i class="icon-arrow-left"></i> {{ 'back' | trans }}
         </a>
-        {% if retryButton %}
+        {% if retryButton and nbUserPaper == 0%}
             <a class="btn btn-primary" href="{{ path('ujm_exercise_paper', { 'id': exoID }) }}">
                 <i class="icon-check"></i> {{ 'compose' | trans }}
             </a>
@@ -104,6 +104,16 @@
             <hr/>
         {% endif %}
 
+        {% if nbUserPaper > 0 %}
+            <span>
+                <h3>{{ 'already answered' | trans }} : 
+                <a class="btn btn-primary" href="{{ path('ujm_exercise_paper', { 'id': exoID }) }}">
+                    <i class="icon-check"></i> {{ 'start again' | trans }}
+                </a></h3>
+            </span>
+            <br/>
+        {% endif %}
+        
         {% include "UJMExoBundle:Partial:badgeInfos/infos.html.twig" %}
         {% include "UJMExoBundle:Partial:correction/attemptInfo.html.twig" %}
             
