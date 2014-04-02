@@ -45,6 +45,7 @@ class PlatformConfiguration
     private $facebookClientId;
     private $facebookClientSecret;
     private $facebookClientActive;
+    private $formCaptcha;
 
     /**
      * @param mixed $sessionDbDataCol
@@ -438,5 +439,15 @@ class PlatformConfiguration
     public function isNameActive()
     {
         return $this->nameActive;
+    }
+
+    public function setFormCaptcha($boolean)
+    {
+        $this->formCaptcha = $boolean;
+    }
+
+    public function getFormCaptcha()
+    {
+        return $this->formCaptcha;
     }
 }
