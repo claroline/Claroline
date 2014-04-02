@@ -96,14 +96,13 @@
             <div class="col-md-8">
                 {% if pager.getNbPages() > 1 %}
                      {{ renderPager(search, pager, max, order, direction) }}
-                {% endif %}            
+                {% endif %}
             </div>
-            <div class="col-md-4" style="margin-top: 15px;">
+            <div class="col-md-4 margin-top-md">
                 {{ maxResultsSelectBox(max, "$('#search-button').trigger('click');", 'groups_per_page') }}
             </div>
         </div>
 
-        <div>
         <div class="table-responsive">
             <table class="table table-striped table-bordered table-condensed" id="group-table">
                 <thead>

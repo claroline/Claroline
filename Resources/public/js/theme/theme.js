@@ -10,7 +10,8 @@
 (function () {
     'use strict';
 
-    var homePath = $('#homePath').html(); //global
+    var home = window.Claroline.Home;
+    var modal = window.Claroline.Modal;
 
     function save(id)
     {
@@ -23,7 +24,7 @@
             variables +=  $('code', this.parentNode.parentNode).html() + ': ' + this.value + ';\n';
         });
 
-        $.post(homePath + 'admin/theme/build', {
+        $.post(home.path + 'admin/theme/build', {
             'theme-id': id,
             'theme-less': themeLess,
             'name': name,
@@ -39,94 +40,60 @@
                 ready.resolve(data);
 
             } else {
-                modal('admin/theme/error');
+                modal.fromRoute('claro_theme_error');
             }
         })
         .error(function () {
-            modal('admin/theme/error');
+            modal.fromRoute('claro_theme_error');
         });
 
         return ready;
     }
 
-    function modal(url, name, id)
+    function deleteTheme(id)
     {
-        $('.modal').modal('hide');
-
-        name = typeof(name) !== 'undefined' ? name : null;
-        id = typeof(id) !== 'undefined' ? id : null;
-
-        $.ajax(homePath + url)
+        $.ajax(home.path + 'admin/theme/delete/' + id)
         .done(function (data) {
-            var modal = document.createElement('div');
-            modal.className = 'modal fade';
-
-            if (name) {
-                modal.setAttribute('id', name);
+            if (data === 'true') {
+                window.location = home.path + 'admin/theme/list';
+            } else {
+                modal.fromRoute('claro_theme_error');
             }
-
-            if (id) {
-                $(modal).data('id', id);
-            }
-
-            modal.innerHTML = data;
-
-            $(modal).appendTo('body');
-            $(modal).modal('show');
-
-            $(modal).on('hidden', function () {
-                $(this).remove();
-            });
+        })
+        .error(function () {
+            modal.fromRoute('claro_theme_error');
         });
     }
 
     $('body').on('click', '.theme-generator .btn.dele', function () {
-
-        modal('admin/theme/confirm', 'delete-theme', $(this).data('id'));
-    });
-
-    $('body').on('click', '.theme-generator .alert .close', function () {
-
-        modal('admin/theme/confirm', 'delete-theme', $(this).data('id'));
-    });
-
-    $('body').on('click', '.#delete-theme .btn.delete', function () {
-        var id = $('#delete-theme').data('id');
-
-        $.ajax(homePath + 'admin/theme/delete/' + id)
-        .done(function (data) {
-            if (data === 'true') {
-                window.location = homePath + 'admin/theme/list';
-            } else {
-                modal('admin/theme/error');
-            }
-        })
-        .error(function () {
-            modal('admin/theme/error');
+        var id = $(this).data('id');
+        modal.fromRoute('claro_theme_confirm', {}, function (element) {
+            element.on('click', '.btn.delete', function () {
+                deleteTheme(id);
+            });
         });
-    });
-
-    $('body').on('click', '.theme-generator .btn.save', function () {
+    })
+    .on('click', '.theme-generator .alert .close', function () {
+        var id = $(this).data('id');
+        modal.fromRoute('claro_theme_confirm', {}, function (element) {
+            element.on('click', '.btn.delete', function () {
+                deleteTheme(id);
+            });
+        });
+    })
+    .on('click', '.theme-generator .btn.save', function () {
         save($(this).data('id'))
         .done(function () {
-            window.location = homePath + 'admin/theme/list';
+            window.location = home.path + 'admin/theme/list';
         });
-    });
-
-    $('body').on('click', '.theme-generator .btn.preview', function () {
+    })
+    .on('click', '.theme-generator .btn.preview', function () {
         save($(this).data('id'))
         .done(function (data) {
-            window.location = homePath + 'admin/theme/preview/' + data;
+            window.location = home.path + 'admin/theme/preview/' + data;
         });
-    });
-
-    $('.theme-value .btn').each(function () {
-        $(this).colorpicker().on('changeColor', function (event) {
-            $('input', this.parentNode.parentNode).val(event.color.toHex());
-        });
-    });
-
-    $('.theme-value .btn').on('click', function () {
+    })
+    .on('click', '.theme-value .btn', function () {
         var color = $('input', this.parentNode.parentNode).val();
 
         if (/(^#[0-9A-F]{6}$)|(^#[0-9A-F]{3}$)/i.test(color)) {
@@ -134,4 +101,9 @@
         }
     });
 
+    $('.theme-value .btn').each(function () {
+        $(this).colorpicker().on('changeColor', function (event) {
+            $('input', this.parentNode.parentNode).val(event.color.toHex());
+        });
+    });
 }());

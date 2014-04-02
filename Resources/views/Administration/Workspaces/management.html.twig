@@ -32,7 +32,7 @@
             {{ 'delete'|trans({}, 'platform') }}
         </button>
         <a href="{{ path('claro_workspace_creation_form') }}" class="btn btn-default action-button" >
-            <i class="icon-book"></i>
+            <i class="icon-pencil"></i>
             {{ 'create'|trans({}, 'platform') }}
         </a>
     {% endif %}
@@ -62,7 +62,7 @@
                 'href': path('claro_admin_parameters_index')
             },
             {
-                'name': 'parameters'|trans({}, 'platform'),
+                'name': 'workspaces_management'|trans({}, 'platform'),
                 'href': ''
             }
         ])
@@ -98,8 +98,8 @@
                     {{ renderPager(search, pager, max, order) }}
                 {% endif %}
             </div>
-            <div class="col-md-4" style="margin-top: 15px;">
-                <div class="input-group margin-md">
+            <div class="col-md-4 margin-top-md margin-bottom-md">
+                <div class="input-group">
                     <select class="form-control input-md" id="max-select">
                         <option>20</option>
                         <option>50</option>
