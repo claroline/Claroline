@@ -356,4 +356,20 @@ class DropRepository extends EntityRepository {
             return $result[0][1];
         }
     }
+
+    /**
+     *  Close unclosed drops in a dropzone
+     * @param $dropzoneId
+     */
+    public function closeUnTerminatedDropsByDropzone($dropzoneId)
+    {
+        $qb = $this->createQueryBuilder('drop')
+            ->update('Icap\\DropzoneBundle\\Entity\\Drop','d')
+            ->set('d.autoClosedDrop',1)
+            ->set('d.finished',1)
+            ->andWhere('d.dropzone = :dropzoneId')
+            ->andWhere('d.finished = 0')
+            ->setParameter('dropzoneId',$dropzoneId);
+        $qb->getQuery()->execute();
+    }
 }

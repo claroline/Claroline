@@ -85,6 +85,17 @@ class Drop {
      */
     protected $hiddenDirectory;
 
+
+    /**
+     * Indicate if the drop was close automaticaly ( when time is up by the dropzone option
+     * autoCloseOpenedDropsWhenTimeIsUp )
+     *
+     * @ORM\Column(name="auto_closed_drop",type="boolean", nullable=false)
+     */
+    protected $autoClosedDrop;
+
+
+
     public function __construct()
     {
         $this->documents = new ArrayCollection();
@@ -336,5 +347,21 @@ class Drop {
         }
 
         return $date;
+    }
+
+    /**
+     * @param mixed $autoClosedDrop
+     */
+    public function setAutoClosedDrop($autoClosedDrop)
+    {
+        $this->autoClosedDrop = $autoClosedDrop;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAutoClosedDrop()
+    {
+        return $this->autoClosedDrop;
     }
 }
