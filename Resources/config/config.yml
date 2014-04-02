@@ -1,5 +1,6 @@
 plugin:
   has_options: false
+  icon: res_advert.png
 
   resources:
     - class: Claroline\AnnouncementBundle\Entity\AnnouncementAggregate
