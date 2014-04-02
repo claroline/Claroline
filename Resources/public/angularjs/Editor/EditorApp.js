@@ -7,7 +7,9 @@ var EditorApp = angular.module('EditorApp', [
     'ui.bootstrap', 
     'ui.pageslide', 
     'ui.sortable', 
-    'ui.tinymce'
+    'ui.tinymce',
+    'ui.trans',
+    'ui.resourcePicker'
 ]);
 
 // History
@@ -46,5 +48,3 @@ EditorApp.controller('TemplateCtrl', TemplateCtrl);
 EditorApp.controller('TemplateModalCtrl', TemplateModalCtrl);
 
 EditorApp.filter('truncate', TruncateTextFilter);
-EditorApp.filter('trans', TranslationFilter);
-EditorApp.filter('transChoice', TranslationChoiceFilter);
