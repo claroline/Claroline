@@ -156,7 +156,13 @@
      * @TODO Get real backend mask
      */
     simpleRights.getMask = function (element) {
-        return $.parseJSON($(simpleRights.get('mask', element)).html());
+        var json = $(simpleRights.get('mask', element)).html();
+
+        if (json !== undefined && json !== '') {
+            return $.parseJSON();
+        } else {
+            return [true, false, false, false, false];
+        }
     };
 
     /**

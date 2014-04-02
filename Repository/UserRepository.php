@@ -59,6 +59,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface
      */
     public function refreshUser(UserInterface $user)
     {
+
         $class = get_class($user);
 
         if (!$this->supportsClass($class)) {
@@ -66,11 +67,12 @@ class UserRepository extends EntityRepository implements UserProviderInterface
         }
 
         $dql = '
-            SELECT u, groups, group_roles, roles, ws FROM Claroline\CoreBundle\Entity\User u
+            SELECT u, groups, group_roles, roles, ws, gws FROM Claroline\CoreBundle\Entity\User u
             LEFT JOIN u.groups groups
             LEFT JOIN groups.roles group_roles
             LEFT JOIN u.roles roles
             LEFT JOIN roles.workspace ws
+            LEFT JOIN group_roles.workspace gws
             WHERE u.id = :userId
         ';
         $query = $this->_em->createQuery($dql);

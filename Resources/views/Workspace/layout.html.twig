@@ -41,7 +41,7 @@
     {% if not is_path_mode and workspace is defined %}
 
         {% if is_granted('OPEN', workspace) %}
-            {% render controller("ClarolineCoreBundle:Workspace:renderToolList", {'workspaceId': workspace.getId(), '_breadcrumbs': app.request.query.get('_breadcrumbs', {})}) %}
+            {% render controller("ClarolineCoreBundle:Workspace:renderToolList", {'workspace': workspace, '_breadcrumbs': app.request.query.get('_breadcrumbs', {})}) %}
         {% endif %}
 
     {% endif %}

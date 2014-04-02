@@ -55,7 +55,7 @@
         });
     };
 
-    $('body').bind('ajaxSend', function () {
+    $(document).bind('ajaxSend', function () {
         stackedRequests++;
         $('.please-wait').show();
     }).bind('ajaxComplete', function () {
