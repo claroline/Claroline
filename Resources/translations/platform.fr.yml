@@ -833,3 +833,4 @@ tune_public_url_success: 'Personnalisez de l''URL de votre profil public effectu
 tune_public_url_error: 'Une erreur s''est produite lors de la personnalisation de l''URL de votre profil public.'
 your_current_url: 'Votre URL actuelle'
 public_profile_url_tuning_only_once: 'La personnalisation de l''URL de votre profil public n''est possible qu''une seule fois'
+public_url_help: 'Note : Votre URL personnalisée doit comprendre au maximum 30 lettres ou chiffres. Ne pas utiliser d''espaces, de symboles ou de caractères spéciaux.'
