@@ -87,17 +87,25 @@
     });
 
     $('#registration-confirm-ok').click(function () {
-        var route = Routing.generate(
+        var confirmRegistrationRoute = Routing.generate(
             'claro_workspace_add_user',
             {'workspaceId': workspaceId, 'userId': twigUserId}
         );
+
+        var visitWorkspaceRoute = Routing.generate(
+            'claro_workspace_open_tool',
+            {'workspaceId': workspaceId, 'toolName': 'home'}
+        );
+
+        var registeredText = Translator.get('platform' + ':' + 'registered');
+
         $.ajax({
-            url: route,
+            url: confirmRegistrationRoute,
             type: 'POST',
             success: function () {
                 $(registerButtonClass).each(function () {
                     $(this).empty();
-                    $(this).html(Translator.get('platform' + ':' + 'registered'));
+                    $(this).html("<a class='visit-workspace' href="+visitWorkspaceRoute+">"+registeredText+"<i class='icon-share'></i></a>");
                     $(this).attr('class', 'pull-right label label-success');
                 });
             }
