@@ -43,7 +43,7 @@
                 {{ form_rest(form) }}
             </div>
             <div class="panel-footer">
-                <button type="submit" class="btn btn-primary">{{ 'tune'|trans({}, 'platform') }}</button>
+                <button type="submit" class="btn btn-primary" id="tune_button" disabled="disabled">{{ 'tune'|trans({}, 'platform') }}</button>
                 <a href="{{ path('claro_profile_view') }}" class="btn btn-default">
                     {{ 'cancel' | trans({}, 'platform') }}
                 </a>

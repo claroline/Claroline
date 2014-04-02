@@ -17,6 +17,7 @@
         var loadingBlock     = $('.feedback .loading', urlForm);
         var okBlock          = $('.feedback .icon-ok', urlForm);
         var koBlock          = $('.feedback .icon-remove', urlForm);
+        var tuneButton       = $('#tune_button');
         var timer;
 
         urlField.keyup(function() {
@@ -28,7 +29,10 @@
             var publicUrl = urlField.val()
             loadingState();
 
-            if (currentPublicUrl != publicUrl) {
+            if ('' == publicUrl) {
+                koState();
+            }
+            else if (currentPublicUrl != publicUrl) {
                 $.post(
                     urlForm.attr('data-ajax-action'),
                     {'publicUrl': publicUrl},
@@ -46,6 +50,7 @@
             }
             else {
                 okState();
+                tuneButton.attr('disabled', 'disabled');
             }
         };
 
@@ -57,6 +62,7 @@
             loadingBlock.removeClass('hidden');
             okBlock.addClass('hidden');
             koBlock.addClass('hidden');
+            tuneButton.attr('disabled', 'disabled');
         }
 
         function okState()
@@ -67,6 +73,7 @@
             loadingBlock.addClass('hidden');
             okBlock.removeClass('hidden');
             koBlock.addClass('hidden');
+            tuneButton.attr('disabled', false);
         }
 
         function koState()
@@ -74,9 +81,10 @@
             urlField
                 .removeClass('check-ok')
                 .addClass('check-ko');
-            loadingBlock.removeClass('hidden');
+            loadingBlock.addClass('hidden');
             okBlock.addClass('hidden');
             koBlock.removeClass('hidden');
+            tuneButton.attr('disabled', 'disabled');
         }
     });
 })(jQuery);
