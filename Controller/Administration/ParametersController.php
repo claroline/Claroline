@@ -165,7 +165,8 @@ class ParametersController extends Controller
                         'name' => $form['name']->getData(),
                         'support_email' => $form['support_email']->getData(),
                         'default_role' => $form['defaultRole']->getData()->getName(),
-                        'redirect_after_login' => $form['redirect_after_login']->getData()
+                        'redirect_after_login' => $form['redirect_after_login']->getData(),
+                        'form_captcha' => $form['formCaptcha']->getData(),
                     )
                 );
 
