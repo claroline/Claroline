@@ -263,11 +263,6 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
      */
     protected $lastUri;
 
-    /**
-     * @ORM\Column(name="is_mail_displayed", type="boolean")
-     */
-    protected $isMailDisplayed = false;
-
     public function __construct()
     {
         parent::__construct();
@@ -868,20 +863,5 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
     public function getLastUri()
     {
         return $this->lastUri;
-    }
-
-    public function setIsMailDisplayed($boolean)
-    {
-        $this->isMailDisplayed = $boolean;
-    }
-
-    public function isMailDisplayed()
-    {
-        return $this->isMailDisplayed;
-    }
-
-    public function getIsMailDisplayed()
-    {
-        return $this->isMailDisplayed;
     }
 }

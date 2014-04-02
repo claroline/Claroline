@@ -12,63 +12,37 @@
 namespace Claroline\CoreBundle\Library\Installation\Updater;
 
 use Claroline\CoreBundle\Entity\Tool\Tool;
+use Claroline\CoreBundle\Persistence\ObjectManager;
 
-class Updater021200
+class Updater021101
 {
     private $container;
     private $logger;
-    private $om;
-    private $conn;
+
+    /**
+     * @var ObjectManager
+     */
+    private $objectManager;
 
     public function __construct($container)
     {
-        $this->container = $container;
-        $this->om = $container->get('claroline.persistence.object_manager');
-        $this->conn = $container->get('doctrine.dbal.default_connection');
+        $this->container     = $container;
+        $this->objectManager = $container->get('claroline.persistence.object_manager');
     }
 
     public function postUpdate()
     {
-        $this->updateUsers();
-        $this->updateTools();
-    }
-
-    public function updateUsers()
-    {
-        $this->log('Updating users...');
-        $users = $this->om->getRepository('ClarolineCoreBundle:User')->findAll();
-        $this->om->startFlushSuite();
-        $i = 0;
-
-        foreach ($users as $user) {
-            $user->setIsMailDisplayed(false);
-            $this->om->persist($user);
-            $i++;
-
-            if ($i % 200 === 0) {
-                $this->om->endFlushSuite();
-                $this->om->startFlushSuite();
-            }
-        }
-
-        $this->om->endFlushSuite();
-
-        $this->log('Done.');
-    }
-
-    public function updateTools()
-    {
         $this->log('Updating existing badges tool...');
         /** @var \Claroline\CoreBundle\Entity\Tool\Tool $badgesTool */
-        $badgesTool = $this->om->getRepository('Claroline\CoreBundle\Entity\Tool\Tool')->findOneByName('badges');
+        $badgesTool = $this->objectManager->getRepository('Claroline\CoreBundle\Entity\Tool\Tool')->findOneByName('badges');
         $badgesTool->setDisplayName('badges_management');
 
-        $this->om->persist($badgesTool);
+        $this->objectManager->persist($badgesTool);
 
         $this->log('Existing badges tool updated.');
 
         $myBadgesToolName = 'my_badges';
-        $myBadgesTool = $this->om->getRepository('ClarolineCoreBundle:Tool\Tool')->findOneByName($myBadgesToolName);
+        $myBadgesTool = $this->objectManager->getRepository('ClarolineCoreBundle:Tool\Tool')->findOneByName($myBadgesToolName);
 
         if (null === $myBadgesTool) {
             $this->log('Creating new tool for displaying user badges in workspace...');
@@ -87,12 +61,12 @@ class Updater021200
                 ->setIsLockedForAdmin(false)
                 ->setIsAnonymousExcluded(true);
 
-            $this->om->persist($newBadgeTool);
+            $this->objectManager->persist($newBadgeTool);
 
             $this->log('New tool for displaying user badges in workspace created.');
         }
 
-        $this->om->flush();
+        $this->objectManager->flush();
     }
 
     public function setLogger($logger)
