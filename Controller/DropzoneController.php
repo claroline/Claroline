@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by : Vincent SAISSET
- * Date: 22/08/13
- * Time: 09:30
- */
-
 namespace Icap\DropzoneBundle\Controller;
 
 use Claroline\CoreBundle\Entity\User;
@@ -53,6 +47,8 @@ class DropzoneController extends DropzoneBaseController
             // see if manual plannification option has changed.
             $oldManualPlanning = $dropzone->getManualPlanning();
             $oldManualPlanningOption = $dropzone->getManualState();
+
+            $oldEndDropDate = $dropzone->getEndAllowDrop();
 
             $form->handleRequest($this->getRequest());
 
@@ -122,6 +118,10 @@ class DropzoneController extends DropzoneBaseController
             }
 
             if ($form->isValid()) {
+
+
+
+
                 if ($dropzone->getPeerReview() != true) {
                     $dropzone->setExpectedTotalCorrection(1);
                     if ($dropzone->getManualState() == 'peerReview') {
@@ -140,6 +140,10 @@ class DropzoneController extends DropzoneBaseController
                         $manualStateChanged = true;
                         $newManualState = $dropzone->getManualState();
                     }
+                }else {
+                   if($oldEndDropDate != $dropzone->getEndAllowDrop()){
+                       $dropzone->setAutoCloseState(Dropzone::AUTO_CLOSED_STATE_WAITING);
+                   }
                 }
 
                 $em = $this->getDoctrine()->getManager();
@@ -341,6 +345,12 @@ class DropzoneController extends DropzoneBaseController
         $dropRepo = $em->getRepository('IcapDropzoneBundle:Drop');
         $drop = $dropRepo->findOneBy(array('dropzone' => $dropzone, 'user' => $user));
         $dropzoneManager = $this->get('icap.manager.dropzone_manager');
+        // check if endAllowDrop is past and close all unvalidated
+        // drops if autoclose options is activated.
+        if($dropzone->getAutoCloseState() == Dropzone::AUTO_CLOSED_STATE_WAITING) {
+            $dropzoneManager->closeDropzoneOpenedDrops($dropzone);
+
+        }
 
         $nbCorrections = $em
             ->getRepository('IcapDropzoneBundle:Correction')
@@ -351,7 +361,7 @@ class DropzoneController extends DropzoneBaseController
         $hasUnfinishedCorrection = $em->getRepository('IcapDropzoneBundle:Correction')->getNotFinished($dropzone, $user) != null;
 
 
-
+        // get progression of the evaluation ( current state, all states available and needed infos to the view).
         $dropzoneProgress = $dropzoneManager->getDrozponeProgress($dropzone,$drop,$nbCorrections);
         return array(
             'workspace' => $dropzone->getResourceNode()->getWorkspace(),

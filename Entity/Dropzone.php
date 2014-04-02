@@ -18,15 +18,18 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity
  * @ORM\Table(name="icap__dropzonebundle_dropzone")
  */
-class Dropzone extends AbstractResource {
+class Dropzone extends AbstractResource
+{
 
     const MANUAL_STATE_NOT_STARTED = "notStarted";
-    const MANUAL_STATE_PEER_REVIEW ="peerReview";
+    const MANUAL_STATE_PEER_REVIEW = "peerReview";
     const MANUAL_STATE_ALLOW_DROP = "allowDrop";
     const MANUAL_STATE_ALLOW_DROP_AND_PEER_REVIEW = "allowDropAndPeerReview";
     const MANUAL_STATE_FINISHED = "finished";
+    const AUTO_CLOSED_STATE_WAITING = 'waiting';
+    const AUTO_CLOSED_STATE_CLOSED = 'AutoClosed';
 
-    
+
     /**
      * 1 = common
      * 2 = criteria
@@ -51,7 +54,7 @@ class Dropzone extends AbstractResource {
     /**
      * @ORM\Column(name="success_message",type="text", nullable=true)
      */
-    protected $successMessage =null;
+    protected $successMessage = null;
 
     /**
      * @ORM\Column(name="fail_message",type="text", nullable=true)
@@ -149,20 +152,20 @@ class Dropzone extends AbstractResource {
     /**
      * Defini si oui ou non les corrections faites par les pairs sont visibles par le possesseur de la copie corrigé.
      * les corrections devront cependant rester anonyme.
-     * 
+     *
      * @var bool
      * @ORM\Column(name="diplay_corrections_to_learners",type="boolean",nullable=false)
      *
      */
-    protected $diplayCorrectionsToLearners= false;
+    protected $diplayCorrectionsToLearners = false;
 
     /**
-    * Depend on diplayCorrectionsToLearners, need diplayCorrectionsToLearners to be true in order to work.
-    * Allow users to flag that they are not agree with the correction.
-    * 
-    * @var bool
-    * @ORM\Column(name="allow_correction_deny",type="boolean",nullable=false)
-    */
+     * Depend on diplayCorrectionsToLearners, need diplayCorrectionsToLearners to be true in order to work.
+     * Allow users to flag that they are not agree with the correction.
+     *
+     * @var bool
+     * @ORM\Column(name="allow_correction_deny",type="boolean",nullable=false)
+     */
     protected $allowCorrectionDeny = false;
 
     /**
@@ -183,7 +186,7 @@ class Dropzone extends AbstractResource {
      * )
      */
     protected $drops;
-    
+
     /**
      * @var ArrayCollection
      *
@@ -195,6 +198,24 @@ class Dropzone extends AbstractResource {
      * )
      */
     protected $peerReviewCriteria;
+
+    /**
+     * if true,
+     * when time is up, all drop not already closed will be closed and flaged as uncompletedDrop.
+     * That will allow them to access the next step ( correction by users or admins ).
+     *
+     * @var bool
+     * @ORM\Column(name="auto_close_opened_drops_when_time_is_up",type="boolean",nullable=false)
+     */
+    protected $autoCloseOpenedDropsWhenTimeIsUp;
+
+    /**
+     * @var String
+     * @ORM\Column(name="auto_close_state",type="string",nullable=false,options={"default" = "waiting"})
+     */
+    protected $autoCloseState = self::AUTO_CLOSED_STATE_WAITING;
+
+
 
     /**
      * @ORM\OneToOne(
@@ -371,7 +392,7 @@ class Dropzone extends AbstractResource {
         $this->instruction = $instruction;
     }
 
-   /**
+    /**
      * @return text
      */
     public function getCorrectionInstruction()
@@ -454,11 +475,10 @@ class Dropzone extends AbstractResource {
             self::MANUAL_STATE_ALLOW_DROP,
             self::MANUAL_STATE_ALLOW_DROP_AND_PEER_REVIEW,
             self::MANUAL_STATE_FINISHED);
-        if(array_search($manualState,$ms_tab_values) !== false)
-        {
-             $this->manualState = $manualState;
+        if (array_search($manualState, $ms_tab_values) !== false) {
+            $this->manualState = $manualState;
         }
-       
+
     }
 
     /**
@@ -575,8 +595,8 @@ class Dropzone extends AbstractResource {
     }
 
     /**
-    * @return bool
-    **/
+     * @return bool
+     **/
     public function getAllowCorrectionDeny()
     {
         return $this->allowCorrectionDeny;
@@ -698,12 +718,11 @@ class Dropzone extends AbstractResource {
 
             $finished = $allowDropEnd = $now->getTimestamp() > $this->endAllowDrop->getTimestamp();
 
-            if($this->isPeerReview())
-            {
+            if ($this->isPeerReview()) {
                 $finished = $allowDropEnd && $now->getTimestamp() > $this->endReview->getTimestamp();
             }
-           
-            return  $finished;
+
+            return $finished;
         }
     }
 
@@ -713,7 +732,7 @@ class Dropzone extends AbstractResource {
             return -1;
         }
         $now = new \DateTime();
-        if ($now->getTimestamp() <$reference->getTimestamp()) {
+        if ($now->getTimestamp() < $reference->getTimestamp()) {
             return $reference->getTimestamp() - $now->getTimestamp();
         } else {
             return 0;
@@ -765,6 +784,42 @@ class Dropzone extends AbstractResource {
         $this->peerReviewCriteria[] = $criterion;
 
         return $this;
+    }
+
+    /**
+     * @param boolean $autoCloseOpenedDropsWhenTimeIsUp
+     */
+    public function setAutoCloseOpenedDropsWhenTimeIsUp($autoCloseOpenedDropsWhenTimeIsUp)
+    {
+        $this->autoCloseOpenedDropsWhenTimeIsUp = $autoCloseOpenedDropsWhenTimeIsUp;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function getAutoCloseOpenedDropsWhenTimeIsUp()
+    {
+        return $this->autoCloseOpenedDropsWhenTimeIsUp;
+    }
+
+    /**
+     * Param that indicate if all drop have already been auto closed or not.
+     * @param String $autoCloseState
+     */
+    public function setAutoCloseState($autoCloseState)
+    {
+        $authorizedValues = array(self::AUTO_CLOSED_STATE_CLOSED,self::AUTO_CLOSED_STATE_WAITING);
+        if(in_array($autoCloseState,$authorizedValues)) {
+            $this->autoCloseState = $autoCloseState;
+        }
+    }
+
+    /**
+     * @return String
+     */
+    public function getAutoCloseState()
+    {
+        return $this->autoCloseState;
     }
 
 }

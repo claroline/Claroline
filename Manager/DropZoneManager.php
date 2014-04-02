@@ -213,4 +213,33 @@ class DropzoneManager
     }
 
 
+    /**
+     * if the dropzone option 'autocloseOpenDropsWhenTimeIsUp' is activated, and evalution allowToDrop time is over,
+     *  this will close all drop not closed yet.
+     * @param Dropzone $dropzone
+     */
+    public function closeDropzoneOpenedDrops(Dropzone $dropzone)
+    {
+        if($this->isDropzoneDropTimeIsUp($dropzone) )
+        {
+            $dropRepo = $this->em->getRepository('IcapDropzoneBundle:Drop');
+            $dropRepo->closeUnTerminatedDropsByDropzone($dropzone->getId());
+            $dropzone->setAutoCloseState(Dropzone::AUTO_CLOSED_STATE_CLOSED);
+        }
+    }
+
+    /**
+     * Check if dropzone  options are ok in order to autoclose Drops
+     * @param Dropzone $dropzone
+     * @return bool
+     */
+    private function isDropzoneDropTimeIsUp(Dropzone $dropzone)
+    {
+        $dropDatePassed = false;
+        if ($dropzone->getAutoCloseOpenedDropsWhenTimeIsUp() && $dropzone->getManualPlanning() == false) {
+            $now = new \DateTime();
+            $dropDatePassed = $now->getTimestamp() > $dropzone->getEndAllowDrop()->getTimeStamp();
+        }
+        return $dropDatePassed;
+    }
 }
