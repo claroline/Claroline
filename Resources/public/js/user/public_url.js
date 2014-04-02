@@ -41,7 +41,6 @@
                         }
                     })
                     .fail(function() {
-                        console.log('fail');
                         alert('error');
                     });
             }
