@@ -338,17 +338,17 @@
     $('body').bind('ajaxComplete', function () {
         tinymce.claroline.initialization();
     })
-        .on('click', '.mce-widget.mce-btn[aria-label="Fullscreen"]', function () {
-            tinymce.claroline.toggleFullscreen(this);
-            window.dispatchEvent(new window.Event('resize'));
-        })
-        .bind('DOMSubtreeModified', function () {
-            clearTimeout(tinymce.claroline.domChange);
-            tinymce.claroline.domChange = setTimeout(tinymce.claroline.initialization, 10);
-        })
-        .on('click', 'form *[type=submit]', function () {
-            tinymce.claroline.disableBeforeUnload = true;
-        });
+    .on('click', '.mce-widget.mce-btn[aria-label="Fullscreen"]', function () {
+        tinymce.claroline.toggleFullscreen(this);
+        window.dispatchEvent(new window.Event('resize'));
+    })
+    .bind('DOMSubtreeModified', function () {
+        clearTimeout(tinymce.claroline.domChange);
+        tinymce.claroline.domChange = setTimeout(tinymce.claroline.initialization, 10);
+    })
+    .on('click', 'form *[type=submit]', function () {
+        tinymce.claroline.disableBeforeUnload = true;
+    });
 
     $(document).ready(function () {
         tinymce.claroline.initialization();

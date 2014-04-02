@@ -25,14 +25,14 @@
         {% if config.getParameter('name') == "" and config.getParameter('logo') == "" %}
             {{ topbar.item({'name':'home', 'href':path('claro_index'), 'icon':'home'}) }}
         {% endif %}
-        {{ topbar.item({'name':'desktop', 'href':path('claro_desktop_open'), 'icon':'briefcase', 'route':'/desktop/tool/'}) }}
+        {{ topbar.item({'href':path('claro_desktop_open'), 'icon':'briefcase', 'route':'/desktop/tool/', 'title': 'desktop' | trans({}, 'platform')}) }}
         {% if is_granted('ROLE_ADMIN') %}
-            {{ topbar.item({'name':'administration', 'href':path('claro_admin_parameters_index'), 'icon':'cog', 'route':'/administration/index/'}) }}
+            {{ topbar.item({'href':path('claro_admin_parameters_index'), 'icon':'cog', 'route':'/admin/', 'title':'administration' | trans({}, 'platform')}) }}
         {% endif %}
         {% if countUnreadMessages > 0 %}
-            {{ topbar.item({'name':'', 'href':path('claro_message_list_received'), 'icon':'envelope', 'route':'/message/', 'title':'new_message_alert' | trans({'%count%': countUnreadMessages}, 'platform'), 'badge' : countUnreadMessages }) }}
+            {{ topbar.item({'href':path('claro_message_list_received'), 'icon':'envelope', 'route':'/message/', 'title':'new_message_alert' | trans({'%count%': countUnreadMessages}, 'platform'), 'badge' : countUnreadMessages }) }}
         {% else %}
-            {{ topbar.item({'name':'', 'href':path('claro_message_list_received'), 'icon':'envelope', 'route':'/message/', 'title':'new_message_alert' | trans({'%count%': countUnreadMessages}, 'platform')}) }}
+            {{ topbar.item({'href':path('claro_message_list_received'), 'icon':'envelope', 'route':'/message/', 'title':'new_message_alert' | trans({'%count%': countUnreadMessages}, 'platform')}) }}
         {% endif %}
         {% if countUnviewedNotifications > 0 %}
             {{ topbar.item({'id':'notification-topbar-item', 'href':path('icap_notification_view'), 'icon':'bell-alt', 'route':'/icap_notification/', 'title':'notifications', 'badge' : countUnviewedNotifications}) }}

@@ -157,6 +157,7 @@ class WorkspaceParametersController extends Controller
      */
     public function workspaceEditFormAction(AbstractWorkspace $workspace)
     {
+        $user = $this->security->getToken()->getUser();
         $this->checkAccess($workspace);
         $form = $this->formFactory->create(FormFactory::TYPE_WORKSPACE_EDIT, array(), $workspace);
 
@@ -173,7 +174,8 @@ class WorkspaceParametersController extends Controller
         return array(
             'form' => $form->createView(),
             'workspace' => $workspace,
-            'url' => $url
+            'url' => $url,
+            'user' => $user
         );
     }
 

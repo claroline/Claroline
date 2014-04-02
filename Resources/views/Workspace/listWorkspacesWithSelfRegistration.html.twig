@@ -40,6 +40,11 @@
 
 {% block title %}{{ parent() ~ ' - ' ~ "register_to_a_public_workspace" | trans({}, "platform") | striptags | raw }}{% endblock %}
 
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel='stylesheet' type='text/css' href='{{ asset('bundles/clarolinecore/css/workspace/workspace-list.css')}}'>
+{% endblock %}
+
 {% block breadcrumb %}
     {{
         macros.breadcrumbs([

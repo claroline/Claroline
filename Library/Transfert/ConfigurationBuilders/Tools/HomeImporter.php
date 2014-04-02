@@ -35,9 +35,6 @@ class HomeImporter extends Importer implements ConfigurationInterface
         return $treeBuilder;
     }
 
-    /**
-     * @DI\Observe("create_form_directory")
-     */
     public function getConfigBuilder(ValidateToolConfigEvent $event)
     {
         $event->setConfigurationBuilder($this->getConfigTreeBuilder());
@@ -120,4 +117,4 @@ class HomeImporter extends Importer implements ConfigurationInterface
     {
         return 'home';
     }
-} 
+}

@@ -112,7 +112,7 @@
 {% endmacro %}
 
 {% macro maxResultsSelectBox(currentMax, onChangeHandler, label) %}
-    <div class="input-group margin-md">
+    <div class="input-group margin-bottom-md">
         <select class="form-control input-md" id="max-select" onchange="{{ onChangeHandler }}">
             <option{% if currentMax == 20 %} selected{% endif %}>20</option>
             <option{% if currentMax == 50 %} selected{% endif %}>50</option>

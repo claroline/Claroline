@@ -22,7 +22,7 @@
      */
     simpleRights.getValue = function (element)
     {
-        return $(element).attr('checked') ? true : false;
+        return $(element).prop('checked') ? true : false;
     };
 
     /**
@@ -72,14 +72,14 @@
     simpleRights.checkEveryone = function (element)
     {
         if (!simpleRights.getValue(element)) {
-            $('input#everyone', simpleRights.getTable(element)).attr('checked', false);
+            $('input#everyone', simpleRights.getTable(element)).prop('checked', false);
         }
 
         if (simpleRights.getValue($('input#anonymous', simpleRights.getTable(element))) &&
             simpleRights.getValue($('input#workspace', simpleRights.getTable(element))) &&
             simpleRights.getValue($('input#platform', simpleRights.getTable(element)))
         ) {
-            $('input#everyone', simpleRights.getTable(element)).attr('checked', true);
+            $('input#everyone', simpleRights.getTable(element)).prop('checked', true);
         }
     };
 
@@ -98,13 +98,13 @@
             general.each(function () {
                 for (var key in mask) {
                     if (mask.hasOwnProperty(key)) {
-                        $($(this).find('input').get(parseInt(key) + 1)).attr('checked', mask[key]);
+                        $($(this).find('input').get(parseInt(key) + 1)).prop('checked', mask[key]);
                     }
                 }
             });
         } else {
             general.each(function () {
-                $(this).find('input').attr('checked', false);
+                $(this).find('input').prop('checked', false);
             });
         }
     };
@@ -132,7 +132,7 @@
                 }
             }
 
-            $('input#' + role, simpleRights.getTable(element)).attr('checked', value);
+            $('input#' + role, simpleRights.getTable(element)).prop('checked', value);
         });
     };
 
@@ -156,7 +156,13 @@
      * @TODO Get real backend mask
      */
     simpleRights.getMask = function (element) {
-        return $.parseJSON($(simpleRights.get('mask', element)).html());
+        var json = $(simpleRights.get('mask', element)).html();
+
+        if (json !== undefined && json !== '') {
+            return $.parseJSON(json);
+        } else {
+            return [true, false, true, false, false];
+        }
     };
 
     /**
@@ -165,7 +171,7 @@
      * @param element The checkbox html element
      */
     simpleRights.everyone = function (element) {
-        $('input', simpleRights.getTable(element)).attr('checked', simpleRights.getValue(element));
+        $('input', simpleRights.getTable(element)).prop('checked', simpleRights.getValue(element));
         simpleRights.anonymous(element);
         simpleRights.workspace(element);
         simpleRights.platform(element);
