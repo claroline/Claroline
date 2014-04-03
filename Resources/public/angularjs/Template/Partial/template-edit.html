@@ -1,50 +1,44 @@
 <div class="modal-header">
     <h4 class="modal-title">
         <span class="icon-pencil"></span> 
-        Editing template : <strong>&lt;{{ formTemplate.name }}&gt;</strong></h4>
+        {{ 'template_edit_title' | trans:{}:'path_editor' }} : <strong>&lt;{{ formTemplate.name }}&gt;</strong>
+    </h4>
 </div>
 
 <div class="modal-body">
     <form name="templateForm" role="form">
         <fieldset class="row">
             <div class="form-group col-md-12">
-                <label for="template-name">{{ 'template_name' | trans:{}:"path_editor" }}</label>
+                <label for="template-name">{{ 'template_name' | trans:{}:'path_editor' }}</label>
                 <input type="text" name="template-name" ng-model="formTemplate.name" class="form-control" value="{{ formTemplate.name }}" />
             </div>
             
             <div class="form-group col-md-12">
-                <label for="template-description">Description</label>
+                <label for="template-description">{{ 'template_description' | trans:{}:'path_editor' }}</label>
                 <textarea class="form-control" name="template-description" id="template-description" cols="30" rows="4" ng-model="formTemplate.description"></textarea>
             </div>
             
             <div ng-hide="undefined != formTemplate.id && null != formTemplate.id && formTemplate.id.length != 0" class="form-group col-md-12">
                 <label class="checkbox">
                     <input type="checkbox" ng-model="formTemplate.withResources" />
-                    Save documents &amp; tools too ?
+                    {{ 'template_save_resources' | trans:{}:'path_editor' }}
                 </label>
             </div>
             
             <input type="hidden" ng-model="formTemplate.structure" name="template-step" />
         </fieldset>
-        
+
         <div class="row">
             <div class="col-md-12">
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <span class="icon-road"></span> Selected steps
-                    </div>
-                    <div class="panel-body">
-                        <ul class="tree">
-                            <li ng-include="webDir + 'angularjs/Template/Partial/tree-item.html'" onload="step = formTemplate.structure"></li>
-                        </ul>
-                    </div>
-                </div>
+                <ul class="tree">
+                    <li ng-include="webDir + 'bundles/innovapath/angularjs/Template/Partial/tree-item.html'" onload="step = formTemplate.structure"></li>
+                </ul>
             </div>
         </div>
     </form>
 </div>
 
 <div class="modal-footer">
-    <button class="btn btn-primary" ng-click="save(formTemplate)" ng-disabled="!templateForm.$valid">Save template</button>
-    <button class="btn btn-default cancel" ng-click="close()">Cancel</button>
+    <button class="btn btn-primary" ng-click="save(formTemplate)" ng-disabled="!templateForm.$valid">{{ 'template_save' | trans:{}:'path_editor' }}</button>
+    <button class="btn btn-default cancel" ng-click="close()">{{ 'cancel' | trans:{}:'path_editor' }}</button>
 </div>

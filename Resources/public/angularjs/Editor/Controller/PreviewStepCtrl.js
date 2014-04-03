@@ -1,11 +1,67 @@
 'use strict';
 
 function PreviewStepCtrl($scope, $modal, $http, HistoryFactory, PathFactory, StepFactory, ResourceFactory) {
-    // $scope.resourceTypeLabels = ResourceFactory.getResourceTypeLabels();
+    // Store resource icons
+    $scope.resourceIcons = EditorApp.resourceIcons;
+
+    // Resource Picker config
+    $scope.resourcePickerConfig = {
+        parentElement: '#resourcePicker',
+        isPickerMultiSelectAllowed: true,
+        isPickerOnly: true,
+        isWorkspace: true,
+        webPath: EditorApp.webDir,
+        appPath: EditorApp.appDir,
+        directoryId: EditorApp.wsDirectoryId,
+        resourceTypes: EditorApp.resourceTypes,
+        pickerCallback: function (nodes) {
+            if (typeof nodes === 'object' && nodes.length !== 0) {
+                for (var nodeId in nodes) {
+                    var node = nodes[nodeId];
+
+                    if (typeof $scope.previewStep.resources != 'object') {
+                        $scope.previewStep.resources = [];
+                    }
+
+                    // Check if resource has already been linked to the the step
+                    var resourceExists = false;
+                    for (var i = 0; i < $scope.previewStep.resources.length; i++) {
+                        var res = $scope.previewStep.resources[i];
+                        if (res.resourceId === nodeId) {
+                            resourceExists = true;
+                            break;
+                        }
+                    }
+
+                    if (!resourceExists) {
+                        // Resource need to be linked
+                        var resource = ResourceFactory.generateNewResource();
+                        resource.name = node[0];
+                        resource.type = node[2];
+                        resource.resourceId = nodeId;
+
+                        $scope.previewStep.resources.push(resource);
+                    }
+                }
+
+                // Update history
+                HistoryFactory.update($scope.path);
+
+                // Reload preview step data
+                $scope.updatePreviewStep();
+            }
+        }
+    };
 
     // Load who list
     $http.get(Routing.generate('innova_path_get_stepwho')).success(function(data) { 
         $scope.whoList = data; 
+    });
+
+    // Load who default
+    $http.get(Routing.generate('innova_path_get_stepwho_default')).success(function(data) { 
+        StepFactory.setWhoDefault(data);
+        $scope.whoDefault = data; 
     });
 
     // Load where list
@@ -13,13 +69,61 @@ function PreviewStepCtrl($scope, $modal, $http, HistoryFactory, PathFactory, Ste
         $scope.whereList = data; 
     });
 
+    // Load where default
+    $http.get(Routing.generate('innova_path_get_stepwhere_default')).success(function(data) { 
+        StepFactory.setWhereDefault(data);
+        $scope.whereDefault = data; 
+    });
+
+    // Tiny MCE options
+    if (typeof(configTinyMCE) != 'undefined' && null != configTinyMCE && configTinyMCE.length != 0) {
+        // App as a config for tinyMCE => use it
+        $scope.tinymceOptions = configTinyMCE;
+    }
+    else {
+        var home = window.Claroline.Home;
+
+        var language = home.locale.trim();
+        var contentCSS = home.asset + 'bundles/clarolinecore/css/tinymce/tinymce.css';
+        
+        // If no config, add default tiny
+        $scope.tinymceOptions = {
+            relative_urls: false,
+            theme: 'modern',
+            language: language,
+            browser_spellcheck : true,
+            autoresize_min_height: 100,
+            autoresize_max_height: 500,
+            content_css: contentCSS,
+            plugins: [
+                'autoresize advlist autolink lists link image charmap print preview hr anchor pagebreak',
+                'searchreplace wordcount visualblocks visualchars fullscreen',
+                'insertdatetime media nonbreaking save table directionality',
+                'template paste textcolor emoticons code'
+            ],
+            toolbar1: 'styleselect | bold italic | alignleft aligncenter alignright alignjustify | preview fullscreen resourcePicker',
+            toolbar2: 'undo redo | forecolor backcolor emoticons | bullist numlist outdent indent | link image media print code',
+            paste_preprocess: function (plugin, args) {
+                var link = $('<div>' + args.content + '</div>').text().trim(); //inside div because a bug of jquery
+                var url = link.match(/^(((ftp|https?):\/\/)[\-\w@:%_\+.~#?,&\/\/=]+)|((mailto:)?[_.\w-]+@([\w][\w\-]+\.)+[a-zA-Z]{2,3})$/);
+
+                if (url) {
+                    args.content = '<a href="' + link + '">' + link + '</a>';
+                    home.generatedContent(link, function (data) {
+                        insertContent(data);
+                    }, false);
+                }
+            }
+        };
+    }
+
 	/**
      * Select step image in library
      * @returns void
      */
     $scope.selectImage = function() {
         var modalInstance = $modal.open({
-            templateUrl: EditorApp.webDir + 'angularjs/Step/Partial/select-image.html',
+            templateUrl: EditorApp.webDir + 'bundles/innovapath/angularjs/Step/Partial/select-image.html',
             controller: 'SelectImageModalCtrl'
         });
         
@@ -109,7 +213,6 @@ function PreviewStepCtrl($scope, $modal, $http, HistoryFactory, PathFactory, Ste
                     $scope.previewStep.durationHours = 0;
                 }
 
-                console.log('coucou');
                 $scope.previewStep.durationHours += minutesToHours;
                 $scope.previewStep.durationMinutes = $scope.previewStep.durationMinutes % 60;
             }
@@ -130,9 +233,8 @@ function PreviewStepCtrl($scope, $modal, $http, HistoryFactory, PathFactory, Ste
         }
 
         var modalInstance = $modal.open({
-            templateUrl: EditorApp.webDir + 'angularjs/Resource/Partial/resource-edit.html',
-            controller: 'ResourceModalCtrl',
-
+            templateUrl: EditorApp.webDir + 'bundles/innovapath/angularjs/Resource/Partial/resource-edit.html',
+            controller: 'ResourceModalCtrl'
         });
 
         // Process modal results
@@ -205,7 +307,7 @@ function PreviewStepCtrl($scope, $modal, $http, HistoryFactory, PathFactory, Ste
             }
         }
 
-         // Update history
-         HistoryFactory.update($scope.path);
+        // Update history
+        HistoryFactory.update($scope.path);
     };
 }

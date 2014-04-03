@@ -28,7 +28,7 @@
                 <div class="row">
                     {# Step image #}
                     <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12 text-center">
-                        <img ng-src="{% verbatim %}{{ webDir }}images/steps/{{ previewStep.image }}{% endverbatim %}" />
+                        <img ng-src="{% verbatim %}{{ webDir }}bundles/innovapath/images/steps/{{ previewStep.image }}{% endverbatim %}" />
                         <a ng-show="edit.preview" href="#" class="btn btn-default btn-sm" ng-click="selectImage()" role="button">
                             <span class="icon-picture"></span> {{ 'select_image'|trans({}, 'path_editor') }}
                         </a>
@@ -41,25 +41,28 @@
                                     <div class="panel-body">
                                         <div class="row" ng-show="!edit.preview">
                                             <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 text-center">
-                                                <span class="icon-user icon-large"></span> {% verbatim %}{{ whoList[previewStep.who] }}{% endverbatim %}
+                                                <span class="icon-user icon-large"></span> {% verbatim %}{{ whoList[previewStep.who] || whoDefault.name }}{% endverbatim %}
                                             </div>
 
                                             <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 text-center">
-                                                <span class="icon-map-marker icon-large"></span> {% verbatim %}{{ whereList[previewStep.where] }}{% endverbatim %}
+                                                <span class="icon-map-marker icon-large"></span> {% verbatim %}{{ whereList[previewStep.where] || whereDefault.name }}{% endverbatim %}
                                             </div>
                                         </div>
 
                                         <div class="row" ng-show="edit.preview">
-                                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                                 <div class="input-group">
-                                                    <span class="input-group-addon"><span class="icon-user"></span></span>
+                                                    <span class="input-group-addon"><span class="icon-user"></span> ?</span>
                                                     <select class="form-control" name="step-who" ng-model="previewStep.who" ng-options="k as v for (k,v) in whoList">
                                                     </select>
                                                 </div>
                                             </div>
-                                            <div class="col-md-6 col-md-6 col-sm-6 col-xs-6">
+                                            
+                                            <br/>
+
+                                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                                 <div class="input-group">
-                                                    <span class="input-group-addon"><span class="icon-map-marker"></span></span>
+                                                    <span class="input-group-addon"><span class="icon-map-marker"></span> ?</span>
                                                     <select class="form-control" name="step-where" ng-model="previewStep.where" ng-options="k as v for (k,v) in whereList">
                                                     </select>
                                                 </div>
@@ -82,24 +85,19 @@
                                             </span>
                                         </div>
                                         
-                                        <div class="row" ng-show="edit.preview" >
+                                        <div class="row" ng-show="edit.preview">
                                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 text-left">
-                                                {# <label style="margin-bottom: 0;">
-                                                    <input type="checkbox" name="step-hasDuration" ng-model="previewStep.hasDuration" value="true"/>
-                                                    Durée
-                                                </label> #}
                                                 <div class="input-group">
                                                     <span class="input-group-addon"><span class="icon-time"></span></span>
-                                                    <label style="margin-bottom: 0; vertical-align: middle; border: 1px solid #ccc; padding: 6px 12px; border-radius: 0 4px 4px 0;">
+                                                    <label style="margin-bottom: 0; vertical-align: middle; border: 1px solid #ccc; padding: 6px 12px; border-radius: 0 4px 4px 0; width: 100%;">
                                                         <input type="checkbox" name="step-hasDuration" ng-model="previewStep.hasDuration" value="true" />
-                                                        l'étape a une durée
+                                                        {{ 'step_has_duration'|trans({}, 'path_editor') }}
                                                     </label>
                                                 </div>
                                             </div>
 
                                             <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6" ng-show="previewStep.hasDuration">
                                                 <br/>
-
                                                 <div class="input-group">
                                                     <span class="input-group-addon">h</span>
                                                     <input class="form-control text-right" type="text" ng-model="previewStep.durationHours" ng-change="correctDuration('hour')" size="1" />
@@ -116,7 +114,6 @@
 
                                             <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6" ng-show="previewStep.hasDuration">
                                                 <br/>
-
                                                 <div class="input-group">
                                                     <span class="input-group-addon">min</span>
                                                     <input class="form-control text-right" type="text" ng-model="previewStep.durationMinutes" ng-change="correctDuration('minute')" size="1" />
@@ -139,7 +136,7 @@
                         <div class="row">
                             {# Step with computer #}
                             <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
-                                <div class="panel panel-default" ng-class="{'clickable-area': edit.preview}" ng-click="previewStep.withComputer = !previewStep.withComputer">
+                                <div class="panel panel-default" ng-class="{'clickable-area': edit.preview}" ng-click="previewStep.withComputer = edit.preview ? !previewStep.withComputer : previewStep.withComputer">
                                     <div class="panel-body">
                                         <span ng-show="!previewStep.withComputer" class="icon-stack">
                                             <span class="icon-desktop"></span>
@@ -155,7 +152,7 @@
 
                             {# Step with tutor #}
                             <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
-                                <div class="panel panel-default" ng-class="{'clickable-area': edit.preview}" ng-click="previewStep.withTutor = !previewStep.withTutor">
+                                <div class="panel panel-default" ng-class="{'clickable-area': edit.preview}" ng-click="previewStep.withTutor = edit.preview ? !previewStep.withTutor : previewStep.withTutor">
                                     <div class="panel-body">
                                         <span ng-show="!previewStep.withTutor" class="icon-stack">
                                             <span class="icon-user"></span>
@@ -168,60 +165,109 @@
                                     </div>
                                 </div>
                             </div>
-
                         </div>
                     </div>
-
                 </div>
             </div>
         </div>
 
-        <a ng-show="edit.preview" class="btn btn-sm btn-default" href="#" style="margin-bottom: 15px;">Modifier la description</a>
-        
-        <table class="table table-condensed table-hover" style="margin-bottom: 0;">
-            <caption class="h4 text-left" style="margin-bottom: 10px;">
+        <div ng-show="!edit.preview" ng-bind-html="previewStep.description">
+            <em>{{ 'step_no_description'|trans({}, 'path_editor') }}</em>
+        </div>
+
+        <div ng-show="edit.preview">
+            <textarea ui-tinymce="tinymceOptions" class="form-control" name="step-description" ng-model="previewStep.description"></textarea>
+        </div>
+    </div>
+
+    <div class="navbar navbar-default navbar-static-top" style="margin-bottom: 0; border-top: 1px solid #E7E7E7;">
+        <div class="navbar-header">
+            <span class="h4 navbar-text">
                 <span class="icon-folder-open"></span>
                 {{ 'resources'|trans({}, 'path_editor') }}
-                
-                <a href="#" class="btn btn-xs btn-primary pull-right" ng-click="editResource()">
-                    <span class="icon-plus"></span>
-                    {{ 'resource_add'|trans({}, 'path_editor') }}
+            </span>
+        </div>
+        <ul class="nav navbar-nav navbar-right">
+            <li>
+                <a href="#" ui-resource-picker="resourcePickerConfig"><span class="icon-search"></span> {{ 'resources_browse'|trans({}, 'path_editor') }}</a>
+            </li>
+
+            <li>
+                <a href="#" ng-click="editResource()"><span class="icon-plus"></span> {{ 'resource_add'|trans({}, 'path_editor') }}</a>
+            </li>
+            <li class="dropdown">
+                <a class="dropdown-toggle" data-toggle="dropdown">
+                    <span class="icon-zoom-in"></span>
+                    <span class="sr-only">Zoom</span>
+                    <span class="caret"></span>
                 </a>
-            </caption>
-            
-            <tr ng-show="(null == inheritedResources || inheritedResources.length == 0) && (null == previewStep.resources || previewStep.resources.length == 0)">
-                <td colspan="2" class="text-center"><em>{{ 'step_no_resource'|trans({}, 'path_editor') }}</em></td>
-            </tr>
-            
-            <!-- Inherited resources from parents -->
-            <tr ng-repeat="resource in inheritedResources">
-                <td>{% verbatim %}{{ resourceTypeLabels[resource.type] }}{% endverbatim %}</td>
-                <td ng-class="{'excluded-resource': resource.isExcluded}">
-                    {% verbatim %}{{ resource.name | truncate }}{% endverbatim %} 
-                    <small>({{ 'from'|trans({}, 'path_editor') }} &lt;{% verbatim %}{{ resource.parentStep | truncate }}{% endverbatim %}&gt;)</small></td>
-                <td class="text-right">
-                    <a href="#" ng-disabled="!resource.isExcluded" class="btn btn-xs btn-success" ng-click="includeParentResource(resource)"><span class="icon-eye-open"></span></a>
-                    <a href="#" ng-disabled="resource.isExcluded" class="btn btn-xs btn-danger" ng-click="excludeParentResource(resource)"><span class="icon-eye-close"></span></a>
-                </td>
-            </tr>
-            
-            <!-- Specific resources -->
-            <tr ng-repeat="resource in previewStep.resources">
-                <td>{% verbatim %}{{ resourceTypeLabels[resource.type] }}{% endverbatim %}</td>
-                <td>{% verbatim %}{{ resource.name | truncate }}{% endverbatim %} </td>
-                <td class="text-right">
-                    <a href="#" class="btn btn-xs btn-default" ng-click="editResource(resource)">
-                        <span class="icon-pencil"></span>
-                        <span class="sr-only">{{ 'resource_edit'|trans({}, 'path_editor') }}</span>
-                    </a>
-                    <a href="#" class="btn btn-xs btn-danger" ng-click="removeResource(resource)">
-                        <span class="icon-trash"></span>
-                        <span class="sr-only">{{ 'resource_delete'|trans({}, 'path_editor') }}</span>
-                    </a>
-                </td>
-            </tr>
-        </table>
+                <ul class="dropdown-menu zoom">
+                    <li class="active">
+                        <a href="#">50%</a>
+                    </li>
+                    <li>
+                        <a href="#">75%</a>
+                    </li>
+                    <li>
+                        <a href="#">100%</a>
+                    </li>
+                    <li>
+                        <a href="#">125%</a>
+                    </li>
+                    <li>
+                        <a href="#">150%</a>
+                    </li>
+                    <li>
+                        <a href="#">200%</a>
+                    </li>
+                </ul>
+
+            </li>
+        </ul>
     </div>
+
+    <p class="text-center" ng-show="(null == inheritedResources || inheritedResources.length == 0) && (null == previewStep.resources || previewStep.resources.length == 0)">
+        <em>{{ 'step_no_resource'|trans({}, 'path_editor') }}</em>
+    </p>
+
+    <ul class="nodes" ng-show="(null != inheritedResources && inheritedResources.length != 0) || (null != previewStep.resources && previewStep.resources.length != 0)">
+        <!-- Inherited resources from parents -->
+        <li ng-repeat="resource in inheritedResources" class="node-thumbnail node ui-state-default zoom75">
+            <div class="node-element" style="background-image: url('{% verbatim %}{{ resourceIcons[resource.type] }}{% endverbatim %}');"></div>
+
+            <div class="dropdown">
+                <a class="dropdown-toggle name dropdown-thumbnail" href="#" data-toggle="dropdown" role="button">
+                    <div class="node-name">{% verbatim %}{{ resource.name }}{% endverbatim %} <span class="icon-caret-down"></span></div>
+                </a>
+                <ul class="dropdown-menu" role="menu">
+                    <li>
+                        <a class="node-menu-action" href="#" ng-show="resource.isExcluded" ng-click="includeParentResource(resource)">Afficher dans cette étape</a>
+                        <a class="node-menu-action" href="#" ng-show="!resource.isExcluded" ng-click="excludeParentResource(resource)">Masquer dans cette étape</a>
+                    </li>
+                </ul>
+            </div>
+        </li>
+
+        <!-- Specific resources -->
+        <li ng-repeat="resource in previewStep.resources" class="node-thumbnail node ui-state-default zoom75">
+            <div class="node-element" style="background-image: url({% verbatim %}{{ resourceIcons[resource.type] || resourceIcons['custom/default'] }}{% endverbatim %});"></div>
+
+            <div class="dropdown">
+                <a class="dropdown-toggle name dropdown-thumbnail" href="#" data-toggle="dropdown" role="button">
+                    <div class="node-name">{% verbatim %}{{ resource.name }}{% endverbatim %} <span class="icon-caret-down"></span></div>
+                </a>
+                <ul class="dropdown-menu" role="menu">
+                    <li ng-show="null == resource.resourceId || resource.resourceId.lengt == 0">
+                        <a class="node-menu-action" href="#" ng-click="editResource(resource)">{{ 'resource_edit'|trans({}, 'path_editor') }}
+                        </a>
+                    </li>
+                    <li>
+                        <a class="node-menu-action" href="#" ng-click="removeResource(resource)">{{ 'resource_delete'|trans({}, 'path_editor') }}</a>
+                    </li>
+                </ul>
+            </div>
+        </li>
+    </ul>
 </div>
 
 <div class="row" ng-show="edit.preview">

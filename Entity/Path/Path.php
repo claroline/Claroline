@@ -5,6 +5,7 @@ namespace Innova\PathBundle\Entity\Path;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Innova\PathBundle\Entity\Step;

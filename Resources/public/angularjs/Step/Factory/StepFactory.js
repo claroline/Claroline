@@ -7,6 +7,9 @@ function StepFactory($http, $q, PathFactory) {
     // Stored step
     var step = null;
     
+    var whoDefault = null;
+    var whereDefault = null;
+
     // Base template used to append new step to tree
     var baseStep = {
         id                : null,
@@ -30,6 +33,22 @@ function StepFactory($http, $q, PathFactory) {
     var images = null;
     
     return {
+        getWhoDefault: function() {
+            return whoDefault;
+        },
+
+        setWhoDefault: function(defaultValue) {
+            whoDefault = defaultValue;
+        },
+
+        getWhereDefault: function() {
+            return whereDefault;
+        },
+
+        setWhereDefault: function(defaultValue) {
+            whereDefault = defaultValue;
+        },
+
         /**
          * 
          */
@@ -70,6 +89,9 @@ function StepFactory($http, $q, PathFactory) {
             
             newStep.id = stepId;
             
+            newStep.who = whoDefault.id;
+            newStep.where = whereDefault.id;
+
             return newStep;
         },
         

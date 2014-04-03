@@ -221,7 +221,7 @@ class PublishmentManager
         // Process local resources of current step
         foreach ($stepResources as $resource) {
             // Manage non digital resources
-            if (!$resource->isDigital) {
+            if ('custom/innova_non_digital_resource' === $resource->type) {
                 $nonDigitalResource = $this->nonDigitalResourceManager->edit($this->workspace, $resource->resourceId, $resource->name, $resource->description, $resource->type);
                 // update JSON
                 $resource->resourceId = $nonDigitalResource->getResourceNode()->getId();

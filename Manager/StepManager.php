@@ -188,6 +188,16 @@ class StepManager
         return $stepWhos;
     }
     
+    public function getWhoDefault()
+    {
+        $default = $this->om->getRepository('InnovaPathBundle:StepWho')->findOneBy(array('default' => true));
+
+        return array(
+            'id'   => $default->getId(),
+            'name' => $this->translator->trans($default->getName(), array(), 'innova_tools'),
+        );        
+    }
+
     public function getWhere()
     {
         $results = $this->om->getRepository('InnovaPathBundle:StepWhere')->findAll();
@@ -198,6 +208,16 @@ class StepManager
         }
         
         return $stepWheres;
+    }
+
+    public function getWhereDefault()
+    {
+        $default = $this->om->getRepository('InnovaPathBundle:StepWhere')->findOneBy(array('default' => true));
+
+        return array(
+            'id'   => $default->getId(),
+            'name' => $this->translator->trans($default->getName(), array(), 'innova_tools'),
+        );       
     }
 
 	public function contextualUpdate($step)

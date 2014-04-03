@@ -16,19 +16,16 @@ function ScenarioCtrl($scope, $modal, HistoryFactory, PathFactory, StepFactory) 
 
     /**
      * Update Path when Tree is modified with drag n drop
-     * @returns void
      */
     $scope.applyTreeChanges = function() {
         PathFactory.setPath($scope.path);
         PathFactory.recalculateStepsLevel($scope.path);
 
         HistoryFactory.update($scope.path);
-        $scope.updatePreviewStep();
     };
 
     /**
      * Remove a step from Tree
-     * @returns void
      */
     $scope.remove = function(step) {
         // Search step to remove function
@@ -52,12 +49,12 @@ function ScenarioCtrl($scope, $modal, HistoryFactory, PathFactory, StepFactory) 
 
         // Display confirm modal
         var modalInstance = $modal.open({
-            templateUrl: EditorApp.webDir + 'angularjs/Step/Partial/confirm-delete.html',
-            controller: 'ConfirmDeleteModalCtrl',
+            templateUrl: EditorApp.webDir + 'bundles/innovapath/angularjs/Confirm/Partial/confirm.html',
+            controller: 'ConfirmModalCtrl',
             resolve: {
-                step: function () {
-                    return ;
-                }
+                title: function () { return Translator.get('path_editor:step_delete_title', { stepName: step.name }) },
+                message: function () { return Translator.get('path_editor:step_delete_confirm') },
+                confirmButton: function () { return Translator.get('path_editor:step_delete') }
             }
         });
 
@@ -67,24 +64,19 @@ function ScenarioCtrl($scope, $modal, HistoryFactory, PathFactory, StepFactory) 
 
             HistoryFactory.update($scope.path);
             $scope.updatePreviewStep();
-        }, function () {
-            // Cancel
         });
     };
 
     /**
      * Remove all children of the specified step
-     * @returns void
      */
     $scope.removeChildren = function(step) {
         step.children = [];
         HistoryFactory.update($scope.path);
-        $scope.updatePreviewStep();
     };
 
     /**
      * Add a new step child to specified step
-     * @returns void
      */
     $scope.addChild = function(step) {
         var newStep = StepFactory.generateNewStep(step);
@@ -95,17 +87,15 @@ function ScenarioCtrl($scope, $modal, HistoryFactory, PathFactory, StepFactory) 
         step.children.push(newStep);
         
         HistoryFactory.update($scope.path);
-        $scope.updatePreviewStep();
     };
 
     /**
      * Open modal to create a new template from specified step(s)
-     * @returns void
      */
     $scope.editTemplate = function(step) {
         StepFactory.setStep(step);
         var modalInstance = $modal.open({
-            templateUrl: EditorApp.webDir + 'angularjs/Template/Partial/template-edit.html',
+            templateUrl: EditorApp.webDir + 'bundles/innovapath/angularjs/Template/Partial/template-edit.html',
             controller: 'TemplateModalCtrl'
         });
 

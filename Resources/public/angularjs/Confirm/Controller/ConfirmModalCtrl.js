@@ -1,10 +1,13 @@
 'use strict';
 
 /**
- * Confirm delete Modal Controller
+ * Confirm Modal Controller
  */
-function ConfirmDeleteModalCtrl($scope, $modalInstance, StepFactory) {
+function ConfirmModalCtrl($scope, $modalInstance, StepFactory, title, message, confirmButton) {
     $scope.step = StepFactory.getStep();
+    $scope.title = title;
+    $scope.message = message;
+    $scope.confirmButton = confirmButton;
 
     /**
      * Confirm delete step

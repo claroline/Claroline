@@ -54,9 +54,14 @@ services:
     innova_path.controller.path_editor:
         class: %innova_path.controller.path_editor.class%
         arguments:
-            router:      @router
-            formFactory: @form.factory
-            session:     @session
-            translator:  @translator
-            pathHandler: @innova_path.form.handler.path
+            objectManager:   @doctrine.orm.entity_manager
+            router:          @router
+            formFactory:     @form.factory
+            session:         @session
+            translator:      @translator
+            pathHandler:     @innova_path.form.handler.path
+            resourceManager: @claroline.manager.resource_manager
+            securityContext: @security.context
+        calls:
+            - [setRequest, [@request]]
         scope: request

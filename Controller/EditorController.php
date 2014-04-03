@@ -3,6 +3,7 @@
 namespace Innova\PathBundle\Controller;
 
 use Symfony\Component\Form\FormFactoryInterface;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -17,6 +18,9 @@ use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 
 use Innova\PathBundle\Form\Handler\PathHandler;
 use Innova\PathBundle\Entity\Path\Path;
+use Doctrine\Common\Persistence\ObjectManager;
+use Claroline\CoreBundle\Manager\ResourceManager;
+use Symfony\Component\Security\Core\SecurityContextInterface;
 
 /**
  * Class EditorController
@@ -39,6 +43,12 @@ use Innova\PathBundle\Entity\Path\Path;
  */
 class EditorController
 {
+    /**
+     * Object manager
+     * @var \Doctrine\Common\Persistence\ObjectManager
+     */
+    protected $om;
+
     /**
      * Router
      * @var \Symfony\Component\Routing\RouterInterface $router
@@ -68,27 +78,55 @@ class EditorController
      * @var \Innova\PathBundle\Form\Handler\PathHandler
      */
     protected $pathHandler;
-    
+
+    /**
+     * Current request
+     * @var \Symfony\Component\HttpFoundation\Request
+     */
+    protected $request;
+
+    /**
+     * Current security context
+     * @var \Symfony\Component\Security\Core\SecurityContextInterface
+     */
+    protected $security;
+
     /**
      * Class constructor
-     * @param \Symfony\Component\Routing\RouterInterface   $router
-     * @param \Symfony\Component\Form\FormFactoryInterface $formFactory
-     * @param \Innova\PathBundle\Form\Handler\PathHandler  $pathHandler
+     * @param \Doctrine\Common\Persistence\ObjectManager                $objectManager
+     * @param \Symfony\Component\Routing\RouterInterface                $router
+     * @param \Symfony\Component\Form\FormFactoryInterface              $formFactory
+     * @param \Innova\PathBundle\Form\Handler\PathHandler               $pathHandler
+     * @param \Claroline\CoreBundle\Manager\ResourceManager             $resourceManager
+     * @param \Symfony\Component\Security\Core\SecurityContextInterface $securityContext
      */
     public function __construct(
+        ObjectManager        $objectManager,
         RouterInterface      $router,
         FormFactoryInterface $formFactory,
         SessionInterface     $session,
         TranslatorInterface  $translator,
-        PathHandler          $pathHandler)
+        PathHandler          $pathHandler,
+        ResourceManager      $resourceManager,
+        SecurityContextInterface $securityContext)
     {
-        $this->router      = $router;
-        $this->formFactory = $formFactory;
-        $this->session     = $session;
-        $this->translator  = $translator;
-        $this->pathHandler = $pathHandler;
+        $this->om              = $objectManager;
+        $this->router          = $router;
+        $this->formFactory     = $formFactory;
+        $this->session         = $session;
+        $this->translator      = $translator;
+        $this->pathHandler     = $pathHandler;
+        $this->resourceManager = $resourceManager;
+        $this->security        = $securityContext;
     }
-    
+
+    public function setRequest(Request $request = null)
+    {
+        $this->request = $request;
+
+        return $this;
+    }
+
     /**
      * Create a new path
      * @Route(
@@ -102,32 +140,8 @@ class EditorController
     public function newAction(AbstractWorkspace $workspace)
     {
         $path = Path::initialize();
-        
-        // Create form
-        $form = $this->formFactory->create('innova_path', $path);
-        
-        // Try to process data
-        $this->pathHandler->setForm($form);
-        if ($this->pathHandler->process()) {
-            // Add user message
-            $this->session->getFlashBag()->add(
-                'success',
-                $this->translator->trans('path_save_success', array(), 'path_editor')
-            );
-            
-            // Redirect to edit
-            $url = $this->router->generate('innova_path_editor_edit', array (
-                'workspaceId' => $workspace->getId(),
-                'id' => $path->getId(),
-            ));
-        
-            return new RedirectResponse($url);
-        }
-        
-        return array (
-            'workspace' => $workspace,
-            'form'      => $form->createView(),
-        );
+
+        return $this->renderEditor($workspace, $path);
     }
     
     /**
@@ -143,9 +157,25 @@ class EditorController
      */
     public function editAction(AbstractWorkspace $workspace, Path $path)
     {
+        return $this->renderEditor($workspace, $path, 'PUT');
+    }
+
+    /**
+     * Render Editor UI
+     * @param  \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace $workspace
+     * @param  \Innova\PathBundle\Entity\Path\Path $path
+     * @param  string $httpMethod
+     * @return array|RedirectResponse
+     */
+    protected function renderEditor(AbstractWorkspace $workspace, Path $path, $httpMethod = null)
+    {
+        $params = array ();
+        if (!empty($httpMethod)) {
+            $params['method'] = $httpMethod;
+        }
         // Create form
-        $form = $this->formFactory->create('innova_path', $path, array ('method' => 'PUT'));
-        
+        $form = $this->formFactory->create('innova_path', $path, $params);
+
         // Try to process data
         $this->pathHandler->setForm($form);
         if ($this->pathHandler->process()) {
@@ -154,19 +184,27 @@ class EditorController
                 'success',
                 $this->translator->trans('path_save_success', array(), 'path_editor')
             );
-            
+
             // Redirect to list
             $url = $this->router->generate('innova_path_editor_edit', array (
                 'workspaceId' => $workspace->getId(),
                 'id' => $path->getId(),
             ));
-        
+
             return new RedirectResponse($url);
         }
-        
+
+        // Get workspace root directory
+        $wsDirectory = $this->resourceManager->getWorkspaceRoot($workspace);
+        $resourceTypes = $this->om->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findAll();
+        $resourceIcons = $this->om->getRepository('ClarolineCoreBundle:Resource\ResourceIcon')->findByIsShortcut(false);
+
         return array (
-            'workspace' => $workspace,
-            'form'      => $form->createView(),
+            'workspace'          => $workspace,
+            'wsDirectoryId'      => $wsDirectory->getId(),
+            'resourceTypes'      => $resourceTypes,
+            'resourceIcons'      => $resourceIcons,
+            'form'               => $form->createView(),
         );
     }
 }
