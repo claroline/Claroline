@@ -28,14 +28,14 @@
                     </div>
                     {% if publicProfilePreferences.allowMailSending or publicProfilePreferences.allowMessageSending %}
                         <ul class="nav nav-pills nav-stacked contact_methods">
-                            {% if publicProfilePreferences.allowMailSending %}
+                            {% if publicProfilePreferences.allowMailSending and is_granted('IS_AUTHENTICATED_FULLY') %}
                                 <li>
                                     <a href="{{path('claro_mail_form', {'userId':user.getId()})}}">
                                         <i class="icon-envelope"></i> {{ 'send_mail'|trans({}, 'platform') }}
                                     </a>
                                 </li>
                             {% endif %}
-                            {% if publicProfilePreferences.allowMessageSending %}
+                            {% if publicProfilePreferences.allowMessageSending and is_granted('IS_AUTHENTICATED_FULLY') %}
                                 <li>
                                     <a href="{{path('claro_message_show', {'message': 0})}}?ids[]={{ user.getId() }}">
                                         <i class="icon-comment"></i> {{ 'send_message'|trans({}, 'platform') }}
