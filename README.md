@@ -26,15 +26,16 @@ Project setup
 
 - PHP >= 5.4.1
 - PHP extensions:
+    - fileinfo (for mime type detection)
+    - curl (for facebook authentication)
+    - mcrypt
+    - Optionaly:
+        - [gd][1] (for simple icon creation)
+        - [ffmpeg][2] (for video thumbnail creation)
     - If you use PHP 5.5, you need to install the following extensions manually:
         - php5-json
         - php5-curl
         - php5-intl
-    - fileinfo (for mime type detection)
-    - curl (for facebook authentication)
-    - Optionaly:
-        - [gd][1] (for simple icon creation)
-        - [ffmpeg][2] (for video thumbnail creation)
 - A RDBMS like MySQL (>=5.0, recommended) or PostgreSQL (>= 8.0)
 - A web server like Apache or Nginx
 - A global installation of [composer][3] (for dependency management)
