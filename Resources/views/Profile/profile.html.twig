@@ -28,11 +28,9 @@
                 </div>
                 <p>
                     {% if user.getMail() != "" %}
-                       {% if user.isMailDisplayed() %}
-                           <a href="{{path('claro_mail_form', {'userId':user.getId()})}}"> <i class="icon-envelope"></i>
-                               {{ user.getMail() }}
-                           </a>
-                       {% endif %}
+                       <a href="{{path('claro_mail_form', {'userId':user.getId()})}}"> <i class="icon-envelope"></i>
+                        {{ user.getMail() }}
+                         </a>
                     {% endif %}
                 <ul class="col-md-10">
                     <li>{{'First name' | trans({}, 'platform') }}: {{user.getFirstName()}}</li>
