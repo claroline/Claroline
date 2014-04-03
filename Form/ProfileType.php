@@ -64,8 +64,7 @@ class ProfileType extends AbstractType
                 ->add('phone', 'text', array('required' => false, 'label' => 'phone'))
                 ->add('locale', 'choice', array('choices' => $this->langs, 'required' => false, 'label' => 'Language'));
         } else {
-            $builder->add('firstName', 'text', array('label' => 'First name'))
-                ->add('username', 'text', array('label' => 'User name'))
+            $builder->add('username', 'text', array('label' => 'User name'))
                 ->add('administrativeCode', 'text', array('required' => false, 'label' => 'administrative_code'))
                 ->add('mail', 'email', array('required' => false, 'label' => 'email'))
                 ->add('phone', 'text', array('required' => false, 'label' => 'phone'))
