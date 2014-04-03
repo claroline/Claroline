@@ -12,9 +12,12 @@
 namespace Claroline\CoreBundle\Controller;
 
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Entity\UserPublicProfilePreferences;
+use Claroline\CoreBundle\Form\UserPublicProfilePreferencesType;
 use Claroline\CoreBundle\Event\StrictDispatcher;
 use Claroline\CoreBundle\Form\ProfileType;
 use Claroline\CoreBundle\Form\ResetPasswordType;
+use Claroline\CoreBundle\Form\UserPublicProfileUrlType;
 use Claroline\CoreBundle\Manager\LocaleManager;
 use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Manager\UserManager;
@@ -24,15 +27,14 @@ use Pagerfanta\Adapter\DoctrineORMAdapter;
 use Pagerfanta\Pagerfanta;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 
 /**
- * @DI\Tag("security.secure_service")
- * @SEC\PreAuthorize("hasRole('ROLE_USER')")
- *
  * Controller of the user profile.
  */
 class ProfileController extends Controller
@@ -46,12 +48,12 @@ class ProfileController extends Controller
 
     /**
      * @DI\InjectParams({
-     *     "userManager"        = @DI\Inject("claroline.manager.user_manager"),
-     *     "roleManager"        = @DI\Inject("claroline.manager.role_manager"),
-     *     "eventDispatcher"    = @DI\Inject("claroline.event.event_dispatcher"),
-     *     "security"           = @DI\Inject("security.context"),
-     *     "request"            = @DI\Inject("request"),
-     *     "localeManager"      = @DI\Inject("claroline.common.locale_manager")
+     *     "userManager"     = @DI\Inject("claroline.manager.user_manager"),
+     *     "roleManager"     = @DI\Inject("claroline.manager.role_manager"),
+     *     "eventDispatcher" = @DI\Inject("claroline.event.event_dispatcher"),
+     *     "security"        = @DI\Inject("security.context"),
+     *     "request"         = @DI\Inject("request"),
+     *     "localeManager"   = @DI\Inject("claroline.common.locale_manager")
      * })
      */
     public function __construct(
@@ -84,111 +86,223 @@ class ProfileController extends Controller
 
     /**
      * @EXT\Route(
-     *     "/form/{user}",
-     *     name="claro_profile_form"
+     *     "/",
+     *      name="claro_profile_view"
      * )
-     *
-     * @EXT\Template("ClarolineCoreBundle:Profile:profileForm.html.twig")
+     * @SEC\Secure(roles="ROLE_USER")
+     * @EXT\Template()
      * @EXT\ParamConverter("loggedUser", options={"authenticatedUser" = true})
-     * Displays an editable form of the current user's profile.
-     *
-     * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function formAction(User $user, User $loggedUser)
+    public function viewAction(User $loggedUser)
     {
-        $isAdmin = $this->get('security.context')->isGranted('ROLE_ADMIN');
-
-        if ($user !== $loggedUser && !$isAdmin) {
-            throw new AccessDeniedException();
-        }
-
-        $roles = $this->roleManager->getPlatformRoles($user);
-        $form = $this->createForm(
-            new ProfileType($roles, $isAdmin, $this->localeManager->getAvailableLocales()), $user
+        return array(
+            'user'  => $loggedUser
         );
-
-        return array('profile_form' => $form->createView(), 'user' => $user);
     }
 
     /**
      * @EXT\Route(
-     *     "/update/{user}",
-     *     name="claro_profile_update"
+     *     "/preferences",
+     *      name="claro_user_public_profile_preferences"
      * )
+     * @SEC\Secure(roles="ROLE_USER")
+     * @EXT\Template()
+     * @EXT\ParamConverter("loggedUser", options={"authenticatedUser" = true})
+     */
+    public function editPublicProfilePreferencesAction(User $loggedUser)
+    {
+        $form    = $this->createForm(new UserPublicProfilePreferencesType(), $loggedUser->getPublicProfilePreferences());
+
+        if ($this->request->isMethod('POST')) {
+            $form->handleRequest($this->request);
+
+            if ($form->isValid()) {
+                /** @var \Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface $sessionFlashBag */
+                $sessionFlashBag = $this->get('session')->getFlashBag();
+                /** @var \Symfony\Bundle\FrameworkBundle\Translation\Translator $translator */
+                $translator = $this->get('translator');
+
+                try {
+                    /** @var \Claroline\CoreBundle\Entity\UserPublicProfilePreferences $userPublicProfilePreferences */
+                    $userPublicProfilePreferences = $form->getData();
+
+                    if ($userPublicProfilePreferences !== $loggedUser->getPublicProfilePreferences()) {
+                        throw new \Exception();
+                    }
+
+                    $entityManager = $this->get('doctrine.orm.entity_manager');
+                    $entityManager->persist($userPublicProfilePreferences);
+                    $entityManager->flush();
+
+                    $sessionFlashBag->add('success', $translator->trans('edit_public_profile_preferences_success', array(), 'platform'));
+                } catch(\Exception $exception){
+                    $sessionFlashBag->add('error', $translator->trans('edit_public_profile_preferences_error', array(), 'platform'));
+                }
+
+                return $this->redirect($this->generateUrl('claro_user_public_profile_preferences'));
+            }
+        }
+
+        return array(
+            'form' => $form->createView(),
+            'user' => $loggedUser
+        );
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/{publicUrl}",
+     *      name="claro_public_profile_view"
+     * )
+     */
+    public function publicProfileAction($publicUrl)
+    {
+        /** @var \Claroline\CoreBundle\Entity\User $user */
+        $user = $this->getDoctrine()->getRepository('ClarolineCoreBundle:User')->findOneByPublicUrl($publicUrl);
+        if (null === $user) {
+            throw $this->createNotFoundException("Unknown user.");
+        }
+
+        $userPublicProfilePreferences = $user->getPublicProfilePreferences();
+        $publicProfileVisible         = false;
+
+        if ($this->get('security.context')->isGranted('ROLE_ADMIN')) {
+            $userPublicProfilePreferences = $this->get('claroline.manager.user_manager')->getUserPublicProfilePreferencesForAdmin();
+        }
+
+        $response = new Response($this->renderView('ClarolineCoreBundle:Profile:publicProfile.html.twig', array('user' => $user, 'publicProfilePreferences' => $userPublicProfilePreferences)));
+
+        if (UserPublicProfilePreferences::SHARE_POLICY_EVERYBODY !== $userPublicProfilePreferences->getSharePolicy()) {
+            if(UserPublicProfilePreferences::SHARE_POLICY_NOBODY === $userPublicProfilePreferences->getSharePolicy()) {
+                $response = new Response($this->renderView('ClarolineCoreBundle:Profile:publicProfile.404.html.twig', array('user' => $user, 'publicUrl' => $publicUrl)), 404);
+            }
+            else {
+                $loggedUser = $this->getUser();
+
+                if (UserPublicProfilePreferences::SHARE_POLICY_PLATFORM_USER !== $userPublicProfilePreferences->getSharePolicy()
+                    || null === $loggedUser) {
+                    $response = new Response($this->renderView('ClarolineCoreBundle:Profile:publicProfile.401.html.twig', array('user' => $user, 'publicUrl' => $publicUrl)), 401);
+                }
+            }
+        }
+
+        return $response;
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/profile/edit/{user}",
+     *     name="claro_user_profile_edit"
+     * )
+     * @SEC\Secure(roles="ROLE_USER")
      *
-     * @EXT\Template("ClarolineCoreBundle:Profile:profileForm.html.twig")
+     * @EXT\Template()
      * @EXT\ParamConverter("loggedUser", options={"authenticatedUser" = true})
      * Updates the user's profile and redirects to the profile form.
      *
+     * @param \Claroline\CoreBundle\Entity\User $user
+     * @param \Claroline\CoreBundle\Entity\User $loggedUser
+     *
+     * @throws \Symfony\Component\Security\Core\Exception\AccessDeniedException
+     *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
-    public function updateAction(User $user, User $loggedUser)
+    public function editProfileAction(User $loggedUser, User $user = null)
     {
         $isAdmin = $this->get('security.context')->isGranted('ROLE_ADMIN');
 
-        if ($user !== $loggedUser && !$isAdmin) {
+        $editYourself = false;
+
+        if (null !== $user && !$isAdmin) {
             throw new AccessDeniedException();
+        }
+
+        if (null === $user) {
+            $user         = $loggedUser;
+            $editYourself = true;
         }
 
         $roles = $this->roleManager->getPlatformRoles($loggedUser);
         $form = $this->createForm(
             new ProfileType($roles, $isAdmin, $this->localeManager->getAvailableLocales()), $user
         );
+
         $form->handleRequest($this->request);
 
         if ($form->isValid()) {
+            /** @var \Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface $sessionFlashBag */
+            $sessionFlashBag = $this->get('session')->getFlashBag();
+            /** @var \Symfony\Bundle\FrameworkBundle\Translation\Translator $translator */
+            $translator = $this->get('translator');
+
             $user = $form->getData();
             $this->userManager->rename($user, $user->getUsername());
-            $em = $this->getDoctrine()->getManager();
-            $unitOfWork = $em->getUnitOfWork();
-            $unitOfWork->computeChangeSets();
-            $changeSet = $unitOfWork->getEntityChangeSet($user);
-            $newRoles = array();
 
-            if (isset($form['platformRoles'])) {
-                $newRoles = $form['platformRoles']->getData();
-                $this->userManager->setPlatformRoles($user, $newRoles);
+            $successMessage = $translator->trans('edit_profile_success', array(), 'platform');
+            $errorMessage   = $translator->trans('edit_profile_error', array(), 'platform');
+            $redirectUrl    = $this->generateUrl('claro_admin_user_list');
+            if ($editYourself) {
+                $successMessage = $translator->trans('edit_your_profile_success', array(), 'platform');
+                $errorMessage   = $translator->trans('edit_your_profile_error', array(), 'platform');
+                $redirectUrl    = $this->generateUrl('claro_profile_view');
             }
 
-            $rolesChangeSet = array();
-            //Detect added
-            foreach ($newRoles as $role) {
-                if (!$this->isInRoles($role, $roles)) {
-                    $rolesChangeSet[$role->getTranslationKey()] = array(false, true);
+            try {
+                $entityManager = $this->getDoctrine()->getManager();
+                $unitOfWork    = $entityManager->getUnitOfWork();
+                $unitOfWork->computeChangeSets();
+
+                $changeSet = $unitOfWork->getEntityChangeSet($user);
+                $newRoles  = array();
+
+                if (isset($form['platformRoles'])) {
+                    $newRoles = $form['platformRoles']->getData();
+                    $this->userManager->setPlatformRoles($user, $newRoles);
                 }
-            }
-            //Detect removed
-            foreach ($roles as $role) {
-                if (!$this->isInRoles($role, $newRoles)) {
-                    $rolesChangeSet[$role->getTranslationKey()] = array(true, false);
+
+                $rolesChangeSet = array();
+                //Detect added
+                foreach ($newRoles as $role) {
+                    if (!$this->isInRoles($role, $roles)) {
+                        $rolesChangeSet[$role->getTranslationKey()] = array(false, true);
+                    }
                 }
+                //Detect removed
+                foreach ($roles as $role) {
+                    if (!$this->isInRoles($role, $newRoles)) {
+                        $rolesChangeSet[$role->getTranslationKey()] = array(true, false);
+                    }
+                }
+                if (count($rolesChangeSet) > 0) {
+                    $changeSet['roles'] = $rolesChangeSet;
+                }
+
+                $this->userManager->uploadAvatar($user);
+                $this->eventDispatcher->dispatch(
+                    'log',
+                    'Log\LogUserUpdate',
+                    array($user, $changeSet)
+                );
+
+                $sessionFlashBag->add('success', $successMessage);
+            } catch(\Exception $exception){
+                $sessionFlashBag->add('error', $errorMessage);
             }
-            if (count($rolesChangeSet) > 0) {
-                $changeSet['roles'] = $rolesChangeSet;
-            }
 
-            $this->userManager->uploadAvatar($user);
-            $this->eventDispatcher->dispatch(
-                'log',
-                'Log\LogUserUpdate',
-                array($user, $changeSet)
-            );
-
-            if ($isAdmin) {
-                return $this->redirect($this->generateUrl('claro_admin_user_list'));
-            }
-
-            return $this->redirect($this->generateUrl('claro_profile_view', array('userId' => $user->getId())));
-
+            return $this->redirect($redirectUrl);
         }
 
-        return array('profile_form' => $form->createView(), 'user' => $user);
+        return array(
+            'form'         => $form->createView(),
+            'user'         => $user,
+            'editYourself' => $editYourself
+        );
     }
 
     /**
      * @EXT\Route(
-     *     "/view/{userId}",
-     *      name="claro_profile_view"
+     *     "/password/edit",
+     *      name="claro_user_password_edit"
      * )
      * @EXT\ParamConverter(
      *      "user",
@@ -200,92 +314,113 @@ class ProfileController extends Controller
      * Displays the public profile of an user.
      *
      * @param \Claroline\CoreBundle\Entity\User $user
-     * @param int                               $page
+     * @param int $page
+     *
+     * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
+     *
+     * @return array
      */
-    public function viewAction(User $user, $page = 1)
+    public function editPasswordAction(User $loggedUser)
     {
-        $doctrine = $this->getDoctrine();
-        $doctrine->getManager()->getFilters()->disable('softdeleteable');
+        $form = $this->createForm(new ResetPasswordType(), $loggedUser);
+        $form->handleRequest($this->request);
 
-        $query   = $doctrine->getRepository('ClarolineCoreBundle:Badge\UserBadge')->findByUser($user, false);
-        $adapter = new DoctrineORMAdapter($query);
-        $pager   = new Pagerfanta($adapter);
+        if ($form->isValid()) {
+            /** @var \Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface $sessionFlashBag */
+            $sessionFlashBag = $this->get('session')->getFlashBag();
+            /** @var \Symfony\Bundle\FrameworkBundle\Translation\Translator $translator */
+            $translator = $this->get('translator');
 
-        try {
-            $pager->setCurrentPage($page);
-        } catch (NotValidCurrentPageException $exception) {
-            throw new NotFoundHttpException();
+            try {
+                /** @var \Claroline\CoreBundle\Entity\User $user */
+                $user = $form->getData();
+
+                if ($user !== $loggedUser) {
+                    throw new \Exception();
+                }
+
+                $entityManager = $this->get('doctrine.orm.entity_manager');
+                $entityManager->persist($user);
+                $entityManager->flush();
+
+                $sessionFlashBag->add('success', $translator->trans('edit_password_success', array(), 'platform'));
+            } catch(\Exception $exception){
+                $sessionFlashBag->add('error', $translator->trans('edit_password_error', array(), 'platform'));
+            }
+
+            return $this->redirect($this->generateUrl('claro_profile_view'));
         }
 
-        /** @var \Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler $platformConfigHandler */
-        $platformConfigHandler = $this->get('claroline.config.platform_config_handler');
-
         return array(
-            'user'     => $user,
-            'pager'    => $pager,
-            'language' => $platformConfigHandler->getParameter('locale_language')
+            'form' => $form->createView(),
+            'user' => $loggedUser
         );
     }
 
     /**
      * @EXT\Route(
-     *     "/password/form/{user}",
-     *      name="claro_password_form"
+     *     "/publicurl/edit",
+     *      name="claro_user_public_url_edit"
      * )
-     * @EXT\Template("ClarolineCoreBundle:Profile:passwordForm.html.twig")
-     *
-     * Displays the password reset form for a user.
-     *
-     * @param \Claroline\CoreBundle\Entity\User $user
-     * @throws \Symfony\Component\Security\Core\Exception\AccessDeniedException
-     * @return array
+     * @SEC\Secure(roles="ROLE_USER")
+     * @EXT\Template()
+     * @EXT\ParamConverter("loggedUser", options={"authenticatedUser" = true})
      */
-    public function editPasswordFormAction(User $user)
+    public function editPublicUrlAction(User $loggedUser)
     {
-        $security = $this->get('security.context');
+        $currentPublicUrl = $loggedUser->getPublicUrl();
+        $form = $this->createForm(new UserPublicProfileUrlType(), $loggedUser);
+        $form->handleRequest($this->request);
 
-        if ($security->getToken()->getUser() !== $user && !$security->isGranted('ROLE_ADMIN')) {
-            throw new AccessDeniedException();
+        if ($form->isValid()) {
+            /** @var \Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface $sessionFlashBag */
+            $sessionFlashBag = $this->get('session')->getFlashBag();
+            /** @var \Symfony\Bundle\FrameworkBundle\Translation\Translator $translator */
+            $translator = $this->get('translator');
+
+            try {
+                /** @var \Claroline\CoreBundle\Entity\User $user */
+                $user = $form->getData();
+
+                $user->setHasTunedPublicUrl(true);
+
+                $entityManager = $this->get('doctrine.orm.entity_manager');
+                $entityManager->persist($user);
+                $entityManager->flush();
+
+                $sessionFlashBag->add('success', $translator->trans('tune_public_url_success', array(), 'platform'));
+            } catch(\Exception $exception){
+                $sessionFlashBag->add('error', $translator->trans('tune_public_url_error', array(), 'platform'));
+            }
+
+            return $this->redirect($this->generateUrl('claro_profile_view'));
         }
 
-        $form = $this->createForm(new ResetPasswordType(), $user);
-
-        return array('form' => $form->createView(), 'user' => $user);
+        return array(
+            'form'             => $form->createView(),
+            'user'             => $loggedUser,
+            'currentPublicUrl' => $currentPublicUrl
+        );
     }
 
     /**
      * @EXT\Route(
-     *     "/password/edit/{user}",
-     *      name="claro_password"
+     *     "/publicurl/check",
+     *      name="claro_user_public_url_check"
      * )
-     * @EXT\Template("ClarolineCoreBundle:Profile:passwordForm.html.twig")
-     *
-     * Updates the password of a user.
-     *
-     * @param \Claroline\CoreBundle\Entity\User $user
-     * @throws \Symfony\Component\Security\Core\Exception\AccessDeniedException
-     * @return array|\Symfony\Component\HttpFoundation\RedirectResponse
+     * @SEC\Secure(roles="ROLE_USER")
+     * @EXT\Method({"POST"})
      */
-    public function editPasswordAction(User $user)
+    public function checkPublicUrlAction(Request $request)
     {
-        $security = $this->get('security.context');
+        $existedUser = $this->getDoctrine()->getRepository('ClarolineCoreBundle:User')->findOneByPublicUrl($request->request->get('publicUrl'));
+        $data = array('check' => false);
 
-        if ($security->getToken()->getUser() !== $user && !$security->isGranted('ROLE_ADMIN')) {
-            throw new AccessDeniedException();
+        if (null === $existedUser) {
+            $data['check'] = true;
         }
 
-        $form = $this->createForm(new ResetPasswordType(), $user);
-        $form->handleRequest($this->request);
-
-        if ($form->isValid()) {
-            $user = $form->getData();
-            $em = $this->get('doctrine.orm.entity_manager');
-            $em->persist($user);
-            $em->flush();
-
-            return $this->redirect($this->generateUrl('claro_profile_view', array('userId' => $user->getId())));
-        }
-
-        return array('form' => $form->createView(), 'user' => $user);
+        $response = new JsonResponse($data);
+        return $response;
     }
 }

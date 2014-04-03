@@ -1,0 +1,70 @@
+{% extends "ClarolineCoreBundle::layout.html.twig" %}
+
+{% block title %}{{ user.getLastName() ~ ' ' ~ user.getFirstName() | striptags | raw }}{% endblock %}
+
+{% set canEdit = (app.user is not null and user.getId() == app.user.getId()) or is_granted('ROLE_ADMIN') %}
+
+{% block content %}
+    <div class="panel panel-default panel-user">
+        <div class="panel-heading relative">
+            <h3 class="panel-title">
+                {{ 'public_profile'|trans({}, 'platform') }}
+            </h3>
+        </div>
+        <div class="panel-body">
+            <div class="row">
+                <aside class="col-md-2 profile_aside" role="complementary">
+                    <div class="avatar">
+                        {% if user.getPicture() != "" %}
+                            <img src="{{ asset('uploads/pictures/') ~  user.getPicture() }}" class="profile_picture">
+                        {% else %}
+                            <h1 class="profile_picture_placeholder"><i class="icon-user"></i></h1>
+                        {% endif %}
+                    </div>
+                    <div class="informations">
+                        <p class="text-center text-muted">
+                            {{ 'registered'|trans({}, 'platform') }} {{ user.getCreationDate()| timeAgo }}
+                        </p>
+                    </div>
+                    {% if publicProfilePreferences.allowMailSending or publicProfilePreferences.allowMessageSending %}
+                        <ul class="nav nav-pills nav-stacked contact_methods">
+                            {% if publicProfilePreferences.allowMailSending and is_granted('IS_AUTHENTICATED_FULLY') %}
+                                <li>
+                                    <a href="{{path('claro_mail_form', {'userId':user.getId()})}}">
+                                        <i class="icon-envelope"></i> {{ 'send_mail'|trans({}, 'platform') }}
+                                    </a>
+                                </li>
+                            {% endif %}
+                            {% if publicProfilePreferences.allowMessageSending and is_granted('IS_AUTHENTICATED_FULLY') %}
+                                <li>
+                                    <a href="{{path('claro_message_show', {'message': 0})}}?ids[]={{ user.getId() }}">
+                                        <i class="icon-comment"></i> {{ 'send_message'|trans({}, 'platform') }}
+                                    </a>
+                                </li>
+                            {% endif %}
+                        </ul>
+                    {% endif %}
+                </aside>
+                <div class="col-md-6 profile_informations">
+                    <h2>{{ user.getLastName() ~ ' ' ~ user.getFirstName() }}</h2>
+                    {% if publicProfilePreferences.displayEmail %}
+                        <p><span class="icon-envelope"> <a href="mailto:{{ user.getmail() }}" title="{{ user.getmail() }}">{{ user.getmail() }}</a></span></p>
+                    {% endif %}
+                    {% if publicProfilePreferences.displayPhoneNumber %}
+                        {% if user.getPhone() is not null %}
+                            <p><span class="icon-phone-sign"></span> {{ user.getPhone() }}</p>
+                        {% endif %}
+                    {% endif %}
+                    {% if '' != user.getDescription() %}
+                        <div class="description_block">
+                            <p class="lead">Description de {{ user.getLastName() ~ ' ' ~ user.getFirstName() }}</p>
+                            <div class="description">
+                                {{ user.getDescription() |raw }}
+                            </div>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

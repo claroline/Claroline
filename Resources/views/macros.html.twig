@@ -98,7 +98,7 @@
 {% macro displayUser(user) %}
     {% if user %}
         {% if user.isEnabled %}
-            <a href="{{path('claro_profile_view', {'userId':user.getId()})}}">
+            <a href="{{path('claro_public_profile_view', {'publicUrl': user.getPublicUrl()})}}">
                 {{ user.getUsername() }}
             </a>
         {% else %}

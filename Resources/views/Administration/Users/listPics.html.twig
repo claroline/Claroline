@@ -103,7 +103,7 @@
                 {{ user.getId() }}
 
                 {% if user.getPicture() != "" %}
-                <a href="{{ path('claro_profile_view', {'userId': user.getId()}) }}" class="thumbnail">
+                <a href="{{ path('claro_public_profile_view', {'publicUrl':user.getPublicUrl()}) }}" class="thumbnail">
                     <div class="user-picture" style="background-image:url('{{ asset('uploads/pictures/') ~  user.getPicture() }}');
                 "></div>
                 </a>
@@ -117,7 +117,7 @@
                     <a href="{{ path('claro_profile_view', {'userId': user.getId()}) }}">
                         <i class="icon-user"> </i>
                     </a>
-                    <a href="{{ path('claro_profile_form', {'user': user.getId()}) }}">
+                    <a href="{{ path('claro_user_profile_edit', {'user': user.getId()}) }}">
                         <i class="icon-pencil"></i>
                     </a>
                     {% if is_granted('ROLE_ADMIN') %}
