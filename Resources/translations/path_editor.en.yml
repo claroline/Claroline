@@ -41,10 +41,12 @@ redo: Redo
 resources: Resources
 resource_delete: Delete
 resource_edit: Edit
-resource_add: Add resource
-resource_edit_form: Editing resource
-resource_create_form: Creating resource
+resource_add: Create
 root_default_name: <untitled>
+resource_edit_title: Resource
+resource_save: Save resource
+resources_browse: Browse
+resource_propagate_to_children: Make this resource visible in children
 
 # s
 save: Save

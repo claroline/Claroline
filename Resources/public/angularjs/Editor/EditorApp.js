@@ -8,7 +8,7 @@ var EditorApp = angular.module('EditorApp', [
     'ui.pageslide', 
     'ui.sortable', 
     'ui.tinymce',
-    'ui.trans',
+    'ui.translation',
     'ui.resourcePicker'
 ]);
 
@@ -39,7 +39,6 @@ EditorApp.controller('SelectImageModalCtrl', SelectImageModalCtrl);
 
 // Resources
 EditorApp.factory('ResourceFactory', ResourceFactory);
-EditorApp.controller('ResourcePickerModalCtrl', ResourcePickerModalCtrl);
 EditorApp.controller('ResourceModalCtrl', ResourceModalCtrl);
 
 // Templates

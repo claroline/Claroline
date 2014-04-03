@@ -140,33 +140,8 @@ class EditorController
     public function newAction(AbstractWorkspace $workspace)
     {
         $path = Path::initialize();
-        
-        // Create form
-        $form = $this->formFactory->create('innova_path', $path);
-        
-        // Try to process data
-        $this->pathHandler->setForm($form);
-        if ($this->pathHandler->process()) {
-            // Add user message
-            $this->session->getFlashBag()->add(
-                'success',
-                $this->translator->trans('path_save_success', array(), 'path_editor')
-            );
-            
-            // Redirect to edit
-            $url = $this->router->generate('innova_path_editor_edit', array (
-                'workspaceId' => $workspace->getId(),
-                'id' => $path->getId(),
-            ));
-        
-            return new RedirectResponse($url);
-        }
 
-        return array (
-            'workspace'     => $workspace,
-            'wsDirectoryId' => $this->resourceManager->getWorkspaceRoot($workspace)->getId(),
-            'form'          => $form->createView(),
-        );
+        return $this->renderEditor($workspace, $path);
     }
     
     /**
@@ -182,9 +157,25 @@ class EditorController
      */
     public function editAction(AbstractWorkspace $workspace, Path $path)
     {
+        return $this->renderEditor($workspace, $path, 'PUT');
+    }
+
+    /**
+     * Render Editor UI
+     * @param  \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace $workspace
+     * @param  \Innova\PathBundle\Entity\Path\Path $path
+     * @param  string $httpMethod
+     * @return array|RedirectResponse
+     */
+    protected function renderEditor(AbstractWorkspace $workspace, Path $path, $httpMethod = null)
+    {
+        $params = array ();
+        if (!empty($httpMethod)) {
+            $params['method'] = $httpMethod;
+        }
         // Create form
-        $form = $this->formFactory->create('innova_path', $path, array ('method' => 'PUT'));
-        
+        $form = $this->formFactory->create('innova_path', $path, $params);
+
         // Try to process data
         $this->pathHandler->setForm($form);
         if ($this->pathHandler->process()) {
@@ -193,33 +184,26 @@ class EditorController
                 'success',
                 $this->translator->trans('path_save_success', array(), 'path_editor')
             );
-            
+
             // Redirect to list
             $url = $this->router->generate('innova_path_editor_edit', array (
                 'workspaceId' => $workspace->getId(),
                 'id' => $path->getId(),
             ));
-        
+
             return new RedirectResponse($url);
         }
 
+        // Get workspace root directory
         $wsDirectory = $this->resourceManager->getWorkspaceRoot($workspace);
-        $ancestors = $this->resourceManager->getAncestors($wsDirectory);
-
         $resourceTypes = $this->om->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findAll();
-
-        /*$path = array();
-        foreach ($ancestors as $ancestor) {
-            $path[] = $this->resourceManager->toArray($ancestor, $this->security->getToken());
-        }*/
-
-        $jsonPath = json_encode($ancestors);
+        $resourceIcons = $this->om->getRepository('ClarolineCoreBundle:Resource\ResourceIcon')->findByIsShortcut(false);
 
         return array (
             'workspace'          => $workspace,
             'wsDirectoryId'      => $wsDirectory->getId(),
-            'wsDirectoryHistory' => $jsonPath,
             'resourceTypes'      => $resourceTypes,
+            'resourceIcons'      => $resourceIcons,
             'form'               => $form->createView(),
         );
     }

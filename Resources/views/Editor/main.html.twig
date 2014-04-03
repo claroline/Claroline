@@ -77,6 +77,7 @@
         '@InnovaAngularUIPageslideBundle/Resources/public/js/*'
         '@InnovaAngularUITinyMCEBundle/Resources/public/js/*'
         '@InnovaAngularUITranslationBundle/Resources/public/js/*'
+        '@InnovaAngularUIResourcePickerBundle/Resources/public/js/*'
     %}
         <script type="text/javascript" src="{{ asset_url }}"></script>
     {% endjavascripts %}
@@ -96,7 +97,6 @@
         '@InnovaPathBundle/Resources/public/angularjs/Confirm/Controller/ConfirmModalCtrl.js'
         '@InnovaPathBundle/Resources/public/angularjs/Resource/Factory/ResourceFactory.js'
         '@InnovaPathBundle/Resources/public/angularjs/Resource/Controller/ResourceModalCtrl.js'
-        '@InnovaPathBundle/Resources/public/angularjs/Resource/Controller/ResourcePickerModalCtrl.js'
         '@InnovaPathBundle/Resources/public/angularjs/Template/Factory/TemplateFactory.js'
         '@InnovaPathBundle/Resources/public/angularjs/Template/Controller/TemplateCtrl.js'
         '@InnovaPathBundle/Resources/public/angularjs/Template/Controller/TemplateModalCtrl.js'
@@ -112,7 +112,13 @@
         EditorApp.appDir        = "{{ app.request.getBaseUrl }}";
         EditorApp.webDir        = "{{ asset('') }}";
         EditorApp.wsDirectoryId = {{ wsDirectoryId }};
-        EditorApp.wsDirectoryId = {{ wsDirectoryHistory | raw }};
+
+        EditorApp.resourceIcons = {
+            {% for resourceIcon in resourceIcons %}
+                "{{ resourceIcon.mimeType }}" : "{{ asset(resourceIcon.relativeUrl) }}"{% if loop.last != true %},{% endif %}
+            {% endfor %}
+        };
+
         EditorApp.resourceTypes = {
             {% for resourceType in resourceTypes %}
             "{{ resourceType.getName() }}": {

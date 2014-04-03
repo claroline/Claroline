@@ -41,8 +41,14 @@ redo: Rétablir
 resources: Ressources
 resource_delete: Supprimer
 resource_edit: Modifier
-resource_add: Ajouter une ressource
+resource_add: Créer
 root_default_name: <sans nom>
+resource_edit_title: Ressource
+resource_save: Sauvegarder la ressource
+resource_name: Nom
+resource_description: Description
+resources_browse: Parcourir
+resource_propagate_to_children: Rendre cette ressource visible pour les étapes enfants
 
 # s
 save: Sauvegarder

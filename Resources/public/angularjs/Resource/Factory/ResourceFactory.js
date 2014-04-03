@@ -12,46 +12,11 @@ function ResourceFactory(PathFactory) {
         resourceId          : null,
         name                : null,
         description         : null,
-        type                : null,
-        isDigital           : true,
+        type                : 'custom/innova_non_digital_resource',
         propagateToChildren : true
     };
     
     return {
-        /**
-         * 
-         * @returns Array
-         */
-        getResourceTypes: function() {
-            return [
-                {key: 'text',          label: Translator.get('path_editor:text')},
-                {key: 'sound',         label: Translator.get('path_editor:sound')},
-                {key: 'picture',       label: Translator.get('path_editor:picture')},
-                {key: 'video',         label: Translator.get('path_editor:video')},
-                {key: 'simulation',    label: Translator.get('path_editor:simulation')},
-                {key: 'test',          label: Translator.get('path_editor:test')},
-                {key: 'chat',          label: Translator.get('path_editor:chat')},
-                {key: 'forum',         label: Translator.get('path_editor:forum')},
-                {key: 'deposit_files', label: Translator.get('path_editor:deposit_files')},
-                {key: 'other',         label: Translator.get('path_editor:other')},
-                {key: 'indifferent',   label: Translator.get('path_editor:indifferent')}
-            ];
-        },
-        
-        getResourceTypeLabels: function() {
-            var labels = {};
-            
-            var types = this.getResourceTypes();
-            if (typeof types !== 'undefined' && null !== types) {
-                for (var i = 0; i < types.length; i++) {
-                    var currentType = types[i];
-                    labels[currentType.key] = currentType.label;
-                } 
-            }
-            
-            return labels;
-        },
-        
         /**
          * 
          * @returns object

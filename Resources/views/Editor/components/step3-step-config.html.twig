@@ -178,51 +178,96 @@
         <div ng-show="edit.preview">
             <textarea ui-tinymce="tinymceOptions" class="form-control" name="step-description" ng-model="previewStep.description"></textarea>
         </div>
+    </div>
 
-        <table class="table table-condensed table-hover" style="margin-bottom: 0;">
-            <caption class="h4 text-left" style="margin-bottom: 10px; margin-top: 20px;">
+    <div class="navbar navbar-default navbar-static-top" style="margin-bottom: 0; border-top: 1px solid #E7E7E7;">
+        <div class="navbar-header">
+            <span class="h4 navbar-text">
                 <span class="icon-folder-open"></span>
                 {{ 'resources'|trans({}, 'path_editor') }}
-                
-                <a href="#" class="btn btn-xs btn-primary pull-right" ng-click="editResource()">
-                    <span class="icon-plus"></span>
-                    {{ 'resource_add'|trans({}, 'path_editor') }}
+            </span>
+        </div>
+        <ul class="nav navbar-nav navbar-right">
+            <li>
+                <a href="#" ui-resource-picker="resourcePickerConfig"><span class="icon-search"></span> {{ 'resources_browse'|trans({}, 'path_editor') }}</a>
+            </li>
+
+            <li>
+                <a href="#" ng-click="editResource()"><span class="icon-plus"></span> {{ 'resource_add'|trans({}, 'path_editor') }}</a>
+            </li>
+            <li class="dropdown">
+                <a class="dropdown-toggle" data-toggle="dropdown">
+                    <span class="icon-zoom-in"></span>
+                    <span class="sr-only">Zoom</span>
+                    <span class="caret"></span>
                 </a>
-            </caption>
-            
-            <tr ng-show="(null == inheritedResources || inheritedResources.length == 0) && (null == previewStep.resources || previewStep.resources.length == 0)">
-                <td colspan="2" class="text-center"><em>{{ 'step_no_resource'|trans({}, 'path_editor') }}</em></td>
-            </tr>
-            
-            <!-- Inherited resources from parents -->
-            <tr ng-repeat="resource in inheritedResources">
-                <td>{% verbatim %}{{ resourceTypeLabels[resource.type] }}{% endverbatim %}</td>
-                <td ng-class="{'excluded-resource': resource.isExcluded}">
-                    {% verbatim %}{{ resource.name | truncate }}{% endverbatim %} 
-                    <small>({{ 'from'|trans({}, 'path_editor') }} &lt;{% verbatim %}{{ resource.parentStep | truncate }}{% endverbatim %}&gt;)</small></td>
-                <td class="text-right">
-                    <a href="#" ng-disabled="!resource.isExcluded" class="btn btn-xs btn-success" ng-click="includeParentResource(resource)"><span class="icon-eye-open"></span></a>
-                    <a href="#" ng-disabled="resource.isExcluded" class="btn btn-xs btn-danger" ng-click="excludeParentResource(resource)"><span class="icon-eye-close"></span></a>
-                </td>
-            </tr>
-            
-            <!-- Specific resources -->
-            <tr ng-repeat="resource in previewStep.resources">
-                <td>{% verbatim %}{{ resourceTypeLabels[resource.type] }}{% endverbatim %}</td>
-                <td>{% verbatim %}{{ resource.name | truncate }}{% endverbatim %} </td>
-                <td class="text-right">
-                    <a href="#" class="btn btn-xs btn-default" ng-click="editResource(resource)">
-                        <span class="icon-pencil"></span>
-                        <span class="sr-only">{{ 'resource_edit'|trans({}, 'path_editor') }}</span>
-                    </a>
-                    <a href="#" class="btn btn-xs btn-danger" ng-click="removeResource(resource)">
-                        <span class="icon-trash"></span>
-                        <span class="sr-only">{{ 'resource_delete'|trans({}, 'path_editor') }}</span>
-                    </a>
-                </td>
-            </tr>
-        </table>
+                <ul class="dropdown-menu zoom">
+                    <li class="active">
+                        <a href="#">50%</a>
+                    </li>
+                    <li>
+                        <a href="#">75%</a>
+                    </li>
+                    <li>
+                        <a href="#">100%</a>
+                    </li>
+                    <li>
+                        <a href="#">125%</a>
+                    </li>
+                    <li>
+                        <a href="#">150%</a>
+                    </li>
+                    <li>
+                        <a href="#">200%</a>
+                    </li>
+                </ul>
+
+            </li>
+        </ul>
     </div>
+
+    <p class="text-center" ng-show="(null == inheritedResources || inheritedResources.length == 0) && (null == previewStep.resources || previewStep.resources.length == 0)">
+        <em>{{ 'step_no_resource'|trans({}, 'path_editor') }}</em>
+    </p>
+
+    <ul class="nodes" ng-show="(null != inheritedResources && inheritedResources.length != 0) || (null != previewStep.resources && previewStep.resources.length != 0)">
+        <!-- Inherited resources from parents -->
+        <li ng-repeat="resource in inheritedResources" class="node-thumbnail node ui-state-default zoom75">
+            <div class="node-element" style="background-image: url('{% verbatim %}{{ resourceIcons[resource.type] }}{% endverbatim %}');"></div>
+
+            <div class="dropdown">
+                <a class="dropdown-toggle name dropdown-thumbnail" href="#" data-toggle="dropdown" role="button">
+                    <div class="node-name">{% verbatim %}{{ resource.name }}{% endverbatim %} <span class="icon-caret-down"></span></div>
+                </a>
+                <ul class="dropdown-menu" role="menu">
+                    <li>
+                        <a class="node-menu-action" href="#" ng-show="resource.isExcluded" ng-click="includeParentResource(resource)">Afficher dans cette étape</a>
+                        <a class="node-menu-action" href="#" ng-show="!resource.isExcluded" ng-click="excludeParentResource(resource)">Masquer dans cette étape</a>
+                    </li>
+                </ul>
+            </div>
+        </li>
+
+        <!-- Specific resources -->
+        <li ng-repeat="resource in previewStep.resources" class="node-thumbnail node ui-state-default zoom75">
+            <div class="node-element" style="background-image: url({% verbatim %}{{ resourceIcons[resource.type] || resourceIcons['custom/default'] }}{% endverbatim %});"></div>
+
+            <div class="dropdown">
+                <a class="dropdown-toggle name dropdown-thumbnail" href="#" data-toggle="dropdown" role="button">
+                    <div class="node-name">{% verbatim %}{{ resource.name }}{% endverbatim %} <span class="icon-caret-down"></span></div>
+                </a>
+                <ul class="dropdown-menu" role="menu">
+                    <li ng-show="null == resource.resourceId || resource.resourceId.lengt == 0">
+                        <a class="node-menu-action" href="#" ng-click="editResource(resource)">{{ 'resource_edit'|trans({}, 'path_editor') }}
+                        </a>
+                    </li>
+                    <li>
+                        <a class="node-menu-action" href="#" ng-click="removeResource(resource)">{{ 'resource_delete'|trans({}, 'path_editor') }}</a>
+                    </li>
+                </ul>
+            </div>
+        </li>
+    </ul>
 </div>
 
 <div class="row" ng-show="edit.preview">
