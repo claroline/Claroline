@@ -32,6 +32,13 @@ class Updater021101
 
     public function postUpdate()
     {
+        $this->createMyBadgeWorkspaceTool();
+        $this->setPublicUrlOnUsers();
+        $this->createUserPublicProfilePreferences();
+    }
+
+    public function createMyBadgeWorkspaceTool()
+    {
         $myBadgesToolName = 'my_badges';
         $myBadgesTool = $this->objectManager->getRepository('ClarolineCoreBundle:Tool\Tool')->findOneByName($myBadgesToolName);
 
@@ -54,9 +61,53 @@ class Updater021101
             $this->objectManager->persist($newBadgeTool);
 
             $this->log('New tool for displaying user badges in workspace created.');
+
+            $this->objectManager->flush();
+        }
+    }
+
+    protected function setPublicUrlOnUsers()
+    {
+        $this->log('Updating public url for users...');
+
+        /** @var \Claroline\CoreBundle\Repository\UserRepository $userRepository */
+        $userRepository = $this->objectManager->getRepository('ClarolineCoreBundle:User');
+        /** @var \CLaroline\CoreBundle\Entity\User[] $users */
+        $users = $userRepository->findByPublicUrl(null);
+
+        /** @var \Claroline\CoreBundle\Manager\UserManager $userManager */
+        $userManager = $this->container->get('claroline.manager.user_manager');
+
+        foreach ($users as $user) {
+            $publicUrl = $userManager->generatePublicUrl($user);
+            $user->setPublicUrl($publicUrl);
+            $this->objectManager->persist($user);
+            $this->objectManager->flush();
+        }
+
+        $this->log('Public url for users updated.');
+    }
+
+    protected function createUserPublicProfilePreferences()
+    {
+        $this->log('Creating public profile preferences for users...');
+
+        /** @var \Claroline\CoreBundle\Repository\UserRepository $userRepository */
+        $userRepository = $this->objectManager->getRepository('ClarolineCoreBundle:User');
+        /** @var \CLaroline\CoreBundle\Entity\User[] $users */
+        $users = $userRepository->findWithPublicProfilePreferences();
+
+        foreach ($users as $user) {
+            if (null === $user->getPublicProfilePreferences()) {
+                $newUserPublicProfilePreferences = new UserPublicProfilePreferences();
+                $newUserPublicProfilePreferences->setUser($user);
+                $this->objectManager->persist($newUserPublicProfilePreferences);
+            }
         }
 
         $this->objectManager->flush();
+
+        $this->log('Public profile preferences for users created.');
     }
 
     public function setLogger($logger)

@@ -9,3 +9,4 @@ badge_expiring_need_period_and_duration: 'Le badge doit avoir une durée de vali
 google_meta_tag_error: 'Le champ doit être une balise meta, exemple: <meta name="google-site-verification" content="XXX" />'
 password_mismatch: 'Les mots de passe ne correspondent pas'
 special_char_not_allowed: 'Les caractères spéciaux ne sont pas autorisés (les caractères autorisés sont : a-z, A-Z, 0-9, _ et .)'
+public_profile_url_not_valid: 'L''URL de votre profil public n''est pas valide.'
