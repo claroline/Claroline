@@ -49,16 +49,9 @@
                 </div>
             {% endif %}
         {%  endif %}
-        <div class="row">
-            <div class="text-muted col-md-4">{{ 'Documents'|trans({}, 'icap_dropzone') }}</div>
-            <div class="col-md-8">
-                <ul class="list-unstyled">
-                    {% for document in drop.documents %}
-                        <li>{% include 'IcapDropzoneBundle:Document:simpleShowDocument.html.twig' %}</li>
-                    {% endfor %}
-                </ul>
-            </div>
-        </div>
+        
+        {% set documentListText = 'Documents'|trans({}, 'icap_dropzone') %}
+        {{ dropzoneMacros.displayDocumentsList(drop, dropzone, 6, "condensed", documentListText) }}
 
         <div class="row">
             <div class="text-muted col-md-4">{{ 'Learner'|trans({}, 'icap_dropzone') }}</div>

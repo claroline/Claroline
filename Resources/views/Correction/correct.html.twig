@@ -62,16 +62,8 @@
                 </div>
             {% endif %}
 
-            <div class="row">
-                <div class="text-muted col-md-4">Documents:</div>
-                <div class="col-md-8">
-                    <ul class="list-unstyled">
-                        {% for document in correction.drop.documents %}
-                            <li>{% include 'IcapDropzoneBundle:Document:simpleShowDocument.html.twig' %}</li>
-                        {% endfor %}
-                    </ul>
-                </div>
-            </div>
+            {% set documentListText = 'Documents'|trans({}, 'icap_dropzone') %}
+            {{ dropzoneMacros.displayDocumentsList(correction.drop, dropzone, 6, "condensed", documentListText) }}
 
             <div class="row">
                 <div class="text-muted col-md-4">{{ 'Learner'|trans({}, 'icap_dropzone') }}</div>
@@ -137,11 +129,8 @@
                     {% endif %}
                 </p>
                 {% if correction.drop.documents|length > 0 %}
-                    <ul>
-                        {% for document in correction.drop.documents %}
-                            <li>{% include 'IcapDropzoneBundle:Document:simpleShowDocument.html.twig' with {'document': document} %}</li>
-                        {% endfor %}
-                    </ul>
+                    {% set documentListText = 'Documents'|trans({}, 'icap_dropzone') %}
+                    {{ dropzoneMacros.displayDocumentsList(correction.drop, dropzone, 6, "condensed", documentListText) }}
                 {% else %}
                     <p class="text-danger">{{ 'No document associated'|trans({}, 'icap_dropzone') }}</p>
                 {% endif %}
