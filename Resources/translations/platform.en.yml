@@ -70,12 +70,6 @@ add_workspace: 'Add workspace'
 admin: Administrator
 admin_analytics: 'Platform analytics'
 admin_analytics_no_data: 'No data.'
-admin_form_firstName: 'first name'
-admin_form_lastName: Lastname
-admin_form_mail: 'Email adress'
-admin_form_plainPassword_first: Paswword
-admin_form_plainPassword_second: 'Repeat your password'
-admin_form_username: Username
 admin_home_tabs_configuration: 'Home tabs configuration'
 admin_logs: 'Platform logs'
 admin_third_party_application: 'Third-party applications'

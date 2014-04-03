@@ -148,7 +148,7 @@ class AdministrationControllerTest extends MockeryTestCase
             ->andReturn(true);
         $this->translator
             ->shouldReceive('trans')
-            ->with('admin_form_username', array(), 'platform')
+            ->with('User name', array(), 'platform')
             ->once()
             ->andReturn('admin form username');
         $user->shouldReceive('getUsername')
@@ -156,7 +156,7 @@ class AdministrationControllerTest extends MockeryTestCase
             ->andReturn('username');
         $this->translator
             ->shouldReceive('trans')
-            ->with('admin_form_plainPassword_first', array(), 'platform')
+            ->with('password', array(), 'platform')
             ->once()
             ->andReturn('admin form plainPassword first');
         $user->shouldReceive('getPlainPassword')

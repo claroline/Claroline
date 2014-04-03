@@ -71,12 +71,6 @@ add_workspace: 'Ajouter un espace d''activités'
 admin: Administrateur
 admin_analytics: 'Statistiques plateforme'
 admin_analytics_no_data: 'Aucune donnée.'
-admin_form_firstName: Prénom
-admin_form_lastName: 'Nom de famille'
-admin_form_mail: 'Adresse email'
-admin_form_plainPassword_first: 'Mot de passe'
-admin_form_plainPassword_second: 'Répétez votre mot de passe'
-admin_form_username: 'Nom d''utilisateur'
 admin_home_tabs_configuration: 'Configuration des onglets pour les pages d''accueil'
 admin_logs: 'Suivi plateforme'
 admin_third_party_application: 'Applications tierces'
