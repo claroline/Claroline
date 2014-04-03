@@ -1,5 +1,7 @@
 {% extends 'ClarolineCoreBundle:Workspace:layout.html.twig' %}
 
+{% import 'IcapDropzoneBundle::macros.html.twig' as dropzoneMacros %}
+
 {% block stylesheets %}
     {{ parent() }}
     {% stylesheets debug=false filter='lessphp'  output='bundles/icapdropzone/css/style.css'
