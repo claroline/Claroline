@@ -75,6 +75,7 @@ class GeneralType extends AbstractType
                     'choices' => $this->langs
                 )
             )
+            ->add('formCaptcha', 'checkbox', array('label' => 'display_captcha', 'required' => false))
             ->add('redirect_after_login', 'checkbox', array('label' => 'redirect_after_login', 'required' => false));
    }
 
