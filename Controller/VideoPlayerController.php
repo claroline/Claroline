@@ -21,11 +21,11 @@ class VideoPlayerController extends Controller
 {
     /**
      * @Route(
-     *     "/stream/video/{node}",
+     *     "/stream/video/{node}/{name}",
      *     name="claro_stream_video"
      * )
      */
-    public function streamAction(ResourceNode $node)
+    public function streamAction(ResourceNode $node, $name)
     {
         $video = $this->get('claroline.manager.resource_manager')->getResourceFromNode($node);
         $response = new StreamedResponse();
