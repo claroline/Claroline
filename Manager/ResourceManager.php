@@ -23,9 +23,6 @@ use Claroline\CoreBundle\Repository\ResourceNodeRepository;
 use Claroline\CoreBundle\Repository\ResourceRightsRepository;
 use Claroline\CoreBundle\Repository\ResourceShortcutRepository;
 use Claroline\CoreBundle\Repository\RoleRepository;
-use Claroline\CoreBundle\Manager\RightsManager;
-use Claroline\CoreBundle\Manager\RoleManager;
-use Claroline\CoreBundle\Manager\IconManager;
 use Claroline\CoreBundle\Manager\Exception\MissingResourceNameException;
 use Claroline\CoreBundle\Manager\Exception\ResourceTypeNotFoundException;
 use Claroline\CoreBundle\Manager\Exception\RightsException;
@@ -36,8 +33,10 @@ use Claroline\CoreBundle\Event\StrictDispatcher;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Library\Utilities\ClaroUtilities;
+use Claroline\CoreBundle\Library\Security\Utilities;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 use JMS\DiExtraBundle\Annotation as DI;
+use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 /**
  * @DI\Service("claroline.manager.resource_manager")
@@ -66,6 +65,8 @@ class ResourceManager
     private $om;
     /** @var ClaroUtilities */
     private $ut;
+    /** @var Utilities */
+    private $secut;
 
     /**
      * Constructor.
@@ -77,7 +78,7 @@ class ResourceManager
      *     "dispatcher"    = @DI\Inject("claroline.event.event_dispatcher"),
      *     "om"            = @DI\Inject("claroline.persistence.object_manager"),
      *     "ut"            = @DI\Inject("claroline.utilities.misc"),
-     *     "sc"            = @DI\Inject("security.context")
+     *     "secut"         = @DI\Inject("claroline.security.utilities")
      * })
      */
     public function __construct (
@@ -87,7 +88,7 @@ class ResourceManager
         StrictDispatcher $dispatcher,
         ObjectManager $om,
         ClaroUtilities $ut,
-        SecurityContextInterface $sc
+        Utilities $secut
     )
     {
         $this->resourceTypeRepo = $om->getRepository('ClarolineCoreBundle:Resource\ResourceType');
@@ -101,7 +102,7 @@ class ResourceManager
         $this->dispatcher = $dispatcher;
         $this->om = $om;
         $this->ut = $ut;
-        $this->sc = $sc;
+        $this->secut = $secut;
     }
 
     /**
@@ -193,31 +194,39 @@ class ResourceManager
      */
     public function getUniqueName(ResourceNode $node, ResourceNode $parent = null)
     {
-        $children = $this->getSiblings($parent);
-        $name = $node->getName();
-        $arName = explode('~', pathinfo($name, PATHINFO_FILENAME));
-        $baseName = $arName[0];
-        $nbName = 0;
+        $candidateName = $node->getName();
+        $parent = $parent ?: $node->getParent();
+        $sameLevelNodes = $parent ?
+            $parent->getChildren() :
+            $this->resourceNodeRepo->findBy(array('parent' => null));
+        $siblingNames = array();
 
-        if ($children) {
-            foreach ($children as $child) {
-                $arChildName = explode('~', pathinfo($child->getName(), PATHINFO_FILENAME));
-                if ($baseName === $arChildName[0]) {
-                    $nbName++;
-                }
+        foreach ($sameLevelNodes as $levelNode) {
+            if ($levelNode !== $node) {
+                $siblingNames[] = $levelNode->getName();
             }
         }
 
-        return (0 !== $nbName) ?  $baseName.'~'.$nbName.'.'.pathinfo($name, PATHINFO_EXTENSION): $name;
-    }
-
-    public function getSiblings(ResourceNode $parent = null)
-    {
-        if ($parent !== null) {
-            return $parent->getChildren();
+        if (!in_array($candidateName, $siblingNames)) {
+            return $candidateName;
         }
 
-        return $this->resourceNodeRepo->findBy(array('parent' => null));
+        $candidateRoot = pathinfo($candidateName, PATHINFO_FILENAME);
+        $candidateExt = ($ext = pathinfo($candidateName, PATHINFO_EXTENSION)) ? '.' . $ext : '';
+        $candidatePattern = '/^'
+            . preg_quote($candidateRoot)
+            . '~(\d+)'
+            . preg_quote($candidateExt)
+            . '$/';
+        $previousIndex = 0;
+
+        foreach ($siblingNames as $name) {
+            if (preg_match($candidatePattern, $name, $matches) && $matches[1] > $previousIndex) {
+                $previousIndex = $matches[1];
+            }
+        }
+
+        return $candidateRoot . '~' . ++$previousIndex . $candidateExt;
     }
 
     /**
@@ -399,20 +408,17 @@ class ResourceManager
             $this->rightsManager->create($data, $data['role'], $node, false, $resourceTypes);
         }
 
-        $resourceTypes = $this->resourceTypeRepo->findAll();
-
-        /**@todo remove this line and grant edit requests in the resourceManager.*/
         $this->rightsManager->create(
-            31,
-            $this->roleRepo->findOneBy(array('name' => 'ROLE_ADMIN')),
+            0,
+            $this->roleRepo->findOneBy(array('name' => 'ROLE_ANONYMOUS')),
             $node,
             false,
-            $resourceTypes
+            array()
         );
 
         $this->rightsManager->create(
             0,
-            $this->roleRepo->findOneBy(array('name' => 'ROLE_ANONYMOUS')),
+            $this->roleRepo->findOneBy(array('name' => 'ROLE_USER')),
             $node,
             false,
             array()
@@ -776,7 +782,7 @@ class ResourceManager
      *
      * @return array
      */
-    public function toArray(ResourceNode $node)
+    public function toArray(ResourceNode $node, TokenInterface $token)
     {
         $resourceArray = array();
         $resourceArray['id'] = $node->getId();
@@ -797,7 +803,7 @@ class ResourceManager
 
         $isAdmin = false;
 
-        $roles = $this->roleManager->getStringRolesFromCurrentUser();
+        $roles = $this->roleManager->getStringRolesFromToken($token);
 
         foreach ($roles as $role) {
             if ($role === 'ROLE_ADMIN') {
@@ -805,7 +811,7 @@ class ResourceManager
             }
         }
 
-        if ($isAdmin || $node->getCreator()->getUsername() === $this->sc->getToken()->getUser()->getUsername()) {
+        if ($isAdmin || $node->getCreator()->getUsername() === $token->getUser()->getUsername()) {
             $resourceArray['mask'] = 1023;
         } else {
             $resourceArray['mask'] = $this->resourceRightsRepo->findMaximumRights($roles, $node);
@@ -1020,6 +1026,8 @@ class ResourceManager
     public function rename(ResourceNode $node, $name)
     {
         $node->setName($name);
+        $name = $this->getUniqueName($node, $node->getParent());
+        $node->setName($name);
         $this->om->persist($node);
         $this->logChangeSet($node);
         $this->om->flush();
@@ -1232,6 +1240,16 @@ class ResourceManager
     }
 
     /**
+     * @param AbstractWorkspace $workspace
+     *
+     * @return \Claroline\CoreBundle\Entity\Resource\ResourceNode[]
+     */
+    public function getByWorkspace(AbstractWorkspace $workspace)
+    {
+        return $this->resourceNodeRepo->findBy(array('workspace' => $workspace));
+    }
+
+    /**
      * @param integer[] $ids
      *
      * @return \Claroline\CoreBundle\Entity\Resource\ResourceNode[]
@@ -1367,5 +1385,22 @@ class ResourceManager
     private function getEncoding()
     {
         return $this->ut->getDefaultEncoding();
+    }
+
+    /**
+     * Returns true of the token owns the workspace of the resource node.
+     *
+     * @param ResourceNode   $node
+     * @param TokenInterface $token
+     *
+     * @return boolean
+     */
+    public function isWorkspaceOwnerOf(ResourceNode $node, TokenInterface $token)
+    {
+        $workspace = $node->getWorkspace();
+        $managerRoleName = 'ROLE_WS_MANAGER_' . $workspace->getGuid();
+
+        return in_array($managerRoleName, $this->secut->getRoles($token)) ? true: false;
+
     }
 }

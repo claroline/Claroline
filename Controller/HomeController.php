@@ -22,6 +22,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+
 /**
  * @TODO doc
  */
@@ -187,7 +188,7 @@ class HomeController
      * @param string $size The size (content-12) of the content.
      * @param string $type The type of the content.
      *
-     * @Route("/content/size/{id}/{size}/{type}", name="claroline_content_size")
+     * @Route("/content/size/{id}/{size}/{type}", name="claroline_content_size", options = {"expose" = true})
      *
      * @Template("ClarolineCoreBundle:Home:sizes.html.twig")
      *
@@ -223,7 +224,7 @@ class HomeController
     /**
      * Render the HTML of the regions.
      *
-     * @Route("/content/region/{content}", name="claroline_region")
+     * @Route("/content/region/{content}", name="claroline_content_region", options = {"expose" = true})
      *
      * @param string $content The id of the content or the entity object of a content.
      *
@@ -286,19 +287,19 @@ class HomeController
      * Create new content by POST method. This is used by ajax.
      * The response is the id of the new content in success, otherwise the response is the false word in a string.
      *
-     * @Route("/content/create", name="claroline_content_create")
+     * @Route(
+     *     "/content/create/{type}/{father}",
+     *     name="claroline_content_create",
+     *     defaults={"type" = "home", "father" = null}
+     * )
+     *
      * @Secure(roles="ROLE_ADMIN")
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function createAction()
+    public function createAction($type = null, $father = null)
     {
-        if ($id = $this->manager->createContent(
-            $this->request->get('title'),
-            $this->request->get('text'),
-            $this->request->get('type'),
-            $this->request->get('father')
-        )) {
+        if ($id = $this->manager->createContent($this->request->get('home_content_form'), $type, $father)) {
             return new Response($id);
         }
 
@@ -309,23 +310,21 @@ class HomeController
      * Update a content by POST method. This is used by ajax.
      * The response is the word true in a string in success, otherwise false.
      *
-     * @Route("/content/update/{content}", name="claroline_content_update")
+     * @Route(
+     *     "/content/update/{content}/{size}/{type}",
+     *     name="claroline_content_update",
+     *     defaults={"size" = null, "type" = null}
+     * )
      * @Secure(roles="ROLE_ADMIN")
      *
      * @ParamConverter("content", class = "ClarolineCoreBundle:Content", options = {"id" = "content"})
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function updateAction($content)
+    public function updateAction($content, $size = null, $type = null)
     {
         try {
-            $this->manager->UpdateContent(
-                $content,
-                $this->request->get('title'),
-                $this->request->get('text'),
-                $this->request->get('size'),
-                $this->request->get('type')
-            );
+            $this->manager->UpdateContent($content, $this->request->get('home_content_form'), $size, $type);
 
             return new Response('true');
         } catch (\Exeption $e) {
@@ -469,18 +468,26 @@ class HomeController
     /**
      * Check if a string is a valid URL
      *
-     * @Route("/isvalidurl", name="claroline_is_valid_url")
+     * @Route("/cangeneratecontent", name="claroline_can_generate_content")
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function isValidUrl()
+    public function canGenerateContentAction()
     {
         if ($this->manager->isValidUrl($this->request->get('url'))) {
 
-            return new Response('true');
+            $graph = $this->manager->getGraph($this->request->get('url'));
+
+            if (isset($graph['type'])) {
+                return $this->render(
+                    'ClarolineCoreBundle:Home/graph:'.$graph['type'].'.html.twig',
+                    array('content' => $graph),
+                    true
+                );
+            }
         }
 
-        return new Response('false'); //useful in ajax
+        return new Response('false'); //in case is not valid URL
     }
 
     /**

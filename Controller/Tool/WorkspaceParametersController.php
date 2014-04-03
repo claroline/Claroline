@@ -28,6 +28,7 @@ use Claroline\CoreBundle\Manager\WorkspaceManager;
 use Claroline\CoreBundle\Manager\WorkspaceTagManager;
 use Claroline\CoreBundle\Manager\LocaleManager;
 use Claroline\CoreBundle\Manager\UserManager;
+use Claroline\CoreBundle\Manager\TermsOfServiceManager;
 use JMS\DiExtraBundle\Annotation as DI;
 
 class WorkspaceParametersController extends Controller
@@ -41,6 +42,7 @@ class WorkspaceParametersController extends Controller
     private $request;
     private $localeManager;
     private $userManager;
+    private $tosManager;
 
     /**
      * @DI\InjectParams({
@@ -51,7 +53,8 @@ class WorkspaceParametersController extends Controller
      *     "formFactory"         = @DI\Inject("claroline.form.factory"),
      *     "router"              = @DI\Inject("router"),
      *     "localeManager"       = @DI\Inject("claroline.common.locale_manager"),
-     *     "userManager"         = @DI\Inject("claroline.manager.user_manager")
+     *     "userManager"         = @DI\Inject("claroline.manager.user_manager"),
+     *     "tosManager"          = @DI\Inject("claroline.common.terms_of_service_manager")
      * })
      */
     public function __construct(
@@ -63,7 +66,8 @@ class WorkspaceParametersController extends Controller
         UrlGeneratorInterface $router,
         Request $request,
         LocaleManager $localeManager,
-        UserManager $userManager
+        UserManager $userManager,
+        TermsOfServiceManager $tosManager
     )
     {
         $this->workspaceManager = $workspaceManager;
@@ -75,6 +79,7 @@ class WorkspaceParametersController extends Controller
         $this->request = $request;
         $this->localeManager = $localeManager;
         $this->userManager = $userManager;
+        $this->tosManager = $tosManager;
     }
 
     /**
@@ -152,6 +157,7 @@ class WorkspaceParametersController extends Controller
      */
     public function workspaceEditFormAction(AbstractWorkspace $workspace)
     {
+        $user = $this->security->getToken()->getUser();
         $this->checkAccess($workspace);
         $form = $this->formFactory->create(FormFactory::TYPE_WORKSPACE_EDIT, array(), $workspace);
 
@@ -168,7 +174,8 @@ class WorkspaceParametersController extends Controller
         return array(
             'form' => $form->createView(),
             'workspace' => $workspace,
-            'url' => $url
+            'url' => $url,
+            'user' => $user
         );
     }
 
@@ -243,7 +250,7 @@ class WorkspaceParametersController extends Controller
         $event = $this->eventDispatcher->dispatch(
             strtolower('configure_workspace_tool_' . $tool->getName()),
             'ConfigureWorkspaceTool',
-            array($tool,$workspace)
+            array($tool, $workspace)
         );
 
         return new Response($event->getContent());
@@ -306,7 +313,7 @@ class WorkspaceParametersController extends Controller
         }
 
         $form = $this->formFactory->create(
-            FormFactory::TYPE_USER_BASE_PROFILE, array($this->localeManager)
+            FormFactory::TYPE_USER_BASE_PROFILE, array($this->localeManager, $this->tosManager)
         );
         $form->handleRequest($this->request);
 

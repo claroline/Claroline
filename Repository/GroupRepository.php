@@ -209,14 +209,16 @@ class GroupRepository extends EntityRepository
      *
      * @return array[Group]|Query
      */
-    public function findAll($executeQuery = true, $orderedBy = 'id')
+    public function findAll($executeQuery = true, $orderedBy = 'id', $order = null)
     {
+        $order = $order === 'DESC' ? 'DESC' : 'ASC';
         if (!$executeQuery) {
             return $this->_em->createQuery(
                 "SELECT g, r, ws FROM Claroline\CoreBundle\Entity\Group g
                  LEFT JOIN g.roles r
                  LEFT JOIN r.workspace ws
-                 ORDER BY g.{$orderedBy}"
+                 ORDER BY g.{$orderedBy} "
+                 .$order
             );
         }
 
@@ -256,11 +258,13 @@ class GroupRepository extends EntityRepository
      * @param string  $search
      * @param boolean $executeQuery
      * @param string  $orderedBy
+     * @param string  $order ( ascending , descending )
      *
-     * @return array[Group]|Query
+     * @return \Claroline\CoreBundle\Entity\Group[]|Query
      */
-    public function findByName($search, $executeQuery = true, $orderedBy = 'id')
+    public function findByName($search, $executeQuery = true, $orderedBy = 'id', $order = null)
     {
+        $order = $order === 'DESC' ? 'DESC' : 'ASC';
         $dql = "
             SELECT g, r, ws
             FROM Claroline\CoreBundle\Entity\Group g
@@ -268,12 +272,33 @@ class GroupRepository extends EntityRepository
             LEFT JOIN r.workspace ws
             WHERE UPPER(g.name) LIKE :search
             ORDER BY g.{$orderedBy}
-        ";
+            ".$order
+        ;
         $search = strtoupper($search);
         $query = $this->_em->createQuery($dql);
         $query->setParameter('search', "%{$search}%");
 
         return $executeQuery ? $query->getResult() : $query;
+    }
+
+    /**
+     * @param string $search
+     *
+     * @return array
+     */
+    public function findByNameForAjax($search)
+    {
+        $resultArray = array();
+        $groups      = $this->findByName($search);
+
+        foreach ($groups as $group) {
+            $resultArray[] = array(
+                'id'   => $group->getId(),
+                'text' => $group->getName()
+            );
+        }
+
+        return $resultArray;
     }
 
     /**
@@ -296,15 +321,16 @@ class GroupRepository extends EntityRepository
         return array();
     }
 
-    public function findByRoles(array $roles, $getQuery = false, $orderedBy = 'id')
+    public function findByRoles(array $roles, $getQuery = false, $orderedBy = 'id', $order = null)
     {
+        $order = $order === 'DESC' ? 'DESC' : 'ASC';
         $dql = "
             SELECT u, ws, r FROM Claroline\CoreBundle\Entity\Group u
             JOIN u.roles r
             LEFT JOIN r.workspace ws
             WHERE r IN (:roles)
             ORDER BY u.{$orderedBy}
-            ";
+            ".$order;
 
         $query = $this->_em->createQuery($dql);
         $query->setParameter('roles', $roles);
@@ -427,5 +453,13 @@ class GroupRepository extends EntityRepository
         }
 
         return $result;
+    }
+
+    public function findNames()
+    {
+        $dql = 'SELECT g.name as name FROM Claroline\CoreBundle\Entity\Group g';
+        $query = $this->_em->createQuery($dql);
+
+        return $query->getResult();
     }
 }

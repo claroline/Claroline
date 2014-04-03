@@ -44,7 +44,7 @@ class Event
     private $end;
 
     /**
-     * @ORM\Column(nullable=true)
+     * @ORM\Column(nullable=true, type="text")
      */
     private $description;
 
@@ -109,9 +109,6 @@ class Event
         if (!is_null($start)) {
             if ($start instanceof \Datetime) {
                 $this->start = $start->getTimestamp();
-            } else {
-                $date  = new \Datetime($start);
-                $this->start = $date->getTimestamp();
             }
         }
     }
@@ -133,9 +130,6 @@ class Event
         if (!is_null($end)) {
             if ($end instanceof \Datetime) {
                 $this->end = $end-> getTimestamp();
-            } else {
-                $date  = new \Datetime($end);
-                $this->end = $date->getTimestamp();
             }
         }
     }

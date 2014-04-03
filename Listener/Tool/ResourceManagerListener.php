@@ -23,6 +23,7 @@ use Claroline\CoreBundle\Manager\WorkspaceTagManager;
 use Claroline\CoreBundle\Event\StrictDispatcher;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Claroline\CoreBundle\Manager\MaskManager;
 
 /**
  * @DI\Service()
@@ -32,6 +33,7 @@ class ResourceManagerListener
     private $resourceManager;
     private $rightsManager;
     private $workspaceManager;
+    private $maskManager;
 
     /**
      * @DI\InjectParams({
@@ -44,7 +46,8 @@ class ResourceManagerListener
      *     "resourceManager"        = @DI\Inject("claroline.manager.resource_manager"),
      *     "rightsManager"          = @DI\Inject("claroline.manager.rights_manager"),
      *     "workspaceManager"       = @DI\Inject("claroline.manager.workspace_manager"),
-     *     "workspaceTagManager"    = @DI\Inject("claroline.manager.workspace_tag_manager")
+     *     "workspaceTagManager"    = @DI\Inject("claroline.manager.workspace_tag_manager"),
+     *     "maskManager"            = @DI\Inject("claroline.manager.mask_manager")
      * })
      */
     public function __construct(
@@ -57,7 +60,8 @@ class ResourceManagerListener
         ResourceManager $resourceManager,
         RightsManager $rightsManager,
         WorkspaceManager $workspaceManager,
-        WorkspaceTagManager $workspaceTagManager
+        WorkspaceTagManager $workspaceTagManager,
+        MaskManager $maskManager
     )
     {
         $this->em = $em;
@@ -70,6 +74,7 @@ class ResourceManagerListener
         $this->rightsManager = $rightsManager;
         $this->workspaceManager = $workspaceManager;
         $this->workspaceTagManager = $workspaceTagManager;
+        $this->maskManager = $maskManager;
     }
 
     /**
@@ -131,7 +136,7 @@ class ResourceManagerListener
         $path = array();
 
         foreach ($ancestors as $ancestor) {
-            $path[] = $this->manager->toArray($ancestor);
+            $path[] = $this->manager->toArray($ancestor, $this->sc->getToken());
         }
 
         $jsonPath = json_encode($path);
@@ -190,10 +195,12 @@ class ResourceManagerListener
         if (!$this->sc->isGranted('parameters', $workspace)) {
             throw new AccessDeniedException();
         }
-        $resource = $this->resourceManager->getWorkspaceRoot($workspace);
-        $roleRights = $this->rightsManager->getNonAdminRights($resource);
 
+        $resource = $this->resourceManager->getWorkspaceRoot($workspace);
+        $roleRights = $this->rightsManager->getConfigurableRights($resource);
         $datas = $this->workspaceTagManager->getDatasForWorkspaceList(true);
+        $resourceType = $resource->getResourceType();
+        $mask = $this->maskManager->decodeMask($resourceType->getDefaultMask(), $resourceType);
 
         return $this->templating->render(
             'ClarolineCoreBundle:Tool\workspace\resource_manager:resourcesRights.html.twig',
@@ -208,7 +215,8 @@ class ResourceManagerListener
                 'hierarchy' => $datas['hierarchy'],
                 'rootTags' => $datas['rootTags'],
                 'displayable' => $datas['displayable'],
-                'workspaceRoles' => $datas['workspaceRoles']
+                'workspaceRoles' => $datas['workspaceRoles'],
+                'mask' => $mask
             )
         );
     }

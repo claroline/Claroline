@@ -40,8 +40,8 @@
     {% endif %}
     {% if not is_path_mode and workspace is defined %}
 
-        {% if is_granted({}, workspace) %}
-            {% render controller("ClarolineCoreBundle:Workspace:renderToolList", {'workspaceId': workspace.getId(), '_breadcrumbs': app.request.query.get('_breadcrumbs', {})}) %}
+        {% if is_granted('OPEN', workspace) %}
+            {% render controller("ClarolineCoreBundle:Workspace:renderToolList", {'workspace': workspace, '_breadcrumbs': app.request.query.get('_breadcrumbs', {})}) %}
         {% endif %}
 
     {% endif %}
@@ -57,4 +57,17 @@
         </div>
         {% block section_after_content %}{% endblock %}
     </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript">
+        window.PickerPath = "{{ path('claro_upload_modal') }}";
+        window.Workspace = {};
+        {% if _resource is defined %}
+            window.Workspace.id = {{ _resource.getResourceNode().getWorkspace().getId() }};
+        {% else %}
+            window.Workspace.id = null;
+        {% endif %}
+    </script>
 {% endblock %}

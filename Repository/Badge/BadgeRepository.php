@@ -13,6 +13,7 @@ namespace Claroline\CoreBundle\Repository\Badge;
 
 use Claroline\CoreBundle\Entity\Badge\Badge;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
@@ -40,6 +41,7 @@ class BadgeRepository extends EntityRepository
 
         return $executeQuery ? $query->getResult(): $query;
     }
+
     /**
      * @param Badge $badge
      * @param User $user
@@ -116,7 +118,7 @@ class BadgeRepository extends EntityRepository
     {
         $query = $this->getEntityManager()
             ->createQuery(
-                'SELECT b, t
+                'SELECT b
                 FROM ClarolineCoreBundle:Badge\Badge b
                 JOIN b.translations t
                 WHERE t.slug = :slug
@@ -172,6 +174,50 @@ class BadgeRepository extends EntityRepository
     }
 
     /**
+     * @param string $search
+     *
+     * @return array
+     */
+    public function findByNameFrForAjax($search)
+    {
+        return $this->findByNameForAjax($search, 'fr');
+    }
+
+    /**
+     * @param string $search
+     *
+     * @return array
+     */
+    public function findByNameEnForAjax($search)
+    {
+        return $this->findByNameForAjax($search, 'en');
+    }
+
+    /**
+     * @param string $search
+     *
+     * @param string $locale
+     *
+     * @return array
+     */
+    public function findByNameForAjax($search, $locale)
+    {
+        $resultArray = array();
+
+        /** @var Badge[] $badges */
+        $badges = $this->findByNameAndLocale($search, $locale);
+
+        foreach ($badges as $badge) {
+            $resultArray[] = array(
+                'id'   => $badge->getId(),
+                'text' => $badge->getName($locale)
+            );
+        }
+
+        return $resultArray;
+    }
+
+    /**
      * @param  array           $params
      * @return ArrayCollection
      */
@@ -189,5 +235,26 @@ class BadgeRepository extends EntityRepository
         }
 
         return array();
+    }
+
+    /**
+     * @param \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace $workspace
+     * @param bool                                                     $executeQuery
+     *
+     * @return Query|array
+     */
+    public function findByWorkspace(AbstractWorkspace $workspace, $executeQuery = true)
+    {
+        $query = $this->getEntityManager()
+            ->createQuery(
+                'SELECT b, ub, bt
+                FROM ClarolineCoreBundle:Badge\Badge b
+                LEFT JOIN b.userBadges ub
+                JOIN b.translations bt
+                WHERE b.workspace = :workspaceId'
+            )
+            ->setParameter('workspaceId', $workspace->getId());
+
+        return $executeQuery ? $query->getResult(): $query;
     }
 }

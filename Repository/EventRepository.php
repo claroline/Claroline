@@ -43,7 +43,9 @@ class EventRepository extends EntityRepository
     }
 
     /**
-     * Get All the Desktop User's events
+     * @param User $user
+     * @param boolean $allDay
+     * @return array
      */
     public function findDesktop(User $user, $allDay)
     {
@@ -62,7 +64,7 @@ class EventRepository extends EntityRepository
         return $query->getResult();
     }
 
-    public function findByWorkspaceId($workspaceId,$allDay)
+    public function findByWorkspaceId($workspaceId,$allDay, $limit = null)
     {
         $dql = "
             SELECT e
@@ -74,6 +76,9 @@ class EventRepository extends EntityRepository
         $query = $this->_em->createQuery($dql);
         $query->setParameter('workspaceId', $workspaceId);
         $query->setParameter('allDay', $allDay);
+        if ($limit > 0) {
+            $query->setMaxResults($limit);
+        }
 
         return $query->getResult();
     }

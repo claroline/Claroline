@@ -20,11 +20,9 @@ use Claroline\CoreBundle\Manager\ContentManager;
 use Claroline\CoreBundle\Library\Installation\Settings\MailingSettings;
 use Claroline\CoreBundle\Library\Installation\Settings\MailingChecker;
 use Claroline\CoreBundle\Manager\TermsOfServiceManager;
-use Icap\BlogBundle\Controller\Controller;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use JMS\DiExtraBundle\Annotation as DI;
-use JMS\SecurityExtraBundle\Annotation\PreAuthorize;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use JMS\SecurityExtraBundle\Annotation as SEC;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormFactory;
 use Symfony\Component\HttpFoundation\Request;
@@ -33,10 +31,13 @@ use Claroline\CoreBundle\Manager\MailManager;
 use Claroline\CoreBundle\Form\Administration as AdminForm;
 use Claroline\CoreBundle\Manager\CacheManager;
 use Claroline\CoreBundle\Library\Installation\Refresher;
+use Claroline\CoreBundle\Manager\HwiManager;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * @DI\Tag("security.secure_service")
- * @PreAuthorize("hasRole('ADMIN')")
+ * @SEC\PreAuthorize("hasRole('ADMIN')")
  *
  * Controller of the platform parameters section.
  */
@@ -53,6 +54,7 @@ class ParametersController extends Controller
     private $cacheManager;
     private $dbSessionValidator;
     private $refresher;
+    private $hwiManager;
 
     /**
      * @DI\InjectParams({
@@ -67,7 +69,8 @@ class ParametersController extends Controller
      *     "cacheManager"       = @DI\Inject("claroline.manager.cache_manager"),
      *     "contentManager"     = @DI\Inject("claroline.manager.content_manager"),
      *     "sessionValidator"   = @DI\Inject("claroline.session.database_validator"),
-     *     "refresher"          = @DI\Inject("claroline.installation.refresher")
+     *     "refresher"          = @DI\Inject("claroline.installation.refresher"),
+     *     "hwiManager"         = @DI\Inject("claroline.manager.hwi_manager"),
      * })
      */
     public function __construct(
@@ -82,7 +85,8 @@ class ParametersController extends Controller
         ContentManager $contentManager,
         CacheManager $cacheManager,
         DatabaseSessionValidator $sessionValidator,
-        Refresher $refresher
+        Refresher $refresher,
+        HwiManager $hwiManager
     )
     {
         $this->configHandler = $configHandler;
@@ -97,16 +101,12 @@ class ParametersController extends Controller
         $this->cacheManager = $cacheManager;
         $this->dbSessionValidator = $sessionValidator;
         $this->refresher = $refresher;
+        $this->hwiManager = $hwiManager;
     }
 
     /**
-     * @Template("ClarolineCoreBundle:Administration\platform:index.html.twig")
-     * @Route(
-     *     "/index",
-     *     name="claro_admin_parameters_index"
-     * )
-     *
-     * Displays the administration section index.
+     * @EXT\Route("/", name="claro_admin_parameters_index")
+     * @EXT\Template
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -116,17 +116,13 @@ class ParametersController extends Controller
     }
 
     /**
-     * @Route(
-     *     "/general",
-     *     name="claro_admin_parameters_general"
-     * )
-     * @Template("ClarolineCoreBundle:Administration\platform:settings.html.twig")
-     *
-     * Displays the platform settings.
+     * @EXT\Route("/general", name="claro_admin_parameters_general")
+     * @EXT\Method("GET")
+     * @EXT\Template
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function settingsFormAction()
+    public function generalFormAction()
     {
         $description = $this->contentManager->getTranslatedContent(array('type' => 'platformDescription'));
         $platformConfig = $this->configHandler->getPlatformConfig();
@@ -143,14 +139,9 @@ class ParametersController extends Controller
     }
 
     /**
-     * @Route(
-     *     "/general/submit",
-     *     name="claro_admin_edit_parameters_general"
-     * )
-     *
-     * @Template("ClarolineCoreBundle:Administration\platform:settings.html.twig")
-     *
-     * Updates the platform settings and redirects to the settings form.
+     * @EXT\Route("/general", name="claro_admin_edit_parameters_general")
+     * @EXT\Method("POST")
+     * @EXT\Template("ClarolineCoreBundle:Administration\Parameters:generalForm.html.twig")
      *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
@@ -174,7 +165,8 @@ class ParametersController extends Controller
                         'name' => $form['name']->getData(),
                         'support_email' => $form['support_email']->getData(),
                         'default_role' => $form['defaultRole']->getData()->getName(),
-                        'redirect_after_login' => $form['redirect_after_login']->getData()
+                        'redirect_after_login' => $form['redirect_after_login']->getData(),
+                        'form_captcha' => $form['formCaptcha']->getData(),
                     )
                 );
 
@@ -208,16 +200,13 @@ class ParametersController extends Controller
             }
         }
 
-        return $this->redirect($this->generateUrl('claro_admin_index'));
+        return $this->redirect($this->generateUrl('claro_admin_parameters_general'));
     }
 
     /**
-     * @Route(
-     *     "/appearance",
-     *     name="claro_admin_parameters_appearance"
-     * )
-     *
-     * @Template("ClarolineCoreBundle:Administration\platform:appearance.html.twig")
+     * @EXT\Route("/appearance", name="claro_admin_parameters_appearance")
+     * @EXT\Method("GET")
+     * @EXT\Template
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -236,12 +225,9 @@ class ParametersController extends Controller
     }
 
     /**
-     * @Route(
-     *     "/appearance/submit",
-     *     name="claro_admin_edit_parameters_appearance"
-     * )
-     *
-     * Displays the platform settings.
+     * @EXT\Route("/appearance", name="claro_admin_edit_parameters_appearance")
+     * @EXT\Method("POST")
+     * @EXT\Template("ClarolineCoreBundle:Administration\Parameters:appearanceForm.html.twig")
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -258,6 +244,7 @@ class ParametersController extends Controller
             try {
                 $this->configHandler->setParameters(
                     array(
+                        'nameActive' => $form['name_active']->getData(),
                         'theme' => $form['theme']->getData(),
                         'footer' => $form['footer']->getData(),
                         'logo' => $this->request->get('selectlogo'),
@@ -288,12 +275,20 @@ class ParametersController extends Controller
     }
 
     /**
-     * @Route(
-     *     "/mail/server",
-     *     name="claro_admin_parameters_mail_server"
-     * )
+     * @EXT\Route("/mail", name="claro_admin_parameters_mail_index")
+     * @EXT\Template
      *
-     * @Template("ClarolineCoreBundle:Administration\platform\mail:server.html.twig")
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function mailIndexAction()
+    {
+        return array();
+    }
+
+    /**
+     * @EXT\Route("/mail/server", name="claro_admin_parameters_mail_server")
+     * @EXT\Method("GET")
+     * @EXT\Template
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -310,12 +305,9 @@ class ParametersController extends Controller
 
 
     /**
-     * @Route(
-     *     "/mail/server/submit",
-     *     name="claro_admin_edit_parameters_mail_server"
-     * )
-     *
-     * @Template("ClarolineCoreBundle:Administration\platform\mail:server.html.twig")
+     * @EXT\Route("/mail/server", name="claro_admin_edit_parameters_mail_server")
+     * @EXT\Method("POST")
+     * @EXT\Template("ClarolineCoreBundle:Administration\Parameters:mailServerForm.html.twig")
      *
      * Updates the platform settings and redirects to the settings form.
      *
@@ -381,16 +373,13 @@ class ParametersController extends Controller
     }
 
     /**
-     * @Route(
-     *     "/mail/registration",
-     *     name="claro_admin_mail_registration"
-     * )
-     *
-     * @Template("ClarolineCoreBundle:Administration\platform\mail:registration.html.twig")
+     * @EXT\Route("/mail/registration", name="claro_admin_mail_registration")
+     * @EXT\Method("GET")
+     * @EXT\Template
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function inscriptionMailFormAction()
+    public function registrationMailFormAction()
     {
         $form = $this->formFactory->create(
             new AdminForm\MailInscriptionType(),
@@ -401,52 +390,38 @@ class ParametersController extends Controller
     }
 
     /**
-     * @Route(
-     *     "/mail/submit/registration",
-     *     name="claro_admin_edit_mail_registration"
-     * )
-     *
-     * @Template("ClarolineCoreBundle:Administration\platform\mail:registration.html.twig")
+     * @EXT\Route("/mail/registration", name="claro_admin_edit_mail_registration")
+     * @EXT\Method("POST")
+     * @EXT\Template("ClarolineCoreBundle:Administration\Parameters:registrationMailForm.html.twig")
      *
      * @return \Symfony\Component\HttpFoundation\Response
      *
      * @todo add csfr protection
      */
-    public function submitInscriptionMailAction()
+    public function submitRegistrationMailAction()
     {
-        $form = $this->request->get('platform_parameters_form');
-        $errors = $this->mailManager->validateInscriptionMail($form['content']);
+        $formData = $this->request->get('platform_parameters_form');
+        $form = $this->formFactory->create(new AdminForm\MailInscriptionType(), $formData['content']);
+        $errors = $this->mailManager->validateInscriptionMail($formData['content']);
 
-        if (count($errors) === 0) {
-            if (isset($form['content'])) {
-                $this->contentManager->updateContent($this->mailManager->getMailInscription(), $form['content']);
+        if (count($errors) > 0) {
+            foreach ($errors as $language => $errors) {
+                foreach ($errors['content'] as $error) {
+                    $msg = $this->translator->trans($error, array('%language%' => $language), 'platform');
+                    $form->get('content')->addError(new FormError($msg));
+                }
             }
-
-            return $this->redirect($this->generateUrl('claro_admin_index'));
+        } else {
+            $this->contentManager->updateContent($this->mailManager->getMailInscription(), $formData['content']);
         }
 
-        $formWithErrors = $this->formFactory->create(
-            new AdminForm\MailInscriptionType(),
-            $form['content']
-        );
-
-        foreach ($errors as $language => $errors) {
-            foreach ($errors['content'] as $error) {
-                $trans = $this->translator->trans($error, array('%language%' => $language), 'platform');
-                $formWithErrors->get('content')->addError(new FormError($trans));
-            }
-        }
-
-        return array('form' => $formWithErrors->createView());
+        return array('form' => $form->createView());
     }
 
     /**
-     * @Route(
-     *     "/mail/layout",
-     *     name="claro_admin_mail_layout"
-     * )
-     *
-     * @Template("ClarolineCoreBundle:Administration\platform\mail:layout.html.twig")
+     * @EXT\Route("/mail/layout", name="claro_admin_mail_layout")
+     * @EXT\Method("GET")
+     * @EXT\Template
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -461,12 +436,9 @@ class ParametersController extends Controller
     }
 
     /**
-     * @Route(
-     *     "/mail/layout/submit",
-     *     name="claro_admin_edit_mail_layout"
-     * )
-     *
-     * @Template("ClarolineCoreBundle:Administration\platform\mail:layout.html.twig")
+     * @EXT\Route("/mail/layout", name="claro_admin_edit_mail_layout")
+     * @EXT\Method("POST")
+     * @EXT\Template("ClarolineCoreBundle:Administration\Parameters:mailLayoutForm.html.twig")
      *
      * @return \Symfony\Component\HttpFoundation\Response
      *
@@ -474,104 +446,74 @@ class ParametersController extends Controller
      */
     public function submitMailLayoutAction()
     {
-        $form = $this->request->get('platform_parameters_form');
-        $errors = $this->mailManager->validateLayoutMail($form['content']);
+        $formData = $this->request->get('platform_parameters_form');
+        $form = $this->formFactory->create(new AdminForm\MailLayoutType(), $formData['content']);
+        $errors = $this->mailManager->validateLayoutMail($formData['content']);
 
-        if (count($errors) === 0) {
-            if (isset($form['content'])) {
-                $this->contentManager->updateContent($this->mailManager->getMailLayout(), $form['content']);
+        if (count($errors) > 0) {
+            foreach ($errors as $language => $error) {
+                $msg = $this->translator->trans($error['content'], array('%language%' => $language), 'platform');
+                $form->get('content')->addError(new FormError($msg));
             }
-
-            return $this->redirect($this->generateUrl('claro_admin_index'));
+        } else {
+            $this->contentManager->updateContent($this->mailManager->getMailLayout(), $formData['content']);
         }
 
-        $formWithErrors = $this->formFactory->create(
-            new AdminForm\MailLayoutType(),
-            $form['content']
-        );
-
-        foreach ($errors as $language => $error) {
-            $trans = $this->translator->trans($error['content'], array('%language%' => $language), 'platform');
-            $formWithErrors->get('content')->addError(new FormError($trans));
-        }
-
-        return array('form' => $formWithErrors->createView());
+        return array('form' => $form->createView());
     }
 
     /**
-     * @Route(
-     *     "/terms_of_service",
-     *     name="claro_admin_edit_terms_of_service"
-     * )
-     *
-     * @Template("ClarolineCoreBundle:Administration\platform:termsOfService.html.twig")
+     * @EXT\Route("/terms", name="claro_admin_edit_terms_of_service")
+     * @EXT\Method("GET")
+     * @EXT\Template
      *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
-    public function termsOfServiceAction()
+    public function termsOfServiceFormAction()
     {
         $form = $this->formFactory->create(
             new AdminForm\TermsOfServiceType($this->configHandler->getParameter('terms_of_service')),
             $this->termsOfService->getTermsOfService(false)
         );
 
-        return array(
-            'form' => $form->createView(),
-        );
+        return array('form' => $form->createView());
     }
 
     /**
      * Updates the platform settings and redirects to the settings form.
      *
-     * @Route("/terms_of_service/submit", name="claro_admin_edit_terms_of_service_submit")
+     * @EXT\Route("/terms", name="claro_admin_edit_terms_of_service_submit")
+     * @EXT\Method("POST")
+     * @EXT\Template("ClarolineCoreBundle:Administration\Parameters:termsOfServiceForm.html.twig")
      *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
     public function submitTermsOfServiceAction()
     {
+        $form = $this->formFactory->create(
+            new AdminForm\TermsOfServiceType($this->configHandler->getParameter('terms_of_service')),
+            $this->termsOfService->getTermsOfService(false)
+        );
 
-        if ($termsOfService = $this->request->get('terms_of_service_form')) {
+        $form->handleRequest($this->request);
 
-            if (isset($termsOfService['active'])) {
-                $this->configHandler->setParameter('terms_of_service', true);
-            } else {
-                $this->configHandler->setParameter('terms_of_service', false);
-            }
-
-            if (isset($termsOfService['termsOfService'])) {
-                $this->termsOfService->setTermsOfService($termsOfService['termsOfService']);
-            }
+        if ($form->isValid()) {
+            $this->configHandler->setParameter('terms_of_service', $form->get('active')->getData());
+            $this->termsOfService->setTermsOfService(
+                $this->request->get('terms_of_service_form')['termsOfService']
+            );
         }
 
-        return $this->redirect($this->generateUrl('claro_admin_index'));
+        return array('form' => $form->createView());
     }
 
     /**
-     * @Template("ClarolineCoreBundle:Administration\platform\mail:index.html.twig")
-     * @Route(
-     *     "/mail/index",
-     *     name="claro_admin_parameters_mail_index"
-     * )
-     *
-     * Displays the administration section index.
-     *
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function mailIndexAction()
-    {
-        return array();
-    }
-
-    /**
-     * @Template("ClarolineCoreBundle:Administration\platform:indexing.html.twig")
-     * @Route(
-     *     "/indexing",
-     *     name="claro_admin_parameters_indexing"
-     * )
+     * @EXT\Route("/indexing", name="claro_admin_parameters_indexing")
+     * @EXT\Template
      *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
-    public function indexingAction()
+    public function indexingFormAction()
     {
         $form = $this->formFactory->create(new AdminForm\IndexingType(), $this->configHandler->getPlatformConfig());
 
@@ -580,7 +522,6 @@ class ParametersController extends Controller
 
             if ($form->isValid()) {
                 $this->configHandler->setParameter('google_meta_tag', $form['google_meta_tag']->getData());
-                return $this->redirect($this->generateUrl('claro_admin_index'));
             }
         }
 
@@ -588,36 +529,24 @@ class ParametersController extends Controller
     }
 
     /**
-     * @Route(
-     *     "/session",
-     *     name="claro_admin_session"
-     * )
-     *
-     * @Template("ClarolineCoreBundle:Administration\platform:session.html.twig")
+     * @EXT\Route("/session", name="claro_admin_session")
+     * @EXT\Method("GET")
+     * @EXT\Template
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function sessionAction()
+    public function sessionFormAction()
     {
-        $platformConfig = $this->configHandler->getPlatformConfig();
+        $config = $this->configHandler->getPlatformConfig();
+        $form = $this->formFactory->create(new AdminForm\SessionType(), $config);
 
-        $form = $this->formFactory->create(
-            new AdminForm\SessionType(),
-            $platformConfig
-        );
-
-        return array(
-            'form' => $form->createView(),
-        );
+        return array('form' => $form->createView());
     }
 
     /**
-     * @Route(
-     *     "/session/submit",
-     *     name="claro_admin_session_submit"
-     * )
-     *
-     * @Template("ClarolineCoreBundle:Administration\platform:session.html.twig")
+     * @EXT\Route("/session", name="claro_admin_session_submit")
+     * @EXT\Method("POST")
+     * @EXT\Template("ClarolineCoreBundle:Administration\Parameters:sessionForm.html.twig")
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -649,13 +578,11 @@ class ParametersController extends Controller
 
             if (count($errors) === 0) {
                 $this->configHandler->setParameters($data);
-
-                return $this->redirect($this->generateUrl('claro_admin_index'));
-            }
-
-            foreach ($errors as  $error) {
-                $trans = $this->translator->trans($error, array(), 'platform');
-                $form->addError(new FormError($trans));
+            } else {
+                foreach ($errors as $error) {
+                    $msg = $this->translator->trans($error, array(), 'platform');
+                    $form->addError(new FormError($msg));
+                }
             }
         }
 
@@ -663,9 +590,75 @@ class ParametersController extends Controller
     }
 
     /**
-     *  Get the list of themes availables.
+     * @EXT\Route("/oauth", name="claro_admin_parameters_oauth_index")
+     * @EXT\Template
      *
-     *  @return array with a list of the themes availables.
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function oauthIndexAction()
+    {
+        return array();
+    }
+
+    /**
+     * @EXT\Route("/oauth/facebook", name="claro_admin_facebook_form")
+     * @EXT\Method("GET")
+     * @EXT\Template
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function facebookFormAction()
+    {
+        $platformConfig = $this->configHandler->getPlatformConfig();
+        $form = $this->formFactory->create(new AdminForm\FacebookType(), $platformConfig);
+
+        return array('form' => $form->createView());
+    }
+
+    /**
+     * @EXT\Route("/oauth/facebook", name="claro_admin_facebook_form_submit")
+     * @EXT\Method("POST")
+     * @EXT\Template("ClarolineCoreBundle:Administration\Parameters:facebookForm.html.twig")
+     *
+     * Displays the administration section index.
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function submitFacebookFormAction()
+    {
+        $platformConfig = $this->configHandler->getPlatformConfig();
+        $form = $this->formFactory->create(new AdminForm\FacebookType(), $platformConfig);
+        $form->handleRequest($this->request);
+
+        if ($form->isValid()) {
+            $data = array(
+                'facebook_client_id' => $form['facebook_client_id']->getData(),
+                'facebook_client_secret' => $form['facebook_client_secret']->getData(),
+                'facebook_client_active' => $form['facebook_client_active']->getData()
+            );
+
+            $errors = $this->hwiManager->validateFacebook(
+                $data['facebook_client_id'], $data['facebook_client_secret']
+            );
+
+            if (count($errors) === 0) {
+                $this->configHandler->setParameters($data);
+                $this->cacheManager->refresh();
+            } else {
+                foreach ($errors as $error) {
+                    $trans = $this->translator->trans($error, array(), 'platform');
+                    $form->addError(new FormError($trans));
+                }
+            }
+        }
+
+        return array('form' => $form->createView());
+    }
+
+    /**
+     *  Returns the list of available themes.
+     *
+     *  @return array
      */
     private function getThemes()
     {

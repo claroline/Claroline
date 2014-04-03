@@ -25,19 +25,19 @@
         {% if config.getParameter('name') == "" and config.getParameter('logo') == "" %}
             {{ topbar.item({'name':'home', 'href':path('claro_index'), 'icon':'home'}) }}
         {% endif %}
-        {{ topbar.item({'name':'desktop', 'href':path('claro_desktop_open'), 'icon':'briefcase', 'route':'/desktop/tool/'}) }}
+        {{ topbar.item({'href':path('claro_desktop_open'), 'icon':'briefcase', 'route':'/desktop/tool/', 'title': 'desktop' | trans({}, 'platform')}) }}
         {% if is_granted('ROLE_ADMIN') %}
-            {{ topbar.item({'name':'administration', 'href':path('claro_admin_parameters_index'), 'icon':'cog', 'route':'/administration/index/'}) }}
+            {{ topbar.item({'href':path('claro_admin_parameters_index'), 'icon':'cog', 'route':'/admin/', 'title':'administration' | trans({}, 'platform')}) }}
         {% endif %}
         {% if countUnreadMessages > 0 %}
-            {{ topbar.item({'name':'messages', 'href':path('claro_message_list_received'), 'icon':'envelope', 'route':'/message/', 'title':'new_message_alert' | trans({'%count%': countUnreadMessages}, 'platform'), 'badge' : countUnreadMessages }) }}
+            {{ topbar.item({'href':path('claro_message_list_received'), 'icon':'envelope', 'route':'/message/', 'title':'new_message_alert' | trans({'%count%': countUnreadMessages}, 'platform'), 'badge' : countUnreadMessages }) }}
         {% else %}
-            {{ topbar.item({'name':'messages', 'href':path('claro_message_list_received'), 'icon':'envelope', 'route':'/message/', 'title':'new_message_alert' | trans({'%count%': countUnreadMessages}, 'platform')}) }}
+            {{ topbar.item({'href':path('claro_message_list_received'), 'icon':'envelope', 'route':'/message/', 'title':'new_message_alert' | trans({'%count%': countUnreadMessages}, 'platform')}) }}
         {% endif %}
         {% if countUnviewedNotifications > 0 %}
-            {{ topbar.item({'id':'notification-topbar-item', 'href':path('icap_notification_view'), 'icon':'bell', 'route':'/icap_notification/', 'title':'notifications', 'badge' : countUnviewedNotifications}) }}
+            {{ topbar.item({'id':'notification-topbar-item', 'href':path('icap_notification_view'), 'icon':'bell-alt', 'route':'/icap_notification/', 'title':'notifications', 'badge' : countUnviewedNotifications}) }}
         {% else %}
-            {{ topbar.item({'id':'notification-topbar-item', 'href':path('icap_notification_view'), 'icon':'bell', 'route':'/icap_notification/', 'title':'notifications'}) }}
+            {{ topbar.item({'id':'notification-topbar-item', 'href':path('icap_notification_view'), 'icon':'bell-alt', 'route':'/icap_notification/', 'title':'notifications'}) }}
         {% endif %}
         {% if '/icap_notification/'|compareRoute('true') is empty %}
             {% include "IcapNotificationBundle:Notification:dropdownScript.html.twig" with {'notificationElementId':'notification-topbar-item'} %}
@@ -105,7 +105,7 @@
     {% endblock dropdowLogin %}
 
     {% block dropdownLogged %}
-        {{ topbar.item({'name':'my_account', 'href':path('claro_profile_view', {'userId': app.user.id}), 'icon':'user'}) }}
+        {{ topbar.item({'name':'my_profile', 'href':path('claro_profile_view', {'userId': app.user.id}), 'icon':'user'}) }}
         <li class="divider"></li>
         {% if personalWs is not null %}
             {{ topbar.item({'name':'my_workspace', 'href':path('claro_workspace_open_tool', {'workspaceId': personalWs.getId(), 'toolName': 'home'}), 'icon':'book'}) }}
@@ -120,7 +120,7 @@
         {% else %}
             {% set logoutPath = path('claro_security_logout') %}
         {% endif %}
-        {{ topbar.item({'name':'logout', 'href':logoutPath, 'icon':'off'}) }}
+        {{ topbar.item({'name':'logout', 'href':logoutPath, 'icon':'off', id:"btn-logout"}) }}
 
     {% endblock dropdownLogged %}
 

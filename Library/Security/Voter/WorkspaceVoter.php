@@ -33,9 +33,9 @@ class WorkspaceVoter implements VoterInterface
 
     /**
      * @DI\InjectParams({
-     *     "em"             = @DI\Inject("doctrine.orm.entity_manager"),
-     *     "translator"     = @DI\Inject("translator"),
-     *     "ut"             = @DI\Inject("claroline.security.utilities")
+     *     "em"         = @DI\Inject("doctrine.orm.entity_manager"),
+     *     "translator" = @DI\Inject("translator"),
+     *     "ut"         = @DI\Inject("claroline.security.utilities")
      * })
      */
     public function __construct(
@@ -51,17 +51,21 @@ class WorkspaceVoter implements VoterInterface
 
     public function vote(TokenInterface $token, $object, array $attributes)
     {
-
         if ($object instanceof AbstractWorkspace) {
 
-            if (count($attributes) === 0) {
-                $roles = $this->ut->getRoles($token);
-                $ws = $this->em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')
-                    ->findWorkspaceByWorkspaceAndRoles($object, $roles);
+            //Managers can do anything in their workspace.
+            $manager = $this->em->getRepository('ClarolineCoreBundle:Role')
+                ->findManagerRole($object);
 
-                return (count($ws) === 0) ? VoterInterface::ACCESS_DENIED: VoterInterface::ACCESS_GRANTED;
+            $roles = $this->ut->getRoles($token);
+
+            foreach ($roles as $role) {
+                if ($role === $manager->getName()) {
+                    return VoterInterface::ACCESS_GRANTED;
+                }
             }
 
+            //otherwise we check if we can open the tool specified in the $attributes array
             return ($this->canDo($object, $token, $attributes[0])) ?
                 VoterInterface::ACCESS_GRANTED:
                 VoterInterface::ACCESS_DENIED;
@@ -91,42 +95,23 @@ class WorkspaceVoter implements VoterInterface
      *
      * @throws \RuntimeException
      */
-    private function canDo(AbstractWorkspace $workspace, TokenInterface $token, $action)
+    public function canDo(AbstractWorkspace $workspace, TokenInterface $token, $action)
     {
-        $manager = $this->em->getRepository('ClarolineCoreBundle:Role')
-            ->findManagerRole($workspace);
-        $roles = $this->ut->getRoles($token);
-
-        if ($action === 'DELETE') {
-            foreach ($roles as $role) {
-                if ($role === $manager->getName()) {
-                    return true;
-                }
-            }
-
-            return false;
-        }
-
+        //get a list of tools openable by the user
         $tools = $this->em
             ->getRepository('ClarolineCoreBundle:Tool\Tool')
             ->findDisplayedByRolesAndWorkspace($this->ut->getRoles($token), $workspace);
 
-        if ($action === 'OPEN') {
-            if (count($tools) > 0) {
-                return true;
-            } else {
-                return false;
-            }
+        //if the action is open, we see if tools can be opened
+        if (strtolower($action) === 'open') {
+            return (count($tools) > 0) ? true: false;
         }
 
+        //otherwise, we check if the action is equal to the name of the tool
         foreach ($tools as $tool) {
             if ($tool->getName() === $action) {
                 return true;
             }
-        }
-
-        if ($token instanceof AnonymousToken) {
-            throw new AuthenticationException('Insufficient permissions : authentication required');
         }
 
         return false;

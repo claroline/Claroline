@@ -37,7 +37,8 @@ class SimpleTextController extends Controller
 
         $simpleTextConfig = $this->get('claroline.manager.simple_text_manager')->getTextConfig($widget);
         //wtf !
-        $id = array_pop(array_keys($request->request->all()));
+        $keys = array_keys($request->request->all());
+        $id = array_pop($keys);
         $form = $this->get('claroline.form.factory')->create(FormFactory::TYPE_SIMPLE_TEXT, array($id));
         $form->bind($this->getRequest());
 

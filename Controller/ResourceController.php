@@ -149,7 +149,7 @@ class ResourceController
                     $parent
                 );
 
-                $nodesArray[] = $this->resourceManager->toArray($createdResource->getResourceNode());
+                $nodesArray[] = $this->resourceManager->toArray($createdResource->getResourceNode(), $this->sc->getToken());
             }
 
             return new JsonResponse($nodesArray);
@@ -259,7 +259,7 @@ class ResourceController
         foreach ($nodes as $node) {
             try {
                 $movedNode = $this->resourceManager->move($node, $newParent);
-                $movedNodes[] = $this->resourceManager->toArray($movedNode);
+                $movedNodes[] = $this->resourceManager->toArray($movedNode, $this->sc->getToken());
             } catch (ResourceMoveException $e) {
                 return new Response($this->translator->trans('invalid_move', array(), 'error'), 422);
             }
@@ -427,7 +427,7 @@ class ResourceController
         $user = $this->sc->getToken()->getUser();
         $path = array();
         $creatableTypes = array();
-        $currentRoles = $this->roleManager->getStringRolesFromCurrentUser();
+        $currentRoles = $this->roleManager->getStringRolesFromToken($this->sc->getToken());
         $canChangePosition = false;
         $nodesWithCreatorPerms = array();
 
@@ -450,7 +450,21 @@ class ResourceController
 
             $path = $this->resourceManager->getAncestors($node);
             $nodes = $this->resourceManager->getChildren($node, $currentRoles);
-            //set "admin" mask if someone is the creator of a resource.
+
+            //set "admin" mask if someone is the creator of a resource or the resource workspace owner.
+            //if someone needs admin rights, the resource type list will go in this array
+            $adminTypes = [];
+            $isOwner = $this->resourceManager->isWorkspaceOwnerOf($node, $this->sc->getToken());
+
+            if ($isOwner || $this->sc->isGranted('ROLE_ADMIN')) {
+                $resourceTypes = $this->resourceManager->getAllResourceTypes();
+
+                foreach ($resourceTypes as $resourceType) {
+                    $adminTypes[$resourceType->getName()] = $this->translator
+                        ->trans($resourceType->getName(), array(), 'resource');
+                }
+            }
+
             foreach ($nodes as $item) {
                 if ($user !== 'anon.') {
                     if ($item['creator_username'] === $user->getUsername()) {
@@ -459,7 +473,9 @@ class ResourceController
                 }
                 $nodesWithCreatorPerms[] = $item;
             }
+
             $creatableTypes = $this->rightsManager->getCreatableTypes($currentRoles, $node);
+            $creatableTypes = array_merge($creatableTypes, $adminTypes);
             $this->dispatcher->dispatch('log', 'Log\LogResourceRead', array($node));
         }
 
@@ -518,7 +534,7 @@ class ResourceController
         foreach ($nodes as $node) {
             //$resource = $this->resourceManager->getResourceFromNode($node);
             $newNodes[] = $this->resourceManager
-                ->toArray($this->resourceManager->copy($node, $parent, $user)->getResourceNode());
+                ->toArray($this->resourceManager->copy($node, $parent, $user)->getResourceNode(), $this->sc->getToken());
         }
 
         return new JsonResponse($newNodes);
@@ -548,7 +564,7 @@ class ResourceController
         $criteria = $this->resourceManager->buildSearchArray($this->request->query->all());
         $criteria['roots'] = isset($criteria['roots']) ? $criteria['roots'] : array();
         $path = $node ? $this->resourceManager->getAncestors($node): array();
-        $userRoles = $this->roleManager->getStringRolesFromCurrentUser();
+        $userRoles = $this->roleManager->getStringRolesFromToken($this->sc->getToken());
 
         //by criteria recursive => infinte loop
         $resources = $this->resourceManager->getByCriteria($criteria, $userRoles, true);
@@ -587,7 +603,7 @@ class ResourceController
         foreach ($nodes as $node) {
             $shortcut = $this->resourceManager
                 ->makeShortcut($node, $parent, $creator, new ResourceShortcut());
-            $links[] = $this->resourceManager->toArray($shortcut->getResourceNode());
+            $links[] = $this->resourceManager->toArray($shortcut->getResourceNode(), $this->sc->getToken());
         }
 
         return new JsonResponse($links);

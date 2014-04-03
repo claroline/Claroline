@@ -11,6 +11,7 @@
 
 namespace Claroline\CoreBundle\Manager;
 
+use Claroline\CoreBundle\Entity\AbstractRoleSubject;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Templating\EngineInterface;
@@ -28,7 +29,6 @@ class MailManager
 {
     private $router;
     private $mailer;
-    private $templating;
     private $translator;
     private $container;
     private $ch;
@@ -39,7 +39,6 @@ class MailManager
      * @DI\InjectParams({
      *     "router"         = @DI\Inject("router"),
      *     "mailer"         = @DI\Inject("mailer"),
-     *     "templating"     = @Di\Inject("templating"),
      *     "ch"             = @DI\Inject("claroline.config.platform_config_handler"),
      *     "container"      = @DI\Inject("service_container"),
      *     "cacheManager"   = @DI\Inject("claroline.manager.cache_manager"),
@@ -48,7 +47,6 @@ class MailManager
      */
     public function __construct(
         \Swift_Mailer $mailer,
-        EngineInterface $templating,
         UrlGeneratorInterface $router,
         Translator $translator,
         PlatformConfigurationHandler $ch,
@@ -59,7 +57,6 @@ class MailManager
     {
         $this->router = $router;
         $this->mailer = $mailer;
-        $this->templating = $templating;
         $this->translator = $translator;
         $this->container = $container;
         $this->ch = $ch;
@@ -84,16 +81,12 @@ class MailManager
     public function sendForgotPassword(User $user)
     {
         $hash = $user->getResetPasswordHash();
-        $msg = $this->translator->trans('mail_click', array(), 'platform');
-        $link = $this->container->get('request')->server->get('HTTP_ORIGIN') . $this->router->generate(
-            'claro_security_reset_password',
-            array('hash' => $hash)
-        );
-        $body = $this->templating->render(
-            'ClarolineCoreBundle:Authentication:emailForgotPassword.html.twig',
-            array('message' => $msg, 'link' => $link, 'user' => $user)
-        );
+        $link = $this->router->generate('claro_security_reset_password', array('hash' => $hash), true);
         $subject = $this->translator->trans('reset_pwd', array(), 'platform');
+
+        $body = $this->container->get('templating')->render(
+            'ClarolineCoreBundle:Mail:forgotPassword.html.twig', array('user' => $user, 'link' => $link)
+        );
 
         return $this->send($subject, $body, array($user));
     }
@@ -107,10 +100,12 @@ class MailManager
     {
         $locale = $user->getLocale();
         $content = $this->contentManager->getTranslatedContent(array('type' => 'claro_mail_registration'));
-        $displayedLocale = isset($content[$locale]) ? $locale: $this->ch->getParameter('locale_language');
+        $displayedLocale = isset($content[$locale]) ? $locale : $this->ch->getParameter('locale_language');
         $body = $content[$displayedLocale]['content'];
-        $subject =  $content[$displayedLocale]['title'];
+        $subject = $content[$displayedLocale]['title'];
 
+        $body = str_replace('%first_name%', $user->getFirstName(), $body);
+        $body = str_replace('%last_name%', $user->getLastName(), $body);
         $body = str_replace('%username%', $user->getUsername(), $body);
         $body = str_replace('%password%', $user->getPlainPassword(), $body);
         $subject = str_replace('%platform_name%', $this->ch->getParameter('name'), $subject);
@@ -139,12 +134,12 @@ class MailManager
     public function send($subject, $body, array $users, $from = null)
     {
         if ($this->isMailerAvailable()) {
+            $to = [];
+
             $layout = $this->contentManager->getTranslatedContent(array('type' => 'claro_mail_layout'));
 
-            $from = ($from === null) ? $this->ch->getParameter('support_email'): $from->getMail();
-            $to = array();
-
-            $locale = count($users) === 1 ? $users[0]->getLocale(): $this->ch->getParameter('locale_language');
+            $fromEmail = ($from === null) ? $this->ch->getParameter('support_email') : $from->getMail();
+            $locale = count($users) === 1 ? $users[0]->getLocale() : $this->ch->getParameter('locale_language');
 
             if (!$locale) {
                 $locale = $this->ch->getParameter('locale_language');
@@ -154,22 +149,35 @@ class MailManager
             $body = str_replace('%content%', $body, $usedLayout);
             $body = str_replace('%platform_name%', $this->ch->getParameter('name'), $body);
 
+            if ($from) {
+                $body = str_replace('%first_name%', $from->getFirstName(), $body);
+                $body = str_replace('%last_name%', $from->getLastName(), $body);
+            } else {
+                $body = str_replace('%first_name%', $this->ch->getParameter('name'), $body);
+                $body = str_replace('%last_name%', '', $body);
+            }
+
             foreach ($users as $user) {
-                $to[] = $user->getMail();
+
+                $mail = $user->getMail();
+
+                if (filter_var($mail, FILTER_VALIDATE_EMAIL)) {
+                    $to[] = $mail;
+                }
             }
 
             $message = \Swift_Message::newInstance()
                 ->setSubject($subject)
-                ->setFrom($from)
+                ->setFrom($fromEmail)
                 ->setBody($body, 'text/html');
 
             if (count($to) > 1) {
-                $message->setCc($to);
+                $message->setBcc($to);
             } else {
                 $message->setTo($to);
             }
 
-            return $this->mailer->send($message) ? true: false;
+            return $this->mailer->send($message) ? true : false;
         }
 
         return false;
@@ -186,9 +194,6 @@ class MailManager
         $errors = array();
 
         foreach ($languages as $language) {
-            if (!strpos($translatedContents[$language]['content'], '%username%')) {
-                $errors[$language]['content'][] = 'missing_%username%';
-            }
             if (!strpos($translatedContents[$language]['content'], '%password%')) {
                 $errors[$language]['content'][] = 'missing_%password%';
             }

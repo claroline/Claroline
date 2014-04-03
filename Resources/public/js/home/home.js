@@ -12,62 +12,32 @@
 
     window.Claroline.Home = {};
     var home = window.Claroline.Home;
+    var modal = window.Claroline.Modal;
 
     home.path = $('#homePath').html(); //global
+    home.locale = $('#homeLocale').html(); //global
+    home.asset = $('#homeAsset').html(); //global
+
 
     if (!home.path) {
         home.path = './';
     }
 
-    home.locale = $('#homeLocale').html(); //global
-
     if (!home.locale) {
         home.locale = 'en';
     }
-
-    home.asset = $('#homeAsset').html(); //global
 
     if (!home.asset) {
         home.asset = './';
     }
 
-    home.modal = function (url, id, element)
-    {
-        $('.modal').modal('hide');
-
-        id = typeof(id) !== 'undefined' ? id : null;
-        element = typeof(element) !== 'undefined' ? element : null;
-
-        $.ajax(home.path + url)
-        .done(function (data) {
-            var modal = document.createElement('div');
-            modal.className = 'modal fade';
-
-            if (id) {
-                modal.setAttribute('id', id);
-            }
-
-            if (element) {
-                $(modal).data('element', element);
-            }
-
-            modal.innerHTML = data;
-
-            $(modal).appendTo('body');
-
-            $(modal).modal('show');
-
-            $(modal).on('hidden.bs.modal', function () {
-                $(this).remove();
-            });
-
-        })
-        .error(function () {
-            alert('An error occurred!\n\nPlease try again later or check your internet connection');
-        });
-
-    };
-
+    /**
+     * Find urls ina text
+     *
+     * @param text A string
+     *
+     * @return An array with urls
+     */
     home.findUrls = function (text)
     {
         var source = (text || '').toString();
@@ -88,84 +58,185 @@
     };
 
     /**
-     * Create and update an element by POST method with ajax.
+     * Insert the HTML of a new or edited content.
+     */
+    home.insertContent = function (creatorElement, data, type, father, update)
+    {
+        update = typeof(update) !== 'undefined' ? update : null;
+
+        var contentPath = 'content/' + data + '/' + type;
+
+        if (father) {
+            contentPath += '/' + father;
+        }
+
+        $.ajax(home.path + contentPath).done(function (data) {
+            if (father && !update) {
+                $('.creator' + father).after(data);
+                $('.creator' + father).find('.collapse' + father).collapse('hide');
+            } else if (father && update) {
+                $(creatorElement).parents('.creator' + father).first().replaceWith(data);
+            } else if (update) {
+                $(creatorElement).replaceWith(data);
+            } else {
+                $(creatorElement).next().prepend(data).hide().fadeIn('slow');
+            }
+
+            $('.contents').trigger('ContentModified');
+        });
+    };
+
+    /**
+     * Empty titles and contents in a creator for each languages.
+     */
+    home.emptyContent = function (creatorElement)
+    {
+        $('input', creatorElement).val('');
+        $('textarea', creatorElement).val('').data('saved', 'true');
+    };
+
+    /**
+     * Create or update an element by POST method with ajax.
      *
      * @param [DOM obj] element The .creator element
      * @param [String] id The id of the content, this parameter is optional.
      *
      * @TODO Prevent multiple clicks
      */
-    home.creator = function (element, id)
+    home.creator = function (element, id, update)
     {
         id = typeof(id) !== 'undefined' ? id : null;
+        update = typeof(update) !== 'undefined' ? update : null;
 
         var creatorElement = $(element).parents('.creator').get(0);
-        var title = $('.content-title', creatorElement).get(0);
-        var text = $('.content-text', creatorElement).get(0);
+        var form = $('form', creatorElement).first().serializeArray();
         var type = $(creatorElement).data('type');
         var father = $(creatorElement).data('father');
-        var path = '';
-        var contentPath = '';
+        var route = 'content/create/' + type;
 
-        if (id) {
-            path = 'content/update/' + id;
-        } else {
-            path = 'content/create';
+        if (father) {
+            route += '/' + father;
         }
 
-        if (text.value !== '' || title.value !== '') {
-            $.post(home.path + path, {
-                'title': title.value,
-                'text': text.value,
-                'type': type,
-                'father': father
-            })
+        if (update) {
+            route = 'content/update/' + id;
+        }
+
+        if (!home.creatorIsEmpty(form)) {
+            $.post(home.path + route, form)
             .done(function (data) {
                 if (!isNaN(data) && data !== '') {
-                    contentPath = 'content/' + data + '/' + type;
-
-                    var insertElement = function (content) {
-                        $(creatorElement).next().prepend(content).hide().fadeIn('slow');
-                    };
-
-                    if (father) {
-                        contentPath = 'content/' + data + '/' + type + '/' + father;
-
-                        insertElement = function (content)
-                        {
-                            $('.creator' + father).after(content);
-                            $('.creator' + father).find('.collapse' + father).collapse('hide');
-                        };
-                    }
-
-                    $.ajax(home.path + contentPath)
-                    .done(function (data) {
-                        insertElement(data);
-                        $('.contents').trigger('ContentModified');
-                    });
-
-                    title.value = '';
-                    text.value = '';
+                    home.insertContent(creatorElement, data, type, father);
+                    home.emptyContent(creatorElement);
                 } else if (data === 'true') {
-
-                    contentPath = 'content/' + id + '/' + type;
-
-                    if (father) {
-                        creatorElement = $(creatorElement).parents('.creator' + father).get(0);
-                        contentPath = 'content/' + id + '/' + type + '/' + father;
-                    }
-
-                    $.ajax(home.path + contentPath)
-                    .done(function (data) {
-                        $(creatorElement).replaceWith(data);
-                        $('.contents').trigger('ContentModified');
-                    });
+                    home.insertContent(creatorElement, id, type, father, update);
                 } else {
-                    home.modal('content/error');
+                    modal.error();
                 }
             })
             .error(function () {
-                home.modal('content/error');
+                modal.error();
+            });
+        }
+    };
+
+    /**
+     * Delete a content or a content type.
+     *
+     * @param element The HTML elementof a content.
+     * @param type, in order to delete a type, make this parameter true
+     */
+    home.deleteContent = function (element, type)
+    {
+        var path = typeof(type) === 'undefined' || type === false ? 'delete' : 'deletetype';
+        var id = element.data('id');
+
+        if (id) {
+            $.ajax(home.path + 'content/' + path + '/' + id)
+            .done(function (data) {
+                if (data === 'true') {
+                    if (type) {
+                        element = element.parent();
+                    }
+
+                    element.hide('slow', function () {
+                        $(this).remove();
+                        $('.contents').trigger('ContentModified');
+                    });
+                } else {
+                    modal.error();
+                }
+            })
+            .error(function () {
+                modal.error();
+            });
+        }
+    };
+
+    /**
+     * check if a translated content form is empty
+     *
+     * @param form A serializeArray of a form element
+     */
+    home.creatorIsEmpty = function (form)
+    {
+        if (form instanceof Array) {
+            for (var lang in form) {
+                if (form.hasOwnProperty(lang) && form[lang].value !== undefined && form[lang].value !== '') {
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    };
+
+    /**
+     * Change the size of a home page content.
+     *
+     * @param size The new size of the content, example: content-12
+     * @param id The id of the content
+     * @param type The type of the content
+     * @param element The html elment to change after modify the content.
+     */
+    home.changeSize = function (size, id, type, element) {
+        if (id && type && element) {
+            $.post(home.path + 'content/update/' + id + '/' + size + '/' + type)
+            .done(function (data) {
+                if (data === 'true') {
+                    $(element).removeClass(function (index, css) {
+                        return (css.match(/\bcontent-\d+/g) || []).join(' ');
+                    });
+                    modal.hide();
+                    $(element).addClass(size);
+                    $(element).trigger('DOMSubtreeModified'); //height resize event
+                    $('#sizes').modal('hide');
+                    $('.contents').trigger('ContentModified');
+
+                } else {
+                    modal.error();
+                }
+            })
+            .error(function () {
+                modal.error();
+            });
+        }
+    };
+
+    /**
+     * Put a content in a region (top, left, right, content and footer)
+     *
+     * @param name The name of the region
+     * @param id The id of the content to put in a region
+     */
+    home.changeRegion = function (name, id) {
+        if (name && id) {
+            $.ajax(home.path + 'region/' + name + '/' + id)
+            .done(function () {
+                location.reload();
+            })
+            .error(function () {
+                modal.error();
             });
         }
     };
@@ -187,18 +258,18 @@
         })
         .error(function () {
             if (error) {
-                home.modal('content/error');
+                modal.error();
             }
         });
     };
 
-    home.isValidURL = function (url, action)
+    home.canGenerateContent = function (url, action)
     {
-        $.post(home.path + 'isvalidurl', {
+        $.post(home.path + 'cangeneratecontent', {
             'url': url
         })
-        .done(function (data) {
-            if (data.trim() === 'true') {
+        .success(function (data) {
+            if (data.trim() !== 'false') {
                 action(data);
             }
         });
@@ -252,7 +323,7 @@
         var translatable = $(this).parents('.content-translatable').first();
         var lang = $(this).text();
         $('.content-menu button span', translatable).text(lang);
-        $('textarea', translatable).parent().each(function () {
+        $('.lang', translatable).each(function () {
             if ($(this).data('lang') === lang) {
                 $(this).removeClass('hide');
             } else {

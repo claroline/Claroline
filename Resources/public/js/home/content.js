@@ -11,145 +11,54 @@
     'use strict';
 
     var home = window.Claroline.Home;
-
-    $('body').on('mouseenter', '.content-element', function () {
-
-        if ($('.content-menu', this).get(0) !== undefined) {
-            $('.content-menu').each(function () {
-                if (!$(this).hasClass('hide')) {
-                    $(this).addClass('hide');
-                }
-                if ($(this).hasClass('open')) {
-                    $(this).removeClass('open');
-                }
-            });
-        }
-
-        $(this).find('.content-menu').first().removeClass('hide');
-
-    });
-
-    $('body').on('mouseleave', '.content-element', function () {
-        if (!$(this).find('.content-menu').first().hasClass('open')) {
-            $(this).find('.content-menu').first().removeClass('open');
-        }
-        $(this).find('.content-menu').first().addClass('hide');
-    });
+    var modal = window.Claroline.Modal;
+    var tinymce = window.tinymce;
 
     $('body').on('click', '.content-size', function (event) {
-        var element = $(event.target).parents('.content-element').get(0);
-        var size = (element.className.match(/\bcontent-\d+/g) || []).join(' ').substr(8);
-        var id = $(element).data('id');
-        var type = $(element).data('type');
+        var content = $(event.target).parents('.content-element').get(0);
+        var size = (content.className.match(/\bcontent-\d+/g) || []).join(' ').substr(8);
+        var id = $(content).data('id');
+        var type = $(content).data('type');
 
-        home.modal('content/size/' + id + '/' + size + '/' + type, 'sizes', element);
-    });
-
-    $('body').on('click', '#sizes .panel', function (event) {
-        var size = 'content-' + event.target.innerHTML;
-        var id = $('#sizes .modal-body').data('id');
-        var type = $('#sizes .modal-body').data('type');
-        var element = $('#sizes').data('element');
-
-        if (id && type && element) {
-            $.post(home.path + 'content/update/' + id, { 'size': size, 'type': type })
-            .done(function (data) {
-                if (data === 'true') {
-                    $(element).removeClass(function (index, css) {
-                        return (css.match(/\bcontent-\d+/g) || []).join(' ');
-                    });
-
-                    $(element).addClass(size);
-                    $(element).trigger('DOMSubtreeModified'); //height resize event
-                    $('#sizes').modal('hide');
-                    $('.contents').trigger('ContentModified');
-
-                } else {
-                    home.modal('content/error');
-                }
-            })
-            .error(function () {
-                home.modal('content/error');
+        modal.fromRoute('claroline_content_size', {'id': id, 'size': size, 'type': type}, function (element) {
+            element.attr('id', 'sizes')
+            .on('click', '.panel', function (event) {
+                size = 'content-' + event.target.innerHTML;
+                home.changeSize(size, id, type, content);
             });
-        }
+        });
     });
 
     $('body').on('click', '.content-region', function (event) {
-        var element = $(event.target).parents('.content-element').get(0);
-        var id = $(element).data('id');
+        var id = $(event.target).parents('.content-element').data('id');
 
-        home.modal('content/region/' + id, 'regions', element);
-    });
-
-
-    $('body').on('click', '#regions .panel', function (event) {
-        var name = $(event.target).data('region');
-        var id = $('#regions .modal-body').data('id');
-
-        if (id && name) {
-            $.ajax(home.path + 'region/' + name + '/' + id)
-            .done(function () {
-                location.reload();
-            })
-            .error(function () {
-                home.modal('content/error');
+        modal.fromRoute('claroline_content_region', {'content': id}, function (element) {
+            element.attr('id', 'regions')
+            .on('click', '.panel', function (event) {
+                var name = $(event.target).data('region');
+                home.changeRegion(name, id);
             });
-        }
+        });
     });
 
     $('body').on('click', '.content-delete', function (event) {
-        var element = $(event.target).parents('.content-element').get(0);
+        var content = $(event.target).parents('.content-element');
 
-        home.modal('content/confirm', 'delete-content', element);
-    });
-
-    $('body').on('click', '#delete-content .btn.delete', function () {
-        var element = $('#delete-content').data('element');
-        var id = $(element).data('id');
-
-        if (id && element) {
-            $.ajax(home.path + 'content/delete/' + id)
-            .done(function (data) {
-                if (data === 'true') {
-                    $(element).hide('slow', function () {
-                        $(this).remove();
-                        $('.contents').trigger('ContentModified');
-                    });
-                } else {
-                    home.modal('content/error');
-                }
-            })
-            .error(function () {
-                home.modal('content/error');
+        modal.fromRoute('claro_content_confirm', null, function (element) {
+            element.on('click', '.btn.delete', function () {
+                home.deleteContent(content);
             });
-        }
+        });
     });
 
     $('body').on('click', '.type-delete', function (event) {
-        var element = $(event.target).parents('.alert').get(0);
+        var type = $(event.target).parents('.alert');
 
-        home.modal('content/confirm', 'delete-type', element);
-    });
-
-    $('body').on('click', '#delete-type .btn.delete', function () {
-        var element = $('#delete-type').data('element');
-        var id = $(element).data('id');
-
-        if (id && element) {
-            $.ajax(home.path + 'content/deletetype/' + id)
-            .done(function (data) {
-                if (data === 'true') {
-                    $(element).parent().hide('slow', function () {
-                        $(this).remove();
-                    });
-                } else {
-                    home.modal('content/error');
-                }
-            })
-            .error(function () {
-                home.modal('content/error');
+        modal.fromRoute('claro_content_confirm', null, function (element) {
+            element.on('click', '.btn.delete', function () {
+                home.deleteContent(type, true);
             });
-        }
+        });
     });
 
     $('body').on('click', '.create-type', function (event) {
@@ -166,14 +75,14 @@
                             $('.panel .panel-body', typeCreator).append(data);
                             name.val('');
                         } else {
-                            home.modal('content/error');
+                            modal.error();
                         }
                     })
                     .error(function () {
-                        home.modal('content/error');
+                        modal.error();
                     });
                 } else {
-                    home.modal('content/typeerror');
+                    modal.error();
                 }
             });
         }
@@ -199,10 +108,11 @@
                 $('.contents').trigger('ContentModified');
             })
             .error(function () {
-                home.modal('content/error');
+                modal.error();
             });
         }
     });
+
 
     $('body').on('click', '.creator-button', function (event) {
         home.creator(event.target);
@@ -213,7 +123,7 @@
         var id = $(element).data('id');
 
         if (element && id) {
-            home.creator(event.target, id);
+            home.creator(event.target, id, true);
         }
     });
 
@@ -237,33 +147,33 @@
                 $('.contents').trigger('ContentModified');
             })
             .error(function () {
-                home.modal('content/error');
+                modal.error();
             });
         }
     });
 
     $('body').on('click', '.creator .addlink', function () {
-        var element = $(event.target).parents('.creator').get(0);
+        var creator = $(event.target).parents('.creator').get(0);
 
-        home.modal('content/link', 'add-link', element);
-    });
+        modal.fromRoute('claro_content_link', null, function (element) {
+            element.on('click', '.btn-primary', function () {
+                var urls = home.findUrls($('input', element).val());
 
-    $('body').on('click', '#add-link .btn-primary', function () {
-        var urls = home.findUrls($('#add-link input').val());
-        var modal = $(this).parents('.modal').get(0);
-        var creator = $('#add-link').data('element');
+                if (urls.length > 0) {
+                    home.generatedContent(urls[0], function (data) {
+                        var editor = tinymce.get($('.lang:not(.hide) textarea', creator).attr('id'));
+                        editor.insertContent('<div>' + data + '</div>');
+                        setTimeout(function () {
+                            editor.fire('change');
+                        }, 500);
+                    });
 
-        if (urls.length > 0) {
-            home.generatedContent(urls[0], function (data) {
-                $('.content-text', creator).val(
-                    $('.content-text', creator).val() + '<p><a href="' + urls[0] + '">' + urls[0] + '</a></p>' + data
-                );
+                    element.modal('hide');
+                } else {
+                    $('.form-group', element).addClass('has-error');
+                }
             });
-
-            $(modal).modal('hide');
-        } else {
-            $('.form-group', modal).addClass('has-error');
-        }
+        });
     });
 
     $('.contents').sortable({
@@ -284,7 +194,7 @@
                     $('.contents').trigger('ContentModified');
                 })
                 .error(function () {
-                    home.modal('content/error');
+                    modal.error();
                 });
             }
         }

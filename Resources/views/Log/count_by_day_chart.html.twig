@@ -36,7 +36,7 @@
 <script type="text/javascript">
     var chartData = {{ chartData|json_encode|raw }};
     var bg_color = "transparent";
-    if ($.browser.msie && parseInt($.browser.version, 10) <= 8) bg_color = "#fff";
+    if (navigator.userAgent.match(/msie/i) && navigator.userAgent.match(/8/)) bg_color = "#fff";
     $(document).ready(function(){
         if (chartData.length>0) {
             var actionsPlot = $.jqplot(

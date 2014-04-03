@@ -52,34 +52,37 @@
         </div>
         <div class="margin clearfix">
             <div class="results_list">
-
             </div>
         </div>
     </div>
-    <div class="table-responsive">
-        <table id="top_analytics_table" class="table table-condensed table-striped">
-            {% if list_data is not empty %}
-                <thead>
-                    <tr>
-                    {% for key, col in list_data[0] %}
-                        {% if key != 'id' %}
-                            <th>{{ key|trans({}, 'platform') }}</th>
-                        {% endif %}
+    <div class="col-md-12">
+        <div class="table-responsive">
+            <table id="top_analytics_table" class="table table-condensed table-hover table-bordered">
+                {% if list_data is not empty %}
+                    <thead>
+                        <tr>
+                        {% for key, col in list_data[0] %}
+                            {% if key != 'id' %}
+                                <th>{{ key|trans({}, 'platform') }}</th>
+                            {% endif %}
+                        {% endfor %}
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for row in list_data %}
+                        <tr>
+                            {% for key, col in row %}
+                                {% if key != 'id' %}
+                                    <td>{{ col }}</td>
+                                {% endif %}
+                            {% endfor %}
+                        </tr>
                     {% endfor %}
-                    </tr>
-                </thead>
-            {% endif %}
-            <tbody>
-            {% for row in list_data %}
-                <tr>
-                    {% for key, col in row %}
-                        {% if key != 'id' %}
-                            <td>{{ col }}</td>
-                        {% endif %}
-                    {% endfor %}
-                </tr>
-            {% endfor %}
-            </tbody>
-        </table>
+                    </tbody>
+                {% else %}
+                    <div class="alert alert-info">{{ 'admin_analytics_no_data'|trans({}, 'platform') }}</div>
+                {% endif %}
+            </table>
+        </div>
     </div>
 {% endblock %}

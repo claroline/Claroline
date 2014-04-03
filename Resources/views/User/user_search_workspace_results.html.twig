@@ -1,0 +1,13 @@
+{% macro userList(users) %}
+    {% if users|length > 0 %}
+        {% for user in users %}
+            <li><a class="user-picker-result" href="#" data-user="{{ user.firstName~' '~user.lastName }}" data-id="{{ user.id }}" data-url="{{ path('claro_profile_view', {'userId':user.id}) }}">{{ user.firstName~" "~user.lastName~" ("~user.mail~")" }}</a></li>
+        {% endfor %}
+    {% else %}
+        <li>{{ 'no_search_results' | trans({}, 'platform') }}</li>
+    {% endif %}
+{% endmacro %}
+
+{% import _self as lists %}
+
+{{ lists.userList(users) }}

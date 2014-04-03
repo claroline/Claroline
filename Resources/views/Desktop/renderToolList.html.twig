@@ -5,10 +5,6 @@
     data-original-title="{{ tool.getName()|trans({}, 'tools') }}"
     >
     <i class="{{ tool.getClass() }}"></i>
-    {% if tool.getDisplayName is empty %}
-        <span>{{ tool.getName()|trans({}, 'tools') }}</span>
-    {% else %}
-        <span>{{ tool.getDisplayName()|trans({}, 'tools') }}</span>
-    {% endif %}
+    <span>{{ tool.getDisplayName()|trans({}, 'tools') }}</span>
 </a>
 {% endfor %}

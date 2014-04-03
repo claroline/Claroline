@@ -36,12 +36,12 @@ class ToolListener
 
     /**
      * @DI\InjectParams({
-     *     "container" = @DI\Inject("service_container"),
-     *     "toolManager" = @DI\Inject("claroline.manager.tool_manager"),
+     *     "container"        = @DI\Inject("service_container"),
+     *     "toolManager"      = @DI\Inject("claroline.manager.tool_manager"),
      *     "workspaceManager" = @DI\Inject("claroline.manager.workspace_manager"),
-     *     "formFactory" = @DI\Inject("claroline.form.factory"),
-     *     "templating" = @DI\Inject("templating"),
-     *     "httpKernel" = @DI\Inject("http_kernel")
+     *     "formFactory"      = @DI\Inject("claroline.form.factory"),
+     *     "templating"       = @DI\Inject("templating"),
+     *     "httpKernel"       = @DI\Inject("http_kernel")
      * })
      */
     public function __construct(
@@ -152,10 +152,25 @@ class ToolListener
             array('isConfigurableInDesktop' => true, 'isDisplayableInDesktop' => true)
         );
 
-        return $this->templating->render(
-            'ClarolineCoreBundle:Tool\desktop\parameters:parameters.html.twig',
-            array('tools' => $tools)
+
+        if (count($tools) > 1) {
+            return $this->templating->render(
+                'ClarolineCoreBundle:Tool\desktop\parameters:parameters.html.twig',
+                array('tools' => $tools)
+            );
+        }
+
+        //otherwise only parameters exists so we return the parameters page.
+        $params['_controller'] = 'ClarolineCoreBundle:Tool\DesktopParameters:desktopConfigureTool';
+
+        $subRequest = $this->container->get('request')->duplicate(
+            array(),
+            null,
+            $params
         );
+        $response = $this->httpKernel->handle($subRequest, HttpKernelInterface::SUB_REQUEST);
+
+        return $response->getContent();
     }
 
     public function workspaceAgenda($workspaceId)
@@ -163,6 +178,7 @@ class ToolListener
         $em = $this->container->get('doctrine.orm.entity_manager');
         $workspace = $this->workspaceManager->getWorkspaceById($workspaceId);
         $form = $this->formFactory->create(FormFactory::TYPE_AGENDA);
+        $file = $this->formFactory->create(FormFactory::TYPE_AGENDA_IMPORTER);
         $listEvents = $em->getRepository('ClarolineCoreBundle:Event')->findByWorkspaceId($workspaceId, true);
         $usr = $this->container->get('security.context')->getToken()->getUser();
         $owners = $em->getRepository('ClarolineCoreBundle:Event')->findByUserWithoutAllDay($usr, 0);
@@ -190,6 +206,7 @@ class ToolListener
             array(
                 'workspace' => $workspace,
                 'form' => $form->createView(),
+                'file' => $file->createView(),
                 'owners' => $owners
             )
         );

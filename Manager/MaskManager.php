@@ -103,7 +103,7 @@ class MaskManager
         $permsMap = array();
 
         foreach ($decoders as $decoder) {
-            $permsMap[] = $decoder->getName();
+            $permsMap[$decoder->getValue()] = $decoder->getName();
         }
 
         return $permsMap;

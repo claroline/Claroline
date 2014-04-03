@@ -36,6 +36,7 @@ use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 use Symfony\Component\Serializer\Normalizer\GetSetMethodNormalizer;
 use JMS\DiExtraBundle\Annotation as DI;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * @DI\Service("claroline.manager.workspace_manager")
@@ -77,7 +78,7 @@ class WorkspaceManager
     /** @var PagerFactory */
     private $pagerFactory;
     private $workspaceFavouriteRepo;
-    private $security;
+    private $container;
 
     /**
      * Constructor.
@@ -93,7 +94,7 @@ class WorkspaceManager
      *     "ut"              = @DI\Inject("claroline.utilities.misc"),
      *     "templateDir"     = @DI\Inject("%claroline.param.templates_directory%"),
      *     "pagerFactory"    = @DI\Inject("claroline.pager.pager_factory"),
-     *     "security"        = @DI\Inject("security.context")
+     *     "container"       = @DI\Inject("service_container")
      * })
      */
     public function __construct(
@@ -107,7 +108,7 @@ class WorkspaceManager
         ClaroUtilities $ut,
         $templateDir,
         PagerFactory $pagerFactory,
-        SecurityContextInterface $security
+        ContainerInterface $container
     )
     {
         $this->homeTabManager = $homeTabManager;
@@ -129,7 +130,7 @@ class WorkspaceManager
         $this->workspaceRepo = $om->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace');
         $this->workspaceFavouriteRepo = $om->getRepository('ClarolineCoreBundle:Workspace\WorkspaceFavourite');
         $this->pagerFactory = $pagerFactory;
-        $this->security = $security;
+        $this->container = $container;
     }
 
     /**
@@ -165,7 +166,6 @@ class WorkspaceManager
         $workspace = $this->om->factory('Claroline\CoreBundle\Entity\Workspace\SimpleWorkspace');
         $workspace->setCreator($manager);
         $workspace->setName($config->getWorkspaceName());
-        $workspace->setPublic($config->isPublic());
         $workspace->setCode($config->getWorkspaceCode());
         $workspace->setGuid($this->ut->generateGuid());
         $workspace->setDisplayable($config->isDisplayable());
@@ -173,7 +173,7 @@ class WorkspaceManager
         $workspace->setSelfUnregistration($config->getSelfUnregistration());
         $baseRoles = $this->roleManager->initWorkspaceBaseRole($config->getRoles(), $workspace);
         $baseRoles['ROLE_ANONYMOUS'] = $this->roleRepo->findOneBy(array('name' => 'ROLE_ANONYMOUS'));
-        $this->roleManager->associateRole($manager, $baseRoles["ROLE_WS_MANAGER"]);
+        $this->roleManager->associateRole($manager, $baseRoles['ROLE_WS_MANAGER']);
         $dir = $this->om->factory('Claroline\CoreBundle\Entity\Resource\Directory');
         $dir->setName($workspace->getName());
         $rights = $config->getPermsRootConfiguration();
@@ -503,6 +503,11 @@ class WorkspaceManager
         return $this->workspaceRepo->findByAnonymous();
     }
 
+    public function getWorkspacesByManager(User $user)
+    {
+        return $this->workspaceRepo->findWorkspacesByManager($user);
+    }
+
     /**
      * @return integer
      */
@@ -516,9 +521,41 @@ class WorkspaceManager
      *
      * @return \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace[]
      */
-    public function getWorkspacesByRoles(array $roles)
+    public function getOpenableWorkspacesByRoles(array $roles)
     {
-        return $this->workspaceRepo->findByRoles($roles);
+        $workspaces = $this->workspaceRepo->findByRoles($roles);
+
+        foreach ($roles as $role) {
+
+            if (strpos('_' . $role, 'ROLE_WS_MANAGER')) {
+                $workspace = $this->roleRepo->findOneByName($role)->getWorkspace();
+                $workspaces[] = $workspace;
+            }
+        }
+
+        $ids = [];
+
+        return array_filter($workspaces, function ($workspace) use (&$ids) {
+            if (!in_array($workspace->getId(), $ids)) {
+                $ids[] = $workspace->getId();
+
+                return true;
+            }
+        });
+    }
+
+    /**
+     * @param string[] $roles
+     * @param integer $page
+     * @param integer $max
+     *
+     * @return \PagerFanta\PagerFanta
+     */
+    public function getOpenableWorkspacesByRolesPager(array $roles, $page, $max)
+    {
+        $workspaces = $this->getOpenableWorkspacesByRoles($roles);
+
+        return $this->pagerFactory->createPagerFromArray($workspaces, $page, $max);
     }
 
     /**
@@ -783,9 +820,41 @@ class WorkspaceManager
                 array($role, $user)
             );
         }
+
         $token = new UsernamePasswordToken($user, null, 'main', $user->getRoles());
-        $this->security->setToken($token);
+        $this->container->get('security.context')->setToken($token);
 
         return $user;
+    }
+
+    /**
+     * @param integer $page
+     * @param integer $max
+     * @param string  $orderedBy
+     *
+     * @return \Pagerfanta\Pagerfanta;
+     */
+    public function findAllWorkspaces($page, $max = 20, $orderedBy = 'id', $order = null)
+    {
+        $order = $order === 'DESC' ? 'DESC' : 'ASC';
+        $tab = array($orderedBy => $order);
+        $result = $this->workspaceRepo->findBy(array(), array('id' => $order));
+
+        return $this->pagerFactory->createPagerFromArray($result, $page, $max);
+    }
+
+    /**
+     * @param string  $search
+     * @param integer $page
+     * @param integer $max
+     * @param string  $orderedBy
+     *
+     * @return \Pagerfanta\Pagerfanta;
+     */
+    public function getWorkspaceByName($search, $page, $max = 20, $orderedBy = 'id')
+    {
+        $query = $this->workspaceRepo->findByName($search, false, $orderedBy);
+
+        return $this->pagerFactory->createPager($query, $page, $max);
     }
 }

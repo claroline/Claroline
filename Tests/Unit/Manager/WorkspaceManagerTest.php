@@ -92,7 +92,6 @@ class WorkspaceManagerTest extends MockeryTestCase
 
         $config = $this->mock('Claroline\CoreBundle\Library\Workspace\Configuration');
         $config->shouldReceive('getWorkspaceName')->once()->andReturn('wsname');
-        $config->shouldReceive('isPublic')->once()->andReturn(true);
         $config->shouldReceive('getWorkspaceCode')->once()->andReturn('wscode');
         $config->shouldReceive('getRoles')->once()->andReturn(array('ROLE_WS_MANAGER', 'ROLE_WS_VISITOR'));
         $config->shouldReceive('getPermsRootConfiguration')->once()->andReturn(array('rootconfig'));
@@ -104,7 +103,6 @@ class WorkspaceManagerTest extends MockeryTestCase
         $config->shouldReceive('getSelfRegistration')->once()->andReturn(true);
         $config->shouldReceive('getSelfUnregistration')->once()->andReturn(true);
         $this->ut->shouldReceive('generateGuid')->once()->andReturn('guid');
-
         $manager = $this->mock('Claroline\CoreBundle\Entity\User');
         $workspace = $this->mock('Claroline\CoreBundle\Entity\Workspace\SimpleWorkspace');
         $workspace->shouldReceive('setName')->once()->with('wsname');
@@ -468,7 +466,7 @@ class WorkspaceManagerTest extends MockeryTestCase
             ->andReturn($workspaces);
         m::getConfiguration()->allowMockingNonExistentMethods(false);
 
-        $this->assertEquals($workspaces, $this->getManager()->getWorkspacesByRoles($roles));
+        $this->assertEquals($workspaces, $this->getManager()->getOpenableWorkspacesByRoles($roles));
     }
 
     public function testGetWorkspaceIdsByUserAndRoleNames()

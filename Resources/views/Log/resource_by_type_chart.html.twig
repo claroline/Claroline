@@ -34,7 +34,7 @@
     pieChartData.push(["{{resource.name|trans({}, 'resource')}}",{{resource.total}}]);
     {% endfor %}
     var bg_color = "transparent";
-    if ($.browser.msie && parseInt($.browser.version, 10) <= 8) bg_color = "#fff";
+    if (navigator.userAgent.match(/msie/i) && navigator.userAgent.match(/8/)) bg_color = "#fff";
     var numberRows = 7;
     {% if numberRows is not empty %}
     numberRows = {{ numberRows }};

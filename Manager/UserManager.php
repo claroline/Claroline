@@ -36,7 +36,6 @@ use Symfony\Component\Validator\ValidatorInterface;
 class UserManager
 {
     private $ch;
-    private $context;
     private $ed;
     private $mailManager;
     private $om;
@@ -59,7 +58,6 @@ class UserManager
      *     "pagerFactory"           = @DI\Inject("claroline.pager.pager_factory"),
      *     "ch"                     = @DI\Inject("claroline.config.platform_config_handler"),
      *     "roleManager"            = @DI\Inject("claroline.manager.role_manager"),
-     *     "context"                = @DI\Inject("security.context"),
      *     "ed"                     = @DI\Inject("claroline.event.event_dispatcher"),
      *     "toolManager"            = @DI\Inject("claroline.manager.tool_manager"),
      *     "translator"             = @DI\Inject("translator"),
@@ -74,7 +72,6 @@ class UserManager
         PagerFactory $pagerFactory,
         PlatformConfigurationHandler $ch,
         RoleManager $roleManager,
-        SecurityContext $context,
         StrictDispatcher $ed,
         ToolManager $toolManager,
         Translator $translator,
@@ -94,7 +91,6 @@ class UserManager
         $this->om = $om;
         $this->mailManager = $mailManager;
         $this->validator = $validator;
-        $this->context = $context;
     }
 
     /**
@@ -161,13 +157,23 @@ class UserManager
         $user->setUsername('username#' . $user->getId());
         $user->setIsEnabled(false);
 
-        $this->ed->dispatch(
-            'delete_user', 'DeleteUser',
-            array($user)
-        );
+        // keeping the user's workspace with its original code
+        // would prevent creating a user with the same username
+        // todo: workspace deletion should be an option
+        $ws = $user->getPersonalWorkspace();
+
+        if ($ws) {
+            $ws->setCode($ws->getCode() . '#deleted_user#' . $user->getId());
+            $ws->setPublic(false);
+            $ws->setDisplayable(false);
+            $this->om->persist($ws);
+        }
 
         $this->om->persist($user);
         $this->om->flush();
+
+        $this->ed->dispatch('log', 'Log\LogUserDelete', array($user));
+        $this->ed->dispatch('delete_user', 'DeleteUser', array($user));
     }
 
     /**
@@ -330,7 +336,13 @@ class UserManager
      */
     public function getUserByUsername($username)
     {
-        return $this->userRepo->loadUserByUsername($username);
+        try {
+            $user = $this->userRepo->loadUserByUsername($username);
+        } catch (\Exception $e)
+        {
+            $user = null;
+        }
+        return $user;
     }
 
     /**
@@ -387,12 +399,13 @@ class UserManager
      * @param integer $page
      * @param integer $max
      * @param string  $orderedBy
+     * @param string  $order
      *
      * @return \Pagerfanta\Pagerfanta;
      */
-    public function getAllUsers($page, $max = 20, $orderedBy = 'id')
+    public function getAllUsers($page, $max = 20, $orderedBy = 'id', $order = null)
     {
-        $query = $this->userRepo->findAll(false, $orderedBy);
+        $query = $this->userRepo->findAll(false, $orderedBy, $order);
 
         return $this->pagerFactory->createPager($query, $page, $max);
     }
@@ -449,6 +462,16 @@ class UserManager
     public function getUsersByGroupWithoutPager(Group $group)
     {
         return $this->userRepo->findByGroup($group);
+    }
+
+    /**
+     * @param AbstractWorkspace $workspace
+     *
+     * @return User[]
+     */
+    public function getByWorkspaceWithUsersFromGroup(AbstractWorkspace $workspace)
+    {
+        return $this->userRepo->findByWorkspaceWithUsersFromGroup($workspace);
     }
 
     /**
@@ -533,15 +556,18 @@ class UserManager
     }
 
     /**
-     * Get Current User
+     * @param \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace $workspace
+     * @param string                                                   $search
+     * @param integer                                                  $page
+     * @param integer                                                  $max
      *
-     * @return mixed Claroline\CoreBundle\Entity\User or null
+     * @return \Pagerfanta\Pagerfanta
      */
-    public function getCurrentUser()
+    public function getAllUsersByWorkspaceAndName(AbstractWorkspace $workspace, $search, $page, $max = 20)
     {
-        if (is_object($token = $this->context->getToken()) and is_object($user = $token->getUser())) {
-            return $user;
-        }
+        $query = $this->userRepo->findAllByWorkspaceAndName($workspace, $search, false);
+
+        return $this->pagerFactory->createPager($query, $page, $max);
     }
 
     /**
@@ -672,9 +698,10 @@ class UserManager
      *
      * @return \Pagerfanta\Pagerfanta
      */
-    public function getByRolesIncludingGroups(array $roles, $page = 1, $max = 20, $orderedBy = 'id')
+    public function getByRolesIncludingGroups(array $roles, $page = 1, $max = 20, $orderedBy = 'id', $order= null)
     {
-        $res = $this->userRepo->findByRolesIncludingGroups($roles, true, $orderedBy);
+
+        $res = $this->userRepo->findByRolesIncludingGroups($roles, true, $orderedBy, $order);
 
         return $this->pagerFactory->createPager($res, $page, $max);
     }
@@ -688,9 +715,9 @@ class UserManager
      *
      * @return \Pagerfanta\Pagerfanta
      */
-    public function getByRolesAndNameIncludingGroups(array $roles, $search, $page = 1, $max = 20, $orderedBy = 'id')
+    public function getByRolesAndNameIncludingGroups(array $roles, $search, $page = 1, $max = 20, $orderedBy = 'id', $direction = null)
     {
-        $res = $this->userRepo->findByRolesAndNameIncludingGroups($roles, $search, true, $orderedBy);
+        $res = $this->userRepo->findByRolesAndNameIncludingGroups($roles, $search, true, $orderedBy, $direction);
 
         return $this->pagerFactory->createPager($res, $page, $max);
     }
@@ -803,5 +830,24 @@ class UserManager
         $user->setLocale($locale);
         $this->om->persist($user);
         $this->om->flush();
+    }
+
+    public function toArrayForPicker($users)
+    {
+        $resultArray = array();
+
+        $resultArray['users'] = array();
+        if (count($users)>0) {
+            foreach ($users as $user) {
+                $userArray = array();
+                $userArray['id'] = $user->getId();
+                $userArray['name'] = $user->getFirstName()." ".$user->getLastName();
+                $userArray['mail'] = $user->getMail();
+                $userArray['avatar'] = $user->getPicture();
+                array_push($resultArray['users'], $userArray);
+            }
+        }
+
+        return $resultArray;
     }
 }

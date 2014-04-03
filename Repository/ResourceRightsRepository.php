@@ -105,19 +105,26 @@ class ResourceRightsRepository extends EntityRepository
     /**
      * @todo to be removed
      */
-    public function findNonAdminRights(ResourceNode $resource)
+    public function findConfigurableRights(ResourceNode $resource)
     {
         $dql = "
             SELECT rights
             FROM Claroline\CoreBundle\Entity\Resource\ResourceRights rights
             JOIN rights.resourceNode resource
             JOIN rights.role role
-            WHERE resource.id = {$resource->getId()}
-            AND role.name != 'ROLE_ADMIN'
+            WHERE resource.id = :resourceId
+            AND role.name <> :resourceManagerRole
             ORDER BY role.name
         ";
 
-        return $this->_em->createQuery($dql)->getResult();
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('resourceId', $resource->getId());
+        $query->setParameter(
+            'resourceManagerRole',
+            'ROLE_WS_MANAGER_' . $resource->getWorkspace()->getGuid()
+        );
+
+        return $query->getResult();
     }
 
     /**

@@ -19,6 +19,7 @@ use Claroline\CoreBundle\Entity\Content;
 use Claroline\CoreBundle\Entity\Home\SubContent;
 use Claroline\CoreBundle\Entity\Home\Content2Type;
 use Claroline\CoreBundle\Entity\Home\Content2Region;
+use Claroline\CoreBundle\Form\HomeContentType;
 
 /**
  * @Service("claroline.manager.home_manager")
@@ -34,20 +35,26 @@ class HomeManager
     private $subContent;
     private $contentType;
     private $contentRegion;
+    private $contentManager;
+    private $formFactory;
 
     /**
      * @InjectParams({
      *     "graph"          = @Inject("claroline.common.graph_service"),
      *     "homeService"    = @Inject("claroline.common.home_service"),
+     *     "contentManager" = @Inject("claroline.manager.content_manager"),
      *     "manager"        = @Inject("doctrine"),
-     *     "persistence"    = @Inject("claroline.persistence.object_manager")
+     *     "persistence"    = @Inject("claroline.persistence.object_manager"),
+     *     "formFactory"    = @Inject("form.factory")
      * })
      */
-    public function __construct($graph, $homeService, $manager, $persistence)
+    public function __construct($graph, $homeService, $manager, $contentManager, $persistence, $formFactory)
     {
         $this->graph = $graph;
         $this->manager = $persistence;
+        $this->contentManager = $contentManager;
         $this->homeService = $homeService;
+        $this->formFactory = $formFactory;
         $this->type = $manager->getRepository('ClarolineCoreBundle:Home\Type');
         $this->region = $manager->getRepository('ClarolineCoreBundle:Home\Region');
         $this->content = $manager->getRepository('ClarolineCoreBundle:Content');
@@ -218,14 +225,13 @@ class HomeManager
      *
      * @return The id of the new content.
      */
-    public function createContent($title, $text, $type = null, $father = null)
+    public function createContent($translatedContent, $type = null, $father = null)
     {
-        if ($title or $text) {
-            $content = new Content();
-            $content->setTitle($title);
-            $content->setContent($text);
-            $this->manager->persist($content);
-
+        if (isset($translatedContent['content']) and
+            is_array($translatedContent['content']) and
+            $id = $this->contentManager->createContent($translatedContent['content']) and
+            $content = $this->content->find($id)
+        ) {
             if ($father) {
                 $father = $this->content->find($father);
                 $first = $this->subContent->findOneBy(array('back' => null, 'father' => $father));
@@ -253,21 +259,21 @@ class HomeManager
      *
      * @return This function doesn't return anything.
      */
-    public function updateContent($content, $title, $text, $size = null, $type = null)
+    public function updateContent($content, $translatedContent = null, $size = null, $type = null)
     {
-        $content->setTitle($title);
-        $content->setContent($text);
+        if (isset($translatedContent['content' . $content->getId()]) and
+            is_array($translatedContent['content' . $content->getId()])
+        ) {
+            $this->contentManager->updateContent($content, $translatedContent['content' . $content->getId()]);
+        }
 
         if ($size and $type) {
             $type = $this->type->findOneBy(array('name' => $type));
             $contentType = $this->contentType->findOneBy(array('content' => $content, 'type' => $type));
             $contentType->setSize($size);
             $this->manager->persist($contentType);
+            $this->manager->flush();
         }
-
-        $content->setModified();
-        $this->manager->persist($content);
-        $this->manager->flush();
     }
 
     /**
@@ -434,8 +440,13 @@ class HomeManager
         $variables = array('type' => $type);
 
         if ($id and !$content) {
-            $variables['content'] = $this->content->find($id);
+            $content = $this->content->find($id);
+            $variables['content'] = $content;
         }
+
+        $variables['form'] = $this->formFactory->create(
+            new HomeContentType($id, $type, $father), $content
+        )->createView();
 
         return $this->homeService->isDefinedPush($variables, 'father', $father);
     }

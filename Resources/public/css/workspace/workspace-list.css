@@ -1,0 +1,11 @@
+a.visit-workspace{
+    color: #fff;
+}
+
+a.visit-workspace:hover{
+    text-decoration:none;
+}
+
+.visit-workspace i{
+    padding-left: 4px;
+}

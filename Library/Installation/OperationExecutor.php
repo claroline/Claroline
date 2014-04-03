@@ -20,6 +20,9 @@ use JMS\DiExtraBundle\Annotation as DI;
 
 /**
  * @DI\Service("claroline.installation.operation_executor")
+ *
+ * Installs/updates platform bundles as mentioned in the operation
+ * file (operations.xml) generated during composer execution.
  */
 class OperationExecutor
 {

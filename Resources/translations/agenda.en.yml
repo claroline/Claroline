@@ -1,18 +1,19 @@
 add_event: 'Add new event'
-agenda_form_allDay: 'Task'
+agenda_form_allDay: Task
 agenda_form_description: Description
 agenda_form_end: 'End date'
 agenda_form_endHours: 'End hour'
-agenda_form_priority_High: High
 agenda_form_priority: Priority
+agenda_form_priority_High: High
 agenda_form_recurring: Repeats
 agenda_form_start: 'Start date'
 agenda_form_startHours: 'Start hour'
-agenda_form_title: title
+agenda_form_title: 'Title'
 apr: Apr
 april: April
 aug: Aug
 august: August
+cancel: Cancel
 close: Close
 confirm: 'Confirm modification ?'
 date_invalid: 'An error occured. Please check that your event doesn''t end before it starts'
@@ -21,13 +22,15 @@ dec: Dec
 december: December
 end: end
 end_date: 'End date'
-error: 'An unexpeded error occured, please try again'
+error: 'An unexpected error occurred, please try again'
 event_update: 'Event modified'
+export: 'Export events'
 feb: Feb
 february: February
 fri: Fri
 friday: Friday
 high: High
+import_agenda_file_file: 'Import'
 jan: Jan
 january: January
 jul: Jul
@@ -37,7 +40,7 @@ june: June
 length: Length
 low: Low
 mar: Mar
-march: Mar
+march: March
 may: May
 medium: Medium
 modify: 'Modify an event'
@@ -47,6 +50,7 @@ month: month
 next: '>'
 nextYear: '>>'
 'no event found': 'no event found'
+no_description: 'No description'
 nov: Nov
 november: November
 oct: Oct

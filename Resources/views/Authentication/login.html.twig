@@ -9,15 +9,14 @@ same message when authentication has failed (no precise validation errors).
 
 {% block content %}
     {{ macros.flashBox() }}
-    <div class="col-md-offset-4 col-md-4">
+    <div class="col-md-offset-3 col-md-5">
         {% if error %}
             <div class="alert alert-danger">
                 <button type="button" class="close" data-dismiss="alert">×</button>
                 {{ 'login_failure'|trans({}, 'platform') }}
             </div>
         {% endif %}
-
-        <div class='content-element panel panel-default'>
+        <div class='panel panel-default'>
             <div class="panel-heading">
                 <h3 class="panel-title">{{ 'login' | trans({}, "platform")}}</h3>
             </div>
@@ -25,7 +24,7 @@ same message when authentication has failed (no precise validation errors).
                 <div class="panel-body">
                     <div class="form-group">
                         <label for="username">{{ 'username_or_email'|trans({}, 'platform') }}</label>
-                        <input type="text" class="form-control" id="username" name="_username" placeholder="{{ 'username'|trans({}, 'platform') }}" tabindex="1" autofocus>
+                        <input type="text" class="form-control" id="username" name="_username" placeholder="{{ 'username_or_email' | trans({}, 'platform') }}" tabindex="1" autofocus>
                     </div>
                     <div class="form-group">
                         <label for="password">
@@ -41,8 +40,34 @@ same message when authentication has failed (no precise validation errors).
                 </div>
                 <div class="panel-footer">
                     <button type="submit" class="btn btn-primary" tabindex="3">{{ 'login'|trans({}, 'platform') }}</button>
+                    {% if is_facebook_available() %}
+                        <button class='btn btn-primary facebook-connect hide'>
+                        <i class="icon-facebook-sign"></i> {{ 'login'|trans({}, 'platform') }}
+                        <div onlogin="fb_login();" class="fb-login-button" data-max-rows="1" data-size="xlarge"
+                            data-show-faces="false" data-auto-logout-link="false">
+                        </div>
+                        </button>
+                    {% endif %}
                 </div>
             </form>
         </div>
+        {% if is_facebook_available() %}
+        <script>
+            function fb_login() {
+                FB.getLoginStatus(function(response) {
+                    if (response.status === 'connected') {
+                        document.location = "{{ url("hwi_oauth_service_redirect", {service: "facebook"}) }}";
+                    } else {
+                        FB.login(function(response) {
+                            if (response.authResponse) {
+                                document.location = "{{ url("hwi_oauth_service_redirect", {service: "facebook"}) }}";
+                            }
+                        });
+                    }
+                });
+            }
+        </script>
+        {% endif %}
     </div>
+
 {% endblock %}
