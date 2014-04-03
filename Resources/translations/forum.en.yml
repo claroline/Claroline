@@ -22,6 +22,7 @@ messages: Messages
 messages_per_page: Messages per page
 move_message: Move a message
 move_subject: Move a subject
+move_to: Move to
 new_category: New category
 new_message: Answer
 new_subject: New topic

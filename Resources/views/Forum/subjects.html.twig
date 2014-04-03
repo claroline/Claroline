@@ -36,6 +36,11 @@
     <li class="active"> {{ category.getName() }} </li>
 {% endblock %}
 
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel='stylesheet' type='text/css' href='{{ asset('bundles/clarolineforum/css/subjects.css')}}'>
+{% endblock %}
+
 {% block section_content %}
     <div class="panel-heading">
         <h3 class="panel-title">{{ _resource.getResourceNode().getName() }}</h3>
@@ -58,8 +63,8 @@
                 </div>
             </div>
         </div>
-        <div class="table-responsive">
-            <table id="subjects_table" class="table table-striped table-bordered table-condensed">
+        <div id="subjects-table-container" class="table-responsive">
+            <table class="table table-striped table-bordered table-condensed">
                 <thead>
                     <tr>
                         <th></th>
@@ -76,7 +81,7 @@
                 {% for subject in pager.currentPageResults %}
                     <tr class='row-subject'>
                         <td>
-                            {%  if isModerator %}
+                            {% if isModerator %}
                                 {% if subject['isSticked'] == true %}
                                     <a href="{{ path('claro_subject_unstick', {'subject': subject['id']}) }}">
                                         <i class="icon-paper-clip"></i> {{ 'unstick' | trans({}, 'forum') }}
@@ -119,9 +124,22 @@
                         </td>
                         {% if isModerator %}
                             <td>
-                                <a id="move-subject" href="{{ path('claro_subject_move_form' , {'subject': subject['id']}) }}">
-                                    <i class="icon-arrow-right"></i> {{ 'move' | trans({}, 'platform') }}
-                                </a>
+                                <div class="dropdown">
+                                    <a id="dLabel-{{ subject.id }}" role="button" data-toggle="dropdown" data-target="#" href="#">
+                                    {{ 'move_to' | trans({}, 'forum') }} <span class="caret"></span>
+                                    </a>
+                                    <ul class="dropdown-menu move-subject-dropdown" role="menu" aria-labelledby="dLabel-{{ subject.id }}">
+                                        {% for  cat in _resource.categories %}
+                                            {% if cat != category %}                                           
+                                            <li>
+                                                <a title="{{cat.name}}" href="{{ path('claro_subject_move', {'subject': subject.id, 'newCategory': cat.id }) }}">
+                                                    {{ cat.name | truncate(30) }}
+                                                </a>
+                                            </li>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </ul>
+                                </div>
                             </td>
                             <td>
                                 <a id="delete-subject" href="{{ _path('claro_forum_delete_subject', {'subject': subject['id']}) }}">
