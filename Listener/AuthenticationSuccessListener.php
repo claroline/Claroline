@@ -128,21 +128,25 @@ class AuthenticationSuccessListener implements AuthenticationSuccessHandlerInter
 
     public function saveLastUri(FilterResponseEvent $event)
     {
-        if ($event->isMasterRequest()
-            && !$event->getRequest()->isXmlHttpRequest()
-            && !in_array($event->getRequest()->attributes->get('_route'), $this->getExcludedRoutes())
-            && 'GET' === $event->getRequest()->getMethod()
-            && 200 === $event->getResponse()->getStatusCode()
-            && !$event->getResponse() instanceof StreamedResponse
-        ) {
-            if ($token =  $this->securityContext->getToken()) {
-                if ('anon.' !== $user = $token->getUser()) {
-                    $uri = $event->getRequest()->getRequestUri();
-                    $user->setLastUri($uri);
-                    $this->manager->persist($user);
-                    $this->manager->flush();
+        if ($this->configurationHandler->getParameter('redirect_after_login')) {
+
+            if ($event->isMasterRequest()
+                && !$event->getRequest()->isXmlHttpRequest()
+                && !in_array($event->getRequest()->attributes->get('_route'), $this->getExcludedRoutes())
+                && 'GET' === $event->getRequest()->getMethod()
+                && 200 === $event->getResponse()->getStatusCode()
+                && !$event->getResponse() instanceof StreamedResponse
+            ) {
+                if ($token =  $this->securityContext->getToken()) {
+                    if ('anon.' !== $user = $token->getUser()) {
+                        $uri = $event->getRequest()->getRequestUri();
+                        $user->setLastUri($uri);
+                        $this->manager->persist($user);
+                        $this->manager->flush();
+                    }
                 }
             }
+
         }
     }
 

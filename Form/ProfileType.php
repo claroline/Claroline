@@ -12,6 +12,7 @@
 namespace Claroline\CoreBundle\Form;
 
 use Claroline\CoreBundle\Entity\Role;
+use Claroline\CoreBundle\Repository\RoleRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
@@ -24,12 +25,13 @@ class ProfileType extends AbstractType
     private $isAdmin;
     private $langs;
 
-     /**
-      * Constructor.
-      *
-      * @param Role[]  $platformRoles
-      * @param boolean $isAdmin
-      */
+    /**
+     * Constructor.
+     *
+     * @param Role[]   $platformRoles
+     * @param boolean  $isAdmin
+     * @param string[] $langs
+     */
     public function __construct(array $platformRoles, $isAdmin, array $langs)
     {
         $this->platformRoles = new ArrayCollection($platformRoles);
@@ -46,21 +48,26 @@ class ProfileType extends AbstractType
     {
         parent::buildForm($builder, $options);
 
+        $builder
+            ->add('firstName', 'text', array('label' => 'First name'))
+            ->add('lastName', 'text', array('label' => 'Last name'));
+
         if (!$this->isAdmin) {
-            $builder->add('firstName', 'text', array('label' => 'First name'))
-                ->add('lastName', 'text', array('label' => 'Last name'))
+            $builder
                 ->add('username', 'text', array('read_only' => true, 'disabled' => true, 'label' => 'User name'))
-                ->add('administrativeCode', 'text', array('required' => false, 'read_only' => true, 'disabled' => true))
-                ->add('mail', 'email', array('required' => false))
-                ->add('phone', 'text', array('required' => false))
+                ->add(
+                    'administrativeCode',
+                    'text',
+                    array('required' => false, 'read_only' => true, 'disabled' => true, 'label' => 'administrative_code')
+                )
+                ->add('mail', 'email', array('required' => false, 'label' => 'email'))
+                ->add('phone', 'text', array('required' => false, 'label' => 'phone'))
                 ->add('locale', 'choice', array('choices' => $this->langs, 'required' => false, 'label' => 'Language'));
         } else {
-            $builder->add('firstName', 'text', array('label' => 'First name'))
-                ->add('lastName', 'text', array('label' => 'Last name'))
-                ->add('username', 'text', array('label' => 'User name'))
-                ->add('administrativeCode', 'text', array('required' => false))
-                ->add('mail', 'email', array('required' => false))
-                ->add('phone', 'text', array('required' => false))
+            $builder->add('username', 'text', array('label' => 'User name'))
+                ->add('administrativeCode', 'text', array('required' => false, 'label' => 'administrative_code'))
+                ->add('mail', 'email', array('required' => false, 'label' => 'email'))
+                ->add('phone', 'text', array('required' => false, 'label' => 'phone'))
                 ->add('locale', 'choice', array('choices' => $this->langs, 'required' => false, 'label' => 'Language'))
                 ->add(
                     'platformRoles',
@@ -72,11 +79,12 @@ class ProfileType extends AbstractType
                         'expanded' => false,
                         'multiple' => true,
                         'property' => 'translationKey',
-                        'query_builder' => function (\Doctrine\ORM\EntityRepository $er) {
-                            return $er->createQueryBuilder('r')
+                        'query_builder' => function (RoleRepository $roleRepository) {
+                            return $roleRepository->createQueryBuilder('r')
                                     ->where("r.type != " . Role::WS_ROLE)
                                     ->andWhere("r.name != 'ROLE_ANONYMOUS'");
-                        }
+                        },
+                        'label' => 'roles'
                     )
                 );
         }
@@ -87,16 +95,21 @@ class ProfileType extends AbstractType
                 'required' => false,
                 'constraints' => new Image(
                     array(
-                        'minWidth' => 50,
-                        'maxWidth' => 800,
+                        'minWidth'  => 50,
+                        'maxWidth'  => 800,
                         'minHeight' => 50,
                         'maxHeight' => 800,
                     )
-                )
+                ),
+                'label' => 'picture_profile'
             )
         )
-        ->add('description', 'tinymce', array('required' => false))
-        ->add('isMailDisplayed', 'checkbox', array('label' => 'is_mail_displayed', 'required' => false));
+
+        ->add(
+            'description',
+            'tinymce',
+            array('required' => false, 'label' => 'description')
+        );
     }
 
     public function getName()
@@ -108,7 +121,7 @@ class ProfileType extends AbstractType
     {
         $resolver->setDefaults(
             array(
-                'data_class' => 'Claroline\CoreBundle\Entity\User',
+                'data_class'         => 'Claroline\CoreBundle\Entity\User',
                 'translation_domain' => 'platform'
             )
         );

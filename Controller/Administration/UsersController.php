@@ -206,7 +206,6 @@ class UsersController extends Controller
      *     defaults={"page"=1, "max"=50, "order"="id","direction"="ASC"},
      *     options = {"expose"=true}
      * )
-     * @EXT\Method("GET")
      * @EXT\Template
      * @EXT\ParamConverter(
      *     "order",

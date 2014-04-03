@@ -55,4 +55,20 @@ class ResourceTypeRepository extends EntityRepository
 
         return $qb->getQuery()->getResult();
     }
+
+    /**
+     * Returns all the resource types introduced by plugins.
+     *
+     * @return array[ResourceType]
+     */
+    public function findAll()
+    {
+        $dql = '
+          SELECT rt, ma FROM Claroline\CoreBundle\Entity\Resource\ResourceType rt
+          LEFT JOIN rt.actions ma';
+
+        $query = $this->_em->createQuery($dql);
+
+        return $query->getResult();
+    }
 }

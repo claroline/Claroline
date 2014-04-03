@@ -26,7 +26,7 @@
     </div>
     <form class="form-horizontal" action="{{ path('claro_workspace_edit', {'workspace': workspace.getId()}) }}" method="post" {{ form_enctype(form) }}>
         <div class="panel-body">
-            {% if is_granted('DELETE', workspace ) %}
+            {% if is_granted('DELETE', workspace) and workspace != user.personalWorkspace %}
                 <a href="#" class="workspace-delete-confirmation btn btn-default">
                     <i class="icon-trash"></i> {{ 'workspace_delete'|trans({}, 'platform') }}
                 </a>

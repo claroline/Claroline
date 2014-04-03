@@ -95,8 +95,9 @@ class HomeTabConfigRepository extends EntityRepository
     public function findVisibleAdminDesktopHomeTabConfigs()
     {
         $dql = "
-            SELECT htc
+            SELECT htc, ht
             FROM Claroline\CoreBundle\Entity\Home\HomeTabConfig htc
+            JOIN htc.homeTab ht
             WHERE htc.type = 'admin_desktop'
             AND htc.user IS NULL
             AND htc.visible = true
@@ -110,7 +111,7 @@ class HomeTabConfigRepository extends EntityRepository
     public function findVisibleAdminWorkspaceHomeTabConfigs()
     {
         $dql = "
-            SELECT htc
+            SELECT htc, ht
             FROM Claroline\CoreBundle\Entity\Home\HomeTabConfig htc
             JOIN htc.homeTab ht
             WHERE htc.type = 'admin_workspace'
@@ -126,8 +127,9 @@ class HomeTabConfigRepository extends EntityRepository
     public function findVisibleDesktopHomeTabConfigsByUser(User $user)
     {
         $dql = "
-            SELECT htc
+            SELECT htc, ht
             FROM Claroline\CoreBundle\Entity\Home\HomeTabConfig htc
+            JOIN htc.homeTab ht
             WHERE htc.user = :user
             AND htc.type = 'desktop'
             AND htc.visible = true
@@ -142,8 +144,9 @@ class HomeTabConfigRepository extends EntityRepository
     public function findVisibleWorkspaceHomeTabConfigsByWorkspace(AbstractWorkspace $workspace)
     {
         $dql = "
-            SELECT htc
+            SELECT htc, ht
             FROM Claroline\CoreBundle\Entity\Home\HomeTabConfig htc
+            JOIN htc.homeTab ht
             WHERE htc.workspace = :workspace
             AND htc.type = 'workspace'
             AND htc.visible = true

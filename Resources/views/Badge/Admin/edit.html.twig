@@ -86,8 +86,8 @@
                         <thead>
                         <tr>
                             <th></th>
-                            <th>{{ 'admin_form_firstName'|trans({}, 'platform') }}</th>
-                            <th>{{ 'admin_form_lastName'|trans({}, 'platform') }}</th>
+                            <th>{{ 'First name'|trans({}, 'platform') }}</th>
+                            <th>{{ 'Last name'|trans({}, 'platform') }}</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -100,7 +100,7 @@
                                        data-confirm-message="{{ 'badge_unaward_confirm_message'|trans({'%badgeName%': badge.name, '%user%': user.firstname ~ ' ' ~ user.lastname}) }}"
                                        data-confirm-ok="{{ 'unaward'|trans }}" data-confirm-cancel="{{ 'cancel'|trans({}, 'platform') }}"><span class="icon-remove-circle"></span></a>
                                 </td>
-                                <td><a href="{{ path('claro_profile_view', {'userId': user.id}) }}" title="{{ user.firstname }} {{ user.lastname }}">{{ user.firstname }}</a></td>
+                                <td><a href="{{ path('claro_public_profile_view', {'publicUrl': user.getPublicUrl()}) }}" title="{{ user.firstname }} {{ user.lastname }}">{{ user.firstname }}</a></td>
                                 <td>{{ user.lastname }}</td>
                             </tr>
                         {% endfor %}
