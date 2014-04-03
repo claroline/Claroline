@@ -124,22 +124,24 @@
                         </td>
                         {% if isModerator %}
                             <td>
-                                <div class="dropdown">
-                                    <a id="dLabel-{{ subject.id }}" role="button" data-toggle="dropdown" data-target="#" href="#">
-                                    {{ 'move_to' | trans({}, 'forum') }} <span class="caret"></span>
-                                    </a>
-                                    <ul class="dropdown-menu move-subject-dropdown" role="menu" aria-labelledby="dLabel-{{ subject.id }}">
-                                        {% for  cat in _resource.categories %}
-                                            {% if cat != category %}                                           
-                                            <li>
-                                                <a title="{{cat.name}}" href="{{ path('claro_subject_move', {'subject': subject.id, 'newCategory': cat.id }) }}">
-                                                    {{ cat.name | truncate(30) }}
-                                                </a>
-                                            </li>
-                                            {% endif %}
-                                        {% endfor %}
-                                    </ul>
-                                </div>
+                                {% if _resource.categories|length > 1 %}
+                                    <div class="dropdown">
+                                        <a id="dLabel-{{ subject.id }}" role="button" data-toggle="dropdown" data-target="#" href="#">
+                                        {{ 'move_to' | trans({}, 'forum') }} <span class="caret"></span>
+                                        </a>
+                                        <ul class="dropdown-menu move-subject-dropdown" role="menu" aria-labelledby="dLabel-{{ subject.id }}">
+                                            {% for cat in _resource.categories %}
+                                                {% if cat != category %}
+                                                <li>
+                                                    <a title="{{cat.name}}" href="{{ path('claro_subject_move', {'subject': subject.id, 'newCategory': cat.id }) }}">
+                                                        {{ cat.name | truncate(30) }}
+                                                    </a>
+                                                </li>
+                                                {% endif %}
+                                            {% endfor %}
+                                        </ul>
+                                    </div>
+                                {% endif %}
                             </td>
                             <td>
                                 <a id="delete-subject" href="{{ _path('claro_forum_delete_subject', {'subject': subject['id']}) }}">
