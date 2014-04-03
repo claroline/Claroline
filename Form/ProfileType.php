@@ -24,12 +24,13 @@ class ProfileType extends AbstractType
     private $isAdmin;
     private $langs;
 
-     /**
-      * Constructor.
-      *
-      * @param Role[]  $platformRoles
-      * @param boolean $isAdmin
-      */
+    /**
+     * Constructor.
+     *
+     * @param Role[] $platformRoles
+     * @param boolean $isAdmin
+     * @param array $langs
+     */
     public function __construct(array $platformRoles, $isAdmin, array $langs)
     {
         $this->platformRoles = new ArrayCollection($platformRoles);
@@ -50,18 +51,22 @@ class ProfileType extends AbstractType
             $builder->add('firstName', 'text', array('label' => 'First name'))
                 ->add('lastName', 'text', array('label' => 'Last name'))
                 ->add('username', 'text', array('read_only' => true, 'disabled' => true, 'label' => 'User name'))
-                ->add('administrativeCode', 'text', array('required' => false, 'read_only' => true, 'disabled' => true))
-                ->add('mail', 'email', array('required' => false))
-                ->add('phone', 'text', array('required' => false))
+                ->add(
+                    'administrativeCode',
+                    'text',
+                    array('required' => false, 'read_only' => true, 'disabled' => true, 'label' => 'administrative_code')
+                )
+                ->add('mail', 'email', array('required' => false, 'label' => 'email'))
+                ->add('phone', 'text', array('required' => false, 'label' => 'phone'))
                 ->add('locale', 'choice', array('choices' => $this->langs, 'required' => false, 'label' => 'Language'));
 
         } else {
-            $builder->add('firstName', 'text')
-                ->add('lastName', 'text')
-                ->add('username', 'text')
-                ->add('administrativeCode', 'text', array('required' => false))
-                ->add('mail', 'email', array('required' => false))
-                ->add('phone', 'text', array('required' => false))
+            $builder->add('firstName', 'text', array('label' => 'First name'))
+                ->add('lastName', 'text', array('label' => 'Last name'))
+                ->add('username', 'text', array('label' => 'User name'))
+                ->add('administrativeCode', 'text', array('required' => false, 'label' => 'administrative_code'))
+                ->add('mail', 'email', array('required' => false, 'label' => 'email'))
+                ->add('phone', 'text', array('required' => false, 'label' => 'phone'))
                 ->add('locale', 'choice', array('choices' => $this->langs, 'required' => false, 'label' => 'Language'))
                 ->add(
                     'platformRoles',
@@ -77,7 +82,8 @@ class ProfileType extends AbstractType
                             return $er->createQueryBuilder('r')
                                     ->where("r.type != " . Role::WS_ROLE)
                                     ->andWhere("r.name != 'ROLE_ANONYMOUS'");
-                        }
+                        },
+                        'label' => 'roles'
                     )
                 );
         }
@@ -93,14 +99,15 @@ class ProfileType extends AbstractType
                         'minHeight' => 50,
                         'maxHeight' => 800,
                     )
-                )
+                ),
+                'label' => 'picture_profile'
             )
         )
 
         ->add(
             'description',
             'tinymce',
-            array('required' => false)
+            array('required' => false, 'label' => 'description')
         );
     }
 

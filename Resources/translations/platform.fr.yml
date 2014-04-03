@@ -451,18 +451,6 @@ please_wait: 'Veuillez patienter...'
 position: Position
 positive_number_expected: 'Cette valeur doit être un nombre positif'
 private: Privée
-profile_form_administrativeCode: 'Code administratif'
-profile_form_creation_plainPassword_first: 'Mot de passe'
-profile_form_creation_plainPassword_second: Vérification
-profile_form_description: Description
-profile_form_mail: Mail
-profile_form_note: 'Note personnelle'
-profile_form_ownedRoles: Role(s)
-profile_form_phone: Téléphone
-profile_form_pictureFile: 'Photo de profil'
-profile_form_plainPassword_first: 'Mot de passe'
-profile_form_plainPassword_second: Vérification
-profile_form_platformRoles: Rôles
 properties: Propriétés
 public: Public
 public_registration: Inscription publique
@@ -758,3 +746,6 @@ new_role_message_object: 'Vos permissions sur la plateforme ont changé'
 no_role_selected_message: 'Aucun role sélectionné.'
 is_mail_displayed: 'Afficher l''email ?'
 display_captcha: 'Afficher les captcha pour les anonymes'
+email: 'Adresse email'
+description: 'Description'
+picture_profile: 'Photo de profil'
