@@ -16,9 +16,9 @@
     var translator = window.Translator;
 
     //Load external plugins
-    tinymce.PluginManager.load('mention', home.asset + 'bundles/frontend/tinymce/plugins/mention/plugin.min.js');
-    tinymce.PluginManager.load('accordion', home.asset + 'bundles/frontend/tinymce/plugins/accordion/plugin.min.js');
-    tinymce.DOM.loadCSS(home.asset + 'bundles/frontend/tinymce/plugins/mention/css/autocomplete.css');
+    //tinymce.PluginManager.load('mention', home.asset + 'bundles/frontend/tinymce/plugins/mention/plugin.min.js');
+    //tinymce.PluginManager.load('accordion', home.asset + 'bundles/frontend/tinymce/plugins/accordion/plugin.min.js');
+    //tinymce.DOM.loadCSS(home.asset + 'bundles/frontend/tinymce/plugins/mention/css/autocomplete.css');
 
     /**
      * Claroline TinyMCE parameters and methods.
@@ -281,12 +281,12 @@
             'template paste textcolor emoticons code -mention -accordion'
         ],
         'toolbar1': 'styleselect | bold italic | alignleft aligncenter alignright alignjustify | ' +
-            'preview fullscreen resourcePicker fileUpload  accordion',
+                    'preview fullscreen resourcePicker fileUpload  accordion',
         'toolbar2': 'undo redo | forecolor backcolor emoticons | bullist numlist outdent indent | ' +
-            'link image media print code',
+                    'link image media print code',
         'extended_valid_elements': 'user[id], a[data-toggle|data-parent]',
         'paste_preprocess': tinymce.claroline.paste,
-        'setup': tinymce.claroline.setup,
+        'setup': tinymce.claroline.setup/*,
         'mentions': {
             source: function (query, process, delimiter) {
                 if (!_.isUndefined(window.Workspace) && !_.isNull(window.Workspace.id)) {
@@ -311,7 +311,7 @@
                 return '<user id="' + item.id + '"><a href="' + home.path + 'profile/view/' + item.id + '">' + item.name + '</a></user>';
             },
             delay: 200
-        }
+        }*/
     };
 
     /**
