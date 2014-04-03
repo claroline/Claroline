@@ -63,7 +63,7 @@
         <a href="{{ path('ujm_exercise_open', { 'exerciseId': exoID }) }}" class="btn btn-primary">
             <i class="icon-arrow-left"></i> {{ 'back' | trans }}
         </a>
-        {% if retryButton and nbUserPaper == 0%}
+        {% if retryButton and nbUserPaper == 0 %}
             <a class="btn btn-primary" href="{{ path('ujm_exercise_paper', { 'id': exoID }) }}">
                 <i class="icon-check"></i> {{ 'compose' | trans }}
             </a>
@@ -80,7 +80,7 @@
         {% endif %}
 
         <hr/>
-        
+
         {% if isAdmin == 1 and  papers is not empty %}
             {{ 'searchUserPaper' | trans }} :
             <div class="input-group">
@@ -105,18 +105,22 @@
         {% endif %}
 
         {% if nbUserPaper > 0 %}
-            <span>
-                <h3>{{ 'already answered' | trans }} : 
-                <a class="btn btn-primary" href="{{ path('ujm_exercise_paper', { 'id': exoID }) }}">
-                    <i class="icon-check"></i> {{ 'start again' | trans }}
-                </a></h3>
-            </span>
-            <br/>
+            <fieldset id="container" class="alert alert-info">
+                {{ 'already answered' | trans }}
+                {% if retryButton %} :
+                    <div style="float:right;">
+                        <a class="btn btn-primary" href="{{ path('ujm_exercise_paper', { 'id': exoID }) }}">
+                            <i class="icon-check"></i> {{ 'start again' | trans }}
+                        </a>
+                    </div>
+                    {% else %}.
+                    {% endif %}
+            </fieldset>
         {% endif %}
-        
+
         {% include "UJMExoBundle:Partial:badgeInfos/infos.html.twig" %}
         {% include "UJMExoBundle:Partial:correction/attemptInfo.html.twig" %}
-            
+
         <h6 style="color: red; text-align: right;">({{ 'paperLegend' | trans }}).</h6>
 
         <div id="resultSearch">
