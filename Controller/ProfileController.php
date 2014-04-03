@@ -172,18 +172,13 @@ class ProfileController extends Controller
 
         $response = new Response($this->renderView('ClarolineCoreBundle:Profile:publicProfile.html.twig', array('user' => $user, 'publicProfilePreferences' => $userPublicProfilePreferences)));
 
-        if (UserPublicProfilePreferences::SHARE_POLICY_EVERYBODY !== $userPublicProfilePreferences->getSharePolicy()) {
-            if(UserPublicProfilePreferences::SHARE_POLICY_NOBODY === $userPublicProfilePreferences->getSharePolicy()) {
-                $response = new Response($this->renderView('ClarolineCoreBundle:Profile:publicProfile.404.html.twig', array('user' => $user, 'publicUrl' => $publicUrl)), 404);
-            }
-            else {
-                $loggedUser = $this->getUser();
 
-                if (UserPublicProfilePreferences::SHARE_POLICY_PLATFORM_USER !== $userPublicProfilePreferences->getSharePolicy()
-                    || null === $loggedUser) {
-                    $response = new Response($this->renderView('ClarolineCoreBundle:Profile:publicProfile.401.html.twig', array('user' => $user, 'publicUrl' => $publicUrl)), 401);
-                }
-            }
+        if(UserPublicProfilePreferences::SHARE_POLICY_NOBODY === $userPublicProfilePreferences->getSharePolicy()) {
+            $response = new Response($this->renderView('ClarolineCoreBundle:Profile:publicProfile.404.html.twig', array('user' => $user, 'publicUrl' => $publicUrl)), 404);
+        }
+        else if (UserPublicProfilePreferences::SHARE_POLICY_PLATFORM_USER === $userPublicProfilePreferences->getSharePolicy()
+                 && null === $this->getUser()) {
+            $response = new Response($this->renderView('ClarolineCoreBundle:Profile:publicProfile.401.html.twig', array('user' => $user, 'publicUrl' => $publicUrl)), 401);
         }
 
         return $response;
