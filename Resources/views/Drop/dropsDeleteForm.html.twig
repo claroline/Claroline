@@ -6,16 +6,9 @@
             <div class="col-md-3 text-muted">{{ 'Drop by'|trans({}, 'icap_dropzone') }}</div>
             <div class="col-md-9">{{ drop.user.firstName }} {{ drop.user.lastName }}</div>
         </div>
-        <div class="row">
-            <div class="col-md-3 text-muted">{{ 'Documents'|trans({}, 'icap_dropzone') }}</div>
-            <div class="col-md-9">
-                <ul>
-                    {% for document in drop.documents %}
-                        <li>{% include 'IcapDropzoneBundle:Document:simpleShowDocument.html.twig' %}</li>
-                    {% endfor %}
-                </ul>
-            </div>
-        </div>
+        
+        {% set documentListText = 'Documents'|trans({}, 'icap_dropzone') %}
+        {{ dropzoneMacros.displayDocumentsList(dropzone, drop.documents, 6, "condensed", documentListText) }}
     </div>
 
     <div class="container form-group form-buttons">
