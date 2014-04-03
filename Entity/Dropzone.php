@@ -154,7 +154,7 @@ class Dropzone extends AbstractResource {
      * @ORM\Column(name="diplay_corrections_to_learners",type="boolean",nullable=false)
      *
      */
-    protected $diplayCorrectionsToLearners= false;
+    protected $diplayCorrectionsToLearners = false;
 
     /**
     * Depend on diplayCorrectionsToLearners, need diplayCorrectionsToLearners to be true in order to work.
@@ -183,7 +183,7 @@ class Dropzone extends AbstractResource {
      * )
      */
     protected $drops;
-    
+
     /**
      * @var ArrayCollection
      *
@@ -195,6 +195,24 @@ class Dropzone extends AbstractResource {
      * )
      */
     protected $peerReviewCriteria;
+
+    /**
+     * if true,
+     * when time is up, all drop not already closed will be closed and flaged as uncompletedDrop.
+     * That will allow them to access the next step ( correction by users or admins ).
+     *
+     * @var bool
+     * @ORM\Column(name="auto_close_opened_drops_when_time_is_up",type="boolean",nullable=false)
+     */
+    protected $autoCloseOpenedDropsWhenTimeIsUp;
+
+    /**
+     * @var String
+     * @ORM\Column(name="auto_close_state",type="string",nullable=false,options={"default" = "waiting"})
+     */
+    protected $autoCloseState = self::AUTO_CLOSED_STATE_WAITING;
+
+
 
     /**
      * @ORM\OneToOne(
@@ -371,7 +389,7 @@ class Dropzone extends AbstractResource {
         $this->instruction = $instruction;
     }
 
-   /**
+    /**
      * @return text
      */
     public function getCorrectionInstruction()
@@ -765,6 +783,42 @@ class Dropzone extends AbstractResource {
         $this->peerReviewCriteria[] = $criterion;
 
         return $this;
+    }
+
+    /**
+     * @param boolean $autoCloseOpenedDropsWhenTimeIsUp
+     */
+    public function setAutoCloseOpenedDropsWhenTimeIsUp($autoCloseOpenedDropsWhenTimeIsUp)
+    {
+        $this->autoCloseOpenedDropsWhenTimeIsUp = $autoCloseOpenedDropsWhenTimeIsUp;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function getAutoCloseOpenedDropsWhenTimeIsUp()
+    {
+        return $this->autoCloseOpenedDropsWhenTimeIsUp;
+    }
+
+    /**
+     * Param that indicate if all drop have already been auto closed or not.
+     * @param String $autoCloseState
+     */
+    public function setAutoCloseState($autoCloseState)
+    {
+        $authorizedValues = array(self::AUTO_CLOSED_STATE_CLOSED,self::AUTO_CLOSED_STATE_WAITING);
+        if(in_array($autoCloseState,$authorizedValues)) {
+            $this->autoCloseState = $autoCloseState;
+        }
+    }
+
+    /**
+     * @return String
+     */
+    public function getAutoCloseState()
+    {
+        return $this->autoCloseState;
     }
 
 }
