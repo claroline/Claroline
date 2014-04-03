@@ -637,16 +637,6 @@ url_invalid: 'the code is not correct, do no try to change the url'
 user: User
 user_accounts: 'User accounts'
 user_creation: 'User creation'
-user_form_administrativeCode: 'Administrative code'
-user_form_firstName: 'First name'
-user_form_lastName: 'Last name'
-user_form_mail: Mail
-user_form_note: 'Personnal note'
-user_form_ownedRoles: Role(s)
-user_form_phone: Phone
-user_form_plainPassword_first: Password
-user_form_plainPassword_second: Verification
-user_form_username: Username
 user_parameters: 'User parameters'
 user_picker: 'User picker'
 user_removed: 'User removed'
