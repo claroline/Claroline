@@ -193,14 +193,6 @@ class ProfileController extends Controller
      *
      * @EXT\Template()
      * @EXT\ParamConverter("loggedUser", options={"authenticatedUser" = true})
-     * Updates the user's profile and redirects to the profile form.
-     *
-     * @param \Claroline\CoreBundle\Entity\User $user
-     * @param \Claroline\CoreBundle\Entity\User $loggedUser
-     *
-     * @throws \Symfony\Component\Security\Core\Exception\AccessDeniedException
-     *
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
     public function editProfileAction(User $loggedUser, User $user = null)
     {
@@ -299,21 +291,8 @@ class ProfileController extends Controller
      *     "/password/edit",
      *      name="claro_user_password_edit"
      * )
-     * @EXT\ParamConverter(
-     *      "user",
-     *      class="ClarolineCoreBundle:User",
-     *      options={"id" = "userId", "strictId" = true}
-     * )
-     * @EXT\Template("ClarolineCoreBundle:Profile:profile.html.twig")
-     *
-     * Displays the public profile of an user.
-     *
-     * @param \Claroline\CoreBundle\Entity\User $user
-     * @param int $page
-     *
-     * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
-     *
-     * @return array
+     * @EXT\ParamConverter("loggedUser", options={"authenticatedUser" = true})
+     * @EXT\Template()
      */
     public function editPasswordAction(User $loggedUser)
     {
