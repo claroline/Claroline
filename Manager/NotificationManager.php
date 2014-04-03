@@ -144,7 +144,13 @@ class NotificationManager
     /**
      * Create new Tag given its name
      *
-     * @param \Icap\NotificationBundle\Entity\NotifiableInterface $notifiable
+     * @param string        $actionKey
+     * @param string        $iconKey
+     * @param integer|null  $resourceId
+     * @param array         $details
+     * @param object|null   $doer
+     *
+     * @internal param \Icap\NotificationBundle\Entity\NotifiableInterface $notifiable
      *
      * @return Notification
      */
@@ -154,8 +160,8 @@ class NotificationManager
         $notification->setActionKey($actionKey);
         $notification->setIconKey($iconKey);
         $notification->setResourceId($resourceId);
-        $details = $details;
-        $doerId = null;
+
+        $doerId  = null;
 
         if ($doer === null) {
             $securityToken = $this->security->getToken();
@@ -171,10 +177,11 @@ class NotificationManager
 
         if (!isset($details['doer']) && !empty($doerId)) {
             $details['doer'] = array(
-                'id' => $doerId,
+                'id'        => $doerId,
                 'firstName' =>  $doer->getFirstName(),
-                'lastName' => $doer->getLastName(),
-                'avatar' => $doer->getPicture()
+                'lastName'  => $doer->getLastName(),
+                'avatar'    => $doer->getPicture(),
+                'publicUrl' => $doer->getPublicUrl()
             );
         }
         $notification->setDetails($details);
