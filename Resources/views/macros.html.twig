@@ -7,7 +7,7 @@
             <table class="table table-responsive {% if mode == "condensed" %}table-condensed{% endif %} well">
                 {% for index, document in drop.documents %}
                     <tr>
-                        <td>{{ 'Document n°%count%'|trans({'%count%': index}, 'icap_dropzone') }}</td>
+                        <td>{{ 'Document n°%count%'|trans({'%count%': index + 1}, 'icap_dropzone') }}</td>
                         <td>{{ (document.type~'_type')|trans({}, 'icap_dropzone') }}</td>
                         <td>
                             {% if document.url is not null %}
