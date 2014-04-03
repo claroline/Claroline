@@ -30,5 +30,6 @@ class ClarolineCoreExtension extends Extension
         $loader = new YamlFileLoader($container, $locator);
         $loader->load('parameters.yml');
         $loader->load('services.yml');
+        $loader->load('twig.yml');
     }
 }
