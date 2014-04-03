@@ -46,22 +46,30 @@ class ProfileCreationType extends AbstractType
             $builder->add('firstName', 'text', array('label' => 'First name'))
                 ->add('lastName', 'text', array('label' => 'Last name'))
                 ->add('username', 'text', array('label' => 'User name'))
-                ->add('plainPassword', 'repeated', array('type' => 'password', 'required' => true))
+                ->add(
+                    'plainPassword',
+                    'repeated',
+                    array(
+                        'type' => 'password',
+                        'first_options' => array('label' => 'password'),
+                        'second_options' => array('label' => 'verification')
+                        )
+                    )
                 ->add(
                     'administrativeCode',
                     'text',
                     array(
-                        'required' => false, 'label' => 'profile_form_administrativeCode'
+                        'required' => false, 'label' => 'administrative_code'
                     )
                 )
-                ->add('mail', 'email', array('required' => true, 'label' => 'profile_form_mail'))
-                ->add('phone', 'text', array('required' => false, 'label' => 'profile_form_phone'))
+                ->add('mail', 'email', array('required' => true, 'label' => 'email'))
+                ->add('phone', 'text', array('required' => false, 'label' => 'phone'))
                 ->add('locale', 'choice', array('choices' => $this->langs, 'required' => false, 'label' => 'Language'))
                 ->add(
                     'platformRoles',
                     'entity',
                     array(
-                        'label' => 'profile_form_platformRoles',
+                        'label' => 'roles',
                         'mapped' => false,
                         'data' => $this->platformRoles,
                         'class' => 'Claroline\CoreBundle\Entity\Role',

@@ -55,16 +55,19 @@ class ProfileType extends AbstractType
         if (!$this->isAdmin) {
             $builder
                 ->add('username', 'text', array('read_only' => true, 'disabled' => true, 'label' => 'User name'))
-                ->add('administrativeCode', 'text', array('required' => false, 'read_only' => true, 'disabled' => true))
-                ->add('mail', 'email', array('required' => false))
-                ->add('phone', 'text', array('required' => false))
+                ->add(
+                    'administrativeCode',
+                    'text',
+                    array('required' => false, 'read_only' => true, 'disabled' => true, 'label' => 'administrative_code')
+                )
+                ->add('mail', 'email', array('required' => false, 'label' => 'email'))
+                ->add('phone', 'text', array('required' => false, 'label' => 'phone'))
                 ->add('locale', 'choice', array('choices' => $this->langs, 'required' => false, 'label' => 'Language'));
         } else {
-            $builder
-                ->add('username', 'text', array('label' => 'User name'))
-                ->add('administrativeCode', 'text', array('required' => false))
-                ->add('mail', 'email', array('required' => false))
-                ->add('phone', 'text', array('required' => false))
+            $builder->add('username', 'text', array('label' => 'User name'))
+                ->add('administrativeCode', 'text', array('required' => false, 'label' => 'administrative_code'))
+                ->add('mail', 'email', array('required' => false, 'label' => 'email'))
+                ->add('phone', 'text', array('required' => false, 'label' => 'phone'))
                 ->add('locale', 'choice', array('choices' => $this->langs, 'required' => false, 'label' => 'Language'))
                 ->add(
                     'platformRoles',
@@ -80,7 +83,8 @@ class ProfileType extends AbstractType
                             return $roleRepository->createQueryBuilder('r')
                                     ->where("r.type != " . Role::WS_ROLE)
                                     ->andWhere("r.name != 'ROLE_ANONYMOUS'");
-                        }
+                        },
+                        'label' => 'roles'
                     )
                 );
         }
@@ -96,14 +100,15 @@ class ProfileType extends AbstractType
                         'minHeight' => 50,
                         'maxHeight' => 800,
                     )
-                )
+                ),
+                'label' => 'picture_profile'
             )
         )
 
         ->add(
             'description',
             'tinymce',
-            array('required' => false)
+            array('required' => false, 'label' => 'description')
         );
     }
 

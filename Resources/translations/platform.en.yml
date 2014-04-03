@@ -90,12 +90,6 @@ add_workspace: 'Add workspace'
 admin: Administrator
 admin_analytics: 'Platform analytics'
 admin_analytics_no_data: 'No data.'
-admin_form_firstName: 'first name'
-admin_form_lastName: Lastname
-admin_form_mail: 'Email adress'
-admin_form_plainPassword_first: Paswword
-admin_form_plainPassword_second: 'Repeat your password'
-admin_form_username: Username
 admin_home_tabs_configuration: 'Home tabs configuration'
 admin_logs: 'Platform logs'
 admin_third_party_application: 'Third-party applications'
@@ -496,18 +490,6 @@ position: Position
 positive_number_expected: 'This value should be a positive number'
 private: Private
 profil_edition: 'User profile edition'
-profile_form_administrativeCode: 'Administrative code'
-profile_form_creation_plainPassword_first: Password
-profile_form_creation_plainPassword_second: Verification
-profile_form_description: Description
-profile_form_mail: Mail
-profile_form_note: 'Personnal note'
-profile_form_ownedRoles: Role(s)
-profile_form_phone: Phone
-profile_form_pictureFile: 'Picture profile'
-profile_form_plainPassword_first: Password
-profile_form_plainPassword_second: Verification
-profile_form_platformRoles: Roles
 properties: Properties
 public: Public
 public_profile: 'Public profile'
@@ -708,16 +690,6 @@ url_invalid: 'the code is not correct, do no try to change the url'
 user: User
 user_accounts: 'User accounts'
 user_creation: 'User creation'
-user_form_administrativeCode: 'Administrative code'
-user_form_firstName: 'First name'
-user_form_lastName: 'Last name'
-user_form_mail: Mail
-user_form_note: 'Personnal note'
-user_form_ownedRoles: Role(s)
-user_form_phone: Phone
-user_form_plainPassword_first: Password
-user_form_plainPassword_second: Verification
-user_form_username: Username
 user_parameters: 'User parameters'
 user_picker: 'User picker'
 user_profile: 'User profile'
@@ -825,6 +797,10 @@ new_role_message_object: 'Your permissions on the platform have changed'
 no_role_selected_message: 'No role selected.'
 is_mail_displayed: 'Display email ?'
 display_captcha: 'Display captcha for anonymous'
+email: 'Email adress'
+description: 'Description'
+picture_profile: 'Picture profile'
+verification: 'Verification'
 404: 'Page Not found'
 tune_your_public_profile_url: 'Tune your public profile URL'
 tune: 'Tune'

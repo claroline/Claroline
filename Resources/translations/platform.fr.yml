@@ -91,12 +91,6 @@ add_workspace: 'Ajouter un espace d''activités'
 admin: Administrateur
 admin_analytics: 'Statistiques plateforme'
 admin_analytics_no_data: 'Aucune donnée.'
-admin_form_firstName: Prénom
-admin_form_lastName: 'Nom de famille'
-admin_form_mail: 'Adresse email'
-admin_form_plainPassword_first: 'Mot de passe'
-admin_form_plainPassword_second: 'Répétez votre mot de passe'
-admin_form_username: 'Nom d''utilisateur'
 admin_home_tabs_configuration: 'Configuration des onglets pour les pages d''accueil'
 admin_logs: 'Suivi plateforme'
 admin_third_party_application: 'Applications tierces'
@@ -497,18 +491,6 @@ position: Position
 positive_number_expected: 'Cette valeur doit être un nombre positif'
 private: Privée
 profil_edition: 'Modification du profil utilisateur'
-profile_form_administrativeCode: 'Code administratif'
-profile_form_creation_plainPassword_first: 'Mot de passe'
-profile_form_creation_plainPassword_second: Vérification
-profile_form_description: Description
-profile_form_mail: Mail
-profile_form_note: 'Note personnelle'
-profile_form_ownedRoles: Role(s)
-profile_form_phone: Téléphone
-profile_form_pictureFile: 'Photo de profil'
-profile_form_plainPassword_first: 'Mot de passe'
-profile_form_plainPassword_second: Vérification
-profile_form_platformRoles: Rôles
 properties: Propriétés
 public: Public
 public_profile: 'Profil public'
@@ -709,16 +691,6 @@ url_invalid: 'Le code n''est pas correct, n''essayez pas de changer l''adresse'
 user: Utilisateur
 user_accounts: 'Comptes utilisateur'
 user_creation: 'Création d''un utilisateur'
-user_form_administrativeCode: 'Code administratif'
-user_form_firstName: Nom
-user_form_lastName: Prénom
-user_form_mail: Mail
-user_form_note: 'Note personnelle'
-user_form_ownedRoles: Role(s)
-user_form_phone: Téléphone
-user_form_plainPassword_first: 'Mot de passe'
-user_form_plainPassword_second: Vérification
-user_form_username: 'Nom d''utilisateur'
 user_parameters: 'Paramètres de l''utilisateur'
 user_picker: 'Outil pour choisir un utilisateur'
 user_profile: 'Profil utilisateur'
@@ -826,6 +798,10 @@ new_role_message_object: 'Vos permissions sur la plateforme ont changé'
 no_role_selected_message: 'Aucun role sélectionné.'
 is_mail_displayed: 'Afficher l''email ?'
 display_captcha: 'Afficher les captcha pour les anonymes'
+email: 'Adresse email'
+description: 'Description'
+picture_profile: 'Photo de profil'
+verification: 'Vérification'
 404: 'La page que vous cherchez n''existe pas.'
 tune_your_public_profile_url: 'Personnalisez l''URL de votre profil public'
 tune: 'Personnaliser'
