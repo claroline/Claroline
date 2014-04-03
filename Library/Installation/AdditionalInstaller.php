@@ -122,14 +122,15 @@ class AdditionalInstaller extends BaseInstaller
             $updater021000->postUpdate();
         }
 
-        if (version_compare($currentVersion, '2.12.0', '<')) {
-            $updater021000 = new Updater\Updater021200($this->container);
+        if (version_compare($currentVersion, '2.11.1', '<')) {
+            $this->buildDefaultTemplate();
+            $updater021000 = new Updater\Updater021101($this->container);
             $updater021000->setLogger($this->logger);
             $updater021000->postUpdate();
         }
 
-        if (version_compare($currentVersion, '2.13.0', '<')) {
-            $updater021000 = new Updater\Updater021300($this->container);
+        if (version_compare($currentVersion, '2.12.0', '<')) {
+            $updater021000 = new Updater\Updater021200($this->container);
             $updater021000->setLogger($this->logger);
             $updater021000->postUpdate();
         }

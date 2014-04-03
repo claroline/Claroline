@@ -28,9 +28,9 @@ class ProfileType extends AbstractType
     /**
      * Constructor.
      *
-     * @param Role[]  $platformRoles
-     * @param boolean $isAdmin
-     * @param string[]   $langs
+     * @param Role[]   $platformRoles
+     * @param boolean  $isAdmin
+     * @param string[] $langs
      */
     public function __construct(array $platformRoles, $isAdmin, array $langs)
     {

@@ -11,78 +11,68 @@
 
 namespace Claroline\CoreBundle\Library\Installation\Updater;
 
-use Claroline\CoreBundle\Entity\Tool\Tool;
+use Claroline\CoreBundle\Entity\UserPublicProfilePreferences;
 
 class Updater021200
 {
     private $container;
     private $logger;
-    private $om;
-    private $conn;
+    private $objectManager;
 
     public function __construct($container)
     {
-        $this->container = $container;
-        $this->om = $container->get('claroline.persistence.object_manager');
-        $this->conn = $container->get('doctrine.dbal.default_connection');
+        $this->container     = $container;
+        $this->objectManager = $container->get('claroline.persistence.object_manager');
     }
 
     public function postUpdate()
     {
-        $this->updateUsers();
-        $this->updateTools();
+        $this->setPublicUrlOnUsers();
+        $this->createUserPublicProfilePreferences();
     }
 
-    public function updateUsers()
+    protected function setPublicUrlOnUsers()
     {
-        $this->log('Updating users...');
-        $users = $this->om->getRepository('ClarolineCoreBundle:User')->findAll();
-        $this->om->startFlushSuite();
-        $i = 0;
+        $this->log('Updating public url for users...');
+
+        /** @var \Claroline\CoreBundle\Repository\UserRepository $userRepository */
+        $userRepository = $this->objectManager->getRepository('ClarolineCoreBundle:User');
+        /** @var \CLaroline\CoreBundle\Entity\User[] $users */
+        $users = $userRepository->findByPublicUrl(null);
+
+        /** @var \Claroline\CoreBundle\Manager\UserManager $userManager */
+        $userManager = $this->container->get('claroline.manager.user_manager');
 
         foreach ($users as $user) {
-            $user->setIsMailDisplayed(false);
-            $this->om->persist($user);
-            $i++;
+            $publicUrl = $userManager->generatePublicUrl($user);
+            $user->setPublicUrl($publicUrl);
+            $this->objectManager->persist($user);
+            $this->objectManager->flush();
+        }
 
-            if ($i % 200 === 0) {
-                $this->om->endFlushSuite();
-                $this->om->startFlushSuite();
+        $this->log('Public url for users updated.');
+    }
+
+    protected function createUserPublicProfilePreferences()
+    {
+        $this->log('Creating public profile preferences for users...');
+
+        /** @var \Claroline\CoreBundle\Repository\UserRepository $userRepository */
+        $userRepository = $this->objectManager->getRepository('ClarolineCoreBundle:User');
+        /** @var \CLaroline\CoreBundle\Entity\User[] $users */
+        $users = $userRepository->findWithPublicProfilePreferences();
+
+        foreach ($users as $user) {
+            if (null === $user->getPublicProfilePreferences()) {
+                $newUserPublicProfilePreferences = new UserPublicProfilePreferences();
+                $newUserPublicProfilePreferences->setUser($user);
+                $this->objectManager->persist($newUserPublicProfilePreferences);
             }
         }
 
-        $this->om->endFlushSuite();
+        $this->objectManager->flush();
 
-        $this->log('Done.');
-    }
-
-    public function updateTools()
-    {
-        $myBadgesToolName = 'my_badges';
-        $myBadgesTool = $this->om->getRepository('ClarolineCoreBundle:Tool\Tool')->findOneByName($myBadgesToolName);
-
-        if (null === $myBadgesTool) {
-            $this->log('Creating new tool for displaying user badges in workspace...');
-            $newBadgeTool = new Tool();
-            $newBadgeTool
-                ->setName($myBadgesToolName)
-                ->setClass('icon-trophy')
-                ->setIsWorkspaceRequired(false)
-                ->setIsDesktopRequired(false)
-                ->setDisplayableInWorkspace(true)
-                ->setDisplayableInDesktop(false)
-                ->setExportable(false)
-                ->setIsConfigurableInWorkspace(false)
-                ->setIsConfigurableInDesktop(false)
-                ->setIsLockedForAdmin(false)
-                ->setIsAnonymousExcluded(true);
-
-            $this->om->persist($newBadgeTool);
-
-            $this->log('New tool for displaying user badges in workspace created.');
-        }
-
-        $this->om->flush();
+        $this->log('Public profile preferences for users created.');
     }
 
     public function setLogger($logger)
@@ -96,4 +86,4 @@ class Updater021200
             $log('    ' . $message);
         }
     }
-} 
+}
