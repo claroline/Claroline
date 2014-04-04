@@ -11,7 +11,6 @@
             {{ form_widget(form.save, { 'label': 'Sauvegarder' }) }}
             {{ form_end(form) }}
         {% else %}
-            <div class="current-step-text">
             {% if currentStep.children is not empty %}
                 {% if currentStep.description is null %}
                     <div class="panel panel-default">
@@ -33,9 +32,10 @@
                         </ul>
                     </div>
                 {% endif %}
-            </div>
             {% endif %}
-            {{ currentStep.description | raw }}
+            <div class="current-step-text">
+                {{ currentStep.description | raw }}
+            </div>
         {% endif %}
     </div>
 </div>
