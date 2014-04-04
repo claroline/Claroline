@@ -1,5 +1,7 @@
 contextual_edit : Edition contextuelle
 
+do_not_display_automatically: Ne pas afficher automatiquement 
+
 full_tree: Sommaire
 full_path_notice_1: Vous pouvez afficher le sommaire du parcours en cliquant sur le bouton 
 full_path_notice_2: Il sera accessible en haut à gauche tout au long de votre progression.
