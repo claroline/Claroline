@@ -1,15 +1,9 @@
 <?php
 
-/**
- * Created by PhpStorm.
- * User: jorge
- * Date: 3/04/14
- * Time: 17:07
- */
-
 namespace Claroline\CoreBundle\Library\Installation\Updater;
 
 use Claroline\CoreBundle\Persistence\ObjectManager;
+use Claroline\CoreBundle\Entity\Resource\ResourceIcon;
 
 class Updater021201
 {
