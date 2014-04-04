@@ -216,14 +216,19 @@ class DropzoneManager
      *  this will close all drop not closed yet.
      * @param Dropzone $dropzone
      */
-    public function closeDropzoneOpenedDrops(Dropzone $dropzone)
+    public function closeDropzoneOpenedDrops(Dropzone $dropzone,$force=false)
     {
+<<<<<<< HEAD
 <<<<<<< HEAD
         if($this->isDropzoneDropTimeIsUp($dropzone) )
         {
 =======
         if ($this->isDropzoneDropTimeIsUp($dropzone)) {
 >>>>>>> 2424bca0cc0ebc2a8a1fdd429c06e1df8f455e18
+=======
+        if ($force || $this->isDropzoneDropTimeIsUp($dropzone)) {
+
+>>>>>>> 3e9fa87530f1a1590bba3385f0b74fa6ebe4420c
             $dropRepo = $this->em->getRepository('IcapDropzoneBundle:Drop');
             $dropRepo->closeUnTerminatedDropsByDropzone($dropzone->getId());
             $dropzone->setAutoCloseState(Dropzone::AUTO_CLOSED_STATE_CLOSED);

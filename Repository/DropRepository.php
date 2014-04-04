@@ -363,6 +363,10 @@ class DropRepository extends EntityRepository {
      */
     public function closeUnTerminatedDropsByDropzone($dropzoneId)
     {
+<<<<<<< HEAD
+=======
+
+>>>>>>> 3e9fa87530f1a1590bba3385f0b74fa6ebe4420c
         $qb = $this->createQueryBuilder('drop')
             ->update('Icap\\DropzoneBundle\\Entity\\Drop','d')
             ->set('d.autoClosedDrop',1)

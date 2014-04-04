@@ -8,12 +8,15 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2014/04/03 11:43:47
+ * Generation date: 2014/04/04 11:24:27
  */
-class Version20140403114342 extends AbstractMigration
+class Version20140404112422 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
+        $this->addSql("
+            ALTER TABLE icap__dropzonebundle_drop CHANGE auto_closed_drop auto_closed_drop BOOLEAN DEFAULT 'false' NOT NULL
+        ");
         $this->addSql("
             ALTER TABLE icap__dropzonebundle_dropzone 
             ADD auto_close_opened_drops_when_time_is_up BOOLEAN DEFAULT 'false' NOT NULL, 
@@ -23,6 +26,9 @@ class Version20140403114342 extends AbstractMigration
 
     public function down(Schema $schema)
     {
+        $this->addSql("
+            ALTER TABLE icap__dropzonebundle_drop CHANGE auto_closed_drop auto_closed_drop BOOLEAN NOT NULL
+        ");
         $this->addSql("
             ALTER TABLE icap__dropzonebundle_dropzone 
             DROP auto_close_opened_drops_when_time_is_up, 

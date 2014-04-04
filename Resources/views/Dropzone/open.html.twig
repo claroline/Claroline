@@ -135,17 +135,9 @@
 
         {% if drop is not null and drop.finished != true %}
             <hr />
-            <div>
-                {% set nbDocument = drop.documents|length %}
-                {{ 'nbDocumentsInThisEvaluation'|transchoice(drop.documents|length, {}, 'icap_dropzone') }}
-                <ul>
-                    {%  for document in drop.documents%}
-                        <li>
-                            {% include 'IcapDropzoneBundle:Document:simpleShowDocument.html.twig' %}
-                        </li>
-                    {% endfor %}
-                </ul>
-            </div>
+            {% set nbDocument = drop.documents|length %}
+            {% set documentListText = 'nbDocumentsInThisEvaluation'|transchoice(nbDocument, {}, 'icap_dropzone') %}
+            {{ dropzoneMacros.displayDocumentsList(drop, dropzone, 6, "condensed", documentListText) }}
         {% endif %}
         
 

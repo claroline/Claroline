@@ -90,6 +90,7 @@ class Drop {
      * Indicate if the drop was close automaticaly ( when time is up by the dropzone option
      * autoCloseOpenedDropsWhenTimeIsUp )
      *
+<<<<<<< HEAD
      * @ORM\Column(name="auto_closed_drop",type="boolean", nullable=false)
      */
     protected $autoClosedDrop;
@@ -98,6 +99,10 @@ class Drop {
 
     public function __construct()
     {
+=======
+     * @ORM\Column(name="auto_closed_drop",type="boolean", nullable=false,options={"default" = 0})
+     */
+>>>>>>> 3e9fa87530f1a1590bba3385f0b74fa6ebe4420c
         $this->documents = new ArrayCollection();
     }
 
