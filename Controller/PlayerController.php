@@ -9,11 +9,15 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\DependencyInjection\ContainerAware;
+use Symfony\Component\HttpFoundation\Request;
 
 use Innova\PathBundle\Entity\Path\Path;
 use Innova\PathBundle\Entity\Step;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
-use Symfony\Component\DependencyInjection\ContainerAware;
+
+
 
 /**
  * Player controller
@@ -159,6 +163,42 @@ class PlayerController extends ContainerAware
             'currentStep' => $currentStep,
             'edit' => $edit,
             'form' => $form->createView()
+        );
+    }
+
+    /**
+    *
+    * @Route("/set-do-not-display-anymore", name="setDoNotDisplayAnymore", options={"expose"=true})
+    * @Method("GET")
+    */
+    public function setDoNotDisplayAnymore(Request $request)
+    {
+        $isChecked = $request->query->get('isChecked');
+
+        $session = $this->container->get('request')->getSession();
+        $session->set('doNotDisplayAnymore', $isChecked);
+
+        return new JsonResponse(
+            array('isChecked' => $session->get('doNotDisplayAnymore'))
+        );
+    }
+
+    /**
+    *
+    * @Route("/get-do-not-display-anymore", name="getDoNotDisplayAnymore", options={"expose"=true})
+    * @Method("GET")
+    */
+    public function getDoNotDisplayAnymore()
+    {
+        $isChecked = null;
+
+        $session = $this->container->get('request')->getSession();
+        if(!$isChecked = $session->get('doNotDisplayAnymore')) {
+            $isChecked = false;
+        }
+       
+        return new JsonResponse(
+            array('isChecked' => $isChecked)
         );
     }
 }

@@ -8,10 +8,16 @@
                 <h4 class="modal-title">{{ path.resourceNode.name }}</h4>
             </div>
             <div class="modal-body">
-                <ul>
-                {% set parents = currentStep.getParents() %}
-                {{ macros.displayTreeItem(path.getRootStep(), parents, currentStep, path, workspace) }}
-                </ul>
+                <div id="do-not-display-anymore-container" class="text-right">
+                    <label class="text-muted" for="do-not-display-anymore">{{ 'do_not_display_automatically' | trans({}, 'path_player') }} </label> 
+                    <input type="checkbox" id="do-not-display-anymore" name="do-not-display-anymore" />
+                </div>
+                <div>
+                    <ul>
+                    {% set parents = currentStep.getParents() %}
+                    {{ macros.displayTreeItem(path.getRootStep(), parents, currentStep, path, workspace) }}
+                    </ul>
+                </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">{{ 'close' | trans({}, 'innova_tools') }}</button>
