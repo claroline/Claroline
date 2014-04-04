@@ -1,23 +1,40 @@
 $( document ).ready(function() {
 	$("*").tooltip({placement:'top'});
 
-	$('.resource-frame').on('load', function () {
-        var frame = $(this);
-        //$("#loading-resource-" + frame.data("resource-id")).fadeOut(300);
-        frame.animate({ height: frame.contents().find("#wrap").height() + 20}, 300, function() {});
+    getDoNotDisplayAnymore();
+
+    $('#current-step-text a').attr('target','_blank');
+
+    $('#do-not-display-anymore').change(function() {
+        var isChecked = $('#do-not-display-anymore').is(':checked');
+        setDoNotDisplayAnymore(isChecked);
     });
-
-   $('.resource-tab a').on('click', function () {
-   		var iframe = $($(this).attr("href") +" iframe");
-   		if (iframe.attr("src") == ""){
-   			iframe.attr("src", iframe.attr("data-resource-src"));
-   		}
-   	});
-
-   $('.reload-resource').on('click', function () {
-      var iframe = $("#frame-resource-"+$(this).data('resource-id'));
-      iframe.attr("src", iframe.data("resource-src"));
-    });
-
-   $('#current-step-text a').attr('target','_blank');
+   
 });
+
+
+function setDoNotDisplayAnymore(isChecked){
+    $.ajax({
+        url: Routing.generate('setDoNotDisplayAnymore'),
+        type: 'GET',
+        data:{
+            isChecked: isChecked
+        },
+        dataType: 'json',
+    });
+}
+
+function getDoNotDisplayAnymore(isChecked){
+    $.ajax({
+        url: Routing.generate('getDoNotDisplayAnymore'),
+        type: 'GET',
+        dataType: 'json',
+    })
+    .done(function(data) {
+        if (typeof isRoot != 'undefined' && data.isChecked == "false") {
+            $('#full-tree').modal('show');
+        } else if (data.isChecked == "true") {
+            $('#do-not-display-anymore').prop('checked', true);
+        }
+    });    
+}
