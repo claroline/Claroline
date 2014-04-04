@@ -5,12 +5,13 @@
         <div class="lvl-{{ currentStep.lvl + 1 }} lvl-indicator-xlarge">&nbsp;</div>
         <h4>{{ currentStep.name }}</h4>
     </div>
-    <div id="current-step-text" class="panel-body">
+    <div class="panel-body">
         {% if edit == true %}
             {{ form_widget(form.description) }}
             {{ form_widget(form.save, { 'label': 'Sauvegarder' }) }}
             {{ form_end(form) }}
         {% else %}
+            <div class="current-step-text">
             {% if currentStep.children is not empty %}
                 {% if currentStep.description is null %}
                     <div class="panel panel-default">
@@ -32,6 +33,7 @@
                         </ul>
                     </div>
                 {% endif %}
+            </div>
             {% endif %}
             {{ currentStep.description | raw }}
         {% endif %}
