@@ -28,12 +28,9 @@ Project setup
 
 - PHP >= 5.4.1
 - PHP extensions:
-    - If you use PHP 5.5, you need to install the following extensions manually:
-        - php5-json
-        - php5-curl
-        - php5-intl
     - fileinfo (for mime type detection)
     - curl (for facebook authentication)
+    - mcrypt
     - Check if you have a correct configuration of time zone in your php.ini,
       you can find a list of supported timezones [here][9], for example
       "Europe/Brussels" (this value is case sensitive, be sure to use correct
@@ -41,6 +38,10 @@ Project setup
     - Optionaly:
         - [gd][1] (for simple icon creation)
         - [ffmpeg][2] (for video thumbnail creation)
+    - If you use PHP 5.5, you need to install the following extensions manually:
+        - php5-json
+        - php5-curl
+        - php5-intl
 - A RDBMS like MySQL (>=5.0, recommended) or PostgreSQL (>= 8.0)
 - A web server like Apache or Nginx
 - A global installation of [composer][3] (for dependency management)
@@ -67,7 +68,7 @@ Project setup
 - Run the following commands:
     - `$ composer require composer/composer dev-master`
     - `$ composer require claroline/bundle-recorder "~3.0"`
-    - `$ cp composer.dist.json composer.json`
+    - `$ cp composer.json.dist composer.json`
     - `$ composer update --prefer-source`
     - `$ php app/console claroline:update`
 
