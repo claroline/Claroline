@@ -16,6 +16,7 @@ use Claroline\CoreBundle\Library\Themes\ThemeService;
 use Symfony\Component\Config\FileLocatorInterface;
 use Symfony\Component\Templating\TemplateReferenceInterface;
 use Symfony\Bundle\FrameworkBundle\Templating\Loader\TemplateLocator as baseTemplateLocator;
+use Claroline\CoreBundle\Entity\Theme\Theme;
 
 /**
  * {@inheritDoc}
@@ -61,7 +62,7 @@ class TemplateLocator extends baseTemplateLocator
 
         $name = ucwords(str_replace('-', ' ', $this->configHandler->getParameter('theme')));
         $theme = $this->themeService->findTheme(array('name' => $name));
-        $path = $theme->getPath();
+        $path = $this->getPath($theme);
         $bundle = substr($path, 0, strpos($path, ':'));
 
         if ($this->isOverwritable($theme, $bundle, $template)) {
@@ -128,10 +129,18 @@ class TemplateLocator extends baseTemplateLocator
     private function isOverwritable($theme, $bundle, $template)
     {
         return (
-            $theme !== null and
+            $theme instanceof Theme and
             $bundle !== '' and
             $bundle !== $template->get('bundle') and
             $template->get('bundle') === 'ClarolineCoreBundle'
         );
+    }
+
+    /**
+     * Get the th of a theme
+     */
+    private function getPath($theme)
+    {
+        return ($theme instanceof Theme) ? $theme->getPath() : null;
     }
 }
