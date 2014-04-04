@@ -34,7 +34,9 @@
                
                 <td>
                     <div class="btn-group ">
-                        <a href="#" type="button" class="btn btn-default btn-xs">{{ 'See user s correction'|trans({}, 'icap_dropzone') }}</a>
+                        {#
+                        <a href="#" type="button" class="btn btn-default btn-xs">{{ 'See user s correction'|trans({}, 'icap_dropzone') }}</a> 
+                        #}
                        {#
                         {%  if AwaitingMode is defined and  AwaitingMode == true %}
                             <a href="{{ path('icap_dropzone_drops_detail_add_correction', {'resourceId': dropzone.id, 'dropId': drop.id}) }}" type="button" class="btn btn-default btn-xs">{{ 'Add a correction'|trans({}, 'icap_dropzone') }}</a>

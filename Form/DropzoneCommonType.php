@@ -14,9 +14,13 @@ class DropzoneCommonType extends AbstractType
             ->add('stayHere', 'hidden', array(
                 'mapped' => false
             ))
+            ->add('autoCloseForManualStates', 'hidden', array(
+                "mapped" => false
+            ))
             ->add('instruction', 'tinymce', array(
                 'required' => false
             ))
+
 
             ->add('allowWorkspaceResource', 'checkbox', array('required' => false))
             ->add('allowUpload', 'checkbox', array('required' => false))
@@ -64,6 +68,7 @@ class DropzoneCommonType extends AbstractType
                 'multiple' => false
             ))
 
+            ->add('autoCloseOpenedDropsWhenTimeIsUp','checkbox', array('required' => false))
             ->add('startAllowDrop', 'datetime', array('date_widget' => 'single_text', 'time_widget' => 'single_text', 'with_seconds' => false, 'required' => false))
             ->add('endAllowDrop', 'datetime', array('date_widget' => 'single_text', 'time_widget' => 'single_text', 'with_seconds' => false, 'required' => false))
             ->add('startReview', 'datetime', array('date_widget' => 'single_text', 'time_widget' => 'single_text', 'with_seconds' => false, 'required' => false))
