@@ -100,8 +100,8 @@ administrative_code: 'Code administratif'
 advanced: Avancé
 agenda: Agenda
 all: Tous
-all_available_workspaces: 'Tous les espaces d''activités disponibles'
-all_my_workspaces: 'Tous mes espaces d''activités'
+all_available_workspaces: 'Tous les formations disponibles'
+all_my_workspaces: 'Tous mes formations'
 all_workspaces: 'Tous les espaces d''activités (publics)'
 already_existing_user: 'L''utilisateur existe déjà.'
 an_error_occured_message: 'Une erreur s''est produite. Veuillez contacter l''administrateur.'
@@ -142,7 +142,7 @@ category_root: 'Catégories de base'
 category_structure: 'Structure des catégories'
 change_view: 'Changer l''affichage'
 choose_resource_form_type: 'Type de ressource'
-classify_my_workspaces: 'Classer mes espaces'
+classify_my_workspaces: 'Classer mes formations'
 classify_workspaces: 'Classer les espaces'
 close: Fermer
 code: Code
@@ -406,13 +406,13 @@ my_agenda: 'Mon agenda'
 my_applications: 'Mes applications'
 my_badges: 'Mes badges'
 my_contacts: 'Mes contacts'
-my_favourite_workspaces: 'Mes espaces d''activités favoris'
+my_favourite_workspaces: 'Mes formations favoris'
 my_notes: 'Mes notes'
 my_portfolio: 'Mon portfolio'
 my_profile: 'Mon profil'
 my_resources: 'Mes ressources'
 my_workspace: 'Espace personnel'
-my_workspaces: 'Mes espaces d''activités'
+my_workspaces: 'Mes formations'
 name: Nom
 new: Nouveau
 new_message: 'Nouveau message'
