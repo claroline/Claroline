@@ -1,9 +1,7 @@
 <?php
 namespace Icap\DropzoneBundle\Manager;
 
-use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Manager\MaskManager;
-use Claroline\CoreBundle\Entity\User;
 use Icap\DropzoneBundle\Entity\Dropzone;
 use Icap\DropzoneBundle\Entity\Drop;
 use JMS\DiExtraBundle\Annotation as DI;
@@ -216,9 +214,10 @@ class DropzoneManager
      *  this will close all drop not closed yet.
      * @param Dropzone $dropzone
      */
-    public function closeDropzoneOpenedDrops(Dropzone $dropzone)
+    public function closeDropzoneOpenedDrops(Dropzone $dropzone,$force=false)
     {
-        if ($this->isDropzoneDropTimeIsUp($dropzone)) {
+        if ($force || $this->isDropzoneDropTimeIsUp($dropzone)) {
+
             $dropRepo = $this->em->getRepository('IcapDropzoneBundle:Drop');
             $dropRepo->closeUnTerminatedDropsByDropzone($dropzone->getId());
             $dropzone->setAutoCloseState(Dropzone::AUTO_CLOSED_STATE_CLOSED);

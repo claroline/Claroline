@@ -25,7 +25,8 @@ class Dropzone extends AbstractResource {
     const MANUAL_STATE_ALLOW_DROP = "allowDrop";
     const MANUAL_STATE_ALLOW_DROP_AND_PEER_REVIEW = "allowDropAndPeerReview";
     const MANUAL_STATE_FINISHED = "finished";
-
+    const AUTO_CLOSED_STATE_WAITING = "waiting";
+    const AUTO_CLOSED_STATE_CLOSED ="autoClosed";
     
     /**
      * 1 = common
@@ -202,9 +203,9 @@ class Dropzone extends AbstractResource {
      * That will allow them to access the next step ( correction by users or admins ).
      *
      * @var bool
-     * @ORM\Column(name="auto_close_opened_drops_when_time_is_up",type="boolean",nullable=false)
+     * @ORM\Column(name="auto_close_opened_drops_when_time_is_up",type="boolean",nullable=false,options={"default" = 0})
      */
-    protected $autoCloseOpenedDropsWhenTimeIsUp;
+    protected $autoCloseOpenedDropsWhenTimeIsUp = 0;
 
     /**
      * @var String
