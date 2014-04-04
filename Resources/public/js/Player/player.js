@@ -24,7 +24,7 @@ function setDoNotDisplayAnymore(isChecked){
     });
 }
 
-function getDoNotDisplayAnymore(isChecked){
+function getDoNotDisplayAnymore(){
     $.ajax({
         url: Routing.generate('getDoNotDisplayAnymore'),
         type: 'GET',
