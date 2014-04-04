@@ -118,10 +118,15 @@ class DropzoneController extends DropzoneBaseController
             }
 
             if ($form->isValid()) {
+<<<<<<< HEAD
 
 
 
 
+=======
+                //getting the dropzoneManager
+                $dropzoneManager = $this->get('icap.manager.dropzone_manager');
+>>>>>>> 3e9fa87530f1a1590bba3385f0b74fa6ebe4420c
                 if ($dropzone->getPeerReview() != true) {
                     $dropzone->setExpectedTotalCorrection(1);
                     if ($dropzone->getManualState() == 'peerReview') {
@@ -129,17 +134,24 @@ class DropzoneController extends DropzoneBaseController
                     }
                 }
 
-
-
                 $manualStateChanged = false;
-                $newManualState;
+                $newManualState = null;
                 if( $dropzone->getManualPlanning() == true)
                 {
+
                     if($oldManualPlanning == false || $oldManualPlanningOption != $dropzone->getManualState())
                     {
                         $manualStateChanged = true;
                         $newManualState = $dropzone->getManualState();
                     }
+<<<<<<< HEAD
+=======
+                    // option auto Close unterminated drops
+                    if($form->get('autoCloseForManualStates')->getData() == 1) {
+                        $dropzoneManager->closeDropzoneOpenedDrops($dropzone,true);
+                    }
+
+>>>>>>> 3e9fa87530f1a1590bba3385f0b74fa6ebe4420c
                 }else {
                    if($oldEndDropDate != $dropzone->getEndAllowDrop()){
                        $dropzone->setAutoCloseState(Dropzone::AUTO_CLOSED_STATE_WAITING);
@@ -156,16 +168,16 @@ class DropzoneController extends DropzoneBaseController
                 $em->flush();
 
 
-                // check if manual state has changed to send notification.
+                // check if manual state has changed
                 if($manualStateChanged)
                 {
-                    //getting the dropzoneManager
-                    $dropzoneManager = $this->get('icap.manager.dropzone_manager');
+                   // send notification.
+
                     $usersIds = $dropzoneManager->getDropzoneUsersIds($dropzone);
-
                     $event = new LogDropzoneManualStateChangedEvent($dropzone,$newManualState,$usersIds);
-
                     $this->get('event_dispatcher')->dispatch('log', $event);
+
+
                 }
                 $event = new LogDropzoneConfigureEvent($dropzone, $changeSet);
                 $this->dispatch($event);

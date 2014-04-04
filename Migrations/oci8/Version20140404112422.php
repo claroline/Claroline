@@ -8,12 +8,17 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2014/04/03 11:43:46
+ * Generation date: 2014/04/04 11:24:26
  */
-class Version20140403114342 extends AbstractMigration
+class Version20140404112422 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
+        $this->addSql("
+            ALTER TABLE icap__dropzonebundle_drop MODIFY (
+                auto_closed_drop NUMBER(1) DEFAULT '0'
+            )
+        ");
         $this->addSql("
             ALTER TABLE icap__dropzonebundle_dropzone 
             ADD (
@@ -25,6 +30,11 @@ class Version20140403114342 extends AbstractMigration
 
     public function down(Schema $schema)
     {
+        $this->addSql("
+            ALTER TABLE icap__dropzonebundle_drop MODIFY (
+                auto_closed_drop NUMBER(1) DEFAULT NULL
+            )
+        ");
         $this->addSql("
             ALTER TABLE icap__dropzonebundle_dropzone 
             DROP (

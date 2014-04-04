@@ -132,6 +132,7 @@
                     {{ form_row(form.endReview, {'label_attr': {'class': 'control-label', 'style': 'font-weight: normal;'}}) }}
                 </div>
             </div>
+
         </div>
 
         <div class="btn-group pull-right">
@@ -149,6 +150,28 @@
             <strong>1/2</strong>
         </div>
     </div>
+    <div id="autoClosePrompt" class="modal fade" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <a class="close" data-dismiss="modal">×</a>
+
+                    <h4>{{ 'People will not be able to drop anymore'|trans({},'icap_dropzone') }}</h4>
+                </div>
+                <div class="modal-body">
+
+
+                    <p>{{ 'Do you want to valid all drop started but not validated yet ?'|trans({},'icap_dropzone') }}</p>
+                </div>
+                <div class="modal-footer">
+                    <a id="acitvate_manualStateAutoClose" href="#" class="btn btn-success">{{ 'yes'|trans({},'icap_dropzone') }}</a>
+                    <a href="#" class="btn btn-default" data-dismiss="modal">{{ 'no'|trans({},'icap_dropzone') }}</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
 {% endblock %}
 
 {% block javascripts %}
@@ -163,7 +186,13 @@
                 'html': true
             });
 
+            $("input:radio[name='icap_dropzone_common_form[manualState]']").click(function()
+            {
+                onManualStateChange($(this));
+            });
+
             $('#icap_dropzone_common_form_stayHere').val(0);
+            $('#icap_dropzone_common_form_autoCloseForManualStates').val(0);
             $('.save-button').on('click', function(event) {
                 event.preventDefault();
                 $('#icap_dropzone_common_form_stayHere').val(1);
@@ -283,6 +312,28 @@
             }
             console.log($cb.prop('checked'));
         }
+
+        /**
+         * When manual state has changed and involve that poeple will not be able to drop anymore, this will ask if
+         * you want to close opened drop. ( same as autoClose when time is up ).
+         *
+         * @param $radio (jquery selected item)
+         */
+        function onManualStateChange($radio)
+        {
+            var val = $radio.val();
+            $('#icap_dropzone_common_form_autoCloseForManualStates').val(0);
+            if(val == 'finished' || val == 'peerReview' ) {
+                $('#autoClosePrompt').modal('show'); // call the modal dialog.
+                $('#acitvate_manualStateAutoClose').unbind('click').click(function(e) {
+                    e.preventDefault();
+                    $('#icap_dropzone_common_form_autoCloseForManualStates').val(1);
+                    $('#autoClosePrompt').modal('hide');
+                });
+            }
+        }
+
+
 
     </script>
 {% endblock %}

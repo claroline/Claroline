@@ -46,19 +46,10 @@
         {% if drop.documents|length <= 0%}
             {{ 'no document added yet'|trans({},'icap_dropzone')}}
         {% endif %}
-        <br>
-        {% for document in drop.documents %}
-            <div class="row">
-                <div class="col-md-8">
-                    {% include 'IcapDropzoneBundle:Document:simpleShowDocument.html.twig' %}
-                
-
-                <div class=" pull-right">
-                    <a href="{{ path('icap_dropzone_delete_document', {'resourceId': dropzone.id, 'dropId': drop.id, 'documentId': document.id}) }}" class="btn btn-danger btn-sm  launch-modal"><span class="glyphicon icon-trash"></span> {{ 'Delete'|trans({}, 'icap_dropzone') }}</a>
-                </div>
-                </div>
-            </div>
-        {% endfor %}
+        
+        <br />
+        {% set documentListText = 'Documents'|trans({}, 'icap_dropzone') %}
+        {{ dropzoneMacros.displayDocumentsList(drop, dropzone, 12, "complete", documentListText) }}
 
         <div class="show-during-add" style="display: none;">
             <hr/>
