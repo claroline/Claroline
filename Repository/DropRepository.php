@@ -9,6 +9,7 @@ namespace Icap\DropzoneBundle\Repository;
 
 
 use Doctrine\ORM\EntityRepository;
+use Icap\DropzoneBundle\Entity\Drop;
 use Icap\DropzoneBundle\Entity\Dropzone;
 
 class DropRepository extends EntityRepository {

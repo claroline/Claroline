@@ -92,12 +92,6 @@ class Drop {
      *
      * @ORM\Column(name="auto_closed_drop",type="boolean", nullable=false,options={"default" = 0})
      */
-    protected $autoClosedDrop = 0;
-
-
-
-    public function __construct()
-    {
         $this->documents = new ArrayCollection();
     }
 

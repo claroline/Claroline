@@ -1,7 +1,9 @@
 <?php
 namespace Icap\DropzoneBundle\Manager;
 
+use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Manager\MaskManager;
+use Claroline\CoreBundle\Entity\User;
 use Icap\DropzoneBundle\Entity\Dropzone;
 use Icap\DropzoneBundle\Entity\Drop;
 use JMS\DiExtraBundle\Annotation as DI;
