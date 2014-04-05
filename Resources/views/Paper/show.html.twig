@@ -275,7 +275,12 @@
             {% endif %}
         {% endif %}
 
-        {% if p == -2 %}
+        {% if p == -2 or p == -1%}
+            {% if p == -1 %}
+                <script type="text/javascript">
+                    alert('{{ 'NotAllowedModifyPaper' | trans}}');
+                </script>
+            {% endif %}
             <hr/>
             {% if (display == 'all' or display == 'score') %}
                 {% set scoreFinal = scorePaper / maxExoScore %}

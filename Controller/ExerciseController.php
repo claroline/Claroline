@@ -723,6 +723,16 @@ class ExerciseController extends Controller
         $typeInterToRecorded = $request->get('typeInteraction');
 
         $tabOrderInter = $session->get('tabOrderInter');
+        
+        if ($paper->getEnd()) {
+            
+            return $this->forward('UJMExoBundle:Paper:show', 
+                                  array(
+                                      'id' => $paper->getId(),
+                                      'p'  => -1
+                                       )
+                                 );
+        }
 
         //To record response
         $exerciseSer = $this->container->get('ujm.exercise_services');
