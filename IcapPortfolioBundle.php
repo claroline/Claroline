@@ -8,6 +8,10 @@ use Claroline\InstallationBundle\Bundle\InstallableBundle;
 
 class IcapPortfolioBundle extends InstallableBundle implements AutoConfigurableInterface
 {
+    public function hasMigrations()
+    {
+        return false;
+    }
 
     public function supports($environment)
     {
