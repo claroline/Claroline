@@ -246,7 +246,7 @@ noPaperFound: No paper found
 noQuestion: You ask for nothing
 noQuestionFound: No question found
 noRightAnswer: No right answer
-NotAllowedModifyPaper: You can't alter your answers anymore !
+notAllowedModifyPaper: You can't alter your answers anymore !
 nothingToImport: No question is checked for the import
 notImageMesssage: The document should be an image
 noTitle: The question has no title
