@@ -15,29 +15,29 @@
                 <td>
                     {% if path.published %}
                         {% if not path.modified %}
-                            <span class="text-success">[{{ 'published' | trans({}, 'innova_tools') }}]</span>
+                            <span class="text-success">{{ 'published' | trans({}, 'innova_tools') }}</span>
                         {% else %}
-                            <span class="text-warning">
-                                [{{ 'published' | trans({}, 'innova_tools') }} {{ 'modified' | trans({}, 'innova_tools') }}]
-                            </span>
+                            <span class="text-warning">{{ 'published' | trans({}, 'innova_tools') }} {{ 'modified' | trans({}, 'innova_tools') }}</span>
                         {% endif %}
                     {% else %}
-                        <span class="text-danger">[{{ 'draft' | trans({}, 'innova_tools') }}]</span>
+                        <span class="text-danger">{{ 'draft' | trans({}, 'innova_tools') }}</span>
                     {% endif %}
                 </td>
                 <td>
-                    <strong>{{ path.resourceNode.name }}</strong>
+                    <strong>
+                    {% if path.published %}
+                    <a href="{{ path('innova_path_player_index', {workspaceId: workspace.id, pathId: path.id, stepId: path.getRootStep().id}) }}" />
+                        {{ path.resourceNode.name }}
+                    </a>
+                    {% else %}
+                        {{ path.resourceNode.name }}
+                    {% endif %}
+                    </strong>
                 </td>
                 <td>
                     <em>{{ path.description | striptags | truncate(40, true, ' [...]') }}</em>
                 </td>
                 <td class="text-right">
-                {% if path.published %}
-                    <a href="{{ path('innova_path_player_index', {workspaceId: workspace.id, pathId: path.id, stepId: path.getRootStep().id}) }}" class="btn btn-xs btn-default" />
-                        <span class="icon-play"></span>
-                        {{ 'play' | trans({}, 'innova_tools') }}
-                    </a>
-                {% endif %}
                     <a href="{{ path('innova_path_editor_edit', {workspaceId: workspace.id, id: path.id}) }}" class="btn btn-xs btn-default">
                         <span class="icon-pencil"></span>
                         {{ 'edit' | trans({}, 'innova_tools') }}
