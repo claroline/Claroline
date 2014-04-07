@@ -13,6 +13,7 @@ namespace Claroline\CoreBundle\Form\Badge\Type;
 
 use Claroline\CoreBundle\Entity\Badge\Badge;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
+use Claroline\CoreBundle\Manager\LocaleManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
@@ -29,35 +30,34 @@ class BadgeType extends AbstractType
     /** @var \Claroline\CoreBundle\Form\Badge\Type\BadgeRuleType */
     private $badgeRuleType;
 
-    /** @var \Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler */
-    private $platformConfigHandler;
-
-    /** @var \Symfony\Bundle\FrameworkBundle\Translation\Translator */
-    private $translator;
+    /** @var \Claroline\CoreBundle\Manager\LocaleManager */
+    private $localeManager;
 
     /**
      * @DI\InjectParams({
-     *     "badgeRuleType"         = @DI\Inject("claroline.form.badge.rule"),
-     *     "platformConfigHandler" = @DI\Inject("claroline.config.platform_config_handler"),
-     *     "translator"            = @DI\Inject("translator")
+     *     "badgeRuleType" = @DI\Inject("claroline.form.badge.rule"),
+     *     "localeManager" = @DI\Inject("claroline.common.locale_manager")
      * })
      */
-    public function __construct(
-        BadgeRuleType $badgeRuleType,
-        PlatformConfigurationHandler $platformConfigHandler,
-        Translator $translator
-    )
+    public function __construct(BadgeRuleType $badgeRuleType, LocaleManager $localeManager)
     {
-        $this->badgeRuleType         = $badgeRuleType;
-        $this->platformConfigHandler = $platformConfigHandler;
-        $this->translator            = $translator;
+        $this->badgeRuleType = $badgeRuleType;
+        $this->localeManager = $localeManager;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $languages = $this->localeManager->getAvailableLocales();
+
+        $translationBuilder = $builder->create('translations', 'form', array('virtual' => true));
+
+        foreach ($languages as $language) {
+            $fieldName = sprintf('%sTranslation', $language);
+            $translationBuilder->add($fieldName, new BadgeTranslationType());
+        }
+
         $builder
-            ->add('frTranslation', new BadgeTranslationType())
-            ->add('enTranslation', new BadgeTranslationType())
+            ->add($translationBuilder)
             ->add('automatic_award', 'checkbox', array('required' => false))
             ->add('file', 'file', array('label' => 'badge_form_image'))
             ->add('is_expiring', 'checkbox', array('required' => false))

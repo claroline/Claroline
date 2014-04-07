@@ -302,6 +302,14 @@ class Badge extends Rulable
     }
 
     /**
+     * @return BadgeTranslation|null
+     */
+    public function getEsTranslation()
+    {
+        return $this->getTranslationForLocale('es');
+    }
+
+    /**
      * @param  BadgeTranslation $translation
      * @return Badge
      */
