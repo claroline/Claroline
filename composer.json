@@ -1,0 +1,22 @@
+{
+    "name": "icap/portfolio-bundle",
+    "description": "Portfolio bundle for Claroline Connect. See https://github.com/claroline/Claroline",
+    "keywords": ["Claroline", "Portfolio"],
+    "homepage": "http://www.claroline.net",
+    "type": "claroline-core",
+    "authors": [
+        {
+            "name": "AILLOUD Maxime",
+            "homepage": "https://github.com/maxailloud"
+        }
+    ],
+    "require": {
+        "php": ">=5.4.1",
+        "claroline/core-bundle": ">=2.12,<3.0"
+        
+    },
+    "autoload": {
+        "psr-0": { "Icap\\PortfolioBundle": "" }
+    },
+    "target-dir": "Icap/PortfolioBundle"
+}
