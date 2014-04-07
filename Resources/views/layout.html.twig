@@ -1,6 +1,6 @@
-{% extends 'ClarolineCoreBundle:Workspace:layout.html.twig' %}
+{% extends 'ClarolineCoreBundle::layout.html.twig' %}
 
-{% block title %}{{ 'my_portfolios'|trans({}, 'platform') }}{% endblock %}
+{% block title %}{{ parent() }} - {{ 'my_portfolios'|trans({}, 'platform') }}{% endblock %}
 
 {% block content %}
     <div class="panel panel-default">

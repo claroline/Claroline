@@ -20,7 +20,7 @@ class PortfolioController extends Controller
      * @ParamConverter("loggedUser", options={"authenticatedUser" = true})
      * @Template()
      */
-    public function listAction(User $user)
+    public function listAction(User $loggedUser)
     {
         return array(
         );
