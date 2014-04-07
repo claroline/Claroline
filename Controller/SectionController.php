@@ -347,7 +347,18 @@ class SectionController extends Controller
 
     private function persistUpdateSection (Request $request, Wiki $wiki, Section $section, Contribution $oldActiveContribution, User $user) {
         $form = $this->createForm($this->get('icap.wiki.section_edit_type'), $section);
-        if ("POST" === $request->getMethod()) {
+        if ($request->isXMLHttpRequest()) {
+            return $this->render(
+                'IcapWikiBundle:Section:editModal.html.twig',
+                array(
+                    '_resource' => $wiki,
+                    'section' => $section,
+                    'workspace' => $wiki->getResourceNode()->getWorkspace(),
+                    'form' => $form->createView()
+                )
+            );
+        }
+        else if ("POST" === $request->getMethod()) {
             $form->handleRequest($request);
             $section->isActiveContributionChanged($oldActiveContribution);
             if ($form->isValid()) {

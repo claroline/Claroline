@@ -11,6 +11,12 @@
     <li class="active">{{(section.isRoot())?_resource.resourceNode.name:section.activeContribution.title}}</li>
 {% endblock %}
 
+{% block wiki_buttons %}
+    <div class="wiki-header-buttons">
+        <a href="{{ path('icap_wiki_view', { 'wikiId': _resource.id }) }}" class="btn btn-primary"> {{'back_to_wiki'|trans({},'icap_wiki')}}</a>
+    </div>
+{% endblock %}
+
 {% block wiki_panel %}
     {% block wiki_content %}
         <div class="page-header">

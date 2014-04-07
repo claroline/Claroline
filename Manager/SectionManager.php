@@ -57,7 +57,7 @@ class SectionManager
                 $prefix = $childrens[$simpleSection['parentId']];
             }            
             $archivedSections[$simpleSection['id']] = $prefix." ".$simpleSection['title'];
-            $prefixesArray[$simpleSection['id']] = $prefix.".";
+            $prefixesArray[$simpleSection['id']] = "&nbsp;".$prefix.".";
         }
 
         return $archivedSections;

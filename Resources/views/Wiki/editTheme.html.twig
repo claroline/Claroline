@@ -1,0 +1,47 @@
+{% extends 'ClarolineCoreBundle::form_theme.html.twig' %}
+
+{% block form_label %}
+    {% spaceless %}
+        {% set is_multichoice_widget = (checked is defined) and ('choice' in form.parent.vars.block_prefixes) %}
+        {% set is_choice_widget = 'radio' in block_prefixes or 'checkbox' in block_prefixes %}
+        {% if is_multichoice_widget %}
+            {% set label_attr = label_attr|merge({'class': 'radio' in block_prefixes ? 'radio' : 'checkbox'}) %}
+        {% else %}
+            {% set lbl_width = theme_options.label_width is defined ? theme_options.label_width : 'col-md-2' %}
+            {% set label_attr = label_attr|merge({'class': 'control-label ' ~ lbl_width}) %}
+        {% endif %}
+        {% if not compound %}
+            {% set label_attr = label_attr|merge({'for': id}) %}
+        {% endif %}
+        {% if required %}
+            {% set label_attr = label_attr|merge({'class': (label_attr.class|default('') ~ ' required')|trim}) %}
+        {% endif %}
+        {% if label is empty %}
+            {% set label = id|trans({}, translation_domain) %}
+        {% endif %}
+        <label{% for attrname, attrvalue in label_attr %} {{ attrname }}="{{ attrvalue }}"{% endfor %}>
+        {% if is_choice_widget %}
+            {{ form_widget(form) }}
+        {% endif %}
+        {{ label|trans({}, translation_domain) }}
+        {% if is_multichoice_widget %}
+            {{ form_widget(form) }}
+        {% endif %}
+        </label>
+    {% endspaceless %}
+{% endblock form_label %}
+
+{% block choice_widget_options %}
+    {% spaceless %}
+        {% for group_label, choice in options %}
+            {% if choice is iterable %}
+                <optgroup label="{{ group_label|trans({}, translation_domain) }}">
+                    {% set options = choice %}
+                    {{ block('choice_widget_options') }}
+                </optgroup>
+            {% else %}
+                <option value="{{ choice.value }}"{% if choice is selectedchoice(value) %} selected="selected"{% endif %}>{{ choice.label|trans({}, translation_domain)|raw }}</option>
+            {% endif %}
+        {% endfor %}
+    {% endspaceless %}
+{% endblock choice_widget_options %}

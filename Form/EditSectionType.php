@@ -46,15 +46,18 @@ class EditSectionType extends AbstractType
                 if ($isRoot === false && $data->getIsWikiAdmin()) {
                     $form
                         ->add('visible', 'checkbox', array(
-                            'required' => false    
+                                'required' => false,
+                                'theme_options' => array('label_width' => 'col-md-12', 'control_width' => 'hidden')
                             )
                         )
                         ->add('position', 'choice', array(
-                            'choices' => $sectionManager->getArchivedSectionsForPosition($data)
+                                'choices' => $sectionManager->getArchivedSectionsForPosition($data),
+                                'theme_options' => array('label_width' => 'col-md-12', 'control_width' => 'col-md-12')
                             )
                         )
                         ->add('brother', 'checkbox', array(
-                            'required' => false
+                                'required' => false,
+                                'theme_options' => array('label_width' => 'col-md-12', 'control_width' => 'hidden')
                             )
                         );   
                 }

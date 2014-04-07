@@ -23,11 +23,50 @@ $(document).ready(function() {
                         containerNewForm = $('#newSectionContainer-'+newLink.attr('data-section'));
                         containerNewForm.find('#icap_wiki_section_type_activeContribution_text').attr('id', 'icap_wiki_section_type_'+newLink.attr('data-section'));
                         $('#wnsc-'+newLink.attr('data-section')).show();
+                        $('#wesc-'+newLink.attr('data-section')).hide();
+                        $('#wst-'+newLink.attr('data-section')).show();
                     })
                 ;
             }
             else {
                 $('#wnsc-'+newLink.attr('data-section')).show();
+                $('#wesc-'+newLink.attr('data-section')).hide();
+                $('#wst-'+newLink.attr('data-section')).show();
+            }
+        });
+    });
+
+    //Activate edit section modal
+    $('a.edit-section').each(function(){
+        var editLink = $(this);
+        editLink.attr("data-path", editLink.attr('href'));
+        editLink.attr('href', '#editSectionContainer-'+editLink.attr('data-section'));
+        var containerNewForm = null;
+        console.log(editLink.attr("data-empty"));
+        editLink.on('click', function (event){
+            if(typeof editLink.attr("data-empty") === 'undefined'){
+                event.preventDefault();
+                $.get(editLink.attr("data-path"))
+                    .always(function () {
+                        if (containerNewForm !== null) {
+                            containerNewForm.remove();
+                        }
+                    })
+                    .done(function (data) {
+                        $('#wesc-'+editLink.attr('data-section')).html(data);
+                        editLink.attr('data-empty','false');
+                        containerNewForm = $('#editSectionContainer-'+editLink.attr('data-section'));
+                        containerNewForm.find('#icap_wiki_edit_section_type_activeContribution_text').attr('id', 'icap_wiki_edit_section_type_'+editLink.attr('data-section'));
+                        $('#wesc-'+editLink.attr('data-section')).show();
+                        $('#wst-'+editLink.attr('data-section')).hide();
+                        $('#wnsc-'+editLink.attr('data-section')).hide();
+                    })
+                ;
+            }
+            else {
+                $('#wesc-'+editLink.attr('data-section')).show();
+                $('#wst-'+editLink.attr('data-section')).hide();
+                $('#wnsc-'+editLink.attr('data-section')).hide();
             }
         });
     });

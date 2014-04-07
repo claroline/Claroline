@@ -21,7 +21,7 @@ div.panel-wiki {
 	margin-bottom: 30px;
 }
 
-.wiki-new-section-container {
+.wiki-new-section-container, .wiki-edit-section-container {
 	display: none;
 }
 
@@ -29,24 +29,26 @@ div.panel-wiki {
 	margin-bottom: 10px;
 }
 
-.wiki-new-section-container .modal-content { box-shadow: none;}
+.wiki-new-section-container .modal-content, .wiki-edit-section-container .modal-content{ box-shadow: none;}
 
 /*Wiki contents*/
 div.wiki-contents-inner { float:left; min-width: 20%; }
 div.wiki-contents ul { list-style-type: none; padding-left: 10px; }
 div.wiki-contents ul#wiki-contents-list{padding-left: 0px; }
 div.wiki-contents-title { text-align: center; margin-bottom:5px; }
+
 ul.sortable-list.sortable-enable li, ul.sortable-list.sortable-enable li a { cursor: move !important; }
+ul.sortable-list.sortable-enable li {border: 1px dashed #357EBD; padding-left: 2px; border-left: 4px solid #357EBD;}
 ul#wiki-contents-list li.invisible-wiki-content a { color:#999; }
 
 
 /*Wiki sections*/
 div.wiki-sections ul { list-style-type: none; padding-left: 0; }
-div.subsection-header h3, div.subsection-header h4 { font-weight: 800 !important; margin-bottom: 5px; }
-div.subsection-header h3 {margin-top: 15px;}
-div.subsection-header h4 {margin-top: 10px;}
+div.subsection-header h3, div.subsection-header h4 { margin-bottom: 5px; padding-bottom: 3px;}
+div.subsection-header h3 {margin-top: 15px; border-bottom: 1px dashed #eeeeee;}
+div.subsection-header h4 {margin-top: 10px; border-bottom: 1px dotted #eeeeee;}
 div.wiki-sections div.page-header {padding-bottom: 0px; margin:25px 0 10px 0;}
-div.wiki-sections div.page-header h2 {margin-bottom:2px;}
+div.wiki-sections div.page-header h2 {margin-bottom:2px; font-weight: bold !important;}
 div.wiki-sections li.invisible-wiki-section { color: #aaa; }
 div.wiki-sections div.wiki-section-text { overflow: auto;}
 
@@ -61,10 +63,25 @@ span.invisible-section-text {font-style: italic;}
 
 
 /*Move section form*/
-.move-wiki-section-header {margin: 50px 0 20px; font-size: 20px;}
+.move-wiki-section-header {margin: 20px 0 20px; font-size: 20px;}
+.move-wiki-section-header+.controls {padding-left: 10px;}
 
 /* Wiki configure */
 
 /* Restore sections */
 .wiki-deleted-sections-header{margin:40px 0 20px;}
 #wiki-deleted-sections-list li {line-height: 25px; padding: 3px;}
+
+.wiki-new-section-container .modal-content, .wiki-edit-section-container .modal-content {
+    background-color: #EDF3FF;
+}
+
+.wiki-new-section-container .modal-content > div[class^=modal-], .wiki-edit-section-container .modal-content > div[class^=modal-] {
+    padding:5px;
+}
+
+.wiki-new-section-container .modal-content .modal-header h3,  .wiki-edit-section-container .modal-content .modal-header h3{
+    margin:0;
+}
+
+.wiki-new-section-container .modal-content .modal-footer, .wiki-edit-section-container .modal-content .modal-footer {margin-top: -25px;}

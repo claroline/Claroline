@@ -39,10 +39,11 @@
     </div>
 
     {% if tree is not empty and tree[0] is not empty and tree[0].activeContribution.text is not empty%}
-        <div class="wiki-description">
+        <div id="wst-{{ tree[0].id }}" class="wiki-description">
             {{ tree[0].activeContribution.text|raw }}
         </div>
     {% endif %}
+    <div id="wesc-{{tree[0].id}}" class="wiki-edit-section-container"></div>
 
     {% if tree is not empty and tree[0] is not empty and tree[0].__children is not empty %}
         <div class="wiki-contents">

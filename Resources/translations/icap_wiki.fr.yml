@@ -32,6 +32,7 @@ moderate: "Modéré "
 read_only: "Consultation"
 options: "Options"
 New section: 'Nouvelle section'
+Edit section: 'Modifier la section'
 wiki_contents: 'Sommaire'
 history: 'Historique'
 active_contribution: 'Version actuelle'
