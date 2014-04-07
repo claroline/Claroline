@@ -1,10 +1,10 @@
 author: Auteur
-category: Catégorie
-category_form_name: Catégorie
+category: Forum
+category_form_name: Forum
 edit_message: Éditer un message
 field_content_required: Le champ contenu est requis.
 forum: Forum
-forum_category_edit: Modifier la catégorie
+forum_category_edit: Modifier le forum
 forum_settings: Paramètres du forum
 forum_subject_edit: Modifier le sujet de discussion
 forum_subject_form_title: Titre
@@ -23,10 +23,10 @@ messages_per_page: Messages par page
 move_message: Déplacer un message
 move_subject: Déplacer un sujet de discussion
 move_to: Déplacer vers
-new_category: Ajouter une catégorie
+new_category: Ajouter un forum
 new_message: Répondre
 new_subject: Ajouter un sujet de discussion
-remove_category_confirm_message: Êtes vous sûr de vouloir supprimer cette catégorie ?
+remove_category_confirm_message: Êtes vous sûr de vouloir supprimer ce forum ?
 remove_subject_confirm_message: Êtes vous sûr de vouloir supprimer ce sujet de discussion ?
 remove_subjects_confirm_message: Êtes vous sûr de vouloir supprimer ces %count% sujet(s) de discussion ?
 responses: Réponses
