@@ -95,15 +95,6 @@ class ResourceNodeRepository extends MaterializedPathRepository
         $builder = new ResourceQueryBuilder();
         $children = array();
 
-        //we just check the resource workspace here
-        $isWorkspaceManager = false;
-        $ws = $parent->getWorkspace();
-        $managerRole = 'ROLE_WS_MANAGER_' . $ws->getGuid();
-
-        if (in_array($managerRole, $roles)) {
-            $isWorkspaceManager = true;
-        }
-
         //check if manager of the workspace.
         //if it's true, show every children
         if ($this->isWorkspaceManager($parent, $roles)) {
