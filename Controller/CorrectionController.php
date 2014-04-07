@@ -1133,7 +1133,8 @@ class CorrectionController extends DropzoneBaseController
         $dropId = $correction->getDrop()->getId();
         $dropzoneId = $dropzone->getId();
         // dropZone not in peerReview or corrections are not displayed to users or correction deny is not allowed 
-        if (!$dropzone->getPeerReview() || !$dropzone->getDisplayNotationToLearners() || !$dropzone->getAllowCorrectionDeny()) {
+        if (!$dropzone->getPeerReview() || !$dropzone->getAllowCorrectionDeny() || !$dropzone->getDiplayCorrectionsToLearners()) {
+
            throw new AccessDeniedException();
         }
         // if loggued user is not the drop owner and is not admin.
