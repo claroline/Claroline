@@ -1,6 +1,6 @@
 <?php
 
-namespace Icap\NotificationBundle;
+namespace Icap\PortfolioBundle;
 
 use Claroline\KernelBundle\Bundle\AutoConfigurableInterface;
 use Claroline\KernelBundle\Bundle\ConfigurationBuilder;
