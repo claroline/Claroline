@@ -95,18 +95,9 @@ class ResourceNodeRepository extends MaterializedPathRepository
         $builder = new ResourceQueryBuilder();
         $children = array();
 
-        //we just check the resource workspace here
-        $isWorkspaceManager = false;
-        $ws = $parent->getWorkspace();
-        $managerRole = 'ROLE_WS_MANAGER_' . $ws->getGuid();
-
-        if (in_array($managerRole, $roles)) {
-            $isWorkspaceManager = true;
-        }
-
         //check if manager of the workspace.
         //if it's true, show every children
-        if (in_array('ROLE_ADMIN', $roles) || $isWorkspaceManager) {
+        if ($this->isWorkspaceManager($parent, $roles)) {
             $builder->selectAsArray()
                 ->whereParentIs($parent)
                 ->orderByName();
@@ -354,12 +345,20 @@ class ResourceNodeRepository extends MaterializedPathRepository
     public function findByMimeTypeAndParent($mimeType, ResourceNode $parent, array $roles)
     {
         $builder = new ResourceQueryBuilder();
-        $dql = $builder->selectAsEntity(false, 'Claroline\CoreBundle\Entity\Resource\File')
-            ->whereParentIs($parent)
-            ->whereMimeTypeIs('%'.$mimeType.'%')
-            ->whereRoleIn($roles)
-            ->whereCanOpen()
-            ->getDql();
+        if (!$this->isWorkspaceManager($parent, $roles)) {
+            $dql = $builder->selectAsEntity(false, 'Claroline\CoreBundle\Entity\Resource\File')
+                ->whereParentIs($parent)
+                ->whereMimeTypeIs('%'.$mimeType.'%')
+                ->whereRoleIn($roles)
+                ->whereCanOpen()
+                ->getDql();
+        } else {
+            $dql = $builder->selectAsEntity(false, 'Claroline\CoreBundle\Entity\Resource\File')
+                ->whereParentIs($parent)
+                ->whereMimeTypeIs('%'.$mimeType.'%')
+                ->whereCanOpen()
+                ->getDql();
+        }
 
         $query = $this->_em->createQuery($dql);
         $query->setParameters($builder->getParameters());
@@ -497,5 +496,32 @@ class ResourceNodeRepository extends MaterializedPathRepository
         }
 
         return $query->getResult();
+    }
+
+    private function isWorkspaceManager(ResourceNode $node, array $roles)
+    {
+        $rolenames = array();
+
+        foreach ($roles as $role) {
+            if ($role instanceof \Symfony\Component\Security\Core\Role\Role) {
+                $rolenames[] = $role->getRole();
+            } else {
+                $rolenames[] = $role;
+            }
+        }
+
+        $isWorkspaceManager = false;
+        $ws = $node->getWorkspace();
+        $managerRole = 'ROLE_WS_MANAGER_' . $ws->getGuid();
+
+        if (in_array($managerRole, $rolenames)) {
+            $isWorkspaceManager = true;
+        }
+
+        if (in_array('ROLE_ADMIN', $rolenames)) {
+            $isWorkspaceManager = true;
+        }
+
+        return $isWorkspaceManager;
     }
 }
