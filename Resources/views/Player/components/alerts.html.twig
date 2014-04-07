@@ -1,7 +1,3 @@
-<script type="text/javascript">
-    var isRoot = true;
-</script>
-
 {% for type, flashMessages in app.session.flashbag.all() %}
     {% for flashMessage in flashMessages %}
     <div class="{{ type }}">
