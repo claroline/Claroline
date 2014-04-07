@@ -67,10 +67,6 @@ class DropzoneCommonType extends AbstractType
                 'expanded' => true,
                 'multiple' => false
             ))
-<<<<<<< HEAD
-=======
-
->>>>>>> 3e9fa87530f1a1590bba3385f0b74fa6ebe4420c
             ->add('autoCloseOpenedDropsWhenTimeIsUp','checkbox', array('required' => false))
             ->add('startAllowDrop', 'datetime', array('date_widget' => 'single_text', 'time_widget' => 'single_text', 'with_seconds' => false, 'required' => false))
             ->add('endAllowDrop', 'datetime', array('date_widget' => 'single_text', 'time_widget' => 'single_text', 'with_seconds' => false, 'required' => false))
