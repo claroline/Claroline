@@ -21,9 +21,9 @@ Language: Langue
 'Last name': Nom
 None: Aucun
 'Or choose an existing file from resource manager': 'Ou veuillez choisir un fichier existant dans gestionnaire de ressources'
-'Overview of all recent activities in %workspaceName%': 'Aperçu de toutes les activités récentes de %workspaceName%'
-'Overview of recent activities in %workspaceName%': 'Aperçu des activités récentes de %workspaceName%'
-'Overview of recent activities of your workspaces': 'Aperçu des activités récentes de vos formations'
+'Overview of all recent activities in %workspaceName%': 'Traces des actions récentes de %workspaceName%'
+'Overview of recent activities in %workspaceName%': 'Traces des actions récentes de %workspaceName%'
+'Overview of recent activities of your workspaces': 'Traces des actions récentes de vos formations'
 'Paste here the meta tag provides by Google Webmaster': 'Collez ici la balise meta fournit par Google Webmaster'
 'See all': 'Voir tous'
 'Select a Language': 'Sélectionnez une langue'
@@ -108,7 +108,7 @@ an_error_occured_message: 'Une erreur s''est produite. Veuillez contacter l''adm
 analytics_connections: 'Visites utilisateurs'
 analytics_home: 'Vue de l''ensemble'
 analytics_resources: 'Contenu plateforme'
-analytics_top: 'Top des activités'
+analytics_top: 'Top des traces'
 anonymous: Anonyme
 answer: Répondre
 appearance: Apparence
@@ -335,7 +335,7 @@ is_already_in_category: 'est déjà dans la catégorie'
 jqplot_date_output_format: '%d-%m-%Y'
 keep_me_logged_in: 'Se souvenir de moi'
 lastName: Nom
-last_30_days_activity: 'Activités des 30 derniers jours'
+last_30_days_activity: 'Traces des actions des 30 derniers jours'
 last_name: Nom
 layout: Layout
 left: Gauche
@@ -777,7 +777,7 @@ workspaces_per_page: 'Formations par page'
 ws_creator: Créateur de formation
 ws_most_viewed: Formations les plus consultés
 yes: oui
-yesterday_activity: 'Activité de la veille'
+yesterday_activity: 'Traces des actions de la veille'
 your_username: 'Votre nom d''utilisateur est '
 users_per_page: Utilisateurs par page
 groups_per_page: Groupes par page
