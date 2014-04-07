@@ -274,4 +274,9 @@ People will not be able to drop anymore: 'People will not be able to drop anymor
 Do you want to valid all drop started but not validated yet ?: 'Do you want to valid all drop started but not validated yet ?'
 yes: 'yes'
 no: 'no'
-
+People that have a copy in this dropzone: 'People that have a copy in this dropzone'
+List of examiners: 'List of examiners'
+Started Corrections: 'Started Corrections'
+Complete Corrections: 'Complete Corrections'
+number of Report: 'number of Report'
+was reported: 'was reported'

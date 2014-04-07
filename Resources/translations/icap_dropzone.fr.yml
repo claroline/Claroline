@@ -273,4 +273,9 @@ People will not be able to drop anymore: 'Les utilisateurs ne pourront plus dép
 Do you want to valid all drop started but not validated yet ?: 'Voulez vous valider automatiquement toutes les copies commencées qui n''ont pas encore été terminées ?'
 yes: 'oui'
 no: 'non'
-
+People that have a copy in this dropzone: 'Personnes ayant déposé une copie dans la zone de dépot'
+List of examiners: 'Liste des correcteurs'
+Started Corrections: 'Corrections commencées'
+Complete Corrections: 'Corrections terminées'
+number of Report: 'Nombre de signalement'
+was reported: 'A été signalé'
