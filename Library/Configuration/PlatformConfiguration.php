@@ -46,6 +46,9 @@ class PlatformConfiguration
     private $facebookClientSecret;
     private $facebookClientActive;
     private $formCaptcha;
+    private $ldapHost;
+    private $ldapPort;
+    private $ldapRootDn;
 
     /**
      * @param mixed $sessionDbDataCol
@@ -449,5 +452,35 @@ class PlatformConfiguration
     public function getFormCaptcha()
     {
         return $this->formCaptcha;
+    }
+
+    public function setLdapHost($host)
+    {
+        $this->ldapHost = $host;
+    }
+
+    public function getLdapHost()
+    {
+        return $this->ldapHost;
+    }
+
+    public function setLdapPort($port)
+    {
+        $this->ldapPort = $port;
+    }
+
+    public function getLdapPort()
+    {
+        return $this->ldapPort;
+    }
+
+    public function setLdapRootDn($rootDn)
+    {
+        $this->ldapRootDn = $rootDn;
+    }
+
+    public function getLdapRootDn()
+    {
+        return $this->ldapRootDn;
     }
 }
