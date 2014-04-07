@@ -124,6 +124,8 @@
                         <th><a href="{{ sortUrl(max, search, 'visibility', direction) }}"> {{ 'visibility'|trans({}, 'platform') }} </a></th>
                         <th><a href="{{ sortUrl(max, search, 'displayble', direction) }}"> {{ 'public_registration'|trans({}, 'platform') }} </a></th>
                         <th>{{ 'edit'|trans({}, 'platform') }}</th>
+                        <th>date </th>
+                        <th> subscribers </th>
                     </tr>
                 </thead>
                 <tbody>
@@ -177,6 +179,10 @@
                                 <i class="icon-pencil"></i>
                             </a>
                         </td>
+                        <td>
+                            {{ w.getCreationDate()|date("d/m/Y g:i")}} 
+                        </td>
+                        <td>  </td>
                     </tr>
                 {% endfor %}
                 </tbody>

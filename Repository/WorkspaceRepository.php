@@ -503,9 +503,9 @@ class WorkspaceRepository extends EntityRepository
         $upperSearch = trim($upperSearch);
         $upperSearch = preg_replace('/\s+/', ' ', $upperSearch);
         $dql = "
-            SELECT w,u
+            SELECT w
             FROM Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace w
-            
+            WHERE w.name LIKE :search
             OR UPPER(w.code) LIKE :search
             ORDER BY w.{$orderedBy}
         ";

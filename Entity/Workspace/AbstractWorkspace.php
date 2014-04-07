@@ -120,6 +120,11 @@ abstract class AbstractWorkspace
      */
     protected $selfUnregistration = false;
 
+    /**
+     * @ORM\Column(name="creation_date", type="integer")
+     */
+    protected $creationDate;
+
     public function __construct()
     {
         $this->roles = new ArrayCollection();
@@ -235,4 +240,15 @@ abstract class AbstractWorkspace
     {
         return $this->selfUnregistration;
     }
+
+    public function setCreationDate($creationDate)
+    {
+        return $this->creationDate = $creationDate;
+    }
+
+    public function getCreationDate()
+    {
+        return $this->creationDate;
+    }
+
 }
