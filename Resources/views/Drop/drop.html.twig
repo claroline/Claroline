@@ -55,7 +55,6 @@
             <hr/>
             <div class="container-inline"></div>
         </div>
-
         <div class='div-test'>
             {% if allowedTypes|length <= 0 %}
                 <span class="text-danger">{{ 'No document type allowed'|trans({}, 'icap_dropzone') }}</span>
@@ -188,6 +187,11 @@
             }
             Claroline.ResourceManager.initialize(config);
 
+            // autosubmit input files.
+            $('#icap_dropzone_document_file_form_file').change(function(){
+              $(this).parents('form').submit();
+            });
+
             $('a.launch-inline').on('click', function (event) {
                 event.preventDefault();
                 $('.disabled-during-add').attr('disabled', 'disabled');
@@ -234,6 +238,7 @@
                     }
                 });
             });
+
 
 
             $('#dropzone_global_save_link').click(function()

@@ -15,7 +15,7 @@
         <div class="row">
             <div class='col-md-8'>
                 <div class='input-group'>
-                    {{ form_widget(form.document,{'label_col_size': ' ', 'attr': {'placeholder': (documentType~'_placeholder')|trans({}, 'icap_dropzone')}, 'label_attr': {'class': 'sr-only'},'id':'icap_dropzone_document_file_form_url' }) }}
+                    {{ form_widget(form.document,{'label_col_size': ' ', 'attr': {'placeholder': (documentType~'_placeholder')|trans({}, 'icap_dropzone')}, 'label_attr': {'class': 'sr-only'},'id':'icap_dropzone_document_file_form_'~documentType }) }}
                     <span class='input-group-btn'>
                         <button type="submit" class="btn btn-primary">
                             {{ 'Add'|trans({}, 'icap_dropzone') }}
