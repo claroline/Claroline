@@ -53,5 +53,11 @@
 
 {% block javascripts %}
     {{ parent() }}
+    <script>
+        var pathId = {{ path.id }};
+        {% if currentStep == path.getRootStep %}
+        var isRoot = true;
+        {% endif %}
+    </script>
     <script type="text/javascript" src="{{ asset('bundles/innovapath/js/Player/player.js') }}"></script>
 {% endblock %}

@@ -1,5 +1,5 @@
 $( document ).ready(function() {
-	$("*").tooltip({placement:'top'});
+    $("*").tooltip({placement:'top'});
 
     getDoNotDisplayAnymore();
 
@@ -18,23 +18,41 @@ function setDoNotDisplayAnymore(isChecked){
         url: Routing.generate('setDoNotDisplayAnymore'),
         type: 'GET',
         data:{
-            isChecked: isChecked
+            isChecked: isChecked,
+            pathId: pathId
         },
         dataType: 'json',
+    })
+    .done(function(data) {
+        window.localStorage.setItem('do-not-display-anymore-' + pathId, isChecked);
     });
 }
 
 function getDoNotDisplayAnymore(){
-    $.ajax({
-        url: Routing.generate('getDoNotDisplayAnymore'),
-        type: 'GET',
-        dataType: 'json',
-    })
-    .done(function(data) {
-        if (typeof isRoot != 'undefined' && data.isChecked == "false") {
-            $('#full-tree').modal('show');
-        } else if (data.isChecked == "true") {
-            $('#do-not-display-anymore').prop('checked', true);
-        }
-    });    
+    var doNotDisplayAnymore = window.localStorage.getItem('do-not-display-anymore-' + pathId);
+
+    if (doNotDisplayAnymore == "true"){
+        $('#do-not-display-anymore').prop('checked', true);
+    } else if (doNotDisplayAnymore != "false") {
+        $.ajax({
+            url: Routing.generate('getDoNotDisplayAnymore'),
+            type: 'GET',
+            data:{
+                pathId: pathId
+            },
+            dataType: 'json',
+        })
+        .done(function(data) {
+            if (typeof isRoot != 'undefined' && data.isChecked == false) {
+                $('#full-tree').modal('show');
+                window.localStorage.setItem('do-not-display-anymore-' + pathId, "false");
+            } else if (data.isChecked == "true") {
+                $('#do-not-display-anymore').prop('checked', true);
+                window.localStorage.setItem('do-not-display-anymore-' + pathId, "true");
+
+            }
+        });
+    } else if (typeof isRoot != 'undefined') {
+        $('#full-tree').modal('show');
+    }
 }

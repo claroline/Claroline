@@ -174,12 +174,19 @@ class PlayerController extends ContainerAware
     public function setDoNotDisplayAnymore(Request $request)
     {
         $isChecked = $request->query->get('isChecked');
+        $pathId = $request->query->get('pathId');
 
         $session = $this->container->get('request')->getSession();
-        $session->set('doNotDisplayAnymore', $isChecked);
+        if(!$doNotDisplay = $session->get('doNotDisplayAnymore')){
+            $doNotDisplay = array();
+        }
+
+        $doNotDisplay[$pathId] = $isChecked;
+
+        $session->set('doNotDisplayAnymore', $doNotDisplay);
 
         return new JsonResponse(
-            array('isChecked' => $session->get('doNotDisplayAnymore'))
+            array('isChecked' => $doNotDisplay[$pathId])
         );
     }
 
@@ -188,15 +195,18 @@ class PlayerController extends ContainerAware
     * @Route("/get-do-not-display-anymore", name="getDoNotDisplayAnymore", options={"expose"=true})
     * @Method("GET")
     */
-    public function getDoNotDisplayAnymore()
+    public function getDoNotDisplayAnymore(Request $request)
     {
+        $pathId = $request->query->get('pathId');
         $isChecked = null;
 
         $session = $this->container->get('request')->getSession();
-        if(!$isChecked = $session->get('doNotDisplayAnymore')) {
+        if($doNotDisplay = $session->get('doNotDisplayAnymore') && isset($doNotDisplay[$pathId]) && $doNotDisplay[$pathId]) {
+            $isChecked = true;
+        } else {
             $isChecked = false;
         }
-       
+
         return new JsonResponse(
             array('isChecked' => $isChecked)
         );
