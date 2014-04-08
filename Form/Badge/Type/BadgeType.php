@@ -33,21 +33,40 @@ class BadgeType extends AbstractType
     /** @var \Claroline\CoreBundle\Manager\LocaleManager */
     private $localeManager;
 
+    /** @var \Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler */
+    private $platformConfigHandler;
+
     /**
      * @DI\InjectParams({
-     *     "badgeRuleType" = @DI\Inject("claroline.form.badge.rule"),
-     *     "localeManager" = @DI\Inject("claroline.common.locale_manager")
+     *     "badgeRuleType"         = @DI\Inject("claroline.form.badge.rule"),
+     *     "localeManager"         = @DI\Inject("claroline.common.locale_manager"),
+     *     "platformConfigHandler" = @DI\Inject("claroline.config.platform_config_handler")
      * })
      */
-    public function __construct(BadgeRuleType $badgeRuleType, LocaleManager $localeManager)
+    public function __construct(BadgeRuleType $badgeRuleType, LocaleManager $localeManager, PlatformConfigurationHandler $platformConfigHandler)
     {
-        $this->badgeRuleType = $badgeRuleType;
-        $this->localeManager = $localeManager;
+        $this->badgeRuleType         = $badgeRuleType;
+        $this->localeManager         = $localeManager;
+        $this->platformConfigHandler = $platformConfigHandler;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $languages = $this->localeManager->getAvailableLocales();
+        $platformLanguage = $this->platformConfigHandler->getParameter('locale_language');
+        $languages        = array_values($this->localeManager->getAvailableLocales());
+        $sortedLanguages  = array();
+
+        usort($languages, function ($language1, $language2) use($platformLanguage) {
+            if ($language1 === $platformLanguage) {
+                return -1;
+            }
+            else if ($language2 === $platformLanguage) {
+                return 1;
+            }
+            else {
+                return 0;
+            }
+        });
 
         $translationBuilder = $builder->create('translations', 'form', array('virtual' => true));
 
