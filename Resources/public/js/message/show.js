@@ -85,7 +85,7 @@
     function displayPager(type, normalRoute, searchRoute)
     {
         currentType = type;
-        var toList = $('#message_form_to').attr('value');
+        var toList = $('#message_form_to').val();
         var toListArray = toList.split(';');
         var search = toListArray[toListArray.length - 1].trim();
         var route;
