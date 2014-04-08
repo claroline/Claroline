@@ -17,6 +17,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use JMS\SerializerBundle\Annotation\Type;
 use Claroline\CoreBundle\Entity\Tool\OrderedTool;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\WorkspaceRepository")
@@ -122,6 +123,7 @@ abstract class AbstractWorkspace
 
     /**
      * @ORM\Column(name="creation_date", type="integer")
+     * @Gedmo\Timestampable(on="create")
      */
     protected $creationDate;
 
@@ -243,12 +245,14 @@ abstract class AbstractWorkspace
 
     public function setCreationDate($creationDate)
     {
-        return $this->creationDate = $creationDate;
+        $this->creationDate = $creationDate;
     }
 
     public function getCreationDate()
     {
-        return $this->creationDate;
+        $date = date('d-m-Y H:i', $this->creationDate);
+
+        return (new \Datetime($date));
     }
 
 }
