@@ -40,6 +40,14 @@ class Version20140408093225 extends AbstractMigration
         $this->addSql("
             DROP TABLE __temp__ujm_type_qcm
         ");
+        
+        $this->addSql("
+            UPDATE ujm_type_qcm SET code=1 WHERE value='Multiple response'
+        ");
+        $this->addSql("
+            UPDATE ujm_type_qcm SET code=2 WHERE value='Unique response'
+        ");
+        
         $this->addSql("
             CREATE UNIQUE INDEX UNIQ_4C21382C77153098 ON ujm_type_qcm (code)
         ");
@@ -69,22 +77,12 @@ class Version20140408093225 extends AbstractMigration
         $this->addSql("
             DROP TABLE __temp__ujm_type_open_question
         ");
-        $this->addSql("
-            CREATE UNIQUE INDEX UNIQ_ABC1CC4777153098 ON ujm_type_open_question (code)
-        ");
         
-        $this->addSql("
-            UPDATE ujm_type_qcm SET code=1 WHERE value='Multiple response'
-        ");
-        $this->addSql("
-            UPDATE ujm_type_qcm SET code=2 WHERE value='Unique response'
-        ");
-       
         $this->addSql("
             UPDATE ujm_type_open_question SET code=1 WHERE value='numerical'
         ");
         $this->addSql("
-            UPDATE ujm_type_open_question SET code=2 WHERE value= long'
+            UPDATE ujm_type_open_question SET code=2 WHERE value= 'long'
         ");
         $this->addSql("
             UPDATE ujm_type_open_question SET code=3 WHERE value='short'
@@ -92,6 +90,11 @@ class Version20140408093225 extends AbstractMigration
         $this->addSql("
             UPDATE ujm_type_open_question SET code=4 WHERE value='oneWord'
         ");
+        
+        $this->addSql("
+            CREATE UNIQUE INDEX UNIQ_ABC1CC4777153098 ON ujm_type_open_question (code)
+        ");
+        
     }
 
     public function down(Schema $schema)
