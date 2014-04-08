@@ -1,20 +1,23 @@
 {% import 'InnovaPathBundle::Player/components/macros.html.twig' as macros %}
 
-<ul class="nav nav-tabs">
-    {% set allParents = currentStep.getParents() %}
-    {% for parent in allParents %}
-        {% for resource in parent.step2ResourceNodes if resource.propagated == true %}
-            {% set thisResourceIsExcluded = false %}
-            {% for resourceCurrentStep in currentStep.step2ResourceNodes if resourceCurrentStep.excluded == true and resourceCurrentStep.resourceNode == resource.resourceNode %}
-                    {% set thisResourceIsExcluded = true %}
-            {% endfor %}
-            {% if thisResourceIsExcluded == false %}
-                {{ macros.displayResourceButton(resource, parent) }}
-            {% endif %}
-        {% endfor %}
-    {% endfor %}
+{% set allParents = currentStep.getParents() %}
 
-    {% for resource in currentStep.step2ResourceNodes if resource.excluded == false %}
+<div id="resources-btn">
+    <ul class="nav nav-tabs">
+        {% for parent in allParents %}
+            {% for resource in parent.step2ResourceNodes if resource.propagated == true %}
+                {% set thisResourceIsExcluded = false %}
+                {% for resourceCurrentStep in currentStep.step2ResourceNodes if resourceCurrentStep.excluded == true and resourceCurrentStep.resourceNode == resource.resourceNode %}
+                        {% set thisResourceIsExcluded = true %}
+                {% endfor %}
+                {% if thisResourceIsExcluded == false %}
+                    {{ macros.displayResourceButton(resource, parent) }}
+                {% endif %}
+            {% endfor %}
+        {% endfor %}
+
+        {% for resource in currentStep.step2ResourceNodes if resource.excluded == false %}
             {{ macros.displayResourceButton(resource, currentStep) }}
-    {% endfor %}
-</ul>
+        {% endfor %}
+    </ul>
+</div>
