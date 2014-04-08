@@ -274,7 +274,7 @@ class RolesController extends Controller
      * @EXT\Route(
      *     "/{workspace}/users/unregistered/page/{page}/search/{search}/max/{max}/order/{order}/direction/{direction}",
      *     name="claro_workspace_unregistered_user_list_search",
-     *     defaults={"page"=1, "max"=50, "order"="id"},
+     *     defaults={"page"=1, "max"=50, "order"="id", "direction"="ASC"},
      *     options = {"expose"=true}
      * )
      * @EXT\ParamConverter(
