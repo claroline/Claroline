@@ -7,7 +7,6 @@ $(document).ready(function() {
         newLink.attr("data-path", newLink.attr('href'));
         newLink.attr('href', '#newSectionContainer-'+newLink.attr('data-section'));
         var containerNewForm = null;
-        console.log(newLink.attr("data-empty"));
         newLink.on('click', function (event){
             if(typeof newLink.attr("data-empty") === 'undefined'){
                 event.preventDefault();
@@ -42,7 +41,6 @@ $(document).ready(function() {
         editLink.attr("data-path", editLink.attr('href'));
         editLink.attr('href', '#editSectionContainer-'+editLink.attr('data-section'));
         var containerNewForm = null;
-        console.log(editLink.attr("data-empty"));
         editLink.on('click', function (event){
             if(typeof editLink.attr("data-empty") === 'undefined'){
                 event.preventDefault();
