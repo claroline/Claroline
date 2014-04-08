@@ -14,7 +14,7 @@
     border-radius: 3px;
     font-size: 0;
     margin: 0;
-    margin-bottom: 15px;
+    margin-bottom: 20px;
 }
 
 .path-player .breadcrumbs ul,
@@ -46,7 +46,8 @@
     text-shadow:    -1px 0 0 rgba(0, 0, 0, 0.2), 
                     1px 0 0 rgba(0, 0, 0, 0.7),
                     0 -1px 0 rgba(0, 0, 0, 0.2),
-                    0 1px 0 rgba(0, 0, 0, 0.7);}
+                    0 1px 0 rgba(0, 0, 0, 0.7);
+}
 
 .path-player .breadcrumbs ul > li > a:after {
     content: "";

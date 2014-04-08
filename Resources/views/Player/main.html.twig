@@ -34,10 +34,6 @@
         </div>
     </div>
     
-    {% if currentStep == path.getRootStep %}
-            {% include 'InnovaPathBundle::Player/components/alerts.html.twig' %}
-    {% endif %}
-    
     <div class="content row">
         {# resource #}
         <div class="col-md-12">
@@ -53,5 +49,11 @@
 
 {% block javascripts %}
     {{ parent() }}
+    <script>
+        var pathId = {{ path.id }};
+        {% if currentStep == path.getRootStep %}
+        var isRoot = true;
+        {% endif %}
+    </script>
     <script type="text/javascript" src="{{ asset('bundles/innovapath/js/Player/player.js') }}"></script>
 {% endblock %}

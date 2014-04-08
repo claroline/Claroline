@@ -9,11 +9,15 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\DependencyInjection\ContainerAware;
+use Symfony\Component\HttpFoundation\Request;
 
 use Innova\PathBundle\Entity\Path\Path;
 use Innova\PathBundle\Entity\Step;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
-use Symfony\Component\DependencyInjection\ContainerAware;
+
+
 
 /**
  * Player controller
@@ -159,6 +163,52 @@ class PlayerController extends ContainerAware
             'currentStep' => $currentStep,
             'edit' => $edit,
             'form' => $form->createView()
+        );
+    }
+
+    /**
+    *
+    * @Route("/set-do-not-display-anymore", name="setDoNotDisplayAnymore", options={"expose"=true})
+    * @Method("GET")
+    */
+    public function setDoNotDisplayAnymore(Request $request)
+    {
+        $isChecked = $request->query->get('isChecked');
+        $pathId = $request->query->get('pathId');
+
+        $session = $this->container->get('request')->getSession();
+        if(!$doNotDisplay = $session->get('doNotDisplayAnymore')){
+            $doNotDisplay = array();
+        }
+
+        $doNotDisplay[$pathId] = $isChecked;
+
+        $session->set('doNotDisplayAnymore', $doNotDisplay);
+
+        return new JsonResponse(
+            array('isChecked' => $doNotDisplay[$pathId])
+        );
+    }
+
+    /**
+    *
+    * @Route("/get-do-not-display-anymore", name="getDoNotDisplayAnymore", options={"expose"=true})
+    * @Method("GET")
+    */
+    public function getDoNotDisplayAnymore(Request $request)
+    {
+        $pathId = $request->query->get('pathId');
+        $isChecked = null;
+
+        $session = $this->container->get('request')->getSession();
+        if($doNotDisplay = $session->get('doNotDisplayAnymore') && isset($doNotDisplay[$pathId]) && $doNotDisplay[$pathId]) {
+            $isChecked = true;
+        } else {
+            $isChecked = false;
+        }
+
+        return new JsonResponse(
+            array('isChecked' => $isChecked)
         );
     }
 }

@@ -3,10 +3,8 @@
     <table id="otherpaths" class="table table-hover in" style="margin-top: -1px;">
         <thead>
             <tr>
-                <th>{{ 'status' | trans({}, 'innova_tools') }}</th>
                 <th>{{ 'name' | trans({}, 'innova_tools') }}</th>
                 <th>{{ 'description' | trans({}, 'innova_tools') }}</th>
-                <th class="text-right">{{ 'available_actions' | trans({}, 'innova_tools') }}</th>
             </tr>
         </thead>
         <tbody>
@@ -14,27 +12,14 @@
             {% if path.published %}
             <tr>
                 <td>
-                    {% if path.published %}
-                        {% if not path.modified %}
-                            <span class="text-success">[{{ 'published' | trans({}, 'innova_tools') }}]</span>
-                        {% else %}
-                            <span class="text-warning">
-                                [{{ 'published' | trans({}, 'innova_tools') }} {{ 'modified' | trans({}, 'innova_tools') }}]
-                            </span>
-                        {% endif %}
-                    {% endif %}
+                    <strong>
+                        <a href="{{ path('innova_path_player_index', {workspaceId: workspace.id, pathId: path.id, stepId: path.getRootStep().id}) }}" />
+                        {{ path.resourceNode.name }}
+                        </a>
+                    </strong>
                 </td>
                 <td>
-                    <strong>{{ path.resourceNode.name }}</strong>
-                </td>
-                <td>
-                    {{ path.description | striptags | truncate(40, true, ' [...]') }}
-                </td>
-                <td align="right">
-                    <a href="{{ path('innova_path_player_index', {workspaceId: workspace.id, pathId: path.id, stepId: path.getRootStep().id}) }}" data-original-title="{{ 'play' | trans({}, 'innova_tools') }}" class="btn btn-xs btn-default" />
-                        <span class="icon-play"></span>
-                        {{ 'play' | trans({}, 'innova_tools') }}
-                    </a>
+                    <em>{{ path.description | striptags | truncate(40, true, ' [...]') }}</em>
                 </td>
             </tr>
             {% endif %}

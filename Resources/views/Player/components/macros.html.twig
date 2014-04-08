@@ -1,9 +1,7 @@
 {% macro displayResourceButton(resource, step) %}
-    <li class="resource-tab">
-        <a target="_blank" href="{{ path('claro_resource_open', {'node': resource.resourceNode.id, 'resourceType': resource.resourceNode.resourceType.name }) }}"  data-resource-id = "{{ resource.resourceNode.id }}">
-            <span rel="tooltip" data-original-title="{{ step.name }}" class="lvl-{{ step.lvl + 1 }} lvl-indicator-right">&nbsp;</span>
-            <img rel="tooltip" data-original-title="{{ resource.resourceNode.resourceType.name | trans({}, 'resource') }}" height="20px" src="{{ asset(resource.resourceNode.icon.relativeUrl) }}" />
-            <span >{{ resource.resourceNode.name }}</span>
+    <li class="resource-tab" rel="tooltip" data-original-title="{{ resource.resourceNode.resourceType.name | trans({}, 'resource') }}">
+        <a class="resource-link lvl-{{ step.lvl + 1 }}" target="_blank" href="{{ path('claro_resource_open', {'node': resource.resourceNode.id, 'resourceType': resource.resourceNode.resourceType.name }) }}"  data-resource-id = "{{ resource.resourceNode.id }}">
+            <span class="resource-name">{{ resource.resourceNode.name }}</span>
         </a>
     </li>
 {% endmacro %}
@@ -58,7 +56,7 @@
     {% endif %}
 
     <li class="dropdown lvl-{{ step.lvl + 1 }} {{ isTerminalClass }} {{ class }}">
-        <a rel="tooltip" data-original-title="{{ step.name }}" class="dropdown-label" href="{{ path('innova_path_player_index', { workspaceId: workspace.id, pathId: path.id, stepId: step.id }) }}">
+        <a class="dropdown-label" href="{{ path('innova_path_player_index', { workspaceId: workspace.id, pathId: path.id, stepId: step.id }) }}">
             {{ step.name }}
         </a>
         {% set stepSiblings = step.siblings %}
