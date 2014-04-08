@@ -26,7 +26,7 @@ function creationQCM(expectedAnswer, response, point, comment, positionForce, ad
     whichChange();
 
     // when select a radio box, deselect the other because can only have one selected
-    $(':radio').live('click', function () {
+    $(":radio").click(function(){
        if ($(this).is(':checked')) {
            $('#newTable').find(('tr:not(:first)')).each(function () {
               $(this).find('input').eq(1).removeAttr('checked');
@@ -102,7 +102,7 @@ function creationQCMEdit(expectedAnswer, response, point, comment, positionForce
     whichChecked();
     whichChange();
 
-    $(':radio').live('click', function () {
+    $(':radio').on('click', function () {
        if ($(this).is(':checked')) {
            $('#newTable').find(('tr:not(:first)')).each(function () {
               $(this).find('input').eq(1).removeAttr('checked');

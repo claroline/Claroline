@@ -3,7 +3,7 @@ function editionAv() {
 
     var popup = false;
     var row;
-    $('.button_editionA').live('click', function () {
+    $('.button_editionA').on('click', function () {
         row = $(this).parents('tr.ligne_choice:first');
         if (row.find('#divReplaceTextarea').length) {
             //var text0 = $("#divReplaceTextarea").html();
