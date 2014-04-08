@@ -48,7 +48,11 @@ resource_save: Sauvegarder la ressource
 resource_name: Nom
 resource_description: Description
 resources_browse: Parcourir
-resource_propagate_to_children: Rendre cette ressource visible pour les étapes enfants
+resource_propagate_to_children: Rendre cette ressource disponible dans les étapes enfants
+resource_hide_parent: Masquer dans cette étape
+resource_show_parent: Afficher dans cette étape
+resource_propagate : Rendre disponible dans les étapes enfants
+resource_no_propagate : Rendre indisponible dans les étapes enfants
 
 # s
 save: Sauvegarder
@@ -66,8 +70,11 @@ step_no_description: Il n'y a aucune description pour cette étape.
 select_image: Choisir une image
 step_has_duration: l'étape a une durée
 step_delete_confirm: Êtes-vous sur de vouloir supprimer cette étape ?
+step_delete_children_confirm: Êtes-vous sur de vouloir supprimer ces étapes ?
 step_delete: Supprimer l'étape
+step_delete_children: Supprimer les enfants
 step_delete_title: <span class="icon-trash"></span> Suppression de l'étape : <strong>&lt;%stepName%&gt;</strong>
+step_delete_children_title: <span class="icon-trash"></span> Suppression des enfants de l'étape : <strong>&lt;%stepName%&gt;</strong>
 select_image_title: Sélectionner une image pour l'étape
 step_edit: Modifier l'étape
 step_add_child: Ajouter un enfant

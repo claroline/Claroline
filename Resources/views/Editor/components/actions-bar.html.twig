@@ -14,7 +14,7 @@
             <span class="icon-save"></span> {{ 'save'|trans({}, 'path_editor') }}
         </button>
 
-        <a href="{{ path('claro_workspace_open_tool', { workspaceId: workspace.id, toolName: 'innova_path' }) }}" class="btn btn-warning">
+        <a ng-click="closeEditor('{{ path('claro_workspace_open_tool', { workspaceId: workspace.id, toolName: 'innova_path' }) }}')" href="#" class="btn btn-warning">
             <span class="icon-remove-sign"></span> {{ 'back'|trans({}, 'path_editor') }}
         </a>
     </div>

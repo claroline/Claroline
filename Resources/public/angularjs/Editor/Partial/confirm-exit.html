@@ -1,0 +1,15 @@
+<div class="modal-header">
+    <h4 class="modal-title"></h4>
+</div>
+
+<div class="modal-body">
+    The path {{ path.name }} has been modified.
+    <br/>
+    Do you want to save your changes ?
+</div>
+
+<div class="modal-footer">
+    <button class="btn btn-primary" ng-click="exitAndSave()">Save and Close editor</button>
+    <button class="btn btn-default" ng-click="exit()">Discard changes</button>
+    <button class="btn btn-default cancel" ng-click="cancel()">{{ 'cancel' | trans:{}:'path_editor' }}</button>
+</div>

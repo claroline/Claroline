@@ -1,4 +1,4 @@
-{% extends "InnovaPathBundle::layout.html.twig" %}
+{% extends "ClarolineCoreBundle:Workspace:layout.html.twig" %}
 
 {% block stylesheets %}
     {{ parent() }}
@@ -13,37 +13,36 @@
 
 {% block content %}
     {% include 'InnovaPathBundle:Editor:components/breadcrumbs.html.twig' with { workspace: workspace } %}
-
     {{ form_start(form, {'attr': {'class': 'form-horizontal', 'novalidate': true}}) }}
-    <div ng-cloak="" ng-app="EditorApp" class="path-editor">
-        <div ng-controller="AlertCtrl" class="alerts">
-            {% include 'InnovaPathBundle:Editor:components/messages.html.twig' %}
+        <div ng-cloak="" ng-app="EditorApp" class="path-editor">
+            <div ng-controller="AlertCtrl" class="alerts">
+                {% include 'InnovaPathBundle:Editor:components/messages.html.twig' %}
+            </div>
+
+            <div ng-controller="MainCtrl">
+                <div ng-controller="TemplateCtrl" id="templates-sidebar" style="display:none;" >
+                    {% include 'InnovaPathBundle:Editor:components/templates-sidebar.html.twig' %}
+                </div>
+
+                {% include 'InnovaPathBundle:Editor:components/actions-bar.html.twig' with { workspace: workspace } %}
+
+                <div ng-controller="GlobalCtrl" class="row">
+                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                        {% include 'InnovaPathBundle:Editor:components/step1-global.html.twig' %}
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div ng-controller="ScenarioCtrl" class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                        {% include 'InnovaPathBundle:Editor:components/step2-scenario.html.twig' %}
+                    </div>
+
+                    <div ng-controller="PreviewStepCtrl" class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                        {% include 'InnovaPathBundle:Editor:components/step3-step-config.html.twig' %}
+                    </div>
+                </div>
+            </div>
         </div>
-        
-        <div ng-controller="MainCtrl">
-            <div ng-controller="TemplateCtrl" id="templates-sidebar" style="display:none;" >
-                {% include 'InnovaPathBundle:Editor:components/templates-sidebar.html.twig' %}
-            </div>
-            
-            {% include 'InnovaPathBundle:Editor:components/actions-bar.html.twig' with { workspace: workspace } %}
-            
-            <div ng-controller="GlobalCtrl" class="row">
-                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                    {% include 'InnovaPathBundle:Editor:components/step1-global.html.twig' %}
-                </div>
-            </div>
-            
-            <div class="row">
-                <div ng-controller="ScenarioCtrl" class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-                    {% include 'InnovaPathBundle:Editor:components/step2-scenario.html.twig' %}
-                </div>
-                
-                <div ng-controller="PreviewStepCtrl" class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-                    {% include 'InnovaPathBundle:Editor:components/step3-step-config.html.twig' %}
-                </div>
-            </div>
-        </div>
-    </div>
     {{ form_end(form) }}
 {% endblock %}
 
@@ -88,10 +87,12 @@
         '@InnovaPathBundle/Resources/public/angularjs/History/Factory/HistoryFactory.js'
         '@InnovaPathBundle/Resources/public/angularjs/Clipboard/Factory/ClipboardFactory.js'
         '@InnovaPathBundle/Resources/public/angularjs/Path/Factory/PathFactory.js'
+        '@InnovaPathBundle/Resources/public/angularjs/Path/Filter/PathToJsonFilter.js'
         '@InnovaPathBundle/Resources/public/angularjs/Editor/Controller/MainCtrl.js'
         '@InnovaPathBundle/Resources/public/angularjs/Editor/Controller/GlobalCtrl.js'
         '@InnovaPathBundle/Resources/public/angularjs/Editor/Controller/ScenarioCtrl.js'
         '@InnovaPathBundle/Resources/public/angularjs/Editor/Controller/PreviewStepCtrl.js'
+        '@InnovaPathBundle/Resources/public/angularjs/Editor/Controller/ConfirmExitModalCtrl.js'
         '@InnovaPathBundle/Resources/public/angularjs/Step/Factory/StepFactory.js'
         '@InnovaPathBundle/Resources/public/angularjs/Step/Controller/SelectImageModalCtrl.js'
         '@InnovaPathBundle/Resources/public/angularjs/Confirm/Controller/ConfirmModalCtrl.js'
@@ -108,6 +109,7 @@
     
     {# Set some vars needed by Angular parts #}
     <script type="text/javascript">
+        EditorApp.formName      = "{{ form.vars.name }}";
         EditorApp.currentPath   = {{ form.vars.value.structure | raw }};
         EditorApp.appDir        = "{{ app.request.getBaseUrl }}";
         EditorApp.webDir        = "{{ asset('') }}";

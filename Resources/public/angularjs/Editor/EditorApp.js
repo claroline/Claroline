@@ -32,6 +32,8 @@ EditorApp.factory('PathFactory', PathFactory);
 EditorApp.controller('GlobalCtrl', GlobalCtrl);
 EditorApp.controller('ScenarioCtrl', ScenarioCtrl);
 EditorApp.controller('PreviewStepCtrl', PreviewStepCtrl);
+EditorApp.controller('ConfirmExitModalCtrl', ConfirmExitModalCtrl);
+EditorApp.filter('path_to_json', PathToJsonFilter);
 
 // Steps
 EditorApp.factory('StepFactory', StepFactory);

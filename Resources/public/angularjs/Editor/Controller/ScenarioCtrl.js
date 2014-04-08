@@ -31,10 +31,9 @@ function ScenarioCtrl($scope, $modal, HistoryFactory, PathFactory, StepFactory) 
         // Search step to remove function
         function walk(path) {
             var children = path.children;
-            var i;
 
             if (children) {
-                i = children.length;
+                var i = children.length;
                 while (i--) {
                     if (children[i] === step) {
                         return children.splice(i, 1);
@@ -71,8 +70,21 @@ function ScenarioCtrl($scope, $modal, HistoryFactory, PathFactory, StepFactory) 
      * Remove all children of the specified step
      */
     $scope.removeChildren = function(step) {
-        step.children = [];
-        HistoryFactory.update($scope.path);
+        // Display confirm modal
+        var modalInstance = $modal.open({
+            templateUrl: EditorApp.webDir + 'bundles/innovapath/angularjs/Confirm/Partial/confirm.html',
+            controller: 'ConfirmModalCtrl',
+            resolve: {
+                title: function () { return Translator.get('path_editor:step_delete_children_title', { stepName: step.name }) },
+                message: function () { return Translator.get('path_editor:step_delete_children_confirm') },
+                confirmButton: function () { return Translator.get('path_editor:step_delete_children') }
+            }
+        });
+
+        modalInstance.result.then(function() {
+            step.children = [];
+            HistoryFactory.update($scope.path);
+        });
     };
 
     /**

@@ -2,6 +2,8 @@
 
 namespace Innova\PathBundle\Form\Type;
 
+use Symfony\Component\Form\FormBuilderInterface;
+
 class PathType extends AbstractPathType
 {
     public function getName()

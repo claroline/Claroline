@@ -3,7 +3,7 @@
 /**
  * Main Controller
  */
-function MainCtrl($scope, HistoryFactory, ClipboardFactory, PathFactory, AlertFactory, StepFactory, ResourceFactory) {
+function MainCtrl($scope, $modal, $location, HistoryFactory, ClipboardFactory, PathFactory, AlertFactory, StepFactory, ResourceFactory) {
     $scope.path = EditorApp.currentPath;
     PathFactory.setPath($scope.path);
     
@@ -33,6 +33,8 @@ function MainCtrl($scope, HistoryFactory, ClipboardFactory, PathFactory, AlertFa
 
     // Store Preview step state before start editing to be able to cancel editing
     $scope.previewStepBackup = {};
+
+    $scope.saveAndClose = false;
 
     /**
      * Display step in the preview zone
@@ -91,12 +93,12 @@ function MainCtrl($scope, HistoryFactory, ClipboardFactory, PathFactory, AlertFa
         // Backup step
         $scope.previewStepBackup = jQuery.extend(true, {}, step);
 
-        if (null === step.who || step.who.length === 0) {
+        if (typeof step.who === 'undefined' || null === step.who || step.who.length === 0) {
             var whoDefault = StepFactory.getWhoDefault();
             step.who = whoDefault.id + "";
         }
 
-        if (null === step.where || step.where.length === 0) {
+        if (typeof step.where === 'undefined' || null === step.where || step.where.length === 0) {
             var whereDefault = StepFactory.getWhereDefault();
             step.where = whereDefault.id + "";
         }
@@ -141,5 +143,34 @@ function MainCtrl($scope, HistoryFactory, ClipboardFactory, PathFactory, AlertFa
         $scope.path = PathFactory.getPath();
 
         $scope.updatePreviewStep();
+    };
+
+    $scope.closeEditor = function (returnUrl) {
+        if (0 === HistoryFactory.getHistoryState()) {
+            // Path is not modified => exit without confirm
+            window.location = returnUrl;
+        }
+        else {
+            // There are pending modifications => ask for confirmation to know what to do
+            // Display confirm modal
+            var modalInstance = $modal.open({
+                templateUrl: EditorApp.webDir + 'bundles/innovapath/angularjs/Editor/Partial/confirm-exit.html',
+                controller: 'ConfirmExitModalCtrl'
+            });
+
+            modalInstance.result.then(function(method) {
+                if ('save' === method) {
+                    $scope.saveAndClose = true;
+
+                    // Force submit the form
+                    document[EditorApp.formName].submit();
+                }
+                else if ('discard') {
+                    window.location = returnUrl;
+                }
+
+                return true;
+            });
+        }
     };
 }

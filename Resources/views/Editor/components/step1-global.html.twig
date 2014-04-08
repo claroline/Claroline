@@ -24,9 +24,16 @@
         
         {{ form_row(form.structure, {
                 'attr': {
-                    'value' : '{{ path | json }}'
+                    'value' : '{{ path | path_to_json }}'
                 }
             }) 
+        }}
+
+        {{ form_row(form.saveAndClose, {
+                'attr': {
+                    'value' : '{{ saveAndClose }}'
+                }
+            })
         }}
     </div>
 </div>

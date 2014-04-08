@@ -176,20 +176,37 @@ class EditorController
         // Create form
         $form = $this->formFactory->create('innova_path', $path, $params);
 
+        // Add save and close flag to form
+        $form->add('saveAndClose', 'hidden', array ('mapped' => false));
+
         // Try to process data
         $this->pathHandler->setForm($form);
         if ($this->pathHandler->process()) {
+            $data = $this->pathHandler->getData();
+
             // Add user message
             $this->session->getFlashBag()->add(
                 'success',
                 $this->translator->trans('path_save_success', array(), 'path_editor')
             );
 
+            $saveAndClose = $form->get('saveAndClose')->getData();
+            if ($saveAndClose) {
+                // Redirect to list of paths
+                $url = $this->router->generate('claro_workspace_open_tool', array (
+                    'workspaceId' => $workspace->getId(),
+                    'toolName' => 'innova_path',
+                ));
+            }
+            else {
+                // Redirect to editor
+                $url = $this->router->generate('innova_path_editor_edit', array (
+                    'workspaceId' => $workspace->getId(),
+                    'id' => $path->getId(),
+                ));
+            }
+
             // Redirect to list
-            $url = $this->router->generate('innova_path_editor_edit', array (
-                'workspaceId' => $workspace->getId(),
-                'id' => $path->getId(),
-            ));
 
             return new RedirectResponse($url);
         }

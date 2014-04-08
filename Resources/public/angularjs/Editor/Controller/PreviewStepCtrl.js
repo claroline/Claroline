@@ -3,10 +3,10 @@
 function PreviewStepCtrl($scope, $modal, $http, HistoryFactory, PathFactory, StepFactory, ResourceFactory) {
     // Store resource icons
     $scope.resourceIcons = EditorApp.resourceIcons;
+    $scope.resourceZoom = 75;
 
     // Resource Picker config
     $scope.resourcePickerConfig = {
-        parentElement: '#resourcePicker',
         isPickerMultiSelectAllowed: true,
         isPickerOnly: true,
         isWorkspace: true,
@@ -15,13 +15,14 @@ function PreviewStepCtrl($scope, $modal, $http, HistoryFactory, PathFactory, Ste
         directoryId: EditorApp.wsDirectoryId,
         resourceTypes: EditorApp.resourceTypes,
         pickerCallback: function (nodes) {
+            console.log(this);
             if (typeof nodes === 'object' && nodes.length !== 0) {
+                if (typeof $scope.previewStep.resources !== 'object') {
+                    $scope.previewStep.resources = [];
+                }
+
                 for (var nodeId in nodes) {
                     var node = nodes[nodeId];
-
-                    if (typeof $scope.previewStep.resources != 'object') {
-                        $scope.previewStep.resources = [];
-                    }
 
                     // Check if resource has already been linked to the the step
                     var resourceExists = false;
@@ -41,15 +42,16 @@ function PreviewStepCtrl($scope, $modal, $http, HistoryFactory, PathFactory, Ste
                         resource.resourceId = nodeId;
 
                         $scope.previewStep.resources.push(resource);
+                        $scope.$apply();
                     }
                 }
 
                 // Update history
                 HistoryFactory.update($scope.path);
-
-                // Reload preview step data
-                $scope.updatePreviewStep();
             }
+
+            // Remove checked nodes for next time
+            nodes = {};
         }
     };
 
@@ -279,6 +281,20 @@ function PreviewStepCtrl($scope, $modal, $http, HistoryFactory, PathFactory, Ste
         // Update history
         HistoryFactory.update($scope.path);
     };
+
+    $scope.enableResourcePropagation = function (resource) {
+        resource.propagateToChildren = true;
+
+        // Update history
+        HistoryFactory.update($scope.path);
+    }
+
+    $scope.disableResourcePropagation = function (resource) {
+        resource.propagateToChildren = false;
+
+        // Update history
+        HistoryFactory.update($scope.path);
+    }
 
     /**
      * Exclude a resource herited from parents

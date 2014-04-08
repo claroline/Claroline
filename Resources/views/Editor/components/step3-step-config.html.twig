@@ -180,7 +180,7 @@
         </div>
     </div>
 
-    <div class="navbar navbar-default navbar-static-top" style="margin-bottom: 0; border-top: 1px solid #E7E7E7;">
+    <div class="navbar navbar-default navbar-static-top navbar-resources">
         <div class="navbar-header">
             <span class="h4 navbar-text">
                 <span class="icon-folder-open"></span>
@@ -193,7 +193,7 @@
             </li>
 
             <li>
-                <a href="#" ng-click="editResource()"><span class="icon-plus"></span> {{ 'resource_add'|trans({}, 'path_editor') }}</a>
+                <a href="#" ng-click="editResource()"><span class="icon-edit"></span> {{ 'resource_add'|trans({}, 'path_editor') }}</a>
             </li>
             <li class="dropdown">
                 <a class="dropdown-toggle" data-toggle="dropdown">
@@ -202,54 +202,46 @@
                     <span class="caret"></span>
                 </a>
                 <ul class="dropdown-menu zoom">
-                    <li class="active">
-                        <a href="#">50%</a>
-                    </li>
-                    <li>
-                        <a href="#">75%</a>
-                    </li>
-                    <li>
-                        <a href="#">100%</a>
-                    </li>
-                    <li>
-                        <a href="#">125%</a>
-                    </li>
-                    <li>
-                        <a href="#">150%</a>
-                    </li>
-                    <li>
-                        <a href="#">200%</a>
-                    </li>
+                    <li ng-class="{ active: 50 == resourceZoom }"><a href="#" ng-click="resourceZoom = 50">50%</a></li>
+                    <li ng-class="{ active: 75 == resourceZoom }"><a href="#" ng-click="resourceZoom = 75">75%</a></li>
+                    <li ng-class="{ active: 100 == resourceZoom }"><a href="#" ng-click="resourceZoom = 100">100%</a></li>
+                    <li ng-class="{ active: 125 == resourceZoom }"><a href="#" ng-click="resourceZoom = 125">125%</a></li>
+                    <li ng-class="{ active: 150 == resourceZoom }"><a href="#" ng-click="resourceZoom = 150">150%</a></li>
+                    <li ng-class="{ active: 200 == resourceZoom }"><a href="#" ng-click="resourceZoom = 200">200%</a></li>
                 </ul>
-
             </li>
         </ul>
     </div>
 
-    <p class="text-center" ng-show="(null == inheritedResources || inheritedResources.length == 0) && (null == previewStep.resources || previewStep.resources.length == 0)">
+    <p class="text-center" ng-show="(null == inheritedResources || inheritedResources.length == 0) && (null == previewStep.resources || previewStep.resources.length == 0)" style="margin-top: 10px;">
         <em>{{ 'step_no_resource'|trans({}, 'path_editor') }}</em>
     </p>
 
-    <ul class="nodes" ng-show="(null != inheritedResources && inheritedResources.length != 0) || (null != previewStep.resources && previewStep.resources.length != 0)">
+    <ul class="step-resources nodes" ng-show="(null != inheritedResources && inheritedResources.length != 0) || (null != previewStep.resources && previewStep.resources.length != 0)">
         <!-- Inherited resources from parents -->
-        <li ng-repeat="resource in inheritedResources" class="node-thumbnail node ui-state-default zoom75">
+        <li ng-repeat="resource in inheritedResources" ng-class="{excluded: resource.isExcluded}" class="resource-inherited resource-lvl-{% verbatim %}{{ resource.parentStep.lvl }}{% endverbatim %} node-thumbnail node ui-state-default zoom{% verbatim %}{{ resourceZoom }}{% endverbatim %}">
             <div class="node-element" style="background-image: url('{% verbatim %}{{ resourceIcons[resource.type] }}{% endverbatim %}');"></div>
-
             <div class="dropdown">
                 <a class="dropdown-toggle name dropdown-thumbnail" href="#" data-toggle="dropdown" role="button">
                     <div class="node-name">{% verbatim %}{{ resource.name }}{% endverbatim %} <span class="icon-caret-down"></span></div>
                 </a>
                 <ul class="dropdown-menu" role="menu">
                     <li>
-                        <a class="node-menu-action" href="#" ng-show="resource.isExcluded" ng-click="includeParentResource(resource)">Afficher dans cette étape</a>
-                        <a class="node-menu-action" href="#" ng-show="!resource.isExcluded" ng-click="excludeParentResource(resource)">Masquer dans cette étape</a>
+                        <a class="node-menu-action" href="#" ng-show="resource.isExcluded" ng-click="includeParentResource(resource)">
+                            <span class="icon-eye-open"></span>
+                            {{ 'resource_show_parent'|trans({}, 'path_editor') }}
+                        </a>
+                        <a class="node-menu-action" href="#" ng-show="!resource.isExcluded" ng-click="excludeParentResource(resource)">
+                            <span class="icon-eye-close"></span>
+                            {{ 'resource_hide_parent'|trans({}, 'path_editor') }}
+                        </a>
                     </li>
                 </ul>
             </div>
         </li>
 
         <!-- Specific resources -->
-        <li ng-repeat="resource in previewStep.resources" class="node-thumbnail node ui-state-default zoom75">
+        <li ng-repeat="resource in previewStep.resources" ng-class="{propagated: resource.propagateToChildren}" class="resource node-thumbnail node ui-state-default zoom{% verbatim %}{{ resourceZoom }}{% endverbatim %}">
             <div class="node-element" style="background-image: url({% verbatim %}{{ resourceIcons[resource.type] || resourceIcons['custom/default'] }}{% endverbatim %});"></div>
 
             <div class="dropdown">
@@ -257,12 +249,28 @@
                     <div class="node-name">{% verbatim %}{{ resource.name }}{% endverbatim %} <span class="icon-caret-down"></span></div>
                 </a>
                 <ul class="dropdown-menu" role="menu">
-                    <li ng-show="null == resource.resourceId || resource.resourceId.lengt == 0">
-                        <a class="node-menu-action" href="#" ng-click="editResource(resource)">{{ 'resource_edit'|trans({}, 'path_editor') }}
+                    <li ng-show="null == resource.resourceId || resource.resourceId.length == 0">
+                        <a class="node-menu-action" href="#" ng-click="editResource(resource)">
+                            <span class="icon-pencil"></span>
+                            {{ 'resource_edit'|trans({}, 'path_editor') }}
                         </a>
                     </li>
                     <li>
-                        <a class="node-menu-action" href="#" ng-click="removeResource(resource)">{{ 'resource_delete'|trans({}, 'path_editor') }}</a>
+                        <a class="node-menu-action" href="#" ng-show="!resource.propagateToChildren" ng-click="enableResourcePropagation(resource)">
+                            <span class="icon-eye-open"></span>
+                            {{ 'resource_propagate'|trans({}, 'path_editor') }}
+                        </a>
+
+                        <a class="node-menu-action" href="#" ng-show="resource.propagateToChildren" ng-click="disableResourcePropagation(resource)">
+                            <span class="icon-eye-close"></span>
+                            {{ 'resource_no_propagate'|trans({}, 'path_editor') }}
+                        </a>
+                    </li>
+                    <li>
+                        <a class="node-menu-action" href="#" ng-click="removeResource(resource)">
+                            <span class="icon-trash"></span>
+                            {{ 'resource_delete'|trans({}, 'path_editor') }}
+                        </a>
                     </li>
                 </ul>
             </div>

@@ -1,5 +1,5 @@
 # b
-back: Quit editor
+back: Close editor
 
 # c
 create: Create
@@ -47,6 +47,10 @@ resource_edit_title: Resource
 resource_save: Save resource
 resources_browse: Browse
 resource_propagate_to_children: Make this resource visible in children
+resource_hide_parent: Hide in this step
+resource_show_parent: Display in this step
+resource_propagate : Make available in children
+resource_no_propagate : Make unavailable in children
 
 # s
 save: Save
@@ -64,8 +68,11 @@ step_no_description: There is no description for this step.
 select_image: Select image
 step_has_duration: step has a duration
 step_delete_confirm: Are you sure you want to delete this step ?
+step_delete_children_confirm: Are you sure you want to delete this steps ?
 step_delete: Delete step
+step_delete_children: Delete children
 step_delete_title: <span class="icon-trash"></span> Delete step : <strong>&lt;%stepName%&gt;</strong>
+step_delete_children_title: <span class="icon-trash"></span> Delete children of step : <strong>&lt;%stepName%&gt;</strong>
 select_image_title: Select step image
 step_edit: Edit step
 step_add_child: Add a child

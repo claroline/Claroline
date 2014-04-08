@@ -10,7 +10,7 @@ abstract class AbstractPathType extends AbstractType
 {
     abstract function getName();
     
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options = array ())
     {
         $builder->add('name', 'text', array ('required' => true));
         $builder->add('description', 'text', array ('required' => false));

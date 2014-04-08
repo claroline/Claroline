@@ -11,3 +11,33 @@
 .panel-heading {
 	position: relative;
 }
+
+.navbar-resources {
+    z-index: 1; /* Prevent navbar to be over modal backdrop */
+    margin-bottom: 0;
+    border-top: 1px solid #E7E7E7;
+}
+
+.navbar-resources .dropdown-toggle {
+    cursor: pointer;
+}
+
+.resource-inherited.excluded {
+    text-decoration: line-through;
+    opacity: 0.8;
+}
+
+.resource.propagated:before {
+    font-family: FontAwesome;
+    font-weight: normal;
+    font-style: normal;
+    text-decoration: inherit;
+    font-size: 18px;
+    -webkit-font-smoothing: antialiased;
+    content: "\f061";
+    position: absolute;
+    top: -4px;
+    left: 4px;
+    height: 20px;
+    width: 20px;
+}

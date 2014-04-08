@@ -90,7 +90,11 @@ function ResourceFactory(PathFactory) {
                                 if (currentStep.resources[j].propagateToChildren) {
                                     // Current resource must be available for children
                                     var resource = currentStep.resources[j];
-                                    resource.parentStep = currentStep.name;
+                                    resource.parentStep = {
+                                        id: currentStep.id,
+                                        lvl: currentStep.lvl,
+                                        name: currentStep.name
+                                    };
                                     resource.isExcluded = stepToFind.excludedResources.indexOf(resource.id) != -1;
                                     inheritedResources.unshift(resource);
                                 }
