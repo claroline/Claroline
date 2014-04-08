@@ -84,16 +84,16 @@
                             {% if isModerator %}
                                 {% if subject['isSticked'] == true %}
                                     <a href="{{ path('claro_subject_unstick', {'subject': subject['id']}) }}">
-                                        <i class="icon-paper-clip"></i> {{ 'unstick' | trans({}, 'forum') }}
+                                        <i class="icon-pushpin"></i> {{ 'unstick' | trans({}, 'forum') }}
                                     </a>
                                 {% else %}
                                     <a href="{{ path('claro_subject_stick', {'subject': subject['id']}) }}">
-                                        <i class="icon-paper-clip"></i> {{ 'stick' | trans({}, 'forum') }}
+                                        <i class="icon-pushpin"></i> {{ 'stick' | trans({}, 'forum') }}
                                     </a>
                                 {% endif %}
                             {% else %}
                                 {% if subject['isSticked'] == true %}
-                                    <i class="icon-paper-clip"></i> {{ 'stuck' | trans({}, 'forum') }}
+                                    <i class="icon-pushpin"></i> {{ 'stuck' | trans({}, 'forum') }}
                                 {% endif %}
                             {% endif %}
                         </td>
