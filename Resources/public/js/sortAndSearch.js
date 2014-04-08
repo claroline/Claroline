@@ -1,3 +1,7 @@
+// To import questions
+var questionId = [];
+var pos = 0;
+
 // To know if sorting is up or down
 var clickC = clickTi = clickTy = clickI = clickL = clickT = clickU = clickN = clickS = clickM
     = clickE = clickSps = clickSn = clickSp = clickDl = clickTl = clickQl = clickCl = clickPl = clickRl = 'no';
@@ -592,108 +596,28 @@ function searchUserPaper(path) {
     });
 }
 
-function importQuestion(pathmy, pathshared, exoID, pageToGo, nothingToImport) {
-    var questionIdArrayMy = [];
-    var questionIdArrayShared = [];
-    var i = 0;
-    var j = 0;
+function addQuestionInOrder(idQ) {
+    var position = questionId.indexOf(idQ);
 
-    $("input[type=checkbox][name=my]").each(function () {
-        if ($(this).is(':checked')) {
-            questionIdArrayMy[i] = $(this).val();
-            i++;
-        }
-    });
-
-    $("input[type=checkbox][name=shared]").each(function () {
-        if ($(this).is(':checked')) {
-            questionIdArrayShared[j] = $(this).val();
-            j++;
-        }
-    });
-
-    if (i == 0 && j == 0) {
-        alert(nothingToImport);
-    } else if (i == 0) {
-        ajaxImport(pathshared, exoID, pageToGo, questionIdArrayShared, true, '');
-    } else if (j == 0) {
-        ajaxImport(pathmy, exoID, pageToGo, questionIdArrayMy, true, '');
+    if (position != -1) {
+        questionId.splice(position, 1);
     } else {
-        ajaxImport(pathmy, exoID, pageToGo, questionIdArrayMy, false, '');
-        ajaxImport(pathshared, exoID, pageToGo, questionIdArrayShared, true, '');
+        questionId[pos] = idQ;
+        pos++;
     }
 }
 
-function importQuestionSearch(path, exoID, nothingToImport) {
-    var type;
-    var  arrayIdQuestion = [];
-    var i = 0;
-
-    $("input[type=radio][name=WhereSearch]").each(function () {
-        if ($(this).is(':checked')) {
-            type = $(this).val();
-        }
-    });
-
-    $("input[type=checkbox][name=import]").each(function () {
-        if ($(this).is(':checked')) {
-            arrayIdQuestion[i] = $(this).val();
-            i++;
-        }
-    });
-
-    if (i == 0) {
+function importQuestion(pathImport, exoID, pageToGo, nothingToImport) {
+    if (pos == 0) {
         alert(nothingToImport);
-    } else {
-        if (type == 'my') {
-            ajaxImport(path, exoID, -1, arrayIdQuestion, true, type);
-        } else if (type == 'shared') {
-            ajaxImport(path, exoID, -1, arrayIdQuestion, true, type);
-        } else {
-            // all
-            ajaxImport(path, exoID, -1, arrayIdQuestion, true, type);
-        }
-    }
-}
-
-function ajaxImport(path, exoID, pageToGo, arrayIdQuestion, redirection, type) {
-
-    if (pageToGo != -1) {
-        if (redirection == true) {
-            $.ajax({
-                type: 'POST',
-                url: path,
-                data: {
-                    exoID : exoID,
-                    pageGoNow : pageToGo,
-                    qid: arrayIdQuestion
-                },
-                cache: false,
-                success: function (data) {
-                    window.location.href = data;
-                }
-            });
-        } else {
-            $.ajax({
-                type: 'POST',
-                url: path,
-                data: {
-                    exoID : exoID,
-                    pageGoNow : pageToGo,
-                    qid: arrayIdQuestion
-
-                }
-            });
-        }
     } else {
         $.ajax({
             type: 'POST',
-            url: path,
+            url: pathImport,
             data: {
                 exoID : exoID,
-                qid: arrayIdQuestion,
-                type: type
-
+                pageGoNow : pageToGo,
+                qid: questionId
             },
             cache: false,
             success: function (data) {
@@ -701,4 +625,28 @@ function ajaxImport(path, exoID, pageToGo, arrayIdQuestion, redirection, type) {
             }
         });
     }
+}
+
+function displayAllQuestionInSearch(pathSearch, exoID, displayAll) {
+    var type = $('#type').val();
+    var whatToFind = $('#whatToFind').val();
+    var where = $('#where').val();
+    var page = 1;
+
+    $.ajax({
+        type: 'GET',
+        url: pathSearch,
+        data: {
+            exoID : exoID,
+            type : type,
+            whatToFind : whatToFind,
+            where : where,
+            page : page,
+            displayAll : displayAll
+        },
+        cache: false,
+        success: function (data) {
+            $('#resultSearch').html(data);
+        }
+    });
 }

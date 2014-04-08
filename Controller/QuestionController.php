@@ -77,7 +77,7 @@ class QuestionController extends Controller
      * Lists the User's Question entities.
      *
      */
-    public function indexAction($pageNow = 0, $pageNowShared = 0, $categoryToFind = '', $titleToFind = '', $resourceId = -1)
+    public function indexAction($pageNow = 0, $pageNowShared = 0, $categoryToFind = '', $titleToFind = '', $resourceId = -1, $displayAll = 0)
     {
         $vars = array();
         $sharedWithMe = array();
@@ -96,7 +96,7 @@ class QuestionController extends Controller
         $click = $request->query->get('click', 'my'); // Get which array to fchange page (default 'my question')
         $pagerMy = $request->query->get('pagerMy', 1); // Get the page of the array my question (default 1)
         $pagerShared = $request->query->get('pagerShared', 1); // Get the pager of the array my shared question (default 1)
-        $max = 5; // Max of questions per page
+        $max = 10; // Max of questions per page
 
         // If change page of my questions array
         if ($click == 'my') {
@@ -181,6 +181,14 @@ class QuestionController extends Controller
             }
         }
 
+        if ($displayAll == 1) {
+            if (count($interactions) > count($shared)) {
+                $max = count($interactions);
+            } else {
+                $max = count($shared);
+            }
+        }
+
         $doublePagination = $this->doublePaginationWithIf($interactions, $sharedWithMe, $max, $pagerMy, $pagerShared, $pageNow, $pageNowShared);
 
         $interactionsPager = $doublePagination[0];
@@ -196,6 +204,7 @@ class QuestionController extends Controller
         $vars['pagerMy']              = $pagerfantaMy;
         $vars['pagerShared']          = $pagerfantaShared;
         $vars['shareRight']           = $shareRight;
+        $vars['displayAll']           = $displayAll;
 
         return $this->render('UJMExoBundle:Question:index.html.twig', $vars);
     }
@@ -775,7 +784,7 @@ class QuestionController extends Controller
     {
         $request = $this->get('request');
 
-        $max = 5; // Max per page
+        $max = 10; // Max per page
 
         $search = $request->query->get('search');
         $page = $request->query->get('page');
@@ -842,7 +851,7 @@ class QuestionController extends Controller
         $listDoc = $repository->findBy(array('user' => $user->getId()));
 
         // Pagination of the documents
-        $max = 5; // Max questions displayed per page
+        $max = 10; // Max questions displayed per page
 
         $page = $request->query->get('page', 1); // Which page
 
@@ -919,7 +928,7 @@ class QuestionController extends Controller
             $linkPaper = array();
 
             $request = $this->container->get('request');
-            $max = 5;
+            $max = 10;
             $page = $request->query->get('page', 1);
             $show = $request->query->get('show', 0);
 
@@ -1056,7 +1065,7 @@ class QuestionController extends Controller
         $request = $this->container->get('request');
         $user = $this->container->get('security.context')->getToken()->getUser();
 
-        $max = 5; // Max per page
+        $max = 10; // Max per page
 
         $type = $request->query->get('doctype');
         $searchLabel = $request->query->get('searchLabel');
@@ -1118,7 +1127,7 @@ class QuestionController extends Controller
         $userId = $this->container->get('security.context')->getToken()->getUser()->getId();
         $request = $this->get('request');
 
-        $max = 5; // Max per page
+        $max = 10; // Max per page
 
         $labelToFind = $request->query->get('labelToFind');
         $page = $request->query->get('page');
@@ -1255,13 +1264,18 @@ class QuestionController extends Controller
         $questionWithResponse = array();
         $alreadyShared = array();
 
-        $max = 5; // Max questions displayed per page
+        $max = 10; // Max questions displayed per page
 
         $type = $request->query->get('type'); // In which column
         $whatToFind = $request->query->get('whatToFind'); // Which text to find
         $where = $request->query->get('where'); // In which database
         $page = $request->query->get('page'); // Which page
         $exoID = $request->query->get('exoID'); // If we import or see the questions
+        $displayAll = $request->query->get('displayAll', 0); // If we want to have all the questions in one page
+
+//      echo $type . ' | '. $whatToFind . ' | '. $where . ' | '. $page . ' | '. $exoID . ' | '. $displayAll;die();
+//      b4 : All | i | all | 1 | 5 | 0
+
 
         // If what and where to search is defined
         if ($type && $whatToFind && $where) {
@@ -1332,6 +1346,11 @@ class QuestionController extends Controller
                 }
 
                 if ($exoID == -1) {
+
+                    if ($displayAll == 1) {
+                        $max = count($listInteractions);
+                    }
+
                     $pagination = $this->pagination($listInteractions, $max, $page);
                 } else {
                     $exoQuestions = $em->getRepository('UJMExoBundle:ExerciseQuestion')->findBy(array('exercise' => $exoID));
@@ -1352,6 +1371,11 @@ class QuestionController extends Controller
                         }
                         $already = false;
                     }
+
+                    if ($displayAll == 1) {
+                        $max = count($finalList);
+                    }
+
                     $pagination = $this->pagination($finalList, $max, $page);
                 }
 
@@ -1369,7 +1393,8 @@ class QuestionController extends Controller
                         'whatToFind'  => $whatToFind,
                         'questionWithResponse' => $questionWithResponse,
                         'alreadyShared' => $alreadyShared,
-                        'exoID' => $exoID
+                        'exoID' => $exoID,
+                        'displayAll' => $displayAll
                         )
                     );
                 } else {
@@ -1380,7 +1405,8 @@ class QuestionController extends Controller
                             'exoID'         => $exoID,
                             'canDisplay'    => $where,
                             'whatToFind'    => $whatToFind,
-                            'type'          => $type
+                            'type'          => $type,
+                            'displayAll'    => $displayAll
                         )
                     );
                 }
@@ -1465,6 +1491,11 @@ class QuestionController extends Controller
                 }
 
                 if ($exoID == -1) {
+
+                    if ($displayAll == 1) {
+                        $max = count($listInteractions);
+                    }
+
                     $pagination = $this->pagination($listInteractions, $max, $page);
                 } else {
                     $exoQuestions = $em->getRepository('UJMExoBundle:ExerciseQuestion')->findBy(array('exercise' => $exoID));
@@ -1485,6 +1516,11 @@ class QuestionController extends Controller
                         }
                         $already = false;
                     }
+
+                    if ($displayAll == 1) {
+                        $max = count($finalList);
+                    }
+
                     $pagination = $this->pagination($finalList, $max, $page);
                 }
 
@@ -1500,18 +1536,20 @@ class QuestionController extends Controller
                         'pagerSearch' => $pagerSearch,
                         'type'        => $type,
                         'whatToFind'  => $whatToFind,
-                        'exoID' => $exoID
+                        'exoID' => $exoID,
+                        'displayAll' => $displayAll
                         )
                     );
                 } else {
                     $divResultSearch = $this->render(
                         'UJMExoBundle:Question:searchQuestionImport.html.twig', array(
                             'listQuestions' => $listQuestionsPager,
-                            'pagerSearch' => $pagerSearch,
-                            'exoID' => $exoID,
-                            'canDisplay' => $where,
-                            'whatToFind'  => $whatToFind,
-                            'type'        => $type
+                            'pagerSearch'   => $pagerSearch,
+                            'exoID'         => $exoID,
+                            'canDisplay'    => $where,
+                            'whatToFind'    => $whatToFind,
+                            'type'          => $type,
+                            'displayAll'    => $displayAll
                         )
                     );
                 }
@@ -1638,6 +1676,11 @@ class QuestionController extends Controller
                 }
 
                 if ($exoID == -1) {
+
+                    if ($displayAll == 1) {
+                        $max = count($listInteractions);
+                    }
+
                     $pagination = $this->pagination($listInteractions, $max, $page);
                 } else {
                     $exoQuestions = $em->getRepository('UJMExoBundle:ExerciseQuestion')->findBy(array('exercise' => $exoID));
@@ -1658,6 +1701,11 @@ class QuestionController extends Controller
                         }
                         $already = false;
                     }
+
+                    if ($displayAll == 1) {
+                        $max = count($finalList);
+                    }
+
                     $pagination = $this->pagination($finalList, $max, $page);
                 }
 
@@ -1675,7 +1723,8 @@ class QuestionController extends Controller
                         'whatToFind'  => $whatToFind,
                         'questionWithResponse' => $questionWithResponse,
                         'alreadyShared' => $alreadyShared,
-                        'exoID' => $exoID
+                        'exoID' => $exoID,
+                        'displayAll' => $displayAll
                         )
                     );
                 } else {
@@ -1686,7 +1735,8 @@ class QuestionController extends Controller
                             'exoID' => $exoID,
                             'canDisplay' => $where,
                             'whatToFind'  => $whatToFind,
-                            'type'        => $type
+                            'type'        => $type,
+                            'displayAll' => $displayAll
                         )
                     );
                 }
@@ -1711,6 +1761,9 @@ class QuestionController extends Controller
             return $this->render(
                 'UJMExoBundle:Question:SearchQuestionType.html.twig', array(
                 'listQuestions' => '',
+                'canDisplay' => $where,
+                'whatToFind'  => $whatToFind,
+                'type'        => $type
                 )
             );
         }

@@ -41,11 +41,23 @@
     </div>
     <div class="panel-body">
         {% if listQuestions is not empty %}
-            <a class="btn btn-primary" href="#" onclick="importQuestionSearch('{{ path('ujm_exercise_validate_import_search') }}',
-                {{ exoID }}, '{{ 'nothingToImport' | trans }}');event.preventDefault();">
+            <a class="btn btn-primary" href="#" onclick="importQuestion('{{ path('ujm_exercise_validate_import') }}',
+                {{ exoID }}, 1, '{{ 'nothingToImport' | trans }}');event.preventDefault();">
                 <i class="icon-download"></i> {{ 'import' | trans }}
             </a>
+
+            {% if pagerSearch.getNbResults > pagerSearch.maxPerPage and displayAll == 0 %}
+            <button class="btn btn-primary" onclick="displayAllQuestionInSearch('{{ path('ujm_question_searchQuestion') }}', {{ exoID }}, 1);">
+                <i class="icon-plus-sign"></i> {{ 'display all on this page' | trans }}
+            </button>
+            {% elseif displayAll == 1 %}
+                <button class="btn btn-primary" onclick="displayAllQuestionInSearch('{{ path('ujm_question_searchQuestion') }}', {{ exoID }}, 0);">
+                <i class="icon-plus-sign"></i> {{ 'display pagination' | trans }}
+            </button>
+            {% endif %}
+
             <hr/>
+
             <table class="table table-striped table-bordered table-condensed" id="QuestionArrayMy">
                 <thead>
                     <tr style="background-color: lightsteelblue;">
@@ -94,7 +106,7 @@
                         <td class="classic">
                             <ul class="list-unstyled">
                                 <li>
-                                    <input type="checkbox" name ="import" value="{{ interaction.question.id }}">
+                                    <input type="checkbox" name ="import" value="{{ interaction.question.id }}" onclick="addQuestionInOrder($(this).val());">
                                 </li>
                             </ul>
                         </td>

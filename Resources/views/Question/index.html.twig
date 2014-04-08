@@ -54,7 +54,7 @@
     {% endblock %}
 {% else %}
 {% endif %}
-            
+
 {% extends layout %}
 
 {% block stylesheets %}
@@ -79,6 +79,16 @@
         <a class="btn btn-primary" href="{{ path('ujm_question_search_question') }}">
             <i class="icon-question"></i> {{ 'searchQuestion' | trans }}
         </a>
+
+        {% if (pagerMy.getNbResults > pagerMy.maxPerPage or pagerShared.getNbResults > pagerShared.maxPerPage) and displayAll == 0 %}
+            <a class="btn btn-primary" href="{{ path('ujm_question_index', { 'displayAll': 1 }) }} ">
+                <i class="icon-plus-sign"></i> {{ 'display all on this page' | trans }}
+            </a>
+        {% elseif displayAll == 1 %}
+            <a class="btn btn-primary" href="{{ path('ujm_question_index') }} ">
+                <i class="icon-minus-sign"></i> {{ 'display pagination' | trans }}
+            </a>
+        {% endif %}
     </div>
     <div class="list-group">
         <div class="list-group-item">
@@ -232,7 +242,7 @@
                                     <td class="classic">
                                         {% if(shareRight[myQShare.id]) %}
                                             {% if(questionWithResponse[myQShare.id] == 0) %}
-                                                <a class="btn btn-default" data-toggle="tooltip" title="{{ 'edit' | trans }}" 
+                                                <a class="btn btn-default" data-toggle="tooltip" title="{{ 'edit' | trans }}"
                                                    href="{{ path('ujm_question_edit', { 'id': myQShare.question.id }) }}">
                                                     <i class="icon-pencil"></i>
                                                 </a>

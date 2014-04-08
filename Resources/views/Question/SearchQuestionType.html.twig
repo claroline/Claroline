@@ -42,6 +42,19 @@
 
     <div class="panel-body">
         {% if listQuestions is not empty %}
+
+            {% if pagerSearch.getNbResults > pagerSearch.maxPerPage and displayAll == 0 %}
+            <button class="btn btn-primary" onclick="displayAllQuestionInSearch('{{ path('ujm_question_searchQuestion') }}', {{ exoID }}, 1);">
+                <i class="icon-plus-sign"></i> {{ 'display all on this page' | trans }}
+            </button>
+            {% elseif displayAll == 1 %}
+                <button class="btn btn-primary" onclick="displayAllQuestionInSearch('{{ path('ujm_question_searchQuestion') }}', {{ exoID }}, 0);">
+                <i class="icon-plus-sign"></i> {{ 'display pagination' | trans }}
+            </button>
+            {% endif %}
+
+            <hr/>
+
             <table class="table table-striped table-bordered table-condensed" id="QuestionArray">
                 <thead>
                     <tr style="background-color: lightsteelblue;">
