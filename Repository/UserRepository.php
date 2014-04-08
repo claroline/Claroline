@@ -1120,4 +1120,26 @@ class UserRepository extends EntityRepository implements UserProviderInterface
 
         return $executeQuery ? $queryBuilder->getQuery()->getResult(): $queryBuilder->getQuery();
     }
+
+    /**
+     * @param string $data
+     *
+     * @return User
+     */
+    public function findOneByIdOrPublicUrl($data)
+    {
+        $dql = '
+            SELECT u
+            FROM Claroline\CoreBundle\Entity\User u
+            WHERE u.id = :id
+            OR u.publicUrl = :publicUrl
+            AND u.isEnabled = true
+        ';
+
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('id', $data);
+        $query->setParameter('publicUrl', $data);
+
+        return $query->getSingleResult();
+    }
 }
