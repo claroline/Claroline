@@ -147,6 +147,8 @@ class ExerciseController extends Controller
      */
     public function openAction($exerciseId)
     {
+        $exerciseSer = $this->container->get('ujm.exercise_services');
+        
         $user = $this->container->get('security.context')->getToken()->getUser();
 
         $em = $this->getDoctrine()->getManager();
@@ -163,12 +165,15 @@ class ExerciseController extends Controller
         }
 
         if (($this->controlDate($exoAdmin, $exercise) === true)
-            && ($this->controlMaxAttemps($exercise, $user, $exoAdmin) === true)
+            && ($exerciseSer->controlMaxAttemps($exercise, $user, $exoAdmin) === true)
         ) {
             $allowToCompose = 1;
         }
 
         $nbQuestions = $em->getRepository('UJMExoBundle:ExerciseQuestion')->getCountQuestion($exerciseId);
+        
+        $nbUserPaper = $exerciseSer->getNbPaper($user->getId(),
+                                                $exercise->getId());
 
         return $this->render(
             'UJMExoBundle:Exercise:show.html.twig',
@@ -179,6 +184,7 @@ class ExerciseController extends Controller
                 'allowToCompose' => $allowToCompose,
                 'userId'         => $user->getId(),
                 'nbQuestion'     => $nbQuestions['nbq'],
+                'nbUserPaper'    => $nbUserPaper,
                 '_resource'      => $exercise
             )
         );
@@ -482,13 +488,15 @@ class ExerciseController extends Controller
      */
     public function exercisePaperAction($id)
     {
+        $exerciseSer = $this->container->get('ujm.exercise_services');
+        
         $user = $this->container->get('security.context')->getToken()->getUser();
         $uid = $user->getId();
 
         $em = $this->getDoctrine()->getManager();
         $exercise = $em->getRepository('UJMExoBundle:Exercise')->find($id);
 
-        $exoAdmin = $this->container->get('ujm.exercise_services')->isExerciseAdmin($exercise);
+        $exoAdmin = $exerciseSer->isExerciseAdmin($exercise);
         $this->checkAccess($exercise);
 
         $workspace = $exercise->getResourceNode()->getWorkspace();
@@ -509,7 +517,7 @@ class ExerciseController extends Controller
 
             //if not exist a paper no finished
             if (count($paper) == 0) {
-                if ($this->controlMaxAttemps($exercise, $user, $exoAdmin) === false) {
+                if ($exerciseSer->controlMaxAttemps($exercise, $user, $exoAdmin) === false) {
                    return $this->redirect($this->generateUrl('ujm_paper_list', array('exoID' => $id)));
                 }
 
@@ -562,7 +570,10 @@ class ExerciseController extends Controller
             $typeInter = $interactions[0]->getType();
 
             //To display selectioned question
-            return $this->displayQuestion(1, $interactions[0], $typeInter, $exercise->getDispButtonInterrupt(), $workspace, $paper);
+            return $this->displayQuestion(1, $interactions[0], $typeInter, 
+                    $exercise->getDispButtonInterrupt(),
+                    $exercise->getMaxAttempts(),
+                    $workspace, $paper);
         } else {
             return $this->redirect($this->generateUrl('ujm_paper_list', array('exoID' => $id)));
         }
@@ -613,6 +624,16 @@ class ExerciseController extends Controller
         $typeInterToRecorded = $request->get('typeInteraction');
 
         $tabOrderInter = $session->get('tabOrderInter');
+        
+        if ($paper->getEnd()) {
+            
+            return $this->forward('UJMExoBundle:Paper:show', 
+                                  array(
+                                      'id' => $paper->getId(),
+                                      'p'  => -1
+                                       )
+                                 );
+        }
 
         //To record response
         $exerciseSer = $this->container->get('ujm.exercise_services');
@@ -675,7 +696,9 @@ class ExerciseController extends Controller
 
             return $this->displayQuestion(
                 $numQuestionToDisplayed, $interactionToDisplay, $typeInterToDisplayed,
-                $response->getPaper()->getExercise()->getDispButtonInterrupt(), $workspace, $paper
+                $response->getPaper()->getExercise()->getDispButtonInterrupt(),
+                $response->getPaper()->getExercise()->getMaxAttempts(),
+                $workspace, $paper
             );
         }
     }
@@ -809,7 +832,8 @@ class ExerciseController extends Controller
      */
     private function displayQuestion(
         $numQuestionToDisplayed, $interactionToDisplay,
-        $typeInterToDisplayed, $dispButtonInterrupt, $workspace, $paper
+        $typeInterToDisplayed, $dispButtonInterrupt, $maxAttempsAllowed, 
+        $workspace, $paper
     )
     {
         $em = $this->getDoctrine()->getManager();
@@ -914,8 +938,10 @@ class ExerciseController extends Controller
         $array['interactionType']        = $typeInterToDisplayed;
         $array['numQ']                   = $numQuestionToDisplayed;
         $array['paper']                  = $session->get('paper');
+        $array['numAttempt']             = $paper->getNumPaper();
         $array['response']               = $responseGiven;
         $array['dispButtonInterrupt']    = $dispButtonInterrupt;
+        $array['maxAttempsAllowed']      = $maxAttempsAllowed;
         $array['_resource']              = $paper->getExercise();
 
         return $this->render(
@@ -978,22 +1004,6 @@ class ExerciseController extends Controller
             return true;
         } else {
             return false;
-        }
-    }
-
-    /**
-     * To control the max attemps
-     *
-     */
-    private function controlMaxAttemps($exercise, $user, $exoAdmin)
-    {
-        if (($exoAdmin != 1) && ($exercise->getMaxAttempts() > 0)
-            && ($exercise->getMaxAttempts() <= $this->container->get('ujm.exercise_services')
-                ->getNbPaper($user->getId(), $exercise->getId()))
-        ) {
-            return false;
-        } else {
-            return true;
         }
     }
 

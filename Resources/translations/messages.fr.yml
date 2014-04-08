@@ -49,17 +49,27 @@ all: Tout
 allow to edit: Autoriser l'édition
 allQuestion: Toutes
 already: Cette question est déjà partagée avec cet utilisateur
+already answered: Vous avez déjà répondu à cet exercice
 alreadyExist: Ce nom existe déjà.
 alreadyPlaced: Réponses déjà placées
 alter category: Modifier cette catégorie
 answer_coched: Aucune réponse attendue n\'est cochée
 answer zone: Zone de réponse
+attempt info1: Vous avez droit à
+attempt info2sing: essai
+attempt info2plur: essais
+attempt info3: Essai N°
+attempt info4: Il vous reste
+attempt info5: afin d'améliorer votre note
+attempt info6: Il ne vous reste plus aucun essai
 at the end of assessment: A la fin du test
 at the same time that the correction: En même temps que la correction
 availability of correction: Disponibilité de la correction
 availability of score: Disponibilité de la note
 
 # B
+badgeObtained: Félicitation ! Vous avez obtenu le badge de connaissances
+badgeNoObtained: Vous n'avez pas encore obtenu le badge de connaissance
 back: Retour
 back to the list: Retour à la liste
 bank of questions: Banque de questions
@@ -159,6 +169,7 @@ histoSuccess: Histogramme de réussite
 hole: Blancs
 hole creation: Création d'une question à trous
 hole edition: Edition d'une question à trous
+home exercise: Accueil de l'exercice
 
 # I
 infiny: Infini
@@ -212,7 +223,7 @@ moreInformation: Plus d'informations
 multiple response: Réponse multiples
 my account: Mon compte
 my questions: Mes questions
-my shared questions: Mes questions partagées
+my shared questions: Questions qui m'ont été partagées
 
 # N
 nameUser2Shared: Nom de l'utilisateur avec qui partager la question
@@ -223,6 +234,7 @@ never: Jamais
 newCategoryName: Nouveau nom de la catégorie
 newName: Nouveau nom du document
 newDoc: Nouveau document
+next: Suivant
 no: Non
 no answer: Pas de réponse
 noAnswerZone: Vous n\'avez mis aucune zone de réponse
@@ -234,6 +246,7 @@ noPaperFound: Aucune copie
 noQuestion: Vous ne posez aucune question
 noQuestionFound: Pas de question trouvée
 noRightAnswer: Aucune bonne réponse
+notAllowedModifyPaper: Vous ne pouvez plus modifier vos réponses !
 nothingToImport: Aucune question à importer n\'est cochée
 notImageMesssage: Le document doit être une image
 noTitle: La question n\'a pas de titre
@@ -275,6 +288,7 @@ pointInstruction: Les points doivent être attribués avant le placement de chaq
 pointRightResponse: Points bonne réponse
 position: => Positionner le(s) pointeur(s) ci-dessous (croix rouge) sur l'image. La position du centre du pointeur défini votre réponse.
 preview: Aperçu
+previous: Précédent
 print paper: Imprimer la copie
 
 # Q
@@ -305,6 +319,7 @@ role: Rôle
 save: Enregistrer
 saveNewOrder: Enregistrer le nouvel ordre
 sawHint: de pénalité pour indices vus
+score and list of question: Note et liste des questions
 search: Rechercher un document
 searchQuestion: Chercher des questions
 searchUserPaper: Rechercher les copies de l'utilisateur
@@ -323,6 +338,7 @@ shared with: Partager avec
 short: Courte
 show: Afficher
 show Instructions: Montrer les consignes
+start again: Recommencer
 sort: Trier les documents
 start date: Date de début
 subscription: Inscription

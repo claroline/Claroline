@@ -62,7 +62,13 @@ class TypeQCM
      * @ORM\Column(name="value", type="string", length=255)
      */
     private $value;
-
+    
+    /**
+     * @var integer $code
+     *
+     * @ORM\Column(unique=true, name="code", type="integer")
+     */
+    private $code;
 
     /**
      * Get id
@@ -92,6 +98,26 @@ class TypeQCM
     public function getValue()
     {
         return $this->value;
+    }
+    
+    /**
+     * Set code
+     *
+     * @param integer $code
+     */
+    public function setCode($code)
+    {
+        $this->code = $code;
+    }
+
+    /**
+     * Get code
+     *
+     * @return integer
+     */
+    public function getCode()
+    {
+        return $this->code;
     }
 
     public function __toString()

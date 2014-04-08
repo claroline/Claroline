@@ -43,6 +43,12 @@
 namespace UJM\ExoBundle\Services\classes;
 
 use Claroline\CoreBundle\Library\Resource\ResourceCollection;
+use Claroline\CoreBundle\Entity\Badge\Badge;
+use Claroline\CoreBundle\Entity\Badge\BadgeClaim;
+use Claroline\CoreBundle\Entity\Badge\BadgeCollection;
+use Claroline\CoreBundle\Entity\Badge\BadgeRule;
+use Claroline\CoreBundle\Entity\Badge\BadgeTranslation;
+use Gedmo\SoftDeleteable\Traits\SoftDeleteableEntity\SoftDeleteableEntity;
 
 use Doctrine\Bundle\DoctrineBundle\Registry;
 
@@ -233,11 +239,11 @@ class exerciseServices
                     list($xa,$ya) = explode("-", $coords[$j]); // Answers of the student
                     list($xr,$yr) = explode(",", $rightCoords[$i]->getValue()); // Right answers
 
-                    $valid = $rightCoords[$i]->getSize() / 2; // Size of the answer zone
+                    $valid = $rightCoords[$i]->getSize(); // Size of the answer zone
 
                     // If answer student is in right answer
-                    if ((($xa) < ($xr + $valid)) && (($xa) > ($xr - $valid)) && (($ya) < ($yr + $valid)) &&
-                        (($ya) > ($yr - $valid))
+                    if ((($xa + 8) < ($xr + $valid)) && (($xa + 8) > ($xr)) &&
+                        (($ya + 8) < ($yr + $valid)) && (($ya + 8) > ($yr))
                     ) {
                         // Not get points twice for one answer
                         if ($this->alreadyDone($rightCoords[$i]->getValue(), $verif, $z)) {
@@ -806,6 +812,106 @@ class exerciseServices
         }
 
         return $linkedCategory;
+    }
+
+    /**
+     * To control the max attemps
+     *
+     */
+    public function controlMaxAttemps($exercise, $user, $exoAdmin)
+    {
+        if (($exoAdmin != 1) && ($exercise->getMaxAttempts() > 0)
+            && ($exercise->getMaxAttempts() <= $this->getNbPaper($user->getId(),
+            $exercise->getId()))
+        ) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    /**
+     *
+     * to return badges linked with the exercise
+     */
+    public function getBadgeLinked($resourceId)
+    {
+        /*$badges = array();
+        $em = $this->doctrine->getManager();
+        $badgesRules = $em->getRepository('ClarolineCoreBundle:Badge\BadgeRule')
+                          ->findBy(array('resource' => $resourceId));
+
+        foreach ($badgesRules as $br) {
+
+            $badgesSearch = $em->getRepository('ClarolineCoreBundle:Badge\Badge')
+                               ->findByNameAndLocale('BadgeExercice2', 'fr');
+
+            foreach($badgesSearch as $badge) {
+                if ($badge->getId() == $br->getAssociatedBadge()->getId()) {
+                    $badges[] = $badge;
+                }
+            }
+
+        }*/
+
+        $badges = array();
+        $em = $this->doctrine->getManager();
+        $badgesRules = $em->getRepository('ClarolineCoreBundle:Badge\BadgeRule')
+                          ->findBy(array('resource' => $resourceId));
+
+        foreach ($badgesRules as $br) {
+            $badge = $em->getRepository('ClarolineCoreBundle:Badge\Badge')
+                          ->findBy(array('id' => $br->getAssociatedBadge(), 'deletedAt' => null));
+            if($badge) {
+                $badges[] = $br->getAssociatedBadge();
+            }
+        }
+
+        return $badges;
+    }
+
+    /**
+     *
+     * to return infos badges fon an exercise and an user
+     */
+    public function badgesInfoUser($userId, $resourceId, $locale)
+    {
+        $em = $this->doctrine->getManager();
+        $badgesInfoUser = array();
+        $i = 0;
+
+        $exoBadges = $this->getBadgeLinked($resourceId);
+        foreach($exoBadges as $badge) {
+            //if ($badge->getDeletedAt() == '') {
+                $brs = $em->getRepository('ClarolineCoreBundle:Badge\BadgeRule')
+                          ->findBy(array(
+                              'associatedBadge' => $badge->getId()
+                       ));
+                if (count($brs) == 1) {
+                    $trans = $em->getRepository('ClarolineCoreBundle:Badge\BadgeTranslation')
+                                ->findOneBy(array(
+                                    'badge'  => $badge->getId(),
+                                    'locale' => $locale
+                             ));
+                    $badgesInfoUser[$i]['badgeName'] = $trans->getName();
+
+                    $userBadge = $em->getRepository('ClarolineCoreBundle:Badge\UserBadge')
+                                    ->findOneBy(array(
+                                        'user'  => $userId,
+                                        'badge' => $badge->getId()
+                                 ));
+                    if ($userBadge) {
+                        $badgesInfoUser[$i]['issued'] = $userBadge->getIssuedAt();
+                    } else {
+                        $badgesInfoUser[$i]['issued'] = -1;
+                    }
+
+                    $i++;
+                }
+            //}
+        }
+
+        return $badgesInfoUser;
     }
 
     private function getPenalty($interaction, $paperID)

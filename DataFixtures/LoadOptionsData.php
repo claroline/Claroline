@@ -51,31 +51,42 @@ class LoadOptionsData extends AbstractFixture
     {
         $this->manager = $manager;
 
-        $valTqcm = array('Multiple response', 'Unique response');
-        foreach ($valTqcm as $val) {
-            $this->newTQCM($val);
+        $valTqcm = array();
+        
+        $valTqcm[1] = 'Multiple response';
+        $valTqcm[2] = 'Unique response';
+        
+        foreach ($valTqcm as $code => $val) {
+            $this->newTQCM($val, $code);
         }
 
-        $valTopen = array('numerical', 'long', 'short', 'oneWord');
-        foreach ($valTopen as $val) {
-            $this->newTOPEN($val);
+        $valTopen = array();
+        $valTopen[1] = 'numerical';
+        $valTopen[2] = 'long';
+        $valTopen[3] = 'short';
+        $valTopen[4] = 'oneWord';
+        
+        foreach ($valTopen as $code => $val) {
+            $this->newTOPEN($val, $code);
         }
         
         $this->manager->flush();
     }
 
-    private function newTQCM($val)
+    private function newTQCM($val, $code)
     {
         $tqcm = new TypeQCM();
         $tqcm->setValue($val);
+        $tqcm->setCode($code);
 
         $this->manager->persist($tqcm);
     }
     
-    private function newTOPEN($val)
+    private function newTOPEN($val, $code)
     {
         $topen = new TypeOpenQuestion();
         $topen->setValue($val);
+        $topen->setCode($code);
 
         $this->manager->persist($topen);
     }

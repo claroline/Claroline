@@ -49,17 +49,27 @@ all: All
 allow to edit: Allow to edit
 allQuestion: All the questions
 already: This question is already shared with this user
+already answered: You have already answered at this exercise
 alreadyExist: This name exist already
 alreadyPlaced: Already placed answers.
 alter category: Alter this cataegory
 answer_coched: No response expected is checked
 answer zone: Answer zone
+attempt info1: You have
+attempt info2sing: attempt
+attempt info2plur: attempts
+attempt info3: Attempt N°
+attempt info4: You have
+attempt info5: in order to improve your score
+attempt info6: You do not have attempt
 at the end of assessment: At the end of assessment
 at the same time that the correction: At the same time that the correction
 availability of correction: Availability of correction
 availability of score: Availability of score
 
 # B
+badgeObtained: Congratulations ! You got the badge of knowledge
+badgeNoObtained: You have not yet received the badge of knowledge
 back: Back
 back to the list: Back to the list
 bank of questions: Bank of questions
@@ -159,6 +169,7 @@ histoSuccess: Success' histogram
 hole: Hole
 hole creation: Creation of a question with holes
 hole edition: Edition of a question with holes
+home exercise: Home exercise
 
 # I
 infiny: Indefinite
@@ -212,7 +223,7 @@ moreInformation: More information
 multiple response: Multiple response
 my account: My account
 my questions: My questions
-my shared questions: My shared questions
+my shared questions: Questions which was shared with me
 
 # N
 nameUser2Shared: Name of user to share the question
@@ -223,6 +234,7 @@ never: Never
 newCategoryName: New name of the category
 newName: New name of the document
 newDoc: New document
+next: Next
 no: No
 no answer: No answer
 noAnswerZone: There is no answer zone
@@ -234,6 +246,7 @@ noPaperFound: No paper found
 noQuestion: You ask for nothing
 noQuestionFound: No question found
 noRightAnswer: No right answer
+notAllowedModifyPaper: You can't alter your answers anymore !
 nothingToImport: No question is checked for the import
 notImageMesssage: The document should be an image
 noTitle: The question has no title
@@ -275,6 +288,7 @@ pointInstruction: Points must be assigned before positioning each answer zone
 pointRightResponse: Right answer points
 position: => Place pointers below (red cross) on the picture. The pointer's center defines your answer.
 preview: Preview
+previous: Previous
 print paper: Print paper
 
 # Q
@@ -305,6 +319,7 @@ role: Role
 save: Save
 saveNewOrder: Save the new order
 sawHint: of penalty for seen hints
+score and list of question: Score and list of questions
 search: Search
 searchQuestion: Search questions
 searchUserPaper: Search papers of user
@@ -324,6 +339,7 @@ short: Short
 show: Show
 show Instructions: Show instructions
 sort: Sort documents
+start again: Start again
 start date: Start date
 subscription: Subscription
 

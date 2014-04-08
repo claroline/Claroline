@@ -63,6 +63,11 @@ class PaperController extends Controller
      */
     public function indexAction($exoID, $page, $all)
     {
+        $nbUserPaper = 0;
+        $retryButton = false;
+        $nbAttemptAllowed = -1;
+        $exerciseSer = $this->container->get('ujm.exercise_services');
+        
         $exoAdmin = false;
         $arrayMarkPapers = array();
 
@@ -74,7 +79,7 @@ class PaperController extends Controller
 
         $this->checkAccess($exercise);
 
-        if ($this->container->get('ujm.exercise_services')->isExerciseAdmin($exercise)) {
+        if ($exerciseSer->isExerciseAdmin($exercise)) {
 
             $exoAdmin = true;
         }
@@ -88,11 +93,14 @@ class PaperController extends Controller
                             ->getManager()
                             ->getRepository('UJMExoBundle:Paper')
                             ->getExerciseAllPapers($exoID);
+            $nbUserPaper = $exerciseSer->getNbPaper($user->getId(),
+                                                    $exercise->getId());
         } else {
             $paper = $this->getDoctrine()
                             ->getManager()
                             ->getRepository('UJMExoBundle:Paper')
                             ->getExerciseUserPapers($user->getId(), $exoID);
+            $nbUserPaper = count($paper);
         }
 
         // Pagination of the paper list
@@ -124,17 +132,36 @@ class PaperController extends Controller
             $arrayMarkPapers[$p->getId()] = $this->container->get('ujm.exercise_services')->getInfosPaper($p);
         }
 
+        if ($exerciseSer->controlMaxAttemps($exercise,
+                $user, $exerciseSer->isExerciseAdmin($exercise))) {
+            $retryButton = true;
+        }
+        
+        if ($exercise->getMaxAttempts() > 0) {
+            if ($exoAdmin === false) {
+                $nbAttemptAllowed = $exercise->getMaxAttempts() - count($paper);
+            }
+        }
+        
+        $badgesInfoUser = $exerciseSer->badgesInfoUser(
+                $user->getId(), $exercise->getResourceNode()->getId(),
+                $this->container->getParameter('locale'));
+        
         return $this->render(
             'UJMExoBundle:Paper:index.html.twig',
             array(
-                'workspace' => $workspace,
-                'papers'    => $papers,
-                'isAdmin'   => $exoAdmin,
-                'pager'     => $pagerfanta,
-                'exoID'     => $exoID,
-                'display'   => $display,
-                '_resource' => $exercise,
-                'arrayMarkPapers' => $arrayMarkPapers
+                'workspace'        => $workspace,
+                'papers'           => $papers,
+                'isAdmin'          => $exoAdmin,
+                'pager'            => $pagerfanta,
+                'exoID'            => $exoID,
+                'display'          => $display,
+                'retryButton'      => $retryButton,
+                'nbAttemptAllowed' => $nbAttemptAllowed,
+                'badgesInfoUser'   => $badgesInfoUser,
+                'nbUserPaper'      => $nbUserPaper,
+                '_resource'        => $exercise,
+                'arrayMarkPapers'  => $arrayMarkPapers
             )
         );
     }
@@ -145,9 +172,19 @@ class PaperController extends Controller
      */
     public function showAction($id, $p = -2)
     {
+        $nbAttemptAllowed = -1;
+        $retryButton = false;
+        $exerciseSer = $this->container->get('ujm.exercise_services');
+        
         $user = $this->container->get('security.context')->getToken()->getUser();
         $em = $this->getDoctrine()->getManager();
         $paper = $em->getRepository('UJMExoBundle:Paper')->find($id);
+        $exercise = $paper->getExercise();
+        
+        if ($exerciseSer->controlMaxAttemps($exercise,
+                $user, $exerciseSer->isExerciseAdmin($exercise))) {
+            $retryButton = true;
+        }
 
         if ($this->container->get('ujm.exercise_services')->isExerciseAdmin($paper->getExercise())) {
             $admin = 1;
@@ -163,7 +200,7 @@ class PaperController extends Controller
             return $this->redirect($this->generateUrl('ujm_exercise_open', array('exerciseId' => $paper->getExercise()->getId())));
         }
 
-        $infosPaper = $this->container->get('ujm.exercise_services')->getInfosPaper($paper);
+        $infosPaper = $exerciseSer->getInfosPaper($paper);
 
         $hintViewed = $this->getDoctrine()
             ->getManager()
@@ -171,25 +208,41 @@ class PaperController extends Controller
             ->getHintViewed($paper->getId());
 
         $nbMaxQuestion = count($infosPaper['interactions']);
+        
+        $badgesInfoUser = $exerciseSer->badgesInfoUser(
+                $user->getId(), $exercise->getResourceNode()->getId(),
+                $this->container->getParameter('locale'));
+        
+        if ($exercise->getMaxAttempts() > 0) {
+            if (!$exerciseSer->isExerciseAdmin($exercise)) {
+                $nbpaper = $exerciseSer->getNbPaper($user->getId(),
+                                                    $exercise->getId());
+                
+                $nbAttemptAllowed = $exercise->getMaxAttempts() - $nbpaper;
+            }
+        }
 
         return $this->render(
             'UJMExoBundle:Paper:show.html.twig',
             array(
-                'workspace'     => $worspace,
-                'exoId'         => $paper->getExercise()->getId(),
-                'interactions'  => $infosPaper['interactions'],
-                'responses'     => $infosPaper['responses'],
-                'scorePaper'    => $infosPaper['scorePaper'],
-                'scoreTemp'     => $infosPaper['scoreTemp'],
-                'maxExoScore'   => $infosPaper['maxExoScore'],
-                'hintViewed'    => $hintViewed,
-                'correction'    => $paper->getExercise()->getCorrectionMode(),
-                'display'       => $display,
-                'admin'         => $admin,
-                '_resource'     => $paper->getExercise(),
-                'p'             => $p,
-                'nbMaxQuestion' => $nbMaxQuestion,
-                'paperID'       => $paper->getId()
+                'workspace'        => $worspace,
+                'exoId'            => $paper->getExercise()->getId(),
+                'interactions'     => $infosPaper['interactions'],
+                'responses'        => $infosPaper['responses'],
+                'scorePaper'       => $infosPaper['scorePaper'],
+                'scoreTemp'        => $infosPaper['scoreTemp'],
+                'maxExoScore'      => $infosPaper['maxExoScore'],
+                'hintViewed'       => $hintViewed,
+                'correction'       => $paper->getExercise()->getCorrectionMode(),
+                'display'          => $display,
+                'admin'            => $admin,
+                'nbAttemptAllowed' => $nbAttemptAllowed,
+                'badgesInfoUser'   => $badgesInfoUser,
+                '_resource'        => $paper->getExercise(),
+                'p'                => $p,
+                'nbMaxQuestion'    => $nbMaxQuestion,
+                'paperID'          => $paper->getId(),
+                'retryButton'      => $retryButton
             )
         );
     }

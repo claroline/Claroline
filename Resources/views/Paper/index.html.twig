@@ -63,6 +63,11 @@
         <a href="{{ path('ujm_exercise_open', { 'exerciseId': exoID }) }}" class="btn btn-primary">
             <i class="icon-arrow-left"></i> {{ 'back' | trans }}
         </a>
+        {% if retryButton and nbUserPaper == 0 %}
+            <a class="btn btn-primary" href="{{ path('ujm_exercise_paper', { 'id': exoID }) }}">
+                <i class="icon-check"></i> {{ 'compose' | trans }}
+            </a>
+        {% endif %}
         {% if isAdmin %}
             <a href="{{ path('ujm_exercise_docimology', { 'exerciseId': exoID, 'nbPapers': pager.getNbResults }) }}"
                class="btn btn-primary">
@@ -98,6 +103,23 @@
 
             <hr/>
         {% endif %}
+
+        {% if nbUserPaper > 0 %}
+            <fieldset id="container" class="alert alert-info">
+                {{ 'already answered' | trans }}
+                {% if retryButton %} :
+                    <div style="float:right;">
+                        <a class="btn btn-primary" href="{{ path('ujm_exercise_paper', { 'id': exoID }) }}">
+                            <i class="icon-check"></i> {{ 'start again' | trans }}
+                        </a>
+                    </div>
+                    {% else %}.
+                    {% endif %}
+            </fieldset>
+        {% endif %}
+
+        {% include "UJMExoBundle:Partial:badgeInfos/infos.html.twig" %}
+        {% include "UJMExoBundle:Partial:correction/attemptInfo.html.twig" %}
 
         <h6 style="color: red; text-align: right;">({{ 'paperLegend' | trans }}).</h6>
 

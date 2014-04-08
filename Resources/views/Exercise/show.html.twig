@@ -229,9 +229,15 @@
         </div>
         <div class="text-center panel-footer">
             {% if allowToCompose == 1 and nbQuestion > 0 %}
-                <a class="btn btn-primary" href="{{ path('ujm_exercise_paper', { 'id': entity.id }) }}">
-                    <i class="icon-check"></i> {{ 'compose' | trans }}
-                </a>
+                {% if nbUserPaper == 0 %}
+                    <a class="btn btn-primary" href="{{ path('ujm_exercise_paper', { 'id': entity.id }) }}">
+                        <i class="icon-check"></i> {{ 'compose' | trans }}
+                    </a>
+                {% else %}
+                    <a class="btn btn-primary" href="{{ path('ujm_paper_list', { 'exoID': entity.id }) }}">
+                        <i class="icon-check"></i> {{ 'compose' | trans }}
+                    </a>
+                {% endif %}
             {% endif %}
             {% if exoAdmin == 1 %}
                 <a class="btn btn-primary" href="{{ path('ujm_exercise_edit', { 'id': entity.id }) }}">
