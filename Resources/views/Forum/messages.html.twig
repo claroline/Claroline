@@ -33,7 +33,7 @@
 
 {% block resourceBreadcrumb %}
     <li><a href="{{ path('claro_forum_categories', { 'forum': category.getForum().getId() }) }}">{{ _resource.getResourceNode().getName() }}</a></li>
-    <li><a href="{{ path('claro_forum_subjects', { 'category': category.getId() }) }}">{{ _resource.getResourceNode().getName() }}</a></li>
+    <li><a href="{{ path('claro_forum_subjects', { 'category': category.getId() }) }}">{{ category.getName() }}</a></li>
     <li class="active">{{ subject.getTitle() }}</li>
 {% endblock %}
 
@@ -43,6 +43,11 @@
     </div>
     <div class="panel-body">
         <div class="row">
+            <div class="col-md-12">
+                <a title="{{ category.getName() }}" class="btn btn-default" href="{{ path('claro_forum_subjects', { 'category': category.getId() }) }}">
+                    <i class="icon-chevron-left"></i> {{ 'back_to'|trans({}, 'forum') }} "{{ category.getName() | truncate(20) }}"
+                </a> 
+            </div>
             <div class="col-md-9">
                 {{ renderPager(subject.getId(), pager, max) }}
             </div>
