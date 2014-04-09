@@ -20,5 +20,5 @@ plugin:
       icon: res_file.png
 
   widgets:
-     - name: claroline_path_widget
+     - name: innova_path_widget
        is_configurable: false
