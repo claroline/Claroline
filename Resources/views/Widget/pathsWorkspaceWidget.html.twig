@@ -4,7 +4,7 @@
             <a class="list-group-item" href="{{ path('innova_path_player_index', {workspaceId: workspace.id, pathId: path.id, stepId: path.getRootStep().id}) }}" />
                 {{ path.resourceNode.name }} 
                 - <em>{{ path.description | striptags | truncate(40, true, ' [...]') }}</em> 
-                <span class="label label-default pull-right">propriétaire</span>
+                <span class="label label-default pull-right">{{ 'path_author'|trans({}, 'widget') }}</span>
             </a>
     {% endfor %}
     {% for path in paths["others"] if path.published %}
