@@ -25,16 +25,6 @@ class WorkspaceEditType extends AbstractType
         $attr['autocomplete'] = 'off';
         $builder->add('name', 'text', array('required' => true));
         $builder->add('code', 'text', array('required' => true));
-        $builder->add(
-            'creationDate',
-            'datepicker',
-            array(
-                'required'      => false,
-                'widget'        => 'single_text',
-                'format'        => 'dd-MM-yyyy',
-                'attr'          => $attr,
-            )
-        );
         $builder->add('displayable', 'checkbox', array('required' => false));
         $builder->add('selfRegistration', 'checkbox', array('required' => false));
         $builder->add('selfUnregistration', 'checkbox', array('required' => false));

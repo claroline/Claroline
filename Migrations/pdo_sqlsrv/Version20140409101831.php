@@ -1,6 +1,6 @@
 <?php
 
-namespace Claroline\CoreBundle\Migrations\drizzle_pdo_mysql;
+namespace Claroline\CoreBundle\Migrations\pdo_sqlsrv;
 
 use Doctrine\DBAL\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
@@ -8,15 +8,15 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2014/04/07 10:40:34
+ * Generation date: 2014/04/09 10:18:33
  */
-class Version20140407104030 extends AbstractMigration
+class Version20140409101831 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
         $this->addSql("
             ALTER TABLE claro_workspace 
-            ADD creation_date INT NOT NULL
+            ADD creation_date INT
         ");
     }
 
@@ -24,7 +24,7 @@ class Version20140407104030 extends AbstractMigration
     {
         $this->addSql("
             ALTER TABLE claro_workspace 
-            DROP creation_date
+            DROP COLUMN creation_date
         ");
     }
 }

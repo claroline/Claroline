@@ -8,15 +8,15 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2014/04/04 03:02:22
+ * Generation date: 2014/04/09 10:18:33
  */
-class Version20140404150205 extends AbstractMigration
+class Version20140409101831 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
         $this->addSql("
             ALTER TABLE claro_workspace 
-            ADD COLUMN creation_date INTEGER NOT NULL
+            ADD COLUMN creation_date INTEGER DEFAULT NULL
         ");
     }
 
