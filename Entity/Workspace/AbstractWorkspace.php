@@ -121,7 +121,7 @@ abstract class AbstractWorkspace
     protected $selfUnregistration = false;
 
     /**
-     * @ORM\Column(name="creation_date", type="integer")
+     * @ORM\Column(name="creation_date", type="integer", nullable=true)
      */
     protected $creationDate;
 

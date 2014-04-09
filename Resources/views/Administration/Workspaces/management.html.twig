@@ -180,7 +180,11 @@
                             </a>
                         </td>
                         <td>
-                            {{ w.getCreationDate()|date("d/m/Y g:i")}} 
+                            {% if w.getCreationDate() is defined %}
+                                {{ w.getCreationDate()|date("d/m/Y g:i")}} 
+                            {% else %}
+                                -
+                            {% endif %}
                         </td>
                         <td>  </td>
                     </tr>
