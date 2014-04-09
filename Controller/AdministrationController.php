@@ -21,6 +21,7 @@ use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Manager\UserManager;
 use Claroline\CoreBundle\Manager\WorkspaceManager;
 use Claroline\CoreBundle\Manager\WorkspaceTagManager;
+use Claroline\CoreBundle\Manager\ToolManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use JMS\SecurityExtraBundle\Annotation as SEC;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
@@ -44,6 +45,7 @@ class AdministrationController extends Controller
     private $userManager;
     private $roleManager;
     private $groupManager;
+    private $toolManager;
     private $workspaceManager;
     private $workspaceTagManager;
     private $eventDispatcher;
@@ -57,6 +59,7 @@ class AdministrationController extends Controller
      *     "userManager"         = @DI\Inject("claroline.manager.user_manager"),
      *     "roleManager"         = @DI\Inject("claroline.manager.role_manager"),
      *     "groupManager"        = @DI\Inject("claroline.manager.group_manager"),
+     *     "toolManager"         = @DI\Inject("claroline.manager.tool_manager"),
      *     "workspaceManager"    = @DI\Inject("claroline.manager.workspace_manager"),
      *     "workspaceTagManager" = @DI\Inject("claroline.manager.workspace_tag_manager"),
      *     "eventDispatcher"     = @DI\Inject("claroline.event.event_dispatcher"),
@@ -70,6 +73,7 @@ class AdministrationController extends Controller
         UserManager $userManager,
         RoleManager $roleManager,
         GroupManager $groupManager,
+        ToolManager $toolManager,
         WorkspaceManager $workspaceManager,
         WorkspaceTagManager $workspaceTagManager,
         StrictDispatcher $eventDispatcher,
@@ -89,6 +93,7 @@ class AdministrationController extends Controller
         $this->analyticsManager = $analyticsManager;
         $this->translator = $translator;
         $this->request = $request;
+        $this->toolManager = $toolManager;
     }
 
     /**
@@ -735,5 +740,17 @@ class AdministrationController extends Controller
         }
 
         return new Response($msg, 200);
+    }
+
+    /**
+     * @EXT\Template("ClarolineCoreBundle:Administration:left_bar.html.twig")
+     *
+     * @return array
+     */
+    public function renderLeftBarAction()
+    {
+        $tools = $this->toolManager->getAdminTools();
+
+        return array('tools' => $tools);
     }
 }

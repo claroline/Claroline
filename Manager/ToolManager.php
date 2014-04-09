@@ -40,6 +40,8 @@ class ToolManager
     private $roleRepo;
     /** @var ToolRepository */
     private $toolRepo;
+
+    private $adminToolRepo;
     /** @var EventDispatcher */
     private $ed;
     /** @var ClaroUtilities */
@@ -73,6 +75,7 @@ class ToolManager
         $this->orderedToolRepo = $om->getRepository('ClarolineCoreBundle:Tool\OrderedTool');
         $this->toolRepo = $om->getRepository('ClarolineCoreBundle:Tool\Tool');
         $this->roleRepo = $om->getRepository('ClarolineCoreBundle:Role');
+        $this->adminToolRepo = $om->getRepository('ClarolineCoreBundle:Administration\Tool');
         $this->ed = $ed;
         $this->utilities = $utilities;
         $this->translator = $translator;
@@ -575,5 +578,10 @@ class ToolManager
     public function getDisplayedByRolesAndWorkspace(array $roles, AbstractWorkspace $workspace)
     {
         return $this->toolRepo->findDisplayedByRolesAndWorkspace($roles, $workspace);
+    }
+
+    public function getAdminTools()
+    {
+        return $this->adminToolRepo->findAll();
     }
 }

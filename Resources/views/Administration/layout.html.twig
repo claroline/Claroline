@@ -3,65 +3,7 @@
 {% block title %}{{ 'administration'|trans({}, 'platform')|striptags|raw }}{% endblock %}
 
 {% block leftbar %}
-    <div class="list-group menu">
-        <div class="list-group-item disabled">{{ 'administration'|trans({}, 'platform') }}</div>
-        <a class="list-group-item{{ '/admin/parameters'|compareRoute(' active') }}"
-            href="{{ path('claro_admin_parameters_index') }}">
-            <i class="icon-cog"></i>
-            {{ 'platform_parameters'|trans({}, 'platform') }}
-        </a>
-        <a class="list-group-item
-            {{ '/admin/users'|compareRoute(' active') }}
-            {{ '/admin/groups'|compareRoute(' active') }}"
-            href="{{ path('claro_admin_users_management') }}">
-        <i class="icon-user"></i>
-            {{ 'users_management'|trans({}, 'platform') }}
-        </a>
-        <a class="list-group-item{{ '/admin/workspaces'|compareRoute(' active') }}"
-           href="{{ path('claro_admin_workspaces_management') }}">
-            <i class="icon-book"></i> {{ 'workspaces_management'|trans({}, 'platform') }}
-        </a>
-        <a class="list-group-item{{ '/admin/badges'|compareRoute(' active') }}"
-            href="{{ path('claro_admin_badges') }}">
-            <i class="icon-trophy"></i>
-            {{ 'badges_management'|trans({}, 'platform') }}
-        </a>
-        <a class="list-group-item{{ '/admin/registration'|compareRoute(' active') }}"
-           href="{{ path('claro_admin_registration_management') }}">
-           <i class="icon-book"></i>
-            {{ 'registration_to_workspaces'|trans({}, 'platform') }}
-        </a>
-        <a class="list-group-item{{ '/admin/plugin'|compareRoute(' active') }}"
-           href="{{ path('claro_admin_plugins') }}">
-            <i class="icon-wrench"></i>
-            {{ 'platform_plugins'|trans({}, 'platform') }}
-        </a>
-        <a class="list-group-item{{ '/admin/home_tab'|compareRoute(' active') }}"
-           href="{{ path('claro_admin_home_tabs_configuration_menu') }}">
-            <i class="icon-th-large"></i>
-            {{ 'home_tabs'|trans({}, 'platform') }}
-        </a>
-        <a class="list-group-item{{ '/admin/tool'|compareRoute(' active') }}"
-            href="{{ path('claro_admin_tool_show') }}">
-            <i class="icon-pencil"></i>
-            {{ 'desktop_tools'|trans({}, 'platform') }}
-        </a>
-        <a class="list-group-item{{ '/admin/logs'|compareRoute(' active') }}"
-            href="{{ path('claro_admin_logs_show') }}">
-            <i class="icon-reorder"></i>
-            {{ 'admin_logs'|trans({}, 'platform') }}
-        </a>
-        <a class="list-group-item{{ '/admin/analytics'|compareRoute(' active') }}"
-           href="{{ path('claro_admin_analytics_show') }}">
-            <i class="icon-bar-chart"></i>
-            {{ 'admin_analytics'|trans({}, 'platform') }}
-        </a>
-        <a class="list-group-item{{ '/admin/applications'|compareRoute(' active') }}"
-            href="{{ path('admin_application_list') }}">
-            <i class="icon-puzzle-piece"></i>
-            {{ 'admin_third_party_application'|trans({}, 'platform') }}
-        </a>
-    </div>
+    {% render controller("ClarolineCoreBundle:Administration:renderLeftBar") %}
 {% endblock %}
 
 {% block content %}
