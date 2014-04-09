@@ -77,6 +77,7 @@ class Updater021200
         $users = $userRepository->findByPublicUrl(null);
 
         $this->log('User to update ' . count($users) . ' - ' . date('Y/m/d H:i:s'));
+        $this->log('It may take a while to process, go grab a coffee.');
 
         /** @var \Claroline\CoreBundle\Manager\UserManager $userManager */
         $userManager = $this->container->get('claroline.manager.user_manager');
