@@ -73,7 +73,7 @@ class ProfileCreationType extends AbstractType
                         'mapped' => false,
                         'data' => $this->platformRoles,
                         'class' => 'Claroline\CoreBundle\Entity\Role',
-                        'expanded' => false,
+                        'expanded' => true,
                         'multiple' => true,
                         'property' => 'translationKey',
                         'query_builder' => function (\Doctrine\ORM\EntityRepository $er) {
