@@ -69,6 +69,7 @@ badge_form_choose_image: 'Choose badge image'
 badge_form_criteria: 'Earning criteria'
 badge_form_description: Description
 badge_form_enTranslation: 'English translation'
+badge_form_esTranslation: 'Spanish translation'
 badge_form_execute: 'User validate the rule following executing an action on'
 badge_form_execute_times: 'When he executed the action'
 badge_form_frTranslation: 'French translation'

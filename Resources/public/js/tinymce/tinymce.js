@@ -14,11 +14,14 @@
     var home = window.Claroline.Home;
     var modal = window.Claroline.Modal;
     var translator = window.Translator;
+    var publicProfileUrl = window.Routing.generate('claro_public_profile_view')+"/";
+    var searchUserInWorkspaceUrl = window.Routing.generate('claro_user_search_in_workspace')+"/";
+
 
     //Load external plugins
-    //tinymce.PluginManager.load('mention', home.asset + 'bundles/frontend/tinymce/plugins/mention/plugin.min.js');
-    //tinymce.PluginManager.load('accordion', home.asset + 'bundles/frontend/tinymce/plugins/accordion/plugin.min.js');
-    //tinymce.DOM.loadCSS(home.asset + 'bundles/frontend/tinymce/plugins/mention/css/autocomplete.css');
+    tinymce.PluginManager.load('mention', home.asset + 'bundles/frontend/tinymce/plugins/mention/plugin.min.js');
+    tinymce.PluginManager.load('accordion', home.asset + 'bundles/frontend/tinymce/plugins/accordion/plugin.min.js');
+    tinymce.DOM.loadCSS(home.asset + 'bundles/frontend/tinymce/plugins/mention/css/autocomplete.css');
 
     /**
      * Claroline TinyMCE parameters and methods.
@@ -286,12 +289,12 @@
                     'link image media print code',
         'extended_valid_elements': 'user[id], a[data-toggle|data-parent]',
         'paste_preprocess': tinymce.claroline.paste,
-        'setup': tinymce.claroline.setup/*,
+        'setup': tinymce.claroline.setup,
         'mentions': {
             source: function (query, process, delimiter) {
                 if (!_.isUndefined(window.Workspace) && !_.isNull(window.Workspace.id)) {
                     if (delimiter === '@' && query.length>0) {
-                        $.getJSON(home.path + 'user/searchInWorkspace/' + window.Workspace.id + '/' + query, function (data) {
+                        $.getJSON(searchUserInWorkspaceUrl + window.Workspace.id + '/' + query, function (data) {
                             if(!_.isEmpty(data) && !_.isUndefined(data.users) && !_.isEmpty(data.users))process(data.users);
                         });
                     }
@@ -308,10 +311,10 @@
                     '</li>';
             },
             insert: function(item) {
-                return '<user id="' + item.id + '"><a href="' + home.path + 'profile/view/' + item.id + '">' + item.name + '</a></user>';
+                return '<user id="' + item.id + '"><a href="' + publicProfileUrl + item.id + '">' + item.name + '</a></user>';
             },
             delay: 200
-        }*/
+        }
     };
 
     /**

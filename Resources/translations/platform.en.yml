@@ -744,6 +744,7 @@ workspace_edit_form_name: Name
 workspace_edit_form_selfRegistration: 'Public registration'
 workspace_edit_form_selfUnregistration: 'Public unregistration'
 workspace_form_code: Code
+workspace_edit_form_creationDate: 'Creation date'
 workspace_form_displayable: Public
 workspace_form_name: Name
 workspace_form_selfRegistration: 'Public registration'
@@ -772,6 +773,8 @@ workspace_unregistration_confirm_title: 'Do you really want to unregister from t
 workspace_welcome: Welcome
 workspaces: Workspaces
 workspaces_included_in_category: 'Workspaces included in this category'
+workspace_management : 'The workspace has been create at %creationDate%, by %creator%. There is %count% suscriber(s).'
+workspace_management_date_null : 'The workspace has been created by %creator%. There is %count% subscrber(s).'
 workspaces_management: 'Workspaces management'
 workspaces_per_page: 'Workspace per page'
 ws_creator: 'Workspace creator'
