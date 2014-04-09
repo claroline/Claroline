@@ -21,7 +21,7 @@ class Updater010400
         $em = $this->container->get('doctrine.orm.entity_manager');
 
 
-        $widget = $em->getRepository('ClarolineCoreBundle:Widget\Widget')->findBy(array('name' => 'claroline_path_widget'));
+        $widget = $em->getRepository('ClarolineCoreBundle:Widget\Widget')->findBy(array('name' => 'innova_path_widget'));
 
         if (!$widget) {
             $this->log('adding the path widget...');
