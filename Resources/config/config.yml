@@ -18,3 +18,7 @@ plugin:
       name: innova_non_digital_resource
       is_exportable: false
       icon: res_file.png
+
+  widgets:
+     - name: claroline_path_widget
+       is_configurable: false
