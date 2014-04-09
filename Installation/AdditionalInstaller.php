@@ -10,6 +10,17 @@ use Innova\PathBundle\Entity\NonDigitalResourceType;
  */
 class AdditionalInstaller extends BaseInstaller
 {
+    
+    private $logger;
+
+    public function __construct()
+    {
+        $self = $this;
+        $this->logger = function ($message) use ($self) {
+            $self->log($message);
+        };
+    }
+    
     /**
      * Action to perform after Bundle installation
      * Load default allowed types for the non digital resources
