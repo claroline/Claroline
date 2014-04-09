@@ -45,6 +45,11 @@ class AdditionalInstaller extends BaseInstaller
             );
             $query->getResult();
         }
+
+
+        $updater010400 = new Updater\Updater010400($this->container);
+        $updater010400->setLogger($this->logger);
+        $updater010400->postUpdate();
         
         return $this;
     }

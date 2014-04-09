@@ -1,0 +1,21 @@
+{% if paths | length > 0 %}
+    <ul class="list-group">
+    {% for path in paths["me"] if path.published %}
+            <a class="list-group-item" href="{{ path('innova_path_player_index', {workspaceId: workspace.id, pathId: path.id, stepId: path.getRootStep().id}) }}" />
+                {{ path.resourceNode.name }} 
+                - <em>{{ path.description | striptags | truncate(40, true, ' [...]') }}</em> 
+                <span class="label label-default pull-right">propriétaire</span>
+            </a>
+    {% endfor %}
+    {% for path in paths["others"] if path.published %}
+            <a class="list-group-item" href="{{ path('innova_path_player_index', {workspaceId: workspace.id, pathId: path.id, stepId: path.getRootStep().id}) }}" />
+                {{ path.resourceNode.name }} 
+                - <em>{{ path.description | striptags | truncate(40, true, ' [...]') }}</em> 
+            </a>
+    {% endfor %}
+    </ul>
+{% else %}
+    {{ 'no_path_widget_message'|trans({}, 'widget') }}
+{% endif %}
+
+
