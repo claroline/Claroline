@@ -76,14 +76,23 @@ class Updater021200
         /** @var \CLaroline\CoreBundle\Entity\User[] $users */
         $users = $userRepository->findByPublicUrl(null);
 
+        $this->log('User to update ' . count($users) . ' - ' . date('Y/m/d H:i:s'));
+
         /** @var \Claroline\CoreBundle\Manager\UserManager $userManager */
         $userManager = $this->container->get('claroline.manager.user_manager');
+
+        $nbUsers = 0;
 
         foreach ($users as $user) {
             $publicUrl = $userManager->generatePublicUrl($user);
             $user->setPublicUrl($publicUrl);
             $this->objectManager->persist($user);
             $this->objectManager->flush();
+            $nbUsers++;
+            if (200 === $nbUsers) {
+                $this->log('    ' . $nbUsers . ' updated users - ' . date('Y/m/d H:i:s'));
+                $nbUsers = 0;
+            }
         }
 
         $this->log('Public url for users updated.');
