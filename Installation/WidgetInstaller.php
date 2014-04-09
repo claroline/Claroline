@@ -5,7 +5,7 @@ namespace Innova\PathBundle\Installation\Updater;
 use Claroline\CoreBundle\Entity\Widget\Widget;
 use Doctrine\DBAL\Connection;
 
-class Updater010400
+class WidgetInstaller
 {
 
     private $container;
@@ -19,7 +19,6 @@ class Updater010400
     public function postUpdate()
     {
         $em = $this->container->get('doctrine.orm.entity_manager');
-
 
         $widget = $em->getRepository('ClarolineCoreBundle:Widget\Widget')->findBy(array('name' => 'innova_path_widget'));
 

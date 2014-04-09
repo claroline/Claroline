@@ -29,7 +29,8 @@ class AdditionalInstaller extends BaseInstaller
     public function postInstall()
     {
         $this->insertNonDigitalResourceTypes();
-        
+        $this->widgetInstaller();
+
         return $this;
     }
     
@@ -57,10 +58,7 @@ class AdditionalInstaller extends BaseInstaller
             $query->getResult();
         }
 
-
-        $updater010400 = new Updater\Updater010400($this->container);
-        $updater010400->setLogger($this->logger);
-        $updater010400->postUpdate();
+        $this->widgetInstaller();
         
         return $this;
     }
@@ -82,5 +80,15 @@ class AdditionalInstaller extends BaseInstaller
         $em->flush();
         
         return $this;
+    }
+
+    /**
+     * Insert widget
+     */
+    public function widgetInstaller()
+    {
+        $widgetInstaller = new WidgetInstaller($this->container);
+        $widgetInstaller->setLogger($this->logger);
+        $widgetInstaller->postUpdate();
     }
 }
