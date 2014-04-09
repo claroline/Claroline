@@ -739,6 +739,7 @@ workspace_delete_confirm_message: 'Etes-vous sûr de vouloir supprimer cet espac
 workspace_delete_confirm_title: 'Confirmation de suppression'
 workspace_delete_success_message: 'L''espace d''activités "%workspaceName%" été supprimé.'
 workspace_edit_form_code: Code
+workspace_edit_form_creationDate : 'Date de création'
 workspace_edit_form_displayable: Visible
 workspace_edit_form_name: Nom
 workspace_edit_form_selfRegistration: 'Inscription publique'
@@ -754,6 +755,7 @@ workspace_home_tab_creation: 'Création d''un onglet pour les espaces d''activit
 workspace_home_tab_edition: 'Edition de l''onglet pour les espaces d''activités'
 workspace_home_tabs: 'Onglets pour les espaces d''activités'
 workspace_list: 'Liste des espaces d''activités'
+workspace_management : 'L''espace d''activité a été créé le %creationDate%, par %creator%. Il y a %count% inscrit(s).'
 workspace_order_tool_edit_form_name: Nom
 workspace_registration_confirm_title: 'Voulez-vous vous inscrire à cet espace d''activités ?'
 workspace_registration_message: 'Vous avez été inscrit à l''espace d''activité %workspace_name%'

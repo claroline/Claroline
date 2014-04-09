@@ -78,7 +78,7 @@ class WorkspacesController
             $this->workspaceManager->getWorkspaceByName($search, $page, $max, $order);
         $direction = $direction === 'DESC' ? 'ASC' : 'DESC';
 
-        return array('pager' => $pager, 'search' => $search, 'max' => $max, 'order' => $order, 'direction' => $direction);
+        return array('pager' => $pager, 'search' => $search, 'max' => $max, 'order' => $order, 'direction' => $direction );
     }
 
     /**

@@ -554,4 +554,18 @@ class WorkspaceRepository extends EntityRepository
 
         return $query->getResult();
     }
+
+    public function countUsers($workspaceId)
+    {
+        $dql = '
+            SELECT count(w) FROM Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace w
+            JOIN w.roles r
+            JOIN r.users u
+            WHERE w.id = :workspaceId
+        ';
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('workspaceId', $workspaceId);
+
+        return $query->getSingleScalarResult();
+    }
 }

@@ -19,8 +19,22 @@ class WorkspaceEditType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $attr = array();
+        $attr['class'] = 'datepicker input-small';
+        $attr['data-date-format'] = 'dd-mm-yyyy';
+        $attr['autocomplete'] = 'off';
         $builder->add('name', 'text', array('required' => true));
         $builder->add('code', 'text', array('required' => true));
+        $builder->add(
+            'creationDate',
+            'datepicker',
+            array(
+                'required'      => false,
+                'widget'        => 'single_text',
+                'format'        => 'dd-MM-yyyy',
+                'attr'          => $attr,
+            )
+        );
         $builder->add('displayable', 'checkbox', array('required' => false));
         $builder->add('selfRegistration', 'checkbox', array('required' => false));
         $builder->add('selfUnregistration', 'checkbox', array('required' => false));

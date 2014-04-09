@@ -860,8 +860,8 @@ class WorkspaceManager
         return $this->pagerFactory->createPager($query, $page, $max);
     }
 
-    public function countUsers()
+    public function countUsers($workspaceId)
     {
-        
+        return $this->workspaceRepo->countUsers($workspaceId);
     }
 }
