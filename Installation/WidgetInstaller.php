@@ -1,6 +1,6 @@
 <?php
 
-namespace Innova\PathBundle\Installation\Updater;
+namespace Innova\PathBundle\Installation;
 
 use Claroline\CoreBundle\Entity\Widget\Widget;
 use Doctrine\DBAL\Connection;
