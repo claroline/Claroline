@@ -30,7 +30,7 @@ class Updater010400
                 ->findOneBy(array('vendorName' => 'Innova', 'bundleName' => 'PathBundle'));
 
             $widget = new Widget();
-            $widget->setName('claroline_path_widget');
+            $widget->setName('innova_path_widget');
             $widget->setDisplayableInDesktop(false);
             $widget->setDisplayableInWorkspace(true);
             $widget->setConfigurable(false);
