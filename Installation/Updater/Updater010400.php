@@ -5,23 +5,15 @@ namespace Innova\PathBundle\Installation\Updater;
 use Claroline\CoreBundle\Entity\Widget\Widget;
 use Doctrine\DBAL\Connection;
 
-class Updater020200
+class Updater010400
 {
 
     private $container;
     private $logger;
-    /** @var  Connection */
-    private $conn;
 
     public function __construct($container)
     {
         $this->container = $container;
-        $this->conn = $container->get('doctrine.dbal.default_connection');
-    }
-
-    public function preUpdate()
-    {
-        
     }
 
     public function postUpdate()
