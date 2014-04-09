@@ -54,63 +54,46 @@
             </div>
             <div class="col-md-10">
                 <ul class="nav nav-tabs" id="translationFormTabs">
-                    {% set frErrorClass = (not form.frTranslation.vars.valid) ? 'has-error' : null %}
-                    {% set enErrorClass = (not form.enTranslation.vars.valid) ? 'has-error' : null %}
-                    <li class="active"><a href="#fr" {% if null != frErrorClass %} class="{{ frErrorClass }}"{% endif %} data-toggle="tab">{{ 'badge_form_frTranslation'|trans }}<img src="{{ asset('bundles/clarolinecore/images/lang/fr.png') }}" alt="fr" class="flag" /></a></li>
-                    <li><a href="#en" {% if null != enErrorClass %} class="{{ enErrorClass }}"{% endif %} data-toggle="tab">{{ 'badge_form_enTranslation'|trans }}<img src="{{ asset('bundles/clarolinecore/images/lang/en.png') }}" alt="en" class="flag" /></a></li>
+                    {% for translation in form.translations %}
+                        {% set locale = translation.locale.vars.value %}
+                        <li{% if loop.first %} class="active"{% endif %}>
+                            <a href="#{{ locale }}" {% if not translation.vars.valid %}class="has-error" {% endif %}data-toggle="tab">
+                                {{ ('badge_form_' ~ locale ~ 'Translation')|trans }}
+                                <img src="{{ asset('bundles/clarolinecore/images/lang/' ~ locale ~ '.png') }}" alt="{{ locale }}" class="flag" />
+                            </a>
+                        </li>
+                    {% endfor %}
                 </ul>
 
                 <div class="tab-content well well-sm badge_translations">
-                    <div class="tab-pane active" id="fr">
-                        {{ form_errors(form.frTranslation) }}
-                        <div class="form-group{% if not form.frTranslation.name.vars.valid %} has-error{% endif %}">
-                            <label class="required control-label" for="badge_form_frTranslation_name">{{ 'badge_form_name'|trans }} :</label>
-                            {{ form_errors(form.frTranslation.name) }}
-                            {{ form_widget(form.frTranslation.name) }}
-                            <div class="help-block badge_help">
-                                <span class="image_help">128 carac. max</span>
+                    {% for translation in form.translations %}
+                        {% set locale = translation.locale.vars.value %}
+                        <div class="tab-pane{% if loop.first %} active{% endif %}" id="{{ locale }}">
+                            {{ form_errors(translation) }}
+                            <div class="form-group{% if not translation.name.vars.valid %} has-error{% endif %}">
+                                <label class="required control-label" for="badge_form_{{ locale }}Translation_name">{{ 'badge_form_name'|trans }} :</label>
+                                {{ form_errors(translation.name) }}
+                                {{ form_widget(translation.name) }}
+                                <div class="help-block badge_help">
+                                    <span class="image_help">128 carac. max</span>
+                                </div>
                             </div>
-                        </div>
-                        <div class="form-group{% if not form.frTranslation.description.vars.valid %} has-error{% endif %}">
-                            <label class="required control-label" for="badge_form_frTranslation_description">{{ 'badge_form_description'|trans }} :</label>
-                            {{ form_errors(form.frTranslation.description) }}
-                            {{ form_widget(form.frTranslation.description) }}
-                            <div class="help-block badge_help">
-                                <span class="image_help">128 carac. max</span>
+                            <div class="form-group{% if not translation.description.vars.valid %} has-error{% endif %}">
+                                <label class="required control-label" for="badge_form_{{ locale }}Translation_description">{{ 'badge_form_description'|trans }} :</label>
+                                {{ form_errors(translation.description) }}
+                                {{ form_widget(translation.description) }}
+                                <div class="help-block badge_help">
+                                    <span class="image_help">128 carac. max</span>
+                                </div>
                             </div>
-                        </div>
-                        <div class="form-group{% if not form.frTranslation.criteria.vars.valid %} has-error{% endif %}">
-                            <label class="required control-label" for="badge_form_frTranslation_criteria">{{ 'badge_form_criteria'|trans }} :</label>
-                            {{ form_errors(form.frTranslation.criteria) }}
-                            {{ form_widget(form.frTranslation.criteria) }}
-                        </div>
-                        {{ form_widget(form.frTranslation) }}
-                    </div>
-                    <div class="tab-pane" id="en">
-                        {{ form_errors(form.enTranslation) }}
-                        <div class="form-group{% if not form.enTranslation.name.vars.valid %} has-error{% endif %}">
-                            <label class="required control-label" for="badge_form_frTranslation_name">{{ 'badge_form_name'|trans }} :</label>
-                            {{ form_errors(form.enTranslation.name) }}
-                            {{ form_widget(form.enTranslation.name) }}
-                            <div class="help-block badge_help">
-                                <span class="image_help">128 carac. max</span>
+                            <div class="form-group{% if not translation.criteria.vars.valid %} has-error{% endif %}">
+                                <label class="required control-label" for="badge_form_{{ locale }}Translation_criteria">{{ 'badge_form_criteria'|trans }} :</label>
+                                {{ form_errors(translation.criteria) }}
+                                {{ form_widget(translation.criteria) }}
                             </div>
+                            {{ form_widget(translation) }}
                         </div>
-                        <div class="form-group{% if not form.enTranslation.description.vars.valid %} has-error{% endif %}">
-                            <label class="required control-label" for="badge_form_frTranslation_description">{{ 'badge_form_description'|trans }} :</label>
-                            {{ form_errors(form.enTranslation.description) }}
-                            {{ form_widget(form.enTranslation.description) }}
-                            <div class="help-block badge_help">
-                                <span class="image_help">128 carac. max</span>
-                            </div>
-                        </div>
-                        <div class="form-group{% if not form.enTranslation.criteria.vars.valid %} has-error{% endif %}">
-                            <label class="required control-label" for="badge_form_frTranslation_criteria">{{ 'badge_form_criteria'|trans }} :</label>
-                            {{ form_errors(form.enTranslation.criteria) }}
-                            {{ form_widget(form.enTranslation.criteria) }}
-                        </div>
-                        {{ form_widget(form.enTranslation) }}
-                    </div>
+                    {% endfor %}
                 </div>
 
                 <div class="form-group is_expiring">
