@@ -183,6 +183,7 @@ database: 'Base de données'
 database_connection_failed: 'La connexion à la base de données à échoué.'
 date: Date
 date_form_format: dd/MM/yyyy
+date_form_placeholder: jj/mm/aaaa
 date_format: d/m/Y
 date_range.apply: Appliquer
 date_range.clear: Effacer

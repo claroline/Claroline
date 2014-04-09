@@ -19,8 +19,10 @@
         {% endif %}
         <script type="text/javascript">
             $(document).ready(function() {
+               // alert('in2');
                 $("#{{ form.vars['id'] }}").datepicker({{ options|json_encode()|raw }});
             });
         </script>
     {% endspaceless %}
 {% endblock %}
+

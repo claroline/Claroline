@@ -1,0 +1,84 @@
+{% extends 'ZenstruckFormBundle:Twitter:form_bootstrap3_layout.html.twig' %}
+
+{% block custom_widget_attributes %}
+    {% spaceless %}
+        name="{{ full_name }}"{% if read_only %} readonly="readonly"{% endif %}{% if disabled %} disabled="disabled"{% endif %}{% if required %} required="required"{% endif %}{% if max_length %} maxlength="{{ max_length }}"{% endif %}{% if pattern %} pattern="{{ pattern }}"{% endif %}
+        {% for attrname, attrvalue in attr %}{% if attrname in ['placeholder', 'title'] %}{{ attrname }}="{{ attrvalue|trans({}, translation_domain) }}" {% else %}{{ attrname }}="{{ attrvalue }}" {% endif %}{% endfor %}
+    {% endspaceless %}
+{% endblock custom_widget_attributes %}
+
+
+{% block  datetimepicker_row %}
+    {{ form_label(form,{}) }}
+    {{ form_widget(form,{})  }}
+{% endblock %}
+
+
+
+{% block datetimepicker_widget %}
+    {% set attr = attr|merge({'class': (attr.class|default('') ~ ' clarolineDateTimePicker')|trim}) %}
+        {{ form_errors(form.date) }}
+        {{ form_errors(form.time) }}
+
+        <div class="form-inline">
+            {% if component %}
+            <div class="input-group  date col-md-4">
+                 {{ form_widget(form.date, {'id' : id ~ '_date','attr':{'class':'input-small','placeholder': 'date_form_placeholder'|trans({},'platform')},}) }}
+                <span class="input-group-addon"><span class="icon-calendar"></span></span>
+            </div>
+            {% else %}
+                    {{ form_widget(form.date, {'id' : id ~ '_date','attr':{'class':'input-small','placeholder': 'date_form_placeholder'|trans({},'platform')},}) }}
+            {%  endif %}
+            <div class="input-group   col-md-offset-1 col-sm-3 ">
+                {{ form_widget(form.time, {'id' : id ~ '_time','attr':{'class':'input-small','placeholder':'--:--'} } ) }}
+                <span class="input-group-addon"><i class="icon-time"></i></span>
+            </div>
+        </div>
+
+    <script type="text/javascript">
+        $(document).ready(function() {
+            {#  $("#{{ form.vars['id'] }}_date").datepicker({{ options|json_encode()|raw }}); #}
+           $("#{{ form.vars['id'] }}_date").datepicker({{ options|json_encode()|raw }});
+           $("#{{ form.vars['id'] }}_time").keyup(function(e)
+           {
+               // do nothing if this is a delete or suppr key.
+               if(e.keyCode != 8 && e.keyCode != 46 ) {
+                   var time;
+                   var val = $(this).val();
+                   var sep =':';
+                   var lg = $(this).val().length;
+                   var hours = val.substr(0,2);
+                   var min = val.substr(3,2);
+
+                   if(val == '') {
+                       time  ='00:00';
+                   } else {
+                       if(isNaN(parseInt(hours))) {
+                           hours = '00';
+                       }
+                       if(min != '' && isNaN(parseInt(min))){
+                           min = '00';
+                       }
+                       if( hours < 0 || hours > 23) {
+                           hours = '00';
+                       }
+                       if(min < 0 || min > 59) {
+                           min = '00';
+                       }
+                       // if there is no minute or separator.
+                       if(lg < 2) {
+                           sep = '';
+                           min = '';
+                        }
+                       time = hours+sep+min;
+                   }
+                   $(this).val(time);
+
+               }
+           }
+           );
+        });
+    </script>
+
+
+{% endblock %}
