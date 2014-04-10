@@ -5,7 +5,11 @@
 
 {% block resourceBreadcrumb %}
     <li>
-        <a href="{{ path('icap_dropzone_drops', {'resourceId': dropzone.id}) }}"><span class="glyphicon icon-list"></span> {{ dropzone.resourceNode.name }}</a></li>
+        {% if byUserMod == 1 %}
+            <a href="{{ path('icap_dropzone_open', {'resourceId': dropzone.id}) }}"><span class="glyphicon icon-list"></span> {{ dropzone.resourceNode.name }}</a></li>
+        {% else %}
+            <a href="{{ path('icap_dropzone_drops', {'resourceId': dropzone.id}) }}"><span class="glyphicon icon-list"></span> {{ dropzone.resourceNode.name }}</a></li>
+        {% endif  %}
 
     <li class="active">
         {% if byUserMod == 1 %}
