@@ -140,7 +140,7 @@ function addFormHoleEdit(add, response, point, size, orthography, del, selector,
             var node = tinyMCE.get('ujm_exobundle_interactionholetype_html').selection
                     .select(tinyMCE.get('ujm_exobundle_interactionholetype_html').dom.select('#' + ind)[0]);
 
-            if ($(this).attr('checked')) {
+            if ($(this).is(':checked')) {
 
                 if (node.tagName == 'INPUT') {
                     nodeselect = '<select class="blank" id="' + ind + '" name="blank_' + ind + '"><option>' + node.value + '</option></select>';
@@ -271,7 +271,7 @@ function addHole(indexBlank, valHole) {
         var node = tinyMCE.get('ujm_exobundle_interactionholetype_html').selection
                 .select(tinyMCE.get('ujm_exobundle_interactionholetype_html').dom.select('#' + indexBlank)[0]);
         
-        if ($(this).attr('checked')) {
+        if ($(this).is(':checked')) {
         
             if (node.tagName == 'INPUT') {
                 nodeselect = '<select class="blank" id="' + indexBlank + '" name="blank_' + indexBlank + '"><option>' + node.value + '</option></select>';
@@ -279,7 +279,7 @@ function addHole(indexBlank, valHole) {
             } 
             
         } else {
-            if (node.tagName == 'SELECT') {
+            if (node.tagName == 'SELECT') {alert('3');
                 size = $('#ujm_exobundle_interactionholetype_holes_' + index + '_size').val();
                 nodeBlank = '<input type="text" value="' + node.value + '" size="' + size + '" class="blank" id="' + index + '" name="blank_' + indexBlank + '">';
                 tinyMCE.get('ujm_exobundle_interactionholetype_html').selection.setContent(nodeBlank);
