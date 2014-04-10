@@ -45,6 +45,12 @@ class Tool
      */
     protected $class;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Plugin")
+     * @ORM\JoinColumn(onDelete="CASCADE")
+     */
+    protected $plugin;
+
     public function getId()
     {
         return $this->id;
@@ -80,5 +86,15 @@ class Tool
     public function getClass()
     {
         return $this->class;
+    }
+
+    public function setPlugin($plugin)
+    {
+        $this->plugin = $plugin;
+    }
+
+    public function getPlugin()
+    {
+        return $this->plugin;
     }
 } 

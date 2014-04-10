@@ -19,27 +19,27 @@ class LoadAdminTools implements RequiredFixture
 {
     public function load(ObjectManager $manager)
     {
-        $tools = array(
-            array('platform_parameters', 'icon-cog'),
-            array('user_management', 'icon-user'),
-            array('workspace_management', 'icon-book'),
-            array('badges_management', 'icon-trophy'),
-            array('registration_to_workspace', 'icon-book'),
-            array('platform_plugins', 'icon-wrench'),
-            array('home_tabs', 'icon-th-large'),
-            array('desktop_tools', 'icon-pencil'),
-            array('platform_logs', 'icon-reorder'),
-            array('platform_analytics', 'icon-bar-chart')
-        );
-
-        foreach ($tools as $tool) {
-            $entity = new Tool();
-            $entity ->setName($tool[0]);
-            $entity ->setClass($tool[1]);
-            $manager->persist($entity);
-        }
-
-        $manager->flush();
+//        $tools = array(
+//            array('platform_parameters', 'icon-cog'),
+//            array('user_management', 'icon-user'),
+//            array('workspace_management', 'icon-book'),
+//            array('badges_management', 'icon-trophy'),
+//            array('registration_to_workspace', 'icon-book'),
+//            array('platform_plugins', 'icon-wrench'),
+//            array('home_tabs', 'icon-th-large'),
+//            array('desktop_tools', 'icon-pencil'),
+//            array('platform_logs', 'icon-reorder'),
+//            array('platform_analytics', 'icon-bar-chart')
+//        );
+//
+//        foreach ($tools as $tool) {
+//            $entity = new Tool();
+//            $entity ->setName($tool[0]);
+//            $entity ->setClass($tool[1]);
+//            $manager->persist($entity);
+//        }
+//
+//        $manager->flush();
     }
 
     public function setContainer($container)
