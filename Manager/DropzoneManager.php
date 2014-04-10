@@ -156,12 +156,13 @@ class DropzoneManager
 
         $currentState = 0;
         // set the states of the dropzone.
-        if ($dropzone->isPeerReview()) {
+
+        if ($dropzone->getPeerReview()) {
+
             // case of peerReview
             for ($i = 0; $i < $expectedCorrections; $i++) {
                 array_push($states, 'correction n°%nb_correction%/%expected_correction%');
             }
-
             $states = array_merge($states, $end_states);
 
             // getting the current state.
