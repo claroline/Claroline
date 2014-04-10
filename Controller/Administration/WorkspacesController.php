@@ -69,6 +69,7 @@ class WorkspacesController
      * @param $search
      * @param $max
      * @param $order
+     * @param $direction
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function managementAction($page, $search, $max, $order, $direction)

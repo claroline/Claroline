@@ -744,7 +744,7 @@ class AdministrationController extends Controller
 
     /**
      * @EXT\Template("ClarolineCoreBundle:Administration:left_bar.html.twig")
-     *
+     * @EXT\Method("GET")
      * @return array
      */
     public function renderLeftBarAction()
@@ -752,5 +752,25 @@ class AdministrationController extends Controller
         $tools = $this->toolManager->getAdminTools();
 
         return array('tools' => $tools);
+    }
+
+    /**
+     * @EXT\Route(
+     *    "/open/tool/{toolName}",
+     *    name="claro_admin_open_tool",
+     *    options = {"expose"=true}
+     * )
+     *
+     * @return Response
+     */
+    public function openAdministrationToolAction($toolName)
+    {
+        $event = $this->eventDispatcher->dispatch(
+            'administration_tool_' . $toolName ,
+            'OpenAdministrationTool',
+            array('toolName' => $toolName)
+        );
+
+        return $event->getResponse();
     }
 }
