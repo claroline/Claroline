@@ -40,8 +40,8 @@ class DropzoneController extends DropzoneBaseController
     {
         $this->isAllowToOpen($dropzone);
         $this->isAllowToEdit($dropzone);
-
-        $form = $this->createForm(new DropzoneCommonType(), $dropzone);
+        $platformConfigHandler = $this->get('claroline.config.platform_config_handler');
+        $form = $this->createForm(new DropzoneCommonType(), $dropzone,array('language' => $platformConfigHandler->getParameter('locale_language'), 'date_format' => $this->get('translator')->trans('date_form_format', array(), 'platform')));
 
         if ($this->getRequest()->isMethod('POST')) {
             // see if manual plannification option has changed.
