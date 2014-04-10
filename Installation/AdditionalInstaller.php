@@ -29,7 +29,6 @@ class AdditionalInstaller extends BaseInstaller
     public function postInstall()
     {
         $this->insertNonDigitalResourceTypes();
-        $this->widgetInstaller();
 
         return $this;
     }
