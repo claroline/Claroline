@@ -1,24 +1,30 @@
 <?php
 
-/*
- * This file is part of the Claroline Connect package.
- *
- * (c) Claroline Consortium <consortium@claroline.net>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
-namespace Claroline\CoreBundle\DataFixtures\Required\Data;
+namespace Claroline\CoreBundle\Library\Installation\Updater;
 
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Administration\Tool;
-use Claroline\CoreBundle\DataFixtures\Required\RequiredFixture;
 
-class LoadAdminTools implements RequiredFixture
+class Updater021300
 {
-    public function load(ObjectManager $manager)
+    private $container;
+    private $logger;
+
+    /**
+     * @var ObjectManager
+     */
+    private $objectManager;
+
+    public function __construct($container)
     {
+        $this->container     = $container;
+        $this->objectManager = $container->get('claroline.persistence.object_manager');
+    }
+
+    public function postUpdate()
+    {
+        $this->log('Creating admin tools...');
+
         $tools = array(
             array('platform_parameters', 'icon-cog'),
             array('user_management', 'icon-user'),
@@ -36,14 +42,21 @@ class LoadAdminTools implements RequiredFixture
             $entity = new Tool();
             $entity ->setName($tool[0]);
             $entity ->setClass($tool[1]);
-            $manager->persist($entity);
+            $this->objectManager->persist($entity);
         }
 
-        $manager->flush();
+        $this->objectManager->flush();
     }
 
-    public function setContainer($container)
+    public function setLogger($logger)
     {
-        $this->container = $container;
+        $this->logger = $logger;
     }
-}
+
+    private function log($message)
+    {
+        if ($log = $this->logger) {
+            $log('    ' . $message);
+        }
+    }
+} 
