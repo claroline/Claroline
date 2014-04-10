@@ -1,3 +1,6 @@
+
+
+{% import 'IcapDropzoneBundle::macros.html.twig' as dropzoneMacros %}
 <form class="form-horizontal" method="POST" action="{{ path('icap_dropzone_drops_delete', {'resourceId': dropzone.id, 'dropId':drop.id, 'tab': tab, 'page': page}) }}">
     {{ form_errors(form) }}
 
@@ -8,7 +11,7 @@
         </div>
         
         {% set documentListText = 'Documents'|trans({}, 'icap_dropzone') %}
-        {{ dropzoneMacros.displayDocumentsList(dropzone, drop.documents, 6, "condensed", documentListText) }}
+        {{ dropzoneMacros.displayDocumentsList(drop ,dropzone, 12, "condensed", documentListText) }}
     </div>
 
     <div class="container form-group form-buttons">
