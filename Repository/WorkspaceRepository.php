@@ -503,9 +503,9 @@ class WorkspaceRepository extends EntityRepository
         $upperSearch = trim($upperSearch);
         $upperSearch = preg_replace('/\s+/', ' ', $upperSearch);
         $dql = "
-            SELECT w,u
+            SELECT w
             FROM Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace w
-            
+            WHERE w.name LIKE :search
             OR UPPER(w.code) LIKE :search
             ORDER BY w.{$orderedBy}
         ";
@@ -553,5 +553,19 @@ class WorkspaceRepository extends EntityRepository
         $query->setParameter('codes', $codes);
 
         return $query->getResult();
+    }
+
+    public function countUsers($workspaceId)
+    {
+        $dql = '
+            SELECT count(w) FROM Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace w
+            JOIN w.roles r
+            JOIN r.users u
+            WHERE w.id = :workspaceId
+        ';
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('workspaceId', $workspaceId);
+
+        return $query->getSingleScalarResult();
     }
 }

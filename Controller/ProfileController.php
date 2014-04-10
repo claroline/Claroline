@@ -152,13 +152,15 @@ class ProfileController extends Controller
     /**
      * @EXT\Route(
      *     "/{publicUrl}",
-     *      name="claro_public_profile_view"
+     *      name="claro_public_profile_view",
+     *      options={"expose"=true}
      * )
      */
     public function publicProfileAction($publicUrl)
     {
         /** @var \Claroline\CoreBundle\Entity\User $user */
-        $user = $this->getDoctrine()->getRepository('ClarolineCoreBundle:User')->findOneByPublicUrl($publicUrl);
+        $user = $this->getDoctrine()->getRepository('ClarolineCoreBundle:User')->findOneByIdOrPublicUrl($publicUrl);
+
         if (null === $user) {
             throw $this->createNotFoundException("Unknown user.");
         }

@@ -70,6 +70,7 @@ badge_form_choose_image: 'Choisir l''image du badge'
 badge_form_criteria: 'Critères d''obtention'
 badge_form_description: Description
 badge_form_enTranslation: 'Traduction anglaise'
+badge_form_esTranslation: 'Traduction espagnole'
 badge_form_execute: 'La règle est validée suite à une action de l''utilisateur sur'
 badge_form_execute_times: 'Quand il a effectué l''action'
 badge_form_is_expiring: "Le badge a-t-il une durée de validité ?"
