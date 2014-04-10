@@ -36,8 +36,9 @@ class DropzoneManager
     /**
      *  Getting the user that have the 'open' rights.
      *  Excluded the admin profil.
+     * @param \Icap\DropzoneBundle\Entity\Dropzone $dropzone
      * @return array UserIds.
-     * */
+     */
     public function getDropzoneUsersIds(Dropzone $dropzone)
     {
 
@@ -139,11 +140,13 @@ class DropzoneManager
      *  percent : rounded progress in percent
      *  nbCorrection : corrections made by the user in this evaluation.
      *
-     * @param Dropzone dropzone
-     * @param Drop drop
-     * @param int number of correction the user did.
+     * @param \Icap\DropzoneBundle\Entity\Dropzone $dropzone
+     * @param \Icap\DropzoneBundle\Entity\Drop $drop
+     * @param int $nbCorrection number of correction the user did.
+     * @internal param \Icap\DropzoneBundle\Entity\Dropzone $Dropzone
+     * @internal param \Icap\DropzoneBundle\Entity\Drop $Drop
      * @return array (states, currentState,percent,nbCorrection)
-     **/
+     */
     public function getDrozponeProgress(Dropzone $dropzone, Drop $drop = null, $nbCorrection = 0)
     {
         $begin_states = array('Evaluation not started', 'awaiting for drop', 'drop provided');
@@ -215,6 +218,7 @@ class DropzoneManager
      * if the dropzone option 'autocloseOpenDropsWhenTimeIsUp' is activated, and evalution allowToDrop time is over,
      *  this will close all drop not closed yet.
      * @param Dropzone $dropzone
+     * @param bool $force
      */
     public function closeDropzoneOpenedDrops(Dropzone $dropzone,$force=false)
     {
