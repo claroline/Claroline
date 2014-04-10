@@ -51,6 +51,11 @@
         {% set documentListText = 'Documents'|trans({}, 'icap_dropzone') %}
         {{ dropzoneMacros.displayDocumentsList(drop, dropzone, 12, "complete", documentListText) }}
 
+        <form  id='dropzone_global_drop_form' class="form-horizontal" method="POST" action="{{ path('icap_dropzone_drop', {'resourceId': dropzone.id}) }}">
+        <div class="{% if form.vars.errors|length > 0 %}has-error{% endif %}">
+            {{ form_errors(form) }}
+        </div>
+        {{ form_end(form) }}
         <div class="show-during-add" style="display: none;">
             <hr/>
             <div class="container-inline"></div>
@@ -80,10 +85,7 @@
         </div>
 
 
-        <form  id='dropzone_global_drop_form' class="form-horizontal" method="POST" action="{{ path('icap_dropzone_drop', {'resourceId': dropzone.id}) }}">
-            <div class="{% if form.vars.errors|length > 0 %}has-error{% endif %}">
-                {{ form_errors(form) }}
-            </div>
+
             <div class="row">
                 <div class="col-md-12">
 
@@ -103,13 +105,13 @@
 
                                     <div class='modal-warning text-danger' style="display:none">
                                          <span class="text-danger glyphicon icon-warning-sign"></span>
-                                        {{ 'Warn, some field are not empty, they will not be saved until you click the Add button '|trans({},'icap_dropzone') }}
+                                        {{ 'Warn, some field are not empty, they will not be saved until you click the Add button'|trans({},'icap_dropzone') }}
                                     </div>
                                 </div>
                                 <div class="modal-footer">
                                     <a href="#" class="btn btn-default" data-dismiss="modal">{{ 'Cancel'|trans({}, 'icap_dropzone') }}</a>
 
-                                    <button type="submit" class="btn btn-primary pull-right">
+                                    <button id="global_dropsubmit" type="submit" class="btn btn-primary pull-right">
                                         {{ 'Confirm and finished'|trans({}, 'icap_dropzone') }}
                                     </button>
                                 </div>
@@ -119,7 +121,7 @@
 
                 </div>
             </div>
-            {{ form_end(form) }}
+
 
         <br/>
     </div>
@@ -159,7 +161,7 @@
             var resourceNodeId = null;
 
             var callBack = function(nodes){
-                console.log('callback custom pour document');
+                //console.log('callback custom pour document');
                 var id = _.keys(nodes)[0];
                 var name = nodes[_.keys(nodes)][0];
                 var resourceTypes = nodes[_.keys(nodes)][1];
@@ -239,10 +241,15 @@
                 });
             });
 
-
+            $('#global_dropsubmit').click(function(e)
+            {
+                e.preventDefault();
+                $('#dropzone_global_drop_form').submit();
+            });
 
             $('#dropzone_global_save_link').click(function()
             {
+
                 // test if some text or data is not save before launch modal, in order to adapt message.
                 var fieldEmpty = true;
                 var text = $('#icap_dropzone_document_file_form_text').val();
@@ -252,6 +259,7 @@
                     fieldEmpty = false;
                 }
 
+                // if there is not saved data ( text or somethin, alert User.
                 if(!fieldEmpty)
                 {
                     $('.modal-warning').show();
