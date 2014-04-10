@@ -1,21 +1,26 @@
 {% if paths | length > 0 %}
     <ul class="list-group">
     {% for path in paths["me"] if path.published %}
-            <a class="list-group-item" href="{{ path('innova_path_player_index', {workspaceId: workspace.id, pathId: path.id, stepId: path.getRootStep().id}) }}" />
-                {{ path.resourceNode.name }} 
-                - <em>{{ path.description | striptags | truncate(40, true, ' [...]') }}</em> 
-                <span class="label label-default pull-right">{{ 'path_author'|trans({}, 'widget') }}</span>
-            </a>
+            <span class="list-group-item">
+                <a href="{{ path('innova_path_player_index', {workspaceId: workspace.id, pathId: path.id, stepId: path.getRootStep().id}) }}">
+                    {{ path.resourceNode.name }}
+                </a>&nbsp;
+                <em>{{ path.description | striptags | truncate(40, true, ' [...]') }}</em> 
+                <a href="{{ path('innova_path_editor_edit', {workspaceId: workspace.id, id: path.id}) }}" class="btn btn-default btn-xs pull-right">
+                    <span class="icon-pencil"></span> 
+                    {{ 'edit'|trans({}, 'innova_tools') }}
+                </a>
+            </span>
     {% endfor %}
     {% for path in paths["others"] if path.published %}
-            <a class="list-group-item" href="{{ path('innova_path_player_index', {workspaceId: workspace.id, pathId: path.id, stepId: path.getRootStep().id}) }}" />
-                {{ path.resourceNode.name }} 
-                - <em>{{ path.description | striptags | truncate(40, true, ' [...]') }}</em> 
-            </a>
+            <span class="list-group-item">
+                <a href="{{ path('innova_path_player_index', {workspaceId: workspace.id, pathId: path.id, stepId: path.getRootStep().id}) }}">
+                    {{ path.resourceNode.name }}
+                </a>&nbsp;
+                <em>{{ path.description | striptags | truncate(40, true, ' [...]') }}</em> 
+            </span>
     {% endfor %}
     </ul>
 {% else %}
     {{ 'no_path_widget_message'|trans({}, 'widget') }}
 {% endif %}
-
-
