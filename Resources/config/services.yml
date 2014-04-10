@@ -1,0 +1,10 @@
+parameters:
+    icap.portfolio.portfolio_repository.class: Icap\PortfolioBundle\Repository\PortfolioRepository
+
+services:
+    icap.portfolio.portfolio_repository:
+        class:           %icap.portfolio.portfolio_repository.class%
+        factory_service: doctrine.orm.entity_manager
+        factory_method:  getRepository
+        arguments:
+            - Icap\PortfolioBundle\Entity\Portfolio

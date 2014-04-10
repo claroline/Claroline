@@ -8,11 +8,6 @@ use Claroline\InstallationBundle\Bundle\InstallableBundle;
 
 class IcapPortfolioBundle extends InstallableBundle implements AutoConfigurableInterface
 {
-    public function hasMigrations()
-    {
-        return false;
-    }
-
     public function supports($environment)
     {
         return true;
@@ -23,7 +18,7 @@ class IcapPortfolioBundle extends InstallableBundle implements AutoConfigurableI
         $config = new ConfigurationBuilder();
 
         if (file_exists($routingFile = $this->getPath() . '/Resources/config/routing.yml')) {
-            $config->addRoutingResource($routingFile, null, 'icap_portfolio');
+            $config->addRoutingResource($routingFile, null, 'portfolio');
         }
 
         return $config;

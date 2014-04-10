@@ -1,0 +1,6 @@
+no_portfolios_create_one: 'You don''t have any portfolio yet.<br>You can <a href="%newPortfolioUrl%" title="Créer un portfolio">create some</a> to show your skills.'
+updated_on: 'Updated on %date%'
+portfolio_deletion_confirm_title: 'Deletion of a portfolio'
+portfolio_deletion_confirm_message: 'Are you sure you want to delete the portfolio <strong>%portfolioName%</strong> ?'
+icap_portfolio_delete_success: 'Portfolio deleted with success'
+icap_portfolio_delete_error: 'An error occured while deleting portfolio'

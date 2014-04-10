@@ -10,6 +10,17 @@
             </h3>
         </div>
         <div class="panel-body">
+            {{ macros.flashBox() }}
+            {% block content_body %}{% endblock %}
         </div>
     </div>
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {% stylesheets debug=false filter='lessphp, cssmin'  output='bundles/icapportfolio/css/portfolio.css'
+      "@IcapPortfolioBundle/Resources/views/less/portfolio.less"
+    %}
+        <link rel="stylesheet" href="{{ asset_url }}" screen="media" />
+    {% endstylesheets %}
 {% endblock %}

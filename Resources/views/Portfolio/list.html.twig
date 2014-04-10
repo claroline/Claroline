@@ -1,1 +1,75 @@
 {% extends 'IcapPortfolioBundle::layout.html.twig' %}
+
+{% block content_body %}
+    {% if 0 < pager.nbResults %}
+        <table class="table table-hover table_portfolios">
+            <colgroup>
+                <col class="nameCol">
+                <col class="statusCol">
+                <col class="actionsCol">
+            </colgroup>
+            <thead>
+                <tr>
+                    <th>Nom</th>
+                    <th>Statut</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for portfolio in pager %}
+                    <tr class="portfolio">
+                        <td>
+                            <a href="#" title="" class="block">{{ portfolio.name }}</a>
+                            <a href="#" title="" class="text-muted">http://www.localhost/claroline/portfolio/{{ portfolio.slug }}</a>
+                        </td>
+                        <td>
+                            <span class="block"><span class="badge"></span>{{ portfolio.sharePolicyLabel|trans({}, 'icap_portfolio') }}</span>
+                            <span class="text-muted">{{ 'updated_on'|trans({'%date%': portfolio.updatedAt|date('date_format'|trans({}, 'platform') ~ ' H:i:s')}, 'icap_portfolio') }}</span>
+                        </td>
+                        <td>
+                            <a href="{{ path('icap_portfolio_delete', {'id': portfolio.id}) }}" class="btn btn-sm btn-danger delete"
+                                     data-confirm-title="{{ 'portfolio_deletion_confirm_title'|trans({}, 'icap_portfolio') }}"
+                                     data-confirm-message="{{ 'portfolio_deletion_confirm_message'|trans({'%portfolioName%': portfolio.name}, 'icap_portfolio') }}"
+                                     data-confirm-ok="{{ 'delete'|trans({}, 'platform') }}"
+                                     data-confirm-cancel="{{ 'cancel'|trans({}, 'platform') }}" data-toggle="tooltip"
+                                     data-container="body" title="{{ 'delete'|trans({}, 'platform') }}" data-placement="top"
+                                     data-original-title="{{ 'delete'|trans({}, 'platform') }}">
+                                <span class="icon-trash"></span>
+                            </a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p class="well text-center">
+            {{ 'no_portfolios_create_one'|trans({'%newPortfolioUrl%': '#'}, 'icap_portfolio')|raw }}
+        </p>
+    {% endif %}
+
+    {% if pager.haveToPaginate %}
+        {{
+            pagerfanta(
+                pager,
+                'twitter_bootstrap_translated',
+                {
+                    'proximity' : 1,
+                    'routeName': 'icap_portfolio_list'
+                }
+            )
+        }}
+    {%  endif %}
+{% endblock %}
+
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript" src='{{ asset('bundles/frontend/jquery/plugin/confirm-bootstrap/confirm-bootstrap.js') }}'></script>
+    <script type="text/javascript">
+        (function($) {
+            $(function() {
+                $('.delete').confirmModal();
+            });
+        })(jQuery);
+    </script>
+{% endblock %}
