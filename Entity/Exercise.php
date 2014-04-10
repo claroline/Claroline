@@ -186,6 +186,13 @@ class Exercise extends AbstractResource
      * )
      */
     private $groupes;
+    
+    /**
+     * @var boolean $published
+     *
+     * @ORM\Column(name="published", type="boolean")
+     */
+    private $published;
 
     public function __construct()
     {
@@ -577,5 +584,23 @@ class Exercise extends AbstractResource
     public function archiveExercise()
     {
         $this->resourceNode = null;
+    }
+    
+    /**
+     * Set published
+     *
+     * @param boolean $published
+     */
+    public function setPublished($published)
+    {
+        $this->published = $published;
+    }
+
+    /**
+     * Get published
+     */
+    public function getpublished()
+    {
+        return $this->published;
     }
 }
