@@ -29,7 +29,8 @@ class LoadAdminTools implements RequiredFixture
             array('home_tabs', 'icon-th-large'),
             array('desktop_tools', 'icon-pencil'),
             array('platform_logs', 'icon-reorder'),
-            array('platform_analytics', 'icon-bar-chart')
+            array('platform_analytics', 'icon-bar-chart'),
+            array('roles_management', 'icon-group')
         );
 
         foreach ($tools as $tool) {
