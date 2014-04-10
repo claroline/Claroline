@@ -26,13 +26,14 @@ function creationQCM(expectedAnswer, response, point, comment, positionForce, ad
     whichChange();
 
     // when select a radio box, deselect the other because can only have one selected
-    $(":radio").click(function(){
-       if ($(this).is(':checked')) {
+    $(document).on('click', ':radio', function () {
+        if ($(this).is(':checked')) {
+           radioJustChecked = $(this).attr("id");
            $('#newTable').find(('tr:not(:first)')).each(function () {
-              $(this).find('input').eq(1).removeAttr('checked');
+                if (radioJustChecked != $(this).find('input').eq(1).attr("id")) {
+                    $(this).find('input').eq(1).removeAttr('checked');
+                }
            });
-
-           $(this).attr('checked', 'checked');
        }
     });
 
@@ -102,13 +103,14 @@ function creationQCMEdit(expectedAnswer, response, point, comment, positionForce
     whichChecked();
     whichChange();
 
-    $(':radio').on('click', function () {
-       if ($(this).is(':checked')) {
+    $(document).on('click', ':radio', function () {
+        if ($(this).is(':checked')) {
+           radioJustChecked = $(this).attr("id");
            $('#newTable').find(('tr:not(:first)')).each(function () {
-              $(this).find('input').eq(1).removeAttr('checked');
+                if (radioJustChecked != $(this).find('input').eq(1).attr("id")) {
+                    $(this).find('input').eq(1).removeAttr('checked');
+                }
            });
-
-           $(this).attr('checked', 'checked');
        }
     });
 
