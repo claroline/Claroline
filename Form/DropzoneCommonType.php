@@ -3,6 +3,7 @@
 namespace Icap\DropzoneBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
@@ -10,6 +11,15 @@ class DropzoneCommonType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $defaultDateTimeOptions = array(
+            'required'      => false,
+            'read_only'     => false,
+            'component'     => true,
+            'autoclose'     => true,
+            'language'      => $options['language'],
+            'format'        => $options['date_format']
+        );
+
         $builder
             ->add('stayHere', 'hidden', array(
                 'mapped' => false
@@ -68,10 +78,18 @@ class DropzoneCommonType extends AbstractType
                 'multiple' => false
             ))
             ->add('autoCloseOpenedDropsWhenTimeIsUp','checkbox', array('required' => false))
-            ->add('startAllowDrop', 'datetime', array('date_widget' => 'single_text', 'time_widget' => 'single_text', 'with_seconds' => false, 'required' => false))
+            /*
+             *
+             ->add('startAllowDrop', 'datetime', array('date_widget' => 'single_text', 'time_widget' => 'single_text', 'with_seconds' => false, 'required' => false))
             ->add('endAllowDrop', 'datetime', array('date_widget' => 'single_text', 'time_widget' => 'single_text', 'with_seconds' => false, 'required' => false))
             ->add('startReview', 'datetime', array('date_widget' => 'single_text', 'time_widget' => 'single_text', 'with_seconds' => false, 'required' => false))
-            ->add('endReview', 'datetime', array('date_widget' => 'single_text', 'time_widget' => 'single_text', 'with_seconds' => false, 'required' => false));
+            ->add('endReview', 'datetime', array('date_widget' => 'single_text', 'time_widget' => 'single_text', 'with_seconds' => false, 'required' => false))
+            */
+            ->add('startAllowDrop', 'datetimepicker', $defaultDateTimeOptions)
+            ->add('endAllowDrop', 'datetimepicker', $defaultDateTimeOptions)
+            ->add('startReview', 'datetimepicker', $defaultDateTimeOptions)
+            ->add('endReview', 'datetimepicker', $defaultDateTimeOptions);
+
     }
 
     public function getName()
@@ -85,6 +103,7 @@ class DropzoneCommonType extends AbstractType
             array(
                 'language' => 'en',
                 'translation_domain' => 'icap_dropzone',
+                'date_format'     => DateType::HTML5_FORMAT,
             )
         );
     }
