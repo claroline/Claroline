@@ -13,12 +13,12 @@
                 <input type="text" name="template-name" ng-model="formTemplate.name" class="form-control" value="{{ formTemplate.name }}" />
             </div>
             
-            <div class="col-md-12">
+            <div class="form-group col-md-12">
                 <label for="template-description">{{ 'template_description' | trans:{}:'path_editor' }}</label>
                 <textarea class="form-control" name="template-description" id="template-description" cols="30" rows="4" ng-model="formTemplate.description"></textarea>
             </div>
-            
-            <div class="form-group col-md-12">
+
+            <div class="col-md-12">
                 <label class="checkbox">
                     <input type="checkbox" ng-model="formTemplate.withResources" />
                     {{ 'template_save_resources' | trans:{}:'path_editor' }}
@@ -27,7 +27,9 @@
             
             <input type="hidden" ng-model="formTemplate.structure" name="template-step" />
         </fieldset>
+
         <hr/>
+
         <div class="row">
             <div class="col-md-12">
                 <ul class="tree">

@@ -47,7 +47,7 @@ resource_edit_title: Ressource
 resource_save: Sauvegarder la ressource
 resource_name: Nom
 resource_description: Description
-resources_browse: Parcourir
+resources_browse: Sélectionner
 resource_propagate_to_children: Rendre cette ressource disponible dans les étapes enfants
 resource_hide_parent: Masquer dans cette étape
 resource_show_parent: Afficher dans cette étape

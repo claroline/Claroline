@@ -45,7 +45,7 @@ resource_add: Create
 root_default_name: <untitled>
 resource_edit_title: Resource
 resource_save: Save resource
-resources_browse: Browse
+resources_browse: Select
 resource_propagate_to_children: Make this resource visible in children
 resource_hide_parent: Hide in this step
 resource_show_parent: Display in this step
