@@ -33,14 +33,14 @@
                     <tr>
                         <th>{{ 'name'|trans({}, 'platform') }}</th>
                         {% for role in roles %}
-                            <th>{{ role.getName() }}</th>
+                            <th>{{ role.getTranslationKey()|trans({}, 'platform') }}</th>
                         {% endfor %}
                     </tr>
                 </thead>
                     <tbody>
                     {% for tool in tools %}
                         <tr id="{{ tool.getId() }}" class="row-user">
-                            <td>{{ tool.getName() }}</td>
+                            <td>{{ tool.getName()|trans({}, 'tools') }}</td>
                             {% for role in roles %}
                                 <td>
                                     <input type="checkbox"

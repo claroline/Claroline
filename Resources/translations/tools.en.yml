@@ -6,3 +6,14 @@ logs: Logs
 parameters: Settings
 resource_manager: Resources
 users: Users
+platform_parameters: Platform parameters
+user_management: Users management
+workspace_management: Workspaces management
+badges_management: Badges management
+registration_to_workspace: Registration to workspaces
+platform_plugins: Platform plugins
+home_tabs: Home tabs
+desktop_tools: Desktop tools
+platform_logs: Platform logs
+platform_analytics: Platform analytics
+roles_management: Roles management
