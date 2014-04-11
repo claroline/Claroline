@@ -643,4 +643,9 @@ class RoleManager
         $sender = $this->container->get('security.context')->getToken()->getUser();
         $this->messageManager->sendMessageToAbstractRoleSubject($ars, $content, $object, $sender);
     }
+
+    public function getPlatformNonAdminRoles()
+    {
+        return $this->roleRepo->findPlatformNonAdminRoles();
+    }
 }

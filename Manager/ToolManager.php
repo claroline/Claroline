@@ -16,6 +16,7 @@ use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Tool\Tool;
 use Claroline\CoreBundle\Entity\Tool\OrderedTool;
+use Claroline\CoreBundle\Entity\Administration\Tool as AdminTool;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Repository\OrderedToolRepository;
 use Claroline\CoreBundle\Repository\ToolRepository;
@@ -24,7 +25,6 @@ use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Library\Utilities\ClaroUtilities;
 use Claroline\CoreBundle\Manager\Exception\ToolPositionAlreadyOccupiedException;
 use Claroline\CoreBundle\Manager\Exception\UnremovableToolException;
-use Claroline\CoreBundle\Manager\RoleManager;
 use Symfony\Component\Translation\Translator;
 use Claroline\CoreBundle\Event\StrictDispatcher;
 use JMS\DiExtraBundle\Annotation as DI;
@@ -583,5 +583,19 @@ class ToolManager
     public function getAdminTools()
     {
         return $this->adminToolRepo->findAll();
+    }
+
+    public function addRoleToAdminTool(AdminTool $tool, Role $role)
+    {
+        $tool->addRole($role);
+        $this->om->persist($tool);
+        $this->om->flush();
+    }
+
+    public function removeRoleFromAdminTool(AdminTool $tool, Role $role)
+    {
+        $tool->removeRole($role);
+        $this->om->persist($tool);
+        $this->om->flush();
     }
 }

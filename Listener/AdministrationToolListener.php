@@ -192,4 +192,19 @@ class AdministrationToolListener
         $event->setResponse($response);
         $event->stopPropagation();
     }
+
+    /**
+     * @DI\Observe("administration_tool_roles_management")
+     *
+     * @param OpenAdministrationToolEvent $event
+     */
+    public function onOpenRolesManagement(OpenAdministrationToolEvent $event)
+    {
+        $params = array();
+        $params['_controller'] = 'ClarolineCoreBundle:Administration\Roles:index';
+        $subRequest = $this->request->duplicate(array(), null, $params);
+        $response = $this->httpKernel->handle($subRequest, HttpKernelInterface::SUB_REQUEST);
+        $event->setResponse($response);
+        $event->stopPropagation();
+    }
 } 

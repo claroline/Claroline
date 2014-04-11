@@ -1,5 +1,4 @@
 hwi_oauth_login:
-hwi_oauth_login:
     resource: "@HWIOAuthBundle/Resources/config/routing/login.xml"
     prefix:   /login/hwi
 
@@ -242,6 +241,11 @@ claro_admin_parameters:
 claro_admin_workspaces:
     prefix: admin/workspaces
     resource: "@ClarolineCoreBundle/Controller/Administration/WorkspacesController.php"
+    type: annotation
+
+claro_admin_workspaces:
+    prefix: admin/roles
+    resource: "@ClarolineCoreBundle/Controller/Administration/RolesController.php"
     type: annotation
 
 claro_admin_users:

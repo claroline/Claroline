@@ -12,6 +12,7 @@
 namespace Claroline\CoreBundle\Entity\Administration;
 
 use Doctrine\ORM\Mapping as ORM;
+use Claroline\CoreBundle\Entity\Role;
 
 /**
  * @ORM\Entity()
@@ -76,6 +77,11 @@ class Tool
     public function removeRole(Role $role)
     {
         $this->roles->removeElement($role);
+    }
+
+    public function getRoles()
+    {
+        return $this->roles;
     }
 
     public function setClass($class)
