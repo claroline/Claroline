@@ -64,20 +64,19 @@
             {% if allowedTypes|length <= 0 %}
                 <span class="text-danger">{{ 'No document type allowed'|trans({}, 'icap_dropzone') }}</span>
             {% else %}
-
-                {% if 'url' in allowedTypes|keys %}
+                {% if 'url' in allowedTypes %}
                     {% include 'IcapDropzoneBundle:Document:documentForm.html.twig' with {'form':form_url, 'documentType': 'url'}%}
                 {% endif %}
 
-                {% if 'file' in allowedTypes|keys %}
+                {% if 'file' in allowedTypes %}
                     {% include 'IcapDropzoneBundle:Document:documentForm.html.twig' with {'form':form_file, 'documentType': 'file'}%} 
                 {% endif %}
 
-                {% if 'resource' in allowedTypes|keys %}
+                {% if 'resource' in allowedTypes %}
                     {% include 'IcapDropzoneBundle:Document:documentForm.html.twig' with {'form':form_resource, 'documentType': 'resource'}%}
                 {% endif %}
 
-                {% if 'text' in allowedTypes|keys %}
+                {% if 'text' in allowedTypes %}
                     {% include 'IcapDropzoneBundle:Document:documentForm.html.twig' with {'form':form_text, 'documentType': 'text'}%}
                 {% endif %}
             {% endif %}
