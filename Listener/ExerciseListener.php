@@ -60,6 +60,7 @@ class ExerciseListener extends ContainerAware
             $exercise->setName($exercise->getTitle());
             $exercise->setDateCreate(new \Datetime());
             $exercise->setNbQuestionPage(1);
+            $exercise->setPublished(FALSE);
 
             $subscription = new Subscription($user, $exercise);
             $subscription->setAdmin(true);
