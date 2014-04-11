@@ -194,6 +194,11 @@
               $(this).parents('form').submit();
             });
 
+            $('#icap_dropzone_document_file_form_file').parents('form').find('button').click(function(e) {
+                // desactivation of the submit button ( autosubmit is activated).
+                e.preventDefault();
+            });
+
             $('a.launch-inline').on('click', function (event) {
                 event.preventDefault();
                 $('.disabled-during-add').attr('disabled', 'disabled');
