@@ -21,7 +21,7 @@ class Version20140410161231 extends AbstractMigration
             )
         ");
         $this->addSql("
-            UPDATE ujm_exercise SET published=1
+            UPDATE ujm_exercise SET published=TRUE
         ");
     }
 

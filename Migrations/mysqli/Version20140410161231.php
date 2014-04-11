@@ -19,7 +19,7 @@ class Version20140410161231 extends AbstractMigration
             ADD published TINYINT(1) NOT NULL
         ");
         $this->addSql("
-            UPDATE ujm_exercise SET published=1
+            UPDATE ujm_exercise SET published=TRUE
         ");
     }
 
