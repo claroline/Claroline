@@ -15,7 +15,7 @@
             <thead>
                 <tr>
                     <th>{{ 'name'|trans({}, 'icap_portfolio') }}</th>
-                    <th>{{ 'status'|trans({}, 'icap_portfolio') }}</th>
+                    <th>{{ 'visibility'|trans({}, 'icap_portfolio') }}</th>
                     <th></th>
                 </tr>
             </thead>
@@ -31,9 +31,9 @@
                                 <span class="badge {{ portfolio.sharePolicyLabel }}"></span>
                                 {{ portfolio.sharePolicyLabel|trans({}, 'icap_portfolio') }}
                             </span>
-                            <span class="text-muted">
+                            <small class="text-muted">
                                 {{ 'updated_on'|trans({'%date%': portfolio.updatedAt|date('date_format'|trans({}, 'platform') ~ ' H:i:s')}, 'icap_portfolio') }}
-                            </span>
+                            </small>
                         </td>
                         <td>
                             <div class="btn-group">

@@ -23,8 +23,7 @@
                         {{ form_widget(form.refreshUrl) }} {{ 'refresh_url'|trans({}, 'icap_portfolio') }}
                     </label>
                     <span class="help-block alert alert-warning">
-                        <span class="icon-warning-sign"></span> <strong>Attention!</strong> Si vous cochez cette case l'adresse d'accès à votre portfolio sera mise à jour en fonction du nouveau nom renseigné.<br>
-                        L'ancienne adresse de votre portfolio ne sera plus accessible.
+                        {{ 'refresh_url_rename_warning_message'|trans({}, 'icap_portfolio')|raw }}
                     </span>
                 </div>
             </div>
