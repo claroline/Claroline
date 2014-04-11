@@ -7,11 +7,31 @@ table.table_portfolios {
     }
     .portfolio {
         .block {
-            display: block;
+            display:   block;
+            font-size: 12px;
         }
         td {
             padding:        10px 15px;
             vertical-align: middle;
+        }
+    }
+    .badge {
+        display:      block;
+        height:       15px;
+        width:        15px;
+        float:        left;
+        margin-right: 5px;
+        &.shared_to_nobody {
+            background-color: #d9534f;
+        }
+        &.shared_with_user {
+            background-color: #ed9c28;
+        }
+        &.shared_with_platform_user {
+            background-color: #428bca;
+        }
+        &.shared_with_everybody {
+            background-color: #5cb85c;
         }
     }
 }

@@ -23,7 +23,7 @@
                             <a href="#" title="" class="text-muted">http://www.localhost/claroline/portfolio/{{ portfolio.slug }}</a>
                         </td>
                         <td>
-                            <span class="block"><span class="badge"></span>{{ portfolio.sharePolicyLabel|trans({}, 'icap_portfolio') }}</span>
+                            <span class="block"><span class="badge {{ portfolio.sharePolicyLabel }}"></span>{{ portfolio.sharePolicyLabel|trans({}, 'icap_portfolio') }}</span>
                             <span class="text-muted">{{ 'updated_on'|trans({'%date%': portfolio.updatedAt|date('date_format'|trans({}, 'platform') ~ ' H:i:s')}, 'icap_portfolio') }}</span>
                         </td>
                         <td>

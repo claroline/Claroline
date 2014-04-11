@@ -4,3 +4,7 @@ portfolio_deletion_confirm_title: "Suppression d'un portfolio"
 portfolio_deletion_confirm_message: "Etes-vous sûr de vouloir supprimer le portfolio <strong>%portfolioName%</strong> ?"
 icap_portfolio_delete_success: "Portfolio supprimé avec succès"
 icap_portfolio_delete_error: "Erreur lors de la suppression du portfolio"
+shared_to_nobody: 'Partager avec personne'
+shared_with_user: 'Partager avec une liste d''utilisateurs'
+shared_with_platform_user: 'Partager avec les utilisateurs de la plateforme'
+shared_with_everybody: 'Partager avec tout le monde'
