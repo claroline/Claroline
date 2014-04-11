@@ -23,23 +23,21 @@ class AtLeastOneTranslationValidator extends ConstraintValidator
      */
     public function validate($badge, Constraint $constraint)
     {
-        $frTranslation = $badge->getFrTranslation();
-        $enTranslation = $badge->getEnTranslation();
+        $translations        = $badge->getTranslations();
+        $hasEmptyTranslation = 0;
 
-        $frName        = $frTranslation->getName();
-        $frDescription = $frTranslation->getDescription();
-        $frCriteria    = $frTranslation->getCriteria();
+        foreach ($translations as $translation) {
+            // Have to put all method call in variable because of empty doesn't
+            // support result of method as parameter (prior to PHP 5.5)
+            $name        = $translation->getName();
+            $description = $translation->getDescription();
+            $criteria    = $translation->getCriteria();
+            if (empty($name) && empty($description) && empty($criteria)) {
+                $hasEmptyTranslation++;
+            }
+        }
 
-        $enName        = $enTranslation->getName();
-        $enDescription = $enTranslation->getDescription();
-        $enCriteria    = $enTranslation->getCriteria();
-
-        // Have to put all method call in variable because of empty doesn't
-        // support result of method as parameter (prior to PHP 5.5)
-        $hasFrTranslation = !empty($frName) && !empty($frDescription) && !empty($frCriteria);
-        $hasEnTranslation = !empty($enName) && !empty($enDescription) && !empty($enCriteria);
-
-        if (!$hasFrTranslation && !$hasEnTranslation) {
+        if (count($translations) === $hasEmptyTranslation) {
             $this->context->addViolation($constraint->message);
         }
     }

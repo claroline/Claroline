@@ -45,6 +45,7 @@ class UserController extends Controller
     /**
      * @EXT\Route("/searchInWorkspace/{workspaceId}/{search}",
      *      name="claro_user_search_in_workspace",
+     *      options = {"expose"=true},
      *      requirements={"workspaceId" = "\d+"}
      * )
      *

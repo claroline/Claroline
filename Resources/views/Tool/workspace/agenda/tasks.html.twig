@@ -1,5 +1,5 @@
     <div class="span3">
-        <h4> <u>{{'tasks'|trans({}, 'agenda') }} </u></h4>
+        <h3>{{'tasks'|trans({}, 'agenda') }}</h3>
         {% for e in listEvents  %}
         <div class="border">
             <button type="button" class="delete-task close" data-event-id="{{e.id}}" data-dismiss="alert">&times;</button>
