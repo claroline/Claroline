@@ -11,7 +11,7 @@ class Controller extends BaseController
      */
     public function getPortfolioRepository()
     {
-        return $this->get('icap.portfolio.portfolio_repository');
+        return $this->get('icap_portfolio.repository.portfolio');
     }
 
     /**

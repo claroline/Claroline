@@ -1,11 +1,18 @@
 parameters:
-    icap.portfolio.portfolio_repository.class: Icap\PortfolioBundle\Repository\PortfolioRepository
+    icap_portfolio.repository.portfolio.class: Icap\PortfolioBundle\Repository\PortfolioRepository
 
 services:
     # repositories
-    icap.portfolio.portfolio_repository:
-        class:           %icap.portfolio.portfolio_repository.class%
+    icap_portfolio.repository.portfolio:
+        class:           %icap_portfolio.repository.portfolio.class%
         factory_service: doctrine.orm.entity_manager
         factory_method:  getRepository
         arguments:
             - Icap\PortfolioBundle\Entity\Portfolio
+
+    #form
+    icap_portfolio.form.portfolio:
+        class: Symfony\Component\Form\Form
+        factory_method: createNamed
+        factory_service: form.factory
+        arguments: ["icap_portfolio_form", "icap_portfolio_form"]

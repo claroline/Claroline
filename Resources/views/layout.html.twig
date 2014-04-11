@@ -6,7 +6,7 @@
     <div class="panel panel-default">
         <div class="panel-heading relative">
             <h3 class="panel-title">
-                {{ 'my_portfolios'|trans({}, 'platform') }}
+                {% block content_title %}{{ 'my_portfolios'|trans({}, 'platform') }}{% endblock %}
             </h3>
         </div>
         <div class="panel-body">

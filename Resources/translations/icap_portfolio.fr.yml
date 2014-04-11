@@ -1,10 +1,13 @@
-no_portfolios_create_one: 'Vous n''avez aucun portfolio pour le moment.<br>Vous pouvez <a href="%newPortfolioUrl%" title="Créer un portfolio">en créer</a> pour montrer vos compétences.'
+no_portfolios_create_one: 'Vous n''avez aucun portfolio pour le moment.<br>Vous pouvez <a href="%newPortfolioUrl%" title="Ajouter un portfolio">en créer</a> pour montrer vos compétences.'
 updated_on: 'Mis à jour le %date%'
 portfolio_deletion_confirm_title: "Suppression d'un portfolio"
 portfolio_deletion_confirm_message: "Etes-vous sûr de vouloir supprimer le portfolio <strong>%portfolioName%</strong> ?"
-icap_portfolio_delete_success: "Portfolio supprimé avec succès"
-icap_portfolio_delete_error: "Erreur lors de la suppression du portfolio"
+portfolio_delete_success_message: "Portfolio supprimé avec succès"
+portfolio_delete_error_message: "Erreur lors de la suppression du portfolio"
 shared_to_nobody: 'Partager avec personne'
 shared_with_user: 'Partager avec une liste d''utilisateurs'
 shared_with_platform_user: 'Partager avec les utilisateurs de la plateforme'
 shared_with_everybody: 'Partager avec tout le monde'
+add_portfolio: 'Ajouter un portfolio'
+portfolio_add_error_message: 'Erreur lors de l''ajout du portfolio.'
+portfolio_add_success_message: 'Portfolio ajouté avec succès.'
