@@ -693,7 +693,7 @@ user_creation: 'User creation'
 user_parameters: 'User parameters'
 user_picker: 'User picker'
 user_profile: 'User profile'
-user_public_profile_not_visible: 'Your public profile is visible to nobody. <br> You can make it visible for the <span class="shared_policy_link">platform users</span>, or to <span class="shared_policy_link">everybody</span>.'
+user_public_profile_not_visible: 'Your public profile is visible to nobody. <br> You can make it visible for the <span class="shared_policy_link shared_policy_link_platform_users">platform users</span>, or to <span class="shared_policy_link shared_policy_link_everybody">everybody</span>.'
 user_removed: 'User removed'
 username: Username
 username_found_at: 'The username %username% was found at lines: %lines%'
