@@ -22,6 +22,7 @@ class Ldap
     private $host;
     private $port;
     private $rootdn;
+    private $conn;
 
     /**
      * @DI\InjectParams({"ch" = @DI\Inject("claroline.config.platform_config_handler")})
@@ -34,16 +35,16 @@ class Ldap
     }
     public function connect()
     {
-        $conn = ldap_connect($this->host, $this->port);
+        $this->conn = ldap_connect($this->host, $this->port);
 
-        if ($conn) {
-            $bind = ldap_bind($conn);
-            ldap_close($conn);
+        if ($this->conn) {
+            $bind = ldap_bind($this->conn);
+            ldap_close($this->conn);
         }
     }
 
     public function close()
     {
-
+        ldap_close($this->conn);
     }
 } 
