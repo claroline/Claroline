@@ -13,4 +13,16 @@ $(document).ready(function() {
     });
 });
 
+function publish(url, exerciseId) {
+    var id = exerciseId;
 
+    $.ajax({
+            type: "POST",
+            url: url,
+            data: { exerciseId: id },
+            cache: false,
+            success: function (data) {
+                $("#btPublish").css("display", "none");
+            }
+        });
+}

@@ -63,7 +63,7 @@
         <a href="{{ path('ujm_exercise_open', { 'exerciseId': exoID }) }}" class="btn btn-primary">
             <i class="icon-arrow-left"></i> {{ 'back' | trans }}
         </a>
-        {% if retryButton and nbUserPaper == 0 %}
+        {% if retryButton and nbUserPaper == 0 and nbQuestions > 0 %}
             <a class="btn btn-primary" href="{{ path('ujm_exercise_paper', { 'id': exoID }) }}">
                 <i class="icon-check"></i> {{ 'compose' | trans }}
             </a>
@@ -77,6 +77,12 @@
                class="btn btn-primary">
                 {{ 'export CSV of results' | trans }}
             </a>
+            {% if _resource.published == FALSE %}
+                <a href="{{ path('ujm_exercise_delete_all_paper', { 'id': exoID }) }}"
+                   class="btn btn-primary">
+                    <i class="icon-trash"></i> {{ 'delete papers' | trans }}
+                </a>
+            {% endif %}
         {% endif %}
 
         <hr/>
@@ -243,4 +249,5 @@
 {% block javascripts %}
     {{ parent() }}
     <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/sortAndSearch.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/exercise.js') }}"></script>
 {% endblock %}

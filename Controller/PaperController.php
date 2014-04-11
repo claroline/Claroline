@@ -67,7 +67,7 @@ class PaperController extends Controller
         $retryButton = false;
         $nbAttemptAllowed = -1;
         $exerciseSer = $this->container->get('ujm.exercise_services');
-        
+
         $exoAdmin = false;
         $arrayMarkPapers = array();
 
@@ -136,17 +136,20 @@ class PaperController extends Controller
                 $user, $exerciseSer->isExerciseAdmin($exercise))) {
             $retryButton = true;
         }
-        
+
         if ($exercise->getMaxAttempts() > 0) {
             if ($exoAdmin === false) {
                 $nbAttemptAllowed = $exercise->getMaxAttempts() - count($paper);
             }
         }
-        
+
         $badgesInfoUser = $exerciseSer->badgesInfoUser(
                 $user->getId(), $exercise->getResourceNode()->getId(),
                 $this->container->getParameter('locale'));
-        
+
+        $nbQuestions = $em->getRepository('UJMExoBundle:ExerciseQuestion')
+                          ->getCountQuestion($exoID);
+
         return $this->render(
             'UJMExoBundle:Paper:index.html.twig',
             array(
@@ -160,6 +163,7 @@ class PaperController extends Controller
                 'nbAttemptAllowed' => $nbAttemptAllowed,
                 'badgesInfoUser'   => $badgesInfoUser,
                 'nbUserPaper'      => $nbUserPaper,
+                'nbQuestions'      => $nbQuestions['nbq'],
                 '_resource'        => $exercise,
                 'arrayMarkPapers'  => $arrayMarkPapers
             )
@@ -175,12 +179,12 @@ class PaperController extends Controller
         $nbAttemptAllowed = -1;
         $retryButton = false;
         $exerciseSer = $this->container->get('ujm.exercise_services');
-        
+
         $user = $this->container->get('security.context')->getToken()->getUser();
         $em = $this->getDoctrine()->getManager();
         $paper = $em->getRepository('UJMExoBundle:Paper')->find($id);
         $exercise = $paper->getExercise();
-        
+
         if ($exerciseSer->controlMaxAttemps($exercise,
                 $user, $exerciseSer->isExerciseAdmin($exercise))) {
             $retryButton = true;
@@ -208,16 +212,16 @@ class PaperController extends Controller
             ->getHintViewed($paper->getId());
 
         $nbMaxQuestion = count($infosPaper['interactions']);
-        
+
         $badgesInfoUser = $exerciseSer->badgesInfoUser(
                 $user->getId(), $exercise->getResourceNode()->getId(),
                 $this->container->getParameter('locale'));
-        
+
         if ($exercise->getMaxAttempts() > 0) {
             if (!$exerciseSer->isExerciseAdmin($exercise)) {
                 $nbpaper = $exerciseSer->getNbPaper($user->getId(),
                                                     $exercise->getId());
-                
+
                 $nbAttemptAllowed = $exercise->getMaxAttempts() - $nbpaper;
             }
         }
@@ -347,7 +351,7 @@ class PaperController extends Controller
             );
         }
     }
-    
+
     /**
      * To export results in CSV
      *
@@ -356,7 +360,7 @@ class PaperController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
         $exercise = $em->getRepository('UJMExoBundle:Exercise')->find($exerciseId);
-        
+
         if ($this->container->get('ujm.exercise_services')->isExerciseAdmin($exercise)) {
             $iterableResult = $this->getDoctrine()
                                    ->getManager()
@@ -369,14 +373,14 @@ class PaperController extends Controller
                 $infosPaper = $this->container->get('ujm.exercise_services')->getInfosPaper($row[0]);
                 $score = $infosPaper['scorePaper'] /  $infosPaper['maxExoScore'];
                 $score = $score * 20;
-                
+
                 $rowCSV[] = $row[0]->getUser()->getLastName() . '-' . $row[0]->getUser()->getFirstName();
                 $rowCSV[] = $row[0]->getNumPaper();
                 $rowCSV[] = $row[0]->getStart()->format('Y-m-d H:i:s');
                 $rowCSV[] = $row[0]->getEnd()->format('Y-m-d H:i:s');
                 $rowCSV[] = $row[0]->getInterupt();
                 $rowCSV[] = $this->container->get('ujm.exercise_services')->roundUpDown($score);
-                
+
                 fputcsv($handle, $rowCSV);
                 $em->detach($row[0]);
             }
@@ -389,9 +393,9 @@ class PaperController extends Controller
                 'Content-Type' => 'application/force-download',
                 'Content-Disposition' => 'attachment; filename="export.csv"'
             ));
-            
+
         } else {
-            
+
             throw new \Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException();
         }
     }

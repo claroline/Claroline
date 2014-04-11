@@ -109,6 +109,7 @@ delete document: Deletion of document
 delete hole: Delete the hole
 delete of my bank: Delete of my bank
 delete of my exercise: Delete of my exercise
+delete papers: Delete the papers
 description: Description
 displayAllList: Display the whole list
 display all on this page: Display all on this page
@@ -290,6 +291,7 @@ position: => Place pointers below (red cross) on the picture. The pointer's cent
 preview: Preview
 previous: Previous
 print paper: Print paper
+publish: Publish
 
 # Q
 qcm: QCM

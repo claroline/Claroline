@@ -109,6 +109,7 @@ delete document: Suppression de document
 delete hole: Supprimer le blanc
 delete of my bank: Supprimer de ma banque
 delete of my exercise: Supprimer de mon exercice
+delete papers: Supprimer les copies
 description: Description
 displayAllList: Afficher la liste complète
 display all on this page: Tout afficher sur cette page
@@ -290,6 +291,7 @@ position: => Positionner le(s) pointeur(s) ci-dessous (croix rouge) sur l'image.
 preview: Aperçu
 previous: Précédent
 print paper: Imprimer la copie
+publish: Publier
 
 # Q
 qcm: QCM

@@ -148,13 +148,14 @@ class ExerciseController extends Controller
     public function openAction($exerciseId)
     {
         $exerciseSer = $this->container->get('ujm.exercise_services');
-        
+
         $user = $this->container->get('security.context')->getToken()->getUser();
 
         $em = $this->getDoctrine()->getManager();
         $exercise = $em->getRepository('UJMExoBundle:Exercise')->find($exerciseId);
         $this->checkAccess($exercise);
 
+        $published = 1;
         $allowToCompose = 0;
         $exoAdmin = $this->container->get('ujm.exercise_services')->isExerciseAdmin($exercise);
 
@@ -171,9 +172,13 @@ class ExerciseController extends Controller
         }
 
         $nbQuestions = $em->getRepository('UJMExoBundle:ExerciseQuestion')->getCountQuestion($exerciseId);
-        
+
         $nbUserPaper = $exerciseSer->getNbPaper($user->getId(),
                                                 $exercise->getId());
+
+        if ($exercise->getPublished() != 1) {
+            $published = 0;
+        }
 
         return $this->render(
             'UJMExoBundle:Exercise:show.html.twig',
@@ -185,9 +190,68 @@ class ExerciseController extends Controller
                 'userId'         => $user->getId(),
                 'nbQuestion'     => $nbQuestions['nbq'],
                 'nbUserPaper'    => $nbUserPaper,
+                'published'      => $published,
                 '_resource'      => $exercise
             )
         );
+    }
+
+    /**
+     * Publish an exercise
+     *
+     */
+    public function publishAction()
+    {
+        $request = $this->container->get('request');
+
+        if ($request->isXmlHttpRequest()) {
+            $exerciseid = $request->request->get('exerciseId');
+
+            $em = $this->getDoctrine()->getManager();
+            $exercise = $em->getRepository('UJMExoBundle:Exercise')
+                           ->find($exerciseid);
+            $this->checkAccess($exercise);
+
+            $exoAdmin = $this->container->get('ujm.exercise_services')
+                                        ->isExerciseAdmin($exercise);
+
+            if ($exoAdmin == 1) {
+                $exercise->setPublished(TRUE);
+                $em->persist($exercise);
+                $em->flush();
+
+            }
+        }
+
+        return new \Symfony\Component\HttpFoundation\Response('');
+    }
+
+    /**
+     * Delete all papers of this exercise
+     *
+     */
+    public function deleteAllPapersAction($id)
+    {
+        $em = $this->getDoctrine()->getManager();
+            $exercise = $em->getRepository('UJMExoBundle:Exercise')
+                           ->find($id);
+
+        $this->checkAccess($exercise);
+
+        $exoAdmin = $this->container->get('ujm.exercise_services')
+                                    ->isExerciseAdmin($exercise);
+
+        if ( ($exoAdmin == 1) && ($exercise->getPublished() == FALSE) ) {
+
+        }else{die();}
+
+        return $this->forward('UJMExoBundle:Paper:index',
+                                  array(
+                                      'exoID' => $id,
+                                      'page'  => 1,
+                                      'all'   => 0
+                                       )
+                                 );
     }
 
     /**
@@ -489,7 +553,7 @@ class ExerciseController extends Controller
     public function exercisePaperAction($id)
     {
         $exerciseSer = $this->container->get('ujm.exercise_services');
-        
+
         $user = $this->container->get('security.context')->getToken()->getUser();
         $uid = $user->getId();
 
@@ -570,7 +634,7 @@ class ExerciseController extends Controller
             $typeInter = $interactions[0]->getType();
 
             //To display selectioned question
-            return $this->displayQuestion(1, $interactions[0], $typeInter, 
+            return $this->displayQuestion(1, $interactions[0], $typeInter,
                     $exercise->getDispButtonInterrupt(),
                     $exercise->getMaxAttempts(),
                     $workspace, $paper);
@@ -624,10 +688,10 @@ class ExerciseController extends Controller
         $typeInterToRecorded = $request->get('typeInteraction');
 
         $tabOrderInter = $session->get('tabOrderInter');
-        
+
         if ($paper->getEnd()) {
-            
-            return $this->forward('UJMExoBundle:Paper:show', 
+
+            return $this->forward('UJMExoBundle:Paper:show',
                                   array(
                                       'id' => $paper->getId(),
                                       'p'  => -1
@@ -832,7 +896,7 @@ class ExerciseController extends Controller
      */
     private function displayQuestion(
         $numQuestionToDisplayed, $interactionToDisplay,
-        $typeInterToDisplayed, $dispButtonInterrupt, $maxAttempsAllowed, 
+        $typeInterToDisplayed, $dispButtonInterrupt, $maxAttempsAllowed,
         $workspace, $paper
     )
     {

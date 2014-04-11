@@ -246,6 +246,11 @@
                 <a class="btn btn-primary" href="{{ path('ujm_exercise_questions', { 'id': entity.id }) }} " >
                     <i class="icon-question"></i> {{ 'list of question' | trans }}
                 </a>
+                {% if published == false %}
+                    <a id="btPublish" class="btn btn-primary" onclick="publish('{{ path('ujm_exercise_publish') }}', {{ entity.id }})">
+                        <i class="icon-ok"></i> {{ 'publish' | trans }}
+                    </a>
+                {% endif %}
             {% endif %}
             <a class="btn btn-primary" href="{{ path('ujm_paper_list', { 'exoID': entity.id }) }}">
                 <i class="icon-list"></i> {{ 'result' | trans }}
@@ -256,6 +261,8 @@
 
 {% block javascripts %}
     {{ parent() }}
+
+    <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/exercise.js') }}"></script>
 
     <script language="JavaScript">
         $('#less').css({"display" : "none"});
