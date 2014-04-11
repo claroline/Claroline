@@ -38,7 +38,7 @@
                 {{ 'Evaluation finished'|trans({}, 'icap_dropzone') }}
             </p>
         {% endif %}
-        {% if dropzone.peerReview %}
+        {% if dropzone.peerReview and  not PeerReviewEndCase %}
             {% set expectedCorrections = dropzone.expectedTotalCorrection - nbCorrections %}
         {% else %}
             {% set expectedCorrections = 0 %}
@@ -217,10 +217,10 @@
                             {% endif %}
                         </div>
                         {% if dropzone.diplayCorrectionsToLearners %}
-                        <div class='col-md-3'>
-                            <a href="{{ path('icap_dropzone_drop_detail_by_user',{'resourceId': dropzone.id,'dropId':drop.id}) }}" class="btn btn-primary ">{{ 'See Corrections'|trans({},'icap_dropzone') }}</a>
+                            <div class='col-md-3'>
+                                <a href="{{ path('icap_dropzone_drop_detail_by_user',{'resourceId': dropzone.id,'dropId':drop.id}) }}" class="btn btn-primary ">{{ 'See Corrections'|trans({},'icap_dropzone') }}</a>
+                            </div>
                         {% endif %}
-                        </div>
                     {% else %}
                         <div class='text-danger'>
                             {% if dropzone.displayNotationMessageToLearners %}
