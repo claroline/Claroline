@@ -16,15 +16,22 @@
         var basicInformationPublicProfile       = $('#user_public_profile_preferences_form_display_base_informations', form);
         var userPublicProfileNotVisibleBlock    = $('#user_public_profile_not_visible');
         var userPublicProfileVisibleBlocks      = $(".profil_visible");
-        var preferencesField                    = $('.preferences input[type=checkbox]');
+        var preferencesField                    = $('.preferences input[type=checkbox][name!="user_public_profile_preferences_form[display_base_informations]"]');
         var currentUserPublicProfilePreferences = {};
+        var sharedPolicyLinkPlatformUsers       = $('.shared_policy_link_platform_users');
+        var sharedPolicyLinkPlatformEverybody   = $('.shared_policy_link_everybody');
 
         preferencesField.each(function() {
             var preferenceName = parseFieldName($(this).attr('name'));
 
-             if('display_base_informations' !== preferenceName) {
-                 currentUserPublicProfilePreferences[preferenceName] = $('#' + formName + '_' + preferenceName).attr('checked');
-             }
+            currentUserPublicProfilePreferences[preferenceName] = $('#' + formName + '_' + preferenceName).attr('checked');
+        });
+
+        sharedPolicyLinkPlatformUsers.click(function() {
+            $('#user_public_profile_preferences_form_share_policy_1').click();
+        });
+        sharedPolicyLinkPlatformEverybody.click(function() {
+            $('#user_public_profile_preferences_form_share_policy_2').click();
         });
 
         var currentSharedPolicy = parseFormValue($(form).serializeArray()).share_policy;
@@ -72,8 +79,8 @@
                 userPublicProfileVisibleBlocks.addClass('hidden');
 
                 basicInformationPublicProfile
-                    .attr('checked', false)
-                    .attr('disabled', false);
+                    .prop('disabled', false)
+                    .prop('checked', false);
 
                 preferencesField.each(function() {
                     $(this).attr('checked', false);
@@ -84,8 +91,8 @@
                 userPublicProfileNotVisibleBlock.addClass('hidden');
 
                 basicInformationPublicProfile
-                    .attr('checked', 'checked')
-                    .attr('disabled', 'disabled');
+                    .prop('checked', true)
+                    .prop('disabled', true);
 
                 preferencesField.each(function() {
                     $(this).attr('checked', currentUserPublicProfilePreferences[parseFieldName($(this).attr('name'))]);
@@ -95,15 +102,13 @@
 
         function updateFieldVisibility(field, visibility) {
             var block = $('#' + field);
-            if('display_base_informations' !== field) {
-                if (visibility) {
-                    block.removeClass('hidden');
-                    currentUserPublicProfilePreferences[field] = 'checked';
-                }
-                else {
-                    block.addClass('hidden');
-                    currentUserPublicProfilePreferences[field] = false;
-                }
+            if (visibility) {
+                block.removeClass('hidden');
+                currentUserPublicProfilePreferences[field] = 'checked';
+            }
+            else {
+                block.addClass('hidden');
+                currentUserPublicProfilePreferences[field] = false;
             }
         }
 

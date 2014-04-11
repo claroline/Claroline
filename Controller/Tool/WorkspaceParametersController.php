@@ -160,7 +160,8 @@ class WorkspaceParametersController extends Controller
         $user = $this->security->getToken()->getUser();
         $this->checkAccess($workspace);
         $form = $this->formFactory->create(FormFactory::TYPE_WORKSPACE_EDIT, array(), $workspace);
-
+        $count = $this->workspaceManager->countUsers($workspace->getId());
+        
         if ($workspace->getSelfRegistration()) {
             $url = $this->router->generate(
                 'claro_workspace_subscription_url_generate',
@@ -175,7 +176,8 @@ class WorkspaceParametersController extends Controller
             'form' => $form->createView(),
             'workspace' => $workspace,
             'url' => $url,
-            'user' => $user
+            'user' => $user,
+            'count' => $count
         );
     }
 
