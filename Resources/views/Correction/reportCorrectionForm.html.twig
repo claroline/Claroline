@@ -1,10 +1,7 @@
 {% form_theme form "IcapDropzoneBundle::form_theme_bootstrap3.html.twig" %}
 
 
-<div class="col-md-12">
-    <br>
-    <h4 class="modal-title">{{ 'Warning'|trans({}, 'icap_dropzone') }}</h4>
-    <hr>
+
     <form class="form-horizontal" method="POST" action="{{ path('icap_dropzone_drops_deny_correction', {'resourceId': dropzone.id, 'correctionId':correction.id}) }}">
         {{ form_errors(form) }}
 
@@ -33,6 +30,6 @@
             </div>
         </div>
     {{ form_end(form) }}
-</div>
+
 {% render controller('ClarolineCoreBundle:ResourceType:initPicker') %}
 {{ tinymce_init() }}

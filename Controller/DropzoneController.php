@@ -366,6 +366,8 @@ class DropzoneController extends DropzoneBaseController
 
         // get progression of the evaluation ( current state, all states available and needed infos to the view).
         $dropzoneProgress = $dropzoneManager->getDrozponeProgress($dropzone,$drop,$nbCorrections);
+
+        $PeerReviewEndCase = $dropzoneManager->isPeerReviewEndedOrManualStateFinished($dropzone,$nbCorrections);
         return array(
             'workspace' => $dropzone->getResourceNode()->getWorkspace(),
             '_resource' => $dropzone,
@@ -375,6 +377,7 @@ class DropzoneController extends DropzoneBaseController
             'hasCopyToCorrect' => $hasCopyToCorrect,
             'hasUnfinishedCorrection' => $hasUnfinishedCorrection,
             'dropzoneProgress' => $dropzoneProgress,
+            'PeerReviewEndCase' =>$PeerReviewEndCase,
         );
     }
 

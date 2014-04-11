@@ -1174,9 +1174,11 @@ class CorrectionController extends DropzoneBaseController
         }
 
         // not a post, she show the view.
-        $view = 'IcapDropzoneBundle:Correction:reportCorrectionModal.html.twig';
+        $view = 'IcapDropzoneBundle:Correction:reportCorrection.html.twig';
 
-
+        if($this->getRequest()->isXmlHttpRequest()) {
+            $view = 'IcapDropzoneBundle:Correction:reportCorrectionModal.html.twig';
+        }
         return $this->render($view, array(
             'workspace' => $dropzone->getResourceNode()->getWorkspace(),
             '_resource' => $dropzone,

@@ -159,12 +159,26 @@ class DropzoneManager
 
         $currentState = 0;
         // set the states of the dropzone.
-        if ($dropzone->isPeerReview()) {
-            // case of peerReview
-            for ($i = 0; $i < $expectedCorrections; $i++) {
-                array_push($states, 'correction n°%nb_correction%/%expected_correction%');
-            }
 
+        if ($dropzone->getPeerReview()) {
+
+            // case of peerReview
+
+            /*
+             * --------------------- SPECIAL CASE  BEGIN ------------------------------
+             *  particular case where the peerReview end whereas the user didnt
+             *  had time to make all the expected corrections.
+             *  so we make a hack to allow them to see their note and simulate that
+             *  they did the expected corrections.
+            */
+            $allow_user_to_not_have_expected_corrections = $this->isPeerReviewEndedOrManualStateFinished($dropzone,$nbCorrection);
+            /* --------------------- SPECIAL CASE  END ------------------------------*/
+
+            if(!$allow_user_to_not_have_expected_corrections) {
+                for ($i = 0; $i < $expectedCorrections; $i++) {
+                    array_push($states, 'correction n°%nb_correction%/%expected_correction%');
+                }
+            }
             $states = array_merge($states, $end_states);
 
             // getting the current state.
@@ -182,15 +196,21 @@ class DropzoneManager
                     $nbCorrection = $expectedCorrections;
                 }
 
-                $currentState += $nbCorrection;
 
-                if ($nbCorrection >= $expectedCorrections) {
-                    $currentState++;
+                if(!$allow_user_to_not_have_expected_corrections) {
+                    $currentState += $nbCorrection;
+                    if ($nbCorrection >= $expectedCorrections) {
+                        $currentState++;
+                    }
                 }
 
                 if ($drop->countFinishedCorrections() >= $expectedCorrections) {
                     $currentState++;
+                    if($allow_user_to_not_have_expected_corrections){
+                        $currentState++;
+                    }
                 }
+
             }
         } else {
             // case of normal correction.
@@ -211,6 +231,26 @@ class DropzoneManager
         $percent = round(($currentState * 100) / (count($states) - 1));
 
         return array('states' => $states, 'currentState' => $currentState, 'percent' => $percent, 'nbCorrection' => $nbCorrection);
+    }
+
+    /**
+     *  Test to detect the special case where the peerReview end whereas user didnt had time to make the expected
+     *  number of correction.
+     *
+     * @param Dropzone $dropzone
+     * @param $nbCorrection
+     * @return bool
+     */
+    public function isPeerReviewEndedOrManualStateFinished(Dropzone $dropzone, $nbCorrection) {
+        $specialCase = false;
+        if (($dropzone->getManualPlanning() && $dropzone->getManualState() == Dropzone::MANUAL_STATE_FINISHED) ||
+        (!$dropzone->getManualPlanning() && $dropzone->getTimeRemaining($dropzone->getEndReview()) <= 0  )) {
+
+            if($dropzone->getExpectedTotalCorrection() > $nbCorrection) {
+                $specialCase = true;
+            }
+        }
+        return $specialCase;
     }
 
 
