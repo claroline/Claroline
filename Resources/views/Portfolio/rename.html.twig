@@ -1,0 +1,42 @@
+{% extends 'IcapPortfolioBundle::layout.html.twig' %}
+
+{% block title %}{{ parent() ~ ' - ' ~ 'rename_portfolio' | trans({}, 'icap_portfolio') | striptags | raw }}{% endblock %}
+
+{% block content_title %}{{ 'rename_portfolio'|trans({}, 'icap_portfolio') }}{% endblock %}
+
+{% block content_body %}
+    <form action="{{ path('icap_portfolio_rename', {'id': portfolio.id}) }}" method="post" class="form-horizontal" {{ form_enctype(form) }}>
+        {{ form_errors(form) }}
+
+        <div class="form-group">
+            {{ form_label(form.name) }}
+            {{ form_errors(form.name) }}
+            <div class="col-md-10">
+                {{ form_widget(form.name) }}
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-md-10">
+                {{ form_errors(form.refreshUrl) }}
+                <div class="checkbox">
+                    <label>
+                        {{ form_widget(form.refreshUrl) }} {{ 'refresh_url'|trans({}, 'icap_portfolio') }}
+                    </label>
+                    <span class="help-block alert alert-warning">
+                        <span class="icon-warning-sign"></span> <strong>Attention!</strong> Si vous cochez cette case l'adresse d'accès à votre portfolio sera mise à jour en fonction du nouveau nom renseigné.<br>
+                        L'ancienne adresse de votre portfolio ne sera plus accessible.
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        {{ form_rest(form) }}
+
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+                <button type="submit" class="btn btn-primary">{{ 'rename'|trans({}, 'platform') }}</button>
+                <a href="{{ path("icap_portfolio_list") }}" title="{{ 'cancel'|trans({}, 'platform') }}" class="btn btn-default">{{ 'cancel'|trans({}, 'platform') }}</a>
+            </div>
+        </div>
+    </form>
+{% endblock %}

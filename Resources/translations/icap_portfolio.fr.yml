@@ -4,10 +4,18 @@ portfolio_deletion_confirm_title: "Suppression d'un portfolio"
 portfolio_deletion_confirm_message: "Etes-vous sûr de vouloir supprimer le portfolio <strong>%portfolioName%</strong> ?"
 portfolio_delete_success_message: "Portfolio supprimé avec succès"
 portfolio_delete_error_message: "Erreur lors de la suppression du portfolio"
+portfolio_rename_success_message: "Portfolio renommé avec succès"
+portfolio_rename_error_message: "Erreur lors du renommage du portfolio"
 shared_to_nobody: 'Partager avec personne'
 shared_with_user: 'Partager avec une liste d''utilisateurs'
 shared_with_platform_user: 'Partager avec les utilisateurs de la plateforme'
 shared_with_everybody: 'Partager avec tout le monde'
 add_portfolio: 'Ajouter un portfolio'
+rename_portfolio: 'Renommer un portfolio'
 portfolio_add_error_message: 'Erreur lors de l''ajout du portfolio.'
 portfolio_add_success_message: 'Portfolio ajouté avec succès.'
+name: 'Nom'
+status: 'Statut'
+rename: 'Renommer'
+update: 'Mettre à jour'
+refresh_url: 'Réactualiser l''url'

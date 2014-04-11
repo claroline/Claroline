@@ -37,4 +37,12 @@ class Controller extends BaseController
     {
         return $this->getDoctrine()->getManager();
     }
+
+    /**
+     * @return \Icap\PortfolioBundle\Form\Handler\PortfolioHandler
+     */
+    public function getPortfolioFormHandler()
+    {
+        return $this->get('icap_portfolio.form_handler.portfolio');
+    }
 }

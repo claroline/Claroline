@@ -2,29 +2,25 @@
 
 namespace Icap\PortfolioBundle\Form\Type;
 
-use Claroline\CoreBundle\Entity\Badge\Badge;
-use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
-use Claroline\CoreBundle\Manager\LocaleManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
-use Symfony\Bundle\FrameworkBundle\Translation\Translator;
-use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * @DI\FormType(alias="icap_portfolio_form")
+ * @DI\FormType
  */
 class PortfolioType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('name', 'text',
-            array(
-                'label' => 'name'
-            )
-        );
+        $builder
+            ->add('name', 'text',
+                array(
+                    'label'         => 'name',
+                    'theme_options' => array('label_width' => 'col-md-2')
+                )
+            );
     }
 
     public function getName()

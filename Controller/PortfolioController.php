@@ -40,29 +40,51 @@ class PortfolioController extends Controller
         $portfolio->setUser($loggedUser);
 
         try {
-            if ($this->get('icap_portfolio.form_handler.portfolio')->handleAdd($portfolio)) {
+            if ($this->getPortfolioFormHandler()->handleAdd($portfolio)) {
                 $this->getSessionFlashbag()->add('success', $this->getTranslator()->trans('portfolio_add_success_message', array(), 'icap_portfolio'));
 
                 return $this->redirect($this->generateUrl('icap_portfolio_list'));
             }
         } catch (\Exception $exception) {
-            echo "<pre>";
-            var_dump($exception->getMessage());
-            echo "</pre>" . PHP_EOL;
-            die("FFFFFUUUUUCCCCCKKKKK" . PHP_EOL);
             $this->getSessionFlashbag()->add('error', $this->getTranslator()->trans('portfolio_add_error_message', array(), 'icap_portfolio'));
 
             return $this->redirect($this->generateUrl('icap_portfolio_list'));
         }
 
         return array(
-            'form'      => $this->get('icap_portfolio.form.portfolio')->createView(),
+            'form'      => $this->getPortfolioFormHandler()->getAddForm()->createView(),
             'portfolio' => $portfolio
         );
     }
 
     /**
-     * @Route("/delete/{id}", name="icap_portfolio_delete", requirements={"page" = "\d+"}, defaults={"page" = 1})
+     * @Route("/rename/{id}", name="icap_portfolio_rename", requirements={"id" = "\d+"})
+     *
+     * @ParamConverter("loggedUser", options={"authenticatedUser" = true})
+     * @Template()
+     */
+    public function renameAction(User $loggedUser, Portfolio $portfolio)
+    {
+        try {
+            if ($this->getPortfolioFormHandler()->handleRename($portfolio)) {
+                $this->getSessionFlashbag()->add('success', $this->getTranslator()->trans('portfolio_rename_success_message', array(), 'icap_portfolio'));
+
+                return $this->redirect($this->generateUrl('icap_portfolio_list'));
+            }
+        } catch (\Exception $exception) {
+            $this->getSessionFlashbag()->add('error', $this->getTranslator()->trans('portfolio_rename_error_message', array(), 'icap_portfolio'));
+
+            return $this->redirect($this->generateUrl('icap_portfolio_list'));
+        }
+
+        return array(
+            'form'      => $this->getPortfolioFormHandler()->getRenameForm($portfolio)->createView(),
+            'portfolio' => $portfolio
+        );
+    }
+
+    /**
+     * @Route("/delete/{id}", name="icap_portfolio_delete", requirements={"id" = "\d+"})
      *
      * @ParamConverter("loggedUser", options={"authenticatedUser" = true})
      * @Template()
@@ -74,8 +96,7 @@ class PortfolioController extends Controller
         }
 
         try {
-            $this->getEntityManager()->remove($portfolio);
-            $this->getEntityManager()->flush();
+            $this->getPortfolioFormHandler()->handleDelete($portfolio);
 
             $this->getSessionFlashbag()->add('success', $this->getTranslator()->trans('portfolio_delete_success_message', array(), 'icap_portfolio'));
         } catch (\Exception $exception) {

@@ -5,6 +5,7 @@ namespace Icap\PortfolioBundle\Form\Handler;
 use Icap\PortfolioBundle\Entity\Portfolio;
 use Icap\PortfolioBundle\Manager\PortfolioManager;
 use Doctrine\ORM\EntityManager;
+use Symfony\Component\Form\FormFactory;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 use JMS\DiExtraBundle\Annotation as DI;
@@ -15,19 +16,14 @@ use JMS\DiExtraBundle\Annotation as DI;
 class PortfolioHandler
 {
     /**
-     * @var FormInterface
+     * @var FormFactory
      */
-    protected $form;
+    protected $formFactory;
 
     /**
      * @var RequestStack
      */
     protected $requestStack;
-
-    /**
-     * @var EntityManager
-     */
-    protected $entityManager;
 
     /**
      * @var PortfolioManagerManager
@@ -36,18 +32,34 @@ class PortfolioHandler
 
     /**
      * @DI\InjectParams({
-     *     "portfolioForm"    = @DI\Inject("icap_portfolio.form.portfolio"),
+     *     "formFactory"      = @DI\Inject("form.factory"),
      *     "request"          = @DI\Inject("request_stack"),
-     *     "entityManager"    = @DI\Inject("doctrine.orm.entity_manager"),
      *     "portfolioManager" = @DI\Inject("icap_portfolio.manager.portfolio")
      * })
      */
-    public function __construct(FormInterface $portfolioForm, RequestStack $requestStack, EntityManager $entityManager, PortfolioManager $portfolioManager)
+    public function __construct(FormFactory $formFactory, RequestStack $requestStack, PortfolioManager $portfolioManager)
     {
-        $this->form             = $portfolioForm;
+        $this->formFactory      = $formFactory;
         $this->requestStack     = $requestStack;
-        $this->entityManager    = $entityManager;
         $this->portfolioManager = $portfolioManager;
+    }
+
+    /**
+     * @return \Symfony\Component\Form\Form|FormInterface
+     */
+    public function getAddForm()
+    {
+        return $this->formFactory->create('icap_portfolio_form');
+    }
+
+    /**
+     * @param \Icap\PortfolioBundle\Entity\Portfolio $portfolio
+     *
+     * @return \Symfony\Component\Form\Form|FormInterface
+     */
+    public function getRenameForm(Portfolio $portfolio)
+    {
+        return $this->formFactory->create('icap_portfolio_rename_form', $portfolio);
     }
 
     /**
@@ -57,15 +69,15 @@ class PortfolioHandler
      */
     public function handleAdd(Portfolio $portfolio)
     {
-        $this->form->setData($portfolio);
+        $form = $this->getAddForm();
+        $form->setData($portfolio);
 
         $request = $this->requestStack->getCurrentRequest();
         if ($request->isMethod('POST')) {
-            $this->form->submit($request);
+            $form->submit($request);
 
-            if ($this->form->isValid()) {
-                $this->entityManager->persist($portfolio);
-                $this->entityManager->flush();
+            if ($form->isValid()) {
+                $this->portfolioManager->addPortfolio($portfolio);
 
                 return true;
             }
@@ -75,60 +87,37 @@ class PortfolioHandler
     }
 
     /**
-     * @param  Badge $badge
+     * @param  Portfolio $portfolio
      *
      * @return bool True on successfull processing, false otherwise
      */
-    public function handleEdit(Badge $badge)
+    public function handleRename(Portfolio $portfolio)
     {
-        $this->form->setData($badge);
+        $form = $this->getRenameForm($portfolio);
 
-        /** @var BadgeRule[]|\Doctrine\Common\Collections\ArrayCollection $originalRules */
-        $originalRules = $badge->getRules();
+        $request = $this->requestStack->getCurrentRequest();
+        if ($request->isMethod('POST')) {
+            $form->submit($request);
 
-        if ($this->request->isMethod('POST')) {
-            $this->form->handleRequest($this->request);
-
-            if ($this->form->isValid()) {
-                $badgeRules = $badge->getRules();
-
-                $userBadges = $badge->getUserBadges();
-
-                if (0 < count($userBadges) && $this->badgeManager->isRuleChanged($badgeRules, $originalRules)) {
-                    /** @var \Doctrine\ORM\UnitOfWork $unitOfWork */
-                    $unitOfWork = $this->entityManager->getUnitOfWork();
-
-                    $newBadge = clone $badge;
-                    $newBadge->setVersion($badge->getVersion() + 1);
-
-                    $unitOfWork->refresh($badge);
-
-                    $badge->setDeletedAt(new \DateTime());
-
-                    $this->entityManager->persist($newBadge);
-                }
-                else {
-                    // Compute which rules was deleted
-                    foreach ($badgeRules as $rule) {
-                        if ($originalRules->contains($rule)) {
-                            $originalRules->removeElement($rule);
-                        }
-                    }
-
-                    // Delete rules
-                    foreach ($originalRules as $rule) {
-                        $this->entityManager->remove($rule);
-                    }
-                }
-
-                $this->entityManager->persist($badge);
-                $this->entityManager->flush();
+            if ($form->isValid()) {
+                $this->portfolioManager->renamePortfolio($portfolio, $form->get('refreshUrl')->getData());
 
                 return true;
             }
         }
 
         return false;
+    }
+
+    /**
+     * @param  Portfolio $portfolio
+     *
+     * @return bool True on successfull processing, false otherwise
+     */
+    public function handleDelete(Portfolio $portfolio)
+    {
+        $this->entityManager->remove($portfolio);
+        $this->entityManager->flush();
     }
 }
  

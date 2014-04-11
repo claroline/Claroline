@@ -14,9 +14,9 @@
             </colgroup>
             <thead>
                 <tr>
-                    <th>Nom</th>
-                    <th>Statut</th>
-                    <th>Actions</th>
+                    <th>{{ 'name'|trans({}, 'icap_portfolio') }}</th>
+                    <th>{{ 'status'|trans({}, 'icap_portfolio') }}</th>
+                    <th></th>
                 </tr>
             </thead>
             <tbody>
@@ -27,19 +27,41 @@
                             <a href="#" title="" class="text-muted">http://www.localhost/claroline/portfolio/{{ portfolio.slug }}</a>
                         </td>
                         <td>
-                            <span class="block"><span class="badge {{ portfolio.sharePolicyLabel }}"></span>{{ portfolio.sharePolicyLabel|trans({}, 'icap_portfolio') }}</span>
-                            <span class="text-muted">{{ 'updated_on'|trans({'%date%': portfolio.updatedAt|date('date_format'|trans({}, 'platform') ~ ' H:i:s')}, 'icap_portfolio') }}</span>
+                            <span class="block">
+                                <span class="badge {{ portfolio.sharePolicyLabel }}"></span>
+                                {{ portfolio.sharePolicyLabel|trans({}, 'icap_portfolio') }}
+                            </span>
+                            <span class="text-muted">
+                                {{ 'updated_on'|trans({'%date%': portfolio.updatedAt|date('date_format'|trans({}, 'platform') ~ ' H:i:s')}, 'icap_portfolio') }}
+                            </span>
                         </td>
                         <td>
-                            <a href="{{ path('icap_portfolio_delete', {'id': portfolio.id}) }}" class="btn btn-sm btn-danger delete"
-                                     data-confirm-title="{{ 'portfolio_deletion_confirm_title'|trans({}, 'icap_portfolio') }}"
-                                     data-confirm-message="{{ 'portfolio_deletion_confirm_message'|trans({'%portfolioName%': portfolio.name}, 'icap_portfolio') }}"
-                                     data-confirm-ok="{{ 'delete'|trans({}, 'platform') }}"
-                                     data-confirm-cancel="{{ 'cancel'|trans({}, 'platform') }}" data-toggle="tooltip"
-                                     data-container="body" title="{{ 'delete'|trans({}, 'platform') }}" data-placement="top"
-                                     data-original-title="{{ 'delete'|trans({}, 'platform') }}">
-                                <span class="icon-trash"></span>
-                            </a>
+                            <div class="btn-group">
+                                <a href="#" class="btn btn-xs btn-primary">{{ 'update'|trans({}, 'icap_portfolio') }}</a>
+                                <button type="button" class="btn btn-xs btn-primary dropdown-toggle" data-toggle="dropdown">
+                                    <span class="caret"></span>
+                                    <span class="sr-only">Toggle Dropdown</span>
+                                </button>
+                                <ul class="dropdown-menu" role="menu">
+                                    <li>
+                                        <a href="{{ path('icap_portfolio_rename', {'id': portfolio.id}) }}" title="{{ 'rename'|trans({}, 'icap_portfolio') }}">
+                                            <span class=icon-pencil></span> {{ 'rename'|trans({}, 'icap_portfolio') }}
+                                        </a>
+                                    </li>
+                                    <li class="divider"></li>
+                                    <li>
+                                        <a href="{{ path('icap_portfolio_delete', {'id': portfolio.id}) }}" class="delete"
+                                                 data-confirm-title="{{ 'portfolio_deletion_confirm_title'|trans({}, 'icap_portfolio') }}"
+                                                 data-confirm-message="{{ 'portfolio_deletion_confirm_message'|trans({'%portfolioName%': portfolio.name}, 'icap_portfolio') }}"
+                                                 data-confirm-ok="{{ 'delete'|trans({}, 'platform') }}"
+                                                 data-confirm-cancel="{{ 'cancel'|trans({}, 'platform') }}" data-toggle="tooltip"
+                                                 data-container="body" title="{{ 'delete'|trans({}, 'platform') }}" data-placement="top"
+                                                 data-original-title="{{ 'delete'|trans({}, 'platform') }}">
+                                            <span class=icon-trash></span> {{ 'delete'|trans({}, 'platform') }}
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
                         </td>
                     </tr>
                 {% endfor %}

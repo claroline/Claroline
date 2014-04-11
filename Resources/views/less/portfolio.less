@@ -13,6 +13,15 @@ table.table_portfolios {
         td {
             padding:        10px 15px;
             vertical-align: middle;
+            .dropdown-menu {
+                a.delete {
+                    color: #d9534f;
+                    &:hover {
+                        color: #fff;
+                        background-color: #d2322d;
+                    }
+                }
+            }
         }
     }
     .badge {
@@ -34,10 +43,4 @@ table.table_portfolios {
             background-color: #5cb85c;
         }
     }
-}
-
-.form-actions {
-    clear:      both;
-    text-align: center;
-    padding:    19px 20px 20px;
 }
