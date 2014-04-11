@@ -22,12 +22,14 @@ use Icap\DropzoneBundle\Form\DocumentType;
 use Pagerfanta\Adapter\DoctrineORMAdapter;
 use Pagerfanta\Exception\NotValidCurrentPageException;
 use Pagerfanta\Pagerfanta;
+use Claroline\CoreBundle\Entity\User;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 class DropController extends DropzoneBaseController
 {
@@ -575,19 +577,35 @@ class DropController extends DropzoneBaseController
 
     /**
      * @Route(
-     *      "/{resourceId}/report/drop/{dropId}/{correctionId}",
+     *      "/report/drop/{correctionId}",
      *      name="icap_dropzone_report_drop",
      *      requirements={"resourceId" = "\d+", "dropId" = "\d+", "correctionId" = "\d+"}
      * )
-     * @ParamConverter("dropzone", class="IcapDropzoneBundle:Dropzone", options={"id" = "resourceId"})
-     * @ParamConverter("drop", class="IcapDropzoneBundle:Drop", options={"id" = "dropId"})
      * @ParamConverter("correction", class="IcapDropzoneBundle:Correction", options={"id" = "correctionId"})
+     * @ParamConverter("user", options={
+     *      "authenticatedUser" = true,
+     *      "messageEnabled" = true,
+     *      "messageTranslationKey" = "Participate in an evaluation requires authentication. Please login.",
+     *      "messageTranslationDomain" = "icap_dropzone"
+     * })
      * @Template()
      */
-    public function reportDropAction($dropzone, $drop, $correction)
+    public function reportDropAction(Correction $correction,User $user)
     {
+        $dropzone = $correction->getDropzone();
+        $drop = $correction->getDrop();
+        $em = $this->getDoctrine()->getManager();
         $this->isAllowToOpen($dropzone);
 
+        try {
+            $curent_user_correction = $em->getRepository('IcapDropzoneBundle:Correction')->getNotFinished($dropzone, $user);
+        } catch(NotFoundHttpException $e){
+            throw new AccessDeniedException();
+        }
+
+        if($curent_user_correction == null || $curent_user_correction->getId() != $correction->getId()) {
+            throw new AccessDeniedException();
+        }
         $form = $this->createForm(new CorrectionReportType(), $correction);
 
         if ($this->getRequest()->isMethod('POST')) {
@@ -600,7 +618,7 @@ class DropController extends DropzoneBaseController
                 $correction->setFinished(true);
                 $correction->setTotalGrade(0);
 
-                $em = $this->getDoctrine()->getManager();
+
                 $em->persist($drop);
                 $em->persist($correction);
                 $em->flush();
