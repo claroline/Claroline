@@ -160,9 +160,9 @@ class HomeExtension extends \Twig_Extension
      * Example: {% if "claro_get_content_by_type" | activeRoute({'type': 'home'}) %}true{% endif %}
      *
      * @param $route The name of the route.
-     * @params One or more params of the route.
+     * @param $params One or more params of the route.
      *
-     * Return true if the routes match
+     * @return true if the routes match
      */
     public function activeRoute($route, $params = null)
     {
