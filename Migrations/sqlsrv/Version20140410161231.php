@@ -18,6 +18,9 @@ class Version20140410161231 extends AbstractMigration
             ALTER TABLE ujm_exercise 
             ADD published BIT NOT NULL
         ");
+        $this->addSql("
+            UPDATE ujm_exercise SET published=1
+        ");
     }
 
     public function down(Schema $schema)

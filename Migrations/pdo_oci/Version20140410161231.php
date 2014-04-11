@@ -20,6 +20,9 @@ class Version20140410161231 extends AbstractMigration
                 published NUMBER(1) NOT NULL
             )
         ");
+        $this->addSql("
+            UPDATE ujm_exercise SET published=1
+        ");
     }
 
     public function down(Schema $schema)
