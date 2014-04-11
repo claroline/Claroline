@@ -154,7 +154,7 @@ class HomeExtension extends \Twig_Extension
     }
 
     /**
-     * Compara a route with master request route.
+     * Compare a route with master request route.
      * Usefull in sub-views because there we can not use app.request.get('_route')
      *
      * Example: {% if "claro_get_content_by_type" | activeRoute({'type': 'home'}) %}true{% endif %}
