@@ -45,7 +45,7 @@ class PlatformUpdateCommand extends ContainerAwareCommand
             }
         );
         $installer->installFromOperationFile();
-        $refresher->dumpAssets($this->getContainer()->getParameter('kernel.environment'));
+        $refresher->refresh($this->getContainer()->getParameter('kernel.environment'), true);
         MaintenanceHandler::disableMaintenance();
     }
 }
