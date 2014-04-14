@@ -243,7 +243,31 @@ class ExerciseController extends Controller
 
         if ( ($exoAdmin == 1) && ($exercise->getPublished() == FALSE) ) {
 
-        }else{die();}
+            $papers = $em->getRepository('UJMExoBundle:Paper')
+                         ->findBy(array('exercise' => $id));
+
+            foreach ($papers as $paper) {
+                $lhps = $em->getRepository('UJMExoBundle:LinkHintPaper')
+                           ->findBy(array('paper' => $paper->getId()));
+
+                foreach ($lhps as $lph) {
+                    $em->remove($lph);
+                }
+
+                $responses = $em->getRepository('UJMExoBundle:Response')
+                                ->findBy(array('paper' => $paper->getId()));
+
+                foreach ($responses as $response) {
+                    $em->remove($response);
+                }
+
+                $em->remove($paper);
+
+                $em->flush();
+
+            }
+
+        }
 
         return $this->forward('UJMExoBundle:Paper:index',
                                   array(
