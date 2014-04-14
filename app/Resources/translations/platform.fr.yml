@@ -100,9 +100,9 @@ administrative_code: 'Code administratif'
 advanced: Avancé
 agenda: Agenda
 all: Tous
-all_available_workspaces: 'Tous les formations disponibles'
-all_my_workspaces: 'Tous mes formations'
-all_workspaces: 'Tous les formations (publiques)'
+all_available_workspaces: 'Toutes les formations disponibles'
+all_my_workspaces: 'Toutes mes formations'
+all_workspaces: 'Toutes les formations (publiques)'
 already_existing_user: 'L''utilisateur existe déjà.'
 an_error_occured_message: 'Une erreur s''est produite. Veuillez contacter l''administrateur.'
 analytics_connections: 'Visites utilisateurs'
