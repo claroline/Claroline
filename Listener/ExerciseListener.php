@@ -190,7 +190,8 @@ class ExerciseListener extends ContainerAware
         $newExercise->setEndDate($exerciseToCopy->getEndDate());
         $newExercise->setDispButtonInterrupt($exerciseToCopy->getDispButtonInterrupt());
         $newExercise->setLockAttempt($exerciseToCopy->getLockAttempt());
-
+        $newExercise->setPublished($exerciseToCopy->getPublished());
+        
         $em->persist($newExercise);
         $em->flush();
 
