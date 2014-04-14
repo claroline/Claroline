@@ -17,7 +17,6 @@
     var publicProfileUrl = window.Routing.generate('claro_public_profile_view')+"/";
     var searchUserInWorkspaceUrl = window.Routing.generate('claro_user_search_in_workspace')+"/";
 
-
     //Load external plugins
     tinymce.PluginManager.load('mention', home.asset + 'bundles/frontend/tinymce/plugins/mention/plugin.min.js');
     tinymce.PluginManager.load('accordion', home.asset + 'bundles/frontend/tinymce/plugins/accordion/plugin.min.js');
@@ -255,6 +254,27 @@
             .on('LoadContent', function () {
                 tinymce.claroline.editorChange(editor);
             });
+
+        editor.on('BeforeRenderUI', function(e) {
+            editor.theme.panel.find('toolbar').slice(1).hide();
+        });
+
+        // Add a button that toggles toolbar 1+ on/off
+        editor.addButton('displayAllButtons', {
+            'icon': 'none icon-tasks',
+            'classes': 'widget btn',
+            'tooltip': translator.get('platform:tinymce_all_buttons'),
+            onclick: function() {
+                if (!this.active()) {
+                    this.active(true);
+                    editor.theme.panel.find('toolbar').slice(1).show();
+                } else {
+                    this.active(false);
+                    editor.theme.panel.find('toolbar').slice(1).hide();
+                }
+            }
+        });
+
         tinymce.claroline.addResourcePicker(editor);
         tinymce.claroline.setBeforeUnloadActive(editor);
         $('body').bind('ajaxComplete', function () {
@@ -283,10 +303,10 @@
             'insertdatetime media nonbreaking save table directionality',
             'template paste textcolor emoticons code -mention -accordion'
         ],
-        'toolbar1': 'styleselect | bold italic | alignleft aligncenter alignright alignjustify | ' +
-                    'preview fullscreen resourcePicker fileUpload  accordion',
-        'toolbar2': 'undo redo | forecolor backcolor emoticons | bullist numlist outdent indent | ' +
-                    'link image media print code',
+        'toolbar1': 'bold italic strikethrough | alignleft aligncenter alignright alignjustify | ' +
+                    'link resourcePicker fileUpload | preview | fullscreen | displayAllButtons',
+        'toolbar2': 'styleselect | undo redo | forecolor backcolor | charmap | bullist numlist | outdent indent | ' +
+                    'image media | print | code',
         'extended_valid_elements': 'user[id], a[data-toggle|data-parent]',
         'paste_preprocess': tinymce.claroline.paste,
         'setup': tinymce.claroline.setup,
