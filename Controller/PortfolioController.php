@@ -105,5 +105,31 @@ class PortfolioController extends Controller
 
         return $this->redirect($this->generateUrl('icap_portfolio_list'));
     }
+
+    /**
+     * @Route("/visibility/{id}", name="icap_portfolio_update_visibility", requirements={"id" = "\d+"})
+     *
+     * @ParamConverter("loggedUser", options={"authenticatedUser" = true})
+     * @Template()
+     */
+    public function updateVisibilityAction(User $loggedUser, Portfolio $portfolio)
+    {
+        try {
+            if ($this->getPortfolioFormHandler()->handleVisibility($portfolio)) {
+                $this->getSessionFlashbag()->add('success', $this->getTranslator()->trans('portfolio_visibility_update_success_message', array(), 'icap_portfolio'));
+
+                return $this->redirect($this->generateUrl('icap_portfolio_list'));
+            }
+        } catch (\Exception $exception) {
+            $this->getSessionFlashbag()->add('error', $this->getTranslator()->trans('portfolio_visibility_update_error_message', array(), 'icap_portfolio'));
+
+            return $this->redirect($this->generateUrl('icap_portfolio_list'));
+        }
+
+        return array(
+            'form'      => $this->getPortfolioFormHandler()->getVisibilityForm($portfolio)->createView(),
+            'portfolio' => $portfolio
+        );
+    }
 }
  

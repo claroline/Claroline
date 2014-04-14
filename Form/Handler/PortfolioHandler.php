@@ -63,6 +63,16 @@ class PortfolioHandler
     }
 
     /**
+     * @param \Icap\PortfolioBundle\Entity\Portfolio $portfolio
+     *
+     * @return \Symfony\Component\Form\Form|FormInterface
+     */
+    public function getVisibilityForm(Portfolio $portfolio)
+    {
+        return $this->formFactory->create('icap_portfolio_visibility_form', $portfolio);
+    }
+
+    /**
      * @param  Portfolio $portfolio
      *
      * @return bool True on successfull processing, false otherwise
@@ -118,6 +128,29 @@ class PortfolioHandler
     {
         $this->entityManager->remove($portfolio);
         $this->entityManager->flush();
+    }
+
+    /**
+     * @param Portfolio $portfolio
+     *
+     * @return bool True on successfull processing, false otherwise
+     */
+    public function handleVisibility(Portfolio $portfolio)
+    {
+        $form = $this->getVisibilityForm($portfolio);
+
+        $request = $this->requestStack->getCurrentRequest();
+        if ($request->isMethod('POST')) {
+            $form->submit($request);
+
+            if ($form->isValid()) {
+                $this->portfolioManager->updateVisibility($portfolio);
+
+                return true;
+            }
+        }
+
+        return false;
     }
 }
  

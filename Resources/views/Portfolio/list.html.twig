@@ -48,6 +48,11 @@
                                             <span class=icon-pencil></span> {{ 'rename'|trans({}, 'icap_portfolio') }}
                                         </a>
                                     </li>
+                                    <li>
+                                        <a href="{{ path('icap_portfolio_update_visibility', {'id': portfolio.id}) }}" title="{{ 'update_visibility'|trans({}, 'icap_portfolio') }}">
+                                            <span class=icon-cogs></span> {{ 'update_visibility'|trans({}, 'icap_portfolio') }}
+                                        </a>
+                                    </li>
                                     <li class="divider"></li>
                                     <li>
                                         <a href="{{ path('icap_portfolio_delete', {'id': portfolio.id}) }}" class="delete"

@@ -49,6 +49,17 @@ class PortfolioManager
         $this->persist($portfolio);
     }
 
+    /**
+     * @param Portfolio $portfolio
+     */
+    public function updateVisibility(Portfolio $portfolio)
+    {
+        $this->persist($portfolio);
+    }
+
+    /**
+     * @param Portfolio $portfolio
+     */
     private function persist(Portfolio $portfolio)
     {
         $this->entityManager->persist($portfolio);

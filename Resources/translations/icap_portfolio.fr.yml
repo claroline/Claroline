@@ -6,6 +6,8 @@ portfolio_delete_success_message: "Portfolio supprimé avec succès"
 portfolio_delete_error_message: "Erreur lors de la suppression du portfolio"
 portfolio_rename_success_message: "Portfolio renommé avec succès"
 portfolio_rename_error_message: "Erreur lors du renommage du portfolio"
+portfolio_visibility_update_success_message: "Visibilité du portfolio mise à jour avec succès"
+portfolio_visibility_update_error_message: "Erreur lors de la mise à jour de la visibilité du portfolio"
 shared_to_nobody: 'moi seulement'
 shared_with_user: 'liste d''utilisateurs'
 shared_with_platform_user: 'utilisateurs de la plateforme'
@@ -20,3 +22,5 @@ rename: 'Renommer'
 update: 'Mettre à jour'
 refresh_url: 'Réactualiser l''url'
 refresh_url_rename_warning_message: '<span class="icon-warning-sign"></span> <strong>Attention!</strong> Si vous cochez cette case l''adresse d''accès à votre portfolio sera mise à jour en fonction du nouveau nom renseigné.<br>L''ancienne adresse de votre portfolio ne sera plus accessible.'
+update_visibility: 'Modifier la visibilité'
+update_portfolio_visibility: 'Modifier visibilité du portfolio'
