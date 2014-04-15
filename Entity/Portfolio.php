@@ -17,14 +17,14 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class Portfolio
 {
-    const SHARE_POLICY_NOBODY              = 0;
-    const SHARE_POLICY_NOBODY_LABEL        = 'shared_to_nobody';
-    const SHARE_POLICY_USER                = 1;
-    const SHARE_POLICY_USER_LABEL          = 'shared_with_user';
-    const SHARE_POLICY_PLATFORM_USER       = 2;
-    const SHARE_POLICY_PLATFORM_USER_LABEL = 'shared_with_platform_user';
-    const SHARE_POLICY_EVERYBODY           = 3;
-    const SHARE_POLICY_EVERYBODY_LABEL     = 'shared_with_everybody';
+    const VISIBILITY_NOBODY              = 0;
+    const VISIBILITY_NOBODY_LABEL        = 'visibile_to_me';
+    const VISIBILITY_USER                = 1;
+    const VISIBILITY_USER_LABEL          = 'visible_for_some_users';
+    const VISIBILITY_PLATFORM_USER       = 2;
+    const VISIBILITY_PLATFORM_USER_LABEL = 'visible_for_platform_user';
+    const VISIBILITY_EVERYBODY           = 3;
+    const VISIBILITY_EVERYBODY_LABEL     = 'visible_for_everybody';
 
     /**
      * @var integer
@@ -54,9 +54,9 @@ class Portfolio
     /**
      * @var bool
      *
-     * @ORM\Column(type="integer", name="share_policy", nullable=false)
+     * @ORM\Column(type="integer", name="visibility", nullable=false)
      */
-    protected $sharePolicy = 0;
+    protected $visibility = 0;
 
     /**
      * @var \Claroline\CoreBundle\Entity\User
@@ -67,10 +67,9 @@ class Portfolio
     protected $user;
 
     /**
-     * @ORM\ManyToMany(targetEntity="Claroline\CoreBundle\Entity\User")
-     * @ORM\JoinTable(name="icap__portfolio_shared_users")
+     * @ORM\OneToMany(targetEntity="PortfolioUser", mappedBy="portfolio", cascade={"all"})
      */
-    protected $sharedUsers;
+    protected $portfolioUsers;
 
     /**
      * @var datetime $created
@@ -134,13 +133,13 @@ class Portfolio
     }
 
     /**
-     * @param boolean $sharePolicy
+     * @param boolean $visibility
      *
      * @return Portfolio
      */
-    public function setSharePolicy($sharePolicy)
+    public function setVisibility($visibility)
     {
-        $this->sharePolicy = $sharePolicy;
+        $this->visibility = $visibility;
 
         return $this;
     }
@@ -148,51 +147,55 @@ class Portfolio
     /**
      * @return boolean
      */
-    public function getSharePolicy()
+    public function getVisibility()
     {
-        return $this->sharePolicy;
+        return $this->visibility;
     }
 
     /**
      * @return array
      */
-    public static function getSharePolicyLabels()
+    public static function getVisibilityLabels()
     {
         return array(
-            self::SHARE_POLICY_NOBODY        => self::SHARE_POLICY_NOBODY_LABEL,
-            self::SHARE_POLICY_USER          => self::SHARE_POLICY_USER_LABEL,
-            self::SHARE_POLICY_PLATFORM_USER => self::SHARE_POLICY_PLATFORM_USER_LABEL,
-            self::SHARE_POLICY_EVERYBODY     => self::SHARE_POLICY_EVERYBODY_LABEL
+            self::VISIBILITY_NOBODY        => self::VISIBILITY_NOBODY_LABEL,
+            self::VISIBILITY_USER          => self::VISIBILITY_USER_LABEL,
+            self::VISIBILITY_PLATFORM_USER => self::VISIBILITY_PLATFORM_USER_LABEL,
+            self::VISIBILITY_EVERYBODY     => self::VISIBILITY_EVERYBODY_LABEL
         );
     }
 
     /**
      * @return mixed
      */
-    public function getSharePolicyLabel()
+    public function getVisibilityLabel()
     {
-        $sharePolicyLabels = self::getSharePolicyLabels();
-        return $sharePolicyLabels[$this->getSharePolicy()];
+        $visibilityLabels = self::getVisibilityLabels();
+        return $visibilityLabels[$this->getVisibility()];
     }
 
     /**
-     * @param mixed $sharedUsers
+     * @param PortfolioUser[] $portfolioUsers
      *
      * @return Portfolio
      */
-    public function setSharedUsers($sharedUsers)
+    public function setPortfolioUsers($portfolioUsers)
     {
-        $this->sharedUsers = $sharedUsers;
+        foreach ($portfolioUsers as $portfolioUser) {
+            $portfolioUser->setPortfolio($this);
+        }
+
+        $this->portfolioUsers = $portfolioUsers;
 
         return $this;
     }
 
     /**
-     * @return mixed
+     * @return PortfolioUser[]
      */
-    public function getSharedUsers()
+    public function getPortfolioUsers()
     {
-        return $this->sharedUsers;
+        return $this->portfolioUsers;
     }
 
     /**

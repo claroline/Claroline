@@ -8,10 +8,10 @@ portfolio_rename_success_message: "Portfolio renommé avec succès"
 portfolio_rename_error_message: "Erreur lors du renommage du portfolio"
 portfolio_visibility_update_success_message: "Visibilité du portfolio mise à jour avec succès"
 portfolio_visibility_update_error_message: "Erreur lors de la mise à jour de la visibilité du portfolio"
-shared_to_nobody: 'moi seulement'
-shared_with_user: 'liste d''utilisateurs'
-shared_with_platform_user: 'utilisateurs de la plateforme'
-shared_with_everybody: 'tout le monde'
+visibile_to_me: 'moi seulement'
+visible_for_some_users: 'liste d''utilisateurs'
+visible_for_platform_user: 'utilisateurs de la plateforme'
+visible_for_everybody: 'tout le monde'
 add_portfolio: 'Ajouter un portfolio'
 rename_portfolio: 'Renommer un portfolio'
 portfolio_add_error_message: 'Erreur lors de l''ajout du portfolio.'
@@ -24,3 +24,5 @@ refresh_url: 'Réactualiser l''url'
 refresh_url_rename_warning_message: '<span class="icon-warning-sign"></span> <strong>Attention!</strong> Si vous cochez cette case l''adresse d''accès à votre portfolio sera mise à jour en fonction du nouveau nom renseigné.<br>L''ancienne adresse de votre portfolio ne sera plus accessible.'
 update_visibility: 'Modifier la visibilité'
 update_portfolio_visibility: 'Modifier visibilité du portfolio'
+select_visible_users: 'Sélectionnez les utilisateurs qui auront accès à ce portfolio'
+revoke_access: 'Supprimer l''accès'

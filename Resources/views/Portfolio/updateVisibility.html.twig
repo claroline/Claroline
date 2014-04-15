@@ -1,14 +1,73 @@
 {% extends 'IcapPortfolioBundle::layout.html.twig' %}
 
+{% form_theme form _self %}
+
 {% block title %}{{ parent() ~ ' - ' ~ 'update_portfolio_visibility' | trans({}, 'icap_portfolio') | striptags | raw }}{% endblock %}
 
 {% block content_title %}{{ 'update_portfolio_visibility'|trans({}, 'icap_portfolio') }}{% endblock %}
 
+{% block collection_widget %}
+    {% spaceless %}
+        {% if prototype is defined %}
+            {% set attr = attr|merge({'data-prototype': block('collection_prototype') }) %}
+        {% endif %}
+        <div {{ block('widget_container_attributes') }}>
+            {{ form_errors(form) }}
+            <div class="form-collection{{ form|length ? '' : ' hide' }}">
+                {% for rows in form %}
+                    {{ _self.collection_field(rows) }}
+                {% endfor %}
+            </div>
+            {{ form_rest(form) }}
+        </div>
+        {% if allow_add %}
+            <a href="#" class="btn btn-xs btn-success form-collection-add">{{ 'add'|trans({}, 'platform') }}</a>
+        {% endif %}
+    {% endspaceless %}
+{% endblock collection_widget %}
+
+{% block collection_prototype %}
+    {{ _self.collection_field(prototype, allow_delete) }}
+{% endblock collection_prototype %}
+
+{% macro collection_field(rows) %}
+    {% spaceless %}
+        <div class="form-collection-element">
+            {% for row in rows %}
+                <div class="form-group row">
+                    <div class="col-md-9">
+                        {{ form_widget(row) }}
+                        <a class="btn btn-xs btn-danger remove" href="#" data-toggle="tooltip"
+                            title="{{ 'revoke_access'|trans({}, 'icap_portfolio') }}"data-confirm-title="{{ 'revoke_access'|trans({}, 'icap_portfolio') }}">
+                            <span class="icon-trash"></span>
+                        </a>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% endspaceless %}
+{% endmacro %}
+
 {% block content_body %}
-    <form action="{{ path('icap_portfolio_update_visibility', {'id': portfolio.id}) }}" method="post" class="form-horizontal" {{ form_enctype(form) }}>
+    <form action="{{ path('icap_portfolio_update_visibility', {'id': portfolio.id}) }}" method="post" class="form-horizontal" id="visibility_form" {{ form_enctype(form) }}>
         {{ form_errors(form) }}
 
-        {{ form_widget(form) }}
+        <div class="form-group row">
+            {{ form_label(form.visibility) }}
+            <div class="col-md-3">
+                {{ form_widget(form.visibility) }}
+            </div>
+            <div class="col-md-6{% if 1 != form.visibility.vars.data %} hidden{% endif %}" id="choose_user">
+                <label class="row">{{ 'select_visible_users'|trans({}, 'icap_portfolio') }}</label>
+                <div class="row">
+                    <div class="col-md-12">
+                        {{ form_widget(form.portfolio_users) }}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {{ form_rest(form) }}
 
         <div class="form-group">
             <div class="col-sm-offset-2 col-sm-10">
@@ -17,4 +76,19 @@
             </div>
         </div>
     </form>
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('bundles/frontend/jquery/plugin/select2/select2.css') }}" screen="media" />
+{% endblock %}
+
+{% block javascripts %}
+{{ parent() }}
+<script type="text/javascript" src="{{ asset('bundles/zenstruckform/js/helper.js') }}"></script>
+<script type="text/javascript" src="{{ asset('bundles/frontend/jquery/plugin/select2/select2.min.js') }}"></script>
+{% if 'en' != app.request.locale %}
+<script type="text/javascript" src="{{ asset('bundles/frontend/jquery/plugin/select2/select2_locale_' ~ app.request.locale ~ '.js') }}"></script>
+{% endif %}
+<script type="text/javascript" src='{{ asset('bundles/icapportfolio/js/visibility.js') }}'></script>
 {% endblock %}

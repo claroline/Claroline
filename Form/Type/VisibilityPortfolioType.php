@@ -16,14 +16,20 @@ class VisibilityPortfolioType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('share_policy', 'choice', array(
-                'choices'  => Portfolio::getSharePolicyLabels(),
+            ->add('visibility', 'choice', array(
+                'choices'  => Portfolio::getVisibilityLabels(),
                 'required' => true,
                 'expanded' => true,
-                'label'    => 'visibility',
-                'attr'     => array(
-                    'class' => 'share_policies'
-                )
+                'label'    => 'visibility'
+            ))
+            ->add('portfolio_users', 'collection', array(
+                'type'          => 'icap_portfolio_visible_user_form',
+                'by_reference'  => false,
+                'attr'          => array('class' => 'rule-collections'),
+                'theme_options' => array('label_width' => 'col-md-12'),
+                'prototype'     => true,
+                'allow_add'     => true,
+                'allow_delete'  => true
             ));
     }
 

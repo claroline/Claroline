@@ -28,8 +28,8 @@
                         </td>
                         <td>
                             <span class="block">
-                                <span class="badge {{ portfolio.sharePolicyLabel }}"></span>
-                                {{ portfolio.sharePolicyLabel|trans({}, 'icap_portfolio') }}
+                                <span class="badge {{ portfolio.visibilityLabel }}"></span>
+                                {{ portfolio.visibilityLabel|trans({}, 'icap_portfolio') }}
                             </span>
                             <small class="text-muted">
                                 {{ 'updated_on'|trans({'%date%': portfolio.updatedAt|date('date_format'|trans({}, 'platform') ~ ' H:i:s')}, 'icap_portfolio') }}
