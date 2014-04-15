@@ -7,12 +7,26 @@ use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * @DI\FormType
  */
 class VisibilityPortfolioType extends AbstractType
 {
+    /** @var \Symfony\Component\Translation\TranslatorInterface */
+    private $translator;
+
+    /**
+     * @DI\InjectParams({
+     *     "translator" = @DI\Inject("translator")
+     * })
+     */
+    public function __construct(TranslatorInterface $translator)
+    {
+        $this->translator = $translator;
+    }
+
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
@@ -36,6 +50,7 @@ class VisibilityPortfolioType extends AbstractType
                 'use_controller' => true,
                 'property'       => 'username',
                 'repo_method'    => 'findByNameForAjax',
+                'placeholder'    => $this->translator->trans('select_user', array(), 'icap_portfolio'),
                 'mapped'         => false
             ));
     }
