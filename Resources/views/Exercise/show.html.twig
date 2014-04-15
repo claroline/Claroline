@@ -67,6 +67,20 @@
             <i class="icon-question"></i> {{ 'access my question bank' | trans }}
         </a>
     </div>
+
+    {% if published == false %}
+        <div class="alert alert-info">
+            {% if exoAdmin == 1 %}
+                {{ 'infoExerciseNoPuplished'|trans }} : 
+                <a id="btPublish" class="btn btn-primary" onclick="publish('{{ path('ujm_exercise_publish') }}', {{ entity.id }})">
+                    <i class="icon-ok"></i> {{ 'publish' | trans }}
+                </a>
+            {% else %}
+                {{ 'infoExerciseNoPuplished2'|trans }}
+            {% endif %}
+        </div>
+    {% endif %}
+
     <div class="list-group">
         <div class="list-group-item">
             <table class="record_properties table table-striped table-bordered table-condensed">
@@ -246,11 +260,6 @@
                 <a class="btn btn-primary" href="{{ path('ujm_exercise_questions', { 'id': entity.id }) }} " >
                     <i class="icon-question"></i> {{ 'list of question' | trans }}
                 </a>
-                {% if published == false %}
-                    <a id="btPublish" class="btn btn-primary" onclick="publish('{{ path('ujm_exercise_publish') }}', {{ entity.id }})">
-                        <i class="icon-ok"></i> {{ 'publish' | trans }}
-                    </a>
-                {% endif %}
             {% endif %}
             <a class="btn btn-primary" href="{{ path('ujm_paper_list', { 'exoID': entity.id }) }}">
                 <i class="icon-list"></i> {{ 'result' | trans }}

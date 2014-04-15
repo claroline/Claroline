@@ -174,6 +174,8 @@ home exercise: Accueil de l'exercice
 
 # I
 infiny: Infini
+infoExerciseNoPuplished: Cet exercice n'est pas encore publié. Les gestionnaires pourront ajouter des questions, tester l'exercicse et supprimer les copies. Après publication, les apprenants pourront passer l'exercice, les copies ne pourront plus être supprimées
+infoExerciseNoPuplished2: Cet exercice n'est pas encore publié. Vous ne pouvez pas encore répondre.
 infoMark: Les éventuelles pénalités sont à prendre en compte dans votre notation
 infoMeasureDifficulty: Cet indice ne prend pas en compte les étudiants n'ayant pas vu la question
 interupt: Interrompre
