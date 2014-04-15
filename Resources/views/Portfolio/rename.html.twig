@@ -4,6 +4,23 @@
 
 {% block content_title %}{{ 'rename_portfolio'|trans({}, 'icap_portfolio') }}{% endblock %}
 
+{% block breadcrumb %}
+    {{
+        macros.breadcrumbs([
+            {
+                'icon': 'icon-list-alt',
+                'name': 'my_portfolios'|trans({}, 'platform'),
+                'href': path('icap_portfolio_list')
+            },
+            {
+                'icon': 'icon-list-alt',
+                'name': 'rename_portfolio'|trans({}, 'icap_portfolio'),
+                'href': ''
+            }
+        ])
+    }}
+{% endblock %}
+
 {% block content_body %}
     <form action="{{ path('icap_portfolio_rename', {'id': portfolio.id}) }}" method="post" class="form-horizontal" {{ form_enctype(form) }}>
         {{ form_errors(form) }}

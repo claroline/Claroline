@@ -1,8 +1,25 @@
 {% extends 'IcapPortfolioBundle::layout.html.twig' %}
 
-{% block title %}{{ parent() ~ ' - ' ~ 'add_portfolio' | trans({}, 'icap_portfolio') | striptags | raw }}{% endblock %}
+{% block title %}{{ parent() ~ ' - ' ~ 'adding_portfolio' | trans({}, 'icap_portfolio') | striptags | raw }}{% endblock %}
 
-{% block content_title %}{{ 'add_portfolio'|trans({}, 'icap_portfolio') }}{% endblock %}
+{% block content_title %}{{ 'adding_portfolio'|trans({}, 'icap_portfolio') }}{% endblock %}
+
+{% block breadcrumb %}
+    {{
+        macros.breadcrumbs([
+            {
+                'icon': 'icon-list-alt',
+                'name': 'my_portfolios'|trans({}, 'platform'),
+                'href': path('icap_portfolio_list')
+            },
+            {
+                'icon': 'icon-list-alt',
+                'name': 'adding_portfolio'|trans({}, 'icap_portfolio'),
+                'href': ''
+            }
+        ])
+    }}
+{% endblock %}
 
 {% block content_body %}
     <form action="{{ path('icap_portfolio_add') }}" method="post" class="form-horizontal" {{ form_enctype(form) }}>

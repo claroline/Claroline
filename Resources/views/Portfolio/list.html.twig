@@ -4,6 +4,18 @@
     {{ parent() }} <a href="{{ path('icap_portfolio_add') }}" title="{{ 'add_portfolio'|trans({}, 'icap_portfolio') }}" class="btn btn-default btn-xs">{{ 'add_portfolio'|trans({}, 'icap_portfolio') }}</a>
 {% endblock %}
 
+{% block breadcrumb %}
+    {{
+        macros.breadcrumbs([
+            {
+                'icon': 'icon-list-alt',
+                'name': 'my_portfolios'|trans({}, 'platform'),
+                'href': path('icap_portfolio_list')
+            }
+        ])
+    }}
+{% endblock %}
+
 {% block content_body %}
     {% if 0 < pager.nbResults %}
         <table class="table table-hover table_portfolios">
