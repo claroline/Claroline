@@ -180,7 +180,10 @@ class ExerciseController extends Controller
         if ($exercise->getPublished() != 1) {
             $published = 0;
         }
-
+        
+        $nbPapers = $em->getRepository('UJMExoBundle:Paper')
+                       ->countPapers($exerciseId);
+        
         return $this->render(
             'UJMExoBundle:Exercise:show.html.twig',
             array(
@@ -192,6 +195,7 @@ class ExerciseController extends Controller
                 'nbQuestion'     => $nbQuestions['nbq'],
                 'nbUserPaper'    => $nbUserPaper,
                 'published'      => $published,
+                'nbPapers'       => $nbPapers,
                 '_resource'      => $exercise
             )
         );
@@ -220,11 +224,46 @@ class ExerciseController extends Controller
                 $exercise->setPublished(TRUE);
                 $em->persist($exercise);
                 $em->flush();
+                
+                $nbPapers = $em->getRepository('UJMExoBundle:Paper')
+                               ->countPapers($exercise->getId());
 
             }
         }
 
-        return new \Symfony\Component\HttpFoundation\Response('');
+        return new \Symfony\Component\HttpFoundation\Response($nbPapers);
+    }
+    
+    /**
+     * Unpublish an exercise
+     *
+     */
+    public function unpublishAction()
+    {
+        $request = $this->container->get('request');
+
+        if ($request->isXmlHttpRequest()) {
+            $exerciseid = $request->request->get('exerciseId');
+
+            $em = $this->getDoctrine()->getManager();
+            $exercise = $em->getRepository('UJMExoBundle:Exercise')
+                           ->find($exerciseid);
+            $this->checkAccess($exercise);
+
+            $exoAdmin = $this->container->get('ujm.exercise_services')
+                                        ->isExerciseAdmin($exercise);
+            
+            $nbPapers = $em->getRepository('UJMExoBundle:Paper')
+                           ->countPapers($exercise->getId());
+
+            if ( ($exoAdmin == 1) && ($nbPapers == 0) ) {
+                $exercise->setPublished(FALSE);
+                $em->persist($exercise);
+                $em->flush();
+            }
+        }
+
+        return new \Symfony\Component\HttpFoundation\Response();
     }
 
     /**

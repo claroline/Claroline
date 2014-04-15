@@ -16,7 +16,13 @@ ujm_exercise_import_question:
 
 ujm_exercise_publish:
     pattern:  /publish
-    defaults: { _controller: "UJMExoBundle:Exercise:Publish" }
+    defaults: { _controller: "UJMExoBundle:Exercise:publish" }
+    requirements:
+      _method: POST
+      
+ujm_exercise_unpublish:
+    pattern:  /unpublish
+    defaults: { _controller: "UJMExoBundle:Exercise:unpublish" }
     requirements:
       _method: POST
 
