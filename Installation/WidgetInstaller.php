@@ -48,7 +48,7 @@ class WidgetInstaller
                 ->findOneBy(array('vendorName' => 'Innova', 'bundleName' => 'PathBundle'));
 
             $widget = new Widget();
-            $widget->setName('innova_path_widget');
+            $widget->setName($name);
             $widget->setDisplayableInDesktop($desktop);
             $widget->setDisplayableInWorkspace($workspace);
             $widget->setConfigurable(false);
