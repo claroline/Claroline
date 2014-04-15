@@ -551,6 +551,11 @@ class RoleManager
         return $this->roleRepo->findAll();
     }
 
+    public function getAllWhereWorkspaceIsDisplayable()
+    {
+        return $this->roleRepo->findAllWhereWorkspaceIsDisplayable();
+    }
+
     /**
      * @return \Claroline\CoreBundle\Entity\Role[]
      */
