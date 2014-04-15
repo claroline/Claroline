@@ -56,4 +56,21 @@ class PathRepository extends EntityRepository
 
         return $query->getResult();
     }
+
+    public function findAllByUser(UserInterface $user)
+    {
+        $dql  = 'SELECT p ';
+        $dql .= 'FROM Innova\PathBundle\Entity\Path\Path p ';
+        $dql .= 'JOIN p.resourceNode rn ';
+        $dql .= 'JOIN rn.workspace ws ';
+        $dql .= 'JOIN ws.roles r ';
+        $dql .= 'JOIN r.users u ';
+        $dql .= 'WHERE u.id = :user ';
+        
+        $query = $this->_em->createQuery($dql);
+        
+        $query->setParameter('user', $user->getId());
+
+        return $query->getResult();
+    }
 }
