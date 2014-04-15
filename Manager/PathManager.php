@@ -99,6 +99,30 @@ class PathManager
     
         return $paths;
     }
+
+    /**
+     * Find all paths for a workspace
+     * @param  \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace $workspace
+     * @return array
+     */
+    public function findAllFromWorkspaceUnsorted(AbstractWorkspace $workspace)
+    {
+       
+        return $this->om->getRepository('InnovaPathBundle:Path\Path')->findAllByWorkspace($workspace);
+    }
+
+
+
+
+    /**
+     * Find all paths for a user
+     * @return array
+     */
+    public function findAllByUser(UserInterface $user)
+    {
+
+        return $this->om->getRepository('InnovaPathBundle:Path\Path')->findAllByUser($user);
+    }
     
     /**
      * Create a new path
