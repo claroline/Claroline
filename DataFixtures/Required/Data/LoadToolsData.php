@@ -27,7 +27,8 @@ class LoadToolsData implements RequiredFixture
             array('logs', 'icon-list', false, false, true, false, false, false, false, false, true),
             array('analytics', 'icon-bar-chart', false, false, true, false, false, false, false, false, true),
             array('users', 'icon-user', true, false, true, false, false, false, false, false, true),
-            array('badges', 'icon-trophy', false, false, true, false, false, false, false, false, true)
+            array('badges', 'icon-trophy', false, false, true, false, false, false, false, false, true),
+            array('my_badges', 'icon-trophy', false, false, true, false, false, false, false, false, true)
         );
 
         foreach ($tools as $tool) {
