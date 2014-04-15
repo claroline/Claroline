@@ -278,4 +278,18 @@ class RoleRepository extends EntityRepository
 
         return $query->getResult();
     }
+
+    public function findAllWhereWorkspaceIsDisplayable()
+    {
+        $dql = "
+            SELECT r, w
+            FROM Claroline\CoreBundle\Entity\Role r
+            LEFT JOIN r.workspace w
+            WHERE w.displayable = true
+        ";
+
+        $query = $this->_em->createQuery($dql);
+
+        return $query->getResult();
+    }
 }
