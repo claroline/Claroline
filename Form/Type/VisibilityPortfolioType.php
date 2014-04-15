@@ -30,6 +30,13 @@ class VisibilityPortfolioType extends AbstractType
                 'prototype'     => true,
                 'allow_add'     => true,
                 'allow_delete'  => true
+            ))
+            ->add('search_user', 'zenstruck_ajax_entity', array(
+                'class'          => 'ClarolineCoreBundle:User',
+                'use_controller' => true,
+                'property'       => 'username',
+                'repo_method'    => 'findByNameForAjax',
+                'mapped'         => false
             ));
     }
 

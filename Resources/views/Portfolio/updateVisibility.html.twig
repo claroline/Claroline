@@ -13,16 +13,25 @@
         {% endif %}
         <div {{ block('widget_container_attributes') }}>
             {{ form_errors(form) }}
-            <div class="form-collection{{ form|length ? '' : ' hide' }}">
+            <ul class="form-collection list-inline{{ form|length ? '' : ' hide' }}">
                 {% for rows in form %}
-                    {{ _self.collection_field(rows) }}
+                    <li class="form-collection-element">
+                    {% for row in rows %}
+                        {% set user = row.vars.data %}
+                        {{ form_widget(row, {'attr': {'class': 'hidden'}}) }}
+                        <span class="label label-primary">
+                            {{ user.firstname ~ ' ' ~ user.lastname }}
+                            <a class="remove" aria-hidden="true" href="#" data-toggle="tooltip"
+                                title="{{ 'revoke_access'|trans({}, 'icap_portfolio') }}"data-confirm-title="{{ 'revoke_access'|trans({}, 'icap_portfolio') }}">
+                                 <span class="icon-remove"></span>
+                            </a>
+                        </span>
+                    {% endfor %}
+                    </li>
                 {% endfor %}
-            </div>
+            </ul>
             {{ form_rest(form) }}
         </div>
-        {% if allow_add %}
-            <a href="#" class="btn btn-xs btn-success form-collection-add">{{ 'add'|trans({}, 'platform') }}</a>
-        {% endif %}
     {% endspaceless %}
 {% endblock collection_widget %}
 
@@ -32,19 +41,18 @@
 
 {% macro collection_field(rows) %}
     {% spaceless %}
-        <div class="form-collection-element">
+        <li class="form-collection-element">
             {% for row in rows %}
-                <div class="form-group row">
-                    <div class="col-md-9">
-                        {{ form_widget(row) }}
-                        <a class="btn btn-xs btn-danger remove" href="#" data-toggle="tooltip"
-                            title="{{ 'revoke_access'|trans({}, 'icap_portfolio') }}"data-confirm-title="{{ 'revoke_access'|trans({}, 'icap_portfolio') }}">
-                            <span class="icon-trash"></span>
-                        </a>
-                    </div>
-                </div>
+                {{ form_widget(row, {'attr': {'class': 'hidden'}}) }}
+                <span class="label label-primary">
+                    __value__
+                    <a class="remove" aria-hidden="true" href="#" data-toggle="tooltip"
+                        title="{{ 'revoke_access'|trans({}, 'icap_portfolio') }}"data-confirm-title="{{ 'revoke_access'|trans({}, 'icap_portfolio') }}">
+                         <span class="icon-remove"></span>
+                    </a>
+                </span>
             {% endfor %}
-        </div>
+        </li>
     {% endspaceless %}
 {% endmacro %}
 
@@ -62,6 +70,8 @@
                 <div class="row">
                     <div class="col-md-12">
                         {{ form_widget(form.portfolio_users) }}
+                        {{ form_widget(form.search_user) }}
+                        <button class="btn btn-xs btn-success form-collection-add" disabled="disabled">{{ 'add'|trans({}, 'platform') }}</button>
                     </div>
                 </div>
             </div>
