@@ -68,7 +68,6 @@ class PaperController extends Controller
         $nbAttemptAllowed = -1;
         $exerciseSer = $this->container->get('ujm.exercise_services');
 
-        $exoAdmin = false;
         $arrayMarkPapers = array();
 
         $user = $this->container->get('security.context')->getToken()->getUser();
@@ -76,13 +75,10 @@ class PaperController extends Controller
         $em = $this->getDoctrine()->getManager();
         $exercise = $em->getRepository('UJMExoBundle:Exercise')->find($exoID);
         $workspace = $exercise->getResourceNode()->getWorkspace();
+        
+        $exoAdmin = $exerciseSer->isExerciseAdmin($exercise);
 
         $this->checkAccess($exercise);
-
-        if ($exerciseSer->isExerciseAdmin($exercise)) {
-
-            $exoAdmin = true;
-        }
 
         /*if (count($subscription) < 1) {
             return $this->redirect($this->generateUrl('exercise_show', array('id' => $exoID)));
@@ -132,8 +128,10 @@ class PaperController extends Controller
             $arrayMarkPapers[$p->getId()] = $this->container->get('ujm.exercise_services')->getInfosPaper($p);
         }
 
-        if ($exerciseSer->controlMaxAttemps($exercise,
-                $user, $exerciseSer->isExerciseAdmin($exercise))) {
+        if (($exerciseSer->controlDate($exoAdmin, $exercise) === true)
+            && ($exerciseSer->controlMaxAttemps($exercise, $user, $exoAdmin) === true)
+            && ( ($exercise->getPublished() === true) || ($exoAdmin == 1) )
+        ) {
             $retryButton = true;
         }
 

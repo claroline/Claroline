@@ -165,8 +165,9 @@ class ExerciseController extends Controller
             throw $this->createNotFoundException('Unable to find Exercise entity.');
         }
 
-        if (($this->controlDate($exoAdmin, $exercise) === true)
+        if (($exerciseSer->controlDate($exoAdmin, $exercise) === true)
             && ($exerciseSer->controlMaxAttemps($exercise, $user, $exoAdmin) === true)
+            && ( ($exercise->getPublished() === true) || ($exoAdmin == 1) )
         ) {
             $allowToCompose = 1;
         }
@@ -589,7 +590,9 @@ class ExerciseController extends Controller
 
         $workspace = $exercise->getResourceNode()->getWorkspace();
 
-        if ($this->controlDate($exoAdmin, $exercise) === true) {
+        if ( ($exerciseSer->controlDate($exoAdmin, $exercise) === true)
+             && ( ($exercise->getPublished() === true) || ($exoAdmin == 1) )
+           ) {
             $session = $this->getRequest()->getSession();
 
             $dql = 'SELECT max(p.numPaper) FROM UJM\ExoBundle\Entity\Paper p '
@@ -1075,24 +1078,6 @@ class ExerciseController extends Controller
         $em->flush();
 
         return $this->redirect($this->generateUrl('ujm_exercise_open', array('exerciseId' => $paper->getExercise()->getId())));
-    }
-
-    /**
-     * The user must be registered (and the dates must be good or the user must to be admin for the exercise)
-     *
-     */
-    private function controlDate($exoAdmin, $exercise)
-    {
-        if (
-            ((($exercise->getStartDate()->format('Y-m-d H:i:s') <= date('Y-m-d H:i:s'))
-            && (($exercise->getUseDateEnd() == 0)
-            || ($exercise->getEndDate()->format('Y-m-d H:i:s') >= date('Y-m-d H:i:s'))))
-            || ($exoAdmin == 1))
-        ) {
-            return true;
-        } else {
-            return false;
-        }
     }
 
     /**
