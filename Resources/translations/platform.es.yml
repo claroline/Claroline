@@ -590,6 +590,7 @@ the_following_users_were_not_imported: 'Los siguientes usuarios no han sido impo
 the_workspace: 'Espacio de trabajo'
 this_page_requires_authentication: 'Esta página requiere autenticación. Por favor, iniciar sesión.'
 time_col: 'Columna de tiempo en la base de datos'
+tinymce_all_buttons: Todas las herramientas
 to: 'A'
 to_anonymous: 'A usuarios anónimos'
 to_everyone: 'A todos'

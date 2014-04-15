@@ -640,6 +640,7 @@ the_following_users_were_not_imported: 'The following users were not imported.'
 the_workspace: Workspace
 this_page_requires_authentication: 'This page requires authentication. Please login.'
 time_col: 'Database time column'
+tinymce_all_buttons: All tools
 to: To
 to_anonymous: 'to anonymous users'
 to_everyone: 'to everyone'

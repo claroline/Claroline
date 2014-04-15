@@ -641,6 +641,7 @@ the_following_users_were_not_imported: 'Les utilisateurs suivant n''ont pas pu �
 the_workspace: 'L''espace d''activités'
 this_page_requires_authentication: 'Cette page requiert une authentification. Veuillez vous identifier.'
 time_col: 'Colonne des durées'
+tinymce_all_buttons: Tous les outils
 to: Jusque
 to_anonymous: 'aux utilisateurs anonymes'
 to_everyone: 'à tout le monde'
