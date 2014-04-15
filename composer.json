@@ -1,0 +1,101 @@
+{
+    "name": "claroline/claroline",
+    "description": "Claroline Connect",
+    "autoload": {
+        "psr-0": { "": "src/" }
+    },
+    "require": {
+        "php": ">=5.4.1",
+        "sensio/distribution-bundle": "~2.3.4",
+        "claroline/bundle-recorder": "~3.0",
+        "claroline/core-bundle": ">=2.9.5,<3.0",
+        "claroline/web-installer": ">=1.0.10,<2.0",
+        "claroline/announcement-bundle": ">=2.0.5,<3.0",
+        "claroline/forum-bundle": ">=2.1.6,<3.0",
+        "claroline/image-player-bundle": ">=1.0.3,<2.0",
+        "claroline/pdf-player-bundle": ">=1.0.3,<2.0",
+        "claroline/rss-reader-bundle": ">=2.0.5,<3.0",
+        "claroline/video-player-bundle": ">=1.0.4,<2.0",
+        "icap/dropzone-bundle": ">=0.1.1,<2.0"
+    },
+    "require-dev": {
+        "mockery/mockery": "dev-master@dev",
+        "hamcrest/hamcrest": "~1.1.0",
+        "mikey179/vfsStream": "dev-master",
+        "behat/mink-bundle": "dev-master",
+        "behat/mink-selenium2-driver": "*",
+        "behat/mink-goutte-driver": "1.0.*",
+        "phpunit/phpunit": "3.7.*",
+        "behat/behat": "*",
+        "behat/mink": "~1.5.0",
+        "behat/symfony2-extension": "*",
+        "behat/mink-extension": "~1.3"
+    },
+    "repositories": [
+        {
+            "type": "package",
+            "package": {
+                "name": "hamcrest/hamcrest",
+                "version": "1.1.0",
+                "dist": {
+                    "type": "zip",
+                    "url": "https://hamcrest.googlecode.com/files/hamcrest-php-1.1.0.zip"
+                },
+                "include-path": ["Hamcrest-1.1.0/"],
+                "autoload": {
+                    "psr-0": { "Hamcrest_": "Hamcrest-1.1.0/" },
+                    "files": ["Hamcrest-1.1.0/Hamcrest/Hamcrest.php"]
+                }
+            }
+        }
+    ],
+    "scripts": {
+        "pre-install-cmd": [
+            "Claroline\\BundleRecorder\\ScriptHandler::checkForPendingOperations"
+        ],
+        "pre-update-cmd": [
+            "Claroline\\BundleRecorder\\ScriptHandler::checkForPendingOperations",
+            "Claroline\\CoreBundle\\Library\\Maintenance\\MaintenanceHandler::enableMaintenance"
+        ],
+        "post-package-install": [
+            "Claroline\\BundleRecorder\\ScriptHandler::logInstallOperation"
+        ],
+        "post-package-update": [
+            "Claroline\\BundleRecorder\\ScriptHandler::logUpdateOperation"
+        ],
+        "pre-package-uninstall": [
+            "Claroline\\BundleRecorder\\ScriptHandler::prepareUninstallOperation"
+        ],
+        "post-package-uninstall": [
+            "Claroline\\BundleRecorder\\ScriptHandler::logUninstallOperation"
+        ],
+        "post-install-cmd": [
+            "Claroline\\BundleRecorder\\ScriptHandler::buildBundleFile",
+            "Claroline\\CoreBundle\\Library\\Installation\\Refresher::deleteCache",
+            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::buildBootstrap",
+            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installRequirementsFile",
+            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installAssets"
+        ],
+        "post-update-cmd": [
+            "Claroline\\BundleRecorder\\ScriptHandler::buildBundleFile",
+            "Claroline\\CoreBundle\\Library\\Installation\\Refresher::deleteCache",
+            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::buildBootstrap",
+            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installRequirementsFile",
+            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installAssets"
+        ]
+    },
+    "config": {
+        "bin-dir": "bin",
+        "github-protocols": ["https", "http", "git"],
+        "cache-files-ttl": 0
+    },
+    "minimum-stability": "dev",
+    "extra": {
+        "symfony-app-dir": "app",
+        "symfony-web-dir": "web",
+        "symfony-assets-install": "symlink",
+        "branch-alias": {
+            "dev-master": "2.4-dev"
+        }
+    }
+}
