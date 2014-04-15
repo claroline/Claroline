@@ -17,6 +17,7 @@ use Claroline\CoreBundle\Form\Factory\FormFactory;
 use Claroline\CoreBundle\Manager\LocaleManager;
 use Claroline\CoreBundle\Manager\MailManager;
 use Claroline\CoreBundle\Manager\RoleManager;
+use Claroline\CoreBundle\Manager\ToolManager;
 use Claroline\CoreBundle\Manager\UserManager;
 use Claroline\CoreBundle\Manager\WorkspaceManager;
 use JMS\DiExtraBundle\Annotation as DI;
@@ -27,10 +28,11 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\RouterInterface;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Symfony\Component\Security\Core\SecurityContextInterface;
 
 /**
  * @DI\Tag("security.secure_service")
- * @SEC\PreAuthorize("hasRole('ADMIN')")
  */
 class UsersController extends Controller
 {
@@ -43,6 +45,8 @@ class UsersController extends Controller
     private $workspaceManager;
     private $localeManager;
     private $router;
+    private $toolManager;
+    private $userAdminTool;
 
     /**
      * @DI\InjectParams({
@@ -54,7 +58,9 @@ class UsersController extends Controller
      *     "request"            = @DI\Inject("request"),
      *     "mailManager"        = @DI\Inject("claroline.manager.mail_manager"),
      *     "localeManager"      = @DI\Inject("claroline.common.locale_manager"),
-     *     "router"             = @DI\Inject("router")
+     *     "router"             = @DI\Inject("router"),
+     *     "sc"                 = @DI\Inject("security.context"),
+     *     "toolManager"        = @DI\Inject("claroline.manager.tool_manager")
      * })
      */
     public function __construct(
@@ -66,18 +72,23 @@ class UsersController extends Controller
         Request $request,
         MailManager $mailManager,
         LocaleManager $localeManager,
-        RouterInterface $router
+        RouterInterface $router,
+        SecurityContextInterface $sc,
+        ToolManager $toolManager
     )
     {
-        $this->userManager = $userManager;
-        $this->roleManager = $roleManager;
-        $this->eventDispatcher = $eventDispatcher;
-        $this->formFactory = $formFactory;
-        $this->request = $request;
-        $this->mailManager = $mailManager;
-        $this->localeManager = $localeManager;
-        $this->router = $router;
+        $this->userManager      = $userManager;
+        $this->roleManager      = $roleManager;
+        $this->eventDispatcher  = $eventDispatcher;
+        $this->formFactory      = $formFactory;
+        $this->request          = $request;
+        $this->mailManager      = $mailManager;
+        $this->localeManager    = $localeManager;
+        $this->router           = $router;
         $this->workspaceManager = $workspaceManager;
+        $this->sc               = $sc;
+        $this->toolManager      = $toolManager;
+        $this->userAdminTool    = $this->toolManager->getAdminToolByName('user_management');
     }
 
     /**
@@ -89,6 +100,8 @@ class UsersController extends Controller
      */
     public function indexAction()
     {
+        $this->checkOpen();
+
         return array();
     }
 
@@ -106,6 +119,7 @@ class UsersController extends Controller
      */
     public function userCreationFormAction(User $currentUser)
     {
+        $this->checkOpen();
         $roles = $this->roleManager->getPlatformRoles($currentUser);
         $form = $this->formFactory->create(
             FormFactory::TYPE_USER_FULL, array($roles, $this->localeManager->getAvailableLocales())
@@ -137,6 +151,8 @@ class UsersController extends Controller
      */
     public function createAction(User $currentUser)
     {
+        $this->checkOpen();
+
         $roles = $this->roleManager->getPlatformRoles($currentUser);
         $form = $this->formFactory->create(
             FormFactory::TYPE_USER_FULL, array($roles, $this->localeManager->getAvailableLocales())
@@ -184,6 +200,8 @@ class UsersController extends Controller
      */
     public function deleteAction(array $users)
     {
+        $this->checkOpen();
+
         foreach ($users as $user) {
             $this->userManager->deleteUser($user);
             $this->eventDispatcher->dispatch('log', 'Log\LogUserDelete', array($user));
@@ -219,11 +237,13 @@ class UsersController extends Controller
      * @param string  $search
      * @param integer $max
      * @param string  $order
+     * @param string  $direction
      *
      * @return array
      */
     public function listAction($page, $search, $max, $order, $direction)
     {
+        $this->checkOpen();
         $pager = $search === '' ?
             $this->userManager->getAllUsers($page, $max, $order, $direction):
             $this->userManager->getUsersByName($search, $page, $max, $order, $direction);
@@ -259,6 +279,7 @@ class UsersController extends Controller
      */
     public function listPicsAction($page, $search)
     {
+        $this->checkOpen();
         $pager = $search === '' ?
             $this->userManager->getAllUsers($page):
             $this->userManager->getUsersByName($search, $page);
@@ -275,6 +296,7 @@ class UsersController extends Controller
      */
     public function importFormAction()
     {
+        $this->checkOpen();
         $form = $this->formFactory->create(FormFactory::TYPE_USER_IMPORT);
 
         return array('form' => $form->createView());
@@ -298,6 +320,7 @@ class UsersController extends Controller
      */
     public function userWorkspaceListAction(User $user, $page, $max)
     {
+        $this->checkOpen();
         $pager = $this->workspaceManager->getOpenableWorkspacesByRolesPager($user->getRoles(), $page, $max);
 
         return array('user' => $user, 'pager' => $pager, 'page' => $page, 'max' => $max);
@@ -312,6 +335,7 @@ class UsersController extends Controller
      */
     public function importAction()
     {
+        $this->checkOpen();
         $form = $this->formFactory->create(FormFactory::TYPE_USER_IMPORT);
         $form->handleRequest($this->request);
 
@@ -329,5 +353,14 @@ class UsersController extends Controller
         }
 
         return array('form' => $form->createView());
+    }
+
+    private function checkOpen()
+    {
+        if ($this->sc->isGranted($this->userAdminTool)) {
+            return true;
+        }
+
+        throw new AccessDeniedException;
     }
 }

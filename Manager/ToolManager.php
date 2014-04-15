@@ -598,4 +598,15 @@ class ToolManager
         $this->om->persist($tool);
         $this->om->flush();
     }
+
+    public function getAdminToolByName($name)
+    {
+        return $this->om->getRepository('Claroline\CoreBundle\Entity\Administration\Tool')
+            ->findOneByName($name);
+    }
+
+    public function getAdminToolsByRoles(array $roles)
+    {
+
+    }
 }

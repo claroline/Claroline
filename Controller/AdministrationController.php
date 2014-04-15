@@ -753,24 +753,4 @@ class AdministrationController extends Controller
 
         return array('tools' => $tools);
     }
-
-    /**
-     * @EXT\Route(
-     *    "/open/tool/{toolName}",
-     *    name="claro_admin_open_tool",
-     *    options = {"expose"=true}
-     * )
-     *
-     * @return Response
-     */
-    public function openAdministrationToolAction($toolName)
-    {
-        $event = $this->eventDispatcher->dispatch(
-            'administration_tool_' . $toolName ,
-            'OpenAdministrationTool',
-            array('toolName' => $toolName)
-        );
-
-        return $event->getResponse();
-    }
 }

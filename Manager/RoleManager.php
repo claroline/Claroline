@@ -654,6 +654,7 @@ class RoleManager
         $role = new Role();
         $role->setType($translationKey);
         $role->setName('ROLE_' . strtoupper($translationKey));
+        $role->setTranslationKey($translationKey);
         $role->setReadOnly(false);
         $role->setType(Role::PLATFORM_ROLE);
         $this->om->persist($role);
