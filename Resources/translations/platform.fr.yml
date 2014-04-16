@@ -678,7 +678,7 @@ unauthorized: 'Vous n''êtes pas autorisé à consulter cette page.'
 under_min_length: 'Cette valeur est trop courte'
 'unique connections': 'Nb Cnx. uniques'
 unregister: Désinscription
-unregister_from_a_workspace: 'Me désinscrire d''un espace'
+unregister_from_a_workspace: 'Me désinscrire d''un espace d''activités'
 unregistered: 'Non inscrit'
 unregistered_groups: 'Groupes non enregistrés'
 unregistered_users: 'Utilisateurs non enregistrés'
