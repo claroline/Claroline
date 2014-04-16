@@ -140,6 +140,7 @@
                                         <ul class="list-unstyled">
                                             <li>
                                                 <input type="checkbox" name ="my"
+                                                       disabled="disabled"
                                                        value="{{ interaction.question.id }}" onclick="addQuestionInOrder($(this).val());">
                                             </li>
                                         </ul>
@@ -259,4 +260,5 @@
     {{ parent() }}
     <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/sortAndSearch.js') }}"></script>
     <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/resize.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/exerciseImportQuestion.js') }}"></script>
 {% endblock %}
