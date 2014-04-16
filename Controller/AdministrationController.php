@@ -741,16 +741,4 @@ class AdministrationController extends Controller
 
         return new Response($msg, 200);
     }
-
-    /**
-     * @EXT\Template("ClarolineCoreBundle:Administration:left_bar.html.twig")
-     * @EXT\Method("GET")
-     * @return array
-     */
-    public function renderLeftBarAction()
-    {
-        $tools = $this->toolManager->getAdminTools();
-
-        return array('tools' => $tools);
-    }
 }

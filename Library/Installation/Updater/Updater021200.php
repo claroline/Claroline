@@ -73,27 +73,35 @@ class Updater021200
 
         /** @var \Claroline\CoreBundle\Repository\UserRepository $userRepository */
         $userRepository = $this->objectManager->getRepository('ClarolineCoreBundle:User');
-        /** @var \CLaroline\CoreBundle\Entity\User[] $users */
-        $users = $userRepository->findByPublicUrl(null);
 
-        $this->log('User to update ' . count($users) . ' - ' . date('Y/m/d H:i:s'));
+        $this->log('User to update - ' . date('Y/m/d H:i:s'));
         $this->log('It may take a while to process, go grab a coffee.');
 
         /** @var \Claroline\CoreBundle\Manager\UserManager $userManager */
         $userManager = $this->container->get('claroline.manager.user_manager');
+        $nbUsers     = 0;
 
-        $nbUsers = 0;
-
-        foreach ($users as $user) {
+        /** @var \Claroline\CoreBundle\Entity\User $user */
+        $user = $userRepository->findOneByPublicUrl(null);
+        while(null !== $user) {
             $publicUrl = $userManager->generatePublicUrl($user);
+
             $user->setPublicUrl($publicUrl);
             $this->objectManager->persist($user);
             $this->objectManager->flush();
+
             $nbUsers++;
-            if (200 === $nbUsers) {
+            if (100 === $nbUsers) {
                 $this->log('    ' . $nbUsers . ' updated users - ' . date('Y/m/d H:i:s'));
                 $nbUsers = 0;
             }
+
+            $personalWorkspace = $user->getPersonalWorkspace();
+            if (null !== $personalWorkspace) {
+                $this->objectManager->detach($personalWorkspace);
+            }
+            $this->objectManager->detach($user);
+            $user = $userRepository->findOneByPublicUrl(null);
         }
 
         $this->log('Public url for users updated.');

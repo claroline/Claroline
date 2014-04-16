@@ -640,6 +640,7 @@ the_following_users_were_not_imported: 'The following users were not imported.'
 the_workspace: Workspace
 this_page_requires_authentication: 'This page requires authentication. Please login.'
 time_col: 'Database time column'
+tinymce_all_buttons: All tools
 to: To
 to_anonymous: 'to anonymous users'
 to_everyone: 'to everyone'
@@ -693,7 +694,7 @@ user_creation: 'User creation'
 user_parameters: 'User parameters'
 user_picker: 'User picker'
 user_profile: 'User profile'
-user_public_profile_not_visible: 'Your public profile is visible to nobody. <br> You can make it visible for the <span class="shared_policy_link">platform users</span>, or to <span class="shared_policy_link">everybody</span>.'
+user_public_profile_not_visible: 'Your public profile is visible to nobody. <br> You can make it visible for the <span class="shared_policy_link shared_policy_link_platform_users">platform users</span>, or to <span class="shared_policy_link shared_policy_link_everybody">everybody</span>.'
 user_removed: 'User removed'
 username: Username
 username_found_at: 'The username %username% was found at lines: %lines%'

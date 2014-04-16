@@ -31,9 +31,6 @@ use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 
-/**
- * @DI\Tag("security.secure_service")
- */
 class UsersController extends Controller
 {
     private $userManager;
@@ -357,10 +354,10 @@ class UsersController extends Controller
 
     private function checkOpen()
     {
-        if ($this->sc->isGranted($this->userAdminTool)) {
+        if ($this->sc->isGranted('OPEN', $this->userAdminTool)) {
             return true;
         }
 
-        throw new AccessDeniedException;
+        throw new AccessDeniedException();
     }
 }

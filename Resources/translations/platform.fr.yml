@@ -641,6 +641,7 @@ the_following_users_were_not_imported: 'Les utilisateurs suivant n''ont pas pu �
 the_workspace: 'L''espace d''activités'
 this_page_requires_authentication: 'Cette page requiert une authentification. Veuillez vous identifier.'
 time_col: 'Colonne des durées'
+tinymce_all_buttons: Tous les outils
 to: Jusque
 to_anonymous: 'aux utilisateurs anonymes'
 to_everyone: 'à tout le monde'
@@ -694,7 +695,7 @@ user_creation: 'Création d''un utilisateur'
 user_parameters: 'Paramètres de l''utilisateur'
 user_picker: 'Outil pour choisir un utilisateur'
 user_profile: 'Profil utilisateur'
-user_public_profile_not_visible: 'Votre profil public n''est visible à personne. <br> Vous pouvez rendre votre profil visible pour les <span class="shared_policy_link">utilisateurs de la plateforme</span>, ou à <span class="shared_policy_link">tout le monde</span>.'
+user_public_profile_not_visible: 'Votre profil public n''est visible à personne. <br> Vous pouvez rendre votre profil visible pour les <span class="shared_policy_link shared_policy_link_platform_users">utilisateurs de la plateforme</span>, ou à <span class="shared_policy_link shared_policy_link_everybody">tout le monde</span>.'
 user_removed: 'Utilisateur supprimé'
 username: 'Nom d''utilisateur'
 username_found_at: 'Le nom d''utilisateur %username% a été trouvé aux lignes: %lines%'

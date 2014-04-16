@@ -290,6 +290,20 @@ class RoleRepository extends EntityRepository
         $queryBuilder->andWhere($queryBuilder->expr()->not($queryBuilder->expr()->eq('role.name', '?2')))
             ->setParameter(2, 'ROLE_ADMIN');
         $query = $queryBuilder->getQuery();
+        
+        return $query->getResult();
+    }
+
+    public function findAllWhereWorkspaceIsDisplayable()
+    {
+        $dql = "
+            SELECT r, w
+            FROM Claroline\CoreBundle\Entity\Role r
+            LEFT JOIN r.workspace w
+            WHERE w.displayable = true
+        ";
+
+        $query = $this->_em->createQuery($dql);
 
         return $query->getResult();
     }

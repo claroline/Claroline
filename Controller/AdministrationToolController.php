@@ -17,17 +17,26 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 use JMS\DiExtraBundle\Annotation as DI;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
+use Claroline\CoreBundle\Manager\ToolManager;
 
 class AdministrationToolController extends Controller
 {
     private $eventDispatcher;
+    private $toolManager;
 
     /**
-     * @DI\InjectParams({"eventDispatcher" = @DI\Inject("claroline.event.event_dispatcher") })
+     * @DI\InjectParams({
+     *     "eventDispatcher" = @DI\Inject("claroline.event.event_dispatcher"),
+     *     "toolManager"     = @DI\Inject("claroline.manager.tool_manager")
+     * })
      */
-    public function __construct(StrictDispatcher $eventDispatcher)
+    public function __construct(
+        StrictDispatcher $eventDispatcher,
+        ToolManager $toolManager
+    )
     {
         $this->eventDispatcher = $eventDispatcher;
+        $this->toolManager = $toolManager;
     }
 
     /**
@@ -50,5 +59,17 @@ class AdministrationToolController extends Controller
         );
 
         return $event->getResponse();
+    }
+
+    /**
+     * @EXT\Template("ClarolineCoreBundle:Administration:left_bar.html.twig")
+     * @EXT\Method("GET")
+     * @return array
+     */
+    public function renderLeftBarAction()
+    {
+        $tools = $this->toolManager->getAdminTools();
+
+        return array('tools' => $tools);
     }
 }

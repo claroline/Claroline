@@ -24,9 +24,7 @@ use Doctrine\ORM\EntityManager;
 class AdministrationToolVoter implements VoterInterface
 {
     /**
-     * @DI\InjectParams({
-     *     "em" = @DI\Inject("doctrine.orm.entity_manager")
-     * })
+     * @DI\InjectParams({"em" = @DI\Inject("doctrine.orm.entity_manager")})
      */
     public function __construct(EntityManager $em)
     {
@@ -35,13 +33,13 @@ class AdministrationToolVoter implements VoterInterface
 
     public function vote(TokenInterface $token, $object, array $attributes)
     {
-        if ($object instanceof Tool) {
+        if ($object instanceof \Claroline\CoreBundle\Entity\Administration\Tool) {
             $roles = $object->getRoles();
-            $tokenRoles = $object->getRoles();
+            $tokenRoles = $token->getRoles();
 
             foreach ($tokenRoles as $tokenRole) {
                 foreach ($roles as $role) {
-                    if ($role->getName() === $tokenRole->getRole()) {
+                    if ($role->getRole() === $tokenRole->getRole()) {
                         return VoterInterface::ACCESS_GRANTED;
                     }
                 }
