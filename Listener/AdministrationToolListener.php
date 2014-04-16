@@ -68,7 +68,7 @@ class AdministrationToolListener
     public function onOpenWorkspaceManagement(OpenAdministrationToolEvent $event)
     {
         $params = array();
-        $params['_controller'] = 'ClarolineCoreBundle:Administration\Workspaces:management';
+        $params['_controller'] = 'ClarolineCoreBundle:Administration\WorkspaceRegistration:registrationManagement';
         $params['page'] = 1;
         $params['search'] = '';
         $params['max'] = 50;
