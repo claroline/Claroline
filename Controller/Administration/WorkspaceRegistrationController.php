@@ -29,6 +29,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 use Symfony\Component\Translation\Translator;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 class WorkspaceRegistrationController extends Controller
 {

@@ -269,5 +269,10 @@ claro_admin_tools:
     prefix: admin/tool
     type: annotation
 
+claro_admin_plugins:
+    resource: "@ClarolineCoreBundle/Controller/Administration/PluginsController.php"
+    prefix: admin/plugins
+    type: annotation
+
 claro_badge:
     resource: "@ClarolineCoreBundle/Controller/Badge"

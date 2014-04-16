@@ -131,50 +131,6 @@ class AdministrationController extends Controller
 
     /**
      * @EXT\Route(
-     *     "plugins",
-     *     name="claro_admin_plugins"
-     * )
-     * @EXT\Method("GET")
-     *
-     * @EXT\Template()
-     *
-     * Display the plugin list
-     *
-     * @return Response
-     */
-    public function pluginListAction()
-    {
-        $em = $this->get('doctrine.orm.entity_manager');
-        $plugins = $em->getRepository('ClarolineCoreBundle:Plugin')->findAll();
-
-        return array('plugins' => $plugins);
-    }
-
-    /**
-     * @EXT\Route(
-     *     "/plugin/{domain}/options",
-     *     name="claro_admin_plugin_options"
-     * )
-     * @EXT\Method("GET")
-     *
-     * Redirects to the plugin management page.
-     *
-     * @param string $domain
-     *
-     * @return Response
-     *
-     * @throws \Exception
-     */
-    public function pluginParametersAction($domain)
-    {
-        $eventName = "plugin_options_{$domain}";
-        $event = $this->eventDispatcher->dispatch($eventName, 'PluginOptions', array());
-
-        return $event->getResponse();
-    }
-
-    /**
-     * @EXT\Route(
      *     "/logs/",
      *     name="claro_admin_logs_show",
      *     defaults={"page" = 1}

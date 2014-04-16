@@ -105,7 +105,7 @@ class AdministrationToolListener
     public function onOpenRegistrationToWorkspace(OpenAdministrationToolEvent $event)
     {
         $params = array();
-        $params['_controller'] = 'ClarolineCoreBundle:Administration:registrationManagement';
+        $params['_controller'] = 'ClarolineCoreBundle:Administration\WorkspaceRegistration:registrationManagement';
         $params['search'] = '';
         $subRequest = $this->request->duplicate(array(), null, $params);
         $response = $this->httpKernel->handle($subRequest, HttpKernelInterface::SUB_REQUEST);
@@ -121,7 +121,7 @@ class AdministrationToolListener
     public function onOpenPlatformPlugins(OpenAdministrationToolEvent $event)
     {
         $params = array();
-        $params['_controller'] = 'ClarolineCoreBundle:Administration:pluginList';
+        $params['_controller'] = 'ClarolineCoreBundle:Administration\Plugins:pluginList';
         $subRequest = $this->request->duplicate(array(), null, $params);
         $response = $this->httpKernel->handle($subRequest, HttpKernelInterface::SUB_REQUEST);
         $event->setResponse($response);
