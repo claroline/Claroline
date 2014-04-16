@@ -149,7 +149,7 @@ claro_admin:
     type: annotation
 
 claro_admin_home_tab:
-    resource: "@ClarolineCoreBundle/Controller/AdministrationHomeTabController.php"
+    resource: "@ClarolineCoreBundle/Controller/Administration/HomeTabController.php"
     prefix: admin
     type: annotation
 

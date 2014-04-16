@@ -137,7 +137,7 @@ class AdministrationToolListener
     public function onOpenHomeTabs(OpenAdministrationToolEvent $event)
     {
         $params = array();
-        $params['_controller'] = 'ClarolineCoreBundle:AdministrationHomeTab:adminHomeTabsConfigMenu';
+        $params['_controller'] = 'ClarolineCoreBundle:Administration\HomeTab:adminHomeTabsConfigMenu';
         $subRequest = $this->request->duplicate(array(), null, $params);
         $response = $this->httpKernel->handle($subRequest, HttpKernelInterface::SUB_REQUEST);
         $event->setResponse($response);
