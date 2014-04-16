@@ -393,17 +393,17 @@ function changeSize (idSize, indexBlank) {
 }
 
 $(document).ready(function() {
-   $('#holeEditor').bind("DOMSubtreeModified",function(e) {
-        
-     if ( (tinyMCE.activeEditor.selection) && (tinyMCE.activeEditor.selection.getContent() == '') ) {
-        $('#newTable').find(('.trHole')).each(function () {
-            index = $(this).find('td:first').find('input:first').val();
-            if ( (index) && (!tinyMCE.get('ujm_exobundle_interactionholetype_html').dom.select('#' + index)[0]) ) {
-                $(this).remove();
-            }
-        });
-      }
-   });
+    $('#holeEditor').bind("DOMSubtreeModified",function(e) {
+
+        if ( (tinyMCE.activeEditor.selection) && (tinyMCE.activeEditor.selection.getContent() == '') ) {
+            $('#newTable').find(('.trHole')).each(function () {
+                index = $(this).find('td:first').find('input:first').val();
+                if ( (index) && (!tinyMCE.get('ujm_exobundle_interactionholetype_html').dom.select('#' + index)[0]) ) {
+                    $(this).remove();
+                }
+            });
+        }
+    });
 });
 
 //not yet implemented
