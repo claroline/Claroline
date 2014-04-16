@@ -27,59 +27,27 @@
 }
 </style>
     <div class="container">
-        <h3>
-            {{ 'Make my copy'|trans({}, 'icap_dropzone') }}
-        </h3>
+        <h3>{{ 'Make my copy'|trans({}, 'icap_dropzone') }}</h3>
 
         {{ macros.flashBox() }}
 
         {# DROP STATUS BAR #}
         {% include 'IcapDropzoneBundle:Drop:dropStatus.html.twig' %}
 
+        {# INSTRUCTIONS #}
         {% if dropzone.instruction != null %}
             {%  include 'IcapDropzoneBundle:Dropzone:recallInstruction.html.twig' %}
-            <br/>
+            <br />
         {% endif %}
 
+        {# DOCUMENTS ALLREADY ADDED #}
         <h4>{{ 'Documents added  the copy'|trans({},'icap_dropzone')}}</h4>
+        {{ dropzoneMacros.displayDocumentsList(drop, dropzone, 12, "complete", null) }}
 
-        {% if drop.documents|length <= 0%}
-            {{ 'no document added yet'|trans({},'icap_dropzone')}}
-        {% endif %}
-        
-        <br />
-        {% set documentListText = 'Documents'|trans({}, 'icap_dropzone') %}
-        {{ dropzoneMacros.displayDocumentsList(drop, dropzone, 12, "complete", documentListText) }}
+        {# ADD DOCUMENT #}
+        {% include 'IcapDropzoneBundle:Drop:addDocument.html.twig' %}
 
-        <div class="show-during-add" style="display: none;">
-            <hr/>
-            <div class="container-inline"></div>
-        </div>
-        <div class='div-test'>
-            {% if allowedTypes|length <= 0 %}
-                <span class="text-danger">{{ 'No document type allowed'|trans({}, 'icap_dropzone') }}</span>
-            {% else %}
-
-                {% if 'url' in allowedTypes|keys %}
-                    {% include 'IcapDropzoneBundle:Document:documentForm.html.twig' with {'form':form_url, 'documentType': 'url'}%}
-                {% endif %}
-
-                {% if 'file' in allowedTypes|keys %}
-                    {% include 'IcapDropzoneBundle:Document:documentForm.html.twig' with {'form':form_file, 'documentType': 'file'}%} 
-                {% endif %}
-
-                {% if 'resource' in allowedTypes|keys %}
-                    {% include 'IcapDropzoneBundle:Document:documentForm.html.twig' with {'form':form_resource, 'documentType': 'resource'}%}
-                {% endif %}
-
-                {% if 'text' in allowedTypes|keys %}
-                    {% include 'IcapDropzoneBundle:Document:documentForm.html.twig' with {'form':form_text, 'documentType': 'text'}%}
-                {% endif %}
-            {% endif %}
-
-        </div>
-
-
+        {# GLOBAL DROP FORM #}
         <form  id='dropzone_global_drop_form' class="form-horizontal" method="POST" action="{{ path('icap_dropzone_drop', {'resourceId': dropzone.id}) }}">
             <div class="{% if form.vars.errors|length > 0 %}has-error{% endif %}">
                 {{ form_errors(form) }}

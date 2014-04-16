@@ -1,7 +1,9 @@
 {% macro displayDocumentsList(drop, dropzone, width, mode, documentListText ) %}        
     <div class="row">
         <div class="col-md-{{ width }}">
+        {% if documentListText is not null %}
             <div class="text-muted">{{ documentListText }}</div>
+        {% endif %}
             <table class="table table-responsive {% if mode == "condensed" %}table-condensed{% endif %} well">
                 {%  if drop.documents|length <= 0 %}
                        <tr><td>{{ 'No document associated'|trans({},'icap_dropzone') }}</td></tr>
