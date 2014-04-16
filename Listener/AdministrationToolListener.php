@@ -90,7 +90,7 @@ class AdministrationToolListener
         $params = array();
         $params['badgePage'] = 1;
         $params['claimPage'] = 1;
-        $params['_controller'] = 'ClarolineCoreBundle:Badge/Admin:list';
+        $params['_controller'] = 'ClarolineCoreBundle:Administration/Badge:list';
         $subRequest = $this->request->duplicate(array(), null, $params);
         $response = $this->httpKernel->handle($subRequest, HttpKernelInterface::SUB_REQUEST);
         $event->setResponse($response);

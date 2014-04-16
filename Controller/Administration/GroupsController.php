@@ -17,6 +17,7 @@ use Claroline\CoreBundle\Event\StrictDispatcher;
 use Claroline\CoreBundle\Form\Factory\FormFactory;
 use Claroline\CoreBundle\Manager\GroupManager;
 use Claroline\CoreBundle\Manager\RoleManager;
+use Claroline\CoreBundle\Manager\ToolManager;
 use Claroline\CoreBundle\Manager\UserManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use JMS\SecurityExtraBundle\Annotation as SEC;
@@ -26,11 +27,10 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\RouterInterface;
+use Symfony\Component\Security\Core\SecurityContextInterface;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
-/**
- * @DI\Tag("security.secure_service")
- * @SEC\PreAuthorize("hasRole('ADMIN')")
- */
+//This class belongs to the Users admin tool.
 class GroupsController extends Controller
 {
     private $userManager;
@@ -40,6 +40,9 @@ class GroupsController extends Controller
     private $formFactory;
     private $request;
     private $router;
+    private $toolManager;
+    private $sc;
+    private $userAdminTool;
 
     /**
      * @DI\InjectParams({
@@ -49,7 +52,9 @@ class GroupsController extends Controller
      *     "eventDispatcher"    = @DI\Inject("claroline.event.event_dispatcher"),
      *     "formFactory"        = @DI\Inject("claroline.form.factory"),
      *     "request"            = @DI\Inject("request"),
-     *     "router"             = @DI\Inject("router")
+     *     "router"             = @DI\Inject("router"),
+     *     "toolManager"        = @DI\Inject("claroline.manager.tool_manager"),
+     *     "sc"                 = @DI\Inject("security.context")
      * })
      */
     public function __construct(
@@ -59,16 +64,21 @@ class GroupsController extends Controller
         StrictDispatcher $eventDispatcher,
         FormFactory $formFactory,
         Request $request,
-        RouterInterface $router
+        RouterInterface $router,
+        SecurityContextInterface $sc,
+        ToolManager $toolManager
     )
     {
-        $this->userManager = $userManager;
-        $this->roleManager = $roleManager;
-        $this->groupManager = $groupManager;
+        $this->userManager     = $userManager;
+        $this->roleManager     = $roleManager;
+        $this->groupManager    = $groupManager;
         $this->eventDispatcher = $eventDispatcher;
-        $this->formFactory = $formFactory;
-        $this->request = $request;
-        $this->router = $router;
+        $this->formFactory     = $formFactory;
+        $this->request         = $request;
+        $this->router          = $router;
+        $this->toolManager     = $toolManager;
+        $this->userAdminTool   = $this->toolManager->getAdminToolByName('user_management');
+        $this->sc              = $sc;
     }
 
     /**
@@ -82,6 +92,7 @@ class GroupsController extends Controller
      */
     public function creationFormAction()
     {
+        $this->checkOpen();
         $form = $this->formFactory->create(FormFactory::TYPE_GROUP);
 
         return array('form_group' => $form->createView());
@@ -98,6 +109,7 @@ class GroupsController extends Controller
      */
     public function createAction()
     {
+        $this->checkOpen();
         $form = $this->formFactory->create(FormFactory::TYPE_GROUP, array());
         $form->handleRequest($this->request);
 
@@ -147,6 +159,7 @@ class GroupsController extends Controller
      */
     public function listAction($page, $search, $max, $order, $direction)
     {
+        $this->checkOpen();
         $pager = $search === '' ?
             $this->groupManager->getGroups($page, $max, $order, $direction) :
             $this->groupManager->getGroupsByName($search, $page, $max, $order, $direction);
@@ -176,6 +189,8 @@ class GroupsController extends Controller
      */
     public function deleteAction(array $groups)
     {
+        $this->checkOpen();
+
         foreach ($groups as $group) {
             $this->groupManager->deleteGroup($group);
             $this->eventDispatcher->dispatch('log', 'Log\LogGroupDelete', array($group));
@@ -223,6 +238,8 @@ class GroupsController extends Controller
      */
     public function listMembersAction(Group $group, $page, $search, $max, $order)
     {
+        $this->checkOpen();
+
         $pager = $search === '' ?
             $this->userManager->getUsersByGroup($group, $page, $max, $order) :
             $this->userManager->getUsersByNameAndGroup($search, $group, $page, $max, $order);
@@ -269,6 +286,8 @@ class GroupsController extends Controller
      */
     public function listNonMembersAction(Group $group, $page, $search, $max, $order)
     {
+        $this->checkOpen();
+
         $pager = $search === '' ?
             $this->userManager->getGroupOutsiders($group, $page, $max, $order) :
             $this->userManager->getGroupOutsidersByName($group, $page, $search, $max, $order);
@@ -304,6 +323,7 @@ class GroupsController extends Controller
      */
     public function addMembersAction(Group $group, array $users)
     {
+        $this->checkOpen();
         $this->groupManager->addUsersToGroup($group, $users);
 
         foreach ($users as $user) {
@@ -341,6 +361,7 @@ class GroupsController extends Controller
      */
     public function removeMembersAction(Group $group, array $users)
     {
+        $this->checkOpen();
         $this->groupManager->removeUsersFromGroup($group, $users);
 
         foreach ($users as $user) {
@@ -372,6 +393,7 @@ class GroupsController extends Controller
      */
     public function settingsFormAction(Group $group)
     {
+        $this->checkOpen();
         $form = $this->formFactory->create(FormFactory::TYPE_GROUP_SETTINGS, array(), $group);
 
         return array(
@@ -397,6 +419,7 @@ class GroupsController extends Controller
      */
     public function updateSettingsAction(Group $group)
     {
+        $this->checkOpen();
         $oldPlatformRoleTransactionKey = $group->getPlatformRole()->getTranslationKey();
         $form = $this->formFactory->create(FormFactory::TYPE_GROUP_SETTINGS, array(), $group);
         $form->handleRequest($this->request);
@@ -430,6 +453,7 @@ class GroupsController extends Controller
      */
     public function importMembersFormAction(Group $group)
     {
+        $this->checkOpen();
         $form = $this->formFactory->create(FormFactory::TYPE_USER_IMPORT);
 
         return array('form' => $form->createView(), 'group' => $group);
@@ -451,6 +475,7 @@ class GroupsController extends Controller
      */
     public function importMembersAction(Group $group)
     {
+        $this->checkOpen();
         $validFile = true;
         $form = $this->formFactory->create(FormFactory::TYPE_USER_IMPORT);
         $form->handleRequest($this->request);
@@ -474,5 +499,14 @@ class GroupsController extends Controller
         }
 
         return array('form' => $form->createView(), 'group' => $group);
+    }
+
+    private function checkOpen()
+    {
+        if ($this->sc->isGranted('OPEN', $this->userAdminTool)) {
+            return true;
+        }
+
+        throw new AccessDeniedException();
     }
 }

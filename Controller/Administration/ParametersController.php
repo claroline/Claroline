@@ -15,11 +15,12 @@ use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Library\Configuration\UnwritableException;
 use Claroline\CoreBundle\Library\Session\DatabaseSessionValidator;
 use Claroline\CoreBundle\Manager\LocaleManager;
+use Claroline\CoreBundle\Manager\ToolManager;
 use Claroline\CoreBundle\Manager\RoleManager;
+use Claroline\CoreBundle\Manager\TermsOfServiceManager;
 use Claroline\CoreBundle\Manager\ContentManager;
 use Claroline\CoreBundle\Library\Installation\Settings\MailingSettings;
 use Claroline\CoreBundle\Library\Installation\Settings\MailingChecker;
-use Claroline\CoreBundle\Manager\TermsOfServiceManager;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use JMS\DiExtraBundle\Annotation as DI;
 use JMS\SecurityExtraBundle\Annotation as SEC;
@@ -33,12 +34,10 @@ use Claroline\CoreBundle\Manager\CacheManager;
 use Claroline\CoreBundle\Library\Installation\Refresher;
 use Claroline\CoreBundle\Manager\HwiManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
-use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Security\Core\SecurityContextInterface;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
- * @DI\Tag("security.secure_service")
- * @SEC\PreAuthorize("hasRole('ADMIN')")
- *
  * Controller of the platform parameters section.
  */
 class ParametersController extends Controller
@@ -55,6 +54,9 @@ class ParametersController extends Controller
     private $dbSessionValidator;
     private $refresher;
     private $hwiManager;
+    private $sc;
+    private $toolManager;
+    private $paramAdminTool;
 
     /**
      * @DI\InjectParams({
@@ -71,6 +73,8 @@ class ParametersController extends Controller
      *     "sessionValidator"   = @DI\Inject("claroline.session.database_validator"),
      *     "refresher"          = @DI\Inject("claroline.installation.refresher"),
      *     "hwiManager"         = @DI\Inject("claroline.manager.hwi_manager"),
+     *     "toolManager"        = @DI\Inject("claroline.manager.tool_manager"),
+     *     "sc"                 = @DI\Inject("security.context")
      * })
      */
     public function __construct(
@@ -86,22 +90,27 @@ class ParametersController extends Controller
         CacheManager $cacheManager,
         DatabaseSessionValidator $sessionValidator,
         Refresher $refresher,
-        HwiManager $hwiManager
+        HwiManager $hwiManager,
+        ToolManager $toolManager,
+        SecurityContextInterface $sc
     )
     {
-        $this->configHandler = $configHandler;
-        $this->roleManager = $roleManager;
-        $this->formFactory = $formFactory;
-        $this->request = $request;
-        $this->termsOfService = $termsOfService;
-        $this->localeManager = $localeManager;
-        $this->translator = $translator;
-        $this->mailManager = $mailManager;
-        $this->contentManager = $contentManager;
-        $this->cacheManager = $cacheManager;
+        $this->configHandler      = $configHandler;
+        $this->roleManager        = $roleManager;
+        $this->formFactory        = $formFactory;
+        $this->request            = $request;
+        $this->termsOfService     = $termsOfService;
+        $this->localeManager      = $localeManager;
+        $this->translator         = $translator;
+        $this->mailManager        = $mailManager;
+        $this->contentManager     = $contentManager;
+        $this->cacheManager       = $cacheManager;
         $this->dbSessionValidator = $sessionValidator;
-        $this->refresher = $refresher;
-        $this->hwiManager = $hwiManager;
+        $this->refresher          = $refresher;
+        $this->hwiManager         = $hwiManager;
+        $this->sc                 = $sc;
+        $this->toolManager        = $toolManager;
+        $this->paramAdminTool     = $this->toolManager->getAdminToolByName('platform_parameters');
     }
 
     /**
@@ -112,6 +121,8 @@ class ParametersController extends Controller
      */
     public function indexAction()
     {
+        $this->checkOpen();
+
         return array();
     }
 
@@ -124,6 +135,8 @@ class ParametersController extends Controller
      */
     public function generalFormAction()
     {
+        $this->checkOpen();
+
         $description = $this->contentManager->getTranslatedContent(array('type' => 'platformDescription'));
         $platformConfig = $this->configHandler->getPlatformConfig();
         $role = $this->roleManager->getRoleByName($platformConfig->getDefaultRole());
@@ -147,6 +160,8 @@ class ParametersController extends Controller
      */
     public function submitSettingsAction()
     {
+        $this->checkOpen();
+
         $description = $this->contentManager->getContent(array('type' => 'platformDescription'));
         $platformConfig = $this->configHandler->getPlatformConfig();
         $role = $this->roleManager->getRoleByName($platformConfig->getDefaultRole());
@@ -212,6 +227,8 @@ class ParametersController extends Controller
      */
     public function appearanceFormAction()
     {
+        $this->checkOpen();
+
         $platformConfig = $this->configHandler->getPlatformConfig();
         $form = $this->formFactory->create(
             new AdminForm\AppearanceType($this->getThemes()),
@@ -233,6 +250,8 @@ class ParametersController extends Controller
      */
     public function submitAppearanceAction()
     {
+        $this->checkOpen();
+
         $platformConfig = $this->configHandler->getPlatformConfig();
         $form = $this->formFactory->create(
             new AdminForm\AppearanceType($this->getThemes()),
@@ -282,6 +301,8 @@ class ParametersController extends Controller
      */
     public function mailIndexAction()
     {
+        $this->checkOpen();
+
         return array();
     }
 
@@ -294,6 +315,8 @@ class ParametersController extends Controller
      */
     public function mailServerFormAction()
     {
+        $this->checkOpen();
+
         $platformConfig = $this->configHandler->getPlatformConfig();
         $form = $this->formFactory->create(
             new AdminForm\MailServerType($platformConfig->getMailerTransport()),
@@ -315,6 +338,8 @@ class ParametersController extends Controller
      */
     public function submitMailServerAction()
     {
+        $this->checkOpen();
+
         $platformConfig = $this->configHandler->getPlatformConfig();
         $form = $this->formFactory->create(
             new AdminForm\MailServerType($platformConfig->getMailerTransport()),
@@ -381,6 +406,8 @@ class ParametersController extends Controller
      */
     public function registrationMailFormAction()
     {
+        $this->checkOpen();
+
         $form = $this->formFactory->create(
             new AdminForm\MailInscriptionType(),
             $this->mailManager->getMailInscription()
@@ -400,6 +427,8 @@ class ParametersController extends Controller
      */
     public function submitRegistrationMailAction()
     {
+        $this->checkOpen();
+
         $formData = $this->request->get('platform_parameters_form');
         $form = $this->formFactory->create(new AdminForm\MailInscriptionType(), $formData['content']);
         $errors = $this->mailManager->validateInscriptionMail($formData['content']);
@@ -427,6 +456,8 @@ class ParametersController extends Controller
      */
     public function mailLayoutFormAction()
     {
+        $this->checkOpen();
+
         $form = $this->formFactory->create(
             new AdminForm\MailLayoutType(),
             $this->mailManager->getMailLayout()
@@ -446,6 +477,8 @@ class ParametersController extends Controller
      */
     public function submitMailLayoutAction()
     {
+        $this->checkOpen();
+
         $formData = $this->request->get('platform_parameters_form');
         $form = $this->formFactory->create(new AdminForm\MailLayoutType(), $formData['content']);
         $errors = $this->mailManager->validateLayoutMail($formData['content']);
@@ -471,6 +504,8 @@ class ParametersController extends Controller
      */
     public function termsOfServiceFormAction()
     {
+        $this->checkOpen();
+
         $form = $this->formFactory->create(
             new AdminForm\TermsOfServiceType($this->configHandler->getParameter('terms_of_service')),
             $this->termsOfService->getTermsOfService(false)
@@ -490,6 +525,8 @@ class ParametersController extends Controller
      */
     public function submitTermsOfServiceAction()
     {
+        $this->checkOpen();
+
         $form = $this->formFactory->create(
             new AdminForm\TermsOfServiceType($this->configHandler->getParameter('terms_of_service')),
             $this->termsOfService->getTermsOfService(false)
@@ -515,6 +552,8 @@ class ParametersController extends Controller
      */
     public function indexingFormAction()
     {
+        $this->checkOpen();
+
         $form = $this->formFactory->create(new AdminForm\IndexingType(), $this->configHandler->getPlatformConfig());
 
         if ($this->request->getMethod() === 'POST') {
@@ -537,6 +576,8 @@ class ParametersController extends Controller
      */
     public function sessionFormAction()
     {
+        $this->checkOpen();
+
         $config = $this->configHandler->getPlatformConfig();
         $form = $this->formFactory->create(new AdminForm\SessionType(), $config);
 
@@ -552,8 +593,9 @@ class ParametersController extends Controller
      */
     public function submitSessionAction()
     {
-        $platformConfig = $this->configHandler->getPlatformConfig();
+        $this->checkOpen();
 
+        $platformConfig = $this->configHandler->getPlatformConfig();
         $form = $this->formFactory->create(
             new AdminForm\SessionType($this->configHandler->getParameter('session_storage_type')),
             $platformConfig
@@ -597,6 +639,8 @@ class ParametersController extends Controller
      */
     public function oauthIndexAction()
     {
+        $this->checkOpen();
+
         return array();
     }
 
@@ -609,6 +653,7 @@ class ParametersController extends Controller
      */
     public function facebookFormAction()
     {
+        $this->checkOpen();
         $platformConfig = $this->configHandler->getPlatformConfig();
         $form = $this->formFactory->create(new AdminForm\FacebookType(), $platformConfig);
 
@@ -626,6 +671,7 @@ class ParametersController extends Controller
      */
     public function submitFacebookFormAction()
     {
+        $this->checkOpen();
         $platformConfig = $this->configHandler->getPlatformConfig();
         $form = $this->formFactory->create(new AdminForm\FacebookType(), $platformConfig);
         $form->handleRequest($this->request);
@@ -669,5 +715,14 @@ class ParametersController extends Controller
         }
 
         return $tmp;
+    }
+
+    private function checkOpen()
+    {
+        if ($this->sc->isGranted('OPEN', $this->paramAdminTool)) {
+            return true;
+        }
+
+        throw new AccessDeniedException();
     }
 }

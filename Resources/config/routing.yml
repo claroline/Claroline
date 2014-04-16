@@ -221,8 +221,10 @@ claro_user:
     type: annotation
     prefix: user
 
-claro_badge:
-    resource: "@ClarolineCoreBundle/Controller/Badge"
+claro_admin_badge:
+    resource: "@ClarolineCoreBundle/Controller/Administration/BadgeController.php"
+    type: annotation
+    prefix: admin/badge
 
 claro_workspaces_widget:
     resource: "@ClarolineCoreBundle/Controller/Widget/MyWorkspacesWidgetController.php"
@@ -243,13 +245,13 @@ claro_admin_workspaces:
     resource: "@ClarolineCoreBundle/Controller/Administration/WorkspacesController.php"
     type: annotation
 
-claro_admin_workspaces:
+claro_admin_roles:
     prefix: admin/roles
     resource: "@ClarolineCoreBundle/Controller/Administration/RolesController.php"
     type: annotation
 
 claro_admin_users:
-    prefix: admin/users
+    prefix: admin/users_tool
     resource: "@ClarolineCoreBundle/Controller/Administration/UsersController.php"
     type: annotation
 
@@ -262,3 +264,6 @@ claro_admin_tools:
     resource: "@ClarolineCoreBundle/Controller/AdministrationToolController.php"
     prefix: admin/tool
     type: annotation
+
+claro_badge:
+    resource: "@ClarolineCoreBundle/Controller/Badge"

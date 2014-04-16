@@ -290,7 +290,7 @@ class RoleRepository extends EntityRepository
         $queryBuilder->andWhere($queryBuilder->expr()->not($queryBuilder->expr()->eq('role.name', '?2')))
             ->setParameter(2, 'ROLE_ADMIN');
         $query = $queryBuilder->getQuery();
-        
+
         return $query->getResult();
     }
 
