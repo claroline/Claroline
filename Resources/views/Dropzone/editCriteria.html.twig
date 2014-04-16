@@ -179,33 +179,7 @@
                             </div>
                         </div>
                     </div>
-                    <script>
-                        $('.form-submit').on('click', function (event) {
-                            event.preventDefault();
-                            //I do the "click" on submit button for keep html5 warning
-                            $('.inline-body button[type="submit"]').trigger('click');
-                        });
 
-                        $('.form-cancel').on('click', function (event) {
-                            event.preventDefault();
-
-                            var criterionId = $(this).data('criterion');
-                            if (criterionId == 'new') {
-                                $('.new-criteria').hide();
-                                $('.add-criteria-zone').show();
-
-                                if ({{ (pager.nbResults == 0) ? 'true' : 'false' }}) {
-                                    $('.add-remove-column').hide();
-                                }
-                            } else {
-                                $('#'+criterionId+' > .criterion-edit').hide();
-                                $('#'+criterionId+' > .criterion-show').show();
-                            }
-
-                            $('.disabled-during-edition').attr('disabled', null);
-                            $('.criteria-form-button').attr('disabled', null);
-                        });
-                    </script>
                 </div>
             </div>
 
@@ -257,6 +231,7 @@
     <script src="{{ asset('bundles/icapdropzone/js/popup.js') }}"></script>
     <script>
         $(document).ready(function () {
+            setSaveListener();
             $('#icap_dropzone_criteria_form_goBack').val(0);
             $('.back-button').on('click', function(event) {
                 event.preventDefault();
@@ -343,6 +318,7 @@
                         var top = $('#new-criteria').offset().top;
                         top = top - 50;
                         $('body,html').scrollTop(top);
+                        setSaveListener();
                     })
                 ;
             });
@@ -374,9 +350,38 @@
                         $('#'+criterionId+' > .criterion-edit > .template-criteria-zone .form-buttons').hide();
 
                         initTinyMCE(stfalcon_tinymce_config);
+                        setSaveListener();
                     })
                 ;
             });
         });
+
+        function setSaveListener()
+        {
+            $('.form-submit').unbind('click').click(function(event) {
+                event.preventDefault();
+                //I do the "click" on submit button for keep html5 warning
+                $('.inline-body button[type="submit"]').trigger('click');
+            });
+
+            $('.form-cancel').unbind('click').click(function (event) {
+                event.preventDefault();
+                var criterionId = $(this).data('criterion');
+                if (criterionId == 'new') {
+                    $('.new-criteria').hide();
+                    $('.add-criteria-zone').show();
+
+                    if ({{ (pager.nbResults == 0) ? 'true' : 'false' }}) {
+                        $('.add-remove-column').hide();
+                    }
+                } else {
+                    $('#'+criterionId+' > .criterion-edit').hide();
+                    $('#'+criterionId+' > .criterion-show').show();
+                }
+
+                $('.disabled-during-edition').attr('disabled', null);
+                $('.criteria-form-button').attr('disabled', null);
+            });
+        }
     </script>
 {% endblock %}
