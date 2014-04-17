@@ -21,39 +21,42 @@ use Claroline\CoreBundle\Entity\Administration\Tool;
 use Claroline\CoreBundle\Entity\Role;
 use Symfony\Component\HttpFoundation\Response;
 use Claroline\CoreBundle\Form\Factory\FormFactory;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Core\SecurityContextInterface;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
-/**
- * @DI\Tag("security.secure_service")
- * @SEC\PreAuthorize("hasRole('ADMIN')")
- *
- * Controller of the platform parameters section.
- */
 class RolesController extends Controller
 {
     private $toolManager;
     private $roleManager;
     private $formFactory;
     private $request;
+    private $roleAdminTool;
+    private $sc;
 
     /**
      * @DI\InjectParams({
      *     "toolManager" = @DI\Inject("claroline.manager.tool_manager"),
      *     "roleManager" = @DI\Inject("claroline.manager.role_manager"),
      *     "formFactory" = @DI\Inject("claroline.form.factory"),
-     *     "request"     = @DI\Inject("request")
+     *     "request"     = @DI\Inject("request"),
+     *     "sc"          = @DI\Inject("security.context")
      * })
      */
     public function __construct(
         ToolManager $toolManager,
         RoleManager $roleManager,
         FormFactory $formFactory,
-        $request
+        Request $request,
+        SecurityContextInterface $sc
     )
     {
-        $this->toolManager = $toolManager;
-        $this->roleManager = $roleManager;
-        $this->formFactory = $formFactory;
-        $this->request     = $request;
+        $this->toolManager   = $toolManager;
+        $this->roleManager   = $roleManager;
+        $this->formFactory   = $formFactory;
+        $this->request       = $request;
+        $this->roleAdminTool = $toolManager->getAdminToolByName('roles_management');
+        $this->sc            = $sc;
     }
 
     /**
@@ -64,6 +67,8 @@ class RolesController extends Controller
      */
     public function indexAction()
     {
+//        $this->checkOpen();
+
         return array();
     }
 
@@ -76,6 +81,8 @@ class RolesController extends Controller
      */
     public function toolsIndexAction()
     {
+        $this->checkOpen();
+
         $tools = $this->toolManager->getAdminTools();
         $roles = $this->roleManager->getPlatformNonAdminRoles();
 
@@ -96,6 +103,8 @@ class RolesController extends Controller
      */
     public function addRoleToToolAction(Tool $tool, Role $role)
     {
+        $this->checkOpen();
+
         $this->toolManager->addRoleToAdminTool($tool, $role);
 
         return new Response('success');
@@ -115,6 +124,8 @@ class RolesController extends Controller
      */
     public function removeRoleFromToolAction(Tool $tool, Role $role)
     {
+        $this->checkOpen();
+
         $this->toolManager->removeRoleFromAdminTool($tool, $role);
 
         return new Response('success');
@@ -129,6 +140,8 @@ class RolesController extends Controller
      */
     public function createPlatformRoleFormAction()
     {
+        $this->checkOpen();
+
         $form = $form = $this->formFactory->create(FormFactory::TYPE_ROLE_TRANSLATION);
 
         return array('form' => $form->createView());
@@ -143,6 +156,8 @@ class RolesController extends Controller
      */
     public function createPlatformRoleAction()
     {
+        $this->checkOpen();
+
         $form = $this->formFactory->create(FormFactory::TYPE_ROLE_TRANSLATION);
         $form->handleRequest($this->request);
 
@@ -152,5 +167,14 @@ class RolesController extends Controller
         }
 
         return new Response('sussess');
+    }
+
+    private function checkOpen()
+    {
+        if ($this->sc->isGranted('OPEN', $this->roleAdminTool)) {
+            return true;
+        }
+
+        throw new AccessDeniedException();
     }
 } 
