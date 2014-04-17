@@ -94,11 +94,12 @@
             {% endif %}
         {% endif %}
 
-       {% block impersonation %}
+        {% block impersonation %}
             {% if has_role('ROLE_USURPATE_WORKSPACE_ROLE') or is_impersonated() %}
                 {% render controller('ClarolineCoreBundle:Layout:renderWarningImpersonation') %}
             {% endif %}
         {% endblock %}
+        {% block content_container %}
         <div class="container">
             <div class="row">
                 <div class="col-md-12">
@@ -112,6 +113,7 @@
             </div>
         </div>
         <div id="push"></div>
+        {% endblock %}
     </div>
    {% block footer %}
         {% if not is_path_mode %}
