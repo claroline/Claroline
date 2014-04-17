@@ -18,6 +18,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\Form\FormError;
+use DateTime;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class DropzoneController extends DropzoneBaseController
@@ -81,41 +82,85 @@ class DropzoneController extends DropzoneBaseController
                 $form->get('allowRichText')->addError(new FormError('Choose at least one type of document'));
             }
 
+
             if (!$dropzone->getManualPlanning()) {
-                if ($dropzone->getStartAllowDrop() === null) {
+
+               // var_dump($this->getRequest()->request->all());
+                //$form_array= $this->getRequest()->request->get('icap_dropzone_common_form');
+                // reconstruction of datetimes.
+
+                if(array_key_exists('startAllowDrop',$form_array)) {
+                    $dateStr = implode(' ',$form_array['startAllowDrop']);
+                    if($this->validateDate( $dateStr)) {
+                        $startAllowDrop = new DateTime($dateStr);
+                        $dropzone->setStartAllowDrop($startAllowDrop);
+                    }
+                }
+
+                if(array_key_exists('endAllowDrop',$form_array)) {
+                    $dateStr = implode(' ',$form_array['endAllowDrop']);
+                    if($this->validateDate($dateStr)) {
+                        $endAllowDrop = new DateTime($dateStr );
+                        $dropzone->setEndAllowDrop($endAllowDrop);
+                    }
+                }
+
+                if(array_key_exists('endReview',$form_array)) {
+                    $dateStr = implode(' ',$form_array['endReview']);
+                    if($this->validateDate($dateStr)) {
+                        $endReview = new DateTime( implode(' ',$form_array['endReview']));
+                        $dropzone->setEndReview($endReview);
+                    }
+                }
+
+                if(array_key_exists('endAllowDrop',$form_array)) {
+                    $dateStr = implode(' ',$form_array['endAllowDrop']);
+                    if($this->validateDate($dateStr)) {
+                        $endAllowDrop = new DateTime(implode(' ',$form_array['endAllowDrop']));
+                        $dropzone->setEndAllowDrop($endAllowDrop);
+                    }
+                }
+
+                //$dropzone->setStartAllowDrop()
+                /*var_dump( $test_date);
+                var_dump($form_array);
+                die;
+                */
+                if ($dropzone->getStartAllowDrop() == null) {
                     $form->get('startAllowDrop')->addError(new FormError('Choose a date'));
                 }
-                if ($dropzone->getEndAllowDrop() === null) {
+                if ($dropzone->getEndAllowDrop() == null) {
                     $form->get('endAllowDrop')->addError(new FormError('Choose a date'));
                 }
-                if ($dropzone->getPeerReview() && $dropzone->getEndReview() === null) {
+                if ($dropzone->getPeerReview() && $dropzone->getEndReview() == null) {
                     $form->get('endReview')->addError(new FormError('Choose a date'));
                 }
-                if ($dropzone->getStartAllowDrop() !== null && $dropzone->getEndAllowDrop() !== null) {
+                if ($dropzone->getStartAllowDrop() != null && $dropzone->getEndAllowDrop() != null) {
                     if ($dropzone->getStartAllowDrop()->getTimestamp() > $dropzone->getEndAllowDrop()->getTimestamp()) {
                         $form->get('startAllowDrop')->addError(new FormError('Must be before end allow drop'));
                         $form->get('endAllowDrop')->addError(new FormError('Must be after start allow drop'));
                     }
                 }
-                if ($dropzone->getStartReview() !== null && $dropzone->getEndReview() !== null) {
+                if ($dropzone->getStartReview() != null && $dropzone->getEndReview() != null) {
                     if ($dropzone->getStartReview()->getTimestamp() > $dropzone->getEndReview()->getTimestamp()) {
                         $form->get('startReview')->addError(new FormError('Must be before end peer review'));
                         $form->get('endReview')->addError(new FormError('Must be after start peer review'));
                     }
                 }
-                if ($dropzone->getStartAllowDrop() !== null && $dropzone->getStartReview() !== null) {
+                if ($dropzone->getStartAllowDrop() != null && $dropzone->getStartReview() != null) {
                     if ($dropzone->getStartAllowDrop()->getTimestamp() > $dropzone->getStartReview()->getTimestamp()) {
                         $form->get('startReview')->addError(new FormError('Must be after start allow drop'));
                         $form->get('startAllowDrop')->addError(new FormError('Must be before start peer review'));
                     }
                 }
-                if ($dropzone->getEndAllowDrop() !== null && $dropzone->getEndReview() !== null) {
+                if ($dropzone->getEndAllowDrop() != null && $dropzone->getEndReview() != null) {
                     if ($dropzone->getEndAllowDrop()->getTimestamp() > $dropzone->getEndReview()->getTimestamp()) {
                         $form->get('endReview')->addError(new FormError('Must be after end allow drop'));
                         $form->get('endAllowDrop')->addError(new FormError('Must be before end peer review'));
                     }
                 }
             }
+
 
             if ($form->isValid()) {
                 //getting the dropzoneManager
@@ -162,7 +207,7 @@ class DropzoneController extends DropzoneBaseController
                 // check if manual state has changed
                 if($manualStateChanged)
                 {
-                   // send notification.
+                    // send notification.
 
                     $usersIds = $dropzoneManager->getDropzoneUsersIds($dropzone);
                     $event = new LogDropzoneManualStateChangedEvent($dropzone,$newManualState,$usersIds);
@@ -381,6 +426,16 @@ class DropzoneController extends DropzoneBaseController
         );
     }
 
+    /**
+     * Check if user date format is OK.
+     * @param $date
+     * @param string $format
+     * @return bool
+     */
+    private function validateDate($date, $format = 'Y-m-d H:i:s'){
 
+            $d = DateTime::createFromFormat($format, $date);
+            return $d && $d->format($format) == $date;
+    }
 
 }
