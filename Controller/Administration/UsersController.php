@@ -117,9 +117,9 @@ class UsersController extends Controller
     public function userCreationFormAction(User $currentUser)
     {
         $this->checkOpen();
-        $roles = $this->roleManager->getPlatformRoles($currentUser);
+        $role = $this->roleManager->getRoleByName('ROLE_USER');
         $form = $this->formFactory->create(
-            FormFactory::TYPE_USER_FULL, array($roles, $this->localeManager->getAvailableLocales())
+            FormFactory::TYPE_USER_FULL, array(array($role), $this->localeManager->getAvailableLocales())
         );
 
         $error = null;
