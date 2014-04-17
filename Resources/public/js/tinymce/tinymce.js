@@ -14,8 +14,8 @@
     var home = window.Claroline.Home;
     var modal = window.Claroline.Modal;
     var translator = window.Translator;
-    var publicProfileUrl = window.Routing.generate('claro_public_profile_view')+"/";
-    var searchUserInWorkspaceUrl = window.Routing.generate('claro_user_search_in_workspace')+"/";
+    var publicProfileUrl = window.Routing.generate('claro_public_profile_view') + '/';
+    var searchUserInWorkspaceUrl = window.Routing.generate('claro_user_search_in_workspace') + '/';
 
     //Load external plugins
     tinymce.PluginManager.load('mention', home.asset + 'bundles/frontend/tinymce/plugins/mention/plugin.min.js');
@@ -250,21 +250,20 @@
                     tinymce.claroline.disableBeforeUnload = false;
                 }
             }
-        })
-            .on('LoadContent', function () {
-                tinymce.claroline.editorChange(editor);
-            });
+        }).on('LoadContent', function () {
+            tinymce.claroline.editorChange(editor);
+        });
 
-        editor.on('BeforeRenderUI', function(e) {
+        editor.on('BeforeRenderUI', function () {
             editor.theme.panel.find('toolbar').slice(1).hide();
         });
 
         // Add a button that toggles toolbar 1+ on/off
         editor.addButton('displayAllButtons', {
-            'icon': 'none icon-tasks',
+            'icon': 'none icon-chevron-down',
             'classes': 'widget btn',
             'tooltip': translator.get('platform:tinymce_all_buttons'),
-            onclick: function() {
+            onclick: function () {
                 if (!this.active()) {
                     this.active(true);
                     editor.theme.panel.find('toolbar').slice(1).show();
@@ -313,25 +312,30 @@
         'mentions': {
             source: function (query, process, delimiter) {
                 if (!_.isUndefined(window.Workspace) && !_.isNull(window.Workspace.id)) {
-                    if (delimiter === '@' && query.length>0) {
+                    if (delimiter === '@' && query.length > 0) {
                         $.getJSON(searchUserInWorkspaceUrl + window.Workspace.id + '/' + query, function (data) {
-                            if(!_.isEmpty(data) && !_.isUndefined(data.users) && !_.isEmpty(data.users))process(data.users);
+                            if (!_.isEmpty(data) && !_.isUndefined(data.users) && !_.isEmpty(data.users)) {
+                                process(data.users);
+                            }
                         });
                     }
                 }
             },
-            render: function(item) {
+            render: function (item) {
                 var avatar = '<i class="icon-user"></i>';
-                if(item.avatar != null) {
+                if (item.avatar !== null) {
                     avatar = '<img src="' + home.asset + 'uploads/pictures/' + item.avatar + '"/>';
                 }
 
                 return '<li>' +
-                    '<a href="javascript:;"><span class="user-picker-dropdown-avatar">' + avatar + '</span> <span class="user-picker-dropdown-name">' + item.name + '</span> <small class="user-picker-avatar-mail text-muted">('+item.mail+')</small></a>' +
+                    '<a href="javascript:;"><span class="user-picker-dropdown-avatar">' + avatar +
+                    '</span> <span class="user-picker-dropdown-name">' + item.name +
+                    '</span> <small class="user-picker-avatar-mail text-muted">(' + item.mail + ')</small></a>' +
                     '</li>';
             },
-            insert: function(item) {
-                return '<user id="' + item.id + '"><a href="' + publicProfileUrl + item.id + '">' + item.name + '</a></user>';
+            insert: function (item) {
+                return '<user id="' + item.id + '"><a href="' + publicProfileUrl + item.id + '">' + item.name +
+                       '</a></user>';
             },
             delay: 200
         }
