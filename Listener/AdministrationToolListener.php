@@ -153,7 +153,7 @@ class AdministrationToolListener
     public function onOpenDesktopTools(OpenAdministrationToolEvent $event)
     {
         $params = array();
-        $params['_controller'] = 'ClarolineCoreBundle:Tool\AdministrationTool:showTool';
+        $params['_controller'] = 'ClarolineCoreBundle:Administration\Tools:showTool';
         $subRequest = $this->request->duplicate(array(), null, $params);
         $response = $this->httpKernel->handle($subRequest, HttpKernelInterface::SUB_REQUEST);
         $event->setResponse($response);
@@ -169,7 +169,7 @@ class AdministrationToolListener
     public function onOpenPlatformLogs(OpenAdministrationToolEvent $event)
     {
         $params = array();
-        $params['_controller'] = 'ClarolineCoreBundle:Administration:logList';
+        $params['_controller'] = 'ClarolineCoreBundle:Administration\Logs:logList';
         $params['page'] = 1;
         $subRequest = $this->request->duplicate(array(), null, $params);
         $response = $this->httpKernel->handle($subRequest, HttpKernelInterface::SUB_REQUEST);

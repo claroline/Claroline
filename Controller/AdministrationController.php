@@ -131,36 +131,6 @@ class AdministrationController extends Controller
 
     /**
      * @EXT\Route(
-     *     "/logs/",
-     *     name="claro_admin_logs_show",
-     *     defaults={"page" = 1}
-     * )
-     * @EXT\Route(
-     *     "/logs/{page}",
-     *     name="claro_admin_logs_show_paginated",
-     *     requirements={"page" = "\d+"},
-     *     defaults={"page" = 1}
-     * )
-     *
-     * @EXT\Method("GET")
-     *
-     * @EXT\Template()
-     *
-     * Displays logs list using filter parameteres and page number
-     *
-     * @param $page int The requested page number.
-     *
-     * @return Response
-     *
-     * @throws \Exception
-     */
-    public function logListAction($page)
-    {
-        return $this->get('claroline.log.manager')->getAdminList($page);
-    }
-
-    /**
-     * @EXT\Route(
      *     "/analytics/",
      *     name="claro_admin_analytics_show"
      * )
@@ -293,7 +263,6 @@ class AdministrationController extends Controller
      */
     public function analyticsTopAction(Request $request, $topType)
     {
-
         $criteriaForm = $this->formFactory->create(
             FormFactory::TYPE_ADMIN_ANALYTICS_TOP,
             array(),
