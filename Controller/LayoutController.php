@@ -115,7 +115,6 @@ class LayoutController extends Controller
     {
         $isLogged = false;
         $countUnreadMessages = 0;
-        $username = null;
         $registerTarget = null;
         $loginTarget = null;
         $workspaces = null;
@@ -138,13 +137,11 @@ class LayoutController extends Controller
         if ($isLogged) {
             $isLogged = true;
             $countUnreadMessages = $this->messageManager->getNbUnreadMessages($user);
-            $username = $user->getFirstName() . ' ' . $user->getLastName();
             $personalWs = $user->getPersonalWorkspace();
             $workspaces = $this->findWorkspacesFromLogs();
             $countUnviewedNotifications = $this->get('icap.notification.manager')->
                 countUnviewedNotifications($user->getId());
         } else {
-            $username = $this->translator->trans('login', array(), 'platform');
             $workspaces = $this->workspaceManager->getWorkspacesByAnonymous();
 
             if (true === $this->configHandler->getParameter('allow_self_registration')) {
@@ -157,7 +154,6 @@ class LayoutController extends Controller
         return array(
             'isLogged' => $isLogged,
             'countUnreadMessages' => $countUnreadMessages,
-            'username' => $username,
             'register_target' => $registerTarget,
             'login_target' => $loginTarget,
             'workspaces' => $workspaces,
