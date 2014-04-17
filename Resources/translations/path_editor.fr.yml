@@ -8,6 +8,7 @@ cancel: Annuler
 # d
 delete_step: Supprimer l'étape
 description_help: Saisir une courte description du parcours
+discard_changes: Annuler les modifications
 
 # e
 edit_step: Modifier l'étape
@@ -56,6 +57,7 @@ resource_no_propagate : Rendre indisponible dans les étapes enfants
 
 # s
 save: Sauvegarder
+save_and_close: Sauvegarder et quitter l'éditeur
 step1: Informations globales
 step2: Scénario
 step3: Définition des informations de l'étape

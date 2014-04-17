@@ -9,7 +9,7 @@
 </div>
 
 <div class="modal-footer">
-    <button class="btn btn-primary" ng-click="exitAndSave()">Save and Close editor</button>
-    <button class="btn btn-default" ng-click="exit()">Discard changes</button>
+    <button class="btn btn-primary" ng-click="exitAndSave()">{{ 'save_and_close' | trans:{}:'path_editor' }}</button>
+    <button class="btn btn-default" ng-click="exit()">{{ 'discard_changes' | trans:{}:'path_editor' }}</button>
     <button class="btn btn-default cancel" ng-click="cancel()">{{ 'cancel' | trans:{}:'path_editor' }}</button>
 </div>

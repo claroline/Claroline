@@ -8,6 +8,7 @@ cancel: Cancel
 # d
 delete_step: Delete step
 description_help: Enter a short description of the path
+discard_changes: Discard changes
 
 # e
 edit: Edit
@@ -54,6 +55,7 @@ resource_no_propagate : Make unavailable in children
 
 # s
 save: Save
+save_and_close: Save and Close editor
 step1: General properties
 step2: Scenario and steps
 step3: Defining step properties
