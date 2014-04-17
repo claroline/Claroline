@@ -650,3 +650,18 @@ function displayAllQuestionInSearch(pathSearch, exoID, displayAll) {
         }
     });
 }
+
+function getQuestionsExo(idExo, path, pathHome) {
+    var pathRight = '';
+
+    if (idExo == -1) {
+        pathRight = pathHome;
+    } else {
+        var locationEnd = path.lastIndexOf('/');
+        var pathStart = path.substr(0, locationEnd);
+        var locationStart = pathStart.lastIndexOf('/');
+        pathRight =  pathStart.substr(0, locationStart + 1) + idExo + path.substr(locationEnd);
+    }
+
+    window.location.href = pathRight;
+}

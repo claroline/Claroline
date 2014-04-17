@@ -132,6 +132,7 @@ exercise: Exercice
 exercise creation: Création d'un exercice
 exercise definition: Définition de l'exercice
 exercise edit: Modification de l'exercice
+exercice linked Question: Questions liées à l'exercice
 exit: Quitter
 expected answer: Réponse attendue
 explainCoeffDis0: Les copies doivent avoir les mêmes questions pour pouvoir calculer le coefficient de discrimination.

@@ -80,204 +80,339 @@
             <i class="icon-question"></i> {{ 'searchQuestion' | trans }}
         </a>
 
-        {% if (pagerMy.getNbResults > pagerMy.maxPerPage or pagerShared.getNbResults > pagerShared.maxPerPage) and displayAll == 0 %}
-            <a class="btn btn-primary" href="{{ path('ujm_question_index', { 'displayAll': 1 }) }} ">
-                <i class="icon-plus-sign"></i> {{ 'display all on this page' | trans }}
-            </a>
-        {% elseif displayAll == 1 %}
-            <a class="btn btn-primary" href="{{ path('ujm_question_index') }} ">
-                <i class="icon-minus-sign"></i> {{ 'display pagination' | trans }}
-            </a>
+        {% if QuestionsExo == 'false' %}
+            {% if (pagerMy.getNbResults > pagerMy.maxPerPage or pagerShared.getNbResults > pagerShared.maxPerPage) and displayAll == 0 %}
+                <a class="btn btn-primary" href="{{ path('ujm_question_index', { 'displayAll': 1 }) }} ">
+                    <i class="icon-plus-sign"></i> {{ 'display all on this page' | trans }}
+                </a>
+            {% elseif displayAll == 1 %}
+                <a class="btn btn-primary" href="{{ path('ujm_question_index') }} ">
+                    <i class="icon-minus-sign"></i> {{ 'display pagination' | trans }}
+                </a>
+            {% endif %}
         {% endif %}
+
+        <select id="exoList" onchange="getQuestionsExo(this.options[this.selectedIndex].value,
+                    '{{ path('ujm_question_index', {'idExo': idExo, 'QuestionsExo': 'true'}) }}',
+                    '{{ path('ujm_question_index') }}');">
+            <option value="-1">Toutes les questions</option>
+            {% for Exo in listExo %}
+                <option value="{{ Exo['id'] }}">{{ Exo['title'] }}</option>
+            {% endfor %}
+        </select>
     </div>
     <div class="list-group">
         <div class="list-group-item">
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <h3 class="panel-title">{{ 'my questions' | trans }}</h3>
-                </div>
-                <div class="panel-body">
-                    {% if interactions is not empty %}
-                        <table class="table table-striped table-bordered table-condensed" id="QuestionArrayMy">
-                            <thead>
-                                <tr style="background-color: lightsteelblue;">
-                                    <th class="classic" onclick="SortQuestions('Category', 'QuestionArrayMy');"
-                                        onmouseover="this.style.color = '#0099FF'; body.style.cursor = 'pointer';"
-                                        onmouseout="this.style.color = 'black'; body.style.cursor = 'default';">
-                                        <i class="icon-chevron-up" id="upC"  style="display: none;"></i>
-                                        <i class="icon-chevron-down" id="downC"  style="display: none;"></i>
-                                        {{ 'category' | trans }}
-                                    </th>
-                                    <th class="classic" onclick="SortQuestions('Title', 'QuestionArrayMy');"
-                                        onmouseover="this.style.color = '#0099FF'; body.style.cursor = 'pointer';"
-                                        onmouseout="this.style.color = 'black'; body.style.cursor = 'default';">
-                                        <i class="icon-chevron-up" id="upTi" style="display: none;"></i>
-                                        <i class="icon-chevron-down" id="downTi" style="display: none;"></i>
-                                        {{ 'title' | trans }}
-                                    </th>
-                                    <th class="classic" onclick="SortQuestions('Type', 'QuestionArrayMy');"
-                                        onmouseover="this.style.color = '#0099FF'; body.style.cursor = 'pointer';"
-                                        onmouseout="this.style.color = 'black'; body.style.cursor = 'default';">
-                                        <i class="icon-chevron-up" id="upTy" style="display: none;"></i>
-                                        <i class="icon-chevron-down" id="downTy" style="display: none;"></i>
-                                        {{ 'type' | trans }}
-                                    </th>
-                                    <th class="classic" onclick="SortQuestions('Invite', 'QuestionArrayMy');"
-                                        onmouseover="this.style.color = '#0099FF'; body.style.cursor = 'pointer';"
-                                        onmouseout="this.style.color = 'black'; body.style.cursor = 'default';">
-                                        <i class="icon-chevron-up" id="upI" style="display: none;"></i>
-                                        <i class="icon-chevron-down" id="downI" style="display: none;"></i>
-                                        {{ 'question' | trans }}
-                                    </th>
-                                    <th class="classic">{{ 'actions' | trans }}</th>
-                                    <th class="classic"><i class="icon-share-alt"></th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                            {% for interaction in interactions %}
-                                <tr>
-                                    <td class="classic">{{ interaction.question.category.value }}</td>
-                                    <td class="classic"><a href="{{ path('ujm_question_show', { 'id': interaction.question.id }) }}">{{ interaction.question.title }}</a></td>
-                                    <td class="classic">{{ interaction.type|trans }}</td>
-                                    <td class="classic">{{ interaction.invite|raw }}</td>
-                                    <td class="classic">
-                                        <a class="btn btn-default" data-toggle="tooltip" title="{{ 'share' | trans }}" href="{{ path('ujm_question_share', { 'questionID': interaction.question.id }) }}">
-                                            <i class="icon-share-alt"></i>
-                                        </a>
-                                        {% if(questionWithResponse[interaction.id] == 0) %}
-                                            <a class="btn btn-default" data-toggle="tooltip" title="{{ 'edit' | trans }}" href="{{ path('ujm_question_edit', { 'id': interaction.question.id }) }}">
-                                                <i class="icon-pencil"></i>
-                                            </a>
-                                            <a class="btn btn-default" data-toggle="tooltip" title="{{ 'delete' | trans }}" href="{{ path('ujm_question_delete', {
-                                            'id': interaction.question.id, 'pageNow': pagerMy.getCurrentPage, 'maxPage': pagerMy.maxPerPage,
-                                            'nbItem': pagerMy.getNbResults, 'lastPage': pagerMy.getNbPages }) }}">
-                                                <i class="icon-trash"></i>
-                                            </a>
-                                        {% else %}
-                                            <a class="btn btn-default" data-toggle="tooltip" title="{{ 'edit' | trans }}"
-                                               href="{{ path('ujm_question_edit', { 'id': interaction.question.id }) }}"
-                                               style="color: red;">
-                                                <i class="icon-pencil"></i>
-                                            </a>
-                                        {% endif %}
-                                    </td>
-                                    {% if(alreadyShared[interaction.question.id] == 1) %}
-                                        <td class="classic">
-                                            <a class="btn btn-default" data-toggle="tooltip" title="{{ 'show'|trans }}"
-                                               href="{{ path('ujm_see_shared', { 'id': interaction.question.id }) }}">
-                                                <i class="icon-eye-open"></i>
-                                            </a>
-                                        </td>
-                                    {% else %}
-                                        <td></td>
-                                    {% endif %}
-                                </tr>
-                            {% endfor %}
-                            </tbody>
-                        </table>
-                        {% if pagerMy.haveToPaginate %}
-                            <div class="text-center panel-footer">
-                                {{ pagerfanta(pagerMy, 'twitter_bootstrap_translated',
-                                    {'routeName': 'ujm_question_index', 'routeParams':
-                                    {'pagerShared': pagerShared.getCurrentPage, 'pagerMy': pagerMy.getCurrentPage, 'click': 'my'} }) }}
-                            </div>
-                        {% endif %}
-                    {% else %}
-                        <div class="alert alert-info">{{ 'noQuestionFound'|trans }} ...</div>
-                    {% endif %}
-                </div>
-            </div>
 
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <h3 class="panel-title">{{ 'my shared questions' | trans }}</h3>
-                </div>
-                <div class="panel-body">
-                    {% if sharedWithMe is not empty %}
-                        <table class="table table-striped table-bordered table-condensed" id="QuestionArrayShared">
-                            <thead>
-                                <tr style="background-color: lightsteelblue;">
-                                    <th class="classic" onclick="SortQuestions('Category', 'QuestionArrayShared');"
-                                        onmouseover="this.style.color = '#0099FF'; body.style.cursor = 'pointer';"
-                                        onmouseout="this.style.color = 'black'; body.style.cursor = 'default';">
-                                        <i class="icon-chevron-up" id="upCs"  style="display: none;"></i>
-                                        <i class="icon-chevron-down" id="downCs"  style="display: none;"></i>
-                                        {{ 'category' | trans }}
-                                    </th>
-                                    <th class="classic" onclick="SortQuestions('Title', 'QuestionArrayShared');"
-                                        onmouseover="this.style.color = '#0099FF'; body.style.cursor = 'pointer';"
-                                        onmouseout="this.style.color = 'black'; body.style.cursor = 'default';">
-                                        <i class="icon-chevron-up" id="upTis"  style="display: none;"></i>
-                                        <i class="icon-chevron-down" id="downTis"  style="display: none;"></i>
-                                        {{ 'title' | trans }}
-                                    </th>
-                                    <th class="classic" onclick="SortQuestions('Type', 'QuestionArrayShared');"
-                                        onmouseover="this.style.color = '#0099FF'; body.style.cursor = 'pointer';"
-                                        onmouseout="this.style.color = 'black'; body.style.cursor = 'default';">
-                                        <i class="icon-chevron-up" id="upTys"  style="display: none;"></i>
-                                        <i class="icon-chevron-down" id="downTys"  style="display: none;"></i>
-                                        {{ 'Type' | trans }}
-                                    </th>
-                                    <th class="classic" onclick="SortQuestions('Invite', 'QuestionArrayShared');"
-                                        onmouseover="this.style.color = '#0099FF'; body.style.cursor = 'pointer';"
-                                        onmouseout="this.style.color = 'black'; body.style.cursor = 'default';">
-                                        <i class="icon-chevron-up" id="upIs"  style="display: none;"></i>
-                                        <i class="icon-chevron-down" id="downIs"  style="display: none;"></i>
-                                        {{ 'question' | trans }}
-                                    </th>
-                                    <th class="classic">{{ 'shared by' | trans }}</th>
-                                    <th class="classic">{{ "actions" | trans }}</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                            {% for myQShare in sharedWithMe %}
-                                <tr>
-                                    <td class="classic">{{ myQShare.question.category.value }}</td>
-                                    <td class="classic"><a href="{{ path('ujm_question_show', { 'id': myQShare.question.id }) }}">{{ myQShare.question.title }}</a></td>
-                                    <td class="classic">{{ myQShare.type|trans }}</td>
-                                    <td class="classic">{{ myQShare.invite|raw }}</td>
-                                    <td class="classic">
-                                        {{ myQShare.question.user.firstName }} {{ myQShare.question.user.lastName }}
-                                    </td>
-                                    <td class="classic">
-                                        {% if(shareRight[myQShare.id]) %}
-                                            {% if(questionWithResponse[myQShare.id] == 0) %}
-                                                <a class="btn btn-default" data-toggle="tooltip" title="{{ 'edit' | trans }}"
-                                                   href="{{ path('ujm_question_edit', { 'id': myQShare.question.id }) }}">
+            {% if QuestionsExo == 'false' %}
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">{{ 'my questions' | trans }}</h3>
+                    </div>
+                    <div class="panel-body">
+                        {% if interactions is not empty %}
+                            <table class="table table-striped table-bordered table-condensed" id="QuestionArrayMy">
+                                <thead>
+                                    <tr style="background-color: lightsteelblue;">
+                                        <th class="classic" onclick="SortQuestions('Category', 'QuestionArrayMy');"
+                                            onmouseover="this.style.color = '#0099FF'; body.style.cursor = 'pointer';"
+                                            onmouseout="this.style.color = 'black'; body.style.cursor = 'default';">
+                                            <i class="icon-chevron-up" id="upC"  style="display: none;"></i>
+                                            <i class="icon-chevron-down" id="downC"  style="display: none;"></i>
+                                            {{ 'category' | trans }}
+                                        </th>
+                                        <th class="classic" onclick="SortQuestions('Title', 'QuestionArrayMy');"
+                                            onmouseover="this.style.color = '#0099FF'; body.style.cursor = 'pointer';"
+                                            onmouseout="this.style.color = 'black'; body.style.cursor = 'default';">
+                                            <i class="icon-chevron-up" id="upTi" style="display: none;"></i>
+                                            <i class="icon-chevron-down" id="downTi" style="display: none;"></i>
+                                            {{ 'title' | trans }}
+                                        </th>
+                                        <th class="classic" onclick="SortQuestions('Type', 'QuestionArrayMy');"
+                                            onmouseover="this.style.color = '#0099FF'; body.style.cursor = 'pointer';"
+                                            onmouseout="this.style.color = 'black'; body.style.cursor = 'default';">
+                                            <i class="icon-chevron-up" id="upTy" style="display: none;"></i>
+                                            <i class="icon-chevron-down" id="downTy" style="display: none;"></i>
+                                            {{ 'type' | trans }}
+                                        </th>
+                                        <th class="classic" onclick="SortQuestions('Invite', 'QuestionArrayMy');"
+                                            onmouseover="this.style.color = '#0099FF'; body.style.cursor = 'pointer';"
+                                            onmouseout="this.style.color = 'black'; body.style.cursor = 'default';">
+                                            <i class="icon-chevron-up" id="upI" style="display: none;"></i>
+                                            <i class="icon-chevron-down" id="downI" style="display: none;"></i>
+                                            {{ 'question' | trans }}
+                                        </th>
+                                        <th class="classic">{{ 'actions' | trans }}</th>
+                                        <th class="classic"><i class="icon-share-alt"></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                {% for interaction in interactions %}
+                                    <tr>
+                                        <td class="classic">{{ interaction.question.category.value }}</td>
+                                        <td class="classic"><a href="{{ path('ujm_question_show', { 'id': interaction.question.id }) }}">{{ interaction.question.title }}</a></td>
+                                        <td class="classic">{{ interaction.type|trans }}</td>
+                                        <td class="classic">{{ interaction.invite|raw }}</td>
+                                        <td class="classic">
+                                            <a class="btn btn-default" data-toggle="tooltip" title="{{ 'share' | trans }}" href="{{ path('ujm_question_share', { 'questionID': interaction.question.id }) }}">
+                                                <i class="icon-share-alt"></i>
+                                            </a>
+                                            {% if(questionWithResponse[interaction.id] == 0) %}
+                                                <a class="btn btn-default" data-toggle="tooltip" title="{{ 'edit' | trans }}" href="{{ path('ujm_question_edit', { 'id': interaction.question.id }) }}">
                                                     <i class="icon-pencil"></i>
+                                                </a>
+                                                <a class="btn btn-default" data-toggle="tooltip" title="{{ 'delete' | trans }}" href="{{ path('ujm_question_delete', {
+                                                'id': interaction.question.id, 'pageNow': pagerMy.getCurrentPage, 'maxPage': pagerMy.maxPerPage,
+                                                'nbItem': pagerMy.getNbResults, 'lastPage': pagerMy.getNbPages }) }}">
+                                                    <i class="icon-trash"></i>
                                                 </a>
                                             {% else %}
                                                 <a class="btn btn-default" data-toggle="tooltip" title="{{ 'edit' | trans }}"
-                                                   href="{{ path('ujm_question_edit', { 'id': myQShare.question.id }) }}"
+                                                   href="{{ path('ujm_question_edit', { 'id': interaction.question.id }) }}"
                                                    style="color: red;">
                                                     <i class="icon-pencil"></i>
                                                 </a>
                                             {% endif %}
+                                        </td>
+                                        {% if(alreadyShared[interaction.question.id] == 1) %}
+                                            <td class="classic">
+                                                <a class="btn btn-default" data-toggle="tooltip" title="{{ 'show'|trans }}"
+                                                   href="{{ path('ujm_see_shared', { 'id': interaction.question.id }) }}">
+                                                    <i class="icon-eye-open"></i>
+                                                </a>
+                                            </td>
+                                        {% else %}
+                                            <td></td>
                                         {% endif %}
-                                        <a class="btn btn-default" data-toggle="tooltip" title="{{ 'delete of my bank' | trans }}"
-                                           href="{{ path('ujm_delete_shared_question', { 'qid': myQShare.question.id,
-                                                'uid': app.user.id,
-                                                'pageNow': pagerShared.currentPage, 'maxPage': pagerShared.maxPerPage,
-                                                'nbItem': pagerShared.getNbResults, 'lastPage': pagerShared.getNbPages }) }}">
-                                            <i class="icon-trash"></i>
-                                        </a>
-                                    </td>
-                                </tr>
-                            {% endfor %}
-                            </tbody>
-                        </table>
-                        {% if pagerShared.haveToPaginate %}
-                            <div class="text-center panel-footer">
-                                {{ pagerfanta(pagerShared, 'twitter_bootstrap_translated',
-                                    {'routeName': 'ujm_question_index', 'routeParams':
-                                    {'pagerMy': pagerMy.getCurrentPage, 'pagerShared': pagerShared.getCurrentPage,  'click': 'shared'} }) }}
-                            </div>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                            {% if pagerMy.haveToPaginate %}
+                                <div class="text-center panel-footer">
+                                    {{ pagerfanta(pagerMy, 'twitter_bootstrap_translated',
+                                        {'routeName': 'ujm_question_index', 'routeParams':
+                                        {'pagerShared': pagerShared.getCurrentPage, 'pagerMy': pagerMy.getCurrentPage, 'click': 'my'} }) }}
+                                </div>
+                            {% endif %}
+                        {% else %}
+                            <div class="alert alert-info">{{ 'noQuestionFound'|trans }} ...</div>
                         {% endif %}
-                    {% else %}
-                        <div class="alert alert-info">{{ 'noQuestionFound'|trans }} ...</div>
-                    {% endif %}
+                    </div>
                 </div>
-            </div>
+
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">{{ 'my shared questions' | trans }}</h3>
+                    </div>
+                    <div class="panel-body">
+                        {% if sharedWithMe is not empty %}
+                            <table class="table table-striped table-bordered table-condensed" id="QuestionArrayShared">
+                                <thead>
+                                    <tr style="background-color: lightsteelblue;">
+                                        <th class="classic" onclick="SortQuestions('Category', 'QuestionArrayShared');"
+                                            onmouseover="this.style.color = '#0099FF'; body.style.cursor = 'pointer';"
+                                            onmouseout="this.style.color = 'black'; body.style.cursor = 'default';">
+                                            <i class="icon-chevron-up" id="upCs"  style="display: none;"></i>
+                                            <i class="icon-chevron-down" id="downCs"  style="display: none;"></i>
+                                            {{ 'category' | trans }}
+                                        </th>
+                                        <th class="classic" onclick="SortQuestions('Title', 'QuestionArrayShared');"
+                                            onmouseover="this.style.color = '#0099FF'; body.style.cursor = 'pointer';"
+                                            onmouseout="this.style.color = 'black'; body.style.cursor = 'default';">
+                                            <i class="icon-chevron-up" id="upTis"  style="display: none;"></i>
+                                            <i class="icon-chevron-down" id="downTis"  style="display: none;"></i>
+                                            {{ 'title' | trans }}
+                                        </th>
+                                        <th class="classic" onclick="SortQuestions('Type', 'QuestionArrayShared');"
+                                            onmouseover="this.style.color = '#0099FF'; body.style.cursor = 'pointer';"
+                                            onmouseout="this.style.color = 'black'; body.style.cursor = 'default';">
+                                            <i class="icon-chevron-up" id="upTys"  style="display: none;"></i>
+                                            <i class="icon-chevron-down" id="downTys"  style="display: none;"></i>
+                                            {{ 'Type' | trans }}
+                                        </th>
+                                        <th class="classic" onclick="SortQuestions('Invite', 'QuestionArrayShared');"
+                                            onmouseover="this.style.color = '#0099FF'; body.style.cursor = 'pointer';"
+                                            onmouseout="this.style.color = 'black'; body.style.cursor = 'default';">
+                                            <i class="icon-chevron-up" id="upIs"  style="display: none;"></i>
+                                            <i class="icon-chevron-down" id="downIs"  style="display: none;"></i>
+                                            {{ 'question' | trans }}
+                                        </th>
+                                        <th class="classic">{{ 'shared by' | trans }}</th>
+                                        <th class="classic">{{ "actions" | trans }}</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                {% for myQShare in sharedWithMe %}
+                                    <tr>
+                                        <td class="classic">{{ myQShare.question.category.value }}</td>
+                                        <td class="classic"><a href="{{ path('ujm_question_show', { 'id': myQShare.question.id }) }}">{{ myQShare.question.title }}</a></td>
+                                        <td class="classic">{{ myQShare.type|trans }}</td>
+                                        <td class="classic">{{ myQShare.invite|raw }}</td>
+                                        <td class="classic">
+                                            {{ myQShare.question.user.firstName }} {{ myQShare.question.user.lastName }}
+                                        </td>
+                                        <td class="classic">
+                                            {% if(shareRight[myQShare.id]) %}
+                                                {% if(questionWithResponse[myQShare.id] == 0) %}
+                                                    <a class="btn btn-default" data-toggle="tooltip" title="{{ 'edit' | trans }}"
+                                                       href="{{ path('ujm_question_edit', { 'id': myQShare.question.id }) }}">
+                                                        <i class="icon-pencil"></i>
+                                                    </a>
+                                                {% else %}
+                                                    <a class="btn btn-default" data-toggle="tooltip" title="{{ 'edit' | trans }}"
+                                                       href="{{ path('ujm_question_edit', { 'id': myQShare.question.id }) }}"
+                                                       style="color: red;">
+                                                        <i class="icon-pencil"></i>
+                                                    </a>
+                                                {% endif %}
+                                            {% endif %}
+                                            <a class="btn btn-default" data-toggle="tooltip" title="{{ 'delete of my bank' | trans }}"
+                                               href="{{ path('ujm_delete_shared_question', { 'qid': myQShare.question.id,
+                                                    'uid': app.user.id,
+                                                    'pageNow': pagerShared.currentPage, 'maxPage': pagerShared.maxPerPage,
+                                                    'nbItem': pagerShared.getNbResults, 'lastPage': pagerShared.getNbPages }) }}">
+                                                <i class="icon-trash"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                            {% if pagerShared.haveToPaginate %}
+                                <div class="text-center panel-footer">
+                                    {{ pagerfanta(pagerShared, 'twitter_bootstrap_translated',
+                                        {'routeName': 'ujm_question_index', 'routeParams':
+                                        {'pagerMy': pagerMy.getCurrentPage, 'pagerShared': pagerShared.getCurrentPage,  'click': 'shared'} }) }}
+                                </div>
+                            {% endif %}
+                        {% else %}
+                            <div class="alert alert-info">{{ 'noQuestionFound'|trans }} ...</div>
+                        {% endif %}
+                    </div>
+                </div>
+            {% else %}
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">{{ 'exercice linked Question' | trans }}</h3>
+                    </div>
+                    <div class="panel-body">
+                        {% if listQExo is not empty %}
+                            <table class="table table-striped table-bordered table-condensed" id="QuestionArray">
+                                <thead>
+                                    <tr style="background-color: lightsteelblue;">
+                                        <th class="classic" onclick="SortQuestions('Category', 'QuestionArray');"
+                                            onmouseover="this.style.color = '#0099FF'; body.style.cursor = 'pointer';"
+                                            onmouseout="this.style.color = 'black'; body.style.cursor = 'default';">
+                                            <i class="icon-chevron-up" id="upC"  style="display: none;"></i>
+                                            <i class="icon-chevron-down" id="downC"  style="display: none;"></i>
+                                            {{ 'category' | trans }}
+                                        </th>
+                                        <th class="classic" onclick="SortQuestions('Title', 'QuestionArray');"
+                                            onmouseover="this.style.color = '#0099FF'; body.style.cursor = 'pointer';"
+                                            onmouseout="this.style.color = 'black'; body.style.cursor = 'default';">
+                                            <i class="icon-chevron-up" id="upTi"  style="display: none;"></i>
+                                            <i class="icon-chevron-down" id="downTi"  style="display: none;"></i>
+                                            {{ 'title' | trans }}
+                                        </th>
+                                        <th class="classic" onclick="SortQuestions('Type', 'QuestionArray');"
+                                            onmouseover="this.style.color = '#0099FF'; body.style.cursor = 'pointer';"
+                                            onmouseout="this.style.color = 'black'; body.style.cursor = 'default';">
+                                            <i class="icon-chevron-up" id="upTy"  style="display: none;"></i>
+                                            <i class="icon-chevron-down" id="downTy"  style="display: none;"></i>
+                                            {{ 'type' | trans }}
+                                        </th>
+                                        <th class="classic" onclick="SortQuestions('Invite', 'QuestionArray')"
+                                            onmouseover="this.style.color = '#0099FF'; body.style.cursor = 'pointer';"
+                                            onmouseout="this.style.color = 'black'; body.style.cursor = 'default';">
+                                            <i class="icon-chevron-up" id="upI"  style="display: none;"></i>
+                                            <i class="icon-chevron-down" id="downI"  style="display: none;"></i>
+                                            {{ 'question' | trans }}
+                                        </th>
+                                        <th class="classic">{{ "actions" | trans }}</th>
+                                        <th class="classic"><i class="icon-share-alt"></th>
+                                        <th class="classic">{{ 'shared by' | trans }}</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                {% for interactionExo in listQExo %}
+                                    <tr>
+                                        <td class="classic">{{ interactionExo.question.category.value }}</td>
+                                        <td class="classic"><a href="{{ path('ujm_question_show', { 'id': interactionExo.question.id }) }}">{{ interactionExo.question.title }}</a></td>
+                                        <td class="classic">{{ interactionExo.type|trans }}</td>
+                                        <td class="classic">{{ interactionExo.invite|raw }}</td>
+
+                                        {% if actionQ[interactionExo.question.id] == 1 %} <!-- my question -->
+                                            <td class="classic">
+                                                <a class="btn btn-default" data-toggle="tooltip" title="{{ 'share' | trans }}" href="{{ path('ujm_question_share', { 'questionID': interactionExo.question.id }) }}">
+                                                    <i class="icon-share-alt"></i>
+                                                </a>
+                                                {% if(questionWithResponse[interactionExo.id] == 0) %}
+                                                    <a class="btn btn-default" data-toggle="tooltip" title="{{ 'edit' | trans }}" href="{{ path('ujm_question_edit', { 'id': interactionExo.question.id }) }}">
+                                                        <i class="icon-pencil"></i>
+                                                    </a>
+                                                    <a class="btn btn-default" data-toggle="tooltip" title="{{ 'delete' | trans }}" href="{{ path('ujm_question_delete', {
+                                                    'id': interactionExo.question.id }) }}">
+                                                        <i class="icon-trash"></i>
+                                                    </a>
+                                                {% else %}
+                                                    <a class="btn btn-default" data-toggle="tooltip" title="{{ 'edit' | trans }}"
+                                                       href="{{ path('ujm_question_edit', { 'id': interactionExo.question.id }) }}"
+                                                       style="color: red;">
+                                                        <i class="icon-pencil"></i>
+                                                    </a>
+                                                {% endif %}
+                                            </td>
+                                            {% if(alreadyShared[interactionExo.question.id] == 1) %}
+                                                <td class="classic">
+                                                    <a class="btn btn-default" data-toggle="tooltip" title="{{ 'show'|trans }}"
+                                                       href="{{ path('ujm_see_shared', { 'id': interactionExo.question.id }) }}">
+                                                        <i class="icon-eye-open"></i>
+                                                    </a>
+                                                </td>
+                                            {% else %}
+                                                <td style="text-align: center;">-</td>
+                                            {% endif %}
+                                            <td style="text-align: center;">-</td>
+
+                                        {% elseif actionQ[interactionExo.question.id] == 2 %} <!-- shared question -->
+                                            <td class="classic">
+                                                {% if(shareRight[interactionExo.id]) %}
+                                                    {% if(questionWithResponse[interactionExo.id] == 0) %}
+                                                        <a class="btn btn-default" data-toggle="tooltip" title="{{ 'edit' | trans }}"
+                                                           href="{{ path('ujm_question_edit', { 'id': interactionExo.question.id }) }}">
+                                                            <i class="icon-pencil"></i>
+                                                        </a>
+                                                    {% else %}
+                                                        <a class="btn btn-default" data-toggle="tooltip" title="{{ 'edit' | trans }}"
+                                                           href="{{ path('ujm_question_edit', { 'id': interactionExo.question.id }) }}"
+                                                           style="color: red;">
+                                                            <i class="icon-pencil"></i>
+                                                        </a>
+                                                    {% endif %}
+                                                {% endif %}
+                                                <a class="btn btn-default" data-toggle="tooltip" title="{{ 'delete of my bank' | trans }}"
+                                                   href="{{ path('ujm_delete_shared_question', { 'qid': interactionExo.question.id, 'uid': app.user.id, }) }}">
+                                                    <i class="icon-trash"></i>
+                                                </a>
+                                            </td>
+                                            <td style="text-align: center;">-</td>
+                                            <td class="classic">
+                                                {{ interactionExo.question.user.firstName }} {{ interactionExo.question.user.lastName }}
+                                            </td>
+                                        {% else %}
+                                            Ne peut rien faire ...
+                                        {% endif %}
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        {% else %}
+                            <div class="alert alert-info">{{ 'noQuestionFound'|trans }} ...</div>
+                        {% endif %}
+                    </div>
+                </div>
+            {% endif %}
         </div>
     </div>
 {% endblock %}
@@ -286,4 +421,8 @@
     {{ parent() }}
     <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/sortAndSearch.js') }}"></script>
     <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/resize.js') }}"></script>
+
+    <script type="text/javascript">
+        $("#exoList option[value=\""+{{ idExo }}+"\"]").attr('selected', 'selected');
+    </script>
 {% endblock %}

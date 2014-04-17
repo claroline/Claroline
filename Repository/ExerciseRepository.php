@@ -60,4 +60,15 @@ class ExerciseRepository extends EntityRepository
 
         return $query->getResult();
     }
+
+    public function getExerciceByUser($userID)
+    {
+        $dql = 'SELECT e.id, e.title
+            FROM UJM\ExoBundle\Entity\Subscription s JOIN s.exercise e
+            WHERE s.user='.$userID.' AND s.creator = 1';
+
+        $query = $this->_em->createQuery($dql);
+
+        return $query->getResult();
+    }
 }
