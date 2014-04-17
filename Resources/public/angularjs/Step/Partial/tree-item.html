@@ -7,7 +7,7 @@
     <div class="step">{{ step.name | truncate }}</div>
 
     <span ng-show="showButtons == step.id || previewStep == step" class="step-actions btn-group">
-        <a href="#" role="button" class="btn btn-default btn-sm" ng-click="editStep(step)" data-toggle="tooltip" data-container="body" title="{{ 'step_edit' | trans:{}:'path_editor' }}">
+        <a href="#" role="button" ng-disabled="edit.preview" class="btn btn-default btn-sm" ng-click="editStep(step)" data-toggle="tooltip" data-container="body" title="{{ 'step_edit' | trans:{}:'path_editor' }}">
             <span class="icon-pencil"></span>
             <span class="sr-only">{{ 'step_edit' | trans:{}:'path_editor' }}</span>
         </a>
