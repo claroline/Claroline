@@ -167,7 +167,7 @@
                     {% include "UJMExoBundle:Partial:interactionPaper.html.twig" %}
 
                     {% if interactionToDisplayed.typeopenquestion == 'long' %}
-                        <textarea name="interOpenLong" class="claroline-tiny-mce hide" data-theme="advanced" data-resource-picker="off">
+                        <textarea name="interOpenLong" class="claroline-tiny-mce hide" data-theme="advanced" data-resource-picker="off" data-before-unload="off">
                             {{ response }}
                         </textarea>
                     {% endif %}

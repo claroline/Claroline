@@ -109,6 +109,7 @@ delete document: Deletion of document
 delete hole: Delete the hole
 delete of my bank: Delete of my bank
 delete of my exercise: Delete of my exercise
+delete papers: Delete the papers
 description: Description
 displayAllList: Display the whole list
 display all on this page: Display all on this page
@@ -174,6 +175,8 @@ home exercise: Home exercise
 
 # I
 infiny: Indefinite
+infoExerciseNoPuplished: This exercise is not yet published. The administrators can add question, try the exercise and detele the papers. After the publishing, the students will compose the exercise and the papers will can not be deleted
+infoExerciseNoPuplished2: This exercise is not yet published. You can't yet compose.
 infoMark: The potential penalties have to be count during your notation
 infoMeasureDifficulty: This measure doesn't count students that didn't saw the question
 interupt: Interupt
@@ -239,6 +242,7 @@ next: Next
 no: No
 no answer: No answer
 noAnswerZone: There is no answer zone
+noFinish: No finished
 noDocFound: No document found
 noHintShow: Hints not seen, no penalty
 noImg: You must upload a picture
@@ -291,6 +295,7 @@ position: => Place pointers below (red cross) on the picture. The pointer's cent
 preview: Preview
 previous: Previous
 print paper: Print paper
+publish: Publish
 
 # Q
 qcm: QCM
@@ -353,6 +358,7 @@ type: Type
 
 # U
 unique response: Unique response
+unpublish: Unpublish
 upload: Upload
 uploading: Uploading
 use date of end: Use end date

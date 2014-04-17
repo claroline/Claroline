@@ -55,7 +55,7 @@
 
 {% block section_content %}
     <div class="panel-heading">
-        <h3>{{ 'correction' | trans }}</h3>
+        <h3 class="panel-title">{{ 'correction' | trans }}</h3>
     </div>
     <div class="panel-body">
         <a class="btn btn-primary" href="{{ path('ujm_exercise_open', { 'exerciseId':  exoId }) }}">
@@ -300,7 +300,7 @@
             {% endif %}
 
             {% set needLegend = false %}
-            <h3>{{ 'list of question' | trans }} :</h3>
+            <h3 class="panel-title">{{ 'list of question' | trans }} :</h3>
                 <ol>
                     {% set i = 0 %}
                     {% for interaction in interactions %}

@@ -13,4 +13,50 @@ $(document).ready(function() {
     });
 });
 
+function publish(url, exerciseId) {
+    var id = exerciseId;
 
+    $.ajax({
+            type: "POST",
+            url: url,
+            data: { exerciseId: id },
+            cache: false,
+            success: function (data) {
+                hideBtPublish ();
+                if (data == 0) {
+                    displayBtUnpublish ();
+                }
+            }
+        });
+}
+
+function unpublish(url, exerciseId) {
+    var id = exerciseId;
+
+    $.ajax({
+            type: "POST",
+            url: url,
+            data: { exerciseId: id },
+            cache: false,
+            success: function (data) {
+                hideBtUnpublish ();
+                displayBtPublish ();
+            }
+        });
+}
+
+function displayBtPublish () {
+    $("#divPublish").css("display", "block");
+}
+
+function hideBtPublish () {
+    $("#divPublish").css("display", "none");
+}
+
+function displayBtUnpublish () {
+    $("#spanUnpublish").css("display", "inline");
+}
+
+function hideBtUnpublish () {
+    $("#spanUnpublish").css("display", "none");
+}

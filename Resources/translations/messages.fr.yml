@@ -109,6 +109,7 @@ delete document: Suppression de document
 delete hole: Supprimer le blanc
 delete of my bank: Supprimer de ma banque
 delete of my exercise: Supprimer de mon exercice
+delete papers: Supprimer les copies
 description: Description
 displayAllList: Afficher la liste complète
 display all on this page: Tout afficher sur cette page
@@ -174,6 +175,8 @@ home exercise: Accueil de l'exercice
 
 # I
 infiny: Infini
+infoExerciseNoPuplished: Cet exercice n'est pas encore publié. Les gestionnaires pourront ajouter des questions, tester l'exercice et supprimer les copies. Après publication, les apprenants pourront passer l'exercice et les copies ne pourront plus être supprimées
+infoExerciseNoPuplished2: Cet exercice n'est pas encore publié. Vous ne pouvez pas encore répondre.
 infoMark: Les éventuelles pénalités sont à prendre en compte dans votre notation
 infoMeasureDifficulty: Cet indice ne prend pas en compte les étudiants n'ayant pas vu la question
 interupt: Interrompre
@@ -240,6 +243,7 @@ no: Non
 no answer: Pas de réponse
 noAnswerZone: Vous n\'avez mis aucune zone de réponse
 noDocFound: Pas de document trouvé
+noFinish: Non terminé
 noHintShow: Indices non vus, pas de pénalité
 noImg: Vous devez télécharger une image
 noOne: Aucune
@@ -291,6 +295,7 @@ position: => Positionner le(s) pointeur(s) ci-dessous (croix rouge) sur l'image.
 preview: Aperçu
 previous: Précédent
 print paper: Imprimer la copie
+publish: Publier
 
 # Q
 qcm: QCM
@@ -353,6 +358,7 @@ type: Type
 
 # U
 unique response: Réponse Unique
+unpublish: Dépublier
 upload: Télécharger
 uploading: Chargement en cours
 use date of end: Utiliser une date de fin

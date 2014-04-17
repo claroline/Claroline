@@ -51,7 +51,7 @@
 {% block section_content %}
 
     <div class="panel-heading">
-        <h1>{{ 'exercise'|trans }} : {{ entity.title }}</h1>
+        <h3 class="panel-title">{{ 'exercise'|trans }} : {{ entity.title }}</h3>
     </div>
     <div class="panel-body">
         {% if isDesktop() %}
@@ -67,6 +67,18 @@
             <i class="icon-question"></i> {{ 'access my question bank' | trans }}
         </a>
     </div>
+
+    <div id='divPublish' class="alert alert-info" style='display:none'>
+        {% if exoAdmin == 1 %}
+            {{ 'infoExerciseNoPuplished'|trans }} : 
+            <a id="btPublish" class="btn btn-primary" onclick="publish('{{ path('ujm_exercise_publish') }}', {{ entity.id }})">
+                <i class="icon-ok"></i> {{ 'publish' | trans }}
+            </a>
+        {% else %}
+            {{ 'infoExerciseNoPuplished2'|trans }}
+        {% endif %}
+    </div>
+
     <div class="list-group">
         <div class="list-group-item">
             <table class="record_properties table table-striped table-bordered table-condensed">
@@ -246,6 +258,9 @@
                 <a class="btn btn-primary" href="{{ path('ujm_exercise_questions', { 'id': entity.id }) }} " >
                     <i class="icon-question"></i> {{ 'list of question' | trans }}
                 </a>
+                <span id='spanUnpublish' style='display:none'><a id="btUnpublish" class="btn btn-primary" onclick="unpublish('{{ path('ujm_exercise_unpublish') }}', {{ entity.id }})">
+                    <i class="icon-remove"></i> {{ 'unpublish' | trans }}
+                    </a></span>
             {% endif %}
             <a class="btn btn-primary" href="{{ path('ujm_paper_list', { 'exoID': entity.id }) }}">
                 <i class="icon-list"></i> {{ 'result' | trans }}
@@ -256,6 +271,20 @@
 
 {% block javascripts %}
     {{ parent() }}
+
+    <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/exercise.js') }}"></script>
+    
+        {% if published == false %}
+            <script language="JavaScript">displayBtPublish();</script>
+        {% else %}
+            <script language="JavaScript">hideBtPublish();</script>
+        {% endif %}
+    
+        {% if nbPapers == 0 and published == true %}
+             <script language="JavaScript">displayBtUnpublish();</script>
+        {% else %}
+             <script language="JavaScript">hideBtUnpublish();</script>
+        {% endif %}
 
     <script language="JavaScript">
         $('#less').css({"display" : "none"});

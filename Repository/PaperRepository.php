@@ -123,4 +123,22 @@ class PaperRepository extends EntityRepository
 
         return $query->getResult();
     }
+    
+    /**
+     * Returns number of papers for an exercise
+     *
+     */
+    public function countPapers($exerciseID)
+    {
+        $qb = $this->createQueryBuilder('p');
+        
+        $nbPapers = $qb->select('COUNT(p)')
+                       ->join('p.exercise', 'e')
+                       ->join('p.user', 'u')
+                       ->where($qb->expr()->in('e.id', $exerciseID))
+                       ->getQuery()
+                       ->getSingleScalarResult();
+        
+        return $nbPapers;
+    }
 }
