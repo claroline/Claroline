@@ -18,25 +18,30 @@ use Symfony\Component\HttpFoundation\Response;
 use JMS\DiExtraBundle\Annotation as DI;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Claroline\CoreBundle\Manager\ToolManager;
+use Symfony\Component\Security\Core\SecurityContextInterface;
 
 class AdministrationToolController extends Controller
 {
     private $eventDispatcher;
     private $toolManager;
+    private $sc;
 
     /**
      * @DI\InjectParams({
      *     "eventDispatcher" = @DI\Inject("claroline.event.event_dispatcher"),
-     *     "toolManager"     = @DI\Inject("claroline.manager.tool_manager")
+     *     "toolManager"     = @DI\Inject("claroline.manager.tool_manager"),
+     *     "sc"              = @DI\Inject("security.context")
      * })
      */
     public function __construct(
         StrictDispatcher $eventDispatcher,
-        ToolManager $toolManager
+        ToolManager $toolManager,
+        SecurityContextInterface $sc
     )
     {
         $this->eventDispatcher = $eventDispatcher;
         $this->toolManager = $toolManager;
+        $this->sc = $sc;
     }
 
     /**
@@ -68,7 +73,7 @@ class AdministrationToolController extends Controller
      */
     public function renderLeftBarAction()
     {
-        $tools = $this->toolManager->getAdminTools();
+        $tools = $this->toolManager->getAdminToolsByRoles($this->sc->getToken()->getRoles());
 
         return array('tools' => $tools);
     }

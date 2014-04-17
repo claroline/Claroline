@@ -607,6 +607,6 @@ class ToolManager
 
     public function getAdminToolsByRoles(array $roles)
     {
-
+        return $this->om->getRepository('Claroline\CoreBundle\Entity\Administration\Tool')->findByRoles($roles);
     }
 }

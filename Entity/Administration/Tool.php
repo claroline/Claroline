@@ -15,7 +15,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Claroline\CoreBundle\Entity\Role;
 
 /**
- * @ORM\Entity()
+ * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\AdministrationToolRepository")
  * @ORM\Table(name="claro_admin_tools")
  */
 class Tool
