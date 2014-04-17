@@ -1,9 +1,15 @@
 {% macro displayResourceButton(resource, step) %}
-    <li class="resource-tab" rel="tooltip" data-original-title="{{ resource.resourceNode.resourceType.name | trans({}, 'resource') }}">
-        <a class="resource-link lvl-{{ step.lvl + 1 }}" target="_blank" href="{{ path('claro_resource_open', {'node': resource.resourceNode.id, 'resourceType': resource.resourceNode.resourceType.name }) }}"  data-resource-id = "{{ resource.resourceNode.id }}">
+    <li rel="tooltip" data-original-title="{{ resource.resourceNode.resourceType.name | trans({}, 'resource') }}">
+        <a class="path-tab-btn resource-link lvl-{{ step.lvl + 1 }} resource-tab-btn" data-target="#resource{{ resource.resourceNode.id }}">
             <span class="resource-name">{{ resource.resourceNode.name }}</span>
         </a>
     </li>
+{% endmacro %}
+
+{% macro displayResourceFrame(resource, step) %}
+    <div id="resource{{ resource.resourceNode.id }}" class="path-tab resource-tab">
+        <iframe style="border:none;padding:0;" id="{{ resource.resourceNode.id }}" seamless width="100%" class="resource-frame" data-resource-src="{{ path('claro_resource_open', {'node': resource.resourceNode.id, 'resourceType': resource.resourceNode.resourceType.name }) }}" src=""></iframe>
+    </div>
 {% endmacro %}
 
 {% macro displayTreeItem(item, parents, currentStep, path, workspace) %}

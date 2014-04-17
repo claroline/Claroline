@@ -3,7 +3,7 @@
 <div class="panel panel-default">
     <div id="step-title" class="panel-heading">
         <div class="lvl-{{ currentStep.lvl + 1 }} lvl-indicator-xlarge">&nbsp;</div>
-        <h4>{{ currentStep.name }}</h4>
+        <h4 class="path-tab-btn" data-target="#current-step-text">{{ currentStep.name }}</h4>
     </div>
     <div class="panel-body">
         {% if edit == true %}
@@ -33,9 +33,29 @@
                     </div>
                 {% endif %}
             {% endif %}
-            <div class="current-step-text">
-                {{ currentStep.description | raw }}
-            </div>
+
+            {% set allParents = currentStep.getParents() %}
+
+                <div id="current-step-text" class="current-step-text path-tab">
+                    {{ currentStep.description | raw }}
+                </div>
+
+                {% for parent in allParents %}
+                    {% for resource in parent.step2ResourceNodes if resource.propagated == true %}
+                        {% set thisResourceIsExcluded = false %}
+                        {% for resourceCurrentStep in currentStep.step2ResourceNodes if resourceCurrentStep.excluded == true and resourceCurrentStep.resourceNode == resource.resourceNode %}
+                            {% set thisResourceIsExcluded = true %}
+                        {% endfor %}
+                        {% if thisResourceIsExcluded == false %}
+                            {{ macros.displayResourceFrame(resource, parent) }}
+                        {% endif %}
+                    {% endfor %}
+                {% endfor %}
+
+                {% for resource in currentStep.step2ResourceNodes if resource.excluded == false %}
+                    {{ macros.displayResourceframe(resource, currentStep) }}
+                {% endfor %}
+      
         {% endif %}
     </div>
 </div>
