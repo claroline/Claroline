@@ -5,7 +5,7 @@ namespace Claroline\CoreBundle\Library\Installation\Updater;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Administration\Tool;
 
-class Updater021300
+class Updater021400
 {
     private $container;
     private $logger;

@@ -105,16 +105,13 @@ class UsersController extends Controller
     /**
      * @EXT\Route("/new", name="claro_admin_user_creation_form")
      * @EXT\Method("GET")
-     * @EXT\ParamConverter("currentUser", options={"authenticatedUser" = true})
      * @EXT\Template
      *
      * Displays the user creation form.
      *
-     * @param User $currentUser
-     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function userCreationFormAction(User $currentUser)
+    public function userCreationFormAction()
     {
         $this->checkOpen();
         $role = $this->roleManager->getRoleByName('ROLE_USER');
