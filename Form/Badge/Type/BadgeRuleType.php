@@ -75,6 +75,7 @@ class BadgeRuleType extends AbstractType
                     'choices'            => $actionChoices
                 )
             )
+            ->add('isUserReceiver', 'checkbox')
             ->add('occurrence', 'integer', array('attr' => array('class' => 'input-sm')))
             ->add('result', 'text')
             ->add('resource', 'zenstruck_ajax_entity', array(
