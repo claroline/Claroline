@@ -186,7 +186,7 @@ class AdministrationToolListener
     public function onOpenPlatformAnalytics(OpenAdministrationToolEvent $event)
     {
         $params = array();
-        $params['_controller'] = 'ClarolineCoreBundle:Administration:analytics';
+        $params['_controller'] = 'ClarolineCoreBundle:Administration\Analytics:analytics';
         $subRequest = $this->request->duplicate(array(), null, $params);
         $response = $this->httpKernel->handle($subRequest, HttpKernelInterface::SUB_REQUEST);
         $event->setResponse($response);
