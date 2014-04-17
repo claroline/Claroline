@@ -29,6 +29,15 @@ class WorkspaceType extends AbstractType
                 'constraints' => array(new WorkspaceUniqueCode())
                 )
         );
+        if (isset($options['theme_options']['tinymce']) and !$options['theme_options']['tinymce']) {
+            $builder->add(
+                'description',
+                'textarea', 
+                array('required' => false)
+            );
+        } else {
+            $builder->add('description', 'tinymce', array('required' => false));
+        }
         $builder->add(
             'type',
             'choice',
