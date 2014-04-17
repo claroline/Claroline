@@ -25,7 +25,7 @@ $( document ).ready(function() {
 
 
 function resizeIframe(frame){
-    frame.animate({ height: frame.contents().find("#wrap").height() + 20}, 200, function() {});
+    frame.animate({ height: frame.contents().find("#wrap > .container").height() + 25}, 100, function() {});
 }
 
 function toggleActiveClass(btn){
