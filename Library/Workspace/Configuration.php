@@ -23,6 +23,7 @@ class Configuration
     private $workspaceType;
     private $workspaceName;
     private $workspaceCode;
+    private $workspaceDescription;
     private $displayable = false;
     private $selfRegistration = false;
     private $selfUnregistration = false;
@@ -109,6 +110,17 @@ class Configuration
     public function getWorkspaceCode()
     {
         return $this->workspaceCode;
+    }
+    
+    
+    public function setWorkspaceDescription($workspaceDescription)
+    {
+        $this->workspaceDescription = $workspaceDescription;
+    }
+
+    public function getWorkspaceDescription()
+    {
+        return $this->workspaceDescription;
     }
 
     public function getRoles()
