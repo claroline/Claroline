@@ -110,22 +110,4 @@ class AdministrationController extends Controller
     {
         return $this->redirect($this->generateUrl('claro_admin_parameters_index'));
     }
-
-    /**
-     * @EXT\Route("delete/logo/{file}", name="claro_admin_delete_logo")
-     *
-     * @param $file
-     *
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse
-     */
-    public function deleteLogoAction($file)
-    {
-        try {
-            $this->get('claroline.common.logo_service')->deleteLogo($file);
-
-            return new Response('true');
-        } catch (\Exeption $e) {
-            return new Response('false'); //useful in ajax
-        }
-    }
 }

@@ -36,6 +36,7 @@ use Claroline\CoreBundle\Manager\HwiManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Controller of the platform parameters section.
@@ -658,6 +659,24 @@ class ParametersController extends Controller
         $form = $this->formFactory->create(new AdminForm\FacebookType(), $platformConfig);
 
         return array('form' => $form->createView());
+    }
+
+    /**
+     * @EXT\Route("delete/logo/{file}", name="claro_admin_delete_logo", options = {"expose"=true})
+     *
+     * @param $file
+     *
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     */
+    public function deleteLogoAction($file)
+    {
+        try {
+            $this->get('claroline.common.logo_service')->deleteLogo($file);
+
+            return new Response('true');
+        } catch (\Exeption $e) {
+            return new Response('false'); //useful in ajax
+        }
     }
 
     /**
