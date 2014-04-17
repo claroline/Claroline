@@ -2,6 +2,7 @@
 
 namespace Icap\PortfolioBundle\Entity;
 
+use Claroline\CoreBundle\Entity\User;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -36,17 +37,17 @@ class Portfolio
     protected $id;
 
     /**
-     * @var string $name
+     * @var string
      *
      * @ORM\Column(type="string", length=128, nullable=false)
      * @Assert\Length(max = "128")
      */
-    protected $name;
+    protected $title;
 
     /**
-     * @var string $slug
+     * @var string
      *
-     * @Gedmo\Slug(fields={"name"}, updatable=false)
+     * @Gedmo\Slug(fields={"title"}, updatable=false)
      * @ORM\Column(type="string", length=128, unique=true, nullable=false)
      */
     protected $slug;
@@ -56,7 +57,7 @@ class Portfolio
      *
      * @ORM\Column(type="integer", name="visibility", nullable=false)
      */
-    protected $visibility = 0;
+    protected $visibility = self::VISIBILITY_NOBODY;
 
     /**
      * @var \Claroline\CoreBundle\Entity\User
@@ -113,13 +114,13 @@ class Portfolio
     }
 
     /**
-     * @param string $name
+     * @param string $title
      *
      * @return Portfolio
      */
-    public function setName($name)
+    public function setTitle($title)
     {
-        $this->name = $name;
+        $this->title = $title;
 
         return $this;
     }
@@ -127,9 +128,9 @@ class Portfolio
     /**
      * @return string
      */
-    public function getName()
+    public function getTitle()
     {
-        return $this->name;
+        return $this->title;
     }
 
     /**
@@ -252,5 +253,20 @@ class Portfolio
     public function getUser()
     {
         return $this->user;
+    }
+
+    public function visibleToUser(User $user)
+    {
+        $portfolioUsers = $this->getPortfolioUsers();
+        $isVisible      = false;
+
+        foreach ($portfolioUsers as $portfolioUser) {
+            if ($user === $portfolioUser->getUser()) {
+                $isVisible = true;
+                break;
+            }
+        }
+
+        return $isVisible;
     }
 }

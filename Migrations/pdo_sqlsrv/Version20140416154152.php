@@ -1,6 +1,6 @@
 <?php
 
-namespace Icap\PortfolioBundle\Migrations\sqlsrv;
+namespace Icap\PortfolioBundle\Migrations\pdo_sqlsrv;
 
 use Doctrine\DBAL\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
@@ -8,9 +8,9 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2014/04/14 04:48:36
+ * Generation date: 2014/04/16 03:41:55
  */
-class Version20140414164834 extends AbstractMigration
+class Version20140416154152 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
@@ -37,7 +37,7 @@ class Version20140414164834 extends AbstractMigration
             CREATE TABLE icap__portfolio (
                 id INT IDENTITY NOT NULL, 
                 user_id INT NOT NULL, 
-                name NVARCHAR(128) NOT NULL, 
+                title NVARCHAR(128) NOT NULL, 
                 slug NVARCHAR(128) NOT NULL, 
                 visibility INT NOT NULL, 
                 createdAt DATETIME2(6) NOT NULL, 

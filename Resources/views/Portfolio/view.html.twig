@@ -1,0 +1,36 @@
+{% extends 'ClarolineCoreBundle::layout.html.twig' %}
+
+{% block title %}{{ portfolio.user.firstName ~ ' ' ~ portfolio.user.lastName ~ ' - ' ~ 'portfolio' | trans({}, 'icap_portfolio') ~ ' - ' ~ portfolio.title | striptags | raw }}{% endblock %}
+
+{% block content_container %}
+    <div id="portfolio_section">
+        <ul id="configbar" class="list-unstyled">
+            <li class="configbar_item">
+                <span class="icon-plus"></span>
+                Contenu
+            </li>
+            <li class="configbar_item"><span class="icon-cogs"></span>
+                Paramètres
+            </li>
+        </ul>
+
+        <div id="portfolio_container">
+            <header>
+                <div class="container">
+                    <h1 id="username">{{ portfolio.user.firstName ~ ' ' ~ portfolio.user.lastName }}</h1>
+                    <h2 id="portfolio_title">{{ portfolio.title }}</h2>
+                </div>
+            </header>
+        </div>
+    </div>
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {% stylesheets debug=false filter='lessphp, cssmin'  output='bundles/icapportfolio/css/portfolio_view.css'
+      "@IcapPortfolioBundle/Resources/views/less/portfolio.less"
+      "@IcapPortfolioBundle/Resources/views/less/interface.less"
+    %}
+        <link rel="stylesheet" href="{{ asset_url }}" screen="media" />
+    {% endstylesheets %}
+{% endblock %}

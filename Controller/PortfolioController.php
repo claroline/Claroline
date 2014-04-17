@@ -9,6 +9,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use JMS\DiExtraBundle\Annotation\Inject;
+use Symfony\Component\HttpFoundation\Response;
 
 class PortfolioController extends Controller
 {
@@ -130,6 +131,45 @@ class PortfolioController extends Controller
             'form'      => $this->getPortfolioFormHandler()->getVisibilityForm($portfolio)->createView(),
             'portfolio' => $portfolio
         );
+    }
+
+    /**
+     * @Route("/{portfolioSlug}", name="icap_portfolio_view")
+     */
+    public function viewAction($portfolioSlug)
+    {
+        /** @var User|null $user */
+        $user = $this->getUser();
+
+        /** @var \Icap\PortfolioBundle\Entity\Portfolio $portfolio */
+        $portfolio = $this->getDoctrine()->getRepository('IcapPortfolioBundle:Portfolio')->findOneBySlug($portfolioSlug);
+
+        if (null === $portfolio) {
+            throw $this->createNotFoundException("Unknown portfolio.");
+        }
+
+        $response            = new Response($this->renderView('IcapPortfolioBundle:Portfolio:view.html.twig', array('portfolio' => $portfolio)));
+        $portfolioVisibility = $portfolio->getVisibility();
+
+        if ($user !== $portfolio->getUser()) {
+            if (
+                    Portfolio::VISIBILITY_NOBODY === $portfolioVisibility
+                    || (
+                            Portfolio::VISIBILITY_USER === $portfolioVisibility && null !== $user && !$portfolio->visibleToUser($user)
+                    )) {
+                $response = new Response($this->renderView('IcapPortfolioBundle:Portfolio:view.error.html.twig', array('errorCode' => 403, 'portfolioSlug' => $portfolioSlug)), 403);
+            }
+            else if (
+                    null === $user
+                    && (
+                            Portfolio::VISIBILITY_PLATFORM_USER === $portfolioVisibility
+                            || Portfolio::VISIBILITY_USER === $portfolioVisibility
+                    )) {
+                $response = new Response($this->renderView('IcapPortfolioBundle:Portfolio:view.error.html.twig', array('errorCode' => 401, 'portfolioSlug' => $portfolioSlug)), 401);
+            }
+        }
+
+        return $response;
     }
 }
  

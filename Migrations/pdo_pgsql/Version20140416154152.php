@@ -8,9 +8,9 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2014/04/14 04:48:36
+ * Generation date: 2014/04/16 03:41:54
  */
-class Version20140414164834 extends AbstractMigration
+class Version20140416154152 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
@@ -35,7 +35,7 @@ class Version20140414164834 extends AbstractMigration
             CREATE TABLE icap__portfolio (
                 id SERIAL NOT NULL, 
                 user_id INT NOT NULL, 
-                name VARCHAR(128) NOT NULL, 
+                title VARCHAR(128) NOT NULL, 
                 slug VARCHAR(128) NOT NULL, 
                 visibility INT NOT NULL, 
                 createdAt TIMESTAMP(0) WITHOUT TIME ZONE NOT NULL, 

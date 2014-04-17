@@ -26,7 +26,7 @@
             </colgroup>
             <thead>
                 <tr>
-                    <th>{{ 'name'|trans({}, 'icap_portfolio') }}</th>
+                    <th>{{ 'title'|trans({}, 'icap_portfolio') }}</th>
                     <th>{{ 'visibility'|trans({}, 'icap_portfolio') }}</th>
                     <th></th>
                 </tr>
@@ -35,8 +35,8 @@
                 {% for portfolio in pager %}
                     <tr class="portfolio">
                         <td>
-                            <a href="#" title="" class="block">{{ portfolio.name }}</a>
-                            <a href="#" title="" class="text-muted">http://www.localhost/claroline/portfolio/{{ portfolio.slug }}</a>
+                            <a href="{{ path('icap_portfolio_view', {'portfolioSlug': portfolio.slug}) }}" title="" class="block">{{ portfolio.title }}</a>
+                            <a href="{{ path('icap_portfolio_view', {'portfolioSlug': portfolio.slug}) }}" title="" class="text-muted">{{ path('icap_portfolio_view', {'portfolioSlug': portfolio.slug}) }}</a>
                         </td>
                         <td>
                             <span class="block">
@@ -49,7 +49,7 @@
                         </td>
                         <td>
                             <div class="btn-group">
-                                <a href="#" class="btn btn-xs btn-primary">{{ 'update'|trans({}, 'icap_portfolio') }}</a>
+                                <a href="{{ path('icap_portfolio_view', {'portfolioSlug': portfolio.slug}) }}" class="btn btn-xs btn-primary">{{ 'update'|trans({}, 'icap_portfolio') }}</a>
                                 <button type="button" class="btn btn-xs btn-primary dropdown-toggle" data-toggle="dropdown">
                                     <span class="caret"></span>
                                     <span class="sr-only">Toggle Dropdown</span>
@@ -69,7 +69,7 @@
                                     <li>
                                         <a href="{{ path('icap_portfolio_delete', {'id': portfolio.id}) }}" class="delete"
                                                  data-confirm-title="{{ 'portfolio_deletion_confirm_title'|trans({}, 'icap_portfolio') }}"
-                                                 data-confirm-message="{{ 'portfolio_deletion_confirm_message'|trans({'%portfolioName%': portfolio.name}, 'icap_portfolio') }}"
+                                                 data-confirm-message="{{ 'portfolio_deletion_confirm_message'|trans({'%portfolioName%': portfolio.title}, 'icap_portfolio') }}"
                                                  data-confirm-ok="{{ 'delete'|trans({}, 'platform') }}"
                                                  data-confirm-cancel="{{ 'cancel'|trans({}, 'platform') }}" data-toggle="tooltip"
                                                  data-container="body" title="{{ 'delete'|trans({}, 'platform') }}" data-placement="top"

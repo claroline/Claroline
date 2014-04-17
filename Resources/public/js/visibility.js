@@ -24,13 +24,15 @@
             var count = $('.form-collection-element', $container).length;
             var prototype = $container.data('prototype');
 
-            // set count
+            // set count, used as id in DOM
             prototype = prototype.replace(/__name__/g, count);
             // set label
             prototype = prototype.replace(/__value__/g, select2Field.select2('data').text);
 
             // create dom element
             var $newWidget = $(prototype.trim());
+            // set user id
+            $('input', $newWidget).val(select2Field.select2('data').id);
 
             $container.children('.form-collection').removeClass('hide').append($newWidget);
 
