@@ -754,16 +754,6 @@ class QuestionController extends Controller
                         ), $entity
                     );
 
-                    $typeQCM = array();
-                    $types = $this->getDoctrine()
-                                   ->getManager()
-                                   ->getRepository('UJMExoBundle:TypeQCM')
-                                   ->findAll();
-
-                    foreach ($types as $type) {
-                        $typeQCM[$type->getId()] = $type->getCode();
-                    }
-
                     $typeQCM = $this->getTypeQCM();
                     
                     return $this->container->get('templating')->renderResponse(
