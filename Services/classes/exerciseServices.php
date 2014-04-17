@@ -98,7 +98,7 @@ class exerciseServices
         $em = $this->doctrine->getManager();
         $interQCM = $em->getRepository('UJMExoBundle:InteractionQCM')->find($interactionQCMID);
 
-        if ($interQCM->getTypeQCM()->getId() == 2) {
+        if ($interQCM->getTypeQCM()->getCode() == 2) {
             $response[] = $request->request->get('choice');
         } else {
             if ($request->request->get('choice') != null) {

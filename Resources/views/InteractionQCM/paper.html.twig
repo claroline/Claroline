@@ -100,7 +100,7 @@
                 <table class="table-striped" cellspacing="5" cellpadding="2" border="0">
                      {% for choice in interactionToDisplayed.choices %}
                         <tr>
-                            {% if interactionToDisplayed.typeQCM.id == 2 %}
+                            {% if interactionToDisplayed.typeQCM.code == 2 %}
                             <td><p><INPUT type="radio" id="choice_{{ choice.id }}" name="choice" value="{{ choice.id }}"/></p></td>
                             {% else %}
                             <td><p><INPUT type="checkbox" id="choice_{{ choice.id }}" name="choice[]" value="{{ choice.id }}"/></p></td>

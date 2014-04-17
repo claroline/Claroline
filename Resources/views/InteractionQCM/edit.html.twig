@@ -154,7 +154,7 @@
     {# add form choice #}
     <script type="text/javascript">
         $(document).ready(function() {
-            creationQCMEdit('{{ 'expected answer' | trans }}', '{{ 'response' | trans }}', '{{ 'point' | trans }}', '{{ 'comment' | trans }}', '{{ 'Choice.positionForce' | trans }}', '{{ 'addChoice' | trans }}', '{{ 'delete' | trans }}', {{ nbResponses }});
+            creationQCMEdit('{{ 'expected answer' | trans }}', '{{ 'response' | trans }}', '{{ 'point' | trans }}', '{{ 'comment' | trans }}', '{{ 'Choice.positionForce' | trans }}', '{{ 'addChoice' | trans }}', '{{ 'delete' | trans }}', '{{ typeQCM|raw }}', {{ nbResponses }});
             newHintEdit('{{ 'hint' | trans }}', '{{ 'penalty' | trans }}', '{{ 'add hint' | trans }}', '{{ 'delete' | trans }}');
         });
     </script>

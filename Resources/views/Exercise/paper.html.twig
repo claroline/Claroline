@@ -94,7 +94,7 @@
                                 {% if regexTwig('/' ~ choice.id ~ ';/', response) > 0 %}
                                     {% set checked = "checked" %}
                                 {% endif %}
-                                {% if interactionToDisplayed.typeQCM.id == 2 %}
+                                {% if interactionToDisplayed.typeQCM.code == 2 %}
                                     <td><p><INPUT type="radio" name="choice" value="{{ choice.id }}" {{ checked }}/></p></td>
                                 {% else %}
                                     <td><p><INPUT type="checkbox" name="choice[]" value="{{ choice.id }}" {{ checked }}/></p></td>

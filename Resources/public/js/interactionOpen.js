@@ -1,11 +1,18 @@
-function insertStyle() {
+var typeOpen;
+
+function insertStyle(tOpen) {
+
+    typeOpen = JSON.parse(tOpen);
 
     $('#ujm_exobundle_interactionopentype_interaction').find('div').first().find('label').first().remove();
-    $('#ujm_exobundle_interactionopentype_typeopenquestion option[value="2"]').prop('selected', true);
-
-    $('#ujm_exobundle_interactionopentype_typeopenquestion option[value="1"]').attr('disabled', 'disabled');
-    $('#ujm_exobundle_interactionopentype_typeopenquestion option[value="3"]').attr('disabled', 'disabled');
-    $('#ujm_exobundle_interactionopentype_typeopenquestion option[value="4"]').attr('disabled', 'disabled');
+    
+     $('#ujm_exobundle_interactionopentype_typeopenquestion').children('option').each(function() {
+         if (typeOpen[$(this).val()] == 2) {
+             $(this).prop('selected', true);
+         } else {
+             $(this).attr('disabled', 'disabled');
+         }
+     });
 }
 
 function CheckForm() {

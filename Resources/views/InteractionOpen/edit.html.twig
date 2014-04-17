@@ -149,7 +149,7 @@
 
     <script type="text/javascript">
         $(document).ready(function() {
-            insertStyle();
+            insertStyle('{{ typeOpen|raw }}');
             newHintEdit('{{ 'hint' | trans }}', '{{ 'penalty' | trans }}', '{{ 'add hint' | trans }}', '{{ 'delete' | trans }}');
         });
     </script>

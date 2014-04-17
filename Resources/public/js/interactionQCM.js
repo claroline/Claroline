@@ -1,10 +1,14 @@
 var container = $('div#ujm_exobundle_interactionqcmtype_choices'); // Div which contain the dataprototype
 var tableChoices = $('#tableChoice'); // div which contain the choices array
 
+var typeQCM;
+
 // QCM Creation
-function creationQCM(expectedAnswer, response, point, comment, positionForce, addchoice, deleteChoice) {
+function creationQCM(expectedAnswer, response, point, comment, positionForce, addchoice, deleteChoice, tQCM) {
 
     var index; // number of choices
+    
+    typeQCM = JSON.parse(tQCM);
 
     tableChoicesCreation(expectedAnswer, response, point, comment, positionForce, addchoice, deleteChoice, 0);
 
@@ -62,9 +66,11 @@ function creationQCM(expectedAnswer, response, point, comment, positionForce, ad
 }
 
 // QCM Edition
-function creationQCMEdit(expectedAnswer, response, point, comment, positionForce, addchoice, deleteChoice, nbResponses) {
+function creationQCMEdit(expectedAnswer, response, point, comment, positionForce, addchoice, deleteChoice, tQCM, nbResponses) {
 
     var index = 0;
+    
+    typeQCM = JSON.parse(tQCM);
 
     tableChoicesCreation(expectedAnswer, response, point, comment, positionForce, addchoice, deleteChoice, nbResponses);
 
@@ -295,7 +301,7 @@ function whichChecked() {
     var type = $('#ujm_exobundle_interactionqcmtype_typeQCM option:selected').val();
 
     $("*[id$='_rightResponse']").each(function () {
-        if (type == 1) {
+        if (typeQCM[type] == 1) {
             $(this).prop('type', 'checkbox');
         } else {
             $(this).prop('type', 'radio');
@@ -343,7 +349,7 @@ function whichChange() {
         var type = $('#ujm_exobundle_interactionqcmtype_typeQCM option:selected').val();
 
         $("*[id$='_rightResponse']").each(function () {
-            if (type == 1) {
+            if (typeQCM[type] == 1) {
                 $(this).prop('type', 'checkbox');
             } else {
                 $(this).prop('type', 'radio');

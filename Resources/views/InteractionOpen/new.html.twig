@@ -102,12 +102,12 @@
 {# functions javascript #}
 {% if error is defined %}
     <script type="text/javascript">
-        insertStyle();
+        insertStyle('{{ typeOpen|raw }}');
         newHintEdit('{{ 'hint' | trans }}', '{{ 'penalty' | trans }}', '{{ 'add hint' | trans }}', '{{ 'delete' | trans }}');
     </script>
 {% else %}
     <script type="text/javascript">
-        insertStyle();
+        insertStyle('{{ typeOpen|raw }}');
         newHint('{{ 'hint' | trans }}', '{{ 'penalty' | trans }}', '{{ 'add hint' | trans }}', '{{ 'delete' | trans }}');
     </script>
 {% endif %}

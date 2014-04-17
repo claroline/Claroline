@@ -451,12 +451,15 @@ class QuestionController extends Controller
                         $editForm = $form;
                     }
                     $deleteForm = $this->createDeleteForm($interactionQCM[0]->getId());
+                    
+                    $typeQCM = $this->getTypeQCM();
 
                     $variables['entity']         = $interactionQCM[0];
                     $variables['edit_form']      = $editForm->createView();
                     $variables['delete_form']    = $deleteForm->createView();
                     $variables['nbResponses']    = $nbResponses;
                     $variables['linkedCategory'] = $linkedCategory;
+                    $variables['typeQCM'       ] = json_encode($typeQCM);
                     $variables['exoID']          = $exoID;
 
                     if ($exoID != -1) {
@@ -551,11 +554,14 @@ class QuestionController extends Controller
                         $variables['_resource'] = $exercise;
                     }
 
+                    $typeOpen = $this->getTypeOpen();
+                    
                     $variables['entity']         = $interactionOpen[0];
                     $variables['edit_form']      = $editForm->createView();
                     $variables['delete_form']    = $deleteForm->createView();
                     $variables['nbResponses']    = $nbResponses;
                     $variables['linkedCategory'] = $linkedCategory;
+                    $variables['typeOpen']       = json_encode($typeOpen);
                     $variables['exoID']          = $exoID;
 
                     if ($exoID != -1) {
@@ -748,11 +754,24 @@ class QuestionController extends Controller
                         ), $entity
                     );
 
+                    $typeQCM = array();
+                    $types = $this->getDoctrine()
+                                   ->getManager()
+                                   ->getRepository('UJMExoBundle:TypeQCM')
+                                   ->findAll();
+
+                    foreach ($types as $type) {
+                        $typeQCM[$type->getId()] = $type->getCode();
+                    }
+
+                    $typeQCM = $this->getTypeQCM();
+                    
                     return $this->container->get('templating')->renderResponse(
                         'UJMExoBundle:InteractionQCM:new.html.twig', array(
-                        'exoID'  => $exoID,
-                        'entity' => $entity,
-                        'form'   => $form->createView()
+                        'exoID'   => $exoID,
+                        'entity'  => $entity,
+                        'typeQCM' => json_encode($typeQCM),
+                        'form'    => $form->createView()
                         )
                     );
                 }
@@ -786,11 +805,14 @@ class QuestionController extends Controller
                         ), $entity
                     );
 
+                    $typeOpen = $this->getTypeOpen();
+
                     return $this->container->get('templating')->renderResponse(
                         'UJMExoBundle:InteractionOpen:new.html.twig', array(
-                        'exoID'  => $exoID,
-                        'entity' => $entity,
-                        'form'   => $form->createView()
+                        'exoID'    => $exoID,
+                        'entity'   => $entity,
+                        'typeOpen' => json_encode($typeOpen),
+                        'form'     => $form->createView()
                         )
                     );
                 }
@@ -1947,7 +1969,7 @@ class QuestionController extends Controller
 
         return $doublePagination;
     }
-    
+
     private function getActionInteraction($em, $interaction)
     {
         $response = $em->getRepository('UJMExoBundle:Response')
@@ -1994,5 +2016,35 @@ class QuestionController extends Controller
         $actionsS[2] = $questionWithResponse;
 
         return $actionsS;
+    }
+    
+    private function getTypeQCM()
+    {
+        $typeQCM = array();
+        $types = $this->getDoctrine()
+                      ->getManager()
+                      ->getRepository('UJMExoBundle:TypeQCM')
+                      ->findAll();
+
+        foreach ($types as $type) {
+            $typeQCM[$type->getId()] = $type->getCode();
+        }
+        
+        return $typeQCM;
+    }
+    
+    private function getTypeOpen()
+    {
+        $typeOpen = array();
+        $types = $this->getDoctrine()
+                      ->getManager()
+                      ->getRepository('UJMExoBundle:TypeOpenQuestion')
+                      ->findAll();
+
+        foreach ($types as $type) {
+            $typeOpen[$type->getId()] = $type->getCode();
+        }
+        
+        return $typeOpen;
     }
 }
