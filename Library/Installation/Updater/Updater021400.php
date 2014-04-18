@@ -39,9 +39,9 @@ class Updater021400
             array('roles_management', 'icon-group')
         );
 
-        $tools = $this->objectManager->getRepository('ClarolineCoreBundle:Administration\Tool')->findAll();
+        $existingTools = $this->objectManager->getRepository('ClarolineCoreBundle:Administration\Tool')->findAll();
 
-        if (count($tools) === 0) {
+        if (count($existingTools) === 0) {
             foreach ($tools as $tool) {
                 $entity = new Tool();
                 $entity ->setName($tool[0]);

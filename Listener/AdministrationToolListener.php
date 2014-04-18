@@ -39,10 +39,7 @@ class AdministrationToolListener
     {
         $params = array();
         $params['_controller'] = 'ClarolineCoreBundle:Administration\Users:index';
-        $subRequest = $this->request->duplicate(array(), null, $params);
-        $response = $this->httpKernel->handle($subRequest, HttpKernelInterface::SUB_REQUEST);
-        $event->setResponse($response);
-        $event->stopPropagation();
+        $this->redirect($params, $event);
     }
 
     /**
@@ -54,10 +51,7 @@ class AdministrationToolListener
     {
         $params = array();
         $params['_controller'] = 'ClarolineCoreBundle:Administration\Parameters:index';
-        $subRequest = $this->request->duplicate(array(), null, $params);
-        $response = $this->httpKernel->handle($subRequest, HttpKernelInterface::SUB_REQUEST);
-        $event->setResponse($response);
-        $event->stopPropagation();
+        $this->redirect($params, $event);
     }
 
     /**
@@ -74,10 +68,7 @@ class AdministrationToolListener
         $params['max'] = 50;
         $params['direction'] = 'ASC';
         $params['order'] = 'id';
-        $subRequest = $this->request->duplicate(array(), null, $params);
-        $response = $this->httpKernel->handle($subRequest, HttpKernelInterface::SUB_REQUEST);
-        $event->setResponse($response);
-        $event->stopPropagation();
+        $this->redirect($params, $event);
     }
 
     /**
@@ -91,10 +82,7 @@ class AdministrationToolListener
         $params['badgePage'] = 1;
         $params['claimPage'] = 1;
         $params['_controller'] = 'ClarolineCoreBundle:Administration/Badge:list';
-        $subRequest = $this->request->duplicate(array(), null, $params);
-        $response = $this->httpKernel->handle($subRequest, HttpKernelInterface::SUB_REQUEST);
-        $event->setResponse($response);
-        $event->stopPropagation();
+        $this->redirect($params, $event);
     }
 
     /**
@@ -107,10 +95,7 @@ class AdministrationToolListener
         $params = array();
         $params['_controller'] = 'ClarolineCoreBundle:Administration\WorkspaceRegistration:registrationManagement';
         $params['search'] = '';
-        $subRequest = $this->request->duplicate(array(), null, $params);
-        $response = $this->httpKernel->handle($subRequest, HttpKernelInterface::SUB_REQUEST);
-        $event->setResponse($response);
-        $event->stopPropagation();
+        $this->redirect($params, $event);
     }
 
     /**
@@ -122,10 +107,7 @@ class AdministrationToolListener
     {
         $params = array();
         $params['_controller'] = 'ClarolineCoreBundle:Administration\Plugins:pluginList';
-        $subRequest = $this->request->duplicate(array(), null, $params);
-        $response = $this->httpKernel->handle($subRequest, HttpKernelInterface::SUB_REQUEST);
-        $event->setResponse($response);
-        $event->stopPropagation();
+        $this->redirect($params, $event);
     }
 
 
@@ -138,10 +120,7 @@ class AdministrationToolListener
     {
         $params = array();
         $params['_controller'] = 'ClarolineCoreBundle:Administration\HomeTab:adminHomeTabsConfigMenu';
-        $subRequest = $this->request->duplicate(array(), null, $params);
-        $response = $this->httpKernel->handle($subRequest, HttpKernelInterface::SUB_REQUEST);
-        $event->setResponse($response);
-        $event->stopPropagation();
+        $this->redirect($params, $event);
     }
 
 
@@ -154,10 +133,7 @@ class AdministrationToolListener
     {
         $params = array();
         $params['_controller'] = 'ClarolineCoreBundle:Administration\Tools:showTool';
-        $subRequest = $this->request->duplicate(array(), null, $params);
-        $response = $this->httpKernel->handle($subRequest, HttpKernelInterface::SUB_REQUEST);
-        $event->setResponse($response);
-        $event->stopPropagation();
+        $this->redirect($params, $event);
     }
 
 
@@ -171,10 +147,7 @@ class AdministrationToolListener
         $params = array();
         $params['_controller'] = 'ClarolineCoreBundle:Administration\Logs:logList';
         $params['page'] = 1;
-        $subRequest = $this->request->duplicate(array(), null, $params);
-        $response = $this->httpKernel->handle($subRequest, HttpKernelInterface::SUB_REQUEST);
-        $event->setResponse($response);
-        $event->stopPropagation();
+        $this->redirect($params, $event);
     }
 
 
@@ -187,10 +160,7 @@ class AdministrationToolListener
     {
         $params = array();
         $params['_controller'] = 'ClarolineCoreBundle:Administration\Analytics:analytics';
-        $subRequest = $this->request->duplicate(array(), null, $params);
-        $response = $this->httpKernel->handle($subRequest, HttpKernelInterface::SUB_REQUEST);
-        $event->setResponse($response);
-        $event->stopPropagation();
+        $this->redirect($params, $event);
     }
 
     /**
@@ -202,6 +172,11 @@ class AdministrationToolListener
     {
         $params = array();
         $params['_controller'] = 'ClarolineCoreBundle:Administration\Roles:index';
+        $this->redirect($params, $event);
+    }
+
+    private function redirect($params, $event)
+    {
         $subRequest = $this->request->duplicate(array(), null, $params);
         $response = $this->httpKernel->handle($subRequest, HttpKernelInterface::SUB_REQUEST);
         $event->setResponse($response);

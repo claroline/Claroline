@@ -274,11 +274,6 @@ claro_admin_workspace_registration:
     resource: "@ClarolineCoreBundle/Controller/Administration/WorkspaceRegistrationController.php"
     type: annotation
 
-claro_admin_tools:
-    resource: "@ClarolineCoreBundle/Controller/AdministrationToolController.php"
-    prefix: admin/tool
-    type: annotation
-
 claro_admin_plugins:
     resource: "@ClarolineCoreBundle/Controller/Administration/PluginsController.php"
     prefix: admin/plugins
