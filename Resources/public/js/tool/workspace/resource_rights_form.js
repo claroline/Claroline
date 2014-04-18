@@ -45,6 +45,9 @@
             case 'platform':
                 simpleRights.platform(element);
                 break;
+            case 'recursive-option':
+                simpleRights.recursive(element)
+                break;
         }
     });
 
