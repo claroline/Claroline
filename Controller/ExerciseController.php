@@ -220,7 +220,10 @@ class ExerciseController extends Controller
             $exoAdmin = $this->container->get('ujm.exercise_services')
                                         ->isExerciseAdmin($exercise);
 
-            if ($exoAdmin == 1) {
+            if ( ($exoAdmin == 1) && ($exercise->getPublished() == FALSE)) {
+                
+                $this->deletePapers($exercise->getId(), $em);
+                
                 $exercise->setPublished(TRUE);
                 $em->persist($exercise);
                 $em->flush();
@@ -273,8 +276,9 @@ class ExerciseController extends Controller
     public function deleteAllPapersAction($id)
     {
         $em = $this->getDoctrine()->getManager();
-            $exercise = $em->getRepository('UJMExoBundle:Exercise')
-                           ->find($id);
+            
+        $exercise = $em->getRepository('UJMExoBundle:Exercise')
+                       ->find($id);
 
         $this->checkAccess($exercise);
 
@@ -282,31 +286,7 @@ class ExerciseController extends Controller
                                     ->isExerciseAdmin($exercise);
 
         if ( ($exoAdmin == 1) && ($exercise->getPublished() == FALSE) ) {
-
-            $papers = $em->getRepository('UJMExoBundle:Paper')
-                         ->findBy(array('exercise' => $id));
-
-            foreach ($papers as $paper) {
-                $lhps = $em->getRepository('UJMExoBundle:LinkHintPaper')
-                           ->findBy(array('paper' => $paper->getId()));
-
-                foreach ($lhps as $lph) {
-                    $em->remove($lph);
-                }
-
-                $responses = $em->getRepository('UJMExoBundle:Response')
-                                ->findBy(array('paper' => $paper->getId()));
-
-                foreach ($responses as $response) {
-                    $em->remove($response);
-                }
-
-                $em->remove($paper);
-
-                $em->flush();
-
-            }
-
+            $this->deletePapers($id, $em);
         }
 
         return $this->forward('UJMExoBundle:Paper:index',
@@ -1520,5 +1500,32 @@ class ExerciseController extends Controller
         $pagination[1] = $pager;
 
         return $pagination;
+    }
+    
+    private function deletePapers($id, $em) {
+        
+        $papers = $em->getRepository('UJMExoBundle:Paper')
+                     ->findBy(array('exercise' => $id));
+
+        foreach ($papers as $paper) {
+            $lhps = $em->getRepository('UJMExoBundle:LinkHintPaper')
+                       ->findBy(array('paper' => $paper->getId()));
+
+            foreach ($lhps as $lph) {
+                $em->remove($lph);
+            }
+
+            $responses = $em->getRepository('UJMExoBundle:Response')
+                            ->findBy(array('paper' => $paper->getId()));
+
+            foreach ($responses as $response) {
+                $em->remove($response);
+            }
+
+            $em->remove($paper);
+
+            $em->flush();
+
+        }
     }
 }
