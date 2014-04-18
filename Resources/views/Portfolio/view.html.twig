@@ -17,7 +17,7 @@
         {% endif %}
 
 
-        <div data-ng-show="portfolio.$resolved" id="portfolio_container">
+        <div id="portfolio_container">
             <header>
                 <div class="container">
                     <h1 id="username">{{ portfolio.user.firstName ~ ' ' ~ portfolio.user.lastName }}</h1>
@@ -36,7 +36,7 @@
             </section>
         </div>
 
-        <div data-ng-show="!portfolio.$resolved" id="portfolio_loading" class="container"></div>
+        <div data-ng-show="!portfolio.$resolved" id="portfolio_loading"></div>
     </div>
 {% endblock %}
 
