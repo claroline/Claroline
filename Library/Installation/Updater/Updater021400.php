@@ -39,11 +39,15 @@ class Updater021400
             array('roles_management', 'icon-group')
         );
 
-        foreach ($tools as $tool) {
-            $entity = new Tool();
-            $entity ->setName($tool[0]);
-            $entity ->setClass($tool[1]);
-            $this->objectManager->persist($entity);
+        $tools = $this->objectManager->getRepository('ClarolineCoreBundle:Administration\Tool')->findAll();
+
+        if (count($tools) === 0) {
+            foreach ($tools as $tool) {
+                $entity = new Tool();
+                $entity ->setName($tool[0]);
+                $entity ->setClass($tool[1]);
+                $this->objectManager->persist($entity);
+            }
         }
 
         $this->objectManager->flush();
