@@ -67,7 +67,7 @@ class RolesController extends Controller
      */
     public function indexAction()
     {
-//        $this->checkOpen();
+        $this->checkOpen();
 
         return array();
     }
@@ -150,7 +150,7 @@ class RolesController extends Controller
     /**
      * @EXT\Route("/create/platform_role", name="create_platform_role")
      * @EXT\Method("POST")
-     * @EXT\Template()
+     * @EXT\Template("ClarolineCoreBundle:Administration/Roles:createPlatformRoleForm.html.twig")
      *
      * @return array
      */
@@ -164,9 +164,11 @@ class RolesController extends Controller
         if ($form->isValid()) {
             $translationKey = $form->get('translationKey')->getData();
             $this->roleManager->createPlatformRoleAction($translationKey);
+
+            return $this->redirect($this->generateUrl('claro_admin_roles_index'));
         }
 
-        return new Response('sussess');
+        return array('form' => $form->createView());
     }
 
     private function checkOpen()
