@@ -40,8 +40,12 @@ class RoleNameValidator extends ConstraintValidator
 
     public function validate($value, Constraint $constraint)
     {
-        $roleRepo = $this->em->getRepository('ClarolineCoreBundle:Role');
-        $roles = $roleRepo->findByName('ROLE_'.$value);
+        $roles = array();
+
+        if ($constraint->wsGuid === null) {
+            $roleRepo = $this->em->getRepository('ClarolineCoreBundle:Role');
+            $roles = $roleRepo->findByName('ROLE_'.$value);
+        }
 
         if (trim($value) === '') {
             $this->context->addViolation($this->trans->trans('name_required', array(), 'validators'));

@@ -18,12 +18,19 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 class RoleTranslationType extends AbstractType
 {
+    private $wsGuid;
+
+    public function __construct($wsGuid = null)
+    {
+        $this->wsGuid = $wsGuid;
+    }
+
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add(
             'translationKey',
             'text',
-            array('required' => true, 'constraints' => new RoleName())
+            array('required' => true, 'constraints' => new RoleName(array('wsGuid' => $this->wsGuid)))
         );
     }
 

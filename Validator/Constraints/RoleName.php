@@ -19,6 +19,7 @@ use Symfony\Component\Validator\Constraint;
 class RoleName extends Constraint
 {
     public $message = 'role_already_exists';
+    public $wsGuid;
 
     public function validatedBy()
     {
