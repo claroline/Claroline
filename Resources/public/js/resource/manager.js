@@ -439,7 +439,7 @@
                     this.$(event.currentTarget).datepicker('hide');
                 },
                 'keydown input.datepicker': function (event) {
-                    event.preventDefault();s
+                    event.preventDefault();
                     this.$(event.currentTarget).datepicker('hide');
                 }
             },
