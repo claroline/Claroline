@@ -12,7 +12,8 @@
     ],
     "require": {
         "php": ">=5.4.1",
-        "claroline/core-bundle": ">=2.12,<3.0"
+        "claroline/core-bundle": ">=2.12,<3.0",
+        "innova/angular-ui-translation-bundle": "2.0.0"
         
     },
     "autoload": {

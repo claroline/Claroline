@@ -46,9 +46,30 @@ body {
                 text-transform: uppercase;
                 padding-bottom: 0;
             }
-            #portfolio_title {
-                margin-top: 0;
+            .portfolio_title_container {
+                position: relative;
+                float:    left;
+                #portfolio_title {
+                    margin-top: 0;
+                }
+                .portfolio_title_actions {
+                    position: absolute;
+                    top:      0;
+                    right:    -50px;
+                    .portfolio_title_edit_action {
+                        background-color: #f89406;
+                        &:hover {
+                            color:        #fff;
+                            border-color: #fff;
+                        }
+                    }
+                }
             }
         }
     }
+}
+#portfolio_loading {
+    width:      100%;
+    height:     100%;
+    background: url("../../clarolinecore/images/loading.gif") no-repeat center center;
 }

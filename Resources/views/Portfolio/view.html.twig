@@ -3,25 +3,40 @@
 {% block title %}{{ portfolio.user.firstName ~ ' ' ~ portfolio.user.lastName ~ ' - ' ~ 'portfolio' | trans({}, 'icap_portfolio') ~ ' - ' ~ portfolio.title | striptags | raw }}{% endblock %}
 
 {% block content_container %}
-    <div id="portfolio_section">
-        <ul id="configbar" class="list-unstyled">
-            <li class="configbar_item">
-                <span class="icon-plus"></span>
-                Contenu
-            </li>
-            <li class="configbar_item"><span class="icon-cogs"></span>
-                Paramètres
-            </li>
-        </ul>
+    <div id="portfolio_section" data-ng-controller="PortfolioController">
+        {% if editMode %}
+            <ul id="configbar" class="list-unstyled">
+                <li class="configbar_item">
+                    <span class="icon-plus"></span>
+                    Contenu
+                </li>
+                <li class="configbar_item"><span class="icon-cogs"></span>
+                    Paramètres
+                </li>
+            </ul>
+        {% endif %}
 
-        <div id="portfolio_container">
+
+        <div data-ng-show="portfolio.$resolved" id="portfolio_container">
             <header>
                 <div class="container">
                     <h1 id="username">{{ portfolio.user.firstName ~ ' ' ~ portfolio.user.lastName }}</h1>
-                    <h2 id="portfolio_title">{{ portfolio.title }}</h2>
+                    <div class="portfolio_title_container">
+                        <div class="portfolio_title_actions">
+                            <button class="portfolio_title_edit_action btn" data-ng-click="editTitle(widget);"><span class="icon-pencil"></span></button>
+                        </div>
+                        <div data-ng-bind-html="portfolio.title.view | trustAsHtml">
+                        </div>
+                    </div>
                 </div>
             </header>
+
+            <section class="container">
+                Content container.
+            </section>
         </div>
+
+        <div data-ng-show="!portfolio.$resolved" id="portfolio_loading" class="container"></div>
     </div>
 {% endblock %}
 
@@ -33,4 +48,25 @@
     %}
         <link rel="stylesheet" href="{{ asset_url }}" screen="media" />
     {% endstylesheets %}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+
+    {% if editMode %}
+        {# Angular #}
+        {% javascripts debug=true filter='jsmin' output='js/portfolio/angular.js'
+            '@IcapPortfolioBundle/Resources/public/js/angularjs/angular.min.js'
+            '@IcapPortfolioBundle/Resources/public/js/angularjs/angular-animate.min.js'
+            '@IcapPortfolioBundle/Resources/public/js/angularjs/angular-resource.min.js'
+            '@IcapPortfolioBundle/Resources/public/js/angularjs/angular-sanitize.min.js'
+        %}
+            <script type="text/javascript" src="{{ asset_url }}"></script>
+        {% endjavascripts %}
+
+        <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/app.js') }}"></script>
+        <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/services/portfolioService.js') }}"></script>
+        <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/controllers/portfolioController.js') }}"></script>
+        <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/filters/trustAsHtml.js') }}"></script>
+    {% endif %}
 {% endblock %}

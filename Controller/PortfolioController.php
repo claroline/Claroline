@@ -139,16 +139,19 @@ class PortfolioController extends Controller
     public function viewAction($portfolioSlug)
     {
         /** @var User|null $user */
-        $user = $this->getUser();
-
+        $user      = $this->getUser();
         /** @var \Icap\PortfolioBundle\Entity\Portfolio $portfolio */
         $portfolio = $this->getDoctrine()->getRepository('IcapPortfolioBundle:Portfolio')->findOneBySlug($portfolioSlug);
+        $editMode  = false;
 
         if (null === $portfolio) {
             throw $this->createNotFoundException("Unknown portfolio.");
         }
+        if ($user === $portfolio->getUser()) {
+            $editMode = true;
+        }
 
-        $response            = new Response($this->renderView('IcapPortfolioBundle:Portfolio:view.html.twig', array('portfolio' => $portfolio)));
+        $response            = new Response($this->renderView('IcapPortfolioBundle:Portfolio:view.html.twig', array('portfolio' => $portfolio, 'editMode' => $editMode)));
         $portfolioVisibility = $portfolio->getVisibility();
 
         if ($user !== $portfolio->getUser()) {
