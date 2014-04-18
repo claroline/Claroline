@@ -14,7 +14,7 @@ namespace Claroline\CoreBundle\Event;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\EventDispatcher\Event;
 
-class OpenAdministrationToolEvent extends Event implements DataConveyorEventInterface
+class OpenAdministrationToolEvent extends Event implements DataConveyorEventInterface, MandatoryEventInterface
 {
     private $response;
     protected $isPopulated = false;
