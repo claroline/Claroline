@@ -439,7 +439,7 @@
                     this.$(event.currentTarget).datepicker('hide');
                 },
                 'keydown input.datepicker': function (event) {
-                    event.preventDefault();
+                    event.preventDefault();s
                     this.$(event.currentTarget).datepicker('hide');
                 }
             },
@@ -624,6 +624,9 @@
                             break;
                         case 'platform':
                             simpleRights.platform(element);
+                            break;
+                        case 'recursive-option':
+                            simpleRights.recursive(element)
                             break;
                     }
                 },
