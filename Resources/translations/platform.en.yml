@@ -741,12 +741,14 @@ workspace_delete_success_message: 'Workspace "%workspaceName%" has been deleted.
 workspace_edit_form_code: Code
 workspace_edit_form_displayable: Displayable
 workspace_edit_form_name: Name
+workspace_edit_form_description: Description
 workspace_edit_form_selfRegistration: 'Public registration'
 workspace_edit_form_selfUnregistration: 'Public unregistration'
 workspace_form_code: Code
 workspace_edit_form_creationDate: 'Creation date'
 workspace_form_displayable: Public
 workspace_form_name: Name
+workspace_form_description: Description
 workspace_form_selfRegistration: 'Public registration'
 workspace_form_selfUnregistration: 'Public unregistration'
 workspace_form_template: Template

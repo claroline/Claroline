@@ -65,8 +65,9 @@
 
     {% block logged %}
         {% import _self as topbar %}
+        {% set username = app.user.firstName ~ ' ' ~ app.user.lastName %}
         {% set user = username | length > 16 ? username | slice(0, 16) ~ '...' : username %}
-        {{ topbar.item({'name':username, 'icon':'user', 'route':'/profile', 'dropdown':block('dropdownLogged')}) }}
+        {{ topbar.item({'name':user, 'icon':'user', 'route':'/profile', 'dropdown':block('dropdownLogged')}) }}
     {% endblock logged %}
 
     {% block dropdownWorkspace %}

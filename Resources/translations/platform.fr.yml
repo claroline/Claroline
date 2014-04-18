@@ -679,7 +679,7 @@ unauthorized: 'Vous n''êtes pas autorisé à consulter cette page.'
 under_min_length: 'Cette valeur est trop courte'
 'unique connections': 'Nb Cnx. uniques'
 unregister: Désinscription
-unregister_from_a_workspace: 'Me désinscrire d''un espace'
+unregister_from_a_workspace: 'Me désinscrire d''un espace d''activités'
 unregistered: 'Non inscrit'
 unregistered_groups: 'Groupes non enregistrés'
 unregistered_users: 'Utilisateurs non enregistrés'
@@ -743,11 +743,13 @@ workspace_edit_form_code: Code
 workspace_edit_form_creationDate : 'Date de création'
 workspace_edit_form_displayable: Visible
 workspace_edit_form_name: Nom
+workspace_edit_form_description: Description
 workspace_edit_form_selfRegistration: 'Inscription publique'
 workspace_edit_form_selfUnregistration: 'Désinscription publique'
 workspace_form_code: Code
 workspace_form_displayable: Public
 workspace_form_name: Nom
+workspace_form_description: Description
 workspace_form_selfRegistration: 'Inscription publique'
 workspace_form_selfUnregistration: 'Désinscription publique'
 workspace_form_template: Modèle

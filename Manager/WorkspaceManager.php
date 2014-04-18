@@ -167,6 +167,7 @@ class WorkspaceManager
         $workspace->setCreator($manager);
         $workspace->setName($config->getWorkspaceName());
         $workspace->setCode($config->getWorkspaceCode());
+        $workspace->setDescription($config->getWorkspaceDescription());
         $workspace->setGuid($this->ut->generateGuid());
         $workspace->setDisplayable($config->isDisplayable());
         $workspace->setSelfRegistration($config->getSelfRegistration());
