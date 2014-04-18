@@ -24,7 +24,7 @@ use Claroline\CoreBundle\Entity\Resource\ResourceType;
 use Claroline\CoreBundle\Entity\Resource\ResourceIcon;
 use Claroline\CoreBundle\Entity\Resource\MenuAction;
 use Claroline\CoreBundle\Entity\Tool\Tool;
-use Claroline\CoreBundle\Entity\Administration\Tool as AdminTool;
+use Claroline\CoreBundle\Entity\Tool\AdminTool;
 use Claroline\CoreBundle\Entity\Widget\Widget;
 use Symfony\Component\Filesystem\Filesystem;
 use JMS\DiExtraBundle\Annotation as DI;

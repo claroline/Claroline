@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Claroline\CoreBundle\Entity\Administration;
+namespace Claroline\CoreBundle\Entity\Tool;
 
 use Doctrine\ORM\Mapping as ORM;
 use Claroline\CoreBundle\Entity\Role;
@@ -18,7 +18,7 @@ use Claroline\CoreBundle\Entity\Role;
  * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\AdministrationToolRepository")
  * @ORM\Table(name="claro_admin_tools")
  */
-class Tool
+class AdminTool
 {
     /**
      * @ORM\Id

@@ -3,7 +3,7 @@
 namespace Claroline\CoreBundle\Library\Installation\Updater;
 
 use Claroline\CoreBundle\Persistence\ObjectManager;
-use Claroline\CoreBundle\Entity\Administration\Tool;
+use Claroline\CoreBundle\Entity\Tool\AdminTool;
 
 class Updater021400
 {
@@ -39,13 +39,13 @@ class Updater021400
             array('roles_management', 'icon-group')
         );
 
-        $existingTools = $this->objectManager->getRepository('ClarolineCoreBundle:Administration\Tool')->findAll();
+        $existingTools = $this->objectManager->getRepository('ClarolineCoreBundle:Tool\AdminTool')->findAll();
 
         if (count($existingTools) === 0) {
             foreach ($tools as $tool) {
-                $entity = new Tool();
-                $entity ->setName($tool[0]);
-                $entity ->setClass($tool[1]);
+                $entity = new AdminTool();
+                $entity->setName($tool[0]);
+                $entity->setClass($tool[1]);
                 $this->objectManager->persist($entity);
             }
         }

@@ -29,10 +29,10 @@ class AdministrationToolRepository extends EntityRepository
         }
 
         if ($isAdmin) {
-            $dql = "SELECT tool FROM Claroline\CoreBundle\Entity\Administration\Tool tool";
+            $dql = "SELECT tool FROM Claroline\CoreBundle\Entity\Tool\AdminTool tool";
         } else {
             $dql = "
-                SELECT tool FROM Claroline\CoreBundle\Entity\Administration\Tool tool
+                SELECT tool FROM Claroline\CoreBundle\Entity\Tool\AdminTool tool
                 JOIN tool.roles role
                 WHERE role.name IN (:roleNames)
             ";

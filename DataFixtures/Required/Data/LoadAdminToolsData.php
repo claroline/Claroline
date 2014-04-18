@@ -12,7 +12,7 @@
 namespace Claroline\CoreBundle\DataFixtures\Required\Data;
 
 use Claroline\CoreBundle\Persistence\ObjectManager;
-use Claroline\CoreBundle\Entity\Administration\Tool;
+use Claroline\CoreBundle\Entity\Tool\AdminTool;
 use Claroline\CoreBundle\DataFixtures\Required\RequiredFixture;
 
 class LoadAdminTools implements RequiredFixture
@@ -34,7 +34,7 @@ class LoadAdminTools implements RequiredFixture
         );
 
         foreach ($tools as $tool) {
-            $entity = new Tool();
+            $entity = new AdminTool();
             $entity ->setName($tool[0]);
             $entity ->setClass($tool[1]);
             $manager->persist($entity);

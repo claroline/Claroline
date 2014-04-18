@@ -17,7 +17,7 @@ use JMS\SecurityExtraBundle\Annotation as SEC;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Manager\ToolManager;
-use Claroline\CoreBundle\Entity\Administration\Tool;
+use Claroline\CoreBundle\Entity\Tool\AdminTool;
 use Claroline\CoreBundle\Entity\Role;
 use Symfony\Component\HttpFoundation\Response;
 use Claroline\CoreBundle\Form\Factory\FormFactory;
@@ -101,7 +101,7 @@ class RolesController extends Controller
      *
      * @return \Claroline\CoreBundle\Controller\Administration\Response
      */
-    public function addRoleToToolAction(Tool $tool, Role $role)
+    public function addRoleToToolAction(AdminTool $tool, Role $role)
     {
         $this->checkOpen();
 
@@ -122,7 +122,7 @@ class RolesController extends Controller
      *
      * @return \Claroline\CoreBundle\Controller\Administration\Response
      */
-    public function removeRoleFromToolAction(Tool $tool, Role $role)
+    public function removeRoleFromToolAction(AdminTool $tool, Role $role)
     {
         $this->checkOpen();
 

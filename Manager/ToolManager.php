@@ -16,7 +16,7 @@ use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Tool\Tool;
 use Claroline\CoreBundle\Entity\Tool\OrderedTool;
-use Claroline\CoreBundle\Entity\Administration\Tool as AdminTool;
+use Claroline\CoreBundle\Entity\Tool\AdminTool;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Repository\OrderedToolRepository;
 use Claroline\CoreBundle\Repository\ToolRepository;
@@ -75,7 +75,7 @@ class ToolManager
         $this->orderedToolRepo = $om->getRepository('ClarolineCoreBundle:Tool\OrderedTool');
         $this->toolRepo = $om->getRepository('ClarolineCoreBundle:Tool\Tool');
         $this->roleRepo = $om->getRepository('ClarolineCoreBundle:Role');
-        $this->adminToolRepo = $om->getRepository('ClarolineCoreBundle:Administration\Tool');
+        $this->adminToolRepo = $om->getRepository('ClarolineCoreBundle:Tool\AdminTool');
         $this->ed = $ed;
         $this->utilities = $utilities;
         $this->translator = $translator;
@@ -601,12 +601,12 @@ class ToolManager
 
     public function getAdminToolByName($name)
     {
-        return $this->om->getRepository('Claroline\CoreBundle\Entity\Administration\Tool')
+        return $this->om->getRepository('Claroline\CoreBundle\Entity\Tool\AdminTool')
             ->findOneByName($name);
     }
 
     public function getAdminToolsByRoles(array $roles)
     {
-        return $this->om->getRepository('Claroline\CoreBundle\Entity\Administration\Tool')->findByRoles($roles);
+        return $this->om->getRepository('Claroline\CoreBundle\Entity\Tool\AdminTool')->findByRoles($roles);
     }
 }

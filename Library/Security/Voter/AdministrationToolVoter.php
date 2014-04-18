@@ -14,7 +14,7 @@ namespace Claroline\CoreBundle\Library\Security\Voter;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 use JMS\DiExtraBundle\Annotation as DI;
-use Claroline\CoreBundle\Entity\Administration\Tool;
+use Claroline\CoreBundle\Entity\Tool\AdminTool;
 use Doctrine\ORM\EntityManager;
 
 /**
@@ -33,7 +33,7 @@ class AdministrationToolVoter implements VoterInterface
 
     public function vote(TokenInterface $token, $object, array $attributes)
     {
-        if ($object instanceof \Claroline\CoreBundle\Entity\Administration\Tool) {
+        if ($object instanceof \Claroline\CoreBundle\Entity\Tool\AdminTool) {
             $roles = $object->getRoles();
             $tokenRoles = $token->getRoles();
 
