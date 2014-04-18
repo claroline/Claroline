@@ -95,11 +95,11 @@ class WSRestController extends Controller
                 $document->setUser($this->container->get('security.context')->getToken()->getUser());
 
                 if ($redirection == 1 || ($redirection == 0 && (
-                        $document->getType() == '.png' ||
-                        $document->getType() == '.jpeg' ||
-                        $document->getType() == '.jpg' ||
-                        $document->getType() == '.gif' ||
-                        $document->getType() == '.bmp'))
+                        strtolower($document->getType()) == '.png' ||
+                        strtolower($document->getType()) == '.jpeg' ||
+                        strtolower($document->getType()) == '.jpg' ||
+                        strtolower($document->getType()) == '.gif' ||
+                        strtolower($document->getType()) == '.bmp'))
                 ) {
 
                     $em->persist($document);
