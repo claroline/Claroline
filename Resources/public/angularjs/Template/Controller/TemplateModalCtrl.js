@@ -62,7 +62,7 @@ function TemplateModalCtrl($scope, $http, $modalInstance, StepFactory, TemplateF
         var data = '';
         data += 'innova_path_template[name]=' + formTemplate.name;
         data += '&innova_path_template[description]=' + formTemplate.description;
-        data += '&innova_path_template[structure]=' + angular.toJson(formTemplate.structure);
+        data += '&innova_path_template[structure]=' + encodeURIComponent(angular.toJson(formTemplate.structure));
         
         
         if (editTemplate) {

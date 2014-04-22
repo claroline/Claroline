@@ -93,11 +93,13 @@ class EditorController
 
     /**
      * Class constructor
-     * @param \Doctrine\Common\Persistence\ObjectManager                $objectManager
-     * @param \Symfony\Component\Routing\RouterInterface                $router
-     * @param \Symfony\Component\Form\FormFactoryInterface              $formFactory
-     * @param \Innova\PathBundle\Form\Handler\PathHandler               $pathHandler
-     * @param \Claroline\CoreBundle\Manager\ResourceManager             $resourceManager
+     * @param \Doctrine\Common\Persistence\ObjectManager $objectManager
+     * @param \Symfony\Component\Routing\RouterInterface $router
+     * @param \Symfony\Component\Form\FormFactoryInterface $formFactory
+     * @param \Symfony\Component\HttpFoundation\Session\SessionInterface $session
+     * @param \Symfony\Component\Translation\TranslatorInterface $translator
+     * @param \Innova\PathBundle\Form\Handler\PathHandler $pathHandler
+     * @param \Claroline\CoreBundle\Manager\ResourceManager $resourceManager
      * @param \Symfony\Component\Security\Core\SecurityContextInterface $securityContext
      */
     public function __construct(
@@ -182,8 +184,6 @@ class EditorController
         // Try to process data
         $this->pathHandler->setForm($form);
         if ($this->pathHandler->process()) {
-            $data = $this->pathHandler->getData();
-
             // Add user message
             $this->session->getFlashBag()->add(
                 'success',
@@ -191,18 +191,20 @@ class EditorController
             );
 
             $saveAndClose = $form->get('saveAndClose')->getData();
-            if ($saveAndClose) {
-                // Redirect to list of paths
-                $url = $this->router->generate('claro_workspace_open_tool', array (
-                    'workspaceId' => $workspace->getId(),
-                    'toolName' => 'innova_path',
-                ));
-            }
-            else {
+            $saveAndClose = filter_var($saveAndClose, FILTER_VALIDATE_BOOLEAN);
+
+            if (!$saveAndClose) {
                 // Redirect to editor
                 $url = $this->router->generate('innova_path_editor_edit', array (
                     'workspaceId' => $workspace->getId(),
                     'id' => $path->getId(),
+                ));
+            }
+            else {
+                // Redirect to list of paths
+                $url = $this->router->generate('claro_workspace_open_tool', array (
+                    'workspaceId' => $workspace->getId(),
+                    'toolName' => 'innova_path',
                 ));
             }
 
