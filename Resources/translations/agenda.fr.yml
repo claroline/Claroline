@@ -24,12 +24,13 @@ end: Fin
 end_date: 'Date de fin'
 export: 'Exporter les événements'
 error: 'Une erreur s''est produite, veuillez réessayer'
+event: Evénement
 event_update: 'Modification enregistrée'
 feb: Févr
 february: Février
 fri: Ven
 friday: Vendredi
-high: Haute (rouge)
+high: Haute
 import_agenda_file_file: 'Importer'
 jan: Janv
 january: Janvier
@@ -38,11 +39,11 @@ july: Juillet
 jun: Juin
 june: Juin
 length: Durée
-low: Basse (gris)
+low: Basse
 mar: Mars
 march: Mars
 may: Mai
-medium: Normale (bleu)
+medium: Normale
 modify: 'Modifier un événement'
 mon: Lun
 monday: Lundi
@@ -64,6 +65,7 @@ september: Septembre
 start_date: 'Date de début'
 sun: Dim
 sunday: Dimanche
+task: Tâche
 tasks: Tâches
 thu: Jeu
 thursday: Jeudi
@@ -71,6 +73,7 @@ title: 'Le titre est obligatoire'
 today: auj
 tue: Mar
 tuesday: Mardi
+type: Type
 update: Modifier
 wed: Mer
 wednesday: Mercredi

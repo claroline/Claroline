@@ -21,16 +21,14 @@
             </a>
         </div>
         <div id="collapse-{{ currentIndex }}" class="panel-body collapse">
-
             {% if hierarchy[workspaceTagId]|length > 0 %}
-            {{ _self.showTag(hierarchy[workspaceTagId], tagWorkspaces, hierarchy, currentIndex, displayable) }}
+                {{ _self.showTag(hierarchy[workspaceTagId], tagWorkspaces, hierarchy, currentIndex, displayable) }}
             {% endif %}
-
             {% if tagWorkspaces[workspaceTagId]|length > 0 %}
-            {% set relations = tagWorkspaces[workspaceTagId] %}
-            <div id="workspace-list-pager-{{ currentIndex }}" class="workspace-list-pager">
-                {% include 'ClarolineCoreBundle:Workspace:workspaceListByTagRegistrationPager.html.twig' %}
-            </div>
+                {% set relations = tagWorkspaces[workspaceTagId] %}
+                <div id="workspace-list-pager-{{ currentIndex }}" class="workspace-list-pager">
+                    {% include 'ClarolineCoreBundle:Workspace:workspaceListByTagRegistrationPager.html.twig' %}
+                </div>
             {% endif %}
 
         </div>

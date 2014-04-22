@@ -6,3 +6,14 @@ logs: Suivi
 parameters: Paramètres
 resource_manager: Ressources
 users: Utilisateurs
+platform_parameters: Paramètres de la plateforme
+user_management: Gestion des utilisateurs
+workspace_management: Gestion des espaces d'activités
+badges_management: Gestion des badges
+registration_to_workspace: Inscription à des espaces d'activités
+platform_plugins: Plugins de la plateforme
+home_tabs: Onglets de la page d'accueil
+desktop_tools: Outils du bureau
+platform_logs: Suivi plateforme
+platform_analytics: Statistique plateforme
+roles_management: Gestion des roles

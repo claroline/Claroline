@@ -143,8 +143,7 @@ class FormFactory
             'formType' => 'Claroline\CoreBundle\Form\WorkspaceRoleType'
         ),
         self::TYPE_ROLE_TRANSLATION => array(
-            'formType' => 'Claroline\CoreBundle\Form\RoleTranslationType',
-            'entity' => 'Claroline\CoreBundle\Entity\Role'
+            'formType' => 'Claroline\CoreBundle\Form\RoleTranslationType'
         ),
         self::TYPE_USER_EMAIL => array(
             'formType' => 'Claroline\CoreBundle\Form\EmailType'

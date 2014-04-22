@@ -142,7 +142,6 @@ class AdditionalInstaller extends BaseInstaller
             $updater021400->setLogger($this->logger);
             $updater021400->postUpdate();
         }
-
     }
 
     private function setLocale()
