@@ -25,11 +25,14 @@ class PortfolioController extends BaseController
     {
         $response = new JsonResponse();
 
+        /** @var \Symfony\Bundle\FrameworkBundle\Templating\EngineInterface $twigEngine */
+        $twigEngine = $this->get('templating');
+
         $data = array(
             'id'    => $portfolio->getId(),
             'slug'  => $portfolio->getSlug(),
             'title' => array(
-                'view'  => sprintf('<h2 id="portfolio_title">%s</h2>', $portfolio->getTitle()),
+                'view'  => $twigEngine->render('IcapPortfolioBundle:templates:title.html.twig', array('portfolioTitle' => $portfolio->getTitle())),
                 'value' => $portfolio->getTitle()
             )
         );

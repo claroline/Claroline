@@ -22,11 +22,14 @@
                 <div class="container">
                     <h1 id="username">{{ portfolio.user.firstName ~ ' ' ~ portfolio.user.lastName }}</h1>
                     <div class="portfolio_title_container">
-                        <div class="portfolio_title_actions">
-                            <button class="portfolio_title_edit_action btn" data-ng-click="editTitle(widget);"><span class="icon-pencil"></span></button>
-                        </div>
-                        <div data-ng-bind-html="portfolio.title.view | trustAsHtml">
-                        </div>
+                        {% if editMode %}
+                            <div class="portfolio_title_actions">
+                                <button class="portfolio_title_edit_action btn" data-ng-click="editTitle(widget);"><span class="icon-pencil"></span></button>
+                            </div>
+                            <div data-ng-bind-html="portfolio.title.view | trustAsHtml"></div>
+                        {% else %}
+                            {% include 'IcapPortfolioBundle:templates:title.html.twig' with {'portfolioTitle': portfolio.title} only %}
+                        {% endif %}
                     </div>
                 </div>
             </header>
@@ -36,7 +39,9 @@
             </section>
         </div>
 
-        <div data-ng-show="!portfolio.$resolved" id="portfolio_loading"></div>
+        {% if editMode %}
+            <div data-ng-show="!portfolio.$resolved" id="portfolio_loading"></div>
+        {% endif %}
     </div>
 {% endblock %}
 
