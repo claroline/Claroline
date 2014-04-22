@@ -446,4 +446,49 @@ class Manager
         $this->dispatch(new EditCategoryEvent($category, $oldName, $newName));
         $this->om->endFlushSuite();
     }
+
+    public function copy(Forum $forum)
+    {
+        $newForum = new Forum();
+        $forum->setName($forum->getName());
+        $oldCategories = $forum->getCategories();
+        $this->om->persist($newForum);
+
+        foreach ($oldCategories as $oldCategory) {
+            $newCategory = new Category();
+            $newCategory->setName($oldCategory->getName());
+            $newCategory->setForum($newForum);
+            $newCategory->setCreationDate($oldCategory->getCreationDate());
+            $newCategory->setModificationDate($oldCategory->getModificationDate());
+            $oldSubjects = $oldCategory->getSubjects();
+
+            foreach ($oldSubjects as $oldSubject) {
+                $newSubject = new Subject();
+                $newSubject->setTitle($oldSubject->getTitle());
+                $newSubject->setCreator($oldSubject->getCreator());
+                $newSubject->setCategory($newCategory);
+                $newSubject->setCreationDate($oldSubject->getCreationDate());
+                $newSubject->setModificationDate($oldSubject->getModificationDate());
+                $newSubject->setIsSticked($oldSubject->isSticked());
+                $oldMessages = $oldSubject->getMessages();
+
+                foreach ($oldMessages as $oldMessage) {
+                    $newMessage = new Message();
+                    $newMessage->setSubject($newSubject);
+                    $newMessage->setCreator($oldMessage->getCreator());
+                    $newMessage->setContent($oldMessage->getContent());
+                    $newMessage->setCreationDate($oldMessage->getCreationDate());
+                    $newMessage->setModificationDate($oldMessage->getModificationDate());
+
+                    $this->om->persist($newMessage);
+                }
+
+                $this->om->persist($newSubject);
+            }
+
+            $this->om->persist($newCategory);
+        }
+
+        return $newForum;
+    }
 }
