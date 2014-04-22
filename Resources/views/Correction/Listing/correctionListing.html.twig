@@ -19,10 +19,11 @@
                     <th>Outils</th>
                 </thead>
                 <tbody>
+                    {% set validCorrections = 0 %}
                     {% for correction in drop.corrections %}
                         <tr class="{% if not  correction.valid %}danger{% endif %} ">
                             <td>
-   
+
                                 {#
                                 {% if correction.finished == false %}
                                     <span class="text-warning glyphicon icon-time" data-toggle="tooltip"
@@ -30,9 +31,11 @@
                                 {% endif %}
                                 #}
                                 {% if not correction.valid %}
+
                                     <span class=" glyphicon icon-minus-sign" data-toggle="tooltip"
                                     data-original-title="{{ 'Invalidated'|trans({}, 'icap_dropzone') }}"></span>
                                 {% else %}
+                                    {% set validCorrections = validCorrections+1 %}
                                     {% if correction.reporter %}
                                         <span class="text-danger glyphicon icon-warning-sign" data-toggle="tooltip"
                                         data-original-title="{{ 'Reported'|trans({}, 'icap_dropzone') }}"></span>
@@ -80,6 +83,7 @@
                                     {{ 'See correction'|trans({},'icap_dropzone')}}
                                 </a>
                                 #}
+
                                 {% if byUserMod == 0 %}
 
                                     {% if dropzone.peerReview %}
@@ -87,9 +91,13 @@
                                     {% endif %}
                                     {% if correction.finished %}
                                         {% if correction.valid %}
-                                            <a href="{{ path('icap_dropzone_drops_detail_correction_validation', {'resourceId': dropzone.id, 'correctionId': correction.id, 'value': 'no'}) }}" class="btn btn-default btn-xs">{{ 'Invalidate'|trans({}, 'icap_dropzone') }}</a>
+                                            <a href="{{ path('icap_dropzone_drops_detail_correction_validation',
+                                               {'resourceId': dropzone.id, 'correctionId': correction.id, 'value': 'no'}) }}"
+                                               class="btn btn-default btn-xs ">{{ 'Invalidate'|trans({}, 'icap_dropzone') }}</a>
                                         {% else %}
-                                            <a href="{{ path('icap_dropzone_drops_detail_correction_validation', {'resourceId': dropzone.id, 'correctionId': correction.id, 'value': 'yes'}) }}" class="btn btn-default btn-xs">{{ 'revalidate'|trans({}, 'icap_dropzone') }}</a>
+                                            <a href="{{ path('icap_dropzone_revalidateCorrection',
+                                               {'resourceId': dropzone.id, 'correctionId': correction.id, 'value': 'yes'}) }}"
+                                               class="btn btn-default btn-xs launch-modal">{{ 'revalidate'|trans({}, 'icap_dropzone') }}</a>
                                         {% endif %}
                                     {% endif %}
                                     {% if correction.editable %}
@@ -114,10 +122,18 @@
                 </tbody>
             </table>
         </div>
+
+        <div style="display:none">
+
+        </div>
         <script type="text/javascript">
         $(document).ready(function()
         {
+            {% if drop.dropzone.expectedTotalCorrection >= validCorrections %}
+                $('.revalidatdLink').click(function(e){
 
+                });
+            {% endif %}
             /**
                 Allow to use tooltip in disable button inside a button group
                 creating a div in absolute pos 

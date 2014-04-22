@@ -1041,6 +1041,51 @@ class CorrectionController extends DropzoneBaseController
         );
     }
 
+
+    /**
+     * @Route(
+     *      "/{resourceId}/drops/detail/correction/validation/confirmation/{correctionId}/{value}",
+     *      name="icap_dropzone_revalidateCorrection",
+     *      requirements ={"resourceId" ="\d+","withDropOnly"="^(withDropOnly|all|withoutDrops)$"},
+     *      defaults={"page" = 1, "withDropOnly" = "all", "value"="yes" }
+     * )
+     * @ParamConverter("dropzone", class="IcapDropzoneBundle:Dropzone", options={"id" = "resourceId"})
+     * @ParamConverter("correction", class="IcapDropzoneBundle:Correction", options={"id" = "correctionId"})
+     * @Template()
+     */
+    public function RevalidateCorrectionValidationAction (Dropzone $dropzone,Correction $correction,$value)
+    {
+        // check if number of correction will be more than the expected.
+
+        // only valid corrections are count
+        if($dropzone->getExpectedTotalCorrection() <= $correction->getDrop()->countFinishedCorrections()) {
+
+            // Ask confirmation to have more correction than expected.
+            $view = 'IcapDropzoneBundle:Correction:Admin/revalidateCorrection.html.twig';
+            if($this->getRequest()->isXmlHttpRequest()){
+                $view = 'IcapDropzoneBundle:Correction:Admin/revalidateCorrectionModal.html.twig';
+            }
+            return $this->render($view, array(
+                '_resource' => $dropzone,
+                'dropzone' => $dropzone,
+                'drop' => $correction->getDrop(),
+                'correction' => $correction,
+            ));
+        } else {
+            return $this->redirect(
+                $this->generateUrl(
+                    'icap_dropzone_drops_detail_correction_validation',
+                    array(
+                        'resourceId' => $dropzone->getId(),
+                        'correctionId' => $correction->getDrop()->getId(),
+                        'value' => 'yes'
+                    )
+                )
+            );
+        }
+
+
+    }
     /**
      * @Route(
      *      "/{resourceId}/drops/detail/correction/validation/{value}/{correctionId}",
