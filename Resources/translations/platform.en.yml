@@ -470,7 +470,7 @@ password_ok: 'Your password has been changed, you can login now'
 paste: Paste
 path: Path
 permissions: Permissions
-personal_workspace: 'Personal workspace'
+personal_workspace: 'Personal workspace - '
 phone: Phone
 picture_profile: 'Picture profile'
 platform_appearance: 'Platform appearance'
