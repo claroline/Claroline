@@ -148,6 +148,9 @@
         simpleRights.checkGeneral('role:not(.anonymous,.user)', 'workspace', element);
         simpleRights.checkGeneral('role.user', 'platform', element);
         simpleRights.checkEveryone(element);
+        //recursive option
+        var value = $('#advanced-recursive-option').prop('checked');
+        $('#recursive-option').prop('checked', value);
     };
 
     /**
@@ -205,5 +208,15 @@
     simpleRights.platform = function (element) {
         simpleRights.checkEveryone(element);
         simpleRights.checkRole('role.user', element);
+    };
+
+    /**
+     * Trigger when click in 'recursive' checkbox.
+     *
+     * @param element The checkbox html element
+     */
+    simpleRights.recursive = function (element) {
+        var value = $(element).prop('checked');
+        $('#advanced-recursive-option').prop('checked', value);
     };
 }());

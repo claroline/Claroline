@@ -10,3 +10,5 @@ google_meta_tag_error: 'Le champ doit être une balise meta, exemple: <meta name
 password_mismatch: 'Les mots de passe ne correspondent pas'
 special_char_not_allowed: 'Les caractères spéciaux ne sont pas autorisés (les caractères autorisés sont : a-z, A-Z, 0-9, _ et .)'
 public_profile_url_not_valid: 'L''URL de votre profil public n''est pas valide.'
+name_required: Nom requis.
+role_already_exists: Ce rôle existe déjà.

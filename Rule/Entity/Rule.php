@@ -309,6 +309,31 @@ abstract class Rule
     }
 
     /**
+     * @return bool
+     */
+    public function getIsUserReceiver()
+    {
+        return $this->userType === 1;
+    }
+
+    /**
+     * @param bool $value
+     *
+     * @return Rule
+     */
+    public function setIsUserReceiver($value)
+    {
+        if ($value) {
+            $this->userType = 1;
+        }
+        else {
+            $this->userType = 0;
+        }
+
+        return $this;
+    }
+
+    /**
      * @param \Claroline\CoreBundle\Entity\Badge\Badge $badge
      *
      * @return Rule

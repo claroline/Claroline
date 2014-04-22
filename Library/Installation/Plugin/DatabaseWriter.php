@@ -24,6 +24,7 @@ use Claroline\CoreBundle\Entity\Resource\ResourceType;
 use Claroline\CoreBundle\Entity\Resource\ResourceIcon;
 use Claroline\CoreBundle\Entity\Resource\MenuAction;
 use Claroline\CoreBundle\Entity\Tool\Tool;
+use Claroline\CoreBundle\Entity\Tool\AdminTool;
 use Claroline\CoreBundle\Entity\Widget\Widget;
 use Symfony\Component\Filesystem\Filesystem;
 use JMS\DiExtraBundle\Annotation as DI;
@@ -238,6 +239,10 @@ class DatabaseWriter
 
         foreach ($processedConfiguration['themes'] as $theme) {
             $this->persistTheme($theme, $pluginEntity);
+        }
+
+        foreach ($processedConfiguration['admin_tools'] as $adminTool) {
+            $this->persistAdminTool($adminTool, $pluginEntity);
         }
     }
 
@@ -530,6 +535,15 @@ class DatabaseWriter
 
         $themeEntity->setPlugin($pluginEntity);
         $this->em->persist($themeEntity);
+    }
+
+    private function persistAdminTool($adminTool, $pluginEntity)
+    {
+        $adminToolEntity = new AdminTool();
+        $adminToolEntity->setName($adminTool['name']);
+        $adminToolEntity->setClass($adminTool['class']);
+        $adminToolEntity->setPlugin($pluginEntity);
+        $this->em->persist($adminToolEntity);
     }
 
     public function setModifyTemplate($bool)

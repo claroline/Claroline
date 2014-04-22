@@ -26,8 +26,8 @@
             {{ topbar.item({'name':'home', 'href':path('claro_index'), 'icon':'home'}) }}
         {% endif %}
         {{ topbar.item({'href':path('claro_desktop_open'), 'icon':'briefcase', 'route':'/desktop/tool/', 'title': 'desktop' | trans({}, 'platform')}) }}
-        {% if is_granted('ROLE_ADMIN') %}
-            {{ topbar.item({'href':path('claro_admin_parameters_index'), 'icon':'cog', 'route':'/admin/', 'title':'administration' | trans({}, 'platform')}) }}
+        {% if canAdministrate == true %}
+            {{ topbar.item({'href':path('claro_admin_index'), 'icon':'cog', 'route':'/admin/', 'title':'administration' | trans({}, 'platform')}) }}
         {% endif %}
         {% if countUnreadMessages > 0 %}
             {{ topbar.item({'href':path('claro_message_list_received'), 'icon':'envelope', 'route':'/message/', 'title':'new_message_alert' | trans({'%count%': countUnreadMessages}, 'platform'), 'badge' : countUnreadMessages }) }}
@@ -65,8 +65,9 @@
 
     {% block logged %}
         {% import _self as topbar %}
+        {% set username = app.user.firstName ~ ' ' ~ app.user.lastName %}
         {% set user = username | length > 16 ? username | slice(0, 16) ~ '...' : username %}
-        {{ topbar.item({'name':username, 'icon':'user', 'route':'/profile', 'dropdown':block('dropdownLogged')}) }}
+        {{ topbar.item({'name':user, 'icon':'user', 'route':'/profile', 'dropdown':block('dropdownLogged')}) }}
     {% endblock logged %}
 
     {% block dropdownWorkspace %}

@@ -226,12 +226,17 @@ class RolesController extends Controller
      *     "/{workspace}/role/{role}/edit",
      *     name="claro_workspace_role_edit"
      * )
+     * @EXT\Template("ClarolineCoreBundle:Tool\workspace\roles:roleEdit.html.twig")
      * @EXT\Method("POST")
      */
     public function editRoleAction(Role $role, AbstractWorkspace $workspace)
     {
         $this->checkAccess($workspace);
-        $form = $this->formFactory->create(FormFactory::TYPE_ROLE_TRANSLATION, array(), $role);
+        $form = $this->formFactory->create(
+            FormFactory::TYPE_ROLE_TRANSLATION,
+            array('wsGuid' => $workspace->getGuid()),
+            $role
+        );
         $form->handleRequest($this->request);
 
         if ($form->isValid()) {

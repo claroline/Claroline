@@ -111,6 +111,9 @@
                             <td><input id="platform" type="checkbox"></td>
                         </tr>
                     </table>
+                    {% if isDir %}
+                        <input id="recursive-option" name="isRecursive" type="checkbox"/> {{ 'recursive_dir_action'|trans({}, 'platform')}}
+                    {% endif %}
                 </div>
                 {% block formfooter %}
                    <div class="text-right {{ mode }}-footer margin-top-none">
@@ -172,7 +175,7 @@
                         </tbody>
                     </table>
                     {% if isDir %}
-                        <input name="isRecursive" type="checkbox"/> {{ 'recursive_dir_action'|trans({}, 'platform')}}
+                        <input id="advanced-recursive-option" name="isRecursive" type="checkbox"/> {{ 'recursive_dir_action'|trans({}, 'platform')}}
                     {% endif %}
                 </div>
                 {{ block('formfooter') }}
