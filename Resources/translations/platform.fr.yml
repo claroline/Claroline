@@ -1,11 +1,9 @@
 'Action List': 'Liste des actions'
 'Actions per day': 'Nombre d''actions par jour'
 'Activate the terms of service in the platform': 'Activez les conditions d''utilisation dans la plate-forme'
-Active: Actif
 'Add a logo': 'Ajouter un logo'
 'An error has occurred, please check if the file size does not exceeds the permitted size': 'Une erreur s''est produite, veuillez vérifier si la taille du fichier ne dépasse pas la taille autorisée'
 'Audience/user visits': 'Audience/Visites utilisateurs'
-answer: Répondre
 'Choose a logo': 'Choisir un logo'
 'Choose visible actions in the widget': 'Choisissez les actions visibles dans le widget'
 'Choose workspaces displayed in the widget': 'Choisissez les espaces de travail affichés par le widget'
@@ -15,11 +13,8 @@ answer: Répondre
 'First name': Prénom
 'Google HTML tag validation': 'Balise HTML de validation Google'
 'I accept the terms of service': 'J''accepte les conditions d''utilisation'
-Indexing: Référencement
-Language: Langue
 'Last action': '{1} Dernière action|[1,Inf] %logAmount% dernières actions'
 'Last name': Nom
-None: Aucun
 'Or choose an existing file from resource manager': 'Ou veuillez choisir un fichier existant dans gestionnaire de ressources'
 'Overview of all recent activities in %workspaceName%': 'Aperçu de toutes les activités récentes de %workspaceName%'
 'Overview of recent activities in %workspaceName%': 'Aperçu des activités récentes de %workspaceName%'
@@ -27,15 +22,18 @@ None: Aucun
 'Paste here the meta tag provides by Google Webmaster': 'Collez ici la balise meta fournit par Google Webmaster'
 'See all': 'Voir tous'
 'Select a Language': 'Sélectionnez une langue'
-Show: Afficher
 'Show actions': 'Afficher les actions'
 'Show the name of the platform in the top bar': 'Afficher le nom de la plateforme dans la barre supérieure'
 'Terms of service': 'Conditions d''utilisation'
 'The form is not valid': 'Le formulaire n''est pas valide'
 'This placeholder is optional and will be replaced by the author first name': 'Ce placeholder est optionnel et sera remplacé par le prénom de l''auteur'
+'This placeholder is optional and will be replaced by the author first name': Ce placeholder est optionnel et sera remplacé par le prénom de l'auteur
 'This placeholder is optional and will be replaced by the author last name': 'Ce placeholder est optionnel et sera remplacé par le nom de l''auteur'
+'This placeholder is optional and will be replaced by the author last name': Ce placeholder est optionnel et sera remplacé par le nom de l'auteur
 'This placeholder is optional and will be replaced by your platform name': 'Ce placeholder est optionnel et sera remplacé par le nom de la plateforme'
+'This placeholder is optional and will be replaced by your platform name': Ce placeholder est optionnel et sera remplacé par le nom de la plateforme
 'This placeholder is required and will be replaced by the actual mail content': 'Ce placeholder est requis et sera remplacé par le contenu du mail'
+'This placeholder is required and will be replaced by the actual mail content': Ce placeholder est requis et sera remplacé par le contenu du mail
 'This variable is optional and will be replaced by your platform name': 'Ce variable est optionnel et sera remplacé par le nom de la plateforme'
 'This variable is required and will be replaced by the actual mail content': 'Ce variable est requis et sera replacé par le contenu du mail'
 'Upload a file': 'Télécharger un fichier'
@@ -48,8 +46,14 @@ Show: Afficher
 'for period': 'sur la période du :'
 'select all': 'Tout sélectionner'
 'unique connections': 'Nb Cnx. uniques'
+'will be replaced by your platform name': 'qui sera remplacé par le nom de votre plateforme'
+'will display the password': 'qui affichera le mot de passe de l''utilisateur'
+'will display the user first name': 'qui affichera le prénom de l''utilisateur'
+'will display the user last name': 'qui affichera le nom de famille de l''utilisateur'
+'will display the username': 'qui affichera le nom de l''utilisateur'
 404: 'La page que vous cherchez n''existe pas.'
 Active: 'Actif'
+Active: Actif
 Create a new resource: 'Créer une nouvelle ressource'
 First name: Prénom
 Indexing: Référencement
@@ -161,6 +165,7 @@ create_new_admin_tag: 'Créer un nouveau Tag administrateur'
 create_new_home_tab: 'Créer un nouvel onglet'
 create_new_tag: 'Créer un nouveau Tag'
 create_new_user_account: 'Creation de votre compte ClarolineConnect'
+create_role: Créer un rôle
 create_subcategory: 'Créer une sous-catégorie'
 create_user: 'Créer un utilisateur'
 create_widget_instance: 'Créer un nouveau Widget'
@@ -215,6 +220,7 @@ delete_category: 'Supprimer la catégorie'
 delete_category_confirm_message: 'Voulez-vous vraiment supprimer cette catégorie ?'
 delete_category_confirm_title: 'Suppression d''une catégorie'
 delete_home_tab: 'Supprimer l''onglet'
+description: 'Description'
 desktop: Bureau
 desktop_home_tab_creation: 'Création d''un onglet pour le bureau'
 desktop_home_tab_edition: 'Edition de l''onglet pour le bureau'
@@ -224,6 +230,7 @@ directory: Répertoire
 directory_form_name: Nom
 directory_form_shareType: Redistribution
 display: Afficher
+display_captcha: 'Afficher les captcha pour les anonymes'
 display_options: 'Options d''affichage'
 done_on: 'effectuée sur'
 down: Descendre
@@ -246,6 +253,7 @@ edit_public_profile_preferences_success: 'Préférences de votre profil public m
 edit_your_profile_error: 'Une erreur est survenue pendant la modification de votre profil.'
 edit_your_profile_success: 'Modification de votre profil effectué avec succès.'
 editable: Modifiable
+email: 'Adresse email'
 email_form_mail: 'Entrez votre adresse email'
 email_found_at: 'L''email %email% a été trouvé aux lignes: %lines%'
 empty_file: 'Fichier vide'
@@ -271,7 +279,6 @@ filter: Filtrer
 find_workspaces: 'Tous les espaces d''activités publics'
 firstName: Prénom
 first_name: Prénom
-'for period': 'sur la période du :'
 forgot_password: 'Mot de passe oublié ?'
 form_role: Rôle
 from: Depuis
@@ -295,6 +302,7 @@ group_parameter: 'Paramètres du groupe'
 groups: Groupes
 groups_list: 'Liste des groupes'
 groups_per_page: 'Groupes par page'
+groups_per_page: Groupes par page
 groups_registration_in_workspace: 'Inscription des groupes à l''espace d''activités'
 has_been_put_in_category: 'a été placé dans la catégorie'
 has_been_suscribed_with_role: 'a été inscrit(e) avec le rôle'
@@ -332,12 +340,14 @@ invalid_encryption: 'Mode d''authentification non valide'
 invalid_transport: 'Transport non valide'
 invalid_url: 'Cette url n''est pas valide'
 is_already_in_category: 'est déjà dans la catégorie'
+is_mail_displayed: 'Afficher l''email ?'
 jqplot_date_output_format: '%d-%m-%Y'
 keep_me_logged_in: 'Se souvenir de moi'
 lastName: Nom
 last_30_days_activity: 'Activités des 30 derniers jours'
 last_name: Nom
 layout: Layout
+leave_this_page: 'Si vous quittez cette page, vous risquez de perdre vos modifications.'
 left: Gauche
 line_number: 'Ligne %line%:'
 line_per_page: 'Résultats par page'
@@ -364,11 +374,13 @@ mail_message: 'Vous avez demandé la réinitialisation de votre mot de passe. Cl
 mail_not_available: 'La fonction d''envoi de mail n''est pas disponible'
 mail_not_exist: 'Cet email n''existe pas '
 mail_sent: 'Un email vient de vous être envoyé. Vérifiez votre dossier spam au cas où vous ne verriez pas l''email'
+make_my_public_profil_visible: 'Rendre mon profil public visible'
 make_public_profile_visible_to_everybody: 'à <strong>tout le monde</strong>'
 make_public_profile_visible_to_nobody: 'à <strong>personne</strong>'
 make_public_profile_visible_to_platform_user: 'aux <strong>utilisateurs de la plateforme</strong>'
 manage_public_profile_preferences: 'Gérer les préférences du profil public'
 manage_rights: 'Gérer les droits'
+manage_tools: Gérer les outils
 manager: Gestionnaire
 max_size_is: 'La taille maximale est %size%'
 media_most_viewed: 'Media les plus consultés'
@@ -410,6 +422,7 @@ my_favourite_workspaces: 'Mes espaces d''activités favoris'
 my_notes: 'Mes notes'
 my_portfolio: 'Mon portfolio'
 my_profile: 'Mon profil'
+my_profile: Mon profil
 my_resources: 'Mes ressources'
 my_workspace: 'Espace personnel'
 my_workspaces: 'Mes espaces d''activités'
@@ -460,6 +473,7 @@ path: Emplacement
 permissions: Permissions
 personal_workspace: 'Espace personnel'
 phone: Téléphone
+picture_profile: 'Photo de profil'
 platform_appearance: 'Apparence de la plateforme'
 platform_parameters: 'Paramètres de la plateforme'
 platform_parameters_form_auth_mode: 'Mode d''authentification'
@@ -500,7 +514,9 @@ public_profile_undiscoverable: 'Profil introuvable'
 public_profile_undiscoverable_anonymously: 'Connexion obligatoire pour accéder au profil'
 public_profile_undiscoverable_anonymously_text: 'Vous devez être <a href="%loginUrl%" title="Connexion">connectez</a> à la plateforme pour accéder au profil <strong>%publicUrl%</strong>'
 public_profile_undiscoverable_text: 'Nous n''avons trouvé aucun profil concordant pour <strong>%publicUrl%</strong>'
+public_profile_url_tuning_only_once: 'La personnalisation de l''URL de votre profil public n''est possible qu''une seule fois'
 public_registration: 'Inscription publique'
+public_url_help: 'Note : Votre URL personnalisée doit comprendre au maximum 30 lettres ou chiffres. Ne pas utiliser d''espaces, de symboles ou de caractères spéciaux.'
 public_workspace_empty: 'Il n''y a aucun espace d''activités public.'
 public_workspaces: 'Espaces d''activités publics'
 recursive_dir_action: 'Appliquer au contenu du répertoire et aux sous-répertoires'
@@ -579,7 +595,6 @@ search_workspace: 'Rechercher un espace d''activités'
 see: Voir
 see_more: 'Voir plus'
 see_public_profile: 'Voir mon profil public'
-'select all': 'Tout sélectionner'
 select_all: 'Tout sélectionner'
 select_category: 'Sélectionner une catégorie'
 select_contacts_title: 'Sélectionnez les destinataires'
@@ -589,12 +604,14 @@ select_users_for_registration_to_workspace: 'Choississez les utilisateurs à ins
 select_workspaces_for_registration: 'Choisissez les espaces d''activités pour l''inscription'
 selected_workspaces_for_registration: 'Espaces d''activités sélectionnés pour l''inscription'
 selected_workspaces_will_be_put_in_it: 'Les espaces d''activités sélectionnés y seront disponibles'
+send: Envoyer
 send: envoyer
 send_mail: 'Envoyer un mail'
 send_mail_form_content: Message
 send_mail_form_object: Objet
 send_message: 'Envoyer un message'
 send_message_to_workspace: 'Envoyer un message aux utilisateurs de l''espace'
+send_message_to_workspace: Envoyer un message aux utilisateurs de l'espace
 server: Serveur
 session: Session
 session_db_cannot_perform_operations: 'L''écriture et/ou la lecture d''enregistrements dans la table renseignée est impossible. Veuillez vérifier que l''utilisateur de la base de données dispose de droits suffisants et qu''aucune contrainte particulière n''a été affectée à cette table.'
@@ -654,6 +671,7 @@ tool_form_displayName: 'Nom affiché'
 tool_form_name: Nom
 tool_parameters: 'Paramètres des outils'
 tool_roles_create_directory: 'L''option "Créer un répertoire" vous permet de créer automatiquement un répertoire dédié aux utilisateurs de ce groupe.'
+tool_roles_create_directory: L'option "Créer un répertoire" vous permet de créer automatiquement un répertoire dédié aux utilisateurs de ce groupe.
 tools: Outils
 tools_rights_configuration: 'Configuration des droits sur les outils'
 top: Top
@@ -668,7 +686,11 @@ top_workspaces_connections: 'Top des espaces d''activités les plus consultés'
 top_workspaces_resources: 'Top des espaces d''activités avec le plus des resources'
 total: Total
 trash: Corbeille
+tune: 'Personnaliser'
+tune_public_url_error: 'Une erreur s''est produite lors de la personnalisation de l''URL de votre profil public.'
+tune_public_url_success: 'Personnalisation de l''URL de votre profil public effectuée avec succès.'
 tune_your_public_profile: 'Personnalisez votre profil public'
+tune_your_public_profile_url: 'Personnalisez l''URL de votre profil public'
 type: Type
 type_s: Type(s)
 unable_to_start_gmail: 'La connexion avec le service SMTP de Gmail ne peut pas être établie. Veuillez vérifier que le nom d`utilisateur et le mot de passe que vous avez renseignés sont corrects.'
@@ -677,7 +699,6 @@ unable_to_start_smtp: 'La connexion avec le serveur SMTP ne peut pas être étab
 unable_to_start_transport: 'La connexion avec le serveur de mails ne peut pas être établie. Veuillez vérifier que les paramètres que vous avez renseignés sont corrects.'
 unauthorized: 'Vous n''êtes pas autorisé à consulter cette page.'
 under_min_length: 'Cette valeur est trop courte'
-'unique connections': 'Nb Cnx. uniques'
 unregister: Désinscription
 unregister_from_a_workspace: 'Me désinscrire d''un espace d''activités'
 unregistered: 'Non inscrit'
@@ -707,9 +728,11 @@ users_list: 'Liste des utilisateurs'
 users_management: 'Gestion des utilisateurs'
 users_minimum_requirement_msg: 'Les utilisateurs doivent remplir ces conditions: login de 3 caractères, mot de passe de 4 caractères, email valide.'
 users_per_page: 'Utilisateurs par page'
+users_per_page: Utilisateurs par page
 users_registration_in_workspace: 'Inscription des utilisateurs dans l''espace d''activités'
 users_visits: 'Visites des utilisateurs'
 validate: Valider
+verification: 'Vérification'
 view: Voir
 view_category_hierarchy: 'Visualiser la structure des catégories'
 views: 'Nb vues'
@@ -725,14 +748,9 @@ widget_home_tab_delete_confirm_title: 'Suppression du widget de l''onglet'
 widget_settings: 'Paramètres des widgets'
 widgets: Widgets
 widgets_configuration: 'Configuration des widgets'
-'will be replaced by your platform name': 'qui sera remplacé par le nom de votre plateforme'
-'will display the password': 'qui affichera le mot de passe de l''utilisateur'
-'will display the user first name': 'qui affichera le prénom de l''utilisateur'
-'will display the user last name': 'qui affichera le nom de famille de l''utilisateur'
-'will display the username': 'qui affichera le nom de l''utilisateur'
-workspace: 'Espace d''activités'
 workspace.create: 'Créer un nouvel espace d''activités'
 workspace.name_not_blank: 'Veuillez spécifier un nom pour ce workspace.'
+workspace: 'Espace d''activités'
 workspace_administration: Administration
 workspace_classification: 'Classification des espaces d''activités'
 workspace_delete: 'Supprimer l''espace d''activités'
@@ -741,15 +759,15 @@ workspace_delete_confirm_title: 'Confirmation de suppression'
 workspace_delete_success_message: 'L''espace d''activités "%workspaceName%" été supprimé.'
 workspace_edit_form_code: Code
 workspace_edit_form_creationDate : 'Date de création'
+workspace_edit_form_description: Description
 workspace_edit_form_displayable: Visible
 workspace_edit_form_name: Nom
-workspace_edit_form_description: Description
 workspace_edit_form_selfRegistration: 'Inscription publique'
 workspace_edit_form_selfUnregistration: 'Désinscription publique'
 workspace_form_code: Code
+workspace_form_description: Description
 workspace_form_displayable: Public
 workspace_form_name: Nom
-workspace_form_description: Description
 workspace_form_selfRegistration: 'Inscription publique'
 workspace_form_selfUnregistration: 'Désinscription publique'
 workspace_form_template: Modèle
@@ -758,6 +776,7 @@ workspace_home_tab_creation: 'Création d''un onglet pour les espaces d''activit
 workspace_home_tab_edition: 'Edition de l''onglet pour les espaces d''activités'
 workspace_home_tabs: 'Onglets pour les espaces d''activités'
 workspace_list: 'Liste des espaces d''activités'
+workspace_list: Liste des espaces d'activités
 workspace_management : 'L''espace d''activité a été créé le %creationDate%, par %creator%. Il y a %count% inscrit(s).'
 workspace_management_date_null : 'L''espace d''activité a été créé par %creator%. Il y a %count% inscrit(s).'
 workspace_order_tool_edit_form_name: Nom
@@ -780,42 +799,10 @@ workspaces: 'Espaces d''activités'
 workspaces_included_in_category: 'Espaces d''activités enregistrés dans cette catégorie'
 workspaces_management: 'Gestions des espaces d''activités '
 workspaces_per_page: 'Espaces par page'
+workspaces_per_page: Espaces par page
 ws_creator: 'Créateur d''espaces'
 ws_most_viewed: 'Espaces d''activités les plus consultés'
 yes: oui
 yesterday_activity: 'Activité de la veille'
-your_username: 'Votre nom d''utilisateur est '
-users_per_page: Utilisateurs par page
-groups_per_page: Groupes par page
-tool_roles_create_directory: L'option "Créer un répertoire" vous permet de créer automatiquement un répertoire dédié aux utilisateurs de ce groupe.
-my_profile: Mon profil
-send: Envoyer
-send_message_to_workspace: Envoyer un message aux utilisateurs de l'espace
-'This placeholder is required and will be replaced by the actual mail content': Ce placeholder est requis et sera remplacé par le contenu du mail
-'This placeholder is optional and will be replaced by your platform name': Ce placeholder est optionnel et sera remplacé par le nom de la plateforme
-'This placeholder is optional and will be replaced by the author first name': Ce placeholder est optionnel et sera remplacé par le prénom de l'auteur
-'This placeholder is optional and will be replaced by the author last name': Ce placeholder est optionnel et sera remplacé par le nom de l'auteur
-workspace_list: Liste des espaces d'activités
-workspaces_per_page: Espaces par page
-workspace_registration_message: 'Vous avez été inscrit à l''espace d''activité %workspace_name%'
-workspace_registration_message_object: 'Inscription à un espace d''activité'
-new_role_message: 'Vous venez de recevoir le role %name%'
-new_role_message_object: 'Vos permissions sur la plateforme ont changé'
-no_role_selected_message: 'Aucun role sélectionné.'
-is_mail_displayed: 'Afficher l''email ?'
-display_captcha: 'Afficher les captcha pour les anonymes'
-email: 'Adresse email'
-description: 'Description'
-picture_profile: 'Photo de profil'
-verification: 'Vérification'
-404: 'La page que vous cherchez n''existe pas.'
-tune_your_public_profile_url: 'Personnalisez l''URL de votre profil public'
-tune: 'Personnaliser'
-make_my_public_profil_visible: 'Rendre mon profil public visible'
-tune_public_url_success: 'Personnalisation de l''URL de votre profil public effectuée avec succès.'
-tune_public_url_error: 'Une erreur s''est produite lors de la personnalisation de l''URL de votre profil public.'
 your_current_url: 'Votre URL actuelle'
-public_profile_url_tuning_only_once: 'La personnalisation de l''URL de votre profil public n''est possible qu''une seule fois'
-public_url_help: 'Note : Votre URL personnalisée doit comprendre au maximum 30 lettres ou chiffres. Ne pas utiliser d''espaces, de symboles ou de caractères spéciaux.'
-manage_tools: Gérer les outils
-create_role: Créer un rôle
+your_username: 'Votre nom d''utilisateur est '
