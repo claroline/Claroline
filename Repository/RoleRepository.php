@@ -279,6 +279,21 @@ class RoleRepository extends EntityRepository
         return $query->getResult();
     }
 
+    public function findPlatformNonAdminRoles()
+    {
+        $queryBuilder = $this
+            ->createQueryBuilder('role')
+            ->andWhere("role.type = :roleType")
+            ->setParameter("roleType", Role::PLATFORM_ROLE);
+        $queryBuilder->andWhere($queryBuilder->expr()->not($queryBuilder->expr()->eq('role.name', '?1')))
+            ->setParameter(1, 'ROLE_ANONYMOUS');
+        $queryBuilder->andWhere($queryBuilder->expr()->not($queryBuilder->expr()->eq('role.name', '?2')))
+            ->setParameter(2, 'ROLE_ADMIN');
+        $query = $queryBuilder->getQuery();
+
+        return $query->getResult();
+    }
+
     public function findAllWhereWorkspaceIsDisplayable()
     {
         $dql = "

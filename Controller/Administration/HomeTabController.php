@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Claroline\CoreBundle\Controller;
+namespace Claroline\CoreBundle\Controller\Administration;
 
 use Claroline\CoreBundle\Entity\Home\HomeTab;
 use Claroline\CoreBundle\Entity\Home\HomeTabConfig;
@@ -18,39 +18,51 @@ use Claroline\CoreBundle\Entity\Widget\WidgetInstance;
 use Claroline\CoreBundle\Form\Factory\FormFactory;
 use Claroline\CoreBundle\Manager\HomeTabManager;
 use Claroline\CoreBundle\Manager\WidgetManager;
+use Claroline\CoreBundle\Manager\ToolManager;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use JMS\DiExtraBundle\Annotation as DI;
+use Symfony\Component\Security\Core\SecurityContextInterface;
 
-class AdministrationHomeTabController extends Controller
+class HomeTabController extends Controller
 {
     private $formFactory;
     private $homeTabManager;
     private $request;
     private $widgetManager;
+    private $sc;
+    private $hometabAdminTool;
+    private $toolManager;
 
     /**
      * @DI\InjectParams({
-     *     "formFactory"        = @DI\Inject("claroline.form.factory"),
-     *     "homeTabManager"     = @DI\Inject("claroline.manager.home_tab_manager"),
-     *     "request"            = @DI\Inject("request"),
-     *     "widgetManager"      = @DI\Inject("claroline.manager.widget_manager")
+     *     "formFactory"    = @DI\Inject("claroline.form.factory"),
+     *     "homeTabManager" = @DI\Inject("claroline.manager.home_tab_manager"),
+     *     "request"        = @DI\Inject("request"),
+     *     "widgetManager"  = @DI\Inject("claroline.manager.widget_manager"),
+     *     "sc"             = @DI\Inject("security.context"),
+     *     "toolManager"    = @DI\Inject("claroline.manager.tool_manager")
      * })
      */
     public function __construct(
         FormFactory $formFactory,
         HomeTabManager $homeTabManager,
         Request $request,
-        WidgetManager $widgetManager
+        WidgetManager $widgetManager,
+        SecurityContextInterface $sc,
+        ToolManager $toolManager
     )
     {
-        $this->formFactory = $formFactory;
-        $this->homeTabManager = $homeTabManager;
-        $this->request = $request;
-        $this->widgetManager = $widgetManager;
+        $this->formFactory      = $formFactory;
+        $this->homeTabManager   = $homeTabManager;
+        $this->request          = $request;
+        $this->widgetManager    = $widgetManager;
+        $this->sc               = $sc;
+        $this->toolManager      = $toolManager;
+        $this->hometabAdminTool = $this->toolManager->getAdminToolByName('home_tabs');
     }
 
     /**
@@ -60,7 +72,7 @@ class AdministrationHomeTabController extends Controller
      *     options = {"expose"=true}
      * )
      * @EXT\Method("GET")
-     * @EXT\Template("ClarolineCoreBundle:Administration:adminHomeTabsConfigMenu.html.twig")
+     * @EXT\Template("ClarolineCoreBundle:Administration\HomeTab:adminHomeTabsConfigMenu.html.twig")
      *
      * Displays the homeTabs configuration menu.
      *
@@ -78,7 +90,7 @@ class AdministrationHomeTabController extends Controller
      *     options = {"expose"=true}
      * )
      * @EXT\Method("GET")
-     * @EXT\Template("ClarolineCoreBundle:Administration:adminDesktopHomeTabsConfig.html.twig")
+     * @EXT\Template("ClarolineCoreBundle:Administration\HomeTab:adminDesktopHomeTabsConfig.html.twig")
      *
      * Displays the admin homeTabs configuration page.
      *
@@ -88,6 +100,8 @@ class AdministrationHomeTabController extends Controller
      */
     public function adminDesktopHomeTabsConfigAction($homeTabId = -1)
     {
+        $this->checkOpen();
+
         $homeTabConfigs = $this->homeTabManager
             ->getAdminDesktopHomeTabConfigs();
 
@@ -138,7 +152,7 @@ class AdministrationHomeTabController extends Controller
      *     options = {"expose"=true}
      * )
      * @EXT\Method("GET")
-     * @EXT\Template("ClarolineCoreBundle:Administration:adminWorkspaceHomeTabsConfig.html.twig")
+     * @EXT\Template("ClarolineCoreBundle:Administration\HomeTab:adminWorkspaceHomeTabsConfig.html.twig")
      *
      * Displays the admin homeTabs configuration page.
      *
@@ -148,6 +162,8 @@ class AdministrationHomeTabController extends Controller
      */
     public function adminWorkspaceHomeTabsConfigAction($homeTabId = -1)
     {
+        $this->checkOpen();
+
         $homeTabConfigs = $this->homeTabManager
             ->getAdminWorkspaceHomeTabConfigs();
 
@@ -198,7 +214,7 @@ class AdministrationHomeTabController extends Controller
      *     options = {"expose"=true}
      * )
      * @EXT\Method("GET")
-     * @EXT\Template("ClarolineCoreBundle:Administration:adminHomeTabCreateForm.html.twig")
+     * @EXT\Template("ClarolineCoreBundle:Administration\HomeTab:adminHomeTabCreateForm.html.twig")
      *
      * Displays the admin homeTab form.
      *
@@ -206,6 +222,8 @@ class AdministrationHomeTabController extends Controller
      */
     public function adminHomeTabCreateFormAction()
     {
+        $this->checkOpen();
+
         $homeTab = new HomeTab();
         $form = $this->formFactory->create(
             FormFactory::TYPE_HOME_TAB,
@@ -223,7 +241,7 @@ class AdministrationHomeTabController extends Controller
      *     options = {"expose"=true}
      * )
      * @EXT\Method("POST")
-     * @EXT\Template("ClarolineCoreBundle:Administration:adminHomeTabCreateForm.html.twig")
+     * @EXT\Template("ClarolineCoreBundle:Administration\HomeTab:adminHomeTabCreateForm.html.twig")
      *
      * Create a new admin homeTab.
      *
@@ -233,6 +251,8 @@ class AdministrationHomeTabController extends Controller
      */
     public function adminHomeTabCreateAction($homeTabType)
     {
+        $this->checkOpen();
+
         $isDesktop = ($homeTabType === 'desktop');
         $type = $isDesktop ? 'admin_desktop' : 'admin_workspace';
 
@@ -283,7 +303,7 @@ class AdministrationHomeTabController extends Controller
      *     class="ClarolineCoreBundle:Home\HomeTab",
      *     options={"id" = "homeTabId", "strictId" = true}
      * )
-     * @EXT\Template("ClarolineCoreBundle:Administration:adminHomeTabEditForm.html.twig")
+     * @EXT\Template("ClarolineCoreBundle:Administration\HomeTab:adminHomeTabEditForm.html.twig")
      *
      * Displays the admin homeTab name edition form.
      *
@@ -295,6 +315,8 @@ class AdministrationHomeTabController extends Controller
      */
     public function adminHomeTabEditFormAction(HomeTab $homeTab)
     {
+        $this->checkOpen();
+
         if (!is_null($homeTab->getUser()) ||
             !is_null($homeTab->getWorkspace())) {
 
@@ -321,7 +343,7 @@ class AdministrationHomeTabController extends Controller
      *     class="ClarolineCoreBundle:Home\HomeTab",
      *     options={"id" = "homeTabId", "strictId" = true}
      * )
-     * @EXT\Template("ClarolineCoreBundle:Administration:adminHomeTabEditForm.html.twig")
+     * @EXT\Template("ClarolineCoreBundle:Administration\HomeTab:adminHomeTabEditForm.html.twig")
      *
      * Edit the admin homeTab name.
      *
@@ -333,6 +355,8 @@ class AdministrationHomeTabController extends Controller
      */
     public function adminHomeTabEditAction(HomeTab $homeTab)
     {
+        $this->checkOpen();
+
         if (!is_null($homeTab->getUser()) ||
             !is_null($homeTab->getWorkspace())) {
 
@@ -377,6 +401,8 @@ class AdministrationHomeTabController extends Controller
      */
     public function adminHomeTabConfigDeleteAction(HomeTabConfig $homeTabConfig)
     {
+        $this->checkOpen();
+
         if (!is_null($homeTabConfig->getUser()) ||
             !is_null($homeTabConfig->getWorkspace())) {
 
@@ -417,6 +443,8 @@ class AdministrationHomeTabController extends Controller
         $visible
     )
     {
+        $this->checkOpen();
+
         if (!is_null($homeTabConfig->getUser()) ||
             !is_null($homeTabConfig->getWorkspace())) {
 
@@ -455,6 +483,8 @@ class AdministrationHomeTabController extends Controller
         $locked
     )
     {
+        $this->checkOpen();
+
         if (!is_null($homeTabConfig->getUser()) ||
             !is_null($homeTabConfig->getWorkspace())) {
 
@@ -493,6 +523,8 @@ class AdministrationHomeTabController extends Controller
         $direction
     )
     {
+        $this->checkOpen();
+
         if (!is_null($homeTabConfig->getUser()) ||
             !is_null($homeTabConfig->getWorkspace())) {
 
@@ -545,6 +577,8 @@ class AdministrationHomeTabController extends Controller
         WidgetHomeTabConfig $widgetHomeTabConfig
     )
     {
+        $this->checkOpen();
+
         if (!is_null($widgetHomeTabConfig->getUser()) ||
             !is_null($widgetHomeTabConfig->getWorkspace())) {
 
@@ -566,7 +600,7 @@ class AdministrationHomeTabController extends Controller
      *     options = {"expose"=true}
      * )
      * @EXT\Method("GET")
-     * @EXT\Template("ClarolineCoreBundle:Administration:adminWidgetInstanceCreateForm.html.twig")
+     * @EXT\Template("ClarolineCoreBundle:Administration\HomeTab:adminWidgetInstanceCreateForm.html.twig")
      *
      * Displays the widget instance form.
      *
@@ -576,6 +610,8 @@ class AdministrationHomeTabController extends Controller
      */
     public function adminWidgetInstanceCreateFormAction($homeTabType)
     {
+        $this->checkOpen();
+
         $widgetInstance = new WidgetInstance();
         $isDesktop = ($homeTabType === 'desktop');
         $form = $this->formFactory->create(
@@ -597,7 +633,7 @@ class AdministrationHomeTabController extends Controller
      *     options = {"expose"=true}
      * )
      * @EXT\Method("POST")
-     * @EXT\Template("ClarolineCoreBundle:Administration:adminWidgetInstanceCreateForm.html.twig")
+     * @EXT\Template("ClarolineCoreBundle:Administration\HomeTab:adminWidgetInstanceCreateForm.html.twig")
      *
      * Creates a widget instance.
      *
@@ -607,6 +643,8 @@ class AdministrationHomeTabController extends Controller
      */
     public function adminWidgetInstanceCreateAction($homeTabType)
     {
+        $this->checkOpen();
+
         $widgetInstance = new WidgetInstance();
         $isDesktop = ($homeTabType === 'desktop');
 
@@ -664,6 +702,8 @@ class AdministrationHomeTabController extends Controller
         WidgetInstance $widgetInstance
     )
     {
+        $this->checkOpen();
+
         if (!is_null($homeTab->getUser()) ||
             !is_null($homeTab->getWorkspace()) ||
             !is_null($widgetInstance->getUser()) ||
@@ -704,7 +744,7 @@ class AdministrationHomeTabController extends Controller
      *     class="ClarolineCoreBundle:Widget\WidgetInstance",
      *     options={"id" = "widgetInstanceId", "strictId" = true}
      * )
-     * @EXT\Template("ClarolineCoreBundle:Administration:adminWidgetInstanceNameEditForm.html.twig")
+     * @EXT\Template("ClarolineCoreBundle:Administration\HomeTab:adminWidgetInstanceNameEditForm.html.twig")
      *
      * @param WidgetInstance $widgetInstance
      *
@@ -714,6 +754,8 @@ class AdministrationHomeTabController extends Controller
      */
     public function adminWidgetInstanceNameFormAction(WidgetInstance $widgetInstance)
     {
+        $this->checkOpen();
+
         if (!is_null($widgetInstance->getUser()) ||
             !is_null($widgetInstance->getWorkspace())) {
 
@@ -743,13 +785,17 @@ class AdministrationHomeTabController extends Controller
      *     class="ClarolineCoreBundle:Widget\WidgetInstance",
      *     options={"id" = "widgetInstanceId", "strictId" = true}
      * )
-     * @EXT\Template("ClarolineCoreBundle:Administration:adminWidgetInstanceNameEditForm.html.twig")
+     * @EXT\Template("ClarolineCoreBundle:Administration\HomeTab:adminWidgetInstanceNameEditForm.html.twig")
      * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
      *
+     * @param \Claroline\CoreBundle\Entity\Widget\WidgetInstance $widgetInstance
+     * @throws \Symfony\Component\Security\Core\Exception\AccessDeniedException
      * @return array
      */
     public function adminWidgetInstanceNameAction(WidgetInstance $widgetInstance)
     {
+        $this->checkOpen();
+
         if (!is_null($widgetInstance->getUser()) ||
             !is_null($widgetInstance->getWorkspace())) {
 
@@ -789,6 +835,9 @@ class AdministrationHomeTabController extends Controller
      *
      * Change order of the given widgetHomeTabConfig in the given direction.
      *
+     * @param \Claroline\CoreBundle\Entity\Widget\WidgetHomeTabConfig $widgetHomeTabConfig
+     * @param string $direction
+     * @throws \Symfony\Component\Security\Core\Exception\AccessDeniedException
      * @return Response
      */
     public function adminWidgetHomeTabConfigChangeOrderAction(
@@ -796,6 +845,8 @@ class AdministrationHomeTabController extends Controller
         $direction
     )
     {
+        $this->checkOpen();
+
         if (!is_null($widgetHomeTabConfig->getUser()) ||
             !is_null($widgetHomeTabConfig->getWorkspace())) {
 
@@ -835,6 +886,8 @@ class AdministrationHomeTabController extends Controller
         WidgetHomeTabConfig $widgetHomeTabConfig
     )
     {
+        $this->checkOpen();
+
         if (!is_null($widgetHomeTabConfig->getUser()) ||
             !is_null($widgetHomeTabConfig->getWorkspace())) {
 
@@ -872,6 +925,8 @@ class AdministrationHomeTabController extends Controller
         WidgetHomeTabConfig $widgetHomeTabConfig
     )
     {
+        $this->checkOpen();
+
         if (!is_null($widgetHomeTabConfig->getUser()) ||
             !is_null($widgetHomeTabConfig->getWorkspace())) {
 
@@ -904,6 +959,8 @@ class AdministrationHomeTabController extends Controller
         WidgetInstance $widgetInstance
     )
     {
+        $this->checkOpen();
+
         if (!is_null($widgetInstance->getUser()) ||
             !is_null($widgetInstance->getWorkspace())) {
 
@@ -917,5 +974,14 @@ class AdministrationHomeTabController extends Controller
         );
 
         return new Response($event->getContent());
+    }
+
+    private function checkOpen()
+    {
+        if ($this->sc->isGranted('OPEN', $this->hometabAdminTool)) {
+            return true;
+        }
+
+        throw new AccessDeniedException();
     }
 }

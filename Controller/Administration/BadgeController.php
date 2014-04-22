@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Claroline\CoreBundle\Controller\Badge;
+namespace Claroline\CoreBundle\Controller\Administration;
 
 use Claroline\CoreBundle\Entity\Badge\Badge;
 use Claroline\CoreBundle\Entity\Badge\BadgeClaim;
@@ -28,16 +28,14 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use JMS\SecurityExtraBundle\Annotation as SEC;
 use JMS\DiExtraBundle\Annotation as DI;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
- * @DI\Tag("security.secure_service")
- * @SEC\PreAuthorize("hasRole('ADMIN')")
- *
  * Controller of the badges.
  *
  * @Route("/admin/badges")
  */
-class AdminController extends Controller
+class BadgeController extends Controller
 {
     /**
      * @Route(
@@ -51,6 +49,8 @@ class AdminController extends Controller
      */
     public function listAction($badgePage, $claimPage)
     {
+        $this->checkOpen();
+
         $parameters = array(
             'badgePage'        => $badgePage,
             'claimPage'        => $claimPage,
@@ -78,6 +78,7 @@ class AdminController extends Controller
      */
     public function addAction(Request $request)
     {
+        $this->checkOpen();
         $badge = new Badge();
 
         $locales = $this->get('claroline.common.locale_manager')->getAvailableLocales();
@@ -119,6 +120,7 @@ class AdminController extends Controller
      */
     public function editAction(Request $request, Badge $badge, $page = 1)
     {
+        $this->checkOpen();
         $query   = $this->getDoctrine()->getRepository('ClarolineCoreBundle:Badge\Badge')->findUsers($badge, false);
         $adapter = new DoctrineORMAdapter($query);
         $pager   = new Pagerfanta($adapter);
@@ -162,6 +164,8 @@ class AdminController extends Controller
      */
     public function deleteAction(Badge $badge)
     {
+        $this->checkOpen();
+
         if (null !== $badge->getWorkspace()) {
             throw $this->createNotFoundException("No badge found.");
         }
@@ -195,6 +199,8 @@ class AdminController extends Controller
      */
     public function awardAction(Request $request, Badge $badge)
     {
+        $this->checkOpen();
+
         if (null !== $badge->getWorkspace()) {
             throw $this->createNotFoundException("No badge found.");
         }
@@ -271,6 +277,8 @@ class AdminController extends Controller
      */
     public function unawardAction(Request $request, Badge $badge, User $user)
     {
+        $this->checkOpen();
+
         if (null !== $badge->getWorkspace()) {
             throw $this->createNotFoundException("No badge found.");
         }
@@ -315,6 +323,8 @@ class AdminController extends Controller
      */
     public function manageClaimAction(BadgeClaim $badgeClaim, $validate = false)
     {
+        $this->checkOpen();
+
         if (null !== $badgeClaim->getBadge()->getWorkspace()) {
             throw $this->createNotFoundException("No badge found.");
         }
@@ -348,5 +358,17 @@ class AdminController extends Controller
         }
 
         return $this->redirect($this->generateUrl('claro_admin_badges'));
+    }
+
+    private function checkOpen()
+    {
+        $badgeAdminTool = $this->container->get('claroline.manager.tool_manager')
+            ->getAdminToolByName('platform_parameters');
+
+        if ($this->container->get('security.context')->isGranted('OPEN', $badgeAdminTool)) {
+            return true;
+        }
+
+        throw new AccessDeniedException();
     }
 }

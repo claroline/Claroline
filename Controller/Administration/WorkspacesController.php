@@ -13,39 +13,48 @@ namespace Claroline\CoreBundle\Controller\Administration;
 
 use Claroline\CoreBundle\Event\StrictDispatcher;
 use Claroline\CoreBundle\Manager\WorkspaceManager;
+use Claroline\CoreBundle\Manager\ToolManager;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use JMS\SecurityExtraBundle\Annotation as SEC;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Security\Core\SecurityContextInterface;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
-/**
- * @DI\Tag("security.secure_service")
- * @SEC\PreAuthorize("hasRole('ADMIN')")
- */
 class WorkspacesController
 {
     private $workspaceManager;
     private $om;
     private $eventDispatcher;
+    private $sc;
+    private $toolManager;
+    private $workspaceAdminTool;
 
     /**
      * @DI\InjectParams({
      *     "workspaceManager"   = @DI\Inject("claroline.manager.workspace_manager"),
      *     "om"                 = @DI\Inject("claroline.persistence.object_manager"),
-     *     "eventDispatcher"    = @DI\Inject("claroline.event.event_dispatcher")
+     *     "eventDispatcher"    = @DI\Inject("claroline.event.event_dispatcher"),
+     *     "sc"                 = @DI\Inject("security.context"),
+     *     "toolManager"        = @DI\Inject("claroline.manager.tool_manager")
      * })
      */
     public function __construct(
         WorkspaceManager $workspaceManager,
         ObjectManager $om,
-        StrictDispatcher $eventDispatcher
+        StrictDispatcher $eventDispatcher,
+        SecurityContextInterface $sc,
+        ToolManager $toolManager
     )
     {
-        $this->workspaceManager = $workspaceManager;
-        $this->om = $om;
-        $this->eventDispatcher = $eventDispatcher;
+        $this->workspaceManager   = $workspaceManager;
+        $this->om                 = $om;
+        $this->eventDispatcher    = $eventDispatcher;
+        $this->sc                 = $sc;
+        $this->toolManager        = $toolManager;
+        $this->workspaceAdminTool = $this->toolManager->getAdminToolByName('platform_parameters');
     }
 
     /**
@@ -69,10 +78,13 @@ class WorkspacesController
      * @param $search
      * @param $max
      * @param $order
+     * @param $direction
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function managementAction($page, $search, $max, $order, $direction)
     {
+        $this->checkOpen();
+
         $pager = $search === '' ?
             $this->workspaceManager->findAllWorkspaces($page, $max, $order, $direction) :
             $this->workspaceManager->getWorkspaceByName($search, $page, $max, $order);
@@ -92,6 +104,8 @@ class WorkspacesController
      */
     public function toggleWorkspaceVisibilityAction(Request $request)
     {
+        $this->checkOpen();
+
         $postData = $request->request->all();
         $workspace = $this->workspaceManager->getWorkspaceById($postData['id']);
         $postData['visible'] === '1' ?
@@ -113,6 +127,8 @@ class WorkspacesController
      */
     public function toggleWorkspacePublicRegistrationAction(Request $request)
     {
+        $this->checkOpen();
+
         $postData = $request->request->all();
         $workspace = $this->workspaceManager->getWorkspaceById($postData['id']);
         $postData['registration'] === 'unlock' ?
@@ -143,6 +159,8 @@ class WorkspacesController
      */
     public function deleteWorkspacesAction(array $workspaces)
     {
+        $this->checkOpen();
+
         if (count($workspaces) > 0) {
             $this->om->startFlushSuite();
 
@@ -155,5 +173,14 @@ class WorkspacesController
         }
 
         return new Response('Workspace(s) deleted', 204);
+    }
+
+    private function checkOpen()
+    {
+        if ($this->sc->isGranted('OPEN', $this->workspaceAdminTool)) {
+            return true;
+        }
+
+        throw new AccessDeniedException();
     }
 }

@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Claroline\CoreBundle\Controller\Tool;
+namespace Claroline\CoreBundle\Controller\Administration;
 
 use Claroline\CoreBundle\Form\Factory\FormFactory;
 use Claroline\CoreBundle\Manager\ToolManager;
@@ -21,24 +21,25 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use JMS\DiExtraBundle\Annotation as DI;
 use JMS\SecurityExtraBundle\Annotation as SEC;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Symfony\Component\Security\Core\SecurityContextInterface;
 
-/**
- * @DI\Tag("security.secure_service")
- * @SEC\PreAuthorize("hasRole('ADMIN')")
- */
-class AdministrationToolController extends Controller
+class ToolsController extends Controller
 {
     private $request;
     private $toolManager;
     private $formFactory;
     private $router;
+    private $sc;
+    private $desktopToolAdmin;
 
     /**
      * @DI\InjectParams({
      *     "request"     = @DI\Inject("request"),
      *     "toolManager" = @DI\Inject("claroline.manager.tool_manager"),
      *     "formFactory" = @DI\Inject("claroline.form.factory"),
-     *     "router"      = @DI\Inject("router")
+     *     "router"      = @DI\Inject("router"),
+     *     "sc"          = @DI\Inject("security.context")
      * })
      */
     public function __construct
@@ -46,21 +47,24 @@ class AdministrationToolController extends Controller
         Request $request,
         ToolManager $toolManager,
         FormFactory $formFactory,
-        UrlGeneratorInterface $router
+        UrlGeneratorInterface $router,
+        SecurityContextInterface $sc
     )
     {
-        $this->request = $request;
-        $this->toolManager = $toolManager;
-        $this->formFactory = $formFactory;
-        $this->router = $router;
+        $this->request          = $request;
+        $this->toolManager      = $toolManager;
+        $this->formFactory      = $formFactory;
+        $this->router           = $router;
+        $this->sc               = $sc;
+        $this->desktopToolAdmin = $toolManager->getAdminToolByName('desktop_tools');
     }
 
     /**
      * @EXT\Route(
-     *     "/tool/show",
+     *     "/show",
      *     name="claro_admin_tool_show"
      * )
-     * @EXT\Template("ClarolineCoreBundle:Administration:desktopToolNames.html.twig")
+     * @EXT\Template("ClarolineCoreBundle:Administration\Tool:desktopToolNames.html.twig")
      *
      * change the desktop tool name.
      *
@@ -68,6 +72,8 @@ class AdministrationToolController extends Controller
      */
     public function showToolAction()
     {
+        $this->checkOpen();
+
         $forms = array();
         $tools = $this->toolManager->getAllTools();
 
@@ -83,7 +89,7 @@ class AdministrationToolController extends Controller
 
      /**
      * @EXT\Route(
-     *     "/tool/modify/{id}",
+     *     "/modify/{id}",
      *     name="claro_admin_tool_modify"
      * )
      * @EXT\Method("POST")
@@ -100,6 +106,8 @@ class AdministrationToolController extends Controller
      */
     public function modifyToolAction(Tool $tool)
     {
+        $this->checkOpen();
+
         $form = $this->formFactory->create(FormFactory::TYPE_TOOL, array(), $tool);
 
         if ($this->request->getMethod() === 'POST') {
@@ -110,5 +118,14 @@ class AdministrationToolController extends Controller
         }
 
         return new RedirectResponse($this->router->generate('claro_admin_tool_show'));
+    }
+
+    private function checkOpen()
+    {
+        if ($this->sc->isGranted('OPEN', $this->desktopToolAdmin)) {
+            return true;
+        }
+
+        throw new AccessDeniedException();
     }
 }
