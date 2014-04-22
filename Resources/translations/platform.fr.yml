@@ -449,6 +449,7 @@ not_blank_expected: 'Cette valeur ne peut pas être vide'
 note: Note
 notification_activated: 'Notifications activées.'
 notification_deactivated: 'Notifications désactivées.'
+notifications: 'Notifications'
 oauth: Oauth
 object: Objet
 ok: Ok
