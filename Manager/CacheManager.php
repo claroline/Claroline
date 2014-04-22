@@ -21,7 +21,7 @@ class CacheManager {
     public function __construct(StrictDispatcher $eventManager, $rootDir)
     {
         $ds = DIRECTORY_SEPARATOR;
-        $this->cachePath = $rootDir . $ds . 'cache' . $ds . 'claroline.cache.php';
+        $this->cachePath = $rootDir . $ds . 'cache' . $ds . 'claroline.cache.ini';
         $this->eventManager = $eventManager;
     }
 
@@ -29,6 +29,8 @@ class CacheManager {
      * Read a value from the claroline cache.
      *
      * @param $parameter
+     *
+     * @throws \Exception
      *
      * @return
      */
@@ -41,22 +43,25 @@ class CacheManager {
             $isRefreshed = true;
         }
 
-        $values = include $this->cachePath;
+        $values = parse_ini_file($this->cachePath);
+        $return = null;
 
         if (isset($values[$parameter])) {
-            return $values[$parameter];
+            $return = $values[$parameter];
         } else {
             if (!$isRefreshed) {
                 $this->refresh();
-                $values = include $this->cachePath;
+                $values = parse_ini_file($this->cachePath);
 
                 if (isset($values[$parameter])) {
-                    return $values[$parameter];
+                    $return = $values[$parameter];
                 }
             }
         }
 
-        return null;
+        //gotta parse & change "return":
+
+        return $return;
     }
 
     /**
@@ -66,11 +71,7 @@ class CacheManager {
     {
         $this->removeCache();
         $event = $this->eventManager->dispatch('refresh_cache', 'RefreshCache');
-        $value = var_export($event->getParameters(), true);
-        $code = sprintf('<?php return %s;', $value);
-        if (!file_put_contents($this->cachePath, $code)) {
-            throw new \Exception("The claroline cache couldn't be created");
-        }
+        $this->writeIniFile($event->getParameters(), $this->cachePath);
     }
 
     /**
@@ -89,5 +90,29 @@ class CacheManager {
     private function cacheExists()
     {
         return file_exists($this->cachePath);
+    }
+
+    /**
+     * @param array $array
+     * @param string $iniFile
+     *
+     * @throws \Exception
+     */
+    public function writeIniFile(array $array, $iniFile)
+    {
+        if (file_exists($this->cachePath)) {
+            unlink($this->cachePath);
+        }
+
+        foreach ($array as $key => $value) {
+
+            if (is_bool($value)) {
+                $value = ($value) ? "true": "false";
+            }
+
+            if (!file_put_contents($iniFile, "{$key} = {$value}\n", FILE_APPEND)) {
+                throw new \Exception("The claroline cache couldn't be created");
+            }
+        }
     }
 } 
