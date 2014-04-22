@@ -286,6 +286,47 @@
     };
 
     /**
+     * @todo documentation
+     */
+    tinymce.claroline.mentionsSource = function (query, process, delimiter)
+    {
+        if (!_.isUndefined(window.Workspace) && !_.isNull(window.Workspace.id)) {
+            if (delimiter === '@' && query.length > 0) {
+                $.getJSON(searchUserInWorkspaceUrl + window.Workspace.id + '/' + query, function (data) {
+                    if (!_.isEmpty(data) && !_.isUndefined(data.users) && !_.isEmpty(data.users)) {
+                        process(data.users);
+                    }
+                });
+            }
+        }
+    };
+
+    /**
+     * @todo documentation
+     */
+    tinymce.claroline.mentionsItem = function (item)
+    {
+        var avatar = '<i class="icon-user"></i>';
+        if (item.avatar !== null) {
+            avatar = '<img src="' + home.asset + 'uploads/pictures/' + item.avatar + '"/>';
+        }
+
+        return '<li>' +
+            '<a href="javascript:;"><span class="user-picker-dropdown-avatar">' + avatar + '</span>' +
+            '<span class="user-picker-dropdown-name">' + item.name + '</span>' +
+            '<small class="user-picker-avatar-mail text-muted">(' + item.mail + ')</small></a>' +
+            '</li>';
+    };
+
+    /**
+     * @todo documentation
+     */
+    tinymce.claroline.mentionsInsert = function (item)
+    {
+        return '<user id="' + item.id + '"><a href="' + publicProfileUrl + item.id + '">' + item.name + '</a></user>';
+    };
+
+    /**
      * Configuration and parameters of a TinyMCE editor.
      */
     tinymce.claroline.configuration = {
@@ -303,41 +344,17 @@
             'template paste textcolor emoticons code -mention -accordion'
         ],
         'toolbar1': 'bold italic strikethrough | alignleft aligncenter alignright alignjustify | ' +
-                    'link resourcePicker fileUpload | preview | fullscreen | displayAllButtons',
-        'toolbar2': 'styleselect | undo redo | forecolor backcolor | charmap | bullist numlist | outdent indent | ' +
-                    'image media | print | code',
+                    'resourcePicker fileUpload | fullscreen displayAllButtons',
+        'toolbar2': 'styleselect | undo redo | forecolor backcolor | bullist numlist | outdent indent | ' +
+                    'image media link charmap | print preview | code',
         'extended_valid_elements': 'user[id], a[data-toggle|data-parent]',
         'paste_preprocess': tinymce.claroline.paste,
         'setup': tinymce.claroline.setup,
         'mentions': {
-            source: function (query, process, delimiter) {
-                if (!_.isUndefined(window.Workspace) && !_.isNull(window.Workspace.id)) {
-                    if (delimiter === '@' && query.length > 0) {
-                        $.getJSON(searchUserInWorkspaceUrl + window.Workspace.id + '/' + query, function (data) {
-                            if (!_.isEmpty(data) && !_.isUndefined(data.users) && !_.isEmpty(data.users)) {
-                                process(data.users);
-                            }
-                        });
-                    }
-                }
-            },
-            render: function (item) {
-                var avatar = '<i class="icon-user"></i>';
-                if (item.avatar !== null) {
-                    avatar = '<img src="' + home.asset + 'uploads/pictures/' + item.avatar + '"/>';
-                }
-
-                return '<li>' +
-                    '<a href="javascript:;"><span class="user-picker-dropdown-avatar">' + avatar +
-                    '</span> <span class="user-picker-dropdown-name">' + item.name +
-                    '</span> <small class="user-picker-avatar-mail text-muted">(' + item.mail + ')</small></a>' +
-                    '</li>';
-            },
-            insert: function (item) {
-                return '<user id="' + item.id + '"><a href="' + publicProfileUrl + item.id + '">' + item.name +
-                       '</a></user>';
-            },
-            delay: 200
+            'source': tinymce.claroline.mentionsSource,
+            'render': tinymce.claroline.mentionsRender,
+            'insert': tinymce.claroline.mentionsInsert,
+            'delay': 200
         }
     };
 
@@ -367,6 +384,7 @@
     })
     .on('click', '.mce-widget.mce-btn[aria-label="Fullscreen"]', function () {
         tinymce.claroline.toggleFullscreen(this);
+        $(window).scrollTop($(this).parents('.mce-tinymce.mce-container.mce-panel').first().offset().top);
         window.dispatchEvent(new window.Event('resize'));
     })
     .bind('DOMSubtreeModified', function () {
@@ -383,7 +401,7 @@
 
     $(window).on('beforeunload', function () {
         if (tinymce.claroline.checkBeforeUnload()) {
-            return 'Leaving this page will lose your changes. Are you sure?';
+            return translator.get('platform:leave_this_page');
         }
     });
 }());
