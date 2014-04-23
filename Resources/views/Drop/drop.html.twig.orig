@@ -44,6 +44,50 @@
         <h4>{{ 'Documents added  the copy'|trans({},'icap_dropzone')}}</h4>
         {{ dropzoneMacros.displayDocumentsList(drop, dropzone, 12, "complete", null) }}
 
+<<<<<<< HEAD
+        {% if drop.documents|length <= 0%}
+            {{ 'no document added yet'|trans({},'icap_dropzone')}}
+        {% endif %}
+        
+        <br />
+        {% set documentListText = 'Documents'|trans({}, 'icap_dropzone') %}
+        {{ dropzoneMacros.displayDocumentsList(drop, dropzone, 12, "complete", documentListText) }}
+
+        <form  id='dropzone_global_drop_form' class="form-horizontal" method="POST" action="{{ path('icap_dropzone_drop', {'resourceId': dropzone.id}) }}">
+        <div class="{% if form.vars.errors|length > 0 %}has-error{% endif %}">
+            {{ form_errors(form) }}
+        </div>
+        {{ form_end(form) }}
+        <div class="show-during-add" style="display: none;">
+            <hr/>
+            <div class="container-inline"></div>
+        </div>
+        <div class='div-test'>
+            {% if allowedTypes|length <= 0 %}
+                <span class="text-danger">{{ 'No document type allowed'|trans({}, 'icap_dropzone') }}</span>
+            {% else %}
+                {% if 'url' in allowedTypes %}
+                    {% include 'IcapDropzoneBundle:Document:documentForm.html.twig' with {'form':form_url, 'documentType': 'url'}%}
+                {% endif %}
+
+                {% if 'file' in allowedTypes %}
+                    {% include 'IcapDropzoneBundle:Document:documentForm.html.twig' with {'form':form_file, 'documentType': 'file'}%} 
+                {% endif %}
+
+                {% if 'resource' in allowedTypes %}
+                    {% include 'IcapDropzoneBundle:Document:documentForm.html.twig' with {'form':form_resource, 'documentType': 'resource'}%}
+                {% endif %}
+
+                {% if 'text' in allowedTypes %}
+                    {% include 'IcapDropzoneBundle:Document:documentForm.html.twig' with {'form':form_text, 'documentType': 'text'}%}
+                {% endif %}
+            {% endif %}
+
+        </div>
+
+
+
+=======
         {# ADD DOCUMENT #}
         {% include 'IcapDropzoneBundle:Drop:addDocument.html.twig' %}
 
@@ -52,6 +96,7 @@
             <div class="{% if form.vars.errors|length > 0 %}has-error{% endif %}">
                 {{ form_errors(form) }}
             </div>
+>>>>>>> arnaud/layout-improvment
             <div class="row">
                 <div class="col-md-12">
 
@@ -71,13 +116,13 @@
 
                                     <div class='modal-warning text-danger' style="display:none">
                                          <span class="text-danger glyphicon icon-warning-sign"></span>
-                                        {{ 'Warn, some field are not empty, they will not be saved until you click the Add button '|trans({},'icap_dropzone') }}
+                                        {{ 'Warn, some field are not empty, they will not be saved until you click the Add button'|trans({},'icap_dropzone') }}
                                     </div>
                                 </div>
                                 <div class="modal-footer">
                                     <a href="#" class="btn btn-default" data-dismiss="modal">{{ 'Cancel'|trans({}, 'icap_dropzone') }}</a>
 
-                                    <button type="submit" class="btn btn-primary pull-right">
+                                    <button id="global_dropsubmit" type="submit" class="btn btn-primary pull-right">
                                         {{ 'Confirm and finished'|trans({}, 'icap_dropzone') }}
                                     </button>
                                 </div>
@@ -87,7 +132,7 @@
 
                 </div>
             </div>
-            {{ form_end(form) }}
+
 
         <br/>
     </div>
@@ -127,7 +172,7 @@
             var resourceNodeId = null;
 
             var callBack = function(nodes){
-                console.log('callback custom pour document');
+                //console.log('callback custom pour document');
                 var id = _.keys(nodes)[0];
                 var name = nodes[_.keys(nodes)][0];
                 var resourceTypes = nodes[_.keys(nodes)][1];
@@ -158,6 +203,11 @@
             // autosubmit input files.
             $('#icap_dropzone_document_file_form_file').change(function(){
               $(this).parents('form').submit();
+            });
+
+            $('#icap_dropzone_document_file_form_file').parents('form').find('button').click(function(e) {
+                // desactivation of the submit button ( autosubmit is activated).
+                e.preventDefault();
             });
 
             $('a.launch-inline').on('click', function (event) {
@@ -207,10 +257,15 @@
                 });
             });
 
-
+            $('#global_dropsubmit').click(function(e)
+            {
+                e.preventDefault();
+                $('#dropzone_global_drop_form').submit();
+            });
 
             $('#dropzone_global_save_link').click(function()
             {
+
                 // test if some text or data is not save before launch modal, in order to adapt message.
                 var fieldEmpty = true;
                 var text = $('#icap_dropzone_document_file_form_text').val();
@@ -220,6 +275,7 @@
                     fieldEmpty = false;
                 }
 
+                // if there is not saved data ( text or somethin, alert User.
                 if(!fieldEmpty)
                 {
                     $('.modal-warning').show();
