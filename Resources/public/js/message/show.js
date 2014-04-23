@@ -22,6 +22,7 @@
     );
 
     var currentType = 'user';
+
     var users = [];
     var groups = [];
     var workspaces = [];
@@ -123,6 +124,11 @@
                 statusCode: {
                     200: function (datas) {
                         var currentValue = $('#message_form_to').attr('value');
+
+                        if (currentValue === undefined) {
+                            currentValue = '';
+                        }
+
                         currentValue += datas;
                         $('#message_form_to').attr('value', currentValue);
                     }
@@ -135,6 +141,7 @@
 
     function updateContactInput()
     {
+        $('#message_form_to').attr('value', '');
         getUsersFromInput('claro_usernames_from_users', users, 'userIds');
         getUsersFromInput('claro_names_from_groups', groups, 'groupIds');
         getUsersFromInput('claro_names_from_workspaces', workspaces, 'workspaceIds');
@@ -225,10 +232,10 @@
 
     $('body').on('click', '.contact-chk', function () {
         var contactId = $(this).attr('contact-id');
-        var checked = $(this).attr('checked');
+        var checked = $(this).prop('checked');
         var index = typeMap[currentType].indexOf(contactId);
 
-        if (checked === 'checked' && index < 0) {
+        if (checked && index < 0) {
             typeMap[currentType].push(contactId);
         }
         else {

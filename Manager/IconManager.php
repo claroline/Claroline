@@ -245,14 +245,19 @@ class IconManager
     public function delete(ResourceIcon $icon)
     {
         if ($icon->getMimeType() === 'custom') {
-            $shortcut = $icon->getShortcutIcon();
-            $this->om->remove($shortcut);
-            $this->om->remove($icon);
-            $this->om->flush();
-        }
+            //search if this icon is used elsewhere (ie copy)
+            $res = $this->om->getRepository('ClarolineCoreBundle:Resource\ResourceNode')
+                ->findBy(array('icon' => $icon));
 
-        $this->removeImageFromThumbDir($icon);
-        $this->removeImageFromThumbDir($icon->getShortcutIcon());
+            if (count($res) <= 1) {
+                $shortcut = $icon->getShortcutIcon();
+                $this->om->remove($shortcut);
+                $this->om->remove($icon);
+                $this->om->flush();
+                $this->removeImageFromThumbDir($icon);
+                $this->removeImageFromThumbDir($icon->getShortcutIcon());
+            }
+        }
     }
 
     /**

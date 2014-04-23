@@ -104,7 +104,7 @@
             $.ajax(home.path + contentPath)
             .done(function (data) {
                 $(element).replaceWith(data);
-
+                $(window).scrollTop($('.creator[data-id="' + id + '"]').offset().top);
                 $('.contents').trigger('ContentModified');
             })
             .error(function () {

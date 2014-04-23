@@ -10,3 +10,5 @@ google_meta_tag_error: 'The field must be a meta tag, example: <meta name="googl
 password_mismatch: 'Passwords mismatch'
 special_char_not_allowed: 'Special characters are not allowed (allowed characters are: a-z, A-Z, 0-9, _ and .)'
 public_profile_url_not_valid: 'Your public profile URL is not valid.'
+name_required: Name required.
+role_already_exists: This role already exists.

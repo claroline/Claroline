@@ -1297,7 +1297,15 @@ class ResourceManager
         $newNode->setIcon($node->getIcon());
         $newNode->setClass($node->getClass());
         $newNode->setMimeType($node->getMimeType());
-        $this->rightsManager->copy($node, $newNode);
+
+        //if everything happens inside the same workspace, rights are copied
+        if ($newParent->getWorkspace() === $node->getWorkspace()) {
+            $this->rightsManager->copy($node, $newNode);
+        } else {
+            //otherwise we use the parent rights
+            $this->setRights($newNode, $newParent, array());
+        }
+
         $this->om->persist($newNode);
 
         return $newNode;
