@@ -93,26 +93,22 @@ class CacheManager {
     }
 
     /**
-     * @param array $array
+     * @param array $parameters
      * @param string $iniFile
      *
      * @throws \Exception
      */
-    public function writeIniFile(array $array, $iniFile)
+    private function writeIniFile(array $parameters, $iniFile)
     {
-        if (file_exists($this->cachePath)) {
-            unlink($this->cachePath);
+        $content = '';
+
+        foreach ($parameters as $key => $value) {
+            $content .= "{$key} = {$value}\n";
         }
 
-        foreach ($array as $key => $value) {
-
-            if (is_bool($value)) {
-                $value = ($value) ? "true": "false";
-            }
-
-            if (!file_put_contents($iniFile, "{$key} = {$value}\n", FILE_APPEND)) {
-                throw new \Exception("The claroline cache couldn't be created");
-            }
+        if (!file_put_contents($iniFile, $content)) {
+            throw new \Exception("The claroline cache couldn't be created");
         }
+
     }
 } 
