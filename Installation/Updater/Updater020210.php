@@ -35,6 +35,10 @@ class Updater020210
         $em->persist($forumType);
         $em->flush();
         $this->log('Updating forum plugin...');
+        $plugin = $em->getRepository('Claroline\CoreBundle\Entity\Plugin')->findOneByBundleName('ForumBundle');
+        $plugin->setHasOptions(false);
+        $em->persist($forumType);
+        $em->flush();
     }
 
     public function setLogger($logger)
