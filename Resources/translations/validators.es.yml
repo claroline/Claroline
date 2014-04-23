@@ -9,3 +9,5 @@ badge_expiring_need_period_and_duration: 'Un periodo de validez debe estar defin
 google_meta_tag_error: 'Se debe definir una meta etiqueta, ejemplo: <meta name="google-site-verification" content="XXX" />'
 password_mismatch: 'Las contraseña no coinciden'
 special_char_not_allowed: 'Los caracteres especiales no están permitidos (los caracteres permitidos son: a-z, A-Z, 0-9, _ y .)'
+name_required: El Nombre es obligatorio.
+role_already_exists: El rol ya existe.

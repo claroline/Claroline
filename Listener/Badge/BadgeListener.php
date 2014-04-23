@@ -102,18 +102,22 @@ class BadgeListener
             $receiver = $event->getLog()->getReceiver();
 
             foreach ($badges as $badge) {
-                if (null !== $doer && !$doer->hasBadge($badge)) {
-                    $resources = $this->ruleValidator->validate($badge, $doer);
+                $nbRules      = count($badge->getRules());
 
-                    if ($resources) {
+                if (null !== $doer && !$doer->hasBadge($badge)) {
+                    $resources    = $this->ruleValidator->validate($badge, $doer);
+                    $nbValidRules = count($resources['validRules']);
+
+                    if(0 < $nbValidRules && $nbValidRules >= $nbRules) {
                         $this->badgeManager->addBadgeToUser($badge, $doer);
                     }
                 }
 
                 if (null !== $receiver && !$receiver->hasBadge($badge)) {
                     $resources = $this->ruleValidator->validate($badge, $receiver);
+                    $nbValidRules = count($resources['validRules']);
 
-                    if ($resources) {
+                    if(0 < $nbValidRules && $nbValidRules >= $nbRules) {
                         $this->badgeManager->addBadgeToUser($badge, $receiver);
                     }
                 }

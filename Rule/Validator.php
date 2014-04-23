@@ -49,7 +49,7 @@ class Validator
      * @param Rulable $rulable
      * @param User    $user
      *
-     * @return bool|Log[]
+     * @return array
      */
     public function validate(Rulable $rulable, User $user)
     {
@@ -65,7 +65,7 @@ class Validator
      */
     protected function validateRules($rules, User $user, array $restriction)
     {
-        $return    = array('validRules' => 0, 'rules' => array());
+        $return = array('validRules' => 0, 'rules' => array());
 
         if (0 < count($rules)) {
             foreach ($rules as $rule) {

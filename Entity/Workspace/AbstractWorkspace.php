@@ -53,6 +53,11 @@ abstract class AbstractWorkspace
     protected $name;
 
     /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    protected $description;
+
+    /**
      * @ORM\Column(unique=true)
      * @Assert\NotBlank()
      */
@@ -153,7 +158,17 @@ abstract class AbstractWorkspace
         $this->name = $name;
     }
 
-    public function getEvents()
+    public function getDescription() 
+    {
+        return $this->description;
+    }
+
+    public function setDescription($description) 
+    {
+        $this->description = $description;
+    }
+
+    public function getEvents() 
     {
         return $this->events;
     }

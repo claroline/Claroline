@@ -25,6 +25,15 @@ class WorkspaceEditType extends AbstractType
         $attr['autocomplete'] = 'off';
         $builder->add('name', 'text', array('required' => true));
         $builder->add('code', 'text', array('required' => true));
+        if (isset($options['theme_options']['tinymce']) and !$options['theme_options']['tinymce']) {
+            $builder->add(
+                'description',
+                'textarea', 
+                array('required' => false)
+            );
+        } else {
+            $builder->add('description', 'tinymce', array('required' => false));
+        }
         $builder->add('displayable', 'checkbox', array('required' => false));
         $builder->add('selfRegistration', 'checkbox', array('required' => false));
         $builder->add('selfUnregistration', 'checkbox', array('required' => false));

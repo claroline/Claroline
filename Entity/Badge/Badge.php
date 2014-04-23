@@ -301,6 +301,17 @@ class Badge extends Rulable
 
             return $translation;
         }
+        elseif (preg_match('/Name|Description|Criteria$/', $name, $matches)) {
+            //Usefull for badge rule form when wanted frName on a badge
+            $searchedLocale = substr($name, 0, -strlen($matches[0]));
+            $translation    = $this->getTranslationForLocale($searchedLocale);
+
+            if (null !== $translation) {
+                return $translation->{'get' . $matches[0]}();
+            }
+
+            return null;
+        }
 
         $trace = debug_backtrace();
         trigger_error(

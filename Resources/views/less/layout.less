@@ -164,6 +164,7 @@ textarea {
 /************/
 
 #top_bar {
+
     .badge {
         color: @navbar-inverse-bg;
         background: @navbar-inverse-link-color;
@@ -235,6 +236,16 @@ textarea {
         max-height: @navbar-height;
         overflow: hidden !important;
         position: relative;
+    }
+
+    .break-hide {
+        display: none;
+    }
+
+    &.break{
+        .break-hide {
+            display: inline;
+        }
     }
 
     @media(min-width: @screen-md) {
@@ -1154,8 +1165,7 @@ form .global-error {
 }
 
 .mce-container.mce-menubar.mce-toolbar.mce-first.mce-stack-layout-item,
-.mce-statusbar.mce-container.mce-panel.mce-last.mce-stack-layout-item,
-.mce-container.mce-toolbar.mce-last.mce-stack-layout-item{
+.mce-statusbar.mce-container.mce-panel.mce-last.mce-stack-layout-item {
     display: none;
 }
 

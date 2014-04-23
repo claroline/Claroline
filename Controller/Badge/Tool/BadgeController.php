@@ -44,7 +44,7 @@ class BadgeController extends Controller
                 $nbBadgeRules      = count($workspaceBadge->getRules());
                 $validatedRules    = $badgeRuleValidator->validate($workspaceBadge, $loggedUser);
 
-                if(0 < $nbBadgeRules && $nbBadgeRules >= $validatedRules['validRules']) {
+                if(0 < $nbBadgeRules && 0 < $validatedRules['validRules'] && $nbBadgeRules >= $validatedRules['validRules']) {
                     $inProgressBadges[] = $workspaceBadge;
                 }
                 else {
