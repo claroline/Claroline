@@ -48,7 +48,7 @@
     // Put the new image into the drop-down list
     function ChangeList(idDoc, label, type) {
 
-        if (type == '.png' || type == '.jpeg' || type == '.jpg' || type == '.gif' || type == '.bmp') {
+        if (type.toLowerCase() == '.png' || type.toLowerCase() == '.jpeg' || type.toLowerCase() == '.jpg' || type.toLowerCase() == '.gif' || type.toLowerCase() == '.bmp') {
 
             $("#ujm_exobundle_interactiongraphictype_document")
                 .append($('<option selected="selected" value="' + idDoc + '"></option>')
