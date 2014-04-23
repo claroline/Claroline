@@ -179,7 +179,7 @@
                             </a>
                         </td>
                         <td>
-                            {% if w.getCreationDate() is defined %}
+                            {% if w.getCreationDate() is not null %}
                                 {{ w.getCreationDate()|date("d/m/Y g:i")}} 
                             {% else %}
                                 -

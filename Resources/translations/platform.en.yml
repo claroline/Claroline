@@ -773,9 +773,10 @@ workspace_welcome: Welcome
 workspaces: Workspaces
 workspaces_included_in_category: 'Workspaces included in this category'
 workspace_management : 'The workspace has been create at %creationDate%, by %creator%. There is %count% suscriber(s).'
-workspace_management_date_null : 'The workspace has been created by %creator%. There is %count% subscrber(s).'
+workspace_management_date_null : 'There is %count% subscriber(s). The creation date and the creator are not mentioned'
 workspaces_management: 'Workspaces management'
 workspaces_per_page: 'Workspace per page'
+wrong_captcha : 'The code does not match the picture'
 ws_creator: 'Workspace creator'
 ws_most_viewed: 'Most viewed workspaces'
 yes: yes

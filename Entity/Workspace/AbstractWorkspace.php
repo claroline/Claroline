@@ -250,9 +250,12 @@ abstract class AbstractWorkspace
 
     public function getCreationDate()
     {
+        if(!is_null($this->creationDate)){    
         $date = date('d-m-Y H:i', $this->creationDate);
 
         return (new \Datetime($date));
+        }
+        return $this->creationDate;
     }
 
 }

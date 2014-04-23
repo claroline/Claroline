@@ -35,11 +35,10 @@
                 <i class="icon-save"></i> {{ 'save_as_template'|trans({}, 'platform') }}
             </a>
             <hr />
-               <p> {% if workspace.getCreationDate() is defined %}
-                        {{ 'workspace_management'|trans({'%creationDate%':workspace.getCreationDate()|date("d/m/Y g:i"),
-                            '%creator%':workspace.getCreator().getUserName(),'%count%': count}, 'platform') }}
+               <p> {% if workspace.getCreationDate() is null and workspace.getCreator() %}
+                        {{ 'workspace_management'|trans({'%count%': count}, 'platform') }}
                     {% else %}
-                         {{ 'workspace_management_date_null'|trans({'%creator%':workspace.getCreator().getUserName(),
+                         {{ 'workspace_management_date_null'|trans({'%creator%':'',
                             '%count%': count}, 'platform') }}
                     {% endif %}
                </p>

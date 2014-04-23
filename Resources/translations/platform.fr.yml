@@ -756,7 +756,7 @@ workspace_home_tab_edition: 'Edition de l''onglet pour les espaces d''activités
 workspace_home_tabs: 'Onglets pour les espaces d''activités'
 workspace_list: 'Liste des espaces d''activités'
 workspace_management : 'L''espace d''activité a été créé le %creationDate%, par %creator%. Il y a %count% inscrit(s).'
-workspace_management_date_null : 'L''espace d''activité a été créé par %creator%. Il y a %count% inscrit(s).'
+workspace_management_date_null : ' Il y a %count% inscrit(s). Le créateur ainsi que la date de création ne sont spécifiés'
 workspace_order_tool_edit_form_name: Nom
 workspace_registration_confirm_title: 'Voulez-vous vous inscrire à cet espace d''activités ?'
 workspace_registration_message: 'Vous avez été inscrit à l''espace d''activité %workspace_name%'
@@ -777,6 +777,7 @@ workspaces: 'Espaces d''activités'
 workspaces_included_in_category: 'Espaces d''activités enregistrés dans cette catégorie'
 workspaces_management: 'Gestions des espaces d''activités '
 workspaces_per_page: 'Espaces par page'
+wrong_captcha : 'Le code ne correspond pas avec l''image indiquée'
 ws_creator: 'Créateur d''espaces'
 ws_most_viewed: 'Espaces d''activités les plus consultés'
 yes: oui
