@@ -81,16 +81,22 @@ class FileListener implements ContainerAwareInterface
             $tmpFile = $form->get('file')->getData();
             $fileName = $tmpFile->getClientOriginalName();
             $extension = pathinfo($fileName, PATHINFO_EXTENSION);
-            $size = filesize($tmpFile);
-            $mimeType = $tmpFile->getClientMimeType();
-            $hashName = $this->container->get('claroline.utilities.misc')->generateGuid() . "." . $extension;
-            $tmpFile->move($this->container->getParameter('claroline.param.files_directory'), $hashName);
-            $file->setSize($size);
-            $file->setName($fileName);
-            $file->setHashName($hashName);
-            $file->setMimeType($mimeType);
-            $event->setResources(array($file));
-            $event->stopPropagation();
+
+            //uncompress
+            if ($extension === '.zip') {
+                $this->unzip($tmpFile);
+            } else {
+                $size = filesize($tmpFile);
+                $mimeType = $tmpFile->getClientMimeType();
+                $hashName = $this->container->get('claroline.utilities.misc')->generateGuid() . "." . $extension;
+                $tmpFile->move($this->container->getParameter('claroline.param.files_directory'), $hashName);
+                $file->setSize($size);
+                $file->setName($fileName);
+                $file->setHashName($hashName);
+                $file->setMimeType($mimeType);
+                $event->setResources(array($file));
+                $event->stopPropagation();
+            }
 
             return;
         }
@@ -277,5 +283,22 @@ class FileListener implements ContainerAwareInterface
         copy($filePath, $newPath);
 
         return $newFile;
+    }
+
+    private function unzip($archivepath)
+    {
+        $extractPath = sys_get_temp_dir() .
+            DIRECTORY_SEPARATOR .
+            $this->container->get('claroline.utilities.misc')->generateGuid() .
+            '.zip';
+
+        $archive = new \ZipArchive();
+
+        if ($archive->open($archivepath) === TRUE) {
+            $archive->extractTo($extractPath);
+            $archive->close();
+        } else {
+            throw new \Exception("The archive {$archivepath} can't be opened");
+        }
     }
 }
