@@ -173,14 +173,14 @@
         Claroline.Table.initialize(parameters);
 
         $('.popover-block').popover();
-        $('.remove-role-button').live('click', function (event) {
+        $('.remove-role-button').on('click', function (event) {
             var target = $(event.currentTarget);
             var route = target.attr('href');
             $.ajax({
                 url: route,
                 type: 'DELETE',
                 success: function() {
-                    target.parent().remove();
+                    target.parent().parent().parent().remove();
                 }
             });
         });
