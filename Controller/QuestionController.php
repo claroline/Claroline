@@ -171,14 +171,6 @@ class QuestionController extends Controller
                 $shareRight += $actionsS[1];
                 $questionWithResponse += $actionsS[2];
             }
-
-            $doublePagination = $this->doublePaginationWithIf($interactions, $sharedWithMe, $max, $pagerMy, $pagerShared, $pageNow, $pageNowShared);
-
-            $interactionsPager = $doublePagination[0];
-            $pagerfantaMy = $doublePagination[1];
-
-            $sharedWithMePager = $doublePagination[2];
-            $pagerfantaShared = $doublePagination[3];
         }
 
         if ($categoryToFind != '' && $titleToFind != '' && $categoryToFind != 'z' && $titleToFind != 'z') {
@@ -209,6 +201,16 @@ class QuestionController extends Controller
             } else {
                 $max = count($shared);
             }
+        }
+
+        if ($QuestionsExo == 'false') {
+            $doublePagination = $this->doublePaginationWithIf($interactions, $sharedWithMe, $max, $pagerMy, $pagerShared, $pageNow, $pageNowShared);
+
+            $interactionsPager = $doublePagination[0];
+            $pagerfantaMy = $doublePagination[1];
+
+            $sharedWithMePager = $doublePagination[2];
+            $pagerfantaShared = $doublePagination[3];
         }
 
         // Get the exercises created by the user to display questions linked to it
@@ -451,7 +453,7 @@ class QuestionController extends Controller
                         $editForm = $form;
                     }
                     $deleteForm = $this->createDeleteForm($interactionQCM[0]->getId());
-                    
+
                     $typeQCM = $this->getTypeQCM();
 
                     $variables['entity']         = $interactionQCM[0];
@@ -555,7 +557,7 @@ class QuestionController extends Controller
                     }
 
                     $typeOpen = $this->getTypeOpen();
-                    
+
                     $variables['entity']         = $interactionOpen[0];
                     $variables['edit_form']      = $editForm->createView();
                     $variables['delete_form']    = $deleteForm->createView();
@@ -755,7 +757,7 @@ class QuestionController extends Controller
                     );
 
                     $typeQCM = $this->getTypeQCM();
-                    
+
                     return $this->container->get('templating')->renderResponse(
                         'UJMExoBundle:InteractionQCM:new.html.twig', array(
                         'exoID'   => $exoID,
@@ -2007,7 +2009,7 @@ class QuestionController extends Controller
 
         return $actionsS;
     }
-    
+
     private function getTypeQCM()
     {
         $typeQCM = array();
@@ -2019,10 +2021,10 @@ class QuestionController extends Controller
         foreach ($types as $type) {
             $typeQCM[$type->getId()] = $type->getCode();
         }
-        
+
         return $typeQCM;
     }
-    
+
     private function getTypeOpen()
     {
         $typeOpen = array();
@@ -2034,7 +2036,7 @@ class QuestionController extends Controller
         foreach ($types as $type) {
             $typeOpen[$type->getId()] = $type->getCode();
         }
-        
+
         return $typeOpen;
     }
 }
