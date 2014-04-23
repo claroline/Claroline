@@ -153,4 +153,19 @@ class Subject
     {
         return $this->isSticked;
     }
+
+    public function setCreationDate($date)
+    {
+        $this->creationDate = $date;
+    }
+
+    public function setModificationDate($date)
+    {
+        $this->updated = $date;
+    }
+
+    public function getModificationDate()
+    {
+        return $this->updated;
+    }
 }

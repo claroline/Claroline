@@ -175,6 +175,8 @@ class Manager
 
     /**
      * @param \Claroline\ForumBundle\Entity\Message $message
+     *
+     * @return \Claroline\ForumBundle\Entity\Message
      */
     public function createMessage(Message $message)
     {
@@ -211,6 +213,8 @@ class Manager
 
     /**
      * @param \Claroline\ForumBundle\Entity\Subject $subject
+     *
+     * @return \Claroline\ForumBundle\Entity\Subject $subject
      */
     public function createSubject(Subject $subject)
     {
@@ -231,7 +235,7 @@ class Manager
     {
         $notify = $this->notificationRepo->findBy(array('user' => $user, 'forum' => $forum));
 
-        return count($notify) === 1 ? true: false;
+        return count($notify) === 1 ? true : false;
     }
 
     /**
@@ -256,8 +260,10 @@ class Manager
             'forum'
         );
 
-        $url =  $link = $this->container->get('request')->server->get('HTTP_ORIGIN') .
-                $this->router->generate('claro_forum_subjects', array('category' => $message->getSubject()->getCategory()->getId()));
+        $url = $this->router->generate(
+            'claro_forum_subjects', array('category' => $message->getSubject()->getCategory()->getId()), true
+        );
+
         $body = "<a href='{$url}'>{$title}</a><hr>{$message->getContent()}";
 
         $this->mailManager->send($title, $body, $users);
@@ -358,7 +364,7 @@ class Manager
      * @param integer $page
      * @param integer $max
      *
-     * @return @return \Pagerfanta\Pagerfanta
+     * @return \Pagerfanta\Pagerfanta
      */
     public function getSubjectsPager(Category $category, $page = 1, $max = 20)
     {
@@ -439,5 +445,50 @@ class Manager
         $this->om->persist($category);
         $this->dispatch(new EditCategoryEvent($category, $oldName, $newName));
         $this->om->endFlushSuite();
+    }
+
+    public function copy(Forum $forum)
+    {
+        $newForum = new Forum();
+        $forum->setName($forum->getName());
+        $oldCategories = $forum->getCategories();
+        $this->om->persist($newForum);
+
+        foreach ($oldCategories as $oldCategory) {
+            $newCategory = new Category();
+            $newCategory->setName($oldCategory->getName());
+            $newCategory->setForum($newForum);
+            $newCategory->setCreationDate($oldCategory->getCreationDate());
+            $newCategory->setModificationDate($oldCategory->getModificationDate());
+            $oldSubjects = $oldCategory->getSubjects();
+
+            foreach ($oldSubjects as $oldSubject) {
+                $newSubject = new Subject();
+                $newSubject->setTitle($oldSubject->getTitle());
+                $newSubject->setCreator($oldSubject->getCreator());
+                $newSubject->setCategory($newCategory);
+                $newSubject->setCreationDate($oldSubject->getCreationDate());
+                $newSubject->setModificationDate($oldSubject->getModificationDate());
+                $newSubject->setIsSticked($oldSubject->isSticked());
+                $oldMessages = $oldSubject->getMessages();
+
+                foreach ($oldMessages as $oldMessage) {
+                    $newMessage = new Message();
+                    $newMessage->setSubject($newSubject);
+                    $newMessage->setCreator($oldMessage->getCreator());
+                    $newMessage->setContent($oldMessage->getContent());
+                    $newMessage->setCreationDate($oldMessage->getCreationDate());
+                    $newMessage->setModificationDate($oldMessage->getModificationDate());
+
+                    $this->om->persist($newMessage);
+                }
+
+                $this->om->persist($newSubject);
+            }
+
+            $this->om->persist($newCategory);
+        }
+
+        return $newForum;
     }
 }

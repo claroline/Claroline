@@ -16,6 +16,7 @@ use Claroline\CoreBundle\Event\CreateResourceEvent;
 use Claroline\CoreBundle\Event\DeleteResourceEvent;
 use Claroline\CoreBundle\Event\CopyResourceEvent;
 use Claroline\CoreBundle\Event\OpenResourceEvent;
+use Claroline\CoreBundle\Event\DeleteUserEvent;
 use Claroline\CoreBundle\Event\ImportResourceTemplateEvent;
 use Claroline\CoreBundle\Event\ExportResourceTemplateEvent;
 use Claroline\ForumBundle\Entity\Forum;
@@ -87,30 +88,7 @@ class ForumListener extends ContainerAware
     {
         $em = $this->container->get('doctrine.orm.entity_manager');
         $resource = $event->getResource();
-        $forum = new Forum();
-        $forum->setName($resource->getName());
-        $oldSubjects = $forum->getSubjects();
-
-        foreach ($oldSubjects as $oldSubject) {
-            $newSubject = new Subject;
-            $newSubject->setForum($forum);
-            $newSubject->setTitle($oldSubject->getTitle());
-            $newSubject->setCreator($oldSubject->getCreator());
-            $oldMessages = $oldSubjects->getMessages();
-
-            foreach ($oldMessages as $oldMessage) {
-                $newMessage = new Message();
-                $newMessage->setSubject($newSubject);
-                $newMessage->setCreator($oldMessage->getCreator());
-                $newMessage->setContent($oldMessage->getContent());
-
-                $em->persist($newMessage);
-            }
-
-            $em->persist($newSubject);
-        }
-
-        $event->setCopy($forum);
+        $event->setCopy($this->container->get('claroline.manager.forum_manager')->copy($resource));
         $event->stopPropagation();
     }
 
@@ -156,5 +134,20 @@ class ForumListener extends ContainerAware
 
         $event->setResource($forum);
         $event->stopPropagation();
+    }
+
+    public function onDeleteUser(DeleteUserEvent $event)
+    {
+        //remove notification for user if it exists
+        $em = $this->container->get('doctrine.orm.entity_manager');
+        $notificationRepo = $em->getRepository('ClarolineForumBundle:Notification');
+
+        $notifications = $notificationRepo->findOneBy(array('user' => $user));
+
+        foreach ($notifications as $notification) {
+            $em->remove($notification);
+        }
+
+        $em->flush();
     }
 }

@@ -109,4 +109,24 @@ class Category
     {
         $this->name = $name;
     }
+
+    public function setCreationDate($date)
+    {
+        $this->creationDate = $date;
+    }
+
+    public function setModificationDate($date)
+    {
+        $this->modificationDate = $date;
+    }
+
+    public function getCreationDate()
+    {
+        return $this->creationDate;
+    }
+
+    public function getModificationDate()
+    {
+        return $this->modificationDate;
+    }
 }
