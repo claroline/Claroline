@@ -75,9 +75,11 @@
         <br/>
 
         <h3>{{ 'List of corrections'|trans({}, 'icap_dropzone') }}</h3>
-        <a class="btn btn-default" href="{{  path("icap_dropzone_drops_detail_add_correction",{'resourceId':dropzone.id,'dropId':drop.id}) }}">
-            {{  "Add a correction"|trans({},'icap_dropzone') }}
-        </a>
+        {%  if isAllowedToEdit %}
+            <a class="btn btn-default" href="{{  path("icap_dropzone_drops_detail_add_correction",{'resourceId':dropzone.id,'dropId':drop.id}) }}">
+                {{  "Add a correction"|trans({},'icap_dropzone') }}
+            </a>
+        {% endif %}
         <hr/>
 
 
