@@ -13,7 +13,7 @@ namespace Claroline\ForumBundle\Installation\Updater;
 
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
-class Updater020204
+class Updater020210
 {
     private $container;
     private $logger;
@@ -34,6 +34,7 @@ class Updater020204
         $forumType->setDefaultMask(33);
         $em->persist($forumType);
         $em->flush();
+        $this->log('Updating forum plugin...');
     }
 
     public function setLogger($logger)
