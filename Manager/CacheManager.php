@@ -32,7 +32,7 @@ class CacheManager {
      *
      * @throws \Exception
      *
-     * @return
+     * @return mixed
      */
     public function getParameter($parameter)
     {
@@ -59,9 +59,7 @@ class CacheManager {
             }
         }
 
-        //gotta parse & change "return":
-
-        return $return;
+        return $return ? $return: false;
     }
 
     /**
