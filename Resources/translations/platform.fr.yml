@@ -760,6 +760,7 @@ workspace_delete_confirm_title: 'Confirmation de suppression'
 workspace_delete_success_message: 'L''espace d''activités "%workspaceName%" été supprimé.'
 workspace_edit_form_code: Code
 workspace_edit_form_creationDate : 'Date de création'
+workspace_edit_form_creator : 'Créateur de l''espace'
 workspace_edit_form_description: Description
 workspace_edit_form_displayable: Visible
 workspace_edit_form_name: Nom

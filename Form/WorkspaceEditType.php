@@ -17,6 +17,18 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 class WorkspaceEditType extends AbstractType
 {
+
+    /**
+     * Constructor.
+     *
+     * @param string $username
+     */
+    public function __construct($username = null)
+    {
+        $this->username = $username;
+    }
+
+
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $attr = array();
@@ -37,6 +49,17 @@ class WorkspaceEditType extends AbstractType
         $builder->add('displayable', 'checkbox', array('required' => false));
         $builder->add('selfRegistration', 'checkbox', array('required' => false));
         $builder->add('selfUnregistration', 'checkbox', array('required' => false));
+        $builder->add(
+                'creationDate',
+                'datepicker',
+                array(
+                    'required'      => false,
+                    'widget'        => 'single_text',
+                    'format'        => 'dd-MM-yyyy HH:mm',
+                    'disabled'     => 'disabled',
+                )
+            );
+        $builder->add('creator', 'text', array('disabled' => 'disabled', 'data' => $this->username));
     }
 
     public function getName()

@@ -159,7 +159,8 @@ class WorkspaceParametersController extends Controller
     {
         $user = $this->security->getToken()->getUser();
         $this->checkAccess($workspace);
-        $form = $this->formFactory->create(FormFactory::TYPE_WORKSPACE_EDIT, array(), $workspace);
+        $username = is_null( $workspace->getCreator()) ? '' : $workspace->getCreator()->getUsername(); 
+        $form = $this->formFactory->create(FormFactory::TYPE_WORKSPACE_EDIT, array($username), $workspace);
         $count = $this->workspaceManager->countUsers($workspace->getId());
         
         if ($workspace->getSelfRegistration()) {

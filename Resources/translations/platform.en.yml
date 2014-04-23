@@ -757,6 +757,7 @@ workspace_delete_confirm_title: 'Delete Confirm'
 workspace_delete_success_message: 'Workspace "%workspaceName%" has been deleted.'
 workspace_edit_form_code: Code
 workspace_edit_form_creationDate: 'Creation date'
+workspace_edit_form_creator : 'Creator of the workspace'
 workspace_edit_form_description: Description
 workspace_edit_form_displayable: Displayable
 workspace_edit_form_name: Name

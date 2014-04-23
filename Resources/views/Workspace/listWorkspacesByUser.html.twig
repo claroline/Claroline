@@ -14,7 +14,7 @@
             </a>
         </div>
         <div id="collapse-{{ currentIndex }}" class="panel-body collapse">
-            {% if hierarchy[tag.getId()]|length > 0 %}
+            {% if ( hierarchy[tag.getId()] is defined and hierarchy[tag.getId()]|length > 0 ) %}
             {{ _self.showTag(hierarchy[tag.getId()], tagWorkspaces, hierarchy, currentIndex, displayable, favourites) }}
             {% endif %}
                 {% for relWorkspaceTag in tagWorkspaces[tag.id] %}
