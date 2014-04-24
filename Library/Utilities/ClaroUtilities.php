@@ -12,39 +12,26 @@
 namespace Claroline\CoreBundle\Library\Utilities;
 
 use JMS\DiExtraBundle\Annotation as DI;
-use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * @DI\Service("claroline.utilities.misc")
  */
-class ClaroUtilities implements ContainerAwareInterface
+class ClaroUtilities
 {
     private $container;
-    private $formater;
-    private $configHandler;
-    
+    private $hasIntl;
+    private $formatter;
 
     /**
      * @DI\InjectParams({
-     *     "container"     = @DI\Inject("service_container"),
-     *     "configHandler" = @DI\Inject("claroline.config.platform_config_handler" )
+     *     "container" = @DI\Inject("service_container")
      * })
-     *
-     * @param ContainerInterface $container
      */
-    public function setContainer(ContainerInterface $container = null)
+    public function __construct(ContainerInterface $container)
     {
         $this->container = $container;
-        if (extension_loaded('intl')) {
-            $this->formatter = new \IntlDateFormatter(
-                'en',
-                \IntlDateFormatter::SHORT,
-                \IntlDateFormatter::SHORT,
-                date_default_timezone_get(),
-                \IntlDateFormatter::GREGORIAN
-            );
-        }
+        $this->hasIntl = extension_loaded('intl');
     }
 
     /**
@@ -175,8 +162,8 @@ class ClaroUtilities implements ContainerAwareInterface
      */
     public function intlDateFormat($date)
     {
-        if (extension_loaded('intl') and $this->formatter instanceof \IntlDateFormatter) {
-            return $this->formatter->format($date);
+        if (($formatter = $this->getFormatter()) instanceof \IntlDateFormatter) {
+            return $formatter->format($date);
         } elseif ($date instanceof \DateTime) {
             return $date->format('d-m-Y');
         }
@@ -184,4 +171,19 @@ class ClaroUtilities implements ContainerAwareInterface
         return date('d-m-Y', $date);
     }
 
+    private function getFormatter() 
+    {
+        if (!$this->formatter && $this->hasIntl) {
+            $request = $this->container->get('request_stack')->getMasterRequest();
+            $this->formatter = new \IntlDateFormatter(
+                $this->container->get('claroline.common.locale_manager')->getUserLocale($request),
+                \IntlDateFormatter::SHORT,
+                \IntlDateFormatter::SHORT,
+                date_default_timezone_get(),
+                \IntlDateFormatter::GREGORIAN
+            );
+        }
+
+        return $this->formatter;
+    }
 }
