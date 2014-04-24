@@ -25,72 +25,110 @@
     }}
 {% endblock %}
 {% block section_content %}
-<div class="panel-heading">
-    <h3 class="panel-title">{{ 'agenda'|trans({}, 'platform') }} - {{workspace.getName()}}</h3>
-</div>
-<div class="panel-body">
-        <div id="selectOwner">
-            {% for o in owners %}
-                {{o}}
-                <input type="checkbox" name="{{o}}"  class="filterO" />
-            {% endfor %}
-        </div>
-    <div class="row">
-        <div class="col-md-11">
-             <form method="post" action="{{ path('claro_workspace_agenda_import', {workspaceId: workspace.getId()}) }}"  {{ form_enctype(file) }} class="form-inline" >
-                <div class="form-group">
-                    {{ form_widget(file) }}
-                </div>
-                <button type="submit" class="btn btn-default">OK</button>
-             </form>
-        </div>
+    <div class="panel-heading">
+        <h3 class="panel-title">{{ 'agenda'|trans({}, 'platform') }} - {{workspace.getName()}}</h3>
     </div>
-    <div class="row">
-        <a href="{{ path('claro_workspace_agenda_export',{workspaceId:workspace.getId()}) }}" class="btn btn-primary">{{ 'export'|trans({}, 'agenda') }} </a>
-        <div id='calendar' class="col-md-9"></div>
-        <div  id="myModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                        <h4 id="myModalLabel"> {{ 'add_event'|trans({}, 'agenda') }}</h4>
-                    </div>
-                    <div class="modal-body">
-                        <div class='clearfix'>
-                                <form method="post" action="{{ path('claro_workspace_agenda_add_event', {workspaceId: workspace.getId()}) }}" id="myForm" {{ form_enctype(form) }}>
-                                <div id="text" class="col-md-10 filters"> </div>
-                                {{ form_widget(form) }}
-                            </form>
+    <div class="panel-body"> 
+        <div class="row">
+            <div id='calendar' class="col-md-9"></div>
+
+            <div class="col-md-3">
+                <div class="panel text-center">
+                    <a href="{{ path('claro_workspace_agenda_export',{workspaceId:workspace.getId()}) }}" class="btn btn-default btn-xs">
+                        {{ 'export'|trans({}, 'agenda') }}
+                    </a>
+                    <a href="#" class="btn btn-default btn-xs" data-toggle="modal" data-target="#import-modal">
+                        {{ 'import_agenda_file_file'|trans({}, 'agenda') }}
+                    </a>
+                </div>
+                
+                {% if owners | length > 1 %}
+                    <div class="panel panel-default">
+                        <div data-toggle="collapse" data-target="#panel-owner" class="panel-heading">{{'filter_user'|trans({}, 'agenda')}}</div>
+                        <div id="panel-owner" class="panel-body list-group in" style="padding:0">
+                            <div id="selectOwner">
+                                {% for i, o in owners %}
+                                    <li class="list-group-item">
+                                        <input id="event-{{ i }}" type="checkbox" name="{{o}}"  class="filterO" />
+                                        <label for="event-{{ i }}">{{ o }}</label>
+                                    </li>
+                                {% endfor %}
+                            </div>
                         </div>
-                        <a href="{{ path('claro_workspace_agenda_show', {workspaceId: workspace.getId()}) }}" id="link"></a>
-                        <a href="{{ path('claro_workspace_agenda_move') }}" id="move"></a>
-                        <a href="{{ path('claro_workspace_agenda_delete', {workspaceId: workspace.getId()}) }}" id="delete"></a>
-                        <a href="{{ path('claro_workspace_agenda_update', {workspaceId: workspace.getId()}) }}" id="update"></a>
-                        <a href="{{ path('claro_workspace_agenda_tasks', {workspaceId: workspace.getId()}) }}" id="taska"></a>
                     </div>
-                    <div class="modal-footer">
-                        <button class="btn btn-default" data-dismiss="modal" aria-hidden="true">{{'cancel'|trans({}, 'agenda') }}</button>
-                        <button class="btn btn-primary" id="save">{{ 'add_event'|trans({}, 'agenda') }}</button>
-                        <button class="btn btn-info" id="updateBtn" > {{ 'update'|trans({}, 'agenda') }}</button>
-                        <button class="btn btn-primary" id="deleteBtn" >{{ 'delete'|trans({}, 'platform') }} </button>
+                {% endif %}
+
+                <div class="panel panel-default">
+                    <div data-toggle="collapse" data-target="#panel-tasks" class="panel-heading">{{'tasks'|trans({}, 'agenda')}}</div>
+                    <div id="panel-tasks" class="panel-body list-group in" style="padding:0">
+                        <div id="tasks">
+                            {% render controller('ClarolineCoreBundle:Tool\\WorkspaceAgenda:tasks',{'workspaceId': workspace}) %}
+                        </div>
+                    </div>
+                </div>
+                <div class="panel panel-default">
+                    <div class="panel-heading">{{ 'agenda_form_priority'|trans({}, 'agenda') }}</div>
+                    <div class="panel-body list-group" style="padding:0">
+                        <li class="list-group-item" style="color:#FF0000">  {{ 'high'|trans({}, 'agenda') }} </li>
+                        <li class="list-group-item" style="color:#01A9DB"> {{ 'medium'|trans({}, 'agenda') }} </li>
+                        <li class="list-group-item" style="color:#848484"> {{ 'low'|trans({}, 'agenda') }} </li>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="col-md-3">
-         <h3>{{'tasks'|trans({}, 'agenda')}}</h3>
-            <div id="tasks">
-                {% render controller('ClarolineCoreBundle:Tool\\WorkspaceAgenda:tasks',{'workspaceId': workspace}) %}
-            </div>
-            <h3>{{ 'agenda_form_priority'|trans({}, 'agenda') }}</h3>
-            <div>
-                <span style="color:#FF0000">  {{ 'high'|trans({}, 'agenda') }} </span>
-                <span style="color:#01A9DB"> {{ 'medium'|trans({}, 'agenda') }} </span>
-                <span style="color:#848484"> {{ 'low'|trans({}, 'agenda') }} </span>
+    </div>
+
+
+    {# ADD EVENT MODAL #}
+    <div id="myModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 id="myModalLabel"> {{ 'add_event'|trans({}, 'agenda') }}</h4>
+                </div>
+                <div class="modal-body">
+                    <div class='clearfix'>
+                            <form method="post" action="{{ path('claro_workspace_agenda_add_event', {workspaceId: workspace.getId()}) }}" id="myForm" {{ form_enctype(form) }}>
+                            <div id="text" class="col-md-10 filters"> </div>
+                            {{ form_widget(form) }}
+                        </form>
+                    </div>
+                    <a href="{{ path('claro_workspace_agenda_show', {workspaceId: workspace.getId()}) }}" id="link"></a>
+                    <a href="{{ path('claro_workspace_agenda_move') }}" id="move"></a>
+                    <a href="{{ path('claro_workspace_agenda_delete', {workspaceId: workspace.getId()}) }}" id="delete"></a>
+                    <a href="{{ path('claro_workspace_agenda_update', {workspaceId: workspace.getId()}) }}" id="update"></a>
+                    <a href="{{ path('claro_workspace_agenda_tasks', {workspaceId: workspace.getId()}) }}" id="taska"></a>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-default" data-dismiss="modal" aria-hidden="true">{{'cancel'|trans({}, 'agenda') }}</button>
+                    <button class="btn btn-primary" id="save">{{ 'add_event'|trans({}, 'agenda') }}</button>
+                    <button class="btn btn-info" id="updateBtn" > {{ 'update'|trans({}, 'agenda') }}</button>
+                    <button class="btn btn-primary" id="deleteBtn" >{{ 'delete'|trans({}, 'platform') }} </button>
+                </div>
             </div>
         </div>
     </div>
-</div>
+
+    {# IMPORT MODAL #}
+    <div id="import-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="import-modallLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <form method="post" action="{{ path('claro_workspace_agenda_import', {workspaceId: workspace.getId()}) }}"  {{ form_enctype(file) }} class="form-inline" >
+                        <div class="form-group">
+                        {{ form_widget(file) }} 
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">OK</button>
+                    <button class="btn btn-default" data-dismiss="modal" aria-hidden="true">{{'cancel'|trans({}, 'agenda') }}</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
 {% endblock %}
 
 {% block javascripts %}

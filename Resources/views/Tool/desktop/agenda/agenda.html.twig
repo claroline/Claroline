@@ -27,55 +27,82 @@
         <h3 class="panel-title">{{ 'agenda'|trans({}, 'platform') }}</h3>
     </div>
     <div class="panel-body">
-        <div id="selectWorkspace">
-            {% for c in cours %}
-                {{c}}
-                <input type="checkbox" name="{{c}}"  class="filter" />
-            {% endfor %}
-        </div>
         <div class="row">
             <div id="events"></div>
-            <a href="{{ path('claro_desktop_agenda_export') }}" class="btn btn-primary">{{ 'export'|trans({}, 'agenda') }} </a>
             <div id='calendar' class="col-md-9"></div>
-            <div  id="myModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                            <h4 id="myModalLabel"> {{ 'add_event'|trans({}, 'agenda') }}</h4>
-                        </div>
-                        <div class="modal-body">
-                            <form method="post" action="{{ path('claro_desktop_agenda_add') }}" id="myForm" {{ form_enctype(form) }}>
-                                {{ form_widget(form) }}
-                            </form>
-                            <a href="{{ path('claro_desktop_agenda_show') }}" id="link"></a>
-                            <a href="{{ path('claro_workspace_agenda_move') }}" id="move"></a>
-                            <a href="{{ path('claro_desktop_agenda_delete') }}" id="delete"></a>
-                            <a href="{{ path('claro_desktop_agenda_update') }}" id="update"></a>
-                            <a href="{{ path('claro_desktop_agenda_tasks') }}" id="taska"></a>
-                        </div>
-                        <div class="modal-footer">
-                            <button class="btn btn-default" data-dismiss="modal" aria-hidden="true">{{'cancel'|trans({}, 'agenda') }}</button>
-                            <button class="btn btn-primary" id="save">{{ 'add_event'|trans({}, 'agenda') }}</button>
-                            <button class="btn btn-info" id="updateBtn" > {{ 'update'|trans({}, 'agenda') }}</button>
-                            <button class="btn btn-primary" id="deleteBtn" >{{ 'delete'|trans({}, 'platform') }}</button>
+
+            <div class="col-md-3">
+                <div class="panel text-center">
+                    <a href="{{ path('claro_desktop_agenda_export') }}" class="btn btn-default btn-xs">
+                        {{ 'export'|trans({}, 'agenda') }}
+                    </a>
+                </div>
+    
+                {% if cours | length > 1 %}
+                <div class="panel panel-default">
+                    <div data-toggle="collapse" data-target="#panel-owners" class="panel-heading">{{'filter_ws'|trans({}, 'agenda')}}</div>
+                    <div id="panel-owners" class="panel-body list-group in" style="padding:0">
+                        <div id="selectWorkspace">
+                            {% for i, c in cours %}
+                                <li class="list-group-item">
+                                    <input id="ws-{{ i }}" type="checkbox" name="{{ c }}"  class="filter" />
+                                    <label for="ws-{{ i }}">{{ c }}</label>
+                                </li>
+                            {% endfor %}
                         </div>
                     </div>
                 </div>
+                {% endif %}
+
+                <div class="panel panel-default">
+                    <div class="panel-heading">{{'tasks'|trans({}, 'agenda')}}</div>
+                    <div class="panel-body list-group" style="padding:0">
+                        <div id="tasks">
+                            {% include('ClarolineCoreBundle:Tool\\desktop\\agenda:tasks.html.twig') %}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="panel panel-default">
+                    <div class="panel-heading">{{ 'agenda_form_priority'|trans({}, 'agenda') }}</div>
+                    <div class="panel-body list-group" style="padding:0">
+                        <li class="list-group-item" style="color:#FF0000">  {{ 'high'|trans({}, 'agenda') }} </li>
+                        <li class="list-group-item" style="color:#01A9DB"> {{ 'medium'|trans({}, 'agenda') }} </li>
+                        <li class="list-group-item" style="color:#848484"> {{ 'low'|trans({}, 'agenda') }} </li>
+                    </div>
+                </div>
+
             </div>
-            <div class="col-md-3">
-                 <div id="tasks">
-               {% include('ClarolineCoreBundle:Tool\\desktop\\agenda:tasks.html.twig') %}
-           </div>
-            </div>
-                <h3>{{ 'agenda_form_priority'|trans({}, 'agenda') }}</h3>
-                <div>
-                    <span style="color:#FF0000">  {{ 'high'|trans({}, 'agenda') }} </span>
-                    <span style="color:#01A9DB"> {{ 'medium'|trans({}, 'agenda') }} </span>
-                    <span style="color:#848484"> {{ 'low'|trans({}, 'agenda') }} </span>
+        </div>
+    </div>
+
+    <div id="myModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 id="myModalLabel"> {{ 'add_event'|trans({}, 'agenda') }}</h4>
+                </div>
+                <div class="modal-body">
+                    <form method="post" action="{{ path('claro_desktop_agenda_add') }}" id="myForm" {{ form_enctype(form) }}>
+                        {{ form_widget(form) }}
+                    </form>
+                    <a href="{{ path('claro_desktop_agenda_show') }}" id="link"></a>
+                    <a href="{{ path('claro_workspace_agenda_move') }}" id="move"></a>
+                    <a href="{{ path('claro_desktop_agenda_delete') }}" id="delete"></a>
+                    <a href="{{ path('claro_desktop_agenda_update') }}" id="update"></a>
+                    <a href="{{ path('claro_desktop_agenda_tasks') }}" id="taska"></a>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-default" data-dismiss="modal" aria-hidden="true">{{'cancel'|trans({}, 'agenda') }}</button>
+                    <button class="btn btn-primary" id="save">{{ 'add_event'|trans({}, 'agenda') }}</button>
+                    <button class="btn btn-info" id="updateBtn" > {{ 'update'|trans({}, 'agenda') }}</button>
+                    <button class="btn btn-primary" id="deleteBtn" >{{ 'delete'|trans({}, 'platform') }}</button>
                 </div>
             </div>
         </div>
+    </div>
+
 {% endblock %}
 
 {% block javascripts %}

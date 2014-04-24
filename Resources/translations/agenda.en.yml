@@ -27,6 +27,8 @@ event_update: 'Event modified'
 export: 'Export events'
 feb: Feb
 february: February
+filter_user: Filter by user
+filter_ws: Filer by workspace
 fri: Fri
 friday: Friday
 high: High
@@ -51,6 +53,7 @@ next: '>'
 nextYear: '>>'
 'no event found': 'no event found'
 no_description: 'No description'
+no_task_found: No task found
 nov: Nov
 november: November
 oct: Oct
