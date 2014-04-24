@@ -764,6 +764,7 @@ workspace_edit_form_creator : 'Créateur de l''espace'
 workspace_edit_form_description: Description
 workspace_edit_form_displayable: Visible
 workspace_edit_form_name: Nom
+workspace_edit_form_number : Nombre de personnes inscrit à l''espace
 workspace_edit_form_selfRegistration: 'Inscription publique'
 workspace_edit_form_selfUnregistration: 'Désinscription publique'
 workspace_form_code: Code
@@ -779,8 +780,6 @@ workspace_home_tab_edition: 'Edition de l''onglet pour les espaces d''activités
 workspace_home_tabs: 'Onglets pour les espaces d''activités'
 workspace_list: 'Liste des espaces d''activités'
 workspace_list: Liste des espaces d'activités
-workspace_management : 'L''espace d''activité a été créé le %creationDate%, par %creator%. Il y a %count% inscrit(s).'
-workspace_management_date_null : ' Il y a %count% inscrit(s). Le créateur ainsi que la date de création ne sont spécifiés'
 workspace_order_tool_edit_form_name: Nom
 workspace_registration_confirm_title: 'Voulez-vous vous inscrire à cet espace d''activités ?'
 workspace_registration_message: 'Vous avez été inscrit à l''espace d''activité %workspace_name%'

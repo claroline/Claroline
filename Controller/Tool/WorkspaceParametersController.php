@@ -168,8 +168,8 @@ class WorkspaceParametersController extends Controller
         $creationDate = is_null(
                             $workspace->getCreationDate()) ? 
                             null : $this->utilities->intlDateFormat($workspace->getCreationDate());
-        $form = $this->formFactory->create(FormFactory::TYPE_WORKSPACE_EDIT, array($username, $creationDate), $workspace);
         $count = $this->workspaceManager->countUsers($workspace->getId());
+        $form = $this->formFactory->create(FormFactory::TYPE_WORKSPACE_EDIT, array($username, $creationDate, $count), $workspace);
         
         if ($workspace->getSelfRegistration()) {
             $url = $this->router->generate(

@@ -761,6 +761,7 @@ workspace_edit_form_creator : 'Creator of the workspace'
 workspace_edit_form_description: Description
 workspace_edit_form_displayable: Displayable
 workspace_edit_form_name: Name
+workspace_edit_form_number : Number of subscriber(s)
 workspace_edit_form_selfRegistration: 'Public registration'
 workspace_edit_form_selfUnregistration: 'Public unregistration'
 workspace_form_code: Code
@@ -776,8 +777,6 @@ workspace_home_tab_edition: 'Workspace Home tab edition'
 workspace_home_tabs: 'Workspace Home tabs'
 workspace_list: 'Workspace list'
 workspace_list: Workspace list
-workspace_management : 'The workspace has been create at %creationDate%, by %creator%. There is %count% suscriber(s).'
-workspace_management_date_null : 'The workspace has been created by %creator%. There is %count% subscrber(s).'
 workspace_order_tool_edit_form_name: Name
 workspace_registration_confirm_title: 'Do you really want to register to this workspace ?'
 workspace_registration_message: 'You have been registered to the workspace %workspace_name%'
