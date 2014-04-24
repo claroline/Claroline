@@ -21,7 +21,7 @@
             <header>
                 <div class="container">
                     <h1 id="username">{{ portfolio.user.firstName ~ ' ' ~ portfolio.user.lastName }}</h1>
-                    <div class="portfolio_title_container">
+                    <div class="portfolio_title_container" data-widget data-ng-controller="WidgetController" data-ng-model="widgets" data-widget-type="title" data-ng-repeat="widget in (portfolio | filter:{$index: 'title'})">
                         {% if editMode %}
                             <div class="portfolio_title_actions">
                                 <button class="portfolio_title_edit_action btn" data-ng-click="editTitle(widget);"><span class="icon-pencil"></span></button>
@@ -43,6 +43,32 @@
             <div data-ng-show="!portfolio.$resolved" id="portfolio_loading"></div>
         {% endif %}
     </div>
+    <div class="form_container">
+        <div class="panel panel-default edit_container">
+            <div class="panel-heading">
+                <h3 class="panel-title">Panel title <button type="button" class="close" aria-hidden="true">&times;</button></h3>
+            </div>
+            <div class="panel-body">
+                <p>Panel content</p>
+            </div>
+            <div class="panel-footer">
+                <button class="btn btn-primary">Enregistrer</button>
+                <button class="btn btn-default">Annuler</button>
+            </div>
+        </div>
+        <div class="panel panel-default edit_container">
+            <div class="panel-heading">
+                <h3 class="panel-title">Panel title <button type="button" class="close" aria-hidden="true">&times;</button></h3>
+            </div>
+            <div class="panel-body">
+                <p>Panel content</p>
+            </div>
+            <div class="panel-footer">
+                <button class="btn btn-primary">Enregistrer</button>
+                <button class="btn btn-default">Annuler</button>
+            </div>
+        </div>
+    </div>
 {% endblock %}
 
 {% block stylesheets %}
@@ -61,17 +87,19 @@
     {% if editMode %}
         {# Angular #}
         {% javascripts debug=true filter='jsmin' output='js/portfolio/angular.js'
-            '@IcapPortfolioBundle/Resources/public/js/angularjs/angular.min.js'
-            '@IcapPortfolioBundle/Resources/public/js/angularjs/angular-animate.min.js'
-            '@IcapPortfolioBundle/Resources/public/js/angularjs/angular-resource.min.js'
-            '@IcapPortfolioBundle/Resources/public/js/angularjs/angular-sanitize.min.js'
+            '@IcapPortfolioBundle/Resources/public/js/vendor/angular.min.js'
+            '@IcapPortfolioBundle/Resources/public/js/vendor/angular-resource.min.js'
+            '@IcapPortfolioBundle/Resources/public/js/vendor/angular-sanitize.min.js'
         %}
             <script type="text/javascript" src="{{ asset_url }}"></script>
         {% endjavascripts %}
 
         <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/app.js') }}"></script>
         <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/services/portfolioService.js') }}"></script>
+        <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/directives/widgetDirective.js') }}"></script>
+        <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/services/portfolioService.js') }}"></script>
         <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/controllers/portfolioController.js') }}"></script>
+        <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/controllers/widgetController.js') }}"></script>
         <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/filters/trustAsHtml.js') }}"></script>
     {% endif %}
 {% endblock %}

@@ -11,6 +11,9 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use JMS\DiExtraBundle\Annotation\Inject;
 use Symfony\Component\HttpFoundation\Response;
 
+/**
+ * @Route("/portfolio")
+ */
 class PortfolioController extends Controller
 {
     /**

@@ -18,7 +18,7 @@ class IcapPortfolioBundle extends InstallableBundle implements AutoConfigurableI
         $config = new ConfigurationBuilder();
 
         if (file_exists($routingFile = $this->getPath() . '/Resources/config/routing.yml')) {
-            $config->addRoutingResource($routingFile, null, 'portfolio');
+            $config->addRoutingResource($routingFile);
         }
 
         return $config;

@@ -11,7 +11,7 @@ body {
         left:             0;
         top:              0;
         background-color: #403e3f;
-        z-index:          1;
+        z-index:          2;
         .configbar_item {
             border-top:    1px solid #515253;
             border-bottom: 1px solid #333334;
@@ -75,4 +75,24 @@ body {
     top:              0;
     background:       url("../../clarolinecore/images/loading.gif") no-repeat center center;
     background-color: #e2e2e2;
+    z-index:          1;
+}
+
+.form_container {
+    position: absolute;
+    right:    0;
+    bottom:   0;
+    .edit_container {
+        width:    400px;
+        margin:   0 5px 55px 0;
+        display:  inline-block;
+
+        .panel-heading {
+            border-bottom: 0;
+        }
+        .panel-footer {
+            border-top: 0;
+            text-align: center;
+        }
+    }
 }
