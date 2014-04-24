@@ -454,4 +454,29 @@ class RightsManager
 
         return $dirMask | $typeMask; // merge
     }
+
+    /**
+     * Return the resource rights as a readable array. This array can be used for the resource creation.
+
+     * @param ResourceNode $node
+     *
+     * @return array
+     */
+    public function getCustomRoleRights(ResourceNode $node)
+    {
+        $perms = array();
+
+        foreach ($node->getRights() as $right) {
+            //if not ROLE_ANONYMOUS nor ROLE_USER because they're added automatically in ResourceManager::createRights
+            if ($right->getRole()->getName() !== 'ROLE_ANONYMOUS' && $right->getRole()->getName() !== 'ROLE_USER') {
+                $rolePerms = $this->maskManager->decodeMask($right->getMask(), $node->getResourceType());
+                $perms[$right->getRole()->getName()] = $rolePerms;
+                $perms[$right->getRole()->getName()]['role'] = $right->getRole();
+                //no implementation for rights creations yet
+                $perms[$right->getRole()->getName()]['create'] = array();
+            }
+        }
+
+        return $perms;
+    }
 }
