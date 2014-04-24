@@ -891,18 +891,18 @@ class ResourceManager
      *
      * @return array
      */
-    public function download(array $nodes)
+    public function download(array $elements)
     {
         $data = array();
 
-        if (count($nodes) === 0) {
+        if (count($elements) === 0) {
             throw new ExportResourceException('No resources were selected.');
         }
 
         $archive = new \ZipArchive();
         $pathArch = sys_get_temp_dir() . DIRECTORY_SEPARATOR . $this->ut->generateGuid() . '.zip';
         $archive->open($pathArch, \ZipArchive::CREATE);
-        $nodes = $this->expandResources($nodes);
+        $nodes = $this->expandResources($elements);
 
         if (count($nodes) === 1) {
             $event = $this->dispatcher->dispatch(
@@ -920,7 +920,11 @@ class ResourceManager
             return $data;
         }
 
-        $currentDir = $nodes[0];
+        if (isset($nodes[0])) {
+            $currentDir = $nodes[0];
+        } else {
+            $archive->addEmptyDir($elements[0]->getName());
+        }
 
         foreach ($nodes as $node) {
 
