@@ -28,6 +28,8 @@ event: Evénement
 event_update: 'Modification enregistrée'
 feb: Févr
 february: Février
+filter_user: Filtrer par utilisateur
+filter_ws: Filtrer par espace d'activités
 fri: Ven
 friday: Vendredi
 high: Haute
@@ -52,6 +54,7 @@ next: '>'
 nextYear: '>>'
 'no event found': 'Pas d''événements'
 no_description: 'Pas de description'
+no_task_found: Pas de tâches
 nov: Nov
 november: Novembre
 oct: Oct
