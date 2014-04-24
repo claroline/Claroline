@@ -210,7 +210,7 @@ class IconManager
      * @param string $filePath
      * @param string $baseMime (image|video)
      *
-     * @return $thumnnailPath
+     * @return null|string $thumnnailPath
      */
     public function createFromFile($filePath, $baseMime)
     {
@@ -249,7 +249,7 @@ class IconManager
             $res = $this->om->getRepository('ClarolineCoreBundle:Resource\ResourceNode')
                 ->findBy(array('icon' => $icon));
 
-            if (count($res) <= 1) {
+            if (count($res) <= 1 && $icon->isShortcut() === false) {
                 $shortcut = $icon->getShortcutIcon();
                 $this->om->remove($shortcut);
                 $this->om->remove($icon);

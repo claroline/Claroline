@@ -842,8 +842,7 @@ class ResourceManager
             $resource = $this->getResourceFromNode($node);
             /**
              * resChild can be null if a shortcut was removed
-             * @todo: fix shortcut delete. If a target is removed, every link to the
-             * target should be removed too.
+             * @todo: fix shortcut delete. If a target is removed, every link to the target should be removed too.
              */
             if ($resource !== null) {
                 if ($node->getClass() !== 'Claroline\CoreBundle\Entity\Resource\ResourceShortcut') {
@@ -864,7 +863,9 @@ class ResourceManager
                     array($node)
                 );
 
-                $this->iconManager->delete($node->getIcon());
+                if ($node->getIcon()) {
+                    $this->iconManager->delete($node->getIcon());
+                }
 
                 /*
                  * If the child isn't removed here aswell, doctrine will fail to remove $resChild
@@ -877,7 +878,10 @@ class ResourceManager
             }
         }
 
-        $this->iconManager->delete($node->getIcon());
+        if ($node->getIcon()) {
+            $this->iconManager->delete($node->getIcon());
+        }
+        
         $this->om->remove($node);
         $this->om->endFlushSuite();
     }
