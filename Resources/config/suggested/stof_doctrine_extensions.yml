@@ -10,3 +10,4 @@ stof_doctrine_extensions:
 
     class:
         translatable: Claroline\CoreBundle\Listener\LocaleListener
+        timestampable: Claroline\CoreBundle\Listener\TimestampableListener
