@@ -819,3 +819,4 @@ public_profile_url_tuning_only_once: 'La personnalisation de l''URL de votre pro
 public_url_help: 'Note : Votre URL personnalisée doit comprendre au maximum 30 lettres ou chiffres. Ne pas utiliser d''espaces, de symboles ou de caractères spéciaux.'
 manage_tools: Gérer les outils
 create_role: Créer un rôle
+uncompress_file: Décompresser le fichier si possible
