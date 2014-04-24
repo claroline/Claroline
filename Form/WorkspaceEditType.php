@@ -17,15 +17,18 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 class WorkspaceEditType extends AbstractType
 {
+    private $username;
+    private $creationDate;
 
     /**
      * Constructor.
      *
      * @param string $username
      */
-    public function __construct($username = null)
+    public function __construct($username = null, $creationDate = null)
     {
         $this->username = $username;
+        $this->creationDate = $creationDate;
     }
 
 
@@ -51,12 +54,10 @@ class WorkspaceEditType extends AbstractType
         $builder->add('selfUnregistration', 'checkbox', array('required' => false));
         $builder->add(
                 'creationDate',
-                'datepicker',
+                'text',
                 array(
-                    'required'      => false,
-                    'widget'        => 'single_text',
-                    'format'        => 'dd-MM-yyyy HH:mm',
-                    'disabled'     => 'disabled',
+                    'disabled' => 'disabled',
+                    'data' => $this->creationDate        
                 )
             );
         $builder->add('creator', 'text', array('disabled' => 'disabled', 'data' => $this->username));

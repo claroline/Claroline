@@ -21,10 +21,14 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class ClaroUtilities implements ContainerAwareInterface
 {
     private $container;
+    private $formater;
+    private $configHandler;
+    
 
     /**
      * @DI\InjectParams({
-     *     "container" = @DI\Inject("service_container")
+     *     "container"     = @DI\Inject("service_container"),
+     *     "configHandler" = @DI\Inject("claroline.config.platform_config_handler" )
      * })
      *
      * @param ContainerInterface $container
@@ -32,6 +36,15 @@ class ClaroUtilities implements ContainerAwareInterface
     public function setContainer(ContainerInterface $container = null)
     {
         $this->container = $container;
+        if (extension_loaded('intl')) {
+            $this->formatter = new \IntlDateFormatter(
+                'en',
+                \IntlDateFormatter::SHORT,
+                \IntlDateFormatter::SHORT,
+                date_default_timezone_get(),
+                \IntlDateFormatter::GREGORIAN
+            );
+        }
     }
 
     /**
@@ -156,4 +169,19 @@ class ClaroUtilities implements ContainerAwareInterface
         //default
         return 'ISO-8859-1';
     }
+
+    /*
+     * Format the date according to the locale.
+     */
+    public function intlDateFormat($date)
+    {
+        if (extension_loaded('intl') and $this->formatter instanceof \IntlDateFormatter) {
+            return $this->formatter->format($date);
+        } elseif ($date instanceof \DateTime) {
+            return $date->format('d-m-Y');
+        }
+
+        return date('d-m-Y', $date);
+    }
+
 }

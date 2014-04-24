@@ -180,7 +180,7 @@
                         </td>
                         <td>
                             {% if w.getCreationDate() is not null %}
-                                {{ w.getCreationDate()|date("d/m/Y g:i")}} 
+                                {{ w.getCreationDate()| intl_date_format}} 
                             {% else %}
                                 -
                             {% endif %}
