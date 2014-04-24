@@ -159,7 +159,7 @@ database: 'Base de datos'
 database_connection_failed: 'Error en la conexión a la base de datos.'
 date: 'Fecha'
 date_form_format: 'dd/MM/yyyy'
-date_form_placeholder: dd/mm/yyyy
+date_form_placeholder: dd/mm/aaaa
 date_format: 'd/m/Y'
 date_range.apply: 'Aplicar'
 date_range.clear: 'Reinicializar'
