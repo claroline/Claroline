@@ -23,21 +23,6 @@ use JMS\DiExtraBundle\Annotation as DI;
  */
 class DateTimePickerType extends AbstractType
 {
-//    public function buildForm(FormBuilderInterface $builder, array $options)
-//    {
-//        $dateOptions = $builder->get('date')->getOptions();
-//
-//        $dateOptions['options'] = array(
-//            'date_widget'       => 'single_text',
-//            'time_widget'       => 'single_text',
-//            'with_seconds'      => false,
-//            'language'          => 'fr',
-//            'component'         => true,
-//            'autoclose'         => false
-//        );
-//        $builder->remove('date')->add('date','datepicker',$dateOptions);
-//
-//    }
     public function buildView(FormView $view, FormInterface $form, array $options)
     {
         $view->vars['component'] = $options['component'];
