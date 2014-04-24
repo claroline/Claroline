@@ -6,8 +6,10 @@
                 {% if params.title is defined and params.title is not empty %}title="{{ params.title }}"{% endif %}
                 >
             {% if params.icon is defined and params.icon is not empty %}<i class="icon-{{ params.icon }}"></i> {% endif %}
+            <span {% if params.breakhide is defined %}class="break-hide"{% endif %}>
+                {% if params.name is defined %} {{ params.name | trans({}, 'platform') }} {% endif %}
+            </span>
             {% if params.badge is defined and params.badge is not empty %}<span class="badge">{{ params.badge }}</span>{% endif %}
-            {% if params.name is defined %} {{ params.name | trans({}, 'platform') }} {% endif %}
             {% if (params.dropdown is defined and params.dropdown is not empty) and (params.hideArrow is not defined or params.hideArrow is empty) %}<i class="caret"></i>{% endif %}
         </a>
         {% if params.dropdown is defined and params.dropdown is not empty %}
@@ -25,19 +27,19 @@
         {% if config.getParameter('name') == "" and config.getParameter('logo') == "" %}
             {{ topbar.item({'name':'home', 'href':path('claro_index'), 'icon':'home'}) }}
         {% endif %}
-        {{ topbar.item({'href':path('claro_desktop_open'), 'icon':'briefcase', 'route':'/desktop/tool/', 'title': 'desktop' | trans({}, 'platform')}) }}
+        {{ topbar.item({'name': 'desktop', 'breakhide': true, 'href':path('claro_desktop_open'), 'icon':'briefcase', 'route':'/desktop/tool/', 'title': 'desktop' | trans({}, 'platform')}) }}
         {% if canAdministrate == true %}
-            {{ topbar.item({'href':path('claro_admin_index'), 'icon':'cog', 'route':'/admin/', 'title':'administration' | trans({}, 'platform')}) }}
+            {{ topbar.item({'name': 'administration', 'breakhide': true, 'href':path('claro_admin_index'), 'icon':'cog', 'route':'/admin/', 'title':'administration' | trans({}, 'platform')}) }}
         {% endif %}
         {% if countUnreadMessages > 0 %}
-            {{ topbar.item({'href':path('claro_message_list_received'), 'icon':'envelope', 'route':'/message/', 'title':'new_message_alert' | trans({'%count%': countUnreadMessages}, 'platform'), 'badge' : countUnreadMessages }) }}
+            {{ topbar.item({'name': 'messages', 'breakhide': true, 'href':path('claro_message_list_received'), 'icon':'envelope', 'route':'/message/', 'title':'new_message_alert' | trans({'%count%': countUnreadMessages}, 'platform'), 'badge' : countUnreadMessages }) }}
         {% else %}
-            {{ topbar.item({'href':path('claro_message_list_received'), 'icon':'envelope', 'route':'/message/', 'title':'new_message_alert' | trans({'%count%': countUnreadMessages}, 'platform')}) }}
+            {{ topbar.item({'name': 'messages', 'breakhide': true, 'href':path('claro_message_list_received'), 'icon':'envelope', 'route':'/message/', 'title':'new_message_alert' | trans({'%count%': countUnreadMessages}, 'platform')}) }}
         {% endif %}
         {% if countUnviewedNotifications > 0 %}
-            {{ topbar.item({'id':'notification-topbar-item', 'href':path('icap_notification_view'), 'icon':'bell-alt', 'route':'/icap_notification/', 'title':'notifications', 'badge' : countUnviewedNotifications}) }}
+            {{ topbar.item({'name': 'notifications', 'breakhide': true, 'id':'notification-topbar-item', 'href':path('icap_notification_view'), 'icon':'bell-alt', 'route':'/icap_notification/', 'title':'notifications', 'badge' : countUnviewedNotifications}) }}
         {% else %}
-            {{ topbar.item({'id':'notification-topbar-item', 'href':path('icap_notification_view'), 'icon':'bell-alt', 'route':'/icap_notification/', 'title':'notifications'}) }}
+            {{ topbar.item({'name': 'notifications', 'breakhide': true, 'id':'notification-topbar-item', 'href':path('icap_notification_view'), 'icon':'bell-alt', 'route':'/icap_notification/', 'title':'notifications'}) }}
         {% endif %}
         {% if '/icap_notification/'|compareRoute('true') is empty %}
             {% include "IcapNotificationBundle:Notification:dropdownScript.html.twig" with {'notificationElementId':'notification-topbar-item'} %}
