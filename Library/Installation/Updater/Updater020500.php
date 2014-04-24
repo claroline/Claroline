@@ -74,7 +74,7 @@ class Updater020500
             $user = $workspaceManager->findPersonalUser($workspace);
 
             if ($user !== null) {
-                $personalWorkspaceName = $trans . ' - ' . $user->getUsername();
+                $personalWorkspaceName = $trans . $user->getUsername();
                 $this->log('Renaming ' . $personalWorkspaceName);
                 $workspaceManager->rename($workspace, $personalWorkspaceName);
             }

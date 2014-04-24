@@ -133,8 +133,7 @@ class UserManager
     public function rename(User $user, $username)
     {
         $user->setUsername($username);
-        $personalWorkspaceName = $this->translator->trans('personal_workspace', array(), 'platform') .
-            ' - ' . $user->getUsername();
+        $personalWorkspaceName = $this->translator->trans('personal_workspace', array(), 'platform') . $user->getUsername();
         $pws = $user->getPersonalWorkspace();
         $this->workspaceManager->rename($pws, $personalWorkspaceName);
         $this->objectManager->persist($user);
@@ -273,8 +272,7 @@ class UserManager
         $config->setWorkspaceType(Configuration::TYPE_SIMPLE);
         $locale = $this->platformConfigHandler->getParameter('locale_language');
         $this->translator->setLocale($locale);
-        $personalWorkspaceName = $this->translator->trans('personal_workspace', array(), 'platform') .
-        ' - ' . $user->getUsername();
+        $personalWorkspaceName = $this->translator->trans('personal_workspace', array(), 'platform') . $user->getUsername();
         $config->setWorkspaceName($personalWorkspaceName);
         $config->setWorkspaceCode($user->getUsername());
         $workspace = $this->workspaceManager->create($config, $user);

@@ -472,7 +472,7 @@ password_ok: 'Votre mot de passe a été modifié. Vous pouvez maintenant vous c
 paste: Coller
 path: Emplacement
 permissions: Permissions
-personal_workspace: 'Espace personnel'
+personal_workspace: 'Espace personnel - '
 phone: Téléphone
 picture_profile: 'Photo de profil'
 platform_appearance: 'Apparence de la plateforme'
