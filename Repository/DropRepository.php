@@ -331,10 +331,12 @@ class DropRepository extends EntityRepository {
             ->andWhere('drop.dropzone = :dropzone')
             ->andWhere('drop.id = :dropId')
             ->andWhere('correction.finished = 1')
+            ->andWhere('user.id = :userId')
             ->join('drop.user', 'user')
             ->leftJoin('drop.documents', 'document')
             ->leftJoin('drop.corrections', 'correction')
             ->setParameter('dropzone', $dropzone)
+            ->setParameter('userId', $userId)
             ->setParameter('dropId', $dropId);
 
         return $qb->getQuery()->getResult();
