@@ -30,6 +30,14 @@
             </div>
         </div>
 
+        <div class="form-group award_comment">
+            {{ form_label(form.comment) }}
+            {{ form_errors(form.comment) }}
+            <div class="col-lg-6">
+                {{ form_widget(form.comment) }}
+            </div>
+        </div>
+
         {{ form_rest(form) }}
 
         <div class="form-actions">

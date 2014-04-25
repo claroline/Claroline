@@ -247,8 +247,9 @@ class WorkspaceController extends Controller
                 try {
                     $doctrine = $this->getDoctrine();
 
-                    $group        = $form->get('group')->getData();
-                    $user         = $form->get('user')->getData();
+                    $group   = $form->get('group')->getData();
+                    $user    = $form->get('user')->getData();
+                    $comment = $form->get('comment')->getData();
 
                     /** @var \Claroline\CoreBundle\Entity\User[] $users */
                     $users = array();
@@ -261,7 +262,7 @@ class WorkspaceController extends Controller
 
                     /** @var \Claroline\CoreBundle\Manager\BadgeManager $badgeManager */
                     $badgeManager = $this->get('claroline.manager.badge');
-                    $awardedBadge = $badgeManager->addBadgeToUsers($badge, $users);
+                    $awardedBadge = $badgeManager->addBadgeToUsers($badge, $users, $comment);
 
                     $flashMessageType = 'error';
 
