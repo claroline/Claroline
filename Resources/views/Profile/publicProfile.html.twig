@@ -8,7 +8,7 @@
     <div class="panel panel-default panel-user">
         <div class="panel-heading relative">
             <h3 class="panel-title">
-                {{ 'public_profile'|trans({}, 'platform') }}
+                {{ 'public_profile' | trans({}, 'platform') }}
             </h3>
         </div>
         <div class="panel-body">
@@ -16,7 +16,7 @@
                 <aside class="col-md-2 profile_aside" role="complementary">
                     <div class="avatar">
                         {% if user.getPicture() != "" %}
-                            <img src="{{ asset('uploads/pictures/') ~  user.getPicture() }}" class="profile_picture">
+                            <img src="{{ asset('uploads/pictures/') ~  user.getPicture() }}" class="profile_picture" alt="{{ user.getLastName() ~ ' ' ~ user.getFirstName() }}">
                         {% else %}
                             <h1 class="profile_picture_placeholder"><i class="icon-user"></i></h1>
                         {% endif %}

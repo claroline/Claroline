@@ -2,8 +2,7 @@
 
 {% import 'ClarolineCoreBundle::macros.html.twig' as macros %}
 
-<form id="form_log_update_desktop_widget"
-    method="POST"
+<form role="form" id="form_log_update_desktop_widget" method="POST"
     action="{{ path('claro_log_update_desktop_widget_config', {'widgetInstance': instance.getId()})}}"
 
     class="form-horizontal"

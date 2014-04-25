@@ -27,8 +27,9 @@
             {% for action, attributes in actions %}
                 {% set perm = attributes.mask b-and node.mask  %}
                 {% if perm > 0 %}
-                <li>
+                <li role="presentation">
                     <a
+                        role="menuitem"
                         href="#"
                         class="node-menu-action"
                         data-action="{{ action }}"

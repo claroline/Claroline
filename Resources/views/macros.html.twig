@@ -28,7 +28,7 @@
         {% for category, msgs in flashes %}
             {% if msgs|length > 0 %}
                 <div class="alert alert-{{ category }}">
-                    <a class="close" data-dismiss="alert" href="#">×</a>
+                    <a class="close" data-dismiss="alert" href="#" aria-hidden="true">&times;</a>
                     {{ self.renderList(msgs) }}
                 </div>
             {% endif %}

@@ -10,34 +10,34 @@
         <div class="panel-heading relative">
             {% if canEdit %}
                 <div class="dropdown float-right-top">
-                    <a data-toggle="dropdown" href="#" class="btn btn-xs btn-primary">
+                    <a data-toggle="dropdown" href="#" class="btn btn-xs btn-primary" role="button">
                         {{ 'actions' | trans({}, 'platform') }} <span class="icon-gear"></span> <i class="caret"></i>
                     </a>
-                    <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
-                        <li>
-                            <a href="{{ path('claro_user_profile_edit') }}">
+                    <ul class="dropdown-menu" role="menu">
+                        <li role="presentation" >
+                            <a role="menuitem" href="{{ path('claro_user_profile_edit') }}">
                                 {{ 'edit_profile'|trans({}, 'platform') }}
                             </a>
                         </li>
-                        <li>
-                            <a href="{{ path('claro_user_password_edit') }}">
+                        <li role="presentation" >
+                            <a role="menuitem" href="{{ path('claro_user_password_edit') }}">
                                 {{ 'edit_password'|trans({}, 'platform') }}
                             </a>
                         </li>
-                        <li>
-                            <a href="{{ path('claro_public_profile_view', {'publicUrl': user.publicUrl}) }}">
+                        <li role="presentation" >
+                            <a role="menuitem" href="{{ path('claro_public_profile_view', {'publicUrl': user.publicUrl}) }}">
                                 {{ 'see_public_profile'|trans({}, 'platform') }}
                             </a>
                         </li>
                         {% if false == user.hasTunedPublicUrl %}
-                        <li>
-                            <a href="{{ path('claro_user_public_url_edit') }}">
+                        <li role="presentation" >
+                            <a role="menuitem" href="{{ path('claro_user_public_url_edit') }}">
                                 {{ 'tune_your_public_profile_url'|trans({}, 'platform') }}
                             </a>
                         </li>
                         {% endif %}
-                        <li>
-                            <a href="{{ path('claro_user_public_profile_preferences') }}">
+                        <li role="presentation" >
+                            <a role="menuitem" href="{{ path('claro_user_public_profile_preferences') }}">
                                 {{ 'manage_public_profile_preferences'|trans({}, 'platform') }}
                             </a>
                         </li>
@@ -53,7 +53,7 @@
                 <aside class="col-md-2 profile_aside" role="complementary">
                     <div class="avatar">
                         {% if user.getPicture() != "" %}
-                            <img src="{{ asset('uploads/pictures/') ~  user.getPicture() }}" class="profile_picture">
+                            <img src="{{ asset('uploads/pictures/') ~  user.getPicture() }}" class="profile_picture" alt="{{ user.getLastName() ~ ' ' ~ user.getFirstName() }}">
                         {% else %}
                             <h1 class="profile_picture_placeholder"><i class="icon-user"></i></h1>
                         {% endif %}

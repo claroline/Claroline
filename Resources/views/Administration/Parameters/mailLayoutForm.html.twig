@@ -30,7 +30,7 @@
     <div class="panel-heading">
         <h3 class="panel-title">{{ 'layout'|trans({}, 'platform') }}</h3>
     </div>
-    <form class="form-horizontal" action="{{ path('claro_admin_edit_mail_layout') }}"
+    <form role="form" class="form-horizontal" action="{{ path('claro_admin_edit_mail_layout') }}"
           method="post" {{ form_enctype(form) }} id="form_settings" enctype='multipart/form-data'>
         <div class="panel-body">
             <div class="alert alert-warning">

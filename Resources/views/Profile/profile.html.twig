@@ -10,7 +10,7 @@
                 <em class="muted"> ({{ user.getUsername() }})</em>
             </h3>
             {% if user.getId() == app.user.id or is_granted('ROLE_ADMIN') %}
-                <a href="{{ path('claro_profile_form', {'user': user.getId}) }}" class="btn btn-primary float-right-top">
+                <a href="{{ path('claro_profile_form', {'user': user.getId}) }}" class="btn btn-primary float-right-top" role="button">
                     <i class="icon-edit"></i> {{ 'edit'|trans({}, 'platform') }}
                 </a>
             {% endif %}
@@ -19,7 +19,7 @@
             <div>
                 <div>
                     {% if user.getPicture() != "" %}
-                        <img src="{{ asset('uploads/pictures/') ~  user.getPicture() }}" class="col-md-2">
+                        <img src="{{ asset('uploads/pictures/') ~  user.getPicture() }}" class="col-md-2" alt="{{ user.getLastName() ~ ' ' ~ user.getFirstName() }}">
                     {% else %}
                         <div class="col-md-2">
                             <h1 ><i class="icon-user"></i><h1>
@@ -44,8 +44,8 @@
                 <p>{{ user.getDescription() |raw }} </p>
                 <p class="text-muted">{{ 'user'|trans({}, 'platform') }} {{ user.getCreationDate()| timeAgo }}</p>
                 <p>
-                    <a class="btn btn-default" href="{{path('claro_mail_form', {'userId':user.getId()})}}"><i class="icon-comment"></i> {{ 'send_mail'|trans({}, 'platform') }}</a>
-                    <a class="btn btn-default" href="{{path('claro_message_show', {'message': 0})}}?ids[]={{ user.getId() }}"><i class="icon-envelope"></i> {{ 'send_message'|trans({}, 'platform') }}</a>
+                    <a class="btn btn-default" href="{{path('claro_mail_form', {'userId':user.getId()})}}" role="button"><i class="icon-comment"></i> {{ 'send_mail'|trans({}, 'platform') }}</a>
+                    <a class="btn btn-default" href="{{path('claro_message_show', {'message': 0})}}?ids[]={{ user.getId() }}" role="button"><i class="icon-envelope"></i> {{ 'send_message'|trans({}, 'platform') }}</a>
                 </p>
             </div>
         </div>

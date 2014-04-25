@@ -16,29 +16,31 @@
 
 {% set nbPages = relations.getNbPages() %}
 {% if nbPages > 1 %}
-{{ renderPager(relations, workspaceTagId) }}
+    {{ renderPager(relations, workspaceTagId) }}
 {% endif %}
-<table id="workspace-table"  class="table table-striped table-condensed">
-    <tbody id="user-table-body">
-        {% for relation in relations.currentPageResults() %}
-        {% set workspace = relation.getWorkspace() %}
-            <tr id="{{ workspace.getId() }}" class="row-workspace">
-                <td>
-                    {{ workspace.getName() }}
-                    <span class="workspace-code">({{ workspace.getCode() }})</span>
-                </td>
-                <td align="right">
-                    <input
-                        type="checkbox"
-                        value="{{ workspace.getId() }}"
-                        class="chk-workspace-{{currentIndex}} simple-check workspace-check"
-                        align="center"
-                    >
-                </td>
-            </tr>
-        {% endfor %}
-    </tbody>
-</table>
+<div class="table-responsive">
+    <table id="workspace-table"  class="table table-striped table-condensed">
+        <tbody id="user-table-body">
+            {% for relation in relations.currentPageResults() %}
+            {% set workspace = relation.getWorkspace() %}
+                <tr id="{{ workspace.getId() }}" class="row-workspace">
+                    <td>
+                        {{ workspace.getName() }}
+                        <span class="workspace-code">({{ workspace.getCode() }})</span>
+                    </td>
+                    <td align="right">
+                        <input
+                            type="checkbox"
+                            value="{{ workspace.getId() }}"
+                            class="chk-workspace-{{currentIndex}} simple-check workspace-check"
+                            align="center"
+                        >
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
 {% if nbPages > 1 %}
-{{ renderPager(relations, workspaceTagId) }}
+    {{ renderPager(relations, workspaceTagId) }}
 {% endif %}

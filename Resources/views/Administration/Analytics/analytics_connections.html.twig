@@ -61,7 +61,7 @@
         </div>
 
         <div class="margin clearfix">
-            <form id="connections_criteria" action="{{ path('claro_admin_analytics_connections') }}" method="POST" >
+            <form role="form" id="connections_criteria" action="{{ path('claro_admin_analytics_connections') }}" method="POST" >
                 {{ form_widget(form_criteria) }}
                 <div class="form-group"> <input type="submit" value="{{ 'Show actions'|trans({}, 'platform') }}" class="btn btn-primary"/> </div>
             </form>
