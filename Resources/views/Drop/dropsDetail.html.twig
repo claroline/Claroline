@@ -4,11 +4,20 @@
 {% endif %}
 
 {% block resourceBreadcrumb %}
-    <li>
         {% if byUserMod == 1 %}
-            <a href="{{ path('icap_dropzone_open', {'resourceId': dropzone.id}) }}"><span class="glyphicon icon-list"></span> {{ dropzone.resourceNode.name }}</a></li>
+            <li>
+                <a href="{{ path('icap_dropzone_open', {'resourceId': dropzone.id}) }}"><span
+                            class="glyphicon icon-list"></span> {{ dropzone.resourceNode.name }}</a>
+            </li>
         {% else %}
-            <a href="{{ path('icap_dropzone_drops', {'resourceId': dropzone.id}) }}"><span class="glyphicon icon-list"></span> {{ dropzone.resourceNode.name }}</a></li>
+            <li>
+                <a href="{{ path('icap_dropzone_edit_common',{'resourceId':dropzone.id}) }}"><span
+                            class="glyphicon icon-list"></span>  {{ dropzone.resourceNode.name }}</a>
+            </li>
+            <li>
+                <a href="{{ path('icap_dropzone_drops', {'resourceId': dropzone.id}) }}"> {{ 'List of copies'|trans({}, 'icap_dropzone') }}</a>
+            </li>
+            </li>
         {% endif  %}
 
     <li class="active">

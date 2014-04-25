@@ -2,6 +2,14 @@
 
 {% form_theme form "IcapDropzoneBundle::form_theme_bootstrap3.html.twig" %}
 
+
+{% block resourceBreadcrumb %}
+    <li><a href="{{ path('icap_dropzone_edit_common',{'resourceId':dropzone.id}) }}"><span
+                    class="glyphicon icon-list"></span>  {{ dropzone.resourceNode.name }}</a></li>
+    <li class="active"> {{ 'Evaluation criterions'|trans({}, 'icap_dropzone') }}</li>
+{% endblock %}
+
+
 {% block drop_zone_content_edit %}
 
 
