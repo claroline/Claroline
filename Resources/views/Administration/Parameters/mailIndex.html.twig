@@ -28,13 +28,13 @@
     </div>
     <div class="list-group">
         <a class="list-group-item" href="{{ path('claro_admin_parameters_mail_server') }}">
-            <i class="icon-hdd"></i> {{ 'server'|trans({}, 'platform') }}
+            {{ 'server'|trans({}, 'platform') }}
         </a>
         <a class="list-group-item" href="{{ path('claro_admin_mail_registration') }}">
-            <i class="icon-file-text-alt"></i> {{ 'registration'|trans({}, 'platform') }}
+            {{ 'registration'|trans({}, 'platform') }}
         </a>
         <a class="list-group-item" href="{{ path('claro_admin_mail_layout') }}">
-            <i class="icon-th-large"></i> {{ 'layout'|trans({}, 'platform') }}
+            {{ 'layout'|trans({}, 'platform') }}
         </a>
     </div>
 {% endblock %}

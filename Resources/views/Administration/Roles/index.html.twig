@@ -24,10 +24,10 @@
     </div>
     <div class="list-group">
         <a class="list-group-item" href="{{ path('create_platform_role_form') }}">
-            <i class="icon-pencil"></i> {{ 'create_role'|trans({}, 'platform') }}
+            {{ 'create_role'|trans({}, 'platform') }}
         </a>
         <a class="list-group-item" href="{{ path('claro_admin_tools_index', {}) }}">
-            <i class="icon-wrench"></i> {{ 'manage_tools'|trans({}, 'platform') }}
+            {{ 'manage_tools'|trans({}, 'platform') }}
         </a>
     </div>
 {% endblock %}

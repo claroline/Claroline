@@ -25,25 +25,25 @@
     </div>
     <div class="list-group">
         <a class="list-group-item" href="{{ path('claro_admin_parameters_general') }}">
-            <i class="icon-wrench"></i> {{ 'general'|trans({}, 'platform') }}
+            {{ 'general'|trans({}, 'platform') }}
         </a>
         <a class="list-group-item" href="{{ path('claro_admin_parameters_appearance') }}">
-            <i class="icon-picture"></i> {{ 'appearance'|trans({}, 'platform') }}
+            {{ 'appearance'|trans({}, 'platform') }}
         </a>
         <a class="list-group-item" href="{{ path('claro_admin_edit_terms_of_service') }}">
-            <i class="icon-file-text-alt"></i> {{ 'Terms of service' | trans({}, 'platform') }}
+            {{ 'Terms of service' | trans({}, 'platform') }}
         </a>
         <a class="list-group-item" href="{{ path('claro_admin_parameters_mail_index') }}">
-            <i class="icon-envelope"></i> {{ 'mail'|trans({}, 'platform') }}
+            {{ 'mail'|trans({}, 'platform') }}
         </a>
         <a class="list-group-item" href="{{ path('claro_admin_parameters_indexing') }}">
-            <i class="icon-search"></i> {{ 'Indexing'|trans({}, 'platform') }}
+            {{ 'Indexing'|trans({}, 'platform') }}
         </a>
         <a class="list-group-item" href="{{ path('claro_admin_session') }}">
-            <i class="icon-lock"></i> {{ 'session'|trans({}, 'platform') }}
+            {{ 'session'|trans({}, 'platform') }}
         </a>
         <a class="list-group-item" href="{{ path('claro_admin_parameters_oauth_index') }}">
-            <i class="icon-globe"></i> {{ 'oauth'|trans({}, 'platform') }}
+            {{ 'oauth'|trans({}, 'platform') }}
         </a>
     </div>
 {% endblock %}
