@@ -363,7 +363,7 @@ logout: Logout
 logs: tracking
 mail: Mail
 mail_click: 'Click on this link to reset your password'
-mail_config_problem: 'Please contact your administrator platform to reinitialize your password.'
+mail_config_problem: Please contact your administrator platform to reinitialize your password.
 mail_form_content: Content
 mail_form_object: Object
 mail_form_receiver: Receiver(s)
@@ -371,9 +371,9 @@ mail_invalid: 'Mail format is not valid'
 mail_layout: 'Mail layout.'
 mail_login: 'Your Claroline''s login'
 mail_message: 'You received this message because you asked for a new password. Please click on the link below to reset it. If you did not ask to reset your password please ignore this message.'
-mail_not_available: 'The mail function is not available'
+mail_not_available: The mail function is not available.
 mail_not_exist: 'This mail does not exist'
-mail_sent: 'A email has been sent to your address, check your inbox mail and your spam box'
+mail_sent: A email has been sent to your address. Check your inbox mail and your spam box.
 make_my_public_profil_visible: 'Make my public profile visible'
 make_public_profile_visible_to_everybody: 'to <strong>everybody</strong>'
 make_public_profile_visible_to_nobody: 'to <strong>nobody</strong>'
@@ -430,6 +430,7 @@ name: Name
 new: New
 new_message: 'New message'
 new_message_alert: 'You have %count% new message(s)'
+new_password: New password
 new_role_message: 'You received the role %name%'
 new_role_message_object: 'Your permissions on the platform have changed'
 no: no
@@ -544,11 +545,12 @@ rename: Rename
 rename_category: 'Rename category'
 rename_tool: 'Rename tool'
 rename_widget_instance: 'Rename widget'
+repeat_password: Repeat the password
 reset: Reset
-reset_password_txt: 'You asked for your password reinitialisation. If you did not ask for it, please just ignore this message.'
-reset_pwd: 'Reset Your Password'
-reset_pwd_form_plainPassword_first: 'New password'
-reset_pwd_form_plainPassword_second: 'Repeat the password'
+reset_password: Reset password
+reset_password_message: Are you sure you want to reinitialize password ?
+reset_password_txt: You asked for your password reinitialisation. If you did not ask for it, please just ignore this message.
+resetting_your_password: Resetting your password
 resource: Resource
 resource_action_denied_message: 'The action %action% couldn''t be done on ''%path%'': access denied.'
 resource_creation_denied: 'You don''t have the permission to create in the directory ''%path'': access denied'

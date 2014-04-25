@@ -364,7 +364,7 @@ logout: Déconnexion
 logs: suivi
 mail: Mail
 mail_click: 'Cliquez sur ce lien pour réinitialiser votre mot de passe'
-mail_config_problem: 'Veuillez contacter l''administrateur pour reinitialiser votre mot de passe.'
+mail_config_problem: Veuillez contacter l'administrateur pour réinitialiser votre mot de passe.
 mail_form_content: Contenu
 mail_form_object: Objet
 mail_form_receiver: destinataire(s)
@@ -372,9 +372,9 @@ mail_invalid: 'Le format de votre email n''est pas valide'
 mail_layout: 'Mise en page des emails.'
 mail_login: 'Cliquez sur le lien'
 mail_message: 'Vous avez demandé la réinitialisation de votre mot de passe. Cliquez sur lien ci-dessous pour le réinitialiser. Si vous n''êtes pas à l''origine de cette action, veuillez ignorer ce message.'
-mail_not_available: 'La fonction d''envoi de mail n''est pas disponible'
+mail_not_available: La fonction d'envoi d'email n'est pas disponible.
 mail_not_exist: 'Cet email n''existe pas '
-mail_sent: 'Un email vient de vous être envoyé. Vérifiez votre dossier spam au cas où vous ne verriez pas l''email'
+mail_sent: Un email vient de vous être envoyé. Vérifiez votre dossier spam au cas où celui-ci n'apparaîtrait pas dans votre boîte de réception.
 make_my_public_profil_visible: 'Rendre mon profil public visible'
 make_public_profile_visible_to_everybody: 'à <strong>tout le monde</strong>'
 make_public_profile_visible_to_nobody: 'à <strong>personne</strong>'
@@ -432,6 +432,7 @@ new: Nouveau
 new_message: 'Nouveau message'
 new_message_alert: 'Vous avez %count% nouveaux message(s)'
 new_role_message: 'Vous venez de recevoir le role %name%'
+new_password: Nouveau mot de passe
 new_role_message_object: 'Vos permissions sur la plateforme ont changé'
 no: non
 no_category: 'Il n''y a aucune catégorie'
@@ -546,11 +547,12 @@ rename: Renommer
 rename_category: 'Renommer la catégorie'
 rename_tool: 'Renommage d''un outil'
 rename_widget_instance: 'Renommage du Widget'
+repeat_password: Répétez le mot de passe
 reset: Réinitialiser
-reset_password_txt: 'Vous avez demandé la réinitialisation de votre mot de passe. Si vous n''êtes pas à l''origine de cette action, veuillez ignorer ce message.'
-reset_pwd: 'Réinitialisation de votre mot de passe'
-reset_pwd_form_plainPassword_first: 'Nouveau mot de passe'
-reset_pwd_form_plainPassword_second: 'Répétez le mot de passe'
+reset_password: Réinitialiser le mot de passe
+reset_password_message: Êtes-vous sûr de vouloir réinitialiser le mot de passe ?
+reset_password_txt: Vous avez demandé la réinitialisation de votre mot de passe. Si vous n'êtes pas à l'origine de cette action, veuillez ignorer ce message.
+resetting_your_password: Réinitialisation de votre mot de passe
 resource: Ressource
 resource_action_denied_message: 'L''action %action% n''a pas pu être exécutée sur la resource ''%path%'': accès refusé.'
 resource_creation_denied: 'Vous n''avez pas la permission de créer une ressource dans le répertoire ''%path'': accès refusé.'

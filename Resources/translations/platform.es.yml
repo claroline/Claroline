@@ -322,14 +322,14 @@ logout: 'Cerrar sesión'
 logs: 'Rastreo'
 mail: 'Correo'
 mail_click: 'Haga clic en este enlace para restablecer tu contraseña'
-mail_config_problem: 'Por favor, póngase en contacto con el administrador de la plataforma para reiniciar su contraseña.'
+mail_config_problem: Por favor, póngase en contacto con el administrador de la plataforma para reiniciar su contraseña.
 mail_form_content: 'Contenido'
 mail_form_object: 'Asunto'
 mail_form_receiver: 'Destinatarios'
 mail_invalid: 'Formato de correo electrónico invalido'
 mail_login: 'Su identificación de conexión'
 mail_message: 'Usted recibido este mensaje porque usted pidió una nueva contraseña. Por favor, haga clic en el enlace de abajo para restablecerla. Si usted no pidió restablecer su contraseña, por favor ignore este mensaje.'
-mail_not_available: 'La función de correo electrónico no está disponible'
+mail_not_available: La función de correo electrónico no está disponible.
 mail_not_exist: 'Este correo electrónico no existe'
 mail_sent: 'Un correo electrónico ha sido enviado, Por favor compruebe su bandeja de entrada y o en el Spam'
 manage_rights: 'Administrar los derechos'
@@ -382,6 +382,7 @@ name: 'Nombre'
 new: 'Nuevo'
 new_message: 'Nuevo mensaje'
 new_message_alert: 'Usted tiene %count% nuevo(s) mensaje(s)'
+new_password: Nueva contraseña
 new_role_message: 'Usted a recivido el rol %name%'
 new_role_message_object: 'Sus derechos de acceso en la plataforma han cambiado'
 no: 'No'
@@ -486,13 +487,12 @@ rename: 'Renombrar'
 rename_category: 'Renombrar categoría'
 rename_tool: 'Renombrar herramienta'
 rename_widget_instance: 'Renombrar widget'
+repeat_password: Repita la contraseña
 reset: 'Reinicializar'
-reset_password: 'Reinicializar contraseña'
-reset_password_message: '¿Esta seguro que desea reinicializar su contraseña?'
-reset_password_txt: 'Usted pidió la reinicialización de su contraseña. Si usted no la pidió, por favor ignore este mensaje.'
-reset_pwd: 'Reinicializar su contraseña'
-reset_pwd_form_plainPassword_first: 'Nueva contraseña'
-reset_pwd_form_plainPassword_second: 'Repita la contraseña'
+reset_password: Reinicializar contraseña
+reset_password_message: ¿Esta seguro que desea reinicializar su contraseña?
+reset_password_txt: Usted pidió la reinicialización de su contraseña. Si usted no la pidió, por favor ignore este mensaje.
+resetting_your_password: Reinicialización de su contraseña
 resource: 'recurso'
 resource_action_denied_message: 'La acción %action% no puede realizarse en ''%path%'': acceso denegado.'
 resource_creation_denied: 'Usted no tiene el permiso de crear en la carpeta ''%path'': acceso denegado'
