@@ -173,3 +173,4 @@ start_to_award_this_badge: '<a href="%url%" id="awardUser" role="button">Award</
 badge_edit_create_new_version: "<strong>Warning!!!</strong> This badge has already been awarded. Editing its awarding rules will create a new version of this badge."
 consult_my_badge_details: 'View my details badge'
 badge_award_form_comment: 'Comment'
+comment: 'Comment'
