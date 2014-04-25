@@ -4,11 +4,20 @@
 {% endif %}
 
 {% block resourceBreadcrumb %}
-    <li>
         {% if byUserMod == 1 %}
-            <a href="{{ path('icap_dropzone_open', {'resourceId': dropzone.id}) }}"><span class="glyphicon icon-list"></span> {{ dropzone.resourceNode.name }}</a></li>
+            <li>
+                <a href="{{ path('icap_dropzone_open', {'resourceId': dropzone.id}) }}"><span
+                            class="glyphicon icon-list"></span> {{ dropzone.resourceNode.name }}</a>
+            </li>
         {% else %}
-            <a href="{{ path('icap_dropzone_drops', {'resourceId': dropzone.id}) }}"><span class="glyphicon icon-list"></span> {{ dropzone.resourceNode.name }}</a></li>
+            <li>
+                <a href="{{ path('icap_dropzone_edit_common',{'resourceId':dropzone.id}) }}"><span
+                            class="glyphicon icon-list"></span>  {{ dropzone.resourceNode.name }}</a>
+            </li>
+            <li>
+                <a href="{{ path('icap_dropzone_drops', {'resourceId': dropzone.id}) }}"> {{ 'List of copies'|trans({}, 'icap_dropzone') }}</a>
+            </li>
+            </li>
         {% endif  %}
 
     <li class="active">
@@ -75,6 +84,11 @@
         <br/>
 
         <h3>{{ 'List of corrections'|trans({}, 'icap_dropzone') }}</h3>
+        {%  if isAllowedToEdit %}
+            <a class="btn btn-default" href="{{  path("icap_dropzone_drops_detail_add_correction",{'resourceId':dropzone.id,'dropId':drop.id}) }}">
+                {{  "Add a correction"|trans({},'icap_dropzone') }}
+            </a>
+        {% endif %}
         <hr/>
 
 
@@ -89,4 +103,5 @@
 
 {% block javascripts %}
     {{ parent() }}
+    <script src="{{ asset('bundles/icapdropzone/js/popup.js') }}"></script>
 {% endblock %}

@@ -165,13 +165,18 @@ class CriterionController extends DropzoneBaseController
      * @ParamConverter("criterion", class="IcapDropzoneBundle:Criterion", options={"id" = "criterionId"})
      * @Template()
      */
-    public function editDeleteCriterionAction($dropzone, $page, $criterion, $number)
+    public function editDeleteCriterionAction(Dropzone $dropzone, $page, $criterion, $number)
     {
         $this->isAllowToOpen($dropzone);
         $this->isAllowToEdit($dropzone);
 
         $form = $this->createForm(new CriterionDeleteType(), $criterion);
 
+        $nbCorrection = $this
+            ->getDoctrine()
+            ->getManager()
+            ->getRepository('IcapDropzoneBundle:Correction')
+            ->countByDropzone($dropzone->getId());
 
         if ($this->getRequest()->isXMLHttpRequest()) {
 
@@ -184,7 +189,8 @@ class CriterionController extends DropzoneBaseController
                     'criterion' => $criterion,
                     'form' => $form->createView(),
                     'page' => $page,
-                    'number' => $number
+                    'number' => $number,
+                    'nbCorrection' => $nbCorrection,
                 )
             );
         }
@@ -196,7 +202,8 @@ class CriterionController extends DropzoneBaseController
             'criterion' => $criterion,
             'form' => $form->createView(),
             'page' => $page,
-            'number' => $number
+            'number' => $number,
+            'nbCorrection' => $nbCorrection,
         );
     }
 

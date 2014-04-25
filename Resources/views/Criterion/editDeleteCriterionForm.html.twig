@@ -2,6 +2,11 @@
     {{ form_errors(form) }}
 
     <div class="container">
+        {% if nbCorrection > 0 %}
+            <p>
+                {{ 'corrections were already created'|transchoice(nbCorrection,{},'icap_dropzone') }}
+            </p>
+        {% endif %}
         {{ 'Are you sure you want to delete the %number%'|trans({'%number%': number}, 'icap_dropzone') }}
     </div>
 

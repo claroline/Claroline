@@ -2,23 +2,16 @@
 
 {% form_theme form "IcapDropzoneBundle::form_theme_bootstrap3.html.twig" %}
 
+
+{% block resourceBreadcrumb %}
+    <li><a href="{{ path('icap_dropzone_edit_common',{'resourceId':dropzone.id}) }}"><span
+                    class="glyphicon icon-list"></span>  {{ dropzone.resourceNode.name }}</a></li>
+    <li class="active"> {{ 'Evaluation criterions'|trans({}, 'icap_dropzone') }}</li>
+{% endblock %}
+
+
 {% block drop_zone_content_edit %}
-    {#<div class="navbar navbar-default" role="navigation">#}
-        {#<div class="collapse navbar-collapse navbar-ex1-collapse">#}
-            {#<ul class="nav navbar-nav">#}
-                {#<li>#}
-                    {#<a href="{{ path('icap_dropzone_edit_common', {'resourceId': dropzone.id}) }}">#}
-                        {#{{ 'Common'|trans({}, 'icap_dropzone') }}#}
-                    {#</a>#}
-                {#</li>#}
-                {#<li class="active {% if dropzone.editionState < 1 %}disabled{% endif %}">#}
-                    {#<a href="{% if dropzone.editionState < 1 %}#{% else %}{{ path('icap_dropzone_edit_criteria', {'resourceId': dropzone.id}) }}{% endif %}">#}
-                        {#{{ 'Peer review criteria'|trans({}, 'icap_dropzone') }}#}
-                    {#</a>#}
-                {#</li>#}
-            {#</ul>#}
-        {#</div>#}
-    {#</div>#}
+
 
     <form class="form-horizontal" method="POST" action="{{ path('icap_dropzone_edit_criteria', {'resourceId': dropzone.id}) }}">
     <p>{{ 'criteria_explication'|trans({}, 'icap_dropzone')|raw }}</p>
@@ -31,8 +24,16 @@
         </div>
     </div>
     <h3>{{ 'Evaluation Criteria'|trans({}, 'icap_dropzone') }}</h3>
+        {% if nbCorrection > 0 %}
+            <div class="alert alert-warning">
+                <h4> {{ 'Warning'|trans({}, 'icap_dropzone') }}</h4>
 
-    <div class="container">
+                <p> {{ 'corrections were already created'|transchoice(nbCorrection,{},'icap_dropzone') }}</p>
+
+                <p> {{ 'Modify add or delete criteria will affect this corrections if you recalculate the note on it.'|trans({},'icap_dropzone') }}</p>
+            </div>
+        {% endif %}
+        <div class="container">
             <div class="row">
                 <div class="col-md-9">
                     <a href="{{ path('icap_dropzone_edit_add_criterion', {'resourceId': dropzone.id, 'page': pager.currentPage}) }}" class="btn btn-primary add-criterion-button disabled-during-edition"><span class="glyphicon icon-plus"> {{ 'Add a criterion'|trans({}, 'icap_dropzone') }}</span></a>
