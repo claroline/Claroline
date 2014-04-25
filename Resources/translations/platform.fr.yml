@@ -188,6 +188,7 @@ database: 'Base de données'
 database_connection_failed: 'La connexion à la base de données à échoué.'
 date: Date
 date_form_format: dd/MM/yyyy
+date_form_placeholder: jj/mm/aaaa
 date_format: d/m/Y
 date_range.apply: Appliquer
 date_range.clear: Effacer
@@ -363,7 +364,7 @@ logout: Déconnexion
 logs: suivi
 mail: Mail
 mail_click: 'Cliquez sur ce lien pour réinitialiser votre mot de passe'
-mail_config_problem: 'Veuillez contacter l''administrateur pour reinitialiser votre mot de passe.'
+mail_config_problem: Veuillez contacter l'administrateur pour réinitialiser votre mot de passe.
 mail_form_content: Contenu
 mail_form_object: Objet
 mail_form_receiver: destinataire(s)
@@ -371,9 +372,9 @@ mail_invalid: 'Le format de votre email n''est pas valide'
 mail_layout: 'Mise en page des emails.'
 mail_login: 'Cliquez sur le lien'
 mail_message: 'Vous avez demandé la réinitialisation de votre mot de passe. Cliquez sur lien ci-dessous pour le réinitialiser. Si vous n''êtes pas à l''origine de cette action, veuillez ignorer ce message.'
-mail_not_available: 'La fonction d''envoi de mail n''est pas disponible'
+mail_not_available: La fonction d'envoi d'email n'est pas disponible.
 mail_not_exist: 'Cet email n''existe pas '
-mail_sent: 'Un email vient de vous être envoyé. Vérifiez votre dossier spam au cas où vous ne verriez pas l''email'
+mail_sent: Un email vient de vous être envoyé. Vérifiez votre dossier spam au cas où celui-ci n'apparaîtrait pas dans votre boîte de réception.
 make_my_public_profil_visible: 'Rendre mon profil public visible'
 make_public_profile_visible_to_everybody: 'à <strong>tout le monde</strong>'
 make_public_profile_visible_to_nobody: 'à <strong>personne</strong>'
@@ -431,6 +432,7 @@ new: Nouveau
 new_message: 'Nouveau message'
 new_message_alert: 'Vous avez %count% nouveaux message(s)'
 new_role_message: 'Vous venez de recevoir le role %name%'
+new_password: Nouveau mot de passe
 new_role_message_object: 'Vos permissions sur la plateforme ont changé'
 no: non
 no_category: 'Il n''y a aucune catégorie'
@@ -472,7 +474,7 @@ password_ok: 'Votre mot de passe a été modifié. Vous pouvez maintenant vous c
 paste: Coller
 path: Emplacement
 permissions: Permissions
-personal_workspace: 'Espace personnel'
+personal_workspace: 'Espace personnel - '
 phone: Téléphone
 picture_profile: 'Photo de profil'
 platform_appearance: 'Apparence de la plateforme'
@@ -545,11 +547,12 @@ rename: Renommer
 rename_category: 'Renommer la catégorie'
 rename_tool: 'Renommage d''un outil'
 rename_widget_instance: 'Renommage du Widget'
+repeat_password: Répétez le mot de passe
 reset: Réinitialiser
-reset_password_txt: 'Vous avez demandé la réinitialisation de votre mot de passe. Si vous n''êtes pas à l''origine de cette action, veuillez ignorer ce message.'
-reset_pwd: 'Réinitialisation de votre mot de passe'
-reset_pwd_form_plainPassword_first: 'Nouveau mot de passe'
-reset_pwd_form_plainPassword_second: 'Répétez le mot de passe'
+reset_password: Réinitialiser le mot de passe
+reset_password_message: Êtes-vous sûr de vouloir réinitialiser le mot de passe ?
+reset_password_txt: Vous avez demandé la réinitialisation de votre mot de passe. Si vous n'êtes pas à l'origine de cette action, veuillez ignorer ce message.
+resetting_your_password: Réinitialisation de votre mot de passe
 resource: Ressource
 resource_action_denied_message: 'L''action %action% n''a pas pu être exécutée sur la resource ''%path%'': accès refusé.'
 resource_creation_denied: 'Vous n''avez pas la permission de créer une ressource dans le répertoire ''%path'': accès refusé.'
@@ -760,9 +763,11 @@ workspace_delete_confirm_title: 'Confirmation de suppression'
 workspace_delete_success_message: 'L''espace d''activités "%workspaceName%" été supprimé.'
 workspace_edit_form_code: Code
 workspace_edit_form_creationDate : 'Date de création'
+workspace_edit_form_creator : 'Créateur de l''espace'
 workspace_edit_form_description: Description
 workspace_edit_form_displayable: Visible
 workspace_edit_form_name: Nom
+workspace_edit_form_number : Nombre de personnes inscrit à l''espace
 workspace_edit_form_selfRegistration: 'Inscription publique'
 workspace_edit_form_selfUnregistration: 'Désinscription publique'
 workspace_form_code: Code
@@ -778,8 +783,6 @@ workspace_home_tab_edition: 'Edition de l''onglet pour les espaces d''activités
 workspace_home_tabs: 'Onglets pour les espaces d''activités'
 workspace_list: 'Liste des espaces d''activités'
 workspace_list: Liste des espaces d'activités
-workspace_management : 'L''espace d''activité a été créé le %creationDate%, par %creator%. Il y a %count% inscrit(s).'
-workspace_management_date_null : 'L''espace d''activité a été créé par %creator%. Il y a %count% inscrit(s).'
 workspace_order_tool_edit_form_name: Nom
 workspace_registration_confirm_title: 'Voulez-vous vous inscrire à cet espace d''activités ?'
 workspace_registration_message: 'Vous avez été inscrit à l''espace d''activité %workspace_name%'
@@ -800,7 +803,7 @@ workspaces: 'Espaces d''activités'
 workspaces_included_in_category: 'Espaces d''activités enregistrés dans cette catégorie'
 workspaces_management: 'Gestions des espaces d''activités '
 workspaces_per_page: 'Espaces par page'
-workspaces_per_page: Espaces par page
+wrong_captcha : 'Le code ne correspond pas avec l''image indiquée'
 ws_creator: 'Créateur d''espaces'
 ws_most_viewed: 'Espaces d''activités les plus consultés'
 yes: oui

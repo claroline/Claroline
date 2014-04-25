@@ -7,7 +7,8 @@
         <div class="panel-heading">
             <h3 class="panel-title">{{ "send_message" | trans({}, "platform" )}}</h3>
         </div>
-        <form novalidate="novalidate"
+        <form role="form"
+              novalidate="novalidate"
               action="{{path('claro_message_send')}}"
               method="post" {{ form_enctype(form) }}
               id="generic-form"

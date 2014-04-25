@@ -11,7 +11,7 @@
         <div class="panel-heading">
             <h1 class="panel-title">
                 {{ 'my_badges'|trans({}, 'platform') }}
-                <a href="{{ path('claro_claim_badge') }}" class="btn btn-default btn-xs">{{ 'claim_badge'|trans }}</a>
+                <a href="{{ path('claro_claim_badge') }}" class="btn btn-default btn-xs" role="button">{{ 'claim_badge'|trans }}</a>
             </h1>
         </div>
         <div class="panel-body">
@@ -97,11 +97,11 @@
                                         data-loading-state="' ~ loadingState|escape ~ '" data-shared-state="' ~ sharedState|escape ~ '" data-private-state="' ~ privateState|escape ~ '">
                                             ' ~ privateState|raw ~ '
                                     </a>
-                                    <ul class="dropdown-menu sharedoptions" role="menu" aria-labelledby="dLabel">
-                                        <li class="active">
+                                    <ul class="dropdown-menu sharedoptions" role="menu">
+                                        <li role="presentation" class="active">
                                             <a role="menuitem" tabindex="-1" data-toggle="dropdown" href="#" class="sharedoption" data-value="0"><span class="icon-lock publish_collection"></span> ' ~ 'stop_share'|trans ~ '</a>
                                         </li>
-                                        <li>
+                                        <li role="presentation">
                                             <a role="menuitem" tabindex="-1" data-toggle="dropdown" href="#" class="sharedoption" data-value="1"><span class="icon-unlock publish_collection"></span> ' ~ 'share'|trans ~ '</a>
                                         </li>
                                     </ul>
@@ -168,11 +168,11 @@
                                                 {{ privateState|raw }}
                                             {% endif %}
                                         </a>
-                                        <ul class="dropdown-menu sharedoptions" role="menu" aria-labelledby="dLabel">
-                                            <li class="{% if false == isCollectionShared %} active{% endif %}">
+                                        <ul class="dropdown-menu sharedoptions" role="menu">
+                                            <li role="presentation" class="{% if false == isCollectionShared %} active{% endif %}">
                                                 <a role="menuitem" tabindex="-1" data-toggle="dropdown" href="#" class="sharedoption" data-value="0"><span class="icon-lock publish_collection"></span> {{ 'stop_share'|trans }}</a>
                                             </li>
-                                            <li class="{% if isCollectionShared %} active{% endif %}">
+                                            <li role="presentation" class="{% if isCollectionShared %} active{% endif %}">
                                                 <a role="menuitem" tabindex="-1" data-toggle="dropdown" href="#" class="sharedoption" data-value="1"><span class="icon-unlock publish_collection"></span> {{ 'share'|trans }}</a>
                                             </li>
                                         </ul>

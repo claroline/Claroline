@@ -1,17 +1,22 @@
-{% for e in listEvents  %}
-        <div class="panel panel-default">
-            <button type="button" class="delete-task close" data-event-id="{{e.id}}" data-dismiss="alert">&times;</button>
-            <h5 data-event-title="{{e.title}}"> {{ e.title }}</h5>
-            <ul>
-                {% if e.description is not empty %}
-                    <li>{{ e.description |raw }}</li>
-                {% else %}
-                   <li> {{ 'no_description'|trans({}, 'agenda') }} </li>
-                {% endif %}
-                <li class="hidden" data-task="{{e.allDay}}"> {{e.allDay}}</li>
-                <li class="hidden"> {{e.priority}}</li>
-                <li class="hidden"> {{e.id}}</li>
-                <a href="#myModal" class="update-task" role="button">{{'update'|trans({}, 'agenda')}}</a> </p>
-            </ul>
+{% for e in listEvents %}
+    <li class="list-group-item">
+        <button type="button" class="delete-task close" data-event-id="{{e.id}}" data-dismiss="alert">&times;</button>
+        <strong data-event-title="{{e.title}}"> {{ e.title }}</strong>
+
+        {% if e.description is not empty %}
+           <span>{{ e.description |raw }}</span>
+        {% endif %}
+
+        <div class="text-muted">
+            <span data-event-start="{{ e.start|date("d/m/Y")}}"> {{ e.start|date("d/m/Y")}}</span>
         </div>
-    {% endfor %}
+        
+        <div>
+            <a href="#myModal" class="update-task" role="button">modifier</a>
+        </div>
+    </li>
+{% else %}
+    <li class="list-group-item">
+        {{ 'no_task_found'|trans({}, 'agenda') }}
+    </li>
+{% endfor %}

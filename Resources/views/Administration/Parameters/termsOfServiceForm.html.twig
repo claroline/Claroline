@@ -26,7 +26,7 @@
     <div class="panel-heading">
         <h3 class="panel-title">{{ 'Terms of service'|trans({}, 'platform') }}</h3>
     </div>
-    <form action="{{ path('claro_admin_edit_terms_of_service_submit') }}" method="post" id="terms_of_service_form">
+    <form role="form" action="{{ path('claro_admin_edit_terms_of_service_submit') }}" method="post" id="terms_of_service_form">
         <div class="panel-body">
              {{ form_widget(form) }}
         </div>

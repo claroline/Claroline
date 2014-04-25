@@ -308,7 +308,8 @@
     {
         var avatar = '<i class="icon-user"></i>';
         if (item.avatar !== null) {
-            avatar = '<img src="' + home.asset + 'uploads/pictures/' + item.avatar + '"/>';
+            avatar = '<img src="' + home.asset + 'uploads/pictures/' + item.avatar + '" alt="' + item.name +
+                     '" class="img-responsive">';
         }
 
         return '<li>' +
@@ -343,10 +344,10 @@
             'insertdatetime media nonbreaking save table directionality',
             'template paste textcolor emoticons code -mention -accordion'
         ],
-        'toolbar1': 'bold italic strikethrough | alignleft aligncenter alignright alignjustify | ' +
+        'toolbar1': 'bold italic underline strikethrough | alignleft aligncenter alignright alignjustify | ' +
                     'resourcePicker fileUpload | fullscreen displayAllButtons',
         'toolbar2': 'styleselect | undo redo | forecolor backcolor | bullist numlist | outdent indent | ' +
-                    'image media link charmap | print preview | code',
+                    'image media link charmap | print preview code',
         'extended_valid_elements': 'user[id], a[data-toggle|data-parent]',
         'paste_preprocess': tinymce.claroline.paste,
         'setup': tinymce.claroline.setup,

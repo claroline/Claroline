@@ -31,7 +31,7 @@
             <i class="icon-trash"></i>
             {{ 'delete'|trans({}, 'platform') }}
         </button>
-        <a href="{{ path('claro_workspace_creation_form') }}" class="btn btn-default action-button" >
+        <a href="{{ path('claro_workspace_creation_form') }}" class="btn btn-default action-button" role="button">
             <i class="icon-pencil"></i>
             {{ 'create'|trans({}, 'platform') }}
         </a>
@@ -179,8 +179,9 @@
                             </a>
                         </td>
                         <td>
-                            {% if w.getCreationDate() is defined %}
-                                {{ w.getCreationDate()|date("d/m/Y g:i")}} 
+
+                            {% if w.getCreationDate() is not null %}
+                                {{ w.getCreationDate()|intl_date_format}}
                             {% else %}
                                 -
                             {% endif %}

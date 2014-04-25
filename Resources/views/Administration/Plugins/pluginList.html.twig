@@ -32,11 +32,11 @@
                             <a href="{{ path('claro_admin_plugin_options', {'domain': plugin.getShortName()}) }}">
                         {% endif %}
 
-                    <img src="{{ asset(plugin.getIcon()) }}" height="100">
+                        <img src="{{ asset(plugin.getIcon()) }}" height="100" alt="{{  plugin.getShortName()|trans({}, 'plugin_description') }}">
 
-                    {% if plugin.hasOptions() %}
-                        </a>
-                    {% endif %}
+                        {% if plugin.hasOptions() %}
+                            </a>
+                        {% endif %}
 
                         <div class="plugin-figcaption">
                         {% if plugin.hasOptions() %}

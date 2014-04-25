@@ -95,11 +95,11 @@
     <div id="twig-self-registration-user-id" data-user-id="{{ user.getId() }}">
     </div>
 
-    <div id="confirm-registration-validation-box" class="modal fade">
+    <div id="confirm-registration-validation-box" class="modal fade" role="dialog" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                     <h4>{{ 'workspace_registration_confirm_title'|trans({}, 'platform') }}</h4>
                 </div>
                 <div class="modal-body">

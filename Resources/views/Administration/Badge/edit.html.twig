@@ -40,39 +40,41 @@
                     <img src="{{ asset(badge.webPath) }}" alt="{{ badge.name }}" class="badge_image_informations" />
                 </div>
                 <div class="col-md-7">
-                    <table class="badge_informations table table-condensed">
-                        <colgroup>
-                            <col class="fieldLabelCol">
-                            <col class="dataCol">
-                        </colgroup>
-                        <tbody>
-                            <tr>
-                              <td class="section-head text-muted" colspan="2">{{ 'badge_details'|trans }}</td>
-                            </tr>
-                            <tr>
-                              <td class="fieldlabel">{{ 'badge_form_name'|trans }}</td>
-                              <td>{{ badge.name }}</td>
-                            </tr>
-                            <tr>
-                              <td class="fieldlabel">{{ 'badge_version'|trans }}</td>
-                              <td>{{ badge.version }}</td>
-                            </tr>
-                            {% if badge.isExpiring %}
-                            <tr>
-                              <td class="fieldlabel">{{ 'badge_validity_period'|trans }}</td>
-                                <td>{{ badge.expireDuration ~ ' ' ~ badge.expirePeriodLabel|trans }}</td>
-                            </tr>
-                            {% endif %}
-                            <tr>
-                              <td class="fieldlabel">{{ 'badge_form_description'|trans }}</td>
-                              <td>{{ badge.description }}</td>
-                            </tr>
-                            <tr>
-                              <td class="fieldlabel">{{ 'badge_form_criteria'|trans }}</td>
-                              <td>{{ badge.criteria|raw }}</td>
-                            </tr>
-                        </tbody>
-                    </table>
+                    <div class="table-responsive">
+                        <table class="badge_informations table table-condensed">
+                            <colgroup>
+                                <col class="fieldLabelCol">
+                                <col class="dataCol">
+                            </colgroup>
+                            <tbody>
+                                <tr>
+                                  <td class="section-head text-muted" colspan="2">{{ 'badge_details'|trans }}</td>
+                                </tr>
+                                <tr>
+                                  <td class="fieldlabel">{{ 'badge_form_name'|trans }}</td>
+                                  <td>{{ badge.name }}</td>
+                                </tr>
+                                <tr>
+                                  <td class="fieldlabel">{{ 'badge_version'|trans }}</td>
+                                  <td>{{ badge.version }}</td>
+                                </tr>
+                                {% if badge.isExpiring %}
+                                <tr>
+                                  <td class="fieldlabel">{{ 'badge_validity_period'|trans }}</td>
+                                    <td>{{ badge.expireDuration ~ ' ' ~ badge.expirePeriodLabel|trans }}</td>
+                                </tr>
+                                {% endif %}
+                                <tr>
+                                  <td class="fieldlabel">{{ 'badge_form_description'|trans }}</td>
+                                  <td>{{ badge.description }}</td>
+                                </tr>
+                                <tr>
+                                  <td class="fieldlabel">{{ 'badge_form_criteria'|trans }}</td>
+                                  <td>{{ badge.criteria|raw }}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
             <div id="award_users_container" class="award_users_container">
@@ -81,31 +83,32 @@
                         {{ 'badge_awarded_to'|trans }} :
                         <a href="{{ path('claro_admin_badges_award', {'slug': badge.slug}) }}" id="awardUser" role="button" class="btn btn-default pull-right" data-toggle="tooltip" data-placement="left" title="{{ 'award_badge'|trans }}"><span class="icon-plus-sign"></span></a>
                     </h3>
-
-                    <table class="table">
-                        <thead>
-                        <tr>
-                            <th></th>
-                            <th>{{ 'First name'|trans({}, 'platform') }}</th>
-                            <th>{{ 'Last name'|trans({}, 'platform') }}</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        {% for user in pager.currentPageResults %}
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
                             <tr>
-                                <td>
-                                    <a class="close confirm" href="{{ path('claro_admin_badges_unaward', {'slug': badge.slug, 'username': user.username}) }}"
-                                       data-toggle="tooltip" title="{{ 'badge_unaward_confirm_title'|trans }}"
-                                       data-confirm-title="{{ 'badge_unaward_confirm_title'|trans }}"
-                                       data-confirm-message="{{ 'badge_unaward_confirm_message'|trans({'%badgeName%': badge.name, '%user%': user.firstname ~ ' ' ~ user.lastname}) }}"
-                                       data-confirm-ok="{{ 'unaward'|trans }}" data-confirm-cancel="{{ 'cancel'|trans({}, 'platform') }}"><span class="icon-remove-circle"></span></a>
-                                </td>
-                                <td><a href="{{ path('claro_public_profile_view', {'publicUrl': user.getPublicUrl()}) }}" title="{{ user.firstname }} {{ user.lastname }}">{{ user.firstname }}</a></td>
-                                <td>{{ user.lastname }}</td>
+                                <th></th>
+                                <th>{{ 'First name'|trans({}, 'platform') }}</th>
+                                <th>{{ 'Last name'|trans({}, 'platform') }}</th>
                             </tr>
-                        {% endfor %}
-                        </tbody>
-                    </table>
+                            </thead>
+                            <tbody>
+                            {% for user in pager.currentPageResults %}
+                                <tr>
+                                    <td>
+                                        <a class="close confirm" href="{{ path('claro_admin_badges_unaward', {'slug': badge.slug, 'username': user.username}) }}"
+                                           data-toggle="tooltip" title="{{ 'badge_unaward_confirm_title'|trans }}"
+                                           data-confirm-title="{{ 'badge_unaward_confirm_title'|trans }}"
+                                           data-confirm-message="{{ 'badge_unaward_confirm_message'|trans({'%badgeName%': badge.name, '%user%': user.firstname ~ ' ' ~ user.lastname}) }}"
+                                           data-confirm-ok="{{ 'unaward'|trans }}" data-confirm-cancel="{{ 'cancel'|trans({}, 'platform') }}"><span class="icon-remove-circle"></span></a>
+                                    </td>
+                                    <td><a href="{{ path('claro_public_profile_view', {'publicUrl': user.getPublicUrl()}) }}" title="{{ user.firstname }} {{ user.lastname }}">{{ user.firstname }}</a></td>
+                                    <td>{{ user.lastname }}</td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
                     {% if pager.haveToPaginate %}
                     {{
                         pagerfanta(
@@ -147,7 +150,7 @@
                     {{ 'badge_edit_create_new_version'|trans|raw }}
                 </div>
             {% endif %}
-            <form action="{{ path('claro_admin_badges_edit', {'slug': badge.slug}) }}#!edit" method="post" id="editBadgeForm" class="form-horizontal" {{ form_enctype(form) }} novalidate>
+            <form role="form" action="{{ path('claro_admin_badges_edit', {'slug': badge.slug}) }}#!edit" method="post" id="editBadgeForm" class="form-horizontal" {{ form_enctype(form) }} novalidate>
                 {{ form_errors(form) }}
                 <div class="row badges_infos">
                     <div class="col-md-2{% if form.file.vars.errors|length > 0 %} has-error{% endif %}">

@@ -15,44 +15,45 @@
 
                   {%block data %}
         <h3> {{ 'system_requirement'|trans({}, 'install') }} </h3>
-        <hr />
-        <table class="table">
-            <thead>
-                <tr>
-                    <th> {{ 'parameters'|trans({}, 'install') }} </th>
-                    <th> {{ 'minimum_value'|trans({}, 'install') }} </th>
-                    <th> Votre valeur </th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>Php version</td>
-                    <td>  5.2</td>
-                    <td> {{version.php}}</td>
-                </tr>
-                <tr>
-                    <td>Mysql version</td>
-                    <td>  4.xx</td>
-                    <td> {{version.mysql}} </td>
-                </tr>
-                {% for key,value in folders %}
-                <tr>
-                    <td>{{ 'permission'|trans({}, 'install') }} </td>
-                    <td> [{{'folders'|trans({}, 'install')}} {{key}}]</td>
-                    <td> {% if value == 'KO'%}
-                       <span style="color:#FF0000"> {{value}} </span>
-                        {% else %}
-                            {{value}}
-                         {% endif %}
-                    </td>
-                </tr>
-                {% endfor %}
-
-            </tbody>
-        </table>
+        <hr>
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th> {{ 'parameters'|trans({}, 'install') }} </th>
+                        <th> {{ 'minimum_value'|trans({}, 'install') }} </th>
+                        <th> Votre valeur </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Php version</td>
+                        <td>  5.2</td>
+                        <td> {{version.php}}</td>
+                    </tr>
+                    <tr>
+                        <td>Mysql version</td>
+                        <td>  4.xx</td>
+                        <td> {{version.mysql}} </td>
+                    </tr>
+                    {% for key,value in folders %}
+                    <tr>
+                        <td>{{ 'permission'|trans({}, 'install') }} </td>
+                        <td> [{{'folders'|trans({}, 'install')}} {{key}}]</td>
+                        <td> {% if value == 'KO'%}
+                           <span style="color:#FF0000"> {{value}} </span>
+                            {% else %}
+                                {{value}}
+                             {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
         <p>
-          <a href="{{path('claro_showDbForm',{lg:version.lg})}}" class="btn btn-primary" >{{ 'next'|trans({}, 'install') }} </a>
-           <a href="{{path('claro_setup')}}" class="btn btn-default" > {{ 'back'|trans({}, 'install') }} </a>
+          <a href="{{path('claro_showDbForm',{lg:version.lg})}}" class="btn btn-primary" role="button">{{ 'next'|trans({}, 'install') }} </a>
+           <a href="{{path('claro_setup')}}" class="btn btn-default" role="button"> {{ 'back'|trans({}, 'install') }} </a>
           </p>
 
 {%endblock data %}

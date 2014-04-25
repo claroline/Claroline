@@ -20,7 +20,7 @@
 
 {% block section_title %}
     {{ 'workspace_badges'|trans({}, 'badge') }}
-    <a href="{{ path(parameters.add_link, parameters.route_parameters) }}" title="{{ 'add_badge'|trans({}, 'badge') }}" class="btn btn-default btn-sm">
+    <a href="{{ path(parameters.add_link, parameters.route_parameters) }}" title="{{ 'add_badge'|trans({}, 'badge') }}" class="btn btn-default btn-sm" role="button">
         <span class="icon-plus"></span> {{ 'add_badge'|trans({}, 'badge') }}
     </a>
 {% endblock %}

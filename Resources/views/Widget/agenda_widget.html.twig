@@ -1,4 +1,5 @@
 {% if listEvents is not empty %}
+    <div class="table-responsive">
         <table id="mytable" class="table table-bordered table-hover">
             <thead>
                 <tr>
@@ -38,7 +39,7 @@
                             {{ 'event'|trans({}, 'agenda') }}
                         {% endif %}
                     </td>
-                    <td> 
+                    <td>
                         {% if e.priority == '#848484' %}
                             <span style="color:{{ e.priority }}">{{ 'low'|trans({}, 'agenda') }}</span>
                         {% elseif e.priority == '#FF0000' %}
@@ -51,6 +52,7 @@
             {% endfor %}
             </tbody>
         </table>
+    </div>
 {% else %}
     {{ 'no event found'|trans({}, 'agenda') }}</li>
 {% endif %}

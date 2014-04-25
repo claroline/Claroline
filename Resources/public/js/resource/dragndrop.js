@@ -148,7 +148,7 @@
             );
         } else {
             $('.resource-manager').prepend(
-                '<div class="alert alert-danger">' + '<a class="close" href="#" data-dismiss="alert">×</a>' + '<ul>' +
+                '<div class="alert alert-danger">' + '<a class="close" href="#" data-dismiss="alert" aria-hidden="true">&times;</a>' + '<ul>' +
                 '<li>' + message + '</li>' + '</ul>' + '</div>'
             );
         }
@@ -159,7 +159,7 @@
         var lastChar = maxSize.substr(maxSize.length - 1);
         var varSize = maxSize.slice(0, maxSize.length - 1);
         var size = maxSize;
-           
+
         FileAPI.each(files, function (file) {
             if (maxSize !== 0) {
                 switch(lastChar) {
@@ -167,8 +167,8 @@
                     case 'K': size = varSize * FileAPI.KB; break;
                     case 'G': size = varSize * FileAPI.GB; break;
                 }
-            } 
-        
+            }
+
             if (file.size >= size) {
                 showErrorMessage(Translator.get('platform:max_size_is', {'size': maxSize}));
             } else if (file.size === void 0) {

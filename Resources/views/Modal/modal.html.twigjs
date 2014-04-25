@@ -1,6 +1,6 @@
 {% twig_js name="ModalWindow" %}
 
-<div class="modal fade" id="{{ modalId }}">
+<div class="modal fade" id="{{ modalId }}" role="dialog" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">

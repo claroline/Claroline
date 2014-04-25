@@ -45,7 +45,7 @@
     <div class="panel-body" id="workspace-list-div">
         {% include 'ClarolineCoreBundle:Administration\\Analytics:analytics_navbar.html.twig'%}
         <div class="margin clearfix">
-            <form id="top_criteria" action="{{ path('claro_admin_analytics_top') }}" method="POST">
+            <form  role="form" id="top_criteria" action="{{ path('claro_admin_analytics_top') }}" method="POST">
                 {{ form_widget(form_criteria) }}
                 <div class="form-group"><input type="submit" value="{{ 'Show'|trans({}, 'platform') }}" class="btn btn-primary"/></div>
             </form>

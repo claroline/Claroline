@@ -16,7 +16,7 @@
                 var path = '{{ path('exporter_api', {'entityReference': entity_reference, '_format': format}) }}';
                 var field = $( "#{{ form.vars['id'] }}" );
                 field.addClass('form-control');
-                field.after('<a id="{{ form.vars['id'] }}_clear" class="btn btn-default input-group-addon"><span class="icon-remove"></span></a>');
+                field.after('<a id="{{ form.vars['id'] }}_clear" class="btn btn-default input-group-addon" role="button"i><span class="icon-remove"></span></a>');
                 $("#{{ form.vars['id'] }}_clear").on('click', function(){
                     field.val('');
                 });

@@ -69,7 +69,7 @@
             </button>
             <ul class="dropdown-menu pull-right" role="menu">
                 {% for child in form %}
-                    <li class="pointer-hand"><a>{{ child.vars.name | upper }}</a></li>
+                    <li role="presentation" class="pointer-hand"><a role="menuitem">{{ child.vars.name | upper }}</a></li>
                 {% endfor %}
             </ul>
         </div>

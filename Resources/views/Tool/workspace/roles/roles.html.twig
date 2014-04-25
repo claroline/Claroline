@@ -28,7 +28,7 @@
     <div class="list-group">
         <div class="list-group-item">
             <div class="margin-md">
-                <a class="btn btn-default" href="{{ path('claro_workspace_role_create_form', {'workspace': workspace.getId() }) }}">
+                <a class="btn btn-default" href="{{ path('claro_workspace_role_create_form', {'workspace': workspace.getId() }) }}" role="button">
                     <i class="icon-plus"></i> {{ 'add_role'|trans({}, 'platform') }}
                 </a>
             </div>
@@ -43,7 +43,7 @@
                             <tr>
                                 <td> {{ role.getTranslationKey|trans({}, 'platform') }} </td>
                                 <td>
-                                    <a class="btn btn-default" href="{{ path('claro_workspace_role_edit_form', {'workspace': workspace.getId(), 'role': role.getId()}) }}">
+                                    <a class="btn btn-default" href="{{ path('claro_workspace_role_edit_form', {'workspace': workspace.getId(), 'role': role.getId()}) }}" role="button">
                                         <i class="icon-pencil"></i> {{ 'edit'|trans({}, 'platform') }}
                                     </a>
                                 </td>
