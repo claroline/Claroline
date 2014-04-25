@@ -12,6 +12,9 @@
         <li class="active">{{ 'Correction by %firstName% %lastName%'|trans({'%firstName%': correction.user.firstName, '%lastName%': correction.user.lastName}, 'icap_dropzone') }}</li>
     {% else %}
         <li><a href="{{ path('icap_dropzone_open', {'resourceId': dropzone.id}) }}"><span class="glyphicon icon-file"></span> {{ dropzone.resourceNode.name }}</a></li>
+        <li>
+            <a href="{{ path('icap_dropzone_drop_detail_by_user', {'resourceId': dropzone.id,'dropId':correction.drop.id}) }}">  {{ 'Details of your copy'|trans({}, 'icap_dropzone') }}</a>
+        </li>
         <li class="active">{{ 'Correction'|trans({}, 'icap_dropzone') }}</li>
     {% endif %}
 {% endblock %}
