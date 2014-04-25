@@ -3,7 +3,7 @@
 {% block title %}{{ portfolio.user.firstName ~ ' ' ~ portfolio.user.lastName ~ ' - ' ~ 'portfolio' | trans({}, 'icap_portfolio') ~ ' - ' ~ portfolio.title | striptags | raw }}{% endblock %}
 
 {% block content_container %}
-    <div id="portfolio_section" data-portfolio-container data-ng-show="portfolio.$resolved" >
+    <div id="portfolio_section" data-portfolio-container>
         {% if editMode %}
             <ul id="configbar" class="list-unstyled">
                 <li class="configbar_item">
@@ -17,7 +17,7 @@
         {% endif %}
 
 
-        <div id="portfolio_container">
+        <div id="portfolio_container" data-ng-show="portfolio.$resolved">
             <header>
                 <div class="container">
                     <h1 id="username">{{ portfolio.user.firstName ~ ' ' ~ portfolio.user.lastName }}</h1>
