@@ -281,3 +281,4 @@ Complete Corrections: 'Complete Corrections'
 number of Report: 'number of Report'
 was reported: 'was reported'
 You will reactivate a correction but the expected number of correction is already reached. Are you sure ?: 'You will reactivate a correction, but the expected number of correction is already reached. Are you sure ?'
+corrections were already created: "one: A correction was already  created.|some:%count% corrections were already created."

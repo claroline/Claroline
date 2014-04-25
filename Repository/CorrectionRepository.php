@@ -31,6 +31,28 @@ class CorrectionRepository extends EntityRepository {
         return $nbCorrection[0][1];
     }
 
+    /**
+     * @param $dropzoneId
+     *
+     * Get the number of correction of a dropzone.
+     * usefull for example to see if correction are already created when user want to change
+     * criterias of the dropzone.
+     * @throws \Exception
+     * @return mixed
+     */
+    public function countByDropzone($dropzoneId)
+    {
+        $nbCorrection = $this
+            ->createQueryBuilder('correction')
+            ->select('COUNT(correction)')
+            ->andWhere('correction.dropzone = :dropzoneId')
+            ->setParameter('dropzoneId', $dropzoneId)
+            ->getQuery()
+            ->getSingleScalarResult();
+
+        return $nbCorrection;
+    }
+
     public function getNotFinished($dropzone, $user)
     {
         $corrections =  $this->createQueryBuilder('correction')
