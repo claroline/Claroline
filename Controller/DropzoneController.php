@@ -312,6 +312,12 @@ class DropzoneController extends DropzoneBaseController
             }
         }
 
+        $nbCorrection = $this
+            ->getDoctrine()
+            ->getManager()
+            ->getRepository('IcapDropzoneBundle:Correction')
+            ->countByDropzone($dropzone->getId());
+
         $form = $this->createForm(new DropzoneCriteriaType(), $dropzone);
 
         if ($this->getRequest()->isMethod('POST')) {
@@ -365,7 +371,8 @@ class DropzoneController extends DropzoneBaseController
             '_resource' => $dropzone,
             'dropzone' => $dropzone,
             'pager' => $pager,
-            'form' => $form->createView()
+            'form' => $form->createView(),
+            'nbCorrection' => $nbCorrection,
         );
     }
 

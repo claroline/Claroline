@@ -1,6 +1,8 @@
 {% extends "IcapDropzoneBundle::layout.html.twig" %}
 {% block resourceBreadcrumb %}
-    <li class="active"><span class="glyphicon icon-list"></span> {{ dropzone.resourceNode.name }}</li>
+    <li><a href="{{ path('icap_dropzone_edit_common',{'resourceId':dropzone.id}) }}"><span
+                    class="glyphicon icon-list"></span>  {{ dropzone.resourceNode.name }}</a></li>
+    <li class="active"> {{ 'List of copies'|trans({}, 'icap_dropzone') }}</li>
 {% endblock %}
 
 {% block dropzone_content %}

@@ -23,6 +23,7 @@ use Pagerfanta\Adapter\DoctrineORMAdapter;
 use Pagerfanta\Exception\NotValidCurrentPageException;
 use Pagerfanta\Pagerfanta;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Library\Resource\ResourceCollection;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -480,6 +481,7 @@ class DropController extends DropzoneBaseController
                             'page' => $page
                         )
                     )
+
                 );
             }
         }
@@ -524,7 +526,8 @@ class DropController extends DropzoneBaseController
             'workspace' => $dropzone->getResourceNode()->getWorkspace(),
             '_resource' => $dropzone,
             'dropzone' => $dropzone,
-            'drop' => $drop
+            'drop' => $drop,
+            'isAllowedToEdit' => true,
         );
     }
 
@@ -544,6 +547,9 @@ class DropController extends DropzoneBaseController
         $this->isAllowToOpen($dropzone);
         // getting the userId to check if the current drop owner match with the loggued user.
         $userId = $this->get('security.context')->getToken()->getUser()->getId();
+        $collection = new ResourceCollection(array($dropzone->getResourceNode()));
+        $isAllowedToEdit =  $this->get('security.context')->isGranted('EDIT', $collection);
+
 
         // getting the data
         $drop = $this->getDoctrine()
@@ -568,7 +574,8 @@ class DropController extends DropzoneBaseController
             'workspace' => $dropzone->getResourceNode()->getWorkspace(),
             '_resource' => $dropzone,
             'dropzone' => $dropzone,
-            'drop' => $drop
+            'drop' => $drop,
+            'isAllowedToEdit' => $isAllowedToEdit,
         );
     }
 

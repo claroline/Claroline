@@ -280,3 +280,8 @@ Started Corrections: 'Started Corrections'
 Complete Corrections: 'Complete Corrections'
 number of Report: 'number of Report'
 was reported: 'was reported'
+You will reactivate a correction but the expected number of correction is already reached. Are you sure ?: 'You will reactivate a correction, but the expected number of correction is already reached. Are you sure ?'
+recalculate_helper: 'Usefull if you have deleted some criterias whereas people have already started to correct. This will adapt the note. If you added new Criteria, the note of this criteria will be 0. '
+corrections were already created: "one: A correction was already  created.|some:%count% corrections were already created."
+Modify add or delete criteria will affect this corrections if you recalculate the note on it.: "Update, add or delete criteria will affect this corrections if you recalculate their  given note "
+Evaluation criterions: 'Evaluation criterions'
