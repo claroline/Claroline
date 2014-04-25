@@ -3,7 +3,7 @@
 {% block title %}{{ portfolio.user.firstName ~ ' ' ~ portfolio.user.lastName ~ ' - ' ~ 'portfolio' | trans({}, 'icap_portfolio') ~ ' - ' ~ portfolio.title | striptags | raw }}{% endblock %}
 
 {% block content_container %}
-    <div id="portfolio_section" data-ng-controller="PortfolioController">
+    <div id="portfolio_section" data-portfolio-container data-ng-show="portfolio.$resolved" >
         {% if editMode %}
             <ul id="configbar" class="list-unstyled">
                 <li class="configbar_item">
@@ -21,15 +21,17 @@
             <header>
                 <div class="container">
                     <h1 id="username">{{ portfolio.user.firstName ~ ' ' ~ portfolio.user.lastName }}</h1>
-                    <div class="portfolio_title_container" data-widget data-ng-controller="WidgetController" data-ng-model="widgets" data-widget-type="title" data-ng-repeat="widget in (portfolio | filter:{$index: 'title'})">
-                        {% if editMode %}
-                            <div class="portfolio_title_actions">
-                                <button class="portfolio_title_edit_action btn" data-ng-click="editTitle(widget);"><span class="icon-pencil"></span></button>
-                            </div>
-                            <div data-ng-bind-html="portfolio.title.view | trustAsHtml"></div>
-                        {% else %}
-                            {% include 'IcapPortfolioBundle:templates:title.html.twig' with {'portfolioTitle': portfolio.title} only %}
-                        {% endif %}
+                    <div data-widget-portlet="title" data-ng-show="widgets.length > 0">
+                        <div class="portfolio_title_container" data-ng-model="widgets" data-ng-repeat="widget in (widgets | filter:slugFilter(type))">
+                            {% if editMode %}
+                                <div class="portfolio_title_actions">
+                                    <button class="portfolio_title_edit_action btn" data-ng-click="editTitle(widget);"><span class="icon-pencil"></span></button>
+                                </div>
+                                <div data-ng-bind-html="widget.view | trustAsHtml"></div>
+                            {% else %}
+                                {% include 'IcapPortfolioBundle:templates:title.html.twig' with {'portfolioTitle': portfolio.title} only %}
+                            {% endif %}
+                        </div>
                     </div>
                 </div>
             </header>
@@ -95,11 +97,14 @@
         {% endjavascripts %}
 
         <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/app.js') }}"></script>
-        <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/services/portfolioService.js') }}"></script>
-        <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/directives/widgetDirective.js') }}"></script>
-        <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/services/portfolioService.js') }}"></script>
         <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/controllers/portfolioController.js') }}"></script>
-        <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/controllers/widgetController.js') }}"></script>
+        <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/controllers/widgetsController.js') }}"></script>
+        <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/services/portfolioService.js') }}"></script>
+        <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/services/portfolioManager.js') }}"></script>
+        <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/services/widgetsManager.js') }}"></script>
+        <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/services/widgetsConfig.js') }}"></script>
+        <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/directives/widgetsDirective.js') }}"></script>
+        <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/directives/portfolioDirective.js') }}"></script>
         <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/filters/trustAsHtml.js') }}"></script>
     {% endif %}
 {% endblock %}

@@ -34,6 +34,10 @@ class PortfolioController extends BaseController
             'title' => array(
                 'view'  => $twigEngine->render('IcapPortfolioBundle:templates:title.html.twig', array('portfolioTitle' => $portfolio->getTitle())),
                 'value' => $portfolio->getTitle()
+            ),
+            'userInformation' => array(
+                'view'   => 'pouet',
+                'avatar' => $loggedUser->getPicture()
             )
         );
 
