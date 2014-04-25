@@ -199,10 +199,14 @@ class QuestionController extends Controller
         }
 
         // Get the exercises created by the user to display questions linked to it
+        /*$listExo = $this->getDoctrine()
+                        ->getManager()
+                        ->getRepository('UJMExoBundle:Exercise')
+                        ->getExerciceByUser($uid);*/
         $listExo = $this->getDoctrine()
                         ->getManager()
                         ->getRepository('UJMExoBundle:Exercise')
-                        ->getExerciceByUser($uid);
+                        ->getExerciseAdmin($uid);
 
         if ($QuestionsExo == 'false') {
             $vars['pagerMy']      = $pagerfantaMy;

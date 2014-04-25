@@ -71,4 +71,35 @@ class ExerciseRepository extends EntityRepository
 
         return $query->getResult();
     }
+    
+    public function getExerciseAdmin($userID)
+    {
+        $exercises = array();
+        
+        $dql = 'SELECT w.id
+            FROM Claroline\CoreBundle\Entity\User u 
+            JOIN u.roles r 
+            JOIN r.workspace w
+            WHERE u.id='.$userID.' AND r.translationKey=\'manager\'' ;
+
+        $query = $this->_em->createQuery($dql);
+        
+        foreach ($query->getResult() as $ws) {
+            $dql = 'SELECT e.id, e.title
+                    FROM UJM\ExoBundle\Entity\Exercise e
+                    JOIN e.resourceNode rn
+                    JOIN rn.resourceType rt
+                    JOIN rn.workspace w
+                    WHERE rt.name =\'ujm_exercise\'
+                    AND w.id='.$ws['id'].'
+                    ORDER BY e.title';
+            $queryResources = $this->_em->createQuery($dql);
+            foreach ($queryResources->getResult() as $resource) {
+                $exercises[] =  $resource;
+            }
+        }
+        
+        return $exercises;
+        
+    }
 }
