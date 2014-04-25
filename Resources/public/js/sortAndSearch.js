@@ -634,3 +634,21 @@ function getQuestionsExo(idExo, path, pathHome) {
 
     window.location.href = pathRight;
 }
+
+function briefSearch(path) {
+
+    var userSearch = $('#briefSearch').val();
+
+    $.ajax({
+        type: 'POST',
+        url: path,
+        data: {
+            userSearch : userSearch
+        },
+        cache: false,
+        success: function (data) {
+            $('body').html(data);
+            ready();
+        }
+    });
+}

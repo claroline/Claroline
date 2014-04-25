@@ -126,30 +126,15 @@ class QuestionController extends Controller
                 ->getRepository('UJMExoBundle:Interaction')
                 ->getExerciseInteraction($em, $idExo, 0);
 
-            foreach ($listQExo as $interaction) {
-                if ($interaction->getQuestion()->getUser()->getId() == $uid) {
-                    $actionQ[$interaction->getQuestion()->getId()] = 1; // my question
+            $allActions = $this->getActionsAllQuestions($listQExo, $uid, $actionQ,
+                $questionWithResponse, $alreadyShared, $sharedWithMe, $shareRight, $em);
 
-                    $actions = $this->getActionInteraction($em, $interaction);
-                    $questionWithResponse += $actions[0];
-                    $alreadyShared += $actions[1];
-                } else {
-                    $sharedQ = $em->getRepository('UJMExoBundle:Share')
-                    ->findOneBy(array('user' => $uid, 'question' => $interaction->getQuestion()->getId()));
+            $actionQ = $allActions[0];
+            $questionWithResponse = $allActions[1];
+            $alreadyShared = $allActions[2];
+            $sharedWithMe = $allActions[3];
+            $shareRight = $allActions[4];
 
-                    if (count($sharedQ) > 0) {
-                        $actionQ[$interaction->getQuestion()->getId()] = 2; // shared question
-
-                        $actionsS = $this->getActionShared($em, $sharedQ);
-                        $sharedWithMe += $actionsS[0];
-                        $shareRight += $actionsS[1];
-                        $questionWithResponse += $actionsS[2];
-                    } else {
-                        $actionQ[$interaction->getQuestion()->getId()] = 3; // other
-                    }
-
-                }
-            }
         } else {
             $interactions = $this->getDoctrine()
                 ->getManager()
@@ -1866,6 +1851,68 @@ class QuestionController extends Controller
         );
     }
 
+    /**
+     * To search questions brief in the question bank
+     *
+     */
+    public function briefSearchAction ()
+    {
+        $em = $this->getDoctrine()->getManager();
+        $interactionRepository = $em->getRepository('UJMExoBundle:Interaction');
+
+        $user = $this->container->get('security.context')->getToken()->getUser();
+        $request = $this->get('request');
+
+        $listInteractions = array();
+        $actionQ = array();
+        $questionWithResponse = array();
+        $alreadyShared = array();
+        $sharedWithMe = array();
+        $shareRight = array();
+
+        if ($request->isXmlHttpRequest()) {
+            $userSearch = $request->request->get('userSearch');
+
+            $listInteractions = $interactionRepository->findByAll($user->getId(), $userSearch);
+
+            $sharedQuestion = $em->getRepository('UJMExoBundle:Share')
+                ->findByAllShared($user->getId(), $userSearch);
+
+            $end = count($sharedQuestion);
+
+            for ($i = 0; $i < $end; $i++) {
+                $listInteractions[] = $em->getRepository('UJMExoBundle:Interaction')
+                    ->findOneBy(array('question' => $sharedQuestion[$i]->getQuestion()->getId()));
+            }
+
+            $allActions = $this->getActionsAllQuestions($listInteractions, $user->getId(), $actionQ,
+                $questionWithResponse, $alreadyShared, $sharedWithMe, $shareRight, $em);
+
+            $actionQ = $allActions[0];
+            $questionWithResponse = $allActions[1];
+            $alreadyShared = $allActions[2];
+            $sharedWithMe = $allActions[3];
+            $shareRight = $allActions[4];
+
+            $listExo = $this->getDoctrine()
+                        ->getManager()
+                        ->getRepository('UJMExoBundle:Exercise')
+                        ->getExerciceByUser($user->getId());
+
+            $vars['listQExo']             = $listInteractions;
+            $vars['actionQ']              = $actionQ;
+            $vars['questionWithResponse'] = $questionWithResponse;
+            $vars['alreadyShared']        = $alreadyShared;
+            $vars['shareRight']           = $shareRight;
+            $vars['listExo']              = $listExo;
+            $vars['displayAll']           = 0;
+            $vars['idExo']                = -1;
+            $vars['QuestionsExo']         = 'true';
+
+            return $this->render('UJMExoBundle:Question:index.html.twig', $vars);
+        }
+    }
+
     private function createDeleteForm($id)
     {
         return $this->createFormBuilder(array('id' => $id))
@@ -2038,5 +2085,43 @@ class QuestionController extends Controller
         }
 
         return $typeOpen;
+    }
+
+    private function getActionsAllQuestions($listInteractions, $userID, $actionQ,
+        $questionWithResponse, $alreadyShared, $sharedWithMe, $shareRight, $em)
+    {
+        $allActions = array();
+
+        foreach ($listInteractions as $interaction) {
+                if ($interaction->getQuestion()->getUser()->getId() == $userID) {
+                    $actionQ[$interaction->getQuestion()->getId()] = 1; // my question
+
+                    $actions = $this->getActionInteraction($em, $interaction);
+                    $questionWithResponse += $actions[0];
+                    $alreadyShared += $actions[1];
+                } else {
+                    $sharedQ = $em->getRepository('UJMExoBundle:Share')
+                    ->findOneBy(array('user' => $userID, 'question' => $interaction->getQuestion()->getId()));
+
+                    if (count($sharedQ) > 0) {
+                        $actionQ[$interaction->getQuestion()->getId()] = 2; // shared question
+
+                        $actionsS = $this->getActionShared($em, $sharedQ);
+                        $sharedWithMe += $actionsS[0];
+                        $shareRight += $actionsS[1];
+                        $questionWithResponse += $actionsS[2];
+                    } else {
+                        $actionQ[$interaction->getQuestion()->getId()] = 3; // other
+                    }
+                }
+            }
+
+        $allActions[0] = $actionQ;
+        $allActions[1] = $questionWithResponse;
+        $allActions[2] = $alreadyShared;
+        $allActions[3] = $sharedWithMe;
+        $allActions[4] = $shareRight;
+
+        return $allActions;
     }
 }

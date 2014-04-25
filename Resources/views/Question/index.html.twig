@@ -100,6 +100,18 @@
                 <option value="{{ Exo['id'] }}">{{ Exo['title'] }}</option>
             {% endfor %}
         </select>
+
+        <div class="input-group" style="width: 350px; margin-top: 20px;">
+            <input type="text" class="form-control" id="briefSearch" placeholder="{{ 'briefSearch'|trans }}"
+                onkeydown="if (event.keyCode == 13) {
+                    briefSearch('{{ path('ujm_question_briefSearch') }}');
+                    return false; }">
+            <span class="input-group-btn">
+                <button class="btn btn-default" type="button" id="SubmitBriefSearch"
+                    onClick="briefSearch('{{ path('ujm_question_briefSearch') }}');">
+                <i class="icon-search"></i></button>
+            </span>
+        </div>
     </div>
     <div class="list-group">
         <div class="list-group-item">
@@ -423,6 +435,9 @@
     <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/resize.js') }}"></script>
 
     <script type="text/javascript">
+        $(document).ready(function () {
+            ready();
+        });
         $("#exoList option[value=\""+{{ idExo }}+"\"]").attr('selected', 'selected');
     </script>
 {% endblock %}

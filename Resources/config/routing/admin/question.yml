@@ -89,3 +89,7 @@ ujm_see_shared:
 ujm_document_change_name:
     pattern: /change/document/name
     defaults: {_controller: "UJMExoBundle:Question:changeDocumentName" }
+
+ujm_question_briefSearch:
+    pattern: /search/brief
+    defaults: {_controller: "UJMExoBundle:Question:briefSearch" }
