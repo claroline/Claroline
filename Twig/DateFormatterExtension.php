@@ -13,6 +13,7 @@ namespace Claroline\CoreBundle\Twig;
 
 use Symfony\Component\HttpKernel\KernelInterface;
 use JMS\DiExtraBundle\Annotation as DI;
+use Claroline\CoreBundle\Library\Utilities\ClaroUtilities;
 
 /**
  * @DI\Service
@@ -23,24 +24,14 @@ class DateFormatterExtension extends \Twig_Extension
     protected $configHandler;
     protected $kernel;
     protected $formater;
+    protected $utilities;
 
     /**
-     * @DI\InjectParams({ "configHandler" = @DI\Inject("claroline.config.platform_config_handler" )})
+     * @DI\InjectParams({ "utilities" = @DI\Inject("claroline.utilities.misc")})
      */
-    public function __construct(KernelInterface $kernel, $configHandler)
+    public function __construct(ClaroUtilities $utilities)
     {
-        $this->kernel = $kernel;
-        $this->configHandler = $configHandler;
-
-        if (extension_loaded('intl')) {
-            $this->formatter = new \IntlDateFormatter(
-                $configHandler->getParameter('locale_language'),
-                \IntlDateFormatter::SHORT,
-                \IntlDateFormatter::SHORT,
-                date_default_timezone_get(),
-                \IntlDateFormatter::GREGORIAN
-            );
-        }
+        $this->utilities = $utilities;
     }
 
     /**
@@ -58,13 +49,7 @@ class DateFormatterExtension extends \Twig_Extension
      */
     public function intlDateFormat($date)
     {
-        if (extension_loaded('intl') and $this->formatter instanceof \IntlDateFormatter) {
-            return $this->formatter->format($date);
-        } elseif ($date instanceof \DateTime) {
-            return $date->format('d-m-Y');
-        }
-
-        return date('d-m-Y', $date);
+        return $this->utilities->intlDateFormat($date);
     }
 
     /**

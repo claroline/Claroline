@@ -30,6 +30,7 @@ use Claroline\CoreBundle\Manager\LocaleManager;
 use Claroline\CoreBundle\Manager\UserManager;
 use Claroline\CoreBundle\Manager\TermsOfServiceManager;
 use JMS\DiExtraBundle\Annotation as DI;
+use Claroline\CoreBundle\Library\Utilities\ClaroUtilities;
 
 class WorkspaceParametersController extends Controller
 {
@@ -43,6 +44,7 @@ class WorkspaceParametersController extends Controller
     private $localeManager;
     private $userManager;
     private $tosManager;
+    private $utilities;
 
     /**
      * @DI\InjectParams({
@@ -54,7 +56,8 @@ class WorkspaceParametersController extends Controller
      *     "router"              = @DI\Inject("router"),
      *     "localeManager"       = @DI\Inject("claroline.common.locale_manager"),
      *     "userManager"         = @DI\Inject("claroline.manager.user_manager"),
-     *     "tosManager"          = @DI\Inject("claroline.common.terms_of_service_manager")
+     *     "tosManager"          = @DI\Inject("claroline.common.terms_of_service_manager"),
+     *      "utilities"          = @DI\Inject("claroline.utilities.misc")
      * })
      */
     public function __construct(
@@ -67,7 +70,8 @@ class WorkspaceParametersController extends Controller
         Request $request,
         LocaleManager $localeManager,
         UserManager $userManager,
-        TermsOfServiceManager $tosManager
+        TermsOfServiceManager $tosManager,
+        ClaroUtilities $utilities
     )
     {
         $this->workspaceManager = $workspaceManager;
@@ -80,6 +84,7 @@ class WorkspaceParametersController extends Controller
         $this->localeManager = $localeManager;
         $this->userManager = $userManager;
         $this->tosManager = $tosManager;
+        $this->utilities = $utilities;
     }
 
     /**
@@ -159,8 +164,12 @@ class WorkspaceParametersController extends Controller
     {
         $user = $this->security->getToken()->getUser();
         $this->checkAccess($workspace);
-        $form = $this->formFactory->create(FormFactory::TYPE_WORKSPACE_EDIT, array(), $workspace);
+        $username = is_null( $workspace->getCreator()) ? '' : $workspace->getCreator()->getUsername(); 
+        $creationDate = is_null(
+                            $workspace->getCreationDate()) ? 
+                            null : $this->utilities->intlDateFormat($workspace->getCreationDate());
         $count = $this->workspaceManager->countUsers($workspace->getId());
+        $form = $this->formFactory->create(FormFactory::TYPE_WORKSPACE_EDIT, array($username, $creationDate, $count), $workspace);
         
         if ($workspace->getSelfRegistration()) {
             $url = $this->router->generate(

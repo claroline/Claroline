@@ -207,7 +207,7 @@ class AuthenticationController
         }
 
         return array(
-            'error' => $this->translator->trans('mail_invalid', array(), 'platform'),
+            'error' => $this->translator->trans('wrong_captcha', array(), 'platform'),
             'form' => $form->createView()
         );
     }

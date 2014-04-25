@@ -35,16 +35,6 @@
                 <i class="icon-save"></i> {{ 'save_as_template'|trans({}, 'platform') }}
             </a>
             <hr />
-               <p> {% if workspace.getCreationDate() is defined %}
-                        {{ 'workspace_management'|trans({'%creationDate%':workspace.getCreationDate()|date("d/m/Y g:i"),
-                            '%creator%':workspace.getCreator().getUserName(),'%count%': count}, 'platform') }}
-                    {% else %}
-                         {{ 'workspace_management_date_null'|trans({'%creator%':workspace.getCreator().getUserName(),
-                            '%count%': count}, 'platform') }}
-                    {% endif %}
-               </p>
-
-            <hr>
             {{ form_widget(form) }}
             <hr />
             <h3 class="panel-title">{{ 'generate_url'|trans({}, 'platform') }}</h3> <br />

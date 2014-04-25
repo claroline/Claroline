@@ -760,9 +760,11 @@ workspace_delete_confirm_title: 'Delete Confirm'
 workspace_delete_success_message: 'Workspace "%workspaceName%" has been deleted.'
 workspace_edit_form_code: Code
 workspace_edit_form_creationDate: 'Creation date'
+workspace_edit_form_creator : 'Creator of the workspace'
 workspace_edit_form_description: Description
 workspace_edit_form_displayable: Displayable
 workspace_edit_form_name: Name
+workspace_edit_form_number : Number of subscriber(s)
 workspace_edit_form_selfRegistration: 'Public registration'
 workspace_edit_form_selfUnregistration: 'Public unregistration'
 workspace_form_code: Code
@@ -778,8 +780,6 @@ workspace_home_tab_edition: 'Workspace Home tab edition'
 workspace_home_tabs: 'Workspace Home tabs'
 workspace_list: 'Workspace list'
 workspace_list: Workspace list
-workspace_management : 'The workspace has been create at %creationDate%, by %creator%. There is %count% suscriber(s).'
-workspace_management_date_null : 'The workspace has been created by %creator%. There is %count% subscrber(s).'
 workspace_order_tool_edit_form_name: Name
 workspace_registration_confirm_title: 'Do you really want to register to this workspace ?'
 workspace_registration_message: 'You have been registered to the workspace %workspace_name%'
@@ -798,9 +798,11 @@ workspace_unregistration_confirm_title: 'Do you really want to unregister from t
 workspace_welcome: Welcome
 workspaces: Workspaces
 workspaces_included_in_category: 'Workspaces included in this category'
+workspace_management : 'The workspace has been create at %creationDate%, by %creator%. There is %count% suscriber(s).'
+workspace_management_date_null : 'There is %count% subscriber(s). The creation date and the creator are not mentioned'
 workspaces_management: 'Workspaces management'
 workspaces_per_page: 'Workspace per page'
-workspaces_per_page: Workspace per page
+wrong_captcha : 'The code does not match the picture'
 ws_creator: 'Workspace creator'
 ws_most_viewed: 'Most viewed workspaces'
 yes: yes
