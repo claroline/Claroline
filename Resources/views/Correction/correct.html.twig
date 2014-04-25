@@ -1,7 +1,11 @@
 {% extends "IcapDropzoneBundle::layout.html.twig" %}
 {% block resourceBreadcrumb %}
     {% if admin == true %}
-        <li><a href="{{ path('icap_dropzone_drops', {'resourceId': dropzone.id}) }}"><span class="glyphicon icon-list"></span> {{ dropzone.resourceNode.name }}</a></li>
+        <li><a href="{{ path('icap_dropzone_edit_common', {'resourceId': dropzone.id}) }}"><span
+                        class="glyphicon icon-list"></span> {{ dropzone.resourceNode.name }}</a></li>
+        <li>
+            <a href="{{ path('icap_dropzone_drops', {'resourceId': dropzone.id}) }}"> {{ 'List of copies'|trans({}, 'icap_dropzone') }}</a>
+        </li>
         <li><a href="{{ path('icap_dropzone_drops_detail', {'resourceId': dropzone.id, 'dropId': correction.drop.id}) }}">
             {{ 'Retail copy of %firstName% %lastName%'|trans({'%firstName%': correction.drop.user.firstName, '%lastName%': correction.drop.user.lastName}, 'icap_dropzone') }}
         </a></li>

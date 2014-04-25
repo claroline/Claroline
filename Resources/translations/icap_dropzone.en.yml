@@ -283,3 +283,4 @@ was reported: 'was reported'
 You will reactivate a correction but the expected number of correction is already reached. Are you sure ?: 'You will reactivate a correction, but the expected number of correction is already reached. Are you sure ?'
 corrections were already created: "one: A correction was already  created.|some:%count% corrections were already created."
 Modify add or delete criteria will affect this corrections if you recalculate the note on it.: "Update, add or delete criteria will affect this corrections if you recalculate their  given note "
+Evaluation criterions: 'Evaluation criterions'

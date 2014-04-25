@@ -282,3 +282,4 @@ was reported: 'A été signalé'
 You will reactivate a correction but the expected number of correction is already reached. Are you sure ?: 'Vous êtes sur le point de revalider une correction. Cependant le nombre attendu de correction a déjà été atteint. Êtes vous sûr ?'
 corrections were already created: "one: Une correction a déjà été créee.|some:%count% corrections ont déjà été créées."
 Modify add or delete criteria will affect this corrections if you recalculate the note on it.: "Modifier, Ajouter ou supprimer des critères affectera les corrections déjà effectuées seulement si vous recalculez les notes données par celles ci."
+Evaluation criterions: "Critères d'évaluation"
