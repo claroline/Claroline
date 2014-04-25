@@ -188,6 +188,7 @@ database: 'Base de données'
 database_connection_failed: 'La connexion à la base de données à échoué.'
 date: Date
 date_form_format: dd/MM/yyyy
+date_form_placeholder: jj/mm/aaaa
 date_format: d/m/Y
 date_range.apply: Appliquer
 date_range.clear: Effacer
@@ -472,7 +473,7 @@ password_ok: 'Votre mot de passe a été modifié. Vous pouvez maintenant vous c
 paste: Coller
 path: Emplacement
 permissions: Permissions
-personal_workspace: 'Espace personnel'
+personal_workspace: 'Espace personnel - '
 phone: Téléphone
 picture_profile: 'Photo de profil'
 platform_appearance: 'Apparence de la plateforme'
@@ -806,4 +807,9 @@ ws_most_viewed: 'Espaces d''activités les plus consultés'
 yes: oui
 yesterday_activity: 'Activité de la veille'
 your_current_url: 'Votre URL actuelle'
+public_profile_url_tuning_only_once: 'La personnalisation de l''URL de votre profil public n''est possible qu''une seule fois'
+public_url_help: 'Note : Votre URL personnalisée doit comprendre au maximum 30 lettres ou chiffres. Ne pas utiliser d''espaces, de symboles ou de caractères spéciaux.'
+manage_tools: Gérer les outils
+create_role: Créer un rôle
+uncompress_file: Décompresser le fichier si possible
 your_username: 'Votre nom d''utilisateur est '

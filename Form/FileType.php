@@ -34,6 +34,15 @@ class FileType extends AbstractType
                 )
            )
         );
+        $builder->add(
+            'uncompress',
+            'checkbox',
+            array(
+                'label' => 'uncompress_file',
+                'mapped' => false,
+                'required' => false
+            )
+        );
     }
 
     public function getName()

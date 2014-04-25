@@ -187,6 +187,7 @@ database: Database
 database_connection_failed: 'Database connection failed.'
 date: Date
 date_form_format: MM/dd/yyyy
+date_form_placeholder: mm/dd/yyyy
 date_format: m/d/Y
 date_range.apply: Apply
 date_range.clear: Clear
@@ -470,7 +471,7 @@ password_ok: 'Your password has been changed, you can login now'
 paste: Paste
 path: Path
 permissions: Permissions
-personal_workspace: 'Personal workspace'
+personal_workspace: 'Personal workspace - '
 phone: Phone
 picture_profile: 'Picture profile'
 platform_appearance: 'Platform appearance'
@@ -803,4 +804,9 @@ ws_most_viewed: 'Most viewed workspaces'
 yes: yes
 yesterday_activity: 'Yesterday''s activity'
 your_current_url: 'Your current URL'
+public_profile_url_tuning_only_once: 'Public profile URL tuning is possible just once'
+public_url_help: 'Note : Your tuned URL must have maximum 30 letters or figures. Don''t use whitspaces, symbols or special characters.'
+manage_tools: Manage tools
+create_role: Create role
+uncompress_file: Uncompress the file if possible
 your_username: 'Your username is '
