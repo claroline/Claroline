@@ -92,8 +92,8 @@ class FileListener implements ContainerAwareInterface
 
             //uncompress
             if ($extension === 'zip' && $form->get('uncompress')->getData()) {
-                $root = $this->unzip($tmpFile, $event->getParent());
-                $event->setResources(array($root));
+                $roots = $this->unzip($tmpFile, $event->getParent());
+                $event->setResources($roots);
                 //do not process the resources afterwards because nodes have been created with the unzip function.
                 $event->setProcess(false);
                 $event->stopPropagation();
@@ -311,10 +311,10 @@ class FileListener implements ContainerAwareInterface
             $archive->close();
             $this->om->startFlushSuite();
             $perms = $this->container->get('claroline.manager.rights_manager')->getCustomRoleRights($root);
-            $root = $this->uploadDir($extractPath, $root, $perms);
+            $roots = $this->uploadDir($extractPath, $root, $perms);
             $this->om->endFlushSuite();
 
-            return $root;
+            return $roots;
         } else {
             throw new \Exception("The archive {$archivepath} can't be opened");
         }
@@ -322,18 +322,19 @@ class FileListener implements ContainerAwareInterface
 
     private function uploadDir($dir, ResourceNode $parent, array $perms)
     {
+        $roots = [];
         $iterator = new \DirectoryIterator($dir);
 
         foreach ($iterator as $item) {
             if ($item->isFile()) {
-                $this->uploadFile($item, $parent, $perms);
+                $roots[] = $this->uploadFile($item, $parent, $perms);
             }
 
             if ($item->isDir() === true && $item->isDot() !== true) {
                 //create new dir
                 $directory = new Directory();
                 $directory->setName($item->getBasename());
-                $directory = $this->resourceManager->create(
+                $roots[] = $this->resourceManager->create(
                     $directory,
                     $this->resourceManager->getResourceTypeByName('directory'),
                     $this->sc->getToken()->getUser(),
@@ -351,7 +352,7 @@ class FileListener implements ContainerAwareInterface
             }
         }
 
-        return isset($directory) ? $directory: null;
+        return $roots;
     }
 
     private function uploadFile(\DirectoryIterator $file, ResourceNode $parent, array $perms)
@@ -371,7 +372,7 @@ class FileListener implements ContainerAwareInterface
         $entityFile->setHashName($hashName);
         $entityFile->setMimeType($mimeType);
 
-        $this->resourceManager->create(
+        return $this->resourceManager->create(
             $entityFile,
             $this->resourceManager->getResourceTypeByName('file'),
             $this->sc->getToken()->getUser(),
