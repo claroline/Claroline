@@ -58,7 +58,9 @@ class BadgeAwardType extends AbstractType
                 'property'       => 'username',
                 'repo_method'    => 'findByNameForAjax'
             ))
-            ->add('comment', 'tinymce');
+            ->add('comment', 'tinymce', array(
+                'required' => false
+            ));
     }
 
     public function getName()
