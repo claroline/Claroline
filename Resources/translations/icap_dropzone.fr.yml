@@ -280,3 +280,4 @@ Complete Corrections: 'Corrections terminées'
 number of Report: 'Nombre de signalement'
 was reported: 'A été signalé'
 You will reactivate a correction but the expected number of correction is already reached. Are you sure ?: 'Vous êtes sur le point de revalider une correction. Cependant le nombre attendu de correction a déjà été atteint. Êtes vous sûr ?'
+corrections were already created: "one: Une correction a déjà été créee.|some:%count% corrections ont déjà été créées."
