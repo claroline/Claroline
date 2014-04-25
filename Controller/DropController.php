@@ -541,7 +541,7 @@ class DropController extends DropzoneBaseController
      * @ParamConverter("drop", class="IcapDropzoneBundle:Drop", options={"id" = "dropId"})
      * @Template()
      */
-    public function dropDetailAction($dropzone,$drop)
+    public function dropDetailAction(Dropzone $dropzone, Drop $drop)
     {
         // check  if the User is allowed to open the dropZone.
         $this->isAllowToOpen($dropzone);
@@ -552,17 +552,20 @@ class DropController extends DropzoneBaseController
 
 
         // getting the data
-        $drop = $this->getDoctrine()
+        $dropSecure = $this->getDoctrine()
             ->getRepository('IcapDropzoneBundle:Drop')
             ->getDropAndValidEndedCorrectionsAndDocumentsByUser($dropzone,$drop->getId(),$userId);
 
         // if there is no result ( user is not the owner, or the drop has not ended Corrections , show 404)
-        if(count($drop) == 0)
-        {
-            throw new NotFoundHttpException(); 
+        if (count($dropSecure) == 0) {
+            if ($drop->getUser()->getId() != $userId) {
+                throw new AccessDeniedException();
+            } else {
+                throw new NotFoundHttpException();
+            }
         }else
         {
-            $drop = $drop[0];
+            $drop = $dropSecure[0];
         }
         /*
         $corrections = $drop->getCorrections();
