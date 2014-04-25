@@ -8,7 +8,7 @@
             <div class="panel-heading">
                 <h3 class="panel-title">{{ 'oauth_application_acceptance' | trans({}, "api")}}</h3>
             </div>
-            <form action="{{ path('fos_oauth_server_authorize') }}" method="POST" class="fos_oauth_server_authorize" {{ form_enctype(form) }}>
+            <form role="form" action="{{ path('fos_oauth_server_authorize') }}" method="POST" class="fos_oauth_server_authorize" {{ form_enctype(form) }}>
             <div class="panel-body">
                 <p>{{ 'app_want_access_to_your_account'|trans({'%clientName%': client.name}, 'api') }}</p>
                 {{ form_row(form.client_id) }}

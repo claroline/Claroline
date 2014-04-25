@@ -11,7 +11,7 @@
                 {{ 'tune_your_public_profile_url'|trans({}, 'platform') }}
             </h3>
         </div>
-        <form action="{{ path('claro_user_public_url_edit') }}" data-ajax-action="{{ path('claro_user_public_url_check') }}" method="post" class="form-horizontal" role="form" id="public_profile_url" {{ form_enctype(form) }}>
+        <form role="form" action="{{ path('claro_user_public_url_edit') }}" data-ajax-action="{{ path('claro_user_public_url_check') }}" method="post" class="form-horizontal" role="form" id="public_profile_url" {{ form_enctype(form) }}>
             <div class="panel-body">
                 <p>
                     {{ 'your_current_url'|trans({}, 'platform') }} <strong><a href="{{ path('claro_public_profile_view', {'publicUrl': user.publicUrl}) }}" title="{{ 'public_profile'|trans({}, 'platform') }}">{{ path('claro_public_profile_view', {'publicUrl': user.publicUrl}) }}</a></strong>.
@@ -45,7 +45,7 @@
             </div>
             <div class="panel-footer">
                 <button type="submit" class="btn btn-primary" id="tune_button" disabled="disabled">{{ 'tune'|trans({}, 'platform') }}</button>
-                <a href="{{ path('claro_profile_view') }}" class="btn btn-default">
+                <a href="{{ path('claro_profile_view') }}" class="btn btn-default" role="button">
                     {{ 'cancel' | trans({}, 'platform') }}
                 </a>
             </div>

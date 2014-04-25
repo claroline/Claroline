@@ -15,7 +15,7 @@
             mozallowfullscreen></iframe>
     {% else %}
         <a href="{{ content["url"] }}" target="_blank">
-            <img src="{{ content["image"] }}" width="100%">
+            <img src="{{ content["image"] }}" class="img-responsive" {% if content["title"] is defined %}alt="{{ content["title"] }}"{% endif %}>
         </a>
     {% endif %}
 

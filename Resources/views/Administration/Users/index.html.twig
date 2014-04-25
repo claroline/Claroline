@@ -24,19 +24,19 @@
     </div>
     <div class="list-group">
         <a class="list-group-item" href="{{ path('claro_admin_user_creation_form') }}" id="link_add_user">
-            {{ 'create_user'|trans({}, 'platform') }}
+            <i class="icon-pencil"></i> {{ 'create_user'|trans({}, 'platform') }}
         </a>
         <a class="list-group-item" href="{{ path('claro_admin_user_list') }}" id="link_list_user">
-            {{ 'list_users'|trans({}, 'platform') }}
+            <i class="icon-user"></i> {{ 'list_users'|trans({}, 'platform') }}
         </a>
         <a  class="list-group-item" href="{{ path('claro_admin_import_users_form') }}">
-            {{ 'import_users'|trans({}, 'platform') }}
+            <i class="icon-download-alt"></i> {{ 'import_users'|trans({}, 'platform') }}
         </a>
         <a class="list-group-item" href="{{ path('claro_admin_group_creation_form') }}" id="link_group_create_form">
-            {{ 'create_group'|trans({}, 'platform') }}
+            <i class="icon-pencil"></i> {{ 'create_group'|trans({}, 'platform') }}
         </a>
         <a class="list-group-item" href="{{ path('claro_admin_group_list') }}" id="link_group_list">
-            {{ 'list_groups'|trans({}, 'platform') }}
+            <i class="icon-group"></i> {{ 'list_groups'|trans({}, 'platform') }}
         </a>
     </div>
 {% endblock %}

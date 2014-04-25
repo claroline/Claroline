@@ -25,29 +25,31 @@
                     <img src="{{ asset(badge.webPath) }}" alt="{{ badge.name }}" class="badge_image_informations" />
                 </div>
                 <div class="col-md-7">
-                    <table class="badge_informations table table-condensed">
-                        <colgroup>
-                            <col class="fieldLabelCol">
-                            <col class="dataCol">
-                        </colgroup>
-                        <tbody>
-                            <tr>
-                              <td class="section-head text-muted" colspan="2">{{ 'badge_details'|trans }}</td>
-                            </tr>
-                            <tr>
-                              <td class="fieldlabel">{{ 'badge_form_name'|trans }}</td>
-                              <td>{{ badge.name }}</td>
-                            </tr>
-                            <tr>
-                              <td class="fieldlabel">{{ 'badge_form_description'|trans }}</td>
-                              <td>{{ badge.description }}</td>
-                            </tr>
-                            <tr>
-                              <td class="fieldlabel">{{ 'badge_form_criteria'|trans }}</td>
-                              <td><a href="{{ path('claro_view_badge', {'slug': badge.slug}) }}">{{ url('claro_view_badge', {'slug': badge.slug}) }}</a></td>
-                            </tr>
-                        </tbody>
-                    </table>
+                    <div class="table-responsive">
+                        <table class="badge_informations table table-condensed">
+                            <colgroup>
+                                <col class="fieldLabelCol">
+                                <col class="dataCol">
+                            </colgroup>
+                            <tbody>
+                                <tr>
+                                  <td class="section-head text-muted" colspan="2">{{ 'badge_details'|trans }}</td>
+                                </tr>
+                                <tr>
+                                  <td class="fieldlabel">{{ 'badge_form_name'|trans }}</td>
+                                  <td>{{ badge.name }}</td>
+                                </tr>
+                                <tr>
+                                  <td class="fieldlabel">{{ 'badge_form_description'|trans }}</td>
+                                  <td>{{ badge.description }}</td>
+                                </tr>
+                                <tr>
+                                  <td class="fieldlabel">{{ 'badge_form_criteria'|trans }}</td>
+                                  <td><a href="{{ path('claro_view_badge', {'slug': badge.slug}) }}">{{ url('claro_view_badge', {'slug': badge.slug}) }}</a></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>

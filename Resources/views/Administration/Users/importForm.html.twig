@@ -26,7 +26,7 @@
     <div class="panel-heading">
         <h3 class="panel-title">{{ 'users_import'|trans({}, 'platform') }}</h3>
     </div>
-    <form class="form-horizontal" action="{{ path('claro_admin_import_users') }}" method="post" {{ form_enctype(form) }} >
+    <form role="form" class="form-horizontal" action="{{ path('claro_admin_import_users') }}" method="post" {{ form_enctype(form) }} >
         <div class="panel-body">
             <div>{{ macros.flashBox() }}</div>
             <div class="well">
@@ -67,7 +67,7 @@
         </div>
         <div class="panel-footer">
             <button type="submit" class="btn btn-primary">{{ 'ok'|trans({}, 'platform') }}</button>
-            <a href="{{ path('claro_admin_user_list') }}" class="btn btn-default">
+            <a href="{{ path('claro_admin_user_list') }}" class="btn btn-default" role="button">
                 {{ 'cancel'|trans({}, 'platform') }}
             </a>
         </div>

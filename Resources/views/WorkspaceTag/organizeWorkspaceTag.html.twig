@@ -19,37 +19,37 @@
                         <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
                             <span class="caret"></span>
                         </button>
-                        <ul class="dropdown-menu">
-                            <li class="edit-tag-btn">
-                                <a href="#">
+                        <ul class="dropdown-menu" role="menu">
+                            <li role="presentation" class="edit-tag-btn">
+                                <a role="menuitem" href="#">
                                     <i class="icon-pencil"></i>
                                     {{ 'rename_category'|trans({}, 'platform') }}
                                 </a>
                             </li>
-                            <li class="divider"></li>
-                            <li class="create-sub-tag-btn">
-                                <a href="#">
+                            <li role="presentation" class="divider"></li>
+                            <li role="presentation" class="create-sub-tag-btn">
+                                <a role="menuitem" href="#">
                                     <i class="icon-plus"></i>
                                     {{ 'create_subcategory'|trans({}, 'platform') }}
                                 </a>
                             </li>
-                            <li class="add-tag-btn">
-                                <a href="#">
+                            <li role="presentation" class="add-tag-btn">
+                                <a role="menuitem" href="#">
                                     <i class="icon-list-alt"></i>
                                     {{ 'add_subcategory'|trans({}, 'platform') }}
                                 </a>
                             </li>
-                            <li class="divider remove-tag-divider-{{ tagId }}"></li>
+                            <li role="presentation" class="divider remove-tag-divider-{{ tagId }}"></li>
                             {% if not isRoot %}
-                                <li class="remove-tag-btn">
-                                    <a href="#">
+                                <li role="presentation" class="remove-tag-btn">
+                                    <a role="menuitem" href="#">
                                         <i class="icon-remove"></i>
                                         {{ 'remove_subcategory'|trans({}, 'platform') }}
                                     </a>
                                 </li>
                             {% endif %}
-                            <li class="delete-tag-btn">
-                                <a href="#">
+                            <li role="presentation" class="delete-tag-btn">
+                                <a role="menuitem" href="#">
                                     <i class="icon-trash"></i>
                                     {{ 'delete_category'|trans({}, 'platform') }}
                                 </a>
@@ -132,11 +132,11 @@
     </button>
 </div>
 
-<div id="form-modal-box" class="modal fade">
+<div id="form-modal-box" class="modal fade" role="dialog" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">×</button>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                 <h3 id="form-modal-title"></h3>
             </div>
             <div id="form-modal-body" class="modal-body">
@@ -145,11 +145,11 @@
     </div>
 </div>
 
-<div id="remove-workspace-tag-validation-box" class="modal fade">
+<div id="remove-workspace-tag-validation-box" class="modal fade" role="dialog" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">×</button>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                 <h3>{{ 'workspace_tag_remove_confirm_title'|trans({}, 'platform') }}</h3>
             </div>
             <div class="modal-body">
@@ -171,11 +171,11 @@
     </div>
 </div>
 
-<div id="delete-workspace-tag-validation-box" class="modal fade">
+<div id="delete-workspace-tag-validation-box" class="modal fade" role="dialog" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">×</button>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                 <h3>{{ 'delete_category_confirm_title'|trans({}, 'platform') }}</h3>
             </div>
             <div class="modal-body">
@@ -197,11 +197,11 @@
     </div>
 </div>
 
-<div id="add-tag-modal-box" class="modal fade">
+<div id="add-tag-modal-box" class="modal fade" role="dialog" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">×</button>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                 <h3 id="add-tag-modal-title">
                     {{ 'add_subcategory'|trans({}, 'platform')  }}
                 </h3>

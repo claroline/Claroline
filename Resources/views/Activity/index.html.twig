@@ -33,7 +33,7 @@
         <button id="add_resource_button" class="btn btn-primary">
             <i class="icon-plus"></i> {{'add_resource'|trans({},'platform')}}
         </button>
-        <a href="{{ path('claro_activity_show_player', {'activity': _resource.getId()}) }}" class="btn btn-default">
+        <a href="{{ path('claro_activity_show_player', {'activity': _resource.getId()}) }}" class="btn btn-default" role="button">
             <i class="icon-user"></i> {{ 'show_as_user'|trans({}, 'platform') }}
         </a>
         <div id="twig-attributes" data-activity-id="{{ _resource.getId() }}"></div>

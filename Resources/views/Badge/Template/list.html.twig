@@ -37,10 +37,10 @@
                                     </td>
                                     <td>
                                         <div class="btn-group">
-                                            <a href="{{ path(parameters.claim_link, {'id': badgeClaim.id, 'validate': true}|merge(parameters.route_parameters)) }}" class="btn btn-xs btn-success confirm" title="{{ 'badge_validate_award'|trans({}, 'badge') }}" data-confirm-title="{{ 'badge_award_confirm_title'|trans({}, 'badge') }}" data-confirm-message="{{ 'badge_award_confirm_message'|trans({'%badgeName%': badgeClaim.badge.name, '%user%': badgeClaim.user.firstname ~ ' ' ~ badgeClaim.user.lastname }, 'badge') }}" data-confirm-ok="{{ 'award'|trans({}, 'badge') }}" data-confirm-cancel="{{ 'cancel'|trans({}, 'platform') }}" data-confirm-style="success">
+                                            <a href="{{ path(parameters.claim_link, {'id': badgeClaim.id, 'validate': true}|merge(parameters.route_parameters)) }}" class="btn btn-xs btn-success confirm" title="{{ 'badge_validate_award'|trans({}, 'badge') }}" data-confirm-title="{{ 'badge_award_confirm_title'|trans({}, 'badge') }}" data-confirm-message="{{ 'badge_award_confirm_message'|trans({'%badgeName%': badgeClaim.badge.name, '%user%': badgeClaim.user.firstname ~ ' ' ~ badgeClaim.user.lastname }, 'badge') }}" data-confirm-ok="{{ 'award'|trans({}, 'badge') }}" data-confirm-cancel="{{ 'cancel'|trans({}, 'platform') }}" data-confirm-style="success" role="button">
                                                 {{ 'badge_validate_award_short'|trans({}, 'badge') }}
                                             </a>
-                                            <a href="{{ path(parameters.claim_link, {'id': badgeClaim.id, 'validate': false}|merge(parameters.route_parameters)) }}" class="btn btn-xs btn-danger confirm" title="{{ 'badge_reject_award'|trans({}, 'badge') }}" data-confirm-title="{{ 'badge_dont_award_confirm_title'|trans({}, 'badge') }}" data-confirm-message="{{ 'badge_dont_award_confirm_message'|trans({'%badgeName%': badgeClaim.badge.name, '%user%': badgeClaim.user.firstname ~ ' ' ~ badgeClaim.user.lastname}, 'badge') }}" data-confirm-ok="{{ 'dont_award'|trans({}, 'badge') }}" data-confirm-cancel="{{ 'cancel'|trans({}, 'platform') }}" data-confirm-style="danger">
+                                            <a href="{{ path(parameters.claim_link, {'id': badgeClaim.id, 'validate': false}|merge(parameters.route_parameters)) }}" class="btn btn-xs btn-danger confirm" title="{{ 'badge_reject_award'|trans({}, 'badge') }}" data-confirm-title="{{ 'badge_dont_award_confirm_title'|trans({}, 'badge') }}" data-confirm-message="{{ 'badge_dont_award_confirm_message'|trans({'%badgeName%': badgeClaim.badge.name, '%user%': badgeClaim.user.firstname ~ ' ' ~ badgeClaim.user.lastname}, 'badge') }}" data-confirm-ok="{{ 'dont_award'|trans({}, 'badge') }}" data-confirm-cancel="{{ 'cancel'|trans({}, 'platform') }}" data-confirm-style="danger" role="button">
                                                 {{ 'badge_reject_award_short'|trans({}, 'badge') }}
                                             </a>
                                         </div>
@@ -91,18 +91,18 @@
                     <div class="node-name">{{ badge.name }} <i class="icon-caret-down"></i></div>
                 </a>
                 <ul class="dropdown-menu" role="menu">
-                    <li>
-                        <a href="{{ path(parameters.view_link, {'slug': badge.slug}|merge(parameters.route_parameters)) }}" class="node-menu-action">
+                    <li role="presentation">
+                        <a role="menuitem" href="{{ path(parameters.view_link, {'slug': badge.slug}|merge(parameters.route_parameters)) }}" class="node-menu-action">
                             {{ 'view'|trans({}, 'platform') }}
                         </a>
                     </li>
-                    <li>
-                        <a href="{{ path(parameters.edit_link.url, {'slug': badge.slug}|merge(parameters.route_parameters)) }}{{ parameters.edit_link.suffix }}" class="node-menu-action">
+                    <li role="presentation">
+                        <a role="menuitem" href="{{ path(parameters.edit_link.url, {'slug': badge.slug}|merge(parameters.route_parameters)) }}{{ parameters.edit_link.suffix }}" class="node-menu-action">
                             {{ 'edit'|trans({}, 'platform') }}
                         </a>
                     </li>
-                    <li>
-                        <a href="{{ path(parameters.delete_link, {'slug': badge.slug}|merge(parameters.route_parameters)) }}" class="node-menu-action confirm" data-confirm-title="{{ 'badge_delete_confirm_title'|trans({}, 'badge') }}" data-confirm-message="{{ 'badge_delete_confirm_message'|trans({'%badgeName%': badge.name}, 'badge') }}" data-confirm-ok="{{ 'delete'|trans({}, 'platform') }}" data-confirm-cancel="{{ 'cancel'|trans({}, 'platform') }}" data-confirm-style="danger">
+                    <li role="presentation">
+                        <a role="menuitem" href="{{ path(parameters.delete_link, {'slug': badge.slug}|merge(parameters.route_parameters)) }}" class="node-menu-action confirm" data-confirm-title="{{ 'badge_delete_confirm_title'|trans({}, 'badge') }}" data-confirm-message="{{ 'badge_delete_confirm_message'|trans({'%badgeName%': badge.name}, 'badge') }}" data-confirm-ok="{{ 'delete'|trans({}, 'platform') }}" data-confirm-cancel="{{ 'cancel'|trans({}, 'platform') }}" data-confirm-style="danger">
                             {{ 'delete'|trans({}, 'platform') }}
                         </a>
                     </li>

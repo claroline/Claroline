@@ -38,20 +38,20 @@
         {% if nbPages > 1 %}
             {{ renderPager(search, workspaces) }}
         {% endif %}
-
-        <table class="table table-bordered table-responsive">
-            <tr>
-                <th>{{ 'name'|trans({}, 'platform') }}</th>
-                <th></th>
-            </tr>
-            {% for workspace in workspaces %}
+        <div class="table-responsive">
+            <table class="table table-bordered">
                 <tr>
-                    <td>{{ workspace.getName() }}</td>
-                    <td><input type="checkbox" class="contact-chk" contact-id="{{ workspace.getId() }}"></td>
+                    <th>{{ 'name'|trans({}, 'platform') }}</th>
+                    <th></th>
                 </tr>
-            {% endfor %}
-        </table>
-
+                {% for workspace in workspaces %}
+                    <tr>
+                        <td>{{ workspace.getName() }}</td>
+                        <td><input type="checkbox" class="contact-chk" contact-id="{{ workspace.getId() }}"></td>
+                    </tr>
+                {% endfor %}
+            </table>
+        </div>
         {% if nbPages > 1 %}
             {{ renderPager(search, users) }}
         {% endif %}

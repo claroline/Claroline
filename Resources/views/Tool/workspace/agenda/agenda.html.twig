@@ -37,7 +37,7 @@
         </div>
     <div class="row">
         <div class="col-md-11">
-             <form method="post" action="{{ path('claro_workspace_agenda_import', {workspaceId: workspace.getId()}) }}"  {{ form_enctype(file) }} class="form-inline" >
+             <form role="form" method="post" action="{{ path('claro_workspace_agenda_import', {workspaceId: workspace.getId()}) }}"  {{ form_enctype(file) }} class="form-inline" >
                 <div class="form-group">
                     {{ form_widget(file) }}
                 </div>
@@ -46,18 +46,18 @@
         </div>
     </div>
     <div class="row">
-        <a href="{{ path('claro_workspace_agenda_export',{workspaceId:workspace.getId()}) }}" class="btn btn-primary">{{ 'export'|trans({}, 'agenda') }} </a>
+        <a href="{{ path('claro_workspace_agenda_export',{workspaceId:workspace.getId()}) }}" class="btn btn-primary" role="button">{{ 'export'|trans({}, 'agenda') }} </a>
         <div id='calendar' class="col-md-9"></div>
-        <div  id="myModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div  id="myModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="agendaLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                        <h4 id="myModalLabel"> {{ 'add_event'|trans({}, 'agenda') }}</h4>
+                        <h4 id="agendaLabel"> {{ 'add_event'|trans({}, 'agenda') }}</h4>
                     </div>
                     <div class="modal-body">
                         <div class='clearfix'>
-                                <form method="post" action="{{ path('claro_workspace_agenda_add_event', {workspaceId: workspace.getId()}) }}" id="myForm" {{ form_enctype(form) }}>
+                            <form role="form" method="post" action="{{ path('claro_workspace_agenda_add_event', {workspaceId: workspace.getId()}) }}" id="myForm" {{ form_enctype(form) }}>
                                 <div id="text" class="col-md-10 filters"> </div>
                                 {{ form_widget(form) }}
                             </form>
@@ -69,7 +69,7 @@
                         <a href="{{ path('claro_workspace_agenda_tasks', {workspaceId: workspace.getId()}) }}" id="taska"></a>
                     </div>
                     <div class="modal-footer">
-                        <button class="btn btn-default" data-dismiss="modal" aria-hidden="true">{{'cancel'|trans({}, 'agenda') }}</button>
+                        <button class="btn btn-default" data-dismiss="modal">{{'cancel'|trans({}, 'agenda') }}</button>
                         <button class="btn btn-primary" id="save">{{ 'add_event'|trans({}, 'agenda') }}</button>
                         <button class="btn btn-info" id="updateBtn" > {{ 'update'|trans({}, 'agenda') }}</button>
                         <button class="btn btn-primary" id="deleteBtn" >{{ 'delete'|trans({}, 'platform') }} </button>

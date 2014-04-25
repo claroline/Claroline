@@ -24,7 +24,8 @@
     <div class="panel-heading">
         <h3 class="panel-title">{{ 'role_edition'|trans({}, 'platform') }} ({{ role.getTranslationKey() | trans({}, "platform") }})</h3>
     </div>
-    <form class="form-horizontal"
+    <form role="form"
+          class="form-horizontal"
           action="{{ path('claro_workspace_role_edit', {'workspace': workspace.getId(), 'role': role.getId()} ) }}"
           method="post" {{ form_enctype(form) }}
           id="workspace-role-creation">
@@ -33,7 +34,7 @@
         </div>
         <div class="panel-footer">
             <button type="submit" class="btn btn-primary">{{ 'ok'|trans({}, 'platform') }}</button>
-            <a class="btn btn-default" href="{{ path('claro_workspace_roles', {'workspace': workspace.getId()}) }}">{{ "cancel" | trans({}, "platform") }} </a>
+            <a class="btn btn-default" href="{{ path('claro_workspace_roles', {'workspace': workspace.getId()}) }}" role="button">{{ "cancel" | trans({}, "platform") }} </a>
         </div>
     </form>
 {% endblock %}
