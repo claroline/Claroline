@@ -168,9 +168,9 @@ class DropRepository extends EntityRepository {
             "WHERE d.finished = true \n".
             "AND d.dropzone = :dropzone \n")
             ->setParameter('dropzone', $dropzone);
-        $result = $query->getResult();
+        $result = $query->getSingleScalarResult();
 
-        return $result[0][1];
+        return $result;
     }
 
     public function getDropsFullyCorrectedOrderByUserQuery($dropzone)
@@ -350,12 +350,11 @@ class DropRepository extends EntityRepository {
             "WHERE drop.dropzone = :dropzone")
             ->setParameter('dropzone', $dropzone);
 
-        $result = $query->getResult();
-
-        if ($result[0][1] == null) {
+        $result = $query->getSingleScalarResult();
+        if ($result == null) {
             return 0;
         }else {
-            return $result[0][1];
+            return $result;
         }
     }
 
