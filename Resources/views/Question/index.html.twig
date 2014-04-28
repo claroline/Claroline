@@ -400,7 +400,9 @@
                                                 {{ interactionExo.question.user.firstName }} {{ interactionExo.question.user.lastName }}
                                             </td>
                                         {% else %}
-                                            Ne peut rien faire ...
+                                            <td class="classic" colspan="3">
+                                                {{ 'noRights' | trans }}
+                                            </td>
                                         {% endif %}
                                     </tr>
                                 {% endfor %}

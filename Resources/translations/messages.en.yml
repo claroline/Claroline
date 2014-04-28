@@ -252,6 +252,7 @@ noPaperFound: No paper found
 noQuestion: You ask for nothing
 noQuestionFound: No question found
 noRightAnswer: No right answer
+noRights: Your aren't the owner of this question and it's not shared with you
 notAllowedModifyPaper: You can't alter your answers anymore !
 nothingToImport: No question is checked for the import
 notImageMesssage: The document should be an image

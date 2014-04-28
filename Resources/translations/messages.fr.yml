@@ -252,6 +252,7 @@ noPaperFound: Aucune copie
 noQuestion: Vous ne posez aucune question
 noQuestionFound: Pas de question trouvée
 noRightAnswer: Aucune bonne réponse
+noRights: Vous n'êtes pas propriétaire de cette question et elle ne vous est pas partagée
 notAllowedModifyPaper: Vous ne pouvez plus modifier vos réponses !
 nothingToImport: Aucune question à importer n\'est cochée
 notImageMesssage: Le document doit être une image
