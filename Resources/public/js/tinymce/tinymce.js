@@ -30,7 +30,8 @@
     };
 
     /**
-     * This method fire the event "show" of TinyMCE, this is usefull after change manually something in the editor.
+     * This method fix the height of TinyMCE after modify it,
+     * this is usefull when change manually something in the editor.
      *
      * @param editor A TinyMCE editor object.
      *
@@ -38,7 +39,22 @@
     tinymce.claroline.editorChange = function (editor)
     {
         setTimeout(function () {
-            editor.fire('show');
+            var container = $(editor.getContainer()).find('iframe').first();
+            var height = container.contents().height();
+            var max = 'autoresize_max_height';
+            var min = 'autoresize_min_height';
+
+            switch (true)
+            {
+                case (height <= tinymce.claroline.configuration[min]):
+                    container.css('height', tinymce.claroline.configuration[min]);
+                    break;
+                case (height >= tinymce.claroline.configuration[max]):
+                    container.css('height', tinymce.claroline.configuration[max]);
+                    break;
+                default:
+                    container.css('height', height);
+            }
         }, 500);
     };
 
