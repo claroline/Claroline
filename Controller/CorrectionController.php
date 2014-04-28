@@ -661,8 +661,16 @@ class CorrectionController extends DropzoneBaseController
     public function dropsDetailCorrectionAction(Dropzone $dropzone, $state, $correctionId, $page, $user)
     {
         $this->isAllowToOpen($dropzone);
-        if($state != 'preview')
-        {
+        $correction = $this
+            ->getDoctrine()
+            ->getRepository('IcapDropzoneBundle:Correction')
+            ->getCorrectionAndDropAndUserAndDocuments($dropzone, $correctionId);
+        $userId = $this->get('security.context')->getToken()->getUser()->getId();
+        if ($state == 'preview') {
+            if ($correction->getDrop()->getUser()->getId() != $userId) {
+                throw new AccessDeniedException();
+            }
+        } else {
             $this->isAllowToEdit($dropzone);
         }
         //$this->checkUserGradeAvailable($dropzone);
@@ -682,10 +690,7 @@ class CorrectionController extends DropzoneBaseController
         }
 
         /** @var Correction $correction */
-        $correction = $this
-            ->getDoctrine()
-            ->getRepository('IcapDropzoneBundle:Correction')
-            ->getCorrectionAndDropAndUserAndDocuments($dropzone, $correctionId);
+
 
         $edit = $state == 'edit';
 
