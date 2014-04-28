@@ -100,7 +100,7 @@ class HomeTabManagerTest extends MockeryTestCase
     {
         $homeTab = $this->mock('Claroline\CoreBundle\Entity\Home\HomeTab');
         $workspace =
-            $this->mock('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace');
+            $this->mock('Claroline\CoreBundle\Entity\Workspace\Workspace');
 
         $homeTab->shouldReceive('getWorkspace')->once()->andReturn($workspace);
         $this->homeTabConfigRepo
@@ -150,7 +150,7 @@ class HomeTabManagerTest extends MockeryTestCase
         $homeTabConfig =
             $this->mock('Claroline\CoreBundle\Entity\Home\HomeTabConfig');
         $workspace =
-            $this->mock('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace');
+            $this->mock('Claroline\CoreBundle\Entity\Workspace\Workspace');
         $homeTab = new HomeTab();
 
         $homeTabConfig->shouldReceive('getHomeTab')
@@ -451,7 +451,7 @@ class HomeTabManagerTest extends MockeryTestCase
     {
         $homeTab = new HomeTab();
         $workspace =
-            $this->mock('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace');
+            $this->mock('Claroline\CoreBundle\Entity\Workspace\Workspace');
 
         $this->homeTabConfigRepo
             ->shouldReceive('findOneBy')
@@ -488,7 +488,7 @@ class HomeTabManagerTest extends MockeryTestCase
         $this->markTestSkipped("I don't understand");
         $homeTab = new HomeTab();
         $workspace =
-            $this->mock('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace');
+            $this->mock('Claroline\CoreBundle\Entity\Workspace\Workspace');
         $adminHomeTabConfig =
             $this->mock('Claroline\CoreBundle\Entity\Home\HomeTabConfig');
 
@@ -527,7 +527,7 @@ class HomeTabManagerTest extends MockeryTestCase
     {
         $homeTab = new HomeTab();
         $workspace =
-            $this->mock('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace');
+            $this->mock('Claroline\CoreBundle\Entity\Workspace\Workspace');
         $workspaceHomeTabConfig =
             $this->mock('Claroline\CoreBundle\Entity\Home\HomeTabConfig');
 
@@ -566,7 +566,7 @@ class HomeTabManagerTest extends MockeryTestCase
     {
         $homeTab = new HomeTab();
         $workspace =
-            $this->mock('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace');
+            $this->mock('Claroline\CoreBundle\Entity\Workspace\Workspace');
         $adminHomeTabConfig =
             $this->mock('Claroline\CoreBundle\Entity\Home\HomeTabConfig');
         $workspaceHomeTabConfig =
@@ -685,7 +685,7 @@ class HomeTabManagerTest extends MockeryTestCase
             $this->mock('Claroline\CoreBundle\Entity\Widget\WidgetHomeTabConfig');
         $homeTab = new HomeTab();
         $workspace =
-            $this->mock('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace');
+            $this->mock('Claroline\CoreBundle\Entity\Workspace\Workspace');
 
         $widgetHomeTabConfig
             ->shouldReceive('getWidgetOrder')
@@ -797,7 +797,7 @@ class HomeTabManagerTest extends MockeryTestCase
             $this->mock('Claroline\CoreBundle\Entity\Widget\WidgetHomeTabConfig');
         $homeTab = new HomeTab();
         $workspace =
-            $this->mock('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace');
+            $this->mock('Claroline\CoreBundle\Entity\Workspace\Workspace');
 
         $widgetHomeTabConfig
             ->shouldReceive('getWidgetOrder')
@@ -940,7 +940,7 @@ class HomeTabManagerTest extends MockeryTestCase
     public function testGetWorkspaceHomeTabConfigsByWorkspace()
     {
         $workspace =
-            $this->mock('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace');
+            $this->mock('Claroline\CoreBundle\Entity\Workspace\Workspace');
         $homeTabConfigs = array('home_tab_config_A', 'home_tab_config_B');
 
         $this->homeTabConfigRepo
@@ -1005,7 +1005,7 @@ class HomeTabManagerTest extends MockeryTestCase
     public function testGetVisibleWorkspaceHomeTabConfigsByWorkspace()
     {
         $workspace =
-            $this->mock('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace');
+            $this->mock('Claroline\CoreBundle\Entity\Workspace\Workspace');
         $homeTabConfigs = array('home_tab_config_A', 'home_tab_config_B');
 
         $this->homeTabConfigRepo
@@ -1039,7 +1039,7 @@ class HomeTabManagerTest extends MockeryTestCase
     public function testGetOrderOfLastWorkspaceHomeTabConfigByWorkspace()
     {
         $workspace =
-            $this->mock('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace');
+            $this->mock('Claroline\CoreBundle\Entity\Workspace\Workspace');
 
         $this->homeTabConfigRepo
             ->shouldReceive('findOrderOfLastWorkspaceHomeTabByWorkspace')
@@ -1084,7 +1084,7 @@ class HomeTabManagerTest extends MockeryTestCase
     {
         $homeTab = new HomeTab();
         $workspace =
-            $this->mock('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace');
+            $this->mock('Claroline\CoreBundle\Entity\Workspace\Workspace');
         $homeTabConfig = new HomeTabConfig();
 
         $this->homeTabConfigRepo
@@ -1193,7 +1193,7 @@ class HomeTabManagerTest extends MockeryTestCase
     {
         $homeTab = new HomeTab();
         $workspace =
-            $this->mock('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace');
+            $this->mock('Claroline\CoreBundle\Entity\Workspace\Workspace');
         $adminWidgetConfigs = array('whtc_a', 'whtc_b');
 
         $this->widgetHomeTabConfigRepo
@@ -1212,7 +1212,7 @@ class HomeTabManagerTest extends MockeryTestCase
     {
         $homeTab = new HomeTab();
         $workspace =
-            $this->mock('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace');
+            $this->mock('Claroline\CoreBundle\Entity\Workspace\Workspace');
         $adminWidgetConfigs = array('whtc_a', 'whtc_b');
 
         $this->widgetHomeTabConfigRepo
@@ -1266,7 +1266,7 @@ class HomeTabManagerTest extends MockeryTestCase
     {
         $homeTab = new HomeTab();
         $workspace =
-            $this->mock('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace');
+            $this->mock('Claroline\CoreBundle\Entity\Workspace\Workspace');
 
         $this->widgetHomeTabConfigRepo
             ->shouldReceive('findOrderOfLastWidgetInHomeTabByWorkspace')

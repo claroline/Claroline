@@ -363,7 +363,7 @@ You can find wich template to use with this code (it's not automatic yet in subj
 
 As you already know, AbstractResource has a mandatory relation to the
 ResourceNode table. The ResourceNode
-table has a mandatory relation to the AbstractWorkspace table.
+table has a mandatory relation to the Workspace table.
 The Workspace indicate the context in wich your resource was placed.
 A resource is usually opened through the resource manager. The resource manager
 will append the resource breadcrumbs to the url (_breadcrumbs[]=123&...) to keep

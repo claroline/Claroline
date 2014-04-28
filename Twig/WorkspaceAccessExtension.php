@@ -51,7 +51,7 @@ class WorkspaceAccessExtension extends \Twig_Extension
 
     public function hasRoleAccess($role, $workspaceId)
     {
-        $workspace = $this->em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')
+        $workspace = $this->em->getRepository('ClarolineCoreBundle:Workspace\Workspace')
             ->find($workspaceId);
         $repo = $this->em->getRepository('ClarolineCoreBundle:Tool\Tool');
         $tools = $repo->findDisplayedByRolesAndWorkspace(array($role), $workspace);
@@ -61,7 +61,7 @@ class WorkspaceAccessExtension extends \Twig_Extension
 
     public function hasAccess($workspaceId)
     {
-        $workspace = $this->em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')
+        $workspace = $this->em->getRepository('ClarolineCoreBundle:Workspace\Workspace')
             ->find($workspaceId);
 
         return $this->sc->isGranted('OPEN', $workspace);
@@ -70,7 +70,7 @@ class WorkspaceAccessExtension extends \Twig_Extension
     public function hasRoleInWorkspace($workspaceId, TokenInterface $token)
     {
         $roles = $this->ut->getRoles($token);
-        $workspace = $this->em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')
+        $workspace = $this->em->getRepository('ClarolineCoreBundle:Workspace\Workspace')
             ->find($workspaceId);
         $repo = $this->em->getRepository('ClarolineCoreBundle:Role');
         $workspaceRoles = $repo->findRolesByWorkspaceAndRoleNames($workspace, $roles);

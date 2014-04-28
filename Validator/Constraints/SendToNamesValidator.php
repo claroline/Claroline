@@ -76,7 +76,7 @@ class SendToNamesValidator extends ConstraintValidator
         }
 
         foreach ($workspaceCodes as $workspaceCode) {
-            $ws = $this->em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')
+            $ws = $this->em->getRepository('ClarolineCoreBundle:Workspace\Workspace')
                 ->findOneBy(array('code' => $workspaceCode));
 
             if ($ws === null) {

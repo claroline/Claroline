@@ -39,7 +39,7 @@ class RoleManagerTest extends MockeryTestCase
 
     public function testCreateWorkspaceRole()
     {
-        $workspace = $this->mock('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace');
+        $workspace = $this->mock('Claroline\CoreBundle\Entity\Workspace\Workspace');
         $role = $this->mock('Claroline\CoreBundle\Entity\Role');
         $this->om->shouldReceive('factory')->once()->with('Claroline\CoreBundle\Entity\Role')
             ->andReturn($role);
@@ -167,7 +167,7 @@ class RoleManagerTest extends MockeryTestCase
         $manager = $this->getManager(array('createWorkspaceRole'));
         $roleUser = m::mock('Claroline\CoreBundle\Entity\Role');
         $roleManager = m::mock('Claroline\CoreBundle\Entity\Role');
-        $workspace = m::mock('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace');
+        $workspace = m::mock('Claroline\CoreBundle\Entity\Workspace\Workspace');
         $roles = array(
             'ROLE_WS_USER' => 'user',
             'ROLE_WS_MANAGER' => 'superuser'
@@ -209,7 +209,7 @@ class RoleManagerTest extends MockeryTestCase
     public function testCheckWorkspaceRoleEditionThrowsExceptionForUser()
     {
         $roleManager = $this->getManager(array('getManagerRole'));
-        $workspace = new \Claroline\CoreBundle\Entity\Workspace\SimpleWorkspace;
+        $workspace = new \Claroline\CoreBundle\Entity\Workspace\Workspace;
         $managerRole = m::mock('Claroline\CoreBundle\Entity\Role');
         $roles = array($managerRole);
         $user = m::mock('Claroline\CoreBundle\Entity\User');
@@ -254,7 +254,7 @@ class RoleManagerTest extends MockeryTestCase
         $manager = $this->getManager(array('checkWorkspaceRoleEditionIsValid', 'dissociateRole'));
 
         $subject = new \Claroline\CoreBundle\Entity\User();
-        $workspace = new \Claroline\CoreBundle\Entity\Workspace\SimpleWorkspace();
+        $workspace = new \Claroline\CoreBundle\Entity\Workspace\Workspace();
         $role = new \Claroline\CoreBundle\Entity\Role();
 
         $manager->shouldReceive('checkWorkspaceRoleEditionIsValid')->once()
@@ -269,7 +269,7 @@ class RoleManagerTest extends MockeryTestCase
         $managerRole = m::mock('Claroline\CoreBundle\Entity\Role');
         $roles = array($managerRole);
         $subject = new \Claroline\CoreBundle\Entity\User();
-        $workspace = new \Claroline\CoreBundle\Entity\Workspace\SimpleWorkspace();
+        $workspace = new \Claroline\CoreBundle\Entity\Workspace\Workspace();
 
         $this->roleRepo->shouldReceive('findByUserAndWorkspace')->once()
             ->with($subject, $workspace)->andReturn($roles);
@@ -289,7 +289,7 @@ class RoleManagerTest extends MockeryTestCase
         $managerRole = m::mock('Claroline\CoreBundle\Entity\Role');
         $roles = array($managerRole);
         $subject = new \Claroline\CoreBundle\Entity\Group();
-        $workspace = new \Claroline\CoreBundle\Entity\Workspace\SimpleWorkspace();
+        $workspace = new \Claroline\CoreBundle\Entity\Workspace\Workspace();
 
         $this->roleRepo->shouldReceive('findByGroupAndWorkspace')->once()
             ->with($subject, $workspace)->andReturn($roles);
@@ -307,7 +307,7 @@ class RoleManagerTest extends MockeryTestCase
     {
         $manager = $this->getManager(array('resetWorkspaceRolesForSubject'));
         $subject = new \Claroline\CoreBundle\Entity\Group();
-        $workspace = new \Claroline\CoreBundle\Entity\Workspace\SimpleWorkspace();
+        $workspace = new \Claroline\CoreBundle\Entity\Workspace\Workspace();
         $subjects = array($subject);
         $manager->shouldReceive('resetWorkspaceRolesForSubject')->once()
             ->with($subject, $workspace);
@@ -346,7 +346,7 @@ class RoleManagerTest extends MockeryTestCase
     {
         $wsRole = new \Claroline\CoreBundle\Entity\Role();
         $anonRole = new \Claroline\CoreBundle\Entity\Role();
-        $workspace = new \Claroline\CoreBundle\Entity\Workspace\SimpleWorkspace();
+        $workspace = new \Claroline\CoreBundle\Entity\Workspace\Workspace();
         $wsRoles = array($wsRole);
         $res = array($wsRole, $anonRole);
         $this->roleRepo->shouldReceive('findByWorkspace')->once()->with($workspace)->andReturn($wsRoles);
@@ -375,7 +375,7 @@ class RoleManagerTest extends MockeryTestCase
 
     public function testGetRolesByWorkspace()
     {
-        $workspace = new \Claroline\CoreBundle\Entity\Workspace\SimpleWorkspace();
+        $workspace = new \Claroline\CoreBundle\Entity\Workspace\Workspace();
         $this->roleRepo->shouldReceive('findByWorkspace')->once()->with($workspace)->andReturn('return');
 
         $this->assertEquals('return', $this->getManager()->getRolesByWorkspace($workspace));
@@ -383,7 +383,7 @@ class RoleManagerTest extends MockeryTestCase
 
     public function testGetCollaboratorRole()
     {
-        $workspace = new \Claroline\CoreBundle\Entity\Workspace\SimpleWorkspace();
+        $workspace = new \Claroline\CoreBundle\Entity\Workspace\Workspace();
         $this->roleRepo->shouldReceive('findCollaboratorRole')->once()->with($workspace)->andReturn('return');
 
         $this->assertEquals('return', $this->getManager()->getCollaboratorRole($workspace));
@@ -391,7 +391,7 @@ class RoleManagerTest extends MockeryTestCase
 
     public function testGetVisitorRole()
     {
-        $workspace = new \Claroline\CoreBundle\Entity\Workspace\SimpleWorkspace();
+        $workspace = new \Claroline\CoreBundle\Entity\Workspace\Workspace();
         $this->roleRepo->shouldReceive('findVisitorRole')->once()->with($workspace)->andReturn('return');
 
         $this->assertEquals('return', $this->getManager()->getVisitorRole($workspace));
@@ -399,7 +399,7 @@ class RoleManagerTest extends MockeryTestCase
 
     public function testGetManagerRole()
     {
-        $workspace = new \Claroline\CoreBundle\Entity\Workspace\SimpleWorkspace();
+        $workspace = new \Claroline\CoreBundle\Entity\Workspace\Workspace();
         $this->roleRepo->shouldReceive('findManagerRole')->once()->with($workspace)->andReturn('return');
 
         $this->assertEquals('return', $this->getManager()->getManagerRole($workspace));
@@ -416,7 +416,7 @@ class RoleManagerTest extends MockeryTestCase
     public function testGetWorkspaceRoleForUser()
     {
         $user = new \Claroline\CoreBundle\Entity\User();
-        $workspace = new \Claroline\CoreBundle\Entity\Workspace\SimpleWorkspace();
+        $workspace = new \Claroline\CoreBundle\Entity\Workspace\Workspace();
         $this->roleRepo->shouldReceive('findWorkspaceRolesForUser')->once()
             ->with($user, $workspace)->andReturn('return');
 
@@ -425,7 +425,7 @@ class RoleManagerTest extends MockeryTestCase
 
     public function testGetRolesByWorkspaceAndTool()
     {
-        $workspace = new \Claroline\CoreBundle\Entity\Workspace\SimpleWorkspace();
+        $workspace = new \Claroline\CoreBundle\Entity\Workspace\Workspace();
         $tool = new \Claroline\CoreBundle\Entity\Tool\Tool();
         $this->roleRepo->shouldReceive('findByWorkspaceAndTool')->once()
             ->with($workspace, $tool)->andReturn('return');

@@ -57,7 +57,6 @@ class LoadWorkspaceData extends AbstractFixture implements ContainerAwareInterfa
             $config = new Configuration($personalWsTemplateFile);
             $config->setWorkspaceName($name);
             $config->setWorkspaceCode(substr($name, 0, 1) . self::$codeDiscrCount);
-            $config->setWorkspaceType(Configuration::TYPE_SIMPLE);
             $config->setDisplayable(true);
             $workspace = $workspaceManager->create($config, $this->getReference('user/'.$username));
             $this->setReference("workspace/{$name}", $workspace);

@@ -55,7 +55,7 @@ class ResourceManagerTest extends MockeryTestCase
         $resourceType = $this->mock('Claroline\CoreBundle\Entity\Resource\ResourceType');
         $resourceType->shouldReceive('getName')->once()->andReturn('directory');
         $user = new \Claroline\CoreBundle\Entity\User();
-        $workspace = new \Claroline\CoreBundle\Entity\Workspace\SimpleWorkspace();
+        $workspace = new \Claroline\CoreBundle\Entity\Workspace\Workspace();
         $icon = new \Claroline\CoreBundle\Entity\Resource\ResourceIcon();
         $resource = $this->mock('Claroline\CoreBundle\Entity\Resource\AbstractResource');
         $node = $this->mock('Claroline\CoreBundle\Entity\Resource\ResourceNode');
@@ -451,7 +451,7 @@ class ResourceManagerTest extends MockeryTestCase
         $last = $this->mock('Claroline\CoreBundle\Entity\Resource\ResourceNode');
         $event = $this->mock('Claroline\CoreBundle\Event\CopyResourceEvent');
         $resourceType = $this->mock('Claroline\CoreBundle\Entity\Resource\ResourceType');
-        $workspace = $this->mock('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace');
+        $workspace = $this->mock('Claroline\CoreBundle\Entity\Workspace\Workspace');
         $icon = $this->mock('Claroline\CoreBundle\Entity\Resource\ResourceIcon');
 
         $manager->shouldReceive('getResourceFromNode')->once()
@@ -502,7 +502,7 @@ class ResourceManagerTest extends MockeryTestCase
         $last = $this->mock('Claroline\CoreBundle\Entity\Resource\ResourceNode');
         $event = $this->mock('Claroline\CoreBundle\Event\CopyResourceEvent');
         $resourceType = $this->mock('Claroline\CoreBundle\Entity\Resource\ResourceType');
-        $workspace = $this->mock('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace');
+        $workspace = $this->mock('Claroline\CoreBundle\Entity\Workspace\Workspace');
         $icon = $this->mock('Claroline\CoreBundle\Entity\Resource\ResourceIcon');
         $newNode = $this->mock('Claroline\CoreBundle\Entity\Resource\ResourceNode');
 
@@ -553,7 +553,7 @@ class ResourceManagerTest extends MockeryTestCase
         $parent = $this->mock('Claroline\CoreBundle\Entity\Resource\ResourceNode');
         $dirType = $this->mock('Claroline\CoreBundle\Entity\Resource\ResourceType');
         $shortcut = $this->mock('Claroline\CoreBundle\Entity\Resource\ResourceShortcut');
-        $workspace = $this->mock('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace');
+        $workspace = $this->mock('Claroline\CoreBundle\Entity\Workspace\Workspace');
         $icon = $this->mock('Claroline\CoreBundle\Entity\Resource\ResourceIcon');
         $shortcutIcon = $this->mock('Claroline\CoreBundle\Entity\Resource\ResourceIcon');
         $shortcutNode = new \Claroline\CoreBundle\Entity\Resource\ResourceNode();

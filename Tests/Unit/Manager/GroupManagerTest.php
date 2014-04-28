@@ -197,7 +197,7 @@ class GroupManagerTest extends MockeryTestCase
 
     public function testGetWorkspaceOutsiders()
     {
-        $workspace = $this->mock('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace');
+        $workspace = $this->mock('Claroline\CoreBundle\Entity\Workspace\Workspace');
         $em = $this->mock('Doctrine\ORM\EntityManager');
         $query = new \Doctrine\ORM\Query($em);
 
@@ -215,7 +215,7 @@ class GroupManagerTest extends MockeryTestCase
 
     public function testGetWorkspaceOutsidersByName()
     {
-        $workspace = $this->mock('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace');
+        $workspace = $this->mock('Claroline\CoreBundle\Entity\Workspace\Workspace');
         $em = $this->mock('Doctrine\ORM\EntityManager');
         $query = new \Doctrine\ORM\Query($em);
 
@@ -233,7 +233,7 @@ class GroupManagerTest extends MockeryTestCase
 
     public function testGetGroupsByWorkspace()
     {
-        $workspace = $this->mock('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace');
+        $workspace = $this->mock('Claroline\CoreBundle\Entity\Workspace\Workspace');
         $em = $this->mock('Doctrine\ORM\EntityManager');
         $query = new \Doctrine\ORM\Query($em);
 
@@ -251,7 +251,7 @@ class GroupManagerTest extends MockeryTestCase
 
     public function testGetGroupsByWorkspaceAndName()
     {
-        $workspace = $this->mock('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace');
+        $workspace = $this->mock('Claroline\CoreBundle\Entity\Workspace\Workspace');
         $em = $this->mock('Doctrine\ORM\EntityManager');
         $query = new \Doctrine\ORM\Query($em);
 
@@ -327,7 +327,7 @@ class GroupManagerTest extends MockeryTestCase
         $query = new \Doctrine\ORM\Query($em);
         $role = new \Claroline\CoreBundle\Entity\Role();
         $roles = array($role);
-        $workspace = new \Claroline\CoreBundle\Entity\Workspace\SimpleWorkspace();
+        $workspace = new \Claroline\CoreBundle\Entity\Workspace\Workspace();
 
         $this->groupRepo->shouldReceive('findOutsidersByWorkspaceRoles')
             ->with($roles, $workspace, true)
@@ -368,7 +368,7 @@ class GroupManagerTest extends MockeryTestCase
         $query = new \Doctrine\ORM\Query($em);
         $role = new \Claroline\CoreBundle\Entity\Role();
         $roles = array($role);
-        $workspace = new \Claroline\CoreBundle\Entity\Workspace\SimpleWorkspace();
+        $workspace = new \Claroline\CoreBundle\Entity\Workspace\Workspace();
 
         $this->groupRepo->shouldReceive('findOutsidersByWorkspaceRolesAndName')
             ->with($roles, 'name', $workspace, true)

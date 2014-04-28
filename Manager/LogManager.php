@@ -59,9 +59,9 @@ class LogManager
         }
 
         // Get manager and collaborator workspaces config
-        /** @var \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace[] $workspaces */
+        /** @var \Claroline\CoreBundle\Entity\Workspace\Workspace[] $workspaces */
         $workspaces = $em
-            ->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')
+            ->getRepository('ClarolineCoreBundle:Workspace\Workspace')
             ->findByUserAndRoleNamesNotIn($user, array('ROLE_WS_COLLABORATOR', 'ROLE_WS_MANAGER'), $workspaceIds);
 
         $configs = array();
@@ -489,7 +489,7 @@ class LogManager
         $workspaceIdsResult = $this
             ->container
             ->get('doctrine.orm.entity_manager')
-            ->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')
+            ->getRepository('ClarolineCoreBundle:Workspace\Workspace')
             ->findIdsByUserAndRoleNames($loggedUser, array('ROLE_WS_COLLABORATOR', 'ROLE_WS_MANAGER'));
 
         foreach ($workspaceIdsResult as $line) {

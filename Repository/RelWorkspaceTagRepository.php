@@ -12,13 +12,13 @@
 namespace Claroline\CoreBundle\Repository;
 
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Entity\Workspace\WorkspaceTag;
 use Doctrine\ORM\EntityRepository;
 
 class RelWorkspaceTagRepository extends EntityRepository
 {
-    public function findByWorkspaceAndUser(AbstractWorkspace $workspace, User $user)
+    public function findByWorkspaceAndUser(Workspace $workspace, User $user)
     {
         $dql = '
             SELECT rwt, t
@@ -36,7 +36,7 @@ class RelWorkspaceTagRepository extends EntityRepository
         return $query->getResult();
     }
 
-    public function findAdminByWorkspace(AbstractWorkspace $workspace)
+    public function findAdminByWorkspace(Workspace $workspace)
     {
         $dql = '
             SELECT rwt, t
@@ -66,7 +66,7 @@ class RelWorkspaceTagRepository extends EntityRepository
     }
 
     public function findOneByWorkspaceAndTagAndUser(
-        AbstractWorkspace $workspace,
+        Workspace $workspace,
         WorkspaceTag $tag,
         User $user
     )
@@ -87,7 +87,7 @@ class RelWorkspaceTagRepository extends EntityRepository
         return $query->getOneOrNullResult();
     }
 
-    public function findOneAdminByWorkspaceAndTag(AbstractWorkspace $workspace, WorkspaceTag $tag)
+    public function findOneAdminByWorkspaceAndTag(Workspace $workspace, WorkspaceTag $tag)
     {
         $dql = '
             SELECT rwt
@@ -105,7 +105,7 @@ class RelWorkspaceTagRepository extends EntityRepository
         return $query->getOneOrNullResult();
     }
 
-    public function findAllByWorkspaceAndUser(AbstractWorkspace $workspace, User $user)
+    public function findAllByWorkspaceAndUser(Workspace $workspace, User $user)
     {
         $dql = '
             SELECT rwt, t

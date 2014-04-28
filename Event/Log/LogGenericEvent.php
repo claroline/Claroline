@@ -14,7 +14,7 @@ namespace Claroline\CoreBundle\Event\Log;
 use Symfony\Component\EventDispatcher\Event;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Role;
-use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Entity\User;
 
 abstract class LogGenericEvent extends Event implements RestrictionnableInterface
@@ -54,7 +54,7 @@ abstract class LogGenericEvent extends Event implements RestrictionnableInterfac
         $receiverGroup = null,
         ResourceNode $resource = null,
         Role $role = null,
-        AbstractWorkspace $workspace = null,
+        Workspace $workspace = null,
         User $owner = null,
         $toolName = null,
         $isWorkspaceEnterEvent = false

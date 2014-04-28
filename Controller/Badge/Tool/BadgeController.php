@@ -12,13 +12,13 @@
 namespace Claroline\CoreBundle\Controller\Badge\Tool;
 
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Entity\Badge\Badge;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 class BadgeController extends Controller
 {
-    public function myWorkspaceBadgeAction(AbstractWorkspace $workspace, User $loggedUser, $badgePage)
+    public function myWorkspaceBadgeAction(Workspace $workspace, User $loggedUser, $badgePage)
     {
         /** @var \Claroline\CoreBundle\Rule\Validator $badgeRuleValidator */
         $badgeRuleValidator = $this->get("claroline.rule.validator");

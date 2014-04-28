@@ -13,7 +13,7 @@ namespace Claroline\CoreBundle\Repository\Log;
 
 use Claroline\CoreBundle\Entity\Badge\BadgeRule;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Entity\Workspace\SimpleWorkspace;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Query\Parameter;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
@@ -68,7 +68,7 @@ class LogRepositoryTest extends WebTestCase
     {
         $badgeRule = new BadgeRule();
         $user = new User();
-        $workspace = new SimpleWorkspace();
+        $workspace = new Workspace();
 
         $query = $this->logRepository->findByWorkspaceBadgeRuleAndUser($workspace, $badgeRule, $user, false);
         $expectedQuery =

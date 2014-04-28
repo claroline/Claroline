@@ -13,7 +13,7 @@ namespace Claroline\CoreBundle\Repository\Badge;
 
 use Claroline\CoreBundle\Entity\Badge\Badge;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
@@ -238,12 +238,12 @@ class BadgeRepository extends EntityRepository
     }
 
     /**
-     * @param \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace $workspace
+     * @param \Claroline\CoreBundle\Entity\Workspace\Workspace $workspace
      * @param bool                                                     $executeQuery
      *
      * @return Query|array
      */
-    public function findByWorkspace(AbstractWorkspace $workspace, $executeQuery = true)
+    public function findByWorkspace(Workspace $workspace, $executeQuery = true)
     {
         $query = $this->getEntityManager()
             ->createQuery(

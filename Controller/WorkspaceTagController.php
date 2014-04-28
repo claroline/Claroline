@@ -12,7 +12,7 @@
 namespace Claroline\CoreBundle\Controller;
 
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Entity\Workspace\WorkspaceTag;
 use Claroline\CoreBundle\Form\Factory\FormFactory;
 use Claroline\CoreBundle\Library\Security\Utilities;
@@ -769,7 +769,7 @@ class WorkspaceTagController extends Controller
      * @EXT\Method("DELETE")
      * @EXT\ParamConverter(
      *      "workspace",
-     *      class="ClarolineCoreBundle:Workspace\AbstractWorkspace",
+     *      class="ClarolineCoreBundle:Workspace\Workspace",
      *      options={"id" = "workspaceId", "strictId" = true}
      * )
      * @EXT\ParamConverter(
@@ -780,13 +780,13 @@ class WorkspaceTagController extends Controller
      *
      * Remove admin Tag from Workspace
      *
-     * @param AbstractWorkspace workspace
+     * @param Workspace workspace
      * @param WorkspaceTag $workspaceTag
      *
      * @return Response
      */
     public function removeAdminWorkspaceTagFromWorkspace(
-        AbstractWorkspace $workspace,
+        Workspace $workspace,
         WorkspaceTag $workspaceTag
     )
     {
@@ -809,7 +809,7 @@ class WorkspaceTagController extends Controller
      * @EXT\Method("DELETE")
      * @EXT\ParamConverter(
      *      "workspace",
-     *      class="ClarolineCoreBundle:Workspace\AbstractWorkspace",
+     *      class="ClarolineCoreBundle:Workspace\Workspace",
      *      options={"id" = "workspaceId", "strictId" = true}
      * )
      * @EXT\ParamConverter(
@@ -821,14 +821,14 @@ class WorkspaceTagController extends Controller
      *
      * Remove Tag from Workspace
      *
-     * @param AbstractWorkspace workspace
+     * @param Workspace workspace
      * @param WorkspaceTag $workspaceTag
      *
      * @return Response
      */
     public function removeWorkspaceTagFromWorkspace(
         User $currentUser,
-        AbstractWorkspace $workspace,
+        Workspace $workspace,
         WorkspaceTag $workspaceTag
     )
     {
@@ -989,7 +989,7 @@ class WorkspaceTagController extends Controller
      * @EXT\Method("POST")
      * @EXT\ParamConverter(
      *     "workspaces",
-     *      class="ClarolineCoreBundle:Workspace\AbstractWorkspace",
+     *      class="ClarolineCoreBundle:Workspace\Workspace",
      *      options={"multipleIds" = true, "name" = "workspaceIds"}
      * )
      * @EXT\ParamConverter(
@@ -1061,7 +1061,7 @@ class WorkspaceTagController extends Controller
      * @EXT\Method("POST")
      * @EXT\ParamConverter(
      *     "workspaces",
-     *      class="ClarolineCoreBundle:Workspace\AbstractWorkspace",
+     *      class="ClarolineCoreBundle:Workspace\Workspace",
      *      options={"multipleIds" = true, "name" = "workspaceIds"}
      * )
      * @EXT\ParamConverter(

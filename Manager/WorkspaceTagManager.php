@@ -12,7 +12,7 @@
 namespace Claroline\CoreBundle\Manager;
 
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Entity\Workspace\WorkspaceTag;
 use Claroline\CoreBundle\Entity\Workspace\RelWorkspaceTag;
 use Claroline\CoreBundle\Entity\Workspace\WorkspaceTagHierarchy;
@@ -64,7 +64,7 @@ class WorkspaceTagManager
         $this->tagRepo = $om->getRepository('ClarolineCoreBundle:Workspace\WorkspaceTag');
         $this->relTagRepo = $om->getRepository('ClarolineCoreBundle:Workspace\RelWorkspaceTag');
         $this->tagHierarchyRepo = $om->getRepository('ClarolineCoreBundle:Workspace\WorkspaceTagHierarchy');
-        $this->workspaceRepo = $om->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace');
+        $this->workspaceRepo = $om->getRepository('ClarolineCoreBundle:Workspace\Workspace');
         $this->roleManager = $roleManager;
         $this->workspaceManager = $workspaceManager;
         $this->om = $om;
@@ -99,7 +99,7 @@ class WorkspaceTagManager
         $this->om->flush();
     }
 
-    public function createTagRelation(WorkspaceTag $tag, AbstractWorkspace $workspace)
+    public function createTagRelation(WorkspaceTag $tag, Workspace $workspace)
     {
         $relWorkspaceTag = $this->om->factory('Claroline\CoreBundle\Entity\Workspace\RelWorkspaceTag');
         $relWorkspaceTag->setTag($tag);
@@ -116,7 +116,7 @@ class WorkspaceTagManager
         $this->om->flush();
     }
 
-    public function deleteRelWorkspaceTag(WorkspaceTag $tag, AbstractWorkspace $workspace)
+    public function deleteRelWorkspaceTag(WorkspaceTag $tag, Workspace $workspace)
     {
         $relWorkspaceTag = $this->relTagRepo->findOneBy(array('tag' => $tag, 'workspace' => $workspace));
 
@@ -124,7 +124,7 @@ class WorkspaceTagManager
         $this->om->flush();
     }
 
-    public function deleteAllRelationsFromWorkspaceAndUser(AbstractWorkspace $workspace, User $user)
+    public function deleteAllRelationsFromWorkspaceAndUser(Workspace $workspace, User $user)
     {
         $relations = $this->relTagRepo->findByWorkspaceAndUser($workspace, $user);
 
@@ -134,7 +134,7 @@ class WorkspaceTagManager
         $this->om->flush();
     }
 
-    public function deleteAllAdminRelationsFromWorkspace(AbstractWorkspace $workspace)
+    public function deleteAllAdminRelationsFromWorkspace(Workspace $workspace)
     {
         $relations = $this->relTagRepo->findAdminByWorkspace($workspace);
 
@@ -301,12 +301,12 @@ class WorkspaceTagManager
         return $this->tagRepo->findOneBy(array('id' => $tagId, 'user' => null));
     }
 
-    public function getTagRelationsByWorkspaceAndUser(AbstractWorkspace $workspace, User $user)
+    public function getTagRelationsByWorkspaceAndUser(Workspace $workspace, User $user)
     {
         return $this->relTagRepo->findByWorkspaceAndUser($workspace, $user);
     }
 
-    public function getAdminTagRelationsByWorkspace(AbstractWorkspace $workspace)
+    public function getAdminTagRelationsByWorkspace(Workspace $workspace)
     {
         return $this->relTagRepo->findAdminByWorkspace($workspace);
     }
@@ -317,7 +317,7 @@ class WorkspaceTagManager
     }
 
     public function getTagRelationByWorkspaceAndTagAndUser(
-        AbstractWorkspace $workspace,
+        Workspace $workspace,
         WorkspaceTag $tag,
         User $user
     )
@@ -325,12 +325,12 @@ class WorkspaceTagManager
         return $this->relTagRepo->findOneByWorkspaceAndTagAndUser($workspace, $tag, $user);
     }
 
-    public function getAdminTagRelationByWorkspaceAndTag(AbstractWorkspace $workspace, WorkspaceTag $tag)
+    public function getAdminTagRelationByWorkspaceAndTag(Workspace $workspace, WorkspaceTag $tag)
     {
         return $this->relTagRepo->findOneAdminByWorkspaceAndTag($workspace, $tag);
     }
 
-    public function getAllTagRelationsByWorkspaceAndUser(AbstractWorkspace $workspace, User $user)
+    public function getAllTagRelationsByWorkspaceAndUser(Workspace $workspace, User $user)
     {
         return $this->relTagRepo->findAllByWorkspaceAndUser($workspace, $user);
     }

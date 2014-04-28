@@ -59,7 +59,7 @@ class AgendaManager
             $listEventsU = $repo->findByUser($usr, false);
             $listEvents = array_merge($listEventsU, $listDesktop);
         }
-        
+
         $calendar = $this->writeCalendar($listEvents);
         $fileName = $this->writeToICS($calendar, $workspaceId);
 
@@ -120,8 +120,8 @@ class AgendaManager
 
     /**
      * Import ical files type
-     * @param  UploadedFile $file      
-     * @param  AbstractWorkspace $workspace 
+     * @param  UploadedFile $file
+     * @param  Workspace $workspace
      * @return int number of events saved
      */
     public function importEvents(UploadedFile $file, $workspace)
@@ -144,8 +144,8 @@ class AgendaManager
             $e->setUser($this->security->getToken()->getUser());
             $e->setPriority('#01A9DB');
         }
-        $this->om->endFlushSuite();     
+        $this->om->endFlushSuite();
 
         return $i;
     }
-} 
+}

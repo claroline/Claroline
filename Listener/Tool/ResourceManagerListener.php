@@ -13,7 +13,7 @@ namespace Claroline\CoreBundle\Listener\Tool;
 
 use Claroline\CoreBundle\Listener\NoHttpRequestException;
 use JMS\DiExtraBundle\Annotation as DI;
-use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Event\DisplayToolEvent;
 use Claroline\CoreBundle\Event\ConfigureWorkspaceToolEvent;
 use Claroline\CoreBundle\Manager\ResourceManager;
@@ -190,7 +190,7 @@ class ResourceManagerListener
         return $zoom;
     }
 
-    private function workspaceResourceRightsForm(AbstractWorkspace $workspace)
+    private function workspaceResourceRightsForm(Workspace $workspace)
     {
         if (!$this->sc->isGranted('parameters', $workspace)) {
             throw new AccessDeniedException();

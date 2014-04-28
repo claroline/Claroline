@@ -161,10 +161,10 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
     protected $resourceNodes;
 
     /**
-     * @var Workspace\AbstractWorkspace
+     * @var Workspace\Workspace
      *
      * @ORM\OneToOne(
-     *     targetEntity="Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace"
+     *     targetEntity="Claroline\CoreBundle\Entity\Workspace\Workspace"
      * )
      * @ORM\JoinColumn(name="workspace_id", onDelete="SET NULL")
      */
@@ -584,7 +584,7 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
     }
 
     /**
-     * @param Workspace\AbstractWorkspace $workspace
+     * @param Workspace\Workspace $workspace
      *
      * @return User
      */
@@ -596,7 +596,7 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
     }
 
     /**
-     * @return Workspace\AbstractWorkspace
+     * @return Workspace\Workspace
      */
     public function getPersonalWorkspace()
     {

@@ -52,7 +52,7 @@ class WorkspacePropertiesImporterTest extends MockeryTestCase
         //objectManager
         $wsRepo = $this->mock('Claroline\CoreBundle\Repository\WorkspaceRepository');
         $this->om->shouldReceive('getRepository')
-            ->with('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace')
+            ->with('Claroline\CoreBundle\Entity\Workspace\Workspace')
             ->andReturn($wsRepo);
 
         if ($codeExists) {

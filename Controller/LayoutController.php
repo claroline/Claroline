@@ -16,7 +16,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Translation\Translator;
 use Symfony\Component\Security\Core\SecurityContextInterface;
-use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Library\Security\Utilities;
 use Claroline\CoreBundle\Manager\MessageManager;
@@ -105,7 +105,7 @@ class LayoutController extends Controller
     /**
      * @EXT\ParamConverter(
      *      "workspace",
-     *      class="ClarolineCoreBundle:Workspace\AbstractWorkspace",
+     *      class="ClarolineCoreBundle:Workspace\Workspace",
      *      options={"id" = "workspaceId", "strictId" = true}
      * )
      * @EXT\Template()
@@ -116,7 +116,7 @@ class LayoutController extends Controller
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function topBarAction(AbstractWorkspace $workspace = null)
+    public function topBarAction(Workspace $workspace = null)
     {
         $tools = $this->toolManager->getAdminToolsByRoles($this->security->getToken()->getRoles());
         $canAdministrate = count($tools) > 0 ? true: false;

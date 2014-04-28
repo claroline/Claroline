@@ -11,7 +11,7 @@
 
 namespace Claroline\CoreBundle\Library\Security\Voter;
 
-use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Library\Security\Utilities;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
@@ -51,7 +51,7 @@ class WorkspaceVoter implements VoterInterface
 
     public function vote(TokenInterface $token, $object, array $attributes)
     {
-        if ($object instanceof AbstractWorkspace) {
+        if ($object instanceof Workspace) {
 
             //Managers can do anything in their workspace.
             $manager = $this->em->getRepository('ClarolineCoreBundle:Role')
@@ -87,7 +87,7 @@ class WorkspaceVoter implements VoterInterface
     /**
      * Checks if the current token has the right to do the action $action.
      *
-     * @param AbstractWorkspace $workspace
+     * @param Workspace $workspace
      * @param TokenInterface    $token
      * @param string            $action
      *
@@ -95,7 +95,7 @@ class WorkspaceVoter implements VoterInterface
      *
      * @throws \RuntimeException
      */
-    public function canDo(AbstractWorkspace $workspace, TokenInterface $token, $action)
+    public function canDo(Workspace $workspace, TokenInterface $token, $action)
     {
         //get a list of tools openable by the user
         $tools = $this->em

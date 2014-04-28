@@ -15,7 +15,7 @@ use Symfony\Component\EventDispatcher\Event;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
 
 class ImportResourceTemplateEvent extends Event
 {
@@ -32,7 +32,7 @@ class ImportResourceTemplateEvent extends Event
         array $config,
         ResourceNode $parent,
         User $user,
-        AbstractWorkspace $workspace,
+        Workspace $workspace,
         array $roles,
         array $createdResources = array(),
         array $files = array()

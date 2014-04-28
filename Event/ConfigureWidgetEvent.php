@@ -13,7 +13,7 @@ namespace Claroline\CoreBundle\Event;
 
 use Symfony\Component\EventDispatcher\Event;
 use Claroline\CoreBundle\Event\DataConveyorEventInterface;
-use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Entity\Widget\WidgetInstance;
 
 /**
@@ -27,7 +27,7 @@ class ConfigureWidgetEvent extends Event implements DataConveyorEventInterface
     /**
      * Constructor.
      *
-     * @param AbstractWorkspace $workspace
+     * @param Workspace $workspace
      */
     public function __construct(WidgetInstance $instance)
     {

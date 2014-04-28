@@ -20,7 +20,7 @@ use Claroline\CoreBundle\Repository\UserRepository;
 use Claroline\CoreBundle\Repository\WorkspaceRepository;
 use Claroline\CoreBundle\Repository\Log\LogRepository;
 use Claroline\CoreBundle\Persistence\ObjectManager;
-use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use JMS\DiExtraBundle\Annotation as DI;
 
 /**
@@ -50,7 +50,7 @@ class AnalyticsManager
         $this->resourceRepo  = $objectManager->getRepository('ClarolineCoreBundle:Resource\ResourceNode');
         $this->resourceTypeRepo  = $objectManager->getRepository('ClarolineCoreBundle:Resource\ResourceType');
         $this->userRepo      = $objectManager->getRepository('ClarolineCoreBundle:User');
-        $this->workspaceRepo = $objectManager->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace');
+        $this->workspaceRepo = $objectManager->getRepository('ClarolineCoreBundle:Workspace\Workspace');
         $this->logRepository = $objectManager->getRepository('ClarolineCoreBundle:Log\Log');
 
     }
@@ -226,7 +226,7 @@ class AnalyticsManager
     /**
      * Retrieve analytics for workspace: chartData and resource statistics
      */
-    public function getWorkspaceAnalytics(AbstractWorkspace $workspace)
+    public function getWorkspaceAnalytics(Workspace $workspace)
     {
         $range = $this->getDefaultRange();
         $action = 'workspace-enter';

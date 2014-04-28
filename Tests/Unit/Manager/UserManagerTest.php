@@ -53,7 +53,7 @@ class UserManagerTest extends MockeryTestCase
     {
         $manager = $this->getManager(array('setPersonalWorkspace'));
         $user = $this->mock('Claroline\CoreBundle\Entity\User');
-        $workspace = $this->mock('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace');
+        $workspace = $this->mock('Claroline\CoreBundle\Entity\Workspace\Workspace');
 
         $manager->shouldReceive('setPersonalWorkspace')
             ->with($user)
@@ -101,7 +101,7 @@ class UserManagerTest extends MockeryTestCase
     {
         $manager = $this->getManager(array('setPersonalWorkspace'));
         $user = $this->mock('Claroline\CoreBundle\Entity\User');
-        $workspace = $this->mock('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace');
+        $workspace = $this->mock('Claroline\CoreBundle\Entity\Workspace\Workspace');
 
         $this->om->shouldReceive('startFlushSuite')->once();
         $this->om->shouldReceive('endFlushSuite')->once();
@@ -138,7 +138,7 @@ class UserManagerTest extends MockeryTestCase
     {
         $manager = $this->getManager(array('setPersonalWorkspace'));
         $user = $this->mock('Claroline\CoreBundle\Entity\User');
-        $workspace = $this->mock('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace');
+        $workspace = $this->mock('Claroline\CoreBundle\Entity\Workspace\Workspace');
         $roleOne = $this->mock('Claroline\CoreBundle\Entity\Role');
         $roleTwo = $this->mock('Claroline\CoreBundle\Entity\Role');
         $roles = new ArrayCollection(array($roleOne, $roleTwo));
@@ -295,7 +295,7 @@ class UserManagerTest extends MockeryTestCase
 
     public function testGetUserByWorkspaceAndRole()
     {
-        $workspace = $this->mock('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace');
+        $workspace = $this->mock('Claroline\CoreBundle\Entity\Workspace\Workspace');
         $role = $this->mock('Claroline\CoreBundle\Entity\Role');
         $userA = $this->mock('Claroline\CoreBundle\Entity\User');
         $userB = $this->mock('Claroline\CoreBundle\Entity\User');
@@ -311,7 +311,7 @@ class UserManagerTest extends MockeryTestCase
 
     public function testGetWorkspaceOutsidersByName()
     {
-        $workspace = $this->mock('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace');
+        $workspace = $this->mock('Claroline\CoreBundle\Entity\Workspace\Workspace');
         $em = $this->mock('Doctrine\ORM\EntityManager');
         $query = new \Doctrine\ORM\Query($em);
 
@@ -329,7 +329,7 @@ class UserManagerTest extends MockeryTestCase
 
     public function testGetWorkspaceOutsiders()
     {
-        $workspace = $this->mock('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace');
+        $workspace = $this->mock('Claroline\CoreBundle\Entity\Workspace\Workspace');
         $em = $this->mock('Doctrine\ORM\EntityManager');
         $query = new \Doctrine\ORM\Query($em);
 
@@ -417,7 +417,7 @@ class UserManagerTest extends MockeryTestCase
 
     public function testGetUsersByWorkspace()
     {
-        $workspace = $this->mock('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace');
+        $workspace = $this->mock('Claroline\CoreBundle\Entity\Workspace\Workspace');
         $em = $this->mock('Doctrine\ORM\EntityManager');
         $query = new \Doctrine\ORM\Query($em);
 
@@ -435,7 +435,7 @@ class UserManagerTest extends MockeryTestCase
 
     public function testGetUsersByWorkspaceAndName()
     {
-        $workspace = $this->mock('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace');
+        $workspace = $this->mock('Claroline\CoreBundle\Entity\Workspace\Workspace');
         $em = $this->mock('Doctrine\ORM\EntityManager');
         $query = new \Doctrine\ORM\Query($em);
 
@@ -605,7 +605,7 @@ class UserManagerTest extends MockeryTestCase
         $query = new \Doctrine\ORM\Query($em);
         $role = new \Claroline\CoreBundle\Entity\Role();
         $roles = array($role);
-        $workspace = new \Claroline\CoreBundle\Entity\Workspace\SimpleWorkspace();
+        $workspace = new \Claroline\CoreBundle\Entity\Workspace\Workspace();
 
         $this->userRepo->shouldReceive('findOutsidersByWorkspaceRoles')
             ->with($roles, $workspace, true)
@@ -646,7 +646,7 @@ class UserManagerTest extends MockeryTestCase
         $query = new \Doctrine\ORM\Query($em);
         $role = new \Claroline\CoreBundle\Entity\Role();
         $roles = array($role);
-        $workspace = new \Claroline\CoreBundle\Entity\Workspace\SimpleWorkspace();
+        $workspace = new \Claroline\CoreBundle\Entity\Workspace\Workspace();
 
         $this->userRepo->shouldReceive('findOutsidersByWorkspaceRolesAndName')
             ->with($roles, 'name', $workspace, true)

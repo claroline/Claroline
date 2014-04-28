@@ -17,7 +17,7 @@ use Claroline\CoreBundle\Entity\Resource\ResourceShortcut;
 use Claroline\CoreBundle\Entity\Resource\ResourceIcon;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Repository\ResourceTypeRepository;
 use Claroline\CoreBundle\Repository\ResourceNodeRepository;
 use Claroline\CoreBundle\Repository\ResourceRightsRepository;
@@ -115,7 +115,7 @@ class ResourceManager
      * @param \Claroline\CoreBundle\Entity\Resource\AbstractResource   $resource
      * @param \Claroline\CoreBundle\Entity\Resource\ResourceType       $resourceType
      * @param \Claroline\CoreBundle\Entity\User                        $creator
-     * @param \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace $workspace
+     * @param \Claroline\CoreBundle\Entity\Workspace\Workspace $workspace
      * @param \Claroline\CoreBundle\Entity\Resource\ResourceNode       $parent
      * @param \Claroline\CoreBundle\Entity\Resource\ResourceIcon       $icon
      * @param array                                                    $rights
@@ -126,7 +126,7 @@ class ResourceManager
         AbstractResource $resource,
         ResourceType $resourceType,
         User $creator,
-        AbstractWorkspace $workspace,
+        Workspace $workspace,
         ResourceNode $parent = null,
         ResourceIcon $icon = null,
         array $rights = array()
@@ -881,7 +881,7 @@ class ResourceManager
         if ($node->getIcon()) {
             $this->iconManager->delete($node->getIcon());
         }
-        
+
         $this->om->remove($node);
         $this->om->endFlushSuite();
     }
@@ -1126,11 +1126,11 @@ class ResourceManager
     }
 
     /**
-     * @param \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace $workspace
+     * @param \Claroline\CoreBundle\Entity\Workspace\Workspace $workspace
      *
      * @return array
      */
-    public function getWorkspaceRoot(AbstractWorkspace $workspace)
+    public function getWorkspaceRoot(Workspace $workspace)
     {
         return $this->resourceNodeRepo->findWorkspaceRoot($workspace);
     }
@@ -1248,11 +1248,11 @@ class ResourceManager
     }
 
     /**
-     * @param AbstractWorkspace $workspace
+     * @param Workspace $workspace
      *
      * @return \Claroline\CoreBundle\Entity\Resource\ResourceNode[]
      */
-    public function getByWorkspace(AbstractWorkspace $workspace)
+    public function getByWorkspace(Workspace $workspace)
     {
         return $this->resourceNodeRepo->findBy(array('workspace' => $workspace));
     }

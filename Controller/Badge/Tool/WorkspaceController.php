@@ -16,7 +16,7 @@ use Claroline\CoreBundle\Entity\Badge\BadgeClaim;
 use Claroline\CoreBundle\Entity\Badge\BadgeRule;
 use Claroline\CoreBundle\Entity\Badge\BadgeTranslation;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Pagerfanta\Exception\NotValidCurrentPageException;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -43,12 +43,12 @@ class WorkspaceController extends Controller
      * )
      * @ParamConverter(
      *     "workspace",
-     *     class="ClarolineCoreBundle:Workspace\AbstractWorkspace",
+     *     class="ClarolineCoreBundle:Workspace\Workspace",
      *     options={"id" = "workspaceId"}
      * )
      * @Template
      */
-    public function listAction(AbstractWorkspace $workspace, $badgePage, $claimPage)
+    public function listAction(Workspace $workspace, $badgePage, $claimPage)
     {
         $this->checkUserIsAllowed($workspace);
 
@@ -80,12 +80,12 @@ class WorkspaceController extends Controller
      * @Route("/add", name="claro_workspace_tool_badges_add")
      * @ParamConverter(
      *     "workspace",
-     *     class="ClarolineCoreBundle:Workspace\AbstractWorkspace",
+     *     class="ClarolineCoreBundle:Workspace\Workspace",
      *     options={"id" = "workspaceId"}
      * )
      * @Template()
      */
-    public function addAction(Request $request, AbstractWorkspace $workspace)
+    public function addAction(Request $request, Workspace $workspace)
     {
         $this->checkUserIsAllowed($workspace);
 
@@ -128,13 +128,13 @@ class WorkspaceController extends Controller
      * @Route("/edit/{slug}/{page}", name="claro_workspace_tool_badges_edit")
      * @ParamConverter(
      *     "workspace",
-     *     class="ClarolineCoreBundle:Workspace\AbstractWorkspace",
+     *     class="ClarolineCoreBundle:Workspace\Workspace",
      *     options={"id" = "workspaceId"}
      * )
      * @ParamConverter("badge", converter="badge_converter")
      * @Template
      */
-    public function editAction(Request $request, AbstractWorkspace $workspace, Badge $badge, $page = 1)
+    public function editAction(Request $request, Workspace $workspace, Badge $badge, $page = 1)
     {
         if (null === $badge->getWorkspace()) {
             throw $this->createNotFoundException("No badge found.");
@@ -182,13 +182,13 @@ class WorkspaceController extends Controller
      * @Route("/delete/{slug}", name="claro_workspace_tool_badges_delete")
      * @ParamConverter(
      *     "workspace",
-     *     class="ClarolineCoreBundle:Workspace\AbstractWorkspace",
+     *     class="ClarolineCoreBundle:Workspace\Workspace",
      *     options={"id" = "workspaceId"}
      * )
      * @ParamConverter("badge", converter="badge_converter")
      * @Template
      */
-    public function deleteAction(AbstractWorkspace $workspace, Badge $badge)
+    public function deleteAction(Workspace $workspace, Badge $badge)
     {
         if (null === $badge->getWorkspace()) {
             throw $this->createNotFoundException("No badge found.");
@@ -223,13 +223,13 @@ class WorkspaceController extends Controller
      * @Route("/award/{slug}", name="claro_workspace_tool_badges_award")
      * @ParamConverter(
      *     "workspace",
-     *     class="ClarolineCoreBundle:Workspace\AbstractWorkspace",
+     *     class="ClarolineCoreBundle:Workspace\Workspace",
      *     options={"id" = "workspaceId"}
      * )
      * @ParamConverter("badge", converter="badge_converter")
      * @Template
      */
-    public function awardAction(Request $request, AbstractWorkspace $workspace, Badge $badge)
+    public function awardAction(Request $request, Workspace $workspace, Badge $badge)
     {
         if (null === $badge->getWorkspace()) {
             throw $this->createNotFoundException("No badge found.");
@@ -310,13 +310,13 @@ class WorkspaceController extends Controller
      * @Route("/unaward/{id}/{username}", name="claro_workspace_tool_badges_unaward")
      * @ParamConverter(
      *     "workspace",
-     *     class="ClarolineCoreBundle:Workspace\AbstractWorkspace",
+     *     class="ClarolineCoreBundle:Workspace\Workspace",
      *     options={"id" = "workspaceId"}
      * )
      * @ParamConverter("user", options={"mapping": {"username": "username"}})
      * @Template
      */
-    public function unawardAction(Request $request, AbstractWorkspace $workspace, Badge $badge, User $user)
+    public function unawardAction(Request $request, Workspace $workspace, Badge $badge, User $user)
     {
         if (null === $badge->getWorkspace()) {
             throw $this->createNotFoundException("No badge found.");
@@ -366,12 +366,12 @@ class WorkspaceController extends Controller
      * @Route("/claim/manage/{id}/{validate}", name="claro_workspace_tool_manage_claim")
      * @ParamConverter(
      *     "workspace",
-     *     class="ClarolineCoreBundle:Workspace\AbstractWorkspace",
+     *     class="ClarolineCoreBundle:Workspace\Workspace",
      *     options={"id" = "workspaceId"}
      * )
      * @Template
      */
-    public function manageClaimAction(AbstractWorkspace $workspace, BadgeClaim $badgeClaim, $validate = false)
+    public function manageClaimAction(Workspace $workspace, BadgeClaim $badgeClaim, $validate = false)
     {
         if (null === $badgeClaim->getBadge()->getWorkspace()) {
             throw $this->createNotFoundException("No badge found.");
@@ -413,7 +413,7 @@ class WorkspaceController extends Controller
         );
     }
 
-    private function checkUserIsAllowed(AbstractWorkspace $workspace)
+    private function checkUserIsAllowed(Workspace $workspace)
     {
         if (!$this->get('security.context')->isGranted('badges', $workspace)) {
             throw new AccessDeniedException();

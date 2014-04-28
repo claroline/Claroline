@@ -11,7 +11,7 @@
 
 namespace Claroline\CoreBundle\Entity;
 
-use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Entity\User;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -50,7 +50,7 @@ class Event
 
     /**
      * @ORM\ManyToOne(
-     *     targetEntity="Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace",
+     *     targetEntity="Claroline\CoreBundle\Entity\Workspace\Workspace",
      *     inversedBy="events",
      *     cascade={"persist"}
      * )
@@ -149,7 +149,7 @@ class Event
         return $this->workspace;
     }
 
-    public function setWorkspace(AbstractWorkspace $workspace)
+    public function setWorkspace(Workspace $workspace)
     {
         $this->workspace = $workspace;
     }

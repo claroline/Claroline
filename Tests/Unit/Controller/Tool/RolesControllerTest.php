@@ -53,7 +53,7 @@ class RolesControllerTest extends MockeryTestCase
 
     public function testConfigureRolePageAction()
     {
-        $workspace = new \Claroline\CoreBundle\Entity\Workspace\SimpleWorkspace();
+        $workspace = new \Claroline\CoreBundle\Entity\Workspace\Workspace();
         $role = new \Claroline\CoreBundle\Entity\Role();
         $roles = array($role);
         $this->checkAccess($workspace);
@@ -65,7 +65,7 @@ class RolesControllerTest extends MockeryTestCase
 
     public function testCreateRoleFormAction()
     {
-        $workspace = new \Claroline\CoreBundle\Entity\Workspace\SimpleWorkspace();
+        $workspace = new \Claroline\CoreBundle\Entity\Workspace\Workspace();
         $this->checkAccess($workspace);
         $form = $this->mock('Symfony\Component\Form\FormInterface');
         $this->formFactory->shouldReceive('create')->with(FormFactory::TYPE_WORKSPACE_ROLE)->andReturn($form);
@@ -78,7 +78,7 @@ class RolesControllerTest extends MockeryTestCase
 
     public function testCreateRoleAction()
     {
-        $workspace = $this->mock('Claroline\CoreBundle\Entity\Workspace\SimpleWorkspace');
+        $workspace = $this->mock('Claroline\CoreBundle\Entity\Workspace\Workspace');
         $workspace->shouldReceive('getGuid')->andReturn('GUID');
         $workspace->shouldReceive('getId')->andReturn(1);
         $user = new \Claroline\CoreBundle\Entity\User();
@@ -156,7 +156,7 @@ class RolesControllerTest extends MockeryTestCase
     public function testRemoveRoleAction()
     {
         $role = new \Claroline\CoreBundle\Entity\Role();
-        $workspace = new \Claroline\CoreBundle\Entity\Workspace\SimpleWorkspace();
+        $workspace = new \Claroline\CoreBundle\Entity\Workspace\Workspace();
         $this->checkAccess($workspace);
         $this->roleManager->shouldReceive('remove')->once()->with($role);
         $this->controller->removeRoleAction($workspace, $role);
@@ -165,7 +165,7 @@ class RolesControllerTest extends MockeryTestCase
     public function testEditRoleFormAction()
     {
         $role = new \Claroline\CoreBundle\Entity\Role;
-        $workspace = new \Claroline\CoreBundle\Entity\Workspace\SimpleWorkspace;
+        $workspace = new \Claroline\CoreBundle\Entity\Workspace\Workspace;
         $formView = $this->mock('Symfony\Component\Form\FormView');
         $form = $this->mock('Symfony\Component\Form\FormInterface');
         $this->checkAccess($workspace);
@@ -183,7 +183,7 @@ class RolesControllerTest extends MockeryTestCase
     public function testEditRoleAction()
     {
         $role = $this->mock('Claroline\CoreBundle\Entity\Role');
-        $workspace = $this->mock('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace');
+        $workspace = $this->mock('Claroline\CoreBundle\Entity\Workspace\Workspace');
         $form = $this->mock('Symfony\Component\Form\FormInterface');
 
         $this->security
@@ -212,7 +212,7 @@ class RolesControllerTest extends MockeryTestCase
     public function testRemoveUserFromRoleAction()
     {
         $role = new \Claroline\CoreBundle\Entity\Role;
-        $workspace = new \Claroline\CoreBundle\Entity\Workspace\SimpleWorkspace;
+        $workspace = new \Claroline\CoreBundle\Entity\Workspace\Workspace;
         $user = new \Claroline\CoreBundle\Entity\User;
         $this->checkAccess($workspace);
         $this->roleManager->shouldReceive('dissociateWorkspaceRole')->once()
@@ -224,7 +224,7 @@ class RolesControllerTest extends MockeryTestCase
     {
         $user = new \Claroline\CoreBundle\Entity\User;
         $role = new \Claroline\CoreBundle\Entity\Role;
-        $workspace = new \Claroline\CoreBundle\Entity\Workspace\SimpleWorkspace;
+        $workspace = new \Claroline\CoreBundle\Entity\Workspace\Workspace;
         $this->roleManager->shouldReceive('associateRolesToSubjects')->with(array($user), array($role))->once();
         $this->checkAccess($workspace);
         $this->controller->addUsersToRolesAction(array($user), array($role), $workspace);
@@ -233,7 +233,7 @@ class RolesControllerTest extends MockeryTestCase
     public function testRemoveGroupFromRoleAction()
     {
         $role = new \Claroline\CoreBundle\Entity\Role;
-        $workspace = new \Claroline\CoreBundle\Entity\Workspace\SimpleWorkspace;
+        $workspace = new \Claroline\CoreBundle\Entity\Workspace\Workspace;
         $group = new \Claroline\CoreBundle\Entity\Group;
         $this->checkAccess($workspace);
         $this->roleManager->shouldReceive('dissociateWorkspaceRole')->once()
@@ -245,7 +245,7 @@ class RolesControllerTest extends MockeryTestCase
     {
         $group = new \Claroline\CoreBundle\Entity\Group;
         $role = new \Claroline\CoreBundle\Entity\Role;
-        $workspace = new \Claroline\CoreBundle\Entity\Workspace\SimpleWorkspace;
+        $workspace = new \Claroline\CoreBundle\Entity\Workspace\Workspace;
         $this->roleManager->shouldReceive('associateRolesToSubjects')->with(array($group), array($role))->once();
         $this->checkAccess($workspace);
         $this->controller->addGroupsToRolesAction(array($group), array($role), $workspace);
@@ -258,7 +258,7 @@ class RolesControllerTest extends MockeryTestCase
     public function testUsersListAction($search, $call)
     {
         $wsRole = new \Claroline\CoreBundle\Entity\Role;
-        $workspace = new \Claroline\CoreBundle\Entity\Workspace\SimpleWorkspace;
+        $workspace = new \Claroline\CoreBundle\Entity\Workspace\Workspace;
 
         $this->security
             ->shouldReceive('isGranted')
@@ -292,7 +292,7 @@ class RolesControllerTest extends MockeryTestCase
     {
         $wsRole = new \Claroline\CoreBundle\Entity\Role;
         $role = new \Claroline\CoreBundle\Entity\Role;
-        $workspace = new \Claroline\CoreBundle\Entity\Workspace\SimpleWorkspace;
+        $workspace = new \Claroline\CoreBundle\Entity\Workspace\Workspace;
         $wsRoles = array($wsRole);
         $roles = array($role);
         $page = 1;
@@ -319,7 +319,7 @@ class RolesControllerTest extends MockeryTestCase
         );
     }
 
-    private function checkAccess(\Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace $workspace)
+    private function checkAccess(\Claroline\CoreBundle\Entity\Workspace\Workspace $workspace)
     {
         $this->security->shouldReceive('isGranted')->with('users', $workspace)->once()->andReturn(true);
     }

@@ -12,7 +12,7 @@
 namespace Claroline\CoreBundle\Entity\Home;
 
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -48,7 +48,7 @@ class HomeTab
 
     /**
      * @ORM\ManyToOne(
-     *     targetEntity="Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace"
+     *     targetEntity="Claroline\CoreBundle\Entity\Workspace\Workspace"
      * )
      * @ORM\JoinColumn(name="workspace_id", nullable=true, onDelete="CASCADE")
      */
@@ -99,7 +99,7 @@ class HomeTab
         return $this->workspace;
     }
 
-    public function setWorkspace(AbstractWorkspace $workspace)
+    public function setWorkspace(Workspace $workspace)
     {
         $this->workspace = $workspace;
     }

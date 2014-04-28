@@ -17,7 +17,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 use Claroline\CoreBundle\Entity\Event;
-use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Manager\AgendaManager;
 use Claroline\CoreBundle\Form\Factory\FormFactory;
@@ -79,15 +79,15 @@ class WorkspaceAgendaController extends Controller
      * @EXT\Method("POST")
      * @EXT\ParamConverter(
      *      "workspace",
-     *      class="ClarolineCoreBundle:Workspace\AbstractWorkspace",
+     *      class="ClarolineCoreBundle:Workspace\Workspace",
      *      options={"id" = "workspaceId", "strictId" = true}
      * )
      *
-     * @param AbstractWorkspace $workspace
+     * @param Workspace $workspace
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function addEventAction(AbstractWorkspace $workspace)
+    public function addEventAction(Workspace $workspace)
     {
         $this->checkUserIsAllowed('agenda', $workspace);
         $form = $this->formFactory->create(FormFactory::TYPE_AGENDA);
@@ -145,15 +145,15 @@ class WorkspaceAgendaController extends Controller
      * @EXT\Method("POST")
      * @EXT\ParamConverter(
      *      "workspace",
-     *      class="ClarolineCoreBundle:Workspace\AbstractWorkspace",
+     *      class="ClarolineCoreBundle:Workspace\Workspace",
      *      options={"id" = "workspaceId", "strictId" = true}
      * )
      *
-     * @param AbstractWorkspace $workspace
+     * @param Workspace $workspace
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function updateAction(AbstractWorkspace $workspace)
+    public function updateAction(Workspace $workspace)
     {
         $this->checkUserIsAllowed('agenda', $workspace);
         $postData = $this->request->request->all();
@@ -187,15 +187,15 @@ class WorkspaceAgendaController extends Controller
      * @EXT\Method("POST")
      * @EXT\ParamConverter(
      *      "workspace",
-     *      class="ClarolineCoreBundle:Workspace\AbstractWorkspace",
+     *      class="ClarolineCoreBundle:Workspace\Workspace",
      *      options={"id" = "workspaceId", "strictId" = true}
      * )
      *
-     * @param AbstractWorkspace $workspace
+     * @param Workspace $workspace
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function deleteAction(AbstractWorkspace $workspace)
+    public function deleteAction(Workspace $workspace)
     {
         $this->checkUserIsAllowed('agenda', $workspace);
         $repository = $this->om->getRepository('ClarolineCoreBundle:Event');
@@ -222,15 +222,15 @@ class WorkspaceAgendaController extends Controller
      * @EXT\Method({"GET","POST"})
      * @EXT\ParamConverter(
      *      "workspace",
-     *      class="ClarolineCoreBundle:Workspace\AbstractWorkspace",
+     *      class="ClarolineCoreBundle:Workspace\Workspace",
      *      options={"id" = "workspaceId", "strictId" = true}
      * )
      *
-     * @param AbstractWorkspace $workspace
+     * @param Workspace $workspace
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function showAction(AbstractWorkspace $workspace)
+    public function showAction(Workspace $workspace)
     {
 
         $this->checkUserIsAllowed('agenda', $workspace);
@@ -322,14 +322,14 @@ class WorkspaceAgendaController extends Controller
      * @EXT\Method({"GET","POST"})
      * @EXT\ParamConverter(
      *      "workspace",
-     *      class="ClarolineCoreBundle:Workspace\AbstractWorkspace",
+     *      class="ClarolineCoreBundle:Workspace\Workspace",
      *      options={"id" = "workspaceId", "strictId" = true}
      * )
-     * @param AbstractWorkspace $workspace
+     * @param Workspace $workspace
      *
      * @EXT\Template("ClarolineCoreBundle:Tool\\desktop\\agenda:tasks.html.twig")
      */
-    public function tasksAction(AbstractWorkspace $workspaceId)
+    public function tasksAction(Workspace $workspaceId)
     {
         $listEvents = $this->om->getRepository('ClarolineCoreBundle:Event')->findByWorkspaceId($workspaceId, true);
 
@@ -344,13 +344,13 @@ class WorkspaceAgendaController extends Controller
      * @EXT\Method({"GET","POST"})
      * @EXT\ParamConverter(
      *      "workspace",
-     *      class="ClarolineCoreBundle:Workspace\AbstractWorkspace",
+     *      class="ClarolineCoreBundle:Workspace\Workspace",
      *      options={"id" = "workspaceId", "strictId" = true}
      * )
-     * @param AbstractWorkspace $workspace
+     * @param Workspace $workspace
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function exportsEventIcsAction(AbstractWorkspace $workspaceId)
+    public function exportsEventIcsAction(Workspace $workspaceId)
     {
         $file =  $this->agendaManager->export($workspaceId);
         $response = new StreamedResponse();
@@ -378,13 +378,13 @@ class WorkspaceAgendaController extends Controller
      * @EXT\Method({"GET","POST"})
      * @EXT\ParamConverter(
      *      "workspace",
-     *      class="ClarolineCoreBundle:Workspace\AbstractWorkspace",
+     *      class="ClarolineCoreBundle:Workspace\Workspace",
      *      options={"id" = "workspaceId", "strictId" = true}
      * )
-     * @param AbstractWorkspace $workspace
+     * @param Workspace $workspace
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function importsEventsIcsAction(AbstractWorkspace $workspace)
+    public function importsEventsIcsAction(Workspace $workspace)
     {
         $form = $this->formFactory->create(FormFactory::TYPE_AGENDA_IMPORTER);
         $form->handleRequest($this->request);
@@ -403,25 +403,25 @@ class WorkspaceAgendaController extends Controller
         }
     }
 
-    private function checkUserIsAllowed($permission, AbstractWorkspace $workspace)
+    private function checkUserIsAllowed($permission, Workspace $workspace)
     {
         if (!$this->security->isGranted($permission, $workspace)) {
             throw new AccessDeniedException();
         }
     }
 
-    private function checkUserIsAllowedtoWrite(AbstractWorkspace $workspace, Event $event = null)
+    private function checkUserIsAllowedtoWrite(Workspace $workspace, Event $event = null)
     {
         $usr = $this->security->getToken()->getUser();
         $rm = $this->rm->getManagerRole($workspace);
         $ru = $this->rm->getWorkspaceRolesForUser($usr, $workspace);
-        
+
         if (!is_null($event)) {
             if ($event->getUser()->getUsername() === $usr->getUsername()) {
                 return true;
             }
         }
-        
+
         foreach ($ru as $role) {
             if ($role->getTranslationKey() === $rm->getTranslationKey()) {
                 return true;

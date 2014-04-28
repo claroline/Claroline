@@ -13,7 +13,7 @@ namespace Claroline\CoreBundle\Repository\Badge;
 
 use Claroline\CoreBundle\Entity;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Doctrine\ORM\EntityRepository;
 
 class BadgeClaimRepository extends EntityRepository
@@ -56,13 +56,13 @@ class BadgeClaimRepository extends EntityRepository
     }
 
     /**
-     * @param AbstractWorkspace $workspace
+     * @param Workspace $workspace
      *
      * @param bool $executedQuery
      *
      * @return array
      */
-    public function findByWorkspace(AbstractWorkspace $workspace = null, $executedQuery = true)
+    public function findByWorkspace(Workspace $workspace = null, $executedQuery = true)
     {
         $workspaceConstraint = 'b.workspace = :workspace';
 

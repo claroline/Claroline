@@ -12,7 +12,7 @@
 namespace Claroline\CoreBundle\Controller\Tool;
 
 use Claroline\CoreBundle\Entity\Role;
-use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
@@ -28,7 +28,7 @@ class ResourceManagerController extends Controller
      *
      * @EXT\Template("ClarolineCoreBundle:Tool\workspace\resource_manager:resourceRightsCreation.html.twig")
      *
-     * @param AbstractWorkspace $workspace
+     * @param Workspace $workspace
      * @param Role $role
      *
      * @throws AccessDeniedException
@@ -36,7 +36,7 @@ class ResourceManagerController extends Controller
      * @return array
      */
     public function workspaceResourceRightsCreationFormAction(
-        AbstractWorkspace $workspace,
+        Workspace $workspace,
         Role $role
     )
     {

@@ -37,7 +37,7 @@ class WorkspaceAgendaControllerTest extends MockeryTestCase
 
     public function testAddEventAction()
     {
-        $workspace = $this->mock('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace');
+        $workspace = $this->mock('Claroline\CoreBundle\Entity\Workspace\Workspace');
         $date = $this->mock('DateTime');
         $token = $this->mock('Symfony\Component\Security\Core\Authentication\Token\TokenInterface');
         $user = new User();
@@ -102,7 +102,7 @@ class WorkspaceAgendaControllerTest extends MockeryTestCase
     public function testUpdateAction()
     {
 
-        $workspace = $this->mock('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace');
+        $workspace = $this->mock('Claroline\CoreBundle\Entity\Workspace\Workspace');
         $token = $this->mock('Symfony\Component\Security\Core\Authentication\Token\TokenInterface');
         $user = new User();
         $event = $this->mock('Claroline\CoreBundle\Entity\Event');

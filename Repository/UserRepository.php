@@ -17,7 +17,7 @@ use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\NoResultException;
-use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\Group;
@@ -94,12 +94,12 @@ class UserRepository extends EntityRepository implements UserProviderInterface
      * Returns the users who have a given workspace role. The members of a group
      * which has that role are also returned.
      *
-     * @param AbstractWorkspace $workspace
+     * @param Workspace $workspace
      * @param Role              $role
      *
      * @return User[]
      */
-    public function findByWorkspaceAndRole(AbstractWorkspace $workspace, Role $role)
+    public function findByWorkspaceAndRole(Workspace $workspace, Role $role)
     {
         $dql = '
             SELECT DISTINCT u FROM Claroline\CoreBundle\Entity\User u
@@ -134,12 +134,12 @@ class UserRepository extends EntityRepository implements UserProviderInterface
      * Returns the users who are not members of a workspace. Users's groups are not
      * taken into account.
      *
-     * @param AbstractWorkspace $workspace
+     * @param Workspace $workspace
      * @param boolean           $executeQuery
      *
      * @return User[]|Query
      */
-    public function findWorkspaceOutsiders(AbstractWorkspace $workspace, $executeQuery = true)
+    public function findWorkspaceOutsiders(Workspace $workspace, $executeQuery = true)
     {
         $dql = '
             SELECT u, ws, r FROM Claroline\CoreBundle\Entity\User u
@@ -167,13 +167,13 @@ class UserRepository extends EntityRepository implements UserProviderInterface
      * Returns the users who are not members of a workspace, filtered by a search on
      * their name. Users's groups are not taken into account.
      *
-     * @param AbstractWorkspace $workspace
+     * @param Workspace $workspace
      * @param string            $search
      * @param boolean           $executeQuery
      *
      * @return User[]|Query
      */
-    public function findWorkspaceOutsidersByName(AbstractWorkspace $workspace, $search, $executeQuery = true)
+    public function findWorkspaceOutsidersByName(Workspace $workspace, $search, $executeQuery = true)
     {
         $dql = '
             SELECT u, ws, r FROM Claroline\CoreBundle\Entity\User u
@@ -368,12 +368,12 @@ class UserRepository extends EntityRepository implements UserProviderInterface
      * Returns the users who are members of a workspace. Users's groups are not
      * taken into account.
      *
-     * @param AbstractWorkspace $workspace
+     * @param Workspace $workspace
      * @param boolean           $executeQuery
      *
      * @return User[]|Query
      */
-    public function findByWorkspace(AbstractWorkspace $workspace, $executeQuery = true)
+    public function findByWorkspace(Workspace $workspace, $executeQuery = true)
     {
         $dql = '
             SELECT wr, u, ws from Claroline\CoreBundle\Entity\User u
@@ -462,13 +462,13 @@ class UserRepository extends EntityRepository implements UserProviderInterface
      * Returns the users of a workspace whose first name, last name or username
      * match a given search string.
      *
-     * @param AbstractWorkspace $workspace
+     * @param Workspace $workspace
      * @param string            $search
      * @param boolean           $executeQuery
      *
      * @return User[]|Query
      */
-    public function findByWorkspaceAndName(AbstractWorkspace $workspace, $search, $executeQuery = true)
+    public function findByWorkspaceAndName(Workspace $workspace, $search, $executeQuery = true)
     {
         $upperSearch = strtoupper($search);
         $dql = '
@@ -497,13 +497,13 @@ class UserRepository extends EntityRepository implements UserProviderInterface
      * Returns the users of a workspace whose first name, last name or username
      * match a given search string. Including users in groups
      *
-     * @param AbstractWorkspace $workspace
+     * @param Workspace $workspace
      * @param string            $search
      * @param boolean           $executeQuery
      *
      * @return User[]|Query
      */
-    public function findAllByWorkspaceAndName(AbstractWorkspace $workspace, $search, $executeQuery = true)
+    public function findAllByWorkspaceAndName(Workspace $workspace, $search, $executeQuery = true)
     {
         $upperSearch = strtoupper($search);
         $dql = '
@@ -583,7 +583,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface
      * Returns the users who are not members of a group and whose first name, last
      * name or username match a given search string.
      *
-     * @param AbstractWorkspace $workspace
+     * @param Workspace $workspace
      * @param string            $search
      * @param boolean           $executeQuery
      * @param string            $orderedBy
@@ -742,17 +742,17 @@ class UserRepository extends EntityRepository implements UserProviderInterface
     {
         $dql = "
             SELECT CONCAT(CONCAT(u.firstName, ' '), u.lastName) AS name, u.username, COUNT(DISTINCT ws.id) AS total
-            FROM Claroline\CoreBundle\Entity\User u, Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace ws
+            FROM Claroline\CoreBundle\Entity\User u, Claroline\CoreBundle\Entity\Workspace\Workspace ws
             WHERE CONCAT(CONCAT(u.id,':'), ws.id) IN
             (
                 SELECT CONCAT(CONCAT(u1.id, ':'), ws1.id)
-                FROM Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace ws1
+                FROM Claroline\CoreBundle\Entity\Workspace\Workspace ws1
                 JOIN ws1.roles r1
                 JOIN r1.users u1
             ) OR CONCAT(CONCAT(u.id, ':'), ws.id) IN
             (
                 SELECT CONCAT(CONCAT(u2.id, ':'), ws2.id)
-                FROM Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace ws2
+                FROM Claroline\CoreBundle\Entity\Workspace\Workspace ws2
                 JOIN ws2.roles r2
                 JOIN r2.groups g2
                 JOIN g2.users u2
@@ -885,12 +885,12 @@ class UserRepository extends EntityRepository implements UserProviderInterface
      * Find users who are outside the workspace and users whose role are in $roles.
      *
      * @param Role[]                                                   $roles
-     * @param \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace $workspace
+     * @param \Claroline\CoreBundle\Entity\Workspace\Workspace $workspace
      * @param boolean                                                  $getQuery
      *
      * @return Query|User[]
      */
-    public function findOutsidersByWorkspaceRoles(array $roles, AbstractWorkspace $workspace, $getQuery = false)
+    public function findOutsidersByWorkspaceRoles(array $roles, Workspace $workspace, $getQuery = false)
     {
         //feel free to make this request easier if you can
 
@@ -924,7 +924,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface
      *
      * @param Role[]                                                   $roles
      * @param string                                                   $name
-     * @param \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace $workspace
+     * @param \Claroline\CoreBundle\Entity\Workspace\Workspace $workspace
      * @param boolean                                                  $getQuery
      *
      * @return Query|User[]
@@ -932,7 +932,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface
     public function findOutsidersByWorkspaceRolesAndName(
         array $roles,
         $name,
-        AbstractWorkspace $workspace,
+        Workspace $workspace,
         $getQuery = false
     )
     {
@@ -979,7 +979,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface
     {
         $dql = "
             SELECT CONCAT(CONCAT(u.firstName,' '), u.lastName) AS name, u.username, COUNT(DISTINCT ws.id) AS total
-            FROM Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace ws
+            FROM Claroline\CoreBundle\Entity\Workspace\Workspace ws
             JOIN ws.creator u
             WHERE u.isEnabled = true
             GROUP BY u.id
@@ -1018,11 +1018,11 @@ class UserRepository extends EntityRepository implements UserProviderInterface
     }
 
     /**
-     * @param AbstractWorkspace $workspace
+     * @param Workspace $workspace
      *
      * @return array
      */
-    public function findByWorkspaceWithUsersFromGroup(AbstractWorkspace $workspace)
+    public function findByWorkspaceWithUsersFromGroup(Workspace $workspace)
     {
         $dql = '
             SELECT u

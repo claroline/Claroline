@@ -12,7 +12,7 @@
 namespace Claroline\CoreBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
-use Claroline\CoreBundle\Entity\Workspace\SimpleWorkspace;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
@@ -93,7 +93,7 @@ class AgendaType extends AbstractType
             array(
                 'title' => 'hello',
                 'priority' => '#FF0000',
-                'workspace' => new SimpleWorkspace() ,
+                'workspace' => new Workspace() ,
                 'user' => new \Claroline\CoreBundle\Entity\User(),
                 'class' => 'Claroline\CoreBundle\Entity\Event',
                 'translation_domain' => 'agenda'
@@ -116,7 +116,7 @@ class AgendaType extends AbstractType
         ->setAllowedtypes(
             array(
                 'title' => 'string',
-                'workspace' => 'Claroline\CoreBundle\Entity\Workspace\SimpleWorkspace',
+                'workspace' => 'Claroline\CoreBundle\Entity\Workspace\Workspace',
                 'user' => 'Claroline\CoreBundle\Entity\User'
             )
         )

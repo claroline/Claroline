@@ -11,7 +11,7 @@
 
 namespace Claroline\CoreBundle\Listener\Badge;
 
-use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Pager\PagerFactory;
 use Claroline\CoreBundle\Rule\Validator;
 use Claroline\CoreBundle\Event\DisplayToolEvent;
@@ -146,11 +146,11 @@ class BadgeListener
     }
 
     /**
-     * @param \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace $workspace
+     * @param \Claroline\CoreBundle\Entity\Workspace\Workspace $workspace
      *
      * @return string
      */
-    private function badgesManagement(AbstractWorkspace $workspace)
+    private function badgesManagement(Workspace $workspace)
     {
         $parameters = array(
             'badgePage'    => 1,
@@ -178,11 +178,11 @@ class BadgeListener
     }
 
     /**
-     * @param \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace $workspace
+     * @param \Claroline\CoreBundle\Entity\Workspace\Workspace $workspace
      *
      * @return string
      */
-    private function myBadges(AbstractWorkspace $workspace)
+    private function myBadges(Workspace $workspace)
     {
         $user = $this->securityContext->getToken()->getUser();
 

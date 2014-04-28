@@ -73,7 +73,7 @@ class WorkspacePropertiesImporter extends Importer implements ConfigurationInter
     {
         $processor = new Processor();
         $configuration = $processor->processConfiguration($this, $data);
-        $this->om->getRepository('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace')
+        $this->om->getRepository('Claroline\CoreBundle\Entity\Workspace\Workspace')
             ->findOneByCode($configuration['code']);
         $this->validateOwner($configuration['owner']);
 

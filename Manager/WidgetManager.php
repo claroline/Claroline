@@ -13,7 +13,7 @@ namespace Claroline\CoreBundle\Manager;
 
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Entity\Widget\Widget;
 use Claroline\CoreBundle\Entity\Widget\WidgetInstance;
 use Symfony\Component\Routing\RouterInterface;
@@ -56,7 +56,7 @@ class WidgetManager
      * @param boolean                                                  $isAdmin
      * @param boolean                                                  $isDesktop
      * @param \Claroline\CoreBundle\Entity\User                        $user
-     * @param \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace $ws
+     * @param \Claroline\CoreBundle\Entity\Workspace\Workspace $ws
      *
      * @return \Claroline\CoreBundle\Entity\Widget\WidgetInstance
      *
@@ -67,7 +67,7 @@ class WidgetManager
         $isAdmin,
         $isDesktop,
         User $user = null,
-        AbstractWorkspace $ws = null
+        Workspace $ws = null
     )
     {
         if (!$widget->isDisplayableInDesktop()) {
@@ -154,11 +154,11 @@ class WidgetManager
     }
 
     /**
-     * @param \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace $workspace
+     * @param \Claroline\CoreBundle\Entity\Workspace\Workspace $workspace
      *
      * @return \Claroline\CoreBundle\Entity\Widget\WidgetInstance[]
      */
-    public function getWorkspaceInstances(AbstractWorkspace $workspace)
+    public function getWorkspaceInstances(Workspace $workspace)
     {
         return  $this->widgetInstanceRepo->findBy(array('workspace' => $workspace));
     }
@@ -237,13 +237,13 @@ class WidgetManager
     /**
      * @todo define what I do
      *
-     * @param \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace $workspace
+     * @param \Claroline\CoreBundle\Entity\Workspace\Workspace $workspace
      * @param array                                                    $excludedWidgetInstances
      *
      * @return \Claroline\CoreBundle\Entity\Widget\WidgetInstance[]
      */
     public function getWorkspaceWidgetInstance(
-        AbstractWorkspace $workspace,
+        Workspace $workspace,
         array $excludedWidgetInstances
     )
     {

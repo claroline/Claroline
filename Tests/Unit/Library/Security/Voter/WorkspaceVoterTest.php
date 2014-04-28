@@ -12,7 +12,7 @@
 namespace Claroline\CoreBundle\Library\Security\Voter;
 
 use Claroline\CoreBundle\Library\Testing\MockeryTestCase;
-use Claroline\CoreBundle\Entity\Workspace\SimpleWorkspace;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
 
 class WorkspaceVoterTest extends MockeryTestCase
 {
@@ -36,7 +36,7 @@ class WorkspaceVoterTest extends MockeryTestCase
     )
     {
         $voter = $this->getVoter();
-        $workspace = new SimpleWorkspace();
+        $workspace = new Workspace();
         $token = $this->mock('Symfony\Component\Security\Core\Authentication\Token\TokenInterface');
         $repo = $this->mock('Claroline\CoreBundle\Repository\ToolRepository');
         $this->em->shouldReceive('getRepository')->with('ClarolineCoreBundle:Tool\Tool')->andReturn($repo);
@@ -57,13 +57,13 @@ class WorkspaceVoterTest extends MockeryTestCase
     )
     {
         $voter = $this->getVoter(array('canDo'));
-        $workspace = new SimpleWorkspace();
+        $workspace = new Workspace();
         $token = $this->mock('Symfony\Component\Security\Core\Authentication\Token\TokenInterface');
         $manager = $this->mock('Claroline\CoreBundle\Entity\Role');
         $manager->shouldReceive('getName')->andReturn('ROLE_WS_MANAGER');
         $roleRepo =  $this->mock('Claroline\CoreBundle\Repository\RoleRepository');
         $workspaceRepo = $this->mock('Claroline\CoreBundle\Repository\WorkspaceRepository');
-        $this->em->shouldReceive('getRepository')->with('ClarolineCoreBundle:Workspace\AbstractWorkspace')
+        $this->em->shouldReceive('getRepository')->with('ClarolineCoreBundle:Workspace\Workspace')
             ->andReturn($workspaceRepo);
         $this->em->shouldReceive('getRepository')->with('ClarolineCoreBundle:Role')->andReturn($roleRepo);
         $roleRepo->shouldReceive('findManagerRole')->andReturn($manager);
@@ -76,7 +76,7 @@ class WorkspaceVoterTest extends MockeryTestCase
 
     public function voteProvider()
     {
-        $ws = new SimpleWorkspace();
+        $ws = new Workspace();
 
         return array(
             //manager
@@ -173,4 +173,4 @@ class WorkspaceVoterTest extends MockeryTestCase
             array($this->em, $this->translator, $this->ut)
         );
     }
-} 
+}

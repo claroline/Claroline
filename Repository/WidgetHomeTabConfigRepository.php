@@ -14,7 +14,7 @@ namespace Claroline\CoreBundle\Repository;
 use Claroline\CoreBundle\Entity\Home\HomeTab;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Widget\WidgetInstance;
-use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Doctrine\ORM\EntityRepository;
 
 class WidgetHomeTabConfigRepository extends EntityRepository
@@ -89,7 +89,7 @@ class WidgetHomeTabConfigRepository extends EntityRepository
 
     public function findWidgetConfigsByWorkspace(
         HomeTab $homeTab,
-        AbstractWorkspace $workspace
+        Workspace $workspace
     )
     {
         $dql = "
@@ -109,7 +109,7 @@ class WidgetHomeTabConfigRepository extends EntityRepository
 
     public function findVisibleWidgetConfigsByWorkspace(
         HomeTab $homeTab,
-        AbstractWorkspace $workspace
+        Workspace $workspace
     )
     {
         $dql = "
@@ -164,7 +164,7 @@ class WidgetHomeTabConfigRepository extends EntityRepository
 
     public function findOrderOfLastWidgetInHomeTabByWorkspace(
         HomeTab $homeTab,
-        AbstractWorkspace $workspace
+        Workspace $workspace
     )
     {
         $dql = "
@@ -222,7 +222,7 @@ class WidgetHomeTabConfigRepository extends EntityRepository
     public function updateWidgetHomeTabConfigByWorkspace(
         HomeTab $homeTab,
         $widgetOrder,
-        AbstractWorkspace $workspace
+        Workspace $workspace
     )
     {
         $dql = "
@@ -289,7 +289,7 @@ class WidgetHomeTabConfigRepository extends EntityRepository
         HomeTab $homeTab,
         $widgetOrder,
         $newWidgetOrder,
-        AbstractWorkspace $workspace
+        Workspace $workspace
     )
     {
         $dql = "

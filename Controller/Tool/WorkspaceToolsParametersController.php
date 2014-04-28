@@ -13,7 +13,7 @@ namespace Claroline\CoreBundle\Controller\Tool;
 
 use Symfony\Component\HttpFoundation\Response;
 use Claroline\CoreBundle\Controller\Tool\AbstractParametersController;
-use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Entity\Tool\Tool;
 use Claroline\CoreBundle\Entity\Tool\OrderedTool;
 use Claroline\CoreBundle\Entity\Role;
@@ -60,14 +60,14 @@ class WorkspaceToolsParametersController extends AbstractParametersController
      * @EXT\Template("ClarolineCoreBundle:Tool\workspace\parameters:toolRoles.html.twig")
      * @EXT\ParamConverter(
      *      "workspace",
-     *      class="ClarolineCoreBundle:Workspace\AbstractWorkspace",
+     *      class="ClarolineCoreBundle:Workspace\Workspace",
      *      options={"id" = "workspaceId", "strictId" = true}
      * )
      *
-     * @param AbstractWorkspace $workspace
+     * @param Workspace $workspace
      * @return array
      */
-    public function workspaceToolsRolesAction(AbstractWorkspace $workspace)
+    public function workspaceToolsRolesAction(Workspace $workspace)
     {
         $this->checkAccess($workspace);
 
@@ -87,7 +87,7 @@ class WorkspaceToolsParametersController extends AbstractParametersController
      * @EXT\Method("POST")
      * @EXT\ParamConverter(
      *      "workspace",
-     *      class="ClarolineCoreBundle:Workspace\AbstractWorkspace",
+     *      class="ClarolineCoreBundle:Workspace\Workspace",
      *      options={"id" = "workspaceId", "strictId" = true}
      * )
      * @EXT\ParamConverter(
@@ -105,13 +105,13 @@ class WorkspaceToolsParametersController extends AbstractParametersController
      *
      * @param Tool              $tool
      * @param Role              $role
-     * @param AbstractWorkspace $workspace
+     * @param Workspace $workspace
      *
      * @return \Symfony\Component\HttpFoundation\Response
      *
      * @throws \Exception
      */
-    public function removeRoleFromTool(Tool $tool, Role $role, AbstractWorkspace $workspace)
+    public function removeRoleFromTool(Tool $tool, Role $role, Workspace $workspace)
     {
         $this->checkAccess($workspace);
         $this->toolManager->removeRole($tool, $role, $workspace);
@@ -128,7 +128,7 @@ class WorkspaceToolsParametersController extends AbstractParametersController
      * @EXT\Method("POST")
      * @EXT\ParamConverter(
      *      "workspace",
-     *      class="ClarolineCoreBundle:Workspace\AbstractWorkspace",
+     *      class="ClarolineCoreBundle:Workspace\Workspace",
      *      options={"id" = "workspaceId", "strictId" = true}
      * )
      * @EXT\ParamConverter(
@@ -146,13 +146,13 @@ class WorkspaceToolsParametersController extends AbstractParametersController
      *
      * @param Tool              $tool
      * @param Role              $role
-     * @param AbstractWorkspace $workspace
+     * @param Workspace $workspace
      *
      * @return \Symfony\Component\HttpFoundation\Response
      *
      * @throws \Exception
      */
-    public function addRoleToTool(Tool $tool, Role $role, AbstractWorkspace $workspace)
+    public function addRoleToTool(Tool $tool, Role $role, Workspace $workspace)
     {
         $this->checkAccess($workspace);
         $this->toolManager->addRole($tool, $role, $workspace);
@@ -169,7 +169,7 @@ class WorkspaceToolsParametersController extends AbstractParametersController
      * @EXT\Method("POST")
      * @EXT\ParamConverter(
      *      "workspace",
-     *      class="ClarolineCoreBundle:Workspace\AbstractWorkspace",
+     *      class="ClarolineCoreBundle:Workspace\Workspace",
      *      options={"id" = "workspaceId", "strictId" = true}
      * )
      * @EXT\ParamConverter(
@@ -182,11 +182,11 @@ class WorkspaceToolsParametersController extends AbstractParametersController
      *
      * @param Tool              $tool
      * @param integer           $position
-     * @param AbstractWorkspace $workspace
+     * @param Workspace $workspace
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function move(Tool $tool, $position, AbstractWorkspace $workspace)
+    public function move(Tool $tool, $position, Workspace $workspace)
     {
         $this->checkAccess($workspace);
         $this->toolManager->move($tool, $position, null, $workspace);
@@ -205,7 +205,7 @@ class WorkspaceToolsParametersController extends AbstractParametersController
      *
      * @EXT\ParamConverter(
      *      "workspace",
-     *      class="ClarolineCoreBundle:Workspace\AbstractWorkspace",
+     *      class="ClarolineCoreBundle:Workspace\Workspace",
      *      options={"id" = "workspaceId", "strictId" = true}
      * )
      * @EXT\ParamConverter(
@@ -214,12 +214,12 @@ class WorkspaceToolsParametersController extends AbstractParametersController
      *      options={"id" = "toolId", "strictId" = true}
      * )
      *
-     * @param AbstractWorkspace $workspace
+     * @param Workspace $workspace
      * @param Tool              $tool
      *
      * @return Response
      */
-    public function workspaceOrderToolEditFormAction(AbstractWorkspace $workspace, Tool $tool)
+    public function workspaceOrderToolEditFormAction(Workspace $workspace, Tool $tool)
     {
         $this->checkAccess($workspace);
         $ot = $this->toolManager->getOneByWorkspaceAndTool($workspace, $tool);
@@ -242,7 +242,7 @@ class WorkspaceToolsParametersController extends AbstractParametersController
      *
      * @EXT\ParamConverter(
      *      "workspace",
-     *      class="ClarolineCoreBundle:Workspace\AbstractWorkspace",
+     *      class="ClarolineCoreBundle:Workspace\Workspace",
      *      options={"id" = "workspaceId", "strictId" = true}
      * )
      * @EXT\ParamConverter(
@@ -251,12 +251,12 @@ class WorkspaceToolsParametersController extends AbstractParametersController
      *      options={"id" = "workspaceOrderToolId", "strictId" = true}
      * )
      *
-     * @param AbstractWorkspace $workspace
+     * @param Workspace $workspace
      * @param OrderedTool       $ot
      *
      * @return Response
      */
-    public function workspaceOrderToolEditAction(AbstractWorkspace $workspace, OrderedTool $ot)
+    public function workspaceOrderToolEditAction(Workspace $workspace, OrderedTool $ot)
     {
         $this->checkAccess($workspace);
         $form = $this->formFactory->create(FormFactory::TYPE_ORDERED_TOOL, array(), $ot);

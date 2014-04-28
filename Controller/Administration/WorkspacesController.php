@@ -148,7 +148,7 @@ class WorkspacesController
      * @EXT\Method("DELETE")
      * @EXT\ParamConverter(
      *     "workspaces",
-     *      class="ClarolineCoreBundle:Workspace\AbstractWorkspace",
+     *      class="ClarolineCoreBundle:Workspace\Workspace",
      *      options={"multipleIds" = true}
      * )
      *

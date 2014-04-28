@@ -19,7 +19,7 @@ use Symfony\Component\Security\Core\SecurityContextInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
-use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\Role;
@@ -86,7 +86,7 @@ class RolesController extends Controller
      * @EXT\Method("GET")
      * @EXT\Template("ClarolineCoreBundle:Tool\workspace\roles:roles.html.twig")
      */
-    public function configureRolePageAction(AbstractWorkspace $workspace)
+    public function configureRolePageAction(Workspace $workspace)
     {
         $this->checkAccess($workspace);
         $roles = $this->roleManager->getRolesByWorkspace($workspace);
@@ -102,7 +102,7 @@ class RolesController extends Controller
      * @EXT\Method("GET")
      * @EXT\Template("ClarolineCoreBundle:Tool\workspace\roles:roleCreation.html.twig")
      */
-    public function createRoleFormAction(AbstractWorkspace $workspace)
+    public function createRoleFormAction(Workspace $workspace)
     {
         $this->checkAccess($workspace);
         $form = $this->formFactory->create(FormFactory::TYPE_WORKSPACE_ROLE);
@@ -119,7 +119,7 @@ class RolesController extends Controller
      * @EXT\Template("ClarolineCoreBundle:Tool\workspace\roles:roleCreation.html.twig")
      * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
      */
-    public function createRoleAction(AbstractWorkspace $workspace, User $user)
+    public function createRoleAction(Workspace $workspace, User $user)
     {
         $this->checkAccess($workspace);
         $form = $this->formFactory->create(FormFactory::TYPE_WORKSPACE_ROLE);
@@ -197,7 +197,7 @@ class RolesController extends Controller
      * )
      * @EXT\Method("GET")
      */
-    public function removeRoleAction(AbstractWorkspace $workspace, Role $role)
+    public function removeRoleAction(Workspace $workspace, Role $role)
     {
         $this->checkAccess($workspace);
         $this->roleManager->remove($role);
@@ -213,7 +213,7 @@ class RolesController extends Controller
      * @EXT\Method("GET")
      * @EXT\Template("ClarolineCoreBundle:Tool\workspace\roles:roleEdit.html.twig")
      */
-    public function editRoleFormAction(Role $role, AbstractWorkspace $workspace)
+    public function editRoleFormAction(Role $role, Workspace $workspace)
     {
         $this->checkAccess($workspace);
         $form = $this->formFactory->create(FormFactory::TYPE_ROLE_TRANSLATION, array(), $role);
@@ -229,7 +229,7 @@ class RolesController extends Controller
      * @EXT\Template("ClarolineCoreBundle:Tool\workspace\roles:roleEdit.html.twig")
      * @EXT\Method("POST")
      */
-    public function editRoleAction(Role $role, AbstractWorkspace $workspace)
+    public function editRoleAction(Role $role, Workspace $workspace)
     {
         $this->checkAccess($workspace);
         $form = $this->formFactory->create(
@@ -260,7 +260,7 @@ class RolesController extends Controller
      * )
      * @EXT\Method({"DELETE", "GET"})
      */
-    public function removeUserFromRoleAction(User $user, Role $role, AbstractWorkspace $workspace)
+    public function removeUserFromRoleAction(User $user, Role $role, Workspace $workspace)
     {
         $this->checkAccess($workspace);
         $this->roleManager->dissociateWorkspaceRole($user, $workspace, $role);
@@ -290,7 +290,7 @@ class RolesController extends Controller
      * @EXT\Method("GET")
      * @EXT\Template("ClarolineCoreBundle:Tool\workspace\roles:unregisteredUsers.html.twig")
      */
-    public function unregisteredUserListAction($page, $search, AbstractWorkspace $workspace, $max, $order, $direction)
+    public function unregisteredUserListAction($page, $search, Workspace $workspace, $max, $order, $direction)
     {
         $this->checkAccess($workspace);
         $wsRoles = $this->roleManager->getRolesByWorkspace($workspace);
@@ -334,7 +334,7 @@ class RolesController extends Controller
      * )
      * @EXT\Template("ClarolineCoreBundle:Tool\workspace\roles:unregisteredGroups.html.twig")
      */
-    public function unregisteredGroupListAction($page, $search, AbstractWorkspace $workspace, $max, $order, $direction)
+    public function unregisteredGroupListAction($page, $search, Workspace $workspace, $max, $order, $direction)
     {
         $this->checkAccess($workspace);
         $wsRoles = $this->roleManager->getRolesByWorkspace($workspace);
@@ -375,11 +375,11 @@ class RolesController extends Controller
      *
      * @param array $users
      * @param array $roles
-     * @param \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace $workspace
+     * @param \Claroline\CoreBundle\Entity\Workspace\Workspace $workspace
      *
      * @return Response
      */
-    public function addUsersToRolesAction(array $users, array $roles, AbstractWorkspace $workspace)
+    public function addUsersToRolesAction(array $users, array $roles, Workspace $workspace)
     {
         $this->checkAccess($workspace);
         $this->roleManager->associateRolesToSubjects($users, $roles, true);
@@ -395,7 +395,7 @@ class RolesController extends Controller
      * )
      * @EXT\Method({"DELETE", "GET"})
      */
-    public function removeGroupFromRoleAction(Group $group, Role $role, AbstractWorkspace $workspace)
+    public function removeGroupFromRoleAction(Group $group, Role $role, Workspace $workspace)
     {
         $this->checkAccess($workspace);
         $this->roleManager->dissociateWorkspaceRole($group, $workspace, $role);
@@ -421,7 +421,7 @@ class RolesController extends Controller
      *     options={"multipleIds"=true, "name"="roleIds"}
      * )
      */
-    public function addGroupsToRolesAction(array $groups, array $roles, AbstractWorkspace $workspace)
+    public function addGroupsToRolesAction(array $groups, array $roles, Workspace $workspace)
     {
         $this->checkAccess($workspace);
         $this->roleManager->associateRolesToSubjects($groups, $roles, true);
@@ -451,9 +451,9 @@ class RolesController extends Controller
      * )
      * @EXT\Template("ClarolineCoreBundle:Tool\workspace\roles:workspaceUsers.html.twig")
      */
-    public function usersListAction(AbstractWorkspace $workspace, $page, $search, $max, $order, $direction = 'ASC')
+    public function usersListAction(Workspace $workspace, $page, $search, $max, $order, $direction = 'ASC')
     {
-        
+
         $this->checkAccess($workspace);
         $wsRoles = $this->roleManager->getRolesByWorkspace($workspace);
 
@@ -501,7 +501,7 @@ class RolesController extends Controller
      * )
      * @EXT\Template("ClarolineCoreBundle:Tool\workspace\roles:workspaceGroups.html.twig")
      */
-    public function groupsListAction(AbstractWorkspace $workspace, $page, $search, $max, $order, $direction)
+    public function groupsListAction(Workspace $workspace, $page, $search, $max, $order, $direction)
     {
         $this->checkAccess($workspace);
         $wsRoles = $this->roleManager->getRolesByWorkspace($workspace);
@@ -545,7 +545,7 @@ class RolesController extends Controller
      * )
      */
     public function usersOfGroupAction(
-        AbstractWorkspace $workspace,
+        Workspace $workspace,
         Group $group,
         $page,
         $search,
@@ -627,7 +627,7 @@ class RolesController extends Controller
      * @EXT\Method({"GET"})
      * @EXT\ParamConverter(
      *     "workspaces",
-     *      class="ClarolineCoreBundle:Workspace\AbstractWorkspace",
+     *      class="ClarolineCoreBundle:Workspace\Workspace",
      *      options={"multipleIds" = true, "name" = "workspaceIds"}
      * )
      */
@@ -642,7 +642,7 @@ class RolesController extends Controller
         return new Response($names, 200);
     }
 
-    private function checkAccess(AbstractWorkspace $workspace)
+    private function checkAccess(Workspace $workspace)
     {
         if (!$this->security->isGranted('users', $workspace)) {
             throw new AccessDeniedException();

@@ -11,28 +11,18 @@
 
 namespace Claroline\CoreBundle\Entity\Workspace;
 
-use Symfony\Component\Validator\Constraints as Assert;
-use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;
-use Doctrine\ORM\Mapping as ORM;
-use Doctrine\Common\Collections\ArrayCollection;
-use JMS\SerializerBundle\Annotation\Type;
 use Claroline\CoreBundle\Entity\Tool\OrderedTool;
-use Gedmo\Mapping\Annotation as Gedmo;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\WorkspaceRepository")
  * @ORM\Table(name="claro_workspace")
- * @ORM\InheritanceType("SINGLE_TABLE")
- * @ORM\DiscriminatorColumn(name="discr", type="string")
- * @ORM\DiscriminatorMap({
- *     "Claroline\CoreBundle\Entity\Workspace\SimpleWorkspace"
- *         = "Claroline\CoreBundle\Entity\Workspace\SimpleWorkspace",
- *     "Claroline\CoreBundle\Entity\Workspace\AggregatorWorkspace"
- *         = "Claroline\CoreBundle\Entity\Workspace\AggregatorWorkspace"
- * })
  * @DoctrineAssert\UniqueEntity("code")
  */
-abstract class AbstractWorkspace
+class Workspace
 {
     protected static $visitorPrefix = 'ROLE_WS_VISITOR';
     protected static $collaboratorPrefix = 'ROLE_WS_COLLABORATOR';
@@ -128,8 +118,7 @@ abstract class AbstractWorkspace
 
     /**
      * @ORM\Column(name="creation_date", type="integer", nullable=true)
-    */
-
+     */
     protected $creationDate;
 
     public function __construct()
@@ -143,11 +132,6 @@ abstract class AbstractWorkspace
         return $this->id;
     }
 
-    public function setId($id)
-    {
-        $this->id = 0;
-    }
-
     public function getName()
     {
         return $this->name;
@@ -158,17 +142,17 @@ abstract class AbstractWorkspace
         $this->name = $name;
     }
 
-    public function getDescription() 
+    public function getDescription()
     {
         return $this->description;
     }
 
-    public function setDescription($description) 
+    public function setDescription($description)
     {
         $this->description = $description;
     }
 
-    public function getEvents() 
+    public function getEvents()
     {
         return $this->events;
     }
@@ -267,12 +251,10 @@ abstract class AbstractWorkspace
     {
         if (is_null($this->creationDate)) {
             return $this->creationDate;
-
-        } else {
-            $date = date('d-m-Y H:i', $this->creationDate);
-
-            return (new \Datetime($date));
         }
-    }
 
+        $date = date('d-m-Y H:i', $this->creationDate);
+
+        return new \Datetime($date);
+    }
 }

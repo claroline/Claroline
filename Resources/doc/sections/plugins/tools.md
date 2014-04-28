@@ -63,7 +63,7 @@ private function workspace($workspaceId)
 {
     //if you want to keep the context, you must retrieve the workspace.
     $em = $this->container->get('doctrine.orm.entity_manager');
-    $workspace = $em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->find($workspaceId);
+    $workspace = $em->getRepository('ClarolineCoreBundle:Workspace\Workspace')->find($workspaceId);
 
     return $this->container->get('templating')->render(
         'ClarolineExampleBundle::workspace_tool.html.twig', array('workspace' => $workspace)

@@ -11,7 +11,7 @@
 
 namespace Claroline\CoreBundle\Event;
 
-use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\User;
 use Symfony\Component\EventDispatcher\Event;
@@ -27,7 +27,7 @@ class ImportToolEvent extends Event
 
     /**
      *
-     * @param AbstractWorkspace $workspace The workspace
+     * @param Workspace $workspace The workspace
      * @param array             $config    The config array from the template
      * @param ResourceNode      $root      The workspace root
      * @param User              $user      The creator
@@ -35,7 +35,7 @@ class ImportToolEvent extends Event
      * @param array             $roles     The role list wich is needed for the creation;
      */
     public function __construct(
-        AbstractWorkspace $workspace,
+        Workspace $workspace,
         array $config,
         ResourceNode $root,
         User $user,

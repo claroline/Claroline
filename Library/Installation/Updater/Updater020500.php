@@ -52,7 +52,7 @@ class Updater020500
 
         $workspaceManager = $this->container->get('claroline.manager.workspace_manager');
         $translator = $this->container->get('translator');
-        $workspaces = $this->om->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->findAll();
+        $workspaces = $this->om->getRepository('ClarolineCoreBundle:Workspace\Workspace')->findAll();
         $trans = $translator->trans('personal_workspace', array(), 'platform');
         $this->om->startFlushSuite();
 
