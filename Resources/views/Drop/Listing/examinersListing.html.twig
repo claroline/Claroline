@@ -5,8 +5,14 @@
 {#                 <th>{{'has a drop'|trans({}, 'icap_dropzone') }}</th> #}
                 <th>{{'Started Corrections'|trans({}, 'icap_dropzone') }}</th>
                 <th>{{'Complete Corrections'|trans({}, 'icap_dropzone') }}</th>
-                <th>{{'number of Report'|trans({},'icap_dropzone')}}</th>
-                <th>{{'was reported'|trans({},'icap_dropzone')}}</th>
+                <th>
+                    <div class="popoverItem" data-toggle="popover" data-placement="top"
+                         data-content="{{ 'number_of_denied_corrections'|trans({}, 'icap_dropzone')|raw }}">{{ 'number of Report'|trans({},'icap_dropzone') }}</div>
+                </th>
+                <th>
+                    <div class="popoverItem" data-toggle="popover" data-placement="top"
+                         data-content="{{ 'corrections_denied'|trans({}, 'icap_dropzone')|raw }}">{{ 'was reported'|trans({},'icap_dropzone') }}</div>
+                </th>
                 <th>{{'tools'|trans({},'icap_dropzone')}}</th>
             </thead>
             <tbody>
