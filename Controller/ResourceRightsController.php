@@ -143,7 +143,6 @@ class ResourceRightsController
      *
      * @throws AccessDeniedException if the current user is not allowed to edit the resource
      */
-
     public function editPermsAction(ResourceNode $node)
     {
         $collection = new ResourceCollection(array($node));
@@ -154,6 +153,26 @@ class ResourceRightsController
         foreach ($datas as $data) {
             $this->rightsManager->editPerms($data['permissions'], $data['role'], $node, $isRecursive);
         }
+
+        return new Response("success");
+    }
+
+
+    /**
+     * Use only when create a new resource
+     *
+     * @EXT\Route(
+     *     "/perms/open/{node}",
+     *     name="claro_resource_open_perms",
+     *     options={"expose"=true}
+     * )
+     */
+    public function openPermsAction(ResourceNode $node)
+    {
+        $collection = new ResourceCollection(array($node));
+        $this->checkAccess('EDIT', $collection);
+        $this->rightsManager->editPerms(1, $this->roleManager->getRoleByName('ROLE_USER'), $node, false);
+        $this->rightsManager->editPerms(1, $this->roleManager->getRoleByName('ROLE_ANONYMOUS'), $node, false);
 
         return new Response("success");
     }

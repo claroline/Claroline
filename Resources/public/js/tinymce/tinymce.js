@@ -14,8 +14,7 @@
     var home = window.Claroline.Home;
     var modal = window.Claroline.Modal;
     var translator = window.Translator;
-    var publicProfileUrl = window.Routing.generate('claro_public_profile_view') + '/';
-    var searchUserInWorkspaceUrl = window.Routing.generate('claro_user_search_in_workspace') + '/';
+    var routing =  window.Routing;
 
     //Load external plugins
     tinymce.PluginManager.load('mention', home.asset + 'bundles/frontend/tinymce/plugins/mention/plugin.min.js');
@@ -149,6 +148,9 @@
                     nodes[resource.id] = new Array(resource.name, resource.type, resource[mimeType]);
                     $(element).modal('hide');
                     tinymce.claroline.callBack(nodes);
+                    $.ajax(
+                        routing.generate('claro_resource_open_perms', {'node': resource.id})
+                    );
                 } else {
                     $('.progress', element).addClass('hide');
                     $('.alert', element).removeClass('hide');
@@ -292,6 +294,8 @@
     {
         if (!_.isUndefined(window.Workspace) && !_.isNull(window.Workspace.id)) {
             if (delimiter === '@' && query.length > 0) {
+                var searchUserInWorkspaceUrl = routing.generate('claro_user_search_in_workspace') + '/';
+
                 $.getJSON(searchUserInWorkspaceUrl + window.Workspace.id + '/' + query, function (data) {
                     if (!_.isEmpty(data) && !_.isUndefined(data.users) && !_.isEmpty(data.users)) {
                         process(data.users);
@@ -324,6 +328,8 @@
      */
     tinymce.claroline.mentionsInsert = function (item)
     {
+        var publicProfileUrl = routing.generate('claro_public_profile_view') + '/';
+
         return '<user id="' + item.id + '"><a href="' + publicProfileUrl + item.id + '">' + item.name + '</a></user>';
     };
 
