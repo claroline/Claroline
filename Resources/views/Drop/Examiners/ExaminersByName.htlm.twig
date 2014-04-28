@@ -56,3 +56,25 @@
         {% endif %}
         
 {% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript">
+        $('document').ready(function () {
+            $('.popoverItem').popover({
+                'trigger': 'hover',
+                'html': true
+            });
+        });
+    </script>
+{% endblock %}
+
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        table th div.popover {
+            font-weight: normal;
+        }
+    </style>
+{% endblock %}
