@@ -22,12 +22,12 @@
                 <div class="container">
                     <h1 id="username">{{ portfolio.user.firstName ~ ' ' ~ portfolio.user.lastName }}</h1>
                     <div data-widget-portlet="title" data-ng-show="widgets.length > 0">
-                        <div class="portfolio_title_container" data-ng-model="widgets" data-ng-repeat="widget in (widgets | filter:slugFilter(type))">
+                        <div class="portfolio_title_container" data-ng-model="widgets" data-ng-repeat="widget in widgets">
                             {% if editMode %}
                                 <div class="portfolio_title_actions">
-                                    <button class="portfolio_title_edit_action btn" data-ng-click="editTitle(widget);"><span class="icon-pencil"></span></button>
+                                    <button class="portfolio_title_edit_action btn" data-ng-click="edit(widget);"><span class="icon-pencil"></span></button>
                                 </div>
-                                <div data-ng-bind-html="widget.view | trustAsHtml"></div>
+                                <div data-ng-bind-html="widget.views.view | trustAsHtml"></div>
                             {% else %}
                                 {% include 'IcapPortfolioBundle:templates:title.html.twig' with {'portfolioTitle': portfolio.title} only %}
                             {% endif %}
@@ -99,10 +99,12 @@
         <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/app.js') }}"></script>
         <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/controllers/portfolioController.js') }}"></script>
         <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/controllers/widgetsController.js') }}"></script>
-        <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/services/portfolioService.js') }}"></script>
+        <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/services/portfolio.js') }}"></script>
         <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/services/portfolioManager.js') }}"></script>
         <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/services/widgetsManager.js') }}"></script>
         <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/services/widgetsConfig.js') }}"></script>
+        <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/services/widgetsFactory.js') }}"></script>
+        <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/services/urlInterpolator.js') }}"></script>
         <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/directives/widgetsDirective.js') }}"></script>
         <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/directives/portfolioDirective.js') }}"></script>
         <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/filters/trustAsHtml.js') }}"></script>

@@ -32,7 +32,9 @@ class PortfolioController extends BaseController
             'id'    => $portfolio->getId(),
             'slug'  => $portfolio->getSlug(),
             'title' => array(
-                'view'  => $twigEngine->render('IcapPortfolioBundle:templates:title.html.twig', array('portfolioTitle' => $portfolio->getTitle())),
+                'views'  => array(
+                    'view' => $twigEngine->render('IcapPortfolioBundle:templates:title.html.twig', array('portfolioTitle' => $portfolio->getTitle()))
+                ),
                 'value' => $portfolio->getTitle()
             ),
             'userInformation' => array(
