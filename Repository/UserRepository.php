@@ -207,8 +207,8 @@ class UserRepository extends EntityRepository implements UserProviderInterface
      * Returns all the users.
      *
      * @param boolean $executeQuery
-     * @param string  $orderedBy
-     *
+     * @param string $orderedBy
+     * @param null $order
      * @return User[]|Query
      */
     public function findAll($executeQuery = true, $orderedBy = 'id', $order = null)
@@ -216,19 +216,15 @@ class UserRepository extends EntityRepository implements UserProviderInterface
         if (!$executeQuery) {
             $order = $order === 'DESC' ? 'DESC' : 'ASC';
             $dql = "
-                SELECT u, pws, g, r , rws , up from Claroline\CoreBundle\Entity\User u
-                LEFT JOIN u.personalWorkspace pws
+                SELECT u, g, r, up from Claroline\CoreBundle\Entity\User u
                 LEFT JOIN u.groups g
                 LEFT JOIN u.roles r
-                LEFT JOIN r.workspace rws
-                LEFT JOIN u.publicProfilePreferences up
+                JOIN u.publicProfilePreferences up
                 WHERE u.isEnabled = true
-                ORDER BY u.{$orderedBy}
-                ".$order
+                AND r.type = 1
+                ORDER BY u.{$orderedBy} {$order}
+            ";
 
-            ;
-            // the join on role is required because this method is only called in the administration
-            // and we only want the platform roles of a user.
             return $this->_em->createQuery($dql);
         }
 
