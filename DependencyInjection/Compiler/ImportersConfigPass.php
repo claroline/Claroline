@@ -23,10 +23,10 @@ class ImportersConfigPass implements CompilerPassInterface
             return;
         }
 
-        $definition = $container->getDefinition('claroline.manager.transfert_manager');
+        $transfertManager = $container->getDefinition('claroline.manager.transfert_manager');
 
         foreach ($container->findTaggedServiceIds('claroline.importer') as $id => $attributes) {
-            $definition->addMethodCall('addImporter', array(new Reference($id)));
+            $transfertManager->addMethodCall('addImporter', array(new Reference($id)));
         }
     }
 } 

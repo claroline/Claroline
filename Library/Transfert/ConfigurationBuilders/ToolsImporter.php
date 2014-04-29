@@ -17,6 +17,10 @@ use Symfony\Component\Config\Definition\ConfigurationInterface;
 use Symfony\Component\Config\Definition\Processor;
 use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 use JMS\DiExtraBundle\Annotation as DI;
+use Claroline\CoreBundle\Manager\ToolManager;
+use Claroline\CoreBundle\Manager\RoleManager;
+use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
+use Claroline\CoreBundle\Persistence\ObjectManager;
 
 /**
  * @DI\Service("claroline.importer.tools_importer")
@@ -24,7 +28,29 @@ use JMS\DiExtraBundle\Annotation as DI;
  */
 class ToolsImporter extends Importer implements ConfigurationInterface
 {
-    private static $data;
+    private $toolManager;
+    private $roleManager;
+    private $om;
+
+    /**
+     * Constructor.
+     *
+     * @DI\InjectParams({
+     *     "toolManager" = @DI\Inject("claroline.manager.tool_manager"),
+     *     "roleManager" = @DI\Inject("claroline.manager.role_manager"),
+     *     "om"          = @DI\Inject("claroline.persistence.object_manager")
+     * })
+     */
+    public function __construct(
+        ToolManager $toolManager,
+        RoleManager $roleManager,
+        ObjectManager $om
+    )
+    {
+        $this->toolManager = $toolManager;
+        $this->roleManager = $roleManager;
+        $this->om = $om;
+    }
 
     public function  getConfigTreeBuilder()
     {
@@ -97,19 +123,35 @@ class ToolsImporter extends Importer implements ConfigurationInterface
         $processor = new Processor();
         $processor->processConfiguration($this, $data);
 
-        //root must exists
-
-        //and has no parent
-
         foreach ($data['tools'] as $tool) {
             $importer = $this->getImporterByName($tool['tool']['type']);
 
-            if (!$importer) {
-                throw new InvalidConfigurationException('The importer ' . $tool['tool']['type'] . ' does not exist');
-            }
+//            if (!$importer) {
+//                throw new InvalidConfigurationException('The importer ' . $tool['tool']['type'] . ' does not exist');
+//            }
 
             if (isset($tool['tool']['data'])) {
                 $importer->validate($tool['tool']['data']);
+            }
+        }
+    }
+
+    public function import(array $tools, AbstractWorkspace $workspace, array $entityRoles)
+    {
+        $position = 1;
+
+        foreach ($tools as $tool) {
+            $toolEntity = $this->om->getRepository('Claroline\CoreBundle\Entity\Tool\Tool')
+                ->findOneByName($tool['tool']['type']);
+            $otr = $this->toolManager
+                ->addWorkspaceTool($toolEntity, $position, $tool['tool']['translation'], $workspace);
+            $position++;
+
+            if (isset($tool['tool']['roles'])) {
+                foreach ($tool['tool']['roles'] as $role) {
+                    $roleEntity = $this->roleManager->getRoleByName($role['name'] . '_' . $workspace->getGuid());
+                    $this->toolManager->addRoleToOrderedTool($otr, $entityRoles[$role['name']]);
+                }
             }
         }
     }

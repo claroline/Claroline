@@ -17,6 +17,8 @@ use Claroline\CoreBundle\Library\Transfert\Importer;
 use Symfony\Component\Config\Definition\Processor;
 use JMS\DiExtraBundle\Annotation as DI;
 use Claroline\CoreBundle\Persistence\ObjectManager;
+use Claroline\CoreBundle\Manager\RoleManager;
+use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 
 /**
  * @DI\Service("claroline.importer.role_importer")
@@ -26,15 +28,18 @@ class RolesImporter extends Importer implements ConfigurationInterface
 {
     private static $data;
     private $om;
+    private $roleManager;
 
     /**
      * @DI\InjectParams({
-     *     "om" = @DI\Inject("claroline.persistence.object_manager")
+     *     "om"          = @DI\Inject("claroline.persistence.object_manager"),
+     *     "roleManager" = @DI\Inject("claroline.manager.role_manager")
      * })
      */
-    public function __construct(ObjectManager $om)
+    public function __construct(ObjectManager $om, RoleManager $roleManager)
     {
         $this->om = $om;
+        $this->roleManager = $roleManager;
     }
 
     public function  getConfigTreeBuilder()
@@ -119,5 +124,29 @@ class RolesImporter extends Importer implements ConfigurationInterface
         }
 
         return false;
+    }
+
+    public function import(array $roles, AbstractWorkspace $workspace)
+    {
+        $entityRoles = array();
+
+        foreach ($roles as $role) {
+            if (!$role['role']['is_base_role']) {
+                $entityRoles[$role['role']['name']] = $this->roleManager->createWorkspaceRole(
+                    "{$role['role']['name']}_{$workspace->getGuid()}",
+                    $role['role']['translation'],
+                    $workspace,
+                    false
+                );
+            } else {
+                $entityRoles[$role['role']['name']] = $this->roleManager->createBaseRole(
+                    $role['role']['name'],
+                    $role['role']['translation'],
+                    false
+                );
+            }
+        }
+
+        return $entityRoles;
     }
 }

@@ -18,6 +18,7 @@ use Symfony\Component\Config\Definition\Processor;
 use JMS\DiExtraBundle\Annotation as DI;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Library\Transfert\Merger;
+use Claroline\CoreBundle\Manager\UserManager;
 
 /**
  * @DI\Service("claroline.importer.users_importer")
@@ -27,10 +28,11 @@ class UsersImporter extends Importer implements ConfigurationInterface
 {
     private static $data;
     private $om;
+    private $userManager;
 
     /**
      * @DI\InjectParams({
-     *     "om"      = @DI\Inject("claroline.persistence.object_manager")
+     *     "om" = @DI\Inject("claroline.persistence.object_manager")
      * })
      */
     public function __construct(ObjectManager $om)
@@ -327,5 +329,12 @@ class UsersImporter extends Importer implements ConfigurationInterface
     public static function ownerAlreadyExists($v, $owner)
     {
         return $owner === $v ? true: false;
+    }
+
+    public function import(array $users)
+    {
+        foreach ($users as $user) {
+
+        }
     }
 }

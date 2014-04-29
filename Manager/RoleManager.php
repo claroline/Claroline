@@ -310,27 +310,15 @@ class RoleManager
     public function initWorkspaceBaseRole(array $roles, AbstractWorkspace $workspace)
     {
         $this->om->startFlushSuite();
-
         $entityRoles = array();
 
-        foreach ($roles as $name => $translation) {
-            $role = $this->createWorkspaceRole(
-                "{$name}_{$workspace->getGuid()}",
-                $translation,
-                $workspace,
-                false
-            );
-            $entityRoles[$name] = $role;
-        }
-
-        $role = $this->createWorkspaceRole(
+        $entityRoles['ROLE_WS_MANAGER'] = $this->createWorkspaceRole(
             "ROLE_WS_MANAGER_{$workspace->getGuid()}",
             'manager',
             $workspace,
             true
         );
 
-        $entityRoles['ROLE_WS_MANAGER'] = $role;
         $this->om->endFlushSuite();
 
         return $entityRoles;

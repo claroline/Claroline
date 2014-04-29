@@ -16,7 +16,10 @@ use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Claroline\CoreBundle\Library\Transfert\Importer;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use Symfony\Component\Config\Definition\Processor;
+use Claroline\CoreBundle\Manager\UserManager;
 use JMS\DiExtraBundle\Annotation as DI;
+use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 
 /**
  * @DI\Service("claroline.importer.owner_importer")
@@ -25,15 +28,18 @@ use JMS\DiExtraBundle\Annotation as DI;
 class OwnerImporter extends Importer implements ConfigurationInterface
 {
     private $om;
+    private $userManager;
 
     /**
      * @DI\InjectParams({
-     *     "om" = @DI\Inject("claroline.persistence.object_manager")
+     *     "om"          = @DI\Inject("claroline.persistence.object_manager"),
+     *     "userManager" = @DI\Inject("claroline.manager.user_manager")
      * })
      */
-    public function __construct(ObjectManager $om)
+    public function __construct(ObjectManager $om, UserManager $userManager)
     {
         $this->om = $om;
+        $this->userManager = $userManager;
     }
 
     public function  getConfigTreeBuilder()
@@ -171,4 +177,26 @@ class OwnerImporter extends Importer implements ConfigurationInterface
         return !filter_var($v, FILTER_VALIDATE_EMAIL);
     }
 
+    public function import(array $owner, $workspace)
+    {
+        $user = new User();
+        $user->setFirstName($owner['first_name']);
+        $user->setLastName($owner['last_name']);
+        $user->setUsername($owner['username']);
+        $user->setPlainPassword($owner['password']);
+        $user->setMail($owner['mail']);
+        $user->setAdministrativeCode($owner['code']);
+
+        if (isset($owner['roles'])) {
+            foreach ($owner['roles'] as $role) {
+                $role = $this->om->getRepository('Claroline\CoreBundle\Entity\Role')->findOneByName($role['name']);
+                $user->addRole($role);
+            }
+        }
+
+        //add the workspace role manager
+        //YOLO;
+
+        $this->userManager->createUser($user);
+    }
 }

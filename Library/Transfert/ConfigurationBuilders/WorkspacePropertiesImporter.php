@@ -17,6 +17,7 @@ use Claroline\CoreBundle\Library\Transfert\Importer;
 use Symfony\Component\Config\Definition\Processor;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use JMS\DiExtraBundle\Annotation as DI;
+use Claroline\CoreBundle\Entity\Workspace\SimpleWorkspace;
 
 /**
  * @DI\Service("claroline.importer.properties_importer")
@@ -76,8 +77,6 @@ class WorkspacePropertiesImporter extends Importer implements ConfigurationInter
         $this->om->getRepository('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace')
             ->findOneByCode($configuration['code']);
         $this->validateOwner($configuration['owner']);
-
-
     }
 
     function validateOwner($owner)
@@ -95,8 +94,21 @@ class WorkspacePropertiesImporter extends Importer implements ConfigurationInter
         }
 
         //throws no result exception
-        $this->om->getRepository('Claroline\CoreBundle\Entity\User')->findOneByUsername($owner);
+        $this->om->getRepository('Claroline\CoreBundle\Entity\User')
+            ->findOneByUsername($owner);
 
         return true;
+    }
+
+    public function import($properties)
+    {
+
+//        $owner = $this->om->getRepository('Claroline\CoreBundle\Entity\User')
+//            ->findOneByUsername($properties['owner']);
+//        $workspace->setCreator($owner);
+
+        //create base roles here.
+
+//        return $workspace;
     }
 }
