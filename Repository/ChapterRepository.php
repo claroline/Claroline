@@ -62,6 +62,8 @@ class ChapterRepository extends NestedTreeRepository{
         }
     }
 
+
+
     function getPreviousSibling(Chapter $chapter){
         try{
             return $this->getPrevSiblingsQueryBuilder($chapter)

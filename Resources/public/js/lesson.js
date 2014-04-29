@@ -40,6 +40,7 @@ function initSortable(){
         onDrop: function($item, container, _super) {
             var path = $item.data('path');
             var parentId = $item.parent().data('list');
+            console.log("parent:"+parentId);
             var $previous_element = $item.prev();
             var brother = false;
             var firstposition = true;
@@ -76,6 +77,9 @@ function initSortable(){
         $(this).data("status", $(this).data("status") == "disable" ? "enable" : "disable");
         $('.menu-item').each(function() {
             $(this).toggleClass("cursor_move");
+        });
+        $('.draggable-item').each(function() {
+            $(this).toggleClass("draggable-list");
         });
     })
 }
@@ -125,4 +129,3 @@ function expand(obj){
 function callback_tinymce_init(){
     // script called on tinymce initialization ...
 }
-

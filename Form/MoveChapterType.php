@@ -38,8 +38,15 @@ class MoveChapterType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->addEventListener(FormEvents::PRE_SET_DATA,
-            function (FormEvent $event) use ($builder)
+            function (FormEvent $event) use ($builder, $options)
             {
+                //var_dump($options['attr']['filter']);
+                //$filter = 1;
+                //if($options['attr']['filter'] != null){
+                    $filter = $options['attr']['filter'];
+                //}
+                //var_dump($filter);
+
                 $form = $event->getForm();
                 $data = $event->getData();
 
@@ -48,18 +55,19 @@ class MoveChapterType extends AbstractType
                     $chapters = $chapterRepository->getChapterAndChapterChildren($data->getLesson()->getRoot());
                     $nonLegitTargets =  $chapterRepository->getChapterAndChapterChildren($data);
 
+                    //add current parent to non legit destination list
+                    if($data->getParent() != null){
+                        array_push($nonLegitTargets, $data->getParent());
+                    }
+
                     $chapters_list = array();
-                    $root = true;
                     foreach ($chapters as $child) {
-                        if($root){
+                        //add and rename lesson root, if legit destination
+                        if($child->getId() == $child->getRoot() && ($filter == 0 || $this->isLegitTarget($child, $nonLegitTargets))){
                             $chapters_list[$child->getId()] = $this->translator->trans('Root', array(), 'icap_lesson');
-                            $root = false;
-                        }else{
-                            //remove non legit targets form destination
-                            if( $this->isLegitTarget($child, $nonLegitTargets)){
-                                //$tmp_title = str_repeat("--", $child->getLevel()).$child->getTitle();
-                                $chapters_list[$child->getId()] = $child->getTitle();
-                            }
+                        //add chapters as legit destination for move, after checking if legit
+                        }else if( $filter == 0 || $this->isLegitTarget($child, $nonLegitTargets)){
+                            $chapters_list[$child->getId()] = $child->getTitle();
                         }
                     }
 

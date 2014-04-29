@@ -117,7 +117,7 @@ class LessonController extends Controller
             $tmp_tree = $chapterRepository->getChapterTree($lesson->getRoot());
             $tree = $tmp_tree[0];
             //form used to move chapters, used by dragndrop methods
-            $form_view = $this->createForm($this->get("icap.lesson.movechaptertype"), $chapter)->createView();
+            $form_view = $this->createForm($this->get("icap.lesson.movechaptertype"), $chapter, array('attr' => array('filter' => 0)))->createView();
             $path = $chapterRepository->getPath($chapter);
             //path first element is the lesson root, we don't show it in the breadcrumb
             unset($path[0]);
@@ -458,11 +458,11 @@ class LessonController extends Controller
         $this->checkAccess("EDIT", $lesson);
         $chapter = $this->findChapter($lesson, $chapterId);
 
-        $form = $this->createForm($this->get("icap.lesson.movechaptertype"), $chapter);
-        $form->handleRequest($this->getRequest());
+        $form = $this->createForm($this->get("icap.lesson.movechaptertype"), $chapter, array('attr' => array('filter' => 1)));
+        $form->handleRequest($this->container->get('request_stack')->getCurrentRequest());
 
         //for ajaxification
-        if ($this->getRequest()->isXMLHttpRequest()) {
+        if ($this->container->get('request_stack')->getCurrentRequest()->isXMLHttpRequest()) {
             return $this->render(
                 'IcapLessonBundle:Lesson:choiceMoveChapterAjaxified.html.twig',
                 array(
@@ -503,7 +503,7 @@ class LessonController extends Controller
         $em = $this->getDoctrine()->getManager();
         $repo = $em->getRepository('IcapLessonBundle:Chapter');
 
-        $form = $this->createForm($this->get("icap.lesson.movechaptertype"), $chapter);
+        $form = $this->createForm($this->get("icap.lesson.movechaptertype"), $chapter, array('attr' => array('filter' => 0)));
         $form->handleRequest($this->getRequest());
         if ($form->isValid() and $form->get('choiceChapter')->getData() != $chapter->getid()) {
             $newParentId = $form->get('choiceChapter')->getData();

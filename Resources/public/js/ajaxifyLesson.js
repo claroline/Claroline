@@ -15,14 +15,14 @@ function injectForm(obj, hashname){
             .done(function (data) {
                 resetTiny();
                 $('#chapter_content').html(data);
-                initSelectedChapterListener();
-                selectActiveChapter();
+                //initSelectedChapterListener();
+                //selectActiveChapter();
             })
         ;
     });
 }
 
-/*function injectFormForMove(obj, hashname){
+function injectFormMove(obj, hashname){
     var newLink = $(obj);
     newLink.attr("data-path", newLink.attr('href'));
     newLink.attr('href', hashname+'-'+newLink.attr('data-chapter'));
@@ -31,11 +31,18 @@ function injectForm(obj, hashname){
         $.get(newLink.attr("data-path"))
             .done(function (data) {
                 resetTiny();
+                $('#moveChapterFormContainer').html('');
                 $('#chapter_content').html(data);
+                //initSelectedChapterListener();
+                //selectActiveChapter();
+                //auto check for each next value change
+                initValidateBrotherListener();
+                //manually check for first time
+                checkChapterMoveDestination();
             })
         ;
     });
-}*/
+}
 
 function popupForm(obj, hashname){
     var newLink = $(obj);
@@ -81,7 +88,9 @@ function initSelectedChapterListener(){
 }
 
 function initValidateBrotherListener(){
+    console.log("initValidateBrotherListener");
     $('#icap_lesson_movechaptertype_choiceChapter').on('change', function (event){
+        console.log("checkChapterMoveDestination");
         checkChapterMoveDestination();
     });
 }
@@ -89,8 +98,10 @@ function initValidateBrotherListener(){
 function checkChapterMoveDestination(){
     //if fist element, root, selected
     if($('#icap_lesson_movechaptertype_choiceChapter')[0].selectedIndex == 0){
+        console.log("brother disabled");
         $('#icap_lesson_movechaptertype_brother').prop('disabled', true);
     }else{
+        console.log("brother enabled");
         $('#icap_lesson_movechaptertype_brother').prop('disabled', false);
     }
 }
@@ -102,20 +113,26 @@ $(document).ready(function() {
         injectForm($(this), '#editChapter');
     });
     //form ajax insertion for chapter creation
-    $('.createchapter').each(function(){
+    $('a.createchapter').each(function(){
         injectForm($(this), '#createChapter');
     });
     //form ajax insertion for chapter move
     $('a.movechapter').each(function(){
-        $(this).on('click', function (event){
-            event.preventDefault();
-            $('#chapter_content').html($('#moveChapterFormContainer').html());
-            $('#moveChapterFormContainer').html('')
-            initValidateBrotherListener();
-            checkChapterMoveDestination();
-        });
+       // $(this).on('click', function (event){
+            //event.preventDefault();
+            //$('#chapter_content').html($('#moveChapterFormContainer').html());
+        injectFormMove($(this), '#moveChapter');
+            //$('#moveChapterFormContainer').html('');
+            //initValidateBrotherListener();
+            //checkChapterMoveDestination();
+        //});
         //injectForm($(this), '#moveChapter');
     });
+
+/*    $('a.movechapter').on('click', function (event){
+        initValidateBrotherListener();
+    });*/
+
     //ajax popup for chapter delete form
     $('a.deletechapter').each(function(){
         popupForm($(this), '#deleteChapter');
