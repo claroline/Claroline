@@ -14,8 +14,7 @@
     var home = window.Claroline.Home;
     var modal = window.Claroline.Modal;
     var translator = window.Translator;
-    var publicProfileUrl = window.Routing.generate('claro_public_profile_view') + '/';
-    var searchUserInWorkspaceUrl = window.Routing.generate('claro_user_search_in_workspace') + '/';
+    var routing =  window.Routing;
 
     //Load external plugins
     tinymce.PluginManager.load('mention', home.asset + 'bundles/frontend/tinymce/plugins/mention/plugin.min.js');
@@ -31,7 +30,8 @@
     };
 
     /**
-     * This method fire the event "show" of TinyMCE, this is usefull after change manually something in the editor.
+     * This method fix the height of TinyMCE after modify it,
+     * this is usefull when change manually something in the editor.
      *
      * @param editor A TinyMCE editor object.
      *
@@ -39,7 +39,22 @@
     tinymce.claroline.editorChange = function (editor)
     {
         setTimeout(function () {
-            editor.fire('show');
+            var container = $(editor.getContainer()).find('iframe').first();
+            var height = container.contents().height();
+            var max = 'autoresize_max_height';
+            var min = 'autoresize_min_height';
+
+            switch (true)
+            {
+                case (height <= tinymce.claroline.configuration[min]):
+                    container.css('height', tinymce.claroline.configuration[min]);
+                    break;
+                case (height >= tinymce.claroline.configuration[max]):
+                    container.css('height', tinymce.claroline.configuration[max]);
+                    break;
+                default:
+                    container.css('height', height);
+            }
         }, 500);
     };
 
@@ -149,6 +164,9 @@
                     nodes[resource.id] = new Array(resource.name, resource.type, resource[mimeType]);
                     $(element).modal('hide');
                     tinymce.claroline.callBack(nodes);
+                    $.ajax(
+                        routing.generate('claro_resource_open_perms', {'node': resource.id})
+                    );
                 } else {
                     $('.progress', element).addClass('hide');
                     $('.alert', element).removeClass('hide');
@@ -292,6 +310,8 @@
     {
         if (!_.isUndefined(window.Workspace) && !_.isNull(window.Workspace.id)) {
             if (delimiter === '@' && query.length > 0) {
+                var searchUserInWorkspaceUrl = routing.generate('claro_user_search_in_workspace') + '/';
+
                 $.getJSON(searchUserInWorkspaceUrl + window.Workspace.id + '/' + query, function (data) {
                     if (!_.isEmpty(data) && !_.isUndefined(data.users) && !_.isEmpty(data.users)) {
                         process(data.users);
@@ -324,6 +344,8 @@
      */
     tinymce.claroline.mentionsInsert = function (item)
     {
+        var publicProfileUrl = routing.generate('claro_public_profile_view') + '/';
+
         return '<user id="' + item.id + '"><a href="' + publicProfileUrl + item.id + '">' + item.name + '</a></user>';
     };
 
