@@ -268,7 +268,7 @@ class ProfileController extends Controller
                     $changeSet['roles'] = $rolesChangeSet;
                 }
                 
-                if ($this->userManager->uploadAvatar($user) === -1 ) {;
+                if ($this->userManager->uploadAvatar($user) === -1 ) {
                     $sessionFlashBag->add('error', $errorRight);
                 }
 
@@ -280,10 +280,7 @@ class ProfileController extends Controller
 
                 $sessionFlashBag->add('success', $successMessage);
             } catch(\Exception $exception){
-                $sessionFlashBag->add('error', $errorMessage);
-                throw $exception;
-                
-                
+                $sessionFlashBag->add('error', $errorMessage);       
             }
 
             return $this->redirect($redirectUrl);
