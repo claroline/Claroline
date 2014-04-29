@@ -90,46 +90,6 @@ class ToolManager
     }
 
     /**
-     * Import a tool in a workspace from the template archive.
-     *
-     * @param array             $config
-     * @param array             $roles
-     * @param string            $name
-     * @param AbstractWorkspace $workspace
-     * @param AbstractResource  $rootDir
-     * @param Tool              $tool
-     * @param User              $manager
-     * @param integer           $position
-     */
-    public function import(
-        array $config,
-        array $roles,
-        array $generatedRoles,
-        $name,
-        AbstractWorkspace $workspace,
-        AbstractResource $rootDir,
-        Tool $tool,
-        User $manager,
-        $position,
-        $archive
-    )
-    {
-        $this->configChecker($config);
-        $otr = $this->addWorkspaceTool($tool, $position, $name, $workspace);
-
-        foreach ($roles as $role) {
-            $this->addRoleToOrderedTool($otr, $role);
-        }
-
-        $filePaths = $this->extractFiles($archive, $config);
-
-        $this->ed->dispatch(
-            'tool_' . $tool->getName() . '_from_template', 'ImportTool',
-            array($workspace, $config, $rootDir->getResourceNode(), $manager, $filePaths, $generatedRoles)
-        );
-    }
-
-    /**
      * @param \Claroline\CoreBundle\Entity\Tool\Tool                   $tool
      * @param integer                                                  $position
      * @param string                                                   $name

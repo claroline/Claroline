@@ -233,46 +233,6 @@ class FileListener implements ContainerAwareInterface
     }
 
     /**
-     * @DI\Observe("resource_file_to_template")
-     *
-     * @param ExportResourceTemplateEvent $event
-     */
-    public function onExportTemplate(ExportResourceTemplateEvent $event)
-    {
-        $resource = $event->getResource();
-        $hash = $resource->getHashName();
-        //@todo: remove this line without breaking everything ('type' is set by the tool listener).
-        $config['type'] = 'file';
-        $filePath = $this->container->getParameter('claroline.param.files_directory') . DIRECTORY_SEPARATOR . $hash;
-        $event->setFiles(array(array('archive_path' => $hash, 'original_path' => $filePath)));
-        $event->setConfig($config);
-        $event->stopPropagation();
-    }
-
-    /**
-     * @DI\Observe("resource_file_from_template")
-     *
-     * @param ImportResourceTemplateEvent $event
-     */
-    public function onImportTemplate(ImportResourceTemplateEvent $event)
-    {
-        $ds = DIRECTORY_SEPARATOR;
-        $files = $event->getFiles();
-        $file = new File();
-        $extension = pathinfo($files[0], PATHINFO_EXTENSION);
-        $hashName = $this->container->get('claroline.utilities.misc')->generateGuid() . "." . $extension;
-        $physicalPath = $this->container->getParameter('claroline.param.files_directory') . $ds . $hashName;
-        rename($files[0], $physicalPath);
-        $size = filesize($physicalPath);
-        $file->setSize($size);
-        $file->setHashName($hashName);
-        $guesser = MimeTypeGuesser::getInstance();
-        $file->setMimeType($guesser->guess($physicalPath));
-        $event->setResource($file);
-        $event->stopPropagation();
-    }
-
-    /**
      * Copies a file (no persistence).
      *
      * @param File $resource

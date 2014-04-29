@@ -179,40 +179,4 @@ class TextListener implements ContainerAwareInterface
     {
         $event->stopPropagation();
     }
-
-    /**
-     * @DI\Observe("resource_text_to_template")
-     *
-     * @param ExportResourceTemplateEvent $event
-     */
-    public function onExportTemplate(ExportResourceTemplateEvent $event)
-    {
-        $text = $event->getResource();
-        $revisionRepo = $this->container->get('doctrine.orm.entity_manager')
-            ->getRepository('ClarolineCoreBundle:Resource\Revision');
-        $config['text'] = $revisionRepo->getLastRevision($text)->getContent();
-        $event->setConfig($config);
-        $event->stopPropagation();
-    }
-
-    /**
-     * @DI\Observe("resource_text_from_template")
-     *
-     * @param ImportResourceTemplateEvent $event
-     */
-    public function onImportTemplate(ImportResourceTemplateEvent $event)
-    {
-        $em = $this->container->get('doctrine.orm.entity_manager');
-        $user = $event->getUser();
-        $text = new Text();
-        $em->persist($text);
-        $config = $event->getConfig();
-        $revision = new Revision();
-        $revision->setContent($config['text']);
-        $revision->setUser($user);
-        $revision->setText($text);
-        $em->persist($revision);
-        $event->setResource($text);
-        $event->stopPropagation();
-    }
 }

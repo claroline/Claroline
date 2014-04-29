@@ -135,58 +135,6 @@ class ActivityListener implements ContainerAwareInterface
     }
 
     /**
-     * @DI\Observe("resource_activity_to_template")
-     *
-     * @param ExportResourceTemplateEvent $event
-     */
-    public function onExportTemplate(ExportResourceTemplateEvent $event)
-    {
-        $em = $this->container->get('doctrine.orm.entity_manager');
-        $resource = $event->getResource();
-        $config['instructions'] = $resource->getInstructions();
-        $resourceActivities = $em->getRepository('ClarolineCoreBundle:Resource\ResourceActivity')
-            ->findResourceActivities($resource);
-        $resourceDependencies = array();
-
-        foreach ($resourceActivities as $resourceActivity) {
-            if ($resourceActivity->getResourceNode()->getWorkspace() ===
-                $resource->getResourceNode()->getWorkspace()) {
-                $resourceActivityConfig['id'] = $resourceActivity->getResourceNode()->getId();
-                $resourceActivityConfig['order'] = $resourceActivity->getSequenceOrder();
-                $config['resources'][] = $resourceActivityConfig;
-            }
-        }
-
-        $event->setFiles($resourceDependencies);
-        $event->setConfig($config);
-        $event->stopPropagation();
-    }
-
-    /**
-     * @DI\Observe("resource_activity_from_template")
-     *
-     * @param ImportResourceTemplateEvent $event
-     */
-    public function onImportTemplate(ImportResourceTemplateEvent $event)
-    {
-        $em = $this->container->get('doctrine.orm.entity_manager');
-        $config = $event->getConfig();
-        $activity = new Activity();
-        $activity->setInstructions($config['instructions']);
-
-        foreach ($config['resources'] as $data) {
-            $resourceActivity = new ResourceActivity();
-            $resourceActivity->setResource($event->find($data['id']));
-            $resourceActivity->setSequenceOrder($data['order']);
-            $resourceActivity->setActivity($activity);
-            $em->persist($resourceActivity);
-        }
-
-        $event->setResource($activity);
-        $event->stopPropagation();
-    }
-
-    /**
      * @DI\Observe("open_activity")
      *
      * @param OpenResourceEvent $event
