@@ -211,9 +211,9 @@ class ProfileController extends Controller
             $editYourself = true;
         }
 
-        $roles = $this->roleManager->getPlatformRoles($loggedUser);
+        $roles = $this->roleManager->getRoleByName('ROLE_USER');
         $form = $this->createForm(
-            new ProfileType($roles, $isAdmin, $this->localeManager->getAvailableLocales()), $user
+            new ProfileType(array($roles), $isAdmin, $this->localeManager->getAvailableLocales()), $user
         );
 
         $form->handleRequest($this->request);
@@ -238,50 +238,46 @@ class ProfileController extends Controller
                 $redirectUrl    = $this->generateUrl('claro_profile_view');
             }
 
-            try {
-                $entityManager = $this->getDoctrine()->getManager();
-                $unitOfWork    = $entityManager->getUnitOfWork();
-                $unitOfWork->computeChangeSets();
+            $entityManager = $this->getDoctrine()->getManager();
+            $unitOfWork    = $entityManager->getUnitOfWork();
+            $unitOfWork->computeChangeSets();
 
-                $changeSet = $unitOfWork->getEntityChangeSet($user);
-                $newRoles  = array();
+            $changeSet = $unitOfWork->getEntityChangeSet($user);
+            $newRoles  = array();
 
-                if (isset($form['platformRoles'])) {
-                    $newRoles = $form['platformRoles']->getData();
-                    $this->userManager->setPlatformRoles($user, $newRoles);
-                }
-
-                $rolesChangeSet = array();
-                //Detect added
-                foreach ($newRoles as $role) {
-                    if (!$this->isInRoles($role, $roles)) {
-                        $rolesChangeSet[$role->getTranslationKey()] = array(false, true);
-                    }
-                }
-                //Detect removed
-                foreach ($roles as $role) {
-                    if (!$this->isInRoles($role, $newRoles)) {
-                        $rolesChangeSet[$role->getTranslationKey()] = array(true, false);
-                    }
-                }
-                if (count($rolesChangeSet) > 0) {
-                    $changeSet['roles'] = $rolesChangeSet;
-                }
-                
-                if ($this->userManager->uploadAvatar($user) === false ) {
-                    $sessionFlashBag->add('error', $errorRight);
-                }
-
-                $this->eventDispatcher->dispatch(
-                    'log',
-                    'Log\LogUserUpdate',
-                    array($user, $changeSet)
-                );
-
-                $sessionFlashBag->add('success', $successMessage);
-            } catch(\Exception $exception){
-                $sessionFlashBag->add('error', $errorMessage);       
+            if (isset($form['platformRoles'])) {
+                $newRoles = $form['platformRoles']->getData();
+                $this->userManager->setPlatformRoles($user, $newRoles);
             }
+
+            $rolesChangeSet = array();
+            //Detect added
+            foreach ($newRoles as $role) {
+                if (!$this->isInRoles($role, $roles)) {
+                    $rolesChangeSet[$role->getTranslationKey()] = array(false, true);
+                }
+            }
+            //Detect removed
+            foreach ($roles as $role) {
+                if (!$this->isInRoles($role, $newRoles)) {
+                    $rolesChangeSet[$role->getTranslationKey()] = array(true, false);
+                }
+            }
+            if (count($rolesChangeSet) > 0) {
+                $changeSet['roles'] = $rolesChangeSet;
+            }
+            
+            if ($this->userManager->uploadAvatar($user) === false ) {
+                $sessionFlashBag->add('error', $errorRight);
+            }
+
+            $this->eventDispatcher->dispatch(
+                'log',
+                'Log\LogUserUpdate',
+                array($user, $changeSet)
+            );
+
+            $sessionFlashBag->add('success', $successMessage);
 
             return $this->redirect($redirectUrl);
         }

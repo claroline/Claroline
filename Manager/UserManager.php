@@ -818,18 +818,21 @@ class UserManager
      */
     public function uploadAvatar(User $user)
     {
-        if ( is_writable($this->uploadsDirectory.'/pictures/')) {
-            if (null !== $user->getPictureFile()) {
-                $user->setPicture(
-                    sha1($user->getPictureFile()->getClientOriginalName().$user->getId()).'.'.$user->getPictureFile()->guessExtension()
-                );
-                $user->getPictureFile()->move($this->uploadsDirectory.'/pictures/', $user->getPicture());
-                
-                return true;
+        if (null !== $user->getPictureFile()) {
+            if (!is_writable($pictureDir = $this->uploadsDirectory.'/pictures/')) {
+                throw new \Exception("{$pictureDir} is not writable");
             }
+
+            $user->setPicture(
+                sha1(
+                    $user->getPictureFile()->getClientOriginalName()
+                    . $user->getId())
+                    . '.'
+                    . $user->getPictureFile()->guessExtension()
+            );
+            $user->getPictureFile()->move($pictureDir, $user->getPicture());
         }
 
-        return false;
     }
 
     /**
