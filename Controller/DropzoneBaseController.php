@@ -33,6 +33,7 @@ class DropzoneBaseController extends Controller
 {
     const CRITERION_PER_PAGE = 10;
     const DROP_PER_PAGE = 10;
+    const CORRECTION_PER_PAGE = 10;
 
     protected function isAllow(Dropzone $dropzone, $actionName)
     {
