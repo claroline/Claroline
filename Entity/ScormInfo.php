@@ -19,11 +19,13 @@ class ScormInfo
 
     /**
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\User")
+     * @ORM\JoinColumn(name="user_id", onDelete="CASCADE", nullable=false)
      */
     protected $user;
 
     /**
      * @ORM\ManyToOne(targetEntity="Claroline\ScormBundle\Entity\Scorm")
+     * @ORM\JoinColumn(name="scorm_id", onDelete="CASCADE", nullable=false)
      */
     protected $scorm;
 

@@ -3,10 +3,11 @@
 namespace Claroline\ScormBundle\Controller;
 
 use Claroline\ScormBundle\Entity\ScormInfo;
+use Claroline\ScormBundle\Event\Log\LogScormResultEvent;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-use Claroline\CoreBundle\Event\Event\LogGenericEvent;
+//use Claroline\CoreBundle\Event\Log\LogGenericEvent;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 
@@ -91,11 +92,18 @@ class ScormController extends Controller
         $details['credit'] = $scormInfo->getCredit();
         $details['lessonMode'] = $scormInfo->getLessonMode();
 
-        $log = new LogGenericEvent(
+        $log = new LogScormResultEvent(
             "resource_scorm_result",
-            $details, null, null,
-            $scorm, null, $scorm->getWorkspace(),
-            $user, null, null, null
+            $details,
+            null,
+            null,
+            $scorm->getResourceNode(),
+            null,
+            $scorm->getResourceNode()->getWorkspace(),
+            $user,
+            null,
+            null,
+            null
         );
         $this->get('event_dispatcher')->dispatch('log', $log);
 

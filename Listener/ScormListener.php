@@ -2,37 +2,76 @@
 
 namespace Claroline\ScormBundle\Listener;
 
-use Claroline\CoreBundle\Event\Event\CopyResourceEvent;
-use Claroline\CoreBundle\Event\Event\CreateFormResourceEvent;
-use Claroline\CoreBundle\Event\Event\CreateResourceEvent;
-use Claroline\CoreBundle\Event\Event\OpenResourceEvent;
-use Claroline\CoreBundle\Event\Event\DeleteResourceEvent;
-//use Claroline\CoreBundle\Event\Event\DownloadResourceEvent;
+use Claroline\CoreBundle\Event\CopyResourceEvent;
+use Claroline\CoreBundle\Event\CreateFormResourceEvent;
+use Claroline\CoreBundle\Event\CreateResourceEvent;
+use Claroline\CoreBundle\Event\OpenResourceEvent;
+use Claroline\CoreBundle\Event\DeleteResourceEvent;
+use Claroline\CoreBundle\Persistence\ObjectManager;
+//use Claroline\CoreBundle\Event\DownloadResourceEvent;
 use Claroline\ScormBundle\Entity\Scorm;
 use Claroline\ScormBundle\Entity\ScormInfo;
 use Claroline\ScormBundle\Form\ScormType;
 use JMS\DiExtraBundle\Annotation as DI;
-use Symfony\Component\DependencyInjection\ContainerAware;
+use Symfony\Bundle\TwigBundle\TwigEngine;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\Form\FormError;
+use Symfony\Component\Form\FormFactory;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Security\Core\SecurityContextInterface;
+use Symfony\Component\Translation\Translator;
 
 /**
  * @DI\Service
  */
-class ScormListener extends ContainerAware
+class ScormListener
 {
-    protected $container;
+    private $container;
+    private $formFactory;
+    private $om;
+    private $request;
+    private $router;
+    private $securityContext;
+    private $templating;
+    private $translator;
+    private $uploadPath;
 
     /**
      * @DI\InjectParams({
-     *     "container" = @DI\Inject("service_container")
+     *     "container"          = @DI\Inject("service_container"),
+     *     "formFactory"        = @DI\Inject("form.factory"),
+     *     "om"                 = @DI\Inject("claroline.persistence.object_manager"),
+     *     "requestStack"       = @DI\Inject("request_stack"),
+     *     "router"             = @DI\Inject("router"),
+     *     "securityContext"    = @DI\Inject("security.context"),
+     *     "templating"         = @DI\Inject("templating"),
+     *     "translator"         = @DI\Inject("translator")
      * })
-     *
-     * @param ContainerInterface $container
      */
-    public function setContainer(ContainerInterface $container = null)
+    public function __construct(
+        ContainerInterface $container,
+        FormFactory $formFactory,
+        ObjectManager $om,
+        RequestStack $requestStack,
+        UrlGeneratorInterface $router,
+        SecurityContextInterface $securityContext,
+        TwigEngine $templating,
+        Translator $translator
+    )
     {
         $this->container = $container;
+        $this->formFactory = $formFactory;
+        $this->om = $om;
+        $this->request = $requestStack->getCurrentRequest();
+        $this->router = $router;
+        $this->securityContext = $securityContext;
+        $this->templating = $templating;
+        $this->translator = $translator;
+        $this->uploadPath = $this->container
+            ->getParameter('kernel.root_dir') . '/../web/uploads/webresource/';
     }
 
     /**
@@ -42,8 +81,8 @@ class ScormListener extends ContainerAware
      */
     public function onCreateForm(CreateFormResourceEvent $event)
     {
-        $form = $this->container->get('form.factory')->create(new ScormType, new Scorm());
-        $content = $this->container->get('templating')->render(
+        $form = $this->formFactory->create(new ScormType(), new Scorm());
+        $content = $this->templating->render(
             'ClarolineCoreBundle:Resource:createForm.html.twig',
             array(
                 'form' => $form->createView(),
@@ -61,117 +100,28 @@ class ScormListener extends ContainerAware
      */
     public function onCreate(CreateResourceEvent $event)
     {
-        $request = $this->container->get('request');
-        $form = $this->container->get('form.factory')->create(new ScormType(), new Scorm());
-        $form->handleRequest($request);
+        $form = $this->formFactory->create(new ScormType(), new Scorm());
+        $form->handleRequest($this->request);
 
         if ($form->isValid()) {
-            $scorm = $form->getData();
             $tmpFile = $form->get('file')->getData();
-            $fileName = $tmpFile->getClientOriginalName();
-            $extension = pathinfo($fileName, PATHINFO_EXTENSION);
-            $hashName = $this->container->get('claroline.utilities.misc')
-                ->generateGuid() . "." . $extension;
-            $tmpFile->move($this->container->getParameter('claroline.param.files_directory'), $hashName);
 
-            $path = $this->container->getParameter('claroline.param.files_directory') .
-                DIRECTORY_SEPARATOR .
-                $hashName;
-            $zip = new \ZipArchive();
+            if ($this->isScormArchive($tmpFile)) {
+                $scormResources = $this->createScormResource($tmpFile);
+                $event->setResources($scormResources);
+                $event->stopPropagation();
 
-            if ($zip->open($path) === true) {
-                $stream = $zip->getStream("imsmanifest.xml");
-
-                if ($stream) {
-                    $contents = '';
-
-                    while (!feof($stream)) {
-                        $contents .= fread($stream, 2);
-                    }
-                    $dom = new \DOMDocument();
-                    $dom->loadXML($contents);
-
-                    $items = $dom->getElementsByTagName('item');
-                    $scoResources = $dom->getElementsByTagName('resource');
-                    $resources = array();
-
-                    foreach ($items as $item) {
-                        $ref = $item->attributes->getNamedItem('identifierref');
-
-                        if (!is_null($ref)) {
-                            $identifierRef = $ref->nodeValue;
-                            $title = $item->getElementsByTagName('title')->item(0)->nodeValue;
-                            $launchDatas = $item->getElementsByTagNameNS(
-                                $item->lookupNamespaceUri('adlcp'),
-                                'datafromlms'
-                            );
-                            $masteryScores = $item->getElementsByTagNameNS(
-                                $item->lookupNamespaceUri('adlcp'),
-                                'masteryscore'
-                            );
-
-                            if ($launchDatas->length > 0) {
-                                $launchData = $launchDatas->item(0)->nodeValue;
-                            } else {
-                                $launchData = '';
-                            }
-
-                            if ($masteryScores->length > 0) {
-                                $masteryScore = intval($masteryScores->item(0)->nodeValue);
-                            } else {
-                                $masteryScore = -1;
-                            }
-
-                            foreach ($scoResources as $scoResource) {
-                                $identifier = $scoResource->attributes->getNamedItem('identifier');
-                                $href = $scoResource->attributes->getNamedItem('href');
-                                $scormType = $scoResource->attributes->getNamedItemNS(
-                                    $scoResource->lookupNamespaceUri('adlcp'),
-                                    'scormtype'
-                                );
-
-                                // For compatibility with Raptivity scorm 1.2 package
-                                if (is_null($scormType)) {
-                                    $scormType = $scoResource->attributes->getNamedItemNS(
-                                        $scoResource->lookupNamespaceUri('adlcp'),
-                                        'scormType'
-                                    );
-                                }
-
-                                if (!is_null($identifier)
-                                    && !is_null($scormType)
-                                    && !is_null($href)
-                                    && $identifier->nodeValue === $identifierRef
-                                    && $scormType->nodeValue === 'sco') {
-
-                                    $scoUrl = $href->nodeValue;
-
-                                    $scorm = new Scorm();
-                                    $scorm->setName($title);
-                                    $scorm->setEntryUrl($scoUrl);
-                                    $scorm->setLaunchData($launchData);
-                                    $scorm->setMasteryScore($masteryScore);
-                                    $scorm->setHashName($hashName);
-                                    $resources[] = $scorm;
-                                    break;
-                                }
-                            }
-                        }
-                    }
-
-                    $event->setResources($resources);
-                    $this->unzipTmpFile($hashName);
-
-                } else {
-                    throw new \Exception("File imsmanifest.xml must be in the root directory of the archive");
-                }
+                return;
+            } else {
+                $errorMsg = $this->translator->trans(
+                    'invalid_scorm_archive_message',
+                    array(),
+                    'resource'
+                );
+                $form->addError(new FormError($errorMsg));
             }
-            $event->stopPropagation();
-
-            return;
         }
-
-        $content = $this->container->get('templating')->render(
+        $content = $this->templating->render(
             'ClarolineCoreBundle:Resource:createForm.html.twig',
             array(
                 'form' => $form->createView(),
@@ -192,15 +142,14 @@ class ScormListener extends ContainerAware
         $ds = DIRECTORY_SEPARATOR;
         $scorm = $event->getResource();
         $hashName = $scorm->getHashName();
-        $relativePath = pathinfo($hashName, PATHINFO_FILENAME)
+        $relativePath = $hashName
             . $ds
             . $scorm->getEntryUrl();
-        $route = $this->container->get('router')->getContext()->getBaseUrl();
-        $fp = preg_replace('"/web/app_dev.php$"', "/web/HTMLPage/$relativePath", $route);
+        $route = $this->router->getContext()->getBaseUrl();
+        $fp = preg_replace('"/web/app_dev.php$"', "/web/uploads/webresource/$relativePath", $route);
 
-        $user = $this->container->get('security.context')->getToken()->getUser();
-        $em = $this->container->get('doctrine.orm.entity_manager');
-        $scormInfo = $em->getRepository('ClarolineScormBundle:ScormInfo')
+        $user = $this->securityContext->getToken()->getUser();
+        $scormInfo = $this->om->getRepository('ClarolineScormBundle:ScormInfo')
             ->findOneBy(array('user' => $user->getId(), 'scorm' => $scorm->getId()));
 
         if (is_null($scormInfo)) {
@@ -220,12 +169,14 @@ class ScormListener extends ContainerAware
             $scormInfo->setLessonMode("normal");
             $scormInfo->setExitMode("");
         }
-        $content = $this->container->get('templating')->render(
+        $content = $this->templating->render(
             'ClarolineScormBundle::scorm.html.twig',
             array(
+                'resource' => $event->getResource(),
+                '_resource' => $event->getResource(),
+                'scormInfo' => $scormInfo,
                 'scormUrl' => $fp,
-                'workspace' => $scorm->getWorkspace(),
-                'scormInfo' => $scormInfo
+                'workspace' => $scorm->getResourceNode()->getWorkspace()
             )
         );
         $response = new Response($content);
@@ -240,8 +191,12 @@ class ScormListener extends ContainerAware
      */
     public function onDelete(DeleteResourceEvent $event)
     {
-        $em = $this->container->get('doctrine.orm.entity_manager');
-        $em->remove($event->getResource());
+        $webResourcesPath = $this->uploadPath . $event->getResource()->getHashName();
+
+        if (file_exists($webResourcesPath)) {
+            $this->deleteFiles($webResourcesPath);
+        }
+        $this->om->remove($event->getResource());
         $event->stopPropagation();
     }
 
@@ -263,21 +218,171 @@ class ScormListener extends ContainerAware
         $event->stopPropagation();
     }
 
-    private function unzipTmpFile($hashName)
+    /**
+     * Checks if a UploadedFile is a zip archive that contains a
+     * imsmanifest.xml file in its root directory.
+     *
+     * @param UploadedFile $file
+     *
+     * @return boolean.
+     */
+    private function isScormArchive(UploadedFile $file)
     {
-        $path = $this->container->getParameter('claroline.param.files_directory') . DIRECTORY_SEPARATOR . $hashName;
         $zip = new \ZipArchive();
 
-        if ($zip->open($path) === true) {
-            $zip->extractTo(
-                $this->container->getParameter('claroline.site.directory')
-                . DIRECTORY_SEPARATOR
-                . pathinfo($hashName, PATHINFO_FILENAME)
-                . DIRECTORY_SEPARATOR
-            );
-            $zip->close();
-        } else {
-            return 0;
+        return $file->getClientMimeType() === 'application/zip'
+            && $zip->open($file)
+            && $zip->getStream("imsmanifest.xml");
+    }
+
+    /**
+     * Unzip a given ZIP file into the web resources directory
+     *
+     * @param UploadedFile $file
+     * @param $hashName name of the destination directory
+     */
+    private function unzipScormArchive(UploadedFile $file, $hashName)
+    {
+        $zip = new \ZipArchive();
+        $zip->open($file);
+        $destinationDir = $this->uploadPath . $hashName;
+
+        if (!file_exists($destinationDir)) {
+            mkdir($destinationDir, 0777, true);
         }
+        $zip->extractTo($destinationDir);
+        $zip->close();
+    }
+
+    /**
+     * Manages creation of Scorm resources and their web resources
+     *
+     * @param UploadedFile $file
+     *
+     * @return Scorm resource or null.
+     */
+    private function createScormResource(UploadedFile $file)
+    {
+        $fileName = $file->getClientOriginalName();
+        $extension = pathinfo($fileName, PATHINFO_EXTENSION);
+        $hashName = $this->container->get('claroline.utilities.misc')
+            ->generateGuid() . "." . $extension;
+        $resources = $this->generateResourcesFromScormArchive($file, $hashName);
+        $this->unzipScormArchive($file, $hashName);
+
+        return $resources;
+    }
+
+    /**
+     * Parses imsmanifest.xml file of a Scorm archive and
+     * creates Scorm resources defined in it.
+     *
+     * @param UploadedFile $file
+     * @param $hashName
+     *
+     * @return array of Scorm resources
+     */
+    private function generateResourcesFromScormArchive(UploadedFile $file, $hashName)
+    {
+        $resources = array();
+        $contents = '';
+        $zip = new \ZipArchive();
+
+        $zip->open($file);
+        $stream = $zip->getStream("imsmanifest.xml");
+
+        while (!feof($stream)) {
+            $contents .= fread($stream, 2);
+        }
+        $dom = new \DOMDocument();
+        $dom->loadXML($contents);
+
+        $items = $dom->getElementsByTagName('item');
+        $scoResources = $dom->getElementsByTagName('resource');
+
+        foreach ($items as $item) {
+            $ref = $item->attributes->getNamedItem('identifierref');
+
+            if (!is_null($ref)) {
+                $identifierRef = $ref->nodeValue;
+                $title = $item->getElementsByTagName('title')->item(0)->nodeValue;
+                $launchDatas = $item->getElementsByTagNameNS(
+                    $item->lookupNamespaceUri('adlcp'),
+                    'datafromlms'
+                );
+                $masteryScores = $item->getElementsByTagNameNS(
+                    $item->lookupNamespaceUri('adlcp'),
+                    'masteryscore'
+                );
+
+                if ($launchDatas->length > 0) {
+                    $launchData = $launchDatas->item(0)->nodeValue;
+                } else {
+                    $launchData = '';
+                }
+
+                if ($masteryScores->length > 0) {
+                    $masteryScore = intval($masteryScores->item(0)->nodeValue);
+                } else {
+                    $masteryScore = -1;
+                }
+
+                foreach ($scoResources as $scoResource) {
+                    $identifier = $scoResource->attributes->getNamedItem('identifier');
+                    $href = $scoResource->attributes->getNamedItem('href');
+                    $scormType = $scoResource->attributes->getNamedItemNS(
+                        $scoResource->lookupNamespaceUri('adlcp'),
+                        'scormtype'
+                    );
+
+                    // For compatibility with Raptivity scorm 1.2 package
+                    if (is_null($scormType)) {
+                        $scormType = $scoResource->attributes->getNamedItemNS(
+                            $scoResource->lookupNamespaceUri('adlcp'),
+                            'scormType'
+                        );
+                    }
+
+                    if (!is_null($identifier)
+                        && !is_null($scormType)
+                        && !is_null($href)
+                        && $identifier->nodeValue === $identifierRef
+                        && $scormType->nodeValue === 'sco') {
+
+                        $scoUrl = $href->nodeValue;
+
+                        $scorm = new Scorm();
+                        $scorm->setName($title);
+                        $scorm->setEntryUrl($scoUrl);
+                        $scorm->setLaunchData($launchData);
+                        $scorm->setMasteryScore($masteryScore);
+                        $scorm->setHashName($hashName);
+                        $resources[] = $scorm;
+                        break;
+                    }
+                }
+            }
+        }
+        $zip->close();
+
+        return $resources;
+    }
+
+    /**
+     * Deletes recursively a directory and its content.
+     *
+     * @param $dir The path to the directory to delete.
+     */
+    private function deleteFiles($dirPath)
+    {
+        foreach (glob($dirPath . '/*') as $content) {
+
+            if (is_dir($content)) {
+                $this->deleteFiles($content);
+            } else {
+                unlink($content);
+            }
+        }
+        rmdir($dirPath);
     }
 }

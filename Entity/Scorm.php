@@ -12,7 +12,7 @@ use Doctrine\ORM\Mapping as ORM;
 class Scorm extends AbstractResource
 {
     /**
-     * @ORM\Column(name="hash_name", length=36)
+     * @ORM\Column(name="hash_name", length=50)
      */
     protected $hashName;
 

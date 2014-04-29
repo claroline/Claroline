@@ -1,1 +1,2 @@
-claroline_scorm: "Scorm (1.2)"
+claroline_scorm: 'Scorm (1.2)'
+invalid_scorm_archive_message : 'Le fichier doit être une archive ZIP contenant le fichier "imsmanifest.xml" à la racine.'

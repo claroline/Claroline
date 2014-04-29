@@ -4,7 +4,7 @@
     "keywords": ["Claroline", "Plugin", "Scorm"],
     "homepage": "http://www.claroline.net",
     "type": "claroline-plugin",
-    "license": "",
+    "license": "GPL-3.0+",
     "authors": [
         {
             "name": "Claroline development team",
@@ -13,10 +13,8 @@
         }
     ],
     "require": {
-        "php": ">=5.3.0",
-        "symfony/framework-bundle":  "2.*",
-        "symfony/symfony":           "2.*"
-
+        "php": ">=5.4.1",
+        "claroline/core-bundle": "~2.13"
     },
     "autoload": {
         "psr-0": { "Claroline\\ScormBundle": "" }

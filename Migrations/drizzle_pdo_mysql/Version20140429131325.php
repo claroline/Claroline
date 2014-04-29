@@ -1,6 +1,6 @@
 <?php
 
-namespace Claroline\ScormBundle\Migrations\pdo_mysql;
+namespace Claroline\ScormBundle\Migrations\drizzle_pdo_mysql;
 
 use Doctrine\DBAL\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
@@ -8,17 +8,17 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2013/08/05 11:05:52
+ * Generation date: 2014/04/29 01:13:27
  */
-class Version20130805110551 extends AbstractMigration
+class Version20140429131325 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
         $this->addSql("
             CREATE TABLE claro_scorm_info (
                 id INT AUTO_INCREMENT NOT NULL, 
-                user_id INT DEFAULT NULL, 
-                scorm_id INT DEFAULT NULL, 
+                user_id INT NOT NULL, 
+                scorm_id INT NOT NULL, 
                 score_raw INT DEFAULT NULL, 
                 score_min INT DEFAULT NULL, 
                 score_max INT DEFAULT NULL, 
@@ -31,35 +31,39 @@ class Version20130805110551 extends AbstractMigration
                 exit_mode VARCHAR(255) DEFAULT NULL, 
                 lesson_location VARCHAR(255) DEFAULT NULL, 
                 lesson_mode VARCHAR(255) DEFAULT NULL, 
+                PRIMARY KEY(id), 
                 INDEX IDX_6F4BB916A76ED395 (user_id), 
-                INDEX IDX_6F4BB916D75F22BE (scorm_id), 
-                PRIMARY KEY(id)
-            ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
+                INDEX IDX_6F4BB916D75F22BE (scorm_id)
+            )
         ");
         $this->addSql("
             CREATE TABLE claro_scorm (
-                id INT NOT NULL, 
-                hash_name VARCHAR(36) NOT NULL, 
+                id INT AUTO_INCREMENT NOT NULL, 
+                hash_name VARCHAR(50) NOT NULL, 
                 mastery_score INT DEFAULT NULL, 
                 launch_data VARCHAR(255) DEFAULT NULL, 
                 entry_url VARCHAR(255) NOT NULL, 
-                PRIMARY KEY(id)
-            ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
+                resourceNode_id INT DEFAULT NULL, 
+                PRIMARY KEY(id), 
+                UNIQUE INDEX UNIQ_B6416871B87FAB32 (resourceNode_id)
+            )
         ");
         $this->addSql("
             ALTER TABLE claro_scorm_info 
             ADD CONSTRAINT FK_6F4BB916A76ED395 FOREIGN KEY (user_id) 
-            REFERENCES claro_user (id)
+            REFERENCES claro_user (id) 
+            ON DELETE CASCADE
         ");
         $this->addSql("
             ALTER TABLE claro_scorm_info 
             ADD CONSTRAINT FK_6F4BB916D75F22BE FOREIGN KEY (scorm_id) 
-            REFERENCES claro_scorm (id)
+            REFERENCES claro_scorm (id) 
+            ON DELETE CASCADE
         ");
         $this->addSql("
             ALTER TABLE claro_scorm 
-            ADD CONSTRAINT FK_B6416871BF396750 FOREIGN KEY (id) 
-            REFERENCES claro_resource (id) 
+            ADD CONSTRAINT FK_B6416871B87FAB32 FOREIGN KEY (resourceNode_id) 
+            REFERENCES claro_resource_node (id) 
             ON DELETE CASCADE
         ");
     }

@@ -1,6 +1,6 @@
 <?php
 
-namespace Claroline\ScormBundle\Migrations\sqlsrv;
+namespace Claroline\ScormBundle\Migrations\pdo_sqlsrv;
 
 use Doctrine\DBAL\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
@@ -8,17 +8,17 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2013/08/05 11:05:53
+ * Generation date: 2014/04/29 01:13:27
  */
-class Version20130805110551 extends AbstractMigration
+class Version20140429131325 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
         $this->addSql("
             CREATE TABLE claro_scorm_info (
                 id INT IDENTITY NOT NULL, 
-                user_id INT, 
-                scorm_id INT, 
+                user_id INT NOT NULL, 
+                scorm_id INT NOT NULL, 
                 score_raw INT, 
                 score_min INT, 
                 score_max INT, 
@@ -42,28 +42,35 @@ class Version20130805110551 extends AbstractMigration
         ");
         $this->addSql("
             CREATE TABLE claro_scorm (
-                id INT NOT NULL, 
-                hash_name NVARCHAR(36) NOT NULL, 
+                id INT IDENTITY NOT NULL, 
+                hash_name NVARCHAR(50) NOT NULL, 
                 mastery_score INT, 
                 launch_data NVARCHAR(255), 
                 entry_url NVARCHAR(255) NOT NULL, 
+                resourceNode_id INT, 
                 PRIMARY KEY (id)
             )
         ");
         $this->addSql("
+            CREATE UNIQUE INDEX UNIQ_B6416871B87FAB32 ON claro_scorm (resourceNode_id) 
+            WHERE resourceNode_id IS NOT NULL
+        ");
+        $this->addSql("
             ALTER TABLE claro_scorm_info 
             ADD CONSTRAINT FK_6F4BB916A76ED395 FOREIGN KEY (user_id) 
-            REFERENCES claro_user (id)
+            REFERENCES claro_user (id) 
+            ON DELETE CASCADE
         ");
         $this->addSql("
             ALTER TABLE claro_scorm_info 
             ADD CONSTRAINT FK_6F4BB916D75F22BE FOREIGN KEY (scorm_id) 
-            REFERENCES claro_scorm (id)
+            REFERENCES claro_scorm (id) 
+            ON DELETE CASCADE
         ");
         $this->addSql("
             ALTER TABLE claro_scorm 
-            ADD CONSTRAINT FK_B6416871BF396750 FOREIGN KEY (id) 
-            REFERENCES claro_resource (id) 
+            ADD CONSTRAINT FK_B6416871B87FAB32 FOREIGN KEY (resourceNode_id) 
+            REFERENCES claro_resource_node (id) 
             ON DELETE CASCADE
         ");
     }
