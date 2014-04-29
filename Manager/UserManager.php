@@ -819,18 +819,18 @@ class UserManager
     public function uploadAvatar(User $user)
     {
 
-        if ( is_readable($this->uploadsDirectory)) {
+        if ( is_writable($this->uploadsDirectory.'/pictures/')) {
             if (null !== $user->getPictureFile()) {
                 $user->setPicture(
                     sha1($user->getPictureFile()->getClientOriginalName().$user->getId()).'.'.$user->getPictureFile()->guessExtension()
                 );
                 $user->getPictureFile()->move($this->uploadsDirectory.'/pictures/', $user->getPicture());
                 
-                return 0;
+                return true;
             }
         }
 
-        return -1;
+        return false;
     }
 
     /**

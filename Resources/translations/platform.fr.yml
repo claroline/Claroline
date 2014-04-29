@@ -247,7 +247,7 @@ edit_password_message: 'Êtes vous sur de vouloir modifier votre mot de passe ?'
 edit_password_success: 'Modification de votre mot de passe effectuée avec succès.'
 edit_profile: 'Modifier votre profil'
 edit_profile_error: 'Une erreur est survenue pendant la modification du profil.'
-edit_profile_error_right : 'Vous n''êtes pas authorisez à uploader des images, veuillez contactez votre administrateur'
+edit_profile_error_right : Vous n'êtes pas autorisez à uploader des images, veuillez contactez votre administrateur
 edit_profile_success: 'Modification du profil effectué avec succès.'
 edit_public_profile: 'Modifier le profil public'
 edit_public_profile_preferences_error: 'Une erreur est survenue lors de la modification des préférences de votre profil public.'
