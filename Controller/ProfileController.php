@@ -268,7 +268,7 @@ class ProfileController extends Controller
                     $changeSet['roles'] = $rolesChangeSet;
                 }
                 
-                if ($this->userManager->uploadAvatar($user) === -1 ) {
+                if ($this->userManager->uploadAvatar($user) === false ) {
                     $sessionFlashBag->add('error', $errorRight);
                 }
 

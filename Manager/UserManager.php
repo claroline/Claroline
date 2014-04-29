@@ -818,7 +818,6 @@ class UserManager
      */
     public function uploadAvatar(User $user)
     {
-
         if ( is_writable($this->uploadsDirectory.'/pictures/')) {
             if (null !== $user->getPictureFile()) {
                 $user->setPicture(
