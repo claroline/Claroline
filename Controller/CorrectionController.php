@@ -1292,6 +1292,69 @@ class CorrectionController extends DropzoneBaseController
         );
     }
 
+    /**
+     *
+     * @Route(
+     *      "/{resourceId}/examiners/{userId}",
+     *      name="icap_dropzone_examiner_corrections",
+     *      requirements ={"resourceId" ="\d+","userId"="\d+"},
+     *      defaults={"page" = 1 }
+     * )
+     *
+     * @Route(
+     *      "/{resourceId}/examiners/{userId}/{page}",
+     *      name="icap_dropzone_examiner_corrections_paginated",
+     *      requirements ={"resourceId" ="\d+","userId"="\d+","page"="\d+"},
+     *      defaults={"page" = 1 }
+     * )
+     *
+     *
+     * @ParamConverter("dropzone",class="IcapDropzoneBundle:Dropzone",options={"id" = "resourceId"})
+     * @ParamConverter("user",class="ClarolineCoreBundle:User",options={"id" = "userId"})
+     * @Template()
+     *
+     *
+     * **/
+    public function correctionsByUserAction(Dropzone $dropzone, User $user, $page)
+    {
+        $this->isAllowToOpen($dropzone);
+        $this->isAllowToEdit($dropzone);
+
+        $correctionsQuery = $this->getDoctrine()->getManager()
+            ->getRepository('IcapDropzoneBundle:Correction')
+            ->getByDropzoneUser($dropzone->getId(), $user->getId(), true);
+
+
+        $adapter = new DoctrineORMAdapter($correctionsQuery);
+        $pager = new Pagerfanta($adapter);
+        $pager->setMaxPerPage(DropzoneBaseController::CORRECTION_PER_PAGE);
+        try {
+            $pager->setCurrentPage($page);
+        } catch (NotValidCurrentPageException $e) {
+            if ($page > 0) {
+                return $this->redirect(
+                    $this->generateUrl(
+                        'icap_dropzone_examiner_corrections_paginated',
+                        array(
+                            'resourceId' => $dropzone->getId(),
+                            'userId' => $user->getId(),
+                        )
+                    )
+                );
+            } else {
+                throw new NotFoundHttpException();
+            }
+        }
+        $corrections = $pager->getCurrentPageResults();
+
+        return array(
+            '_resource' => $dropzone,
+            'dropzone' => $dropzone,
+            'pager' => $pager,
+            'user' => $user,
+            'corrections' => $corrections,
+        );
+    }
 
     /**
      * 
@@ -1388,7 +1451,7 @@ class CorrectionController extends DropzoneBaseController
 
     }
 
-    private function addCorrectionCount($dropzone,$users)
+    private function addCorrectionCount(Dropzone $dropzone, $users)
     {
         $correctionRepo = $this->getDoctrine()->getManager()->getRepository('IcapDropzoneBundle:Correction');
         $dropRepo = $this->getDoctrine()->getManager()->getRepository('IcapDropzoneBundle:Drop');
@@ -1397,7 +1460,7 @@ class CorrectionController extends DropzoneBaseController
 
             $reponseItem = array();
             $responseItem['userId'] = $user->getId();
-            $corrections = $correctionRepo->getCorrectionsByUser($dropzone,  $user );
+            $corrections = $correctionRepo->getByDropzoneUser($dropzone->getId(), $user->getId());
             $count = count($corrections);
             $responseItem['correction_count'] = $count;
 

@@ -148,20 +148,6 @@ class CorrectionRepository extends EntityRepository {
     }
 
 
-    public function getbyUser($user)
-    {
-        $users = $this->createQueryBuilder('correction')
-        ->select('correction')
-        ->join('correction.user','user')
-        ->andWhere('correction.dropzone = :dropzone')
-        ->orderBy('correction.user', 'DESC')
-        ->setParameter('dropzone',$dropzone)
-        ->getQuery()
-        ->getResult();
-
-        return $users;
-    }
-
     public function getUsersByDropzoneQuery($dropzone)
     {
 
@@ -190,18 +176,22 @@ class CorrectionRepository extends EntityRepository {
     }
 
 
-
-    public function getCorrectionsByUser(Dropzone $dropzone, $user)
+    public function getByDropzoneUser($dropzone, $user, $onlyQuery = false)
     {
         $query = $this->createQueryBuilder('correction')
             ->select('correction')
             ->andWhere('correction.dropzone = :dropzone')
             ->andWhere('correction.user = :user')
-            ->setParameter('dropzone',$dropzone->getId())
-            ->setParameter('user',$user->getId())
+            ->addOrderBy('correction.endDate', 'DESC')
+            ->addOrderBy('correction.startDate', 'DESC')
+            ->setParameter('dropzone', $dropzone)
+            ->setParameter('user', $user)
             ->getQuery();
+        $return = $query;
+        if (!$onlyQuery) {
+            $return = $query->getResult();
+        }
 
-        $result = $query->getResult();
-        return $result;
+        return $return;
     }
 }

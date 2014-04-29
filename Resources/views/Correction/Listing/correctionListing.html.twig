@@ -20,7 +20,7 @@
         </thead>
         <tbody>
         {% set validCorrections = 0 %}
-        {% for correction in drop.corrections %}
+        {% for correction in corrections %}
             <tr class="{% if not  correction.valid %}danger{% endif %} ">
                 <td>
 
@@ -145,11 +145,7 @@
 </div>
 <script type="text/javascript">
     $(document).ready(function () {
-        {% if drop.dropzone.expectedTotalCorrection >= validCorrections %}
-        $('.revalidatdLink').click(function (e) {
 
-        });
-        {% endif %}
         /**
          Allow to use tooltip in disable button inside a button group
          creating a div in absolute pos
