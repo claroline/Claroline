@@ -72,15 +72,15 @@
             {{ exoID }}, {{ pageToGo }}, '{{ 'nothingToImport' | trans }}');event.preventDefault();">
                 <i class="icon-download"></i> {{ 'import' | trans }}
         </a>
-        {% if (pagerMy.getNbResults > pagerMy.maxPerPage or pagerShared.getNbResults > pagerShared.maxPerPage) and displayAll == 0 %}
-            <a class="btn btn-primary" href="{{ path('ujm_exercise_import_question', { 'exoID': exoID, 'displayAll': 1 }) }} ">
-                <i class="icon-plus-sign"></i> {{ 'display all on this page' | trans }}
-            </a>
-        {% elseif displayAll == 1 %}
-            <a class="btn btn-primary" href="{{ path('ujm_exercise_import_question', { 'exoID': exoID }) }} ">
-                <i class="icon-minus-sign"></i> {{ 'display pagination' | trans }}
-            </a>
-        {% endif %}
+            {% if (pagerMy.getNbResults > pagerMy.maxPerPage or pagerShared.getNbResults > pagerShared.maxPerPage) and displayAll == 0 %}
+                <a class="btn btn-primary" href="{{ path('ujm_exercise_import_question', { 'exoID': exoID, 'displayAll': 1 }) }} ">
+                    <i class="icon-plus-sign"></i> {{ 'display all on this page' | trans }}
+                </a>
+            {% elseif displayAll == 1 %}
+                <a class="btn btn-primary" href="{{ path('ujm_exercise_import_question', { 'exoID': exoID }) }}">
+                    <i class="icon-minus-sign"></i> {{ 'display pagination' | trans }}
+                </a>
+            {% endif %}
     </div>
     <div class="list-group">
         <div class="list-group-item">
@@ -248,4 +248,9 @@
     <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/sortAndSearch.js') }}"></script>
     <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/resize.js') }}"></script>
     <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/exerciseImportQuestion.js') }}"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            ready();
+        });
+    </script>
 {% endblock %}

@@ -1901,7 +1901,7 @@ class QuestionController extends Controller
             $listExo = $this->getDoctrine()
                         ->getManager()
                         ->getRepository('UJMExoBundle:Exercise')
-                        ->getExerciceByUser($user->getId());
+                        ->getExerciseAdmin($user->getId());
 
             $vars['listQExo']             = $listInteractions;
             $vars['actionQ']              = $actionQ;
