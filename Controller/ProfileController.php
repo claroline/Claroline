@@ -229,7 +229,9 @@ class ProfileController extends Controller
 
             $successMessage = $translator->trans('edit_profile_success', array(), 'platform');
             $errorMessage   = $translator->trans('edit_profile_error', array(), 'platform');
+            $errorRight = $translator->trans('edit_profile_error_right', array(), 'platform');
             $redirectUrl    = $this->generateUrl('claro_admin_user_list');
+
             if ($editYourself) {
                 $successMessage = $translator->trans('edit_your_profile_success', array(), 'platform');
                 $errorMessage   = $translator->trans('edit_your_profile_error', array(), 'platform');
@@ -265,8 +267,11 @@ class ProfileController extends Controller
                 if (count($rolesChangeSet) > 0) {
                     $changeSet['roles'] = $rolesChangeSet;
                 }
+                
+                if ($this->userManager->uploadAvatar($user) === -1 ) {;
+                    $sessionFlashBag->add('error', $errorRight);
+                }
 
-                $this->userManager->uploadAvatar($user);
                 $this->eventDispatcher->dispatch(
                     'log',
                     'Log\LogUserUpdate',
@@ -276,6 +281,9 @@ class ProfileController extends Controller
                 $sessionFlashBag->add('success', $successMessage);
             } catch(\Exception $exception){
                 $sessionFlashBag->add('error', $errorMessage);
+                throw $exception;
+                
+                
             }
 
             return $this->redirect($redirectUrl);
