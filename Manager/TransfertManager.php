@@ -140,8 +140,6 @@ class TransfertManager
         $owner->addRole($entityRoles['ROLE_WS_MANAGER']);
         $this->om->persist($owner);
 
-        $tools = $this->getImporterByName('tools')->import($data['tools'], $workspace, $entityRoles);
-
         $dir = new Directory();
         $dir->setName($workspace->getName());
 
@@ -155,6 +153,9 @@ class TransfertManager
             null,
             array()
         );
+
+        $tools = $this->getImporterByName('tools')
+            ->import($data['tools'], $workspace, $entityRoles, $root->getResourceNode());
 
         $this->om->endFlushSuite();
 

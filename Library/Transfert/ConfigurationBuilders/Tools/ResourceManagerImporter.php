@@ -17,6 +17,7 @@ use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Config\Definition\Processor;
 use Claroline\CoreBundle\Library\Transfert\Importer;
 use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
+use Claroline\CoreBundle\Manager\RightsManager;
 
 /**
  * @DI\Service("claroline.tool.resource_manager_importer")
@@ -26,6 +27,17 @@ class ResourceManagerImporter extends Importer implements ConfigurationInterface
 {
     private $result;
     private $data;
+    private $rightManager;
+
+    /**
+     * @DI\InjectParams({
+     *     "rightManager" = @DI\Inject("claroline.manager.rights_manager")
+     * })
+     */
+    public function __construct(RightsManager $rightManager)
+    {
+        $this->rightManager = $rightManager;
+    }
 
     public function  getConfigTreeBuilder()
     {
@@ -47,23 +59,35 @@ class ResourceManagerImporter extends Importer implements ConfigurationInterface
         $processor = new Processor();
         $this->result = $processor->processConfiguration($this, $data);
 
-        foreach ($data['data']['items'] as $item) {
-            $importer = $this->getImporterByName($item['item']['type']);
+        if (isset($data['data']['items'])) {
+            foreach ($data['data']['items'] as $item) {
+                $importer = $this->getImporterByName($item['item']['type']);
 
-            if (!$importer) {
-                throw new InvalidConfigurationException('The importer ' . $item['item']['type'] . ' does not exist');
-            }
+                if (!$importer) {
+                    throw new InvalidConfigurationException('The importer ' . $item['item']['type'] . ' does not exist');
+                }
 
-            if (isset($item['item']['data'])) {
-                $importer->validate($item['item']['data']);
+                if (isset($item['item']['data'])) {
+                    $importer->validate($item['item']['data']);
+                }
             }
         }
-
     }
 
-    public function import(array $array)
+    public function import(array $data, $workspace, $entityRoles, $root)
     {
-
+        if (isset($data['data']['root'])) {
+            foreach ($data['data']['root']['roles'] as $role) {
+                $creations = array();
+                $this->rightManager->create(
+                    $role['role']['rights'],
+                    $entityRoles[$role['role']['name']],
+                    $root,
+                    false,
+                    $creations
+                );
+            }
+        }
     }
 
     public function getName()
@@ -85,8 +109,10 @@ class ResourceManagerImporter extends Importer implements ConfigurationInterface
 
         $availableParents = [];
 
-        foreach ($data['data']['directories'] as $directory) {
-            $availableParents[] = $directory['directory']['uid'];
+        if (isset($data['data']['directories'])) {
+            foreach ($data['data']['directories'] as $directory) {
+                $availableParents[] = $directory['directory']['uid'];
+            }
         }
 
         if (isset($data['data']['root'])) {

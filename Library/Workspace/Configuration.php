@@ -38,10 +38,7 @@ class Configuration
 
             if (true === $code = $archive->open($path)) {
 
-                $extractPath = sys_get_temp_dir() .
-                    DIRECTORY_SEPARATOR .
-                    "YOLO";
-
+                $extractPath = sys_get_temp_dir() . DIRECTORY_SEPARATOR . uniqid();
                 $archive = new \ZipArchive();
 
                 if ($archive->open($path) === TRUE) {

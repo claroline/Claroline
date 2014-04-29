@@ -131,12 +131,13 @@ class ToolsImporter extends Importer implements ConfigurationInterface
 //            }
 
             if (isset($tool['tool']['data'])) {
-                $importer->validate($tool['tool']['data']);
+                $array['data'] = $tool['tool']['data'];
+                $importer->validate($array);
             }
         }
     }
 
-    public function import(array $tools, AbstractWorkspace $workspace, array $entityRoles)
+    public function import(array $tools, AbstractWorkspace $workspace, array $entityRoles, $root = null)
     {
         $position = 1;
 
@@ -152,6 +153,13 @@ class ToolsImporter extends Importer implements ConfigurationInterface
                     $roleEntity = $this->roleManager->getRoleByName($role['name'] . '_' . $workspace->getGuid());
                     $this->toolManager->addRoleToOrderedTool($otr, $entityRoles[$role['name']]);
                 }
+            }
+
+            $importer = $this->getImporterByName($tool['tool']['type']);
+
+            if (isset($tool['tool']['data'])) {
+                $data['data'] = $tool['tool']['data'];
+                $importer->import($data, $workspace, $entityRoles, $root);
             }
         }
     }
