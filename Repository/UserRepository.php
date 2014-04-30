@@ -62,7 +62,8 @@ class UserRepository extends EntityRepository implements UserProviderInterface
         }
 
         $dql = '
-            SELECT u, ur, g, gr FROM Claroline\CoreBundle\Entity\User u
+            SELECT u, up, ur, g, gr FROM Claroline\CoreBundle\Entity\User u
+            JOIN u.publicProfilePreferences up
             JOIN u.roles ur
             LEFT JOIN u.groups g
             LEFT JOIN g.roles gr
