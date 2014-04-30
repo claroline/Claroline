@@ -156,14 +156,15 @@ class ToolRepository extends EntityRepository
      */
     public function findDisplayedToolsByWorkspace(Workspace $workspace)
     {
-        $dql = "
+        $dql = '
             SELECT tool
             FROM Claroline\CoreBundle\Entity\Tool\Tool tool
             JOIN tool.orderedTools ot
             JOIN ot.workspace ws
-            WHERE ws.id = {$workspace->getId()}
-        ";
+            WHERE ws = :workspace
+        ';
         $query = $this->_em->createQuery($dql);
+        $query->setParameter('workspace', $workspace);
 
         return $query->getResult();
     }

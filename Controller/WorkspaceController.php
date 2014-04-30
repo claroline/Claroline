@@ -398,6 +398,7 @@ class WorkspaceController extends Controller
         }
 
         return array(
+            'hasManagerAccess' => $hasManagerAccess,
             'orderedTools' => $orderedTools,
             'workspace' => $workspace
         );

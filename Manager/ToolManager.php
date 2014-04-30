@@ -566,6 +566,9 @@ class ToolManager
      */
     public function getOrderedToolsByWorkspace(Workspace $workspace)
     {
+        // pre-load associated tools to save some requests
+        $this->toolRepo->findDisplayedToolsByWorkspace($workspace);
+
         return $this->orderedToolRepo->findBy(array('workspace' => $workspace), array('order' => 'ASC'));
     }
 
