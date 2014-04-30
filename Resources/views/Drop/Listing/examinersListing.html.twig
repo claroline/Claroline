@@ -20,7 +20,7 @@
         {% for user in pager.currentPageResults %}
             <tr  >
                 <td>
-                    {{ user.lastName|upper }} {{ user.firstName|capitalize }}
+                    <a href="{{ path('icap_dropzone_examiner_corrections',{'resourceId':dropzone.id,'userId':user.id}) }}"> {{ user.lastName|upper }} {{ user.firstName|capitalize }}</a>
                 </td>
 {#                 <td>
                     {{ attribute(usersAndCorrectionCount, user.id).userDropCount }}

@@ -1,5 +1,11 @@
 {% extends "IcapDropzoneBundle:Drop:dropsByBase.html.twig" %}
-
+{% block resourceBreadcrumb %}
+    <li><a href="{{ path('icap_dropzone_edit_common',{'resourceId':dropzone.id}) }}"><span
+                    class="glyphicon icon-list"></span>  {{ dropzone.resourceNode.name }}</a></li>
+    <li class="active">
+        {{ 'Examiners'|trans({}, 'icap_dropzone') }}
+    </li>
+{% endblock %}
 {% block dropzone_content_drops_by_navbar %}
     <ul class="nav navbar-nav">
         <li >
