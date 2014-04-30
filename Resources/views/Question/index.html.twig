@@ -104,13 +104,32 @@
         <div class="input-group" style="width: 350px; margin-top: 20px;">
             <input type="text" class="form-control" id="briefSearch" placeholder="{{ 'briefSearch'|trans }}"
                 onkeydown="if (event.keyCode == 13) {
-                    briefSearch('{{ path('ujm_question_briefSearch') }}');
+                    briefSearch('{{ path('ujm_question_briefSearch') }}', -1, 'index');
                     return false; }">
             <span class="input-group-btn">
                 <button class="btn btn-default" type="button" id="SubmitBriefSearch"
-                    onClick="briefSearch('{{ path('ujm_question_briefSearch') }}');">
+                    onClick="briefSearch('{{ path('ujm_question_briefSearch') }}', -1, 'index');">
                 <i class="icon-search"></i></button>
+                <a class="btn btn-default" data-toggle="tooltip" title="Recherche par type"
+                   accesskey=""href="#" onclick="showInfos();event.preventDefault();">
+                    <i class="icon-question"></i>
+                </a>
             </span>
+        </div>
+
+        <div id="infosSearch" style="display: none;">
+            <br/>
+            <div class="alert alert-info">
+                <p>
+                    {{ 'infoSearchType' | trans }} :
+                    <ul>
+                        <li style="list-style-type: circle">'qcm' {{ 'forTypeOf' | trans }} {{ 'InteractionQCM' | trans }},</li>
+                        <li style="list-style-type: circle">'graphic' {{ 'forTypeOf' | trans }} {{ 'InteractionGraphic' | trans }},</li>
+                        <li style="list-style-type: circle">'hole' {{ 'forTypeOf' | trans }} {{ 'InteractionHole' | trans }},</li>
+                        <li style="list-style-type: circle">'open' {{ 'forTypeOf' | trans }} {{ 'InteractionOpen' | trans }}.</li>
+                    </ul>
+                </p>
+            </div>
         </div>
     </div>
     <div class="list-group">

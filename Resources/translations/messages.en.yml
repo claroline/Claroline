@@ -153,6 +153,7 @@ findQuestion: Find questions
 findWhat: What you're looking for
 final mark: Final mark
 finish: Finish
+forTypeOf: for a question of type
 frequency: Frequency
 from: From
 
@@ -186,6 +187,7 @@ isInterupt: Interupted
 image: Image
 import: Import
 import questions: Import questions
+infoSearchType: If you want to do a search by type, you must used the following key words
 instruction add hole : To add a blank, you must select the text in the editor "Text with hole", then click on the button "Create hole".
 interactionGraphic creation: InteractionGraphic creation
 interactionGraphic Edition: InteractionGraphic Edition

@@ -153,6 +153,7 @@ findQuestion: Rechercher des questions
 findWhat: Ce que vous cherchez
 final mark: Note finale
 finish: Terminer
+forTypeOf: pour une question de type
 frequency: Fréquence
 from: A partir du
 
@@ -186,6 +187,7 @@ isInterupt: Interrompu
 image: Image
 import: Importer
 import questions: Importer des questions
+infoSearchType: Si vous voulez faire une recherche par type, vous devez utiliser les mots clés suivants
 instruction add hole : Pour créer un trou, selectionnez le texte à trouer dans l'éditeur "Texte à trous", puis cliquer sur le bouton "Créer un blanc".
 interactionGraphic creation: Création d'une question Graphique
 interactionGraphic Edition: Edition d'une question Graphique

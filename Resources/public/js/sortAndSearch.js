@@ -635,7 +635,7 @@ function getQuestionsExo(idExo, path, pathHome) {
     window.location.href = pathRight;
 }
 
-function briefSearch(path) {
+function briefSearch(path, exoID, where, idExo) {
 
     var userSearch = $('#briefSearch').val();
 
@@ -643,7 +643,10 @@ function briefSearch(path) {
         type: 'POST',
         url: path,
         data: {
-            userSearch : userSearch
+            userSearch : userSearch,
+            exoID: exoID,
+            where: where,
+            idExo: idExo
         },
         cache: false,
         success: function (data) {
@@ -651,4 +654,12 @@ function briefSearch(path) {
             ready();
         }
     });
+}
+
+function showInfos() {
+    if ($('#infosSearch').css('display') == 'none') {
+        $('#infosSearch').css({'display' : 'block'});
+    } else {
+        $('#infosSearch').css({'display' : 'none'});
+    }
 }

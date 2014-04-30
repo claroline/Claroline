@@ -180,10 +180,10 @@ class ExerciseController extends Controller
         if ($exercise->getPublished() != 1) {
             $published = 0;
         }
-        
+
         $nbPapers = $em->getRepository('UJMExoBundle:Paper')
                        ->countPapers($exerciseId);
-        
+
         return $this->render(
             'UJMExoBundle:Exercise:show.html.twig',
             array(
@@ -221,13 +221,13 @@ class ExerciseController extends Controller
                                         ->isExerciseAdmin($exercise);
 
             if ( ($exoAdmin == 1) && ($exercise->getPublished() == FALSE)) {
-                
+
                 $this->deletePapers($exercise->getId(), $em);
-                
+
                 $exercise->setPublished(TRUE);
                 $em->persist($exercise);
                 $em->flush();
-                
+
                 $nbPapers = $em->getRepository('UJMExoBundle:Paper')
                                ->countPapers($exercise->getId());
 
@@ -236,7 +236,7 @@ class ExerciseController extends Controller
 
         return new \Symfony\Component\HttpFoundation\Response($nbPapers);
     }
-    
+
     /**
      * Unpublish an exercise
      *
@@ -255,7 +255,7 @@ class ExerciseController extends Controller
 
             $exoAdmin = $this->container->get('ujm.exercise_services')
                                         ->isExerciseAdmin($exercise);
-            
+
             $nbPapers = $em->getRepository('UJMExoBundle:Paper')
                            ->countPapers($exercise->getId());
 
@@ -276,7 +276,7 @@ class ExerciseController extends Controller
     public function deleteAllPapersAction($id)
     {
         $em = $this->getDoctrine()->getManager();
-            
+
         $exercise = $em->getRepository('UJMExoBundle:Exercise')
                        ->find($id);
 
@@ -401,8 +401,18 @@ class ExerciseController extends Controller
     *To import in this Exercise a Question of the User's bank.
     *
     */
-    public function importQuestionAction($exoID, $pageGoNow, $maxPage, $nbItem, $displayAll)
+    public function importQuestionAction($exoID, $pageGoNow, $maxPage, $nbItem, $displayAll, $idExo = -1, $QuestionsExo = 'false')
     {
+        if ($QuestionsExo == '') {
+            $QuestionsExo = 'false';
+        }
+
+        $vars = array();
+        $sharedWithMe = array();
+        $shareRight = array();
+        $questionWithResponse = array();
+        $alreadyShared = array();
+
         $em = $this->getDoctrine()->getManager();
         $exercise = $em->getRepository('UJMExoBundle:Exercise')->find($exoID);
         $this->checkAccess($exercise);
@@ -412,7 +422,9 @@ class ExerciseController extends Controller
         $user = $this->container->get('security.context')->getToken()->getUser();
         $uid = $user->getId();
 
-        $exoAdmin = $this->container->get('ujm.exercise_services')->isExerciseAdmin($exercise);
+        $services = $this->container->get('ujm.exercise_services');
+
+        $exoAdmin = $services->isExerciseAdmin($exercise);
 
         // To paginate the result :
         $request = $this->get('request'); // Get the request which contains the following parameters :
@@ -435,68 +447,103 @@ class ExerciseController extends Controller
 
         if ($exoAdmin == 1) {
 
-            $interactions = $this->getDoctrine()
-                ->getManager()
-                ->getRepository('UJMExoBundle:Interaction')
-                ->getUserInteractionImport($this->getDoctrine()->getManager(), $uid, $exoID);
+            if ($QuestionsExo == 'true') {
 
-            $shared = $em->getRepository('UJMExoBundle:Share')
-                    ->getUserInteractionSharedImport($exoID, $uid, $em);
+                $actionQ = array();
 
-            if ($displayAll == 1) {
-                if (count($interactions) > count($shared)) {
-                    $max = count($interactions);
-                } else {
-                    $max = count($shared);
-                }
-            }
+                $listQExo = $this->getDoctrine()
+                    ->getManager()
+                    ->getRepository('UJMExoBundle:Interaction')
+                    ->getExerciseInteraction($em, $idExo, 0);
 
-            $sharedWithMe = array();
+                $allActions = $services->getActionsAllQuestions($listQExo, $uid, $actionQ,
+                    $questionWithResponse, $alreadyShared, $sharedWithMe, $shareRight, $em);
 
-            $end = count($shared);
+                $actionQ = $allActions[0];
+                $questionWithResponse = $allActions[1];
+                $alreadyShared = $allActions[2];
+                $sharedWithMe = $allActions[3];
+                $shareRight = $allActions[4];
 
-            for ($i = 0; $i < $end; $i++) {
-                $sharedWithMe[] = $em->getRepository('UJMExoBundle:Interaction')
-                    ->findOneBy(array('question' => $shared[$i]->getQuestion()->getId()));
-            }
-
-            $doublePagination = $this->doublePagination($interactions, $sharedWithMe, $max, $pagerMy, $pagerShared);
-
-            $interactionsPager = $doublePagination[0];
-            $pagerfantaMy = $doublePagination[1];
-
-            $sharedWithMePager = $doublePagination[2];
-            $pagerfantaShared = $doublePagination[3];
-
-            if ($pageToGo) {
-                $pageGoNow = $pageToGo;
             } else {
-                // If new item > max per page, display next page
-                $rest = $nbItem % $maxPage;
 
-                if ($nbItem == 0) {
-                    $pageGoNow = 0;
+                $interactions = $this->getDoctrine()
+                    ->getManager()
+                    ->getRepository('UJMExoBundle:Interaction')
+                    ->getUserInteractionImport($this->getDoctrine()->getManager(), $uid, $exoID);
+
+                $shared = $em->getRepository('UJMExoBundle:Share')
+                        ->getUserInteractionSharedImport($exoID, $uid, $em);
+
+                if ($displayAll == 1) {
+                    if (count($interactions) > count($shared)) {
+                        $max = count($interactions);
+                    } else {
+                        $max = count($shared);
+                    }
                 }
 
-                if ($rest == 0) {
-                    $pageGoNow += 1;
+                $sharedWithMe = array();
+
+                $end = count($shared);
+
+                for ($i = 0; $i < $end; $i++) {
+                    $sharedWithMe[] = $em->getRepository('UJMExoBundle:Interaction')
+                        ->findOneBy(array('question' => $shared[$i]->getQuestion()->getId()));
+                }
+
+                $doublePagination = $this->doublePagination($interactions, $sharedWithMe, $max, $pagerMy, $pagerShared);
+
+                $interactionsPager = $doublePagination[0];
+                $pagerfantaMy = $doublePagination[1];
+
+                $sharedWithMePager = $doublePagination[2];
+                $pagerfantaShared = $doublePagination[3];
+
+                if ($pageToGo) {
+                    $pageGoNow = $pageToGo;
+                } else {
+                    // If new item > max per page, display next page
+                    $rest = $nbItem % $maxPage;
+
+                    if ($nbItem == 0) {
+                        $pageGoNow = 0;
+                    }
+
+                    if ($rest == 0) {
+                        $pageGoNow += 1;
+                    }
                 }
             }
 
-            return $this->render(
-                'UJMExoBundle:Question:import.html.twig',
-                array(
-                    'workspace'    => $workspace,
-                    'interactions' => $interactionsPager,
-                    'exoID'        => $exoID,
-                    'sharedWithMe' => $sharedWithMePager,
-                    'pagerMy'      => $pagerfantaMy,
-                    'pagerShared'  => $pagerfantaShared,
-                    'pageToGo'     => $pageGoNow,
-                    '_resource'    => $exercise,
-                    'displayAll'   => $displayAll
-                )
-            );
+            $listExo = $this->getDoctrine()
+                        ->getManager()
+                        ->getRepository('UJMExoBundle:Exercise')
+                        ->getExerciseAdmin($user->getId());
+
+            if ($QuestionsExo == 'false') {
+                $vars['pagerMy']      = $pagerfantaMy;
+                $vars['pagerShared']  = $pagerfantaShared;
+                $vars['interactions'] = $interactionsPager;
+                $vars['sharedWithMe'] = $sharedWithMePager;
+                $vars['pageToGo']     = $pageGoNow;
+            } else {
+                $vars['listQExo'] = $listQExo;
+                $vars['actionQ']  = $actionQ;
+                $vars['pageToGo'] = 1;
+            }
+            $vars['questionWithResponse'] = $questionWithResponse;
+            $vars['alreadyShared']        = $alreadyShared;
+            $vars['shareRight']           = $shareRight;
+            $vars['displayAll']           = $displayAll;
+            $vars['listExo']              = $listExo;
+            $vars['exoID']                = $exoID;
+            $vars['QuestionsExo']         = $QuestionsExo;
+            $vars['workspace']            = $workspace;
+            $vars['_resource']            = $exercise;
+            $vars['idExo']                = $idExo;
+
+            return $this->render('UJMExoBundle:Question:import.html.twig', $vars);
         } else {
             return $this->redirect($this->generateUrl('ujm_exercise_open', array('exerciseId' => $exoID)));
         }
@@ -1501,9 +1548,9 @@ class ExerciseController extends Controller
 
         return $pagination;
     }
-    
+
     private function deletePapers($id, $em) {
-        
+
         $papers = $em->getRepository('UJMExoBundle:Paper')
                      ->findBy(array('exercise' => $id));
 
