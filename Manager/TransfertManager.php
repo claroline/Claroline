@@ -21,6 +21,7 @@ use Symfony\Component\Config\Definition\Dumper\YamlReferenceDumper;
 use JMS\DiExtraBundle\Annotation as DI;
 use Claroline\CoreBundle\Entity\Workspace\SimpleWorkspace;
 use Claroline\CoreBundle\Entity\Resource\Directory;
+use Claroline\CoreBundle\Library\Workspace\Configuration;
 
 /**
  * @DI\Service("claroline.manager.transfert_manager")
@@ -97,16 +98,30 @@ class TransfertManager
 
     }
 
-    public function import(array $data)
+    public function import(Configuration $configuration)
     {
-        $ownerImporter = $this->getImporterByName('owner');
-        $ownerImporter->import($data['members']['owner'], null);
+        $data = $configuration->getData();
+        $this->setImporters('', $data);
+        $this->validate($data);
+
+        $owner = (isset($data['members']['owner'])) ?
+            $this->getImporterByName('owner')->import($data['members']['owner'], null):
+            $this->om->getRepository('ClarolineCoreBundle:User')->findOneByUsername($data['properties']['owner']);
+
+        //initialize the configuration
+        $configuration->setWorkspaceName($data['properties']['name']);
+        $configuration->setWorkspaceName($data['properties']['code']);
+        $configuration->setWorkspaceName($data['properties']['visible']);
+        $configuration->setWorkspaceName($data['properties']['self_registration']);
+        $configuration->setWorkspaceName($data['properties']['self_unregistration']);
+
+        $this->createWorkspace($configuration, $owner);
     }
 
-    public function createWorkspace($configuration, $owner)
+    public function createWorkspace(Configuration $configuration, $owner)
     {
-        $this->om->startFlushSuite();
         $data = $configuration->getData();
+        $this->om->startFlushSuite();
         $this->setImporters('', $data);
         $this->validate($data);
         $workspace = new SimpleWorkspace();
@@ -155,8 +170,7 @@ class TransfertManager
         );
 
         $tools = $this->getImporterByName('tools')
-            ->import($data['tools'], $workspace, $entityRoles, $root->getResourceNode());
-
+            ->import($data['tools'], $workspace, $entityRoles, $root);
         $this->om->endFlushSuite();
 
         return $workspace;
@@ -204,6 +218,7 @@ class TransfertManager
         $string .= $dumper->dump($this->getImporterByName('groups'));
         $string .= $dumper->dump($this->getImporterByName('roles'));
         $string .= $dumper->dump($this->getImporterByName('tools'));
+        $string .= $dumper->dump($this->getImporterByName('forum'));
 
         return $string;
     }

@@ -14,6 +14,7 @@ namespace Claroline\CoreBundle\Command\Dev;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Claroline\CoreBundle\Library\Workspace\Configuration;
 
 class ImportWorkspaceCommand extends ContainerAwareCommand
 {
@@ -25,8 +26,8 @@ class ImportWorkspaceCommand extends ContainerAwareCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $path = __DIR__ . "/ws.zip";
-        $this->getContainer()->get('claroline.manager.transfert_manager')->initialize($path);
-        $this->getContainer()->get('claroline.manager.transfert_manager')->import();
+        $archive = $this->getContainer()->getParameter('claroline.param.templates_directory') . 'default.zip';
+        $config = Configuration::fromTemplate($archive);
+        $this->getContainer()->get('claroline.manager.transfert_manager')->import($config);
     }
 } 

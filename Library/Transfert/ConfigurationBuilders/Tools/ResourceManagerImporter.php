@@ -18,6 +18,9 @@ use Symfony\Component\Config\Definition\Processor;
 use Claroline\CoreBundle\Library\Transfert\Importer;
 use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 use Claroline\CoreBundle\Manager\RightsManager;
+use Claroline\CoreBundle\Manager\ResourceManager;
+use Claroline\CoreBundle\Persistence\ObjectManager;
+use Claroline\CoreBundle\Entity\Resource\Directory;
 
 /**
  * @DI\Service("claroline.tool.resource_manager_importer")
@@ -28,15 +31,26 @@ class ResourceManagerImporter extends Importer implements ConfigurationInterface
     private $result;
     private $data;
     private $rightManager;
+    private $resourceManager;
+    private $availableParents;
+    private $om;
 
     /**
      * @DI\InjectParams({
-     *     "rightManager" = @DI\Inject("claroline.manager.rights_manager")
+     *     "rightManager"    = @DI\Inject("claroline.manager.rights_manager"),
+     *     "resourceManager" = @DI\Inject("claroline.manager.resource_manager"),
+     *     "om"              = @DI\Inject("claroline.persistence.object_manager")
      * })
      */
-    public function __construct(RightsManager $rightManager)
+    public function __construct(
+        RightsManager $rightManager,
+        ResourceManager $resourceManager,
+        ObjectManager $om
+    )
     {
         $this->rightManager = $rightManager;
+        $this->resourceManager = $resourceManager;
+        $this->om = $om;
     }
 
     public function  getConfigTreeBuilder()
@@ -68,25 +82,128 @@ class ResourceManagerImporter extends Importer implements ConfigurationInterface
                 }
 
                 if (isset($item['item']['data'])) {
-                    $importer->validate($item['item']['data']);
+                    $forum['data'] = $item['item']['data'];
+                    $importer->validate($forum['data']);
                 }
             }
         }
     }
 
-    public function import(array $data, $workspace, $entityRoles, $root)
+    public function import(array $data, $workspace, $entityRoles, Directory $root)
     {
-        if (isset($data['data']['root'])) {
-            foreach ($data['data']['root']['roles'] as $role) {
-                $creations = array();
-                $this->rightManager->create(
-                    $role['role']['rights'],
-                    $entityRoles[$role['role']['name']],
-                    $root,
-                    false,
-                    $creations
+        //@TODO CHANGE IMPLEMENTATION SO ROLE_USER AND ROLE_ANONYMOUS PERMS CAN BE CHANGED
+        //@TODO FIX WARNINGS !!!
+
+        /*
+         * Each directory is created without parent.
+         * The parent is set after the ResourceManager::create method is fired.
+         * When there is no parent and no right array, the resource creation will copy
+         * the parent rights (ROLE_USER and ROLE_ANONYMOUS) and we only need to add the roles from the $data
+         * instead of the full array with default perms.
+         * The implementation will change later (if we need to change the perms of
+         * ROLE_USER and ROLE_ANONYMOUS) but it's easier to code it that way.
+         */
+
+        $directories[$data['data']['root']['uid']] = $root;
+
+        /*************************/
+        /* WORKSPACE DIRECTORIES */
+        /*************************/
+
+        if (isset($data['data']['directories'])) {
+            //build the nodes
+            foreach ($data['data']['directories'] as $directory) {
+                $directoryEntity = new Directory();
+                $directoryEntity->setName($directory['directory']['name']);
+                $owner = $this->om
+                    ->getRepository('ClarolineCoreBundle:User')->findOneByUsername($directory['directory']['creator']);
+
+                $directories[$directory['directory']['uid']] = $this->resourceManager->create(
+                    $directoryEntity,
+                    $this->om->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceType')->findOneByName('directory'),
+                    $owner,
+                    $workspace,
+                    null,
+                    null,
+                    array()
                 );
+
+                //add the missing roles
+                foreach ($directory['directory']['roles'] as $role) {
+                    $creations = $this->getCreationRightsArray($role['role']['rights']['create']);
+                    $this->rightManager->create(
+                        $role['role']['rights'],
+                        $entityRoles[$role['role']['name']],
+                        $directoryEntity->getResourceNode(),
+                        false,
+                        $creations
+                    );
+                }
             }
+
+            //set the correct parent
+            foreach ($data['data']['directories'] as $directory) {
+                $node = $directories[$directory['directory']['uid']]->getResourceNode();
+                $node->setParent($directories[$directory['directory']['parent']]->getResourceNode());
+                $this->om->persist($node);
+            }
+        }
+
+        /*************/
+        /* RESOURCES */
+        /*************/
+
+        if (isset($data['data']['items'])) {
+            foreach ($data['data']['items'] as $item) {
+                $res['data'] = $item['item']['data'];
+                //get the entity from an importer
+                $entity = $this->getImporterByName($item['item']['type'])->import($res);
+                $entity->setName($item['item']['name']);
+                $type = $this->om
+                    ->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceType')
+                    ->findOneByName($item['item']['type']);
+                $owner = $this->om
+                    ->getRepository('ClarolineCoreBundle:User')->findOneByUsername($item['item']['creator']);
+
+                $entity = $this->resourceManager->create(
+                    $entity,
+                    $type,
+                    $owner,
+                    $workspace,
+                    null,
+                    null,
+                    array()
+                );
+
+                $entity->getResourceNode()->setParent($directories[$item['item']['parent']]->getResourceNode());
+                $this->om->persist($entity);
+                //add the missing roles
+                foreach ($item['item']['roles'] as $role) {
+                    $this->rightManager->create(
+                        $role['role']['rights'],
+                        $entityRoles[$role['role']['name']],
+                        $entity->getResourceNode(),
+                        false,
+                        array()
+                    );
+                }
+            }
+        }
+
+        /***************/
+        /* ROOT RIGHTS */
+        /***************/
+
+        //add the missing roles
+        foreach ($data['data']['root']['roles'] as $role) {
+            $creations = $this->getCreationRightsArray($data['data']['root']['roles']['rights']['create']);
+            $this->rightManager->create(
+                $role['role']['rights'],
+                $entityRoles[$role['role']['name']],
+                $root->getResourceNode(),
+                false,
+                $creations
+            );
         }
     }
 
@@ -107,21 +224,23 @@ class ResourceManagerImporter extends Importer implements ConfigurationInterface
             }
         }
 
-        $availableParents = [];
+        $this->availableParents = [];
 
         if (isset($data['data']['directories'])) {
             foreach ($data['data']['directories'] as $directory) {
-                $availableParents[] = $directory['directory']['uid'];
+                $this->availableParents[] = $directory['directory']['uid'];
             }
         }
 
         if (isset($data['data']['root'])) {
-            $availableParents[] = $data['data']['root']['uid'];
+            $this->availableParents[] = $data['data']['root']['uid'];
         }
+
+        $availableParents = $this->availableParents;
 
         $rootNode
             ->children()
-                ->arrayNode('root')
+                ->arrayNode('root')->isRequired()
                     ->children()
                         ->scalarNode('uid')->isRequired()->end()
                         ->arrayNode('roles')
@@ -279,5 +398,19 @@ class ResourceManagerImporter extends Importer implements ConfigurationInterface
     public function getData()
     {
         return $this->data;
+    }
+
+    private function getCreationRightsArray ($rights) {
+        $creations = array();
+
+        if ($rights !== null) {
+
+            foreach ($rights as $el) {
+                $creations[] = $this->om->getRepository('ClarolineCoreBundle:Resource\ResourceType')
+                    ->findOneByName($el['name']);
+            }
+        }
+
+        return $creations;
     }
 } 

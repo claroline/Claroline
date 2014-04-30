@@ -438,7 +438,7 @@ class RightsManager
     /**
      * Merges permissions related to a specific resource type (i.e. "post" in a
      * forum) with a directory mask. This allows directory permissions to be
-     * applied recursively without loosing particular permissions.
+     * applied recursively without losing particular permissions.
      *
      * @param int $dirMask          A directory mask
      * @param int $resourceMask     A specific resource mask

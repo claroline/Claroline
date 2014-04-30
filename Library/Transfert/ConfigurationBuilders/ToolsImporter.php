@@ -20,6 +20,7 @@ use JMS\DiExtraBundle\Annotation as DI;
 use Claroline\CoreBundle\Manager\ToolManager;
 use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
+use Claroline\CoreBundle\Entity\Resource\Directory;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 
 /**
@@ -137,7 +138,7 @@ class ToolsImporter extends Importer implements ConfigurationInterface
         }
     }
 
-    public function import(array $tools, AbstractWorkspace $workspace, array $entityRoles, $root = null)
+    public function import(array $tools, AbstractWorkspace $workspace, array $entityRoles, Directory $root)
     {
         $position = 1;
 
