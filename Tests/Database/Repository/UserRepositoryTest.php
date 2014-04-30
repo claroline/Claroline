@@ -71,24 +71,6 @@ class UserRepositoryTest extends RepositoryTestCase
         $this->assertFalse(self::$repo->supportsClass('Foo\User'));
     }
 
-    public function testFindByWorkspaceAndRole()
-    {
-        $users = self::$repo->findByWorkspaceAndRole(self::get('ws_1'), self::get('ROLE_1'));
-        $this->assertEquals(3, count($users));
-    }
-
-    public function testFindWorkspaceOutsiders()
-    {
-        $users = self::$repo->findWorkspaceOutsiders(self::get('ws_1'));
-        $this->assertEquals(2, count($users));
-    }
-
-    public function testFindWorkspaceOutsidersByName()
-    {
-        $users = self::$repo->findWorkspaceOutsidersByName(self::get('ws_1'), 'B');
-        $this->assertEquals(1, count($users));
-    }
-
     public function testFindAll()
     {
         $this->assertEquals(4, count(self::$repo->findAll()));
@@ -113,22 +95,6 @@ class UserRepositoryTest extends RepositoryTestCase
         $this->assertEquals(1, count($users));
         $users = self::$repo->findByNameAndGroup('b', self::get('group_2'));
         $this->assertEquals(2, count($users));
-    }
-
-    public function testFindByWorkspace()
-    {
-        $users = self::$repo->findByWorkspace(self::get('ws_1'));
-        $this->assertEquals(2, count($users));
-        $this->assertEquals(self::get('john'), $users[0]);
-        $this->assertEquals(self::get('bob'), $users[1]);
-    }
-
-    public function testFindByWorkspaceAndName()
-    {
-        $users = self::$repo->findByWorkspaceAndName(self::get('ws_1'), 'O');
-        $this->assertEquals(2, count($users));
-        $users = self::$repo->findByWorkspaceAndName(self::get('ws_1'), 'ohn');
-        $this->assertEquals(1, count($users));
     }
 
     public function testFindGroupOutsiders()
@@ -193,30 +159,6 @@ class UserRepositoryTest extends RepositoryTestCase
         $this->assertEquals(2, count($users));
         $users = self::$repo->findByRoles(array(self::get('ROLE_2')));
         $this->assertEquals(1, count($users));
-    }
-
-    public function testFindByRolesAndName()
-    {
-        $users = self::$repo->findByRolesAndName(array(self::get('ROLE_1')), 'o');
-        $this->assertEquals(2, count($users));
-        $users = self::$repo->findByRolesAndName(array(self::get('ROLE_1')), 'j');
-        $this->assertEquals(1, count($users));
-
-    }
-
-    public function testFindOutsidersByWorkspaceRolesAndName()
-    {
-        $users = self::$repo->findOutsidersByWorkspaceRolesAndName(array(self::get('ROLE_1')), 'j', self::get('ws_1'));
-        $this->assertEquals(2, count($users));
-
-    }
-
-    public function testFindOutsidersByWorkspaceRoles()
-    {
-        $users = self::$repo->findOutsidersByWorkspaceRoles(array(self::get('ROLE_1')), self::get('ws_1'));
-        $this->assertEquals(2, count($users));
-        $users = self::$repo->findOutsidersByWorkspaceRoles(array(self::get('ROLE_2')), self::get('ws_2'));
-        $this->assertEquals(3, count($users));
     }
 
     public function testFindUsernames()

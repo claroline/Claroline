@@ -453,11 +453,10 @@ class RolesController extends Controller
      */
     public function usersListAction(Workspace $workspace, $page, $search, $max, $order, $direction = 'ASC')
     {
-
         $this->checkAccess($workspace);
         $wsRoles = $this->roleManager->getRolesByWorkspace($workspace);
 
-        $pager = ($search === '') ?
+        $pager = $search === '' ?
             $this->userManager->getByRolesIncludingGroups($wsRoles, $page, $max, $order, $direction):
             $this->userManager->getByRolesAndNameIncludingGroups($wsRoles, $search, $page, $max, $order, $direction);
 

@@ -359,46 +359,6 @@ class UserManager
     }
 
     /**
-     * @param \Claroline\CoreBundle\Entity\Workspace\Workspace $workspace
-     * @param \Claroline\CoreBundle\Entity\Role                        $role
-     *
-     * @return User[]
-     */
-    public function getUserByWorkspaceAndRole(Workspace $workspace, Role $role)
-    {
-        return $this->userRepo->findByWorkspaceAndRole($workspace, $role);
-    }
-
-    /**
-     * @param \Claroline\CoreBundle\Entity\Workspace\Workspace $workspace
-     * @param string                                                   $search
-     * @param integer                                                  $page
-     * @param integer                                                  $max
-     *
-     * @return \Pagerfanta\Pagerfanta;
-     */
-    public function getWorkspaceOutsidersByName(Workspace $workspace, $search, $page, $max = 20)
-    {
-        $query = $this->userRepo->findWorkspaceOutsidersByName($workspace, $search, false);
-
-        return $this->pagerFactory->createPager($query, $page, $max);
-    }
-
-    /**
-     * @param \Claroline\CoreBundle\Entity\Workspace\Workspace $workspace
-     * @param integer                                                  $page
-     * @param integer                                                  $max
-     *
-     * @return \Pagerfanta\Pagerfanta;
-     */
-    public function getWorkspaceOutsiders(Workspace $workspace, $page, $max = 20)
-    {
-        $query = $this->userRepo->findWorkspaceOutsiders($workspace, false);
-
-        return $this->pagerFactory->createPager($query, $page, $max);
-    }
-
-    /**
      * @param integer $page
      * @param integer $max
      * @param string  $orderedBy
@@ -495,20 +455,6 @@ class UserManager
     }
 
     /**
-     * @param \Claroline\CoreBundle\Entity\Workspace\Workspace $workspace
-     * @param integer                                                  $page
-     * @param integer                                                  $max
-     *
-     * @return \Pagerfanta\Pagerfanta
-     */
-    public function getUsersByWorkspace(Workspace $workspace, $page, $max = 20)
-    {
-        $query = $this->userRepo->findByWorkspace($workspace, false);
-
-        return $this->pagerFactory->createPager($query, $page, $max);
-    }
-
-    /**
      * @param \Claroline\CoreBundle\Entity\Workspace\Workspace[] $workspaces
      * @param integer                                                    $page
      * @param integer                                                    $max
@@ -541,21 +487,6 @@ class UserManager
             ->findUsersByWorkspacesAndSearch($workspaces, $search);
 
         return $this->pagerFactory->createPagerFromArray($users, $page, $max);
-    }
-
-    /**
-     * @param \Claroline\CoreBundle\Entity\Workspace\Workspace $workspace
-     * @param string                                                   $search
-     * @param integer                                                  $page
-     * @param integer                                                  $max
-     *
-     * @return \Pagerfanta\Pagerfanta
-     */
-    public function getUsersByWorkspaceAndName(Workspace $workspace, $search, $page, $max = 20)
-    {
-        $query = $this->userRepo->findByWorkspaceAndName($workspace, $search, false);
-
-        return $this->pagerFactory->createPager($query, $page, $max);
     }
 
     /**
@@ -602,26 +533,6 @@ class UserManager
         $query = $this->userRepo->findGroupOutsidersByName($group, $search, false, $orderedBy);
 
         return $this->pagerFactory->createPager($query, $page, $max);
-    }
-
-    /**
-     * @param \Claroline\CoreBundle\Entity\User $excludedUser
-     *
-     * @return User[]
-     */
-    public function getAllUsersExcept(User $excludedUser)
-    {
-        return $this->userRepo->findAllExcept($excludedUser);
-    }
-
-    /**
-     * @param string[] $usernames
-     *
-     * @return User[]
-     */
-    public function getUsersByUsernames(array $usernames)
-    {
-        return $this->userRepo->findByUsernames($usernames);
     }
 
     /**
@@ -694,11 +605,12 @@ class UserManager
     }
 
     /**
-     * @param Role[]  $roles
+     * @param Role[] $roles
      * @param integer $page
      * @param integer $max
-     * @param string  $orderedBy
+     * @param string $orderedBy
      *
+     * @param null $order
      * @return \Pagerfanta\Pagerfanta
      */
     public function getByRolesIncludingGroups(array $roles, $page = 1, $max = 20, $orderedBy = 'id', $order= null)
@@ -736,54 +648,6 @@ class UserManager
         $res = $this->userRepo->findByRoles($roles, true);
 
         return $this->pagerFactory->createPager($res, $page, $max);
-    }
-
-    /**
-     * @param Role[]                                                   $roles
-     * @param \Claroline\CoreBundle\Entity\Workspace\Workspace $workspace
-     * @param integer                                                  $page
-     * @param integer                                                  $max
-     *
-     * @return \Pagerfanta\Pagerfanta
-     */
-    public function getOutsidersByWorkspaceRoles(array $roles, Workspace $workspace, $page = 1, $max = 20)
-    {
-        $res = $this->userRepo->findOutsidersByWorkspaceRoles($roles, $workspace, true);
-
-        return $this->pagerFactory->createPager($res, $page, $max);
-    }
-
-    /**
-     * @param Role[]  $roles
-     * @param string  $name
-     * @param integer $page
-     * @param integer $max
-     *
-     * @return \Pagerfanta\Pagerfanta
-     */
-    public function getUsersByRolesAndName(array $roles, $name, $page = 1, $max  = 20)
-    {
-        $res = $this->userRepo->findByRolesAndName($roles, $name, true);
-
-        return $this->pagerFactory->createPager($res, $page, $max);
-    }
-
-    /**
-     * @param Role[]                                                   $roles
-     * @param string                                                   $name
-     * @param \Claroline\CoreBundle\Entity\Workspace\Workspace $workspace
-     * @param integer                                                  $page
-     * @param integer                                                  $max
-     *
-     * @return \Pagerfanta\Pagerfanta| \Doctrine\ORM\Query
-     */
-    public function getOutsidersByWorkspaceRolesAndName(
-        array $roles, $name, Workspace $workspace, $page = 1, $max = 20
-    )
-    {
-        $res = $this->userRepo->findOutsidersByWorkspaceRolesAndName($roles, $name, $workspace, true);
-
-        return ($page !== 0) ? $this->pagerFactory->createPager($res, $page, $max): $res;
     }
 
     /**
