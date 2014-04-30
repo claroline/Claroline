@@ -83,8 +83,9 @@ class PathTemplateController
     /**
      * Class constructor
      * Inject needed dependencies
-     * @param \Symfony\Component\Form\FormFactoryInterface   $formFactory
+     * @param \Symfony\Component\Form\FormFactoryInterface $formFactory
      * @param \Innova\PathBundle\Manager\PathTemplateManager $pathTemplateManager
+     * @param \Innova\PathBundle\Form\Handler\PathTemplateHandler $pathTemplateHandler
      */
     public function __construct(
         FormFactoryInterface $formFactory,
@@ -116,7 +117,7 @@ class PathTemplateController
     
     /**
      * Create a new template
-     * @return Response
+     * @return \Symfony\Component\HttpFoundation\Response
      * 
      * @Route(
      *     "/add",
@@ -138,7 +139,7 @@ class PathTemplateController
         if ($this->pathTemplateHandler->process()) {
             // Success => modified data
             $pathTemplate = $this->pathTemplateHandler->getData();
-            
+
             return new Response(
                 $pathTemplate->getId()
             );
@@ -149,8 +150,9 @@ class PathTemplateController
 
     /**
      * Edit existing template
-     * @return Response
-     * 
+     * @param \Innova\PathBundle\Entity\Path\PathTemplate $pathTemplate
+     * @return \Symfony\Component\HttpFoundation\Response
+     *
      * @Route(
      *     "/edit/{id}",
      *     name    = "innova_path_template_edit",
@@ -178,10 +180,11 @@ class PathTemplateController
         
         return new Response('error');
     }
-    
+
     /**
      * Delete template
-     * @return Response
+     * @param \Innova\PathBundle\Entity\Path\PathTemplate $pathTemplate
+     * @return \Symfony\Component\HttpFoundation\Response
      *
      * @Route(
      *     "/delete/{id}",
