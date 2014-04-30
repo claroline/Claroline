@@ -91,68 +91,8 @@ class ScormController extends Controller
             throw new AccessDeniedException();
         }
         $scorm = $this->scormRepo->findOneById($scormId);
-
         $sessionTimeInHundredth = $this->convertTimeInHundredth($sessionTime);
-        $totalTimeInHundredth = $this->convertTimeInHundredth($totalTime);
-        $totalTimeInHundredth += $sessionTimeInHundredth;
 
-        if ($mode === 'persist') {
-            $this->persistScormInfo(
-                $scorm,
-                $user,
-                $credit,
-                $entry,
-                $exitMode,
-                $lessonLocation,
-                $lessonMode,
-                $lessonStatus,
-                $scoreMax,
-                $scoreMin,
-                $scoreRaw,
-                $sessionTimeInHundredth,
-                $suspendData,
-                $totalTimeInHundredth
-            );
-        } elseif ($mode === 'log') {
-            $this->logScormResult(
-                $scorm,
-                $user,
-                $credit,
-                $exitMode,
-                $lessonMode,
-                $lessonStatus,
-                $scoreMax,
-                $scoreMin,
-                $scoreRaw,
-                $sessionTimeInHundredth,
-                $suspendData,
-                $totalTimeInHundredth
-            );
-        }
-
-        return new Response('', '204');
-    }
-
-    /**
-     * Persist given datas in Scorm informations
-     */
-    private function persistScormInfo(
-        Scorm $scorm,
-        User $user,
-        $credit,
-        $entry,
-        $exitMode,
-        $lessonLocation,
-        $lessonMode,
-        $lessonStatus,
-        $scoreMax,
-        $scoreMin,
-        $scoreRaw,
-        $sessionTimeInHundredth,
-        $suspendData,
-        $totalTimeInHundredth
-    )
-    {
         $scormInfo = $this->scormInfoRepo->findOneBy(
             array('user' => $user->getId(), 'scorm' => $scorm->getId())
         );
@@ -174,10 +114,34 @@ class ScormController extends Controller
         $scormInfo->setScoreRaw($scoreRaw);
         $scormInfo->setSessionTime($sessionTimeInHundredth);
         $scormInfo->setSuspendData($suspendData);
-        $scormInfo->setTotalTime($totalTimeInHundredth);
+
+        if ($mode === 'log') {
+            // Compute total time
+            $totalTimeInHundredth = $this->convertTimeInHundredth($totalTime);
+            $totalTimeInHundredth += $sessionTimeInHundredth;
+            // Persist total time
+            $scormInfo->setTotalTime($totalTimeInHundredth);
+
+            $this->logScormResult(
+                $scorm,
+                $user,
+                $credit,
+                $exitMode,
+                $lessonMode,
+                $lessonStatus,
+                $scoreMax,
+                $scoreMin,
+                $scoreRaw,
+                $sessionTimeInHundredth,
+                $suspendData,
+                $totalTimeInHundredth
+            );
+        }
 
         $this->om->persist($scormInfo);
         $this->om->flush();
+
+        return new Response('', '204');
     }
 
     /**
