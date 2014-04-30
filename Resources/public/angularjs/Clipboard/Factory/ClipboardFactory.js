@@ -56,12 +56,14 @@ function ClipboardFactory($rootScope, PathFactory) {
                 // Replace IDs before inject steps in path
                 this.replaceStepsId(stepCopy);
                 this.replaceResourcesId(stepCopy);
-                
+
                 if (!clipboardFromTemplates) {
                     stepCopy.name = stepCopy.name + '_copy';
                 }
                 
                 step.children.push(stepCopy);
+
+                PathFactory.recalculateStepsLevel();
             }
             
             return this;
@@ -73,7 +75,7 @@ function ClipboardFactory($rootScope, PathFactory) {
          * @returns ClipboardFactory
          */
         replaceResourcesId: function(step) {
-            if (step.resources.length != 0) {
+            if (typeof step.resources !== 'undefined' && step.resources !== null && step.resources.length != 0) {
                 for (var i = 0; i < step.resources.length; i++) {
                     step.resources[i].id = PathFactory.getNextResourceId();
                 }
@@ -95,6 +97,8 @@ function ClipboardFactory($rootScope, PathFactory) {
          */
         replaceStepsId: function(step) {
             step.id = PathFactory.getNextStepId();
+            step.resourceId = null;
+
             if (step.children.length != 0) {
                 for (var i = 0; i < step.children.length; i++) {
                     this.replaceStepsId(step.children[i]);
