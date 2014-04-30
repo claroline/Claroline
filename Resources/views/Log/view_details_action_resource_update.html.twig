@@ -9,7 +9,7 @@
                     <dd>...</dd>
                 {% else %}
                     {% if key == 'icon' %}
-                        <dd><img width="71" heigth="80" src="{{asset(values[0])}}"/></dd>
+                        <dd><img width="71" heigth="80" src="{{asset(values[0])}}" alt="{{ ('log_change_set')|trans({}, 'log') }}"></dd>
                     {% elseif values[0] is sameas(true) %}
                         <dd>{{ ('yes')|trans({}, 'platform') }}</dd>
                     {% elseif values[0] is sameas(false) %}
@@ -28,7 +28,7 @@
                     <dd>...</dd>
                 {% else %}
                     {% if key == 'icon' %}
-                        <dd><img width="71" heigth="80" src="{{asset(values[1])}}"/></dd>
+                        <dd><img width="71" heigth="80" src="{{asset(values[1])}}" alt="{{ ('log_change_set')|trans({}, 'log') }}"></dd>
                     {% elseif values[1] is sameas(true) %}
                         <dd>{{ ('yes')|trans({}, 'platform') }}</dd>
                     {% elseif values[1] is sameas(false) %}

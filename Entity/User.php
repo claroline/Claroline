@@ -25,13 +25,15 @@ use Claroline\CoreBundle\Entity\AbstractRoleSubject;
 use Claroline\CoreBundle\Entity\Role;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\Validator\ExecutionContextInterface;
 
 /**
- * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\UserRepository")
  * @ORM\Table(name="claro_user")
+ * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\UserRepository")
  * @ORM\HasLifecycleCallbacks
  * @DoctrineAssert\UniqueEntity("username")
  * @DoctrineAssert\UniqueEntity("mail")
+ * @Assert\Callback(methods={"isPublicUrlValid"})
  */
 class User extends AbstractRoleSubject implements Serializable, AdvancedUserInterface, EquatableInterface, OrderableInterface
 {
@@ -264,9 +266,23 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
     protected $lastUri;
 
     /**
-     * @ORM\Column(name="is_mail_displayed", type="boolean")
+     * @var string
+     *
+     * @ORM\Column(name="public_url", type="string", nullable=true, unique=true)
      */
-    protected $isMailDisplayed = false;
+    protected $publicUrl;
+
+    /**
+     * @ORM\Column(name="has_tuned_public_url", type="boolean")
+     */
+    protected $hasTunedPublicUrl = false;
+
+    /**
+     * @var UserPublicProfilePreferences
+     *
+     * @ORM\OneToOne(targetEntity="UserPublicProfilePreferences", mappedBy="user", cascade={"all"})
+     */
+    protected $publicProfilePreferences;
 
     public function __construct()
     {
@@ -870,18 +886,73 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
         return $this->lastUri;
     }
 
-    public function setIsMailDisplayed($boolean)
+    /**
+     * @param string $publicUrl
+     *
+     * @return User
+     */
+    public function setPublicUrl($publicUrl)
     {
-        $this->isMailDisplayed = $boolean;
+        $this->publicUrl = $publicUrl;
+
+        return $this;
     }
 
-    public function isMailDisplayed()
+    /**
+     * @return string
+     */
+    public function getPublicUrl()
     {
-        return $this->isMailDisplayed;
+        return $this->publicUrl;
     }
 
-    public function getIsMailDisplayed()
+    /**
+     * @param mixed $hasTunedPublicUrl
+     *
+     * @return User
+     */
+    public function setHasTunedPublicUrl($hasTunedPublicUrl)
     {
-        return $this->isMailDisplayed;
+        $this->hasTunedPublicUrl = $hasTunedPublicUrl;
+
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function hasTunedPublicUrl()
+    {
+        return $this->hasTunedPublicUrl;
+    }
+
+    /**
+     * @return \Claroline\CoreBundle\Entity\UserPublicProfilePreferences
+     */
+    public function getPublicProfilePreferences()
+    {
+        return $this->publicProfilePreferences;
+    }
+
+    /**
+     * @param \Claroline\CoreBundle\Entity\UserPublicProfilePreferences $publicProfilPreferences
+     *
+     * @return User
+     */
+    public function setPublicProfilePreferences(UserPublicProfilePreferences $publicProfilPreferences)
+    {
+        $publicProfilPreferences->setUser($this);
+
+        $this->publicProfilePreferences = $publicProfilPreferences;
+
+        return $this;
+    }
+
+    public function isPublicUrlValid(ExecutionContextInterface $context)
+    {
+        // Search for whitespaces
+        if (preg_match("/\s/", $this->getPublicUrl())) {
+            $context->addViolationAt('publicUrl', 'public_profile_url_not_valid', array(), null);
+        }
     }
 }

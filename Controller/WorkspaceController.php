@@ -299,7 +299,9 @@ class WorkspaceController extends Controller
             $config->setWorkspaceCode($form->get('code')->getData());
             $config->setDisplayable($form->get('displayable')->getData());
             $config->setSelfRegistration($form->get('selfRegistration')->getData());
-            $config->setSelfUnregistration($form->get('selfUnregistration')->getData());
+            $config->setSelfUnregistration($form->get('selfUnregistration')->getData());            
+            $config->setWorkspaceDescription($form->get('description')->getData());
+            
             $user = $this->security->getToken()->getUser();
             $this->workspaceManager->create($config, $user);
             $this->tokenUpdater->update($this->security->getToken());

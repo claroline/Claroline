@@ -27,7 +27,8 @@
     <div class="panel-heading">
         <h3 class="panel-title">{{ 'save_workspace_as_template'|trans({}, 'platform') }}</h3>
     </div>
-    <form class="form-horizontal"
+    <form role="form"
+          class="form-horizontal"
           action="{{ path('claro_workspace_export', {'workspace': workspace.getId() }) }}"
           method="post" {{ form_enctype(form) }}>
         <div class="panel-body">

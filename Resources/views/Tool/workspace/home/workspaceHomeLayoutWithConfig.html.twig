@@ -26,7 +26,7 @@
             {{ 'home'|trans({}, 'tools') }}
         </h3>
         <div class="float-right-top">
-            <a class="btn btn-primary" href="{{ path('claro_display_workspace_home_tabs_without_config', {'tabId': tabId, 'workspaceId': workspace.getId()}) }}">
+            <a class="btn btn-primary" href="{{ path('claro_display_workspace_home_tabs_without_config', {'tabId': tabId, 'workspaceId': workspace.getId()}) }}" role="button">
                 <i id="switch-config-mode" class="icon-ok"></i>
             </a>
         </div>
@@ -45,21 +45,21 @@
                     {{ workspaceHomeTab.getName() }}
                     <div class="dropdown">
                       <i class="icon-chevron-down pointer-hand" data-toggle="dropdown"></i>
-                      <ul class="dropdown-menu">
-                            <li><i class="hometab-reorder-left-btn icon-arrow-left"> {{ "left" | trans({}, 'platform') }}</i></li>
-                            <li><i class="hometab-reorder-right-btn icon-arrow-right"> {{ "right" | trans({}, 'platform') }}</i></li>
+                      <ul class="dropdown-menu" role="menu">
+                            <li role="presentation"><i role="menuitem" class="hometab-reorder-left-btn icon-arrow-left"> {{ "left" | trans({}, 'platform') }}</i></li>
+                            <li role="presentation"><i role="menuitem" class="hometab-reorder-right-btn icon-arrow-right"> {{ "right" | trans({}, 'platform') }}</i></li>
                             <li class="divider"></li>
-                            <li><i class="hometab-rename-btn icon-pencil"> {{ "rename" | trans({}, 'platform') }}</i></li>
-                            <li>
+                            <li role="presentation"><i role="menuitem" class="hometab-rename-btn icon-pencil"> {{ "rename" | trans({}, 'platform') }}</i></li>
+                            <li role="presentation">
                                 {% if workspaceHomeTabConfig.isVisible() %}
-                                    <i class="hometab-visibility-btn icon-eye-close" visiblility-value="visible"
+                                    <i role="menuitem" class="hometab-visibility-btn icon-eye-close" visiblility-value="visible"
                                     id="visible-hometab-id-{{ workspaceHomeTab.getId() }}"> {{ "hide" | trans({}, 'platform') }}</i>
                                  {% else %}
-                                    <i class="hometab-visibility-btn icon-eye-open" visiblility-value="invisible"
+                                    <i role="menuitem" class="hometab-visibility-btn icon-eye-open" visiblility-value="invisible"
                                     id="visible-hometab-id-{{ workspaceHomeTab.getId() }}"> {{ "display" | trans({}, 'platform') }}</i>
                                  {% endif %}
                             </li>
-                            <li><i class="hometab-delete-btn icon-trash"> {{ "delete" | trans({}, 'platform') }}</i></li>
+                            <li role="presentation"><i role="menuitem" class="hometab-delete-btn icon-trash"> {{ "delete" | trans({}, 'platform') }}</i></li>
                       </ul>
                     </div>
                 </a>
@@ -76,11 +76,11 @@
         {% block homeTab %}{% endblock %}
     </div>
 
-    <div id="delete-hometab-validation-box" class="modal fade">
+    <div id="delete-hometab-validation-box" class="modal fade" role="dialog" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal">×</button>
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                     <h3>{{ 'home_tab_delete_confirm_title'|trans({}, 'platform') }}</h3>
                 </div>
                 <div class="modal-body">
@@ -94,11 +94,11 @@
         </div>
     </div>
 
-    <div id="hometab-modal-box" class="modal fade">
+    <div id="hometab-modal-box" class="modal fade" role="dialog" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal">×</button>
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                     <h3 id="hometab-modal-title"></h3>
                 </div>
                 <div id="hometab-modal-body" class="modal-body">

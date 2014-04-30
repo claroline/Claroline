@@ -31,7 +31,7 @@
             <i class="icon-trash"></i>
             {{ 'delete'|trans({}, 'platform') }}
         </button>
-        <a href="{{ path('claro_workspace_creation_form') }}" class="btn btn-default action-button" >
+        <a href="{{ path('claro_workspace_creation_form') }}" class="btn btn-default action-button" role="button">
             <i class="icon-pencil"></i>
             {{ 'create'|trans({}, 'platform') }}
         </a>
@@ -124,6 +124,7 @@
                         <th><a href="{{ sortUrl(max, search, 'visibility', direction) }}"> {{ 'visibility'|trans({}, 'platform') }} </a></th>
                         <th><a href="{{ sortUrl(max, search, 'displayble', direction) }}"> {{ 'public_registration'|trans({}, 'platform') }} </a></th>
                         <th>{{ 'edit'|trans({}, 'platform') }}</th>
+                        <th>date </th>
                     </tr>
                 </thead>
                 <tbody>
@@ -176,6 +177,14 @@
                             <a href="{{ path('claro_workspace_edit_form', {'workspace':w.getId() }) }}">
                                 <i class="icon-pencil"></i>
                             </a>
+                        </td>
+                        <td>
+
+                            {% if w.getCreationDate() is not null %}
+                                {{ w.getCreationDate()|intl_date_format}}
+                            {% else %}
+                                -
+                            {% endif %}
                         </td>
                     </tr>
                 {% endfor %}

@@ -1,17 +1,19 @@
 {% macro item(params) %}
-    <li {% if params.id is defined and params.id is not empty %} id="{{ params.id }}" {% endif %}class="{% if params.dropdown is defined and params.dropdown is not empty %}dropdown{% endif %}{{ params.route | default(' ') | compareRoute(' active') | raw }}">
-        <a
-                {% if params.dropdown is defined and params.dropdown is not empty %}class="pointer-hand dropdown-toggle" data-toggle="dropdown"{% endif %}
-                {% if params.href is defined and params.href is not empty %}href="{{ params.href }}"{% endif %}
-                {% if params.title is defined and params.title is not empty %}title="{{ params.title }}"{% endif %}
-                >
+    <li role="presentation" {% if params.id is defined and params.id is not empty %} id="{{ params.id }}" {% endif %}class="{% if params.dropdown is defined and params.dropdown is not empty %}dropdown{% endif %}{{ params.route | default(' ') | compareRoute(' active') | raw }}">
+        <a  role="menuitem"
+            {% if params.dropdown is defined and params.dropdown is not empty %}class="pointer-hand dropdown-toggle" data-toggle="dropdown"{% endif %}
+            {% if params.href is defined and params.href is not empty %}href="{{ params.href }}"{% endif %}
+            {% if params.title is defined and params.title is not empty %}title="{{ params.title }}"{% endif %}
+            >
             {% if params.icon is defined and params.icon is not empty %}<i class="icon-{{ params.icon }}"></i> {% endif %}
+            <span {% if params.breakhide is defined %}class="break-hide"{% endif %}>
+                {% if params.name is defined %} {{ params.name | trans({}, 'platform') }} {% endif %}
+            </span>
             {% if params.badge is defined and params.badge is not empty %}<span class="badge">{{ params.badge }}</span>{% endif %}
-            {% if params.name is defined %} {{ params.name | trans({}, 'platform') }} {% endif %}
             {% if (params.dropdown is defined and params.dropdown is not empty) and (params.hideArrow is not defined or params.hideArrow is empty) %}<i class="caret"></i>{% endif %}
         </a>
         {% if params.dropdown is defined and params.dropdown is not empty %}
-            <ul class="dropdown-menu">
+            <ul class="dropdown-menu" role="menu">
                 {{ params.dropdown | raw }}
             </ul>
         {% endif %}
@@ -25,19 +27,19 @@
         {% if config.getParameter('name') == "" and config.getParameter('logo') == "" %}
             {{ topbar.item({'name':'home', 'href':path('claro_index'), 'icon':'home'}) }}
         {% endif %}
-        {{ topbar.item({'href':path('claro_desktop_open'), 'icon':'briefcase', 'route':'/desktop/tool/', 'title': 'desktop' | trans({}, 'platform')}) }}
-        {% if is_granted('ROLE_ADMIN') %}
-            {{ topbar.item({'href':path('claro_admin_parameters_index'), 'icon':'cog', 'route':'/admin/', 'title':'administration' | trans({}, 'platform')}) }}
+        {{ topbar.item({'name': 'desktop', 'breakhide': true, 'href':path('claro_desktop_open'), 'icon':'briefcase', 'route':'/desktop/tool/', 'title': 'desktop' | trans({}, 'platform')}) }}
+        {% if canAdministrate == true %}
+            {{ topbar.item({'name': 'administration', 'breakhide': true, 'href':path('claro_admin_index'), 'icon':'cog', 'route':'/admin/', 'title':'administration' | trans({}, 'platform')}) }}
         {% endif %}
         {% if countUnreadMessages > 0 %}
-            {{ topbar.item({'href':path('claro_message_list_received'), 'icon':'envelope', 'route':'/message/', 'title':'new_message_alert' | trans({'%count%': countUnreadMessages}, 'platform'), 'badge' : countUnreadMessages }) }}
+            {{ topbar.item({'name': 'messages', 'breakhide': true, 'href':path('claro_message_list_received'), 'icon':'envelope', 'route':'/message/', 'title':'new_message_alert' | trans({'%count%': countUnreadMessages}, 'platform'), 'badge' : countUnreadMessages }) }}
         {% else %}
-            {{ topbar.item({'href':path('claro_message_list_received'), 'icon':'envelope', 'route':'/message/', 'title':'new_message_alert' | trans({'%count%': countUnreadMessages}, 'platform')}) }}
+            {{ topbar.item({'name': 'messages', 'breakhide': true, 'href':path('claro_message_list_received'), 'icon':'envelope', 'route':'/message/', 'title':'new_message_alert' | trans({'%count%': countUnreadMessages}, 'platform')}) }}
         {% endif %}
         {% if countUnviewedNotifications > 0 %}
-            {{ topbar.item({'id':'notification-topbar-item', 'href':path('icap_notification_view'), 'icon':'bell-alt', 'route':'/icap_notification/', 'title':'notifications', 'badge' : countUnviewedNotifications}) }}
+            {{ topbar.item({'name': 'notifications', 'breakhide': true, 'id':'notification-topbar-item', 'href':path('icap_notification_view'), 'icon':'bell-alt', 'route':'/icap_notification/', 'title':'notifications', 'badge' : countUnviewedNotifications}) }}
         {% else %}
-            {{ topbar.item({'id':'notification-topbar-item', 'href':path('icap_notification_view'), 'icon':'bell-alt', 'route':'/icap_notification/', 'title':'notifications'}) }}
+            {{ topbar.item({'name': 'notifications', 'breakhide': true, 'id':'notification-topbar-item', 'href':path('icap_notification_view'), 'icon':'bell-alt', 'route':'/icap_notification/', 'title':'notifications'}) }}
         {% endif %}
         {% if '/icap_notification/'|compareRoute('true') is empty %}
             {% include "IcapNotificationBundle:Notification:dropdownScript.html.twig" with {'notificationElementId':'notification-topbar-item'} %}
@@ -65,24 +67,25 @@
 
     {% block logged %}
         {% import _self as topbar %}
+        {% set username = app.user.firstName ~ ' ' ~ app.user.lastName %}
         {% set user = username | length > 16 ? username | slice(0, 16) ~ '...' : username %}
-        {{ topbar.item({'name':username, 'icon':'user', 'route':'/profile', 'dropdown':block('dropdownLogged')}) }}
+        {{ topbar.item({'name':user, 'icon':'user', 'route':'/profile', 'dropdown':block('dropdownLogged')}) }}
     {% endblock logged %}
 
     {% block dropdownWorkspace %}
         {% import _self as topbar %}
         {% if isLogged %}
             {% if not workspaces is empty %}
-                <li class="dropdown-header">{{ 'history'|trans({}, 'platform') }}</li>
+                <li role="presentation" class="dropdown-header">{{ 'history'|trans({}, 'platform') }}</li>
                 {% for workspace in workspaces %}
                     {{ topbar.item({'name':workspace.getName() ~ ' (' ~ workspace.getCode() ~ ')', 'href':path('claro_workspace_open', {'workspaceId': workspace.getId()})}) }}
                 {% endfor %}
-                <li class="divider"></li>
+                <li role="presentation" class="divider"></li>
             {% endif %}
             {{ topbar.item({'name':'my_workspaces', 'href':path('claro_workspace_by_user'), 'icon':'book'}) }}
             {{ topbar.item({'name':'find_workspaces', 'href':path('claro_workspace_list'), 'icon':'book'}) }}
             {% if is_granted('ROLE_WS_CREATOR') %}
-                <li class="divider"></li>
+                <li role="presentation" class="divider"></li>
                 {{ topbar.item({'name':'create_workspace', 'href':path('claro_workspace_creation_form'), 'icon':'pencil'}) }}
             {% endif %}
         {% else %}
@@ -91,30 +94,29 @@
     {% endblock dropdownWorkspace %}
 
     {% block dropdowLogin %}
-        <li>
-            <a id="link-registration" href="{{ path(register_target) }}">
+        <li role="presentation">
+            <a role="menuitem" id="link-registration" href="{{ path(register_target) }}">
                 {{ 'register'|trans({}, 'platform') }}
             </a>
         </li>
-        <li class="divider"></li>
-        <li>
-            <a href="{{ login_target }}" id="link-login">
+        <li role="presentation" class="divider"></li>
+        <li role="presentation">
+            <a role="menuitem" href="{{ login_target }}" id="link-login">
                 {{ 'login'|trans({}, 'platform') }}
             </a>
         </li>
     {% endblock dropdowLogin %}
 
     {% block dropdownLogged %}
-        {{ topbar.item({'name':'my_profile', 'href':path('claro_profile_view', {'userId': app.user.id}), 'icon':'user'}) }}
-        <li class="divider"></li>
+        {{ topbar.item({'name':'my_profile', 'href':path('claro_profile_view'), 'icon':'user'}) }}
+        <li role="presentation" class="divider"></li>
         {% if personalWs is not null %}
             {{ topbar.item({'name':'my_workspace', 'href':path('claro_workspace_open_tool', {'workspaceId': personalWs.getId(), 'toolName': 'home'}), 'icon':'book'}) }}
         {% endif %}
         {{ topbar.item({'name':'my_agenda', 'href':path('claro_desktop_open_tool', {'toolName': 'agenda' }), 'icon':'calendar'}) }}
         {{ topbar.item({'name':'my_resources', 'href':path('claro_desktop_open_tool', {'toolName': 'resource_manager'}) ~ '#resources/0', 'icon':'folder-close'}) }}
         {{ topbar.item({'name':'my_badges', 'href':path('claro_profile_view_badges'), 'icon':'trophy'}) }}
-        {{ topbar.item({'name':'my_applications', 'href':path('claro_profile_applications'), 'icon':'puzzle-piece'}) }}
-        <li class="divider"></li>
+        <li role="presentation" class="divider"></li>
         {% if isImpersonated %}
             {% set logoutPath = path('claro_desktop_open', {'_switch': '_exit'}) %}
         {% else %}

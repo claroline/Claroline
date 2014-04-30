@@ -24,7 +24,10 @@ class ResetPasswordType extends AbstractType
             'repeated',
             array(
                 'type' => 'password',
-                'invalid_message' => 'password_mismatch'
+                'invalid_message' => 'password_mismatch',
+                'first_options' => array('label' => 'new_password'),
+                'second_options' => array('label' => 'repeat_password')
+
             )
         );
     }

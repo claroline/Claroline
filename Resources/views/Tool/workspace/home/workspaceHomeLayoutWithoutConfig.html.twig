@@ -25,7 +25,7 @@
         </h3>
         {% if is_granted('ROLE_WS_MANAGER_' ~ workspace.getGuid()) %}
             <div class="float-right-top">
-                <a class="btn btn-primary" href="{{ path( 'claro_display_workspace_home_tabs_with_config', { 'tabId': tabId, 'workspaceId': workspace.getId()}) }}">
+                <a class="btn btn-primary" href="{{ path( 'claro_display_workspace_home_tabs_with_config', { 'tabId': tabId, 'workspaceId': workspace.getId()}) }}" role="button">
                     <i id="switch-config-mode" class="icon-pencil"></i>
                 </a>
             </div>

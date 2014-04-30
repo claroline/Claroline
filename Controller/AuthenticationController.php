@@ -129,7 +129,10 @@ class AuthenticationController
         }
 
         return array(
-            'error' => $this->translator->trans('mail_config_problem', array(), 'platform')
+            'error' =>
+                $this->translator->trans('mail_not_available', array(), 'platform')
+                . ' '
+                . $this->translator->trans('mail_config_problem', array(), 'platform')
         );
     }
 
@@ -204,7 +207,7 @@ class AuthenticationController
         }
 
         return array(
-            'error' => $this->translator->trans('mail_invalid', array(), 'platform'),
+            'error' => $this->translator->trans('wrong_captcha', array(), 'platform'),
             'form' => $form->createView()
         );
     }

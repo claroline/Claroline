@@ -842,8 +842,7 @@ class ResourceManager
             $resource = $this->getResourceFromNode($node);
             /**
              * resChild can be null if a shortcut was removed
-             * @todo: fix shortcut delete. If a target is removed, every link to the
-             * target should be removed too.
+             * @todo: fix shortcut delete. If a target is removed, every link to the target should be removed too.
              */
             if ($resource !== null) {
                 if ($node->getClass() !== 'Claroline\CoreBundle\Entity\Resource\ResourceShortcut') {
@@ -864,7 +863,9 @@ class ResourceManager
                     array($node)
                 );
 
-                $this->iconManager->delete($node->getIcon());
+                if ($node->getIcon()) {
+                    $this->iconManager->delete($node->getIcon());
+                }
 
                 /*
                  * If the child isn't removed here aswell, doctrine will fail to remove $resChild
@@ -877,7 +878,10 @@ class ResourceManager
             }
         }
 
-        $this->iconManager->delete($node->getIcon());
+        if ($node->getIcon()) {
+            $this->iconManager->delete($node->getIcon());
+        }
+        
         $this->om->remove($node);
         $this->om->endFlushSuite();
     }
@@ -891,18 +895,18 @@ class ResourceManager
      *
      * @return array
      */
-    public function download(array $nodes)
+    public function download(array $elements)
     {
         $data = array();
 
-        if (count($nodes) === 0) {
+        if (count($elements) === 0) {
             throw new ExportResourceException('No resources were selected.');
         }
 
         $archive = new \ZipArchive();
         $pathArch = sys_get_temp_dir() . DIRECTORY_SEPARATOR . $this->ut->generateGuid() . '.zip';
         $archive->open($pathArch, \ZipArchive::CREATE);
-        $nodes = $this->expandResources($nodes);
+        $nodes = $this->expandResources($elements);
 
         if (count($nodes) === 1) {
             $event = $this->dispatcher->dispatch(
@@ -920,7 +924,11 @@ class ResourceManager
             return $data;
         }
 
-        $currentDir = $nodes[0];
+        if (isset($nodes[0])) {
+            $currentDir = $nodes[0];
+        } else {
+            $archive->addEmptyDir($elements[0]->getName());
+        }
 
         foreach ($nodes as $node) {
 
@@ -1297,7 +1305,15 @@ class ResourceManager
         $newNode->setIcon($node->getIcon());
         $newNode->setClass($node->getClass());
         $newNode->setMimeType($node->getMimeType());
-        $this->rightsManager->copy($node, $newNode);
+
+        //if everything happens inside the same workspace, rights are copied
+        if ($newParent->getWorkspace() === $node->getWorkspace()) {
+            $this->rightsManager->copy($node, $newNode);
+        } else {
+            //otherwise we use the parent rights
+            $this->setRights($newNode, $newParent, array());
+        }
+
         $this->om->persist($newNode);
 
         return $newNode;

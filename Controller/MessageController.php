@@ -679,7 +679,7 @@ class MessageController
         }
 
         foreach ($usernames as $username) {
-            if ($user->getUsername() === $username) {
+            if (strtolower($user->getUsername()) === strtolower($username)) {
                 return true;
             }
         }

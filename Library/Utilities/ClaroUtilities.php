@@ -12,26 +12,26 @@
 namespace Claroline\CoreBundle\Library\Utilities;
 
 use JMS\DiExtraBundle\Annotation as DI;
-use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * @DI\Service("claroline.utilities.misc")
  */
-class ClaroUtilities implements ContainerAwareInterface
+class ClaroUtilities
 {
     private $container;
+    private $hasIntl;
+    private $formatter;
 
     /**
      * @DI\InjectParams({
      *     "container" = @DI\Inject("service_container")
      * })
-     *
-     * @param ContainerInterface $container
      */
-    public function setContainer(ContainerInterface $container = null)
+    public function __construct(ContainerInterface $container)
     {
         $this->container = $container;
+        $this->hasIntl = extension_loaded('intl');
     }
 
     /**
@@ -155,5 +155,35 @@ class ClaroUtilities implements ContainerAwareInterface
 
         //default
         return 'ISO-8859-1';
+    }
+
+    /*
+     * Format the date according to the locale.
+     */
+    public function intlDateFormat($date)
+    {
+        if (($formatter = $this->getFormatter()) instanceof \IntlDateFormatter) {
+            return $formatter->format($date);
+        } elseif ($date instanceof \DateTime) {
+            return $date->format('d-m-Y');
+        }
+
+        return date('d-m-Y', $date);
+    }
+
+    private function getFormatter() 
+    {
+        if (!$this->formatter && $this->hasIntl) {
+            $request = $this->container->get('request_stack')->getMasterRequest();
+            $this->formatter = new \IntlDateFormatter(
+                $this->container->get('claroline.common.locale_manager')->getUserLocale($request),
+                \IntlDateFormatter::SHORT,
+                \IntlDateFormatter::SHORT,
+                date_default_timezone_get(),
+                \IntlDateFormatter::GREGORIAN
+            );
+        }
+
+        return $this->formatter;
     }
 }

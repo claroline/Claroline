@@ -59,7 +59,7 @@
     </div>
     <div class="theme-generator panel-footer">
         <button class="btn save btn-primary"{% if theme is defined %} data-id="{{ theme.getId() }}"{% endif %}><i class="icon-ok"></i> {{ "Save" | trans({}, "theme") }}</button>
-        <a href="{{ path("claroline_admin_theme_list") }}" class="btn btn-default"><i class="icon-reply"></i> {{ "Cancel" | trans({}, "theme") }}</a>
+        <a href="{{ path("claroline_admin_theme_list") }}" class="btn btn-default" role="button"><i class="icon-reply"></i> {{ "Cancel" | trans({}, "theme") }}</a>
         <button class="btn btn-default preview"{% if theme is defined %} data-id="{{ theme.getId() }}"{% endif %}><i class="icon-eye-open"></i> {{ "Preview" | trans({}, "theme") }}</button>
         {% if theme is defined %}
             <button class="btn btn-default dele" data-id="{{ theme.getId() }}"><i class="icon-trash"></i> {{ "Delete" | trans({}, "theme") }}</button>
@@ -91,19 +91,21 @@
                                 </h3>
                             </div>
                             <div id="collapse{{ loop.index }}" class="collapse">
-                                <table class="table">
-                                    {% for code,value in array %}
-                                        <tr>
-                                            <td width="40%" class="theme-code"><code>{{ code }}</code></td>
-                                            <td class="theme-value input-group">
-                                                <span class="input-group-btn">
-                                                    <button class="btn btn-primary" type="button"><i class="icon-tint"></i></button>
-                                                </span>
-                                                <input class="form-control" type="text" value="{{ value }}"/>
-                                            </td>
-                                        </tr>
-                                    {% endfor %}
-                                </table>
+                                <div class="table-responsive">
+                                    <table class="table">
+                                        {% for code,value in array %}
+                                            <tr>
+                                                <td width="40%" class="theme-code"><code>{{ code }}</code></td>
+                                                <td class="theme-value input-group">
+                                                    <span class="input-group-btn">
+                                                        <button class="btn btn-primary" type="button"><i class="icon-tint"></i></button>
+                                                    </span>
+                                                    <input class="form-control" type="text" value="{{ value }}"/>
+                                                </td>
+                                            </tr>
+                                        {% endfor %}
+                                    </table>
+                                </div>
                             </div>
                         </div>
                     {% endfor %}

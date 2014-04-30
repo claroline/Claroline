@@ -447,7 +447,7 @@ class WorkspaceTagManager
         $workspaceRoles = array();
 
         if ($withRoles) {
-            $roles = $this->roleManager->getAllRoles();
+            $roles = $this->roleManager->getAllWhereWorkspaceIsDisplayable();
 
             foreach ($roles as $role) {
                 $wsRole = $role->getWorkspace();

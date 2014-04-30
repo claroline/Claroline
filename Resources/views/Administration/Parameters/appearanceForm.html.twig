@@ -26,7 +26,7 @@
     <div class="panel-heading">
         <h3 class="panel-title">{{ 'platform_appearance'|trans({}, 'platform') }}</h3>
     </div>
-    <form class="form-horizontal" action="{{path('claro_admin_edit_parameters_appearance')}}" method="post" {{ form_enctype(form_appearance) }} id="form_settings" enctype='multipart/form-data'>
+    <form role="form" class="form-horizontal" action="{{path('claro_admin_edit_parameters_appearance')}}" method="post" {{ form_enctype(form_appearance) }} id="form_settings" enctype='multipart/form-data'>
         <div class="panel-body">
             {{ form_widget(form_appearance) }}
             <div class="form-group row">
@@ -42,8 +42,8 @@
                     </div>
                     {% for logo in logos %}
                         <div class="alert {% if config.getParameter('logo') == logo %}alert-info{% else %}alert-warning{% endif %} content-4 pointer-hand logo" data-logo="{{ logo }}">
-                            <button type="button" class="close">&times;</button>
-                            <img src="{{ asset("") ~ "uploads/logos/" ~ logo }}" height="35">
+                            <button type="button" class="close" aria-hidden="true">&times;</button>
+                            <img src="{{ asset("") ~ "uploads/logos/" ~ logo }}" height="35" alt="Logo {{loop.index}}">
                         </div>
                     {% endfor %}
                     <input type="hidden" name="selectlogo" {% if config.getParameter('logo') != "" %}value="{{ config.getParameter('logo') }}"{% endif %}>

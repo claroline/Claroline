@@ -10,14 +10,15 @@
 (function () {
     'use strict';
 
-    var home = window.Claroline.Home;
     var modal = window.Claroline.Modal;
 
     function deletelogo(element) {
         var logo = $(element).data('logo');
 
         if (logo && element) {
-            $.ajax(home.path + 'admin/delete/logo/' + logo)
+
+            var route = Routing.generate('claro_admin_delete_logo', {'file': logo});
+            $.ajax(route)
             .done(function (data) {
                 if (data === 'true') {
                     $(element).hide('slow', function () {

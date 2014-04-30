@@ -1,0 +1,33 @@
+{% extends "ClarolineCoreBundle:Administration:layout.html.twig" %}
+
+{% block title %}{{ parent() ~ ' - ' ~ 'roles_management' | trans({}, 'platform') | striptags | raw }}{% endblock %}
+
+{% block breadcrumb %}
+    {{
+        macros.breadcrumbs([
+            {
+                'icon': 'icon-cog',
+                'name': 'administration'|trans({}, 'platform'),
+                'href': path('claro_admin_index')
+            },
+            {
+                'name': 'roles_management'|trans({}, 'platform'),
+                'href': path('claro_admin_roles_index')
+            }
+        ])
+    }}
+{% endblock %}
+
+{% block section_content %}
+    <div class="panel-heading">
+        <h3 class="panel-title">{{ 'manage_tools'|trans({}, 'platform') }}</h3>
+    </div>
+    <div class="list-group">
+        <a class="list-group-item" href="{{ path('create_platform_role_form') }}">
+            {{ 'create_role'|trans({}, 'platform') }}
+        </a>
+        <a class="list-group-item" href="{{ path('claro_admin_tools_index', {}) }}">
+            {{ 'manage_tools'|trans({}, 'platform') }}
+        </a>
+    </div>
+{% endblock %}

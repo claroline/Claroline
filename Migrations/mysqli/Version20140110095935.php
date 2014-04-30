@@ -1,7 +1,7 @@
 <?php
-
+ 
 namespace Claroline\CoreBundle\Migrations\mysqli;
-
+ 
 use Doctrine\DBAL\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
 

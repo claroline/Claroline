@@ -164,6 +164,7 @@ textarea {
 /************/
 
 #top_bar {
+
     .badge {
         color: @navbar-inverse-bg;
         background: @navbar-inverse-link-color;
@@ -235,6 +236,16 @@ textarea {
         max-height: @navbar-height;
         overflow: hidden !important;
         position: relative;
+    }
+
+    .break-hide {
+        display: none;
+    }
+
+    &.break{
+        .break-hide {
+            display: inline;
+        }
     }
 
     @media(min-width: @screen-md) {
@@ -1154,8 +1165,7 @@ form .global-error {
 }
 
 .mce-container.mce-menubar.mce-toolbar.mce-first.mce-stack-layout-item,
-.mce-statusbar.mce-container.mce-panel.mce-last.mce-stack-layout-item,
-.mce-container.mce-toolbar.mce-last.mce-stack-layout-item{
+.mce-statusbar.mce-container.mce-panel.mce-last.mce-stack-layout-item {
     display: none;
 }
 
@@ -1293,7 +1303,8 @@ body.mce-fullscreen .modal.fullscreen {
 .white-space {
     vertical-align: top;
     white-space: nowrap;
- }
+}
+
 /**********************/
 /**    Facebook      **/
 /**********************/
@@ -1310,5 +1321,111 @@ body.mce-fullscreen .modal.fullscreen {
     }
     i {
         font-size: 17px;
+    }
+}
+
+/**********************/
+/**    Profile       **/
+/**********************/
+.profile_aside {
+    .avatar {
+        text-align: center;
+        .profile_picture {
+            margin-top: 20px;
+        }
+        .profile_picture_placeholder {
+            font-size: 80px;
+        }
+    }
+    .informations {
+        margin-top: 20px;
+    }
+    .contact_methods {
+        margin-top: 20px;
+        li {
+            a {
+                font-size:     12px;
+                padding-right: 0;
+            }
+        }
+    }
+}
+.profile_informations {
+    &> p {
+        margin-bottom: 0;
+        margin-top:    10px;
+    }
+    .description_block {
+        margin-top:    20px;
+        .lead {
+            border-bottom: 5px solid #eee;
+            margin-bottom: 10px;
+        }
+        .description {
+            margin-left: 15px;
+            p {
+                margin-bottom: 0;
+            }
+        }
+    }
+}
+
+.share_policies {
+    label {
+        font-weight: normal;
+    }
+}
+
+.preferences {
+    margin-left: 30px;
+    .preference-summary {
+        display:   block;
+        font-size: 12px;
+    }
+}
+
+.shared_policy_link {
+    color: @link-color;
+
+    &:hover {
+        cursor:          pointer;
+        text-decoration: underline;
+    }
+}
+
+#public_profile_url {
+    .public_profile_url {
+        label {
+            padding-right: 2px;
+        }
+        div {
+            padding-left: 0;
+        }
+
+        .check-ok {
+            border-color: #3c763d;
+        }
+        .check-ko {
+            border-color: #843534;
+        }
+
+        .feedback {
+            position:    absolute;
+            top:         0;
+            right:       15px;
+            width:       34px;
+            height:      34px;
+            line-height: 34px;
+            text-align:  center;
+            .loading {
+                margin-top: 6px;
+            }
+            .icon-ok {
+                color: #3c763d;
+            }
+            .icon-remove {
+                color: #843534;
+            }
+        }
     }
 }
