@@ -80,7 +80,7 @@ class ExerciseRepository extends EntityRepository
             FROM Claroline\CoreBundle\Entity\User u 
             JOIN u.roles r 
             JOIN r.workspace w
-            WHERE u.id='.$userID.' AND r.translationKey=\'manager\'' ;
+            WHERE u.id='.$userID.' AND r.name LIKE \'ROLE_WS_MANAGER_%\'' ;
 
         $query = $this->_em->createQuery($dql);
         
@@ -98,6 +98,30 @@ class ExerciseRepository extends EntityRepository
                 $exercises[] =  $resource;
             }
         }
+        
+        /*$dql = "
+            SELECT e.id, e.title
+            FROM UJM\ExoBundle\Entity\Exercise e
+            JOIN e.resourceNode node
+            JOIN node.rights right
+            JOIN right.role r
+            JOIN node.resourceType rt
+            WHERE r.name IN (
+                SELECT r2.name FROM Claroline\CoreBundle\Entity\Role r2
+                LEFT JOIN r2.users u2
+                LEFT JOIN r2.groups g
+                LEFT JOIN g.users u3
+                WHERE r2.name LIKE 'ROLE_WS_MANAGER_%'
+                AND u2.id = '$userID'
+                OR u3.id = '$userID'
+                AND r2.name LIKE 'ROLE_WS_MANAGER_%'
+            ) AND rt.name ='ujm_exercise'
+        ";
+        
+        $queryResources = $this->_em->createQuery($dql);
+            foreach ($queryResources->getResult() as $resource) {
+                $exercises[] =  $resource;
+            }*/
         
         return $exercises;
         
