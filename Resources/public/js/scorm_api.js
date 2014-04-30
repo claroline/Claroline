@@ -44,7 +44,7 @@ var scormId = document.getElementById("twig-scorm-data").getAttribute("scorm-id"
 var apiInitialized = false;
 var apiLastError = "301";
 
-function commitResult()
+function commitResult(mode)
 {
     "use strict";
 
@@ -65,7 +65,7 @@ function commitResult()
     $.ajax({
         url: Routing.generate(
             "claro_scorm_info_commit",
-            {"datasString": datasString}
+            {"datasString": datasString, "mode": mode}
         ),
         type: "POST",
         success: function () {
@@ -106,6 +106,7 @@ function LMSFinish(arg)
         }
         apiLastError = "0";
         apiInitialized = false;
+        commitResult('log');
 
         return "true";
     } else {
@@ -369,7 +370,7 @@ function LMSCommit(arg)
             return "false";
         } else {
             apiLastError = "0";
-            commitResult();
+            commitResult('persist');
 
             return "true";
         }

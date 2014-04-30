@@ -11,8 +11,10 @@
 
 namespace Claroline\ScormBundle\Controller;
 
+use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\ScormBundle\Entity\ScormInfo;
+use Claroline\ScormBundle\Entity\Scorm;
 use Claroline\ScormBundle\Event\Log\LogScormResultEvent;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -54,80 +56,159 @@ class ScormController extends Controller
 
     /**
      * @EXT\Route(
-     *     "/scorm/info/commit/{datasString}",
+     *     "/scorm/info/commit/{datasString}/mode/{mode}",
      *     name = "claro_scorm_info_commit",
      *     options={"expose"=true}
      * )
      *
      * @param string $datasString
+     * @param string $mode  determines if given datas must be persisted
+     *                      or logged
      *
      * @return Response
      */
-    public function commitScormInfo($datasString)
+    public function commitScormInfo($datasString, $mode)
     {
         $datasArray = explode("<-;->", $datasString);
-        $scormId = $datasArray[0];
-        $studentId = $datasArray[1];
+        $scormId = intval($datasArray[0]);
+        $studentId = intval($datasArray[1]);
         $lessonMode = $datasArray[2];
         $lessonLocation = $datasArray[3];
         $lessonStatus = $datasArray[4];
         $credit = $datasArray[5];
-        $scoreRaw = $datasArray[6];
-        $scoreMin = $datasArray[7];
-        $scoreMax = $datasArray[8];
+        $scoreRaw = intval($datasArray[6]);
+        $scoreMin = intval($datasArray[7]);
+        $scoreMax = intval($datasArray[8]);
         $sessionTime = $datasArray[9];
         $totalTime = $datasArray[10];
         $suspendData = $datasArray[11];
         $entry = $datasArray[12];
         $exitMode = $datasArray[13];
 
-        if ($this->securityContext->getToken()->getUser()->getId() !== intval($studentId)) {
+        $user = $this->securityContext->getToken()->getUser();
+
+        if ($user->getId() !== $studentId) {
             throw new AccessDeniedException();
         }
+        $scorm = $this->scormRepo->findOneById($scormId);
 
         $sessionTimeInHundredth = $this->convertTimeInHundredth($sessionTime);
         $totalTimeInHundredth = $this->convertTimeInHundredth($totalTime);
         $totalTimeInHundredth += $sessionTimeInHundredth;
 
-        $user = $this->userRepo->findOneById(intval($studentId));
-        $scorm = $this->scormRepo->findOneById(intval($scormId));
+        if ($mode === 'persist') {
+            $this->persistScormInfo(
+                $scorm,
+                $user,
+                $credit,
+                $entry,
+                $exitMode,
+                $lessonLocation,
+                $lessonMode,
+                $lessonStatus,
+                $scoreMax,
+                $scoreMin,
+                $scoreRaw,
+                $sessionTimeInHundredth,
+                $suspendData,
+                $totalTimeInHundredth
+            );
+        } elseif ($mode === 'log') {
+            $this->logScormResult(
+                $scorm,
+                $user,
+                $credit,
+                $exitMode,
+                $lessonMode,
+                $lessonStatus,
+                $scoreMax,
+                $scoreMin,
+                $scoreRaw,
+                $sessionTimeInHundredth,
+                $suspendData,
+                $totalTimeInHundredth
+            );
+        }
+
+        return new Response('', '204');
+    }
+
+    /**
+     * Persist given datas in Scorm informations
+     */
+    private function persistScormInfo(
+        Scorm $scorm,
+        User $user,
+        $credit,
+        $entry,
+        $exitMode,
+        $lessonLocation,
+        $lessonMode,
+        $lessonStatus,
+        $scoreMax,
+        $scoreMin,
+        $scoreRaw,
+        $sessionTimeInHundredth,
+        $suspendData,
+        $totalTimeInHundredth
+    )
+    {
         $scormInfo = $this->scormInfoRepo->findOneBy(
             array('user' => $user->getId(), 'scorm' => $scorm->getId())
         );
 
         if (is_null($scormInfo)) {
             $scormInfo = new ScormInfo();
-            $scormInfo->setUser($user);
-            $scormInfo->setScorm($scorm);
-            $scormInfo->setLessonMode($lessonMode);
             $scormInfo->setCredit($credit);
+            $scormInfo->setLessonMode($lessonMode);
+            $scormInfo->setScorm($scorm);
+            $scormInfo->setUser($user);
         }
 
-        $scormInfo->setLessonLocation($lessonLocation);
-        $scormInfo->setLessonStatus($lessonStatus);
-        $scormInfo->setScoreRaw(intval($scoreRaw));
-        $scormInfo->setScoreMin(intval($scoreMin));
-        $scormInfo->setScoreMax(intval($scoreMax));
-        $scormInfo->setSessionTime($sessionTimeInHundredth);
-        $scormInfo->setTotalTime($totalTimeInHundredth);
         $scormInfo->setEntry($entry);
         $scormInfo->setExitMode($exitMode);
+        $scormInfo->setLessonLocation($lessonLocation);
+        $scormInfo->setLessonStatus($lessonStatus);
+        $scormInfo->setScoreMax($scoreMax);
+        $scormInfo->setScoreMin($scoreMin);
+        $scormInfo->setScoreRaw($scoreRaw);
+        $scormInfo->setSessionTime($sessionTimeInHundredth);
         $scormInfo->setSuspendData($suspendData);
+        $scormInfo->setTotalTime($totalTimeInHundredth);
 
         $this->om->persist($scormInfo);
         $this->om->flush();
+    }
 
+    /**
+     * Log given datas as result of a Scorm resource
+     */
+    private function logScormResult(
+        Scorm $scorm,
+        User $user,
+        $credit,
+        $exitMode,
+        $lessonMode,
+        $lessonStatus,
+        $scoreMax,
+        $scoreMin,
+        $scoreRaw,
+        $sessionTimeInHundredth,
+        $suspendData,
+        $totalTimeInHundredth
+    )
+    {
         $details = array();
-        $details['scoreRaw'] = $scormInfo->getScoreRaw();
-        $details['scoreMin'] = $scormInfo->getScoreMin();
-        $details['scoreMax'] = $scormInfo->getScoreMax();
-        $details['lessonStatus'] = $scormInfo->getLessonStatus();
-        $details['sessionTime'] = $scormInfo->getSessionTime();
-        $details['totalTime'] = $scormInfo->getTotalTime();
-        $details['suspendData'] = $scormInfo->getSuspendData();
-        $details['exitMode'] = $scormInfo->getExitMode();
-        $details['credit'] = $scormInfo->getCredit();
-        $details['lessonMode'] = $scormInfo->getLessonMode();
+        $details['credit'] = $credit;
+        $details['exitMode'] = $exitMode;
+        $details['lessonMode'] = $lessonMode;
+        $details['lessonStatus'] = $lessonStatus;
+        $details['scoreMax'] = $scoreMax;
+        $details['scoreMin'] = $scoreMin;
+        $details['scoreRaw'] = $scoreRaw;
+        $details['sessionTime'] = $sessionTimeInHundredth;
+        $details['suspendData'] = $suspendData;
+        $details['totalTime'] = $totalTimeInHundredth;
 
         $log = new LogScormResultEvent(
             "resource_scorm_result",
@@ -143,8 +224,6 @@ class ScormController extends Controller
             null
         );
         $this->eventDispatcher->dispatch('log', $log);
-
-        return new Response('', '204');
     }
 
     /**
