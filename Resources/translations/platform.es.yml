@@ -591,6 +591,7 @@ tags_list: 'Lista de etiquetas'
 tags_management: 'Gestión de etiquetas'
 tags_organization: 'Organización de las etiquetas'
 teacher: 'Profesor'
+terms_enabled_but_empty: Las condiciones de servicio sólo se pueden habilitar si el texto está proporcionado al menos una lengua.
 text_form_content: 'Contenido'
 text_form_name: 'Nombre'
 text_form_shareType: 'Compartible'

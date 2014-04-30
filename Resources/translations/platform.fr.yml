@@ -653,6 +653,7 @@ tags_list: 'Liste des Tags'
 tags_management: 'Gestion des Tags'
 tags_organization: 'Organisation des Tags'
 teacher: Professeur
+terms_enabled_but_empty: Les conditions d'utilisation ne peuvent être activées que si le texte est fourni dans au moins une langue.
 text_form_content: Contenu
 text_form_name: Nom
 text_form_shareType: Redistribution

@@ -115,7 +115,9 @@ class AuthenticationSuccessListener implements AuthenticationSuccessHandlerInter
      */
     public function onKernelRequest(GetResponseEvent $event)
     {
-        $event = $this->showTermOfServices($event);
+        if ($this->configurationHandler->getParameter('terms_of_service')) {
+            $this->showTermOfServices($event);
+        }
     }
 
     /**
@@ -123,43 +125,41 @@ class AuthenticationSuccessListener implements AuthenticationSuccessHandlerInter
      */
     public function onKernelResponse(FilterResponseEvent $event)
     {
-        $this->saveLastUri($event);
+        if ($this->configurationHandler->getParameter('redirect_after_login')) {
+            $this->saveLastUri($event);
+        }
     }
 
-    public function saveLastUri(FilterResponseEvent $event)
+    private function saveLastUri(FilterResponseEvent $event)
     {
-        if ($this->configurationHandler->getParameter('redirect_after_login')) {
-
-            if ($event->isMasterRequest()
-                && !$event->getRequest()->isXmlHttpRequest()
-                && !in_array($event->getRequest()->attributes->get('_route'), $this->getExcludedRoutes())
-                && 'GET' === $event->getRequest()->getMethod()
-                && 200 === $event->getResponse()->getStatusCode()
-                && !$event->getResponse() instanceof StreamedResponse
-            ) {
-                if ($token =  $this->securityContext->getToken()) {
-                    if ('anon.' !== $user = $token->getUser()) {
-                        $uri = $event->getRequest()->getRequestUri();
-                        $user->setLastUri($uri);
-                        $this->manager->persist($user);
-                        $this->manager->flush();
-                    }
+        if ($event->isMasterRequest()
+            && !$event->getRequest()->isXmlHttpRequest()
+            && !in_array($event->getRequest()->attributes->get('_route'), $this->getExcludedRoutes())
+            && 'GET' === $event->getRequest()->getMethod()
+            && 200 === $event->getResponse()->getStatusCode()
+            && !$event->getResponse() instanceof StreamedResponse
+        ) {
+            if ($token =  $this->securityContext->getToken()) {
+                if ('anon.' !== $user = $token->getUser()) {
+                    $uri = $event->getRequest()->getRequestUri();
+                    $user->setLastUri($uri);
+                    $this->manager->persist($user);
+                    $this->manager->flush();
                 }
             }
-
         }
     }
 
     private function showTermOfServices(GetResponseEvent $event)
     {
-        if ($event->isMasterRequest() and
-            $user = $this->getUser($event->getRequest()) and
-            !$user->hasAcceptedTerms() and
-            !$this->isImpersonated()and
-            $content = $this->termsOfService->getTermsOfService(false)
+        if ($event->isMasterRequest()
+            && ($user = $this->getUser($event->getRequest()))
+            && !$user->hasAcceptedTerms()
+            && !$this->isImpersonated()
+            && ($content = $this->termsOfService->getTermsOfService(false))
         ) {
-            if ($termsOfService = $event->getRequest()->get('accept_terms_of_service_form') and
-                isset($termsOfService['terms_of_service'])
+            if (($termsOfService = $event->getRequest()->get('accept_terms_of_service_form'))
+                && isset($termsOfService['terms_of_service'])
             ) {
                 $user->setAcceptedTerms(true);
                 $this->manager->persist($user);
@@ -167,31 +167,30 @@ class AuthenticationSuccessListener implements AuthenticationSuccessHandlerInter
             } else {
                 $form = $this->formFactory->create(new TermsOfServiceType(), $content);
                 $response = $this->templating->render(
-                    "ClarolineCoreBundle:Authentication:termsOfService.html.twig",
+                    'ClarolineCoreBundle:Authentication:termsOfService.html.twig',
                     array('form' => $form->createView())
                 );
 
                 $event->setResponse(new Response($response));
             }
         }
-
-        return $event;
     }
 
     /**
      * Return a user if need to accept the terms of service
      *
+     * @param \Symfony\Component\HttpFoundation\Request $request
      * @return Claroline\CoreBundle\Entity\User
      */
-    private function getUser($request)
+    private function getUser(Request $request)
     {
-        if ($this->configurationHandler->getParameter('terms_of_service') and
-            $request->get('_route') !== 'claroline_locale_change' and
-            $request->get('_route') !== 'claroline_locale_select' and
-            $request->get('_route') !== 'bazinga_exposetranslation_js' and
-            $token = $this->securityContext->getToken() and
-            $user = $token->getUser() and
-            $user instanceof User
+        if ($this->configurationHandler->getParameter('terms_of_service')
+            && $request->get('_route') !== 'claroline_locale_change'
+            && $request->get('_route') !== 'claroline_locale_select'
+            && $request->get('_route') !== 'bazinga_exposetranslation_js'
+            && ($token = $this->securityContext->getToken())
+            && ($user = $token->getUser())
+            && $user instanceof User
         ) {
             return $user;
         }

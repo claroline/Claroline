@@ -651,6 +651,7 @@ tags_list: 'Tags list'
 tags_management: 'Tags management'
 tags_organization: 'Tags organization'
 teacher: Teacher
+terms_enabled_but_empty: Terms of service can only be enabled if the text is provided in at least one language.
 text_form_content: Content
 text_form_name: Name
 text_form_shareType: Sharable

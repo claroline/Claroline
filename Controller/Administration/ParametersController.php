@@ -516,8 +516,6 @@ class ParametersController extends Controller
     }
 
     /**
-     * Updates the platform settings and redirects to the settings form.
-     *
      * @EXT\Route("/terms", name="claro_admin_edit_terms_of_service_submit")
      * @EXT\Method("POST")
      * @EXT\Template("ClarolineCoreBundle:Administration\Parameters:termsOfServiceForm.html.twig")
@@ -536,10 +534,16 @@ class ParametersController extends Controller
         $form->handleRequest($this->request);
 
         if ($form->isValid()) {
-            $this->configHandler->setParameter('terms_of_service', $form->get('active')->getData());
-            $this->termsOfService->setTermsOfService(
-                $this->request->get('terms_of_service_form')['termsOfService']
-            );
+            $areTermsEnabled = $form->get('active')->getData();
+            $terms = $this->request->get('terms_of_service_form')['termsOfService'];
+
+            if ($areTermsEnabled && $this->termsOfService->areTermsEmpty($terms)) {
+                $error = $this->translator->trans('terms_enabled_but_empty', array(), 'platform');
+                $form->addError(new FormError($error));
+            } else {
+                $this->termsOfService->setTermsOfService($terms);
+                $this->configHandler->setParameter('terms_of_service', $areTermsEnabled);
+            }
         }
 
         return array('form' => $form->createView());
