@@ -1,6 +1,6 @@
 <?php
 
-namespace Claroline\ScormBundle\Migrations\drizzle_pdo_mysql;
+namespace Claroline\ScormBundle\Migrations\pdo_sqlsrv;
 
 use Doctrine\DBAL\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
@@ -8,45 +8,52 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2014/04/29 01:13:27
+ * Generation date: 2014/04/30 03:09:49
  */
-class Version20140429131325 extends AbstractMigration
+class Version20140430150948 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
         $this->addSql("
             CREATE TABLE claro_scorm_info (
-                id INT AUTO_INCREMENT NOT NULL, 
+                id INT IDENTITY NOT NULL, 
                 user_id INT NOT NULL, 
                 scorm_id INT NOT NULL, 
-                score_raw INT DEFAULT NULL, 
-                score_min INT DEFAULT NULL, 
-                score_max INT DEFAULT NULL, 
-                lesson_status VARCHAR(255) DEFAULT NULL, 
-                session_time INT DEFAULT NULL, 
-                total_time INT DEFAULT NULL, 
-                entry VARCHAR(255) DEFAULT NULL, 
-                suspend_data VARCHAR(255) DEFAULT NULL, 
-                credit VARCHAR(255) DEFAULT NULL, 
-                exit_mode VARCHAR(255) DEFAULT NULL, 
-                lesson_location VARCHAR(255) DEFAULT NULL, 
-                lesson_mode VARCHAR(255) DEFAULT NULL, 
-                PRIMARY KEY(id), 
-                INDEX IDX_6F4BB916A76ED395 (user_id), 
-                INDEX IDX_6F4BB916D75F22BE (scorm_id)
+                score_raw INT, 
+                score_min INT, 
+                score_max INT, 
+                lesson_status NVARCHAR(255), 
+                session_time INT, 
+                total_time INT, 
+                entry NVARCHAR(255), 
+                suspend_data VARCHAR(MAX), 
+                credit NVARCHAR(255), 
+                exit_mode NVARCHAR(255), 
+                lesson_location NVARCHAR(255), 
+                lesson_mode NVARCHAR(255), 
+                PRIMARY KEY (id)
             )
         ");
         $this->addSql("
+            CREATE INDEX IDX_6F4BB916A76ED395 ON claro_scorm_info (user_id)
+        ");
+        $this->addSql("
+            CREATE INDEX IDX_6F4BB916D75F22BE ON claro_scorm_info (scorm_id)
+        ");
+        $this->addSql("
             CREATE TABLE claro_scorm (
-                id INT AUTO_INCREMENT NOT NULL, 
-                hash_name VARCHAR(50) NOT NULL, 
-                mastery_score INT DEFAULT NULL, 
-                launch_data VARCHAR(255) DEFAULT NULL, 
-                entry_url VARCHAR(255) NOT NULL, 
-                resourceNode_id INT DEFAULT NULL, 
-                PRIMARY KEY(id), 
-                UNIQUE INDEX UNIQ_B6416871B87FAB32 (resourceNode_id)
+                id INT IDENTITY NOT NULL, 
+                hash_name NVARCHAR(50) NOT NULL, 
+                mastery_score INT, 
+                launch_data VARCHAR(MAX), 
+                entry_url NVARCHAR(255) NOT NULL, 
+                resourceNode_id INT, 
+                PRIMARY KEY (id)
             )
+        ");
+        $this->addSql("
+            CREATE UNIQUE INDEX UNIQ_B6416871B87FAB32 ON claro_scorm (resourceNode_id) 
+            WHERE resourceNode_id IS NOT NULL
         ");
         $this->addSql("
             ALTER TABLE claro_scorm_info 
@@ -72,7 +79,7 @@ class Version20140429131325 extends AbstractMigration
     {
         $this->addSql("
             ALTER TABLE claro_scorm_info 
-            DROP FOREIGN KEY FK_6F4BB916D75F22BE
+            DROP CONSTRAINT FK_6F4BB916D75F22BE
         ");
         $this->addSql("
             DROP TABLE claro_scorm_info

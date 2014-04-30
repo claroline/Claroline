@@ -31,7 +31,7 @@ class Scorm extends AbstractResource
     protected $masteryScore;
 
     /**
-     * @ORM\Column(name="launch_data", nullable=true)
+     * @ORM\Column(name="launch_data", nullable=true, length=4096)
      */
     protected $launchData;
 

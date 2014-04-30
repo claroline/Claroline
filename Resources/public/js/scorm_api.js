@@ -47,7 +47,7 @@ var apiLastError = "301";
 function commitResult(mode)
 {
     "use strict";
-
+    
     var datasString = "" + scormId +
         "<-;->" + scoData["cmi.core.student_id"] +
         "<-;->" + scoData["cmi.core.lesson_mode"] +
@@ -63,6 +63,7 @@ function commitResult(mode)
         "<-;->" + scoData["cmi.core.entry"] +
         "<-;->" + scoData["cmi.core.exit"];
     $.ajax({
+        async: false,
         url: Routing.generate(
             "claro_scorm_info_commit",
             {"datasString": datasString, "mode": mode}

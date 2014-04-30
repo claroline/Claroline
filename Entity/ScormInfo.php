@@ -74,7 +74,7 @@ class ScormInfo
     protected $entry;
 
     /**
-     * @ORM\Column(name="suspend_data", nullable=true)
+     * @ORM\Column(name="suspend_data", nullable=true, length=4096)
      */
     protected $suspendData;
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace Claroline\ScormBundle\Migrations\mysqli;
+namespace Claroline\ScormBundle\Migrations\pdo_mysql;
 
 use Doctrine\DBAL\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
@@ -8,9 +8,9 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2014/04/29 01:13:27
+ * Generation date: 2014/04/30 03:09:49
  */
-class Version20140429131325 extends AbstractMigration
+class Version20140430150948 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
@@ -26,7 +26,7 @@ class Version20140429131325 extends AbstractMigration
                 session_time INT DEFAULT NULL, 
                 total_time INT DEFAULT NULL, 
                 entry VARCHAR(255) DEFAULT NULL, 
-                suspend_data VARCHAR(255) DEFAULT NULL, 
+                suspend_data VARCHAR(4096) DEFAULT NULL, 
                 credit VARCHAR(255) DEFAULT NULL, 
                 exit_mode VARCHAR(255) DEFAULT NULL, 
                 lesson_location VARCHAR(255) DEFAULT NULL, 
@@ -41,7 +41,7 @@ class Version20140429131325 extends AbstractMigration
                 id INT AUTO_INCREMENT NOT NULL, 
                 hash_name VARCHAR(50) NOT NULL, 
                 mastery_score INT DEFAULT NULL, 
-                launch_data VARCHAR(255) DEFAULT NULL, 
+                launch_data VARCHAR(4096) DEFAULT NULL, 
                 entry_url VARCHAR(255) NOT NULL, 
                 resourceNode_id INT DEFAULT NULL, 
                 UNIQUE INDEX UNIQ_B6416871B87FAB32 (resourceNode_id), 

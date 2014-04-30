@@ -8,9 +8,9 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2014/04/29 01:13:27
+ * Generation date: 2014/04/30 03:09:49
  */
-class Version20140429131325 extends AbstractMigration
+class Version20140430150948 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
@@ -26,7 +26,7 @@ class Version20140429131325 extends AbstractMigration
                 session_time NUMBER(10) DEFAULT NULL, 
                 total_time NUMBER(10) DEFAULT NULL, 
                 entry VARCHAR2(255) DEFAULT NULL, 
-                suspend_data VARCHAR2(255) DEFAULT NULL, 
+                suspend_data CLOB DEFAULT NULL, 
                 credit VARCHAR2(255) DEFAULT NULL, 
                 exit_mode VARCHAR2(255) DEFAULT NULL, 
                 lesson_location VARCHAR2(255) DEFAULT NULL, 
@@ -73,7 +73,7 @@ class Version20140429131325 extends AbstractMigration
                 id NUMBER(10) NOT NULL, 
                 hash_name VARCHAR2(50) NOT NULL, 
                 mastery_score NUMBER(10) DEFAULT NULL, 
-                launch_data VARCHAR2(255) DEFAULT NULL, 
+                launch_data CLOB DEFAULT NULL, 
                 entry_url VARCHAR2(255) NOT NULL, 
                 resourceNode_id NUMBER(10) DEFAULT NULL, 
                 PRIMARY KEY(id)
