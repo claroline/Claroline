@@ -94,44 +94,13 @@ class WorkspaceAgendaController extends Controller
         $form->handleRequest($this->request);
         if ($form->isValid()) {
             $event = $form->getData();
-            // the end date has to be bigger
-            if ($event->getStart() <= $event->getEnd()) {
-                $event->setWorkspace($workspace);
-                $event->setUser($this->security->getToken()->getUser());
-                $this->om->persist($event);
-                if ($event->getRecurring() > 0) {
-                    $this->calculRecurrency($event);
-                }
-                $this->om->flush();
-                $start = is_null($event->getStart())? null : $event->getStart()->getTimestamp();
-                $end = is_null($event->getEnd())? null : $event->getEnd()->getTimestamp();
-                $data = array(
-                    'id' => $event->getId(),
-                    'title' => $event->getTitle(),
-                    'start' => $start,
-                    'end' => $end,
-                    'color' => $event->getPriority(),
-                    'allDay' => $event->getAllDay()
-                );
-
+            $json = $this->agendaManager->addEvent($event);
+      
                 return new Response(
-                    json_encode($data),
-                    200,
+                    json_encode($json['data']),
+                    $json['code'],
                     array('Content-Type' => 'application/json')
                 );
-            } else {
-                return new Response(
-                    json_encode(array('greeting' => ' start date is bigger than end date ')),
-                    400,
-                    array('Content-Type' => 'application/json')
-                );
-            }
-
-            return new Response(
-                json_encode(array('greeting' => 'dates are not valid')),
-                400,
-                array('Content-Type' => 'application/json')
-            );
         }
 
         return new Response('Invalid data', 422);

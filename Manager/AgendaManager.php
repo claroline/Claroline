@@ -44,6 +44,38 @@ class AgendaManager
         $this->security = $security;
     }
 
+    public function addEvent(Event $event)
+    {
+        // the end date has to be bigger
+        if ($event->getStart() <= $event->getEnd()) {
+            $event->setWorkspace($workspace);
+            $event->setUser($this->security->getToken()->getUser());
+            $this->om->persist($event);
+            if ($event->getRecurring() > 0) {
+                $this->calculRecurrency($event);
+            }
+            $this->om->flush();
+            $start = is_null($event->getStart())? null : $event->getStart()->getTimestamp();
+            $end = is_null($event->getEnd())? null : $event->getEnd()->getTimestamp();
+            $data = array(
+                'id' => $event->getId(),
+                'title' => $event->getTitle(),
+                'start' => $start,
+                'end' => $end,
+                'color' => $event->getPriority(),
+                'allDay' => $event->getAllDay()
+            );
+            return array(
+                'code' => 200,
+                'message' => $data
+                ) ;
+        }
+        return array(
+                'code' => 400,
+                'message' => 'Start date has to be bigger'
+                ) ;
+    }
+
     /**
      * @param $workspaceId
      * @return list of Events
