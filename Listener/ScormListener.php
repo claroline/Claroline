@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of the Claroline Connect package.
+ *
+ * (c) Claroline Consortium <consortium@claroline.net>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace Claroline\ScormBundle\Listener;
 
 use Claroline\CoreBundle\Event\CopyResourceEvent;
@@ -7,8 +16,8 @@ use Claroline\CoreBundle\Event\CreateFormResourceEvent;
 use Claroline\CoreBundle\Event\CreateResourceEvent;
 use Claroline\CoreBundle\Event\OpenResourceEvent;
 use Claroline\CoreBundle\Event\DeleteResourceEvent;
+use Claroline\CoreBundle\Event\DownloadResourceEvent;
 use Claroline\CoreBundle\Persistence\ObjectManager;
-//use Claroline\CoreBundle\Event\DownloadResourceEvent;
 use Claroline\ScormBundle\Entity\Scorm;
 use Claroline\ScormBundle\Entity\ScormInfo;
 use Claroline\ScormBundle\Form\ScormType;
@@ -30,14 +39,19 @@ use Symfony\Component\Translation\Translator;
 class ScormListener
 {
     private $container;
+    // path to the Scorm archive file
+    private $filePath;
     private $formFactory;
     private $om;
     private $request;
     private $router;
+    private $scormInfoRepo;
+    private $scormRepo;
+    // path to the Scorm unzipped files
+    private $scormResourcesPath;
     private $securityContext;
     private $templating;
     private $translator;
-    private $uploadPath;
 
     /**
      * @DI\InjectParams({
@@ -63,15 +77,19 @@ class ScormListener
     )
     {
         $this->container = $container;
+        $this->filePath = $this->container
+            ->getParameter('claroline.param.files_directory') . DIRECTORY_SEPARATOR;
         $this->formFactory = $formFactory;
         $this->om = $om;
         $this->request = $requestStack->getCurrentRequest();
         $this->router = $router;
+        $this->scormInfoRepo = $om->getRepository('ClarolineScormBundle:ScormInfo');
+        $this->scormRepo = $om->getRepository('ClarolineScormBundle:Scorm');
+        $this->scormResourcesPath = $this->container
+            ->getParameter('kernel.root_dir') . '/../web/uploads/scormresources/';
         $this->securityContext = $securityContext;
         $this->templating = $templating;
         $this->translator = $translator;
-        $this->uploadPath = $this->container
-            ->getParameter('kernel.root_dir') . '/../web/uploads/webresource/';
     }
 
     /**
@@ -139,18 +157,15 @@ class ScormListener
      */
     public function onOpen(OpenResourceEvent $event)
     {
-        $ds = DIRECTORY_SEPARATOR;
         $scorm = $event->getResource();
-        $hashName = $scorm->getHashName();
-        $relativePath = $hashName
-            . $ds
+        $scormPath = $scorm->getHashName()
+            . DIRECTORY_SEPARATOR
             . $scorm->getEntryUrl();
-        $route = $this->router->getContext()->getBaseUrl();
-        $fp = preg_replace('"/web/app_dev.php$"', "/web/uploads/webresource/$relativePath", $route);
 
         $user = $this->securityContext->getToken()->getUser();
-        $scormInfo = $this->om->getRepository('ClarolineScormBundle:ScormInfo')
-            ->findOneBy(array('user' => $user->getId(), 'scorm' => $scorm->getId()));
+        $scormInfo = $this->scormInfoRepo->findOneBy(
+            array('user' => $user->getId(), 'scorm' => $scorm->getId())
+        );
 
         if (is_null($scormInfo)) {
             $scormInfo = new ScormInfo();
@@ -172,10 +187,10 @@ class ScormListener
         $content = $this->templating->render(
             'ClarolineScormBundle::scorm.html.twig',
             array(
-                'resource' => $event->getResource(),
-                '_resource' => $event->getResource(),
+                'resource' => $scorm,
+                '_resource' => $scorm,
                 'scormInfo' => $scormInfo,
-                'scormUrl' => $fp,
+                'scormUrl' => $scormPath,
                 'workspace' => $scorm->getResourceNode()->getWorkspace()
             )
         );
@@ -191,10 +206,20 @@ class ScormListener
      */
     public function onDelete(DeleteResourceEvent $event)
     {
-        $webResourcesPath = $this->uploadPath . $event->getResource()->getHashName();
+        $hashName = $event->getResource()->getHashName();
+        $scormArchiveFile = $this->filePath . $hashName;
+        $scormResourcesPath = $this->scormResourcesPath . $hashName;
 
-        if (file_exists($webResourcesPath)) {
-            $this->deleteFiles($webResourcesPath);
+        $nbScorm = (int)($this->scormRepo->getNbScormWithHashName($hashName));
+
+        if ($nbScorm === 1) {
+
+            if (file_exists($scormArchiveFile)) {
+                $event->setFiles(array($scormArchiveFile));
+            }
+            if (file_exists($scormResourcesPath)) {
+                $this->deleteFiles($scormResourcesPath);
+            }
         }
         $this->om->remove($event->getResource());
         $event->stopPropagation();
@@ -215,6 +240,17 @@ class ScormListener
         $copy->setEntryUrl($resource->getEntryUrl());
         $copy->setName($resource->getName());
         $event->setCopy($copy);
+        $event->stopPropagation();
+    }
+
+    /**
+     * @DI\Observe("download_claroline_scorm")
+     *
+     * @param DownloadResourceEvent $event
+     */
+    public function onDownload(DownloadResourceEvent $event)
+    {
+        $event->setItem($this->filePath . $event->getResource()->getHashName());
         $event->stopPropagation();
     }
 
@@ -245,7 +281,7 @@ class ScormListener
     {
         $zip = new \ZipArchive();
         $zip->open($file);
-        $destinationDir = $this->uploadPath . $hashName;
+        $destinationDir = $this->scormResourcesPath . $hashName;
 
         if (!file_exists($destinationDir)) {
             mkdir($destinationDir, 0777, true);
@@ -269,6 +305,8 @@ class ScormListener
             ->generateGuid() . "." . $extension;
         $resources = $this->generateResourcesFromScormArchive($file, $hashName);
         $this->unzipScormArchive($file, $hashName);
+        // Move Scorm archive in the files directory
+        $file->move($this->filePath, $hashName);
 
         return $resources;
     }
