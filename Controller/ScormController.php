@@ -11,19 +11,49 @@
 
 namespace Claroline\ScormBundle\Controller;
 
+use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\ScormBundle\Entity\ScormInfo;
 use Claroline\ScormBundle\Event\Log\LogScormResultEvent;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-//use Claroline\CoreBundle\Event\Log\LogGenericEvent;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Symfony\Component\Security\Core\SecurityContextInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
+use JMS\DiExtraBundle\Annotation as DI;
 
 class ScormController extends Controller
 {
+    private $eventDispatcher;
+    private $om;
+    private $securityContext;
+    private $scormInfoRepo;
+    private $scormRepo;
+    private $userRepo;
+
     /**
-     * @Route(
+     * @DI\InjectParams({
+     *     "eventDispatcher"    = @DI\Inject("event_dispatcher"),
+     *     "om"                 = @DI\Inject("claroline.persistence.object_manager"),
+     *     "securityContext"    = @DI\Inject("security.context")
+     * })
+     */
+    public function __construct(
+        EventDispatcherInterface $eventDispatcher,
+        ObjectManager $om,
+        SecurityContextInterface $securityContext
+    )
+    {
+        $this->eventDispatcher = $eventDispatcher;
+        $this->om = $om;
+        $this->securityContext = $securityContext;
+        $this->scormInfoRepo = $om->getRepository('ClarolineScormBundle:ScormInfo');
+        $this->scormRepo = $om->getRepository('ClarolineScormBundle:Scorm');
+        $this->userRepo = $om->getRepository('ClarolineCoreBundle:User');
+    }
+
+    /**
+     * @EXT\Route(
      *     "/scorm/info/commit/{datasString}",
      *     name = "claro_scorm_info_commit",
      *     options={"expose"=true}
@@ -51,7 +81,7 @@ class ScormController extends Controller
         $entry = $datasArray[12];
         $exitMode = $datasArray[13];
 
-        if ($this->get('security.context')->getToken()->getUser()->getId() !== intval($studentId)) {
+        if ($this->securityContext->getToken()->getUser()->getId() !== intval($studentId)) {
             throw new AccessDeniedException();
         }
 
@@ -59,13 +89,11 @@ class ScormController extends Controller
         $totalTimeInHundredth = $this->convertTimeInHundredth($totalTime);
         $totalTimeInHundredth += $sessionTimeInHundredth;
 
-        $em = $this->get('doctrine.orm.entity_manager');
-        $user = $em->getRepository('ClarolineCoreBundle:User')
-            ->findOneById(intval($studentId));
-        $scorm = $em->getRepository('ClarolineScormBundle:Scorm')
-            ->findOneById(intval($scormId));
-        $scormInfo = $em->getRepository('ClarolineScormBundle:ScormInfo')
-            ->findOneBy(array('user' => $user->getId(), 'scorm' => $scorm->getId()));
+        $user = $this->userRepo->findOneById(intval($studentId));
+        $scorm = $this->scormRepo->findOneById(intval($scormId));
+        $scormInfo = $this->scormInfoRepo->findOneBy(
+            array('user' => $user->getId(), 'scorm' => $scorm->getId())
+        );
 
         if (is_null($scormInfo)) {
             $scormInfo = new ScormInfo();
@@ -86,8 +114,8 @@ class ScormController extends Controller
         $scormInfo->setExitMode($exitMode);
         $scormInfo->setSuspendData($suspendData);
 
-        $em->persist($scormInfo);
-        $em->flush();
+        $this->om->persist($scormInfo);
+        $this->om->flush();
 
         $details = array();
         $details['scoreRaw'] = $scormInfo->getScoreRaw();
@@ -114,7 +142,7 @@ class ScormController extends Controller
             null,
             null
         );
-        $this->get('event_dispatcher')->dispatch('log', $log);
+        $this->eventDispatcher->dispatch('log', $log);
 
         return new Response('', '204');
     }
