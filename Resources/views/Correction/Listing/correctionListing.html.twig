@@ -8,9 +8,13 @@
         <thead>
         <th>Etat</th>
         <th>
-            {% if byUserMod == 0 %}
-                Correcteur
+            {% if  adminCorrectionByUserMod is defined and  adminCorrectionByUserMod == 1 %}
+                {{ "copy author's"|trans({},'icap_dropzone') }}
+            {% elseif byUserMod == 0 %}
+                {% set adminCorrectionByUserMod = 0 %}
+                {{ 'Examiner'|trans({},'icap_dropzone') }}
             {% endif %}
+
         </th>
         <th>Commencée</th>
         <th>Dernière Ouverture</th>
@@ -47,20 +51,31 @@
                     {% endif %}
                 </td>
                 <td>
-                    <a href="{{ path('icap_dropzone_drops_detail_correction', {'resourceId': dropzone.id, 'correctionId': correction.id, 'state': viewState_var}) }}"
-                       class="" data-toggle="tooltip"
-                       data-original-title="{{ 'See correction'|trans({},'icap_dropzone') }}">
-                        {% if correction.editable and byUserMod == 0 %}
-                            <span class="text-muted glyphicon icon-group" data-toggle="tooltip"
-                                  data-original-title="{{ 'created by a manager'|trans({}, 'icap_dropzone') }}">
-                                    </span>
-                        {% endif %}
-                        {% if(byUserMod == 0) %}
-                            {{ correction.user.firstName|capitalize ~' '~ correction.user.lastName|upper }}
-                        {% else %}
-                            {{ 'Correction number %num%'|trans({'%num%': loop.index}, 'icap_dropzone') }}
-                        {% endif %}
-                    </a>
+
+                    {% if  adminCorrectionByUserMod is defined and  adminCorrectionByUserMod == 1 %}
+                        <a href="{{ path('icap_dropzone_drops_detail_correction_standard', {'resourceId': dropzone.id, 'correctionId': correction.id,'state':'show'}) }}"
+                           class="" data-toggle="tooltip"
+                           data-original-title="{{ 'See correction'|trans({},'icap_dropzone') }}">
+                            {{ correction.drop.user.firstName|capitalize ~' '~ correction.drop.user.lastName|upper }}
+                        </a>
+                    {% else %}
+                        <a href="{{ path('icap_dropzone_drops_detail_correction', {'resourceId': dropzone.id, 'correctionId': correction.id, 'state': viewState_var}) }}"
+                           class="" data-toggle="tooltip"
+                           data-original-title="{{ 'See correction'|trans({},'icap_dropzone') }}">
+                            {% if correction.editable and byUserMod == 0 %}
+                                <span class="text-muted glyphicon icon-group" data-toggle="tooltip"
+                                      data-original-title="{{ 'created by a manager'|trans({}, 'icap_dropzone') }}">
+                                        </span>
+                            {% endif %}
+
+
+                            {% if(byUserMod == 0) %}
+                                {{ correction.user.firstName|capitalize ~' '~ correction.user.lastName|upper }}
+                            {% else %}
+                                {{ 'Correction number %num%'|trans({'%num%': loop.index}, 'icap_dropzone') }}
+                            {% endif %}
+                        </a>
+                    {% endif %}
                 </td>
                 <td>
                     {{ correction.startDate|date('formatDatetime'|trans({}, 'icap_dropzone')) }}
@@ -98,13 +113,17 @@
                             {% endif %}
                             {% if correction.finished %}
                                 {% if correction.valid %}
-                                    <a href="{{ path('icap_dropzone_drops_detail_correction_validation',
+                                    {% set path_invalidate_link = 'icap_dropzone_drops_detail_correction_validation' %}
+                                    {% if  adminCorrectionByUserMod == 1 %}
+                                        {% set path_invalidate_link = 'icap_dropzone_drops_detail_correction_validation_by_user' %}
+                                    {% endif %}
+                                    <a href="{{ path(path_invalidate_link,
                                     {'resourceId': dropzone.id, 'correctionId': correction.id, 'value': 'no'}) }}"
-                                       class="btn btn-default btn-xs ">{{ 'Invalidate'|trans({}, 'icap_dropzone') }}</a>
+                                       class="btn btn-default btn-xs dropzone_invalidate_link ">{{ 'Invalidate'|trans({}, 'icap_dropzone') }}</a>
                                 {% else %}
                                     <a href="{{ path('icap_dropzone_revalidateCorrection',
                                     {'resourceId': dropzone.id, 'correctionId': correction.id, 'value': 'yes'}) }}"
-                                       class="btn btn-default btn-xs launch-modal">{{ 'revalidate'|trans({}, 'icap_dropzone') }}</a>
+                                       class="btn btn-default btn-xs launch-modal ">{{ 'revalidate'|trans({}, 'icap_dropzone') }}</a>
                                 {% endif %}
                             {% endif %}
                             {% if correction.editable %}
@@ -166,6 +185,8 @@
             d.tooltip();
             return d;
         });
+
+
     });
 
 </script>

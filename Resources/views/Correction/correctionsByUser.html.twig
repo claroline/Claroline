@@ -1,12 +1,21 @@
 {% extends "IcapDropzoneBundle::layout.html.twig" %}
 {% block resourceBreadcrumb %}
-    <li class="active"><span class="glyphicon icon-list"></span> {{ dropzone.resourceNode.name }}</li>
+    <li>
+        <a href="{{ path('icap_dropzone_edit_common',{'resourceId':dropzone.id}) }}"><span
+                    class="glyphicon icon-list"></span>  {{ dropzone.resourceNode.name }}</a>
+    </li>
+    <li>
+        <a href="{{ path('icap_dropzone_examiners', {'resourceId': dropzone.id}) }}"> {{ 'Examiners'|trans({}, 'icap_dropzone') }}</a>
+    </li>
+    <li class="active">
+        {{ 'corrections by user'|trans({}, 'icap_dropzone') }}
+    </li>
 {% endblock %}
 
 {% block dropzone_content %}
     <div class="container container-dropzone">
         <h2>
-            {{ 'List of corrections by User'|trans({}, 'icap_dropzone') }}
+            {{ 'List of corrections made by %user%'|trans({'%user%':user.firstName|capitalize ~' '~ user.lastName|upper}, 'icap_dropzone') }}
             <a class=" btn btn-default pull-right" href="{{ path('icap_dropzone_edit', {'resourceId': dropzone.id}) }}"><span class="glyphicon icon-edit"></span> {{ 'Edit evaluation'|trans({}, 'icap_dropzone') }}</a>
         </h2>
         {{ macros.flashBox() }}
@@ -33,6 +42,7 @@
          <h5>{% block dropzone_content_drops_by_list_subtitle %}{% endblock %}</h5>
 
             {% set byUserMod = 0 %}
+            {% set adminCorrectionByUserMod = 1 %}
             {% block dropzone_content_drops_by_Listing %}
                 {% include 'IcapDropzoneBundle:Correction:Listing/CorrectionListing.html.twig' %}
             {% endblock %}

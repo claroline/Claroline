@@ -1,24 +1,23 @@
 {% extends "IcapDropzoneBundle::layout.html.twig" %}
-{% if (byUserMod is not defined)%}
+{% if (byUserMod is not defined) %}
     {% set byUserMod = 0 %}
 {% endif %}
 
 {% block resourceBreadcrumb %}
-        {% if byUserMod == 1 %}
-            <li>
-                <a href="{{ path('icap_dropzone_open', {'resourceId': dropzone.id}) }}"><span
-                            class="glyphicon icon-list"></span> {{ dropzone.resourceNode.name }}</a>
-            </li>
-        {% else %}
-            <li>
-                <a href="{{ path('icap_dropzone_edit_common',{'resourceId':dropzone.id}) }}"><span
-                            class="glyphicon icon-list"></span>  {{ dropzone.resourceNode.name }}</a>
-            </li>
-            <li>
-                <a href="{{ path('icap_dropzone_drops', {'resourceId': dropzone.id}) }}"> {{ 'List of copies'|trans({}, 'icap_dropzone') }}</a>
-            </li>
-            </li>
-        {% endif  %}
+    {% if byUserMod == 1 %}
+        <li>
+            <a href="{{ path('icap_dropzone_open', {'resourceId': dropzone.id}) }}"><span
+                        class="glyphicon icon-list"></span> {{ dropzone.resourceNode.name }}</a>
+        </li>
+    {% else %}
+        <li>
+            <a href="{{ path('icap_dropzone_edit_common',{'resourceId':dropzone.id}) }}"><span
+                        class="glyphicon icon-list"></span>  {{ dropzone.resourceNode.name }}</a>
+        </li>
+        <li>
+            <a href="{{ path('icap_dropzone_drops', {'resourceId': dropzone.id}) }}"> {{ 'List of copies'|trans({}, 'icap_dropzone') }}</a>
+        </li>
+    {% endif %}
 
     <li class="active">
         {% if byUserMod == 1 %}
@@ -46,7 +45,10 @@
         {% if(byUserMod == 0) %}
             <div class="row">
                 <div class="col-md-12">
-                    <a class="btn btn-default btn-sm" href="{{ path('icap_dropzone_drops', {'resourceId': dropzone.id}) }}"><span class="glyphicon icon-angle-left"></span> {{ 'Return to copies'|trans({}, 'icap_dropzone') }}</a>
+                    <a class="btn btn-default btn-sm"
+                       href="{{ path('icap_dropzone_drops', {'resourceId': dropzone.id}) }}"><span
+                                class="glyphicon icon-angle-left"></span> {{ 'Return to copies'|trans({}, 'icap_dropzone') }}
+                    </a>
                 </div>
             </div>
 
@@ -61,8 +63,8 @@
                     </div>
                 </div>
             {% endif %}
-        {%  endif %}
-        
+        {% endif %}
+
         {% set documentListText = 'Documents'|trans({}, 'icap_dropzone') %}
         {{ dropzoneMacros.displayDocumentsList(drop, dropzone, 6, "condensed", documentListText) }}
 
@@ -84,9 +86,10 @@
         <br/>
 
         <h3>{{ 'List of corrections'|trans({}, 'icap_dropzone') }}</h3>
-        {%  if isAllowedToEdit %}
-            <a class="btn btn-default" href="{{  path("icap_dropzone_drops_detail_add_correction",{'resourceId':dropzone.id,'dropId':drop.id}) }}">
-                {{  "Add a correction"|trans({},'icap_dropzone') }}
+        {% if isAllowedToEdit %}
+            <a class="btn btn-default"
+               href="{{ path("icap_dropzone_drops_detail_add_correction",{'resourceId':dropzone.id,'dropId':drop.id}) }}">
+                {{ "Add a correction"|trans({},'icap_dropzone') }}
             </a>
         {% endif %}
         <hr/>

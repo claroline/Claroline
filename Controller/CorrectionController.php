@@ -1095,13 +1095,20 @@ class CorrectionController extends DropzoneBaseController
      * @Route(
      *      "/{resourceId}/drops/detail/correction/validation/{value}/{correctionId}",
      *      name="icap_dropzone_drops_detail_correction_validation",
-     *      requirements={"resourceId" = "\d+", "correctionId" = "\d+", "value" = "no|yes"}
+     *      requirements={"resourceId" = "\d+", "correctionId" = "\d+", "value" = "no|yes"},
+     *      defaults={"routeParam"="default"}
+     * )
+     * @Route(
+     *      "/{resourceId}/drops/detail/correction/validation/byUser/{value}/{correctionId}",
+     *      name="icap_dropzone_drops_detail_correction_validation_by_user",
+     *      requirements={"resourceId" = "\d+", "correctionId" = "\d+", "value" = "no|yes"},
+     *      defaults={"routeParam"="byUser"}
      * )
      * @ParamConverter("dropzone", class="IcapDropzoneBundle:Dropzone", options={"id" = "resourceId"})
      * @ParamConverter("correction", class="IcapDropzoneBundle:Correction", options={"id" = "correctionId"})
      * @Template()
      */
-    public function setCorrectionValidationAction(Dropzone $dropzone, Correction $correction, $value)
+    public function setCorrectionValidationAction(Dropzone $dropzone, Correction $correction, $value, $routeParam)
     {
         $this->isAllowToOpen($dropzone);
         $this->isAllowToEdit($dropzone);
@@ -1120,15 +1127,27 @@ class CorrectionController extends DropzoneBaseController
         $event = new LogCorrectionValidationChangeEvent($dropzone, $correction->getDrop(), $correction);
         $this->dispatch($event);
 
-        return $this->redirect(
-            $this->generateUrl(
-                'icap_dropzone_drops_detail',
-                array(
-                    'resourceId' => $dropzone->getId(),
-                    'dropId' => $correction->getDrop()->getId(),
+        if ($routeParam == 'default') {
+            return $this->redirect(
+                $this->generateUrl(
+                    'icap_dropzone_drops_detail',
+                    array(
+                        'resourceId' => $dropzone->getId(),
+                        'dropId' => $correction->getDrop()->getId(),
+                    )
                 )
-            )
-        );
+            );
+        } else if ($routeParam == "byUser") {
+            return $this->redirect(
+                $this->generateUrl(
+                    'icap_dropzone_examiner_corrections',
+                    array(
+                        'resourceId' => $dropzone->getId(),
+                        'userId' => $correction->getUser()->getId(),
+                    )
+                )
+            );
+        }
     }
 
     /**

@@ -287,3 +287,7 @@ Modify add or delete criteria will affect this corrections if you recalculate th
 Evaluation criterions: 'Evaluation criterions'
 corrections_denied: 'Correction examiner have made that were reported'
 number_of_denied_corrections: 'Number of copy that the examiner have  reported'
+corrections by user: 'corrections by user'
+copy author's: 'copy author'
+Examiner: 'Examiner'
+List of corrections made by %user%: 'List of corrections made by %user%'
