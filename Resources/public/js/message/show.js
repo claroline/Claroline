@@ -147,6 +147,12 @@
         getUsersFromInput('claro_names_from_workspaces', workspaces, 'workspaceIds');
     }
 
+    function setActiveTab(target) {
+        ['#users-nav-tab', '#groups-nav-tab', '#workspaces-nav-tab'].forEach(function (tab) {
+            $(tab)[tab === target ? 'addClass' : 'removeClass']('active');
+        });
+    }
+
     $('#contacts-button').click(function () {
         initTempTab();
         displayPager(
@@ -158,8 +164,7 @@
     });
 
     $('#users-nav-tab').on('click', function () {
-        $('#groups-nav-tab').attr('class', '');
-        $(this).attr('class', 'active');
+        setActiveTab('#users-nav-tab');
         displayPager(
             'user',
             'claro_message_contactable_users',
@@ -168,8 +173,7 @@
     });
 
     $('#groups-nav-tab').on('click', function () {
-        $('#users-nav-tab').attr('class', '');
-        $(this).attr('class', 'active');
+        setActiveTab('#groups-nav-tab');
         displayPager(
             'group',
             'claro_message_contactable_groups',
@@ -178,15 +182,13 @@
     });
 
     $('#workspaces-nav-tab').on('click', function () {
-        $('#workspaces-nav-tab').attr('class', '');
-        $(this).attr('class', 'active');
+        setActiveTab('#workspaces-nav-tab');
         displayPager(
             'workspace',
             'claro_message_contactable_workspaces',
             'claro_message_contactable_workspaces_search'
         );
     });
-
 
     $('body').on('click', '.pagination > ul > li > a', function (event) {
         event.preventDefault();
