@@ -86,7 +86,7 @@
                     <i class="icon-plus-sign"></i> {{ 'display all on this page' | trans }}
                 </a>
             {% elseif displayAll == 1 %}
-                <a class="btn btn-primary" href="{{ path('ujm_question_index') }} ">
+                <a class="btn btn-primary" href="{{ path('ujm_question_index') }}">
                     <i class="icon-minus-sign"></i> {{ 'display pagination' | trans }}
                 </a>
             {% endif %}
@@ -104,19 +104,38 @@
         <div class="input-group" style="width: 350px; margin-top: 20px;">
             <input type="text" class="form-control" id="briefSearch" placeholder="{{ 'briefSearch'|trans }}"
                 onkeydown="if (event.keyCode == 13) {
-                    briefSearch('{{ path('ujm_question_briefSearch') }}');
+                    briefSearch('{{ path('ujm_question_briefSearch') }}', -1, 'index');
                     return false; }">
             <span class="input-group-btn">
                 <button class="btn btn-default" type="button" id="SubmitBriefSearch"
-                    onClick="briefSearch('{{ path('ujm_question_briefSearch') }}');">
+                    onClick="briefSearch('{{ path('ujm_question_briefSearch') }}', -1, 'index');">
                 <i class="icon-search"></i></button>
+                <a class="btn btn-default" data-toggle="tooltip" title="Recherche par type"
+                   accesskey=""href="#" onclick="showInfos();event.preventDefault();">
+                    <i class="icon-question"></i>
+                </a>
             </span>
+        </div>
+
+        <div id="infosSearch" style="display: none;">
+            <br/>
+            <div class="alert alert-info">
+                <p>
+                    {{ 'infoSearchType' | trans }} :
+                    <ul>
+                        <li style="list-style-type: circle">'qcm' {{ 'forTypeOf' | trans }} {{ 'InteractionQCM' | trans }},</li>
+                        <li style="list-style-type: circle">'graphic' {{ 'forTypeOf' | trans }} {{ 'InteractionGraphic' | trans }},</li>
+                        <li style="list-style-type: circle">'hole' {{ 'forTypeOf' | trans }} {{ 'InteractionHole' | trans }},</li>
+                        <li style="list-style-type: circle">'open' {{ 'forTypeOf' | trans }} {{ 'InteractionOpen' | trans }}.</li>
+                    </ul>
+                </p>
+            </div>
         </div>
     </div>
     <div class="list-group">
         <div class="list-group-item">
-            <h3 class="panel-title">{{ "my questions"|trans }} : </h3><br/>
             {% if QuestionsExo == 'false' %}
+                <h3 class="panel-title">{{ "my questions"|trans }} : </h3><br/>
                 {% if interactions is not empty %}
                     <table class="table table-striped table-bordered table-condensed" id="QuestionArrayMy">
                         <thead>
@@ -400,7 +419,9 @@
                                                 {{ interactionExo.question.user.firstName }} {{ interactionExo.question.user.lastName }}
                                             </td>
                                         {% else %}
-                                            Ne peut rien faire ...
+                                            <td class="classic" colspan="3">
+                                                {{ 'noRights' | trans }}
+                                            </td>
                                         {% endif %}
                                     </tr>
                                 {% endfor %}
