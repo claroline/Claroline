@@ -583,6 +583,7 @@ class MessageController
                     );
                 }
             }
+
             // get groups in which user is subscribed
             $userGroups = $user->getGroups();
             $userGroupsFinal = array();
@@ -600,6 +601,7 @@ class MessageController
                     }
                 }
             }
+
             // merge the 2 groups array
             foreach ($userGroupsFinal as $userGroupFinal) {
                 if (!in_array($userGroupFinal, $groups)) {
@@ -607,7 +609,7 @@ class MessageController
                 }
             }
 
-            $this->pagerFactory->createPagerFromArray($groups, $page);
+            $groups = $this->pagerFactory->createPagerFromArray($groups, $page);
         }
 
         return array('groups' => $groups, 'search' => $search);
