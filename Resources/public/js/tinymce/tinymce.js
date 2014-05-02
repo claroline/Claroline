@@ -51,6 +51,7 @@
                     break;
                 case (height >= tinymce.claroline.configuration[max]):
                     container.css('height', tinymce.claroline.configuration[max]);
+                    container.css('overflow', 'scroll');
                     break;
                 default:
                     container.css('height', height);
