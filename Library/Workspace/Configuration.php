@@ -28,6 +28,7 @@ class Configuration
     private $selfRegistration = false;
     private $selfUnregistration = false;
     private $templateFile;
+    private $extractPath;
 
     public function __construct($path, $full = true)
     {
@@ -39,6 +40,7 @@ class Configuration
             if (true === $code = $archive->open($path)) {
 
                 $extractPath = sys_get_temp_dir() . DIRECTORY_SEPARATOR . uniqid();
+                $this->setExtractPath($extractPath);
                 $archive = new \ZipArchive();
 
                 if ($archive->open($path) === TRUE) {
@@ -161,5 +163,15 @@ class Configuration
     public function getData()
     {
         return $this->data;
+    }
+
+    public function setExtractPath($path)
+    {
+        $this->extractPath = $path;
+    }
+
+    public function getExtractPath()
+    {
+        return $this->extractPath;
     }
 }

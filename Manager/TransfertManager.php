@@ -101,7 +101,7 @@ class TransfertManager
     public function import(Configuration $configuration)
     {
         $data = $configuration->getData();
-        $this->setImporters('', $data);
+        $this->setImporters($configuration->getExtractPath(), $data);
         $this->validate($data);
 
         $owner = (isset($data['members']['owner'])) ?
@@ -122,7 +122,7 @@ class TransfertManager
     {
         $data = $configuration->getData();
         $this->om->startFlushSuite();
-        $this->setImporters('', $data);
+        $this->setImporters($configuration->getExtractPath(), $data);
         $this->validate($data);
         $workspace = new SimpleWorkspace();
         $workspace->setName($configuration->getWorkspaceName());
