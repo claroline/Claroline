@@ -13,6 +13,7 @@ namespace Claroline\CoreBundle\Library\Security\Voter;
 
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Library\Security\Utilities;
+use Claroline\CoreBundle\Manager\WorkspaceManager;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 use Symfony\Component\Security\Core\Authentication\Token\AnonymousToken;
@@ -27,47 +28,26 @@ use JMS\DiExtraBundle\Annotation as DI;
  */
 class WorkspaceVoter implements VoterInterface
 {
-    private $em;
-    private $translator;
-    private $ut;
+    private $wm;
 
     /**
      * @DI\InjectParams({
-     *     "em"         = @DI\Inject("doctrine.orm.entity_manager"),
-     *     "translator" = @DI\Inject("translator"),
-     *     "ut"         = @DI\Inject("claroline.security.utilities")
+     *     "wm" = @DI\Inject("claroline.manager.workspace_manager")
      * })
      */
-    public function __construct(
-        EntityManager $em,
-        Translator $translator,
-        Utilities $ut
-    )
+    public function __construct(WorkspaceManager $wm)
     {
-        $this->em = $em;
-        $this->translator = $translator;
-        $this->ut = $ut;
+        $this->wm = $wm;
     }
 
     public function vote(TokenInterface $token, $object, array $attributes)
     {
         if ($object instanceof Workspace) {
+            $target = $attributes[0] === 'OPEN' ? null : $attributes[0];
+            $accesses = $this->wm->getAccesses($token, array($object), $target);
 
-            //Managers can do anything in their workspace.
-            $manager = $this->em->getRepository('ClarolineCoreBundle:Role')
-                ->findManagerRole($object);
-
-            $roles = $this->ut->getRoles($token);
-
-            foreach ($roles as $role) {
-                if ($role === $manager->getName()) {
-                    return VoterInterface::ACCESS_GRANTED;
-                }
-            }
-
-            //otherwise we check if we can open the tool specified in the $attributes array
-            return ($this->canDo($object, $token, $attributes[0])) ?
-                VoterInterface::ACCESS_GRANTED:
+            return isset($accesses[$object->getId()]) && $accesses[$object->getId()] === true ?
+                VoterInterface::ACCESS_GRANTED :
                 VoterInterface::ACCESS_DENIED;
         }
 
@@ -82,38 +62,5 @@ class WorkspaceVoter implements VoterInterface
     public function supportsClass($class)
     {
         return true;
-    }
-
-    /**
-     * Checks if the current token has the right to do the action $action.
-     *
-     * @param Workspace $workspace
-     * @param TokenInterface    $token
-     * @param string            $action
-     *
-     * @return boolean
-     *
-     * @throws \RuntimeException
-     */
-    public function canDo(Workspace $workspace, TokenInterface $token, $action)
-    {
-        //get a list of tools openable by the user
-        $tools = $this->em
-            ->getRepository('ClarolineCoreBundle:Tool\Tool')
-            ->findDisplayedByRolesAndWorkspace($this->ut->getRoles($token), $workspace);
-
-        //if the action is open, we see if tools can be opened
-        if (strtolower($action) === 'open') {
-            return (count($tools) > 0) ? true: false;
-        }
-
-        //otherwise, we check if the action is equal to the name of the tool
-        foreach ($tools as $tool) {
-            if ($tool->getName() === $action) {
-                return true;
-            }
-        }
-
-        return false;
     }
 }

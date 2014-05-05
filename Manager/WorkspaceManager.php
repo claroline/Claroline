@@ -14,6 +14,7 @@ namespace Claroline\CoreBundle\Manager;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Entity\Workspace\WorkspaceFavourite;
+use Claroline\CoreBundle\Library\Security\Utilities;
 use Claroline\CoreBundle\Manager\HomeTabManager;
 use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Manager\ResourceManager;
@@ -31,6 +32,7 @@ use Claroline\CoreBundle\Pager\PagerFactory;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Library\Utilities\ClaroUtilities;
 use Claroline\CoreBundle\Manager\Exception\UnknownToolException;
+use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Yaml\Yaml;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Security\Core\SecurityContextInterface;
@@ -73,6 +75,7 @@ class WorkspaceManager
     private $om;
     /** @var ClaroUtilities */
     private $ut;
+    private $sut;
     /** @var string */
     private $templateDir;
     /** @var PagerFactory */
@@ -92,6 +95,7 @@ class WorkspaceManager
      *     "dispatcher"      = @DI\Inject("claroline.event.event_dispatcher"),
      *     "om"              = @DI\Inject("claroline.persistence.object_manager"),
      *     "ut"              = @DI\Inject("claroline.utilities.misc"),
+     *     "sut"             = @DI\Inject("claroline.security.utilities"),
      *     "templateDir"     = @DI\Inject("%claroline.param.templates_directory%"),
      *     "pagerFactory"    = @DI\Inject("claroline.pager.pager_factory"),
      *     "container"       = @DI\Inject("service_container")
@@ -106,6 +110,7 @@ class WorkspaceManager
         StrictDispatcher $dispatcher,
         ObjectManager $om,
         ClaroUtilities $ut,
+        Utilities $sut,
         $templateDir,
         PagerFactory $pagerFactory,
         ContainerInterface $container
@@ -117,6 +122,7 @@ class WorkspaceManager
         $this->resourceManager = $resourceManager;
         $this->toolManager = $toolManager;
         $this->ut = $ut;
+        $this->sut = $sut;
         $this->om = $om;
         $this->dispatcher = $dispatcher;
         $this->templateDir = $templateDir;
@@ -545,6 +551,60 @@ class WorkspaceManager
                 return true;
             }
         });
+    }
+
+    /**
+     * Returns the accesses rights of a given token for a set of workspaces.
+     * If a tool name is passed in, the check will be limited to that tool,
+     * otherwise workspaces with at least one accessible tool will be
+     * considered open. Access to any tool is always granted to platform
+     * administrators and workspace managers.
+     *
+     * The returned value is an associative array in which
+     * keys are workspace ids and values are boolean indicating if the
+     * workspace is open.
+     *
+     * @param TokenInterface    $token
+     * @param array[Workspace]  $workspaces
+     * @param string|null       $toolName
+     * @return array[boolean]
+     */
+    public function getAccesses(TokenInterface $token, array $workspaces, $toolName = null)
+    {
+        $userRoleNames = $this->sut->getRoles($token);
+        $accesses = array();
+
+        if (in_array('ROLE_ADMIN', $userRoleNames)) {
+            foreach ($workspaces as $workspace) {
+                $accesses[$workspace->getId()] = true;
+            }
+
+            return $accesses;
+        }
+
+        $hasAllAccesses = true;
+        $workspacesWithoutManagerRole = array();
+
+        foreach ($workspaces as $workspace) {
+            if (in_array('ROLE_WS_MANAGER_' . $workspace->getCode(), $userRoleNames)) {
+                $accesses[$workspace->getId()] = true;
+            } else {
+                $accesses[$workspace->getId()] = $hasAllAccesses = false;
+                $workspacesWithoutManagerRole[] = $workspace;
+            }
+        }
+
+        if (!$hasAllAccesses) {
+            $em = $this->container->get('doctrine.orm.entity_manager');
+            $openWsIds = $em->getRepository('ClarolineCoreBundle:Workspace\Workspace')
+                ->findOpenWorkspaceIds($userRoleNames, $workspacesWithoutManagerRole, $toolName);
+
+            foreach ($openWsIds as $idRow) {
+                $accesses[$idRow['id']] = true;
+            }
+        }
+
+        return $accesses;
     }
 
     /**

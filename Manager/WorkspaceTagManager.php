@@ -466,16 +466,15 @@ class WorkspaceTagManager
             $tagWorkspacePager[$key] = $this->pagerFactory->createPagerFromArray($content, 1);
         }
 
-        $datas = array();
-        $datas['workspaces'] = $this->pagerFactory->createPagerFromArray($workspaces, 1);
-        $datas['tags'] = $tags;
-        $datas['tagWorkspaces'] = $tagWorkspacePager;
-        $datas['hierarchy'] = $hierarchy;
-        $datas['rootTags'] = $rootTags;
-        $datas['displayable'] = $displayable;
-        $datas['workspaceRoles'] = $workspaceRoles;
-
-        return $datas;
+        return array(
+            'workspaces' => $this->pagerFactory->createPagerFromArray($workspaces, 1),
+            'tags' => $tags,
+            'tagWorkspaces' => $tagWorkspacePager,
+            'hierarchy' => $hierarchy,
+            'rootTags' => $rootTags,
+            'displayable' => $displayable,
+            'workspaceRoles' => $workspaceRoles
+        );
     }
 
     public function getDatasForWorkspaceListByUser(User $user, array $roles)

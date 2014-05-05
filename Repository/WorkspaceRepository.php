@@ -11,6 +11,7 @@
 
 namespace Claroline\CoreBundle\Repository;
 
+use Claroline\CoreBundle\Entity\Tool\Tool;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Doctrine\ORM\EntityRepository;
@@ -114,6 +115,44 @@ class WorkspaceRepository extends EntityRepository
         ";
 
         $query = $this->_em->createQuery($dql);
+
+        return $query->getResult();
+    }
+
+    /**
+     * Finds which workspaces can be opened by one of the given roles,
+     * in a given set of workspaces. If a tool name is passed in, the
+     * check will be limited to that tool, otherwise workspaces with
+     * at least one accessible tool will be considered open. Only the
+     * ids are returned.
+     *
+     * @param array[string]     $roles
+     * @param array[Workspace]  $workspaces
+     * @param string|null       $toolName
+     * @return array[integer]
+     */
+    public function findOpenWorkspaceIds(array $roles, array $workspaces, $toolName = null)
+    {
+        $dql = '
+            SELECT DISTINCT w.id FROM Claroline\CoreBundle\Entity\Workspace\Workspace w
+            JOIN w.orderedTools ot
+            JOIN ot.tool t
+            JOIN ot.roles otr
+            WHERE otr.name IN (:roles)
+            AND w IN (:workspaces)
+        ';
+
+        if ($toolName) {
+            $dql .= 'AND t.name = :toolName';
+        }
+
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('roles', $roles);
+        $query->setParameter('workspaces', $workspaces);
+
+        if ($toolName) {
+            $query->setParameter('toolName', $toolName);
+        }
 
         return $query->getResult();
     }

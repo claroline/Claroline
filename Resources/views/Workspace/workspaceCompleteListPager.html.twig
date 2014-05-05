@@ -19,9 +19,11 @@
     {{ renderPager(workspaces) }}
 {% endif %}
 
+{% set accesses = get_workspaces_accesses(workspaces.currentPageResults) %}
+
 {% for workspace in workspaces.currentPageResults %}
     <a class="list-group-item row-workspace row-workspace-id-{{ workspace.getId() }}"
-        {% set granted = has_access_to_workspace(workspace.getId(), app.security.getToken()) %}
+        {% set granted = accesses[workspace.getId()] is defined and accesses[workspace.getId()] == true %}
 
         {% if granted %}
             href="{{ path('claro_workspace_open',
