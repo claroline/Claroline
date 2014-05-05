@@ -431,9 +431,9 @@ class AnnouncementController extends Controller
     {
         $token = $this->securityContext->getToken();
         $roles = $this->utils->getRoles($token);
-        $workspaces = $this->workspaceManager->getWorkspacesByRoles($roles);
-        $datas = $this->announcementManager->getVisibleAnnouncementsByWorkspaces($workspaces, $roles);
-        $pager = $this->pagerFactory->createPagerFromArray($datas, $page, 5);
+        $workspaces = $this->workspaceManager->getOpenableWorkspacesByRoles($roles);
+        $data = $this->announcementManager->getVisibleAnnouncementsByWorkspaces($workspaces, $roles);
+        $pager = $this->pagerFactory->createPagerFromArray($data, $page, 5);
 
         return array('datas' => $pager, 'widgetType' => 'desktop');
     }
