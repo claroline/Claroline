@@ -87,8 +87,8 @@ class String
 
                 if ($readMoreText != '' && $lengthBeforeWithoutHtml > $nbCaracter) {
                     $text   .= 'SuspensionPoint';
-                    $pattern = '#((</[^>]*>[\n\t\r ]*)?(</[^>]*>[\n\t\r ]*)?((</[^>]*>)[\n\t\r ]*)?(</[^>]*>)[\n\t\r ]*SuspensionPoint)#i';
-                    $text    = preg_replace($pattern, $readMoreText . '${2}${3}${5}', $text);
+                    $pattern = '#((</[^>]*>[\n\t\r ]*)?(</[^>]*>[\n\t\r ]*)?(</[^>]*>[\n\t\r ]*)?(</[^>]*>[\n\t\r ]*)?(</[^>]*>)[\n\t\r ]*SuspensionPoint)#i';
+                    $text    = preg_replace($pattern, $readMoreText.'${2}${3}${4}${5}${6}', $text);
                 }
             }
         }
