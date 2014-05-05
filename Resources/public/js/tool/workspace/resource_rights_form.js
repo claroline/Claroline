@@ -103,7 +103,7 @@
         });
     });
 
-    $('.role-item').live('click', function (event) {
+    $('.role-item').on('click', function (event) {
         event.preventDefault();
         $.ajax({
             url: event.currentTarget.getAttribute('href'),
@@ -117,12 +117,12 @@
         });
     });
 
-    $('.res-creation-options').live('click', function (event) {
+    $('.res-creation-options').on('click', function (event) {
         event.preventDefault();
         modal.fromUrl(event.currentTarget.getAttribute('href'));
     });
 
-    $('.workspace-role-item').live('click', function (event) {
+    $('.workspace-role-item').on('click', function (event) {
         event.preventDefault();
         $.ajax({
             context: this,
