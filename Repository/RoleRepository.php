@@ -299,7 +299,7 @@ class RoleRepository extends EntityRepository
         $dql = "
             SELECT r, w
             FROM Claroline\CoreBundle\Entity\Role r
-            LEFT JOIN r.workspace w
+            JOIN r.workspace w
             WHERE w.displayable = true
         ";
 

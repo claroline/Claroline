@@ -144,7 +144,7 @@ class WorkspaceController extends Controller
      *
      * Renders the workspace list page with its claroline layout.
      *
-     * @return Response
+     * @param $currentUser
      */
     public function listAction($currentUser)
     {
