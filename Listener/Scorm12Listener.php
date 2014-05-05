@@ -19,7 +19,7 @@ use Claroline\CoreBundle\Event\DeleteResourceEvent;
 use Claroline\CoreBundle\Event\DownloadResourceEvent;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\ScormBundle\Entity\Scorm12;
-use Claroline\ScormBundle\Entity\Scorm12Info;
+use Claroline\ScormBundle\Entity\Scorm12Tracking;
 use Claroline\ScormBundle\Form\ScormType;
 use Claroline\ScormBundle\Listener\Exception\InvalidScorm12ArchiveException;
 use JMS\DiExtraBundle\Annotation as DI;
@@ -46,7 +46,7 @@ class Scorm12Listener
     private $om;
     private $request;
     private $router;
-    private $scormInfoRepo;
+    private $scormTrackingRepo;
     private $scormRepo;
     // path to the Scorm unzipped files
     private $scormResourcesPath;
@@ -84,7 +84,7 @@ class Scorm12Listener
         $this->om = $om;
         $this->request = $requestStack->getCurrentRequest();
         $this->router = $router;
-        $this->scormInfoRepo = $om->getRepository('ClarolineScormBundle:Scorm12Info');
+        $this->scormTrackingRepo = $om->getRepository('ClarolineScormBundle:Scorm12Tracking');
         $this->scormRepo = $om->getRepository('ClarolineScormBundle:Scorm12');
         $this->scormResourcesPath = $this->container
             ->getParameter('kernel.root_dir') . '/../web/uploads/scormresources/';
@@ -167,12 +167,12 @@ class Scorm12Listener
             . $scorm->getEntryUrl();
 
         $user = $this->securityContext->getToken()->getUser();
-        $scormInfo = $this->scormInfoRepo->findOneBy(
+        $scormInfo = $this->scormTrackingRepo->findOneBy(
             array('user' => $user->getId(), 'scorm' => $scorm->getId())
         );
 
         if (is_null($scormInfo)) {
-            $scormInfo = new Scorm12Info();
+            $scormInfo = new Scorm12Tracking();
             $scormInfo->setUser($user);
             $scormInfo->setScorm($scorm);
             $scormInfo->setScoreRaw(-1);

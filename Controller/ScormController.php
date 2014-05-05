@@ -13,7 +13,7 @@ namespace Claroline\ScormBundle\Controller;
 
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Persistence\ObjectManager;
-use Claroline\ScormBundle\Entity\Scorm12Info;
+use Claroline\ScormBundle\Entity\Scorm12Tracking;
 use Claroline\ScormBundle\Entity\Scorm12;
 use Claroline\ScormBundle\Event\Log\LogScorm12ResultEvent;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -29,7 +29,7 @@ class ScormController extends Controller
     private $eventDispatcher;
     private $om;
     private $securityContext;
-    private $scorm12InfoRepo;
+    private $scorm12TrackingRepo;
     private $scorm12Repo;
     private $userRepo;
 
@@ -49,15 +49,15 @@ class ScormController extends Controller
         $this->eventDispatcher = $eventDispatcher;
         $this->om = $om;
         $this->securityContext = $securityContext;
-        $this->scorm12InfoRepo = $om->getRepository('ClarolineScormBundle:Scorm12Info');
+        $this->scorm12TrackingRepo = $om->getRepository('ClarolineScormBundle:Scorm12Tracking');
         $this->scorm12Repo = $om->getRepository('ClarolineScormBundle:Scorm12');
         $this->userRepo = $om->getRepository('ClarolineCoreBundle:User');
     }
 
     /**
      * @EXT\Route(
-     *     "/scorm/info/commit/{datasString}/mode/{mode}",
-     *     name = "claro_scorm_12_info_commit",
+     *     "/scorm/tracking/commit/{datasString}/mode/{mode}",
+     *     name = "claro_scorm_12_tracking_commit",
      *     options={"expose"=true}
      * )
      *
@@ -67,7 +67,7 @@ class ScormController extends Controller
      *
      * @return Response
      */
-    public function commitScorm12Info($datasString, $mode)
+    public function commitScorm12Tracking($datasString, $mode)
     {
         $datasArray = explode("<-;->", $datasString);
         $scormId = intval($datasArray[0]);
@@ -93,34 +93,34 @@ class ScormController extends Controller
         $scorm = $this->scorm12Repo->findOneById($scormId);
         $sessionTimeInHundredth = $this->convertTimeInHundredth($sessionTime);
 
-        $scormInfo = $this->scorm12InfoRepo->findOneBy(
+        $scormTracking = $this->scorm12TrackingRepo->findOneBy(
             array('user' => $user->getId(), 'scorm' => $scorm->getId())
         );
 
-        if (is_null($scormInfo)) {
-            $scormInfo = new Scorm12Info();
-            $scormInfo->setCredit($credit);
-            $scormInfo->setLessonMode($lessonMode);
-            $scormInfo->setScorm($scorm);
-            $scormInfo->setUser($user);
+        if (is_null($scormTracking)) {
+            $scormTracking = new Scorm12Tracking();
+            $scormTracking->setCredit($credit);
+            $scormTracking->setLessonMode($lessonMode);
+            $scormTracking->setScorm($scorm);
+            $scormTracking->setUser($user);
         }
 
-        $scormInfo->setEntry($entry);
-        $scormInfo->setExitMode($exitMode);
-        $scormInfo->setLessonLocation($lessonLocation);
-        $scormInfo->setLessonStatus($lessonStatus);
-        $scormInfo->setScoreMax($scoreMax);
-        $scormInfo->setScoreMin($scoreMin);
-        $scormInfo->setScoreRaw($scoreRaw);
-        $scormInfo->setSessionTime($sessionTimeInHundredth);
-        $scormInfo->setSuspendData($suspendData);
+        $scormTracking->setEntry($entry);
+        $scormTracking->setExitMode($exitMode);
+        $scormTracking->setLessonLocation($lessonLocation);
+        $scormTracking->setLessonStatus($lessonStatus);
+        $scormTracking->setScoreMax($scoreMax);
+        $scormTracking->setScoreMin($scoreMin);
+        $scormTracking->setScoreRaw($scoreRaw);
+        $scormTracking->setSessionTime($sessionTimeInHundredth);
+        $scormTracking->setSuspendData($suspendData);
 
         if ($mode === 'log') {
             // Compute total time
             $totalTimeInHundredth = $this->convertTimeInHundredth($totalTime);
             $totalTimeInHundredth += $sessionTimeInHundredth;
             // Persist total time
-            $scormInfo->setTotalTime($totalTimeInHundredth);
+            $scormTracking->setTotalTime($totalTimeInHundredth);
 
             $this->logScorm12Result(
                 $scorm,
@@ -138,7 +138,7 @@ class ScormController extends Controller
             );
         }
 
-        $this->om->persist($scormInfo);
+        $this->om->persist($scormTracking);
         $this->om->flush();
 
         return new Response('', '204');

@@ -8,26 +8,14 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2014/05/05 10:29:14
+ * Generation date: 2014/05/05 02:12:44
  */
-class Version20140505102910 extends AbstractMigration
+class Version20140505141242 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
         $this->addSql("
-            CREATE TABLE claro_scorm_12 (
-                id INT AUTO_INCREMENT NOT NULL, 
-                hash_name VARCHAR(50) NOT NULL, 
-                mastery_score INT DEFAULT NULL, 
-                launch_data TEXT DEFAULT NULL, 
-                entry_url VARCHAR(255) NOT NULL, 
-                resourceNode_id INT DEFAULT NULL, 
-                PRIMARY KEY(id), 
-                UNIQUE INDEX UNIQ_6FE774D5B87FAB32 (resourceNode_id)
-            )
-        ");
-        $this->addSql("
-            CREATE TABLE claro_scorm_12_info (
+            CREATE TABLE claro_scorm_12_tracking (
                 id INT AUTO_INCREMENT NOT NULL, 
                 user_id INT NOT NULL, 
                 scorm_id INT NOT NULL, 
@@ -44,9 +32,33 @@ class Version20140505102910 extends AbstractMigration
                 lesson_location VARCHAR(255) DEFAULT NULL, 
                 lesson_mode VARCHAR(255) DEFAULT NULL, 
                 PRIMARY KEY(id), 
-                INDEX IDX_7D2C37E3A76ED395 (user_id), 
-                INDEX IDX_7D2C37E3D75F22BE (scorm_id)
+                INDEX IDX_CF939976A76ED395 (user_id), 
+                INDEX IDX_CF939976D75F22BE (scorm_id)
             )
+        ");
+        $this->addSql("
+            CREATE TABLE claro_scorm_12 (
+                id INT AUTO_INCREMENT NOT NULL, 
+                hash_name VARCHAR(50) NOT NULL, 
+                mastery_score INT DEFAULT NULL, 
+                launch_data TEXT DEFAULT NULL, 
+                entry_url VARCHAR(255) NOT NULL, 
+                resourceNode_id INT DEFAULT NULL, 
+                PRIMARY KEY(id), 
+                UNIQUE INDEX UNIQ_6FE774D5B87FAB32 (resourceNode_id)
+            )
+        ");
+        $this->addSql("
+            ALTER TABLE claro_scorm_12_tracking 
+            ADD CONSTRAINT FK_CF939976A76ED395 FOREIGN KEY (user_id) 
+            REFERENCES claro_user (id) 
+            ON DELETE CASCADE
+        ");
+        $this->addSql("
+            ALTER TABLE claro_scorm_12_tracking 
+            ADD CONSTRAINT FK_CF939976D75F22BE FOREIGN KEY (scorm_id) 
+            REFERENCES claro_scorm_12 (id) 
+            ON DELETE CASCADE
         ");
         $this->addSql("
             ALTER TABLE claro_scorm_12 
@@ -54,31 +66,19 @@ class Version20140505102910 extends AbstractMigration
             REFERENCES claro_resource_node (id) 
             ON DELETE CASCADE
         ");
-        $this->addSql("
-            ALTER TABLE claro_scorm_12_info 
-            ADD CONSTRAINT FK_7D2C37E3A76ED395 FOREIGN KEY (user_id) 
-            REFERENCES claro_user (id) 
-            ON DELETE CASCADE
-        ");
-        $this->addSql("
-            ALTER TABLE claro_scorm_12_info 
-            ADD CONSTRAINT FK_7D2C37E3D75F22BE FOREIGN KEY (scorm_id) 
-            REFERENCES claro_scorm_12 (id) 
-            ON DELETE CASCADE
-        ");
     }
 
     public function down(Schema $schema)
     {
         $this->addSql("
-            ALTER TABLE claro_scorm_12_info 
-            DROP FOREIGN KEY FK_7D2C37E3D75F22BE
+            ALTER TABLE claro_scorm_12_tracking 
+            DROP FOREIGN KEY FK_CF939976D75F22BE
+        ");
+        $this->addSql("
+            DROP TABLE claro_scorm_12_tracking
         ");
         $this->addSql("
             DROP TABLE claro_scorm_12
-        ");
-        $this->addSql("
-            DROP TABLE claro_scorm_12_info
         ");
     }
 }

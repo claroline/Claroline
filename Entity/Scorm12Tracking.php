@@ -15,9 +15,9 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="claro_scorm_12_info")
+ * @ORM\Table(name="claro_scorm_12_tracking")
  */
-class Scorm12Info
+class Scorm12Tracking
 {
     /**
      * @ORM\Id
