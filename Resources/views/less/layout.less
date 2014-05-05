@@ -369,6 +369,9 @@ textarea {
 }
 
 .content-element {
+    .panel-heading, .panel-body {
+        overflow: hidden;
+    }
     > .nav.nav-pills{
         margin-bottom: 5px;
         border: 1px solid transparent;
@@ -962,10 +965,6 @@ form .global-error {
         margin-bottom: 20px;
     }
 
-    a {
-        word-break: break-all;
-    }
-
     h1, h2, h3, h4, h5, h6 {
         margin-top: 0;
     }
@@ -1303,7 +1302,8 @@ body.mce-fullscreen .modal.fullscreen {
 .white-space {
     vertical-align: top;
     white-space: nowrap;
- }
+}
+
 /**********************/
 /**    Facebook      **/
 /**********************/

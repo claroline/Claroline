@@ -15,6 +15,8 @@ use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Bundle\FrameworkBundle\Translation\Translator;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Router;
+
 /**
  * @DI\Service
  * @DI\Tag("twig.extension")
@@ -141,12 +143,12 @@ class HomeExtension extends \Twig_Extension
     }
 
     /**
-     * Deprecated and must be deleted because a lack of path info in nginx
+     * Return active if a given link match to the path info
      */
     public function activeLink($link)
     {
-        if ((isset($_SERVER['PATH_INFO']) && $_SERVER['PATH_INFO'] === $link)
-            || (!isset($_SERVER['PATH_INFO']) && $link == '/')) {
+        $pathinfo = $this->getPathInfo();
+        if (($pathinfo and '/' . $pathinfo === $link) or (!$pathinfo and $link === '/')) {
             return ' active'; //the white space is nedded
         }
 
@@ -178,12 +180,12 @@ class HomeExtension extends \Twig_Extension
     }
 
     /**
-     * Deprecated and must be deleted because a lack of path info in nginx
+     * Compare a given link and look if is is inside the the path ifo and start at 0 position.
      */
     public function compareRoute($link, $return = " class='active'")
     {
-        if (isset($_SERVER['REQUEST_URI']) && strpos($_SERVER['REQUEST_URI'], $link) === 0
-            || isset($_SERVER['PATH_INFO']) && strpos($_SERVER['PATH_INFO'], $link) === 0) {
+        $pathinfo = $this->getPathInfo();
+        if ($pathinfo and strpos('/' . $pathinfo, $link) === 0) {
             return $return;
         }
 
@@ -250,5 +252,19 @@ class HomeExtension extends \Twig_Extension
         }
 
         return true;
+    }
+
+
+    private function getPathInfo()
+    {
+        $request = $this->container->get('request_stack')->getMasterRequest();
+        $router = $this->container->get('router');
+
+        if ($request instanceof Request and $router instanceof Router) {
+            $index = $router->generate('claro_index');
+            $current = $router->generate($request->get('_route'), $request->get('_route_params'));
+
+            return str_replace($index, '', $current);
+        }
     }
 }
