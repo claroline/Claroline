@@ -102,18 +102,12 @@ class WorkspaceRepository extends EntityRepository
             SELECT DISTINCT w FROM Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace w
             JOIN w.orderedTools ot
             JOIN ot.roles r
-            WHERE r.name = '{$roles[0]}'
-        ";
-
-        for ($i = 1, $size = count($roles) - 1; $i < $size; $i++) {
-            $dql .= " OR r.name = '{$roles[$i]}'";
-        }
-
-        $dql .= "
+            WHERE r.name in (:roles)
             ORDER BY w.name
         ";
 
         $query = $this->_em->createQuery($dql);
+        $query->setParameter('roles', $roles);
 
         return $query->getResult();
     }
