@@ -72,8 +72,7 @@ class AgendaType extends AbstractType
                         '#FF0000' => 'high',
                         '#01A9DB' => 'medium',
                         '#848484' => 'low'
-                    ),
-                    'data' => '#01A9DB'
+                    )
                 )
             )
             ->add(

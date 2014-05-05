@@ -56,7 +56,6 @@ class WorkspaceAgendaController extends Controller
         Request $request,
         AgendaManager $agendaManager,
         RouterInterface $router
-
     )
     {
         $this->security = $security;
@@ -65,7 +64,6 @@ class WorkspaceAgendaController extends Controller
         $this->request = $request;
         $this->agendaManager = $agendaManager;
         $this->router = $router;
-
     }
 
     /**

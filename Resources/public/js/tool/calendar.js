@@ -333,7 +333,6 @@
                 $('#agenda_form_title').attr('value', title);
             }
             $('#agenda_form_description').val(calEvent.description);
-            console.debug(calEvent.color);
             $('#agenda_form_priority option[value=' + calEvent.color + ']').attr('selected', 'selected');
             var pickedDate = new Date(calEvent.start);
             $('#agenda_form_start').val($.fullCalendar.formatDate( pickedDate,'dd-MM-yyyy'));
