@@ -114,40 +114,31 @@ class LayoutController extends Controller
      * (anonymous/logged, profile, etc.) and the platform options (e.g. self-
      * registration allowed/prohibited).
      *
+     * @param \Claroline\CoreBundle\Entity\Workspace\Workspace $workspace
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function topBarAction(Workspace $workspace = null)
     {
-        $tools = $this->toolManager->getAdminToolsByRoles($this->security->getToken()->getRoles());
-        $canAdministrate = count($tools) > 0 ? true: false;
-        $isLogged = false;
+        $canAdministrate = false;
         $countUnreadMessages = 0;
         $registerTarget = null;
         $loginTarget = null;
         $workspaces = null;
         $personalWs = null;
-        $isInAWorkspace = false;
         $countUnviewedNotifications = 0;
 
         $token = $this->security->getToken();
         $user = $token->getUser();
         $roles = $this->utils->getRoles($token);
 
-        if (!is_null($workspace)) {
-            $isInAWorkspace = true;
-        }
-
-        if (!in_array('ROLE_ANONYMOUS', $roles)) {
-            $isLogged = true;
-        }
-
-        if ($isLogged) {
-            $isLogged = true;
+        if ($isLogged = !in_array('ROLE_ANONYMOUS', $roles)) {
+            $tools = $this->toolManager->getAdminToolsByRoles($token->getRoles());
+            $canAdministrate = count($tools) > 0;
             $countUnreadMessages = $this->messageManager->getNbUnreadMessages($user);
             $personalWs = $user->getPersonalWorkspace();
             $workspaces = $this->findWorkspacesFromLogs();
-            $countUnviewedNotifications = $this->get('icap.notification.manager')->
-                countUnviewedNotifications($user->getId());
+            $countUnviewedNotifications = $this->get('icap.notification.manager')
+                ->countUnviewedNotifications($user->getId());
         } else {
             $workspaces = $this->workspaceManager->getWorkspacesByAnonymous();
 
@@ -166,7 +157,7 @@ class LayoutController extends Controller
             'workspaces' => $workspaces,
             'personalWs' => $personalWs,
             "isImpersonated" => $this->isImpersonated(),
-            'isInAWorkspace' => $isInAWorkspace,
+            'isInAWorkspace' => $workspace !== null,
             'currentWorkspace' => $workspace,
             'countUnviewedNotifications' => $countUnviewedNotifications,
             'canAdministrate' => $canAdministrate
