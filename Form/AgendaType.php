@@ -71,8 +71,9 @@ class AgendaType extends AbstractType
                     'choices' => array(
                         '#FF0000' => 'high',
                         '#01A9DB' => 'medium',
-                        '#848484' => 'low',
-                    )
+                        '#848484' => 'low'
+                    ),
+                    'data' => '#01A9DB'
                 )
             )
             ->add(
@@ -91,38 +92,10 @@ class AgendaType extends AbstractType
     {
         $resolver->setDefaults(
             array(
-                'title' => 'hello',
-                'priority' => '#FF0000',
                 'workspace' => new SimpleWorkspace() ,
                 'user' => new \Claroline\CoreBundle\Entity\User(),
                 'class' => 'Claroline\CoreBundle\Entity\Event',
                 'translation_domain' => 'agenda'
-            )
-        )
-        ->setRequired(
-            array(
-                'title',
-                'priority',
-                'workspace',
-                'user'
-            )
-        )
-        ->setOptional(
-            array(
-                'start',
-                'end'
-            )
-        )
-        ->setAllowedtypes(
-            array(
-                'title' => 'string',
-                'workspace' => 'Claroline\CoreBundle\Entity\Workspace\SimpleWorkspace',
-                'user' => 'Claroline\CoreBundle\Entity\User'
-            )
-        )
-        ->setAllowedValues(
-            array(
-                'priority' => array('#FF0000', '#01A9DB', '#848484')
             )
         );
     }
