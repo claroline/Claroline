@@ -51,7 +51,7 @@ class LoadRegionData extends AbstractFixture
             'About Us' => array(
                 'url' => 'http://www.claroline.net/type/claroline',
                 'icon' => '',
-                'translation' => array('fr' => '&Agrave; propos de nous', 'es' => '¿Quiénes somos?')
+                'translation' => array('fr' => 'À propos de nous', 'es' => '¿Quiénes somos?')
             ),
             'Home' => array(
                 'url' => '/',
