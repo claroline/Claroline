@@ -13,9 +13,9 @@ namespace Claroline\ScormBundle\Controller;
 
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Persistence\ObjectManager;
-use Claroline\ScormBundle\Entity\ScormInfo;
-use Claroline\ScormBundle\Entity\Scorm;
-use Claroline\ScormBundle\Event\Log\LogScormResultEvent;
+use Claroline\ScormBundle\Entity\Scorm12Info;
+use Claroline\ScormBundle\Entity\Scorm12;
+use Claroline\ScormBundle\Event\Log\LogScorm12ResultEvent;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Response;
@@ -29,8 +29,8 @@ class ScormController extends Controller
     private $eventDispatcher;
     private $om;
     private $securityContext;
-    private $scormInfoRepo;
-    private $scormRepo;
+    private $scorm12InfoRepo;
+    private $scorm12Repo;
     private $userRepo;
 
     /**
@@ -49,15 +49,15 @@ class ScormController extends Controller
         $this->eventDispatcher = $eventDispatcher;
         $this->om = $om;
         $this->securityContext = $securityContext;
-        $this->scormInfoRepo = $om->getRepository('ClarolineScormBundle:ScormInfo');
-        $this->scormRepo = $om->getRepository('ClarolineScormBundle:Scorm');
+        $this->scorm12InfoRepo = $om->getRepository('ClarolineScormBundle:Scorm12Info');
+        $this->scorm12Repo = $om->getRepository('ClarolineScormBundle:Scorm12');
         $this->userRepo = $om->getRepository('ClarolineCoreBundle:User');
     }
 
     /**
      * @EXT\Route(
      *     "/scorm/info/commit/{datasString}/mode/{mode}",
-     *     name = "claro_scorm_info_commit",
+     *     name = "claro_scorm_12_info_commit",
      *     options={"expose"=true}
      * )
      *
@@ -67,7 +67,7 @@ class ScormController extends Controller
      *
      * @return Response
      */
-    public function commitScormInfo($datasString, $mode)
+    public function commitScorm12Info($datasString, $mode)
     {
         $datasArray = explode("<-;->", $datasString);
         $scormId = intval($datasArray[0]);
@@ -90,15 +90,15 @@ class ScormController extends Controller
         if ($user->getId() !== $studentId) {
             throw new AccessDeniedException();
         }
-        $scorm = $this->scormRepo->findOneById($scormId);
+        $scorm = $this->scorm12Repo->findOneById($scormId);
         $sessionTimeInHundredth = $this->convertTimeInHundredth($sessionTime);
 
-        $scormInfo = $this->scormInfoRepo->findOneBy(
+        $scormInfo = $this->scorm12InfoRepo->findOneBy(
             array('user' => $user->getId(), 'scorm' => $scorm->getId())
         );
 
         if (is_null($scormInfo)) {
-            $scormInfo = new ScormInfo();
+            $scormInfo = new Scorm12Info();
             $scormInfo->setCredit($credit);
             $scormInfo->setLessonMode($lessonMode);
             $scormInfo->setScorm($scorm);
@@ -122,7 +122,7 @@ class ScormController extends Controller
             // Persist total time
             $scormInfo->setTotalTime($totalTimeInHundredth);
 
-            $this->logScormResult(
+            $this->logScorm12Result(
                 $scorm,
                 $user,
                 $credit,
@@ -147,8 +147,8 @@ class ScormController extends Controller
     /**
      * Log given datas as result of a Scorm resource
      */
-    private function logScormResult(
-        Scorm $scorm,
+    private function logScorm12Result(
+        Scorm12 $scorm,
         User $user,
         $credit,
         $exitMode,
@@ -174,8 +174,8 @@ class ScormController extends Controller
         $details['suspendData'] = $suspendData;
         $details['totalTime'] = $totalTimeInHundredth;
 
-        $log = new LogScormResultEvent(
-            "resource_scorm_result",
+        $log = new LogScorm12ResultEvent(
+            "resource_scorm_12_result",
             $details,
             null,
             null,

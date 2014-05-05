@@ -15,10 +15,10 @@ use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass="Claroline\ScormBundle\Repository\ScormRepository")
- * @ORM\Table(name="claro_scorm")
+ * @ORM\Entity(repositoryClass="Claroline\ScormBundle\Repository\Scorm12Repository")
+ * @ORM\Table(name="claro_scorm_12")
  */
-class Scorm extends AbstractResource
+class Scorm12 extends AbstractResource
 {
     /**
      * @ORM\Column(name="hash_name", length=50)

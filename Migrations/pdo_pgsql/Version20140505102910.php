@@ -8,14 +8,28 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2014/04/30 03:09:49
+ * Generation date: 2014/05/05 10:29:14
  */
-class Version20140430150948 extends AbstractMigration
+class Version20140505102910 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
         $this->addSql("
-            CREATE TABLE claro_scorm_info (
+            CREATE TABLE claro_scorm_12 (
+                id SERIAL NOT NULL, 
+                hash_name VARCHAR(50) NOT NULL, 
+                mastery_score INT DEFAULT NULL, 
+                launch_data VARCHAR(4096) DEFAULT NULL, 
+                entry_url VARCHAR(255) NOT NULL, 
+                resourceNode_id INT DEFAULT NULL, 
+                PRIMARY KEY(id)
+            )
+        ");
+        $this->addSql("
+            CREATE UNIQUE INDEX UNIQ_6FE774D5B87FAB32 ON claro_scorm_12 (resourceNode_id)
+        ");
+        $this->addSql("
+            CREATE TABLE claro_scorm_12_info (
                 id SERIAL NOT NULL, 
                 user_id INT NOT NULL, 
                 scorm_id INT NOT NULL, 
@@ -35,41 +49,27 @@ class Version20140430150948 extends AbstractMigration
             )
         ");
         $this->addSql("
-            CREATE INDEX IDX_6F4BB916A76ED395 ON claro_scorm_info (user_id)
+            CREATE INDEX IDX_7D2C37E3A76ED395 ON claro_scorm_12_info (user_id)
         ");
         $this->addSql("
-            CREATE INDEX IDX_6F4BB916D75F22BE ON claro_scorm_info (scorm_id)
+            CREATE INDEX IDX_7D2C37E3D75F22BE ON claro_scorm_12_info (scorm_id)
         ");
         $this->addSql("
-            CREATE TABLE claro_scorm (
-                id SERIAL NOT NULL, 
-                hash_name VARCHAR(50) NOT NULL, 
-                mastery_score INT DEFAULT NULL, 
-                launch_data VARCHAR(4096) DEFAULT NULL, 
-                entry_url VARCHAR(255) NOT NULL, 
-                resourceNode_id INT DEFAULT NULL, 
-                PRIMARY KEY(id)
-            )
+            ALTER TABLE claro_scorm_12 
+            ADD CONSTRAINT FK_6FE774D5B87FAB32 FOREIGN KEY (resourceNode_id) 
+            REFERENCES claro_resource_node (id) 
+            ON DELETE CASCADE NOT DEFERRABLE INITIALLY IMMEDIATE
         ");
         $this->addSql("
-            CREATE UNIQUE INDEX UNIQ_B6416871B87FAB32 ON claro_scorm (resourceNode_id)
-        ");
-        $this->addSql("
-            ALTER TABLE claro_scorm_info 
-            ADD CONSTRAINT FK_6F4BB916A76ED395 FOREIGN KEY (user_id) 
+            ALTER TABLE claro_scorm_12_info 
+            ADD CONSTRAINT FK_7D2C37E3A76ED395 FOREIGN KEY (user_id) 
             REFERENCES claro_user (id) 
             ON DELETE CASCADE NOT DEFERRABLE INITIALLY IMMEDIATE
         ");
         $this->addSql("
-            ALTER TABLE claro_scorm_info 
-            ADD CONSTRAINT FK_6F4BB916D75F22BE FOREIGN KEY (scorm_id) 
-            REFERENCES claro_scorm (id) 
-            ON DELETE CASCADE NOT DEFERRABLE INITIALLY IMMEDIATE
-        ");
-        $this->addSql("
-            ALTER TABLE claro_scorm 
-            ADD CONSTRAINT FK_B6416871B87FAB32 FOREIGN KEY (resourceNode_id) 
-            REFERENCES claro_resource_node (id) 
+            ALTER TABLE claro_scorm_12_info 
+            ADD CONSTRAINT FK_7D2C37E3D75F22BE FOREIGN KEY (scorm_id) 
+            REFERENCES claro_scorm_12 (id) 
             ON DELETE CASCADE NOT DEFERRABLE INITIALLY IMMEDIATE
         ");
     }
@@ -77,14 +77,14 @@ class Version20140430150948 extends AbstractMigration
     public function down(Schema $schema)
     {
         $this->addSql("
-            ALTER TABLE claro_scorm_info 
-            DROP CONSTRAINT FK_6F4BB916D75F22BE
+            ALTER TABLE claro_scorm_12_info 
+            DROP CONSTRAINT FK_7D2C37E3D75F22BE
         ");
         $this->addSql("
-            DROP TABLE claro_scorm_info
+            DROP TABLE claro_scorm_12
         ");
         $this->addSql("
-            DROP TABLE claro_scorm
+            DROP TABLE claro_scorm_12_info
         ");
     }
 }

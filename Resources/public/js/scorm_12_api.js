@@ -65,7 +65,7 @@ function commitResult(mode)
     $.ajax({
         async: false,
         url: Routing.generate(
-            "claro_scorm_info_commit",
+            "claro_scorm_12_info_commit",
             {"datasString": datasString, "mode": mode}
         ),
         type: "POST",

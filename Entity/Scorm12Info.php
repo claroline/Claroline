@@ -15,9 +15,9 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="claro_scorm_info")
+ * @ORM\Table(name="claro_scorm_12_info")
  */
-class ScormInfo
+class Scorm12Info
 {
     /**
      * @ORM\Id
@@ -33,7 +33,7 @@ class ScormInfo
     protected $user;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Claroline\ScormBundle\Entity\Scorm")
+     * @ORM\ManyToOne(targetEntity="Claroline\ScormBundle\Entity\Scorm12")
      * @ORM\JoinColumn(name="scorm_id", onDelete="CASCADE", nullable=false)
      */
     protected $scorm;
