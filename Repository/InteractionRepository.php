@@ -131,6 +131,42 @@ class InteractionRepository extends EntityRepository
 
         return $interactions;
     }
+    
+    /**
+     * Interactions by Exercise's Questions for the import
+     *
+     */
+    public function getExerciseInteractionImport($em, $exoSearch, $exoImport){
+        
+        $dql = 'SELECT eq FROM UJM\ExoBundle\Entity\ExerciseQuestion eq
+               JOIN eq.question q
+               WHERE eq.exercise=' . $exoSearch;
+        $dql .= ' AND q.id NOT IN
+                (SELECT q2.id FROM UJM\ExoBundle\Entity\ExerciseQuestion eq2
+                JOIN eq2.question q2
+                JOIN eq2.exercise e2
+                WHERE e2.id=' . $exoImport . ')';
+        $dql .= ' ORDER BY eq.ordre';
+        
+        $query = $em->createQuery($dql);
+        $eqs = $query->getResult();
+        
+        foreach ($eqs as $eq) {
+            $questionsList[] = $eq->getQuestion()->getId();
+        }
+        
+        foreach ($questionsList as $q) {
+            $dql = 'SELECT i FROM UJM\ExoBundle\Entity\Interaction i JOIN i.question q '
+                . 'WHERE q=' . $q;
+            $query = $em->createQuery($dql);
+            $inter = $query->getResult();
+            $interactions[] = $inter[0];
+        }
+
+        return $interactions;
+        
+        
+    }
 
     /**
      * Interactions for a paper
@@ -226,12 +262,20 @@ class InteractionRepository extends EntityRepository
         return $query->getResult();
     }
 
-    public function findByAll($userId, $whatToFind)
+    public function findByAll($userId, $whatToFind, $searchToImport = FALSE, $exoID = -1)
     {
         $dql = 'SELECT i FROM UJM\ExoBundle\Entity\Interaction i JOIN i.question q JOIN q.category c
             WHERE (i.invite LIKE :search OR i.type LIKE :search OR c.value LIKE :search OR q.title LIKE :search)
             AND q.user = '.$userId.'
         ';
+        
+        if ($searchToImport === TRUE) {
+            $dql .= ' AND q.id NOT IN
+                    (SELECT q2.id FROM UJM\ExoBundle\Entity\ExerciseQuestion eq
+                    JOIN eq.question q2
+                    JOIN eq.exercise e2
+                    WHERE e2.id=' . $exoID . ')';
+        }
 
         $query = $this->_em->createQuery($dql)
             ->setParameter('search', "%{$whatToFind}%");

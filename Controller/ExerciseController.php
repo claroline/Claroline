@@ -454,7 +454,7 @@ class ExerciseController extends Controller
                 $listQExo = $this->getDoctrine()
                     ->getManager()
                     ->getRepository('UJMExoBundle:Interaction')
-                    ->getExerciseInteraction($em, $idExo, 0);
+                    ->getExerciseInteractionImport($em, $idExo, $exoID);
 
                 $allActions = $services->getActionsAllQuestions($listQExo, $uid, $actionQ,
                     $questionWithResponse, $alreadyShared, $sharedWithMe, $shareRight, $em);

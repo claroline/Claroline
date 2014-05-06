@@ -1872,13 +1872,19 @@ class QuestionController extends Controller
         $alreadyShared = array();
         $sharedWithMe = array();
         $shareRight = array();
+        
+        $searchToImport = FALSE;
 
         if ($request->isXmlHttpRequest()) {
             $userSearch = $request->request->get('userSearch');
             $exoID = $request->request->get('exoID');
             $where = $request->request->get('where');
+            
+            if ($where == 'import') {
+                $searchToImport = TRUE;
+            }
 
-            $listInteractions = $interactionRepository->findByAll($user->getId(), $userSearch);
+            $listInteractions = $interactionRepository->findByAll($user->getId(), $userSearch, $searchToImport, $exoID);
 
             $sharedQuestion = $em->getRepository('UJMExoBundle:Share')
                 ->findByAllShared($user->getId(), $userSearch);
