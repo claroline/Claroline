@@ -107,6 +107,7 @@ class Updater021000
 
         foreach ($resourceNodes as $resourceNode) {
             $rightsManager = $this->container->get('claroline.manager.rights_manager');
+
             $rightsManager->create(0, $roleUser, $resourceNode, false);
             $i++;
 

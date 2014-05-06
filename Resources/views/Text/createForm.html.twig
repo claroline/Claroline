@@ -1,5 +1,5 @@
 <div class='modal-dialog withTinyMCE'>
-    <form novalidate="novalidate"
+    <form role="form" novalidate="novalidate"
           action="{{ path('claro_resource_create', {'resourceType':resourceType, 'parentId':'_nodeId'}) }}"
           method="post" {{ form_enctype(form) }}
           id="generic-form"

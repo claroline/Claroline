@@ -21,6 +21,7 @@ use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Library\Security\Utilities;
 use Claroline\CoreBundle\Manager\MessageManager;
 use Claroline\CoreBundle\Manager\RoleManager;
+use Claroline\CoreBundle\Manager\ToolManager;
 use Claroline\CoreBundle\Manager\WorkspaceManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use JMS\DiExtraBundle\Annotation as DI;
@@ -39,6 +40,7 @@ class LayoutController extends Controller
     private $utils;
     private $translator;
     private $configHandler;
+    private $toolManager;
 
     /**
      * @DI\InjectParams({
@@ -49,13 +51,15 @@ class LayoutController extends Controller
      *     "security"           = @DI\Inject("security.context"),
      *     "utils"              = @DI\Inject("claroline.security.utilities"),
      *     "translator"         = @DI\Inject("translator"),
-     *     "configHandler"      = @DI\Inject("claroline.config.platform_config_handler")
+     *     "configHandler"      = @DI\Inject("claroline.config.platform_config_handler"),
+     *     "toolManager"       = @DI\Inject("claroline.manager.tool_manager")
      * })
      */
     public function __construct(
         MessageManager $messageManager,
         RoleManager $roleManager,
         WorkspaceManager $workspaceManager,
+        ToolManager $toolManager,
         UrlGeneratorInterface $router,
         SecurityContextInterface $security,
         Utilities $utils,
@@ -66,6 +70,7 @@ class LayoutController extends Controller
         $this->messageManager = $messageManager;
         $this->roleManager = $roleManager;
         $this->workspaceManager = $workspaceManager;
+        $this->toolManager = $toolManager;
         $this->router = $router;
         $this->security = $security;
         $this->utils = $utils;
@@ -113,9 +118,10 @@ class LayoutController extends Controller
      */
     public function topBarAction(AbstractWorkspace $workspace = null)
     {
+        $tools = $this->toolManager->getAdminToolsByRoles($this->security->getToken()->getRoles());
+        $canAdministrate = count($tools) > 0 ? true: false;
         $isLogged = false;
         $countUnreadMessages = 0;
-        $username = null;
         $registerTarget = null;
         $loginTarget = null;
         $workspaces = null;
@@ -138,13 +144,11 @@ class LayoutController extends Controller
         if ($isLogged) {
             $isLogged = true;
             $countUnreadMessages = $this->messageManager->getNbUnreadMessages($user);
-            $username = $user->getFirstName() . ' ' . $user->getLastName();
             $personalWs = $user->getPersonalWorkspace();
             $workspaces = $this->findWorkspacesFromLogs();
             $countUnviewedNotifications = $this->get('icap.notification.manager')->
                 countUnviewedNotifications($user->getId());
         } else {
-            $username = $this->translator->trans('login', array(), 'platform');
             $workspaces = $this->workspaceManager->getWorkspacesByAnonymous();
 
             if (true === $this->configHandler->getParameter('allow_self_registration')) {
@@ -157,7 +161,6 @@ class LayoutController extends Controller
         return array(
             'isLogged' => $isLogged,
             'countUnreadMessages' => $countUnreadMessages,
-            'username' => $username,
             'register_target' => $registerTarget,
             'login_target' => $loginTarget,
             'workspaces' => $workspaces,
@@ -165,7 +168,8 @@ class LayoutController extends Controller
             "isImpersonated" => $this->isImpersonated(),
             'isInAWorkspace' => $isInAWorkspace,
             'currentWorkspace' => $workspace,
-            'countUnviewedNotifications' => $countUnviewedNotifications
+            'countUnviewedNotifications' => $countUnviewedNotifications,
+            'canAdministrate' => $canAdministrate
         );
     }
 

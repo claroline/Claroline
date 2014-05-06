@@ -216,11 +216,12 @@ class UserRepository extends EntityRepository implements UserProviderInterface
         if (!$executeQuery) {
             $order = $order === 'DESC' ? 'DESC' : 'ASC';
             $dql = "
-                SELECT u, pws, g, r , rws from Claroline\CoreBundle\Entity\User u
+                SELECT u, pws, g, r , rws , up from Claroline\CoreBundle\Entity\User u
                 LEFT JOIN u.personalWorkspace pws
                 LEFT JOIN u.groups g
                 LEFT JOIN u.roles r
                 LEFT JOIN r.workspace rws
+                LEFT JOIN u.publicProfilePreferences up
                 WHERE u.isEnabled = true
                 ORDER BY u.{$orderedBy}
                 ".$order
@@ -1106,5 +1107,40 @@ class UserRepository extends EntityRepository implements UserProviderInterface
         $query = $this->_em->createQuery($dql);
 
         return $query->getResult();
+    }
+
+    /**
+     * @param bool $executeQuery
+     *
+     * @return array|Query
+     */
+    public function findWithPublicProfilePreferences($executeQuery = true)
+    {
+        $queryBuilder = $this->createQueryBuilder('user')
+            ->leftJoin('user.publicProfilePreferences', 'uppf');
+
+        return $executeQuery ? $queryBuilder->getQuery()->getResult(): $queryBuilder->getQuery();
+    }
+
+    /**
+     * @param string $data
+     *
+     * @return User
+     */
+    public function findOneByIdOrPublicUrl($data)
+    {
+        $dql = '
+            SELECT u
+            FROM Claroline\CoreBundle\Entity\User u
+            WHERE u.id = :id
+            OR u.publicUrl = :publicUrl
+            AND u.isEnabled = true
+        ';
+
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('id', $data);
+        $query->setParameter('publicUrl', $data);
+
+        return $query->getSingleResult();
     }
 }

@@ -14,6 +14,8 @@ namespace Claroline\CoreBundle\Twig;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Bundle\FrameworkBundle\Translation\Translator;
 use Symfony\Component\HttpKernel\KernelInterface;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Router;
 
 /**
  * @DI\Service
@@ -46,6 +48,7 @@ class HomeExtension extends \Twig_Extension
             'timeAgo' => new \Twig_Filter_Method($this, 'timeAgo'),
             'homeLink' => new \Twig_Filter_Method($this, 'homeLink'),
             'activeLink' => new \Twig_Filter_Method($this, 'activeLink'),
+            'activeRoute' => new \Twig_Filter_Method($this, 'activeRoute'),
             'compareRoute' => new \Twig_Filter_Method($this, 'compareRoute'),
             'autoLink' => new \Twig_Filter_Method($this, 'autoLink')
         );
@@ -119,6 +122,9 @@ class HomeExtension extends \Twig_Extension
         );
     }
 
+    /**
+     * Check if a link is local or external
+     */
     public function homeLink($link)
     {
         if (!(strpos($link, "http://") === 0 or
@@ -136,26 +142,59 @@ class HomeExtension extends \Twig_Extension
         return $link;
     }
 
+    /**
+     * Return active if a given link match to the path info
+     */
     public function activeLink($link)
     {
-        if ((isset($_SERVER['PATH_INFO']) && $_SERVER['PATH_INFO'] === $link)
-            || (!isset($_SERVER['PATH_INFO']) && $link == '/')) {
+        $pathinfo = $this->getPathInfo();
+        if (($pathinfo and '/' . $pathinfo === $link) or (!$pathinfo and $link === '/')) {
             return ' active'; //the white space is nedded
         }
 
         return '';
     }
 
+    /**
+     * Compare a route with master request route.
+     * Usefull in sub-views because there we can not use app.request.get('_route')
+     *
+     * Example: {% if "claro_get_content_by_type" | activeRoute({'type': 'home'}) %}true{% endif %}
+     *
+     * @param $route The name of the route.
+     * @param $params One or more params of the route.
+     *
+     * @return true if the routes match
+     */
+    public function activeRoute($route, $params = null)
+    {
+        $request = $this->container->get('request_stack')->getMasterRequest();
+
+        if ($request instanceof Request and $request->get('_route') === $route) {
+            if (is_array($params) and count(array_intersect_assoc($request->get('_route_params'), $params)) <= 0) {
+                return false;
+            }
+
+            return true;
+        }
+    }
+
+    /**
+     * Compare a given link and look if is is inside the the path ifo and start at 0 position.
+     */
     public function compareRoute($link, $return = " class='active'")
     {
-        if (isset($_SERVER['REQUEST_URI']) && strpos($_SERVER['REQUEST_URI'], $link) === 0
-            || isset($_SERVER['PATH_INFO']) && strpos($_SERVER['PATH_INFO'], $link) === 0) {
+        $pathinfo = $this->getPathInfo();
+        if ($pathinfo and strpos('/' . $pathinfo, $link) === 0) {
             return $return;
         }
 
         return '';
     }
 
+    /**
+     * Find links in a text and made it clickable
+     */
     public function autoLink($text)
     {
         $rexProtocol = '(https?://)?';
@@ -213,5 +252,19 @@ class HomeExtension extends \Twig_Extension
         }
 
         return true;
+    }
+
+
+    private function getPathInfo()
+    {
+        $request = $this->container->get('request_stack')->getMasterRequest();
+        $router = $this->container->get('router');
+
+        if ($request instanceof Request and $router instanceof Router) {
+            $index = $router->generate('claro_index');
+            $current = $router->generate($request->get('_route'), $request->get('_route_params'));
+
+            return str_replace($index, '', $current);
+        }
     }
 }

@@ -49,7 +49,7 @@ class Validator
      * @param Rulable $rulable
      * @param User    $user
      *
-     * @return bool|Log[]
+     * @return array
      */
     public function validate(Rulable $rulable, User $user)
     {
@@ -65,7 +65,7 @@ class Validator
      */
     protected function validateRules($rules, User $user, array $restriction)
     {
-        $return    = array('validRules' => 0, 'rules' => array());
+        $return = array('validRules' => 0, 'rules' => array());
 
         if (0 < count($rules)) {
             foreach ($rules as $rule) {
@@ -92,7 +92,6 @@ class Validator
      */
     public function validateRule(Rule $rule, array $restrictions = array())
     {
-        $isValid            = true;
         /** @var \Claroline\CoreBundle\Rule\Constraints\AbstractConstraint[] $usedConstraints */
         $usedConstraints    = array();
         /** @var \Claroline\CoreBundle\Rule\Constraints\AbstractConstraint[] $existedConstraints */
@@ -112,15 +111,20 @@ class Validator
             }
         }
 
+        $validatedConstraints = 0;
+        $nbConstraints        = count($usedConstraints);
+
         $associatedLogs = $this->getAssociatedLogs($usedConstraints, $restrictions);
 
         foreach ($usedConstraints as $usedConstraint) {
             $usedConstraint->setAssociatedLogs($associatedLogs);
 
-            $isValid = $isValid && $usedConstraint->validate();
+            if ($usedConstraint->validate()) {
+                $validatedConstraints++;
+            }
         }
 
-        return ($isValid) ? $associatedLogs : $isValid;
+        return ($validatedConstraints === $nbConstraints) ? $associatedLogs : false;
     }
 
     /**

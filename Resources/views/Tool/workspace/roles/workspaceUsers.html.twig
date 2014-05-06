@@ -71,10 +71,10 @@
             <div class="row">
                 <div class="col-md-8">
                     <div class="btn-group margin-md">
-                        <a href="{{ path('claro_workspace_unregistered_user_list', {'workspace': workspace.getId()}) }}" class="btn btn-default dropdown-toggle">
+                        <a href="{{ path('claro_workspace_unregistered_user_list', {'workspace': workspace.getId()}) }}" class="btn btn-default dropdown-toggle" role="button">
                             <i class="icon-plus"></i> {{ 'add_users'|trans({}, 'platform') }}
                         </a>
-                        <a href="{{ path('claro_message_form_for_workspace', {'workspace': workspace.getId()}) }}" class="btn btn-default dropdown-toggle">
+                        <a href="{{ path('claro_message_form_for_workspace', {'workspace': workspace.getId()}) }}" class="btn btn-default dropdown-toggle" role="button">
                             <i class="icon-envelope"></i> {{ 'send_message_to_workspace'|trans({}, 'platform') }}
                         </a>
                     </div>
@@ -116,7 +116,7 @@
                         {% for user in pager.currentPageResults %}
                             <tr id="row-{{ user.id }}" class="row-user" data-user-id="{{ user.getId() }}">
                                 <td>
-                                    <a href="{{ path('claro_profile_view', {'userId': user.getId()}) }}"> {{user.getUsername()}}</a>
+                                    <a href="{{ path('claro_public_profile_view', {'publicUrl': user.getPublicUrl()}) }}"> {{user.getUsername()}}</a>
                                 </td>
                                 <td>{{ user.getLastName() }}</td>
                                 <td>{{ user.getFirstName() }}</td>
@@ -173,14 +173,14 @@
         Claroline.Table.initialize(parameters);
 
         $('.popover-block').popover();
-        $('.remove-role-button').live('click', function (event) {
+        $('.remove-role-button').on('click', function (event) {
             var target = $(event.currentTarget);
             var route = target.attr('href');
             $.ajax({
                 url: route,
                 type: 'DELETE',
                 success: function() {
-                    target.parent().remove();
+                    target.parent().parent().parent().remove();
                 }
             });
         });

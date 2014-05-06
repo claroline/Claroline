@@ -3,9 +3,9 @@
         {% if content["images"][0] is defined or content["image"] is defined %}
             <a href="{{ content["url"] }}" target="_blank">
                 {% if content["image"] is defined %}
-                    <img src="{{ content["image"] }}">
+                    <img src="{{ content["image"] }}" class="img-responsive" {% if content["title"] is defined %}alt="{{ content["title"] }}"{% endif %}>
                 {% else %}
-                    <img src="{{ content["images"][0] }}">
+                    <img src="{{ content["images"][0] }}" class="img-responsive" {% if content["title"] is defined %}alt="{{ content["title"] }}"{% endif %}>
                 {% endif %}
             </a>
         {% endif %}

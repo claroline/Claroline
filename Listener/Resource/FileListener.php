@@ -17,6 +17,8 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\File\MimeType\MimeTypeGuesser;
 use JMS\DiExtraBundle\Annotation as DI;
 use Claroline\CoreBundle\Entity\Resource\File;
+use Claroline\CoreBundle\Entity\Resource\Directory;
+use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Form\FileType;
 use Claroline\CoreBundle\Event\CopyResourceEvent;
 use Claroline\CoreBundle\Event\CreateFormResourceEvent;
@@ -33,6 +35,9 @@ use Claroline\CoreBundle\Event\ImportResourceTemplateEvent;
 class FileListener implements ContainerAwareInterface
 {
     private $container;
+    private $resourceManager;
+    private $om;
+    private $sc;
 
     /**
      * @DI\InjectParams({
@@ -44,6 +49,9 @@ class FileListener implements ContainerAwareInterface
     public function setContainer(ContainerInterface $container = null)
     {
         $this->container = $container;
+        $this->resourceManager = $container->get('claroline.manager.resource_manager');
+        $this->om = $container->get('claroline.persistence.object_manager');
+        $this->sc = $container->get('security.context');
     }
 
     /**
@@ -81,16 +89,26 @@ class FileListener implements ContainerAwareInterface
             $tmpFile = $form->get('file')->getData();
             $fileName = $tmpFile->getClientOriginalName();
             $extension = pathinfo($fileName, PATHINFO_EXTENSION);
-            $size = filesize($tmpFile);
-            $mimeType = $tmpFile->getClientMimeType();
-            $hashName = $this->container->get('claroline.utilities.misc')->generateGuid() . "." . $extension;
-            $tmpFile->move($this->container->getParameter('claroline.param.files_directory'), $hashName);
-            $file->setSize($size);
-            $file->setName($fileName);
-            $file->setHashName($hashName);
-            $file->setMimeType($mimeType);
-            $event->setResources(array($file));
-            $event->stopPropagation();
+
+            //uncompress
+            if ($extension === 'zip' && $form->get('uncompress')->getData()) {
+                $roots = $this->unzip($tmpFile, $event->getParent());
+                $event->setResources($roots);
+                //do not process the resources afterwards because nodes have been created with the unzip function.
+                $event->setProcess(false);
+                $event->stopPropagation();
+            } else {
+                $size = filesize($tmpFile);
+                $mimeType = $tmpFile->getClientMimeType();
+                $hashName = $this->container->get('claroline.utilities.misc')->generateGuid() . "." . $extension;
+                $tmpFile->move($this->container->getParameter('claroline.param.files_directory'), $hashName);
+                $file->setSize($size);
+                $file->setName($fileName);
+                $file->setHashName($hashName);
+                $file->setMimeType($mimeType);
+                $event->setResources(array($file));
+                $event->stopPropagation();
+            }
 
             return;
         }
@@ -277,5 +295,91 @@ class FileListener implements ContainerAwareInterface
         copy($filePath, $newPath);
 
         return $newFile;
+    }
+
+    private function unzip($archivepath, ResourceNode $root)
+    {
+        $extractPath = sys_get_temp_dir() .
+            DIRECTORY_SEPARATOR .
+            $this->container->get('claroline.utilities.misc')->generateGuid() .
+            '.zip';
+
+        $archive = new \ZipArchive();
+
+        if ($archive->open($archivepath) === TRUE) {
+            $archive->extractTo($extractPath);
+            $archive->close();
+            $this->om->startFlushSuite();
+            $perms = $this->container->get('claroline.manager.rights_manager')->getCustomRoleRights($root);
+            $roots = $this->uploadDir($extractPath, $root, $perms);
+            $this->om->endFlushSuite();
+
+            return $roots;
+        } else {
+            throw new \Exception("The archive {$archivepath} can't be opened");
+        }
+    }
+
+    private function uploadDir($dir, ResourceNode $parent, array $perms)
+    {
+        $roots = [];
+        $iterator = new \DirectoryIterator($dir);
+
+        foreach ($iterator as $item) {
+            if ($item->isFile()) {
+                $roots[] = $this->uploadFile($item, $parent, $perms);
+            }
+
+            if ($item->isDir() === true && $item->isDot() !== true) {
+                //create new dir
+                $directory = new Directory();
+                $directory->setName($item->getBasename());
+                $roots[] = $this->resourceManager->create(
+                    $directory,
+                    $this->resourceManager->getResourceTypeByName('directory'),
+                    $this->sc->getToken()->getUser(),
+                    $parent->getWorkspace(),
+                    $parent,
+                    null,
+                    $perms
+                );
+
+                $this->uploadDir(
+                    $dir . DIRECTORY_SEPARATOR . $item->getBasename(),
+                    $directory->getResourceNode(),
+                    $perms
+                );
+            }
+        }
+
+        return $roots;
+    }
+
+    private function uploadFile(\DirectoryIterator $file, ResourceNode $parent, array $perms)
+    {
+        $entityFile = new File();
+        $fileName = $file->getFilename();
+        $size = @filesize($file);
+        $extension = pathinfo($fileName, PATHINFO_EXTENSION);
+        $mimeType = $this->container->get('claroline.utilities.mime_type_guesser')->guess($extension);
+        $hashName = $this->container->get('claroline.utilities.misc')->generateGuid() . "." . $extension;
+        copy(
+            $file->getPathname(),
+            $this->container->getParameter('claroline.param.files_directory') . DIRECTORY_SEPARATOR. $hashName
+        );
+        $entityFile->setSize($size);
+        $entityFile->setName($fileName);
+        $entityFile->setHashName($hashName);
+        $entityFile->setMimeType($mimeType);
+
+        return $this->resourceManager->create(
+            $entityFile,
+            $this->resourceManager->getResourceTypeByName('file'),
+            $this->sc->getToken()->getUser(),
+            $parent->getWorkspace(),
+            $parent,
+            null,
+            $perms
+        );
     }
 }

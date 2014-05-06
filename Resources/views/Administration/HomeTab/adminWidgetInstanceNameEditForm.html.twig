@@ -1,0 +1,23 @@
+<form
+    role="form"
+    id="edit-widget-instance-form"
+    class="form-horizontal"
+    action="{{ path(
+        'claro_admin_widget_instance_name_edit',
+        {'widgetInstanceId': widgetInstance.getId()}
+    ) }}"
+    method="post"
+    {{ form_enctype(form) }}
+>
+    <div class="panel-body">
+        {{ form_widget(form) }}
+    </div>
+    <div class="form-actions panel-footer">
+        <button id="form-edit-widget-instance-ok-btn" type="submit" class="btn btn-primary">
+            {{ 'ok'|trans({}, 'platform') }}
+        </button>
+        <button id="form-cancel-btn" type="button" class="btn btn-default">
+            {{ 'cancel'|trans({}, 'platform') }}
+        </button>
+    </div>
+</form>

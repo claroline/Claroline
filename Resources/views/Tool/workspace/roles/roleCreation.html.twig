@@ -19,7 +19,7 @@
         )
     }}
 {% endblock %}
-{% block section_content %}
+{% block section_content %}s
     <div class="panel-heading">
         <h3 class="panel-title">{{ 'role_creation'|trans({}, 'platform') }}</h3>
     </div>
@@ -27,7 +27,8 @@
         <div class="alert alert-info">
             {{ 'tool_roles_create_directory'|trans({}, 'platform') }}
         </div>
-        <form class="form-horizontal"
+        <form role="form"
+              class="form-horizontal"
               action="{{ path('claro_workspace_role_create', {'workspace': workspace.getId()} ) }}"
               method="post" {{ form_enctype(form) }}
               id="workspace-role-creation">
@@ -36,7 +37,7 @@
             </div>
             <div class="panel-footer">
                 <button type="submit" class="btn btn-primary">{{ 'ok'|trans({}, 'platform') }}</button>
-                <a class="btn btn-default" href="{{ path('claro_workspace_roles', {'workspace': workspace.getId()}) }}">
+                <a class="btn btn-default" href="{{ path('claro_workspace_roles', {'workspace': workspace.getId()}) }}" role="button">
                     {{ 'cancel'|trans({}, 'platform') }}
                 </a>
                 </div>

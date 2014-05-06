@@ -19,7 +19,12 @@
         } else {
             $.ajax(routing.generate('claroline_locale_change', {'_locale': $(this).html().toLowerCase()}))
             .done(function () {
-                window.location.reload();
+                // window.location.reload() does not work with post request;
+                var form = document.createElement('form');
+                form.action = document.URL;
+                form.method = 'post';
+                document.body.appendChild(form);
+                form.submit();
             });
         }
     });

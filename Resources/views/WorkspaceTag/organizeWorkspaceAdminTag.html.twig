@@ -89,15 +89,15 @@
        </div>
     </div>
 
-    <div id="add-tag-validation-box" class="modal fade">
+    <div id="add-tag-validation-box" class="modal fade" role="dialog" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                     <h4 class="modal-title">{{ 'enter_tag_name_message'|trans({}, 'platform') }}</h4>
                 </div>
                 <div class="modal-body" style="overflow-y: visible">
-                    <form class="form-horizontal">
+                    <form role="form" class="form-horizontal">
                         <label for="modal-tag-input" class="col-md-2 control-label">
                             {{ 'name'|trans({}, 'platform') }}
                         </label>

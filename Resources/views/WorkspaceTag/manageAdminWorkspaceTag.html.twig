@@ -44,7 +44,7 @@
                         value="{{ tagId }}"
                     >
                 </span>
-                {% if tagsHierarchy[tagId]|length > 0 %}
+                {% if ( tagsHierarchy[tagId] is defined and tagsHierarchy[tagId]|length > 0 ) %}
                     {{ _self.showTagHierarchy(tagsHierarchy[tagId], tagsHierarchy) }}
                 {% endif %}
             </li>
@@ -128,63 +128,63 @@
     {% if nbPages > 1 %}
         {{ renderPager(search, workspaces) }}
     {% endif %}
-
-    <table class="table table-bordered table-responsive">
-        <tr>
-            <th></th>
-            <th>{{ 'workspace'|trans({}, 'platform') }}</th>
-            <th>{{ 'categories'|trans({}, 'platform') }}</th>
-        </tr>
-        {% if workspaces is empty %}
+    <div class="table-responsive">
+        <table class="table table-bordered">
             <tr>
-                <td colspan="3" class="text-center">
-                    {{ 'no_workspace'|trans({}, 'platform') }}
-                </td>
+                <th></th>
+                <th>{{ 'workspace'|trans({}, 'platform') }}</th>
+                <th>{{ 'categories'|trans({}, 'platform') }}</th>
             </tr>
-        {% else %}
-            {% for workspace in workspaces %}
-                <tr class="tag-workspace-category-row">
-                    <td>
-                        <input
-                            type="checkbox"
-                            class="workspace-chk"
-                            value="{{ workspace.getId() }}"
-                        >
-                    </td>
-                    <td class="tag-workspace-col">
-                        {{ workspace.getName() }}
-                        <span><small>({{ workspace.getCode() }})</small></span>
-                    </td>
-                    <td class="tag-category-col">
-                        {% for workspaceTag in workspacesTags[workspace.getId()] %}
-                            <span class="workspace-tag-element"
-                                workspace-id="{{ workspace.getId() }}"
-                                workspace-tag-id="{{ workspaceTag.getTag().getId() }}"
-                            >
-                                <span class="label label-danger">
-                                    {{ workspaceTag.getTag().getName() }}
-                                    &nbsp;
-                                    <i class="icon-remove-sign remove-tag-button pointer-hand"></i>
-                                </span>
-                                &nbsp;
-                            </span>
-                        {% endfor %}
+            {% if workspaces is empty %}
+                <tr>
+                    <td colspan="3" class="text-center">
+                        {{ 'no_workspace'|trans({}, 'platform') }}
                     </td>
                 </tr>
-            {% endfor %}
-        {% endif %}
-    </table>
-
+            {% else %}
+                {% for workspace in workspaces %}
+                    <tr class="tag-workspace-category-row">
+                        <td>
+                            <input
+                                type="checkbox"
+                                class="workspace-chk"
+                                value="{{ workspace.getId() }}"
+                            >
+                        </td>
+                        <td class="tag-workspace-col">
+                            {{ workspace.getName() }}
+                            <span><small>({{ workspace.getCode() }})</small></span>
+                        </td>
+                        <td class="tag-category-col">
+                            {% for workspaceTag in workspacesTags[workspace.getId()] %}
+                                <span class="workspace-tag-element"
+                                    workspace-id="{{ workspace.getId() }}"
+                                    workspace-tag-id="{{ workspaceTag.getTag().getId() }}"
+                                >
+                                    <span class="label label-danger">
+                                        {{ workspaceTag.getTag().getName() }}
+                                        &nbsp;
+                                        <i class="icon-remove-sign remove-tag-button pointer-hand"></i>
+                                    </span>
+                                    &nbsp;
+                                </span>
+                            {% endfor %}
+                        </td>
+                    </tr>
+                {% endfor %}
+            {% endif %}
+        </table>
+    </div>
     {% if nbPages > 1 %}
         {{ renderPager(search, workspaces) }}
     {% endif %}
 </div>
 
-<div id="remove-workspace-tag-validation-box" class="modal fade">
+<div id="remove-workspace-tag-validation-box" class="modal fade" role="dialog" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">×</button>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                 <h3>{{ 'remove_workspace_from_category_confirm_title'|trans({}, 'platform') }}</h3>
             </div>
             <div class="modal-body">
@@ -208,11 +208,11 @@
     </div>
 </div>
 
-<div id="tag-hierarchy-modal-box" class="modal fade">
+<div id="tag-hierarchy-modal-box" class="modal fade" role="dialog" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">×</button>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                 <h3>
                     {{ 'select_category'|trans({}, 'platform') }}
                 </h3>

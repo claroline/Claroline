@@ -271,7 +271,6 @@ class Badge extends Rulable
     /**
      * @param string $locale
      *
-     * @throws \InvalidArgumentException
      * @return BadgeTranslation|null
      */
     public function getTranslationForLocale($locale)
@@ -282,23 +281,66 @@ class Badge extends Rulable
             }
         }
 
-        throw new \InvalidArgumentException(sprintf('Unknown translation for locale %s.', $locale));
+        return null;
     }
 
-    /**
-     * @return BadgeTranslation|null
-     */
-    public function getFrTranslation()
+    public function __get($name)
     {
-        return $this->getTranslationForLocale('fr');
+        $translationName = 'Translation';
+
+        if (preg_match(sprintf('/%s$/', $translationName), $name)) {
+            $searchedLocale = substr($name, 0, -strlen($translationName));
+            $translation = $this->getTranslationForLocale($searchedLocale);
+
+            if (null === $translation) {
+                $translation = new BadgeTranslation();
+                $translation
+                    ->setLocale($searchedLocale)
+                    ->setBadge($this);
+            }
+
+            return $translation;
+        }
+        elseif (preg_match('/Name|Description|Criteria$/', $name, $matches)) {
+            //Usefull for badge rule form when wanted frName on a badge
+            $searchedLocale = substr($name, 0, -strlen($matches[0]));
+            $translation    = $this->getTranslationForLocale($searchedLocale);
+
+            if (null !== $translation) {
+                return $translation->{'get' . $matches[0]}();
+            }
+
+            return null;
+        }
+
+        $trace = debug_backtrace();
+        trigger_error(
+            'Undefined property via __get(): ' . $name .
+            ' in ' . $trace[0]['file'] .
+            ' on line ' . $trace[0]['line'],
+            E_USER_NOTICE);
+
+        return null;
     }
 
-    /**
-     * @return BadgeTranslation|null
-     */
-    public function getEnTranslation()
+    public function __set($name, $value)
     {
-        return $this->getTranslationForLocale('en');
+        $translationName = 'Translation';
+
+        if (preg_match(sprintf('/%s$/', $translationName), $name)) {
+            $this->addTranslation($value);
+
+            return $this;
+        }
+
+        $trace = debug_backtrace();
+        trigger_error(
+            'Undefined property via __set(): ' . $name .
+            ' in ' . $trace[0]['file'] .
+            ' on line ' . $trace[0]['line'],
+            E_USER_NOTICE);
+
+        return null;
     }
 
     /**
@@ -424,22 +466,6 @@ class Badge extends Rulable
         }
 
         return $this->getTranslationForLocale($locale)->getName();
-    }
-
-    /**
-     * @return string
-     */
-    public function getFrName()
-    {
-        return $this->getName('fr');
-    }
-
-    /**
-     * @return string
-     */
-    public function getEnName()
-    {
-        return $this->getName('en');
     }
 
     /**
@@ -743,41 +769,39 @@ class Badge extends Rulable
 
     protected function dealWithAtLeastOneTranslation(ObjectManager $objectManager)
     {
-        $frTranslation = $this->getFrTranslation();
-        $enTranslation = $this->getEnTranslation();
+        $translations          = $this->getTranslations();
+        $hasEmptyTranslation   = 0;
+        /** @var \Claroline\CoreBundle\Entity\Badge\BadgeTranslation[] $emptyTranslations */
+        $emptyTranslations     = array();
+        /** @var \Claroline\CoreBundle\Entity\Badge\BadgeTranslation[] $nonEmptyTranslations */
+        $nonEmptyTranslations  = array();
 
-        $frName        = $frTranslation->getName();
-        $frDescription = $frTranslation->getDescription();
-        $frCriteria    = $frTranslation->getCriteria();
+        foreach ($translations as $translation) {
+            // Have to put all method call in variable because of empty doesn't
+            // support result of method as parameter (prior to PHP 5.5)
+            $name        = $translation->getName();
+            $description = $translation->getDescription();
+            $criteria    = $translation->getCriteria();
+            if (empty($name) && empty($description) && empty($criteria)) {
+                $emptyTranslations[] = $translation;
+            }
+            else {
+                $nonEmptyTranslations[] = $translation;
+            }
+        }
 
-        $enName        = $enTranslation->getName();
-        $enDescription = $enTranslation->getDescription();
-        $enCriteria    = $enTranslation->getCriteria();
-
-        // Have to put all method call in variable because of empty doesn't
-        // support result of method as parameter (prior to PHP 5.5)
-        $hasFrTranslation = !empty($frName) && !empty($frDescription) && !empty($frCriteria);
-        $hasEnTranslation = !empty($enName) && !empty($enDescription) && !empty($enCriteria);
-
-        if (!$hasFrTranslation && !$hasEnTranslation) {
+        if (count($translations) === count($emptyTranslations)) {
             throw new \Exception('At least one translation must be defined on the badge');
         }
 
-        if (!$hasFrTranslation || !$hasEnTranslation) {
-            if ($hasFrTranslation) {
-                $enTranslation
-                    ->setLocale('en')
-                    ->setName($frName)
-                    ->setDescription($frDescription)
-                    ->setCriteria($frCriteria);
-            } elseif ($hasEnTranslation) {
-                $frTranslation
-                    ->setLocale('fr')
-                    ->setName($enName)
-                    ->setDescription($enDescription)
-                    ->setCriteria($enCriteria);
-            }
+        $firstNonEmptyTranslation = $nonEmptyTranslations[0];
+        foreach ($emptyTranslations as $emptyTranslation) {
+            $emptyTranslation
+                ->setName($firstNonEmptyTranslation->getName())
+                ->setDescription($firstNonEmptyTranslation->getDescription())
+                ->setCriteria($firstNonEmptyTranslation->getCriteria());
         }
+
     }
 
     /**

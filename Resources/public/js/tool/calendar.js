@@ -80,6 +80,7 @@
             $('.hours').each(function() {
                 $(this).val('00:00');
             });
+            $('#agenda_form_priority option[value= #01A9DB]').attr('selected', 'selected');
             $('#myModal').modal();
         };
         var dayClickDesktop = function (date) {
@@ -97,11 +98,13 @@
                 $(this).val('00:00');
             });
             var currentDate = new Date();
+            $('#agenda_form_start').val($.fullCalendar.formatDate(date,'dd-MM-yyyy'));
             if( clickedDate > currentDate) {
                 $('#agenda_form_end').val($.fullCalendar.formatDate(clickedDate,'dd-MM-yyyy'));
             } else {
                 $('#agenda_form_end').val($.fullCalendar.formatDate(currentDate,'dd-MM-yyyy'));
             }
+            $('#agenda_form_priority option[value= #01A9DB]').attr('selected', 'selected');
             $('#myModal').modal();
         };
         var dayClickFunction = context === 'desktop' ? dayClickDesktop : dayClickWorkspace;
@@ -440,15 +443,29 @@
                 {
                     return false;
                 }
+
+                var eventContent = '';
+                eventContent += '<a href="#" data-target="#myModal" role="button" data-toggle="modal" class="launch" data-id='+event.id+'>';
+                eventContent +=     Translator.get('platform' + ':' + 'edit');
+                eventContent += '</a>';
+                eventContent += '<div>';
+                eventContent +=     t('agenda_form_start') + ' : ' + $.fullCalendar.formatDate(event.start ,'dd-MM-yyyy HH:mm');
+                eventContent += '</div>';
+                eventContent += '<div class="mypopo' + event.id + '">';
+                eventContent +=     t('agenda_form_end') +':'  + $.fullCalendar.formatDate(event.end ,'dd-MM-yyyy HH:mm');
+                eventContent += '</div>';
+
+                if (typeof event.description !== 'undefined' && event.description !== null && event.description.length !== 0) {
+                    eventContent += '<div style="word-break:break-all;">';
+                    eventContent +=     'Description: ' + event.description;
+                    eventContent += '</div>';
+                }
+
                 element.popover({
                     title: event.title + '<button type="button" class="pop-close close" data-dismiss="popover" aria-hidden="true">&times;</button>',
-                    content:  '<a href="#" data-target="#myModal" role="button" data-toggle="modal" class="launch" data-id='+event.id+'>'+
-                        Translator.get('platform' + ':' + 'edit')+'</a>'+
-                        ' <div>'+t('agenda_form_start') +' : '+
-                        $.fullCalendar.formatDate(event.start ,'dd-MM-yyyy HH:mm') + '</div>'+
-                        '<div class="mypopo' + event.id + '">'+t('agenda_form_end') +':'  + $.fullCalendar.formatDate(event.end ,'dd-MM-yyyy HH:mm') +'</div> <div style="word-break:break-all;">' +'Description: ' + event.description+'</div>',
-                    html:true,
-                    container:'body'
+                    content: eventContent,
+                    html: true,
+                    container: 'body'
                 });
             },
             eventResize: function (event, dayDelta, minuteDelta) {

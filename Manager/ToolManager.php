@@ -16,6 +16,7 @@ use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Tool\Tool;
 use Claroline\CoreBundle\Entity\Tool\OrderedTool;
+use Claroline\CoreBundle\Entity\Tool\AdminTool;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Repository\OrderedToolRepository;
 use Claroline\CoreBundle\Repository\ToolRepository;
@@ -24,7 +25,6 @@ use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Library\Utilities\ClaroUtilities;
 use Claroline\CoreBundle\Manager\Exception\ToolPositionAlreadyOccupiedException;
 use Claroline\CoreBundle\Manager\Exception\UnremovableToolException;
-use Claroline\CoreBundle\Manager\RoleManager;
 use Symfony\Component\Translation\Translator;
 use Claroline\CoreBundle\Event\StrictDispatcher;
 use JMS\DiExtraBundle\Annotation as DI;
@@ -40,6 +40,8 @@ class ToolManager
     private $roleRepo;
     /** @var ToolRepository */
     private $toolRepo;
+
+    private $adminToolRepo;
     /** @var EventDispatcher */
     private $ed;
     /** @var ClaroUtilities */
@@ -73,6 +75,7 @@ class ToolManager
         $this->orderedToolRepo = $om->getRepository('ClarolineCoreBundle:Tool\OrderedTool');
         $this->toolRepo = $om->getRepository('ClarolineCoreBundle:Tool\Tool');
         $this->roleRepo = $om->getRepository('ClarolineCoreBundle:Role');
+        $this->adminToolRepo = $om->getRepository('ClarolineCoreBundle:Tool\AdminTool');
         $this->ed = $ed;
         $this->utilities = $utilities;
         $this->translator = $translator;
@@ -575,5 +578,35 @@ class ToolManager
     public function getDisplayedByRolesAndWorkspace(array $roles, AbstractWorkspace $workspace)
     {
         return $this->toolRepo->findDisplayedByRolesAndWorkspace($roles, $workspace);
+    }
+
+    public function getAdminTools()
+    {
+        return $this->adminToolRepo->findAll();
+    }
+
+    public function addRoleToAdminTool(AdminTool $tool, Role $role)
+    {
+        $tool->addRole($role);
+        $this->om->persist($tool);
+        $this->om->flush();
+    }
+
+    public function removeRoleFromAdminTool(AdminTool $tool, Role $role)
+    {
+        $tool->removeRole($role);
+        $this->om->persist($tool);
+        $this->om->flush();
+    }
+
+    public function getAdminToolByName($name)
+    {
+        return $this->om->getRepository('Claroline\CoreBundle\Entity\Tool\AdminTool')
+            ->findOneByName($name);
+    }
+
+    public function getAdminToolsByRoles(array $roles)
+    {
+        return $this->om->getRepository('Claroline\CoreBundle\Entity\Tool\AdminTool')->findByRoles($roles);
     }
 }

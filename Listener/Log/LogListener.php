@@ -164,7 +164,8 @@ class LogListener
         if ($doer !== null) {
             $details['doer'] = array(
                 'firstName' => $doer->getFirstName(),
-                'lastName' => $doer->getLastName()
+                'lastName'  => $doer->getLastName(),
+                'publicUrl' => $doer->getPublicUrl()
             );
 
             if (count($log->getDoerPlatformRoles()) > 0) {

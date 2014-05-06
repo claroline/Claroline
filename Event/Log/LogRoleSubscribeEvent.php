@@ -118,9 +118,11 @@ class LogRoleSubscribeEvent extends LogGenericEvent implements NotifiableInterfa
         //For both cases (user or group) we need to exclude all users already enrolled in other groups
         $roleGroups = $this->role->getGroups();
 
-        foreach ($roleGroups as $group) {
-            if ($group->getId() != $currentGroupId) {
-                $userIds = array_merge($userIds, $group->getUserIds());
+        if ($roleGroups) {
+            foreach ($roleGroups as $group) {
+                if ($group->getId() != $currentGroupId) {
+                    $userIds = array_merge($userIds, $group->getUserIds());
+                }
             }
         }
         $userIds = array_unique($userIds);

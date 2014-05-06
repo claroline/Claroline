@@ -71,7 +71,7 @@
             <div class="row">
                 <div class="col-md-8">
                     <div class="btn-group margin-md">
-                        <a href="{{ path('claro_workspace_unregistered_group_list', {'workspace': workspace.getId()}) }}" class="btn btn-default dropdown-toggle">
+                        <a href="{{ path('claro_workspace_unregistered_group_list', {'workspace': workspace.getId()}) }}" class="btn btn-default dropdown-toggle" role="button">
                             <i class="icon-plus"></i> {{ 'add_groups' | trans({}, 'platform') }}
                         </a>
                     </div>
@@ -151,14 +151,14 @@
         Claroline.Table.initialize(parameters);
 
         $('.popover-block').popover();
-        $('.remove-role-button').live('click', function (event) {
+        $('.remove-role-button').on('click', function (event) {
             var target = $(event.currentTarget);
             var route = target.attr('href');
             $.ajax({
                 url: route,
                 type: 'DELETE',
                 success: function() {
-                    target.parent().remove();
+                    target.parent().parent().parent().remove();
                 }
             });
         });

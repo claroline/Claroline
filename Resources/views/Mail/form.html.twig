@@ -6,7 +6,8 @@
             <h3 class="panel-title">{{ "send_mail" | trans({}, "platform" )}}</h3>
         </div>
         {% form_theme form 'ClarolineCoreBundle::form_theme_vertical.html.twig' %}
-        <form novalidate="novalidate"
+        <form role="form"
+            novalidate="novalidate"
             action="{{path('claro_mail_send', {'userId': userId})}}"
             method="post" {{ form_enctype(form) }}
             id="generic-form"
