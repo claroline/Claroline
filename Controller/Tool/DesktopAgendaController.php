@@ -71,11 +71,7 @@ class DesktopAgendaController extends Controller
      */
     public function desktopShowAction()
     {
-        $usr = $this->get('security.context')->getToken()->getUser();
-        $listEvents = $this->om->getRepository('ClarolineCoreBundle:Event')->findByUser($usr, 0);
-        $desktopEvents = $this->om->getRepository('ClarolineCoreBundle:Event')->findDesktop($usr, 0);
-        $data = array_merge($this->convertEventoArray($listEvents), $this->convertEventoArray($desktopEvents));
-
+        $data = $this->agendaManager->desktopEvents();   
         return new Response(
             json_encode($data),
             200,
@@ -95,43 +91,16 @@ class DesktopAgendaController extends Controller
         $form = $this->formFactory->create(FormFactory::TYPE_AGENDA, array(), $event);
         $form->handleRequest($this->request);
         if ($form->isValid()) {
-            // the end date has to be bigger
-            if ($event->getStart() <= $event->getEnd()) {
-                $event->setUser($this->security->getToken()->getUser());
-                $this->om->persist($event);
-                $this->om->flush();
-                $start = is_null($event->getStart())? null : $event->getStart()->getTimestamp();
-                $end = is_null($event->getEnd())? null : $event->getEnd()->getTimestamp();
-                $data = array(
-                    'id' => $event->getId(),
-                    'title' => $event->getTitle(),
-                    'start' => $start,
-                    'end' => $end,
-                    'color' => $event->getPriority(),
-                    'allDay' => $event->getAllDay()
-                );
+            $json = $this->agendaManager->addEvent($event, null);
 
-                return new Response(
-                    json_encode($data),
-                    200,
-                    array('Content-Type' => 'application/json')
-                );
-            } else {
-                return new Response(
-                    json_encode(array('greeting' => ' start date is bigger than end date ')),
-                    400,
-                    array('Content-Type' => 'application/json')
-                );
-            }
-        } else {
-             return new Response(
-                 json_encode(array('greeting' => 'dates are not valid')),
-                 400,
-                 array('Content-Type' => 'application/json')
-             );
-        }
+            return new Response(
+                json_encode($json['message']),
+                $json['code'],
+                array('Content-Type' => 'application/json')
+            );
+        } 
 
-        return new Response('Invalid data', 422);
+        return new Response('Dates are not valids', 422);
     }
 
     /**
@@ -145,20 +114,23 @@ class DesktopAgendaController extends Controller
      */
     public function deleteAction()
     {
-        $repository = $this->om->getRepository('ClarolineCoreBundle:Event');
         $postData = $this->request->request->all();
-        $event = $repository->find($postData['id']);
-        $this->om->remove($event);
-        $this->om->flush();
+        if ($this->agendaManager->deleteEvent($postData['id'])) {    
+            return new Response(
+                json_encode(array('greeting' => 'delete')),
+                200,
+                array('Content-Type' => 'application/json')
+            );
+        }
 
         return new Response(
-            json_encode(array('greeting' => 'delete')),
-            200,
-            array('Content-Type' => 'application/json')
-        );
+                json_encode(array('greeting' => 'fail')),
+                400,
+                array('Content-Type' => 'application/json')
+            );
     }
 
-        /**
+    /**
      * @EXT\Route(
      *     "/update",
      *     name="claro_desktop_agenda_update"
@@ -251,26 +223,4 @@ class DesktopAgendaController extends Controller
 
         return $response;
     }
-
-    private function convertEventoArray($listEvents)
-    {
-        $data = array();
-
-        foreach ($listEvents as $key => $object) {
-            $data[$key]['id'] = $object->getId();
-            $workspace = $object->getWorkspace();
-            $data[$key]['title'] = !is_null($workspace) ?
-                $workspace->getName() :
-                $this->translator->trans('desktop', array(), 'platform');
-            $data[$key]['title'] .= ' : ' . $object->getTitle();
-            $data[$key]['allDay'] = $object->getAllDay();
-            $data[$key]['start'] = $object->getStart()->getTimestamp();
-            $data[$key]['end'] = $object->getEnd()->getTimestamp();
-            $data[$key]['color'] = $object->getPriority();
-            $data[$key]['visible'] = true;
-        }
-
-        return($data);
-    }
-
 }

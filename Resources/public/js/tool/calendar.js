@@ -80,6 +80,7 @@
             $('.hours').each(function() {
                 $(this).val('00:00');
             });
+            $('#agenda_form_priority option[value= #01A9DB]').attr('selected', 'selected');
             $('#myModal').modal();
         };
         var dayClickDesktop = function (date) {
@@ -97,11 +98,13 @@
                 $(this).val('00:00');
             });
             var currentDate = new Date();
+            $('#agenda_form_start').val($.fullCalendar.formatDate(date,'dd-MM-yyyy'));
             if( clickedDate > currentDate) {
                 $('#agenda_form_end').val($.fullCalendar.formatDate(clickedDate,'dd-MM-yyyy'));
             } else {
                 $('#agenda_form_end').val($.fullCalendar.formatDate(currentDate,'dd-MM-yyyy'));
             }
+            $('#agenda_form_priority option[value= #01A9DB]').attr('selected', 'selected');
             $('#myModal').modal();
         };
         var dayClickFunction = context === 'desktop' ? dayClickDesktop : dayClickWorkspace;
