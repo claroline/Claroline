@@ -22,26 +22,29 @@ class LoadContentData extends AbstractFixture
     public function load(ObjectManager $manager)
     {
         $titles = array(
-            'ClarolineConnect© : plateforme Claroline de nouvelle génération.',
+            'ClarolineConnect©',
             '',
             '',
-            'ClarolineConnect© Demo',
+            'Demo',
             'Youtube',
             'Vimeo',
             'Wikipedia'
         );
 
         $textDir = __DIR__. '/files/homepage';
+        $locales = array('en', 'fr', 'es');
 
-        $texts = array(
-            file_get_contents("{$textDir}/text1.txt", 'r'),
-            file_get_contents("{$textDir}/text2.txt", 'r'),
-            file_get_contents("{$textDir}/text3.txt", 'r'),
-            file_get_contents("{$textDir}/text4.txt", 'r'),
-            file_get_contents("{$textDir}/text3.txt", 'r'),
-            file_get_contents("{$textDir}/text5.txt", 'r'),
-            file_get_contents("{$textDir}/text6.txt", 'r')
-        );
+        foreach ($locales as $locale) {
+            $text[$locale] = array(
+                file_get_contents($textDir . '/text1.' . $locale . '.html', 'r'),
+                file_get_contents($textDir . '/text2.' . $locale . '.html', 'r'),
+                file_get_contents($textDir . '/text3.' . $locale . '.html', 'r'),
+                file_get_contents($textDir . '/text4.' . $locale . '.html', 'r'),
+                file_get_contents($textDir . '/text3.' . $locale . '.html', 'r'),
+                file_get_contents($textDir . '/text5.' . $locale . '.html', 'r'),
+                file_get_contents($textDir . '/text6.' . $locale . '.html', 'r')
+            );
+        }
 
         $types = array('home', 'home', 'home', 'home', 'opengraph', 'opengraph', 'opengraph', 'opengraph');
         $sizes = array(
@@ -53,7 +56,13 @@ class LoadContentData extends AbstractFixture
 
             $content[$i] = new Content();
             $content[$i]->setTitle($title);
-            $content[$i]->setContent($texts[$i]);
+
+            foreach ($locales as $locale) {
+                $content[$i]->setContent($text[$locale][$i]);
+                $content[$i]->setTranslatableLocale($locale);
+                $manager->persist($content[$i]);
+                $manager->flush();
+            }
 
             $first = $manager->getRepository('ClarolineCoreBundle:Home\Content2Type')->findOneBy(
                 array('back' => null, 'type' => $type)
@@ -66,7 +75,6 @@ class LoadContentData extends AbstractFixture
             $contentType->setSize($sizes[$i]);
 
             $manager->persist($contentType);
-            $manager->persist($content[$i]);
 
             $manager->flush();
         }
