@@ -62,7 +62,7 @@ class UserManager
      *     "toolManager"            = @DI\Inject("claroline.manager.tool_manager"),
      *     "translator"             = @DI\Inject("translator"),
      *     "validator"              = @DI\Inject("validator"),
-     *     "workspaceManager"       = @DI\Inject("claroline.manager.workspace_manager")
+     *     "workspaceManager"       = @DI\Inject("claroline.manager.workspace_manager"),
      * })
      */
     public function __construct(
@@ -232,6 +232,7 @@ class UserManager
     public function importUsers(array $users)
     {
         $this->om->startFlushSuite();
+        $lg = $this->ch->getParameter('locale_language');
 
         foreach ($users as $user) {
             $firstName = $user[0];
@@ -250,6 +251,7 @@ class UserManager
             $newUser->setMail($email);
             $newUser->setAdministrativeCode($code);
             $newUser->setPhone($phone);
+            $newUser->setLocale($lg);
             $this->createUser($newUser);
         }
 
