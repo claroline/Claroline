@@ -47,8 +47,8 @@
     </div>
     {% if editMode %}
         <div class="form-container" data-ng-controller="editWidgetsController">
-            <div class="panel panel-default edit-container" data-ng-repeat="editedWidget in editedWidgets">
-                <form name="form" data-ng-submit="save(editedWidget)">
+            <form name="form" class="edit-container" data-ng-submit="save(editedWidget)" data-ng-repeat="editedWidget in editedWidgets">
+                <div class="panel panel-default">
                     <div class="panel-heading">
                         <h3 class="panel-title">
                             <span data-ng-bind="(editedWidget.title) || (editedWidget.getType() + '.form.title')"></span>
@@ -58,11 +58,11 @@
                     <div class="panel-body" data-ng-show="editedWidget.views.form" data-bind-html="editedWidget.views.form">
                     </div>
                     <div class="panel-footer">
-                        <button type="submit" class="btn btn-sm btn-primary">{{ 'save'|trans({}, 'platform') }}</button>
-                        <button class="btn btn-sm btn-default" data-ng-click="cancel(editedWidget)">{{ 'cancel'|trans({}, 'platform') }}</button>
+                        <button type="submit" class="btn btn-primary">{{ 'save'|trans({}, 'platform') }}</button>
+                        <button class="btn btn-default" data-ng-click="cancel(editedWidget)">{{ 'cancel'|trans({}, 'platform') }}</button>
                     </div>
-                </form>
-            </div>
+                </div>
+            </form>
 
             <div class="panel panel-default edit-container">
                 <div class="panel-heading">
