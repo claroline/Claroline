@@ -21,7 +21,7 @@
         <h3 class="panel-title">{{ video.getResourceNode().getName() }}</h3>
     </div>
     <div class="panel-body">
-        <{{ tag }} controls="controls" width="540" height="273" preload="none" style="background:#000">
+        <{{ tag }} controls="controls" width="540" height="273" preload="none" style="background:#000;max-width:100%">
             <source type="{{ video.getResourceNode().getMimeType() }}" src="{{ source }}">
             <object class="flashplayer" type="application/x-shockwave-flash" data="{{ mediaFlash }}">
                 <param name="movie" value="{{ mediaFlash }}" />
