@@ -55,40 +55,14 @@
                             <button type="button" class="close" aria-hidden="true" data-ng-click="cancel(editedWidget);">&times;</button>
                         </h3>
                     </div>
-                    <div class="panel-body" data-ng-show="editedWidget.views.form" data-bind-html="editedWidget.views.form">
-                    </div>
+                    <div class="panel-body panel-loading" data-ng-show="!editedWidget.views.form"></div>
+                    <div class="panel-body" data-ng-show="editedWidget.views.form" data-bind-html="editedWidget.views.form"></div>
                     <div class="panel-footer">
                         <button type="submit" class="btn btn-primary">{{ 'save'|trans({}, 'platform') }}</button>
                         <button class="btn btn-default" data-ng-click="cancel(editedWidget)">{{ 'cancel'|trans({}, 'platform') }}</button>
                     </div>
                 </div>
             </form>
-
-            <div class="panel panel-default edit-container">
-                <div class="panel-heading">
-                    <h3 class="panel-title">Panel title <button type="button" class="close" aria-hidden="true">&times;</button></h3>
-                </div>
-                <div class="panel-body">
-                    <p>Panel content</p>
-                </div>
-                <div class="panel-footer">
-                    <button class="btn btn-primary">{{ 'save'|trans({}, 'platform') }}</button>
-                    <button class="btn btn-default">{{ 'cancel'|trans({}, 'platform') }}</button>
-                </div>
-            </div>
-
-            <div class="panel panel-default edit-container">
-                <div class="panel-heading">
-                    <h3 class="panel-title">Panel title <button type="button" class="close" aria-hidden="true">&times;</button></h3>
-                </div>
-                <div class="panel-body">
-                    <p>Panel content</p>
-                </div>
-                <div class="panel-footer">
-                    <button class="btn btn-primary">{{ 'save'|trans({}, 'platform') }}</button>
-                    <button class="btn btn-default">{{ 'cancel'|trans({}, 'platform') }}</button>
-                </div>
-            </div>
         </div>
     {% endif %}
 {% endblock %}
