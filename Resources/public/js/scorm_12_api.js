@@ -47,7 +47,7 @@ var apiLastError = "301";
 function commitResult(mode)
 {
     "use strict";
-    
+
     var datasString = "" + scormId +
         "<-;->" + scoData["cmi.core.student_id"] +
         "<-;->" + scoData["cmi.core.lesson_mode"] +
@@ -81,7 +81,7 @@ function LMSInitialize(arg)
 
     console.log("*** LMSInitialize ***");
 
-    if (arg !== "") {
+    if (arg != "") {
         apiLastError = "201";
 
         return "false";
@@ -100,13 +100,19 @@ function LMSFinish(arg)
 
     if (apiInitialized) {
 
-        if (arg !== "") {
+        if (arg != "") {
             apiLastError = "201";
 
             return "false";
         }
         apiLastError = "0";
         apiInitialized = false;
+        // Set value for "cmi.core.entry" depending on "cmi.core.exit"
+        if (scoData["cmi.core.exit"].toUpperCase() === 'SUSPEND') {
+            scoData["cmi.core.entry"] = 'resume';
+        } else {
+            scoData["cmi.core.entry"] = '';
+        }
         commitResult('log');
 
         return "true";
@@ -365,7 +371,7 @@ function LMSCommit(arg)
     console.log("*** LMSCommit ***");
 
     if (apiInitialized) {
-        if (arg !== "") {
+        if (arg != "") {
             apiLastError = "201";
 
             return "false";

@@ -1,4 +1,3 @@
 claroline_scorm_12: 'Scorm (1.2)'
 invalid_scorm_archive_message: 'Le fichier doit être une archive ZIP contenant le fichier "imsmanifest.xml" à la racine.'
 invalid_scorm_version_12_message: 'La version de Scorm définie dans le fichier "imsmanifest.xml" de l''archive doit être à "1.2".'
-mandatory_scorm_version_message: 'La version de Scorm n''est pas définie dans le fichier "imsmanifest.xml" de l''archive.'

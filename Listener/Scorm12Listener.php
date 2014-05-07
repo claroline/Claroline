@@ -162,38 +162,39 @@ class Scorm12Listener
     public function onOpen(OpenResourceEvent $event)
     {
         $scorm = $event->getResource();
-        $scormPath = $scorm->getHashName()
+        $scormPath = 'uploads/scormresources/'
+            . $scorm->getHashName()
             . DIRECTORY_SEPARATOR
             . $scorm->getEntryUrl();
 
         $user = $this->securityContext->getToken()->getUser();
-        $scormInfo = $this->scormTrackingRepo->findOneBy(
+        $scormTracking = $this->scormTrackingRepo->findOneBy(
             array('user' => $user->getId(), 'scorm' => $scorm->getId())
         );
 
-        if (is_null($scormInfo)) {
-            $scormInfo = new Scorm12Tracking();
-            $scormInfo->setUser($user);
-            $scormInfo->setScorm($scorm);
-            $scormInfo->setScoreRaw(-1);
-            $scormInfo->setScoreMax(-1);
-            $scormInfo->setScoreMin(-1);
-            $scormInfo->setLessonStatus("not attempted");
-            $scormInfo->setSuspendData("");
-            $scormInfo->setEntry("ab-initio");
-            $scormInfo->setLessonLocation("");
-            $scormInfo->setCredit("no-credit");
-            $scormInfo->setTotalTime(0);
-            $scormInfo->setSessionTime(0);
-            $scormInfo->setLessonMode("normal");
-            $scormInfo->setExitMode("");
+        if (is_null($scormTracking)) {
+            $scormTracking = new Scorm12Tracking();
+            $scormTracking->setUser($user);
+            $scormTracking->setScorm($scorm);
+            $scormTracking->setScoreRaw(-1);
+            $scormTracking->setScoreMax(-1);
+            $scormTracking->setScoreMin(-1);
+            $scormTracking->setLessonStatus("not attempted");
+            $scormTracking->setSuspendData("");
+            $scormTracking->setEntry("ab-initio");
+            $scormTracking->setLessonLocation("");
+            $scormTracking->setCredit("no-credit");
+            $scormTracking->setTotalTime(0);
+            $scormTracking->setSessionTime(0);
+            $scormTracking->setLessonMode("normal");
+            $scormTracking->setExitMode("");
         }
         $content = $this->templating->render(
             'ClarolineScormBundle::scorm12.html.twig',
             array(
                 'resource' => $scorm,
                 '_resource' => $scorm,
-                'scormInfo' => $scormInfo,
+                'scormTracking' => $scormTracking,
                 'scormUrl' => $scormPath,
                 'workspace' => $scorm->getResourceNode()->getWorkspace()
             )
@@ -346,82 +347,121 @@ class Scorm12Listener
 
         $scormVersionElements = $dom->getElementsByTagName('schemaversion');
 
-        if ($scormVersionElements->length < 1) {
-            throw new InvalidScorm12ArchiveException('mandatory_scorm_version_message');
-        }
-        $scormVersion = $scormVersionElements->item(0)->textContent;
+        if ($scormVersionElements->length > 0) {
+            $scormVersion = $scormVersionElements->item(0)->textContent;
 
-        if ($scormVersion !== '1.2') {
-            throw new InvalidScorm12ArchiveException('invalid_scorm_version_12_message');
+            if ($scormVersion !== '1.2') {
+                throw new InvalidScorm12ArchiveException('invalid_scorm_version_12_message');
+            }
         }
         
         $items = $dom->getElementsByTagName('item');
         $scoResources = $dom->getElementsByTagName('resource');
 
-        foreach ($items as $item) {
-            $ref = $item->attributes->getNamedItem('identifierref');
+        if ($items->length > 0) {
 
-            if (!is_null($ref)) {
-                $identifierRef = $ref->nodeValue;
-                $title = $item->getElementsByTagName('title')->item(0)->nodeValue;
-                $launchDatas = $item->getElementsByTagNameNS(
-                    $item->lookupNamespaceUri('adlcp'),
-                    'datafromlms'
-                );
-                $masteryScores = $item->getElementsByTagNameNS(
-                    $item->lookupNamespaceUri('adlcp'),
-                    'masteryscore'
-                );
+            foreach ($items as $item) {
+                $ref = $item->attributes->getNamedItem('identifierref');
 
-                if ($launchDatas->length > 0) {
-                    $launchData = $launchDatas->item(0)->nodeValue;
-                } else {
-                    $launchData = '';
-                }
-
-                if ($masteryScores->length > 0) {
-                    $masteryScore = intval($masteryScores->item(0)->nodeValue);
-                } else {
-                    $masteryScore = -1;
-                }
-
-                foreach ($scoResources as $scoResource) {
-                    $identifier = $scoResource->attributes->getNamedItem('identifier');
-                    $href = $scoResource->attributes->getNamedItem('href');
-                    $scormType = $scoResource->attributes->getNamedItemNS(
-                        $scoResource->lookupNamespaceUri('adlcp'),
-                        'scormtype'
+                if (!is_null($ref)) {
+                    $identifierRef = $ref->nodeValue;
+                    $title = $item->getElementsByTagName('title')->item(0)->nodeValue;
+                    $launchDatas = $item->getElementsByTagNameNS(
+                        $item->lookupNamespaceUri('adlcp'),
+                        'datafromlms'
+                    );
+                    $masteryScores = $item->getElementsByTagNameNS(
+                        $item->lookupNamespaceUri('adlcp'),
+                        'masteryscore'
                     );
 
-                    // For compatibility with Raptivity scorm 1.2 package
-                    if (is_null($scormType)) {
-                        $scormType = $scoResource->attributes->getNamedItemNS(
-                            $scoResource->lookupNamespaceUri('adlcp'),
-                            'scormType'
-                        );
+                    if ($launchDatas->length > 0) {
+                        $launchData = $launchDatas->item(0)->nodeValue;
+                    } else {
+                        $launchData = '';
                     }
 
-                    if (!is_null($identifier)
-                        && !is_null($scormType)
-                        && !is_null($href)
-                        && $identifier->nodeValue === $identifierRef
-                        && $scormType->nodeValue === 'sco') {
+                    if ($masteryScores->length > 0) {
+                        $masteryScore = intval($masteryScores->item(0)->nodeValue);
+                    } else {
+                        $masteryScore = -1;
+                    }
 
-                        $scoUrl = $href->nodeValue;
+                    foreach ($scoResources as $scoResource) {
+                        $identifier = $scoResource->attributes->getNamedItem('identifier');
+                        $href = $scoResource->attributes->getNamedItem('href');
+                        $scormType = $scoResource->attributes->getNamedItemNS(
+                            $scoResource->lookupNamespaceUri('adlcp'),
+                            'scormtype'
+                        );
 
-                        $scorm = new Scorm12();
-                        $scorm->setName($title);
-                        $scorm->setEntryUrl($scoUrl);
-                        $scorm->setLaunchData($launchData);
-                        $scorm->setMasteryScore($masteryScore);
-                        $scorm->setHashName($hashName);
-                        $resources[] = $scorm;
-                        break;
+                        // For compatibility with Raptivity scorm 1.2 package
+                        if (is_null($scormType)) {
+                            $scormType = $scoResource->attributes->getNamedItemNS(
+                                $scoResource->lookupNamespaceUri('adlcp'),
+                                'scormType'
+                            );
+                        }
+
+                        if (!is_null($identifier)
+                            && !is_null($scormType)
+                            && !is_null($href)
+                            && $identifier->nodeValue === $identifierRef
+                            && $scormType->nodeValue === 'sco') {
+
+                            $scoUrl = $href->nodeValue;
+
+                            $scorm = new Scorm12();
+                            $scorm->setName($title);
+                            $scorm->setEntryUrl($scoUrl);
+                            $scorm->setLaunchData($launchData);
+                            $scorm->setMasteryScore($masteryScore);
+                            $scorm->setHashName($hashName);
+                            $resources[] = $scorm;
+                            break;
+                        }
                     }
                 }
             }
+        } else {
+
+            foreach ($scoResources as $scoResource) {
+                $identifier = $scoResource->attributes->getNamedItem('identifier');
+                $href = $scoResource->attributes->getNamedItem('href');
+                $scormType = $scoResource->attributes->getNamedItemNS(
+                    $scoResource->lookupNamespaceUri('adlcp'),
+                    'scormtype'
+                );
+
+                // For compatibility with Raptivity scorm 1.2 package
+                if (is_null($scormType)) {
+                    $scormType = $scoResource->attributes->getNamedItemNS(
+                        $scoResource->lookupNamespaceUri('adlcp'),
+                        'scormType'
+                    );
+                }
+
+                if (!is_null($identifier)
+                    && !is_null($scormType)
+                    && !is_null($href)
+                    && ($scormType->nodeValue === 'sco')) {
+
+                    $scoUrl = $href->nodeValue;
+
+                    $scorm = new Scorm12();
+                    $scorm->setName('no_title');
+                    $scorm->setEntryUrl($scoUrl);
+                    $scorm->setHashName($hashName);
+                    $resources[] = $scorm;
+                }
+            }
         }
+
         $zip->close();
+
+        if (count($resources) === 0) {
+            throw new InvalidScorm12ArchiveException('no_sco_found_message');
+        }
 
         return $resources;
     }
