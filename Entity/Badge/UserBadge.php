@@ -62,7 +62,6 @@ class UserBadge
     /**
      * @var User $issuer
      *
-     * @Gedmo\Blameable(on="create")
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\User", inversedBy="issuedBadges")
      * @ORM\JoinColumn(name="issuer_id", referencedColumnName="id", nullable=true, onDelete="SET NULL")
     */
@@ -141,6 +140,18 @@ class UserBadge
     public function getIssuedAt()
     {
         return $this->issuedAt;
+    }
+
+    /**
+     * @param \Claroline\CoreBundle\Entity\User|null $issuer
+     *
+     * @return UserBadge
+     */
+    public function setIssuer($issuer)
+    {
+        $this->issuer = $issuer;
+
+        return $this;
     }
 
     /**
