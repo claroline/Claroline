@@ -6,7 +6,9 @@ portfolioApp
         $scope.widgets = [];
 
         $scope.$watch("widgetPortlets." + $scope.type, function(data) {
-            $scope.widgets = data;
+            if (data) {
+                $scope.widgets = data;
+            }
         });
 
         $scope.edit = function(widget) {

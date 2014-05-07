@@ -16,16 +16,22 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 class WidgetController extends BaseController
 {
     /**
-     * @Route("/{id}/{widget}/form", name="icap_portfolio_internal_widget_form", options={"expose"=true})
+     * @Route("/portfolio/{id}/{type}/{action}", name="icap_portfolio_internal_widget_form", options={"expose"=true})
      * @Method({"GET"})
      *
      * @ParamConverter("loggedUser", options={"authenticatedUser" = true})
      */
-    public function formAction(User $loggedUser, Portfolio $portfolio, $widget)
+    public function widgetAction(User $loggedUser, Portfolio $portfolio, $type, $action)
     {
         $response = new JsonResponse();
+        $data     = array();
 
-        $response->setData(array('pouet' => 'pouet'));
+        /** @var \Symfony\Bundle\FrameworkBundle\Templating\EngineInterface $twigEngine */
+        $twigEngine = $this->get('templating');
+
+        $data['form'] = $twigEngine->render('IcapPortfolioBundle:templates/' . $action . ':' . $type . '.html.twig');
+
+        $response->setData($data);
 
         return $response;
     }

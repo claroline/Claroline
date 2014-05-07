@@ -3,29 +3,29 @@
 {% block title %}{{ portfolio.user.firstName ~ ' ' ~ portfolio.user.lastName ~ ' - ' ~ 'portfolio' | trans({}, 'icap_portfolio') ~ ' - ' ~ portfolio.title | striptags | raw }}{% endblock %}
 
 {% block content_container %}
-    <div id="portfolio_section" data-portfolio-container>
+    <div id="portfolio-section" data-portfolio-container>
         {% if editMode %}
             <ul id="configbar" class="list-unstyled">
-                <li class="configbar_item">
+                <li class="configbar-item">
                     <span class="icon-plus"></span>
                     Contenu
                 </li>
-                <li class="configbar_item"><span class="icon-cogs"></span>
+                <li class="configbar-item"><span class="icon-cogs"></span>
                     Paramètres
                 </li>
             </ul>
         {% endif %}
 
 
-        <div id="portfolio_container" data-ng-show="portfolio.$resolved">
+        <div id="portfolio-container" data-ng-show="portfolio.$resolved">
             <header>
                 <div class="container">
                     <h1 id="username">{{ portfolio.user.firstName ~ ' ' ~ portfolio.user.lastName }}</h1>
                     <div data-widget-portlet="title" data-ng-show="widgets.length > 0">
-                        <div class="portfolio_title_container" data-ng-model="widgets" data-ng-repeat="widget in widgets">
+                        <div class="portfolio-title-container" data-ng-repeat="widget in widgets">
                             {% if editMode %}
-                                <div class="portfolio_title_actions">
-                                    <button class="portfolio_title_edit_action btn" data-ng-click="edit(widget);"><span class="icon-pencil"></span></button>
+                                <div class="portfolio-title-actions">
+                                    <button class="portfolio-title-edit-action btn" data-ng-click="edit(widget);" data-ng-show="!widget.isEditing()"><span class="icon-pencil"></span></button>
                                 </div>
                                 <div data-ng-bind-html="widget.views.view | trustAsHtml"></div>
                             {% else %}
@@ -42,35 +42,55 @@
         </div>
 
         {% if editMode %}
-            <div data-ng-show="!portfolio.$resolved" id="portfolio_loading"></div>
+            <div data-ng-show="!portfolio.$resolved" id="portfolio-loading"></div>
         {% endif %}
     </div>
-    <div class="form_container">
-        <div class="panel panel-default edit_container">
-            <div class="panel-heading">
-                <h3 class="panel-title">Panel title <button type="button" class="close" aria-hidden="true">&times;</button></h3>
+    {% if editMode %}
+        <div class="form-container" data-ng-controller="editWidgetsController">
+            <div class="panel panel-default edit-container" data-ng-repeat="editedWidget in editedWidgets">
+                <form name="form" data-ng-submit="save(editedWidget)">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">
+                            <span data-ng-bind="(editedWidget.title) || (editedWidget.getType() + '.form.title')"></span>
+                            <button type="button" class="close" aria-hidden="true" data-ng-click="cancel(editedWidget);">&times;</button>
+                        </h3>
+                    </div>
+                    <div class="panel-body" data-ng-show="editedWidget.views.form" data-bind-html="editedWidget.views.form">
+                    </div>
+                    <div class="panel-footer">
+                        <button type="submit" class="btn btn-sm btn-primary">{{ 'save'|trans({}, 'platform') }}</button>
+                        <button class="btn btn-sm btn-default" data-ng-click="cancel(editedWidget)">{{ 'cancel'|trans({}, 'platform') }}</button>
+                    </div>
+                </form>
             </div>
-            <div class="panel-body">
-                <p>Panel content</p>
+
+            <div class="panel panel-default edit-container">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Panel title <button type="button" class="close" aria-hidden="true">&times;</button></h3>
+                </div>
+                <div class="panel-body">
+                    <p>Panel content</p>
+                </div>
+                <div class="panel-footer">
+                    <button class="btn btn-primary">{{ 'save'|trans({}, 'platform') }}</button>
+                    <button class="btn btn-default">{{ 'cancel'|trans({}, 'platform') }}</button>
+                </div>
             </div>
-            <div class="panel-footer">
-                <button class="btn btn-primary">Enregistrer</button>
-                <button class="btn btn-default">Annuler</button>
+
+            <div class="panel panel-default edit-container">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Panel title <button type="button" class="close" aria-hidden="true">&times;</button></h3>
+                </div>
+                <div class="panel-body">
+                    <p>Panel content</p>
+                </div>
+                <div class="panel-footer">
+                    <button class="btn btn-primary">{{ 'save'|trans({}, 'platform') }}</button>
+                    <button class="btn btn-default">{{ 'cancel'|trans({}, 'platform') }}</button>
+                </div>
             </div>
         </div>
-        <div class="panel panel-default edit_container">
-            <div class="panel-heading">
-                <h3 class="panel-title">Panel title <button type="button" class="close" aria-hidden="true">&times;</button></h3>
-            </div>
-            <div class="panel-body">
-                <p>Panel content</p>
-            </div>
-            <div class="panel-footer">
-                <button class="btn btn-primary">Enregistrer</button>
-                <button class="btn btn-default">Annuler</button>
-            </div>
-        </div>
-    </div>
+    {% endif %}
 {% endblock %}
 
 {% block stylesheets %}
@@ -96,9 +116,11 @@
             <script type="text/javascript" src="{{ asset_url }}"></script>
         {% endjavascripts %}
 
+        <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/utils/Array.js') }}"></script>
         <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/app.js') }}"></script>
         <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/controllers/portfolioController.js') }}"></script>
         <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/controllers/widgetsController.js') }}"></script>
+        <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/controllers/editWidgetsController.js') }}"></script>
         <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/services/portfolio.js') }}"></script>
         <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/services/portfolioManager.js') }}"></script>
         <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/services/widgetsManager.js') }}"></script>
@@ -107,6 +129,7 @@
         <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/services/urlInterpolator.js') }}"></script>
         <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/directives/widgetsDirective.js') }}"></script>
         <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/directives/portfolioDirective.js') }}"></script>
+        <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/directives/bindHtmlDirective.js') }}"></script>
         <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/filters/trustAsHtml.js') }}"></script>
     {% endif %}
 {% endblock %}

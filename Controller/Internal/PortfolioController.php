@@ -16,6 +16,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 class PortfolioController extends BaseController
 {
     /**
+     * @Route("/", name="icap_portfolio_internal_portfolio_base_url", options={"expose"=true})
      * @Route("/portfolio/{id}", name="icap_portfolio_internal_portfolio", options={"expose"=true})
      * @Method({"GET"})
      *
@@ -38,7 +39,9 @@ class PortfolioController extends BaseController
                 'value' => $portfolio->getTitle()
             ),
             'userInformation' => array(
-                'view'   => 'pouet',
+                'views'  => array(
+                    'view' => $twigEngine->render('IcapPortfolioBundle:templates:userInformation.html.twig', array('user' => $portfolio->getUser()))
+                ),
                 'avatar' => $loggedUser->getPicture()
             )
         );

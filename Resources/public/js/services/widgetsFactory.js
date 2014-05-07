@@ -13,13 +13,13 @@ portfolioApp
 
                 this.portfolioId = portfolioId;
 
-                var baseUrl = this.baseUrl + "/:portfolioId/:type/:subtype/:id/:action";
-                var widget = $resource(baseUrl,
+                var baseUrl = this.baseUrl + "/:portfolioId/:type/:id/:action";
+                var widget = $resource(
+                    baseUrl,
                     {
                         type: type,
                         portfolioId: portfolioId,
-                        id: "@id",
-                        subtype: "@$type"
+                        id: "@id"
                     },
                     {
                         get:    { method: "GET" },
@@ -29,43 +29,28 @@ portfolioApp
                         remove: { method: "DELETE"}
                     }
                 );
+                widget.prototype.editing = false;
 
                 widget.prototype.generateUrl = function(parameters) {
                     parameters.portfolioId = portfolioId;
                     parameters.type        = type;
-                    parameters.subtype     = this.$type;
 
-                    return urlInterpolator.interpolate(baseUrl + "/{{portfolioId}}/{{type}}/{{subtype}}/{{id}}/{{action}}", parameters);
-                };
-                widget.prototype.getMediaDownloadUrl = function() {
-                    return this.generateUrl({action: "media"});
+                    return urlInterpolator.interpolate("/{{portfolioId}}/{{type}}/{{action}}", parameters);
                 };
                 widget.prototype.getRenderUrl = function() {
                     return this.generateUrl({action: "render"});
                 };
-                widget.prototype.getUploadUrl = function() {
-                    return this.generateUrl({action: "upload"});
-                };
-                widget.prototype.getFullUrl = function() {
-                    return this.generateUrl({id: this.id, view: "detail"});
-                };
-                widget.prototype.getEmbedUrl = function() {
-                    return this.generateUrl({action: "embed"});
-                };
-                widget.prototype.getSort = function() {
-                    return this.generateUrl({action: "sort"});
-                };
-                widget.prototype.getLoadFormUrl = function() {
+                widget.prototype.getFormUrl = function() {
                     return this.generateUrl({action: "form"});
                 };
-                widget.prototype.setForm = function(form) {
-                    this.views.form = form;
+                widget.prototype.setFormView = function(formView) {
+                    this.views.form = formView;
                 };
-                widget.prototype.setEditMode = function(e) {
-                    this.focus = e, e ? this.$minified = !1 : delete this.$minified;
+                widget.prototype.setEditMode = function(isEditing) {
+                    this.editing = isEditing;
                 };
                 widget.prototype.isEditing = function() {
-                    return this.focus && !this.$minified;
+                    return this.editing;
                 };
                 widget.prototype.getType = function() {
                     return type;
