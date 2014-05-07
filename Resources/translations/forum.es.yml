@@ -1,0 +1,41 @@
+author: Autor
+back_to: 'Volver a'
+back_to_categories: 'volver a las categorías'
+category: Categoría
+category_form_name: Categoría
+edit_message: 'Editar un mensaje'
+field_content_required: 'Se requiere campo Contenido.'
+forum: Foro
+forum_category_edit: 'Editar una categoría'
+forum_form_name: Nombre
+forum_message_form_content: Cotenido
+forum_new_message: 'Un nuevo mensaje fue agregada en tema "%subject%", en el foro "%forum%"'.
+forum_options_form_messages: 'Mensajes por página'
+forum_options_form_subjects: 'Temas por página'
+forum_settings: 'Configuración del foro'
+forum_subject_edit: 'Editar tema'
+forum_subject_form_title: Título
+forum_subject_form_message: Mensaje
+forum_subject_form_message_content: 'Contenido'
+forum_subject_title_form_title: Título
+last_message: 'Ultimo mensaje'
+messages: Mensajes
+messages_per_page: 'Mensajes por página'
+move_message: 'Mover un mensaje'
+move_subject: 'Mover un tema'
+move_to: 'Mover a'
+new_category: 'Nueva categoría'
+new_message: Responder
+new_subject: 'Nuevo tema'
+remove_category_confirm_message: '¿Está seguro de que desea eliminar esta categoría?'
+remove_subject_confirm_message: '¿Está seguro que quiere borrar este mensaje?'
+remove_subjects_confirm_message: '¿Está seguro que desea eliminar %count% tema(s)?'
+responses: Respuestas
+started_by: 'Iniciado por'
+stick: Anclar
+stuck: Anclado
+subject: Tema
+subjets_per_page: 'Temas por pagina'
+subscribe_mail_list: 'Suscríbase a las notificaciones'
+unstick: Desanclar
+unsubscribe_mail_list: 'Desinscribirse a las notificaciones'
