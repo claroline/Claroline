@@ -37,11 +37,11 @@
             <div class="form-group row">
                 <label class="control-label col-md-3">{{ "Choose a logo" | trans({}, "platform") }}</label>
                 <div class="col-md-9 logos">
-                    <div class="alert {% if config.getParameter('logo') == "" %}alert-info{% else %}alert-warning{% endif %} content-4 pointer-hand logo" data-logo="null">
+                    <div style="height:80px" class="alert {% if config.getParameter('logo') == "" %}alert-info{% else %}alert-warning{% endif %} content-4 pointer-hand logo" data-logo="null">
                         <p style="height:35px;font-size:18px">{{ "None" | trans({}, "platform") }}</p>
                     </div>
                     {% for logo in logos %}
-                        <div class="alert {% if config.getParameter('logo') == logo %}alert-info{% else %}alert-warning{% endif %} content-4 pointer-hand logo" data-logo="{{ logo }}">
+                        <div style="height:80px" class="alert {% if config.getParameter('logo') == logo %}alert-info{% else %}alert-warning{% endif %} content-4 pointer-hand logo" data-logo="{{ logo }}">
                             <button type="button" class="close" aria-hidden="true">&times;</button>
                             <img src="{{ asset("") ~ "uploads/logos/" ~ logo }}" height="35" alt="Logo {{loop.index}}">
                         </div>

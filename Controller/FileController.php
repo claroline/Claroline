@@ -99,8 +99,7 @@ class FileController extends Controller
         );
 
         return new JsonResponse(
-            array($manager->toArray($file->getResourceNode(),
-            $this->get('security.context')->getToken()))
+            array($manager->toArray($file->getResourceNode(), $this->get('security.context')->getToken()))
         );
     }
 
