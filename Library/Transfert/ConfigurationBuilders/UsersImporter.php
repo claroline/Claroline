@@ -83,6 +83,18 @@ class UsersImporter extends Importer implements ConfigurationInterface
             }
         }
 
+        //add platform roles
+        $existingRoles = $this->om->getRepository('ClarolineCoreBundle:Role')->findAllPlatformRoles();
+
+        foreach($existingRoles as $existingRole) {
+            $availableRoleName[] = $existingRole->getName();
+        }
+
+        //ROLE_ANONYMOUS can be selected
+        $availableRoleName[] = 'ROLE_ANONYMOUS';
+        //ROLE_WS_MANAGER is created automatically
+        $availableRoleName[] = 'ROLE_WS_MANAGER';
+
         $owner = null;
 
        if (isset($configuration['members']['owner']['username'])) {

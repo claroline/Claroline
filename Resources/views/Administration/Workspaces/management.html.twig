@@ -35,6 +35,10 @@
             <i class="icon-pencil"></i>
             {{ 'create'|trans({}, 'platform') }}
         </a>
+        <a href="{{ path('claro_admin_import_form') }}" class="btn btn-default action-button">
+            <i class="icon-book"></i>
+            {{ 'import'|trans({}, 'platform') }}
+        </a>
     {% endif %}
 {% endmacro %}
 {% macro sortUrl(max, search, order, direction) %}

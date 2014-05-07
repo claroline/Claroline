@@ -34,6 +34,7 @@ class ResourceManagerImporter extends Importer implements ConfigurationInterface
     private $resourceManager;
     private $availableParents;
     private $om;
+    private $availableCreators;
 
     /**
      * @DI\InjectParams({
@@ -130,7 +131,10 @@ class ResourceManagerImporter extends Importer implements ConfigurationInterface
 
                 //add the missing roles
                 foreach ($directory['directory']['roles'] as $role) {
-                    $creations = $this->getCreationRightsArray($role['role']['rights']['create']);
+                     $creations = (isset($role['role']['rights']['create'])) ?
+                        $this->getCreationRightsArray($role['role']['rights']['create']):
+                        array();
+
                     $this->rightManager->create(
                         $role['role']['rights'],
                         $entityRoles[$role['role']['name']],
@@ -157,13 +161,15 @@ class ResourceManagerImporter extends Importer implements ConfigurationInterface
             foreach ($data['data']['items'] as $item) {
                 $res['data'] = $item['item']['data'];
                 //get the entity from an importer
-                $entity = $this->getImporterByName($item['item']['type'])->import($res, $item['item']['name']);
+                $entity = $this->getImporterByName($item['item']['type'])
+                    ->import($res, $item['item']['name']);
                 $entity->setName($item['item']['name']);
                 $type = $this->om
                     ->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceType')
                     ->findOneByName($item['item']['type']);
                 $owner = $this->om
-                    ->getRepository('ClarolineCoreBundle:User')->findOneByUsername($item['item']['creator']);
+                    ->getRepository('ClarolineCoreBundle:User')
+                    ->findOneByUsername($item['item']['creator']);
 
                 $entity = $this->resourceManager->create(
                     $entity,
@@ -196,7 +202,10 @@ class ResourceManagerImporter extends Importer implements ConfigurationInterface
 
         //add the missing roles
         foreach ($data['data']['root']['roles'] as $role) {
-            $creations = $this->getCreationRightsArray($data['data']['root']['roles']['rights']['create']);
+            $creations = (isset($role['role']['rights']['create'])) ?
+                $this->getCreationRightsArray($role['role']['rights']['create']):
+                array();
+
             $this->rightManager->create(
                 $role['role']['rights'],
                 $entityRoles[$role['role']['name']],
@@ -238,6 +247,28 @@ class ResourceManagerImporter extends Importer implements ConfigurationInterface
 
         $availableParents = $this->availableParents;
 
+        $this->availableCreators = [];
+
+        if (isset($data['data']['members'])) {
+            if (isset($data['data']['members']['users'])) {
+                foreach ($data['data']['members']['users'] as $user) {
+                    $this->availableCreators[] = $user['user']['username'];
+                }
+            }
+
+            if (isset($data['data']['members']['owner'])) {
+                //do something
+            }
+        }
+
+        $users = $this->om->getRepository('ClarolineCoreBundle:User')->findAll();
+
+        foreach ($users as $user) {
+            $this->availableCreators[] = $user->getUsername();
+        }
+
+        $availableCreators = $this->availableCreators;
+
         $rootNode
             ->children()
                 ->arrayNode('root')->isRequired()
@@ -276,7 +307,19 @@ class ResourceManagerImporter extends Importer implements ConfigurationInterface
                                 ->children()
                                     ->scalarNode('name')->isRequired()->end()
                                     ->scalarNode('uid')->isRequired()->end()
-                                    ->scalarNode('creator')->isRequired()->end()
+                                    ->scalarNode('creator')->isRequired()
+                                        ->validate()
+                                            ->ifTrue(
+                                                function ($v) use ($availableCreators) {
+                                                    return call_user_func_array(
+                                                        __CLASS__ . '::creatorExists',
+                                                        array($v, $availableCreators)
+                                                    );
+                                                }
+                                            )
+                                            ->thenInvalid("The creator username %s doesn't exists")
+                                        ->end()
+                                    ->end()
                                     ->scalarNode('parent')->isRequired()
                                         ->validate()
                                             ->ifTrue(
@@ -388,6 +431,11 @@ class ResourceManagerImporter extends Importer implements ConfigurationInterface
     public static function parentExists($v, $parents)
     {
         return !in_array($v, $parents);
+    }
+
+    public static function creatorExists($v, $creators)
+    {
+        return !in_array($v, $creators);
     }
 
     public function setData($data)

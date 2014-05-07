@@ -197,6 +197,6 @@ class OwnerImporter extends Importer implements ConfigurationInterface
         //add the workspace role manager
         //YOLO;
 
-        $this->userManager->createUser($user);
+        return $this->userManager->createUser($user);
     }
 }

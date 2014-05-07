@@ -15,6 +15,8 @@ use Claroline\CoreBundle\Event\StrictDispatcher;
 use Claroline\CoreBundle\Manager\WorkspaceManager;
 use Claroline\CoreBundle\Manager\ToolManager;
 use Claroline\CoreBundle\Persistence\ObjectManager;
+use Claroline\CoreBundle\Form\WorkspaceImportType;
+use Claroline\CoreBundle\Library\Workspace\Configuration;
 use JMS\DiExtraBundle\Annotation as DI;
 use JMS\SecurityExtraBundle\Annotation as SEC;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
@@ -22,8 +24,10 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\Form\FormError;
 
-class WorkspacesController
+class WorkspacesController extends Controller
 {
     private $workspaceManager;
     private $om;
@@ -173,6 +177,48 @@ class WorkspacesController
         }
 
         return new Response('Workspace(s) deleted', 204);
+    }
+
+    /**
+     * @EXT\Route("/import/form", name="claro_admin_import_form")
+     * @EXT\Template
+     */
+    public function importWorkspaceFormAction()
+    {
+        $this->checkOpen();
+        $form = $this->createForm(new WorkspaceImportType());
+
+        return array('form' => $form->createView());
+    }
+
+    /**
+     * @EXT\Route("/import", name="claro_admin_import")
+     * @EXT\Template("ClarolineCoreBundle:Administration/Workspaces:importWorkspaceForm.html.twig")
+     */
+    public function importWorkspaceAction()
+    {
+        $form = $this->createForm(new WorkspaceImportType());
+        $form->handleRequest($this->get('request'));
+
+        if ($form->isValid()) {
+            $tmpFile = $form->get('file')->getData();
+            $tmpName = uniqid() . '.zip';
+            $tmpFile->move(sys_get_temp_dir(), $tmpName);
+            $configuration = new Configuration(sys_get_temp_dir() . DIRECTORY_SEPARATOR . $tmpName);
+
+//            try {
+                $this->get('claroline.manager.transfert_manager')->import($configuration);
+//            }
+//            catch (\Exception $e) {
+//                $form->addError(
+//                    new FormError($e->getMessage())
+//                );
+//
+//                return array('form' => $form->createView());
+//            }
+        }
+
+        return $this->redirect($this->generateUrl('claro_admin_workspaces_management'));
     }
 
     private function checkOpen()

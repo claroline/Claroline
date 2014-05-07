@@ -51,6 +51,21 @@ abstract class Importer
         return null;
     }
 
+    /**
+     * Platform roles must be on every platforms. They don't need to be created.
+     * ROLE_WS_MANAGER is created automatically.
+     */
+    public static function getDefaultRoles()
+    {
+        return array(
+            'ROLE_USER',
+            'ROLE_WS_MANAGER',
+            'ROLE_WS_CREATOR',
+            'ROLE_ADMIN',
+            'ROLE_ANONYMOUS'
+        );
+    }
+
     abstract function getName();
 
     abstract function validate(array $data);

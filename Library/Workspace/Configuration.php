@@ -12,8 +12,8 @@
 namespace Claroline\CoreBundle\Library\Workspace;
 
 use \RuntimeException;
-use Symfony\Component\Yaml\Yaml;
 use Claroline\CoreBundle\Library\Transfert\Resolver;
+use Claroline\CoreBundle\Entity\User;
 
 class Configuration
 {
@@ -29,33 +29,33 @@ class Configuration
     private $selfUnregistration = false;
     private $templateFile;
     private $extractPath;
+    private $owner;
 
-    public function __construct($path, $full = true)
+    public function __construct($path)
     {
-        if ($full) {
-            $this->templateFile = $path;
-            $this->workspaceType = self::TYPE_SIMPLE;
+        $this->templateFile = $path;
+        $this->workspaceType = self::TYPE_SIMPLE;
+        $archive = new \ZipArchive();
+        $this->owner = null;
+
+        if (true === $code = $archive->open($path)) {
+
+            $extractPath = sys_get_temp_dir() . DIRECTORY_SEPARATOR . uniqid();
+            $this->setExtractPath($extractPath);
             $archive = new \ZipArchive();
 
-            if (true === $code = $archive->open($path)) {
-
-                $extractPath = sys_get_temp_dir() . DIRECTORY_SEPARATOR . uniqid();
-                $this->setExtractPath($extractPath);
-                $archive = new \ZipArchive();
-
-                if ($archive->open($path) === TRUE) {
-                    $archive->extractTo($extractPath);
-                    $archive->close();
-                }
-
-                $resolver = new Resolver($extractPath);
-                $this->data = $resolver->resolve();
-
-            } else {
-                throw new \Exception(
-                    "Couldn't open template archive '{$path}' (error {$code})"
-                );
+            if ($archive->open($path) === TRUE) {
+                $archive->extractTo($extractPath);
+                $archive->close();
             }
+
+            $resolver = new Resolver($extractPath);
+            $this->data = $resolver->resolve();
+
+        } else {
+            throw new \Exception(
+                "Couldn't open template archive '{$path}' (error {$code})"
+            );
         }
     }
 
@@ -91,8 +91,6 @@ class Configuration
     {
         return $this->workspaceName;
     }
-
-
 
     public function check()
     {
@@ -173,5 +171,15 @@ class Configuration
     public function getExtractPath()
     {
         return $this->extractPath;
+    }
+
+    public function setOwner(User $owner)
+    {
+        $this->owner = $owner;
+    }
+
+    public function getOwner()
+    {
+        return $this->owner;
     }
 }

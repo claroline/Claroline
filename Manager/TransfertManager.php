@@ -21,6 +21,7 @@ use Symfony\Component\Config\Definition\Dumper\YamlReferenceDumper;
 use JMS\DiExtraBundle\Annotation as DI;
 use Claroline\CoreBundle\Entity\Workspace\SimpleWorkspace;
 use Claroline\CoreBundle\Entity\Resource\Directory;
+use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Workspace\Configuration;
 
 /**
@@ -92,7 +93,6 @@ class TransfertManager
 
         if (isset ($data['tools'])) {
             $tools['tools'] = $data['tools'];
-//            var_dump($tools);
             $toolsImporter->validate($tools);
         }
 
@@ -115,10 +115,19 @@ class TransfertManager
         $configuration->setWorkspaceName($data['properties']['self_registration']);
         $configuration->setWorkspaceName($data['properties']['self_unregistration']);
 
+        if (isset($data['properties']['owner'])) {
+            $owner = $this->om->getRepository('ClarolineCoreBundle:User')
+                ->findOneByUsername($data['properties']['owner']);
+            $configuration->setOwner($owner);
+        } else {
+            $user = $this->container->get('security.context')->getToken()->getUser();
+            $configuration->setOwner($user);
+        }
+
         $this->createWorkspace($configuration, $owner);
     }
 
-    public function createWorkspace(Configuration $configuration, $owner)
+    public function createWorkspace(Configuration $configuration, User $owner)
     {
         $data = $configuration->getData();
         $this->om->startFlushSuite();
@@ -135,9 +144,9 @@ class TransfertManager
         $date = new \Datetime(date('d-m-Y H:i'));
         $workspace->setCreationDate($date->getTimestamp());
 
-//        if ($owner) {
-//            $workspace->setCreator($owner);
-//        }
+        if ($owner) {
+            $workspace->setCreator($owner);
+        }
 
         $this->om->persist($workspace);
         $this->om->flush();
