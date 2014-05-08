@@ -744,3 +744,4 @@ verification: 'Repita su contraseña'
 manage_tools: Gestión de las herramientas
 create_role: Crear un rol
 uncompress_file: Descomprimir el archivo si es posible
+workspace_import: Importar de un espacio de trabajo

@@ -25,6 +25,7 @@ class WorkspaceImportType extends AbstractType
             'file',
             'file',
             array(
+                'label' => 'workspace',
                 'required' => true,
                 'mapped' => false,
                 'constraints' => array(
