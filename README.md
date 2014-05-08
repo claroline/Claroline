@@ -42,8 +42,6 @@ Project setup
 
 ##### Configuration of php.ini
 - The *memory_limit* must be >= 256Mb (also in cli).
-- The *post_max_size* and *upload_max_filesize* must be enough in order to
-  upload your files.
 - Be sure that you have a correct configuration of time zone, this value is case
   sensitive, be sure to use correct upper and lower case, you can find a list of
   supported timezones [here][9].
