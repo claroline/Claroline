@@ -3,7 +3,6 @@ README
 
 This repository provides the basic application structure of the Claroline
 platform.
-
 It doesn't contain the sources nor the third-party libraries required to make
 the application fully functional. Those sources have to be installed following
 the procedure described below.
@@ -31,20 +30,23 @@ Project setup
     - fileinfo (for mime type detection)
     - curl (for facebook authentication)
     - mcrypt
-    - Check if you have a correct configuration of time zone in your php.ini,
-      you can find a list of supported timezones [here][9], for example
-      "Europe/Brussels" (this value is case sensitive, be sure to use correct
-      upper and lower case).
     - Optionaly:
         - [gd][1] (for simple icon creation)
         - [ffmpeg][2] (for video thumbnail creation)
     - If you use PHP 5.5, you need to install the following extensions manually:
         - php5-json
-        - php5-curl
         - php5-intl
 - A RDBMS like MySQL (>=5.0, recommended) or PostgreSQL (>= 8.0)
 - A web server like Apache or Nginx
 - A global installation of [composer][3] (for dependency management)
+
+##### Configuration of php.ini
+- The *memory_limit* must be >= 256Mb (also in cli).
+- The *post_max_size* and *upload_max_filesize* must be enough in order to
+  upload your files.
+- Be sure that you have a correct configuration of time zone, this value is case
+  sensitive, be sure to use correct upper and lower case, you can find a list of
+  supported timezones [here][9].
 
 ### Development installation
 
