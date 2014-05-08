@@ -133,7 +133,7 @@ class ForumImporter extends Importer implements ConfigurationInterface
                     $messageEntity->setContent($content);
 
                     if ($message['message']['creator'] !== null) {
-                        $creator = $repo->findOneByUsername($subject['subject']['creator']);
+                        $creator = $repo->findOneByUsername($message['message']['creator']);
                     } else {
                         $creator = $this->container->get('security.context')->getToken()->getUser();
                     }
