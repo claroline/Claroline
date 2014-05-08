@@ -42,9 +42,8 @@ Project setup
 
 ##### Configuration of php.ini
 - The *memory_limit* must be >= 256Mb (also in cli).
-- Be sure that you have a correct configuration of time zone, this value is case
-  sensitive, be sure to use correct upper and lower case, you can find a list of
-  supported timezones [here][9].
+- Be sure that you have a correct configuration of time zone
+  ([supported timezones][9]).
 
 ### Development installation
 
