@@ -48,6 +48,7 @@ class UserManager
     private $userRepo;
     private $validator;
     private $workspaceManager;
+    private $uploadsDirectory;
 
     /**
      * Constructor.
@@ -63,7 +64,8 @@ class UserManager
      *     "toolManager"            = @DI\Inject("claroline.manager.tool_manager"),
      *     "translator"             = @DI\Inject("translator"),
      *     "validator"              = @DI\Inject("validator"),
-     *     "workspaceManager"       = @DI\Inject("claroline.manager.workspace_manager")
+     *     "workspaceManager"       = @DI\Inject("claroline.manager.workspace_manager"),
+     *     "uploadsDirectory"       = @DI\Inject("%claroline.param.uploads_directory%")
      * })
      */
     public function __construct(
@@ -77,7 +79,8 @@ class UserManager
         ToolManager $toolManager,
         Translator $translator,
         ValidatorInterface $validator,
-        WorkspaceManager $workspaceManager
+        WorkspaceManager $workspaceManager,
+        $uploadsDirectory
     )
     {
         $this->userRepo               = $objectManager->getRepository('ClarolineCoreBundle:User');
@@ -92,6 +95,7 @@ class UserManager
         $this->objectManager          = $objectManager;
         $this->mailManager            = $mailManager;
         $this->validator              = $validator;
+        $this->uploadsDirectory       = $uploadsDirectory;
     }
 
     /**
@@ -817,11 +821,20 @@ class UserManager
     public function uploadAvatar(User $user)
     {
         if (null !== $user->getPictureFile()) {
+            if (!is_writable($pictureDir = $this->uploadsDirectory.'/pictures/')) {
+                throw new \Exception("{$pictureDir} is not writable");
+            }
+
             $user->setPicture(
-                sha1($user->getPictureFile()->getClientOriginalName()).'.'.$user->getPictureFile()->guessExtension()
+                sha1(
+                    $user->getPictureFile()->getClientOriginalName()
+                    . $user->getId())
+                    . '.'
+                    . $user->getPictureFile()->guessExtension()
             );
-            $user->getPictureFile()->move(__DIR__.'/../../../../../../web/uploads/pictures', $user->getPicture());
+            $user->getPictureFile()->move($pictureDir, $user->getPicture());
         }
+
     }
 
     /**

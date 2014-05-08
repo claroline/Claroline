@@ -19,7 +19,9 @@ class ResetPasswordType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add(
+        $builder
+        ->add('password','password')
+        ->add(
             'plainPassword',
             'repeated',
             array(
@@ -27,7 +29,6 @@ class ResetPasswordType extends AbstractType
                 'invalid_message' => 'password_mismatch',
                 'first_options' => array('label' => 'new_password'),
                 'second_options' => array('label' => 'repeat_password')
-
             )
         );
     }
@@ -41,7 +42,6 @@ class ResetPasswordType extends AbstractType
     {
         $resolver->setDefaults(
             array(
-                'data_class' => 'Claroline\CoreBundle\Entity\User',
                 'translation_domain' => 'platform'
             )
         );

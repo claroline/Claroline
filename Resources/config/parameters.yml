@@ -4,6 +4,7 @@
 parameters:
     claroline.param.files_directory: "%kernel.root_dir%/../files"
     claroline.param.thumbnails_directory: "%kernel.root_dir%/../web/thumbnails"
+    claroline.param.uploads_directory : "%kernel.root_dir%/../web/uploads"
     claroline.param.templates_directory: "%kernel.root_dir%/../templates/"
     claroline.param.platform_config_handler_class: Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler
     claroline.param.platform_options_file: %kernel.root_dir%/config/platform_options.yml
