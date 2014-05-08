@@ -89,7 +89,7 @@ class ProfileController extends Controller
     {
         /** @var \Claroline\CoreBundle\Rule\Validator $badgeRuleValidator */
         $badgeRuleValidator = $this->get("claroline.rule.validator");
-        $validatedRules       = $badgeRuleValidator->validate($badge, $user);
+        $validatedRules     = $badgeRuleValidator->validate($badge, $user);
         $validateLogsLink   = array();
 
         if (0 < $validatedRules['validRules']) {

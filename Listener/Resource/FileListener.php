@@ -92,8 +92,8 @@ class FileListener implements ContainerAwareInterface
 
             //uncompress
             if ($extension === 'zip' && $form->get('uncompress')->getData()) {
-                $roots = $this->unzip($tmpFile, $event->getParent());
-                $event->setResources($roots);
+                $resources = $this->unzip($tmpFile, $event->getParent());
+                $event->setResources($resources);
                 //do not process the resources afterwards because nodes have been created with the unzip function.
                 $event->setProcess(false);
                 $event->stopPropagation();
@@ -297,7 +297,7 @@ class FileListener implements ContainerAwareInterface
         return $newFile;
     }
 
-    private function unzip($archivepath, ResourceNode $root)
+    private function unzip($archivePath, ResourceNode $root)
     {
         $extractPath = sys_get_temp_dir() .
             DIRECTORY_SEPARATOR .
@@ -306,35 +306,35 @@ class FileListener implements ContainerAwareInterface
 
         $archive = new \ZipArchive();
 
-        if ($archive->open($archivepath) === TRUE) {
+        if ($archive->open($archivePath) === true) {
             $archive->extractTo($extractPath);
             $archive->close();
             $this->om->startFlushSuite();
             $perms = $this->container->get('claroline.manager.rights_manager')->getCustomRoleRights($root);
-            $roots = $this->uploadDir($extractPath, $root, $perms);
+            $resources = $this->uploadDir($extractPath, $root, $perms);
             $this->om->endFlushSuite();
 
-            return $roots;
-        } else {
-            throw new \Exception("The archive {$archivepath} can't be opened");
+            return $resources;
         }
+
+        throw new \Exception("The archive {$archivePath} can't be opened");
     }
 
     private function uploadDir($dir, ResourceNode $parent, array $perms)
     {
-        $roots = [];
+        $resources = [];
         $iterator = new \DirectoryIterator($dir);
 
         foreach ($iterator as $item) {
             if ($item->isFile()) {
-                $roots[] = $this->uploadFile($item, $parent, $perms);
+                $resources[] = $this->uploadFile($item, $parent, $perms);
             }
 
-            if ($item->isDir() === true && $item->isDot() !== true) {
+            if ($item->isDir() && !$item->isDot()) {
                 //create new dir
                 $directory = new Directory();
                 $directory->setName($item->getBasename());
-                $roots[] = $this->resourceManager->create(
+                $resources[] = $this->resourceManager->create(
                     $directory,
                     $this->resourceManager->getResourceTypeByName('directory'),
                     $this->sc->getToken()->getUser(),
@@ -352,7 +352,20 @@ class FileListener implements ContainerAwareInterface
             }
         }
 
-        return $roots;
+        // set order manually as we are inside a flush suite
+        for ($i = 0, $count = count($resources); $i < $count; ++$i) {
+            if ($i > 0) {
+                $resources[$i]->getResourceNode()
+                    ->setPrevious($resources[$i - 1]->getResourceNode());
+            }
+
+            if ($i < $count - 1) {
+                $resources[$i]->getResourceNode()
+                    ->setNext($resources[$i + 1]->getResourceNode());
+            }
+        }
+
+        return $resources;
     }
 
     private function uploadFile(\DirectoryIterator $file, ResourceNode $parent, array $perms)

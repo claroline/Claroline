@@ -227,9 +227,10 @@ class WorkspaceController extends Controller
      *     options={"id" = "workspaceId"}
      * )
      * @ParamConverter("badge", converter="badge_converter")
+     * @ParamConverter("loggedUser", options={"authenticatedUser" = true})
      * @Template
      */
-    public function awardAction(Request $request, AbstractWorkspace $workspace, Badge $badge)
+    public function awardAction(Request $request, AbstractWorkspace $workspace, Badge $badge, User $loggedUser)
     {
         if (null === $badge->getWorkspace()) {
             throw $this->createNotFoundException("No badge found.");
@@ -261,7 +262,7 @@ class WorkspaceController extends Controller
 
                     /** @var \Claroline\CoreBundle\Manager\BadgeManager $badgeManager */
                     $badgeManager = $this->get('claroline.manager.badge');
-                    $awardedBadge = $badgeManager->addBadgeToUsers($badge, $users);
+                    $awardedBadge = $badgeManager->addBadgeToUsers($badge, $users, $loggedUser);
 
                     $flashMessageType = 'error';
 

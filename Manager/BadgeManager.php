@@ -50,17 +50,18 @@ class BadgeManager
     }
 
     /**
-     * @param Badge  $badge
-     * @param User[] $users
+     * @param Badge     $badge
+     * @param User[]    $users
+     * @param User|null $issuer
      *
      * @return int
      */
-    public function addBadgeToUsers(Badge $badge, $users)
+    public function addBadgeToUsers(Badge $badge, $users, $issuer = null)
     {
         $addedBadge = 0;
 
         foreach ($users as $user) {
-            if ($this->addBadgeToUser($badge, $user)) {
+            if ($this->addBadgeToUser($badge, $user, $issuer)) {
                 $addedBadge++;
             }
         }
@@ -69,13 +70,14 @@ class BadgeManager
     }
 
     /**
-     * @param Badge $badge
-     * @param User  $user
+     * @param Badge     $badge
+     * @param User      $user
+     * @param User|null $issuer
      *
      * @throws \Exception
      * @return bool
      */
-    public function addBadgeToUser(Badge $badge, User $user)
+    public function addBadgeToUser(Badge $badge, User $user, $issuer = null)
     {
         $badgeAwarded = false;
 
@@ -88,7 +90,8 @@ class BadgeManager
                 $userBadge = new UserBadge();
                 $userBadge
                     ->setBadge($badge)
-                    ->setUser($user);
+                    ->setUser($user)
+                    ->setIssuer($issuer);
 
                 if ($badge->isExpiring()) {
                     $userBadge->setExpiredAt($this->generateExpireDate($badge));

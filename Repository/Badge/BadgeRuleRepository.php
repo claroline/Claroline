@@ -23,14 +23,15 @@ class BadgeRuleRepository extends EntityRepository
      *
      * @return array|\Doctrine\ORM\AbstractQuery
      */
-    public function findBadgeFromAction($action, $executeQuery = true)
+    public function findBadgeAutomaticallyAwardedFromAction($action, $executeQuery = true)
     {
         $query = $this->getEntityManager()
             ->createQuery(
                 'SELECT b
                 FROM ClarolineCoreBundle:Badge\Badge b
                 JOIN b.badgeRules br
-                WHERE br.action = :action'
+                WHERE br.action = :action
+                AND b.automaticAward = true'
             )
             ->setParameter('action', $action);
 
