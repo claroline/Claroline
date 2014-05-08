@@ -183,7 +183,6 @@ class OwnerImporter extends Importer implements ConfigurationInterface
         $user->setFirstName($owner['first_name']);
         $user->setLastName($owner['last_name']);
         $user->setUsername($owner['username']);
-        $user->setPlainPassword($owner['password']);
         $user->setMail($owner['mail']);
         $user->setAdministrativeCode($owner['code']);
 

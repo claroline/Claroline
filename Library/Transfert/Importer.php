@@ -3,12 +3,15 @@
 namespace Claroline\CoreBundle\Library\Transfert;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Claroline\CoreBundle\Entity\User;
 
 abstract class Importer
 {
     private $listImporters;
     private $rootPath;
     private $configuration;
+    private $owner;
+    private $isStrict;
 
     public function setListImporters(ArrayCollection $importers)
     {
@@ -49,6 +52,26 @@ abstract class Importer
         }
 
         return null;
+    }
+
+    public function setOwner(User $user)
+    {
+        $this->owner = $user;
+    }
+
+    public function getOwner()
+    {
+        return $this->owner;
+    }
+
+    public function setStrict($boolean)
+    {
+        $this->isStrict = $boolean;
+    }
+
+    public function isStrict()
+    {
+        return $this->isStrict;
     }
 
     /**

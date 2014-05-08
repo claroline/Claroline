@@ -251,6 +251,8 @@ class FileListener implements ContainerAwareInterface
 
     private function unzip($archivepath, ResourceNode $root)
     {
+
+
         $extractPath = sys_get_temp_dir() .
             DIRECTORY_SEPARATOR .
             $this->container->get('claroline.utilities.misc')->generateGuid() .

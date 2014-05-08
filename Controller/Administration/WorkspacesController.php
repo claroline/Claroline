@@ -205,17 +205,18 @@ class WorkspacesController extends Controller
             $tmpName = uniqid() . '.zip';
             $tmpFile->move(sys_get_temp_dir(), $tmpName);
             $configuration = new Configuration(sys_get_temp_dir() . DIRECTORY_SEPARATOR . $tmpName);
+            $importUsers = true;
 
-//            try {
-                $this->get('claroline.manager.transfert_manager')->import($configuration);
-//            }
-//            catch (\Exception $e) {
-//                $form->addError(
-//                    new FormError($e->getMessage())
-//                );
-//
-//                return array('form' => $form->createView());
-//            }
+            try {
+                $this->get('claroline.manager.transfert_manager')->import($configuration, $importUsers);
+            }
+            catch (\Exception $e) {
+                $form->addError(
+                    new FormError($e->getMessage())
+                );
+
+                return array('form' => $form->createView());
+            }
         }
 
         return $this->redirect($this->generateUrl('claro_admin_workspaces_management'));

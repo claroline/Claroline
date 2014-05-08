@@ -98,22 +98,10 @@ class TransfertManager
 
     }
 
-    public function import(Configuration $configuration)
+    public function import(Configuration $configuration, $importUsers = false)
     {
         $data = $configuration->getData();
-        $this->setImporters($configuration->getExtractPath(), $data);
-        $this->validate($data);
-
-        $owner = (isset($data['members']['owner'])) ?
-            $this->getImporterByName('owner')->import($data['members']['owner'], null):
-            $this->om->getRepository('ClarolineCoreBundle:User')->findOneByUsername($data['properties']['owner']);
-
-        //initialize the configuration
-        $configuration->setWorkspaceName($data['properties']['name']);
-        $configuration->setWorkspaceName($data['properties']['code']);
-        $configuration->setWorkspaceName($data['properties']['visible']);
-        $configuration->setWorkspaceName($data['properties']['self_registration']);
-        $configuration->setWorkspaceName($data['properties']['self_unregistration']);
+        $owner = null;
 
         if (isset($data['properties']['owner'])) {
             $owner = $this->om->getRepository('ClarolineCoreBundle:User')
@@ -124,15 +112,48 @@ class TransfertManager
             $configuration->setOwner($user);
         }
 
-        $this->createWorkspace($configuration, $owner);
+        $this->setImporters($configuration, $data);
+        $this->validate($data);
+
+        if ($importUsers) {
+            if (isset($data['members']['owner'])) {
+                $owner = $this->getImporterByName('owner')->import($data['members']['owner'], null);
+            }
+
+            if (isset($data['members']['users'])) {
+                $this->getImporterByName('user')->import($data['members']['users']);
+            }
+        } else {
+            if ($data['properties']['owner'] !== null) {
+                $this->om->getRepository('ClarolineCoreBundle:User')->findOneByUsername($data['properties']['owner']);
+            }
+        }
+
+        if ($owner === null) {
+            $owner = $this->container->get('security.context')->getToken()->getUser();
+        }
+
+        //initialize the configuration
+        $configuration->setWorkspaceName($data['properties']['name']);
+        $configuration->setWorkspaceCode($data['properties']['code']);
+        $configuration->setDisplayable($data['properties']['visible']);
+        $configuration->setSelfRegistration($data['properties']['self_registration']);
+        $configuration->setSelfUnregistration($data['properties']['self_unregistration']);
+
+        $this->createWorkspace($configuration, $owner, true);
     }
 
-    public function createWorkspace(Configuration $configuration, User $owner)
+    public function createWorkspace(Configuration $configuration, User $owner, $isValidated = false)
     {
+        $configuration->setOwner($owner);
         $data = $configuration->getData();
         $this->om->startFlushSuite();
-        $this->setImporters($configuration->getExtractPath(), $data);
-        $this->validate($data);
+        $this->setImporters($configuration, $data);
+
+        if (!$isValidated) {
+            $this->validate($data);
+        }
+
         $workspace = new SimpleWorkspace();
         $workspace->setName($configuration->getWorkspaceName());
         $workspace->setCode($configuration->getWorkspaceCode());
@@ -203,15 +224,15 @@ class TransfertManager
 
     /**
      * Inject the rootPath
-     *
-     * @param $rootPath
-     * @param $configuration
+     * @param \Claroline\CoreBundle\Library\Workspace\Configuration $configuration
+     * @param array $data
      */
-    private function setImporters($rootPath, $configuration)
+    private function setImporters(Configuration $configuration, array $data)
     {
         foreach ($this->listImporters as $importer) {
-            $importer->setRootPath($rootPath);
-            $importer->setConfiguration($configuration);
+            $importer->setRootPath($configuration->getExtractPath());
+            $importer->setOwner($configuration->getOwner());
+            $importer->setConfiguration($data);
             $importer->setListImporters($this->listImporters);
         }
     }

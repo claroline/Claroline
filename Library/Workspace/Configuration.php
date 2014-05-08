@@ -30,9 +30,11 @@ class Configuration
     private $templateFile;
     private $extractPath;
     private $owner;
+    private $isStrict;
 
     public function __construct($path)
     {
+        $this->isStrict = true;
         $this->templateFile = $path;
         $this->workspaceType = self::TYPE_SIMPLE;
         $archive = new \ZipArchive();

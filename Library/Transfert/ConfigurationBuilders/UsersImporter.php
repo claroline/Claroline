@@ -19,6 +19,7 @@ use JMS\DiExtraBundle\Annotation as DI;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Library\Transfert\Merger;
 use Claroline\CoreBundle\Manager\UserManager;
+use Claroline\CoreBundle\Entity\User;
 
 /**
  * @DI\Service("claroline.importer.users_importer")
@@ -29,15 +30,18 @@ class UsersImporter extends Importer implements ConfigurationInterface
     private static $data;
     private $om;
     private $userManager;
+    private $container;
 
     /**
      * @DI\InjectParams({
-     *     "om" = @DI\Inject("claroline.persistence.object_manager")
+     *     "om"        = @DI\Inject("claroline.persistence.object_manager"),
+     *     "container" = @DI\Inject("service_container")
      * })
      */
-    public function __construct(ObjectManager $om)
+    public function __construct(ObjectManager $om, $container)
     {
-        $this->om = $om;
+        $this->om        = $om;
+        $this->container = $container;
     }
 
     public function  getConfigTreeBuilder()
@@ -143,7 +147,6 @@ class UsersImporter extends Importer implements ConfigurationInterface
                                     ->thenInvalid("The owner %s already exists in the configuration")
                                 ->end()
                             ->end()
-                            ->scalarNode('password')->example('noidea')->isRequired()->end()
                             ->scalarNode('mail')->example('jdoe@gmail.com')->isRequired()
                                 ->validate()
                                     ->ifTrue(
@@ -245,6 +248,29 @@ class UsersImporter extends Importer implements ConfigurationInterface
         $configuration = $processor->processConfiguration($this, $data);
     }
 
+    public function import(array $data)
+    {
+        $this->om->startFlushSuite();
+
+        foreach ($data as $user) {
+            $userEntity = new User();
+            $userEntity->setUsername($user['user']['username']);
+            $userEntity->setLastName($user['user']['last_name']);
+            $userEntity->setFirstName($user['user']['first_name']);
+            $userEntity->setPassword(uniqid());
+            $mail = uniqid() . '@change_me.com';
+            $userEntity->setMail($mail);
+            $this->container->get('claroline.manager.user_manager')->createUser($userEntity);
+
+            //@todo add the roles
+            if (isset($user['roles'])) {
+                //do smart things here
+            }
+        }
+
+        $this->om->endFlushSuite();
+    }
+
     public static function usernameAlreadyExistsInDatabase($v, $usernames)
     {
         return in_array($v, $usernames);
@@ -341,12 +367,5 @@ class UsersImporter extends Importer implements ConfigurationInterface
     public static function ownerAlreadyExists($v, $owner)
     {
         return $owner === $v ? true: false;
-    }
-
-    public function import(array $users)
-    {
-        foreach ($users as $user) {
-
-        }
     }
 }

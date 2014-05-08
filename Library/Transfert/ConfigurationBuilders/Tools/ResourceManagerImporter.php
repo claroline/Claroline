@@ -116,8 +116,14 @@ class ResourceManagerImporter extends Importer implements ConfigurationInterface
             foreach ($data['data']['directories'] as $directory) {
                 $directoryEntity = new Directory();
                 $directoryEntity->setName($directory['directory']['name']);
-                $owner = $this->om
-                    ->getRepository('ClarolineCoreBundle:User')->findOneByUsername($directory['directory']['creator']);
+
+                if ($directory['directory']['creator']) {
+                    $owner = $this->om
+                        ->getRepository('ClarolineCoreBundle:User')
+                        ->findOneByUsername($directory['directory']['creator']);
+                } else {
+                    $owner = $this->getOwner();
+                }
 
                 $directories[$directory['directory']['uid']] = $this->resourceManager->create(
                     $directoryEntity,
@@ -167,9 +173,14 @@ class ResourceManagerImporter extends Importer implements ConfigurationInterface
                 $type = $this->om
                     ->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceType')
                     ->findOneByName($item['item']['type']);
-                $owner = $this->om
-                    ->getRepository('ClarolineCoreBundle:User')
-                    ->findOneByUsername($item['item']['creator']);
+
+                if ($item['item']['creator']) {
+                    $owner = $this->om
+                        ->getRepository('ClarolineCoreBundle:User')
+                        ->findOneByUsername($item['item']['creator']);
+                } else {
+                    $owner = $this->getOwner();
+                }
 
                 $entity = $this->resourceManager->create(
                     $entity,
@@ -184,14 +195,16 @@ class ResourceManagerImporter extends Importer implements ConfigurationInterface
                 $entity->getResourceNode()->setParent($directories[$item['item']['parent']]->getResourceNode());
                 $this->om->persist($entity);
                 //add the missing roles
-                foreach ($item['item']['roles'] as $role) {
-                    $this->rightManager->create(
-                        $role['role']['rights'],
-                        $entityRoles[$role['role']['name']],
-                        $entity->getResourceNode(),
-                        false,
-                        array()
-                    );
+                if (isset($item['item']['roles'])) {
+                    foreach ($item['item']['roles'] as $role) {
+                        $this->rightManager->create(
+                            $role['role']['rights'],
+                            $entityRoles[$role['role']['name']],
+                            $entity->getResourceNode(),
+                            false,
+                            array()
+                        );
+                    }
                 }
             }
         }
@@ -435,6 +448,10 @@ class ResourceManagerImporter extends Importer implements ConfigurationInterface
 
     public static function creatorExists($v, $creators)
     {
+        if ($v === null) {
+            return false;
+        }
+
         return !in_array($v, $creators);
     }
 
