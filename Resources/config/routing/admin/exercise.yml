@@ -29,6 +29,8 @@ ujm_exercise_unpublish:
 ujm_exercise_questions:
     pattern:  /{id}/questions/{pageNow}/{categoryToFind}/{titleToFind}/{displayAll}
     defaults: { _controller: UJMExoBundle:Exercise:showQuestions, pageNow: 0, categoryToFind: z, titleToFind: z, displayAll: 0 }
+    requirements:
+        categoryToFind: ".+"
 
 ujm_exercise_question_delete:
     pattern:  /{exoID}/{qid}/delete/{pageNow}/{maxPage}/{nbItem}/{lastPage}
