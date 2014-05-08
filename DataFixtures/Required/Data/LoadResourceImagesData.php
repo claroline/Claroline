@@ -46,6 +46,7 @@ class LoadResourceImagesData implements RequiredFixture
             array('res_pdf.png', 'application/pdf'),
             array('res_image.png', 'image'),
             array('res_vector.png', 'application/postscript'),
+            array('res_vector.png', 'application/ai'),
             array('res_vector.png', 'image/svg+xml'),
             array('res_zip.png', 'application/zip'),
             array('res_zip.png', 'application/x-rar-compressed'),
