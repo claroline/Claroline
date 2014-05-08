@@ -27,11 +27,18 @@ use Claroline\ForumBundle\Entity\Message;
  */
 class ForumImporter extends Importer implements ConfigurationInterface
 {
+    private $container;
+    private $om;
+
     /**
-     * @DI\InjectParams({"om" = @DI\Inject("claroline.persistence.object_manager")})
+     * @DI\InjectParams({
+     *      "om"        = @DI\Inject("claroline.persistence.object_manager"),
+     *      "container" = @DI\Inject("service_container")
+     * })
      */
-    public function __construct($om)
+    public function __construct($om, $container)
     {
+        $this->container = $container;
         $this->om = $om;
     }
 
@@ -68,10 +75,10 @@ class ForumImporter extends Importer implements ConfigurationInterface
                                                     ->children()
                                                         ->arrayNode('message')
                                                             ->children()
-                                                                ->scalarNode('content')->end()
+                                                                ->scalarNode('path')->end()
                                                                 ->scalarNode('creator')->end()
-                                                                ->scalarNode('date_creation')->end()
-                                                                ->scalarNode('date_modification')->end()
+                                                                ->scalarNode('creation_date')->end()
+                                                                ->scalarNode('modification_date')->end()
                                                             ->end()
                                                         ->end()
                                                     ->end()
@@ -103,19 +110,34 @@ class ForumImporter extends Importer implements ConfigurationInterface
             $entityCategory = new Category();
             $entityCategory->setForum($forum);
             $entityCategory->setName($category['category']['name']);
-            $creator = $repo->findOneByUsername($category['category']);
 
             foreach ($category['category']['subjects'] as $subject) {
                 $subjectEntity = new Subject();
                 $subjectEntity->setTitle($subject['subject']['name']);
-                $creator = $repo->findOneByUsername($subject['subject']['creator']);
+
+                if ($subject['subject']['creator'] !== null) {
+                    $creator = $repo->findOneByUsername($subject['subject']['creator']);
+                } else {
+                    $creator = $this->container->get('security.context')->getToken()->getUser();
+                }
+
                 $subjectEntity->setCreator($creator);
                 $subjectEntity->setCategory($entityCategory);
 
                 foreach ($subject['subject']['messages'] as $message) {
                     $messageEntity = new Message();
-                    $messageEntity->setContent($message['message']['content']);
-                    $creator = $repo->findOneByUsername($message['message']['creator']);
+                    $content = file_get_contents(
+                        $this->getRootPath() . DIRECTORY_SEPARATOR . $message['message']['path']
+                    );
+
+                    $messageEntity->setContent($content);
+
+                    if ($message['message']['creator'] !== null) {
+                        $creator = $repo->findOneByUsername($subject['subject']['creator']);
+                    } else {
+                        $creator = $this->container->get('security.context')->getToken()->getUser();
+                    }
+
                     $messageEntity->setCreator($creator);
                     $messageEntity->setSubject($subjectEntity);
 
