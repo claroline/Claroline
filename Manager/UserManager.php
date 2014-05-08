@@ -236,6 +236,7 @@ class UserManager
      */
     public function importUsers(array $users)
     {
+        $lg = $this->platformConfigHandler->getParameter('locale_language');
         $this->objectManager->startFlushSuite();
 
         foreach ($users as $user) {
@@ -255,6 +256,7 @@ class UserManager
             $newUser->setMail($email);
             $newUser->setAdministrativeCode($code);
             $newUser->setPhone($phone);
+            $newUser->setLocale($lg);
             $this->createUser($newUser);
         }
 
