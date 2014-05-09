@@ -20,13 +20,11 @@ class Updater021401
     private $logger;
     /** @var ObjectManager */
     private $om;
-    private $conn;
 
     public function __construct($container)
     {
         $this->container = $container;
         $this->om = $container->get('claroline.persistence.object_manager');
-        $this->conn = $container->get('doctrine.dbal.default_connection');
     }
 
     public function postUpdate()
@@ -38,14 +36,17 @@ class Updater021401
     {
         $this->log('updating icons...');
 
-        $icon = new ResourceIcon();
-        $icon->setRelativeUrl('bundles/clarolinecore/images/resources/icons/res_vector.png');
-        $icon->setMimeType('application/ai');
-        $icon->setShortcut(false);
-        $this->om->persist($icon);
+        $mimetypes = array('application/illustrator', 'application/ai');
 
-        $this->container->get('claroline.manager.icon_manager')->createShortcutIcon($icon);
-        $this->om->flush();
+        foreach ($mimetypes as $mimetype) {
+            $icon = new ResourceIcon();
+            $icon->setRelativeUrl('bundles/clarolinecore/images/resources/icons/res_vector.png');
+            $icon->setMimeType($mimetype);
+            $icon->setShortcut(false);
+            $this->om->persist($icon);
+
+            $this->container->get('claroline.manager.icon_manager')->createShortcutIcon($icon);
+        }
     }
 
     public function setLogger($logger)

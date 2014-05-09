@@ -145,7 +145,7 @@ class AdditionalInstaller extends BaseInstaller
 
         if (version_compare($currentVersion, '2.14.1', '<')) {
             $this->buildDefaultTemplate();
-            $updater021401 = new Updater\Updater021400($this->container);
+            $updater021401 = new Updater\Updater021401($this->container);
             $updater021401->setLogger($this->logger);
             $updater021401->postUpdate();
         }
