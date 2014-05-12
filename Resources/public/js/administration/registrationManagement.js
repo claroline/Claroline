@@ -25,15 +25,15 @@
     $('.accordion-checkbox').click(function (event) {
         event.stopPropagation();
         var element = event.currentTarget;
-        var checkedValue = $(element).attr('checked') === 'checked' ? true : false;
+        var checkedValue = $(element).is(':checked');
         var value = $(element).attr('value');
         var subMenus = 'input[class^="chk-workspaces-' + value + '"]';
         var subElements = 'input[class^="chk-workspace-' + value + '"]';
         $(subMenus).each(function (index, element) {
-            $(element).attr('checked', checkedValue);
+            $(element).prop('checked', checkedValue);
         });
         $(subElements).each(function (index, element) {
-            $(element).attr('checked', checkedValue);
+            $(element).prop('checked', checkedValue);
         });
 
         if ($('.workspace-check:checked').length > 0) {
