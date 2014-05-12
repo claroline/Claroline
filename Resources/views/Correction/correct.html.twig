@@ -28,7 +28,18 @@
 
             <div class="row">
                 <div class="col-md-12">
-                    <a class="btn btn-default btn-sm" href="{{ path('icap_dropzone_drops_detail', {'resourceId': dropzone.id, 'dropId': correction.drop.id}) }}"><span class="glyphicon icon-angle-left"></span> {{ 'Return to corrections'|trans({}, 'icap_dropzone') }}</a>
+                    {% if backUserId is defined  and backUserId != -1 %}
+                        {# back from correction By user ( admin tool ) #}
+                        <a class="btn btn-default btn-sm"
+                           href="{{ path('icap_dropzone_examiner_corrections', {'resourceId': dropzone.id, 'userId': backUserId}) }}"><span
+                                    class="glyphicon icon-angle-left"></span> {{ 'Return to corrections'|trans({}, 'icap_dropzone') }}
+                        </a>
+                    {% else %}
+                        <a class="btn btn-default btn-sm"
+                           href="{{ path('icap_dropzone_drops_detail', {'resourceId': dropzone.id, 'dropId': correction.drop.id}) }}"><span
+                                    class="glyphicon icon-angle-left"></span> {{ 'Return to corrections'|trans({}, 'icap_dropzone') }}
+                        </a>
+                    {% endif %}
                 </div>
             </div>
             <br/>
