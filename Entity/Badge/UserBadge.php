@@ -75,6 +75,13 @@ class UserBadge
     protected $expiredAt;
 
     /**
+     * @var string $comment
+     *
+     * @ORM\Column(type="text", nullable=true)
+     */
+    protected $comment;
+
+    /**
      * @param int $id
      *
      * @return UserBadge
@@ -200,5 +207,25 @@ class UserBadge
     public function isExpiring()
     {
         return null !== $this->expiredAt;
+    }
+
+    /**
+     * @param string $comment
+     *
+     * @return UserBadge
+     */
+    public function setComment($comment)
+    {
+        $this->comment = $comment;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getComment()
+    {
+        return $this->comment;
     }
 }

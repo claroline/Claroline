@@ -1,4 +1,4 @@
-{% extends "ClarolineCoreBundle:Administration/Badge:ajaxLayout.html.twig" %}
+{% extends "ClarolineCoreBundle:Administration:ajaxLayout.html.twig" %}
 
 {% trans_default_domain "platform" %}
 
@@ -27,6 +27,14 @@
             </div>
             <div class="col-lg-3">
                 {{ form_widget(form.user) }}
+            </div>
+        </div>
+
+        <div class="form-group award_comment">
+            {{ form_label(form.comment) }}
+            {{ form_errors(form.comment) }}
+            <div class="col-lg-6">
+                {{ form_widget(form.comment) }}
             </div>
         </div>
 
