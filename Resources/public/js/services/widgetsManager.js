@@ -41,6 +41,17 @@ portfolioApp
                 widget.setEditMode(false);
 
                 var widgetIndex = this.editing.remove(widget);
+            },
+            save: function(widget) {
+                var $this = this;
+                var success = function() {
+                    $this.cancelEditing(widget);
+                };
+                var failed = function(error) {
+                    console.error('Error occured while saving widget');
+                    console.log(error);
+                }
+                widget.$save(success, failed);
             }
         };
     }]);

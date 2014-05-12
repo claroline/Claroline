@@ -9,6 +9,6 @@ portfolioApp
         };
 
         $scope.save = function(widget) {
-            console.log('save widget');
+            widgetsManager.save(widget);
         };
     }]);
