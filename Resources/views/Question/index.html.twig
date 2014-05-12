@@ -92,8 +92,9 @@
             {% endif %}
         {% endif %}
 
+        {#% set var toto = <script type="text/javascript">$('#exoList').options[$('#exoList').selectedIndex].value</script> %#}
         <select id="exoList" onchange="getQuestionsExo(this.options[this.selectedIndex].value,
-                    '{{ path('ujm_question_index', {'idExo': idExo, 'QuestionsExo': 'true'}) }}',
+                    '{{ path('ujm_question_bank_filter') }}',
                     '{{ path('ujm_question_index') }}');">
             <option value="-1">Toutes les questions</option>
             {% for Exo in listExo %}

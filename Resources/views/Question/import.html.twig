@@ -84,7 +84,7 @@
             {% endif %}
         {% endif %}
 
-        <select id="exoList" onchange="getQuestionsExo(this.options[this.selectedIndex].value,
+        <select id="exoList" onchange="getQuestionsExoImport(this.options[this.selectedIndex].value,
                     '{{ path('ujm_exercise_import_question', { 'exoID': exoID, 'idExo': idExo, 'QuestionsExo': 'true' }) }}',
                     '{{ path('ujm_exercise_import_question', { 'exoID': exoID }) }}');">
             <option value="-1">Toutes les questions</option>

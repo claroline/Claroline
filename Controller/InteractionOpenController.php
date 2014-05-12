@@ -112,7 +112,7 @@ class InteractionOpenController extends Controller
             if ($exoID == -1) {
                 return $this->redirect(
                     $this->generateUrl('ujm_question_index', array(
-                        'categoryToFind' => $categoryToFind, 'titleToFind' => $titleToFind)
+                        'categoryToFind' => base64_encode($categoryToFind), 'titleToFind' => base64_encode($titleToFind))
                     )
                 );
             } else {

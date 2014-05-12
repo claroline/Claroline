@@ -622,6 +622,16 @@ function displayAllQuestionInSearch(pathSearch, exoID, displayAll) {
 
 function getQuestionsExo(idExo, path, pathHome) {
     var pathRight = '';
+    if (idExo == -1) {
+        pathRight = pathHome;
+    } else {
+        pathRight = path + '/' + idExo;
+    }
+    window.location.href = pathRight;
+}
+
+function getQuestionsExoImport(idExo, path, pathHome) {
+    var pathRight = '';
 
     if (idExo == -1) {
         pathRight = pathHome;
@@ -629,11 +639,12 @@ function getQuestionsExo(idExo, path, pathHome) {
         var locationEnd = path.lastIndexOf('/');
         var pathStart = path.substr(0, locationEnd);
         var locationStart = pathStart.lastIndexOf('/');
-        pathRight =  pathStart.substr(0, locationStart + 1) + idExo + path.substr(locationEnd);
+        pathRight = pathStart.substr(0, locationStart + 1) + idExo + path.substr(locationEnd);
     }
 
     window.location.href = pathRight;
 }
+
 
 function briefSearch(path, exoID, where, idExo) {
 

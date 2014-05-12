@@ -77,12 +77,12 @@ class QuestionController extends Controller
      * Lists the User's Question entities.
      *
      */
-    public function indexAction($pageNow = 0, $pageNowShared = 0, $categoryToFind = '', $titleToFind = '', $resourceId = -1, $displayAll = 0, $idExo = -1, $QuestionsExo = 'false')
+    public function indexAction($pageNow = 0, $pageNowShared = 0, $categoryToFind = '', $titleToFind = '', $resourceId = -1, $displayAll = 0)
     {
-        if ($QuestionsExo == '') {
-            $QuestionsExo = 'false';
+        if(base64_decode($categoryToFind)) {
+            $categoryToFind = base64_decode($categoryToFind);
+            $titleToFind    = base64_decode($titleToFind);
         }
-
         $vars = array();
         $sharedWithMe = array();
         $shareRight = array();
@@ -119,45 +119,25 @@ class QuestionController extends Controller
         $user = $this->container->get('security.context')->getToken()->getUser();
         $uid = $user->getId();
 
-        if ($QuestionsExo == 'true') {
+        $interactions = $this->getDoctrine()
+            ->getManager()
+            ->getRepository('UJMExoBundle:Interaction')
+            ->getUserInteraction($uid);
 
-            $actionQ = array();
+        foreach ($interactions as $interaction) {
+            $actions = $services->getActionInteraction($em, $interaction);
+            $questionWithResponse += $actions[0];
+            $alreadyShared += $actions[1];
+        }
 
-            $listQExo = $this->getDoctrine()
-                ->getManager()
-                ->getRepository('UJMExoBundle:Interaction')
-                ->getExerciseInteraction($em, $idExo, 0);
+        $shared = $em->getRepository('UJMExoBundle:Share')
+            ->findBy(array('user' => $uid));
 
-            $allActions = $services->getActionsAllQuestions($listQExo, $uid, $actionQ,
-                $questionWithResponse, $alreadyShared, $sharedWithMe, $shareRight, $em);
-
-            $actionQ = $allActions[0];
-            $questionWithResponse = $allActions[1];
-            $alreadyShared = $allActions[2];
-            $sharedWithMe = $allActions[3];
-            $shareRight = $allActions[4];
-
-        } else {
-            $interactions = $this->getDoctrine()
-                ->getManager()
-                ->getRepository('UJMExoBundle:Interaction')
-                ->getUserInteraction($uid);
-
-            foreach ($interactions as $interaction) {
-                $actions = $services->getActionInteraction($em, $interaction);
-                $questionWithResponse += $actions[0];
-                $alreadyShared += $actions[1];
-            }
-
-            $shared = $em->getRepository('UJMExoBundle:Share')
-                ->findBy(array('user' => $uid));
-
-            foreach ($shared as $s) {
-                $actionsS = $services->getActionShared($em, $s);
-                $sharedWithMe += $actionsS[0];
-                $shareRight += $actionsS[1];
-                $questionWithResponse += $actionsS[2];
-            }
+        foreach ($shared as $s) {
+            $actionsS = $services->getActionShared($em, $s);
+            $sharedWithMe += $actionsS[0];
+            $shareRight += $actionsS[1];
+            $questionWithResponse += $actionsS[2];
         }
 
         if ($categoryToFind != '' && $titleToFind != '' && $categoryToFind != 'z' && $titleToFind != 'z') {
@@ -190,37 +170,83 @@ class QuestionController extends Controller
             }
         }
 
-        if ($QuestionsExo == 'false') {
-            $doublePagination = $this->doublePaginationWithIf($interactions, $sharedWithMe, $max, $pagerMy, $pagerShared, $pageNow, $pageNowShared);
+        $doublePagination = $this->doublePaginationWithIf($interactions, $sharedWithMe, $max, $pagerMy, $pagerShared, $pageNow, $pageNowShared);
 
-            $interactionsPager = $doublePagination[0];
-            $pagerfantaMy = $doublePagination[1];
+        $interactionsPager = $doublePagination[0];
+        $pagerfantaMy = $doublePagination[1];
 
-            $sharedWithMePager = $doublePagination[2];
-            $pagerfantaShared = $doublePagination[3];
-        }
+        $sharedWithMePager = $doublePagination[2];
+        $pagerfantaShared = $doublePagination[3];
 
         $listExo = $this->getDoctrine()
                         ->getManager()
                         ->getRepository('UJMExoBundle:Exercise')
                         ->getExerciseAdmin($uid);
 
-        if ($QuestionsExo == 'false') {
-            $vars['pagerMy']      = $pagerfantaMy;
-            $vars['pagerShared']  = $pagerfantaShared;
-            $vars['interactions'] = $interactionsPager;
-            $vars['sharedWithMe'] = $sharedWithMePager;
-        } else {
-            $vars['listQExo'] = $listQExo;
-            $vars['actionQ'] = $actionQ;
-        }
+        $vars['pagerMy']              = $pagerfantaMy;
+        $vars['pagerShared']          = $pagerfantaShared;
+        $vars['interactions']         = $interactionsPager;
+        $vars['sharedWithMe']         = $sharedWithMePager;
         $vars['questionWithResponse'] = $questionWithResponse;
         $vars['alreadyShared']        = $alreadyShared;
         $vars['shareRight']           = $shareRight;
         $vars['displayAll']           = $displayAll;
         $vars['listExo']              = $listExo;
+        $vars['idExo']                = -1;
+        $vars['QuestionsExo']         = 'false';
+
+        return $this->render('UJMExoBundle:Question:index.html.twig', $vars);
+    }
+
+    /**
+     * To filter question by exercise
+     *
+     */
+    public function bankFilterAction($idExo = -1)
+    {
+        $vars = array();
+        $sharedWithMe = array();
+        $shareRight = array();
+        $questionWithResponse = array();
+        $alreadyShared = array();
+
+        $em = $this->getDoctrine()->getManager();
+
+        $services = $this->container->get('ujm.exercise_services');
+
+        $user = $this->container->get('security.context')->getToken()->getUser();
+        $uid = $user->getId();
+
+        $actionQ = array();
+
+        $listQExo = $this->getDoctrine()
+            ->getManager()
+            ->getRepository('UJMExoBundle:Interaction')
+            ->getExerciseInteraction($em, $idExo, 0);
+
+        $allActions = $services->getActionsAllQuestions($listQExo, $uid, $actionQ,
+            $questionWithResponse, $alreadyShared, $sharedWithMe, $shareRight, $em);
+
+        $actionQ = $allActions[0];
+        $questionWithResponse = $allActions[1];
+        $alreadyShared = $allActions[2];
+        $sharedWithMe = $allActions[3];
+        $shareRight = $allActions[4];
+
+        $listExo = $this->getDoctrine()
+                        ->getManager()
+                        ->getRepository('UJMExoBundle:Exercise')
+                        ->getExerciseAdmin($uid);
+
+        $vars['listQExo']             = $listQExo;
+        $vars['actionQ']              = $actionQ;
+        $vars['questionWithResponse'] = $questionWithResponse;
+        $vars['alreadyShared']        = $alreadyShared;
+        $vars['shareRight']           = $shareRight;
+        $vars['displayAll']           = 0;
+        $vars['listExo']              = $listExo;
         $vars['idExo']                = $idExo;
-        $vars['QuestionsExo']         = $QuestionsExo;
+        $vars['QuestionsExo']         = 'true';
 
         return $this->render('UJMExoBundle:Question:index.html.twig', $vars);
     }
@@ -1872,14 +1898,14 @@ class QuestionController extends Controller
         $alreadyShared = array();
         $sharedWithMe = array();
         $shareRight = array();
-        
+
         $searchToImport = FALSE;
 
         if ($request->isXmlHttpRequest()) {
             $userSearch = $request->request->get('userSearch');
             $exoID = $request->request->get('exoID');
             $where = $request->request->get('where');
-            
+
             if ($where == 'import') {
                 $searchToImport = TRUE;
             }

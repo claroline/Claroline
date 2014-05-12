@@ -1,9 +1,13 @@
+ujm_question_bank_filter:
+    pattern: /bank/filter/{idExo}
+    defaults: { _controller: UJMExoBundle:Question:bankFilter, idExo: -1 }
+
 ujm_question_index:
-    pattern: /index/{pageNow}/{pageNowShared}/{categoryToFind}/{titleToFind}/{resourceId}/{displayAll}/{idExo}/{QuestionsExo}
-    defaults: { _controller: UJMExoBundle:Question:index, pageNow: 0, pageNowShared: 0, categoryToFind: z, titleToFind: z, resourceId: -1, displayAll: 0, idExo: -1, QuestionsExo: false }
-    requirements:
-        categoryToFind: ".+"
-        titleToFind: ".+"
+    pattern: /index/{pageNow}/{pageNowShared}/{categoryToFind}/{titleToFind}/{resourceId}/{displayAll}
+    defaults: { _controller: UJMExoBundle:Question:index, pageNow: 0, pageNowShared: 0, categoryToFind: z, titleToFind: z, resourceId: -1, displayAll: 0 }
+    #requirements:
+        #categoryToFind: ".+"
+        #titleToFind: ".+"
 
 ujm_question_new:
     pattern:  /new/{exoID}/{pageToGo}/{maxPage}/{nbItem}
