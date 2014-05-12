@@ -156,9 +156,10 @@
 
     <script src="{{ asset('bundles/icapdropzone/js/popup.js') }}"></script>
     <script>
+        tinymce.claroline.configuration.toolbar1 = 'bold italic strikethrough | alignleft aligncenter alignright alignjustify | ';
         $(document).ready(function () {
-            var resourceNodeId = null;
 
+            var resourceNodeId = null;
             var callBack = function(nodes){
                 //console.log('callback custom pour document');
                 var id = _.keys(nodes)[0];
