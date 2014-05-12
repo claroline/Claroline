@@ -550,9 +550,10 @@ class CorrectionController extends DropzoneBaseController
 
     /**
      * @Route(
-     *      "/{resourceId}/drops/detail/correction/standard/{state}/{correctionId}",
+     *      "/{resourceId}/drops/detail/correction/standard/{state}/{correctionId}/{backUserId}",
      *      name="icap_dropzone_drops_detail_correction_standard",
-     *      requirements={"resourceId" = "\d+", "correctionId" = "\d+", "state" = "show|edit"}
+     *      requirements={"resourceId" = "\d+", "correctionId" = "\d+", "state" = "show|edit", "backUserId" = "\d+"},
+     *      defaults={"backUserId" = "-1"}
      * )
      * @ParamConverter("dropzone", class="IcapDropzoneBundle:Dropzone", options={"id" = "resourceId"})
      * @ParamConverter("user", options={
@@ -562,7 +563,7 @@ class CorrectionController extends DropzoneBaseController
      *      "messageTranslationDomain" = "icap_dropzone"
      * })
      */
-    public function dropsDetailCorrectionStandardAction(Dropzone $dropzone, $state, $correctionId, $user)
+    public function dropsDetailCorrectionStandardAction(Dropzone $dropzone, $state, $correctionId, $user, $backUserId)
     {
         $this->isAllowToOpen($dropzone);
         $this->isAllowToEdit($dropzone);
@@ -632,7 +633,8 @@ class CorrectionController extends DropzoneBaseController
                 'form' => $form->createView(),
                 'admin' => true,
                 'edit' => $edit,
-                'state' => $state
+                'state' => $state,
+                'backUserId' => $backUserId,
             )
         );
     }

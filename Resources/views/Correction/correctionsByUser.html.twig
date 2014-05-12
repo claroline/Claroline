@@ -13,11 +13,22 @@
 {% endblock %}
 
 {% block dropzone_content %}
+
     <div class="container container-dropzone">
         <h2>
             {{ 'List of corrections made by %user%'|trans({'%user%':user.firstName|capitalize ~' '~ user.lastName|upper}, 'icap_dropzone') }}
             <a class=" btn btn-default pull-right" href="{{ path('icap_dropzone_edit', {'resourceId': dropzone.id}) }}"><span class="glyphicon icon-edit"></span> {{ 'Edit evaluation'|trans({}, 'icap_dropzone') }}</a>
         </h2>
+
+        <div class="row">
+            <div class="col-md-12">
+                <a class="btn btn-default btn-sm"
+                   href="{{ path('icap_dropzone_examiners', {'resourceId': dropzone.id}) }}"><span
+                            class="glyphicon icon-angle-left"></span> {{ 'List of examiners'|trans({}, 'icap_dropzone') }}
+                </a>
+            </div>
+        </div>
+
         {{ macros.flashBox() }}
 
         {% block dropzone_content_corrections %}
@@ -43,6 +54,7 @@
 
             {% set byUserMod = 0 %}
             {% set adminCorrectionByUserMod = 1 %}
+            {% set backUserId = user.id %}
             {% block dropzone_content_drops_by_Listing %}
                 {% include 'IcapDropzoneBundle:Correction:Listing/CorrectionListing.html.twig' %}
             {% endblock %}
