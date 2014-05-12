@@ -36,8 +36,9 @@ class DropzoneManager
     /**
      *  Getting the user that have the 'open' rights.
      *  Excluded the admin profil.
+     * @param \Icap\DropzoneBundle\Entity\Dropzone $dropzone
      * @return array UserIds.
-     * */
+     */
     public function getDropzoneUsersIds(Dropzone $dropzone)
     {
 

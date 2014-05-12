@@ -1,7 +1,7 @@
 {% extends "IcapDropzoneBundle:Dropzone:edit.html.twig" %}
 
+{% form_theme form "ClarolineCoreBundle:Form:date_time_picker.html.twig" %}
 {% form_theme form "IcapDropzoneBundle::form_theme_bootstrap3.html.twig" %}
-
 {% block drop_zone_content_edit %}
     {#<div class="navbar navbar-default peer-review-options" role="navigation" {% if not dropzone.peerReview %}style="display: none;"{% endif %}>#}
         {#<div class="collapse navbar-collapse navbar-ex1-collapse">#}
@@ -108,28 +108,28 @@
 
         <div id="planning_dates">
             <div class="form-group">
-                <div class="row col-lg-offset-2">
+                <div class="col-md-offset-2">
                     {{ form_row(form.startAllowDrop, {'label_attr': {'class': 'control-label', 'style': 'font-weight: normal;'}}) }}
                 </div>
             </div>
             <div class="form-group">
-                <div class="row col-lg-offset-2">
+                <div class="col-md-offset-2">
                     {{ form_row(form.endAllowDrop, {'label_attr': {'class': 'control-label', 'style': 'font-weight: normal;'}}) }}
                 </div>
             </div>
             <div class="form-group">
-                <div class="row col-lg-offset-2">
+                <div class="col-md-offset-2">
                     {{ form_row(form.autoCloseOpenedDropsWhenTimeIsUp,{'label_attr': {'class': 'control-label', 'style': 'font-weight: normal;'}}) }}
                 </div>
             </div>
             <div class="form-group">
-                <div class="row col-lg-offset-2 peer-review-options">
+                <div class="col-md-offset-2 peer-review-options">
                     {{ form_row(form.startReview, {'label_attr': {'class': 'control-label', 'style': 'font-weight: normal;'}}) }}
                 </div>
             </div>
             <div class="form-group">
-                <div class="row col-lg-offset-2 peer-review-options">
-                    {{ form_row(form.endReview, {'label_attr': {'class': 'control-label', 'style': 'font-weight: normal;'}}) }}
+                <div class="col-md-offset-2 peer-review-options">
+                    {{ form_row(form.endReview, {'label_attr': {'class': 'control-label', 'style': 'font-weight: normal;'} } ) }}
                 </div>
             </div>
 
