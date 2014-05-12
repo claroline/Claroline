@@ -242,10 +242,12 @@ dsn: dsn
 edit: Edit
 edit_password: 'Edit your password'
 edit_password_error: 'An error occured while editing your password.'
+edit_password_error_current : Your currently password is not correct.
 edit_password_message: 'Do you really want to update your passwords ?'
 edit_password_success: 'Your password has been edited with success.'
 edit_profile: 'Edit your profile'
 edit_profile_error: 'An error occured while editing the profile.'
+edit_profile_error_right : 'You are not authorized to upload pictures, please contact your administrator'
 edit_profile_success: 'The profile has been edited with success.'
 edit_public_profile: 'Edit public profil'
 edit_public_profile_preferences_error: 'An error occured while editing your public profile preferences.'
@@ -550,6 +552,7 @@ reset: Reset
 reset_password: Reset password
 reset_password_message: Are you sure you want to reinitialize password ?
 reset_password_txt: You asked for your password reinitialisation. If you did not ask for it, please just ignore this message.
+reset_pwd_form_password : 'Your current password'
 resetting_your_password: Resetting your password
 resource: Resource
 resource_action_denied_message: 'The action %action% couldn''t be done on ''%path%'': access denied.'

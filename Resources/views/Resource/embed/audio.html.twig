@@ -6,3 +6,4 @@
         <embed src="{{ path('claro_file_get_media', {'node': node.getId}) }}"></embed>
     </object>
 </audio>
+<a href="{{ path('claro_resource_open', {'resourceType': node.getResourceType().getName(), 'node' : node.getId()}) }}">{{ node.getName() }}</a>
