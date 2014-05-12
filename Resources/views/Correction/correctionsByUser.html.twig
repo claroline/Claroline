@@ -1,14 +1,34 @@
 {% extends "IcapDropzoneBundle::layout.html.twig" %}
 {% block resourceBreadcrumb %}
-    <li class="active"><span class="glyphicon icon-list"></span> {{ dropzone.resourceNode.name }}</li>
+    <li>
+        <a href="{{ path('icap_dropzone_edit_common',{'resourceId':dropzone.id}) }}"><span
+                    class="glyphicon icon-list"></span>  {{ dropzone.resourceNode.name }}</a>
+    </li>
+    <li>
+        <a href="{{ path('icap_dropzone_examiners', {'resourceId': dropzone.id}) }}"> {{ 'Examiners'|trans({}, 'icap_dropzone') }}</a>
+    </li>
+    <li class="active">
+        {{ 'corrections by user'|trans({}, 'icap_dropzone') }}
+    </li>
 {% endblock %}
 
 {% block dropzone_content %}
+
     <div class="container container-dropzone">
         <h2>
-            {{ 'List of corrections by User'|trans({}, 'icap_dropzone') }}
+            {{ 'List of corrections made by %user%'|trans({'%user%':user.firstName|capitalize ~' '~ user.lastName|upper}, 'icap_dropzone') }}
             <a class=" btn btn-default pull-right" href="{{ path('icap_dropzone_edit', {'resourceId': dropzone.id}) }}"><span class="glyphicon icon-edit"></span> {{ 'Edit evaluation'|trans({}, 'icap_dropzone') }}</a>
         </h2>
+
+        <div class="row">
+            <div class="col-md-12">
+                <a class="btn btn-default btn-sm"
+                   href="{{ path('icap_dropzone_examiners', {'resourceId': dropzone.id}) }}"><span
+                            class="glyphicon icon-angle-left"></span> {{ 'List of examiners'|trans({}, 'icap_dropzone') }}
+                </a>
+            </div>
+        </div>
+
         {{ macros.flashBox() }}
 
         {% block dropzone_content_corrections %}
@@ -32,9 +52,12 @@
          <h3>{% block dropzone_content_drops_by_list_title %}{{ 'Corrections'|trans({}, 'icap_dropzone') }}{% endblock %}</h3>
          <h5>{% block dropzone_content_drops_by_list_subtitle %}{% endblock %}</h5>
 
-        {% block dropzone_content_drops_by_Listing %}
-            {% include 'IcapDropzoneBundle:Drop:Listing/dropsListing.html.twig' %}
-        {% endblock %}
+            {% set byUserMod = 0 %}
+            {% set adminCorrectionByUserMod = 1 %}
+            {% set backUserId = user.id %}
+            {% block dropzone_content_drops_by_Listing %}
+                {% include 'IcapDropzoneBundle:Correction:Listing/CorrectionListing.html.twig' %}
+            {% endblock %}
     
             <div class="container row">
                 {% block dropzone_content_drops_by_pager %}
@@ -46,8 +69,8 @@
                             'twitter_bootstrap_translated',
                             {
                             'proximity' : 1,
-                            'routeName': 'icap_dropzone_drops_by_default_paginated',
-                            'routeParams': {'resourceId': dropzone.id}
+                            'routeName': 'icap_dropzone_examiner_corrections_paginated',
+                            'routeParams': {'resourceId': dropzone.id,'userId':user.id}
                             }
                             )
                             }}
