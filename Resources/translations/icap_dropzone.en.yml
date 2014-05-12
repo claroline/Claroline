@@ -285,3 +285,9 @@ recalculate_helper: 'Usefull if you have deleted some criterias whereas people h
 corrections were already created: "one: A correction was already  created.|some:%count% corrections were already created."
 Modify add or delete criteria will affect this corrections if you recalculate the note on it.: "Update, add or delete criteria will affect this corrections if you recalculate their  given note "
 Evaluation criterions: 'Evaluation criterions'
+corrections_denied: 'Correction examiner have made that were reported'
+number_of_denied_corrections: 'Number of copy that the examiner have  reported'
+corrections by user: 'corrections by user'
+copy author's: 'copy author'
+Examiner: 'Examiner'
+List of corrections made by %user%: 'List of corrections made by %user%'
