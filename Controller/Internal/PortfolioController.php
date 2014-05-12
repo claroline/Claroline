@@ -16,7 +16,6 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 class PortfolioController extends BaseController
 {
     /**
-     * @Route("/", name="icap_portfolio_internal_portfolio_base_url", options={"expose"=true})
      * @Route("/portfolio/{id}", name="icap_portfolio_internal_portfolio", options={"expose"=true})
      * @Method({"GET"})
      *

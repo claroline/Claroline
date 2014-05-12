@@ -6,12 +6,12 @@ portfolioApp
         var portfolio = $resource(url, { portfolioId: "@portfolioId" }, { get: { method: "GET" } });
 
         portfolio.prototype.init = function() {
-            angular.forEach(widgetsConfig.config, function(element, index) {
-                if (!this[index]) {
-                    return this[index] = [];
+            angular.forEach(widgetsConfig.config, function(widgetTypeConfig, widgetType) {
+                if (!this[widgetType]) {
+                    return;
                 }
-                var widget = widgetFactory.getResource(this.id, index);
-                this[index] = element.unique ? new widget(this[index]) : this[index].map(function(element) {
+                var widget = widgetFactory.getResource(this.id, widgetType);
+                this[widgetType] = widgetTypeConfig.unique ? [new widget(this[widgetType])] : this[widgetType].map(function(element) {
                     return new widget(element);
                 }, this);
             }, this);

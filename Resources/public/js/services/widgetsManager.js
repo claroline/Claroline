@@ -8,7 +8,7 @@ portfolioApp
             editing: [],
             init: function(widgets) {
                 angular.forEach(widgetsConfig.getTypes(), function(type) {
-                    this.widgets[type] = widgets[type] ? [widgets[type]] : [];
+                    this.widgets[type] = widgets[type] ? widgets[type] : [];
                 }, this);
             },
             edit: function(widget) {
@@ -17,7 +17,6 @@ portfolioApp
                 if (!widget.isEditing()) {
                     widget.setEditMode(true);
                     this.loadForm(widget);
-                    widget
                 }
             },
             loadForm: function(widget) {
@@ -40,7 +39,7 @@ portfolioApp
             cancelEditing: function(widget) {
                 widget.setEditMode(false);
 
-                var widgetIndex = this.editing.remove(widget);
+                this.editing.remove(widget);
             },
             save: function(widget) {
                 var $this = this;
