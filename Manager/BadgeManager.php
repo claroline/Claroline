@@ -79,7 +79,7 @@ class BadgeManager
      * @throws \Exception
      * @return bool
      */
-    public function addBadgeToUser(Badge $badge, User $user, $comment, $issuer = null)
+    public function addBadgeToUser(Badge $badge, User $user, $comment = null, $issuer = null)
     {
         $badgeAwarded = false;
 
