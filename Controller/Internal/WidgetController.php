@@ -17,31 +17,45 @@ use Symfony\Component\HttpFoundation\Request;
 class WidgetController extends BaseController
 {
     /**
-     * @Route("/portfolio/{id}/{type}/{action}", name="icap_portfolio_internal_widget", defaults={"action" = "edit"})
-     * @Method({"GET", "POST"})
+     * @Route("/portfolio/{id}/{type}/{action}", name="icap_portfolio_internal_widget_get", defaults={"action" = "edit"})
+     * @Method({"GET"})
      *
      * @ParamConverter("loggedUser", options={"authenticatedUser" = true})
      */
     public function getAction(Request $request, User $loggedUser, Portfolio $portfolio, $type, $action)
     {
         $response = new JsonResponse();
+        $data     = array();
+
+        if ("form" === $action) {
+            /** @var \Symfony\Bundle\FrameworkBundle\Templating\EngineInterface $twigEngine */
+            $twigEngine = $this->get('templating');
+
+            $data['form'] = $twigEngine->render('IcapPortfolioBundle:templates/' . $action . ':' . $type . '.html.twig');
+        }
+
+        $response->setData($data);
+
+        return $response;
+    }
+    /**
+     * @Route("/portfolio/{id}/{type}", name="icap_portfolio_internal_widget_post")
+     * @Method({"POST"})
+     *
+     * @ParamConverter("loggedUser", options={"authenticatedUser" = true})
+     */
+    public function postAction(Request $request, User $loggedUser, Portfolio $portfolio, $type)
+    {
+        $response = new JsonResponse();
         /** @var \Symfony\Bundle\FrameworkBundle\Templating\EngineInterface $twigEngine */
         $twigEngine = $this->get('templating');
         $data     = array();
 
-        if ($request->isMethod("POST")) {
-            $parameters = $request->request->all();
-            $data['value'] = $parameters['value'];
-            $data['views'] = array(
-                'view' => $twigEngine->render('IcapPortfolioBundle:templates:' . $type . '.html.twig', array('portfolioTitle' => $parameters['value']))
-            );
-        }
-        else {
-            if ("form" === $action) {
-
-                $data['form'] = $twigEngine->render('IcapPortfolioBundle:templates/' . $action . ':' . $type . '.html.twig');
-            }
-        }
+        $parameters = $request->request->all();
+        $data['value'] = $parameters['value'];
+        $data['views'] = array(
+            'view' => $twigEngine->render('IcapPortfolioBundle:templates:' . $type . '.html.twig', array('portfolioTitle' => $parameters['value']))
+        );
 
         $response->setData($data);
 
