@@ -587,7 +587,8 @@ class Dropzone extends AbstractResource
     }
 
     /**
-     * @param bool $displayNotationToLearners
+     * @param $diplayCorrectionsToLearners
+     * @internal param bool $displayNotationToLearners
      */
     public function setDiplayCorrectionsToLearners($diplayCorrectionsToLearners)
     {
