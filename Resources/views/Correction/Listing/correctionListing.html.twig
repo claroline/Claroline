@@ -53,7 +53,10 @@
                 <td>
 
                     {% if  adminCorrectionByUserMod is defined and  adminCorrectionByUserMod == 1 %}
-                        <a href="{{ path('icap_dropzone_drops_detail_correction_standard', {'resourceId': dropzone.id, 'correctionId': correction.id,'state':'show'}) }}"
+                        {% if  backUserId is not defined %}
+                            {% set backUserId = -1 %}
+                        {% endif %}
+                        <a href="{{ path('icap_dropzone_drops_detail_correction_standard', {'resourceId': dropzone.id, 'correctionId': correction.id,'state':'show', 'backUserId':backUserId}) }}"
                            class="" data-toggle="tooltip"
                            data-original-title="{{ 'See correction'|trans({},'icap_dropzone') }}">
                             {{ correction.drop.user.firstName|capitalize ~' '~ correction.drop.user.lastName|upper }}
