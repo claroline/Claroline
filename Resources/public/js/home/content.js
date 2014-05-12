@@ -42,7 +42,7 @@
     });
 
     $('body').on('click', '.content-delete', function (event) {
-        var content = $(event.target).parents('.content-element');
+        var content = $(event.target).parents('.content-element').first();
 
         modal.fromRoute('claro_content_confirm', null, function (element) {
             element.on('click', '.btn.delete', function () {
