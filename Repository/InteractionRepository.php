@@ -137,6 +137,8 @@ class InteractionRepository extends EntityRepository
      *
      */
     public function getExerciseInteractionImport($em, $exoSearch, $exoImport){
+        $questionsList = array();
+        $interactions  = array();
         
         $dql = 'SELECT eq FROM UJM\ExoBundle\Entity\ExerciseQuestion eq
                JOIN eq.question q
