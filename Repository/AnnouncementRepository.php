@@ -17,10 +17,8 @@ use Doctrine\ORM\EntityRepository;
 
 class AnnouncementRepository extends EntityRepository
 {
-    public function findVisibleAnnouncementsByWorkspace(AbstractWorkspace $workspace, array $roles)
+    public function findVisibleByWorkspace(AbstractWorkspace $workspace)
     {
-        $now = new \DateTime();
-
         $dql = '
             SELECT a AS announcement
             FROM Claroline\AnnouncementBundle\Entity\Announcement a
@@ -31,8 +29,31 @@ class AnnouncementRepository extends EntityRepository
             JOIN r.role rr
             WHERE w = :workspace
             AND a.visible = true
-            AND ( ( a.visibleFrom IS NULL ) OR ( a.visibleFrom <= :now ) )
-            AND ( ( a.visibleUntil IS NULL ) OR ( a.visibleUntil >= :now ) )
+            AND ((a.visibleFrom IS NULL) OR (a.visibleFrom <= :now))
+            AND ((a.visibleUntil IS NULL) OR (a.visibleUntil >= :now))
+            ORDER BY a.publicationDate DESC
+        ';
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('workspace', $workspace);
+        $query->setParameter('now', new \DateTime());
+
+        return $query->getResult();
+    }
+
+    public function findVisibleByWorkspaceAndRoles(AbstractWorkspace $workspace, array $roles)
+    {
+        $dql = '
+            SELECT a AS announcement
+            FROM Claroline\AnnouncementBundle\Entity\Announcement a
+            JOIN a.aggregate aa
+            JOIN aa.resourceNode n
+            JOIN n.workspace w
+            JOIN n.rights r
+            JOIN r.role rr
+            WHERE w = :workspace
+            AND a.visible = true
+            AND ((a.visibleFrom IS NULL) OR (a.visibleFrom <= :now))
+            AND ((a.visibleUntil IS NULL) OR (a.visibleUntil >= :now))
             AND BIT_AND(r.mask, 1) = 1
             AND rr.name in (:roles)
             ORDER BY a.publicationDate DESC
@@ -40,15 +61,13 @@ class AnnouncementRepository extends EntityRepository
         $query = $this->_em->createQuery($dql);
         $query->setParameter('workspace', $workspace);
         $query->setParameter('roles', $roles);
-        $query->setParameter('now', $now);
+        $query->setParameter('now', new \DateTime());
 
         return $query->getResult();
     }
 
-    public function findVisibleAnnouncementsByWorkspaces(array $workspaces, array $roles)
+    public function findVisibleByWorkspacesAndRoles(array $workspaces, array $managerWorkspaces, array $roles)
     {
-        $now = new \DateTime();
-
         $dql = '
             SELECT
                 a AS announcement,
@@ -61,18 +80,24 @@ class AnnouncementRepository extends EntityRepository
             JOIN n.workspace w
             JOIN n.rights r
             JOIN r.role rr
-            WHERE w IN (:workspaces)
-            AND a.visible = true
-            AND ( ( a.visibleFrom IS NULL ) OR ( a.visibleFrom <= :now ) )
-            AND ( ( a.visibleUntil IS NULL ) OR ( a.visibleUntil >= :now ) )
-            AND BIT_AND(r.mask, 1) = 1
+            WHERE a.visible = true
+            AND ((a.visibleFrom IS NULL) OR (a.visibleFrom <= :now))
+            AND ((a.visibleUntil IS NULL) OR (a.visibleUntil >= :now))
+            AND (
+              w IN (:managerWorkspaces)
+              OR (
+                w IN (:workspaces)
+                AND BIT_AND(r.mask, 1) = 1
+              )
+            )
             AND rr.name in (:roles)
             ORDER BY a.publicationDate DESC
         ';
         $query = $this->_em->createQuery($dql);
         $query->setParameter('workspaces', $workspaces);
+        $query->setParameter('managerWorkspaces', $managerWorkspaces);
         $query->setParameter('roles', $roles);
-        $query->setParameter('now', $now);
+        $query->setParameter('now', new \DateTime());
 
         return $query->getResult();
     }

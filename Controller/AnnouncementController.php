@@ -93,7 +93,7 @@ class AnnouncementController extends Controller
      * @EXT\Template("ClarolineAnnouncementBundle::announcementsList.html.twig")
      *
      * @param AnnouncementAggregate $aggregate
-     *
+     * @param $page
      * @return Response
      */
     public function announcementsListAction(AnnouncementAggregate $aggregate, $page)
@@ -396,14 +396,17 @@ class AnnouncementController extends Controller
      *
      * Renders announcements in a pager.
      *
+     * @param \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace $workspace
+     * @param $page
+     *
      * @return Response
      */
     public function announcementsWorkspaceWidgetPagerAction(AbstractWorkspace $workspace, $page)
     {
         $token = $this->securityContext->getToken();
         $roles = $this->utils->getRoles($token);
-        $datas = $this->announcementManager->getVisibleAnnouncementsByWorkspace($workspace, $roles);
-        $pager = $this->pagerFactory->createPagerFromArray($datas, $page, 5);
+        $data = $this->announcementManager->getVisibleAnnouncementsByWorkspace($workspace, $roles);
+        $pager = $this->pagerFactory->createPagerFromArray($data, $page, 5);
 
         return array(
             'datas' => $pager,
@@ -424,6 +427,8 @@ class AnnouncementController extends Controller
      * @EXT\Template("ClarolineAnnouncementBundle::announcementsDesktopWidgetPager.html.twig")
      *
      * Renders announcements in a pager.
+     *
+     * @param $page
      *
      * @return Response
      */
@@ -447,10 +452,10 @@ class AnnouncementController extends Controller
      * - for MOVE / COPY $collection->setAttributes(array('parent' => $parent))
      *  where $parent is the new parent entity.
      *
-     * @param string             $permission
-     * @param ResourceCollection $collection
+     * @param string $permission
+     * @param \Claroline\CoreBundle\Entity\Resource\AbstractResource $resource
+     * @throws \Symfony\Component\Security\Core\Exception\AccessDeniedException
      *
-     * @throws AccessDeniedException
      */
     private function checkAccess($permission, AbstractResource $resource)
     {

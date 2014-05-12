@@ -54,12 +54,32 @@ class AnnouncementManager
 
     public function getVisibleAnnouncementsByWorkspace(AbstractWorkspace $workspace, array $roles)
     {
-        return $this->announcementRepo->findVisibleAnnouncementsByWorkspace($workspace, $roles);
+        if (in_array('ROLE_ADMIN', $roles)
+            || in_array("ROLE_WS_MANAGER_{$workspace->getGuid()}", $roles)) {
+            return $this->announcementRepo->findVisibleByWorkspace($workspace);
+        }
+
+        return $this->announcementRepo->findVisibleByWorkspaceAndRoles($workspace, $roles);
     }
 
     public function getVisibleAnnouncementsByWorkspaces(array $workspaces, array $roles)
     {
-        return $this->announcementRepo->findVisibleAnnouncementsByWorkspaces($workspaces, $roles);
+        $managerWorkspaces = array();
+        $nonManagerWorkspaces = array();
+
+        foreach ($workspaces as $workspace) {
+            if (in_array("ROLE_WS_MANAGER_{$workspace->getGuid()}", $roles)) {
+                $managerWorkspaces[] = $workspace;
+            } else {
+                $nonManagerWorkspaces[] = $workspace;
+            }
+        }
+
+        return $this->announcementRepo->findVisibleByWorkspacesAndRoles(
+            $nonManagerWorkspaces,
+            $managerWorkspaces,
+            $roles
+        );
     }
 
     public function getAllAnnouncementsByAggregate(AnnouncementAggregate $aggregate)
