@@ -57,7 +57,10 @@ class PlatformConfigurationHandler
         'facebook_client_id' => null,
         'facebook_client_secret' => null,
         'facebook_client_active' => null,
-        'form_captcha' => true
+        'form_captcha' => true,
+        'ldap_host' => null,
+        'ldap_port' => null,
+        'ldap_root_dn' => null
     );
 
     /**
@@ -145,6 +148,9 @@ class PlatformConfigurationHandler
         $config->setFacebookClientSecret($this->parameters['facebook_client_secret']);
         $config->setFacebookClientActive($this->parameters['facebook_client_active']);
         $config->setFormCaptcha($this->parameters['form_captcha']);
+        $config->setLdapHost($this->parameters['ldap_host']);
+        $config->setLdapPort($this->parameters['ldap_port']);
+        $config->setLdapRootDn($this->parameters['ldap_root_dn']);
 
         return $config;
     }
