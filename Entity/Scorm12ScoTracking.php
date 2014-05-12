@@ -15,9 +15,9 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="claro_scorm_12_tracking")
+ * @ORM\Table(name="claro_scorm_12_sco_tracking")
  */
-class Scorm12Tracking
+class Scorm12ScoTracking
 {
     /**
      * @ORM\Id
@@ -33,10 +33,10 @@ class Scorm12Tracking
     protected $user;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Claroline\ScormBundle\Entity\Scorm12")
+     * @ORM\ManyToOne(targetEntity="Claroline\ScormBundle\Entity\Scorm12Sco")
      * @ORM\JoinColumn(name="scorm_id", onDelete="CASCADE", nullable=false)
      */
-    protected $scorm;
+    protected $sco;
 
     /**
      * @ORM\Column(name="score_raw", type="integer", nullable=true)
@@ -98,6 +98,21 @@ class Scorm12Tracking
      */
     protected $lessonMode;
 
+    /**
+     * @ORM\Column(name="best_score_raw", type="integer", nullable=true)
+     */
+    protected $bestScoreRaw;
+
+    /**
+     * @ORM\Column(name="best_lesson_status", nullable=true)
+     */
+    protected $bestLessonStatus;
+
+    /**
+     * @ORM\Column(name="is_locked", type="boolean", nullable=false)
+     */
+    protected $isLocked;
+
     public function getId()
     {
         return $this->id;
@@ -118,14 +133,14 @@ class Scorm12Tracking
         $this->user = $user;
     }
 
-    public function getScorm()
+    public function getSco()
     {
-        return $this->scorm;
+        return $this->sco;
     }
 
-    public function setScorm($scorm)
+    public function setSco($sco)
     {
-        $this->scorm = $scorm;
+        $this->sco = $sco;
     }
 
     public function getScoreRaw()
@@ -246,5 +261,35 @@ class Scorm12Tracking
     public function setLessonMode($lessonMode)
     {
         $this->lessonMode = $lessonMode;
+    }
+
+    public function getBestScoreRaw()
+    {
+        return $this->bestScoreRaw;
+    }
+
+    public function getBestLessonStatus()
+    {
+        return $this->bestLessonStatus;
+    }
+
+    public function getIsLocked()
+    {
+        return $this->isLocked;
+    }
+
+    public function setBestScoreRaw($bestScoreRaw)
+    {
+        $this->bestScoreRaw = $bestScoreRaw;
+    }
+
+    public function setBestLessonStatus($bestLessonStatus)
+    {
+        $this->bestLessonStatus = $bestLessonStatus;
+    }
+
+    public function setIsLocked($isLocked)
+    {
+        $this->isLocked = $isLocked;
     }
 }

@@ -1,3 +1,28 @@
+{% macro renderMenu(scos) %}
+    <ul>
+    {% for sco in scos %}
+        
+        {% if sco.getIsBlock() %}
+            {% set scoChildren = sco.getScoChildren() %}
+            <li><b>{{ sco.getTitle() }}</b></li>
+            
+            {% if scoChildren is not null %}
+                {{ _self.renderMenu(scoChildren) }}
+            {% endif %}
+                
+        {% else %}
+            <li sco-id="{{sco.getId()}}">
+                <a href="{{ path('claro_render_scorm_12_sco', {'scoId': sco.getId()}) }}" class="sco-menu-link">
+                    {{ sco.getTitle() }}
+                </a>
+            </li>
+        {% endif %}
+    {% endfor %}
+    </ul>
+{% endmacro %}
+
+{% from _self import renderMenu %}
+
 {% set layout = "ClarolineCoreBundle:Workspace:layout.html.twig" %}
 
 {% if isDesktop() %}
@@ -6,88 +31,13 @@
 
 {% extends layout %}
 
-{% block javascripts %}
-    <script src="{{ asset('bundles/clarolinescorm/js/scorm_12_api.js') }}" type="text/javascript"></script>
-    {{ parent() }}
-    <script type="text/javascript">
-        function runPrefixedMethod(obj, method) {
-            var pfx = ['webkit', 'moz', 'ms', 'o', ''];
-            var p = 0, m = null, t = null;
-
-            while (p < pfx.length && !obj[m]) {
-                m = method;
-
-                if (pfx[p] == '') {
-                    m = m.substr(0,1).toLowerCase() + m.substr(1);
-                }
-
-                m = pfx[p] + m;
-
-                if ('undefined' !== (t = typeof obj[m])) {
-                    pfx = [pfx[p]];
-
-                    return t === 'function' ? obj[m]() : obj[m];
-                }
-
-                p++;
-            }
-        }
-
-        function enterFullScreen() {
-            if (runPrefixedMethod(document, 'FullScreen') || runPrefixedMethod(document, 'IsFullScreen')) {
-                runPrefixedMethod(document, 'CancelFullScreen');
-            }
-            else {
-                runPrefixedMethod(document.getElementById('scorm-frame'), 'RequestFullScreen');
-            }
-        }
-        
-    </script>
-{% endblock %}
-    
-{% block title %}{{ resource.getResourceNode().getName() ~ ' - ' ~ parent()|striptags|raw }}{% endblock %}
-
 {% block section_content %}
     <div class="panel-heading">
         <h3 class="panel-title"> {{ resource.getResourceNode().getName() }} </h3>
     </div>
     <div class="panel-body">
-        <div class="text-right">
-            <a class="btn btn-primary pointer-hand" onClick="javascript:enterFullScreen()">
-                <i class="icon-resize-full"></i>
-            </a>
-        </div>
-        <div class="full-size">
-            <div id="twig-scorm-data"
-                 student-id="{{scormTracking.getUser().getId()}}"
-                 scorm-id="{{scormTracking.getScorm().getId()}}"
-                 student-name="{{scormTracking.getUser().getFirstName()}}, {{scormTracking.getUser().getLastName()}}"
-                 scorm-id="{{scormTracking.getScorm().getId()}}"
-                 score-raw="{% if scormTracking.getScoreRaw() > -1 %}{{scormTracking.getScoreRaw()}}{% endif %}"
-                 score-min="{% if scormTracking.getScoreMin() > -1 %}{{scormTracking.getScoreMin()}}{% endif %}"
-                 score-max="{% if scormTracking.getScoreMax() > -1 %}{{scormTracking.getScoreMax()}}{% endif %}"
-                 total-time="{{scormTracking.getTotalTime()}}"
-                 credit="{{scormTracking.getCredit()}}"
-                 lesson-status="{{scormTracking.getLessonStatus()}}"
-                 lesson-location="{{scormTracking.getLessonLocation()}}"
-                 exit="{{scormTracking.getExitMode()}}"
-                 entry="{{scormTracking.getEntry()}}"
-                 lesson-mode="{{scormTracking.getLessonMode()}}"
-                 suspend-data="{{scormTracking.getSuspendData()}}"
-                 launch-data="{{ scormTracking.getScorm().getLaunchData()}}"
-            >
-            </div>
-            <iframe id="scorm-frame"
-                    class="full-size"
-                    src="{{ asset(scormUrl) }}"
-                    frameborder="0">
-            </iframe>
+        <div id="scorm-menu">
+            {{ renderMenu(scos) }}
         </div>
     </div>
-    <style>
-        .full-size {
-            height: 100%;
-            width: 100%;
-        }
-    </style>
 {% endblock %}

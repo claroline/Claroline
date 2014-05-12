@@ -13,13 +13,13 @@ namespace Claroline\ScormBundle\Repository;
 
 use Doctrine\ORM\EntityRepository;
 
-class Scorm12Repository extends EntityRepository
+class Scorm12ResourceRepository extends EntityRepository
 {
     public function getNbScormWithHashName($hashName)
     {
         $dql = '
             SELECT COUNT(s.id)
-            FROM Claroline\ScormBundle\Entity\Scorm12 s
+            FROM Claroline\ScormBundle\Entity\Scorm12Resource s
             WHERE s.hashName = :hashName
         ';
 

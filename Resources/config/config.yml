@@ -2,6 +2,6 @@ plugin:
   has_options: false
 
   resources:
-    - class: Claroline\ScormBundle\Entity\Scorm12
+    - class: Claroline\ScormBundle\Entity\Scorm12Resource
       name: claroline_scorm_12
       icon: scorm_12_icon.png

@@ -18,11 +18,18 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 
-class ScormType extends AbstractType
+class Scorm12Type extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('name', 'hidden', array('data' => 'tmpname'));
+        $builder->add(
+            'name',
+            'text',
+            array(
+                'required' => true,
+                'constraints' => new NotBlank()
+            )
+        );
         $builder->add(
             'file',
             'file',
@@ -39,11 +46,11 @@ class ScormType extends AbstractType
 
     public function getName()
     {
-        return 'scorm_form';
+        return 'scorm_12_form';
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
-        $resolver->setDefaults(array('translation_domain' => 'platform'));
+        $resolver->setDefaults(array('translation_domain' => 'resource'));
     }
 }

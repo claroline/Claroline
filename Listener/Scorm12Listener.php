@@ -17,10 +17,11 @@ use Claroline\CoreBundle\Event\CreateResourceEvent;
 use Claroline\CoreBundle\Event\OpenResourceEvent;
 use Claroline\CoreBundle\Event\DeleteResourceEvent;
 use Claroline\CoreBundle\Event\DownloadResourceEvent;
+use Claroline\CoreBundle\Listener\NoHttpRequestException;
 use Claroline\CoreBundle\Persistence\ObjectManager;
-use Claroline\ScormBundle\Entity\Scorm12;
-use Claroline\ScormBundle\Entity\Scorm12Tracking;
-use Claroline\ScormBundle\Form\ScormType;
+use Claroline\ScormBundle\Entity\Scorm12Resource;
+use Claroline\ScormBundle\Entity\Scorm12Sco;
+use Claroline\ScormBundle\Form\Scorm12Type;
 use Claroline\ScormBundle\Listener\Exception\InvalidScorm12ArchiveException;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Bundle\TwigBundle\TwigEngine;
@@ -29,7 +30,7 @@ use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormFactory;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 use Symfony\Component\Translation\Translator;
@@ -43,13 +44,14 @@ class Scorm12Listener
     // path to the Scorm archive file
     private $filePath;
     private $formFactory;
+    private $httpKernel;
     private $om;
     private $request;
     private $router;
-    private $scormTrackingRepo;
-    private $scormRepo;
+    private $scormResourceRepo;
     // path to the Scorm unzipped files
     private $scormResourcesPath;
+    private $scorm12ScoTrackingRepo;
     private $securityContext;
     private $templating;
     private $translator;
@@ -58,6 +60,7 @@ class Scorm12Listener
      * @DI\InjectParams({
      *     "container"          = @DI\Inject("service_container"),
      *     "formFactory"        = @DI\Inject("form.factory"),
+     *     "httpKernel"         = @DI\Inject("http_kernel"),
      *     "om"                 = @DI\Inject("claroline.persistence.object_manager"),
      *     "requestStack"       = @DI\Inject("request_stack"),
      *     "router"             = @DI\Inject("router"),
@@ -69,6 +72,7 @@ class Scorm12Listener
     public function __construct(
         ContainerInterface $container,
         FormFactory $formFactory,
+        HttpKernelInterface $httpKernel,
         ObjectManager $om,
         RequestStack $requestStack,
         UrlGeneratorInterface $router,
@@ -81,13 +85,14 @@ class Scorm12Listener
         $this->filePath = $this->container
             ->getParameter('claroline.param.files_directory') . DIRECTORY_SEPARATOR;
         $this->formFactory = $formFactory;
+        $this->httpKernel = $httpKernel;
         $this->om = $om;
         $this->request = $requestStack->getCurrentRequest();
         $this->router = $router;
-        $this->scormTrackingRepo = $om->getRepository('ClarolineScormBundle:Scorm12Tracking');
-        $this->scormRepo = $om->getRepository('ClarolineScormBundle:Scorm12');
+        $this->scormResourceRepo = $om->getRepository('ClarolineScormBundle:Scorm12Resource');
         $this->scormResourcesPath = $this->container
             ->getParameter('kernel.root_dir') . '/../web/uploads/scormresources/';
+        $this->scorm12ScoTrackingRepo = $om->getRepository('ClarolineScormBundle:Scorm12ScoTracking');
         $this->securityContext = $securityContext;
         $this->templating = $templating;
         $this->translator = $translator;
@@ -100,7 +105,10 @@ class Scorm12Listener
      */
     public function onCreateForm(CreateFormResourceEvent $event)
     {
-        $form = $this->formFactory->create(new ScormType(), new Scorm12());
+        $form = $this->formFactory->create(
+            new Scorm12Type(),
+            new Scorm12Resource()
+        );
         $content = $this->templating->render(
             'ClarolineCoreBundle:Resource:createForm.html.twig',
             array(
@@ -119,7 +127,10 @@ class Scorm12Listener
      */
     public function onCreate(CreateResourceEvent $event)
     {
-        $form = $this->formFactory->create(new ScormType(), new Scorm12());
+        $form = $this->formFactory->create(
+            new Scorm12Type(),
+            new Scorm12Resource()
+        );
         $form->handleRequest($this->request);
 
         try {
@@ -127,8 +138,26 @@ class Scorm12Listener
                 $tmpFile = $form->get('file')->getData();
 
                 if ($this->isScormArchive($tmpFile)) {
-                    $scormResources = $this->createScormResource($tmpFile);
-                    $event->setResources($scormResources);
+                    $scormResource = new Scorm12Resource();
+                    $scormResource->setName($form['name']->getData());
+                    $fileName = $tmpFile->getClientOriginalName();
+                    $extension = pathinfo($fileName, PATHINFO_EXTENSION);
+                    $hashName = $this->container->get('claroline.utilities.misc')
+                        ->generateGuid() . "." . $extension;
+                    $scormResource->setHashName($hashName);
+                    $scos = $this->generateScosFromScormArchive($tmpFile);
+
+                    if (count($scos) > 0) {
+                        $this->om->persist($scormResource);
+                        $this->persistScos($scormResource, $scos);
+                    } else {
+                        throw new InvalidScorm12ArchiveException('no_sco_in_scorm_archive_message');
+                    }
+                    $this->unzipScormArchive($tmpFile, $hashName);
+                    // Move Scorm archive in the files directory
+                    $tmpFile->move($this->filePath, $hashName);
+
+                    $event->setResources(array($scormResource));
                     $event->stopPropagation();
 
                     return;
@@ -161,45 +190,20 @@ class Scorm12Listener
      */
     public function onOpen(OpenResourceEvent $event)
     {
-        $scorm = $event->getResource();
-        $scormPath = 'uploads/scormresources/'
-            . $scorm->getHashName()
-            . DIRECTORY_SEPARATOR
-            . $scorm->getEntryUrl();
-
-        $user = $this->securityContext->getToken()->getUser();
-        $scormTracking = $this->scormTrackingRepo->findOneBy(
-            array('user' => $user->getId(), 'scorm' => $scorm->getId())
-        );
-
-        if (is_null($scormTracking)) {
-            $scormTracking = new Scorm12Tracking();
-            $scormTracking->setUser($user);
-            $scormTracking->setScorm($scorm);
-            $scormTracking->setScoreRaw(-1);
-            $scormTracking->setScoreMax(-1);
-            $scormTracking->setScoreMin(-1);
-            $scormTracking->setLessonStatus("not attempted");
-            $scormTracking->setSuspendData("");
-            $scormTracking->setEntry("ab-initio");
-            $scormTracking->setLessonLocation("");
-            $scormTracking->setCredit("no-credit");
-            $scormTracking->setTotalTime(0);
-            $scormTracking->setSessionTime(0);
-            $scormTracking->setLessonMode("normal");
-            $scormTracking->setExitMode("");
+        if (!$this->request) {
+            throw new NoHttpRequestException();
         }
-        $content = $this->templating->render(
-            'ClarolineScormBundle::scorm12.html.twig',
-            array(
-                'resource' => $scorm,
-                '_resource' => $scorm,
-                'scormTracking' => $scormTracking,
-                'scormUrl' => $scormPath,
-                'workspace' => $scorm->getResourceNode()->getWorkspace()
-            )
+        $scorm = $event->getResource();
+        $params['_controller'] = 'ClarolineScormBundle:Scorm:renderScorm12Resource';
+        $params['scormId'] = $scorm->getId();
+
+        $subRequest = $this->request->duplicate(
+            array(),
+            null,
+            $params
         );
-        $response = new Response($content);
+        $response = $this->httpKernel->handle($subRequest, HttpKernelInterface::SUB_REQUEST);
+
         $event->setResponse($response);
         $event->stopPropagation();
     }
@@ -215,7 +219,7 @@ class Scorm12Listener
         $scormArchiveFile = $this->filePath . $hashName;
         $scormResourcesPath = $this->scormResourcesPath . $hashName;
 
-        $nbScorm = (int)($this->scormRepo->getNbScormWithHashName($hashName));
+        $nbScorm = (int)($this->scormResourceRepo->getNbScormWithHashName($hashName));
 
         if ($nbScorm === 1) {
 
@@ -238,12 +242,20 @@ class Scorm12Listener
     public function onCopy(CopyResourceEvent $event)
     {
         $resource = $event->getResource();
-        $copy = new Scorm12();
+        $copy = new Scorm12Resource();
         $copy->setHashName($resource->getHashName());
-        $copy->setLaunchData($resource->getLaunchData());
-        $copy->setMasteryScore($resource->getMasteryScore());
-        $copy->setEntryUrl($resource->getEntryUrl());
         $copy->setName($resource->getName());
+        $this->om->persist($copy);
+
+        $scos = $resource->getScos();
+
+        foreach ($scos as $sco) {
+
+            if (is_null($sco->getScoParent())) {
+                $this->copySco($sco, $copy);
+            }
+        }
+
         $event->setCopy($copy);
         $event->stopPropagation();
     }
@@ -301,172 +313,6 @@ class Scorm12Listener
     }
 
     /**
-     * Manages creation of Scorm resources and their web resources
-     *
-     * @param UploadedFile $file
-     *
-     * @return Scorm resource or null.
-     */
-    private function createScormResource(UploadedFile $file)
-    {
-        $fileName = $file->getClientOriginalName();
-        $extension = pathinfo($fileName, PATHINFO_EXTENSION);
-        $hashName = $this->container->get('claroline.utilities.misc')
-            ->generateGuid() . "." . $extension;
-        $resources = $this->generateResourcesFromScormArchive($file, $hashName);
-        $this->unzipScormArchive($file, $hashName);
-        // Move Scorm archive in the files directory
-        $file->move($this->filePath, $hashName);
-
-        return $resources;
-    }
-
-    /**
-     * Parses imsmanifest.xml file of a Scorm archive and
-     * creates Scorm resources defined in it.
-     *
-     * @param UploadedFile $file
-     * @param $hashName
-     *
-     * @return array of Scorm resources
-     */
-    private function generateResourcesFromScormArchive(UploadedFile $file, $hashName)
-    {
-        $resources = array();
-        $contents = '';
-        $zip = new \ZipArchive();
-
-        $zip->open($file);
-        $stream = $zip->getStream("imsmanifest.xml");
-
-        while (!feof($stream)) {
-            $contents .= fread($stream, 2);
-        }
-        $dom = new \DOMDocument();
-        $dom->loadXML($contents);
-
-        $scormVersionElements = $dom->getElementsByTagName('schemaversion');
-
-        if ($scormVersionElements->length > 0) {
-            $scormVersion = $scormVersionElements->item(0)->textContent;
-
-            if ($scormVersion !== '1.2') {
-                throw new InvalidScorm12ArchiveException('invalid_scorm_version_12_message');
-            }
-        }
-        
-        $items = $dom->getElementsByTagName('item');
-        $scoResources = $dom->getElementsByTagName('resource');
-
-        if ($items->length > 0) {
-
-            foreach ($items as $item) {
-                $ref = $item->attributes->getNamedItem('identifierref');
-
-                if (!is_null($ref)) {
-                    $identifierRef = $ref->nodeValue;
-                    $title = $item->getElementsByTagName('title')->item(0)->nodeValue;
-                    $launchDatas = $item->getElementsByTagNameNS(
-                        $item->lookupNamespaceUri('adlcp'),
-                        'datafromlms'
-                    );
-                    $masteryScores = $item->getElementsByTagNameNS(
-                        $item->lookupNamespaceUri('adlcp'),
-                        'masteryscore'
-                    );
-
-                    if ($launchDatas->length > 0) {
-                        $launchData = $launchDatas->item(0)->nodeValue;
-                    } else {
-                        $launchData = '';
-                    }
-
-                    if ($masteryScores->length > 0) {
-                        $masteryScore = intval($masteryScores->item(0)->nodeValue);
-                    } else {
-                        $masteryScore = -1;
-                    }
-
-                    foreach ($scoResources as $scoResource) {
-                        $identifier = $scoResource->attributes->getNamedItem('identifier');
-                        $href = $scoResource->attributes->getNamedItem('href');
-                        $scormType = $scoResource->attributes->getNamedItemNS(
-                            $scoResource->lookupNamespaceUri('adlcp'),
-                            'scormtype'
-                        );
-
-                        // For compatibility with Raptivity scorm 1.2 package
-                        if (is_null($scormType)) {
-                            $scormType = $scoResource->attributes->getNamedItemNS(
-                                $scoResource->lookupNamespaceUri('adlcp'),
-                                'scormType'
-                            );
-                        }
-
-                        if (!is_null($identifier)
-                            && !is_null($scormType)
-                            && !is_null($href)
-                            && $identifier->nodeValue === $identifierRef
-                            && $scormType->nodeValue === 'sco') {
-
-                            $scoUrl = $href->nodeValue;
-
-                            $scorm = new Scorm12();
-                            $scorm->setName($title);
-                            $scorm->setEntryUrl($scoUrl);
-                            $scorm->setLaunchData($launchData);
-                            $scorm->setMasteryScore($masteryScore);
-                            $scorm->setHashName($hashName);
-                            $resources[] = $scorm;
-                            break;
-                        }
-                    }
-                }
-            }
-        } else {
-
-            foreach ($scoResources as $scoResource) {
-                $identifier = $scoResource->attributes->getNamedItem('identifier');
-                $href = $scoResource->attributes->getNamedItem('href');
-                $scormType = $scoResource->attributes->getNamedItemNS(
-                    $scoResource->lookupNamespaceUri('adlcp'),
-                    'scormtype'
-                );
-
-                // For compatibility with Raptivity scorm 1.2 package
-                if (is_null($scormType)) {
-                    $scormType = $scoResource->attributes->getNamedItemNS(
-                        $scoResource->lookupNamespaceUri('adlcp'),
-                        'scormType'
-                    );
-                }
-
-                if (!is_null($identifier)
-                    && !is_null($scormType)
-                    && !is_null($href)
-                    && ($scormType->nodeValue === 'sco')) {
-
-                    $scoUrl = $href->nodeValue;
-
-                    $scorm = new Scorm12();
-                    $scorm->setName('no_title');
-                    $scorm->setEntryUrl($scoUrl);
-                    $scorm->setHashName($hashName);
-                    $resources[] = $scorm;
-                }
-            }
-        }
-
-        $zip->close();
-
-        if (count($resources) === 0) {
-            throw new InvalidScorm12ArchiveException('no_sco_found_message');
-        }
-
-        return $resources;
-    }
-
-    /**
      * Deletes recursively a directory and its content.
      *
      * @param $dir The path to the directory to delete.
@@ -482,5 +328,356 @@ class Scorm12Listener
             }
         }
         rmdir($dirPath);
+    }
+
+    /**
+     * Parses imsmanifest.xml file of a Scorm archive and
+     * creates Scos defined in it.
+     *
+     * @param Scorm12Resource $scormResource
+     * @param UploadedFile $file
+     *
+     * @return array of Scorm resources
+     */
+    private function generateScosFromScormArchive(UploadedFile $file)
+    {
+        $contents = '';
+        $zip = new \ZipArchive();
+
+        $zip->open($file);
+        $stream = $zip->getStream("imsmanifest.xml");
+
+        while (!feof($stream)) {
+            $contents .= fread($stream, 2);
+        }
+        $dom = new \DOMDocument();
+        $dom->loadXML($contents);
+
+        $scormVersionElements = $dom->getElementsByTagName('schemaversion');
+
+        if ($scormVersionElements->length > 0
+            && $scormVersionElements->item(0)->textContent !== '1.2') {
+
+            throw new InvalidScorm12ArchiveException('invalid_scorm_version_12_message');
+        }
+
+        $scos = $this->parseOrganizationsNode($dom);
+
+        return $scos;
+    }
+
+    /**
+     * Associates SCORM resource to SCOs and persists them.
+     * As array $scos can also contain an array of scos
+     * this method is call recursively when an element is an array.
+     *
+     * @param Scorm12Resource $scormResource
+     * @param array $scos Array of Scorm12Sco
+     */
+    private function persistScos(
+        Scorm12Resource $scormResource,
+        array $scos
+    )
+    {
+        foreach ($scos as $sco) {
+
+            if (is_array($sco)) {
+                $this->persistScos($scormResource, $sco);
+            } else {
+                $sco->setScormResource($scormResource);
+                $this->om->persist($sco);
+            }
+        }
+    }
+
+    /**
+     * Looks for the organization to use
+     *
+     * @param \DOMDocument $dom
+     * @return array of Scorm12Sco
+     * @throws InvalidScorm12ArchiveException If a default organization
+     *         is defined and not found
+     */
+    private function parseOrganizationsNode(\DOMDocument $dom)
+    {
+        $organizationsList = $dom->getElementsByTagName('organizations');
+        $resources = $dom->getElementsByTagName('resource');
+
+        if ($organizationsList->length > 0) {
+            $organizations = $organizationsList->item(0);
+            $organization = $organizations->firstChild;
+
+            if (!is_null($organizations->attributes)
+                && !is_null($organizations->attributes->getNamedItem('default'))) {
+
+                $defaultOrganization = $organizations->attributes->getNamedItem('default')->nodeValue;
+            } else {
+                $defaultOrganization = null;
+            }
+            // No default organization is defined
+            if (is_null($defaultOrganization)) {
+                
+                while (!is_null($organization)
+                    && $organization->nodeName !== 'organization') {
+
+                    $organization = $organization->nextSibling;
+                }
+
+                if (is_null($organization)) {
+
+                    return $this->parseResourceNodes($resources);
+                }
+            }
+            // A default organization is defined
+            // Look for it
+            else {
+
+                while (!is_null($organization)
+                    && ($organization->nodeName !== 'organization'
+                    || is_null($organization->attributes->getNamedItem('identifier'))
+                    || $organization->attributes->getNamedItem('identifier')->nodeValue !== $defaultOrganization)) {
+
+                    $organization = $organization->nextSibling;
+                }
+
+                if (is_null($organization)) {
+
+                    throw new InvalidScorm12ArchiveException('default_organization_not_found_message');
+                }
+            }
+
+            return $this->parseItemNodes($organization, $resources);
+        }
+    }
+
+    /**
+     * Creates defined structure of SCOs
+     *
+     * @param \DOMNode $source
+     * @param \DOMNodeList $resources
+     * @return array of Scorm12Sco
+     * @throws InvalidScorm12ArchiveException
+     */
+    private function parseItemNodes(
+        \DOMNode $source,
+        \DOMNodeList $resources,
+        Scorm12Sco $parentSco = null
+    )
+    {
+        $item = $source->firstChild;
+        $scos = array();
+
+        while (!is_null($item)) {
+
+            if ($item->nodeName === 'item') {
+                $sco = new Scorm12Sco();
+                $scos[] = $sco;
+                $sco->setScoParent($parentSco);
+                $this->findAttrParams($sco, $item, $resources);
+                $this->findNodeParams($sco, $item->firstChild);
+
+                if ($sco->getIsBlock()) {
+                    $scos[] = $this->parseItemNodes($item, $resources, $sco);
+                }
+            }
+            $item = $item->nextSibling;
+        }
+
+        return $scos;
+    }
+
+    private function parseResourceNodes(\DOMNodeList $resources)
+    {
+        $scos = array();
+
+        foreach ($resources as $resource) {
+
+            if (!is_null($resource->attributes)) {
+                $scormType = $resource->attributes->getNamedItemNS(
+                    $resource->lookupNamespaceUri('adlcp'),
+                    'scormtype'
+                );
+
+                if (!is_null($scormType) && $scormType->nodeValue === 'sco') {
+                    $identifier = $resource->attributes->getNamedItem('identifier');
+                    $href = $resource->attributes->getNamedItem('href');
+
+                    if (is_null($identifier)) {
+
+                        throw new InvalidScorm12ArchiveException('sco_with_no_identifier_message');
+                    }
+                    if (is_null($href)) {
+
+                        throw new InvalidScorm12ArchiveException('sco_resource_without_href_message');
+                    }
+                    $sco = new Scorm12Sco();
+                    $sco->setIsBlock(false);
+                    $sco->setVisible(true);
+                    $sco->setIdentifier($identifier->nodeValue);
+                    $sco->setTitle($identifier->nodeValue);
+                    $sco->setEntryUrl($href->nodeValue);
+                    $scos[] = $sco;
+                }
+            }
+        }
+
+        return $scos;
+    }
+
+    /**
+     * Initializes parameters of the SCO defined in attributes of the node.
+     * It also look for the associated resource if it is a SCO and not a block.
+     *
+     * @param Scorm12Sco $sco
+     * @param \DOMNode $item
+     * @param \DOMNodeList $resources
+     * @throws InvalidScorm12ArchiveException
+     */
+    private function findAttrParams(
+        Scorm12Sco $sco,
+        \DOMNode $item,
+        \DOMNodeList $resources
+    )
+    {
+        $identifier = $item->attributes->getNamedItem('identifier');
+        $isVisible = $item->attributes->getNamedItem('isvisible');
+        $identifierRef = $item->attributes->getNamedItem('identifierref');
+        $parameters = $item->attributes->getNamedItem('parameters');
+
+        // throws an Exception if identifier is undefined
+        if (is_null($identifier)) {
+            throw new InvalidScorm12ArchiveException('sco_with_no_identifier_message');
+        }
+        $sco->setIdentifier($identifier->nodeValue);
+
+        // visible is true by default
+        if (!is_null($isVisible) && $isVisible === 'false') {
+            $sco->setVisible(false);
+        } else {
+            $sco->setVisible(true);
+        }
+
+        // set parameters for SCO entry resource
+        if (!is_null($parameters)) {
+            $sco->setParameters($parameters->nodeValue);
+        }
+
+        // check if item is a block or a SCO. A block doesn't define identifierref
+        if (is_null($identifierRef)) {
+            $sco->setIsBlock(true);
+        } else {
+            $sco->setIsBlock(false);
+            // retrieve entry URL
+            $sco->setEntryUrl(
+                $this->findEntryUrl($identifierRef->nodeValue, $resources)
+            );
+        }
+    }
+
+    /**
+     * Initializes parameters of the SCO defined in children nodes
+     *
+     * @param Scorm12Sco $sco
+     * @param \DOMNode $item
+     */
+    private function findNodeParams(Scorm12Sco $sco, \DOMNode $item)
+    {
+        while (!is_null($item)) {
+
+            switch ($item->nodeName) {
+                case 'title':
+                    $sco->setTitle($item->nodeValue);
+                    break;
+                case 'adlcp:masteryscore':
+                    $sco->setMasteryScore($item->nodeValue);
+                    break;
+                case 'adlcp:maxtimeallowed':
+                    $sco->setMaxTimeAllowed($item->nodeValue);
+                    break;
+                case 'adlcp:timelimitaction':
+                    $action = strtolower($item->nodeValue);
+
+                    if ($action === 'exit,message'
+                        || $action === 'exit,no message'
+                        || $action === 'continue,message'
+                        || $action === 'continue,no message') {
+
+                        $sco->setTimeLimitAction($action);
+                    }
+                    break;
+                case 'adlcp:datafromlms':
+                    $sco->setLaunchData($item->nodeValue);
+                    break;
+                case 'adlcp:prerequisites':
+                    $sco->setPrerequisites($item->nodeValue);
+                    break;
+            }
+            $item = $item->nextSibling;
+        }
+    }
+
+    /**
+     * Searches for the resource with the given id and retrieve URL to its content.
+     *
+     * @param string $identifierref id of the resource associated to the SCO
+     * @param \DOMNodeList $resources
+     * @return string URL to the resource associated to the SCO
+     * @throws InvalidScorm12ArchiveException
+     */
+    public function findEntryUrl($identifierref, \DOMNodeList $resources)
+    {
+        foreach ($resources as $resource) {
+            $identifier = $resource->attributes->getNamedItem('identifier');
+
+            if (!is_null($identifier)) {
+                $identifierValue = $identifier->nodeValue;
+
+                if ($identifierValue === $identifierref) {
+                    $href = $resource->attributes->getNamedItem('href');
+
+                    if (is_null($href)) {
+
+                        throw new InvalidScorm12ArchiveException('sco_resource_without_href_message');
+                    }
+
+                    return $href->nodeValue;
+                }
+            }
+        }
+        throw new InvalidScorm12ArchiveException('sco_without_resource_message');
+    }
+
+    /**
+     * Copy given sco and its children
+     *
+     * @param Scorm12Sco $sco
+     * @param Scorm12Resource $resource
+     * @param Scorm12Sco $scoParent
+     */
+    private function copySco(
+        Scorm12Sco $sco,
+        Scorm12Resource $resource,
+        Scorm12Sco $scoParent = null
+    )
+    {
+        $scoCopy = new Scorm12Sco();
+        $scoCopy->setScormResource($resource);
+        $scoCopy->setScoParent($scoParent);
+        $scoCopy->setEntryUrl($sco->getEntryUrl());
+        $scoCopy->setIdentifier($sco->getIdentifier());
+        $scoCopy->setIsBlock($sco->getIsBlock());
+        $scoCopy->setLaunchData($sco->getLaunchData());
+        $scoCopy->setMasteryScore($sco->getMasteryScore());
+        $scoCopy->setMaxTimeAllowed($sco->getMaxTimeAllowed());
+        $scoCopy->setParameters($sco->getParameters());
+        $scoCopy->setPrerequisites($sco->getPrerequisites());
+        $scoCopy->setTimeLimitAction($sco->getTimeLimitAction());
+        $scoCopy->setTitle($sco->getTitle());
+        $scoCopy->setVisible($sco->isVisible());
+        $this->om->persist($scoCopy);
+
+        foreach ($sco->getScoChildren() as $scoChild) {
+            $this->copySco($scoChild, $resource, $scoCopy);
+        }
     }
 }
