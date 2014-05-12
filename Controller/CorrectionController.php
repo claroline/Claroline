@@ -550,9 +550,10 @@ class CorrectionController extends DropzoneBaseController
 
     /**
      * @Route(
-     *      "/{resourceId}/drops/detail/correction/standard/{state}/{correctionId}",
+     *      "/{resourceId}/drops/detail/correction/standard/{state}/{correctionId}/{backUserId}",
      *      name="icap_dropzone_drops_detail_correction_standard",
-     *      requirements={"resourceId" = "\d+", "correctionId" = "\d+", "state" = "show|edit"}
+     *      requirements={"resourceId" = "\d+", "correctionId" = "\d+", "state" = "show|edit", "backUserId" = "\d+"},
+     *      defaults={"backUserId" = "-1"}
      * )
      * @ParamConverter("dropzone", class="IcapDropzoneBundle:Dropzone", options={"id" = "resourceId"})
      * @ParamConverter("user", options={
@@ -562,7 +563,7 @@ class CorrectionController extends DropzoneBaseController
      *      "messageTranslationDomain" = "icap_dropzone"
      * })
      */
-    public function dropsDetailCorrectionStandardAction(Dropzone $dropzone, $state, $correctionId, $user)
+    public function dropsDetailCorrectionStandardAction(Dropzone $dropzone, $state, $correctionId, $user, $backUserId)
     {
         $this->isAllowToOpen($dropzone);
         $this->isAllowToEdit($dropzone);
@@ -632,7 +633,8 @@ class CorrectionController extends DropzoneBaseController
                 'form' => $form->createView(),
                 'admin' => true,
                 'edit' => $edit,
-                'state' => $state
+                'state' => $state,
+                'backUserId' => $backUserId,
             )
         );
     }
@@ -661,8 +663,16 @@ class CorrectionController extends DropzoneBaseController
     public function dropsDetailCorrectionAction(Dropzone $dropzone, $state, $correctionId, $page, $user)
     {
         $this->isAllowToOpen($dropzone);
-        if($state != 'preview')
-        {
+        $correction = $this
+            ->getDoctrine()
+            ->getRepository('IcapDropzoneBundle:Correction')
+            ->getCorrectionAndDropAndUserAndDocuments($dropzone, $correctionId);
+        $userId = $this->get('security.context')->getToken()->getUser()->getId();
+        if ($state == 'preview') {
+            if ($correction->getDrop()->getUser()->getId() != $userId) {
+                throw new AccessDeniedException();
+            }
+        } else {
             $this->isAllowToEdit($dropzone);
         }
         //$this->checkUserGradeAvailable($dropzone);
@@ -682,10 +692,7 @@ class CorrectionController extends DropzoneBaseController
         }
 
         /** @var Correction $correction */
-        $correction = $this
-            ->getDoctrine()
-            ->getRepository('IcapDropzoneBundle:Correction')
-            ->getCorrectionAndDropAndUserAndDocuments($dropzone, $correctionId);
+
 
         $edit = $state == 'edit';
 
@@ -1090,13 +1097,20 @@ class CorrectionController extends DropzoneBaseController
      * @Route(
      *      "/{resourceId}/drops/detail/correction/validation/{value}/{correctionId}",
      *      name="icap_dropzone_drops_detail_correction_validation",
-     *      requirements={"resourceId" = "\d+", "correctionId" = "\d+", "value" = "no|yes"}
+     *      requirements={"resourceId" = "\d+", "correctionId" = "\d+", "value" = "no|yes"},
+     *      defaults={"routeParam"="default"}
+     * )
+     * @Route(
+     *      "/{resourceId}/drops/detail/correction/validation/byUser/{value}/{correctionId}",
+     *      name="icap_dropzone_drops_detail_correction_validation_by_user",
+     *      requirements={"resourceId" = "\d+", "correctionId" = "\d+", "value" = "no|yes"},
+     *      defaults={"routeParam"="byUser"}
      * )
      * @ParamConverter("dropzone", class="IcapDropzoneBundle:Dropzone", options={"id" = "resourceId"})
      * @ParamConverter("correction", class="IcapDropzoneBundle:Correction", options={"id" = "correctionId"})
      * @Template()
      */
-    public function setCorrectionValidationAction(Dropzone $dropzone, Correction $correction, $value)
+    public function setCorrectionValidationAction(Dropzone $dropzone, Correction $correction, $value, $routeParam)
     {
         $this->isAllowToOpen($dropzone);
         $this->isAllowToEdit($dropzone);
@@ -1115,15 +1129,27 @@ class CorrectionController extends DropzoneBaseController
         $event = new LogCorrectionValidationChangeEvent($dropzone, $correction->getDrop(), $correction);
         $this->dispatch($event);
 
-        return $this->redirect(
-            $this->generateUrl(
-                'icap_dropzone_drops_detail',
-                array(
-                    'resourceId' => $dropzone->getId(),
-                    'dropId' => $correction->getDrop()->getId(),
+        if ($routeParam == 'default') {
+            return $this->redirect(
+                $this->generateUrl(
+                    'icap_dropzone_drops_detail',
+                    array(
+                        'resourceId' => $dropzone->getId(),
+                        'dropId' => $correction->getDrop()->getId(),
+                    )
                 )
-            )
-        );
+            );
+        } else if ($routeParam == "byUser") {
+            return $this->redirect(
+                $this->generateUrl(
+                    'icap_dropzone_examiner_corrections',
+                    array(
+                        'resourceId' => $dropzone->getId(),
+                        'userId' => $correction->getUser()->getId(),
+                    )
+                )
+            );
+        }
     }
 
     /**
@@ -1287,6 +1313,69 @@ class CorrectionController extends DropzoneBaseController
         );
     }
 
+    /**
+     *
+     * @Route(
+     *      "/{resourceId}/examiners/{userId}",
+     *      name="icap_dropzone_examiner_corrections",
+     *      requirements ={"resourceId" ="\d+","userId"="\d+"},
+     *      defaults={"page" = 1 }
+     * )
+     *
+     * @Route(
+     *      "/{resourceId}/examiners/{userId}/{page}",
+     *      name="icap_dropzone_examiner_corrections_paginated",
+     *      requirements ={"resourceId" ="\d+","userId"="\d+","page"="\d+"},
+     *      defaults={"page" = 1 }
+     * )
+     *
+     *
+     * @ParamConverter("dropzone",class="IcapDropzoneBundle:Dropzone",options={"id" = "resourceId"})
+     * @ParamConverter("user",class="ClarolineCoreBundle:User",options={"id" = "userId"})
+     * @Template()
+     *
+     *
+     * **/
+    public function correctionsByUserAction(Dropzone $dropzone, User $user, $page)
+    {
+        $this->isAllowToOpen($dropzone);
+        $this->isAllowToEdit($dropzone);
+
+        $correctionsQuery = $this->getDoctrine()->getManager()
+            ->getRepository('IcapDropzoneBundle:Correction')
+            ->getByDropzoneUser($dropzone->getId(), $user->getId(), true);
+
+
+        $adapter = new DoctrineORMAdapter($correctionsQuery);
+        $pager = new Pagerfanta($adapter);
+        $pager->setMaxPerPage(DropzoneBaseController::CORRECTION_PER_PAGE);
+        try {
+            $pager->setCurrentPage($page);
+        } catch (NotValidCurrentPageException $e) {
+            if ($page > 0) {
+                return $this->redirect(
+                    $this->generateUrl(
+                        'icap_dropzone_examiner_corrections_paginated',
+                        array(
+                            'resourceId' => $dropzone->getId(),
+                            'userId' => $user->getId(),
+                        )
+                    )
+                );
+            } else {
+                throw new NotFoundHttpException();
+            }
+        }
+        $corrections = $pager->getCurrentPageResults();
+
+        return array(
+            '_resource' => $dropzone,
+            'dropzone' => $dropzone,
+            'pager' => $pager,
+            'user' => $user,
+            'corrections' => $corrections,
+        );
+    }
 
     /**
      * 
@@ -1383,7 +1472,7 @@ class CorrectionController extends DropzoneBaseController
 
     }
 
-    private function addCorrectionCount($dropzone,$users)
+    private function addCorrectionCount(Dropzone $dropzone, $users)
     {
         $correctionRepo = $this->getDoctrine()->getManager()->getRepository('IcapDropzoneBundle:Correction');
         $dropRepo = $this->getDoctrine()->getManager()->getRepository('IcapDropzoneBundle:Drop');
@@ -1392,7 +1481,7 @@ class CorrectionController extends DropzoneBaseController
 
             $reponseItem = array();
             $responseItem['userId'] = $user->getId();
-            $corrections = $correctionRepo->getCorrectionsByUser($dropzone,  $user );
+            $corrections = $correctionRepo->getByDropzoneUser($dropzone->getId(), $user->getId());
             $count = count($corrections);
             $responseItem['correction_count'] = $count;
 

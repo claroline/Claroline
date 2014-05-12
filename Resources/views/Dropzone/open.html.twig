@@ -38,7 +38,7 @@
                 {{ 'Evaluation finished'|trans({}, 'icap_dropzone') }}
             </p>
         {% endif %}
-        {% if dropzone.peerReview and  not PeerReviewEndCase %}
+        {% if (dropzone.peerReview) and (not (PeerReviewEndCase)) %}
             {% set expectedCorrections = dropzone.expectedTotalCorrection - nbCorrections %}
         {% else %}
             {% set expectedCorrections = 0 %}
