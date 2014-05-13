@@ -142,6 +142,18 @@ class TransfertManager
         $this->createWorkspace($configuration, $owner, true, $createUsers, $importUsers);
     }
 
+    /**
+     * @param Configuration $configuration
+     * @param User $owner
+     * @param bool $isValidated
+     * @param bool $createUsers
+     * @param bool $importUsers
+     * @return SimpleWorkspace
+     *
+     * The template doesn't need to be validated anymore if
+     *  - it comes from the self::import() function
+     *  - we want to create a user from the default template (it should work no matter what)
+     */
     public function createWorkspace(
         Configuration $configuration,
         User $owner,
@@ -210,6 +222,8 @@ class TransfertManager
 
         //users also import workspaces and fire the setImporters method with an other config file
         //@todo find a way to fix the above comment
+        //because we need setConfiguration/getConfiguration
+        //and setRootPath/getRootPath
         $this->setImporters($configuration, $data);
 
         $dir = new Directory();
@@ -230,7 +244,7 @@ class TransfertManager
         $this->om->endFlushSuite();
 
         //add missing tools for workspace
-        $this->container->get('claroline.manager.tool_manager')->addMissingWorkspaceTools($workspace);
+        //$this->container->get('claroline.manager.tool_manager')->addMissingWorkspaceTools($workspace);
 
         return $workspace;
     }

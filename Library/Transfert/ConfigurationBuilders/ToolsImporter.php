@@ -127,9 +127,9 @@ class ToolsImporter extends Importer implements ConfigurationInterface
         foreach ($data['tools'] as $tool) {
             $importer = $this->getImporterByName($tool['tool']['type']);
 
-//            if (!$importer) {
-//                throw new InvalidConfigurationException('The importer ' . $tool['tool']['type'] . ' does not exist');
-//            }
+            if (!$importer) {
+                throw new InvalidConfigurationException('The importer ' . $tool['tool']['type'] . ' does not exist');
+            }
 
             if (isset($tool['tool']['data'])) {
                 $array['data'] = $tool['tool']['data'];

@@ -29,35 +29,51 @@ class Configuration
     private $selfUnregistration = false;
     private $templateFile;
     private $extractPath;
-    private $owner;
-    private $isStrict;
+    private $owner = null;
 
     public function __construct($path)
     {
-        $this->isStrict = true;
         $this->templateFile = $path;
         $this->workspaceType = self::TYPE_SIMPLE;
-        $archive = new \ZipArchive();
-        $this->owner = null;
 
-        if (true === $code = $archive->open($path)) {
+        //Default.zip is the template used for creating users.
+        //Therefore we don't want to extract it every time.
+        if (strpos($path, 'default.zip')) {
+            $rootPath = str_replace('default.zip', '', $path);
+            $extractPath = $rootPath . "default";
 
-            $extractPath = sys_get_temp_dir() . DIRECTORY_SEPARATOR . uniqid();
-            $this->setExtractPath($extractPath);
-            $archive = new \ZipArchive();
-
-            if ($archive->open($path) === TRUE) {
-                $archive->extractTo($extractPath);
-                $archive->close();
+            if (!is_dir($this->extractPath)) {
+                $archive = new \ZipArchive();
+                if (true === $code = $archive->open($path)) {
+                    $this->extract($extractPath, $archive);
+                }
             }
-
-            $resolver = new Resolver($extractPath);
-            $this->data = $resolver->resolve();
         } else {
-            throw new \Exception(
-                "Couldn't open template archive '{$path}' (error {$code})"
-            );
+            $archive = new \ZipArchive();
+            if (true === $code = $archive->open($path)) {
+                $extractPath = sys_get_temp_dir() . DIRECTORY_SEPARATOR . uniqid();
+                $this->extract($extractPath, $archive);
+            } else {
+                throw new \Exception(
+                    "Couldn't open template archive '{$path}' (error {$code})"
+                );
+            }
         }
+    }
+
+    /**
+     * Assume the archive is already opened.
+     *
+     * @param $extractPath
+     * @param $archive
+     */
+    private function extract($extractPath, $archive)
+    {
+        $archive->extractTo($extractPath);
+        $archive->close();
+        $this->setExtractPath($extractPath);
+        $resolver = new Resolver($extractPath);
+        $this->data = $resolver->resolve();
     }
 
     /**

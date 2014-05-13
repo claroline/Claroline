@@ -16,7 +16,6 @@ use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Claroline\CoreBundle\Library\Transfert\Importer;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use Symfony\Component\Config\Definition\Processor;
-use Claroline\CoreBundle\Manager\UserManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
@@ -28,18 +27,18 @@ use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 class OwnerImporter extends Importer implements ConfigurationInterface
 {
     private $om;
-    private $userManager;
+    private $container;
 
     /**
      * @DI\InjectParams({
      *     "om"          = @DI\Inject("claroline.persistence.object_manager"),
-     *     "userManager" = @DI\Inject("claroline.manager.user_manager")
+     *     "container"   = @DI\Inject("service_container")
      * })
      */
-    public function __construct(ObjectManager $om, UserManager $userManager)
+    public function __construct(ObjectManager $om, $container)
     {
         $this->om = $om;
-        $this->userManager = $userManager;
+        $this->container = $container;
     }
 
     public function  getConfigTreeBuilder()
@@ -195,7 +194,7 @@ class OwnerImporter extends Importer implements ConfigurationInterface
                 }
             }
 
-            $user = $this->userManager->createUser($user);
+            $user = $this->container->get('claroline.manager.user_manager')->createUser($user);
         } else {
             $userEntities = $this->om->getRepository('ClarolineCoreBundle:User')
                 ->findBy(array('username' => $owner['username']));
