@@ -82,6 +82,8 @@ textarea {
     .list-group {
         .box-shadow(none);
         width: 400px;
+        position: relative;
+        top: 0;
         .list-group-item {
             border: none;
             padding-left: 12px;
@@ -118,6 +120,36 @@ textarea {
                 .border-bottom-radius(0);
             }
         }
+    }
+
+    .scroll-up, .scroll-down {
+        background: @navbar-default-bg;
+        position: absolute;
+        width: 100%;
+        margin: 0;
+        padding: 0;
+        text-align: center;
+        cursor: pointer;
+        z-index: 3;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+
+        &:hover {
+            background: @navbar-default-link-active-bg;
+            color: @navbar-default-link-active-color
+        }
+    }
+
+    .scroll-up {
+        top: 50px;
+        border-bottom: 2px solid  @navbar-default-border;
+    }
+
+    .scroll-down {
+        bottom: 0;
+        border-top: 2px solid  @navbar-default-border;
     }
 }
 
@@ -369,6 +401,9 @@ textarea {
 }
 
 .content-element {
+    .panel-heading, .panel-body {
+        overflow: hidden;
+    }
     > .nav.nav-pills{
         margin-bottom: 5px;
         border: 1px solid transparent;
@@ -962,10 +997,6 @@ form .global-error {
         margin-bottom: 20px;
     }
 
-    a {
-        word-break: break-all;
-    }
-
     h1, h2, h3, h4, h5, h6 {
         margin-top: 0;
     }
@@ -1303,7 +1334,8 @@ body.mce-fullscreen .modal.fullscreen {
 .white-space {
     vertical-align: top;
     white-space: nowrap;
- }
+}
+
 /**********************/
 /**    Facebook      **/
 /**********************/

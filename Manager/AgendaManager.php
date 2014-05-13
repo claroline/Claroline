@@ -12,11 +12,15 @@
 namespace Claroline\CoreBundle\Manager;
 
 use Claroline\CoreBundle\Entity\Event;
+use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Config\Definition\Exception\Exception;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Claroline\CoreBundle\Manager\RoleManager;
+use Symfony\Component\Translation\Translator;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
  * @DI\Service("claroline.manager.agenda_manager")
@@ -25,23 +29,98 @@ class AgendaManager
 {
     private $om;
     private $security;
+    private $rm;
+    private $translator;
 
     /**
      * @DI\InjectParams({
-     *     "om"                 = @DI\Inject("claroline.persistence.object_manager"),
-     *     "rootDir"            = @DI\Inject("%kernel.root_dir%"),
-     *     "security"           = @DI\Inject("security.context")
+     *     "om"           = @DI\Inject("claroline.persistence.object_manager"),
+     *     "rootDir"      = @DI\Inject("%kernel.root_dir%"),
+     *     "security"     = @DI\Inject("security.context"),
+     *     "rm"           =  @DI\Inject("claroline.manager.role_manager"),
+     *     "translator"   = @DI\Inject("translator")
      * })
      */
     public function __construct(
         ObjectManager $om,
         $rootDir,
-        SecurityContextInterface $security
+        SecurityContextInterface $security,
+        RoleManager $rm,
+        Translator $translator
     )
     {
         $this->rootDir = $rootDir;
         $this->om = $om;
         $this->security = $security;
+        $this->rm = $rm;
+        $this->translator = $translator;
+    }
+
+    public function addEvent(Event $event, $workspace = null)
+    {
+        if(!is_null($workspace)) {    
+            $this->checkUserIsAllowed('agenda', $workspace);
+        }
+        // the end date has to be bigger
+        if ($event->getStart() <= $event->getEnd()) {
+            if(! is_null($workspace)) {
+                $event->setWorkspace($workspace);
+            }
+
+            $event->setUser($this->security->getToken()->getUser());
+            $this->om->persist($event);
+            if ($event->getRecurring() > 0) {
+                $this->calculRecurrency($event);
+            }
+            $this->om->flush();
+            $start = is_null($event->getStart())? null : $event->getStart()->getTimestamp();
+            $end = is_null($event->getEnd())? null : $event->getEnd()->getTimestamp();
+            $data = array(
+                'id' => $event->getId(),
+                'title' => $event->getTitle(),
+                'start' => $start,
+                'end' => $end,
+                'color' => $event->getPriority(),
+                'allDay' => $event->getAllDay()
+            );
+            return array(
+                'code' => 200,
+                'message' => $data
+                );
+        }
+        return array(
+                'code' => 400,
+                'message' => 'Start date has to be bigger'
+                );
+    }
+
+    /**
+     * @param  int $id 
+     * @return boolean
+     */
+    public function deleteEvent($id, $workspace = null)
+    {
+        if(!is_null($workspace)) {
+            $this->checkUserIsAllowed('agenda', $workspace);
+            if (!$this->checkUserIsAllowedtoWrite($workspace, $event)) {
+                throw new AccessDeniedException();
+            }
+        }
+        $repository = $this->om->getRepository('ClarolineCoreBundle:Event');
+        $event = $repository->find($id);
+        $this->om->remove($event);
+        $this->om->flush();
+
+        return true;
+    }
+
+    public function desktopEvents(){
+        $usr = $this->security->getToken()->getUser();
+        $listEvents = $this->om->getRepository('ClarolineCoreBundle:Event')->findByUser($usr, 0);
+        $desktopEvents = $this->om->getRepository('ClarolineCoreBundle:Event')->findDesktop($usr, 0);
+        $data = array_merge($this->convertEventoArray($listEvents), $this->convertEventoArray($desktopEvents));
+
+        return $data;
     }
 
     /**
@@ -147,5 +226,150 @@ class AgendaManager
         $this->om->endFlushSuite();     
 
         return $i;
+    }
+
+    public function updateEvent($event, $allDay, $workspace)
+    {
+        $this->checkUserIsAllowed('agenda', $workspace);
+        if (!$this->checkUserIsAllowedtoWrite($workspace, $event)) {
+            throw new AccessDeniedException();
+        }
+        $event->setAllDay($allDay);
+        $this->om->flush();
+
+        return true;
+    }
+
+    public function displayEvents(AbstractWorkspace $workspace)
+    {
+        $this->checkUserIsAllowed('agenda', $workspace);
+        $listEvents = $this->om->getRepository('ClarolineCoreBundle:Event')
+            ->findbyWorkspaceId($workspace->getId(), false);
+        $role = $this->checkUserIsAllowedtoWrite($workspace);
+        $data = array();
+        foreach ($listEvents as $key => $object) {
+            $data[$key]['id'] = $object->getId();
+            $data[$key]['title'] = $object->getTitle();
+            $data[$key]['allDay'] = $object->getAllDay();
+            $data[$key]['start'] = $object->getStart()->getTimestamp();
+            $data[$key]['end'] = $object->getEnd()->getTimestamp();
+            $data[$key]['color'] = $object->getPriority();
+            $data[$key]['description'] = $object->getDescription();
+            $data[$key]['owner'] = $object->getUser()->getUsername();
+            if ($data[$key]['owner'] === $this->security->getToken()->getUser()->getUsername()) {
+                $data[$key]['editable'] = true;
+            } else {
+                $data[$key]['editable'] = $role;
+            }
+        }
+        return $data;
+    }
+
+    public function moveEvent($id, $dayDelta, $minuteDelta)
+    {
+        $repository = $this->om->getRepository('ClarolineCoreBundle:Event');
+        $event = $repository->find($id);
+        // if is null = desktop event
+        if (!is_null($event->getWorkspace())) {
+            $this->checkUserIsAllowed('agenda', $event->getWorkspace());
+
+            if (!$this->checkUserIsAllowedtoWrite($event->getWorkspace())) {
+                throw new AccessDeniedException();
+            }
+        }
+
+        // timestamp 1h = 3600
+        $newStartDate = strtotime(
+            $dayDelta . ' day ' . $minuteDelta . ' minute',
+            $event->getStart()->getTimestamp()
+        );
+        $dateStart = new \DateTime(date('d-m-Y H:i', $newStartDate));
+        $event->setStart($dateStart);
+        $newEndDate = strtotime(
+            $dayDelta . ' day ' . $minuteDelta . ' minute',
+            $event->getEnd()->getTimestamp()
+        );
+        $dateEnd = new \DateTime(date('d-m-Y H:i', $newEndDate));
+        $event->setStart($dateStart);
+        $event->setEnd($dateEnd);
+        $this->om->flush();
+
+        $data = array(
+            'id' => $event->getId(),
+            'title' => $event->getTitle(),
+            'allDay' => $event->getAllDay(),
+            'start' => $event->getStart()->getTimestamp(),
+            'end' => $event->getEnd()->getTimestamp(),
+            'color' => $event->getPriority()
+        );
+
+        return $data;
+    }
+
+    private function checkUserIsAllowedtoWrite(AbstractWorkspace $workspace, Event $event = null)
+    {
+        $usr = $this->security->getToken()->getUser();
+        $rm = $this->rm->getManagerRole($workspace);
+        $ru = $this->rm->getWorkspaceRolesForUser($usr, $workspace);
+        
+        if (!is_null($event)) {
+            if ($event->getUser()->getUsername() === $usr->getUsername()) {
+                return true;
+            }
+        }
+        
+        foreach ($ru as $role) {
+            if ($role->getTranslationKey() === $rm->getTranslationKey()) {
+                return true;
+            }
+
+            return false;
+        }
+    }
+
+    private function checkUserIsAllowed($permission, AbstractWorkspace $workspace)
+    {
+        if (!$this->security->isGranted($permission, $workspace)) {
+            throw new AccessDeniedException();
+        }
+    }
+
+    private function convertEventoArray($listEvents)
+    {
+        $data = array();
+
+        foreach ($listEvents as $key => $object) {
+            $data[$key]['id'] = $object->getId();
+            $workspace = $object->getWorkspace();
+            $data[$key]['title'] = !is_null($workspace) ?
+                $workspace->getName() :
+                $this->translator->trans('desktop', array(), 'platform');
+            $data[$key]['title'] .= ' : ' . $object->getTitle();
+            $data[$key]['allDay'] = $object->getAllDay();
+            $data[$key]['start'] = $object->getStart()->getTimestamp();
+            $data[$key]['end'] = $object->getEnd()->getTimestamp();
+            $data[$key]['color'] = $object->getPriority();
+            $data[$key]['visible'] = true;
+        }
+
+        return($data);
+    }
+
+    private function calculRecurrency(Event $event)
+    {
+        $listEvents = array();
+
+        // it calculs by day for now
+        for ($i = 1; $i <= $event->getRecurring(); $i++) {
+            $temp = clone $event;
+            $newStartDate = $temp->getStart()->getTimestamp() + (3600 * 24 * $i);
+            $temp->setStart(new \DateTime(date('d-m-Y H:i', $newStartDate)));
+            $newEndDate = $temp->getEnd()->getTimestamp() + (3600 * 24 * $i);
+            $temp->setEnd(new \DateTime(date('d-m-Y H:i', $newEndDate)));
+            $listEvents[$i] = $temp;
+            $this->om->persist($listEvents[$i]);
+
+            return $listEvents;
+        }
     }
 } 

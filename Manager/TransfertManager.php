@@ -55,7 +55,7 @@ class TransfertManager
     /**
      * Import a workspace
      */
-    public function validate(array $data)
+    public function validate(array $data, $validateUsers = true)
     {
         $usersImporter  = $this->getImporterByName('user');
         $groupsImporter = $this->getImporterByName('groups');
@@ -64,10 +64,16 @@ class TransfertManager
         $ownerImporter  = $this->getImporterByName('owner');
         $importer = $this->getImporterByName('workspace_properties');
 
-        //owner
-        if (isset($data['members']['owner'])) {
-            $owner['owner'] = $data['members']['owner'];
-            $ownerImporter->validate($owner);
+        if ($validateUsers) {
+            if (isset($data['members']['owner'])) {
+                $owner['owner'] = $data['members']['owner'];
+                $ownerImporter->validate($owner);
+            }
+
+            if (isset($data['members']['users'])) {
+                $users['users'] = $data['members']['users'];
+                $usersImporter->validate($users);
+            }
         }
 
         //properties
@@ -79,11 +85,6 @@ class TransfertManager
         if (isset($data['roles'])) {
             $roles['roles'] = $data['roles'];
             $rolesImporter->validate($roles);
-        }
-
-        if (isset($data['members']['users'])) {
-            $users['users'] = $data['members']['users'];
-            $usersImporter->validate($users);
         }
 
         if (isset($data['members']['groups'])) {
@@ -98,34 +99,30 @@ class TransfertManager
 
     }
 
-    public function import(Configuration $configuration, $importUsers = false)
+    public function import(
+        Configuration $configuration,
+        $createUsers = false,
+        $importUsers = false
+    )
     {
         $data = $configuration->getData();
-        $owner = null;
 
         if (isset($data['properties']['owner'])) {
-            $owner = $this->om->getRepository('ClarolineCoreBundle:User')
+            $user = $this->om->getRepository('ClarolineCoreBundle:User')
                 ->findOneByUsername($data['properties']['owner']);
-            $configuration->setOwner($owner);
         } else {
             $user = $this->container->get('security.context')->getToken()->getUser();
-            $configuration->setOwner($user);
         }
 
+        $configuration->setOwner($user);
         $this->setImporters($configuration, $data);
-        $this->validate($data);
+        $this->validate($data, $createUsers);
 
-        if ($importUsers) {
+        $owner = null;
+
+        if ($createUsers) {
             if (isset($data['members']['owner'])) {
                 $owner = $this->getImporterByName('owner')->import($data['members']['owner'], null);
-            }
-
-            if (isset($data['members']['users'])) {
-                $this->getImporterByName('user')->import($data['members']['users']);
-            }
-        } else {
-            if ($data['properties']['owner'] !== null) {
-                $this->om->getRepository('ClarolineCoreBundle:User')->findOneByUsername($data['properties']['owner']);
             }
         }
 
@@ -140,11 +137,18 @@ class TransfertManager
         $configuration->setSelfRegistration($data['properties']['self_registration']);
         $configuration->setSelfUnregistration($data['properties']['self_unregistration']);
 
-        $this->createWorkspace($configuration, $owner, true);
+        $this->createWorkspace($configuration, $owner, true, $createUsers, $importUsers);
     }
 
-    public function createWorkspace(Configuration $configuration, User $owner, $isValidated = false)
+    public function createWorkspace(
+        Configuration $configuration,
+        User $owner,
+        $isValidated = false,
+        $createUsers = false,
+        $importUsers = false
+    )
     {
+        //throw new \Exception($configuration->getExtractPath());
         $configuration->setOwner($owner);
         $data = $configuration->getData();
         $this->om->startFlushSuite();
@@ -172,6 +176,7 @@ class TransfertManager
         $this->om->persist($workspace);
         $this->om->flush();
 
+        //throw new \Exception($configuration->getExtractPath());
         //load roles
         $entityRoles = $this->getImporterByName('roles')->import($data['roles'], $workspace);
         //The manager role is required for every workspace
@@ -185,10 +190,30 @@ class TransfertManager
         $owner->addRole($entityRoles['ROLE_WS_MANAGER']);
         $this->om->persist($owner);
 
+        //add base roles to the role array
+        $pfRoles = $this->om->getRepository('ClarolineCoreBundle:Role')->findAllPlatformRoles();
+
+        foreach ($pfRoles as $pfRole) {
+            $entityRoles[$pfRole->getName()] = $pfRole;
+        }
+
+        $entityRoles['ROLE_ANONYMOUS'] = $this->om
+            ->getRepository('ClarolineCoreBundle:Role')->findOneByName('ROLE_ANONYMOUS');
+
+
+        if ($createUsers) {
+            if (isset($data['members']['users'])) {
+                $this->getImporterByName('user')->import($data['members']['users'], $entityRoles);
+            }
+        }
+
+        //users also import workspaces and fire the setImporters method with an other config file
+        //@todo find a way to fix the above comment
+        $this->setImporters($configuration, $data);
+
         $dir = new Directory();
         $dir->setName($workspace->getName());
 
-        //check if the resource manager configuration exists
         $root = $this->container->get('claroline.manager.resource_manager')->create(
             $dir,
             $this->om->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceType')->findOneByName('directory'),

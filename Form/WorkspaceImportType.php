@@ -35,6 +35,15 @@ class WorkspaceImportType extends AbstractType
             )
         );
         $builder->add(
+            'create_users',
+            'checkbox',
+            array(
+                'label' => 'create_users',
+                'mapped' => false,
+                'required' => false
+            )
+        );
+        $builder->add(
             'import_users',
             'checkbox',
             array(

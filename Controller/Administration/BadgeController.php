@@ -194,10 +194,11 @@ class BadgeController extends Controller
     /**
      * @Route("/award/{slug}", name="claro_admin_badges_award")
      * @ParamConverter("badge", converter="badge_converter")
+     * @ParamConverter("loggedUser", options={"authenticatedUser" = true})
      *
      * @Template()
      */
-    public function awardAction(Request $request, Badge $badge)
+    public function awardAction(Request $request, Badge $badge, User $loggedUser)
     {
         $this->checkOpen();
 
@@ -215,8 +216,9 @@ class BadgeController extends Controller
                 try {
                     $doctrine = $this->getDoctrine();
 
-                    $group        = $form->get('group')->getData();
-                    $user         = $form->get('user')->getData();
+                    $group   = $form->get('group')->getData();
+                    $user    = $form->get('user')->getData();
+                    $comment = $form->get('comment')->getData();
 
                     /** @var \Claroline\CoreBundle\Entity\User[] $users */
                     $users = array();
@@ -229,7 +231,7 @@ class BadgeController extends Controller
 
                     /** @var \Claroline\CoreBundle\Manager\BadgeManager $badgeManager */
                     $badgeManager = $this->get('claroline.manager.badge');
-                    $awardedBadge = $badgeManager->addBadgeToUsers($badge, $users);
+                    $awardedBadge = $badgeManager->addBadgeToUsers($badge, $users, $comment, $loggedUser);
 
                     $flashMessageType = 'error';
 

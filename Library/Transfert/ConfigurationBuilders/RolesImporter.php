@@ -132,19 +132,21 @@ class RolesImporter extends Importer implements ConfigurationInterface
 
         foreach ($roles as $role) {
             if (!$role['role']['is_base_role']) {
-                $entityRoles[$role['role']['name']] = $this->roleManager->createWorkspaceRole(
+                $roleEntity = $this->roleManager->createWorkspaceRole(
                     "{$role['role']['name']}_{$workspace->getGuid()}",
                     $role['role']['translation'],
                     $workspace,
                     false
                 );
             } else {
-                $entityRoles[$role['role']['name']] = $this->roleManager->createBaseRole(
+                $roleEntity = $this->roleManager->createBaseRole(
                     $role['role']['name'],
                     $role['role']['translation'],
                     false
                 );
             }
+
+            $entityRoles[$role['role']['name']] = $roleEntity;
         }
 
         return $entityRoles;

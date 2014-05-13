@@ -53,7 +53,6 @@ class Configuration
 
             $resolver = new Resolver($extractPath);
             $this->data = $resolver->resolve();
-
         } else {
             throw new \Exception(
                 "Couldn't open template archive '{$path}' (error {$code})"

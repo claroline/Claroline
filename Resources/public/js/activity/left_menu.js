@@ -18,13 +18,11 @@
 
     $('#progress-bar').html(currentStep + '/' + totalSteps);
 
-    $('.icon-arrow-right').live('click', function () {
+    $('body').on('click', '.icon-arrow-right', function () {
         currentItem++;
         if (currentItem >= totalItems) {currentItem = totalItems; }
         loadRightFrame(currentItem);
-    });
-
-    $('.icon-arrow-left').live('click', function () {
+    }).on('click', '.icon-arrow-left', function () {
         currentItem--;
         if (currentItem <= 1) {currentItem = 1; }
         loadRightFrame(currentItem);

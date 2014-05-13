@@ -12,6 +12,7 @@ abstract class Importer
     private $configuration;
     private $owner;
     private $isStrict;
+    private $roles = array();
 
     public function setListImporters(ArrayCollection $importers)
     {
@@ -74,6 +75,16 @@ abstract class Importer
         return $this->isStrict;
     }
 
+    public function setWorkspace($workspace)
+    {
+        $this->workspace = $workspace;
+    }
+
+    public function getWorkspace()
+    {
+        return $this->workspace;
+    }
+
     /**
      * Platform roles must be on every platforms. They don't need to be created.
      * ROLE_WS_MANAGER is created automatically.
@@ -87,6 +98,21 @@ abstract class Importer
             'ROLE_ADMIN',
             'ROLE_ANONYMOUS'
         );
+    }
+
+    public function setRolesEntity(array $roles)
+    {
+        $this->roles = $roles;
+    }
+
+    public function getRolesEntity()
+    {
+        return $this->roles;
+    }
+
+    public function addRoleEntity($role)
+    {
+        $this->roles[] = $role;
     }
 
     abstract function getName();

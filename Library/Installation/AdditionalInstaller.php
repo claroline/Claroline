@@ -14,6 +14,9 @@ namespace Claroline\CoreBundle\Library\Installation;
 use Claroline\CoreBundle\Library\Installation\Updater\MaintenancePageUpdater;
 use Claroline\CoreBundle\Library\Workspace\TemplateBuilder;
 use Claroline\InstallationBundle\Additional\AdditionalInstaller as BaseInstaller;
+use Symfony\Bundle\SecurityBundle\Command\InitAclCommand;
+use Symfony\Component\Console\Input\ArrayInput;
+use Symfony\Component\Console\Output\NullOutput;
 
 class AdditionalInstaller extends BaseInstaller
 {
@@ -69,7 +72,10 @@ class AdditionalInstaller extends BaseInstaller
         }
 
         if (version_compare($currentVersion, '2.1.5', '<')) {
-             $this->createAclTablesIfNotExist();
+            $this->log('Creating acl tables if not present...');
+            $command = new InitAclCommand();
+            $command->setContainer($this->container);
+            $command->run(new ArrayInput(array()), new NullOutput());
         }
 
         if (version_compare($currentVersion, '2.2.0', '<')) {
@@ -140,6 +146,13 @@ class AdditionalInstaller extends BaseInstaller
             $updater021400 = new Updater\Updater021400($this->container);
             $updater021400->setLogger($this->logger);
             $updater021400->postUpdate();
+        }
+
+        if (version_compare($currentVersion, '2.14.1', '<')) {
+            $this->buildDefaultTemplate();
+            $updater021401 = new Updater\Updater021401($this->container);
+            $updater021401->setLogger($this->logger);
+            $updater021401->postUpdate();
         }
     }
 

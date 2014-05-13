@@ -33,6 +33,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Security\Core\SecurityContextInterface;
+use Symfony\Component\Security\Core\Encoder\EncoderFactory;
 
 /**
  * Controller of the user profile.
@@ -45,6 +46,7 @@ class ProfileController extends Controller
     private $security;
     private $request;
     private $localeManager;
+    private $encoderFactory;
 
     /**
      * @DI\InjectParams({
@@ -53,7 +55,8 @@ class ProfileController extends Controller
      *     "eventDispatcher" = @DI\Inject("claroline.event.event_dispatcher"),
      *     "security"        = @DI\Inject("security.context"),
      *     "request"         = @DI\Inject("request"),
-     *     "localeManager"   = @DI\Inject("claroline.common.locale_manager")
+     *     "localeManager"   = @DI\Inject("claroline.common.locale_manager"),
+     *     "encoderFactory" = @DI\Inject("security.encoder_factory")
      * })
      */
     public function __construct(
@@ -62,7 +65,8 @@ class ProfileController extends Controller
         StrictDispatcher $eventDispatcher,
         SecurityContextInterface $security,
         Request $request,
-        LocaleManager $localeManager
+        LocaleManager $localeManager,
+        EncoderFactory $encoderFactory
     )
     {
         $this->userManager = $userManager;
@@ -71,6 +75,7 @@ class ProfileController extends Controller
         $this->security = $security;
         $this->request = $request;
         $this->localeManager = $localeManager;
+        $this->encoderFactory = $encoderFactory;
     }
 
     private function isInRoles($role, $roles)
@@ -207,13 +212,13 @@ class ProfileController extends Controller
         }
 
         if (null === $user) {
-            $user         = $loggedUser;
+            $user = $loggedUser;
             $editYourself = true;
         }
 
         $roles = $this->roleManager->getPlatformRoles($loggedUser);
         $form = $this->createForm(
-            new ProfileType($roles, $isAdmin, $this->localeManager->getAvailableLocales()), $user
+            new ProfileType(array($roles), $isAdmin, $this->localeManager->getAvailableLocales()), $user
         );
 
         $form->handleRequest($this->request);
@@ -229,54 +234,55 @@ class ProfileController extends Controller
 
             $successMessage = $translator->trans('edit_profile_success', array(), 'platform');
             $errorMessage   = $translator->trans('edit_profile_error', array(), 'platform');
-            $redirectUrl    = $this->generateUrl('claro_admin_user_list');
+            $errorRight = $translator->trans('edit_profile_error_right', array(), 'platform');
+            $redirectUrl = $this->generateUrl('claro_admin_user_list');
+
             if ($editYourself) {
                 $successMessage = $translator->trans('edit_your_profile_success', array(), 'platform');
                 $errorMessage   = $translator->trans('edit_your_profile_error', array(), 'platform');
                 $redirectUrl    = $this->generateUrl('claro_profile_view');
             }
 
-            try {
-                $entityManager = $this->getDoctrine()->getManager();
-                $unitOfWork    = $entityManager->getUnitOfWork();
-                $unitOfWork->computeChangeSets();
+            $entityManager = $this->getDoctrine()->getManager();
+            $unitOfWork    = $entityManager->getUnitOfWork();
+            $unitOfWork->computeChangeSets();
 
-                $changeSet = $unitOfWork->getEntityChangeSet($user);
-                $newRoles  = array();
+            $changeSet = $unitOfWork->getEntityChangeSet($user);
+            $newRoles  = array();
 
-                if (isset($form['platformRoles'])) {
-                    $newRoles = $form['platformRoles']->getData();
-                    $this->userManager->setPlatformRoles($user, $newRoles);
-                }
-
-                $rolesChangeSet = array();
-                //Detect added
-                foreach ($newRoles as $role) {
-                    if (!$this->isInRoles($role, $roles)) {
-                        $rolesChangeSet[$role->getTranslationKey()] = array(false, true);
-                    }
-                }
-                //Detect removed
-                foreach ($roles as $role) {
-                    if (!$this->isInRoles($role, $newRoles)) {
-                        $rolesChangeSet[$role->getTranslationKey()] = array(true, false);
-                    }
-                }
-                if (count($rolesChangeSet) > 0) {
-                    $changeSet['roles'] = $rolesChangeSet;
-                }
-
-                $this->userManager->uploadAvatar($user);
-                $this->eventDispatcher->dispatch(
-                    'log',
-                    'Log\LogUserUpdate',
-                    array($user, $changeSet)
-                );
-
-                $sessionFlashBag->add('success', $successMessage);
-            } catch(\Exception $exception){
-                $sessionFlashBag->add('error', $errorMessage);
+            if (isset($form['platformRoles'])) {
+                $newRoles = $form['platformRoles']->getData();
+                $this->userManager->setPlatformRoles($user, $newRoles);
             }
+
+            $rolesChangeSet = array();
+            //Detect added
+            foreach ($newRoles as $role) {
+                if (!$this->isInRoles($role, $roles)) {
+                    $rolesChangeSet[$role->getTranslationKey()] = array(false, true);
+                }
+            }
+            //Detect removed
+            foreach ($roles as $role) {
+                if (!$this->isInRoles($role, $newRoles)) {
+                    $rolesChangeSet[$role->getTranslationKey()] = array(true, false);
+                }
+            }
+            if (count($rolesChangeSet) > 0) {
+                $changeSet['roles'] = $rolesChangeSet;
+            }
+            
+            if ($this->userManager->uploadAvatar($user) === false ) {
+                $sessionFlashBag->add('error', $errorRight);
+            }
+
+            $this->eventDispatcher->dispatch(
+                'log',
+                'Log\LogUserUpdate',
+                array($user, $changeSet)
+            );
+
+            $sessionFlashBag->add('success', $successMessage);
 
             return $this->redirect($redirectUrl);
         }
@@ -298,7 +304,8 @@ class ProfileController extends Controller
      */
     public function editPasswordAction(User $loggedUser)
     {
-        $form = $this->createForm(new ResetPasswordType(), $loggedUser);
+        $form = $this->createForm(new ResetPasswordType());
+        $oldPassword = $loggedUser->getPassword();
         $form->handleRequest($this->request);
 
         if ($form->isValid()) {
@@ -306,22 +313,17 @@ class ProfileController extends Controller
             $sessionFlashBag = $this->get('session')->getFlashBag();
             /** @var \Symfony\Bundle\FrameworkBundle\Translation\Translator $translator */
             $translator = $this->get('translator');
+            $loggedUser->setPlainPassword($form['password']->getData()); 
 
-            try {
-                /** @var \Claroline\CoreBundle\Entity\User $user */
-                $user = $form->getData();
-
-                if ($user !== $loggedUser) {
-                    throw new \Exception();
-                }
-
+            if ($this->encodePassword($loggedUser) === $oldPassword) {   
+                $loggedUser->setPlainPassword($form['plainPassword']->getData()); 
+                $loggedUser->setPassword($this->encodePassword($loggedUser));              
                 $entityManager = $this->get('doctrine.orm.entity_manager');
-                $entityManager->persist($user);
+                $entityManager->persist($loggedUser);
                 $entityManager->flush();
-
                 $sessionFlashBag->add('success', $translator->trans('edit_password_success', array(), 'platform'));
-            } catch(\Exception $exception){
-                $sessionFlashBag->add('error', $translator->trans('edit_password_error', array(), 'platform'));
+            } else {
+                $sessionFlashBag->add('error', $translator->trans('edit_password_error_current', array(), 'platform'));
             }
 
             return $this->redirect($this->generateUrl('claro_profile_view'));
@@ -398,5 +400,12 @@ class ProfileController extends Controller
 
         $response = new JsonResponse($data);
         return $response;
+    }
+
+    private function encodePassword(User $user)
+    {
+        return $this->encoderFactory
+            ->getEncoder($user)
+            ->encodePassword($user->getPlainPassword(), $user->getSalt());
     }
 }

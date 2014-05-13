@@ -59,6 +59,12 @@
                     </div>
                 </div>
             </div>
+            {% if '' != userBadge.comment %}
+                <div>
+                    <h3>{{ 'comment'|trans({}, 'badge') }} :</h3>
+                    {{ userBadge.comment|raw }}
+                </div>
+            {% endif %}
             {% set nbRules = badge.rules|length %}
             {% if 0 < nbRules %}
                 {% if 0 == validatedRules.validRules %}

@@ -98,7 +98,6 @@ class UsersImporter extends Importer implements ConfigurationInterface
         $availableRoleName[] = 'ROLE_ANONYMOUS';
         //ROLE_WS_MANAGER is created automatically
         $availableRoleName[] = 'ROLE_WS_MANAGER';
-
         $owner = null;
 
        if (isset($configuration['members']['owner']['username'])) {
@@ -248,7 +247,7 @@ class UsersImporter extends Importer implements ConfigurationInterface
         $configuration = $processor->processConfiguration($this, $data);
     }
 
-    public function import(array $data)
+    public function import(array $data, array $entityRoles)
     {
         $this->om->startFlushSuite();
 
@@ -262,9 +261,10 @@ class UsersImporter extends Importer implements ConfigurationInterface
             $userEntity->setMail($mail);
             $this->container->get('claroline.manager.user_manager')->createUser($userEntity);
 
-            //@todo add the roles
             if (isset($user['roles'])) {
-                //do smart things here
+                foreach ($user['roles'] as $role) {
+                    $user->addRole($entityRoles[$role]);
+                }
             }
         }
 

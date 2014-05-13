@@ -62,7 +62,6 @@ class UserBadge
     /**
      * @var User $issuer
      *
-     * @Gedmo\Blameable(on="create")
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\User", inversedBy="issuedBadges")
      * @ORM\JoinColumn(name="issuer_id", referencedColumnName="id", nullable=true, onDelete="SET NULL")
     */
@@ -74,6 +73,13 @@ class UserBadge
      * @ORM\Column(name="expired_at", type="datetime", nullable=true)
      */
     protected $expiredAt;
+
+    /**
+     * @var string $comment
+     *
+     * @ORM\Column(type="text", nullable=true)
+     */
+    protected $comment;
 
     /**
      * @param int $id
@@ -144,6 +150,18 @@ class UserBadge
     }
 
     /**
+     * @param \Claroline\CoreBundle\Entity\User|null $issuer
+     *
+     * @return UserBadge
+     */
+    public function setIssuer($issuer)
+    {
+        $this->issuer = $issuer;
+
+        return $this;
+    }
+
+    /**
      * @return \Claroline\CoreBundle\Entity\User
      */
     public function getIssuer()
@@ -189,5 +207,25 @@ class UserBadge
     public function isExpiring()
     {
         return null !== $this->expiredAt;
+    }
+
+    /**
+     * @param string $comment
+     *
+     * @return UserBadge
+     */
+    public function setComment($comment)
+    {
+        $this->comment = $comment;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getComment()
+    {
+        return $this->comment;
     }
 }

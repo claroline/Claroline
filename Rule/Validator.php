@@ -92,7 +92,6 @@ class Validator
      */
     public function validateRule(Rule $rule, array $restrictions = array())
     {
-        $isValid            = true;
         /** @var \Claroline\CoreBundle\Rule\Constraints\AbstractConstraint[] $usedConstraints */
         $usedConstraints    = array();
         /** @var \Claroline\CoreBundle\Rule\Constraints\AbstractConstraint[] $existedConstraints */
@@ -112,15 +111,20 @@ class Validator
             }
         }
 
+        $validatedConstraints = 0;
+        $nbConstraints        = count($usedConstraints);
+
         $associatedLogs = $this->getAssociatedLogs($usedConstraints, $restrictions);
 
         foreach ($usedConstraints as $usedConstraint) {
             $usedConstraint->setAssociatedLogs($associatedLogs);
 
-            $isValid = $isValid && $usedConstraint->validate();
+            if ($usedConstraint->validate()) {
+                $validatedConstraints++;
+            }
         }
 
-        return ($isValid) ? $associatedLogs : $isValid;
+        return ($validatedConstraints === $nbConstraints) ? $associatedLogs : false;
     }
 
     /**

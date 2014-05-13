@@ -74,9 +74,17 @@ class WorkspacePropertiesImporter extends Importer implements ConfigurationInter
     {
         $processor = new Processor();
         $configuration = $processor->processConfiguration($this, $data);
-        $this->om->getRepository('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace')
-            ->findOneByCode($configuration['code']);
         $this->validateOwner($configuration['owner']);
+        $this->validateCode($configuration['code']);
+    }
+
+    function validateCode($code)
+    {
+        $ws = $this->om->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->findByCode($code);
+
+        if ($ws !== array()) {
+            throw new \Exception('The code ' . $code . ' already exists');
+        }
     }
 
     function validateOwner($owner)
@@ -103,12 +111,6 @@ class WorkspacePropertiesImporter extends Importer implements ConfigurationInter
     public function import($properties)
     {
 
-//        $owner = $this->om->getRepository('Claroline\CoreBundle\Entity\User')
-//            ->findOneByUsername($properties['owner']);
-//        $workspace->setCreator($owner);
-
-        //create base roles here.
-
-//        return $workspace;
+        //
     }
 }

@@ -10,90 +10,177 @@
 (function () {
     'use strict';
 
-    window.ClarolineSidebar = {
-        displayed: {
-            left: null,
-            right: null
-        },
-        
-        getSide: function (element) {
-            return this.isLeft(element) ? 'left' : 'right';
-        },
-        
-        isLeft: function (element) {
-            return 'left-bar' === $(element).prop('id');
-        },
-        
-        initialize: function (element) {
-            var side = this.getSide(element);
-            
-            var $sidebar = $('#' + side + '-bar');
-            if ($sidebar.html().replace(/^\s+/g, '').replace(/\s+$/g, '') !== '') {
-                // Sidebar is not empty => need to display it
-                $sidebar.parent().removeClass('hide');
-                
-                var hasIcon = false;
-                $sidebar.find('.list-group-item.disabled').children().each(function (index) {
-                    // Search in sidebar header if dev has defined an icon for his bar
-                    var className = $(this).prop('class');
-                    if (className.match(/^icon-/) != null) {
-                        // Icon found
-                        hasIcon = true;
-                        
-                        return false; // Break the loop
-                    }
-                });
-                
-                if (!hasIcon) {
-                    // Add little arrow to header
-                    var otherSide = 'left' === side ? 'right' : 'left';
-                    var header = '<i class="icon-caret-' + otherSide + '"></i>' + $sidebar.find('.list-group-item.disabled').html();
-                    $sidebar.find('.list-group-item.disabled').html(header);
-                }
-                
-                $('body').addClass(side + '-bar-push');
-                $('#top_bar').addClass(side + '-bar-push');
-                $('.impersonalitation > .navbar-fixed-top').addClass(side + '-bar-push');
-            }
-        },
-        
-        display: function(event, element) {
-            var side = this.getSide(element);
-            
-            // if correct bug chrome inside select autside element
-            if (event.clientX !== 0 && event.clientY !== 0) {
-                clearTimeout(window.ClarolineSidebar.displayed[side]);
-                window.ClarolineSidebar.displayed[side] = setTimeout(function () {
-                    $(element).animate({width: '400px'}, 300);
-                }, 200);
-            }
-        },
-        
-        hide: function(element) {
-            var side = this.getSide(element);
-            
-            clearTimeout(window.ClarolineSidebar.displayed[side]);
-            window.ClarolineSidebar.displayed[side] = setTimeout(function () {
-                $('.in', element).each(function () {
-                    $(this).removeClass('in');
-                    $(this).addClass('collapse');
-                });
+    window.Claroline = window.Claroline || {};
+    window.Claroline.Sidebar = {
+        'displayed': null,
+        'resizeWindow': null,
+        'scrollUp': null,
+        'scrollDown': null
+    };
 
-                $(element).animate({width: '40px'}, 300);
+    var sidebar = window.Claroline.Sidebar;
+
+
+    /**
+     * Display a sidebar if is not empty.
+     * Add icon, scroll buttons and push classes to the body and the top bars.
+     *
+     * @param side The sideof the sibebar that can be right or left.
+     *
+     */
+    sidebar.initialize = function (side) {
+        var sidebar = $('#' + side + '-bar');
+        if (sidebar.html().replace(/^\s+/g, '').replace(/\s+$/g, '') !== '') {
+
+            sidebar.parent().removeClass('hide');
+
+            var hasIcon = false;
+            $('.list-group-item.disabled', sidebar).children().each(function () {
+                // Search in sidebar header if dev has defined an icon for his bar
+                var className = $(this).prop('class');
+                if (className.match(/^icon-/) !== null) {
+                    hasIcon = true;
+                    return;
+                }
+            });
+
+            if (!hasIcon) {
+                // Add little arrow to header
+                var header = '<i class="icon-caret-' + side + '"></i>' + $('.list-group-item.disabled', sidebar).html();
+                $('.list-group-item.disabled', sidebar).html(header);
+            }
+
+            sidebar.append('<div class="scroll-up hide" aria-hidden="true">' +
+                            '<i class="icon-double-angle-up"></i></div>' +
+                            '<div class="scroll-down hide" aria-hidden="true">' +
+                            '<i class="icon-double-angle-down"></i></div>'
+            );
+
+            $('body').addClass(side + '-bar-push');
+            $('#top_bar').addClass(side + '-bar-push');
+            $('.impersonalitation > .navbar-fixed-top').addClass(side + '-bar-push');
+        }
+    };
+
+    /**
+     * Display sidebar
+     *
+     * @param event The mouse event
+     * @param element The sidebar html element
+     *
+     */
+    sidebar.display = function (event, element) {
+        // if correct bug chrome inside select autside element
+        if (event.clientX !== 0 && event.clientY !== 0) {
+            clearTimeout(sidebar.displayed);
+            sidebar.displayed = setTimeout(function () {
+                $(element).animate({width: '400px'}, 300);
             }, 200);
         }
     };
-    
-    window.ClarolineSidebar.initialize('#left-bar');
-    window.ClarolineSidebar.initialize('#right-bar');
-    
-    $('body').on('mouseenter', '.sidebar', function (event) {
-        // Display sidebar on mouse hover
-        window.ClarolineSidebar.display(event, this);
+
+    /**
+     * Hide sidebar
+     *
+     * @param element The sidebar html element
+     *
+     */
+    sidebar.hide = function (element) {
+        clearTimeout(sidebar.displayed);
+        sidebar.displayed = setTimeout(function () {
+            /*$('.in', element).each(function () {
+                $(this).removeClass('in');
+                $(this).addClass('collapse');
+            });*/
+            $(element).animate({width: '40px'}, 300);
+        }, 200);
+    };
+
+    /**
+     * Check window height and sidebar menu height in order to display or hide scroll buttons.
+     */
+    sidebar.checkHeight = function ()
+    {
+        var windowHeight = $(window).height();
+        $('.sidebar .scroll-down, .sidebar .scroll-up').addClass('hide');
+        $('.sidebar .list-group').css('top', '0');
+
+        $('.sidebar').each(function () {
+            var element = this;
+            var menuHeight = $('.list-group.menu', element).first().outerHeight(true);
+            if (menuHeight > windowHeight - 50) {
+                $('.scroll-down', element).removeClass('hide');
+            }
+        });
+    };
+
+    /**
+     * Change the relative position of a menu inside of a side bar
+     *
+     * @param element Html element of a scroll button
+     * @param move The size in pixels to move, that can be positive or negative
+     *
+     */
+    sidebar.scroll = function (element, move) {
+        var windowHeight = $(window).height();
+        var sidebar = $(element).parents('.sidebar');
+        var menu = $('.list-group.menu', sidebar).first();
+        var height = menu.outerHeight(true);
+        var current = parseInt(menu.css('top').replace('px', ''));
+
+        if ((move > 0 && current + move <= 0) || (move < 0 && current >= windowHeight - height - 43)) {
+            menu.css('top', (current +  move) + 'px');
+
+            if (current + move < 0) {
+                $('.scroll-up', sidebar).removeClass('hide');
+            } else {
+                $('.scroll-up', sidebar).addClass('hide');
+            }
+
+            if (current + move >= windowHeight - height - 43) {
+                $('.scroll-down', sidebar).removeClass('hide');
+            } else {
+                $('.scroll-down', sidebar).addClass('hide');
+            }
+        }
+    };
+
+    sidebar.initialize('left');
+    sidebar.initialize('right');
+
+    $(window).on('resize', function () {
+        clearTimeout(sidebar.resizeWindow);
+        sidebar.resizeWindow = setTimeout(sidebar.checkHeight, 500);
     })
-    .on('mouseleave', '.sidebar', function () {
-        // Hide sidebar on mouse leave
-        window.ClarolineSidebar.hide(this);
+    .load(function () {
+        clearTimeout(sidebar.resizeWindow);
+        sidebar.resizeWindow = setTimeout(sidebar.checkHeight, 500);
     });
 
+    $('body').on('mouseenter', '.sidebar', function (event) {
+        sidebar.display(event, this);
+    })
+    .on('mouseleave', '.sidebar', function () {
+        sidebar.hide(this);
+    })
+    .on('mouseenter', '.sidebar .scroll-down', function () {
+        var element = this;
+        clearInterval(sidebar.scrollUp);
+        clearInterval(sidebar.scrollDown);
+        sidebar.scrollDown = setInterval(function () {
+            sidebar.scroll(element, -2);
+        }, 10);
+    })
+    .on('mouseenter', '.sidebar .scroll-up', function () {
+        var element = this;
+        clearInterval(sidebar.scrollUp);
+        clearInterval(sidebar.scrollDown);
+        sidebar.scrollUp = setInterval(function () {
+            sidebar.scroll(element, 2);
+        }, 10);
+    })
+    .on('mouseleave', '.sidebar, .sidebar .scroll-up, .sidebar .scroll-down', function () {
+        clearInterval(sidebar.scrollUp);
+        clearInterval(sidebar.scrollDown);
+    });
 }());

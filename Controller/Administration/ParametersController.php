@@ -432,20 +432,11 @@ class ParametersController extends Controller
 
         $formData = $this->request->get('platform_parameters_form');
         $form = $this->formFactory->create(new AdminForm\MailInscriptionType(), $formData['content']);
-        $errors = $this->mailManager->validateInscriptionMail($formData['content']);
+        $errors = $this->mailManager->validateMailVariable($formData['content'], '%password%');
 
-        if (count($errors) > 0) {
-            foreach ($errors as $language => $errors) {
-                foreach ($errors['content'] as $error) {
-                    $msg = $this->translator->trans($error, array('%language%' => $language), 'platform');
-                    $form->get('content')->addError(new FormError($msg));
-                }
-            }
-        } else {
-            $this->contentManager->updateContent($this->mailManager->getMailInscription(), $formData['content']);
-        }
-
-        return array('form' => $form->createView());
+        return array(
+            'form' => $this->updateMailContent($formData, $form, $errors, $this->mailManager->getMailInscription())
+        );
     }
 
     /**
@@ -482,18 +473,11 @@ class ParametersController extends Controller
 
         $formData = $this->request->get('platform_parameters_form');
         $form = $this->formFactory->create(new AdminForm\MailLayoutType(), $formData['content']);
-        $errors = $this->mailManager->validateLayoutMail($formData['content']);
+        $errors = $this->mailManager->validateMailVariable($formData['content'], '%content%');
 
-        if (count($errors) > 0) {
-            foreach ($errors as $language => $error) {
-                $msg = $this->translator->trans($error['content'], array('%language%' => $language), 'platform');
-                $form->get('content')->addError(new FormError($msg));
-            }
-        } else {
-            $this->contentManager->updateContent($this->mailManager->getMailLayout(), $formData['content']);
-        }
-
-        return array('form' => $form->createView());
+        return array(
+            'form' => $this->updateMailContent($formData, $form, $errors, $this->mailManager->getMailLayout())
+        );
     }
 
     /**
@@ -721,6 +705,48 @@ class ParametersController extends Controller
     }
 
     /**
+     * @EXT\Route("/ldap", name="claro_admin_ldap_form")
+     * @EXT\Method("GET")
+     * @EXT\Template
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function ldapFormAction()
+    {
+        $platformConfig = $this->configHandler->getPlatformConfig();
+        $form = $this->formFactory->create(new AdminForm\LdapType(), $platformConfig);
+
+        return array('form' => $form->createView());
+    }
+
+    /**
+     * @EXT\Route("/ldap", name="claro_admin_ldap_form_submit")
+     * @EXT\Method("POST")
+     * @EXT\Template("ClarolineCoreBundle:Administration\Parameters:ldapForm.html.twig")
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function submitLdapFormAction()
+    {
+        $platformConfig = $this->configHandler->getPlatformConfig();
+        $form = $this->formFactory->create(new AdminForm\LdapType(), $platformConfig);
+        $form->handleRequest($this->request);
+
+        if ($form->isValid()) {
+
+            $data = array(
+                'ldap_host' => $form['ldap_host']->getData(),
+                'ldap_port' => $form['ldap_port']->getData(),
+                'ldap_root_dn' => $form['ldap_root_dn']->getData()
+            );
+
+            $this->configHandler->setParameters($data);
+        }
+
+        return array('form' => $form->createView());
+    }
+
+    /**
      *  Returns the list of available themes.
      *
      *  @return array
@@ -743,5 +769,29 @@ class ParametersController extends Controller
         }
 
         throw new AccessDeniedException();
+    }
+
+    private function updateMailContent($formData, $form, $errors, $content)
+    {
+        if (count($errors) > 0) {
+            if (isset($errors['no_content'])) {
+                $form->get('content')->addError(
+                    new FormError($this->translator->trans($errors['no_content'], array(), 'validators'))
+                );
+            }
+
+            foreach ($errors as $language => $errors) {
+                if (isset($errors['content'])) {
+                    foreach ($errors['content'] as $error) {
+                        $msg = $this->translator->trans($error, array('%language%' => $language), 'platform');
+                        $form->get('content')->addError(new FormError($msg));
+                    }
+                }
+            }
+        } else {
+            $this->contentManager->updateContent($content, $formData['content']);
+        }
+
+        return $form->createView();
     }
 }
