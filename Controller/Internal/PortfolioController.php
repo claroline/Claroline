@@ -35,7 +35,7 @@ class PortfolioController extends BaseController
                 'views'  => array(
                     'view' => $this->getWidgetsManager()->getView($portfolio, 'title')
                 ),
-                'value' => $portfolio->getTitle()
+                'title' => $portfolio->getTitle()
             ),
             'userInformation' => array(
                 'views'  => array(

@@ -13,8 +13,25 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
  */
 class TitleType extends PortfolioType
 {
+    public function buildForm(FormBuilderInterface $builder, array $options)
+    {
+        $builder
+            ->add('title', 'text');
+    }
+
     public function getName()
     {
         return 'icap_portfolio_widget_form_title';
+    }
+
+    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    {
+        $resolver->setDefaults(
+            array(
+                'data_class'         => 'Icap\PortfolioBundle\Entity\Portfolio',
+                'translation_domain' => 'icap_portfolio',
+                'csrf_protection'    => false,
+            )
+        );
     }
 }

@@ -51,7 +51,7 @@
                 <div class="panel panel-default">
                     <div class="panel-heading">
                         <h3 class="panel-title">
-                            <span data-ng-bind="(editedWidget.title) || (editedWidget.getType() + '_form_title')|trans"></span>
+                            <span data-ng-bind="editedWidget.getType() + '_form_title'|trans"></span>
                             <button type="button" class="close" aria-hidden="true" data-ng-click="cancel(editedWidget);">&times;</button>
                         </h3>
                     </div>

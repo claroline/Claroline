@@ -80,34 +80,45 @@ class WidgetsManager
 
     /**
      * @param string $type
+     * @param object $data
      *
      * @return \Symfony\Component\Form\Form|\Symfony\Component\Form\FormInterface
      */
-    public function getForm($type)
+    public function getForm($type, $data)
     {
-        return $this->formFactory->create('icap_portfolio_widget_form_' . $type);
+        return $this->formFactory->create('icap_portfolio_widget_form_' . $type, $data);
     }
+
     /**
      * @param Portfolio $portfolio
      * @param string    $type
      * @param array     $parameters
      *
+     * @throws \InvalidArgumentException
      * @return array
      */
     public function handle(Portfolio $portfolio, $type, array $parameters)
     {
         $data = array();
 
-        $form = $this->getForm($type);
+        $form = $this->getForm($type, $portfolio);
+        $form->submit($parameters);
 
-        // Update database info
+        if ($form->isValid()) {
+            $object = $form->getData();
 
-        $data['value'] = $parameters['value'];
-        $data['views'] = array(
-            'view' => $this->getView($portfolio, $type)
-        );
+            $this->entityManager->persist($object);
+            $this->entityManager->flush();
 
-        return $data;
+            $data['title'] = $parameters['title'];
+            $data['views'] = array(
+                'view' => $this->getView($portfolio, $type)
+            );
+
+            return $data;
+        }
+
+        throw new \InvalidArgumentException();
     }
 }
  
