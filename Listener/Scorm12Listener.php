@@ -351,7 +351,11 @@ class Scorm12Listener
             $contents .= fread($stream, 2);
         }
         $dom = new \DOMDocument();
-        $dom->loadXML($contents);
+        
+        if (!$dom->loadXML($contents)) {
+
+            throw new InvalidScorm12ArchiveException('cannot_load_imsmanifest_message');
+        }
 
         $scormVersionElements = $dom->getElementsByTagName('schemaversion');
 

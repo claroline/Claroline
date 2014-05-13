@@ -1,3 +1,4 @@
+cannot_load_imsmanifest_message: 'Impossible de charger le fichier "imsmanifest.xml"'
 claroline_scorm_12: 'Scorm (1.2)'
 claroline_scorm_12_resource: 'Scorm (1.2)'
 default_organization_not_found_message: 'L''organisation par défaut définie dans le fichier "imsmanifest.xml" de l''archive est introuvable.'
