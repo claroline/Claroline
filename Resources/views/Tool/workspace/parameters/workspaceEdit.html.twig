@@ -31,9 +31,6 @@
                     <i class="icon-trash"></i> {{ 'workspace_delete'|trans({}, 'platform') }}
                 </a>
             {% endif %}
-            <a href="{{ path('claro_workspace_export_form', {'workspace': workspace.getId() }) }}" class='btn btn-default' role="button">
-                <i class="icon-save"></i> {{ 'save_as_template'|trans({}, 'platform') }}
-            </a>
             <hr />
             {{ form_widget(form) }}
             <hr />

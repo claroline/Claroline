@@ -89,30 +89,6 @@ class WorkspaceParametersController extends Controller
 
     /**
      * @EXT\Route(
-     *     "/{workspace}/form/export",
-     *     name="claro_workspace_export_form"
-     * )
-     * @EXT\Method("GET")
-     *
-     * @EXT\Template("ClarolineCoreBundle:Tool\workspace\parameters:template.html.twig")
-     *
-     * @param AbstractWorkspace $workspace
-     *
-     * @return Response
-     */
-    public function workspaceExportFormAction(AbstractWorkspace $workspace)
-    {
-        $this->checkAccess($workspace);
-        $form = $this->formFactory->create(FormFactory::TYPE_WORKSPACE_TEMPLATE);
-
-        return array(
-            'form' => $form->createView(),
-            'workspace' => $workspace
-        );
-    }
-
-    /**
-     * @EXT\Route(
      *     "/{workspace}/export",
      *     name="claro_workspace_export"
      * )
