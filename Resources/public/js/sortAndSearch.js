@@ -578,16 +578,17 @@ window.onload = function () {
     }
 };
 
-function searchUserPaper(path) {
+function searchUserPaper(path, exoID) {
 
     var userName = $('#nameUser').val();
-
+    
     // Send theses informations to the controller to have the matching questions and display it
     $.ajax({
         type: 'GET',
         url: path,
         data: {
-            userName: userName
+            userName: userName,
+            exoID:    exoID
         },
         cache: false,
         success: function (data) {

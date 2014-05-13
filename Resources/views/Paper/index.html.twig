@@ -91,7 +91,7 @@
             {{ 'searchUserPaper' | trans }} :
             <div class="input-group">
                 <input type="text" class="form-control" id="nameUser" placeholder="{{ 'search'|trans({}, 'platform') }}"
-                    onkeydown="if (event.keyCode == 13) { searchUserPaper('{{ path('ujm_paper_searchUserPaper') }}');return false; }">
+                    onkeydown="if (event.keyCode == 13) { searchUserPaper('{{ path('ujm_paper_searchUserPaper') }}', {{exoID}});return false; }">
                 <span class="input-group-btn">
                     <button class="btn btn-default" type="button" id="searchPaperUser"
                         onClick="searchUserPaper('{{ path('ujm_paper_searchUserPaper') }}');">
