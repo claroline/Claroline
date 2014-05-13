@@ -68,7 +68,7 @@ class Installer
 
     private function clearCache()
     {
-        if (is_dir($directory = __DIR__ . '/../../../../../app/cache/prod')) {
+        if (is_dir($directory = dirname($this->kernelFile) . '/cache/prod')) {
             $fileSystem = new Filesystem();
             $cacheIterator = new \DirectoryIterator($directory);
 
