@@ -229,6 +229,9 @@ class TransfertManager
             ->import($data['tools'], $workspace, $entityRoles, $root);
         $this->om->endFlushSuite();
 
+        //add missing tools for workspace
+        $this->container->get('claroline.manager.tool_manager')->addMissingWorkspaceTools($workspace);
+
         return $workspace;
     }
 
