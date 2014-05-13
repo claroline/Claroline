@@ -9,10 +9,11 @@
  * file that was distributed with this source code.
  */
 
-namespace Claroline\ScormBundle;
+namespace Claroline\ScormBundle\Listener\Exception;
 
-use Claroline\CoreBundle\Library\PluginBundle;
-
-class ClarolineScormBundle extends PluginBundle
+/**
+ * Class for exceptions thrown when no selection has been made with the ResourceQueryBuilder.
+ */
+class InvalidScorm12ArchiveException extends \Exception
 {
 }

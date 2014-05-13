@@ -1,14 +1,23 @@
 <?php
 
+/*
+ * This file is part of the Claroline Connect package.
+ *
+ * (c) Claroline Consortium <consortium@claroline.net>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace Claroline\ScormBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="claro_scorm_info")
+ * @ORM\Table(name="claro_scorm_12_sco_tracking")
  */
-class ScormInfo
+class Scorm12ScoTracking
 {
     /**
      * @ORM\Id
@@ -19,13 +28,15 @@ class ScormInfo
 
     /**
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\User")
+     * @ORM\JoinColumn(name="user_id", onDelete="CASCADE", nullable=false)
      */
     protected $user;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Claroline\ScormBundle\Entity\Scorm")
+     * @ORM\ManyToOne(targetEntity="Claroline\ScormBundle\Entity\Scorm12Sco")
+     * @ORM\JoinColumn(name="scorm_id", onDelete="CASCADE", nullable=false)
      */
-    protected $scorm;
+    protected $sco;
 
     /**
      * @ORM\Column(name="score_raw", type="integer", nullable=true)
@@ -63,7 +74,7 @@ class ScormInfo
     protected $entry;
 
     /**
-     * @ORM\Column(name="suspend_data", nullable=true)
+     * @ORM\Column(name="suspend_data", nullable=true, length=4096)
      */
     protected $suspendData;
 
@@ -87,6 +98,21 @@ class ScormInfo
      */
     protected $lessonMode;
 
+    /**
+     * @ORM\Column(name="best_score_raw", type="integer", nullable=true)
+     */
+    protected $bestScoreRaw;
+
+    /**
+     * @ORM\Column(name="best_lesson_status", nullable=true)
+     */
+    protected $bestLessonStatus;
+
+    /**
+     * @ORM\Column(name="is_locked", type="boolean", nullable=false)
+     */
+    protected $isLocked;
+
     public function getId()
     {
         return $this->id;
@@ -107,14 +133,14 @@ class ScormInfo
         $this->user = $user;
     }
 
-    public function getScorm()
+    public function getSco()
     {
-        return $this->scorm;
+        return $this->sco;
     }
 
-    public function setScorm($scorm)
+    public function setSco($sco)
     {
-        $this->scorm = $scorm;
+        $this->sco = $sco;
     }
 
     public function getScoreRaw()
@@ -235,5 +261,35 @@ class ScormInfo
     public function setLessonMode($lessonMode)
     {
         $this->lessonMode = $lessonMode;
+    }
+
+    public function getBestScoreRaw()
+    {
+        return $this->bestScoreRaw;
+    }
+
+    public function getBestLessonStatus()
+    {
+        return $this->bestLessonStatus;
+    }
+
+    public function getIsLocked()
+    {
+        return $this->isLocked;
+    }
+
+    public function setBestScoreRaw($bestScoreRaw)
+    {
+        $this->bestScoreRaw = $bestScoreRaw;
+    }
+
+    public function setBestLessonStatus($bestLessonStatus)
+    {
+        $this->bestLessonStatus = $bestLessonStatus;
+    }
+
+    public function setIsLocked($isLocked)
+    {
+        $this->isLocked = $isLocked;
     }
 }

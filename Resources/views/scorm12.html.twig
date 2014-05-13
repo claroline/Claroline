@@ -1,0 +1,43 @@
+{% macro renderMenu(scos) %}
+    <ul>
+    {% for sco in scos %}
+        
+        {% if sco.getIsBlock() %}
+            {% set scoChildren = sco.getScoChildren() %}
+            <li><b>{{ sco.getTitle() }}</b></li>
+            
+            {% if scoChildren is not null %}
+                {{ _self.renderMenu(scoChildren) }}
+            {% endif %}
+                
+        {% else %}
+            <li sco-id="{{sco.getId()}}">
+                <a href="{{ path('claro_render_scorm_12_sco', {'scoId': sco.getId()}) }}" class="sco-menu-link">
+                    {{ sco.getTitle() }}
+                </a>
+            </li>
+        {% endif %}
+    {% endfor %}
+    </ul>
+{% endmacro %}
+
+{% from _self import renderMenu %}
+
+{% set layout = "ClarolineCoreBundle:Workspace:layout.html.twig" %}
+
+{% if isDesktop() %}
+    {% set layout = "ClarolineCoreBundle:Desktop:layout.html.twig" %}
+{% endif %}
+
+{% extends layout %}
+
+{% block section_content %}
+    <div class="panel-heading">
+        <h3 class="panel-title"> {{ resource.getResourceNode().getName() }} </h3>
+    </div>
+    <div class="panel-body">
+        <div id="scorm-menu">
+            {{ renderMenu(scos) }}
+        </div>
+    </div>
+{% endblock %}
