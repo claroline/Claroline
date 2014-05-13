@@ -8,3 +8,12 @@ Array.prototype.remove = function(value) {
     }
     return false;
 }
+
+// Determine wheter an element is in the array or not
+Array.prototype.inArray = function(value) {
+    var index = this.indexOf(value);
+    if (index != -1) {
+        return true;
+    }
+    return false;
+}
