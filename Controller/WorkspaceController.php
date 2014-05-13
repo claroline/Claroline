@@ -1105,10 +1105,20 @@ class WorkspaceController extends Controller
         $token = $this->security->getToken();
         $user = $token->getUser();
         $roles = $this->utils->getRoles($token);
-        $resultWorkspace = $this->workspaceManager
-            ->getWorkspaceByWorkspaceAndRoles($workspace, $roles);
+        $workspaceManagerRole = $this->roleManager
+            ->getManagerRole($workspace)->getRole();
+        $isWorkspaceManager = false;
 
-        if (!is_null($resultWorkspace)) {
+        if (in_array($workspaceManagerRole, $roles)) {
+            $isWorkspaceManager = true;
+        }
+
+        if (!$isWorkspaceManager) {
+            $resultWorkspace = $this->workspaceManager
+                ->getWorkspaceByWorkspaceAndRoles($workspace, $roles);
+        }
+
+        if ($isWorkspaceManager || !is_null($resultWorkspace)) {
             $favourite = $this->workspaceManager
                 ->getFavouriteByWorkspaceAndUser($workspace, $user);
 
