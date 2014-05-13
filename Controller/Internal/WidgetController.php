@@ -24,16 +24,13 @@ class WidgetController extends BaseController
      */
     public function getAction(Request $request, User $loggedUser, Portfolio $portfolio, $type, $action)
     {
-        $response = new JsonResponse();
-        $data     = array();
+        $data = array();
 
         if ("form" === $action) {
-            /** @var \Symfony\Bundle\FrameworkBundle\Templating\EngineInterface $twigEngine */
-            $twigEngine = $this->get('templating');
-
-            $data['form'] = $twigEngine->render('IcapPortfolioBundle:templates/' . $action . ':' . $type . '.html.twig');
+            $data['form'] = $this->getWidgetsManager()->getFormView($type, $action);
         }
 
+        $response = new JsonResponse();
         $response->setData($data);
 
         return $response;
@@ -46,17 +43,9 @@ class WidgetController extends BaseController
      */
     public function postAction(Request $request, User $loggedUser, Portfolio $portfolio, $type)
     {
+        $data = $this->getWidgetsManager()->handle($portfolio, $type, $request->request->all());
+
         $response = new JsonResponse();
-        /** @var \Symfony\Bundle\FrameworkBundle\Templating\EngineInterface $twigEngine */
-        $twigEngine = $this->get('templating');
-        $data     = array();
-
-        $parameters = $request->request->all();
-        $data['value'] = $parameters['value'];
-        $data['views'] = array(
-            'view' => $twigEngine->render('IcapPortfolioBundle:templates:' . $type . '.html.twig', array('portfolioTitle' => $parameters['value']))
-        );
-
         $response->setData($data);
 
         return $response;

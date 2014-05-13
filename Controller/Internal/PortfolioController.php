@@ -33,7 +33,7 @@ class PortfolioController extends BaseController
             'slug'  => $portfolio->getSlug(),
             'title' => array(
                 'views'  => array(
-                    'view' => $twigEngine->render('IcapPortfolioBundle:templates:title.html.twig', array('portfolioTitle' => $portfolio->getTitle()))
+                    'view' => $this->getWidgetsManager()->getView($portfolio, 'title')
                 ),
                 'value' => $portfolio->getTitle()
             ),

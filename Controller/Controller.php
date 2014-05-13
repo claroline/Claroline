@@ -45,4 +45,12 @@ class Controller extends BaseController
     {
         return $this->get('icap_portfolio.form_handler.portfolio');
     }
+
+    /**
+     * @return \Icap\PortfolioBundle\Manager\WidgetsManager
+     */
+    public function getWidgetsManager()
+    {
+        return $this->get('icap_portfolio.manager.widgets');
+    }
 }
