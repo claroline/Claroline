@@ -139,7 +139,7 @@
                                         description : data.description
                                     }
                                 );
-                                
+
                                 $('#calendar').fullCalendar('unselect');
                             } else {
                                 $.ajax({
@@ -147,7 +147,7 @@
                                     'type': 'GET',
                                     'success': function (data, textStatus, xhr) {
                                         $("#tasks").html(data);
-                                        
+
                                     }
                                 });
                             }
@@ -378,15 +378,15 @@
                             if(event1.allDay === event2.allDay) {
                                 if(event1.color === event2.color) {
                                   return 0 ;
-                                } else 
+                                } else
                                     return 1;
-                            } else 
+                            } else
                                 return 2;
                         } else
                             return 3;
                     } else
                         return 4;
-                }     
+                }
                 else
                     return 5;
             }
@@ -453,6 +453,10 @@
                 eventContent += '</div>';
                 eventContent += '<div class="mypopo' + event.id + '">';
                 eventContent +=     t('agenda_form_end') +':'  + $.fullCalendar.formatDate(event.end ,'dd-MM-yyyy HH:mm');
+                eventContent += '</div>';
+                // To display the name of the user who created this event.
+                eventContent += '<div>';
+                eventContent +=     t('agenda_form_author') + ' : ' + event.owner;
                 eventContent += '</div>';
 
                 if (typeof event.description !== 'undefined' && event.description !== null && event.description.length !== 0) {

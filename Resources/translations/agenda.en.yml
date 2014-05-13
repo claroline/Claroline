@@ -9,6 +9,7 @@ agenda_form_recurring: Repeats
 agenda_form_start: 'Start date'
 agenda_form_startHours: 'Start hour'
 agenda_form_title: 'Title'
+agenda_form_author: 'Created by'
 apr: Apr
 april: April
 aug: Aug
