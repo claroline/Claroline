@@ -57,7 +57,7 @@
                         </ul>
                     </div>
                 </span>
-                {% if tagsHierarchy[tagId]|length > 0 %}
+                {% if tagsHierarchy[tagId] is defined and tagsHierarchy[tagId]|length > 0 %}
                     {{ _self.showTagHierarchy(tagsHierarchy[tagId], tagsHierarchy, false, tagId) }}
                 {% else %}
                     <div><ul class="tag-children-list-{{ tagId }}"></ul></div>
