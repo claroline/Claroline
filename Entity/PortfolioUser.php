@@ -39,7 +39,7 @@ class PortfolioUser
     protected $portfolio;
 
     /**
-     * @param mixed $portfolio
+     * @param Portfolio $portfolio
      *
      * @return PortfolioUser
      */
@@ -51,7 +51,7 @@ class PortfolioUser
     }
 
     /**
-     * @return mixed
+     * @return Portfolio
      */
     public function getPortfolio()
     {

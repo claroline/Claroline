@@ -73,7 +73,7 @@ class Portfolio
     protected $portfolioUsers;
 
     /**
-     * @var datetime $created
+     * @var \Datetime $createdAt
      *
      * @Gedmo\Timestampable(on="create")
      * @ORM\Column(type="datetime")
@@ -81,7 +81,7 @@ class Portfolio
     protected $createdAt;
 
     /**
-     * @var datetime $updated
+     * @var \Datetime $updatedAt
      *
      * @Gedmo\Timestampable(on="update")
      * @ORM\Column(type="datetime")
