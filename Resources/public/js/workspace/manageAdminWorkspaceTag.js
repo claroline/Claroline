@@ -78,7 +78,7 @@
         $('.tag-checked-icon').addClass('hide');
         $('.tag-hierarchy-element').removeClass('claroline-tag-highlight');
         $('.tag-chk').each(function () {
-            $(this).attr('checked', false);
+            $(this).prop('checked', false);
         });
         $('#one-tag-alert').addClass('hide');
         $('#tag-hierarchy-modal-box').modal('show');
@@ -107,11 +107,11 @@
             if (!selectedElement.hasClass('claroline-tag-highlight')) {
                 selectedElement.addClass('claroline-tag-highlight');
                 checkIcon.removeClass('hide');
-                checkboxElement.attr('checked', 'checked');
+                checkboxElement.prop('checked', 'checked');
             } else {
                 selectedElement.removeClass('claroline-tag-highlight');
                 checkIcon.addClass('hide');
-                checkboxElement.attr('checked', false);
+                checkboxElement.prop('checked', false);
             }
         });
 //        var selectedElement = $(this);
