@@ -39,7 +39,7 @@ class PortfolioController extends BaseController
             ),
             'userInformation' => array(
                 'views'  => array(
-                    'view' => $twigEngine->render('IcapPortfolioBundle:templates:userInformation.html.twig', array('user' => $portfolio->getUser()))
+                    'view' => $this->getWidgetsManager()->getView($portfolio, 'userInformation')
                 ),
                 'avatar' => $loggedUser->getPicture()
             )
