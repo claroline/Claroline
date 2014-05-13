@@ -154,14 +154,16 @@ class WorkspaceManager
      * Creates a workspace.
      *
      * @param \Claroline\CoreBundle\Library\Workspace\Configuration $configuration
-     * @param \Claroline\CoreBundle\Entity\User $manager
+     * @param \Claroline\CoreBundle\Entity\User                     $manager
+     * @param bool                                                  $createUsers
+     * @param bool                                                  $importUsers
      *
      * @return \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace
      */
-    public function create(Configuration $configuration, User $manager)
+    public function create(Configuration $configuration, User $manager, $createUsers = false, $importUsers = false)
     {
         $transfertManager = $this->container->get('claroline.manager.transfert_manager');
-        $workspace = $transfertManager->createWorkspace($configuration, $manager);
+        $workspace = $transfertManager->createWorkspace($configuration, $manager, $createUsers, $importUsers);
 
         return $workspace;
     }

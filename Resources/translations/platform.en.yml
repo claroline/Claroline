@@ -818,3 +818,4 @@ create_role: Create role
 uncompress_file: Uncompress the file if possible
 your_username: 'Your username is '
 workspace_import: Workspace import
+create_users: Create users

@@ -55,7 +55,7 @@ class TransfertManager
     /**
      * Import a workspace
      */
-    public function validate(array $data, $validateUsers = true)
+    public function validate(array $data, $validateUsers = true, $validateProperties = true)
     {
         $usersImporter  = $this->getImporterByName('user');
         $groupsImporter = $this->getImporterByName('groups');
@@ -77,9 +77,11 @@ class TransfertManager
         }
 
         //properties
-        if (isset($data['properties'])) {
-            $properties['properties'] = $data['properties'];
-            $importer->validate($properties);
+        if ($validateProperties) {
+            if (isset($data['properties'])) {
+                $properties['properties'] = $data['properties'];
+                $importer->validate($properties);
+            }
         }
 
         if (isset($data['roles'])) {
@@ -120,9 +122,9 @@ class TransfertManager
 
         $owner = null;
 
-        if ($createUsers) {
+        if ($createUsers || $importUsers) {
             if (isset($data['members']['owner'])) {
-                $owner = $this->getImporterByName('owner')->import($data['members']['owner'], null);
+                $owner = $this->getImporterByName('owner')->import($data['members']['owner'], $createUsers, $importUsers);
             }
         }
 
@@ -148,14 +150,13 @@ class TransfertManager
         $importUsers = false
     )
     {
-        //throw new \Exception($configuration->getExtractPath());
         $configuration->setOwner($owner);
         $data = $configuration->getData();
         $this->om->startFlushSuite();
         $this->setImporters($configuration, $data);
 
         if (!$isValidated) {
-            $this->validate($data);
+            $this->validate($data, $createUsers, false);
         }
 
         $workspace = new SimpleWorkspace();
@@ -201,9 +202,9 @@ class TransfertManager
             ->getRepository('ClarolineCoreBundle:Role')->findOneByName('ROLE_ANONYMOUS');
 
 
-        if ($createUsers) {
+        if ($createUsers || $importUsers) {
             if (isset($data['members']['users'])) {
-                $this->getImporterByName('user')->import($data['members']['users'], $entityRoles);
+                $this->getImporterByName('user')->import($data['members']['users'], $entityRoles, $createUsers, $importUsers);
             }
         }
 

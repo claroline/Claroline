@@ -52,11 +52,12 @@ class WorkspaceType extends AbstractType
         );
 
         $builder->add(
-            'template',
-            'entity',
+            'file',
+            'file',
             array(
-                'class' => 'ClarolineCoreBundle:Workspace\Template',
-                'property' => 'name'
+                'label' => 'template',
+                'mapped' => false,
+                'required' => false
             )
         );
         $builder->add('displayable', 'checkbox', array('required' => false));

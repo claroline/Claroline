@@ -247,23 +247,45 @@ class UsersImporter extends Importer implements ConfigurationInterface
         $configuration = $processor->processConfiguration($this, $data);
     }
 
-    public function import(array $data, array $entityRoles)
+    public function import(array $data, array $entityRoles, $createUsers = true, $importUsers = true)
     {
+        var_dump(array_keys($entityRoles));
         $this->om->startFlushSuite();
 
-        foreach ($data as $user) {
-            $userEntity = new User();
-            $userEntity->setUsername($user['user']['username']);
-            $userEntity->setLastName($user['user']['last_name']);
-            $userEntity->setFirstName($user['user']['first_name']);
-            $userEntity->setPassword(uniqid());
-            $mail = uniqid() . '@change_me.com';
-            $userEntity->setMail($mail);
-            $this->container->get('claroline.manager.user_manager')->createUser($userEntity);
+        if ($createUsers) {
+            foreach ($data as $user) {
+                $userEntity = new User();
+                $userEntity->setUsername($user['user']['username']);
+                $userEntity->setLastName($user['user']['last_name']);
+                $userEntity->setFirstName($user['user']['first_name']);
+                $userEntity->setPassword(uniqid());
+                $mail = uniqid() . '@change_me.com';
+                $userEntity->setMail($mail);
+                $this->container->get('claroline.manager.user_manager')->createUser($userEntity);
 
-            if (isset($user['roles'])) {
-                foreach ($user['roles'] as $role) {
-                    $user->addRole($entityRoles[$role]);
+                if ($importUsers) {
+                    if (isset($user['user']['roles'])) {
+                        foreach ($user['user']['roles'] as $role) {
+                            $userEntity->addRole($entityRoles[$role['name']]);
+                        }
+                    }
+                }
+
+                $this->om->persist($userEntity);
+            }
+        } else {
+            if ($importUsers) {
+                foreach ($data as $user) {
+                    $userEntities = $this->om->getRepository('ClarolineCoreBundle:User')
+                        ->findBy(array('username' => $user['user']['username']));
+
+                    if (isset($user['user']['roles']) && count($userEntities) === 1) {
+                        foreach ($user['user']['roles'] as $role) {
+                            $userEntities[0]->addRole($entityRoles[$role['name']]);
+                        }
+                    }
+
+                    $this->om->persist($userEntities[0]);
                 }
             }
         }

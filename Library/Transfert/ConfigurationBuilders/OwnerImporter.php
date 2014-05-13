@@ -177,25 +177,38 @@ class OwnerImporter extends Importer implements ConfigurationInterface
         return !filter_var($v, FILTER_VALIDATE_EMAIL);
     }
 
-    public function import(array $owner, $workspace)
+    public function import(array $owner, $entityRoles, $createUsers, $importUsers)
     {
-        $user = new User();
-        $user->setFirstName($owner['first_name']);
-        $user->setLastName($owner['last_name']);
-        $user->setUsername($owner['username']);
-        $user->setMail($owner['mail']);
-        $user->setAdministrativeCode($owner['code']);
+        if ($createUsers) {
+            $user = new User();
+            $user->setFirstName($owner['first_name']);
+            $user->setLastName($owner['last_name']);
+            $user->setUsername($owner['username']);
+            $user->setMail($owner['mail']);
+            $user->setAdministrativeCode($owner['code']);
 
-        if (isset($owner['roles'])) {
-            foreach ($owner['roles'] as $role) {
-                $role = $this->om->getRepository('Claroline\CoreBundle\Entity\Role')->findOneByName($role['name']);
-                $user->addRole($role);
+            if ($importUsers) {
+                if (isset($owner['user']['roles'])) {
+                    foreach ($owner['user']['roles'] as $role) {
+                        $user->addRole($entityRoles[$role['name']]);
+                    }
+                }
             }
+
+            $user = $this->userManager->createUser($user);
+        } else {
+            $userEntities = $this->om->getRepository('ClarolineCoreBundle:User')
+                ->findBy(array('username' => $owner['username']));
+
+            if (isset($user['user']['roles']) && count($userEntities) === 1) {
+                foreach ($user['user']['roles'] as $role) {
+                    $userEntities[0]->addRole($entityRoles[$role['name']]);
+                }
+            }
+
+            $this->om->persist($userEntities[0]);
         }
 
-        //add the workspace role manager
-        //YOLO;
-
-        return $this->userManager->createUser($user);
+        return $user;
     }
 }

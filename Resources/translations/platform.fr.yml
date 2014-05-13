@@ -819,3 +819,4 @@ create_role: Créer un rôle
 uncompress_file: Décompresser le fichier si possible
 your_username: 'Votre nom d''utilisateur est '
 workspace_import: Importer un espace d'activité
+create_users: Créer les utilisateurs

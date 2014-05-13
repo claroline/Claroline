@@ -288,12 +288,14 @@ class WorkspaceController extends Controller
         $ds = DIRECTORY_SEPARATOR;
 
         if ($form->isValid()) {
+
             $type = $form->get('type')->getData() == 'simple' ?
                 Configuration::TYPE_SIMPLE :
                 Configuration::TYPE_AGGREGATOR;
-            $config = Configuration::fromTemplate(
-                $this->templateDir . $ds . $form->get('template')->getData()->getHash()
-            );
+            $template =  $form->get('file')->getData() ?
+                $form->get('file')->getData()->getPathname():
+                $this->container->getParameter('claroline.param.templates_directory') . $ds . 'default.zip';
+            $config = Configuration::fromTemplate($template);
             $config->setWorkspaceType($type);
             $config->setWorkspaceName($form->get('name')->getData());
             $config->setWorkspaceCode($form->get('code')->getData());

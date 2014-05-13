@@ -208,16 +208,16 @@ class WorkspacesController extends Controller
             $createUsers = $form->get('create_users')->getData();
             $importUsers = $form->get('import_users')->getData();
 
-            try {
+//            try {
                 $this->get('claroline.manager.transfert_manager')->import($configuration, $createUsers, $importUsers);
-            }
-            catch (\Exception $e) {
-                $form->addError(
-                    new FormError($e->getMessage())
-                );
-
-                return array('form' => $form->createView());
-            }
+//            }
+//            catch (\Exception $e) {
+//                $form->addError(
+//                    new FormError($e->getMessage())
+//                );
+//
+//                return array('form' => $form->createView());
+//            }
         }
 
         return $this->redirect($this->generateUrl('claro_admin_workspaces_management'));
