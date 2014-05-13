@@ -52,7 +52,7 @@ function creationQCM(expectedAnswer, response, point, comment, positionForce, ad
         return ui;
     };
 
-    $('tbody').sortable({
+    /*$('tbody').sortable({
         helper: fixHelper,
         cancel: 'contenteditable',
         stop: function (event, ui) {
@@ -62,7 +62,7 @@ function creationQCM(expectedAnswer, response, point, comment, positionForce, ad
                 $('body').trigger('DOMSubtreeModified');
             });
         }
-    });
+    });*/
 }
 
 // QCM Edition
