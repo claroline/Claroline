@@ -23,4 +23,9 @@ class IcapPortfolioBundle extends InstallableBundle implements AutoConfigurableI
 
         return $config;
     }
+
+    public function getRequiredFixturesDirectory($environment)
+    {
+        return 'DataFixtures/Required';
+    }
 }
