@@ -290,4 +290,6 @@ corrections by user: 'corrections par utilisateur'
 copy author's: 'Copie de'
 Examiner: 'Correcteur'
 List of corrections made by %user%: 'Liste des corrections faites par %user%'
+You are about to delete a correction. This action is not without consequence.: 'Vous êtes sur le point de supprimer une correction, cela n''est pas sans conséquences.'
+Confirm the correction delete: 'Confirmer la suppression de la correction'
 

@@ -28,13 +28,8 @@
             <tr class="{% if not  correction.valid %}danger{% endif %} ">
                 <td>
 
-                    {#
-                    {% if correction.finished == false %}
-                        <span class="text-warning glyphicon icon-time" data-toggle="tooltip"
-                        data-original-title="{{ 'Not finished'|trans({}, 'icap_dropzone') }}"></span>
-                    {% endif %}
-                    #}
-                    {% if not correction.valid %}
+
+                {% if not correction.valid %}
 
                         <span class=" glyphicon icon-minus-sign" data-toggle="tooltip"
                               data-original-title="{{ 'Invalidated'|trans({}, 'icap_dropzone') }}"></span>
@@ -53,6 +48,7 @@
                 <td>
 
                     {% if  adminCorrectionByUserMod is defined and  adminCorrectionByUserMod == 1 %}
+                        {% set backPage = 'adminCorrectionByUserMod' %}
                         {% if  backUserId is not defined %}
                             {% set backUserId = -1 %}
                         {% endif %}
@@ -62,6 +58,7 @@
                             {{ correction.drop.user.firstName|capitalize ~' '~ correction.drop.user.lastName|upper }}
                         </a>
                     {% else %}
+                        {% set backPage = 'default' %}
                         <a href="{{ path('icap_dropzone_drops_detail_correction', {'resourceId': dropzone.id, 'correctionId': correction.id, 'state': viewState_var}) }}"
                            class="" data-toggle="tooltip"
                            data-original-title="{{ 'See correction'|trans({},'icap_dropzone') }}">
@@ -132,10 +129,17 @@
                             {% if correction.editable %}
                                 <a href="{{ path('icap_dropzone_drops_detail_correction', {'resourceId': dropzone.id, 'correctionId': correction.id, 'state': 'edit'}) }}"
                                    class="btn btn-default btn-xs">{{ 'dropzone_edit'|trans({}, 'icap_dropzone') }}</a>
-                                <a href="{{ path('icap_dropzone_drops_detail_delete_correction', {'resourceId': dropzone.id, 'correctionId': correction.id}) }}"
-                                   class="btn btn-danger btn-xs"><span
-                                            class="glyphicon icon-trash"></span>{{ 'Delete'|trans({}, 'icap_dropzone') }}
-                                </a>
+                                {% if backUserId is defined %}
+                                    <a href="{{ path('icap_dropzone_drops_detail_delete_correction', {'resourceId': dropzone.id, 'correctionId': correction.id,'backUserId': backUserId }) }}"
+                                       class="btn btn-danger btn-xs launch-modal"><span
+                                                class="glyphicon icon-trash "></span>{{ 'Delete'|trans({}, 'icap_dropzone') }}
+                                    </a>
+                                {% else %}
+                                    <a href="{{ path('icap_dropzone_drops_detail_delete_correction', {'resourceId': dropzone.id, 'correctionId': correction.id}) }}"
+                                       class="btn btn-danger btn-xs launch-modal"><span
+                                                class="glyphicon icon-trash "></span>{{ 'Delete'|trans({}, 'icap_dropzone') }}
+                                    </a>
+                                {% endif %}
                             {% else %}
                                 <a href="#" class="btn btn-default btn-xs disabled" disabled="disabled"
                                    data-toggle="tooltip"
@@ -161,6 +165,7 @@
         </tbody>
     </table>
 </div>
+
 
 <div style="display:none">
 
