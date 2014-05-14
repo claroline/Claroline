@@ -129,11 +129,17 @@
                             {% if correction.editable %}
                                 <a href="{{ path('icap_dropzone_drops_detail_correction', {'resourceId': dropzone.id, 'correctionId': correction.id, 'state': 'edit'}) }}"
                                    class="btn btn-default btn-xs">{{ 'dropzone_edit'|trans({}, 'icap_dropzone') }}</a>
-
-                                <a href="{{ path('icap_dropzone_drops_detail_delete_correction', {'resourceId': dropzone.id, 'correctionId': correction.id}) }}"
-                                   class="btn btn-danger btn-xs launch-modal"><span
-                                            class="glyphicon icon-trash "></span>{{ 'Delete'|trans({}, 'icap_dropzone') }}
-                                </a>
+                                {% if backUserId is defined %}
+                                    <a href="{{ path('icap_dropzone_drops_detail_delete_correction', {'resourceId': dropzone.id, 'correctionId': correction.id,'backUserId': backUserId }) }}"
+                                       class="btn btn-danger btn-xs launch-modal"><span
+                                                class="glyphicon icon-trash "></span>{{ 'Delete'|trans({}, 'icap_dropzone') }}
+                                    </a>
+                                {% else %}
+                                    <a href="{{ path('icap_dropzone_drops_detail_delete_correction', {'resourceId': dropzone.id, 'correctionId': correction.id}) }}"
+                                       class="btn btn-danger btn-xs launch-modal"><span
+                                                class="glyphicon icon-trash "></span>{{ 'Delete'|trans({}, 'icap_dropzone') }}
+                                    </a>
+                                {% endif %}
                             {% else %}
                                 <a href="#" class="btn btn-default btn-xs disabled" disabled="disabled"
                                    data-toggle="tooltip"
