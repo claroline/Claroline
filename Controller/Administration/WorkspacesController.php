@@ -205,11 +205,10 @@ class WorkspacesController extends Controller
             $tmpName = uniqid() . '.zip';
             $tmpFile->move(sys_get_temp_dir(), $tmpName);
             $configuration = new Configuration(sys_get_temp_dir() . DIRECTORY_SEPARATOR . $tmpName);
-            $createUsers = $form->get('create_users')->getData();
-            $importUsers = $form->get('import_users')->getData();
+            $isStrict = $form->get('strict')->getData();
 
 //            try {
-                $this->get('claroline.manager.transfert_manager')->import($configuration, $createUsers, $importUsers);
+                $this->get('claroline.manager.transfert_manager')->import($configuration, $isStrict);
 //            }
 //            catch (\Exception $e) {
 //                $form->addError(

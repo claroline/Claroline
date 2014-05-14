@@ -11,7 +11,7 @@ abstract class Importer
     private $rootPath;
     private $configuration;
     private $owner;
-    private $isStrict;
+    private static $isStrict;
     private $roles = array();
 
     public function setListImporters(ArrayCollection $importers)
@@ -67,12 +67,12 @@ abstract class Importer
 
     public function setStrict($boolean)
     {
-        $this->isStrict = $boolean;
+        self::$isStrict = $boolean;
     }
 
-    public function isStrict()
+    public static function isStrict()
     {
-        return $this->isStrict;
+        return self::$isStrict;
     }
 
     public function setWorkspace($workspace)

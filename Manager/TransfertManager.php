@@ -55,26 +55,13 @@ class TransfertManager
     /**
      * Import a workspace
      */
-    public function validate(array $data, $validateUsers = true, $validateProperties = true)
+    public function validate(array $data, $validateProperties = true)
     {
-        $usersImporter  = $this->getImporterByName('user');
         $groupsImporter = $this->getImporterByName('groups');
         $rolesImporter  = $this->getImporterByName('roles');
         $toolsImporter  = $this->getImporterByName('tools');
-        $ownerImporter  = $this->getImporterByName('owner');
         $importer = $this->getImporterByName('workspace_properties');
-
-        if ($validateUsers) {
-            if (isset($data['members']['owner'])) {
-                $owner['owner'] = $data['members']['owner'];
-                $ownerImporter->validate($owner);
-            }
-
-            if (isset($data['members']['users'])) {
-                $users['users'] = $data['members']['users'];
-                $usersImporter->validate($users);
-            }
-        }
+        $usersImporter  = $this->getImporterByName('user');
 
         //properties
         if ($validateProperties) {
@@ -82,6 +69,11 @@ class TransfertManager
                 $properties['properties'] = $data['properties'];
                 $importer->validate($properties);
             }
+        }
+
+        if (isset($data['members']['users'])) {
+            $users['users'] = $data['members']['users'];
+            $usersImporter->validate($users);
         }
 
         if (isset($data['roles'])) {
@@ -103,34 +95,14 @@ class TransfertManager
 
     public function import(
         Configuration $configuration,
-        $createUsers = false,
-        $importUsers = false
+        $isStrict = false
     )
     {
         $data = $configuration->getData();
-
-        if (isset($data['properties']['owner'])) {
-            $user = $this->om->getRepository('ClarolineCoreBundle:User')
-                ->findOneByUsername($data['properties']['owner']);
-        } else {
-            $user = $this->container->get('security.context')->getToken()->getUser();
-        }
-
-        $configuration->setOwner($user);
-        $this->setImporters($configuration, $data);
-        $this->validate($data, $createUsers);
-
-        $owner = null;
-
-        if ($createUsers || $importUsers) {
-            if (isset($data['members']['owner'])) {
-                $owner = $this->getImporterByName('owner')->import($data['members']['owner'], $createUsers, $importUsers);
-            }
-        }
-
-        if ($owner === null) {
-            $owner = $this->container->get('security.context')->getToken()->getUser();
-        }
+        $owner = $this->container->get('security.context')->getToken()->getUser();
+        $configuration->setOwner($owner);
+        $this->setImporters($configuration, $data, $isStrict);
+        $this->validate($data);
 
         //initialize the configuration
         $configuration->setWorkspaceName($data['properties']['name']);
@@ -139,15 +111,16 @@ class TransfertManager
         $configuration->setSelfRegistration($data['properties']['self_registration']);
         $configuration->setSelfUnregistration($data['properties']['self_unregistration']);
 
-        $this->createWorkspace($configuration, $owner, true, $createUsers, $importUsers);
+        $this->createWorkspace($configuration, $owner, true, $isStrict, true);
     }
 
     /**
      * @param Configuration $configuration
      * @param User $owner
      * @param bool $isValidated
-     * @param bool $createUsers
+     * @param bool $isStrict
      * @param bool $importUsers
+     *
      * @return SimpleWorkspace
      *
      * The template doesn't need to be validated anymore if
@@ -158,17 +131,17 @@ class TransfertManager
         Configuration $configuration,
         User $owner,
         $isValidated = false,
-        $createUsers = false,
+        $isStrict = true,
         $importUsers = false
     )
     {
         $configuration->setOwner($owner);
         $data = $configuration->getData();
         $this->om->startFlushSuite();
-        $this->setImporters($configuration, $data);
+        $this->setImporters($configuration, $data, $isStrict);
 
         if (!$isValidated) {
-            $this->validate($data, $createUsers, false);
+            $this->validate($data, false);
         }
 
         $workspace = new SimpleWorkspace();
@@ -213,18 +186,11 @@ class TransfertManager
         $entityRoles['ROLE_ANONYMOUS'] = $this->om
             ->getRepository('ClarolineCoreBundle:Role')->findOneByName('ROLE_ANONYMOUS');
 
-
-        if ($createUsers || $importUsers) {
+        if ($importUsers) {
             if (isset($data['members']['users'])) {
-                $this->getImporterByName('user')->import($data['members']['users'], $entityRoles, $createUsers, $importUsers);
+                $this->getImporterByName('user')->import($data['members']['users'], $entityRoles);
             }
         }
-
-        //users also import workspaces and fire the setImporters method with an other config file
-        //@todo find a way to fix the above comment
-        //because we need setConfiguration/getConfiguration
-        //and setRootPath/getRootPath
-        $this->setImporters($configuration, $data);
 
         $dir = new Directory();
         $dir->setName($workspace->getName());
@@ -267,16 +233,19 @@ class TransfertManager
 
     /**
      * Inject the rootPath
+     *
      * @param \Claroline\CoreBundle\Library\Workspace\Configuration $configuration
      * @param array $data
+     * @param $isStrict
      */
-    private function setImporters(Configuration $configuration, array $data)
+    private function setImporters(Configuration $configuration, array $data, $isStrict)
     {
         foreach ($this->listImporters as $importer) {
             $importer->setRootPath($configuration->getExtractPath());
             $importer->setOwner($configuration->getOwner());
             $importer->setConfiguration($data);
             $importer->setListImporters($this->listImporters);
+            $importer->setStrict($isStrict);
         }
     }
 
