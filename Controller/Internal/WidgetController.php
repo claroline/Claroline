@@ -12,12 +12,12 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * @Route("/internal")
+ * @Route("/internal/portfolio/{id}")
  */
 class WidgetController extends BaseController
 {
     /**
-     * @Route("/portfolio/{id}/{type}/{action}", name="icap_portfolio_internal_widget_get", defaults={"action" = "edit"})
+     * @Route("/{type}/{action}", name="icap_portfolio_internal_widget_get", defaults={"action" = "edit"})
      * @Method({"GET"})
      *
      * @ParamConverter("loggedUser", options={"authenticatedUser" = true})
@@ -36,7 +36,7 @@ class WidgetController extends BaseController
         return $response;
     }
     /**
-     * @Route("/portfolio/{id}/{type}", name="icap_portfolio_internal_widget_post")
+     * @Route("/{type}", name="icap_portfolio_internal_widget_post")
      * @Method({"POST"})
      *
      * @ParamConverter("loggedUser", options={"authenticatedUser" = true})
