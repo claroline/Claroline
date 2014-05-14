@@ -121,7 +121,7 @@
         {{ showTagHierarchy(rootTags, hierarchy, true, 0) }}
     {% else %}
         <div><ul id="tags-root"></ul></div>
-        {{ 'no_category'|trans({}, 'platform') }}
+        <div id="no-category-element">{{ 'no_category'|trans({}, 'platform') }}</div>
         <br>
     {% endif %}
     <br>
