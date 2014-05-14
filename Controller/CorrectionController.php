@@ -1069,8 +1069,12 @@ class CorrectionController extends DropzoneBaseController
             // Action on GET , Ask confirmation Modal or not.
 
             $view = 'IcapDropzoneBundle:Correction:deleteCorrection.html.twig';
+            $backUserId = 0;
+
+            $backUserId = $this->getRequest()->get('backUserId');
             if ($this->getRequest()->isXmlHttpRequest()) {
                 $view = 'IcapDropzoneBundle:Correction:deleteCorrectionModal.html.twig';
+                $backUserId = $correction->getUser()->getId();
             }
 
             $return = $this->render($view, array(
@@ -1080,6 +1084,7 @@ class CorrectionController extends DropzoneBaseController
                 'correction' => $correction,
                 'drop' => $correction->getDrop(),
                 'backPage' => 'AdminCorrectionsByUser',
+                'backUserId' => $backUserId,
             ));
         }
         return $return;
