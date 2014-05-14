@@ -47,7 +47,7 @@
     </div>
     {% if editMode %}
         <div class="form-container" data-ng-controller="editWidgetsController">
-            <form name="form" class="edit-container" data-ng-submit="save(editedWidget)" data-ng-repeat="editedWidget in editedWidgets">
+            <form name="form" class="edit-container" data-loading-form="save(editedWidget)" data-ng-repeat="editedWidget in editedWidgets">
                 <div class="panel panel-default">
                     <div class="panel-heading">
                         <h3 class="panel-title">
@@ -106,6 +106,7 @@
         <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/directives/widgetsDirective.js') }}"></script>
         <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/directives/portfolioDirective.js') }}"></script>
         <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/directives/bindHtmlDirective.js') }}"></script>
+        <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/directives/loadingFormDirective.js') }}"></script>
         <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/filters/trustAsHtml.js') }}"></script>
         <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/filters/trans.js') }}"></script>
     {% endif %}

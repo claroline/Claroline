@@ -50,7 +50,7 @@ portfolioApp
                     console.error('Error occured while saving widget');
                     console.log(error);
                 }
-                widget.$save(success, failed);
+                return widget.$save(success, failed);
             }
         };
     }]);
