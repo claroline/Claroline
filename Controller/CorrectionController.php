@@ -1009,18 +1009,21 @@ class CorrectionController extends DropzoneBaseController
         );
     }
 
+
     /**
      * @Route(
-     *      "/{resourceId}/delete/correction/{correctionId}",
+     *      "/{resourceId}/delete/correction/{correctionId}/{backPage}",
      *      name="icap_dropzone_drops_detail_delete_correction",
-     *      requirements={"resourceId" = "\d+", "correctionId" = "\d+"}
+     *      requirements={"resourceId" = "\d+", "correctionId" = "\d+"},
+     *      defaults={"backPage" ="default"}
      * )
      * @ParamConverter("dropzone", class="IcapDropzoneBundle:Dropzone", options={"id" = "resourceId"})
      * @ParamConverter("correction", class="IcapDropzoneBundle:Correction", options={"id" = "correctionId"})
      * @Template()
      */
-    public function deleteCorrectionAction($dropzone, $correction)
+    public function deleteCorrectionAction(Dropzone $dropzone, Correction $correction, $backPage)
     {
+        $userId = $correction->getUser()->getId();
         $this->isAllowToOpen($dropzone);
         $this->isAllowToEdit($dropzone);
 
@@ -1030,22 +1033,61 @@ class CorrectionController extends DropzoneBaseController
 
         $dropId = $correction->getDrop()->getId();
 
-        $em = $this->getDoctrine()->getManager();
-        $em->remove($correction);
-        $em->flush();
+        // Action on POST , real delete
+        if ($this->getRequest()->isMethod('POST')) {
+            $em = $this->getDoctrine()->getManager();
+            $em->remove($correction);
+            $em->flush();
 
-        $event = new LogCorrectionDeleteEvent($dropzone, $correction->getDrop(), $correction);
-        $this->dispatch($event);
+            $event = new LogCorrectionDeleteEvent($dropzone, $correction->getDrop(), $correction);
+            $this->dispatch($event);
 
-        return $this->redirect(
-            $this->generateUrl(
-                'icap_dropzone_drops_detail',
-                array(
-                    'resourceId' => $dropzone->getId(),
-                    'dropId' => $dropId,
-                )
-            )
-        );
+            $return = null;
+            if ($backPage != "default") {
+                $return = $this->redirect(
+                    $this->generateUrl(
+                        'icap_dropzone_examiner_corrections',
+                        array(
+                            'resourceId' => $dropzone->getId(),
+                            'userId' => $userId,
+                        )
+                    )
+                );
+            } else {
+                $return = $this->redirect(
+                    $this->generateUrl(
+                        'icap_dropzone_drops_detail',
+                        array(
+                            'resourceId' => $dropzone->getId(),
+                            'dropId' => $dropId,
+                        )
+                    )
+                );
+            }
+
+        } else {
+            // Action on GET , Ask confirmation Modal or not.
+
+            $view = 'IcapDropzoneBundle:Correction:deleteCorrection.html.twig';
+            $backUserId = 0;
+
+            $backUserId = $this->getRequest()->get('backUserId');
+            if ($this->getRequest()->isXmlHttpRequest()) {
+                $view = 'IcapDropzoneBundle:Correction:deleteCorrectionModal.html.twig';
+                $backUserId = $correction->getUser()->getId();
+            }
+
+            $return = $this->render($view, array(
+                'workspace' => $dropzone->getResourceNode()->getWorkspace(),
+                '_resource' => $dropzone,
+                'dropzone' => $dropzone,
+                'correction' => $correction,
+                'drop' => $correction->getDrop(),
+                'backPage' => 'AdminCorrectionsByUser',
+                'backUserId' => $backUserId,
+            ));
+        }
+        return $return;
     }
 
 
