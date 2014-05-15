@@ -99,6 +99,16 @@ class WorkspaceTagManager
         $this->om->flush();
     }
 
+    public function linkWorkspace(
+        WorkspaceTag $tag,
+        AbstractWorkspace $workspace = null
+    )
+    {
+        $tag->setWorkspace($workspace);
+        $this->om->persist($tag);
+        $this->om->flush();
+    }
+
     public function createTagRelation(WorkspaceTag $tag, AbstractWorkspace $workspace)
     {
         $relWorkspaceTag = $this->om->factory('Claroline\CoreBundle\Entity\Workspace\RelWorkspaceTag');

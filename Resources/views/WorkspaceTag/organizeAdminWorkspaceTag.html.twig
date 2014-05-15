@@ -2,17 +2,43 @@
     <div>
         <ul {% if isRoot %}id="tags-root"{% else %}class="tag-children-list-{{ parentTagId }}"{% endif %}>
         {% for tag in tagsList %}
-        {% set tagId = tag.getId() %}
-        {% set tagName = tag.getName() %}
+            {% set tagId = tag.getId() %}
+            {% set tagName = tag.getName() %}
+            {% set linkedWorkspace = tag.getWorkspace() %}
+            
+            {% if linkedWorkspace is null %}
+                {% set linkedWorkspaceId = 0 %}
+            {% else %}
+                {% set linkedWorkspaceId = linkedWorkspace.getId() %}
+            {% endif %}
+            
             <li class="hierarchy-tag-parent tag-parent-{{ tagId }}"
                 workspace-tag-id="{{ tagId }}"
             >
                 <span class="tag-element"
                     workspace-tag-id="{{ tagId }}"
                     workspace-tag-name="{{ tagName }}"
+                    linked-workspace-id="{{ linkedWorkspaceId }}"
                 >
                     <span class="open-tag-btn pointer-hand tag-name-{{ tagId }}">
                         {{ tagName }}
+                        {% if linkedWorkspace is not null %}
+                            <span class="linked-workspace-name">
+                                [
+                                <i class="icon-book"></i>
+                                <span class="workspace-name">{{ linkedWorkspace.getName() }}</span>
+                                <small>(<span class="workspace-code">{{ linkedWorkspace.getCode() }}</span>)</small>
+                                ]
+                            </span>
+                        {% else %}
+                            <span class="linked-workspace-name hide">
+                                [
+                                <i class="icon-book"></i>
+                                <span class="workspace-name"></span>
+                                <small>(<span class="workspace-code"></span>)</small>
+                                ]
+                            </span>
+                        {% endif %}
                     </span>
 
                     <div class="btn-group tag-button-group hide">
@@ -20,6 +46,13 @@
                             <span class="caret"></span>
                         </button>
                         <ul class="dropdown-menu" role="menu">
+                            <li role="presentation" class="link-workspace-btn">
+                                <a role="menuitem" href="#">
+                                    <i class="icon-book"></i>
+                                    {{ 'link_workspace'|trans({}, 'platform') }}
+                                </a>
+                            </li>
+                            <li role="presentation" class="divider"></li>
                             <li role="presentation" class="edit-tag-btn">
                                 <a role="menuitem" href="#">
                                     <i class="icon-pencil"></i>
@@ -216,6 +249,33 @@
                     class="btn btn-default"
                     data-dismiss="modal"
                     value="{{ 'close'|trans({}, 'platform') }}"
+                />
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="workspace-modal-box" class="modal fade" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h3 id="add-tag-modal-title">
+                    {{ 'select_workspace_to_link'|trans({}, 'platform')  }}
+                </h3>
+            </div>
+            <div id="workspace-modal-body" class="modal-body">
+            </div>
+            <div class="modal-footer">
+                <input type="button"
+                    id="link-workspace-confirm-ok"
+                    class="btn btn-primary"
+                    value="{{ 'link'|trans({}, 'platform') }}"
+                />
+                <input type="button"
+                    class="btn btn-default"
+                    data-dismiss="modal"
+                    value="{{ 'cancel'|trans({}, 'platform') }}"
                 />
             </div>
         </div>
