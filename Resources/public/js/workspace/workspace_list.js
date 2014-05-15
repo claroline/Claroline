@@ -69,6 +69,19 @@
                 });
             }
         });
+        
+        $('.linked-workspace').on('click', function (event) {
+            event.preventDefault();
+            event.stopPropagation();
+            
+            var workspaceId = parseInt($(this).attr('workspace-id'), 10);
+
+            window.location = Routing.generate(
+                'claro_workspace_open',
+                {'workspaceId': workspaceId}
+            );
+            
+        });
     }
 
     initEvents();

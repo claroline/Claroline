@@ -23,7 +23,7 @@
                     <span class="open-tag-btn pointer-hand tag-name-{{ tagId }}">
                         {{ tagName }}
                         {% if linkedWorkspace is not null %}
-                            <span class="linked-workspace-name">
+                            <span class="linked-workspace-name" style="color:#B29EA1">
                                 [
                                 <i class="icon-book"></i>
                                 <span class="workspace-name">{{ linkedWorkspace.getName() }}</span>
@@ -31,7 +31,7 @@
                                 ]
                             </span>
                         {% else %}
-                            <span class="linked-workspace-name hide">
+                            <span class="linked-workspace-name hide" style="color:#B29EA1">
                                 [
                                 <i class="icon-book"></i>
                                 <span class="workspace-name"></span>

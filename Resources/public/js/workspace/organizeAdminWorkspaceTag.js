@@ -108,7 +108,7 @@
                 '>' +
                     '<span class="open-tag-btn pointer-hand tag-name-' + tagId + '">\n' +
                         tagName +
-                        '\n<span class="linked-workspace-name hide">\n' +
+                        '\n<span class="linked-workspace-name hide" style="color:#B29EA1">\n' +
                         '[\n' +
                         '<i class="icon-book"></i>\n' +
                         '<span class="workspace-name"></span>' +

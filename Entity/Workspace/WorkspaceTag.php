@@ -93,4 +93,9 @@ class WorkspaceTag
     {
         $this->workspace = $workspace;
     }
+
+    public function __toString()
+    {
+        return $this->id . '-' . $this->name;
+    }
 }
