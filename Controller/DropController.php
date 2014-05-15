@@ -567,18 +567,30 @@ class DropController extends DropzoneBaseController
         {
             $drop = $dropSecure[0];
         }
-        /*
-        $corrections = $drop->getCorrections();
-        echo count($corrections);
-        var_dump($corrections);
-        die;
-        */
+
+        $showCorrections = true;
+
+        // if drop is complete and corrections needed were made  and dropzone.showCorrection is true.
+        $user = $drop->getUser();
+        $em = $this->getDoctrine()->getManager();
+        $nbCorrections = $em
+            ->getRepository('IcapDropzoneBundle:Correction')
+            ->countFinished($dropzone, $user);
+        $hasCopyToCorrect = $em
+            ->getRepository('IcapDropzoneBundle:Drop')
+            ->hasCopyToCorrect($dropzone, $user);
+
+        if ($dropzone->getDiplayCorrectionsToLearners() && !$hasCopyToCorrect && $dropzone->getExpectedTotalCorrection() <= $nbCorrections) {
+            $showCorrections = false;
+        }
+
         return array(
             'workspace' => $dropzone->getResourceNode()->getWorkspace(),
             '_resource' => $dropzone,
             'dropzone' => $dropzone,
             'drop' => $drop,
             'isAllowedToEdit' => $isAllowedToEdit,
+            'showCorrections' => $showCorrections,
         );
     }
 

@@ -72,8 +72,8 @@
             <div class="text-muted col-md-4">{{ 'Learner'|trans({}, 'icap_dropzone') }}</div>
             <div class="col-md-8">{{ drop.user.firstName }} {{ drop.user.lastName }}</div>
         </div>
-
-        <div class="row">
+        {% if byUserMod == 0  or dropzone.diplayCorrectionsToLearners %}
+            <div class="row">
             <div class="text-muted col-md-4">{{ 'Number of validated corrections'|trans({}, 'icap_dropzone') }}</div>
             <div class="col-md-8">{% include 'IcapDropzoneBundle:Drop:dropsNbCorrections.html.twig' %}</div>
         </div>
@@ -82,21 +82,28 @@
             <div class="text-muted col-md-4">{{ 'Average validated corrections'|trans({}, 'icap_dropzone') }}</div>
             <div class="col-md-8">{% include 'IcapDropzoneBundle:Drop:dropsTotalGrade.html.twig' %}</div>
         </div>
-
-        <br/>
-
-        <h3>{{ 'List of corrections'|trans({}, 'icap_dropzone') }}</h3>
-        {% if isAllowedToEdit %}
-            <a class="btn btn-default"
-               href="{{ path("icap_dropzone_drops_detail_add_correction",{'resourceId':dropzone.id,'dropId':drop.id}) }}">
-                {{ "Add a correction"|trans({},'icap_dropzone') }}
-            </a>
         {% endif %}
-        <hr/>
+        <br/>
+        {{ dump(drop.finished) }}
+        {% if (dropzone.peerReview) %}
+            {% set expectedCorrections = dropzone.expectedTotalCorrection - nbCorrections %}
+        {% else %}
+            {% set expectedCorrections = 0 %}
+        {% endif %}
+        {% if byUserMod == 0  or (dropzone.diplayCorrectionsToLearners and drop.finished == true and  expectedCorrections <= 0 ) %}
 
-        {% set corrections = drop.corrections %}
-        {% include 'IcapDropzoneBundle:Correction:Listing/correctionListing.html.twig' %}
+            <h3>{{ 'List of corrections'|trans({}, 'icap_dropzone') }}</h3>
+            {% if isAllowedToEdit %}
+                <a class="btn btn-default"
+                   href="{{ path("icap_dropzone_drops_detail_add_correction",{'resourceId':dropzone.id,'dropId':drop.id}) }}">
+                    {{ "Add a correction"|trans({},'icap_dropzone') }}
+                </a>
+            {% endif %}
+            <hr/>
 
+            {% set corrections = drop.corrections %}
+            {% include 'IcapDropzoneBundle:Correction:Listing/correctionListing.html.twig' %}
+        {% endif %}
     </div>
 {% endblock %}
 
