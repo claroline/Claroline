@@ -568,7 +568,7 @@ class DropController extends DropzoneBaseController
             $drop = $dropSecure[0];
         }
 
-        $showCorrections = true;
+        $showCorrections = false;
 
         // if drop is complete and corrections needed were made  and dropzone.showCorrection is true.
         $user = $drop->getUser();
@@ -581,7 +581,7 @@ class DropController extends DropzoneBaseController
             ->hasCopyToCorrect($dropzone, $user);
 
         if ($dropzone->getDiplayCorrectionsToLearners() && !$hasCopyToCorrect && $dropzone->getExpectedTotalCorrection() <= $nbCorrections) {
-            $showCorrections = false;
+            $showCorrections = true;
         }
 
         return array(
