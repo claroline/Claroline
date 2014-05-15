@@ -144,17 +144,18 @@
                     {% endfor %}
                     </tbody>
                 </table>
-            </div>
+            {% else %}
+                <div class="alert alert-info">{{ 'noQuestionFound'|trans }} ...</div>
+            {% endif %}
         </div>
-        {% if pagerQuestion.haveToPaginate %}
-            <div class="text-center panel-footer">
-                {{ pagerfanta(pagerQuestion, 'twitter_bootstrap_translated', {'routeName': 'ujm_exercise_questions', 'routeParams':
-                { 'id': exerciseID } }) }}
-            </div>
-        {% endif %}
-    {% else %}
-        <div class="alert alert-info">{{ 'noQuestionFound'|trans }} ...</div>
+    </div>
+    {% if pagerQuestion.haveToPaginate %}
+        <div class="text-center panel-footer">
+            {{ pagerfanta(pagerQuestion, 'twitter_bootstrap_translated', {'routeName': 'ujm_exercise_questions', 'routeParams':
+            { 'id': exerciseID } }) }}
+        </div>
     {% endif %}
+
 {% endblock %}
 
 {% block javascripts %}
