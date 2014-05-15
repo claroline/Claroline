@@ -93,7 +93,6 @@ class ResourceManagerImporter extends Importer implements ConfigurationInterface
     public function import(array $data, $workspace, $entityRoles, Directory $root)
     {
         //@TODO CHANGE IMPLEMENTATION SO ROLE_USER AND ROLE_ANONYMOUS PERMS CAN BE CHANGED
-        //@TODO FIX WARNINGS !!!
 
         /*
          * Each directory is created without parent.
@@ -105,7 +104,9 @@ class ResourceManagerImporter extends Importer implements ConfigurationInterface
          * ROLE_USER and ROLE_ANONYMOUS) but it's easier to code it that way.
          */
 
+        $createdResources = array();
         $directories[$data['data']['root']['uid']] = $root;
+        $resourceNodes = [];
 
         /*************************/
         /* WORKSPACE DIRECTORIES */
@@ -206,6 +207,8 @@ class ResourceManagerImporter extends Importer implements ConfigurationInterface
                         );
                     }
                 }
+
+                $resourceNodes[$item['item']['uid']] = $entity;
             }
         }
 
@@ -227,6 +230,25 @@ class ResourceManagerImporter extends Importer implements ConfigurationInterface
                 $creations
             );
         }
+
+        //We need to force the flush in order to add the rich text.
+        $this->om->forceFlush();
+
+        /*************/
+        /* RICH TEXT */
+        /*************/
+
+        /*
+        if (isset($data['data']['items'])) {
+            foreach ($data['data']['items'] as $item) {
+                if (isset ($item['item']['is_rich'])) {
+                    if ($item['item']['is_rich']) {
+                        $this->getImporterByName($item['item']['type'])
+                            ->format($res, array('directories' => $directories, 'items' => $resourceNodes));
+                    }
+                }
+            }
+        }*/
     }
 
     public function getName()
@@ -382,6 +404,8 @@ class ResourceManagerImporter extends Importer implements ConfigurationInterface
                                 ->children()
                                     ->scalarNode('name')->end()
                                     ->scalarNode('creator')->end()
+                                    ->scalarNode('uid')->end()
+                                    ->booleanNode('is_rich')->defaultFalse()->end()
                                     ->scalarNode('parent')
                                         ->validate()
                                         ->ifTrue(

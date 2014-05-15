@@ -110,6 +110,11 @@ class ObjectManager extends ObjectManagerDecorator
         $this->flush();
     }
 
+    public function forceFlush()
+    {
+        parent::flush();
+    }
+
     /**
      * Starts a transaction.
      *

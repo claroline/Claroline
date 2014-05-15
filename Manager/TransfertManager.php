@@ -155,6 +155,8 @@ class TransfertManager
         $date = new \Datetime(date('d-m-Y H:i'));
         $workspace->setCreationDate($date->getTimestamp());
 
+        $this->setWorkspaceForImporter($workspace);
+
         if ($owner) {
             $workspace->setCreator($owner);
         }
@@ -162,7 +164,6 @@ class TransfertManager
         $this->om->persist($workspace);
         $this->om->flush();
 
-        //throw new \Exception($configuration->getExtractPath());
         //load roles
         $entityRoles = $this->getImporterByName('roles')->import($data['roles'], $workspace);
         //The manager role is required for every workspace
@@ -246,6 +247,13 @@ class TransfertManager
             $importer->setConfiguration($data);
             $importer->setListImporters($this->listImporters);
             $importer->setStrict($isStrict);
+        }
+    }
+
+    private function setWorkspaceForImporter(SimpleWorkspace $workspace)
+    {
+        foreach ($this->listImporters as $importer) {
+            $importer->setWorkspace($workspace);
         }
     }
 

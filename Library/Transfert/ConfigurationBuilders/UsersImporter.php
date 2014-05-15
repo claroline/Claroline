@@ -18,8 +18,6 @@ use Symfony\Component\Config\Definition\Processor;
 use JMS\DiExtraBundle\Annotation as DI;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Library\Transfert\Merger;
-use Claroline\CoreBundle\Manager\UserManager;
-use Claroline\CoreBundle\Entity\User;
 
 /**
  * @DI\Service("claroline.importer.users_importer")

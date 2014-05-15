@@ -11,6 +11,7 @@ abstract class Importer
     private $rootPath;
     private $configuration;
     private $owner;
+    private $workspace;
     private static $isStrict;
     private $roles = array();
 
