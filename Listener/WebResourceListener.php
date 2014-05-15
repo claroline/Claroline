@@ -234,8 +234,6 @@ class WebResourceListener
      */
     private function guessRootFile(UploadedFile $file)
     {
-        $rootFile = null;
-
         if (!$this->getZip()->open($file)) {
             throw new \Exception('Can not open archive file.');
         }
@@ -243,8 +241,7 @@ class WebResourceListener
         // Try to locate usual default HTML files to avoid unzip archive and scan directory tree
         foreach ($this->defaultIndexFiles as $html) {
             if (is_numeric($this->getZip()->locateName($html))) {
-                $rootFile = $html;
-                break;
+                return $html;
             }
         }
 
@@ -263,10 +260,10 @@ class WebResourceListener
 
         // Only one file
         if (count($htmlFiles) === 1) {
-            $rootFile = array_shift($htmlFiles);
+            return array_shift($htmlFiles);
         }
 
-        return $rootFile;
+        return null;
     }
 
     /**
@@ -276,26 +273,23 @@ class WebResourceListener
      */
     private function guessRootFileFromUnzipped($hash)
     {
-        $rootFile = null;
-
         // Grab all HTML files from Archive
         $htmlFiles = $this->getHTMLFiles($hash);
 
         // Only one file
         if (count($htmlFiles) === 1) {
-            $rootFile = array_shift($htmlFiles);
+            return array_shift($htmlFiles);
         }
 
         // Check usual default root files
         foreach ($this->defaultIndexFiles as $file) {
             if (in_array($file, $htmlFiles)) {
-                $rootFile = $file;
-                break;
+                return $file;
             }
         }
 
         // Unable to find an unique HTML file
-        return $rootFile;
+        return null;
     }
 
     /**
