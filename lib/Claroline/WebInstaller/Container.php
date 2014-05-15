@@ -28,6 +28,14 @@ class Container
     }
 
     /**
+     * @return string
+     */
+    public function getAppDirectory()
+    {
+        return $this->appDirectory;
+    }
+
+    /**
      * @return Request
      */
     public function getRequest()

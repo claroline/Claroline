@@ -11,6 +11,7 @@
 
 namespace Claroline\WebInstaller;
 
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Claroline\CoreBundle\Library\Installation\Settings\SettingChecker;
@@ -236,8 +237,57 @@ class Controller
         $installer->install();
         $this->request->getSession()->invalidate();
 
+        if (!$installer->hasSucceeded()) {
+            return $this->redirect('/error/' . $installer->getLogFilename());
+        }
+
         return $this->redirect('/../app.php');
     }
+
+    public function installStatusStep($timestamp = null)
+    {
+        $logDir = $this->container->getAppDirectory() . '/logs';
+        $logFile = null;
+
+        if (!$timestamp) {
+            $newestFileTime = 0;
+
+            foreach (new \DirectoryIterator($logDir) as $item) {
+                if ($item->isFile()
+                    && preg_match('/^install\-(\d+)\.log$/', $item->getFilename(), $matches)
+                    && $item->getMTime() > $newestFileTime) {
+                    $newestFileTime = $item->getMTime();
+                    $logFile = $item->getPathname();
+                    $timestamp = $matches[1];
+                }
+            }
+        } else {
+            $logFile = $logDir . '/install-' . $timestamp . '.log';
+        }
+
+        return new JsonResponse(
+            array(
+                'timestamp' => $timestamp,
+                'content' => file_get_contents($logFile)
+            )
+        );
+    }
+
+    public function failedInstallStep($logFilename)
+    {
+        $logFile = $this->container->getAppDirectory() . '/logs/' . $logFilename;
+        $logContent = file_exists($logFile) ? file_get_contents($logFile) : null;
+
+        return $this->renderStep(
+            'error.html.php',
+            'failed_install',
+            array(
+                'log' => $logContent,
+                'log_filename' => $logFilename
+            )
+        );
+    }
+
     private function renderStep($template, $titleKey, array $variables)
     {
         return new Response(

@@ -14,6 +14,9 @@ namespace Claroline\WebInstaller;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Installation\Settings\FirstAdminSettings;
 use Claroline\CoreBundle\Library\Security\PlatformRoles;
+use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Output\StreamOutput;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Filesystem\Filesystem;
 
 class Installer
@@ -22,6 +25,9 @@ class Installer
     private $writer;
     private $kernelFile;
     private $kernelClass;
+    private $appDir;
+    private $hasSucceeded = false;
+    private $logFilename = null;
 
     public function __construct(
         FirstAdminSettings $adminSettings,
@@ -34,41 +40,55 @@ class Installer
         $this->writer = $writer;
         $this->kernelFile = $kernelFile;
         $this->kernelClass = $kernelClass;
+        $this->appDir = dirname($kernelFile);
     }
 
     public function install()
     {
-        // preventive clear in case the installer is launched twice
-        $this->clearCache();
+        $this->logFilename = 'install-' . time() . '.log';
+        $logFile = $this->appDir . '/logs/' . $this->logFilename;
+        $output = new StreamOutput(fopen($logFile, 'a'));
 
-        require_once $this->kernelFile;
+        try {
+            // preventive clear in case the installer is launched twice
+            $this->clearCache($output);
 
-        $kernel = new $this->kernelClass('prod', false);
-        $kernel->boot();
+            require_once $this->kernelFile;
 
-        $refresher = $kernel->getContainer()->get('claroline.installation.refresher');
-        $refresher->installAssets();
+            $kernel = new $this->kernelClass('prod', false);
+            $kernel->boot();
 
-        $installer = $kernel->getContainer()->get('claroline.installation.platform_installer');
-        $installer->installFromOperationFile();
-
-        $userManager = $kernel->getContainer()->get('claroline.manager.user_manager');
-        $user = new User();
-        $user->setFirstName($this->adminSettings->getFirstName());
-        $user->setLastName($this->adminSettings->getLastName());
-        $user->setUsername($this->adminSettings->getUsername());
-        $user->setPlainPassword($this->adminSettings->getPassword());
-        $user->setMail($this->adminSettings->getEmail());
-        $userManager->createUserWithRole($user, PlatformRoles::ADMIN);
-
-        $refresher->dumpAssets('prod');
-
-        $this->writer->writeInstallFlag();
+            $container = $kernel->getContainer();
+            $refresher = $container->get('claroline.installation.refresher');
+            $refresher->setOutput($output);
+            $refresher->installAssets();
+            $this->launchInstaller($container, $output);
+            $this->createAdminUser($container, $output);
+            $refresher->dumpAssets('prod');
+            $this->writer->writeInstallFlag();
+            $this->hasSucceeded = true;
+        } catch (\Exception $ex) {
+            $output->writeln('[ERROR] An exception has been thrown during installation');
+            $output->writeln('Message: ' . $ex->getMessage());
+            $output->writeln('Trace: ' . $ex->getTraceAsString());
+        }
     }
 
-    private function clearCache()
+    public function hasSucceeded()
     {
-        if (is_dir($directory = dirname($this->kernelFile) . '/cache/prod')) {
+        return $this->hasSucceeded;
+    }
+
+    public function getLogFilename()
+    {
+        return $this->logFilename;
+    }
+
+    private function clearCache(OutputInterface $output)
+    {
+        $output->writeln('Clearing the cache...');
+
+        if (is_dir($directory = $this->appDir . '/cache')) {
             $fileSystem = new Filesystem();
             $cacheIterator = new \DirectoryIterator($directory);
 
@@ -78,5 +98,35 @@ class Installer
                 }
             }
         }
+    }
+
+    private function launchInstaller(ContainerInterface $container, OutputInterface $output)
+    {
+        $installer = $container->get('claroline.installation.platform_installer');
+        $installer->setOutput($output);
+        $installer->setLogger(function ($message) use ($output) {
+            $output->writeln($message);
+        });
+
+        if (file_exists($opFile = $this->appDir . '/config/operations.xml')) {
+            $output->writeln('Installing the platform from operation file...');
+            $installer->installFromOperationFile();
+        } else {
+            $output->writeln('Installing the platform from kernel...');
+            $installer->installFromKernel(false);
+        }
+    }
+
+    private function createAdminUser(ContainerInterface $container, OutputInterface $output)
+    {
+        $output->writeln('Creating first admin user...');
+        $userManager = $container->get('claroline.manager.user_manager');
+        $user = new User();
+        $user->setFirstName($this->adminSettings->getFirstName());
+        $user->setLastName($this->adminSettings->getLastName());
+        $user->setUsername($this->adminSettings->getUsername());
+        $user->setPlainPassword($this->adminSettings->getPassword());
+        $user->setMail($this->adminSettings->getEmail());
+        $userManager->createUserWithRole($user, PlatformRoles::ADMIN);
     }
 }
