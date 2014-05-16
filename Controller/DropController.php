@@ -560,8 +560,6 @@ class DropController extends DropzoneBaseController
         if (count($dropSecure) == 0) {
             if ($drop->getUser()->getId() != $userId) {
                 throw new AccessDeniedException();
-            } else {
-                throw new NotFoundHttpException();
             }
         }else
         {
@@ -576,11 +574,8 @@ class DropController extends DropzoneBaseController
         $nbCorrections = $em
             ->getRepository('IcapDropzoneBundle:Correction')
             ->countFinished($dropzone, $user);
-        $hasCopyToCorrect = $em
-            ->getRepository('IcapDropzoneBundle:Drop')
-            ->hasCopyToCorrect($dropzone, $user);
 
-        if ($dropzone->getDiplayCorrectionsToLearners() && !$hasCopyToCorrect && $dropzone->getExpectedTotalCorrection() <= $nbCorrections) {
+        if ($dropzone->getDiplayCorrectionsToLearners() && $drop->countFinishedCorrections() >= $dropzone->getExpectedTotalCorrection() && $dropzone->getExpectedTotalCorrection() <= $nbCorrections) {
             $showCorrections = true;
         }
 

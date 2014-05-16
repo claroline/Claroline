@@ -77,14 +77,13 @@
             <div class="text-muted col-md-4">{{ 'Number of validated corrections'|trans({}, 'icap_dropzone') }}</div>
             <div class="col-md-8">{% include 'IcapDropzoneBundle:Drop:dropsNbCorrections.html.twig' %}</div>
         </div>
-        {% if byUserMod == 0   or showCorrections %}
+        {% if byUserMod == 0   or showCorrections or dropzone.displayNotationToLearners %}
             <div class="row">
             <div class="text-muted col-md-4">{{ 'Average validated corrections'|trans({}, 'icap_dropzone') }}</div>
             <div class="col-md-8">{% include 'IcapDropzoneBundle:Drop:dropsTotalGrade.html.twig' %}</div>
         </div>
         {% endif %}
         <br/>
-
         {# showCorrection is set in controller if drop is finished and have expected corrections
         and the author have done the expected number of correction #}
         {% if byUserMod == 0  or showCorrections %}

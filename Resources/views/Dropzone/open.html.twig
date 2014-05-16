@@ -196,6 +196,7 @@
                         </div>
                     </div>
                 {% endif %}
+
                 <a href="{{ path('icap_dropzone_drop_detail_by_user',{'resourceId': dropzone.id,'dropId':drop.id}) }}"
                    class="btn btn-primary">{{ 'See my copy'|trans({},'icap_dropzone') }}</a>
             {% endif %}
@@ -221,7 +222,7 @@
                         {#{% if dropzone.diplayCorrectionsToLearners %}#}
                         <div class='col-md-3'>
                             <a href="{{ path('icap_dropzone_drop_detail_by_user',{'resourceId': dropzone.id,'dropId':drop.id}) }}"
-                               class="btn btn-primary ">{{ 'See my copy'|trans({},'icap_dropzone') }}</a>
+                               class="btn btn-default ">{{ 'See my copy'|trans({},'icap_dropzone') }}</a>
                         </div>
                         {#{% endif %}#}
                     {% else %}
@@ -239,7 +240,7 @@
                         </div>
                         {#{% if dropzone.diplayCorrectionsToLearners %}#}
                         <a href="{{ path('icap_dropzone_drop_detail_by_user',{'resourceId': dropzone.id,'dropId':drop.id}) }}"
-                           class="btn btn-primary">{{ 'See my copy'|trans({},'icap_dropzone') }}</a>
+                           class="btn btn-default">{{ 'See my copy'|trans({},'icap_dropzone') }}</a>
                         {#{% endif %}#}
                     {% endif %}
                 {% else %}
@@ -251,6 +252,13 @@
                                 {{ 'Finished! Patience your copy is being corrected.'|trans({}, 'icap_dropzone') }}
                             {% endif %}
                         </strong>
+
+
+                    </div>
+                    <br>
+                    <div class='col-md-3'>
+                        <a href="{{ path('icap_dropzone_drop_detail_by_user',{'resourceId': dropzone.id,'dropId':drop.id}) }}"
+                           class="btn btn-default ">{{ 'See my copy'|trans({},'icap_dropzone') }}</a>
                     </div>
                 {% endif %}
             </div>
