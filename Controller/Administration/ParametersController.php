@@ -11,32 +11,32 @@
 
 namespace Claroline\CoreBundle\Controller\Administration;
 
+use Claroline\CoreBundle\Form\Administration as AdminForm;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Library\Configuration\UnwritableException;
+use Claroline\CoreBundle\Library\Installation\Refresher;
+use Claroline\CoreBundle\Library\Installation\Settings\MailingChecker;
+use Claroline\CoreBundle\Library\Installation\Settings\MailingSettings;
 use Claroline\CoreBundle\Library\Session\DatabaseSessionValidator;
+use Claroline\CoreBundle\Manager\CacheManager;
+use Claroline\CoreBundle\Manager\ContentManager;
+use Claroline\CoreBundle\Manager\HwiManager;
 use Claroline\CoreBundle\Manager\LocaleManager;
-use Claroline\CoreBundle\Manager\ToolManager;
+use Claroline\CoreBundle\Manager\MailManager;
 use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Manager\TermsOfServiceManager;
-use Claroline\CoreBundle\Manager\ContentManager;
-use Claroline\CoreBundle\Library\Installation\Settings\MailingSettings;
-use Claroline\CoreBundle\Library\Installation\Settings\MailingChecker;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Claroline\CoreBundle\Manager\ToolManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use JMS\SecurityExtraBundle\Annotation as SEC;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Bundle\FrameworkBundle\Translation\Translator;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormFactory;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Bundle\FrameworkBundle\Translation\Translator;
-use Claroline\CoreBundle\Manager\MailManager;
-use Claroline\CoreBundle\Form\Administration as AdminForm;
-use Claroline\CoreBundle\Manager\CacheManager;
-use Claroline\CoreBundle\Library\Installation\Refresher;
-use Claroline\CoreBundle\Manager\HwiManager;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
-use Symfony\Component\Security\Core\SecurityContextInterface;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Symfony\Component\Security\Core\SecurityContextInterface;
 
 /**
  * Controller of the platform parameters section.
@@ -699,48 +699,6 @@ class ParametersController extends Controller
                     $form->addError(new FormError($trans));
                 }
             }
-        }
-
-        return array('form' => $form->createView());
-    }
-
-    /**
-     * @EXT\Route("/ldap", name="claro_admin_ldap_form")
-     * @EXT\Method("GET")
-     * @EXT\Template
-     *
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function ldapFormAction()
-    {
-        $platformConfig = $this->configHandler->getPlatformConfig();
-        $form = $this->formFactory->create(new AdminForm\LdapType(), $platformConfig);
-
-        return array('form' => $form->createView());
-    }
-
-    /**
-     * @EXT\Route("/ldap", name="claro_admin_ldap_form_submit")
-     * @EXT\Method("POST")
-     * @EXT\Template("ClarolineCoreBundle:Administration\Parameters:ldapForm.html.twig")
-     *
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function submitLdapFormAction()
-    {
-        $platformConfig = $this->configHandler->getPlatformConfig();
-        $form = $this->formFactory->create(new AdminForm\LdapType(), $platformConfig);
-        $form->handleRequest($this->request);
-
-        if ($form->isValid()) {
-
-            $data = array(
-                'ldap_host' => $form['ldap_host']->getData(),
-                'ldap_port' => $form['ldap_port']->getData(),
-                'ldap_root_dn' => $form['ldap_root_dn']->getData()
-            );
-
-            $this->configHandler->setParameters($data);
         }
 
         return array('form' => $form->createView());

@@ -1,74 +1,55 @@
-'Action List': 'Liste des actions'
-'Actions per day': 'Nombre d''actions par jour'
-'Activate the terms of service in the platform': 'Activez les conditions d''utilisation dans la plate-forme'
-'Add a logo': 'Ajouter un logo'
-'An error has occurred, please check if the file size does not exceeds the permitted size': 'Une erreur s''est produite, veuillez vérifier si la taille du fichier ne dépasse pas la taille autorisée'
-'Audience/user visits': 'Audience/Visites utilisateurs'
-'Choose a logo': 'Choisir un logo'
-'Choose visible actions in the widget': 'Choisissez les actions visibles dans le widget'
-'Choose workspaces displayed in the widget': 'Choisissez les espaces de travail affichés par le widget'
-'Create a new resource': 'Créer une nouvelle ressource'
-'Draw an area on the graph to zoom, double-click to cancel': 'Tracez une zone sur le graphique pour zoomer; double cliquez pour annuler'
-'Filter actions': 'Filtrer les actions'
-'First name': Prénom
-'Google HTML tag validation': 'Balise HTML de validation Google'
-'I accept the terms of service': 'J''accepte les conditions d''utilisation'
-'Last action': '{1} Dernière action|[1,Inf] %logAmount% dernières actions'
-'Last name': Nom
-'Or choose an existing file from resource manager': 'Ou veuillez choisir un fichier existant dans gestionnaire de ressources'
-'Overview of all recent activities in %workspaceName%': 'Aperçu de toutes les activités récentes de %workspaceName%'
-'Overview of recent activities in %workspaceName%': 'Aperçu des activités récentes de %workspaceName%'
-'Overview of recent activities of your workspaces': 'Aperçu des activités récentes de vos espaces de travail'
-'Paste here the meta tag provides by Google Webmaster': 'Collez ici la balise meta fournit par Google Webmaster'
-'See all': 'Voir tous'
-'Select a Language': 'Sélectionnez une langue'
-'Show actions': 'Afficher les actions'
-'Show the name of the platform in the top bar': 'Afficher le nom de la plateforme dans la barre supérieure'
-'Terms of service': 'Conditions d''utilisation'
-'The form is not valid': 'Le formulaire n''est pas valide'
-'This placeholder is optional and will be replaced by the author first name': 'Ce placeholder est optionnel et sera remplacé par le prénom de l''auteur'
-'This placeholder is optional and will be replaced by the author first name': Ce placeholder est optionnel et sera remplacé par le prénom de l'auteur
-'This placeholder is optional and will be replaced by the author last name': 'Ce placeholder est optionnel et sera remplacé par le nom de l''auteur'
-'This placeholder is optional and will be replaced by the author last name': Ce placeholder est optionnel et sera remplacé par le nom de l'auteur
-'This placeholder is optional and will be replaced by your platform name': 'Ce placeholder est optionnel et sera remplacé par le nom de la plateforme'
-'This placeholder is optional and will be replaced by your platform name': Ce placeholder est optionnel et sera remplacé par le nom de la plateforme
-'This placeholder is required and will be replaced by the actual mail content': 'Ce placeholder est requis et sera remplacé par le contenu du mail'
-'This placeholder is required and will be replaced by the actual mail content': Ce placeholder est requis et sera remplacé par le contenu du mail
-'This variable is optional and will be replaced by your platform name': 'Ce variable est optionnel et sera remplacé par le nom de la plateforme'
-'This variable is required and will be replaced by the actual mail content': 'Ce variable est requis et sera replacé par le contenu du mail'
-'Upload a file': 'Télécharger un fichier'
-'User name': 'Nom d''utilisateur'
-'You can redefine the content of the registration mail here': 'Vous pouvez redéfinir ici le contenu du mail d''inscription'
-'You can redefine the layout used when a mail is sent': 'Vous pouvez redéfinir ici le layout des emails envoyés par la plateforme'
-'You can use the following variables in your form': 'Vous pouvez utiliser les variables suivantes dans votre formulaire'
-'You can use the full screen version of the text editor to include HTML': 'Vous pouvez utiliser la version plein écran de l''éditeur afin d''y inclure du HTML'
-'Your changes have been saved': 'Vos changements ont été sauvegardés'
-'for period': 'sur la période du :'
-'select all': 'Tout sélectionner'
-'unique connections': 'Nb Cnx. uniques'
-'will be replaced by your platform name': 'qui sera remplacé par le nom de votre plateforme'
-'will display the password': 'qui affichera le mot de passe de l''utilisateur'
-'will display the user first name': 'qui affichera le prénom de l''utilisateur'
-'will display the user last name': 'qui affichera le nom de famille de l''utilisateur'
-'will display the username': 'qui affichera le nom de l''utilisateur'
 404: 'La page que vous cherchez n''existe pas.'
+Action List: 'Liste des actions'
+Actions per day: 'Nombre d''actions par jour'
+Activate the terms of service in the platform: 'Activez les conditions d''utilisation dans la plate-forme'
 Active: 'Actif'
 Active: Actif
+Add a logo: 'Ajouter un logo'
+An error has occurred, please check if the file size does not exceeds the permitted size: 'Une erreur s''est produite, veuillez vérifier si la taille du fichier ne dépasse pas la taille autorisée'
+Audience/user visits: 'Audience/Visites utilisateurs'
+Choose a logo: 'Choisir un logo'
+Choose visible actions in the widget: 'Choisissez les actions visibles dans le widget'
+Choose workspaces displayed in the widget: 'Choisissez les espaces de travail affichés par le widget'
 Create a new resource: 'Créer une nouvelle ressource'
+Draw an area on the graph to zoom, double-click to cancel: 'Tracez une zone sur le graphique pour zoomer; double cliquez pour annuler'
+Filter actions: 'Filtrer les actions'
 First name: Prénom
+Google HTML tag validation: 'Balise HTML de validation Google'
+I accept the terms of service: 'J''accepte les conditions d''utilisation'
 Indexing: Référencement
 Language: Langue
+Last action: '{1} Dernière action|[1,Inf] %logAmount% dernières actions'
 Last name: Nom
 None: Aucun
+Or choose an existing file from resource manager: 'Ou veuillez choisir un fichier existant dans gestionnaire de ressources'
+Overview of all recent activities in %workspaceName%: 'Aperçu de toutes les activités récentes de %workspaceName%'
+Overview of recent activities in %workspaceName%: 'Aperçu des activités récentes de %workspaceName%'
+Overview of recent activities of your workspaces: 'Aperçu des activités récentes de vos espaces de travail'
+Paste here the meta tag provides by Google Webmaster: 'Collez ici la balise meta fournit par Google Webmaster'
+See all: 'Voir tous'
+Select a Language: 'Sélectionnez une langue'
+Show actions: 'Afficher les actions'
 Show the name of the platform in the top bar: 'Afficher le nom de la plateforme dans la barre supérieure'
 Show: Afficher
+Terms of service: 'Conditions d''utilisation'
+The form is not valid: 'Le formulaire n''est pas valide'
+This placeholder is optional and will be replaced by the author first name: 'Ce placeholder est optionnel et sera remplacé par le prénom de l''auteur'
+This placeholder is optional and will be replaced by the author first name: Ce placeholder est optionnel et sera remplacé par le prénom de l'auteur
+This placeholder is optional and will be replaced by the author last name: 'Ce placeholder est optionnel et sera remplacé par le nom de l''auteur'
+This placeholder is optional and will be replaced by the author last name: Ce placeholder est optionnel et sera remplacé par le nom de l'auteur
+This placeholder is optional and will be replaced by your platform name: 'Ce placeholder est optionnel et sera remplacé par le nom de la plateforme'
+This placeholder is optional and will be replaced by your platform name: Ce placeholder est optionnel et sera remplacé par le nom de la plateforme
+This placeholder is required and will be replaced by the actual mail content: 'Ce placeholder est requis et sera remplacé par le contenu du mail'
+This placeholder is required and will be replaced by the actual mail content: Ce placeholder est requis et sera remplacé par le contenu du mail
 This variable is optional and will be replaced by your platform name: 'Ce variable est optionnel et sera remplacé par le nom de la plateforme'
 This variable is required and will be replaced by the actual mail content: 'Ce variable est requis et sera replacé par le contenu du mail'
+Upload a file: 'Télécharger un fichier'
 User name: 'Nom d''utilisateur'
 You can redefine the content of the registration mail here: 'Vous pouvez redéfinir ici le contenu du mail d''inscription'
 You can redefine the layout used when a mail is sent: 'Vous pouvez redéfinir ici le layout des emails envoyés par la plateforme'
 You can use the following variables in your form: 'Vous pouvez utiliser les variables suivantes dans votre formulaire'
 You can use the full screen version of the text editor to include HTML: 'Vous pouvez utiliser la version plein écran de l''éditeur afin d''y inclure du HTML'
+Your changes have been saved: 'Vos changements ont été sauvegardés'
 account_created: 'Compte créé'
 account_general_statistics: 'Statistiques générales sur les comptes'
 action: Action
@@ -233,6 +214,7 @@ directory_form_shareType: Redistribution
 display: Afficher
 display_captcha: 'Afficher les captcha pour les anonymes'
 display_options: 'Options d''affichage'
+distinguished_name: Nom distinctif (DN)
 done_on: 'effectuée sur'
 down: Descendre
 download: Télécharger
@@ -282,6 +264,7 @@ filter: Filtrer
 find_workspaces: 'Tous les espaces d''activités publics'
 firstName: Prénom
 first_name: Prénom
+for period: 'sur la période du :'
 forgot_password: 'Mot de passe oublié ?'
 form_role: Rôle
 from: Depuis
@@ -329,6 +312,7 @@ home_tabs_configuration: 'Configuration des onglets de la page d''accueil'
 id: Id
 id_col: 'Colonne des identifiants'
 import: Importer
+import_roles: 'Importer des roles'
 import_user_file_file: 'Importer depuis fichier csv'
 import_users: 'Importer des utilisateurs'
 informations: Informations
@@ -433,8 +417,8 @@ name: Nom
 new: Nouveau
 new_message: 'Nouveau message'
 new_message_alert: 'Vous avez %count% nouveaux message(s)'
-new_role_message: 'Vous venez de recevoir le role %name%'
 new_password: Nouveau mot de passe
+new_role_message: 'Vous venez de recevoir le role %name%'
 new_role_message_object: 'Vos permissions sur la plateforme ont changé'
 no: non
 no_category: 'Il n''y a aucune catégorie'
@@ -602,6 +586,7 @@ search_workspace: 'Rechercher un espace d''activités'
 see: Voir
 see_more: 'Voir plus'
 see_public_profile: 'Voir mon profil public'
+select all: 'Tout sélectionner'
 select_all: 'Tout sélectionner'
 select_category: 'Sélectionner une catégorie'
 select_contacts_title: 'Sélectionnez les destinataires'
@@ -705,7 +690,9 @@ unable_to_start_sendmail: 'La connexion avec Sendmail ou Postfix ne peut pas êt
 unable_to_start_smtp: 'La connexion avec le serveur SMTP ne peut pas être établie. Veuillez vérifier que les paramètres que vous avez renseignés sont corrects.'
 unable_to_start_transport: 'La connexion avec le serveur de mails ne peut pas être établie. Veuillez vérifier que les paramètres que vous avez renseignés sont corrects.'
 unauthorized: 'Vous n''êtes pas autorisé à consulter cette page.'
+uncompress_file: Décompresser le fichier si possible
 under_min_length: 'Cette valeur est trop courte'
+unique connections: 'Nb Cnx. uniques'
 unregister: Désinscription
 unregister_from_a_workspace: 'Me désinscrire d''un espace d''activités'
 unregistered: 'Non inscrit'
@@ -755,6 +742,11 @@ widget_home_tab_delete_confirm_title: 'Suppression du widget de l''onglet'
 widget_settings: 'Paramètres des widgets'
 widgets: Widgets
 widgets_configuration: 'Configuration des widgets'
+will be replaced by your platform name: 'qui sera remplacé par le nom de votre plateforme'
+will display the password: 'qui affichera le mot de passe de l''utilisateur'
+will display the user first name: 'qui affichera le prénom de l''utilisateur'
+will display the user last name: 'qui affichera le nom de famille de l''utilisateur'
+will display the username: 'qui affichera le nom de l''utilisateur'
 workspace.create: 'Créer un nouvel espace d''activités'
 workspace.name_not_blank: 'Veuillez spécifier un nom pour ce workspace.'
 workspace: 'Espace d''activités'
@@ -812,9 +804,4 @@ ws_most_viewed: 'Espaces d''activités les plus consultés'
 yes: oui
 yesterday_activity: 'Activité de la veille'
 your_current_url: 'Votre URL actuelle'
-public_profile_url_tuning_only_once: 'La personnalisation de l''URL de votre profil public n''est possible qu''une seule fois'
-public_url_help: 'Note : Votre URL personnalisée doit comprendre au maximum 30 lettres ou chiffres. Ne pas utiliser d''espaces, de symboles ou de caractères spéciaux.'
-manage_tools: Gérer les outils
-create_role: Créer un rôle
-uncompress_file: Décompresser le fichier si possible
 your_username: 'Votre nom d''utilisateur est '
