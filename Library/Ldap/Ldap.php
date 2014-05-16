@@ -21,8 +21,8 @@ class Ldap
 {
     private $host;
     private $port;
-    private $rootdn;
-    private $conn;
+    private $dn;
+    private $connect;
 
     /**
      * @DI\InjectParams({"ch" = @DI\Inject("claroline.config.platform_config_handler")})
@@ -31,20 +31,30 @@ class Ldap
     {
         $this->host = $ch->getParameter('ldap_host');
         $this->port = $ch->getParameter('ldap_port');
-        $this->rootdn = $ch->getParameter('ldap_root_dn');
+        $this->dn = $ch->getParameter('ldap_root_dn');
     }
+
     public function connect()
     {
-        $this->conn = ldap_connect($this->host, $this->port);
+        $this->connect = ldap_connect($this->host, $this->port);
 
-        if ($this->conn) {
-            $bind = ldap_bind($this->conn);
-            ldap_close($this->conn);
+        if ($this->connect) {
+            return @ldap_bind($this->connect);
         }
     }
 
     public function close()
     {
-        ldap_close($this->conn);
+        ldap_close($this->connect);
     }
-} 
+
+    public function search($filter, $attributes = array())
+    {
+        return ldap_search($this->connect, $this->dn, $filter, $attributes);
+    }
+
+    public function getEntries($search)
+    {
+        return ldap_get_entries($this->connect, $search);
+    }
+}

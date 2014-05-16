@@ -20,9 +20,9 @@ class LdapType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('ldap_host', 'text', array('label' => 'ldap_host'))
-            ->add('ldap_port', 'text', array('label' => 'ldap_port'))
-            ->add('ldap_root_dn', 'text', array('label' => 'ldap_root_dn'));
+        $builder->add('ldap_host', 'text', array('label' => 'platform_parameters_form_host'))
+            ->add('ldap_port', 'text', array('label' => 'platform_parameters_form_port'))
+            ->add('ldap_root_dn', 'text', array('label' => 'distinguished_name'));
     }
 
     public function getName()

@@ -11,32 +11,33 @@
 
 namespace Claroline\CoreBundle\Controller\Administration;
 
+use Claroline\CoreBundle\Form\Administration as AdminForm;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Library\Configuration\UnwritableException;
+use Claroline\CoreBundle\Library\Installation\Refresher;
+use Claroline\CoreBundle\Library\Installation\Settings\MailingChecker;
+use Claroline\CoreBundle\Library\Installation\Settings\MailingSettings;
+use Claroline\CoreBundle\Library\Ldap\Ldap;
 use Claroline\CoreBundle\Library\Session\DatabaseSessionValidator;
+use Claroline\CoreBundle\Manager\CacheManager;
+use Claroline\CoreBundle\Manager\ContentManager;
+use Claroline\CoreBundle\Manager\HwiManager;
 use Claroline\CoreBundle\Manager\LocaleManager;
-use Claroline\CoreBundle\Manager\ToolManager;
+use Claroline\CoreBundle\Manager\MailManager;
 use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Manager\TermsOfServiceManager;
-use Claroline\CoreBundle\Manager\ContentManager;
-use Claroline\CoreBundle\Library\Installation\Settings\MailingSettings;
-use Claroline\CoreBundle\Library\Installation\Settings\MailingChecker;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Claroline\CoreBundle\Manager\ToolManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use JMS\SecurityExtraBundle\Annotation as SEC;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Bundle\FrameworkBundle\Translation\Translator;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormFactory;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Bundle\FrameworkBundle\Translation\Translator;
-use Claroline\CoreBundle\Manager\MailManager;
-use Claroline\CoreBundle\Form\Administration as AdminForm;
-use Claroline\CoreBundle\Manager\CacheManager;
-use Claroline\CoreBundle\Library\Installation\Refresher;
-use Claroline\CoreBundle\Manager\HwiManager;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
-use Symfony\Component\Security\Core\SecurityContextInterface;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Symfony\Component\Security\Core\SecurityContextInterface;
 
 /**
  * Controller of the platform parameters section.
@@ -58,6 +59,7 @@ class ParametersController extends Controller
     private $sc;
     private $toolManager;
     private $paramAdminTool;
+    private $ldap;
 
     /**
      * @DI\InjectParams({
@@ -75,7 +77,8 @@ class ParametersController extends Controller
      *     "refresher"          = @DI\Inject("claroline.installation.refresher"),
      *     "hwiManager"         = @DI\Inject("claroline.manager.hwi_manager"),
      *     "toolManager"        = @DI\Inject("claroline.manager.tool_manager"),
-     *     "sc"                 = @DI\Inject("security.context")
+     *     "sc"                 = @DI\Inject("security.context"),
+     *     "ldap"               = @DI\Inject("claroline.library.ldap")
      * })
      */
     public function __construct(
@@ -93,7 +96,8 @@ class ParametersController extends Controller
         Refresher $refresher,
         HwiManager $hwiManager,
         ToolManager $toolManager,
-        SecurityContextInterface $sc
+        SecurityContextInterface $sc,
+        Ldap $ldap
     )
     {
         $this->configHandler      = $configHandler;
@@ -112,6 +116,7 @@ class ParametersController extends Controller
         $this->sc                 = $sc;
         $this->toolManager        = $toolManager;
         $this->paramAdminTool     = $this->toolManager->getAdminToolByName('platform_parameters');
+        $this->ldap               = $ldap;
     }
 
     /**
@@ -705,8 +710,18 @@ class ParametersController extends Controller
     }
 
     /**
-     * @EXT\Route("/ldap", name="claro_admin_ldap_form")
-     * @EXT\Method("GET")
+     * @EXT\Route("/ldap", name="claro_admin_ldap")
+     * @EXT\Template
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function ldapMenuAction()
+    {
+        return array();
+    }
+
+    /**
+     * @EXT\Route("/ldap/settings", name="claro_admin_ldap_form")
      * @EXT\Template
      *
      * @return \Symfony\Component\HttpFoundation\Response
@@ -716,24 +731,7 @@ class ParametersController extends Controller
         $platformConfig = $this->configHandler->getPlatformConfig();
         $form = $this->formFactory->create(new AdminForm\LdapType(), $platformConfig);
 
-        return array('form' => $form->createView());
-    }
-
-    /**
-     * @EXT\Route("/ldap", name="claro_admin_ldap_form_submit")
-     * @EXT\Method("POST")
-     * @EXT\Template("ClarolineCoreBundle:Administration\Parameters:ldapForm.html.twig")
-     *
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function submitLdapFormAction()
-    {
-        $platformConfig = $this->configHandler->getPlatformConfig();
-        $form = $this->formFactory->create(new AdminForm\LdapType(), $platformConfig);
-        $form->handleRequest($this->request);
-
-        if ($form->isValid()) {
-
+        if ($this->request->getMethod() === 'POST' and $form->handleRequest($this->request) and $form->isValid()) {
             $data = array(
                 'ldap_host' => $form['ldap_host']->getData(),
                 'ldap_port' => $form['ldap_port']->getData(),
@@ -744,6 +742,73 @@ class ParametersController extends Controller
         }
 
         return array('form' => $form->createView());
+    }
+
+    /**
+     * @EXT\Route("/ldap/import/users", name="claro_admin_ldap_import_users")
+     * @EXT\Template
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function ldapImportUsersAction()
+    {
+        $classes = array();
+
+        if ($this->ldap->connect()) {
+
+            if ($search = $this->ldap->search('(&(objectClass=*))', array('objectclass'))) {
+                $entries = $this->ldap->getEntries($search);
+                foreach ($entries as $objectClass) {
+                    if (isset($objectClass['objectclass'])) {
+                        unset($objectClass['objectclass']['count']);
+                        $classes = array_merge($classes, $objectClass['objectclass']);
+                    }
+                }
+            }
+
+            $this->ldap->close();
+
+            return array('classes' => array_unique($classes));
+        }
+
+        return array('error' => true);
+    }
+
+    /**
+     * @EXT\Route("/ldap/import/roles", name="claro_admin_ldap_import_roles")
+     * @EXT\Template
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function ldapImportRolesAction()
+    {
+        if ($this->ldap->connect()) {
+            $this->ldap->close();
+
+            return array();
+        }
+
+        return array('error' => true);
+    }
+
+    /**
+     * @EXT\Route("/ldap/get/users/{objectClass}", name="claro_admin_ldap_get_users", options = {"expose"=true})
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function ldapGetUsersAction($objectClass)
+    {
+        $users = array();
+
+        if ($this->ldap->connect()) {
+            if ($search = $this->ldap->search('(&(objectClass=' . $objectClass . '))')) {
+                $users = $this->ldap->getEntries($search);
+            }
+
+            $this->ldap->close();
+        }
+
+        return new Response(json_encode($users));
     }
 
     /**

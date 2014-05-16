@@ -1,0 +1,45 @@
+{% extends "ClarolineCoreBundle:Administration:layout.html.twig" %}
+
+{% block title %}{{ parent() ~ ' - LDAP ' ~ 'import_roles' | trans({}, 'platform') | striptags | raw }}{% endblock %}
+
+{% block breadcrumb %}
+    {{
+        macros.breadcrumbs([
+            {
+                'icon': 'icon-cog',
+                'name': 'administration'|trans({}, 'platform'),
+                'href': path('claro_admin_index')
+            },
+            {
+                'name': 'parameters'|trans({}, 'platform'),
+                'href': path('claro_admin_index')
+            },
+            {
+                'name': 'LDAP'|trans({}, 'platform'),
+                'href': path('claro_admin_ldap')
+            },
+            {
+                'name': 'import_roles'|trans({}, 'platform'),
+                'href': ''
+            }
+        ])
+    }}
+{% endblock %}
+
+{% block section_content %}
+    <div class="panel-heading">
+        <h3 class="panel-title">{{ 'LDAP - ' ~ 'import_roles'|trans({}, 'platform') }}</h3>
+    </div>
+    <div class="panel-body">
+        {% if error is defined %}
+            <div class="alert alert-danger">
+                <i class="icon-warning-sign"></i> {{ 'ldap_error_conexion' | trans({}, 'platform') }}
+            </div>
+            <a class="btn btn-primary" href="{{ path('claro_admin_ldap_form') }}" class="alert-link">
+                <i class="icon-wrench"></i> {{ 'LDAP settings' | trans({}, 'platform')}}
+            </a>
+        {% else %}
+
+        {% endif %}
+    </div>
+{% endblock %}

@@ -1,73 +1,56 @@
-'Action List': 'Action List'
-'Actions per day': 'Actions per day'
-'Activate the terms of service in the platform': 'Activate the terms of service in the platform'
-'Add a logo': 'Add a logo'
-'An error has occurred, please check if the file size does not exceeds the permitted size': 'An error has occurred, please check if the file size does not exceeds the permitted size'
-'Audience/user visits': 'Audience/user visits'
-'Choose a logo': 'Choose a logo'
-'Choose visible actions in the widget': 'Choose visible actions in the widget'
-'Choose workspaces displayed in the widget': 'Choose workspaces displayed in the widget'
-'Create a new resource': 'Create a new resource'
-'Draw an area on the graph to zoom, double-click to cancel': 'Draw an area on the graph to zoom, double-click to cancel'
-'Filter actions': 'Filter actions'
-'First name': 'First name'
-'Google HTML tag validation': 'Google HTML tag validation'
-'I accept the terms of service': 'I accept the terms of service'
-'Last action': '{1} Last action|[1,Inf] Last %logAmount% actions'
-'Last name': 'Last name'
-'Or choose an existing file from resource manager': 'Or choose an existing file from resource manager'
-'Overview of all recent activities in %workspaceName%': 'Overview of all recent activities in %workspaceName%'
-'Overview of recent activities in %workspaceName%': 'Overview of recent activities in %workspaceName%'
-'Overview of recent activities of your workspaces': 'Overview of recent activities of your workspaces'
-'Paste here the meta tag provides by Google Webmaster': 'Paste here the meta tag provides by Google Webmaster'
-'See all': 'See all'
-'Select a Language': 'Select a Language'
-'Show actions': 'Show actions'
-'Show the name of the platform in the top bar': 'Show the name of the platform in the top bar'
-'Terms of service': 'Terms of service'
-'The form is not valid': 'The form is not valid'
-'This placeholder is optional and will be replaced by the author first name': 'This placeholder is optional and will be replaced by the author first name'
-'This placeholder is optional and will be replaced by the author first name': This placeholder is optional and will be replaced by the author first name
-'This placeholder is optional and will be replaced by the author last name': 'This placeholder is optional and will be replaced by the author last name'
-'This placeholder is optional and will be replaced by the author last name': This placeholder is optional and will be replaced by the author last name
-'This placeholder is optional and will be replaced by your platform name': 'This placeholder is optional and will be replaced by your platform name'
-'This placeholder is optional and will be replaced by your platform name': This placeholder is optional and will be replaced by your platform name
-'This placeholder is required and will be replaced by the actual mail content': 'This placeholder is required and will be replaced by the actual mail content'
-'This placeholder is required and will be replaced by the actual mail content': This placeholder is required and will be replaced by the actual mail content
-'This variable is optional and will be replaced by your platform name': 'This variable is optional and will be replaced by your platform name'
-'This variable is required and will be replaced by the actual mail content': 'This variable is required and will be replaced by the actual mail content'
-'Upload a file': 'Upload a file'
-'User name': 'User name'
-'You can redefine the content of the registration mail here': 'You can redefine the content of the registration mail here'
-'You can redefine the layout used when a mail is sent': 'You can redefine the layout used when a mail is sent'
-'You can use the following variables in your form': 'You can use the following variables in your form'
-'You can use the full screen version of the text editor to include HTML': 'You can use the full screen version of the text editor to include HTML'
-'Your changes have been saved': 'Your changes have been saved'
-'for period': 'for period'
-'select all': 'Select all'
-'unique connections': 'Nb unique Cnx.'
-'will be replaced by your platform name': 'will be replaced by your platform name'
-'will display the password': 'will display the password'
-'will display the user first name': 'will display the user first name'
-'will display the user last name': 'will display the user last name'
-'will display the username': 'will display the username'
 404: 'Page Not found'
+Action List: 'Action List'
+Actions per day: 'Actions per day'
+Activate the terms of service in the platform: 'Activate the terms of service in the platform'
 Active: 'Active'
 Active: Active
+Add a logo: 'Add a logo'
+An error has occurred, please check if the file size does not exceeds the permitted size: 'An error has occurred, please check if the file size does not exceeds the permitted size'
+Audience/user visits: 'Audience/user visits'
+Choose a logo: 'Choose a logo'
+Choose visible actions in the widget: 'Choose visible actions in the widget'
+Choose workspaces displayed in the widget: 'Choose workspaces displayed in the widget'
 Create a new resource: 'Create a new resource'
+Draw an area on the graph to zoom, double-click to cancel: 'Draw an area on the graph to zoom, double-click to cancel'
+Filter actions: 'Filter actions'
 First name: 'First name'
+Google HTML tag validation: 'Google HTML tag validation'
+I accept the terms of service: 'I accept the terms of service'
 Indexing: Indexing
+LDAP settings: LDAP settings
 Language: Language
+Last action: '{1} Last action|[1,Inf] Last %logAmount% actions'
 Last name: 'Last name'
 None: None
+Or choose an existing file from resource manager: 'Or choose an existing file from resource manager'
+Overview of all recent activities in %workspaceName%: 'Overview of all recent activities in %workspaceName%'
+Overview of recent activities in %workspaceName%: 'Overview of recent activities in %workspaceName%'
+Overview of recent activities of your workspaces: 'Overview of recent activities of your workspaces'
+Paste here the meta tag provides by Google Webmaster: 'Paste here the meta tag provides by Google Webmaster'
+See all: 'See all'
+Select a Language: 'Select a Language'
+Show actions: 'Show actions'
+Show the name of the platform in the top bar: 'Show the name of the platform in the top bar'
 Show: Show
+Terms of service: 'Terms of service'
+The form is not valid: 'The form is not valid'
+This placeholder is optional and will be replaced by the author first name: 'This placeholder is optional and will be replaced by the author first name'
+This placeholder is optional and will be replaced by the author first name: This placeholder is optional and will be replaced by the author first name
+This placeholder is optional and will be replaced by the author last name: 'This placeholder is optional and will be replaced by the author last name'
+This placeholder is optional and will be replaced by the author last name: This placeholder is optional and will be replaced by the author last name
+This placeholder is optional and will be replaced by your platform name: 'This placeholder is optional and will be replaced by your platform name'
+This placeholder is optional and will be replaced by your platform name: This placeholder is optional and will be replaced by your platform name
+This placeholder is required and will be replaced by the actual mail content: 'This placeholder is required and will be replaced by the actual mail content'
+This placeholder is required and will be replaced by the actual mail content: This placeholder is required and will be replaced by the actual mail content
 This variable is optional and will be replaced by your platform name: 'This variable is optional and will be replaced by your platform name'
 This variable is required and will be replaced by the actual mail content: 'This variable is required and will be replaced by the actual mail content'
+Upload a file: 'Upload a file'
 User name: 'User name'
 You can redefine the content of the registration mail here: 'You can redefine the content of the registration mail here'
 You can redefine the layout used when a mail is sent: 'You can redefine the layout used when a mail is sent'
 You can use the following variables in your form: 'You can use the following variables in your form'
 You can use the full screen version of the text editor to include HTML: 'You can use the full screen version of the text editor to include HTML'
+Your changes have been saved: 'Your changes have been saved'
 account_created: 'Account created.'
 account_general_statistics: 'Account general statistics'
 action: Action
@@ -232,6 +215,7 @@ directory_form_shareType: Sharable
 display: Display
 display_captcha: 'Display captcha for anonymous'
 display_options: 'Display options'
+distinguished_name: Distinguished Name (DN)
 done_on: 'done on'
 down: Down
 download: Download
@@ -281,6 +265,7 @@ filter: Filter
 find_workspaces: 'All public workspaces'
 firstName: 'First name'
 first_name: 'First name'
+for period: 'for period'
 forgot_password: 'Forgot your password ?'
 form_role: Role
 from: From
@@ -328,6 +313,7 @@ home_tabs_configuration: 'Home tabs configuration'
 id: Id
 id_col: 'Database data column'
 import: Import
+import_roles: 'Import roles'
 import_user_file_file: 'Import from a csv file'
 import_users: 'Import users'
 informations: Informations
@@ -349,6 +335,8 @@ lastName: 'Last name'
 last_30_days_activity: 'Activity over the last 30 days'
 last_name: 'Last name'
 layout: Layout
+ldap_error_conexion: Could not connect to LDAP server
+ldap_user_class: User class
 leave_this_page: 'If you leave this page you may lose your changes.'
 left: Left
 line_number: 'Line %line%:'
@@ -600,6 +588,7 @@ search_workspace: 'Search for a workspace'
 see: See
 see_more: 'See more'
 see_public_profile: 'See my public profile'
+select all: 'Select all'
 select_all: 'Select all'
 select_category: 'Select a category'
 select_contacts_title: 'Select receivers'
@@ -702,7 +691,9 @@ unable_to_start_sendmail: 'Sendmail or Postfix cannot be started. Please check t
 unable_to_start_smtp: 'The connection with the SMTP server cannot be established. Please check that the parameters you provided are correct.'
 unable_to_start_transport: 'The mailing transport cannot be started. Please check that the parameters you provided are correct.'
 unauthorized: 'You are not authorized to see this page.'
+uncompress_file: Uncompress the file if possible
 under_min_length: 'This value is too short'
+unique connections: 'Nb unique Cnx.'
 unregister: Unregister
 unregister_from_a_workspace: 'Unregister from a workspace'
 unregistered: Unregistered
@@ -752,6 +743,11 @@ widget_home_tab_delete_confirm_title: 'Remove widget from Home tab'
 widget_settings: 'Widget settings'
 widgets: Widgets
 widgets_configuration: 'Widgets configuration'
+will be replaced by your platform name: 'will be replaced by your platform name'
+will display the password: 'will display the password'
+will display the user first name: 'will display the user first name'
+will display the user last name: 'will display the user last name'
+will display the username: 'will display the username'
 workspace.create: 'Create a new workspace'
 workspace.name_not_blank: 'The workspace''s name is required.'
 workspace: Workspace
@@ -783,6 +779,8 @@ workspace_home_tab_edition: 'Workspace Home tab edition'
 workspace_home_tabs: 'Workspace Home tabs'
 workspace_list: 'Workspace list'
 workspace_list: Workspace list
+workspace_management : 'The workspace has been create at %creationDate%, by %creator%. There is %count% suscriber(s).'
+workspace_management_date_null : 'There is %count% subscriber(s). The creation date and the creator are not mentioned'
 workspace_order_tool_edit_form_name: Name
 workspace_registration_confirm_title: 'Do you really want to register to this workspace ?'
 workspace_registration_message: 'You have been registered to the workspace %workspace_name%'
@@ -801,8 +799,6 @@ workspace_unregistration_confirm_title: 'Do you really want to unregister from t
 workspace_welcome: Welcome
 workspaces: Workspaces
 workspaces_included_in_category: 'Workspaces included in this category'
-workspace_management : 'The workspace has been create at %creationDate%, by %creator%. There is %count% suscriber(s).'
-workspace_management_date_null : 'There is %count% subscriber(s). The creation date and the creator are not mentioned'
 workspaces_management: 'Workspaces management'
 workspaces_per_page: 'Workspace per page'
 wrong_captcha : 'The code does not match the picture'
@@ -811,9 +807,4 @@ ws_most_viewed: 'Most viewed workspaces'
 yes: yes
 yesterday_activity: 'Yesterday''s activity'
 your_current_url: 'Your current URL'
-public_profile_url_tuning_only_once: 'Public profile URL tuning is possible just once'
-public_url_help: 'Note : Your tuned URL must have maximum 30 letters or figures. Don''t use whitspaces, symbols or special characters.'
-manage_tools: Manage tools
-create_role: Create role
-uncompress_file: Uncompress the file if possible
 your_username: 'Your username is '

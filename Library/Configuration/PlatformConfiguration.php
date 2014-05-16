@@ -469,6 +469,12 @@ class PlatformConfiguration
         $this->ldapPort = $port;
     }
 
+    /**
+     * @Assert\Regex(
+     *      "/^[0-9]+$/",
+     *      message = "port_error"
+     * )
+     */
     public function getLdapPort()
     {
         return $this->ldapPort;
