@@ -129,8 +129,7 @@ class PortfolioHandler
      */
     public function handleDelete(Portfolio $portfolio)
     {
-        $this->entityManager->remove($portfolio);
-        $this->entityManager->flush();
+        $this->portfolioManager->deletePortfolio($portfolio);
     }
 
     /**

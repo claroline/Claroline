@@ -123,6 +123,15 @@ class PortfolioManager
     /**
      * @param Portfolio $portfolio
      */
+    public function deletePortfolio(Portfolio $portfolio)
+    {
+        $this->entityManager->remove($portfolio);
+        $this->entityManager->flush();
+    }
+
+    /**
+     * @param Portfolio $portfolio
+     */
     private function persistPortfolio(Portfolio $portfolio)
     {
         $this->entityManager->persist($portfolio);

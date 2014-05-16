@@ -143,16 +143,13 @@ class PortfolioController extends Controller
     public function viewAction($portfolioSlug)
     {
         /** @var User|null $user */
-        $user      = $this->getUser();
-        /** @var \Icap\PortfolioBundle\Entity\Portfolio $portfolio */
-        $portfolio = $this->getDoctrine()->getRepository('IcapPortfolioBundle:Portfolio')->findOneBySlug($portfolioSlug);
-        $editMode  = false;
+        $user        = $this->getUser();
+        /** @var \Icap\PortfolioBundle\Entity\Widget\TitleWidget $titleWidget */
+        $titleWidget = $this->getDoctrine()->getRepository('IcapPortfolioBundle:Widget\TitleWidget')->findOneBySlug($portfolioSlug);
+        $portfolio   = $titleWidget->getWidgetNode()->getPortfolio();
+        $editMode    = false;
 
         $portfolioWidgets = $this->getPortfolioWidgetTypeRepository()->findAllInArray();
-
-        echo "<pre>";
-        var_dump($portfolio->get);
-        echo "</pre>" . PHP_EOL;
 
         if (null === $portfolio) {
             throw $this->createNotFoundException("Unknown portfolio.");
@@ -161,24 +158,23 @@ class PortfolioController extends Controller
             $editMode = true;
         }
 
-        $widgetsConfig = $this->getWidgetsManager()->getWidgetsConfig();
-
-        $response            = new Response($this->renderView('IcapPortfolioBundle:Portfolio:view.html.twig', array('portfolio' => $portfolio, 'editMode' => $editMode, 'widgetsConfig' => $widgetsConfig)));
+        $widgetsConfig       = $this->getWidgetsManager()->getWidgetsConfig();
+        $response            = new Response($this->renderView('IcapPortfolioBundle:Portfolio:view.html.twig', array('title' => $titleWidget->getTitle(), 'portfolio' => $portfolio, 'editMode' => $editMode, 'widgetsConfig' => $widgetsConfig)));
         $portfolioVisibility = $portfolio->getVisibility();
 
         if ($user !== $portfolio->getUser()) {
             if (
                 Portfolio::VISIBILITY_NOBODY === $portfolioVisibility
                 || (
-                        Portfolio::VISIBILITY_USER === $portfolioVisibility && null !== $user && !$portfolio->visibleToUser($user)
+                    Portfolio::VISIBILITY_USER === $portfolioVisibility && null !== $user && !$portfolio->visibleToUser($user)
                 )) {
                 $response = new Response($this->renderView('IcapPortfolioBundle:Portfolio:view.error.html.twig', array('errorCode' => 403, 'portfolioSlug' => $portfolioSlug)), 403);
             }
             else if (
                     null === $user
                     && (
-                            Portfolio::VISIBILITY_PLATFORM_USER === $portfolioVisibility
-                            || Portfolio::VISIBILITY_USER === $portfolioVisibility
+                        Portfolio::VISIBILITY_PLATFORM_USER === $portfolioVisibility
+                        || Portfolio::VISIBILITY_USER === $portfolioVisibility
                     )) {
                 $response = new Response($this->renderView('IcapPortfolioBundle:Portfolio:view.error.html.twig', array('errorCode' => 401, 'portfolioSlug' => $portfolioSlug)), 401);
             }
