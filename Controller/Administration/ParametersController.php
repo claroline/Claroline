@@ -705,6 +705,48 @@ class ParametersController extends Controller
     }
 
     /**
+     * @EXT\Route("/ldap", name="claro_admin_ldap_form")
+     * @EXT\Method("GET")
+     * @EXT\Template
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function ldapFormAction()
+    {
+        $platformConfig = $this->configHandler->getPlatformConfig();
+        $form = $this->formFactory->create(new AdminForm\LdapType(), $platformConfig);
+
+        return array('form' => $form->createView());
+    }
+
+    /**
+     * @EXT\Route("/ldap", name="claro_admin_ldap_form_submit")
+     * @EXT\Method("POST")
+     * @EXT\Template("ClarolineCoreBundle:Administration\Parameters:ldapForm.html.twig")
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function submitLdapFormAction()
+    {
+        $platformConfig = $this->configHandler->getPlatformConfig();
+        $form = $this->formFactory->create(new AdminForm\LdapType(), $platformConfig);
+        $form->handleRequest($this->request);
+
+        if ($form->isValid()) {
+
+            $data = array(
+                'ldap_host' => $form['ldap_host']->getData(),
+                'ldap_port' => $form['ldap_port']->getData(),
+                'ldap_root_dn' => $form['ldap_root_dn']->getData()
+            );
+
+            $this->configHandler->setParameters($data);
+        }
+
+        return array('form' => $form->createView());
+    }
+
+    /**
      *  Returns the list of available themes.
      *
      *  @return array
