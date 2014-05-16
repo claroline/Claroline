@@ -483,6 +483,7 @@ remove_user_s_confirm_message: '¿Esta seguro que desea suprimir estos %count% u
 remove_workspace_confirm_workspace: '¿Esta seguro que desea suprimir este espacio de trabajo?'
 remove_workspace_from_category_confirm_message: '¿Esta seguro que desea retirar este espacio de trabajo de la categoría?'
 remove_workspace_from_category_confirm_title: 'Suprimir espacio de trabajo de una categoría'
+remove_workspace_from_selection: 'eliminar espacio de trabajo de la selección'
 remove_workspaces_confirm_workspaces: '¿Esta seguro que desea suprimir estos %count% espacios de trabajo?'
 rename: 'Renombrar'
 rename_category: 'Renombrar categoría'

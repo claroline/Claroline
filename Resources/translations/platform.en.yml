@@ -543,6 +543,7 @@ remove_user_s_confirm_message: 'Are you sure you want to delete these %count% us
 remove_workspace_confirm_workspace: 'Are you sure you want to delete this workspace?'
 remove_workspace_from_category_confirm_message: 'Are you sure you want to remove the workspace from this category ?'
 remove_workspace_from_category_confirm_title: 'Remove workspace from category'
+remove_workspace_from_selection: 'Remove workspace from selection'
 remove_workspaces_confirm_workspaces: 'Are you sure you want to delete these %count% workspaces ?'
 rename: Rename
 rename_category: 'Rename category'
