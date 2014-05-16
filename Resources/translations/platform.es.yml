@@ -16,7 +16,6 @@ First name: 'Nombre'
 Google HTML tag validation: 'Etiqueta HTML de validación de Google'
 I accept the terms of service: 'Acepto los Condiciones del servicio'
 Indexing: 'Indexación'
-LDAP settings: Configuración de LDAP
 Language: 'Idioma'
 Last action: '{1} ultima acción|[1,Inf] ultima %logAmount% acción'
 Last name: 'Apellido'
@@ -309,8 +308,6 @@ lastName: 'Apellido'
 last_30_days_activity: 'Actividad de los últimos 30 días'
 last_name: 'Apellido'
 layout: 'disposición'
-ldap_error_conexion: Imposible de conectarse con el servidor LDAP
-ldap_user_class: Clase de usuario
 leave_this_page: 'Si usted cierra esta página, usted puede perder los cambios.'
 left: 'Izquierda'
 line_number: 'Linea %line%:'

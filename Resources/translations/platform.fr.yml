@@ -17,7 +17,6 @@ First name: Prénom
 Google HTML tag validation: 'Balise HTML de validation Google'
 I accept the terms of service: 'J''accepte les conditions d''utilisation'
 Indexing: Référencement
-LDAP settings: Paramètres LDAP
 Language: Langue
 Last action: '{1} Dernière action|[1,Inf] %logAmount% dernières actions'
 Last name: Nom
@@ -335,8 +334,6 @@ lastName: Nom
 last_30_days_activity: 'Activités des 30 derniers jours'
 last_name: Nom
 layout: Layout
-ldap_error_conexion: Impossible de se connecter au serveur LDAP
-ldap_user_class: Classe d'utilisateur
 leave_this_page: 'Si vous quittez cette page, vous risquez de perdre vos modifications.'
 left: Gauche
 line_number: 'Ligne %line%:'

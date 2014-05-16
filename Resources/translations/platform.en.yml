@@ -17,7 +17,6 @@ First name: 'First name'
 Google HTML tag validation: 'Google HTML tag validation'
 I accept the terms of service: 'I accept the terms of service'
 Indexing: Indexing
-LDAP settings: LDAP settings
 Language: Language
 Last action: '{1} Last action|[1,Inf] Last %logAmount% actions'
 Last name: 'Last name'
@@ -335,8 +334,6 @@ lastName: 'Last name'
 last_30_days_activity: 'Activity over the last 30 days'
 last_name: 'Last name'
 layout: Layout
-ldap_error_conexion: Could not connect to LDAP server
-ldap_user_class: User class
 leave_this_page: 'If you leave this page you may lose your changes.'
 left: Left
 line_number: 'Line %line%:'
