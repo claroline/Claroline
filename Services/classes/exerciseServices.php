@@ -1017,6 +1017,36 @@ class exerciseServices
 
         return $actionsS;
     }
+    
+    public function getTypeQCM()
+    {
+        $em = $this->doctrine->getManager();
+        
+        $typeQCM = array();
+        $types = $em->getRepository('UJMExoBundle:TypeQCM')
+                    ->findAll();
+
+        foreach ($types as $type) {
+            $typeQCM[$type->getId()] = $type->getCode();
+        }
+
+        return $typeQCM;
+    }
+
+    public function getTypeOpen()
+    {
+        $em = $this->doctrine->getManager();
+        
+        $typeOpen = array();
+        $types = $em->getRepository('UJMExoBundle:TypeOpenQuestion')
+                    ->findAll();
+
+        foreach ($types as $type) {
+            $typeOpen[$type->getId()] = $type->getCode();
+        }
+
+        return $typeOpen;
+    }
 
     private function getPenalty($interaction, $paperID)
     {

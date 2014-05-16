@@ -117,6 +117,7 @@ class InteractionQCMController extends Controller
      */
     public function createAction()
     {
+        $services = $this->container->get('ujm.exercise_services');
         $interQCM  = new InteractionQCM();
         $form      = $this->createForm(
             new InteractionQCMType(
@@ -157,12 +158,14 @@ class InteractionQCMController extends Controller
             }
         }
 
+        $typeQCM = $services->getTypeQCM();
         $formWithError = $this->render(
             'UJMExoBundle:InteractionQCM:new.html.twig', array(
             'entity' => $interQCM,
             'form'   => $form->createView(),
             'error'  => true,
-            'exoID'  => $exoID
+            'exoID'  => $exoID,
+            'typeQCM' => json_encode($typeQCM)
             )
         );
 

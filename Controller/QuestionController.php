@@ -415,6 +415,7 @@ class QuestionController extends Controller
      */
     public function editAction($id, $exoID, $form = null)
     {
+        $services = $this->container->get('ujm.exercise_services');
         $question = $this->controlUserQuestion($id);
         $share    = $this->container->get('ujm.exercise_services')->controlUserSharedQuestion($id);
         $user     = $this->container->get('security.context')->getToken()->getUser();
@@ -466,7 +467,7 @@ class QuestionController extends Controller
                     }
                     $deleteForm = $this->createDeleteForm($interactionQCM[0]->getId());
 
-                    $typeQCM = $this->getTypeQCM();
+                    $typeQCM = $services->getTypeQCM();
 
                     $variables['entity']         = $interactionQCM[0];
                     $variables['edit_form']      = $editForm->createView();
@@ -568,7 +569,7 @@ class QuestionController extends Controller
                         $variables['_resource'] = $exercise;
                     }
 
-                    $typeOpen = $this->getTypeOpen();
+                    $typeOpen = $services->getTypeOpen();
 
                     $variables['entity']         = $interactionOpen[0];
                     $variables['edit_form']      = $editForm->createView();
@@ -729,7 +730,7 @@ class QuestionController extends Controller
      */
     public function choixFormTypeAction()
     {
-
+        $services = $this->container->get('ujm.exercise_services');
         $request = $this->container->get('request');
 
         if ($request->isXmlHttpRequest()) {
@@ -768,7 +769,7 @@ class QuestionController extends Controller
                         ), $entity
                     );
 
-                    $typeQCM = $this->getTypeQCM();
+                    $typeQCM = $services->getTypeQCM();
 
                     return $this->container->get('templating')->renderResponse(
                         'UJMExoBundle:InteractionQCM:new.html.twig', array(
@@ -809,7 +810,7 @@ class QuestionController extends Controller
                         ), $entity
                     );
 
-                    $typeOpen = $this->getTypeOpen();
+                    $typeOpen = $services->getTypeOpen();
 
                     return $this->container->get('templating')->renderResponse(
                         'UJMExoBundle:InteractionOpen:new.html.twig', array(
@@ -2059,35 +2060,5 @@ class QuestionController extends Controller
         $doublePagination[3] = $pagerTwo;
 
         return $doublePagination;
-    }
-
-    private function getTypeQCM()
-    {
-        $typeQCM = array();
-        $types = $this->getDoctrine()
-                      ->getManager()
-                      ->getRepository('UJMExoBundle:TypeQCM')
-                      ->findAll();
-
-        foreach ($types as $type) {
-            $typeQCM[$type->getId()] = $type->getCode();
-        }
-
-        return $typeQCM;
-    }
-
-    private function getTypeOpen()
-    {
-        $typeOpen = array();
-        $types = $this->getDoctrine()
-                      ->getManager()
-                      ->getRepository('UJMExoBundle:TypeOpenQuestion')
-                      ->findAll();
-
-        foreach ($types as $type) {
-            $typeOpen[$type->getId()] = $type->getCode();
-        }
-
-        return $typeOpen;
     }
 }
