@@ -77,26 +77,34 @@
             <div class="text-muted col-md-4">{{ 'Number of validated corrections'|trans({}, 'icap_dropzone') }}</div>
             <div class="col-md-8">{% include 'IcapDropzoneBundle:Drop:dropsNbCorrections.html.twig' %}</div>
         </div>
-
-        <div class="row">
+        {% if byUserMod == 0   or showCorrections or dropzone.displayNotationToLearners %}
+            <div class="row">
             <div class="text-muted col-md-4">{{ 'Average validated corrections'|trans({}, 'icap_dropzone') }}</div>
             <div class="col-md-8">{% include 'IcapDropzoneBundle:Drop:dropsTotalGrade.html.twig' %}</div>
         </div>
-
-        <br/>
-
-        <h3>{{ 'List of corrections'|trans({}, 'icap_dropzone') }}</h3>
-        {% if isAllowedToEdit %}
-            <a class="btn btn-default"
-               href="{{ path("icap_dropzone_drops_detail_add_correction",{'resourceId':dropzone.id,'dropId':drop.id}) }}">
-                {{ "Add a correction"|trans({},'icap_dropzone') }}
-            </a>
         {% endif %}
-        <hr/>
+        <br/>
+        {# showCorrection is set in controller if drop is finished and have expected corrections
+        and the author have done the expected number of correction #}
+        {% if byUserMod == 0  or showCorrections %}
 
-        {% set corrections = drop.corrections %}
-        {% include 'IcapDropzoneBundle:Correction:Listing/correctionListing.html.twig' %}
+            <h3>{{ 'List of corrections'|trans({}, 'icap_dropzone') }}</h3>
+            {% if isAllowedToEdit %}
+                <a class="btn btn-default"
+                   href="{{ path("icap_dropzone_drops_detail_add_correction",{'resourceId':dropzone.id,'dropId':drop.id}) }}">
+                    {{ "Add a correction"|trans({},'icap_dropzone') }}
+                </a>
+            {% endif %}
+            <hr/>
 
+            {% set corrections = drop.corrections %}
+            {% include 'IcapDropzoneBundle:Correction:Listing/correctionListing.html.twig' %}
+        {% endif %}
+
+        {% if byUserMod == 1 %}
+            <a href="{{ path("icap_dropzone_open",{'resourceId':dropzone.id}) }}"
+               class="btn btn-default">{{ "Return"|trans({},'icap_dropzone') }}</a>
+        {% endif %}
     </div>
 {% endblock %}
 
