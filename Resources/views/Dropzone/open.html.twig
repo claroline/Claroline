@@ -170,11 +170,7 @@
                         {{ 'nb correction remains'|transchoice(expectedCorrections, {}, 'icap_dropzone') }}
                     </div>
 
-                    <div class="col-md-3">
-                        {% if hasCopyToCorrect == true and hasUnfinishedCorrection == false %}
-                            <a href="{{ path('icap_dropzone_correct', {'resourceId': dropzone.id}) }}" class="btn btn-primary pull-right">{{ 'Correct a copy'|trans({}, 'icap_dropzone') }}</a>
-                        {% endif %}
-                    </div>
+
                 </div>
 
                 {% if hasUnfinishedCorrection == true %}
@@ -182,9 +178,7 @@
                         <div class="col-md-9 text-danger">
                             {{ 'You have already begun a correction.'|trans({}, 'icap_dropzone') }}
                         </div>
-                        <div class="col-md-3">
-                            <a href="{{ path('icap_dropzone_correct', {'resourceId': dropzone.id}) }}" class="btn btn-primary pull-right">{{ 'Complete my correction'|trans({}, 'icap_dropzone') }}</a>
-                        </div>
+
                     </div>
                 {% elseif hasCopyToCorrect == false %}
                     <div class="row">
@@ -196,6 +190,23 @@
                         </div>
                     </div>
                 {% endif %}
+                <br>
+                <div class="row">
+                    <div class="col-md-12 ">
+                        <div class="btn-group pull-right">
+                            <a href="{{ path('icap_dropzone_drop_detail_by_user',{'resourceId': dropzone.id,'dropId':drop.id}) }}"
+                               class="btn btn-default">{{ 'See my copy'|trans({},'icap_dropzone') }}</a>
+                            {% if hasCopyToCorrect == true and hasUnfinishedCorrection == false %}
+                                <a href="{{ path('icap_dropzone_correct', {'resourceId': dropzone.id}) }}"
+                                   class="btn btn-primary ">{{ 'Correct a copy'|trans({}, 'icap_dropzone') }}</a>
+                            {% endif %}
+                            {% if hasUnfinishedCorrection == true %}
+                                <a href="{{ path('icap_dropzone_correct', {'resourceId': dropzone.id}) }}"
+                                   class="btn btn-primary pull-right">{{ 'Complete my correction'|trans({}, 'icap_dropzone') }}</a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
             {% endif %}
         {% endif %}
 
@@ -216,11 +227,7 @@
                                 </div>
                             {% endif %}
                         </div>
-                        {% if dropzone.diplayCorrectionsToLearners %}
-                            <div class='col-md-3'>
-                                <a href="{{ path('icap_dropzone_drop_detail_by_user',{'resourceId': dropzone.id,'dropId':drop.id}) }}" class="btn btn-primary ">{{ 'See Corrections'|trans({},'icap_dropzone') }}</a>
-                            </div>
-                        {% endif %}
+
                     {% else %}
                         <div class='text-danger'>
                             {% if dropzone.displayNotationMessageToLearners %}
@@ -234,9 +241,7 @@
                                 </div>
                             {% endif %}
                         </div>
-                        {% if dropzone.diplayCorrectionsToLearners %}
-                            <a href="{{ path('icap_dropzone_drop_detail_by_user',{'resourceId': dropzone.id,'dropId':drop.id}) }}" class="btn btn-primary">{{ 'See Corrections'|trans({},'icap_dropzone') }}</a>
-                        {% endif %}
+
                     {% endif %}
                 {% else %}
                     <div class="col-md-12">
@@ -247,8 +252,20 @@
                                 {{ 'Finished! Patience your copy is being corrected.'|trans({}, 'icap_dropzone') }}
                             {% endif %}
                         </strong>
+
+
                     </div>
+                    <br>
+
                 {% endif %}
+            </div>
+            <div class="row">
+                <div class="col-md-12 ">
+                    <div class="btn-group pull-right">
+                        <a href="{{ path('icap_dropzone_drop_detail_by_user',{'resourceId': dropzone.id,'dropId':drop.id}) }}"
+                           class="btn btn-default ">{{ 'See my copy'|trans({},'icap_dropzone') }}</a>
+                    </div>
+                </div>
             </div>
         {% endif %}
 

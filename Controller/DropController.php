@@ -560,25 +560,32 @@ class DropController extends DropzoneBaseController
         if (count($dropSecure) == 0) {
             if ($drop->getUser()->getId() != $userId) {
                 throw new AccessDeniedException();
-            } else {
-                throw new NotFoundHttpException();
             }
         }else
         {
             $drop = $dropSecure[0];
         }
-        /*
-        $corrections = $drop->getCorrections();
-        echo count($corrections);
-        var_dump($corrections);
-        die;
-        */
+
+        $showCorrections = false;
+
+        // if drop is complete and corrections needed were made  and dropzone.showCorrection is true.
+        $user = $drop->getUser();
+        $em = $this->getDoctrine()->getManager();
+        $nbCorrections = $em
+            ->getRepository('IcapDropzoneBundle:Correction')
+            ->countFinished($dropzone, $user);
+
+        if ($dropzone->getDiplayCorrectionsToLearners() && $drop->countFinishedCorrections() >= $dropzone->getExpectedTotalCorrection() && $dropzone->getExpectedTotalCorrection() <= $nbCorrections) {
+            $showCorrections = true;
+        }
+
         return array(
             'workspace' => $dropzone->getResourceNode()->getWorkspace(),
             '_resource' => $dropzone,
             'dropzone' => $dropzone,
             'drop' => $drop,
             'isAllowedToEdit' => $isAllowedToEdit,
+            'showCorrections' => $showCorrections,
         );
     }
 
