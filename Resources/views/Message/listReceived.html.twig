@@ -88,12 +88,12 @@
                     {% for userMessage in pager.currentPageResults %}
                         <tr
                             class=
-                            "row-user-message"
+                            "row-user-message
                             {% if not userMessage.isRead() %} bold {% endif %}
                             {% if userMessage.isRead() %} active {% endif %}
                             pointer-hand
-                            href="{{ path('claro_message_show', {'message': userMessage.getMessage().getId()}) }}"
-                        >
+                            <a href="{{ path('claro_message_show', {'message': userMessage.getMessage().getId()}) }}"
+                        ">
                             <td><input class="chk-item" value="{{ userMessage.getId() }}" type="checkbox"></input></td>
                             <td> {{ userMessage.getMessage().getObject() }} </td>
                             <td> {{ userMessage.getMessage().getSenderUsername() }} </td>
