@@ -54,13 +54,13 @@ class PortfolioHandler
     }
 
     /**
-     * @param \Icap\PortfolioBundle\Entity\Portfolio $portfolio
+     * @param \Icap\PortfolioBundle\Entity\Widget\TitleWidget $titleWidget
      *
      * @return \Symfony\Component\Form\Form|FormInterface
      */
-    public function getRenameForm(Portfolio $portfolio)
+    public function getRenameForm(TitleWidget $titleWidget)
     {
-        return $this->formFactory->create('icap_portfolio_rename_form', $portfolio);
+        return $this->formFactory->create('icap_portfolio_rename_form', $titleWidget);
     }
 
     /**
@@ -100,20 +100,20 @@ class PortfolioHandler
     }
 
     /**
-     * @param  Portfolio $portfolio
+     * @param TitleWidget $titleWidget
      *
      * @return bool True on successfull processing, false otherwise
      */
-    public function handleRename(Portfolio $portfolio)
+    public function handleRename(TitleWidget $titleWidget)
     {
-        $form = $this->getRenameForm($portfolio);
+        $form = $this->getRenameForm($titleWidget);
 
         $request = $this->requestStack->getCurrentRequest();
         if ($request->isMethod('POST')) {
             $form->submit($request);
 
             if ($form->isValid()) {
-                $this->portfolioManager->renamePortfolio($portfolio, $form->get('refreshUrl')->getData());
+                $this->portfolioManager->renamePortfolio($titleWidget, $form->get('refreshUrl')->getData());
 
                 return true;
             }

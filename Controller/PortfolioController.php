@@ -4,6 +4,7 @@ namespace Icap\PortfolioBundle\Controller;
 
 use Claroline\CoreBundle\Entity\User;
 use Icap\PortfolioBundle\Entity\Portfolio;
+use Icap\PortfolioBundle\Entity\Widget\TitleWidget;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -67,10 +68,10 @@ class PortfolioController extends Controller
      * @ParamConverter("loggedUser", options={"authenticatedUser" = true})
      * @Template()
      */
-    public function renameAction(User $loggedUser, Portfolio $portfolio)
+    public function renameAction(User $loggedUser, TitleWidget $titleWidget)
     {
         try {
-            if ($this->getPortfolioFormHandler()->handleRename($portfolio)) {
+            if ($this->getPortfolioFormHandler()->handleRename($titleWidget)) {
                 $this->getSessionFlashbag()->add('success', $this->getTranslator()->trans('portfolio_rename_success_message', array(), 'icap_portfolio'));
 
                 return $this->redirect($this->generateUrl('icap_portfolio_list'));
@@ -82,8 +83,8 @@ class PortfolioController extends Controller
         }
 
         return array(
-            'form'      => $this->getPortfolioFormHandler()->getRenameForm($portfolio)->createView(),
-            'portfolio' => $portfolio
+            'form'      => $this->getPortfolioFormHandler()->getRenameForm($titleWidget)->createView(),
+            'portfolio' => $titleWidget
         );
     }
 

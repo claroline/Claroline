@@ -85,16 +85,17 @@ class PortfolioManager
     }
 
     /**
-     * @param Portfolio $portfolio
+     * @param TitleWidget $titleWidget
      * @param bool      $refreshUrl
      */
-    public function renamePortfolio(Portfolio $portfolio, $refreshUrl = false)
+    public function renamePortfolio(TitleWidget $titleWidget, $refreshUrl = false)
     {
         if ($refreshUrl) {
-            $portfolio->setSlug(null);
+            $titleWidget->setSlug(null);
         }
 
-        $this->persistPortfolio($portfolio);
+        $this->entityManager->persist($titleWidget);
+        $this->entityManager->flush();
     }
 
     /**
