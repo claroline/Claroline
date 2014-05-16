@@ -131,6 +131,7 @@ end date: Date de fin
 entry: Entrer
 erase: Pour effacer une zone de réponse, maintenez la touche 's' enfoncée et cliquez sur la croix permettant de la déplacer
 exercise: Exercice
+exercise alert break: Interuption non autorisée. Votre copie sera considérée comme terminée !
 exercise creation: Création d'un exercice
 exercise definition: Définition de l'exercice
 exercise edit: Modification de l'exercice

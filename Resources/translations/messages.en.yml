@@ -131,6 +131,7 @@ end date: End date
 entry: Entry
 erase: To erase an answer zone, maintain press 's' key and click on the cross which allows to move it
 exercise: Exercise
+exercise alert break: The interruption of this exercise is not allowed. Your paper will be considered finish !
 exercise definition: Exercise definition
 exercise creation: Exercise creation
 exercise edit: Exercise edit

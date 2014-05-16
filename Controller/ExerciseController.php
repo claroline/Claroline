@@ -684,7 +684,7 @@ class ExerciseController extends Controller
                 $paper->setUser($user);
                 $paper->setStart(new \Datetime());
                 $paper->setArchive(0);
-                $paper->setInterupt(0);
+                $paper->setInterupt(1);
 
                 if ( ($exercise->getNbQuestion() > 0) && ($exercise->getKeepSameQuestion()) == true ) {
                     $papers = $this->getDoctrine()

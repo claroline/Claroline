@@ -1,3 +1,5 @@
+var validate = false;
+
 function show_hint(idHint, path_hint_show, confirm_hint, nbr_hint, penalty, paper) {
     //"use strict";
 
@@ -29,6 +31,8 @@ function show_hint2(idHint, path_hint_show, nbr_hint, penalty, paper) {
 }
 
 function submitForm(numQuestionToDisplayed, interactionType) {
+    validate = true;
+    interType = interactionType;
     $('#numQuestionToDisplayed').val(numQuestionToDisplayed);
 
     if (interactionType == 'InteractionGraphic') {
@@ -39,6 +43,8 @@ function submitForm(numQuestionToDisplayed, interactionType) {
 }
 
 function finish(interactionType, alert) {
+    validate = true;
+    interType = interactionType;
     $('#numQuestionToDisplayed').val('finish');
 
     if (interactionType == 'InteractionGraphic') {
@@ -51,6 +57,7 @@ function finish(interactionType, alert) {
 }
 
 function interupt(interactionType) {
+    interType = interactionType;
     $('#numQuestionToDisplayed').val('interupt');
 
     if (interactionType == 'InteractionGraphic') {
@@ -66,7 +73,7 @@ function recordGraph() {
     var margin = $('#AnswerImg').css("margin-top"); // margin top of the answer image
 
     var taille = $('#nbpointer').val(); // number of total answer
-
+    
     for (var x = 1 ; x < taille ; x++) {
         var label = 'cursor' + x;
         var top = $('#' + label).css("top");
@@ -164,3 +171,24 @@ function paperResponseHole(response) {
         }
     });
 }
+
+$(document).ready(function() {
+
+    if ( (typeof allowToInterrupt !== 'undefined') && (!allowToInterrupt) ) {
+        $(window).bind("beforeunload",function(){
+            if (validate === false) {
+                return mssg;
+            } else {
+                validate = false;
+            }
+        });
+
+        $(window).bind("unload",function() {
+            $('#numQuestionToDisplayed').val('finish');
+            if (interType == 'InteractionGraphic') {
+                recordGraph();
+            }
+            $('#formResponse').submit();
+        });
+    }
+});
