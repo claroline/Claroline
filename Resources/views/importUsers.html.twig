@@ -1,0 +1,113 @@
+{% extends "ClarolineCoreBundle:Administration:layout.html.twig" %}
+
+{% block title %}{{ parent() ~ ' - LDAP ' ~ ' import_users' | trans({}, 'platform') | striptags | raw }}{% endblock %}
+
+{% block breadcrumb %}
+    {{
+        macros.breadcrumbs([
+            {
+                'icon': 'icon-cog',
+                'name': 'administration'|trans({}, 'platform'),
+                'href': path('claro_admin_index')
+            },
+            {
+                'name': 'parameters'|trans({}, 'platform'),
+                'href': path('claro_admin_index')
+            },
+            {
+                'name': 'LDAP'|trans({}, 'platform'),
+                'href': path('claro_admin_ldap')
+            },
+            {
+                'name': 'import_users'|trans({}, 'platform'),
+                'href': ''
+            }
+        ])
+    }}
+{% endblock %}
+
+{% macro row(id, name) %}
+    <div class="row margin-bottom-md">
+        <div class="col-md-3">
+            <label for="{{ id }}">{{ name | trans({}, 'platform') }}:</label>
+        </div>
+        <div class="col-md-9">
+            <select class="form-control" id="{{ id }}"></select>
+        </div>
+    </div>
+{% endmacro %}
+
+{% block section_content %}
+    {% import _self as select %}
+    <div class="panel-heading">
+        <h3 class="panel-title">{{  'LDAP - ' ~ 'import_users' | trans({}, 'platform') }}</h3>
+    </div>
+    <div class="panel-body">
+        {% if error is defined %}
+            <div class="alert alert-danger">
+                <i class="icon-warning-sign"></i> {{ 'ldap_error_conexion' | trans({}, 'platform') }}
+            </div>
+            <a class="btn btn-primary" href="{{ path('claro_admin_ldap_form') }}" class="alert-link">
+                <i class="icon-wrench"></i> {{ 'LDAP settings' | trans({}, 'platform')}}
+            </a>
+        {% else %}
+            <div class="row margin-bottom-md">
+                <div class="col-md-3">
+                    <label for="ldapObjectClass">{{ 'ldap_user_class' | trans({}, 'platform') }}:</label>
+                </div>
+                <div class="col-md-9">
+                    <select class="form-control" id="ldapObjectClass">
+                        <option></option>
+                        {% for objectClass in classes %}
+                            <option>{{ objectClass }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+            <div class="hide" id="ldapAttributes">
+                {{ select.row('userName', 'username') }}
+                {{ select.row('firstName', 'firstName') }}
+                {{ select.row('lastName', 'lastName') }}
+                {{ select.row('email', 'email') }}
+                {{ select.row('password', 'password') }}
+                {{ select.row('code', 'administrative_code') }}
+                {{ select.row('locale', 'Language') }}
+            </div>
+            <div class="hide table-responsive" id="ldapPreview">
+                <p class='text-muted'><i class="icon-eye-open"></i> {{ 'Preview' | trans({}, 'theme') }}</p>
+                <table class="table table-bordered">
+                    <tr>
+                        <th>{{ 'username' | trans({}, 'platform') }}</th>
+                        <th>{{ 'firstName' | trans({}, 'platform') }}</th>
+                        <th>{{ 'lastName' | trans({}, 'platform') }}</th>
+                        <th>{{ 'email' | trans({}, 'platform') }}</th>
+                        <th>{{ 'password' | trans({}, 'platform') }}</th>
+                        <th>{{ 'administrative_code' | trans({}, 'platform') }}</th>
+                        <th>{{ 'Language' | trans({}, 'platform') }}</th>
+                    </tr>
+                    {% for i in 1..5 %}
+                        <tr id="user{{ i }}">
+                            <td class="userName"></td>
+                            <td class="firstName"></td>
+                            <td class="lastName"></td>
+                            <td class="email"></td>
+                            <td class="password"></td>
+                            <td class="code"></td>
+                            <td class="locale"></td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            </div>
+        {% endif %}
+    </div>
+    <div class="panel-footer text-right hide" id='ldapFooter'>
+        <a class="btn btn-default" href="{{ path('claro_admin_ldap') }}">{{ 'cancel' | trans({}, 'platform') }}</a>
+        <a class="btn btn-primary" href="{{ path('claro_admin_ldap') }}"><i class='icon-ok'></i> {{ 'import_users' | trans({}, 'platform') }}</a>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript" src="{{ asset('bundles/clarolinecore/js/ldap.js') }}"></script>
+{% endblock %}
+

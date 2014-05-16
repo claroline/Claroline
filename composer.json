@@ -1,0 +1,23 @@
+{
+    "name": "claroline/ldap-bundle",
+    "description": "Claroline LDAP plugin",
+    "keywords": ["Claroline", "Plugin", "LDAP"],
+    "homepage": "http://www.claroline.net",
+    "type": "claroline-plugin",
+    "license": "GPL-3.0+",
+    "authors": [
+        {
+            "name": "Claroline development team",
+            "email": "dev@claroline.net",
+            "homepage": "http://github.com/claroline"
+        }
+    ],
+    "require": {
+        "php": ">=5.4.1",
+        "claroline/core-bundle": ">=2.15.0,<3.0"
+    },
+    "autoload": {
+        "psr-0": { "Claroline\\LdapBundle": "" }
+    },
+    "target-dir": "Claroline/LdapBundle"
+}

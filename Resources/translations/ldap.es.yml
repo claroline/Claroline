@@ -1,0 +1,3 @@
+LDAP settings: Configuración de LDAP
+ldap_error_conexion: Imposible de conectarse con el servidor LDAP
+ldap_user_class: Clase de usuario
