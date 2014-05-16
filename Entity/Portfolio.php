@@ -5,14 +5,10 @@ namespace Icap\PortfolioBundle\Entity;
 use Claroline\CoreBundle\Entity\User;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
-use Symfony\Component\Validator\Constraints as Assert;
+use Icap\PortfolioBundle\Entity\Widget\WidgetNode;
 
 /**
- * @ORM\Table(name="icap__portfolio",
- *      uniqueConstraints={
- *          @ORM\UniqueConstraint(name="portfolio_slug_unique_idx", columns={"slug"})
- *      }
- * )
+ * @ORM\Table(name="icap__portfolio")
  * @ORM\Entity(repositoryClass="Icap\PortfolioBundle\Repository\PortfolioRepository")
  * @Gedmo\SoftDeleteable(fieldName="deletedAt", timeAware=false)
  */
@@ -37,22 +33,6 @@ class Portfolio
     protected $id;
 
     /**
-     * @var string
-     *
-     * @ORM\Column(type="string", length=128, nullable=false)
-     * @Assert\Length(max = "128")
-     */
-    protected $title;
-
-    /**
-     * @var string
-     *
-     * @Gedmo\Slug(fields={"title"}, updatable=false)
-     * @ORM\Column(type="string", length=128, unique=true, nullable=false)
-     */
-    protected $slug;
-
-    /**
      * @var bool
      *
      * @ORM\Column(type="integer", name="visibility", nullable=false)
@@ -73,20 +53,11 @@ class Portfolio
     protected $portfolioUsers;
 
     /**
-     * @var \Datetime $createdAt
+     * @var \Icap\PortfolioBundle\Entity\Widget\WidgetNode[]
      *
-     * @Gedmo\Timestampable(on="create")
-     * @ORM\Column(type="datetime")
+     * @ORM\OneToMany(targetEntity="Icap\PortfolioBundle\Entity\Widget\WidgetNode", mappedBy="portfolio")
      */
-    protected $createdAt;
-
-    /**
-     * @var \Datetime $updatedAt
-     *
-     * @Gedmo\Timestampable(on="update")
-     * @ORM\Column(type="datetime")
-     */
-    protected $updatedAt;
+    protected $widgetNodes;
 
     /**
      * @ORM\Column(name="deletedAt", type="datetime", nullable=true)
@@ -111,26 +82,6 @@ class Portfolio
     public function getId()
     {
         return $this->id;
-    }
-
-    /**
-     * @param string $title
-     *
-     * @return Portfolio
-     */
-    public function setTitle($title)
-    {
-        $this->title = $title;
-
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getTitle()
-    {
-        return $this->title;
     }
 
     /**
@@ -200,42 +151,6 @@ class Portfolio
     }
 
     /**
-     * @param string $slug
-     *
-     * @return Portfolio
-     */
-    public function setSlug($slug)
-    {
-        $this->slug = $slug;
-
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getSlug()
-    {
-        return $this->slug;
-    }
-
-    /**
-     * @return \Icap\PortfolioBundle\Entity\datetime
-     */
-    public function getCreatedAt()
-    {
-        return $this->createdAt;
-    }
-
-    /**
-     * @return \Icap\PortfolioBundle\Entity\datetime
-     */
-    public function getUpdatedAt()
-    {
-        return $this->updatedAt;
-    }
-
-    /**
      * @param \Claroline\CoreBundle\Entity\User $user
      *
      * @return Portfolio
@@ -269,4 +184,25 @@ class Portfolio
 
         return $isVisible;
     }
+
+    /**
+     * @param \Icap\PortfolioBundle\Entity\Widget\WidgetNode[] $widgetNodes
+     *
+     * @return Portfolio
+     */
+    public function setWidgetNodes($widgetNodes)
+    {
+        $this->widgetNodes = $widgetNodes;
+
+        return $this;
+    }
+
+    /**
+     * @return \Icap\PortfolioBundle\Entity\Widget\WidgetNode[]
+     */
+    public function getWidgetNodes()
+    {
+        return $this->widgetNodes;
+    }
+
 }

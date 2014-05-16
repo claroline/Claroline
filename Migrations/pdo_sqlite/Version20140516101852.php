@@ -8,9 +8,9 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2014/05/14 10:21:26
+ * Generation date: 2014/05/16 10:18:53
  */
-class Version20140514102125 extends AbstractMigration
+class Version20140516101852 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
@@ -35,20 +35,28 @@ class Version20140514102125 extends AbstractMigration
             CREATE TABLE icap__portfolio (
                 id INTEGER NOT NULL, 
                 user_id INTEGER NOT NULL, 
-                title VARCHAR(128) NOT NULL, 
-                slug VARCHAR(128) NOT NULL, 
                 visibility INTEGER NOT NULL, 
-                createdAt DATETIME NOT NULL, 
-                updatedAt DATETIME NOT NULL, 
                 deletedAt DATETIME DEFAULT NULL, 
                 PRIMARY KEY(id)
             )
         ");
         $this->addSql("
-            CREATE UNIQUE INDEX UNIQ_8B1895D989D9B62 ON icap__portfolio (slug)
+            CREATE INDEX IDX_8B1895DA76ED395 ON icap__portfolio (user_id)
         ");
         $this->addSql("
-            CREATE INDEX IDX_8B1895DA76ED395 ON icap__portfolio (user_id)
+            CREATE TABLE icap__portfolio_widget_title (
+                id INTEGER NOT NULL, 
+                widget_node_id INTEGER DEFAULT NULL, 
+                title VARCHAR(128) NOT NULL, 
+                slug VARCHAR(128) NOT NULL, 
+                PRIMARY KEY(id)
+            )
+        ");
+        $this->addSql("
+            CREATE UNIQUE INDEX UNIQ_1431A01D989D9B62 ON icap__portfolio_widget_title (slug)
+        ");
+        $this->addSql("
+            CREATE UNIQUE INDEX UNIQ_1431A01D48229816 ON icap__portfolio_widget_title (widget_node_id)
         ");
         $this->addSql("
             CREATE TABLE icap__portfolio_widget_type (
@@ -98,6 +106,9 @@ class Version20140514102125 extends AbstractMigration
         ");
         $this->addSql("
             DROP TABLE icap__portfolio
+        ");
+        $this->addSql("
+            DROP TABLE icap__portfolio_widget_title
         ");
         $this->addSql("
             DROP TABLE icap__portfolio_widget_type

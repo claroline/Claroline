@@ -2,7 +2,6 @@
 
 namespace Icap\PortfolioBundle\Form\Type\Widgets;
 
-use Icap\PortfolioBundle\Form\Type\PortfolioType;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -11,7 +10,7 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 /**
  * @DI\FormType
  */
-class TitleType extends PortfolioType
+class TitleType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {

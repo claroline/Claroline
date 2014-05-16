@@ -35,8 +35,8 @@ class WidgetNode
 
     /**
      * @var Portfolio
-     * @ORM\ManyToOne(targetEntity="Icap\PortfolioBundle\Entity\Portfolio", inversedBy="portfolioUsers")
-     * @ORM\JoinColumn(name="portfolio_id", referencedColumnName="id", nullable=false)
+     * @ORM\ManyToOne(targetEntity="Icap\PortfolioBundle\Entity\Portfolio", inversedBy="widgetNodes")
+     * @ORM\JoinColumn(name="portfolio_id", referencedColumnName="id", onDelete="CASCADE", nullable=false)
      */
     protected $portfolio;
 
@@ -99,5 +99,26 @@ class WidgetNode
     {
         return $this->portfolio;
     }
+
+    /**
+     * @param \Icap\PortfolioBundle\Entity\Widget\WidgetType $widgetType
+     *
+     * @return WidgetNode
+     */
+    public function setWidgetType($widgetType)
+    {
+        $this->widgetType = $widgetType;
+
+        return $this;
+    }
+
+    /**
+     * @return \Icap\PortfolioBundle\Entity\Widget\WidgetType
+     */
+    public function getWidgetType()
+    {
+        return $this->widgetType;
+    }
+
 }
  

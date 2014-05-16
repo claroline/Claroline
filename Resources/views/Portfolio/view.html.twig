@@ -109,5 +109,11 @@
         <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/directives/loadingFormDirective.js') }}"></script>
         <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/filters/trustAsHtml.js') }}"></script>
         <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/filters/trans.js') }}"></script>
+        <script type="text/javascript">
+            'use strict';
+            (function(){
+                window.widgetsConfig = '{{ widgetsConfig|json_encode()|raw }}';
+            })();
+        </script>
     {% endif %}
 {% endblock %}

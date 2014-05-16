@@ -9,7 +9,7 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 /**
  * @DI\FormType
  */
-class RenamePortfolioType extends PortfolioType
+class RenamePortfolioType extends PortfolioTitleType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {

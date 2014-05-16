@@ -3,6 +3,7 @@
 namespace Icap\PortfolioBundle\Form\Handler;
 
 use Icap\PortfolioBundle\Entity\Portfolio;
+use Icap\PortfolioBundle\Entity\Widget\TitleWidget;
 use Icap\PortfolioBundle\Manager\PortfolioManager;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\Form\FormFactory;
@@ -49,7 +50,7 @@ class PortfolioHandler
      */
     public function getAddForm()
     {
-        return $this->formFactory->create('icap_portfolio_form');
+        return $this->formFactory->create('icap_portfolio_title_form');
     }
 
     /**
@@ -79,15 +80,17 @@ class PortfolioHandler
      */
     public function handleAdd(Portfolio $portfolio)
     {
+        $titleWidget = new TitleWidget();
+
         $form = $this->getAddForm();
-        $form->setData($portfolio);
+        $form->setData($titleWidget);
 
         $request = $this->requestStack->getCurrentRequest();
         if ($request->isMethod('POST')) {
             $form->submit($request);
 
             if ($form->isValid()) {
-                $this->portfolioManager->addPortfolio($portfolio);
+                $this->portfolioManager->addPortfolio($portfolio, $titleWidget);
 
                 return true;
             }

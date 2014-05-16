@@ -10,7 +10,7 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 /**
  * @DI\FormType
  */
-class PortfolioType extends AbstractType
+class PortfolioTitleType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
@@ -25,14 +25,14 @@ class PortfolioType extends AbstractType
 
     public function getName()
     {
-        return 'icap_portfolio_form';
+        return 'icap_portfolio_title_form';
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(
             array(
-                'data_class'         => 'Icap\PortfolioBundle\Entity\Portfolio',
+                'data_class'         => 'Icap\PortfolioBundle\Entity\Widget\TitleWidget',
                 'translation_domain' => 'icap_portfolio'
             )
         );

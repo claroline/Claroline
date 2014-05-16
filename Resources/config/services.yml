@@ -9,3 +9,9 @@ services:
         factory_method:  getRepository
         arguments:
             - Icap\PortfolioBundle\Entity\Portfolio
+    icap_portfolio.repository.portfolio_widget_type:
+        class:           %icap_portfolio.repository.portfolio.class%
+        factory_service: doctrine.orm.entity_manager
+        factory_method:  getRepository
+        arguments:
+            - IcapPortfolioBundle:Widget\WidgetType

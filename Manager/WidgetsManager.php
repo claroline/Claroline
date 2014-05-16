@@ -45,6 +45,29 @@ class WidgetsManager
     }
 
     /**
+     * @return array
+     */
+    public function getWidgetsConfig()
+    {
+        $widgetTypes = $this->entityManager->getRepository('IcapPortfolioBundle:Widget\WidgetType')->findAllInArray();
+
+        $sortedWidgetTypes = array();
+
+        foreach ($widgetTypes as $widgetType) {
+            $sortedWidgetTypes[$widgetType['name']] = $widgetType;
+        }
+
+        // Adding title
+        $sortedWidgetTypes['title'] = array(
+            'name'        => 'title',
+            'isUnique'    => true,
+            'isDeletable' => false
+        );
+
+        return $sortedWidgetTypes;
+    }
+
+    /**
      * @param Portfolio $portfolio
      * @param string    $type
      *

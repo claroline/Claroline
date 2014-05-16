@@ -13,6 +13,13 @@ class Controller extends BaseController
     {
         return $this->get('icap_portfolio.repository.portfolio');
     }
+    /**
+     * @return \Icap\PortfolioBundle\Repository\Widget\WidgetTypeRepository
+     */
+    public function getPortfolioWidgetTypeRepository()
+    {
+        return $this->get('icap_portfolio.repository.portfolio_widget_type');
+    }
 
     /**
      * @return \Symfony\Bundle\FrameworkBundle\Translation\Translator
@@ -44,6 +51,14 @@ class Controller extends BaseController
     public function getPortfolioFormHandler()
     {
         return $this->get('icap_portfolio.form_handler.portfolio');
+    }
+
+    /**
+     * @return \Icap\PortfolioBundle\Manager\PortfolioManager
+     */
+    public function getPortfolioManager()
+    {
+        return $this->get('icap_portfolio.manager.portfolio');
     }
 
     /**

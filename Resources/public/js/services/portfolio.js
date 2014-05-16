@@ -11,7 +11,7 @@ portfolioApp
                     return;
                 }
                 var widget = widgetFactory.getResource(this.id, widgetType);
-                this[widgetType] = widgetTypeConfig.unique ? [new widget(this[widgetType])] : this[widgetType].map(function(element) {
+                this[widgetType] = widgetTypeConfig.isUnique ? [new widget(this[widgetType])] : this[widgetType].map(function(element) {
                     return new widget(element);
                 }, this);
             }, this);
