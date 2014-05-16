@@ -18,7 +18,7 @@
                     >
                         <i class="icon-align-justify"></i>
                         {{ tag.getName() }}
-                        {% if workspaceId is defined %}
+                        {% if workspace is not null %}
                             <span style="color:#B29EA1">
                                 [
                                 <i class="icon-book"></i>
@@ -29,10 +29,10 @@
                         {% endif %}
                     <input
                         class="chk-workspaces-{{currentIndex}} accordion-checkbox chk-workspace
-                            {% if workspaceId is defined %}workspace-linked{% endif %} pull-right"
+                            {% if workspace is not null %}workspace-linked{% endif %} pull-right"
                         type="checkbox"
                         value="{{currentIndex}}"
-                        {% if workspaceId is defined %}workspace-id="{{ workspaceId }}"{% endif %}
+                        {% if workspace is not null %}workspace-id="{{ workspaceId }}"{% endif %}
                     >
                  </div>
                 </a>

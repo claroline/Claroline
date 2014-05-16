@@ -18,7 +18,7 @@
                     >
                         <i class="icon-align-justify"></i>
                         {{ tag.getName() }}
-                        {% if workspaceId is defined %}
+                        {% if workspace is not null %}
                             {% set granted = has_access_to_workspace(workspaceId) %}
                             <span class="pull-right {% if granted %}linked-workspace{%else%}text-muted{% endif %}"
                                 style="color:{% if granted %}#555555{%else%}#999999{% endif %}"
