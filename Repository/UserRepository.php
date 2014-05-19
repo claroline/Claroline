@@ -805,7 +805,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface
             SELECT u, r1, g, r2, ws, up From Claroline\CoreBundle\Entity\User u
             LEFT JOIN u.roles r1
             LEFT JOIN u.personalWorkspace ws
-            LEFT JOIN u.publicProfilePreferences up
+            JOIN u.publicProfilePreferences up
             LEFT JOIN u.groups g
             LEFT JOIN g.roles r2
             WHERE r1 in (:roles)
