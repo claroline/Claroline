@@ -39,15 +39,6 @@ class WidgetType
     protected $isDeletable = false;
 
     /**
-     * @ORM\OneToMany(
-     *     targetEntity="Icap\PortfolioBundle\Entity\Widget\WidgetNode",
-     *     mappedBy="widgetType",
-     *     cascade={"persist"}
-     * )
-     */
-    protected $widgetNodes;
-
-    /**
      * @return mixed
      */
     public function getId()
@@ -113,13 +104,5 @@ class WidgetType
     public function getIsUnique()
     {
         return $this->isUnique;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getWidgetNodes()
-    {
-        return $this->widgetNodes;
     }
 }

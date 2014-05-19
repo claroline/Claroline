@@ -3,8 +3,16 @@
 namespace Icap\PortfolioBundle\Entity\Widget;
 
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
+use Icap\PortfolioBundle\Entity\Portfolio;
 
-/** @ORM\MappedSuperclass */
+/**
+ * @ORM\Table(name="icap__portfolio_abstract_widget")
+ * @ORM\Entity
+ * @ORM\InheritanceType("JOINED")
+ * @ORM\DiscriminatorColumn(name="widget_type", type="string")
+ * @ORM\DiscriminatorMap({"title" = "TitleWidget", "userInformation" = "UserInformationWidget"})
+ */
 abstract class AbstractWidget
 {
     /**
@@ -17,28 +25,27 @@ abstract class AbstractWidget
     protected $id;
 
     /**
-     * @var \Icap\PortfolioBundle\Entity\Widget\WidgetNode
+     * @var \Datetime $createdAt
      *
-     * @ORM\OneToOne(targetEntity="Icap\PortfolioBundle\Entity\Widget\WidgetNode")
-     * @ORM\JoinColumn(name="widget_node_id", onDelete="CASCADE")
+     * @Gedmo\Timestampable(on="create")
+     * @ORM\Column(type="datetime")
      */
-    protected $widgetNode;
+    protected $createdAt;
 
     /**
-     * @param WidgetNode $widgetNode
+     * @var \Datetime $updatedAt
+     *
+     * @Gedmo\Timestampable(on="update")
+     * @ORM\Column(type="datetime")
      */
-    public function setWidgetNode(WidgetNode $widgetNode)
-    {
-        $this->widgetNode = $widgetNode;
-    }
+    protected $updatedAt;
 
     /**
-     * @return WidgetNode
+     * @var Portfolio
+     * @ORM\ManyToOne(targetEntity="Icap\PortfolioBundle\Entity\Portfolio", inversedBy="widgets")
+     * @ORM\JoinColumn(name="portfolio_id", referencedColumnName="id", onDelete="CASCADE", nullable=false)
      */
-    public function getWidgetNode()
-    {
-        return $this->widgetNode;
-    }
+    protected $portfolio;
 
     /**
      * @return integer
@@ -46,5 +53,29 @@ abstract class AbstractWidget
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * @return \Datetime
+     */
+    public function getCreatedAt()
+    {
+        return $this->createdAt;
+    }
+
+    /**
+     * @return \Datetime
+     */
+    public function getUpdatedAt()
+    {
+        return $this->updatedAt;
+    }
+
+    /**
+     * @return \Icap\PortfolioBundle\Entity\Portfolio
+     */
+    public function getPortfolio()
+    {
+        return $this->portfolio;
     }
 }

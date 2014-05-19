@@ -18,4 +18,24 @@ class UserInformationWidget extends AbstractWidget
      * @ORM\Column(type="string", nullable=true)
      */
     protected $city;
+
+    /**
+     * @param string $city
+     *
+     * @return UserInformationWidget
+     */
+    public function setCity($city)
+    {
+        $this->city = $city;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCity()
+    {
+        return $this->city;
+    }
 }

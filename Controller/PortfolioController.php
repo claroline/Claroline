@@ -25,7 +25,7 @@ class PortfolioController extends Controller
      */
     public function listAction(User $loggedUser, $page)
     {
-        $query = $this->getDoctrine()->getRepository('IcapPortfolioBundle:Widget\TitleWidget')->findAllForUser($loggedUser, false);
+        $query = $this->getDoctrine()->getRepository('IcapPortfolioBundle:Portfolio')->findByUserWithWidgets($loggedUser, false);
         $pager = $this->get('claroline.pager.pager_factory')->createPager($query, $page, 10);
 
         return array(

@@ -42,23 +42,6 @@ class PortfolioManager
     }
 
     /**
-     * @param User $user
-     *
-     * @param int  $page
-     *
-     * @return array
-     */
-    public function getListPaginate(User $user, $page = 1)
-    {
-        $portfolios = array();
-
-        $query = $this->entityManager->getRepository('IcapPortfolioBundle:Portfolio')->findByUser($user, false);
-        $pager = $this->pagerFactory->createPager($query, $page, 10);
-
-        return $portfolios;
-    }
-
-    /**
      * @param Portfolio   $portfolio
      * @param TitleWidget $titleWidget
      *
