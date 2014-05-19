@@ -106,7 +106,7 @@
                     {% elseif hoursRemainingBeforeStartReview >= 1 %}
                         {{ 'There are only nb hours before the beginning of the peer review'|transchoice(hoursRemainingBeforeStartReview|number_format, {}, 'icap_dropzone') }}
                     {% else %}
-                        {{ 'There are only nb minutes before the beginning of the peer review'|transchoice(minutesRemainingBeforeStartReview|number_format, {}, 'icap_dropzone') }}
+                        {{ 'There are only nb minutes before the beginning of the peear review'|transchoice(minutesRemainingBeforeStartReview|number_format, {}, 'icap_dropzone') }}
                     {% endif %}
                 </div>
             </div>
@@ -122,8 +122,8 @@
         {% endif %}
 
         {% include 'IcapDropzoneBundle:Drop:dropStatus.html.twig' %}
-        
-        {% if dropzone.instruction is not null %}
+
+        {% if dropzone.instruction is not null and not dropzone.isNotStarted %}
             <hr/>
             <p class="text-muted">
                 {{ 'Instruction_'|trans({}, 'icap_dropzone') }}
