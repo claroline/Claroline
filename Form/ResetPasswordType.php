@@ -19,9 +19,9 @@ class ResetPasswordType extends AbstractType
 {
     private $resetPwd = null;
 
-    public function __construct($resetPwd = null)
+    public function __construct($resetPwd = false)
     {
-        $this->resetPwd = is_null($resetPwd) ? false : true; 
+        $this->resetPwd = $resetPwd;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
