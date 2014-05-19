@@ -32,9 +32,10 @@ class RoleRepository extends EntityRepository
         $dql = "
             SELECT r FROM Claroline\CoreBundle\Entity\Role r
             JOIN r.workspace ws
-            WHERE ws.id = {$workspace->getId()}
+            WHERE ws.id = :workspaceId
         ";
         $query = $this->_em->createQuery($dql);
+        $query->setParameter('workspaceId', $workspace->getId());
 
         return $query->getResult();
     }
