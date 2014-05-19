@@ -22,6 +22,7 @@ files/*
 templates/*
 vendor/*
 web/bundles/*
+web/css/*
 web/js/*
 web/themes/*
 web/thumbnails/*
