@@ -248,6 +248,10 @@ class ResourceRightsController
         $rows = $this->request->getCurrentRequest()->request->get('role_row');
         $data = array();
 
+        if (is_null($roles)) {
+            $roles = array();
+        }
+
         foreach (array_keys($rows) as $roleId) {
             if (!array_key_exists($roleId, $roles)) {
                 foreach ($permsMap as $perm) {

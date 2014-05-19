@@ -33,6 +33,7 @@ class ResourceQueryBuilder
     private $parameters = array();
     private $fromClause;
     private $joinRelativesClause;
+    private $leftJoinRoles = false;
 
     public function __construct()
     {
@@ -92,7 +93,7 @@ class ResourceQueryBuilder
             "    resourceType.name as type,{$eol}" .
             "    previous.id as previous_id,{$eol}" .
             "    next.id as next_id,{$eol}" .
-            "    icon.relativeUrl as large_icon,{$eol}".
+            "    icon.relativeUrl as large_icon,{$eol}" .
             "    node.mimeType as mime_type";
 
         if ($withMaxPermissions) {
@@ -441,6 +442,10 @@ class ResourceQueryBuilder
 
         $eol = PHP_EOL;
         $joinRelatives = $this->joinSingleRelatives ? $this->joinRelativesClause: '';
+        $joinRoles = $this->leftJoinRoles ?
+            "LEFT JOIN node.workspace workspace{$eol}" .
+            "LEFT JOIN workspace.roles role{$eol}" :
+            '';
         $joinRights = $this->leftJoinRights ?
             "LEFT JOIN node.rights rights{$eol}" .
             "JOIN rights.role rightRole{$eol}" :
@@ -449,6 +454,7 @@ class ResourceQueryBuilder
             $this->selectClause .
             $this->fromClause.
             $joinRelatives .
+            $joinRoles .
             $joinRights .
             $this->whereClause .
             $this->orderClause .
@@ -479,5 +485,66 @@ class ResourceQueryBuilder
         } else {
             $this->whereClause = $this->whereClause . "AND {$clause}" . PHP_EOL;
         }
+    }
+
+    /**
+     * Filters nodes that are bound to any of the given roles.
+     *
+     * @param array[string|RoleInterface] $roles
+     *
+     * @return \Claroline\CoreBundle\Repository\ResourceQueryBuilder
+     */
+    public function whereHasRoleIn(array $roles)
+    {
+        $managerRoles = array();
+        $otherRoles = array();
+
+        foreach ($roles as $role) {
+            $roleName = $role instanceof RoleInterface ? $role->getRole() : $role;
+
+            if (preg_match('/^ROLE_WS_MANAGER_/', $roleName)) {
+                $managerRoles[] = $roleName;
+            } else {
+                $otherRoles[] = $roleName;
+            }
+        }
+        $eol = PHP_EOL;
+        
+        if (count($otherRoles) > 0 && count($managerRoles) === 0) {
+            $this->leftJoinRights = true;
+            $clause = "{$eol}({$eol}({$eol}";
+            
+            foreach ($otherRoles as $i => $otherRole) {
+                $clause .= $i > 0 ? '    OR ' : '    ';
+                $clause .= "rightRole.name = :role_{$i}{$eol}";
+                $this->parameters[":role_{$i}"] = $otherRole;
+            }
+            $clause .= "){$eol}AND BIT_AND(rights.mask, 1) = 1{$eol})";
+            $this->addWhereClause($clause);
+        } elseif (count($otherRoles) === 0 && count($managerRoles) > 0) {
+            $this->leftJoinRoles = true;
+            $clause = "{$eol}({$eol}";
+            $clause .= "role.name IN (:roles){$eol}";
+            $this->parameters[":roles"] = $managerRoles;
+            $this->addWhereClause($clause . ')');
+        } elseif (count($otherRoles) > 0 && count($managerRoles) > 0) {
+            $this->leftJoinRoles = true;
+            $this->leftJoinRights = true;
+
+            $clause = "{$eol}({$eol}({$eol}({$eol}";
+
+            foreach ($otherRoles as $i => $otherRole) {
+                $clause .= $i > 0 ? '    OR ' : '    ';
+                $clause .= "rightRole.name = :role_{$i}{$eol}";
+                $this->parameters[":role_{$i}"] = $otherRole;
+            }
+            $clause .= "){$eol}AND BIT_AND(rights.mask, 1) = 1{$eol}){$eol}";
+            $clause .= "OR{$eol}";
+            $clause .= "role.name IN (:roles){$eol}";
+            $this->parameters[":roles"] = $managerRoles;
+            $this->addWhereClause($clause . ")");
+        }
+
+        return $this;
     }
 }

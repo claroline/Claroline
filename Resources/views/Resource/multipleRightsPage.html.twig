@@ -22,29 +22,31 @@
                             {{ _self.showTag(hierarchy[tag.getId()], tagWorkspaces, hierarchy, currentIndex, displayable, workspaceRoles, resource) }}
                         {% endif %}
                     {% endif %}
-                    {% for relWorkspaceTag in tagWorkspaces[tag.id] %}
-                        <div class="panel panel-default">
-                            {% set workspace = relWorkspaceTag.getWorkspace() %}
-                            <div class="panel-heading">
-                                <a data-toggle="collapse" href="#collapse-{{ currentIndex }}-{{ workspace.getCode() }}">
-                                    <h3 class="panel-title">
-                                        {{ workspace.getName() }}
-                                        <span class="workspace-code">({{ workspace.getCode() }})</span>
-                                    </h3>
-                                </a>
+                    {% if tagWorkspaces[tag.getId()] is defined %}
+                        {% for relWorkspaceTag in tagWorkspaces[tag.getId()] %}
+                            <div class="panel panel-default">
+                                {% set workspace = relWorkspaceTag.getWorkspace() %}
+                                <div class="panel-heading">
+                                    <a data-toggle="collapse" href="#collapse-{{ currentIndex }}-{{ workspace.getCode() }}">
+                                        <h3 class="panel-title">
+                                            {{ workspace.getName() }}
+                                            <span class="workspace-code">({{ workspace.getCode() }})</span>
+                                        </h3>
+                                    </a>
+                                </div>
+                                <div id="collapse-{{ currentIndex }}-{{ workspace.getCode() }}" class="list-group collapse">
+                                    {% for role in workspaceRoles[workspace.getCode()] %}
+                                        {% if role.getName() != 'ROLE_WS_MANAGER_' ~ workspace.getGuid() %}
+                                            <a class="workspace-role-item list-group-item"
+                                               href="{{ path('claro_resource_right_form', {'node':resource.id, 'role':role.id}) }}">
+                                                {{ role.getTranslationKey() }}
+                                            </a>
+                                        {% endif %}
+                                    {% endfor %}
+                                </div>
                             </div>
-                            <div id="collapse-{{ currentIndex }}-{{ workspace.getCode() }}" class="list-group collapse">
-                                {% for role in workspaceRoles[workspace.getCode()] %}
-                                    {% if role.getName() != 'ROLE_WS_MANAGER_' ~ workspace.getGuid() %}
-                                        <a class="workspace-role-item list-group-item"
-                                           href="{{ path('claro_resource_right_form', {'node':resource.id, 'role':role.id}) }}">
-                                            {{ role.getTranslationKey() }}
-                                        </a>
-                                    {% endif %}
-                                {% endfor %}
-                            </div>
-                        </div>
-                    {% endfor %}
+                        {% endfor %}
+                    {% endif %}
                 </div>
             </div>
         {% endif %}
