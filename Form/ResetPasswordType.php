@@ -17,11 +17,19 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 class ResetPasswordType extends AbstractType
 {
+    private $resetPwd = null;
+
+    public function __construct($resetPwd = null)
+    {
+        $this->resetPwd = is_null($resetPwd) ? false : true; 
+    }
+
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder
-        ->add('password','password')
-        ->add(
+        if ($this->resetPwd) {
+            $builder->add('password','password');
+        }
+        $builder->add(
             'plainPassword',
             'repeated',
             array(
