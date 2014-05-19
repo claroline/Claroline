@@ -6,6 +6,7 @@ nbproject/*
 app/build/*
 app/bootstrap*
 app/cache/*
+app/config/.update
 app/config/bundles.ini
 app/config/is_installed.php
 app/config/operations.xml*

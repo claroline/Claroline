@@ -1,13 +1,14 @@
 README
 ======
 
-This repository provides the basic application structure of the Claroline platform.
-It doesn't contain the sources nor the third-party libraries required to make the
-application fully functional. Those sources have to be installed following the
-procedure described below.
+This repository provides the basic application structure of the Claroline
+platform.
+It doesn't contain the sources nor the third-party libraries required to make
+the application fully functional. Those sources have to be installed following
+the procedure described below.
 
-If you want to contribute or directly browse the sources of the project, here is a
-(non-exhaustive) list of their dedicated repositories:
+If you want to contribute or directly browse the sources of the project, here
+is a (non-exhaustive) list of their dedicated repositories:
 
 - [CoreBundle][core]
 - [KernelBundle][kernel]
@@ -28,22 +29,32 @@ Project setup
 - PHP extensions:
     - fileinfo (for mime type detection)
     - curl (for facebook authentication)
+    - mcrypt
     - Optionaly:
         - [gd][1] (for simple icon creation)
         - [ffmpeg][2] (for video thumbnail creation)
+    - If you use PHP 5.5, you need to install the following extensions manually:
+        - php5-json
+        - php5-intl
 - A RDBMS like MySQL (>=5.0, recommended) or PostgreSQL (>= 8.0)
 - A web server like Apache or Nginx
 - A global installation of [composer][3] (for dependency management)
 
+##### Configuration of php.ini
+- The *memory_limit* must be >= 256Mb (also in cli).
+- Be sure that you have a correct configuration of time zone
+  ([supported timezones][9]).
+
 ### Development installation
 
 - Clone this repository
-- Create an *app/config/parameters.yml* file based on *app/config/parameters.yml.dist*
-  and fill at least the main db parameters (database doesn't have to exist, but if
-  it exists, it must be empty)
+- Create an *app/config/parameters.yml* file based on
+  *app/config/parameters.yml.dist*
+  and fill at least the main db parameters (database doesn't have to exist,
+  but if it exists, it must be empty)
 - Make the following directories (and their children) writable from the command
-  line and the web server (for further explanation on common permissions issues and
-  solutions with Symfony2, read [this][5]):
+  line and the web server (for further explanation on common permissions issues
+  and solutions with Symfony2, read [this][5]):
     - *app/cache*
     - *app/logs*
     - *app/config*
@@ -56,7 +67,7 @@ Project setup
 - Run the following commands:
     - `$ composer require composer/composer dev-master`
     - `$ composer require claroline/bundle-recorder "~3.0"`
-    - `$ cp composer.dist.json composer.json`
+    - `$ cp composer.json.dist composer.json`
     - `$ composer update --prefer-source`
     - `$ php app/console claroline:update`
 
@@ -130,7 +141,8 @@ usage) or visit our continuous integration server [here][7].
 Documentation
 -------------
 
-For development documentation, see [Claroline/CoreBundle/Resources/doc/index.md][8].
+For development documentation, see
+[Claroline/CoreBundle/Resources/doc/index.md][8].
 
 
 [core]:         https://github.com/claroline/CoreBundle
@@ -150,3 +162,4 @@ For development documentation, see [Claroline/CoreBundle/Resources/doc/index.md]
 [6]: http://www.phpunit.de/manual/current/en/index.html
 [7]: http://dev.claroline.net:8080/job/Claronext/
 [8]: https://github.com/claroline/CoreBundle/blob/master/Resources/doc/index.md
+[9]: http://www.php.net/manual/en/timezones.php
