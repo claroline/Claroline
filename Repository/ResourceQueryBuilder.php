@@ -512,14 +512,10 @@ class ResourceQueryBuilder
         
         if (count($otherRoles) > 0 && count($managerRoles) === 0) {
             $this->leftJoinRights = true;
-            $clause = "{$eol}({$eol}({$eol}";
-            
-            foreach ($otherRoles as $i => $otherRole) {
-                $clause .= $i > 0 ? '    OR ' : '    ';
-                $clause .= "rightRole.name = :role_{$i}{$eol}";
-                $this->parameters[":role_{$i}"] = $otherRole;
-            }
-            $clause .= "){$eol}AND BIT_AND(rights.mask, 1) = 1{$eol})";
+            $clause = "{$eol}({$eol}";
+            $clause .= "rightRole.name IN (:roles){$eol}";
+            $this->parameters[":roles"] = $otherRoles;
+            $clause .= "AND{$eol}BIT_AND(rights.mask, 1) = 1{$eol})";
             $this->addWhereClause($clause);
         } elseif (count($otherRoles) === 0 && count($managerRoles) > 0) {
             $this->leftJoinRoles = true;
@@ -530,18 +526,13 @@ class ResourceQueryBuilder
         } elseif (count($otherRoles) > 0 && count($managerRoles) > 0) {
             $this->leftJoinRoles = true;
             $this->leftJoinRights = true;
-
-            $clause = "{$eol}({$eol}({$eol}({$eol}";
-
-            foreach ($otherRoles as $i => $otherRole) {
-                $clause .= $i > 0 ? '    OR ' : '    ';
-                $clause .= "rightRole.name = :role_{$i}{$eol}";
-                $this->parameters[":role_{$i}"] = $otherRole;
-            }
-            $clause .= "){$eol}AND BIT_AND(rights.mask, 1) = 1{$eol}){$eol}";
+            $clause = "{$eol}({$eol}({$eol}";
+            $clause .= "rightRole.name IN (:otherroles){$eol}";
+            $this->parameters[":otherroles"] = $otherRoles;
+            $clause .= "AND{$eol}BIT_AND(rights.mask, 1) = 1{$eol}){$eol}";
             $clause .= "OR{$eol}";
-            $clause .= "role.name IN (:roles){$eol}";
-            $this->parameters[":roles"] = $managerRoles;
+            $clause .= "role.name IN (:managerroles){$eol}";
+            $this->parameters[":managerroles"] = $managerRoles;
             $this->addWhereClause($clause . ")");
         }
 
