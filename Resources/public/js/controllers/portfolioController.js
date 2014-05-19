@@ -1,7 +1,7 @@
 'use strict';
 
 portfolioApp
-    .controller('portfolioController', ['$scope', 'portfolioManager', 'widgetsManager', 'urlInterpolator', function($scope, portfolioManager, widgetsManager, urlInterpolator) {
-        $scope.portfolio      = portfolioManager.getPortfolio(1);
+    .controller('portfolioController', ['$scope', 'portfolioManager', 'widgetsManager', 'urlInterpolator', '$attrs', function($scope, portfolioManager, widgetsManager, urlInterpolator, $attrs) {
+        $scope.portfolio      = portfolioManager.getPortfolio($attrs['portfolioContainer']);
         $scope.widgetPortlets = widgetsManager.widgets;
     }]);

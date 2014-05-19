@@ -30,7 +30,6 @@ class PortfolioController extends BaseController
 
         $data = array(
             'id'    => $portfolio->getId(),
-            'slug'  => $portfolio->getSlug(),
             'title' => array(
                 'views'  => array(
                     'view' => $this->getWidgetsManager()->getView($portfolio, 'title')

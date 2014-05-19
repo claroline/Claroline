@@ -1,9 +1,9 @@
 {% extends 'ClarolineCoreBundle::layout.html.twig' %}
 
-{% block title %}{{ portfolio.user.firstName ~ ' ' ~ portfolio.user.lastName ~ ' - ' ~ 'portfolio' | trans({}, 'icap_portfolio') ~ ' - ' ~ portfolio.title | striptags | raw }}{% endblock %}
+{% block title %}{{ portfolio.user.firstName ~ ' ' ~ portfolio.user.lastName ~ ' - ' ~ 'portfolio' | trans({}, 'icap_portfolio') ~ ' - ' ~ title | striptags | raw }}{% endblock %}
 
 {% block content_container %}
-    <div id="portfolio-section" data-portfolio-container>
+    <div id="portfolio-section" data-portfolio-container="{{ portfolio.id }}">
         {% if editMode %}
             <ul id="configbar" class="list-unstyled">
                 <li class="configbar-item">
@@ -15,7 +15,6 @@
                 </li>
             </ul>
         {% endif %}
-
 
         <div id="portfolio-container" data-ng-show="portfolio.$resolved">
             <header>
