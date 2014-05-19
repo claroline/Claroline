@@ -94,6 +94,12 @@ class Drop {
      */
     protected $autoClosedDrop = 0;
 
+    /**
+     * @var bool
+     *
+     * @ORM\Column(name="unlocked_drop",type="boolean",nullable=false,options={"default" = false})
+     */
+    protected $unlockedDrop = false;
 
 
     public function __construct()
@@ -364,4 +370,21 @@ class Drop {
     {
         return $this->autoClosedDrop;
     }
+
+    /**
+     * @param boolean $unlockedDrop
+     */
+    public function setUnlockedDrop($unlockedDrop)
+    {
+        $this->unlockedDrop = $unlockedDrop;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function isUnlockedDrop()
+    {
+        return $this->unlockedDrop;
+    }
 }
+
