@@ -3,6 +3,8 @@ PortfolioBundle
 
 A Claroline plugin to add portfolio management.
 
+/!\ Still Work In Progress and may not be working. Wait for first version to use it. /!\
+
 Installation
 ============
 
