@@ -9,6 +9,7 @@ agenda_form_recurring: Répétition
 agenda_form_start: 'Date de début'
 agenda_form_startHours: 'Heure de début'
 agenda_form_title: Titre
+agenda_form_author: 'Créé par'
 apr: Avr
 april: Avril
 aug: Août

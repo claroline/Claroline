@@ -116,8 +116,7 @@ class ResourceNodeRepository extends MaterializedPathRepository
         } else {
             $builder->selectAsArray(true)
                 ->whereParentIs($parent)
-                ->whereCanOpen()
-                ->whereRoleIn($roles);
+                ->whereHasRoleIn($roles);
 
             $query = $this->_em->createQuery($builder->getDql());
             $query->setParameters($builder->getParameters());
@@ -180,8 +179,7 @@ class ResourceNodeRepository extends MaterializedPathRepository
         $builder = new ResourceQueryBuilder();
         $dql = $builder->selectAsArray()
             ->whereParentIsNull()
-            ->whereRoleIn($roles)
-            ->whereCanOpen()
+            ->whereHasRoleIn($roles)
             ->orderByName()
             ->getDql();
 
@@ -349,8 +347,7 @@ class ResourceNodeRepository extends MaterializedPathRepository
             $dql = $builder->selectAsEntity(false, 'Claroline\CoreBundle\Entity\Resource\File')
                 ->whereParentIs($parent)
                 ->whereMimeTypeIs('%'.$mimeType.'%')
-                ->whereRoleIn($roles)
-                ->whereCanOpen()
+                ->whereHasRoleIn($roles)
                 ->getDql();
         } else {
             $dql = $builder->selectAsEntity(false, 'Claroline\CoreBundle\Entity\Resource\File')
@@ -437,8 +434,7 @@ class ResourceNodeRepository extends MaterializedPathRepository
     private function addFilters(ResourceQueryBuilder $builder,  array $criteria, array $roles = null)
     {
         if ($roles) {
-            $builder->whereRoleIn($roles)
-                ->whereCanOpen();
+            $builder->whereHasRoleIn($roles);
         }
 
         $filterMethodMap = array(

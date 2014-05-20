@@ -304,7 +304,7 @@ class ProfileController extends Controller
      */
     public function editPasswordAction(User $loggedUser)
     {
-        $form = $this->createForm(new ResetPasswordType());
+        $form = $this->createForm(new ResetPasswordType(true));
         $oldPassword = $loggedUser->getPassword();
         $form->handleRequest($this->request);
 

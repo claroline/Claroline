@@ -58,7 +58,7 @@ class AgendaManager
 
     public function addEvent(Event $event, $workspace = null)
     {
-        if(!is_null($workspace)) {    
+        if(!is_null($workspace)) {
             $this->checkUserIsAllowed('agenda', $workspace);
         }
         // the end date has to be bigger
@@ -95,7 +95,7 @@ class AgendaManager
     }
 
     /**
-     * @param  int $id 
+     * @param  int $id
      * @return boolean
      */
     public function deleteEvent($id, $workspace = null)
@@ -138,7 +138,7 @@ class AgendaManager
             $listEventsU = $repo->findByUser($usr, false);
             $listEvents = array_merge($listEventsU, $listDesktop);
         }
-        
+
         $calendar = $this->writeCalendar($listEvents);
         $fileName = $this->writeToICS($calendar, $workspaceId);
 
@@ -199,8 +199,8 @@ class AgendaManager
 
     /**
      * Import ical files type
-     * @param  UploadedFile $file      
-     * @param  AbstractWorkspace $workspace 
+     * @param  UploadedFile $file
+     * @param  AbstractWorkspace $workspace
      * @return int number of events saved
      */
     public function importEvents(UploadedFile $file, $workspace)
@@ -223,7 +223,7 @@ class AgendaManager
             $e->setUser($this->security->getToken()->getUser());
             $e->setPriority('#01A9DB');
         }
-        $this->om->endFlushSuite();     
+        $this->om->endFlushSuite();
 
         return $i;
     }
@@ -311,13 +311,13 @@ class AgendaManager
         $usr = $this->security->getToken()->getUser();
         $rm = $this->rm->getManagerRole($workspace);
         $ru = $this->rm->getWorkspaceRolesForUser($usr, $workspace);
-        
+
         if (!is_null($event)) {
             if ($event->getUser()->getUsername() === $usr->getUsername()) {
                 return true;
             }
         }
-        
+
         foreach ($ru as $role) {
             if ($role->getTranslationKey() === $rm->getTranslationKey()) {
                 return true;
@@ -350,6 +350,8 @@ class AgendaManager
             $data[$key]['end'] = $object->getEnd()->getTimestamp();
             $data[$key]['color'] = $object->getPriority();
             $data[$key]['visible'] = true;
+            // To display the name of the user who created this event.
+            $data[$key]['owner'] = $object->getUser()->getUsername();
         }
 
         return($data);
@@ -372,4 +374,4 @@ class AgendaManager
             return $listEvents;
         }
     }
-} 
+}
