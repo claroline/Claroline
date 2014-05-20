@@ -10,7 +10,7 @@
             {% else %}
                 {% if region is not defined or (region is defined and region is empty) %}
                     {% if type is defined %}<li><a class="content-size"><i class="icon-resize-horizontal"></i> {{ "Size" | trans({}, 'home') }}</a></li>{% endif %}
-                    <li><a class="content-edit"><i class="icon-edit"></i> {{ "Edit" | trans({}, 'home') }}</a></li>
+                    <li><a class="content-edit"><i class="icon-pencil"></i> {{ "Edit" | trans({}, 'home') }}</a></li>
                 {% endif %}
                 <li role="presentation"><a role="menuitem" class="content-delete"><i class="icon-trash"></i> {{ "Delete" | trans({}, 'home') }}</a></li>
                 {% if type != "home" %}
