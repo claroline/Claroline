@@ -78,6 +78,7 @@ class DropzoneCommonType extends AbstractType
                 'multiple' => false
             ))
             ->add('autoCloseOpenedDropsWhenTimeIsUp','checkbox', array('required' => false))
+            ->add('notifyOnDrop', 'checkbox', array('required' => false))
             /*
              *
              ->add('startAllowDrop', 'datetime', array('date_widget' => 'single_text', 'time_widget' => 'single_text', 'with_seconds' => false, 'required' => false))

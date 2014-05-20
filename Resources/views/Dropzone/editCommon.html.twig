@@ -135,6 +135,15 @@
 
         </div>
 
+        <h4>{{ 'Notifications'|trans({}, 'icap_dropzone') }}</h4>
+
+        <div class="form-group">
+            <div class="col-lg-offset-2 col-lg-9 peer-review-options">
+                {{ form_errors(form.notifyOnDrop) }}
+                {{ form_widget(form.notifyOnDrop) }}
+            </div>
+        </div>
+
         <div class="btn-group pull-right">
             <a href="{{ path('claro_workspace_open_tool', {'workspaceId': workspace.getId(), 'toolName': 'resource_manager'}) }}" class="btn btn-default">{{ 'Cancel'|trans({}, 'icap_dropzone') }}</a>
 
