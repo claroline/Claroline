@@ -107,11 +107,11 @@
             if (!selectedElement.hasClass('claroline-tag-highlight')) {
                 selectedElement.addClass('claroline-tag-highlight');
                 checkIcon.removeClass('hide');
-                checkboxElement.attr('checked', 'checked');
+                checkboxElement.prop('checked', 'checked');
             } else {
                 selectedElement.removeClass('claroline-tag-highlight');
                 checkIcon.addClass('hide');
-                checkboxElement.attr('checked', false);
+                checkboxElement.prop('checked', false);
             }
         });
     });

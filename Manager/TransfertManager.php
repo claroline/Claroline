@@ -23,6 +23,7 @@ use Claroline\CoreBundle\Entity\Workspace\SimpleWorkspace;
 use Claroline\CoreBundle\Entity\Resource\Directory;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Workspace\Configuration;
+use Claroline\CoreBundle\Library\Transfert\RichTextInterface;
 
 /**
  * @DI\Service("claroline.manager.transfert_manager")
@@ -121,7 +122,8 @@ class TransfertManager
      * @param bool $isStrict
      * @param bool $importUsers
      *
-     * @return SimpleWorkspace
+     * @throws InvalidConfigurationException
+     * @return SimpleWorkbolspace
      *
      * The template doesn't need to be validated anymore if
      *  - it comes from the self::import() function
@@ -209,6 +211,21 @@ class TransfertManager
         $tools = $this->getImporterByName('tools')
             ->import($data['tools'], $workspace, $entityRoles, $root);
         $this->om->endFlushSuite();
+
+        //now we have to parse everything in case there is a rich text
+        //rich texts must be located in the tools section
+        foreach ($data['tools'] as $tool) {
+            $importer = $this->getImporterByName($tool['tool']['type']);
+
+            if (!$importer) {
+                throw new InvalidConfigurationException('The importer ' . $tool['tool']['type'] . ' does not exist');
+            }
+
+            if (isset($tool['tool']['data']) && $importer instanceof RichTextInterface) {
+                $data['data'] = $tool['tool']['data'];
+                $importer->format($data);
+            }
+        }
 
         //add missing tools for workspace
         //$this->container->get('claroline.manager.tool_manager')->addMissingWorkspaceTools($workspace);

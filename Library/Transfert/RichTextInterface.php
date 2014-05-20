@@ -11,7 +11,7 @@
 
 namespace Claroline\CoreBundle\Library\Transfert;
 
-interface RichTextInterface0
+interface RichTextInterface
 {
-    public function format($text, $resources);
-} 
+    public function format($data);
+}

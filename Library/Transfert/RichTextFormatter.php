@@ -18,6 +18,9 @@ use JMS\DiExtraBundle\Annotation as DI;
  */
 class RichTextFormatter {
 
+    const PLACEHOLDER_START = '[[';
+    const PLACEHOLDER_END = ']]';
+
     /**
      * @param $text
      * @param array $resources
@@ -29,8 +32,8 @@ class RichTextFormatter {
      *      'items'       => array(42 => $file, ...)
      * )
      */
-    public function format($text, array $resources)
+    public function format()
     {
-
+        //look for the placeholder start
     }
 } 

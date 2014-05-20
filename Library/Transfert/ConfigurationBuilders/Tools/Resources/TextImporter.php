@@ -39,7 +39,6 @@ class TextImporter extends Importer implements ConfigurationInterface
                 ->arrayNode('text')
                     ->prototype('array')
                         ->children()
-                            //in case it's a rich text, we should check if the resource exists//
                             ->scalarNode('content')->isRequired()->end()
                         ->end()
                     ->end()

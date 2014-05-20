@@ -10,6 +10,7 @@ google_meta_tag_error: 'The field must be a meta tag, example: <meta name="googl
 name_required: Name required.
 need_at_least_one_translation: 'At least one complete translation must be defined'
 password_mismatch: 'Passwords mismatch'
+port_error: The port must be a number
 public_profile_url_not_valid: 'Your public profile URL is not valid.'
 role_already_exists: This role already exists.
 special_char_not_allowed: 'Special characters are not allowed (allowed characters are: a-z, A-Z, 0-9, _ and .)'

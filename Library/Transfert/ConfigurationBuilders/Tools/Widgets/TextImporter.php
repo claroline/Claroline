@@ -13,6 +13,7 @@ namespace Claroline\CoreBundle\Library\Transfert\ConfigurationBuilders\Tools\Wid
 
 use Claroline\CoreBundle\Entity\Widget\WidgetInstance;
 use Claroline\CoreBundle\Library\Transfert\Importer;
+use Claroline\CoreBundle\Library\Transfert\RichTextInterface;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\Processor;
@@ -24,7 +25,7 @@ use Claroline\CoreBundle\Persistence\ObjectManager;
  * @DI\Service("claroline.widget.text_importer")
  * @DI\Tag("claroline.importer")
  */
-class TextImporter extends Importer implements ConfigurationInterface
+class TextImporter extends Importer implements ConfigurationInterface, RichTextInterface
 {
     private $om;
     private $container;
@@ -86,5 +87,10 @@ class TextImporter extends Importer implements ConfigurationInterface
                     ->scalarNode('content')->isRequired()->end()
                 ->end()
             ->end();
+    }
+
+    public function format($data)
+    {
+
     }
 } 

@@ -6,7 +6,7 @@
                 <a href="{{ path('claro_workspace_admin_tag_check_children', {'tagId':tag.getId()}) }}">
                 {{ tag.getName() }}
                 </a>
-                {% if tagsHierarchy[tag.getId()]|length > 0 %}
+                {% if tagsHierarchy[tag.getId()] is defined and tagsHierarchy[tag.getId()]|length > 0 %}
                     {{ _self.showTagHierarchy(tagsHierarchy[tag.getId()], tagsHierarchy) }}
                 {% endif %}
             </li>

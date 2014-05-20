@@ -21,13 +21,13 @@ use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Config\Definition\Processor;
 use Claroline\CoreBundle\Library\Transfert\Importer;
-use Symfony\Component\Yaml\Yaml;
+use Claroline\CoreBundle\Library\Transfert\RichTextInterface;
 
 /**
  * @DI\Service("claroline.tool.home_importer")
  * @DI\Tag("claroline.importer")
  */
-class HomeImporter extends Importer implements ConfigurationInterface
+class HomeImporter extends Importer implements ConfigurationInterface, RichTextInterface
 {
     private $om;
     private $container;
@@ -181,6 +181,28 @@ class HomeImporter extends Importer implements ConfigurationInterface
             }
 
             $homeTabOrder++;
+        }
+    }
+
+    public function format($data)
+    {
+        foreach ($data['data'] as $tab) {
+            foreach ($tab['tab']['widgets'] as $widget) {
+                $widgetImporter = null;
+
+                foreach ($this->getListImporters() as $importer) {
+                    if ($importer->getName() == $widget['widget']['type']) {
+                        $widgetImporter = $importer;
+                    }
+                }
+
+                if ($widgetImporter instanceof RichTextInterface) {
+                    if (isset($widget['widget']['data']) && $widgetImporter) {
+                        $widgetdata = $widget['widget']['data'];
+                        $widgetImporter->format($widgetdata);
+                    }
+                }
+            }
         }
     }
 
