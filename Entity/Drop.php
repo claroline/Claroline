@@ -96,6 +96,9 @@ class Drop {
 
     /**
      * @var bool
+     * Used to flag that a copy have been unlocked ( admin made a correction that unlocked the copy:
+     *  the copy doesn't wait anymore the expected number of correction
+     * the drop author will not need anymore to do the expected number of correction to see his copy.)
      *
      * @ORM\Column(name="unlocked_drop",type="boolean",nullable=false,options={"default" = false})
      */
