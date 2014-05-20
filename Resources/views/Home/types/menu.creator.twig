@@ -19,7 +19,7 @@
                                 <div class="navbar-form pull-right">
                                     {% if content is defined %}
                                     <a class="cancel-button btn btn-default">{{ 'Cancel' | trans({}, 'home') }}</a>
-                                    <a class="edit-button btn btn-primary">{{ 'Edit' | trans({}, 'home') }}</a>
+                                    <a class="edit-button btn btn-primary">{{ 'save' | trans({}, 'platform') }}</a>
                                     {% else %}
                                     <a data-toggle="collapse" href=".collapse{{ father }}" class="btn btn-default" role="button">{{ 'Cancel' | trans({}, 'home') }}</a>
                                     <a class="creator-button btn btn-primary">{{ 'Create' | trans({}, 'home') }}</a>
@@ -41,7 +41,7 @@
                     <div class="navbar-form pull-right">
                         {% if content is defined %}
                         <a class="cancel-button btn btn-default">{{ 'Cancel' | trans({}, 'home') }}</a>
-                        <a class="edit-button btn btn-primary">{{ 'Edit' | trans({}, 'home') }}</a>
+                        <a class="edit-button btn btn-primary">{{ 'save' | trans({}, 'platform') }}</a>
                         {% else %}
                         <a class="creator-button btn btn-primary">{{ 'Create' | trans({}, 'home') }}</a>
                         {% endif %}
