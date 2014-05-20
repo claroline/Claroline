@@ -293,4 +293,5 @@ List of corrections made by %user%: 'Liste des corrections faites par %user%'
 You are about to delete a correction. This action is not without consequence.: 'Vous êtes sur le point de supprimer une correction, cela n''est pas sans conséquences.'
 Confirm the correction delete: 'Confirmer la suppression de la correction'
 See my copy: 'Voir ma copie'
-
+Notify on drop: "Nofifier les administrateurs de l'évaluation quand quelqu'un dépose une copie."
+Notifications: "Notifications"

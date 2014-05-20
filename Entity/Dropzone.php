@@ -226,6 +226,15 @@ class Dropzone extends AbstractResource
      */
     protected $hiddenDirectory;
 
+    /**
+     * @var bool
+     * Notify Evaluation admins when a someone made a drop
+     *
+     * @ORM\Column(name="notify_on_drop",type="boolean",nullable=false,options={"default" = false})
+     */
+    protected $notifyOnDrop = false;
+
+
     public function __construct()
     {
         $this->drops = new ArrayCollection();
@@ -822,5 +831,22 @@ class Dropzone extends AbstractResource
     {
         return $this->autoCloseState;
     }
+
+    /**
+     * @param boolean $notifyOnDrop
+     */
+    public function setNotifyOnDrop($notifyOnDrop)
+    {
+        $this->notifyOnDrop = $notifyOnDrop;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function getNotifyOnDrop()
+    {
+        return $this->notifyOnDrop;
+    }
+
 
 }
