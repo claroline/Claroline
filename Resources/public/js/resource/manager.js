@@ -690,7 +690,7 @@
                         type: 'POST',
                         processData: false,
                         contentType: false,
-                        success: function (form) {;
+                        success: function (form) {
                             $('#form-rights-tag-wrapper').empty();
                             $('#form-rights-tag-wrapper').append(form);
                         }
