@@ -11,34 +11,37 @@
 
 namespace Claroline\LdapBundle\Library;
 
-use JMS\DiExtraBundle\Annotation\Service;
+use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use JMS\DiExtraBundle\Annotation\Inject;
 use JMS\DiExtraBundle\Annotation\InjectParams;
-use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
+use JMS\DiExtraBundle\Annotation\Service;
+use Symfony\Component\Yaml\Dumper;
+use Symfony\Component\Yaml\Parser;
 
 /**
  * @Service()
  */
 class LdapManager
 {
-    private $host;
-    private $port;
-    private $dn;
+    private $yml;
+    private $path;
+    private $config;
     private $connect;
 
     /**
-     * @InjectParams({"ch" = @Inject("claroline.config.platform_config_handler")})
+     * @InjectParams()
      */
-    public function __construct(PlatformConfigurationHandler $ch)
+    public function __construct()
     {
-        $this->host = $ch->getParameter('ldap_host');
-        $this->port = $ch->getParameter('ldap_port');
-        $this->dn = $ch->getParameter('ldap_root_dn');
+        $this->path = __DIR__ . '/../../../../../../app/config/ldap.yml';
+        $this->yml = new Parser();
+        $this->dumper = new Dumper();
+        $this->config = $this->getConfig();
     }
 
     public function connect()
     {
-        $this->connect = ldap_connect($this->host, $this->port);
+        $this->connect = ldap_connect($this->getHost(), $this->getPort());
 
         if ($this->connect) {
             return @ldap_bind($this->connect);
@@ -52,11 +55,67 @@ class LdapManager
 
     public function search($filter, $attributes = array())
     {
-        return ldap_search($this->connect, $this->dn, $filter, $attributes);
+        return ldap_search($this->connect, $this->getDn(), $filter, $attributes);
     }
 
     public function getEntries($search)
     {
         return ldap_get_entries($this->connect, $search);
+    }
+
+    public function getHost()
+    {
+        if (isset($this->config['host'])) {
+            return $this->config['host'];
+        }
+
+        return '';
+    }
+
+    public function getPort()
+    {
+        if (isset($this->config['port'])) {
+            return $this->config['port'];
+        }
+
+        return '';
+    }
+
+    public function getDn()
+    {
+        if (isset($this->config['dn'])) {
+            return $this->config['dn'];
+        }
+
+        return '';
+    }
+
+    public function setHost($host)
+    {
+        $this->config['host'] = $host;
+    }
+
+    public function setPort($port)
+    {
+        $this->config['port'] = $port;
+    }
+
+    public function setDn($dn)
+    {
+        $this->config['dn'] = $dn;
+    }
+
+    public function saveConfig()
+    {
+        return file_put_contents($this->path, $this->dumper->dump($this->config));
+    }
+
+    private function getConfig()
+    {
+        if (!file_exists($this->path)) {
+            touch($this->path);
+        }
+
+        return $this->yml->parse(file_get_contents($this->path));
     }
 }

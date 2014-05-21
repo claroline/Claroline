@@ -1,2 +1,6 @@
 plugin:
-  has_options: false
+    has_options: false
+
+    admin_tools:
+        - name: 'ldap'
+          class: 'icon-ok'
