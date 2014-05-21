@@ -17,7 +17,6 @@
 
 (function () {
     'use strict';
-
     window.Claroline = window.Claroline || {};
 
     var manager = window.Claroline.ResourceManager = {};
