@@ -17,7 +17,6 @@
 
 (function () {
     'use strict';
-
     window.Claroline = window.Claroline || {};
 
     var manager = window.Claroline.ResourceManager = {};
@@ -691,7 +690,7 @@
                         type: 'POST',
                         processData: false,
                         contentType: false,
-                        success: function (form) {
+                        success: function (form) {;
                             $('#form-rights-tag-wrapper').empty();
                             $('#form-rights-tag-wrapper').append(form);
                         }
