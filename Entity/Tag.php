@@ -34,6 +34,11 @@ class Tag
      */
     protected $slug;
 
+    /*
+     * Variable used in tag to define appearence frequency and calculate tag weight
+     */
+    protected  $weight = 1;
+
     /**
      * @ORM\ManyToMany(targetEntity="Post", mappedBy="tags")
      */
@@ -110,5 +115,25 @@ class Tag
     public function getSlug()
     {
         return $this->slug;
+    }
+
+    /**
+     * @param int $weight
+     *
+     * @return Tag
+     */
+    public function setWeight($weight)
+    {
+        $this->weight = $weight;
+
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getWeight()
+    {
+        return $this->weight;
     }
 }

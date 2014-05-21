@@ -30,12 +30,17 @@ log_resource-icap_blog-comment_delete_shortname: "Suppression d'un commentaire"
 log_resource-icap_blog-comment_delete_title:     "Suppression d'un commentaire dans un article"
 log_resource-icap_blog-comment_delete_filter:    "Suppression d'un commentaire dans un article"
 
+log_resource-icap_blog-comment_update_shortname: "Mise à jour d'un commentaire"
+log_resource-icap_blog-comment_update_filter:    "Mise à jour d'un commentaire dans un article"
+log_resource-icap_blog-comment_update_title:     "Mise à jour d'un commentaire dans un article"
+
 log_created_post: "Article crée"
 log_readed_post:  "Article lu"
 log_deleted_post: "Article supprimé"
 
 log_created_comment: "Commentaire crée"
 log_deleted_comment: "Commentaire supprimé"
+log_updated_comment: "Commentaire mis à jour"
 
 log_post_title:      "Titre"
 log_post_author:     "Auteur"
@@ -44,6 +49,7 @@ log_comment_author:  "Auteur"
 
 postPerPage: "Article par page"
 content:     "Contenu"
+message: "Message"
 
 log.blog.configure:        "a configuré le blog %blog%"
 log.blog.configure_banner: "a configuré la bannière du blog %blog%"
@@ -53,3 +59,4 @@ log.blog.update_post:      "a mis à jour l'article %post% du blog %blog%"
 log.blog.delete_post:      "a supprimé l'article %post% du blog %blog%"
 log.blog.create_comment:   "a commenté l'article %post% du blog %blog%"
 log.blog.delete_comment:   "a supprimé un commentaire de l'article %post% du blog %blog%"
+log.blog.update_comment:   "a modifié un commentaire de l'article %post% du blog %blog%"

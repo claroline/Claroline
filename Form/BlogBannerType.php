@@ -54,7 +54,8 @@ class BlogBannerType extends AbstractType
            'translation_domain' => 'icap_blog',
             'data_class'        => 'Icap\BlogBundle\Entity\BlogOptions',
             'csrf_protection'   => true,
-            'intention'         => 'configure_banner_blog'
+            'intention'         => 'configure_banner_blog',
+            'no_captcha'        => true
         ));
     }
 }

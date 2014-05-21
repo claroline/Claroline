@@ -4,33 +4,6 @@
 
 {% set blogOptions = _resource.options %}
 {% block content %}
-        {% if is_granted('ROLE_ADMIN') or is_granted('EDIT', _resource) %}
-        <div class="btn-toolbar">
-            {% if is_granted('ROLE_ADMIN') %}
-            <div class="btn-group">
-                <button class="btn btn-default dropdown-toggle" data-toggle="dropdown"><span class="icon-eye-open"></span>{{ 'show_as'|trans({}, 'platform') }} <span class="caret"></span></button>
-                <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
-                    {% if has_role_access_to_workspace('ROLE_ANONYMOUS', _resource.resourceNode.workspace.id) %}
-                        <li>
-                            <a href="?view_as=ROLE_ANONYMOUS_{{ _resource.resourceNode.workspace.id }}">
-                                {{ 'anonymous'|trans({}, 'platform') }}
-                            </a>
-                        </li>
-                    {% endif %}
-                    {% for role in user.personalWorkspace.roles %}
-                        {% if has_role_access_to_workspace(role.getName(), _resource.resourceNode.workspace.id) %}
-                            <li>
-                                <a href="{{ path('icap_blog_view', {'blogId': _resource.id}) }}?view_as={{ role.getName() }}">
-                                    {{ role.getTranslationKey()|trans({}, 'platform') }}
-                                </a>
-                            </li>
-                        {% endif %}
-                    {% endfor %}
-                </ul>
-            </div>
-            {% endif %}
-        </div>
-        {% endif %}
         {% if blogOptions.displayTitle %}
         <h1><a href="{{ path('icap_blog_view', {'blogId': _resource.id}) }}" title="{{ _resource.resourceNode.name }}" class="blog_title">{{ _resource.resourceNode.name }}</a></h1>
         {% endif %}
@@ -126,7 +99,7 @@
         {% endif %}
         {{ macros.flashBox() }}
         <div class="row button_block">
-            {% if is_granted('EDIT', _resource) or is_granted('POST', _resource) %}
+            {% if is_granted('EDIT', _resource) or is_granted('POST', _resource) or is_granted('ROLE_ADMIN') %}
             <div class="col-md-12">
                 {% if is_granted('EDIT', _resource) or is_granted('POST', _resource) %}
                     <a href="{{ _path('icap_blog_post_new', {'blogId': _resource.id}) }}" title="{{ 'new_post'|trans({}, 'icap_blog') }}" class="btn btn-default">
@@ -137,6 +110,29 @@
                     <a href="{{ path('icap_blog_configure', {"blogId": _resource.id}) }}" title="{{ 'options'|trans({}, 'platform') }}" class="btn btn-default">
                         <i class="icon-wrench"></i> {{ 'options'|trans({}, 'platform') }}
                     </a>
+                {% endif %}
+                {% if is_granted('ROLE_ADMIN') %}
+                    <div class="btn-group">
+                        <button class="btn btn-default dropdown-toggle" data-toggle="dropdown"><span class="icon-eye-open"></span>{{ 'show_as'|trans({}, 'platform') }} <span class="caret"></span></button>
+                        <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+                            {% if has_role_access_to_workspace('ROLE_ANONYMOUS', _resource.resourceNode.workspace.id) %}
+                                <li>
+                                    <a href="?view_as=ROLE_ANONYMOUS_{{ _resource.resourceNode.workspace.id }}">
+                                        {{ 'anonymous'|trans({}, 'platform') }}
+                                    </a>
+                                </li>
+                            {% endif %}
+                            {% for role in user.personalWorkspace.roles %}
+                                {% if has_role_access_to_workspace(role.getName(), _resource.resourceNode.workspace.id) %}
+                                    <li>
+                                        <a href="{{ path('icap_blog_view', {'blogId': _resource.id}) }}?view_as={{ role.getName() }}">
+                                            {{ role.getTranslationKey()|trans({}, 'platform') }}
+                                        </a>
+                                    </li>
+                                {% endif %}
+                            {% endfor %}
+                        </ul>
+                    </div>
                 {% endif %}
             </div>
             {% endif %}
@@ -190,14 +186,20 @@
                     <div class="panel-heading">
                         <h3 class="panel-title">{{ 'tag_cloud'|trans({}, 'icap_blog') }}</h3>
                     </div>
-                    <div class="panel-body">
-                        <ul class="list-unstyled list-inline">
-                            {% for tag in blog_tags(_resource) %}
-                            <li><a href="{{ path('icap_blog_view_filter', {'blogId': _resource.id, 'filter': tag.slug}) }}" title="{{ tag }}">{{ tag }}</a></li>
-                            {% else %}
-                            <li>{{ 'no_tags'|trans({}, 'icap_blog') }}</li>
-                            {% endfor %}
-                        </ul>
+                    <div class="tag-cloud-container panel-body">
+                        {% if blogOptions.tagCloud == 1 %}
+                        <canvas width="320" height="320" id="tagCloudCanvas">
+                        {% endif %}
+                            <ul id="tagList" class="tag-cloud list-unstyled list-inline">
+                                {% for tag in blog_tags(_resource) %}
+                                <li><a class="w{{ tag.weight }}" href="{{ path('icap_blog_view_filter', {'blogId': _resource.id, 'filter': tag.slug}) }}" title="{{ tag }}">{{ tag }}</a></li>
+                                {% else %}
+                                <li>{{ 'no_tags'|trans({}, 'icap_blog') }}</li>
+                                {% endfor %}
+                            </ul>
+                        {% if blogOptions.tagCloud == 1 %}
+                        </canvas>
+                        {% endif %}
                     </div>
                 </div>
 
@@ -286,6 +288,10 @@
         <script type='text/javascript'src='{{ asset('bundles/icapblog/js/banner.js') }}'></script>
     {% endif %}
 
+    {% if blogOptions.tagCloud == 1 %}
+        <script type='text/javascript'src='{{ asset('bundles/icapblog/js/jquery.tagcanvas.min.js') }}'></script>
+    {% endif %}
+
     <script type="text/javascript" src="{{ url('bazinga_exposetranslation_js', { 'domain_name': 'agenda' }) }}"></script>
     <script type="text/javascript">
         (function($) {
@@ -312,6 +318,20 @@
                 $('.delete').confirmModal();
 
                 $('.tree').tree();
+
+                {% if blogOptions.tagCloud == 1 %}
+                $('#tagCloudCanvas').tagcanvas({
+                    textColour : '#428BCA',
+                    outlineThickness : 1,
+                    maxSpeed : 0.05,
+                    textHeight: 18,
+                    depth : 0.5,
+                    weight : true,
+                    outlineColour : '#2A6496',
+                    outlineMethod : 'colour',
+                    reverse : true
+                }, 'tagList');
+                {% endif %}
             });
         })(jQuery);
     </script>

@@ -129,6 +129,15 @@ class BlogOptions
     protected $oldFileName = null;
 
     /**
+     * @var int
+     *
+     * Option for tag cloud rendering (Classic:0 (or null), 3D sphere:1)
+     *
+     * @ORM\Column(type="smallint", name="tag_cloud", nullable=true)
+     */
+    protected $tagCloud = null;
+
+    /**
      * @return int
      */
     public function getId()
@@ -424,6 +433,27 @@ class BlogOptions
     {
         return $this->file;
     }
+
+    /**
+     * @param int $tagCloud
+     *
+     * @return BlogOptions
+     */
+    public function setTagCloud($tagCloud)
+    {
+        $this->tagCloud = $tagCloud;
+
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getTagCloud()
+    {
+        return $this->tagCloud;
+    }
+
     /**
      * @return null|string
      */

@@ -14,6 +14,8 @@
         {% include 'IcapBlogBundle:Log:log_details_comment_create.html.twig' %}
     {% elseif constant('Icap\\BlogBundle\\Event\\Log\\LogCommentDeleteEvent::ACTION') == log.action %}
         {% include 'IcapBlogBundle:Log:log_details_comment_delete.html.twig' %}
+    {% elseif constant('Icap\\BlogBundle\\Event\\Log\\LogCommentUpdateEvent::ACTION') == log.action %}
+        {% include 'IcapBlogBundle:Log:log_details_comment_update.html.twig' %}
     {% elseif constant('Icap\\BlogBundle\\Event\\Log\\LogBlogConfigureEvent::ACTION') == log.action %}
         {% include 'IcapBlogBundle:Log:log_details_blog_configure.html.twig' %}
     {% elseif constant('Icap\\BlogBundle\\Event\\Log\\LogBlogConfigureBannerEvent::ACTION') == log.action %}

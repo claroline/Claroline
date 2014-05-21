@@ -1,7 +1,7 @@
 icap_blog_form_name: 'Name'
 icap_blog_post_form_title: 'Title'
 icap_blog_post_form_content: 'Content'
-icap_blog_post_form_tags: 'Tags'
+icap_blog_post_form_tags: 'Tags <span class="info">(seperated by ,)</span>'
 icap_blog_infos_form_infos: 'Information'
 icap_blog_post_form_publicationDate: "Publishing date"
 new_post: 'New post'
@@ -40,6 +40,9 @@ icap_blog_comment_publish_success: 'Comment published with success'
 icap_blog_comment_publish_error: 'An error occured while publishing comment'
 icap_blog_comment_unpublish_success: 'Comment unpublished with success'
 icap_blog_comment_unpublish_error: 'An error occured while unpublishing comment'
+icap_blog_comment_edit_success: 'Comment updated with success'
+icap_blog_comment_edit_error: 'An error occured while updating comment'
+icap_blog_comment_access_denied: 'You are not authorized to modify this comment.'
 icap_blog_post_need_validation_before_publishing: "Your post will need to be validated by an administrator before being publish."
 icap_blog_post_edit_need_validation_before_publishing: "Edition of your post will need to be validated by an administrator before being publish."
 icap_blog_post_comment_need_validation_before_publishing: "Your comment will need to be validated by an administrator before being publish."
@@ -72,6 +75,7 @@ edit_blog_infos: "Edit blog's information"
 icap_blog_edit_infos_success: 'Blog information edited with success'
 icap_blog_edit_infos_error: 'An error occured while editing blog information'
 icap_blog_post_search_too_much_result: 'Your search criteria are considered irrelevant, please use other key words.'
+icap_blog_options_form_tag_cloud: 'Tag cloud'
 add_comment: 'Add a comment'
 be_the_first_to_comment: 'Be the first to comment this post'
 icap_blog_post_comment_form_message: 'Comment'
@@ -87,3 +91,6 @@ archives: "Archives"
 blog_rss_feed: "RSS feed of the blog"
 rss_feed: "RSS feed"
 read_more: "View more"
+modified_at: "Modified at"
+classic: "Classic"
+3D: "3D sphere <span>(* Not compatible with IE<9)</span>"

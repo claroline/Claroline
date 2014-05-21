@@ -23,35 +23,54 @@
             {% set isPublished = comment.isPublished %}
             {% if is_granted('EDIT', _resource) or isPublished %}
             <li>
-                <div class="panel {% if isPublished == false %}panel-warning{% else %}panel-default{% endif %}">
+                <div id="comment-{{ comment.id }}" class="blog-comment panel {% if isPublished == false %}panel-warning{% else %}panel-default{% endif %}">
                     <div class="panel-heading">
                         {% if is_granted('EDIT', _resource) %}
                         <div class="btn-group pull-right options">
                             {% if isPublished %}
-                            <a href="{{ path('icap_blog_comment_unpublish', {'blogId': _resource.id, 'postSlug': post.slug, 'commentId': comment.id}) }}" class="btn btn-default btn-red btn-xs">
+                            <a href="{{ path('icap_blog_comment_unpublish', {'blogId': _resource.id, 'postSlug': post.slug, 'commentId': comment.id}) }}" class="btn btn-default btn-xs">
                                 {{ 'unpublish'|trans }}
                             </a>
                             {% else %}
-                            <a href="{{ path('icap_blog_comment_publish', {'blogId': _resource.id, 'postSlug': post.slug, 'commentId': comment.id}) }}" class="btn btn-default btn-green btn-xs">
+                            <a href="{{ path('icap_blog_comment_publish', {'blogId': _resource.id, 'postSlug': post.slug, 'commentId': comment.id}) }}" class="btn btn-default btn-xs">
                                 {{ 'publish'|trans }}
+                            </a>
+                            {% endif %}
+                            {% if user is defined and user is not empty and comment.author is not empty and comment.author.id == user.id %}
+                            <a data-id="{{ comment.id }}" href="{{ path('icap_blog_comment_edit', {'blogId': _resource.id, 'postSlug': post.slug, 'commentId': comment.id}) }}" class="edit-comment-btn btn btn-primary btn-xs">
+                                <span class="icon-edit"></span>
+                                {{ 'modifier'|trans }}
                             </a>
                             {% endif %}
                             <a href="{{ path('icap_blog_comment_delete', {'blogId': _resource.id, 'postSlug': post.slug, 'commentId': comment.id}) }}" class="btn btn-xs btn-danger delete" data-confirm-title="{{ 'comment_deletion_confirm_title'|trans }}" data-confirm-message="{{ 'comment_deletion_confirm_message'|trans }}" data-confirm-ok="{{ 'delete'|trans({}, 'platform') }}" data-confirm-cancel="{{ 'cancel'|trans({}, 'platform') }}" data-toggle="tooltip" title="{{ 'delete'|trans({}, 'platform') }}" data-placement="top" data-original-title="{{ 'delete'|trans({}, 'platform') }}">
                                 <i class="icon-trash"></i>
                             </a>
                         </div>
+                        {% elseif user is defined and user is not empty and comment.author is not empty and comment.author.id == user.id %}
+                        <div class="btn-group pull-right options">
+                            <a href="{{ path('icap_blog_comment_edit', {'blogId': _resource.id, 'postSlug': post.slug, 'commentId': comment.id}) }}" class="btn btn-primary btn-xs">
+                                <span class="icon-edit"></span>
+                                {{ 'modifier'|trans }}
+                            </a>
+                        </div>
                         {% endif %}
 
                         <ul class="list-inline">
-                            {% set authorPicture = comment.author.picture %}
+                            {% set authorPicture = (null == comment.author) ? null : comment.author.picture %}
                             {% set author = (null == comment.author) ? 'anonymous'|trans({}, 'platform') : comment.author.firstname ~ ' ' ~ comment.author.lastname %}
+                            {% set dateText = (null == comment.updateDate)? comment.publicationDate|date('date_format'|trans({}, 'platform')) : 'modified_at'|trans({},'icap_blog') ~ ' ' ~ comment.updateDate|date('date_format'|trans({}, 'platform')) %}
                             <li>{% if authorPicture is null %}<span class="icon-user"></span>{% else %}<img src="{{ asset('uploads/pictures/') ~ authorPicture }}" alt="{{ author }}" class="img-rounded user_picture">{% endif %}&nbsp;{% if null == comment.author %}{{ author }}{% else %}<a href="{{ path('claro_profile_view', {'userId': comment.author.id}) }}" title="{{ author }}">{{ author }}</a>{% endif %}</li>
-                            {% if isPublished %}<li><span class="icon-calendar"></span>  {{ comment.publicationDate|date('date_format'|trans({}, 'platform')) }}</li>{% endif %}
+                            {% if isPublished %}<li><span class="icon-calendar"></span>  <small><time>{{ dateText }}</time></small></li>{% endif %}
                             <a name="comment-{{ comment.id }}"></a>
                         </ul>
                     </div>
                     <div class="panel-body">
-                        {{ comment.message|raw }}
+                        <div id="comment-body-{{ comment.id }}" class="blog-comment-body">
+                            {{ comment.message|raw }}
+                        </div>
+                        {% if user is defined and user is not empty and comment.author is not empty and comment.author.id == user.id %}
+                        <div id="comment-body-edit-{{ comment.id }}" class="blog-comment-body-edit" style="display: none;"></div>
+                        {% endif %}
                     </div>
                 </div>
             </li>
@@ -88,4 +107,46 @@
 {{ parent() }}
 {% render controller('ClarolineCoreBundle:ResourceType:initPicker') %}
 {{ tinymce_init() }}
+<script type="text/javascript">
+    $(document).ready(function() {
+        'use strict';
+        //Activate inline comment edit
+        $('ul.comment_list').on('click', 'a.cancel-update-comment-btn',function (event) {
+            var commentElt = $(this).parents('div.blog-comment');
+            commentElt.find('.blog-comment-body').show();
+            commentElt.find('.blog-comment-body-edit').hide();
+            event.preventDefault();
+        });
+        $('a.edit-comment-btn').each(function(){
+            var newLink = $(this);
+            newLink.attr("data-path", newLink.attr('href'));
+            newLink.attr('href', '#comment-body-'+newLink.attr('data-id'));
+            var containerNewForm = null;
+            newLink.on('click', function (event){
+                if(typeof newLink.attr("data-empty") === 'undefined'){
+                    event.preventDefault();
+                    $.get(newLink.attr("data-path"))
+                            .always(function () {
+                                if (containerNewForm !== null) {
+                                    containerNewForm.remove();
+                                }
+                            })
+                            .done(function (data) {
+                                $('#comment-body-edit-'+newLink.attr('data-id')).html(data);
+                                newLink.attr('data-empty','false');
+                                containerNewForm = $('#comment-'+newLink.attr('data-id'));
+                                containerNewForm.find('#icap_blog_post_comment_form_message').attr('id', 'icap_blog_post_comment_form_message_'+newLink.attr('data-id'));
+                                $('#comment-body-edit-'+newLink.attr('data-id')).show();
+                                $('#comment-body-'+newLink.attr('data-id')).hide();
+                            })
+                    ;
+                }
+                else {
+                    $('#comment-body-edit-'+newLink.attr('data-id')).show();
+                    $('#comment-body-'+newLink.attr('data-id')).hide();
+                }
+            });
+        });
+    });
+</script>
 {% endblock %}

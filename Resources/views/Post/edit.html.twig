@@ -76,7 +76,8 @@
 <script type="text/javascript">
     $(function() {
         $(".tags").tagit({
-            'availableTags' : ["{{ blog_tags(_resource)|join('","')|raw }}"]
+            'availableTags' : ["{{ blog_tags(_resource)|join('","')|raw }}"],
+            'allowSpaces' : true
         });
     });
 </script>

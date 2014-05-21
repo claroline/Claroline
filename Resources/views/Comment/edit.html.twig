@@ -1,0 +1,21 @@
+{% extends 'IcapBlogBundle::layout.html.twig' %}
+
+{% form_theme form _self %}
+
+{% block title %}{{ _resource.resourceNode.name }} - {{ "edit_post"|trans({'%postTitle%': post.title}, 'icap_blog') }}{% endblock %}
+
+{% block blog_content %}
+    {% include "IcapBlogBundle:Comment:editForm.html.twig"%}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {% render controller('ClarolineCoreBundle:ResourceType:initPicker') %}
+    {{ tinymce_init() }}
+    {% javascripts output='js/blog.js'
+    '@FrontEndBundle/Resources/public/jquery/jquery-ui-1.9.2/components/jquery.ui.position.min.js'
+    '@FrontEndBundle/Resources/public/jquery/jquery-ui-1.9.2/components/jquery.ui.menu.min.js'
+    '@FrontEndBundle/Resources/public/jquery/jquery-ui-1.9.2/components/jquery.ui.autocomplete.min.js'
+    %}<script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+{% endblock %}

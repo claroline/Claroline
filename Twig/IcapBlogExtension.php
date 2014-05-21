@@ -3,28 +3,28 @@ namespace Icap\BlogBundle\Twig;
 
 use Icap\BlogBundle\Entity\Blog;
 use Icap\BlogBundle\Repository\PostRepository;
-use Icap\BlogBundle\Repository\TagRepository;
+use Icap\BlogBundle\Manager\TagManager;
 
 class IcapBlogExtension extends \Twig_Extension
 {
-    /** @var \Icap\BlogBundle\Repository\TagRepository */
-    protected $tagRepository;
+    /** @var \Icap\BlogBundle\Manager\TagManager */
+    protected $tagManager;
 
     /** @var \Icap\BlogBundle\Repository\PostRepository */
     protected $postRepository;
 
-    public function __construct(TagRepository $tagManager, PostRepository $postManager)
+    public function __construct(TagManager $tagManager, PostRepository $postManager)
     {
-        $this->tagRepository  = $tagManager;
+        $this->tagManager  = $tagManager;
         $this->postRepository = $postManager;
     }
 
     /**
-     * @return TagRepository
+     * @return TagManager
      */
-    public function getTagRepository()
+    public function getTagManager()
     {
-        return $this->tagRepository;
+        return $this->tagManager;
     }
 
     /**
@@ -57,7 +57,10 @@ class IcapBlogExtension extends \Twig_Extension
 
     public function getTagsByBlog(Blog $blog)
     {
-        return $this->getTagRepository()->findByBlog($blog);
+        $tags = $this->getTagManager()->loadByBlog($blog, 50);
+        shuffle($tags);
+
+        return $tags;
     }
 
     public function getAuthorsByBlog(Blog $blog)

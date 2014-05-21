@@ -5,7 +5,11 @@ namespace Icap\BlogBundle\Form;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use JMS\DiExtraBundle\Annotation as DI;
 
+/**
+ * @DI\Service("icap_blog.form.comment")
+ */
 class CommentType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)

@@ -2,6 +2,7 @@
 
 namespace Icap\BlogBundle\Manager;
 
+use Icap\BlogBundle\Entity\Blog;
 use Icap\BlogBundle\Entity\Tag;
 use Icap\BlogBundle\Repository\TagRepository;
 
@@ -86,6 +87,35 @@ class TagManager
     public function loadTag($name)
     {
         return $this->getTagRepository()->findOneByName($name);
+    }
+
+    /**
+     * Load a blog tags, calculating their weights
+     *
+     * @param \Icap\BlogBundle\Entity\Blog $blog
+     * @param int max
+     * @return array tags
+     */
+    public function loadByBlog(Blog $blog, $max = null)
+    {
+        $results = $this->getTagRepository()->findByBlog($blog, true, $max);
+        $maxWeight = intval($results[0]['frequency']);
+        $minWeight = intval(end(array_values($results))['frequency']);
+        $diff = $maxWeight - $minWeight;
+        $tags = array();
+        foreach ($results as $result) {
+            $tag = $result[0];
+            $weight = 1;
+            if ($diff > 10) {
+                $weight = round(((intval($result['frequency']) - $minWeight)/$diff)*9 + 1);
+            } else {
+                $weight = intval($result['frequency']) - $minWeight + 1;
+            }
+            $tag->setWeight($weight);
+            array_push($tags, $tag);
+        }
+
+        return $tags;
     }
 
     /**

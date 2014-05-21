@@ -46,6 +46,14 @@ class Comment extends Statusable
     protected $publicationDate;
 
     /**
+     * @var \Datetime $publicationDate
+     *
+     * @ORM\Column(type="datetime", name="update_date", nullable=true)
+     * @Gedmo\Timestampable(on="change", field="message")
+     */
+    protected $updateDate;
+
+    /**
      * @var User $author
      *
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\User")
@@ -184,5 +192,25 @@ class Comment extends Statusable
     public function getPublicationDate()
     {
         return $this->publicationDate;
+    }
+
+    /**
+     * @param \Datetime $updateDate
+     *
+     * @return Comment
+     */
+    public function setUpdateDate($updateDate)
+    {
+        $this->updateDate = $updateDate;
+
+        return $this;
+    }
+
+    /**
+     * @return \Datetime
+     */
+    public function getUpdateDate()
+    {
+        return $this->updateDate;
     }
 }

@@ -14,6 +14,7 @@ use Icap\BlogBundle\Event\Log\LogBlogConfigureBannerEvent;
 use Icap\BlogBundle\Event\Log\LogBlogConfigureEvent;
 use Icap\BlogBundle\Event\Log\LogCommentCreateEvent;
 use Icap\BlogBundle\Event\Log\LogCommentDeleteEvent;
+use Icap\BlogBundle\Event\Log\LogCommentUpdateEvent;
 use Icap\BlogBundle\Event\Log\LogPostCreateEvent;
 use Icap\BlogBundle\Event\Log\LogPostDeleteEvent;
 use Icap\BlogBundle\Event\Log\LogPostReadEvent;
@@ -246,6 +247,20 @@ class Controller extends BaseController
     protected function dispatchCommentDeleteEvent(Post $post, Comment $comment)
     {
         $event = new LogCommentDeleteEvent($post, $comment);
+
+        return $this->dispatch($event);
+    }
+
+    /**
+     * @param Post    $post
+     *
+     * @param Comment $comment
+     *
+     * @return Controller
+     */
+    protected function dispatchCommentUpdateEvent(Post $post, Comment $comment, $changeSet)
+    {
+        $event = new LogCommentUpdateEvent($post, $comment, $changeSet);
 
         return $this->dispatch($event);
     }

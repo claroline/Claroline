@@ -34,6 +34,6 @@ services:
 
     icap.blog.twig.extension:
         class: "%icap.blog.twig.extension.class%"
-        arguments: [@icap.blog.tag_repository, @icap.blog.post_repository]
+        arguments: [@icap.blog.manager.tag, @icap.blog.post_repository]
         tags:
             - { name: twig.extension }
