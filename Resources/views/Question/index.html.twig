@@ -35,7 +35,7 @@
 
 {% set layout = "ClarolineCoreBundle:Workspace:layout.html.twig" %}
 
-{% if isDesktop() %}
+{#% if isDesktop() %#}
     {% set layout = "ClarolineCoreBundle:Desktop:layout.html.twig" %}
     {% block breadcrumb %}
         {{
@@ -52,8 +52,8 @@
             ])
         }}
     {% endblock %}
-{% else %}
-{% endif %}
+{#% else %#}
+{#% endif %#}
 
 {% extends layout %}
 
