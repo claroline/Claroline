@@ -214,6 +214,8 @@ class TransfertManager
 
         //now we have to parse everything in case there is a rich text
         //rich texts must be located in the tools section
+
+        /*
         foreach ($data['tools'] as $tool) {
             $importer = $this->getImporterByName($tool['tool']['type']);
 
@@ -226,9 +228,10 @@ class TransfertManager
                 $importer->format($data);
             }
         }
+        */
 
         //add missing tools for workspace
-        //$this->container->get('claroline.manager.tool_manager')->addMissingWorkspaceTools($workspace);
+        $this->container->get('claroline.manager.tool_manager')->addMissingWorkspaceTools($workspace);
 
         return $workspace;
     }
