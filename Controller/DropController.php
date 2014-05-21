@@ -111,13 +111,15 @@ class DropController extends DropzoneBaseController
                 $em->persist($notFinishedDrop);
                 $em->flush();
 
-                $event = new LogDropEndEvent($dropzone, $notFinishedDrop);
+                $rm = $this->get('claroline.manager.role_manager');
+                $event = new LogDropEndEvent($dropzone, $notFinishedDrop, $rm);
                 $this->dispatch($event);
 
                 $this->getRequest()->getSession()->getFlashBag()->add(
                     'success',
                     $this->get('translator')->trans('Your copy has been saved', array(), 'icap_dropzone')
                 );
+
 
                 return $this->redirect(
                     $this->generateUrl(
