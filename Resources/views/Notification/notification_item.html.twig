@@ -18,6 +18,10 @@
         {% include 'IcapDropzoneBundle:Notification:notification_drop_grade_available.html.twig' %}
     {% elseif constant('Icap\\DropzoneBundle\\Event\\Log\\LogDropzoneManualStateChangedEvent::ACTION') == notification.actionKey %}
         {#    MANUAL STATE CHANGED  #}
-        {% include 'IcapDropzoneBundle:Notification:notification_dropzone_manual_state_changed.html.twig' %}    
+        {% include 'IcapDropzoneBundle:Notification:notification_dropzone_manual_state_changed.html.twig' %}
+    {% elseif constant('Icap\\DropzoneBundle\\Event\\Log\\LogDropEndEvent::ACTION') == notification.actionKey %}
+        {#    DROP END  #}
+        {% include 'IcapDropzoneBundle:Notification:notification_drop_end.html.twig' %}
+
     {% endif %}
 {% endblock %}
