@@ -94,15 +94,25 @@ class Drop {
      */
     protected $autoClosedDrop = 0;
 
+
     /**
      * @var bool
      * Used to flag that a copy have been unlocked ( admin made a correction that unlocked the copy:
      *  the copy doesn't wait anymore the expected number of correction
-     * the drop author will not need anymore to do the expected number of correction to see his copy.)
      *
      * @ORM\Column(name="unlocked_drop",type="boolean",nullable=false,options={"default" = false})
      */
     protected $unlockedDrop = false;
+
+
+    /**
+     * @var bool
+     * Used to flag that a user have been unlocked ( admin made a correction that unlocked the copy:
+     * the drop author will not need anymore to do the expected number of correction to see his copy.)
+     *
+     * @ORM\Column(name="unlocked_user",type="boolean",nullable=false,options={"default" = false})
+     */
+    protected $unlockedUser = false;
 
 
     public function __construct()
@@ -388,6 +398,22 @@ class Drop {
     public function isUnlockedDrop()
     {
         return $this->unlockedDrop;
+    }
+
+    /**
+     * @param boolean $unlockedUser
+     */
+    public function setUnlockedUser($unlockedUser)
+    {
+        $this->unlockedUser = $unlockedUser;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function getUnlockedUser()
+    {
+        return $this->unlockedUser;
     }
 }
 
