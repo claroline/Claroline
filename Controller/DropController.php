@@ -589,7 +589,36 @@ class DropController extends DropzoneBaseController
         );
     }
 
+    /**
+     * @param Drop $drop
+     * @param User $user
+     *
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     * @Route(
+     *      "/unlock/drop/{dropId}",
+     *      name="icap_dropzone_unlock_drop",
+     *      requirements={"resourceId" = "\d+", "dropId" = "\d+"}
+     * )
+     * @ParamConverter("user", options={
+     *      "authenticatedUser" = true,
+     *      "messageEnabled" = true,
+     *      "messageTranslationKey" = "This action requires authentication. Please login.",
+     *      "messageTranslationDomain" = "icap_dropzone"
+     * })
+     * @Template()
+     */
+    public function unlockDropAction(Drop $drop, User $user)
+    {
 
+        return $this->redirect(
+            $this->generateUrl(
+                'icap_dropzone_drops_awaiting',
+                array(
+                    'resourceId' => $drop->getDropzone()->getId()
+                )
+            )
+        );
+    }
 
 
     /**

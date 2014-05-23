@@ -293,4 +293,6 @@ List of corrections made by %user%: 'Liste des corrections faites par %user%'
 You are about to delete a correction. This action is not without consequence.: 'Vous êtes sur le point de supprimer une correction, cela n''est pas sans conséquences.'
 Confirm the correction delete: 'Confirmer la suppression de la correction'
 See my copy: 'Voir ma copie'
-
+Unlock copy: 'Débloquer la copie'
+You need at least one correction on the copy to unlock it: "Il faut au moins une correction sur la copie pour pouvoir la débloquer."
+Allow student to see his copy whereas the copy didn't received the expected number of correction.: "Faire que l'étudiant puisse voir sa copie même si celle ci n'as pas reçue le nombre de correction requis."

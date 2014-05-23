@@ -160,8 +160,6 @@
             {% endif %}
         {% endif %}
 
-
-
         {% if dropzone.isPeerReview and expectedCorrections > 0 %}
             {% if drop is not null and drop.finished == true %}
                 <hr/>
@@ -213,6 +211,7 @@
         {% if drop is not null and drop.finished == true and expectedCorrections <= 0 %}
             <hr/>
             <div class="row">
+
                 {% if drop.countFinishedCorrections >= dropzone.expectedTotalCorrection %}
                     {% if drop.calculatedGrade >= dropzone.minimumScoreToPass %}
                         <div class='text-success'>
@@ -247,7 +246,11 @@
                     <div class="col-md-12">
                         <strong>
                             {% if dropzone.peerReview %}
-                                {{ 'Finished! You have realized the nb corrections expected. Patience your copy is being corrected.'|transchoice(dropzone.expectedTotalCorrection, {}, 'icap_dropzone') }}
+                                {% if hasCopyToCorrect %}
+                                    {{ 'Finished! Patience your copy is being corrected.'|trans({}, 'icap_dropzone') }}
+                                {% else %}
+                                    {{ 'Finished! You have realized the nb corrections expected. Patience your copy is being corrected.'|transchoice(dropzone.expectedTotalCorrection, {}, 'icap_dropzone') }}
+                                {% endif %}
                             {% else %}
                                 {{ 'Finished! Patience your copy is being corrected.'|trans({}, 'icap_dropzone') }}
                             {% endif %}
@@ -258,6 +261,7 @@
                     <br>
 
                 {% endif %}
+
             </div>
             <div class="row">
                 <div class="col-md-12 ">
@@ -268,7 +272,6 @@
                 </div>
             </div>
         {% endif %}
-
     </div>
 {% endblock %}
 
