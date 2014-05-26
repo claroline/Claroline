@@ -19,6 +19,10 @@
                     {% if drop.reported %}
                         <span class="text-danger glyphicon icon-warning-sign" data-toggle="tooltip" title="" data-original-title="{{ 'This copy has been reported'|trans({}, 'icap_dropzone') }}"></span> 
                     {% endif %}
+                        {% if drop.unlockedDrop %}
+                            <span class="text-warning glyphicon icon-info-sign" data-toggle="tooltip" title=""
+                                  data-original-title="{{ 'This copy has been unlocked by admin.(it did not received the expected number of correction)'|trans({}, 'icap_dropzone') }}"></span>
+                        {% endif %}
                     </a>
                 </td>
                 <td>
@@ -40,12 +44,12 @@
                 {% endif %}
                 <td>
                     <div class="btn-group ">
-                        {#<a href="{{ path('icap_dropzone_drops_detail', {'resourceId': dropzone.id, 'dropId': drop.id}) }}" type="button" class="btn btn-default btn-xs">{{ 'See copy'|trans({}, 'icap_dropzone') }}</a>
-                        #}
+
                         {% if AwaitingMode is defined and  AwaitingMode == true %}
                             <a href="{{ path('icap_dropzone_drops_detail_add_correction', {'resourceId': dropzone.id, 'dropId': drop.id}) }}"
                                type="button"
                                class="btn btn-default btn-xs">{{ 'Add a correction'|trans({}, 'icap_dropzone') }}</a>
+                            {#  --------------- UNLOCKED BUTTON ---------------- #}
                             {# if the dropzone is finished, show unlock buttons #}
                             {% if dropzone.isFinished %}
                                 {% if drop.corrections|length == 0 %}
@@ -53,12 +57,19 @@
                                        data-placement="left"
                                        title="{{ 'You need at least one correction on the copy to unlock it'|trans({}, 'icap_dropzone') }}">{{ 'Unlock copy'|trans({}, 'icap_dropzone') }}</a>
                                 {% else %}
-                                    <a href="{{ path('icap_dropzone_unlock_drop', {'dropId':drop.id}) }}" type="button"
-                                       class="btn btn-default btn-xs" data-placement="left" data-toggle="tooltip"
-                                       title="{{ "Allow student to see his copy whereas the copy didn't received the expected number of correction."|trans({}, 'icap_dropzone') }}">{{ 'Unlock copy'|trans({}, 'icap_dropzone') }}</a>
-                                {% endif %}
+                                    {% if(drop.unlockedDrop) %}
+                                        <a href="#"
+                                           class="btn btn-default btn-xs disabled">{{ 'Unlocked copy'|trans({}, 'icap_dropzone') }}</a>
+                                    {% else %}
+                                        <a href="{{ path('icap_dropzone_unlock_drop', {'dropId':drop.id}) }}"
+                                           type="button"
+                                           class="btn btn-default btn-xs" data-placement="left" data-toggle="tooltip"
+                                           title="{{ "Allow student to see his copy whereas the copy didn't received the expected number of correction."|trans({}, 'icap_dropzone') }}">{{ 'Unlock copy'|trans({}, 'icap_dropzone') }}</a>
 
+                                    {% endif %}
+                                {% endif %}
                             {% endif %}
+                            {#  --------------- END UNLOCKED BUTTON  --------------- #}
                         {% endif %}
                         <a href="{{ path('icap_dropzone_drops_delete', {'resourceId': dropzone.id, 'dropId': drop.id, 'tab': 0, 'page': pager.currentPage}) }}"
                            class="btn btn-danger btn-xs launch-modal"><span

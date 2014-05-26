@@ -140,7 +140,7 @@ class DropRepository extends EntityRepository {
     public function getDropIdsFullyCorrectedQuery($dropzone)
     {
         $query = $this->getEntityManager()->createQuery(
-            "SELECT cd.id AS did, count(cd.id) AS nb_corrections, cdd.expectedTotalCorrection \n".
+            "SELECT cd.id AS did, cd.unlockedDrop as unlcoked, count(cd.id) AS nb_corrections, cdd.expectedTotalCorrection \n" .
             "FROM Icap\\DropzoneBundle\\Entity\\Correction AS c \n".
             "JOIN c.drop AS cd \n".
             "JOIN cd.dropzone AS cdd \n".
@@ -149,7 +149,7 @@ class DropRepository extends EntityRepository {
             "AND c.valid = true \n".
             "AND cd.finished = true \n".
             "GROUP BY did \n".
-            "HAVING nb_corrections >= cdd.expectedTotalCorrection")
+            "HAVING (nb_corrections >= cdd.expectedTotalCorrection) OR (unlcoked = true) ")
             ->setParameter('dropzoneId', $dropzone->getId());
 
         return $query;
@@ -282,6 +282,7 @@ class DropRepository extends EntityRepository {
             ->select('drop, document, correction, user')
             ->andWhere('drop.dropzone = :dropzone')
             ->andWhere('drop.finished = true')
+            ->andWhere('drop.unlockedDrop = false')
             ->join('drop.user', 'user')
             ->leftJoin('drop.documents', 'document')
             ->leftJoin('drop.corrections', 'correction')
