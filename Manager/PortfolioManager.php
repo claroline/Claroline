@@ -49,19 +49,8 @@ class PortfolioManager
      */
     public function addPortfolio(Portfolio $portfolio, TitleWidget $titleWidget)
     {
-        $titleWidgetType = $this->entityManager->getRepository('IcapPortfolioBundle:Widget\WidgetType')->findOneByName('title');
-        if (null === $titleWidget) {
-            throw new \InvalidArgumentException("Unknow widget type 'title'.");
-        }
+        $titleWidget->setPortfolio($portfolio);
 
-        $widgetNode = new WidgetNode();
-        $widgetNode
-            ->setPortfolio($portfolio)
-            ->setWidgetType($titleWidgetType);
-
-        $titleWidget->setWidgetNode($widgetNode);
-
-        $this->entityManager->persist($widgetNode);
         $this->entityManager->persist($titleWidget);
 
         $this->persistPortfolio($portfolio);

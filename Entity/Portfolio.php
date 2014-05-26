@@ -186,13 +186,13 @@ class Portfolio
     }
 
     /**
-     * @param \Icap\PortfolioBundle\Entity\Widget\WidgetNode[] $widgetNodes
+     * @param \Icap\PortfolioBundle\Entity\Widget\AbstractWidget[] $abstractWidgets
      *
      * @return Portfolio
      */
-    public function setWidgets($widgetNodes)
+    public function setWidgets($abstractWidgets)
     {
-        $this->widgets = $widgetNodes;
+        $this->widgets = $abstractWidgets;
 
         return $this;
     }

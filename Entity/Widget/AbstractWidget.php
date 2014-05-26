@@ -78,4 +78,16 @@ abstract class AbstractWidget
     {
         return $this->portfolio;
     }
+
+    /**
+     * @param \Icap\PortfolioBundle\Entity\Portfolio $portfolio
+     *
+     * @return AbstractWidget
+     */
+    public function setPortfolio(Portfolio $portfolio)
+    {
+        $this->portfolio = $portfolio;
+
+        return $this;
+    }
 }
