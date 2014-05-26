@@ -20,7 +20,7 @@ class DropRepository extends EntityRepository {
             "SELECT d.id AS did, c.valid as valid, count(c.id) AS nb_corrections \n".
             "FROM Icap\\DropzoneBundle\\Entity\\Drop AS d \n".
             "LEFT OUTER JOIN d.corrections AS c \n".
-            "WHERE d.dropzone = :dropzone \n".
+            "WHERE d.dropzone = :dropzone and d.unlockedDrop = false \n" .
             "GROUP BY d.id, c.valid")
             ->setParameter('dropzone', $dropzone);
 
