@@ -599,6 +599,7 @@ class DropController extends DropzoneBaseController
      *      name="icap_dropzone_unlock_drop",
      *      requirements={"resourceId" = "\d+", "dropId" = "\d+"}
      * )
+     * @ParamConverter("drop", class="IcapDropzoneBundle:Drop", options={"id" = "dropId"})
      * @ParamConverter("user", options={
      *      "authenticatedUser" = true,
      *      "messageEnabled" = true,
@@ -609,12 +610,22 @@ class DropController extends DropzoneBaseController
      */
     public function unlockDropAction(Drop $drop, User $user)
     {
+        $em = $this->getDoctrine()->getManager();
+        $drop->setUnlockedDrop(true);
+        $em->flush();
 
+        $this->getRequest()
+            ->getSession()
+            ->getFlashBag()
+            ->add('success', $this->get('translator')->trans('Drop have been unlocked', array(), 'icap_dropzone')
+            );
+
+        $dropzoneId = $drop->getDropzone()->getId();
         return $this->redirect(
             $this->generateUrl(
                 'icap_dropzone_drops_awaiting',
                 array(
-                    'resourceId' => $drop->getDropzone()->getId()
+                    'resourceId' => $dropzoneId
                 )
             )
         );
