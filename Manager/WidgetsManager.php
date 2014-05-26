@@ -58,13 +58,6 @@ class WidgetsManager
             $sortedWidgetTypes[$widgetType['name']] = $widgetType;
         }
 
-        // Adding title
-        $sortedWidgetTypes['title'] = array(
-            'name'        => 'title',
-            'isUnique'    => true,
-            'isDeletable' => false
-        );
-
         return $sortedWidgetTypes;
     }
 
@@ -77,18 +70,6 @@ class WidgetsManager
     public function getView(AbstractWidget $widget, $type)
     {
         return $this->templatingEngine->render('IcapPortfolioBundle:templates:' . $type . '.html.twig', array('widget' => $widget));
-    }
-
-    public function getViewData(Portfolio $portfolio, $type)
-    {
-        $viewData = array();
-
-        switch($type) {
-            case 'title':
-                break;
-        }
-
-        return $viewData;
     }
 
     /**
@@ -114,18 +95,18 @@ class WidgetsManager
     }
 
     /**
-     * @param Portfolio $portfolio
-     * @param string    $type
-     * @param array     $parameters
+     * @param AbstractWidget $widget
+     * @param string         $type
+     * @param array          $parameters
      *
      * @throws \InvalidArgumentException
      * @return array
      */
-    public function handle(Portfolio $portfolio, $type, array $parameters)
+    public function handle(AbstractWidget $widget, $type, array $parameters)
     {
         $data = array();
 
-        $form = $this->getForm($type, $portfolio);
+        $form = $this->getForm($type, $widget);
         $form->submit($parameters);
 
         if ($form->isValid()) {
@@ -136,7 +117,7 @@ class WidgetsManager
 
             $data['title'] = $parameters['title'];
             $data['views'] = array(
-                'view' => $this->getView($portfolio, $type)
+                'view' => $this->getView($widget, $type)
             );
 
             return $data;

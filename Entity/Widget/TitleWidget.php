@@ -80,7 +80,7 @@ class TitleWidget extends AbstractWidget
     public function getData()
     {
         return array(
-            'value' => $this->getTitle()
+            'title' => $this->getTitle()
         );
     }
 }

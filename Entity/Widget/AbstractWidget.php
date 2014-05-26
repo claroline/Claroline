@@ -8,7 +8,7 @@ use Icap\PortfolioBundle\Entity\Portfolio;
 
 /**
  * @ORM\Table(name="icap__portfolio_abstract_widget")
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="Icap\PortfolioBundle\Repository\Widget\AbstractWidgetRepository")
  * @ORM\InheritanceType("JOINED")
  * @ORM\DiscriminatorColumn(name="widget_type", type="string")
  * @ORM\DiscriminatorMap({"title" = "TitleWidget", "userInformation" = "UserInformationWidget"})
