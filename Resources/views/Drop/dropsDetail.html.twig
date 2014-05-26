@@ -55,6 +55,7 @@
             <br/>
             {{ macros.flashBox() }}
 
+
             {% if drop.reported %}
                 <div class="row text-danger">
                     <div class="col-md-12">
@@ -74,8 +75,18 @@
         </div>
 
         <div class="row">
-            <div class="text-muted col-md-4">{{ 'Number of validated corrections'|trans({}, 'icap_dropzone') }}</div>
-            <div class="col-md-8">{% include 'IcapDropzoneBundle:Drop:dropsNbCorrections.html.twig' %}</div>
+            <div class="text-muted col-md-4">{{ 'Number of validated corrections'|trans({}, 'icap_dropzone') }}
+            </div>
+            <div class="col-md-8">
+                {% include 'IcapDropzoneBundle:Drop:dropsNbCorrections.html.twig' %}
+                {% if drop.unlockedDrop %}
+                    {% if drop.unlockedDrop %}
+                        <span class="text-warning glyphicon icon-info-sign" data-toggle="tooltip" title=""
+                              data-original-title="{{ 'This copy has been unlocked by admin.(it did not received the expected number of correction)'|trans({}, 'icap_dropzone') }}"></span>
+                    {% endif %}
+
+                {% endif %}
+            </div>
         </div>
         {% if byUserMod == 0   or showCorrections or dropzone.displayNotationToLearners %}
             <div class="row">
@@ -115,4 +126,5 @@
 {% block javascripts %}
     {{ parent() }}
     <script src="{{ asset('bundles/icapdropzone/js/popup.js') }}"></script>
+    <script src="{{ asset('bundles/icapdropzone/js/tooltip.js') }}"></script>
 {% endblock %}
