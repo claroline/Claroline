@@ -3,4 +3,4 @@ plugin:
 
     admin_tools:
         - name: 'ldap'
-          class: 'icon-ok'
+          class: 'icon-hdd'

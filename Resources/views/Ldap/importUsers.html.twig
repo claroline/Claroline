@@ -15,7 +15,7 @@
                 'href': path('claro_admin_index')
             },
             {
-                'name': 'LDAP'|trans({}, 'platform'),
+                'name': 'LDAP'|trans({}, 'ldap'),
                 'href': path('claro_admin_ldap')
             },
             {
@@ -45,15 +45,15 @@
     <div class="panel-body">
         {% if error is defined %}
             <div class="alert alert-danger">
-                <i class="icon-warning-sign"></i> {{ 'ldap_error_conexion' | trans({}, 'platform') }}
+                <i class="icon-warning-sign"></i> {{ 'ldap_error_conexion' | trans({}, 'ldap') }}
             </div>
             <a class="btn btn-primary" href="{{ path('claro_admin_ldap_form') }}" class="alert-link">
-                <i class="icon-wrench"></i> {{ 'LDAP settings' | trans({}, 'platform')}}
+                <i class="icon-wrench"></i> {{ 'LDAP settings' | trans({}, 'ldap')}}
             </a>
         {% else %}
             <div class="row margin-bottom-md">
                 <div class="col-md-3">
-                    <label for="ldapObjectClass">{{ 'ldap_user_class' | trans({}, 'platform') }}:</label>
+                    <label for="ldapObjectClass">{{ 'ldap_user_class' | trans({}, 'ldap') }}:</label>
                 </div>
                 <div class="col-md-9">
                     <select class="form-control" id="ldapObjectClass">

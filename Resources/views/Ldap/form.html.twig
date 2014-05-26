@@ -1,6 +1,6 @@
 {% extends "ClarolineCoreBundle:Administration:layout.html.twig" %}
 
-{% block title %}{{ parent() ~ ' - LDAP settings' | trans({}, 'platform') | striptags | raw }}{% endblock %}
+{% block title %}{{ parent() ~ ' - LDAP settings' | trans({}, 'ldap') | striptags | raw }}{% endblock %}
 
 {% block breadcrumb %}
     {{
@@ -19,7 +19,7 @@
                 'href': path('claro_admin_ldap')
             },
             {
-                'name': 'LDAP settings' | trans({}, 'platform'),
+                'name': 'LDAP settings' | trans({}, 'ldap'),
                 'href': ''
             }
         ])
@@ -28,7 +28,7 @@
 
 {% block section_content %}
     <div class="panel-heading">
-        <h3 class="panel-title">{{ 'LDAP settings'|trans({}, 'platform') }}</h3>
+        <h3 class="panel-title">{{ 'LDAP settings'|trans({}, 'ldap') }}</h3>
     </div>
     {{ macros.flashBox() }}
     <form class="form-horizontal" action="{{ path('claro_admin_ldap_form') }}" method="post" {{ form_enctype(form) }} id="form_settings">

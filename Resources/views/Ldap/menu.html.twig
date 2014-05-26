@@ -1,6 +1,6 @@
 {% extends "ClarolineCoreBundle:Administration:layout.html.twig" %}
 
-{% block title %}{{ parent() ~ ' - ' ~ 'LDAP' | trans({}, 'platform') | striptags | raw }}{% endblock %}
+{% block title %}{{ parent() ~ ' - ' ~ 'LDAP' | trans({}, 'ldap') | striptags | raw }}{% endblock %}
 
 {% block breadcrumb %}
     {{
@@ -15,7 +15,7 @@
                 'href': path('claro_admin_parameters_index')
             },
             {
-                'name': 'LDAP'|trans({}, 'platform'),
+                'name': 'LDAP'|trans({}, 'ldap'),
                 'href': ''
             }
         ])
@@ -24,7 +24,7 @@
 
 {% block section_content %}
     <div class="panel-heading">
-        <h3 class="panel-title">{{ 'LDAP' | trans({}, 'platform') }}</h3>
+        <h3 class="panel-title">{{ 'LDAP' | trans({}, 'ldap') }}</h3>
     </div>
     <div class="list-group">
         <a class="list-group-item" href="{{ path('claro_admin_ldap_form') }}">
