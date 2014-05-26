@@ -115,10 +115,12 @@ class WidgetsManager
             $this->entityManager->persist($object);
             $this->entityManager->flush();
 
-            $data['title'] = $parameters['title'];
-            $data['views'] = array(
-                'view' => $this->getView($widget, $type)
+            $widgetDatas = array(
+                'views' => array(
+                    'view' => $this->getView($widget, $type)
+                )
             );
+            $data = $widgetDatas + $widget->getData();
 
             return $data;
         }
