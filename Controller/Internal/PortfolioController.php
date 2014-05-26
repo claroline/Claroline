@@ -28,21 +28,23 @@ class PortfolioController extends BaseController
         /** @var \Symfony\Bundle\FrameworkBundle\Templating\EngineInterface $twigEngine */
         $twigEngine = $this->get('templating');
 
+        /** @var \Icap\PortfolioBundle\Entity\Widget\AbstractWidget[] $widgets */
+        $widgets = $portfolio->getWidgets();
+
         $data = array(
-            'id'    => $portfolio->getId(),
-            'title' => array(
-                'views'  => array(
-                    'view' => $this->getWidgetsManager()->getView($portfolio, 'title')
-                ),
-                'title' => $portfolio->getTitle()
-            ),
-            'userInformation' => array(
-                'views'  => array(
-                    'view' => $this->getWidgetsManager()->getView($portfolio, 'userInformation')
-                ),
-                'avatar' => $loggedUser->getPicture()
-            )
+            'id' => $portfolio->getId()
         );
+
+        foreach ($widgets as $key => $widget) {
+            $widgetType = $widget->getWidgetType();
+
+            $widgetDatas = array(
+                'views' => array(
+                    'view' => $this->getWidgetsManager()->getView($widget, $widgetType)
+                )
+            );
+            $data[$widgetType] = $widgetDatas + $widget->getData();
+        }
 
         $response->setData($data);
 

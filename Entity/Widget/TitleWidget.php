@@ -16,6 +16,8 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class TitleWidget extends AbstractWidget
 {
+    protected $widgetType = 'title';
+
     /**
      * @var string
      *
@@ -72,4 +74,13 @@ class TitleWidget extends AbstractWidget
         return $this->title;
     }
 
+    /**
+     * @return array
+     */
+    public function getData()
+    {
+        return array(
+            'value' => $this->getTitle()
+        );
+    }
 }

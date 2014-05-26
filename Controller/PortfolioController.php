@@ -146,7 +146,7 @@ class PortfolioController extends Controller
         $user        = $this->getUser();
         /** @var \Icap\PortfolioBundle\Entity\Widget\TitleWidget $titleWidget */
         $titleWidget = $this->getDoctrine()->getRepository('IcapPortfolioBundle:Widget\TitleWidget')->findOneBySlug($portfolioSlug);
-        $portfolio   = $titleWidget->getWidgetNode()->getPortfolio();
+        $portfolio   = $titleWidget->getPortfolio();
         $editMode    = false;
 
         $portfolioWidgets = $this->getPortfolioWidgetTypeRepository()->findAllInArray();

@@ -10,6 +10,8 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class UserInformationWidget extends AbstractWidget
 {
+    protected $widgetType = 'userInformation';
+
     /**
      * @var string
      *
@@ -35,5 +37,15 @@ class UserInformationWidget extends AbstractWidget
     public function getCity()
     {
         return $this->city;
+    }
+
+    /**
+     * @return array
+     */
+    public function getData()
+    {
+        return array(
+            'city' => $this->getCity()
+        );
     }
 }

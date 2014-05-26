@@ -47,6 +47,8 @@ abstract class AbstractWidget
      */
     protected $portfolio;
 
+    protected $widgetType = null;
+
     /**
      * @return integer
      */
@@ -90,4 +92,17 @@ abstract class AbstractWidget
 
         return $this;
     }
+
+    /**
+     * @return null
+     */
+    public function getWidgetType()
+    {
+        return $this->widgetType;
+    }
+
+    /**
+     * @return array
+     */
+    abstract public function getData();
 }

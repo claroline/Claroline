@@ -4,6 +4,7 @@ namespace Icap\PortfolioBundle\Manager;
 
 use Doctrine\ORM\EntityManager;
 use Icap\PortfolioBundle\Entity\Portfolio;
+use Icap\PortfolioBundle\Entity\Widget\AbstractWidget;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Bundle\FrameworkBundle\Templating\EngineInterface;
 use Symfony\Component\Form\FormFactory;
@@ -68,14 +69,14 @@ class WidgetsManager
     }
 
     /**
-     * @param Portfolio $portfolio
-     * @param string    $type
+     * @param AbstractWidget $widget
+     * @param string         $type
      *
      * @return string
      */
-    public function getView(Portfolio $portfolio, $type)
+    public function getView(AbstractWidget $widget, $type)
     {
-        return $this->templatingEngine->render('IcapPortfolioBundle:templates:' . $type . '.html.twig', array('portfolio' => $portfolio));
+        return $this->templatingEngine->render('IcapPortfolioBundle:templates:' . $type . '.html.twig', array('widget' => $widget));
     }
 
     public function getViewData(Portfolio $portfolio, $type)
