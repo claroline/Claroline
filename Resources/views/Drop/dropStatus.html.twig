@@ -1,9 +1,10 @@
 
 {% if dropzoneProgress is defined  %}
- 
-{# 	{{ dump(dropzoneProgress)}} 
-	 {{dump( dropzoneProgress.states[dropzoneProgress.currentState])}} #}
-<h5>{{ 'Dropzone progress'|trans({},'icap_dropzone') }}</h5>
+
+    {#	{{ dump(dropzoneProgress)}}
+        {{dump( dropzoneProgress.states[dropzoneProgress.currentState])}}#}
+
+    <h5>{{ 'Dropzone progress'|trans({},'icap_dropzone') }}</h5>
 <div class="progress " style="text-align: center;">
   <div class="progress-bar " role="progressbar" aria-valuenow="{{ dropzoneProgress.currentState}}" aria-valuemin="0" aria-valuemax="{{dropzoneProgress.states|length }}" style="width: {{dropzoneProgress.percent}}%;">
 
@@ -13,7 +14,8 @@
     {% set currentLiteralState = dropzoneProgress.states[dropzoneProgress.currentState] %}
     {{ currentLiteralState|trans({'%nb_correction%':dropzoneProgress.nbCorrection,'%expected_correction%':dropzone.expectedTotalCorrection},'icap_dropzone') }}
   </span>
-  
+
+
   </div>
 </div>
   <style>
