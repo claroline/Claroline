@@ -1,6 +1,6 @@
 {% extends 'ClarolineCoreBundle::layout.html.twig' %}
 
-{% block title %}{{ portfolio.user.firstName ~ ' ' ~ portfolio.user.lastName ~ ' - ' ~ 'portfolio' | trans({}, 'icap_portfolio') ~ ' - ' ~ title | striptags | raw }}{% endblock %}
+{% block title %}{{ portfolio.user.firstName ~ ' ' ~ portfolio.user.lastName ~ ' - ' ~ 'portfolio' | trans({}, 'icap_portfolio') ~ ' - ' ~ titleWidget.title | striptags | raw }}{% endblock %}
 
 {% block content_container %}
     <div id="portfolio-section" data-portfolio-container="{{ portfolio.id }}">
@@ -28,7 +28,7 @@
                                 </div>
                                 <div data-ng-bind-html="widget.views.view | trustAsHtml"></div>
                             {% else %}
-                                {% include 'IcapPortfolioBundle:templates:title.html.twig' with {'portfolio': portfolio} only %}
+                                {% include 'IcapPortfolioBundle:templates:title.html.twig' with {'widget': titleWidget} only %}
                             {% endif %}
                         </div>
                     </div>

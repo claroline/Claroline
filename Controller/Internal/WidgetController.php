@@ -5,6 +5,7 @@ namespace Icap\PortfolioBundle\Controller\Internal;
 use Claroline\CoreBundle\Entity\User;
 use Icap\PortfolioBundle\Controller\Controller as BaseController;
 use Icap\PortfolioBundle\Entity\Portfolio;
+use Icap\PortfolioBundle\Entity\Widget\AbstractWidget;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -36,14 +37,19 @@ class WidgetController extends BaseController
         return $response;
     }
     /**
-     * @Route("/{type}", name="icap_portfolio_internal_widget_post")
+     * @Route("/{type}", name="icap_portfolio_internal_widget_post", defaults={"widgetId" = null})
+     * @Route("/{type}/{widgetId}", name="icap_portfolio_internal_widget_post_id")
      * @Method({"POST"})
      *
      * @ParamConverter("loggedUser", options={"authenticatedUser" = true})
      */
-    public function postAction(Request $request, User $loggedUser, Portfolio $portfolio, $type)
+    public function postAction(Request $request, User $loggedUser, Portfolio $portfolio, $type, AbstractWidget $widget = null)
     {
-        $data = $this->getWidgetsManager()->handle($portfolio, $type, $request->request->all());
+        if (null === $widget) {
+            $widget = $this->getDoctrine()->getRepository('IcapPortfolioBundle:Widget\AbstractWidget')->findOneByTypeAndPortfolio($type, $portfolio);
+        }
+
+        $data = $this->getWidgetsManager()->handle($widget, $type, $request->request->all());
 
         $response = new JsonResponse();
         $response->setData($data);

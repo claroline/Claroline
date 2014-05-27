@@ -7,8 +7,6 @@ use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * This entity is only an AbstractResource sub-type, with no additional attributes.
- *
  * @ORM\Table(name="icap__portfolio_widget_title",
  *      uniqueConstraints={
  *          @ORM\UniqueConstraint(name="portfolio_slug_unique_idx", columns={"slug"})
@@ -18,6 +16,8 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class TitleWidget extends AbstractWidget
 {
+    protected $widgetType = 'title';
+
     /**
      * @var string
      *
@@ -74,4 +74,13 @@ class TitleWidget extends AbstractWidget
         return $this->title;
     }
 
+    /**
+     * @return array
+     */
+    public function getData()
+    {
+        return array(
+            'title' => $this->getTitle()
+        );
+    }
 }

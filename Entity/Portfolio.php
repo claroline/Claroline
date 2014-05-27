@@ -55,9 +55,9 @@ class Portfolio
     /**
      * @var \Icap\PortfolioBundle\Entity\Widget\WidgetNode[]
      *
-     * @ORM\OneToMany(targetEntity="Icap\PortfolioBundle\Entity\Widget\WidgetNode", mappedBy="portfolio")
+     * @ORM\OneToMany(targetEntity="Icap\PortfolioBundle\Entity\Widget\AbstractWidget", mappedBy="portfolio")
      */
-    protected $widgetNodes;
+    protected $widgets;
 
     /**
      * @ORM\Column(name="deletedAt", type="datetime", nullable=true)
@@ -186,13 +186,13 @@ class Portfolio
     }
 
     /**
-     * @param \Icap\PortfolioBundle\Entity\Widget\WidgetNode[] $widgetNodes
+     * @param \Icap\PortfolioBundle\Entity\Widget\AbstractWidget[] $abstractWidgets
      *
      * @return Portfolio
      */
-    public function setWidgetNodes($widgetNodes)
+    public function setWidgets($abstractWidgets)
     {
-        $this->widgetNodes = $widgetNodes;
+        $this->widgets = $abstractWidgets;
 
         return $this;
     }
@@ -200,9 +200,9 @@ class Portfolio
     /**
      * @return \Icap\PortfolioBundle\Entity\Widget\WidgetNode[]
      */
-    public function getWidgetNodes()
+    public function getWidgets()
     {
-        return $this->widgetNodes;
+        return $this->widgets;
     }
 
 }

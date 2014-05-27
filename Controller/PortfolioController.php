@@ -25,7 +25,7 @@ class PortfolioController extends Controller
      */
     public function listAction(User $loggedUser, $page)
     {
-        $query = $this->getDoctrine()->getRepository('IcapPortfolioBundle:Widget\TitleWidget')->findAllForUser($loggedUser, false);
+        $query = $this->getDoctrine()->getRepository('IcapPortfolioBundle:Portfolio')->findByUserWithWidgets($loggedUser, false);
         $pager = $this->get('claroline.pager.pager_factory')->createPager($query, $page, 10);
 
         return array(
@@ -146,7 +146,7 @@ class PortfolioController extends Controller
         $user        = $this->getUser();
         /** @var \Icap\PortfolioBundle\Entity\Widget\TitleWidget $titleWidget */
         $titleWidget = $this->getDoctrine()->getRepository('IcapPortfolioBundle:Widget\TitleWidget')->findOneBySlug($portfolioSlug);
-        $portfolio   = $titleWidget->getWidgetNode()->getPortfolio();
+        $portfolio   = $titleWidget->getPortfolio();
         $editMode    = false;
 
         $portfolioWidgets = $this->getPortfolioWidgetTypeRepository()->findAllInArray();
@@ -159,7 +159,7 @@ class PortfolioController extends Controller
         }
 
         $widgetsConfig       = $this->getWidgetsManager()->getWidgetsConfig();
-        $response            = new Response($this->renderView('IcapPortfolioBundle:Portfolio:view.html.twig', array('title' => $titleWidget->getTitle(), 'portfolio' => $portfolio, 'editMode' => $editMode, 'widgetsConfig' => $widgetsConfig)));
+        $response            = new Response($this->renderView('IcapPortfolioBundle:Portfolio:view.html.twig', array('titleWidget' => $titleWidget, 'portfolio' => $portfolio, 'editMode' => $editMode, 'widgetsConfig' => $widgetsConfig)));
         $portfolioVisibility = $portfolio->getVisibility();
 
         if ($user !== $portfolio->getUser()) {

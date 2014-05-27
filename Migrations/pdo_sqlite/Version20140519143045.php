@@ -8,9 +8,9 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2014/05/16 10:18:53
+ * Generation date: 2014/05/19 02:30:46
  */
-class Version20140516101852 extends AbstractMigration
+class Version20140519143045 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
@@ -44,9 +44,21 @@ class Version20140516101852 extends AbstractMigration
             CREATE INDEX IDX_8B1895DA76ED395 ON icap__portfolio (user_id)
         ");
         $this->addSql("
+            CREATE TABLE icap__portfolio_abstract_widget (
+                id INTEGER NOT NULL, 
+                portfolio_id INTEGER NOT NULL, 
+                createdAt DATETIME NOT NULL, 
+                updatedAt DATETIME NOT NULL, 
+                widget_type VARCHAR(255) NOT NULL, 
+                PRIMARY KEY(id)
+            )
+        ");
+        $this->addSql("
+            CREATE INDEX IDX_3E7AEFBBB96B5643 ON icap__portfolio_abstract_widget (portfolio_id)
+        ");
+        $this->addSql("
             CREATE TABLE icap__portfolio_widget_title (
                 id INTEGER NOT NULL, 
-                widget_node_id INTEGER DEFAULT NULL, 
                 title VARCHAR(128) NOT NULL, 
                 slug VARCHAR(128) NOT NULL, 
                 PRIMARY KEY(id)
@@ -54,9 +66,6 @@ class Version20140516101852 extends AbstractMigration
         ");
         $this->addSql("
             CREATE UNIQUE INDEX UNIQ_1431A01D989D9B62 ON icap__portfolio_widget_title (slug)
-        ");
-        $this->addSql("
-            CREATE UNIQUE INDEX UNIQ_1431A01D48229816 ON icap__portfolio_widget_title (widget_node_id)
         ");
         $this->addSql("
             CREATE TABLE icap__portfolio_widget_type (
@@ -71,31 +80,11 @@ class Version20140516101852 extends AbstractMigration
             CREATE UNIQUE INDEX UNIQ_3E00FC8F5E237E06 ON icap__portfolio_widget_type (name)
         ");
         $this->addSql("
-            CREATE TABLE icap__portfolio_widget_node (
-                id INTEGER NOT NULL, 
-                widget_type_id INTEGER NOT NULL, 
-                portfolio_id INTEGER NOT NULL, 
-                createdAt DATETIME NOT NULL, 
-                updatedAt DATETIME NOT NULL, 
-                PRIMARY KEY(id)
-            )
-        ");
-        $this->addSql("
-            CREATE INDEX IDX_37A143E3CB638B52 ON icap__portfolio_widget_node (widget_type_id)
-        ");
-        $this->addSql("
-            CREATE INDEX IDX_37A143E3B96B5643 ON icap__portfolio_widget_node (portfolio_id)
-        ");
-        $this->addSql("
             CREATE TABLE icap__portfolio_widget_user_information (
                 id INTEGER NOT NULL, 
-                widget_node_id INTEGER DEFAULT NULL, 
                 city VARCHAR(255) DEFAULT NULL, 
                 PRIMARY KEY(id)
             )
-        ");
-        $this->addSql("
-            CREATE UNIQUE INDEX UNIQ_E2BFAA0348229816 ON icap__portfolio_widget_user_information (widget_node_id)
         ");
     }
 
@@ -108,13 +97,13 @@ class Version20140516101852 extends AbstractMigration
             DROP TABLE icap__portfolio
         ");
         $this->addSql("
+            DROP TABLE icap__portfolio_abstract_widget
+        ");
+        $this->addSql("
             DROP TABLE icap__portfolio_widget_title
         ");
         $this->addSql("
             DROP TABLE icap__portfolio_widget_type
-        ");
-        $this->addSql("
-            DROP TABLE icap__portfolio_widget_node
         ");
         $this->addSql("
             DROP TABLE icap__portfolio_widget_user_information

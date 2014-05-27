@@ -4,6 +4,7 @@ namespace Icap\PortfolioBundle\Manager;
 
 use Doctrine\ORM\EntityManager;
 use Icap\PortfolioBundle\Entity\Portfolio;
+use Icap\PortfolioBundle\Entity\Widget\AbstractWidget;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Bundle\FrameworkBundle\Templating\EngineInterface;
 use Symfony\Component\Form\FormFactory;
@@ -57,37 +58,18 @@ class WidgetsManager
             $sortedWidgetTypes[$widgetType['name']] = $widgetType;
         }
 
-        // Adding title
-        $sortedWidgetTypes['title'] = array(
-            'name'        => 'title',
-            'isUnique'    => true,
-            'isDeletable' => false
-        );
-
         return $sortedWidgetTypes;
     }
 
     /**
-     * @param Portfolio $portfolio
-     * @param string    $type
+     * @param AbstractWidget $widget
+     * @param string         $type
      *
      * @return string
      */
-    public function getView(Portfolio $portfolio, $type)
+    public function getView(AbstractWidget $widget, $type)
     {
-        return $this->templatingEngine->render('IcapPortfolioBundle:templates:' . $type . '.html.twig', array('portfolio' => $portfolio));
-    }
-
-    public function getViewData(Portfolio $portfolio, $type)
-    {
-        $viewData = array();
-
-        switch($type) {
-            case 'title':
-                break;
-        }
-
-        return $viewData;
+        return $this->templatingEngine->render('IcapPortfolioBundle:templates:' . $type . '.html.twig', array('widget' => $widget));
     }
 
     /**
@@ -113,18 +95,18 @@ class WidgetsManager
     }
 
     /**
-     * @param Portfolio $portfolio
-     * @param string    $type
-     * @param array     $parameters
+     * @param AbstractWidget $widget
+     * @param string         $type
+     * @param array          $parameters
      *
      * @throws \InvalidArgumentException
      * @return array
      */
-    public function handle(Portfolio $portfolio, $type, array $parameters)
+    public function handle(AbstractWidget $widget, $type, array $parameters)
     {
         $data = array();
 
-        $form = $this->getForm($type, $portfolio);
+        $form = $this->getForm($type, $widget);
         $form->submit($parameters);
 
         if ($form->isValid()) {
@@ -133,10 +115,12 @@ class WidgetsManager
             $this->entityManager->persist($object);
             $this->entityManager->flush();
 
-            $data['title'] = $parameters['title'];
-            $data['views'] = array(
-                'view' => $this->getView($portfolio, $type)
+            $widgetDatas = array(
+                'views' => array(
+                    'view' => $this->getView($widget, $type)
+                )
             );
+            $data = $widgetDatas + $widget->getData();
 
             return $data;
         }

@@ -15,8 +15,27 @@ class PortfolioRepository extends EntityRepository
      */
     public function findByUser(User $user, $executeQuery = true)
     {
-        $query = $this->createQueryBuilder('portfolio')
-            ->andWhere('portfolio.user = :userId')
+        $query = $this->createQueryBuilder('p')
+            ->andWhere('p.user = :userId')
+            ->setParameter('userId', $user->getId())
+        ;
+
+        return $executeQuery ? $query->getQuery()->getResult(): $query->getQuery();
+    }
+
+    /**
+     * @param User $user
+     * @param bool $executeQuery
+     *
+     * @return array|\Doctrine\ORM\Query
+     */
+    public function findByUserWithWidgets(User $user, $executeQuery = true)
+    {
+        $query = $this->createQueryBuilder('p')
+            ->select('p', 'widgets')
+            ->join('p.widgets','widgets')
+            ->andWhere('p.user = :userId')
+            ->andWhere('widgets INSTANCE OF IcapPortfolioBundle:Widget\TitleWidget')
             ->setParameter('userId', $user->getId())
         ;
 

@@ -35,8 +35,8 @@
                 {% for portfolio in pager %}
                     <tr class="portfolio">
                         <td>
-                            <a href="{{ path('icap_portfolio_view', {'portfolioSlug': portfolio.slug}) }}" title="" class="block">{{ portfolio.title }}</a>
-                            <a href="{{ path('icap_portfolio_view', {'portfolioSlug': portfolio.slug}) }}" title="" class="text-muted">{{ path('icap_portfolio_view', {'portfolioSlug': portfolio.slug}) }}</a>
+                            <a href="{{ path('icap_portfolio_view', {'portfolioSlug': portfolio.widgets.0.slug}) }}" title="" class="block">{{ portfolio.widgets.0.title }}</a>
+                            <a href="{{ path('icap_portfolio_view', {'portfolioSlug': portfolio.widgets.0.slug}) }}" title="" class="text-muted">{{ path('icap_portfolio_view', {'portfolioSlug': portfolio.widgets.0.slug}) }}</a>
                         </td>
                         <td>
                             <span class="block">
@@ -44,12 +44,12 @@
                                 {{ portfolio.visibility|visibilityLabel|trans({}, 'icap_portfolio') }}
                             </span>
                             <small class="text-muted">
-                                {{ 'updated_on'|trans({'%date%': portfolio.updatedAt|date('date_format'|trans({}, 'platform') ~ ' H:i:s')}, 'icap_portfolio') }}
+                                {{ 'updated_on'|trans({'%date%': portfolio.widgets.0.updatedAt|date('date_format'|trans({}, 'platform') ~ ' H:i:s')}, 'icap_portfolio') }}
                             </small>
                         </td>
                         <td>
                             <div class="btn-group">
-                                <a href="{{ path('icap_portfolio_view', {'portfolioSlug': portfolio.slug}) }}" class="btn btn-xs btn-primary">{{ 'update'|trans({}, 'icap_portfolio') }}</a>
+                                <a href="{{ path('icap_portfolio_view', {'portfolioSlug': portfolio.widgets.0.slug}) }}" class="btn btn-xs btn-primary">{{ 'update'|trans({}, 'icap_portfolio') }}</a>
                                 <button type="button" class="btn btn-xs btn-primary dropdown-toggle" data-toggle="dropdown">
                                     <span class="caret"></span>
                                     <span class="sr-only">Toggle Dropdown</span>
@@ -69,7 +69,7 @@
                                     <li>
                                         <a href="{{ path('icap_portfolio_delete', {'id': portfolio.id}) }}" class="delete"
                                                  data-confirm-title="{{ 'portfolio_deletion_confirm_title'|trans({}, 'icap_portfolio') }}"
-                                                 data-confirm-message="{{ 'portfolio_deletion_confirm_message'|trans({'%portfolioName%': portfolio.title}, 'icap_portfolio') }}"
+                                                 data-confirm-message="{{ 'portfolio_deletion_confirm_message'|trans({'%portfolioName%': portfolio.widgets.0.title}, 'icap_portfolio') }}"
                                                  data-confirm-ok="{{ 'delete'|trans({}, 'platform') }}"
                                                  data-confirm-cancel="{{ 'cancel'|trans({}, 'platform') }}" data-toggle="tooltip"
                                                  data-container="body" title="{{ 'delete'|trans({}, 'platform') }}" data-placement="top"

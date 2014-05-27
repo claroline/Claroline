@@ -27,7 +27,7 @@ class TitleType extends AbstractType
     {
         $resolver->setDefaults(
             array(
-                'data_class'         => 'Icap\PortfolioBundle\Entity\Portfolio',
+                'data_class'         => 'Icap\PortfolioBundle\Entity\Widget\TitleWidget',
                 'translation_domain' => 'icap_portfolio',
                 'csrf_protection'    => false,
             )
