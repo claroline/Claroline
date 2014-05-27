@@ -99,6 +99,8 @@ class DropzoneManager
      *  6 : Waiting for correction
      *  7 : copy corrected, Evaluation End.     *
      *
+     * WARNING : if a drop has the 'unlockedDrop' property, it will make the drop being at the last state.
+     *
      *  currentstate : index of the current state  in the stateArray
      *  percent : rounded progress in percent
      *  nbCorrection : corrections made by the user in this evaluation.
@@ -136,6 +138,7 @@ class DropzoneManager
      *  6 : Waiting for correction
      *  7 : copy corrected, Evaluation End.
      *
+     * WARNING : if a drop has the 'unlockedDrop' property, it will make the drop being at the last state.
      *  currentstate : index of the current state  in the stateArray
      *  percent : rounded progress in percent
      *  nbCorrection : corrections made by the user in this evaluation.
@@ -171,10 +174,10 @@ class DropzoneManager
              *  so we make a hack to allow them to see their note and simulate that
              *  they did the expected corrections.
             */
-            $allow_user_to_not_have_expected_corrections = $this->isPeerReviewEndedOrManualStateFinished($dropzone,$nbCorrection);
+            $allow_user_to_not_have_expected_corrections = $this->isPeerReviewEndedOrManualStateFinished($dropzone, $nbCorrection);
             /* --------------------- SPECIAL CASE  END ------------------------------*/
 
-            if(!$allow_user_to_not_have_expected_corrections) {
+            if (!$allow_user_to_not_have_expected_corrections && !$drop->isUnlockedDrop()) {
                 for ($i = 0; $i < $expectedCorrections; $i++) {
                     array_push($states, 'correction n°%nb_correction%/%expected_correction%');
                 }
@@ -197,11 +200,13 @@ class DropzoneManager
                 }
 
 
-                if(!$allow_user_to_not_have_expected_corrections) {
+                if (!$allow_user_to_not_have_expected_corrections && !$drop->isUnlockedDrop()) {
                     $currentState += $nbCorrection;
                     if ($nbCorrection >= $expectedCorrections) {
                         $currentState++;
                     }
+                } else {
+                    $currentState++;
                 }
 
                 if ($drop->countFinishedCorrections() >= $expectedCorrections) {
@@ -209,7 +214,10 @@ class DropzoneManager
                     if($allow_user_to_not_have_expected_corrections){
                         $currentState++;
                     }
+                } else if ($drop->isUnlockedDrop()) {
+                    $currentState++;
                 }
+
 
             }
         } else {
