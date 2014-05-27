@@ -159,7 +159,7 @@ class PortfolioController extends Controller
         }
 
         $widgetsConfig       = $this->getWidgetsManager()->getWidgetsConfig();
-        $response            = new Response($this->renderView('IcapPortfolioBundle:Portfolio:view.html.twig', array('title' => $titleWidget->getTitle(), 'portfolio' => $portfolio, 'editMode' => $editMode, 'widgetsConfig' => $widgetsConfig)));
+        $response            = new Response($this->renderView('IcapPortfolioBundle:Portfolio:view.html.twig', array('titleWidget' => $titleWidget, 'portfolio' => $portfolio, 'editMode' => $editMode, 'widgetsConfig' => $widgetsConfig)));
         $portfolioVisibility = $portfolio->getVisibility();
 
         if ($user !== $portfolio->getUser()) {
