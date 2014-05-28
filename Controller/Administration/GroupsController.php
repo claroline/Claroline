@@ -394,7 +394,10 @@ class GroupsController extends Controller
     public function settingsFormAction(Group $group)
     {
         $this->checkOpen();
-        $form = $this->formFactory->create(FormFactory::TYPE_GROUP_SETTINGS, array(), $group);
+        $role = $this->roleManager->getRoleByName('ROLE_WS_CREATOR');
+        $this->roleManager->validateRoleInsert($group, $role);
+        $isAdmin = ($this->sc->isGranted('ROLE_ADMIN')) ? true: false;
+        $form = $this->formFactory->create(FormFactory::TYPE_GROUP_SETTINGS, array('isAdmin' => $isAdmin), $group);
 
         return array(
             'group' => $group,
@@ -421,7 +424,8 @@ class GroupsController extends Controller
     {
         $this->checkOpen();
         $oldPlatformRoleTransactionKey = $group->getPlatformRole()->getTranslationKey();
-        $form = $this->formFactory->create(FormFactory::TYPE_GROUP_SETTINGS, array(), $group);
+        $isAdmin = ($this->sc->isGranted('ROLE_ADMIN')) ? true: false;
+        $form = $this->formFactory->create(FormFactory::TYPE_GROUP_SETTINGS, array('isAdmin' => $isAdmin), $group);
         $form->handleRequest($this->request);
 
         if ($form->isValid()) {

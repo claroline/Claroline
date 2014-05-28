@@ -18,9 +18,17 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 class GroupSettingsType extends GroupType
 {
+    private $isAdmin;
+
+    public function __construct($isAdmin)
+    {
+        $this->isAdmin = $isAdmin;
+    }
+
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         parent::buildForm($builder, $options);
+        $isAdmin = $this->isAdmin;
         $builder->add(
             'platformRole', 'entity', array(
                 'class' => 'Claroline\CoreBundle\Entity\Role',
@@ -28,10 +36,16 @@ class GroupSettingsType extends GroupType
                 'multiple' => false,
                 'property' => 'translationKey',
                 'disabled' => false,
-                'query_builder' => function (\Doctrine\ORM\EntityRepository $er) {
-                    return $er->createQueryBuilder('r')
-                            ->where("r.type != " . Role::WS_ROLE)
-                            ->andWhere("r.name != 'ROLE_ANONYMOUS'");
+                'query_builder' => function (\Doctrine\ORM\EntityRepository $er) use ($isAdmin){
+                    $query = $er->createQueryBuilder('r')
+                        ->where("r.type != " . Role::WS_ROLE)
+                        ->andWhere("r.name != 'ROLE_ANONYMOUS'");
+
+                    if (!$isAdmin) {
+                        $query->andWhere("r.name != 'ROLE_ADMIN'");
+                    }
+
+                    return $query;
                 }
             )
         );

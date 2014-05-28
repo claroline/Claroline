@@ -739,3 +739,5 @@ ws_most_viewed: 'Espacio de trabajo mas visto'
 yes: 'Si'
 yesterday_activity: 'Actividades de ayer'
 your_username: 'Su nombre de usuario es '
+closed_account: Cuenta cerrada.
+list_role: Lista de roles

@@ -284,6 +284,13 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
      */
     protected $publicProfilePreferences;
 
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="expiration_date", type="datetime")
+     */
+    protected $expirationDate;
+
     public function __construct()
     {
         parent::__construct();
@@ -843,7 +850,12 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
 
     public function isAccountNonExpired()
     {
-        return true;
+        foreach ($this->getRoles() as $role) {
+            if ($role === 'ROLE_ADMIN') {
+                return true;
+            }
+        }
+        return ($this->expirationDate >= new \DateTime()) ? true: false;
     }
 
     public function isAccountNonLocked()
@@ -954,5 +966,15 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
         if (preg_match("/\s/", $this->getPublicUrl())) {
             $context->addViolationAt('publicUrl', 'public_profile_url_not_valid', array(), null);
         }
+    }
+
+    public function setExpirationDate($expirationDate)
+    {
+        $this->expirationDate = $expirationDate;
+    }
+
+    public function getExpirationDate()
+    {
+        return $this->expirationDate;
     }
 }

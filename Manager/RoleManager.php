@@ -142,11 +142,17 @@ class RoleManager
 
     /**
      * @param \Claroline\CoreBundle\Entity\AbstractRoleSubject $ars
-     * @param string                                           $roleName
+     * @param string $roleName
+     * @throws \Exception
      */
     public function setRoleToRoleSubject(AbstractRoleSubject $ars, $roleName)
     {
         $role = $this->roleRepo->findOneBy(array('name' => $roleName));
+        $validated = $this->validateRoleInsert($ars, $role);
+
+        if (!$validated) {
+            throw new Exception\AddRoleException();
+        }
 
         if (!is_null($role)) {
             $ars->addRole($role);
@@ -664,5 +670,23 @@ class RoleManager
         $role->setType(Role::PLATFORM_ROLE);
         $this->om->persist($role);
         $this->om->flush();
+    }
+
+    public function validateRoleInsert(AbstractRoleSubject $ars, Role $role)
+    {
+        $total = $this->om->getRepository('ClarolineCoreBundle:User')->countUsersByRoleIncludingGroup($role);
+
+        if (get_class($ars) === 'Claroline\CoreBundle\Entity\User') {
+            return ($total < $role->getMaxUsers()) ? true: false;
+        }
+
+        if (get_class($ars) === 'Claroline\CoreBundle\Entity\Group') {
+            $countUsers = $this->userRepo->countUsersOfGroup($ars);
+            $substractUsers = $this->userRepo->countUsersOfGroupByRole($ars, $role);
+
+            var_dump($substractUsers);
+
+            return (($total + $countUsers - $substractUsers) < $role->getMaxUsers()) ? true: false;
+        }
     }
 }

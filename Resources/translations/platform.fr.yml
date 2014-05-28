@@ -805,3 +805,6 @@ yes: oui
 yesterday_activity: 'Activité de la veille'
 your_current_url: 'Votre URL actuelle'
 your_username: 'Votre nom d''utilisateur est '
+closed_account: Compte clos
+role_list: Liste des roles
+unavailable_role: The role %translationKey% is not available

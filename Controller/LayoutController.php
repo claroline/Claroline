@@ -17,6 +17,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Translation\Translator;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
+use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Library\Security\Utilities;
 use Claroline\CoreBundle\Manager\MessageManager;
@@ -151,7 +152,13 @@ class LayoutController extends Controller
         } else {
             $workspaces = $this->workspaceManager->getWorkspacesByAnonymous();
 
-            if (true === $this->configHandler->getParameter('allow_self_registration')) {
+            if (true === $this->configHandler->getParameter('allow_self_registration') &&
+                $this->roleManager->validateRoleInsert(
+                    new User(),
+                    $this->roleManager->getRoleByName('ROLE_USER'
+                    )
+                )
+            ) {
                 $registerTarget = 'claro_registration_user_registration_form';
             }
 

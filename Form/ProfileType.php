@@ -46,6 +46,7 @@ class ProfileType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        var_dump(count($this->platformRoles));
         parent::buildForm($builder, $options);
 
         $builder

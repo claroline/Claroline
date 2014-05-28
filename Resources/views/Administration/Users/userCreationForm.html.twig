@@ -31,7 +31,9 @@
             {% if error is not empty %}
                 <div class="alert alert-warning"> {{ error|trans({}, 'platform') }} </div>
             {% endif %}
-
+            {% for role in unavailableRoles %}
+                <div class="alert alert-warning"> {{ 'unavailable_role'|trans({'%translationKey%': role}, 'platform') }}</div>
+            {% endfor %}
             {{ form_widget(form_complete_user) }}
         </div>
         <div class="panel-footer">

@@ -805,3 +805,6 @@ yes: yes
 yesterday_activity: 'Yesterday''s activity'
 your_current_url: 'Your current URL'
 your_username: 'Your username is '
+closed_account: Closed account
+list_role: Role list
+unavailable_role: The role %translationKey% is not available

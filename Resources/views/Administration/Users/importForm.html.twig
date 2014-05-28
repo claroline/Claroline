@@ -30,6 +30,11 @@
         <div class="panel-body">
             <div>{{ macros.flashBox() }}</div>
             <div class="well">
+                {% if error %}
+                    <div class="alert alert-danger">
+                        {{ 'unavailable_role'|trans({'%translationKey%': 'user'}, 'platform') }}
+                    </div>
+                {% endif %}
                 <p>
                     <b>{{ 'csv_users_import_infos'|trans({}, 'platform') }}</b>
                 </p>

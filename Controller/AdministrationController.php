@@ -30,18 +30,21 @@ class AdministrationController extends Controller
      * @DI\InjectParams({
      *     "eventDispatcher" = @DI\Inject("claroline.event.event_dispatcher"),
      *     "toolManager"     = @DI\Inject("claroline.manager.tool_manager"),
-     *     "sc"              = @DI\Inject("security.context")
+     *     "sc"              = @DI\Inject("security.context"),
+     *     "container"       = @DI\Inject("service_container")
      * })
      */
     public function __construct(
         StrictDispatcher $eventDispatcher,
         ToolManager $toolManager,
-        SecurityContextInterface $sc
+        SecurityContextInterface $sc,
+        $container
     )
     {
         $this->eventDispatcher = $eventDispatcher;
         $this->toolManager = $toolManager;
         $this->sc = $sc;
+        $this->container = $container;
     }
 
     /**
@@ -59,6 +62,8 @@ class AdministrationController extends Controller
     public function indexAction()
     {
         $tools = $this->toolManager->getAdminToolsByRoles($this->sc->getToken()->getRoles());
+//        var_dump($this->container->getParameter('security.user_checker.class'));
+//        throw new \Exception();
 
         if (count($tools) === 0) {
             throw new AccessDeniedException();
