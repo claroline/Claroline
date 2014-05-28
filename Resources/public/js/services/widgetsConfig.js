@@ -6,6 +6,9 @@ portfolioApp
             config: JSON.parse(window.widgetsConfig),
             getTypes: function() {
                 return Object.keys(this.config);
+            },
+            isDeletable: function(widgetType) {
+                return this.config[widgetType].isDeletable
             }
         };
     }]);

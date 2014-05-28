@@ -6,25 +6,31 @@
     <div id="portfolio-section" data-portfolio-container="{{ portfolio.id }}">
         {% if editMode %}
             <ul id="configbar" class="list-unstyled">
-                <li class="configbar-item">
+                <li class="configbar-item" data-ng-click="createWidget('userInformation')">
                     <span class="icon-plus"></span>
-                    Contenu
+                    userInformation
                 </li>
-                <li class="configbar-item"><span class="icon-cogs"></span>
-                    Paramètres
+                <li class="configbar-item" data-ng-click="createWidget('links')">
+                    <span class="icon-plus"></span>
+                    links
+                </li>
+                <li class="configbar-item" data-ng-click="createWidget('skills')">
+                    <span class="icon-plus"></span>
+                    skills
                 </li>
             </ul>
         {% endif %}
 
-        <div id="portfolio-container" data-ng-show="portfolio.$resolved">
+        <div id="portfolio-container" data-ng-if="portfolio.$resolved">
             <header>
                 <div class="container">
                     <h1 id="username">{{ portfolio.user.firstName ~ ' ' ~ portfolio.user.lastName }}</h1>
                     <div data-widget-portlet="title" data-ng-show="widgets.length > 0">
                         <div class="portfolio-title-container" data-ng-repeat="widget in widgets">
                             {% if editMode %}
-                                <div class="portfolio-title-actions">
-                                    <button class="portfolio-title-edit-action btn" data-ng-click="edit(widget);" data-ng-show="!widget.isEditing()"><span class="icon-pencil"></span></button>
+                                <div class="widget-actions">
+                                    <button class="widget-action btn" data-ng-click="delete(widget);" data-ng-if="isDeletable(widget)"><span class="icon-trash"></span></button>
+                                    <button class="widget-action btn" data-ng-click="edit(widget);" data-ng-if="!widget.isEditing()"><span class="icon-pencil"></span></button>
                                 </div>
                                 <div data-ng-bind-html="widget.views.view | trustAsHtml"></div>
                             {% else %}
@@ -36,7 +42,66 @@
             </header>
 
             <section class="container">
-                Content container.
+                <div data-widget-portlet="userInformation" data-ng-show="widgets.length > 0">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            userInformation
+                        </div>
+                        <div class="panel-body">
+                            <div data-ng-repeat="widget in widgets">
+                                {% if editMode %}
+                                    <div class="widget-actions">
+                                        <button class="widget-action btn" data-ng-click="delete(widget);" data-ng-if="isDeletable(widget)"><span class="icon-trash"></span></button>
+                                        <button class="widget-action btn" data-ng-click="edit(widget);" data-ng-if="!widget.isEditing()"><span class="icon-pencil"></span></button>
+                                    </div>
+                                    <div data-ng-bind-html="widget.views.view | trustAsHtml"></div>
+                                {% else %}
+                                    {% include 'IcapPortfolioBundle:templates:userInformation.html.twig' with {'widget': userInformationWidget} only %}
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div data-widget-portlet="links" data-ng-show="widgets.length > 0">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            links
+                        </div>
+                        <div class="panel-body">
+                            <div data-ng-repeat="widget in widgets">
+                                {% if editMode %}
+                                    <div class="widget-actions">
+                                        <button class="widget-action btn" data-ng-click="delete(widget);" data-ng-if="isDeletable(widget)"><span class="icon-trash"></span></button>
+                                        <button class="widget-action btn" data-ng-click="edit(widget);" data-ng-if="!widget.isEditing()"><span class="icon-pencil"></span></button>
+                                    </div>
+                                    <div data-ng-bind-html="widget.views.view | trustAsHtml"></div>
+                                {% else %}
+                                    {% include 'IcapPortfolioBundle:templates:links.html.twig' with {'widget': linksWidget} only %}
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div data-widget-portlet="skills" data-ng-show="widgets.length > 0">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            skills
+                        </div>
+                        <div class="panel-body">
+                            <div data-ng-repeat="widget in widgets">
+                                {% if editMode %}
+                                    <div class="widget-actions">
+                                        <button class="widget-action btn" data-ng-click="delete(widget);" data-ng-show="isDeletable(widget)"><span class="icon-trash"></span></button>
+                                        <button class="widget-action btn" data-ng-click="edit(widget);" data-ng-show="!widget.isEditing()"><span class="icon-pencil"></span></button>
+                                    </div>
+                                    <div data-ng-bind-html="widget.views.view | trustAsHtml"></div>
+                                {% else %}
+                                    {% include 'IcapPortfolioBundle:templates:links.html.twig' with {'widget': linksWidget} only %}
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </section>
         </div>
 

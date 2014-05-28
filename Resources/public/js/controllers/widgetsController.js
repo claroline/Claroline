@@ -6,6 +6,7 @@ portfolioApp
         $scope.widgets = [];
 
         $scope.$watch("widgetPortlets." + $scope.type, function(data) {
+            console.log(data);
             if (data) {
                 $scope.widgets = data;
             }
@@ -13,5 +14,9 @@ portfolioApp
 
         $scope.edit = function(widget) {
             widgetsManager.edit(widget);
+        };
+
+        $scope.isDeletable = function(widget) {
+            return widgetsManager.isDeletable(widget);
         };
     }]);

@@ -1,7 +1,7 @@
 'use strict';
 
 portfolioApp
-    .factory("widgetsManager", ["$http", "widgetsConfig", function($http, widgetsConfig){
+    .factory("widgetsManager", ["$http", "widgetsConfig", "widgetFactory", function($http, widgetsConfig, widgetFactory){
         return {
             widgets: [],
             forms:   [],
@@ -51,6 +51,24 @@ portfolioApp
                     console.log(error);
                 }
                 return widget.$save(success, failed);
+            },
+            create: function(portfolioId, type) {
+                var istypeUnique = widgetsConfig.config[type].isUnique;
+                if (istypeUnique && 0 < this.widgets[type].length) {
+                    this.edit(this.widgets[type][0]);
+                }
+                else {
+                    var newWidget = widgetFactory.getResource(portfolioId, type);
+                    if (istypeUnique) {
+                        this.widgets[type] = [new newWidget()];
+                    }
+                    else {
+                        this.widgets[type].push(new newWidget());
+                    }
+                }
+            },
+            isDeletable: function(widget) {
+                return widgetsConfig.isDeletable(widget.getType());
             }
         };
     }]);
