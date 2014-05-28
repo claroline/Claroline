@@ -91,7 +91,6 @@ class Manager
         MailManager $mailManager,
         ContainerInterface $container,
         SecurityContextInterface $sc
-
     )
     {
         $this->om = $om;
