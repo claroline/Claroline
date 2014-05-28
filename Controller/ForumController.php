@@ -882,7 +882,7 @@ class ForumController extends Controller
      *
      * @param Subject $subject
      */
-    public function closedSubjectAction(Subject $subject)
+    public function closeSubjectAction(Subject $subject)
     {
         $forum = $subject->getCategory()->getForum();
         $this->checkAccess($forum);

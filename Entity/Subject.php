@@ -83,7 +83,7 @@ class Subject
     /**
      * @ORM\Column(type="boolean")
      */
-    protected $isClosed = true;
+    protected $isClosed = false;
 
     /**
      * Constructor.
@@ -179,7 +179,7 @@ class Subject
         $this->isClosed = $isClosed;
     }
 
-    public function getIsClosed()
+    public function isClosed()
     {
         return $this->isClosed;
     }
