@@ -14,6 +14,7 @@ namespace Claroline\ForumBundle\Transfert;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Claroline\CoreBundle\Library\Transfert\Importer;
+use Claroline\CoreBundle\Library\Transfert\RichTextInterface;
 use Symfony\Component\Config\Definition\Processor;
 use JMS\DiExtraBundle\Annotation as DI;
 use Claroline\ForumBundle\Entity\Forum;
@@ -115,9 +116,13 @@ class ForumImporter extends Importer implements ConfigurationInterface
                 $subjectEntity = new Subject();
                 $subjectEntity->setTitle($subject['subject']['name']);
 
+                $creator = null;
+
                 if ($subject['subject']['creator'] !== null) {
                     $creator = $repo->findOneByUsername($subject['subject']['creator']);
-                } else {
+                }
+
+                if ($creator === null) {
                     $creator = $this->container->get('security.context')->getToken()->getUser();
                 }
 
@@ -132,9 +137,13 @@ class ForumImporter extends Importer implements ConfigurationInterface
 
                     $messageEntity->setContent($content);
 
+                    $creator = null;
+
                     if ($message['message']['creator'] !== null) {
                         $creator = $repo->findOneByUsername($message['message']['creator']);
-                    } else {
+                    }
+
+                    if ($creator === null) {
                         $creator = $this->container->get('security.context')->getToken()->getUser();
                     }
 

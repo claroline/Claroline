@@ -9,7 +9,7 @@ forum: Foro
 forum_category_edit: 'Editar una categoría'
 forum_form_name: Nombre
 forum_message_form_content: Cotenido
-forum_new_message: 'Un nuevo mensaje fue agregada en tema "%subject%", en el foro "%forum%"'.
+forum_new_message: 'Un nuevo mensaje fue agregada en tema "%subject%", en el foro "%forum%"'
 forum_options_form_messages: 'Mensajes por página'
 forum_options_form_subjects: 'Temas por página'
 forum_settings: 'Configuración del foro'
