@@ -159,6 +159,11 @@ class ResourceManager
         $node->setName($name);
         $node->setPrevious($previous);
         $node->setClass(get_class($resource));
+
+        if (!is_null($parent)) {
+            $node->setAccessibleFrom($parent->getAccessibleFrom());
+            $node->setAccessibleTo($parent->getAccessibleTo());
+        }
         $resource->setResourceNode($node);
         $this->setRights($node, $parent, $rights);
         $this->om->persist($node);
