@@ -145,7 +145,7 @@ Save criterion: 'Sauvegarder le critère'
 Are you sure you want to delete the %number%: 'Êtes vous sûr de vouloir supprimer le critère #%number%'
 There are no evaluation criterion: 'Aucun critère d''évaluation'
 noCopyExpectedCorrection: "one: Aucune copie n'est evaluée.|some: Aucune copie n'a reçu les %count% corrections attendues."
-No copy was made: "Aucune copie n'a été rendu"
+No copy was made: "Aucune copie n'a été rendue"
 Evaluation finished: 'Evaluation terminée'
 Keep this correction scored zero: 'Conserver la correction notée zéro'
 Invalidate this correction: 'Invalider la correction'
@@ -298,3 +298,4 @@ You need at least one correction on the copy to unlock it: "Il faut au moins une
 Allow student to see his copy whereas the copy didn't received the expected number of correction.: "Faire que l'étudiant puisse voir sa copie même si celle ci n'as pas reçue le nombre de correction requis."
 Drop have been unlocked: 'La copie a été débloquée'
 This copy has been unlocked by admin.(it did not received the expected number of correction):  "Cette copie à été débloquée par un administrateur. ( Elle n'a pas reçu le nombre de corrections attendues )."
+No copy waiting for correction: 'Aucune copie en attente de correction'
