@@ -177,7 +177,7 @@ class DropzoneManager
             $allow_user_to_not_have_expected_corrections = $this->isPeerReviewEndedOrManualStateFinished($dropzone, $nbCorrection);
             /* --------------------- SPECIAL CASE  END ------------------------------*/
 
-            if (!$allow_user_to_not_have_expected_corrections && !$drop->isUnlockedDrop()) {
+            if (!$allow_user_to_not_have_expected_corrections && $drop != null && !$drop->isUnlockedDrop()) {
                 for ($i = 0; $i < $expectedCorrections; $i++) {
                     array_push($states, 'correction n°%nb_correction%/%expected_correction%');
                 }
