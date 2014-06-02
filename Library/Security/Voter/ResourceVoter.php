@@ -187,18 +187,28 @@ class ResourceVoter implements VoterInterface
         $action = strtolower($action);
 
         foreach ($nodes as $node) {
-            $mask = $this->repository->findMaximumRights($this->ut->getRoles($token), $node);
-            $type = $node->getResourceType();
-            $decoder = $this->maskManager->getDecoder($type, $action);
+            $accessibleFrom = $node->getAccessibleFrom();
+            $accessibleTo = $node->getAccessibleTo();
+            $currentDate = new \DateTime();
 
-            //gotta check
-            if (!$decoder) {
-                return array('The permission ' . $action . ' does not exists for the type ' . $type->getName());
-            }
+            if ((is_null($accessibleFrom) || $currentDate >= $accessibleFrom)
+                && (is_null($accessibleTo) || $currentDate <= $accessibleTo)) {
 
-            $grant = $decoder ? $mask & $decoder->getValue(): 0;
+                $mask = $this->repository->findMaximumRights($this->ut->getRoles($token), $node);
+                $type = $node->getResourceType();
+                $decoder = $this->maskManager->getDecoder($type, $action);
 
-            if ($decoder && $grant === 0) {
+                //gotta check
+                if (!$decoder) {
+                    return array('The permission ' . $action . ' does not exists for the type ' . $type->getName());
+                }
+
+                $grant = $decoder ? $mask & $decoder->getValue(): 0;
+
+                if ($decoder && $grant === 0) {
+                    $errors[] = $this->getRoleActionDeniedMessage($action, $node->getPathForDisplay());
+                }
+            } else {
                 $errors[] = $this->getRoleActionDeniedMessage($action, $node->getPathForDisplay());
             }
         }

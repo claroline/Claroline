@@ -1419,4 +1419,30 @@ class ResourceManager
         return in_array($managerRoleName, $this->secut->getRoles($token)) ? true: false;
 
     }
+
+    /**
+     * Retrieves all descendants of given ResourceNode and updates their
+     * accessibility dates.
+     *
+     * @param ResourceNode $node A directory
+     * @param datetime $accessibleFrom
+     * @param datetime $accessibleTo
+     */
+    public function changeAccessibilityDate(
+        ResourceNode $node,
+        $accessibleFrom,
+        $accessibleTo
+    )
+    {
+        if ($node->getResourceType()->getName() === 'directory') {
+            $descendants = $this->resourceNodeRepo->findDescendants($node);
+
+            foreach ($descendants as $descendant) {
+                $descendant->setAccessibleFrom($accessibleFrom);
+                $descendant->setAccessibleTo($accessibleTo);
+                $this->om->persist($descendant);
+            }
+            $this->om->flush();
+        }
+    }
 }

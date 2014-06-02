@@ -116,6 +116,7 @@ class ResourceNodeRepository extends MaterializedPathRepository
         } else {
             $builder->selectAsArray(true)
                 ->whereParentIs($parent)
+                ->whereNodeIsAccessible()
                 ->whereHasRoleIn($roles);
 
             $query = $this->_em->createQuery($builder->getDql());

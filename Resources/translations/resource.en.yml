@@ -13,6 +13,8 @@ open: Open
 open-tracking: 'View tracking'
 rename: Rename
 resource_name_form_name: 'Resource name'
+resource_properties_form_accessibleFrom: 'Accessible from'
+resource_properties_form_accessibleTo: 'Accessible from'
 resource_properties_form_copiable: Copy
 resource_properties_form_creationDate: 'Creation Date'
 resource_properties_form_creator: Creator

@@ -377,6 +377,31 @@ class ResourceQueryBuilder
     }
 
     /**
+     * Filters nodes that are accessible depending on access date.
+     *
+     * @return ResourceQueryBuilder
+     */
+    public function whereNodeIsAccessible()
+    {
+        $eol = PHP_EOL;
+        $currentDate = new \DateTime();
+
+        $clause = "{$eol}({$eol}";
+        $clause .= "node.accessibleFrom IS NULL{$eol}";
+        $clause .= "OR{$eol}";
+        $clause .= "node.accessibleFrom <= :currentdate{$eol}";
+        $clause .= "){$eol}AND{$eol}({$eol}";
+        $clause .= "node.accessibleTo IS NULL{$eol}";
+        $clause .= "OR{$eol}";
+        $clause .= "node.accessibleTo >= :currentdate{$eol}";
+        $clause .= "){$eol}";
+        $this->parameters[':currentdate'] = $currentDate->format('Y-m-d H:i:s');
+        $this->addWhereClause($clause);
+
+        return $this;
+    }
+
+    /**
      * Orders nodes by path.
      *
      * @return Claroline\CoreBundle\Repository\ResourceQueryBuilder

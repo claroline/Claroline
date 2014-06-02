@@ -184,6 +184,16 @@ class ResourceNode
      */
     protected $class;
 
+    /**
+     * @ORM\Column(name="accessible_from", type="datetime", nullable=true)
+     */
+    protected $accessibleFrom;
+
+    /**
+     * @ORM\Column(name="accessible_to", type="datetime", nullable=true)
+     */
+    protected $accessibleTo;
+
     private $pathForCreationLog = '';
 
     public function __construct()
@@ -502,6 +512,25 @@ class ResourceNode
     public function setClass($class)
     {
         $this->class = $class;
+    }
+    public function getAccessibleFrom()
+    {
+        return $this->accessibleFrom;
+    }
+
+    public function setAccessibleFrom($accessibleFrom)
+    {
+        $this->accessibleFrom = $accessibleFrom;
+    }
+
+    public function getAccessibleTo()
+    {
+        return $this->accessibleTo;
+    }
+
+    public function setAccessibleTo($accessibleTo)
+    {
+        $this->accessibleTo = $accessibleTo;
     }
 
     /**
