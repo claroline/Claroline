@@ -245,8 +245,8 @@ peerReview: ' correction par les pairs '
 finished :  ' Evaluations terminée'
 user : ' Utilisateur'
 tools: ' Outils'
-fully corrected copies: 'Copies dont l''évaluation est terminée'
-Awaiting for correction copies: 'Copies en attente de correction(s)'
+fully corrected copies: 'Copies terminées dont l''évaluation est complète'
+Awaiting for correction copies: 'Copies terminées en attente de correction(s)'
 revalidate: 'revalider'
 Need to be the author: 'Vous devez être l''auteur de la correction pour effectuer cette action'
 sort by reported: 'Signalées'
@@ -301,3 +301,4 @@ This copy has been unlocked by admin.(it did not received the expected number of
 No copy waiting for correction: 'Aucune copie en attente de correction'
 Notify on drop: "Nofifier les administrateurs de l'évaluation quand quelqu'un dépose une copie."
 Notifications: "Notifications"
+unterminated drops: 'copie(s) non terminée(s)'
