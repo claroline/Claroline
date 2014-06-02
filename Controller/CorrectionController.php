@@ -1464,6 +1464,7 @@ class CorrectionController extends DropzoneBaseController
 
         //getting the repos
         $dropRepo = $this->getDoctrine()->getManager()->getRepository('IcapDropzoneBundle:Drop');
+        $countUnterminatedDrops = $dropRepo->countUnterminatedDropsByDropzone($dropzone->getId());
         $correctionRepo = $this->getDoctrine()->getManager()->getRepository('IcapDropzoneBundle:Correction');
         
         // getting the Query of  users that have at least one correction.
@@ -1504,6 +1505,7 @@ class CorrectionController extends DropzoneBaseController
             'usersAndCorrectionCount' => $usersAndCorrectionCount,
             'nbDropCorrected' =>  $dropRepo->countDropsFullyCorrected($dropzone),
             'nbDrop' =>$dropRepo->countDrops($dropzone),
+            'unterminated_drops' => $countUnterminatedDrops,
             'pager' => $pager
             );
        

@@ -11,6 +11,10 @@
             {{ 'List of copies'|trans({}, 'icap_dropzone') }}
             <a class=" btn btn-default pull-right" href="{{ path('icap_dropzone_edit', {'resourceId': dropzone.id}) }}"><span class="glyphicon icon-edit"></span> {{ 'Edit evaluation'|trans({}, 'icap_dropzone') }}</a>
         </h2>
+
+        {% if unterminated_drops is defined %}
+            <p>{{ unterminated_drops }} copies non terminées.</p>
+        {% endif %}
         {{ macros.flashBox() }}
 
         {% block dropzone_content_drops %}
