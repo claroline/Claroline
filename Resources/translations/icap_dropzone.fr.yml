@@ -298,5 +298,6 @@ You need at least one correction on the copy to unlock it: "Il faut au moins une
 Allow student to see his copy whereas the copy didn't received the expected number of correction.: "Faire que l'étudiant puisse voir sa copie même si celle ci n'as pas reçue le nombre de correction requis."
 Drop have been unlocked: 'La copie a été débloquée'
 This copy has been unlocked by admin.(it did not received the expected number of correction):  "Cette copie à été débloquée par un administrateur. ( Elle n'a pas reçu le nombre de corrections attendues )."
-No copy waiting for correction: 'Aucune copie en attente de correction'Notify on drop: "Nofifier les administrateurs de l'évaluation quand quelqu'un dépose une copie."
+No copy waiting for correction: 'Aucune copie en attente de correction'
+Notify on drop: "Nofifier les administrateurs de l'évaluation quand quelqu'un dépose une copie."
 Notifications: "Notifications"
