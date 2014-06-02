@@ -562,4 +562,31 @@ class WorkspaceRepository extends EntityRepository
 
         return $query->getSingleScalarResult();
     }
+
+    /**
+     * Returns the workspaces accessible by one of the given roles.
+     *
+     * @param array[string] $roleNames
+     *
+     * @return array[AbstractWorkspace]
+     */
+    public function findMyWorkspacesByRoleNames(array $roleNames)
+    {
+        $dql = '
+            SELECT DISTINCT w
+            FROM Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace w
+            WHERE w IN (
+                SELECT rw.id
+                FROM Claroline\CoreBundle\Entity\Role r
+                JOIN Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace rw
+                WHERE r.name IN (:roleNames)
+            )
+            ORDER BY w.name ASC
+        ';
+
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('roleNames', $roleNames);
+
+        return $query->getResult();
+    }
 }
