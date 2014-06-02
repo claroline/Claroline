@@ -283,7 +283,7 @@
     <script type='text/javascript'src='{{ asset('bundles/frontend/jquery/plugin/confirm-bootstrap/confirm-bootstrap.js') }}'></script>
     <script type='text/javascript'src='{{ asset('bundles/icapblog/js/jquery-tree.js') }}'></script>
 
-    {% if blogOptions.isBannerActivate or (false == blogOptions.isBannerActivate and is_granted('EDIT', _resource)) %}
+    {% if (blogOptions.isBannerActivate or false == blogOptions.isBannerActivate) and is_granted('EDIT', _resource) %}
         <script type="text/javascript" src="{{ asset('bundles/frontend/bootstrap-colorpicker/dist/js/bootstrap-colorpicker.js') }}"></script>
         <script type='text/javascript'src='{{ asset('bundles/icapblog/js/banner.js') }}'></script>
     {% endif %}

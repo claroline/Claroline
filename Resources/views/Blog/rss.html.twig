@@ -9,8 +9,8 @@
     >
 <channel>
     <title>{{ feed.title  }}</title>
-    <atom:link href="{{ feed.feedURL }}" rel="self" type="application/rss+xml" />
-    <link>{{ feed.siteURL }}</link>
+    <atom:link href="{{ feed.feedUrl }}" rel="self" type="application/rss+xml" />
+    <link>{{ feed.siteUrl }}</link>
     <description>{{ feed.description|raw }}</description>
     <language>{{ feed.lang }}-{{ feed.lang|upper }}</language>
     {% for item in items %}

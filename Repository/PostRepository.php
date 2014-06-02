@@ -231,7 +231,7 @@ class PostRepository extends EntityRepository
 
             $query
                 ->andWhere('post.publicationDate >= :startDate')
-                ->andWhere('post.publicationDate <= :endDate')
+                ->andWhere('post.publicationDate < :endDate')
                 ->setParameter('startDate', $startDate)
                 ->setParameter('endDate', $endDate);
         }
