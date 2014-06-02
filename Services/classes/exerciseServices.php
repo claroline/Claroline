@@ -201,12 +201,12 @@ class exerciseServices
      * Return the number of papers for an exercise and foran user
      *
      */
-    public function getNbPaper($uid, $exoID)
+    public function getNbPaper($uid, $exoID, $finished = false)
     {
         $papers = $this->doctrine
                        ->getManager()
                        ->getRepository('UJMExoBundle:Paper')
-                       ->getExerciseUserPapers($uid, $exoID);
+                       ->getExerciseUserPapers($uid, $exoID, $finished);
 
         return count($papers);
     }
@@ -822,7 +822,7 @@ class exerciseServices
     {
         if (($exoAdmin != 1) && ($exercise->getMaxAttempts() > 0)
             && ($exercise->getMaxAttempts() <= $this->getNbPaper($user->getId(),
-            $exercise->getId()))
+            $exercise->getId(), true))
         ) {
             return false;
         } else {
