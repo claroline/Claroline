@@ -13,7 +13,7 @@ namespace Claroline\ForumBundle\Installation\Updater;
 
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
-class Updater020220
+class Updater020300
 {
     private $container;
     private $logger;
@@ -32,13 +32,15 @@ class Updater020220
         $forums = $em->getRepository('ClarolineForumBundle:Forum')->findAll();
         
         foreach ($forums as $forum) {
-        	$categories = $forum->getCategory();
+        	$categories = $forum->getCategories();
         	foreach ($categories as $cat) {
-        		$subject = $cat->getSubject();
-        		$subject->isClosed(false);
+        		$subjects = $cat->getSubjects();
+        		foreach ($subjects as $subject) {
+        			$subject->isClosed(false);
+        			}
         		}
             }
-        }
+
         $em->persist($forum);
         $em->flush();
     }
