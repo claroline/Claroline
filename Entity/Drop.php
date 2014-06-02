@@ -19,7 +19,8 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *      @ORM\UniqueConstraint(name="unique_drop_number_in_drop_zone", columns={"drop_zone_id", "number"})
  * })
  */
-class Drop {
+class Drop
+{
     /**
      * @ORM\Id
      * @ORM\Column(type="integer")
@@ -94,6 +95,25 @@ class Drop {
      */
     protected $autoClosedDrop = 0;
 
+
+    /**
+     * @var bool
+     * Used to flag that a copy have been unlocked ( admin made a correction that unlocked the copy:
+     *  the copy doesn't wait anymore the expected number of correction
+     *
+     * @ORM\Column(name="unlocked_drop",type="boolean",nullable=false,options={"default" = false})
+     */
+    protected $unlockedDrop = false;
+
+
+    /**
+     * @var bool
+     * Used to flag that a user have been unlocked ( admin made a correction that unlocked the copy:
+     * the drop author will not need anymore to do the expected number of correction to see his copy.)
+     *
+     * @ORM\Column(name="unlocked_user",type="boolean",nullable=false,options={"default" = false})
+     */
+    protected $unlockedUser = false;
 
 
     public function __construct()
@@ -306,8 +326,8 @@ class Drop {
     {
         $hasDeniedCorrection = false;
         $corrections = $this->getCorrections();
-        foreach($corrections as $correction ) {
-            if($correction->getCorrectionDenied()) {
+        foreach ($corrections as $correction) {
+            if ($correction->getCorrectionDenied()) {
                 $hasDeniedCorrection = true;
                 break;
             }
@@ -327,17 +347,17 @@ class Drop {
         $validCorrectionFound = false;
         foreach ($corrections as $correction) {
             // if an ended  correction (with a endDate value) has not been found
-            if( $validCorrectionFound == false) {
+            if ($validCorrectionFound == false) {
                 // if its a valid correction.
-                if( $correction->getEndDate()!== NULL)  {
+                if ($correction->getEndDate() !== NULL) {
                     // valid correction found, we change the step and keep the date.
                     $date = $correction->getEndDate();
                     $validCorrectionFound = true;
                 }
-            }else {
+            } else {
                 // at least a valid ended  correction has been found ( with an endDate)
                 // date comparaison if $correction endDate is not NULL;
-                if($correction->getEndDate() !== NULL) {
+                if ($correction->getEndDate() !== NULL) {
                     if ($date->getTimestamp() < $correction->getEndDate()->getTimestamp()) {
                         $date = $correction->getEndDate();
                     }
@@ -364,4 +384,37 @@ class Drop {
     {
         return $this->autoClosedDrop;
     }
+
+    /**
+     * @param boolean $unlockedDrop
+     */
+    public function setUnlockedDrop($unlockedDrop)
+    {
+        $this->unlockedDrop = $unlockedDrop;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function isUnlockedDrop()
+    {
+        return $this->unlockedDrop;
+    }
+
+    /**
+     * @param boolean $unlockedUser
+     */
+    public function setUnlockedUser($unlockedUser)
+    {
+        $this->unlockedUser = $unlockedUser;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function getUnlockedUser()
+    {
+        return $this->unlockedUser;
+    }
 }
+

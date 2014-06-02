@@ -12,34 +12,35 @@ use Doctrine\ORM\EntityRepository;
 use Icap\DropzoneBundle\Entity\Drop;
 use Icap\DropzoneBundle\Entity\Dropzone;
 
-class DropRepository extends EntityRepository {
+class DropRepository extends EntityRepository
+{
 
     public function getDropIdNotCorrected($dropzone)
     {
         $query = $this->getEntityManager()->createQuery(
-            "SELECT d.id AS did, c.valid as valid, count(c.id) AS nb_corrections \n".
-            "FROM Icap\\DropzoneBundle\\Entity\\Drop AS d \n".
-            "LEFT OUTER JOIN d.corrections AS c \n".
-            "WHERE d.dropzone = :dropzone \n".
+            "SELECT d.id AS did, c.valid as valid, count(c.id) AS nb_corrections \n" .
+            "FROM Icap\\DropzoneBundle\\Entity\\Drop AS d \n" .
+            "LEFT OUTER JOIN d.corrections AS c \n" .
+            "WHERE d.dropzone = :dropzone and d.unlockedDrop = false \n" .
             "GROUP BY d.id, c.valid")
             ->setParameter('dropzone', $dropzone);
 
         $result = $query->getResult();
 
         $dropIds = array();
-        foreach($result as $line) {
+        foreach ($result as $line) {
             if ($line['valid'] === null) {
                 $dropIds[$line['did']] = 'has no correction';
             }
         }
 
-        foreach($result as $line) {
+        foreach ($result as $line) {
             if ($line['valid'] === false) {
                 $dropIds[$line['did']] = 'has only invalid corrections';
             }
         }
 
-        foreach($result as $line) {
+        foreach ($result as $line) {
             if ($line['valid'] === true) {
                 if ($line['nb_corrections'] >= $dropzone->getExpectedTotalCorrection()) {
                     $dropIds[$line['did']] = 'must be removed';
@@ -51,7 +52,7 @@ class DropRepository extends EntityRepository {
         }
 
         $arrayResult = array();
-        foreach($dropIds as $key => $value) {
+        foreach ($dropIds as $key => $value) {
             $arrayResult[] = $key;
         }
 //        echo('<pre>');
@@ -68,12 +69,12 @@ class DropRepository extends EntityRepository {
     public function getDropIdNotFullyCorrected($dropzone)
     {
         $query = $this->getEntityManager()->createQuery(
-            "SELECT d.id AS did, count(c.id) AS nb_corrections \n".
-            "FROM Icap\\DropzoneBundle\\Entity\\Drop AS d \n".
-            "LEFT OUTER JOIN d.corrections AS c \n".
-            "WHERE d.dropzone = :dropzone \n".
-            "AND c.finished = true \n".
-            "GROUP BY d.id \n".
+            "SELECT d.id AS did, count(c.id) AS nb_corrections \n" .
+            "FROM Icap\\DropzoneBundle\\Entity\\Drop AS d \n" .
+            "LEFT OUTER JOIN d.corrections AS c \n" .
+            "WHERE d.dropzone = :dropzone \n" .
+            "AND c.finished = true \n" .
+            "GROUP BY d.id \n" .
             "HAVING nb_corrections < :expectedTotalCorrection")
             ->setParameter('dropzone', $dropzone)
             ->setParameter('expectedTotalCorrection', $dropzone->getExpectedTotalCorrection());
@@ -81,7 +82,7 @@ class DropRepository extends EntityRepository {
         $result = $query->getResult();
 
         $dropIds = array();
-        foreach($result as $line) {
+        foreach ($result as $line) {
             $dropIds[] = $line['did'];
         }
 
@@ -131,7 +132,7 @@ class DropRepository extends EntityRepository {
             return null;
         }
 
-        $randomIndex = rand(0, (count($possibleIds)-1));
+        $randomIndex = rand(0, (count($possibleIds) - 1));
         $dropId = $possibleIds[$randomIndex];
 
         return $this->find($dropId);
@@ -140,16 +141,16 @@ class DropRepository extends EntityRepository {
     public function getDropIdsFullyCorrectedQuery($dropzone)
     {
         $query = $this->getEntityManager()->createQuery(
-            "SELECT cd.id AS did, count(cd.id) AS nb_corrections, cdd.expectedTotalCorrection \n".
-            "FROM Icap\\DropzoneBundle\\Entity\\Correction AS c \n".
-            "JOIN c.drop AS cd \n".
-            "JOIN cd.dropzone AS cdd \n".
-            "WHERE cdd.id = :dropzoneId \n".
-            "AND c.finished = true \n".
-            "AND c.valid = true \n".
-            "AND cd.finished = true \n".
-            "GROUP BY did \n".
-            "HAVING nb_corrections >= cdd.expectedTotalCorrection")
+            "SELECT cd.id AS did, cd.unlockedDrop as unlcoked, count(cd.id) AS nb_corrections, cdd.expectedTotalCorrection \n" .
+            "FROM Icap\\DropzoneBundle\\Entity\\Correction AS c \n" .
+            "JOIN c.drop AS cd \n" .
+            "JOIN cd.dropzone AS cdd \n" .
+            "WHERE cdd.id = :dropzoneId \n" .
+            "AND c.finished = true \n" .
+            "AND c.valid = true \n" .
+            "AND cd.finished = true \n" .
+            "GROUP BY did \n" .
+            "HAVING (nb_corrections >= cdd.expectedTotalCorrection) OR (unlcoked = true) ")
             ->setParameter('dropzoneId', $dropzone->getId());
 
         return $query;
@@ -163,9 +164,9 @@ class DropRepository extends EntityRepository {
     public function countDrops($dropzone)
     {
         $query = $this->getEntityManager()->createQuery(
-            "SELECT count(d.id) \n".
-            "FROM Icap\\DropzoneBundle\\Entity\\Drop AS d \n".
-            "WHERE d.finished = true \n".
+            "SELECT count(d.id) \n" .
+            "FROM Icap\\DropzoneBundle\\Entity\\Drop AS d \n" .
+            "WHERE d.finished = true \n" .
             "AND d.dropzone = :dropzone \n")
             ->setParameter('dropzone', $dropzone);
         $result = $query->getSingleScalarResult();
@@ -178,7 +179,7 @@ class DropRepository extends EntityRepository {
         $lines = $this->getDropIdsFullyCorrectedQuery($dropzone)->getResult();
 
         $dropIds = array();
-        foreach($lines as $line) {
+        foreach ($lines as $line) {
             $dropIds[] = $line['did'];
         }
 
@@ -201,7 +202,7 @@ class DropRepository extends EntityRepository {
         $lines = $this->getDropIdsFullyCorrectedQuery($dropzone)->getResult();
 
         $dropIds = array();
-        foreach($lines as $line) {
+        foreach ($lines as $line) {
             $dropIds[] = $line['did'];
         }
 
@@ -224,7 +225,7 @@ class DropRepository extends EntityRepository {
         $lines = $this->getDropIdsFullyCorrectedQuery($dropzone)->getResult();
 
         $dropIds = array();
-        foreach($lines as $line) {
+        foreach ($lines as $line) {
             $dropIds[] = $line['did'];
         }
 
@@ -247,7 +248,7 @@ class DropRepository extends EntityRepository {
         $lines = $this->getDropIdsFullyCorrectedQuery($dropzone)->getResult();
 
         $dropIds = array();
-        foreach($lines as $line) {
+        foreach ($lines as $line) {
             $dropIds[] = $line['did'];
         }
 
@@ -267,13 +268,12 @@ class DropRepository extends EntityRepository {
     }
 
 
-
     public function getDropsAwaitingCorrectionQuery($dropzone)
     {
         $lines = $this->getDropIdsFullyCorrectedQuery($dropzone)->getResult();
 
         $dropIds = array();
-        foreach($lines as $line) {
+        foreach ($lines as $line) {
             $dropIds[] = $line['did'];
         }
 
@@ -282,6 +282,7 @@ class DropRepository extends EntityRepository {
             ->select('drop, document, correction, user')
             ->andWhere('drop.dropzone = :dropzone')
             ->andWhere('drop.finished = true')
+            ->andWhere('drop.unlockedDrop = false')
             ->join('drop.user', 'user')
             ->leftJoin('drop.documents', 'document')
             ->leftJoin('drop.corrections', 'correction')
@@ -297,14 +298,14 @@ class DropRepository extends EntityRepository {
         return $qb->getQuery();
     }
 
-    public function getDropIdsByUser($dropzoneId,$userId)
+    public function getDropIdsByUser($dropzoneId, $userId)
     {
         $qb = $this->createQueryBuilder('drop')
             ->select('drop.id')
             ->andWhere('drop.dropzone = :dropzone')
             ->andWhere('drop.user = :user')
-            ->setParameter('dropzone',$dropzoneId)
-            ->setParameter('user',$userId);
+            ->setParameter('dropzone', $dropzoneId)
+            ->setParameter('user', $userId);
         return $qb->getQuery()->getResult()[0];
     }
 
@@ -323,7 +324,7 @@ class DropRepository extends EntityRepository {
         return $qb->getQuery()->getResult()[0];
     }
 
-    public function getDropAndValidEndedCorrectionsAndDocumentsByUser($dropzone,$dropId,$userId)
+    public function getDropAndValidEndedCorrectionsAndDocumentsByUser($dropzone, $dropId, $userId)
     {
 
         $qb = $this->createQueryBuilder('drop')
@@ -345,15 +346,15 @@ class DropRepository extends EntityRepository {
     public function getLastNumber($dropzone)
     {
         $query = $this->getEntityManager()->createQuery(
-            "SELECT max(drop.number) \n".
-            "FROM Icap\\DropzoneBundle\\Entity\\Drop AS drop \n".
+            "SELECT max(drop.number) \n" .
+            "FROM Icap\\DropzoneBundle\\Entity\\Drop AS drop \n" .
             "WHERE drop.dropzone = :dropzone")
             ->setParameter('dropzone', $dropzone);
 
         $result = $query->getSingleScalarResult();
         if ($result == null) {
             return 0;
-        }else {
+        } else {
             return $result;
         }
     }
@@ -365,12 +366,12 @@ class DropRepository extends EntityRepository {
     public function closeUnTerminatedDropsByDropzone($dropzoneId)
     {
         $qb = $this->createQueryBuilder('drop')
-            ->update('Icap\\DropzoneBundle\\Entity\\Drop','d')
-            ->set('d.autoClosedDrop',1)
-            ->set('d.finished',1)
+            ->update('Icap\\DropzoneBundle\\Entity\\Drop', 'd')
+            ->set('d.autoClosedDrop', 1)
+            ->set('d.finished', 1)
             ->andWhere('d.dropzone = :dropzoneId')
             ->andWhere('d.finished = 0')
-            ->setParameter('dropzoneId',$dropzoneId);
+            ->setParameter('dropzoneId', $dropzoneId);
         $qb->getQuery()->execute();
     }
 }
