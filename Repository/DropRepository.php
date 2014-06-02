@@ -360,6 +360,24 @@ class DropRepository extends EntityRepository
     }
 
     /**
+     *  Return the number of unfinished copies ( student didnt click 'save and finish'))
+     * @param $dropzoneId
+     * @return mixed
+     */
+    public function countUnterminatedDropsByDropzone($dropzoneId)
+    {
+        $nb = $this->createQueryBuilder('d')
+            ->select('count(d)')
+            ->andWhere('d.dropzone = :dropzoneId')
+            ->andWhere('d.finished = 0')
+            ->setParameter('dropzoneId', $dropzoneId)
+            ->getQuery()
+            ->getSingleScalarResult();
+        return $nb;
+    }
+
+
+    /**
      *  Close unclosed drops in a dropzone
      * @param $dropzoneId
      */

@@ -193,6 +193,7 @@ class DropController extends DropzoneBaseController
         $dropRepo = $this->getDoctrine()->getManager()->getRepository('IcapDropzoneBundle:Drop');
         $dropsQuery = $dropRepo->getDropsFullyCorrectedOrderByUserQuery($dropzone);
 
+        $countUnterminatedDrops = $dropRepo->countUnterminatedDropsByDropzone($dropzone->getId());
         $adapter = new DoctrineORMAdapter($dropsQuery);
         $pager = new Pagerfanta($adapter);
         $pager->setMaxPerPage(DropzoneBaseController::DROP_PER_PAGE);
@@ -217,6 +218,7 @@ class DropController extends DropzoneBaseController
         return $this->addDropsStats($dropzone, array(
             'workspace' => $dropzone->getResourceNode()->getWorkspace(),
             '_resource' => $dropzone,
+            'unterminated_drops' => $countUnterminatedDrops,
             'dropzone' => $dropzone,
             'pager' => $pager
         ));
@@ -414,6 +416,8 @@ class DropController extends DropzoneBaseController
         $dropRepo = $this->getDoctrine()->getManager()->getRepository('IcapDropzoneBundle:Drop');
         $dropsQuery = $dropRepo->getDropsAwaitingCorrectionQuery($dropzone);
 
+        $countUnterminatedDrops = $dropRepo->countUnterminatedDropsByDropzone($dropzone->getId());
+
         $adapter = new DoctrineORMAdapter($dropsQuery);
         $pager = new Pagerfanta($adapter);
         $pager->setMaxPerPage(DropzoneBaseController::DROP_PER_PAGE);
@@ -439,6 +443,7 @@ class DropController extends DropzoneBaseController
             'workspace' => $dropzone->getResourceNode()->getWorkspace(),
             '_resource' => $dropzone,
             'dropzone' => $dropzone,
+            'unterminated_drops' => $countUnterminatedDrops,
             'pager' => $pager,
         ));
     }
