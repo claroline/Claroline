@@ -141,7 +141,7 @@ class DropController extends DropzoneBaseController
         $resourceTypes = $this->getDoctrine()->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findAll();
 
         $dropzoneManager = $this->get('icap.manager.dropzone_manager');
-        $dropzoneProgress = $dropzoneManager->getDropzoneProgressByUser($dropzone,$user);
+        $dropzoneProgress = $dropzoneManager->getDropzoneProgressByUser($dropzone, $user);
 
         return array(
             'workspace' => $dropzone->getResourceNode()->getWorkspace(),
@@ -169,7 +169,7 @@ class DropController extends DropzoneBaseController
     }
 
     /**
-     * 
+     *
      * @Route(
      *      "/{resourceId}/drops/by/user",
      *      name="icap_dropzone_drops_by_user",
@@ -241,11 +241,11 @@ class DropController extends DropzoneBaseController
      *      requirements={"resourceId" = "\d+", "page" = "\d+"},
      *      defaults={"page" = 1}
      * )
-     * 
+     *
      * @ParamConverter("dropzone", class="IcapDropzoneBundle:Dropzone", options={"id" = "resourceId"})
      * @Template()
      **/
-    public function dropsByDefaultAction($dropzone,$page)
+    public function dropsByDefaultAction($dropzone, $page)
     {
         $this->isAllowToOpen($dropzone);
         $this->isAllowToEdit($dropzone);
@@ -283,7 +283,7 @@ class DropController extends DropzoneBaseController
     }
 
     /**
-     * 
+     *
      * @Route(
      *      "/{resourceId}/drops/by/report",
      *      name="icap_dropzone_drops_by_report",
@@ -296,11 +296,11 @@ class DropController extends DropzoneBaseController
      *      requirements={"resourceId" = "\d+", "page" = "\d+"},
      *      defaults={"page" = 1}
      * )
-     * 
+     *
      * @ParamConverter("dropzone", class="IcapDropzoneBundle:Dropzone", options={"id" = "resourceId"})
      * @Template()
      */
-    public function dropsByReportAction($dropzone,$page)
+    public function dropsByReportAction($dropzone, $page)
     {
         $this->isAllowToOpen($dropzone);
         $this->isAllowToEdit($dropzone);
@@ -438,8 +438,8 @@ class DropController extends DropzoneBaseController
         return $this->addDropsStats($dropzone, array(
             'workspace' => $dropzone->getResourceNode()->getWorkspace(),
             '_resource' => $dropzone,
-            'dropzone'  => $dropzone,
-            'pager'     => $pager,
+            'dropzone' => $dropzone,
+            'pager' => $pager,
         ));
     }
 
@@ -550,21 +550,20 @@ class DropController extends DropzoneBaseController
         // getting the userId to check if the current drop owner match with the loggued user.
         $userId = $this->get('security.context')->getToken()->getUser()->getId();
         $collection = new ResourceCollection(array($dropzone->getResourceNode()));
-        $isAllowedToEdit =  $this->get('security.context')->isGranted('EDIT', $collection);
+        $isAllowedToEdit = $this->get('security.context')->isGranted('EDIT', $collection);
 
 
         // getting the data
         $dropSecure = $this->getDoctrine()
             ->getRepository('IcapDropzoneBundle:Drop')
-            ->getDropAndValidEndedCorrectionsAndDocumentsByUser($dropzone,$drop->getId(),$userId);
+            ->getDropAndValidEndedCorrectionsAndDocumentsByUser($dropzone, $drop->getId(), $userId);
 
         // if there is no result ( user is not the owner, or the drop has not ended Corrections , show 404)
         if (count($dropSecure) == 0) {
             if ($drop->getUser()->getId() != $userId) {
                 throw new AccessDeniedException();
             }
-        }else
-        {
+        } else {
             $drop = $dropSecure[0];
         }
 
@@ -591,7 +590,47 @@ class DropController extends DropzoneBaseController
         );
     }
 
+    /**
+     * @param Drop $drop
+     * @param User $user
+     *
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     * @Route(
+     *      "/unlock/drop/{dropId}",
+     *      name="icap_dropzone_unlock_drop",
+     *      requirements={"resourceId" = "\d+", "dropId" = "\d+"}
+     * )
+     * @ParamConverter("drop", class="IcapDropzoneBundle:Drop", options={"id" = "dropId"})
+     * @ParamConverter("user", options={
+     *      "authenticatedUser" = true,
+     *      "messageEnabled" = true,
+     *      "messageTranslationKey" = "This action requires authentication. Please login.",
+     *      "messageTranslationDomain" = "icap_dropzone"
+     * })
+     * @Template()
+     */
+    public function unlockDropAction(Drop $drop, User $user)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $drop->setUnlockedDrop(true);
+        $em->flush();
 
+        $this->getRequest()
+            ->getSession()
+            ->getFlashBag()
+            ->add('success', $this->get('translator')->trans('Drop have been unlocked', array(), 'icap_dropzone')
+            );
+
+        $dropzoneId = $drop->getDropzone()->getId();
+        return $this->redirect(
+            $this->generateUrl(
+                'icap_dropzone_drops_awaiting',
+                array(
+                    'resourceId' => $dropzoneId
+                )
+            )
+        );
+    }
 
 
     /**
@@ -609,7 +648,7 @@ class DropController extends DropzoneBaseController
      * })
      * @Template()
      */
-    public function reportDropAction(Correction $correction,User $user)
+    public function reportDropAction(Correction $correction, User $user)
     {
         $dropzone = $correction->getDropzone();
         $drop = $correction->getDrop();
@@ -618,11 +657,11 @@ class DropController extends DropzoneBaseController
 
         try {
             $curent_user_correction = $em->getRepository('IcapDropzoneBundle:Correction')->getNotFinished($dropzone, $user);
-        } catch(NotFoundHttpException $e){
+        } catch (NotFoundHttpException $e) {
             throw new AccessDeniedException();
         }
 
-        if($curent_user_correction == null || $curent_user_correction->getId() != $correction->getId()) {
+        if ($curent_user_correction == null || $curent_user_correction->getId() != $correction->getId()) {
             throw new AccessDeniedException();
         }
         $form = $this->createForm(new CorrectionReportType(), $correction);
@@ -642,7 +681,7 @@ class DropController extends DropzoneBaseController
                 $em->persist($correction);
                 $em->flush();
 
-                $this->dispatchDropReportEvent($dropzone,$drop,$correction);
+                $this->dispatchDropReportEvent($dropzone, $drop, $correction);
                 $this
                     ->getRequest()
                     ->getSession()
@@ -676,14 +715,12 @@ class DropController extends DropzoneBaseController
         ));
     }
 
-    protected function dispatchDropReportEvent(Dropzone $dropzone, Drop $drop,Correction $correction)
+    protected function dispatchDropReportEvent(Dropzone $dropzone, Drop $drop, Correction $correction)
     {
         $rm = $this->get('claroline.manager.role_manager');
-        $event = new LogDropReportEvent($dropzone,$drop,$correction,$rm);
+        $event = new LogDropReportEvent($dropzone, $drop, $correction, $rm);
         $this->get('event_dispatcher')->dispatch('log', $event);
     }
-
-
 
 
     /**

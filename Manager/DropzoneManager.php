@@ -11,7 +11,6 @@ use JMS\DiExtraBundle\Annotation as DI;
 /**
  * @DI\Service("icap.manager.dropzone_manager")
  */
-
 class DropzoneManager
 {
     private $container;
@@ -99,6 +98,8 @@ class DropzoneManager
      *  6 : Waiting for correction
      *  7 : copy corrected, Evaluation End.     *
      *
+     * WARNING : if a drop has the 'unlockedDrop' property, it will make the drop being at the last state.
+     *
      *  currentstate : index of the current state  in the stateArray
      *  percent : rounded progress in percent
      *  nbCorrection : corrections made by the user in this evaluation.
@@ -136,6 +137,7 @@ class DropzoneManager
      *  6 : Waiting for correction
      *  7 : copy corrected, Evaluation End.
      *
+     * WARNING : if a drop has the 'unlockedDrop' property, it will make the drop being at the last state.
      *  currentstate : index of the current state  in the stateArray
      *  percent : rounded progress in percent
      *  nbCorrection : corrections made by the user in this evaluation.
@@ -171,10 +173,10 @@ class DropzoneManager
              *  so we make a hack to allow them to see their note and simulate that
              *  they did the expected corrections.
             */
-            $allow_user_to_not_have_expected_corrections = $this->isPeerReviewEndedOrManualStateFinished($dropzone,$nbCorrection);
+            $allow_user_to_not_have_expected_corrections = $this->isPeerReviewEndedOrManualStateFinished($dropzone, $nbCorrection);
             /* --------------------- SPECIAL CASE  END ------------------------------*/
 
-            if(!$allow_user_to_not_have_expected_corrections) {
+            if (!$allow_user_to_not_have_expected_corrections && $drop != null && !$drop->isUnlockedDrop()) {
                 for ($i = 0; $i < $expectedCorrections; $i++) {
                     array_push($states, 'correction n°%nb_correction%/%expected_correction%');
                 }
@@ -197,19 +199,24 @@ class DropzoneManager
                 }
 
 
-                if(!$allow_user_to_not_have_expected_corrections) {
+                if (!$allow_user_to_not_have_expected_corrections && !$drop->isUnlockedDrop()) {
                     $currentState += $nbCorrection;
                     if ($nbCorrection >= $expectedCorrections) {
                         $currentState++;
                     }
+                } else {
+                    $currentState++;
                 }
 
                 if ($drop->countFinishedCorrections() >= $expectedCorrections) {
                     $currentState++;
-                    if($allow_user_to_not_have_expected_corrections){
+                    if ($allow_user_to_not_have_expected_corrections) {
                         $currentState++;
                     }
+                } else if ($drop->isUnlockedDrop()) {
+                    $currentState++;
                 }
+
 
             }
         } else {
@@ -241,12 +248,14 @@ class DropzoneManager
      * @param $nbCorrection
      * @return bool
      */
-    public function isPeerReviewEndedOrManualStateFinished(Dropzone $dropzone, $nbCorrection) {
+    public function isPeerReviewEndedOrManualStateFinished(Dropzone $dropzone, $nbCorrection)
+    {
         $specialCase = false;
         if (($dropzone->getManualPlanning() && $dropzone->getManualState() == Dropzone::MANUAL_STATE_FINISHED) ||
-        (!$dropzone->getManualPlanning() && $dropzone->getTimeRemaining($dropzone->getEndReview()) <= 0  )) {
+            (!$dropzone->getManualPlanning() && $dropzone->getTimeRemaining($dropzone->getEndReview()) <= 0)
+        ) {
 
-            if($dropzone->getExpectedTotalCorrection() > $nbCorrection) {
+            if ($dropzone->getExpectedTotalCorrection() > $nbCorrection) {
                 $specialCase = true;
             }
         }
@@ -260,7 +269,7 @@ class DropzoneManager
      * @param Dropzone $dropzone
      * @param bool $force
      */
-    public function closeDropzoneOpenedDrops(Dropzone $dropzone,$force=false)
+    public function closeDropzoneOpenedDrops(Dropzone $dropzone, $force = false)
     {
         if ($force || $this->isDropzoneDropTimeIsUp($dropzone)) {
             $dropRepo = $this->em->getRepository('IcapDropzoneBundle:Drop');
