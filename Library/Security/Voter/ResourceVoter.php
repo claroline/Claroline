@@ -188,11 +188,11 @@ class ResourceVoter implements VoterInterface
 
         foreach ($nodes as $node) {
             $accessibleFrom = $node->getAccessibleFrom();
-            $accessibleTo = $node->getAccessibleTo();
+            $accessibleUntil = $node->getAccessibleUntil();
             $currentDate = new \DateTime();
 
             if ((is_null($accessibleFrom) || $currentDate >= $accessibleFrom)
-                && (is_null($accessibleTo) || $currentDate <= $accessibleTo)) {
+                && (is_null($accessibleUntil) || $currentDate <= $accessibleUntil)) {
 
                 $mask = $this->repository->findMaximumRights($this->ut->getRoles($token), $node);
                 $type = $node->getResourceType();

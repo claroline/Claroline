@@ -1,6 +1,6 @@
 <?php
 
-namespace Claroline\CoreBundle\Migrations\sqlsrv;
+namespace Claroline\CoreBundle\Migrations\pdo_oci;
 
 use Doctrine\DBAL\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
@@ -8,37 +8,29 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2014/05/28 12:01:20
+ * Generation date: 2014/06/02 02:07:39
  */
-class Version20140528120118 extends AbstractMigration
+class Version20140602140737 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
         $this->addSql("
             ALTER TABLE claro_resource_node 
-            ADD accessible_from DATETIME2(6)
-        ");
-        $this->addSql("
-            ALTER TABLE claro_resource_node 
-            ADD accessible_to DATETIME2(6)
+            ADD (
+                accessible_from TIMESTAMP(0) DEFAULT NULL, 
+                accessible_until TIMESTAMP(0) DEFAULT NULL
+            )
         ");
         $this->addSql("
             ALTER TABLE claro_workspace_tag 
-            DROP COLUMN workspace_id
+            DROP (workspace_id)
         ");
         $this->addSql("
             ALTER TABLE claro_workspace_tag 
             DROP CONSTRAINT FK_C8EFD7EF82D40A1F
         ");
         $this->addSql("
-            IF EXISTS (
-                SELECT * 
-                FROM sysobjects 
-                WHERE name = 'IDX_C8EFD7EF82D40A1F'
-            ) 
-            ALTER TABLE claro_workspace_tag 
-            DROP CONSTRAINT IDX_C8EFD7EF82D40A1F ELSE 
-            DROP INDEX IDX_C8EFD7EF82D40A1F ON claro_workspace_tag
+            DROP INDEX IDX_C8EFD7EF82D40A1F
         ");
     }
 
@@ -46,15 +38,15 @@ class Version20140528120118 extends AbstractMigration
     {
         $this->addSql("
             ALTER TABLE claro_resource_node 
-            DROP COLUMN accessible_from
-        ");
-        $this->addSql("
-            ALTER TABLE claro_resource_node 
-            DROP COLUMN accessible_to
+            DROP (
+                accessible_from, accessible_until
+            )
         ");
         $this->addSql("
             ALTER TABLE claro_workspace_tag 
-            ADD workspace_id INT
+            ADD (
+                workspace_id NUMBER(10) DEFAULT NULL
+            )
         ");
         $this->addSql("
             ALTER TABLE claro_workspace_tag 

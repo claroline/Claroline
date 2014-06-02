@@ -1,6 +1,6 @@
 <?php
 
-namespace Claroline\CoreBundle\Migrations\pdo_mysql;
+namespace Claroline\CoreBundle\Migrations\drizzle_pdo_mysql;
 
 use Doctrine\DBAL\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
@@ -8,16 +8,16 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2014/05/28 12:01:19
+ * Generation date: 2014/06/02 02:07:39
  */
-class Version20140528120118 extends AbstractMigration
+class Version20140602140737 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
         $this->addSql("
             ALTER TABLE claro_resource_node 
             ADD accessible_from DATETIME DEFAULT NULL, 
-            ADD accessible_to DATETIME DEFAULT NULL
+            ADD accessible_until DATETIME DEFAULT NULL
         ");
         $this->addSql("
             ALTER TABLE claro_workspace_tag 
@@ -37,7 +37,7 @@ class Version20140528120118 extends AbstractMigration
         $this->addSql("
             ALTER TABLE claro_resource_node 
             DROP accessible_from, 
-            DROP accessible_to
+            DROP accessible_until
         ");
         $this->addSql("
             ALTER TABLE claro_workspace_tag 

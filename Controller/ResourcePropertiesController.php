@@ -187,10 +187,10 @@ class ResourcePropertiesController extends Controller
 
             if ($isRecursive) {
                 $accessibleFrom = $form->get('accessibleFrom')->getData();
-                $accessibleTo = $form->get('accessibleTo')->getData();
+                $accessibleUntil = $form->get('accessibleUntil')->getData();
 
                 $this->resourceManager
-                    ->changeAccessibilityDate($node, $accessibleFrom, $accessibleTo);
+                    ->changeAccessibilityDate($node, $accessibleFrom, $accessibleUntil);
             }
 
             return new JsonResponse($nodesArray);

@@ -190,9 +190,9 @@ class ResourceNode
     protected $accessibleFrom;
 
     /**
-     * @ORM\Column(name="accessible_to", type="datetime", nullable=true)
+     * @ORM\Column(name="accessible_until", type="datetime", nullable=true)
      */
-    protected $accessibleTo;
+    protected $accessibleUntil;
 
     private $pathForCreationLog = '';
 
@@ -523,14 +523,14 @@ class ResourceNode
         $this->accessibleFrom = $accessibleFrom;
     }
 
-    public function getAccessibleTo()
+    public function getAccessibleUntil()
     {
-        return $this->accessibleTo;
+        return $this->accessibleUntil;
     }
 
-    public function setAccessibleTo($accessibleTo)
+    public function setAccessibleUntil($accessibleUntil)
     {
-        $this->accessibleTo = $accessibleTo;
+        $this->accessibleUntil = $accessibleUntil;
     }
 
     /**

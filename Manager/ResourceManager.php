@@ -162,7 +162,7 @@ class ResourceManager
 
         if (!is_null($parent)) {
             $node->setAccessibleFrom($parent->getAccessibleFrom());
-            $node->setAccessibleTo($parent->getAccessibleTo());
+            $node->setAccessibleUntil($parent->getAccessibleUntil());
         }
         $resource->setResourceNode($node);
         $this->setRights($node, $parent, $rights);
@@ -1431,12 +1431,12 @@ class ResourceManager
      *
      * @param ResourceNode $node A directory
      * @param datetime $accessibleFrom
-     * @param datetime $accessibleTo
+     * @param datetime $accessibleUntil
      */
     public function changeAccessibilityDate(
         ResourceNode $node,
         $accessibleFrom,
-        $accessibleTo
+        $accessibleUntil
     )
     {
         if ($node->getResourceType()->getName() === 'directory') {
@@ -1444,7 +1444,7 @@ class ResourceManager
 
             foreach ($descendants as $descendant) {
                 $descendant->setAccessibleFrom($accessibleFrom);
-                $descendant->setAccessibleTo($accessibleTo);
+                $descendant->setAccessibleUntil($accessibleUntil);
                 $this->om->persist($descendant);
             }
             $this->om->flush();

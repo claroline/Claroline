@@ -54,7 +54,7 @@ class ResourcePropertiesType extends AbstractType
             )
         );
         $builder->add(
-            'accessibleTo',
+            'accessibleUntil',
             'date',
             array(
                 'required' => false,

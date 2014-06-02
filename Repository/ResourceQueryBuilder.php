@@ -522,9 +522,9 @@ class ResourceQueryBuilder
             $clause .= "OR{$eol}";
             $clause .= "node.accessibleFrom <= :currentdate{$eol}";
             $clause .= "){$eol}AND{$eol}({$eol}";
-            $clause .= "node.accessibleTo IS NULL{$eol}";
+            $clause .= "node.accessibleUntil IS NULL{$eol}";
             $clause .= "OR{$eol}";
-            $clause .= "node.accessibleTo >= :currentdate{$eol}";
+            $clause .= "node.accessibleUntil >= :currentdate{$eol}";
             $clause .= "){$eol})";
             $this->parameters[':currentdate'] = $currentDate->format('Y-m-d H:i:s');
             $this->addWhereClause($clause);
@@ -546,9 +546,9 @@ class ResourceQueryBuilder
             $clause .= "OR{$eol}";
             $clause .= "node.accessibleFrom <= :currentdate{$eol}";
             $clause .= "){$eol}AND{$eol}({$eol}";
-            $clause .= "node.accessibleTo IS NULL{$eol}";
+            $clause .= "node.accessibleUntil IS NULL{$eol}";
             $clause .= "OR{$eol}";
-            $clause .= "node.accessibleTo >= :currentdate{$eol}";
+            $clause .= "node.accessibleUntil >= :currentdate{$eol}";
             $clause .= "){$eol}){$eol}";
             $this->parameters[':currentdate'] = $currentDate->format('Y-m-d H:i:s');
             $clause .= "OR{$eol}";

@@ -8,9 +8,9 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2014/05/28 12:01:19
+ * Generation date: 2014/06/02 02:07:39
  */
-class Version20140528120118 extends AbstractMigration
+class Version20140602140737 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
@@ -20,7 +20,7 @@ class Version20140528120118 extends AbstractMigration
         ");
         $this->addSql("
             ALTER TABLE claro_resource_node 
-            ADD COLUMN accessible_to DATETIME DEFAULT NULL
+            ADD COLUMN accessible_until DATETIME DEFAULT NULL
         ");
         $this->addSql("
             DROP INDEX tag_unique_name_and_user

@@ -1,6 +1,6 @@
 <?php
 
-namespace Claroline\CoreBundle\Migrations\mysqli;
+namespace Claroline\CoreBundle\Migrations\ibm_db2;
 
 use Doctrine\DBAL\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
@@ -8,27 +8,27 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2014/05/28 12:01:20
+ * Generation date: 2014/06/02 02:07:39
  */
-class Version20140528120118 extends AbstractMigration
+class Version20140602140737 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
         $this->addSql("
             ALTER TABLE claro_resource_node 
-            ADD accessible_from DATETIME DEFAULT NULL, 
-            ADD accessible_to DATETIME DEFAULT NULL
+            ADD COLUMN accessible_from TIMESTAMP(0) DEFAULT NULL 
+            ADD COLUMN accessible_until TIMESTAMP(0) DEFAULT NULL
+        ");
+        $this->addSql("
+            ALTER TABLE claro_workspace_tag 
+            DROP COLUMN workspace_id
         ");
         $this->addSql("
             ALTER TABLE claro_workspace_tag 
             DROP FOREIGN KEY FK_C8EFD7EF82D40A1F
         ");
         $this->addSql("
-            DROP INDEX IDX_C8EFD7EF82D40A1F ON claro_workspace_tag
-        ");
-        $this->addSql("
-            ALTER TABLE claro_workspace_tag 
-            DROP workspace_id
+            DROP INDEX IDX_C8EFD7EF82D40A1F
         ");
     }
 
@@ -36,12 +36,12 @@ class Version20140528120118 extends AbstractMigration
     {
         $this->addSql("
             ALTER TABLE claro_resource_node 
-            DROP accessible_from, 
-            DROP accessible_to
+            DROP COLUMN accessible_from 
+            DROP COLUMN accessible_until
         ");
         $this->addSql("
             ALTER TABLE claro_workspace_tag 
-            ADD workspace_id INT DEFAULT NULL
+            ADD COLUMN workspace_id INTEGER DEFAULT NULL
         ");
         $this->addSql("
             ALTER TABLE claro_workspace_tag 
