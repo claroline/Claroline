@@ -114,7 +114,7 @@ class UsersController extends Controller
     public function userCreationFormAction()
     {
         $this->checkOpen();
-        $role = $this->roleManager->getRoleByName('ROLE_USER');
+        $roleUser = $this->roleManager->getRoleByName('ROLE_USER');
         $isAdmin = ($this->sc->isGranted('ROLE_ADMIN')) ? true: false;
         $roles = $this->roleManager->getAllPlatformRoles();
         $unavailableRoles = [];
@@ -127,7 +127,7 @@ class UsersController extends Controller
         }
 
         $form = $this->formFactory->create(
-            FormFactory::TYPE_USER_FULL, array(array($role), $this->localeManager->getAvailableLocales(), $isAdmin)
+            FormFactory::TYPE_USER_FULL, array(array($roleUser), $this->localeManager->getAvailableLocales(), $isAdmin)
         );
 
         $error = null;

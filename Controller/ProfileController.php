@@ -209,7 +209,6 @@ class ProfileController extends Controller
     {
         $isAdmin = $this->get('security.context')->isGranted('ROLE_ADMIN');
         $isGrantedUserAdmin = $this->get('security.context')->isGranted('OPEN', $this->toolManager->getAdminToolByName('user_management'));
-        $showFullForm = $isAdmin | $isGrantedUserAdmin;
         $editYourself = false;
 
         if (null !== $user && !$isAdmin && !$isGrantedUserAdmin) {
@@ -222,13 +221,23 @@ class ProfileController extends Controller
         }
 
         $roles = $this->roleManager->getPlatformRoles($user);
+
         $form = $this->createForm(
-            new ProfileType(array($roles), $showFullForm, $this->localeManager->getAvailableLocales()), $user
+            new ProfileType($roles, $isAdmin, $isGrantedUserAdmin, $this->localeManager->getAvailableLocales()), $user
         );
 
         $form->handleRequest($this->request);
+        $unavailableRoles = [];
+        $roles = $this->roleManager->getAllPlatformRoles();
 
-        if ($form->isValid()) {
+        foreach ($roles as $role) {
+            $isAvailable = $this->roleManager->validateRoleInsert($user, $role);
+            if (!$isAvailable) {
+                $unavailableRoles[] = $role->getTranslationKey();
+            }
+        }
+
+        if ($form->isValid() && count($unavailableRoles) === 0) {
             /** @var \Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface $sessionFlashBag */
             $sessionFlashBag = $this->get('session')->getFlashBag();
             /** @var \Symfony\Bundle\FrameworkBundle\Translation\Translator $translator */
@@ -296,9 +305,10 @@ class ProfileController extends Controller
         }
 
         return array(
-            'form'         => $form->createView(),
-            'user'         => $user,
-            'editYourself' => $editYourself
+            'form'             => $form->createView(),
+            'user'             => $user,
+            'editYourself'     => $editYourself,
+            'unavailableRoles' => $unavailableRoles
         );
     }
 

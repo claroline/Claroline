@@ -173,11 +173,17 @@ class RoleManager
 
     /**
      * @param \Claroline\CoreBundle\Entity\AbstractRoleSubject $ars
-     * @param \Claroline\CoreBundle\Entity\Role                $role
-     * @param boolean                                          $sendMail
+     * @param \Claroline\CoreBundle\Entity\Role $role
+     * @param boolean $sendMail
+     *
+     * @throws Exception\AddRoleException
      */
     public function associateRole(AbstractRoleSubject $ars, Role $role, $sendMail = false)
     {
+        if (!$this->validateRoleInsert($ars, $role)) {
+            throw new Exception\AddRoleException();
+        }
+
         if (!$ars->hasRole($role->getName())) {
             $ars->addRole($role);
             $this->om->startFlushSuite();
@@ -219,10 +225,10 @@ class RoleManager
 
     /**
      * @param \Claroline\CoreBundle\Entity\AbstractRoleSubject $ars
-     * @param \Doctrine\Common\Collections\ArrayCollection     $roles
+     * @param array     $roles
      * @param boolean                                          $sendMail
      */
-    public function associateRoles(AbstractRoleSubject $ars, ArrayCollection $roles, $sendMail = false)
+    public function associateRoles(AbstractRoleSubject $ars, $roles, $sendMail = false)
     {
         foreach ($roles as $role) {
             $this->associateRole($ars, $role, $sendMail);
@@ -231,6 +237,7 @@ class RoleManager
         $this->om->flush();
     }
 
+
     /**
      * @param \Claroline\CoreBundle\Entity\AbstractRoleSubject[]
      * @param \Claroline\CoreBundle\Entity\Role $role
@@ -238,10 +245,8 @@ class RoleManager
     public function associateRoleToMultipleSubjects(array $subjects, Role $role)
     {
         foreach ($subjects as $subject) {
-            $subject->addRole($role);
-            $this->om->persist($subject);
+            $this->associateRole($subject, $role);
         }
-        $this->om->flush();
     }
 
     /**
@@ -676,6 +681,10 @@ class RoleManager
     {
         $total = $this->om->getRepository('ClarolineCoreBundle:User')->countUsersByRoleIncludingGroup($role);
 
+        if ($role->getName() === 'ROLE_ADMIN' && !$this->container->get('security.context')->isGranted('ROLE_ADMIN')) {
+            return false;
+        }
+
         if (get_class($ars) === 'Claroline\CoreBundle\Entity\User') {
             return ($total < $role->getMaxUsers()) ? true: false;
         }
@@ -683,8 +692,6 @@ class RoleManager
         if (get_class($ars) === 'Claroline\CoreBundle\Entity\Group') {
             $countUsers = $this->userRepo->countUsersOfGroup($ars);
             $substractUsers = $this->userRepo->countUsersOfGroupByRole($ars, $role);
-
-            var_dump($substractUsers);
 
             return (($total + $countUsers - $substractUsers) < $role->getMaxUsers()) ? true: false;
         }

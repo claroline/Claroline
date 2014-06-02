@@ -223,7 +223,6 @@ class UserManager
      *
      * @param \Claroline\CoreBundle\Entity\User $user
      * @param \Doctrine\Common\Collections\ArrayCollection $roles
-     * @throws \Exception
      */
     public function insertUserWithRoles(User $user, ArrayCollection $roles)
     {
@@ -319,11 +318,9 @@ class UserManager
      * @param \Claroline\CoreBundle\Entity\User $user
      * @param ArrayCollection                   $roles
      */
-    public function setPlatformRoles(User $user, ArrayCollection $roles)
+    public function setPlatformRoles(User $user, $roles)
     {
-        $user->setPlatformRoles($roles);
-        $this->objectManager->persist($user);
-        $this->objectManager->flush();
+        $this->roleManager->associateRoles($user, $roles);
     }
 
     /**

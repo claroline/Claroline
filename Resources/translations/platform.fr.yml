@@ -807,4 +807,5 @@ your_current_url: 'Votre URL actuelle'
 your_username: 'Votre nom d''utilisateur est '
 closed_account: Compte clos
 role_list: Liste des roles
-unavailable_role: The role %translationKey% is not available
+unavailable_role: Le role %translationKey% n'est pas utilisable
+fail_add_user_group_message: Ces utilisateurs n'ont pas pu être ajouté au groupe (vérifiez la limite d'utilisaterus par rôle).

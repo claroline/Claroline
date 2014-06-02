@@ -11,6 +11,9 @@
         {% set cancelUrl  = editYourself ? path('claro_profile_view') : path('claro_admin_user_list') %}
         <form role="form" class="form-horizontal" action="{{ actionForm }}" method="post" {{ form_enctype(form) }} id="profile_form">
             <div class="panel-body">
+                {% for role in unavailableRoles %}
+                    <div class="alert alert-warning"> {{ 'unavailable_role'|trans({'%translationKey%': role}, 'platform') }}</div>
+                {% endfor %}
                 {{ form_widget(form) }}
             </div>
             <div class="panel-footer">

@@ -32,7 +32,9 @@
     </div>
     <form role="form" class="form-horizontal" action="{{ path('claro_admin_update_group_settings', {'groupId': group.getId()}) }}" method="post" {{ form_enctype(form_settings) }} id="form_settings">
         <div class="panel-body">
-
+            {% for role in unavailableRoles %}
+                <div class="alert alert-warning"> {{ 'unavailable_role'|trans({'%translationKey%': role}, 'platform') }}</div>
+            {% endfor %}
             {{ form_widget(form_settings) }}
         </div>
         <div class="panel-footer">
