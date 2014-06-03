@@ -741,3 +741,9 @@ yesterday_activity: 'Actividades de ayer'
 your_username: 'Su nombre de usuario es '
 closed_account: Cuenta cerrada.
 list_role: Lista de roles
+unavailable_role: El rol %translationKey% no es utilizable
+fail_add_user_group_message: Estos usuarios no han podido ser agregados al grupo (control del límite usuarios por función).
+unavailable_platform: La plataforma no está disponible.
+account_duration_label: Duración de la vida de una cuentas (días)
+platform_init_date: Fecha de activación de la plataforma
+platform_expiration_date: Fecha de vencimiento de la plataforma

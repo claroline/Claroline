@@ -681,6 +681,11 @@ class RoleManager
     {
         $total = $this->om->getRepository('ClarolineCoreBundle:User')->countUsersByRoleIncludingGroup($role);
 
+        //cli always win!
+        if ($role->getName() === 'ROLE_ADMIN' && php_sapi_name() === 'cli' ) {
+            return true;
+        }
+
         if ($role->getName() === 'ROLE_ADMIN' && !$this->container->get('security.context')->isGranted('ROLE_ADMIN')) {
             return false;
         }
