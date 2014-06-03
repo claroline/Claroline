@@ -156,10 +156,11 @@ class GroupsController extends Controller
      * Returns the platform group list.
      *
      * @param integer $page
-     * @param string  $search
+     * @param string $search
      * @param integer $max
-     * @param string  $order
+     * @param string $order
      *
+     * @param $direction
      * @return array
      */
     public function listAction($page, $search, $max, $order, $direction)
@@ -525,7 +526,9 @@ class GroupsController extends Controller
                 $users[] = str_getcsv($line, ';');
             }
 
-            if ($validFile) {
+
+
+            if ($validFile && $this->groupManager->validateAddUsersToGroup($users, $group)) {
                 $this->userManager->importUsers($users);
                 $this->groupManager->importUsers($group, $users);
 
@@ -535,7 +538,7 @@ class GroupsController extends Controller
             }
         }
 
-        return array('form' => $form->createView(), 'group' => $group);
+        return array('form' => $form->createView(), 'group' => $group, 'error_import' => 'fail_add_user_group_message');
     }
 
     private function checkOpen()

@@ -5,7 +5,6 @@ parameters:
     security.logout.handler.session.class: Claroline\CoreBundle\Library\Security\LogoutHandler
     templating.locator.class: Claroline\CoreBundle\Library\Templating\Loader\TemplateLocator
     twig.controller.exception.class : Claroline\CoreBundle\Controller\CustomExceptionController
-    security.user_checker.class: Claroline\CoreBundle\Library\Security\UserChecker
 
 services:
     templating.locator:

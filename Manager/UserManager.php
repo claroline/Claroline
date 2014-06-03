@@ -20,13 +20,12 @@ use Claroline\CoreBundle\Event\StrictDispatcher;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Library\Security\PlatformRoles;
 use Claroline\CoreBundle\Library\Workspace\Configuration;
-use Claroline\CoreBundle\Manager\MailManager;
 use Claroline\CoreBundle\Pager\PagerFactory;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\DiExtraBundle\Annotation as DI;
-use Symfony\Component\Config\Definition\Exception\Exception;
+use Claroline\CoreBundle\Manager\Exception\AddRoleException;
 use Symfony\Component\Security\Core\SecurityContext;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Translation\Translator;
@@ -262,7 +261,7 @@ class UserManager
         $total = $this->countUsersByRoleIncludingGroup($roleUser);
 
         if ($total + count($users) > $max) {
-            throw new Exception\AddRoleException();
+            throw new AddRoleException();
         }
 
         $lg = $this->platformConfigHandler->getParameter('locale_language');

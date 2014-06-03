@@ -119,7 +119,12 @@ class LayoutController extends Controller
      */
     public function topBarAction(AbstractWorkspace $workspace = null)
     {
-        $tools = $this->toolManager->getAdminToolsByRoles($this->security->getToken()->getRoles());
+        if ($token = $this->security->getToken()) {
+            $tools = $this->toolManager->getAdminToolsByRoles($token->getRoles());
+        } else {
+            $tools = array();
+        }
+
         $canAdministrate = count($tools) > 0 ? true: false;
         $isLogged = false;
         $countUnreadMessages = 0;
@@ -130,9 +135,12 @@ class LayoutController extends Controller
         $isInAWorkspace = false;
         $countUnviewedNotifications = 0;
 
-        $token = $this->security->getToken();
-        $user = $token->getUser();
-        $roles = $this->utils->getRoles($token);
+        if ($token) {
+            $user = $token->getUser();
+            $roles = $this->utils->getRoles($token);
+        } else {
+            $roles = array('ROLE_ANONYMOUS');
+        }
 
         if (!is_null($workspace)) {
             $isInAWorkspace = true;
@@ -162,7 +170,7 @@ class LayoutController extends Controller
                 $registerTarget = 'claro_registration_user_registration_form';
             }
 
-            $loginTarget = $this->router->generate('claro_desktop_open');
+            $loginTarget = $this->router->generate('claro_security_login');
         }
 
         return array(
@@ -233,9 +241,11 @@ class LayoutController extends Controller
 
     private function isImpersonated()
     {
-        foreach ($this->security->getToken()->getRoles() as $role) {
-            if ($role instanceof \Symfony\Component\Security\Core\Role\SwitchUserRole) {
-                return true;
+        if ($token = $this->security->getToken()) {
+            foreach ($token->getRoles() as $role) {
+                if ($role instanceof \Symfony\Component\Security\Core\Role\SwitchUserRole) {
+                    return true;
+                }
             }
         }
 

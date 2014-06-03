@@ -80,18 +80,7 @@
             url: Routing.generate('claro_activity_add_resource', {'activityId':{{ _resource.getId() }}, 'nodeId': _.keys(nodes)[0]}),
             type: 'GET',
             success: function(nodes){
-                var html = "";
-                html+= "<div id= " + nodes[0].id + " >";
-                html+= "<div class='alert alert-info'>";
-                html+= "<a class='close' href="+Routing.generate('claro_activity_remove_resource', {'nodeId':nodes[0].id, 'activityId': {{ _resource.getId() }} })+" aria-hidden="true">&times;</a>";
-                html+= "<a class='alert-link' href="+Routing.generate('claro_resource_open', {'resourceType': nodes[0].type, 'action': 'open', 'node': nodes[0].id})+">";
-                html+= nodes[0].name
-                html+= "</a>";
-                html+= "</div>";
-                html+= "</div>";
-
-                $("#sortable").append(html);
-            },
+            }
         });
         }
 

@@ -809,3 +809,4 @@ closed_account: Closed account
 list_role: Role list
 unavailable_role: The role %translationKey% is not available
 fail_add_user_group_message: These users couldn't be added to this group (check the max amount of users by role).
+unavailable_platform: The platform is unavailable.
