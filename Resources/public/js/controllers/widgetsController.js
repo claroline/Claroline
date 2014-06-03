@@ -2,7 +2,13 @@
 
 portfolioApp
     .controller("widgetsController", ["$scope", "$attrs", "widgetsManager", function($scope, $attrs, widgetsManager) {
-        $scope.type    = $scope.widgetType;
+        if(!$scope.widgetType && $attrs.widgetPortlet) {
+            $scope.type = $attrs.widgetPortlet;
+        }
+        else {
+            $scope.type = $scope.widgetType;
+        }
+
         $scope.widgets = [];
 
         $scope.$watch("widgetPortlets." + $scope.type, function(data) {
