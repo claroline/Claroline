@@ -94,6 +94,15 @@
                                         <i class="icon-pushpin"></i> {{ 'stick' | trans({}, 'forum') }}
                                     </a>
                                 {% endif %}
+                                {% if subject['is_closed'] == true %}
+									<a href="{{ path('claro_subject_open', {'subject': subject['id']}) }}">
+                                        <i class="icon-eye-close"></i> {{ 'close' | trans({}, 'platform') }}
+                                    </a>
+                                {% else %}
+                                    <a href="{{ path('claro_subject_close', {'subject': subject['id']}) }}">
+                                        <i class="icon-eye-open"></i> {{ 'open' | trans({}, 'platform') }}
+                                    </a>
+                                {% endif %}
                             {% else %}
                                 {% if subject['isSticked'] == true %}
                                     <i class="icon-pushpin"></i> {{ 'stuck' | trans({}, 'forum') }}

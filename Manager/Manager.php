@@ -19,6 +19,7 @@ use Claroline\ForumBundle\Entity\Subject;
 use Claroline\ForumBundle\Entity\Message;
 use Claroline\ForumBundle\Entity\Notification;
 use Claroline\ForumBundle\Entity\Category;
+use Claroline\CoreBundle\Library\Resource\ResourceCollection;
 use Claroline\ForumBundle\Event\Log\CreateMessageEvent;
 use Claroline\ForumBundle\Event\Log\CreateSubjectEvent;
 use Claroline\ForumBundle\Event\Log\CreateCategoryEvent;
@@ -34,6 +35,8 @@ use Claroline\ForumBundle\Event\Log\MoveSubjectEvent;
 use Claroline\ForumBundle\Event\Log\EditMessageEvent;
 use Claroline\ForumBundle\Event\Log\EditCategoryEvent;
 use Claroline\ForumBundle\Event\Log\EditSubjectEvent;
+use Claroline\ForumBundle\Event\Log\CloseSubjectEvent;
+use Claroline\ForumBundle\Event\Log\OpenSubjectEvent;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Pager\PagerFactory;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -41,6 +44,8 @@ use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use JMS\DiExtraBundle\Annotation as DI;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
+use Symfony\Component\Security\Core\SecurityContextInterface;
 
 /**
  * @DI\Service("claroline.manager.forum_manager")
@@ -59,6 +64,7 @@ class Manager
     private $router;
     private $mailManager;
     private $container;
+    private $sc;
 
     /**
      * Constructor.
@@ -71,7 +77,8 @@ class Manager
      *     "translator"     = @DI\Inject("translator"),
      *     "router"         = @DI\Inject("router"),
      *     "mailManager"    = @DI\Inject("claroline.manager.mail_manager"),
-     *     "container"      = @DI\Inject("service_container")
+     *     "container"      = @DI\Inject("service_container"),
+     *     "sc"           = @DI\Inject("security.context")
      * })
      */
     public function __construct(
@@ -82,7 +89,8 @@ class Manager
         TranslatorInterface $translator,
         RouterInterface $router,
         MailManager $mailManager,
-        ContainerInterface $container
+        ContainerInterface $container,
+        SecurityContextInterface $sc
     )
     {
         $this->om = $om;
@@ -97,6 +105,7 @@ class Manager
         $this->router = $router;
         $this->mailManager = $mailManager;
         $this->container = $container;
+        $this->sc = $sc;
     }
 
     /**
@@ -178,12 +187,21 @@ class Manager
      *
      * @return \Claroline\ForumBundle\Entity\Message
      */
-    public function createMessage(Message $message)
+    public function createMessage(Message $message, Subject $subject)
     {
-        $this->om->startFlushSuite();
+    	$forum = $subject->getCategory()->getForum();
+        $collection = new ResourceCollection(array($forum->getResourceNode()));
+
+        if (!$this->sc->isGranted('post', $collection)) {
+            throw new AccessDeniedHttpException($collection->getErrorsForDisplay());
+        }
+
+     	$user = $this->sc->getToken()->getUser();
+        $message->setCreator($user);
+        $message->setSubject($subject);
         $this->om->persist($message);
-        $this->dispatch(new CreateMessageEvent($message));
-        $this->om->endFlushSuite();
+        $this->om->flush();
+		$this->dispatch(new CreateMessageEvent($message));
         $this->sendMessageNotification($message, $message->getCreator());
 
         return $message;
@@ -358,6 +376,34 @@ class Manager
     }
 
     /**
+     * Close a subject and no one can write in it.
+     *
+     * @param \Claroline\ForumBundle\Entity\Subject $subject
+     */
+    public function closeSubject(Subject $subject)
+    {
+        $this->om->startFlushSuite();
+        $subject->setIsClosed(true);
+        $this->om->persist($subject);
+        $this->dispatch(new CloseSubjectEvent($subject));
+        $this->om->endFlushSuite();
+    }
+
+    /**
+     * Open a subject.
+     *
+     * @param \Claroline\ForumBundle\Entity\Subject $subject
+     */
+    public function openSubject(Subject $subject)
+    {
+        $this->om->startFlushSuite();
+        $subject->setIsClosed(false);
+        $this->om->persist($subject);
+        $this->dispatch(new OpenSubjectEvent($subject));
+        $this->om->endFlushSuite();
+    }
+
+    /**
      * Get the pager for the subject list of a category.
      *
      * @param \Claroline\ForumBundle\Entity\Category $category
@@ -490,5 +536,13 @@ class Manager
         }
 
         return $newForum;
+    }
+
+    public function replyMessage(Message $message,Message $oldMessage)
+    {
+    	$html = '<div class="well">'.$oldMessage->getContent().'</div>'.$message->getContent();
+        $message = new Message();
+        $message->setContent($html);
+        $this->createMessage($message, $oldMessage->getSubject());
     }
 }

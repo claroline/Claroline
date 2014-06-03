@@ -92,6 +92,9 @@
                         <p class="text-muted">{{ message.getCreationDate()| timeAgo }}</p>
                         <hr>
                         <div class="pull-right clearfix">
+	                        <a class="btn btn-default" href="{{ path('claro_forum_reply_message_form', {'message': message.getId()}) }}">
+	                            <i class="icon-pencil"></i> {{ 'answer'|trans({}, 'platform') }}
+	                            </a>
                         {% if isModerator or app.security.token.user == message.getCreator() %}
                             <a class="btn btn-default" href="{{ path('claro_forum_edit_message_form', {'message': message.getId()}) }}">
                                 <i class="icon-pencil"></i> {{ 'edit'|trans({}, 'platform') }}
@@ -117,21 +120,25 @@
         {% if canAnswer %}
             <h4><i class="icon-reply"></i> {{ 'new_message' | trans({}, 'forum') }}</h4>
             <div>
+            {% if not subject.isClosed() %}
                 <textarea class="forum-answer claroline-tiny-mce hide"></textarea>
                 {{ form_widget(form._token) }}
+            {% endif %}
             </div>
         {% endif %}
     </div>
     <div class="panel-footer clearfix">
         <div class="pull-right">
-            <a class="btn btn-default" href='{{ path('claro_forum_subjects', { 'category': category.getId() }) }}'>
-               {{ 'back'|trans({}, 'platform') }}
-            </a>
-            {% if canAnswer %}
-                <a class="btn btn-primary">
-                    <i class="icon-reply"></i> {{ 'new_message' | trans({}, 'forum') }}
-                </a>
-            {% endif %}
+	        {% if not subject.isClosed() %}
+	            <a class="btn btn-default" href='{{ path('claro_forum_subjects', { 'category': category.getId() }) }}'>
+	               {{ 'back'|trans({}, 'platform') }}
+	            </a>
+	            {% if canAnswer %}
+	                <a class="btn btn-primary">
+	                    <i class="icon-reply"></i> {{ 'new_message' | trans({}, 'forum') }}
+	                </a>
+	            {% endif %}
+         {% endif %}
         </div>
     </div>
 {% endblock %}

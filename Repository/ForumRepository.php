@@ -39,7 +39,8 @@ class ForumRepository extends EntityRepository
             subjectCreator.id as subject_creator_id,
             lastUser.lastName as last_message_creator_lastname,
             lastUser.firstName as last_message_creator_firstname,
-            s.creationDate as subject_created
+            s.creationDate as subject_created,
+            s.isClosed as is_closed
             FROM Claroline\ForumBundle\Entity\Subject s
             JOIN s.messages m_count
             JOIN s.creator subjectCreator

@@ -81,6 +81,11 @@ class Subject
     protected $isSticked = false;
 
     /**
+     * @ORM\Column(type="boolean")
+     */
+    protected $isClosed = false;
+
+    /**
      * Constructor.
      */
     public function __construct()
@@ -167,5 +172,15 @@ class Subject
     public function getModificationDate()
     {
         return $this->updated;
+    }
+
+    public function setIsClosed($isClosed)
+    {
+        $this->isClosed = $isClosed;
+    }
+
+    public function isClosed()
+    {
+        return $this->isClosed;
     }
 }
