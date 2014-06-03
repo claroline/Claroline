@@ -135,15 +135,16 @@
 
         </div>
 
-        <h4>{{ 'Notifications'|trans({}, 'icap_dropzone') }}</h4>
+        <div id="dropzone_notification_part">
+            <h4>{{ 'Notifications'|trans({}, 'icap_dropzone') }}</h4>
 
-        <div class="form-group">
-            <div class="col-lg-offset-2 col-lg-9 peer-review-options">
-                {{ form_errors(form.notifyOnDrop) }}
-                {{ form_widget(form.notifyOnDrop) }}
+            <div class="form-group">
+                <div class="col-lg-offset-2 col-lg-9 manual-review-option">
+                    {{ form_errors(form.notifyOnDrop) }}
+                    {{ form_widget(form.notifyOnDrop) }}
+                </div>
             </div>
         </div>
-
         <div class="btn-group pull-right">
             <a href="{{ path('claro_workspace_open_tool', {'workspaceId': workspace.getId(), 'toolName': 'resource_manager'}) }}" class="btn btn-default">{{ 'Cancel'|trans({}, 'icap_dropzone') }}</a>
 
@@ -224,13 +225,20 @@
 
             var enablePeerReviewOptions = function (peerReviewEnabled) {
                 if (peerReviewEnabled) {
+                    // show the peerReview options
                     $('.peer-review-options').show();
+                    // hide the manuals options.
+                    $('.manual-review-option').hide();
                     $('#icap_dropzone_common_form_manualState_2').parent().show();
                     $('#icap_dropzone_common_form_manualState_3').parent().show();
                     $('#icap_dropzone_common_form_diplayCorrectionsToLearners').show();
+                    $('#dropzone_notification_part').hide();
                     $('.submit_button').html('{{ 'Save and continue'|trans({}, 'icap_dropzone') }}');
                 } else {
+                    // hide the peerReview options
                     $('.peer-review-options').hide();
+                    //show the manuals options
+                    $('.manual-review-option').show();
                     $('#icap_dropzone_common_form_manualState_2').parent().hide();
                     $('#icap_dropzone_common_form_manualState_3').parent().hide();
 
@@ -241,6 +249,8 @@
                     $('#icap_dropzone_common_form_endReview_time').val(null);
                     $('#icap_dropzone_common_form_startReview_date').val(null);
                     $('#icap_dropzone_common_form_startReview_time').val(null);
+
+                    $('#dropzone_notification_part').show();
 
                     $('.submit_button').html('{{ 'Save and finished'|trans({}, 'icap_dropzone') }}');
 
