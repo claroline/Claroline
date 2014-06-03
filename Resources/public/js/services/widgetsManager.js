@@ -4,6 +4,7 @@ portfolioApp
     .factory("widgetsManager", ["$http", "widgetsConfig", "widgetFactory", function($http, widgetsConfig, widgetFactory){
         return {
             widgets: [],
+            emptyWidgets: [],
             forms:   [],
             editing: [],
             init: function(widgets) {
@@ -54,18 +55,39 @@ portfolioApp
             },
             create: function(portfolioId, type) {
                 var istypeUnique = widgetsConfig.config[type].isUnique;
+
                 if (istypeUnique && 0 < this.widgets[type].length) {
                     this.edit(this.widgets[type][0]);
                 }
                 else {
-                    var newWidget = widgetFactory.getResource(portfolioId, type);
+                    var widget = this.createEmptyWidget(portfolioId, type);
                     if (istypeUnique) {
-                        this.widgets[type] = [new newWidget()];
+                        this.widgets[type] = [widget];
                     }
                     else {
-                        this.widgets[type].push(new newWidget());
+                        this.widgets[type].push(widget);
                     }
                 }
+            },
+            createEmptyWidget: function(portfolioId, type, subtype) {
+                var newWidget;
+                var widget = widgetFactory.getResource(portfolioId, type);
+
+                if (this.emptyWidgets[type]) {
+                    newWidget = new widget(angular.copy(this.emptyWidgets[type]));
+                    this.edit(newWidget);
+                }
+                else {
+                    newWidget = widget.create();
+                    var $this = this;
+                    newWidget.$promise.then(function() {
+                        newWidget.$newlyCreated  = true;
+                        $this.emptyWidgets[type] = angular.copy(newWidget);
+                        $this.edit(newWidget);
+                    });
+                }
+
+                return newWidget;
             },
             isDeletable: function(widget) {
                 return widgetsConfig.isDeletable(widget.getType());

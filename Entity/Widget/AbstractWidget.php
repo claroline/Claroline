@@ -105,4 +105,9 @@ abstract class AbstractWidget
      * @return array
      */
     abstract public function getData();
+
+    /**
+     * @return array
+     */
+    abstract public function getEmpty();
 }

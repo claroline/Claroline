@@ -5,7 +5,7 @@ namespace Icap\PortfolioBundle\Controller\Internal;
 use Claroline\CoreBundle\Entity\User;
 use Icap\PortfolioBundle\Controller\Controller as BaseController;
 use Icap\PortfolioBundle\Entity\Portfolio;
-use Icap\PortfolioBundle\Entity\Widget\AbstractWidget;
+use Icap\PortfolioBundle\Entity\Widget;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -18,7 +18,7 @@ use Symfony\Component\HttpFoundation\Request;
 class WidgetController extends BaseController
 {
     /**
-     * @Route("/{type}/{action}", name="icap_portfolio_internal_widget_get", defaults={"action" = "edit"})
+     * @Route("/{type}/{action}", name="icap_portfolio_internal_widget_get", defaults={"action" = "empty"})
      * @Method({"GET"})
      *
      * @ParamConverter("loggedUser", options={"authenticatedUser" = true})
@@ -30,12 +30,19 @@ class WidgetController extends BaseController
         if ("form" === $action) {
             $data['form'] = $this->getWidgetsManager()->getFormView($type, $action);
         }
+        else {
+            $widgetNamespace = sprintf('Icap\PortfolioBundle\Entity\Widget\%sWidget', ucfirst($type));
+            $widget          = new $widgetNamespace();
+            $data            = $widget->getEmpty();
+            $data['views']   = array();
+        }
 
         $response = new JsonResponse();
         $response->setData($data);
 
         return $response;
     }
+
     /**
      * @Route("/{type}", name="icap_portfolio_internal_widget_post", defaults={"widgetId" = null})
      * @Route("/{type}/{widgetId}", name="icap_portfolio_internal_widget_post_id")
@@ -43,7 +50,7 @@ class WidgetController extends BaseController
      *
      * @ParamConverter("loggedUser", options={"authenticatedUser" = true})
      */
-    public function postAction(Request $request, User $loggedUser, Portfolio $portfolio, $type, AbstractWidget $widget = null)
+    public function postAction(Request $request, User $loggedUser, Portfolio $portfolio, $type, Widget\AbstractWidget $widget = null)
     {
         if (null === $widget) {
             $widget = $this->getDoctrine()->getRepository('IcapPortfolioBundle:Widget\AbstractWidget')->findOneByTypeAndPortfolio($type, $portfolio);

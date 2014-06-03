@@ -48,4 +48,14 @@ class UserInformationWidget extends AbstractWidget
             'city' => $this->getCity()
         );
     }
+
+    /**
+     * @return array
+     */
+    public function getEmpty()
+    {
+        return array(
+            'city' => null
+        );
+    }
 }
