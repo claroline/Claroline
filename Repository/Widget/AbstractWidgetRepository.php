@@ -24,6 +24,6 @@ class AbstractWidgetRepository extends EntityRepository
             ->setParameter('portfolio', $portfolio)
         ;
 
-        return $executeQuery ? $query->getQuery()->getSingleResult(): $query->getQuery();
+        return $executeQuery ? $query->getQuery()->getOneOrNullResult(): $query->getQuery();
     }
 }

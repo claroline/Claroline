@@ -50,10 +50,20 @@ class WidgetController extends BaseController
      *
      * @ParamConverter("loggedUser", options={"authenticatedUser" = true})
      */
-    public function postAction(Request $request, User $loggedUser, Portfolio $portfolio, $type, Widget\AbstractWidget $widget = null)
+    public function postAction(Request $request, User $loggedUser, Portfolio $portfolio, $type, $widgetId)
     {
-        if (null === $widget) {
+        if (null === $widgetId) {
             $widget = $this->getDoctrine()->getRepository('IcapPortfolioBundle:Widget\AbstractWidget')->findOneByTypeAndPortfolio($type, $portfolio);
+
+            if (null === $widget) {
+                $widgetNamespace = sprintf('Icap\PortfolioBundle\Entity\Widget\%sWidget', ucfirst($type));
+                /** @var \Icap\PortfolioBundle\Entity\Widget\AbstractWidget $widget */
+                $widget = new $widgetNamespace();
+                $widget->setPortfolio($portfolio);
+            }
+        }
+        else {
+            $widget = $this->getDoctrine()->getRepository('IcapPortfolioBundle:Widget\AbstractWidget')->findOne($widgetId);
         }
 
         $data = $this->getWidgetsManager()->handle($widget, $type, $request->request->all());
