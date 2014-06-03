@@ -715,6 +715,9 @@ class ExerciseController extends Controller
                 $em->flush();
             } else {
                 $paper = $paper[0];
+                if (!$exercise->getDispButtonInterrupt()) {
+                   return $this->forceFinishExercise($paper);
+                }
                 $tabOrderInter = explode(';', $paper->getOrdreQuestion());
                 unset($tabOrderInter[count($tabOrderInter) - 1]);
                 $interactions[0] = $em->getRepository('UJMExoBundle:Interaction')->find($tabOrderInter[0]);
@@ -1127,6 +1130,26 @@ class ExerciseController extends Controller
         $session->remove('penalties');
 
         return $this->forward('UJMExoBundle:Paper:show', array('id' => $paper->getId()));
+    }
+
+    /**
+     * To force finish an assessment
+     *
+     */
+    private function forceFinishExercise($paperToClose)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        /** @var \UJM\ExoBundle\Entity\Paper $paper */
+        $paper = $paperToClose;
+        $paper->setInterupt(0);
+        $paper->setEnd(new \Datetime());
+        $em->persist($paper);
+        $em->flush();
+
+        $this->container->get('ujm.exercise_services')->manageEndOfExercise($paper);
+
+        return $this->forward('UJMExoBundle:Exercise:exercisePaper', array('id' => $paper->getExercise()->getId()));
     }
 
     /**
