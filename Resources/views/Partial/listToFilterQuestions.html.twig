@@ -1,6 +1,6 @@
 {% set ws = '' %}
 
-<option value="-1">Toutes les questions</option>
+<option value="-1">{{ 'allQuestion' | trans }}</option>
 {% for Exo in listExo %}
     {% if ws != Exo['name'] %}
         {% if ws !='' %}
