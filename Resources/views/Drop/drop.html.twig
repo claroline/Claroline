@@ -41,7 +41,9 @@
             <br/>
         {% endif %}
 
+        <p><span class="glyphicon icon-info-sign"></span> {{ 'drop_info'|trans({},'icap_dropzone') }}</p>
         <h4>{{ 'Documents added  the copy'|trans({},'icap_dropzone')}}</h4>
+
 
         {% if drop.documents|length <= 0%}
             {{ 'no document added yet'|trans({},'icap_dropzone')}}
@@ -190,11 +192,13 @@
             Claroline.ResourceManager.initialize(config);
 
             if ($('#icap_dropzone_document_file_form_file').val() != '') {
+                $('.please-wait').show();
                 $(this).parents('form').submit();
             }
             // autosubmit input files.
             $('#icap_dropzone_document_file_form_file').change(function(){
-              $(this).parents('form').submit();
+                $('.please-wait').show();
+                $(this).parents('form').submit();
             });
 
             $('#icap_dropzone_document_file_form_file').parents('form').find('button').click(function(e) {

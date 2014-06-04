@@ -304,3 +304,4 @@ This copy has been unlocked by admin.(it did not received the expected number of
 No copy waiting for correction: 'No copy waiting for correction'
 unterminated drops: 'unterminated drops'
 Notify on drop: 'Notify administrators when someone made a drop'
+drop_info: "Documents are automaticaly saved, but don't forget to click on the 'finish' button when you have no more thing to add, if you don't, your copy will be like undelivered."
