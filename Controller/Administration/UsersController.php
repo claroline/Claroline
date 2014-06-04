@@ -98,8 +98,12 @@ class UsersController extends Controller
     public function indexAction()
     {
         $this->checkOpen();
+        $canUserBeCreated = $this->roleManager->validateRoleInsert(
+            new User(),
+            $this->roleManager->getRoleByName('ROLE_USER')
+        );
 
-        return array();
+        return array('canUserBeCreated' => $canUserBeCreated);
     }
 
     /**
@@ -122,7 +126,7 @@ class UsersController extends Controller
         foreach ($roles as $role) {
             $isAvailable = $this->roleManager->validateRoleInsert(new User(), $role);
             if (!$isAvailable) {
-                $unavailableRoles[] = $role->getTranslationKey();
+                $unavailableRoles[] = $role;
             }
         }
 
@@ -169,14 +173,15 @@ class UsersController extends Controller
         foreach ($form->get('platformRoles')->getData() as $role) {
             $isAvailable = $this->roleManager->validateRoleInsert(new User(), $role);
             if (!$isAvailable) {
-                $unavailableRoles[] = $role->getTranslationKey();
+                $unavailableRoles[] = $role;
             }
         }
 
-        $isAvailable = $this->roleManager->validateRoleInsert(new User(), $this->roleManager->getRoleByName('ROLE_USER'));
+        $roleUser = $this->roleManager->getRoleByName('ROLE_USER');
+        $isAvailable = $this->roleManager->validateRoleInsert(new User(), $roleUser);
 
         if (!$isAvailable) {
-            $unavailableRoles[] = 'user';
+            $unavailableRoles[] = $roleUser;
         }
 
         $unavailableRoles = array_unique($unavailableRoles);

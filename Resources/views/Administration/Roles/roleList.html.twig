@@ -38,7 +38,7 @@
                 <tbody id="group-table-body">
                 {% for role in roles %}
                     <tr>
-                        <td> {{ role.getTranslationKey() }} </td>
+                        <td> {{ role.getTranslationKey() | trans({}, 'platform') }} </td>
                         <td> <input name="max-user-{{ role.getId() }}" type="number" value="{{ role.getMaxUsers() }}"> </input> </td>
                     </tr>
                 {% endfor %}

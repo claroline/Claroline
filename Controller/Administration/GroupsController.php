@@ -416,7 +416,7 @@ class GroupsController extends Controller
         foreach ($roles as $role) {
             $isAvailable = $this->roleManager->validateRoleInsert($group, $role);
             if (!$isAvailable) {
-                $unavailableRoles[] = $role->getTranslationKey();
+                $unavailableRoles[] = $role;
             }
         }
 
@@ -455,7 +455,7 @@ class GroupsController extends Controller
         foreach ($roles as $role) {
             $isAvailable = $this->roleManager->validateRoleInsert($group, $role);
             if (!$isAvailable) {
-                $unavailableRoles[] = $role->getTranslationKey();
+                $unavailableRoles[] = $role;
             }
         }
 

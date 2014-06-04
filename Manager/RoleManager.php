@@ -677,6 +677,13 @@ class RoleManager
         $this->om->flush();
     }
 
+    /**
+     * Returns if a role can be added to a RoleSubject.
+     *
+     * @param AbstractRoleSubject $ars
+     * @param Role $role
+     * @return bool
+     */
     public function validateRoleInsert(AbstractRoleSubject $ars, Role $role)
     {
         $total = $this->om->getRepository('ClarolineCoreBundle:User')->countUsersByRoleIncludingGroup($role);
@@ -688,6 +695,10 @@ class RoleManager
 
         if ($role->getName() === 'ROLE_ADMIN' && !$this->container->get('security.context')->isGranted('ROLE_ADMIN')) {
             return false;
+        }
+
+        if ($ars->hasRole($role->getName())) {
+            return true;
         }
 
         if (get_class($ars) === 'Claroline\CoreBundle\Entity\User') {

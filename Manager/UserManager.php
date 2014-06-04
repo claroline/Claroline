@@ -319,6 +319,7 @@ class UserManager
      */
     public function setPlatformRoles(User $user, $roles)
     {
+        $this->roleManager->resetRoles($user);
         $this->roleManager->associateRoles($user, $roles);
     }
 

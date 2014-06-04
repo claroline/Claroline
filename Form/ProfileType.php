@@ -83,7 +83,8 @@ class ProfileType extends AbstractType
                         'query_builder' => function (RoleRepository $roleRepository) use ($isAdmin) {
                             $query = $roleRepository->createQueryBuilder('r')
                                     ->where("r.type != " . Role::WS_ROLE)
-                                    ->andWhere("r.name != 'ROLE_ANONYMOUS'");
+                                    ->andWhere("r.name != 'ROLE_ANONYMOUS'")
+                                    ->andWhere("r.name != 'ROLE_USER'");
                             if (!$isAdmin) {
                                 $query->andWhere("r.name != 'ROLE_ADMIN'");
                             }

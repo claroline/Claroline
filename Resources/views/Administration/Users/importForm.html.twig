@@ -31,7 +31,7 @@
             <div>{{ macros.flashBox() }}</div>
             {% if error %}
                 <div class="alert alert-danger">
-                    {{ 'unavailable_role'|trans({'%translationKey%': 'user'}, 'platform') }}
+                    {{ 'role_limit_reached'|trans({'%translationKey%': 'user'}, 'platform') }}
                 </div>
             {% endif %}
             <div class="well">

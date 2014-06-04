@@ -228,12 +228,17 @@ class ProfileController extends Controller
 
         $form->handleRequest($this->request);
         $unavailableRoles = [];
-        $roles = $this->roleManager->getAllPlatformRoles();
+
+        if ($this->get('request')->getMethod() === 'POST') {
+            $form->get('platformRoles')->getData();
+        } else {
+            $roles = $this->roleManager->getAllPlatformRoles();
+        }
 
         foreach ($roles as $role) {
             $isAvailable = $this->roleManager->validateRoleInsert($user, $role);
             if (!$isAvailable) {
-                $unavailableRoles[] = $role->getTranslationKey();
+                $unavailableRoles[] = $role;
             }
         }
 

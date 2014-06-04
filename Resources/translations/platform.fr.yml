@@ -813,3 +813,5 @@ unavailable_platform: La plateforme n'est pas disponible.
 account_duration_label: Durée de vie des comptes (jours)
 platform_init_date: Date d'activation de la plateforme
 platform_expiration_date: Date d'expiration de la plateforme
+role_limit_reached: La limite d'utilisateur de type %translationKey% a été atteinte.
+user_limit_reached: La limite de création d'utilisateur a été atteinte.

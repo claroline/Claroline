@@ -33,7 +33,7 @@
     <form role="form" class="form-horizontal" action="{{ path('claro_admin_update_group_settings', {'groupId': group.getId()}) }}" method="post" {{ form_enctype(form_settings) }} id="form_settings">
         <div class="panel-body">
             {% for role in unavailableRoles %}
-                <div class="alert alert-warning"> {{ 'unavailable_role'|trans({'%translationKey%': role}, 'platform') }}</div>
+                <div class="alert alert-warning"> {{ 'role_limit_reached'|trans({'%translationKey%': role.getTranslationKey()|trans({}, 'platform')}, 'platform') }}</div>
             {% endfor %}
             {{ form_widget(form_settings) }}
         </div>
@@ -44,4 +44,14 @@
             </a>
         </div>
     </form>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    //disable unavailable checkboxes.
+    <script>
+        {% for role in unavailableRoles %}
+        $('#group_form_platformRoles_' + {{ role.getId() }}).attr('disabled', true);
+        {% endfor %}
+    </script>
 {% endblock %}

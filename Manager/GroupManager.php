@@ -464,7 +464,13 @@ class GroupManager
      */
     public function setPlatformRoles(Group $group, $roles)
     {
+        foreach ($group->getPlatformRoles() as $role) {
+            $group->removeRole($role);
+        }
+
+        $this->om->persist($group);
         $this->roleManager->associateRoles($group, $roles);
+        $this->om->flush();
     }
 
     public function validateAddUsersToGroup(array $users, Group $group)

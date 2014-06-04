@@ -32,7 +32,11 @@
                 <div class="alert alert-warning"> {{ error|trans({}, 'platform') }} </div>
             {% endif %}
             {% for role in unavailableRoles %}
-                <div class="alert alert-warning"> {{ 'unavailable_role'|trans({'%translationKey%': role}, 'platform') }}</div>
+                {% if role.getName() == 'ROLE_USER' %}
+                    <div class="alert alert-danger"> {{ 'user_limit_reached'|trans({}, 'platform') }}</div>
+                {% else %}
+                    <div class="alert alert-warning"> {{ 'role_limit_reached'|trans({'%translationKey%': role.getTranslationKey()|trans({}, 'platform')}, 'platform') }}</div>
+                {% endif %}
             {% endfor %}
             {{ form_widget(form_complete_user) }}
         </div>
@@ -43,4 +47,14 @@
             </a>
         </div>
     </form>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    //disable unavailable checkboxes.
+    <script>
+        {% for role in unavailableRoles %}
+            $('#profile_form_creation_platformRoles_' + {{ role.getId() }}).attr('disabled', true);
+        {% endfor %}
+    </script>
 {% endblock %}

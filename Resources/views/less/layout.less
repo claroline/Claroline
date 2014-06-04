@@ -749,6 +749,18 @@ div.pagination {
 /* MISC */
 /********/
 
+.list-group  > a.disabled  {
+  color: @nav-disabled-link-color;
+
+  &, &:hover,
+  &:focus {
+    color: @nav-disabled-link-hover-color;
+    text-decoration: none;
+    background-color: transparent;
+    cursor: not-allowed;
+  }
+}
+
 .margin {
     &-none { margin: 0 0 0 0 }
     &-md { margin: 15px 15px 15px 15px }
