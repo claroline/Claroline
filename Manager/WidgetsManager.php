@@ -125,5 +125,28 @@ class WidgetsManager
 
         throw new \InvalidArgumentException();
     }
+
+    /**
+     * @param Portfolio $portfolio
+     * @param string    $type
+     *
+     * @throws \InvalidArgumentException
+     * @return AbstractWidget
+     */
+    public function getNewWidget(Portfolio $portfolio, $type)
+    {
+        $widgetsConfig = $this->getWidgetsConfig();
+
+        if (isset($widgetsConfig[$type])) {
+            $widgetNamespace = sprintf('Icap\PortfolioBundle\Entity\Widget\%sWidget', ucfirst($type));
+            /** @var \Icap\PortfolioBundle\Entity\Widget\AbstractWidget $widget */
+            $widget = new $widgetNamespace();
+            $widget->setPortfolio($portfolio);
+
+            return $widget;
+        }
+
+        throw new \InvalidArgumentException("Unknown type of widget.");
+    }
 }
  

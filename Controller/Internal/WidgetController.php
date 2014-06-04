@@ -11,6 +11,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * @Route("/internal/portfolio/{id}")
@@ -51,15 +52,26 @@ class WidgetController extends BaseController
      */
     public function postAction(Request $request, User $loggedUser, Portfolio $portfolio, $type)
     {
-        $widgetNamespace = sprintf('Icap\PortfolioBundle\Entity\Widget\%sWidget', ucfirst($type));
-        /** @var \Icap\PortfolioBundle\Entity\Widget\AbstractWidget $widget */
-        $widget = new $widgetNamespace();
-        $widget->setPortfolio($portfolio);
+        $response      = new JsonResponse();
+        $widgetManager = $this->getWidgetsManager();
+        $widgetsConfig = $widgetManager->getWidgetsConfig();
+        $data          = array();
+        $statusCode    = Response::HTTP_BAD_REQUEST;
 
-        $data = $this->getWidgetsManager()->handle($widget, $type, $request->request->all());
+        if (isset($widgetsConfig[$type])) {
+            if (!$widgetsConfig[$type]['isUnique'] || (
+                    $widgetsConfig[$type]['isUnique']
+                    && null === $this->getDoctrine()->getRepository('IcapPortfolioBundle:Widget\AbstractWidget')->findOneByTypeAndPortfolio($type, $portfolio)
+                )) {
+                $newWidget  = $widgetManager->getNewWidget($portfolio, $type);
+                $data       = $widgetManager->handle($newWidget, $type, $request->request->all());
+                $statusCode = Response::HTTP_OK;
+            }
+        }
 
-        $response = new JsonResponse();
-        $response->setData($data);
+        $response
+            ->setData($data)
+            ->setStatusCode($statusCode);
 
         return $response;
     }
@@ -73,11 +85,14 @@ class WidgetController extends BaseController
      */
     public function putAction(Request $request, User $loggedUser, Portfolio $portfolio, $type, $widgetId)
     {
+        /** @var \Icap\PortfolioBundle\Repository\Widget\AbstractWidgetRepository $abstractWidgetRepository */
+        $abstractWidgetRepository = $this->getDoctrine()->getRepository('IcapPortfolioBundle:Widget\AbstractWidget');
+
         if (null === $widgetId) {
-            $widget = $this->getDoctrine()->getRepository('IcapPortfolioBundle:Widget\AbstractWidget')->findOneByTypeAndPortfolio($type, $portfolio);
+            $widget = $abstractWidgetRepository->findOneByTypeAndPortfolio($type, $portfolio);
         }
         else {
-            $widget = $this->getDoctrine()->getRepository('IcapPortfolioBundle:Widget\AbstractWidget')->findOne($widgetId);
+            $widget = $abstractWidgetRepository->findOne($widgetId);
         }
 
         $data = $this->getWidgetsManager()->handle($widget, $type, $request->request->all());
