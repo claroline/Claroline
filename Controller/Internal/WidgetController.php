@@ -44,23 +44,37 @@ class WidgetController extends BaseController
     }
 
     /**
-     * @Route("/{type}", name="icap_portfolio_internal_widget_post", defaults={"widgetId" = null})
-     * @Route("/{type}/{widgetId}", name="icap_portfolio_internal_widget_post_id")
+     * @Route("/{type}", name="icap_portfolio_internal_widget_post")
      * @Method({"POST"})
      *
      * @ParamConverter("loggedUser", options={"authenticatedUser" = true})
      */
-    public function postAction(Request $request, User $loggedUser, Portfolio $portfolio, $type, $widgetId)
+    public function postAction(Request $request, User $loggedUser, Portfolio $portfolio, $type)
+    {
+        $widgetNamespace = sprintf('Icap\PortfolioBundle\Entity\Widget\%sWidget', ucfirst($type));
+        /** @var \Icap\PortfolioBundle\Entity\Widget\AbstractWidget $widget */
+        $widget = new $widgetNamespace();
+        $widget->setPortfolio($portfolio);
+
+        $data = $this->getWidgetsManager()->handle($widget, $type, $request->request->all());
+
+        $response = new JsonResponse();
+        $response->setData($data);
+
+        return $response;
+    }
+
+    /**
+     * @Route("/{type}", name="icap_portfolio_internal_widget_put", defaults={"widgetId" = null})
+     * @Route("/{type}/{widgetId}", name="icap_portfolio_internal_widget_post_id")
+     * @Method({"PUT"})
+     *
+     * @ParamConverter("loggedUser", options={"authenticatedUser" = true})
+     */
+    public function putAction(Request $request, User $loggedUser, Portfolio $portfolio, $type, $widgetId)
     {
         if (null === $widgetId) {
             $widget = $this->getDoctrine()->getRepository('IcapPortfolioBundle:Widget\AbstractWidget')->findOneByTypeAndPortfolio($type, $portfolio);
-
-            if (null === $widget) {
-                $widgetNamespace = sprintf('Icap\PortfolioBundle\Entity\Widget\%sWidget', ucfirst($type));
-                /** @var \Icap\PortfolioBundle\Entity\Widget\AbstractWidget $widget */
-                $widget = new $widgetNamespace();
-                $widget->setPortfolio($portfolio);
-            }
         }
         else {
             $widget = $this->getDoctrine()->getRepository('IcapPortfolioBundle:Widget\AbstractWidget')->findOne($widgetId);

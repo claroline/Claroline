@@ -110,9 +110,7 @@ class WidgetsManager
         $form->submit($parameters);
 
         if ($form->isValid()) {
-            $object = $form->getData();
-
-            $this->entityManager->persist($object);
+            $this->entityManager->persist($widget);
             $this->entityManager->flush();
 
             $widgetDatas = array(

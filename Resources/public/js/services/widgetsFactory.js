@@ -30,6 +30,7 @@ portfolioApp
                     }
                 );
                 widget.prototype.editing = false;
+                widget.prototype.new   = false;
 
                 widget.prototype.generateUrl = function(parameters) {
                     parameters.portfolioId = portfolioId;
@@ -54,6 +55,12 @@ portfolioApp
                 };
                 widget.prototype.getType = function() {
                     return type;
+                };
+                widget.prototype.setNewMode = function(isNew) {
+                    this.new = isNew;
+                };
+                widget.prototype.isNew = function() {
+                    return this.new;
                 };
 
                 this.widgetResources[type] = widget;

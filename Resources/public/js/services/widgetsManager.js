@@ -45,13 +45,15 @@ portfolioApp
             save: function(widget) {
                 var $this = this;
                 var success = function() {
+                    widget.setNewMode(false);
                     $this.cancelEditing(widget);
                 };
                 var failed = function(error) {
                     console.error('Error occured while saving widget');
                     console.log(error);
                 }
-                return widget.$save(success, failed);
+
+                return widget.isNew() ? delete widget.new && widget.$save(success, failed) : delete widget.new && widget.$update(success, failed);
             },
             create: function(portfolioId, type) {
                 var istypeUnique = widgetsConfig.config[type].isUnique;
@@ -81,7 +83,7 @@ portfolioApp
                     newWidget = widget.create();
                     var $this = this;
                     newWidget.$promise.then(function() {
-                        newWidget.$newlyCreated  = true;
+                        newWidget.setNewMode(true);
                         $this.emptyWidgets[type] = angular.copy(newWidget);
                         $this.edit(newWidget);
                     });
