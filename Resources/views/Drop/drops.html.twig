@@ -13,7 +13,7 @@
         </h2>
 
         {% if unterminated_drops is defined %}
-            <p>{{ unterminated_drops }} copies non terminées.</p>
+            <p>{{ unterminated_drops }} {{ 'unterminated drops'|trans({},'icap_dropzone') }}</p>
         {% endif %}
         {{ macros.flashBox() }}
 
