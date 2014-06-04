@@ -40,15 +40,19 @@
             {%  include 'IcapDropzoneBundle:Dropzone:recallInstruction.html.twig' %}
             <br/>
         {% endif %}
+        <div class="panel panel-default">
+            <div class="panel-body"><p class="text-muted"><span
+                            class="glyphicon icon-info-sign"></span> {{ 'drop_info'|trans({},'icap_dropzone') }}</p>
+            </div>
+        </div>
 
-        <p><span class="glyphicon icon-info-sign"></span> {{ 'drop_info'|trans({},'icap_dropzone') }}</p>
         <h4>{{ 'Documents added  the copy'|trans({},'icap_dropzone')}}</h4>
 
 
-        {% if drop.documents|length <= 0%}
+        {#{% if drop.documents|length <= 0%}
             {{ 'no document added yet'|trans({},'icap_dropzone')}}
-        {% endif %}
-        
+        {% endif %}#}
+
         <br />
         {% set documentListText = 'Documents'|trans({}, 'icap_dropzone') %}
         {{ dropzoneMacros.displayDocumentsList(drop, dropzone, 12, "complete", documentListText) }}
