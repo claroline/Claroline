@@ -21,7 +21,6 @@
                         <div class="portfolio-title-container" data-ng-repeat="widget in widgets">
                             {% if editMode %}
                                 <div class="widget-actions">
-                                    <button class="widget-action btn" data-ng-click="delete(widget);" data-ng-if="isDeletable(widget)"><span class="icon-trash"></span></button>
                                     <button class="widget-action btn" data-ng-click="edit(widget);" data-ng-if="!widget.isEditing()"><span class="icon-pencil"></span></button>
                                 </div>
                                 <div data-ng-bind-html="widget.views.view | trustAsHtml"></div>

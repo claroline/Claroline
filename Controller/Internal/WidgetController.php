@@ -78,7 +78,7 @@ class WidgetController extends BaseController
 
     /**
      * @Route("/{type}", name="icap_portfolio_internal_widget_put", defaults={"widgetId" = null})
-     * @Route("/{type}/{widgetId}", name="icap_portfolio_internal_widget_post_id")
+     * @Route("/{type}/{widgetId}", name="icap_portfolio_internal_widget_put_id")
      * @Method({"PUT"})
      *
      * @ParamConverter("loggedUser", options={"authenticatedUser" = true})
@@ -99,6 +99,37 @@ class WidgetController extends BaseController
 
         $response = new JsonResponse();
         $response->setData($data);
+
+        return $response;
+    }
+
+    /**
+     * @Route("/{type}", name="icap_portfolio_internal_widget_delete", defaults={"widgetId" = null})
+     * @Route("/{type}/{widgetId}", name="icap_portfolio_internal_widget_delete_id")
+     * @Method({"DELETE"})
+     *
+     * @ParamConverter("loggedUser", options={"authenticatedUser" = true})
+     */
+    public function deleteAction(Request $request, User $loggedUser, Portfolio $portfolio, $type, $widgetId)
+    {
+        /** @var \Icap\PortfolioBundle\Repository\Widget\AbstractWidgetRepository $abstractWidgetRepository */
+        $abstractWidgetRepository = $this->getDoctrine()->getRepository('IcapPortfolioBundle:Widget\AbstractWidget');
+
+        if (null === $widgetId) {
+            $widget = $abstractWidgetRepository->findOneByTypeAndPortfolio($type, $portfolio);
+        }
+        else {
+            $widget = $abstractWidgetRepository->findOne($widgetId);
+        }
+
+        $response = new JsonResponse();
+
+        try {
+            $this->getWidgetsManager()->deleteWidget($widget);
+
+        } catch(\Exception $exception){
+            $response->setStatusCode(Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
 
         return $response;
     }

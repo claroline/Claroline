@@ -93,6 +93,19 @@ portfolioApp
             },
             isDeletable: function(widget) {
                 return widgetsConfig.isDeletable(widget.getType());
+            },
+            delete: function(widget) {
+                if (this.isDeletable(widget)) {
+                    var $this = this;
+                    var success = function() {
+                        $this.widgets[widget.getType()].remove(widget);
+                    };
+                    var failed = function(error) {
+                        console.error('Error occured while deleting widget');
+                        console.log(error);
+                    }
+                    widget.$delete(success, failed);
+                }
             }
         };
     }]);

@@ -148,5 +148,14 @@ class WidgetsManager
 
         throw new \InvalidArgumentException("Unknown type of widget.");
     }
+
+    /**
+     * @param AbstractWidget $widget
+     */
+    public function deleteWidget(AbstractWidget $widget)
+    {
+        $this->entityManager->remove($widget);
+        $this->entityManager->flush();
+    }
 }
  
