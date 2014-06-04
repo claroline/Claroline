@@ -304,3 +304,4 @@ Notifications: "Notifications"
 unterminated drops: 'copie(s) non terminée(s)'
 Notify on drop: 'Notifier les administrateurs lorsqu''une copie est déposée'
 drop_info: "Chaque document ajouté est sauvegardé automatiquement. Cependant pensez à cliquer sur 'terminer' en bas à droite une fois que vous avez fini. Si vous ne le faites pas votre copie sera considérée comme non-rendue."
+dropzone_startedNotValidatedYet_infos: "Ces copies concernent les personnes qui ont commencé à déposer des fichiers mais n'ont pas encore cliqué sur le bouton 'terminer' afin de valider leurs copies. Si vous ne faites rien, ces copies seront considérées comme 'non rendues'."
