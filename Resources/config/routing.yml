@@ -253,3 +253,8 @@ claro_admin_groups:
     prefix: admin/groups
     resource: "@ClarolineCoreBundle/Controller/Administration/GroupsController.php"
     type: annotation
+
+claro_admin_competence:
+    prefix: admin/competence
+    resource: "@ClarolineCoreBundle/Controller/Administration/CompetenceController.php"
+    type: annotation

@@ -61,6 +61,11 @@
             <i class="icon-puzzle-piece"></i>
             {{ 'admin_third_party_application'|trans({}, 'platform') }}
         </a>
+        <a class="list-group-item{{ '/admin/applications'|compareRoute(' active') }}"
+            href="{{ path('claro_admin_competence_form') }}">
+            <i class="icon-list-ol"></i>
+            {{ 'admin_competence'|trans({}, 'platform') }}
+        </a>
     </div>
 {% endblock %}
 

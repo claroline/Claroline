@@ -120,6 +120,15 @@ abstract class AbstractWorkspace
      */
     protected $selfUnregistration = false;
 
+    /**
+     * @ORM\OneToMany(
+     *     targetEntity="Claroline\CoreBundle\Entity\Competence\Competence",
+     *     mappedBy="workspace",
+     *     cascade={"persist"}
+     * )
+     */
+    protected $competences;
+
     public function __construct()
     {
         $this->roles = new ArrayCollection();
