@@ -321,7 +321,9 @@ class DropRepository extends EntityRepository
             ->setParameter('dropzone', $dropzone)
             ->setParameter('dropId', $dropId);
 
-        return $qb->getQuery()->getResult()[0];
+        $res = $qb->getQuery()->getResult();
+
+        return $res;
     }
 
     public function getDropAndValidEndedCorrectionsAndDocumentsByUser($dropzone, $dropId, $userId)
