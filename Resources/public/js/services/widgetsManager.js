@@ -69,13 +69,12 @@ portfolioApp
                     var widget = this.createEmptyWidget(portfolioId, type);
                     if (istypeUnique) {
                         this.widgets[type] = [widget];
-                    }
-                    else {
+                    } else {
                         this.widgets[type].push(widget);
                     }
                 }
             },
-            createEmptyWidget: function(portfolioId, type, subtype) {
+            createEmptyWidget: function(portfolioId, type) {
                 var newWidget;
                 var widget = widgetFactory.getResource(portfolioId, type);
 
@@ -87,7 +86,6 @@ portfolioApp
                     newWidget = widget.create();
                     var $this = this;
                     newWidget.$promise.then(function() {
-                        newWidget.setNewMode(true);
                         $this.emptyWidgets[type] = angular.copy(newWidget);
                         $this.edit(newWidget);
                     });
