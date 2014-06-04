@@ -41,6 +41,10 @@ portfolioApp
                 widget.setEditMode(false);
 
                 this.editing.remove(widget);
+
+                if (widget.isNew()) {
+                    this.widgets[widget.getType()].remove(widget);
+                }
             },
             save: function(widget) {
                 var $this = this;
