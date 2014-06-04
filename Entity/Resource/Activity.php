@@ -46,6 +46,15 @@ class Activity extends AbstractResource
      */
     protected $endDate;
 
+    /**
+     * @ORM\OneToOne(
+     *     targetEntity="Claroline\CoreBundle\Entity\Activity\ActivityParameters",
+     *     inversedBy="activity"
+     * )
+     * @ORM\JoinColumn(name="parameters_id", onDelete="SET NULL", nullable=true)
+     */
+    protected $parameters;
+
     public function __construct()
     {
         $this->resourcesActivities = new ArrayCollection();
