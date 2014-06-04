@@ -14,7 +14,7 @@ namespace Claroline\CoreBundle\Entity\Competence;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\CompetenceRepository")
  * @ORM\Table(name="claro_competence")
  */
 Class Competence {

@@ -18,6 +18,7 @@ use Claroline\CoreBundle\Form\Factory\FormFactory;
 use Claroline\CoreBundle\Manager\GroupManager;
 use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Manager\UserManager;
+use Claroline\CoreBundle\Manager\CompetenceManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use JMS\SecurityExtraBundle\Annotation as SEC;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
@@ -26,6 +27,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\RouterInterface;
+
 
 /**
  * @DI\Tag("security.secure_service")
@@ -41,7 +43,8 @@ class CompetenceController {
      *     "eventDispatcher"    = @DI\Inject("claroline.event.event_dispatcher"),
      *     "formFactory"        = @DI\Inject("claroline.form.factory"),
      *     "request"            = @DI\Inject("request"),
-     *     "router"             = @DI\Inject("router")
+     *     "router"             = @DI\Inject("router"),
+     *     "cptmanager"			= @DI\Inject("claroline.manager.competence_manager")
      * })
      */
     public function __construct(
@@ -77,5 +80,26 @@ class CompetenceController {
         $form = $this->formFactory->create(FormFactory::TYPE_COMPETENCE);
 
         return array('form' => $form->createView());
+    }
+
+     /**
+     * @EXT\Route("/add", name="claro_admin_competence_add")
+     * @EXT\Method("POST")
+     * @EXT\Template("ClarolineCoreBundle:Administration:competenceForm.html.twig")
+     *
+     * Displays the group creation form.
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function competenceAction()
+    {
+        $form = $this->formFactory->create(FormFactory::TYPE_COMPETENCE, array());
+
+        return array('form' => $form->createView());
+        
+        if ($form->isValid()) {
+            $competence = $form->getData();
+            
+        }
     }
 } 
