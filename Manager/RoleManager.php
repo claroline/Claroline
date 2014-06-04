@@ -154,6 +154,10 @@ class RoleManager
             throw new Exception\AddRoleException();
         }
 
+        if (get_class($ars) === 'Claroline\CoreBundle\Entity\Group' && $role->getName() === 'ROLE_USER') {
+            throw new Exception\AddRoleException('ROLE_USER cannot be added to groups');
+        }
+
         if (!is_null($role)) {
             $ars->addRole($role);
             $this->om->persist($ars);
@@ -184,7 +188,12 @@ class RoleManager
             throw new Exception\AddRoleException();
         }
 
+        if (get_class($ars) === 'Claroline\CoreBundle\Entity\Group' && $role->getName() === 'ROLE_USER') {
+            throw new Exception\AddRoleException('ROLE_USER cannot be added to groups');
+        }
+
         if (!$ars->hasRole($role->getName())) {
+
             $ars->addRole($role);
             $this->om->startFlushSuite();
 

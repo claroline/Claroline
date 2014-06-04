@@ -1148,7 +1148,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface
     public function countUsersByRoleIncludingGroup(Role $role)
     {
         $dql = '
-            SELECT count(u)
+            SELECT count(distinct u)
             FROM Claroline\CoreBundle\Entity\User u
             JOIN u.roles r1
             LEFT JOIN  u.groups g
