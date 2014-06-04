@@ -14,6 +14,7 @@
     var home = window.Claroline.Home;
     var modal = window.Claroline.Modal;
     var translator = window.Translator;
+    var routing =  window.Routing;
 
     //Load external plugins
     tinymce.PluginManager.load('mention', home.asset + 'bundles/frontend/tinymce/plugins/mention/plugin.min.js');
@@ -29,7 +30,8 @@
     };
 
     /**
-     * This method fire the event "show" of TinyMCE, this is usefull after change manually something in the editor.
+     * This method fix the height of TinyMCE after modify it,
+     * this is usefull when change manually something in the editor.
      *
      * @param editor A TinyMCE editor object.
      *
@@ -37,7 +39,23 @@
     tinymce.claroline.editorChange = function (editor)
     {
         setTimeout(function () {
-            editor.fire('show');
+            var container = $(editor.getContainer()).find('iframe').first();
+            var height = container.contents().height();
+            var max = 'autoresize_max_height';
+            var min = 'autoresize_min_height';
+
+            switch (true)
+            {
+                case (height <= tinymce.claroline.configuration[min]):
+                    container.css('height', tinymce.claroline.configuration[min]);
+                    break;
+                case (height >= tinymce.claroline.configuration[max]):
+                    container.css('height', tinymce.claroline.configuration[max]);
+                    container.css('overflow', 'scroll');
+                    break;
+                default:
+                    container.css('height', height);
+            }
         }, 500);
     };
 
@@ -147,6 +165,9 @@
                     nodes[resource.id] = new Array(resource.name, resource.type, resource[mimeType]);
                     $(element).modal('hide');
                     tinymce.claroline.callBack(nodes);
+                    $.ajax(
+                        routing.generate('claro_resource_open_perms', {'node': resource.id})
+                    );
                 } else {
                     $('.progress', element).addClass('hide');
                     $('.alert', element).removeClass('hide');
@@ -248,10 +269,30 @@
                     tinymce.claroline.disableBeforeUnload = false;
                 }
             }
-        })
-            .on('LoadContent', function () {
-                tinymce.claroline.editorChange(editor);
-            });
+        }).on('LoadContent', function () {
+            tinymce.claroline.editorChange(editor);
+        });
+
+        editor.on('BeforeRenderUI', function () {
+            editor.theme.panel.find('toolbar').slice(1).hide();
+        });
+
+        // Add a button that toggles toolbar 1+ on/off
+        editor.addButton('displayAllButtons', {
+            'icon': 'none icon-chevron-down',
+            'classes': 'widget btn',
+            'tooltip': translator.get('platform:tinymce_all_buttons'),
+            onclick: function () {
+                if (!this.active()) {
+                    this.active(true);
+                    editor.theme.panel.find('toolbar').slice(1).show();
+                } else {
+                    this.active(false);
+                    editor.theme.panel.find('toolbar').slice(1).hide();
+                }
+            }
+        });
+
         tinymce.claroline.addResourcePicker(editor);
         tinymce.claroline.setBeforeUnloadActive(editor);
         $('body').bind('ajaxComplete', function () {
@@ -264,6 +305,52 @@
     };
 
     /**
+     * @todo documentation
+     */
+    tinymce.claroline.mentionsSource = function (query, process, delimiter)
+    {
+        if (!_.isUndefined(window.Workspace) && !_.isNull(window.Workspace.id)) {
+            if (delimiter === '@' && query.length > 0) {
+                var searchUserInWorkspaceUrl = routing.generate('claro_user_search_in_workspace') + '/';
+
+                $.getJSON(searchUserInWorkspaceUrl + window.Workspace.id + '/' + query, function (data) {
+                    if (!_.isEmpty(data) && !_.isUndefined(data.users) && !_.isEmpty(data.users)) {
+                        process(data.users);
+                    }
+                });
+            }
+        }
+    };
+
+    /**
+     * @todo documentation
+     */
+    tinymce.claroline.mentionsItem = function (item)
+    {
+        var avatar = '<i class="icon-user"></i>';
+        if (item.avatar !== null) {
+            avatar = '<img src="' + home.asset + 'uploads/pictures/' + item.avatar + '" alt="' + item.name +
+                     '" class="img-responsive">';
+        }
+
+        return '<li>' +
+            '<a href="javascript:;"><span class="user-picker-dropdown-avatar">' + avatar + '</span>' +
+            '<span class="user-picker-dropdown-name">' + item.name + '</span>' +
+            '<small class="user-picker-avatar-mail text-muted">(' + item.mail + ')</small></a>' +
+            '</li>';
+    };
+
+    /**
+     * @todo documentation
+     */
+    tinymce.claroline.mentionsInsert = function (item)
+    {
+        var publicProfileUrl = routing.generate('claro_public_profile_view') + '/';
+
+        return '<user id="' + item.id + '"><a href="' + publicProfileUrl + item.id + '">' + item.name + '</a></user>';
+    };
+
+    /**
      * Configuration and parameters of a TinyMCE editor.
      */
     tinymce.claroline.configuration = {
@@ -273,44 +360,25 @@
         'browser_spellcheck': true,
         'autoresize_min_height': 100,
         'autoresize_max_height': 500,
-        'content_css': home.asset + 'bundles/clarolinecore/css/tinymce/tinymce.css',
+        'content_css': home.asset + 'css/clarolinecore/tinymce.css',
         'plugins': [
             'autoresize advlist autolink lists link image charmap print preview hr anchor pagebreak',
             'searchreplace wordcount visualblocks visualchars fullscreen',
             'insertdatetime media nonbreaking save table directionality',
             'template paste textcolor emoticons code -mention -accordion'
         ],
-        'toolbar1': 'styleselect | bold italic | alignleft aligncenter alignright alignjustify | ' +
-            'preview fullscreen resourcePicker fileUpload  accordion',
-        'toolbar2': 'undo redo | forecolor backcolor emoticons | bullist numlist outdent indent | ' +
-            'link image media print code',
+        'toolbar1': 'bold italic underline strikethrough | alignleft aligncenter alignright alignjustify | ' +
+                    'resourcePicker fileUpload | fullscreen displayAllButtons',
+        'toolbar2': 'styleselect | undo redo | forecolor backcolor | bullist numlist | outdent indent | ' +
+                    'image media link charmap | print preview code',
         'extended_valid_elements': 'user[id], a[data-toggle|data-parent]',
         'paste_preprocess': tinymce.claroline.paste,
         'setup': tinymce.claroline.setup,
         'mentions': {
-            source: function (query, process, delimiter) {
-                if (!_.isUndefined(window.Workspace) && !_.isNull(window.Workspace.id)) {
-                    if (delimiter === '@' && query.length>0) {
-                        $.getJSON(home.path + 'user/searchInWorkspace/' + window.Workspace.id + '/' + query, function (data) {
-                            if(!_.isEmpty(data) && !_.isUndefined(data.users) && !_.isEmpty(data.users))process(data.users);
-                        });
-                    }
-                }
-            },
-            render: function(item) {
-                var avatar = '<i class="icon-user"></i>';
-                if(item.avatar != null) {
-                    avatar = '<img src="' + home.asset + 'uploads/pictures/' + item.avatar + '"/>';
-                }
-
-                return '<li>' +
-                    '<a href="javascript:;"><span class="user-picker-dropdown-avatar">' + avatar + '</span> <span class="user-picker-dropdown-name">' + item.name + '</span> <small class="user-picker-avatar-mail text-muted">('+item.mail+')</small></a>' +
-                    '</li>';
-            },
-            insert: function(item) {
-                return '<user id="' + item.id + '"><a href="' + home.path + 'profile/view/' + item.id + '">' + item.name + '</a></user>';
-            },
-            delay: 200
+            'source': tinymce.claroline.mentionsSource,
+            'render': tinymce.claroline.mentionsRender,
+            'insert': tinymce.claroline.mentionsInsert,
+            'delay': 200
         }
     };
 
@@ -340,6 +408,7 @@
     })
     .on('click', '.mce-widget.mce-btn[aria-label="Fullscreen"]', function () {
         tinymce.claroline.toggleFullscreen(this);
+        $(window).scrollTop($(this).parents('.mce-tinymce.mce-container.mce-panel').first().offset().top);
         window.dispatchEvent(new window.Event('resize'));
     })
     .bind('DOMSubtreeModified', function () {
@@ -356,7 +425,7 @@
 
     $(window).on('beforeunload', function () {
         if (tinymce.claroline.checkBeforeUnload()) {
-            return 'Leaving this page will lose your changes. Are you sure?';
+            return translator.get('platform:leave_this_page');
         }
     });
 }());

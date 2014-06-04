@@ -1,0 +1,97 @@
+{% extends "ClarolineCoreBundle::layout.html.twig" %}
+
+{% block title %}{{ 'my_profile'|trans({}, 'platform') ~ ' - ' ~ user.getLastName() ~ ' ' ~ user.getFirstName() | striptags | raw }}{% endblock %}
+
+{% set canEdit = (app.user is not null and user.getId() == app.user.getId()) or is_granted('ROLE_ADMIN') %}
+
+{% block content %}
+    {{ macros.flashBox() }}
+    <div class="panel panel-default panel-user">
+        <div class="panel-heading relative">
+            {% if canEdit %}
+                <div class="dropdown float-right-top">
+                    <a data-toggle="dropdown" href="#" class="btn btn-xs btn-primary" role="button">
+                        {{ 'actions' | trans({}, 'platform') }} <span class="icon-gear"></span> <i class="caret"></i>
+                    </a>
+                    <ul class="dropdown-menu" role="menu">
+                        <li role="presentation" >
+                            <a role="menuitem" href="{{ path('claro_user_profile_edit') }}">
+                                {{ 'edit_profile'|trans({}, 'platform') }}
+                            </a>
+                        </li>
+                        <li role="presentation" >
+                            <a role="menuitem" href="{{ path('claro_user_password_edit') }}">
+                                {{ 'edit_password'|trans({}, 'platform') }}
+                            </a>
+                        </li>
+                        <li role="presentation" >
+                            <a role="menuitem" href="{{ path('claro_public_profile_view', {'publicUrl': user.publicUrl}) }}">
+                                {{ 'see_public_profile'|trans({}, 'platform') }}
+                            </a>
+                        </li>
+                        {% if false == user.hasTunedPublicUrl %}
+                        <li role="presentation" >
+                            <a role="menuitem" href="{{ path('claro_user_public_url_edit') }}">
+                                {{ 'tune_your_public_profile_url'|trans({}, 'platform') }}
+                            </a>
+                        </li>
+                        {% endif %}
+                        <li role="presentation" >
+                            <a role="menuitem" href="{{ path('claro_user_public_profile_preferences') }}">
+                                {{ 'manage_public_profile_preferences'|trans({}, 'platform') }}
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            {% endif %}
+            <h3 class="panel-title">
+                {{ 'user_profile'|trans({}, 'platform') }}
+            </h3>
+        </div>
+        <div class="panel-body">
+            <div class="row">
+                <aside class="col-md-2 profile_aside" role="complementary">
+                    <div class="avatar">
+                        {% if user.getPicture() != "" %}
+                            <img src="{{ asset('uploads/pictures/') ~  user.getPicture() }}" class="profile_picture" alt="{{ user.getLastName() ~ ' ' ~ user.getFirstName() }}">
+                        {% else %}
+                            <h1 class="profile_picture_placeholder"><i class="icon-user"></i></h1>
+                        {% endif %}
+                    </div>
+                    <div class="informations">
+                        <p class="text-center text-muted">
+                            {{ 'registered'|trans({}, 'platform') }} {{ user.getCreationDate()| timeAgo }}
+                        </p>
+                    </div>
+                    <ul class="nav nav-pills nav-stacked contact_methods">
+                        <li>
+                            <a href="{{path('claro_mail_form', {'userId':user.getId()})}}">
+                                <i class="icon-envelope"></i> {{ 'send_mail'|trans({}, 'platform') }}
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{path('claro_message_show', {'message': 0})}}?ids[]={{ user.getId() }}">
+                                <i class="icon-comment"></i> {{ 'send_message'|trans({}, 'platform') }}
+                            </a>
+                        </li>
+                    </ul>
+                </aside>
+                <div class="col-md-6 profile_informations">
+                    <h2>{{ user.getLastName() ~ ' ' ~ user.getFirstName() }}</h2>
+                    <p><span class="icon-envelope"> <a href="mailto:{{ user.getmail() }}" title="{{ user.getmail() }}">{{ user.getmail() }}</a></span></p>
+                    {% if user.getPhone() is not null %}
+                        <p><span class="icon-phone-sign"></span> {{ user.getPhone() }}</p>
+                    {% endif %}
+                    {% if '' != user.getDescription() %}
+                        <div class="description_block">
+                            <p class="lead">Description de {{ user.getLastName() ~ ' ' ~ user.getFirstName() }}</p>
+                            <div class="description">
+                                {{ user.getDescription() |raw }}
+                            </div>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

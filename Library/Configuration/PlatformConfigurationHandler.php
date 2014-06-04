@@ -130,6 +130,7 @@ class PlatformConfigurationHandler
         $config->setMailerUsername($this->parameters['mailer_username']);
         $config->setMailerPassword($this->parameters['mailer_password']);
         $config->setMailerAuthMode($this->parameters['mailer_auth_mode']);
+        $config->setMailerPort($this->parameters['mailer_port']);
         $config->setGoogleMetaTag($this->parameters['google_meta_tag']);
         $config->setRedirectAfterLogin($this->parameters['redirect_after_login']);
         $config->setSessionStorageType($this->parameters['session_storage_type']);

@@ -16,6 +16,7 @@ use Claroline\CoreBundle\Library\Themes\ThemeService;
 use Symfony\Component\Config\FileLocatorInterface;
 use Symfony\Component\Templating\TemplateReferenceInterface;
 use Symfony\Bundle\FrameworkBundle\Templating\Loader\TemplateLocator as baseTemplateLocator;
+use Claroline\CoreBundle\Entity\Theme\Theme;
 
 /**
  * {@inheritDoc}
@@ -59,15 +60,12 @@ class TemplateLocator extends baseTemplateLocator
             throw new \InvalidArgumentException('The template must be an instance of TemplateReferenceInterface.');
         }
 
-        $path = $this->configHandler->getParameter('theme');
-        $theme = $this->themeService->findTheme(array('path' => $path));
+        $name = ucwords(str_replace('-', ' ', $this->configHandler->getParameter('theme')));
+        $theme = $this->themeService->findTheme(array('name' => $name));
+        $path = $this->getPath($theme);
         $bundle = substr($path, 0, strpos($path, ':'));
 
-        if ($theme !== null and
-            $bundle !== '' and
-            $bundle !== $template->get('bundle') and
-            $template->get('bundle') === 'ClarolineCoreBundle'
-        ) {
+        if ($this->isOverwritable($theme, $bundle, $template)) {
             $template = $this->locateTemplate($template, $bundle, $theme, $currentPath);
         } elseif ($template->get('bundle') === 'FOSOAuthServerBundle') {
             if ('Authorize' === $template->get('controller') && 'authorize' === $template->get('name')) {
@@ -122,5 +120,27 @@ class TemplateLocator extends baseTemplateLocator
         }
 
         return $newTemplate;
+    }
+
+    /**
+     * Check if $theme, $bundle and $template are correct in order to Overwrite a template.
+     * @return boolean
+     */
+    private function isOverwritable($theme, $bundle, $template)
+    {
+        return (
+            $theme instanceof Theme and
+            $bundle !== '' and
+            $bundle !== $template->get('bundle') and
+            $template->get('bundle') === 'ClarolineCoreBundle'
+        );
+    }
+
+    /**
+     * Get the th of a theme
+     */
+    private function getPath($theme)
+    {
+        return ($theme instanceof Theme) ? $theme->getPath() : null;
     }
 }

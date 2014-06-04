@@ -12,7 +12,7 @@ same message when authentication has failed (no precise validation errors).
     <div class="col-md-offset-4 col-md-4">
         {% if error %}
             <div class="alert alert-danger">
-                <button type="button" class="close" data-dismiss="alert">×</button>
+                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
                 {{ 'login_failure'|trans({}, 'platform') }}
             </div>
         {% endif %}
@@ -21,7 +21,7 @@ same message when authentication has failed (no precise validation errors).
             <div class="panel-heading">
                 <h3 class="panel-title">{{ 'login' | trans({}, "platform")}}</h3>
             </div>
-            <form id="login" class="vertical" action="{{ path('claro_api_oauth_login_check') }}" method="post">
+            <form role="form" id="login" class="vertical" action="{{ path('claro_api_oauth_login_check') }}" method="post">
                 {% if(error) %}
                 <div class='form_error'></div>
                 {% endif %}

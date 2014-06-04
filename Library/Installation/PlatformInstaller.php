@@ -109,6 +109,7 @@ class PlatformInstaller
     {
         $this->createDatabaseIfNotExists();
         $this->createAclTablesIfNotExist();
+        $this->createPublicSubDirectories();
     }
 
     private function createDatabaseIfNotExists()
@@ -142,6 +143,22 @@ class PlatformInstaller
         $command = new InitAclCommand();
         $command->setContainer($this->container);
         $command->run(new ArrayInput(array()), $this->output ?: new NullOutput());
+    }
+
+    private function createPublicSubDirectories()
+    {
+        $this->log('Creating public sub-directories...');
+        $directories = array(
+            $this->container->getParameter('claroline.param.thumbnails_directory'),
+            $this->container->getParameter('claroline.param.uploads_directory'),
+            $this->container->getParameter('claroline.param.uploads_directory') . '/badges'
+        );
+
+        foreach ($directories as $directory) {
+            if (!is_dir($directory)) {
+                mkdir($directory);
+            }
+        };
     }
 
     private function log($message)

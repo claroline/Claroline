@@ -17,6 +17,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use JMS\SerializerBundle\Annotation\Type;
 use Claroline\CoreBundle\Entity\Tool\OrderedTool;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\WorkspaceRepository")
@@ -50,6 +51,11 @@ abstract class AbstractWorkspace
      * @Assert\NotBlank()
      */
     protected $name;
+
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    protected $description;
 
     /**
      * @ORM\Column(unique=true)
@@ -128,6 +134,12 @@ abstract class AbstractWorkspace
      * )
      */
     protected $competences;
+    
+    /**
+     * @ORM\Column(name="creation_date", type="integer", nullable=true)
+     */
+
+    protected $creationDate;
 
     public function __construct()
     {
@@ -155,7 +167,17 @@ abstract class AbstractWorkspace
         $this->name = $name;
     }
 
-    public function getEvents()
+    public function getDescription() 
+    {
+        return $this->description;
+    }
+
+    public function setDescription($description) 
+    {
+        $this->description = $description;
+    }
+
+    public function getEvents() 
     {
         return $this->events;
     }
@@ -244,4 +266,22 @@ abstract class AbstractWorkspace
     {
         return $this->selfUnregistration;
     }
+
+    public function setCreationDate($creationDate)
+    {
+        $this->creationDate = $creationDate;
+    }
+
+    public function getCreationDate()
+    {
+        if (is_null($this->creationDate)) {
+            return $this->creationDate;
+
+        } else {
+            $date = date('d-m-Y H:i', $this->creationDate);
+
+            return (new \Datetime($date));
+        }
+    }
+
 }

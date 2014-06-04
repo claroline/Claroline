@@ -3,6 +3,7 @@
 {% block title %}{{ 'administration'|trans({}, 'platform')|striptags|raw }}{% endblock %}
 
 {% block leftbar %}
+<<<<<<< HEAD
     <div class="list-group menu">
         <div class="list-group-item disabled">{{ 'administration'|trans({}, 'platform') }}</div>
         <a class="list-group-item{{ '/admin/parameters'|compareRoute(' active') }}"
@@ -67,6 +68,9 @@
             {{ 'admin_competence'|trans({}, 'platform') }}
         </a>
     </div>
+=======
+    {% render controller("ClarolineCoreBundle:Administration:renderLeftBar") %}
+>>>>>>> 9f091fdc988deee80c4ff05fdedb073324e0d5b2
 {% endblock %}
 
 {% block content %}

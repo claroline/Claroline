@@ -17,14 +17,26 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 class ResetPasswordType extends AbstractType
 {
+    private $resetPwd = null;
+
+    public function __construct($resetPwd = false)
+    {
+        $this->resetPwd = $resetPwd;
+    }
+
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        if ($this->resetPwd) {
+            $builder->add('password','password');
+        }
         $builder->add(
             'plainPassword',
             'repeated',
             array(
                 'type' => 'password',
-                'invalid_message' => 'password_mismatch'
+                'invalid_message' => 'password_mismatch',
+                'first_options' => array('label' => 'new_password'),
+                'second_options' => array('label' => 'repeat_password')
             )
         );
     }
@@ -38,7 +50,6 @@ class ResetPasswordType extends AbstractType
     {
         $resolver->setDefaults(
             array(
-                'data_class' => 'Claroline\CoreBundle\Entity\User',
                 'translation_domain' => 'platform'
             )
         );

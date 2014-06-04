@@ -26,7 +26,7 @@
     <div class="panel-heading">
         <h3 class="panel-title">{{ 'user_creation'|trans({}, 'platform') }}</h3>
     </div>
-    <form class="form-horizontal" action="{{ path('claro_admin_create_user') }}" method="post" {{ form_enctype(form_complete_user) }} id="form_complete_user" autocomplete="off">
+    <form role="form" class="form-horizontal" action="{{ path('claro_admin_create_user') }}" method="post" {{ form_enctype(form_complete_user) }} id="form_complete_user" autocomplete="off">
         <div class="panel-body">
             {% if error is not empty %}
                 <div class="alert alert-warning"> {{ error|trans({}, 'platform') }} </div>
@@ -36,7 +36,7 @@
         </div>
         <div class="panel-footer">
             <button type="submit" class="btn btn-primary">{{ 'ok'|trans({}, 'platform') }}</button>
-            <a class="btn btn-default" href="{{ path('claro_admin_users_management') }}">
+            <a class="btn btn-default" href="{{ path('claro_admin_users_management') }}" role="button">
                 {{ 'cancel'|trans({}, 'platform') }}
             </a>
         </div>

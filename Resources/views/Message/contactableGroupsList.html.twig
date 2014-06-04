@@ -38,20 +38,20 @@
         {% if nbPages > 1 %}
             {{ renderPager(search, groups) }}
         {% endif %}
-
-        <table class="table table-bordered table-responsive">
-            <tr>
-                <th>{{ 'name'|trans({}, 'platform') }}</th>
-                <th></th>
-            </tr>
-            {% for group in groups %}
+        <div class="table-responsive">
+            <table class="table table-bordered">
                 <tr>
-                    <td>{{ group.getName() }}</td>
-                    <td><input type="checkbox" class="contact-chk" contact-id="{{ group.getId() }}"></td>
+                    <th>{{ 'name'|trans({}, 'platform') }}</th>
+                    <th></th>
                 </tr>
-            {% endfor %}
-        </table>
-
+                {% for group in groups %}
+                    <tr>
+                        <td>{{ group.getName() }}</td>
+                        <td><input type="checkbox" class="contact-chk" contact-id="{{ group.getId() }}"></td>
+                    </tr>
+                {% endfor %}
+            </table>
+        </div>
         {% if nbPages > 1 %}
             {{ renderPager(search, groups) }}
         {% endif %}

@@ -17,7 +17,6 @@
 
 (function () {
     'use strict';
-
     window.Claroline = window.Claroline || {};
 
     var manager = window.Claroline.ResourceManager = {};
@@ -212,7 +211,6 @@
                 'click a.delete': function () {
                     if (!(this.$('a.delete').hasClass('disabled'))) {
                         this.dispatcher.trigger('delete', {ids: _.keys(this.checkedNodes.nodes)});
-                        this.checkedNodes.nodes = {};
                     }
                 },
                 'click a.download': function () {
@@ -348,7 +346,7 @@
                             this.setPasteBinState(false, false);
                         }
                         // add the node to the selection or remove it if already present
-                        if (this.checkedNodes.nodes.hasOwnProperty(event.node.id)) {
+                        if (this.checkedNodes.nodes.hasOwnProperty(event.node.id) && !event.isChecked) {
                             delete this.checkedNodes.nodes[event.node.id];
                         } else {
                             this.checkedNodes.nodes[event.node.id] = [
@@ -391,6 +389,7 @@
                 this.setButtonEnabledState(this.$('a.paste'), isReadyToPaste && !this.isSearchMode);
             },
             setInitialState: function () {
+                this.checkedNodes.nodes = {};
                 this.isReadyToPaste = false;
                 this.isCutMode = false;
                 this.setButtonEnabledState(this.$('a.cut'), false);
@@ -420,9 +419,9 @@
                 parameters.isPasteAllowed = this.isReadyToPaste && !this.isSearchMode && directory.id !== '0';
                 parameters.isSearchMode = this.isSearchMode;
                 parameters.resourceZoom = this.parameters.resourceZoom;
-                parameters.isCreateAllowed = parameters.isAddAllowed = directory.id !== 0 &&
-                    _.size(creatableTypes) > 0 &&
-                    (this.parameters.isPickerMode || !this.isSearchMode);
+                parameters.isCreateAllowed = parameters.isAddAllowed = directory.id !== 0
+                    && _.size(creatableTypes) > 0
+                    && (this.parameters.isPickerMode || !this.isSearchMode);
                 $(this.el).html(Twig.render(ResourceManagerActions, parameters));
             }
         }),
@@ -624,6 +623,9 @@
                             break;
                         case 'platform':
                             simpleRights.platform(element);
+                            break;
+                        case 'recursive-option':
+                            simpleRights.recursive(element)
                             break;
                     }
                 },

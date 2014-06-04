@@ -226,15 +226,7 @@ class SettingChecker
             'files' => 'directory',
             'templates' => 'directory',
             'vendor' => 'directory',
-            'web' => 'directory',
-            'web/bundles' => 'directory',
-            'web/js' => 'directory',
-            'web/themes' => 'directory',
-            'web/thumbnails' => 'directory',
-            'web/uploads' => 'directory',
-            'web/uploads/badges' => 'directory',
-            'web/uploads/logos' => 'directory',
-            'web/vendor' => 'directory'
+            'web' => 'directory'
         );
 
         foreach ($writableElements as $element => $type) {

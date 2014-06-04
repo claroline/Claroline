@@ -19,6 +19,13 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 class FileType extends AbstractType
 {
+    private $uncompress;
+
+    public function __construct($uncompress = false)
+    {
+        $this->uncompress = $uncompress;
+    }
+
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add('name', 'hidden', array('data' => 'tmpname'));
@@ -34,6 +41,17 @@ class FileType extends AbstractType
                 )
            )
         );
+        if ($this->uncompress) {
+            $builder->add(
+                'uncompress',
+                'checkbox',
+                array(
+                    'label' => 'uncompress_file',
+                    'mapped' => false,
+                    'required' => false
+                )
+            );
+        }
     }
 
     public function getName()

@@ -1,6 +1,6 @@
 {% twig_js name="ResourceManagerActions" %}
 {% if isPickerMode == false %}
-    <ul class="nav navbar-nav">
+    <ul class="nav navbar-nav" role="toolbar">
         {% if resourceTypes|length > 0 %}
             <li class="dropdown">
                 <a class="dropdown-toggle{% if isCreateAllowed == false %} disabled{% endif %}" data-toggle="dropdown">
@@ -8,9 +8,9 @@
                     {{ 'create'|trans({}, 'platform') }}
                     <span class="caret"></span>
                 </a>
-                <ul class="dropdown-menu create">
+                <ul class="dropdown-menu create" role="menu">
                     {% for resourceType, name in creatableTypes %}
-                        <li><a id='{{ resourceType }}'>{{ name }}</a></li>
+                        <li role="presentation"><a role="menuitem" id='{{ resourceType }}'>{{ name }}</a></li>
                     {% endfor %}
                 </ul>
             </li>
@@ -51,18 +51,18 @@
                 <i class="icon-zoom-in"></i>
                 <span class="caret"></span>
             </a>
-            <ul class="dropdown-menu zoom">
-                <li{% if resourceZoom == 'zoom50' %} class="active"{% endif %}><a id='zoom50'>50%</a></li>
-                <li{% if resourceZoom == 'zoom75' %} class="active"{% endif %}><a id='zoom75'>75%</a></li>
-                <li{% if resourceZoom == 'zoom100' %} class="active"{% endif %}><a id='zoom100'>100%</a></li>
-                <li{% if resourceZoom == 'zoom125' %} class="active"{% endif %}><a id='zoom125'>125%</a></li>
-                <li{% if resourceZoom == 'zoom150' %} class="active"{% endif %}><a id='zoom150'>150%</a></li>
-                <li{% if resourceZoom == 'zoom200' %} class="active"{% endif %}><a id='zoom200'>200%</a></li>
+            <ul class="dropdown-menu zoom" role="menu">
+                <li role="presentation" {% if resourceZoom == 'zoom50' %} class="active"{% endif %}><a role="menuitem" id='zoom50'>50%</a></li>
+                <li role="presentation" {% if resourceZoom == 'zoom75' %} class="active"{% endif %}><a role="menuitem" id='zoom75'>75%</a></li>
+                <li role="presentation" {% if resourceZoom == 'zoom100' %} class="active"{% endif %}><a role="menuitem" id='zoom100'>100%</a></li>
+                <li role="presentation" {% if resourceZoom == 'zoom125' %} class="active"{% endif %}><a role="menuitem" id='zoom125'>125%</a></li>
+                <li role="presentation" {% if resourceZoom == 'zoom150' %} class="active"{% endif %}><a role="menuitem" id='zoom150'>150%</a></li>
+                <li role="presentation" {% if resourceZoom == 'zoom200' %} class="active"{% endif %}><a role="menuitem" id='zoom200'>200%</a></li>
             </ul>
         </li>
     </ul>
 {% else %}
-    <ul class='nav navbar-nav'>
+    <ul class='nav navbar-nav' role="toolbar">
         <li>
             <a class="add {% if isAddAllowed == false or isPasteAllowed == false %}disabled{% endif %}">
                 <i class="icon-plus"></i>
@@ -72,7 +72,7 @@
     </ul>
 {% endif %}
 
-<form class="navbar-form pull-right">
+<form class="navbar-form pull-right" role="search">
     <div class="input-group"  style="width: 250px;">
         <input class="name form-control" type="text" placeholder="{{ 'search'|trans({}, 'platform') }}" value="{{ searchedName }}">
         <span class="input-group-btn">

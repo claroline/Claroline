@@ -94,7 +94,7 @@ class BadgeListener
         /** @var \Claroline\CoreBundle\Repository\Badge\BadgeRuleRepository $badgeRuleRepository */
         $badgeRuleRepository = $this->entityManager->getRepository('ClarolineCoreBundle:Badge\BadgeRule');
         /** @var \Claroline\CoreBundle\Entity\badge\Badge[] $badges */
-        $badges              = $badgeRuleRepository->findBadgeFromAction($event->getLog()->getAction());
+        $badges              = $badgeRuleRepository->findBadgeAutomaticallyAwardedFromAction($event->getLog()->getAction());
 
         if (0 < count($badges)) {
 
@@ -102,10 +102,12 @@ class BadgeListener
             $receiver = $event->getLog()->getReceiver();
 
             foreach ($badges as $badge) {
-                if (null !== $doer && !$doer->hasBadge($badge)) {
-                    $resources = $this->ruleValidator->validate($badge, $doer);
+                $nbRules = count($badge->getRules());
 
-                    if ($resources) {
+                if (null !== $doer && !$doer->hasBadge($badge)) {
+                    $resources    = $this->ruleValidator->validate($badge, $doer);
+
+                    if(0 < $resources['validRules'] && $resources['validRules'] >= $nbRules) {
                         $this->badgeManager->addBadgeToUser($badge, $doer);
                     }
                 }
@@ -113,7 +115,7 @@ class BadgeListener
                 if (null !== $receiver && !$receiver->hasBadge($badge)) {
                     $resources = $this->ruleValidator->validate($badge, $receiver);
 
-                    if ($resources) {
+                    if(0 < $resources['validRules'] && $resources['validRules'] >= $nbRules) {
                         $this->badgeManager->addBadgeToUser($badge, $receiver);
                     }
                 }

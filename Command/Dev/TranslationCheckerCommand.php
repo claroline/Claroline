@@ -35,11 +35,11 @@ class TranslationCheckerCommand extends ContainerAwareCommand
     {
         $ds = DIRECTORY_SEPARATOR;
         $projectDir = $this->getContainer()->getParameter('kernel.root_dir')."{$ds}..{$ds}vendor{$ds}claroline{$ds}core-bundle";
-        $routingFolder = "{$projectDir}{$ds}Claroline/CoreBundle/Resources/translations";
+        $translationFolder = "{$projectDir}{$ds}Claroline/CoreBundle/Resources/translations";
         $fileName = $input->getOption('file');
 
         if ($fileName == null) {
-            foreach (new \DirectoryIterator($routingFolder) as $fileInfo) {
+            foreach (new \DirectoryIterator($translationFolder) as $fileInfo) {
                 $this->parseTranslationFile($fileInfo);
             }
         } else {

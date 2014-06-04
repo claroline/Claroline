@@ -167,10 +167,13 @@ class WorkspaceManager
         $workspace->setCreator($manager);
         $workspace->setName($config->getWorkspaceName());
         $workspace->setCode($config->getWorkspaceCode());
+        $workspace->setDescription($config->getWorkspaceDescription());
         $workspace->setGuid($this->ut->generateGuid());
         $workspace->setDisplayable($config->isDisplayable());
         $workspace->setSelfRegistration($config->getSelfRegistration());
         $workspace->setSelfUnregistration($config->getSelfUnregistration());
+        $date = new \Datetime(date('d-m-Y H:i'));
+        $workspace->setCreationDate($date->getTimestamp());
         $baseRoles = $this->roleManager->initWorkspaceBaseRole($config->getRoles(), $workspace);
         $baseRoles['ROLE_ANONYMOUS'] = $this->roleRepo->findOneBy(array('name' => 'ROLE_ANONYMOUS'));
         $this->roleManager->associateRole($manager, $baseRoles['ROLE_WS_MANAGER']);
@@ -524,7 +527,7 @@ class WorkspaceManager
     public function getOpenableWorkspacesByRoles(array $roles)
     {
         $workspaces = $this->workspaceRepo->findByRoles($roles);
-
+        
         foreach ($roles as $role) {
 
             if (strpos('_' . $role, 'ROLE_WS_MANAGER')) {
@@ -856,5 +859,10 @@ class WorkspaceManager
         $query = $this->workspaceRepo->findByName($search, false, $orderedBy);
 
         return $this->pagerFactory->createPager($query, $page, $max);
+    }
+
+    public function countUsers($workspaceId)
+    {
+        return $this->workspaceRepo->countUsers($workspaceId);
     }
 }

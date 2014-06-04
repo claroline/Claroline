@@ -19,7 +19,7 @@
             {{ 'Filter actions'|trans({}, 'platform') }}
         </legend>
 
-        <form id="logFilter" action="{{ filterFormAction }}" method="GET" class="form-inline" role="form">
+        <form role="form" id="logFilter" action="{{ filterFormAction }}" method="GET" class="form-inline">
             {{ form_errors(filterForm) }}
             <div class="row">
                 <div class="form-group col-md-12">

@@ -5,3 +5,14 @@ logs: 'Registros'
 parameters: 'Parámetros'
 resource_manager: 'Recursos'
 users: 'Usuarios'
+platform_parameters: Parámetros de la plataforma
+user_management: Gestión de usuarios
+workspace_management: Gestión de espacios de trabajo
+badges_management: Gestión de insignias
+registration_to_workspace: Inscripción a un espacio de trabajo
+platform_plugins: Plugins de la plataforma
+home_tabs: Pestañas
+desktop_tools: Herramientas del escritorio
+platform_logs: Registros de la plataforma
+platform_analytics: Análisis de la plataforma
+roles_management: Gestión de roles

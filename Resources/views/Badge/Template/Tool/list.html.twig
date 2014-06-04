@@ -15,7 +15,11 @@
                         </div>
                         <div class="col-md-8">
                             <p>{{ badge.description }}</p>
-                            <p><a href="{{ path('claro_workspace_tool_view_my_badge', {'workspaceId': workspace.id, 'slug': badge.slug}) }}" title="{{ 'consult_my_badge_details'|trans({}, 'badge') }}" class="btn btn-default">{{ 'consult_my_badge_details'|trans({}, 'badge') }}</a></p>
+                            <p>
+                                <a href="{{ path('claro_workspace_tool_view_my_badge', {'workspaceId': workspace.id, 'slug': badge.slug}) }}" title="{{ 'consult_my_badge_details'|trans({}, 'badge') }}" class="btn btn-default" role="button">
+                                    {{ 'consult_my_badge_details'|trans({}, 'badge') }}
+                                </a>
+                            </p>
                         </div>
                     </div>
                 </div>

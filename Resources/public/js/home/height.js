@@ -114,6 +114,10 @@
     $(window).on('resize', function () {
         clearTimeout(resizeWindow);
         resizeWindow = setTimeout(resizeDivs, 500);
+    })
+    .load(function () {
+        clearTimeout(resizeWindow);
+        resizeWindow = setTimeout(resizeDivs, 500);
     });
 
     $(document).ready(function () {

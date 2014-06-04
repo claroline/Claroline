@@ -226,12 +226,17 @@ class RolesController extends Controller
      *     "/{workspace}/role/{role}/edit",
      *     name="claro_workspace_role_edit"
      * )
+     * @EXT\Template("ClarolineCoreBundle:Tool\workspace\roles:roleEdit.html.twig")
      * @EXT\Method("POST")
      */
     public function editRoleAction(Role $role, AbstractWorkspace $workspace)
     {
         $this->checkAccess($workspace);
-        $form = $this->formFactory->create(FormFactory::TYPE_ROLE_TRANSLATION, array(), $role);
+        $form = $this->formFactory->create(
+            FormFactory::TYPE_ROLE_TRANSLATION,
+            array('wsGuid' => $workspace->getGuid()),
+            $role
+        );
         $form->handleRequest($this->request);
 
         if ($form->isValid()) {
@@ -274,7 +279,7 @@ class RolesController extends Controller
      * @EXT\Route(
      *     "/{workspace}/users/unregistered/page/{page}/search/{search}/max/{max}/order/{order}/direction/{direction}",
      *     name="claro_workspace_unregistered_user_list_search",
-     *     defaults={"page"=1, "max"=50, "order"="id"},
+     *     defaults={"page"=1, "max"=50, "order"="id", "direction"="ASC"},
      *     options = {"expose"=true}
      * )
      * @EXT\ParamConverter(
@@ -451,6 +456,7 @@ class RolesController extends Controller
         
         $this->checkAccess($workspace);
         $wsRoles = $this->roleManager->getRolesByWorkspace($workspace);
+        $currentUser = $this->security->getToken()->getUser();
 
         $pager = ($search === '') ?
             $this->userManager->getByRolesIncludingGroups($wsRoles, $page, $max, $order, $direction):
@@ -465,7 +471,8 @@ class RolesController extends Controller
             'wsRoles' => $wsRoles,
             'max' => $max,
             'order' => $order,
-            'direction' => $direction
+            'direction' => $direction,
+            'currentUser' => $currentUser
         );
     }
 

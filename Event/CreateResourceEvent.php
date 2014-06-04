@@ -13,20 +13,23 @@ namespace Claroline\CoreBundle\Event;
 
 use Symfony\Component\EventDispatcher\Event;
 use Claroline\CoreBundle\Event\DataConveyorEventInterface;
+use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 
 /**
  * Event dispatched by the resource controller when a resource creation is asked.
  */
 class CreateResourceEvent extends Event implements DataConveyorEventInterface
 {
-    private $resource;
+    private $parent;
     private $formContent;
     private $resourceType;
     private $resources;
     private $isPopulated = false;
+    private $process = true;
 
-    public function __construct($resourceType = null)
+    public function __construct($parent = null, $resourceType = null)
     {
+        $this->parent = $parent;
         $this->resourceType = $resourceType;
         $this->resources = array();
     }
@@ -79,5 +82,25 @@ class CreateResourceEvent extends Event implements DataConveyorEventInterface
     public function isPopulated()
     {
         return $this->isPopulated;
+    }
+
+    public function setProcess($boolean)
+    {
+        $this->process = $boolean;
+    }
+
+    public function getProcess()
+    {
+        return $this->process;
+    }
+
+    public function setParent(ResourceNode $parent)
+    {
+        $this->parent = $parent;
+    }
+
+    public function getParent()
+    {
+        return $this->parent;
     }
 }

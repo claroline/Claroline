@@ -11,15 +11,27 @@
 
 namespace Claroline\CoreBundle\Form;
 
+use Claroline\CoreBundle\Validator\Constraints\RoleName;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 class RoleTranslationType extends AbstractType
 {
+    private $wsGuid;
+
+    public function __construct($wsGuid = null)
+    {
+        $this->wsGuid = $wsGuid;
+    }
+
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('translationKey', 'text', array('required' => true));
+        $builder->add(
+            'translationKey',
+            'text',
+            array('required' => true, 'constraints' => new RoleName(array('wsGuid' => $this->wsGuid)))
+        );
     }
 
     public function getName()

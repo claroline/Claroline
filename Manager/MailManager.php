@@ -82,7 +82,7 @@ class MailManager
     {
         $hash = $user->getResetPasswordHash();
         $link = $this->router->generate('claro_security_reset_password', array('hash' => $hash), true);
-        $subject = $this->translator->trans('reset_pwd', array(), 'platform');
+        $subject = $this->translator->trans('resetting_your_password', array(), 'platform');
 
         $body = $this->container->get('templating')->render(
             'ClarolineCoreBundle:Mail:forgotPassword.html.twig', array('user' => $user, 'link' => $link)
@@ -183,38 +183,32 @@ class MailManager
         return false;
     }
 
+
     /**
-     * @param $translatedContents
+     * Validate a variable (placeholder) in a translated content
+     *
+     * @param $translatedContents An array containing translated content
+     * @param $mailVariable thevariable to validate
      *
      * @return array
      */
-    public function validateInscriptionMail(array $translatedContents)
+    public function validateMailVariable(array $translatedContents, $mailVariable)
     {
         $languages = array_keys($translatedContents);
         $errors = array();
+        $voidCount = 0;
 
         foreach ($languages as $language) {
-            if (!strpos($translatedContents[$language]['content'], '%password%')) {
-                $errors[$language]['content'][] = 'missing_%password%';
+            if ($translatedContents[$language]['content'] !== '') {
+                if (!strpos($translatedContents[$language]['content'], $mailVariable)) {
+                    $errors[$language]['content'][] = 'missing_' . $mailVariable;
+                }
+            } else {
+                $voidCount++;
             }
-        }
 
-        return $errors;
-    }
-
-    /**
-     * @param $translatedContents
-     *
-     * @return array
-     */
-    public function validateLayoutMail(array $translatedContents)
-    {
-        $languages = array_keys($translatedContents);
-        $errors = array();
-
-        foreach ($languages as $language) {
-            if (!strpos($translatedContents[$language]['content'], '%content%')) {
-                $errors[$language]['content'] = 'missing_%content%';
+            if ($voidCount === count($languages)) {
+                $errors['no_content'] = 'need_at_least_one_translation';
             }
         }
 

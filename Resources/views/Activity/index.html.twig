@@ -20,7 +20,7 @@
         {% for resourceActivity in resourceActivities %}
                 <div id={{ resourceActivity.getResourceNode().getId() }}>
                     <div class="alert alert-info">
-                        <a class="close" href="{{ path('claro_activity_remove_resource', {'nodeId':resourceActivity.getResourceNode().getId(), 'activityId': resourceActivity.getActivity().getId()})}}">&times;</a>
+                        <a class="close" href="{{ path('claro_activity_remove_resource', {'nodeId':resourceActivity.getResourceNode().getId(), 'activityId': resourceActivity.getActivity().getId()})}}" aria-hidden="true">&times;</a>
                         <a class="alert-link" href="{{ path('claro_resource_open', {'resourceType':resourceActivity.getResourceNode().getResourceType().getName(), 'node':resourceActivity.getResourceNode().getId()} )}}">
                             {{ resourceActivity.getResourceNode().getName() }}
                         </a>
@@ -33,7 +33,7 @@
         <button id="add_resource_button" class="btn btn-primary">
             <i class="icon-plus"></i> {{'add_resource'|trans({},'platform')}}
         </button>
-        <a href="{{ path('claro_activity_show_player', {'activity': _resource.getId()}) }}" class="btn btn-default">
+        <a href="{{ path('claro_activity_show_player', {'activity': _resource.getId()}) }}" class="btn btn-default" role="button">
             <i class="icon-user"></i> {{ 'show_as_user'|trans({}, 'platform') }}
         </a>
         <div id="twig-attributes" data-activity-id="{{ _resource.getId() }}"></div>
@@ -83,7 +83,7 @@
                 var html = "";
                 html+= "<div id= " + nodes[0].id + " >";
                 html+= "<div class='alert alert-info'>";
-                html+= "<a class='close' href="+Routing.generate('claro_activity_remove_resource', {'nodeId':nodes[0].id, 'activityId': {{ _resource.getId() }} })+">&times;</a>";
+                html+= "<a class='close' href="+Routing.generate('claro_activity_remove_resource', {'nodeId':nodes[0].id, 'activityId': {{ _resource.getId() }} })+" aria-hidden="true">&times;</a>";
                 html+= "<a class='alert-link' href="+Routing.generate('claro_resource_open', {'resourceType': nodes[0].type, 'action': 'open', 'node': nodes[0].id})+">";
                 html+= nodes[0].name
                 html+= "</a>";
