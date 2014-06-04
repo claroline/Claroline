@@ -1,0 +1,16 @@
+{% set ws = '' %}
+
+<option value="-1">Toutes les questions</option>
+{% for Exo in listExo %}
+    {% if ws != Exo['name'] %}
+        {% if ws !='' %}
+            </optgroup>
+        {% endif %}
+        {% set ws = Exo['name'] %}
+        <optgroup label="{{ Exo['name'] }}">
+    {% endif %}
+    <option value="{{ Exo['id'] }}">
+        {{ Exo['title'] }}
+    </option>
+{% endfor %}
+</optgroup>

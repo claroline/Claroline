@@ -71,21 +71,22 @@ class ExerciseRepository extends EntityRepository
 
         return $query->getResult();
     }
-    
+
     public function getExerciseAdmin($userID)
     {
         $exercises = array();
-        
-        $dql = 'SELECT w.id
-            FROM Claroline\CoreBundle\Entity\User u 
-            JOIN u.roles r 
+
+        $dql = 'SELECT w.id, w.name
+            FROM Claroline\CoreBundle\Entity\User u
+            JOIN u.roles r
             JOIN r.workspace w
-            WHERE u.id='.$userID.' AND r.name LIKE \'ROLE_WS_MANAGER_%\'' ;
+            WHERE u.id='.$userID.' AND r.name LIKE \'ROLE_WS_MANAGER_%\'
+            ORDER BY w.name' ;
 
         $query = $this->_em->createQuery($dql);
-        
+
         foreach ($query->getResult() as $ws) {
-            $dql = 'SELECT e.id, e.title
+            $dql = 'SELECT e.id, e.title, w.name
                     FROM UJM\ExoBundle\Entity\Exercise e
                     JOIN e.resourceNode rn
                     JOIN rn.resourceType rt
@@ -98,7 +99,7 @@ class ExerciseRepository extends EntityRepository
                 $exercises[] =  $resource;
             }
         }
-        
+
         /*$dql = "
             SELECT e.id, e.title
             FROM UJM\ExoBundle\Entity\Exercise e
@@ -117,13 +118,13 @@ class ExerciseRepository extends EntityRepository
                 AND r2.name LIKE 'ROLE_WS_MANAGER_%'
             ) AND rt.name ='ujm_exercise'
         ";
-        
+
         $queryResources = $this->_em->createQuery($dql);
             foreach ($queryResources->getResult() as $resource) {
                 $exercises[] =  $resource;
             }*/
-        
+
         return $exercises;
-        
+
     }
 }

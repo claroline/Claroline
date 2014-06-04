@@ -92,15 +92,12 @@
             {% endif %}
         {% endif %}
 
-        {#% set var toto = <script type="text/javascript">$('#exoList').options[$('#exoList').selectedIndex].value</script> %#}
         <select id="exoList" onchange="getQuestionsExo(this.options[this.selectedIndex].value,
-                    '{{ path('ujm_question_bank_filter') }}',
-                    '{{ path('ujm_question_index') }}');">
-            <option value="-1">Toutes les questions</option>
-            {% for Exo in listExo %}
-                <option value="{{ Exo['id'] }}">{{ Exo['title'] }}</option>
-            {% endfor %}
+            '{{ path('ujm_question_bank_filter') }}',
+            '{{ path('ujm_question_index') }}');">
+            {% include "UJMExoBundle:Partial:listToFilterQuestions.html.twig" %}
         </select>
+
 
         <div class="input-group" style="width: 350px; margin-top: 20px;">
             <input type="text" class="form-control" id="briefSearch" placeholder="{{ 'briefSearch'|trans }}"

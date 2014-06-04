@@ -85,16 +85,9 @@
         {% endif %}
 
         <select id="exoList" onchange="getQuestionsExoImport(this.options[this.selectedIndex].value,
-                    '{{ path('ujm_exercise_import_question', { 'exoID': exoID, 'idExo': idExo, 'QuestionsExo': 'true' }) }}',
-                    '{{ path('ujm_exercise_import_question', { 'exoID': exoID }) }}');">
-            <option value="-1">Toutes les questions</option>
-            {% for Exo in listExo %}
-                {% if exoID == Exo['id'] %}
-                    <option value="{{ Exo['id'] }}" disabled>{{ Exo['title'] }}</option>
-                {% else %}
-                    <option value="{{ Exo['id'] }}">{{ Exo['title'] }}</option>
-                {% endif %}
-            {% endfor %}
+                     '{{ path('ujm_exercise_import_question', { 'exoID': exoID, 'idExo': idExo, 'QuestionsExo': 'true' }) }}',
+                     '{{ path('ujm_exercise_import_question', { 'exoID': exoID }) }}');">
+            {% include "UJMExoBundle:Partial:listToFilterQuestions.html.twig" %}
         </select>
 
         <div class="input-group" style="width: 350px; margin-top: 20px;">
