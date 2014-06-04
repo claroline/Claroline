@@ -524,18 +524,32 @@ class DropController extends DropzoneBaseController
         $this->isAllowToOpen($dropzone);
         $this->isAllowToEdit($dropzone);
 
-        $drop = $this
+        $dropResult = $this
             ->getDoctrine()
             ->getRepository('IcapDropzoneBundle:Drop')
             ->getDropAndCorrectionsAndDocumentsAndUser($dropzone, $dropId);
 
-        return array(
-            'workspace' => $dropzone->getResourceNode()->getWorkspace(),
-            '_resource' => $dropzone,
-            'dropzone' => $dropzone,
-            'drop' => $drop,
-            'isAllowedToEdit' => true,
-        );
+        $drop = null;
+        $return = $this->redirect(
+            $this->generateUrl(
+                'icap_dropzone_drops_awaiting',
+                array(
+                    'resourceId' => $dropzone->getId()
+                )
+            ));
+
+        if (count($dropResult) > 0) {
+            $drop = $dropResult[0];
+            $return = array(
+                'workspace' => $dropzone->getResourceNode()->getWorkspace(),
+                '_resource' => $dropzone,
+                'dropzone' => $dropzone,
+                'drop' => $drop,
+                'isAllowedToEdit' => true,
+            );
+        }
+
+        return $return;
     }
 
     /**
