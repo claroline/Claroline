@@ -53,7 +53,7 @@ portfolioApp
                     console.log(error);
                 }
 
-                return widget.isNew() ? delete widget.new && widget.$save(success, failed) : delete widget.new && widget.$update(success, failed);
+                return widget.isNew() ? widget.$save(success, failed) : widget.$update(success, failed);
             },
             create: function(portfolioId, type) {
                 var istypeUnique = widgetsConfig.config[type].isUnique;
