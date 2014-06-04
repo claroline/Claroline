@@ -305,3 +305,4 @@ No copy waiting for correction: 'No copy waiting for correction'
 unterminated drops: 'unterminated drops'
 Notify on drop: 'Notify administrators when someone made a drop'
 drop_info: "Documents are automaticaly saved, but don't forget to click on the 'finish' button when you have no more thing to add, if you don't, your copy will be like undelivered."
+dropzone_startedNotValidatedYet_infos: "Started but not validated drops are drop where people started to depose some files to the evaluation but had nevers clicked on the 'finished' button. If you do nothing, they will be considered as not deposited."
