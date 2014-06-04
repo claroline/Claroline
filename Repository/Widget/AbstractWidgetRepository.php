@@ -13,7 +13,7 @@ class AbstractWidgetRepository extends EntityRepository
      * @param \Icap\PortfolioBundle\Entity\Portfolio|\Icap\PortfolioBundle\Repository\Widget\User $portfolio
      * @param bool                                                                                $executeQuery
      *
-     * @return array|\Doctrine\ORM\Query
+     * @return \Icap\PortfolioBundle\Entity\Widget\AbstractWidget|\Doctrine\ORM\Query
      */
     public function findOneByTypeAndPortfolio($type, Portfolio $portfolio, $executeQuery = true)
     {
