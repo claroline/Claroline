@@ -13,9 +13,8 @@ portfolioApp
                 }, this);
             },
             edit: function(widget) {
-                this.addEditing(widget);
-
                 if (!widget.isEditing()) {
+                    this.addEditing(widget);
                     widget.setEditMode(true);
                     this.loadForm(widget);
                 }
@@ -33,9 +32,7 @@ portfolioApp
                 });
             },
             addEditing: function(widget) {
-                if (!widget.isEditing()) {
-                    this.editing.push(widget);
-                }
+                this.editing.push(widget);
             },
             cancelEditing: function(widget) {
                 widget.setEditMode(false);

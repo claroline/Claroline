@@ -43,7 +43,7 @@
                                 <div data-ng-repeat="widget in widgets">
                                     {% if editMode %}
                                         <div class="widget-actions">
-                                            <button class="widget-action btn btn-sm btn-danger" data-ng-class="{'btn-loading': widget.isDeleting}" data-ng-click="delete(widget);" data-ng-if="isDeletable(widget) && !widget.isNew()"><span class="loading" data-ng-if="widget.isDeleting"></span><span class="icon-trash" data-ng-if="!widget.isDeleting"></span></button>
+                                            <button class="widget-action btn btn-sm btn-danger" data-ng-class="{'btn-loading': widget.isDeleting}" data-confirm-click="delete(widget);" data-ng-if="isDeletable(widget) && !widget.isNew()"><span class="loading" data-ng-if="widget.isDeleting"></span><span class="icon-trash" data-ng-if="!widget.isDeleting"></span></button>
                                             <button class="widget-action btn btn-sm" data-ng-click="edit(widget);" data-ng-if="!widget.isEditing() && !widget.isNew()"><span class="icon-pencil"></span></button>
                                         </div>
                                         <div data-ng-bind-html="widget.views.view | trustAsHtml"></div>
@@ -99,6 +99,7 @@
         <script type="text/javascript" src="{{ asset('bundles/stfalcontinymce/vendor/tinymce/tinymce.jquery.min.js') }}"></script>
         <script type="text/javascript" src="{{ asset('bundles/stfalcontinymce/vendor/tinymce/jquery.tinymce.min.js') }}"></script>
         <script type="text/javascript" src="{{ asset('bundles/clarolinecore/js/tinymce/tinymce.js') }}"></script>
+        <script type='text/javascript' src='{{ asset('bundles/frontend/jquery/plugin/confirm-bootstrap/confirm-bootstrap.js') }}'></script>
 
         {# Angular #}
         {% javascripts debug=true filter='jsmin' output='js/portfolio/angular.js'
@@ -128,6 +129,7 @@
         <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/directives/portfolioDirective.js') }}"></script>
         <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/directives/bindHtmlDirective.js') }}"></script>
         <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/directives/loadingFormDirective.js') }}"></script>
+        <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/directives/confirmClickDirective.js') }}"></script>
         <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/filters/trustAsHtml.js') }}"></script>
         <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/filters/trans.js') }}"></script>
         <script type="text/javascript">
