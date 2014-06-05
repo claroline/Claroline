@@ -1,6 +1,6 @@
 <?php
 
-namespace Claroline\CoreBundle\Migrations\pdo_oci;
+namespace Claroline\CoreBundle\Migrations\oci8;
 
 use Doctrine\DBAL\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
@@ -8,9 +8,9 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2014/06/04 02:56:55
+ * Generation date: 2014/06/05 09:22:17
  */
-class Version20140604145653 extends AbstractMigration
+class Version20140605092215 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
@@ -177,6 +177,7 @@ class Version20140604145653 extends AbstractMigration
                 result VARCHAR2(255) DEFAULT NULL, 
                 resultComparison NUMBER(5) DEFAULT NULL, 
                 userType NUMBER(5) NOT NULL, 
+                additional_datas VARCHAR2(255) DEFAULT NULL, 
                 PRIMARY KEY(id)
             )
         ");
@@ -350,6 +351,12 @@ class Version20140604145653 extends AbstractMigration
         $this->addSql("
             CREATE UNIQUE INDEX UNIQ_E4A67CAC88BD9C1F ON claro_activity (parameters_id)
         ");
+        $this->addSql("
+            ALTER TABLE claro_badge_rule 
+            ADD (
+                additional_datas VARCHAR2(255) DEFAULT NULL
+            )
+        ");
     }
 
     public function down(Schema $schema)
@@ -398,6 +405,10 @@ class Version20140604145653 extends AbstractMigration
         ");
         $this->addSql("
             DROP INDEX UNIQ_E4A67CAC88BD9C1F
+        ");
+        $this->addSql("
+            ALTER TABLE claro_badge_rule 
+            DROP (additional_datas)
         ");
     }
 }
