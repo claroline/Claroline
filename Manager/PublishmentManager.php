@@ -25,12 +25,6 @@ class PublishmentManager
     protected $stepManager;
     
     /**
-     * innova nondigitalresource manager
-     * @var \Innova\PathBundle\Manager\NonDigitalResourceManager
-     */
-    protected $nonDigitalResourceManager;
-    
-    /**
      * Current workspace of the path
      * @var \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace
      */
@@ -56,23 +50,21 @@ class PublishmentManager
     
     /**
      * Class constructor
-     * @param \Doctrine\Common\Persistence\ObjectManager           $objectManager
-     * @param \Innova\PathBundle\Manager\StepManager               $stepManager
-     * @param \Innova\PathBundle\Manager\NonDigitalResourceManager $nonDigitalResourceManager
+     * @param \Doctrine\Common\Persistence\ObjectManager $objectManager
+     * @param \Innova\PathBundle\Manager\StepManager     $stepManager
      */
     public function __construct(
-        ObjectManager             $objectManager,
-        StepManager               $stepManager,
-        NonDigitalResourceManager $nonDigitalResourceManager)
+        ObjectManager $objectManager,
+        StepManager   $stepManager)
     {
-        $this->om                        = $objectManager;
-        $this->stepManager               = $stepManager;
-        $this->nonDigitalResourceManager = $nonDigitalResourceManager;
+        $this->om          = $objectManager;
+        $this->stepManager = $stepManager;
     }
-    
+
     /**
      * Initialize a new publishment
-     * @param  \Innova\PathBundle\Entity\Path\Path
+     * @param \Innova\PathBundle\Entity\Path\Path $path
+     * @throws \Exception
      * @return \Innova\PathBundle\Manager\PublishmentManager
      */
     protected function start(Path $path)
@@ -205,11 +197,11 @@ class PublishmentManager
     
         return $processedSteps;
     }
-    
+
     /**
      * Publish resources for a step
-     * @param  \Innova\PathBundle\Entity\Step $step              Current step
-     * @param  array                          $resources         List of resources for the current step
+     * @param  \Innova\PathBundle\Entity\Step $step Current step
+     * @param  array                          $stepResources
      * @param  array                          $excludedResources List of resources (from parents) which must be exlcuded for the current step
      * @return array
      */
@@ -220,12 +212,6 @@ class PublishmentManager
     
         // Process local resources of current step
         foreach ($stepResources as $resource) {
-            // Manage non digital resources
-            if ('custom/innova_non_digital_resource' === $resource->type) {
-                $nonDigitalResource = $this->nonDigitalResourceManager->edit($this->workspace, $resource->resourceId, $resource->name, $resource->description, $resource->type);
-                // update JSON
-                $resource->resourceId = $nonDigitalResource->getResourceNode()->getId();
-            }
     
             // Link step to resource node or update existing relation
             $step2resourceNode = $this->stepManager->editResourceNodeRelation($step, $resource->resourceId, false, $resource->propagateToChildren, $currentOrder);
@@ -254,9 +240,11 @@ class PublishmentManager
     
         return $processedResources;
     }
-    
+
     /**
      * Clean steps which no long exist in the current path
+     * @param  array $neededSteps
+     * @param  array $existingSteps
      * @return \Innova\PathBundle\Manager\PublishmentManager
      */
     protected function cleanSteps(array $neededSteps = array (), array $existingSteps = array ())
@@ -269,9 +257,12 @@ class PublishmentManager
         
         return $this;
     }
-    
+
     /**
      * Clean resources which no long exist in the current step
+     * @param  \Innova\PathBundle\Entity\Step $step
+     * @param  array                          $neededResources
+     * @param  array                          $existingResources
      * @return \Innova\PathBundle\Manager\PublishmentManager
      */
     protected function cleanResources(Step $step, array $neededResources = array (), array $existingResources = array ())

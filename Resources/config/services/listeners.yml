@@ -6,17 +6,6 @@ services:
     tags:
       - { name: kernel.event_listener, event: open_tool_workspace_innova_path, method: onWorkspaceOpen }
 
-  innova.listener.non_digital_resource:
-    class: Innova\PathBundle\Listener\Resource\NonDigitalResourceListener
-    calls:
-      - [setContainer, ["@service_container"]]
-    tags:
-      - { name: kernel.event_listener, event: open_innova_non_digital_resource, method: onNonDigitalResourceOpen }
-      - { name: kernel.event_listener, event: create_form_innova_non_digital_resource, method: onNonDigitalResourceCreateForm }
-      - { name: kernel.event_listener, event: delete_innova_non_digital_resource, method: onNonDigitalResourceDelete }
-      - { name: kernel.event_listener, event: create_innova_non_digital_resource, method: onNonDigitalResourceCreate }
-      - { name: kernel.event_listener, event: copy_innova_non_digital_resource, method: onNonDigitalResourceCopy }
-
   innova.listener.path:
     class: Innova\PathBundle\Listener\Resource\PathListener
     calls:

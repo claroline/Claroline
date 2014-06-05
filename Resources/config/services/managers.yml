@@ -3,25 +3,16 @@ services:
     innova_path.manager.path:
         class: %innova_path.manager.path.class%
         arguments:
-            objectManager:             @doctrine.orm.entity_manager
-            securityContext:           @security.context
-            resourceManager:           @claroline.manager.resource_manager
+            objectManager:   @doctrine.orm.entity_manager
+            securityContext: @security.context
+            resourceManager: @claroline.manager.resource_manager
 
     # Publishment manager 
     innova_path.manager.publishment:
         class: %innova_path.manager.publishment.class%
         arguments:
-            objectManager:             @doctrine.orm.entity_manager
-            stepManager:               @innova_path.manager.step
-            nonDigitalResourceManager: @innova_path.manager.non_digital_resource
-
-    # NonDigitalResource manager
-    innova_path.manager.non_digital_resource:
-        class: %innova_path.manager.non_digital_resource.class%
-        arguments:
-            objectManager:   @doctrine.orm.entity_manager
-            securityContext: @security.context
-            resourceManager: @claroline.manager.resource_manager
+            objectManager: @doctrine.orm.entity_manager
+            stepManager:   @innova_path.manager.step
 
     # Path template manager
     innova_path.manager.path_template:
