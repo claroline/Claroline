@@ -36,46 +36,6 @@ class StepManager
         $this->translator = $translator;
     }
 
-    /**
-     * Get all resource nodes linked to the step
-     * @param \Innova\PathBundle\Entity\Step $step
-     * @return array
-     */
-    public function getStepResourceNodes(Step $step)
-    {
-        $resourceNodes = array();
-        $step2ResourceNodes = $this->om->getRepository('InnovaPathBundle:Step2ResourceNode')->findBy(array('step' => $step, 'excluded' => false));
-
-        $nonDigitalRepo = $this->om->getRepository('InnovaPathBundle:NonDigitalResource');
-        foreach ($step2ResourceNodes as $step2ResourceNode) {
-            if ($step2ResourceNode->getResourceNode()->getClass() == "Innova\PathBundle\Entity\NonDigitalResource") {
-                $resourceNodes["nonDigital"][] = $nonDigitalRepo->findOneByResourceNode($step2ResourceNode->getResourceNode());
-            }
-            else {
-                $resourceNodes["digital"][] = $step2ResourceNode->getResourceNode();
-            }
-        }
-        return $resourceNodes;
-    }
-
-    public function getStepPropagatedResourceNodes(Step $step)
-    {
-        $resourceNodes = array();
-        $step2ResourceNodes = $this->om->getRepository('InnovaPathBundle:Step2ResourceNode')->findBy(array('step' => $step, 'propagated' => true));
-
-        $nonDigitalRepo = $this->om->getRepository('InnovaPathBundle:NonDigitalResource');
-        foreach ($step2ResourceNodes as $step2ResourceNode) {
-            if ($step2ResourceNode->getResourceNode()->getClass() == "Innova\PathBundle\Entity\NonDigitalResource") {
-                $resourceNodes["nonDigital"][] = $nonDigitalRepo->getRepository('InnovaPathBundle:NonDigitalResource')->findOneByResourceNode($step2ResourceNode->getResourceNode());
-            }
-            else {
-                $resourceNodes["digital"][] = $step2ResourceNode->getResourceNode();
-            }
-        }
-
-        return $resourceNodes;
-    }
-
     public function editResourceNodeRelation(Step $step, $resourceNodeId, $excluded, $propagated, $order = null)
     {
         $step2resourceNode = $this->om->getRepository('InnovaPathBundle:Step2ResourceNode')->findOneBy(array (
