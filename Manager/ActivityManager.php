@@ -45,7 +45,7 @@ class ActivityManager
      *  Access to ActivityRuleRepository methods *
      *********************************************/
 
-    public function findActivityRuleByActionAndResource(
+    public function getActivityRuleByActionAndResource(
         $action,
         ResourceNode $resourceNode,
         $executeQuery = true
