@@ -75,25 +75,11 @@ class Step
     protected $description = null;
 
     /**
-     * @var string
-     *
-     * @ORM\Column(name="image", type="string", length=255, nullable=true)
-     */
-    protected $image;
-
-    /**
      * @var boolean
      *
      * @ORM\Column(name="withTutor", type="boolean")
      */
     protected $withTutor;
-
-    /**
-     * @var boolean
-     *
-     * @ORM\Column(name="withComputer", type="boolean")
-     */
-    protected $withComputer;
 
     /**
      * Step duration
@@ -105,7 +91,7 @@ class Step
 
     /**
      * Path
-     * @var Innova\PathBundle\Entity\Path\Path
+     * @var \Innova\PathBundle\Entity\Path\Path
      * 
      * @ORM\ManyToOne(targetEntity="Innova\PathBundle\Entity\Path\Path", inversedBy="steps")
      * @ORM\JoinColumn(onDelete="CASCADE")
@@ -135,7 +121,6 @@ class Step
     public function __construct()
     {
         $this->withTutor = false;
-        $this->withComputer = true;
         
         $this->children = new ArrayCollection();
         $this->step2ResourceNodes = new ArrayCollection();
@@ -215,27 +200,6 @@ class Step
     }
 
     /**
-     * Set image
-     * @param  string $image
-     * @return \Innova\PathBundle\Entity\Step
-     */
-    public function setImage($image)
-    {
-        $this->image= $image;
-    
-        return $this;
-    }
-    
-    /**
-     * Get image
-     * @return string
-     */
-    public function getImage()
-    {
-        return $this->image;
-    }
-
-    /**
      * Set withTutor
      * @param  boolean $withTutor
      * @return \Innova\PathBundle\Entity\Step
@@ -254,27 +218,6 @@ class Step
     public function isWithTutor()
     {
         return $this->withTutor;
-    }
-
-    /**
-     * Set withComputer
-     * @param  boolean $withComputer
-     * @return \Innova\PathBundle\Entity\Step
-     */
-    public function setWithComputer($withComputer)
-    {
-        $this->withComputer = $withComputer;
-
-        return $this;
-    }
-
-    /**
-     * Get withComputer
-     * @return boolean
-     */
-    public function isWithComputer()
-    {
-        return $this->withComputer;
     }
 
     /**
@@ -324,7 +267,7 @@ class Step
      * @param  \Innova\PathBundle\Entity\StepWho $stepWho
      * @return \Innova\PathBundle\Entity\Step
      */
-    public function setStepWho(\Innova\PathBundle\Entity\StepWho $stepWho = null)
+    public function setStepWho(StepWho $stepWho = null)
     {
         $this->stepWho = $stepWho;
 
@@ -345,7 +288,7 @@ class Step
      * @param  \Innova\PathBundle\Entity\StepWhere $stepWhere
      * @return \Innova\PathBundle\Entity\Step
      */
-    public function setStepWhere(\Innova\PathBundle\Entity\StepWhere $stepWhere = null)
+    public function setStepWhere(StepWhere $stepWhere = null)
     {
         $this->stepWhere = $stepWhere;
 
@@ -454,6 +397,7 @@ class Step
     /**
      * Remove step2ResourceNodes
      * @param \Innova\PathBundle\Entity\Step2ResourceNode $step2ResourceNodes
+     * @return \Innova\PathBundle\Entity\Step
      */
     public function removeStep2ResourceNode(Step2ResourceNode $step2ResourceNodes)
     {

@@ -1,0 +1,21 @@
+<div class="action-bar clearfix">
+    <div class="btn-group">
+        <a href="#" class="btn btn-default" data-ng-click="undo()" data-ng-disabled="undoDisabled">
+            <span class="icon-reply"></span> {{ 'undo'|trans({}, 'path_editor') }}
+        </a>
+    
+        <a href="#" class="btn btn-default" data-ng-click="redo()" data-ng-disabled="redoDisabled">
+            <span class="icon-share-alt"></span> {{ 'redo'|trans({}, 'path_editor') }}
+        </a>
+    </div>
+
+    <div class="pull-right">
+        <button type="submit" class="btn btn-primary">
+            <span class="icon-save"></span> {{ 'save'|trans({}, 'path_editor') }}
+        </button>
+
+        <a data-ng-click="closeEditor('{{ path('claro_workspace_open_tool', { workspaceId: workspace.id, toolName: 'innova_path' }) }}')" href="#" class="btn btn-warning">
+            <span class="icon-remove-sign"></span> {{ 'back'|trans({}, 'path_editor') }}
+        </a>
+    </div>
+</div>

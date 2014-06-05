@@ -3,7 +3,7 @@
 /**
  * Global Controller
  */
-function GlobalCtrl($scope, $http, HistoryFactory, PathFactory) {
+function GlobalCtrl($scope) {
     /**
      * Update Root step when path name changes
      */
@@ -11,12 +11,5 @@ function GlobalCtrl($scope, $http, HistoryFactory, PathFactory) {
         if (undefined != $scope.path.steps[0]) {
             $scope.path.steps[0].name = $scope.path.name;
         }
-    };
-    
-    /**
-     * Update History when general data change
-     */
-    $scope.updateHistory = function() {
-        HistoryFactory.update($scope.path);
     };
 }

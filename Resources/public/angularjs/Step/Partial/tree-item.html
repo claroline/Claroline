@@ -1,49 +1,39 @@
-<div class="tree-item" 
-      ng-class="{'active-step': previewStep.id == step.id}" 
-      ng-click="setPreviewStep(step)" 
-      ng-mouseenter="showButtons = step.id" 
-      ng-mouseleave="showButtons = null">  
+<div class="tree-item"
+     data-ng-class="{'active-step': previewStep.id == step.id}"
+     data-ng-click="setPreviewStep(step)"
+     data-ng-mouseenter="showButtons = step.id"
+     data-ng-mouseleave="showButtons = null">
     <div class="lvl lvl-{{ step.lvl }}"></div>
     <div class="step">{{ step.name | truncate }}</div>
 
-    <span ng-show="showButtons == step.id || previewStep == step" class="step-actions btn-group">
-        <a href="#" role="button" ng-disabled="edit.preview" class="btn btn-default btn-sm" ng-click="editStep(step)" data-toggle="tooltip" data-container="body" title="{{ 'step_edit' | trans:{}:'path_editor' }}">
-            <span class="icon-pencil"></span>
-            <span class="sr-only">{{ 'step_edit' | trans:{}:'path_editor' }}</span>
-        </a>
-
-        <a href="#" role="button" class="btn btn-default btn-sm" ng-click="addChild(step)" data-toggle="tooltip" data-container="body" title="{{ 'step_add_child' | trans:{}:'path_editor' }}">
+    <span data-ng-show="showButtons == step.id || previewStep == step" class="step-actions btn-group">
+        <a href="#" class="btn btn-default btn-sm" data-ng-click="addChild(step)" data-toggle="tooltip" data-container="body" title="{{ 'step_add_child' | trans:{}:'path_editor' }}">
             <span class="icon-plus"></span>
             <span class="sr-only">{{ 'step_add_child' | trans:{}:'path_editor' }}</span>
         </a>
 
-        <a href="#" role="button" class="btn btn-default btn-sm" ng-click="copy(step)" data-toggle="tooltip" data-container="body" title="{{ 'step_copy' | trans:{}:'path_editor' }}">
+        <a href="#" class="btn btn-default btn-sm" data-ng-click="copy(step)" data-toggle="tooltip" data-container="body" title="{{ 'step_copy' | trans:{}:'path_editor' }}">
             <span class="icon-copy"></span>
             <span class="sr-only">{{ 'step_copy' | trans:{}:'path_editor' }}</span>
         </a>
 
-        <a href="#" role="button" class="btn btn-default btn-sm" ng-click="paste(step)" ng-disabled="pasteDisabled" data-toggle="tooltip" data-container="body" title="{{ 'step_paste' | trans:{}:'path_editor' }}">
+        <a href="#" class="btn btn-default btn-sm" data-ng-click="paste(step)" data-ng-disabled="pasteDisabled" data-toggle="tooltip" data-container="body" title="{{ 'step_paste' | trans:{}:'path_editor' }}">
             <span class="icon-paste"></span>
             <span class="sr-only">{{ 'step_paste' | trans:{}:'path_editor' }}</span>
         </a>
 
-        <a href="#" role="button" class="btn btn-info btn-sm" ng-click="editTemplate(step)" data-toggle="tooltip" data-container="body" title="{{ 'step_to_template' | trans:{}:'path_editor' }}">
+        <a href="#" class="btn btn-info btn-sm" data-ng-click="editTemplate(step)" data-toggle="tooltip" data-container="body" title="{{ 'step_to_template' | trans:{}:'path_editor' }}">
             <span class="icon-download-alt"></span>
             <span class="sr-only">{{ 'step_to_template' | trans:{}:'path_editor' }}</span>
         </a>
 
-        <a href="#" role="button" ng-disabled="isRootNode" class="btn btn-danger btn-sm" ng-click="remove(step)" data-toggle="tooltip" data-container="body" title="{{ 'step_delete' | trans:{}:'path_editor' }}">
+        <a href="#" data-ng-disabled="isRootNode" class="btn btn-danger btn-sm" data-ng-click="remove(step)" data-toggle="tooltip" data-container="body" title="{{ 'step_delete' | trans:{}:'path_editor' }}">
             <span class="icon-trash"></span>
             <span class="sr-only">{{ 'step_delete' | trans:{}:'path_editor' }}</span>
-        </a>
-
-        <a href="#" role="button" class="btn btn-danger btn-sm" ng-click="removeChildren(step)" ng-disabled="step.children.length == 0" data-toggle="tooltip" data-container="body" title="{{ 'step_delete_children' | trans:{}:'path_editor' }}">
-            <span class="icon-list"></span>
-            <span class="sr-only">{{ 'step_delete_children' | trans:{}:'path_editor' }}</span>
         </a>
     </span>
 </div>
 
-<ul class="children" ui-sortable="sortableOptions" ng-model="step.children">
-    <li ng-repeat="step in step.children" ng-include="webDir + 'bundles/innovapath/angularjs/Step/Partial/tree-item.html'" onload="isRootNode = false"></li>
+<ul class="children" data-ui-sortable="sortableOptions" data-ng-model="step.children">
+    <li data-ng-repeat="step in step.children" data-ng-include="webDir + 'bundles/innovapath/angularjs/Step/Partial/tree-item.html'" onload="isRootNode = false"></li>
 </ul>

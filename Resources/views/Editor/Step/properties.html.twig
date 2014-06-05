@@ -1,0 +1,81 @@
+{# Properties #}
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h4 class="panel-title">
+            <a data-toggle="collapse" href="#panel-properties">
+                {{ 'properties'|trans({}, 'path_editor') }}
+            </a>
+        </h4>
+    </div>
+    <div id="panel-properties" class="panel-collapse collapse">
+        <div class="panel-body">
+            {# With tutor #}
+            <div class="form-group">
+                <label class="control-label col-md-4" for="with-tutor">{{ 'with_tutor'|trans({}, 'path_editor') }}</label>
+                <div class="col-md-4">
+                    <select class="form-control" name="with-tutor" id="with-tutor" data-ng-change="updateHistory()" data-ng-model="previewStep.withTutor">
+                        <option value=""></option>
+                        <option value="true">{{ 'yes'|trans({}, 'path_editor') }}</option>
+                        <option value="false">{{ 'no'|trans({}, 'path_editor') }}</option>
+                    </select>
+                </div>
+            </div>
+
+            {# Who #}
+            <div class="form-group">
+                <label class="control-label col-md-4" for="step-who">Modalité de travail</label>
+                <div class="col-md-6">
+                    <select class="form-control" id="step-who" name="step-who" data-ng-change="updateHistory()" data-ng-model="previewStep.who" data-ng-options="k as v for (k,v) in whoList">
+                    </select>
+                </div>
+            </div>
+
+            {# Where #}
+            <div class="form-group">
+                <label class="control-label col-md-4" for="step-where">Lieu d'apprentissage</label>
+                <div class="col-md-6">
+                    <select class="form-control" id="step-where" name="step-where" data-ng-change="updateHistory()" data-ng-model="previewStep.where" data-ng-options="k as v for (k,v) in whereList">
+                    </select>
+                </div>
+            </div>
+
+            {# Duration #}
+            <div class="form-group">
+                <label class="control-label col-md-4" for="duration">Durée prévue</label>
+                <div class="col-md-8">
+                    <div class="row">
+                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                            <div class="input-group">
+                                <span class="input-group-addon">h</span>
+                                <input class="form-control text-right" type="text" data-ng-model="previewStep.durationHours" data-ng-change="correctDuration('hour')" size="1" />
+                                <div class="btn-group-vertical" style="display: table-cell;">
+                                    <button data-ng-click="incrementDuration('hour')" type="button" class="btn btn-xs btn-default" style="font-size: 9px; border-top-left-radius: 0;">
+                                        <span class="icon-chevron-up"></span>
+                                    </button>
+                                    <button data-ng-click="decrementDuration('hour')" type="button" class="btn btn-xs btn-default" style="font-size: 9px; border-bottom-left-radius: 0;">
+                                        <span class="icon-chevron-down"></span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                            <div class="input-group">
+                                <span class="input-group-addon">min</span>
+                                <input class="form-control text-right" type="text" data-ng-model="previewStep.durationMinutes" data-ng-change="correctDuration('minute')" size="1" />
+                                <div class="btn-group-vertical" style="display: table-cell">
+                                    <button data-ng-click="incrementDuration('minute')" type="button" class="btn btn-xs btn-default" style="font-size: 9px; border-top-left-radius: 0;">
+                                        <span class="icon-chevron-up"></span>
+                                    </button>
+                                    <button data-ng-click="decrementDuration('minute')" type="button" class="btn btn-xs btn-default" style="font-size: 9px; border-bottom-left-radius: 0;">
+                                        <span class="icon-chevron-down"></span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

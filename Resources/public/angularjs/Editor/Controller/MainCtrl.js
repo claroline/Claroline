@@ -3,7 +3,7 @@
 /**
  * Main Controller
  */
-function MainCtrl($scope, $modal, $location, HistoryFactory, ClipboardFactory, PathFactory, AlertFactory, StepFactory, ResourceFactory) {
+function MainCtrl($scope, $modal, HistoryFactory, ClipboardFactory, PathFactory, AlertFactory, ResourceFactory) {
     $scope.path = EditorApp.currentPath;
     PathFactory.setPath($scope.path);
     
@@ -24,45 +24,43 @@ function MainCtrl($scope, $modal, $location, HistoryFactory, ClipboardFactory, P
     
     $scope.alerts = AlertFactory.getAlerts();
 
-    // Flag to know if we are editing a step (need to use an object to can access this var in child controllers)
-    $scope.edit = {};
-    $scope.edit.preview = false;
-
     // Store current previewed step
     $scope.previewStep = null;
 
-    // Store Preview step state before start editing to be able to cancel editing
-    $scope.previewStepBackup = {};
-
     $scope.saveAndClose = false;
+
+    /**
+     * Update History when general data change
+     */
+    $scope.updateHistory = function() {
+        HistoryFactory.update($scope.path);
+    };
 
     /**
      * Display step in the preview zone
      * @returns void
      */
     $scope.setPreviewStep = function(step) {
-        if (!$scope.edit.preview) {
-            // We are not editing a step => we can change the preview
-            var isRootStep = false;
-            var rootStep = null;
-            if (undefined !== $scope.path && null !== $scope.path && undefined !== $scope.path.steps[0]) {
-                rootStep = $scope.path.steps[0];
-            }
+        // We are not editing a step => we can change the preview
+        var isRootStep = false;
+        var rootStep = null;
+        if (undefined !== $scope.path && null !== $scope.path && undefined !== $scope.path.steps[0]) {
+            rootStep = $scope.path.steps[0];
+        }
 
-            if (step) {
-                $scope.previewStep = step;
-                if (step.id === rootStep.id) {
-                    isRootStep = true;
-                }
-            }
-            else if (rootStep) {
-                $scope.previewStep = rootStep;
+        if (step) {
+            $scope.previewStep = step;
+            if (step.id === rootStep.id) {
                 isRootStep = true;
             }
-
-            $scope.stepIsRootNode = isRootStep;
-            $scope.inheritedResources = ResourceFactory.getInheritedResources($scope.previewStep);
         }
+        else if (rootStep) {
+            $scope.previewStep = rootStep;
+            isRootStep = true;
+        }
+
+        $scope.stepIsRootNode = isRootStep;
+        $scope.inheritedResources = ResourceFactory.getInheritedResources($scope.previewStep);
     };
     
     /**
@@ -81,30 +79,6 @@ function MainCtrl($scope, $modal, $location, HistoryFactory, ClipboardFactory, P
     if (null === $scope.previewStep) {
         $scope.setPreviewStep();
     }
-
-    /**
-     * Display edit step form
-     * @returns void
-     */
-    $scope.editStep = function(step) {
-        $scope.edit.preview = false;
-        $scope.setPreviewStep(step);
-
-        // Backup step
-        $scope.previewStepBackup = jQuery.extend(true, {}, step);
-
-        if (typeof step.who === 'undefined' || null === step.who || step.who.length === 0) {
-            var whoDefault = StepFactory.getWhoDefault();
-            step.who = whoDefault.id + "";
-        }
-
-        if (typeof step.where === 'undefined' || null === step.where || step.where.length === 0) {
-            var whereDefault = StepFactory.getWhereDefault();
-            step.where = whereDefault.id + "";
-        }
-
-        $scope.edit.preview = true;
-    };
 
     /**
      * Copy data into clipboard

@@ -41,3 +41,19 @@
     height: 20px;
     width: 20px;
 }
+
+.panel .panel-group .panel {
+    border-top: none;
+    border-right: none;
+    border-left: none;
+    margin: 0;
+    border-radius: 0;
+}
+
+.panel .panel-group .panel .panel-heading {
+    border-radius: 0;
+}
+
+.panel .panel-group .panel:last-child {
+    border-bottom: none;
+}

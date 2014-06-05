@@ -5,7 +5,6 @@ namespace Innova\PathBundle\Entity\Path;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\Common\Collections\ArrayCollection;
-use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Innova\PathBundle\Entity\Step;
@@ -75,7 +74,7 @@ class Path extends AbstractResource implements PathInterface
     
     /**
      * Set json structure
-     * @param  string $path
+     * @param  string $structure
      * @return \Innova\PathBundle\Entity\Path\Path
      */
     public function setStructure($structure)
@@ -141,7 +140,7 @@ class Path extends AbstractResource implements PathInterface
      * @param  \Innova\PathBundle\Entity\Step $step
      * @return \Innova\PathBundle\Entity\Path\Path
      */
-    public function addStep(\Innova\PathBundle\Entity\Step $step)
+    public function addStep(Step $step)
     {
         $this->steps->set($step->getId(), $step);
         $step->setPath($this);
@@ -152,8 +151,9 @@ class Path extends AbstractResource implements PathInterface
     /**
      * Remove step
      * @param \Innova\PathBundle\Entity\Step $step
+     * @return \Innova\PathBundle\Entity\Path\Path
      */
-    public function removeStep(\Innova\PathBundle\Entity\Step $step)
+    public function removeStep(Step $step)
     {
         $this->steps->removeElement($step);
         $step->setPath(null);
@@ -206,7 +206,7 @@ class Path extends AbstractResource implements PathInterface
         $root = null;
         foreach ($this->steps as $step)
         {
-            if ($step->getParent() === null) {
+            if (null === $step->getParent()) {
                 // Root step found
                 $root = $step;
                 break;
@@ -229,7 +229,8 @@ class Path extends AbstractResource implements PathInterface
     public static function initialize($name = null)
     {
         $path = new Path();
-        
+        $path->setName($name);
+
         // Init path structure
         $path->initializeStructure();
     
@@ -252,10 +253,7 @@ class Path extends AbstractResource implements PathInterface
                     'lvl'          => 0,
                     'resourceId'   => null,
                     'name'         => $this->getName(),
-                    'image'        => 'no_image.png',
-                    'withComputer' => true,
                     'withTutor'    => false,
-                    'hasDuration'  => false,
                     'children'     => array (),
                 ),
             ),

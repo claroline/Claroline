@@ -128,7 +128,9 @@ class PathController
     
     /**
      * Delete path from database
-     * @return RedirectResponse
+     * @param \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace $workspace
+     * @param \Innova\PathBundle\Entity\Path\Path $path
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
      *
      * @Route(
      *     "/delete/{id}",

@@ -1,0 +1,39 @@
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title">{{ 'step1'|trans({}, 'path_editor') }}</h3>
+    </div>
+    
+    <div class="panel-body collapse in">
+        {{ form_row(form.name, {
+                'attr': {
+                    'placeholder' : 'name_help'|trans({}, 'path_editor'),
+                    'data-ng-model': 'path.name',
+                    'data-ng-change': 'renameRootStep(); updateHistory();'
+                }
+            }) 
+        }}
+        
+        {{ form_row(form.description, {
+                'attr': {
+                    'placeholder' : 'description_help'|trans({}, 'path_editor'),
+                    'data-ng-model':     'path.description',
+                    'data-ng-change':    'updateHistory();'
+                }
+            }) 
+        }}
+        
+        {{ form_row(form.structure, {
+                'attr': {
+                    'value' : '{{ path | path_to_json }}'
+                }
+            }) 
+        }}
+
+        {{ form_row(form.saveAndClose, {
+                'attr': {
+                    'value' : '{{ saveAndClose }}'
+                }
+            })
+        }}
+    </div>
+</div>

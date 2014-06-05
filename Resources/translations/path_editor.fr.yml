@@ -59,7 +59,7 @@ resource_no_propagate : Rendre indisponible dans les étapes enfants
 save: Sauvegarder
 save_and_close: Sauvegarder et quitter l'éditeur
 step1: Informations globales
-step2: Scénario
+step2: Parcours
 step3: Définition des informations de l'étape
 selected_step: Etape sélectionnée
 step_duration: Durée
@@ -100,23 +100,12 @@ template_save_resources: Conserver les ressources liées
 # u
 undo: Annuler
 
-# v
-validate: Valider les modifications
-
 # w
-with_computer: Avec ordinateur
-with_tutor: Avec tuteur
-without_computer: Sans ordinateur
-without_tutor: Sans tuteur
+with_tutor: Tutoré
 
-text: Texte
-sound: Son
-picture: Image
-video: Vidéo
-simulation: Simulation
-test: Test
-chat: Chat
-forum: Forum
-deposit_files: Dépôt de fichier
-other: Autre
-indifferent: Indifférent
+primary_resource: Ressource principale
+secondary_resources: Ressources complémentaires
+properties: Propriétés
+
+yes: Oui
+no: Non

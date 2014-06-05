@@ -57,7 +57,7 @@ resource_no_propagate : Make unavailable in children
 save: Save
 save_and_close: Save and Close editor
 step1: General properties
-step2: Scenario and steps
+step2: Path
 step3: Defining step properties
 selected_step: Selected step
 step_duration: Duration
@@ -98,23 +98,11 @@ template_save_resources: Keep linked resources
 # u
 undo: Undo
 
-# v
-validate: Validate modifications
-
 # w
-with_computer: With computer
-with_tutor: With tutor
-without_computer: Without computer
-without_tutor: Without tutor
+with_tutor: Tutored
 
-text: Text
-sound: Sound
-picture: Picture
-video: Video
-simulation: Simulation
-test: Test
-chat: Chat
-forum: Forum
-deposit_files: Deposit files
-other: Other
-indifferent: Indifferent
+primary_resource: Primary resource
+secondary_resources: Secondary resources
+properties: Properties
+yes: Oui
+no: Non

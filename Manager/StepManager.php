@@ -78,29 +78,29 @@ class StepManager
 
     public function editResourceNodeRelation(Step $step, $resourceNodeId, $excluded, $propagated, $order = null)
     {
-        $step2ressourceNode = $this->om->getRepository('InnovaPathBundle:Step2ResourceNode')->findOneBy(array (
+        $step2resourceNode = $this->om->getRepository('InnovaPathBundle:Step2ResourceNode')->findOneBy(array (
             'step' => $step,
             'resourceNode' => $resourceNodeId,
             'excluded' => $excluded,
         ));
     
-        if (!$step2ressourceNode) {
-            $step2ressourceNode = new Step2ResourceNode();
+        if (!$step2resourceNode) {
+            $step2resourceNode = new Step2ResourceNode();
         }
     
-        $step2ressourceNode->setResourceNode($this->om->getRepository('ClarolineCoreBundle:Resource\ResourceNode')->findOneById($resourceNodeId));
-        $step2ressourceNode->setStep($step);
-        $step2ressourceNode->setExcluded($excluded);
-        $step2ressourceNode->setPropagated($propagated);
+        $step2resourceNode->setResourceNode($this->om->getRepository('ClarolineCoreBundle:Resource\ResourceNode')->findOneById($resourceNodeId));
+        $step2resourceNode->setStep($step);
+        $step2resourceNode->setExcluded($excluded);
+        $step2resourceNode->setPropagated($propagated);
         
         if (!empty($order)) {
-            $step2ressourceNode->setResourceOrder($order);
+            $step2resourceNode->setResourceOrder($order);
         }
     
-        $this->om->persist($step2ressourceNode);
+        $this->om->persist($step2resourceNode);
         $this->om->flush();
     
-        return $step2ressourceNode;
+        return $step2resourceNode;
     }
     
     /**
@@ -154,7 +154,7 @@ class StepManager
         $step->setWithComputer($withComputer);
         
         $durationHours = !empty($stepStructure->durationHours) ? intval($stepStructure->durationHours) : 0;
-        $durationMinutes = !empty($jsonStep->durationMinutes) ? intval($stepStructure->durationMinutes) : 0;
+        $durationMinutes = !empty($stepStructure->durationMinutes) ? intval($stepStructure->durationMinutes) : 0;
         $step->setDuration(new \DateTime('00-00-00 ' . $durationHours . ':' . $durationMinutes . ':00'));
         
         $stepWho = null;
@@ -187,16 +187,6 @@ class StepManager
         
         return $stepWhos;
     }
-    
-    public function getWhoDefault()
-    {
-        $default = $this->om->getRepository('InnovaPathBundle:StepWho')->findOneBy(array('default' => true));
-
-        return array(
-            'id'   => $default->getId(),
-            'name' => $this->translator->trans($default->getName(), array(), 'innova_tools'),
-        );        
-    }
 
     public function getWhere()
     {
@@ -208,16 +198,6 @@ class StepManager
         }
         
         return $stepWheres;
-    }
-
-    public function getWhereDefault()
-    {
-        $default = $this->om->getRepository('InnovaPathBundle:StepWhere')->findOneBy(array('default' => true));
-
-        return array(
-            'id'   => $default->getId(),
-            'name' => $this->translator->trans($default->getName(), array(), 'innova_tools'),
-        );       
     }
 
 	public function contextualUpdate($step)
@@ -236,7 +216,8 @@ class StepManager
         $this->om->flush();
     }
 
-    public function findAndUpdateJsonStep($jsonSteps, $step){
+    public function findAndUpdateJsonStep($jsonSteps, $step)
+    {
         foreach($jsonSteps as $jsonStep){
             echo $jsonStep->resourceId;
             if($jsonStep->resourceId == $step->getId()){

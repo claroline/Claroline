@@ -41,7 +41,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 
 // Controller dependencies
-use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 use Innova\PathBundle\Manager\StepManager;
 
@@ -92,15 +92,16 @@ class StepController
     /**
      * Class constructor
      * Inject needed dependencies
-     * @param EntityManagerInterface   $entityManager
-     * @param SecurityContextInterface $securityContext
-     * @param StepManager              $stepManager
+     * @param string                                                    $kernelRoot
+     * @param \Doctrine\Common\Persistence\ObjectManager                $entityManager
+     * @param \Symfony\Component\Security\Core\SecurityContextInterface $securityContext
+     * @param \Innova\PathBundle\Manager\StepManager                    $stepManager
      */
     public function __construct(
         $kernelRoot,
-	    EntityManagerInterface   $entityManager,
+	    ObjectManager            $entityManager,
         SecurityContextInterface $securityContext,
-        StepManager              $stepManager) 
+        StepManager              $stepManager)
     {
         $this->kernelRoot      = $kernelRoot;
         $this->entityManager   = $entityManager;
@@ -141,44 +142,6 @@ class StepController
     }
 
     /**
-     * Load available Step images
-     * @return JsonResponse
-     * 
-     * @Route(
-     *      "/sep/images",
-     *      name="innova_step_images",
-     *      options = {"expose"=true}
-     * )
-     * @Method("GET")
-     */
-    public function getImagesAction() 
-    {
-        $images = array ();
-        
-        $authorizedExtensions = array ('png', 'jpg', 'jpeg', 'tiff', 'gif');
-        $imagesPath = $this->kernelRoot . '/../web/bundles/innovapath/images/steps/';
-        
-        // Get all content of directory
-        $imagesDir = dir($imagesPath);
-        if ($imagesDir) {
-            while ($entry = $imagesDir->read()) {
-                $filename = $imagesPath . $entry;
-                if (is_file($filename)) {
-                    // Current element is a file => check extension to see if it's an authorized image
-                    $fileInfo = pathinfo($entry);
-                    if (!empty($fileInfo) && !empty($fileInfo['extension']) && in_array($fileInfo['extension'], $authorizedExtensions)) {
-                        // Authorized file => get it
-                        $images[] = $entry;
-                    }
-                }
-            }
-            $imagesDir->close();
-        }
-        
-        return new JsonResponse($images);
-    }
-
-    /**
      * Load available values for step where property
      * @return JsonResponse
      * 
@@ -195,25 +158,6 @@ class StepController
         $wereList = $this->stepManager->getWhere();
     
         return new JsonResponse($wereList);
-    }
-    
-    /**
-     * Load default value for step where property
-     * @return JsonResponse
-     * 
-     * @Route(
-     *     "/step/where_default",
-     *     name = "innova_path_get_stepwhere_default",
-     *     options = {"expose"=true}
-     * )
-     *
-     * @Method("GET")
-     */
-    public function getWhereDefaultAction()
-    {
-        $default = $this->stepManager->getWhereDefault();
-
-        return new JsonResponse($default);
     }
 
     /**
@@ -232,23 +176,5 @@ class StepController
         $whoList = $this->stepManager->getWho();
     
         return new JsonResponse($whoList);
-    }
-
-    /**
-     * Load default value for step who property
-     * @return JsonResponse
-     * 
-     * @Route(
-     *     "/step/who_default",
-     *     name = "innova_path_get_stepwho_default",
-     *     options = {"expose"=true}
-     * )
-     * @Method("GET")
-     */
-    public function getWhoDefaultAction()
-    {
-        $default = $this->stepManager->getWhoDefault();
-
-        return new JsonResponse($default);
     }
 }
