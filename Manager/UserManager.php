@@ -20,12 +20,12 @@ use Claroline\CoreBundle\Event\StrictDispatcher;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Library\Security\PlatformRoles;
 use Claroline\CoreBundle\Library\Workspace\Configuration;
-use Claroline\CoreBundle\Manager\MailManager;
 use Claroline\CoreBundle\Pager\PagerFactory;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\DiExtraBundle\Annotation as DI;
+use Claroline\CoreBundle\Manager\Exception\AddRoleException;
 use Symfony\Component\Security\Core\SecurityContext;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Translation\Translator;
@@ -115,6 +115,14 @@ class UserManager
             ->setPublicUrl($this->generatePublicUrl($user))
             ->setPublicProfilePreferences(new UserPublicProfilePreferences());
 
+        $accountDuration = $this->platformConfigHandler->getParameter('account_duration');
+        $expirationDate = new \DateTime();
+
+        ($accountDuration === null) ?
+            $expirationDate->setDate(2100, 1, 1):
+            $expirationDate->add(new \DateInterval('P' . $accountDuration . 'D'));
+
+        $user->setExpirationDate($expirationDate);
         $this->toolManager->addRequiredToolsToUser($user);
         $this->roleManager->setRoleToRoleSubject($user, PlatformRoles::USER);
         $this->objectManager->persist($user);
@@ -212,13 +220,21 @@ class UserManager
      * This user will have the additional roles $roles.
      * These roles must already exists.
      *
-     * @param \Claroline\CoreBundle\Entity\User            $user
+     * @param \Claroline\CoreBundle\Entity\User $user
      * @param \Doctrine\Common\Collections\ArrayCollection $roles
      */
     public function insertUserWithRoles(User $user, ArrayCollection $roles)
     {
         $this->objectManager->startFlushSuite();
         $this->createUser($user);
+        foreach ($roles as $role) {
+            $validated = $this->roleManager->validateRoleInsert($user, $role);
+
+            if (!$validated) {
+                throw new Exception\AddRoleException();
+            }
+        }
+
         $this->roleManager->associateRoles($user, $roles);
         $this->objectManager->endFlushSuite();
     }
@@ -240,6 +256,14 @@ class UserManager
      */
     public function importUsers(array $users)
     {
+        $roleUser = $this->roleManager->getRoleByName('ROLE_USER');
+        $max = $roleUser->getMaxUsers();
+        $total = $this->countUsersByRoleIncludingGroup($roleUser);
+
+        if ($total + count($users) > $max) {
+            throw new AddRoleException();
+        }
+
         $lg = $this->platformConfigHandler->getParameter('locale_language');
         $this->objectManager->startFlushSuite();
 
@@ -293,11 +317,10 @@ class UserManager
      * @param \Claroline\CoreBundle\Entity\User $user
      * @param ArrayCollection                   $roles
      */
-    public function setPlatformRoles(User $user, ArrayCollection $roles)
+    public function setPlatformRoles(User $user, $roles)
     {
-        $user->setPlatformRoles($roles);
-        $this->objectManager->persist($user);
-        $this->objectManager->flush();
+        $this->roleManager->resetRoles($user);
+        $this->roleManager->associateRoles($user, $roles);
     }
 
     /**
@@ -905,5 +928,15 @@ class UserManager
             ->setDisplayPhoneNumber(true);
 
         return $userPublicProfilePreferences;
+    }
+
+    public function countUsersByRoleIncludingGroup(Role $role)
+    {
+        return $this->objectManager->getRepository('ClarolineCoreBundle:User')->countUsersByRoleIncludingGroup($role);
+    }
+
+    public function countUsersOfGroup(Group $group)
+    {
+        return $this->userRepo->countUsersOfGroup($group);
     }
 }
