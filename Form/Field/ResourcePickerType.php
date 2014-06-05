@@ -11,6 +11,7 @@
 
 namespace Claroline\CoreBundle\Form\Field;
 
+use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use JMS\DiExtraBundle\Annotation\FormType;
 use JMS\DiExtraBundle\Annotation\Inject;
 use JMS\DiExtraBundle\Annotation\InjectParams;
@@ -62,7 +63,7 @@ class ResourcePickerType extends TextType
     {
         parent::finishView($view, $form, $options);
 
-        if ($resourceNode = $this->gerResourceNode($form)) {
+        if ($resourceNode = $this->getResourceNode($form)) {
             $view->vars['attr']['data-name'] = $resourceNode->getName();
             $view->vars['attr']['data-type'] = $resourceNode->getResourceType()->getName();
         }
@@ -71,9 +72,9 @@ class ResourcePickerType extends TextType
     /**
      * Get resource node
      */
-    private function gerResourceNode(FormInterface $form)
+    private function getResourceNode(FormInterface $form)
     {
-        if ($form->getData() instanceof resourceNode) {
+        if ($form->getData() instanceof ResourceNode) {
             return $form->getData();
         } else if ($form->getData() and $form->getData() != '') {
             return $this->resourceManager->getById($form->getData());
