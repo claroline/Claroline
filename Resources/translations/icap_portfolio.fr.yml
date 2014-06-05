@@ -33,3 +33,6 @@ portfolio_error_401_text: 'Vous devez être <a href="%loginUrl%" title="Connexio
 portfolio_error_403: 'Accès au portfolio interdit'
 portfolio_error_403_text: 'Vous n''êtes pas autorisé à accéder à ce portfolio.'
 title_form_title: 'Titre du portfolio'
+userInformation_title: 'Informations utilisateur'
+userInformation_form_title: 'Informations utilisateur'
+user_information_form_city: 'Ville'

@@ -33,3 +33,6 @@ portfolio_error_401_text: 'You must be <a href="%loginUrl%" title="Connection">c
 portfolio_error_403: 'Forbidden access to portfolio'
 portfolio_error_403_text: 'You are not allowed to access this portfolio.'
 title_form_title: 'Portfolio''s title'
+userInformation_title: 'User information'
+userInformation_form_title: 'User information'
+user_information_form_city: 'City'

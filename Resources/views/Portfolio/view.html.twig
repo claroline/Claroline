@@ -37,7 +37,7 @@
                     <div data-widget-portlet data-ng-show="widgets.length > 0">
                         <div class="panel panel-default">
                             <div class="panel-heading">
-                                {% verbatim %}{{ widgetType }}{% endverbatim %}
+                                {% verbatim %}{{ widgetType + '_title'|trans }}{% endverbatim %}
                             </div>
                             <div class="panel-body">
                                 <div data-ng-repeat="widget in widgets">
