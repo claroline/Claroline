@@ -96,6 +96,10 @@
     {{ parent() }}
 
     {% if editMode %}
+        <script type="text/javascript" src="{{ asset('bundles/stfalcontinymce/vendor/tinymce/tinymce.jquery.min.js') }}"></script>
+        <script type="text/javascript" src="{{ asset('bundles/stfalcontinymce/vendor/tinymce/jquery.tinymce.min.js') }}"></script>
+        <script type="text/javascript" src="{{ asset('bundles/clarolinecore/js/tinymce/tinymce.js') }}"></script>
+
         {# Angular #}
         {% javascripts debug=true filter='jsmin' output='js/portfolio/angular.js'
             '@IcapPortfolioBundle/Resources/public/js/vendor/angular.min.js'
@@ -104,6 +108,8 @@
         %}
             <script type="text/javascript" src="{{ asset_url }}"></script>
         {% endjavascripts %}
+
+        <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/vendor/angular-ui/ui-tinymce/tinymce.js') }}"></script>
 
         <script type="text/javascript" src="{{ url('bazinga_exposetranslation_js', { 'domain_name': 'icap_portfolio' }) }}"></script>
 
