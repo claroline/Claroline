@@ -405,9 +405,7 @@ class GroupsController extends Controller
     public function settingsFormAction(Group $group)
     {
         $this->checkOpen();
-        $role = $this->roleManager->getRoleByName('ROLE_WS_CREATOR');
-        $this->roleManager->validateRoleInsert($group, $role);
-        $isAdmin = ($this->sc->isGranted('ROLE_ADMIN')) ? true: false;
+        $isAdmin = $this->sc->isGranted('ROLE_ADMIN');
         $roles = $group->getPlatformRole();
         $form = $this->formFactory->create(FormFactory::TYPE_GROUP_SETTINGS, array('isAdmin' => $isAdmin, 'roles' => $roles), $group);
         $unavailableRoles = [];
@@ -446,7 +444,7 @@ class GroupsController extends Controller
     {
         $this->checkOpen();
         $oldRoles = $group->getPlatformRoles();
-        $isAdmin = ($this->sc->isGranted('ROLE_ADMIN')) ? true: false;
+        $isAdmin = $this->sc->isGranted('ROLE_ADMIN');
         $form = $this->formFactory->create(FormFactory::TYPE_GROUP_SETTINGS, array('isAdmin' => $isAdmin, 'roles' => $oldRoles), $group);
         $form->handleRequest($this->request);
         $unavailableRoles = [];

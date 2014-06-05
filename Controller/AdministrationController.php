@@ -62,8 +62,6 @@ class AdministrationController extends Controller
     public function indexAction()
     {
         $tools = $this->toolManager->getAdminToolsByRoles($this->sc->getToken()->getRoles());
-//        var_dump($this->container->getParameter('security.user_checker.class'));
-//        throw new \Exception();
 
         if (count($tools) === 0) {
             throw new AccessDeniedException();

@@ -44,33 +44,33 @@ class UnavailablePlatformListener
      */
     public function onKernelRequest($event)
     {
-//        $token = $this->sc->getToken();
-//        $isAdmin = false;
-//
-//        if ($token) {
-//            foreach ($token->getRoles() as $role) {
-//                if ($role->getRole() === 'ROLE_ADMIN') {
-//                    $isAdmin = true;
-//                }
-//            }
-//        }
-//
-//        $now = time();
-//        $minDate = $this->ch->getParameter('platform_init_date');
-//        $maxDate = $this->ch->getParameter('platform_limit_date');
-//
-//        if (
-//            ($minDate > $now || $now > $maxDate) &&
-//            !$isAdmin && $event->isMasterRequest() &&
-//            !in_array($event->getRequest()->get('_route'), $this->getPublicRoute())
-//        ) {
-//            $response = new Response($this->templating->render(
-//                'ClarolineCoreBundle:Exception:unavailable_platform_exception.html.twig'
-//            ). $event->getRequest()->get('_route'));
-//
-//            $response->setStatusCode(500);
-//            $event->setResponse($response);
-//        }
+        $token = $this->sc->getToken();
+        $isAdmin = false;
+
+        if ($token) {
+            foreach ($token->getRoles() as $role) {
+                if ($role->getRole() === 'ROLE_ADMIN') {
+                    $isAdmin = true;
+                }
+            }
+        }
+
+        $now = time();
+        $minDate = $this->ch->getParameter('platform_init_date');
+        $maxDate = $this->ch->getParameter('platform_limit_date');
+
+        if (
+            ($minDate > $now || $now > $maxDate) &&
+            !$isAdmin && $event->isMasterRequest() &&
+            !in_array($event->getRequest()->get('_route'), $this->getPublicRoute())
+        ) {
+            $response = new Response($this->templating->render(
+                'ClarolineCoreBundle:Exception:unavailable_platform_exception.html.twig'
+            ). $event->getRequest()->get('_route'));
+
+            $response->setStatusCode(500);
+            $event->setResponse($response);
+        }
     }
 
     private function getPublicRoute()
