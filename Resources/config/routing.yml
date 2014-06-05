@@ -264,6 +264,11 @@ claro_admin_logs:
     resource: "@ClarolineCoreBundle/Controller/Administration/LogsController.php"
     type: annotation
 
+claro_admin_analytics:
+    prefix: admin/analytics
+    resource: "@ClarolineCoreBundle/Controller/Administration/AnalyticsController.php"
+    type: annotation
+
 claro_admin_workspace_registration:
     prefix: admin/workspace/registration
     resource: "@ClarolineCoreBundle/Controller/Administration/WorkspaceRegistrationController.php"
