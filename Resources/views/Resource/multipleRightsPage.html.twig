@@ -102,10 +102,6 @@
                                 <td><input id="everyone" type="checkbox"></td>
                             </tr>
                             <tr>
-                                <td><label for="anonymous">{{ 'to_anonymous' | trans({}, 'platform')}}</label></td>
-                                <td><input id="anonymous" type="checkbox"></td>
-                            </tr>
-                            <tr>
                                 <td><label for="workspace">{{ 'to_workspace_members' | trans({}, 'platform')}}</label></td>
                                 <td><input id="workspace" type="checkbox"></td>
                             </tr>
@@ -214,10 +210,13 @@
                                     </div>
                                     <div id="collapse-all-{{ workspace.getCode() }}" class="list-group collapse">
                                         {% for role in workspaceRoles[workspace.getCode()] %}
-                                            <a class="workspace-role-item list-group-item"
-                                               href="{{ path('claro_resource_right_form', {'node':resource.id, 'role':role.id}) }}">
-                                                {{ role.getTranslationKey()|trans({}, 'platform') }}
-                                            </a>
+
+                                            {% if 'ROLE_WS_MANAGER' in role.getName() != 1 %}
+                                                <a class="workspace-role-item list-group-item"
+                                                   href="{{ path('claro_resource_right_form', {'node':resource.id, 'role':role.id}) }}">
+                                                    {{ role.getTranslationKey()|trans({}, 'platform') }}
+                                                </a>
+                                            {% endif %}
                                         {% endfor %}
                                     </div>
                                 </div>

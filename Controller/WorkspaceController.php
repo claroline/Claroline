@@ -413,7 +413,7 @@ class WorkspaceController extends Controller
      *     name="claro_workspace_open_tool",
      *     options={"expose"=true}
      * )
-     * @EXT\Method("GET")
+     *
      * @EXT\ParamConverter(
      *      "workspace",
      *      class="ClarolineCoreBundle:Workspace\AbstractWorkspace",
