@@ -497,7 +497,7 @@ reset_password: Reinicializar contraseña
 reset_password_message: ¿Esta seguro que desea reinicializar su contraseña?
 reset_password_txt: Usted pidió la reinicialización de su contraseña. Si usted no la pidió, por favor ignore este mensaje.
 resetting_your_password: Reinicialización de su contraseña
-resource: 'recurso'
+resource: 'Recurso'
 resource_action_denied_message: 'La acción %action% no puede realizarse en ''%path%'': acceso denegado.'
 resource_creation_denied: 'Usted no tiene el permiso de crear en la carpeta ''%path'': acceso denegado'
 resource_creation_wrong_type: 'Usted no tiene el permiso de crear un tipo %type% en la carpeta ''%path%'': acceso denegado'

@@ -886,7 +886,7 @@ class ResourceManager
         if ($node->getIcon()) {
             $this->iconManager->delete($node->getIcon());
         }
-        
+
         $this->om->remove($node);
         $this->om->endFlushSuite();
     }
@@ -1273,6 +1273,14 @@ class ResourceManager
             'Claroline\CoreBundle\Entity\Resource\ResourceNode',
             $ids
         );
+    }
+
+    /**
+     * @return \Claroline\CoreBundle\Entity\Resource\ResourceNode
+     */
+    public function getById($id)
+    {
+        return $this->resourceNodeRepo->findOneby(array('id' => $id));
     }
 
     /**
