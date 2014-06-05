@@ -12,7 +12,7 @@
 namespace Claroline\CoreBundle\Listener;
 
 use Claroline\CoreBundle\Event\LogCreateEvent;
-use Claroline\CoreBundle\Persistence\ObjectManager;
+use Claroline\CoreBundle\Manager\ActivityManager;
 use Claroline\CoreBundle\Rule\Validator;
 use JMS\DiExtraBundle\Annotation as DI;
 
@@ -21,25 +21,21 @@ use JMS\DiExtraBundle\Annotation as DI;
  */
 class ActivityRuleListener
 {
-    private $activityRuleRepo;
-//    private $evaluationRepo;
-    private $om;
+    private $activityManager;
     private $ruleValidator;
 
     /**
      * @DI\InjectParams({
-     *     "om"            = @DI\Inject("claroline.persistence.object_manager"),
-     *     "ruleValidator" = @DI\Inject("claroline.rule.validator")
+     *     "activityManager" = @DI\Inject("claroline.manager.activity_manager"),
+     *     "ruleValidator"   = @DI\Inject("claroline.rule.validator")
      * })
      */
     public function __construct(
-        ObjectManager $om,
+        ActivityManager $activityManager,
         Validator $ruleValidator
     )
     {
-        $this->om = $om;
-        $this->activityRuleRepo = $om->getRepository('ClarolineCoreBundle:Activity\ActivityRule');
-//        $this->evaluationRepo = $om->getRepository('ClarolineCoreBundle:Activity\Evaluation');
+        $this->activityManager = $activityManager;
         $this->ruleValidator = $ruleValidator;
     }
 
@@ -54,31 +50,31 @@ class ActivityRuleListener
         $action = $log->getAction();
         $resourceNode = $log->getResourceNode();
 
-        $activityRules = $this->activityRuleRepo
-            ->findActivityRuleByActionAndResource($action, $resourceNode);
+        if (!is_null($resourceNode)) {
+            $activityRules = $this->activityManager
+                ->getActivityRuleByActionAndResource($action, $resourceNode);
 
-        if (count($activityRules) > 0) {
-            $user =  $log->getDoer();
+            if (count($activityRules) > 0) {
+                $user =  $log->getDoer();
 
-            foreach ($activityRules as $activityRule) {
-                $activityParams = $activityRule->getActivityParameters();
-//                $evaluation = $this->evaluationRepo
-//                    ->findEvaluationByUserAndActivityParams($user, $activityParams);
+                foreach ($activityRules as $activityRule) {
+                    $activityParams = $activityRule->getActivityParameters();
 
-                $nbRules = is_null($activityParams->getRules()) ?
-                    0 :
-                    count($activityParams->getRules());
+                    $nbRules = is_null($activityParams->getRules()) ?
+                        0 :
+                        count($activityParams->getRules());
 
-                if (!is_null($user) && $nbRules > 0) {
-                    $resources = $this->ruleValidator->validate(
-                        $activityParams,
-                        $user
-                    );
+                    if (!is_null($user) && $nbRules > 0) {
+                        $resources = $this->ruleValidator->validate(
+                            $activityParams,
+                            $user
+                        );
 
-                    if(0 < $resources['validRules']
-                        && $resources['validRules'] >= $nbRules) {
+                        if(0 < $resources['validRules']
+                            && $resources['validRules'] >= $nbRules) {
 
-//                        Mettre à jour l'évaluation
+    //                        Mettre à jour l'évaluation
+                        }
                     }
                 }
             }

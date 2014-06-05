@@ -8,9 +8,9 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2014/06/04 02:56:55
+ * Generation date: 2014/06/05 09:22:17
  */
-class Version20140604145653 extends AbstractMigration
+class Version20140605092215 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
@@ -77,6 +77,7 @@ class Version20140604145653 extends AbstractMigration
                 `result` VARCHAR(255) DEFAULT NULL, 
                 resultComparison INT DEFAULT NULL, 
                 userType INT NOT NULL, 
+                additional_datas VARCHAR(255) DEFAULT NULL, 
                 PRIMARY KEY(id), 
                 INDEX IDX_6824A65E896F55DB (activity_parameters_id), 
                 INDEX IDX_6824A65E89329D25 (resource_id), 
@@ -180,6 +181,10 @@ class Version20140604145653 extends AbstractMigration
         $this->addSql("
             CREATE UNIQUE INDEX UNIQ_E4A67CAC88BD9C1F ON claro_activity (parameters_id)
         ");
+        $this->addSql("
+            ALTER TABLE claro_badge_rule 
+            ADD additional_datas VARCHAR(255) DEFAULT NULL
+        ");
     }
 
     public function down(Schema $schema)
@@ -228,6 +233,10 @@ class Version20140604145653 extends AbstractMigration
         $this->addSql("
             ALTER TABLE claro_activity 
             DROP parameters_id
+        ");
+        $this->addSql("
+            ALTER TABLE claro_badge_rule 
+            DROP additional_datas
         ");
     }
 }
