@@ -12,95 +12,104 @@
 namespace Claroline\CoreBundle\Entity\Resource;
 
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
+use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
- * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\ActivityRepository")
+ * @ORM\Entity()
  * @ORM\Table(name="claro_activity")
  */
 class Activity extends AbstractResource
 {
     /**
+     * @var string
+     * @ORM\Column(length=255, nullable=true)
+     */
+    protected $title;
+
+    /**
      * @Assert\NotBlank()
-     * @ORM\Column(name="instruction")
+     * @ORM\Column(name="description")
      */
-    protected $instructions;
+    protected $description;
 
     /**
-     * @ORM\OneToMany(
-     *     targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceActivity",
-     *     mappedBy="activity"
-     * )
+     * @ORM\OneToOne(targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceNode")
+     * @ORM\JoinColumn(nullable=false)
      */
-    protected $resourcesActivities;
+    protected $resourceNode;
 
     /**
-     * @ORM\Column(name="start_date", type="datetime", nullable=true)
+     * Set title
+     *
+     * @param  string  $title
+     * @return Activity
      */
-    protected $startDate;
-
-    /**
-     * @ORM\Column(name="end_date", type="datetime", nullable=true)
-     */
-    protected $endDate;
-
-    public function __construct()
+    public function setTitle($title)
     {
-        $this->resourcesActivities = new ArrayCollection();
+        $this->title = $title;
+
+        return $this;
     }
 
     /**
-     * Returns the instruction.
+     * Get title
      *
      * @return string
      */
-    public function getInstructions()
+    public function getTitle()
     {
-        return $this->instructions;
+        return $this->title;
+    }
+
+
+    /**
+     * Set description
+     *
+     * @param  string  $description
+     * @return activity
+     */
+    public function setDescription($description)
+    {
+        if ($description !== null) {
+            $this->description = $description;
+        }
+
+        return $this;
     }
 
     /**
-     * Sets the instruction.
+     * Get description
+     *
+     * @return string
      */
-    public function setInstructions($instructions)
+    public function getDescription()
     {
-        $this->instructions = $instructions;
+        return $this->description;
     }
 
-    public function addResourceActivity(ResourceActivity $newResourceActivity)
+    /**
+     * Get resource node
+     *
+     * @return string
+     */
+    public function getResourceNode()
     {
-        $this->resourcesActivities->add($newResourceActivity);
+        return $this->resourceNode;
     }
 
-    public function removeResourceActivity(ResourceActivity $resourceActivity)
+    /**
+     * Set resource node
+     *
+     * @param  ResourceNode  $resourceNode
+     * @return activity
+     */
+    public function setResourceNode(ResourceNode $resourceNode)
     {
-        $this->resourcesActivities->removeElement($resourceActivity);
-    }
+        $this->resourceNode = $resourceNode;
 
-    public function getResourceActivities()
-    {
-        return $this->resourcesActivities;
-    }
-
-    public function setStartDate($date)
-    {
-        $this->startDate = $date;
-    }
-
-    public function getStartDate()
-    {
-        return $this->startDate;
-    }
-
-    public function setEndDate($date)
-    {
-        $this->endDate = $date;
-    }
-
-    public function getEndDate()
-    {
-        return $this->endDate;
+        return $this;
     }
 }

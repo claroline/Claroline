@@ -151,9 +151,13 @@ class ResourceController
                         $parent
                     );
 
-                    $nodesArray[] = $this->resourceManager->toArray($createdResource->getResourceNode(), $this->sc->getToken());
+                    $nodesArray[] = $this->resourceManager->toArray(
+                        $createdResource->getResourceNode(), $this->sc->getToken()
+                    );
                 } else {
-                    $nodesArray[] = $this->resourceManager->toArray($resource->getResourceNode(), $this->sc->getToken());
+                    $nodesArray[] = $this->resourceManager->toArray(
+                        $resource->getResourceNode(), $this->sc->getToken()
+                    );
                 }
             }
 
@@ -538,8 +542,9 @@ class ResourceController
 
         foreach ($nodes as $node) {
             //$resource = $this->resourceManager->getResourceFromNode($node);
-            $newNodes[] = $this->resourceManager
-                ->toArray($this->resourceManager->copy($node, $parent, $user)->getResourceNode(), $this->sc->getToken());
+            $newNodes[] = $this->resourceManager->toArray(
+                $this->resourceManager->copy($node, $parent, $user)->getResourceNode(), $this->sc->getToken()
+            );
         }
 
         return new JsonResponse($newNodes);
@@ -568,7 +573,7 @@ class ResourceController
     {
         $criteria = $this->resourceManager->buildSearchArray($this->request->query->all());
         $criteria['roots'] = isset($criteria['roots']) ? $criteria['roots'] : array();
-        $path = $node ? $this->resourceManager->getAncestors($node): array();
+        $path = $node ? $this->resourceManager->getAncestors($node) : array();
         $userRoles = $this->roleManager->getStringRolesFromToken($this->sc->getToken());
 
         //by criteria recursive => infinte loop
@@ -754,7 +759,7 @@ class ResourceController
     }
 
     /**
-     * @EXT\Route("/init", name="claro_resource_init")
+     * @EXT\Route("/init", name="claro_resource_init", options={"expose"=true})
      * @EXT\Template("ClarolineCoreBundle:Resource:init.html.twig")
      */
     public function initAction()
