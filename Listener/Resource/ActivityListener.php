@@ -87,12 +87,12 @@ class ActivityListener
         $form = $this->formFactory->create(new ActivityType(), $formData);
         $form->handleRequest($this->request);
 
-        /*if ($form->isValid()) {
+        if ($form->isValid()) {
             $event->setResources(array($form->getData()));
             $event->stopPropagation();
 
             return;
-        }*/
+        }
 
         $content = $this->templating->render(
             'ClarolineCoreBundle:Resource:createForm.html.twig',

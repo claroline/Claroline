@@ -26,15 +26,6 @@
     </div>
     <form role="form" class="form-horizontal" action="{{ path('claro_workspace_edit', {'workspace': workspace.getId()}) }}" method="post" {{ form_enctype(form) }}>
         <div class="panel-body">
-            {% if is_granted('DELETE', workspace) and workspace != user.personalWorkspace %}
-                <a href="#" class="workspace-delete-confirmation btn btn-default">
-                    <i class="icon-trash"></i> {{ 'workspace_delete'|trans({}, 'platform') }}
-                </a>
-            {% endif %}
-            <a href="{{ path('claro_workspace_export_form', {'workspace': workspace.getId() }) }}" class='btn btn-default' role="button">
-                <i class="icon-save"></i> {{ 'save_as_template'|trans({}, 'platform') }}
-            </a>
-            <hr />
             {{ form_widget(form) }}
             <hr />
             <h3 class="panel-title">{{ 'generate_url'|trans({}, 'platform') }}</h3> <br />
@@ -45,11 +36,22 @@
                 {{ url }}
             </div>
             {% endif %}
-        <div class="panel-footer">
-            <button type="submit" class="btn btn-primary">{{ 'ok'|trans({}, 'platform') }}</button>
-            <a href="{{ path('claro_workspace_open_tool', {'workspaceId': workspace.getId(), 'toolName': 'parameters'}) }}">
-                <button type="button" class="btn btn-default">{{ 'cancel'|trans({}, 'platform') }}</button>
+        </div>
+        <div class="panel-footer text-right">
+            {% if is_granted('DELETE', workspace) and workspace != user.personalWorkspace %}
+                <a href="#" class="workspace-delete-confirmation btn btn-default">
+                    <i class="icon-trash"></i> {{ 'workspace_delete'|trans({}, 'platform') }}
+                </a>
+            {% endif %}
+            {# comment until fix functionality
+            <a href="{{ path('claro_workspace_export_form', {'workspace': workspace.getId() }) }}" class='btn btn-default' role="button">
+                <i class="icon-save"></i> {{ 'save_as_template'|trans({}, 'platform') }}
             </a>
+            #}
+            <a class="btn btn-default" href="{{ path('claro_workspace_open_tool', {'workspaceId': workspace.getId(), 'toolName': 'parameters'}) }}">
+                 {{ 'cancel'|trans({}, 'platform') }}
+            </a>
+            <button type="submit" class="btn btn-primary">{{ 'ok'|trans({}, 'platform') }}</button>
         </div>
     </form>
     <div id="delete-ws-validation-box" class="modal fade" role="dialog" aria-hidden="true">
