@@ -25,7 +25,7 @@
         "MIT"
     ],
     "require" : {
-        "claroline/core-bundle" : "3.0-dev",
+        "claroline/core-bundle" : "dev-3.0-dev",
         "doctrine/doctrine-fixtures-bundle" : "2.2.0",
         "innova/angular-js-bundle" : ">=1.0",
         "innova/angular-ui-bootstrap-bundle" : ">=1.0",
