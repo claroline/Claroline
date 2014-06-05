@@ -54,31 +54,33 @@ class ActivityRuleListener
         $action = $log->getAction();
         $resourceNode = $log->getResourceNode();
 
-        $activityRules = $this->activityRuleRepo
-            ->findActivityRuleByActionAndResource($action, $resourceNode);
+        if (!is_null($resourceNode)) {
+            $activityRules = $this->activityRuleRepo
+                ->findActivityRuleByActionAndResource($action, $resourceNode->getId());
 
-        if (count($activityRules) > 0) {
-            $user =  $log->getDoer();
+            if (count($activityRules) > 0) {
+                $user =  $log->getDoer();
 
-            foreach ($activityRules as $activityRule) {
-                $activityParams = $activityRule->getActivityParameters();
-//                $evaluation = $this->evaluationRepo
-//                    ->findEvaluationByUserAndActivityParams($user, $activityParams);
+                foreach ($activityRules as $activityRule) {
+                    $activityParams = $activityRule->getActivityParameters();
+    //                $evaluation = $this->evaluationRepo
+    //                    ->findEvaluationByUserAndActivityParams($user, $activityParams);
 
-                $nbRules = is_null($activityParams->getRules()) ?
-                    0 :
-                    count($activityParams->getRules());
+                    $nbRules = is_null($activityParams->getRules()) ?
+                        0 :
+                        count($activityParams->getRules());
 
-                if (!is_null($user) && $nbRules > 0) {
-                    $resources = $this->ruleValidator->validate(
-                        $activityParams,
-                        $user
-                    );
+                    if (!is_null($user) && $nbRules > 0) {
+                        $resources = $this->ruleValidator->validate(
+                            $activityParams,
+                            $user
+                        );
 
-                    if(0 < $resources['validRules']
-                        && $resources['validRules'] >= $nbRules) {
+                        if(0 < $resources['validRules']
+                            && $resources['validRules'] >= $nbRules) {
 
-//                        Mettre à jour l'évaluation
+    //                        Mettre à jour l'évaluation
+                        }
                     }
                 }
             }
