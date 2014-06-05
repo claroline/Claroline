@@ -24,7 +24,6 @@ use Claroline\CoreBundle\DataFixtures\Optional\LoadFileData;
 use Claroline\CoreBundle\DataFixtures\Optional\LoadTextData;
 use Claroline\CoreBundle\DataFixtures\Optional\LoadWorkspaceData;
 use Claroline\CoreBundle\DataFixtures\Optional\LoadMessagesData;
-use Claroline\CoreBundle\DataFixtures\Optional\LoadActivityData;
 use Claroline\CoreBundle\DataFixtures\Optional\LoadShortcutData;
 use Claroline\ForumBundle\DataFixtures\Demo\LoadForumData;
 use Doctrine\Common\DataFixtures\ReferenceRepository;
@@ -66,7 +65,6 @@ class LoadDemoFixture extends LoggableFixture implements ContainerAwareInterface
         $this->createGroups();
         $this->createWorkspaces();
         $this->createFilesAndDirectories();
-        $this->createActivities();
         $this->createShortcuts();
         $this->createMessages();
         $this->createHomepage();
@@ -224,7 +222,6 @@ class LoadDemoFixture extends LoggableFixture implements ContainerAwareInterface
                     'Cours 3/Groupe 2',
                     'Cours 3/Groupe 3',
                     'Jane Doe/Images et vidéos',
-                    'Jane Doe/Docs/Activities'
                 )
             )
         );
@@ -269,61 +266,10 @@ class LoadDemoFixture extends LoggableFixture implements ContainerAwareInterface
         );
     }
 
-    private function createActivities()
-    {
-        $this->loadFixture(
-            new LoadActivityData(
-                'Chapitre 1',
-                'Activities',
-                'Jane Doe',
-                array(
-                    $this->getReference('file/video.mp4')->getResourceNode()->getId(),
-                    $this->getReference('file/wallpaper.jpg')->getResourceNode()->getId()
-                )
-            )
-        );
-        $this->loadFixture(
-            new LoadActivityData(
-                'Chapitre 2',
-                'Activities',
-                'Jane Doe',
-                array(
-                    $this->getReference('file/lorem.pdf')->getResourceNode()->getId(),
-                    $this->getReference('file/symfony.pdf')->getResourceNode()->getId()
-                )
-            )
-        );
-        $this->loadFixture(
-            new LoadActivityData(
-                'Activité',
-                'Jane Doe',
-                'Jane Doe',
-                array(
-                    $this->getReference('activity/Chapitre 1')->getResourceNode()->getId(),
-                    $this->getReference('activity/Chapitre 2')->getResourceNode()->getId()
-                )
-            )
-        );
-    }
-
     private function createShortcuts()
     {
         $collaboratorRole = $this->manager->getRepository('ClarolineCoreBundle:Role')
             ->findCollaboratorRole($this->getReference('user/Jane Doe')->getPersonalWorkspace());
-        $this->loadFixture(
-            new LoadShortcutData(
-                $this->getReference('directory/Docs'),
-                'Activities',
-                'Jane Doe'
-            )
-        );
-        $this->loadFixture(
-            new LoadShortcutData(
-                $this->getReference('directory/Premier semestre'),
-                'Activities',
-                'Jane Doe'
-            )
-        );
         $this->loadFixture(
             new LoadShortcutData(
                 $this->getReference('directory/Travaux'),
