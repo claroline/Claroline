@@ -2,3 +2,7 @@
     <label for="city" class="required">{{ 'user_information_form_city'|trans({}, 'icap_portfolio') }}</label>
     <input type="text" class="form-control" id="city" name="userInformation[city]" data-ng-model="editedWidget.city" required="required" />
 </div>
+<div class="form-group">
+    <label for="description" class="required">{{ 'user_information_form_description'|trans({}, 'icap_portfolio') }}</label>
+    <textarea class="form-control" rows="3" id="description" name="userInformation[description]" data-ng-model="editedWidget.description" required="required"></textarea>
+</div>
