@@ -83,7 +83,7 @@ class ObjectManager extends ObjectManagerDecorator
             parent::flush();
         }
     }
-
+    
     /**
      * Starts a flush suite. Until the suite is ended by a call to "endFlushSuite",
      * all the flush operations are suspended. Flush suites can be nested, which means

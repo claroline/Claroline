@@ -24,19 +24,29 @@
 
     $('.accordion-checkbox').click(function (event) {
         event.stopPropagation();
-        var element = event.currentTarget;
-        var checkedValue = $(element).is(':checked');
-        var value = $(element).attr('value');
+        var categoryElement = event.currentTarget;
+        var checkedValue = $(categoryElement).is(':checked');
+        var value = $(categoryElement).attr('value');
         var subMenus = 'input[class^="chk-workspaces-' + value + '"]';
         var subElements = 'input[class^="chk-workspace-' + value + '"]';
+        
         $(subMenus).each(function (index, element) {
             $(element).prop('checked', checkedValue);
         });
         $(subElements).each(function (index, element) {
             $(element).prop('checked', checkedValue);
         });
+        
+        if (checkedValue) {
+            var parentMenus = $(categoryElement).parents('.panel-root');
+            $(parentMenus).each(function (index, element) {
+                var currentMenuId = $(element).attr('current-index');
+                var menuClass = '.chk-workspaces-' + currentMenuId;
+                $(menuClass + '.accordion-checkbox.workspace-linked').prop('checked', checkedValue);
+            });
+        }
 
-        if ($('.workspace-check:checked').length > 0) {
+        if ($('.workspace-check:checked').length > 0 || $('.workspace-linked:checked').length > 0) {
             $('.subscribe-user-button, .subscribe-group-button').attr('disabled', false);
         }
         else {
@@ -51,8 +61,17 @@
         var array = [];
         var i = 0;
         $('.workspace-check:checked').each(function (index, element) {
+            
             if (array.indexOf(element.value) === -1) {
                 array[i] = element.value;
+                i++;
+            }
+        });
+        $('.workspace-linked:checked').each(function (index, element) {
+            var workspaceId = parseInt($(element).attr('workspace-id'), 10);
+            
+            if (array.indexOf(workspaceId) === -1) {
+                array[i] = workspaceId;
                 i++;
             }
         });
@@ -70,7 +89,7 @@
     });
 
     $('#workspace-list-div').on('click', '.workspace-check', function () {
-        if ($('.workspace-check:checked').length > 0) {
+        if ($('.workspace-check:checked').length > 0 || $('.workspace-linked:checked').length > 0) {
             $('.subscribe-user-button, .subscribe-group-button').attr('disabled', false);
         }
         else {

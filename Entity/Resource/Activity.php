@@ -13,6 +13,7 @@ namespace Claroline\CoreBundle\Entity\Resource;
 
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
+use Claroline\CoreBundle\Entity\Activity\ActivityParameters;
 use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -40,6 +41,15 @@ class Activity extends AbstractResource
      * @ORM\JoinColumn(nullable=false)
      */
     protected $resourceNode;
+
+    /**
+     * @ORM\OneToOne(
+     *     targetEntity="Claroline\CoreBundle\Entity\Activity\ActivityParameters",
+     *     inversedBy="activity"
+     * )
+     * @ORM\JoinColumn(name="parameters_id", onDelete="SET NULL", nullable=true)
+     */
+    protected $parameters;
 
     /**
      * Set title
@@ -109,6 +119,29 @@ class Activity extends AbstractResource
     public function setResourceNode(ResourceNode $resourceNode)
     {
         $this->resourceNode = $resourceNode;
+
+        return $this;
+    }
+
+    /**
+     * Get parameters
+     *
+     * @return string
+     */
+    public function getParameters()
+    {
+        return $this->parameters;
+    }
+
+    /**
+     * Set parameters
+     *
+     * @param  ResourceNode  $resourceNode
+     * @return activity
+     */
+    public function setParameters(ActivityParameters $parameters)
+    {
+        $this->parameters = $parameters;
 
         return $this;
     }

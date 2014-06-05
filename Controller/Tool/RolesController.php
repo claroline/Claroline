@@ -456,6 +456,7 @@ class RolesController extends Controller
         
         $this->checkAccess($workspace);
         $wsRoles = $this->roleManager->getRolesByWorkspace($workspace);
+        $currentUser = $this->security->getToken()->getUser();
 
         $pager = ($search === '') ?
             $this->userManager->getByRolesIncludingGroups($wsRoles, $page, $max, $order, $direction):
@@ -470,7 +471,8 @@ class RolesController extends Controller
             'wsRoles' => $wsRoles,
             'max' => $max,
             'order' => $order,
-            'direction' => $direction
+            'direction' => $direction,
+            'currentUser' => $currentUser
         );
     }
 
