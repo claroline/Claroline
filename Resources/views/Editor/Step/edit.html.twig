@@ -6,11 +6,11 @@
 
         {# Step name #}
         <h3 class="panel-title">
-            <strong ng-show="previewStep.lvl == 0" ng-bind="previewStep.name" style="margin-left: 8px;"></strong>
+            <strong data-ng-show="previewStep.lvl == 0" data-ng-bind="previewStep.name" style="margin-left: 8px;"></strong>
         </h3>
 
         {# Edit step name #}
-        <input type="text" style="margin-left: 8px;" class="form-control" name="step-name" ng-model="previewStep.name" ng-show="previewStep.lvl != 0" />
+        <input type="text" style="margin-left: 8px;" class="form-control" name="step-name" data-ng-model="previewStep.name" data-ng-show="previewStep.lvl != 0" />
     </div>
 
     <div class="panel-group" id="accordion">

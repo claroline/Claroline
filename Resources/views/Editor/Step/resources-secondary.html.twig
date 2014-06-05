@@ -5,12 +5,78 @@
             <a data-toggle="collapse" href="#panel-secondary-resources">
                 {{ 'secondary_resources'|trans({}, 'path_editor') }}
             </a>
-            <span class="badge pull-right">5</span>
+            <span class="badge pull-right">{% verbatim %}{{ inheritedResources.length + previewStep.resources.length }}{% endverbatim %}</span>
         </h4>
     </div>
     <div id="panel-secondary-resources" class="panel-collapse collapse">
         <div class="panel-body">
+            <a href="#" ui-resource-picker="resourcePickerConfig" class="btn btn-sm btn-default">
+                <span class="icon-plus"></span> {{ 'resources_browse'|trans({}, 'path_editor') }}
+            </a>
 
+            {# Herited resources #}
+
+            {# Locale resources #}
+
+            <ul class="step-resources nodes" ng-show="(null != inheritedResources && inheritedResources.length != 0) || (null != previewStep.resources && previewStep.resources.length != 0)">
+                <!-- Inherited resources from parents -->
+                <li ng-repeat="resource in inheritedResources" ng-class="{excluded: resource.isExcluded}" class="resource-inherited resource-lvl-{% verbatim %}{{ resource.parentStep.lvl }}{% endverbatim %} node-thumbnail node ui-state-default zoom{% verbatim %}{{ resourceZoom }}{% endverbatim %}">
+                    <div class="node-element" style="background-image: url('{% verbatim %}{{ resourceIcons[resource.type] }}{% endverbatim %}');"></div>
+                    <div class="dropdown">
+                        <a class="dropdown-toggle name dropdown-thumbnail" href="#" data-toggle="dropdown" role="button">
+                            <div class="node-name">{% verbatim %}{{ resource.name }}{% endverbatim %} <span class="icon-caret-down"></span></div>
+                        </a>
+                        <ul class="dropdown-menu" role="menu">
+                            <li>
+                                <a class="node-menu-action" href="#" ng-show="resource.isExcluded" ng-click="includeParentResource(resource)">
+                                    <span class="icon-eye-open"></span>
+                                    {{ 'resource_show_parent'|trans({}, 'path_editor') }}
+                                </a>
+                                <a class="node-menu-action" href="#" ng-show="!resource.isExcluded" ng-click="excludeParentResource(resource)">
+                                    <span class="icon-eye-close"></span>
+                                    {{ 'resource_hide_parent'|trans({}, 'path_editor') }}
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+
+                <!-- Specific resources -->
+                <li ng-repeat="resource in previewStep.resources" ng-class="{propagated: resource.propagateToChildren}" class="resource node-thumbnail node ui-state-default zoom{% verbatim %}{{ resourceZoom }}{% endverbatim %}">
+                    <div class="node-element" style="background-image: url({% verbatim %}{{ resourceIcons[resource.type] || resourceIcons['custom/default'] }}{% endverbatim %});"></div>
+
+                    <div class="dropdown">
+                        <a class="dropdown-toggle name dropdown-thumbnail" href="#" data-toggle="dropdown" role="button">
+                            <div class="node-name">{% verbatim %}{{ resource.name }}{% endverbatim %} <span class="icon-caret-down"></span></div>
+                        </a>
+                        <ul class="dropdown-menu" role="menu">
+                            <li ng-show="null == resource.resourceId || resource.resourceId.length == 0">
+                                <a class="node-menu-action" href="#" ng-click="editResource(resource)">
+                                    <span class="icon-pencil"></span>
+                                    {{ 'resource_edit'|trans({}, 'path_editor') }}
+                                </a>
+                            </li>
+                            <li>
+                                <a class="node-menu-action" href="#" ng-show="!resource.propagateToChildren" ng-click="enableResourcePropagation(resource)">
+                                    <span class="icon-eye-open"></span>
+                                    {{ 'resource_propagate'|trans({}, 'path_editor') }}
+                                </a>
+
+                                <a class="node-menu-action" href="#" ng-show="resource.propagateToChildren" ng-click="disableResourcePropagation(resource)">
+                                    <span class="icon-eye-close"></span>
+                                    {{ 'resource_no_propagate'|trans({}, 'path_editor') }}
+                                </a>
+                            </li>
+                            <li>
+                                <a class="node-menu-action" href="#" ng-click="removeResource(resource)">
+                                    <span class="icon-trash"></span>
+                                    {{ 'resource_delete'|trans({}, 'path_editor') }}
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+            </ul>
         </div>
     </div>
 </div>
