@@ -8,9 +8,9 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2014/06/05 01:14:53
+ * Generation date: 2014/06/05 02:22:52
  */
-class Version20140605131451 extends AbstractMigration
+class Version20140605142250 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
@@ -169,11 +169,6 @@ class Version20140605131451 extends AbstractMigration
             ON DELETE SET NULL
         ");
         $this->addSql("
-            ALTER TABLE claro_resource_node 
-            ADD accessible_from DATETIME DEFAULT NULL, 
-            ADD accessible_until DATETIME DEFAULT NULL
-        ");
-        $this->addSql("
             ALTER TABLE claro_activity 
             DROP FOREIGN KEY FK_E4A67CACB87FAB32
         ");
@@ -203,19 +198,6 @@ class Version20140605131451 extends AbstractMigration
         $this->addSql("
             ALTER TABLE claro_badge_rule 
             ADD additional_datas VARCHAR(255) DEFAULT NULL
-        ");
-        $this->addSql("
-            ALTER TABLE claro_workspace_tag 
-            ADD workspace_id INT DEFAULT NULL
-        ");
-        $this->addSql("
-            ALTER TABLE claro_workspace_tag 
-            ADD CONSTRAINT FK_C8EFD7EF82D40A1F FOREIGN KEY (workspace_id) 
-            REFERENCES claro_workspace (id) 
-            ON DELETE SET NULL
-        ");
-        $this->addSql("
-            CREATE INDEX IDX_C8EFD7EF82D40A1F ON claro_workspace_tag (workspace_id)
         ");
     }
 
@@ -284,22 +266,6 @@ class Version20140605131451 extends AbstractMigration
         $this->addSql("
             ALTER TABLE claro_badge_rule 
             DROP additional_datas
-        ");
-        $this->addSql("
-            ALTER TABLE claro_resource_node 
-            DROP accessible_from, 
-            DROP accessible_until
-        ");
-        $this->addSql("
-            ALTER TABLE claro_workspace_tag 
-            DROP FOREIGN KEY FK_C8EFD7EF82D40A1F
-        ");
-        $this->addSql("
-            DROP INDEX IDX_C8EFD7EF82D40A1F ON claro_workspace_tag
-        ");
-        $this->addSql("
-            ALTER TABLE claro_workspace_tag 
-            DROP workspace_id
         ");
     }
 }

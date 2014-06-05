@@ -15,7 +15,7 @@ use JMS\DiExtraBundle\Annotation\FormType;
 use JMS\DiExtraBundle\Annotation\Inject;
 use JMS\DiExtraBundle\Annotation\InjectParams;
 use JMS\DiExtraBundle\Annotation\Service;
-use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
@@ -24,7 +24,7 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
  * @Service()
  * @FormType(alias = "resourcePicker")
  */
-class ResourcePickerType extends AbstractType
+class ResourcePickerType extends TextType
 {
     private $resourceManager;
 

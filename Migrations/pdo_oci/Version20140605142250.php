@@ -1,6 +1,6 @@
 <?php
 
-namespace Claroline\CoreBundle\Migrations\oci8;
+namespace Claroline\CoreBundle\Migrations\pdo_oci;
 
 use Doctrine\DBAL\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
@@ -8,9 +8,9 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2014/06/05 01:14:53
+ * Generation date: 2014/06/05 02:22:51
  */
-class Version20140605131451 extends AbstractMigration
+class Version20140605142250 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
@@ -337,13 +337,6 @@ class Version20140605131451 extends AbstractMigration
             ON DELETE SET NULL
         ");
         $this->addSql("
-            ALTER TABLE claro_resource_node 
-            ADD (
-                accessible_from TIMESTAMP(0) DEFAULT NULL, 
-                accessible_until TIMESTAMP(0) DEFAULT NULL
-            )
-        ");
-        $this->addSql("
             ALTER TABLE claro_activity 
             ADD (
                 parameters_id NUMBER(10) DEFAULT NULL, 
@@ -385,21 +378,6 @@ class Version20140605131451 extends AbstractMigration
             ADD (
                 additional_datas VARCHAR2(255) DEFAULT NULL
             )
-        ");
-        $this->addSql("
-            ALTER TABLE claro_workspace_tag 
-            ADD (
-                workspace_id NUMBER(10) DEFAULT NULL
-            )
-        ");
-        $this->addSql("
-            ALTER TABLE claro_workspace_tag 
-            ADD CONSTRAINT FK_C8EFD7EF82D40A1F FOREIGN KEY (workspace_id) 
-            REFERENCES claro_workspace (id) 
-            ON DELETE SET NULL
-        ");
-        $this->addSql("
-            CREATE INDEX IDX_C8EFD7EF82D40A1F ON claro_workspace_tag (workspace_id)
         ");
     }
 
@@ -478,23 +456,6 @@ class Version20140605131451 extends AbstractMigration
         $this->addSql("
             ALTER TABLE claro_badge_rule 
             DROP (additional_datas)
-        ");
-        $this->addSql("
-            ALTER TABLE claro_resource_node 
-            DROP (
-                accessible_from, accessible_until
-            )
-        ");
-        $this->addSql("
-            ALTER TABLE claro_workspace_tag 
-            DROP (workspace_id)
-        ");
-        $this->addSql("
-            ALTER TABLE claro_workspace_tag 
-            DROP CONSTRAINT FK_C8EFD7EF82D40A1F
-        ");
-        $this->addSql("
-            DROP INDEX IDX_C8EFD7EF82D40A1F
         ");
     }
 }
