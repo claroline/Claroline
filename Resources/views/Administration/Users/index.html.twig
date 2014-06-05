@@ -34,7 +34,7 @@
             {{ 'import_users'|trans({}, 'platform') }}
         {% if not canUserBeCreated %} </div> {% else %} </a> {% endif %}
         <a class="list-group-item" href="{{ path('claro_admin_group_creation_form') }}" id="link_group_create_form">
-            {{ 'create_group'|trans({}, 'platform') }}users
+            {{ 'create_group'|trans({}, 'platform') }}
         </a>
         <a class="list-group-item" href="{{ path('claro_admin_group_list') }}" id="link_group_list">
             {{ 'list_groups'|trans({}, 'platform') }}
