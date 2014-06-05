@@ -106,7 +106,7 @@ portfolioApp
                         console.error('Error occured while deleting widget');
                         console.log(error);
                     }
-                    widget.$delete(success, failed);
+                    return widget.$delete(success, failed);
                 }
             }
         };

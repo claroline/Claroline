@@ -66,6 +66,13 @@ body {
                 }
             }
         }
+
+        .widget-actions {
+            .btn-danger.btn-loading {
+                padding-left: 7px;
+                padding-right: 6px;
+            }
+        }
     }
 }
 
@@ -101,12 +108,14 @@ body {
         .panel-footer {
             border-top: 0;
             text-align: center;
-            button {
-                span.loading {
-                    display: inline-block;
-                    margin:  0;
-                }
-            }
         }
+    }
+}
+
+.panel {
+    span.loading {
+        display:        inline-block;
+        margin:         0;
+        vertical-align: middle;
     }
 }

@@ -26,6 +26,9 @@ portfolioApp
         };
 
         $scope.delete = function(widget) {
-            widgetsManager.delete(widget);
+            widget.isDeleting = true;
+            widgetsManager.delete(widget).then(function(data) {
+                delete widget.isDeleting;
+            });
         }
     }]);
