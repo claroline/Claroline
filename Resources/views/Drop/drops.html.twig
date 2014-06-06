@@ -13,7 +13,13 @@
         </h2>
 
         {% if unterminated_drops is defined %}
-            <p>{{ unterminated_drops }} {{ 'unterminated drops'|trans({},'icap_dropzone') }}</p>
+            <p>{{ unterminated_drops }} {{ 'unterminated drops'|trans({},'icap_dropzone') }}
+                {% if unterminated_drops > 0 and (dropzone.manualState ==  'finished' or dropzone.manualState == 'peerReview' ) %}
+                    <a href="{{ path('icap_dropzone_auto_close_drops_confirmation',{'resourceId':dropzone.id}) }}"
+                       class="btn btn-default btn-xs launch-modal">Close unterminated drops</a>
+                {% endif %}
+            </p>
+
         {% endif %}
         {{ macros.flashBox() }}
 

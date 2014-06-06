@@ -42,7 +42,7 @@ class DropzoneController extends DropzoneBaseController
         $this->isAllowToOpen($dropzone);
         $this->isAllowToEdit($dropzone);
         $platformConfigHandler = $this->get('claroline.config.platform_config_handler');
-        $form = $this->createForm(new DropzoneCommonType(), $dropzone,array('language' => $platformConfigHandler->getParameter('locale_language'), 'date_format' => $this->get('translator')->trans('date_form_format', array(), 'platform')));
+        $form = $this->createForm(new DropzoneCommonType(), $dropzone, array('language' => $platformConfigHandler->getParameter('locale_language'), 'date_format' => $this->get('translator')->trans('date_form_format', array(), 'platform')));
 
         if ($this->getRequest()->isMethod('POST')) {
             // see if manual plannification option has changed.
@@ -56,7 +56,7 @@ class DropzoneController extends DropzoneBaseController
             /** @var Dropzone $dropzone */
             $dropzone = $form->getData();
 
-            if (!$dropzone->getPeerReview( )and $dropzone->getManualState() == 'peerReview') {
+            if (!$dropzone->getPeerReview() and $dropzone->getManualState() == 'peerReview') {
                 $dropzone->setManualState('notStarted');
             }
             if ($dropzone->getEditionState() < 2) {
@@ -85,38 +85,38 @@ class DropzoneController extends DropzoneBaseController
 
             if (!$dropzone->getManualPlanning()) {
 
-               // var_dump($this->getRequest()->request->all());
+                // var_dump($this->getRequest()->request->all());
                 //$form_array= $this->getRequest()->request->get('icap_dropzone_common_form');
                 // reconstruction of datetimes.
 
-                if(array_key_exists('startAllowDrop',$form_array)) {
-                    $dateStr = implode(' ',$form_array['startAllowDrop']);
-                    if($this->validateDate( $dateStr)) {
+                if (array_key_exists('startAllowDrop', $form_array)) {
+                    $dateStr = implode(' ', $form_array['startAllowDrop']);
+                    if ($this->validateDate($dateStr)) {
                         $startAllowDrop = new DateTime($dateStr);
                         $dropzone->setStartAllowDrop($startAllowDrop);
                     }
                 }
 
-                if(array_key_exists('endAllowDrop',$form_array)) {
-                    $dateStr = implode(' ',$form_array['endAllowDrop']);
-                    if($this->validateDate($dateStr)) {
-                        $endAllowDrop = new DateTime($dateStr );
+                if (array_key_exists('endAllowDrop', $form_array)) {
+                    $dateStr = implode(' ', $form_array['endAllowDrop']);
+                    if ($this->validateDate($dateStr)) {
+                        $endAllowDrop = new DateTime($dateStr);
                         $dropzone->setEndAllowDrop($endAllowDrop);
                     }
                 }
 
-                if(array_key_exists('endReview',$form_array)) {
-                    $dateStr = implode(' ',$form_array['endReview']);
-                    if($this->validateDate($dateStr)) {
-                        $endReview = new DateTime( implode(' ',$form_array['endReview']));
+                if (array_key_exists('endReview', $form_array)) {
+                    $dateStr = implode(' ', $form_array['endReview']);
+                    if ($this->validateDate($dateStr)) {
+                        $endReview = new DateTime(implode(' ', $form_array['endReview']));
                         $dropzone->setEndReview($endReview);
                     }
                 }
 
-                if(array_key_exists('endAllowDrop',$form_array)) {
-                    $dateStr = implode(' ',$form_array['endAllowDrop']);
-                    if($this->validateDate($dateStr)) {
-                        $endAllowDrop = new DateTime(implode(' ',$form_array['endAllowDrop']));
+                if (array_key_exists('endAllowDrop', $form_array)) {
+                    $dateStr = implode(' ', $form_array['endAllowDrop']);
+                    if ($this->validateDate($dateStr)) {
+                        $endAllowDrop = new DateTime(implode(' ', $form_array['endAllowDrop']));
                         $dropzone->setEndAllowDrop($endAllowDrop);
                     }
                 }
@@ -175,23 +175,21 @@ class DropzoneController extends DropzoneBaseController
 
                 $manualStateChanged = false;
                 $newManualState = null;
-                if( $dropzone->getManualPlanning() == true)
-                {
+                if ($dropzone->getManualPlanning() == true) {
 
-                    if($oldManualPlanning == false || $oldManualPlanningOption != $dropzone->getManualState())
-                    {
+                    if ($oldManualPlanning == false || $oldManualPlanningOption != $dropzone->getManualState()) {
                         $manualStateChanged = true;
                         $newManualState = $dropzone->getManualState();
                     }
                     // option auto Close unterminated drops
-                    if($form->get('autoCloseForManualStates')->getData() == 1) {
-                        $dropzoneManager->closeDropzoneOpenedDrops($dropzone,true);
+                    if ($form->get('autoCloseForManualStates')->getData() == 1) {
+                        $dropzoneManager->closeDropzoneOpenedDrops($dropzone, true);
                     }
 
-                }else {
-                   if($oldEndDropDate != $dropzone->getEndAllowDrop()){
-                       $dropzone->setAutoCloseState(Dropzone::AUTO_CLOSED_STATE_WAITING);
-                   }
+                } else {
+                    if ($oldEndDropDate != $dropzone->getEndAllowDrop()) {
+                        $dropzone->setAutoCloseState(Dropzone::AUTO_CLOSED_STATE_WAITING);
+                    }
                 }
 
                 $em = $this->getDoctrine()->getManager();
@@ -205,12 +203,11 @@ class DropzoneController extends DropzoneBaseController
 
 
                 // check if manual state has changed
-                if($manualStateChanged)
-                {
+                if ($manualStateChanged) {
                     // send notification.
 
                     $usersIds = $dropzoneManager->getDropzoneUsersIds($dropzone);
-                    $event = new LogDropzoneManualStateChangedEvent($dropzone,$newManualState,$usersIds);
+                    $event = new LogDropzoneManualStateChangedEvent($dropzone, $newManualState, $usersIds);
                     $this->get('event_dispatcher')->dispatch('log', $event);
 
 
@@ -402,7 +399,7 @@ class DropzoneController extends DropzoneBaseController
         $dropzoneManager = $this->get('icap.manager.dropzone_manager');
         // check if endAllowDrop is past and close all unvalidated
         // drops if autoclose options is activated.
-        if($dropzone->getAutoCloseState() == Dropzone::AUTO_CLOSED_STATE_WAITING) {
+        if ($dropzone->getAutoCloseState() == Dropzone::AUTO_CLOSED_STATE_WAITING) {
             $dropzoneManager->closeDropzoneOpenedDrops($dropzone);
 
         }
@@ -417,9 +414,9 @@ class DropzoneController extends DropzoneBaseController
 
 
         // get progression of the evaluation ( current state, all states available and needed infos to the view).
-        $dropzoneProgress = $dropzoneManager->getDrozponeProgress($dropzone,$drop,$nbCorrections);
+        $dropzoneProgress = $dropzoneManager->getDrozponeProgress($dropzone, $drop, $nbCorrections);
 
-        $PeerReviewEndCase = $dropzoneManager->isPeerReviewEndedOrManualStateFinished($dropzone,$nbCorrections);
+        $PeerReviewEndCase = $dropzoneManager->isPeerReviewEndedOrManualStateFinished($dropzone, $nbCorrections);
         return array(
             'workspace' => $dropzone->getResourceNode()->getWorkspace(),
             '_resource' => $dropzone,
@@ -429,7 +426,7 @@ class DropzoneController extends DropzoneBaseController
             'hasCopyToCorrect' => $hasCopyToCorrect,
             'hasUnfinishedCorrection' => $hasUnfinishedCorrection,
             'dropzoneProgress' => $dropzoneProgress,
-            'PeerReviewEndCase' =>$PeerReviewEndCase,
+            'PeerReviewEndCase' => $PeerReviewEndCase,
         );
     }
 
@@ -439,10 +436,11 @@ class DropzoneController extends DropzoneBaseController
      * @param string $format
      * @return bool
      */
-    private function validateDate($date, $format = 'Y-m-d H:i:s'){
+    private function validateDate($date, $format = 'Y-m-d H:i:s')
+    {
 
-            $d = DateTime::createFromFormat($format, $date);
-            return $d && $d->format($format) == $date;
+        $d = DateTime::createFromFormat($format, $date);
+        return $d && $d->format($format) == $date;
     }
 
 }

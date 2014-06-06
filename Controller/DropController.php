@@ -789,4 +789,57 @@ class DropController extends DropzoneBaseController
             )
         );
     }
+
+    /**
+     * @Route(
+     *      "/{resourceId}/autoclosedrops/confirm",
+     *      name="icap_dropzone_auto_close_drops_confirmation",
+     *      requirements={"resourceId" = "\d+", "dropId" = "\d+"}
+     * )
+     * @ParamConverter("dropzone", class="IcapDropzoneBundle:Dropzone", options={"id" = "resourceId"})
+     * @Template()
+     */
+    public function autoCloseDropsConfirmationAction($dropzone)
+    {
+        $this->isAllowToOpen($dropzone);
+        $this->isAllowToEdit($dropzone);
+
+        $view = 'IcapDropzoneBundle:Dropzone:confirmCloseUnterminatedDrop.html.twig';
+        if ($this->getRequest()->isXmlHttpRequest()) {
+            $view = 'IcapDropzoneBundle:Dropzone:confirmCloseUnterminatedDropModal.html.twig';
+        }
+        return $this->render($view, array(
+            'workspace' => $dropzone->getResourceNode()->getWorkspace(),
+            '_resource' => $dropzone,
+            'dropzone' => $dropzone,
+        ));
+    }
+
+    /**
+     * @Route(
+     *      "/{resourceId}/autoclosedrops",
+     *      name="icap_dropzone_auto_close_drops",
+     *      requirements={"resourceId" = "\d+"}
+     * )
+     * @ParamConverter("dropzone", class="IcapDropzoneBundle:Dropzone", options={"id" = "resourceId"})
+     *
+     */
+    public function autoCloseDropsAction($dropzone)
+    {
+        $this->isAllowToOpen($dropzone);
+        $this->isAllowToEdit($dropzone);
+
+        $dropzoneManager = $this->get('icap.manager.dropzone_manager');
+        $dropzoneManager->closeDropzoneOpenedDrops($dropzone, true);
+
+
+        return $this->redirect(
+            $this->generateUrl(
+                'icap_dropzone_drops_awaiting',
+                array(
+                    'resourceId' => $dropzone->getId()
+                )
+            )
+        );
+    }
 }
