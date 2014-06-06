@@ -45,7 +45,8 @@ class Activity extends AbstractResource
     /**
      * @ORM\OneToOne(
      *     targetEntity="Claroline\CoreBundle\Entity\Activity\ActivityParameters",
-     *     inversedBy="activity"
+     *     inversedBy="activity",
+     *     cascade={"persist"}
      * )
      * @ORM\JoinColumn(name="parameters_id", onDelete="SET NULL", nullable=true)
      */
