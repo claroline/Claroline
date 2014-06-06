@@ -80,59 +80,12 @@
         <form onsubmit="return check_form('{{ 'nbr_choices' | trans }}', '{{ 'answer_coched' | trans }}', '{{ 'label_empty' | trans }}', '{{ 'point_answers' | trans }}', '{{ 'point_answer' | trans }}', '{{ 'invite_question' | trans }}');"
               action="{{ path('ujm_interactionqcm_update', { 'id': entity.id }) }}" method="post" {{ form_enctype(edit_form) }}>
             <div class="panel-body">
+                {% set form = edit_form %}
+
                 {% include "UJMExoBundle:Partial:questionEdit.html.twig" %}
+                {% include "UJMExoBundle:Partial:interactions/qcm.html.twig" %}
 
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <h3 class="panel-title">{{ 'response' | trans }}:
-                    </div>
-                    <div class="panel-body">
-                        <br>
-                        <div class="panel panel-default">
-                            <div class="panel-heading">
-                                <h3 class="panel-title">{{ 'points' | trans }}</h3>
-                            </div>
-                            <div class="panel-body">
-                                <div class="form-group row">
-                                    {{ form_label(edit_form.scoreRightResponse) }}
-                                    {{ form_errors(edit_form.scoreRightResponse) }}
-                                    <div class="col-md-9">{{ form_widget(edit_form.scoreRightResponse) }}</div>
-                                </div>
-                                <div class="form-group row">
-                                    {{ form_label(edit_form.scoreFalseResponse) }}
-                                    {{ form_errors(edit_form.scoreFalseResponse) }}
-                                    <div class="col-md-9">{{ form_widget(edit_form.scoreFalseResponse) }}</div>
-                                </div>
-                                <div class="form-group row">
-                                    {{ form_label(edit_form.weightResponse) }}
-                                    <div class="col-md-9">{{ form_widget(edit_form.weightResponse) }}</div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="panel panel-default">
-                            <div class="panel-heading">
-                                <h3 class="panel-title">{{ 'choice' | trans }}</h3>
-                            </div>
-                            <div class="panel-body">
-                                <div class="form-group row">
-                                    {{ form_label(edit_form.shuffle) }}
-                                    <div class="col-md-9">{{ form_widget(edit_form.shuffle) }}</div>
-                                </div>
-                                {{ form_row(edit_form.typeQCM) }}
-                                 <div id="choiceError"></div>
-                                 <div id="tableChoice"></div>
-                                 {{ form_row(edit_form.choices) | replace({"col-md-3": "col-md-12"}) | raw }}
-                                 {{ form_errors(edit_form.choices) }}
-                            </div>
-                        </div>
-                    </div>
-
-                    <div style="display: none;">{{ form_rest(edit_form) }}</div>
-                    {{ form_errors(edit_form) }}
-
-                    <input type="hidden" name="exercise" value="{{ exoID }}"/>
-                </div>
+                <input type="hidden" name="exercise" value="{{ exoID }}"/>
             </div>
             <div class="panel-footer">
                 <button type="submit" id="button_submit" class="btn btn-primary" onclick="setOrder();">{{ 'save' | trans }}</button>

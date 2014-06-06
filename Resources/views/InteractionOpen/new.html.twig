@@ -44,49 +44,7 @@
 
         <div class="panel-body">
             {% include "UJMExoBundle:Partial:question.html.twig" %}
-
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <h3 class="panel-title">{{ 'response' | trans }}</h3>
-                </div>
-                <div class="panel-body">
-                    {{ form_row(form.typeopenquestion) }}
-
-                    <div id="qOpenScoreMaxLongResp">
-                        <div class="form-group row">
-                            {{ form_label(form.scoreMaxLongResp) }}
-                            <div class="col-md-9">
-                                {{ form_widget(form.scoreMaxLongResp) }}
-                                {{ form_errors(form.scoreMaxLongResp) }}
-                            </div>
-                        </div>
-                    </div>
-
-                    <div id="qOpenOrthography" style="display: none;">
-                        <p>
-                            {{ form_label(form.orthographyCorrect) }}
-                            {{ form_widget(form.orthographyCorrect) }}
-                        </p>
-                    </div>
-
-                    <!--<div id="qOpenUnit" style="display: none;">
-                        <p>
-                            {#{ form_row(form.unit) }#}
-                        </p>
-                    </div>-->
-
-                    <div id="qOpenKeyword" style="display: none;">
-                        <p>
-                            {{ form_row(form.wordResponses) }}
-                        </p>
-                    </div>
-                </div>
-
-                <div style="display: none;">
-                    {{ form_rest(form) }}
-                </div>
-                {{ form_errors(form) }}
-            </div>
+            {% include "UJMExoBundle:Partial:interactions/open.html.twig" %}
         </div>
         <div class="panel-footer">
             <input type="hidden" name="exercise" value="{{ exoID }}" />

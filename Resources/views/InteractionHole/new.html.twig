@@ -43,57 +43,7 @@
     <form onsubmit="return check_form('{{ 'nb_hole' | trans }}')" action="{{ path('ujm_interactionhole_create') }}" method="post" {{ form_enctype(form) }}>
         <div class="panel-body">
             {% include "UJMExoBundle:Partial:question.html.twig" %}
-
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <h3 class="panel-title">{{ 'response' | trans }}</h3>
-                </div>
-                <div class="panel-body">
-
-                    <div class="panel panel-default">
-                        <div class="panel-heading">
-                            <h3 class="panel-title">{{ 'Inter_Hole.html' | trans }}</h3>
-                        </div>
-                        <div class="panel-body">
-                            <div class="form-group row">
-                                <div id="holeEditor" class="col-md-9">{{ form_widget(form.html) }}</div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="panel panel-default">
-                        <div class="panel-heading">
-                            <h3 class="panel-title">{{ 'hole' | trans }}</h3>
-                        </div>
-                        <div class="panel-body">
-                            <div id="Instructions" class="alert alert-info">
-                                <a class="close" onclick="HideInstruction();">&times;</a>
-                                <p>{{ 'instruction add hole' | trans }}</p>
-                            </div>
-                            </br>
-                            <a id="create_hole" class="btn btn-primary" onclick="createHole();">
-                                <i class="icon-plus"></i> {{ 'create hole' | trans }}
-                            </a>
-                            <a class="btn btn-default" onclick="DisplayInstruction();" id="showInstruct">
-                                <i class="icon-question"></i> {{ 'show Instructions' | trans }}
-                            </a>
-                            <a class="btn btn-default" onclick="HideInstruction();" id="hideInstruct">
-                                <i class="icon-question"></i> {{ 'hide Instructions' | trans }}
-                            </a>
-                            </br></br>
-                            {#{ form_row(form.holes) }#}
-                            <div id="holeError"></div>
-                            <div id="tableHoles"></div>
-                            {{ form_widget(form.holes) }}
-                            {{ form_errors(form.holes) }}
-                        </div>
-                    </div>
-
-                    <div style="display: none;">{{ form_rest(form) }}</div>
-                    {{ form_errors(form) }}
-
-                </div>
-            </div>
+            {% include "UJMExoBundle:Partial:interactions/hole.html.twig" %}
         </div>
         <div class="panel-footer">
             <input type="hidden" name="exercise" value="{{ exoID }}" />
@@ -113,22 +63,22 @@
 {# functions javascript #}
 {% if error is defined %}
     <script type="text/javascript">
-        addFormHoleEdit('{{ "add" | trans }}', '{{ "response" | trans }}', 
+        addFormHoleEdit('{{ "add" | trans }}', '{{ "response" | trans }}',
         '{{ "point" | trans }}', '{{ "Inter_Hole.size" | trans }}', *
-        '{{ "Inter_Hole.orthography" | trans }}', '{{ "delete" | trans }}', 
-        '{{ "Hole.selector" | trans }}', '{{ asset('bundles/ujmexo/images/ajouter_ligne.jpeg') }}', 
+        '{{ "Inter_Hole.orthography" | trans }}', '{{ "delete" | trans }}',
+        '{{ "Hole.selector" | trans }}', '{{ asset('bundles/ujmexo/images/ajouter_ligne.jpeg') }}',
         '{{ "key word" | trans }}', '{{ "points" | trans  }}');
 
         newHintEdit('{{ 'hint' | trans }}', '{{ 'penalty' | trans }}', '{{ 'add hint' | trans }}', '{{ 'delete' | trans }}');
     </script>
 {% else %}
     <script type="text/javascript">
-        addFormHole('{{ "add" | trans }}', '{{ "response" | trans }}', 
-        '{{ "point" | trans }}', '{{ "Inter_Hole.size" | trans }}', 
-        '{{ "Inter_Hole.orthography" | trans }}', '{{ "delete" | trans }}', 
-        '{{ "Hole.selector" | trans }}', '{{ asset('bundles/ujmexo/images/ajouter_ligne.jpeg') }}', 
+        addFormHole('{{ "add" | trans }}', '{{ "response" | trans }}',
+        '{{ "point" | trans }}', '{{ "Inter_Hole.size" | trans }}',
+        '{{ "Inter_Hole.orthography" | trans }}', '{{ "delete" | trans }}',
+        '{{ "Hole.selector" | trans }}', '{{ asset('bundles/ujmexo/images/ajouter_ligne.jpeg') }}',
         '{{ "key word" | trans  }}', '{{ "points" | trans  }}');
-        
+
     newHint('{{ 'hint' | trans }}', '{{ 'penalty' | trans }}', '{{ 'add hint' | trans }}', '{{ 'delete' | trans }}');
     </script>
 {% endif %}

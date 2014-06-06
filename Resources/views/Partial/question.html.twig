@@ -33,98 +33,75 @@
  # knowledge of the CeCILL license and that you accept its terms.
 #}
 
-<div class="panel panel-default">
-    <div class="panel-heading">
-        <h3 class="panel-title">{{ 'title' | trans }}</h3>
-    </div>
-    <div class="panel-body">
-        <div class="form-group row">
-            {{ form_label(form.interaction.question.title) }}
-            <div class="col-md-9">{{ form_widget(form.interaction.question.title) }}</div>
-        </div>
-    </div>
+<div class="form-group row">
+    {{ form_label(form.interaction.question.title) }}
+    <div class="col-md-9">{{ form_widget(form.interaction.question.title) }}</div>
 </div>
 
-<div class="panel panel-default">
-    <div class="panel-heading">
-        <h3 class="panel-title">{{ 'category' | trans }}</h3>
-    </div>
-    <div class="panel-body">
-        <div class="form-group row">
-            <label class="control-label col-md-3">{{ 'choose' | trans }}</label>
-            <div class="col-md-9">
-                {{ form_widget(form.interaction.question.category) }}
-                {{ form_errors(form.interaction.question.category) }}
-            </div>
+<br><hr><br>
+
+<div>
+    <div class="form-group row">
+        <label class="control-label col-md-3">{{ 'category' | trans }}</label>
+        <div class="col-md-9">
+            {{ form_widget(form.interaction.question.category) }}
+            {{ form_errors(form.interaction.question.category) }}
         </div>
     </div>
-    <div class="panel-footer">
-        <a class="btn btn-primary" onclick="openCat('{{ path('ujm_category_new_pop', {'edit': 1} ) }}');"><i class="icon-pencil"></i> {{ 'alter category' | trans }}</a>
-        <a class="btn btn-primary" onclick="openCat('{{ path('ujm_category_new_pop') }}');"><i class="icon-plus"></i> {{ 'create a new category' | trans }}</a>
-        <a id="linkedCategory" style="display: none;" class="btn btn-primary" id="lien_category_drop" onclick="dropCategory();"><i class="icon-trash"></i> {{ 'drop category' | trans }}</a>
-    </div>
+    <a class="btn btn-primary" onclick="openCat('{{ path('ujm_category_new_pop', {'edit': 1} ) }}');"><i class="icon-pencil"></i> {{ 'alter category' | trans }}</a>
+    <a class="btn btn-primary" onclick="openCat('{{ path('ujm_category_new_pop') }}');"><i class="icon-plus"></i> {{ 'create a new category' | trans }}</a>
+    <a id="linkedCategory" style="display: none;" class="btn btn-primary" id="lien_category_drop" onclick="dropCategory();"><i class="icon-trash"></i> {{ 'drop category' | trans }}</a>
 </div>
 
-<div class="panel panel-default">
-    <div class="panel-heading">
-        <h3 class="panel-title">{{ 'description' | trans }}</h3>
-    </div>
-    <div class="panel-body">
-        <a class="btn btn-primary" data-toggle="collapse" data-target="#collepsedescription">
-            <i class="icon-pencil"></i> {{ 'Question.description' | trans }}
-        </a>
-    </div>
+<br><hr><br>
+
+<div>
+    <a class="btn btn-primary" data-toggle="collapse" data-target="#collepsedescription">
+        <i class="icon-pencil"></i> {{ 'Question.description' | trans }}
+    </a>
     <div id="collepsedescription" class="list-group collapse">
         <div class="list-group-item">{{ form_widget(form.interaction.question.description) }}</div>
     </div>
 </div>
 
-<div class="panel panel-default">
-    <div class="panel-heading">
-        <h3 class="panel-title">{{ 'model' | trans }}</h3>
-    </div>
-    <div class="panel-body">
-        <div class="form-group row">
-            {{ form_label(form.interaction.question.model) }}
-            <div class="col-md-3">{{ form_widget(form.interaction.question.model) }}</div>
-        </div>
+<br><hr><br>
+
+<div>
+    <div class="form-group row">
+        {{ form_label(form.interaction.question.model) }}
+        <div class="col-md-3">{{ form_widget(form.interaction.question.model) }}</div>
     </div>
 </div>
 
-<div class="panel panel-default">
-    <div class="panel-heading">
-        <h3 class="panel-title">{{ 'question' | trans }}</h3>
-    </div>
-    <div class="panel-body">
-        {{ form_widget(form.interaction.invite) }}
-    </div>
+<br><hr><br>
+
+<div>
+    <label class="control-label col-md-3">{{ 'question' | trans }}</label>
+    <br><br>
+    {{ form_widget(form.interaction.invite) }}
 </div>
 
-<div class="panel panel-default">
-    <div class="panel-heading">
-        <h3 class="panel-title">{{ 'comment' | trans }}</h3>
-    </div>
-    <div class="panel-body">
-        <a class="btn btn-primary" data-toggle="collapse" data-target="#collepseinteraction">
-            <i class="icon-pencil"></i> {{ 'Interaction.feedback' | trans }}
-        </a>
-    </div>
+<br><hr><br>
+
+<div>
+    <a class="btn btn-primary" data-toggle="collapse" data-target="#collepseinteraction">
+        <i class="icon-pencil"></i> {{ 'Interaction.feedback' | trans }}
+    </a>
     <div id="collepseinteraction" class="list-group collapse">
         <div class="list-group-item">{{ form_widget(form.interaction.feedBack) }}</div>
     </div>
 </div>
 
-<div class="panel panel-default">
-    <div class="panel-heading">
-        <h3 class="panel-title">{{ 'hints' | trans }}</h3>
-    </div>
-    <div id="divHint" class="panel-body">
-        <div id="hintError"></div>
-        <div id="tableHint"></div>
-        {{ form_widget(form.interaction.hints) }}
-        {{ form_errors(form.interaction.hints) }}
-    </div>
+<br><hr><br>
+
+<div id="divHint" class="panel-body">
+    <div id="hintError"></div>
+    <div id="tableHint"></div>
+    {{ form_widget(form.interaction.hints) }}
+    {{ form_errors(form.interaction.hints) }}
 </div>
+
+<br><hr><br>
 
 <input type="hidden" id="pathDrop" value="{{ path('ujm_category_drop') }}"/>
 
