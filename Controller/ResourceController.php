@@ -425,7 +425,7 @@ class ResourceController
      *
      * @return \Symfony\Component\HttpFoundation\Response
      *
-     * @throws Exception if the id doesnt't match any existing directory
+     * @throws Exception if the id doesn't match any existing directory
      */
     public function openDirectoryAction(ResourceNode $node = null)
     {
@@ -486,6 +486,7 @@ class ResourceController
 
         $jsonResponse = new JsonResponse(
             array(
+                'id' => $node ? $node->getId() : '0',
                 'path' => $path,
                 'creatableTypes' => $creatableTypes,
                 'nodes' => $nodesWithCreatorPerms,
@@ -537,9 +538,10 @@ class ResourceController
         }
 
         foreach ($nodes as $node) {
-            //$resource = $this->resourceManager->getResourceFromNode($node);
-            $newNodes[] = $this->resourceManager
-                ->toArray($this->resourceManager->copy($node, $parent, $user)->getResourceNode(), $this->sc->getToken());
+            $newNodes[] = $this->resourceManager->toArray(
+                $this->resourceManager->copy($node, $parent, $user)->getResourceNode(),
+                $this->sc->getToken()
+            );
         }
 
         return new JsonResponse($newNodes);
@@ -567,14 +569,20 @@ class ResourceController
     public function filterAction(ResourceNode $node = null)
     {
         $criteria = $this->resourceManager->buildSearchArray($this->request->query->all());
-        $criteria['roots'] = isset($criteria['roots']) ? $criteria['roots'] : array();
+        $criteria['roots'] = $node ? array($node->getPath()) : array();
         $path = $node ? $this->resourceManager->getAncestors($node): array();
         $userRoles = $this->roleManager->getStringRolesFromToken($this->sc->getToken());
 
-        //by criteria recursive => infinte loop
+        //by criteria recursive => infinite loop
         $resources = $this->resourceManager->getByCriteria($criteria, $userRoles, true);
 
-        return new JsonResponse(array('nodes' => $resources, 'path' => $path));
+        return new JsonResponse(
+            array(
+                'id' => $node ? $node->getId() : '0',
+                'nodes' => $resources,
+                'path' => $path
+            )
+        );
     }
 
     /**
@@ -754,12 +762,20 @@ class ResourceController
     }
 
     /**
-     * @EXT\Route("/init", name="claro_resource_init")
-     * @EXT\Template("ClarolineCoreBundle:Resource:init.html.twig")
+     * @EXT\Route(
+     *     "/manager_parameters",
+     *     name="claro_resource_manager_parameters",
+     *     options={"expose"=true}
+     * )
      */
-    public function initAction()
+    public function managerParametersAction()
     {
-        return array('resourceTypes' => $this->resourceManager->getAllResourceTypes());
+        $json = $this->templating->render(
+            'ClarolineCoreBundle:Resource:managerParameters.json.twig',
+            array('resourceTypes' => $this->resourceManager->getAllResourceTypes())
+        );
+
+        return new Response($json, 200, array('Content-Type' => 'application/json'));
     }
 
     /**

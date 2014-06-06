@@ -184,15 +184,15 @@ class ResourceManager
 
     /**
      * Gets a unique name for a resource in a folder.
-     * If the name of the resource already exists here, ~*indice* will be happended
-     * to its name
+     * If the name of the resource already exists here, ~*indice* will be appended
+     * to its name.
      *
      * @param \Claroline\CoreBundle\Entity\Resource\ResourceNode $node
      * @param \Claroline\CoreBundle\Entity\Resource\ResourceNode $parent
-     *
+     * @param bool $isCopy
      * @return string
      */
-    public function getUniqueName(ResourceNode $node, ResourceNode $parent = null)
+    public function getUniqueName(ResourceNode $node, ResourceNode $parent = null, $isCopy = false)
     {
         $candidateName = $node->getName();
         $parent = $parent ?: $node->getParent();
@@ -202,9 +202,13 @@ class ResourceManager
         $siblingNames = array();
 
         foreach ($sameLevelNodes as $levelNode) {
-            if ($levelNode !== $node) {
-                $siblingNames[] = $levelNode->getName();
+            if (!$isCopy && $levelNode === $node) {
+                // without that condition, a node which is "renamed" with the
+                // same name is also incremented
+                continue;
             }
+
+            $siblingNames[] = $levelNode->getName();
         }
 
         if (!in_array($candidateName, $siblingNames)) {
@@ -709,7 +713,7 @@ class ResourceManager
     public function buildSearchArray($queryParameters)
     {
         $allowedStringCriteria = array('name', 'dateFrom', 'dateTo');
-        $allowedArrayCriteria = array('roots', 'types');
+        $allowedArrayCriteria = array('types');
         $criteria = array();
 
         foreach ($queryParameters as $parameter => $value) {
@@ -737,7 +741,7 @@ class ResourceManager
         $last = $this->resourceNodeRepo->findOneBy(array('parent' => $parent, 'next' => null));
         $resource = $this->getResourceFromNode($node);
 
-        if ($resource instanceof \Claroline\CoreBundle\Entity\Resource\ResourceShortcut) {
+        if ($resource instanceof ResourceShortcut) {
             $copy = $this->om->factory('Claroline\CoreBundle\Entity\Resource\ResourceShortcut');
             $copy->setTarget($resource->getTarget());
             $newNode = $this->copyNode($node, $parent, $user, $last);
@@ -775,11 +779,11 @@ class ResourceManager
     }
 
     /**
-     * Convert a ressource into an array (mainly used to be serialized and sent to the manager.js as
+     * Convert a resource into an array (mainly used to be serialized and sent to the manager.js as
      * a json response)
      *
      * @param \Claroline\CoreBundle\Entity\Resource\ResourceNode $node
-     *
+     * @param \Symfony\Component\Security\Core\Authentication\Token\TokenInterface $token
      * @return array
      */
     public function toArray(ResourceNode $node, TokenInterface $token)
@@ -881,7 +885,7 @@ class ResourceManager
         if ($node->getIcon()) {
             $this->iconManager->delete($node->getIcon());
         }
-        
+
         $this->om->remove($node);
         $this->om->endFlushSuite();
     }
@@ -1299,7 +1303,7 @@ class ResourceManager
         $newNode->setCreator($user);
         $newNode->setWorkspace($newParent->getWorkspace());
         $newNode->setParent($newParent);
-        $newNode->setName($this->getUniqueName($node, $newParent));
+        $newNode->setName($this->getUniqueName($node, $newParent, true));
         $newNode->setPrevious($last);
         $newNode->setNext(null);
         $newNode->setIcon($node->getIcon());

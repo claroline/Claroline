@@ -534,6 +534,15 @@ textarea {
 
         table {
             margin-top: 20px;
+
+            /* see bootstrap's breadcrumb.less */
+            td span.result-breadcrumb {
+                &+span.result-breadcrumb:before {
+                  content: "/\00a0";
+                  padding: 0 5px;
+                  color: @breadcrumb-color;
+                }
+            }
         }
 
         .checkbox-column {

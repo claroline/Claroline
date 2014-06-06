@@ -1,7 +1,7 @@
 {
-    "appPath": "{{ app.request.getBaseUrl }}",
     "webPath": "{{ asset('') }}",
     "language": "{{ app.request.locale }}",
+    "zoom": "{{ app.session.get('zoom') }}",
     "resourceTypes": {
         {% for resourceType in resourceTypes %}
             "{{ resourceType.getName() }}": {

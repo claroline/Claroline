@@ -107,7 +107,12 @@ class ResourcePropertiesController extends Controller
         if ($form->isValid()) {
             $this->resourceManager->rename($node, $form->get('name')->getData());
 
-            return new JsonResponse(array($node->getName()));
+            return new JsonResponse(
+                array(
+                    'id' => $node->getId(),
+                    'name' => $node->getName()
+                )
+            );
         }
 
         return array('form' => $form->createView(), 'nodeId' => $node->getId());
@@ -151,13 +156,14 @@ class ResourcePropertiesController extends Controller
      * Changes the resource properties.
      *
      * @param ResourceNode $node
-     *
-     * @return StreamedResponse
+     * @param \Claroline\CoreBundle\Entity\User $user
+     * @throws \Symfony\Component\Security\Core\Exception\AccessDeniedException
+     * @return SResponse
      */
     public function changePropertiesAction(ResourceNode $node, User $user)
     {
         if (!$user === $node->getCreator()) {
-             throw new AccessDeniedException("You're not the owner of this resource");
+             throw new AccessDeniedException();
         }
 
         $creatorUsername = $node->getCreator()->getUsername();
@@ -176,9 +182,8 @@ class ResourcePropertiesController extends Controller
             }
 
             $this->resourceManager->rename($node, $name);
-            $nodesArray[] = $this->resourceManager->toArray($node, $this->sc->getToken());
 
-            return new JsonResponse($nodesArray);
+            return new JsonResponse($this->resourceManager->toArray($node, $this->sc->getToken()));
         }
 
         return array('form' => $form->createView(), 'nodeId' => $node->getId());

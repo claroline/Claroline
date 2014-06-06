@@ -22,14 +22,13 @@
     {{ parent() }}
     <script type="text/javascript">
         $(function() {
-            Claroline.ResourceManager.initialize({
+            Claroline.ResourceManager.createFullManager({
                 "parentElement": $('div.section-content .panel'),
-                "isPickerMultiSelectAllowed": true,
+                "breadcrumbElement": $('ul.breadcrumb'),
                 "isWorkspace": false,
-                "appPath": "{{ app.request.getBaseUrl }}",
                 "webPath": "{{ asset('') }}",
                 "language": "{{ app.request.locale }}",
-                "resourceZoom": "{{ resourceZoom }}",
+                "zoom": "{{ resourceZoom }}",
                 "resourceTypes": {
                     {% for resourceType in resourceTypes %}
                         "{{ resourceType.getName() }}": {

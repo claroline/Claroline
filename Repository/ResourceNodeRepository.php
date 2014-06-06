@@ -235,15 +235,15 @@ class ResourceNodeRepository extends MaterializedPathRepository
 
         if ($isRecursive) {
             $shortcuts = $this->findRecursiveDirectoryShortcuts($criteria, $roles);
-            $additionnalRoots = array();
+            $additionalRoots = array();
 
             foreach ($shortcuts as $shortcut) {
-                $additionnalRoots[] = $shortcut['target_path'];
+                $additionalRoots[] = $shortcut['target_path'];
             }
 
             $baseRoots = (count($criteria['roots']) > 0) ?
                 $criteria['roots']: array();
-            $finalRoots = array_merge($additionnalRoots, $baseRoots);
+            $finalRoots = array_merge($additionalRoots, $baseRoots);
             $criteria['roots'] = $finalRoots;
         }
 

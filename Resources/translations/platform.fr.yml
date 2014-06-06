@@ -545,6 +545,7 @@ resource_action_denied_message: 'L''action %action% n''a pas pu être exécutée
 resource_creation_denied: 'Vous n''avez pas la permission de créer une ressource dans le répertoire ''%path'': accès refusé.'
 resource_creation_wrong_type: 'Vous n''avez pas la permission de créer un(e) %type% dans le répertoire ''%path%'': accès refusé.'
 resource_delete: 'Êtes-vous sûr de vouloir supprimer cette ressource ?'
+resource_picker: Sélecteur de ressources
 resource_properties_form_sharable: 'Partager cette ressource'
 resource_properties_form_shareType: 'Type de partage'
 resource_properties_form_userIcon: Icône

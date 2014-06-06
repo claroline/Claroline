@@ -269,7 +269,7 @@ class ResourceQueryBuilder
             for ($i = 0; $i < $count; $i++) {
                 $clause .= $i > 0 ? '    OR ' : '    ';
                 $clause .= "node.path LIKE :root_{$i}{$eol}";
-                $this->parameters[":root_{$i}"] = "{$roots[$i]}%";
+                $this->parameters[":root_{$i}"] = "{$roots[$i]}_%";
             }
 
             $this->addWhereClause($clause . ')');
@@ -509,7 +509,7 @@ class ResourceQueryBuilder
             }
         }
         $eol = PHP_EOL;
-        
+
         if (count($otherRoles) > 0 && count($managerRoles) === 0) {
             $this->leftJoinRights = true;
             $clause = "{$eol}({$eol}";
