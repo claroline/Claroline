@@ -20,11 +20,14 @@
 
 {% block section_content %}
     <div class="panel-heading">
-        <h3 class="panel-title">{{ 'manage_tools'|trans({}, 'platform') }}</h3>
+        <h3 class="panel-title">{{ 'roles_management'|trans({}, 'platform') }}</h3>
     </div>
     <div class="list-group">
         <a class="list-group-item" href="{{ path('create_platform_role_form') }}">
             {{ 'create_role'|trans({}, 'platform') }}
+        </a>
+        <a class="list-group-item" href="{{ path('platform_roles_list') }}">
+            {{ 'list_role'|trans({}, 'platform') }}
         </a>
         <a class="list-group-item" href="{{ path('claro_admin_tools_index', {}) }}">
             {{ 'manage_tools'|trans({}, 'platform') }}

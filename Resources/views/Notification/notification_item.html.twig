@@ -9,9 +9,13 @@
     {% endif %}
     {% if constant('Claroline\\CoreBundle\\Event\\Log\\LogWorkspaceRoleChangeRightEvent::ACTION') == notification.actionKey %}
         {% include 'ClarolineCoreBundle:Notification:notification_role_change_right.html.twig' %}
-    {% elseif constant('Claroline\\CoreBundle\\Event\\Log\\LogRoleSubscribeEvent::ACTION_USER') == notification.actionKey %}
-        {% include 'ClarolineCoreBundle:Notification:notification_subscribe_user.html.twig' %}
+    {% elseif constant('Claroline\\CoreBundle\\Event\\Log\\LogRoleSubscribeEvent::ACTION_WORKSPACE_USER') == notification.actionKey %}
+        {% include 'ClarolineCoreBundle:Notification:notification_workspace_subscribe_user.html.twig' %}
+    {% elseif constant('Claroline\\CoreBundle\\Event\\Log\\LogRoleSubscribeEvent::ACTION_WORKSPACE_GROUP') == notification.actionKey %}
+        {% include 'ClarolineCoreBundle:Notification:notification_workspace_subscribe_group.html.twig' %}
     {% elseif constant('Claroline\\CoreBundle\\Event\\Log\\LogRoleSubscribeEvent::ACTION_GROUP') == notification.actionKey %}
         {% include 'ClarolineCoreBundle:Notification:notification_subscribe_group.html.twig' %}
+    {% elseif constant('Claroline\\CoreBundle\\Event\\Log\\LogRoleSubscribeEvent::ACTION_USER') == notification.actionKey %}
+        {% include 'ClarolineCoreBundle:Notification:notification_subscribe_user.html.twig' %}
     {% endif %}
 {% endblock %}

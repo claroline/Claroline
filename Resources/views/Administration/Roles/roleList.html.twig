@@ -1,0 +1,55 @@
+{% extends "ClarolineCoreBundle:Administration:layout.html.twig" %}
+
+{% block title %}{{ parent() ~ ' - ' ~ 'roles_management' | trans({}, 'platform') | striptags | raw }}{% endblock %}
+
+{% block breadcrumb %}
+    {{
+        macros.breadcrumbs([
+            {
+                'icon': 'icon-cog',
+                'name': 'administration'|trans({}, 'platform'),
+                'href': path('claro_admin_index')
+            },
+            {
+                'name': 'roles_management'|trans({}, 'platform'),
+                'href': path('claro_admin_roles_index')
+            },
+            {
+                'name': 'list_role'|trans({}, 'platform'),
+                'href': ''
+            },
+        ])
+    }}
+{% endblock %}
+
+{% block section_content %}
+    <div class="panel-heading">
+        <h3 class="panel-title">{{ 'list_role'|trans({}, 'platform') }}</h3>
+    </div>
+    <div class="table-responsive panel-body">
+        <form action="{{ path('platform_roles_edit') }}" method="post" novalidate>
+            <table class="table table-striped table-bordered table-condensed" id="group-table">
+                <thead>
+                <tr>
+                    <th> {{ 'name'|trans({}, 'platform') }} </th>
+                    <th> {{ 'max'|trans({}, 'platform') }} </th>
+                </tr>
+                </thead>
+                <tbody id="group-table-body">
+                {% for role in roles %}
+                    <tr>
+                        <td> {{ role.getTranslationKey() | trans({}, 'platform') }} </td>
+                        <td> <input name="max-user-{{ role.getId() }}" type="number" value="{{ role.getMaxUsers() }}"> </input> </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+            <div class="panel-footer">
+                <input type="submit" class="btn btn-primary"/>
+                <a class="btn btn-default" href="{{ path('claro_admin_users_management') }}" role="button">
+                    {{ 'cancel'|trans({}, 'platform') }}
+                </a>
+            </div>
+        </form>
+    </div>
+{% endblock %}

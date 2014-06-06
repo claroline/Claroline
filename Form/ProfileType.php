@@ -23,6 +23,7 @@ class ProfileType extends AbstractType
 {
     private $platformRoles;
     private $isAdmin;
+    private $isGrantedUserAdministration;
     private $langs;
 
     /**
@@ -32,10 +33,11 @@ class ProfileType extends AbstractType
      * @param boolean  $isAdmin
      * @param string[] $langs
      */
-    public function __construct(array $platformRoles, $isAdmin, array $langs)
+    public function __construct(array $platformRoles, $isAdmin, $isGrantedUserAdministration, array $langs)
     {
         $this->platformRoles = new ArrayCollection($platformRoles);
         $this->isAdmin = $isAdmin;
+        $this->isGrantedUserAdministration = $isGrantedUserAdministration;
 
         if (!empty($langs)) {
             $this->langs = $langs;
@@ -50,20 +52,19 @@ class ProfileType extends AbstractType
 
         $builder
             ->add('firstName', 'text', array('label' => 'First name'))
-            ->add('lastName', 'text', array('label' => 'Last name'));
+            ->add('lastName', 'text', array('label' => 'Last name'))
+            ->add('username', 'text', array('read_only' => true, 'disabled' => true, 'label' => 'User name'))
+            ->add(
+                'administrativeCode',
+                'text',
+                array('required' => false, 'read_only' => true, 'disabled' => true, 'label' => 'administrative_code')
+            )
+            ->add('mail', 'email', array('required' => false, 'label' => 'email'))
+            ->add('phone', 'text', array('required' => false, 'label' => 'phone'))
+            ->add('locale', 'choice', array('choices' => $this->langs, 'required' => false, 'label' => 'Language'));
 
-        if (!$this->isAdmin) {
-            $builder
-                ->add('username', 'text', array('read_only' => true, 'disabled' => true, 'label' => 'User name'))
-                ->add(
-                    'administrativeCode',
-                    'text',
-                    array('required' => false, 'read_only' => true, 'disabled' => true, 'label' => 'administrative_code')
-                )
-                ->add('mail', 'email', array('required' => false, 'label' => 'email'))
-                ->add('phone', 'text', array('required' => false, 'label' => 'phone'))
-                ->add('locale', 'choice', array('choices' => $this->langs, 'required' => false, 'label' => 'Language'));
-        } else {
+        if ($this->isAdmin || $this->isGrantedUserAdministration) {
+            $isAdmin = $this->isAdmin;
             $builder->add('username', 'text', array('label' => 'User name'))
                 ->add('administrativeCode', 'text', array('required' => false, 'label' => 'administrative_code'))
                 ->add('mail', 'email', array('required' => false, 'label' => 'email'))
@@ -78,11 +79,17 @@ class ProfileType extends AbstractType
                         'class' => 'Claroline\CoreBundle\Entity\Role',
                         'expanded' => true,
                         'multiple' => true,
-                        'property' => 'name',
-                        'query_builder' => function (RoleRepository $roleRepository) {
-                            return $roleRepository->createQueryBuilder('r')
+                        'property' => 'translationKey',
+                        'query_builder' => function (RoleRepository $roleRepository) use ($isAdmin) {
+                            $query = $roleRepository->createQueryBuilder('r')
                                     ->where("r.type != " . Role::WS_ROLE)
-                                    ->andWhere("r.name != 'ROLE_ANONYMOUS'");
+                                    ->andWhere("r.name != 'ROLE_ANONYMOUS'")
+                                    ->andWhere("r.name != 'ROLE_USER'");
+                            if (!$isAdmin) {
+                                $query->andWhere("r.name != 'ROLE_ADMIN'");
+                            }
+
+                            return $query;
                         },
                         'label' => 'roles'
                     )

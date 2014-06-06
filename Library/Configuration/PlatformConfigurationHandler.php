@@ -57,7 +57,10 @@ class PlatformConfigurationHandler
         'facebook_client_id' => null,
         'facebook_client_secret' => null,
         'facebook_client_active' => null,
-        'form_captcha' => true
+        'form_captcha' => true,
+        'platform_limit_date' => null,
+        'platform_init_date' => null,
+        'account_duration' => null
     );
 
     /**
@@ -145,6 +148,9 @@ class PlatformConfigurationHandler
         $config->setFacebookClientSecret($this->parameters['facebook_client_secret']);
         $config->setFacebookClientActive($this->parameters['facebook_client_active']);
         $config->setFormCaptcha($this->parameters['form_captcha']);
+        $config->setAccountDuration($this->parameters['account_duration']); //days
+        $config->setPlatformLimitDate($this->parameters['platform_limit_date']);
+        $config->setPlatformInitDate($this->parameters['platform_init_date']);
 
         return $config;
     }

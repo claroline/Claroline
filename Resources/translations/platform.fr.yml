@@ -808,3 +808,13 @@ yes: oui
 yesterday_activity: 'Activité de la veille'
 your_current_url: 'Votre URL actuelle'
 your_username: 'Votre nom d''utilisateur est '
+closed_account: Compte clos
+role_list: Liste des roles
+unavailable_role: Le role %translationKey% n'est pas utilisable
+fail_add_user_group_message: Ces utilisateurs n'ont pas pu être ajouté au groupe (vérifiez la limite d'utilisateurs par rôle).
+unavailable_platform: La plateforme n'est pas disponible.
+account_duration_label: Durée de vie des comptes (jours)
+platform_init_date: Date d'activation de la plateforme
+platform_expiration_date: Date d'expiration de la plateforme
+role_limit_reached: La limite d'utilisateur de type %translationKey% a été atteinte.
+user_limit_reached: La limite de création d'utilisateur a été atteinte.
