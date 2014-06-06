@@ -129,8 +129,7 @@ class ActivityManager
             $firstEvaluation = new Evaluation();
             $firstEvaluation->setUser($user);
             $firstEvaluation->setActivityParameters($activityParams);
-
-            
+            $firstEvaluation->setType($activityParams->getEvaluationType());
 
             $this->persistence->persist($firstEvaluation);
             $this->persistence->flush();
