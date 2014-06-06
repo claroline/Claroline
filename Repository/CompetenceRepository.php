@@ -51,4 +51,14 @@ class CompetenceRepository extends EntityRepository{
 
 		return $query->getResult();
 	}
+
+    /**
+     * @param Competence $competence
+     * @param Competence $root
+     *
+     */
+    public function getCompetencesNotParents(Competence $competence, Competence $root)
+	{
+    	
+	}
 } 

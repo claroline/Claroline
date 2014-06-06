@@ -39,11 +39,6 @@ class CompetencesLinkType extends AbstractType {
             'expanded' => true,
             'multiple' => true,
             'property' => 'name',
-/*            'query_builder' => function (RoleRepository $roleRepository) {
-                    return $roleRepository->createQueryBuilder('r')
-                        ->where("r.type != " . Role::WS_ROLE)
-                        ->andWhere("r.name != 'ROLE_ANONYMOUS'");
-                },*/
             'label' => 'competences'
         )
     );
