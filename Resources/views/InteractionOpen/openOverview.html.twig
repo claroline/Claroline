@@ -89,63 +89,9 @@
         {% endif %}
     </div>
 
-    <div class="list-group">
-        <div class="list-group-item">
+    {% set inter = interOpen %}
+    {% include "UJMExoBundle:Partial:correction/open.html.twig" %}
 
-            <div class="panel panel-default">
-                <div class="panel-heading"><h3 class="panel-title">{{ 'title' | trans }}</h3></div>
-                <div class="panel-body">
-                    {{ interOpen.interaction.question.title }}
-                </div>
-            </div>
-
-            {% if interOpen.interaction.question.description != '' %}
-                <div class="panel panel-default">
-                    <div class="panel-heading"><h3 class="panel-title">{{ 'description' | trans }}</h3></div>
-                    <div class="panel-body">
-                        {{ interOpen.interaction.question.description|raw }}
-                    </div>
-                </div>
-            {% endif %}
-
-            <div class="panel panel-default">
-                <div class="panel-heading"><h3 class="panel-title">{{ 'question' | trans }}</h3></div>
-                <div class="panel-body">
-                    {{ interOpen.interaction.invite|raw }}
-                </div>
-            </div>
-
-            <div class="panel panel-default">
-                <div class="panel-heading"><h3 class="panel-title">{{ 'response' | trans }}</h3></div>
-                <div class="panel-body">
-                    {{ 'your answer' | trans }} :
-
-                    <div>
-                        {% if interOpen.typeopenquestion == 'long' %}
-                           {{ response|raw}}
-                        {% endif %}
-                    </div>
-                </div>
-            </div>
-
-            {% if interOpen.interaction.feedback != '' %}
-                <div class="panel panel-default">
-                    <div class="panel-heading"><h3 class="panel-title">{{ 'comment' | trans }}</h3></div>
-                    <div class="panel-body">
-                        {{ interOpen.interaction.feedback|raw }}
-                    </div>
-                </div>
-            {% endif %}
-
-            <div class="panel panel-default">
-                <div class="panel-heading"><h3 class="panel-title">{{ 'mark' | trans }}</h3></div>
-                <div class="panel-body">
-                    {% if penalty > 0 %}
-                        {{ 'penalty' | trans }} : {{ penalty }}.<br/>
-                    {% endif %}
-                    {{ 'not yet mark' | trans }}.
-                </div>
-            </div>
-        </div>
-    </div>
+   <hr/>
+   {% include "UJMExoBundle:Partial:correction/overviewScore.html.twig" %}
 {% endblock %}

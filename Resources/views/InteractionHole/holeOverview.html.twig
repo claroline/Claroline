@@ -88,68 +88,14 @@
             </a>
         {% endif %}
     </div>
-    
-    <div class="list-group">
-        <div class="list-group-item">
 
-            <div class="panel panel-default">
-                <div class="panel-heading"><h3 class="panel-title">{{ 'title' | trans }}</h3></div>
-                <div class="panel-body">
-                    {{ interHole.interaction.question.title }}
-                </div>
-            </div>
+    {% set inter = interHole %}
+    {% include "UJMExoBundle:Partial:correction/hole.html.twig" %}
 
-            {% if interHole.interaction.question.description != '' %}
-                <div class="panel panel-default">
-                    <div class="panel-heading"><h3 class="panel-title">{{ 'description' | trans }}</h3></div>
-                    <div class="panel-body">
-                        {{ interHole.interaction.question.description|raw }}
-                    </div>
-                </div>
-            {% endif %}
-
-            <div class="panel panel-default">
-                <div class="panel-heading"><h3 class="panel-title">{{ 'question' | trans }}</h3></div>
-                <div class="panel-body">
-                    {{ interHole.interaction.invite|raw }}
-                </div>
-            </div>
-            
-            <div class="panel panel-default">
-                <div class="panel-heading"><h3 class="panel-title">{{ 'your answer' | trans }}</h3></div>
-                <div class="panel-body">
-                    <div id="yAnswer">{{ interHole.html|raw }}</div>
-                </div>
-            </div>
-            
-            <div class="panel panel-default">
-                <div class="panel-heading"><h3 class="panel-title">{{ 'expected answer' | trans }}</h3></div>
-                <div class="panel-body">
-                    <div id="eAnswer">{{ interHole.html|raw }}</div>
-                </div>
-            </div>
-            {% if interHole.interaction.feedback != '' %}
-                <div class="panel panel-default">
-                    <div class="panel-heading"><h3 class="panel-title">{{ 'comment' | trans }}</h3></div>
-                    <div class="panel-body">
-                        {{ interHole.interaction.feedback|raw }}
-                    </div>
-                </div>
-            {% endif %}
-
-            <div class="panel panel-default">
-                <div class="panel-heading"><h3 class="panel-title">{{ 'mark' | trans }}</h3></div>
-                <div class="panel-body">
-                    {% if penalty > 0 %}
-                        {{ 'penalty' | trans }} : {{ penalty }}.<br/>
-                    {% endif %}
-                    {{ 'mark' | trans }} : <span id="score">{{ score }}.</span>
-                </div>
-            </div>
-        </div>
-    </div>
+    <hr/>
+    {% include "UJMExoBundle:Partial:correction/overviewScore.html.twig" %}
 {% endblock %}
-            
+
 {% block javascripts %}
     {{ parent() }}
     <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/paper.js') }}"></script>

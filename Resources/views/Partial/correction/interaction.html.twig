@@ -1,6 +1,8 @@
 <hr/>
-<h3 class="panel-title">{{ 'nQuestion' | trans }}{{p + 1}} : {{ inter.interaction.question.title }}</h3>
-<hr/>
+{% if p is defined %}
+    <h3 class="panel-title">{{ 'nQuestion' | trans }}{{p + 1}} : {{ inter.interaction.question.title }}</h3>
+    <hr/>
+{% endif %}
 
 {% if inter.interaction.question.description != '' %}
     <p>{{ inter.interaction.question.description|raw }}</p>

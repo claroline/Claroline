@@ -1,0 +1,16 @@
+{% if inter.interaction.feedback != '' %}
+    <p>{{ inter.interaction.feedback|raw }}</p>
+    <hr/>
+{% endif %}
+
+<div>
+    {% if penalty > 0 %}
+        {{ 'penalty' | trans }} : {{ penalty }}.<br/>
+    {% endif %}
+    <hr/>
+    {% if (inter.interaction.type == 'InteractionOpen') %}
+       {{ 'not yet mark' | trans }}.
+    {% else %}
+        {{ 'mark' | trans }} : <span id="score">{{ score }}.</span>
+    {% endif %}
+</div>
