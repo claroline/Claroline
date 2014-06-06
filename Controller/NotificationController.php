@@ -39,6 +39,8 @@ class NotificationController extends Controller
 
         $result = $this->get("icap.notification.manager")
             ->getUserNotificationsList($user->getId(), $page, $maxResult);
+        $systemName = $this->container->getParameter('icap_notification.system_name');
+        $result['systemName'] = $systemName;
 
         if ($request->isXMLHttpRequest()) {
             $unviewedNotifications = $this->get('icap.notification.manager')->countUnviewedNotifications($user->getId());
@@ -52,8 +54,6 @@ class NotificationController extends Controller
             $defaultLayout = $this->container->getParameter('icap_notification.default_layout');
             $systemName = $this->container->getParameter('icap_notification.system_name');
             $result['layout'] = $defaultLayout;
-            $result['systemName'] = $systemName;
-
 
             return $result;
         }
