@@ -22,7 +22,7 @@
     {{ parent() }}
     <script type="text/javascript">
         $(function() {
-            Claroline.ResourceManager.initialize({
+            Claroline.ResourceManager.createFullManager({
                 "parentElement": $('div.section-content .panel'),
                 "isPickerMultiSelectAllowed": true,
                 "isWorkspace": false,

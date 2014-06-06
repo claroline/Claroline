@@ -186,18 +186,56 @@
     {% if 'en' != app.request.locale %}
         <script type="text/javascript" src="{{ asset('bundles/frontend/jquery/plugin/datepicker/js/locales/bootstrap-datepicker.' ~ app.request.locale ~ '.js') }}"></script>
     {% endif %}
+
+
+
+
     <script type="text/javascript" src="{{ asset('bundles/frontend/underscore/underscore-1.3.3.min.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('bundles/frontend/backbone/backbone-0.9.2.min.js') }}"></script>
-    {% javascripts debug=false filter='jsmin' output='vendor/claroline/js/libraries.js'
-        'bundles/clarolinecore/js/modal.js'
-        'bundles/clarolinecore/js/simplerights.js'
-        'bundles/clarolinecore/js/resource/manager.js'
-        'bundles/clarolinecore/js/home/home.js'
-        'bundles/clarolinecore/js/locale.js'
-        'bundles/clarolinecore/js/utilities.js'
-        'bundles/clarolinecore/js/startup.js'
-    %}<script type="text/javascript" src="{{ asset_url }}"></script>
-    {% endjavascripts %}
+    {#<script type="text/javascript" src="{{ asset('bundles/frontend/backbone/backbone-0.9.2.min.js') }}"></script>#}
+    <script type="text/javascript" src="{{ asset('bundles/frontend/backbone/backbone-1.1.2.min.js') }}"></script>
+
+    {#{% javascripts debug=false filter='jsmin' output='vendor/claroline/js/libraries.js'#}
+        {#'bundles/clarolinecore/js/modal.js'#}
+        {#'bundles/clarolinecore/js/simplerights.js'#}
+        {#'bundles/clarolinecore/js/home/home.js'#}
+        {#'bundles/clarolinecore/js/locale.js'#}
+        {#'bundles/clarolinecore/js/utilities.js'#}
+        {#'bundles/clarolinecore/js/startup.js'#}
+    {#%}<script type="text/javascript" src="{{ asset_url }}"></script>#}
+    {#{% endjavascripts %}#}
+
+
+    <script type="text/javascript" src="{{ asset('bundles/clarolinecore/js/modal.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/clarolinecore/js/simplerights.js') }}"></script>
+
+
+
+
+
+
+
+    <script type="text/javascript" src="{{ asset('bundles/clarolinecore/js/resource/manager/views/actions.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/clarolinecore/js/resource/manager/views/breadcrumbs.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/clarolinecore/js/resource/manager/views/filters.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/clarolinecore/js/resource/manager/views/form.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/clarolinecore/js/resource/manager/views/master.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/clarolinecore/js/resource/manager/views/nodes.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/clarolinecore/js/resource/manager/views/thumbnail.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/clarolinecore/js/resource/manager/router.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/clarolinecore/js/resource/manager/server.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/clarolinecore/js/resource/manager/manager.js') }}"></script>
+
+
+
+
+
+
+    <script type="text/javascript" src="{{ asset('bundles/clarolinecore/js/home/home.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/clarolinecore/js/locale.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/clarolinecore/js/utilities.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/clarolinecore/js/startup.js') }}"></script>
+
+
     <script type="text/javascript" src="{{ asset('bundles/stfalcontinymce/vendor/tinymce/tinymce.jquery.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('bundles/stfalcontinymce/vendor/tinymce/jquery.tinymce.min.js') }}"></script><!-- this is not duplicated file -->
     <script type="text/javascript" src="{{ asset('bundles/clarolinecore/js/tinymce/tinymce.js') }}"></script>
