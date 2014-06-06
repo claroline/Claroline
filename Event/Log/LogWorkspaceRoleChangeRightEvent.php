@@ -46,7 +46,9 @@ class LogWorkspaceRoleChangeRightEvent extends LogGenericEvent implements Mandat
             ),
             'resource' => array(
                 'name' => $resource->getName(),
-                'path' => $resource->getPathForDisplay()
+                'path' => $resource->getPathForDisplay(),
+                'id' => $resource->getId(),
+                'resourceType' => $resource->getResourceType()->getName()
             )
         );
 

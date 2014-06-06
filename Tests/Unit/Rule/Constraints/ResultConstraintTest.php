@@ -37,8 +37,14 @@ class ResultConstraintTest extends MockeryTestCase
 
     public function testValidateNoLog()
     {
+        $badgeRule = new BadgeRule();
+        $badgeRule
+            ->setOccurrence(1);
+
         $resultConstraint = new ResultConstraint();
-        $resultConstraint->setAssociatedLogs(array());
+        $resultConstraint
+            ->setRule($badgeRule)
+            ->setAssociatedLogs(array());
 
         $this->assertFalse($resultConstraint->validate());
     }
@@ -47,6 +53,7 @@ class ResultConstraintTest extends MockeryTestCase
     {
         $badgeRule = new BadgeRule();
         $badgeRule
+            ->setOccurrence(1)
             ->setResult(rand(13, PHP_INT_MAX))
             ->setResultComparison(0);
 
@@ -66,6 +73,7 @@ class ResultConstraintTest extends MockeryTestCase
     {
         $badgeRule = new BadgeRule();
         $badgeRule
+            ->setOccurrence(1)
             ->setResult(rand(13, PHP_INT_MAX))
             ->setResultComparison(0);
 
@@ -196,6 +204,7 @@ class ResultConstraintTest extends MockeryTestCase
     {
         $badgeRule = new BadgeRule();
         $badgeRule
+            ->setOccurrence(1)
             ->setResult(rand(PHP_INT_MAX / 2 + 1, PHP_INT_MAX - PHP_INT_MAX / 4))
             ->setResultComparison(1);
 
@@ -214,7 +223,7 @@ class ResultConstraintTest extends MockeryTestCase
             ->setRule($badgeRule)
             ->setAssociatedLogs($associatedLogs);
 
-        $this->assertFalse($resultConstraint->validate());
+        $this->assertTrue($resultConstraint->validate());
     }
 
     public function testValidateOneInferiorRightLogResultInferiorEqual()
@@ -316,6 +325,7 @@ class ResultConstraintTest extends MockeryTestCase
 
         $badgeRule = new BadgeRule();
         $badgeRule
+            ->setOccurrence(1)
             ->setResult($result)
             ->setResultComparison(2);
 
@@ -334,7 +344,7 @@ class ResultConstraintTest extends MockeryTestCase
             ->setRule($badgeRule)
             ->setAssociatedLogs($associatedLogs);
 
-        $this->assertFalse($resultConstraint->validate());
+        $this->assertTrue($resultConstraint->validate());
     }
 
     public function testValidateOneRightLogResultSuperior()
@@ -407,6 +417,7 @@ class ResultConstraintTest extends MockeryTestCase
     {
         $badgeRule = new BadgeRule();
         $badgeRule
+            ->setOccurrence(1)
             ->setResult(rand(PHP_INT_MAX / 4, PHP_INT_MAX / 2))
             ->setResultComparison(3);
 
@@ -425,7 +436,7 @@ class ResultConstraintTest extends MockeryTestCase
             ->setRule($badgeRule)
             ->setAssociatedLogs($associatedLogs);
 
-        $this->assertFalse($resultConstraint->validate());
+        $this->assertTrue($resultConstraint->validate());
     }
 
     public function testValidateOneSuperiorRightLogResultSuperiorEqual()
@@ -527,6 +538,7 @@ class ResultConstraintTest extends MockeryTestCase
 
         $badgeRule = new BadgeRule();
         $badgeRule
+            ->setOccurrence(1)
             ->setResult($result)
             ->setResultComparison(4);
 
@@ -545,6 +557,6 @@ class ResultConstraintTest extends MockeryTestCase
             ->setRule($badgeRule)
             ->setAssociatedLogs($associatedLogs);
 
-        $this->assertFalse($resultConstraint->validate());
+        $this->assertTrue($resultConstraint->validate());
     }
 }
