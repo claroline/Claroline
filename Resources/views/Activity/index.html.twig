@@ -1,14 +1,18 @@
-{# to keep the workspace layout, extends this template #}
-{% extends "ClarolineCoreBundle:Workspace:layout.html.twig" %}
+{% set layout = "ClarolineCoreBundle:Workspace:layout.html.twig" %}
+
+{% if isDesktop() %}
+    {% set layout = "ClarolineCoreBundle:Desktop:layout.html.twig" %}
+{% endif %}
+
+{% extends layout %}
+
+{% block title %}{{ _resource.resourceNode.name ~ ' - ' ~ "activity" | trans({}, "resource") | striptags | raw }}{% endblock %}
 
 {% block section_content %}
     <div class="panel-heading">
         <h3 class="panel-title">{{ 'activity'|trans({}, 'resource') }} {{ _resource.getName() }}</h3>
     </div>
     <div class="panel-body">
-
-    </div>
-    <div class="panel-footer">
-
+        <div>{{ _resource.getDescription() | raw }}</div>
     </div>
 {% endblock %}

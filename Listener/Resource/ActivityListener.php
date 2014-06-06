@@ -208,15 +208,15 @@ class ActivityListener
      */
     public function onOpen(OpenResourceEvent $event)
     {
-        /*$activity = $event->getResource();
+        $activity = $event->getResource();
         $content = $this->templating->render(
-            'ClarolineCoreBundle:Activity/player:activity.html.twig',
-            array('activity' => $activity)
+            'ClarolineCoreBundle:Activity:index.html.twig',
+            array('_resource' => $activity)
         );
 
         $response = new Response($content);
         $event->setResponse($response);
-        $event->stopPropagation();*/
+        $event->stopPropagation();
     }
 
     /**
