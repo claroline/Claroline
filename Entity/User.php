@@ -26,6 +26,7 @@ use Claroline\CoreBundle\Entity\Role;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Validator\ExecutionContextInterface;
+use Claroline\CoreBundle\Entity\Facet\FieldFacetValue;
 
 /**
  * @ORM\Table(name="claro_user")
@@ -291,6 +292,15 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
      */
     protected $expirationDate;
 
+    /**
+     * @ORM\OneToMany(
+     *     targetEntity="Claroline\CoreBundle\Entity\Facet\FieldFacetValue",
+     *     mappedBy="user",
+     *     cascade={"persist"}
+     * )
+     */
+    protected $fieldsFacetValue;
+
     public function __construct()
     {
         parent::__construct();
@@ -303,6 +313,7 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
         $this->userBadges        = new ArrayCollection();
         $this->issuedBadges      = new ArrayCollection();
         $this->badgeClaims       = new ArrayCollection();
+        $this->fieldsFacetValue  = new ArrayCollection();
     }
 
     /**
@@ -976,5 +987,15 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
     public function getExpirationDate()
     {
         return $this->expirationDate;
+    }
+
+    public function getFieldsFacetValue()
+    {
+        return $this->fieldsFacetValue;
+    }
+
+    public function addFieldFacet(FieldFacetValue $fieldFacetValue)
+    {
+        $this->fieldsFacetValue->add($fieldFacetValue);
     }
 }
