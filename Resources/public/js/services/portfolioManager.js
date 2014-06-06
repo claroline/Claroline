@@ -1,7 +1,7 @@
 'use strict';
 
 portfolioApp
-    .factory('portfolioManager', ['Portfolio', "widgetsManager", function(Portfolio, widgetsManager){
+    .factory('portfolioManager', ["Portfolio", "widgetsManager", function(Portfolio, widgetsManager){
         return {
             portfolio:   null,
             portfolioId: null,
