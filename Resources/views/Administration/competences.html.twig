@@ -1,0 +1,85 @@
+{% extends "ClarolineCoreBundle:Administration:layout.html.twig" %}
+
+{% block title %}{{ 'competence' | trans({}, 'platform') | striptags | raw }}{% endblock %}
+{% macro competenceHierarchy(cptList, cptHierarchy,isRoot, rootId) %}
+	{% if isRoot %}
+		{% for c in cptList %}
+			{% set rootId = c.getId() %}
+				<ul id="roots-{{c.getId()}}">
+					<li>
+						<a href="{{ path('claro_admin_competence_add_sub', {competenceId: c.getId(), rootId: rootId }) }}" >{{c.getName()}} ({{c.getScore()}}) </a> 
+						{% if cptHierarchy[c.getId()] is defined and cptHierarchy[c.getId()]|length > 0 and cptHierarchy[c.getId()][c.getId()] is defined and cptHierarchy[c.getId()][c.getId()]|length > 0 %}
+		                    {{ _self.competenceHierarchy(cptHierarchy[c.getId()][c.getId()], cptHierarchy,false, c.getId()) }}
+		                {% else %}
+		                    <div><ul class="cpt-children-list-{{ c.getId() }}"></ul></div>
+		                {% endif %}
+	                </li>
+	                <div class="btn-group cpt-button-group hide">
+                        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                            <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu" role="menu">
+                            <li role="presentation" class="edit-cpt-btn">
+                                <a role="menuitem" href="#">
+                                    <i class="icon-pencil"></i>
+                                    {{ 'rename_category'|trans({}, 'platform') }}
+                                </a>
+                            </li>
+                            <li role="presentation" class="divider"></li>
+                            <li role="presentation" class="create-sub-cpt-btn">
+                                <a role="menuitem" href="#">
+                                    <i class="icon-plus"></i>
+                                    {{ 'create_subcategory'|trans({}, 'platform') }}
+                                </a>
+                            </li>
+                            <li role="presentation" class="add-cpt-btn">
+                                <a role="menuitem" href="#">
+                                    <i class="icon-list-alt"></i>
+                                    {{ 'add_subcategory'|trans({}, 'platform') }}
+                                </a>
+                            </li>
+                            <li role="presentation" class="divider remove-cpt-divider-{{c.getId()}}"></li>
+                            {% if not isRoot %}
+                                <li role="presentation" class="remove-cpt-btn">
+                                    <a role="menuitem" href="#">
+                                        <i class="icon-remove"></i>
+                                        {{ 'remove_subcategory'|trans({}, 'platform') }}
+                                    </a>
+                                </li>
+                            {% endif %}
+                            <li role="presentation" class="delete-cpt-btn">
+                                <a role="menuitem" href="#">
+                                    <i class="icon-trash"></i>
+                                    {{ 'delete_category'|trans({}, 'platform') }}
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+				</ul>
+		{% endfor %}
+	{% else %}
+		{% for c in cptList %}
+			<ul class="children-">
+				<li>
+					<a href="{{ path('claro_admin_competence_add_sub', {competenceId: c.getId(), rootId: rootId }) }}" >{{c.getName()}}</a> 
+					{% if cptHierarchy[rootId] is defined and cptHierarchy[rootId]|length > 0  and cptHierarchy[rootId][c.getId()] is defined and cptHierarchy[rootId][c.getId()]|length > 0 %}
+		                    {{ _self.competenceHierarchy(cptHierarchy[rootId][c.getId()], cptHierarchy,false, rootId) }} 
+	                {% else %}
+	                    <div><ul class="tag-children-list-{{ c.getId() }}"></ul></div>
+	                {% endif %}
+                </li>
+			</ul>
+	    {% endfor %}
+    {% endif %}
+{% endmacro %}
+{% from _self import competenceHierarchy %}
+{% block content %}
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title">{{ "competence" | trans({}, "platform" )}}</h3>
+            {{ competenceHierarchy(cpt,cptHierarchy,true, null) }}
+            <div class="panel-footer">
+            </div>
+        </form>
+    </div>
+{% endblock %}

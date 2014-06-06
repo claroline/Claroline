@@ -35,6 +35,9 @@ use Symfony\Component\Routing\RouterInterface;
  */
 class CompetenceController {
 
+    private $formFactory;
+    private $cptmanager;
+    private $request;
     /**
      * @DI\InjectParams({
      *     "userManager"        = @DI\Inject("claroline.manager.user_manager"),
@@ -54,7 +57,8 @@ class CompetenceController {
         StrictDispatcher $eventDispatcher,
         FormFactory $formFactory,
         Request $request,
-        RouterInterface $router
+        RouterInterface $router,
+        CompetenceManager $cptmanager
     )
     {
         $this->userManager = $userManager;
@@ -64,6 +68,26 @@ class CompetenceController {
         $this->formFactory = $formFactory;
         $this->request = $request;
         $this->router = $router;
+        $this->cptmanager = $cptmanager;
+    }
+
+     /**
+     * @EXT\Route("/show", name="claro_admin_competences")
+     * @EXT\Method("GET")
+     * @EXT\Template("ClarolineCoreBundle:Administration:competences.html.twig")
+     *
+     * Displays the group creation form.
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function competenceShowAction()
+    {
+    	$competences = $this->cptmanager->getTransversalCompetences();
+    	$tab = $this->cptmanager->orderHierarchy();
+    	return array(
+    		'cpt' => $competences,
+    		'cptHierarchy' => $tab
+    	);
     }
 
      /**
@@ -94,12 +118,121 @@ class CompetenceController {
     public function competenceAction()
     {
         $form = $this->formFactory->create(FormFactory::TYPE_COMPETENCE, array());
+        $form->handleRequest($this->request);
 
-        return array('form' => $form->createView());
-        
         if ($form->isValid()) {
             $competence = $form->getData();
-            
-        }
+            if($this->cptmanager->add($competence)) {
+            	return array('form' => $form->createView());
+            } else {
+            	throw new Exception("no written", 1);
+            	
+            }
+        } 
+        return array('form' => $form->createView());
     }
+
+    /**
+     * @EXT\Route("/addsubcpt/{competenceId}/{rootId}", name="claro_admin_competence_add_sub")
+     * @EXT\Method({"GET","POST"})
+     * @EXT\ParamConverter(
+     *      "competence",
+     *      class="ClarolineCoreBundle:Competence\Competence",
+     *      options={"id" = "competenceId", "strictId" = true}
+     * )
+     * @EXT\ParamConverter(
+     *      "root",
+     *      class="ClarolineCoreBundle:Competence\Competence",
+     *      options={"id" = "rootId", "strictId" = true}
+     * )
+     *
+     * @param Competence $competence
+     * @EXT\Template("ClarolineCoreBundle:Administration:competenceForm.html.twig")
+     *
+     * Add a sub competence
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function subCompetenceAction($competence, $root)
+    {
+        $form = $this->formFactory->create(FormFactory::TYPE_COMPETENCE);
+        $form->handleRequest($this->request);
+
+        if ($form->isValid()) {        	
+            $subCpt = $form->getData();
+            if($this->cptmanager->addSub($competence, $subCpt, $root)) {
+            	    return new RedirectResponse(
+                    $this->router->generate('claro_admin_competences')
+                );
+            	} else {
+            		throw new Exception("no written", 1);
+            	}
+            }
+
+        return array(
+        	'form' => $form->createView(),
+        	'cpt' => $competence,
+        	'root' => $root
+        );
+    }
+
+    /**
+     * @EXT\Route("/delete/{competenceId}", name="claro_admin_competence_delete")
+     * @EXT\Method("GET")
+     * @EXT\ParamConverter(
+     *      "competence",
+     *      class="ClarolineCoreBundle:Competence\Competence",
+     *      options={"id" = "competenceId", "strictId" = true}
+     * )
+     *
+     * @param Competence $competence
+     *
+     * Delete a competence
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function deleteCompetenceAction($competence)
+    {
+    	if($this->cptmanager->delete($competence)) {
+    	    return new RedirectResponse(
+            $this->router->generate('claro_admin_competences')
+        );
+        	} else {
+    		throw new Exception("no written", 1);
+    	}
+    }
+
+    /**
+     * @EXT\Route("/link/{competenceId}", name="claro_admin_competence_link")
+     * @EXT\Method("GET")
+     * @EXT\ParamConverter(
+     *      "competence",
+     *      class="ClarolineCoreBundle:Competence\Competence",
+     *      options={"id" = "competenceId", "strictId" = true}
+     * )
+     * @EXT\Template("ClarolineCoreBundle:Administration:competenceLinkForm.html.twig")
+     * @param Competence $competence
+     *
+     * link a competence
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function linkCompetenceFormAction($competence)
+    {
+    	$competences = $this->cptmanager->getTransversalCompetences();
+        $form = $this->formFactory->create(FormFactory::TYPE_COMPETENCE_LINK, array($competences, true));
+    	
+        return array(
+        	'form' => $form->createView(),
+        	'cpt' => $competence,
+        );
+/*
+    	if($this->cptmanager->link($competence)) {
+    	    return new RedirectResponse(
+            $this->router->generate('claro_admin_competences')
+        );
+        	} else {
+    		throw new \Exception("no written", 1);*/
+    	}
+
 } 

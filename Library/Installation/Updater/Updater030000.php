@@ -12,7 +12,8 @@
 namespace Claroline\CoreBundle\Library\Installation\Updater;
 
 use Claroline\CoreBundle\Persistence\ObjectManager;
-use Claroline\CoreBundle\Entity\Resource\ResourceIcon;
+use Claroline\CoreBundle\Entity\Tool\AdminTool;
+
 
 class Updater030000
 {
@@ -46,15 +47,15 @@ class Updater030000
             unlink($this->oldCachePath);
         }
 
-        $this->log('Creating admin tools...');
+        $this->log('Creating admin referential competence tools...');
 
         $tools = array(
             array('competence_referencial', 'icon-reorder'),
         );
 
-        $existingTools = $this->objectManager->getRepository('ClarolineCoreBundle:Tool\AdminTool')->findAll();
+        $existingTool = $this->objectManager->getRepository('ClarolineCoreBundle:Tool\AdminTool')->findByName('competence_referencial');
 
-        if (count($existingTools) === 0) {
+        if (count($existingTool) === 0) {
             foreach ($tools as $tool) {
                 $entity = new AdminTool();
                 $entity->setName($tool[0]);

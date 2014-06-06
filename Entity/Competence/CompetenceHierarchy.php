@@ -17,7 +17,7 @@ namespace Claroline\CoreBundle\Entity\Competence;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\CompetenceRepository")
  * @ORM\Table(name="claro_competence_hierarchy",
  *     uniqueConstraints={
  *         @ORM\UniqueConstraint(
@@ -61,4 +61,70 @@ Class CompetenceHierarchy {
      * @ORM\JoinColumns({@ORM\JoinColumn(onDelete="CASCADE", nullable=true)})
      */
     protected $root;
+
+    /**
+     * @param mixed $id
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * @param mixed $competence
+     */
+    public function setCompetence($competence)
+    {
+        $this->competence = $competence;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCompetence()
+    {
+        return $this->competence;
+    }
+
+    /**
+     * @param mixed $parent
+     */
+    public function setParent($parent)
+    {
+        $this->parent = $parent;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getParent()
+    {
+        return $this->parent;
+    }
+
+    /**
+     * @param mixed $root
+     */
+    public function setRoot($root)
+    {
+        $this->root = $root;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRoot()
+    {
+        return $this->root;
+    }
+
+
 }

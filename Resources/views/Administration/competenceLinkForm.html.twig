@@ -7,14 +7,8 @@
         <div class="panel-heading">
             <h3 class="panel-title">{{ "competence" | trans({}, "platform" )}}</h3>
         </div>
-       {% if cpt is defined %}
-        	{{ cpt.getName() }} 
-        	{% set route = path('claro_admin_competence_add_sub', {competenceId: cpt.getId(), rootId: root.getId() }) %}
-       {% else %}
-       		{% set route = path('claro_admin_competence_add') %}	
-       {% endif %}
         <form novalidate="novalidate"
-              action="{{ route }}"
+              action="{{ path('claro_admin_competence_add') }}"
               method="post" {{ form_enctype(form) }}
               id="generic-form"
               class="form-horizontal">

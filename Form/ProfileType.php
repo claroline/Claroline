@@ -78,7 +78,7 @@ class ProfileType extends AbstractType
                         'class' => 'Claroline\CoreBundle\Entity\Role',
                         'expanded' => true,
                         'multiple' => true,
-                        'property' => 'translationKey',
+                        'property' => 'name',
                         'query_builder' => function (RoleRepository $roleRepository) {
                             return $roleRepository->createQueryBuilder('r')
                                     ->where("r.type != " . Role::WS_ROLE)
