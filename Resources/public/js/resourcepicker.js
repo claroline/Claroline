@@ -161,7 +161,7 @@
                 $(this).next().appendTo(element);
             }
 
-            $(this).addClass('resource-picker-done').addClass('hide²');
+            $(this).addClass('resource-picker-done').addClass('hide');
 
             picker.checkView($('.input-group', element));
         });
