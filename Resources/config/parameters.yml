@@ -24,3 +24,7 @@ parameters:
     innova_path.form.handler.path.class:                 Innova\PathBundle\Form\Handler\PathHandler
     innova_path.form.handler.path_template.class:        Innova\PathBundle\Form\Handler\PathTemplateHandler
     innova_path.form.handler.step.class:                 Innova\PathBundle\Form\Handler\StepHandler
+
+    # Listeners
+    innova_path.listener.path_tool.class: Innova\PathBundle\Listener\ToolListener
+    innova_path.listener.path.class:      Innova\PathBundle\Listener\Resource\PathListener

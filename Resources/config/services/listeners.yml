@@ -1,13 +1,13 @@
 services:
-  innova.listener.path_tool:
-    class: Innova\PathBundle\Listener\ToolListener
+  innova_path.listener.path_tool:
+    class: %innova_path.listener.path_tool.class%
     calls:
       - [setContainer, ["@service_container"]]
     tags:
       - { name: kernel.event_listener, event: open_tool_workspace_innova_path, method: onWorkspaceOpen }
 
-  innova.listener.path:
-    class: Innova\PathBundle\Listener\Resource\PathListener
+  innova_path.listener.path:
+    class: %innova_path.listener.path.class%
     calls:
       - [setContainer, ["@service_container"]]
     tags:
