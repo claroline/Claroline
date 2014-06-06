@@ -32,7 +32,9 @@ portfolioApp
             },
             addEditing: function(widget) {
                 widget.setEditMode(true);
-                this.editing.push(widget);
+                if (!this.editing.inArray(widget)) {
+                    this.editing.push(widget);
+                }
             },
             cancelEditing: function(widget) {
                 widget.setEditMode(false);
@@ -63,15 +65,10 @@ portfolioApp
                     this.edit(this.widgets[type][0]);
                 }
                 else {
-                    var widget = this.createEmptyWidget(portfolioId, type);
-                    if (istypeUnique) {
-                        this.widgets[type] = [widget];
-                    } else {
-                        this.widgets[type].push(widget);
-                    }
+                    this.createEmptyWidget(portfolioId, type, istypeUnique);
                 }
             },
-            createEmptyWidget: function(portfolioId, type) {
+            createEmptyWidget: function(portfolioId, type, istypeUnique) {
                 var newWidget;
                 var widget = widgetFactory.getResource(portfolioId, type);
 
@@ -81,14 +78,18 @@ portfolioApp
                 }
                 else {
                     newWidget = widget.create();
-                    this.edit(newWidget);
                     var $this = this;
                     newWidget.$promise.then(function() {
                         $this.emptyWidgets[type] = angular.copy(newWidget);
+                        $this.edit(newWidget);
                     });
+                    this.addEditing(newWidget);
                 }
-
-                return newWidget;
+                if (istypeUnique) {
+                    this.widgets[type] = [newWidget];
+                } else {
+                    this.widgets[type].push(newWidget);
+                }
             },
             isDeletable: function(widget) {
                 return widgetsConfig.isDeletable(widget.getType());
