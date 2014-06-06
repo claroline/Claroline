@@ -30,7 +30,7 @@ class Evaluation
      * @ORM\ManyToOne(
      *     targetEntity="Claroline\CoreBundle\Entity\User"
      * )
-     * @ORM\JoinColumn(name="user_id", onDelete="CASCADE", nullable=true)
+     * @ORM\JoinColumn(name="user_id", onDelete="CASCADE", nullable=false)
      */
     protected $user;
 

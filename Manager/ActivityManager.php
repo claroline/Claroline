@@ -12,6 +12,8 @@
 namespace Claroline\CoreBundle\Manager;
 
 use Claroline\CoreBundle\Entity\Activity\ActivityParameters;
+use Claroline\CoreBundle\Entity\Activity\Evaluation;
+use Claroline\CoreBundle\Entity\Log\Log;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Persistence\ObjectManager;
@@ -95,6 +97,29 @@ class ActivityManager
         $this->persistence->flush();
     }
 
+    public function updateEvaluation(
+        User $user,
+        ActivityParameters $activityParams,
+        Log $log
+    )
+    {
+        $evaluationType = $activityParams->getEvaluationType();
+
+        $evaluation = $this->evaluationRepo
+            ->findEvaluationByUserAndActivityParams($user, $activityParams);
+
+        if (is_null($evaluation)) {
+            $firstEvaluation = new Evaluation();
+            $firstEvaluation->setUser($user);
+            $firstEvaluation->setActivityParameters($activityParams);
+
+            
+
+            $this->persistence->persist($firstEvaluation);
+            $this->persistence->flush();
+        }
+    }
+
 
     /*********************************************
      *  Access to ActivityRuleRepository methods *
@@ -108,7 +133,7 @@ class ActivityManager
     {
         return $this->activityRuleRepo->findActivityRuleByActionAndResource(
             $action,
-            $resourceNode->getId(),
+            $resourceNode,
             $executeQuery
         );
     }

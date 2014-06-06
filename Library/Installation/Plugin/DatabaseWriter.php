@@ -18,6 +18,7 @@ use Claroline\CoreBundle\Manager\MaskManager;
 use Claroline\CoreBundle\Library\PluginBundle;
 use Claroline\CoreBundle\Manager\IconManager;
 use Claroline\CoreBundle\Library\Workspace\TemplateBuilder;
+use Claroline\CoreBundle\Entity\Activity\ActivityRuleAction;
 use Claroline\CoreBundle\Entity\Plugin;
 use Claroline\CoreBundle\Entity\Theme\Theme;
 use Claroline\CoreBundle\Entity\Resource\ResourceType;
@@ -165,6 +166,10 @@ class DatabaseWriter
             ->getRepository('ClarolineCoreBundle:Resource\ResourceType')
             ->findByPlugin($plugin->getGeneratedId());
 
+        foreach ($resourceTypes as $resourceType) {
+            $this->deleteActivityRules($resourceType);
+        }
+
         if ($this->modifyTemplate) {
             $this->templateBuilder = TemplateBuilder::fromTemplate("{$this->templateDir}default.zip");
             foreach ($resourceTypes as $resourceType) {
@@ -273,6 +278,8 @@ class DatabaseWriter
         $this->updateCustomAction($resource['actions'], $resourceType);
 
         $this->updateIcons($resource, $resourceType, $plugin);
+
+        $this->updateActivityRules($resource['activity_rules'], $resourceType);
 
         if (!$isExistResourceType && $this->modifyTemplate) {
             $this->templateBuilder->addResourceType($resource['name'], 'ROLE_WS_MANAGER');
@@ -440,6 +447,7 @@ class DatabaseWriter
         $this->persistCustomAction($resource['actions'], $resourceType);
         $this->setResourceTypeDefaultMask($resource['default_rights'], $resourceType);
         $this->persistIcons($resource, $resourceType, $plugin);
+        $this->persistActivityRules($resource['activity_rules'], $resourceType);
 
         //create default mask
 
@@ -544,6 +552,48 @@ class DatabaseWriter
         $adminToolEntity->setClass($adminTool['class']);
         $adminToolEntity->setPlugin($pluginEntity);
         $this->em->persist($adminToolEntity);
+    }
+
+    private function persistActivityRules($rules, $resourceType)
+    {
+        $aRuleActionRepo = $this->em
+            ->getRepository('Claroline\CoreBundle\Entity\Activity\ActivityRuleAction');
+
+        foreach ($rules as $rule) {
+            $ruleAction = $aRuleActionRepo->findOneBy(
+                array('action' => $rule['action'], 'resourceType' => $resourceType)
+            );
+
+            if (is_null($ruleAction)) {
+                $ruleAction = new ActivityRuleAction();
+                $ruleAction->setResourceType($resourceType);
+                $ruleAction->setAction($rule['action']);
+            }
+            if (isset($rule['type'])) {
+                $ruleAction->setType($rule['type']);
+            }
+
+            $this->em->persist($ruleAction);
+        }
+        $this->em->flush();
+    }
+    
+    private function deleteActivityRules($resourceType)
+    {
+        $aRuleActionRepo = $this->em
+            ->getRepository('Claroline\CoreBundle\Entity\Activity\ActivityRuleAction');
+        $ruleActions = $aRuleActionRepo->findBy(array('resourceType' => $resourceType));
+
+        foreach ($ruleActions as $ruleAction) {
+            $this->em->remove($ruleAction);
+        }
+        $this->em->flush();
+    }
+
+    private function updateActivityRules($rules, $resourceType)
+    {
+        $this->deleteActivityRules($resourceType);
+        $this->persistActivityRules($rules, $resourceType);
     }
 
     public function setModifyTemplate($bool)

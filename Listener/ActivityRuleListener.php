@@ -73,7 +73,8 @@ class ActivityRuleListener
                         if(0 < $resources['validRules']
                             && $resources['validRules'] >= $nbRules) {
 
-    //                        Mettre à jour l'évaluation
+                            $this->activityManager
+                                ->updateEvaluation($user, $activityParams, $log);
                         }
                     }
                 }
