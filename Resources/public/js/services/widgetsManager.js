@@ -14,9 +14,8 @@ portfolioApp
             },
             edit: function(widget) {
                 if (!widget.isEditing()) {
-                    this.addEditing(widget);
-                    widget.setEditMode(true);
                     this.loadForm(widget);
+                    this.addEditing(widget);
                 }
             },
             loadForm: function(widget) {
@@ -32,6 +31,7 @@ portfolioApp
                 });
             },
             addEditing: function(widget) {
+                widget.setEditMode(true);
                 this.editing.push(widget);
             },
             cancelEditing: function(widget) {
@@ -81,10 +81,10 @@ portfolioApp
                 }
                 else {
                     newWidget = widget.create();
+                    this.edit(newWidget);
                     var $this = this;
                     newWidget.$promise.then(function() {
                         $this.emptyWidgets[type] = angular.copy(newWidget);
-                        $this.edit(newWidget);
                     });
                 }
 
