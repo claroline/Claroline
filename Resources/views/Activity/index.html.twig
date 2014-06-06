@@ -9,10 +9,13 @@
 {% block title %}{{ _resource.resourceNode.name ~ ' - ' ~ "activity" | trans({}, "resource") | striptags | raw }}{% endblock %}
 
 {% block section_content %}
-    <div class="panel-heading">
-        <h3 class="panel-title">{{ 'activity'|trans({}, 'resource') }} {{ _resource.getName() }}</h3>
-    </div>
     <div class="panel-body">
-        <div>{{ _resource.getDescription() | raw }}</div>
+        <ul class="nav nav-tabs margin-bottom-md">
+            <li class="active"><a>{{ _resource.resourceNode.name }}</a></li>
+            <li><a class="add-resource pointer-hand"><i class="icon-plus"></i> {{ 'add_resource' | trans({}, 'platform') }}</a></li>
+        </ul>
+        <div class="activity-primary">
+            <div>{{ _resource.getDescription() | raw }}</div>
+        </div>
     </div>
 {% endblock %}
