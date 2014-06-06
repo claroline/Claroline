@@ -881,7 +881,7 @@
         },
         initialize: function (parameters) {
             this.isOpenEnabled = true;
-            this.views = {};
+            this.views = this.views !== undefined ? this.views : {};
             this.parameters = parameters;
             this.dispatcher = _.extend({}, Backbone.Events);
             _.each(parameters.isPickerOnly ? ['picker'] : ['main', 'picker'], function (view) {

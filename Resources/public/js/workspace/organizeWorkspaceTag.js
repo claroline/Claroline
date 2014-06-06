@@ -227,6 +227,7 @@
                             });
                         } else {
                             $('#tags-root').append(generateTagElement(data, tagName, false));
+                            $('#no-category-element').remove();
                             closeFormModal();
                         }
                         break;

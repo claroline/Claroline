@@ -1262,4 +1262,83 @@ class WorkspaceTagController extends Controller
 
         return new Response('success', 204);
     }
+
+    /**
+     * @EXT\Route(
+     *     "admin/tag/{workspaceTagId}/link/workspace/{workspaceId}",
+     *     name="claro_admin_workspace_tag_link_workspace",
+     *     defaults={"workspaceId"=null},
+     *     options={"expose"=true}
+     * )
+     * @EXT\Method("POST")
+     * @EXT\ParamConverter(
+     *     "workspaceTag",
+     *     class="ClarolineCoreBundle:Workspace\WorkspaceTag",
+     *     options={"id" = "workspaceTagId", "strictId" = true}
+     * )
+     * @EXT\ParamConverter(
+     *     "workspace",
+     *     class="ClarolineCoreBundle:Workspace\AbstractWorkspace",
+     *     options={"id" = "workspaceId", "strictId" = true}
+     * )
+     *
+     * Associate a Workspace Tag to a Workspace
+     *
+     * @return Response
+     */
+    public function adminWorkspaceTagLinkWorkspaceAction(
+        WorkspaceTag $workspaceTag,
+        AbstractWorkspace $workspace = NULL
+    )
+    {
+        if (!$this->securityContext->isGranted('ROLE_ADMIN')) {
+            throw new AccessDeniedException();
+        }
+        if (is_null($workspaceTag->getUser())) {
+            $this->tagManager->linkWorkspace($workspaceTag, $workspace);
+        }
+
+        return new Response('success', 204);
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/workspace/{linkedWorkspaceId}/public/list/page/{page}",
+     *     name="claro_render_public_workspace_list_pager",
+     *     defaults={"page"=1, "search"=""},
+     *     options={"expose"=true}
+     * )
+     * @EXT\Method("GET")
+     * @EXT\Route(
+     *     "/workspace/{linkedWorkspaceId}/public/list/page/{page}/search/{search}",
+     *     name="claro_render_public_workspace_list_pager_search",
+     *     defaults={"page"=1},
+     *     options={"expose"=true}
+     * )
+     * @EXT\Method("GET")
+     *
+     * @EXT\Template()
+     *
+     * Get list of all public workspaces
+     *
+     * @return Response
+     */
+    public function renderPublicWorkspaceListPagerAction(
+        $linkedWorkspaceId,
+        $page,
+        $search
+    )
+    {
+        $workspaces = ($search === '') ?
+            $this->workspaceManager
+                ->getDisplayableWorkspacesPager($page) :
+            $this->workspaceManager
+                ->getDisplayableWorkspacesBySearchPager($search, $page);
+
+        return array(
+            'linkedWorkspaceId' => $linkedWorkspaceId,
+            'workspaces' => $workspaces,
+            'search' => $search
+        );
+    }
 }

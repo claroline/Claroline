@@ -13,6 +13,7 @@
     window.Claroline = window.Claroline || {};
     var translator = window.Translator;
     var routing = window.Routing;
+    var common = window.Claroline.Common;
     var modal = window.Claroline.Modal = {};
 
     /**
@@ -62,7 +63,7 @@
     {
         modal.parentHide();
 
-        return modal.createElement('div', 'modal fade')
+        return common.createElement('div', 'modal fade')
             .html(content)
             .appendTo('body')
             .modal('show')
@@ -85,17 +86,6 @@
     };
 
     /**
-     * This function creates a new element in the document with a given class name.
-     *
-     * @param tag The tag name of the new element.
-     * @param className The class name of the new element.
-     */
-    modal.createElement = function (tag, className)
-    {
-        return $(document.createElement(tag)).addClass(className);
-    };
-
-    /**
      * This function show a complete modal with given title and content.
      *
      * @param title The title of the modal.
@@ -104,15 +94,15 @@
     modal.simpleContainer = function (title, content)
     {
         modal.create(
-            modal.createElement('div', 'modal-dialog').html(
-                modal.createElement('div', 'modal-content').append(
-                    modal.createElement('div', 'modal-header')
-                    .append(modal.createElement('button', 'close').html('&times;').attr('data-dismiss', 'modal'))
-                    .append(modal.createElement('h4', 'modal-title').html(title))
+            common.createElement('div', 'modal-dialog').html(
+                common.createElement('div', 'modal-content').append(
+                    common.createElement('div', 'modal-header')
+                    .append(common.createElement('button', 'close').html('&times;').attr('data-dismiss', 'modal'))
+                    .append(common.createElement('h4', 'modal-title').html(title))
                 )
-                .append(modal.createElement('div', 'modal-body').html(content))
-                .append(modal.createElement('div', 'modal-footer').html(
-                    modal.createElement('button', 'btn btn-primary')
+                .append(common.createElement('div', 'modal-body').html(content))
+                .append(common.createElement('div', 'modal-footer').html(
+                    common.createElement('button', 'btn btn-primary')
                     .html(translator.get('home:Ok'))
                     .attr('data-dismiss', 'modal')
                     )
