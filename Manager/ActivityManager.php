@@ -14,12 +14,13 @@ namespace Claroline\CoreBundle\Manager;
 use Claroline\CoreBundle\Entity\Activity\ActivityParameters;
 use Claroline\CoreBundle\Entity\Activity\Evaluation;
 use Claroline\CoreBundle\Entity\Log\Log;
+use Claroline\CoreBundle\Entity\Resource\Activity;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
-use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Manager\ResourceManager;
 use Claroline\CoreBundle\Persistence\ObjectManager;
-use JMS\DiExtraBundle\Annotation\Service;
 use JMS\DiExtraBundle\Annotation\Inject;
 use JMS\DiExtraBundle\Annotation\InjectParams;
+use JMS\DiExtraBundle\Annotation\Service;
 
 /**
  * @Service("claroline.manager.activity_manager")
@@ -29,17 +30,20 @@ class ActivityManager
     private $activityRuleRepo;
     private $evaluationRepo;
     private $persistence;
+    private $resourceManager;
 
     /**
      * Constructor.
      *
      * @InjectParams({
-     *     "persistence" = @Inject("claroline.persistence.object_manager")
+     *     "persistence"        = @Inject("claroline.persistence.object_manager"),
+     *     "resourceManager"    = @Inject("claroline.manager.resource_manager")
      * })
      */
-    public function __construct(ObjectManager $persistence)
+    public function __construct(ObjectManager $persistence, ResourceManager $resourceManager)
     {
         $this->persistence = $persistence;
+        $this->resourceManager = $resourceManager;
         $this->activityRuleRepo = $persistence->getRepository('ClarolineCoreBundle:Activity\ActivityRule');
         $this->evaluationRepo = $persistence->getRepository('ClarolineCoreBundle:Activity\Evaluation');
     }
@@ -47,18 +51,31 @@ class ActivityManager
     /**
      * Create a new activity
      */
-    public function createActivity()
+    public function createActivity($title, $description, $resourceNodeId, $persist = false)
     {
-        $this->editActivity(new Activity());
+        $resourceNode = $this->resourceManager->getById($resourceNodeId);
+        $parameters = new ActivityParameters();
+
+        return $this->editActivity(new Activity(), $title, $description, $resourceNode, $parameters, $persist);
     }
 
     /**
      * Edit an activity
      */
-    public function editActivity($activity)
+    public function editActivity($activity, $title, $description, $resourceNode, $parameters, $persist = false)
     {
-        $this->persistence->persist($activity);
-        $this->persistence->flush();
+        $activity->setName($title);
+        $activity->setTitle($title);
+        $activity->setDescription($description);
+        $activity->setResourceNode($resourceNode);
+        $activity->setParameters($parameters);
+
+        if ($persist) {
+            $this->persistence->persist($activity);
+            $this->persistence->flush();
+        }
+
+        return $activity;
     }
 
     /**
