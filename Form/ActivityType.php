@@ -29,8 +29,8 @@ class ActivityType extends AbstractType
     {
         $builder
             ->add('name', 'text', array('constraints' => new NotBlank()))
-            ->add('description', 'tinymce', array('label' => 'description'))
-            ->add('resourceNode', 'resourcePicker');
+            ->add('description', 'tinymce', array('constraints' => new NotBlank(), 'label' => 'description'))
+            ->add('resourceNode', 'resourcePicker', array('constraints' => new NotBlank()));
     }
 
     public function getName()

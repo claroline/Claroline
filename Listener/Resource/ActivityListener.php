@@ -38,6 +38,7 @@ class ActivityListener
     private $request;
     private $persistence;
     private $entityManager;
+    private $activityManager;
 
     /**
      * @InjectParams({
@@ -46,15 +47,17 @@ class ActivityListener
      *     "request"            = @Inject("request_stack"),
      *     "persistence"        = @Inject("claroline.persistence.object_manager"),
      *     "entityManager"      = @Inject("doctrine.orm.entity_manager"),
+     *     "activityManager"    = @Inject("claroline.manager.activity_manager"),
      * })
      */
-    public function __construct($formFactory, $templating, $request, $persistence, $entityManager)
+    public function __construct($formFactory, $templating, $request, $persistence, $entityManager, $activityManager)
     {
         $this->formFactory = $formFactory;
         $this->templating = $templating;
         $this->request = $request->getMasterRequest();
         $this->persistence = $persistence;
         $this->entityManager = $entityManager;
+        $this->activityManager = $activityManager;
     }
 
     /**
@@ -88,7 +91,12 @@ class ActivityListener
         $form->handleRequest($this->request);
 
         if ($form->isValid()) {
-            $event->setResources(array($form->getData()));
+            $data = $form->getData();
+            $activity = $this->activityManager->createActivity(
+                $data['name'], $data['description'], $data['resourceNode'], false
+            );
+
+            $event->setResources(array($activity));
             $event->stopPropagation();
 
             return;
