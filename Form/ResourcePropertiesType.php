@@ -45,6 +45,24 @@ class ResourcePropertiesType extends AbstractType
             )
         );
         $builder->add(
+            'accessibleFrom',
+            'date',
+            array(
+                'required' => false,
+                'widget' => 'single_text',
+                'format' => 'yyyy-MM-dd'
+            )
+        );
+        $builder->add(
+            'accessibleUntil',
+            'date',
+            array(
+                'required' => false,
+                'widget' => 'single_text',
+                'format' => 'yyyy-MM-dd'
+            )
+        );
+        $builder->add(
             'resourceType',
             'entity',
             array(

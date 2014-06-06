@@ -13,6 +13,9 @@
     var currentElement;
     var currentTagId;
     var currentParentTagId;
+    var currentLinkedWorkspaceId;
+    var currentLinkedWorkspaceName;
+    var currentLinkedWorkspaceCode;
     var isSubcategory;
 
     function openFormModal(title, content)
@@ -39,6 +42,18 @@
     {
         $('#add-tag-modal-box').modal('hide');
         $('#add-tag-modal-body').empty();
+    }
+    
+    function openWorkspaceModal(content)
+    {
+        $('#workspace-modal-body').html(content);
+        $('#workspace-modal-box').modal('show');
+    }
+    
+    function closeWorkspaceModal()
+    {
+        $('#workspace-modal-box').modal('hide');
+        $('#workspace-modal-body').empty();
     }
 
     function cleanSelection()
@@ -89,16 +104,31 @@
                 '<span class="tag-element"\n' +
                     'workspace-tag-id="' + tagId + '"\n' +
                     'workspace-tag-name="' + tagName + '"\n' +
+                    'linked-workspace-id="' + 0 + '"\n' +
                 '>' +
                     '<span class="open-tag-btn pointer-hand tag-name-' + tagId + '">\n' +
                         tagName +
-                    '\n</span>\n' +
+                        '\n<span class="linked-workspace-name hide" style="color:#B29EA1">\n' +
+                        '[\n' +
+                        '<i class="icon-book"></i>\n' +
+                        '<span class="workspace-name"></span>' +
+                        '<small>(<span class="workspace-code"></span>)</small>\n' +
+                        ']\n' +
+                        '</span>\n' +
+                    '</span>\n' +
 
                     '<div class="btn-group tag-button-group hide">\n' +
                         '<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">\n' +
                             '<span class="caret"></span>\n' +
                         '</button>\n' +
                         '<ul class="dropdown-menu">\n' +
+                           ' <li class="link-workspace-btn">\n' +
+                                '<a href="#">\n' +
+                                    '<i class="icon-book"></i>\n' +
+                                    Translator.get('platform' + ':' + 'link_workspace') +
+                                '\n</a>\n' +
+                            '</li>\n' +
+                            '<li class="divider"></li>\n' +
                            ' <li class="edit-tag-btn">\n' +
                                 '<a href="#">\n' +
                                     '<i class="icon-pencil"></i>\n' +
@@ -146,6 +176,20 @@
         return generatedTagElement;
     }
 
+    function removeLinkedWorkspaceName()
+    {
+        currentElement.find('.linked-workspace-name').addClass('hide');
+    }
+    
+    function addLinkedWorkspaceName()
+    {
+        var workspaceNameElement = $('.workspace-name', currentElement);
+        var workspaceCodeElement = $('.workspace-code', currentElement);
+        workspaceNameElement.html(currentLinkedWorkspaceName);
+        workspaceCodeElement.html(currentLinkedWorkspaceCode);
+        currentElement.find('.linked-workspace-name').removeClass('hide');
+    }
+
     // Click on the category create button
     $('#create-root-tag-btn').on('click', function () {
         cleanSelection();
@@ -162,7 +206,30 @@
             }
         });
     });
+    
+    // Click on the link workspace button
+    $('#workspace-organization-div').on('click', '.link-workspace-btn', function (e) {
+        e.stopImmediatePropagation();
+        e.preventDefault();
 
+        currentElement = $(this).parents('.tag-element');
+        currentTagId = currentElement.attr('workspace-tag-id');
+        currentLinkedWorkspaceId = parseInt(currentElement.attr('linked-workspace-id'), 10);
+
+        $.ajax({
+            url: Routing.generate(
+                'claro_render_public_workspace_list_pager',
+                {'linkedWorkspaceId': currentLinkedWorkspaceId}
+            ),
+            type: 'GET',
+            success: function (datas) {
+                openWorkspaceModal(
+                    datas
+                );
+            }
+        });
+    });
+    
     // Click on the category edit button
     $('#workspace-organization-div').on('click', '.edit-tag-btn', function (e) {
         e.stopImmediatePropagation();
@@ -227,6 +294,7 @@
                             });
                         } else {
                             $('#tags-root').append(generateTagElement(data, tagName, false));
+                            $('#no-category-element').remove();
                             closeFormModal();
                         }
                         break;
@@ -491,5 +559,153 @@
                 window.location.reload();
             }
         });
+    });
+    
+    // Click on SEARCH button of workspace list modal
+    $('#workspace-modal-box').on('click', '#search-workspace-button', function () {
+        var searchElement = document.getElementById('search-workspace-txt');
+        var search = $(searchElement).val();
+        var route;
+
+        if (search !== '') {
+            route = Routing.generate(
+                'claro_render_public_workspace_list_pager_search',
+                {'linkedWorkspaceId': currentLinkedWorkspaceId, 'search': search}
+            );
+        } else {
+            route = Routing.generate(
+                'claro_render_public_workspace_list_pager',
+                {'linkedWorkspaceId': currentLinkedWorkspaceId}
+            );
+        }
+
+        $.ajax({
+            url: route,
+            type: 'GET',
+            success: function (data) {
+                $('#workspace-modal-body').html(data);
+            }
+        });
+    });
+
+    // Press ENTER on workspace list modal
+    $('#workspace-modal-box').on('keypress', '#search-workspace-txt', function (e) {
+
+        if (e.keyCode == 13) {
+            var searchElement = document.getElementById('search-workspace-txt');
+            var search = $(searchElement).val();
+            var route;
+
+            if (search !== '') {
+                route = Routing.generate(
+                    'claro_render_public_workspace_list_pager_search',
+                    {
+                        'linkedWorkspaceId': currentLinkedWorkspaceId,
+                        'search': search
+                    }
+                );
+            } else {
+                route = Routing.generate(
+                    'claro_render_public_workspace_list_pager',
+                    {'linkedWorkspaceId': currentLinkedWorkspaceId}
+                );
+            }
+
+            $.ajax({
+                url: route,
+                type: 'GET',
+                success: function (data) {
+                    $('#workspace-modal-body').html(data);
+                }
+            });
+        }
+    })
+    
+    // Click on pager buttons on workspace modal
+    $('#workspace-modal-box').on('click', '.pagination > ul > li > a', function (event) {
+        event.preventDefault();
+        event.stopPropagation();
+
+        var element = event.currentTarget;
+        var url = $(element).attr('href');
+        var route;
+
+        if (url !== '#') {
+            var urlTab = url.split('/');
+            var page = getPage(urlTab);
+            var search = getSearch(urlTab);
+
+            if (search !== '') {
+                route = Routing.generate(
+                    'claro_render_public_workspace_list_pager_search',
+                    {
+                        'linkedWorkspaceId': currentLinkedWorkspaceId,
+                        'page': page,
+                        'search': search
+                    }
+                );
+            } else {
+                route = Routing.generate(
+                    'claro_render_public_workspace_list_pager',
+                    {
+                        'linkedWorkspaceId': currentLinkedWorkspaceId,
+                        'page': page
+                    }
+                );
+            }
+
+            $.ajax({
+                url: route,
+                type: 'GET',
+                success: function (data) {
+                    $('#workspace-modal-body').html(data);
+                }
+            });
+        }
+    });
+    
+    // Click on LINK button of the Workspace form modal
+    $('#link-workspace-confirm-ok').on('click', function () {
+        var route;
+
+        if (currentLinkedWorkspaceId === 0) {
+            route = Routing.generate(
+                'claro_admin_workspace_tag_link_workspace',
+                {'workspaceTagId': currentTagId}
+            );
+        } else {
+            route = Routing.generate(
+                'claro_admin_workspace_tag_link_workspace',
+                {
+                    'workspaceTagId': currentTagId,
+                    'workspaceId': currentLinkedWorkspaceId
+                }
+            );
+        }
+
+        $.ajax({
+            url: route,
+            type: 'POST',
+            success: function () {
+                currentElement.attr('linked-workspace-id', currentLinkedWorkspaceId);
+                
+                if (currentLinkedWorkspaceId === 0) {
+                    removeLinkedWorkspaceName();
+                } else {
+                    addLinkedWorkspaceName();
+                }
+                closeWorkspaceModal();
+            }
+        });
+    });
+    
+    // Click on Radio button of the Workspace form modal
+    $('body').on('click', '#workspace-modal-body .chk-workspace', function () {
+        currentLinkedWorkspaceId = parseInt($(this).val(), 10);
+        
+        if (currentLinkedWorkspaceId !== 0) {
+            currentLinkedWorkspaceName = $(this).attr('workspace-name');
+            currentLinkedWorkspaceCode = $(this).attr('workspace-code');
+        }
     });
 })();

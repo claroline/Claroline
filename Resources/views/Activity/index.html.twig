@@ -1,110 +1,21 @@
-{# to keep the workspace layout, extends this template #}
-{% extends "ClarolineCoreBundle:Workspace:layout.html.twig" %}
+{% set layout = "ClarolineCoreBundle:Workspace:layout.html.twig" %}
 
-{% block stylesheets %}
-    {{ parent() }}
-{% endblock %}
+{% if isDesktop() %}
+    {% set layout = "ClarolineCoreBundle:Desktop:layout.html.twig" %}
+{% endif %}
+
+{% extends layout %}
+
+{% block title %}{{ _resource.resourceNode.name ~ ' - ' ~ "activity" | trans({}, "resource") | striptags | raw }}{% endblock %}
 
 {% block section_content %}
-    <div class="panel-heading">
-        <h3 class="panel-title">{{ 'activity'|trans({}, 'resource') }} {{ _resource.getName() }}</h3>
-    </div>
     <div class="panel-body">
-        <div id="activity-instruction">
-            <h4>{{ 'instructions'|trans({}, 'platform') }} :</h4>
-                {{ _resource.getInstructions() }}
-        </div>
-        <br>
-
-        <div id="sortable">
-        {% for resourceActivity in resourceActivities %}
-                <div id={{ resourceActivity.getResourceNode().getId() }}>
-                    <div class="alert alert-info">
-                        <a class="close" href="{{ path('claro_activity_remove_resource', {'nodeId':resourceActivity.getResourceNode().getId(), 'activityId': resourceActivity.getActivity().getId()})}}" aria-hidden="true">&times;</a>
-                        <a class="alert-link" href="{{ path('claro_resource_open', {'resourceType':resourceActivity.getResourceNode().getResourceType().getName(), 'node':resourceActivity.getResourceNode().getId()} )}}">
-                            {{ resourceActivity.getResourceNode().getName() }}
-                        </a>
-                    </div>
-                </div>
-        {% endfor %}
+        <ul class="nav nav-tabs margin-bottom-md">
+            <li class="active"><a>{{ _resource.resourceNode.name }}</a></li>
+            <li><a class="add-resource pointer-hand"><i class="icon-plus"></i> {{ 'add_resource' | trans({}, 'platform') }}</a></li>
+        </ul>
+        <div class="activity-primary">
+            <div>{{ _resource.getDescription() | raw }}</div>
         </div>
     </div>
-    <div class="panel-footer">
-        <button id="add_resource_button" class="btn btn-primary">
-            <i class="icon-plus"></i> {{'add_resource'|trans({},'platform')}}
-        </button>
-        <a href="{{ path('claro_activity_show_player', {'activity': _resource.getId()}) }}" class="btn btn-default" role="button">
-            <i class="icon-user"></i> {{ 'show_as_user'|trans({}, 'platform') }}
-        </a>
-        <div id="twig-attributes" data-activity-id="{{ _resource.getId() }}"></div>
-    </div>
-{% endblock %}
-{% block javascripts %}
-    {{ parent() }}
-    <script type="text/javascript" src="{{ asset('bundles/clarolinecore/js/activity/index.js') }}"></script>
-    <script type="text/javascript">
-        $(function() {
-            Claroline.ResourceManager.initialize({
-                "parentElement": $('div.section-content'),
-                "isPickerMultiSelectAllowed": false,
-                "isPickerOnly": true,
-                "pickerCallback": function(nodes){callBack(nodes);},
-                "appPath": "{{ app.request.getBaseUrl }}",
-                "webPath": "{{ asset('') }}",
-                "resourceTypes": {
-                    {% for resourceType in resourceTypes %}
-                        "{{ resourceType.getName() }}": {
-                            "name": "{{ resourceType.getName()|trans({}, 'resource') }}",
-                            "actions": {
-                                {% for action in resourceType.getActions() %}
-                                    "{{ action.getName() }}": {
-                                        "name": "{{ action.getName() }}",
-                                        "route": "{{ path('claro_resource_action', {'resourceType': resourceType.getName(), 'action': action.getName(), 'node': '_nodeId' }) }}",
-                                        "async": {% if action.isAsync() %} 1 {% else %} 0 {% endif %},
-                                        "mask": {{ action.getValue() }},
-                                        "isCustom": {% if action.isCustom() %} "yes" {% else %} "no" {% endif %},
-                                        "isForm": {% if action.isForm() %} true {% else %} false {% endif %}
-                                    }
-                                    {% if loop.last != true %},{% endif %}
-                                {% endfor %}
-                            }
-                        }{% if loop.last != true %},{% endif %}
-                    {% endfor %}
-                }
-            });
-
-        $('#add_resource_button').click(function(){Claroline.ResourceManager.picker('open')});
-
-        var callBack = function(nodes){
-            $.ajax({
-            url: Routing.generate('claro_activity_add_resource', {'activityId':{{ _resource.getId() }}, 'nodeId': _.keys(nodes)[0]}),
-            type: 'GET',
-            success: function(nodes){
-                var html = "";
-                html+= "<div id= " + nodes[0].id + " >";
-                html+= "<div class='alert alert-info'>";
-                html+= "<a class='close' href="+Routing.generate('claro_activity_remove_resource', {'nodeId':nodes[0].id, 'activityId': {{ _resource.getId() }} })+" aria-hidden="true">&times;</a>";
-                html+= "<a class='alert-link' href="+Routing.generate('claro_resource_open', {'resourceType': nodes[0].type, 'action': 'open', 'node': nodes[0].id})+">";
-                html+= nodes[0].name
-                html+= "</a>";
-                html+= "</div>";
-                html+= "</div>";
-
-                $("#sortable").append(html);
-            },
-        });
-        }
-
-        $('body').on('click', '.close', function(e){
-            e.preventDefault();
-            $.ajax({
-                url: e.target.href,
-                type: 'DELETE',
-                success: function(){
-                    $(e.currentTarget.parentElement.parentElement).remove();
-                }
-            });
-        });
-    });
-    </script>
 {% endblock %}
