@@ -102,6 +102,11 @@ class Role implements RoleInterface
      */
     protected $workspace;
 
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    protected $maxUsers;
+
     public function __construct()
     {
         $this->users           = new ArrayCollection();
@@ -234,5 +239,16 @@ class Role implements RoleInterface
     public function getWorkspace()
     {
         return $this->workspace;
+    }
+
+    public function setMaxUsers($maxUsers)
+    {
+        $this->maxUsers = $maxUsers;
+    }
+
+    public function getMaxUsers()
+    {
+        //2147483647 is the maximium integer in the database field.
+        return ($this->maxUsers === null) ? 2147483647: $this->maxUsers;
     }
 }

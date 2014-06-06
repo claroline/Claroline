@@ -70,7 +70,9 @@
                     <li>{{ 'phone'|trans({}, 'platform') }}</li>
                 </ul>
             </div>
-
+            {% if error_import is defined %}
+                <div class="alert alert-danger"> {{ error_import|trans({}, 'platform') }} </div>
+            {% endif %}
             {{ form_widget(form) }}
         </div>
         <div class="panel-footer">

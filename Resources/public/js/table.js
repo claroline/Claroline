@@ -10,6 +10,7 @@
 /* global createValidationBox */
 /* global ModalWindow */
 /* global ValidationFooter */
+/* global ErrorFooter */
 
 (function () {
     'use strict';
@@ -55,6 +56,7 @@
     table.initialize = function (parameters) {
         var currentAction = '';
         createValidationBox();
+        createErrorBox();
 
         $('#search-button').click(function () {
             var search = document.getElementById('search-items-txt') ?
@@ -149,6 +151,10 @@
                                 $(element).parent().parent().remove();
                             });
                         }
+                    },
+                    error: function(xhr) {
+                        $('#error-modal').modal('show');
+                        $('#error-modal .modal-body').html(xhr.responseText);
                     }
                 });
                 $('#table-modal').modal('hide');
@@ -165,6 +171,14 @@
             }
         });
     };
+
+    function createErrorBox() {
+        var html = Twig.render(
+            ModalWindow,
+            {'footer': Twig.render(ErrorFooter), 'isHidden': true, 'modalId': 'error-modal', 'body': ''}
+        );
+        $('body').append(html);
+    }
 
     function createValidationBox() {
         var html = Twig.render(

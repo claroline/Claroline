@@ -142,11 +142,21 @@ class RoleManager
 
     /**
      * @param \Claroline\CoreBundle\Entity\AbstractRoleSubject $ars
-     * @param string                                           $roleName
+     * @param string $roleName
+     * @throws \Exception
      */
     public function setRoleToRoleSubject(AbstractRoleSubject $ars, $roleName)
     {
         $role = $this->roleRepo->findOneBy(array('name' => $roleName));
+        $validated = $this->validateRoleInsert($ars, $role);
+
+        if (!$validated) {
+            throw new Exception\AddRoleException();
+        }
+
+        if (get_class($ars) === 'Claroline\CoreBundle\Entity\Group' && $role->getName() === 'ROLE_USER') {
+            throw new Exception\AddRoleException('ROLE_USER cannot be added to groups');
+        }
 
         if (!is_null($role)) {
             $ars->addRole($role);
@@ -167,12 +177,23 @@ class RoleManager
 
     /**
      * @param \Claroline\CoreBundle\Entity\AbstractRoleSubject $ars
-     * @param \Claroline\CoreBundle\Entity\Role                $role
-     * @param boolean                                          $sendMail
+     * @param \Claroline\CoreBundle\Entity\Role $role
+     * @param boolean $sendMail
+     *
+     * @throws Exception\AddRoleException
      */
     public function associateRole(AbstractRoleSubject $ars, Role $role, $sendMail = false)
     {
+        if (!$this->validateRoleInsert($ars, $role)) {
+            throw new Exception\AddRoleException();
+        }
+
+        if (get_class($ars) === 'Claroline\CoreBundle\Entity\Group' && $role->getName() === 'ROLE_USER') {
+            throw new Exception\AddRoleException('ROLE_USER cannot be added to groups');
+        }
+
         if (!$ars->hasRole($role->getName())) {
+
             $ars->addRole($role);
             $this->om->startFlushSuite();
 
@@ -213,10 +234,10 @@ class RoleManager
 
     /**
      * @param \Claroline\CoreBundle\Entity\AbstractRoleSubject $ars
-     * @param \Doctrine\Common\Collections\ArrayCollection     $roles
+     * @param array     $roles
      * @param boolean                                          $sendMail
      */
-    public function associateRoles(AbstractRoleSubject $ars, ArrayCollection $roles, $sendMail = false)
+    public function associateRoles(AbstractRoleSubject $ars, $roles, $sendMail = false)
     {
         foreach ($roles as $role) {
             $this->associateRole($ars, $role, $sendMail);
@@ -225,6 +246,7 @@ class RoleManager
         $this->om->flush();
     }
 
+
     /**
      * @param \Claroline\CoreBundle\Entity\AbstractRoleSubject[]
      * @param \Claroline\CoreBundle\Entity\Role $role
@@ -232,10 +254,8 @@ class RoleManager
     public function associateRoleToMultipleSubjects(array $subjects, Role $role)
     {
         foreach ($subjects as $subject) {
-            $subject->addRole($role);
-            $this->om->persist($subject);
+            $this->associateRole($subject, $role);
         }
-        $this->om->flush();
     }
 
     /**
@@ -664,5 +684,41 @@ class RoleManager
         $role->setType(Role::PLATFORM_ROLE);
         $this->om->persist($role);
         $this->om->flush();
+    }
+
+    /**
+     * Returns if a role can be added to a RoleSubject.
+     *
+     * @param AbstractRoleSubject $ars
+     * @param Role $role
+     * @return bool
+     */
+    public function validateRoleInsert(AbstractRoleSubject $ars, Role $role)
+    {
+        $total = $this->om->getRepository('ClarolineCoreBundle:User')->countUsersByRoleIncludingGroup($role);
+
+        //cli always win!
+        if ($role->getName() === 'ROLE_ADMIN' && php_sapi_name() === 'cli' ) {
+            return true;
+        }
+
+        if ($role->getName() === 'ROLE_ADMIN' && !$this->container->get('security.context')->isGranted('ROLE_ADMIN')) {
+            return false;
+        }
+
+        if ($ars->hasRole($role->getName())) {
+            return true;
+        }
+
+        if (get_class($ars) === 'Claroline\CoreBundle\Entity\User') {
+            return ($total < $role->getMaxUsers()) ? true: false;
+        }
+
+        if (get_class($ars) === 'Claroline\CoreBundle\Entity\Group') {
+            $countUsers = $this->userRepo->countUsersOfGroup($ars);
+            $substractUsers = $this->userRepo->countUsersOfGroupByRole($ars, $role);
+
+            return (($total + $countUsers - $substractUsers) < $role->getMaxUsers()) ? true: false;
+        }
     }
 }

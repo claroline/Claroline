@@ -21,6 +21,7 @@ use Claroline\CoreBundle\Form\UserPublicProfileUrlType;
 use Claroline\CoreBundle\Manager\LocaleManager;
 use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Manager\UserManager;
+use Claroline\CoreBundle\Manager\ToolManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use JMS\SecurityExtraBundle\Annotation as SEC;
 use Pagerfanta\Adapter\DoctrineORMAdapter;
@@ -30,7 +31,6 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 use Symfony\Component\Security\Core\Encoder\EncoderFactory;
@@ -47,6 +47,7 @@ class ProfileController extends Controller
     private $request;
     private $localeManager;
     private $encoderFactory;
+    private $toolManager;
 
     /**
      * @DI\InjectParams({
@@ -56,7 +57,8 @@ class ProfileController extends Controller
      *     "security"        = @DI\Inject("security.context"),
      *     "request"         = @DI\Inject("request"),
      *     "localeManager"   = @DI\Inject("claroline.common.locale_manager"),
-     *     "encoderFactory" = @DI\Inject("security.encoder_factory")
+     *     "encoderFactory"  = @DI\Inject("security.encoder_factory"),
+     *     "toolManager"     = @DI\Inject("claroline.manager.tool_manager")
      * })
      */
     public function __construct(
@@ -66,7 +68,8 @@ class ProfileController extends Controller
         SecurityContextInterface $security,
         Request $request,
         LocaleManager $localeManager,
-        EncoderFactory $encoderFactory
+        EncoderFactory $encoderFactory,
+        ToolManager $toolManager
     )
     {
         $this->userManager = $userManager;
@@ -76,6 +79,7 @@ class ProfileController extends Controller
         $this->request = $request;
         $this->localeManager = $localeManager;
         $this->encoderFactory = $encoderFactory;
+        $this->toolManager = $toolManager;
     }
 
     private function isInRoles($role, $roles)
@@ -204,10 +208,10 @@ class ProfileController extends Controller
     public function editProfileAction(User $loggedUser, User $user = null)
     {
         $isAdmin = $this->get('security.context')->isGranted('ROLE_ADMIN');
-
+        $isGrantedUserAdmin = $this->get('security.context')->isGranted('OPEN', $this->toolManager->getAdminToolByName('user_management'));
         $editYourself = false;
 
-        if (null !== $user && !$isAdmin) {
+        if (null !== $user && !$isAdmin && !$isGrantedUserAdmin) {
             throw new AccessDeniedException();
         }
 
@@ -216,14 +220,29 @@ class ProfileController extends Controller
             $editYourself = true;
         }
 
-        $roles = $this->roleManager->getPlatformRoles($loggedUser);
+        $roles = $this->roleManager->getPlatformRoles($user);
+
         $form = $this->createForm(
-            new ProfileType(array($roles), $isAdmin, $this->localeManager->getAvailableLocales()), $user
+            new ProfileType($roles, $isAdmin, $isGrantedUserAdmin, $this->localeManager->getAvailableLocales()), $user
         );
 
         $form->handleRequest($this->request);
+        $unavailableRoles = [];
 
-        if ($form->isValid()) {
+        if ($this->get('request')->getMethod() === 'POST') {
+            $form->get('platformRoles')->getData();
+        } else {
+            $roles = $this->roleManager->getAllPlatformRoles();
+        }
+
+        foreach ($roles as $role) {
+            $isAvailable = $this->roleManager->validateRoleInsert($user, $role);
+            if (!$isAvailable) {
+                $unavailableRoles[] = $role;
+            }
+        }
+
+        if ($form->isValid() && count($unavailableRoles) === 0) {
             /** @var \Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface $sessionFlashBag */
             $sessionFlashBag = $this->get('session')->getFlashBag();
             /** @var \Symfony\Bundle\FrameworkBundle\Translation\Translator $translator */
@@ -251,6 +270,9 @@ class ProfileController extends Controller
             $newRoles  = array();
 
             if (isset($form['platformRoles'])) {
+                //verification:
+                //only the admin can grant the role admin
+                //simple users cannot change anything. Don't let them put whatever they want with a fake form.
                 $newRoles = $form['platformRoles']->getData();
                 $this->userManager->setPlatformRoles($user, $newRoles);
             }
@@ -288,9 +310,10 @@ class ProfileController extends Controller
         }
 
         return array(
-            'form'         => $form->createView(),
-            'user'         => $user,
-            'editYourself' => $editYourself
+            'form'             => $form->createView(),
+            'user'             => $user,
+            'editYourself'     => $editYourself,
+            'unavailableRoles' => $unavailableRoles
         );
     }
 
