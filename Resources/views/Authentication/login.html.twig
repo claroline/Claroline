@@ -16,6 +16,12 @@ same message when authentication has failed (no precise validation errors).
                 {{ 'login_failure'|trans({}, 'platform') }}
             </div>
         {% endif %}
+        {% if is_expired %}
+            <div class="alert alert-danger">
+                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                {{ 'closed_account'|trans({}, 'platform') }}
+            </div>
+        {% endif %}
         <div class='panel panel-default'>
             <div class="panel-heading">
                 <h3 class="panel-title">{{ 'login' | trans({}, "platform")}}</h3>

@@ -19,6 +19,7 @@ use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Manager\ToolManager;
 use Claroline\CoreBundle\Entity\Tool\AdminTool;
 use Claroline\CoreBundle\Entity\Role;
+use Claroline\CoreBundle\Persistence\ObjectManager;
 use Symfony\Component\HttpFoundation\Response;
 use Claroline\CoreBundle\Form\Factory\FormFactory;
 use Symfony\Component\HttpFoundation\Request;
@@ -40,15 +41,17 @@ class RolesController extends Controller
      *     "roleManager" = @DI\Inject("claroline.manager.role_manager"),
      *     "formFactory" = @DI\Inject("claroline.form.factory"),
      *     "request"     = @DI\Inject("request"),
-     *     "sc"          = @DI\Inject("security.context")
+     *     "sc"          = @DI\Inject("security.context"),
+     *     "om"          = @DI\Inject("claroline.persistence.object_manager")
      * })
      */
     public function __construct(
-        ToolManager $toolManager,
-        RoleManager $roleManager,
-        FormFactory $formFactory,
-        Request $request,
-        SecurityContextInterface $sc
+        ToolManager              $toolManager,
+        RoleManager              $roleManager,
+        FormFactory              $formFactory,
+        Request                  $request,
+        SecurityContextInterface $sc,
+        ObjectManager            $om
     )
     {
         $this->toolManager   = $toolManager;
@@ -57,6 +60,7 @@ class RolesController extends Controller
         $this->request       = $request;
         $this->roleAdminTool = $toolManager->getAdminToolByName('roles_management');
         $this->sc            = $sc;
+        $this->om            = $om;
     }
 
     /**
@@ -96,7 +100,7 @@ class RolesController extends Controller
      * )
      * @EXT\Method("POST")
      *
-     * @param Tool $tool
+     * @param AdminTool $tool
      * @param Role $role
      *
      * @return \Claroline\CoreBundle\Controller\Administration\Response
@@ -117,7 +121,7 @@ class RolesController extends Controller
      * )
      * @EXT\Method("POST")
      *
-     * @param Tool $tool
+     * @param AdminTool $tool
      * @param Role $role
      *
      * @return \Claroline\CoreBundle\Controller\Administration\Response
@@ -141,7 +145,6 @@ class RolesController extends Controller
     public function createPlatformRoleFormAction()
     {
         $this->checkOpen();
-
         $form = $form = $this->formFactory->create(FormFactory::TYPE_ROLE_TRANSLATION);
 
         return array('form' => $form->createView());
@@ -169,6 +172,67 @@ class RolesController extends Controller
         }
 
         return array('form' => $form->createView());
+    }
+
+    /**
+     * @EXT\Route("/roles/list", name="platform_roles_list")
+     * @EXT\Template("ClarolineCoreBundle:Administration/Roles:roleList.html.twig")
+     *
+     * @return array
+     */
+    public function roleListAction()
+    {
+        $roles = $this->roleManager->getAllPlatformRoles();
+
+        return array('roles' => $roles, 'errors' => array());
+    }
+
+    /**
+     * @EXT\Route("/roles/edit", name="platform_roles_edit")
+     * @EXT\Template("ClarolineCoreBundle:Administration/Roles:roleList.html.twig")
+     */
+    public function editRoles()
+    {
+        $errors = $this->validateParameters();
+
+        if (count($errors) > 0) {
+            $roles = $this->roleManager->getAllPlatformRoles();
+
+            return array('roles' => $roles, 'errors' => $errors);
+        }
+
+        $roles = $this->roleManager->getAllPlatformRoles();
+
+        foreach ($this->request->request as $role => $value) {
+            $id = str_replace('max-user-', '', $role);
+
+            foreach ($roles as $entity) {
+                if ($entity->getId() === (int)$id) {
+                    $value = ($value === '') ? null: $value;
+                    $entity->setMaxUsers($value);
+                }
+            }
+
+            $this->om->persist($entity);
+        }
+
+        $this->om->flush();
+
+        return $this->redirect($this->generateUrl('claro_admin_roles_index'));
+    }
+
+    private function validateParameters()
+    {
+        return [];
+//        $errors = [];
+//
+//        foreach ($this->request->request as $key => $value) {
+//            if (!is_int($value)) {
+//                $errors[] = array($key => $value);
+//            }
+//        }
+//
+//        return $errors;
     }
 
     private function checkOpen()
