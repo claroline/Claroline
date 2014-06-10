@@ -123,6 +123,10 @@ class WidgetsManager
             return $data;
         }
 
+        echo "<pre>";
+        var_dump($form->getErrors());
+        echo "</pre>" . PHP_EOL;
+
         throw new \InvalidArgumentException();
     }
 

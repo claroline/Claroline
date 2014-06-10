@@ -1,0 +1,8 @@
+<div class="form-group">
+    <label for="title" class="required">{{ 'skills_form_skill_name'|trans({}, 'icap_portfolio') }}</label>
+    <input type="text" class="form-control" id="title" name="icap_portfolio_widget_form_skills[skills][0][name]" data-ng-model="skill.name" />
+</div>
+<div class="form-group" data-ng-repeat="skill in editedWidget.skills">
+    <label for="title" class="required">{{ 'skills_form_skill_name'|trans({}, 'icap_portfolio') }}</label>
+    {% verbatim %}<input type="text" class="form-control" id="title" name="icap_portfolio_widget_form_skills[skills][{{ $index }}][name]" data-ng-model="skill.name" />{% endverbatim %}
+</div>

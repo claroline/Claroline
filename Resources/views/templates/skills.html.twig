@@ -1,0 +1,7 @@
+<ul>
+{% for skill in widget.skills %}
+    <li>{{ skill.name }}</li>
+{% else %}
+    <li>no skills</li>
+{% endfor %}
+</ul>

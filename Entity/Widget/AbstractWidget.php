@@ -11,7 +11,11 @@ use Icap\PortfolioBundle\Entity\Portfolio;
  * @ORM\Entity(repositoryClass="Icap\PortfolioBundle\Repository\Widget\AbstractWidgetRepository")
  * @ORM\InheritanceType("JOINED")
  * @ORM\DiscriminatorColumn(name="widget_type", type="string")
- * @ORM\DiscriminatorMap({"title" = "TitleWidget", "userInformation" = "UserInformationWidget"})
+ * @ORM\DiscriminatorMap({
+ *      "title"           = "TitleWidget",
+ *      "userInformation" = "UserInformationWidget",
+ *      "skills"          = "SkillsWidget"
+ * })
  */
 abstract class AbstractWidget
 {
