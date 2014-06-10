@@ -2,15 +2,15 @@
     <hr/>
     <p>{{ inter.interaction.feedback|raw }}</p>
 {% endif %}
-                            
+
 <hr/>
+
 {% for hv in hintViewed %}
     {% if( hv.hint.interaction.id == interactions[p].id ) %}
         {{ 'penalty' | trans }} : {{ hv.hint.penalty }}
-        <br/>
+        <br/><hr/>
     {% endif %}
 {% endfor %}
-<hr/>
 
 {% if (inter.interaction.type == 'InteractionOpen') %}
     {% if responses[p].mark != -1 %}

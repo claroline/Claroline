@@ -102,6 +102,7 @@ class TwigExtensions extends \Twig_Extension
                                ->getRepository('UJMExoBundle:InteractionGraphic')
                                ->getInteractionGraphic($interId);
                 $inter['question'] = $interG[0];
+                $inter['maxScore'] = $this->getGraphicScoreMax($interG[0]);
             break;
 
             case "InteractionHole":
@@ -150,9 +151,14 @@ class TwigExtensions extends \Twig_Extension
     {
         return $this->exerciseSer->openMaxScore($interOpen);
     }
-    
+
     private function getHoleScoreMax($interHole)
     {
         return $this->exerciseSer->holeMaxScore($interHole);
+    }
+
+    private function getGraphicScoreMax($interG)
+    {
+        return $this->exerciseSer->graphicMaxScore($interG);
     }
 }

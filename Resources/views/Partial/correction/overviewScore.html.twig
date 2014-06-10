@@ -5,9 +5,10 @@
 
 <div>
     {% if penalty > 0 %}
-        {{ 'penalty' | trans }} : {{ penalty }}.<br/>
+        {{ 'penalty' | trans }} : {{ penalty }}.
+        <br/><hr/>
     {% endif %}
-    <hr/>
+
     {% if (inter.interaction.type == 'InteractionOpen') %}
        {{ 'not yet mark' | trans }}.
     {% else %}

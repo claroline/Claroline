@@ -1,0 +1,160 @@
+<label class="control-label col-md-3">{{ 'image' | trans }}</label>
+
+<br><br>
+
+<div id="Instructions" class="alert alert-info">
+    <a class="close" onclick="HideInstruction();">&times;</a>
+    <p>{{ 'resizeZone' | trans }}.</p>
+    <hr>
+    <p>{{ 'selectZone' | trans }}.</p>
+    <hr>
+    <p>{{ 'erase' | trans }}.</p>
+    <hr>
+    <p>{{ 'pointInstruction' | trans }}.</p>
+</div>
+
+<div>
+    {% if src == 'edit' %}
+        {% if app.user.id == entity.interaction.question.user.id %}
+            <a class="btn btn-primary" onClick="addPicture('{{ path('ujm_interactiongraphic_SavePic') }}');">
+                <i class="icon-picture"></i> {{ "add a new picture" | trans }}
+            </a>
+        {% else %}
+            {{ "only owner graphic" | trans }}
+        {% endif %}
+    {% else %}
+        <a class="btn btn-primary" onClick="addPicture('{{ path('ujm_interactiongraphic_SavePic') }}');">
+            <i class="icon-picture"></i> {{ "add a new picture" | trans }}
+        </a>
+    {% endif %}
+
+    <a class="btn btn-default" onclick="DisplayInstruction();" id="showInstruct">
+        <i class="icon-question"></i> {{ 'show Instructions' | trans }}
+    </a>
+
+    <a class="btn btn-default" onclick="HideInstruction();" id="hideInstruct">
+        <i class="icon-question"></i> {{ 'hide Instructions' | trans }}
+    </a>
+</div>
+
+<br><br>
+
+<div class="form-group row">
+    <label class="control-label col-md-3">{{ 'choose' | trans }}</label>
+    <div class="col-md-9">
+        <div class="input-group">
+            {{ form_widget(form.document) }}
+            <span class="input-group-btn">
+                <a class="btn btn-primary" id="LoadImg" onclick="LoadPic('{{ path('ujm_interactiongraphic_DisplayPic') }}', '{{ asset('uploads') }}', '{{ form.document.vars.id }}');" class="btn btn-primary">
+                    {{ 'select' | trans }}
+                </a>
+            </span>
+        </div>
+    </div>
+</div>
+
+<br><hr><br>
+
+<label class="control-label col-md-3">{{ 'selected Image' | trans }}</label>
+
+<br><br>
+
+<div id="Answer" style="position: relative;">
+
+    {% if src == 'edit' %}
+        <img src="{{ asset(entity.document.url) }}" width="{{entity.width}}" height="{{entity.height}}" id="AnswerImage"/>
+
+        {% set i = 0 %}
+        {% set allInfo = '' %}
+
+        {% for p in position %}
+            <div id="dragContainer{{ i }}">
+                <i class="icon-move" style="cursor: move; position: absolute; left: -10px; top: -15px;"></i>
+                <img src="{{ asset('bundles/ujmexo/images/graphic/circlew.png') }}" alt="AnswerZone{{ i }}" id="img{{ i }}"/>
+            </div>
+
+            {% set allInfo = p.shape~';'~p.color~';'~asset('bundles/ujmexo/images/graphic/')~';'~p.value~';'~p.size~';'~p.scoreCoords~'^'~allInfo %}
+
+            {% set i = i + 1 %}
+        {% endfor %}
+    {% endif %}
+</div>
+
+<br><hr><br>
+
+<div id="AnswerArray">
+    <label class="control-label col-md-3">{{ 'Score' | trans }}</label>
+
+    <br><br>
+
+    <table class="table table-striped table-bordered table-condensed">
+        <tr>
+            <th class="classic">{{ 'answer zone' | trans }}</th>
+            <th class="classic">{{ 'shape' | trans }}</th>
+            <th class="classic">{{ 'color' | trans }}</th>
+            <th class="classic">{{ 'points' | trans }}</th>
+        </tr>
+        <tr>
+            <td class="classic">
+                <img src="{{ asset('bundles/ujmexo/images/graphic/circlew.png') }}"
+                    id="movable"/>
+            </td>
+            <td class="classic">
+                <select class="form-control" id="shape" size="1" onchange="changezone('{{ asset('bundles/ujmexo/images/graphic/') }}');">
+                    <option value="circle"  selected>{{ 'cercle' | trans }}</option>
+                    <option value="square" >{{ 'square' | trans }}</option>
+                </select>
+            </td>
+            <td class="classic">
+                <select class="form-control" id="color" size="1" onchange="changezone('{{ asset('bundles/ujmexo/images/graphic/') }}');">
+                    <option value="white"    style="background-color:#FFFFFF;" selected> &nbsp;&nbsp;&nbsp; </option>
+                    <option value="red"      style="background-color:#FF0000;">          &nbsp;&nbsp;&nbsp; </option>
+                    <option value="blue"     style="background-color:#002FFF;">          &nbsp;&nbsp;&nbsp; </option>
+                    <option value="purple"   style="background-color:#8B008B;">          &nbsp;&nbsp;&nbsp; </option>
+                    <option value="green"    style="background-color:#008600;">          &nbsp;&nbsp;&nbsp; </option>
+                    <option value="orange"   style="background-color:#FF7A00;">          &nbsp;&nbsp;&nbsp; </option>
+                    <option value="yellow"   style="background-color:#FFFF09;">          &nbsp;&nbsp;&nbsp; </option>
+                </select>
+            </td>
+            <td class="classic">
+                <input class="form-control" type="TEXT" id="points" value="1" onblur="CheckScore('{{ 'wrongPoint' | trans }}', 'default');">
+            </td>
+        </tr>
+    </table>
+</div>
+
+<br><hr><br>
+
+<div id="AlreadyPlacedArray">
+    <label class="control-label col-md-3">{{ 'alreadyPlaced' | trans }}</label>
+
+    <br><br>
+
+    <table class="table table-striped table-bordered table-condensed">
+        <thead>
+            <tr>
+                <th class="classic">{{ 'response' | trans }}</th>
+                <th class="classic">{{ 'shape' | trans }}</th>
+                <th class="classic">{{ 'color' | trans }}</th>
+                <th class="classic">{{ 'points' | trans }}</th>
+            </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+</div>
+
+{% if src == 'edit' %}
+    <input type="hidden" id="info" name="info" value="{{i}}~{{allInfo}}"/>
+{% endif %}
+
+<input type="hidden" id="imagewidth" name="imagewidth" value="0"/>
+<input type="hidden" id="imageheight" name="imageheight" value="0"/>
+<input type="hidden" id="coordsZone" name="coordsZone" value=""/>
+
+<input class="form-control" type="hidden" name="exercise" value="{{ exoID }}"/>
+
+<input class="form-control" type="hidden" id="message" name="message" value="{{ 'inside' | trans }} ..."/>
+
+<div style="display: none;">{{ form_rest(form) }}</div>
+{{ form_errors(form) }}
