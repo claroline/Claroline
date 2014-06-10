@@ -29,6 +29,9 @@ class WidgetsManager
      */
     protected $formFactory;
 
+    /** @var array */
+    protected $widgetsConfig = null;
+
     /**
      * Constructor.
      *
@@ -50,15 +53,40 @@ class WidgetsManager
      */
     public function getWidgetsConfig()
     {
-        $widgetTypes = $this->entityManager->getRepository('IcapPortfolioBundle:Widget\WidgetType')->findAllInArray();
+        $widgetsConfig = $this->widgetsConfig;
 
-        $sortedWidgetTypes = array();
+        if (null === $this->widgetsConfig) {
+            $widgetTypes = $this->entityManager->getRepository('IcapPortfolioBundle:Widget\WidgetType')->findAllInArray();
 
-        foreach ($widgetTypes as $widgetType) {
-            $sortedWidgetTypes[$widgetType['name']] = $widgetType;
+            $sortedWidgetTypes = array();
+
+            foreach ($widgetTypes as $widgetType) {
+                $sortedWidgetTypes[$widgetType['name']] = $widgetType;
+            }
+
+            $this->widgetsConfig = $sortedWidgetTypes;
+            $widgetsConfig = $this->widgetsConfig;
         }
 
-        return $sortedWidgetTypes;
+        return $widgetsConfig;
+    }
+
+    /**
+     * @param string $widgetType
+     *
+     * @return bool
+     */
+    public function isWidgetTypeUnique($widgetType)
+    {
+        $widgetTypeIsUnique = false;
+
+        $widgetsConfig = $this->getWidgetsConfig();
+
+        if (isset($widgetsConfig[$widgetType]) && $widgetsConfig[$widgetType]['isUnique']) {
+            $widgetTypeIsUnique = true;
+        }
+
+        return $widgetTypeIsUnique;
     }
 
     /**
