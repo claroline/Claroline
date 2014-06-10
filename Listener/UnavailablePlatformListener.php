@@ -52,7 +52,7 @@ class UnavailablePlatformListener
     /**
      * @DI\Observe("kernel.response")
      */
-    public function onKernelRequest($event)
+    public function onKernelResponse(FilterResponseEvent $event)
     {
         if ($this->kernel->getEnvironment() === 'prod') {
             $token = $this->sc->getToken();
