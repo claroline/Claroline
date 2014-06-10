@@ -1,6 +1,6 @@
 <?php
 
-namespace Claroline\CoreBundle\Migrations\pdo_sqlsrv;
+namespace Claroline\CoreBundle\Migrations\drizzle_pdo_mysql;
 
 use Doctrine\DBAL\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
@@ -8,19 +8,19 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2014/05/26 11:12:03
+ * Generation date: 2014/06/10 03:21:08
  */
-class Version20140526111202 extends AbstractMigration
+class Version20140610152107 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
         $this->addSql("
             ALTER TABLE claro_user 
-            ADD expiration_date DATETIME2(6) NOT NULL
+            ADD expiration_date DATETIME DEFAULT NULL
         ");
         $this->addSql("
             ALTER TABLE claro_role 
-            ADD maxUsers INT
+            ADD maxUsers INT DEFAULT NULL
         ");
     }
 
@@ -28,11 +28,11 @@ class Version20140526111202 extends AbstractMigration
     {
         $this->addSql("
             ALTER TABLE claro_role 
-            DROP COLUMN maxUsers
+            DROP maxUsers
         ");
         $this->addSql("
             ALTER TABLE claro_user 
-            DROP COLUMN expiration_date
+            DROP expiration_date
         ");
     }
 }
