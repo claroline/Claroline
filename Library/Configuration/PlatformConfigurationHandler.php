@@ -58,8 +58,8 @@ class PlatformConfigurationHandler
         'facebook_client_secret' => null,
         'facebook_client_active' => null,
         'form_captcha' => true,
-        'platform_limit_date' => null,
-        'platform_init_date' => null,
+        'platform_limit_date' => 1451606461,//1 june 2016
+        'platform_init_date' => 1388534461, //1 june 2014
         'account_duration' => null
     );
 
