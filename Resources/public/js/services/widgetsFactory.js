@@ -13,7 +13,7 @@ portfolioApp
 
                 this.portfolioId = portfolioId;
 
-                var baseUrl = this.baseUrl + "/:portfolioId/:type/:id/:action";
+                var baseUrl = this.baseUrl + "/:portfolioId/:type/:id";
                 var widget = $resource(
                     baseUrl,
                     {
