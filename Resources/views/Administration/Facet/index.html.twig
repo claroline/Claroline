@@ -26,7 +26,99 @@
     <div class="panel-heading">
         <h3 class="panel-title">{{ 'facets'|trans({}, 'platform') }}</h3>
     </div>
-    {% for facet in facets %}
-        {{ facet.getName() }}
-    {% endfor %}
+    <div class="panel-body">
+        <ul class="nav nav-tabs">
+            {% for facet in facets %}
+                <li><a href="#{{ facet.getName() }}" data-toggle="tab">{{ facet.getName() }}</a></li>
+            {% endfor %}
+            <li id="add-facet-btn">
+                <a class="pointer-hand">
+                    <i class="icon-plus"></i>
+                </a>
+            </li>
+        </ul>
+
+        <div class="tab-content">
+            {% for facet in facets %}
+                <div class="tab-pane" id="{{ facet.getName() }}">
+                    <div class="panel-heading"></div>
+                    <div class="panel-body"></div>
+                    <div data-facet-id="{{ facet.getId() }}" class="panel-footer pointer hand text-center add-field-to-facet">
+                        <i class="icon-plus-sign"></i>
+                        {{ 'add_field_to_facet'|trans({}, 'platform') }}
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+
+    <script>
+
+        /******************/
+        /* FACET CREATION */
+        /******************/
+
+        $('#add-facet-btn').on('click', function(event) {
+            var url = Routing.generate('claro_admin_facet_form');
+            $.ajax({
+                url: url,
+                success: function(data, textStatus, jqXHR) {
+                    console.debug(data);
+                    window.Claroline.Modal.create(data).on('click', '#submit-facet-creation-form', function(event) {
+                        event.preventDefault();
+                        submitForm('form_facet_creation');
+                    });
+                }
+            })
+        });
+
+        /******************/
+        /* FIELD CREATION */
+        /******************/
+
+        $('#add-field-to-facet').on('click', function(event) {
+            var url = Routing.generate('claro_admin_field_form');
+            $.ajax({
+                url: url,
+                success: function(data, textStatus, jqXHR) {
+                    console.debug(data);
+//                    window.Claroline.Modal.create(data).on('click', '#', function(event) {
+//                        event.preventDefault();
+//                        submitForm('form_facet_creation');
+//                    });
+                }
+            })
+        });
+
+
+        function submitForm(formId) {
+            formData = new FormData(document.getElementById(formId));
+            url = $('#' + formId).attr('action');
+            console.debug(formData);
+            $.ajax({
+                url: url,
+                data: formData,
+                type: 'POST',
+                processData: false,
+                contentType: false,
+                success: function() {
+                    addTab('YOLO');
+                }
+            });
+        }
+
+        function addFacet(name) {
+            alert(name);
+        }
+
+        function addField(facetId, name) {
+
+        }
+
+    </script>
 {% endblock %}

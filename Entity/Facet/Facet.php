@@ -28,14 +28,14 @@ class Facet {
     protected $id;
 
     /**
-     * @ORM\Column()
+     * @ORM\Column(unique=true)
      */
     protected $name;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="integer", name="position")
      */
-    protected $order;
+    protected $position;
 
     /**
      * @ORM\OneToMany(
@@ -76,13 +76,13 @@ class Facet {
         $this->fieldsFacet->add($fieldFacet);
     }
 
-    public function setOrder($order)
+    public function setPosition($position)
     {
-        $this->order = $order;
+        $this->position = $position;
     }
 
-    public function getOrder()
+    public function getPosition()
     {
-        return $this->order;
+        return $this->position;
     }
 } 

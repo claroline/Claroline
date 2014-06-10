@@ -45,7 +45,7 @@ class FacetManager
     {
         $facet = new Facet();
         $facet->setName($name);
-        $facet->setOrder($this->om->count('Claroline\CoreBundle\Entity\Facet\Facet'));
+        $facet->setPosition($this->om->count('Claroline\CoreBundle\Entity\Facet\Facet'));
         $this->om->persist($facet);
         $this->om->flush();
     }
@@ -71,7 +71,7 @@ class FacetManager
         $order = 0;
 
         foreach ($facets as $facet) {
-            $facet->setOrder($order);
+            $facet->setPosition($order);
             $order++;
             $this->om->persist($facet);
         }
@@ -88,7 +88,7 @@ class FacetManager
         $order = 0;
 
         foreach ($fields as $field) {
-            $field->setOrder($order);
+            $field->setPosition($order);
             $order++;
             $this->om->persist($field);
         }
@@ -109,7 +109,7 @@ class FacetManager
         $fieldFacet->setFacet($facet);
         $fieldFacet->setName($name);
         $fieldFacet->setType($type);
-        $fieldFacet->setOrder($this->om->count('Claroline\CoreBundle\Entity\Facet\FieldFacet'));
+        $fieldFacet->setPosition($this->om->count('Claroline\CoreBundle\Entity\Facet\FieldFacet'));
         $this->om->persist($facet);
         $this->om->flush();
     }
@@ -193,7 +193,7 @@ class FacetManager
      */
     public function moveFacetDown(Facet $facet)
     {
-        $currentPosition = $facet->getOrder();
+        $currentPosition = $facet->setPosition();
         $maxPosition = $this->om->count('Claroline\CoreBundle\Entity\Facet\Facet');
     }
 
@@ -231,7 +231,7 @@ class FacetManager
     {
         return $this->om
             ->getRepository('ClarolineCoreBundle:Facet\FieldFacet')
-            ->findBy(array('facet' => $facet), array('order' => 'ASC'));
+            ->findBy(array('facet' => $facet), array('position' => 'ASC'));
     }
 
     /**
@@ -241,6 +241,6 @@ class FacetManager
     {
         return $this->om
             ->getRepository('ClarolineCoreBundle:Facet\Facet')
-            ->findBy(array(), array('order' => 'ASC'));
+            ->findBy(array(), array('position' => 'ASC'));
     }
 } 

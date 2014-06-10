@@ -18,6 +18,12 @@ use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 use Claroline\CoreBundle\Manager\ToolManager;
 use Claroline\CoreBundle\Manager\FacetManager;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Symfony\Component\Form\FormFactoryInterface;
+use Claroline\CoreBundle\Entity\Facet\Facet;
+use Claroline\CoreBundle\Form\FacetType;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 class FacetController extends Controller
 {
@@ -31,20 +37,26 @@ class FacetController extends Controller
      *     "router"       = @DI\Inject("router"),
      *     "sc"           = @DI\Inject("security.context"),
      *     "toolManager"  = @DI\Inject("claroline.manager.tool_manager"),
-     *     "facetManager" = @DI\Inject("claroline.manager.facet_manager")
+     *     "facetManager" = @DI\Inject("claroline.manager.facet_manager"),
+     *     "formFactory"  = @DI\Inject("form.factory"),
+     *     "request"      = @DI\Inject("request")
      * })
      */
     public function __construct(
         RouterInterface $router,
         SecurityContextInterface $sc,
         ToolManager $toolManager,
-        FacetManager $facetManager
+        FacetManager $facetManager,
+        FormFactoryInterface $formFactory,
+        Request $request
     )
     {
         $this->sc            = $sc;
         $this->toolManager   = $toolManager;
         $this->userAdminTool = $this->toolManager->getAdminToolByName('user_management');
         $this->facetManager  = $facetManager;
+        $this->formFactory   = $formFactory;
+        $this->request       = $request;
     }
 
     /**
@@ -64,11 +76,47 @@ class FacetController extends Controller
     }
 
     /**
-     * Ajax method for creating a new facet
+     * Returns the facet creation form in a modal
+     *
+     * @EXT\Route("/form",
+     *      name="claro_admin_facet_form",
+     *      options = {"expose"=true}
+     * )
+     * @EXT\Template
+     */
+    public function facetFormAction()
+    {
+        $this->checkOpen();
+        $form = $this->formFactory->create(new FacetType(), new Facet());
+
+        return array('form' => $form->createView());
+    }
+
+    /**
+     * Returns the facet creation form in a modal
+     *
+     * @EXT\Route("/create",
+     *      name="claro_admin_facet_create",
+     *      options = {"expose"=true}
+     * )
      */
     public function createFacetAction()
     {
         $this->checkOpen();
+
+        $form = $this->formFactory->create(new FacetType(), new Facet());
+        $form->handleRequest($this->request);
+
+        if ($form->isValid()) {
+            $this->facetManager->createFacet($form->get('name')->getData());
+
+            return new Response('success', 204);
+        }
+
+       return $this->render(
+           'ClarolineCoreBundle:Administration\Facet:facetForm.html.twig',
+           array('form' => $form->createView())
+       );
     }
 
     /**

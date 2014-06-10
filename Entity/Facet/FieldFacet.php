@@ -36,7 +36,7 @@ class FieldFacet
     protected $id;
 
     /**
-     * @ORM\Column()
+     * @ORM\Column(unique=true)
      */
     protected $name;
 
@@ -64,9 +64,9 @@ class FieldFacet
     protected $fieldsFacetValue;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="integer", name="position")
      */
-    protected $order;
+    protected $position;
 
     public function __construct()
     {
@@ -124,13 +124,13 @@ class FieldFacet
         $this->fieldsFacetValue->add($fieldFacetValue);
     }
 
-    public function setOrder($order)
+    public function setPosition($position)
     {
-        $this->order = $order;
+        $this->position = $position;
     }
 
     public function getOrder()
     {
-        return $this->order;
+        return $this->position;
     }
 }
