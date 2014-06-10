@@ -59,17 +59,17 @@
                         </a>
                     {% else %}
                         {% set backPage = 'default' %}
+                        {% if correction.editable and byUserMod == 0 %}
+                            <span class="text-muted glyphicon icon-group" data-toggle="tooltip"
+                                  data-original-title="{{ 'created by a manager'|trans({}, 'icap_dropzone') }}">
+                            </span>
+                        {% endif %}
                         <a href="{{ path('icap_dropzone_drops_detail_correction', {'resourceId': dropzone.id, 'correctionId': correction.id, 'state': viewState_var}) }}"
                            class="" data-toggle="tooltip"
                            data-original-title="{{ 'See correction'|trans({},'icap_dropzone') }}">
-                            {% if correction.editable and byUserMod == 0 %}
-                                <span class="text-muted glyphicon icon-group" data-toggle="tooltip"
-                                      data-original-title="{{ 'created by a manager'|trans({}, 'icap_dropzone') }}">
-                                        </span>
-                            {% endif %}
 
 
-                            {% if(byUserMod == 0) %}
+                        {% if(byUserMod == 0) %}
                                 {{ correction.user.firstName|capitalize ~' '~ correction.user.lastName|upper }}
                             {% else %}
                                 {{ 'Correction number %num%'|trans({'%num%': loop.index}, 'icap_dropzone') }}
