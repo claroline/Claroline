@@ -92,7 +92,7 @@ class WidgetController extends BaseController
             $widget = $abstractWidgetRepository->findOneByTypeAndPortfolio($type, $portfolio);
         }
         else {
-            $widget = $abstractWidgetRepository->findOne($widgetId);
+            $widget = $abstractWidgetRepository->find($widgetId);
         }
 
         $data = $this->getWidgetsManager()->handle($widget, $type, $request->request->all());
@@ -119,7 +119,7 @@ class WidgetController extends BaseController
             $widget = $abstractWidgetRepository->findOneByTypeAndPortfolio($type, $portfolio);
         }
         else {
-            $widget = $abstractWidgetRepository->findOne($widgetId);
+            $widget = $abstractWidgetRepository->find($widgetId);
         }
 
         $response = new JsonResponse();
