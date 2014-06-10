@@ -1,8 +1,9 @@
 {% extends "IcapDropzoneBundle:Drop:dropsByBase.html.twig" %}
 
-{% block dropzone_content_drops_by_reported %}  
-            <a href="#" class="btn btn-default btn-xs active">{{ 'sort by reported'|trans({}, 'icap_dropzone') }}</a>
-        {% endblock %}
+{% block dropzone_content_drops_by_reported %}
+    <a href="#" class="btn btn-default btn-xs active" data-toggle="tooltip" title=""
+       data-original-title="{{ 'only reported drops'|trans({}, 'icap_dropzone') }}">{{ 'sort by reported'|trans({}, 'icap_dropzone') }}</a>
+{% endblock %}
 
 {% block dropzone_content_drops_by_paginate_part %}
         {% if pager.haveToPaginate %}

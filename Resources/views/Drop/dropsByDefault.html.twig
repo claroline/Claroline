@@ -1,5 +1,6 @@
 {% extends "IcapDropzoneBundle:Drop:dropsByBase.html.twig" %}
 
 {% block dropzone_content_drops_by_default %}
-            <a href="#" class="btn btn-default btn-xs active">{{ 'default sort'|trans({}, 'icap_dropzone') }}</a>
+    <a href="#" class="btn btn-default btn-xs active" data-toggle="tooltip" title=""
+       data-original-title="{{ 'Sorted by date with reported drops first'|trans({}, 'icap_dropzone') }}">{{ 'default sort'|trans({}, 'icap_dropzone') }}</a>
 {% endblock %}
