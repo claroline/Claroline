@@ -288,7 +288,7 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="expiration_date", type="datetime")
+     * @ORM\Column(name="expiration_date", type="datetime", nullable=true)
      */
     protected $expirationDate;
 
@@ -866,7 +866,11 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
                 return true;
             }
         }
-        return ($this->expirationDate >= new \DateTime()) ? true: false;
+
+        /** @var \DateTime */
+        $expDate = $this->getExpirationDate();
+
+        return ($this->getExpirationDate() >= new \DateTime()) ? true: false;
     }
 
     public function isAccountNonLocked()
@@ -986,7 +990,7 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
 
     public function getExpirationDate()
     {
-        return $this->expirationDate;
+        return $this->expirationDate !== null ? $this->expirationDate: new \DateTime(2100-01-01);
     }
 
     public function getFieldsFacetValue()
