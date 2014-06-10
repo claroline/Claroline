@@ -3,6 +3,7 @@
 {% else %}
     {%  set viewState_var = 'preview' %}
 {% endif %}
+{##}
 <div class="table-responsive">
     <table class="table table-striped table-hover">
         <thead>
@@ -52,11 +53,21 @@
                         {% if  backUserId is not defined %}
                             {% set backUserId = -1 %}
                         {% endif %}
-                        <a href="{{ path('icap_dropzone_drops_detail_correction_standard', {'resourceId': dropzone.id, 'correctionId': correction.id,'state':'show', 'backUserId':backUserId}) }}"
+                        {% if  correction.drop is defined and correction.drop != null %}
+                            <a href="{{ path('icap_dropzone_drops_detail_correction_standard', {'resourceId': dropzone.id, 'correctionId': correction.id,'state':'show', 'backUserId':backUserId}) }}"
                            class="" data-toggle="tooltip"
                            data-original-title="{{ 'See correction'|trans({},'icap_dropzone') }}">
+
                             {{ correction.drop.user.firstName|capitalize ~' '~ correction.drop.user.lastName|upper }}
                         </a>
+                        {% else %}
+                            {# case where a drop was deleted ( we keep the corrections ) #}
+                            <span class="" data-toggle="tooltip"
+                                  data-original-title="{{ 'The drop was deleted by administator'|trans({},'icap_dropzone') }}">
+
+                               {{ 'Deleted drop'|trans({},'icap_dropzone') }}
+                            </span>
+                        {% endif %}
                     {% else %}
                         {% set backPage = 'default' %}
                         {% if correction.editable and byUserMod == 0 %}
