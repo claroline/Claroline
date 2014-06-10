@@ -309,3 +309,5 @@ dropzone_startedNotValidatedYet_infos: "Started but not validated drops are drop
 Close unterminated drops: "Close unterminated drops"
 Sorted by date with reported drops first: "Sorted by date with reported drops first"
 only reported drops: "only reported drops"
+The drop was deleted by administator: "The drop was deleted by administator"
+Deleted drop: "Deleted drop"

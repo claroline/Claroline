@@ -308,3 +308,5 @@ dropzone_startedNotValidatedYet_infos: "Ces copies concernent les personnes qui 
 Close unterminated drops: "Valider les copies non terminées"
 Sorted by date with reported drops first: "Tri par date avec les copies signalées en premier."
 only reported drops: "Seulement les copies signalées"
+The drop was deleted by administator: "La copie a été supprimée par un administrateur"
+Deleted drop: "Copie supprimée"
