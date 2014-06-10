@@ -14,7 +14,7 @@ namespace Claroline\CoreBundle\Entity\Activity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\Activity\PastEvaluationRepository")
  * @ORM\Table(name="claro_activity_past_evaluation")
  */
 class PastEvaluation

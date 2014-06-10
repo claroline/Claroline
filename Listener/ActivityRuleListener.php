@@ -47,6 +47,7 @@ class ActivityRuleListener
     public function onLog(LogCreateEvent $event)
     {
         $log = $event->getLog();
+        $dateLog = $log->getDateLog();
         $action = $log->getAction();
         $resourceNode = $log->getResourceNode();
 
@@ -59,22 +60,36 @@ class ActivityRuleListener
 
                 foreach ($activityRules as $activityRule) {
                     $activityParams = $activityRule->getActivityParameters();
+                    $activityNode = $activityParams->getActivity()->getResourceNode();
+                    $accessFrom = $activityNode->getAccessibleFrom();
+                    $accessUntil = $activityNode->getAccessibleUntil();
 
-                    $nbRules = is_null($activityParams->getRules()) ?
-                        0 :
-                        count($activityParams->getRules());
+                    if ((is_null($accessFrom) || $dateLog >= $accessFrom)
+                        && (is_null($accessUntil) || $dateLog <= $accessUntil)) {
 
-                    if (!is_null($user) && $nbRules > 0) {
-                        $resources = $this->ruleValidator->validate(
-                            $activityParams,
-                            $user
-                        );
+                        $nbRules = is_null($activityParams->getRules()) ?
+                            0 :
+                            count($activityParams->getRules());
 
-                        if(0 < $resources['validRules']
-                            && $resources['validRules'] >= $nbRules) {
+                        if (!is_null($user) && $nbRules > 0) {
+                            $activityStatus = 'unknown';
+                            $rulesLogs = $this->ruleValidator->validate(
+                                $activityParams,
+                                $user
+                            );
 
-                            $this->activityManager
-                                ->updateEvaluation($user, $activityParams, $log);
+                            if(isset($rulesLogs['validRules'])
+                                && $rulesLogs['validRules'] >= $nbRules) {
+
+                                $activityStatus = 'completed';
+                            }
+
+                            $this->activityManager->updateEvaluation(
+                                $user,
+                                $activityParams,
+                                $log,
+                                $activityStatus
+                            );
                         }
                     }
                 }

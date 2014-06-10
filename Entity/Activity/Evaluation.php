@@ -15,7 +15,15 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\Activity\EvaluationRepository")
- * @ORM\Table(name="claro_activity_evaluation")
+ * @ORM\Table(
+ *     name="claro_activity_evaluation",
+ *     uniqueConstraints={
+ *         @ORM\UniqueConstraint(
+ *             name="user_activity_unique_evaluation",
+ *             columns={"user_id", "activity_parameters_id"}
+ *         )
+ *     }
+ * )
  */
 class Evaluation
 {

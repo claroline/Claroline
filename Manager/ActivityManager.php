@@ -29,6 +29,7 @@ class ActivityManager
 {
     private $activityRuleRepo;
     private $evaluationRepo;
+    private $pastEvaluationRepo;
     private $persistence;
     private $resourceManager;
 
@@ -40,12 +41,19 @@ class ActivityManager
      *     "resourceManager"    = @Inject("claroline.manager.resource_manager")
      * })
      */
-    public function __construct(ObjectManager $persistence, ResourceManager $resourceManager)
+    public function __construct(
+        ObjectManager $persistence,
+        ResourceManager $resourceManager
+    )
     {
         $this->persistence = $persistence;
         $this->resourceManager = $resourceManager;
-        $this->activityRuleRepo = $persistence->getRepository('ClarolineCoreBundle:Activity\ActivityRule');
-        $this->evaluationRepo = $persistence->getRepository('ClarolineCoreBundle:Activity\Evaluation');
+        $this->activityRuleRepo = $persistence
+            ->getRepository('ClarolineCoreBundle:Activity\ActivityRule');
+        $this->evaluationRepo = $persistence
+            ->getRepository('ClarolineCoreBundle:Activity\Evaluation');
+        $this->pastEvaluationRepo = $persistence
+            ->getRepository('ClarolineCoreBundle:Activity\Evaluation');
     }
 
     /**
@@ -117,10 +125,12 @@ class ActivityManager
     public function updateEvaluation(
         User $user,
         ActivityParameters $activityParams,
-        Log $log
+        Log $log,
+        $activityStatus
     )
     {
         $evaluationType = $activityParams->getEvaluationType();
+        $status = 'unknown';
 
         $evaluation = $this->evaluationRepo
             ->findEvaluationByUserAndActivityParams($user, $activityParams);
@@ -133,6 +143,8 @@ class ActivityManager
 
             $this->persistence->persist($firstEvaluation);
             $this->persistence->flush();
+        } else {
+            $status = $evaluation->getStatus();
         }
     }
 
@@ -166,6 +178,24 @@ class ActivityManager
     )
     {
         return $this->evaluationRepo->findEvaluationByUserAndActivityParams(
+            $user,
+            $activityParams,
+            $executeQuery
+        );
+    }
+
+
+    /******************************************
+     * Access to PastEvaluationRepository methods *
+     ******************************************/
+
+    public function getPastEvaluationsByUserAndActivityParams(
+        User $user,
+        ActivityParameters $activityParams,
+        $executeQuery = true
+    )
+    {
+        return $this->evaluationRepo->findPastEvaluationsByUserAndActivityParams(
             $user,
             $activityParams,
             $executeQuery

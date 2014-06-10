@@ -124,7 +124,7 @@ class Validator
             if ($usedConstraint->validate()) {
                 $validatedConstraints++;
             }
-            }
+        }
 
         return ($validatedConstraints === $nbConstraints) ? $associatedLogs : false;
     }
