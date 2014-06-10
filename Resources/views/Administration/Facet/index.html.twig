@@ -24,14 +24,9 @@
 
 {% block section_content %}
     <div class="panel-heading">
-        <h3 class="panel-title">{{ 'users_management'|trans({}, 'platform') }}</h3>
+        <h3 class="panel-title">{{ 'facets'|trans({}, 'platform') }}</h3>
     </div>
-    <div class="list-group">
-        <a class="list-group-item" href="#" id="link_add_user">
-            {{ 'create_facet'|trans({}, 'platform') }}
-        </a>
-        <a class="list-group-item" href="" id="link_list_user">
-            {{ 'list_facet'|trans({}, 'platform') }}
-        </a>
-    </div>
+    {% for facet in facets %}
+        {{ facet.getName() }}
+    {% endfor %}
 {% endblock %}

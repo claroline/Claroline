@@ -17,29 +17,34 @@ use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 use Claroline\CoreBundle\Manager\ToolManager;
+use Claroline\CoreBundle\Manager\FacetManager;
 
 class FacetController extends Controller
 {
     private $router;
     private $toolManager;
     private $userAdminTool;
+    private $facetManager;
 
     /**
      * @DI\InjectParams({
-     *     "router"      = @DI\Inject("router"),
-     *     "sc"          = @DI\Inject("security.context"),
-     *     "toolManager" = @DI\Inject("claroline.manager.tool_manager")
+     *     "router"       = @DI\Inject("router"),
+     *     "sc"           = @DI\Inject("security.context"),
+     *     "toolManager"  = @DI\Inject("claroline.manager.tool_manager"),
+     *     "facetManager" = @DI\Inject("claroline.manager.facet_manager")
      * })
      */
     public function __construct(
         RouterInterface $router,
         SecurityContextInterface $sc,
-        ToolManager $toolManager
+        ToolManager $toolManager,
+        FacetManager $facetManager
     )
     {
         $this->sc            = $sc;
         $this->toolManager   = $toolManager;
         $this->userAdminTool = $this->toolManager->getAdminToolByName('user_management');
+        $this->facetManager  = $facetManager;
     }
 
     /**
@@ -53,8 +58,9 @@ class FacetController extends Controller
     public function indexAction()
     {
         $this->checkOpen();
+        $facets = $this->facetManager->getFacets();
 
-        return array();
+        return array('facets' => $facets);
     }
 
     /**

@@ -56,6 +56,7 @@ class UnavailablePlatformListener
         }
 
         $now = time();
+
         $minDate = $this->ch->getParameter('platform_init_date');
         $maxDate = $this->ch->getParameter('platform_limit_date');
 
