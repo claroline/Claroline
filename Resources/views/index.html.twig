@@ -21,19 +21,19 @@
 {% endblock %}
 
 {% block section_content %}
-    <div class="panel-heading">
-        <h3 class="panel-title">{{ 'paths' | trans({}, 'innova_tools') }}</h3>
+    <div class="panel-heading relative">
+        <h3 class="panel-title">
+            {{ 'paths' | trans({}, 'innova_tools') }}
+        </h3>
+
+        <a href="{{ path('innova_path_editor_new', {workspaceId: workspace.id}) }}" class="btn btn-sm btn-default float-right-top">
+            <span class="icon-plus"></span>
+            {{ 'create_path' | trans({}, 'innova_tools') }}
+        </a>
     </div>
 
     <div class="panel-body">
         <div>{{ macros.flashBox() }}</div>
-
-        <a href="{{ path('innova_path_editor_new', {workspaceId: workspace.id}) }}" class="btn btn-default">
-            <span class="icon-plus"></span>
-            {{ 'create_path' | trans({}, 'innova_tools') }}
-        </a>
-
-        <hr />
 
         {% if paths["me"] is empty and paths["others"] is empty  %}
 

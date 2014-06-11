@@ -1,15 +1,13 @@
 <div class="panel panel-default">
-    <div class="panel-heading">
+    <div class="panel-heading relative">
         <h3 class="panel-title">{{ 'step2'|trans({}, 'path_editor') }}</h3>
+
+        <a class="btn btn-sm btn-default float-right-top" data-pageslide="left" data-ps-speed="0.5" href="#templates-sidebar">
+            <span class="icon-download-alt"></span> {{ 'open_templates'|trans({}, 'path_editor') }}
+        </a>
     </div>
     
     <div class="panel-body">
-        <div class="action-bar">
-            <a class="btn btn-sm btn-default" data-pageslide="left" data-ps-speed="0.5" href="#templates-sidebar">
-                <span class="icon-download-alt"></span> {{ 'open_templates'|trans({}, 'path_editor') }}
-            </a>
-        </div>
-        
         <ul class="tree">
             <li data-ng-repeat="step in path.steps" data-ng-include="'{{ asset('bundles/innovapath/angularjs/Step/Partial/tree-item.html') }}'" onload="isRootNode = ($index == 0)"></li>
         </ul>
