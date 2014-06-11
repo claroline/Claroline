@@ -28,6 +28,6 @@
             </div>
         </form>
         <a href="{{path('claro_admin_competence_delete', {competenceId:cpt.getId()})}}" class="btn btn-primary">{{ 'delete'|trans({}, 'platform') }}</a>
-        <a href="{{path('claro_admin_competence_link', {competenceId:cpt.getId()})}}" class="btn btn-primary">{{ 'link'|trans({}, 'platform') }}</a>
+        <a href="{{path('claro_admin_competence_link_form', {competenceId:cpt.getId(), rootId: root.getId()})}}" class="btn btn-primary">{{ 'link'|trans({}, 'platform') }}</a>
     </div>
 {% endblock %}

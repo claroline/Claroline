@@ -40,10 +40,6 @@ class CompetenceController {
     private $request;
     /**
      * @DI\InjectParams({
-     *     "userManager"        = @DI\Inject("claroline.manager.user_manager"),
-     *     "roleManager"        = @DI\Inject("claroline.manager.role_manager"),
-     *     "groupManager"       = @DI\Inject("claroline.manager.group_manager"),
-     *     "eventDispatcher"    = @DI\Inject("claroline.event.event_dispatcher"),
      *     "formFactory"        = @DI\Inject("claroline.form.factory"),
      *     "request"            = @DI\Inject("request"),
      *     "router"             = @DI\Inject("router"),
@@ -51,20 +47,12 @@ class CompetenceController {
      * })
      */
     public function __construct(
-        UserManager $userManager,
-        RoleManager $roleManager,
-        GroupManager $groupManager,
-        StrictDispatcher $eventDispatcher,
         FormFactory $formFactory,
         Request $request,
         RouterInterface $router,
         CompetenceManager $cptmanager
     )
     {
-        $this->userManager = $userManager;
-        $this->roleManager = $roleManager;
-        $this->groupManager = $groupManager;
-        $this->eventDispatcher = $eventDispatcher;
         $this->formFactory = $formFactory;
         $this->request = $request;
         $this->router = $router;
@@ -72,7 +60,7 @@ class CompetenceController {
     }
 
      /**
-     * @EXT\Route("/show", name="claro_admin_competences")
+     * @EXT\Route("/show", name="claro_admin_competences", options={"expose"=true})
      * @EXT\Method("GET")
      * @EXT\Template("ClarolineCoreBundle:Administration:competences.html.twig")
      *
@@ -203,12 +191,17 @@ class CompetenceController {
     }
 
     /**
-     * @EXT\Route("/link/{competenceId}", name="claro_admin_competence_link")
+     * @EXT\Route("/link/{competenceId}/{rootId}", name="claro_admin_competence_link_form")
      * @EXT\Method("GET")
      * @EXT\ParamConverter(
      *      "competence",
      *      class="ClarolineCoreBundle:Competence\Competence",
      *      options={"id" = "competenceId", "strictId" = true}
+     * )
+     * @EXT\ParamConverter(
+     *      "root",
+     *      class="ClarolineCoreBundle:Competence\Competence",
+     *      options={"id" = "rootId", "strictId" = true}
      * )
      * @EXT\Template("ClarolineCoreBundle:Administration:competenceLinkForm.html.twig")
      * @param Competence $competence
@@ -217,22 +210,51 @@ class CompetenceController {
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function linkCompetenceFormAction($competence)
+    public function linkCompetenceFormAction($competence, $root)
     {
     	$competences = $this->cptmanager->getTransversalCompetences();
-        $form = $this->formFactory->create(FormFactory::TYPE_COMPETENCE_LINK, array($competences, true));
+        $form = $this->formFactory->create(FormFactory::TYPE_COMPETENCE_LINK, array($competences, true, $root, $competence));
     	
         return array(
         	'form' => $form->createView(),
         	'cpt' => $competence,
+        	'root' => $root
         );
-/*
-    	if($this->cptmanager->link($competence)) {
-    	    return new RedirectResponse(
-            $this->router->generate('claro_admin_competences')
-        );
-        	} else {
-    		throw new \Exception("no written", 1);*/
-    	}
+    }
 
+    /**
+     * @EXT\Route("/link/{rootId}/{parentId}/add", name="claro_admin_competence_link",options={"expose"=true})
+     * @EXT\Method("POST")
+     * @EXT\ParamConverter(
+     *      "root",
+     *      class="ClarolineCoreBundle:Competence\Competence",
+     *      options={"id" = "rootId", "strictId" = true}
+     * )
+     * @EXT\ParamConverter(
+     *     "competences",
+     *      class="ClarolineCoreBundle:Competence\Competence",
+     *      options={"multipleIds" = true, "name" = "competences"}
+     * )
+     * @EXT\ParamConverter(
+     *      "parent",
+     *      class="ClarolineCoreBundle:Competence\Competence",
+     *      options={"id" = "parentId", "strictId" = true}
+     * )
+     * @EXT\Template("ClarolineCoreBundle:Administration:competenceLinkForm.html.twig")
+     * @param Competence $competences
+     *
+     * link a competence
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function linkCompetenceAction(array $competences, $parent, $root)
+    {
+    	
+    	if($this->cptmanager->link($competences,$parent, $root)) {
+    	   return new Response(200);
+     
+        	} else {
+    		throw new \Exception("no written", 1);
+    	}
+    }
 } 

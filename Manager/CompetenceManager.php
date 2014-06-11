@@ -133,9 +133,19 @@ class CompetenceManager {
         return true;
     }
 
-    public function link(competence $competence)
+    public function link(array $competences, Competence $parent, Competence $root )
     {
-    	
+    	$this->om->startFlushSuite();
+    	foreach ($competences as $c) {
+	    	$cptHierarchy = $this->om->factory('Claroline\CoreBundle\Entity\Competence\CompetenceHierarchy');
+			$cptHierarchy->setCompetence($c);
+			$cptHierarchy->setParent($parent);
+			$cptHierarchy->setRoot($root);
+			$this->om->persist($cptHierarchy);
+    	}
+    	$this->om->endFlushSuite();
+
+		return true;
     }
 
     private function checkUserIsAllowed($permission, AbstractWorkspace $workspace)

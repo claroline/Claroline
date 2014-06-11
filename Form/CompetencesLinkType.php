@@ -20,12 +20,15 @@ class CompetencesLinkType extends AbstractType {
 
     private $competences;
     private $isAdmin;
-    private $langs;
+    private $root;
+    private $parent;
 
-    public function __construct(array $competences, $isAdmin)
+    public function __construct(array $competences, $isAdmin, $root, $parent)
     {
         $this->competences = new ArrayCollection($competences);
         $this->isAdmin = $isAdmin;
+        $this->root = $root;
+        $this->parent = $parent;
     }
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
@@ -40,8 +43,10 @@ class CompetencesLinkType extends AbstractType {
             'multiple' => true,
             'property' => 'name',
             'label' => 'competences'
-        )
+        ) 
     );
+       $builder->add('root','hidden', array('data' => $this->root->getId()));
+       $builder->add('parent','hidden', array('data' => $this->parent->getId()));
     }
 
     public function getName()

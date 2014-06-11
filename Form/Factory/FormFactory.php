@@ -202,7 +202,7 @@ class FormFactory
         ),
         self::TYPE_COMPETENCE_LINK => array(
             'formType' => 'Claroline\CoreBundle\Form\CompetencesLinkType',
-            'entity' => 'Claroline\CoreBundle\Entity\Competence\Competence'
+            //'entity' => 'Claroline\CoreBundle\Entity\Competence\Competence'
         )
     );
 
