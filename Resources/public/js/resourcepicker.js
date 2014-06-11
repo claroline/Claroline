@@ -107,8 +107,6 @@
      */
     picker.callBack = function (nodes)
     {
-        console.log(nodes);
-
         var nodeId = _.keys(nodes)[0];
         var name = nodes[_.keys(nodes)][0];
         var type = nodes[_.keys(nodes)][1];
@@ -159,7 +157,12 @@
                 $('.input-group input', element).val(name);
             }
 
-            $(this).addClass('resource-picker-done');
+            if ($(this).next().hasClass('help-block')) {
+                $(this).next().appendTo(element);
+            }
+
+            $(this).addClass('resource-picker-done').addClass('hide');
+
             picker.checkView($('.input-group', element));
         });
     };
