@@ -842,4 +842,6 @@ class DropController extends DropzoneBaseController
             )
         );
     }
+
+
 }
