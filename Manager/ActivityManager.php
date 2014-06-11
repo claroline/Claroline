@@ -126,11 +126,28 @@ class ActivityManager
         User $user,
         ActivityParameters $activityParams,
         Log $log,
+        $rulesLogs,
         $activityStatus
     )
     {
         $evaluationType = $activityParams->getEvaluationType();
-        $status = 'unknown';
+        $maxTimeAllowed = $activityParams->getMaxDuration();
+        $maxAttempts = $activityParams->getMaxAttempts();
+
+        $logDetails = $log->getDetails();
+        $duration = isset($logDetails['duration']) ?
+            $logDetails['duration'] :
+            null;
+        $totalTime = is_null($duration) ? 0 : $duration;
+        $score = isset($logDetails['result']) ?
+            $logDetails['result'] :
+            null;
+        $scoreMin = isset($logDetails['scoreMin']) ?
+            $logDetails['scoreMin'] :
+            0;
+        $scoreMax = isset($logDetails['scoreMax']) ?
+            $logDetails['scoreMax'] :
+            null;
 
         $evaluation = $this->evaluationRepo
             ->findEvaluationByUserAndActivityParams($user, $activityParams);
@@ -139,12 +156,23 @@ class ActivityManager
             $firstEvaluation = new Evaluation();
             $firstEvaluation->setUser($user);
             $firstEvaluation->setActivityParameters($activityParams);
-            $firstEvaluation->setType($activityParams->getEvaluationType());
+            $firstEvaluation->setType($evaluationType);
+            $firstEvaluation->setAttemptsCount(1);
+            $firstEvaluation->setLog($log);
+            $firstEvaluation->setStatus($activityStatus);
+            $firstEvaluation->setNumScore($score);
+            $firstEvaluation->setScoreMin($scoreMin);
+            $firstEvaluation->setScoreMax($scoreMax);
+            $firstEvaluation->setDuration($duration);
+            $firstEvaluation->setAttemptsDuration($totalTime);
 
             $this->persistence->persist($firstEvaluation);
             $this->persistence->flush();
         } else {
             $status = $evaluation->getStatus();
+            $evaluation->setAttemptsCount($evaluation->getAttemptsCount() + 1);
+
+            // Archiver la tentative
         }
     }
 

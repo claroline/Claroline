@@ -14,7 +14,7 @@ namespace Claroline\CoreBundle\Rule\Constraints;
 use Claroline\CoreBundle\Rule\Entity\Rule;
 use Doctrine\ORM\QueryBuilder;
 
-class ResourceAccessDateConstraint extends AbstractConstraint
+class RuleActiveDateConstraint extends AbstractConstraint
 {
     /**
      * @return bool
@@ -31,7 +31,7 @@ class ResourceAccessDateConstraint extends AbstractConstraint
      */
     public function isApplicableTo(Rule $rule)
     {
-        return ($rule->getAdditionalDatas() === 'resource_access_date');
+        return ($rule->getAdditionalDatas() === 'rule_active_date');
     }
 
     /**
@@ -41,25 +41,26 @@ class ResourceAccessDateConstraint extends AbstractConstraint
      */
     public function getQuery(QueryBuilder $queryBuilder)
     {
-        $resourceNode = $this->getRule()->getResource();
-        $accessibleFrom = $resourceNode->getAccessibleFrom();
-        $accessibleUntil = $resourceNode->getAccessibleUntil();
+        $rule = $this->getRule();
+        $activeFrom = $rule->getActiveFrom();
+        $activeUntil = $rule->getActiveUntil();
+
         $resultQueryBuilder = $queryBuilder;
 
-        if (!is_null($accessibleFrom)) {
+        if (!is_null($activeFrom)) {
             $resultQueryBuilder = $resultQueryBuilder
-                ->andWhere('l.dateLog >= :accessibleFrom')
+                ->andWhere('l.dateLog >= :activeFrom')
                 ->setParameter(
-                    'accessibleFrom',
-                    $accessibleFrom->format('Y-m-d H:i:s')
+                    'activeFrom',
+                    $activeFrom->format('Y-m-d H:i:s')
                 );
         }
-        if (!is_null($accessibleUntil)) {
+        if (!is_null($activeUntil)) {
             $resultQueryBuilder = $resultQueryBuilder
-                ->andWhere('l.dateLog <= :accessibleUntil')
+                ->andWhere('l.dateLog <= :activeUntil')
                 ->setParameter(
-                    'accessibleUntil',
-                    $accessibleUntil->format('Y-m-d H:i:s')
+                    'activeUntil',
+                    $activeUntil->format('Y-m-d H:i:s')
                 );
         }
 

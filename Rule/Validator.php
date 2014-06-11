@@ -16,7 +16,7 @@ use Claroline\CoreBundle\Rule\Constraints\BadgeConstraint;
 use Claroline\CoreBundle\Rule\Constraints\DoerConstraint;
 use Claroline\CoreBundle\Rule\Constraints\OccurenceConstraint;
 use Claroline\CoreBundle\Rule\Constraints\ReceiverConstraint;
-use Claroline\CoreBundle\Rule\Constraints\ResourceAccessDateConstraint;
+use Claroline\CoreBundle\Rule\Constraints\RuleActiveDateConstraint;
 use Claroline\CoreBundle\Rule\Constraints\ResourceConstraint;
 use Claroline\CoreBundle\Rule\Constraints\ResultConstraint;
 use Claroline\CoreBundle\Rule\Entity\Rule;
@@ -104,7 +104,7 @@ class Validator
             new ReceiverConstraint(),
             new ActionConstraint(),
             new BadgeConstraint(),
-            new ResourceAccessDateConstraint()
+            new RuleActiveDateConstraint()
         );
 
         foreach ($existedConstraints as $existedConstraint) {

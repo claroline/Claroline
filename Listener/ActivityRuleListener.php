@@ -88,6 +88,7 @@ class ActivityRuleListener
                                 $user,
                                 $activityParams,
                                 $log,
+                                $rulesLogs,
                                 $activityStatus
                             );
                         }
