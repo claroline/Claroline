@@ -17,7 +17,7 @@ class SkillsWidget extends AbstractWidget
     /**
      * @var SkillsWidgetSkill[]
      *
-     * @ORM\OneToMany(targetEntity="Icap\PortfolioBundle\Entity\Widget\SkillsWidgetSkill", mappedBy="skillsWidget", cascade={"remove"})
+     * @ORM\OneToMany(targetEntity="Icap\PortfolioBundle\Entity\Widget\SkillsWidgetSkill", mappedBy="skillsWidget", cascade={"persist", "remove"})
      */
     protected $skills;
 
@@ -28,6 +28,10 @@ class SkillsWidget extends AbstractWidget
      */
     public function setSkills($skills)
     {
+        foreach ($skills as $skill) {
+            $skill->setSkillsWidget($this);
+        }
+
         $this->skills = $skills;
 
         return $this;

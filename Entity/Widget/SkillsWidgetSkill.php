@@ -62,5 +62,24 @@ class SkillsWidgetSkill
         return $this->name;
     }
 
+    /**
+     * @param mixed $skillsWidget
+     *
+     * @return SkillsWidgetSkill
+     */
+    public function setSkillsWidget($skillsWidget)
+    {
+        $this->skillsWidget = $skillsWidget;
+
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSkillsWidget()
+    {
+        return $this->skillsWidget;
+    }
 }
  

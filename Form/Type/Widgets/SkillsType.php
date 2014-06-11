@@ -18,7 +18,8 @@ class SkillsType extends AbstractType
             ->add('skills', 'collection',
                 array(
                     'type'          => 'icap_portfolio_widget_form_skills_skill',
-                    'by_reference'  => false
+                    'by_reference'  => false,
+                    'allow_add'     => true
                 )
             );
     }
