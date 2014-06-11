@@ -1577,6 +1577,57 @@ class CorrectionController extends DropzoneBaseController
         // getting all the drop corrections
         $corrections = $CorrectionRepo->findBy(['drop' => $drop->getId()]);
 
+        $this->recalculateScoreForCorrections($corrections);
+
+        return $this->redirect(
+            $this->generateUrl(
+                'icap_dropzone_drops_detail',
+                array(
+                    'resourceId' => $dropzone->getId(),
+                    'dropId' => $drop->getId(),
+                )
+            )
+        );
+
+    }
+
+    /**
+     * @Route(
+     *      "/{dropzone}/recalculateDropzoneGrades",
+     *      name="icap_dropzone_recalculate_dropzone_grades",
+     *      requirements={"dropId" = "\d+"}
+     * )
+     * @ParamConverter("drop", class="IcapDropzoneBundle:Dropzone", options={"id" = "dropzone"})
+     *
+     */
+    public function recalculateScoreByDropActionAction($dropzone)
+    {
+        $this->isAllowToOpen($dropzone);
+        $this->isAllowToEdit($dropzone);
+
+        if (!$dropzone->getPeerReview()) {
+            throw new AccessDeniedException();
+        }
+        // getting the repository
+        $CorrectionRepo = $this->getDoctrine()->getManager()->getRepository('IcapDropzoneBundle:Correction');
+        // getting all the drop corrections
+        $corrections = $CorrectionRepo->findBy(['dropzone' => $dropzone->getId()]);
+
+        $this->recalculateScoreForCorrections($corrections);
+
+        return $this->redirect(
+            $this->generateUrl(
+                'icap_dropzone_drops',
+                array(
+                    'resourceId' => $dropzone->getId(),
+                )
+            )
+        );
+
+    }
+
+    private function recalculateScoreForCorrections(Array $corrections)
+    {
         // recalculate the score for all corrections
         foreach ($corrections as $correction) {
             $oldTotalGrade = $correction->getTotalGrade();
@@ -1592,16 +1643,5 @@ class CorrectionController extends DropzoneBaseController
                 $this->dispatch($event);
             }
         }
-
-        return $this->redirect(
-            $this->generateUrl(
-                'icap_dropzone_drops_detail',
-                array(
-                    'resourceId' => $dropzone->getId(),
-                    'dropId' => $correction->getDrop()->getId(),
-                )
-            )
-        );
-
     }
 }
