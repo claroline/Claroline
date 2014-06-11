@@ -1553,4 +1553,55 @@ class CorrectionController extends DropzoneBaseController
         }
         return $response;
     }
+
+    /**
+     * @Route(
+     *      "/{dropId}/recalculateDropGrade",
+     *      name="icap_dropzone_recalculate_drop_grade",
+     *      requirements={"dropId" = "\d+"}
+     * )
+     * @ParamConverter("drop", class="IcapDropzoneBundle:Drop", options={"id" = "dropId"})
+     *
+     */
+    public function recalculateScoreByDropAction($drop)
+    {
+        $dropzone = $drop->getDropzone();
+        $this->isAllowToOpen($dropzone);
+        $this->isAllowToEdit($dropzone);
+
+        if (!$dropzone->getPeerReview()) {
+            throw new AccessDeniedException();
+        }
+        // getting the repository
+        $CorrectionRepo = $this->getDoctrine()->getManager()->getRepository('IcapDropzoneBundle:Correction');
+        // getting all the drop corrections
+        $corrections = $CorrectionRepo->findBy(['drop' => $drop->getId()]);
+
+        // recalculate the score for all corrections
+        foreach ($corrections as $correction) {
+            $oldTotalGrade = $correction->getTotalGrade();
+            $totalGrade = $this->calculateCorrectionTotalGrade($dropzone, $correction);
+            $correction->setTotalGrade($totalGrade);
+            $em = $this->getDoctrine()->getManager();
+
+            $em->persist($correction);
+            $em->flush();
+
+            if ($oldTotalGrade != $totalGrade) {
+                $event = new LogCorrectionUpdateEvent($dropzone, $correction->getDrop(), $correction);
+                $this->dispatch($event);
+            }
+        }
+
+        return $this->redirect(
+            $this->generateUrl(
+                'icap_dropzone_drops_detail',
+                array(
+                    'resourceId' => $dropzone->getId(),
+                    'dropId' => $correction->getDrop()->getId(),
+                )
+            )
+        );
+
+    }
 }

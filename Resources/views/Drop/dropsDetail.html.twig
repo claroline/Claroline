@@ -105,7 +105,17 @@
                    href="{{ path("icap_dropzone_drops_detail_add_correction",{'resourceId':dropzone.id,'dropId':drop.id}) }}">
                     {{ "Add a correction"|trans({},'icap_dropzone') }}
                 </a>
+                {% if dropzone.peerReview %}
+                    <a href="{{ path('icap_dropzone_recalculate_drop_grade',
+                    { 'dropId': drop.id}) }}"
+                       class="btn btn-default " data-toggle="tooltip" data-placement="left"
+                       data-container="body"
+                       title="{{ 'recalculate_helper'|trans({},'icap_dropzone') }}">
+                        {{ 'Recalculate the score'|trans({}, 'icap_dropzone') }}</a>
+                {% endif %}
             {% endif %}
+
+
             <hr/>
 
             {% set corrections = drop.corrections %}

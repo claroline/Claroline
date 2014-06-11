@@ -116,12 +116,12 @@
                         {% if byUserMod == 0 %}
 
                             {% if dropzone.peerReview %}
-                                <a href="{{ path('icap_dropzone_recalculate_score',
-                                {'resourceId': dropzone.id, 'correctionId': correction.id}) }}"
-                                   class="btn btn-default btn-xs" data-toggle="tooltip" data-placement="left"
-                                   data-container="body"
-                                   title="{{ 'recalculate_helper'|trans({},'icap_dropzone') }}">
-                                    {{ 'Recalculate the score'|trans({}, 'icap_dropzone') }}</a>
+                                {# <a href="{{ path('icap_dropzone_recalculate_score',
+                                 {'resourceId': dropzone.id, 'correctionId': correction.id}) }}"
+                                    class="btn btn-default btn-xs" data-toggle="tooltip" data-placement="left"
+                                    data-container="body"
+                                    title="{{ 'recalculate_helper'|trans({},'icap_dropzone') }}">
+                                     {{ 'Recalculate the score'|trans({}, 'icap_dropzone') }}</a>#}
                             {% endif %}
                             {% if correction.finished %}
                                 {% if correction.valid %}
