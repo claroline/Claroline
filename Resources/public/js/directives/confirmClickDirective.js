@@ -2,7 +2,7 @@
 
 portfolioApp
     .directive('confirmClick', ["$parse", "translationService", function ($parse, translationService) {
-        function link(scope, element, attributes) {
+        var link = function (scope, element, attributes) {
             var clickAction = attributes.confirmClick;
             element.confirmModal({
                 'confirmTitle'   : translationService.trans('widget_delete_confirm_title'),

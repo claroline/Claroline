@@ -6,7 +6,7 @@ portfolioApp
             baseUrl: Routing.generate("icap_portfolio_internal_portfolio"),
             portfolioId: null,
             widgetResources: [],
-            getResource: function(portfolioId, type) {
+            getWidget: function(portfolioId, type) {
                 if (this.widgetResources[type]) {
                     return this.widgetResources[type];
                 }
