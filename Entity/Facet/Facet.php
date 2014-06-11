@@ -43,6 +43,7 @@ class Facet {
      *     mappedBy="facet",
      *     cascade={"persist"}
      * )
+     * @ORM\OrderBy({"position" = "ASC"})
      */
     protected $fieldsFacet;
 

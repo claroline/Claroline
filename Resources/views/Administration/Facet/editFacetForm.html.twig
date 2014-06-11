@@ -1,0 +1,12 @@
+{% extends "ClarolineCoreBundle:Administration\\Facet:facetModalForm.html.twig" %}
+
+{% block form %}
+    <form role="form" class="form-horizontal" action="{{ path('claro_admin_facet_edit', {'facet': facet.getId()}) }}" method="post" {{ form_enctype(form) }} id="form_facet_edit">
+        <div class="modal-body">
+            {{ form_widget(form) }}
+        </div>
+        <div class="modal-footer">
+            <button id="submit-facet-creation-form" class="btn btn-primary" aria-hidden="true">{{ 'create'|trans({}, 'platform') }}</button>
+        </div>
+    </form>
+{% endblock %}

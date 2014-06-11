@@ -29,7 +29,20 @@
     <div class="panel-body">
         <ul class="nav nav-tabs">
             {% for facet in facets %}
-                <li><a href="#{{ facet.getName() }}" data-toggle="tab">{{ facet.getName() }}</a></li>
+                <li>
+                    <a href="#{{ facet.getName() }}" data-facet-id="{{ facet.getId() }}" data-toggle="tab">{{ facet.getName() }}
+                        <div class="dropdown">
+                            <i class="icon-chevron-down pointer-hand" data-toggle="dropdown"></i>
+                            <ul class="dropdown-menu" role="menu">
+                                <li role="presentation"><i role="menuitem" class="facet-reorder-left-btn icon-arrow-left"> {{ "left" | trans({}, 'platform') }}</i></li>
+                                <li role="presentation"><i role="menuitem" class="facet-reorder-right-btn icon-arrow-right"> {{ "right" | trans({}, 'platform') }}</i></li>
+                                <li class="divider"></li>
+                                <li role="presentation"><i role="menuitem" class="facet-rename-btn icon-pencil"> {{ "rename" | trans({}, 'platform') }}</i></li>
+                                <li role="presentation"><i role="menuitem" class="facet-delete-btn icon-trash"> {{ "delete" | trans({}, 'platform') }}</i></li>
+                            </ul>
+                        </div>
+                    </a>
+                </li>
             {% endfor %}
             <li id="add-facet-btn">
                 <a class="pointer-hand">
@@ -42,9 +55,18 @@
             {% for facet in facets %}
                 <div class="tab-pane" id="{{ facet.getName() }}">
                     <div class="panel-heading"></div>
-                    <div class="panel-body"></div>
-                    <div data-facet-id="{{ facet.getId() }}" class="panel-footer pointer hand text-center add-field-to-facet">
-                        <i class="icon-plus-sign"></i>
+                    <div class="panel-body">
+                        <ul class="list-group list-fields" data-facet-id="{{ facet.getId() }}">
+                            {% for field in facet.getFieldsFacet() %}
+                            <li class="list-group-item" id="field-{{ field.getId() }}" data-field-facet-id="{{ field.getId() }}">
+                                <a class="edit-field-facet" href="#">{{ field.getName() }} ({{ field.getTypeTranslationKey }})</a>
+                                <a class="close remove-field-facet" href="#" aria-hidden="true">&times;</a>
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                    <div data-facet-id="{{ facet.getId() }}" class="panel-footer pointer-hand text-center add-field-to-facet">
+                        <i class="icon-plus-sign" data-facet-id="{{ facet.getId() }}"></i>
                         {{ 'add_field_to_facet'|trans({}, 'platform') }}
                     </div>
                 </div>
@@ -58,43 +80,142 @@
     {{ parent() }}
 
     <script>
-
         /******************/
         /* FACET CREATION */
         /******************/
 
         $('#add-facet-btn').on('click', function(event) {
             var url = Routing.generate('claro_admin_facet_form');
-            $.ajax({
-                url: url,
-                success: function(data, textStatus, jqXHR) {
-                    console.debug(data);
-                    window.Claroline.Modal.create(data).on('click', '#submit-facet-creation-form', function(event) {
-                        event.preventDefault();
-                        submitForm('form_facet_creation');
-                    });
-                }
-            })
+            displayForm(url, 'form_facet_creation', undefined);
         });
 
         /******************/
         /* FIELD CREATION */
         /******************/
 
-        $('#add-field-to-facet').on('click', function(event) {
-            var url = Routing.generate('claro_admin_field_form');
+        $('.add-field-to-facet').on('click', function(event) {
+            var url = Routing.generate('claro_admin_facet_field_form', {'facet': $(event.target).attr('data-facet-id')});
+            displayForm(url, 'form_field_creation', undefined);
+        });
+
+        /********************/
+        /* MOVE RIGHT FACET */
+        /********************/
+
+        $('.facet-reorder-right-btn').on('click', function(event) {
+            var facetId = $($(event.currentTarget)[0].parentElement.parentElement.parentElement.parentElement).attr('data-facet-id');
+            var url = Routing.generate('claro_admin_move_facet_up', {'facet': facetId});
+            $.ajax({
+                url: url,
+                success: function(data) {
+                    alert('right');
+                }
+            });
+        });
+
+        /*******************/
+        /* MOVE LEFT FACET */
+        /*******************/
+
+        $('.facet-reorder-left-btn').on('click', function(event) {
+            var facetId = $($(event.currentTarget)[0].parentElement.parentElement.parentElement.parentElement).attr('data-facet-id');
+            var url = Routing.generate('claro_admin_move_facet_down', {'facet': facetId});
+            $.ajax({
+                url: url,
+                success: function(data) {
+                    alert('left');
+                }
+            });
+        });
+
+        /****************/
+        /* DELETE FACET */
+        /****************/
+
+        $('.facet-delete-btn').on('click', function(event) {
+            var facetId = $($(event.currentTarget)[0].parentElement.parentElement.parentElement.parentElement).attr('data-facet-id');
+            var url = Routing.generate('claro_admin_facet_remove', {'facet': facetId});
+            $.ajax({
+                url: url,
+                success: function(data) {
+                    alert('delete');
+                }
+            });
+        });
+
+        /****************/
+        /* RENAME FACET */
+        /****************/
+
+        $('.facet-rename-btn').on('click', function(event) {
+            var facetId = $($(event.currentTarget)[0].parentElement.parentElement.parentElement.parentElement).attr('data-facet-id');
+            var url = Routing.generate('claro_admin_facet_edit_form', {'facet': facetId})
+            displayForm(url, 'form_facet_edit', undefined);
+        });
+
+        /********************/
+        /* EDIT FIELD FACET */
+        /********************/
+
+        $('.edit-field-facet').on('click', function(event) {
+            var fieldFacetId = $($(event.currentTarget)[0].parentElement).attr('data-field-facet-id');
+            var url = Routing.generate('claro_admin_field_facet_edit_form', {'fieldFacet': fieldFacetId});
+            displayForm(url, 'form_field_edit', undefined);
+        });
+
+        /**********************/
+        /* DELETE FIELD FACET */
+        /**********************/
+
+        $('.remove-field-facet').on('click', function(event) {
+            var fieldFacetId = $($(event.currentTarget)[0].parentElement).attr('data-field-facet-id');
+            var url = Routing.generate('claro_admin_remove_field_facet', {'fieldFacet': fieldFacetId});
+            $.ajax({
+                url: url,
+                success: function(data) {
+                    alert('delete done');
+                }
+            });
+        });
+
+        /*******************/
+        /* SORTABLE FIELDS */
+        /*******************/
+
+        $('.list-fields').sortable({
+            update: function(event, ui) {
+                var facetId = $($(event.target)[0]).attr('data-facet-id');
+                var url = Routing.generate('claro_admin_field_facet_order', {'facet': facetId});
+                $.ajax({
+                    url: url,
+                    data: {ids: $(event.target).sortable('toArray')},
+                    success: function() {
+                        alert('reordering done');
+                    }
+                })
+            }
+        });
+
+        /***********/
+        /* HELPERS */
+        /***********/
+
+        function displayForm(url, formId, callback) {
             $.ajax({
                 url: url,
                 success: function(data, textStatus, jqXHR) {
-                    console.debug(data);
-//                    window.Claroline.Modal.create(data).on('click', '#', function(event) {
-//                        event.preventDefault();
-//                        submitForm('form_facet_creation');
-//                    });
+                    window.Claroline.Modal.create(data).on('click', 'button.btn', function(event) {
+                        event.preventDefault();
+                        submitForm(formId);
+                    });
                 }
-            })
-        });
+            });
+        }
 
+        function displayValidationModal()
+        {
+            alert('are you sure you wanna do that action modal');
+        }
 
         function submitForm(formId) {
             formData = new FormData(document.getElementById(formId));
@@ -107,7 +228,7 @@
                 processData: false,
                 contentType: false,
                 success: function() {
-                    addTab('YOLO');
+                    alert('YOLO');
                 }
             });
         }

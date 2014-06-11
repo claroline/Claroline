@@ -62,6 +62,13 @@ class FacetManager
         $this->reorderFacets();
     }
 
+    public function editFacet(Facet $facet, $name)
+    {
+        $facet->setName($name);
+        $this->om->persist($facet);
+        $this->om->flush();
+    }
+
     /**
      * Fixes gaps beteween facet orders
      */
@@ -82,9 +89,9 @@ class FacetManager
     /**
      * Fixes gaps beteween fields orders
      */
-    public function reoderFields()
+    public function reorderFields(Facet $facet)
     {
-        $fields = $this->getFields();
+        $fields = $this->getFields($facet);
         $order = 0;
 
         foreach ($fields as $field) {
@@ -110,7 +117,7 @@ class FacetManager
         $fieldFacet->setName($name);
         $fieldFacet->setType($type);
         $fieldFacet->setPosition($this->om->count('Claroline\CoreBundle\Entity\Facet\FieldFacet'));
-        $this->om->persist($facet);
+        $this->om->persist($fieldFacet);
         $this->om->flush();
     }
 
@@ -121,9 +128,10 @@ class FacetManager
      */
     public function removeField(FieldFacet $field)
     {
+        $facet = $field->getFacet();
         $this->om->remove($field);
         $this->om->flush();
-        $this->reorderFields();
+        $this->reorderFields($facet );
     }
 
     /**
@@ -166,24 +174,19 @@ class FacetManager
      */
     public function moveFacetUp(Facet $facet)
     {
-        $currentPosition = $facet->getOrder();
+        $currentPosition = $facet->getPosition();
 
-        /*
-         * The above facet must take the current position.
-         * There is no facet above 0
-         */
-        if ($currentPosition !== 0) {
-            $prevPosition = $currentPosition - 1;
-            $prevFacet = $this->om
+        if ($currentPosition < $this->om->count('Claroline\CoreBundle\Entity\Facet\Facet') - 1) {
+            $nextPosition = $currentPosition + 1;
+            $nextFacet = $this->om
                 ->getRepository('ClarolineCoreBundle:Facet\Facet')
-                ->findOneBy(array('order' => $prevPosition));
-            $prevFacet->setPosition($currentPosition);
-            $facet->setPosition($prevPosition);
-            $this->om->persist($prevFacet);
+                ->findOneBy(array('position' => $nextPosition));
+            $nextFacet->setPosition($currentPosition);
+            $facet->setPosition($nextPosition);
+            $this->om->persist($nextFacet);
             $this->om->persist($facet);
             $this->om->flush();
         }
-
     }
 
     /**
@@ -193,28 +196,49 @@ class FacetManager
      */
     public function moveFacetDown(Facet $facet)
     {
-        $currentPosition = $facet->setPosition();
-        $maxPosition = $this->om->count('Claroline\CoreBundle\Entity\Facet\Facet');
+        $currentPosition = $facet->getPosition();
+
+        if ($currentPosition > 0) {
+            $prevPosition = $currentPosition - 1;
+            $prevFacet = $this->om
+                ->getRepository('ClarolineCoreBundle:Facet\Facet')
+                ->findOneBy(array('position' => $prevPosition));
+            $prevFacet->setPosition($currentPosition);
+            $facet->setPosition($prevPosition);
+            $this->om->persist($prevFacet);
+            $this->om->persist($facet);
+            $this->om->flush();
+        }
+    }
+
+    public function editField(FieldFacet $fieldFacet, $name, $type)
+    {
+        $fieldFacet->setName($name);
+        $fieldFacet->setType($type);
+        $this->om->persist($fieldFacet);
+        $this->om->flush();
     }
 
     /**
-     * Moves a field up
+     * Order the fields of a facet according to the $ids order.
      *
-     * @param FieldFacet $fieldFacet
+     * @param array $ids
+     * @param Facet $facet
      */
-    public function moveFieldFacetUp(FieldFacet $fieldFacet)
+    public function orderFields(array $ids, Facet $facet)
     {
+        $fields = $this->getFields($facet);
 
-    }
+        foreach ($fields as $field) {
+            foreach($ids as $key => $id) {
+                if ($id === $field->getId()) {
+                    $field->setPosition($key);
+                    $this->om->persist($field);
+                }
+            }
+        }
 
-    /**
-     * Moves a field down
-     *
-     * @param FieldFacet $fieldFacet
-     */
-    public function moveFieldFacetDown(FieldFacet $fieldFacet)
-    {
-
+        $this->om->flush();
     }
 
     public function getFieldsValueByUserAndFacet(User $user, Facet $facet)
