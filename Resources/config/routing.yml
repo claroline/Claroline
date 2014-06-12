@@ -279,5 +279,10 @@ claro_admin_plugins:
     prefix: admin/plugins
     type: annotation
 
+claro_admin_plugins:
+    resource: "@ClarolineCoreBundle/Controller/Administration/FacetController.php"
+    prefix: admin/facet
+    type: annotation
+
 claro_badge:
     resource: "@ClarolineCoreBundle/Controller/Badge"
