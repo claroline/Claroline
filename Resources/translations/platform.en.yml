@@ -810,3 +810,13 @@ yes: yes
 yesterday_activity: 'Yesterday''s activity'
 your_current_url: 'Your current URL'
 your_username: 'Your username is '
+closed_account: Closed account
+list_role: Role list
+unavailable_role: The role %translationKey% is not available
+fail_add_user_group_message: These users couldn't be added to this group (check the max amount of users by role).
+unavailable_platform: The platform is unavailable
+account_duration_label: Account lifetime (days)
+platform_init_date: Platform activation date
+platform_expiration_date: Platform expiration date
+role_limit_reached: The limit of %translationKey% has been reached.
+user_limit_reached: The user limit has been reached.

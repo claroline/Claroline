@@ -18,8 +18,10 @@ use Icap\NotificationBundle\Entity\NotifiableInterface;
 
 class LogRoleSubscribeEvent extends LogGenericEvent implements NotifiableInterface
 {
-    const ACTION_USER = 'workspace-role-subscribe_user';
-    const ACTION_GROUP = 'workspace-role-subscribe_group';
+    const ACTION_USER = 'role-subscribe_user';
+    const ACTION_GROUP = 'role-subscribe_group';
+    const ACTION_WORKSPACE_USER = 'workspace-role-subscribe_user';
+    const ACTION_WORKSPACE_GROUP = 'workspace-role-subscribe_group';
     protected $receiver = null;
     protected  $receiverGroup = null;
     protected $role = null;
@@ -34,7 +36,10 @@ class LogRoleSubscribeEvent extends LogGenericEvent implements NotifiableInterfa
         $details = array('role' => array('name' => $role->getTranslationKey()));
 
         if ($role->getWorkspace()) {
-            $details['workspace'] = array('name' => $role->getWorkspace()->getName());
+            $details['workspace'] = array(
+                'name' => $role->getWorkspace()->getName(),
+                'id' => $role->getWorkspace()->getId()
+            );
         }
 
         if ($subject instanceof User) {
@@ -42,19 +47,18 @@ class LogRoleSubscribeEvent extends LogGenericEvent implements NotifiableInterfa
                 'firstName' => $subject->getFirstName(),
                 'lastName' => $subject->getLastName()
             );
-            $action = self::ACTION_USER;
             $this->receiver = $subject;
         } else {
             $details['receiverGroup'] = array(
                 'name' => $subject->getName()
             );
-            $action = self::ACTION_GROUP;
+
             $this->receiverGroup = $subject;
         }
 
         $this->details = $details;
         parent::__construct(
-            $action,
+            $this->getActionKey(),
             $details,
             $this->receiver,
             $this->receiverGroup,
@@ -138,9 +142,18 @@ class LogRoleSubscribeEvent extends LogGenericEvent implements NotifiableInterfa
     public function getActionKey()
     {
         if ($this->receiver !== null) {
-            return $this::ACTION_USER;
+            if ($this->role->getWorkspace() === null) {
+                return $this::ACTION_USER;
+            } else {
+                return $this::ACTION_WORKSPACE_USER;
+            }
+
         } else {
-            return $this::ACTION_GROUP;
+            if ($this->role->getWorkspace() === null) {
+                return $this::ACTION_GROUP;
+            } else {
+                return $this::ACTION_WORKSPACE_GROUP;
+            }
         }
     }
 
