@@ -37,6 +37,7 @@ class FieldFacet
 
     /**
      * @ORM\Column(unique=true)
+     * @Assert\NotBlank()
      */
     protected $name;
 
@@ -129,7 +130,7 @@ class FieldFacet
         $this->position = $position;
     }
 
-    public function getOrder()
+    public function getPosition()
     {
         return $this->position;
     }

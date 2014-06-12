@@ -818,3 +818,15 @@ platform_init_date: Date d'activation de la plateforme
 platform_expiration_date: Date d'expiration de la plateforme
 role_limit_reached: La limite d'utilisateur de type %translationKey% a été atteinte.
 user_limit_reached: La limite de création d'utilisateur a été atteinte.
+facets: Facettes
+add_field_to_facet: Ajouter un champ à une facette
+text: Texte
+number: Nombre
+create_facet: Créer une facette
+create_field: Créer un champ
+edit_facet: Editer une facette
+edit_field: Editer un champ
+remove_facet: Supprimer une facette
+remove_facet_confirm: Etes-vous sur de vouloir supprimer la facette %name% ?
+remove_field: Supprimer une champ
+remove_field_confirm: Etes-vous sur de vouloir supprimer le champ %name% ?

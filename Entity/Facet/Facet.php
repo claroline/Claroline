@@ -14,6 +14,7 @@ namespace Claroline\CoreBundle\Entity\Facet;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Claroline\CoreBundle\Entity\Facet\FieldFacet;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity
@@ -29,6 +30,7 @@ class Facet {
 
     /**
      * @ORM\Column(unique=true)
+     * @Assert\NotBlank()
      */
     protected $name;
 
