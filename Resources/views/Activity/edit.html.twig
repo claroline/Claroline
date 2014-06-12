@@ -1,0 +1,35 @@
+{% set layout = "ClarolineCoreBundle:Workspace:layout.html.twig" %}
+
+{% if isDesktop() %}
+    {% set layout = "ClarolineCoreBundle:Desktop:layout.html.twig" %}
+{% endif %}
+
+{% extends layout %}
+
+{% block title %}{{ _resource.resourceNode.name ~ ' - ' ~ "edit" | trans({}, "platform") | striptags | raw }}{% endblock %}
+
+{% block resourceBreadcrumb %}
+    <li>
+        <a href="{{ path('claro_resource_open', { 'resourceType': _resource.getResourceNode().getResourceType().getName(), 'node': _resource.getResourceNode().getId() }) }}">
+            {{ _resource.getResourceNode().getName() }}
+        </a>
+    </li>
+    <li class="active">{{ 'edit' | trans({}, 'platform') }}</li>
+{% endblock %}
+
+{% block section_content %}
+    <div class="panel-heading">
+        <div class="panel-title">{{ _resource.getTitle() }} ({{ 'edit' | trans({}, 'platform') }})</div>
+    </div>
+    <form role="form" action="{{ path('activity_edit', {'resource': _resource.getId() }) }}" method="POST">
+        <div class="panel-body">
+            {{ form_widget(form) }}
+        </div>
+        <div class="panel-footer text-right">
+            <a class="btn btn-default" href="{{ path('claro_resource_open', { 'resourceType': _resource.getResourceNode().getResourceType().getName(), 'node': _resource.getResourceNode().getId() }) }}">
+                {{ 'cancel' | trans({}, 'platform') }}
+            </a>
+            <button class="btn btn-primary" type="submit">{{ 'ok' | trans({}, 'platform') }}</button>
+        </div>
+    </form>
+{% endblock %}

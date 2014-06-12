@@ -55,8 +55,10 @@ account_general_statistics: 'Statistiques générales sur les comptes'
 action: Action
 actions: Actions
 active_widgets: 'Widgets actifs'
+activity_already: Cette ressource est déjà dans l'activité
 activity_form_instructions: Instructions
 activity_form_name: Nom
+activity_resource_delete: Êtes-vous sûr de vouloir supprimer cette ressource de l'activite?
 add: Ajouter
 add_category: 'Ajouter une catégorie'
 add_group: 'Ajouter un groupe'

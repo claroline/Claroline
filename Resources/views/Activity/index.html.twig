@@ -10,12 +10,64 @@
 
 {% block section_content %}
     <div class="panel-body">
-        <ul class="nav nav-tabs margin-bottom-md">
-            <li class="active"><a>{{ _resource.resourceNode.name }}</a></li>
-            <li><a class="add-resource pointer-hand"><i class="icon-plus"></i> {{ 'add_resource' | trans({}, 'platform') }}</a></li>
+        {% if is_granted('edit', _resource) %}
+            <div class="float-right-top margin-right-md">
+                <a href="{{ path('activity_edit', {'resource':  _resource.getId() }) }}" class="btn btn-primary"><i class="icon-pencil"></i></a>
+            </div>
+        {% endif %}
+
+        <ul class="activity-tabs nav nav-tabs margin-bottom-md">
+            <li class="active activity-primary"><a class="pointer-hand" data-id="activity-primary">{{ _resource.getTitle() }}</a></li>
+            {% for resource in _resource.getParameters().getSecondaryResources() %}
+                <li class="activity-tab-{{ resource.getId() }}">
+                    <a class="pointer-hand" data-id="resource-{{ resource.getId() }}">
+                        {{ resource.getName() }}
+                        {% if is_granted('edit', _resource) %}
+                            <div class="dropdown">
+                                <i class="icon-chevron-down pointer-hand" data-toggle="dropdown"></i>
+                                <ul class="dropdown-menu" role="menu">
+                                    <li role="presentation">
+                                        <i role="menuitem"
+                                           class="activity-delete icon-trash"
+                                           data-resource="{{ resource.getId() }}"
+                                           data-activity="{{ _resource.getId() }}"
+                                        >
+                                            {{ 'delete' | trans({}, 'platform') }}
+                                        </i>
+                                    </li>
+                                </ul>
+                            </div>
+                        {% endif %}
+                    </a>
+                </li>
+            {% endfor %}
+            {% if is_granted('edit', _resource) %}
+                <li>
+                    <a class="add-resource pointer-hand" data-id="{{ _resource.getId() }}">
+                        <i class="icon-plus"></i> {{ 'add_resource' | trans({}, 'platform') }}
+                    </a>
+                </li>
+            {% endif %}
         </ul>
-        <div class="activity-primary">
-            <div>{{ _resource.getDescription() | raw }}</div>
+        <div class="activities">
+            <div id="activity-primary">
+                <div>{{ _resource.getDescription() | raw }}</div>
+                <hr>
+                {{ _resource.getPrimaryResource().getName() }}
+            </div>
+            {% for resource in _resource.getParameters().getSecondaryResources() %}
+                <div class="hide" id="resource-{{ resource.getId() }}">
+                    {{ resource.getName() }}
+                </div>
+            {% endfor %}
         </div>
     </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {% if is_granted('edit', _resource) %}
+        <script src="{{ asset('bundles/clarolinecore/js/activity/edit.js') }}"></script>
+    {% endif %}
+    <script src="{{ asset('bundles/clarolinecore/js/activity/activity.js') }}"></script>
 {% endblock %}

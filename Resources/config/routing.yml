@@ -207,6 +207,20 @@ claro_activity:
     prefix: activity
     type: annotation
 
+claro_activity_modal:
+    pattern: /activity/modal
+    options: { expose: true }
+    defaults:
+        _controller: FrameworkBundle:Template:template
+        template: 'ClarolineCoreBundle:Activity:modal.html.twig'
+
+claro_activity_delete_resource:
+    pattern: /activity/delete
+    options: { expose: true }
+    defaults:
+        _controller: FrameworkBundle:Template:template
+        template: 'ClarolineCoreBundle:Activity:delete.html.twig'
+
 fos_js_routing:
     resource: "@FOSJsRoutingBundle/Resources/config/routing/routing.xml"
 

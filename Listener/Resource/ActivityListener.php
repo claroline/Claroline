@@ -11,22 +11,23 @@
 
 namespace Claroline\CoreBundle\Listener\Resource;
 
-use Symfony\Component\HttpFoundation\Response;
-use JMS\DiExtraBundle\Annotation\Service;
-use JMS\DiExtraBundle\Annotation\InjectParams;
-use JMS\DiExtraBundle\Annotation\Inject;
-use JMS\DiExtraBundle\Annotation\Observe;
+use Claroline\CoreBundle\Entity\Activity\ActivityParameters;
 use Claroline\CoreBundle\Entity\Resource\Activity;
 use Claroline\CoreBundle\Entity\Resource\ResourceActivity;
-use Claroline\CoreBundle\Form\ActivityType;
 use Claroline\CoreBundle\Event\CopyResourceEvent;
 use Claroline\CoreBundle\Event\CreateFormResourceEvent;
 use Claroline\CoreBundle\Event\CreateResourceEvent;
-use Claroline\CoreBundle\Event\OpenResourceEvent;
 use Claroline\CoreBundle\Event\CustomActionResourceEvent;
+use Claroline\CoreBundle\Event\DeleteResourceEvent;
 use Claroline\CoreBundle\Event\ExportResourceTemplateEvent;
 use Claroline\CoreBundle\Event\ImportResourceTemplateEvent;
-use Claroline\CoreBundle\Event\DeleteResourceEvent;
+use Claroline\CoreBundle\Event\OpenResourceEvent;
+use Claroline\CoreBundle\Form\ActivityType;
+use JMS\DiExtraBundle\Annotation\Inject;
+use JMS\DiExtraBundle\Annotation\InjectParams;
+use JMS\DiExtraBundle\Annotation\Observe;
+use JMS\DiExtraBundle\Annotation\Service;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * @Service
@@ -38,7 +39,6 @@ class ActivityListener
     private $request;
     private $persistence;
     private $entityManager;
-    private $activityManager;
 
     /**
      * @InjectParams({
@@ -47,17 +47,15 @@ class ActivityListener
      *     "request"            = @Inject("request_stack"),
      *     "persistence"        = @Inject("claroline.persistence.object_manager"),
      *     "entityManager"      = @Inject("doctrine.orm.entity_manager"),
-     *     "activityManager"    = @Inject("claroline.manager.activity_manager"),
      * })
      */
-    public function __construct($formFactory, $templating, $request, $persistence, $entityManager, $activityManager)
+    public function __construct($formFactory, $templating, $request, $persistence, $entityManager)
     {
         $this->formFactory = $formFactory;
         $this->templating = $templating;
         $this->request = $request->getMasterRequest();
         $this->persistence = $persistence;
         $this->entityManager = $entityManager;
-        $this->activityManager = $activityManager;
     }
 
     /**
@@ -67,7 +65,7 @@ class ActivityListener
      */
     public function onCreateForm(CreateFormResourceEvent $event)
     {
-        $form = $this->formFactory->create(new ActivityType, new Activity());
+        $form = $this->formFactory->create(new ActivityType(), new Activity());
         $content = $this->templating->render(
             'ClarolineCoreBundle:Resource:createForm.html.twig',
             array(
@@ -86,15 +84,13 @@ class ActivityListener
      */
     public function onCreate(CreateResourceEvent $event)
     {
-        $formData = $this->request->get('activity_form');
-        $form = $this->formFactory->create(new ActivityType(), $formData);
+        $form = $this->formFactory->create(new ActivityType(), new Activity());
         $form->handleRequest($this->request);
 
         if ($form->isValid()) {
-            $data = $form->getData();
-            $activity = $this->activityManager->createActivity(
-                $data['name'], $data['description'], $data['resourceNode'], false
-            );
+            $activity = $form->getData();
+            $activity->setName($activity->getTitle());
+            $activity->setParameters(new ActivityParameters());
 
             $event->setResources(array($activity));
             $event->stopPropagation();
