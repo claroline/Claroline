@@ -96,6 +96,7 @@ portfolioApp
             },
             delete: function(widget) {
                 if (this.isDeletable(widget)) {
+                    widget.isDeleting = true;
                     var $this = this;
                     var success = function() {
                         $this.widgets[widget.getType()].remove(widget);
@@ -104,7 +105,9 @@ portfolioApp
                         console.error('Error occured while deleting widget');
                         console.log(error);
                     }
-                    return widget.$delete(success, failed);
+                    widget.$delete(success, failed).then(function() {
+                        delete widget.isDeleting;
+                    });
                 }
             }
         };
