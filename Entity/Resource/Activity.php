@@ -16,7 +16,6 @@ use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Activity\ActivityParameters;
 use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM;
-use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * @ORM\Entity()
@@ -37,10 +36,10 @@ class Activity extends AbstractResource
     protected $description;
 
     /**
-     * @ORM\OneToOne(targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceNode")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceNode")
+     * @ORM\JoinColumn(nullable=true)
      */
-    protected $resourceNode;
+    protected $primaryResource;
 
     /**
      * @ORM\OneToOne(
@@ -106,20 +105,20 @@ class Activity extends AbstractResource
      *
      * @return string
      */
-    public function getResourceNode()
+    public function getPrimaryResource()
     {
-        return $this->resourceNode;
+        return $this->primaryResource;
     }
 
     /**
      * Set resource node
      *
-     * @param  ResourceNode  $resourceNode
+     * @param  ResourceNode  $primaryResource
      * @return activity
      */
-    public function setResourceNode(ResourceNode $resourceNode)
+    public function setPrimaryResource(ResourceNode $primaryResource)
     {
-        $this->resourceNode = $resourceNode;
+        $this->primaryResource = $primaryResource;
 
         return $this;
     }
@@ -137,7 +136,7 @@ class Activity extends AbstractResource
     /**
      * Set parameters
      *
-     * @param  ResourceNode  $resourceNode
+     * @param  ActivityParameters  $parameters
      * @return activity
      */
     public function setParameters(ActivityParameters $parameters)

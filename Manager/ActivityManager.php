@@ -18,7 +18,6 @@ use Claroline\CoreBundle\Entity\Activity\PastEvaluation;
 use Claroline\CoreBundle\Entity\Log\Log;
 use Claroline\CoreBundle\Entity\Resource\Activity;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
-use Claroline\CoreBundle\Manager\ResourceManager;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Rule\Entity\Rule;
 use JMS\DiExtraBundle\Annotation\Inject;
@@ -33,58 +32,28 @@ class ActivityManager
     private $activityRuleRepo;
     private $evaluationRepo;
     private $pastEvaluationRepo;
-    private $persistence;
-    private $resourceManager;
+    private $om;
 
     /**
-     * Constructor.
-     *
      * @InjectParams({
-     *     "persistence"        = @Inject("claroline.persistence.object_manager"),
-     *     "resourceManager"    = @Inject("claroline.manager.resource_manager")
+     *     "om" = @Inject("claroline.persistence.object_manager"),
      * })
      */
-    public function __construct(
-        ObjectManager $persistence,
-        ResourceManager $resourceManager
-    )
+    public function __construct(ObjectManager $om)
     {
-        $this->persistence = $persistence;
-        $this->resourceManager = $resourceManager;
-        $this->activityRuleRepo = $persistence
-            ->getRepository('ClarolineCoreBundle:Activity\ActivityRule');
-        $this->evaluationRepo = $persistence
-            ->getRepository('ClarolineCoreBundle:Activity\Evaluation');
-        $this->pastEvaluationRepo = $persistence
-            ->getRepository('ClarolineCoreBundle:Activity\Evaluation');
-    }
-
-    /**
-     * Create a new activity
-     */
-    public function createActivity($title, $description, $resourceNodeId, $persist = false)
-    {
-        $resourceNode = $this->resourceManager->getById($resourceNodeId);
-        $parameters = new ActivityParameters();
-
-        return $this->editActivity(new Activity(), $title, $description, $resourceNode, $parameters, $persist);
+        $this->om = $om;
+        $this->activityRuleRepo = $om->getRepository('ClarolineCoreBundle:Activity\ActivityRule');
+        $this->evaluationRepo = $om->getRepository('ClarolineCoreBundle:Activity\Evaluation');
+        $this->pastEvaluationRepo = $om->getRepository('ClarolineCoreBundle:Activity\PastEvaluation');
     }
 
     /**
      * Edit an activity
      */
-    public function editActivity($activity, $title, $description, $resourceNode, $parameters, $persist = false)
+    public function editActivity(Activity $activity)
     {
-        $activity->setName($title);
-        $activity->setTitle($title);
-        $activity->setDescription($description);
-        $activity->setResourceNode($resourceNode);
-        $activity->setParameters($parameters);
-
-        if ($persist) {
-            $this->persistence->persist($activity);
-            $this->persistence->flush();
-        }
+        $this->om->persist($activity);
+        $this->om->flush();
 
         return $activity;
     }
@@ -92,37 +61,38 @@ class ActivityManager
     /**
      * Delete an activity
      */
-    public function deleteActivty($activity)
+    public function deleteActivty(Activity $activity)
     {
-        $this->persistence->remove($activity);
-        $this->persistence->flush();
+        $this->om->remove($activity);
+        $this->om->flush();
     }
 
     /**
      * Link a resource to an activity
      */
-    public function addResource($resourceActivity)
+    public function addResource(Activity $activity, ResourceNode $resource)
     {
-        $this->persistence->persist($resourceActivity);
-        $this->persistence->flush();
+        if (!$activity->getParameters()->getSecondaryResources()->contains($resource)) {
+            $activity->getParameters()->getSecondaryResources()->add($resource);
+            $this->om->persist($activity);
+            $this->om->flush();
+
+            return true;
+        }
     }
 
     /**
-     * Edit a resource link in an activity
+     * Remove a resource from an activity
      */
-    public function editResource($resourceActivity)
+    public function removeResource(Activity $activity, ResourceNode $resource)
     {
-        $this->persistence->persist($resourceActivity);
-        $this->persistence->flush();
-    }
+        if ($activity->getParameters()->getSecondaryResources()->contains($resource)) {
+            $activity->getParameters()->getSecondaryResources()->removeElement($resource);
+            $this->om->persist($activity);
+            $this->om->flush();
 
-    /**
-     * delete a resource from an activity
-     */
-    public function deleteResource($resourceActivity)
-    {
-        $this->persistence->persist($resourceActivity);
-        $this->persistence->flush();
+            return true;
+        }
     }
 
     public function manageEvaluation(
@@ -219,7 +189,7 @@ class ActivityManager
                     // Checker si la tentative est réussie ou non
                     // Faire qqch avec le nombre max de tentative
 
-                    $this->persistence->persist($pastEval);
+                    $this->om->persist($pastEval);
                 }
             }
         }
@@ -257,7 +227,7 @@ class ActivityManager
                 $duration
             );
 
-            $this->persistence->persist($pastEval);
+            $this->om->persist($pastEval);
         }
 
         $firstEvaluation = new Evaluation();
@@ -273,8 +243,8 @@ class ActivityManager
 //        $firstEvaluation->setDuration($duration);
         $firstEvaluation->setAttemptsDuration($totalTime);
 
-        $this->persistence->persist($firstEvaluation);
-        $this->persistence->flush();
+        $this->om->persist($firstEvaluation);
+        $this->om->flush();
     }
 
     private function updateEvaluation(
@@ -353,7 +323,7 @@ class ActivityManager
                             $duration
                         );
 
-                        $this->persistence->persist($pastEval);
+                        $this->om->persist($pastEval);
                     }
                 }
             }
@@ -392,7 +362,7 @@ class ActivityManager
                 $duration
             );
 
-            $this->persistence->persist($pastEval);
+            $this->om->persist($pastEval);
         }
 
         $evaluation->setDate($currentLog->getDateLog());
@@ -401,8 +371,8 @@ class ActivityManager
         $evaluation->setStatus($activityStatus);
         $evaluation->setLog($currentLog);
 
-        $this->persistence->persist($evaluation);
-        $this->persistence->flush();
+        $this->om->persist($evaluation);
+        $this->om->flush();
     }
 
     private function computeActivityTotalTime($totalTime, $sessionTime)
@@ -434,8 +404,8 @@ class ActivityManager
         $rule->setUserType(0);
         $rule->setResultComparison(Rule::RESULT_SUPERIOR_EQUAL);
 
-        $this->persistence->persist($rule);
-        $this->persistence->flush();
+        $this->om->persist($rule);
+        $this->om->flush();
     }
 
 

@@ -1,0 +1,14 @@
+{% twig_js name="FacetTabInnerHtml" %}
+
+<a href="#facet-pane-{{ facet.id }}" data-facet-id="{{ facet.id }}" data-facet-name="{{ facet.name }}" data-toggle="tab">{{ facet.name }}
+    <div class="dropdown">
+        <i class="icon-chevron-down pointer-hand" data-toggle="dropdown"></i>
+        <ul class="dropdown-menu" role="menu">
+            <li role="presentation"><i role="menuitem" class="facet-reorder-left-btn icon-arrow-left"> {{ "left" | trans({}, 'platform') }}</i></li>
+            <li role="presentation"><i role="menuitem" class="facet-reorder-right-btn icon-arrow-right"> {{ "right" | trans({}, 'platform') }}</i></li>
+            <li class="divider"></li>
+            <li role="presentation"><i role="menuitem" class="facet-rename-btn icon-pencil"> {{ "rename" | trans({}, 'platform') }}</i></li>
+            <li role="presentation"><i role="menuitem" class="facet-delete-btn icon-trash"> {{ "delete" | trans({}, 'platform') }}</i></li>
+        </ul>
+    </div>
+</a>

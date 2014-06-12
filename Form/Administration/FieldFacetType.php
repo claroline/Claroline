@@ -1,5 +1,4 @@
 <?php
-
 /*
  * This file is part of the Claroline Connect package.
  *
@@ -9,26 +8,37 @@
  * file that was distributed with this source code.
  */
 
-namespace Claroline\CoreBundle\Form;
+namespace Claroline\CoreBundle\Form\Administration;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
-use Symfony\Component\Validator\Constraints\NotBlank;
+use Claroline\CoreBundle\Entity\Facet\FieldFacet;
 
-class ActivityType extends AbstractType
+class FieldFacetType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder
-            ->add('title', 'text', array('label' => 'name', 'constraints' => new NotBlank()))
-            ->add('description', 'tinymce', array('required' => false, 'label' => 'description'))
-            ->add('primaryResource', 'resourcePicker', array('required' => false));
+        $builder->add('name', 'text', array('label' => 'name'));
+        $builder->add(
+            'type',
+            'choice',
+            array(
+                'choices' => array(
+                    FieldFacet::STRING_TYPE => 'text',
+                    FieldFacet::FLOAT_TYPE => 'number',
+                    FieldFacet::DATE_TYPE => 'date'
+                ),
+                'multiple' => false,
+                'expanded' => false,
+                'label' => 'type'
+            )
+        );
     }
 
     public function getName()
     {
-        return 'activity_form';
+        return 'facet_form';
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)

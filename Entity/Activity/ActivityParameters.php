@@ -51,11 +51,7 @@ class ActivityParameters extends Rulable
      * @ORM\ManyToMany(
      *     targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceNode"
      * )
-     * @ORM\JoinTable(
-     *     name="claro_activity_secondary_resources",
-     *     joinColumns={@ORM\JoinColumn(name="activity_parameters_id", referencedColumnName="id")},
-     *     inverseJoinColumns={@ORM\JoinColumn(name="resource_node_id", referencedColumnName="id")}
-     * )
+     * @ORM\JoinTable(name="claro_activity_secondary_resources")
      */
     protected $secondaryResources;
 

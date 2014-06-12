@@ -9,26 +9,22 @@
  * file that was distributed with this source code.
  */
 
-namespace Claroline\CoreBundle\Form;
+namespace Claroline\CoreBundle\Form\Administration;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
-use Symfony\Component\Validator\Constraints\NotBlank;
 
-class ActivityType extends AbstractType
+class FacetType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder
-            ->add('title', 'text', array('label' => 'name', 'constraints' => new NotBlank()))
-            ->add('description', 'tinymce', array('required' => false, 'label' => 'description'))
-            ->add('primaryResource', 'resourcePicker', array('required' => false));
+        $builder->add('name', 'text', array('label' => 'name'));
     }
 
     public function getName()
     {
-        return 'activity_form';
+        return 'facet_form';
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)
