@@ -108,6 +108,14 @@ abstract class AbstractWidget
     /**
      * @return array
      */
+    public function getChildren()
+    {
+        return array();
+    }
+
+    /**
+     * @return array
+     */
     abstract public function getData();
 
     /**

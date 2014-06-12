@@ -74,4 +74,12 @@ class SkillsWidget extends AbstractWidget
             'skills' => array()
         );
     }
+
+    /**
+     * @return array
+     */
+    public function getChildren()
+    {
+        return $this->getSkills();
+    }
 }

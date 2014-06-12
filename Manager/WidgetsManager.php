@@ -2,6 +2,7 @@
 
 namespace Icap\PortfolioBundle\Manager;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManager;
 use Icap\PortfolioBundle\Entity\Portfolio;
 use Icap\PortfolioBundle\Entity\Widget\AbstractWidget;
@@ -132,12 +133,25 @@ class WidgetsManager
      */
     public function handle(AbstractWidget $widget, $type, array $parameters)
     {
+        $originalChildren = new ArrayCollection();
+
+        foreach ($widget->getChildren() as $child) {
+            $originalChildren->add($child);
+        }
+
         $data = array();
 
         $form = $this->getForm($type, $widget);
         $form->submit($parameters);
 
         if ($form->isValid()) {
+            $newChildren = $widget->getChildren();
+            foreach ($originalChildren as $child) {
+                if (!$newChildren->contains($child)) {
+                     $this->entityManager->remove($child);
+                }
+            }
+
             $this->entityManager->persist($widget);
             $this->entityManager->flush();
 
