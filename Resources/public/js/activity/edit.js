@@ -78,7 +78,7 @@
         picker.on('click', 'button.btn-primary', function () {
             modal.hide();
 
-            $.ajax(routing.generate('activity_delete', {'activity': activity, 'resource': resource}))
+            $.ajax(routing.generate('activity_remove_resource', {'activity': activity, 'resource': resource}))
             .done(function (data) {
 
                 if (data === 'true') {
@@ -122,7 +122,7 @@
 
         $.ajax(
             routing.generate(
-                'claro_activity_delete_resource',
+                'claro_activity_remove_resource',
                 {'activity': activity, 'resource': resource}
             )
         )

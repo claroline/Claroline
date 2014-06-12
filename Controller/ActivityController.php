@@ -52,7 +52,7 @@ class ActivityController
     }
 
     /**
-     * @Route("activity/edit/{resource}", name="activity_edit")
+     * @Route("edit/{resource}", name="activity_edit")
      * @ParamConverter("resource", class = "ClarolineCoreBundle:Resource\Activity", options = {"id" = "resource"})
      * @Template()
      */
@@ -71,7 +71,7 @@ class ActivityController
     }
 
     /**
-     * @Route("activity/add/{activity}/{resource}", name="activity_add", options = {"expose": true})
+     * @Route("add/{activity}/{resource}", name="activity_add", options = {"expose": true})
      * @ParamConverter("activity", class = "ClarolineCoreBundle:Resource\Activity", options = {"id" = "activity"})
      * @ParamConverter("resource", class = "ClarolineCoreBundle:Resource\ResourceNode", options = {"id" = "resource"})
      */
@@ -95,28 +95,19 @@ class ActivityController
     }
 
     /**
-     * @Route("activity/delete/{activity}/{resource}", name="activity_delete", options = {"expose": true})
+     * @Route("remove/{activity}/{resource}", name="activity_remove_resource", options = {"expose": true})
      * @ParamConverter("activity", class = "ClarolineCoreBundle:Resource\Activity", options = {"id" = "activity"})
      * @ParamConverter("resource", class = "ClarolineCoreBundle:Resource\ResourceNode", options = {"id" = "resource"})
      */
-    public function deleteAction($activity, $resource)
+    public function removeAction($activity, $resource)
     {
-        $this->checkAccess('delete', $activity);
+        $this->checkAccess('edit', $activity);
 
-        if ($this->activityManager->deleteResource($activity, $resource)) {
+        if ($this->activityManager->removeResource($activity, $resource)) {
             return new Response('true');
         }
 
         return new Response('false');
-    }
-
-    /**
-     * @Route("activity/modal", name="activity_modal")
-     * @Template()
-     */
-    public function modalAction($resource)
-    {
-        return array();
     }
 
     private function checkAccess($permission, $resource)

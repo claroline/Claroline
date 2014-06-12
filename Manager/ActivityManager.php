@@ -108,9 +108,9 @@ class ActivityManager
     }
 
     /**
-     * delete a resource from an activity
+     * Remove a resource from an activity
      */
-    public function deleteResource($activity, $resource)
+    public function removeResource($activity, $resource)
     {
         if ($activity->getParameters()->getSecondaryResources()->contains($resource)) {
             $activity->getParameters()->getSecondaryResources()->removeElement($resource);
