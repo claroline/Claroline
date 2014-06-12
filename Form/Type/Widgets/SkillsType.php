@@ -19,7 +19,8 @@ class SkillsType extends AbstractType
                 array(
                     'type'          => 'icap_portfolio_widget_form_skills_skill',
                     'by_reference'  => false,
-                    'allow_add'     => true
+                    'allow_add'     => true,
+                    'allow_delete'  => true
                 )
             );
     }
