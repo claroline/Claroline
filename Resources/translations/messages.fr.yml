@@ -266,6 +266,7 @@ noUserFound: Pas d'utilisateur trouvé
 nQuestion: Question n°
 number of papers: Nombre de copies
 number of questions: Nombre de questions
+numberOfQuestionWithModel: Et créer <input type ="text" name='nbq' value='0' size='2' /> question(s) sur ce moléle
 number of questions to draw: Nombre de questions à tirer
 numerical: Numérique
 num_paper: Numéro de la copie

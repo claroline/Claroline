@@ -69,7 +69,12 @@
 <div>
     <div class="form-group row">
         {{ form_label(form.interaction.question.model) }}
-        <div class="col-md-3">{{ form_widget(form.interaction.question.model) }}</div>
+        <div class="col-md-3">
+            {{ form_widget(form.interaction.question.model) }}
+        </div>
+        <div id="divnbq" style="display: none">
+            {{ "numberOfQuestionWithModel" | trans | raw }}
+        </div>
     </div>
 </div>
 

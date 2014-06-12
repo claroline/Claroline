@@ -290,4 +290,21 @@ class InteractionQCM
 
         $this->choices = $choices;
     }
+
+    public function __clone() {
+        if ($this->id) {
+            $this->id = null;
+
+            $this->interaction = clone $this->interaction;
+
+            $newChoices = new \Doctrine\Common\Collections\ArrayCollection;
+            foreach ($this->choices as $choice) {
+                $newChoice = clone $choice;
+                $newChoice->setInteractionQCM($this);
+                $newChoices->add($newChoice);
+            }
+            $this->choices = $newChoices;
+
+        }
+    }
 }

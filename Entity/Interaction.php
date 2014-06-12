@@ -289,4 +289,22 @@ class Interaction
             $this->addHint($hint);
         }
     }
+
+    public function __clone() {
+        if ($this->id) {
+            $this->id = null;
+
+            $this->question = clone $this->question;
+            $this->question->setModel(0);
+
+            $newHints = new \Doctrine\Common\Collections\ArrayCollection;
+            foreach ($this->hints as $hint) {
+                $newHint = clone $hint;
+                $newHint->setInteraction($this);
+                $newHints->add($newHint);
+            }
+            $this->hints = $newHints;
+
+        }
+    }
 }

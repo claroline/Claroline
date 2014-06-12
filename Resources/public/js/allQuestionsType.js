@@ -6,7 +6,7 @@ $('#feebackOptionalShow').css({"display" : "inline-block"});
 $('#descriptionOptionalHide').css({"display" : "none"});
 $('#feebackOptionalHide').css({"display" : "none"});
 
-$("*[id$='_interaction_question_model']").attr("disabled", true);
+//$("*[id$='_interaction_question_model']").attr("disabled", true);
 
 // Display the textarea
 function DisplayOptional(type) {
@@ -88,3 +88,13 @@ function displayDeleteCategory() {
 }
 
 displayDeleteCategory();
+
+$(document).ready(function () {
+    $("*[id$='interaction_question_model']").click(function() {
+        if(this.checked) {
+            $('#divnbq').css({"display" : "block"});
+        } else {
+            $('#divnbq').css({"display" : "none"});
+        }
+    });
+});

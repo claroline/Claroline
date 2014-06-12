@@ -266,6 +266,7 @@ noUserFound: No user found
 nQuestion: Question n°
 number of papers: Number of papers
 number of questions: Number of questions
+numberOfQuestionWithModel: And create <input type ="text" name='nbq' value='0' size='2' /> question(s) with this model
 number of questions to draw: Number of questions to draw
 numerical: Numerical
 num_paper: Paper's number

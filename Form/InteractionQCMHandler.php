@@ -100,7 +100,8 @@ class InteractionQCMHandler
         $ord = 1;
         foreach ($interQCM->getChoices() as $choice) {
             $choice->setOrdre($ord);
-            $interQCM->addChoice($choice);
+            //$interQCM->addChoice($choice);
+            $choice->setInteractionQCM($interQCM);
             $this->em->persist($choice);
             $ord = $ord + 1;
             //echo($choice->getRightResponse());
@@ -109,11 +110,29 @@ class InteractionQCMHandler
         //On persite tous les hints de l'entité interaction
         foreach ($interQCM->getInteraction()->getHints() as $hint) {
             $hint->setPenalty(ltrim($hint->getPenalty(), '-'));
-            $interQCM->getInteraction()->addHint($hint);
+            //$interQCM->getInteraction()->addHint($hint);
+            $hint->setInteraction($interQCM->getInteraction());
             $this->em->persist($hint);
         }
 
         $this->em->flush();
+
+        if ($interQCM->getInteraction()->getQuestion()->getModel()) {
+            $request = $this->request;
+            $nbCop = 0;
+            if ($request->request->get('nbq') > 0)
+            {
+                while ($nbCop < $request->request->get('nbq')) {
+                    $nbCop ++;
+                    $copy = clone $interQCM;
+                    $title = $copy->getInteraction()->getQuestion()->getTitle();
+                    $copy->getInteraction()->getQuestion()
+                         ->setTitle($title.' '.$nbCop);
+
+                    $this->onSuccessAdd($copy);
+                }
+            }
+        }
 
     }
 
