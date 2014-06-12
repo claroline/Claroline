@@ -51,6 +51,7 @@ You can use the following variables in your form: 'You can use the following var
 You can use the full screen version of the text editor to include HTML: 'You can use the full screen version of the text editor to include HTML'
 Your changes have been saved: 'Your changes have been saved'
 account_created: 'Account created.'
+account_duration_label: Account lifetime (days)
 account_general_statistics: 'Account general statistics'
 action: Action
 actions: Actions
@@ -61,6 +62,7 @@ activity_form_name: Name
 activity_resource_remove: 'Are you sure you want to remove this resource from the activity?'
 add: Add
 add_category: 'Add category'
+add_field_to_facet: Add field to facet
 add_group: 'Add group'
 add_group_s_confirm_message: 'group(s) added'
 add_groups: 'Add groups'
@@ -132,6 +134,7 @@ choose_resource_form_type: 'Resource type'
 classify_my_workspaces: 'Classify my workspaces'
 classify_workspaces: 'Classify workspaces'
 close: Close
+closed_account: Closed account
 code: Code
 collaborator: Collaborator
 communication: Communication
@@ -143,6 +146,8 @@ copiable: Copiable
 copy: Copy
 create: Create
 create_category: 'Create a category'
+create_facet: Create a facet
+create_field: Create a field
 create_group: 'Create group'
 create_new_admin_tag: 'Create new admin tag'
 create_new_home_tab: 'Create new tab'
@@ -225,6 +230,8 @@ drag_file_here: 'Drag the file here'
 drop_file: 'Drop the file'
 dsn: dsn
 edit: Edit
+edit_facet: Edit a facet
+edit_field: Edit a field
 edit_password: 'Edit your password'
 edit_password_error: 'An error occured while editing your password.'
 edit_password_error_current : Your currently password is not correct.
@@ -251,6 +258,8 @@ exportable: Exportable
 external_pdo_database: 'External database (PDO)'
 facebook: Facebook
 facebook_application_validation_error: 'Provided credentials are not valid.'
+facets: Facets
+fail_add_user_group_message: These users couldn't be added to this group (check the max amount of users by role).
 fast_answer: 'Fast answer'
 fb_client_id: 'Application id'
 fb_client_secret: 'Application secret'
@@ -344,6 +353,7 @@ link: Link
 link_outdated: 'link is no more valid'
 link_workspace: 'Link workspace'
 list_groups: 'List groups'
+list_role: Role list
 list_users: 'List users'
 list_workspaces: 'List workspaces'
 lock: Lock
@@ -440,6 +450,7 @@ not_blank_expected: 'This value should not be blank'
 note: Note
 notification_activated: 'Notifications activated.'
 notification_deactivated: 'Notifications deactivated.'
+number: Number
 oauth: Oauth
 object: Object
 ok: Ok
@@ -466,6 +477,8 @@ personal_workspace: 'Personal workspace - '
 phone: Phone
 picture_profile: 'Picture profile'
 platform_appearance: 'Platform appearance'
+platform_expiration_date: Platform expiration date
+platform_init_date: Platform activation date
 platform_parameters: 'Platform parameters'
 platform_parameters_form_auth_mode: 'Authentication mode'
 platform_parameters_form_content: Content
@@ -520,6 +533,10 @@ registered_groups: 'Registered groups'
 registered_users: 'Registered users'
 registration: Registration
 registration_to_workspaces: 'Registration to workspaces'
+remove_facet: Remove a facet
+remove_facet_confirm: Do you really want to remove the facet %name% ?
+remove_field: Remove a field
+remove_field_confirm: Do you really want to remove the field %name% ?
 remove_group_confirm_message: 'Are you sure you want to delete this group?'
 remove_group_s_confirm_message: 'Are you sure you want to delete these %count% groups?'
 remove_message_confirm_message: 'Are you sure you want to delete this message?'
@@ -576,6 +593,7 @@ rights_management: 'Rights Management'
 role: Role
 role_creation: 'Role creation'
 role_edition: 'Role edition'
+role_limit_reached: The limit of %translationKey% has been reached.
 role_name_type_form_translationKey: Name
 roles: Roles
 roles_management: 'Roles management'
@@ -645,6 +663,7 @@ tags_list: 'Tags list'
 tags_management: 'Tags management'
 tags_organization: 'Tags organization'
 teacher: Teacher
+text: Text
 text_form_content: Content
 text_form_name: Name
 text_form_shareType: Sharable
@@ -693,6 +712,8 @@ unable_to_start_sendmail: 'Sendmail or Postfix cannot be started. Please check t
 unable_to_start_smtp: 'The connection with the SMTP server cannot be established. Please check that the parameters you provided are correct.'
 unable_to_start_transport: 'The mailing transport cannot be started. Please check that the parameters you provided are correct.'
 unauthorized: 'You are not authorized to see this page.'
+unavailable_platform: The platform is unavailable
+unavailable_role: The role %translationKey% is not available
 uncompress_file: Uncompress the file if possible
 under_min_length: 'This value is too short'
 unique connections: 'Nb unique Cnx.'
@@ -710,6 +731,7 @@ url_invalid: 'the code is not correct, do no try to change the url'
 user: User
 user_accounts: 'User accounts'
 user_creation: 'User creation'
+user_limit_reached: The user limit has been reached.
 user_parameters: 'User parameters'
 user_picker: 'User picker'
 user_profile: 'User profile'
@@ -810,13 +832,3 @@ yes: yes
 yesterday_activity: 'Yesterday''s activity'
 your_current_url: 'Your current URL'
 your_username: 'Your username is '
-closed_account: Closed account
-list_role: Role list
-unavailable_role: The role %translationKey% is not available
-fail_add_user_group_message: These users couldn't be added to this group (check the max amount of users by role).
-unavailable_platform: The platform is unavailable
-account_duration_label: Account lifetime (days)
-platform_init_date: Platform activation date
-platform_expiration_date: Platform expiration date
-role_limit_reached: The limit of %translationKey% has been reached.
-user_limit_reached: The user limit has been reached.

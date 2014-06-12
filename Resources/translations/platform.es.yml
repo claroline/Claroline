@@ -56,6 +56,7 @@ activity_form_name: 'Nombre'
 activity_resource_remove: '¿Esta seguro que desea remover este recurso de la actividad?'
 add: 'Agregar'
 add_category: 'Agregar categoría'
+add_field_to_facet: Agregar un campo a una faceta
 add_group: 'Agregar grupo'
 add_group_s_confirm_message: 'Grupos agregados'
 add_groups: 'Agregar grupos'
@@ -135,6 +136,8 @@ copiable: 'Copiable'
 copy: 'Copiar'
 create: 'Crear'
 create_category: 'Crear una categoría'
+create_facet: Crear una faceta
+create_field: Crear un campo
 create_group: 'Crear un grupo'
 create_new_admin_tag: 'Crear una etiqueta de administrador'
 create_new_home_tab: 'Crear una pestaña'
@@ -217,6 +220,8 @@ drag_file_here: 'Arrastre el archivo aquí'
 drop_file: 'Arrastre el archivo'
 dsn: dsn
 edit: 'Editar'
+edit_facet: Editar faceta
+edit_field: Editar campo
 editable: 'Editable'
 email: 'Correo electrónico'
 email_form_mail: 'Ingrese su correo electrónico'
@@ -229,6 +234,7 @@ exportable: 'Exportable'
 external_pdo_database: 'Base de datos externa (PDO)'
 facebook: Facebook
 facebook_application_validation_error: 'Las credenciales proporcionadas no son válidos.'
+facets: Facetas
 fail_add_user_group_message: Estos usuarios no han podido ser agregados al grupo (control del límite usuarios por función).
 fast_answer: 'Respuesta rápida'
 fb_client_id: 'Id de la aplicación'
@@ -411,6 +417,7 @@ note: Note
 notification_activated: 'Notificaciones activas.'
 notification_deactivated: 'Notificaciones desacivadas.'
 notifications: 'Notificaciones'
+number: Numero
 oauth: 'OAuth'
 object: 'Asunto'
 ok: 'Ok'
@@ -484,6 +491,10 @@ registered_users: 'Usuarios inscritos'
 registration: 'Inscripción'
 registration_to_workspaces: 'Inscripción a un espacio de trabajo'
 remove: Remover
+remove_facet: Eliminar una faceta
+remove_facet_confirm: ¿Esta seguro que desea suprimir la faceta %name%?
+remove_field: Eliminar una campo
+remove_field_confirm: ¿Esta seguro que desea suprimir el campo %name%?
 remove_group_confirm_message: '¿Esta seguro que desea suprimir este grupo?'
 remove_group_s_confirm_message: '¿Esta seguro que desea suprimir estos %count% grupos?'
 remove_message_confirm_message: '¿Esta seguro que desea suprimir este mensaje?'
@@ -606,6 +617,7 @@ tags_list: 'Lista de etiquetas'
 tags_management: 'Gestión de etiquetas'
 tags_organization: 'Organización de las etiquetas'
 teacher: 'Profesor'
+text: Texto
 text_form_content: 'Contenido'
 text_form_name: 'Nombre'
 text_form_shareType: 'Compartible'

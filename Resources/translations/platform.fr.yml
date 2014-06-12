@@ -62,6 +62,7 @@ activity_form_name: Nom
 activity_resource_remove: Êtes-vous sûr de vouloir enlever cette ressource de l'activite?
 add: Ajouter
 add_category: 'Ajouter une catégorie'
+add_field_to_facet: Ajouter un champ à une facette
 add_group: 'Ajouter un groupe'
 add_group_s_confirm_message: 'groupe(s) ajouté(s)'
 add_groups: 'Ajouter des groupes'
@@ -145,6 +146,8 @@ copiable: Copiable
 copy: Copier
 create: Créer
 create_category: 'Créer une catégorie'
+create_facet: Créer une facette
+create_field: Créer un champ
 create_group: 'Créer un groupe'
 create_new_admin_tag: 'Créer un nouveau Tag administrateur'
 create_new_home_tab: 'Créer un nouvel onglet'
@@ -227,6 +230,8 @@ drag_file_here: 'Déplacez le fichier ici'
 drop_file: 'Déposez le fichier'
 dsn: dsn
 edit: Modifier
+edit_facet: Editer une facette
+edit_field: Editer un champ
 edit_password: 'Modifier votre mot de passe'
 edit_password_error: 'Une erreur est survenue pendant la modification de votre mot de passe.'
 edit_password_error_current : Votre mot de passe actuel n'est pas correcte.
@@ -253,6 +258,7 @@ exportable: Exportable
 external_pdo_database: 'Base de données externe (PDO)'
 facebook: Facebook
 facebook_application_validation_error: 'Les identifiants fournis ne sont pas valides.'
+facets: Facettes
 fail_add_user_group_message: Ces utilisateurs n'ont pas pu être ajouté au groupe (vérifiez la limite d'utilisateurs par rôle).
 fast_answer: 'Réponse rapide'
 fb_client_id: 'Id de l''application'
@@ -444,6 +450,7 @@ note: Note
 notification_activated: 'Notifications activées.'
 notification_deactivated: 'Notifications désactivées.'
 notifications: 'Notifications'
+number: Nombre
 oauth: Oauth
 object: Objet
 ok: Ok
@@ -528,6 +535,10 @@ registration: Inscription
 registration_to_workspaces: 'Inscription à des espaces d''activités'
 remove: Enlever
 remove: Remove
+remove_facet: Supprimer une facette
+remove_facet_confirm: Etes-vous sur de vouloir supprimer la facette %name% ?
+remove_field: Supprimer une champ
+remove_field_confirm: Etes-vous sur de vouloir supprimer le champ %name% ?
 remove_group_confirm_message: 'Êtes-vous sûr de vouloir supprimer ce groupe ?'
 remove_group_s_confirm_message: 'Êtes-vous sûr de vouloir supprimer ces %count% groupes?'
 remove_message_confirm_message: 'Êtes-vous sûr de vouloir supprimer ce message ?'
@@ -656,6 +667,7 @@ tags_list: 'Liste des Tags'
 tags_management: 'Gestion des Tags'
 tags_organization: 'Organisation des Tags'
 teacher: Professeur
+text: Texte
 text_form_content: Contenu
 text_form_name: Nom
 text_form_shareType: Redistribution

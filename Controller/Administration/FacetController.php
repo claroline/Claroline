@@ -26,6 +26,7 @@ use Claroline\CoreBundle\Form\Administration\FacetType;
 use Claroline\CoreBundle\Form\Administration\FieldFacetType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 class FacetController extends Controller
 {
@@ -127,9 +128,11 @@ class FacetController extends Controller
         $form->handleRequest($this->request);
 
         if ($form->isValid()) {
-            $this->facetManager->createFacet($form->get('name')->getData());
+            $facet = $this->facetManager->createFacet($form->get('name')->getData());
 
-            return new Response('success', 204);
+            return new JsonResponse(
+                array('name' => $facet->getName(), 'position' => $facet->getPosition(), 'id' => $facet->getId())
+            );
         }
 
        return $this->render(
@@ -154,13 +157,21 @@ class FacetController extends Controller
         $form->handleRequest($this->request);
 
         if ($form->isValid()) {
-            $this->facetManager->addField(
+            $field = $this->facetManager->addField(
                 $facet,
                 $form->get('name')->getData(),
                 $form->get('type')->getData()
             );
 
-            return new Response('success');
+            return new JsonResponse(
+                array(
+                    'name' => $field->getName(),
+                    'position' => $field->getPosition(),
+                    'typeTranslationKey' => $field->getTypeTranslationKey(),
+                    'id' => $field->getId(),
+                    'facet_id' => $facet->getId()
+                )
+            );
         }
 
         return $this->render(
@@ -213,13 +224,20 @@ class FacetController extends Controller
     public function editFacetAction(Facet $facet)
     {
         $this->checkOpen();
+        $oldName = $facet->getName();
         $form = $this->formFactory->create(new FacetType(), $facet);
         $form->handleRequest($this->request);
 
         if ($form->isValid()) {
-            $this->facetManager->editFacet($facet, $form->get('name')->getData());
+            $facet = $this->facetManager->editFacet($facet, $form->get('name')->getData());
 
-            return new Response('success', 204);
+            return new JsonResponse(
+                array(
+                    'id' => $facet->getId(),
+                    'old_name' => $oldName,
+                    'new_name' => $facet->getName(),
+                )
+            );
         }
 
         return $this->render(
@@ -298,13 +316,19 @@ class FacetController extends Controller
         $form->handleRequest($this->request);
 
         if ($form->isValid()) {
-            $this->facetManager->editField(
+            $fieldFacet = $this->facetManager->editField(
                 $fieldFacet,
                 $form->get('name')->getData(),
                 $form->get('type')->getData()
             );
 
-            return new Response('success');
+            return new JsonResponse(
+                array(
+                    'id' => $fieldFacet->getId(),
+                    'name' => $fieldFacet->getName(),
+                    'typeTranslationKey' => $fieldFacet->getTypeTranslationKey()
+                )
+            );
         }
 
         return $this->render(
