@@ -12,7 +12,7 @@ portfolioApp
             };
 
             scope.addChild = function(child) {
-                scope.collection.push({'name': child});
+                scope.collection.push(child);
             };
 
             scope.deleteChild = function(child) {
