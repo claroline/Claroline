@@ -818,3 +818,15 @@ platform_init_date: Platform activation date
 platform_expiration_date: Platform expiration date
 role_limit_reached: The limit of %translationKey% has been reached.
 user_limit_reached: The user limit has been reached.
+facets: Facets
+add_field_to_facet: Add field to facet
+text: Text
+number: Number
+create_facet: Create a facet
+create_field: Create a field
+edit_facet: Edit a facet
+edit_field: Edit a field
+remove_facet: Remove a facet
+remove_facet_confirm: Do you really want to remove the facet %name% ?
+remove_field: Remove a field
+remove_field_confirm: Do you really want to remove the field %name% ?

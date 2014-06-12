@@ -29,20 +29,7 @@
     <div class="panel-body">
         <ul class="nav nav-tabs">
             {% for facet in facets %}
-                <li>
-                    <a href="#{{ facet.getName() }}" data-facet-id="{{ facet.getId() }}" data-toggle="tab">{{ facet.getName() }}
-                        <div class="dropdown">
-                            <i class="icon-chevron-down pointer-hand" data-toggle="dropdown"></i>
-                            <ul class="dropdown-menu" role="menu">
-                                <li role="presentation"><i role="menuitem" class="facet-reorder-left-btn icon-arrow-left"> {{ "left" | trans({}, 'platform') }}</i></li>
-                                <li role="presentation"><i role="menuitem" class="facet-reorder-right-btn icon-arrow-right"> {{ "right" | trans({}, 'platform') }}</i></li>
-                                <li class="divider"></li>
-                                <li role="presentation"><i role="menuitem" class="facet-rename-btn icon-pencil"> {{ "rename" | trans({}, 'platform') }}</i></li>
-                                <li role="presentation"><i role="menuitem" class="facet-delete-btn icon-trash"> {{ "delete" | trans({}, 'platform') }}</i></li>
-                            </ul>
-                        </div>
-                    </a>
-                </li>
+                {% include "ClarolineCoreBundle:Administration\\Facet:facetTab.html.twigjs" with {'facet': facet} %}
             {% endfor %}
             <li id="add-facet-btn">
                 <a class="pointer-hand">
@@ -51,25 +38,9 @@
             </li>
         </ul>
 
-        <div class="tab-content">
+        <div id="facet-pane" class="tab-content">
             {% for facet in facets %}
-                <div class="tab-pane" id="{{ facet.getName() }}">
-                    <div class="panel-heading"></div>
-                    <div class="panel-body">
-                        <ul class="list-group list-fields" data-facet-id="{{ facet.getId() }}">
-                            {% for field in facet.getFieldsFacet() %}
-                            <li class="list-group-item" id="field-{{ field.getId() }}" data-field-facet-id="{{ field.getId() }}">
-                                <a class="edit-field-facet" href="#">{{ field.getName() }} ({{ field.getTypeTranslationKey }})</a>
-                                <a class="close remove-field-facet" href="#" aria-hidden="true">&times;</a>
-                            </li>
-                            {% endfor %}
-                        </ul>
-                    </div>
-                    <div data-facet-id="{{ facet.getId() }}" class="panel-footer pointer-hand text-center add-field-to-facet">
-                        <i class="icon-plus-sign" data-facet-id="{{ facet.getId() }}"></i>
-                        {{ 'add_field_to_facet'|trans({}, 'platform') }}
-                    </div>
-                </div>
+                {% include "ClarolineCoreBundle:Administration\\Facet:facetPane.html.twigjs" with {'facet': facet} %}
             {% endfor %}
         </div>
 
@@ -80,102 +51,68 @@
     {{ parent() }}
 
     <script>
-        /******************/
-        /* FACET CREATION */
-        /******************/
-
-        $('#add-facet-btn').on('click', function(event) {
+        $('body')
+        .on('click', '#add-facet-btn', function(event) {
             var url = Routing.generate('claro_admin_facet_form');
-            displayForm(url, 'form_facet_creation', undefined);
-        });
-
-        /******************/
-        /* FIELD CREATION */
-        /******************/
-
-        $('.add-field-to-facet').on('click', function(event) {
+            displayForm(url, 'form_facet_creation', addFacet);
+        })
+        .on('click', '.add-field-to-facet', function(event) {
             var url = Routing.generate('claro_admin_facet_field_form', {'facet': $(event.target).attr('data-facet-id')});
-            displayForm(url, 'form_field_creation', undefined);
-        });
-
-        /********************/
-        /* MOVE RIGHT FACET */
-        /********************/
-
-        $('.facet-reorder-right-btn').on('click', function(event) {
+            displayForm(url, 'form_field_creation', addField);
+        })
+        .on('click', '.facet-reorder-right-btn', function(event) {
             var facetId = $($(event.currentTarget)[0].parentElement.parentElement.parentElement.parentElement).attr('data-facet-id');
             var url = Routing.generate('claro_admin_move_facet_up', {'facet': facetId});
             $.ajax({
                 url: url,
                 success: function(data) {
-                    alert('right');
+                    moveFacetRight(facetId)
                 }
             });
-        });
-
-        /*******************/
-        /* MOVE LEFT FACET */
-        /*******************/
-
-        $('.facet-reorder-left-btn').on('click', function(event) {
+        })
+        .on('click', '.facet-reorder-left-btn', function(event) {
             var facetId = $($(event.currentTarget)[0].parentElement.parentElement.parentElement.parentElement).attr('data-facet-id');
             var url = Routing.generate('claro_admin_move_facet_down', {'facet': facetId});
             $.ajax({
                 url: url,
                 success: function(data) {
-                    alert('left');
+                    moveFacetLeft(facetId)
                 }
             });
-        });
-
-        /****************/
-        /* DELETE FACET */
-        /****************/
-
-        $('.facet-delete-btn').on('click', function(event) {
+        })
+        .on('click', '.facet-delete-btn', function(event) {
             var facetId = $($(event.currentTarget)[0].parentElement.parentElement.parentElement.parentElement).attr('data-facet-id');
+            var facetName = $($(event.currentTarget)[0].parentElement.parentElement.parentElement.parentElement).attr('data-facet-name');
             var url = Routing.generate('claro_admin_facet_remove', {'facet': facetId});
-            $.ajax({
-                url: url,
-                success: function(data) {
-                    alert('delete');
-                }
-            });
-        });
-
-        /****************/
-        /* RENAME FACET */
-        /****************/
-
-        $('.facet-rename-btn').on('click', function(event) {
+            executeRequestConfirm(
+                url,
+                removeFacet,
+                facetId,
+                Translator.get('platform:remove_facet_confirm', {'name': facetName}),
+                Translator.get('platform:remove_facet')
+            );
+        })
+        .on('click', '.facet-rename-btn', function(event) {
             var facetId = $($(event.currentTarget)[0].parentElement.parentElement.parentElement.parentElement).attr('data-facet-id');
             var url = Routing.generate('claro_admin_facet_edit_form', {'facet': facetId})
-            displayForm(url, 'form_facet_edit', undefined);
-        });
-
-        /********************/
-        /* EDIT FIELD FACET */
-        /********************/
-
-        $('.edit-field-facet').on('click', function(event) {
+            displayForm(url, 'form_facet_edit', editFacet);
+        })
+        .on('click', '.edit-field-facet', function(event) {
             var fieldFacetId = $($(event.currentTarget)[0].parentElement).attr('data-field-facet-id');
             var url = Routing.generate('claro_admin_field_facet_edit_form', {'fieldFacet': fieldFacetId});
-            displayForm(url, 'form_field_edit', undefined);
-        });
-
-        /**********************/
-        /* DELETE FIELD FACET */
-        /**********************/
-
-        $('.remove-field-facet').on('click', function(event) {
+            displayForm(url, 'form_field_edit', editField);
+        })
+        .on('click', '.remove-field-facet', function(event) {
             var fieldFacetId = $($(event.currentTarget)[0].parentElement).attr('data-field-facet-id');
+            var fieldFacetName = $($(event.currentTarget)[0].parentElement).attr('data-field-facet-name');
             var url = Routing.generate('claro_admin_remove_field_facet', {'fieldFacet': fieldFacetId});
-            $.ajax({
-                url: url,
-                success: function(data) {
-                    alert('delete done');
-                }
-            });
+            executeRequestConfirm(
+                url,
+                removeField,
+                fieldFacetId,
+                Translator.get('platform:remove_field_confirm', {'name': fieldFacetName}),
+                Translator.get('platform:remove_field')
+            );
         });
 
         /*******************/
@@ -190,7 +127,6 @@
                     url: url,
                     data: {ids: $(event.target).sortable('toArray')},
                     success: function() {
-                        alert('reordering done');
                     }
                 })
             }
@@ -200,46 +136,103 @@
         /* HELPERS */
         /***********/
 
-        function displayForm(url, formId, callback) {
+        function displayForm(url, formId, successHandler) {
             $.ajax({
                 url: url,
                 success: function(data, textStatus, jqXHR) {
+                    window.Claroline.Modal.hide();
                     window.Claroline.Modal.create(data).on('click', 'button.btn', function(event) {
                         event.preventDefault();
-                        submitForm(formId);
+                        submitForm(formId, successHandler);
                     });
                 }
             });
         }
 
-        function displayValidationModal()
-        {
-            alert('are you sure you wanna do that action modal');
-        }
-
-        function submitForm(formId) {
+        function submitForm(formId, successHandler) {
             formData = new FormData(document.getElementById(formId));
             url = $('#' + formId).attr('action');
-            console.debug(formData);
             $.ajax({
                 url: url,
                 data: formData,
                 type: 'POST',
                 processData: false,
                 contentType: false,
-                success: function() {
-                    alert('YOLO');
+                success: function(data, textStatus, jqXHR) {
+                    if (jqXHR.getResponseHeader('Content-Type') === 'application/json') {
+                        $('.modal').modal('hide');
+                        successHandler(data, textStatus, jqXHR);
+                    } else {
+                        $('#facet-modal').replaceWith(data);
+                    }
                 }
             });
         }
 
-        function addFacet(name) {
-            alert(name);
+        function executeRequestConfirm(url, successHandler, successParameter, body, header) {
+            var html = Twig.render(
+                ModalWindow,
+                {'confirmFooter': true, 'modalId': 'confirm-modal', 'body': body, 'header': header}
+            );
+
+            $('body').append(html);
+            //display validation modal
+            $('#confirm-modal').modal('show');
+            //destroy the modal when hidden
+            $('#confirm-modal').on('hidden.bs.modal', function () {
+                $(this).remove();
+            });
+
+            $('#confirm-ok').on('click', function(event) {
+                $.ajax({
+                    url: url,
+                    success: function(data) {
+                        successHandler(event, successParameter);
+                        $('#confirm-modal').modal('hide');
+                    }
+                });
+            })
+
         }
 
-        function addField(facetId, name) {
+        /*************/
+        /* CALLBACKS */
+        /*************/
 
+        var addFacet = function(data, textStatus, jqXHR) {
+            $('#add-facet-btn').before(Twig.render(FacetTab, {'facet': data}));
+            $('#facet-pane').append(Twig.render(FacetPane, {'facet': data}));
         }
 
+        var removeFacet = function(event, facetId) {
+            $('#facet-pane-' + facetId).remove();
+            $('#tab-facet-' + facetId).remove();
+        }
+
+        var moveFacetRight = function(facetId) {
+            var next = $('#tab-facet-' + facetId).next().attr('id');
+            $('#tab-facet-' + facetId).insertAfter('#' + next);
+        }
+
+        var moveFacetLeft = function(facetId) {
+            var prev = $('#tab-facet-' + facetId).prev().attr('id');
+            $('#tab-facet-' + facetId).insertBefore('#' + prev);
+        }
+
+        var addField = function(data, textStatus, jqXHR) {
+            $('#lu-facet-' + data['facet_id']).append(Twig.render(FieldElement, {'field': data}))
+        }
+
+        var removeField = function(event, fieldId) {
+            $('#field-' + fieldId).remove();
+        }
+
+        var editFacet = function(data, textStatus, jqXHR) {
+            $('#tab-facet-' + data['id']).children().html(Twig.render(FacetTabInnerHtml, {'facet': data}));
+        }
+
+        var editField = function(data, textStatus, jqXHR) {
+            $('#field-' + data['id']).html(Twig.render(FieldElementInnerHtml, {'field': data}));
+        }
     </script>
 {% endblock %}

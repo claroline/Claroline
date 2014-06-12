@@ -48,6 +48,8 @@ class FacetManager
         $facet->setPosition($this->om->count('Claroline\CoreBundle\Entity\Facet\Facet'));
         $this->om->persist($facet);
         $this->om->flush();
+
+        return $facet;
     }
 
     /**
@@ -67,6 +69,8 @@ class FacetManager
         $facet->setName($name);
         $this->om->persist($facet);
         $this->om->flush();
+
+        return $facet;
     }
 
     /**
@@ -119,6 +123,8 @@ class FacetManager
         $fieldFacet->setPosition($this->om->count('Claroline\CoreBundle\Entity\Facet\FieldFacet'));
         $this->om->persist($fieldFacet);
         $this->om->flush();
+
+        return $fieldFacet;
     }
 
     /**
@@ -217,6 +223,8 @@ class FacetManager
         $fieldFacet->setType($type);
         $this->om->persist($fieldFacet);
         $this->om->flush();
+
+        return $fieldFacet;
     }
 
     /**

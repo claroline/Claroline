@@ -1,0 +1,9 @@
+{% twig_js name="FieldElement" %}
+
+<li class="list-group-item"
+    id="field-{{ field.id }}"
+    data-field-facet-id="{{ field.id }}"
+    data-field-facet-name="{{ field.name }}"
+>
+    {% include "ClarolineCoreBundle:Administration\\Facet:fieldElementInnerHtml.html.twigjs" with {'field': field} %}
+</li>

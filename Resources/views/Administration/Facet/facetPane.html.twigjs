@@ -1,0 +1,16 @@
+{% twig_js name="FacetPane" %}
+
+<div class="tab-pane" id="facet-pane-{{ facet.id}}">
+    <div class="panel-heading"></div>
+    <div class="panel-body">
+        <ul class="list-group list-fields" data-facet-id="{{ facet.id }}" id="lu-facet-{{ facet.id }}">
+            {% for field in facet.fieldsFacet %}
+                {% include "ClarolineCoreBundle:Administration\\Facet:fieldElement.html.twigjs" with {'field': field} %}
+            {% endfor %}
+        </ul>
+    </div>
+    <div data-facet-id="{{ facet.id }}" class="panel-footer pointer-hand text-center add-field-to-facet">
+        <i class="icon-plus-sign" data-facet-id="{{ facet.id }}"></i>
+        {{ 'add_field_to_facet'|trans({}, 'platform') }}
+    </div>
+</div>
