@@ -28,7 +28,7 @@
                                 <ul class="dropdown-menu" role="menu">
                                     <li role="presentation">
                                         <i role="menuitem"
-                                           class="activity-delete icon-trash"
+                                           class="activity-remove-resource icon-trash"
                                            data-resource="{{ resource.getId() }}"
                                            data-activity="{{ _resource.getId() }}"
                                         >
@@ -51,9 +51,13 @@
         </ul>
         <div class="activities">
             <div id="activity-primary">
-                <div>{{ _resource.getDescription() | raw }}</div>
-                <hr>
-                {{ _resource.getPrimaryResource().getName() }}
+                {% if not _resource.getDescription() is empty %}
+                    <div>{{ _resource.getDescription() | raw }}</div>
+                {% endif %}
+                {% if not _resource.getPrimaryResource() is empty %}
+                    <hr>
+                    {{ _resource.getPrimaryResource().getName() }}
+                {% endif %}
             </div>
             {% for resource in _resource.getParameters().getSecondaryResources() %}
                 <div class="hide" id="resource-{{ resource.getId() }}">

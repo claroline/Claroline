@@ -26,7 +26,7 @@
                 .append(
                     common.createElement('ul', 'dropdown-menu').html(
                         common.createElement('li').html(
-                            common.createElement('i', 'activity-delete icon-trash')
+                            common.createElement('i', 'activity-remove-resource icon-trash')
                             .data('resource', resource.id)
                             .data('activity', activity)
                             .html(
@@ -116,7 +116,7 @@
             }
         });
     })
-    .on('click', '.activity-tabs .activity-delete', function () {
+    .on('click', '.activity-tabs .activity-remove-resource', function () {
         var activity = $(this).data('activity');
         var resource = $(this).data('resource');
 
