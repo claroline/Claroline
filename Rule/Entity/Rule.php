@@ -106,14 +106,6 @@ abstract class Rule
     protected $user;
 
     /**
-     * @var string
-     *
-     * @ORM\Column(name="additional_datas", type="string", nullable=true)
-     * @Expose
-     */
-    protected $additionalDatas;
-
-    /**
      * @var datetime
      *
      * @ORM\Column(name="active_from", type="datetime", nullable=true)
@@ -373,26 +365,6 @@ abstract class Rule
     public function getBadge()
     {
         return $this->badge;
-    }
-
-    /**
-     * @param string $action
-     *
-     * @return Rule
-     */
-    public function setAdditionalDatas($additionalDatas)
-    {
-        $this->additionalDatas = $additionalDatas;
-
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getAdditionalDatas()
-    {
-        return $this->additionalDatas;
     }
 
     /**

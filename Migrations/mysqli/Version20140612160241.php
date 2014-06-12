@@ -1,6 +1,6 @@
 <?php
 
-namespace Claroline\CoreBundle\Migrations\drizzle_pdo_mysql;
+namespace Claroline\CoreBundle\Migrations\mysqli;
 
 use Doctrine\DBAL\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
@@ -8,16 +8,17 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2014/06/11 02:27:33
+ * Generation date: 2014/06/12 04:02:43
  */
-class Version20140611142731 extends AbstractMigration
+class Version20140612160241 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
         $this->addSql("
             ALTER TABLE claro_badge_rule 
             ADD active_from DATETIME DEFAULT NULL, 
-            ADD active_until DATETIME DEFAULT NULL
+            ADD active_until DATETIME DEFAULT NULL, 
+            DROP additional_datas
         ");
         $this->addSql("
             ALTER TABLE claro_activity_past_evaluation 
@@ -52,7 +53,8 @@ class Version20140611142731 extends AbstractMigration
         $this->addSql("
             ALTER TABLE claro_activity_rule 
             ADD active_from DATETIME DEFAULT NULL, 
-            ADD active_until DATETIME DEFAULT NULL
+            ADD active_until DATETIME DEFAULT NULL, 
+            DROP additional_datas
         ");
     }
 
@@ -86,11 +88,13 @@ class Version20140611142731 extends AbstractMigration
         ");
         $this->addSql("
             ALTER TABLE claro_activity_rule 
+            ADD additional_datas VARCHAR(255) DEFAULT NULL, 
             DROP active_from, 
             DROP active_until
         ");
         $this->addSql("
             ALTER TABLE claro_badge_rule 
+            ADD additional_datas VARCHAR(255) DEFAULT NULL, 
             DROP active_from, 
             DROP active_until
         ");

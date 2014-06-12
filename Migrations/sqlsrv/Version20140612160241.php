@@ -1,6 +1,6 @@
 <?php
 
-namespace Claroline\CoreBundle\Migrations\pdo_sqlsrv;
+namespace Claroline\CoreBundle\Migrations\sqlsrv;
 
 use Doctrine\DBAL\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
@@ -8,9 +8,9 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2014/06/11 02:27:33
+ * Generation date: 2014/06/12 04:02:43
  */
-class Version20140611142731 extends AbstractMigration
+class Version20140612160241 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
@@ -21,6 +21,10 @@ class Version20140611142731 extends AbstractMigration
         $this->addSql("
             ALTER TABLE claro_badge_rule 
             ADD active_until DATETIME2(6)
+        ");
+        $this->addSql("
+            ALTER TABLE claro_badge_rule 
+            DROP COLUMN additional_datas
         ");
         $this->addSql("
             ALTER TABLE claro_activity_past_evaluation 
@@ -63,6 +67,10 @@ class Version20140611142731 extends AbstractMigration
         $this->addSql("
             ALTER TABLE claro_activity_rule 
             ADD active_until DATETIME2(6)
+        ");
+        $this->addSql("
+            ALTER TABLE claro_activity_rule 
+            DROP COLUMN additional_datas
         ");
     }
 
@@ -119,11 +127,19 @@ class Version20140611142731 extends AbstractMigration
         ");
         $this->addSql("
             ALTER TABLE claro_activity_rule 
+            ADD additional_datas NVARCHAR(255)
+        ");
+        $this->addSql("
+            ALTER TABLE claro_activity_rule 
             DROP COLUMN active_from
         ");
         $this->addSql("
             ALTER TABLE claro_activity_rule 
             DROP COLUMN active_until
+        ");
+        $this->addSql("
+            ALTER TABLE claro_badge_rule 
+            ADD additional_datas NVARCHAR(255)
         ");
         $this->addSql("
             ALTER TABLE claro_badge_rule 

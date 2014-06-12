@@ -1,6 +1,6 @@
 <?php
 
-namespace Claroline\CoreBundle\Migrations\ibm_db2;
+namespace Claroline\CoreBundle\Migrations\pdo_mysql;
 
 use Doctrine\DBAL\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
@@ -8,20 +8,21 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2014/06/11 02:27:33
+ * Generation date: 2014/06/12 04:02:42
  */
-class Version20140611142731 extends AbstractMigration
+class Version20140612160241 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
         $this->addSql("
             ALTER TABLE claro_badge_rule 
-            ADD COLUMN active_from TIMESTAMP(0) DEFAULT NULL 
-            ADD COLUMN active_until TIMESTAMP(0) DEFAULT NULL
+            ADD active_from DATETIME DEFAULT NULL, 
+            ADD active_until DATETIME DEFAULT NULL, 
+            DROP additional_datas
         ");
         $this->addSql("
             ALTER TABLE claro_activity_past_evaluation 
-            ADD COLUMN log_id INTEGER DEFAULT NULL
+            ADD log_id INT DEFAULT NULL
         ");
         $this->addSql("
             ALTER TABLE claro_activity_past_evaluation 
@@ -34,7 +35,8 @@ class Version20140611142731 extends AbstractMigration
         ");
         $this->addSql("
             ALTER TABLE claro_activity_evaluation 
-            ADD COLUMN log_id INTEGER DEFAULT NULL ALTER user_id user_id INTEGER NOT NULL
+            ADD log_id INT DEFAULT NULL, 
+            CHANGE user_id user_id INT NOT NULL
         ");
         $this->addSql("
             ALTER TABLE claro_activity_evaluation 
@@ -50,8 +52,9 @@ class Version20140611142731 extends AbstractMigration
         ");
         $this->addSql("
             ALTER TABLE claro_activity_rule 
-            ADD COLUMN active_from TIMESTAMP(0) DEFAULT NULL 
-            ADD COLUMN active_until TIMESTAMP(0) DEFAULT NULL
+            ADD active_from DATETIME DEFAULT NULL, 
+            ADD active_until DATETIME DEFAULT NULL, 
+            DROP additional_datas
         ");
     }
 
@@ -59,38 +62,41 @@ class Version20140611142731 extends AbstractMigration
     {
         $this->addSql("
             ALTER TABLE claro_activity_evaluation 
-            DROP COLUMN log_id ALTER user_id user_id INTEGER DEFAULT NULL
-        ");
-        $this->addSql("
-            ALTER TABLE claro_activity_evaluation 
             DROP FOREIGN KEY FK_F75EC869EA675D86
         ");
         $this->addSql("
-            DROP INDEX IDX_F75EC869EA675D86
+            DROP INDEX IDX_F75EC869EA675D86 ON claro_activity_evaluation
         ");
         $this->addSql("
-            DROP INDEX user_activity_unique_evaluation
+            DROP INDEX user_activity_unique_evaluation ON claro_activity_evaluation
         ");
         $this->addSql("
-            ALTER TABLE claro_activity_past_evaluation 
-            DROP COLUMN log_id
+            ALTER TABLE claro_activity_evaluation 
+            DROP log_id, 
+            CHANGE user_id user_id INT DEFAULT NULL
         ");
         $this->addSql("
             ALTER TABLE claro_activity_past_evaluation 
             DROP FOREIGN KEY FK_F1A76182EA675D86
         ");
         $this->addSql("
-            DROP INDEX IDX_F1A76182EA675D86
+            DROP INDEX IDX_F1A76182EA675D86 ON claro_activity_past_evaluation
+        ");
+        $this->addSql("
+            ALTER TABLE claro_activity_past_evaluation 
+            DROP log_id
         ");
         $this->addSql("
             ALTER TABLE claro_activity_rule 
-            DROP COLUMN active_from 
-            DROP COLUMN active_until
+            ADD additional_datas VARCHAR(255) DEFAULT NULL, 
+            DROP active_from, 
+            DROP active_until
         ");
         $this->addSql("
             ALTER TABLE claro_badge_rule 
-            DROP COLUMN active_from 
-            DROP COLUMN active_until
+            ADD additional_datas VARCHAR(255) DEFAULT NULL, 
+            DROP active_from, 
+            DROP active_until
         ");
     }
 }

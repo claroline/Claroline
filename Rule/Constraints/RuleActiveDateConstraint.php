@@ -31,7 +31,8 @@ class RuleActiveDateConstraint extends AbstractConstraint
      */
     public function isApplicableTo(Rule $rule)
     {
-        return ($rule->getAdditionalDatas() === 'rule_active_date');
+        return !is_null($rule->getActiveFrom())
+            || !is_null($rule->getActiveUntil());
     }
 
     /**

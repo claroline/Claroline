@@ -12,6 +12,7 @@
 namespace Claroline\CoreBundle\Manager;
 
 use Claroline\CoreBundle\Entity\Activity\ActivityParameters;
+use Claroline\CoreBundle\Entity\Activity\ActivityRule;
 use Claroline\CoreBundle\Entity\Activity\Evaluation;
 use Claroline\CoreBundle\Entity\Activity\PastEvaluation;
 use Claroline\CoreBundle\Entity\Log\Log;
@@ -19,6 +20,7 @@ use Claroline\CoreBundle\Entity\Resource\Activity;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Manager\ResourceManager;
 use Claroline\CoreBundle\Persistence\ObjectManager;
+use Claroline\CoreBundle\Rule\Entity\Rule;
 use JMS\DiExtraBundle\Annotation\Inject;
 use JMS\DiExtraBundle\Annotation\InjectParams;
 use JMS\DiExtraBundle\Annotation\Service;
@@ -409,6 +411,31 @@ class ActivityManager
         $session = is_null($sessionTime) ? 0 : $sessionTime;
 
         return $total + $session;
+    }
+
+
+    public function createActivityRule(
+        ActivityParameters $activityParams,
+        $action,
+        $occurrence,
+        $result,
+        $activeFrom,
+        $activeUntil,
+        ResourceNode $resourceNode = null)
+    {
+        $rule = new ActivityRule();
+        $rule->setActivityParameters($activityParams);
+        $rule->setAction($action);
+        $rule->setOccurrence($occurrence);
+        $rule->setResult($result);
+        $rule->setActiveFrom($activeFrom);
+        $rule->setActiveUntil($activeUntil);
+        $rule->setResource($resourceNode);
+        $rule->setUserType(0);
+        $rule->setResultComparison(Rule::RESULT_SUPERIOR_EQUAL);
+
+        $this->persistence->persist($rule);
+        $this->persistence->flush();
     }
 
 
