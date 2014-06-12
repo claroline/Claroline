@@ -58,7 +58,6 @@ class FormFactory
     const TYPE_PLATFORM_MAIL_INSCRIPTION = 'platform_mail_inscription';
     const TYPE_AGENDA_IMPORTER = 'import_agenda_file';
     const TYPE_COMPETENCE = 'competence';
-    const TYPE_COMPETENCE_LINK = 'competence_link';
 
     private static $types = array(
         self::TYPE_MESSAGE => array(
@@ -199,10 +198,6 @@ class FormFactory
         self:: TYPE_COMPETENCE => array(
             'formType' => 'Claroline\CoreBundle\Form\CompetenceType',
             'entity' => 'Claroline\CoreBundle\Entity\Competence\Competence'
-        ),
-        self::TYPE_COMPETENCE_LINK => array(
-            'formType' => 'Claroline\CoreBundle\Form\CompetencesLinkType',
-            //'entity' => 'Claroline\CoreBundle\Entity\Competence\Competence'
         )
     );
 

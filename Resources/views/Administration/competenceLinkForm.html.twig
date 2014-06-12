@@ -7,21 +7,23 @@
         <div class="panel-heading">
             <h3 class="panel-title">{{ "competence" | trans({}, "platform" )}}</h3>
         </div>
-        <form action="#" method="post" {{ form_enctype(form) }}
-              id="myForm"
-              class="form-horizontal">
+        {{cpt.getName() }}
+        <form action="#" method="post" id="myForm" class="form-horizontal">
             <div class="panel-body">
-                {{ form_widget(form) }}
-                {{ form_rest(form) }}
-                {{ form_errors(form) }}
+            	{% for c in competences %}
+            	{{ c.getName() }}
+            		<input type="checkbox" class="checkbox" name="competences_link" />
+            	{% endfor %}	
             </div>
             <div class="panel-footer">
-                <button type="button" class="btn btn-primary" id="link" data-route="{{path('claro_admin_competence_link',{rootId: root.getId(), parentId: cpt.getId()})}}">{{ 'link'|trans({}, 'platform') }}</button>
+                <button type="button" class="btn btn-primary" id="link">{{ 'link'|trans({}, 'platform') }}</button>
+                
+                <button class="btn btn-primary" id="move">{{ 'move'|trans({}, 'platform') }}</button>
+
                 <button class="btn btn-primary" id="link_hierarchy">{{ 'link_hierarchy'|trans({}, 'platform') }}</button>
             </div>
         </form>
         <a href="{{path('claro_admin_competence_delete', {competenceId:cpt.getId()})}}" class="btn btn-primary">{{ 'delete'|trans({}, 'platform') }}</a>
-        
     </div>
 {% endblock %}
 {% block javascripts %}

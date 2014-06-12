@@ -1,9 +1,6 @@
 <?php
 
 /*
- * This file is part of <?php
-
-/*
  * This file is part of the Claroline Connect package.
  *
  * (c) Claroline Consortium <consortium@claroline.net>

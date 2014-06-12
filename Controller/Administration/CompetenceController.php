@@ -212,13 +212,12 @@ class CompetenceController {
      */
     public function linkCompetenceFormAction($competence, $root)
     {
-    	$competences = $this->cptmanager->getTransversalCompetences();
-        $form = $this->formFactory->create(FormFactory::TYPE_COMPETENCE_LINK, array($competences, true, $root, $competence));
+    	$competences = $this->cptmanager->getExcludeHiearchy($competence);
     	
         return array(
-        	'form' => $form->createView(),
         	'cpt' => $competence,
-        	'root' => $root
+        	'root' => $root,
+        	'competences' => $competences
         );
     }
 

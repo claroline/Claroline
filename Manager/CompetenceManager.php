@@ -148,6 +148,17 @@ class CompetenceManager {
 		return true;
     }
 
+    public function getHierarchyCompetence (Competence $competence , Competence $root)
+    {
+    	return true;
+    }
+
+    public function getExcludeHiearchy(Competence $competence)
+    {
+    	return $this->om->getRepository('ClarolineCoreBundle:Competence\Competence')
+    		->getExcludeNodeCompetence($competence);
+    }
+
     private function checkUserIsAllowed($permission, AbstractWorkspace $workspace)
     {
         if (!$this->security->isGranted($permission, $workspace)) {

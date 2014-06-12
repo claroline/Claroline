@@ -26,9 +26,8 @@
         	parameters.rootId = rootId;
         	parameters.parentId = parentId;
     	}
-    	//var route = $('#link').attr('data-route');
+
     	var route = Routing.generate('claro_admin_competence_link',{'rootId': rootId, 'parentId': parentId});
-    	console.debug('parent: '+parentId+' rootId:'+rootId);
     	route += '?'+$.param(parameters);
         $.ajax({
             'url': route,

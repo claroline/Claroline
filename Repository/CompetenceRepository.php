@@ -12,6 +12,7 @@
 namespace Claroline\CoreBundle\Repository;
 
 use Doctrine\ORM\EntityRepository;
+use Claroline\CoreBundle\Entity\Competence\Competence;
 
 class CompetenceRepository extends EntityRepository{
 
@@ -54,11 +55,17 @@ class CompetenceRepository extends EntityRepository{
 
     /**
      * @param Competence $competence
-     * @param Competence $root
      *
      */
-    public function getCompetencesNotParents(Competence $competence, Competence $root)
+    public function getExcludeNodeCompetence(Competence $competence)
 	{
-    	
+    	$dql = '
+    	SELECT c FROM Claroline\CoreBundle\Entity\Competence\Competence c
+    	 WHERE c.id != :competence 
+    	';
+    	$query = $this->_em->createQuery($dql);
+    	$query->setParameter('competence', $competence->getId());
+
+		return $query->getResult();
 	}
 } 
