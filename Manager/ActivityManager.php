@@ -13,6 +13,7 @@ namespace Claroline\CoreBundle\Manager;
 
 use Claroline\CoreBundle\Entity\Activity\ActivityParameters;
 use Claroline\CoreBundle\Entity\Activity\Evaluation;
+use Claroline\CoreBundle\Entity\Activity\PastEvaluation;
 use Claroline\CoreBundle\Entity\Log\Log;
 use Claroline\CoreBundle\Entity\Resource\Activity;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
@@ -122,7 +123,7 @@ class ActivityManager
         $this->persistence->flush();
     }
 
-    public function updateEvaluation(
+    public function manageEvaluation(
         User $user,
         ActivityParameters $activityParams,
         Log $log,
@@ -130,50 +131,284 @@ class ActivityManager
         $activityStatus
     )
     {
-        $evaluationType = $activityParams->getEvaluationType();
-        $maxTimeAllowed = $activityParams->getMaxDuration();
-        $maxAttempts = $activityParams->getMaxAttempts();
-
-        $logDetails = $log->getDetails();
-        $duration = isset($logDetails['duration']) ?
-            $logDetails['duration'] :
-            null;
-        $totalTime = is_null($duration) ? 0 : $duration;
-        $score = isset($logDetails['result']) ?
-            $logDetails['result'] :
-            null;
-        $scoreMin = isset($logDetails['scoreMin']) ?
-            $logDetails['scoreMin'] :
-            0;
-        $scoreMax = isset($logDetails['scoreMax']) ?
-            $logDetails['scoreMax'] :
-            null;
-
         $evaluation = $this->evaluationRepo
             ->findEvaluationByUserAndActivityParams($user, $activityParams);
 
         if (is_null($evaluation)) {
-            $firstEvaluation = new Evaluation();
-            $firstEvaluation->setUser($user);
-            $firstEvaluation->setActivityParameters($activityParams);
-            $firstEvaluation->setType($evaluationType);
-            $firstEvaluation->setAttemptsCount(1);
-            $firstEvaluation->setLog($log);
-            $firstEvaluation->setStatus($activityStatus);
-            $firstEvaluation->setNumScore($score);
-            $firstEvaluation->setScoreMin($scoreMin);
-            $firstEvaluation->setScoreMax($scoreMax);
-            $firstEvaluation->setDuration($duration);
-            $firstEvaluation->setAttemptsDuration($totalTime);
-
-            $this->persistence->persist($firstEvaluation);
-            $this->persistence->flush();
+            $this->manageFirstEvaluation(
+                $user,
+                $activityParams,
+                $log,
+                $rulesLogs,
+                $activityStatus
+            );
         } else {
-            $status = $evaluation->getStatus();
-            $evaluation->setAttemptsCount($evaluation->getAttemptsCount() + 1);
+            $this->updateEvaluation(
+                $evaluation,
+                $user,
+                $activityParams,
+                $log,
+                $rulesLogs,
+                $activityStatus
+            );
 
             // Archiver la tentative
         }
+    }
+
+    private function manageFirstEvaluation(
+        User $user,
+        ActivityParameters $activityParams,
+        Log $currentLog,
+        $rulesLogs,
+        $activityStatus
+    )
+    {
+        $evaluationType = $activityParams->getEvaluationType();
+//        $maxTimeAllowed = $activityParams->getMaxDuration();
+//        $maxAttempts = $activityParams->getMaxAttempts();
+        $nbAttempts = 0;
+        $totalTime = 0;
+        $processCurrentLog = true;
+
+        if (isset($rulesLogs['rules']) && is_array($rulesLogs['rules'])) {
+
+            foreach ($rulesLogs['rules'] as $ruleLogs) {
+//                $rule = $ruleLogs['rule'];
+                $logs = $ruleLogs['logs'];
+
+                foreach ($logs as $log) {
+
+                    if ($log->getId() === $currentLog->getId()) {
+                        $processCurrentLog = false;
+                    }
+                    $logDetails = $log->getDetails();
+                    $duration = isset($logDetails['duration']) ?
+                        $logDetails['duration'] :
+                        null;
+                    $score = isset($logDetails['result']) ?
+                        $logDetails['result'] :
+                        null;
+                    $scoreMin = isset($logDetails['scoreMin']) ?
+                        $logDetails['scoreMin'] :
+                        0;
+                    $scoreMax = isset($logDetails['scoreMax']) ?
+                        $logDetails['scoreMax'] :
+                        null;
+
+                    $pastEval = new PastEvaluation();
+                    $pastEval->setUser($user);
+                    $pastEval->setActivityParameters($activityParams);
+                    $pastEval->setLog($log);
+                    $pastEval->setType($evaluationType);
+                    $pastEval->setDate($log->getDateLog());
+                    $pastEval->setNumScore($score);
+                    $pastEval->setScoreMin($scoreMin);
+                    $pastEval->setScoreMax($scoreMax);
+                    $pastEval->setDuration($duration);
+                    $pastEval->setStatus('unknown');
+
+                    $nbAttempts++;
+                    $totalTime = $this->computeActivityTotalTime(
+                        $totalTime,
+                        $duration
+                    );
+
+                    // Checker si la tentative est réussie ou non
+                    // Faire qqch avec le nombre max de tentative
+
+                    $this->persistence->persist($pastEval);
+                }
+            }
+        }
+
+        if ($processCurrentLog) {
+            $logDetails = $currentLog->getDetails();
+            $duration = isset($logDetails['duration']) ?
+                $logDetails['duration'] :
+                null;
+            $score = isset($logDetails['result']) ?
+                $logDetails['result'] :
+                null;
+            $scoreMin = isset($logDetails['scoreMin']) ?
+                $logDetails['scoreMin'] :
+                0;
+            $scoreMax = isset($logDetails['scoreMax']) ?
+                $logDetails['scoreMax'] :
+                null;
+
+            $pastEval = new PastEvaluation();
+            $pastEval->setUser($user);
+            $pastEval->setActivityParameters($activityParams);
+            $pastEval->setLog($currentLog);
+            $pastEval->setType($evaluationType);
+            $pastEval->setDate($currentLog->getDateLog());
+            $pastEval->setNumScore($score);
+            $pastEval->setScoreMin($scoreMin);
+            $pastEval->setScoreMax($scoreMax);
+            $pastEval->setDuration($duration);
+            $pastEval->setStatus($activityStatus);
+
+            $nbAttempts++;
+            $totalTime = $this->computeActivityTotalTime(
+                $totalTime,
+                $duration
+            );
+
+            $this->persistence->persist($pastEval);
+        }
+
+        $firstEvaluation = new Evaluation();
+        $firstEvaluation->setUser($user);
+        $firstEvaluation->setActivityParameters($activityParams);
+        $firstEvaluation->setType($evaluationType);
+        $firstEvaluation->setAttemptsCount($nbAttempts);
+        $firstEvaluation->setLog($currentLog);
+        $firstEvaluation->setStatus($activityStatus);
+//        $firstEvaluation->setNumScore($score);
+//        $firstEvaluation->setScoreMin($scoreMin);
+//        $firstEvaluation->setScoreMax($scoreMax);
+//        $firstEvaluation->setDuration($duration);
+        $firstEvaluation->setAttemptsDuration($totalTime);
+
+        $this->persistence->persist($firstEvaluation);
+        $this->persistence->flush();
+    }
+
+    private function updateEvaluation(
+        Evaluation $evaluation,
+        User $user,
+        ActivityParameters $activityParams,
+        Log $currentLog,
+        $rulesLogs,
+        $activityStatus
+    )
+    {
+        $pastEvals = $this->pastEvaluationRepo
+            ->findPastEvaluationsByUserAndActivityParams($user, $activityParams);
+
+        $evaluationType = $activityParams->getEvaluationType();
+//        $maxTimeAllowed = $activityParams->getMaxDuration();
+//        $maxAttempts = $activityParams->getMaxAttempts();
+        $nbAttempts = count($pastEvals);
+//        $currentStatus = $evaluation->getStatus();
+//        $currentScore = $evaluation->getNumScore();
+//        $currentScoreMin = $evaluation->getScoreMin();
+//        $currentScoreMax = $evaluation->getScoreMax();
+        $currentTotalTime = $evaluation->getAttemptsDuration();
+        $processCurrentLog = true;
+
+        if (isset($rulesLogs['rules']) && is_array($rulesLogs['rules'])) {
+
+            foreach ($rulesLogs['rules'] as $ruleLogs) {
+                $logs = $ruleLogs['logs'];
+
+                foreach ($logs as $log) {
+                    $pastEvalExisted = false;
+
+                    if ($log->getId() === $currentLog->getId()) {
+                        $processCurrentLog = false;
+                    }
+
+                    foreach ($pastEvals as $pastEval) {
+
+                        if ($pastEval->getLog()->getId() === $log->getId()) {
+                            $pastEvalExisted = true;
+                            break;
+                        }
+                    }
+
+                    if (!$pastEvalExisted) {
+                        $logDetails = $log->getDetails();
+                        $duration = isset($logDetails['duration']) ?
+                            $logDetails['duration'] :
+                            null;
+                        $score = isset($logDetails['result']) ?
+                            $logDetails['result'] :
+                            null;
+                        $scoreMin = isset($logDetails['scoreMin']) ?
+                            $logDetails['scoreMin'] :
+                            0;
+                        $scoreMax = isset($logDetails['scoreMax']) ?
+                            $logDetails['scoreMax'] :
+                            null;
+
+                        $pastEval = new PastEvaluation();
+                        $pastEval->setUser($user);
+                        $pastEval->setActivityParameters($activityParams);
+                        $pastEval->setLog($log);
+                        $pastEval->setType($evaluationType);
+                        $pastEval->setDate($log->getDateLog());
+                        $pastEval->setNumScore($score);
+                        $pastEval->setScoreMin($scoreMin);
+                        $pastEval->setScoreMax($scoreMax);
+                        $pastEval->setDuration($duration);
+                        $pastEval->setStatus('unknown');
+
+                        $nbAttempts++;
+                        $currentTotalTime = $this->computeActivityTotalTime(
+                            $currentTotalTime,
+                            $duration
+                        );
+
+                        $this->persistence->persist($pastEval);
+                    }
+                }
+            }
+        }
+        
+        if ($processCurrentLog) {
+            $logDetails = $currentLog->getDetails();
+            $duration = isset($logDetails['duration']) ?
+                $logDetails['duration'] :
+                null;
+            $score = isset($logDetails['result']) ?
+                $logDetails['result'] :
+                null;
+            $scoreMin = isset($logDetails['scoreMin']) ?
+                $logDetails['scoreMin'] :
+                0;
+            $scoreMax = isset($logDetails['scoreMax']) ?
+                $logDetails['scoreMax'] :
+                null;
+
+            $pastEval = new PastEvaluation();
+            $pastEval->setUser($user);
+            $pastEval->setActivityParameters($activityParams);
+            $pastEval->setLog($currentLog);
+            $pastEval->setType($evaluationType);
+            $pastEval->setDate($currentLog->getDateLog());
+            $pastEval->setNumScore($score);
+            $pastEval->setScoreMin($scoreMin);
+            $pastEval->setScoreMax($scoreMax);
+            $pastEval->setDuration($duration);
+            $pastEval->setStatus($activityStatus);
+
+            $nbAttempts++;
+            $currentTotalTime = $this->computeActivityTotalTime(
+                $currentTotalTime,
+                $duration
+            );
+
+            $this->persistence->persist($pastEval);
+        }
+
+        $evaluation->setDate($currentLog->getDateLog());
+        $evaluation->setAttemptsCount($nbAttempts);
+        $evaluation->setAttemptsDuration($currentTotalTime);
+        $evaluation->setStatus($activityStatus);
+        $evaluation->setLog($currentLog);
+
+        $this->persistence->persist($evaluation);
+        $this->persistence->flush();
+    }
+
+    private function computeActivityTotalTime($totalTime, $sessionTime)
+    {
+        $total = is_null($totalTime) ? 0 : $totalTime;
+        $session = is_null($sessionTime) ? 0 : $sessionTime;
+
+        return $total + $session;
     }
 
 

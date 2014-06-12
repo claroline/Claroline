@@ -60,9 +60,9 @@ class ActivityRuleListener
 
                 foreach ($activityRules as $activityRule) {
                     $activityParams = $activityRule->getActivityParameters();
-                    $activityNode = $activityParams->getActivity()->getResourceNode();
-                    $accessFrom = $activityNode->getAccessibleFrom();
-                    $accessUntil = $activityNode->getAccessibleUntil();
+//                    $activityNode = $activityParams->getActivity()->getResourceNode();
+                    $accessFrom = $activityRule->getActiveFrom();
+                    $accessUntil = $activityRule->getActiveUntil();
 
                     if ((is_null($accessFrom) || $dateLog >= $accessFrom)
                         && (is_null($accessUntil) || $dateLog <= $accessUntil)) {
@@ -84,7 +84,7 @@ class ActivityRuleListener
                                 $activityStatus = 'completed';
                             }
 
-                            $this->activityManager->updateEvaluation(
+                            $this->activityManager->manageEvaluation(
                                 $user,
                                 $activityParams,
                                 $log,
