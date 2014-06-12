@@ -51,6 +51,7 @@ You can use the following variables in your form: 'Vous pouvez utiliser les vari
 You can use the full screen version of the text editor to include HTML: 'Vous pouvez utiliser la version plein écran de l''éditeur afin d''y inclure du HTML'
 Your changes have been saved: 'Vos changements ont été sauvegardés'
 account_created: 'Compte créé'
+account_duration_label: Durée de vie des comptes (jours)
 account_general_statistics: 'Statistiques générales sur les comptes'
 action: Action
 actions: Actions
@@ -58,7 +59,7 @@ active_widgets: 'Widgets actifs'
 activity_already: Cette ressource est déjà dans l'activité
 activity_form_instructions: Instructions
 activity_form_name: Nom
-activity_resource_delete: Êtes-vous sûr de vouloir supprimer cette ressource de l'activite?
+activity_resource_remove: Êtes-vous sûr de vouloir enlever cette ressource de l'activite?
 add: Ajouter
 add_category: 'Ajouter une catégorie'
 add_group: 'Ajouter un groupe'
@@ -132,6 +133,7 @@ choose_resource_form_type: 'Type de ressource'
 classify_my_workspaces: 'Classer mes espaces'
 classify_workspaces: 'Classer les espaces'
 close: Fermer
+closed_account: Compte clos
 code: Code
 collaborator: Collaborateur
 communication: Communication
@@ -251,6 +253,7 @@ exportable: Exportable
 external_pdo_database: 'Base de données externe (PDO)'
 facebook: Facebook
 facebook_application_validation_error: 'Les identifiants fournis ne sont pas valides.'
+fail_add_user_group_message: Ces utilisateurs n'ont pas pu être ajouté au groupe (vérifiez la limite d'utilisateurs par rôle).
 fast_answer: 'Réponse rapide'
 fb_client_id: 'Id de l''application'
 fb_client_secret: 'Secret de l''application'
@@ -467,6 +470,8 @@ personal_workspace: 'Espace personnel - '
 phone: Téléphone
 picture_profile: 'Photo de profil'
 platform_appearance: 'Apparence de la plateforme'
+platform_expiration_date: Date d'expiration de la plateforme
+platform_init_date: Date d'activation de la plateforme
 platform_parameters: 'Paramètres de la plateforme'
 platform_parameters_form_auth_mode: 'Mode d''authentification'
 platform_parameters_form_content: Contenu
@@ -521,6 +526,8 @@ registered_groups: 'Groupes enregistrés'
 registered_users: 'Utilisateurs enregistrés'
 registration: Inscription
 registration_to_workspaces: 'Inscription à des espaces d''activités'
+remove: Enlever
+remove: Remove
 remove_group_confirm_message: 'Êtes-vous sûr de vouloir supprimer ce groupe ?'
 remove_group_s_confirm_message: 'Êtes-vous sûr de vouloir supprimer ces %count% groupes?'
 remove_message_confirm_message: 'Êtes-vous sûr de vouloir supprimer ce message ?'
@@ -577,6 +584,8 @@ rights_management: 'Gestion des droits'
 role: Rôle
 role_creation: 'Création d''un rôle'
 role_edition: 'Modification d''un rôle'
+role_limit_reached: La limite d'utilisateur de type %translationKey% a été atteinte.
+role_list: Liste des roles
 role_name_type_form_translationKey: Nom
 roles: Rôles
 roles_management: 'Gestion des rôles'
@@ -695,6 +704,8 @@ unable_to_start_sendmail: 'La connexion avec Sendmail ou Postfix ne peut pas êt
 unable_to_start_smtp: 'La connexion avec le serveur SMTP ne peut pas être établie. Veuillez vérifier que les paramètres que vous avez renseignés sont corrects.'
 unable_to_start_transport: 'La connexion avec le serveur de mails ne peut pas être établie. Veuillez vérifier que les paramètres que vous avez renseignés sont corrects.'
 unauthorized: 'Vous n''êtes pas autorisé à consulter cette page.'
+unavailable_platform: La plateforme n'est pas disponible.
+unavailable_role: Le role %translationKey% n'est pas utilisable
 uncompress_file: Décompresser le fichier si possible
 under_min_length: 'Cette valeur est trop courte'
 unique connections: 'Nb Cnx. uniques'
@@ -712,6 +723,7 @@ url_invalid: 'Le code n''est pas correct, n''essayez pas de changer l''adresse'
 user: Utilisateur
 user_accounts: 'Comptes utilisateur'
 user_creation: 'Création d''un utilisateur'
+user_limit_reached: La limite de création d'utilisateur a été atteinte.
 user_parameters: 'Paramètres de l''utilisateur'
 user_picker: 'Outil pour choisir un utilisateur'
 user_profile: 'Profil utilisateur'
@@ -810,13 +822,3 @@ yes: oui
 yesterday_activity: 'Activité de la veille'
 your_current_url: 'Votre URL actuelle'
 your_username: 'Votre nom d''utilisateur est '
-closed_account: Compte clos
-role_list: Liste des roles
-unavailable_role: Le role %translationKey% n'est pas utilisable
-fail_add_user_group_message: Ces utilisateurs n'ont pas pu être ajouté au groupe (vérifiez la limite d'utilisateurs par rôle).
-unavailable_platform: La plateforme n'est pas disponible.
-account_duration_label: Durée de vie des comptes (jours)
-platform_init_date: Date d'activation de la plateforme
-platform_expiration_date: Date d'expiration de la plateforme
-role_limit_reached: La limite d'utilisateur de type %translationKey% a été atteinte.
-user_limit_reached: La limite de création d'utilisateur a été atteinte.

@@ -207,7 +207,7 @@ claro_activity:
     prefix: activity/
     type: annotation
 
-claro_activity_remove_resource:
+claro_activity_remove_resource_confirm:
     pattern: /activity/remive
     options: { expose: true }
     defaults:

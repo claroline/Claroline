@@ -76,7 +76,7 @@ class ActivityManager
     /**
      * Edit an activity
      */
-    public function editActivity($activity)
+    public function editActivity(Activity $activity)
     {
         $this->persistence->persist($activity);
         $this->persistence->flush();
@@ -87,7 +87,7 @@ class ActivityManager
     /**
      * Delete an activity
      */
-    public function deleteActivty($activity)
+    public function deleteActivty(Activity $activity)
     {
         $this->persistence->remove($activity);
         $this->persistence->flush();
@@ -96,7 +96,7 @@ class ActivityManager
     /**
      * Link a resource to an activity
      */
-    public function addResource($activity, $resource)
+    public function addResource(Activity $activity, ResourceNode $resource)
     {
         if (!$activity->getParameters()->getSecondaryResources()->contains($resource)) {
             $activity->getParameters()->getSecondaryResources()->add($resource);
@@ -110,7 +110,7 @@ class ActivityManager
     /**
      * Remove a resource from an activity
      */
-    public function removeResource($activity, $resource)
+    public function removeResource(Activity $activity, ResourceNode $resource)
     {
         if ($activity->getParameters()->getSecondaryResources()->contains($resource)) {
             $activity->getParameters()->getSecondaryResources()->removeElement($resource);

@@ -12,7 +12,7 @@
     <div class="panel-body">
         {% if is_granted('edit', _resource) %}
             <div class="float-right-top margin-right-md">
-                <a href="{{ path('activity_edit', {'resource':  _resource.getId() }) }}" class="btn btn-primary"><i class="icon-pencil"></i></a>
+                <a href="{{ path('claro_activity_edit', {'resource':  _resource.getId() }) }}" class="btn btn-primary"><i class="icon-pencil"></i></a>
             </div>
         {% endif %}
 

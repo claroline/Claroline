@@ -52,7 +52,7 @@ class ActivityController
     }
 
     /**
-     * @Route("edit/{resource}", name="activity_edit")
+     * @Route("edit/{resource}", name="claro_activity_edit")
      * @ParamConverter("resource", class = "ClarolineCoreBundle:Resource\Activity", options = {"id" = "resource"})
      * @Template()
      */
@@ -71,7 +71,7 @@ class ActivityController
     }
 
     /**
-     * @Route("add/{activity}/{resource}", name="activity_add", options = {"expose": true})
+     * @Route("add/{activity}/{resource}", name="claro_activity_add", options = {"expose": true})
      * @ParamConverter("activity", class = "ClarolineCoreBundle:Resource\Activity", options = {"id" = "activity"})
      * @ParamConverter("resource", class = "ClarolineCoreBundle:Resource\ResourceNode", options = {"id" = "resource"})
      */
@@ -95,7 +95,7 @@ class ActivityController
     }
 
     /**
-     * @Route("remove/{activity}/{resource}", name="activity_remove_resource", options = {"expose": true})
+     * @Route("remove/{activity}/{resource}", name="claro_activity_remove_resource", options = {"expose": true})
      * @ParamConverter("activity", class = "ClarolineCoreBundle:Resource\Activity", options = {"id" = "activity"})
      * @ParamConverter("resource", class = "ClarolineCoreBundle:Resource\ResourceNode", options = {"id" = "resource"})
      */

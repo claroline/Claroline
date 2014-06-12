@@ -58,7 +58,7 @@ active_widgets: 'Active widgets'
 activity_already: This resource is already in the activity
 activity_form_instructions: Instructions
 activity_form_name: Name
-activity_resource_delete: 'Are you sure you want to delete this resource from the activity?'
+activity_resource_remove: 'Are you sure you want to remove this resource from the activity?'
 add: Add
 add_category: 'Add category'
 add_group: 'Add group'

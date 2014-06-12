@@ -44,7 +44,7 @@
      */
     function addResource(activity, resource)
     {
-        $.ajax(routing.generate('activity_add', {'activity': activity, 'resource': resource}))
+        $.ajax(routing.generate('claro_activity_add', {'activity': activity, 'resource': resource}))
         .done(function (data) {
             if (data !== 'false') {
                 var resource = $.parseJSON(data);
@@ -78,7 +78,7 @@
         picker.on('click', 'button.btn-primary', function () {
             modal.hide();
 
-            $.ajax(routing.generate('activity_remove_resource', {'activity': activity, 'resource': resource}))
+            $.ajax(routing.generate('claro_activity_remove_resource', {'activity': activity, 'resource': resource}))
             .done(function (data) {
 
                 if (data === 'true') {
@@ -122,7 +122,7 @@
 
         $.ajax(
             routing.generate(
-                'claro_activity_remove_resource',
+                'claro_activity_remove_resource_confirm',
                 {'activity': activity, 'resource': resource}
             )
         )
