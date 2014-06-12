@@ -3,7 +3,6 @@
 portfolioApp
     .directive("collectionForm", function() {
         var link = function (scope, element, attrs, ngModel) {
-            console.log('pouet');
             if(!ngModel) {
                 return;// do nothing if no ng-model
             }
@@ -14,6 +13,10 @@ portfolioApp
 
             scope.addChild = function(child) {
                 scope.collection.push({'name': child});
+            };
+
+            scope.deleteChild = function(child) {
+                scope.collection.remove(child);
             };
         };
 

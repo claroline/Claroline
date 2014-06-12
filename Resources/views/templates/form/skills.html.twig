@@ -11,6 +11,11 @@
         </div>
     </div>
     <ul>
-        <li data-ng-repeat="skill in collection">{% verbatim %}<input type="text" class="form-control" id="skill_{{ $index }}_name" name="icap_portfolio_widget_form_skills[skills][{{ $index }}][name]" data-ng-model="skill.name" />{% endverbatim %}</li>
+        <li data-ng-repeat="skill in collection">
+            {% verbatim %}<input type="text" class="form-control" id="skill_{{ $index }}_name" name="icap_portfolio_widget_form_skills[skills][{{ $index }}][name]" data-ng-model="skill.name" />{% endverbatim %}
+            <button class="btn btn-danger" type="button" data-ng-click="deleteChild(skill)">
+                <span class="icon-trash"></span>
+            </button>
+        </li>
     </ul>
 </div>

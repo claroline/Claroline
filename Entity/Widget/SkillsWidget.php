@@ -15,7 +15,7 @@ class SkillsWidget extends AbstractWidget
     protected $widgetType = 'skills';
 
     /**
-     * @var SkillsWidgetSkill[]
+     * @var SkillsWidgetSkill[]|\Doctrine\ORM\PersistentCollection
      *
      * @ORM\OneToMany(targetEntity="Icap\PortfolioBundle\Entity\Widget\SkillsWidgetSkill", mappedBy="skillsWidget", cascade={"persist", "remove"})
      */
