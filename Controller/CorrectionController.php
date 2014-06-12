@@ -1523,7 +1523,7 @@ class CorrectionController extends DropzoneBaseController
         $response = array();
         foreach ($users as $user) {
 
-            $reponseItem = array();
+            $responseItem = array();
             $responseItem['userId'] = $user->getId();
             $corrections = $correctionRepo->getByDropzoneUser($dropzone->getId(), $user->getId());
             $count = count($corrections);

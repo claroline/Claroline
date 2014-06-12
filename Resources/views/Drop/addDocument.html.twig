@@ -1,0 +1,77 @@
+<div class="show-during-add" style="display: none;">
+    <hr/>
+    <div class="container-inline"></div>
+</div>
+
+<h4>{{ 'Add a document'|trans({}, 'icap_dropzone') }}</h4>
+
+<div class='div-test well'>
+    {% if allowedTypes|length <= 0 %}
+        <span class="text-danger">{{ 'No document type allowed'|trans({}, 'icap_dropzone') }}</span>
+    {% else %}
+
+        {% set activeClass = " active " %}
+
+        <ul class="nav nav-tabs">
+            {% if 'url' in allowedTypes %}
+                <li class="{{ activeClass }}"><a href="#url-tab"
+                                                 data-toggle="tab">{{ 'url' |trans({}, 'icap_dropzone') }}</a></li>
+                {% set activeClass = "" %}
+            {% endif %}
+
+            {% if 'file' in allowedTypes %}
+                <li class="{{ activeClass }}"><a href="#file-tab"
+                                                 data-toggle="tab">{{ 'file' |trans({}, 'icap_dropzone') }}</a></li>
+                {% set activeClass = "" %}
+            {% endif %}
+
+            {% if 'resource' in allowedTypes %}
+                <li class="{{ activeClass }}"><a href="#resource-tab"
+                                                 data-toggle="tab">{{ 'resource' |trans({}, 'icap_dropzone') }}</a></li>
+                {% set activeClass = "" %}
+            {% endif %}
+
+            {% if 'text' in allowedTypes %}
+                <li class="{{ activeClass }}"><a href="#text-tab"
+                                                 data-toggle="tab">{{ 'text' |trans({}, 'icap_dropzone') }}</a></li>
+                {% set activeClass = "" %}
+            {% endif %}
+        </ul>
+
+    {% endif %}
+
+    {% if allowedTypes|length > 0 %}
+
+        {% set activeClass = " active " %}
+
+        <div class="tab-content">
+            {% if 'url' in allowedTypes %}
+                <div class="tab-pane {{ activeClass }}" id="url-tab">
+                    {% include 'IcapDropzoneBundle:Document:documentForm.html.twig' with {'form':form_url, 'documentType': 'url'} %}
+                </div>
+                {% set activeClass = "" %}
+            {% endif %}
+
+            {% if 'file' in allowedTypes %}
+                <div class="tab-pane {{ activeClass }}" id="file-tab">
+                    {% include 'IcapDropzoneBundle:Document:documentForm.html.twig' with {'form':form_file, 'documentType': 'file'} %}
+                </div>
+                {% set activeClass = "" %}
+            {% endif %}
+
+            {% if 'resource' in allowedTypes %}
+                <div class="tab-pane {{ activeClass }}" id="resource-tab">
+                    {% include 'IcapDropzoneBundle:Document:documentForm.html.twig' with {'form':form_resource, 'documentType': 'resource'} %}
+                </div>
+                {% set activeClass = "" %}
+            {% endif %}
+
+            {% if 'text' in allowedTypes %}
+                <div class="tab-pane {{ activeClass }}" id="text-tab">
+                    {% include 'IcapDropzoneBundle:Document:documentForm.html.twig' with {'form':form_text, 'documentType': 'text'} %}
+                </div>
+                {% set activeClass = "" %}
+            {% endif %}
+        </div>
+    {% endif %}
+</div>
