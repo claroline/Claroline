@@ -14,7 +14,6 @@ namespace Claroline\CoreBundle\Manager;
 use Claroline\CoreBundle\Entity\Activity\ActivityParameters;
 use Claroline\CoreBundle\Entity\Resource\Activity;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
-use Claroline\CoreBundle\Manager\ResourceManager;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use JMS\DiExtraBundle\Annotation\Inject;
 use JMS\DiExtraBundle\Annotation\InjectParams;
@@ -28,20 +27,15 @@ class ActivityManager
     private $activityRuleRepo;
     private $evaluationRepo;
     private $persistence;
-    private $resourceManager;
 
     /**
-     * Constructor.
-     *
      * @InjectParams({
      *     "persistence"        = @Inject("claroline.persistence.object_manager"),
-     *     "resourceManager"    = @Inject("claroline.manager.resource_manager")
      * })
      */
-    public function __construct(ObjectManager $persistence, ResourceManager $resourceManager)
+    public function __construct(ObjectManager $persistence)
     {
         $this->persistence = $persistence;
-        $this->resourceManager = $resourceManager;
         $this->activityRuleRepo = $persistence->getRepository('ClarolineCoreBundle:Activity\ActivityRule');
         $this->evaluationRepo = $persistence->getRepository('ClarolineCoreBundle:Activity\Evaluation');
     }
@@ -80,31 +74,12 @@ class ActivityManager
     }
 
     /**
-     * Create a new activity
-     */
-    public function createActivity($title, $description, $resourceNodeId, $persist = false)
-    {
-        $resourceNode = $this->resourceManager->getById($resourceNodeId);
-        $parameters = new ActivityParameters();
-
-        return $this->editActivity(new Activity(), $title, $description, $resourceNode, $parameters, $persist);
-    }
-
-    /**
      * Edit an activity
      */
-    public function editActivity($activity, $title, $description, $resourceNode, $parameters, $persist = false)
+    public function editActivity(Activity $activity)
     {
-        $activity->setName($title);
-        $activity->setTitle($title);
-        $activity->setDescription($description);
-        $activity->setResourceNode($resourceNode);
-        $activity->setParameters($parameters);
-
-        if ($persist) {
-            $this->persistence->persist($activity);
-            $this->persistence->flush();
-        }
+        $this->persistence->persist($activity);
+        $this->persistence->flush();
 
         return $activity;
     }
@@ -112,7 +87,7 @@ class ActivityManager
     /**
      * Delete an activity
      */
-    public function deleteActivty($activity)
+    public function deleteActivty(Activity $activity)
     {
         $this->persistence->remove($activity);
         $this->persistence->flush();
@@ -121,27 +96,28 @@ class ActivityManager
     /**
      * Link a resource to an activity
      */
-    public function addResource($resourceActivity)
+    public function addResource(Activity $activity, ResourceNode $resource)
     {
-        $this->persistence->persist($resourceActivity);
-        $this->persistence->flush();
+        if (!$activity->getParameters()->getSecondaryResources()->contains($resource)) {
+            $activity->getParameters()->getSecondaryResources()->add($resource);
+            $this->persistence->persist($activity);
+            $this->persistence->flush();
+
+            return true;
+        }
     }
 
     /**
-     * Edit a resource link in an activity
+     * Remove a resource from an activity
      */
-    public function editResource($resourceActivity)
+    public function removeResource(Activity $activity, ResourceNode $resource)
     {
-        $this->persistence->persist($resourceActivity);
-        $this->persistence->flush();
-    }
+        if ($activity->getParameters()->getSecondaryResources()->contains($resource)) {
+            $activity->getParameters()->getSecondaryResources()->removeElement($resource);
+            $this->persistence->persist($activity);
+            $this->persistence->flush();
 
-    /**
-     * delete a resource from an activity
-     */
-    public function deleteResource($resourceActivity)
-    {
-        $this->persistence->persist($resourceActivity);
-        $this->persistence->flush();
+            return true;
+        }
     }
 }

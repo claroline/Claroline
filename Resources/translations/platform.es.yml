@@ -45,14 +45,18 @@ You can use the following variables in your form: 'Usted puede usar las siguient
 You can use the full screen version of the text editor to include HTML: 'Usted puede usar la versión de pantalla completa del editor de texto para incluir HTML'
 Your changes have been saved: 'Sus cambios han sido guardados'
 account_created: 'Cuenta creada.'
+account_duration_label: Duración de la vida de una cuentas (días)
 account_general_statistics: 'Estadísticas generales de la cuenta'
 action: 'Acción'
 actions: 'Acciones'
 active_widgets: 'Widgets activos'
+activity_already: Este recurso ya está en la actividad
 activity_form_instructions: 'Instrucciones'
 activity_form_name: 'Nombre'
+activity_resource_remove: '¿Esta seguro que desea remover este recurso de la actividad?'
 add: 'Agregar'
 add_category: 'Agregar categoría'
+add_field_to_facet: Agregar un campo a una faceta
 add_group: 'Agregar grupo'
 add_group_s_confirm_message: 'Grupos agregados'
 add_groups: 'Agregar grupos'
@@ -120,6 +124,7 @@ choose_resource_form_type: 'Tipo de recurso'
 classify_my_workspaces: 'Clasificar mis espacios de trabajo'
 classify_workspaces: 'Clasificar espacios de trabajo'
 close: 'Cerrar'
+closed_account: Cuenta cerrada.
 code: 'Código'
 collaborator: 'Colaborador'
 communication: 'Comunicación'
@@ -131,6 +136,8 @@ copiable: 'Copiable'
 copy: 'Copiar'
 create: 'Crear'
 create_category: 'Crear una categoría'
+create_facet: Crear una faceta
+create_field: Crear un campo
 create_group: 'Crear un grupo'
 create_new_admin_tag: 'Crear una etiqueta de administrador'
 create_new_home_tab: 'Crear una pestaña'
@@ -213,6 +220,8 @@ drag_file_here: 'Arrastre el archivo aquí'
 drop_file: 'Arrastre el archivo'
 dsn: dsn
 edit: 'Editar'
+edit_facet: Editar faceta
+edit_field: Editar campo
 editable: 'Editable'
 email: 'Correo electrónico'
 email_form_mail: 'Ingrese su correo electrónico'
@@ -225,6 +234,8 @@ exportable: 'Exportable'
 external_pdo_database: 'Base de datos externa (PDO)'
 facebook: Facebook
 facebook_application_validation_error: 'Las credenciales proporcionadas no son válidos.'
+facets: Facetas
+fail_add_user_group_message: Estos usuarios no han podido ser agregados al grupo (control del límite usuarios por función).
 fast_answer: 'Respuesta rápida'
 fb_client_id: 'Id de la aplicación'
 fb_client_secret: 'secret de la aplicación'
@@ -316,6 +327,7 @@ link: 'Enlace'
 link_outdated: 'Este enlace ya no es valido'
 link_workspace: 'Vincular el espacio de trabajo'
 list_groups: 'Lista de grupos'
+list_role: Lista de roles
 list_users: 'Lista de usuarios'
 list_workspaces: 'Lista de espacios de trabajo'
 lock: 'Desactivar'
@@ -405,6 +417,7 @@ note: Note
 notification_activated: 'Notificaciones activas.'
 notification_deactivated: 'Notificaciones desacivadas.'
 notifications: 'Notificaciones'
+number: Numero
 oauth: 'OAuth'
 object: 'Asunto'
 ok: 'Ok'
@@ -431,6 +444,8 @@ personal_workspace: 'Espacio de trabajo personal - '
 phone: 'Teléfono'
 picture_profile: 'Foto de perfil'
 platform_appearance: 'Apariencia de la plataforma'
+platform_expiration_date: Fecha de vencimiento de la plataforma
+platform_init_date: Fecha de activación de la plataforma
 platform_parameters: 'Parámetros de la plataforma'
 platform_parameters_form_auth_mode: 'Modo de autenticación'
 platform_parameters_form_content: 'Contenido'
@@ -475,6 +490,11 @@ registered_groups: 'Grupos inscritos'
 registered_users: 'Usuarios inscritos'
 registration: 'Inscripción'
 registration_to_workspaces: 'Inscripción a un espacio de trabajo'
+remove: Remover
+remove_facet: Eliminar una faceta
+remove_facet_confirm: ¿Esta seguro que desea suprimir la faceta %name%?
+remove_field: Eliminar una campo
+remove_field_confirm: ¿Esta seguro que desea suprimir el campo %name%?
 remove_group_confirm_message: '¿Esta seguro que desea suprimir este grupo?'
 remove_group_s_confirm_message: '¿Esta seguro que desea suprimir estos %count% grupos?'
 remove_message_confirm_message: '¿Esta seguro que desea suprimir este mensaje?'
@@ -530,6 +550,7 @@ rights_management: 'Gestión de derechos de acceso'
 role: 'Rol'
 role_creation: 'Rol de creación'
 role_edition: 'Rol de edición'
+role_limit_reached: Ha llegado al limite de usuarios de tipo %translationKey%.
 role_name_type_form_translationKey: 'Nombre'
 roles: 'Roles'
 roles_management: 'Gestión de roles'
@@ -596,6 +617,7 @@ tags_list: 'Lista de etiquetas'
 tags_management: 'Gestión de etiquetas'
 tags_organization: 'Organización de las etiquetas'
 teacher: 'Profesor'
+text: Texto
 text_form_content: 'Contenido'
 text_form_name: 'Nombre'
 text_form_shareType: 'Compartible'
@@ -638,6 +660,8 @@ unable_to_start_sendmail: 'Sendmail o Postfix no se han podido iniciar. Por favo
 unable_to_start_smtp: 'La conexión con el servidor SMTP no puede ser establecida. Por favor, compruebe que los parámetros que ha proporcionado son correctos.'
 unable_to_start_transport: 'El transporte de correo no se puede iniciar. Por favor, compruebe que los parámetros que ha proporcionado son correctos.'
 unauthorized: 'Usted no esta autorizado a ver esta página.'
+unavailable_platform: La plataforma no está disponible.
+unavailable_role: El rol %translationKey% no es utilizable
 uncompress_file: Descomprimir el archivo si es posible
 under_min_length: 'Este valor es muy corto'
 unique connections: 'Nb único Cnx.'
@@ -655,6 +679,7 @@ url_invalid: 'El código no es correcto, no intente cambiar la URL'
 user: 'Usuario'
 user_accounts: 'Cuentas de usuario'
 user_creation: 'Creación de un usuario'
+user_limit_reached: Ha llegado al limite de creación de usuarios.
 user_parameters: 'Parámetros del usuario'
 user_removed: 'Usuario suprimido'
 username: 'Nombre de usuario'
@@ -742,25 +767,3 @@ ws_most_viewed: 'Espacio de trabajo mas visto'
 yes: 'Si'
 yesterday_activity: 'Actividades de ayer'
 your_username: 'Su nombre de usuario es '
-closed_account: Cuenta cerrada.
-list_role: Lista de roles
-unavailable_role: El rol %translationKey% no es utilizable
-fail_add_user_group_message: Estos usuarios no han podido ser agregados al grupo (control del límite usuarios por función).
-unavailable_platform: La plataforma no está disponible.
-account_duration_label: Duración de la vida de una cuentas (días)
-platform_init_date: Fecha de activación de la plataforma
-platform_expiration_date: Fecha de vencimiento de la plataforma
-role_limit_reached: Ha llegado al limite de usuarios de tipo %translationKey%.
-user_limit_reached: Ha llegado al limite de creación de usuarios.
-facets: Facetas
-add_field_to_facet: Agregar un campo a una faceta
-text: Texto
-number: Numero
-create_facet: Crear una faceta
-create_field: Crear un campo
-edit_facet: Editar faceta
-edit_field: Editar campo
-remove_facet: Eliminar una faceta
-remove_facet_confirm: ¿Esta seguro que desea suprimir la faceta %name%?
-remove_field: Eliminar una campo
-remove_field_confirm: ¿Esta seguro que desea suprimir el campo %name%?

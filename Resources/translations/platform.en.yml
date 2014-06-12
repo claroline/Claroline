@@ -51,14 +51,18 @@ You can use the following variables in your form: 'You can use the following var
 You can use the full screen version of the text editor to include HTML: 'You can use the full screen version of the text editor to include HTML'
 Your changes have been saved: 'Your changes have been saved'
 account_created: 'Account created.'
+account_duration_label: Account lifetime (days)
 account_general_statistics: 'Account general statistics'
 action: Action
 actions: Actions
 active_widgets: 'Active widgets'
+activity_already: This resource is already in the activity
 activity_form_instructions: Instructions
 activity_form_name: Name
+activity_resource_remove: 'Are you sure you want to remove this resource from the activity?'
 add: Add
 add_category: 'Add category'
+add_field_to_facet: Add field to facet
 add_group: 'Add group'
 add_group_s_confirm_message: 'group(s) added'
 add_groups: 'Add groups'
@@ -130,6 +134,7 @@ choose_resource_form_type: 'Resource type'
 classify_my_workspaces: 'Classify my workspaces'
 classify_workspaces: 'Classify workspaces'
 close: Close
+closed_account: Closed account
 code: Code
 collaborator: Collaborator
 communication: Communication
@@ -141,6 +146,8 @@ copiable: Copiable
 copy: Copy
 create: Create
 create_category: 'Create a category'
+create_facet: Create a facet
+create_field: Create a field
 create_group: 'Create group'
 create_new_admin_tag: 'Create new admin tag'
 create_new_home_tab: 'Create new tab'
@@ -199,7 +206,7 @@ db_table: 'Database table'
 deletable: Deletable
 delete: Delete
 delete_category: 'Delete category'
-delete_category_confirm_message: 'Do you really want to delete this category ?'
+delete_category_confirm_message: 'Do you really want to delete this category?'
 delete_category_confirm_title: 'Category deletion'
 delete_home_tab: 'Delete tab'
 description: 'Description'
@@ -223,10 +230,12 @@ drag_file_here: 'Drag the file here'
 drop_file: 'Drop the file'
 dsn: dsn
 edit: Edit
+edit_facet: Edit a facet
+edit_field: Edit a field
 edit_password: 'Edit your password'
 edit_password_error: 'An error occured while editing your password.'
 edit_password_error_current : Your currently password is not correct.
-edit_password_message: 'Do you really want to update your passwords ?'
+edit_password_message: 'Do you really want to update your passwords?'
 edit_password_success: 'Your password has been edited with success.'
 edit_profile: 'Edit your profile'
 edit_profile_error: 'An error occured while editing the profile.'
@@ -249,6 +258,8 @@ exportable: Exportable
 external_pdo_database: 'External database (PDO)'
 facebook: Facebook
 facebook_application_validation_error: 'Provided credentials are not valid.'
+facets: Facets
+fail_add_user_group_message: These users couldn't be added to this group (check the max amount of users by role).
 fast_answer: 'Fast answer'
 fb_client_id: 'Application id'
 fb_client_secret: 'Application secret'
@@ -265,7 +276,7 @@ find_workspaces: 'All public workspaces'
 firstName: 'First name'
 first_name: 'First name'
 for period: 'for period'
-forgot_password: 'Forgot your password ?'
+forgot_password: 'Forgot your password?'
 form_role: Role
 from: From
 from_message: From
@@ -301,7 +312,7 @@ home: Home
 home_parameters: 'Home parameters'
 home_tab: 'Home tab'
 home_tab_creation: 'Home tab creation'
-home_tab_delete_confirm_message: 'Do you really want to delete this Home tab ?'
+home_tab_delete_confirm_message: 'Do you really want to delete this Home tab?'
 home_tab_delete_confirm_title: 'Delete Home tab'
 home_tab_edition: 'Home tab edition'
 home_tab_form_name: Name
@@ -327,7 +338,7 @@ invalid_encryption: 'Invalid authentication mode'
 invalid_transport: 'Invalid transport'
 invalid_url: 'This url is not valid'
 is_already_in_category: 'is already in category'
-is_mail_displayed: 'Display email ?'
+is_mail_displayed: 'Display email?'
 jqplot_date_output_format: '%m/%d/%Y'
 keep_me_logged_in: 'Keep me logged in'
 lastName: 'Last name'
@@ -342,6 +353,7 @@ link: Link
 link_outdated: 'link is no more valid'
 link_workspace: 'Link workspace'
 list_groups: 'List groups'
+list_role: Role list
 list_users: 'List users'
 list_workspaces: 'List workspaces'
 lock: Lock
@@ -376,9 +388,9 @@ message_form_content: Content
 message_form_object: Object
 message_form_to: To
 messages: Message
-messages_confirm_delete: 'Are your sure , you want to delete this file ?'
-messages_confirm_permanent_delete: 'Are you sure you want to permanently delete this(these) message(s) ?'
-messages_confirm_restore: 'Are you sure you want to restore this(these) message(s) ?'
+messages_confirm_delete: 'Are your sure , you want to delete this file?'
+messages_confirm_permanent_delete: 'Are you sure you want to permanently delete this(these) message(s)?'
+messages_confirm_restore: 'Are you sure you want to restore this(these) message(s)?'
 messages_received: 'Messages received'
 messages_received_removed: 'Messages received removed'
 messages_removed: 'Messages removed'
@@ -438,6 +450,7 @@ not_blank_expected: 'This value should not be blank'
 note: Note
 notification_activated: 'Notifications activated.'
 notification_deactivated: 'Notifications deactivated.'
+number: Number
 oauth: Oauth
 object: Object
 ok: Ok
@@ -464,6 +477,8 @@ personal_workspace: 'Personal workspace - '
 phone: Phone
 picture_profile: 'Picture profile'
 platform_appearance: 'Platform appearance'
+platform_expiration_date: Platform expiration date
+platform_init_date: Platform activation date
 platform_parameters: 'Platform parameters'
 platform_parameters_form_auth_mode: 'Authentication mode'
 platform_parameters_form_content: Content
@@ -518,18 +533,22 @@ registered_groups: 'Registered groups'
 registered_users: 'Registered users'
 registration: Registration
 registration_to_workspaces: 'Registration to workspaces'
-remove_group_confirm_message: 'Are you sure you want to delete this group ?'
-remove_group_s_confirm_message: 'Are you sure you want to delete these %count% groups ?'
-remove_message_confirm_message: 'Are you sure you want to delete this message ?'
-remove_message_s_confirm_message: 'Are you sure you want to delete these %count% messages ?'
+remove_facet: Remove a facet
+remove_facet_confirm: Do you really want to remove the facet %name% ?
+remove_field: Remove a field
+remove_field_confirm: Do you really want to remove the field %name% ?
+remove_group_confirm_message: 'Are you sure you want to delete this group?'
+remove_group_s_confirm_message: 'Are you sure you want to delete these %count% groups?'
+remove_message_confirm_message: 'Are you sure you want to delete this message?'
+remove_message_s_confirm_message: 'Are you sure you want to delete these %count% messages?'
 remove_subcategory: 'Remove subcategory'
-remove_user_confirm_message: 'Are you sure you want to delete this user ?'
-remove_user_s_confirm_message: 'Are you sure you want to delete these %count% users ?'
+remove_user_confirm_message: 'Are you sure you want to delete this user?'
+remove_user_s_confirm_message: 'Are you sure you want to delete these %count% users?'
 remove_workspace_confirm_workspace: 'Are you sure you want to delete this workspace?'
-remove_workspace_from_category_confirm_message: 'Are you sure you want to remove the workspace from this category ?'
+remove_workspace_from_category_confirm_message: 'Are you sure you want to remove the workspace from this category?'
 remove_workspace_from_category_confirm_title: 'Remove workspace from category'
 remove_workspace_from_selection: 'Remove workspace from selection'
-remove_workspaces_confirm_workspaces: 'Are you sure you want to delete these %count% workspaces ?'
+remove_workspaces_confirm_workspaces: 'Are you sure you want to delete these %count% workspaces?'
 rename: Rename
 rename_category: 'Rename category'
 rename_tool: 'Rename tool'
@@ -537,7 +556,7 @@ rename_widget_instance: 'Rename widget'
 repeat_password: Repeat the password
 reset: Reset
 reset_password: Reset password
-reset_password_message: Are you sure you want to reinitialize password ?
+reset_password_message: Are you sure you want to reinitialize password?
 reset_password_txt: You asked for your password reinitialisation. If you did not ask for it, please just ignore this message.
 reset_pwd_form_password : 'Your current password'
 resetting_your_password: Resetting your password
@@ -545,7 +564,7 @@ resource: Resource
 resource_action_denied_message: 'The action %action% couldn''t be done on ''%path%'': access denied.'
 resource_creation_denied: 'You don''t have the permission to create in the directory ''%path'': access denied'
 resource_creation_wrong_type: 'You don''t have the permission to create a(n) %type% in the directory ''%path%'': access denied'
-resource_delete: 'Are you sure you want to delete this resource ?'
+resource_delete: 'Are you sure you want to delete this resource?'
 resource_properties_form_sharable: 'Share this resource'
 resource_properties_form_shareType: 'Share type'
 resource_properties_form_userIcon: Icon
@@ -558,7 +577,7 @@ resource_right_form_canShare: Share
 resource_right_form_canView: See
 resource_right_form_isRecursive: 'Apply changes to current and sub directories'
 resources: Resources
-resources_delete: 'Are you sure you want to delete these resources ?'
+resources_delete: 'Are you sure you want to delete these resources?'
 resources_most_downloaded: 'Most downloaded resources'
 resources_rights: 'Resources rights'
 resources_rights_management: 'Resources rights management'
@@ -574,6 +593,7 @@ rights_management: 'Rights Management'
 role: Role
 role_creation: 'Role creation'
 role_edition: 'Role edition'
+role_limit_reached: The limit of %translationKey% has been reached.
 role_name_type_form_translationKey: Name
 roles: Roles
 roles_management: 'Roles management'
@@ -643,6 +663,7 @@ tags_list: 'Tags list'
 tags_management: 'Tags management'
 tags_organization: 'Tags organization'
 teacher: Teacher
+text: Text
 text_form_content: Content
 text_form_name: Name
 text_form_shareType: Sharable
@@ -691,6 +712,8 @@ unable_to_start_sendmail: 'Sendmail or Postfix cannot be started. Please check t
 unable_to_start_smtp: 'The connection with the SMTP server cannot be established. Please check that the parameters you provided are correct.'
 unable_to_start_transport: 'The mailing transport cannot be started. Please check that the parameters you provided are correct.'
 unauthorized: 'You are not authorized to see this page.'
+unavailable_platform: The platform is unavailable
+unavailable_role: The role %translationKey% is not available
 uncompress_file: Uncompress the file if possible
 under_min_length: 'This value is too short'
 unique connections: 'Nb unique Cnx.'
@@ -708,6 +731,7 @@ url_invalid: 'the code is not correct, do no try to change the url'
 user: User
 user_accounts: 'User accounts'
 user_creation: 'User creation'
+user_limit_reached: The user limit has been reached.
 user_parameters: 'User parameters'
 user_picker: 'User picker'
 user_profile: 'User profile'
@@ -738,7 +762,7 @@ warning_user_impersonation: 'You are connected as %user%.'
 warning_workspace_impersonation: 'You are connected as %role% from the workspace %workspace%.'
 widget: Widget
 widget_display_form_name: Name
-widget_home_tab_delete_confirm_message: 'Do you really want to remove this widget from this Home tab ?'
+widget_home_tab_delete_confirm_message: 'Do you really want to remove this widget from this Home tab?'
 widget_home_tab_delete_confirm_title: 'Remove widget from Home tab'
 widget_settings: 'Widget settings'
 widgets: Widgets
@@ -754,7 +778,7 @@ workspace: Workspace
 workspace_administration: Administration
 workspace_classification: 'Workspace classification'
 workspace_delete: 'Delete the workspace'
-workspace_delete_confirm_message: 'Are you sure you want to delete this workspace ?'
+workspace_delete_confirm_message: 'Are you sure you want to delete this workspace?'
 workspace_delete_confirm_title: 'Delete Confirm'
 workspace_delete_success_message: 'Workspace "%workspaceName%" has been deleted.'
 workspace_edit_form_code: Code
@@ -782,20 +806,20 @@ workspace_list: Workspace list
 workspace_management : 'The workspace has been create at %creationDate%, by %creator%. There is %count% suscriber(s).'
 workspace_management_date_null : 'There is %count% subscriber(s). The creation date and the creator are not mentioned'
 workspace_order_tool_edit_form_name: Name
-workspace_registration_confirm_title: 'Do you really want to register to this workspace ?'
+workspace_registration_confirm_title: 'Do you really want to register to this workspace?'
 workspace_registration_message: 'You have been registered to the workspace %workspace_name%'
 workspace_registration_message_object: 'Workspace registration'
-workspace_remove_from_category_confirm_message: 'Do you really want to remove this workspace from this category ?'
+workspace_remove_from_category_confirm_message: 'Do you really want to remove this workspace from this category?'
 workspace_remove_from_category_confirm_title: 'Remove workspace from category'
 workspace_resource: Resources
 workspace_role_type_form_requireDir: 'Create a directory'
 workspace_role_type_form_translationKey: Name
 workspace_tag_form_name: Name
-workspace_tag_remove_confirm_message: 'Do you really want to remove this category ?'
+workspace_tag_remove_confirm_message: 'Do you really want to remove this category?'
 workspace_tag_remove_confirm_title: 'Remove category'
 workspace_template_form_name: Name
 workspace_tools: Tools
-workspace_unregistration_confirm_title: 'Do you really want to unregister from this workspace ?'
+workspace_unregistration_confirm_title: 'Do you really want to unregister from this workspace?'
 workspace_welcome: Welcome
 workspaces: Workspaces
 workspaces_included_in_category: 'Workspaces included in this category'
@@ -808,25 +832,3 @@ yes: yes
 yesterday_activity: 'Yesterday''s activity'
 your_current_url: 'Your current URL'
 your_username: 'Your username is '
-closed_account: Closed account
-list_role: Role list
-unavailable_role: The role %translationKey% is not available
-fail_add_user_group_message: These users couldn't be added to this group (check the max amount of users by role).
-unavailable_platform: The platform is unavailable
-account_duration_label: Account lifetime (days)
-platform_init_date: Platform activation date
-platform_expiration_date: Platform expiration date
-role_limit_reached: The limit of %translationKey% has been reached.
-user_limit_reached: The user limit has been reached.
-facets: Facets
-add_field_to_facet: Add field to facet
-text: Text
-number: Number
-create_facet: Create a facet
-create_field: Create a field
-edit_facet: Edit a facet
-edit_field: Edit a field
-remove_facet: Remove a facet
-remove_facet_confirm: Do you really want to remove the facet %name% ?
-remove_field: Remove a field
-remove_field_confirm: Do you really want to remove the field %name% ?

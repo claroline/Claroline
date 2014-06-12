@@ -204,8 +204,15 @@ claro_message:
 
 claro_activity:
     resource: "@ClarolineCoreBundle/Controller/ActivityController.php"
-    prefix: activity
+    prefix: activity/
     type: annotation
+
+claro_activity_remove_resource_confirm:
+    pattern: /activity/remive
+    options: { expose: true }
+    defaults:
+        _controller: FrameworkBundle:Template:template
+        template: 'ClarolineCoreBundle:Activity:remove.html.twig'
 
 fos_js_routing:
     resource: "@FOSJsRoutingBundle/Resources/config/routing/routing.xml"

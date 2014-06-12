@@ -18,19 +18,12 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 
 class ActivityType extends AbstractType
 {
-    private $resourceNode;
-
-    public function __construct($resourceNode = null)
-    {
-        $this->resourceNode = $resourceNode;
-    }
-
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('name', 'text', array('constraints' => new NotBlank()))
-            ->add('description', 'tinymce', array('constraints' => new NotBlank(), 'label' => 'description'))
-            ->add('resourceNode', 'resourcePicker', array('constraints' => new NotBlank()));
+            ->add('title', 'text', array('label' => 'name', 'constraints' => new NotBlank()))
+            ->add('description', 'tinymce', array('required' => false, 'label' => 'description'))
+            ->add('primaryResource', 'resourcePicker', array('required' => false));
     }
 
     public function getName()
