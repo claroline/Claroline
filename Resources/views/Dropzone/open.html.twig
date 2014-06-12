@@ -137,7 +137,7 @@
         <hr/>
         {% set nbDocument = drop.documents|length %}
         {% set documentListText = 'nbDocumentsInThisEvaluation'|transchoice(nbDocument, {}, 'icap_dropzone') %}
-        {{ dropzoneMacros.displayDocumentsList(drop, dropzone, 6, "condensed", documentListText) }}
+        {{ dropzoneMacros.displayDocumentsList(drop, dropzone, 12, "condensed", documentListText) }}
     {% endif %}
 
 
