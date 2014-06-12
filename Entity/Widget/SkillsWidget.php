@@ -2,6 +2,7 @@
 
 namespace Icap\PortfolioBundle\Entity\Widget;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -20,6 +21,11 @@ class SkillsWidget extends AbstractWidget
      * @ORM\OneToMany(targetEntity="Icap\PortfolioBundle\Entity\Widget\SkillsWidgetSkill", mappedBy="skillsWidget", cascade={"persist", "remove"})
      */
     protected $skills;
+
+    public function __construct()
+    {
+        $this->skills = new ArrayCollection();
+    }
 
     /**
      * @param \Icap\PortfolioBundle\Entity\Widget\SkillsWidgetSkill[] $skills
