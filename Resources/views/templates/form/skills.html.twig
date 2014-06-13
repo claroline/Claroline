@@ -1,19 +1,12 @@
-<div data-collection-form data-ng-model="editedWidget.children">
-    <div class="form-group">
-        <label for="title" class="required">{{ 'skills_form_skill_name'|trans({}, 'icap_portfolio') }}</label>
-        <div class="input-group">
-            <input type="text" class="form-control" data-ng-model="name" />
-            <span class="input-group-btn">
-                <button class="btn btn-default" type="button" data-ng-click="addChild({'name': name})">
-                    <span class="icon-plus"></span>
-                </button>
-            </span>
-        </div>
-    </div>
+<div data-collection-form="{'name': ''}" data-ng-model="editedWidget.children">
     <ul class="list-unstyled">
         <li data-ng-repeat="skill in collection">
             <div class="input-group">
-                {% verbatim %}<input type="text" class="form-control" id="skill_{{ $index }}_name" name="icap_portfolio_widget_form_skills[skills][{{ $index }}][name]" data-ng-model="skill.name" data-ng-disabled="skill.toDelete" />{% endverbatim %}
+                {% verbatim %}
+                <input type="text" class="form-control" id="skill_{{ $index }}_name"
+                     name="icap_portfolio_widget_form_skills[skills][{{ $index }}][name]" data-ng-model="skill.name"
+                     data-ng-disabled="skill.toDelete" data-ng-focus="addEmptyChild($index + 1)" />
+                {% endverbatim %}
                 <span class="input-group-btn">
                     <button class="btn btn-danger" type="button" data-ng-if="!skill.toDelete" data-ng-click="deleteChild(skill)">
                         <span class="icon-trash"></span>
