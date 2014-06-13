@@ -8,13 +8,15 @@ portfolioApp
             }
 
             scope.emptyChild = jQuery.parseJSON(attrs.collectionForm.replace(/'/g, '"'));
+            scope.emptyChild.notAdded = true;
 
             ngModel.$render = function() {
                 var collection = ngModel.$viewValue || [];
-                if (!scope.isEmpty(collection[collection.length - 1])) {
-                    collection.push(angular.copy(scope.emptyChild));
-                }
                 scope.collection = collection;
+
+                if (!scope.isEmpty(scope.collection[scope.collection.length - 1])) {
+                    scope.collection.push(angular.copy(scope.emptyChild));
+                }
             };
 
             scope.addChild = function(child) {
@@ -46,6 +48,15 @@ portfolioApp
 
                 return isEmpty;
             }
+
+            scope.markEmpty = function(child) {
+                if (scope.isEmpty(child)) {
+                    child.notAdded = true;
+                }
+                else {
+                    delete child.notAdded;
+                }
+            };
 
             scope.isAdded = function(child) {
                 return (!scope.isEmpty(child) && !child.toDelete) || child.toDelete;

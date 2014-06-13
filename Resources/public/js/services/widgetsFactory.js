@@ -67,7 +67,7 @@ portfolioApp
                 widget.prototype.deleteChildren = function() {
                     for (var i = 0;i < this.children.length; i++) {
                         var currentChild = this.children[i];
-                        if (currentChild.toDelete) {
+                        if (currentChild.toDelete || currentChild.notAdded) {
                             this.children.remove(currentChild);
                         }
                     }
