@@ -54,6 +54,7 @@ class InteractionQCMHandler
     protected $em;
     protected $user;
     protected $exercise;
+    protected $isClone = FALSE;
 
     public function __construct(Form $form, Request $request, EntityManager $em, User $user, $exercise=-1)
     {
@@ -117,20 +118,19 @@ class InteractionQCMHandler
 
         $this->em->flush();
 
-        if ($interQCM->getInteraction()->getQuestion()->getModel()) {
-            $request = $this->request;
+        $request = $this->request;
+        if ($this->isClone === FALSE && $request->request->get('nbq') > 0)
+        {
             $nbCop = 0;
-            if ($request->request->get('nbq') > 0)
-            {
-                while ($nbCop < $request->request->get('nbq')) {
-                    $nbCop ++;
-                    $copy = clone $interQCM;
-                    $title = $copy->getInteraction()->getQuestion()->getTitle();
-                    $copy->getInteraction()->getQuestion()
-                         ->setTitle($title.' '.$nbCop);
+            while ($nbCop < $request->request->get('nbq')) {
+                $nbCop ++;
+                $copy = clone $interQCM;
+                $title = $copy->getInteraction()->getQuestion()->getTitle();
+                $copy->getInteraction()->getQuestion()
+                     ->setTitle($title.' '.$nbCop);
 
-                    $this->onSuccessAdd($copy);
-                }
+                $this->isClone = TRUE;
+                $this->onSuccessAdd($copy);
             }
         }
 

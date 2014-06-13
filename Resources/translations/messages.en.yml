@@ -121,6 +121,7 @@ docName: Document name
 document: Document
 doNothing: Do nothing and go back to my documents management
 drop category: Drop this category
+duplicate this question: Duplicate <input type ="text" name='nbq' value='0' size='2' /> time this question
 duration: Duration
 
 # E
@@ -266,7 +267,6 @@ noUserFound: No user found
 nQuestion: Question n°
 number of papers: Number of papers
 number of questions: Number of questions
-numberOfQuestionWithModel: And create <input type ="text" name='nbq' value='0' size='2' /> question(s) with this model
 number of questions to draw: Number of questions to draw
 numerical: Numerical
 num_paper: Paper's number
