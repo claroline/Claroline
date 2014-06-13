@@ -67,22 +67,6 @@
 <br><hr><br>
 
 <div>
-    <div class="form-group row">
-        {{ form_label(form.interaction.question.model) }}
-        <div class="col-md-3">
-            {{ form_widget(form.interaction.question.model) }}
-        </div>
-    </div>
-</div>
-<div id="divnbq" class="form-group row">
-    <label class="control-label col-md-3">
-        {{ "duplicate this question" | trans | raw }}
-    </label>
-</div>
-
-<br><hr><br>
-
-<div>
     <label class="control-label col-md-3">{{ 'question' | trans }}</label>
     <br><br>
     {{ form_widget(form.interaction.invite) }}
