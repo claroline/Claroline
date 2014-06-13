@@ -11,7 +11,9 @@ portfolioApp
 
             ngModel.$render = function() {
                 var collection = ngModel.$viewValue || [];
-                collection.push(angular.copy(scope.emptyChild));
+                if (!scope.isEmpty(collection[collection.length - 1])) {
+                    collection.push(angular.copy(scope.emptyChild));
+                }
                 scope.collection = collection;
             };
 
