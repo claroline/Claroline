@@ -122,6 +122,7 @@ class InteractionGraphicController extends Controller
 
         $formHandler = new InteractionGraphicHandler(
             $form, $this->get('request'), $this->getDoctrine()->getManager(),
+            $this->container->get('ujm.exercise_services'),
             $user, $exoID
         );
 
@@ -140,13 +141,6 @@ class InteractionGraphicController extends Controller
                     )
                 );
             } else {
-                $em = $this->getDoctrine()->getManager();
-                $exercise = $em->getRepository('UJMExoBundle:Exercise')->find($exoID);
-
-                if ($this->container->get('ujm.exercise_services')->isExerciseAdmin($exercise)) {
-                    $this->container->get('ujm.exercise_services')->setExerciseQuestion($exoID, $interGraph);
-                }
-
                 return $this->redirect(
                     $this->generateUrl(
                         'ujm_exercise_questions',
@@ -253,6 +247,7 @@ class InteractionGraphicController extends Controller
 
         $formHandler = new InteractionGraphicHandler(
             $editForm, $this->get('request'), $this->getDoctrine()->getManager(),
+            $this->container->get('ujm.exercise_services'),
             $this->container->get('security.context')->getToken()->getUser()
         );
 

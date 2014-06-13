@@ -37,35 +37,10 @@
 
 namespace UJM\ExoBundle\Form;
 
-use Symfony\Component\Form\Form;
-use Symfony\Component\HttpFoundation\Request;
-use Doctrine\ORM\EntityManager;
-
-use Claroline\CoreBundle\Entity\User;
-
 use UJM\ExoBundle\Entity\InteractionQCM;
-use UJM\ExoBundle\Entity\Exercise;
 
-
-class InteractionQCMHandler
+class InteractionQCMHandler extends \UJM\ExoBundle\Form\InteractionHandler
 {
-    protected $form;
-    protected $request;
-    protected $em;
-    protected $exoServ;
-    protected $user;
-    protected $exercise;
-    protected $isClone = FALSE;
-
-    public function __construct(Form $form, Request $request, EntityManager $em, $exoServ, User $user, $exercise=-1)
-    {
-        $this->form     = $form;
-        $this->request  = $request;
-        $this->em       = $em;
-        $this->exoServ  = $exoServ;
-        $this->user     = $user;
-        $this->exercise = $exercise;
-    }
 
     public function processAdd()
     {
@@ -82,8 +57,9 @@ class InteractionQCMHandler
         return false;
     }
 
-    private function onSuccessAdd(InteractionQCM $interQCM)
+    protected function onSuccessAdd($interQCM)
     {
+
         // \ pour instancier un objet du namespace global et non pas de l'actuel
         $interQCM->getInteraction()->getQuestion()->setDateCreate(new \Datetime());
         $interQCM->getInteraction()->getQuestion()->setUser($this->user);
@@ -107,42 +83,15 @@ class InteractionQCMHandler
             $choice->setInteractionQCM($interQCM);
             $this->em->persist($choice);
             $ord = $ord + 1;
-            //echo($choice->getRightResponse());
         }
 
-        //On persite tous les hints de l'entité interaction
-        foreach ($interQCM->getInteraction()->getHints() as $hint) {
-            $hint->setPenalty(ltrim($hint->getPenalty(), '-'));
-            //$interQCM->getInteraction()->addHint($hint);
-            $hint->setInteraction($interQCM->getInteraction());
-            $this->em->persist($hint);
-        }
+        $this->persistHints($interQCM);
 
         $this->em->flush();
 
-        if ($this->exercise != -1) {
-            $exercise = $this->em->getRepository('UJMExoBundle:Exercise')->find($this->exercise);
+        $this->addAnExericse($interQCM);
 
-            if ($this->exoServ->isExerciseAdmin($exercise)) {
-                $this->exoServ->setExerciseQuestion($this->exercise, $interQCM);
-            }
-        }
-
-        $request = $this->request;
-        if ($this->isClone === FALSE && $request->request->get('nbq') > 0)
-        {
-            $nbCop = 0;
-            while ($nbCop < $request->request->get('nbq')) {
-                $nbCop ++;
-                $copy = clone $interQCM;
-                $title = $copy->getInteraction()->getQuestion()->getTitle();
-                $copy->getInteraction()->getQuestion()
-                     ->setTitle($title.' '.$nbCop);
-
-                $this->isClone = TRUE;
-                $this->onSuccessAdd($copy);
-            }
-        }
+        $this->duplicateInter($interQCM);
 
     }
 

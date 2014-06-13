@@ -37,35 +37,11 @@
 
 namespace UJM\ExoBundle\Form;
 
-use Symfony\Component\Form\Form;
-use Symfony\Component\HttpFoundation\Request;
-use Doctrine\ORM\EntityManager;
-
-use Claroline\CoreBundle\Entity\User;
-
 use UJM\ExoBundle\Entity\InteractionGraphic;
 use UJM\ExoBundle\Entity\Coords;
-use UJM\ExoBundle\Entity\ExerciseQuestion;
-use UJM\ExoBundle\Entity\Exercise;
 
-
-class InteractionGraphicHandler
+class InteractionGraphicHandler extends \UJM\ExoBundle\Form\InteractionHandler
 {
-    protected $form;
-    protected $request;
-    protected $em;
-    protected $user;
-    protected $exercise;
-    protected $isClone = FALSE;
-
-    public function __construct(Form $form, Request $request, EntityManager $em, User $user, $exercise = -1)
-    {
-        $this->form     = $form;
-        $this->request  = $request;
-        $this->em       = $em;
-        $this->user     = $user;
-        $this->exercise = $exercise;
-    }
 
     public function processAdd()
     {
@@ -82,7 +58,7 @@ class InteractionGraphicHandler
         return false;
     }
 
-    private function onSuccessAdd(InteractionGraphic $interGraph)
+    protected function onSuccessAdd($interGraph)
     {
         $interGraph->getInteraction()->getQuestion()->setDateCreate(new \Datetime()); // Set Creation Date to today
         $interGraph->getInteraction()->getQuestion()->setUser($this->user); // add the user to the question
@@ -109,31 +85,14 @@ class InteractionGraphicHandler
         for ($i = 0; $i < $lengthCoord; $i++) {
             $this->em->persist($allCoords[$i]);
         }
-        
-         //On persite tous les hints de l'entité interaction
-        foreach ($interGraph->getInteraction()->getHints() as $hint) {
-            $hint->setPenalty(ltrim($hint->getPenalty(), '-'));
-            $interGraph->getInteraction()->addHint($hint);
-            $this->em->persist($hint);
-        }
-        
-        $this->em->flush();
-        
-        $request = $this->request;
-        if ($this->isClone === FALSE && $request->request->get('nbq') > 0)
-        {
-            $nbCop = 0;
-            while ($nbCop < $request->request->get('nbq')) {
-                $nbCop ++;
-                $copy = clone $interGraph;
-                $title = $copy->getInteraction()->getQuestion()->getTitle();
-                $copy->getInteraction()->getQuestion()
-                     ->setTitle($title.' '.$nbCop);
 
-                $this->isClone = TRUE;
-                $this->onSuccessAdd($copy);
-            }
-        }
+        $this->persistHints($interGraph);
+
+        $this->em->flush();
+
+        $this->addAnExericse($interGraph);
+
+        $this->duplicateInter($interGraph);
     }
 
     public function processUpdate(InteractionGraphic $originalInterGraphic)

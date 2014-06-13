@@ -204,6 +204,7 @@ class InteractionQCMController extends Controller
         );
         $formHandler = new InteractionQCMHandler(
             $editForm, $this->get('request'), $this->getDoctrine()->getManager(),
+            $this->container->get('ujm.exercise_services'),
             $this->container->get('security.context')->getToken()->getUser()
         );
 
