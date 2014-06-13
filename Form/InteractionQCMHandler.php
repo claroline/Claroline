@@ -52,15 +52,17 @@ class InteractionQCMHandler
     protected $form;
     protected $request;
     protected $em;
+    protected $exoServ;
     protected $user;
     protected $exercise;
     protected $isClone = FALSE;
 
-    public function __construct(Form $form, Request $request, EntityManager $em, User $user, $exercise=-1)
+    public function __construct(Form $form, Request $request, EntityManager $em, $exoServ, User $user, $exercise=-1)
     {
         $this->form     = $form;
         $this->request  = $request;
         $this->em       = $em;
+        $this->exoServ  = $exoServ;
         $this->user     = $user;
         $this->exercise = $exercise;
     }
@@ -117,6 +119,14 @@ class InteractionQCMHandler
         }
 
         $this->em->flush();
+
+        if ($this->exercise != -1) {
+            $exercise = $this->em->getRepository('UJMExoBundle:Exercise')->find($this->exercise);
+
+            if ($this->exoServ->isExerciseAdmin($exercise)) {
+                $this->exoServ->setExerciseQuestion($this->exercise, $interQCM);
+            }
+        }
 
         $request = $this->request;
         if ($this->isClone === FALSE && $request->request->get('nbq') > 0)
