@@ -88,13 +88,3 @@ function displayDeleteCategory() {
 }
 
 displayDeleteCategory();
-
-$(document).ready(function () {
-    $("*[id$='interaction_question_model']").click(function() {
-        if(this.checked) {
-            $('#divnbq').css({"display" : "block"});
-        } else {
-            $('#divnbq').css({"display" : "none"});
-        }
-    });
-});

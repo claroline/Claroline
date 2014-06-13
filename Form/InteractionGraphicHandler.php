@@ -56,6 +56,7 @@ class InteractionGraphicHandler
     protected $em;
     protected $user;
     protected $exercise;
+    protected $isClone = FALSE;
 
     public function __construct(Form $form, Request $request, EntityManager $em, User $user, $exercise = -1)
     {
@@ -117,6 +118,22 @@ class InteractionGraphicHandler
         }
         
         $this->em->flush();
+        
+        $request = $this->request;
+        if ($this->isClone === FALSE && $request->request->get('nbq') > 0)
+        {
+            $nbCop = 0;
+            while ($nbCop < $request->request->get('nbq')) {
+                $nbCop ++;
+                $copy = clone $interGraph;
+                $title = $copy->getInteraction()->getQuestion()->getTitle();
+                $copy->getInteraction()->getQuestion()
+                     ->setTitle($title.' '.$nbCop);
+
+                $this->isClone = TRUE;
+                $this->onSuccessAdd($copy);
+            }
+        }
     }
 
     public function processUpdate(InteractionGraphic $originalInterGraphic)

@@ -149,4 +149,12 @@ class InteractionGraphic
     {
         $this->document = $document;
     }
+    
+    public function __clone() {
+        if ($this->id) {
+            $this->id = null;
+
+            $this->interaction = clone $this->interaction;
+        }
+    }
 }
