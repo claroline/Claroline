@@ -3,7 +3,6 @@
 portfolioApp
     .directive("collectionForm", function() {
         var link = function (scope, element, attrs, ngModel) {
-            console.log(attrs);
             if(!ngModel) {
                 return;// do nothing if no ng-model
             }
