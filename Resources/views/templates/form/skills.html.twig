@@ -11,15 +11,15 @@
         </div>
     </div>
     <ul class="list-unstyled">
-        <li data-ng-repeat="skill in collection" data-ng-class="{'child-to-be-deleted': skill.toDelete}">
+        <li data-ng-repeat="skill in collection">
             <div class="input-group">
-                {% verbatim %}<input type="text" class="form-control" id="skill_{{ $index }}_name" name="icap_portfolio_widget_form_skills[skills][{{ $index }}][name]" data-ng-model="skill.name" />{% endverbatim %}
+                {% verbatim %}<input type="text" class="form-control" id="skill_{{ $index }}_name" name="icap_portfolio_widget_form_skills[skills][{{ $index }}][name]" data-ng-model="skill.name" data-ng-disabled="skill.toDelete" />{% endverbatim %}
                 <span class="input-group-btn">
                     <button class="btn btn-danger" type="button" data-ng-if="!skill.toDelete" data-ng-click="deleteChild(skill)">
                         <span class="icon-trash"></span>
                     </button>
-                    <button class="btn btn-success" type="button" data-ng-if="skill.toDelete" data-ng-click="cancelDeletionOfChild(skill)">
-                        <span class="icon-plus"></span>
+                    <button class="btn btn-default" type="button" data-ng-if="skill.toDelete" data-ng-click="cancelDeletionOfChild(skill)">
+                        <span class="icon-undo"></span>
                     </button>
                 </span>
             </div>
