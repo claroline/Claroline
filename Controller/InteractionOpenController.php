@@ -103,6 +103,7 @@ class InteractionOpenController extends Controller
 
         $formHandler = new InteractionOpenHandler(
             $form, $this->get('request'), $this->getDoctrine()->getManager(),
+            $this->container->get('ujm.exercise_services'),
             $this->container->get('security.context')->getToken()->getUser(), $exoID
         );
 
@@ -117,13 +118,6 @@ class InteractionOpenController extends Controller
                     )
                 );
             } else {
-                $em = $this->getDoctrine()->getManager();
-                $exercise = $em->getRepository('UJMExoBundle:Exercise')->find($exoID);
-
-                if ($this->container->get('ujm.exercise_services')->isExerciseAdmin($exercise)) {
-                    $this->container->get('ujm.exercise_services')->setExerciseQuestion($exoID, $interOpen);
-                }
-
                 return $this->redirect(
                     $this->generateUrl('ujm_exercise_questions', array(
                         'id' => $exoID, 'categoryToFind' => $categoryToFind, 'titleToFind' => $titleToFind)
@@ -185,6 +179,7 @@ class InteractionOpenController extends Controller
 
         $formHandler = new InteractionOpenHandler(
             $editForm, $this->get('request'), $this->getDoctrine()->getManager(),
+            $this->container->get('ujm.exercise_services'),
             $this->container->get('security.context')->getToken()->getUser()
         );
 

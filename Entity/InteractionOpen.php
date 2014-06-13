@@ -68,17 +68,17 @@ class InteractionOpen
      */
     private $interaction;
 
-    
+
     /**
      * @ORM\ManyToOne(targetEntity="UJM\ExoBundle\Entity\TypeOpenQuestion")
      */
     private $typeopenquestion;
-    
+
     /**
      * @ORM\OneToMany(targetEntity="UJM\ExoBundle\Entity\WordResponse", mappedBy="interactionopen", cascade={"remove"})
      */
     private $wordResponses;
-    
+
     /**
      * @var float $scoreMaxLongResp
      *
@@ -138,10 +138,10 @@ class InteractionOpen
     {
         $this->typeopenquestion = $typeOpenQuestion;
     }
-    
+
     public function getWordResponses()
     {
-        
+
         return $this->wordResponses;
     }
 
@@ -154,9 +154,9 @@ class InteractionOpen
 
     public function removeWordResponse(\UJM\ExoBundle\Entity\WordResponse $wordResponse)
     {
-        
+
     }
-    
+
     /**
      * Set scoreMaxLongResp
      *
@@ -173,5 +173,22 @@ class InteractionOpen
     public function getScoreMaxLongResp()
     {
         return $this->scoreMaxLongResp;
+    }
+
+    public function __clone() {
+        if ($this->id) {
+            $this->id = null;
+
+            $this->interaction = clone $this->interaction;
+
+            $newWordResponses = new \Doctrine\Common\Collections\ArrayCollection;
+            foreach ($this->wordResponses as $wordResponse) {
+                $newWordResponse = clone $wordResponse;
+                $newWordResponse->setHole($this);
+                $newWordResponses->add($newWordResponse);
+            }
+            $this->wordResponses = $newWordResponses;
+
+        }
     }
 }

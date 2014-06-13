@@ -37,33 +37,10 @@
 
 namespace UJM\ExoBundle\Form;
 
-use Symfony\Component\Form\Form;
-use Symfony\Component\HttpFoundation\Request;
-use Doctrine\ORM\EntityManager;
-
-use Claroline\CoreBundle\Entity\User;
-
 use UJM\ExoBundle\Entity\InteractionOpen;
-use UJM\ExoBundle\Entity\ExerciseQuestion;
-use UJM\ExoBundle\Entity\Exercise;
 
-
-class InteractionOpenHandler
+class InteractionOpenHandler extends \UJM\ExoBundle\Form\InteractionHandler
 {
-    protected $form;
-    protected $request;
-    protected $em;
-    protected $user;
-    protected $exercise;
-
-    public function __construct(Form $form, Request $request, EntityManager $em, User $user, $exercise=-1)
-    {
-        $this->form     = $form;
-        $this->request  = $request;
-        $this->em       = $em;
-        $this->user     = $user;
-        $this->exercise = $exercise;
-    }
 
     public function processAdd()
     {
@@ -80,7 +57,7 @@ class InteractionOpenHandler
         return false;
     }
 
-    private function onSuccessAdd(InteractionOpen $interOpen)
+    protected function onSuccessAdd($interOpen)
     {
         $interOpen->getInteraction()->getQuestion()->setDateCreate(new \Datetime());
         $interOpen->getInteraction()->getQuestion()->setUser($this->user);
@@ -90,17 +67,16 @@ class InteractionOpenHandler
         $this->em->persist($interOpen->getInteraction()->getQuestion());
         $this->em->persist($interOpen->getInteraction());
 
-        //On persite tous les hints de l'entité interaction
-        foreach ($interOpen->getInteraction()->getHints() as $hint) {
-            $hint->setPenalty(ltrim($hint->getPenalty(), '-'));
-            $interOpen->getInteraction()->addHint($hint);
-            $this->em->persist($hint);
-        }
+        $this->persistHints($interOpen);
 
         $this->em->flush();
 
+        $this->addAnExericse($interOpen);
+
+        $this->duplicateInter($interOpen);
+
     }
-    
+
     public function processUpdate(InteractionOpen $originalInterOpen)
     {
         $originalHints = array();
@@ -121,7 +97,7 @@ class InteractionOpenHandler
 
         return false;
     }
-    
+
     private function onSuccessUpdate(InteractionOpen $interOpen, $originalHints)
     {
 
