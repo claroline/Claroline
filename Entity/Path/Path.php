@@ -127,7 +127,7 @@ class Path extends AbstractResource implements PathInterface
     }
 
     /**
-     * Is path modified since the last deployement
+     * Is path modified since the last deployment
      * @return boolean
      */
     public function isModified()

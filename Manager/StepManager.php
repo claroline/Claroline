@@ -135,32 +135,8 @@ class StepManager
         
         return $step;
     }
-    
-    public function getWho()
-    {
-        $results = $this->om->getRepository('InnovaPathBundle:StepWho')->findAll();
-        
-        $stepWhos = array();
-        foreach ($results as $result) {
-            $stepWhos[$result->getId()] = $this->translator->trans($result->getName(), array(), 'innova_tools');
-        }
-        
-        return $stepWhos;
-    }
 
-    public function getWhere()
-    {
-        $results = $this->om->getRepository('InnovaPathBundle:StepWhere')->findAll();
-        
-        $stepWheres = array();
-        foreach ($results as $result) {
-            $stepWheres[$result->getId()] = $this->translator->trans($result->getName(), array(), 'innova_tools');
-        }
-        
-        return $stepWheres;
-    }
-
-	public function contextualUpdate($step)
+    public function contextualUpdate($step)
     {
         $path = $step->getPath();
         $json = json_decode($path->getStructure());

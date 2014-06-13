@@ -14,8 +14,6 @@ use Doctrine\Common\Collections\ArrayCollection;
  */
 class Step
 {
-    const DEFAULT_NAME = 'Step';
-    
     /**
      * Unique identifier of the step
      * @var integer
@@ -27,12 +25,22 @@ class Step
     protected $id;
 
     /**
-     * Name of the step
-     * @var string
+     * Activity of this step
+     * @var \Claroline\CoreBundle\Entity\Resource\Activity
      *
-     * @ORM\Column(name="name", type="string", length=255)
+     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Resource\Activity")
+     * @ORM\JoinColumn(name="activity_id", referencedColumnName="id")
      */
-    protected $name;
+    protected $activity;
+
+    /**
+     * Parameters for this step
+     * @var \Claroline\CoreBundle\Entity\Activity\ActivityParameters
+     *
+     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Activity\ActivityParameters")
+     * @ORM\JoinColumn(name="parameters_id", referencedColumnName="id")
+     */
+    protected $parameters;
 
     /**
      * Depth of the step in the Path
@@ -68,28 +76,6 @@ class Step
     protected $children;
 
     /**
-     * @var string
-     *
-     * @ORM\Column(name="description", type="text", nullable=true)
-     */
-    protected $description = null;
-
-    /**
-     * @var boolean
-     *
-     * @ORM\Column(name="withTutor", type="boolean")
-     */
-    protected $withTutor;
-
-    /**
-     * Step duration
-     * @var \DateTime
-     *
-     * @ORM\Column(name="duration", type="datetime", nullable=true)
-     */
-    protected $duration;
-
-    /**
      * Path
      * @var \Innova\PathBundle\Entity\Path\Path
      * 
@@ -99,33 +85,12 @@ class Step
     protected $path;
 
     /**
-     * @ORM\ManyToOne(targetEntity="StepWho", inversedBy="steps")
-     * @ORM\JoinColumn(name="stepWho_id", referencedColumnName="id", nullable=true)
-     */
-    protected $stepWho;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="StepWhere", inversedBy="steps")
-     * @ORM\JoinColumn(name="stepWhere_id", referencedColumnName="id", nullable=true)
-     */
-    protected $stepWhere;
-
-    /**
-     * @ORM\OneToMany(targetEntity="Step2ResourceNode", mappedBy="step", indexBy="id")
-     */
-    protected $step2ResourceNodes;
-
-    /**
      * Class constructor
      */
     public function __construct()
     {
-        $this->withTutor = false;
-        
         $this->children = new ArrayCollection();
-        $this->step2ResourceNodes = new ArrayCollection();
     }
-    
     
     /**
      * Get id
@@ -135,28 +100,48 @@ class Step
     {
         return $this->id;
     }
-    
+
     /**
-     * Set name
-     * @param string $name
+     * Get activity
+     * @return \Claroline\CoreBundle\Entity\Resource\Activity
+     */
+    public function getActivity()
+    {
+        return $this->activity;
+    }
+
+    /**
+     * Set activity
+     * @param \Claroline\CoreBundle\Entity\Resource\Activity $activity
      * @return \Innova\PathBundle\Entity\Step
      */
-    public function setName($name)
+    public function setActivity(\Claroline\CoreBundle\Entity\Resource\Activity $activity)
     {
-        $this->name = $name;
-    
+        $this->activity = $activity;
+
         return $this;
     }
-    
+
     /**
-     * Get name
-     * @return string
+     * Get activity parameters
+     * @return \Claroline\CoreBundle\Entity\Activity\ActivityParameters
      */
-    public function getName()
+    public function getParameters()
     {
-        return $this->name;
+        return $this->parameters;
     }
-    
+
+    /**
+     * @param \Claroline\CoreBundle\Entity\Activity\ActivityParameters $parameters
+     * @return \Innova\PathBundle\Entity\Step
+     */
+    public function setParameters(\Claroline\CoreBundle\Entity\Activity\ActivityParameters $parameters)
+    {
+        $this->parameters = $parameters;
+
+        return $this;
+    }
+
     /**
      * Set lvl
      * @param integer $lvl
@@ -176,69 +161,6 @@ class Step
     public function getLvl()
     {
         return $this->lvl;
-    }
-
-    /**
-     * Set description
-     * @param  string $description
-     * @return \Innova\PathBundle\Entity\Step
-     */
-    public function setDescription($description)
-    {
-        $this->description = $description;
-
-        return $this;
-    }
-
-    /**
-     * Get description
-     * @return string
-     */
-    public function getDescription()
-    {
-        return $this->description;
-    }
-
-    /**
-     * Set withTutor
-     * @param  boolean $withTutor
-     * @return \Innova\PathBundle\Entity\Step
-     */
-    public function setWithTutor($withTutor)
-    {
-        $this->withTutor = $withTutor;
-
-        return $this;
-    }
-
-    /**
-     * Get withTutor
-     * @return boolean
-     */
-    public function isWithTutor()
-    {
-        return $this->withTutor;
-    }
-
-    /**
-     * Set duration
-     * @param  \DateTime $duration
-     * @return \Innova\PathBundle\Entity\Step
-     */
-    public function setDuration($duration)
-    {
-        $this->duration = $duration;
-
-        return $this;
-    }
-
-    /**
-     * Get duration
-     * @return \DateTime
-     */
-    public function getDuration()
-    {
-        return $this->duration;
     }
 
     /**
@@ -263,53 +185,11 @@ class Step
     }
 
     /**
-     * Set stepWho
-     * @param  \Innova\PathBundle\Entity\StepWho $stepWho
-     * @return \Innova\PathBundle\Entity\Step
-     */
-    public function setStepWho(StepWho $stepWho = null)
-    {
-        $this->stepWho = $stepWho;
-
-        return $this;
-    }
-
-    /**
-     * Get stepWho
-     * @return \Innova\PathBundle\Entity\StepWho
-     */
-    public function getStepWho()
-    {
-        return $this->stepWho;
-    }
-
-    /**
-     * Set stepWhere
-     * @param  \Innova\PathBundle\Entity\StepWhere $stepWhere
-     * @return \Innova\PathBundle\Entity\Step
-     */
-    public function setStepWhere(StepWhere $stepWhere = null)
-    {
-        $this->stepWhere = $stepWhere;
-
-        return $this;
-    }
-
-    /**
-     * Get stepWhere
-     * @return \Innova\PathBundle\Entity\StepWhere
-     */
-    public function getStepWhere()
-    {
-        return $this->stepWhere;
-    }
-
-    /**
      * Set path
      * @param  \Innova\PathBundle\Entity\Path\Path $path
      * @return \Innova\PathBundle\Entity\
      */
-    public function setPath(\Innova\PathBundle\Entity\Path\Path $path = null)
+    public function setPath(Path\Path $path = null)
     {
         $this->path = $path;
 
@@ -379,41 +259,6 @@ class Step
         $step->setParent(null);
         
         return $this;
-    }
-    
-    /**
-     * Add step2ResourceNodes
-     * @param \Innova\PathBundle\Entity\Step2ResourceNode $step2ResourceNodes
-     * @return \Innova\PathBundle\Entity\Step
-     */
-    public function addStep2ResourceNode(Step2ResourceNode $step2ResourceNodes)
-    {
-        $this->step2ResourceNodes->set($step2ResourceNodes->getId(), $step2ResourceNodes);
-        $step2ResourceNodes->setStep($this);
-        
-        return $this;
-    }
-
-    /**
-     * Remove step2ResourceNodes
-     * @param \Innova\PathBundle\Entity\Step2ResourceNode $step2ResourceNodes
-     * @return \Innova\PathBundle\Entity\Step
-     */
-    public function removeStep2ResourceNode(Step2ResourceNode $step2ResourceNodes)
-    {
-        $this->step2ResourceNodes->removeElement($step2ResourceNodes);
-        $step2ResourceNodes->setStep(null);
-        
-        return $this;
-    }
-
-    /**
-     * Get step2ResourceNodes
-     * @return \Doctrine\Common\Collections\Collection 
-     */
-    public function getStep2ResourceNodes()
-    {
-        return $this->step2ResourceNodes;
     }
     
     /**

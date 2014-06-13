@@ -13,10 +13,7 @@ services:
     innova_path.controller.step:
         class: %innova_path.controller.step.class%
         arguments:
-            kernelRoot:      %kernel.root_dir%
             entityManager:   @doctrine.orm.entity_manager
-            securityContext: @security.context
-            stepManager:     @innova_path.manager.step
         
     # Path template controller
     innova_path.controller.path_template:
@@ -61,7 +58,6 @@ services:
             translator:      @translator
             pathHandler:     @innova_path.form.handler.path
             resourceManager: @claroline.manager.resource_manager
-            securityContext: @security.context
         calls:
             - [setRequest, [@request]]
         scope: request

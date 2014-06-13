@@ -42,8 +42,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 
 // Controller dependencies
 use Doctrine\Common\Persistence\ObjectManager;
-use Symfony\Component\Security\Core\SecurityContextInterface;
-use Innova\PathBundle\Manager\StepManager;
+use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 
 /**
  * Class StepController
@@ -58,7 +57,7 @@ use Innova\PathBundle\Manager\StepManager;
  * @link       http://innovalangues.net
  * 
  * @Route(
- *      "",
+ *      "/step",
  *      name = "innova_step",
  *      service="innova_path.controller.step"
  * )
@@ -69,112 +68,37 @@ class StepController
      * Current entity manager for data persist
      * @var \Doctrine\ORM\EntityManager
      */
-    protected $entityManager;
-    
-    /**
-     * Current security context
-     * @var \Symfony\Component\Security\Core\SecurityContextInterface
-     */
-    protected $securityContext;
-    
-    /**
-     * Current path manager
-     * @var \Innova\PathBundle\Manager\StepManager
-     */
-    protected $stepManager;
-    
-    /**
-     * Path to the kernel
-     * @var string
-     */
-    protected $kernelRoot;
-    
+    protected $om;
+
     /**
      * Class constructor
      * Inject needed dependencies
-     * @param string                                                    $kernelRoot
-     * @param \Doctrine\Common\Persistence\ObjectManager                $entityManager
-     * @param \Symfony\Component\Security\Core\SecurityContextInterface $securityContext
-     * @param \Innova\PathBundle\Manager\StepManager                    $stepManager
+     * @param \Doctrine\Common\Persistence\ObjectManager $entityManager
      */
     public function __construct(
-        $kernelRoot,
-	    ObjectManager            $entityManager,
-        SecurityContextInterface $securityContext,
-        StepManager              $stepManager)
+        ObjectManager $entityManager)
     {
-        $this->kernelRoot      = $kernelRoot;
-        $this->entityManager   = $entityManager;
-        $this->securityContext = $securityContext;
-        $this->stepManager     = $stepManager;
+        $this->om = $entityManager;
     }
 
     /**
      * Get available resources for current user
+     * @param \Claroline\CoreBundle\Entity\AbstractWorkspace $workspace
      * @return JsonResponse
-     * 
+     *
      * @Route(
-     *      "/step/resources", 
-     *      name="innova_user_resources", 
+     *      "available_activities",
+     *      name="innova_available_activities",
      *      options = {"expose"=true}
      * )
      * @Method("GET")
      */
-    public function getUserResourcesAction()
+    public function loadAvailableActivitiesAction(AbstractWorkspace $workspace)
     {
-        $user = $this->securityContext->getToken()->getUser();
-        $resourceNodes = $this->entityManager->getRepository('ClarolineCoreBundle:Resource\ResourceNode')->findByCreator($user);
-        
-        $resources = array();
+        $activities = array ();
 
-        foreach ($resourceNodes as $resourceNode) {
-            $resource = new \stdClass();
-            $resource->id = $resourceNode->getId();
-            $resource->workspace = $resourceNode->getWorkspace()->getName();
-            $resource->name = $resourceNode->getName();
-            $resource->type = $resourceNode->getResourceType()->getName();
-            $resource->icon = $resourceNode->getIcon()->getRelativeUrl();
+        /*$activities = $this->om->getRepository('ClarolineCoreBundle:Resource\')*/
 
-            $resources[] = $resource;
-        }
-        
-        return new JsonResponse($resources);
-    }
-
-    /**
-     * Load available values for step where property
-     * @return JsonResponse
-     * 
-     * @Route(
-     *     "/step/where",
-     *     name = "innova_path_get_stepwhere",
-     *     options = {"expose"=true}
-     * )
-     *
-     * @Method("GET")
-     */
-    public function getWheresAction()
-    {
-        $wereList = $this->stepManager->getWhere();
-    
-        return new JsonResponse($wereList);
-    }
-
-    /**
-     * Load available values for step who property
-     * @return JsonResponse
-     * 
-     * @Route(
-     *     "/step/who",
-     *     name = "innova_path_get_stepwho",
-     *     options = {"expose"=true}
-     * )
-     * @Method("GET")
-     */
-    public function getWhosAction()
-    {
-        $whoList = $this->stepManager->getWho();
-    
-        return new JsonResponse($whoList);
+        return new JsonResponse($activities);
     }
 }

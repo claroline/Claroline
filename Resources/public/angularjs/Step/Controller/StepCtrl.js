@@ -54,16 +54,6 @@ function StepCtrl($scope, $http, HistoryFactory, PathFactory, StepFactory, Resou
         }
     };
 
-    // Load who list
-    $http.get(Routing.generate('innova_path_get_stepwho')).success(function(data) { 
-        $scope.whoList = data; 
-    });
-
-    // Load where list
-    $http.get(Routing.generate('innova_path_get_stepwhere')).success(function(data) { 
-        $scope.whereList = data; 
-    });
-
     // Tiny MCE options
     $scope.tinymceOptions = {
         relative_urls: false,

@@ -20,7 +20,6 @@ use Innova\PathBundle\Form\Handler\PathHandler;
 use Innova\PathBundle\Entity\Path\Path;
 use Doctrine\Common\Persistence\ObjectManager;
 use Claroline\CoreBundle\Manager\ResourceManager;
-use Symfony\Component\Security\Core\SecurityContextInterface;
 
 /**
  * Class EditorController
@@ -86,12 +85,6 @@ class EditorController
     protected $request;
 
     /**
-     * Current security context
-     * @var \Symfony\Component\Security\Core\SecurityContextInterface
-     */
-    protected $security;
-
-    /**
      * Class constructor
      * @param \Doctrine\Common\Persistence\ObjectManager $objectManager
      * @param \Symfony\Component\Routing\RouterInterface $router
@@ -100,7 +93,6 @@ class EditorController
      * @param \Symfony\Component\Translation\TranslatorInterface $translator
      * @param \Innova\PathBundle\Form\Handler\PathHandler $pathHandler
      * @param \Claroline\CoreBundle\Manager\ResourceManager $resourceManager
-     * @param \Symfony\Component\Security\Core\SecurityContextInterface $securityContext
      */
     public function __construct(
         ObjectManager        $objectManager,
@@ -109,8 +101,7 @@ class EditorController
         SessionInterface     $session,
         TranslatorInterface  $translator,
         PathHandler          $pathHandler,
-        ResourceManager      $resourceManager,
-        SecurityContextInterface $securityContext)
+        ResourceManager      $resourceManager)
     {
         $this->om              = $objectManager;
         $this->router          = $router;
@@ -119,7 +110,6 @@ class EditorController
         $this->translator      = $translator;
         $this->pathHandler     = $pathHandler;
         $this->resourceManager = $resourceManager;
-        $this->security        = $securityContext;
     }
 
     public function setRequest(Request $request = null)
