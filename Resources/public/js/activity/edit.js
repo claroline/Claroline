@@ -30,7 +30,7 @@
                             .data('resource', resource.id)
                             .data('activity', activity)
                             .html(
-                                ' ' + translator.get('platform:delete')
+                                ' ' + translator.get('platform:remove')
                             )
                         )
                     )
@@ -69,9 +69,9 @@
     }
 
     /**
-     * Delete a resource from an activity
+     * Remove a resource from an activity
      */
-    function deleteResource(data, activity, resource)
+    function removeResource(data, activity, resource)
     {
         var picker = modal.create(data);
 
@@ -108,9 +108,15 @@
 
         picker.open(function (nodes) {
             var nodeId = _.keys(nodes)[0];
+            var type = nodes[_.keys(nodes)][1];
 
-            if (nodeId) {
+            if (nodeId && type !== 'activity') {
                 addResource(activity, nodeId);
+            } else if (type === 'activity') {
+                modal.simpleContainer(
+                    translator.get('platform:add_resource'),
+                    translator.get('platform:activity_resource_not_allowed')
+                );
             } else {
                 modal.error();
             }
@@ -127,7 +133,7 @@
             )
         )
         .done(function (data) {
-            deleteResource(data, activity, resource);
+            removeResource(data, activity, resource);
         })
         .error(function () {
             modal.error();

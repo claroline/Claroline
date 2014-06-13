@@ -59,6 +59,7 @@ active_widgets: 'Active widgets'
 activity_already: This resource is already in the activity
 activity_form_instructions: Instructions
 activity_form_name: Name
+activity_resource_not_allowed: You cannot add a resource of this type
 activity_resource_remove: 'Are you sure you want to remove this resource from the activity?'
 add: Add
 add_category: 'Add category'
@@ -533,6 +534,7 @@ registered_groups: 'Registered groups'
 registered_users: 'Registered users'
 registration: Registration
 registration_to_workspaces: 'Registration to workspaces'
+remove: Remove
 remove_facet: Remove a facet
 remove_facet_confirm: Do you really want to remove the facet %name% ?
 remove_field: Remove a field

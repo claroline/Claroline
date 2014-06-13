@@ -47,7 +47,7 @@ class Activity extends AbstractResource
      *     inversedBy="activity",
      *     cascade={"persist"}
      * )
-     * @ORM\JoinColumn(name="parameters_id", onDelete="SET NULL", nullable=true)
+     * @ORM\JoinColumn(name="parameters_id", onDelete="cascade", nullable=true)
      */
     protected $parameters;
 

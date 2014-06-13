@@ -28,34 +28,38 @@ use JMS\DiExtraBundle\Annotation\InjectParams;
 use JMS\DiExtraBundle\Annotation\Observe;
 use JMS\DiExtraBundle\Annotation\Service;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 
 /**
  * @Service
  */
 class ActivityListener
 {
+    private $router;
     private $formFactory;
     private $templating;
     private $request;
     private $persistence;
-    private $entityManager;
+    private $activityManager;
 
     /**
      * @InjectParams({
+     *     "router"             = @Inject("router"),
      *     "formFactory"        = @Inject("form.factory"),
      *     "templating"         = @Inject("templating"),
      *     "request"            = @Inject("request_stack"),
      *     "persistence"        = @Inject("claroline.persistence.object_manager"),
-     *     "entityManager"      = @Inject("doctrine.orm.entity_manager"),
+     *     "activityManager"    = @Inject("claroline.manager.activity_manager"),
      * })
      */
-    public function __construct($formFactory, $templating, $request, $persistence, $entityManager)
+    public function __construct($router, $formFactory, $templating, $request, $persistence, $activityManager)
     {
+        $this->router = $router;
         $this->formFactory = $formFactory;
         $this->templating = $templating;
         $this->request = $request->getMasterRequest();
         $this->persistence = $persistence;
-        $this->entityManager = $entityManager;
+        $this->activityManager = $activityManager;
     }
 
     /**
@@ -129,72 +133,11 @@ class ActivityListener
      */
     public function onCopy(CopyResourceEvent $event)
     {
-        /*$resource = $event->getResource();
-        $copy = new Activity();
-        $copy->setInstructions($resource->getInstructions());
-        $resourceActivities = $resource->getResourceActivities();
+        $activity = $this->activityManager->copyActivity($event->getResource());
 
-        foreach ($resourceActivities as $resourceActivity) {
-            $ra = new ResourceActivity();
-            $ra->setResourceNode($resourceActivity->getResourceNode());
-            $ra->setSequenceOrder($resourceActivity->getSequenceOrder());
-            $ra->setActivity($copy);
-            $this->persistence->persist($ra);
-        }
-
-        $this->persistence->persist($copy);
-        $event->setCopy($copy);
-        $event->stopPropagation();*/
-    }
-
-    /**
-     * @Observe("resource_activity_to_template")
-     *
-     * @param ExportResourceTemplateEvent $event
-     */
-    public function onExportTemplate(ExportResourceTemplateEvent $event)
-    {
-        /*$resource = $event->getResource();
-        $config['instructions'] = $resource->getInstructions();
-        $resourceActivities = $this->entityManager->getRepository('ClarolineCoreBundle:Resource\ResourceActivity')
-            ->findResourceActivities($resource);
-        $resourceDependencies = array();
-
-        foreach ($resourceActivities as $resourceActivity) {
-            if ($resourceActivity->getResourceNode()->getWorkspace() ===
-                $resource->getResourceNode()->getWorkspace()) {
-                $resourceActivityConfig['id'] = $resourceActivity->getResourceNode()->getId();
-                $resourceActivityConfig['order'] = $resourceActivity->getSequenceOrder();
-                $config['resources'][] = $resourceActivityConfig;
-            }
-        }
-
-        $event->setFiles($resourceDependencies);
-        $event->setConfig($config);
-        $event->stopPropagation();*/
-    }
-
-    /**
-     * @Observe("resource_activity_from_template")
-     *
-     * @param ImportResourceTemplateEvent $event
-     */
-    public function onImportTemplate(ImportResourceTemplateEvent $event)
-    {
-        /*$config = $event->getConfig();
-        $activity = new Activity();
-        $activity->setInstructions($config['instructions']);
-
-        foreach ($config['resources'] as $data) {
-            $resourceActivity = new ResourceActivity();
-            $resourceActivity->setResource($event->find($data['id']));
-            $resourceActivity->setSequenceOrder($data['order']);
-            $resourceActivity->setActivity($activity);
-            $this->persistence->persist($resourceActivity);
-        }
-
-        $event->setResource($activity);
-        $event->stopPropagation();*/
+        $this->persistence->persist($activity);
+        $event->setCopy($activity);
+        $event->stopPropagation();
     }
 
     /**
@@ -220,22 +163,14 @@ class ActivityListener
      */
     public function onCompose(CustomActionResourceEvent $event)
     {
-        /*$resourceTypes = $this->entityManager->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findAll();
         $activity = $event->getResource();
-        $resourceActivities = $this->entityManager->getRepository('ClarolineCoreBundle:Resource\ResourceActivity')
-            ->findResourceActivities($activity);
 
-        $content = $this->templating->render(
-            'ClarolineCoreBundle:Activity:index.html.twig',
-            array(
-                'resourceTypes' => $resourceTypes,
-                'resourceActivities' => $resourceActivities,
-                '_resource' => $activity
+        $event->setResponse(
+            new RedirectResponse(
+                $this->router->generate('claro_activity_edit', array('resource' => $activity->getId()))
             )
         );
 
-        $response = new Response($content);
-        $event->setResponse($response);
-        $event->stopPropagation();*/
+        $event->stopPropagation();
     }
 }
