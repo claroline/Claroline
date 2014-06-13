@@ -105,8 +105,11 @@ class InteractionHoleController extends Controller
 
         $formHandler = new InteractionHoleHandler(
             $form, $this->get('request'), $this->getDoctrine()->getManager(),
-            $this->container->get('security.context')->getToken()->getUser(), $this->get('validator'), $exoID
+            $this->container->get('ujm.exercise_services'),
+            $this->container->get('security.context')->getToken()->getUser(), $exoID
         );
+
+        $formHandler->setValidator($this->get('validator'));
 
         $holeHandler = $formHandler->processAdd();
         if ( $holeHandler === true) {
@@ -120,14 +123,6 @@ class InteractionHoleController extends Controller
                     )
                 );
             } else {
-                $em = $this->getDoctrine()->getManager();
-                $exercise = $em->getRepository('UJMExoBundle:Exercise')->find($exoID);
-
-                //To link the question in the exercise
-                if ($this->container->get('ujm.exercise_services')->isExerciseAdmin($exercise)) {
-                    $this->container->get('ujm.exercise_services')->setExerciseQuestion($exoID, $interHole);
-                }
-
                 return $this->redirect(
                     $this->generateUrl('ujm_exercise_questions', array(
                         'id' => $exoID, 'categoryToFind' => $categoryToFind, 'titleToFind' => $titleToFind)
@@ -190,8 +185,11 @@ class InteractionHoleController extends Controller
         );
         $formHandler = new InteractionHoleHandler(
             $editForm, $this->get('request'), $this->getDoctrine()->getManager(),
-            $this->container->get('security.context')->getToken()->getUser(), $this->get('validator'), $exoID
+            $this->container->get('ujm.exercise_services'),
+            $this->container->get('security.context')->getToken()->getUser(), $exoID
         );
+
+        $formHandler->setValidator($this->get('validator'));
 
         $holeHandler = $formHandler->processUpdate($interHole);
         if ($holeHandler === true) {
@@ -265,7 +263,7 @@ class InteractionHoleController extends Controller
 
         $exerciseSer = $this->container->get('ujm.exercise_services');
         $res = $exerciseSer->responseHole($request);
-        
+
         $vars['score']     = $res['score'];
         $vars['penalty']   = $res['penalty'];
         $vars['interHole'] = $res['interHole'];

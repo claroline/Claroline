@@ -37,34 +37,18 @@
 
 namespace UJM\ExoBundle\Form;
 
-use Symfony\Component\Form\Form;
-use Symfony\Component\HttpFoundation\Request;
-use Doctrine\ORM\EntityManager;
-
-use Claroline\CoreBundle\Entity\User;
-
 use UJM\ExoBundle\Entity\InteractionHole;
 use UJM\ExoBundle\Entity\WordResponse;
 
-class InteractionHoleHandler {
-    protected $form;
-    protected $request;
-    protected $em;
-    protected $user;
-    protected $exercise;
+class InteractionHoleHandler extends \UJM\ExoBundle\Form\InteractionHandler{
+
     protected $validator;
 
-    public function __construct(Form $form, Request $request, EntityManager $em, User $user, $validator, $exercise=-1)
-    {
-        $this->form      = $form;
-        $this->request   = $request;
-        $this->em        = $em;
-        $this->user      = $user;
-        $this->exercise  = $exercise;
+    public function setValidator($validator) {
         $this->validator = $validator;
     }
 
-     public function processAdd()
+    public function processAdd()
     {
         if ( $this->request->getMethod() == 'POST' ) {
             $this->form->handleRequest($this->request);
@@ -88,7 +72,7 @@ class InteractionHoleHandler {
         return false;
     }
 
-    private function onSuccessAdd(InteractionHole $interHole)
+    protected function onSuccessAdd($interHole)
     {
         // to avoid bug with code tinymce
         $htmlTiny = $interHole->getHtml();
@@ -102,7 +86,8 @@ class InteractionHoleHandler {
                 $wr->setHole($hole);
                 $this->em->persist($wr);
             }
-            $interHole->addHole($hole);
+            //$interHole->addHole($hole);
+            $hole->setInteractionHole($interHole);
             $this->em->persist($hole);
         }
         $interHole->setHtml($htmlTiny);
@@ -110,15 +95,15 @@ class InteractionHoleHandler {
         $this->em->persist($interHole->getInteraction()->getQuestion());
         $this->em->persist($interHole->getInteraction());
 
-        foreach ($interHole->getInteraction()->getHints() as $hint) {
-            $hint->setPenalty(ltrim($hint->getPenalty(), '-'));
-            $interHole->getInteraction()->addHint($hint);
-            $this->em->persist($hint);
-        }
+        $this->persistHints($interHole);
 
         $this->em->flush();
-        
+
         $this->htmlWithoutValue($interHole);
+
+        $this->addAnExericse($interHole);
+
+        $this->duplicateInter($interHole);
     }
 
     public function processUpdate(InteractionHole $originalInterHole)
@@ -225,7 +210,7 @@ class InteractionHoleHandler {
         }
 
         $this->em->flush();
-        
+
         $this->htmlWithoutValue($interHole);
     }
 

@@ -62,7 +62,7 @@ class InteractionHole
      * @ORM\Column(name="html", type="text")
      */
     private $html;
-    
+
     /**
      * @var text $htmlWithoutValue
      *
@@ -74,7 +74,7 @@ class InteractionHole
      * @ORM\OneToOne(targetEntity="UJM\ExoBundle\Entity\Interaction", cascade={"remove"})
      */
     private $interaction;
-    
+
     /**
      * @ORM\OneToMany(targetEntity="UJM\ExoBundle\Entity\Hole", mappedBy="interactionHole", cascade={"remove"})
      */
@@ -84,7 +84,7 @@ class InteractionHole
     {
         $this->holes = new \Doctrine\Common\Collections\ArrayCollection;
     }
-    
+
     /**
      * Get id
      *
@@ -114,7 +114,7 @@ class InteractionHole
     {
         return $this->html;
     }
-    
+
     /**
      * Set htmlWithoutValue
      *
@@ -144,10 +144,10 @@ class InteractionHole
     {
         $this->interaction = $interaction;
     }
-    
+
     public function getHoles()
     {
-        
+
         return $this->holes;
     }
 
@@ -160,7 +160,24 @@ class InteractionHole
 
     public function removeHole(\UJM\ExoBundle\Entity\Hole $hole)
     {
-        
+
+    }
+
+    public function __clone() {
+        if ($this->id) {
+            $this->id = null;
+
+            $this->interaction = clone $this->interaction;
+
+            $newHoles = new \Doctrine\Common\Collections\ArrayCollection;
+            foreach ($this->holes as $hole) {
+                $newHole = clone $hole;
+                $newHole->setInteractionHole($this);
+                $newHoles->add($newHole);
+            }
+            $this->holes = $newHoles;
+
+        }
     }
 
 }

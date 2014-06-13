@@ -76,7 +76,7 @@ class Hole
      * @ORM\Column(name="orthography", type="boolean", nullable=true)
      */
     private $orthography;
-    
+
     /**
      * @var boolean $selector
      *
@@ -89,7 +89,7 @@ class Hole
      * @ORM\JoinColumn(name="interaction_hole_id", referencedColumnName="id")
      */
     private $interactionHole;
-    
+
     /**
     * @ORM\OneToMany(targetEntity="UJM\ExoBundle\Entity\WordResponse", mappedBy="hole", cascade={"remove"})
     */
@@ -102,7 +102,7 @@ class Hole
     {
         $this->wordResponses = new \Doctrine\Common\Collections\ArrayCollection;
     }
-    
+
     /**
      * Get id
      *
@@ -170,7 +170,7 @@ class Hole
     {
         return $this->orthography;
     }
-    
+
     /**
      * Set selector
      *
@@ -198,7 +198,7 @@ class Hole
     {
         $this->interactionHole = $interactionHole;
     }
-    
+
     public function getWordResponses()
     {
         return $this->wordResponses;
@@ -213,6 +213,21 @@ class Hole
 
     public function removeWordResponse(\UJM\ExoBundle\Entity\WordResponse $wordResponse)
     {
-        
-    }    
+
+    }
+
+    public function __clone() {
+        if ($this->id) {
+            $this->id = null;
+
+            $newWordResponses = new \Doctrine\Common\Collections\ArrayCollection;
+            foreach ($this->wordResponses as $wordResponse) {
+                $newWordResponse = clone $wordResponse;
+                $newWordResponse->setHole($this);
+                $newWordResponses->add($newWordResponse);
+            }
+            $this->wordResponses = $newWordResponses;
+
+        }
+    }
 }
