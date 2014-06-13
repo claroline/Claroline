@@ -46,6 +46,7 @@ portfolioApp
                 }
             },
             save: function(widget) {
+                widget.deleteChildren();
                 var $this = this;
                 var success = function() {
                     widget.setNewMode(false);

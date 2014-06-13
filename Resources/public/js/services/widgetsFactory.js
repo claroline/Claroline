@@ -64,6 +64,14 @@ portfolioApp
                 widget.prototype.isNew = function() {
                     return this.new;
                 };
+                widget.prototype.deleteChildren = function() {
+                    for (var i = 0;i < this.children.length; i++) {
+                        var currentChild = this.children[i];
+                        if (currentChild.toDelete) {
+                            this.children.remove(currentChild);
+                        }
+                    }
+                };
 
                 this.widgetResources[type] = widget;
 

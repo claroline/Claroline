@@ -16,7 +16,11 @@ portfolioApp
             };
 
             scope.deleteChild = function(child) {
-                scope.collection.remove(child);
+                child.toDelete = true;
+            };
+
+            scope.cancelDeletionOfChild = function(child) {
+                delete child.toDelete;
             };
         };
 

@@ -59,11 +59,11 @@ class SkillsWidget extends AbstractWidget
         $skills = $this->getSkills();
         $data = array(
             'id'     => $this->getId(),
-            'skills' => array()
+            'children' => array()
         );
 
         foreach ($skills as $skill) {
-            $data['skills'][] = array(
+            $data['children'][] = array(
                 'name' => $skill->getName()
             );
         }

@@ -15,12 +15,13 @@ class SkillsType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('skills', 'collection',
+            ->add('children', 'collection',
                 array(
                     'type'          => 'icap_portfolio_widget_form_skills_skill',
                     'by_reference'  => false,
                     'allow_add'     => true,
-                    'allow_delete'  => true
+                    'allow_delete'  => true,
+                    'property_path' => 'skills'
                 )
             );
     }
