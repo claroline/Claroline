@@ -7,11 +7,13 @@ portfolioApp
                 return;// do nothing if no ng-model
             }
 
-            ngModel.$render = function() {
-                scope.collection = ngModel.$viewValue || [];
-            };
-
             scope.emptyChild = jQuery.parseJSON(attrs.collectionForm.replace(/'/g, '"'));
+
+            ngModel.$render = function() {
+                var collection = ngModel.$viewValue || [];
+                collection.push(angular.copy(scope.emptyChild));
+                scope.collection = collection;
+            };
 
             scope.addChild = function(child) {
                 scope.collection.push(child);
@@ -26,9 +28,25 @@ portfolioApp
             };
 
             scope.addEmptyChild = function(index) {
-                if (index == scope.collection.length) {
+                if (index == scope.collection.length && !scope.isEmpty(scope.collection[index - 2])) {
                     scope.collection.push(angular.copy(scope.emptyChild));
                 }
+            };
+
+            scope.isEmpty = function(child) {
+                var isEmpty = false;
+
+                for (var attribute in child) {
+                    if ("$" !== attribute[0] && '' === child[attribute]) {
+                        isEmpty = true;
+                    }
+                }
+
+                return isEmpty;
+            }
+
+            scope.isAdded = function(child) {
+                return (!scope.isEmpty(child) && !child.toDelete) || child.toDelete;
             };
         };
 
