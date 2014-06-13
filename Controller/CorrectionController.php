@@ -1577,7 +1577,7 @@ class CorrectionController extends DropzoneBaseController
         // getting all the drop corrections
         $corrections = $CorrectionRepo->findBy(['drop' => $drop->getId()]);
 
-        $this->recalculateScoreForCorrections($corrections);
+        $this->recalculateScoreForCorrections($dropzone, $corrections);
 
         return $this->redirect(
             $this->generateUrl(
@@ -1597,10 +1597,10 @@ class CorrectionController extends DropzoneBaseController
      *      name="icap_dropzone_recalculate_dropzone_grades",
      *      requirements={"dropId" = "\d+"}
      * )
-     * @ParamConverter("drop", class="IcapDropzoneBundle:Dropzone", options={"id" = "dropzone"})
+     * @ParamConverter("dropzone", class="IcapDropzoneBundle:Dropzone", options={"id" = "dropzone"})
      *
      */
-    public function recalculateScoreByDropActionAction($dropzone)
+    public function recalculateScoreByDropzoneAction($dropzone)
     {
         $this->isAllowToOpen($dropzone);
         $this->isAllowToEdit($dropzone);
@@ -1613,11 +1613,16 @@ class CorrectionController extends DropzoneBaseController
         // getting all the drop corrections
         $corrections = $CorrectionRepo->findBy(['dropzone' => $dropzone->getId()]);
 
-        $this->recalculateScoreForCorrections($corrections);
+        $this->recalculateScoreForCorrections($dropzone, $corrections);
+
+        $this->getRequest()->getSession()->getFlashBag()->add(
+            'success',
+            $this->get('translator')->trans('Grades were recalculated', array(), 'icap_dropzone')
+        );
 
         return $this->redirect(
             $this->generateUrl(
-                'icap_dropzone_drops',
+                'icap_dropzone_edit_criteria',
                 array(
                     'resourceId' => $dropzone->getId(),
                 )
@@ -1626,7 +1631,7 @@ class CorrectionController extends DropzoneBaseController
 
     }
 
-    private function recalculateScoreForCorrections(Array $corrections)
+    private function recalculateScoreForCorrections(Dropzone $dropzone, Array $corrections)
     {
         // recalculate the score for all corrections
         foreach ($corrections as $correction) {
@@ -1638,8 +1643,9 @@ class CorrectionController extends DropzoneBaseController
             $em->persist($correction);
             $em->flush();
 
-            if ($oldTotalGrade != $totalGrade) {
-                $event = new LogCorrectionUpdateEvent($dropzone, $correction->getDrop(), $correction);
+            $currentDrop = $correction->getDrop();
+            if ($currentDrop != null && $oldTotalGrade != $totalGrade) {
+                $event = new LogCorrectionUpdateEvent($dropzone, $currentDrop, $correction);
                 $this->dispatch($event);
             }
         }
