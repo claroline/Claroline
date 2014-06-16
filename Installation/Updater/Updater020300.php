@@ -32,14 +32,14 @@ class Updater020300
         $forums = $em->getRepository('ClarolineForumBundle:Forum')->findAll();
 
         foreach ($forums as $forum) {
-        	$categories = $forum->getCategories();
+            $categories = $forum->getCategories();
 
-        	foreach ($categories as $cat) {
-        		$subjects = $cat->getSubjects();
+            foreach ($categories as $cat) {
+                $subjects = $cat->getSubjects();
 
-        		foreach ($subjects as $subject) {
-        			$subject->isClosed(false);
-        		}
+                foreach ($subjects as $subject) {
+                    $subject->isClosed(false);
+                }
             }
         }
 
