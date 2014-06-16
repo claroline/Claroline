@@ -32,7 +32,7 @@ class StepManager
         ObjectManager $om,
         TranslatorInterface $translator)
     {
-        $this->om = $om;
+        $this->om         = $om;
         $this->translator = $translator;
     }
 
@@ -101,17 +101,11 @@ class StepManager
         $name = !empty($stepStructure->name) ? $stepStructure->name : Step::DEFAULT_NAME;
         $step->setName($name);
         
-        $image = !empty($stepStructure->image) ? $stepStructure->image : null;
-        $step->setImage($image);
-        
         $description = !empty($stepStructure->description) ? $stepStructure->description : null;
         $step->setDescription($description);
         
         $withTutor = !empty($stepStructure->withTutor) ? $stepStructure->withTutor : false;
         $step->setWithTutor($withTutor);
-        
-        $withComputer = !empty($stepStructure->withComputer) ? $stepStructure->withComputer : false;
-        $step->setWithComputer($withComputer);
         
         $durationHours = !empty($stepStructure->durationHours) ? intval($stepStructure->durationHours) : 0;
         $durationMinutes = !empty($stepStructure->durationMinutes) ? intval($stepStructure->durationMinutes) : 0;
@@ -156,10 +150,10 @@ class StepManager
     {
         foreach($jsonSteps as $jsonStep){
             echo $jsonStep->resourceId;
-            if($jsonStep->resourceId == $step->getId()){
+            if ($jsonStep->resourceId == $step->getId()){
                 $jsonStep->description = $step->getDescription();
             }
-            elseif(!empty($jsonStep->children)) {
+            else if (!empty($jsonStep->children)) {
                 $this->findAndUpdateJsonStep($jsonStep->children, $step);
             }
         }

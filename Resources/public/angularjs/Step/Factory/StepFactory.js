@@ -12,6 +12,7 @@ function StepFactory(PathFactory) {
         id                : null,
         lvl               : 0,
         resourceId        : null,
+        activityId        : null,
         name              : 'Step',
         description       : null,
         durationHours     : 0,
