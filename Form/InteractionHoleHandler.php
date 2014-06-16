@@ -106,7 +106,7 @@ class InteractionHoleHandler extends \UJM\ExoBundle\Form\InteractionHandler{
         $this->duplicateInter($interHole);
     }
 
-    public function processUpdate(InteractionHole $originalInterHole)
+    public function processUpdate($originalInterHole)
     {
         $originalHoles = array();
         $originalHints = array();
@@ -141,8 +141,13 @@ class InteractionHoleHandler extends \UJM\ExoBundle\Form\InteractionHandler{
         return false;
     }
 
-    private function onSuccessUpdate(InteractionHole $interHole, $originalHoles, $originalHints)
+    protected function onSuccessUpdate()
     {
+        $arg_list = func_get_args();
+        $interHole = $arg_list[0];
+        $originalHoles = $arg_list[1];
+        $originalHints = $arg_list[2];
+
         // to avoid bug with code tinymce
         $htmlTiny = $interHole->getHtml();
 
@@ -168,23 +173,7 @@ class InteractionHoleHandler extends \UJM\ExoBundle\Form\InteractionHandler{
             $this->em->remove($hole);
         }
 
-        // filter $originalHints to contain hint no longer present
-        foreach ($interHole->getInteraction()->getHints() as $hint) {
-            foreach ($originalHints as $key => $toDel) {
-                if ($toDel->getId() == $hint->getId()) {
-                    unset($originalHints[$key]);
-                }
-            }
-        }
-
-        // remove the relationship between the hint and the interactionhole
-        foreach ($originalHints as $hint) {
-            // remove the Hint from the interactionhole
-            $interHole->getInteraction()->getHints()->removeElement($hint);
-
-            // if you wanted to delete the Hint entirely, you can also do that
-            $this->em->remove($hint);
-        }
+        $this->modifyHints($interHole, $originalHints);
 
         $interHole->setHtml($htmlTiny);
         $this->em->persist($interHole);
@@ -200,13 +189,6 @@ class InteractionHoleHandler extends \UJM\ExoBundle\Form\InteractionHandler{
             }
             $interHole->addHole($hole);
             $this->em->persist($hole);
-        }
-
-        //On persite tous les hints de l'entité interaction
-        foreach ($interHole->getInteraction()->getHints() as $hint) {
-            $hint->setPenalty(ltrim($hint->getPenalty(), '-'));
-            $interHole->getInteraction()->addHint($hint);
-            $this->em->persist($hint);
         }
 
         $this->em->flush();

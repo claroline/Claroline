@@ -95,7 +95,7 @@ class InteractionQCMHandler extends \UJM\ExoBundle\Form\InteractionHandler
 
     }
 
-    public function processUpdate(InteractionQCM $originalInterQCM)
+    public function processUpdate($originalInterQCM)
     {
         $originalChoices = array();
         $originalHints = array();
@@ -121,8 +121,13 @@ class InteractionQCMHandler extends \UJM\ExoBundle\Form\InteractionHandler
         return false;
     }
 
-    private function onSuccessUpdate(InteractionQCM $interQCM, $originalChoices, $originalHints)
+    protected function onSuccessUpdate()
     {
+        $arg_list = func_get_args();
+        $interQCM = $arg_list[0];
+        $originalChoices = $arg_list[1];
+        $originalHints = $arg_list[2];
+
         // filter $originalChoices to contain choice no longer present
         foreach ($interQCM->getChoices() as $choice) {
             foreach ($originalChoices as $key => $toDel) {
@@ -141,23 +146,7 @@ class InteractionQCMHandler extends \UJM\ExoBundle\Form\InteractionHandler
             $this->em->remove($choice);
         }
 
-        // filter $originalHints to contain hint no longer present
-        foreach ($interQCM->getInteraction()->getHints() as $hint) {
-            foreach ($originalHints as $key => $toDel) {
-                if ($toDel->getId() == $hint->getId()) {
-                    unset($originalHints[$key]);
-                }
-            }
-        }
-
-        // remove the relationship between the hint and the interactionqcm
-        foreach ($originalHints as $hint) {
-            // remove the Hint from the interactionqcm
-            $interQCM->getInteraction()->getHints()->removeElement($hint);
-
-            // if you wanted to delete the Hint entirely, you can also do that
-            $this->em->remove($hint);
-        }
+        $this->modifyHints($interQCM, $originalHints);
 
         $pointsWrong = str_replace(',', '.', $interQCM->getScoreFalseResponse());
         $pointsRight = str_replace(',', '.', $interQCM->getScoreRightResponse());
@@ -176,13 +165,6 @@ class InteractionQCMHandler extends \UJM\ExoBundle\Form\InteractionHandler
             $interQCM->addChoice($choice);
             $this->em->persist($choice);
             //$ord++;
-        }
-
-        //On persite tous les hints de l'entité interaction
-        foreach ($interQCM->getInteraction()->getHints() as $hint) {
-            $hint->setPenalty(ltrim($hint->getPenalty(), '-'));
-            $interQCM->getInteraction()->addHint($hint);
-            $this->em->persist($hint);
         }
 
         $this->em->flush();

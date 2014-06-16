@@ -95,7 +95,7 @@ class InteractionGraphicHandler extends \UJM\ExoBundle\Form\InteractionHandler
         $this->duplicateInter($interGraph);
     }
 
-    public function processUpdate(InteractionGraphic $originalInterGraphic)
+    public function processUpdate($originalInterGraphic)
     {
         $originalHints = array();
 
@@ -116,8 +116,12 @@ class InteractionGraphicHandler extends \UJM\ExoBundle\Form\InteractionHandler
         return false;
     }
 
-    private function onSuccessUpdate(InteractionGraphic $interGraphic, $originalHints)
+    protected function onSuccessUpdate()
     {
+        $arg_list = func_get_args();
+        $interGraphic = $arg_list[0];
+        $originalHints = $arg_list[1];
+
         $width = $this->request->get('imagewidth'); // Get the width of the image
         $height = $this->request->get('imageheight'); // Get the height of the image
 
@@ -134,32 +138,9 @@ class InteractionGraphicHandler extends \UJM\ExoBundle\Form\InteractionHandler
 
         $allCoords = $this->persitNewCoords($coord, $interGraphic, $lengthCoord);
 
-        foreach ($interGraphic->getInteraction()->getHints() as $hint) {
-            foreach ($originalHints as $key => $toDel) {
-                if ($toDel->getId() == $hint->getId()) {
-                    unset($originalHints[$key]);
-                }
-            }
-        }
-
-        // remove the relationship between the hint and the interactionGraphic
-        foreach ($originalHints as $hint) {
-            // remove the Hint from the interactionGraphic
-            $interGraphic->getInteraction()->getHints()->removeElement($hint);
-
-            // if you wanted to delete the Hint entirely, you can also do that
-            $this->em->remove($hint);
-        }
-
-        //Persit all the  hints of entity Interaction
-        foreach ($interGraphic->getInteraction()->getHints() as $hint) {
-            $hint->setPenalty(ltrim($hint->getPenalty(), '-'));
-            $interGraphic->getInteraction()->addHint($hint);
-            $this->em->persist($hint);
-        }
+        $this->modifyHints($interGraphic, $originalHints);
 
         foreach ($coordsToDel as $ctd) {
-            // if you wanted to delete the Hint entirely, you can also do that
             $this->em->remove($ctd);
         }
 

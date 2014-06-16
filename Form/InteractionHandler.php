@@ -65,13 +65,45 @@ abstract class InteractionHandler
         $this->exercise = $exercise;
     }
 
+    abstract public function processAdd();
     abstract protected function onSuccessAdd($interaction);
+
+    abstract public function processUpdate($interaction);
+    abstract protected function onSuccessUpdate();
 
     protected function persistHints($inter) {
         foreach ($inter->getInteraction()->getHints() as $hint) {
             $hint->setPenalty(ltrim($hint->getPenalty(), '-'));
             //$interQCM->getInteraction()->addHint($hint);
             $hint->setInteraction($inter->getInteraction());
+            $this->em->persist($hint);
+        }
+    }
+
+    protected function modifyHints($inter, $originalHints) {
+
+        // filter $originalHints to contain hint no longer present
+        foreach ($inter->getInteraction()->getHints() as $hint) {
+            foreach ($originalHints as $key => $toDel) {
+                if ($toDel->getId() == $hint->getId()) {
+                    unset($originalHints[$key]);
+                }
+            }
+        }
+
+        // remove the relationship between the hint and the interactionqcm
+        foreach ($originalHints as $hint) {
+            // remove the Hint from the interactionqcm
+            $inter->getInteraction()->getHints()->removeElement($hint);
+
+            // if you wanted to delete the Hint entirely, you can also do that
+            $this->em->remove($hint);
+        }
+
+        //On persite tous les hints de l'entité interaction
+        foreach ($inter->getInteraction()->getHints() as $hint) {
+            $hint->setPenalty(ltrim($hint->getPenalty(), '-'));
+            $inter->getInteraction()->addHint($hint);
             $this->em->persist($hint);
         }
     }
