@@ -6,14 +6,14 @@ portfolioApp
             baseUrl: Routing.generate("icap_portfolio_internal_portfolio"),
             portfolioId: null,
             widgetResources: [],
-            getResource: function(portfolioId, type) {
+            getWidget: function(portfolioId, type) {
                 if (this.widgetResources[type]) {
                     return this.widgetResources[type];
                 }
 
                 this.portfolioId = portfolioId;
 
-                var baseUrl = this.baseUrl + "/:portfolioId/:type/:id/:action";
+                var baseUrl = this.baseUrl + "/:portfolioId/:type/:id";
                 var widget = $resource(
                     baseUrl,
                     {
@@ -30,6 +30,7 @@ portfolioApp
                     }
                 );
                 widget.prototype.editing = false;
+                widget.prototype.new     = true;
 
                 widget.prototype.generateUrl = function(parameters) {
                     parameters.portfolioId = portfolioId;
@@ -54,6 +55,22 @@ portfolioApp
                 };
                 widget.prototype.getType = function() {
                     return type;
+                };
+                widget.prototype.setNewMode = function(isNew) {
+                    this.new = isNew;
+
+                    return this;
+                };
+                widget.prototype.isNew = function() {
+                    return this.new;
+                };
+                widget.prototype.deleteChildren = function() {
+                    for (var i = 0;i < this.children.length; i++) {
+                        var currentChild = this.children[i];
+                        if (currentChild.toDelete || currentChild.notAdded) {
+                            this.children.remove(currentChild);
+                        }
+                    }
                 };
 
                 this.widgetResources[type] = widget;

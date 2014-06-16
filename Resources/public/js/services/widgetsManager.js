@@ -1,9 +1,10 @@
 'use strict';
 
 portfolioApp
-    .factory("widgetsManager", ["$http", "widgetsConfig", function($http, widgetsConfig){
+    .factory("widgetsManager", ["$http", "widgetsConfig", "widgetFactory", function($http, widgetsConfig, widgetFactory){
         return {
             widgets: [],
+            emptyWidgets: [],
             forms:   [],
             editing: [],
             init: function(widgets) {
@@ -12,11 +13,9 @@ portfolioApp
                 }, this);
             },
             edit: function(widget) {
-                this.addEditing(widget);
-
                 if (!widget.isEditing()) {
-                    widget.setEditMode(true);
                     this.loadForm(widget);
+                    this.addEditing(widget);
                 }
             },
             loadForm: function(widget) {
@@ -32,7 +31,8 @@ portfolioApp
                 });
             },
             addEditing: function(widget) {
-                if (!widget.isEditing()) {
+                widget.setEditMode(true);
+                if (!this.editing.inArray(widget)) {
                     this.editing.push(widget);
                 }
             },
@@ -40,17 +40,76 @@ portfolioApp
                 widget.setEditMode(false);
 
                 this.editing.remove(widget);
+
+                if (widget.isNew()) {
+                    this.widgets[widget.getType()].remove(widget);
+                }
             },
             save: function(widget) {
+                widget.deleteChildren();
                 var $this = this;
                 var success = function() {
+                    widget.setNewMode(false);
                     $this.cancelEditing(widget);
                 };
                 var failed = function(error) {
                     console.error('Error occured while saving widget');
                     console.log(error);
                 }
-                return widget.$save(success, failed);
+
+                return widget.isNew() ? widget.$save(success, failed) : widget.$update(success, failed);
+            },
+            create: function(portfolioId, type) {
+                var istypeUnique = widgetsConfig.config[type].isUnique;
+
+                if (istypeUnique && 0 < this.widgets[type].length) {
+                    this.edit(this.widgets[type][0]);
+                }
+                else {
+                    this.createEmptyWidget(portfolioId, type, istypeUnique);
+                }
+            },
+            createEmptyWidget: function(portfolioId, type, istypeUnique) {
+                var newWidget;
+                var widget = widgetFactory.getWidget(portfolioId, type);
+
+                if (this.emptyWidgets[type]) {
+                    newWidget = new widget(angular.copy(this.emptyWidgets[type]));
+                    this.edit(newWidget);
+                }
+                else {
+                    newWidget = widget.create();
+                    var $this = this;
+                    newWidget.$promise.then(function() {
+                        $this.emptyWidgets[type] = angular.copy(newWidget);
+                        $this.edit(newWidget);
+                    });
+                    this.addEditing(newWidget);
+                }
+                if (istypeUnique) {
+                    this.widgets[type] = [newWidget];
+                } else {
+                    this.widgets[type].push(newWidget);
+                }
+            },
+            isDeletable: function(widget) {
+                return widgetsConfig.isDeletable(widget.getType());
+            },
+            delete: function(widget) {
+                if (this.isDeletable(widget)) {
+                    widget.isDeleting = true;
+                    var $this = this;
+                    var success = function() {
+                        $this.widgets[widget.getType()].remove(widget);
+                    };
+                    var failed = function(error) {
+                        console.error('Error occured while deleting widget');
+                        console.log(error);
+                    }
+                    widget.$delete(success, failed).then(function() {
+                        delete widget.isDeleting;
+                    });
+                }
             }
         };
     }]);

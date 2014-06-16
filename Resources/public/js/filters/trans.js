@@ -1,8 +1,8 @@
 'use strict';
 
 portfolioApp
-    .filter('trans', function() {
+    .filter('trans', ["translationService", function(translationService) {
         return function(key) {
-            return Translator.get('icap_portfolio' + ':' + key);
+            return translationService.trans(key);
         };
-    });
+    }]);

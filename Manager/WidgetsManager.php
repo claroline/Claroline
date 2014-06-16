@@ -2,6 +2,7 @@
 
 namespace Icap\PortfolioBundle\Manager;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManager;
 use Icap\PortfolioBundle\Entity\Portfolio;
 use Icap\PortfolioBundle\Entity\Widget\AbstractWidget;
@@ -29,6 +30,9 @@ class WidgetsManager
      */
     protected $formFactory;
 
+    /** @var array */
+    protected $widgetsConfig = null;
+
     /**
      * Constructor.
      *
@@ -50,15 +54,40 @@ class WidgetsManager
      */
     public function getWidgetsConfig()
     {
-        $widgetTypes = $this->entityManager->getRepository('IcapPortfolioBundle:Widget\WidgetType')->findAllInArray();
+        $widgetsConfig = $this->widgetsConfig;
 
-        $sortedWidgetTypes = array();
+        if (null === $this->widgetsConfig) {
+            $widgetTypes = $this->entityManager->getRepository('IcapPortfolioBundle:Widget\WidgetType')->findAllInArray();
 
-        foreach ($widgetTypes as $widgetType) {
-            $sortedWidgetTypes[$widgetType['name']] = $widgetType;
+            $sortedWidgetTypes = array();
+
+            foreach ($widgetTypes as $widgetType) {
+                $sortedWidgetTypes[$widgetType['name']] = $widgetType;
+            }
+
+            $this->widgetsConfig = $sortedWidgetTypes;
+            $widgetsConfig = $this->widgetsConfig;
         }
 
-        return $sortedWidgetTypes;
+        return $widgetsConfig;
+    }
+
+    /**
+     * @param string $widgetType
+     *
+     * @return bool
+     */
+    public function isWidgetTypeUnique($widgetType)
+    {
+        $widgetTypeIsUnique = false;
+
+        $widgetsConfig = $this->getWidgetsConfig();
+
+        if (isset($widgetsConfig[$widgetType]) && $widgetsConfig[$widgetType]['isUnique']) {
+            $widgetTypeIsUnique = true;
+        }
+
+        return $widgetTypeIsUnique;
     }
 
     /**
@@ -104,15 +133,26 @@ class WidgetsManager
      */
     public function handle(AbstractWidget $widget, $type, array $parameters)
     {
+        $originalChildren = new ArrayCollection();
+
+        foreach ($widget->getChildren() as $child) {
+            $originalChildren->add($child);
+        }
+
         $data = array();
 
         $form = $this->getForm($type, $widget);
         $form->submit($parameters);
 
         if ($form->isValid()) {
-            $object = $form->getData();
+            $newChildren = $widget->getChildren();
+            foreach ($originalChildren as $child) {
+                if (!$newChildren->contains($child)) {
+                     $this->entityManager->remove($child);
+                }
+            }
 
-            $this->entityManager->persist($object);
+            $this->entityManager->persist($widget);
             $this->entityManager->flush();
 
             $widgetDatas = array(
@@ -126,6 +166,38 @@ class WidgetsManager
         }
 
         throw new \InvalidArgumentException();
+    }
+
+    /**
+     * @param Portfolio $portfolio
+     * @param string    $type
+     *
+     * @throws \InvalidArgumentException
+     * @return AbstractWidget
+     */
+    public function getNewWidget(Portfolio $portfolio, $type)
+    {
+        $widgetsConfig = $this->getWidgetsConfig();
+
+        if (isset($widgetsConfig[$type])) {
+            $widgetNamespace = sprintf('Icap\PortfolioBundle\Entity\Widget\%sWidget', ucfirst($type));
+            /** @var \Icap\PortfolioBundle\Entity\Widget\AbstractWidget $widget */
+            $widget = new $widgetNamespace();
+            $widget->setPortfolio($portfolio);
+
+            return $widget;
+        }
+
+        throw new \InvalidArgumentException("Unknown type of widget.");
+    }
+
+    /**
+     * @param AbstractWidget $widget
+     */
+    public function deleteWidget(AbstractWidget $widget)
+    {
+        $this->entityManager->remove($widget);
+        $this->entityManager->flush();
     }
 }
  

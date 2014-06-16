@@ -3,36 +3,12 @@ body {
 }
 
 #portfolio-section {
-    #configbar {
-        padding-top:      54px;
-        width:            100px;
-        height:           100%;
-        position:         fixed;
-        left:             0;
-        top:              0;
-        background-color: #403e3f;
-        z-index:          2;
-        .configbar-item {
-            border-top:    1px solid #515253;
-            border-bottom: 1px solid #333334;
-            border-left:   4px solid #403e3f;
-            display:       block;
-            color:         #ccc;
-            padding:       5px 5px 5px 1px;
-            position:      relative;
-            cursor:        pointer;
-            font-size:     15px;
-            text-align:    center;
-            &:hover {
-                text-decoration:  none;
-                background-color: #444546;
-                color:            #fff;
-            }
-
-            span {
-                font-size:   30px;
-                line-height: 40px;
-                display:     block;
+    .widget_menu_container {
+        text-align: center;
+        .widget_menu {
+            margin-top: 10px;
+            button {
+                text-align: left;
             }
         }
     }
@@ -52,11 +28,11 @@ body {
                 #portfolio-title {
                     margin-top: 0;
                 }
-                .portfolio-title-actions {
+                .widget-actions {
                     position: absolute;
                     top:      0;
                     right:    -50px;
-                    .portfolio-title-edit-action {
+                    .widget-action {
                         background-color: #f89406;
                         &:hover {
                             color:        #fff;
@@ -64,6 +40,13 @@ body {
                         }
                     }
                 }
+            }
+        }
+
+        .widget-actions {
+            .btn-danger.btn-loading {
+                padding-left: 7px;
+                padding-right: 6px;
             }
         }
     }
@@ -80,7 +63,7 @@ body {
 }
 
 .form-container {
-    position: absolute;
+    position: fixed;
     right:    0;
     bottom:   0;
     .edit-container {
@@ -90,23 +73,30 @@ body {
 
         .panel {
             margin-bottom: 0;
-        }
-        .panel-loading {
-            height:     60px;
-            background: url("../../clarolinecore/images/loading.gif") no-repeat center center;
-        }
-        .panel-heading {
-            border-bottom: 0;
-        }
-        .panel-footer {
-            border-top: 0;
-            text-align: center;
-            button {
-                span.loading {
-                    display: inline-block;
-                    margin:  0;
+            .panel-loading {
+                height:     60px;
+                background: url("../../clarolinecore/images/loading.gif") no-repeat center center;
+            }
+            .panel-body {
+                li {
+                    margin-bottom: 5px;
                 }
             }
+            .panel-heading {
+                border-bottom: 0;
+            }
+            .panel-footer {
+                border-top: 0;
+                text-align: center;
+            }
         }
+    }
+}
+
+.panel {
+    span.loading {
+        display:        inline-block;
+        margin:         0;
+        vertical-align: middle;
     }
 }

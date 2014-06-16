@@ -83,4 +83,14 @@ class TitleWidget extends AbstractWidget
             'title' => $this->getTitle()
         );
     }
+
+    /**
+     * @return array
+     */
+    public function getEmpty()
+    {
+        return array(
+            'title' => null
+        );
+    }
 }

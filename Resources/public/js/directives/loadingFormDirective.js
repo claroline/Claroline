@@ -2,8 +2,8 @@
 
 portfolioApp
     .directive('loadingForm', ["$parse", function ($parse) {
-        function link(scope, element, attr) {
-            var longOperation = $parse(attr['loadingForm']); // "compile" the bound expression to our directive
+        function link(scope, element, attributes) {
+            var longOperation = $parse(attributes['loadingForm']); // "compile" the bound expression to our directive
             var button        = element.find("button[type=submit]");
             var buttonHtml    = button.html();
 

@@ -149,8 +149,6 @@ class PortfolioController extends Controller
         $portfolio   = $titleWidget->getPortfolio();
         $editMode    = false;
 
-        $portfolioWidgets = $this->getPortfolioWidgetTypeRepository()->findAllInArray();
-
         if (null === $portfolio) {
             throw $this->createNotFoundException("Unknown portfolio.");
         }

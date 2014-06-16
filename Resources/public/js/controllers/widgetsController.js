@@ -2,7 +2,13 @@
 
 portfolioApp
     .controller("widgetsController", ["$scope", "$attrs", "widgetsManager", function($scope, $attrs, widgetsManager) {
-        $scope.type    = $attrs.widgetPortlet;
+        if(!$scope.widgetType && $attrs.widgetPortlet) {
+            $scope.type = $attrs.widgetPortlet;
+        }
+        else {
+            $scope.type = $scope.widgetType;
+        }
+
         $scope.widgets = [];
 
         $scope.$watch("widgetPortlets." + $scope.type, function(data) {
@@ -14,4 +20,12 @@ portfolioApp
         $scope.edit = function(widget) {
             widgetsManager.edit(widget);
         };
+
+        $scope.isDeletable = function(widget) {
+            return widgetsManager.isDeletable(widget);
+        };
+
+        $scope.delete = function(widget) {
+            widgetsManager.delete(widget);
+        }
     }]);

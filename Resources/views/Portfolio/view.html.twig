@@ -4,27 +4,17 @@
 
 {% block content_container %}
     <div id="portfolio-section" data-portfolio-container="{{ portfolio.id }}">
-        {% if editMode %}
-            <ul id="configbar" class="list-unstyled">
-                <li class="configbar-item">
-                    <span class="icon-plus"></span>
-                    Contenu
-                </li>
-                <li class="configbar-item"><span class="icon-cogs"></span>
-                    Paramètres
-                </li>
-            </ul>
-        {% endif %}
-
-        <div id="portfolio-container" data-ng-show="portfolio.$resolved">
+        <div id="portfolio-container" data-ng-if="portfolio.$resolved">
             <header>
                 <div class="container">
                     <h1 id="username">{{ portfolio.user.firstName ~ ' ' ~ portfolio.user.lastName }}</h1>
+
                     <div data-widget-portlet="title" data-ng-show="widgets.length > 0">
                         <div class="portfolio-title-container" data-ng-repeat="widget in widgets">
                             {% if editMode %}
-                                <div class="portfolio-title-actions">
-                                    <button class="portfolio-title-edit-action btn" data-ng-click="edit(widget);" data-ng-show="!widget.isEditing()"><span class="icon-pencil"></span></button>
+                                <div class="widget-actions">
+                                    <button class="widget-action btn" data-ng-click="edit(widget);" data-ng-if="!widget.isEditing()">
+                                        <span class="icon-pencil"></span></button>
                                 </div>
                                 <div data-ng-bind-html="widget.views.view | trustAsHtml"></div>
                             {% else %}
@@ -35,8 +25,59 @@
                 </div>
             </header>
 
-            <section class="container">
-                Content container.
+            <section>
+                {% if editMode %}
+                <div class="col-md-2 widget_menu_container" role="buttonmenu">
+                    <div class="btn-group-vertical widget_menu" role="buttongroup">
+                        <button type="button" class="btn btn-default" data-ng-repeat="widgetType in widgetTypes" data-ng-click="createWidget(widgetType)">
+                            <span class="icon-plus"></span>
+                            {% verbatim %}{{ widgetType + '_title' | trans }}{% endverbatim %}
+                        </button>
+                    </div>
+                </div>
+                {% endif %}
+                <div class="col-md-8{% if false == editMode %} col-md-offset-2{% endif %}">
+                {% if editMode %}
+                    <div data-ng-repeat="widgetType in widgetTypes">
+                        <div data-widget-portlet data-ng-show="widgets.length > 0">
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    {% verbatim %}{{ widgetType + '_title'|trans }}{% endverbatim %}
+                                </div>
+                                <div class="panel-body">
+                                    <div data-ng-repeat="widget in widgets">
+                                        {% if editMode %}
+                                            <div class="widget-actions">
+                                                <button class="widget-action btn btn-sm btn-danger" data-ng-class="{'btn-loading': widget.isDeleting}" data-confirm-click="delete(widget);" data-ng-if="isDeletable(widget) && !widget.isNew()">
+                                                    <span class="loading" data-ng-if="widget.isDeleting"></span><span class="icon-trash" data-ng-if="!widget.isDeleting"></span>
+                                                </button>
+                                                <button class="widget-action btn btn-sm" data-ng-click="edit(widget);" data-ng-if="!widget.isEditing() && !widget.isNew()">
+                                                    <span class="icon-pencil"></span></button>
+                                            </div>
+                                            <div data-ng-bind-html="widget.views.view | trustAsHtml"></div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% else %}
+                    {% for widget in portfolio.widgets %}
+                        {% if 'title' != widget.widgetType %}
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    {{ (widget.widgetType ~ '_title') | trans({}, 'icap_portfolio') }}
+                                </div>
+                                <div class="panel-body">
+                                    {% include 'IcapPortfolioBundle:templates:' ~ widget.widgetType ~ '.html.twig' with {'widget': widget} only %}
+                                </div>
+                            </div>
+                        {% endif %}
+                    {% else %}
+                        no widget
+                    {% endfor %}
+                {% endif %}
+                </div>
             </section>
         </div>
 
@@ -80,6 +121,11 @@
     {{ parent() }}
 
     {% if editMode %}
+        <script type="text/javascript" src="{{ asset('bundles/stfalcontinymce/vendor/tinymce/tinymce.jquery.min.js') }}"></script>
+        <script type="text/javascript" src="{{ asset('bundles/stfalcontinymce/vendor/tinymce/jquery.tinymce.min.js') }}"></script>
+        <script type="text/javascript" src="{{ asset('bundles/clarolinecore/js/tinymce/tinymce.js') }}"></script>
+        <script type='text/javascript' src='{{ asset('bundles/frontend/jquery/plugin/confirm-bootstrap/confirm-bootstrap.js') }}'></script>
+
         {# Angular #}
         {% javascripts debug=true filter='jsmin' output='js/portfolio/angular.js'
             '@IcapPortfolioBundle/Resources/public/js/vendor/angular.min.js'
@@ -88,6 +134,8 @@
         %}
             <script type="text/javascript" src="{{ asset_url }}"></script>
         {% endjavascripts %}
+
+        <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/vendor/angular-ui/ui-tinymce/tinymce.js') }}"></script>
 
         <script type="text/javascript" src="{{ url('bazinga_exposetranslation_js', { 'domain_name': 'icap_portfolio' }) }}"></script>
 
@@ -102,15 +150,18 @@
         <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/services/widgetsConfig.js') }}"></script>
         <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/services/widgetsFactory.js') }}"></script>
         <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/services/urlInterpolator.js') }}"></script>
+        <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/services/translation.js') }}"></script>
         <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/directives/widgetsDirective.js') }}"></script>
         <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/directives/portfolioDirective.js') }}"></script>
         <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/directives/bindHtmlDirective.js') }}"></script>
         <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/directives/loadingFormDirective.js') }}"></script>
+        <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/directives/confirmClickDirective.js') }}"></script>
+        <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/directives/collectionFormDirective.js') }}"></script>
         <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/filters/trustAsHtml.js') }}"></script>
         <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/filters/trans.js') }}"></script>
         <script type="text/javascript">
             'use strict';
-            (function(){
+            (function() {
                 window.widgetsConfig = '{{ widgetsConfig|json_encode()|raw }}';
             })();
         </script>

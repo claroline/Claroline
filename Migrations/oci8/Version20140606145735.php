@@ -1,6 +1,6 @@
 <?php
 
-namespace Icap\PortfolioBundle\Migrations\pdo_oci;
+namespace Icap\PortfolioBundle\Migrations\oci8;
 
 use Doctrine\DBAL\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
@@ -8,9 +8,9 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2014/05/19 02:30:46
+ * Generation date: 2014/06/06 02:57:36
  */
-class Version20140519143045 extends AbstractMigration
+class Version20140606145735 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
@@ -192,9 +192,55 @@ class Version20140519143045 extends AbstractMigration
             CREATE UNIQUE INDEX UNIQ_3E00FC8F5E237E06 ON icap__portfolio_widget_type (name)
         ");
         $this->addSql("
+            CREATE TABLE icap__portfolio_widget_skills_skill (
+                id NUMBER(10) NOT NULL, 
+                skills_widget_id NUMBER(10) NOT NULL, 
+                name VARCHAR2(255) NOT NULL, 
+                PRIMARY KEY(id)
+            )
+        ");
+        $this->addSql("
+            DECLARE constraints_Count NUMBER; BEGIN 
+            SELECT COUNT(CONSTRAINT_NAME) INTO constraints_Count 
+            FROM USER_CONSTRAINTS 
+            WHERE TABLE_NAME = 'ICAP__PORTFOLIO_WIDGET_SKILLS_SKILL' 
+            AND CONSTRAINT_TYPE = 'P'; IF constraints_Count = 0 
+            OR constraints_Count = '' THEN EXECUTE IMMEDIATE 'ALTER TABLE ICAP__PORTFOLIO_WIDGET_SKILLS_SKILL ADD CONSTRAINT ICAP__PORTFOLIO_WIDGET_SKILLS_SKILL_AI_PK PRIMARY KEY (ID)'; END IF; END;
+        ");
+        $this->addSql("
+            CREATE SEQUENCE ICAP__PORTFOLIO_WIDGET_SKILLS_SKILL_ID_SEQ START WITH 1 MINVALUE 1 INCREMENT BY 1
+        ");
+        $this->addSql("
+            CREATE TRIGGER ICAP__PORTFOLIO_WIDGET_SKILLS_SKILL_AI_PK BEFORE INSERT ON ICAP__PORTFOLIO_WIDGET_SKILLS_SKILL FOR EACH ROW DECLARE last_Sequence NUMBER; last_InsertID NUMBER; BEGIN 
+            SELECT ICAP__PORTFOLIO_WIDGET_SKILLS_SKILL_ID_SEQ.NEXTVAL INTO : NEW.ID 
+            FROM DUAL; IF (
+                : NEW.ID IS NULL 
+                OR : NEW.ID = 0
+            ) THEN 
+            SELECT ICAP__PORTFOLIO_WIDGET_SKILLS_SKILL_ID_SEQ.NEXTVAL INTO : NEW.ID 
+            FROM DUAL; ELSE 
+            SELECT NVL(Last_Number, 0) INTO last_Sequence 
+            FROM User_Sequences 
+            WHERE Sequence_Name = 'ICAP__PORTFOLIO_WIDGET_SKILLS_SKILL_ID_SEQ'; 
+            SELECT : NEW.ID INTO last_InsertID 
+            FROM DUAL; WHILE (last_InsertID > last_Sequence) LOOP 
+            SELECT ICAP__PORTFOLIO_WIDGET_SKILLS_SKILL_ID_SEQ.NEXTVAL INTO last_Sequence 
+            FROM DUAL; END LOOP; END IF; END;
+        ");
+        $this->addSql("
+            CREATE INDEX IDX_98EF40A32F7BE59D ON icap__portfolio_widget_skills_skill (skills_widget_id)
+        ");
+        $this->addSql("
             CREATE TABLE icap__portfolio_widget_user_information (
                 id NUMBER(10) NOT NULL, 
                 city VARCHAR2(255) DEFAULT NULL, 
+                description CLOB DEFAULT NULL, 
+                PRIMARY KEY(id)
+            )
+        ");
+        $this->addSql("
+            CREATE TABLE icap__portfolio_widget_skills (
+                id NUMBER(10) NOT NULL, 
                 PRIMARY KEY(id)
             )
         ");
@@ -226,8 +272,19 @@ class Version20140519143045 extends AbstractMigration
             ON DELETE CASCADE
         ");
         $this->addSql("
+            ALTER TABLE icap__portfolio_widget_skills_skill 
+            ADD CONSTRAINT FK_98EF40A32F7BE59D FOREIGN KEY (skills_widget_id) 
+            REFERENCES icap__portfolio_widget_skills (id)
+        ");
+        $this->addSql("
             ALTER TABLE icap__portfolio_widget_user_information 
             ADD CONSTRAINT FK_E2BFAA03BF396750 FOREIGN KEY (id) 
+            REFERENCES icap__portfolio_abstract_widget (id) 
+            ON DELETE CASCADE
+        ");
+        $this->addSql("
+            ALTER TABLE icap__portfolio_widget_skills 
+            ADD CONSTRAINT FK_6C68C5A1BF396750 FOREIGN KEY (id) 
             REFERENCES icap__portfolio_abstract_widget (id) 
             ON DELETE CASCADE
         ");
@@ -252,6 +309,14 @@ class Version20140519143045 extends AbstractMigration
             DROP CONSTRAINT FK_E2BFAA03BF396750
         ");
         $this->addSql("
+            ALTER TABLE icap__portfolio_widget_skills 
+            DROP CONSTRAINT FK_6C68C5A1BF396750
+        ");
+        $this->addSql("
+            ALTER TABLE icap__portfolio_widget_skills_skill 
+            DROP CONSTRAINT FK_98EF40A32F7BE59D
+        ");
+        $this->addSql("
             DROP TABLE icap__portfolio_users
         ");
         $this->addSql("
@@ -267,7 +332,13 @@ class Version20140519143045 extends AbstractMigration
             DROP TABLE icap__portfolio_widget_type
         ");
         $this->addSql("
+            DROP TABLE icap__portfolio_widget_skills_skill
+        ");
+        $this->addSql("
             DROP TABLE icap__portfolio_widget_user_information
+        ");
+        $this->addSql("
+            DROP TABLE icap__portfolio_widget_skills
         ");
     }
 }

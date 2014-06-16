@@ -1,6 +1,6 @@
 <?php
 
-namespace Icap\PortfolioBundle\Migrations\sqlsrv;
+namespace Icap\PortfolioBundle\Migrations\pdo_sqlsrv;
 
 use Doctrine\DBAL\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
@@ -8,9 +8,9 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2014/05/19 02:30:46
+ * Generation date: 2014/06/06 02:57:36
  */
-class Version20140519143045 extends AbstractMigration
+class Version20140606145735 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
@@ -84,9 +84,27 @@ class Version20140519143045 extends AbstractMigration
             WHERE name IS NOT NULL
         ");
         $this->addSql("
+            CREATE TABLE icap__portfolio_widget_skills_skill (
+                id INT IDENTITY NOT NULL, 
+                skills_widget_id INT NOT NULL, 
+                name NVARCHAR(255) NOT NULL, 
+                PRIMARY KEY (id)
+            )
+        ");
+        $this->addSql("
+            CREATE INDEX IDX_98EF40A32F7BE59D ON icap__portfolio_widget_skills_skill (skills_widget_id)
+        ");
+        $this->addSql("
             CREATE TABLE icap__portfolio_widget_user_information (
                 id INT NOT NULL, 
                 city NVARCHAR(255), 
+                description VARCHAR(MAX), 
+                PRIMARY KEY (id)
+            )
+        ");
+        $this->addSql("
+            CREATE TABLE icap__portfolio_widget_skills (
+                id INT NOT NULL, 
                 PRIMARY KEY (id)
             )
         ");
@@ -118,8 +136,19 @@ class Version20140519143045 extends AbstractMigration
             ON DELETE CASCADE
         ");
         $this->addSql("
+            ALTER TABLE icap__portfolio_widget_skills_skill 
+            ADD CONSTRAINT FK_98EF40A32F7BE59D FOREIGN KEY (skills_widget_id) 
+            REFERENCES icap__portfolio_widget_skills (id)
+        ");
+        $this->addSql("
             ALTER TABLE icap__portfolio_widget_user_information 
             ADD CONSTRAINT FK_E2BFAA03BF396750 FOREIGN KEY (id) 
+            REFERENCES icap__portfolio_abstract_widget (id) 
+            ON DELETE CASCADE
+        ");
+        $this->addSql("
+            ALTER TABLE icap__portfolio_widget_skills 
+            ADD CONSTRAINT FK_6C68C5A1BF396750 FOREIGN KEY (id) 
             REFERENCES icap__portfolio_abstract_widget (id) 
             ON DELETE CASCADE
         ");
@@ -144,6 +173,14 @@ class Version20140519143045 extends AbstractMigration
             DROP CONSTRAINT FK_E2BFAA03BF396750
         ");
         $this->addSql("
+            ALTER TABLE icap__portfolio_widget_skills 
+            DROP CONSTRAINT FK_6C68C5A1BF396750
+        ");
+        $this->addSql("
+            ALTER TABLE icap__portfolio_widget_skills_skill 
+            DROP CONSTRAINT FK_98EF40A32F7BE59D
+        ");
+        $this->addSql("
             DROP TABLE icap__portfolio_users
         ");
         $this->addSql("
@@ -159,7 +196,13 @@ class Version20140519143045 extends AbstractMigration
             DROP TABLE icap__portfolio_widget_type
         ");
         $this->addSql("
+            DROP TABLE icap__portfolio_widget_skills_skill
+        ");
+        $this->addSql("
             DROP TABLE icap__portfolio_widget_user_information
+        ");
+        $this->addSql("
+            DROP TABLE icap__portfolio_widget_skills
         ");
     }
 }

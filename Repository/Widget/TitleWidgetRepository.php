@@ -29,4 +29,22 @@ class TitleWidgetRepository extends EntityRepository
 
         return $executeQuery ? $query->getQuery()->getResult(): $query->getQuery();
     }
+
+    /**
+     * @param string $slug
+     * @param bool   $executeQuery
+     *
+     * @return array|\Doctrine\ORM\Query
+     */
+    public function findOneBySlug($slug, $executeQuery = true)
+    {
+        $query = $this->createQueryBuilder('tw')
+            ->select(array('tw', 'p'))
+            ->join('tw.portfolio', 'p')
+            ->andWhere('tw.slug = :slug')
+            ->setParameter('slug', $slug)
+        ;
+
+        return $executeQuery ? $query->getQuery()->getSingleResult(): $query->getQuery();
+    }
 }
