@@ -11,15 +11,4 @@ portfolioApp
         $scope.createWidget = function(type) {
             widgetsManager.create(portfolioManager.portfolioId, type);
         }
-
-        $scope.getWidgets = function () {
-            var widgets = [];
-            for (var index = 0;index < this.widgets.length; index++) {
-                if ('title' !== this.widgets[index].getType()) {
-                    widgets.push(this.widgets[index]);
-                }
-            }
-
-            return widgets;
-        };
     }]);
