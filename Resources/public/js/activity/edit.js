@@ -11,7 +11,7 @@
     /**
      * Add a dropdown menu for a new tab resource
      */
-    function activityMenu(activity, resource)
+    function activityTabMenu(activity, resource)
     {
         return common.createElement('li', 'activity-tab-' + resource.id).html(
             common.createElement('a', 'pointer-hand')
@@ -40,6 +40,31 @@
     }
 
     /**
+     * get resource content
+     */
+    function activityContent(resource)
+    {
+        var mimeType = resource.mimeType.split('/');
+        var type = mimeType[0];
+        var extension = mimeType[1];
+
+        $.ajax(routing.generate('claro_resource_embed', {'node': resource.id, 'type': type, 'extension': extension}))
+        .done(function (data) {
+            return data;
+        })
+        .error(function () {
+            return common.createElement('div', 'hide')
+            .attr('id', 'resource-' + resource.id)
+            .html(
+                common.createElement('h3').html(translator.get('home:An error occurred')),
+                common.createElement('p').html(
+                    translator.get('home:Please try again later or check your internet connection')
+                )
+            );
+        });
+    }
+
+    /**
      * Add a new resource to an activity
      */
     function addResource(activity, resource)
@@ -50,11 +75,11 @@
                 var resource = $.parseJSON(data);
 
                 $('.activities').append(
-                    common.createElement('div', 'hide').attr('id', 'resource-' + resource.id).html(resource.name)
+                    activityContent(resource)
                 );
 
                 $('.activity-tabs .activity-primary').after(
-                    activityMenu(activity, resource)
+                    activityTabMenu(activity, resource)
                 );
             } else {
                 modal.simpleContainer(

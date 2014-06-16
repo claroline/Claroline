@@ -56,12 +56,38 @@
                 {% endif %}
                 {% if not _resource.getPrimaryResource() is empty %}
                     <hr>
-                    {{ _resource.getPrimaryResource().getName() }}
+                    <h3>{{ _resource.getPrimaryResource().getName() }}</h3>
+                    {% set mimetype = _resource.getPrimaryResource().getMimeType() | split('/') %}
+                    {{
+                        render(
+                            controller(
+                                'ClarolineCoreBundle:Resource:embedResource',
+                                {
+                                    'node': _resource.getPrimaryResource().getId(),
+                                    'type': mimetype[0],
+                                    'extension': mimetype[1]
+                                }
+                            )
+                        )
+                    }}
                 {% endif %}
             </div>
             {% for resource in _resource.getParameters().getSecondaryResources() %}
                 <div class="hide" id="resource-{{ resource.getId() }}">
-                    {{ resource.getName() }}
+                    <h3>{{ resource.getName() }}</h3>
+                    {% set mimetype = resource.getMimeType() | split('/') %}
+                    {{
+                        render(
+                            controller(
+                                'ClarolineCoreBundle:Resource:embedResource',
+                                {
+                                    'node': resource.getId(),
+                                    'type': mimetype[0],
+                                    'extension': mimetype[1]
+                                }
+                            )
+                        )
+                    }}
                 </div>
             {% endfor %}
         </div>
