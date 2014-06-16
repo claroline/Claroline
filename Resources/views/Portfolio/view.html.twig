@@ -27,8 +27,8 @@
 
             <section>
                 {% if editMode %}
-                <div class="col-md-2" role="buttonmenu">
-                    <div class="btn-group-vertical" role="buttongroup">
+                <div class="col-md-2 widget_menu_container" role="buttonmenu">
+                    <div class="btn-group-vertical widget_menu" role="buttongroup">
                         <button type="button" class="btn btn-default" data-ng-repeat="widgetType in widgetTypes" data-ng-click="createWidget(widgetType)">
                             <span class="icon-plus"></span>
                             {% verbatim %}{{ widgetType + '_title' | trans }}{% endverbatim %}
