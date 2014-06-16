@@ -17,6 +17,7 @@ use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 use Claroline\CoreBundle\Manager\ToolManager;
+use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Manager\FacetManager;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Form\FormFactoryInterface;
@@ -32,6 +33,7 @@ class FacetController extends Controller
 {
     private $router;
     private $toolManager;
+    private $roleManager;
     private $userAdminTool;
     private $facetManager;
 
@@ -40,6 +42,7 @@ class FacetController extends Controller
      *     "router"       = @DI\Inject("router"),
      *     "sc"           = @DI\Inject("security.context"),
      *     "toolManager"  = @DI\Inject("claroline.manager.tool_manager"),
+     *     "roleManager"  = @DI\Inject("claroline.manager.role_manager"),
      *     "facetManager" = @DI\Inject("claroline.manager.facet_manager"),
      *     "formFactory"  = @DI\Inject("form.factory"),
      *     "request"      = @DI\Inject("request")
@@ -50,6 +53,7 @@ class FacetController extends Controller
         SecurityContextInterface $sc,
         ToolManager $toolManager,
         FacetManager $facetManager,
+        RoleManager $roleManager,
         FormFactoryInterface $formFactory,
         Request $request
     )
@@ -60,6 +64,7 @@ class FacetController extends Controller
         $this->facetManager  = $facetManager;
         $this->formFactory   = $formFactory;
         $this->request       = $request;
+        $this->roleManager   = $roleManager;
     }
 
     /**
@@ -234,8 +239,7 @@ class FacetController extends Controller
             return new JsonResponse(
                 array(
                     'id' => $facet->getId(),
-                    'old_name' => $oldName,
-                    'new_name' => $facet->getName(),
+                    'name' => $facet->getName()
                 )
             );
         }
@@ -339,6 +343,7 @@ class FacetController extends Controller
 
     /**
      * Ajax method for ordering fields
+     *
      * @EXT\Route("/{facet}/fields/order",
      *      name="claro_admin_field_facet_order",
      *      options = {"expose"=true}
@@ -359,6 +364,75 @@ class FacetController extends Controller
         return new Response('success');
     }
 
+    /**
+     * Returns the facet role edition in a modal
+     *
+     * @EXT\Route("/{facet}/roles/form",
+     *      name="claro_admin_facet_role_form",
+     *      options = {"expose"=true}
+     * )
+     *
+     * @EXT\Template()
+     */
+    public function facetRolesFormAction(Facet $facet)
+    {
+        $this->checkOpen();
+        $roles = $facet->getRoles();
+        $platformRoles = $this->roleManager->getPlatformNonAdminRoles();
+
+        return array('roles' => $roles, 'facet' => $facet, 'platformRoles' => $platformRoles);
+    }
+
+    /**
+     * @EXT\Route("/{facet}/roles/edit",
+     *      name="claro_admin_facet_role_edit",
+     *      options = {"expose"=true}
+     * )
+     */
+    public function editFacetRolesAction(Facet $facet)
+    {
+        $this->checkOpen();
+        $roles = $this->getRolesFromRequest('role-');
+        $this->facetManager->setFacetRoles($facet, $roles);
+
+        return new JsonResponse(array(), 204);
+    }
+
+    /**
+     * Returns the field role edition in a modal
+     *
+     * @EXT\Route("/field/{field}/roles/form",
+     *      name="claro_admin_field_role_form",
+     *      options = {"expose"=true}
+     * )
+     *
+     * @EXT\Template()
+     */
+    public function fieldRolesFormAction(FieldFacet $field)
+    {
+        $this->checkOpen();
+        $fieldFacetsRole = $field->getFieldFacetsRole();
+        $platformRoles = $this->roleManager->getPlatformNonAdminRoles();
+
+        return array('fieldFacetsRole' => $fieldFacetsRole, 'field' => $field, 'platformRoles' => $platformRoles);
+    }
+
+    /**
+     * @EXT\Route("/field/{field}/roles/edit",
+     *      name="claro_admin_field_role_edit",
+     *      options = {"expose"=true}
+     * )
+     */
+    public function editFieldRolesAction(FieldFacet $field)
+    {
+        $this->checkOpen();
+        $roles = $this->getRolesFromRequest('open-role-');
+        $this->facetManager->setFieldBoolProperty($field, $roles, 'canOpen');
+        $roles = $this->getRolesFromRequest('edit-role-');
+        $this->facetManager->setFieldBoolProperty($field, $roles, 'canEdit');
+
+        return new JsonResponse(array(), 204);
+    }
 
     private function checkOpen()
     {
@@ -367,5 +441,24 @@ class FacetController extends Controller
         }
 
         throw new AccessDeniedException();
+    }
+
+    private function getRolesFromRequest($prefix)
+    {
+        $params = $this->request->request->all();
+        $roleIds = [];
+
+        foreach ($params as $key => $value) {
+            $key = '_' . $key;
+            if (strpos($key, $prefix)) {
+                if ('on' === $value) {
+                    $roleIds[] = (int) str_replace('_' . $prefix, '', $key);
+                }
+            }
+        }
+
+        $roles = $this->roleManager->getRolesByIds($roleIds);
+
+        return $roles;
     }
 } 

@@ -16,6 +16,7 @@ use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\AbstractRoleSubject;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Claroline\CoreBundle\Entity\Tool\Tool;
+use Claroline\CoreBundle\Entity\Facet\FieldFacet;
 use Claroline\CoreBundle\Manager\Exception\LastManagerDeleteException;
 use Claroline\CoreBundle\Manager\Exception\RoleReadOnlyException;
 use Claroline\CoreBundle\Repository\RoleRepository;
