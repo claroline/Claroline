@@ -30,18 +30,19 @@ class Updater020300
         $this->log('Updating forum table...');
         $em = $this->container->get('doctrine.orm.entity_manager');
         $forums = $em->getRepository('ClarolineForumBundle:Forum')->findAll();
-        
+
         foreach ($forums as $forum) {
         	$categories = $forum->getCategories();
+
         	foreach ($categories as $cat) {
         		$subjects = $cat->getSubjects();
+
         		foreach ($subjects as $subject) {
         			$subject->isClosed(false);
-        			}
         		}
             }
+        }
 
-        $em->persist($forum);
         $em->flush();
     }
 
@@ -56,4 +57,4 @@ class Updater020300
             $log('    ' . $message);
         }
     }
-} 
+}
