@@ -4,24 +4,17 @@
 
 {% block content_container %}
     <div id="portfolio-section" data-portfolio-container="{{ portfolio.id }}">
-        {% if editMode %}
-            <ul id="configbar" class="list-unstyled">
-                <li data-ng-repeat="widgetType in widgetTypes" class="configbar-item" data-ng-click="createWidget(widgetType)">
-                    <span class="icon-plus"></span>
-                    {% verbatim %}{{ widgetType }}{% endverbatim %}
-                </li>
-            </ul>
-        {% endif %}
-
         <div id="portfolio-container" data-ng-if="portfolio.$resolved">
             <header>
                 <div class="container">
                     <h1 id="username">{{ portfolio.user.firstName ~ ' ' ~ portfolio.user.lastName }}</h1>
+
                     <div data-widget-portlet="title" data-ng-show="widgets.length > 0">
                         <div class="portfolio-title-container" data-ng-repeat="widget in widgets">
                             {% if editMode %}
                                 <div class="widget-actions">
-                                    <button class="widget-action btn" data-ng-click="edit(widget);" data-ng-if="!widget.isEditing()"><span class="icon-pencil"></span></button>
+                                    <button class="widget-action btn" data-ng-click="edit(widget);" data-ng-if="!widget.isEditing()">
+                                        <span class="icon-pencil"></span></button>
                                 </div>
                                 <div data-ng-bind-html="widget.views.view | trustAsHtml"></div>
                             {% else %}
@@ -32,7 +25,18 @@
                 </div>
             </header>
 
-            <section class="container">
+            <section>
+                {% if editMode %}
+                <div class="col-md-2" role="buttonmenu">
+                    <div class="btn-group-vertical" role="buttongroup">
+                        <button type="button" class="btn btn-default" data-ng-repeat="widgetType in widgetTypes" data-ng-click="createWidget(widgetType)">
+                            <span class="icon-plus"></span>
+                            {% verbatim %}{{ widgetType + '_title' | trans }}{% endverbatim %}
+                        </button>
+                    </div>
+                </div>
+                {% endif %}
+                <div class="col-md-8{% if false == editMode %} col-md-offset-2{% endif %}">
                 {% if editMode %}
                     <div data-ng-repeat="widgetType in widgetTypes">
                         <div data-widget-portlet data-ng-show="widgets.length > 0">
@@ -44,8 +48,11 @@
                                     <div data-ng-repeat="widget in widgets">
                                         {% if editMode %}
                                             <div class="widget-actions">
-                                                <button class="widget-action btn btn-sm btn-danger" data-ng-class="{'btn-loading': widget.isDeleting}" data-confirm-click="delete(widget);" data-ng-if="isDeletable(widget) && !widget.isNew()"><span class="loading" data-ng-if="widget.isDeleting"></span><span class="icon-trash" data-ng-if="!widget.isDeleting"></span></button>
-                                                <button class="widget-action btn btn-sm" data-ng-click="edit(widget);" data-ng-if="!widget.isEditing() && !widget.isNew()"><span class="icon-pencil"></span></button>
+                                                <button class="widget-action btn btn-sm btn-danger" data-ng-class="{'btn-loading': widget.isDeleting}" data-confirm-click="delete(widget);" data-ng-if="isDeletable(widget) && !widget.isNew()">
+                                                    <span class="loading" data-ng-if="widget.isDeleting"></span><span class="icon-trash" data-ng-if="!widget.isDeleting"></span>
+                                                </button>
+                                                <button class="widget-action btn btn-sm" data-ng-click="edit(widget);" data-ng-if="!widget.isEditing() && !widget.isNew()">
+                                                    <span class="icon-pencil"></span></button>
                                             </div>
                                             <div data-ng-bind-html="widget.views.view | trustAsHtml"></div>
                                         {% endif %}
@@ -70,6 +77,7 @@
                         no widget
                     {% endfor %}
                 {% endif %}
+                </div>
             </section>
         </div>
 
@@ -153,7 +161,7 @@
         <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/filters/trans.js') }}"></script>
         <script type="text/javascript">
             'use strict';
-            (function(){
+            (function() {
                 window.widgetsConfig = '{{ widgetsConfig|json_encode()|raw }}';
             })();
         </script>
