@@ -26,18 +26,18 @@ class ActivityManager
 {
     private $activityRuleRepo;
     private $evaluationRepo;
-    private $persistence;
+    private $om;
 
     /**
      * @InjectParams({
-     *     "persistence"        = @Inject("claroline.persistence.object_manager"),
+     *     "om"        = @Inject("claroline.persistence.object_manager"),
      * })
      */
-    public function __construct(ObjectManager $persistence)
+    public function __construct(ObjectManager $om)
     {
-        $this->persistence = $persistence;
-        $this->activityRuleRepo = $persistence->getRepository('ClarolineCoreBundle:Activity\ActivityRule');
-        $this->evaluationRepo = $persistence->getRepository('ClarolineCoreBundle:Activity\Evaluation');
+        $this->om = $om;
+        $this->activityRuleRepo = $om->getRepository('ClarolineCoreBundle:Activity\ActivityRule');
+        $this->evaluationRepo = $om->getRepository('ClarolineCoreBundle:Activity\Evaluation');
     }
 
 
@@ -78,8 +78,8 @@ class ActivityManager
      */
     public function editActivity(Activity $activity)
     {
-        $this->persistence->persist($activity);
-        $this->persistence->flush();
+        $this->om->persist($activity);
+        $this->om->flush();
 
         return $activity;
     }
@@ -89,8 +89,8 @@ class ActivityManager
      */
     public function deleteActivty(Activity $activity)
     {
-        $this->persistence->remove($activity);
-        $this->persistence->flush();
+        $this->om->remove($activity);
+        $this->om->flush();
     }
 
     /**
@@ -100,8 +100,8 @@ class ActivityManager
     {
         if (!$activity->getParameters()->getSecondaryResources()->contains($resource)) {
             $activity->getParameters()->getSecondaryResources()->add($resource);
-            $this->persistence->persist($activity);
-            $this->persistence->flush();
+            $this->om->persist($activity);
+            $this->om->flush();
 
             return true;
         }
@@ -114,10 +114,43 @@ class ActivityManager
     {
         if ($activity->getParameters()->getSecondaryResources()->contains($resource)) {
             $activity->getParameters()->getSecondaryResources()->removeElement($resource);
-            $this->persistence->persist($activity);
-            $this->persistence->flush();
+            $this->om->persist($activity);
+            $this->om->flush();
 
             return true;
         }
+    }
+
+    /**
+     * Copy an activity
+     */
+    public function copyActivity(Activity $resource)
+    {
+        $activity = new Activity();
+
+        $activity->setTitle($resource->getTitle());
+        $activity->setDescription($resource->getDescription());
+        $activity->setParameters($this->copyParameters($resource));
+
+        if ($primaryResource = $resource->getPrimaryResource()) {
+            $activity->setPrimaryResource($primaryResource);
+        }
+
+        return $activity;
+    }
+
+    /**
+     * Copy parameters
+     * @todo copy properties
+     */
+    public function copyParameters(Activity $resource)
+    {
+        $parameters = new ActivityParameters();
+
+        foreach ($resource->getParameters()->getSecondaryResources() as $resource) {
+            $parameters->getSecondaryResources()->add($resource);
+        }
+
+        return $parameters;
     }
 }

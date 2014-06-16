@@ -86,6 +86,7 @@ class ActivityController
                         'id' => $resource->getId(),
                         'name' => $resource->getName(),
                         'type' => $resource->getResourceType(),
+                        'mimeType' => $resource->getMimeType(),
                     )
                 )
             );

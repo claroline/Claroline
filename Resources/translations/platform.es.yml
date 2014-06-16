@@ -53,6 +53,7 @@ active_widgets: 'Widgets activos'
 activity_already: Este recurso ya está en la actividad
 activity_form_instructions: 'Instrucciones'
 activity_form_name: 'Nombre'
+activity_resource_not_allowed: No puede agregar un recurso de este tipo
 activity_resource_remove: '¿Esta seguro que desea remover este recurso de la actividad?'
 add: 'Agregar'
 add_category: 'Agregar categoría'
@@ -490,7 +491,7 @@ registered_groups: 'Grupos inscritos'
 registered_users: 'Usuarios inscritos'
 registration: 'Inscripción'
 registration_to_workspaces: 'Inscripción a un espacio de trabajo'
-remove: Remover
+remove: Retirar
 remove_facet: Eliminar una faceta
 remove_facet_confirm: ¿Esta seguro que desea suprimir la faceta %name%?
 remove_field: Eliminar una campo
