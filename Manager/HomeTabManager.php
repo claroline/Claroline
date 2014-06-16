@@ -532,9 +532,17 @@ class HomeTabManager
             foreach ($adminWidgetHomeTabConfigs as $adminWidgetHomeTabConfig) {
                 $widgetHomeTabConfig = new WidgetHomeTabConfig();
                 $widgetHomeTabConfig->setHomeTab($homeTab);
-                $widgetHomeTabConfig->setWidgetInstance(
-                    $adminWidgetHomeTabConfig->getWidgetInstance()
-                );
+
+                $adminWidgetInstance = $adminWidgetHomeTabConfig->getWidgetInstance();
+                $workspaceWidgetInstance = new WidgetInstance();
+                $workspaceWidgetInstance->setIsAdmin(false);
+                $workspaceWidgetInstance->setIsDesktop(false);
+                $workspaceWidgetInstance->setName($adminWidgetInstance->getName());
+                $workspaceWidgetInstance->setWidget($adminWidgetInstance->getWidget());
+                $workspaceWidgetInstance->setWorkspace($workspace);
+                $this->om->persist($workspaceWidgetInstance);
+
+                $widgetHomeTabConfig->setWidgetInstance($workspaceWidgetInstance);
                 $widgetHomeTabConfig->setWorkspace($workspace);
                 $widgetHomeTabConfig->setType('workspace');
                 $widgetHomeTabConfig->setVisible(
