@@ -17,6 +17,7 @@ use JMS\DiExtraBundle\Annotation\InjectParams;
 use Claroline\CoreBundle\Entity\Facet\Facet;
 use Claroline\CoreBundle\Entity\Facet\FieldFacet;
 use Claroline\CoreBundle\Entity\Facet\FieldFacetValue;
+use Claroline\CoreBundle\Entity\Facet\FieldFacetRole;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 
 /**
@@ -46,6 +47,7 @@ class FacetManager
         $facet = new Facet();
         $facet->setName($name);
         $facet->setPosition($this->om->count('Claroline\CoreBundle\Entity\Facet\Facet'));
+        $this->initFacetPermissions($facet);
         $this->om->persist($facet);
         $this->om->flush();
 
@@ -116,13 +118,15 @@ class FacetManager
      */
     public function addField(Facet $facet, $name, $type)
     {
+        $this->om->startFlushSuite();
         $fieldFacet = new FieldFacet();
         $fieldFacet->setFacet($facet);
         $fieldFacet->setName($name);
         $fieldFacet->setType($type);
         $fieldFacet->setPosition($this->om->count('Claroline\CoreBundle\Entity\Facet\FieldFacet'));
+        $this->initFieldPermissions($fieldFacet);
         $this->om->persist($fieldFacet);
-        $this->om->flush();
+        $this->om->endFlushSuite();
 
         return $fieldFacet;
     }
@@ -249,11 +253,6 @@ class FacetManager
         $this->om->flush();
     }
 
-    public function getFieldsValueByUserAndFacet(User $user, Facet $facet)
-    {
-
-    }
-
     /**
      * Get the ordered fields of facet.
      *
@@ -275,4 +274,103 @@ class FacetManager
             ->getRepository('ClarolineCoreBundle:Facet\Facet')
             ->findBy(array(), array('position' => 'ASC'));
     }
-} 
+
+    public function initFacetPermissions(Facet $facet)
+    {
+        $userAdminTool = $this->om
+            ->getRepository('Claroline\CoreBundle\Entity\Tool\AdminTool')
+            ->findOneByName('user_management');
+
+        $roles = $this->om
+            ->getRepository('ClarolineCoreBundle:Role')
+            ->findByAdminTool($userAdminTool);
+
+        $facet->setRoles($roles);
+    }
+
+    public function setFacetRoles(Facet $facet, array $roles)
+    {
+        $facet->setRoles($roles);
+        $this->om->persist($facet);
+        $this->om->flush();
+    }
+
+    public function initFieldPermissions(FieldFacet $field)
+    {
+        $this->om->startFlushSuite();
+        $roles = $field->getFacet()->getRoles();
+
+        foreach ($roles as $role) {
+            $ffr = new FieldFacetRole();
+            $ffr->setRole($role);
+            $ffr->setFieldFacet($field);
+            $ffr->setCanOpen(true);
+            $ffr->setCanEdit(false);
+            $this->om->persist($ffr);
+        }
+
+        $this->om->endFlushSuite();
+    }
+
+    /**
+     * This function will allow to set on of the boolean property of FieldFacetRole
+     * for a fieldFacet and an array of roles.
+     *
+     * @param FieldFacet $fieldFacet
+     * @param array $roles
+     * @param $property (canOpen | canEdit)
+     */
+    public function setFieldBoolProperty(FieldFacet $fieldFacet, array $roles, $property)
+    {
+
+        //find each fields sharing the same role as $fieldFacet
+        $fieldFacetsRole = $fieldFacet->getFieldFacetsRole();
+
+        //get the correct setter
+        $setterFunc = 'set' . ucfirst($property);
+
+        //initialize an array of roles wich are not linked to the field
+        $unknownRoles = array();
+        //initialize an array of fieldFacetRoles wich are going to have their property to true
+        $fieldFacetRolesToChange = array();
+
+        //initialize each of field facets property to false
+        foreach ($fieldFacetsRole as $fieldFacetRole) {
+            $fieldFacetRole->$setterFunc(false);
+        }
+
+        //find roles wich are not linked to a field
+        foreach ($roles as $role) {
+            $found = false;
+
+            foreach ($fieldFacetsRole as $fieldFacetRole) {
+                if ($fieldFacetRole->getRole()->getId() === $role->getId()) {
+                    $found = true;
+                    $fieldFacetRolesToChange[] = $fieldFacetRole;
+                }
+            }
+
+            if (!$found) {
+                $unknownRoles[] = $role;
+            }
+        }
+
+        //create a new FieldFacetRole for each missing role
+        foreach ($unknownRoles as $unknownRole) {
+            $ffr = new FieldFacetRole();
+            $ffr->setRole($unknownRole);
+            $ffr->setFieldFacet($fieldFacet);
+
+            //add the new fieldFacetRole to the list of retrieved fieldFacetRoles at the beginning
+            $fieldFacetRolesToChange[] = $ffr;
+        }
+
+        //set the property correctly
+        foreach ($fieldFacetRolesToChange as $ffr) {
+            $ffr->$setterFunc(true);
+            $this->om->persist($ffr);
+        }
+
+        $this->om->flush();
+    }
+}

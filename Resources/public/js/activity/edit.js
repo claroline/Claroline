@@ -11,7 +11,7 @@
     /**
      * Add a dropdown menu for a new tab resource
      */
-    function activityMenu(activity, resource)
+    function activityTabMenu(activity, resource)
     {
         return common.createElement('li', 'activity-tab-' + resource.id).html(
             common.createElement('a', 'pointer-hand')
@@ -30,13 +30,38 @@
                             .data('resource', resource.id)
                             .data('activity', activity)
                             .html(
-                                ' ' + translator.get('platform:delete')
+                                ' ' + translator.get('platform:remove')
                             )
                         )
                     )
                 )
             )
         );
+    }
+
+    /**
+     * get resource content
+     */
+    function activityContent(resource)
+    {
+        var mimeType = resource.mimeType.split('/');
+        var type = mimeType[0];
+        var extension = mimeType[1];
+
+        $.ajax(routing.generate('claro_resource_embed', {'node': resource.id, 'type': type, 'extension': extension}))
+        .done(function (data) {
+            return data;
+        })
+        .error(function () {
+            return common.createElement('div', 'hide')
+            .attr('id', 'resource-' + resource.id)
+            .html(
+                common.createElement('h3').html(translator.get('home:An error occurred')),
+                common.createElement('p').html(
+                    translator.get('home:Please try again later or check your internet connection')
+                )
+            );
+        });
     }
 
     /**
@@ -50,11 +75,11 @@
                 var resource = $.parseJSON(data);
 
                 $('.activities').append(
-                    common.createElement('div', 'hide').attr('id', 'resource-' + resource.id).html(resource.name)
+                    activityContent(resource)
                 );
 
                 $('.activity-tabs .activity-primary').after(
-                    activityMenu(activity, resource)
+                    activityTabMenu(activity, resource)
                 );
             } else {
                 modal.simpleContainer(
@@ -69,9 +94,9 @@
     }
 
     /**
-     * Delete a resource from an activity
+     * Remove a resource from an activity
      */
-    function deleteResource(data, activity, resource)
+    function removeResource(data, activity, resource)
     {
         var picker = modal.create(data);
 
@@ -108,9 +133,15 @@
 
         picker.open(function (nodes) {
             var nodeId = _.keys(nodes)[0];
+            var type = nodes[_.keys(nodes)][1];
 
-            if (nodeId) {
+            if (nodeId && type !== 'activity') {
                 addResource(activity, nodeId);
+            } else if (type === 'activity') {
+                modal.simpleContainer(
+                    translator.get('platform:add_resource'),
+                    translator.get('platform:activity_resource_not_allowed')
+                );
             } else {
                 modal.error();
             }
@@ -127,7 +158,7 @@
             )
         )
         .done(function (data) {
-            deleteResource(data, activity, resource);
+            removeResource(data, activity, resource);
         })
         .error(function () {
             modal.error();

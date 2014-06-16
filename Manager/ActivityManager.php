@@ -38,7 +38,7 @@ class ActivityManager
 
     /**
      * @InjectParams({
-     *     "om" = @Inject("claroline.persistence.object_manager"),
+     *     "om" = @Inject("claroline.persistence.object_manager")
      * })
      */
     public function __construct(ObjectManager $om)
@@ -96,6 +96,39 @@ class ActivityManager
 
             return true;
         }
+    }
+
+    /**
+     * Copy an activity
+     */
+    public function copyActivity(Activity $resource)
+    {
+        $activity = new Activity();
+
+        $activity->setTitle($resource->getTitle());
+        $activity->setDescription($resource->getDescription());
+        $activity->setParameters($this->copyParameters($resource));
+
+        if ($primaryResource = $resource->getPrimaryResource()) {
+            $activity->setPrimaryResource($primaryResource);
+        }
+
+        return $activity;
+    }
+
+    /**
+     * Copy parameters
+     * @todo copy properties
+     */
+    public function copyParameters(Activity $resource)
+    {
+        $parameters = new ActivityParameters();
+
+        foreach ($resource->getParameters()->getSecondaryResources() as $resource) {
+            $parameters->getSecondaryResources()->add($resource);
+        }
+
+        return $parameters;
     }
 
     public function updateParameters(
@@ -401,7 +434,6 @@ class ActivityManager
 
         return $total + $session;
     }
-
 
     public function createActivityRule(
         ActivityParameters $activityParams,
