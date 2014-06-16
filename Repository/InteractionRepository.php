@@ -81,6 +81,25 @@ class InteractionRepository extends EntityRepository
     }
 
     /**
+     * Model of an user
+     *
+     */
+    public function getUserModel($uid)
+    {
+        $qb = $this->createQueryBuilder('i');
+
+        $qb->join('i.question', 'q')
+            ->join('q.category', 'c')
+            ->join('q.user', 'u')
+            ->where($qb->expr()->in('u.id', $uid))
+            ->andWhere('q.model in (1)')
+            ->orderBy('c.value', 'ASC')
+            ->addOrderBy('q.title', 'ASC');
+
+        return $qb->getQuery()->getResult();
+    }
+
+    /**
      * Interactions by Exercise's Questions
      *
      */
@@ -131,7 +150,7 @@ class InteractionRepository extends EntityRepository
 
         return $interactions;
     }
-    
+
     /**
      * Interactions by Exercise's Questions for the import
      *
@@ -139,7 +158,7 @@ class InteractionRepository extends EntityRepository
     public function getExerciseInteractionImport($em, $exoSearch, $exoImport){
         $questionsList = array();
         $interactions  = array();
-        
+
         $dql = 'SELECT eq FROM UJM\ExoBundle\Entity\ExerciseQuestion eq
                JOIN eq.question q
                WHERE eq.exercise=' . $exoSearch;
@@ -149,14 +168,14 @@ class InteractionRepository extends EntityRepository
                 JOIN eq2.exercise e2
                 WHERE e2.id=' . $exoImport . ')';
         $dql .= ' ORDER BY eq.ordre';
-        
+
         $query = $em->createQuery($dql);
         $eqs = $query->getResult();
-        
+
         foreach ($eqs as $eq) {
             $questionsList[] = $eq->getQuestion()->getId();
         }
-        
+
         foreach ($questionsList as $q) {
             $dql = 'SELECT i FROM UJM\ExoBundle\Entity\Interaction i JOIN i.question q '
                 . 'WHERE q=' . $q;
@@ -166,10 +185,10 @@ class InteractionRepository extends EntityRepository
         }
 
         return $interactions;
-        
-        
-    }
 
+
+    }
+    
     /**
      * Interactions for a paper
      *
@@ -237,6 +256,40 @@ class InteractionRepository extends EntityRepository
 
         return $qb->getQuery()->getResult();
     }
+    
+    /**
+     * Model of an user for the import
+     *
+     */
+    public function getUserModelImport($em, $uid, $exoId)
+    {
+        $questions = array();
+
+        $dql = 'SELECT eq FROM UJM\ExoBundle\Entity\ExerciseQuestion eq WHERE eq.exercise=' . $exoId
+            . ' ORDER BY eq.ordre';
+
+        $query = $em->createQuery($dql);
+        $eqs = $query->getResult();
+
+        foreach ($eqs as $eq) {
+            $questions[] = $eq->getQuestion()->getId();
+        }
+
+        $qb = $this->createQueryBuilder('i');
+
+        $qb->join('i.question', 'q')
+           ->join('q.category', 'c')
+           ->join('q.user', 'u')
+           ->where($qb->expr()->in('u.id', $uid))
+           ->andWhere('q.model in (1)');
+        if (count($questions) > 0) {
+             $qb->andWhere('q.id not in ('.implode(',', $questions).')');
+        }
+        $qb->orderBy('c.value', 'ASC')
+           ->addOrderBy('q.title', 'ASC');
+
+        return $qb->getQuery()->getResult();
+    }
 
     public function findByType($userId, $whatToFind)
     {
@@ -270,7 +323,7 @@ class InteractionRepository extends EntityRepository
             WHERE (i.invite LIKE :search OR i.type LIKE :search OR c.value LIKE :search OR q.title LIKE :search)
             AND q.user = '.$userId.'
         ';
-        
+
         if ($searchToImport === TRUE) {
             $dql .= ' AND q.id NOT IN
                     (SELECT q2.id FROM UJM\ExoBundle\Entity\ExerciseQuestion eq

@@ -219,10 +219,17 @@ class QuestionController extends Controller
 
         $actionQ = array();
 
-        $listQExo = $this->getDoctrine()
-            ->getManager()
-            ->getRepository('UJMExoBundle:Interaction')
-            ->getExerciseInteraction($em, $idExo, 0);
+        if ($idExo == -2) {
+            $listQExo = $this->getDoctrine()
+                ->getManager()
+                ->getRepository('UJMExoBundle:Interaction')
+                ->getUserModel($uid);
+        } else {
+            $listQExo = $this->getDoctrine()
+                ->getManager()
+                ->getRepository('UJMExoBundle:Interaction')
+                ->getExerciseInteraction($em, $idExo, 0);
+        }
 
         $allActions = $services->getActionsAllQuestions($listQExo, $uid, $actionQ,
             $questionWithResponse, $alreadyShared, $sharedWithMe, $shareRight, $em);

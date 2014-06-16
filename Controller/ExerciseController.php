@@ -451,10 +451,17 @@ class ExerciseController extends Controller
 
                 $actionQ = array();
 
-                $listQExo = $this->getDoctrine()
-                    ->getManager()
-                    ->getRepository('UJMExoBundle:Interaction')
-                    ->getExerciseInteractionImport($em, $idExo, $exoID);
+                if($idExo == -2) {
+                    $listQExo = $this->getDoctrine()
+                        ->getManager()
+                        ->getRepository('UJMExoBundle:Interaction')
+                        ->getUserModelImport($this->getDoctrine()->getManager(), $uid, $exoID);
+                } else {
+                    $listQExo = $this->getDoctrine()
+                        ->getManager()
+                        ->getRepository('UJMExoBundle:Interaction')
+                        ->getExerciseInteractionImport($em, $idExo, $exoID);
+                }
 
                 $allActions = $services->getActionsAllQuestions($listQExo, $uid, $actionQ,
                     $questionWithResponse, $alreadyShared, $sharedWithMe, $shareRight, $em);
