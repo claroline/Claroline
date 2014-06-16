@@ -77,7 +77,7 @@ class SkillsWidget extends AbstractWidget
     public function getEmpty()
     {
         return array(
-            'skills' => array()
+            'children' => array()
         );
     }
 
