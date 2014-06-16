@@ -9,17 +9,20 @@
                 <div class="container">
                     <h1 id="username">{{ portfolio.user.firstName ~ ' ' ~ portfolio.user.lastName }}</h1>
 
-                    <div data-widget-portlet="title" data-ng-show="widgets.length > 0">
-                        <div class="portfolio-title-container" data-ng-repeat="widget in widgets">
-                            {% if editMode %}
-                                <div class="widget-actions">
-                                    <button class="widget-action btn" data-ng-click="edit(widget);" data-ng-if="!widget.isEditing()">
-                                        <span class="icon-pencil"></span></button>
-                                </div>
-                                <div data-ng-bind-html="widget.views.view | trustAsHtml"></div>
-                            {% else %}
-                                {% include 'IcapPortfolioBundle:templates:title.html.twig' with {'widget': titleWidget} only %}
-                            {% endif %}
+                    <div data-ng-repeat="widget in widgets | filter:{type: 'title'}" data-ng-show="widgets.length > 0">
+                        <div data-widget>
+                            <div class="portfolio-title-container">
+                                {% if editMode %}
+                                    <div class="widget-actions">
+                                        <button class="widget-action btn" data-ng-click="edit(widget);" data-ng-if="!widget.isEditing()">
+                                            <span class="icon-pencil"></span>
+                                        </button>
+                                    </div>
+                                    <div data-ng-bind-html="widget.views.view | trustAsHtml"></div>
+                                {% else %}
+                                    {% include 'IcapPortfolioBundle:templates:title.html.twig' with {'widget': titleWidget} only %}
+                                {% endif %}
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -38,25 +41,23 @@
                 {% endif %}
                 <div class="col-md-8{% if false == editMode %} col-md-offset-2{% endif %}">
                 {% if editMode %}
-                    <div data-ng-repeat="widgetType in widgetTypes">
-                        <div data-widget-portlet data-ng-show="widgets.length > 0">
+                    <div data-ng-repeat="widget in widgets | filter:{type: '!title'}">
+                        <div data-widget>
                             <div class="panel panel-default">
                                 <div class="panel-heading">
-                                    {% verbatim %}{{ widgetType + '_title'|trans }}{% endverbatim %}
+                                    {% verbatim %}{{ widget.type + '_title'|trans }}{% endverbatim %}
                                 </div>
                                 <div class="panel-body">
-                                    <div data-ng-repeat="widget in widgets">
-                                        {% if editMode %}
-                                            <div class="widget-actions">
-                                                <button class="widget-action btn btn-sm btn-danger" data-ng-class="{'btn-loading': widget.isDeleting}" data-confirm-click="delete(widget);" data-ng-if="isDeletable(widget) && !widget.isNew()">
-                                                    <span class="loading" data-ng-if="widget.isDeleting"></span><span class="icon-trash" data-ng-if="!widget.isDeleting"></span>
-                                                </button>
-                                                <button class="widget-action btn btn-sm" data-ng-click="edit(widget);" data-ng-if="!widget.isEditing() && !widget.isNew()">
-                                                    <span class="icon-pencil"></span></button>
-                                            </div>
-                                            <div data-ng-bind-html="widget.views.view | trustAsHtml"></div>
-                                        {% endif %}
-                                    </div>
+                                    {% if editMode %}
+                                        <div class="widget-actions">
+                                            <button class="widget-action btn btn-sm btn-danger" data-ng-class="{'btn-loading': widget.isDeleting}" data-confirm-click="delete(widget);" data-ng-if="isDeletable(widget) && !widget.isNew()">
+                                                <span class="loading" data-ng-if="widget.isDeleting"></span><span class="icon-trash" data-ng-if="!widget.isDeleting"></span>
+                                            </button>
+                                            <button class="widget-action btn btn-sm" data-ng-click="edit(widget);" data-ng-if="!widget.isEditing() && !widget.isNew()">
+                                                <span class="icon-pencil"></span></button>
+                                        </div>
+                                        <div data-ng-bind-html="widget.views.view | trustAsHtml"></div>
+                                    {% endif %}
                                 </div>
                             </div>
                         </div>
@@ -142,7 +143,7 @@
         <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/utils/Array.js') }}"></script>
         <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/app.js') }}"></script>
         <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/controllers/portfolioController.js') }}"></script>
-        <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/controllers/widgetsController.js') }}"></script>
+        <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/controllers/widgetController.js') }}"></script>
         <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/controllers/editWidgetsController.js') }}"></script>
         <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/services/portfolio.js') }}"></script>
         <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/services/portfolioManager.js') }}"></script>

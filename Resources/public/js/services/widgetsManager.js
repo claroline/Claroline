@@ -7,9 +7,10 @@ portfolioApp
             emptyWidgets: [],
             forms:   [],
             editing: [],
-            init: function(widgets) {
-                angular.forEach(widgetsConfig.getTypes(), function(type) {
-                    this.widgets[type] = widgets[type] ? widgets[type] : [];
+            init: function(portfolioId, widgets) {
+                angular.forEach(widgets, function(rawWidget) {
+                    var widget = widgetFactory.getWidget(portfolioId, rawWidget.type);
+                    this.widgets.push(new widget(rawWidget).setNewMode(false));
                 }, this);
             },
             edit: function(widget) {

@@ -1,7 +1,7 @@
 'use strict';
 
 portfolioApp
-    .directive("widgetPortlet", function() {
+    .directive("widget", function() {
         return {
             scope: true,
             controller: "widgetsController"
