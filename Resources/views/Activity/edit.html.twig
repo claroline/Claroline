@@ -24,6 +24,29 @@
     <form role="form" action="{{ path('claro_activity_edit', {'resource': _resource.getId() }) }}" method="POST">
         <div class="panel-body">
             {{ form_widget(form) }}
+            <hr>
+            {{ form_widget(formParams) }}
+            <hr>
+            {{ form_widget(formRule) }}
+            <hr>
+            
+            <div id="activity-rule-form">
+                <select id="activity-rule-action-select">
+                    <option disabled="disabled">
+                        {{ 'select-activity-rule-action' | trans({}, 'platform') }}
+                    </option>
+
+                    {% for action in ruleActions %}
+                        {% set resourceType = action.getResourceType().getName() %}
+                        {% set actionName = 'log_' ~ action.getAction() ~ '_filter' %}
+                        <option class="rule-action-option option-type-{{resourceType}}"
+                            value="{{action.getAction()}}"
+                        >
+                            {{ actionName | trans({}, 'log') }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
         </div>
         <div class="panel-footer text-right">
             <a class="btn btn-default" href="{{ path('claro_resource_open', { 'resourceType': _resource.getResourceNode().getResourceType().getName(), 'node': _resource.getResourceNode().getId() }) }}">
@@ -33,3 +56,13 @@
         </div>
     </form>
 {% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script
+        src="{{ asset('bundles/clarolinecore/js/activity/editActivityParameters.js') }}"
+        type="text/javascript"
+    >
+    </script>
+{% endblock %}
+

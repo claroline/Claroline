@@ -59,6 +59,9 @@ active_widgets: 'Active widgets'
 activity_already: This resource is already in the activity
 activity_form_instructions: Instructions
 activity_form_name: Name
+activity_parameters_form_evaluation_type: 'Evaluation type'
+activity_parameters_form_max_attempts: 'Number of allowed attempts'
+activity_parameters_form_max_duration: 'Allowed time limit'
 activity_resource_not_allowed: You cannot add a resource of this type
 activity_resource_remove: 'Are you sure you want to remove this resource from the activity?'
 add: Add
@@ -254,6 +257,8 @@ email_found_at: 'The email %email% was found at lines: %lines%'
 empty_file: 'Empty file'
 enter_tag_name_message: 'Please enter a tag name'
 entries_per_day: 'Entries per day'
+evaluation-automatic: Automatic
+evaluation-manual: Manual
 export: Export
 exportable: Exportable
 external_pdo_database: 'External database (PDO)'
