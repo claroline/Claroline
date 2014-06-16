@@ -36,6 +36,7 @@
  */
 
 namespace UJM\ExoBundle\Controller;
+use Symfony\Component\Form\FormError;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
@@ -126,7 +127,8 @@ class InteractionGraphicController extends Controller
             $user, $exoID
         );
 
-         if ($formHandler->processAdd()) {
+         $graphicHandler = $formHandler->processAdd();
+         if ($graphicHandler === TRUE) {
             $categoryToFind = $interGraph->getInteraction()->getQuestion()->getCategory();
             $titleToFind = $interGraph->getInteraction()->getQuestion()->getTitle();
 
@@ -153,6 +155,12 @@ class InteractionGraphicController extends Controller
                 );
             }
          }
+
+         if ($graphicHandler == 'infoDuplicateQuestion') {
+            $form->addError(new FormError(
+                    $this->get('translator')->trans('infoDuplicateQuestion')
+                    ));
+        }
 
         $formWithError = $this->render(
             'UJMExoBundle:InteractionGraphic:new.html.twig', array(

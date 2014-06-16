@@ -121,7 +121,7 @@ docName: Nom du document
 document: Document
 doNothing: Ne rien faire et revenir à la liste de mes documents
 drop category: Supprimer cette catégorie
-duplicate this question: Dupliquer <input type ="text" name='nbq' value='0' size='2' /> fois cette question
+duplicate this question: Dupliquer <input type ="text" name='nbq' value='0' size='2' /> fois cette question (10 maximum autorisé)
 duration: Durée
 
 # E
@@ -179,6 +179,7 @@ home exercise: Accueil de l'exercice
 
 # I
 infiny: Infini
+infoDuplicateQuestion: Pour dupliquer une question vous devez insérer un nombre entier entre 0 et 10.
 infoExerciseNoPuplished: Cet exercice n'est pas encore publié. Les gestionnaires pourront ajouter des questions, tester l'exercice et supprimer les copies. Après publication, les apprenants pourront passer l'exercice et les copies ne pourront plus être supprimées
 infoExerciseNoPuplished2: Cet exercice n'est pas encore publié. Vous ne pouvez pas encore répondre.
 infoMark: Les éventuelles pénalités sont à prendre en compte dans votre notation

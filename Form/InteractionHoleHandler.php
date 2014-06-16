@@ -54,6 +54,11 @@ class InteractionHoleHandler extends \UJM\ExoBundle\Form\InteractionHandler{
             $this->form->handleRequest($this->request);
 
             if ( $this->form->isValid() ) {
+
+                if($this->validateNbClone() === FALSE) {
+                    return 'infoDuplicateQuestion';
+                }
+
                 foreach ($this->form->getData()->getHoles() as $h) {
                     foreach ($h->getWordResponses() as $wr) {
                         $errorList = $this->validator->validate($wr);

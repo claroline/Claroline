@@ -36,6 +36,7 @@
 */
 
 namespace UJM\ExoBundle\Controller;
+use Symfony\Component\Form\FormError;
 
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -107,7 +108,8 @@ class InteractionOpenController extends Controller
             $this->container->get('security.context')->getToken()->getUser(), $exoID
         );
 
-        if ($formHandler->processAdd()) {
+        $openHandler = $formHandler->processAdd();
+        if ($openHandler === TRUE) {
             $categoryToFind = $interOpen->getInteraction()->getQuestion()->getCategory();
             $titleToFind = $interOpen->getInteraction()->getQuestion()->getTitle();
 
@@ -124,6 +126,12 @@ class InteractionOpenController extends Controller
                     )
                 );
             }
+        }
+
+        if ($openHandler == 'infoDuplicateQuestion') {
+            $form->addError(new FormError(
+                    $this->get('translator')->trans('infoDuplicateQuestion')
+                    ));
         }
 
         $typeOpen = $services->getTypeOpen();

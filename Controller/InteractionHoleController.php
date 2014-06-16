@@ -132,7 +132,13 @@ class InteractionHoleController extends Controller
         }
 
         if ($holeHandler != false) {
-            $form->addError(new FormError($holeHandler));
+            if ($holeHandler == 'infoDuplicateQuestion') {
+                $form->addError(new FormError(
+                        $this->get('translator')->trans('infoDuplicateQuestion')
+                        ));
+            } else {
+                $form->addError(new FormError($holeHandler));
+            }
         }
 
         $formWithError = $this->render(

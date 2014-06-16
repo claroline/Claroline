@@ -135,4 +135,18 @@ abstract class InteractionHandler
             }
         }
     }
+
+    protected function validateNbClone() {
+
+        $int =  $this->request->request->get('nbq');
+        if (preg_match('/^[0-9]$/', $int)) {
+            if ($int>=0 && $int<= 10 ) {
+                return TRUE;
+            } else {
+                return FALSE;
+            }
+        } else {
+            return FALSE;
+        }
+    }
 }

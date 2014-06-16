@@ -47,6 +47,10 @@ class InteractionQCMHandler extends \UJM\ExoBundle\Form\InteractionHandler
         if ( $this->request->getMethod() == 'POST' ) {
             $this->form->handleRequest($this->request);
 
+            if($this->validateNbClone() === FALSE) {
+                return 'infoDuplicateQuestion';
+            }
+
             if ( $this->form->isValid() ) {
                 $this->onSuccessAdd($this->form->getData());
 

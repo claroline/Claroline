@@ -38,6 +38,7 @@
 namespace UJM\ExoBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\Form\FormError;
 
 use UJM\ExoBundle\Entity\InteractionQCM;
 use UJM\ExoBundle\Form\InteractionQCMType;
@@ -133,7 +134,8 @@ class InteractionQCMController extends Controller
             $this->container->get('security.context')->getToken()->getUser(), $exoID
         );
 
-        if ($formHandler->processAdd()) {
+        $qcmHandler = $formHandler->processAdd();
+        if ($qcmHandler === TRUE) {
             $categoryToFind = $interQCM->getInteraction()->getQuestion()->getCategory();
             $titleToFind = $interQCM->getInteraction()->getQuestion()->getTitle();
 
@@ -150,6 +152,12 @@ class InteractionQCMController extends Controller
                     )
                 );
             }
+        }
+
+        if ($qcmHandler == 'infoDuplicateQuestion') {
+            $form->addError(new FormError(
+                    $this->get('translator')->trans('infoDuplicateQuestion')
+                    ));
         }
 
         $typeQCM = $services->getTypeQCM();
