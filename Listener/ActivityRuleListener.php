@@ -14,6 +14,7 @@ namespace Claroline\CoreBundle\Listener;
 use Claroline\CoreBundle\Event\LogCreateEvent;
 use Claroline\CoreBundle\Manager\ActivityManager;
 use Claroline\CoreBundle\Rule\Validator;
+use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 use JMS\DiExtraBundle\Annotation as DI;
 
 /**
@@ -23,6 +24,7 @@ class ActivityRuleListener
 {
     private $activityManager;
     private $ruleValidator;
+    private $hasSucceded = false;
 
     /**
      * @DI\InjectParams({
@@ -82,6 +84,7 @@ class ActivityRuleListener
                                 && $rulesLogs['validRules'] >= $nbRules) {
 
                                 $activityStatus = 'completed';
+                                $this->hasSucceded = true;
                             }
 
                             $this->activityManager->manageEvaluation(
@@ -95,6 +98,18 @@ class ActivityRuleListener
                     }
                 }
             }
+        }
+    }
+
+    /**
+     * @DI\Observe("kernel.response")
+     */
+    public function onKernelResponse(FilterResponseEvent $event)
+    {
+        if ($this->hasSucceded) {
+            $content = $event->getResponse()->getContent();
+            $content = str_replace('</body>', '<script>console.log("succeeded");</script></body>', $content);
+            $event->getResponse()->setContent($content);
         }
     }
 }

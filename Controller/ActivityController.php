@@ -11,14 +11,16 @@
 
 namespace Claroline\CoreBundle\Controller;
 
+use Claroline\CoreBundle\Form\ActivityParametersType;
 use Claroline\CoreBundle\Form\ActivityType;
+use Claroline\CoreBundle\Form\ActivityRuleType;
 use Claroline\CoreBundle\Manager\ActivityManager;
 use JMS\DiExtraBundle\Annotation\Inject;
 use JMS\DiExtraBundle\Annotation\InjectParams;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
@@ -29,6 +31,7 @@ class ActivityController
     private $securityContext;
     private $formFactory;
     private $request;
+    private $activityManager;
 
     /**
      * @InjectParams({
@@ -60,14 +63,43 @@ class ActivityController
     {
         $this->checkAccess('edit', $resource);
 
+        $params = $resource->getParameters();
+        $activityRuleActions = $this->activityManager->getAllRuleActions();
         $form = $this->formFactory->create(new ActivityType, $resource);
         $form->handleRequest($this->request);
+        $formParams = $this->formFactory->create(
+            new ActivityParametersType(),
+            $params
+        );
+        $formParams->handleRequest($this->request);
+        $formRule = $this->formFactory->create(
+            new ActivityRuleType()
+        );
+        $formRule->handleRequest($this->request);
 
-        if ($form->isValid()) {
+        if ($form->isValid() && $formParams->isValid()) {
             $this->activityManager->editActivity($form->getData());
+
+            $maxDuration = $formParams->get('max_duration')->getData();
+            $maxAttempts = $formParams->get('max_attempts')->getData();
+            $evaluationType = $formParams->get('evaluation_type')->getData();
+
+            $this->activityManager->updateParameters(
+                $params,
+                $maxDuration,
+                $maxAttempts,
+                $evaluationType
+            );
         }
 
-        return array('_resource' => $resource, 'form' => $form->createView());
+        return array(
+            '_resource' => $resource,
+            'form' => $form->createView(),
+            'formParams' => $formParams->createView(),
+            'params' => $params,
+            'ruleActions' => $activityRuleActions,
+            'formRule' => $formRule->createView()
+        );
     }
 
     /**

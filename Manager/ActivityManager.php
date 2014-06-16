@@ -18,6 +18,7 @@ use Claroline\CoreBundle\Entity\Activity\PastEvaluation;
 use Claroline\CoreBundle\Entity\Log\Log;
 use Claroline\CoreBundle\Entity\Resource\Activity;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
+use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Rule\Entity\Rule;
 use JMS\DiExtraBundle\Annotation\Inject;
@@ -29,6 +30,7 @@ use JMS\DiExtraBundle\Annotation\Service;
  */
 class ActivityManager
 {
+    private $activityRuleActionRepo;
     private $activityRuleRepo;
     private $evaluationRepo;
     private $pastEvaluationRepo;
@@ -42,6 +44,7 @@ class ActivityManager
     public function __construct(ObjectManager $om)
     {
         $this->om = $om;
+        $this->activityRuleActionRepo = $om->getRepository('ClarolineCoreBundle:Activity\ActivityRuleAction');
         $this->activityRuleRepo = $om->getRepository('ClarolineCoreBundle:Activity\ActivityRule');
         $this->evaluationRepo = $om->getRepository('ClarolineCoreBundle:Activity\Evaluation');
         $this->pastEvaluationRepo = $om->getRepository('ClarolineCoreBundle:Activity\PastEvaluation');
@@ -93,6 +96,20 @@ class ActivityManager
 
             return true;
         }
+    }
+
+    public function updateParameters(
+        ActivityParameters $params,
+        $maxDuration,
+        $maxAttempts,
+        $evaluationType
+    )
+    {
+        $params->setMaxDuration($maxDuration);
+        $params->setMaxAttempts($maxAttempts);
+        $params->setEvaluationType($evaluationType);
+        $this->om->persist($params);
+        $this->om->flush();
     }
 
     public function manageEvaluation(
@@ -284,7 +301,9 @@ class ActivityManager
 
                     foreach ($pastEvals as $pastEval) {
 
-                        if ($pastEval->getLog()->getId() === $log->getId()) {
+                        if (!is_null($pastEval->getLog()) &&
+                            $pastEval->getLog()->getId() === $log->getId()) {
+
                             $pastEvalExisted = true;
                             break;
                         }
@@ -424,6 +443,16 @@ class ActivityManager
             $resourceNode,
             $executeQuery
         );
+    }
+
+
+    /***************************************************
+     *  Access to ActivityRuleActionRepository methods *
+     ***************************************************/
+
+    public function getAllRuleActions()
+    {
+        return $this->activityRuleActionRepo->findAll();
     }
 
 
