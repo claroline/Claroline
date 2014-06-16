@@ -66,11 +66,35 @@ class Role implements RoleInterface
 
     /**
      * @ORM\ManyToMany(
+     *     targetEntity="Claroline\CoreBundle\Entity\Facet\Facet",
+     *     mappedBy="roles"
+     * )
+     */
+    protected $facets;
+
+    /**
+     * @ORM\OneToMany(
+     *     targetEntity="Claroline\CoreBundle\Entity\Facet\FieldFacetRole",
+     *     mappedBy="role"
+     * )
+     */
+    protected $fieldFacetsRole;
+
+    /**
+     * @ORM\ManyToMany(
      *     targetEntity="Claroline\CoreBundle\Entity\Tool\OrderedTool",
      *     mappedBy="roles"
      * )
      */
     protected $orderedTools;
+
+    /**
+     * @ORM\ManyToMany(
+     *     targetEntity="Claroline\CoreBundle\Entity\Tool\AdminTool",
+     *     mappedBy="roles"
+     * )
+     */
+    protected $adminTools;
 
     /**
      * @ORM\ManyToMany(
@@ -109,9 +133,11 @@ class Role implements RoleInterface
 
     public function __construct()
     {
-        $this->users           = new ArrayCollection();
-        $this->resourceContext = new ArrayCollection();
-        $this->groups          = new ArrayCollection();
+        $this->users            = new ArrayCollection();
+        $this->resourceContext  = new ArrayCollection();
+        $this->groups           = new ArrayCollection();
+        $this->facets           = new ArrayCollection();
+        $this->fieldFacetsRoles = new ArrayCollection();
     }
 
     public function getId()

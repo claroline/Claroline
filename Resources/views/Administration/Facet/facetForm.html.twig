@@ -4,7 +4,13 @@
     {{ 'create_facet'|trans({}, 'platform') }}
 {% endblock %}
 {% block form %}
-<form role="form" class="form-horizontal" action="{{ path('claro_admin_facet_create') }}" method="post" {{ form_enctype(form) }} id="form_facet_creation">
+<form
+    role="form"
+    class="form-horizontal"
+    action="{{ path('claro_admin_facet_create') }}"
+    method="post" {{ form_enctype(form) }}
+    id="form_facet_creation"
+>
     <div class="modal-body">
         {{ form_widget(form) }}
     </div>

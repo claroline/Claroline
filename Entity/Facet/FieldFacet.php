@@ -17,6 +17,9 @@ use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Claroline\CoreBundle\Entity\Facet\Facet;
 use Claroline\CoreBundle\Entity\Facet\FieldFacetValue;
+use Claroline\CoreBundle\Entity\Role;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+
 
 /**
  * @ORM\Entity
@@ -36,7 +39,7 @@ class FieldFacet
     protected $id;
 
     /**
-     * @ORM\Column(unique=true)
+     * @ORM\Column
      * @Assert\NotBlank()
      */
     protected $name;
@@ -69,9 +72,18 @@ class FieldFacet
      */
     protected $position;
 
+    /**
+     * @ORM\OneToMany(
+     *     targetEntity="Claroline\CoreBundle\Entity\Facet\FieldFacetRole",
+     *     mappedBy="field"
+     * )
+     */
+    protected $fieldFacetsRole;
+
     public function __construct()
     {
         $this->fieldsFacetValue = new ArrayCollection();
+        $this->fieldFacetsRole  = new ArrayCollection();
     }
 
     /**
@@ -143,5 +155,10 @@ class FieldFacet
             case self::STRING_TYPE: return "text";
             default: return "error";
         }
+    }
+
+    public function getFieldFacetsRole()
+    {
+        return $this->fieldFacetsRole;
     }
 }
