@@ -56,38 +56,12 @@
                 {% endif %}
                 {% if not _resource.getPrimaryResource() is empty %}
                     <hr>
-                    <h3>{{ _resource.getPrimaryResource().getName() }}</h3>
-                    {% set mimetype = _resource.getPrimaryResource().getMimeType() | split('/') %}
-                    {{
-                        render(
-                            controller(
-                                'ClarolineCoreBundle:Resource:embedResource',
-                                {
-                                    'node': _resource.getPrimaryResource().getId(),
-                                    'type': mimetype[0],
-                                    'extension': mimetype[1]
-                                }
-                            )
-                        )
-                    }}
+                    <iframe class="activity-iframe" src="{{ path('claro_resource_open', { 'resourceType': _resource.getPrimaryResource().getResourceType().getName(), 'node': _resource.getPrimaryResource().getId() }) }}"></iframe>
                 {% endif %}
             </div>
             {% for resource in _resource.getParameters().getSecondaryResources() %}
                 <div class="hide" id="resource-{{ resource.getId() }}">
-                    <h3>{{ resource.getName() }}</h3>
-                    {% set mimetype = resource.getMimeType() | split('/') %}
-                    {{
-                        render(
-                            controller(
-                                'ClarolineCoreBundle:Resource:embedResource',
-                                {
-                                    'node': resource.getId(),
-                                    'type': mimetype[0],
-                                    'extension': mimetype[1]
-                                }
-                            )
-                        )
-                    }}
+                    <iframe class="activity-iframe" src="{{ path('claro_resource_open', { 'resourceType': resource.getResourceType().getName(), 'node': resource.getId() }) }}"></iframe>
                 </div>
             {% endfor %}
         </div>
@@ -96,8 +70,8 @@
 
 {% block javascripts %}
     {{ parent() }}
+    <script src="{{ asset('bundles/clarolinecore/js/activity/activity.js') }}"></script>
     {% if is_granted('edit', _resource) %}
         <script src="{{ asset('bundles/clarolinecore/js/activity/edit.js') }}"></script>
     {% endif %}
-    <script src="{{ asset('bundles/clarolinecore/js/activity/activity.js') }}"></script>
 {% endblock %}

@@ -7,7 +7,6 @@
     var common = window.Claroline.Common;
     var picker = window.Claroline.ResourcePicker;
 
-
     /**
      * Add a dropdown menu for a new tab resource
      */
@@ -44,24 +43,12 @@
      */
     function activityContent(resource)
     {
-        var mimeType = resource.mimeType.split('/');
-        var type = mimeType[0];
-        var extension = mimeType[1];
-
-        $.ajax(routing.generate('claro_resource_embed', {'node': resource.id, 'type': type, 'extension': extension}))
-        .done(function (data) {
-            return data;
-        })
-        .error(function () {
-            return common.createElement('div', 'hide')
-            .attr('id', 'resource-' + resource.id)
-            .html(
-                common.createElement('h3').html(translator.get('home:An error occurred')),
-                common.createElement('p').html(
-                    translator.get('home:Please try again later or check your internet connection')
-                )
-            );
-        });
+        return common.createElement('div', 'hide').attr('id', 'resource-' + resource.id).html(
+            common.createElement('iframe', 'activity-iframe')
+            .attr(
+                'src', routing.generate('claro_resource_open', {'resourceType': resource.type, 'node': resource.id})
+            )
+        );
     }
 
     /**
