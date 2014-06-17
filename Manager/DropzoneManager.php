@@ -5,7 +5,7 @@ use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Manager\MaskManager;
 use Claroline\CoreBundle\Entity\User;
 use Icap\DropzoneBundle\Entity\Dropzone;
-use Icap\DropzoneBundle\Entity\Drop;
+use Icap\DropzoneBundle\Entity;
 use JMS\DiExtraBundle\Annotation as DI;
 
 /**
@@ -292,4 +292,53 @@ class DropzoneManager
         }
         return $dropDatePassed;
     }
+
+
+    public function recalculateScoreByDropzone(Dropzone $dropzone)
+    {
+        $this->isAllowToOpen($dropzone);
+        $this->isAllowToEdit($dropzone);
+
+        if (!$dropzone->getPeerReview()) {
+            throw new AccessDeniedException();
+        }
+        // getting the repository
+        $CorrectionRepo = $this->getDoctrine()->getManager()->getRepository('IcapDropzoneBundle:Correction');
+        // getting all the drop corrections
+        $corrections = $CorrectionRepo->findBy(['dropzone' => $dropzone->getId()]);
+
+        $this->get('icap.manager.correction_manager')->recalculateScoreForCorrections($dropzone, $corrections);
+
+        $this->getRequest()->getSession()->getFlashBag()->add(
+            'success',
+            $this->get('translator')->trans('Grades were recalculated', array(), 'icap_dropzone')
+        );
+
+
+    }
+
+    //TODO refacoring all class with a service
+    /**
+     * @param Dropzone $dropzone
+     * @param $actionName
+     * @throws AccessDeniedException
+     */
+    protected function isAllow(Dropzone $dropzone, $actionName)
+    {
+        $collection = new ResourceCollection(array($dropzone->getResourceNode()));
+        if (false === $this->get('security.context')->isGranted($actionName, $collection)) {
+            throw new AccessDeniedException();
+        }
+    }
+
+    //TODO refacoring all class with a service
+    /**
+     * @param Dropzone $dropzone
+     */
+    protected function isAllowToEdit(Dropzone $dropzone)
+    {
+        $this->isAllow($dropzone, 'EDIT');
+    }
+
+
 }

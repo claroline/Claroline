@@ -312,3 +312,7 @@ The drop was deleted by administator: "La copie a été supprimée par un admini
 Deleted drop: "Copie supprimée"
 Recalculate all grade: "Recalculer toutes les notes"
 Grades were recalculated: "Les notes ont été recalculées"
+Just save: "Sauvegarder sans recalculer"
+Save and recalculate all grade: "Sauvegarder et recalculer les notes"
+You will be abble to do it later if you want: "note : Vous avez la possibilité de le faire plus tard"
+Your modifications will only affect new corrections. For older, do you want to apply modification and recalculate grades: "Vos modifications vont affecter seulement les nouvelles corrections. Voulez vous appliquer ces modifications aux corrections déjà créées  et recalculer les notes déjà données ?"

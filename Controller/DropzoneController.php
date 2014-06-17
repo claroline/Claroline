@@ -334,8 +334,13 @@ class DropzoneController extends DropzoneBaseController
                 $em->persist($dropzone);
                 $em->flush();
 
+                if ($form->get('recalculateGrades')->getData() == 1) {
+
+                }
+
                 $event = new LogDropzoneConfigureEvent($dropzone, $changeSet);
                 $this->dispatch($event);
+
 
                 if ($dropzone->hasCriteria() === false) {
                     $this->getRequest()->getSession()->getFlashBag()->add(
