@@ -117,7 +117,7 @@ class ActivityController
                     array(
                         'id' => $resource->getId(),
                         'name' => $resource->getName(),
-                        'type' => $resource->getResourceType(),
+                        'type' => $resource->getResourceType()->getName(),
                         'mimeType' => $resource->getMimeType(),
                     )
                 )
