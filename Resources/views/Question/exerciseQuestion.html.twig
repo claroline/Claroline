@@ -115,6 +115,9 @@
                             <td class="classic">{{ interaction.type|trans }}</td>
                             <td class="classic">{{ interaction.invite|raw }}</td>
                             <td class="classic">
+                                <a class="btn btn-default" data-toggle="tooltip" title="{{ 'duplicate' | trans }}" href="{{ path('ujm_question_duplicate', { 'interID': interaction.id, 'exoID': exerciseID }) }}">
+                                    <i class="icon-repeat"></i>
+                                </a>
                                 {% if allowEdit[interaction.id] == 1 %}
                                     {% if (questionWithResponse[interaction.id] == 0) %}
                                         <a class="btn btn-default" title="{{ 'edit' | trans }}"

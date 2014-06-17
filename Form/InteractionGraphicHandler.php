@@ -68,19 +68,27 @@ class InteractionGraphicHandler extends \UJM\ExoBundle\Form\InteractionHandler
         $interGraph->getInteraction()->getQuestion()->setUser($this->user); // add the user to the question
         $interGraph->getInteraction()->setType('InteractionGraphic'); // set the type of the question
 
-        $width = $this->request->get('imagewidth'); // Get the width of the image
-        $height = $this->request->get('imageheight'); // Get the height of the image
+        if ($this->request != NULL) {
+            $width = $this->request->get('imagewidth'); // Get the width of the image
+            $height = $this->request->get('imageheight'); // Get the height of the image
 
-        $interGraph->setHeight($height);
-        $interGraph->setWidth($width);
+            $interGraph->setHeight($height);
+            $interGraph->setWidth($width);
 
-        $coords = $this->request->get('coordsZone'); // Get the answer zones
+            $coords = $this->request->get('coordsZone'); // Get the answer zones
 
-        $coord = preg_split('[,]', $coords); // Split all informations of one answer zones into a cell
+            $coord = preg_split('[,]', $coords); // Split all informations of one answer zones into a cell
 
-        $lengthCoord = count($coord) - 1; // Number of answer zones
+            $lengthCoord = count($coord) - 1; // Number of answer zones
 
-        $allCoords = $this->persitNewCoords($coord, $interGraph, $lengthCoord);
+            $allCoords = $this->persitNewCoords($coord, $interGraph, $lengthCoord);
+        } else {
+
+            $allCoords = $interGraph->getCoords();
+
+            $lengthCoord = count($allCoords);
+
+        }
 
         $this->em->persist($interGraph);
         $this->em->persist($interGraph->getInteraction()->getQuestion());

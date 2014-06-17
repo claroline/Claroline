@@ -27,6 +27,10 @@ ujm_question_display_form_type:
     requirements:
       _method: POST
 
+ujm_question_duplicate:
+    pattern: /duplicate/{interID}/{exoID}
+    defaults: { _controller: "UJMExoBundle:Question:duplicate", exoID: -1 }
+
 ujm_question_share:
   pattern: /share/{questionID}
   defaults: { _controller: "UJMExoBundle:Question:share" }

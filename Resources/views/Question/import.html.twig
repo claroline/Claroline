@@ -158,6 +158,7 @@
                                     {{ 'question' | trans }}
                                 </th>
                                 <th class="classic">{{ 'import' | trans }}</th>
+                                <th class="classic">{{ 'action' | trans }}</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -179,6 +180,11 @@
                                                    value="{{ interaction.question.id }}" onclick="addQuestionInOrder($(this).val());">
                                         </li>
                                     </ul>
+                                </td>
+                                <td>
+                                    <a class="btn btn-default" data-toggle="tooltip" title="{{ 'duplicate' | trans }}" href="{{ path('ujm_question_duplicate', { 'interID': interaction.id, 'exoID': exoID }) }}">
+                                        <i class="icon-repeat"></i>
+                                    </a>
                                 </td>
                             </tr>
                         {% endfor %}
@@ -234,6 +240,7 @@
                                 </th>
                                 <th class="classic">{{ 'shared by' | trans }}</th>
                                 <th class="classic">{{ 'import' | trans }}</th>
+                                <th class="classic">{{ 'action' | trans }}</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -258,6 +265,11 @@
                                                    value="{{ myQShare.question.id }}" onclick="addQuestionInOrder($(this).val());">
                                         </li>
                                     </ul>
+                                </td>
+                                <td>
+                                    <a class="btn btn-default" data-toggle="tooltip" title="{{ 'duplicate' | trans }}" href="{{ path('ujm_question_duplicate', { 'interID': myQShare.id, 'exoID': exoID }) }}">
+                                        <i class="icon-repeat"></i>
+                                    </a>
                                 </td>
                             </tr>
                             {% set i = i + 1 %}
@@ -319,6 +331,7 @@
                                         </th>
                                         <th class="classic">{{ 'shared by' | trans }}</th>
                                         <th class="classic">{{ 'import' | trans }}</th>
+                                        <th class="classic">{{ 'action' | trans }}</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -357,6 +370,11 @@
                                                 {{ 'noRights' | trans }}
                                             </td>
                                         {% endif %}
+                                        <td>
+                                            <a class="btn btn-default" data-toggle="tooltip" title="{{ 'duplicate' | trans }}" href="{{ path('ujm_question_duplicate', { 'interID': interactionExo.id, 'exoID': exoID }) }}">
+                                                <i class="icon-repeat"></i>
+                                            </a>
+                                        </td>
                                     </tr>
                                 {% endfor %}
                                 </tbody>

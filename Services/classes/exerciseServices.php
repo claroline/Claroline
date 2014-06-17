@@ -500,33 +500,33 @@ class exerciseServices
                 ->getRepository('UJMExoBundle:Interaction')
                 ->getInteraction($eq->getQuestion()->getId());//echo $interaction[0]->getInvite();
 
-            switch ($interaction[0]->getType()){
+            switch ($interaction->getType()){
                 case 'InteractionQCM':
                     $interQCM = $this->doctrine
                                      ->getManager()
                                      ->getRepository('UJMExoBundle:InteractionQCM')
-                                     ->getInteractionQCM($interaction[0]->getId());
+                                     ->getInteractionQCM($interaction->getId());
                     $scoreMax = $this->qcmMaxScore($interQCM[0]);
                     break;
                 case 'InteractionGraphic':
                     $interGraphic = $this->doctrine
                                          ->getManager()
                                          ->getRepository('UJMExoBundle:InteractionGraphic')
-                                         ->getInteractionGraphic($interaction[0]->getId());
+                                         ->getInteractionGraphic($interaction->getId());
                     $scoreMax = $this->graphicMaxScore($interGraphic[0]);
                     break;
                 case 'InteractionOpen':
                     $interOpen = $this->doctrine
                                       ->getManager()
                                       ->getRepository('UJMExoBundle:InteractionOpen')
-                                      ->getInteractionOpen($interaction[0]->getId());
+                                      ->getInteractionOpen($interaction->getId());
                     $scoreMax = $this->openMaxScore($interOpen[0]);
                     break;
                 case 'InteractionHole':
                     $interHole = $this->doctrine
                                       ->getManager()
                                       ->getRepository('UJMExoBundle:InteractionHole')
-                                      ->getInteractionHole($interaction[0]->getId());
+                                      ->getInteractionHole($interaction->getId());
                     $scoreMax = $this->holeMaxScore($interHole[0]);
                     break;
             }
@@ -1017,11 +1017,11 @@ class exerciseServices
 
         return $actionsS;
     }
-    
+
     public function getTypeQCM()
     {
         $em = $this->doctrine->getManager();
-        
+
         $typeQCM = array();
         $types = $em->getRepository('UJMExoBundle:TypeQCM')
                     ->findAll();
@@ -1036,7 +1036,7 @@ class exerciseServices
     public function getTypeOpen()
     {
         $em = $this->doctrine->getManager();
-        
+
         $typeOpen = array();
         $types = $em->getRepository('UJMExoBundle:TypeOpenQuestion')
                     ->findAll();

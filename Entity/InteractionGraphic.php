@@ -81,6 +81,19 @@ class InteractionGraphic
     private $document;
 
     /**
+     * @ORM\OneToMany(targetEntity="UJM\ExoBundle\Entity\Coords", mappedBy="interactionGraphic", cascade={"remove"})
+     */
+    private $coords;
+
+    /**
+     * Constructs a new instance of choices
+     */
+    public function __construct()
+    {
+        $this->coords = new \Doctrine\Common\Collections\ArrayCollection;
+    }
+
+    /**
      * Get id
      *
      * @return integer
@@ -149,12 +162,37 @@ class InteractionGraphic
     {
         $this->document = $document;
     }
-    
+
+    public function getCoords()
+    {
+        return $this->coords;
+    }
+
+    public function addCoord(\UJM\ExoBundle\Entity\Coords $coord)
+    {
+        $this->coords[] = $coord;
+        //le choix est bien lié à l'entité interactionqcm, mais dans l'entité choice il faut
+        //aussi lié l'interactionqcm double travail avec les relations bidirectionnelles avec
+        //lesquelles il faut bien faire attention à garder les données cohérentes dans un autre
+        //script il faudra exécuter $interactionqcm->addChoice() qui garde la cohérence entre les
+        //deux entités, il ne faudra pas exécuter $choice->setInteractionQCM(), car lui ne garde
+        //pas la cohérence
+        $coord->setInteractionGraphic($this);
+    }
+
     public function __clone() {
         if ($this->id) {
             $this->id = null;
 
             $this->interaction = clone $this->interaction;
+
+            $newCoords = new \Doctrine\Common\Collections\ArrayCollection;
+            foreach ($this->coords as $coord) {
+                $newCoord = clone $coord;
+                $newCoord->setInteractionGraphic($this);
+                $newCoords->add($newCoord);
+            }
+            $this->coords = $newCoords;
         }
     }
 }

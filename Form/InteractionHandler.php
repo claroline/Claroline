@@ -55,7 +55,7 @@ abstract class InteractionHandler
     protected $exercise;
     protected $isClone = FALSE;
 
-    public function __construct(Form $form, Request $request, EntityManager $em, $exoServ, User $user, $exercise=-1)
+    public function __construct(Form $form = NULL, Request $request = NULL, EntityManager $em, $exoServ, User $user, $exercise=-1)
     {
         $this->form     = $form;
         $this->request  = $request;
@@ -125,13 +125,7 @@ abstract class InteractionHandler
             $nbCop = 0;
             while ($nbCop < $request->request->get('nbq')) {
                 $nbCop ++;
-                $copy = clone $inter;
-                $title = $copy->getInteraction()->getQuestion()->getTitle();
-                $copy->getInteraction()->getQuestion()
-                     ->setTitle($title.' '.$nbCop);
-
-                $this->isClone = TRUE;
-                $this->onSuccessAdd($copy);
+                $this->singleDuplicateInter($inter);
             }
         }
     }
@@ -148,5 +142,15 @@ abstract class InteractionHandler
         } else {
             return FALSE;
         }
+    }
+
+    public function singleDuplicateInter($inter) {
+        $copy = clone $inter;
+        $title = $copy->getInteraction()->getQuestion()->getTitle();
+        $copy->getInteraction()->getQuestion()
+             ->setTitle($title.' #');
+
+        $this->isClone = TRUE;
+        $this->onSuccessAdd($copy);
     }
 }

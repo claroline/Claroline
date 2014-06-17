@@ -59,7 +59,7 @@ class InteractionRepository extends EntityRepository
         $qb->join('i.question', 'q')
             ->where($qb->expr()->in('q.id', $questionId));
 
-        return $qb->getQuery()->getResult();
+        return $qb->getQuery()->getSingleResult();
     }
 
     /**
@@ -188,7 +188,7 @@ class InteractionRepository extends EntityRepository
 
 
     }
-    
+
     /**
      * Interactions for a paper
      *
@@ -256,7 +256,7 @@ class InteractionRepository extends EntityRepository
 
         return $qb->getQuery()->getResult();
     }
-    
+
     /**
      * Model of an user for the import
      *

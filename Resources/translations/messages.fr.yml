@@ -121,6 +121,7 @@ docName: Nom du document
 document: Document
 doNothing: Ne rien faire et revenir à la liste de mes documents
 drop category: Supprimer cette catégorie
+duplicate: Dupliquer
 duplicate this question: Dupliquer <input type ="text" name='nbq' value='0' size='2' /> fois cette question (10 maximum autorisé)
 duration: Durée
 

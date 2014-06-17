@@ -121,6 +121,7 @@ docName: Document name
 document: Document
 doNothing: Do nothing and go back to my documents management
 drop category: Drop this category
+duplicate: Duplicate
 duplicate this question: Duplicate <input type ="text" name='nbq' value='0' size='2' /> time this question (10 maximum allowed)
 duration: Duration
 
