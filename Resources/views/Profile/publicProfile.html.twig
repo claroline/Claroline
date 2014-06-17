@@ -12,59 +12,128 @@
             </h3>
         </div>
         <div class="panel-body">
-            <div class="row">
-                <aside class="col-md-2 profile_aside" role="complementary">
-                    <div class="avatar">
-                        {% if user.getPicture() != "" %}
-                            <img src="{{ asset('uploads/pictures/') ~  user.getPicture() }}" class="profile_picture" alt="{{ user.getLastName() ~ ' ' ~ user.getFirstName() }}">
-                        {% else %}
-                            <h1 class="profile_picture_placeholder"><i class="icon-user"></i></h1>
-                        {% endif %}
+            <ul class="nav nav-tabs">
+                <li class="active">
+                    <a href="#public-profile" data-toggle="tab">{{ 'public'|trans({}, 'platform') }}</a>
+                </li>
+                {% for facet in facets %}
+                    {# if the facet is displayable #}
+                    <li>
+                        <a href="#facet-{{ facet.getId() }}" data-toggle="tab">{{ facet.getName() }}</a>
+                    </li>
+                {% endfor %}
+            </ul>
+            <div id="facet-pane" class="tab-content">
+                <div class="tab-pane active" id="public-profile">
+                    <div class="panel-body">
+                        {% include "ClarolineCoreBundle:Profile:publicProfileTab.html.twig"
+                        with {'user': user, 'publicProfilePreferences': publicProfilePreferences }
+                        %}
                     </div>
-                    <div class="informations">
-                        <p class="text-center text-muted">
-                            {{ 'registered'|trans({}, 'platform') }} {{ user.getCreationDate()| timeAgo }}
-                        </p>
-                    </div>
-                    {% if publicProfilePreferences.allowMailSending or publicProfilePreferences.allowMessageSending %}
-                        <ul class="nav nav-pills nav-stacked contact_methods">
-                            {% if publicProfilePreferences.allowMailSending and is_granted('IS_AUTHENTICATED_FULLY') %}
-                                <li>
-                                    <a href="{{path('claro_mail_form', {'userId':user.getId()})}}">
-                                        <i class="icon-envelope"></i> {{ 'send_mail'|trans({}, 'platform') }}
-                                    </a>
-                                </li>
-                            {% endif %}
-                            {% if publicProfilePreferences.allowMessageSending and is_granted('IS_AUTHENTICATED_FULLY') %}
-                                <li>
-                                    <a href="{{path('claro_message_show', {'message': 0})}}?ids[]={{ user.getId() }}">
-                                        <i class="icon-comment"></i> {{ 'send_message'|trans({}, 'platform') }}
-                                    </a>
-                                </li>
-                            {% endif %}
-                        </ul>
-                    {% endif %}
-                </aside>
-                <div class="col-md-6 profile_informations">
-                    <h2>{{ user.getLastName() ~ ' ' ~ user.getFirstName() }}</h2>
-                    {% if publicProfilePreferences.displayEmail %}
-                        <p><span class="icon-envelope"> <a href="mailto:{{ user.getmail() }}" title="{{ user.getmail() }}">{{ user.getmail() }}</a></span></p>
-                    {% endif %}
-                    {% if publicProfilePreferences.displayPhoneNumber %}
-                        {% if user.getPhone() is not null %}
-                            <p><span class="icon-phone-sign"></span> {{ user.getPhone() }}</p>
-                        {% endif %}
-                    {% endif %}
-                    {% if '' != user.getDescription() %}
-                        <div class="description_block">
-                            <p class="lead">Description de {{ user.getLastName() ~ ' ' ~ user.getFirstName() }}</p>
-                            <div class="description">
-                                {{ user.getDescription() |raw }}
-                            </div>
-                        </div>
-                    {% endif %}
                 </div>
+                {% for facet in facets %}
+                    {# if the facet is displayable #}
+                    <div class="tab-pane" id="facet-{{ facet.getId() }}">
+                        <form
+                              id="form-facet-{{ facet.getId() }}"
+                              role="form"
+                              class="form-horizontal"
+                              method="post"
+                              action="{{ path('claro_user_facet_edit', {'user': user.getId(), 'facet': facet.getId()}) }}"
+                        >
+                            <div class="panel-body">
+                                {% for field in facet.getFieldsFacet() %}
+                                    <div class="form-group row">
+                                        <label class="control-label col-md-3" for="field-{{ field.getId() }}">
+                                            {{ field.getName() }}
+                                        </label>
+                                        <div class="col-md-9">
+                                            {# if the field is displayable #}
+                                            <input
+                                                    id="field-{{ field.getId() }}"
+                                                    name="field-{{ field.getId() }}[{{ field.getName() }}]"
+                                                    {% for fieldFacetValue in fieldFacetValues %}
+                                                        {% if fieldFacetValue.getFieldFacet().getId() == field.getId() %}
+                                                            {% if field.getInputType == 'date' %}
+                                                                value="{{ fieldFacetValue.getValue()|date('date_form_datepicker_php'|trans({}, 'platform')) }}"
+                                                                type="text"
+                                                                class="datepicker form-control"
+                                                                data-date-language="{{ app.request.locale }}"
+                                                                data-date-clear-btn="true"
+                                                                data-date-format="{{ 'date_form_datepicker_format'|trans({}, 'platform') }}"
+                                                            {% else %}
+                                                                value="{{ fieldFacetValue.getValue() }}"
+                                                                type="{{ field.getInputType() }}"
+                                                                class="form-control"
+                                                            {% endif %}
+                                                        {% endif %}
+                                                    {% endfor %}
+                                                    >
+                                            </input>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                            <div class="panel-footer">
+                                <button
+                                    class="btn btn-primary submit-facet-edit-form"
+                                    aria-hidden="true"
+                                >
+                                    {{ 'edit'|trans({}, 'platform') }}
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                {% endfor %}
             </div>
         </div>
     </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+
+        (function () {
+            'use strict';
+
+            $('body')
+            .on('click', '.submit-facet-edit-form', function(event) {
+                event.preventDefault();
+                var formId = $($(event.currentTarget)[0].parentElement.parentElement).attr('id');
+                var formData = new FormData(document.getElementById(formId));
+                var action = $($(event.currentTarget)[0].parentElement.parentElement).attr('action');
+
+                $.ajax({
+                    url: action,
+                    data: formData,
+                    type: 'POST',
+                    processData: false,
+                    contentType: false,
+                    success: function(data) {
+                        for (var fieldId in data) {
+                            var input = $('#field-' + fieldId);
+                            input.attr('value', data[fieldId]);
+                        }
+                    },
+                    error: function(data) {
+                        alert('something went wrong');
+                    }
+                });
+            })
+            .on('click', 'input.datepicker', function(event) {
+                $(event.currentTarget).datepicker('show');
+            });
+
+            $('.datepicker').datepicker()
+            .on('changeDate', function(event) {
+                $(event.currentTarget).datepicker('hide');
+            })
+            .on('keydown', function(event) {
+                event.preventDefault();
+                this.$(event.currentTarget).datepicker('hide');
+            });
+        })();
+
+    </script>
 {% endblock %}

@@ -29,17 +29,17 @@ class FieldFacetValue
     protected $id;
 
     /**
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="string", nullable=true)
      */
     protected $stringValue;
 
     /**
-     * @ORM\Column(type="float")
+     * @ORM\Column(type="float", nullable=true)
      */
     protected $floatValue;
 
     /**
-     * @ORM\Column(type="datetime")
+     * @ORM\Column(type="datetime", nullable=true)
      */
     protected $dateValue;
 
@@ -63,7 +63,7 @@ class FieldFacetValue
      */
     protected $fieldFacet;
 
-    public function setDateValue($dateValue)
+    public function setDateValue(\DateTime $dateValue)
     {
         $this->dateValue = $dateValue;
     }
@@ -128,5 +128,15 @@ class FieldFacetValue
     public function getUser()
     {
         return $this->user;
+    }
+
+    public function getValue()
+    {
+        switch ($this->getFieldFacet()->getType()) {
+            case FieldFacet::FLOAT_TYPE: return $this->getFloatValue();
+            case FieldFacet::DATE_TYPE: return $this->getDateValue();
+            case FieldFacet::STRING_TYPE: return $this->getStringValue();
+            default: return "error";
+        }
     }
 } 
