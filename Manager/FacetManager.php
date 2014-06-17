@@ -21,6 +21,10 @@ use Claroline\CoreBundle\Entity\Facet\FieldFacetValue;
 use Claroline\CoreBundle\Entity\Facet\FieldFacetRole;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use Symfony\Component\Translation\Translator;
+use Symfony\Component\Security\Core\SecurityContextInterface;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+
 
 /**
  * @Service("claroline.manager.facet_manager")
@@ -29,20 +33,24 @@ class FacetManager
 {
     private $om;
     private $translator;
+    private $sc;
 
     /**
      * @InjectParams({
      *     "om"         = @Inject("claroline.persistence.object_manager"),
-     *     "translator" = @Inject("translator")
+     *     "translator" = @Inject("translator"),
+     *     "sc"         = @Inject("security.context")
      * })
      */
     public function __construct(
         ObjectManager $om,
-        Translator $translator
+        Translator $translator,
+        SecurityContextInterface $sc
     )
     {
         $this->om = $om;
         $this->translator = $translator;
+        $this->sc = $sc;
     }
 
     /**
@@ -163,7 +171,9 @@ class FacetManager
      */
     public function setFieldValue(User $user, FieldFacet $field, $value)
     {
-        //@todo check permissions
+        if (!$this->sc->isGranted('edit', $field)) {
+            throw new AccessDeniedException();
+        }
 
         $fieldFacetValue = $this->om->getRepository('ClarolineCoreBundle:Facet\FieldFacetValue')
             ->findOneBy(array('user' => $user, 'fieldFacet' => $field));
@@ -403,5 +413,39 @@ class FacetManager
     public function getFieldFacet($id)
     {
         return $this->om->getRepository('ClarolineCoreBundle:Facet\FieldFacet')->find($id);
+    }
+
+    /**
+     * @param TokenInterface $token
+     */
+    public function getVisibleFieldFacets(TokenInterface $token)
+    {
+        $tokenRoles = $token->getRoles();
+        $roles = array();
+
+        foreach ($tokenRoles as $tokenRole) {
+            $roles[] = $tokenRole->getRole();
+        }
+
+        return $this->om->getRepository('ClarolineCoreBundle:Facet\FieldFacetRole')->findByRoles($roles);
+    }
+
+    /**
+     * @param TokenInterface $token
+     */
+    public function getVisibleFacets(TokenInterface $token)
+    {
+        return $this->om->getRepository('ClarolineCoreBundle:Facet\Facet')->findVisibleFacets($token);
+    }
+
+    public function getDisplayedValue(FieldFacetValue $ffv)
+    {
+        switch ($ffv->getFieldFacet()->getType()) {
+            case FieldFacet::FLOAT_TYPE: return $ffv->getFloatValue();
+            case FieldFacet::DATE_TYPE:
+                return $ffv->getDateValue()->format($this->translator->trans('date_form_datepicker_php', array(), 'platform'));
+            case FieldFacet::STRING_TYPE: return $ffv->getStringValue();
+            default: return "error";
+        }
     }
 }

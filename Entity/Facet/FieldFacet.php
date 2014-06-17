@@ -75,7 +75,7 @@ class FieldFacet
     /**
      * @ORM\OneToMany(
      *     targetEntity="Claroline\CoreBundle\Entity\Facet\FieldFacetRole",
-     *     mappedBy="field"
+     *     mappedBy="fieldFacet"
      * )
      */
     protected $fieldFacetsRole;

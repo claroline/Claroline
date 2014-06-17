@@ -126,7 +126,7 @@ class ProfileController extends Controller
      */
     public function editPublicProfilePreferencesAction(User $loggedUser)
     {
-        $form    = $this->createForm(new UserPublicProfilePreferencesType(), $loggedUser->getPublicProfilePreferences());
+        $form = $this->createForm(new UserPublicProfilePreferencesType(), $loggedUser->getPublicProfilePreferences());
 
         if ($this->request->isMethod('POST')) {
             $form->handleRequest($this->request);
@@ -187,8 +187,10 @@ class ProfileController extends Controller
             $userPublicProfilePreferences = $this->get('claroline.manager.user_manager')->getUserPublicProfilePreferencesForAdmin();
         }
 
-        $facets = $this->facetManager->getFacets();
+        $facets = $this->facetManager->getVisibleFacets($this->security->getToken());
         $fieldFacetValues = $this->facetManager->getFieldValuesByUser($user);
+        $fieldFacets = $this->facetManager->getVisibleFieldFacets($this->security->getToken());
+
         $response = new Response(
             $this->renderView(
                 'ClarolineCoreBundle:Profile:publicProfile.html.twig',
@@ -196,11 +198,13 @@ class ProfileController extends Controller
                     'user' => $user,
                     'publicProfilePreferences' => $userPublicProfilePreferences,
                     'facets' => $facets,
-                    'fieldFacetValues' => $fieldFacetValues
+                    'fieldFacetValues' => $fieldFacetValues,
+                    'fieldFacets' => $fieldFacets
                 )
             )
         );
 
+        /*
         if (UserPublicProfilePreferences::SHARE_POLICY_NOBODY === $userPublicProfilePreferences->getSharePolicy()) {
             $response = new Response($this->renderView('ClarolineCoreBundle:Profile:publicProfile.404.html.twig', array('user' => $user, 'publicUrl' => $publicUrl)), 404);
         }
@@ -208,6 +212,7 @@ class ProfileController extends Controller
                  && null === $this->getUser()) {
             $response = new Response($this->renderView('ClarolineCoreBundle:Profile:publicProfile.401.html.twig', array('user' => $user, 'publicUrl' => $publicUrl)), 401);
         }
+        */
 
         return $response;
     }
@@ -464,7 +469,7 @@ class ProfileController extends Controller
         $data = array();
 
         foreach ($fieldFacetValues as $fieldFacetValue) {
-            $data[$fieldFacetValue->getFieldFacet()->getId()] = $fieldFacetValue->getValue();
+            $data[$fieldFacetValue->getFieldFacet()->getId()] = $this->facetManager->getDisplayedValue($fieldFacetValue);
         }
 
         return new JsonResponse($data);
