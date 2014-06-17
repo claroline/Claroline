@@ -157,6 +157,16 @@ class FieldFacet
         }
     }
 
+    public function getInputType()
+    {
+        switch ($this->type) {
+            case self::FLOAT_TYPE: return "number";
+            case self::DATE_TYPE: return "date";
+            case self::STRING_TYPE: return "text";
+            default: return "error";
+        }
+    }
+
     public function getFieldFacetsRole()
     {
         return $this->fieldFacetsRole;

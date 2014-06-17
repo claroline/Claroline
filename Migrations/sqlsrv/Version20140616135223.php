@@ -1,6 +1,6 @@
 <?php
 
-namespace Claroline\CoreBundle\Migrations\pdo_sqlsrv;
+namespace Claroline\CoreBundle\Migrations\sqlsrv;
 
 use Doctrine\DBAL\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
@@ -8,9 +8,9 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2014/06/16 09:50:30
+ * Generation date: 2014/06/16 01:52:25
  */
-class Version20140616095028 extends AbstractMigration
+class Version20140616135223 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
@@ -68,6 +68,15 @@ class Version20140616095028 extends AbstractMigration
             ON DELETE CASCADE
         ");
         $this->addSql("
+            ALTER TABLE claro_field_facet_value ALTER COLUMN stringValue NVARCHAR(255)
+        ");
+        $this->addSql("
+            ALTER TABLE claro_field_facet_value ALTER COLUMN floatValue DOUBLE PRECISION
+        ");
+        $this->addSql("
+            ALTER TABLE claro_field_facet_value ALTER COLUMN dateValue DATETIME2(6)
+        ");
+        $this->addSql("
             IF EXISTS (
                 SELECT * 
                 FROM sysobjects 
@@ -90,6 +99,15 @@ class Version20140616095028 extends AbstractMigration
         $this->addSql("
             CREATE UNIQUE INDEX UNIQ_F6C21DB25E237E06 ON claro_field_facet (name) 
             WHERE name IS NOT NULL
+        ");
+        $this->addSql("
+            ALTER TABLE claro_field_facet_value ALTER COLUMN stringValue NVARCHAR(255) NOT NULL
+        ");
+        $this->addSql("
+            ALTER TABLE claro_field_facet_value ALTER COLUMN floatValue DOUBLE PRECISION NOT NULL
+        ");
+        $this->addSql("
+            ALTER TABLE claro_field_facet_value ALTER COLUMN dateValue DATETIME2(6) NOT NULL
         ");
     }
 }

@@ -1,6 +1,6 @@
 <?php
 
-namespace Claroline\CoreBundle\Migrations\pdo_oci;
+namespace Claroline\CoreBundle\Migrations\oci8;
 
 use Doctrine\DBAL\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
@@ -8,9 +8,9 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2014/06/16 09:50:29
+ * Generation date: 2014/06/16 01:52:24
  */
-class Version20140616095028 extends AbstractMigration
+class Version20140616135223 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
@@ -96,6 +96,13 @@ class Version20140616095028 extends AbstractMigration
             ON DELETE CASCADE
         ");
         $this->addSql("
+            ALTER TABLE claro_field_facet_value MODIFY (
+                stringValue VARCHAR2(255) DEFAULT NULL, 
+                floatValue DOUBLE PRECISION DEFAULT NULL, 
+                dateValue TIMESTAMP(0) DEFAULT NULL
+            )
+        ");
+        $this->addSql("
             DROP INDEX UNIQ_F6C21DB25E237E06
         ");
     }
@@ -110,6 +117,13 @@ class Version20140616095028 extends AbstractMigration
         ");
         $this->addSql("
             CREATE UNIQUE INDEX UNIQ_F6C21DB25E237E06 ON claro_field_facet (name)
+        ");
+        $this->addSql("
+            ALTER TABLE claro_field_facet_value MODIFY (
+                stringValue VARCHAR2(255) NOT NULL, 
+                floatValue DOUBLE PRECISION NOT NULL, 
+                dateValue TIMESTAMP(0) NOT NULL
+            )
         ");
     }
 }
