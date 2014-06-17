@@ -69,6 +69,9 @@ class BlogController extends Controller
         /** @var \Doctrine\ORM\QueryBuilder $query */
         $query = $postRepository
             ->createQueryBuilder('post')
+            ->select(array('post', 'tags', 'author'))
+            ->leftJoin('post.tags', 'tags')
+            ->join('post.author', 'author')
             ->andWhere('post.blog = :blogId')
         ;
 
@@ -85,7 +88,7 @@ class BlogController extends Controller
 
         $query = $postRepository->createCriteriaQueryBuilder($criterias, $query);
 
-        $adapter = new DoctrineORMAdapter($query);
+        $adapter = new DoctrineORMAdapter($query, false);
         $pager   = new PagerFanta($adapter);
 
         $pager->setMaxPerPage($blog->getOptions()->getPostPerPage());
