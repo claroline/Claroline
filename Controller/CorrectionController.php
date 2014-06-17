@@ -191,7 +191,7 @@ class CorrectionController extends DropzoneBaseController
         $drop = $correction->getDrop();
         $correction->setEndDate(new \DateTime());
         $correction->setFinished(true);
-        $totalGrade = $this->calculateCorrectionTotalGrade($dropzone, $correction);
+        $totalGrade = $this->get('icap.manager.correction_manager')->calculateCorrectionTotalGrade($dropzone, $correction);
         $correction->setTotalGrade($totalGrade);
 
         $em->persist($correction);
@@ -282,28 +282,28 @@ class CorrectionController extends DropzoneBaseController
 
     }
 
+    /* // MOVED TO CORRECTION MANAGER
+        private function calculateCorrectionTotalGrade(Dropzone $dropzone, Correction $correction)
+        {
+            $correction->setTotalGrade(null);
 
-    private function calculateCorrectionTotalGrade(Dropzone $dropzone, Correction $correction)
-    {
-        $correction->setTotalGrade(null);
+            $nbCriteria = count($dropzone->getPeerReviewCriteria());
+            $maxGrade = $dropzone->getTotalCriteriaColumn() - 1;
+            $sumGrades = 0;
+            foreach ($correction->getGrades() as $grade) {
+                ($grade->getValue() > $maxGrade) ? $sumGrades += $maxGrade : $sumGrades += $grade->getValue();
+            }
 
-        $nbCriteria = count($dropzone->getPeerReviewCriteria());
-        $maxGrade = $dropzone->getTotalCriteriaColumn() - 1;
-        $sumGrades = 0;
-        foreach ($correction->getGrades() as $grade) {
-            ($grade->getValue() > $maxGrade) ? $sumGrades += $maxGrade : $sumGrades += $grade->getValue();
+            $totalGrade = 0;
+            if ($nbCriteria != 0) {
+
+                $totalGrade = $sumGrades / ($nbCriteria);
+                $totalGrade = ($totalGrade * 20) / ($maxGrade);
+            }
+
+            return $totalGrade;
         }
-
-        $totalGrade = 0;
-        if ($nbCriteria != 0) {
-
-            $totalGrade = $sumGrades / ($nbCriteria);
-            $totalGrade = ($totalGrade * 20) / ($maxGrade);
-        }
-
-        return $totalGrade;
-    }
-
+    */
     /**
      * @Route(
      *      "/{resourceId}/correct",
@@ -524,7 +524,8 @@ class CorrectionController extends DropzoneBaseController
         }
 
         $view = 'IcapDropzoneBundle:Correction:correctComment.html.twig';
-        $totalGrade = $this->calculateCorrectionTotalGrade($dropzone, $correction);
+
+        $totalGrade = $this->get('icap.manager.correction_manager')->calculateCorrectionTotalGrade($dropzone, $correction);
 
         $dropzoneManager = $this->get('icap.manager.dropzone_manager');
         $dropzoneProgress = $dropzoneManager->getDropzoneProgressByUser($dropzone,$user);
@@ -745,7 +746,7 @@ class CorrectionController extends DropzoneBaseController
                     }
 
                     if ($correction->getFinished()) {
-                        $totalGrade = $this->calculateCorrectionTotalGrade($dropzone, $correction);
+                        $totalGrade = $this->get('icap.manager.correction_manager')->calculateCorrectionTotalGrade($dropzone, $correction);
                         $correction->setTotalGrade($totalGrade);
 
                         $em->persist($correction);
@@ -902,7 +903,7 @@ class CorrectionController extends DropzoneBaseController
             }
 
             $view = 'IcapDropzoneBundle:Correction:correctComment.html.twig';
-            $totalGrade = $this->calculateCorrectionTotalGrade($dropzone, $correction);
+            $totalGrade = $this->get('icap.manager.correction_manager')->calculateCorrectionTotalGrade($dropzone, $correction);
             return $this->render(
                 $view,
                 array(
@@ -926,7 +927,7 @@ class CorrectionController extends DropzoneBaseController
 
         if($state =='show')
         {
-            $totalGrade = $this->calculateCorrectionTotalGrade($dropzone, $correction);
+            $totalGrade = $this->get('icap.manager.correction_manager')->calculateCorrectionTotalGrade($dropzone, $correction);
             return $this->render(
                 $view,
                 array(
@@ -1332,7 +1333,7 @@ class CorrectionController extends DropzoneBaseController
 
         $oldTotalGrade = $correction->getTotalGrade();
 
-        $totalGrade = $this->calculateCorrectionTotalGrade($dropzone, $correction);
+        $totalGrade = $this->get('icap.manager.correction_manager')->calculateCorrectionTotalGrade($dropzone, $correction);
         $correction->setTotalGrade($totalGrade);
         $em = $this->getDoctrine()->getManager();
 
@@ -1605,20 +1606,7 @@ class CorrectionController extends DropzoneBaseController
         $this->isAllowToOpen($dropzone);
         $this->isAllowToEdit($dropzone);
 
-        if (!$dropzone->getPeerReview()) {
-            throw new AccessDeniedException();
-        }
-        // getting the repository
-        $CorrectionRepo = $this->getDoctrine()->getManager()->getRepository('IcapDropzoneBundle:Correction');
-        // getting all the drop corrections
-        $corrections = $CorrectionRepo->findBy(['dropzone' => $dropzone->getId()]);
-
-        $this->recalculateScoreForCorrections($dropzone, $corrections);
-
-        $this->getRequest()->getSession()->getFlashBag()->add(
-            'success',
-            $this->get('translator')->trans('Grades were recalculated', array(), 'icap_dropzone')
-        );
+        $this->get('icap.dropzone_manager')->recalculateScoreByDropzone($dropzone);
 
         return $this->redirect(
             $this->generateUrl(
@@ -1628,7 +1616,6 @@ class CorrectionController extends DropzoneBaseController
                 )
             )
         );
-
     }
 
     private function recalculateScoreForCorrections(Dropzone $dropzone, Array $corrections)
@@ -1636,7 +1623,7 @@ class CorrectionController extends DropzoneBaseController
         // recalculate the score for all corrections
         foreach ($corrections as $correction) {
             $oldTotalGrade = $correction->getTotalGrade();
-            $totalGrade = $this->calculateCorrectionTotalGrade($dropzone, $correction);
+            $totalGrade = $this->get('icap.manager.correction_manager')->calculateCorrectionTotalGrade($dropzone, $correction);
             $correction->setTotalGrade($totalGrade);
             $em = $this->getDoctrine()->getManager();
 

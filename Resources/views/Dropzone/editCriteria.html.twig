@@ -199,7 +199,9 @@
             <div class="row">
                 <div class="btn-group pull-right">
                     <a href="{{ path('icap_dropzone_edit_common', {'resourceId': dropzone.getId()}) }}" class="btn btn-default criteria-form-button back-button">{{ 'Return'|trans({}, 'icap_dropzone') }}</a>
-                    <button type= "submit" class="btn btn-primary criteria-form-button save-submit">{{ 'Save and finished'|trans({}, 'icap_dropzone') }}</button>
+                    <button id="submit_global_form" type="submit"
+                            class="btn btn-primary criteria-form-button save-submit">{{ 'Save and finished'|trans({}, 'icap_dropzone') }}</button>
+
                 </div>
             </div>
         </form>
@@ -210,6 +212,31 @@
             <strong>2/2</strong>
         </div>
     </div>
+    <div class="modal fade" id="recalculateAskPopup" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title">{{ 'Warning'|trans({}, 'icap_dropzone') }}  {{ 'corrections were already created'|transchoice(nbCorrection,{},'icap_dropzone') }}</h4>
+                </div>
+                <div class="modal-body">
+
+
+                    <p> {{ 'Your modifications will only affect new corrections. For older, do you want to apply modification and recalculate grades'|trans({},'icap_dropzone') }}</p>
+
+                </div>
+                <div class="modal-footer">
+                    <button id="notRecalculateButton"
+                            class="btn btn-default">{{ 'Just save'|trans({}, 'icap_dropzone') }}</button>
+
+                    <button id='recalculateButton' class="btn btn-primary pull-right">
+                        {{ 'Save and recalculate all grade'|trans({}, 'icap_dropzone') }}
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
 {% endblock %}
 
 {% block stylesheets %}
@@ -226,16 +253,20 @@
             margin-bottom: 0px;
             margin-top: 0px;
         }
+
     </style>
 {% endblock %}
 
 {% block javascripts %}
     {{ parent() }}
+    <script src="{{ asset('bundles/icapdropzone/js/popup.js') }}"></script>
     {% render controller('ClarolineCoreBundle:ResourceType:initPicker') %}
     {{ tinymce_init() }}
 
-    <script src="{{ asset('bundles/icapdropzone/js/popup.js') }}"></script>
+
     <script>
+        var manualSubmit = false;
+        var nbCorrection = {{nbCorrection}};
         $(document).ready(function () {
             setSaveListener();
             $('#icap_dropzone_criteria_form_goBack').val(0);
@@ -360,6 +391,24 @@
                     })
                 ;
             });
+
+            $('form').submit(function (e) {
+                if (nbCorrection > 0 && !manualSubmit) {
+                    e.preventDefault();
+                    $('#recalculateAskPopup').modal('show');
+                    manualSubmit = true;
+                    $('#recalculateButton').unbind('click').click(function () {
+                        $('#icap_dropzone_criteria_form_recalculateGrades').val(1);
+                        $('form').submit();
+                    });
+
+                    $('#notRecalculateButton').unbind('click').click(function () {
+                        $('form').submit();
+                    });
+                }
+            });
+
+
         });
 
         function setSaveListener()
