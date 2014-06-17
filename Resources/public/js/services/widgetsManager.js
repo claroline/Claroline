@@ -61,14 +61,24 @@ portfolioApp
                 return widget.isNew() ? widget.$save(success, failed) : widget.$update(success, failed);
             },
             create: function(portfolioId, type) {
-                var istypeUnique = widgetsConfig.config[type].isUnique;
-
-                if (istypeUnique && 0 < this.widgets[type].length) {
-                    this.edit(this.widgets[type][0]);
+                var isTypeUnique = widgetsConfig.config[type].isUnique;
+                if (isTypeUnique && 0 < this.findWidgetsByType(type).length) {
+                    this.edit(this.findWidgetsByType(type)[0]);
                 }
                 else {
-                    this.createEmptyWidget(portfolioId, type, istypeUnique);
+                    this.createEmptyWidget(portfolioId, type, isTypeUnique);
                 }
+            },
+            findWidgetsByType: function(type) {
+                var widgets = [];
+
+                for (var index = 0; index < this.widgets.length; index++) {
+                    if (type == this.widgets[index].type) {
+                        widgets.push(this.widgets[index]);
+                    }
+                }
+
+                return widgets;
             },
             createEmptyWidget: function(portfolioId, type, istypeUnique) {
                 var newWidget;
