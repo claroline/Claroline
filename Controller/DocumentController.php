@@ -220,7 +220,7 @@ class DocumentController extends DropzoneBaseController
      */
     public function documentAction($dropzone, $documentType, $drop)
     {
-        $this->isAllowToOpen($dropzone);
+        $this->get('icap.manager.dropzone_voter')->isAllowToOpen($dropzone);
 
         $formType = null;
         if ($documentType == 'url') {
@@ -291,7 +291,7 @@ class DocumentController extends DropzoneBaseController
      */
     public function deleteDocumentAction(Dropzone $dropzone, $user, Drop $drop, Document $document)
     {
-        $this->isAllowToOpen($dropzone);
+        $this->get('icap.manager.dropzone_voter')->isAllowToOpen($dropzone);
 
         if ($drop->getId() != $document->getDrop()->getId()) {
             throw new \HttpInvalidParamException();
@@ -356,7 +356,7 @@ class DocumentController extends DropzoneBaseController
      */
     public function openResourceAction(Dropzone $dropzone, Document $document, $user)
     {
-        $this->isAllowToOpen($dropzone);
+        $this->get('icap.manager.dropzone_voter')->isAllowToOpen($dropzone);
 
         if ($document->getType() == 'url') {
             return $this->redirect($document->getUrl());

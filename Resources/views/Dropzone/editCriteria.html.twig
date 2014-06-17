@@ -37,11 +37,11 @@
             <div class="row">
                 <div class="col-md-9">
                     <a href="{{ path('icap_dropzone_edit_add_criterion', {'resourceId': dropzone.id, 'page': pager.currentPage}) }}" class="btn btn-primary add-criterion-button disabled-during-edition"><span class="glyphicon icon-plus"> {{ 'Add a criterion'|trans({}, 'icap_dropzone') }}</span></a>
-                    <a href="{{ path('icap_dropzone_recalculate_dropzone_grades', {'dropzone': dropzone.id}) }}"
-                       class="btn btn-default disabled-during-edition" data-toggle="tooltip" data-placement="left"
-                       data-container="body"
-                       title="{{ 'recalculate_helper'|trans({},'icap_dropzone') }}"><span
-                                class="glyphicon icon-repeat"> {{ 'Recalculate all grade'|trans({}, 'icap_dropzone') }}</span></a>
+                    {# <a href="{{ path('icap_dropzone_recalculate_dropzone_grades', {'dropzone': dropzone.id}) }}"
+                        class="btn btn-default disabled-during-edition" data-toggle="tooltip" data-placement="left"
+                        data-container="body"
+                        title="{{ 'recalculate_helper'|trans({},'icap_dropzone') }}"><span
+                                 class="glyphicon icon-repeat"> {{ 'Recalculate all grade'|trans({}, 'icap_dropzone') }}</span></a>#}
                 </div>
 
                 <div class="col-md-3 add-remove-column" {% if pager.nbResults == 0 %}style="display: none;"{% endif %}>

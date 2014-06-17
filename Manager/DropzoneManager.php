@@ -40,6 +40,7 @@ class DropzoneManager
      */
     public function getDropzoneUsersIds(Dropzone $dropzone)
     {
+        $this->get('icap.manager.dropzone_voter')->isAllowToEdit($dropzone);
 
         //getting the ressource node
         $ressourceNode = $dropzone->getResourceNode();
@@ -70,10 +71,7 @@ class DropzoneManager
             }
         }
         $userIds = array_unique($userIds);
-        /*var_dump($userIds);
-        var_dump($test);
-        die;
-        */
+
         return $userIds;
     }
 
@@ -143,10 +141,8 @@ class DropzoneManager
      *  nbCorrection : corrections made by the user in this evaluation.
      *
      * @param \Icap\DropzoneBundle\Entity\Dropzone $dropzone
-     * @param \Icap\DropzoneBundle\Entity\Drop $drop
+     * @param \Icap\DropzoneBundle\Entity\Drop|\Icap\DropzoneBundle\Manager\Drop $drop
      * @param int $nbCorrection number of correction the user did.
-     * @internal param \Icap\DropzoneBundle\Entity\Dropzone $Dropzone
-     * @internal param \Icap\DropzoneBundle\Entity\Drop $Drop
      * @return array (states, currentState,percent,nbCorrection)
      */
     public function getDrozponeProgress(Dropzone $dropzone, Drop $drop = null, $nbCorrection = 0)
@@ -271,6 +267,8 @@ class DropzoneManager
      */
     public function closeDropzoneOpenedDrops(Dropzone $dropzone, $force = false)
     {
+        $this->get('icap.manager.dropzone_voter')->isAllowToEdit($dropzone);
+
         if ($force || $this->isDropzoneDropTimeIsUp($dropzone)) {
             $dropRepo = $this->em->getRepository('IcapDropzoneBundle:Drop');
             $dropRepo->closeUnTerminatedDropsByDropzone($dropzone->getId());
@@ -296,49 +294,22 @@ class DropzoneManager
 
     public function recalculateScoreByDropzone(Dropzone $dropzone)
     {
-        $this->isAllowToOpen($dropzone);
-        $this->isAllowToEdit($dropzone);
+        $this->container->get('icap.manager.dropzone_voter')->isAllowToOpen($dropzone);
+        $this->container->get('icap.manager.dropzone_voter')->isAllowToEdit($dropzone);
 
         if (!$dropzone->getPeerReview()) {
             throw new AccessDeniedException();
         }
         // getting the repository
-        $CorrectionRepo = $this->getDoctrine()->getManager()->getRepository('IcapDropzoneBundle:Correction');
+        $CorrectionRepo = $this->em->getRepository('IcapDropzoneBundle:Correction');
         // getting all the drop corrections
         $corrections = $CorrectionRepo->findBy(['dropzone' => $dropzone->getId()]);
 
-        $this->get('icap.manager.correction_manager')->recalculateScoreForCorrections($dropzone, $corrections);
-
-        $this->getRequest()->getSession()->getFlashBag()->add(
-            'success',
-            $this->get('translator')->trans('Grades were recalculated', array(), 'icap_dropzone')
-        );
-
+        $this->container->get('icap.manager.correction_manager')->recalculateScoreForCorrections($dropzone, $corrections);
 
     }
 
-    //TODO refacoring all class with a service
-    /**
-     * @param Dropzone $dropzone
-     * @param $actionName
-     * @throws AccessDeniedException
-     */
-    protected function isAllow(Dropzone $dropzone, $actionName)
-    {
-        $collection = new ResourceCollection(array($dropzone->getResourceNode()));
-        if (false === $this->get('security.context')->isGranted($actionName, $collection)) {
-            throw new AccessDeniedException();
-        }
-    }
 
-    //TODO refacoring all class with a service
-    /**
-     * @param Dropzone $dropzone
-     */
-    protected function isAllowToEdit(Dropzone $dropzone)
-    {
-        $this->isAllow($dropzone, 'EDIT');
-    }
 
 
 }

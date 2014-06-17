@@ -35,8 +35,8 @@ class CriterionController extends DropzoneBaseController
      */
     public function editAddCriterionAction($dropzone, $page, $criterionId)
     {
-        $this->isAllowToOpen($dropzone);
-        $this->isAllowToEdit($dropzone);
+        $this->get('icap.manager.dropzone_voter')->isAllowToOpen($dropzone);
+        $this->get('icap.manager.dropzone_voter')->isAllowToEdit($dropzone);
 
         $criterion = new Criterion();
         if ($criterionId != 0) {
@@ -88,8 +88,8 @@ class CriterionController extends DropzoneBaseController
      */
     public function editCreateCriterionAction($dropzone, $page, $criterionId)
     {
-        $this->isAllowToOpen($dropzone);
-        $this->isAllowToEdit($dropzone);
+        $this->get('icap.manager.dropzone_voter')->isAllowToOpen($dropzone);
+        $this->get('icap.manager.dropzone_voter')->isAllowToEdit($dropzone);
 
         $edit = null;
         $criterion = new Criterion();
@@ -167,8 +167,8 @@ class CriterionController extends DropzoneBaseController
      */
     public function editDeleteCriterionAction(Dropzone $dropzone, $page, $criterion, $number)
     {
-        $this->isAllowToOpen($dropzone);
-        $this->isAllowToEdit($dropzone);
+        $this->get('icap.manager.dropzone_voter')->isAllowToOpen($dropzone);
+        $this->get('icap.manager.dropzone_voter')->isAllowToEdit($dropzone);
 
         $form = $this->createForm(new CriterionDeleteType(), $criterion);
 
@@ -219,8 +219,8 @@ class CriterionController extends DropzoneBaseController
      */
     public function editRemoveCriterionAction(Dropzone $dropzone, $page, Criterion $criterion)
     {
-        $this->isAllowToOpen($dropzone);
-        $this->isAllowToEdit($dropzone);
+        $this->get('icap.manager.dropzone_voter')->isAllowToOpen($dropzone);
+        $this->get('icap.manager.dropzone_voter')->isAllowToEdit($dropzone);
 
         $form = $this->createForm(new CriterionDeleteType(), $criterion);
         $form->handleRequest($this->getRequest());
