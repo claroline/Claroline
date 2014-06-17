@@ -39,8 +39,8 @@ class DropzoneController extends DropzoneBaseController
      */
     public function editCommonAction(Dropzone $dropzone)
     {
-        $this->isAllowToOpen($dropzone);
-        $this->isAllowToEdit($dropzone);
+        $this->get('icap.manager.dropzone_voter')->isAllowToOpen($dropzone);
+        $this->get('icap.manager.dropzone_voter')->isAllowToEdit($dropzone);
         $platformConfigHandler = $this->get('claroline.config.platform_config_handler');
         $form = $this->createForm(new DropzoneCommonType(), $dropzone, array('language' => $platformConfigHandler->getParameter('locale_language'), 'date_format' => $this->get('translator')->trans('date_form_format', array(), 'platform')));
 
@@ -277,8 +277,8 @@ class DropzoneController extends DropzoneBaseController
      */
     public function editCriteriaAction(Dropzone $dropzone, $page)
     {
-        $this->isAllowToOpen($dropzone);
-        $this->isAllowToEdit($dropzone);
+        $this->get('icap.manager.dropzone_voter')->isAllowToOpen($dropzone);
+        $this->get('icap.manager.dropzone_voter')->isAllowToEdit($dropzone);
 
         $em = $this->getDoctrine()->getManager();
         $repository = $em->getRepository('IcapDropzoneBundle:Criterion');
@@ -335,7 +335,11 @@ class DropzoneController extends DropzoneBaseController
                 $em->flush();
 
                 if ($form->get('recalculateGrades')->getData() == 1) {
-
+                    $this->get('icap.manager.dropzone_manager')->recalculateScoreByDropzone($dropzone);
+                    $this->getRequest()->getSession()->getFlashBag()->add(
+                        'success',
+                        $this->get('translator')->trans('Grades were recalculated', array(), 'icap_dropzone')
+                    );
                 }
 
                 $event = new LogDropzoneConfigureEvent($dropzone, $changeSet);
@@ -396,7 +400,7 @@ class DropzoneController extends DropzoneBaseController
     public function openAction(Dropzone $dropzone, $user)
     {
         //Participant view for a dropzone
-        $this->isAllowToOpen($dropzone);
+        $this->get('icap.manager.dropzone_voter')->isAllowToOpen($dropzone);
 
         $em = $this->getDoctrine()->getManager();
         $dropRepo = $em->getRepository('IcapDropzoneBundle:Drop');

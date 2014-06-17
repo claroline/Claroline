@@ -328,7 +328,7 @@ class CorrectionController extends DropzoneBaseController
      */
     public function correctAction($dropzone, $user, $page)
     {
-        $this->isAllowToOpen($dropzone);
+        $this->get('icap.manager.dropzone_voter')->isAllowToOpen($dropzone);
         $em = $this->getDoctrine()->getManager();
 
         $check = $this->checkRightToCorrect($dropzone, $user);
@@ -465,7 +465,7 @@ class CorrectionController extends DropzoneBaseController
      */
     public function correctCommentAction(Dropzone $dropzone, User $user)
     {
-        $this->isAllowToOpen($dropzone);
+        $this->get('icap.manager.dropzone_voter')->isAllowToOpen($dropzone);
         $check = $this->checkRightToCorrect($dropzone, $user);
         if ($check !== null) {
             return $check;
@@ -566,8 +566,8 @@ class CorrectionController extends DropzoneBaseController
      */
     public function dropsDetailCorrectionStandardAction(Dropzone $dropzone, $state, $correctionId, $user, $backUserId)
     {
-        $this->isAllowToOpen($dropzone);
-        $this->isAllowToEdit($dropzone);
+        $this->get('icap.manager.dropzone_voter')->isAllowToOpen($dropzone);
+        $this->get('icap.manager.dropzone_voter')->isAllowToEdit($dropzone);
 
 
         /** @var Correction $correction */
@@ -663,7 +663,7 @@ class CorrectionController extends DropzoneBaseController
      */
     public function dropsDetailCorrectionAction(Dropzone $dropzone, $state, $correctionId, $page, $user)
     {
-        $this->isAllowToOpen($dropzone);
+        $this->get('icap.manager.dropzone_voter')->isAllowToOpen($dropzone);
         $correction = $this
             ->getDoctrine()
             ->getRepository('IcapDropzoneBundle:Correction')
@@ -674,7 +674,7 @@ class CorrectionController extends DropzoneBaseController
                 throw new AccessDeniedException();
             }
         } else {
-            $this->isAllowToEdit($dropzone);
+            $this->get('icap.manager.dropzone_voter')->isAllowToEdit($dropzone);
         }
         //$this->checkUserGradeAvailable($dropzone);
         
@@ -852,10 +852,10 @@ class CorrectionController extends DropzoneBaseController
      */
     public function dropsDetailCorrectionCommentAction(Dropzone $dropzone, $state, $correctionId, $user)
     {
-        $this->isAllowToOpen($dropzone);
+        $this->get('icap.manager.dropzone_voter')->isAllowToOpen($dropzone);
         if($state != 'preview')
         {
-            $this->isAllowToEdit($dropzone);
+            $this->get('icap.manager.dropzone_voter')->isAllowToEdit($dropzone);
         }
 
         $correction = $this
@@ -982,8 +982,8 @@ class CorrectionController extends DropzoneBaseController
      */
     public function dropsDetailAddCorrectionAction($dropzone, $user, $drop)
     {
-        $this->isAllowToOpen($dropzone);
-        $this->isAllowToEdit($dropzone);
+        $this->get('icap.manager.dropzone_voter')->isAllowToOpen($dropzone);
+        $this->get('icap.manager.dropzone_voter')->isAllowToEdit($dropzone);
 
         $em = $this->getDoctrine()->getManager();
         $correction = new Correction();
@@ -1025,8 +1025,8 @@ class CorrectionController extends DropzoneBaseController
     public function deleteCorrectionAction(Dropzone $dropzone, Correction $correction, $backPage)
     {
         $userId = $correction->getUser()->getId();
-        $this->isAllowToOpen($dropzone);
-        $this->isAllowToEdit($dropzone);
+        $this->get('icap.manager.dropzone_voter')->isAllowToOpen($dropzone);
+        $this->get('icap.manager.dropzone_voter')->isAllowToEdit($dropzone);
 
         if ($correction->getEditable() === false) {
             throw new AccessDeniedException();
@@ -1155,8 +1155,8 @@ class CorrectionController extends DropzoneBaseController
      */
     public function setCorrectionValidationAction(Dropzone $dropzone, Correction $correction, $value, $routeParam)
     {
-        $this->isAllowToOpen($dropzone);
-        $this->isAllowToEdit($dropzone);
+        $this->get('icap.manager.dropzone_voter')->isAllowToOpen($dropzone);
+        $this->get('icap.manager.dropzone_voter')->isAllowToEdit($dropzone);
 
         $em = $this->getDoctrine()->getManager();
 
@@ -1207,8 +1207,8 @@ class CorrectionController extends DropzoneBaseController
      */
     public function invalidateAllCorrectionsAction($dropzone, $drop)
     {
-        $this->isAllowToOpen($dropzone);
-        $this->isAllowToEdit($dropzone);
+        $this->get('icap.manager.dropzone_voter')->isAllowToOpen($dropzone);
+        $this->get('icap.manager.dropzone_voter')->isAllowToEdit($dropzone);
 
         $this
             ->getDoctrine()
@@ -1239,7 +1239,7 @@ class CorrectionController extends DropzoneBaseController
     **/
     public function denyCorrectionAction($dropzone,$correction)
     {
-        $this->isAllowToOpen($dropzone);
+        $this->get('icap.manager.dropzone_voter')->isAllowToOpen($dropzone);
         $form = $this->createForm(new CorrectionDenyType(), $correction);
         
         $dropUser = $correction->getDrop()->getUser();
@@ -1324,8 +1324,8 @@ class CorrectionController extends DropzoneBaseController
      */
     public function recalculateScoreAction(Dropzone $dropzone, Correction $correction)
     {
-        $this->isAllowToOpen($dropzone);
-        $this->isAllowToEdit($dropzone);
+        $this->get('icap.manager.dropzone_voter')->isAllowToOpen($dropzone);
+        $this->get('icap.manager.dropzone_voter')->isAllowToEdit($dropzone);
 
         if (!$dropzone->getPeerReview()) {
             throw new AccessDeniedException();
@@ -1381,8 +1381,8 @@ class CorrectionController extends DropzoneBaseController
      * **/
     public function correctionsByUserAction(Dropzone $dropzone, User $user, $page)
     {
-        $this->isAllowToOpen($dropzone);
-        $this->isAllowToEdit($dropzone);
+        $this->get('icap.manager.dropzone_voter')->isAllowToOpen($dropzone);
+        $this->get('icap.manager.dropzone_voter')->isAllowToEdit($dropzone);
 
         $correctionsQuery = $this->getDoctrine()->getManager()
             ->getRepository('IcapDropzoneBundle:Correction')
@@ -1445,8 +1445,8 @@ class CorrectionController extends DropzoneBaseController
     public function ExaminersByCorrectionMadeAction($dropzone,$page,$withDropOnly)
     {
         // check rights
-        $this->isAllowToOpen($dropzone);
-        $this->isAllowToEdit($dropzone);
+        $this->get('icap.manager.dropzone_voter')->isAllowToOpen($dropzone);
+        $this->get('icap.manager.dropzone_voter')->isAllowToEdit($dropzone);
 
 
         // view only available in peerReview mode
@@ -1567,8 +1567,8 @@ class CorrectionController extends DropzoneBaseController
     public function recalculateScoreByDropAction($drop)
     {
         $dropzone = $drop->getDropzone();
-        $this->isAllowToOpen($dropzone);
-        $this->isAllowToEdit($dropzone);
+        $this->get('icap.manager.dropzone_voter')->isAllowToOpen($dropzone);
+        $this->get('icap.manager.dropzone_voter')->isAllowToEdit($dropzone);
 
         if (!$dropzone->getPeerReview()) {
             throw new AccessDeniedException();
@@ -1603,8 +1603,8 @@ class CorrectionController extends DropzoneBaseController
      */
     public function recalculateScoreByDropzoneAction($dropzone)
     {
-        $this->isAllowToOpen($dropzone);
-        $this->isAllowToEdit($dropzone);
+        $this->get('icap.manager.dropzone_voter')->isAllowToOpen($dropzone);
+        $this->get('icap.manager.dropzone_voter')->isAllowToEdit($dropzone);
 
         $this->get('icap.dropzone_manager')->recalculateScoreByDropzone($dropzone);
 

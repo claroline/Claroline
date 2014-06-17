@@ -35,56 +35,28 @@ class DropzoneBaseController extends Controller
     const DROP_PER_PAGE = 10;
     const CORRECTION_PER_PAGE = 10;
 
-    protected function isAllow(Dropzone $dropzone, $actionName)
-    {
-        $collection = new ResourceCollection(array($dropzone->getResourceNode()));
-        if (false === $this->get('security.context')->isGranted($actionName, $collection)) {
-            throw new AccessDeniedException();
-        }
-    }
-
-    protected function isAllowToEdit(Dropzone $dropzone)
-    {
-        $this->isAllow($dropzone, 'EDIT');
-    }
-
-    protected function isAllowToOpen(Dropzone $dropzone)
-    {
-        $this->isAllow($dropzone, 'OPEN');
-
-        $event = new LogResourceReadEvent($dropzone->getResourceNode());
-        $this->dispatch($event);
-    }
-
-    protected function isAllowToOpenDrop(Drop $drop)
-    {
-        $collection = new ResourceCollection(array($drop->getResourceNode()));
-        if (false === $this->get('security.context')->isGranted('OPEN', $collection)) {
-            throw new AccessDeniedException();
-        }
-    }
 
     protected function dispatch($event)
     {
         if (
-                $event instanceof LogResourceReadEvent or
-                $event instanceof LogDropzoneConfigureEvent or
-                $event instanceof LogCriterionCreateEvent or
-                $event instanceof LogCriterionUpdateEvent or
-                $event instanceof LogCriterionDeleteEvent or
-                $event instanceof LogDropStartEvent or
-                $event instanceof LogDropEndEvent or
-                $event instanceof LogDocumentCreateEvent or
-                $event instanceof LogDocumentDeleteEvent or
-                $event instanceof LogDocumentOpenEvent or
-                $event instanceof LogCorrectionStartEvent or
-                $event instanceof LogCorrectionEndEvent or
-                $event instanceof LogCorrectionUpdateEvent or
-                $event instanceof LogCorrectionDeleteEvent or
-                $event instanceof LogCorrectionValidationChangeEvent or
-                $event instanceof LogDropEvaluateEvent or 
-                $event instanceof LogDropReportEvent or
-                $event instanceof LogDropzoneManualStateChangedEvent
+            $event instanceof LogResourceReadEvent or
+            $event instanceof LogDropzoneConfigureEvent or
+            $event instanceof LogCriterionCreateEvent or
+            $event instanceof LogCriterionUpdateEvent or
+            $event instanceof LogCriterionDeleteEvent or
+            $event instanceof LogDropStartEvent or
+            $event instanceof LogDropEndEvent or
+            $event instanceof LogDocumentCreateEvent or
+            $event instanceof LogDocumentDeleteEvent or
+            $event instanceof LogDocumentOpenEvent or
+            $event instanceof LogCorrectionStartEvent or
+            $event instanceof LogCorrectionEndEvent or
+            $event instanceof LogCorrectionUpdateEvent or
+            $event instanceof LogCorrectionDeleteEvent or
+            $event instanceof LogCorrectionValidationChangeEvent or
+            $event instanceof LogDropEvaluateEvent or
+            $event instanceof LogDropReportEvent or
+            $event instanceof LogDropzoneManualStateChangedEvent
         ) {
 
             // Other logs are WIP.

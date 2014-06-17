@@ -63,6 +63,7 @@ class CorrectionManager
 
     public function recalculateScoreForCorrections(Dropzone $dropzone, Array $corrections)
     {
+        $this->container->get('icap.manager.dropzone_voter')->isAllowToEdit($dropzone);
         // recalculate the score for all corrections
         foreach ($corrections as $correction) {
             $oldTotalGrade = $correction->getTotalGrade();

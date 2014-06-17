@@ -51,7 +51,7 @@ class DropController extends DropzoneBaseController
      */
     public function dropAction(Dropzone $dropzone, $user)
     {
-        $this->isAllowToOpen($dropzone);
+        $this->get('icap.manager.dropzone_voter')->isAllowToOpen($dropzone);
 
         $em = $this->getDoctrine()->getManager();
         $dropRepo = $em->getRepository('IcapDropzoneBundle:Drop');
@@ -187,8 +187,8 @@ class DropController extends DropzoneBaseController
      */
     public function dropsByUserAction($dropzone, $page)
     {
-        $this->isAllowToOpen($dropzone);
-        $this->isAllowToEdit($dropzone);
+        $this->get('icap.manager.dropzone_voter')->isAllowToOpen($dropzone);
+        $this->get('icap.manager.dropzone_voter')->isAllowToEdit($dropzone);
 
         $dropRepo = $this->getDoctrine()->getManager()->getRepository('IcapDropzoneBundle:Drop');
         $dropsQuery = $dropRepo->getDropsFullyCorrectedOrderByUserQuery($dropzone);
@@ -249,8 +249,8 @@ class DropController extends DropzoneBaseController
      **/
     public function dropsByDefaultAction($dropzone, $page)
     {
-        $this->isAllowToOpen($dropzone);
-        $this->isAllowToEdit($dropzone);
+        $this->get('icap.manager.dropzone_voter')->isAllowToOpen($dropzone);
+        $this->get('icap.manager.dropzone_voter')->isAllowToEdit($dropzone);
 
         $dropRepo = $this->getDoctrine()->getManager()->getRepository('IcapDropzoneBundle:Drop');
         $dropsQuery = $dropRepo->getDropsFullyCorrectedOrderByReportAndDropDateQuery($dropzone);
@@ -304,8 +304,8 @@ class DropController extends DropzoneBaseController
      */
     public function dropsByReportAction($dropzone, $page)
     {
-        $this->isAllowToOpen($dropzone);
-        $this->isAllowToEdit($dropzone);
+        $this->get('icap.manager.dropzone_voter')->isAllowToOpen($dropzone);
+        $this->get('icap.manager.dropzone_voter')->isAllowToEdit($dropzone);
 
         $dropRepo = $this->getDoctrine()->getManager()->getRepository('IcapDropzoneBundle:Drop');
         $dropsQuery = $dropRepo->getDropsFullyCorrectedReportedQuery($dropzone);
@@ -357,8 +357,8 @@ class DropController extends DropzoneBaseController
      */
     public function dropsByDateAction($dropzone, $page)
     {
-        $this->isAllowToOpen($dropzone);
-        $this->isAllowToEdit($dropzone);
+        $this->get('icap.manager.dropzone_voter')->isAllowToOpen($dropzone);
+        $this->get('icap.manager.dropzone_voter')->isAllowToEdit($dropzone);
 
         $dropRepo = $this->getDoctrine()->getManager()->getRepository('IcapDropzoneBundle:Drop');
         $dropsQuery = $dropRepo->getDropsFullyCorrectedOrderByDropDateQuery($dropzone);
@@ -410,8 +410,8 @@ class DropController extends DropzoneBaseController
      */
     public function dropsAwaitingAction($dropzone, $page)
     {
-        $this->isAllowToOpen($dropzone);
-        $this->isAllowToEdit($dropzone);
+        $this->get('icap.manager.dropzone_voter')->isAllowToOpen($dropzone);
+        $this->get('icap.manager.dropzone_voter')->isAllowToEdit($dropzone);
 
         $dropRepo = $this->getDoctrine()->getManager()->getRepository('IcapDropzoneBundle:Drop');
         $dropsQuery = $dropRepo->getDropsAwaitingCorrectionQuery($dropzone);
@@ -461,8 +461,8 @@ class DropController extends DropzoneBaseController
      */
     public function dropsDeleteAction($dropzone, $drop, $tab, $page)
     {
-        $this->isAllowToOpen($dropzone);
-        $this->isAllowToEdit($dropzone);
+        $this->get('icap.manager.dropzone_voter')->isAllowToOpen($dropzone);
+        $this->get('icap.manager.dropzone_voter')->isAllowToEdit($dropzone);
 
         $form = $this->createForm(new DropType(), $drop);
 
@@ -521,8 +521,8 @@ class DropController extends DropzoneBaseController
      */
     public function dropsDetailAction($dropzone, $dropId)
     {
-        $this->isAllowToOpen($dropzone);
-        $this->isAllowToEdit($dropzone);
+        $this->get('icap.manager.dropzone_voter')->isAllowToOpen($dropzone);
+        $this->get('icap.manager.dropzone_voter')->isAllowToEdit($dropzone);
 
         $dropResult = $this
             ->getDoctrine()
@@ -565,7 +565,7 @@ class DropController extends DropzoneBaseController
     public function dropDetailAction(Dropzone $dropzone, Drop $drop)
     {
         // check  if the User is allowed to open the dropZone.
-        $this->isAllowToOpen($dropzone);
+        $this->get('icap.manager.dropzone_voter')->isAllowToOpen($dropzone);
         // getting the userId to check if the current drop owner match with the loggued user.
         $userId = $this->get('security.context')->getToken()->getUser()->getId();
         $collection = new ResourceCollection(array($dropzone->getResourceNode()));
@@ -672,7 +672,7 @@ class DropController extends DropzoneBaseController
         $dropzone = $correction->getDropzone();
         $drop = $correction->getDrop();
         $em = $this->getDoctrine()->getManager();
-        $this->isAllowToOpen($dropzone);
+        $this->get('icap.manager.dropzone_voter')->isAllowToOpen($dropzone);
 
         try {
             $curent_user_correction = $em->getRepository('IcapDropzoneBundle:Correction')->getNotFinished($dropzone, $user);
@@ -756,8 +756,8 @@ class DropController extends DropzoneBaseController
     public function removeReportAction(Dropzone $dropzone, Drop $drop, Correction $correction, $invalidate)
     {
 
-        $this->isAllowToOpen($dropzone);
-        $this->isAllowToEdit($dropzone);
+        $this->get('icap.manager.dropzone_voter')->isAllowToOpen($dropzone);
+        $this->get('icap.manager.dropzone_voter')->isAllowToEdit($dropzone);
 
         $em = $this->getDoctrine()->getManager();
         $correction->setReporter(false);
@@ -801,8 +801,8 @@ class DropController extends DropzoneBaseController
      */
     public function autoCloseDropsConfirmationAction($dropzone)
     {
-        $this->isAllowToOpen($dropzone);
-        $this->isAllowToEdit($dropzone);
+        $this->get('icap.manager.dropzone_voter')->isAllowToOpen($dropzone);
+        $this->get('icap.manager.dropzone_voter')->isAllowToEdit($dropzone);
 
         $view = 'IcapDropzoneBundle:Dropzone:confirmCloseUnterminatedDrop.html.twig';
         if ($this->getRequest()->isXmlHttpRequest()) {
@@ -826,8 +826,8 @@ class DropController extends DropzoneBaseController
      */
     public function autoCloseDropsAction($dropzone)
     {
-        $this->isAllowToOpen($dropzone);
-        $this->isAllowToEdit($dropzone);
+        $this->get('icap.manager.dropzone_voter')->isAllowToOpen($dropzone);
+        $this->get('icap.manager.dropzone_voter')->isAllowToEdit($dropzone);
 
         $dropzoneManager = $this->get('icap.manager.dropzone_manager');
         $dropzoneManager->closeDropzoneOpenedDrops($dropzone, true);
