@@ -63,6 +63,11 @@ activity_parameters_form_evaluation_type: 'Type d''évaluation'
 activity_parameters_form_max_attempts: 'Nombre de tentatives permises'
 activity_parameters_form_max_duration: 'Temps limite accordé'
 activity_resource_remove: Êtes-vous sûr de vouloir enlever cette ressource de l'activite?
+activity_rule_form_action: Action
+activity_rule_form_occurrence: Occurrence
+activity_rule_form_result: Résultat
+activity_rule_form_activeFrom: 'A partir du'
+activity_rule_form_activeUntil: 'Jusqu''au'
 add: Ajouter
 add_category: 'Ajouter une catégorie'
 add_field_to_facet: Ajouter un champ à une facette

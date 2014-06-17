@@ -31,7 +31,7 @@ class ActivityParameters extends Rulable
     /**
      * @ORM\OneToOne(
      *     targetEntity="Claroline\CoreBundle\Entity\Resource\Activity",
-     *     inversedBy="parameters"
+     *     mappedBy="parameters"
      * )
      * @ORM\JoinColumn(name="activity_id", onDelete="CASCADE", nullable=true)
      */

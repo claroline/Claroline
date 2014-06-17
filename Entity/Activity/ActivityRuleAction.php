@@ -14,7 +14,7 @@ namespace Claroline\CoreBundle\Entity\Activity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\Activity\ActivityRuleActionRepository")
  * @ORM\Table(name="claro_activity_rule_action")
  */
 class ActivityRuleAction

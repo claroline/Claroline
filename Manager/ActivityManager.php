@@ -18,6 +18,7 @@ use Claroline\CoreBundle\Entity\Activity\PastEvaluation;
 use Claroline\CoreBundle\Entity\Log\Log;
 use Claroline\CoreBundle\Entity\Resource\Activity;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
+use Claroline\CoreBundle\Entity\Resource\ResourceType;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Rule\Entity\Rule;
@@ -459,6 +460,33 @@ class ActivityManager
         $this->om->flush();
     }
 
+    public function updateActivityRule(
+        ActivityRule $rule,
+        $action,
+        $occurrence,
+        $result,
+        $activeFrom,
+        $activeUntil,
+        ResourceNode $resourceNode = null
+    )
+    {
+        $rule->setAction($action);
+        $rule->setOccurrence($occurrence);
+        $rule->setResult($result);
+        $rule->setActiveFrom($activeFrom);
+        $rule->setActiveUntil($activeUntil);
+        $rule->setResource($resourceNode);
+
+        $this->om->persist($rule);
+        $this->om->flush();
+    }
+
+    public function deleteActivityRule(ActivityRule $rule)
+    {
+        $this->om->remove($rule);
+        $this->om->flush();
+    }
+
 
     /*********************************************
      *  Access to ActivityRuleRepository methods *
@@ -485,6 +513,21 @@ class ActivityManager
     public function getAllRuleActions()
     {
         return $this->activityRuleActionRepo->findAll();
+    }
+
+    public function getRuleActionsByResourceType(
+        ResourceType $resourceType = null,
+        $executeQuery = true
+    )
+    {
+        return $this->activityRuleActionRepo
+            ->findRuleActionsByResourceType($resourceType, $executeQuery);
+    }
+
+    public function getAllDistinctActivityRuleActions($executeQuery = true)
+    {
+        return $this->activityRuleActionRepo
+            ->findAllDistinctActivityRuleActions($executeQuery);
     }
 
 

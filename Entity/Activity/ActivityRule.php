@@ -22,7 +22,8 @@ class ActivityRule extends Rule
 {
     /**
      * @ORM\ManyToOne(
-     *     targetEntity="Claroline\CoreBundle\Entity\Activity\ActivityParameters"
+     *     targetEntity="Claroline\CoreBundle\Entity\Activity\ActivityParameters",
+     *     inversedBy="rules"
      * )
      * @ORM\JoinColumn(name="activity_parameters_id", onDelete="CASCADE", nullable=false)
      */

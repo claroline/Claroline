@@ -64,6 +64,11 @@ activity_parameters_form_max_attempts: 'Number of allowed attempts'
 activity_parameters_form_max_duration: 'Allowed time limit'
 activity_resource_not_allowed: You cannot add a resource of this type
 activity_resource_remove: 'Are you sure you want to remove this resource from the activity?'
+activity_rule_form_action: Action
+activity_rule_form_occurrence: Occurrence
+activity_rule_form_result: Result
+activity_rule_form_activeFrom: From
+activity_rule_form_activeUntil: Until
 add: Add
 add_category: 'Add category'
 add_field_to_facet: Add field to facet
