@@ -10,13 +10,11 @@
      */
     activity.height = function (element)
     {
-        var height = $(element).contents().height();
+        var height = $(element).contents().find('body').first().height();
 
         if (height) {
             $(element).css('height', height);
         }
-
-        console.log(height);
     };
 
     /** Events **/
@@ -29,20 +27,16 @@
         $('.activities > div').addClass('hide');
         $('#' + id).removeClass('hide');
 
-        clearTimeout(activity.iframeChange);
-        activity.iframeChange = setTimeout(function () {
-            $('#' + id + ' .activity-iframe').each(function () {
-                activity.height(this);
-            });
-        }, 500);
+        $('#' + id + ' .activity-iframe').each(function () {
+            activity.height(this);
+        });
     });
 
     $('.activity-iframe').load(function () {
         var iframe = this;
-        clearTimeout(activity.iframeChange);
-        activity.iframeChange = setTimeout(function () {
+        setTimeout(function () {
             activity.height(iframe);
-        }, 500);
+        }, 300);
     });
 
     $(window).on('resize', function () {
@@ -51,7 +45,16 @@
             $('.activity-iframe').each(function () {
                 activity.height(this);
             });
-        }, 500);
+        }, 300);
+    });
+
+    $(document).ready(function () {
+        clearTimeout(activity.iframeChange);
+        activity.iframeChange = setTimeout(function () {
+            $('.activity-iframe').each(function () {
+                activity.height(this);
+            });
+        }, 300);
     });
 
 }());
