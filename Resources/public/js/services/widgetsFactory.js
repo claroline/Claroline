@@ -31,6 +31,7 @@ portfolioApp
                 );
                 widget.prototype.editing = false;
                 widget.prototype.new     = true;
+                widget.prototype.type    = type;
 
                 widget.prototype.generateUrl = function(parameters) {
                     parameters.portfolioId = portfolioId;

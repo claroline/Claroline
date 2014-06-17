@@ -97,11 +97,8 @@ portfolioApp
                     });
                     this.addEditing(newWidget);
                 }
-                if (istypeUnique) {
-                    this.widgets[type] = [newWidget];
-                } else {
-                    this.widgets[type].push(newWidget);
-                }
+
+                this.widgets.push(newWidget);
             },
             isDeletable: function(widget) {
                 return widgetsConfig.isDeletable(widget.getType());
@@ -111,7 +108,7 @@ portfolioApp
                     widget.isDeleting = true;
                     var $this = this;
                     var success = function() {
-                        $this.widgets[widget.getType()].remove(widget);
+                        $this.widgets.remove(widget);
                     };
                     var failed = function(error) {
                         console.error('Error occured while deleting widget');
