@@ -454,7 +454,7 @@ class ActivityManager
         $rule->setActiveUntil($activeUntil);
         $rule->setResource($resourceNode);
         $rule->setUserType(0);
-        $rule->setResultComparison(Rule::RESULT_SUPERIOR_EQUAL);
+        $rule->setResultComparison(4);
 
         $this->om->persist($rule);
         $this->om->flush();
