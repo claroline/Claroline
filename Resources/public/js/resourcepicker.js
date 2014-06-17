@@ -114,6 +114,7 @@
         $(picker.activePicker).prev().val(nodeId);
         $(picker.activePicker).prev().data('name', name);
         $(picker.activePicker).prev().data('type', type);
+        $(picker.activePicker).prev().trigger('change');
         $('input', picker.activePicker).val(name);
 
         picker.checkView();

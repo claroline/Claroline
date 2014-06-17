@@ -15,10 +15,13 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Claroline\CoreBundle\Entity\Facet\FieldFacet;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Claroline\CoreBundle\Entity\Role;
 
 /**
  * @ORM\Entity
  * @ORM\Table(name="claro_facet")
+ * @UniqueEntity("name")
  */
 class Facet {
     /**
@@ -49,9 +52,21 @@ class Facet {
      */
     protected $fieldsFacet;
 
+    /**
+     * @var Role[]|ArrayCollection
+     *
+     * @ORM\ManyToMany(
+     *     targetEntity="Claroline\CoreBundle\Entity\Role",
+     *     inversedBy="facets"
+     * )
+     * @ORM\JoinTable(name="claro_facet_role")
+     */
+    protected $roles;
+
     public function __construct()
     {
         $this->fieldsFacet = new ArrayCollection();
+        $this->roles       = new ArrayCollection();
     }
 
     public function getId()
@@ -87,5 +102,25 @@ class Facet {
     public function getPosition()
     {
         return $this->position;
+    }
+
+    public function addRole(Role $role)
+    {
+        $this->roles->add($role);
+    }
+
+    public function removeRole(Role $role)
+    {
+        $this->roles->removeElement($role);
+    }
+
+    public function getRoles()
+    {
+        return $this->roles;
+    }
+
+    public function setRoles(array $roles)
+    {
+        $this->roles = $roles;
     }
 } 

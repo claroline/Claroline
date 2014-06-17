@@ -53,6 +53,9 @@ active_widgets: 'Widgets activos'
 activity_already: Este recurso ya está en la actividad
 activity_form_instructions: 'Instrucciones'
 activity_form_name: 'Nombre'
+activity_parameters_form_evaluation_type: 'Tipo de evaluación'
+activity_parameters_form_max_attempts: 'Numero de intentos permitidos'
+activity_parameters_form_max_duration: 'Tiempo limite establecido'
 activity_resource_not_allowed: No puede agregar un recurso de este tipo
 activity_resource_remove: '¿Esta seguro que desea remover este recurso de la actividad?'
 add: 'Agregar'
@@ -166,6 +169,8 @@ data_col: 'Identificador de la columna en la base de datos'
 database: 'Base de datos'
 database_connection_failed: 'Error en la conexión a la base de datos.'
 date: 'Fecha'
+date_form_datepicker_format: dd-mm-yyyy
+date_form_datepicker_php: m-d-Y
 date_form_format: 'dd/MM/yyyy'
 date_form_placeholder: dd/mm/aaaa
 date_format: 'd/m/Y'
@@ -230,6 +235,8 @@ email_found_at: 'El coreo electrónico %email% fue encontrado en la linea: %line
 empty_file: 'Archivo vacío'
 enter_tag_name_message: 'Por favor ingrese el nombre de la etiqueta'
 entries_per_day: 'Entradas por día'
+evaluation-automatic: Automático
+evaluation-manual: Manual
 export: 'Exportar'
 exportable: 'Exportable'
 external_pdo_database: 'Base de datos externa (PDO)'

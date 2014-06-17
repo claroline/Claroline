@@ -106,12 +106,18 @@ abstract class Rule
     protected $user;
 
     /**
-     * @var string
+     * @var datetime
      *
-     * @ORM\Column(name="additional_datas", type="string", nullable=true)
-     * @Expose
+     * @ORM\Column(name="active_from", type="datetime", nullable=true)
      */
-    protected $additionalDatas;
+    protected $activeFrom;
+
+    /**
+     * @var datetime
+     *
+     * @ORM\Column(name="active_until", type="datetime", nullable=true)
+     */
+    protected $activeUntil;
 
     /**
      * @return int
@@ -362,22 +368,42 @@ abstract class Rule
     }
 
     /**
-     * @param string $action
+     * @param datetime $activeFrom
      *
      * @return Rule
      */
-    public function setAdditionalDatas($additionalDatas)
+    public function setActiveFrom($activeFrom)
     {
-        $this->additionalDatas = $additionalDatas;
+        $this->activeFrom = $activeFrom;
 
         return $this;
     }
 
     /**
-     * @return string
+     * @return datetime
      */
-    public function getAdditionalDatas()
+    public function getActiveFrom()
     {
-        return $this->additionalDatas;
+        return $this->activeFrom;
+    }
+
+    /**
+     * @param datetime $activeUntil
+     *
+     * @return Rule
+     */
+    public function setActiveUntil($activeUntil)
+    {
+        $this->activeUntil = $activeUntil;
+
+        return $this;
+    }
+
+    /**
+     * @return datetime
+     */
+    public function getActiveUntil()
+    {
+        return $this->activeUntil;
     }
 }

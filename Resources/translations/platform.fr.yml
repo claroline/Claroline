@@ -59,6 +59,9 @@ active_widgets: 'Widgets actifs'
 activity_already: Cette ressource est déjà dans l'activité
 activity_form_instructions: Instructions
 activity_form_name: Nom
+activity_parameters_form_evaluation_type: 'Type d''évaluation'
+activity_parameters_form_max_attempts: 'Nombre de tentatives permises'
+activity_parameters_form_max_duration: 'Temps limite accordé'
 activity_resource_remove: Êtes-vous sûr de vouloir enlever cette ressource de l'activite?
 add: Ajouter
 add_category: 'Ajouter une catégorie'
@@ -175,6 +178,8 @@ data_col: 'Colonne des données'
 database: 'Base de données'
 database_connection_failed: 'La connexion à la base de données à échoué.'
 date: Date
+date_form_datepicker_format: dd-mm-yyyy
+date_form_datepicker_php: d-m-Y
 date_form_format: dd/MM/yyyy
 date_form_placeholder: jj/mm/aaaa
 date_format: d/m/Y
@@ -253,6 +258,8 @@ email_found_at: 'L''email %email% a été trouvé aux lignes: %lines%'
 empty_file: 'Fichier vide'
 enter_tag_name_message: 'Veuillez entrer un nom de Tag'
 entries_per_day: 'Nombre d''entrées par jour'
+evaluation-automatic: Automatique
+evaluation-manual: Manuelle
 export: Exporter
 exportable: Exportable
 external_pdo_database: 'Base de données externe (PDO)'
@@ -834,3 +841,4 @@ yes: oui
 yesterday_activity: 'Activité de la veille'
 your_current_url: 'Votre URL actuelle'
 your_username: 'Votre nom d''utilisateur est '
+

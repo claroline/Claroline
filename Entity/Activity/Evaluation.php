@@ -15,7 +15,15 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\Activity\EvaluationRepository")
- * @ORM\Table(name="claro_activity_evaluation")
+ * @ORM\Table(
+ *     name="claro_activity_evaluation",
+ *     uniqueConstraints={
+ *         @ORM\UniqueConstraint(
+ *             name="user_activity_unique_evaluation",
+ *             columns={"user_id", "activity_parameters_id"}
+ *         )
+ *     }
+ * )
  */
 class Evaluation
 {
@@ -30,7 +38,7 @@ class Evaluation
      * @ORM\ManyToOne(
      *     targetEntity="Claroline\CoreBundle\Entity\User"
      * )
-     * @ORM\JoinColumn(name="user_id", onDelete="CASCADE", nullable=true)
+     * @ORM\JoinColumn(name="user_id", onDelete="CASCADE", nullable=false)
      */
     protected $user;
 
@@ -101,6 +109,14 @@ class Evaluation
      * @ORM\Column(name="attempts_count", type="integer", nullable=true)
      */
     protected $attemptsCount;
+
+    /**
+     * @ORM\ManyToOne(
+     *     targetEntity="Claroline\CoreBundle\Entity\Log\Log"
+     * )
+     * @ORM\JoinColumn(name="log_id", onDelete="SET NULL", nullable=true)
+     */
+    protected $log;
 
     public function getId()
     {
@@ -250,5 +266,15 @@ class Evaluation
     public function setAttemptsCount($attemptsCount)
     {
         $this->attemptsCount = $attemptsCount;
+    }
+
+    public function getLog()
+    {
+        return $this->log;
+    }
+
+    public function setLog($log)
+    {
+        $this->log = $log;
     }
 }
