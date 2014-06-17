@@ -11,5 +11,8 @@
     "target-dir": "Icap/DropzoneBundle",
     "extra": {
         "dbVersion": "20130906115738"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "4.1.*"
     }
 }
