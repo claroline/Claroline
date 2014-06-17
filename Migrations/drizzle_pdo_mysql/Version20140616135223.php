@@ -8,9 +8,9 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2014/06/16 09:50:30
+ * Generation date: 2014/06/16 01:52:25
  */
-class Version20140616095028 extends AbstractMigration
+class Version20140616135223 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
@@ -60,6 +60,11 @@ class Version20140616095028 extends AbstractMigration
             ON DELETE CASCADE
         ");
         $this->addSql("
+            ALTER TABLE claro_field_facet_value CHANGE stringValue stringValue VARCHAR(255) DEFAULT NULL, 
+            CHANGE floatValue floatValue DOUBLE PRECISION DEFAULT NULL, 
+            CHANGE dateValue dateValue DATETIME DEFAULT NULL
+        ");
+        $this->addSql("
             DROP INDEX UNIQ_F6C21DB25E237E06 ON claro_field_facet
         ");
     }
@@ -74,6 +79,11 @@ class Version20140616095028 extends AbstractMigration
         ");
         $this->addSql("
             CREATE UNIQUE INDEX UNIQ_F6C21DB25E237E06 ON claro_field_facet (name)
+        ");
+        $this->addSql("
+            ALTER TABLE claro_field_facet_value CHANGE stringValue stringValue VARCHAR(255) NOT NULL, 
+            CHANGE floatValue floatValue DOUBLE PRECISION NOT NULL, 
+            CHANGE dateValue dateValue DATETIME NOT NULL
         ");
     }
 }

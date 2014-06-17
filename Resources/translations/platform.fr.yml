@@ -178,6 +178,8 @@ data_col: 'Colonne des données'
 database: 'Base de données'
 database_connection_failed: 'La connexion à la base de données à échoué.'
 date: Date
+date_form_datepicker_format: dd-mm-yyyy
+date_form_datepicker_php: d-m-Y
 date_form_format: dd/MM/yyyy
 date_form_placeholder: jj/mm/aaaa
 date_format: d/m/Y

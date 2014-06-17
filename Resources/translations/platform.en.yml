@@ -179,6 +179,8 @@ data_col: 'Database id column'
 database: Database
 database_connection_failed: 'Database connection failed.'
 date: Date
+date_form_datepicker_format: mm-dd-yyyy
+date_form_datepicker_php: m-d-Y
 date_form_format: MM/dd/yyyy
 date_form_placeholder: mm/dd/yyyy
 date_format: m/d/Y

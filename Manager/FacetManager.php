@@ -14,27 +14,35 @@ namespace Claroline\CoreBundle\Manager;
 use JMS\DiExtraBundle\Annotation\Service;
 use JMS\DiExtraBundle\Annotation\Inject;
 use JMS\DiExtraBundle\Annotation\InjectParams;
+use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Facet\Facet;
 use Claroline\CoreBundle\Entity\Facet\FieldFacet;
 use Claroline\CoreBundle\Entity\Facet\FieldFacetValue;
 use Claroline\CoreBundle\Entity\Facet\FieldFacetRole;
 use Claroline\CoreBundle\Persistence\ObjectManager;
+use Symfony\Component\Translation\Translator;
 
 /**
  * @Service("claroline.manager.facet_manager")
  */
 class FacetManager
 {
+    private $om;
+    private $translator;
+
     /**
      * @InjectParams({
-     *     "om"= @Inject("claroline.persistence.object_manager")
+     *     "om"         = @Inject("claroline.persistence.object_manager"),
+     *     "translator" = @Inject("translator")
      * })
      */
     public function __construct(
-        ObjectManager $om
+        ObjectManager $om,
+        Translator $translator
     )
     {
         $this->om = $om;
+        $this->translator = $translator;
     }
 
     /**
@@ -155,13 +163,25 @@ class FacetManager
      */
     public function setFieldValue(User $user, FieldFacet $field, $value)
     {
-        $fieldFacetValue = new FieldFacetValue();
-        $fieldFacetValue->setUser($user);
-        $fieldFacetValue->setFieldFacet($field);
+        //@todo check permissions
+
+        $fieldFacetValue = $this->om->getRepository('ClarolineCoreBundle:Facet\FieldFacetValue')
+            ->findOneBy(array('user' => $user, 'fieldFacet' => $field));
+
+        if ($fieldFacetValue === null) {
+            $fieldFacetValue = new FieldFacetValue();
+            $fieldFacetValue->setUser($user);
+            $fieldFacetValue->setFieldFacet($field);
+        }
 
         switch ($field->getType()) {
             case FieldFacet::DATE_TYPE:
-                $fieldFacetValue->setDateValue($value);
+                $date = \DateTime::createFromFormat(
+                    $this->translator->trans('date_form_datepicker_php', array(), 'platform'),
+                    $value
+                );
+
+                $fieldFacetValue->setDateValue($date);
                 break;
             case FieldFacet::FLOAT_TYPE:
                 $fieldFacetValue->setFloatValue($value);
@@ -175,6 +195,12 @@ class FacetManager
 
         $this->om->persist($fieldFacetValue);
         $this->om->flush();
+    }
+
+    public function getFieldValuesByUser(User $user)
+    {
+        return $this->om->getRepository('ClarolineCoreBundle:Facet\FieldFacetValue')
+            ->findBy(array('user' => $user));
     }
 
     /**
@@ -372,5 +398,10 @@ class FacetManager
         }
 
         $this->om->flush();
+    }
+
+    public function getFieldFacet($id)
+    {
+        return $this->om->getRepository('ClarolineCoreBundle:Facet\FieldFacet')->find($id);
     }
 }
