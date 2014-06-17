@@ -260,7 +260,7 @@ class NotificationManager
     public function getUserNotificationsList($userId, $page = 1, $maxResult = -1)
     {
         $query = $this->getNotificationViewerRepository()->findUserNotificationsQuery($userId);
-        $adapter = new DoctrineORMAdapter($query);
+        $adapter = new DoctrineORMAdapter($query, false);
         $pager   = new Pagerfanta($adapter);
         $pager->setMaxPerPage($maxResult);
 
