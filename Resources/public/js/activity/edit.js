@@ -5,6 +5,7 @@
     var translator = window.Translator;
     var modal = window.Claroline.Modal;
     var common = window.Claroline.Common;
+    var activity = window.Claroline.Activity;
     var picker = window.Claroline.ResourcePicker;
 
     /**
@@ -48,6 +49,12 @@
             .attr(
                 'src', routing.generate('claro_resource_open', {'resourceType': resource.type, 'node': resource.id})
             )
+            .load(function () {
+                var iframe = this;
+                setTimeout(function () {
+                    activity.height(iframe);
+                }, 50);
+            })
         );
     }
 

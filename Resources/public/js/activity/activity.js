@@ -36,7 +36,7 @@
         var iframe = this;
         setTimeout(function () {
             activity.height(iframe);
-        }, 300);
+        }, 50);
     });
 
     $(window).on('resize', function () {
