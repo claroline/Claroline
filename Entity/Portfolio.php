@@ -53,6 +53,11 @@ class Portfolio
     protected $portfolioUsers;
 
     /**
+     * @ORM\OneToMany(targetEntity="PortfolioGroup", mappedBy="portfolio", cascade={"all"})
+     */
+    protected $portfolioGroups;
+
+    /**
      * @var \Icap\PortfolioBundle\Entity\Widget\WidgetNode[]
      *
      * @ORM\OneToMany(targetEntity="Icap\PortfolioBundle\Entity\Widget\AbstractWidget", mappedBy="portfolio")
@@ -148,6 +153,30 @@ class Portfolio
     public function getPortfolioUsers()
     {
         return $this->portfolioUsers;
+    }
+
+    /**
+     * @param mixed $portfolioGroups
+     *
+     * @return Portfolio
+     */
+    public function setPortfolioGroups($portfolioGroups)
+    {
+        foreach ($portfolioGroups as $portfolioGroup) {
+            $portfolioGroup->setPortfolio($this);
+        }
+
+        $this->portfolioGroups = $portfolioGroups;
+
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPortfolioGroups()
+    {
+        return $this->portfolioGroups;
     }
 
     /**

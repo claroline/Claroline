@@ -5,8 +5,11 @@
         var visibilityFormName = "icap_portfolio_visibility_form";
         var visibilityForm     = $("#visibility_form");
         var chooseUserBlock    = $("#choose_user");
-        var select2Field       = $("#icap_portfolio_visibility_form_search_user");
-        var addingFieldButton  = $('.form-collection-add');
+        var chooseGroupBlock   = $("#choose_group");
+        var userSelect2Field   = $("#icap_portfolio_visibility_form_search_user");
+        var groupSelect2Field  = $("#icap_portfolio_visibility_form_search_group");
+        var addingUserButton   = $('.form-collection-add-user');
+        var addingGroupButton  = $('.form-collection-add-group');
 
         ZenstruckFormHelper.initSelect2Helper()
 
@@ -16,7 +19,7 @@
         });
 
         // form collection prototype creation
-        addingFieldButton.on('click', function(e) {
+        addingUserButton.on('click', function(e) {
             e.preventDefault();
 
             var $this = $(this);
@@ -27,23 +30,53 @@
             // set count, used as id in DOM
             prototype = prototype.replace(/__name__/g, count);
             // set label
-            prototype = prototype.replace(/__value__/g, select2Field.select2('data').text);
+            prototype = prototype.replace(/__value__/g, userSelect2Field.select2('data').text);
 
             // create dom element
             var $newWidget = $(prototype.trim());
             // set user id
-            $('input', $newWidget).val(select2Field.select2('data').id);
+            $('input', $newWidget).val(userSelect2Field.select2('data').id);
 
             $container.children('.form-collection').removeClass('hide').append($newWidget);
 
-            select2Field.select2('data', null);
+            userSelect2Field.select2('data', null);
             $this.attr('disabled', 'disabled');
         });
 
-        select2Field
+        // form collection prototype creation
+        addingGroupButton.on('click', function(e) {
+            e.preventDefault();
+
+            var $this = $(this);
+            var $container = $this.siblings('div[data-prototype]').first();
+            var count = $('.form-collection-element', $container).length;
+            var prototype = $container.data('prototype');
+
+            // set count, used as id in DOM
+            prototype = prototype.replace(/__name__/g, count);
+            // set label
+            prototype = prototype.replace(/__value__/g, groupSelect2Field.select2('data').text);
+
+            // create dom element
+            var $newWidget = $(prototype.trim());
+            // set user id
+            $('input', $newWidget).val(groupSelect2Field.select2('data').id);
+
+            $container.children('.form-collection').removeClass('hide').append($newWidget);
+
+            groupSelect2Field.select2('data', null);
+            $this.attr('disabled', 'disabled');
+        });
+
+        userSelect2Field
             .on("change", function(e) {
                 log("change "+JSON.stringify({val:e.val, added:e.added, removed:e.removed}));
-                addingFieldButton.removeAttr('disabled');
+                addingUserButton.removeAttr('disabled');
+            });
+        groupSelect2Field
+            .on("change", function(e) {
+                log("change "+JSON.stringify({val:e.val, added:e.added, removed:e.removed}));
+                addingGroupButton.removeAttr('disabled');
             });
 
         var log = function (message) {
@@ -54,9 +87,11 @@
             var formValues = parseFormValue($(this).serializeArray());
             if (1 == formValues.visibility) {
                 chooseUserBlock.removeClass('hidden');
+                chooseGroupBlock.removeClass('hidden');
             }
             else {
                 chooseUserBlock.addClass('hidden');
+                chooseGroupBlock.addClass('hidden');
             }
         });
 
