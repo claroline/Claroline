@@ -22,12 +22,18 @@ class ActivityParametersType extends AbstractType
         $builder->add(
             'max_duration',
             'integer',
-            array('required' => false)
+            array(
+                'attr' => array('min' => 1),
+                'required' => false
+            )
         );
         $builder->add(
             'max_attempts',
             'integer',
-            array('required' => false)
+            array(
+                'attr' => array('min' => 1),
+                'required' => false
+            )
         );
         $builder->add(
             'evaluation_type',

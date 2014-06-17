@@ -58,7 +58,7 @@ class ActivityRuleType extends AbstractType
             'occurrence',
             'integer',
             array(
-                'attr' => array('class' => 'activity-rule-option'),
+                'attr' => array('class' => 'activity-rule-option', 'min' => 1),
                 'required' => false
             )
         );
@@ -66,7 +66,7 @@ class ActivityRuleType extends AbstractType
             'result',
             'integer',
             array(
-                'attr' => array('class' => 'activity-rule-option'),
+                'attr' => array('class' => 'activity-rule-option', 'min' => 0),
                 'required' => false
             )
         );
