@@ -65,7 +65,7 @@ class SectionController extends Controller
 
         if ($section->getVisible() === true || $isAdmin) {
             $query = $contributionRepository->getSectionHistoryQuery($section);
-            $adapter = new DoctrineORMAdapter($query);
+            $adapter = new DoctrineORMAdapter($query, false);
             $pager   = new PagerFanta($adapter);
             $pager->setMaxPerPage($maxPerPage);
             
