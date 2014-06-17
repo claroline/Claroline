@@ -39,20 +39,14 @@ class PortfolioController extends BaseController
             $widgetType = $widget->getWidgetType();
 
             $widgetViews = array(
+                'type'  => $widgetType,
                 'views' => array(
                     'view' => $this->getWidgetsManager()->getView($widget, $widgetType)
                 )
             );
 
-            $widgetDatas = $widgetViews + $widget->getData();
-
-            if ($this->getWidgetsManager()->isWidgetTypeUnique($widgetType)) {
-
-                $data[$widgetType] = $widgetDatas;
-            }
-            else {
-                $data[$widgetType][] = $widgetDatas;
-            }
+            $widgetDatas       = $widgetViews + $widget->getData();
+            $data['widgets'][] = $widgetDatas;
         }
 
         $response->setData($data);

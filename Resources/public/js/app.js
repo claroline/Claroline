@@ -3,7 +3,7 @@
 var portfolioApp = angular.module('portfolioApp', ['ngResource', 'ngSanitize', 'ui.tinymce']);
 
 portfolioApp.config(["$httpProvider", "$locationProvider", function($http) {
-    var elementToRemove = ['views', 'editing', 'new', 'id'];
+    var elementToRemove = ['views', 'editing', 'new', 'id', 'type'];
 
     $http.defaults.transformRequest.push(function(data) {
         data = angular.fromJson(data);

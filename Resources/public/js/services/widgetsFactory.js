@@ -31,6 +31,7 @@ portfolioApp
                 );
                 widget.prototype.editing = false;
                 widget.prototype.new     = true;
+                widget.prototype.type    = type;
 
                 widget.prototype.generateUrl = function(parameters) {
                     parameters.portfolioId = portfolioId;
@@ -54,7 +55,7 @@ portfolioApp
                     return this.editing;
                 };
                 widget.prototype.getType = function() {
-                    return type;
+                    return this.type;
                 };
                 widget.prototype.setNewMode = function(isNew) {
                     this.new = isNew;
@@ -65,10 +66,12 @@ portfolioApp
                     return this.new;
                 };
                 widget.prototype.deleteChildren = function() {
-                    for (var i = 0;i < this.children.length; i++) {
-                        var currentChild = this.children[i];
-                        if (currentChild.toDelete || currentChild.notAdded) {
-                            this.children.remove(currentChild);
+                    if (this.children) {
+                        for (var i = 0;i < this.children.length; i++) {
+                            var currentChild = this.children[i];
+                            if (currentChild.toDelete || currentChild.notAdded) {
+                                this.children.remove(currentChild);
+                            }
                         }
                     }
                 };

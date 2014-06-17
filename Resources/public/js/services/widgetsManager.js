@@ -7,9 +7,10 @@ portfolioApp
             emptyWidgets: [],
             forms:   [],
             editing: [],
-            init: function(widgets) {
-                angular.forEach(widgetsConfig.getTypes(), function(type) {
-                    this.widgets[type] = widgets[type] ? widgets[type] : [];
+            init: function(portfolioId, widgets) {
+                angular.forEach(widgets, function(rawWidget) {
+                    var widget = widgetFactory.getWidget(portfolioId, rawWidget.type);
+                    this.widgets.push(new widget(rawWidget).setNewMode(false));
                 }, this);
             },
             edit: function(widget) {
@@ -60,14 +61,24 @@ portfolioApp
                 return widget.isNew() ? widget.$save(success, failed) : widget.$update(success, failed);
             },
             create: function(portfolioId, type) {
-                var istypeUnique = widgetsConfig.config[type].isUnique;
-
-                if (istypeUnique && 0 < this.widgets[type].length) {
-                    this.edit(this.widgets[type][0]);
+                var isTypeUnique = widgetsConfig.config[type].isUnique;
+                if (isTypeUnique && 0 < this.findWidgetsByType(type).length) {
+                    this.edit(this.findWidgetsByType(type)[0]);
                 }
                 else {
-                    this.createEmptyWidget(portfolioId, type, istypeUnique);
+                    this.createEmptyWidget(portfolioId, type, isTypeUnique);
                 }
+            },
+            findWidgetsByType: function(type) {
+                var widgets = [];
+
+                for (var index = 0; index < this.widgets.length; index++) {
+                    if (type == this.widgets[index].type) {
+                        widgets.push(this.widgets[index]);
+                    }
+                }
+
+                return widgets;
             },
             createEmptyWidget: function(portfolioId, type, istypeUnique) {
                 var newWidget;
@@ -86,11 +97,8 @@ portfolioApp
                     });
                     this.addEditing(newWidget);
                 }
-                if (istypeUnique) {
-                    this.widgets[type] = [newWidget];
-                } else {
-                    this.widgets[type].push(newWidget);
-                }
+
+                this.widgets.push(newWidget);
             },
             isDeletable: function(widget) {
                 return widgetsConfig.isDeletable(widget.getType());
@@ -100,7 +108,7 @@ portfolioApp
                     widget.isDeleting = true;
                     var $this = this;
                     var success = function() {
-                        $this.widgets[widget.getType()].remove(widget);
+                        $this.widgets.remove(widget);
                     };
                     var failed = function(error) {
                         console.error('Error occured while deleting widget');
