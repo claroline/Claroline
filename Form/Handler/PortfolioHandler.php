@@ -139,15 +139,16 @@ class PortfolioHandler
      */
     public function handleVisibility(Portfolio $portfolio)
     {
-        $originalPortfolioUsers = $portfolio->getPortfolioUsers();
-        $form                   = $this->getVisibilityForm($portfolio);
+        $originalPortfolioUsers  = $portfolio->getPortfolioUsers();
+        $originalPortfolioGroups = $portfolio->getPortfolioGroups();
+        $form                    = $this->getVisibilityForm($portfolio);
 
         $request = $this->requestStack->getCurrentRequest();
         if ($request->isMethod('POST')) {
             $form->submit($request);
 
             if ($form->isValid()) {
-                $this->portfolioManager->updateVisibility($portfolio, $originalPortfolioUsers);
+                $this->portfolioManager->updateVisibility($portfolio, $originalPortfolioUsers, $originalPortfolioGroups);
 
                 return true;
             }
