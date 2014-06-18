@@ -14,7 +14,8 @@ use Icap\PortfolioBundle\Entity\Portfolio;
  * @ORM\DiscriminatorMap({
  *      "title"           = "TitleWidget",
  *      "userInformation" = "UserInformationWidget",
- *      "skills"          = "SkillsWidget"
+ *      "skills"          = "SkillsWidget",
+ *      "presentation"    = "PresentationWidget"
  * })
  */
 abstract class AbstractWidget

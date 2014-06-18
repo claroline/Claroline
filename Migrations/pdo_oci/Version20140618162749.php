@@ -8,9 +8,9 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2014/06/17 04:59:13
+ * Generation date: 2014/06/18 04:27:50
  */
-class Version20140617165912 extends AbstractMigration
+class Version20140618162749 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
@@ -279,13 +279,19 @@ class Version20140617165912 extends AbstractMigration
             CREATE TABLE icap__portfolio_widget_user_information (
                 id NUMBER(10) NOT NULL, 
                 city VARCHAR2(255) DEFAULT NULL, 
-                description CLOB DEFAULT NULL, 
                 PRIMARY KEY(id)
             )
         ");
         $this->addSql("
             CREATE TABLE icap__portfolio_widget_skills (
                 id NUMBER(10) NOT NULL, 
+                PRIMARY KEY(id)
+            )
+        ");
+        $this->addSql("
+            CREATE TABLE icap__portfolio_widget_presentation (
+                id NUMBER(10) NOT NULL, 
+                presentation CLOB DEFAULT NULL, 
                 PRIMARY KEY(id)
             )
         ");
@@ -343,6 +349,12 @@ class Version20140617165912 extends AbstractMigration
             REFERENCES icap__portfolio_abstract_widget (id) 
             ON DELETE CASCADE
         ");
+        $this->addSql("
+            ALTER TABLE icap__portfolio_widget_presentation 
+            ADD CONSTRAINT FK_F0DBA727BF396750 FOREIGN KEY (id) 
+            REFERENCES icap__portfolio_abstract_widget (id) 
+            ON DELETE CASCADE
+        ");
     }
 
     public function down(Schema $schema)
@@ -370,6 +382,10 @@ class Version20140617165912 extends AbstractMigration
         $this->addSql("
             ALTER TABLE icap__portfolio_widget_skills 
             DROP CONSTRAINT FK_6C68C5A1BF396750
+        ");
+        $this->addSql("
+            ALTER TABLE icap__portfolio_widget_presentation 
+            DROP CONSTRAINT FK_F0DBA727BF396750
         ");
         $this->addSql("
             ALTER TABLE icap__portfolio_widget_skills_skill 
@@ -401,6 +417,9 @@ class Version20140617165912 extends AbstractMigration
         ");
         $this->addSql("
             DROP TABLE icap__portfolio_widget_skills
+        ");
+        $this->addSql("
+            DROP TABLE icap__portfolio_widget_presentation
         ");
     }
 }

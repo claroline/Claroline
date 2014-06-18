@@ -8,9 +8,9 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2014/06/17 04:59:13
+ * Generation date: 2014/06/18 04:27:50
  */
-class Version20140617165912 extends AbstractMigration
+class Version20140618162749 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
@@ -111,13 +111,19 @@ class Version20140617165912 extends AbstractMigration
             CREATE TABLE icap__portfolio_widget_user_information (
                 id INTEGER NOT NULL, 
                 city VARCHAR(255) DEFAULT NULL, 
-                description CLOB DEFAULT NULL, 
                 PRIMARY KEY(id)
             )
         ");
         $this->addSql("
             CREATE TABLE icap__portfolio_widget_skills (
                 id INTEGER NOT NULL, 
+                PRIMARY KEY(id)
+            )
+        ");
+        $this->addSql("
+            CREATE TABLE icap__portfolio_widget_presentation (
+                id INTEGER NOT NULL, 
+                presentation CLOB DEFAULT NULL, 
                 PRIMARY KEY(id)
             )
         ");
@@ -151,6 +157,9 @@ class Version20140617165912 extends AbstractMigration
         ");
         $this->addSql("
             DROP TABLE icap__portfolio_widget_skills
+        ");
+        $this->addSql("
+            DROP TABLE icap__portfolio_widget_presentation
         ");
     }
 }

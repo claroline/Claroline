@@ -43,7 +43,7 @@ portfolioApp
                 this.editing.remove(widget);
 
                 if (widget.isNew()) {
-                    this.widgets[widget.getType()].remove(widget);
+                    this.widgets.remove(widget);
                 }
             },
             save: function(widget) {
