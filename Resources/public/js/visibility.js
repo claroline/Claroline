@@ -19,68 +19,48 @@
         });
 
         // form collection prototype creation
-        addingUserButton.on('click', function(e) {
-            e.preventDefault();
-
-            var $this = $(this);
-            var $container = $this.siblings('div[data-prototype]').first();
-            var count = $('.form-collection-element', $container).length;
-            var prototype = $container.data('prototype');
-
-            // set count, used as id in DOM
-            prototype = prototype.replace(/__name__/g, count);
-            // set label
-            prototype = prototype.replace(/__value__/g, userSelect2Field.select2('data').text);
-
-            // create dom element
-            var $newWidget = $(prototype.trim());
-            // set user id
-            $('input', $newWidget).val(userSelect2Field.select2('data').id);
-
-            $container.children('.form-collection').removeClass('hide').append($newWidget);
-
-            userSelect2Field.select2('data', null);
-            $this.attr('disabled', 'disabled');
+        addingUserButton.on('click', function(event) {
+            addingButtonClick(event, $(this), userSelect2Field);
         });
 
         // form collection prototype creation
-        addingGroupButton.on('click', function(e) {
-            e.preventDefault();
+        addingGroupButton.on('click', function(event) {
+            addingButtonClick(event, $(this), groupSelect2Field);
+        });
 
-            var $this = $(this);
-            var $container = $this.siblings('div[data-prototype]').first();
+        var addingButtonClick = function (event, element, select2Field) {
+            event.preventDefault();
+
+            var $container = element.siblings('div[data-prototype]').first();
             var count = $('.form-collection-element', $container).length;
             var prototype = $container.data('prototype');
 
             // set count, used as id in DOM
             prototype = prototype.replace(/__name__/g, count);
             // set label
-            prototype = prototype.replace(/__value__/g, groupSelect2Field.select2('data').text);
+            prototype = prototype.replace(/__value__/g, select2Field.select2('data').text);
 
             // create dom element
             var $newWidget = $(prototype.trim());
             // set user id
-            $('input', $newWidget).val(groupSelect2Field.select2('data').id);
+            $('input', $newWidget).val(select2Field.select2('data').id);
 
             $container.children('.form-collection').removeClass('hide').append($newWidget);
 
-            groupSelect2Field.select2('data', null);
-            $this.attr('disabled', 'disabled');
+            select2Field.select2('data', null);
+            element.attr('disabled', 'disabled');
+        };
+
+        userSelect2Field.on("change", function(event) {
+            select2FieldChange(event, addingUserButton);
+        });
+        groupSelect2Field.on("change", function(event) {
+            select2FieldChange(event, addingGroupButton);
         });
 
-        userSelect2Field
-            .on("change", function(e) {
-                log("change "+JSON.stringify({val:e.val, added:e.added, removed:e.removed}));
-                addingUserButton.removeAttr('disabled');
-            });
-        groupSelect2Field
-            .on("change", function(e) {
-                log("change "+JSON.stringify({val:e.val, added:e.added, removed:e.removed}));
-                addingGroupButton.removeAttr('disabled');
-            });
-
-        var log = function (message) {
-            console.log(message);
+        var select2FieldChange = function (event, button) {
+            //console.log("change " + JSON.stringify({val: event.val, added: event.added, removed: event.removed}));
+            button.removeAttr('disabled');
         };
 
         visibilityForm.change(function() {
