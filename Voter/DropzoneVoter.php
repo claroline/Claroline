@@ -17,6 +17,7 @@ use Claroline\CoreBundle\Entity\User;
 use Icap\DropzoneBundle\Entity\Dropzone;
 use Icap\DropzoneBundle\Entity;
 use JMS\DiExtraBundle\Annotation as DI;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
  * @DI\Service("icap.manager.dropzone_voter")
@@ -47,8 +48,12 @@ class DropzoneVoter
     protected function isAllow(Dropzone $dropzone, $actionName)
     {
         $collection = new ResourceCollection(array($dropzone->getResourceNode()));
+
         if (false === $this->container->get('security.context')->isGranted($actionName, $collection)) {
+            var_dump($actionName);
+            die;
             throw new AccessDeniedException();
+
         }
     }
 
