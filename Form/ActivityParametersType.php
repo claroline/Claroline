@@ -37,7 +37,7 @@ class ActivityParametersType extends AbstractType
 			)
         );
 
-        $builder->add(
+		$builder->add(
             'who',
             'choice',
             array(
@@ -60,7 +60,6 @@ class ActivityParametersType extends AbstractType
             'integer',
             array('required' => false)
         );
-
         $builder->add(
             'evaluation_type',
             'choice',
