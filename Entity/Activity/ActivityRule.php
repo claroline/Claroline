@@ -29,6 +29,11 @@ class ActivityRule extends Rule
      */
     protected $activityParameters;
 
+    public function __construct()
+    {
+        $this->occurrence = 1;
+    }
+
     public function getActivityParameters()
     {
         return $this->activityParameters;

@@ -35,7 +35,7 @@ class ActivityRuleType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $ruleActions = $this->activityManager->getAllDistinctActivityRuleActions();
-        $actions = array('none' => 'none');
+        $actions = array('none' => 'activity_rule_action_none');
 
         foreach ($ruleActions as $ruleAction) {
             $actions[$ruleAction['action']] = $this->translator->trans(
@@ -58,7 +58,7 @@ class ActivityRuleType extends AbstractType
             'occurrence',
             'integer',
             array(
-                'attr' => array('class' => 'activity-rule-option', 'min' => 1),
+                'attr' => array('class' => 'activity-rule-option-occurrence', 'min' => 1),
                 'required' => true
             )
         );
@@ -66,7 +66,7 @@ class ActivityRuleType extends AbstractType
             'badge',
             'entity',
             array(
-                'attr' => array('class' => 'activity-rule-option'),
+                'attr' => array('class' => 'activity-rule-option-badge'),
                 'class' => 'ClarolineCoreBundle:Badge\Badge',
                 'property' => 'translations[1].name',
                 'required' => false
@@ -76,7 +76,7 @@ class ActivityRuleType extends AbstractType
             'result',
             'integer',
             array(
-                'attr' => array('class' => 'activity-rule-option', 'min' => 0),
+                'attr' => array('class' => 'activity-rule-option-result', 'min' => 0),
                 'required' => false
             )
         );
@@ -84,7 +84,7 @@ class ActivityRuleType extends AbstractType
             'activeFrom',
             'date',
             array(
-                'attr' => array('class' => 'activity-rule-option'),
+                'attr' => array('class' => 'activity-rule-option-date'),
                 'required' => false,
                 'widget' => 'single_text',
                 'format' => 'yyyy-MM-dd'
@@ -94,7 +94,7 @@ class ActivityRuleType extends AbstractType
             'activeUntil',
             'date',
             array(
-                'attr' => array('class' => 'activity-rule-option'),
+                'attr' => array('class' => 'activity-rule-option-date'),
                 'required' => false,
                 'widget' => 'single_text',
                 'format' => 'yyyy-MM-dd'

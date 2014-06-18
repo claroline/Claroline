@@ -14,10 +14,27 @@
     {
         var actionSelect = $('.activity-rule-action').val();
         
-        if (actionSelect === 'none') {
-            $('.activity-rule-option').attr('disabled', 'disabled');
-        } else {
-            $('.activity-rule-option').attr('disabled', false);
+        switch (actionSelect) {
+            case 'none':
+                $('.activity-rule-option-occurrence').prop('readonly', true);
+                $('.activity-rule-option-occurrence').val(1);
+                $('.activity-rule-option-result').attr('disabled', 'disabled');
+                $('.activity-rule-option-date').attr('disabled', 'disabled');
+                $('.activity-rule-option-badge').attr('disabled', 'disabled');
+                $('.activity-rule-option-badge').val('');
+                break;
+            case 'badge-awarding':
+                $('.activity-rule-option-badge').attr('disabled', false);
+                $('.activity-rule-option-date').attr('disabled', false);
+                $('.activity-rule-option-occurrence').prop('readonly', true);
+                $('.activity-rule-option-occurrence').val(1);
+                $('.activity-rule-option-result').attr('disabled', 'disabled');
+                break;
+            default:
+                $('.activity-rule-option-occurrence').prop('readonly', false);
+                $('.activity-rule-option-result').attr('disabled', false);
+                $('.activity-rule-option-date').attr('disabled', false);
+                $('.activity-rule-option-badge').attr('disabled', 'disabled');
         }
     }
     
