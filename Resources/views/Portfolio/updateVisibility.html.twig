@@ -26,7 +26,7 @@
 {% block _icap_portfolio_visibility_form_portfolio_users_widget %}
     {% spaceless %}
         {% if prototype is defined %}
-            {% set attr = attr|merge({'data-prototype': block('collection_prototype') }) %}
+            {% set attr = attr|merge({'data-prototype': block('_icap_portfolio_visibility_form_portfolio_users_prototype') }) %}
         {% endif %}
         <div {{ block('widget_container_attributes') }}>
             {{ form_errors(form) }}
@@ -55,7 +55,7 @@
 {% block _icap_portfolio_visibility_form_portfolio_groups_widget %}
     {% spaceless %}
         {% if prototype is defined %}
-            {% set attr = attr|merge({'data-prototype': block('collection_prototype') }) %}
+            {% set attr = attr|merge({'data-prototype': block('_icap_portfolio_visibility_form_portfolio_groups_prototype') }) %}
         {% endif %}
         <div {{ block('widget_container_attributes') }}>
             {{ form_errors(form) }}
@@ -81,16 +81,20 @@
     {% endspaceless %}
 {% endblock _icap_portfolio_visibility_form_portfolio_groups_widget %}
 
-{% block collection_prototype %}
-    {{ _self.collection_field(prototype, allow_delete) }}
-{% endblock collection_prototype %}
+{% block _icap_portfolio_visibility_form_portfolio_users_prototype %}
+    {{ _self.collection_field(prototype, 'primary') }}
+{% endblock _icap_portfolio_visibility_form_portfolio_users_prototype %}
 
-{% macro collection_field(rows) %}
+{% block _icap_portfolio_visibility_form_portfolio_groups_prototype %}
+    {{ _self.collection_field(prototype, 'info') }}
+{% endblock _icap_portfolio_visibility_form_portfolio_groups_prototype %}
+
+{% macro collection_field(rows, class) %}
     {% spaceless %}
         <li class="form-collection-element">
             {% for row in rows %}
                 {{ form_widget(row, {'attr': {'class': 'hidden'}}) }}
-                <span class="label label-primary">
+                <span class="label label-{{ class }}">
                     __value__
                     <a class="remove" aria-hidden="true" href="#" data-toggle="tooltip"
                         title="{{ 'revoke_access'|trans({}, 'icap_portfolio') }}"data-confirm-title="{{ 'revoke_access'|trans({}, 'icap_portfolio') }}">
