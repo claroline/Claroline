@@ -64,7 +64,7 @@ class Updater030000
         $this->om->persist($textAction);
 
         $badgeAwardAction = new ActivityRuleAction();
-        $textAction->setAction('badge-awarding');
+        $badgeAwardAction->setAction('badge-awarding');
         $this->om->persist($badgeAwardAction);
 
         $this->om->flush();
