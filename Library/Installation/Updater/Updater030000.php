@@ -63,6 +63,10 @@ class Updater030000
         $textAction->setResourceType($textType);
         $this->om->persist($textAction);
 
+        $badgeAwardAction = new ActivityRuleAction();
+        $textAction->setAction('badge-awarding');
+        $this->om->persist($badgeAwardAction);
+
         $this->om->flush();
     }
 }

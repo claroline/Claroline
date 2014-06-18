@@ -274,13 +274,16 @@ class ActivityController
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function getRuleActionsFromResourceType($resourceTypeName)
+    public function getRuleActionsFromResourceType($resourceTypeName = null)
     {
-        $resourceType = $this->resourceManager
-            ->getResourceTypeByName($resourceTypeName);
-
-        $ruleActions = $this->activityManager
-            ->getRuleActionsByResourceType($resourceType);
+        if (is_null($resourceTypeName)) {
+            $ruleActions = $this->activityManager->getRuleActionsWithNoResource();
+        } else {
+            $resourceType = $this->resourceManager
+                ->getResourceTypeByName($resourceTypeName);
+            $ruleActions = $this->activityManager
+                ->getRuleActionsByResourceType($resourceType);
+        }
 
         if (count($ruleActions) > 0) {
             $actions = array();

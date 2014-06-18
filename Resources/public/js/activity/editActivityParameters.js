@@ -40,27 +40,26 @@
                 }
             }
         });
-//        $('.activity-rule-action-option').remove();
-//        
-//        for (var key in actions) {
-//            var option = 
-//                '<option class="activity-rule-action-option" value="' + actions[key] + '">\n' +
-//                    actions[key] +
-//                '\n</option>\n'
-//            
-//            ruleActionSelect.append(option);
-//        }
     }
 
     function checkAvailableActions()
     {
         var primaryResourceType = $('#activity_form_primaryResource').data('type');
+        var route;
         
-        $.ajax({
-            url: Routing.generate(
+        if (typeof primaryResourceType === 'undefined') {
+            route = Routing.generate(
+                'claro_get_rule_actions_from_resource_type'
+            );
+        } else {
+            route = Routing.generate(
                 'claro_get_rule_actions_from_resource_type',
                 {'resourceTypeName': primaryResourceType}
-            ),
+            );
+        }
+        
+        $.ajax({
+            url: route,
             type: 'GET',
             success: function (datas) {
                 var actions = [];

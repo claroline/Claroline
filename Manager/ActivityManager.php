@@ -524,6 +524,12 @@ class ActivityManager
             ->findRuleActionsByResourceType($resourceType, $executeQuery);
     }
 
+    public function getRuleActionsWithNoResource($executeQuery = true)
+    {
+        return $this->activityRuleActionRepo
+            ->findRuleActionsWithNoResource($executeQuery);
+    }
+
     public function getAllDistinctActivityRuleActions($executeQuery = true)
     {
         return $this->activityRuleActionRepo

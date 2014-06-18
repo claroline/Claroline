@@ -33,6 +33,19 @@ class ActivityRuleActionRepository extends EntityRepository
         return $executeQuery ? $query->getResult(): $query;
     }
 
+    public function findRuleActionsWithNoResource($executeQuery = true)
+    {
+        $dql = '
+            SELECT ara
+            FROM Claroline\CoreBundle\Entity\Activity\ActivityRuleAction ara
+            WHERE ara.resourceType IS NULL
+        ';
+
+        $query = $this->_em->createQuery($dql);
+
+        return $executeQuery ? $query->getResult(): $query;
+    }
+
     public function findAllDistinctActivityRuleActions($executeQuery = true)
     {
         $dql = '
