@@ -65,6 +65,7 @@ activity_parameters_form_max_duration: 'Allowed time limit'
 activity_resource_not_allowed: You cannot add a resource of this type
 activity_resource_remove: 'Are you sure you want to remove this resource from the activity?'
 activity_rule_action_none: None
+activity_rule_configuration: 'Rule configuration'
 activity_rule_form_action: Action
 activity_rule_form_activeFrom: From
 activity_rule_form_activeUntil: Until

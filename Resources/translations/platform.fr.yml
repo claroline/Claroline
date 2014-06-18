@@ -64,6 +64,7 @@ activity_parameters_form_max_attempts: 'Nombre de tentatives permises'
 activity_parameters_form_max_duration: 'Temps limite accordé'
 activity_resource_remove: Êtes-vous sûr de vouloir enlever cette ressource de l'activite?
 activity_rule_action_none: Aucune
+activity_rule_configuration: 'Configuration de la règle'
 activity_rule_form_action: Action
 activity_rule_form_activeFrom: 'A partir du'
 activity_rule_form_activeUntil: 'Jusqu''au'

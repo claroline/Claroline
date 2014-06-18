@@ -26,8 +26,13 @@
             {{ form_widget(form) }}
             <hr>
             {{ form_widget(formParams) }}
-            <hr>
-            {{ form_widget(formRule) }}
+            
+            <div id="activity-rule-form-div">
+                <hr>
+                <h3>{{ 'activity_rule_configuration' | trans({}, 'platform') }}</h3>
+                <br>
+                {{ form_widget(formRule) }}
+            </div>
         </div>
         <div class="panel-footer text-right">
             <a class="btn btn-default" href="{{ path('claro_resource_open', { 'resourceType': _resource.getResourceNode().getResourceType().getName(), 'node': _resource.getResourceNode().getId() }) }}">

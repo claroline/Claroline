@@ -10,7 +10,22 @@
 (function () {
     'use strict';
 
-    function disableRuleOption()
+    function enableRuleConfiguration()
+    {
+        var evaluationType = $('#activity_parameters_form_evaluation_type').val();
+        
+        if (evaluationType === 'automatic') {
+            $('#activity-rule-form-div').show('slow', function () {
+            });
+        } else {
+            $('#activity-rule-form-div').hide('slow', function () {
+                $('#activity_rule_form_action').val('none');
+                enableRuleOption();
+            });
+        }
+    }
+
+    function enableRuleOption()
     {
         var actionSelect = $('.activity-rule-action').val();
         
@@ -53,7 +68,7 @@
                 
                 if (value === selectValue) {
                     ruleActionSelect.val('none');
-                    disableRuleOption();
+                    enableRuleOption();
                 }
             }
         });
@@ -94,9 +109,14 @@
     });
     
     $('#activity_rule_form_action').on('change', function () {
-        disableRuleOption();
+        enableRuleOption();
     });
     
+    $('#activity_parameters_form_evaluation_type').on('change', function () {
+        enableRuleConfiguration();
+    });
+    
+    enableRuleConfiguration();
     checkAvailableActions();
-    disableRuleOption();
+    enableRuleOption();
 })();
