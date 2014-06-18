@@ -208,7 +208,7 @@ claro_activity:
     type: annotation
 
 claro_activity_remove_resource_confirm:
-    pattern: /activity/remive
+    pattern: /activity/remove
     options: { expose: true }
     defaults:
         _controller: FrameworkBundle:Template:template

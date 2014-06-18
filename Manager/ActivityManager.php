@@ -85,6 +85,16 @@ class ActivityManager
     }
 
     /**
+     * Remove the primary resource of an activity
+     */
+    public function removePrimaryResource(Activity $activity)
+    {
+        $activity->setPrimaryResource();
+        $this->om->persist($activity);
+        $this->om->flush();
+    }
+
+    /**
      * Remove a resource from an activity
      */
     public function removeResource(Activity $activity, ResourceNode $resource)
@@ -380,7 +390,7 @@ class ActivityManager
                 }
             }
         }
-        
+
         if ($processCurrentLog) {
             $logDetails = $currentLog->getDetails();
             $duration = isset($logDetails['duration']) ?

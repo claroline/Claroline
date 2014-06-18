@@ -56,6 +56,7 @@ activity_form_name: 'Nombre'
 activity_parameters_form_evaluation_type: 'Tipo de evaluación'
 activity_parameters_form_max_attempts: 'Numero de intentos permitidos'
 activity_parameters_form_max_duration: 'Tiempo limite establecido'
+activity_remove_primary_resource: Retirar el recurso principal
 activity_resource_not_allowed: No puede agregar un recurso de este tipo
 activity_resource_remove: '¿Esta seguro que desea remover este recurso de la actividad?'
 add: 'Agregar'
