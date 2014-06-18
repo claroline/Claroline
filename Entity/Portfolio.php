@@ -3,6 +3,7 @@
 namespace Icap\PortfolioBundle\Entity;
 
 use Claroline\CoreBundle\Entity\User;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Icap\PortfolioBundle\Entity\Widget\WidgetNode;
@@ -148,7 +149,7 @@ class Portfolio
     }
 
     /**
-     * @return PortfolioUser[]
+     * @return PortfolioUser[]|ArrayCollection
      */
     public function getPortfolioUsers()
     {
@@ -172,7 +173,7 @@ class Portfolio
     }
 
     /**
-     * @return mixed
+     * @return PortfolioGroup[]|ArrayCollection
      */
     public function getPortfolioGroups()
     {
@@ -199,6 +200,11 @@ class Portfolio
         return $this->user;
     }
 
+    /**
+     * @param User $user
+     *
+     * @return bool
+     */
     public function visibleToUser(User $user)
     {
         $portfolioUsers = $this->getPortfolioUsers();
@@ -208,6 +214,20 @@ class Portfolio
             if ($user === $portfolioUser->getUser()) {
                 $isVisible = true;
                 break;
+            }
+        }
+
+        if (!$isVisible) {
+            $portfolioGroups = $this->getPortfolioGroups();
+            $userGroups      = $user->getGroups();
+
+            foreach ($portfolioGroups as $portfolioGroup) {
+                foreach ($userGroups as $userGroup) {
+                    if ($userGroup === $portfolioGroup->getGroup()) {
+                        $isVisible = true;
+                        break;
+                    }
+                }
             }
         }
 
