@@ -50,8 +50,7 @@ class DropzoneVoter
         $collection = new ResourceCollection(array($dropzone->getResourceNode()));
 
         if (false === $this->container->get('security.context')->isGranted($actionName, $collection)) {
-            var_dump($actionName);
-            die;
+
             throw new AccessDeniedException();
 
         }
