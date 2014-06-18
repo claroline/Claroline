@@ -5,13 +5,13 @@
     var translator = window.Translator;
     var modal = window.Claroline.Modal;
     var common = window.Claroline.Common;
+    var activity = window.Claroline.Activity;
     var picker = window.Claroline.ResourcePicker;
-
 
     /**
      * Add a dropdown menu for a new tab resource
      */
-    function activityMenu(activity, resource)
+    function activityTabMenu(activity, resource)
     {
         return common.createElement('li', 'activity-tab-' + resource.id).html(
             common.createElement('a', 'pointer-hand')
@@ -30,12 +30,31 @@
                             .data('resource', resource.id)
                             .data('activity', activity)
                             .html(
-                                ' ' + translator.get('platform:delete')
+                                ' ' + translator.get('platform:remove')
                             )
                         )
                     )
                 )
             )
+        );
+    }
+
+    /**
+     * get resource content
+     */
+    function activityContent(resource)
+    {
+        return common.createElement('div', 'hide').attr('id', 'resource-' + resource.id).html(
+            common.createElement('iframe', 'activity-iframe')
+            .attr(
+                'src', routing.generate('claro_resource_open', {'resourceType': resource.type, 'node': resource.id})
+            )
+            .load(function () {
+                var iframe = this;
+                setTimeout(function () {
+                    activity.height(iframe);
+                }, 50);
+            })
         );
     }
 
@@ -50,11 +69,11 @@
                 var resource = $.parseJSON(data);
 
                 $('.activities').append(
-                    common.createElement('div', 'hide').attr('id', 'resource-' + resource.id).html(resource.name)
+                    activityContent(resource)
                 );
 
                 $('.activity-tabs .activity-primary').after(
-                    activityMenu(activity, resource)
+                    activityTabMenu(activity, resource)
                 );
             } else {
                 modal.simpleContainer(
@@ -69,9 +88,9 @@
     }
 
     /**
-     * Delete a resource from an activity
+     * Remove a resource from an activity
      */
-    function deleteResource(data, activity, resource)
+    function removeResource(data, activity, resource)
     {
         var picker = modal.create(data);
 
@@ -108,9 +127,15 @@
 
         picker.open(function (nodes) {
             var nodeId = _.keys(nodes)[0];
+            var type = nodes[_.keys(nodes)][1];
 
-            if (nodeId) {
+            if (nodeId && type !== 'activity') {
                 addResource(activity, nodeId);
+            } else if (type === 'activity') {
+                modal.simpleContainer(
+                    translator.get('platform:add_resource'),
+                    translator.get('platform:activity_resource_not_allowed')
+                );
             } else {
                 modal.error();
             }
@@ -127,7 +152,7 @@
             )
         )
         .done(function (data) {
-            deleteResource(data, activity, resource);
+            removeResource(data, activity, resource);
         })
         .error(function () {
             modal.error();

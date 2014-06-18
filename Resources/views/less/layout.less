@@ -62,6 +62,38 @@ img[title=captcha] {
 }
 
 /*************/
+/*  iframes  */
+/*************/
+
+html.iframe, body.iframe {
+    margin: 0 !important;
+    padding: 0 !important;
+    height: auto;
+}
+
+body.iframe {
+    #top_bar, #left-bar, #footer, > #wrap > .container > .row:first-child, #wrap .visible-xs > .list-group.menu {
+        display: none;
+    }
+
+    .sf-toolbar {
+        opacity: 0;
+    }
+
+    &, > .container, > #wrap > .container {
+        padding-top: 0;
+        margin: 0;
+        max-width: 100%;
+        background-color: transparent;
+    }
+
+    > #wrap > .container > .row > div{
+        padding: 0;
+        margin: 0;
+    }
+}
+
+/*************/
 /*  SideBar */
 /*************/
 
@@ -748,6 +780,17 @@ div.pagination {
         .pagination;
     }
 }
+
+/************/
+/* Activity */
+/************/
+
+.activity-iframe {
+    border: none;
+    width: 100%;
+    max-width: 100%;
+}
+
 
 /********/
 /* MISC */
