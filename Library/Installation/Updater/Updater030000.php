@@ -56,15 +56,18 @@ class Updater030000
         $fileAction = new ActivityRuleAction();
         $fileAction->setAction('resource-read');
         $fileAction->setResourceType($fileType);
+        $fileAction->setType('occurrence');
         $this->om->persist($fileAction);
 
         $textAction = new ActivityRuleAction();
         $textAction->setAction('resource-read');
         $textAction->setResourceType($textType);
+        $textAction->setType('occurrence');
         $this->om->persist($textAction);
 
         $badgeAwardAction = new ActivityRuleAction();
         $badgeAwardAction->setAction('badge-awarding');
+        $badgeAwardAction->setType('badge');
         $this->om->persist($badgeAwardAction);
 
         $this->om->flush();
