@@ -82,8 +82,8 @@
             var fieldFacetId = $($(event.currentTarget)[0].parentElement).attr('data-field-facet-id');
             var url = Routing.generate('claro_admin_field_role_form', {'field': fieldFacetId});
             displayForm(url, 'form-field-roles', function(){});
-        })
-
+        });
+    
     /*******************/
     /* SORTABLE FIELDS */
     /*******************/
@@ -183,7 +183,10 @@
 
     var moveFacetLeft = function(facetId) {
         var prev = $('#tab-facet-' + facetId).prev().attr('id');
-        $('#tab-facet-' + facetId).insertBefore('#' + prev);
+
+        if (prev !== 'general-tab-btn') {
+            $('#tab-facet-' + facetId).insertBefore('#' + prev);
+        }
     }
 
     var addField = function(data, textStatus, jqXHR) {

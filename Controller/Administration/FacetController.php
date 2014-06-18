@@ -79,8 +79,14 @@ class FacetController extends Controller
     {
         $this->checkOpen();
         $facets = $this->facetManager->getFacets();
+        $platformRoles = $this->roleManager->getPlatformNonAdminRoles();
+        $profilePreferences = $this->facetManager->getProfilePreferences();
 
-        return array('facets' => $facets);
+        return array(
+            'facets' => $facets,
+            'platformRoles' => $platformRoles,
+            'profilePreferences' => $profilePreferences
+        );
     }
 
     /**
@@ -303,6 +309,7 @@ class FacetController extends Controller
      */
     public function editFieldFormAction(FieldFacet $fieldFacet)
     {
+        $this->checkOpen();
         $form = $this->formFactory->create(new FieldFacetType(), $fieldFacet);
 
         return array('form' => $form->createView(), 'fieldFacet' => $fieldFacet);
@@ -316,6 +323,7 @@ class FacetController extends Controller
      */
     public function editFieldAction(FieldFacet $fieldFacet)
     {
+        $this->checkOpen();
         $form = $this->formFactory->create(new FieldFacetType(), $fieldFacet);
         $form->handleRequest($this->request);
 
@@ -432,6 +440,37 @@ class FacetController extends Controller
         $this->facetManager->setFieldBoolProperty($field, $roles, 'canEdit');
 
         return new JsonResponse(array(), 204);
+    }
+
+    /**
+     * @EXT\Route("/edit/general",
+     *      name="claro_admin_facet_general_edit",
+     *      options = {"expose"=true}
+     * )
+     */
+    public function editGeneralFacet()
+    {
+        $this->checkOpen();
+        $configs = array();
+
+        foreach ($this->request->request as $key => $value) {
+            $arr = explode('-role-', $key);
+            $roleId = (int) $arr[1];
+            $configs[$roleId][$arr[0]] = true;
+        }
+
+        foreach ($configs as $key => $config) {
+            $this->facetManager->setProfilePreference(
+                isset($config['basedata']),
+                isset($config['mail']),
+                isset($config['phone']),
+                isset($config['sendmail']),
+                isset($config['sendmessage']),
+                $this->roleManager->getRole($key)
+            );
+        }
+
+        return new Response('succes', 204);
     }
 
     private function checkOpen()

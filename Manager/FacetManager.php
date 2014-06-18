@@ -15,10 +15,12 @@ use JMS\DiExtraBundle\Annotation\Service;
 use JMS\DiExtraBundle\Annotation\Inject;
 use JMS\DiExtraBundle\Annotation\InjectParams;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\Facet\Facet;
 use Claroline\CoreBundle\Entity\Facet\FieldFacet;
 use Claroline\CoreBundle\Entity\Facet\FieldFacetValue;
 use Claroline\CoreBundle\Entity\Facet\FieldFacetRole;
+use Claroline\CoreBundle\Entity\Facet\PublicProfilePreference;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use Symfony\Component\Translation\Translator;
 use Symfony\Component\Security\Core\SecurityContextInterface;
@@ -448,4 +450,33 @@ class FacetManager
             default: return "error";
         }
     }
+
+    public function setProfilePreference(
+        $baseData,
+        $mail,
+        $phone,
+        $sendMail,
+        $sendMessage,
+        Role $role
+    ) {
+        $profilePref = $this->om->getRepository('ClarolineCoreBundle:Facet\PublicProfilePreference')
+            ->findOneByRole($role);
+
+        $profilePref = $profilePref === null ? new PublicProfilePreference() : $profilePref;
+        $profilePref->setBaseData($baseData);
+        $profilePref->setMail($mail);
+        $profilePref->setPhone($phone);
+        $profilePref->setSendMail($sendMail);
+        $profilePref->setSendMessage($sendMessage);
+        $profilePref->setRole($role);
+
+        $this->om->persist($profilePref);
+        $this->om->flush();
+    }
+
+    public function getProfilePreferences()
+    {
+        return $this->om->getRepository('ClarolineCoreBundle:Facet\PublicProfilePreference')->findAll();
+    }
+
 }
