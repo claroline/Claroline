@@ -160,7 +160,7 @@ class PortfolioController extends Controller
         $response            = new Response($this->renderView('IcapPortfolioBundle:Portfolio:view.html.twig', array('titleWidget' => $titleWidget, 'portfolio' => $portfolio, 'editMode' => $editMode, 'widgetsConfig' => $widgetsConfig)));
         $portfolioVisibility = $portfolio->getVisibility();
 
-        if ($user !== $portfolio->getUser()) {
+        if ($user !== $portfolio->getUser() && !$this->get('security.context')->isgranted('ROLE_ADMIN')) {
             if (
                 Portfolio::VISIBILITY_NOBODY === $portfolioVisibility
                 || (
