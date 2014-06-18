@@ -252,9 +252,13 @@ class ProfileController extends Controller
         $unavailableRoles = [];
 
         if ($this->get('request')->getMethod() === 'POST') {
-            $form->get('platformRoles')->getData();
+            $roles = ($isAdmin || $isGrantedUserAdmin) ?
+                $form->get('platformRoles')->getData():
+                array($this->roleManager->getRoleByName('ROLE_USER'));
         } else {
-            $roles = $this->roleManager->getAllPlatformRoles();
+            $roles = ($isAdmin || $isGrantedUserAdmin) ?
+                $this->roleManager->getAllPlatformRoles():
+                array($this->roleManager->getRoleByName('ROLE_USER'));
         }
 
         foreach ($roles as $role) {
