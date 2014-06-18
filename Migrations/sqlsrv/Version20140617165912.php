@@ -1,6 +1,6 @@
 <?php
 
-namespace Icap\PortfolioBundle\Migrations\pdo_mysql;
+namespace Icap\PortfolioBundle\Migrations\sqlsrv;
 
 use Doctrine\DBAL\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
@@ -8,85 +8,124 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2014/06/06 02:57:36
+ * Generation date: 2014/06/17 04:59:13
  */
-class Version20140606145735 extends AbstractMigration
+class Version20140617165912 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
         $this->addSql("
             CREATE TABLE icap__portfolio_users (
-                id INT AUTO_INCREMENT NOT NULL, 
+                id INT IDENTITY NOT NULL, 
                 user_id INT NOT NULL, 
                 portfolio_id INT NOT NULL, 
-                INDEX IDX_3980F8F8A76ED395 (user_id), 
-                INDEX IDX_3980F8F8B96B5643 (portfolio_id), 
-                UNIQUE INDEX portfolio_users_unique_idx (portfolio_id, user_id), 
-                PRIMARY KEY(id)
-            ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
+                PRIMARY KEY (id)
+            )
+        ");
+        $this->addSql("
+            CREATE INDEX IDX_3980F8F8A76ED395 ON icap__portfolio_users (user_id)
+        ");
+        $this->addSql("
+            CREATE INDEX IDX_3980F8F8B96B5643 ON icap__portfolio_users (portfolio_id)
+        ");
+        $this->addSql("
+            CREATE UNIQUE INDEX portfolio_users_unique_idx ON icap__portfolio_users (portfolio_id, user_id) 
+            WHERE portfolio_id IS NOT NULL 
+            AND user_id IS NOT NULL
         ");
         $this->addSql("
             CREATE TABLE icap__portfolio (
-                id INT AUTO_INCREMENT NOT NULL, 
+                id INT IDENTITY NOT NULL, 
                 user_id INT NOT NULL, 
                 visibility INT NOT NULL, 
-                deletedAt DATETIME DEFAULT NULL, 
-                INDEX IDX_8B1895DA76ED395 (user_id), 
-                PRIMARY KEY(id)
-            ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
+                deletedAt DATETIME2(6), 
+                PRIMARY KEY (id)
+            )
+        ");
+        $this->addSql("
+            CREATE INDEX IDX_8B1895DA76ED395 ON icap__portfolio (user_id)
+        ");
+        $this->addSql("
+            CREATE TABLE icap__portfolio_groups (
+                id INT IDENTITY NOT NULL, 
+                group_id INT NOT NULL, 
+                portfolio_id INT NOT NULL, 
+                PRIMARY KEY (id)
+            )
+        ");
+        $this->addSql("
+            CREATE INDEX IDX_9AF01ADFFE54D947 ON icap__portfolio_groups (group_id)
+        ");
+        $this->addSql("
+            CREATE INDEX IDX_9AF01ADFB96B5643 ON icap__portfolio_groups (portfolio_id)
+        ");
+        $this->addSql("
+            CREATE UNIQUE INDEX portfolio_groups_unique_idx ON icap__portfolio_groups (portfolio_id, group_id) 
+            WHERE portfolio_id IS NOT NULL 
+            AND group_id IS NOT NULL
         ");
         $this->addSql("
             CREATE TABLE icap__portfolio_abstract_widget (
-                id INT AUTO_INCREMENT NOT NULL, 
+                id INT IDENTITY NOT NULL, 
                 portfolio_id INT NOT NULL, 
-                createdAt DATETIME NOT NULL, 
-                updatedAt DATETIME NOT NULL, 
-                widget_type VARCHAR(255) NOT NULL, 
-                INDEX IDX_3E7AEFBBB96B5643 (portfolio_id), 
-                PRIMARY KEY(id)
-            ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
+                createdAt DATETIME2(6) NOT NULL, 
+                updatedAt DATETIME2(6) NOT NULL, 
+                widget_type NVARCHAR(255) NOT NULL, 
+                PRIMARY KEY (id)
+            )
+        ");
+        $this->addSql("
+            CREATE INDEX IDX_3E7AEFBBB96B5643 ON icap__portfolio_abstract_widget (portfolio_id)
         ");
         $this->addSql("
             CREATE TABLE icap__portfolio_widget_title (
                 id INT NOT NULL, 
-                title VARCHAR(128) NOT NULL, 
-                slug VARCHAR(128) NOT NULL, 
-                UNIQUE INDEX UNIQ_1431A01D989D9B62 (slug), 
-                PRIMARY KEY(id)
-            ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
+                title NVARCHAR(128) NOT NULL, 
+                slug NVARCHAR(128) NOT NULL, 
+                PRIMARY KEY (id)
+            )
+        ");
+        $this->addSql("
+            CREATE UNIQUE INDEX UNIQ_1431A01D989D9B62 ON icap__portfolio_widget_title (slug) 
+            WHERE slug IS NOT NULL
         ");
         $this->addSql("
             CREATE TABLE icap__portfolio_widget_type (
-                id INT AUTO_INCREMENT NOT NULL, 
-                name VARCHAR(255) NOT NULL, 
-                is_unique TINYINT(1) NOT NULL, 
-                is_deletable TINYINT(1) NOT NULL, 
-                UNIQUE INDEX UNIQ_3E00FC8F5E237E06 (name), 
-                PRIMARY KEY(id)
-            ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
+                id INT IDENTITY NOT NULL, 
+                name NVARCHAR(255) NOT NULL, 
+                is_unique BIT NOT NULL, 
+                is_deletable BIT NOT NULL, 
+                PRIMARY KEY (id)
+            )
+        ");
+        $this->addSql("
+            CREATE UNIQUE INDEX UNIQ_3E00FC8F5E237E06 ON icap__portfolio_widget_type (name) 
+            WHERE name IS NOT NULL
         ");
         $this->addSql("
             CREATE TABLE icap__portfolio_widget_skills_skill (
-                id INT AUTO_INCREMENT NOT NULL, 
+                id INT IDENTITY NOT NULL, 
                 skills_widget_id INT NOT NULL, 
-                name VARCHAR(255) NOT NULL, 
-                INDEX IDX_98EF40A32F7BE59D (skills_widget_id), 
-                PRIMARY KEY(id)
-            ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
+                name NVARCHAR(255) NOT NULL, 
+                PRIMARY KEY (id)
+            )
+        ");
+        $this->addSql("
+            CREATE INDEX IDX_98EF40A32F7BE59D ON icap__portfolio_widget_skills_skill (skills_widget_id)
         ");
         $this->addSql("
             CREATE TABLE icap__portfolio_widget_user_information (
                 id INT NOT NULL, 
-                city VARCHAR(255) DEFAULT NULL, 
-                description LONGTEXT DEFAULT NULL, 
-                PRIMARY KEY(id)
-            ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
+                city NVARCHAR(255), 
+                description VARCHAR(MAX), 
+                PRIMARY KEY (id)
+            )
         ");
         $this->addSql("
             CREATE TABLE icap__portfolio_widget_skills (
                 id INT NOT NULL, 
-                PRIMARY KEY(id)
-            ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
+                PRIMARY KEY (id)
+            )
         ");
         $this->addSql("
             ALTER TABLE icap__portfolio_users 
@@ -102,6 +141,16 @@ class Version20140606145735 extends AbstractMigration
             ALTER TABLE icap__portfolio 
             ADD CONSTRAINT FK_8B1895DA76ED395 FOREIGN KEY (user_id) 
             REFERENCES claro_user (id)
+        ");
+        $this->addSql("
+            ALTER TABLE icap__portfolio_groups 
+            ADD CONSTRAINT FK_9AF01ADFFE54D947 FOREIGN KEY (group_id) 
+            REFERENCES claro_group (id)
+        ");
+        $this->addSql("
+            ALTER TABLE icap__portfolio_groups 
+            ADD CONSTRAINT FK_9AF01ADFB96B5643 FOREIGN KEY (portfolio_id) 
+            REFERENCES icap__portfolio (id)
         ");
         $this->addSql("
             ALTER TABLE icap__portfolio_abstract_widget 
@@ -138,33 +187,40 @@ class Version20140606145735 extends AbstractMigration
     {
         $this->addSql("
             ALTER TABLE icap__portfolio_users 
-            DROP FOREIGN KEY FK_3980F8F8B96B5643
+            DROP CONSTRAINT FK_3980F8F8B96B5643
+        ");
+        $this->addSql("
+            ALTER TABLE icap__portfolio_groups 
+            DROP CONSTRAINT FK_9AF01ADFB96B5643
         ");
         $this->addSql("
             ALTER TABLE icap__portfolio_abstract_widget 
-            DROP FOREIGN KEY FK_3E7AEFBBB96B5643
+            DROP CONSTRAINT FK_3E7AEFBBB96B5643
         ");
         $this->addSql("
             ALTER TABLE icap__portfolio_widget_title 
-            DROP FOREIGN KEY FK_1431A01DBF396750
+            DROP CONSTRAINT FK_1431A01DBF396750
         ");
         $this->addSql("
             ALTER TABLE icap__portfolio_widget_user_information 
-            DROP FOREIGN KEY FK_E2BFAA03BF396750
+            DROP CONSTRAINT FK_E2BFAA03BF396750
         ");
         $this->addSql("
             ALTER TABLE icap__portfolio_widget_skills 
-            DROP FOREIGN KEY FK_6C68C5A1BF396750
+            DROP CONSTRAINT FK_6C68C5A1BF396750
         ");
         $this->addSql("
             ALTER TABLE icap__portfolio_widget_skills_skill 
-            DROP FOREIGN KEY FK_98EF40A32F7BE59D
+            DROP CONSTRAINT FK_98EF40A32F7BE59D
         ");
         $this->addSql("
             DROP TABLE icap__portfolio_users
         ");
         $this->addSql("
             DROP TABLE icap__portfolio
+        ");
+        $this->addSql("
+            DROP TABLE icap__portfolio_groups
         ");
         $this->addSql("
             DROP TABLE icap__portfolio_abstract_widget

@@ -1,6 +1,6 @@
 <?php
 
-namespace Icap\PortfolioBundle\Migrations\sqlsrv;
+namespace Icap\PortfolioBundle\Migrations\pdo_sqlsrv;
 
 use Doctrine\DBAL\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
@@ -8,9 +8,9 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2014/06/06 02:57:37
+ * Generation date: 2014/06/17 04:59:13
  */
-class Version20140606145735 extends AbstractMigration
+class Version20140617165912 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
@@ -44,6 +44,25 @@ class Version20140606145735 extends AbstractMigration
         ");
         $this->addSql("
             CREATE INDEX IDX_8B1895DA76ED395 ON icap__portfolio (user_id)
+        ");
+        $this->addSql("
+            CREATE TABLE icap__portfolio_groups (
+                id INT IDENTITY NOT NULL, 
+                group_id INT NOT NULL, 
+                portfolio_id INT NOT NULL, 
+                PRIMARY KEY (id)
+            )
+        ");
+        $this->addSql("
+            CREATE INDEX IDX_9AF01ADFFE54D947 ON icap__portfolio_groups (group_id)
+        ");
+        $this->addSql("
+            CREATE INDEX IDX_9AF01ADFB96B5643 ON icap__portfolio_groups (portfolio_id)
+        ");
+        $this->addSql("
+            CREATE UNIQUE INDEX portfolio_groups_unique_idx ON icap__portfolio_groups (portfolio_id, group_id) 
+            WHERE portfolio_id IS NOT NULL 
+            AND group_id IS NOT NULL
         ");
         $this->addSql("
             CREATE TABLE icap__portfolio_abstract_widget (
@@ -124,6 +143,16 @@ class Version20140606145735 extends AbstractMigration
             REFERENCES claro_user (id)
         ");
         $this->addSql("
+            ALTER TABLE icap__portfolio_groups 
+            ADD CONSTRAINT FK_9AF01ADFFE54D947 FOREIGN KEY (group_id) 
+            REFERENCES claro_group (id)
+        ");
+        $this->addSql("
+            ALTER TABLE icap__portfolio_groups 
+            ADD CONSTRAINT FK_9AF01ADFB96B5643 FOREIGN KEY (portfolio_id) 
+            REFERENCES icap__portfolio (id)
+        ");
+        $this->addSql("
             ALTER TABLE icap__portfolio_abstract_widget 
             ADD CONSTRAINT FK_3E7AEFBBB96B5643 FOREIGN KEY (portfolio_id) 
             REFERENCES icap__portfolio (id) 
@@ -161,6 +190,10 @@ class Version20140606145735 extends AbstractMigration
             DROP CONSTRAINT FK_3980F8F8B96B5643
         ");
         $this->addSql("
+            ALTER TABLE icap__portfolio_groups 
+            DROP CONSTRAINT FK_9AF01ADFB96B5643
+        ");
+        $this->addSql("
             ALTER TABLE icap__portfolio_abstract_widget 
             DROP CONSTRAINT FK_3E7AEFBBB96B5643
         ");
@@ -185,6 +218,9 @@ class Version20140606145735 extends AbstractMigration
         ");
         $this->addSql("
             DROP TABLE icap__portfolio
+        ");
+        $this->addSql("
+            DROP TABLE icap__portfolio_groups
         ");
         $this->addSql("
             DROP TABLE icap__portfolio_abstract_widget

@@ -5,8 +5,11 @@
         var visibilityFormName = "icap_portfolio_visibility_form";
         var visibilityForm     = $("#visibility_form");
         var chooseUserBlock    = $("#choose_user");
-        var select2Field       = $("#icap_portfolio_visibility_form_search_user");
-        var addingFieldButton  = $('.form-collection-add');
+        var chooseGroupBlock   = $("#choose_group");
+        var userSelect2Field   = $("#icap_portfolio_visibility_form_search_user");
+        var groupSelect2Field  = $("#icap_portfolio_visibility_form_search_group");
+        var addingUserButton   = $('.form-collection-add-user');
+        var addingGroupButton  = $('.form-collection-add-group');
 
         ZenstruckFormHelper.initSelect2Helper()
 
@@ -16,11 +19,19 @@
         });
 
         // form collection prototype creation
-        addingFieldButton.on('click', function(e) {
-            e.preventDefault();
+        addingUserButton.on('click', function(event) {
+            addingButtonClick(event, $(this), userSelect2Field);
+        });
 
-            var $this = $(this);
-            var $container = $this.siblings('div[data-prototype]').first();
+        // form collection prototype creation
+        addingGroupButton.on('click', function(event) {
+            addingButtonClick(event, $(this), groupSelect2Field);
+        });
+
+        var addingButtonClick = function (event, element, select2Field) {
+            event.preventDefault();
+
+            var $container = element.siblings('div[data-prototype]').first();
             var count = $('.form-collection-element', $container).length;
             var prototype = $container.data('prototype');
 
@@ -37,26 +48,30 @@
             $container.children('.form-collection').removeClass('hide').append($newWidget);
 
             select2Field.select2('data', null);
-            $this.attr('disabled', 'disabled');
+            element.attr('disabled', 'disabled');
+        };
+
+        userSelect2Field.on("change", function(event) {
+            select2FieldChange(event, addingUserButton);
+        });
+        groupSelect2Field.on("change", function(event) {
+            select2FieldChange(event, addingGroupButton);
         });
 
-        select2Field
-            .on("change", function(e) {
-                log("change "+JSON.stringify({val:e.val, added:e.added, removed:e.removed}));
-                addingFieldButton.removeAttr('disabled');
-            });
-
-        var log = function (message) {
-            console.log(message);
+        var select2FieldChange = function (event, button) {
+            //console.log("change " + JSON.stringify({val: event.val, added: event.added, removed: event.removed}));
+            button.removeAttr('disabled');
         };
 
         visibilityForm.change(function() {
             var formValues = parseFormValue($(this).serializeArray());
             if (1 == formValues.visibility) {
                 chooseUserBlock.removeClass('hidden');
+                chooseGroupBlock.removeClass('hidden');
             }
             else {
                 chooseUserBlock.addClass('hidden');
+                chooseGroupBlock.addClass('hidden');
             }
         });
 

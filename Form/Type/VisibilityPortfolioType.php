@@ -31,10 +31,11 @@ class VisibilityPortfolioType extends AbstractType
     {
         $builder
             ->add('visibility', 'choice', array(
-                'choices'  => Portfolio::getVisibilityLabels(),
-                'required' => true,
-                'expanded' => true,
-                'label'    => 'visibility'
+                'choices'       => Portfolio::getVisibilityLabels(),
+                'required'      => true,
+                'expanded'      => true,
+                'label'         => 'visibility',
+                'theme_options' => array('label_width' => 'col-md-1'),
             ))
             ->add('portfolio_users', 'collection', array(
                 'type'          => 'icap_portfolio_visible_user_form',
@@ -51,6 +52,23 @@ class VisibilityPortfolioType extends AbstractType
                 'property'       => 'username',
                 'repo_method'    => 'findByNameForAjax',
                 'placeholder'    => $this->translator->trans('select_user', array(), 'icap_portfolio'),
+                'mapped'         => false
+            ))
+            ->add('portfolio_groups', 'collection', array(
+                'type'          => 'icap_portfolio_visible_group_form',
+                'by_reference'  => false,
+                'attr'          => array('class' => 'rule-collections'),
+                'theme_options' => array('label_width' => 'col-md-12'),
+                'prototype'     => true,
+                'allow_add'     => true,
+                'allow_delete'  => true
+            ))
+            ->add('search_group', 'zenstruck_ajax_entity', array(
+                'class'          => 'ClarolineCoreBundle:Group',
+                'use_controller' => true,
+                'property'       => 'name',
+                'repo_method'    => 'findByNameForAjax',
+                'placeholder'    => $this->translator->trans('select_group', array(), 'icap_portfolio'),
                 'mapped'         => false
             ));
     }

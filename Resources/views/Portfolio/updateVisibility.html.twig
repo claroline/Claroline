@@ -23,10 +23,10 @@
     }}
 {% endblock %}
 
-{% block collection_widget %}
+{% block _icap_portfolio_visibility_form_portfolio_users_widget %}
     {% spaceless %}
         {% if prototype is defined %}
-            {% set attr = attr|merge({'data-prototype': block('collection_prototype') }) %}
+            {% set attr = attr|merge({'data-prototype': block('_icap_portfolio_visibility_form_portfolio_users_prototype') }) %}
         {% endif %}
         <div {{ block('widget_container_attributes') }}>
             {{ form_errors(form) }}
@@ -50,18 +50,51 @@
             {{ form_rest(form) }}
         </div>
     {% endspaceless %}
-{% endblock collection_widget %}
+{% endblock _icap_portfolio_visibility_form_portfolio_users_widget %}
 
-{% block collection_prototype %}
-    {{ _self.collection_field(prototype, allow_delete) }}
-{% endblock collection_prototype %}
+{% block _icap_portfolio_visibility_form_portfolio_groups_widget %}
+    {% spaceless %}
+        {% if prototype is defined %}
+            {% set attr = attr|merge({'data-prototype': block('_icap_portfolio_visibility_form_portfolio_groups_prototype') }) %}
+        {% endif %}
+        <div {{ block('widget_container_attributes') }}>
+            {{ form_errors(form) }}
+            <ul class="form-collection list-inline{{ form|length ? '' : ' hide' }}">
+                {% for rows in form %}
+                    <li class="form-collection-element">
+                    {% for row in rows %}
+                        {% set group = row.vars.data %}
+                        {{ form_widget(row, {'attr': {'class': 'hidden'}}) }}
+                        <span class="label label-info">
+                            {{ group.name }}
+                            <a class="remove" aria-hidden="true" href="#" data-toggle="tooltip"
+                                title="{{ 'revoke_access'|trans({}, 'icap_portfolio') }}"data-confirm-title="{{ 'revoke_access'|trans({}, 'icap_portfolio') }}">
+                                 <span class="icon-remove"></span>
+                            </a>
+                        </span>
+                    {% endfor %}
+                    </li>
+                {% endfor %}
+            </ul>
+            {{ form_rest(form) }}
+        </div>
+    {% endspaceless %}
+{% endblock _icap_portfolio_visibility_form_portfolio_groups_widget %}
 
-{% macro collection_field(rows) %}
+{% block _icap_portfolio_visibility_form_portfolio_users_prototype %}
+    {{ _self.collection_field(prototype, 'primary') }}
+{% endblock _icap_portfolio_visibility_form_portfolio_users_prototype %}
+
+{% block _icap_portfolio_visibility_form_portfolio_groups_prototype %}
+    {{ _self.collection_field(prototype, 'info') }}
+{% endblock _icap_portfolio_visibility_form_portfolio_groups_prototype %}
+
+{% macro collection_field(rows, class) %}
     {% spaceless %}
         <li class="form-collection-element">
             {% for row in rows %}
                 {{ form_widget(row, {'attr': {'class': 'hidden'}}) }}
-                <span class="label label-primary">
+                <span class="label label-{{ class }}">
                     __value__
                     <a class="remove" aria-hidden="true" href="#" data-toggle="tooltip"
                         title="{{ 'revoke_access'|trans({}, 'icap_portfolio') }}"data-confirm-title="{{ 'revoke_access'|trans({}, 'icap_portfolio') }}">
@@ -82,13 +115,23 @@
             <div class="col-md-3">
                 {{ form_widget(form.visibility) }}
             </div>
-            <div class="col-md-6{% if 1 != form.visibility.vars.data %} hidden{% endif %}" id="choose_user">
+            <div class="col-md-5{% if 1 != form.visibility.vars.data %} hidden{% endif %}" id="choose_user">
                 <label class="row">{{ 'select_visible_users'|trans({}, 'icap_portfolio') }}</label>
                 <div class="row">
                     <div class="col-md-12">
                         {{ form_widget(form.portfolio_users) }}
                         {{ form_widget(form.search_user) }}
-                        <button class="btn btn-xs btn-success form-collection-add" disabled="disabled">{{ 'add'|trans({}, 'platform') }}</button>
+                        <button class="btn btn-xs btn-success form-collection-add-user" disabled="disabled">{{ 'add'|trans({}, 'platform') }}</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-5{% if 1 != form.visibility.vars.data %} hidden{% endif %}" id="choose_group">
+                <label class="row">{{ 'select_visible_groups'|trans({}, 'icap_portfolio') }}</label>
+                <div class="row">
+                    <div class="col-md-12">
+                        {{ form_widget(form.portfolio_groups) }}
+                        {{ form_widget(form.search_group) }}
+                        <button class="btn btn-xs btn-success form-collection-add-group" disabled="disabled">{{ 'add'|trans({}, 'platform') }}</button>
                     </div>
                 </div>
             </div>

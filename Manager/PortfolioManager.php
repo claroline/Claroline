@@ -71,10 +71,11 @@ class PortfolioManager
     }
 
     /**
-     * @param Portfolio                  $portfolio
-     * @param Collection|PortfolioUser[] $originalPortfolioUsers
+     * @param Portfolio                               $portfolio
+     * @param Collection|PortfolioUser[]              $originalPortfolioUsers
+     * @param \Doctrine\Common\Collections\Collection $originalPortfolioGroups
      */
-    public function updateVisibility(Portfolio $portfolio, Collection $originalPortfolioUsers)
+    public function updateVisibility(Portfolio $portfolio, Collection $originalPortfolioUsers, Collection $originalPortfolioGroups)
     {
         $portfolioUsers = $portfolio->getPortfolioUsers();
 
@@ -87,6 +88,19 @@ class PortfolioManager
         // Delete rules
         foreach ($originalPortfolioUsers as $originalPortfolioUser) {
             $this->entityManager->remove($originalPortfolioUser);
+        }
+
+        $portfolioGroups = $portfolio->getPortfolioGroups();
+
+        foreach ($portfolioGroups as $portfolioGroup) {
+            if ($originalPortfolioGroups->contains($portfolioGroup)) {
+                $originalPortfolioGroups->removeElement($portfolioGroup);
+            }
+        }
+
+        // Delete rules
+        foreach ($originalPortfolioGroups as $originalPortfolioGroup) {
+            $this->entityManager->remove($originalPortfolioGroup);
         }
 
         $this->persistPortfolio($portfolio);
