@@ -80,6 +80,16 @@ class FieldFacet
      */
     protected $fieldFacetsRole;
 
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    protected $isVisibleByOwner = true;
+
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    protected $isEditableByOwner = false;
+
     public function __construct()
     {
         $this->fieldsFacetValue = new ArrayCollection();
@@ -170,5 +180,25 @@ class FieldFacet
     public function getFieldFacetsRole()
     {
         return $this->fieldFacetsRole;
+    }
+
+    public function setIsVisibleByOwner($boolean)
+    {
+        $this->isVisibleByOwner = $boolean;
+    }
+
+    public function getIsVisibleByOwner()
+    {
+        return $this->isVisibleByOwner;
+    }
+
+    public function setIsEditableByOwner($boolean)
+    {
+        $this->isEditableByOwner = $boolean;
+    }
+
+    public function getIsEditableByOwner()
+    {
+        return $this->isEditableByOwner;
     }
 }

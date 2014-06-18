@@ -63,6 +63,11 @@ class Facet {
      */
     protected $roles;
 
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    protected $isVisibleByOwner = true;
+
     public function __construct()
     {
         $this->fieldsFacet = new ArrayCollection();
@@ -122,5 +127,15 @@ class Facet {
     public function setRoles(array $roles)
     {
         $this->roles = $roles;
+    }
+
+    public function setIsVisibleByOwner($boolean)
+    {
+        $this->isVisibleByOwner = $boolean;
+    }
+
+    public function getIsVisibleByOwner()
+    {
+        return $this->isVisibleByOwner;
     }
 } 

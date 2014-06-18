@@ -83,7 +83,7 @@
             var url = Routing.generate('claro_admin_field_role_form', {'field': fieldFacetId});
             displayForm(url, 'form-field-roles', function(){});
         });
-    
+
     /*******************/
     /* SORTABLE FIELDS */
     /*******************/
