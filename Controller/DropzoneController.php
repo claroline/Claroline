@@ -410,7 +410,6 @@ class DropzoneController extends DropzoneBaseController
         // drops if autoclose options is activated.
         if ($dropzone->getAutoCloseState() == Dropzone::AUTO_CLOSED_STATE_WAITING) {
             $dropzoneManager->closeDropzoneOpenedDrops($dropzone);
-
         }
 
         $nbCorrections = $em

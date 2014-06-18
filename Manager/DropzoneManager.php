@@ -5,7 +5,7 @@ use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Manager\MaskManager;
 use Claroline\CoreBundle\Entity\User;
 use Icap\DropzoneBundle\Entity\Dropzone;
-use Icap\DropzoneBundle\Entity;
+use Icap\DropzoneBundle\Entity\Drop;
 use JMS\DiExtraBundle\Annotation as DI;
 
 /**
@@ -40,7 +40,7 @@ class DropzoneManager
      */
     public function getDropzoneUsersIds(Dropzone $dropzone)
     {
-        $this->get('icap.manager.dropzone_voter')->isAllowToEdit($dropzone);
+        $this->container->get('icap.manager.dropzone_voter')->isAllowToEdit($dropzone);
 
         //getting the ressource node
         $ressourceNode = $dropzone->getResourceNode();
@@ -267,7 +267,6 @@ class DropzoneManager
      */
     public function closeDropzoneOpenedDrops(Dropzone $dropzone, $force = false)
     {
-        $this->get('icap.manager.dropzone_voter')->isAllowToEdit($dropzone);
 
         if ($force || $this->isDropzoneDropTimeIsUp($dropzone)) {
             $dropRepo = $this->em->getRepository('IcapDropzoneBundle:Drop');
