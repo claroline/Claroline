@@ -5,6 +5,7 @@ namespace Icap\PortfolioBundle\Controller;
 use Claroline\CoreBundle\Entity\User;
 use Icap\PortfolioBundle\Entity\Portfolio;
 use Icap\PortfolioBundle\Entity\Widget\TitleWidget;
+use Icap\PortfolioBundle\Event\Log\PortfolioViewEvent;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -175,6 +176,10 @@ class PortfolioController extends Controller
                         || Portfolio::VISIBILITY_USER === $portfolioVisibility
                     )) {
                 $response = new Response($this->renderView('IcapPortfolioBundle:Portfolio:view.error.html.twig', array('errorCode' => 401, 'portfolioSlug' => $portfolioSlug)), 401);
+            }
+            else {
+                $event = new PortfolioViewEvent($portfolio);
+                $this->get('event_dispatcher')->dispatch('log', $event);
             }
         }
 
