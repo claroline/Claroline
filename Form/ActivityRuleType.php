@@ -50,7 +50,6 @@ class ActivityRuleType extends AbstractType
             'choice',
             array(
                 'choices' => $actions,
-                'attr' => array('class' => 'activity-rule-action'),
                 'required' => true
             )
         );
@@ -58,7 +57,7 @@ class ActivityRuleType extends AbstractType
             'occurrence',
             'integer',
             array(
-                'attr' => array('class' => 'activity-rule-option-occurrence', 'min' => 1),
+                'attr' => array('min' => 1),
                 'required' => true
             )
         );
@@ -66,7 +65,6 @@ class ActivityRuleType extends AbstractType
             'badge',
             'entity',
             array(
-                'attr' => array('class' => 'activity-rule-option-badge'),
                 'class' => 'ClarolineCoreBundle:Badge\Badge',
                 'property' => 'translations[1].name',
                 'required' => false
@@ -76,7 +74,7 @@ class ActivityRuleType extends AbstractType
             'result',
             'integer',
             array(
-                'attr' => array('class' => 'activity-rule-option-result', 'min' => 0),
+                'attr' => array('min' => 0),
                 'required' => false
             )
         );

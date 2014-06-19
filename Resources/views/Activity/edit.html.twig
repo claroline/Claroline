@@ -27,7 +27,7 @@
             <hr>
             {{ form_widget(formParams) }}
             
-            <div id="activity-rule-form-div">
+            <div id="activity-rule-form-div" data-rule-default-starting-date="{{ defaultRuleStartingDate }}">
                 <hr>
                 <h3>{{ 'activity_rule_configuration_for_auto_evaluation' | trans({}, 'platform') }}</h3>
                 <br>

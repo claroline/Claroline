@@ -27,29 +27,29 @@
 
     function enableRuleOption()
     {
-        var actionSelect = $('.activity-rule-action').val();
+        var actionSelect = $('#activity_rule_form_action').val();
         
         switch (actionSelect) {
             case 'none':
-                $('.activity-rule-option-occurrence').prop('readonly', true);
-                $('.activity-rule-option-occurrence').val(1);
-                $('.activity-rule-option-result').attr('disabled', 'disabled');
+                $('#activity_rule_form_occurrence').prop('readonly', true);
+                $('#activity_rule_form_occurrence').val(1);
+                $('#activity_rule_form_result').attr('disabled', 'disabled');
+                $('#activity_rule_form_badge').attr('disabled', 'disabled');
+                $('#activity_rule_form_badge').val('');
                 $('.activity-rule-option-date').attr('disabled', 'disabled');
-                $('.activity-rule-option-badge').attr('disabled', 'disabled');
-                $('.activity-rule-option-badge').val('');
                 break;
             case 'badge-awarding':
-                $('.activity-rule-option-badge').attr('disabled', false);
+                $('#activity_rule_form_badge').attr('disabled', false);
                 $('.activity-rule-option-date').attr('disabled', false);
-                $('.activity-rule-option-occurrence').prop('readonly', true);
-                $('.activity-rule-option-occurrence').val(1);
-                $('.activity-rule-option-result').attr('disabled', 'disabled');
+                $('#activity_rule_form_occurrence').prop('readonly', true);
+                $('#activity_rule_form_occurrence').val(1);
+                $('#activity_rule_form_result').attr('disabled', 'disabled');
                 break;
             default:
-                $('.activity-rule-option-occurrence').prop('readonly', false);
-                $('.activity-rule-option-result').attr('disabled', false);
+                $('#activity_rule_form_occurrence').prop('readonly', false);
+                $('#activity_rule_form_result').attr('disabled', false);
                 $('.activity-rule-option-date').attr('disabled', false);
-                $('.activity-rule-option-badge').attr('disabled', 'disabled');
+                $('#activity_rule_form_badge').attr('disabled', 'disabled');
         }
     }
     
@@ -104,6 +104,16 @@
         });
     }
     
+    function setRuleDefaultStartingDate()
+    {
+        if ($('#activity_rule_form_activeFrom').val() === '') {
+            var defaultStartingDate =
+                $('#activity-rule-form-div').data('rule-default-starting-date');
+
+            $('#activity_rule_form_activeFrom').val(defaultStartingDate);
+        }
+    }
+    
     $('#activity_form_primaryResource').on('change', function () {
         checkAvailableActions();
     });
@@ -119,4 +129,5 @@
     enableRuleConfiguration();
     checkAvailableActions();
     enableRuleOption();
+    setRuleDefaultStartingDate();
 })();
