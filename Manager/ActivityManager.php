@@ -312,7 +312,8 @@ class ActivityManager
         $result,
         $activeFrom,
         $activeUntil,
-        ResourceNode $resourceNode = null)
+        ResourceNode $resourceNode = null
+    )
     {
         $rule = new ActivityRule();
         $rule->setActivityParameters($activityParams);
