@@ -103,11 +103,19 @@ log_resource-icap_dropzone-correction_validation_change_filter: 'Evaluation corr
 log_resource-icap_dropzone-drop_report_shortname: 'Copy reported '
 log_resource-icap_dropzone-drop_report_sentence: 'reported a copy in %resource%'
 log_resource-icap_dropzone-correction_report_title: 'A copy was reported'
+log_resource-icap_dropzone-correction_report_filter: 'A copy was reported'
 
 log_resource-icap_dropzone-correction_report_shortname: 'Correction reported '
 log_resource-icap_dropzone-correction_report_sentence: 'reported a Correction in %resource%'
 log_resource-icap_dropzone-correction_report_title: 'A correction was reported'
+log_resource-icap_dropzone-correction_report_filter: 'A correction was reported'
 
 log_resource-icap_dropzone-drop_grade_available_shortname: 'Available grade'
 log_resource-icap_dropzone-drop_grade_available_sentence: 'did last correction needed for a copy, grade for this copy is now available'
 log_resource-icap_dropzone-drop_grade_available_title: 'copy is corrected, grade for this copy is now available in %resource%'
+log_resource-icap_dropzone-drop_grade_available_filter: 'copy is corrected, grade for this copy is now available in %resource%'
+
+log_resource-icap_dropzone-dropzone_manual_state_changed_shortname: "%resources%'s phase changed"
+log_resource-icap_dropzone-dropzone_manual_state_changed_sentence: "has changed  the phase of %resources%"
+log_resource-icap_dropzone-dropzone_manual_state_changed_title: "Dropzone phase changed"
+log_resource-icap_dropzone-dropzone_manual_state_changed_filter: "Dropzone phase changed"

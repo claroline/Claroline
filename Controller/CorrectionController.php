@@ -251,12 +251,13 @@ class CorrectionController extends DropzoneBaseController
      * */
     private function checkUserGradeAvailable(Dropzone $dropzone,Drop $drop, $user)
     {
-
         // notification only in the PeerReview mode.
+        $em = $this->getDoctrine()->getManager();
+        $event = new LogDropGradeAvailableEvent($dropzone, $drop);
         if($dropzone->getPeerReview() == 1)
         {
 
-            $em = $this->getDoctrine()->getManager();
+
             // copy corrected by user
             $nbCorrectionByUser = $em->getRepository('IcapDropzoneBundle:Correction')->getAlreadyCorrectedDropIds($dropzone, $user);
 
@@ -273,11 +274,17 @@ class CorrectionController extends DropzoneBaseController
             if( count($nbCorrectionByOthersOnUsersCopy) >= $expectedCorrections  )
             {
                 //dispatchEvent.
-                $rm = $this->get('claroline.manager.role_manager');
-                $event = new LogDropGradeAvailableEvent($dropzone,$drop);
                 $this->get('event_dispatcher')->dispatch('log', $event);
             }
 
+        } else {
+
+            $nbCorrectionByOthersOnUsersCopy = $em->getRepository('IcapDropzoneBundle:Correction')
+                ->getCorrectionsIds($dropzone, $drop);
+
+            if ($nbCorrectionByOthersOnUsersCopy > 0) {
+                $this->get('event_dispatcher')->dispatch('log', $event);
+            }
         }
 
     }
@@ -604,6 +611,9 @@ class CorrectionController extends DropzoneBaseController
                 $em->flush();
 
                 $this->dispatch($event);
+
+                $event = new LogDropGradeAvailableEvent($dropzone, $correction->getDrop());
+                $this->get('event_dispatcher')->dispatch('log', $event);
 
                 $this->getRequest()->getSession()->getFlashBag()->add(
                     'success',
@@ -991,12 +1001,13 @@ class CorrectionController extends DropzoneBaseController
         $correction->setDropzone($dropzone);
         $correction->setDrop($drop);
         //Allow admins to edit this correction
-        $correction->setEditable(true);
+        $correction->setEditable(true);;
         $em->persist($correction);
         $em->flush();
 
         $event = new LogCorrectionStartEvent($dropzone, $drop, $correction);
         $this->dispatch($event);
+
 
         return $this->redirect(
             $this->generateUrl(
@@ -1162,6 +1173,7 @@ class CorrectionController extends DropzoneBaseController
 
         if ($value == 'yes') {
             $correction->setValid(true);
+            $correction->setFinished(true);
         } else {
             $correction->setValid(false);
         }
@@ -1171,6 +1183,9 @@ class CorrectionController extends DropzoneBaseController
 
         $event = new LogCorrectionValidationChangeEvent($dropzone, $correction->getDrop(), $correction);
         $this->dispatch($event);
+
+        //Notify user his copy has an available note
+        $this->checkUserGradeAvailableByDrop($correction->getDrop());
 
         if ($routeParam == 'default') {
             return $this->redirect(

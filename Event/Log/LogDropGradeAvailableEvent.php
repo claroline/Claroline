@@ -28,7 +28,8 @@ class LogDropGradeAvailableEvent extends AbstractLogResourceEvent implements Not
         $this->drop = $drop;
         $this->details = array(
                 'drop' => $drop,
-                'dropzoneId' => $dropzone->getId(),
+            'dropGrade' => $drop->getCalculatedGrade(),
+            'dropzoneId' => $dropzone->getId(),
                 'dropId' => $drop->getId(),
         );
 
