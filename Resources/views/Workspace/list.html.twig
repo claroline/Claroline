@@ -16,7 +16,7 @@
                         data-toggle="collapse"
                         href="#collapse-{{ currentIndex }}"
                     >
-                        <i class="icon-align-justify"></i>
+                        <i class="fa fa-align-justify"></i>
                         {{ tag.getName() }}
                         {% if workspace is not null %}
                             {% set granted = has_access_to_workspace(workspaceId) %}
@@ -25,7 +25,7 @@
                                 workspace-id="{{ workspaceId }}"
                             >
                                 [
-                                <i class="icon-book"></i>
+                                <i class="fa fa-book"></i>
                                 {{ workspaceName }}
                                 <small>({{ workspaceCode }})</small>
                                 ]
@@ -60,7 +60,7 @@
     {{
         macros.breadcrumbs([
             {
-                'icon': 'icon-book',
+                'icon': 'fa fa-book',
                 'name': 'workspaces'|trans({}, 'platform'),
                 'href': path('claro_workspace_list')
             },
@@ -99,7 +99,7 @@
                         data-parent="#accordion-all"
                         href="#collapse-all"
                     >
-                        <i class="icon-align-justify"></i>
+                        <i class="fa fa-align-justify"></i>
                         {{ 'all_workspaces'|trans({}, 'platform') }}
                     </a>
                 </div>

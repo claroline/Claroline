@@ -36,7 +36,7 @@
 
 {% macro displayControls(group) %}
     {% if app.user %}
-        <button class="btn btn-default action-button" data-action="add"><i class="icon-plus"></i> {{ 'add'|trans({}, 'platform') }}</button>
+        <button class="btn btn-default action-button" data-action="add"><i class="fa fa-plus"></i> {{ 'add'|trans({}, 'platform') }}</button>
     {% endif %}
 {% endmacro %}
 
@@ -53,7 +53,7 @@
     {{
         macros.breadcrumbs([
             {
-                'icon': 'icon-cog',
+                'icon': 'fa fa-cog',
                 'name': 'administration'|trans({}, 'platform'),
                 'href': path('claro_admin_index')
             },
@@ -91,7 +91,7 @@
                     <input class="form-control" type="text" id="search-items-txt" placeholder="{{ 'search'|trans({}, 'platform') }}" value={{search}}>
                     <span class="input-group-btn">
                         <button class="filter btn btn-default" type="button" id="search-button">
-                            <i class="icon-search"></i>
+                            <i class="fa fa-search"></i>
                         </button>
                     </span>
                 </div>

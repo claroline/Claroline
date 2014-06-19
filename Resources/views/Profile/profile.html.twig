@@ -11,7 +11,7 @@
             </h3>
             {% if user.getId() == app.user.id or is_granted('ROLE_ADMIN') %}
                 <a href="{{ path('claro_profile_form', {'user': user.getId}) }}" class="btn btn-primary float-right-top" role="button">
-                    <i class="icon-edit"></i> {{ 'edit'|trans({}, 'platform') }}
+                    <i class="fa fa-pencil-square-o"></i> {{ 'edit'|trans({}, 'platform') }}
                 </a>
             {% endif %}
         </div>
@@ -22,13 +22,13 @@
                         <img src="{{ asset('uploads/pictures/') ~  user.getPicture() }}" class="col-md-2" alt="{{ user.getLastName() ~ ' ' ~ user.getFirstName() }}">
                     {% else %}
                         <div class="col-md-2">
-                            <h1 ><i class="icon-user"></i><h1>
+                            <h1 ><i class="fa fa-user"></i><h1>
                         </div>
                     {% endif %}
                 </div>
                 <p>
                     {% if user.getMail() != "" %}
-                       <a href="{{path('claro_mail_form', {'userId':user.getId()})}}"> <i class="icon-envelope"></i>
+                       <a href="{{path('claro_mail_form', {'userId':user.getId()})}}"> <i class="fa fa-envelope"></i>
                         {{ user.getMail() }}
                          </a>
                     {% endif %}
@@ -38,14 +38,14 @@
                     <li> {{'User name' | trans({}, 'platform') }}: {{user.getUsername()}}</li>
                 </ul>
                     {% if user.getPhone() != "" %}
-                        <i class="icon-phone"></i> {{ user.getPhone() }}
+                        <i class="fa fa-phone"></i> {{ user.getPhone() }}
                     {% endif %}
                 </p>
                 <p>{{ user.getDescription() |raw }} </p>
                 <p class="text-muted">{{ 'user'|trans({}, 'platform') }} {{ user.getCreationDate()| timeAgo }}</p>
                 <p>
-                    <a class="btn btn-default" href="{{path('claro_mail_form', {'userId':user.getId()})}}" role="button"><i class="icon-comment"></i> {{ 'send_mail'|trans({}, 'platform') }}</a>
-                    <a class="btn btn-default" href="{{path('claro_message_show', {'message': 0})}}?ids[]={{ user.getId() }}" role="button"><i class="icon-envelope"></i> {{ 'send_message'|trans({}, 'platform') }}</a>
+                    <a class="btn btn-default" href="{{path('claro_mail_form', {'userId':user.getId()})}}" role="button"><i class="fa fa-comment"></i> {{ 'send_mail'|trans({}, 'platform') }}</a>
+                    <a class="btn btn-default" href="{{path('claro_message_show', {'message': 0})}}?ids[]={{ user.getId() }}" role="button"><i class="fa fa-envelope"></i> {{ 'send_message'|trans({}, 'platform') }}</a>
                 </p>
             </div>
         </div>

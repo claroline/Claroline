@@ -7,16 +7,16 @@
        <div class="list-group menu">
             <div class="list-group-item disabled">{{ 'workspaces' | trans({}, "platform")}}</div>
             <a class="list-group-item{{ "/workspaces/" | activeLink  }}" href="{{ path('claro_workspace_list') }}">
-                <i class="icon-book"></i>
+                <i class="fa fa-book"></i>
                 {{ 'all_workspaces'|trans({}, 'platform') }}
             </a>
             <a class="list-group-item {{ "/workspaces/user" | activeLink  }}" href="{{ path('claro_workspace_by_user') }}">
-                <i class="icon-book"></i>
+                <i class="fa fa-book"></i>
                 {{ 'my_workspaces'|trans({}, 'platform') }}
             </a>
             {% if is_granted('ADMIN') %}
                 <a class="list-group-item {{ "/workspaces/new/form" | activeLink  }}" href="{{ path('claro_workspace_creation_form') }}">
-                    <i class="icon-pencil"></i>
+                    <i class="fa fa-pencil"></i>
                     {{ 'create_workspace'|trans({}, 'platform') }}
                 </a>
             {% endif %}

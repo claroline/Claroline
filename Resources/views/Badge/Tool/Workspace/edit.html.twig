@@ -80,7 +80,7 @@
                     <h3>
                         {{ 'badge_awarded_to'|trans }} :
                         <a href="{{ path('claro_workspace_tool_badges_award', {'workspaceId': workspace.id, 'slug': badge.slug}) }}" id="awardUser" role="button" class="btn btn-default pull-right" data-toggle="tooltip" data-placement="left" title="{{ 'award_badge'|trans }}" role="button">
-                            <span class="icon-plus-sign"></span>
+                            <span class="fa fa-plus-circle"></span>
                         </a>
                     </h3>
                     <div class="table-responsive">
@@ -96,7 +96,7 @@
                             {% for user in pager.currentPageResults %}
                                 <tr>
                                     <td>
-                                        <a class="close confirm" href="{{ path('claro_workspace_tool_badges_unaward', {'workspaceId': workspace.id, 'id': badge.id, 'username': user.username}) }}" data-toggle="tooltip" title="{{ 'badge_unaward_confirm_title'|trans }}" data-confirm-title="{{ 'badge_unaward_confirm_title'|trans }}" data-confirm-message="{{ 'badge_unaward_confirm_message'|trans({'%badgeName%': badge.name, '%user%': user.firstname ~ ' ' ~ user.lastname}) }}" data-confirm-ok="{{ 'unaward'|trans }}" data-confirm-cancel="{{ 'cancel'|trans({}, 'platform') }}"><span class="icon-remove-circle"></span></a>
+                                        <a class="close confirm" href="{{ path('claro_workspace_tool_badges_unaward', {'workspaceId': workspace.id, 'id': badge.id, 'username': user.username}) }}" data-toggle="tooltip" title="{{ 'badge_unaward_confirm_title'|trans }}" data-confirm-title="{{ 'badge_unaward_confirm_title'|trans }}" data-confirm-message="{{ 'badge_unaward_confirm_message'|trans({'%badgeName%': badge.name, '%user%': user.firstname ~ ' ' ~ user.lastname}) }}" data-confirm-ok="{{ 'unaward'|trans }}" data-confirm-cancel="{{ 'cancel'|trans({}, 'platform') }}"><span class="fa fa-times-circle-o"></span></a>
                                     </td>
                                     <td><a href="{{ path('claro_public_profile_view', {'publicUrl': user.publicUrl}) }}" title="{{ user.firstname }} {{ user.lastname }}">{{ user.firstname }}</a></td>
                                     <td>{{ user.lastname }}</td>
@@ -139,7 +139,7 @@
             <h3 id='user-list-block' class="sub-section-header">
                 {{ 'edit_badge'|trans({'%badge_name%' : badge.name}) }}
                 <a href="{{ path('claro_workspace_tool_badges_delete', {'workspaceId': workspace.id, 'slug': badge.slug}) }}" title="{{ 'delete'|trans({}, 'platform') }}" class="btn btn-sm btn-danger delete pull-right" data-confirm-title="{{ 'badge_delete_confirm_title'|trans }}" data-confirm-message="{{ 'badge_delete_confirm_message'|trans({'%badgeName%': badge.name}) }}" data-confirm-ok="{{ 'delete'|trans({}, 'platform') }}" data-confirm-cancel="{{ 'cancel'|trans({}, 'platform') }}" data-confirm-style="danger" role="button">
-                    <span class="icon-trash"></span>
+                    <span class="fa fa-trash-o"></span>
                 </a>
             </h3>
             {% if 0 < pager.currentPageResults|length %}
@@ -152,7 +152,7 @@
                 <div class="row badges_infos">
                     <div class="col-md-2{% if form.file.vars.errors|length > 0 %} has-error{% endif %}">
                         <button type="button" id="change_image" class="btn btn-xs btn-default">
-                            <span class="icon-edit">{{ 'badge_form_change_image'|trans }}</span>
+                            <span class="fa fa-pencil-square-o">{{ 'badge_form_change_image'|trans }}</span>
                         </button>
                         <a href="#" class="thumbnail upload_image_placeholder">
                             <img src="{{ asset(badge.webPath) }}" id="current_image" class="badge_image" alt="{{ 'upload' | trans({}, 'platform') }}" />
@@ -211,7 +211,7 @@
                                         {{ form_widget(form.is_expiring) }}{{ 'badge_form_is_expiring'|trans }}
                                     </label>
                                     <button type="button" class="btn btn-default btn-xs help" data-container="body" data-toggle="popover" data-placement="right" data-content="{{ 'badge_expiration_date_explanation'|trans }}">
-                                        <span class="icon-question"></span>
+                                        <span class="fa fa-question"></span>
                                     </button>
                                 </div>
                             </div>

@@ -38,7 +38,7 @@
     {{
         macros.breadcrumbs([
             {
-                'icon': 'icon-cog',
+                'icon': 'fa fa-cog',
                 'name': 'administration'|trans({}, 'platform'),
                 'href': path('claro_admin_index')
             },
@@ -71,7 +71,7 @@
             <h3>{{'users_visits'|trans({}, 'platform')}}</h3>
             <div id="connections-line-chart" class="line-chart"></div>
             <br/>
-            <div class="count_by_day_chart_legend"><i class="icon-hand-up"></i> <em>{{ 'Draw an area on the graph to zoom, double-click to cancel'|trans({}, 'platform') }}</em></div>
+            <div class="count_by_day_chart_legend"><i class="fa fa-hand-o-up"></i> <em>{{ 'Draw an area on the graph to zoom, double-click to cancel'|trans({}, 'platform') }}</em></div>
         </div>
     </div>
 {% endblock %}

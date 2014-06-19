@@ -17,7 +17,7 @@
     {{
         macros.breadcrumbs([
             {
-                'icon': 'icon-cog',
+                'icon': 'fa fa-cog',
                 'name': 'administration'|trans({}, 'platform'),
                 'href': path('claro_admin_index')
             },
@@ -58,11 +58,11 @@
         </div>
     </div>
     <div class="theme-generator panel-footer">
-        <button class="btn save btn-primary"{% if theme is defined %} data-id="{{ theme.getId() }}"{% endif %}><i class="icon-ok"></i> {{ "Save" | trans({}, "theme") }}</button>
-        <a href="{{ path("claroline_admin_theme_list") }}" class="btn btn-default" role="button"><i class="icon-reply"></i> {{ "Cancel" | trans({}, "theme") }}</a>
-        <button class="btn btn-default preview"{% if theme is defined %} data-id="{{ theme.getId() }}"{% endif %}><i class="icon-eye-open"></i> {{ "Preview" | trans({}, "theme") }}</button>
+        <button class="btn save btn-primary"{% if theme is defined %} data-id="{{ theme.getId() }}"{% endif %}><i class="fa fa-check"></i> {{ "Save" | trans({}, "theme") }}</button>
+        <a href="{{ path("claroline_admin_theme_list") }}" class="btn btn-default" role="button"><i class="fa fa-reply"></i> {{ "Cancel" | trans({}, "theme") }}</a>
+        <button class="btn btn-default preview"{% if theme is defined %} data-id="{{ theme.getId() }}"{% endif %}><i class="fa fa-eye"></i> {{ "Preview" | trans({}, "theme") }}</button>
         {% if theme is defined %}
-            <button class="btn btn-default dele" data-id="{{ theme.getId() }}"><i class="icon-trash"></i> {{ "Delete" | trans({}, "theme") }}</button>
+            <button class="btn btn-default dele" data-id="{{ theme.getId() }}"><i class="fa fa-trash-o"></i> {{ "Delete" | trans({}, "theme") }}</button>
         {% endif %}
     </div>
 
@@ -98,7 +98,7 @@
                                                 <td width="40%" class="theme-code"><code>{{ code }}</code></td>
                                                 <td class="theme-value input-group">
                                                     <span class="input-group-btn">
-                                                        <button class="btn btn-primary" type="button"><i class="icon-tint"></i></button>
+                                                        <button class="btn btn-primary" type="button"><i class="fa fa-tint"></i></button>
                                                     </span>
                                                     <input class="form-control" type="text" value="{{ value }}"/>
                                                 </td>

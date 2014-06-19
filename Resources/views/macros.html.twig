@@ -64,7 +64,7 @@
     {% import _self as self %}
 
     {% set myDesktop = [{
-            'icon': 'icon-briefcase',
+            'icon': 'fa fa-briefcase',
             'name': 'desktop'|trans({}, 'platform'),
             'href': path('claro_desktop_open')
         }]
@@ -80,7 +80,7 @@
     {% set workspaceElements =
         [
             {
-                'icon': 'icon-book',
+                'icon': 'fa fa-book',
                 'name': 'my_workspaces'|trans({}, 'platform'),
                 'href': path('claro_workspace_by_user')
             },

@@ -10,7 +10,7 @@
         {{
             macros.breadcrumbs([
                 {
-                    'icon': 'icon-cog',
+                    'icon': 'fa fa-cog',
                     'name': 'administration'|trans({}, 'platform'),
                     'href': path('claro_admin_index')
                 },
@@ -43,7 +43,7 @@
         </div>
         <div class="panel-body">
             <a class="btn btn-primary" href="{{ path('claroline_admin_theme_edit', {'id': theme.getId()}) }}">
-                <i class="icon-reply"></i> {{ 'Back to the edition page' | trans({}, 'theme') }}
+                <i class="fa fa-reply"></i> {{ 'Back to the edition page' | trans({}, 'theme') }}
             </a>
             <hr>
             <h3>{{ 'Example content' | trans({}, 'theme') }}:</h3>
@@ -51,17 +51,17 @@
             <div class="bs-example">
               <div class="btn-toolbar">
                 <div class="btn-group">
-                  <button type="button" class="btn btn-default"><span class="icon-align-left"></span></button>
-                  <button type="button" class="btn btn-default"><span class="icon-align-center"></span></button>
-                  <button type="button" class="btn btn-default"><span class="icon-align-right"></span></button>
-                  <button type="button" class="btn btn-default"><span class="icon-align-justify"></span></button>
+                  <button type="button" class="btn btn-default"><span class="fa fa-align-left"></span></button>
+                  <button type="button" class="btn btn-default"><span class="fa fa-align-center"></span></button>
+                  <button type="button" class="btn btn-default"><span class="fa fa-align-right"></span></button>
+                  <button type="button" class="btn btn-default"><span class="fa fa-align-justify"></span></button>
                 </div>
               </div>
               <div class="btn-toolbar">
-                <button type="button" class="btn btn-default btn-lg"><span class="icon-star"></span> Star</button>
-                <button type="button" class="btn btn-default"><span class="icon-star"></span> Star</button>
-                <button type="button" class="btn btn-default btn-sm"><span class="icon-star"></span> Star</button>
-                <button type="button" class="btn btn-default btn-xs"><span class="icon-star"></span> Star</button>
+                <button type="button" class="btn btn-default btn-lg"><span class="fa fa-star"></span> Star</button>
+                <button type="button" class="btn btn-default"><span class="fa fa-star"></span> Star</button>
+                <button type="button" class="btn btn-default btn-sm"><span class="fa fa-star"></span> Star</button>
+                <button type="button" class="btn btn-default btn-xs"><span class="fa fa-star"></span> Star</button>
               </div>
             </div>
 
