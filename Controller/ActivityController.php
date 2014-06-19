@@ -195,6 +195,19 @@ class ActivityController
     }
 
     /**
+     * @Route("removeprimary/{activity}", name="claro_activity_remove_primary_resource", options = {"expose": true})
+     * @ParamConverter("activity", class = "ClarolineCoreBundle:Resource\Activity", options = {"id" = "activity"})
+     */
+    public function removePrimaryResourceAction($activity)
+    {
+        $this->checkAccess('edit', $activity);
+
+        $this->activityManager->removePrimaryResource($activity);
+
+        return new Response('true');
+    }
+
+    /**
      * @Route("remove/{activity}/{resource}", name="claro_activity_remove_resource", options = {"expose": true})
      * @ParamConverter("activity", class = "ClarolineCoreBundle:Resource\Activity", options = {"id" = "activity"})
      * @ParamConverter("resource", class = "ClarolineCoreBundle:Resource\ResourceNode", options = {"id" = "resource"})

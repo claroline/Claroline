@@ -51,6 +51,11 @@
         </ul>
         <div class="activities">
             <div id="activity-primary">
+                {% if is_granted('edit', _resource) and not _resource.getPrimaryResource() is empty %}
+                    <button class="remove-primary-resource btn btn-default pull-right" data-id="{{ _resource.getId() }}">
+                        <i class="icon-trash"></i> {{ 'activity_remove_primary_resource' | trans({}, 'platform') }}
+                    </button>
+                {% endif %}
                 {% if not _resource.getDescription() is empty %}
                     <div>{{ _resource.getDescription() | raw }}</div>
                 {% endif %}

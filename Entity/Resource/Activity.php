@@ -116,7 +116,7 @@ class Activity extends AbstractResource
      * @param  ResourceNode  $primaryResource
      * @return activity
      */
-    public function setPrimaryResource(ResourceNode $primaryResource)
+    public function setPrimaryResource($primaryResource = null)
     {
         $this->primaryResource = $primaryResource;
 

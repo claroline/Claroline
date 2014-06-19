@@ -86,6 +86,16 @@ class ActivityManager
     }
 
     /**
+     * Remove the primary resource of an activity
+     */
+    public function removePrimaryResource(Activity $activity)
+    {
+        $activity->setPrimaryResource();
+        $this->om->persist($activity);
+        $this->om->flush();
+    }
+
+    /**
      * Remove a resource from an activity
      */
     public function removeResource(Activity $activity, ResourceNode $resource)
@@ -168,7 +178,7 @@ class ActivityManager
         $pastStatus = ($activityStatus === 'incomplete' || $activityStatus === 'failed') ?
             $activityStatus :
             'unknown';
-        
+
         if (isset($rulesLogs['rules']) && is_array($rulesLogs['rules'])) {
 
             foreach ($rulesLogs['rules'] as $ruleLogs) {
@@ -176,17 +186,17 @@ class ActivityManager
 
                 foreach ($logs as $log) {
                     $pastEvalExisted = false;
-                    
+
                     // Checks if this archived log is the same as the log
                     // that triggers the evaluation
                     if ($log->getId() === $currentLog->getId()) {
                         break;
                     }
-                    
+
                     // Checks if the log is already associated to an existing
                     // PastEvaluation
                     if (!$isFirstEvaluation) {
-                        
+
                         foreach ($pastEvals as $pastEval) {
 
                             if (!is_null($pastEval->getLog()) &&
@@ -197,7 +207,7 @@ class ActivityManager
                             }
                         }
                     }
-                    
+
                     // If the log isn't associated to an existing PastEvaluation
                     if (!$pastEvalExisted) {
                         $logDetails = $log->getDetails();
@@ -225,7 +235,7 @@ class ActivityManager
                         $pastEval->setScoreMax($scoreMax);
                         $pastEval->setDuration($duration);
                         $pastEval->setStatus($pastStatus);
-                        
+
                         $nbAttempts++;
                         $totalTime = $this->computeActivityTotalTime(
                             $totalTime,
@@ -236,7 +246,7 @@ class ActivityManager
                 }
             }
         }
-        
+
         // Creates a PastEvaluation for the log that triggers the evaluation
         $logDetails = $currentLog->getDetails();
         $duration = isset($logDetails['duration']) ?
@@ -302,7 +312,8 @@ class ActivityManager
         $result,
         $activeFrom,
         $activeUntil,
-        ResourceNode $resourceNode = null)
+        ResourceNode $resourceNode = null
+    )
     {
         $rule = new ActivityRule();
         $rule->setActivityParameters($activityParams);

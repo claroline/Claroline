@@ -62,6 +62,8 @@ activity_form_name: Nom
 activity_parameters_form_evaluation_type: 'Type d''évaluation'
 activity_parameters_form_max_attempts: 'Nombre de tentatives permises'
 activity_parameters_form_max_duration: 'Temps limite accordé'
+activity_remove_primary_resource: Enlever la resource primaire
+activity_resource_not_allowed: Vous ne pouvez pas ajouter une ressource de ce type
 activity_resource_remove: Êtes-vous sûr de vouloir enlever cette ressource de l'activite?
 activity_rule_action_none: Aucune
 activity_rule_configuration_for_auto_evaluation: 'Configuration de la règle pour l''évaluation automatique'
@@ -275,6 +277,7 @@ facebook: Facebook
 facebook_application_validation_error: 'Les identifiants fournis ne sont pas valides.'
 facets: Facettes
 fail_add_user_group_message: Ces utilisateurs n'ont pas pu être ajouté au groupe (vérifiez la limite d'utilisateurs par rôle).
+fail_add_user_group_message: Ces utilisateurs n'ont pas pu être ajoutés au groupe (vérifiez la limite d'utilisateurs par rôle).
 fast_answer: 'Réponse rapide'
 fb_client_id: 'Id de l''application'
 fb_client_secret: 'Secret de l''application'
@@ -362,6 +365,7 @@ last_name: Nom
 layout: Layout
 leave_this_page: 'Si vous quittez cette page, vous risquez de perdre vos modifications.'
 left: Gauche
+limit: Limite
 line_number: 'Ligne %line%:'
 line_per_page: 'Résultats par page'
 link: Lien
@@ -535,7 +539,6 @@ public_profile_undiscoverable_anonymously_text: 'Vous devez être <a href="%logi
 public_profile_undiscoverable_text: 'Nous n''avons trouvé aucun profil concordant pour <strong>%publicUrl%</strong>'
 public_profile_url_tuning_only_once: 'La personnalisation de l''URL de votre profil public n''est possible qu''une seule fois'
 public_registration: 'Inscription publique'
-activity_resource_not_allowed: Vous ne pouvez pas ajouter une ressource de ce type
 public_url_help: 'Note : Votre URL personnalisée doit comprendre au maximum 30 lettres ou chiffres. Ne pas utiliser d''espaces, de symboles ou de caractères spéciaux.'
 public_workspace_empty: 'Il n''y a aucun espace d''activités public.'
 public_workspaces: 'Espaces d''activités publics'
@@ -611,7 +614,9 @@ role: Rôle
 role_creation: 'Création d''un rôle'
 role_edition: 'Modification d''un rôle'
 role_limit_reached: La limite d'utilisateur de type %translationKey% a été atteinte.
+role_limit_reached: La limite d'utilisateurs de type %translationKey% a été atteinte.
 role_list: Liste des roles
+role_list: Liste des rôles
 role_name_type_form_translationKey: Nom
 roles: Rôles
 roles_management: 'Gestion des rôles'
@@ -733,6 +738,7 @@ unable_to_start_transport: 'La connexion avec le serveur de mails ne peut pas ê
 unauthorized: 'Vous n''êtes pas autorisé à consulter cette page.'
 unavailable_platform: La plateforme n'est pas disponible.
 unavailable_role: Le role %translationKey% n'est pas utilisable
+unavailable_role: Le rôle %translationKey% n'est pas utilisable
 uncompress_file: Décompresser le fichier si possible
 under_min_length: 'Cette valeur est trop courte'
 unique connections: 'Nb Cnx. uniques'
@@ -751,6 +757,8 @@ user: Utilisateur
 user_accounts: 'Comptes utilisateur'
 user_creation: 'Création d''un utilisateur'
 user_limit_reached: La limite de création d'utilisateur a été atteinte.
+user_limit_reached: La limite de création d'utilisateurs a été atteinte.
+user_limit_too_low: Il y a déjà %total% %role%(s). La limite %newMax% est trop faible.
 user_parameters: 'Paramètres de l''utilisateur'
 user_picker: 'Outil pour choisir un utilisateur'
 user_profile: 'Profil utilisateur'
@@ -849,15 +857,3 @@ yes: oui
 yesterday_activity: 'Activité de la veille'
 your_current_url: 'Votre URL actuelle'
 your_username: 'Votre nom d''utilisateur est '
-closed_account: Compte clos
-role_list: Liste des rôles
-unavailable_role: Le rôle %translationKey% n'est pas utilisable
-fail_add_user_group_message: Ces utilisateurs n'ont pas pu être ajoutés au groupe (vérifiez la limite d'utilisateurs par rôle).
-unavailable_platform: La plateforme n'est pas disponible.
-account_duration_label: Durée de vie des comptes (jours)
-platform_init_date: Date d'activation de la plateforme
-platform_expiration_date: Date d'expiration de la plateforme
-role_limit_reached: La limite d'utilisateurs de type %translationKey% a été atteinte.
-user_limit_reached: La limite de création d'utilisateurs a été atteinte.
-user_limit_too_low: Il y a déjà %total% %role%(s). La limite %newMax% est trop faible.
-limit: Limite
