@@ -269,6 +269,7 @@ facebook: Facebook
 facebook_application_validation_error: 'Les identifiants fournis ne sont pas valides.'
 facets: Facettes
 fail_add_user_group_message: Ces utilisateurs n'ont pas pu être ajouté au groupe (vérifiez la limite d'utilisateurs par rôle).
+fail_add_user_group_message: Ces utilisateurs n'ont pas pu être ajoutés au groupe (vérifiez la limite d'utilisateurs par rôle).
 fast_answer: 'Réponse rapide'
 fb_client_id: 'Id de l''application'
 fb_client_secret: 'Secret de l''application'
@@ -356,6 +357,7 @@ last_name: Nom
 layout: Layout
 leave_this_page: 'Si vous quittez cette page, vous risquez de perdre vos modifications.'
 left: Gauche
+limit: Limite
 line_number: 'Ligne %line%:'
 line_per_page: 'Résultats par page'
 link: Lien
@@ -604,7 +606,9 @@ role: Rôle
 role_creation: 'Création d''un rôle'
 role_edition: 'Modification d''un rôle'
 role_limit_reached: La limite d'utilisateur de type %translationKey% a été atteinte.
+role_limit_reached: La limite d'utilisateurs de type %translationKey% a été atteinte.
 role_list: Liste des roles
+role_list: Liste des rôles
 role_name_type_form_translationKey: Nom
 roles: Rôles
 roles_management: 'Gestion des rôles'
@@ -726,6 +730,7 @@ unable_to_start_transport: 'La connexion avec le serveur de mails ne peut pas ê
 unauthorized: 'Vous n''êtes pas autorisé à consulter cette page.'
 unavailable_platform: La plateforme n'est pas disponible.
 unavailable_role: Le role %translationKey% n'est pas utilisable
+unavailable_role: Le rôle %translationKey% n'est pas utilisable
 uncompress_file: Décompresser le fichier si possible
 under_min_length: 'Cette valeur est trop courte'
 unique connections: 'Nb Cnx. uniques'
@@ -744,6 +749,8 @@ user: Utilisateur
 user_accounts: 'Comptes utilisateur'
 user_creation: 'Création d''un utilisateur'
 user_limit_reached: La limite de création d'utilisateur a été atteinte.
+user_limit_reached: La limite de création d'utilisateurs a été atteinte.
+user_limit_too_low: Il y a déjà %total% %role%(s). La limite %newMax% est trop faible.
 user_parameters: 'Paramètres de l''utilisateur'
 user_picker: 'Outil pour choisir un utilisateur'
 user_profile: 'Profil utilisateur'

@@ -696,7 +696,7 @@ class RoleManager
      */
     public function validateRoleInsert(AbstractRoleSubject $ars, Role $role)
     {
-        $total = $this->om->getRepository('ClarolineCoreBundle:User')->countUsersByRoleIncludingGroup($role);
+        $total = $this->countUsersByRoleIncludingGroup($role);
 
         //cli always win!
         if ($role->getName() === 'ROLE_ADMIN' && php_sapi_name() === 'cli' ) {
@@ -721,5 +721,14 @@ class RoleManager
 
             return (($total + $countUsers - $substractUsers) < $role->getMaxUsers()) ? true: false;
         }
+    }
+
+    /**
+     * @param Role $role
+     * @return bool
+     */
+    public function countUsersByRoleIncludingGroup(Role $role)
+    {
+        return $this->om->getRepository('ClarolineCoreBundle:User')->countUsersByRoleIncludingGroup($role);
     }
 }
