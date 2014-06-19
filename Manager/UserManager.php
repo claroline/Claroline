@@ -900,9 +900,8 @@ class UserManager
      */
     public function generatePublicUrl(User $user, $try = 0)
     {
-        $firstName = str_replace(' ', '-', $user->getFirstName());
-        $lastName = str_replace(' ', '-', $user->getLastName());
-        $publicUrl = strtolower(sprintf('%s.%s', $firstName, $lastName));
+        $publicUrl = $user->getFirstName() . '.' . $user->getLastName();
+        $publicUrl = strtolower(str_replace(' ', '-', $publicUrl));
 
         if (0 < $try) {
             $publicUrl .= $try;

@@ -13,16 +13,14 @@ namespace Claroline\CoreBundle\Library\Installation\Updater;
 
 use Doctrine\ORM\EntityManager;
 
-class Updater021601
+class Updater021602
 {
-    private $container;
-    private $logger;
     /** @var EntityManager */
     private $em;
+    private $logger;
 
     public function __construct($container)
     {
-        $this->container = $container;
         $this->em = $container->get('doctrine.orm.entity_manager');
     }
 
