@@ -29,7 +29,7 @@
 {% macro displayControls() %}
     {% if app.user %}
         <button class="btn btn-default action-button" data-action="remove">
-            <i class="icon-trash"></i>
+            <i class="fa fa-trash-o"></i>
             {{ 'delete'|trans({}, 'platform') }}
         </button>
     {% endif %}
@@ -56,7 +56,7 @@
     {{
         macros.breadcrumbs([
             {
-                'icon': 'icon-cog',
+                'icon': 'fa fa-cog',
                 'name': 'administration'|trans({}, 'platform'),
                 'href': path('claro_admin_index')
             },
@@ -86,7 +86,7 @@
                     <input class="form-control" type="text" id="search-items-txt" placeholder="{{ 'search'|trans({}, 'platform') }}" value={{search}}>
                     <span class="input-group-btn">
                         <button class="filter btn btn-default" type="button" id="search-button">
-                            <i class="icon-search"></i>
+                            <i class="fa fa-search"></i>
                         </button>
                     </span>
                 </div>
@@ -126,7 +126,7 @@
                             <td>
                                 <a class="btn btn-default"
                                    href="{{ path('claro_admin_group_settings_form', {'groupId': group.getId()}) }}" id="link-settings-{{ group.getId() }}"  data-toggle="tooltip" data-placement="bottom" title="{{ 'settings'|trans({}, 'platform') }}" alt="{{ 'settings'|trans({}, 'platform') }}">
-                                    <i class="icon-cog"></i>
+                                    <i class="fa fa-cog"></i>
                                 </a>
                             </td>
                         </tr>

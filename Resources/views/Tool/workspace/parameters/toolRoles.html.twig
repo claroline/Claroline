@@ -46,7 +46,7 @@
                                     <a href="{{ path('claro_workspace_order_tool_edit_form',
                                                 {'workspaceId': workspace.getId(),
                                                 'toolId': toolPermission['tool'].getId()}) }}">
-                                        <i class="icon-pencil"></i>
+                                        <i class="fa fa-pencil"></i>
                                     </a>
                                     {{ toolPermission['displayedName']|trans({}, 'tools') }}
                                     <small><em>({{ toolPermission['tool'].getName()|trans({}, 'tools') }})</em></small>
@@ -70,8 +70,8 @@
                                     </td>
                                 {% endfor %}
                                 <td>
-                                    <div class="icon-circle-arrow-up" style="cursor: pointer;" ></div>
-                                    <div class="icon-circle-arrow-down" style="cursor: pointer;" ></div>
+                                    <div class="fa fa-arrow-circle-up" style="cursor: pointer;" ></div>
+                                    <div class="fa fa-arrow-circle-down" style="cursor: pointer;" ></div>
                                 </td>
                             </tr>
                         {% endfor %}

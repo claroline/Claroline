@@ -525,7 +525,7 @@
             renameThumbnail: function (nodeId, newName, successHandler) {
                 var displayableName = Claroline.Utilities.formatText(newName, 20, 2);
                 this.$('#' + nodeId + ' .node-name')
-                .html(displayableName + ' ').append($(document.createElement('i')).addClass('icon-caret-down'));
+                .html(displayableName + ' ').append($(document.createElement('i')).addClass('fa fa-caret-down'));
                 this.$('#' + nodeId + ' .dropdown[rel=tooltip]').attr('title', newName);
 
                 if (successHandler) {

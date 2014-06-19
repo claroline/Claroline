@@ -12,7 +12,7 @@
     <div class="panel-body">
         {% if is_granted('edit', _resource) %}
             <div class="float-right-top margin-right-md">
-                <a href="{{ path('claro_activity_edit', {'resource':  _resource.getId() }) }}" class="btn btn-primary"><i class="icon-pencil"></i></a>
+                <a href="{{ path('claro_activity_edit', {'resource':  _resource.getId() }) }}" class="btn btn-primary"><i class="fa fa-pencil"></i></a>
             </div>
         {% endif %}
 
@@ -24,11 +24,11 @@
                         {{ resource.getName() }}
                         {% if is_granted('edit', _resource) %}
                             <div class="dropdown">
-                                <i class="icon-chevron-down pointer-hand" data-toggle="dropdown"></i>
+                                <i class="fa fa-chevron-down pointer-hand" data-toggle="dropdown"></i>
                                 <ul class="dropdown-menu" role="menu">
                                     <li role="presentation">
                                         <i role="menuitem"
-                                           class="activity-remove-resource icon-trash"
+                                           class="activity-remove-resource fa fa-trash-o"
                                            data-resource="{{ resource.getId() }}"
                                            data-activity="{{ _resource.getId() }}"
                                         >
@@ -44,13 +44,18 @@
             {% if is_granted('edit', _resource) %}
                 <li>
                     <a class="add-resource pointer-hand" data-id="{{ _resource.getId() }}">
-                        <i class="icon-plus"></i> {{ 'add_resource' | trans({}, 'platform') }}
+                        <i class="fa fa-plus"></i> {{ 'add_resource' | trans({}, 'platform') }}
                     </a>
                 </li>
             {% endif %}
         </ul>
         <div class="activities">
             <div id="activity-primary">
+                {% if is_granted('edit', _resource) and not _resource.getPrimaryResource() is empty %}
+                    <button class="remove-primary-resource btn btn-default pull-right" data-id="{{ _resource.getId() }}">
+                        <i class="fa fa-trash-o"></i> {{ 'activity_remove_primary_resource' | trans({}, 'platform') }}
+                    </button>
+                {% endif %}
                 {% if not _resource.getDescription() is empty %}
                     <div>{{ _resource.getDescription() | raw }}</div>
                 {% endif %}

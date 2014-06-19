@@ -26,26 +26,12 @@
             {{ form_widget(form) }}
             <hr>
             {{ form_widget(formParams) }}
-            <hr>
-            {{ form_widget(formRule) }}
-            <hr>
             
-            <div id="activity-rule-form">
-                <select id="activity-rule-action-select">
-                    <option disabled="disabled">
-                        {{ 'select-activity-rule-action' | trans({}, 'platform') }}
-                    </option>
-
-                    {% for action in ruleActions %}
-                        {% set resourceType = action.getResourceType().getName() %}
-                        {% set actionName = 'log_' ~ action.getAction() ~ '_filter' %}
-                        <option class="rule-action-option option-type-{{resourceType}}"
-                            value="{{action.getAction()}}"
-                        >
-                            {{ actionName | trans({}, 'log') }}
-                        </option>
-                    {% endfor %}
-                </select>
+            <div id="activity-rule-form-div" data-rule-default-starting-date="{{ defaultRuleStartingDate }}">
+                <hr>
+                <h3>{{ 'activity_rule_configuration_for_auto_evaluation' | trans({}, 'platform') }}</h3>
+                <br>
+                {{ form_widget(formRule) }}
             </div>
         </div>
         <div class="panel-footer text-right">

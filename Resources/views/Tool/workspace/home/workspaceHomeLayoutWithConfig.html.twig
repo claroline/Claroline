@@ -27,7 +27,7 @@
         </h3>
         <div class="float-right-top">
             <a class="btn btn-primary" href="{{ path('claro_display_workspace_home_tabs_without_config', {'tabId': tabId, 'workspaceId': workspace.getId()}) }}" role="button">
-                <i id="switch-config-mode" class="icon-ok"></i>
+                <i id="switch-config-mode" class="fa fa-check"></i>
             </a>
         </div>
     </div>
@@ -44,22 +44,22 @@
                 <a href="{{ path('claro_display_workspace_home_tabs_with_config', { 'tabId': workspaceHomeTab.getId(), 'workspaceId': workspace.getId()}) }}" class="hometab-link{% if not workspaceHomeTabConfig.isVisible() %} strike{% endif %}">
                     {{ workspaceHomeTab.getName() }}
                     <div class="dropdown">
-                      <i class="icon-chevron-down pointer-hand" data-toggle="dropdown"></i>
+                      <i class="fa fa-chevron-down pointer-hand" data-toggle="dropdown"></i>
                       <ul class="dropdown-menu" role="menu">
-                            <li role="presentation"><i role="menuitem" class="hometab-reorder-left-btn icon-arrow-left"> {{ "left" | trans({}, 'platform') }}</i></li>
-                            <li role="presentation"><i role="menuitem" class="hometab-reorder-right-btn icon-arrow-right"> {{ "right" | trans({}, 'platform') }}</i></li>
+                            <li role="presentation"><i role="menuitem" class="hometab-reorder-left-btn fa fa-arrow-left"> {{ "left" | trans({}, 'platform') }}</i></li>
+                            <li role="presentation"><i role="menuitem" class="hometab-reorder-right-btn fa fa-arrow-right"> {{ "right" | trans({}, 'platform') }}</i></li>
                             <li class="divider"></li>
-                            <li role="presentation"><i role="menuitem" class="hometab-rename-btn icon-pencil"> {{ "rename" | trans({}, 'platform') }}</i></li>
+                            <li role="presentation"><i role="menuitem" class="hometab-rename-btn fa fa-pencil"> {{ "rename" | trans({}, 'platform') }}</i></li>
                             <li role="presentation">
                                 {% if workspaceHomeTabConfig.isVisible() %}
-                                    <i role="menuitem" class="hometab-visibility-btn icon-eye-close" visiblility-value="visible"
+                                    <i role="menuitem" class="hometab-visibility-btn fa fa-eye-slash" visiblility-value="visible"
                                     id="visible-hometab-id-{{ workspaceHomeTab.getId() }}"> {{ "hide" | trans({}, 'platform') }}</i>
                                  {% else %}
-                                    <i role="menuitem" class="hometab-visibility-btn icon-eye-open" visiblility-value="invisible"
+                                    <i role="menuitem" class="hometab-visibility-btn fa fa-eye" visiblility-value="invisible"
                                     id="visible-hometab-id-{{ workspaceHomeTab.getId() }}"> {{ "display" | trans({}, 'platform') }}</i>
                                  {% endif %}
                             </li>
-                            <li role="presentation"><i role="menuitem" class="hometab-delete-btn icon-trash"> {{ "delete" | trans({}, 'platform') }}</i></li>
+                            <li role="presentation"><i role="menuitem" class="hometab-delete-btn fa fa-trash-o"> {{ "delete" | trans({}, 'platform') }}</i></li>
                       </ul>
                     </div>
                 </a>
@@ -67,7 +67,7 @@
             {% endfor %}
             <li id="add-hometab-btn">
                 <a class="pointer-hand">
-                    <i id="add-hometab-button" class="icon-plus"></i>
+                    <i id="add-hometab-button" class="fa fa-plus"></i>
                     {% if workspaceHomeTabConfigs | length == 0 %} {{ 'create_new_home_tab' | trans({}, 'platform') }}{% endif %}
                 </a>
             </li>

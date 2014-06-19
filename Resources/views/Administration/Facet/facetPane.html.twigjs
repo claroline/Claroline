@@ -10,7 +10,7 @@
         </ul>
     </div>
     <div data-facet-id="{{ facet.id }}" class="panel-footer pointer-hand text-center add-field-to-facet">
-        <i class="icon-plus-sign" data-facet-id="{{ facet.id }}"></i>
+        <i class="fa fa-plus-circle" data-facet-id="{{ facet.id }}"></i>
         {{ 'add_field_to_facet'|trans({}, 'platform') }}
     </div>
 </div>

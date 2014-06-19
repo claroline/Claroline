@@ -569,9 +569,6 @@ class DatabaseWriter
                 $ruleAction->setResourceType($resourceType);
                 $ruleAction->setAction($rule['action']);
             }
-            if (isset($rule['type'])) {
-                $ruleAction->setType($rule['type']);
-            }
 
             $this->em->persist($ruleAction);
         }

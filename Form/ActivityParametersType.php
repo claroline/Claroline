@@ -20,10 +20,41 @@ class ActivityParametersType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add(
+            'withTutor',
+            'choice',
+            array(
+                'choices' => array (0 => 'no', 1 => 'yes'),
+                'required' => false
+            )
+        );
+
+        $builder->add(
             'max_duration',
             'integer',
-            array('required' => false)
+            array(
+				'attr' => array('min' => 1),
+				'required' => false
+			)
         );
+
+		$builder->add(
+            'who',
+            'choice',
+            array(
+                'choices' => array('individual' => 'individual', 'collaborative' => 'collaborative', 'mixed' => 'mixed'),
+                'required' => false
+            )
+        );
+
+        $builder->add(
+            'where',
+            'choice',
+            array(
+                'choices' => array('anywhere' => 'anywhere', 'classroom' => 'classroom'),
+                'required' => false
+            )
+        );
+
         $builder->add(
             'max_attempts',
             'integer',
@@ -34,7 +65,7 @@ class ActivityParametersType extends AbstractType
             'choice',
             array(
                 'choices' => array('automatic' => 'evaluation-automatic', 'manual' => 'evaluation-manual'),
-                'required' => false
+                'required' => true
             )
         );
     }
