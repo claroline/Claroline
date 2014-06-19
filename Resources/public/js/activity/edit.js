@@ -90,34 +90,46 @@
     /**
      * Remove a resource from an activity
      */
-    function removeResource(data, activity, resource)
+    function removeResource(activity, resource)
     {
-        var picker = modal.create(data);
+        $.ajax(routing.generate('claro_activity_remove_resource', {'activity': activity, 'resource': resource}))
+        .done(function (data) {
+            if (data === 'true') {
+                $('.activity-tab-' + resource).hide('slow', function () {
+                    $('.activities #resource-' + resource).remove();
+                    $('.activity-tabs > li').removeClass('active');
+                    $('.activity-tabs > li.activity-primary').addClass('active');
+                    $('.activities > div').addClass('hide');
+                    $('#activity-primary').removeClass('hide');
+                });
+            } else {
+                modal.error();
+            }
+        })
+        .error(function () {
+            modal.error();
+        });
+    }
 
-        picker.on('click', 'button.btn-primary', function () {
-            modal.hide();
-
-            $.ajax(routing.generate('claro_activity_remove_resource', {'activity': activity, 'resource': resource}))
-            .done(function (data) {
-
-                if (data === 'true') {
-                    $('.activity-tab-' + resource).hide('slow', function () {
-                        $('.activities #resource-' + resource).remove();
-
-                        $('.activity-tabs > li').removeClass('active');
-                        $('.activity-tabs > li.activity-primary').addClass('active');
-                        $('.activities > div').addClass('hide');
-                        $('#activity-primary').removeClass('hide');
-                    });
-
-                } else {
-                    modal.error();
-                }
+    /**
+     *
+     */
+    function removePrimaryResource(activity)
+    {
+        if (activity) {
+            $.ajax(routing.generate('claro_activity_remove_primary_resource', {'activity': activity}))
+            .done(function () {
+                $('#activity-primary iframe, #activity-primary hr, #activity-primary .remove-primary-resource')
+                .hide('slow', function () {
+                    $(this).remove();
+                });
             })
             .error(function () {
                 modal.error();
             });
-        });
+        } else {
+            modal.error();
+        }
     }
 
     /** Events **/
@@ -145,17 +157,20 @@
         var activity = $(this).data('activity');
         var resource = $(this).data('resource');
 
-        $.ajax(
-            routing.generate(
-                'claro_activity_remove_resource_confirm',
-                {'activity': activity, 'resource': resource}
-            )
-        )
-        .done(function (data) {
-            removeResource(data, activity, resource);
-        })
-        .error(function () {
-            modal.error();
+        modal.fromRoute('claro_activity_remove_resource_confirm', {}, function (element) {
+            element.on('click', '.btn-primary', function () {
+                modal.hide();
+                removeResource(activity, resource);
+            });
+        });
+    }).on('click', '.remove-primary-resource', function () {
+        var activity = $(this).data('id');
+
+        modal.fromRoute('claro_activity_remove_resource_confirm', {}, function (element) {
+            element.on('click', '.btn-primary', function () {
+                modal.hide();
+                removePrimaryResource(activity);
+            });
         });
     });
 
