@@ -31,13 +31,13 @@
             {% endif %}
 
             <div class="float-right-top">
-                <a class="btn btn-default close pointer-hand" onClick="javascript:enterFullscreen(this.parentNode.parentNode)"><i class="icon-resize-full"></i></a>
+                <a class="btn btn-default close pointer-hand" onClick="javascript:enterFullscreen(this.parentNode.parentNode)"><i class="fa fa-expand"></i></a>
             </div>
         </div>
     </div>
     <div class="panel-footer">
         <a class="btn btn-primary" href="{{ path('claro_resource_download') }}?ids[]={{ _resource.getResourceNode().getId() }}">
-            <i class="icon-download"></i> {{ 'download'|trans({}, 'platform') }}
+            <i class="fa fa-arrow-circle-o-down"></i> {{ 'download'|trans({}, 'platform') }}
         </a>
     </div>
 {% endblock %}
