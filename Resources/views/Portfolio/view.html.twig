@@ -63,26 +63,22 @@
                 {% endif %}
                 <div class="main-content col-md-8{% if false == editMode %} col-md-offset-2{% endif %}">
                 {% if editMode %}
-                    <div class="col-md-4" data-ng-repeat="widget in widgets | filter:{type: '!title'}">
-                        <div data-widget class="panel panel-default">
-                            <div class="panel-heading">
-                                {% verbatim %}{{ widget.type + '_title'|trans }}{% endverbatim %}
-                                {% if editMode %}
-                                    <div class="widget-actions">
-                                        <button class="widget-action btn btn-sm btn-danger" data-ng-class="{'btn-loading': widget.isDeleting}" data-confirm-click="delete(widget);" data-ng-if="isDeletable(widget) && !widget.isNew()">
-                                            <span class="loading" data-ng-if="widget.isDeleting"></span><span class="icon-trash" data-ng-if="!widget.isDeleting"></span>
-                                        </button>
-                                        <button class="widget-action btn btn-sm btn-default" data-ng-click="edit(widget);" data-ng-if="!widget.isEditing() && !widget.isNew()">
-                                            <span class="icon-pencil"></span></button>
-                                    </div>
-                                {% endif %}
-                            </div>
-                            <div class="panel-body">
-                                {% if editMode %}
-                                    <div data-ng-bind-html="widget.views.view | trustAsHtml"></div>
-                                {% endif %}
-                            </div>
-                        </div>
+                    <div data-ng-repeat="widget in widgets | filter:{type: '!title'}" data-ng-if="0 == portfolio.disposition">
+                        {% include 'IcapPortfolioBundle:templates:widget.html.twig' %}
+                    </div>
+                    <div data-ng-if="1 == portfolio.disposition">
+                        <ul class="col-md-6 list-unstyled" data-ng-repeat="col in cols">
+                            <li data-ng-repeat="widget in widgets | filter:{type: '!title', column: col}">
+                                {% include 'IcapPortfolioBundle:templates:widget.html.twig' %}
+                            </li>
+                        </ul>
+                    </div>
+                    <div data-ng-if="2 == portfolio.disposition">
+                        <ul class="col-md-4 list-unstyled" data-ng-repeat="col in cols">
+                            <li data-ng-repeat="widget in widgets | filter:{type: '!title', column: col}">
+                                {% include 'IcapPortfolioBundle:templates:widget.html.twig' %}
+                            </li>
+                        </ul>
                     </div>
                     <div class="no-data" data-ng-show="widgets.length <= 1">
                         <p class="well">{{ 'no_widget'|trans({}, 'icap_portfolio')|raw }}</p>

@@ -11,4 +11,18 @@ portfolioApp
         $scope.createWidget = function(type) {
             widgetsManager.create(portfolioManager.portfolioId, type);
         }
+
+        $scope.$watch('portfolio.disposition', function(newValue, oldValue) {
+            switch(newValue) {
+                case 1:
+                    $scope.cols = [1, 2];
+                    break;
+                case 2:
+                    $scope.cols = [1, 2, 3];
+                    break;
+                default:
+                    $scope.cols = [];
+                    break;
+            }
+        });
     }]);
