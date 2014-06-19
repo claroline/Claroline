@@ -1,7 +1,7 @@
 'use strict';
 
 portfolioApp
-    .controller("portfolioController", ["$scope", "portfolioManager", "widgetsManager", "$attrs", "widgetsConfig", function($scope, portfolioManager, widgetsManager, $attrs, widgetsConfig) {
+    .controller("portfolioController", ["$scope", "$filter", "portfolioManager", "widgetsManager", "$attrs", "widgetsConfig", function($scope, $filter, portfolioManager, widgetsManager, $attrs, widgetsConfig) {
         $scope.portfolio = portfolioManager.getPortfolio($attrs['portfolioContainer']);
         $scope.portfolio.$promise.then(function () {
             $scope.widgets = widgetsManager.widgets;
@@ -13,16 +13,26 @@ portfolioApp
         }
 
         $scope.$watch('portfolio.disposition', function(newValue, oldValue) {
-            switch(newValue) {
-                case 1:
-                    $scope.cols = [1, 2];
-                    break;
-                case 2:
-                    $scope.cols = [1, 2, 3];
-                    break;
-                default:
-                    $scope.cols = [];
-                    break;
+            if (newValue) {
+                switch(newValue) {
+                    case 1:
+                        $scope.cols = [1, 2];
+                        var widgetsToUpdate = $filter('filter')($scope.widgets, {type: '!title', column: 3});
+                        angular.forEach(widgetsToUpdate, function(widget, key) {
+                            widget.column = 2;
+                        });
+                        break;
+                    case 2:
+                        $scope.cols = [1, 2, 3];
+                        break;
+                    default:
+                        $scope.cols = [];
+                        var widgetsToUpdate = $filter('filter')($scope.widgets, {type: '!title', column: '!3'});
+                        angular.forEach(widgetsToUpdate, function(widget, key) {
+                            widget.column = 1;
+                        });
+                        break;
+                }
             }
         });
     }]);
