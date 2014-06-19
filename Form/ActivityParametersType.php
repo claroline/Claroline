@@ -40,7 +40,7 @@ class ActivityParametersType extends AbstractType
             'choice',
             array(
                 'choices' => array('automatic' => 'evaluation-automatic', 'manual' => 'evaluation-manual'),
-                'required' => false
+                'required' => true
             )
         );
     }
