@@ -56,6 +56,9 @@ activity_form_name: 'Nombre'
 activity_parameters_form_evaluation_type: 'Tipo de evaluación'
 activity_parameters_form_max_attempts: 'Numero de intentos permitidos'
 activity_parameters_form_max_duration: 'Tiempo limite establecido (en segundo)'
+activity_parameters_form_withTutor: Tutelado
+activity_parameters_form_where: Lugar de aprendizaje
+activity_parameters_form_who: Modo de trabajo
 activity_remove_primary_resource: Retirar el recurso principal
 activity_resource_not_allowed: No puede agregar un recurso de este tipo
 activity_resource_remove: '¿Esta seguro que desea remover este recurso de la actividad?'
@@ -67,6 +70,11 @@ activity_rule_form_activeUntil: Hasta
 activity_rule_form_badge: Insignia
 activity_rule_form_occurrence: Ocurrencia
 activity_rule_form_result: Resultado
+activity_where_anywhere: Dondequiera
+activity_where_classroom: Aula
+activity_who_collaborative: Colaboración
+activity_who_individual: Individual
+activity_who_mixed: Mezclado
 add: 'Agregar'
 add_category: 'Agregar categoría'
 add_field_to_facet: Agregar un campo a una faceta
