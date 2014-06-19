@@ -38,8 +38,8 @@ class FieldFacetType extends AbstractType
             'isVisibleByOwner',
             'choice', array(
                 'choices' => array('1' => 'yes', '0' => 'no'),
-                'label' => 'is_visible_by_owner',
-                'expanded' => true,
+                'label' => 'visible',
+                'expanded' => false,
                 'multiple' => false
             )
         );
@@ -47,8 +47,8 @@ class FieldFacetType extends AbstractType
             'isEditableByOwner',
             'choice', array(
                 'choices' => array('1' => 'yes', '0' => 'no'),
-                'label' => 'is_visible_by_owner',
-                'expanded' => true,
+                'label' => 'editable',
+                'expanded' => false,
                 'multiple' => false
             )
         );

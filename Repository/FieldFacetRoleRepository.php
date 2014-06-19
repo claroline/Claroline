@@ -22,16 +22,16 @@ class FieldFacetRoleRepository extends EntityRepository
         if (in_array('ROLE_ADMIN', $roles)) {
             $dql = "SELECT
                 field.id as id,
+                field.position as position,
                 1 as canOpen,
                 1 as canEdit
-                FROM Claroline\CoreBundle\Entity\Facet\FieldFacetRole ffr
-                JOIN ffr.fieldFacet field
-                GROUP BY field.id
+                FROM Claroline\CoreBundle\Entity\Facet\FieldFacet field
             ";
         } else{
             $dql = "
                 SELECT
                   field.id as id,
+                  field.position as position,
                   MAX(ffr.canOpen) as canOpen,
                   MAX(ffr.canEdit) as canEdit
                 FROM Claroline\CoreBundle\Entity\Facet\FieldFacetRole ffr

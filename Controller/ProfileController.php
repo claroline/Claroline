@@ -110,8 +110,15 @@ class ProfileController extends Controller
      */
     public function viewAction(User $loggedUser)
     {
+        $facets = $this->facetManager->getPrivateVisibleFacets();
+        $fieldFacetValues = $this->facetManager->getFieldValuesByUser($loggedUser);
+        $fieldFacets = $this->facetManager->getPrivateVisibleFields();
+
         return array(
-            'user'  => $loggedUser
+            'user'  => $loggedUser,
+            'facets' => $facets,
+            'fieldFacetValues' => $fieldFacetValues,
+            'fieldFacets' => $fieldFacets
         );
     }
 

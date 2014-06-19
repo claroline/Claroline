@@ -13,6 +13,7 @@ namespace Claroline\CoreBundle\Library\Security\Voter;
 
 use Claroline\CoreBundle\Entity\Facet\Facet;
 use Claroline\CoreBundle\Entity\Facet\FieldFacet;
+use Claroline\CoreBundle\Entity\Manager\FacetManager;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 use Doctrine\ORM\EntityManager;
@@ -28,15 +29,18 @@ use JMS\DiExtraBundle\Annotation as DI;
 class FacetVoter
 {
     private $em;
+    private $container;
 
     /**
      * @DI\InjectParams({
-     *     "em" = @DI\Inject("doctrine.orm.entity_manager")
+     *     "em"        = @DI\Inject("doctrine.orm.entity_manager"),
+     *     "container" = @DI\Inject("service_container")
      * })
      */
-    public function __construct(EntityManager $em)
+    public function __construct(EntityManager $em, $container)
     {
         $this->em = $em;
+        $this->container = $container;
     }
 
     /**
@@ -59,22 +63,25 @@ class FacetVoter
 
     private function fieldFacetVote(FieldFacet $fieldFacet, TokenInterface $token, $attribute)
     {
-        $fieldFacetsRole = $this->em->getRepository('ClarolineCoreBundle:Facet\FieldFacetRole')
-            ->findBy(array('fieldFacet' => $fieldFacet));
+        $fieldFacetsByRole = $this->container->get('claroline.manager.facet_manager')->getVisibleFieldFacets();
+        $canEdit = false;
+        $canOpen = false;
 
-        foreach ($fieldFacetsRole as $fieldFacetRole) {
-            foreach ($token->getRoles() as $role) {
-                if ($fieldFacetRole->getRole()->getName() === $role->getRole()) {
-
-                    if (strtolower($attribute) === 'open' && $fieldFacetRole->canOpen()) {
-                        return VoterInterface::ACCESS_GRANTED;
-                    }
-
-                    if (strtolower($attribute) === 'edit' && $fieldFacetRole->canEdit()) {
-                        return VoterInterface::ACCESS_GRANTED;
-                    }
-                }
+        foreach ($fieldFacetsByRole as $field) {
+            if ($field['id'] === $fieldFacet->getId()) {
+                $canEdit = $field['canEdit'];
+                $canOpen = $field['canOpen'];
             }
+        }
+
+        if (strtolower($attribute) === 'edit') {
+            return $fieldFacet->getIsEditableByOwner() | $canEdit ?
+                VoterInterface::ACCESS_GRANTED: VoterInterface::ACCESS_DENIED;
+         }
+
+        if (strtolower($attribute) === 'open') {
+            return $fieldFacet->getIsVisibleByOwner() | $canOpen ?
+                VoterInterface::ACCESS_GRANTED: VoterInterface::ACCESS_DENIED;
         }
 
         return VoterInterface::ACCESS_DENIED;
