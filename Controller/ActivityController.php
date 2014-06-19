@@ -164,7 +164,8 @@ class ActivityController
             'form' => $form->createView(),
             'formParams' => $formParams->createView(),
             'params' => $params,
-            'formRule' => $formRule->createView()
+            'formRule' => $formRule->createView(),
+            'defaultRuleStartingDate' => $resource->getResourceNode()->getCreationDate()->format('Y-m-d')
         );
     }
 

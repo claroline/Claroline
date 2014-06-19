@@ -61,7 +61,7 @@ activity_form_instructions: Instructions
 activity_form_name: Nom
 activity_parameters_form_evaluation_type: 'Type d''évaluation'
 activity_parameters_form_max_attempts: 'Nombre de tentatives permises'
-activity_parameters_form_max_duration: 'Temps limite accordé'
+activity_parameters_form_max_duration: 'Temps limite accordé (en seconde)'
 activity_remove_primary_resource: Enlever la resource primaire
 activity_resource_not_allowed: Vous ne pouvez pas ajouter une ressource de ce type
 activity_resource_remove: Êtes-vous sûr de vouloir enlever cette ressource de l'activite?

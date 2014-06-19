@@ -80,18 +80,15 @@ class LoadResourceTypeData implements RequiredFixture
         $fileAction = new ActivityRuleAction();
         $fileAction->setAction('resource-read');
         $fileAction->setResourceType($types['file']);
-        $fileAction->setType('occurrence');
         $manager->persist($fileAction);
 
         $textAction = new ActivityRuleAction();
         $textAction->setAction('resource-read');
         $textAction->setResourceType($types['text']);
-        $textAction->setType('occurrence');
         $manager->persist($textAction);
 
         $badgeAwardAction = new ActivityRuleAction();
         $badgeAwardAction->setAction('badge-awarding');
-        $badgeAwardAction->setType('badge');
         $manager->persist($badgeAwardAction);
     }
 
