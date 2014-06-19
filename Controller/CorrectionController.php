@@ -259,17 +259,18 @@ class CorrectionController extends DropzoneBaseController
 
 
             // copy corrected by user
-            $nbCorrectionByUser = $em->getRepository('IcapDropzoneBundle:Correction')->getAlreadyCorrectedDropIds($dropzone, $user);
 
             // corrections on the user's copy
             $nbCorrectionByOthersOnUsersCopy = $em->getRepository('IcapDropzoneBundle:Correction')->getCorrectionsIds($dropzone, $drop);
 
 
-            //Expected corrections 
+            //Expected corrections
             $expectedCorrections = $dropzone->getExpectedTotalCorrection();
 
-
-            //if(count($nbCorrectionByUser) >=  $expectedCorrections && count($nbCorrectionByOthersOnUsersCopy) >= $expectedCorrections  )
+            /**
+             * $nbCorrectionByUser = $em->getRepository('IcapDropzoneBundle:Correction')->getAlreadyCorrectedDropIds($dropzone, $user);
+             * if(count($nbCorrectionByUser) >=  $expectedCorrections && count($nbCorrectionByOthersOnUsersCopy) >= $expectedCorrections  )
+             **/
             // corrected copy only instead of corrected copy AND given corrections.
             if( count($nbCorrectionByOthersOnUsersCopy) >= $expectedCorrections  )
             {
