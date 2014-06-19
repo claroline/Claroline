@@ -11,41 +11,80 @@
 
 namespace Claroline\CoreBundle\Form;
 
+use Claroline\CoreBundle\Manager\ActivityManager;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\Translation\TranslatorInterface;
+use JMS\DiExtraBundle\Annotation as DI;
 
 class ActivityRuleType extends AbstractType
 {
+    private $activityManager;
+    private $translator;
+
+    public function __construct(
+        ActivityManager $activityManager,
+        TranslatorInterface $translator
+    )
+    {
+        $this->activityManager = $activityManager;
+        $this->translator = $translator;
+    }
+
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $ruleActions = $this->activityManager->getAllDistinctActivityRuleActions();
+        $actions = array('none' => 'activity_rule_action_none');
+
+        foreach ($ruleActions as $ruleAction) {
+            $actions[$ruleAction['action']] = $this->translator->trans(
+                'log_' . $ruleAction['action'] . '_filter',
+                array(),
+                'log'
+            );
+        }
+
         $builder->add(
             'action',
             'choice',
             array(
-                'choices' => array('automatic' => 'evaluation-automatic', 'manual' => 'evaluation-manual'),
+                'choices' => $actions,
+                'attr' => array('class' => 'activity-rule-action'),
                 'required' => true
             )
         );
         $builder->add(
-            'occurence',
+            'occurrence',
             'integer',
-            array('required' => false)
+            array(
+                'attr' => array('class' => 'activity-rule-option-occurrence', 'min' => 1),
+                'required' => true
+            )
+        );
+        $builder->add(
+            'badge',
+            'entity',
+            array(
+                'attr' => array('class' => 'activity-rule-option-badge'),
+                'class' => 'ClarolineCoreBundle:Badge\Badge',
+                'property' => 'translations[1].name',
+                'required' => false
+            )
         );
         $builder->add(
             'result',
             'integer',
-            array('required' => false)
-        );
-        $builder->add(
-            'result',
-            'integer',
-            array('required' => false)
+            array(
+                'attr' => array('class' => 'activity-rule-option-result', 'min' => 0),
+                'required' => false
+            )
         );
         $builder->add(
             'activeFrom',
             'date',
             array(
+                'attr' => array('class' => 'activity-rule-option-date'),
                 'required' => false,
                 'widget' => 'single_text',
                 'format' => 'yyyy-MM-dd'
@@ -55,6 +94,7 @@ class ActivityRuleType extends AbstractType
             'activeUntil',
             'date',
             array(
+                'attr' => array('class' => 'activity-rule-option-date'),
                 'required' => false,
                 'widget' => 'single_text',
                 'format' => 'yyyy-MM-dd'
