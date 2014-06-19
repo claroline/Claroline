@@ -4,7 +4,7 @@
 
 {% block content_container %}
     <div id="portfolio-section" data-portfolio-container="{{ portfolio.id }}">
-        <div id="portfolio-container" data-ng-if="portfolio.$resolved">
+        <div id="portfolio-container" data-ng-if="portfolio.$resolved" data-design-container>
             <header>
                 <div class="container">
                     <h1 id="username">{{ portfolio.user.firstName ~ ' ' ~ portfolio.user.lastName }}</h1>
@@ -164,6 +164,7 @@
         <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/controllers/portfolioController.js') }}"></script>
         <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/controllers/widgetController.js') }}"></script>
         <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/controllers/editWidgetsController.js') }}"></script>
+        <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/controllers/designController.js') }}"></script>
         <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/services/portfolio.js') }}"></script>
         <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/services/portfolioManager.js') }}"></script>
         <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/services/widgetsManager.js') }}"></script>
@@ -177,6 +178,7 @@
         <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/directives/loadingFormDirective.js') }}"></script>
         <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/directives/confirmClickDirective.js') }}"></script>
         <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/directives/collectionFormDirective.js') }}"></script>
+        <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/directives/designDirective.js') }}"></script>
         <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/filters/trustAsHtml.js') }}"></script>
         <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/filters/trans.js') }}"></script>
         <script type="text/javascript">

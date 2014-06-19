@@ -15,7 +15,7 @@
                         <span class="icon-exchange"></span>
                     </button>
                     <ul class="dropdown-menu" role="menu" aria-labelledby="columnMenu">
-                        <li role="presentation" data-ng-repeat="col in cols" data-ng-click="widget.column = col"><a role="menuitem" tabindex="-1" href="#">{% verbatim %}{{ col }}{% endverbatim %}</a></li>
+                        <li role="presentation" data-ng-repeat="col in cols" data-ng-click="changeColumn($event, widget, col)"><a role="menuitem" tabindex="-1" href="#">{% verbatim %}{{ col }}{% endverbatim %}</a></li>
                     </ul>
                 </div>
             </div>
