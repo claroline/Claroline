@@ -872,7 +872,7 @@ class UserManager
         $this->objectManager->persist($user);
         $this->objectManager->flush();
     }
-    
+
     public function toArrayForPicker($users)
     {
         $resultArray = array();
@@ -900,7 +900,8 @@ class UserManager
      */
     public function generatePublicUrl(User $user, $try = 0)
     {
-        $publicUrl = strtolower(sprintf('%s.%s', $user->getFirstName(), $user->getLastName()));
+        $publicUrl = $user->getFirstName() . '.' . $user->getLastName();
+        $publicUrl = strtolower(str_replace(' ', '-', $publicUrl));
 
         if (0 < $try) {
             $publicUrl .= $try;

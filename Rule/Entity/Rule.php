@@ -70,6 +70,14 @@ abstract class Rule
     /**
      * @var string
      *
+     * @ORM\Column(type="string", nullable=true)
+     * @Expose
+     */
+    protected $resultMax;
+
+    /**
+     * @var string
+     *
      * @ORM\Column(type="smallint", nullable=true)
      * @Expose
      */
@@ -197,6 +205,26 @@ abstract class Rule
     public function getResult()
     {
         return $this->result;
+    }
+
+    /**
+     * @param string $resultMax
+     *
+     * @return Rule
+     */
+    public function setResultMax($resultMax)
+    {
+        $this->resultMax = $resultMax;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getResultMax()
+    {
+        return $this->resultMax;
     }
 
     /**

@@ -52,17 +52,19 @@ class ActivityRuleListener
         $dateLog = $log->getDateLog();
         $action = $log->getAction();
         $resourceNode = $log->getResourceNode();
+        $user =  $log->getDoer();
 
-        if (!is_null($resourceNode)) {
-            $activityRules = $this->activityManager
-                ->getActivityRuleByActionAndResource($action, $resourceNode);
+        if (!is_null($user)) {
+            $activityRules = is_null($resourceNode) ?
+                $this->activityManager
+                    ->getActivityRuleByActionWithNoResource($action) :
+                $this->activityManager
+                    ->getActivityRuleByActionAndResource($action, $resourceNode);
 
             if (count($activityRules) > 0) {
-                $user =  $log->getDoer();
 
                 foreach ($activityRules as $activityRule) {
                     $activityParams = $activityRule->getActivityParameters();
-//                    $activityNode = $activityParams->getActivity()->getResourceNode();
                     $accessFrom = $activityRule->getActiveFrom();
                     $accessUntil = $activityRule->getActiveUntil();
 
@@ -73,7 +75,18 @@ class ActivityRuleListener
                             0 :
                             count($activityParams->getRules());
 
-                        if (!is_null($user) && $nbRules > 0) {
+                        if ($nbRules > 0) {
+                            $rules = $activityParams->getRules();
+                            $ruleType = 'result';
+
+                            foreach ($rules as $rule) {
+
+                                if (is_null($rule->getResult())) {
+                                    $ruleType = 'occurrence';
+                                    break;
+                                }
+                            }
+
                             $activityStatus = 'unknown';
                             $rulesLogs = $this->ruleValidator->validate(
                                 $activityParams,
@@ -83,8 +96,15 @@ class ActivityRuleListener
                             if(isset($rulesLogs['validRules'])
                                 && $rulesLogs['validRules'] >= $nbRules) {
 
-                                $activityStatus = 'completed';
+                                $activityStatus = ($ruleType === 'occurrence') ?
+                                    'completed' :
+                                    'passed';
                                 $this->hasSucceded = true;
+                            } else {
+
+                                $activityStatus = ($ruleType === 'occurrence') ?
+                                    'incomplete' :
+                                    'failed';
                             }
 
                             $this->activityManager->manageEvaluation(
