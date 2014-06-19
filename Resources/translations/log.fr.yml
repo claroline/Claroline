@@ -112,5 +112,11 @@ log_resource-icap_dropzone-correction_report_filter: 'Une correction a été sig
 
 log_resource-icap_dropzone-drop_grade_available_shortname: 'Note disponible'
 log_resource-icap_dropzone-drop_grade_available_sentence: 'a éffectué la dernière correction d''une copie dans %resource%'
-log_resource-icap_dropzone-drop_grade_available_title: 'copie corrigée : note disponible'
-log_resource-icap_dropzone-drop_grade_available_filter: 'copie corrigée : note disponible'
+log_resource-icap_dropzone-drop_grade_available_title: 'Note disponible'
+log_resource-icap_dropzone-drop_grade_available_filter: 'Note disponible'
+
+log_resource-icap_dropzone-dropzone_manual_state_changed_shortname: "Changement d'état de l'évaluation "
+log_resource-icap_dropzone-dropzone_manual_state_changed_sentence: "a changé la phase de l'évaluation %resource%"
+log_resource-icap_dropzone-dropzone_manual_state_changed_title: "Changement d'état  de l'évaluation"
+log_resource-icap_dropzone-dropzone_manual_state_changed_filter: "Changement d'état de l'évaluation"
+
