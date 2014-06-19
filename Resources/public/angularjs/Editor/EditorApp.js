@@ -6,7 +6,6 @@ var EditorApp = angular.module('EditorApp', [
     'ngSanitize',
     'ui.bootstrap', 
     'ui.pageslide', 
-    /*'ui.sortable', */
     'ui.tinymce',
     'ui.translation',
     'ui.resourcePicker',
