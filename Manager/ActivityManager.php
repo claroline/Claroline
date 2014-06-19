@@ -165,6 +165,9 @@ class ActivityManager
         }
         $nbAttempts = $isFirstEvaluation ? 0 : count($pastEvals);
         $totalTime = $isFirstEvaluation ? 0 : $evaluation->getAttemptsDuration();
+        $pastStatus = ($activityStatus === 'incomplete' || $activityStatus === 'failed') ?
+            $activityStatus :
+            'unknown';
         
         if (isset($rulesLogs['rules']) && is_array($rulesLogs['rules'])) {
 
@@ -221,7 +224,7 @@ class ActivityManager
                         $pastEval->setScoreMin($scoreMin);
                         $pastEval->setScoreMax($scoreMax);
                         $pastEval->setDuration($duration);
-                        $pastEval->setStatus('unknown');
+                        $pastEval->setStatus($pastStatus);
                         
                         $nbAttempts++;
                         $totalTime = $this->computeActivityTotalTime(
@@ -357,6 +360,17 @@ class ActivityManager
         return $this->activityRuleRepo->findActivityRuleByActionAndResource(
             $action,
             $resourceNode,
+            $executeQuery
+        );
+    }
+
+    public function getActivityRuleByActionWithNoResource(
+        $action,
+        $executeQuery = true
+    )
+    {
+        return $this->activityRuleRepo->findActivityRuleByActionWithNoResource(
+            $action,
             $executeQuery
         );
     }

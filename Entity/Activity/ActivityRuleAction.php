@@ -39,11 +39,6 @@ class ActivityRuleAction
      */
     protected $action;
 
-    /**
-     * @ORM\Column(name="rule_type", nullable=true)
-     */
-    protected $type;
-
     public function getId()
     {
         return $this->id;
@@ -72,15 +67,5 @@ class ActivityRuleAction
     public function setAction($action)
     {
         $this->action = $action;
-    }
-
-    public function getType()
-    {
-        return $this->type;
-    }
-
-    public function setType($type)
-    {
-        $this->type = $type;
     }
 }
