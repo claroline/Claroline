@@ -1028,7 +1028,7 @@ class CorrectionController extends DropzoneBaseController
      *      "/{resourceId}/delete/correction/{correctionId}/{backPage}",
      *      name="icap_dropzone_drops_detail_delete_correction",
      *      requirements={"resourceId" = "\d+", "correctionId" = "\d+"},
-     *      defaults={"backPage" ="default"}
+     *      defaults={"backPage" = "default"}
      * )
      * @ParamConverter("dropzone", class="IcapDropzoneBundle:Dropzone", options={"id" = "resourceId"})
      * @ParamConverter("correction", class="IcapDropzoneBundle:Correction", options={"id" = "correctionId"})
@@ -1046,6 +1046,7 @@ class CorrectionController extends DropzoneBaseController
 
         $dropId = $correction->getDrop()->getId();
 
+
         // Action on POST , real delete
         if ($this->getRequest()->isMethod('POST')) {
             $em = $this->getDoctrine()->getManager();
@@ -1056,17 +1057,7 @@ class CorrectionController extends DropzoneBaseController
             $this->dispatch($event);
 
             $return = null;
-            if ($backPage != "default") {
-                $return = $this->redirect(
-                    $this->generateUrl(
-                        'icap_dropzone_examiner_corrections',
-                        array(
-                            'resourceId' => $dropzone->getId(),
-                            'userId' => $userId,
-                        )
-                    )
-                );
-            } else {
+            if ($backPage == "AdminCorrectionsByUser") {
                 $return = $this->redirect(
                     $this->generateUrl(
                         'icap_dropzone_drops_detail',
@@ -1076,7 +1067,18 @@ class CorrectionController extends DropzoneBaseController
                         )
                     )
                 );
+            } else {
+                $return = $this->redirect(
+                    $this->generateUrl(
+                        'icap_dropzone_examiner_corrections',
+                        array(
+                            'resourceId' => $dropzone->getId(),
+                            'userId' => $userId,
+                        )
+                    )
+                );
             }
+
 
         } else {
             // Action on GET , Ask confirmation Modal or not.
@@ -1187,6 +1189,7 @@ class CorrectionController extends DropzoneBaseController
 
         //Notify user his copy has an available note
         $this->checkUserGradeAvailableByDrop($correction->getDrop());
+
 
         if ($routeParam == 'default') {
             return $this->redirect(

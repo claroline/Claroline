@@ -22,10 +22,16 @@
 
         <div class="row">
             <div class="col-md-12">
-                <a class="btn btn-default btn-sm"
-                   href="{{ path('icap_dropzone_examiners', {'resourceId': dropzone.id}) }}"><span
-                            class="glyphicon icon-angle-left"></span> {{ 'List of examiners'|trans({}, 'icap_dropzone') }}
-                </a>
+                <div class="btn-group">
+                    <a class="btn btn-default btn-sm"
+                       href="{{ path('icap_dropzone_examiners', {'resourceId': dropzone.id }) }}"><span
+                                class="glyphicon "></span> {{ 'List of examiners'|trans({}, 'icap_dropzone') }}
+                    </a>
+                    <a class="btn btn-default btn-sm"
+                       href="{{ path('icap_dropzone_drops', {'resourceId': dropzone.id}) }}"><span
+                                class="glyphicon "></span> {{ 'List of copies'|trans({}, 'icap_dropzone') }}
+                    </a>
+                </div>
             </div>
         </div>
 
