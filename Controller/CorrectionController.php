@@ -1464,7 +1464,7 @@ class CorrectionController extends DropzoneBaseController
         $this->get('icap.manager.dropzone_voter')->isAllowToOpen($dropzone);
         $this->get('icap.manager.dropzone_voter')->isAllowToEdit($dropzone);
 
-
+        /*
         // view only available in peerReview mode
         if(! $dropzone->getPeerReview())
         {
@@ -1473,11 +1473,12 @@ class CorrectionController extends DropzoneBaseController
                     $this->generateUrl(
                         'icap_dropzone_drop',
                         array(
-                            'resourceId' => $dropzoneId
+                            'resourceId' => $dropzone->getId()
                         )
                     )
                 );
         }
+        */
 
         //getting the repos
         $dropRepo = $this->getDoctrine()->getManager()->getRepository('IcapDropzoneBundle:Drop');
