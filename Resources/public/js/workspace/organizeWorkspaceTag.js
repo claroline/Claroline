@@ -101,20 +101,20 @@
                         '<ul class="dropdown-menu">\n' +
                            ' <li class="edit-tag-btn">\n' +
                                 '<a href="#">\n' +
-                                    '<i class="icon-pencil"></i>\n' +
+                                    '<i class="fa fa-pencil"></i>\n' +
                                     Translator.get('platform' + ':' + 'rename_category') +
                                 '\n</a>\n' +
                             '</li>\n' +
                             '<li class="divider"></li>\n' +
                             '<li class="create-sub-tag-btn">\n' +
                                 '<a href="#">\n' +
-                                    '<i class="icon-plus"></i>\n' +
+                                    '<i class="fa fa-plus"></i>\n' +
                                     Translator.get('platform' + ':' + 'create_subcategory') +
                                 '\n</a>\n' +
                             '</li>' +
                             '<li class="add-tag-btn">\n' +
                                 '<a href="#">\n' +
-                                    '<i class="icon-list-alt"></i>\n' +
+                                    '<i class="fa fa-list-alt"></i>\n' +
                                     Translator.get('platform' + ':' + 'add_subcategory') +
                                 '\n</a>\n' +
                             '</li>\n' +
@@ -123,14 +123,14 @@
         if (isSubCategory) {
             generatedTagElement += '<li class="remove-tag-btn">\n' +
                                         '<a href="#">\n' +
-                                            '<i class="icon-remove"></i>\n' +
+                                            '<i class="fa fa-times"></i>\n' +
                                             Translator.get('platform' + ':' + 'remove_subcategory') +
                                         '\n</a>\n' +
                                     '</li>\n';
         }
         generatedTagElement += '<li class="delete-tag-btn">\n' +
                                 '<a href="#">\n' +
-                                    '<i class="icon-trash"></i>\n' +
+                                    '<i class="fa fa-trash-o"></i>\n' +
                                     Translator.get('platform' + ':' + 'delete_category') +
                                 '\n</a>\n' +
                             '</li>\n' +
@@ -328,7 +328,7 @@
                             var removeTagLine =
                                 '<li class="remove-tag-btn">\n' +
                                     '<a href="#">\n' +
-                                        '<i class="icon-remove"></i>\n' +
+                                        '<i class="fa fa-times"></i>\n' +
                                         Translator.get('platform' + ':' + 'remove_subcategory') +
                                     '\n</a>\n' +
                                 '</li>\n';

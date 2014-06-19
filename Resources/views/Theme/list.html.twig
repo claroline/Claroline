@@ -6,7 +6,7 @@
     {{
         macros.breadcrumbs([
             {
-                'icon': 'icon-cog',
+                'icon': 'fa fa-cog',
                 'name': 'administration'|trans({}, 'platform'),
                 'href': path('claro_admin_index')
             },
@@ -38,7 +38,7 @@
                     <button type="button" class="close" data-id="{{ theme.id }}" aria-hidden="true">&times;</button>
                     <strong>
                         <a class="alert-link" href="{{ path("claroline_admin_theme_edit", {"id": theme.id }) }}">
-                            <i class="icon-edit"></i> {{ theme.name }}
+                            <i class="fa fa-pencil-square-o"></i> {{ theme.name }}
                         </a>
                     </strong>
                 </div>
@@ -48,7 +48,7 @@
             <div class="alert alert-info">
                 <strong>
                     <a class="alert-link" href="{{ path("claroline_admin_theme_edit") }}">
-                        <i class="icon-plus-sign"></i> {{ "Create New Theme" | trans({}, "theme") }}
+                        <i class="fa fa-plus-circle"></i> {{ "Create New Theme" | trans({}, "theme") }}
                     </a>
                 </strong>
             </div>

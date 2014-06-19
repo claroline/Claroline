@@ -41,7 +41,7 @@
                 common.createElement('span', 'input-group-btn')
                 .append(
                     common.createElement('a', 'btn btn-default disabled resource-view')
-                    .append(common.createElement('i', 'icon-eye-open'))
+                    .append(common.createElement('i', 'fa fa-eye'))
                     .attr('title', translator.get('platform:see'))
                     .attr('data-toggle', 'tooltip')
                     .attr('target', '_blank')
@@ -49,7 +49,7 @@
                 )
                 .append(
                     common.createElement('a', 'btn btn-default')
-                    .append(common.createElement('i', 'icon-folder-open'))
+                    .append(common.createElement('i', 'fa fa-folder-open'))
                     .attr('title', translator.get('platform:resources'))
                     .attr('data-toggle', 'tooltip')
                     .css('margin', '0')
@@ -60,7 +60,7 @@
                 )
                 .append(
                     common.createElement('a', 'btn btn-default')
-                    .append(common.createElement('i', 'icon-file'))
+                    .append(common.createElement('i', 'fa fa-file'))
                     .attr('title', translator.get('platform:upload'))
                     .attr('data-toggle', 'tooltip')
                     .css('margin', '0')

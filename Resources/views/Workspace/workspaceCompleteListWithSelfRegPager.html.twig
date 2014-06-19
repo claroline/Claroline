@@ -21,7 +21,7 @@
 
 {% for workspace in workspaces.currentPageResults %}
     <div class="list-group-item row-workspace row-workspace-id-{{ workspace.getId() }}">
-        <i class="icon-book"></i>
+        <i class="fa fa-book"></i>
         {{ workspace.getName() }}
         <span><small>({{ workspace.getCode() }})</small></span>
 
@@ -29,7 +29,7 @@
             data-workspace-id="{{ workspace.getId() }}"
             data-workspace-name="{{ workspace.getName() }}"
             data-workspace-code="{{ workspace.getCode() }}">
-            <i class="icon-plus-sign"></i>
+            <i class="fa fa-plus-circle"></i>
             {{ 'register'|trans({}, 'platform') }}
         </span>
     </div>

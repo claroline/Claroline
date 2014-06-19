@@ -169,7 +169,7 @@
     {
         if ($(editor.getElement()).data('resource-picker') !== 'off') {
             editor.addButton('resourcePicker', {
-                'icon': 'none icon-folder-open',
+                'icon': 'none fa fa-folder-open',
                 'classes': 'widget btn',
                 'tooltip': translator.get('platform:resources'),
                 'onclick': function () {
@@ -178,7 +178,7 @@
                 }
             });
             editor.addButton('fileUpload', {
-                'icon': 'none icon-file',
+                'icon': 'none fa fa-file',
                 'classes': 'widget btn',
                 'tooltip': translator.get('platform:upload'),
                 'onclick': function () {
@@ -225,7 +225,7 @@
 
         // Add a button that toggles toolbar 1+ on/off
         editor.addButton('displayAllButtons', {
-            'icon': 'none icon-chevron-down',
+            'icon': 'none fa fa-chevron-down',
             'classes': 'widget btn',
             'tooltip': translator.get('platform:tinymce_all_buttons'),
             onclick: function () {
@@ -273,7 +273,7 @@
      */
     tinymce.claroline.mentionsItem = function (item)
     {
-        var avatar = '<i class="icon-user"></i>';
+        var avatar = '<i class="fa fa-user"></i>';
         if (item.avatar !== null) {
             avatar = '<img src="' + home.asset + 'uploads/pictures/' + item.avatar + '" alt="' + item.name +
                      '" class="img-responsive">';

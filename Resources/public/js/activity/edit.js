@@ -20,13 +20,13 @@
             .append(
                 common.createElement('div', 'dropdown')
                 .append(
-                    common.createElement('i', 'icon-chevron-down pointer-hand')
+                    common.createElement('i', 'fa fa-chevron-down pointer-hand')
                     .attr('data-toggle', 'dropdown')
                 )
                 .append(
                     common.createElement('ul', 'dropdown-menu').html(
                         common.createElement('li').html(
-                            common.createElement('i', 'activity-remove-resource icon-trash')
+                            common.createElement('i', 'activity-remove-resource fa fa-trash-o')
                             .data('resource', resource.id)
                             .data('activity', activity)
                             .html(

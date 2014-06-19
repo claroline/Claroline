@@ -28,13 +28,13 @@
             success: function (data) {
                 if (data === 'added') {
                     $(favouriteIconClass).each(function () {
-                        $(this).removeClass('icon-star-empty');
-                        $(this).addClass('icon-star');
+                        $(this).removeClass('fa-star-o');
+                        $(this).addClass('fa-star');
                     });
                 } else {
                     $(favouriteIconClass).each(function () {
-                        $(this).removeClass('icon-star');
-                        $(this).addClass('icon-star-empty');
+                        $(this).removeClass('fa-star');
+                        $(this).addClass('fa-star-o');
                     });
                 }
             },

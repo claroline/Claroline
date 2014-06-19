@@ -105,7 +105,7 @@
             success: function () {
                 $(registerButtonClass).each(function () {
                     $(this).empty();
-                    $(this).html("<a class='visit-workspace' href="+visitWorkspaceRoute+">"+registeredText+"<i class='icon-share'></i></a>");
+                    $(this).html("<a class='visit-workspace' href="+visitWorkspaceRoute+">"+registeredText+"<i class='fa fa-share-square-o'></i></a>");
                     $(this).attr('class', 'pull-right label label-success');
                 });
             }
