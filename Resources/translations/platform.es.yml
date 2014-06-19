@@ -58,6 +58,14 @@ activity_parameters_form_max_attempts: 'Numero de intentos permitidos'
 activity_parameters_form_max_duration: 'Tiempo limite establecido'
 activity_resource_not_allowed: No puede agregar un recurso de este tipo
 activity_resource_remove: '¿Esta seguro que desea remover este recurso de la actividad?'
+activity_rule_action_none: Ninguno
+activity_rule_configuration_for_auto_evaluation: 'Configuración de la regla para la evaluación automática'
+activity_rule_form_action: Acción
+activity_rule_form_activeFrom: De
+activity_rule_form_activeUntil: Hasta
+activity_rule_form_badge: Insignia
+activity_rule_form_occurrence: Ocurrencia
+activity_rule_form_result: Resultado
 add: 'Agregar'
 add_category: 'Agregar categoría'
 add_field_to_facet: Agregar un campo a una faceta

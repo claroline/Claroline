@@ -12,6 +12,7 @@
 namespace Claroline\CoreBundle\DataFixtures\Required\Data;
 
 use Claroline\CoreBundle\Persistence\ObjectManager;
+use Claroline\CoreBundle\Entity\Activity\ActivityRuleAction;
 use Claroline\CoreBundle\Entity\Resource\ResourceType;
 use Claroline\CoreBundle\Entity\Resource\MaskDecoder;
 use Claroline\CoreBundle\Entity\Resource\MenuAction;
@@ -75,6 +76,23 @@ class LoadResourceTypeData implements RequiredFixture
         $updateTextDecoder->setName('write');
         $updateTextDecoder->setResourceType($types['text']);
         $manager->persist($updateTextDecoder);
+
+        $fileAction = new ActivityRuleAction();
+        $fileAction->setAction('resource-read');
+        $fileAction->setResourceType($types['file']);
+        $fileAction->setType('occurrence');
+        $manager->persist($fileAction);
+
+        $textAction = new ActivityRuleAction();
+        $textAction->setAction('resource-read');
+        $textAction->setResourceType($types['text']);
+        $textAction->setType('occurrence');
+        $manager->persist($textAction);
+
+        $badgeAwardAction = new ActivityRuleAction();
+        $badgeAwardAction->setAction('badge-awarding');
+        $badgeAwardAction->setType('badge');
+        $manager->persist($badgeAwardAction);
     }
 
     public function setContainer($container)
