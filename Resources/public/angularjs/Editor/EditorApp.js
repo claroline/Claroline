@@ -6,10 +6,11 @@ var EditorApp = angular.module('EditorApp', [
     'ngSanitize',
     'ui.bootstrap', 
     'ui.pageslide', 
-    'ui.sortable', 
+    /*'ui.sortable', */
     'ui.tinymce',
     'ui.translation',
-    'ui.resourcePicker'
+    'ui.resourcePicker',
+    'ui.tree'
 ]);
 
 // History

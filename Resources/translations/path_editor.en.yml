@@ -60,6 +60,7 @@ step1: General properties
 step2: Path
 step3: Defining step properties
 selected_step: Selected step
+step_drag: Move item
 step_duration: Duration
 step_who: Who ?
 step_where: Where ?

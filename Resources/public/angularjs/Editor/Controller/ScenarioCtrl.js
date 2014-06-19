@@ -7,11 +7,11 @@ function ScenarioCtrl($scope, $modal, HistoryFactory, PathFactory, StepFactory) 
     // Show action buttons for a step in the tree (contains the ID of the step)
     $scope.showButtons = null;
     
-    // Configure Tree of steps sortable feature
-    $scope.sortableOptions = {
-        update: function(e, ui) { $scope.applyTreeChanges(); },
-        placeholder: 'placeholder',
-        connectWith: '.ui-sortable'
+    // Configure sortable Tree feature
+    $scope.treeOptions = {
+        dropped : function(e){
+            $scope.applyTreeChanges(); 
+        }
     };
 
     /**
@@ -27,7 +27,7 @@ function ScenarioCtrl($scope, $modal, HistoryFactory, PathFactory, StepFactory) 
     /**
      * Remove a step from Tree
      */
-    $scope.remove = function(step) {
+    $scope.removeStep = function(step) {     
         // Search step to remove function
         function walk(path) {
             var children = path.children;
@@ -70,6 +70,7 @@ function ScenarioCtrl($scope, $modal, HistoryFactory, PathFactory, StepFactory) 
      * Remove all children of the specified step
      */
     $scope.removeChildren = function(step) {
+        console.log('564');
         // Display confirm modal
         var modalInstance = $modal.open({
             templateUrl: EditorApp.webDir + 'bundles/innovapath/angularjs/Confirm/Partial/confirm.html',
@@ -91,6 +92,7 @@ function ScenarioCtrl($scope, $modal, HistoryFactory, PathFactory, StepFactory) 
      * Add a new step child to specified step
      */
     $scope.addChild = function(step) {
+        console.log('+');
         var newStep = StepFactory.generateNewStep(step);
         
         if (typeof step.children == undefined || null == step.children) {
