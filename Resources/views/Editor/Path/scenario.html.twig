@@ -6,10 +6,14 @@
             <span class="icon-download-alt"></span> {{ 'open_templates'|trans({}, 'path_editor') }}
         </a>
     </div>
-    
+
     <div class="panel-body">
-        <ul class="tree">
-            <li data-ng-repeat="step in path.steps" data-ng-include="'{{ asset('bundles/innovapath/angularjs/Step/Partial/tree-item.html') }}'" onload="isRootNode = ($index == 0)"></li>
-        </ul>
+        <div ui-tree="treeOptions">
+            <ul class="tree" ui-tree-nodes ng-model="path.steps[0].children" data-nodrop>
+                <li ui-tree-node data-ng-repeat="step in path.steps" data-ng-include="'{{ asset('bundles/innovapath/angularjs/Step/Partial/tree.html') }}'" onload="isRootNode = ($index == 0)"></li>
+            </ul>
+        </div>
     </div>
+
+    
 </div>

@@ -6,7 +6,6 @@
 function MainCtrl($scope, $modal, HistoryFactory, ClipboardFactory, PathFactory, AlertFactory, ResourceFactory) {
     $scope.path = EditorApp.currentPath;
     PathFactory.setPath($scope.path);
-    
     if (null === $scope.path.name || $scope.path.name.length === 0) {
         // Add default name to Root step
         if (undefined != $scope.path.steps[0]) {

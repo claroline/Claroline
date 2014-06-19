@@ -62,6 +62,7 @@ step1: Informations globales
 step2: Parcours
 step3: Définition des informations de l'étape
 selected_step: Etape sélectionnée
+step_drag: Déplacer l'élément
 step_duration: Durée
 step_who: Qui ?
 step_where: Où ?

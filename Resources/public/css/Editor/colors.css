@@ -1,11 +1,12 @@
 .lvl {
-    width: 8px;
+    width: 32px;
     display: block;
     height: 100%;
     position: absolute;
     left: 0;
     top: 0;
     border-radius: 3px 0 0 3px;
+    float:left;
 }
 
 .active-step {
@@ -14,11 +15,11 @@
 
 .active-step .lvl {
     border-right: none;
-    width: 6px;
+    width: 32px;
 }
 
 .active-step .step {
-    padding-left: 28px;
+    padding-left: 54px;
     font-weight: bold;
 }
 

@@ -2,10 +2,10 @@
 
 {% block stylesheets %}
     {{ parent() }}
+
     {% stylesheets debug=false filter='cssmin'  output='vendor/innovapath/editor.css'
         '@InnovaPathBundle/Resources/public/css/Editor/*'
         '@InnovaAngularUIPageslideBundle/Resources/public/css/*'
-        '@InnovaAngularUITreeBundle/Resources/public/css/*'
     %}
         <link rel="stylesheet" href="{{ asset_url }}" />
     {% endstylesheets %}
@@ -56,8 +56,13 @@
                 </div>
 
                 <div class="row">
+<<<<<<< Updated upstream
                     <div data-ng-controller="ScenarioCtrl" class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-                        {% include 'InnovaPathBundle:Editor:Path/scenario.html.twig' %}                   
+                        {% include 'InnovaPathBundle:Editor:Path/scenario.html.twig' %}
+=======
+                    <div ng-controller="ScenarioCtrl" class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                        {% include 'InnovaPathBundle:Editor:components/step2-scenario.html.twig' %}                        
+>>>>>>> Stashed changes
                     </div>
 
                     <div data-ng-controller="StepCtrl" class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
@@ -66,6 +71,8 @@
                 </div>              
                
             </div>
+            <!-- <div my-sortable objects="objects" url="url"></div>-->
+            <div ui-tree="myTreeOptions"></div>
         </div>
     {{ form_end(form) }}
 {% endblock %}
@@ -76,6 +83,7 @@
     
     {# Load translations #}
     <script type="text/javascript" src="{{ url('bazinga_exposetranslation_js', { 'domain_name': 'path_editor' }) }}"></script>
+
     {# Angular #}
     {% javascripts debug=false filter='jsmin' output='vendor/angular/angular-js.js'
         '@InnovaAngularJSBundle/Resources/public/js/angular.min.js'
@@ -95,7 +103,7 @@
     {# Angular UI #}
     {% javascripts debug=false filter='jsmin' output='vendor/angular/angular-ui.js'
         '@InnovaAngularUIBootstrapBundle/Resources/public/js/*'
-        '@InnovaAngularUITreeBundle/Resources/public/js/*'
+        '@InnovaAngularUISortableBundle/Resources/public/js/*'
         '@InnovaAngularUIPageslideBundle/Resources/public/js/*'
         '@InnovaAngularUITinyMCEBundle/Resources/public/js/*'
         '@InnovaAngularUITranslationBundle/Resources/public/js/*'
@@ -124,6 +132,8 @@
         '@InnovaPathBundle/Resources/public/angularjs/Template/Controller/TemplateModalCtrl.js'
         '@InnovaPathBundle/Resources/public/angularjs/TruncateText/Filter/TruncateTextFilter.js'
         '@InnovaPathBundle/Resources/public/angularjs/Editor/EditorApp.js'
+        
+        '@InnovaPathBundle/Resources/public/angularjs/Tree/Directive/tree.js'
     %}
         <script type="text/javascript" src="{{ asset_url }}"></script>
     {% endjavascripts %}
