@@ -207,8 +207,8 @@ class RolesController extends Controller
             $id = str_replace('max-user-', '', $role);
 
             foreach ($roles as $entity) {
-                if ($entity->getId() === (int)$id) {
-                    $value = ($value === '') ? null: $value;
+                if ($entity->getId() === (int) $id) {
+                    $value = ($value === '') ? null: (int) $value;
                     $entity->setMaxUsers($value);
                 }
             }
@@ -223,16 +223,20 @@ class RolesController extends Controller
 
     private function validateParameters()
     {
-        return [];
-//        $errors = [];
-//
-//        foreach ($this->request->request as $key => $value) {
-//            if (!is_int($value)) {
-//                $errors[] = array($key => $value);
-//            }
-//        }
-//
-//        return $errors;
+        $errors = [];
+
+        foreach ($this->request->request as $key => $value) {
+            $id = str_replace('max-user-', '', $key);
+            $role = $this->roleManager->getRole($id);
+            $total = $this->roleManager->countUsersByRoleIncludingGroup($role);
+            $value = (int) $value;
+
+            if ($value < $total) {
+                $errors[$key] = array('user_limit_too_low', $value, $total);
+            }
+        }
+
+        return $errors;
     }
 
     private function checkOpen()
