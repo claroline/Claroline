@@ -1,6 +1,6 @@
 'use strict';
 
-function StepCtrl($scope, $http, HistoryFactory, PathFactory, StepFactory, ResourceFactory) {
+function StepCtrl($scope, HistoryFactory, PathFactory, StepFactory, ResourceFactory) {
     // Store resource icons
     $scope.resourceIcons = EditorApp.resourceIcons;
     $scope.resourceZoom = 75;
