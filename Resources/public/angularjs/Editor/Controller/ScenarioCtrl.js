@@ -70,7 +70,6 @@ function ScenarioCtrl($scope, $modal, HistoryFactory, PathFactory, StepFactory) 
      * Remove all children of the specified step
      */
     $scope.removeChildren = function(step) {
-        console.log('564');
         // Display confirm modal
         var modalInstance = $modal.open({
             templateUrl: EditorApp.webDir + 'bundles/innovapath/angularjs/Confirm/Partial/confirm.html',
@@ -92,7 +91,6 @@ function ScenarioCtrl($scope, $modal, HistoryFactory, PathFactory, StepFactory) 
      * Add a new step child to specified step
      */
     $scope.addChild = function(step) {
-        console.log('+');
         var newStep = StepFactory.generateNewStep(step);
         
         if (typeof step.children == undefined || null == step.children) {
