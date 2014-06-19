@@ -5,7 +5,33 @@ body {
 #portfolio-section {
     .widget-menu-container {
         text-align: center;
-        .widget_menu {
+        h2[data-toggle="collapse"] {
+            cursor: pointer;
+        }
+        .dispositions {
+            padding-left:  15px;
+            padding-right: 15px;
+            .disposition {
+                display:          block;
+                background-color: whitesmoke;
+                height:           100px;
+                margin-bottom:    10px;
+                padding:          10px;
+                cursor:           pointer;
+                &.selected {
+                    background-color: orange;
+                }
+                &:hover {
+                    background-color: orange;
+                }
+                div.border {
+                    height:      80px;
+                    border:      1px solid grey;
+                    padding-top: 30px;
+                }
+            }
+        }
+        .contents {
             margin-top: 10px;
             button {
                 text-align: left;

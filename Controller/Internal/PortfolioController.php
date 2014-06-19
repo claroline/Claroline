@@ -32,15 +32,18 @@ class PortfolioController extends BaseController
         $widgets = $portfolio->getWidgets();
 
         $data = array(
-            'id' => $portfolio->getId()
+            'id'          => $portfolio->getId(),
+            'disposition' => $portfolio->getDisposition()
         );
 
         foreach ($widgets as $key => $widget) {
             $widgetType = $widget->getWidgetType();
 
             $widgetViews = array(
-                'type'  => $widgetType,
-                'views' => array(
+                'type'   => $widgetType,
+                'column' => $widget->getColumn(),
+                'row'    => $widget->getRow(),
+                'views'  => array(
                     'view' => $this->getWidgetsManager()->getView($widget, $widgetType)
                 )
             );

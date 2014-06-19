@@ -10,12 +10,13 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 /**
  * @DI\FormType
  */
-class UserInformationType extends AbstractType
+class UserInformationType extends AbstractWidgetType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder
-            ->add('city', 'text');
+        parent::buildForm($builder, $options);
+
+        $builder->add('city', 'text');
     }
 
     public function getName()

@@ -10,12 +10,13 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 /**
  * @DI\FormType
  */
-class TitleType extends AbstractType
+class TitleType extends AbstractWidgetType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder
-            ->add('title', 'text');
+        parent::buildForm($builder, $options);
+
+        $builder->add('title', 'text');
     }
 
     public function getName()

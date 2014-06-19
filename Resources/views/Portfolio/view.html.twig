@@ -30,18 +30,40 @@
 
             <section>
                 {% if editMode %}
-                <div class="col-md-2 widget-menu-container" role="buttonmenu">
-                    <div class="btn-group-vertical widget_menu" role="buttongroup">
-                        <button type="button" class="btn btn-default" data-ng-repeat="widgetType in widgetTypes" data-ng-click="createWidget(widgetType)">
-                            <span class="icon-plus"></span>
-                            {% verbatim %}{{ widgetType + '_title' | trans }}{% endverbatim %}
-                        </button>
+                <div class="col-md-2 widget-menu-container">
+                    <h2 data-toggle="collapse" data-target="#dispositions" role="button">Disposition</h2>
+                    <ul id="dispositions" class="dispositions collapse">
+                        <li class="disposition" data-ng-class="{'selected': portfolio.disposition == 0}" data-ng-click="portfolio.disposition = 0">
+                            <div>
+                                <div class="col-md-12 border">1</div>
+                            </div>
+                        </li>
+                        <li class="disposition" data-ng-class="{'selected': portfolio.disposition == 1}" data-ng-click="portfolio.disposition = 1">
+                            <div>
+                                <div class="col-md-6 border">1</div>
+                                <div class="col-md-6 border">2</div>
+                            </div></li>
+                        <li class="disposition" data-ng-class="{'selected': portfolio.disposition == 2}" data-ng-click="portfolio.disposition = 2">
+                            <div>
+                                <div class="col-md-4 border">1</div>
+                                <div class="col-md-4 border">2</div>
+                                <div class="col-md-4 border">3</div>
+                            </div></li>
+                    </ul>
+                    <h2 data-toggle="collapse" data-target="#contents" role="button">Contenu</h2>
+                    <div id="contents" class="collapse in">
+                        <div class="btn-group-vertical contents" role="buttongroup">
+                            <button type="button" class="btn btn-default" data-ng-repeat="widgetType in widgetTypes" data-ng-click="createWidget(widgetType)">
+                                <span class="icon-plus"></span>
+                                {% verbatim %}{{ widgetType + '_title' | trans }}{% endverbatim %}
+                            </button>
+                        </div>
                     </div>
                 </div>
                 {% endif %}
                 <div class="main-content col-md-8{% if false == editMode %} col-md-offset-2{% endif %}">
                 {% if editMode %}
-                    <div data-ng-repeat="widget in widgets | filter:{type: '!title'}">
+                    <div class="col-md-4" data-ng-repeat="widget in widgets | filter:{type: '!title'}">
                         <div data-widget class="panel panel-default">
                             <div class="panel-heading">
                                 {% verbatim %}{{ widget.type + '_title'|trans }}{% endverbatim %}
@@ -66,17 +88,15 @@
                         <p class="well">{{ 'no_widget'|trans({}, 'icap_portfolio')|raw }}</p>
                     </div>
                 {% else %}
-                    {% for widget in portfolio.widgets %}
-                        {% if 'title' != widget.widgetType %}
-                            <div class="panel panel-default">
-                                <div class="panel-heading">
-                                    {{ (widget.widgetType ~ '_title') | trans({}, 'icap_portfolio') }}
-                                </div>
-                                <div class="panel-body">
-                                    {% include 'IcapPortfolioBundle:templates:' ~ widget.widgetType ~ '.html.twig' with {'widget': widget} only %}
-                                </div>
+                    {% for widget in portfolio.widgets if 'title' != widget.widgetType %}
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                {{ (widget.widgetType ~ '_title') | trans({}, 'icap_portfolio') }}
                             </div>
-                        {% endif %}
+                            <div class="panel-body">
+                                {% include 'IcapPortfolioBundle:templates:' ~ widget.widgetType ~ '.html.twig' with {'widget': widget} only %}
+                            </div>
+                        </div>
                     {% else %}
                         no widget
                     {% endfor %}

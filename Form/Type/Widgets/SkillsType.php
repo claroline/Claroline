@@ -10,10 +10,12 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 /**
  * @DI\FormType
  */
-class SkillsType extends AbstractType
+class SkillsType extends AbstractWidgetType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        parent::buildForm($builder, $options);
+
         $builder
             ->add('children', 'collection',
                 array(

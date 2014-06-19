@@ -10,12 +10,13 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 /**
  * @DI\FormType
  */
-class PresentationType extends AbstractType
+class PresentationType extends AbstractWidgetType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder
-            ->add('presentation', 'tinymce');
+        parent::buildForm($builder, $options);
+
+        $builder->add('presentation', 'tinymce');
     }
 
     public function getName()
