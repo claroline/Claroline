@@ -185,6 +185,8 @@ class Manager
     /**
      * @param \Claroline\ForumBundle\Entity\Message $message
      *
+     * @param \Claroline\ForumBundle\Entity\Subject $subject
+     * @throws \Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException
      * @return \Claroline\ForumBundle\Entity\Message
      */
     public function createMessage(Message $message, Subject $subject)
