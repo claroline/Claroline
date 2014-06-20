@@ -69,8 +69,7 @@ class BlogController extends Controller
         /** @var \Doctrine\ORM\QueryBuilder $query */
         $query = $postRepository
             ->createQueryBuilder('post')
-            ->select(array('post', 'tags', 'author'))
-            ->leftJoin('post.tags', 'tags')
+            ->select(array('post', 'author'))
             ->join('post.author', 'author')
             ->andWhere('post.blog = :blogId')
         ;
