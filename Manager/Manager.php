@@ -540,11 +540,21 @@ class Manager
         return $newForum;
     }
 
-    public function replyMessage(Message $message,Message $oldMessage)
+    public function replyMessage(Message $message, Message $oldMessage)
     {
-    	$html = '<div class="well">'.$oldMessage->getContent().'</div>'.$message->getContent();
-        $message = new Message();
-        $message->setContent($html);
+        // todo: this should be in a template...
+        $mask = '<div class="well"><div class="original-poster">%s :</div>%s</div>%s';
+        $oldAuthor = $oldMessage->getCreator()->getFirstName()
+            . ' '
+            . $oldMessage->getCreator()->getLastName();
+        $message->setContent(
+            sprintf(
+                $mask,
+                $oldAuthor,
+                $oldMessage->getContent(),
+                $message->getContent()
+            )
+        );
         $this->createMessage($message, $oldMessage->getSubject());
     }
 }

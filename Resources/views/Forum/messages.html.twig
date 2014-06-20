@@ -29,6 +29,11 @@
 
 {% extends layout %}
 
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel='stylesheet' type='text/css' href='{{ asset('bundles/clarolineforum/css/forum.css')}}'>
+{% endblock %}
+
 {% block title %}{{ _resource.getResourceNode().getName() ~ '(' ~ subject.getTitle() ~ ')' ~ ' - ' ~ parent() | striptags | raw  }}{% endblock %}
 
 {% block resourceBreadcrumb %}
