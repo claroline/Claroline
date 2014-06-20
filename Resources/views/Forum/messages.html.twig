@@ -46,7 +46,7 @@
             <div class="col-md-12">
                 <a title="{{ category.getName() }}" class="btn btn-default" href="{{ path('claro_forum_subjects', { 'category': category.getId() }) }}">
                     <i class="icon-chevron-left"></i> {{ 'back_to'|trans({}, 'forum') }} "{{ category.getName() | truncate(20) }}"
-                </a> 
+                </a>
             </div>
             <div class="col-md-9">
                 {{ renderPager(subject.getId(), pager, max) }}
@@ -79,7 +79,7 @@
                         {% endif %}
                         </div>
                         <div>
-                        <a href="{{path('claro_profile_view', {'userId':message.getCreator().getId()})}}">
+                        <a href="{{ path('claro_profile_view', {'userId': message.getCreator().getId()}) }}">
                            {{ message.getCreator().getFirstName() }} {{ message.getCreator().getLastName() }}
                         </a>
                         </div>
@@ -92,22 +92,24 @@
                         <p class="text-muted">{{ message.getCreationDate()| timeAgo }}</p>
                         <hr>
                         <div class="pull-right clearfix">
-	                        <a class="btn btn-default" href="{{ path('claro_forum_reply_message_form', {'message': message.getId()}) }}">
-	                            <i class="icon-pencil"></i> {{ 'answer'|trans({}, 'platform') }}
-	                            </a>
-                        {% if isModerator or app.security.token.user == message.getCreator() %}
-                            <a class="btn btn-default" href="{{ path('claro_forum_edit_message_form', {'message': message.getId()}) }}">
-                                <i class="icon-pencil"></i> {{ 'edit'|trans({}, 'platform') }}
-                            </a>
-                        {% endif %}
-                        {% if isModerator %}
-                            <a id="move-message" class="btn btn-default" href="{{ path('claro_message_move_form', {'message': message.getId()}) }}">
-                                <i class="icon-arrow-right"></i> {{ 'move'|trans({}, 'platform') }}
-                            </a>
-                            <a id="delete-message" class="btn btn-default" href="{{ path('claro_forum_delete_message', {'message': message.getId()}) }}">
-                                <i class="icon-remove"></i> {{ 'delete'|trans({}, 'platform') }}
-                            </a>
-                        {% endif %}
+                            {% if canAnswer and not subject.isClosed() %}
+                                <a class="btn btn-default" href="{{ path('claro_forum_reply_message_form', {'message': message.getId()}) }}">
+                                    <i class="icon-pencil"></i> {{ 'answer'|trans({}, 'platform') }}
+                                </a>
+                            {% endif %}
+                            {% if isModerator or app.security.token.user == message.getCreator() %}
+                                <a class="btn btn-default" href="{{ path('claro_forum_edit_message_form', {'message': message.getId()}) }}">
+                                    <i class="icon-pencil"></i> {{ 'edit'|trans({}, 'platform') }}
+                                </a>
+                            {% endif %}
+                            {% if isModerator %}
+                                <a id="move-message" class="btn btn-default" href="{{ path('claro_message_move_form', {'message': message.getId()}) }}">
+                                    <i class="icon-arrow-right"></i> {{ 'move'|trans({}, 'platform') }}
+                                </a>
+                                <a id="delete-message" class="btn btn-default" href="{{ path('claro_forum_delete_message', {'message': message.getId()}) }}">
+                                    <i class="icon-remove"></i> {{ 'delete'|trans({}, 'platform') }}
+                                </a>
+                            {% endif %}
                         </div>
                      </td>
                 </tr>
@@ -149,7 +151,6 @@
         <script>
             (function () {
                 'use strict';
-                //id="forum_message_form_content" name="forum_message_form[content]"
                 $('body').on('click', '.panel-footer .btn-primary', function () {
                     var content = $('textarea.claroline-tiny-mce').val();
                     var token = $('#forum_message_form__token').val();
