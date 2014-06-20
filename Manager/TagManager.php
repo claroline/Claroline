@@ -103,7 +103,9 @@ class TagManager
 
         if (0 < count($results)) {
             $maxWeight = intval($results[0]['frequency']);
-            $minWeight = intval(end(array_values($results))['frequency']);
+            $resultsValues = array_values($results);
+            $endResult = end($resultsValues);
+            $minWeight = intval($endResult['frequency']);
             $diff = $maxWeight - $minWeight;
             $tags = array();
             foreach ($results as $result) {
