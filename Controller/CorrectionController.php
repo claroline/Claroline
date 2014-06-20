@@ -191,7 +191,7 @@ class CorrectionController extends DropzoneBaseController
         $drop = $correction->getDrop();
         $correction->setEndDate(new \DateTime());
         $correction->setFinished(true);
-        $totalGrade = $this->calculateCorrectionTotalGrade($dropzone, $correction);
+        $totalGrade = $this->get('icap.manager.correction_manager')->calculateCorrectionTotalGrade($dropzone, $correction);
         $correction->setTotalGrade($totalGrade);
 
         $em->persist($correction);
@@ -251,59 +251,67 @@ class CorrectionController extends DropzoneBaseController
      * */
     private function checkUserGradeAvailable(Dropzone $dropzone,Drop $drop, $user)
     {
-
         // notification only in the PeerReview mode.
+        $em = $this->getDoctrine()->getManager();
+        $event = new LogDropGradeAvailableEvent($dropzone, $drop);
         if($dropzone->getPeerReview() == 1)
         {
 
-            $em = $this->getDoctrine()->getManager();
+
             // copy corrected by user
-            $nbCorrectionByUser = $em->getRepository('IcapDropzoneBundle:Correction')->getAlreadyCorrectedDropIds($dropzone, $user);
 
             // corrections on the user's copy
             $nbCorrectionByOthersOnUsersCopy = $em->getRepository('IcapDropzoneBundle:Correction')->getCorrectionsIds($dropzone, $drop);
 
 
-            //Expected corrections 
+            //Expected corrections
             $expectedCorrections = $dropzone->getExpectedTotalCorrection();
 
-
-            //if(count($nbCorrectionByUser) >=  $expectedCorrections && count($nbCorrectionByOthersOnUsersCopy) >= $expectedCorrections  )
+            /**
+             * $nbCorrectionByUser = $em->getRepository('IcapDropzoneBundle:Correction')->getAlreadyCorrectedDropIds($dropzone, $user);
+             * if(count($nbCorrectionByUser) >=  $expectedCorrections && count($nbCorrectionByOthersOnUsersCopy) >= $expectedCorrections  )
+             **/
             // corrected copy only instead of corrected copy AND given corrections.
             if( count($nbCorrectionByOthersOnUsersCopy) >= $expectedCorrections  )
             {
                 //dispatchEvent.
-                $rm = $this->get('claroline.manager.role_manager');
-                $event = new LogDropGradeAvailableEvent($dropzone,$drop);
                 $this->get('event_dispatcher')->dispatch('log', $event);
             }
 
+        } else {
+
+            $nbCorrectionByOthersOnUsersCopy = $em->getRepository('IcapDropzoneBundle:Correction')
+                ->getCorrectionsIds($dropzone, $drop);
+
+            if ($nbCorrectionByOthersOnUsersCopy > 0) {
+                $this->get('event_dispatcher')->dispatch('log', $event);
+            }
         }
 
     }
 
+    /* // MOVED TO CORRECTION MANAGER
+        private function calculateCorrectionTotalGrade(Dropzone $dropzone, Correction $correction)
+        {
+            $correction->setTotalGrade(null);
 
-    private function calculateCorrectionTotalGrade(Dropzone $dropzone, Correction $correction)
-    {
-        $correction->setTotalGrade(null);
+            $nbCriteria = count($dropzone->getPeerReviewCriteria());
+            $maxGrade = $dropzone->getTotalCriteriaColumn() - 1;
+            $sumGrades = 0;
+            foreach ($correction->getGrades() as $grade) {
+                ($grade->getValue() > $maxGrade) ? $sumGrades += $maxGrade : $sumGrades += $grade->getValue();
+            }
 
-        $nbCriteria = count($dropzone->getPeerReviewCriteria());
-        $maxGrade = $dropzone->getTotalCriteriaColumn() - 1;
-        $sumGrades = 0;
-        foreach ($correction->getGrades() as $grade) {
-            ($grade->getValue() > $maxGrade) ? $sumGrades += $maxGrade : $sumGrades += $grade->getValue();
+            $totalGrade = 0;
+            if ($nbCriteria != 0) {
+
+                $totalGrade = $sumGrades / ($nbCriteria);
+                $totalGrade = ($totalGrade * 20) / ($maxGrade);
+            }
+
+            return $totalGrade;
         }
-
-        $totalGrade = 0;
-        if ($nbCriteria != 0) {
-
-            $totalGrade = $sumGrades / ($nbCriteria);
-            $totalGrade = ($totalGrade * 20) / ($maxGrade);
-        }
-
-        return $totalGrade;
-    }
-
+    */
     /**
      * @Route(
      *      "/{resourceId}/correct",
@@ -328,7 +336,7 @@ class CorrectionController extends DropzoneBaseController
      */
     public function correctAction($dropzone, $user, $page)
     {
-        $this->isAllowToOpen($dropzone);
+        $this->get('icap.manager.dropzone_voter')->isAllowToOpen($dropzone);
         $em = $this->getDoctrine()->getManager();
 
         $check = $this->checkRightToCorrect($dropzone, $user);
@@ -465,7 +473,7 @@ class CorrectionController extends DropzoneBaseController
      */
     public function correctCommentAction(Dropzone $dropzone, User $user)
     {
-        $this->isAllowToOpen($dropzone);
+        $this->get('icap.manager.dropzone_voter')->isAllowToOpen($dropzone);
         $check = $this->checkRightToCorrect($dropzone, $user);
         if ($check !== null) {
             return $check;
@@ -524,7 +532,8 @@ class CorrectionController extends DropzoneBaseController
         }
 
         $view = 'IcapDropzoneBundle:Correction:correctComment.html.twig';
-        $totalGrade = $this->calculateCorrectionTotalGrade($dropzone, $correction);
+
+        $totalGrade = $this->get('icap.manager.correction_manager')->calculateCorrectionTotalGrade($dropzone, $correction);
 
         $dropzoneManager = $this->get('icap.manager.dropzone_manager');
         $dropzoneProgress = $dropzoneManager->getDropzoneProgressByUser($dropzone,$user);
@@ -565,8 +574,8 @@ class CorrectionController extends DropzoneBaseController
      */
     public function dropsDetailCorrectionStandardAction(Dropzone $dropzone, $state, $correctionId, $user, $backUserId)
     {
-        $this->isAllowToOpen($dropzone);
-        $this->isAllowToEdit($dropzone);
+        $this->get('icap.manager.dropzone_voter')->isAllowToOpen($dropzone);
+        $this->get('icap.manager.dropzone_voter')->isAllowToEdit($dropzone);
 
 
         /** @var Correction $correction */
@@ -603,6 +612,9 @@ class CorrectionController extends DropzoneBaseController
                 $em->flush();
 
                 $this->dispatch($event);
+
+                $event = new LogDropGradeAvailableEvent($dropzone, $correction->getDrop());
+                $this->get('event_dispatcher')->dispatch('log', $event);
 
                 $this->getRequest()->getSession()->getFlashBag()->add(
                     'success',
@@ -662,7 +674,7 @@ class CorrectionController extends DropzoneBaseController
      */
     public function dropsDetailCorrectionAction(Dropzone $dropzone, $state, $correctionId, $page, $user)
     {
-        $this->isAllowToOpen($dropzone);
+        $this->get('icap.manager.dropzone_voter')->isAllowToOpen($dropzone);
         $correction = $this
             ->getDoctrine()
             ->getRepository('IcapDropzoneBundle:Correction')
@@ -673,7 +685,7 @@ class CorrectionController extends DropzoneBaseController
                 throw new AccessDeniedException();
             }
         } else {
-            $this->isAllowToEdit($dropzone);
+            $this->get('icap.manager.dropzone_voter')->isAllowToEdit($dropzone);
         }
         //$this->checkUserGradeAvailable($dropzone);
         
@@ -745,7 +757,7 @@ class CorrectionController extends DropzoneBaseController
                     }
 
                     if ($correction->getFinished()) {
-                        $totalGrade = $this->calculateCorrectionTotalGrade($dropzone, $correction);
+                        $totalGrade = $this->get('icap.manager.correction_manager')->calculateCorrectionTotalGrade($dropzone, $correction);
                         $correction->setTotalGrade($totalGrade);
 
                         $em->persist($correction);
@@ -851,10 +863,10 @@ class CorrectionController extends DropzoneBaseController
      */
     public function dropsDetailCorrectionCommentAction(Dropzone $dropzone, $state, $correctionId, $user)
     {
-        $this->isAllowToOpen($dropzone);
+        $this->get('icap.manager.dropzone_voter')->isAllowToOpen($dropzone);
         if($state != 'preview')
         {
-            $this->isAllowToEdit($dropzone);
+            $this->get('icap.manager.dropzone_voter')->isAllowToEdit($dropzone);
         }
 
         $correction = $this
@@ -902,7 +914,7 @@ class CorrectionController extends DropzoneBaseController
             }
 
             $view = 'IcapDropzoneBundle:Correction:correctComment.html.twig';
-            $totalGrade = $this->calculateCorrectionTotalGrade($dropzone, $correction);
+            $totalGrade = $this->get('icap.manager.correction_manager')->calculateCorrectionTotalGrade($dropzone, $correction);
             return $this->render(
                 $view,
                 array(
@@ -926,7 +938,7 @@ class CorrectionController extends DropzoneBaseController
 
         if($state =='show')
         {
-            $totalGrade = $this->calculateCorrectionTotalGrade($dropzone, $correction);
+            $totalGrade = $this->get('icap.manager.correction_manager')->calculateCorrectionTotalGrade($dropzone, $correction);
             return $this->render(
                 $view,
                 array(
@@ -981,8 +993,8 @@ class CorrectionController extends DropzoneBaseController
      */
     public function dropsDetailAddCorrectionAction($dropzone, $user, $drop)
     {
-        $this->isAllowToOpen($dropzone);
-        $this->isAllowToEdit($dropzone);
+        $this->get('icap.manager.dropzone_voter')->isAllowToOpen($dropzone);
+        $this->get('icap.manager.dropzone_voter')->isAllowToEdit($dropzone);
 
         $em = $this->getDoctrine()->getManager();
         $correction = new Correction();
@@ -990,12 +1002,13 @@ class CorrectionController extends DropzoneBaseController
         $correction->setDropzone($dropzone);
         $correction->setDrop($drop);
         //Allow admins to edit this correction
-        $correction->setEditable(true);
+        $correction->setEditable(true);;
         $em->persist($correction);
         $em->flush();
 
         $event = new LogCorrectionStartEvent($dropzone, $drop, $correction);
         $this->dispatch($event);
+
 
         return $this->redirect(
             $this->generateUrl(
@@ -1015,7 +1028,7 @@ class CorrectionController extends DropzoneBaseController
      *      "/{resourceId}/delete/correction/{correctionId}/{backPage}",
      *      name="icap_dropzone_drops_detail_delete_correction",
      *      requirements={"resourceId" = "\d+", "correctionId" = "\d+"},
-     *      defaults={"backPage" ="default"}
+     *      defaults={"backPage" = "default"}
      * )
      * @ParamConverter("dropzone", class="IcapDropzoneBundle:Dropzone", options={"id" = "resourceId"})
      * @ParamConverter("correction", class="IcapDropzoneBundle:Correction", options={"id" = "correctionId"})
@@ -1024,14 +1037,15 @@ class CorrectionController extends DropzoneBaseController
     public function deleteCorrectionAction(Dropzone $dropzone, Correction $correction, $backPage)
     {
         $userId = $correction->getUser()->getId();
-        $this->isAllowToOpen($dropzone);
-        $this->isAllowToEdit($dropzone);
+        $this->get('icap.manager.dropzone_voter')->isAllowToOpen($dropzone);
+        $this->get('icap.manager.dropzone_voter')->isAllowToEdit($dropzone);
 
         if ($correction->getEditable() === false) {
             throw new AccessDeniedException();
         }
 
         $dropId = $correction->getDrop()->getId();
+
 
         // Action on POST , real delete
         if ($this->getRequest()->isMethod('POST')) {
@@ -1043,17 +1057,7 @@ class CorrectionController extends DropzoneBaseController
             $this->dispatch($event);
 
             $return = null;
-            if ($backPage != "default") {
-                $return = $this->redirect(
-                    $this->generateUrl(
-                        'icap_dropzone_examiner_corrections',
-                        array(
-                            'resourceId' => $dropzone->getId(),
-                            'userId' => $userId,
-                        )
-                    )
-                );
-            } else {
+            if ($backPage == "AdminCorrectionsByUser") {
                 $return = $this->redirect(
                     $this->generateUrl(
                         'icap_dropzone_drops_detail',
@@ -1063,7 +1067,18 @@ class CorrectionController extends DropzoneBaseController
                         )
                     )
                 );
+            } else {
+                $return = $this->redirect(
+                    $this->generateUrl(
+                        'icap_dropzone_examiner_corrections',
+                        array(
+                            'resourceId' => $dropzone->getId(),
+                            'userId' => $userId,
+                        )
+                    )
+                );
             }
+
 
         } else {
             // Action on GET , Ask confirmation Modal or not.
@@ -1154,13 +1169,14 @@ class CorrectionController extends DropzoneBaseController
      */
     public function setCorrectionValidationAction(Dropzone $dropzone, Correction $correction, $value, $routeParam)
     {
-        $this->isAllowToOpen($dropzone);
-        $this->isAllowToEdit($dropzone);
+        $this->get('icap.manager.dropzone_voter')->isAllowToOpen($dropzone);
+        $this->get('icap.manager.dropzone_voter')->isAllowToEdit($dropzone);
 
         $em = $this->getDoctrine()->getManager();
 
         if ($value == 'yes') {
             $correction->setValid(true);
+            $correction->setFinished(true);
         } else {
             $correction->setValid(false);
         }
@@ -1170,6 +1186,10 @@ class CorrectionController extends DropzoneBaseController
 
         $event = new LogCorrectionValidationChangeEvent($dropzone, $correction->getDrop(), $correction);
         $this->dispatch($event);
+
+        //Notify user his copy has an available note
+        $this->checkUserGradeAvailableByDrop($correction->getDrop());
+
 
         if ($routeParam == 'default') {
             return $this->redirect(
@@ -1206,8 +1226,8 @@ class CorrectionController extends DropzoneBaseController
      */
     public function invalidateAllCorrectionsAction($dropzone, $drop)
     {
-        $this->isAllowToOpen($dropzone);
-        $this->isAllowToEdit($dropzone);
+        $this->get('icap.manager.dropzone_voter')->isAllowToOpen($dropzone);
+        $this->get('icap.manager.dropzone_voter')->isAllowToEdit($dropzone);
 
         $this
             ->getDoctrine()
@@ -1238,7 +1258,7 @@ class CorrectionController extends DropzoneBaseController
     **/
     public function denyCorrectionAction($dropzone,$correction)
     {
-        $this->isAllowToOpen($dropzone);
+        $this->get('icap.manager.dropzone_voter')->isAllowToOpen($dropzone);
         $form = $this->createForm(new CorrectionDenyType(), $correction);
         
         $dropUser = $correction->getDrop()->getUser();
@@ -1323,8 +1343,8 @@ class CorrectionController extends DropzoneBaseController
      */
     public function recalculateScoreAction(Dropzone $dropzone, Correction $correction)
     {
-        $this->isAllowToOpen($dropzone);
-        $this->isAllowToEdit($dropzone);
+        $this->get('icap.manager.dropzone_voter')->isAllowToOpen($dropzone);
+        $this->get('icap.manager.dropzone_voter')->isAllowToEdit($dropzone);
 
         if (!$dropzone->getPeerReview()) {
             throw new AccessDeniedException();
@@ -1332,7 +1352,7 @@ class CorrectionController extends DropzoneBaseController
 
         $oldTotalGrade = $correction->getTotalGrade();
 
-        $totalGrade = $this->calculateCorrectionTotalGrade($dropzone, $correction);
+        $totalGrade = $this->get('icap.manager.correction_manager')->calculateCorrectionTotalGrade($dropzone, $correction);
         $correction->setTotalGrade($totalGrade);
         $em = $this->getDoctrine()->getManager();
 
@@ -1380,8 +1400,8 @@ class CorrectionController extends DropzoneBaseController
      * **/
     public function correctionsByUserAction(Dropzone $dropzone, User $user, $page)
     {
-        $this->isAllowToOpen($dropzone);
-        $this->isAllowToEdit($dropzone);
+        $this->get('icap.manager.dropzone_voter')->isAllowToOpen($dropzone);
+        $this->get('icap.manager.dropzone_voter')->isAllowToEdit($dropzone);
 
         $correctionsQuery = $this->getDoctrine()->getManager()
             ->getRepository('IcapDropzoneBundle:Correction')
@@ -1444,10 +1464,10 @@ class CorrectionController extends DropzoneBaseController
     public function ExaminersByCorrectionMadeAction($dropzone,$page,$withDropOnly)
     {
         // check rights
-        $this->isAllowToOpen($dropzone);
-        $this->isAllowToEdit($dropzone);
+        $this->get('icap.manager.dropzone_voter')->isAllowToOpen($dropzone);
+        $this->get('icap.manager.dropzone_voter')->isAllowToEdit($dropzone);
 
-
+        /*
         // view only available in peerReview mode
         if(! $dropzone->getPeerReview())
         {
@@ -1456,11 +1476,12 @@ class CorrectionController extends DropzoneBaseController
                     $this->generateUrl(
                         'icap_dropzone_drop',
                         array(
-                            'resourceId' => $dropzoneId
+                            'resourceId' => $dropzone->getId()
                         )
                     )
                 );
         }
+        */
 
         //getting the repos
         $dropRepo = $this->getDoctrine()->getManager()->getRepository('IcapDropzoneBundle:Drop');
@@ -1566,8 +1587,8 @@ class CorrectionController extends DropzoneBaseController
     public function recalculateScoreByDropAction($drop)
     {
         $dropzone = $drop->getDropzone();
-        $this->isAllowToOpen($dropzone);
-        $this->isAllowToEdit($dropzone);
+        $this->get('icap.manager.dropzone_voter')->isAllowToOpen($dropzone);
+        $this->get('icap.manager.dropzone_voter')->isAllowToEdit($dropzone);
 
         if (!$dropzone->getPeerReview()) {
             throw new AccessDeniedException();
@@ -1602,23 +1623,10 @@ class CorrectionController extends DropzoneBaseController
      */
     public function recalculateScoreByDropzoneAction($dropzone)
     {
-        $this->isAllowToOpen($dropzone);
-        $this->isAllowToEdit($dropzone);
+        $this->get('icap.manager.dropzone_voter')->isAllowToOpen($dropzone);
+        $this->get('icap.manager.dropzone_voter')->isAllowToEdit($dropzone);
 
-        if (!$dropzone->getPeerReview()) {
-            throw new AccessDeniedException();
-        }
-        // getting the repository
-        $CorrectionRepo = $this->getDoctrine()->getManager()->getRepository('IcapDropzoneBundle:Correction');
-        // getting all the drop corrections
-        $corrections = $CorrectionRepo->findBy(['dropzone' => $dropzone->getId()]);
-
-        $this->recalculateScoreForCorrections($dropzone, $corrections);
-
-        $this->getRequest()->getSession()->getFlashBag()->add(
-            'success',
-            $this->get('translator')->trans('Grades were recalculated', array(), 'icap_dropzone')
-        );
+        $this->get('icap.dropzone_manager')->recalculateScoreByDropzone($dropzone);
 
         return $this->redirect(
             $this->generateUrl(
@@ -1628,7 +1636,6 @@ class CorrectionController extends DropzoneBaseController
                 )
             )
         );
-
     }
 
     private function recalculateScoreForCorrections(Dropzone $dropzone, Array $corrections)
@@ -1636,7 +1643,7 @@ class CorrectionController extends DropzoneBaseController
         // recalculate the score for all corrections
         foreach ($corrections as $correction) {
             $oldTotalGrade = $correction->getTotalGrade();
-            $totalGrade = $this->calculateCorrectionTotalGrade($dropzone, $correction);
+            $totalGrade = $this->get('icap.manager.correction_manager')->calculateCorrectionTotalGrade($dropzone, $correction);
             $correction->setTotalGrade($totalGrade);
             $em = $this->getDoctrine()->getManager();
 

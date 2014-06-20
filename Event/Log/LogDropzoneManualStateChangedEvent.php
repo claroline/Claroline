@@ -29,6 +29,7 @@ class LogDropzoneManualStateChangedEvent extends AbstractLogResourceEvent implem
         $this->details = array(
                 'newState'=> $newstate
         );
+
         parent::__construct($dropzone->getResourceNode(), $this->details);
     }
 
