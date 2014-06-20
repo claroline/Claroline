@@ -34,6 +34,24 @@ class FieldFacetType extends AbstractType
                 'label' => 'type'
             )
         );
+        $builder->add(
+            'isVisibleByOwner',
+            'choice', array(
+                'choices' => array('1' => 'yes', '0' => 'no'),
+                'label' => 'visible',
+                'expanded' => false,
+                'multiple' => false
+            )
+        );
+        $builder->add(
+            'isEditableByOwner',
+            'choice', array(
+                'choices' => array('1' => 'yes', '0' => 'no'),
+                'label' => 'editable',
+                'expanded' => false,
+                'multiple' => false
+            )
+        );
     }
 
     public function getName()

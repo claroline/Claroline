@@ -8,9 +8,9 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2014/06/16 01:52:25
+ * Generation date: 2014/06/17 09:56:13
  */
-class Version20140616135223 extends AbstractMigration
+class Version20140617095612 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
@@ -27,11 +27,11 @@ class Version20140616135223 extends AbstractMigration
             CREATE TABLE claro_field_facet_role (
                 id INT AUTO_INCREMENT NOT NULL, 
                 role_id INT NOT NULL, 
-                field_id INT NOT NULL, 
                 canOpen TINYINT(1) NOT NULL, 
                 canEdit TINYINT(1) NOT NULL, 
+                fieldFacet_id INT NOT NULL, 
                 INDEX IDX_12F52A52D60322AC (role_id), 
-                INDEX IDX_12F52A52443707B0 (field_id), 
+                INDEX IDX_12F52A529F9239AF (fieldFacet_id), 
                 PRIMARY KEY(id)
             ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
         ");
@@ -55,7 +55,7 @@ class Version20140616135223 extends AbstractMigration
         ");
         $this->addSql("
             ALTER TABLE claro_field_facet_role 
-            ADD CONSTRAINT FK_12F52A52443707B0 FOREIGN KEY (field_id) 
+            ADD CONSTRAINT FK_12F52A529F9239AF FOREIGN KEY (fieldFacet_id) 
             REFERENCES claro_field_facet (id) 
             ON DELETE CASCADE
         ");

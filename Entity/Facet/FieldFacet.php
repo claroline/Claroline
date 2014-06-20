@@ -75,10 +75,20 @@ class FieldFacet
     /**
      * @ORM\OneToMany(
      *     targetEntity="Claroline\CoreBundle\Entity\Facet\FieldFacetRole",
-     *     mappedBy="field"
+     *     mappedBy="fieldFacet"
      * )
      */
     protected $fieldFacetsRole;
+
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    protected $isVisibleByOwner = true;
+
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    protected $isEditableByOwner = false;
 
     public function __construct()
     {
@@ -170,5 +180,25 @@ class FieldFacet
     public function getFieldFacetsRole()
     {
         return $this->fieldFacetsRole;
+    }
+
+    public function setIsVisibleByOwner($boolean)
+    {
+        $this->isVisibleByOwner = $boolean;
+    }
+
+    public function getIsVisibleByOwner()
+    {
+        return $this->isVisibleByOwner;
+    }
+
+    public function setIsEditableByOwner($boolean)
+    {
+        $this->isEditableByOwner = $boolean;
+    }
+
+    public function getIsEditableByOwner()
+    {
+        return $this->isEditableByOwner;
     }
 }
