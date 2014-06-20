@@ -40,6 +40,7 @@ class DropzoneManager
      */
     public function getDropzoneUsersIds(Dropzone $dropzone)
     {
+        $this->container->get('icap.manager.dropzone_voter')->isAllowToEdit($dropzone);
 
         //getting the ressource node
         $ressourceNode = $dropzone->getResourceNode();
@@ -70,10 +71,7 @@ class DropzoneManager
             }
         }
         $userIds = array_unique($userIds);
-        /*var_dump($userIds);
-        var_dump($test);
-        die;
-        */
+
         return $userIds;
     }
 
@@ -143,10 +141,8 @@ class DropzoneManager
      *  nbCorrection : corrections made by the user in this evaluation.
      *
      * @param \Icap\DropzoneBundle\Entity\Dropzone $dropzone
-     * @param \Icap\DropzoneBundle\Entity\Drop $drop
+     * @param \Icap\DropzoneBundle\Entity\Drop|\Icap\DropzoneBundle\Manager\Drop $drop
      * @param int $nbCorrection number of correction the user did.
-     * @internal param \Icap\DropzoneBundle\Entity\Dropzone $Dropzone
-     * @internal param \Icap\DropzoneBundle\Entity\Drop $Drop
      * @return array (states, currentState,percent,nbCorrection)
      */
     public function getDrozponeProgress(Dropzone $dropzone, Drop $drop = null, $nbCorrection = 0)
@@ -271,6 +267,7 @@ class DropzoneManager
      */
     public function closeDropzoneOpenedDrops(Dropzone $dropzone, $force = false)
     {
+
         if ($force || $this->isDropzoneDropTimeIsUp($dropzone)) {
             $dropRepo = $this->em->getRepository('IcapDropzoneBundle:Drop');
             $dropRepo->closeUnTerminatedDropsByDropzone($dropzone->getId());
@@ -292,4 +289,26 @@ class DropzoneManager
         }
         return $dropDatePassed;
     }
+
+
+    public function recalculateScoreByDropzone(Dropzone $dropzone)
+    {
+        $this->container->get('icap.manager.dropzone_voter')->isAllowToOpen($dropzone);
+        $this->container->get('icap.manager.dropzone_voter')->isAllowToEdit($dropzone);
+
+        if (!$dropzone->getPeerReview()) {
+            throw new AccessDeniedException();
+        }
+        // getting the repository
+        $CorrectionRepo = $this->em->getRepository('IcapDropzoneBundle:Correction');
+        // getting all the drop corrections
+        $corrections = $CorrectionRepo->findBy(['dropzone' => $dropzone->getId()]);
+
+        $this->container->get('icap.manager.correction_manager')->recalculateScoreForCorrections($dropzone, $corrections);
+
+    }
+
+
+
+
 }
