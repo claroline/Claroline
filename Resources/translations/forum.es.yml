@@ -25,12 +25,14 @@ move_message: 'Mover un mensaje'
 move_subject: 'Mover un tema'
 move_to: 'Mover a'
 new_category: 'Nueva categoría'
-new_message: Responder
+new_message: Nuevo mensaje
 new_subject: 'Nuevo tema'
+posts: Respuestas
 remove_category_confirm_message: '¿Está seguro de que desea eliminar esta categoría?'
 remove_subject_confirm_message: '¿Está seguro que quiere borrar este mensaje?'
 remove_subjects_confirm_message: '¿Está seguro que desea eliminar %count% tema(s)?'
-responses: Respuestas
+reply: Responder
+reply_message: Responder al mensaje
 started_by: 'Iniciado por'
 stick: Anclar
 stuck: Anclado

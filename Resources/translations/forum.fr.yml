@@ -26,12 +26,14 @@ move_message: Déplacer un message
 move_subject: Déplacer un sujet
 move_to: Déplacer vers
 new_category: Ajouter une catégorie
-new_message: Répondre
+new_message: Nouveau message
 new_subject: Ajouter un sujet
+posts: Messages
 remove_category_confirm_message: Êtes vous sûr de vouloir supprimer cette catégorie ?
 remove_subject_confirm_message: Êtes vous sûr de vouloir supprimer ce sujet ?
 remove_subjects_confirm_message: Êtes vous sûr de vouloir supprimer ces %count% sujet(s) ?
-responses: Réponses
+reply: Répondre
+reply_message: Répondre à un message
 started_by: Initié par
 stick: Épingler
 stuck: Épinglé

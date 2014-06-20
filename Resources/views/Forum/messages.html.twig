@@ -64,7 +64,7 @@
             <thead>
                 <tr>
                     <th>{{ 'author'|trans({}, 'forum') }}</th>
-                    <th>{{ 'responses'|trans({}, 'forum') }}</th>
+                    <th>{{ 'posts'|trans({}, 'forum') }}</th>
                 </tr>
             </thead>
             <tbody id='table-message-body'>
@@ -94,7 +94,7 @@
                         <div class="pull-right clearfix">
                             {% if canAnswer and not subject.isClosed() %}
                                 <a class="btn btn-default" href="{{ path('claro_forum_reply_message_form', {'message': message.getId()}) }}">
-                                    <i class="icon-pencil"></i> {{ 'answer'|trans({}, 'platform') }}
+                                    <i class="icon-pencil"></i> {{ 'reply'|trans({}, 'forum') }}
                                 </a>
                             {% endif %}
                             {% if isModerator or app.security.token.user == message.getCreator() %}
@@ -137,7 +137,7 @@
 	            </a>
 	            {% if canAnswer %}
 	                <a class="btn btn-primary">
-	                    <i class="icon-reply"></i> {{ 'new_message' | trans({}, 'forum') }}
+	                    <i class="icon-reply"></i> {{ 'send' | trans({}, 'platform') }}
 	                </a>
 	            {% endif %}
          {% endif %}
