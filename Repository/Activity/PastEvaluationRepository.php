@@ -28,6 +28,7 @@ class PastEvaluationRepository extends EntityRepository
             FROM Claroline\CoreBundle\Entity\Activity\PastEvaluation e
             WHERE e.user = :user
             AND e.activityParameters = :activityParameters
+            ORDER BY e.date DESC
         ';
 
         $query = $this->_em->createQuery($dql);

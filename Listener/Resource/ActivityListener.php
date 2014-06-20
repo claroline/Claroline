@@ -13,7 +13,6 @@ namespace Claroline\CoreBundle\Listener\Resource;
 
 use Claroline\CoreBundle\Entity\Activity\ActivityParameters;
 use Claroline\CoreBundle\Entity\Resource\Activity;
-use Claroline\CoreBundle\Entity\Resource\ResourceActivity;
 use Claroline\CoreBundle\Event\CopyResourceEvent;
 use Claroline\CoreBundle\Event\CreateFormResourceEvent;
 use Claroline\CoreBundle\Event\CreateResourceEvent;
@@ -23,12 +22,14 @@ use Claroline\CoreBundle\Event\ExportResourceTemplateEvent;
 use Claroline\CoreBundle\Event\ImportResourceTemplateEvent;
 use Claroline\CoreBundle\Event\OpenResourceEvent;
 use Claroline\CoreBundle\Form\ActivityType;
+use Claroline\CoreBundle\Manager\ActivityManager;
 use JMS\DiExtraBundle\Annotation\Inject;
 use JMS\DiExtraBundle\Annotation\InjectParams;
 use JMS\DiExtraBundle\Annotation\Observe;
 use JMS\DiExtraBundle\Annotation\Service;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\Security\Core\SecurityContextInterface;
 
 /**
  * @Service
@@ -41,6 +42,7 @@ class ActivityListener
     private $request;
     private $persistence;
     private $activityManager;
+    private $securityContext;
 
     /**
      * @InjectParams({
@@ -50,9 +52,18 @@ class ActivityListener
      *     "request"            = @Inject("request_stack"),
      *     "persistence"        = @Inject("claroline.persistence.object_manager"),
      *     "activityManager"    = @Inject("claroline.manager.activity_manager"),
+     *     "securityContext"    = @Inject("security.context")
      * })
      */
-    public function __construct($router, $formFactory, $templating, $request, $persistence, $activityManager)
+    public function __construct(
+        $router,
+        $formFactory,
+        $templating,
+        $request,
+        $persistence,
+        ActivityManager $activityManager,
+        SecurityContextInterface $securityContext
+    )
     {
         $this->router = $router;
         $this->formFactory = $formFactory;
@@ -60,6 +71,7 @@ class ActivityListener
         $this->request = $request->getMasterRequest();
         $this->persistence = $persistence;
         $this->activityManager = $activityManager;
+        $this->securityContext = $securityContext;
     }
 
     /**
@@ -148,9 +160,28 @@ class ActivityListener
     public function onOpen(OpenResourceEvent $event)
     {
         $activity = $event->getResource();
+        $params = $activity->getParameters();
+        $user = $this->securityContext->getToken()->getUser();
+        $evaluation = $this->activityManager
+            ->getEvaluationByUserAndActivityParams($user, $params);
+
+        if (is_null($evaluation)) {
+            $evaluation = $this->activityManager->createEvaluation(
+                $user,
+                $params,
+                $params->getEvaluationType(),
+                null,
+                'ab-initio'
+            );
+        }
+
         $content = $this->templating->render(
             'ClarolineCoreBundle:Activity:index.html.twig',
-            array('_resource' => $activity)
+            array(
+                '_resource' => $activity,
+                'activityParams' => $params,
+                'evaluation' => $evaluation
+            )
         );
 
         $response = new Response($content);

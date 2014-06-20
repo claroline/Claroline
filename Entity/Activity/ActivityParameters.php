@@ -74,7 +74,7 @@ class ActivityParameters extends Rulable
      * Where the Activity must be done
      * @var string
      *
-     * @ORM\Column(name="where", type="string", nullable=true)
+     * @ORM\Column(name="activity_where", type="string", nullable=true)
      */
     protected $where;
 
