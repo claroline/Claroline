@@ -32,16 +32,20 @@ class ActivityParametersType extends AbstractType
             'max_duration',
             'integer',
             array(
-				'attr' => array('min' => 1),
-				'required' => false
-			)
+                'attr' => array('min' => 1),
+                'required' => false
+            )
         );
 
 		$builder->add(
             'who',
             'choice',
             array(
-                'choices' => array('individual' => 'individual', 'collaborative' => 'collaborative', 'mixed' => 'mixed'),
+                'choices' => array(
+                    'individual' => 'individual',
+                    'collaborative' => 'collaborative',
+                    'mixed' => 'mixed'
+                ),
                 'required' => false
             )
         );
@@ -50,7 +54,10 @@ class ActivityParametersType extends AbstractType
             'where',
             'choice',
             array(
-                'choices' => array('anywhere' => 'anywhere', 'classroom' => 'classroom'),
+                'choices' => array(
+                    'anywhere' => 'anywhere',
+                    'classroom' => 'classroom'
+                ),
                 'required' => false
             )
         );
@@ -58,13 +65,19 @@ class ActivityParametersType extends AbstractType
         $builder->add(
             'max_attempts',
             'integer',
-            array('required' => false)
+            array(
+                'attr' => array('min' => 1),
+                'required' => false
+            )
         );
         $builder->add(
             'evaluation_type',
             'choice',
             array(
-                'choices' => array('automatic' => 'evaluation-automatic', 'manual' => 'evaluation-manual'),
+                'choices' => array(
+                    'automatic' => 'evaluation-automatic',
+                    'manual' => 'evaluation-manual'
+                ),
                 'required' => true
             )
         );

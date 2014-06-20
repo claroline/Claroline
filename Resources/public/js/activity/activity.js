@@ -56,5 +56,21 @@
             });
         }, 300);
     });
+    
+    $('#display-activity-evaluation-btn').on('click', function () {
+        var activityParamsId = $(this).data('activity-params-id');
+        
+        $.ajax({
+            url: Routing.generate(
+                'claro_display_activity_evaluation',
+                {'paramsId': activityParamsId}
+            ),
+            type: 'GET',
+            success: function (datas) {
+                $('#activity-evaluation-modal-body').html(datas);
+            }
+        });
+        $('#activity-evaluation-modal-box').modal('show');
+    });
 
 }());

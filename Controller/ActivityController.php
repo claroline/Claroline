@@ -14,6 +14,7 @@ namespace Claroline\CoreBundle\Controller;
 use Claroline\CoreBundle\Entity\Activity\ActivityParameters;
 use Claroline\CoreBundle\Entity\Activity\ActivityRule;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
+use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Form\ActivityParametersType;
 use Claroline\CoreBundle\Form\ActivityType;
 use Claroline\CoreBundle\Form\ActivityRuleType;
@@ -185,7 +186,7 @@ class ActivityController
                         'id' => $resource->getId(),
                         'name' => $resource->getName(),
                         'type' => $resource->getResourceType()->getName(),
-                        'mimeType' => $resource->getMimeType(),
+                        'mimeType' => $resource->getMimeType()
                     )
                 )
             );
@@ -310,6 +311,44 @@ class ActivityController
         }
 
         return new Response('false');
+    }
+
+    /**
+     * @Route(
+     *     "activity/display/evaluation/parameters/{paramsId}",
+     *     name="claro_display_activity_evaluation",
+     *     options={"expose"=true}
+     * )
+     * @Method("GET")
+     * @ParamConverter("currentUser", options={"authenticatedUser" = true})
+     * @ParamConverter(
+     *      "params",
+     *      class="ClarolineCoreBundle:Activity\ActivityParameters",
+     *      options={"id" = "paramsId", "strictId" = true}
+     * )
+     * @Template()
+     *
+     * Display evaluations of the activity for the current user
+     *
+     * @param User $currentUser
+     * @param ActivityParameters $params
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function displayActivityEvaluationAction(
+        User $currentUser,
+        ActivityParameters $params
+    )
+    {
+        $evaluation = $this->activityManager
+            ->getEvaluationByUserAndActivityParams($currentUser, $params);
+        $pastEvals = $this->activityManager
+            ->getPastEvaluationsByUserAndActivityParams($currentUser, $params);
+
+        return array(
+            'evaluation' => $evaluation,
+            'pastEvals' => $pastEvals
+        );
     }
 
     private function checkAccess($permission, $resource)

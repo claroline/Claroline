@@ -51,7 +51,7 @@ class Evaluation
     protected $activityParameters;
 
     /**
-     * @ORM\Column(name="last_date", type="datetime", nullable=true)
+     * @ORM\Column(name="lastest_evaluation_date", type="datetime", nullable=true)
      */
     protected $date;
 
