@@ -79,7 +79,7 @@
                         {% endif %}
                         </div>
                         <div>
-                        <a href="{{ path('claro_profile_view', {'userId': message.getCreator().getId()}) }}">
+                        <a href="{{ path('claro_public_profile_view', {'publicUrl': message.getCreator().getPublicUrl()}) }}">
                            {{ message.getCreator().getFirstName() }} {{ message.getCreator().getLastName() }}
                         </a>
                         </div>
