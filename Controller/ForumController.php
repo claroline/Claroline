@@ -203,6 +203,9 @@ class ForumController extends Controller
      * )
      * @Template("ClarolineForumBundle:Forum:subjectForm.html.twig")
      * @param Category $category
+     * @throws \Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException
+     * @throws \Exception
+     * @return array|\Symfony\Component\HttpFoundation\RedirectResponse
      */
     public function createSubjectAction(Category $category)
     {
@@ -230,7 +233,7 @@ class ForumController extends Controller
                 $message->setContent($dataMessage['content']);
                 $message->setCreator($user);
                 $message->setSubject($subject);
-                $this->manager->createMessage($message);
+                $this->manager->createMessage($message, $subject);
 
                 return new RedirectResponse(
                     $this->generateUrl('claro_forum_subjects', array('category' => $category->getId()))
@@ -238,7 +241,6 @@ class ForumController extends Controller
             }
         }
 
-        throw new \Exception($form->getErrorsAsString());
         $form->get('message')->addError(
             new FormError($this->get('translator')->trans('field_content_required', array(), 'forum'))
         );
@@ -296,7 +298,7 @@ class ForumController extends Controller
     {
         $form = $this->container->get('form.factory')->create(new MessageType, new Message());
         $form->handleRequest($this->get('request'));
-        
+
 
         if ($form->isValid()) {
             $message = $form->getData();
