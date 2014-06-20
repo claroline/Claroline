@@ -10,7 +10,7 @@
                 <button class="widget-action btn btn-sm btn-default" data-ng-click="edit(widget);" data-ng-if="!widget.isEditing() && !widget.isNew()">
                     <span class="icon-pencil"></span>
                 </button>
-                <div class="btn-group">
+                <div class="btn-group" data-ng-if="!widget.isEditing() && !widget.isNew()">
                     <button class="btn btn-sm btn-default dropdown-toggle" type="button" id="columnMenu" data-toggle="dropdown">
                         <span class="icon-exchange"></span>
                     </button>
