@@ -188,7 +188,7 @@
                                         <a class="btn btn-default" data-toggle="tooltip" title="{{ 'edit' | trans }}" href="{{ path('ujm_question_edit', { 'id': interaction.question.id }) }}">
                                             <i class="icon-pencil"></i>
                                         </a>
-                                        <a class="btn btn-default" data-toggle="tooltip" title="{{ 'delete' | trans }}" href="{{ path('ujm_question_delete', {
+                                        <a class="btn btn-default" data-toggle="tooltip" title="{{ 'delete' | trans }}" id="delete-question" href="{{ path('ujm_question_delete', {
                                         'id': interaction.question.id, 'pageNow': pagerMy.getCurrentPage, 'maxPage': pagerMy.maxPerPage,
                                         'nbItem': pagerMy.getNbResults, 'lastPage': pagerMy.getNbPages }) }}">
                                             <i class="icon-trash"></i>
@@ -448,4 +448,5 @@
         });
         $("#exoList option[value=\""+{{ idExo }}+"\"]").attr('selected', 'selected');
     </script>
+    {% include "UJMExoBundle:Partial:modal/confirmDelQuestion.html.twig" %}
 {% endblock %}

@@ -1,0 +1,39 @@
+{% javascripts
+    debug=false
+    vars=["locale"]
+    "@UJMExoBundle/Resources/views/ConfirmationMessage/removeQuestionConfirm.html.twigjs"
+    filter="twig_js"
+%}
+    <script language="javascript" src="{{ asset_url }}"></script>
+{% endjavascripts %}
+<script>
+    function createValidationBox() {
+        var html = Twig.render(
+            ModalWindow,
+            {'footer': Twig.render(ValidationFooter), 'isHidden': true, 'modalId': 'confirm-modal', 'body': Twig.render(removeQuestionConfirm, {'nbItems': 1})}
+        );
+        $('body').append(html);
+    }
+
+    createValidationBox();
+    var tmpRoute = '';
+    var tmpEl = undefined;
+
+    $('body').on('click', '#delete-question', function(event) {
+        event.preventDefault();
+        $('#confirm-modal').modal('show');
+        tmpRoute = event.currentTarget.href;
+        tmpEl = event.currentTarget;
+    });
+
+    $('body').on('click', '#modal-valid-button', function(event) {
+        $('#confirm-modal').modal('hide');
+        //window.location.href = tmpRoute;
+        $.ajax({
+            url: tmpRoute,
+            success: function () {
+                $(tmpEl)[0].parentElement.parentElement.remove();
+            }
+        });
+    });
+</script>
