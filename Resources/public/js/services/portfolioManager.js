@@ -13,6 +13,17 @@ portfolioApp
                 });
 
                 return this.portfolio;
+            },
+            save: function(portfolio) {
+                var success = function() {
+                    console.log('success');
+                };
+                var failed = function(error) {
+                    console.error('Error occured while saving widget');
+                    console.log(error);
+                }
+
+                return portfolio.$update(success, failed);
             }
         };
     }]);

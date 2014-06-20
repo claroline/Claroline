@@ -33,17 +33,17 @@
                 <div class="col-md-2 widget-menu-container">
                     <h2 data-toggle="collapse" data-target="#dispositions" role="button">Disposition</h2>
                     <ul id="dispositions" class="dispositions collapse">
-                        <li class="disposition" data-ng-class="{'selected': portfolio.disposition == 0}" data-ng-click="portfolio.disposition = 0">
+                        <li class="disposition" data-ng-class="{'selected': portfolio.disposition == 0}" data-ng-click="changeDisposition(0)">
                             <div>
                                 <div class="col-md-12 border">1</div>
                             </div>
                         </li>
-                        <li class="disposition" data-ng-class="{'selected': portfolio.disposition == 1}" data-ng-click="portfolio.disposition = 1">
+                        <li class="disposition" data-ng-class="{'selected': portfolio.disposition == 1}" data-ng-click="changeDisposition(1)">
                             <div>
                                 <div class="col-md-6 border">1</div>
                                 <div class="col-md-6 border">2</div>
                             </div></li>
-                        <li class="disposition" data-ng-class="{'selected': portfolio.disposition == 2}" data-ng-click="portfolio.disposition = 2">
+                        <li class="disposition" data-ng-class="{'selected': portfolio.disposition == 2}" data-ng-click="changeDisposition(2)">
                             <div>
                                 <div class="col-md-4 border">1</div>
                                 <div class="col-md-4 border">2</div>

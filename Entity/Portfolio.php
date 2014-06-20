@@ -280,5 +280,4 @@ class Portfolio
     {
         return $this->widgets;
     }
-
 }
