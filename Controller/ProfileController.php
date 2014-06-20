@@ -197,6 +197,7 @@ class ProfileController extends Controller
         $facets = $this->facetManager->getVisibleFacets($this->security->getToken());
         $fieldFacetValues = $this->facetManager->getFieldValuesByUser($user);
         $fieldFacets = $this->facetManager->getVisibleFieldFacets($this->security->getToken());
+        $adminPublicProfile = $this->facetManager->getVisibleAdminPublicPreference();
 
         $response = new Response(
             $this->renderView(

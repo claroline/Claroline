@@ -586,4 +586,16 @@ class FacetManager
         return $data;
     }
 
+    function getVisibleAdminPublicPreference()
+    {
+        $tokenRoles = $this->sc->getToken()->getRoles();
+        $roles = array();
+
+        foreach ($tokenRoles as $tokenRole) {
+            $roles[] = $tokenRole->getRole();
+        }
+
+        return $this->om->getRepository('ClarolineCoreBundle:Facet\PublicProfilePreference')
+            ->getAdminPublicProfilePreferenceByRole($roles);
+    }
 }

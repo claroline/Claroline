@@ -16,7 +16,7 @@ use Claroline\CoreBundle\Entity\Role;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\PublicProfilePreferenceRepository")
  * @ORM\Table(name="claro_public_profile_preference")
  */
 class PublicProfilePreference
