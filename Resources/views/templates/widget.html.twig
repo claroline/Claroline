@@ -1,0 +1,29 @@
+<div data-widget class="panel panel-default">
+    <div class="panel-heading">
+        {% verbatim %}{{ widget.type + '_title'|trans }}{% endverbatim %}
+        {% if editMode %}
+            <div class="widget-actions">
+                <button class="widget-action btn btn-sm btn-danger" data-ng-class="{'btn-loading': widget.isDeleting}" data-confirm-click="delete(widget);" data-ng-if="isDeletable(widget) && !widget.isNew()">
+                    <span class="loading" data-ng-if="widget.isDeleting"></span>
+                    <span class="icon-trash" data-ng-if="!widget.isDeleting"></span>
+                </button>
+                <button class="widget-action btn btn-sm btn-default" data-ng-click="edit(widget);" data-ng-if="!widget.isEditing() && !widget.isNew()">
+                    <span class="icon-pencil"></span>
+                </button>
+                <div class="btn-group" data-ng-if="!widget.isEditing() && !widget.isNew()">
+                    <button class="btn btn-sm btn-default dropdown-toggle" type="button" id="columnMenu" data-toggle="dropdown">
+                        <span class="icon-exchange"></span>
+                    </button>
+                    <ul class="dropdown-menu" role="menu" aria-labelledby="columnMenu">
+                        <li role="presentation" data-ng-repeat="col in cols" data-ng-click="changeColumn($event, widget, col)"><a role="menuitem" tabindex="-1" href="#">{% verbatim %}{{ col }}{% endverbatim %}</a></li>
+                    </ul>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+    <div class="panel-body">
+        {% if editMode %}
+            <div data-ng-bind-html="widget.views.view | trustAsHtml"></div>
+        {% endif %}
+    </div>
+</div>

@@ -33,9 +33,15 @@ class WidgetController extends BaseController
         }
         else {
             $widgetNamespace = sprintf('Icap\PortfolioBundle\Entity\Widget\%sWidget', ucfirst($type));
+            /** @var \Icap\PortfolioBundle\Entity\Widget\AbstractWidget $widget */
             $widget          = new $widgetNamespace();
-            $data            = $widget->getEmpty();
-            $data['views']   = array();
+            $widgetDatas = array(
+                'type'   => $widget->getWidgetType(),
+                'column' => $widget->getColumn(),
+                'row'    => $widget->getRow(),
+                'views'  => array()
+            );
+            $data = $widgetDatas + $widget->getEmpty();
         }
 
         $response = new JsonResponse();

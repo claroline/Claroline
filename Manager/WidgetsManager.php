@@ -156,8 +156,10 @@ class WidgetsManager
             $this->entityManager->flush();
 
             $widgetDatas = array(
-                'type'  => $widget->getWidgetType(),
-                'views' => array(
+                'type'   => $widget->getWidgetType(),
+                'column' => $widget->getColumn(),
+                'row'    => $widget->getRow(),
+                'views'  => array(
                     'view' => $this->getView($widget, $type)
                 )
             );

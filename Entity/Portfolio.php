@@ -41,6 +41,13 @@ class Portfolio
     protected $visibility = self::VISIBILITY_NOBODY;
 
     /**
+     * @var integer
+     *
+     * @ORM\Column(name="disposition", type="integer")
+     */
+    protected $disposition = 0;
+
+    /**
      * @var \Claroline\CoreBundle\Entity\User
      *
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\User")
@@ -130,6 +137,26 @@ class Portfolio
     {
         $visibilityLabels = self::getVisibilityLabels();
         return $visibilityLabels[$this->getVisibility()];
+    }
+
+    /**
+     * @param int $disposition
+     *
+     * @return Portfolio
+     */
+    public function setDisposition($disposition)
+    {
+        $this->disposition = $disposition;
+
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getDisposition()
+    {
+        return $this->disposition;
     }
 
     /**
@@ -247,11 +274,10 @@ class Portfolio
     }
 
     /**
-     * @return \Icap\PortfolioBundle\Entity\Widget\WidgetNode[]
+     * @return \Icap\PortfolioBundle\Entity\Widget\AbstractWidget[]
      */
     public function getWidgets()
     {
         return $this->widgets;
     }
-
 }

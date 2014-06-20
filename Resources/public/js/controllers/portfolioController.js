@@ -1,7 +1,7 @@
 'use strict';
 
 portfolioApp
-    .controller("portfolioController", ["$scope", "portfolioManager", "widgetsManager", "$attrs", "widgetsConfig", function($scope, portfolioManager, widgetsManager, $attrs, widgetsConfig) {
+    .controller("portfolioController", ["$scope", "$filter", "portfolioManager", "widgetsManager", "$attrs", "widgetsConfig", function($scope, $filter, portfolioManager, widgetsManager, $attrs, widgetsConfig) {
         $scope.portfolio = portfolioManager.getPortfolio($attrs['portfolioContainer']);
         $scope.portfolio.$promise.then(function () {
             $scope.widgets = widgetsManager.widgets;

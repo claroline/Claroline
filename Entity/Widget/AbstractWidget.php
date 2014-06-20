@@ -30,6 +30,20 @@ abstract class AbstractWidget
     protected $id;
 
     /**
+     * @var integer
+     *
+     * @ORM\Column(name="col", type="integer", options={"default" = 1})
+     */
+    protected $column = 1;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="row", type="integer", options={"default" = 1})
+     */
+    protected $row = 1;
+
+    /**
      * @var \Datetime $createdAt
      *
      * @Gedmo\Timestampable(on="create")
@@ -60,6 +74,46 @@ abstract class AbstractWidget
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * @param int $column
+     *
+     * @return AbstractWidget
+     */
+    public function setColumn($column)
+    {
+        $this->column = $column;
+
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getColumn()
+    {
+        return $this->column;
+    }
+
+    /**
+     * @param int $row
+     *
+     * @return AbstractWidget
+     */
+    public function setRow($row)
+    {
+        $this->row = $row;
+
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getRow()
+    {
+        return $this->row;
     }
 
     /**
