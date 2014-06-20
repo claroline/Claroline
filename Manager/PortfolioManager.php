@@ -185,14 +185,21 @@ class PortfolioManager
      */
     public function handle(Portfolio $portfolio, array $parameters)
     {
-        $data = array();
+        $data           = array();
+        $oldDisposition = $portfolio->getDisposition();
 
         $form = $this->getForm($portfolio);
         $form->submit($parameters);
 
         if ($form->isValid()) {
+            $newDisposition = $portfolio->getDisposition();
+
             $this->entityManager->persist($portfolio);
             $this->entityManager->flush();
+
+            if ($oldDisposition !== $newDisposition) {
+                $this->dispositionUpdated($portfolio);
+            }
 
             $data = array(
                 'id'          => $portfolio->getId(),
@@ -203,11 +210,25 @@ class PortfolioManager
 
             return $data;
         }
-        echo "<pre>";
-        var_dump($form->getErrors());
-        echo "</pre>" . PHP_EOL;
-        die("FFFFFUUUUUCCCCCKKKKK" . PHP_EOL);
 
         throw new \InvalidArgumentException();
+    }
+
+    /**
+     * @param Portfolio $portfolio
+     */
+    public function dispositionUpdated(Portfolio $portfolio)
+    {
+        $widgets   = $portfolio->getWidgets();
+        $maxColumn = $portfolio->getDisposition() + 1;
+
+        foreach ($widgets as $widget) {
+            if ($maxColumn < $widget->getColumn()) {
+                $widget->setColumn($maxColumn);
+            }
+            $this->entityManager->persist($widget);
+        }
+
+        $this->entityManager->flush();
     }
 }

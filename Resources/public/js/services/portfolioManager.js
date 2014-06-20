@@ -16,7 +16,6 @@ portfolioApp
             },
             save: function(portfolio) {
                 var success = function() {
-                    console.log('success');
                 };
                 var failed = function(error) {
                     console.error('Error occured while saving widget');

@@ -23,7 +23,6 @@ portfolioApp
                         var widgetsToUpdate = $filter('filter')($scope.widgets, {type: '!title', column: 3});
                         angular.forEach(widgetsToUpdate, function(widget, key) {
                             widget.column = 2;
-                            widgetsManager.save(widget);
                         });
                         break;
                     case 2:
@@ -34,7 +33,6 @@ portfolioApp
                         var widgetsToUpdate = $filter('filter')($scope.widgets, {type: '!title', column: '!3'});
                         angular.forEach(widgetsToUpdate, function(widget, key) {
                             widget.column = 1;
-                            widgetsManager.save(widget);
                         });
                         break;
                 }

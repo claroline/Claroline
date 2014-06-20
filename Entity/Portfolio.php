@@ -274,7 +274,7 @@ class Portfolio
     }
 
     /**
-     * @return \Icap\PortfolioBundle\Entity\Widget\WidgetNode[]
+     * @return \Icap\PortfolioBundle\Entity\Widget\AbstractWidget[]
      */
     public function getWidgets()
     {
