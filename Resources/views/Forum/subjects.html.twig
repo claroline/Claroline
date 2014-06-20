@@ -96,11 +96,11 @@
                                 {% endif %}
                                 {% if subject['is_closed'] == true %}
 									<a href="{{ path('claro_subject_open', {'subject': subject['id']}) }}">
-                                        <i class="icon-eye-close"></i> {{ 'close' | trans({}, 'platform') }}
+                                        <i class="icon-eye-close"></i> {{ 'open' | trans({}, 'platform') }}
                                     </a>
                                 {% else %}
                                     <a href="{{ path('claro_subject_close', {'subject': subject['id']}) }}">
-                                        <i class="icon-eye-open"></i> {{ 'open' | trans({}, 'platform') }}
+                                        <i class="icon-eye-open"></i> {{ 'close' | trans({}, 'platform') }}
                                     </a>
                                 {% endif %}
                             {% else %}
