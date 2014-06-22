@@ -103,6 +103,9 @@
                            href="{{ path('ujm_question_share', { 'questionID': FindQuestion.question.id }) }}">
                             <i class="icon-share-alt"></i>
                         </a>
+                        <a class="btn btn-default" data-toggle="tooltip" title="{{ 'duplicate' | trans }}" href="{{ path('ujm_question_duplicate', { 'interID': FindQuestion.id }) }}">
+                            <i class="icon-repeat"></i>
+                        </a>
                         {% if(questionWithResponse[FindQuestion.id] == 0) %}
                             <a class="btn btn-default" data-toggle="tooltip" title="{{ 'edit' | trans }}"
                                href="{{ path('ujm_question_edit', { 'id': FindQuestion.question.id }) }}">
@@ -110,7 +113,7 @@
                             </a>
 
                             <a class="btn btn-default" data-toggle="tooltip" title="{{ 'delete of my bank' | trans }}"
-                               href="{{ path('ujm_question_delete', { 'id': FindQuestion.question.id}) }}">
+                               href="{{ path('ujm_question_delete', { 'id': FindQuestion.question.id}) }}" id="delete-question">
                                 <i class="icon-trash"></i>
                             </a>
                         {% else %}
@@ -138,7 +141,7 @@
                     </td>
                     <td class="classic">
                         <a href="{{ path('ujm_delete_shared_question', { 'qid': FindQuestion.question.id, 'uid': app.user.id, 'pageNow': pagerSearch.currentPage,
-                            'maxPage': pagerSearch.maxPerPage,'nbItem': pagerSearch.getNbResults, 'lastPage': pagerSearch.getNbPages }) }}"
+                            'maxPage': pagerSearch.maxPerPage,'nbItem': pagerSearch.getNbResults, 'lastPage': pagerSearch.getNbPages }) }}" id="delete-question">
                            <i class="icon-trash"></i>
                         </a>
                     </td>

@@ -664,6 +664,7 @@ function briefSearch(path, exoID, where, idExo) {
         success: function (data) {
             $('body').html(data);
             ready();
+            createValidationBox();
         }
     });
 }

@@ -291,7 +291,7 @@
                                         <a class="btn btn-default" data-toggle="tooltip" title="{{ 'duplicate' | trans }}" href="{{ path('ujm_question_duplicate', { 'interID': myQShare.id }) }}">
                                             <i class="icon-repeat"></i>
                                         </a>
-                                        <a class="btn btn-default" data-toggle="tooltip" title="{{ 'delete of my bank' | trans }}"
+                                        <a class="btn btn-default" data-toggle="tooltip" title="{{ 'delete of my bank' | trans }}" id="delete-question"
                                            href="{{ path('ujm_delete_shared_question', { 'qid': myQShare.question.id,
                                                 'uid': app.user.id,
                                                 'pageNow': pagerShared.currentPage, 'maxPage': pagerShared.maxPerPage,
@@ -372,7 +372,7 @@
                                                 <i class="icon-pencil"></i>
                                             </a>
                                             <a class="btn btn-default" data-toggle="tooltip" title="{{ 'delete' | trans }}" href="{{ path('ujm_question_delete', {
-                                            'id': interactionExo.question.id }) }}">
+                                            'id': interactionExo.question.id }) }}" id="delete-question">
                                                 <i class="icon-trash"></i>
                                             </a>
                                         {% else %}
@@ -412,7 +412,7 @@
                                             {% endif %}
                                         {% endif %}
                                         <a class="btn btn-default" data-toggle="tooltip" title="{{ 'delete of my bank' | trans }}"
-                                           href="{{ path('ujm_delete_shared_question', { 'qid': interactionExo.question.id, 'uid': app.user.id, }) }}">
+                                           href="{{ path('ujm_delete_shared_question', { 'qid': interactionExo.question.id, 'uid': app.user.id, }) }}" id="delete-question">
                                             <i class="icon-trash"></i>
                                         </a>
                                     </td>
