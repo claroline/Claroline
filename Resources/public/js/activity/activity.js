@@ -13,7 +13,7 @@
         var height = $(element).contents().find('body').first().height();
 
         if (height) {
-            $(element).css('height', height);
+            $(element).css('height', height + 15);
         }
     };
 

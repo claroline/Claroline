@@ -15,12 +15,18 @@ use JMS\DiExtraBundle\Annotation\Service;
 use JMS\DiExtraBundle\Annotation\Inject;
 use JMS\DiExtraBundle\Annotation\InjectParams;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\Facet\Facet;
 use Claroline\CoreBundle\Entity\Facet\FieldFacet;
 use Claroline\CoreBundle\Entity\Facet\FieldFacetValue;
 use Claroline\CoreBundle\Entity\Facet\FieldFacetRole;
+use Claroline\CoreBundle\Entity\Facet\PublicProfilePreference;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use Symfony\Component\Translation\Translator;
+use Symfony\Component\Security\Core\SecurityContextInterface;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+
 
 /**
  * @Service("claroline.manager.facet_manager")
@@ -29,20 +35,24 @@ class FacetManager
 {
     private $om;
     private $translator;
+    private $sc;
 
     /**
      * @InjectParams({
      *     "om"         = @Inject("claroline.persistence.object_manager"),
-     *     "translator" = @Inject("translator")
+     *     "translator" = @Inject("translator"),
+     *     "sc"         = @Inject("security.context")
      * })
      */
     public function __construct(
         ObjectManager $om,
-        Translator $translator
+        Translator $translator,
+        SecurityContextInterface $sc
     )
     {
         $this->om = $om;
         $this->translator = $translator;
+        $this->sc = $sc;
     }
 
     /**
@@ -163,7 +173,9 @@ class FacetManager
      */
     public function setFieldValue(User $user, FieldFacet $field, $value)
     {
-        //@todo check permissions
+        if (!$this->sc->isGranted('edit', $field)) {
+            throw new AccessDeniedException();
+        }
 
         $fieldFacetValue = $this->om->getRepository('ClarolineCoreBundle:Facet\FieldFacetValue')
             ->findOneBy(array('user' => $user, 'fieldFacet' => $field));
@@ -404,4 +416,174 @@ class FacetManager
     {
         return $this->om->getRepository('ClarolineCoreBundle:Facet\FieldFacet')->find($id);
     }
+
+    public function getVisibleFieldFacets()
+    {
+        $token = $this->sc->getToken();
+        $tokenRoles = $token->getRoles();
+        $roles = array();
+
+        foreach ($tokenRoles as $tokenRole) {
+            $roles[] = $tokenRole->getRole();
+        }
+
+        return $this->om->getRepository('ClarolineCoreBundle:Facet\FieldFacetRole')->findByRoles($roles);
+    }
+
+    public function getVisibleFacets()
+    {
+        $token = $this->sc->getToken();
+        $data = [];
+        $entities = $this->om->getRepository('ClarolineCoreBundle:Facet\Facet')->findVisibleFacets($token);
+
+        foreach ($entities as $entity) {
+            $data[$entity->getPosition()] = array(
+                'id' => $entity->getId(),
+                'canOpen' => true,
+                'name' => $entity->getName(),
+                'position' => $entity->getPosition(),
+                'fieldFacets' => $entity->getFieldsFacet()
+            );
+        }
+
+        return $data;
+    }
+
+    public function getDisplayedValue(FieldFacetValue $ffv)
+    {
+        switch ($ffv->getFieldFacet()->getType()) {
+            case FieldFacet::FLOAT_TYPE: return $ffv->getFloatValue();
+            case FieldFacet::DATE_TYPE:
+                return $ffv->getDateValue()->format($this->translator->trans('date_form_datepicker_php', array(), 'platform'));
+            case FieldFacet::STRING_TYPE: return $ffv->getStringValue();
+            default: return "error";
+        }
+    }
+
+    public function setProfilePreference(
+        $baseData,
+        $mail,
+        $phone,
+        $sendMail,
+        $sendMessage,
+        Role $role
+    ) {
+        $profilePref = $this->om->getRepository('ClarolineCoreBundle:Facet\PublicProfilePreference')
+            ->findOneByRole($role);
+
+        $profilePref = $profilePref === null ? new PublicProfilePreference() : $profilePref;
+        $profilePref->setBaseData($baseData);
+        $profilePref->setMail($mail);
+        $profilePref->setPhone($phone);
+        $profilePref->setSendMail($sendMail);
+        $profilePref->setSendMessage($sendMessage);
+        $profilePref->setRole($role);
+
+        $this->om->persist($profilePref);
+        $this->om->flush();
+    }
+
+    public function getProfilePreferences()
+    {
+        return $this->om->getRepository('ClarolineCoreBundle:Facet\PublicProfilePreference')->findAll();
+    }
+
+    /**
+     * Returns each facet wich are visible in the private profile.
+     * @todo change the implementation
+     *
+     * @return Facet[]
+     */
+    public function getPrivateVisibleFacets()
+    {
+        $visibleFacets = $this->getVisibleFacets();
+        $visibleByOwner = $this->om->getRepository('ClarolineCoreBundle:Facet\Facet')
+            ->findBy(array('isVisibleByOwner' => true));
+        $private = [];
+
+        foreach ($visibleByOwner as $visible) {
+            $private[$visible->getPosition()] = array(
+                'position' => $visible->getPosition(),
+                'id' => $visible->getId(),
+                'name' => $visible->getName(),
+                'canOpen' => true,
+                'fieldFacets' => $visible->getFieldsFacet()
+            );
+        }
+
+        $data = [];
+
+        //merge both array and set canOpen to true when needed
+        foreach ($private as $el) {
+            $found = false;
+
+            foreach ($visibleFacets as $facet) {
+                if ($el['id'] === $facet['id']) {
+                    $canOpen = $facet['canOpen'] | $el['canOpen'];
+                    $data[$facet['position']] = array(
+                        'position' => $facet['position'],
+                        'id' => $facet['id'],
+                        'name' => $facet['name'],
+                        'canOpen' => $canOpen,
+                        'fieldFacets' => $facet['fieldFacets']
+                    );
+                    $found = true;
+                }
+            }
+
+            if (!$found) {
+                $data[$el['position']] = $el;
+            }
+        }
+
+        $array = $data + $visibleFacets;
+        ksort($array);
+
+        return $array;
+    }
+
+    /**
+     * Return each field visible in the private profile.
+     * The fields are returned as an array wich is used in the facetPane.html.twig file.
+     * The array is has the same structure as the FieldFacetRoleRepository::findByRoles() method.
+     */
+    public function getPrivateVisibleFields()
+    {
+        $fields = $this->om->getRepository('ClarolineCoreBundle:Facet\FieldFacet')->findBy(array('isVisibleByOwner' => true));
+
+        $data = [];
+
+        foreach ($fields as $field) {
+            if ($this->sc->isGranted('ROLE_ADMIN')) {
+                $canOpen = true;
+                $canEdit = true;
+            } else {
+                $canOpen = $field->getIsVisibleByOwner();
+                $canEdit = $field->getIsEditableByOwner();
+            }
+
+            $data[$field->getPosition()] = array(
+                'id' => $field->getId(),
+                'canOpen' => $canOpen,
+                'canEdit' => $canEdit,
+                'position' => $field->getPosition()
+            );
+        }
+
+        $visibleFieldFacets = $this->getVisibleFieldFacets();
+
+        foreach ($data as $field) {
+            $found = false;
+
+            foreach ($visibleFieldFacets as $visibleFieldFacet) {
+                if ($field['id'] === $visibleFieldFacet['id']) {
+                    $data[$field['position']]['canOpen'] = $field['canOpen'] | $visibleFieldFacet['canOpen'];
+                    $data[$field['position']]['canEdit'] = $field['canEdit'] | $visibleFieldFacet['canEdit'];
+                }
+            }
+        }
+
+        return $data;
+    }
+
 }

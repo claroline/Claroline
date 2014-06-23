@@ -16,7 +16,7 @@ use Claroline\CoreBundle\Entity\Facet\FieldFacet;
 use Claroline\CoreBundle\Entity\Role;
 
 /**
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\FieldFacetRoleRepository")
  * @ORM\Table(name="claro_field_facet_role")
  */
 class FieldFacetRole
@@ -44,7 +44,7 @@ class FieldFacetRole
      * )
      * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
      */
-    protected $field;
+    protected $fieldFacet;
 
     /**
      * @ORM\Column(type="boolean")
@@ -71,14 +71,14 @@ class FieldFacetRole
         return $this->role;
     }
 
-    public function setFieldFacet(FieldFacet $field)
+    public function setFieldFacet(FieldFacet $fieldFacet)
     {
-        $this->field = $field;
+        $this->fieldFacet = $fieldFacet;
     }
 
     public function getFieldFacet()
     {
-        return $this->field;
+        return $this->fieldFacet;
     }
 
     public function setCanOpen($bool)
@@ -96,7 +96,7 @@ class FieldFacetRole
         $this->canEdit = $bool;
     }
 
-    public function getCanEdit()
+    public function canEdit()
     {
         return $this->canEdit;
     }

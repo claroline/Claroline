@@ -7,9 +7,9 @@
             <li role="presentation"><i role="menuitem" class="facet-reorder-left-btn fa fa-arrow-left"> {{ "left" | trans({}, 'platform') }}</i></li>
             <li role="presentation"><i role="menuitem" class="facet-reorder-right-btn fa fa-arrow-right"> {{ "right" | trans({}, 'platform') }}</i></li>
             <li class="divider"></li>
-            <li role="presentation"><i role="menuitem" class="facet-rename-btn fa fa-pencil"> {{ "rename" | trans({}, 'platform') }}</i></li>
-            <li role="presentation"><i role="menuitem" class="facet-delete-btn fa fa-trash-o"> {{ "delete" | trans({}, 'platform') }}</i></li>
-            <li role="presentation"><i role="menuitem" class="facet-role-btn fa fa-user"> {{ "roles" | trans({}, 'platform') }}</i></li>
+            <li role="presentation"><i role="menuitem" class="facet-rename-btn icon-pencil"> {{ "edit" | trans({}, 'platform') }}</i></li>
+            <li role="presentation"><i role="menuitem" class="facet-delete-btn icon-trash"> {{ "delete" | trans({}, 'platform') }}</i></li>
+            <li role="presentation"><i role="menuitem" class="facet-role-btn icon-user"> {{ "roles" | trans({}, 'platform') }}</i></li>
         </ul>
     </div>
 </a>

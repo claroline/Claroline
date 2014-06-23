@@ -20,6 +20,15 @@ class FacetType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add('name', 'text', array('label' => 'name'));
+        $builder->add(
+            'isVisibleByOwner',
+            'choice', array(
+                'choices' => array('1' => 'yes', '0' => 'no'),
+                'label' => 'visible',
+                'expanded' => false,
+                'multiple' => false
+            )
+        );
     }
 
     public function getName()

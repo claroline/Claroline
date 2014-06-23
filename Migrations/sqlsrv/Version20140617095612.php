@@ -1,6 +1,6 @@
 <?php
 
-namespace Claroline\CoreBundle\Migrations\pdo_pgsql;
+namespace Claroline\CoreBundle\Migrations\sqlsrv;
 
 use Doctrine\DBAL\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
@@ -8,9 +8,9 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2014/06/16 01:52:24
+ * Generation date: 2014/06/17 09:56:14
  */
-class Version20140616135223 extends AbstractMigration
+class Version20140617095612 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
@@ -18,7 +18,7 @@ class Version20140616135223 extends AbstractMigration
             CREATE TABLE claro_facet_role (
                 facet_id INT NOT NULL, 
                 role_id INT NOT NULL, 
-                PRIMARY KEY(facet_id, role_id)
+                PRIMARY KEY (facet_id, role_id)
             )
         ");
         $this->addSql("
@@ -29,58 +29,62 @@ class Version20140616135223 extends AbstractMigration
         ");
         $this->addSql("
             CREATE TABLE claro_field_facet_role (
-                id SERIAL NOT NULL, 
+                id INT IDENTITY NOT NULL, 
                 role_id INT NOT NULL, 
-                field_id INT NOT NULL, 
-                canOpen BOOLEAN NOT NULL, 
-                canEdit BOOLEAN NOT NULL, 
-                PRIMARY KEY(id)
+                canOpen BIT NOT NULL, 
+                canEdit BIT NOT NULL, 
+                fieldFacet_id INT NOT NULL, 
+                PRIMARY KEY (id)
             )
         ");
         $this->addSql("
             CREATE INDEX IDX_12F52A52D60322AC ON claro_field_facet_role (role_id)
         ");
         $this->addSql("
-            CREATE INDEX IDX_12F52A52443707B0 ON claro_field_facet_role (field_id)
+            CREATE INDEX IDX_12F52A529F9239AF ON claro_field_facet_role (fieldFacet_id)
         ");
         $this->addSql("
             ALTER TABLE claro_facet_role 
             ADD CONSTRAINT FK_CDD5845DFC889F24 FOREIGN KEY (facet_id) 
             REFERENCES claro_facet (id) 
-            ON DELETE CASCADE NOT DEFERRABLE INITIALLY IMMEDIATE
+            ON DELETE CASCADE
         ");
         $this->addSql("
             ALTER TABLE claro_facet_role 
             ADD CONSTRAINT FK_CDD5845DD60322AC FOREIGN KEY (role_id) 
             REFERENCES claro_role (id) 
-            ON DELETE CASCADE NOT DEFERRABLE INITIALLY IMMEDIATE
+            ON DELETE CASCADE
         ");
         $this->addSql("
             ALTER TABLE claro_field_facet_role 
             ADD CONSTRAINT FK_12F52A52D60322AC FOREIGN KEY (role_id) 
             REFERENCES claro_role (id) 
-            ON DELETE CASCADE NOT DEFERRABLE INITIALLY IMMEDIATE
+            ON DELETE CASCADE
         ");
         $this->addSql("
             ALTER TABLE claro_field_facet_role 
-            ADD CONSTRAINT FK_12F52A52443707B0 FOREIGN KEY (field_id) 
+            ADD CONSTRAINT FK_12F52A529F9239AF FOREIGN KEY (fieldFacet_id) 
             REFERENCES claro_field_facet (id) 
-            ON DELETE CASCADE NOT DEFERRABLE INITIALLY IMMEDIATE
+            ON DELETE CASCADE
         ");
         $this->addSql("
-            ALTER TABLE claro_field_facet_value ALTER stringValue 
-            DROP NOT NULL
+            ALTER TABLE claro_field_facet_value ALTER COLUMN stringValue NVARCHAR(255)
         ");
         $this->addSql("
-            ALTER TABLE claro_field_facet_value ALTER floatValue 
-            DROP NOT NULL
+            ALTER TABLE claro_field_facet_value ALTER COLUMN floatValue DOUBLE PRECISION
         ");
         $this->addSql("
-            ALTER TABLE claro_field_facet_value ALTER dateValue 
-            DROP NOT NULL
+            ALTER TABLE claro_field_facet_value ALTER COLUMN dateValue DATETIME2(6)
         ");
         $this->addSql("
-            DROP INDEX UNIQ_F6C21DB25E237E06
+            IF EXISTS (
+                SELECT * 
+                FROM sysobjects 
+                WHERE name = 'UNIQ_F6C21DB25E237E06'
+            ) 
+            ALTER TABLE claro_field_facet 
+            DROP CONSTRAINT UNIQ_F6C21DB25E237E06 ELSE 
+            DROP INDEX UNIQ_F6C21DB25E237E06 ON claro_field_facet
         ");
     }
 
@@ -93,22 +97,17 @@ class Version20140616135223 extends AbstractMigration
             DROP TABLE claro_field_facet_role
         ");
         $this->addSql("
-            CREATE UNIQUE INDEX UNIQ_F6C21DB25E237E06 ON claro_field_facet (name)
+            CREATE UNIQUE INDEX UNIQ_F6C21DB25E237E06 ON claro_field_facet (name) 
+            WHERE name IS NOT NULL
         ");
         $this->addSql("
-            ALTER TABLE claro_field_facet_value ALTER stringValue 
-            SET 
-                NOT NULL
+            ALTER TABLE claro_field_facet_value ALTER COLUMN stringValue NVARCHAR(255) NOT NULL
         ");
         $this->addSql("
-            ALTER TABLE claro_field_facet_value ALTER floatValue 
-            SET 
-                NOT NULL
+            ALTER TABLE claro_field_facet_value ALTER COLUMN floatValue DOUBLE PRECISION NOT NULL
         ");
         $this->addSql("
-            ALTER TABLE claro_field_facet_value ALTER dateValue 
-            SET 
-                NOT NULL
+            ALTER TABLE claro_field_facet_value ALTER COLUMN dateValue DATETIME2(6) NOT NULL
         ");
     }
 }

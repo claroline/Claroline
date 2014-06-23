@@ -1,6 +1,6 @@
 <?php
 
-namespace Claroline\CoreBundle\Migrations\sqlsrv;
+namespace Claroline\CoreBundle\Migrations\pdo_sqlsrv;
 
 use Doctrine\DBAL\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
@@ -8,9 +8,9 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2014/06/16 01:52:25
+ * Generation date: 2014/06/17 09:56:13
  */
-class Version20140616135223 extends AbstractMigration
+class Version20140617095612 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
@@ -31,9 +31,9 @@ class Version20140616135223 extends AbstractMigration
             CREATE TABLE claro_field_facet_role (
                 id INT IDENTITY NOT NULL, 
                 role_id INT NOT NULL, 
-                field_id INT NOT NULL, 
                 canOpen BIT NOT NULL, 
                 canEdit BIT NOT NULL, 
+                fieldFacet_id INT NOT NULL, 
                 PRIMARY KEY (id)
             )
         ");
@@ -41,7 +41,7 @@ class Version20140616135223 extends AbstractMigration
             CREATE INDEX IDX_12F52A52D60322AC ON claro_field_facet_role (role_id)
         ");
         $this->addSql("
-            CREATE INDEX IDX_12F52A52443707B0 ON claro_field_facet_role (field_id)
+            CREATE INDEX IDX_12F52A529F9239AF ON claro_field_facet_role (fieldFacet_id)
         ");
         $this->addSql("
             ALTER TABLE claro_facet_role 
@@ -63,7 +63,7 @@ class Version20140616135223 extends AbstractMigration
         ");
         $this->addSql("
             ALTER TABLE claro_field_facet_role 
-            ADD CONSTRAINT FK_12F52A52443707B0 FOREIGN KEY (field_id) 
+            ADD CONSTRAINT FK_12F52A529F9239AF FOREIGN KEY (fieldFacet_id) 
             REFERENCES claro_field_facet (id) 
             ON DELETE CASCADE
         ");

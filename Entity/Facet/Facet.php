@@ -19,7 +19,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Claroline\CoreBundle\Entity\Role;
 
 /**
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\FacetRepository")
  * @ORM\Table(name="claro_facet")
  * @UniqueEntity("name")
  */
@@ -62,6 +62,11 @@ class Facet {
      * @ORM\JoinTable(name="claro_facet_role")
      */
     protected $roles;
+
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    protected $isVisibleByOwner = true;
 
     public function __construct()
     {
@@ -122,5 +127,15 @@ class Facet {
     public function setRoles(array $roles)
     {
         $this->roles = $roles;
+    }
+
+    public function setIsVisibleByOwner($boolean)
+    {
+        $this->isVisibleByOwner = $boolean;
+    }
+
+    public function getIsVisibleByOwner()
+    {
+        return $this->isVisibleByOwner;
     }
 } 
