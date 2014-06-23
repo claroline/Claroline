@@ -121,8 +121,17 @@ class Recorder
 
         foreach ($operations as $operation) {
             $bundles = $this->detector->detectBundles($operation->getPackage()->getPrettyName());
+            $autoload = $operation->getPackage()->getAutoload();
 
             if (count($bundles) > 0) {
+                if (isset($autoload['psr-4'])) {
+                    foreach ($bundles as $index => $bundle) {
+                        // psr-4 prefix must be prepended to bundle class
+                        $prefixes = array_keys($autoload['psr-4']);
+                        $bundles[$index] = array_shift($prefixes) . $bundle;
+                    }
+                }
+
                 $orderedBundles = array_merge($orderedBundles, $bundles);
             }
         }
