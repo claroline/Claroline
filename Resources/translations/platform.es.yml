@@ -117,11 +117,13 @@ answer: 'Respuesta'
 appearance: 'Apariencia'
 apply: 'Aplicar'
 at_least_one_category_has_to_be_selected: 'Debe seleccionar al menos una categoría'
+attempts: Intentos
 available_widgets: 'Widgets disponibles'
 available_workspaces: 'Espacios de trabajo disponibles'
 back: 'Atrás'
 bad_request: 'La solicitud no es correcta. Si usted llegó a esta página a través de un enlace interno, por favor informe del problema al administrador de la plataforma.'
 badges_management: 'Gestión de insignias'
+best_score: 'Mejor puntaje'
 by: 'Por'
 by_workspace: 'Por espacio de trabajo'
 canCopy: 'Derecho a copiar'
@@ -148,7 +150,9 @@ close: 'Cerrar'
 closed_account: Cuenta cerrada.
 code: 'Código'
 collaborator: 'Colaborador'
+comments: Comentarios
 communication: 'Comunicación'
+completed: Completado
 configuration: 'Configuración'
 configure: 'Configurar'
 connections: 'Conexiones'
@@ -242,6 +246,7 @@ downloads: 'Descargas'
 drag_file_here: 'Arrastre el archivo aquí'
 drop_file: 'Arrastre el archivo'
 dsn: dsn
+duration: Duración
 edit: 'Editar'
 edit_facet: Editar faceta
 edit_field: Editar campo
@@ -252,6 +257,7 @@ email_found_at: 'El coreo electrónico %email% fue encontrado en la linea: %line
 empty_file: 'Archivo vacío'
 enter_tag_name_message: 'Por favor ingrese el nombre de la etiqueta'
 entries_per_day: 'Entradas por día'
+evaluation: Evaluación
 evaluation-automatic: Automático
 evaluation-manual: Manual
 export: 'Exportar'
@@ -261,6 +267,7 @@ facebook: Facebook
 facebook_application_validation_error: 'Las credenciales proporcionadas no son válidos.'
 facets: Facetas
 fail_add_user_group_message: Estos usuarios no han podido ser agregados al grupo (control del límite usuarios por función).
+failed: Fallido
 fast_answer: 'Respuesta rápida'
 fb_client_id: 'Id de la aplicación'
 fb_client_secret: 'secret de la aplicación'
@@ -326,6 +333,7 @@ import: 'Importar'
 import_roles: 'Importar roles'
 import_user_file_file: 'importar de un archivo CSV'
 import_users: 'Importar usuarios'
+incomplete: Incompleto
 informations: 'Informaciones'
 inscription_mail: 'Inscripción de correo electrónico'
 instructions: 'Instrucciones'
@@ -437,12 +445,14 @@ no_user: 'No hay usuarios'
 no_workspace: 'No hay espacio de trabajo'
 none: 'Ninguno'
 not_allowed_message: 'Usted no puede realizar esta acción.'
+not_attempted: 'No intentado'
 not_blank_expected: 'Este valor no debe estar vacío'
 note: Note
 notification_activated: 'Notificaciones activas.'
 notification_deactivated: 'Notificaciones desacivadas.'
 notifications: 'Notificaciones'
 number: Numero
+number_of_attempts: 'Número de intentos'
 oauth: 'OAuth'
 object: 'Asunto'
 ok: 'Ok'
@@ -459,6 +469,7 @@ over_max_length: 'Este valor es muy largo'
 owner: 'Propietario'
 owner_s: 'Propietario(s)'
 parameters: 'Parámetros'
+passed: Logrado
 password: 'Contraseña'
 password_mismatch: 'Las contraseñas no coinciden'
 password_ok: 'Su contraseña ha cambiado, ahora pude conectarse'
@@ -582,6 +593,7 @@ roles_management: 'Gestión de roles'
 save: 'Guardar'
 save_as_template: 'Guardar como una plantilla'
 save_workspace_as_template: 'Guardar el espacio de trabajo como una plantilla'
+score: Puntaje
 search: 'Buscar'
 search_group: 'Buscar un grupo'
 search_user: 'Buscar un usuario'
@@ -625,6 +637,7 @@ show_as_admin: 'Mostrar como administrador'
 show_as_user: 'Mostrar como usuario'
 show_profile: 'Mostrar perfil'
 simple: 'Simple'
+status: Estado
 storage_type: 'Tipo de almacenamiento'
 subcategories: 'subcategorías'
 subscribe_groups: 'Inscribir grupos'
@@ -677,6 +690,7 @@ top_users_workspaces_owners: 'Principales usuarios que mas poseen un espacio de 
 top_workspaces_connections: 'Espacio de trabajo más visitado'
 top_workspaces_resources: 'Principales espacios de trabajo que más tienen recursos'
 total: 'Total'
+total_time: 'Tempo total'
 trash: 'Basura'
 type: 'Tipo'
 type_s: 'Tipo(s)'

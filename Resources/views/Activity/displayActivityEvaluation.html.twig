@@ -1,0 +1,116 @@
+<div>
+    <div class="table-responsive">
+        <table class="table">
+            <tr>
+                <th>{{ 'status' | trans({}, 'platform') }}</th>
+                <th>{{ 'total_time' | trans({}, 'platform') }}</th>
+                <th>{{ 'best_score' | trans({}, 'platform') }}</th>
+                <th>{{ 'number_of_attempts' | trans({}, 'platform') }}</th>
+                <th>{{ 'comments' | trans({}, 'platform') }}</th>
+            </tr>
+            <tr>
+                <td>{{ evaluation.getStatus() | trans({}, 'platform') }}</td>
+                <td>
+                    {% if evaluation.getAttemptsDuration() is not empty %}
+                        {{ evaluation.getAttemptsDuration() }}
+                    {% else %}
+                        -
+                    {% endif %}
+                </td>
+                <td>
+                    {% if evaluation.getNumScore() is not empty %}
+                        {{ evaluation.getNumScore() }}
+                    {% else %}
+                        -
+                    {% endif %}
+                </td>
+                <td>
+                    {% if evaluation.getAttemptsCount() is not empty %}
+                        {{ evaluation.getAttemptsCount() }}
+                    {% else %}
+                        -
+                    {% endif %}
+                </td>
+                <td>
+                    {% if evaluation.getComment() is not empty %}
+                        <i class="fa fa-comment-o display-comment"
+                            data-container="#activity-evaluation-modal-body"
+                            data-toggle="tooltip"
+                            data-placement="left"
+                            data-content="{{ evaluation.getComment() }}"
+                            title="{{ evaluation.getComment() }}"
+                        ></i>
+                            
+                    {% else %}
+                        -
+                    {% endif %}
+                </td>
+            </tr>
+        </table>
+    </div>
+    
+    {% if pastEvals|length > 0 %}
+        <hr>
+        <h4>{{ 'attempts' | trans({}, 'platform') }}</h4>
+        <div class="table-responsive">
+            <table class="table">
+                <tr>
+                    <th>{{ 'date' | trans({}, 'platform') }}</th>
+                    <th>{{ 'status' | trans({}, 'platform') }}</th>
+                    <th>{{ 'duration' | trans({}, 'platform') }}</th>
+                    <th>{{ 'score' | trans({}, 'platform') }}</th>
+                    <th>{{ 'comments' | trans({}, 'platform') }}</th>
+                </tr>
+                
+                {% for eval in pastEvals %}
+                    <tr>
+                        <td>{{ eval.getDate().format('Y-m-d H:i:s') }}</td>
+                        <td>{{ eval.getStatus() | trans({}, 'platform') }}</td>
+                        <td>
+                            {% if eval.getDuration() is not empty %}
+                                {{ eval.getDuration() }}
+                            {% else %}
+                                -
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if eval.getNumScore() is not empty %}
+                                {{ eval.getNumScore() }}
+                            {% else %}
+                                -
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if eval.getComment() is not empty %}
+                                <i class="fa fa-comment-o display-comment"
+                                    data-container="#activity-evaluation-modal-body"
+                                    data-toggle="tooltip"
+                                    data-placement="left"
+                                    data-content="{{ eval.getComment() }}"
+                                    title="{{ eval.getComment() }}"
+                                ></i>
+                            {% else %}
+                                -
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+            </table>
+        </div>
+    {% endif %}
+    
+</div>
+
+{% block stylesheets %}
+    <style type="text/css">
+        td, th {
+            text-align: center;
+        }
+    </style>
+{% endblock %}
+    
+{% block javascripts %}
+    <script>
+        $('.display-comment').tooltip();
+    </script>
+{% endblock %}

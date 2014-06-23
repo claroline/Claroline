@@ -11,7 +11,9 @@
 
 namespace Claroline\CoreBundle\Entity\Activity;
 
+use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Rule\Rulable;
+use Claroline\CoreBundle\Entity\Resource\Activity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -74,7 +76,7 @@ class ActivityParameters extends Rulable
      * Where the Activity must be done
      * @var string
      *
-     * @ORM\Column(name="where", type="string", nullable=true)
+     * @ORM\Column(name="activity_where", type="string", nullable=true)
      */
     protected $where;
 
@@ -160,7 +162,7 @@ class ActivityParameters extends Rulable
      * @param  \Claroline\CoreBundle\Entity\Resource\Activity $activity
      * @return \Claroline\CoreBundle\Entity\Activity\ActivityParameters
      */
-    public function setActivity(\Claroline\CoreBundle\Entity\Resource\Activity $activity = null)
+    public function setActivity(Activity $activity = null)
     {
         $this->activity = $activity;
 
@@ -279,6 +281,34 @@ class ActivityParameters extends Rulable
     public function getSecondaryResources()
     {
         return $this->secondaryResources;
+    }
+
+    /**
+     * Add a secondary resource
+     * @param \Claroline\CoreBundle\Entity\Resource\ResourceNode $resource
+     * @return \Claroline\CoreBundle\Entity\Activity\ActivityParameters
+     */
+    public function addSecondaryResource(ResourceNode $resource)
+    {
+        if (!$this->secondaryResources->contains($resource)) {
+            $this->secondaryResources->add($resource);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a secondary resource
+     * @param  \Claroline\CoreBundle\Entity\Resource\ResourceNode $resource
+     * @return \Claroline\CoreBundle\Entity\Activity\ActivityParameters
+     */
+    public function removeSecondaryResource(ResourceNode $resource)
+    {
+        if ($this->secondaryResources->contains($resource)) {
+            $this->secondaryResources->removeElement($resource);
+        }
+
+        return $this;
     }
 
     /**

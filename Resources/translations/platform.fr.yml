@@ -125,6 +125,7 @@ answer: Répondre
 appearance: Apparence
 apply: Appliquer
 at_least_one_category_has_to_be_selected: 'Au moins une catégorie doit être selectionnée'
+attempts: Tentatives
 available_widgets: 'Widgets disponibles'
 available_workspaces: 'Espaces d''activités disponibles'
 back: Retour
@@ -132,6 +133,7 @@ back_to_profile: 'Retour au profil'
 bad_request: 'La requête est incorrecte. Si vous êtes arrivé sur cette page via un lien interne, veuillez signaler le problème à l''''administrateur de la plateforme.'
 badges_management: 'Gestion des badges'
 base_informations: 'Informations de base'
+best_score: 'Meilleur score'
 by: par
 by_workspace: 'Par espace'
 canCopy: 'Droit de copier'
@@ -159,7 +161,9 @@ close: Fermer
 closed_account: Compte clos
 code: Code
 collaborator: Collaborateur
+comments: Commentaires
 communication: Communication
+completed: Terminé
 configuration: Configuration
 configure: Configurer
 connections: 'Nb Cnx.'
@@ -253,6 +257,7 @@ downloads: 'Nb tchgr.'
 drag_file_here: 'Déplacez le fichier ici'
 drop_file: 'Déposez le fichier'
 dsn: dsn
+duration: Durée
 edit: Modifier
 edit_facet: Editer une facette
 edit_field: Editer un champ
@@ -277,6 +282,7 @@ email_found_at: 'L''email %email% a été trouvé aux lignes: %lines%'
 empty_file: 'Fichier vide'
 enter_tag_name_message: 'Veuillez entrer un nom de Tag'
 entries_per_day: 'Nombre d''entrées par jour'
+evaluation: Evaluation
 evaluation-automatic: Automatique
 evaluation-manual: Manuelle
 export: Exporter
@@ -287,6 +293,7 @@ facebook_application_validation_error: 'Les identifiants fournis ne sont pas val
 facets: Facettes
 fail_add_user_group_message: Ces utilisateurs n'ont pas pu être ajouté au groupe (vérifiez la limite d'utilisateurs par rôle).
 fail_add_user_group_message: Ces utilisateurs n'ont pas pu être ajoutés au groupe (vérifiez la limite d'utilisateurs par rôle).
+failed: Echoué
 fast_answer: 'Réponse rapide'
 fb_client_id: 'Id de l''application'
 fb_client_secret: 'Secret de l''application'
@@ -353,6 +360,7 @@ import: Importer
 import_roles: 'Importer des roles'
 import_user_file_file: 'Importer depuis fichier csv'
 import_users: 'Importer des utilisateurs'
+incomplete: Incomplet
 informations: Informations
 inscription_mail: 'Mail d''inscription'
 instructions: Consignes
@@ -473,12 +481,14 @@ no_user: 'Aucun utilisateur'
 no_workspace: 'Il n''y a aucun espace d''activités'
 none: Aucun
 not_allowed_message: 'Vous n''êtes pas autorisé(e) à effectuer cette action.'
+not_attempted: 'Pas tenté'
 not_blank_expected: 'Cette valeur ne peut pas être vide'
 note: Note
 notification_activated: 'Notifications activées.'
 notification_deactivated: 'Notifications désactivées.'
 notifications: 'Notifications'
 number: Nombre
+number_of_attempts: 'Nombre de tentatives'
 oauth: Oauth
 object: Objet
 ok: Ok
@@ -495,6 +505,7 @@ over_max_length: 'Cette valeur est trop longue'
 owner: Propriétaire
 owner_s: Propriétaire(s)
 parameters: Paramètres
+passed: Réussi
 password: 'Mot de passe'
 password_mismatch: 'Les mots de passe ne correspondent pas.'
 password_ok: 'Votre mot de passe a été modifié. Vous pouvez maintenant vous connecter.'
@@ -632,6 +643,7 @@ roles_management: 'Gestion des rôles'
 save: Sauvegarder
 save_as_template: 'Sauvegarder comme modèle'
 save_workspace_as_template: 'Sauvegarde de l''espace d''activités comme modèle'
+score: Score
 search: Rechercher
 search_group: 'Rechercher un groupe'
 search_user: 'Rechercher un utilisateur'
@@ -677,6 +689,7 @@ show_as_admin: 'Voir comme admin'
 show_as_user: 'Voir comme utilisateur'
 show_profile: 'Voir le profile'
 simple: Simple
+status: Statut
 steal_session: 'Voler la session'
 storage_type: 'Type de stockage'
 subcategories: Sous-catégories
@@ -731,6 +744,7 @@ top_users_workspaces_owners: 'Top des utilisateurs ayant crée le plus de module
 top_workspaces_connections: 'Top des espaces d''activités les plus consultés'
 top_workspaces_resources: 'Top des espaces d''activités avec le plus des resources'
 total: Total
+total_time: 'Durée totale'
 trash: Corbeille
 tune: 'Personnaliser'
 tune_public_url_error: 'Une erreur s''est produite lors de la personnalisation de l''URL de votre profil public.'
