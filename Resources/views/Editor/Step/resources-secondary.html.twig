@@ -12,7 +12,7 @@
     <div id="panel-secondary-resources" class="panel-collapse collapse">
         <div class="panel-body">
             <a href="#" ui-resource-picker="resourcePickerConfig" class="btn btn-sm btn-default">
-                <span class="icon-plus"></span> {{ 'resources_browse'|trans({}, 'path_editor') }}
+                <span class="fa fa-plus"></span> {{ 'resources_browse'|trans({}, 'path_editor') }}
             </a>
 
             {# Herited resources #}
@@ -25,16 +25,16 @@
                     <div class="node-element" style="background-image: url('{% verbatim %}{{ resourceIcons[resource.type] }}{% endverbatim %}');"></div>
                     <div class="dropdown">
                         <a class="dropdown-toggle name dropdown-thumbnail" href="#" data-toggle="dropdown" role="button">
-                            <div class="node-name">{% verbatim %}{{ resource.name }}{% endverbatim %} <span class="icon-caret-down"></span></div>
+                            <div class="node-name">{% verbatim %}{{ resource.name }}{% endverbatim %} <span class="fa fa-caret-down"></span></div>
                         </a>
                         <ul class="dropdown-menu" role="menu">
                             <li>
                                 <a class="node-menu-action" href="#" ng-show="resource.isExcluded" ng-click="includeParentResource(resource)">
-                                    <span class="icon-eye-open"></span>
+                                    <span class="fa fa-eye"></span>
                                     {{ 'resource_show_parent'|trans({}, 'path_editor') }}
                                 </a>
                                 <a class="node-menu-action" href="#" ng-show="!resource.isExcluded" ng-click="excludeParentResource(resource)">
-                                    <span class="icon-eye-close"></span>
+                                    <span class="fa fa-eye-slash"></span>
                                     {{ 'resource_hide_parent'|trans({}, 'path_editor') }}
                                 </a>
                             </li>
@@ -48,29 +48,29 @@
 
                     <div class="dropdown">
                         <a class="dropdown-toggle name dropdown-thumbnail" href="#" data-toggle="dropdown" role="button">
-                            <div class="node-name">{% verbatim %}{{ resource.name }}{% endverbatim %} <span class="icon-caret-down"></span></div>
+                            <div class="node-name">{% verbatim %}{{ resource.name }}{% endverbatim %} <span class="fa fa-caret-down"></span></div>
                         </a>
                         <ul class="dropdown-menu" role="menu">
                             <li ng-show="null == resource.resourceId || resource.resourceId.length == 0">
                                 <a class="node-menu-action" href="#" ng-click="editResource(resource)">
-                                    <span class="icon-pencil"></span>
+                                    <span class="fa fa-pencil"></span>
                                     {{ 'resource_edit'|trans({}, 'path_editor') }}
                                 </a>
                             </li>
                             <li>
                                 <a class="node-menu-action" href="#" ng-show="!resource.propagateToChildren" ng-click="enableResourcePropagation(resource)">
-                                    <span class="icon-eye-open"></span>
+                                    <span class="fa fa-eye"></span>
                                     {{ 'resource_propagate'|trans({}, 'path_editor') }}
                                 </a>
 
                                 <a class="node-menu-action" href="#" ng-show="resource.propagateToChildren" ng-click="disableResourcePropagation(resource)">
-                                    <span class="icon-eye-close"></span>
+                                    <span class="fa fa-eye-slash"></span>
                                     {{ 'resource_no_propagate'|trans({}, 'path_editor') }}
                                 </a>
                             </li>
                             <li>
                                 <a class="node-menu-action" href="#" ng-click="removeResource(resource)">
-                                    <span class="icon-trash"></span>
+                                    <span class="fa fa-trash-o"></span>
                                     {{ 'resource_delete'|trans({}, 'path_editor') }}
                                 </a>
                             </li>

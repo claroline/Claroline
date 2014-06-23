@@ -1,6 +1,6 @@
 <!-- Drag&Drop handler -->
 <div ng-if="step.lvl !== 0" ui-tree-handle class="tree-item mytree-item-handler" data-toggle="tooltip" data-container="body" title="{{ 'step_drag' | trans:{}:'path_editor' }}">
-    <span class="icon-move"></span>
+    <span class="fa fa-arrows"></span>
     <span class="sr-only">{{ 'step_drag' | trans:{}:'path_editor' }}</span>
 </div>
 <!-- Item row -->
@@ -14,27 +14,27 @@
 
     <span data-ng-show="showButtons == step.id || previewStep == step" class="step-actions btn-group">
         <a href="#" class="btn btn-default btn-sm" data-ng-click="addChild(step)" data-toggle="tooltip" data-container="body" title="{{ 'step_add_child' | trans:{}:'path_editor' }}">
-            <span class="icon-plus"></span>
+            <span class="fa fa-plus"></span>
             <span class="sr-only">{{ 'step_add_child' | trans:{}:'path_editor' }}</span>
         </a>
 
         <a href="#" class="btn btn-default btn-sm" data-ng-click="copy(step)" data-toggle="tooltip" data-container="body" title="{{ 'step_copy' | trans:{}:'path_editor' }}">
-            <span class="icon-copy"></span>
+            <span class="fa fa-copy"></span>
             <span class="sr-only">{{ 'step_copy' | trans:{}:'path_editor' }}</span>
         </a>
 
         <a href="#" class="btn btn-default btn-sm" data-ng-click="paste(step)" data-ng-disabled="pasteDisabled" data-toggle="tooltip" data-container="body" title="{{ 'step_paste' | trans:{}:'path_editor' }}">
-            <span class="icon-paste"></span>
+            <span class="fa fa-paste"></span>
             <span class="sr-only">{{ 'step_paste' | trans:{}:'path_editor' }}</span>
         </a>
 
         <a href="#" class="btn btn-info btn-sm" data-ng-click="editTemplate(step)" data-toggle="tooltip" data-container="body" title="{{ 'step_to_template' | trans:{}:'path_editor' }}">
-            <span class="icon-download-alt"></span>
+            <span class="fa fa-download"></span>
             <span class="sr-only">{{ 'step_to_template' | trans:{}:'path_editor' }}</span>
         </a>
 
         <a href="#" data-ng-disabled="isRootNode" class="btn btn-danger btn-sm" data-ng-click="removeStep(step)" data-toggle="tooltip" data-container="body" title="{{ 'step_delete' | trans:{}:'path_editor' }}">
-            <span class="icon-trash"></span>
+            <span class="fa fa-trash-o"></span>
             <span class="sr-only">{{ 'step_delete' | trans:{}:'path_editor' }}</span>
         </a>
     </span>

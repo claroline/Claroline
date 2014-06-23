@@ -1,10 +1,10 @@
 <a id="templates-sidebar-close" href="#" class="btn btn-default btn-xs pull-right">
-    <span class="icon-remove"></span>
+    <span class="fa fa-times"></span>
     {{ 'templates_sidebar_close'|trans({}, 'path_editor') }}
 </a>
 
 <h2>
-    <span class="icon-download-alt"></span> {{ 'templates'|trans({}, 'path_editor') }}
+    <span class="fa fa-download"></span> {{ 'templates'|trans({}, 'path_editor') }}
 </h2>
 
 <table class="table table-condensed table-hover">
@@ -12,17 +12,17 @@
         <td ng-bind="template.name"></td>
         <td class="text-right">
             <button class="btn btn-xs btn-default" ng-click="copy(template.structure)">
-                <span class="icon-copy"></span>
+                <span class="fa fa-files-o"></span>
                 <span class="sr-only">{{ 'template_copy'|trans({}, 'path_editor') }}</span>
             </button>
             
             <button class="btn btn-xs btn-default" ng-click="edit(template)">
-                <span class="icon-pencil"></span>
+                <span class="fa fa-pencil"></span>
                 <span class="sr-only">{{ 'template_edit'|trans({}, 'path_editor') }}</span>
             </button>
             
             <button class="btn btn-xs btn-danger" ng-click="remove(template)">
-                <span class="icon-trash"></span>
+                <span class="fa fa-trash-o"></span>
                 <span class="sr-only">{{ 'template_delete'|trans({}, 'path_editor') }}</span>
             </button>
         </td>
