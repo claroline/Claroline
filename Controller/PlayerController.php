@@ -17,8 +17,6 @@ use Innova\PathBundle\Entity\Path\Path;
 use Innova\PathBundle\Entity\Step;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 
-
-
 /**
  * Player controller
  * @author Innovalangues <contact@innovalangues.net>
@@ -45,9 +43,8 @@ class PlayerController extends ContainerAware
 
     /**
      * Class constructor
-     * @param \Symfony\Component\Routing\RouterInterface   $router
-     * @param \Symfony\Component\Form\FormFactoryInterface $formFactory
-     * @param \Innova\PathBundle\Form\Handler\StepHandler  $stepHandler
+     * @param \Symfony\Component\HttpFoundation\Session\SessionInterface $session
+     * @param \Symfony\Component\Translation\TranslatorInterface         $translator
      */
     public function __construct(
         SessionInterface     $session,
@@ -57,12 +54,13 @@ class PlayerController extends ContainerAware
         $this->translator  = $translator;
     }
 
-
     /**
      * Display path player
-     * @param  Path $path
+     * @param \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace $workspace
+     * @param \Innova\PathBundle\Entity\Path\Path                      $path
+     * @param \Innova\PathBundle\Entity\Step                           $currentStep
      * @return array
-     * 
+     *
      * @Route(
      *      "workspace/{workspaceId}/path/{pathId}/step/{stepId}",
      *      name="innova_path_player_index",
@@ -76,7 +74,6 @@ class PlayerController extends ContainerAware
      */
     public function displayAction(AbstractWorkspace $workspace, Path $path, Step $currentStep)
     {
-
         return array (
             'workspace' => $workspace,
             'path' => $path,
@@ -122,14 +119,12 @@ class PlayerController extends ContainerAware
         );
     }
 
-    
     /**
      * @Method("GET")
      * @Template("InnovaPathBundle:Player:components/resources.html.twig")
      */
     public function displayResourcesAction(Step $currentStep)
     {
-
         return array (
             'currentStep' => $currentStep,
         );
@@ -141,7 +136,6 @@ class PlayerController extends ContainerAware
      */
     public function displayTreeBrowserAction(AbstractWorkspace $workspace, Path $path, Step $currentStep)
     {
-
         return array (
             'workspace' => $workspace,
             'path' => $path,
@@ -167,11 +161,11 @@ class PlayerController extends ContainerAware
     }
 
     /**
-    *
-    * @Route("/set-do-not-display-anymore", name="setDoNotDisplayAnymore", options={"expose"=true})
-    * @Method("GET")
-    */
-    public function setDoNotDisplayAnymore(Request $request)
+     *
+     * @Route("/set-do-not-display-anymore", name="setDoNotDisplayAnymore", options={"expose"=true})
+     * @Method("GET")
+     */
+    public function setDoNotDisplayAnymoreAction(Request $request)
     {
         $isChecked = $request->query->get('isChecked');
         $pathId = $request->query->get('pathId');
@@ -191,11 +185,11 @@ class PlayerController extends ContainerAware
     }
 
     /**
-    *
-    * @Route("/get-do-not-display-anymore", name="getDoNotDisplayAnymore", options={"expose"=true})
-    * @Method("GET")
-    */
-    public function getDoNotDisplayAnymore(Request $request)
+     *
+     * @Route("/get-do-not-display-anymore", name="getDoNotDisplayAnymore", options={"expose"=true})
+     * @Method("GET")
+     */
+    public function getDoNotDisplayAnymoreAction(Request $request)
     {
         $pathId = $request->query->get('pathId');
         $isChecked = null;

@@ -2,7 +2,6 @@
 
 namespace Innova\PathBundle\Entity;
 
-use Innova\PathBundle\Entity\Step2ResourceNode;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 

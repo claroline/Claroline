@@ -21,7 +21,7 @@ function setDoNotDisplayAnymore(isChecked){
             isChecked: isChecked,
             pathId: pathId
         },
-        dataType: 'json',
+        dataType: 'json'
     })
     .done(function(data) {
         window.localStorage.setItem('do-not-display-anymore-' + pathId, isChecked);

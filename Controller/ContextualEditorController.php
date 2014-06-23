@@ -15,12 +15,10 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\DependencyInjection\ContainerAware;
 
-
 use Innova\PathBundle\Form\Handler\StepHandler;
 use Innova\PathBundle\Entity\Path\Path;
 use Innova\PathBundle\Entity\Step;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
-
 
 /**
  * ContextualEditorController controller
@@ -66,7 +64,7 @@ class ContextualEditorController extends ContainerAware
 
     /**
      * Authenticated user
-     * @var \Claroline\CoreBundle\Entity\User\User $user
+     * @var \Claroline\CoreBundle\Entity\User $user
      */
     protected $user;
 
@@ -75,12 +73,15 @@ class ContextualEditorController extends ContainerAware
      * @var \Symfony\Component\Security\Core\SecurityContext $security
      */
     protected $security;
-    
+
     /**
      * Class constructor
-     * @param \Symfony\Component\Routing\RouterInterface   $router
-     * @param \Symfony\Component\Form\FormFactoryInterface $formFactory
-     * @param \Innova\PathBundle\Form\Handler\StepHandler  $stepHandler
+     * @param \Symfony\Component\Security\Core\SecurityContext           $securityContext
+     * @param \Symfony\Component\Routing\RouterInterface                 $router
+     * @param \Symfony\Component\Form\FormFactoryInterface               $formFactory
+     * @param \Symfony\Component\HttpFoundation\Session\SessionInterface $session
+     * @param \Symfony\Component\Translation\TranslatorInterface         $translator
+     * @param \Innova\PathBundle\Form\Handler\StepHandler                $stepHandler
      */
     public function __construct(
         securityContext      $securityContext, 
@@ -103,9 +104,11 @@ class ContextualEditorController extends ContainerAware
 
     /**
      * Display path player
-     * @param  Path $path
+     * @param \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace $workspace
+     * @param \Innova\PathBundle\Entity\Path\Path                      $path
+     * @param \Innova\PathBundle\Entity\Step                           $currentStep
      * @return array
-     * 
+     *
      * @Route(
      *      "workspace/{workspaceId}/path/{pathId}/step/{stepId}/edit/",
      *      name="innova_path_contextual_editor",
@@ -172,7 +175,7 @@ class ContextualEditorController extends ContainerAware
         return new RedirectResponse($url);
     }
 
-    public function addflashMessage($class, $message){
+    protected function addflashMessage($class, $message){
 
         return $this->session->getFlashBag()->add('alert alert-'.$class, $message);
     }
