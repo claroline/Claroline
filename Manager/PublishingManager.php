@@ -173,18 +173,7 @@ class PublishingManager
                 $step = $this->stepManager->edit($this->path, $level, $parent, $currentOrder, $stepStructure, $step);
             }
     
-            // Store existing resources to remove resource relations which no longer exist
-            $existingResources = $step->getStep2ResourceNodes();
-            $existingResources = $existingResources->toArray();
-    
-            // Process resources
-            $resources         = !empty($stepStructure->resources)         ? $stepStructure->resources         : array ();
-            $excludedResources = !empty($stepStructure->excludedResources) ? $stepStructure->excludedResources : array ();
-    
-            $publishedResources = $this->publishResources($step, $resources, $excludedResources);
-    
-            // Clean unused resources
-            $this->cleanResources($step, $publishedResources, $existingResources);
+            // TODO : manage resources inheritance
             
             // Store step to know it doesn't have to be deleted when we will clean the path
             $processedSteps[$step->getId()] = $step;
@@ -210,6 +199,7 @@ class PublishingManager
      * @param  array                          $stepResources
      * @param  array                          $excludedResources List of resources (from parents) which must be exlcuded for the current step
      * @return array
+     * @deprecated
      */
     protected function publishResources(Step $step, array $stepResources = array(), array $excludedResources = array())
     {
@@ -270,6 +260,7 @@ class PublishingManager
      * @param  array                          $neededResources
      * @param  array                          $existingResources
      * @return \Innova\PathBundle\Manager\PublishingManager
+     * @deprecated
      */
     protected function cleanResources(Step $step, array $neededResources = array (), array $existingResources = array ())
     {

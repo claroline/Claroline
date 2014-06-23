@@ -214,6 +214,7 @@ class StepManager
         $parameters->setWhere($where);
 
         // Set resources
+        $this->updateSecondaryResources($parameters, $stepStructure);
 
         // Persist parameters to generate ID
         $this->om->persist($parameters);
@@ -233,9 +234,19 @@ class StepManager
         $publishedResources = array ();
         if (!empty($stepStructure->resources)) {
             foreach ($stepStructure->resources as $resource) {
-
+                $parameters->addSecondaryResource($resource);
+                $publishedResources[] = $resource;
             }
         }
+
+        // Clean removed resources
+        foreach ($existingResources as $existingResource) {
+            if (!in_array($existingResource, $publishedResources)) {
+                $parameters->removeSecondaryResource($existingResource);
+            }
+        }
+
+        return $this;
     }
 
     public function contextualUpdate($step)
