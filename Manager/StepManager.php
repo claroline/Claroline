@@ -174,7 +174,7 @@ class StepManager
             }
         }
 
-        // Generate Claroline resource
+        // Generate Claroline resource node and rights
         if ($newActivity) {
             $activityType = $this->om->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findByName('activity');
             $currentUser = $this->security->getToken()->getUser();
@@ -223,6 +223,19 @@ class StepManager
         $step->setParameters($parameters);
 
         return $this;
+    }
+
+    public function updateSecondaryResources(ActivityParameters $parameters, \stdClass $stepStructure)
+    {
+        $existingResources = $parameters->getSecondaryResources();
+        $existingResources = $existingResources->toArray();
+
+        $publishedResources = array ();
+        if (!empty($stepStructure->resources)) {
+            foreach ($stepStructure->resources as $resource) {
+
+            }
+        }
     }
 
     public function contextualUpdate($step)
