@@ -171,7 +171,8 @@ class ActivityListener
                 $params,
                 $params->getEvaluationType(),
                 null,
-                'ab-initio'
+                'not_attempted',
+                0
             );
         }
 
