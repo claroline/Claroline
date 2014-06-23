@@ -70,6 +70,16 @@ class LoadResourceTypeData implements RequiredFixture
         $activityMenu->setIsForm(false);
         $manager->persist($activityMenu);
 
+        $updateFile = new MenuAction();
+        $updateFile->setName('update_file');
+        $updateFile->setAsync(true);
+        $updateFile->setIsCustom(true);
+        $updateFile->setIsForm(false);
+        $updateFile->setResourceType($types['file']);
+        //8 is default for edit
+        $updateFile->setValue(8);
+        $manager->persist($updateFile);
+
         $updateTextDecoder = new MaskDecoder();
         $updateTextDecoder->setValue(pow(2, 6));
         $updateTextDecoder->setName('write');

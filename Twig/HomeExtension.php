@@ -18,7 +18,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Router;
 
 /**
- * @DI\Service
+ * @DI\Service("claroline.twig.home_extension")
  * @DI\Tag("twig.extension")
  */
 class HomeExtension extends \Twig_Extension

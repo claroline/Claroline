@@ -169,6 +169,13 @@ class AdditionalInstaller extends BaseInstaller
             $updater021601->setLogger($this->logger);
             $updater021601->postUpdate();
         }
+
+        if (version_compare($currentVersion, '2.16.4', '<')) {
+            $this->buildDefaultTemplate();
+            $updater021601 = new Updater\Updater021604($this->container);
+            $updater021601->setLogger($this->logger);
+            $updater021601->postUpdate();
+        }
     }
 
     private function setLocale()
