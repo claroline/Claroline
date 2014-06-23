@@ -1,7 +1,7 @@
 {% if byUserMod == 0 %}
-    {%  set viewState_var = 'show' %}
+    {% set viewState_var = 'show' %}
 {% else %}
-    {%  set viewState_var = 'preview' %}
+    {% set viewState_var = 'preview' %}
 {% endif %}
 {##}
 <div class="table-responsive">
@@ -30,7 +30,7 @@
                 <td>
 
 
-                {% if not correction.valid %}
+                    {% if not correction.valid %}
 
                         <span class=" glyphicon icon-minus-sign" data-toggle="tooltip"
                               data-original-title="{{ 'Invalidated'|trans({}, 'icap_dropzone') }}"></span>
@@ -55,11 +55,11 @@
                         {% endif %}
                         {% if  correction.drop is defined and correction.drop != null %}
                             <a href="{{ path('icap_dropzone_drops_detail_correction_standard', {'resourceId': dropzone.id, 'correctionId': correction.id,'state':'show', 'backUserId':backUserId}) }}"
-                           class="" data-toggle="tooltip"
-                           data-original-title="{{ 'See correction'|trans({},'icap_dropzone') }}">
+                               class="" data-toggle="tooltip"
+                               data-original-title="{{ 'See correction'|trans({},'icap_dropzone') }}">
 
-                            {{ correction.drop.user.firstName|capitalize ~' '~ correction.drop.user.lastName|upper }}
-                        </a>
+                                {{ correction.drop.user.firstName|capitalize ~' '~ correction.drop.user.lastName|upper }}
+                            </a>
                         {% else %}
                             {# case where a drop was deleted ( we keep the corrections ) #}
                             <span class="" data-toggle="tooltip"
@@ -80,7 +80,7 @@
                            data-original-title="{{ 'See correction'|trans({},'icap_dropzone') }}">
 
 
-                        {% if(byUserMod == 0) %}
+                            {% if(byUserMod == 0) %}
                                 {{ correction.user.firstName|capitalize ~' '~ correction.user.lastName|upper }}
                             {% else %}
                                 {{ 'Correction number %num%'|trans({'%num%': loop.index}, 'icap_dropzone') }}
@@ -165,9 +165,6 @@
                                    data-container="body"><span class="glyphicon icon-trash"></span>
                                     {{ 'Delete'|trans({}, 'icap_dropzone') }}
                                 </a>
-
-
-
                             {% endif %}
                         {% endif %}
                     </div>

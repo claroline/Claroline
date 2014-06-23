@@ -13,10 +13,10 @@
             <div class="modal-footer">
                 <div class="btn-group">
                     <button class="btn btn-default" data-dismiss="modal"
-                            aria-hidden="true">{{ 'Cancel'|trans({}, 'icap_dropzone') }}</button>
+                            aria-hidden="true">{{ 'Do nothing'|trans({}, 'icap_dropzone') }}</button>
                     <a id="form-submit" class="btn btn-primary"
                        href="{{ path('icap_dropzone_auto_close_drops',{'resourceId':dropzone.id}) }}">
-                        {{ 'Validate'|trans({}, 'icap_dropzone') }}
+                        {{ 'Validate copies'|trans({}, 'icap_dropzone') }}
                     </a>
                 </div>
             </div>
