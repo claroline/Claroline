@@ -286,6 +286,11 @@ class ActivityManager
             $evaluation->setUser($user);
             $evaluation->setActivityParameters($activityParams);
             $evaluation->setType($evaluationType);
+            $evaluation->setNumScore($score);
+            $evaluation->setScoreMin($scoreMin);
+            $evaluation->setScoreMax($scoreMax);
+        } else {
+            $this->persistBestScore($evaluation, $score, $scoreMin, $scoreMax);
         }
         $evaluation->setDate($currentLog->getDateLog());
         $evaluation->setAttemptsCount($nbAttempts);
@@ -295,14 +300,6 @@ class ActivityManager
 
         $this->om->persist($evaluation);
         $this->om->flush();
-    }
-
-    private function computeActivityTotalTime($totalTime, $sessionTime)
-    {
-        $total = is_null($totalTime) ? 0 : $totalTime;
-        $session = is_null($sessionTime) ? 0 : $sessionTime;
-
-        return $total + $session;
     }
 
     public function createActivityRule(
@@ -394,6 +391,44 @@ class ActivityManager
         $this->om->flush();
 
         return $evaluation;
+    }
+
+    private function computeActivityTotalTime($totalTime, $sessionTime)
+    {
+        $total = is_null($totalTime) ? 0 : $totalTime;
+        $session = is_null($sessionTime) ? 0 : $sessionTime;
+
+        return $total + $session;
+    }
+
+    private function persistBestScore(
+        Evaluation $evaluation,
+        $score,
+        $scoreMin,
+        $scoreMax
+    )
+    {
+        if (!is_null($score) && !is_null($scoreMax)) {
+            $currentScore = $evaluation->getNumScore();
+            $currentScoreMax = $evaluation->getScoreMax();
+
+            if (!is_null($currentScore) && !is_null($currentScoreMax)) {
+                $currentRealScore = $currentScore / $currentScoreMax;
+                $realScore = $score / $scoreMax;
+
+                if ($realScore > $currentRealScore) {
+                    $evaluation->setNumScore($score);
+                    $evaluation->setScoreMin($scoreMin);
+                    $evaluation->setScoreMax($scoreMax);
+                    $this->om->persist($evaluation);
+                }
+            } else {
+                $evaluation->setNumScore($score);
+                $evaluation->setScoreMin($scoreMin);
+                $evaluation->setScoreMax($scoreMax);
+                $this->om->persist($evaluation);
+            }
+        }
     }
 
 
