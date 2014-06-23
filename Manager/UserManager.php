@@ -110,11 +110,7 @@ class UserManager
     {
         $this->objectManager->startFlushSuite();
         $this->setPersonalWorkspace($user);
-
-        $user
-            ->setPublicUrl($this->generatePublicUrl($user))
-            ->setPublicProfilePreferences(new UserPublicProfilePreferences());
-
+        $user->setPublicUrl($this->generatePublicUrl($user));
         $accountDuration = $this->platformConfigHandler->getParameter('account_duration');
         $expirationDate = new \DateTime();
 

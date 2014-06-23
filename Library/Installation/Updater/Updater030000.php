@@ -12,6 +12,7 @@
 namespace Claroline\CoreBundle\Library\Installation\Updater;
 
 use Claroline\CoreBundle\Entity\Activity\ActivityRuleAction;
+use Claroline\CoreBundle\Persistence\ObjectManager;
 
 class Updater030000
 {
@@ -24,6 +25,7 @@ class Updater030000
     {
         $this->container = $container;
         $this->icons = $this->setIcons();
+        /** @var ObjectManager */
         $this->om = $container->get('claroline.persistence.object_manager');
     }
 
@@ -32,6 +34,7 @@ class Updater030000
         $this->updateActivityRuleAction();
         $this->updateActivityIcon();
         $this->updateTools();
+        $this->removePublicProfilePreference();
     }
 
     public function setLogger($logger)
@@ -111,6 +114,19 @@ class Updater030000
         $tool->setClass($class);
         $this->om->persist($tool);
         $this->om->flush();
+    }
+
+    private function removePublicProfilePreference()
+    {
+        $conn = $this->om->getConnection();
+        $sm = $this->om->getSchemaManager();
+        $fromSchema = $sm->createSchema();
+        $toSchema = clone $fromSchema;
+        $toSchema->dropTable('claro_user_public_profile_preferences');
+        $sql = $fromSchema->getMigrateToSql($toSchema, $conn->getDatabasePlatform());
+        $stmt = $conn->prepare($sql);
+        $stmt->execute();
+        $stmt->closeCursor();
     }
 
     private function setIcons()
