@@ -19,8 +19,9 @@ function StepFactory(PathFactory) {
         durationMinutes   : 0,
         who               : null,
         where             : null,
-        withComputer      : true,
+        withTutor         : true,
         children          : [],
+        primaryResource   : null,
         resources         : [],
         excludedResources : []
     };

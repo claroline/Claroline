@@ -11,7 +11,6 @@ function ResourceFactory(PathFactory) {
         id                  : null,
         resourceId          : null,
         name                : null,
-        description         : null,
         type                : 'custom/innova_non_digital_resource',
         propagateToChildren : true
     };

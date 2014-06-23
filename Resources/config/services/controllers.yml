@@ -7,7 +7,7 @@ services:
             router:             @router
             translator:         @translator
             pathManager:        @innova_path.manager.path
-            publishmentManager: @innova_path.manager.publishment
+            publishingManager:  @innova_path.manager.publishing
         
     # Step controller
     innova_path.controller.step:
@@ -58,6 +58,4 @@ services:
             translator:      @translator
             pathHandler:     @innova_path.form.handler.path
             resourceManager: @claroline.manager.resource_manager
-        calls:
-            - [setRequest, [@request]]
         scope: request

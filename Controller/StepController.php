@@ -80,25 +80,4 @@ class StepController
     {
         $this->om = $entityManager;
     }
-
-    /**
-     * Get available resources for current user
-     * @param \Claroline\CoreBundle\Entity\AbstractWorkspace $workspace
-     * @return JsonResponse
-     *
-     * @Route(
-     *      "available_activities",
-     *      name="innova_available_activities",
-     *      options = {"expose"=true}
-     * )
-     * @Method("GET")
-     */
-    public function loadAvailableActivitiesAction(AbstractWorkspace $workspace)
-    {
-        $activities = array ();
-
-        /*$activities = $this->om->getRepository('ClarolineCoreBundle:Resource\')*/
-
-        return new JsonResponse($activities);
-    }
 }

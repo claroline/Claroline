@@ -28,7 +28,7 @@ class Step
      * Activity of this step
      * @var \Claroline\CoreBundle\Entity\Resource\Activity
      *
-     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Resource\Activity")
+     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Resource\Activity", cascade={"persist"})
      * @ORM\JoinColumn(name="activity_id", referencedColumnName="id")
      */
     protected $activity;
@@ -37,7 +37,7 @@ class Step
      * Parameters for this step
      * @var \Claroline\CoreBundle\Entity\Activity\ActivityParameters
      *
-     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Activity\ActivityParameters")
+     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Activity\ActivityParameters", cascade={"persist"})
      * @ORM\JoinColumn(name="parameters_id", referencedColumnName="id")
      */
     protected $parameters;
@@ -318,5 +318,19 @@ class Step
         }
         
         return $parents;
+    }
+
+    /**
+     * Wrapper to access workspace of the Step
+     * @return \Claroline\CoreBundle\Entity\Resource\ResourceNode
+     */
+    public function getWorkspace()
+    {
+        $workspace = null;
+        if (!empty($this->path)) {
+            $workspace = $this->path->getWorkspace();
+        }
+
+        return $workspace;
     }
 }

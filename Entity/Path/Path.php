@@ -263,4 +263,18 @@ class Path extends AbstractResource implements PathInterface
         
         return $this;
     }
+
+    /**
+     * Wrapper to access workspace of the Path
+     * @return \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace
+     */
+    public function getWorkspace()
+    {
+        $workspace = null;
+        if (!empty($this->resourceNode)) {
+            $workspace = $this->resourceNode->getWorkspace();
+        }
+
+        return $workspace;
+    }
 }

@@ -40,7 +40,6 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 
 // Controller dependencies
@@ -48,7 +47,7 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 use Innova\PathBundle\Manager\PathManager;
-use Innova\PathBundle\Manager\PublishmentManager;
+use Innova\PathBundle\Manager\PublishingManager;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Innova\PathBundle\Entity\Path\Path;
 
@@ -98,10 +97,10 @@ class PathController
     protected $pathManager;
     
     /**
-     * Current publishment manager
-     * @var \Innova\PathBundle\Manager\PublishmentManager
+     * Publishing manager
+     * @var \Innova\PathBundle\Manager\PublishingManager
      */
-    protected $publishmentManager;
+    protected $publishingManager;
     
     /**
      * Class constructor
@@ -110,20 +109,20 @@ class PathController
      * @param RouterInterface          $router
      * @param TranslatorInterface      $translator
      * @param PathManager              $pathManager
-     * @param PublishmentManager       $publishmentManager
+     * @param PublishingManager        $publishingManager
      */
     public function __construct(
         SessionInterface         $session,
         RouterInterface          $router,
         TranslatorInterface      $translator,
         PathManager              $pathManager,
-        PublishmentManager       $publishmentManager)
+        PublishingManager        $publishingManager)
     {
-        $this->session     = $session;
-        $this->router      = $router;
-        $this->translator  = $translator;
-        $this->pathManager = $pathManager;
-        $this->publishmentManager = $publishmentManager;
+        $this->session           = $session;
+        $this->router            = $router;
+        $this->translator        = $translator;
+        $this->pathManager       = $pathManager;
+        $this->publishingManager = $publishingManager;
     }
     
     /**
@@ -182,7 +181,7 @@ class PathController
     public function publishAction(AbstractWorkspace $workspace, Path $path)
     {
         try {
-            $this->publishmentManager->publish($path);
+            $this->publishingManager->publish($path);
         
             // Publish success
             $this->session->getFlashBag()->add(

@@ -72,17 +72,10 @@ class PathWidgetListener
             throw new NoHttpRequestException();
         }
 
-        $widgetInstance = $event->getInstance();
         $params = array();
-
         $params['_controller'] = 'InnovaPathBundle:Widget:myPathsWidget';
-      
 
-        $subRequest = $this->request->duplicate(
-            array(),
-            null,
-            $params
-        );
+        $subRequest = $this->request->duplicate(array(), null, $params);
         $response = $this->httpKernel->handle($subRequest, HttpKernelInterface::SUB_REQUEST);
 
         $event->setContent($response->getContent());

@@ -3,7 +3,6 @@
 namespace Innova\PathBundle\Controller;
 
 use Symfony\Component\Form\FormFactoryInterface;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -79,12 +78,6 @@ class EditorController
     protected $pathHandler;
 
     /**
-     * Current request
-     * @var \Symfony\Component\HttpFoundation\Request
-     */
-    protected $request;
-
-    /**
      * Class constructor
      * @param \Doctrine\Common\Persistence\ObjectManager $objectManager
      * @param \Symfony\Component\Routing\RouterInterface $router
@@ -110,13 +103,6 @@ class EditorController
         $this->translator      = $translator;
         $this->pathHandler     = $pathHandler;
         $this->resourceManager = $resourceManager;
-    }
-
-    public function setRequest(Request $request = null)
-    {
-        $this->request = $request;
-
-        return $this;
     }
 
     /**

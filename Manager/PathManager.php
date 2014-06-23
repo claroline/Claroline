@@ -164,7 +164,7 @@ class PathManager
             $path->initializeStructure();
         }
 
-        // Set path as modified (= need publishment to be able to play path with new modifs)
+        // Set path as modified (= need publishing to be able to play path with new modifs)
         $path->setModified(true);
         $this->om->persist($path);
         

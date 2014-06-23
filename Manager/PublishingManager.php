@@ -8,16 +8,22 @@ use Innova\PathBundle\Entity\Path\Path;
 use Innova\PathBundle\Entity\Step;
 
 /**
- * Manage publishment of the paths
+ * Manage Publishing of the paths
  */
-class PublishmentManager
+class PublishingManager
 {
     /**
      * Current entity manage for data persist
      * @var \Doctrine\Common\Persistence\ObjectManager $om
      */
     protected $om;
-    
+
+    /**
+     * Resource Manager
+     * @var \Claroline\CoreBundle\Manager\ResourceManager
+     */
+    protected $resourceManager;
+
     /**
      * innova step manager
      * @var \Innova\PathBundle\Manager\StepManager
@@ -50,22 +56,22 @@ class PublishmentManager
     
     /**
      * Class constructor
-     * @param \Doctrine\Common\Persistence\ObjectManager $objectManager
-     * @param \Innova\PathBundle\Manager\StepManager     $stepManager
+     * @param \Doctrine\Common\Persistence\ObjectManager    $objectManager
+     * @param \Innova\PathBundle\Manager\StepManager        $stepManager
      */
     public function __construct(
-        ObjectManager $objectManager,
-        StepManager   $stepManager)
+        ObjectManager   $objectManager,
+        StepManager     $stepManager)
     {
-        $this->om          = $objectManager;
-        $this->stepManager = $stepManager;
+        $this->om              = $objectManager;
+        $this->stepManager     = $stepManager;
     }
 
     /**
-     * Initialize a new publishment
+     * Initialize a new Publishing
      * @param \Innova\PathBundle\Entity\Path\Path $path
      * @throws \Exception
-     * @return \Innova\PathBundle\Manager\PublishmentManager
+     * @return \Innova\PathBundle\Manager\PublishingManager
      */
     protected function start(Path $path)
     {
@@ -85,9 +91,9 @@ class PublishmentManager
     }
     
     /**
-     * End of the publishment
+     * End of the Publishing
      * Remove temp data from current service
-     * @return \Innova\PathBundle\Manager\PublishmentManager
+     * @return \Innova\PathBundle\Manager\PublishingManager
      */
     protected function end()
     {
@@ -104,11 +110,11 @@ class PublishmentManager
      * Create all needed Entities from JSON structure created by the Editor
      * @param  \Innova\PathBundle\Entity\Path\Path $path
      * @throws \Exception
-     * @return \Innova\PathBundle\Manager\PublishmentManager
+     * @return \Innova\PathBundle\Manager\PublishingManager
      */
     public function publish(Path $path)
     {
-        // Start publishment
+        // Start Publishing
         $this->start($path);
     
         // Store existing steps to remove steps which no longer exist
@@ -133,7 +139,7 @@ class PublishmentManager
         $this->om->persist($this->path);
         $this->om->flush();
         
-        // End publishment
+        // End Publishing
         $this->end();
         
         return $this;
@@ -245,7 +251,7 @@ class PublishmentManager
      * Clean steps which no long exist in the current path
      * @param  array $neededSteps
      * @param  array $existingSteps
-     * @return \Innova\PathBundle\Manager\PublishmentManager
+     * @return \Innova\PathBundle\Manager\PublishingManager
      */
     protected function cleanSteps(array $neededSteps = array (), array $existingSteps = array ())
     {
@@ -263,7 +269,7 @@ class PublishmentManager
      * @param  \Innova\PathBundle\Entity\Step $step
      * @param  array                          $neededResources
      * @param  array                          $existingResources
-     * @return \Innova\PathBundle\Manager\PublishmentManager
+     * @return \Innova\PathBundle\Manager\PublishingManager
      */
     protected function cleanResources(Step $step, array $neededResources = array (), array $existingResources = array ())
     {

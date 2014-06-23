@@ -2,12 +2,15 @@
 
 namespace Innova\PathBundle\Manager;
 
+use Claroline\CoreBundle\Entity\Activity\ActivityParameters;
+use Claroline\CoreBundle\Entity\Resource\Activity;
 use Doctrine\Common\Persistence\ObjectManager;
-use Symfony\Component\Translation\TranslatorInterface;
+use Claroline\CoreBundle\Manager\ResourceManager;
 
 use Innova\PathBundle\Entity\Step;
 use Innova\PathBundle\Entity\Path\Path;
 use Innova\PathBundle\Entity\Step2ResourceNode;
+use Symfony\Component\Security\Core\SecurityContextInterface;
 
 class StepManager
 {
@@ -18,22 +21,31 @@ class StepManager
     protected $om;
 
     /**
-     * Translator engine
-     * @var \Symfony\Component\Translation\TranslatorInterface
+     * Security Context
+     * @var \Symfony\Component\Security\Core\SecurityContextInterface
      */
-    protected $translator;
+    protected $security;
+
+    /**
+     * Resource Manager
+     * @var \Claroline\CoreBundle\Manager\ResourceManager
+     */
+    protected $resourceManager;
 
     /**
      * Class constructor
-     * @param \Doctrine\Common\Persistence\ObjectManager         $om
-     * @param \Symfony\Component\Translation\TranslatorInterface $translator
+     * @param \Doctrine\Common\Persistence\ObjectManager $om
+     * @param \Symfony\Component\Security\Core\SecurityContextInterface $security
+     * @param \Claroline\CoreBundle\Manager\ResourceManager $resourceManager
      */
     public function __construct(
         ObjectManager $om,
-        TranslatorInterface $translator)
+        SecurityContextInterface $security,
+        ResourceManager     $resourceManager)
     {
-        $this->om         = $om;
-        $this->translator = $translator;
+        $this->om              = $om;
+        $this->security        = $security;
+        $this->resourceManager = $resourceManager;
     }
 
     public function editResourceNodeRelation(Step $step, $resourceNodeId, $excluded, $propagated, $order = null)
@@ -101,33 +113,116 @@ class StepManager
         $name = !empty($stepStructure->name) ? $stepStructure->name : Step::DEFAULT_NAME;
         $step->setName($name);
         
-        $description = !empty($stepStructure->description) ? $stepStructure->description : null;
-        $step->setDescription($description);
-        
-        $withTutor = !empty($stepStructure->withTutor) ? $stepStructure->withTutor : false;
-        $step->setWithTutor($withTutor);
-        
-        $durationHours = !empty($stepStructure->durationHours) ? intval($stepStructure->durationHours) : 0;
-        $durationMinutes = !empty($stepStructure->durationMinutes) ? intval($stepStructure->durationMinutes) : 0;
-        $step->setDuration(new \DateTime('00-00-00 ' . $durationHours . ':' . $durationMinutes . ':00'));
-        
-        $stepWho = null;
-        if (!empty($stepStructure->who)) {
-            $stepWho = $this->om->getRepository('InnovaPathBundle:StepWho')->findOneById($stepStructure->who);
-        }
-        $step->setStepWho($stepWho);
-        
-        $stepWhere = null;
-        if (!empty($stepStructure->where)) {
-            $stepWhere = $this->om->getRepository('InnovaPathBundle:StepWhere')->findOneById($stepStructure->where);
-        }
-        $step->setStepWhere($stepWhere);
+        $this->updateActivity($step, $stepStructure);
+        $this->updateParameters($step, $stepStructure);
         
         // Save modifications
         $this->om->persist($step);
         $this->om->flush();
         
         return $step;
+    }
+
+    /**
+     * @param \Innova\PathBundle\Entity\Step $step
+     * @param  \stdClass                     $stepStructure
+     * @return \Innova\PathBundle\Manager\PublishingManager
+     * @throws \LogicException
+     */
+    public function updateActivity(Step $step, \stdClass $stepStructure)
+    {
+        $newActivity = false;
+        $activity = $step->getActivity();
+        if (empty($activity)) {
+            if (!empty($stepStructure->activityId)) {
+                // Load activity from DB
+                $activity = $this->om->getRepository('ClarolineCoreBundle:Resource\Activity')->findById($stepStructure->activityId);
+                if (empty($activity)) {
+                    // Can't find Activity
+                    throw new \LogicException('Unable to find Activity referenced by ID : ' . $stepStructure->activityId);
+                }
+            }
+            else {
+                // Create new activity
+                $newActivity = true;
+                $activity = new Activity();
+            }
+        }
+
+        // Update activity properties
+        if (!empty($stepStructure->name)) {
+            $name = $stepStructure->name;
+        }
+        else {
+            // Create a default name
+            $name = $step->getPath()->getName() . ' - ' . Step::DEFAULT_NAME . ' ' . $step->getOrder();
+        }
+        $step->setName($name);
+
+        $description = !empty($stepStructure->description) ? $stepStructure->description : null;
+        $activity->setDescription($description);
+
+        // Link resource if needed
+        if (!empty($stepStructure->primaryResource) && !empty($stepStructure->primaryResource->resourceId)) {
+            $resource = $this->om->getRepository('ClarolineCoreBundle:Resource\ResourceNode')->findById($stepStructure->primaryResource->resourceId);
+            if (!empty($resource)) {
+                $activity->setPrimaryResource($resource);
+            }
+            else {
+                // Resource not found
+                throw new \LogicException('Unable to find ResourceNode referenced by ID : ' . $stepStructure->primaryResource->resourceId);
+            }
+        }
+
+        // Generate Claroline resource
+        if ($newActivity) {
+            $activityType = $this->om->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findByName('activity');
+            $currentUser = $this->security->getToken()->getUser();
+            $workspace = $step->getWorkspace();
+            $activity = $this->resourceManager->create($activity, $activityType, $currentUser, $workspace);
+        }
+
+        // Update JSON structure
+        $stepStructure->activityId = $activity->getId();
+
+        // Store Activity in Step
+        $step->setActivity($activity);
+
+        return $this;
+    }
+
+    public function updateParameters(Step $step, \stdClass $stepStructure)
+    {
+        $parameters = $step->getParameters();
+        if (empty($parameters)) {
+            $parameters = new ActivityParameters();
+        }
+
+        // Update parameters properties
+        $withTutor = !empty($stepStructure->withTutor) ? $stepStructure->withTutor : false;
+        $parameters->setWithTutor($withTutor);
+
+        $durationHours = !empty($stepStructure->durationHours) ? intval($stepStructure->durationHours) : 0;
+        $durationMinutes = !empty($stepStructure->durationMinutes) ? intval($stepStructure->durationMinutes) : 0;
+        $seconds = $durationHours * 3600 + $durationMinutes * 60;
+        $parameters->setMaxDuration($seconds);
+
+        $who = !empty($stepStructure->who) ? $stepStructure->who : null;
+        $parameters->setWho($who);
+
+        $where = !empty($stepStructure->where) ? $stepStructure->where : null;
+        $parameters->setWhere($where);
+
+        // Set resources
+
+        // Persist parameters to generate ID
+        $this->om->persist($parameters);
+        $this->om->flush();
+
+        // Store parameters in Step
+        $step->setParameters($parameters);
+
+        return $this;
     }
 
     public function contextualUpdate($step)
