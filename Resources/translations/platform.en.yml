@@ -872,3 +872,4 @@ user_limit_too_low: There is already %total% %role%(s). The limit %newMax% is to
 limit: Limit
 yes: Yes
 no: No
+show_profile_for_anonymous: Profil public access for anonymous.

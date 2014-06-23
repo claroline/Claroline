@@ -598,4 +598,9 @@ class FacetManager
         return $this->om->getRepository('ClarolineCoreBundle:Facet\PublicProfilePreference')
             ->getAdminPublicProfilePreferenceByRole($roles);
     }
+
+    function getAdminPublicPreference()
+    {
+        return $this->om->getRepository('ClarolineCoreBundle:Facet\PublicProfilePreference')->findAll();
+    }
 }

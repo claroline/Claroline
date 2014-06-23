@@ -806,3 +806,4 @@ user_limit_too_low: Ya hay %total% %role%(s). El limite %newMax% es muy bajo.
 limit: Límite
 yes: Sí
 no: No
+show_profile_for_anonymous: Profil public access for anonymous.

@@ -16,6 +16,17 @@ use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 class PublicProfilePreferenceRepository extends EntityRepository
 {
     public function getAdminPublicProfilePreferenceByRole(array $roles) {
+
+        if (in_array('ROLE_ADMIN', $roles)) {
+            return array(
+                'baseData' => true,
+                'mail' => true,
+                'phone' => true,
+                'sendMail' => true,
+                'sendMessage' => true
+            );
+        }
+
         $dql = "SELECT
             MAX(p.baseData) as baseData,
             MAX(p.mail) as mail,
@@ -30,6 +41,6 @@ class PublicProfilePreferenceRepository extends EntityRepository
         $query = $this->_em->createQuery($dql);
         $query->setParameter('rolenames', $roles);
 
-        return $query->getResult();
+        return $query->getSingleResult();
     }
 } 

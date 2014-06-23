@@ -279,13 +279,6 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
     protected $hasTunedPublicUrl = false;
 
     /**
-     * @var UserPublicProfilePreferences
-     *
-     * @ORM\OneToOne(targetEntity="UserPublicProfilePreferences", mappedBy="user", cascade={"all"})
-     */
-    protected $publicProfilePreferences;
-
-    /**
      * @var \DateTime
      *
      * @ORM\Column(name="expiration_date", type="datetime", nullable=true)

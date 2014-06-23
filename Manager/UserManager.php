@@ -915,22 +915,6 @@ class UserManager
         return $publicUrl;
     }
 
-    /**
-     * @return UserPublicProfilePreferences
-     */
-    public function getUserPublicProfilePreferencesForAdmin()
-    {
-        $userPublicProfilePreferences = new UserPublicProfilePreferences();
-        $userPublicProfilePreferences
-            ->setSharePolicy(UserPublicProfilePreferences::SHARE_POLICY_EVERYBODY)
-            ->setAllowMailSending(true)
-            ->setAllowMessageSending(true)
-            ->setDisplayEmail(true)
-            ->setDisplayPhoneNumber(true);
-
-        return $userPublicProfilePreferences;
-    }
-
     public function countUsersByRoleIncludingGroup(Role $role)
     {
         return $this->objectManager->getRepository('ClarolineCoreBundle:User')->countUsersByRoleIncludingGroup($role);
