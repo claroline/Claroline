@@ -2,7 +2,6 @@ parameters:
     # Controllers
     innova_path.controller.path.class:          Innova\PathBundle\Controller\PathController
     innova_path.controller.contextual_editor.class: Innova\PathBundle\Controller\ContextualEditorController
-    innova_path.controller.step.class:          Innova\PathBundle\Controller\StepController
     innova_path.controller.path_template.class: Innova\PathBundle\Controller\PathTemplateController
     innova_path.controller.path_player.class:   Innova\PathBundle\Controller\PlayerController
     innova_path.controller.path_editor.class:   Innova\PathBundle\Controller\EditorController

@@ -9,12 +9,6 @@ services:
             pathManager:        @innova_path.manager.path
             publishingManager:  @innova_path.manager.publishing
         
-    # Step controller
-    innova_path.controller.step:
-        class: %innova_path.controller.step.class%
-        arguments:
-            entityManager:   @doctrine.orm.entity_manager
-        
     # Path template controller
     innova_path.controller.path_template:
         class: %innova_path.controller.path_template.class%
