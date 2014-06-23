@@ -647,7 +647,7 @@ function getQuestionsExoImport(idExo, path, pathHome) {
 }
 
 
-function briefSearch(path, exoID, where, idExo) {
+function briefSearch(path, exoID, where) {
 
     var userSearch = $('#briefSearch').val();
 
@@ -657,8 +657,7 @@ function briefSearch(path, exoID, where, idExo) {
         data: {
             userSearch : userSearch,
             exoID: exoID,
-            where: where,
-            idExo: idExo
+            where: where
         },
         cache: false,
         success: function (data) {
@@ -667,6 +666,10 @@ function briefSearch(path, exoID, where, idExo) {
             createValidationBox();
         }
     });
+}
+
+function briefSearchSubmit() {
+    $('#formBriefSearch').submit();
 }
 
 function showInfos() {

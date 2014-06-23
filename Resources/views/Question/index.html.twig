@@ -99,21 +99,26 @@
         </select>
 
 
-        <div class="input-group" style="width: 350px; margin-top: 20px;">
-            <input type="text" class="form-control" id="briefSearch" placeholder="{{ 'briefSearch'|trans }}"
-                onkeydown="if (event.keyCode == 13) {
-                    briefSearch('{{ path('ujm_question_briefSearch') }}', -1, 'index');
-                    return false; }">
-            <span class="input-group-btn">
-                <button class="btn btn-default" type="button" id="SubmitBriefSearch"
-                    onClick="briefSearch('{{ path('ujm_question_briefSearch') }}', -1, 'index');">
-                <i class="icon-search"></i></button>
-                <a class="btn btn-default" data-toggle="tooltip" title="Recherche par type"
-                   accesskey=""href="#" onclick="showInfos();event.preventDefault();">
-                    <i class="icon-question"></i>
-                </a>
-            </span>
-        </div>
+        <form action="{{ path('ujm_question_briefSearch') }}" method="post" id='formBriefSearch'>
+            <div class="input-group" style="width: 350px; margin-top: 20px;">
+                <input type="text" class="form-control" id="briefSearch" placeholder="{{ 'briefSearch'|trans }}" name="userSearch"
+                    onkeydown="if (event.keyCode == 13) {
+                        //briefSearch('{#{ path('ujm_question_briefSearch') }#}', -1, 'index');
+                        briefSearchSubmit();
+                        return false; }">
+                <input type='hidden' name='exoID' value='-1' />
+                <input type='hidden' name='where' value='index' />
+                <span class="input-group-btn">
+                    <button class="btn btn-default" type="button" id="SubmitBriefSearch"
+                        onClick="briefSearchSubmit();">
+                    <i class="icon-search"></i></button>
+                    <a class="btn btn-default" data-toggle="tooltip" title="Recherche par type"
+                       accesskey=""href="#" onclick="showInfos();event.preventDefault();">
+                        <i class="icon-question"></i>
+                    </a>
+                </span>
+            </div>
+        </form>
 
         <div id="infosSearch" style="display: none;">
             <br/>

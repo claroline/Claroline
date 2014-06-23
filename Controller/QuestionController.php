@@ -1909,68 +1909,68 @@ class QuestionController extends Controller
 
         $searchToImport = FALSE;
 
-        if ($request->isXmlHttpRequest()) {
-            $userSearch = $request->request->get('userSearch');
-            $exoID = $request->request->get('exoID');
-            $where = $request->request->get('where');
+        //if ($request->isXmlHttpRequest()) {
+        $userSearch = $request->request->get('userSearch');
+        $exoID = $request->request->get('exoID');
+        $where = $request->request->get('where');
 
-            if ($where == 'import') {
-                $searchToImport = TRUE;
-            }
-
-            $listInteractions = $interactionRepository->findByAll($user->getId(), $userSearch, $searchToImport, $exoID);
-
-            $sharedQuestion = $em->getRepository('UJMExoBundle:Share')
-                ->findByAllShared($user->getId(), $userSearch);
-
-            $end = count($sharedQuestion);
-
-            for ($i = 0; $i < $end; $i++) {
-                $listInteractions[] = $em->getRepository('UJMExoBundle:Interaction')
-                    ->findOneBy(array('question' => $sharedQuestion[$i]->getQuestion()->getId()));
-            }
-
-            $allActions = $services->getActionsAllQuestions($listInteractions, $user->getId(), $actionQ,
-                $questionWithResponse, $alreadyShared, $sharedWithMe, $shareRight, $em);
-
-            $actionQ = $allActions[0];
-            $questionWithResponse = $allActions[1];
-            $alreadyShared = $allActions[2];
-            $sharedWithMe = $allActions[3];
-            $shareRight = $allActions[4];
-
-            $listExo = $this->getDoctrine()
-                        ->getManager()
-                        ->getRepository('UJMExoBundle:Exercise')
-                        ->getExerciseAdmin($user->getId());
-
-            $vars['listQExo']             = $listInteractions;
-            $vars['actionQ']              = $actionQ;
-            $vars['questionWithResponse'] = $questionWithResponse;
-            $vars['alreadyShared']        = $alreadyShared;
-            $vars['shareRight']           = $shareRight;
-            $vars['listExo']              = $listExo;
-            $vars['idExo']                = -1;
-            $vars['displayAll']           = 0;
-            $vars['QuestionsExo']         = 'true';
-
-            if ($where == 'index') {
-
-                return $this->render('UJMExoBundle:Question:index.html.twig', $vars);
-            } else {
-                $em = $this->getDoctrine()->getManager();
-                $exercise = $em->getRepository('UJMExoBundle:Exercise')->find($exoID);
-
-                $workspace = $exercise->getResourceNode()->getWorkspace();
-
-                $vars['workspace'] = $workspace;
-                $vars['_resource'] = $exercise;
-                $vars['exoID'] = $exoID;
-                $vars['pageToGo'] = 1;
-
-                return $this->render('UJMExoBundle:Question:import.html.twig', $vars);
-            }
+        if ($where == 'import') {
+            $searchToImport = TRUE;
         }
+
+        $listInteractions = $interactionRepository->findByAll($user->getId(), $userSearch, $searchToImport, $exoID);
+
+        $sharedQuestion = $em->getRepository('UJMExoBundle:Share')
+            ->findByAllShared($user->getId(), $userSearch);
+
+        $end = count($sharedQuestion);
+
+        for ($i = 0; $i < $end; $i++) {
+            $listInteractions[] = $em->getRepository('UJMExoBundle:Interaction')
+                ->findOneBy(array('question' => $sharedQuestion[$i]->getQuestion()->getId()));
+        }
+
+        $allActions = $services->getActionsAllQuestions($listInteractions, $user->getId(), $actionQ,
+            $questionWithResponse, $alreadyShared, $sharedWithMe, $shareRight, $em);
+
+        $actionQ = $allActions[0];
+        $questionWithResponse = $allActions[1];
+        $alreadyShared = $allActions[2];
+        $sharedWithMe = $allActions[3];
+        $shareRight = $allActions[4];
+
+        $listExo = $this->getDoctrine()
+                    ->getManager()
+                    ->getRepository('UJMExoBundle:Exercise')
+                    ->getExerciseAdmin($user->getId());
+
+        $vars['listQExo']             = $listInteractions;
+        $vars['actionQ']              = $actionQ;
+        $vars['questionWithResponse'] = $questionWithResponse;
+        $vars['alreadyShared']        = $alreadyShared;
+        $vars['shareRight']           = $shareRight;
+        $vars['listExo']              = $listExo;
+        $vars['idExo']                = -1;
+        $vars['displayAll']           = 0;
+        $vars['QuestionsExo']         = 'true';
+
+        if ($where == 'index') {
+
+            return $this->render('UJMExoBundle:Question:index.html.twig', $vars);
+        } else {
+            $em = $this->getDoctrine()->getManager();
+            $exercise = $em->getRepository('UJMExoBundle:Exercise')->find($exoID);
+
+            $workspace = $exercise->getResourceNode()->getWorkspace();
+
+            $vars['workspace'] = $workspace;
+            $vars['_resource'] = $exercise;
+            $vars['exoID'] = $exoID;
+            $vars['pageToGo'] = 1;
+
+            return $this->render('UJMExoBundle:Question:import.html.twig', $vars);
+        }
+        //}
     }
 
     /**
