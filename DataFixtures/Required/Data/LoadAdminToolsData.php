@@ -15,7 +15,7 @@ use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Tool\AdminTool;
 use Claroline\CoreBundle\DataFixtures\Required\RequiredFixture;
 
-class LoadAdminTools implements RequiredFixture
+class LoadAdminToolsData implements RequiredFixture
 {
     public function load(ObjectManager $manager)
     {
