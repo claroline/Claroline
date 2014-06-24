@@ -44,7 +44,7 @@ class PackageController extends Controller
     {
         $this->eventDispatcher = $eventDispatcher;
         $this->toolManager     = $toolManager;
-        $this->adminToolPlugin = $toolManager->getAdminToolByName('platform_plugins');
+        $this->adminToolPlugin = $toolManager->getAdminToolByName('platform_packages');
         $this->sc              = $sc;
         $this->dm              = $dm;
     }

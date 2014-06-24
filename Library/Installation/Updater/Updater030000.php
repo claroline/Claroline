@@ -32,6 +32,7 @@ class Updater030000
         $this->updateActivityRuleAction();
         $this->updateActivityIcon();
         $this->updateTools();
+        $this->updateAdminPluginTool();
     }
 
     public function setLogger($logger)
@@ -104,6 +105,19 @@ class Updater030000
                 $this->updateToolClass($tool, $this->icons[$tool->getClass()]);
             }
         }
+    }
+
+    private function updateAdminPluginTool()
+    {
+        $this->log('updating admin plugin tool...');
+
+        $pluginTool = $this->om
+            ->getRepository('Claroline\CoreBundle\Entity\Tool\AdminTool')
+            ->findOneByName('platform_plugins');
+
+        $pluginTool->setName('platform_packages');
+        $this->om->persist($pluginTool);
+        $this->om->flush();
     }
 
     private function updateToolClass($tool, $class)
