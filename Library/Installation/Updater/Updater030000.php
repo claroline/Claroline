@@ -115,9 +115,11 @@ class Updater030000
             ->getRepository('Claroline\CoreBundle\Entity\Tool\AdminTool')
             ->findOneByName('platform_plugins');
 
-        $pluginTool->setName('platform_packages');
-        $this->om->persist($pluginTool);
-        $this->om->flush();
+        if ($pluginTool) {
+            $pluginTool->setName('platform_packages');
+            $this->om->persist($pluginTool);
+            $this->om->flush();
+        }
     }
 
     private function updateToolClass($tool, $class)
