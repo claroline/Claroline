@@ -48,7 +48,7 @@ same message when authentication has failed (no precise validation errors).
                     <button type="submit" class="btn btn-primary" tabindex="3">{{ 'login'|trans({}, 'platform') }}</button>
                     {% if is_facebook_available() %}
                         <button class='btn btn-primary facebook-connect hide'>
-                        <i class="icon-facebook-sign"></i> {{ 'login'|trans({}, 'platform') }}
+                        <i class="fa fa-facebook-square"></i> {{ 'login'|trans({}, 'platform') }}
                         <div onlogin="fb_login();" class="fb-login-button" data-max-rows="1" data-size="xlarge"
                             data-show-faces="false" data-auto-logout-link="false">
                         </div>

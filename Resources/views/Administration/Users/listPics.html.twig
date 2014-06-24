@@ -19,11 +19,11 @@
 {% macro displayControls(workspaceId) %}
     {% if app.user %}
         <button class="btn btn-default action-button" data-action="remove">
-            <i class="icon-trash"></i>
+            <i class="fa fa-trash-o"></i>
             {{ 'delete'|trans({}, 'platform') }}
         </button>
         <button class="btn btn-default action-button" data-action="password">
-            <i class="icon-trash"></i>
+            <i class="fa fa-trash-o"></i>
             {{ 'reset_password'|trans({}, 'platform') }}
         </button>
     {% endif %}
@@ -40,7 +40,7 @@
     {{
         macros.breadcrumbs([
             {
-                'icon': 'icon-cog',
+                'icon': 'fa fa-cog',
                 'name': 'administration'|trans({}, 'platform'),
                 'href': path('claro_admin_index')
             },
@@ -74,7 +74,7 @@
                 <input class="form-control" type="text" id="search-items-txt" placeholder="{{ 'search'|trans({}, 'platform') }}" value={{search}}>
                 <span class="input-group-btn">
                     <button class="filter btn btn-default" type="button" id="search-button">
-                        <i class="icon-search"></i>
+                        <i class="fa fa-search"></i>
                     </button>
                 </span>
             </div>
@@ -115,16 +115,16 @@
                 <div class="well">
                     {{ user.getMail() }} <br />
                     <a href="{{ path('claro_profile_view', {'userId': user.getId()}) }}">
-                        <i class="icon-user"> </i>
+                        <i class="fa fa-user"> </i>
                     </a>
                     <a href="{{ path('claro_user_profile_edit', {'user': user.getId()}) }}">
-                        <i class="icon-pencil"></i>
+                        <i class="fa fa-pencil"></i>
                     </a>
                     {% if is_granted('ROLE_ADMIN') %}
 
                     {% if user.getId() != app.user.id %}
                     <a href="{{ path('claro_desktop_open', {'_switch': user.getUsername()}) }}">
-                        <i class="icon-eye-open"></i>
+                        <i class="fa fa-eye"></i>
                     </a>
                     {% endif %}
                         {% spaceless %}

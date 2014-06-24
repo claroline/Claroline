@@ -72,7 +72,7 @@
                 <div class="col-md-8">
                     <div class="btn-group margin-md">
                         <a href="{{ path('claro_workspace_unregistered_group_list', {'workspace': workspace.getId()}) }}" class="btn btn-default dropdown-toggle" role="button">
-                            <i class="icon-plus"></i> {{ 'add_groups' | trans({}, 'platform') }}
+                            <i class="fa fa-plus"></i> {{ 'add_groups' | trans({}, 'platform') }}
                         </a>
                     </div>
                 </div>
@@ -81,7 +81,7 @@
                         <input class="form-control" type="text" id="search-items-txt"  placeholder="{{ 'search'|trans({}, 'platform') }}" value="{{ search }}">
                         <span class="input-group-btn">
                             <button class="filter btn btn-default" type="button" id="search-button">
-                                <i class="icon-search"></i>
+                                <i class="fa fa-search"></i>
                             </button>
                         </span>
                     </div>
@@ -119,7 +119,7 @@
                                             {% if role.getWorkspace() == workspace %}
                                                 <span class="label label-success" id="label-{{ role.getId () }}-{{ group.getId()}}">
                                                     {{ role.getTranslationKey()|trans({}, 'platform') }}
-                                                    <i class="icon-remove-sign pointer-hand remove-role-button"
+                                                    <i class="fa fa-times-circle pointer-hand remove-role-button"
                                                         href="{{ path('claro_workspace_remove_role_from_group', {'workspace': workspace.getId(), 'group': group.getId(), 'role': role.getId() } ) }}"
                                                         >
                                                     </i>

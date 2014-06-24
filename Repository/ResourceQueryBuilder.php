@@ -509,13 +509,24 @@ class ResourceQueryBuilder
             }
         }
         $eol = PHP_EOL;
-        
+        $currentDate = new \DateTime();
+
         if (count($otherRoles) > 0 && count($managerRoles) === 0) {
             $this->leftJoinRights = true;
             $clause = "{$eol}({$eol}";
             $clause .= "rightRole.name IN (:roles){$eol}";
             $this->parameters[":roles"] = $otherRoles;
-            $clause .= "AND{$eol}BIT_AND(rights.mask, 1) = 1{$eol})";
+            $clause .= "AND{$eol}BIT_AND(rights.mask, 1) = 1{$eol}";
+            $clause .= "AND{$eol}({$eol}";
+            $clause .= "node.accessibleFrom IS NULL{$eol}";
+            $clause .= "OR{$eol}";
+            $clause .= "node.accessibleFrom <= :currentdate{$eol}";
+            $clause .= "){$eol}AND{$eol}({$eol}";
+            $clause .= "node.accessibleUntil IS NULL{$eol}";
+            $clause .= "OR{$eol}";
+            $clause .= "node.accessibleUntil >= :currentdate{$eol}";
+            $clause .= "){$eol})";
+            $this->parameters[':currentdate'] = $currentDate->format('Y-m-d H:i:s');
             $this->addWhereClause($clause);
         } elseif (count($otherRoles) === 0 && count($managerRoles) > 0) {
             $this->leftJoinRoles = true;
@@ -529,7 +540,17 @@ class ResourceQueryBuilder
             $clause = "{$eol}({$eol}({$eol}";
             $clause .= "rightRole.name IN (:otherroles){$eol}";
             $this->parameters[":otherroles"] = $otherRoles;
-            $clause .= "AND{$eol}BIT_AND(rights.mask, 1) = 1{$eol}){$eol}";
+            $clause .= "AND{$eol}BIT_AND(rights.mask, 1) = 1{$eol}";
+            $clause .= "AND{$eol}({$eol}";
+            $clause .= "node.accessibleFrom IS NULL{$eol}";
+            $clause .= "OR{$eol}";
+            $clause .= "node.accessibleFrom <= :currentdate{$eol}";
+            $clause .= "){$eol}AND{$eol}({$eol}";
+            $clause .= "node.accessibleUntil IS NULL{$eol}";
+            $clause .= "OR{$eol}";
+            $clause .= "node.accessibleUntil >= :currentdate{$eol}";
+            $clause .= "){$eol}){$eol}";
+            $this->parameters[':currentdate'] = $currentDate->format('Y-m-d H:i:s');
             $clause .= "OR{$eol}";
             $clause .= "role.name IN (:managerroles){$eol}";
             $this->parameters[":managerroles"] = $managerRoles;

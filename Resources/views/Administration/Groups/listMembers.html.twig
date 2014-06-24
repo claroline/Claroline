@@ -41,20 +41,20 @@
                 <div class="btn-group">
                     <a class="btn btn-default"
                        href="{{ path('claro_admin_outside_of_group_user_list', {'groupId' : group.getId()}) }}">
-                        <i class="icon-plus"></i> {{ 'add_user'|trans({}, 'platform') }}
+                        <i class="fa fa-plus"></i> {{ 'add_user'|trans({}, 'platform') }}
                     </a>
                     <a class="btn btn-default"
                        id="link-send-message" href="{{ path('claro_message_form_for_group', {'group': group.getId()}) }}">
-                        <i class="icon-envelope"></i> {{ 'send_message'|trans({}, 'platform') }}
+                        <i class="fa fa-envelope"></i> {{ 'send_message'|trans({}, 'platform') }}
                     </a>
                     <button class="btn btn-default action-button"
                             data-action="remove">
-                        <i class="icon-trash"></i> {{ 'delete'|trans({}, 'platform') }}
+                        <i class="fa fa-trash-o"></i> {{ 'delete'|trans({}, 'platform') }}
                     </button>
                     <a class="btn btn-default"
                        id="import-users-into-group"
                        href="{{ path('claro_admin_import_users_into_group_form', {'groupId': group.getId()}) }}">
-                        <i class="icon-user"></i> {{ 'import_users'|trans({}, 'platform') }}
+                        <i class="fa fa-user"></i> {{ 'import_users'|trans({}, 'platform') }}
                     </a>
                 </div>
             </div>
@@ -64,7 +64,7 @@
                         <input class="form-control input-md" id="search-items-txt"/>
                         <span id="search-button"
                               class="filter input-group-addon btn btn-default">
-                            <i class="icon-search"></i>
+                            <i class="fa fa-search"></i>
                         </span>
                     </div>
                 </div>
@@ -84,7 +84,7 @@
     {{
         macros.breadcrumbs([
             {
-                'icon': 'icon-cog',
+                'icon': 'fa fa-cog',
                 'name': 'administration'|trans({}, 'platform'),
                 'href': path('claro_admin_index')
             },

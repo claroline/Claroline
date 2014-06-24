@@ -1,0 +1,121 @@
+{% macro renderPager(pager, linkedWorkspaceId, search) %}
+
+    {% if search == '' %}
+        {{
+            pagerfanta(
+                pager,
+                'twitter_bootstrap_translated',
+                {
+                    'proximity' : 1,
+                    'routeName': 'claro_render_public_workspace_list_pager',
+                    'routeParams': {'linkedWorkspaceId': linkedWorkspaceId}
+                }
+            )
+        }}
+    {% else %}
+        {{
+            pagerfanta(
+                pager,
+                'twitter_bootstrap_translated',
+                {
+                    'proximity' : 1,
+                    'routeName': 'claro_render_public_workspace_list_pager_search',
+                    'routeParams': {'linkedWorkspaceId': linkedWorkspaceId, 'search' : search}
+                }
+            )
+        }}
+    {% endif %}
+{% endmacro %}
+
+{% from _self import renderPager %}
+{% set nbPages = workspaces.getNbPages() %}
+
+<div>
+     <div class="input-group">
+        <input class="form-control"
+            type="text"
+            id="search-workspace-txt"
+            placeholder="{{ 'search'|trans({}, 'platform') }}"
+            value={{ search }}
+        >
+        <span class="input-group-btn">
+            <button class="filter btn btn-default" type="button" id="search-workspace-button">
+                <i class="fa fa-search"></i>
+            </button>
+        </span>
+    </div>
+    <br>
+
+    {% if nbPages > 1 %}
+        {{ renderPager(workspaces, linkedWorkspaceId, search) }}
+    {% endif %}
+
+    <div class="table-responsive">
+        <table class="table table-condensed table-hover">
+
+            {% if workspaces is empty %}
+                <tr>
+                    <td colspan="2" align="center">
+                        {{ 'no_workspace'|trans({}, 'platform') }}
+                    </td>
+                </tr>
+            {% else %}
+                <tr class="workspace-element">
+                    <td class="workspace-name">
+                        <label
+                            class="pointer-hand"
+                            for="workspace-input-0"
+                            style="font-weight: normal;"
+                        >
+                            {{ 'none'|trans({}, 'platform') }}
+                        </label>
+                    </td>
+                    <td>
+                        <input id="workspace-input-0"
+                            type="radio"
+                            name="workspace"
+                            class="chk-workspace"
+                            value="0"
+                            
+                            {% if linkedWorkspaceId == 0 %}
+                                checked="checked"
+                            {% endif %}
+                        >
+                    </td>
+                </tr>
+                
+                {% for workspace in workspaces %}
+                    {% set workspaceId = workspace.getId() %}
+                    {% set workspaceName = workspace.getName() %}
+                    {% set workspacecode = workspace.getCode() %}
+                    <tr class="workspace-element">
+                        <td class="workspace-name">
+                            <label
+                                class="pointer-hand"
+                                for="workspace-input-{{ workspaceId }}"
+                                style="font-weight: normal;"
+                            >
+                                {{ workspaceName }}
+                                <small>({{ workspacecode }})</small>
+                            </label>
+                        </td>
+                        <td>
+                            <input id="workspace-input-{{ workspaceId }}"
+                                type="radio"
+                                name="workspace"
+                                class="chk-workspace"
+                                value="{{ workspaceId }}"
+                                workspace-name="{{ workspaceName }}"
+                                workspace-code="{{ workspacecode }}"
+                                
+                                {% if workspaceId == linkedWorkspaceId %}
+                                    checked="checked"
+                                {% endif %}
+                            >
+                        </td>
+                    </tr>
+                {% endfor %}
+            {% endif %}
+        </table>
+    </div>
+</div>

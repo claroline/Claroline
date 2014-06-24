@@ -37,7 +37,7 @@
                     tag-name="{{ tagName }}"
                 >
                     {{ tagName }}
-                    <i class="tag-checked-icon icon-ok hide" style="color: green;"></i>
+                    <i class="tag-checked-icon fa fa-check hide" style="color: green;"></i>
                     <input
                         type="checkbox"
                         class="tag-chk hide"
@@ -62,7 +62,7 @@
     {{
         macros.breadcrumbs([
             {
-                'icon': 'icon-book',
+                'icon': 'fa fa-book',
                 'name': 'workspaces'|trans({}, 'platform'),
                 'href': path('claro_workspace_list')
             },
@@ -117,7 +117,7 @@
                 type="button"
                 id="search-workspace-button"
             >
-                <i class="icon-search"></i>
+                <i class="fa fa-search"></i>
             </button>
         </span>
     </div>
@@ -164,7 +164,7 @@
                                     <span class="label label-danger">
                                         {{ workspaceTag.getTag().getName() }}
                                         &nbsp;
-                                        <i class="icon-remove-sign remove-tag-button pointer-hand"></i>
+                                        <i class="fa fa-times-circle remove-tag-button pointer-hand"></i>
                                     </span>
                                     &nbsp;
                                 </span>

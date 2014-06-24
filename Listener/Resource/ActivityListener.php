@@ -11,50 +11,78 @@
 
 namespace Claroline\CoreBundle\Listener\Resource;
 
-use Symfony\Component\DependencyInjection\ContainerAwareInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\HttpFoundation\Response;
-use JMS\DiExtraBundle\Annotation as DI;
+use Claroline\CoreBundle\Entity\Activity\ActivityParameters;
 use Claroline\CoreBundle\Entity\Resource\Activity;
-use Claroline\CoreBundle\Entity\Resource\ResourceActivity;
-use Claroline\CoreBundle\Form\ActivityType;
 use Claroline\CoreBundle\Event\CopyResourceEvent;
 use Claroline\CoreBundle\Event\CreateFormResourceEvent;
 use Claroline\CoreBundle\Event\CreateResourceEvent;
-use Claroline\CoreBundle\Event\OpenResourceEvent;
 use Claroline\CoreBundle\Event\CustomActionResourceEvent;
+use Claroline\CoreBundle\Event\DeleteResourceEvent;
 use Claroline\CoreBundle\Event\ExportResourceTemplateEvent;
 use Claroline\CoreBundle\Event\ImportResourceTemplateEvent;
-use Claroline\CoreBundle\Event\DeleteResourceEvent;
+use Claroline\CoreBundle\Event\OpenResourceEvent;
+use Claroline\CoreBundle\Form\ActivityType;
+use Claroline\CoreBundle\Manager\ActivityManager;
+use JMS\DiExtraBundle\Annotation\Inject;
+use JMS\DiExtraBundle\Annotation\InjectParams;
+use JMS\DiExtraBundle\Annotation\Observe;
+use JMS\DiExtraBundle\Annotation\Service;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\Security\Core\SecurityContextInterface;
 
 /**
- * @DI\Service
+ * @Service
  */
-class ActivityListener implements ContainerAwareInterface
+class ActivityListener
 {
-    private $container;
+    private $router;
+    private $formFactory;
+    private $templating;
+    private $request;
+    private $persistence;
+    private $activityManager;
+    private $securityContext;
 
     /**
-     * @DI\InjectParams({
-     *     "container" = @DI\Inject("service_container")
+     * @InjectParams({
+     *     "router"             = @Inject("router"),
+     *     "formFactory"        = @Inject("form.factory"),
+     *     "templating"         = @Inject("templating"),
+     *     "request"            = @Inject("request_stack"),
+     *     "persistence"        = @Inject("claroline.persistence.object_manager"),
+     *     "activityManager"    = @Inject("claroline.manager.activity_manager"),
+     *     "securityContext"    = @Inject("security.context")
      * })
-     *
-     * @param ContainerInterface $container
      */
-    public function setContainer(ContainerInterface $container = null)
+    public function __construct(
+        $router,
+        $formFactory,
+        $templating,
+        $request,
+        $persistence,
+        ActivityManager $activityManager,
+        SecurityContextInterface $securityContext
+    )
     {
-        $this->container = $container;
+        $this->router = $router;
+        $this->formFactory = $formFactory;
+        $this->templating = $templating;
+        $this->request = $request->getMasterRequest();
+        $this->persistence = $persistence;
+        $this->activityManager = $activityManager;
+        $this->securityContext = $securityContext;
     }
 
     /**
-     * @DI\Observe("create_form_activity")
+     * @Observe("create_form_activity")
      *
      * @param CreateFormResourceEvent $event
      */
     public function onCreateForm(CreateFormResourceEvent $event)
     {
-        $form = $this->container->get('form.factory')->create(new ActivityType, new Activity());
-        $content = $this->container->get('templating')->render(
+        $form = $this->formFactory->create(new ActivityType(), new Activity());
+        $content = $this->templating->render(
             'ClarolineCoreBundle:Resource:createForm.html.twig',
             array(
                 'form' => $form->createView(),
@@ -66,38 +94,40 @@ class ActivityListener implements ContainerAwareInterface
     }
 
     /**
-     * @DI\Observe("create_activity")
+     * @Observe("create_activity")
      *
      * @param CreateResourceEvent $event
      */
     public function onCreate(CreateResourceEvent $event)
     {
-        $request = $this->container->get('request');
-        $form = $this->container
-            ->get('form.factory')
-            ->create(new ActivityType(), new Activity());
-        $form->handleRequest($request);
+        $form = $this->formFactory->create(new ActivityType(), new Activity());
+        $form->handleRequest($this->request);
 
         if ($form->isValid()) {
-            $event->setResources(array($form->getData()));
+            $activity = $form->getData();
+            $activity->setName($activity->getTitle());
+            $activity->setParameters(new ActivityParameters());
+
+            $event->setResources(array($activity));
             $event->stopPropagation();
 
             return;
         }
 
-        $content = $this->container->get('templating')->render(
+        $content = $this->templating->render(
             'ClarolineCoreBundle:Resource:createForm.html.twig',
             array(
                 'form' => $form->createView(),
                 'resourceType' => 'activity'
             )
         );
+
         $event->setErrorFormContent($content);
         $event->stopPropagation();
     }
 
     /**
-     * @DI\Observe("delete_activity")
+     * @Observe("delete_activity")
      *
      * @param DeleteResourceEvent $event
      */
@@ -107,7 +137,7 @@ class ActivityListener implements ContainerAwareInterface
     }
 
     /**
-     * @DI\Observe("copy_activity")
+     * @Observe("copy_activity")
      *
      * @todo: Do the resources need to be copied ?
      *
@@ -115,88 +145,44 @@ class ActivityListener implements ContainerAwareInterface
      */
     public function onCopy(CopyResourceEvent $event)
     {
-        $em = $this->container->get('doctrine.orm.entity_manager');
-        $resource = $event->getResource();
-        $copy = new Activity();
-        $copy->setInstructions($resource->getInstructions());
-        $resourceActivities = $resource->getResourceActivities();
+        $activity = $this->activityManager->copyActivity($event->getResource());
 
-        foreach ($resourceActivities as $resourceActivity) {
-            $ra = new ResourceActivity();
-            $ra->setResourceNode($resourceActivity->getResourceNode());
-            $ra->setSequenceOrder($resourceActivity->getSequenceOrder());
-            $ra->setActivity($copy);
-            $em->persist($ra);
-        }
-
-        $em->persist($copy);
-        $event->setCopy($copy);
+        $this->persistence->persist($activity);
+        $event->setCopy($activity);
         $event->stopPropagation();
     }
 
     /**
-     * @DI\Observe("resource_activity_to_template")
-     *
-     * @param ExportResourceTemplateEvent $event
-     */
-    public function onExportTemplate(ExportResourceTemplateEvent $event)
-    {
-        $em = $this->container->get('doctrine.orm.entity_manager');
-        $resource = $event->getResource();
-        $config['instructions'] = $resource->getInstructions();
-        $resourceActivities = $em->getRepository('ClarolineCoreBundle:Resource\ResourceActivity')
-            ->findResourceActivities($resource);
-        $resourceDependencies = array();
-
-        foreach ($resourceActivities as $resourceActivity) {
-            if ($resourceActivity->getResourceNode()->getWorkspace() ===
-                $resource->getResourceNode()->getWorkspace()) {
-                $resourceActivityConfig['id'] = $resourceActivity->getResourceNode()->getId();
-                $resourceActivityConfig['order'] = $resourceActivity->getSequenceOrder();
-                $config['resources'][] = $resourceActivityConfig;
-            }
-        }
-
-        $event->setFiles($resourceDependencies);
-        $event->setConfig($config);
-        $event->stopPropagation();
-    }
-
-    /**
-     * @DI\Observe("resource_activity_from_template")
-     *
-     * @param ImportResourceTemplateEvent $event
-     */
-    public function onImportTemplate(ImportResourceTemplateEvent $event)
-    {
-        $em = $this->container->get('doctrine.orm.entity_manager');
-        $config = $event->getConfig();
-        $activity = new Activity();
-        $activity->setInstructions($config['instructions']);
-
-        foreach ($config['resources'] as $data) {
-            $resourceActivity = new ResourceActivity();
-            $resourceActivity->setResource($event->find($data['id']));
-            $resourceActivity->setSequenceOrder($data['order']);
-            $resourceActivity->setActivity($activity);
-            $em->persist($resourceActivity);
-        }
-
-        $event->setResource($activity);
-        $event->stopPropagation();
-    }
-
-    /**
-     * @DI\Observe("open_activity")
+     * @Observe("open_activity")
      *
      * @param OpenResourceEvent $event
      */
     public function onOpen(OpenResourceEvent $event)
     {
         $activity = $event->getResource();
-        $content = $this->container->get('templating')->render(
-            'ClarolineCoreBundle:Activity/player:activity.html.twig',
-            array('activity' => $activity)
+        $params = $activity->getParameters();
+        $user = $this->securityContext->getToken()->getUser();
+        $evaluation = $this->activityManager
+            ->getEvaluationByUserAndActivityParams($user, $params);
+
+        if (is_null($evaluation)) {
+            $evaluation = $this->activityManager->createEvaluation(
+                $user,
+                $params,
+                $params->getEvaluationType(),
+                null,
+                'not_attempted',
+                0
+            );
+        }
+
+        $content = $this->templating->render(
+            'ClarolineCoreBundle:Activity:index.html.twig',
+            array(
+                '_resource' => $activity,
+                'activityParams' => $params,
+                'evaluation' => $evaluation
+            )
         );
 
         $response = new Response($content);
@@ -205,30 +191,18 @@ class ActivityListener implements ContainerAwareInterface
     }
 
     /**
-     * @DI\Observe("compose_activity")
+     * @Observe("compose_activity")
      */
     public function onCompose(CustomActionResourceEvent $event)
     {
-        $resourceTypes = $this->container->get('doctrine.orm.entity_manager')
-            ->getRepository('ClarolineCoreBundle:Resource\ResourceType')
-            ->findAll();
         $activity = $event->getResource();
-        $resourceActivities = $this->container
-            ->get('doctrine.orm.entity_manager')
-            ->getRepository('ClarolineCoreBundle:Resource\ResourceActivity')
-            ->findResourceActivities($activity);
 
-        $content = $this->container->get('templating')->render(
-            'ClarolineCoreBundle:Activity:index.html.twig',
-            array(
-                'resourceTypes' => $resourceTypes,
-                'resourceActivities' => $resourceActivities,
-                '_resource' => $activity
+        $event->setResponse(
+            new RedirectResponse(
+                $this->router->generate('claro_activity_edit', array('resource' => $activity->getId()))
             )
         );
 
-        $response = new Response($content);
-        $event->setResponse($response);
         $event->stopPropagation();
     }
 }

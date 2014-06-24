@@ -133,21 +133,21 @@
             success: function () {
                 if (newVisible === 'visible') {
                     visibilityBtn.attr('visiblility-value', 'visible');
-                    visibilityBtn.find('i').removeClass('icon-eye-open');
-                    visibilityBtn.find('i').addClass('icon-eye-close');
+                    visibilityBtn.find('i').removeClass('fa-eye');
+                    visibilityBtn.find('i').addClass('fa-eye-slash');
                     visibilityBtn.find('span').html(translator.get('platform:hide'));
                     currentElement.find('.panel-title').first().removeClass('strike');
-                    
+
                     currentElement.find('.panel-body').first().show('slow');
                 } else {
                     visibilityBtn.attr('visiblility-value', 'invisible');
-                    visibilityBtn.find('i').removeClass('icon-eye-close');
-                    visibilityBtn.find('i').addClass('icon-eye-open');
+                    visibilityBtn.find('i').removeClass('fa-eye-slash');
+                    visibilityBtn.find('i').addClass('fa-eye');
                     visibilityBtn.find('span').html(translator.get('platform:display'));
                     currentElement.find('.panel-title').first().addClass('strike');
-                    
+
                     currentElement.find('.panel-body').first().hide('slow');
-                    
+
                 }
             }
         });

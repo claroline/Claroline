@@ -28,7 +28,7 @@ class LoadResourceImagesData implements RequiredFixture
         $coreIconWebDirRelativePath = "bundles/clarolinecore/images/resources/icons/";
         $resourceImages = array(
             array('res_default.png', 'custom/default'),
-            array('res_default.png', 'custom/activity'),
+            array('res_activity.png', 'custom/activity'),
             array('res_file.png', 'custom/file'),
             array('res_folder.png', 'custom/directory'),
             array('res_text.png', 'text/plain'),
