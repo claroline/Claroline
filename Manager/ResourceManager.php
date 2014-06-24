@@ -1417,6 +1417,13 @@ class ResourceManager
         $managerRoleName = 'ROLE_WS_MANAGER_' . $workspace->getGuid();
 
         return in_array($managerRoleName, $this->secut->getRoles($token)) ? true: false;
+    }
 
+    public function resetIcon(ResourceNode $node)
+    {
+        $this->om->startFlushSuite();
+        $icon = $this->iconManager->getIcon($this->getResourceFromNode($node));
+        $node->setIcon($icon);
+        $this->om->endFlushSuite();
     }
 }
