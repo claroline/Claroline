@@ -286,7 +286,7 @@ claro_admin_plugins:
     prefix: admin/plugins
     type: annotation
 
-claro_admin_plugins:
+claro_admin_facet:
     resource: "@ClarolineCoreBundle/Controller/Administration/FacetController.php"
     prefix: admin/facet
     type: annotation
