@@ -20,7 +20,7 @@ use Claroline\CoreBundle\Entity\Facet\Facet;
 use Claroline\CoreBundle\Entity\Facet\FieldFacet;
 use Claroline\CoreBundle\Entity\Facet\FieldFacetValue;
 use Claroline\CoreBundle\Entity\Facet\FieldFacetRole;
-use Claroline\CoreBundle\Entity\Facet\PublicProfilePreference;
+use Claroline\CoreBundle\Entity\Facet\GeneralFacetPreference;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use Symfony\Component\Translation\Translator;
 use Symfony\Component\Security\Core\SecurityContextInterface;
@@ -468,10 +468,10 @@ class FacetManager
         $sendMessage,
         Role $role
     ) {
-        $profilePref = $this->om->getRepository('ClarolineCoreBundle:Facet\PublicProfilePreference')
+        $profilePref = $this->om->getRepository('ClarolineCoreBundle:Facet\GeneralFacetPreference')
             ->findOneByRole($role);
 
-        $profilePref = $profilePref === null ? new PublicProfilePreference() : $profilePref;
+        $profilePref = $profilePref === null ? new GeneralFacetPreference() : $profilePref;
         $profilePref->setBaseData($baseData);
         $profilePref->setMail($mail);
         $profilePref->setPhone($phone);
@@ -485,7 +485,7 @@ class FacetManager
 
     public function getProfilePreferences()
     {
-        return $this->om->getRepository('ClarolineCoreBundle:Facet\PublicProfilePreference')->findAll();
+        return $this->om->getRepository('ClarolineCoreBundle:Facet\GeneralFacetPreference')->findAll();
     }
 
     /**
@@ -595,12 +595,12 @@ class FacetManager
             $roles[] = $tokenRole->getRole();
         }
 
-        return $this->om->getRepository('ClarolineCoreBundle:Facet\PublicProfilePreference')
+        return $this->om->getRepository('ClarolineCoreBundle:Facet\GeneralFacetPreference')
             ->getAdminPublicProfilePreferenceByRole($roles);
     }
 
     function getAdminPublicPreference()
     {
-        return $this->om->getRepository('ClarolineCoreBundle:Facet\PublicProfilePreference')->findAll();
+        return $this->om->getRepository('ClarolineCoreBundle:Facet\GeneralFacetPreference')->findAll();
     }
 }

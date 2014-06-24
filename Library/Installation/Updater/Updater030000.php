@@ -25,8 +25,7 @@ class Updater030000
     {
         $this->container = $container;
         $this->icons = $this->setIcons();
-        /** @var ObjectManager */
-        $this->om = $container->get('claroline.persistence.object_manager');
+        $this->om = $container->get('doctrine.orm.entity_manager');
     }
 
     public function postUpdate()
@@ -119,12 +118,12 @@ class Updater030000
     private function removePublicProfilePreference()
     {
         $conn = $this->om->getConnection();
-        $sm = $this->om->getSchemaManager();
+        $sm = $conn->getSchemaManager();
         $fromSchema = $sm->createSchema();
         $toSchema = clone $fromSchema;
         $toSchema->dropTable('claro_user_public_profile_preferences');
         $sql = $fromSchema->getMigrateToSql($toSchema, $conn->getDatabasePlatform());
-        $stmt = $conn->prepare($sql);
+        $stmt = $conn->prepare($sql[0]);
         $stmt->execute();
         $stmt->closeCursor();
     }

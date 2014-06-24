@@ -221,7 +221,6 @@ class UserRepository extends EntityRepository implements UserProviderInterface
                 LEFT JOIN u.groups g
                 LEFT JOIN u.roles r
                 LEFT JOIN r.workspace rws
-                LEFT JOIN u.publicProfilePreferences up
                 WHERE u.isEnabled = true
                 ORDER BY u.{$orderedBy}
                 ".$order
@@ -1108,19 +1107,6 @@ class UserRepository extends EntityRepository implements UserProviderInterface
         $query = $this->_em->createQuery($dql);
 
         return $query->getResult();
-    }
-
-    /**
-     * @param bool $executeQuery
-     *
-     * @return array|Query
-     */
-    public function findWithPublicProfilePreferences($executeQuery = true)
-    {
-        $queryBuilder = $this->createQueryBuilder('user')
-            ->leftJoin('user.publicProfilePreferences', 'uppf');
-
-        return $executeQuery ? $queryBuilder->getQuery()->getResult(): $queryBuilder->getQuery();
     }
 
     /**

@@ -13,7 +13,7 @@ namespace Claroline\CoreBundle\Repository;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
-class PublicProfilePreferenceRepository extends EntityRepository
+class GeneralFacetPreferenceRepository extends EntityRepository
 {
     public function getAdminPublicProfilePreferenceByRole(array $roles) {
 
@@ -33,7 +33,7 @@ class PublicProfilePreferenceRepository extends EntityRepository
             MAX(p.phone) as phone,
             MAX(p.sendMail) as sendMail,
             MAX(p.sendMessage) as sendMessage
-            FROM Claroline\CoreBundle\Entity\Facet\PublicProfilePreference p
+            FROM Claroline\CoreBundle\Entity\Facet\GeneralFacetPreference p
             JOIN p.role as role
             WHERE role.name in (:rolenames)
         ";
