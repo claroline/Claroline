@@ -18,10 +18,12 @@ class LogDropGradeAvailableEvent extends AbstractLogResourceEvent implements Not
     protected $details;
 
     /**
-     * @param Wiki $wiki
-     * @param Section $section
-     * @param Contribution $contribution
-    */
+     * @param \Icap\DropzoneBundle\Entity\Dropzone $dropzone
+     * @param \Icap\DropzoneBundle\Entity\Drop $drop
+     * @internal param \Icap\DropzoneBundle\Event\Log\Wiki $wiki
+     * @internal param \Icap\DropzoneBundle\Event\Log\Section $section
+     * @internal param \Icap\DropzoneBundle\Event\Log\Contribution $contribution
+     */
     public function __construct(Dropzone $dropzone, Drop $drop)
     {
         $this->dropzone = $dropzone;
@@ -29,6 +31,7 @@ class LogDropGradeAvailableEvent extends AbstractLogResourceEvent implements Not
         $this->details = array(
                 'drop' => $drop,
             'dropGrade' => $drop->getCalculatedGrade(),
+            'resultMax' => 20,
             'dropzoneId' => $dropzone->getId(),
                 'dropId' => $drop->getId(),
         );

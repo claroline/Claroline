@@ -37,7 +37,8 @@ class LogDropEvaluateEvent extends AbstractLogResourceEvent {
                     'username' => $drop->getUser()->getUsername(),
                 )
             ),
-            'result' => $grade
+            'result' => $grade,
+            'resultMax' => 20
         );
 
         parent::__construct($dropzone->getResourceNode(), $details);
