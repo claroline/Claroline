@@ -17,3 +17,4 @@ desktop_tools: Desktop tools
 platform_logs: Platform logs
 platform_analytics: Platform analytics
 roles_management: Roles management
+platform_packages: Platform packages

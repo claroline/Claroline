@@ -816,3 +816,7 @@ role_limit_reached: La limite d'utilisateur de type %translationKey% a été att
 user_limit_reached: La limite de création d'utilisateur a été atteinte.
 user_limit_too_low: Il y a déjà %total% %role%(s). La limite %newMax% est trop faible.
 limit: Limite
+packages: Paquets
+core_packages: Paquets du noyau
+plugin_packages: Paquets des plugins
+no_package_description: Aucune description du paquet.

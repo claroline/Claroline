@@ -14,12 +14,13 @@ namespace Claroline\CoreBundle\Controller\Administration;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Claroline\CoreBundle\Event\StrictDispatcher;
 use Claroline\CoreBundle\Manager\ToolManager;
+use Claroline\CoreBundle\Manager\DependencyManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 
-class PluginsController extends Controller
+class PackageController extends Controller
 {
     private $toolManager;
     private $eventDispatcher;
@@ -30,19 +31,22 @@ class PluginsController extends Controller
      * @DI\InjectParams({
      *      "eventDispatcher" = @DI\Inject("claroline.event.event_dispatcher"),
      *      "toolManager"     = @DI\Inject("claroline.manager.tool_manager"),
+     *      "dm"              = @DI\Inject("claroline.manager.dependency_manager"),
      *      "sc"              = @DI\Inject("security.context")
      * })
      */
     public function __construct(
         StrictDispatcher         $eventDispatcher,
         ToolManager              $toolManager,
-        SecurityContextInterface $sc
+        SecurityContextInterface $sc,
+        DependencyManager        $dm
     )
     {
         $this->eventDispatcher = $eventDispatcher;
         $this->toolManager     = $toolManager;
         $this->adminToolPlugin = $toolManager->getAdminToolByName('platform_plugins');
         $this->sc              = $sc;
+        $this->dm              = $dm;
     }
 
     /**
@@ -58,39 +62,16 @@ class PluginsController extends Controller
      *
      * @return Response
      */
-    public function pluginListAction()
+    public function listAction()
     {
         $this->checkOpen();
+        $corePackages = $this->dm->getInstalledByType(DependencyManager::CLAROLINE_CORE_TYPE);
+        $pluginPackages = $this->dm->getInstalledByType(DependencyManager::CLAROLINE_PLUGIN_TYPE);
 
-        $em = $this->get('doctrine.orm.entity_manager');
-        $plugins = $em->getRepository('ClarolineCoreBundle:Plugin')->findAll();
-
-        return array('plugins' => $plugins);
-    }
-
-    /**
-     * @EXT\Route(
-     *     "/{domain}/options",
-     *     name="claro_admin_plugin_options"
-     * )
-     * @EXT\Method("GET")
-     *
-     * Redirects to the plugin management page.
-     *
-     * @param string $domain
-     *
-     * @return Response
-     *
-     * @throws \Exception
-     */
-    public function pluginParametersAction($domain)
-    {
-        $this->checkOpen();
-
-        $eventName = "plugin_options_{$domain}";
-        $event = $this->eventDispatcher->dispatch($eventName, 'PluginOptions', array());
-
-        return $event->getResponse();
+        return array(
+            'corePackages' => $corePackages,
+            'pluginPackages' => $pluginPackages
+        );
     }
 
     private function checkOpen()

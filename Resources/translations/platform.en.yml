@@ -817,3 +817,7 @@ role_limit_reached: The limit of %translationKey% has been reached.
 user_limit_reached: The user limit has been reached.
 user_limit_too_low: There is already %total% %role%(s). The limit %newMax% is too low.
 limit: Limit
+packages: Packages
+core_packages: Core packages
+plugin_packages: Plugin packages
+no_package_description: No package description.

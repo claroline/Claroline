@@ -25,7 +25,7 @@ class LoadAdminTools implements RequiredFixture
             array('workspace_management', 'icon-book'),
             array('badges_management', 'icon-trophy'),
             array('registration_to_workspace', 'icon-book'),
-            array('platform_plugins', 'icon-wrench'),
+            array('platform_packages', 'icon-wrench'),
             array('home_tabs', 'icon-th-large'),
             array('desktop_tools', 'icon-pencil'),
             array('platform_logs', 'icon-reorder'),

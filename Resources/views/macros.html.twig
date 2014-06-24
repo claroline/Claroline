@@ -127,3 +127,74 @@
         {% endif %}
     </div>
 {% endmacro %}
+
+{% macro renderPackageElement(package) %}
+    <div class="panel-group" id="accordion-{{ package.getDistReference() }}">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h5 class="panel-title>">
+                    <a class="panel-toggle"
+                       data-toggle="collapse"
+                       data-parent="#accordion-{{ package.getDistReference() }}"
+                       href="#collapse-inner-{{ package.getDistReference() }}"
+                    >
+                        {{ package.getPrettyName() }} ({{ package.getPrettyVersion() }})
+                    </a>
+                </h5>
+            </div>
+            <div id="collapse-inner-{{ package.getDistReference() }}" class="panel panel-body collapse">
+                {% if
+                    not package.getDescription()
+                    and not package.getAuthors() | length > 0
+                    and not package.getLicense()
+                    and not package.getHomePage()
+                %}
+                    {{ 'no_package_description'|trans({}, 'platform') }}
+                {% else %}
+                    {% if package.getDescription() %}
+                        <div>
+                            {{ package.getDescription() }}
+                        </div>
+                    {% endif %}
+                    {% if package.getAuthors() | length > 0 %}
+                        <div>
+                            <ul>
+                            {% for author in package.getAuthors() %}
+                                <li>
+                                    {% if author['name'] is defined %}
+                                        {{ author['name'] }}
+                                    {% endif %}
+                                    <ul>
+                                        {% if author['email'] is defined %}
+                                            <li>
+                                                {{ author['email'] }}
+                                            </li>
+                                        {% endif %}
+                                        {% if author['homepage'] is defined %}
+                                            <li>
+                                                <a href="{{ author['homepage'] }}">
+                                                    {{ author['homepage'] }}
+                                                </a>
+                                            </li>
+                                        {% endif %}
+                                    </ul>
+                                </li>
+                            {% endfor %}
+                            </ul>
+                        </div>
+                    {% endif %}
+                    {% if package.getLicense() %}
+                        <div>
+                            {{ package.getLicense()[0] }}
+                        </div>
+                    {% endif %}
+                    {% if package.getHomePage() %}
+                        <div>
+                            <a href="{{ package.getHomePage() }}"> {{ package.getHomePage() }}</a>
+                        </div>
+                    {% endif %}
+                {% endif %}
+            </div>
+        </div>
+    </div>
+{% endmacro %}
