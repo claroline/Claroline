@@ -17,7 +17,8 @@
     <div class="container container-dropzone">
         <h2>
             {{ 'List of corrections made by %user%'|trans({'%user%':user.firstName|capitalize ~' '~ user.lastName|upper}, 'icap_dropzone') }}
-            <a class=" btn btn-default pull-right" href="{{ path('icap_dropzone_edit', {'resourceId': dropzone.id}) }}"><span class="glyphicon icon-edit"></span> {{ 'Edit evaluation'|trans({}, 'icap_dropzone') }}</a>
+            <a class=" btn btn-default pull-right" href="{{ path('icap_dropzone_edit', {'resourceId': dropzone.id}) }}"><span
+                        class="glyphicon icon-edit"></span> {{ 'Edit evaluation'|trans({}, 'icap_dropzone') }}</a>
         </h2>
 
         <div class="row">
@@ -39,24 +40,24 @@
 
         {% block dropzone_content_corrections %}
 
-        {#
-        <div class="btn-group pull-right">
-            {% block dropzone_content_drops_by_default %}
-                <a href="{{ path('icap_dropzone_drops_by_default', {'resourceId': dropzone.id}) }}" class="btn btn-default btn-xs">{{ 'default sort'|trans({}, 'icap_dropzone') }}</a>
-            {% endblock %}
-            {% block dropzone_content_drops_by_user %}
-                <a href="{{ path('icap_dropzone_drops_by_user', {'resourceId': dropzone.id}) }}" class="btn btn-default btn-xs">{{ 'Sort by user'|trans({}, 'icap_dropzone') }}</a>
-            {% endblock %}
-            {% block dropzone_content_drops_by_date %}  
-                <a href="{{ path('icap_dropzone_drops_by_date', {'resourceId': dropzone.id}) }}" class="btn btn-default btn-xs">{{ 'Sort by date'|trans({}, 'icap_dropzone') }}</a>
-            {% endblock %}
-            {% block dropzone_content_drops_by_reported %}  
-                <a href="{{ path('icap_dropzone_drops_by_report', {'resourceId': dropzone.id}) }}" class="btn btn-default btn-xs">{{ 'sort by reported'|trans({}, 'icap_dropzone') }}</a>
-            {% endblock %}
-        </div>
-        #}
-         <h3>{% block dropzone_content_drops_by_list_title %}{{ 'Corrections'|trans({}, 'icap_dropzone') }}{% endblock %}</h3>
-         <h5>{% block dropzone_content_drops_by_list_subtitle %}{% endblock %}</h5>
+            {#
+            <div class="btn-group pull-right">
+                {% block dropzone_content_drops_by_default %}
+                    <a href="{{ path('icap_dropzone_drops_by_default', {'resourceId': dropzone.id}) }}" class="btn btn-default btn-xs">{{ 'default sort'|trans({}, 'icap_dropzone') }}</a>
+                {% endblock %}
+                {% block dropzone_content_drops_by_user %}
+                    <a href="{{ path('icap_dropzone_drops_by_user', {'resourceId': dropzone.id}) }}" class="btn btn-default btn-xs">{{ 'Sort by user'|trans({}, 'icap_dropzone') }}</a>
+                {% endblock %}
+                {% block dropzone_content_drops_by_date %}
+                    <a href="{{ path('icap_dropzone_drops_by_date', {'resourceId': dropzone.id}) }}" class="btn btn-default btn-xs">{{ 'Sort by date'|trans({}, 'icap_dropzone') }}</a>
+                {% endblock %}
+                {% block dropzone_content_drops_by_reported %}
+                    <a href="{{ path('icap_dropzone_drops_by_report', {'resourceId': dropzone.id}) }}" class="btn btn-default btn-xs">{{ 'sort by reported'|trans({}, 'icap_dropzone') }}</a>
+                {% endblock %}
+            </div>
+            #}
+            <h3>{% block dropzone_content_drops_by_list_title %}{{ 'Corrections'|trans({}, 'icap_dropzone') }}{% endblock %}</h3>
+            <h5>{% block dropzone_content_drops_by_list_subtitle %}{% endblock %}</h5>
 
             {% set byUserMod = 0 %}
             {% set adminCorrectionByUserMod = 1 %}
@@ -64,13 +65,12 @@
             {% block dropzone_content_drops_by_Listing %}
                 {% include 'IcapDropzoneBundle:Correction:Listing/correctionListing.html.twig' %}
             {% endblock %}
-    
+
             <div class="container row">
                 {% block dropzone_content_drops_by_pager %}
                     {% block dropzone_content_drops_by_paginate_part %}
                         {% if pager.haveToPaginate %}
-                            {{
-                            pagerfanta(
+                            {{ pagerfanta(
                             pager,
                             'twitter_bootstrap_translated',
                             {
@@ -78,8 +78,7 @@
                             'routeName': 'icap_dropzone_examiner_corrections_paginated',
                             'routeParams': {'resourceId': dropzone.id,'userId':user.id}
                             }
-                            )
-                            }}
+                            ) }}
                         {% endif %}
                     {% endblock %}
                 {% endblock %}
@@ -96,7 +95,6 @@
                 <br/>
             {% endif %}
 
-            {% endblock %}
         {% endblock %}
     </div>
 {% endblock %}
