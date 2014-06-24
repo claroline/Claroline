@@ -656,7 +656,7 @@ select_workspace_to_link: 'Select workspace to link'
 select_workspaces_for_registration: 'Select workspaces for registration'
 selected_workspaces_for_registration: 'Selected workspaces for registration'
 selected_workspaces_will_be_put_in_it: 'Selected workspaces will be put in it'
-send: send
+send: Send
 send_mail: 'Send a mail'
 send_mail_form_content: Message
 send_mail_form_object: Object
@@ -884,5 +884,9 @@ role_limit_reached: The limit of %translationKey% has been reached.
 user_limit_reached: The user limit has been reached.
 user_limit_too_low: There is already %total% %role%(s). The limit %newMax% is too low.
 limit: Limit
+packages: Packages
+core_packages: Core packages
+plugin_packages: Plugin packages
+no_package_description: No package description.
 yes: Yes
 no: No

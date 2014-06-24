@@ -15,6 +15,7 @@ use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\File\MimeType\MimeTypeGuesser;
+use Symfony\Component\HttpKernel\HttpKernelInterface;
 use JMS\DiExtraBundle\Annotation as DI;
 use Claroline\CoreBundle\Entity\Resource\File;
 use Claroline\CoreBundle\Entity\Resource\Directory;
@@ -26,6 +27,7 @@ use Claroline\CoreBundle\Event\CreateResourceEvent;
 use Claroline\CoreBundle\Event\OpenResourceEvent;
 use Claroline\CoreBundle\Event\DeleteResourceEvent;
 use Claroline\CoreBundle\Event\DownloadResourceEvent;
+use Claroline\CoreBundle\Event\CustomActionResourceEvent;
 use Claroline\CoreBundle\Event\ExportResourceTemplateEvent;
 use Claroline\CoreBundle\Event\ImportResourceTemplateEvent;
 
@@ -38,6 +40,8 @@ class FileListener implements ContainerAwareInterface
     private $resourceManager;
     private $om;
     private $sc;
+    private $request;
+    private $httpKernel;
 
     /**
      * @DI\InjectParams({
@@ -52,6 +56,8 @@ class FileListener implements ContainerAwareInterface
         $this->resourceManager = $container->get('claroline.manager.resource_manager');
         $this->om = $container->get('claroline.persistence.object_manager');
         $this->sc = $container->get('security.context');
+        $this->request = $container->get('request_stack');
+        $this->httpKernel = $container->get('httpKernel');
     }
 
     /**
@@ -230,6 +236,25 @@ class FileListener implements ContainerAwareInterface
 
         $event->setResponse($response);
         $event->stopPropagation();
+    }
+
+    /**
+     * @DI\Observe("update_file_file")
+     *
+     * @param CustomActionResourceEvent $event
+     */
+    public function onUpdateFile(CustomActionResourceEvent $event)
+    {
+        if (!$this->request) {
+            throw new NoHttpRequestException();
+        }
+
+        $params = array();
+        $params['_controller'] = 'ClarolineCoreBundle:File:updateFileForm';
+        $params['file'] = $event->getResource()->getId();
+        $subRequest = $this->request->getCurrentRequest()->duplicate(array(), null, $params);
+        $response = $this->httpKernel->handle($subRequest, HttpKernelInterface::SUB_REQUEST);
+        $event->setResponse($response);
     }
 
     /**

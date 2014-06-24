@@ -818,5 +818,8 @@ role_limit_reached: Ha llegado al limite de usuarios de tipo %translationKey%.
 user_limit_reached: Ha llegado al limite de creación de usuarios.
 user_limit_too_low: Ya hay %total% %role%(s). El limite %newMax% es muy bajo.
 limit: Límite
+packages: Packages
+core_packages: Core packages
+plugin_packages: Plugin packages
 yes: Sí
 no: No
