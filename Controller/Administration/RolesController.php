@@ -182,6 +182,7 @@ class RolesController extends Controller
      */
     public function roleListAction()
     {
+        $this->checkOpen();
         $roles = $this->roleManager->getAllPlatformRoles();
 
         return array('roles' => $roles, 'errors' => array());
@@ -196,8 +197,9 @@ class RolesController extends Controller
      *
      * @param Role $role
      */
-    public function removeRole(Role $role)
+    public function removeRoleAction(Role $role)
     {
+        $this->checkOpen();
         $this->roleManager->remove($role);
 
         return new Response('success', 204);
@@ -207,8 +209,9 @@ class RolesController extends Controller
      * @EXT\Route("/roles/edit", name="platform_roles_edit")
      * @EXT\Template("ClarolineCoreBundle:Administration/Roles:roleList.html.twig")
      */
-    public function editRoles()
+    public function editRolesAction()
     {
+        $this->checkOpen();
         $errors = $this->validateParameters();
 
         if (count($errors) > 0) {
