@@ -151,9 +151,14 @@ class StepManager
             $activityType = $this->om->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findOneByName('activity');
             $currentUser = $this->security->getToken()->getUser();
             $workspace = $step->getWorkspace();
-            $wsDirectory = $this->resourceManager->getWorkspaceRoot($workspace);
 
-            $activity = $this->resourceManager->create($activity, $activityType, $currentUser, $workspace, $wsDirectory);
+            // Store Activity in same directory than parent Path
+            $parent = $step->getPath()->getResourceNode()->getWorkspace();
+            if (empty($parent)) {
+                $parent = $this->resourceManager->getWorkspaceRoot($workspace);
+            }
+
+            $activity = $this->resourceManager->create($activity, $activityType, $currentUser, $workspace, $parent);
         }
 
         // Update JSON structure

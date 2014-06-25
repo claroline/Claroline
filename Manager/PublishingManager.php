@@ -56,15 +56,15 @@ class PublishingManager
     
     /**
      * Class constructor
-     * @param \Doctrine\Common\Persistence\ObjectManager    $objectManager
-     * @param \Innova\PathBundle\Manager\StepManager        $stepManager
+     * @param \Doctrine\Common\Persistence\ObjectManager $objectManager
+     * @param \Innova\PathBundle\Manager\StepManager     $stepManager
      */
     public function __construct(
-        ObjectManager   $objectManager,
-        StepManager     $stepManager)
+        ObjectManager $objectManager,
+        StepManager   $stepManager)
     {
-        $this->om              = $objectManager;
-        $this->stepManager     = $stepManager;
+        $this->om          = $objectManager;
+        $this->stepManager = $stepManager;
     }
 
     /**
