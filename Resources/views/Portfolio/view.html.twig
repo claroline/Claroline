@@ -4,7 +4,7 @@
 
 {% block content_container %}
     <div id="portfolio-section" data-portfolio-container="{{ portfolio.id }}">
-        <div id="portfolio-container" data-ng-if="portfolio.$resolved" data-design-container>
+        <div id="portfolio-container" data-ng-if="portfolio.$resolved">
             <header>
                 <div class="container">
                     <h1 id="username">{{ portfolio.user.firstName ~ ' ' ~ portfolio.user.lastName }}</h1>
@@ -30,20 +30,20 @@
 
             <section>
                 {% if editMode %}
-                <div class="col-md-2 widget-menu-container">
+                <div class="col-md-2 widget-menu-container" data-design-container>
                     <h2 data-toggle="collapse" data-target="#dispositions" role="button">Disposition</h2>
                     <ul id="dispositions" class="dispositions collapse">
-                        <li class="disposition" data-ng-class="{'selected': portfolio.disposition == 0}" data-ng-click="changeDisposition(0)">
+                        <li class="disposition" data-ng-class="{'selected': portfolio.disposition == 0, 'idle': !changing, 'loading': changing}" data-ng-click="changeDisposition(0)">
                             <div>
                                 <div class="col-md-12 border">1</div>
                             </div>
                         </li>
-                        <li class="disposition" data-ng-class="{'selected': portfolio.disposition == 1}" data-ng-click="changeDisposition(1)">
+                        <li class="disposition" data-ng-class="{'selected': portfolio.disposition == 1, 'idle': !changing, 'loading': changing}" data-ng-click="changeDisposition(1)">
                             <div>
                                 <div class="col-md-6 border">1</div>
                                 <div class="col-md-6 border">2</div>
                             </div></li>
-                        <li class="disposition" data-ng-class="{'selected': portfolio.disposition == 2}" data-ng-click="changeDisposition(2)">
+                        <li class="disposition" data-ng-class="{'selected': portfolio.disposition == 2, 'idle': !changing, 'loading': changing}" data-ng-click="changeDisposition(2)">
                             <div>
                                 <div class="col-md-4 border">1</div>
                                 <div class="col-md-4 border">2</div>
@@ -129,7 +129,7 @@
 
 {% block stylesheets %}
     {{ parent() }}
-    {% stylesheets debug=false filter='lessphp, cssmin'  output='bundles/icapportfolio/css/portfolio_view.css'
+    {% stylesheets debug=false filter='lessphp, cssmin'  output='css/icapportfolio/style_view.css'
       "@IcapPortfolioBundle/Resources/views/less/portfolio.less"
       "@IcapPortfolioBundle/Resources/views/less/interface.less"
     %}

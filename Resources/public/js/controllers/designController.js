@@ -2,9 +2,16 @@
 
 portfolioApp
     .controller("designController", ["$scope", "$filter", "portfolioManager", "widgetsManager", function($scope, $filter, portfolioManager, widgetsManager) {
+        $scope.changing = false;
+
         $scope.changeDisposition = function (disposition) {
-            $scope.portfolio.disposition = disposition;
-            portfolioManager.save($scope.portfolio);
+            if (!$scope.changing && disposition !== $scope.portfolio.disposition) {
+                $scope.changing = true;
+                $scope.portfolio.disposition = disposition;
+                portfolioManager.save($scope.portfolio).then(function (data) {
+                    $scope.changing = false;
+                });
+            }
         }
 
         $scope.changeColumn = function($event, widget, column) {

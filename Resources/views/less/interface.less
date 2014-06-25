@@ -17,12 +17,19 @@ body {
                 height:           100px;
                 margin-bottom:    10px;
                 padding:          10px;
-                cursor:           pointer;
+                &.loading {
+                    background-position: center;
+                    width:               auto;
+                    opacity: 0.5;
+                }
                 &.selected {
                     background-color: orange;
                 }
-                &:hover {
-                    background-color: orange;
+                &.idle {
+                    cursor:           pointer;
+                    &:hover {
+                        background-color: orange;
+                    }
                 }
                 div.border {
                     height:      80px;
@@ -92,7 +99,7 @@ body {
     width:            100%;
     height:           100%;
     top:              0;
-    background:       url("../../clarolinecore/images/loading.gif") no-repeat center center;
+    background:       url("../../bundles/clarolinecore/images/loading.gif") no-repeat center center;
     background-color: #e2e2e2;
     z-index:          1;
 }
@@ -110,7 +117,7 @@ body {
             margin-bottom: 0;
             .panel-loading {
                 height:     60px;
-                background: url("../../clarolinecore/images/loading.gif") no-repeat center center;
+                background: url("../../bundles/clarolinecore/images/loading.gif") no-repeat center center;
             }
             .panel-body {
                 li {
