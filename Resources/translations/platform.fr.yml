@@ -816,3 +816,6 @@ role_limit_reached: La limite d'utilisateur de type %translationKey% a été att
 user_limit_reached: La limite de création d'utilisateur a été atteinte.
 user_limit_too_low: Il y a déjà %total% %role%(s). La limite %newMax% est trop faible.
 limit: Limite
+name_required: Name required
+remove_role_confirm: Are you sure you want to remove the role %name% ?
+remove_role: Role suppression.

@@ -48,6 +48,7 @@ class Role implements RoleInterface
 
     /**
      * @ORM\Column(name="translation_key")
+     * @Assert\NotBlank()
      */
     protected $translationKey;
 

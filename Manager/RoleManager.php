@@ -365,7 +365,7 @@ class RoleManager
     public function remove(Role $role)
     {
         if ($role->isReadOnly()) {
-            throw new RoleReadOnlyException('This role cannot be modified nor removed');
+            throw new RoleReadOnlyException('This role cannot be removed');
         }
 
         $this->om->remove($role);
