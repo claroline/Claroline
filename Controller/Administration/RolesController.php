@@ -182,17 +182,36 @@ class RolesController extends Controller
      */
     public function roleListAction()
     {
+        $this->checkOpen();
         $roles = $this->roleManager->getAllPlatformRoles();
 
         return array('roles' => $roles, 'errors' => array());
     }
 
     /**
+     * @EXT\Route(
+     *      "/remove/{role}",
+     *      name="platform_roles_remove",
+     *      options={"expose"=true}
+     * )
+     *
+     * @param Role $role
+     */
+    public function removeRoleAction(Role $role)
+    {
+        $this->checkOpen();
+        $this->roleManager->remove($role);
+
+        return new Response('success', 204);
+    }
+
+    /**
      * @EXT\Route("/roles/edit", name="platform_roles_edit")
      * @EXT\Template("ClarolineCoreBundle:Administration/Roles:roleList.html.twig")
      */
-    public function editRoles()
+    public function editRolesAction()
     {
+        $this->checkOpen();
         $errors = $this->validateParameters();
 
         if (count($errors) > 0) {
@@ -204,16 +223,32 @@ class RolesController extends Controller
         $roles = $this->roleManager->getAllPlatformRoles();
 
         foreach ($this->request->request as $role => $value) {
-            $id = str_replace('max-user-', '', $role);
+            $role = '_' . $role;
 
-            foreach ($roles as $entity) {
-                if ($entity->getId() === (int) $id) {
-                    $value = ($value === '') ? null: (int) $value;
-                    $entity->setMaxUsers($value);
+            if (strpos($role, 'max-user-') > 0) {
+                $id = str_replace('_max-user-', '', $role);
+
+                foreach ($roles as $entity) {
+                    if ($entity->getId() === (int) $id) {
+                        $value = ($value === '') ? null: (int) $value;
+                        $entity->setMaxUsers($value);
+                    }
                 }
+
+                $this->om->persist($entity);
             }
 
-            $this->om->persist($entity);
+            if (strpos($role, 'name-') > 0) {
+                $id = str_replace('_name-', '', $role);
+
+                foreach ($roles as $entity) {
+                    if ($entity->getId() === (int) $id) {
+                        $entity->setTranslationKey($value);
+                    }
+                }
+
+                $this->om->persist($entity);
+            }
         }
 
         $this->om->flush();
@@ -226,13 +261,26 @@ class RolesController extends Controller
         $errors = [];
 
         foreach ($this->request->request as $key => $value) {
-            $id = str_replace('max-user-', '', $key);
-            $role = $this->roleManager->getRole($id);
-            $total = $this->roleManager->countUsersByRoleIncludingGroup($role);
-            $value = (int) $value;
 
-            if ($value < $total) {
-                $errors[$key] = array('user_limit_too_low', $value, $total);
+            $key = '_' . $key;
+
+            if (strpos($key, 'max-user-') > 0) {
+                $id = str_replace('_max-user-', '', $key);
+                $role = $this->roleManager->getRole($id);
+                $total = $this->roleManager->countUsersByRoleIncludingGroup($role);
+                $value = (int) $value;
+
+                if ($value < $total) {
+                    $errors[$key] = array('user_limit_too_low', $value, $total);
+                }
+            }
+
+            if (strpos($key, 'name-') > 0) {
+                $value = str_replace(' ','', $value);
+
+                if ($value === '') {
+                    $errors[$key] = array('name_required');
+                }
             }
         }
 

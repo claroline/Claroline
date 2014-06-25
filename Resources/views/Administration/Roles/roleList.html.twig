@@ -33,34 +33,73 @@
             <tr>
                 <th> {{ 'name'|trans({}, 'platform') }} </th>
                 <th> {{ 'limit'|trans({}, 'platform') }} </th>
+                <th> {{ 'delete'|trans({}, 'platform') }}</th>
             </tr>
             </thead>
             <tbody id="group-table-body">
-            {% for role in roles %}
-                <tr>
-                    <td> {{ role.getTranslationKey() | trans({}, 'platform') }} </td>
-                    <td
-                        {% if errors is defined %}
-                            {% for key, error in errors %}
-                                {% if key == "max-user-" ~ role.getId() %}
-                                    class="has-error"
-                                 {% endif %}
-                            {% endfor %}
-                        {% endif %}
-                    >
-                        <input class="form-control" name="max-user-{{ role.getId() }}" type="number" value="{{ role.getMaxUsers() }}"> </input>
-                        {% if errors is defined %}
-                            {% for key, error in errors %}
-                                {% if key == "max-user-" ~ role.getId() %}
-                                    <div class="control-label">
-                                        {{ error[0]|trans({'%newMax%': error[1], '%total%': error[2], '%role%': role.getTranslationKey()|trans({}, 'platform')}, 'platform') }}
-                                     </div>
+                {% for role in roles %}
+                    <tr id="tr-role-{{ role.getId() }}">
+                        <td
+                            {% if errors is defined %}
+                                {% for key, error in errors %}
+                                    {% if key == "_name-" ~ role.getId() %}
+                                        class="has-error"
+                                    {% endif %}
+                                {% endfor %}
+                            {% endif %}
+                        >
+                            <input
+                                class="form-control"
+                                name="name-{{ role.getId() }}"
+                                type="text"
+                                value="{{ role.getTranslationKey()|trans({}, 'platform') }}"
+                            >
+                            </input>
+                            {% if errors is defined %}
+                                {% for key, error in errors %}
+                                    {% if key == "_name-" ~ role.getId() %}
+                                        <div class="control-label">
+                                            {{ error[0]|trans({}, 'platform') }}
+                                        </div>
+                                    {% endif %}
+                                {% endfor %}
+                            {% endif %}
+                        </td>
+                        <td
+                            {% if errors is defined %}
+                                {% for key, error in errors %}
+                                    {% if key == "_max-user-" ~ role.getId() %}
+                                        class="has-error"
+                                     {% endif %}
+                                {% endfor %}
+                            {% endif %}
+                        >
+                            <input class="form-control" name="max-user-{{ role.getId() }}" type="number" value="{{ role.getMaxUsers() }}"> </input>
+                            {% if errors is defined %}
+                                {% for key, error in errors %}
+                                    {% if key == "_max-user-" ~ role.getId() %}
+                                        <div class="control-label">
+                                            {{ error[0]|trans({'%newMax%': error[1], '%total%': error[2], '%role%': role.getTranslationKey()|trans({}, 'platform')}, 'platform') }}
+                                         </div>
+                                    {% endif %}
+                                {% endfor %}
+                            {% endif %}
+                        </td>
+                        <td>
+                            <div
+                                id="delete-role-{{ role.getId() }}-btn"
+                                class="btn btn-primary delete-role-btn"
+                                data-role-id="{{ role.getId() }}"
+                                data-role-name="{{ role.getTranslationKey()|trans({}, 'platform') }}"
+                                {% if role.isReadOnly() %}
+                                    disabled
                                 {% endif %}
-                            {% endfor %}
-                        {% endif %}
-                    </td>
-                </tr>
-            {% endfor %}
+                            >
+                                {{ 'delete'|trans({}, 'platform') }}
+                            </div>
+                        </td>
+                    </tr>
+                {% endfor %}
             </tbody>
         </table>
     </div>
@@ -71,4 +110,9 @@
         </a>
     </div>
     </form>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src='{{ asset('bundles/clarolinecore/js/administration/roleList.js') }}' type="text/javascript"></script>
 {% endblock %}
