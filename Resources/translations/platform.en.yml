@@ -887,3 +887,9 @@ limit: Limit
 yes: Yes
 no: No
 show_profile_for_anonymous: Profil public access for anonymous.
+packages: Packages
+core_packages: Core packages
+plugin_packages: Plugin packages
+no_package_description: No package description.
+yes: Yes
+no: No

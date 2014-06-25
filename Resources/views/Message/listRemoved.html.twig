@@ -26,11 +26,11 @@
 {% endmacro %}
 {% macro displayControls() %}
     {% if app.user %}
-        <button class="btn btn-default action-delete-button" data-action="remove">
+        <button class="btn btn-default action-delete-button table-control" data-action="remove">
             <i class="fa fa-trash-o"></i>
             {{ 'delete'|trans({}, 'platform') }}
         </button>
-        <button class="btn btn-default action-restore-button" data-action="restore">
+        <button class="btn btn-default action-restore-button table-control" data-action="restore">
             <i class="fa fa-refresh"></i>
             {{ 'restore'|trans({}, 'platform') }}
         </button>

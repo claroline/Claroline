@@ -3,6 +3,7 @@
 
 parameters:
     claroline.param.files_directory: "%kernel.root_dir%/../files"
+    claroline.param.vendor_directory: "%kernel.root_dir%/../vendor"
     claroline.param.thumbnails_directory: "%kernel.root_dir%/../web/thumbnails"
     claroline.param.uploads_directory : "%kernel.root_dir%/../web/uploads"
     claroline.param.templates_directory: "%kernel.root_dir%/../templates/"

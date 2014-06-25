@@ -894,3 +894,9 @@ limit: Limite
 yes: Oui
 no: Non
 show_profile_for_anonymous: Profil public accessible aux anonyme.
+packages: Paquets
+core_packages: Paquets du noyau
+plugin_packages: Paquets des plugins
+no_package_description: Aucune description du paquet.
+yes: Oui
+no: Non
