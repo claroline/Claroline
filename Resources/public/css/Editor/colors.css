@@ -1,39 +1,3 @@
-.lvl {
-    width: 32px;
-    display: block;
-    height: 100%;
-    position: absolute;
-    left: 0;
-    top: 0;
-    border-radius: 3px 0 0 3px;
-    float:left;
-}
-
-.active-step {
-    background-color: rgb(240, 240, 240) !important;
-}
-
-.active-step .lvl {
-    border-right: none;
-    width: 32px;
-}
-
-.active-step .step {
-    padding-left: 54px;
-    font-weight: bold;
-}
-
-.active-step .lvl:after {
-    content: "";
-    border-top: 15px solid rgba(0,0,0,0);
-    border-bottom: 15px solid rgba(0,0,0,0);
-    border-left: 15px solid #ddd;
-    position: absolute;
-    right: -15px;
-    top: 0;
-    z-index: 1;
-}
-
 .resource-inherited:before {
     content: "";
     position: absolute;
@@ -46,135 +10,54 @@
 }
 
 /* Level 0 */
-.lvl-0 {
-    background-color: #7B7B7B;
-}
-.active-step .lvl-0~.step {
-    color: #4B4B4B;
-}
-.active-step .lvl-0:after {
-    border-left-color: #7B7B7B;
-}
 .resource-lvl-0:before {
     border-color: #4B4B4B;
     background-color: #7B7B7B;
 }
 
 /* Level 1 */
-.lvl-1 {
-    background-color: #4790aD;
-}
-.active-step .lvl-1~.step {
-    color: #17607D;
-}
-.active-step .lvl-1:after {
-    border-left-color: #4790aD;
-}
 .resource-lvl-1:before {
     border-color: #17607D;
     background-color: #4790aD;
 }
 
 /* Level 2 */
-.lvl-2 {
-    background-color: #8C6796;
-}
-.active-step .lvl-2~.step {
-    color: #5C3766;
-}
-.active-step .lvl-2:after {
-    border-left-color: #8C6796;
-}
 .resource-lvl-2:before {
     border-color: #5C3766;
     background-color: #8C6796;
 }
 
 /* Level 3 */
-.lvl-3 {
-    background-color: #d86178;
-}
-.active-step .lvl-3~.step {
-    color: #a83148;
-}
-.active-step .lvl-3:after {
-    border-left-color: #d86178;
-}
 .resource-lvl-3:before {
     border-color: #a83148;
     background-color: #d86178;
 }
 
 /* Level 4 */
-.lvl-4 {
-    background-color: #FF7A40;
-}
-.active-step .lvl-4~.step {
-    color: #CF4A30;
-}
-.active-step .lvl-4:after {
-    border-left-color: #FF7A40;
-}
 .resource-lvl-4:before {
     border-color: #CF4A30;
     background-color: #FF7A40;
 }
 
 /* Level 5 */
-.lvl-5 {
-    background-color: #FDBE3E;
-}
-.active-step .lvl-5~.step {
-    color: #cD8E0E;
-}
-.active-step .lvl-5:after {
-    border-left-color: #FDBE3E;
-}
 .resource-lvl-5:before {
     border-color: #cD8E0E;
     background-color: #FDBE3E;
 }
 
 /* Level 6 */
-.lvl-6 {
-    background-color: #b8d855;
-}
-.active-step .lvl-6~.step {
-    color: #88A825;
-}
-.active-step .lvl-6:after {
-    border-left-color: #b8d855;
-}
 .resource-lvl-6:before {
     border-color: #88A825;
     background-color: #b8d855;
 }
 
 /* Level 7 */
-.lvl-7 {
-    background-color: #47aD90;
-}
-.active-step .lvl-7~.step {
-    color: #177D60;
-}
-.active-step .lvl-7:after {
-    border-left-color: #47aD90;
-}
 .resource-lvl-7:before {
     border-color: #177D60;
     background-color: #47aD90;
 }
 
 /* Level 8 */
-.lvl-8 {
-    background-color: #91deea;
-}
-.active-step .lvl-8~.step {
-    color: #61aeba;
-}
-.active-step .lvl-8:after {
-    border-left-color: #91deea;
-}
 .resource-lvl-8:before {
     border-color: #61aeba;
     background-color: #91deea;

@@ -1,15 +1,16 @@
 <!-- Drag&Drop handler -->
-<div ng-if="step.lvl !== 0" ui-tree-handle class="tree-item mytree-item-handler" data-toggle="tooltip" data-container="body" title="{{ 'step_drag' | trans:{}:'path_editor' }}">
+<div ng-if="step.lvl !== 0" ui-tree-handle class="mytree-item-handler" data-toggle="tooltip" data-container="body" title="{{ 'step_drag' | trans:{}:'path_editor' }}">
     <span class="fa fa-arrows"></span>
     <span class="sr-only">{{ 'step_drag' | trans:{}:'path_editor' }}</span>
 </div>
+
 <!-- Item row -->
 <div ui-tree-handle class="tree-item" data-nodrag data-ng-class="{'active-step': previewStep.id == step.id}"
      data-ng-click="setPreviewStep(step)"
      data-ng-mouseenter="showButtons = step.id"
      data-ng-mouseleave="showButtons = null">
     
-    <div class="lvl lvl-{{ step.lvl }}" />   
+    <div class="lvl lvl-{{ step.lvl }}"></div>
     <div class="step">{{ step.name | truncate }}</div>
 
     <span data-ng-show="showButtons == step.id || previewStep == step" class="step-actions btn-group">

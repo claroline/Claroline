@@ -4,6 +4,8 @@
     {{ parent() }}
     {% stylesheets debug=false filter='cssmin'  output='vendor/innovapath/editor.css'
         '@InnovaPathBundle/Resources/public/css/Editor/*'
+        '@InnovaPathBundle/Resources/public/css/tree-view.css'
+        '@InnovaPathBundle/Resources/public/css/colors.css'
         '@InnovaAngularUIPageslideBundle/Resources/public/css/*'
         '@InnovaAngularUITreeBundle/Resources/public/css/*'
     %}
@@ -103,7 +105,7 @@
         <script type="text/javascript" src="{{ asset_url }}"></script>
     {% endjavascripts %}
     
-    {% javascripts debug=false filter='jsmin' output='vendor/innovapath/path_editor.js'
+    {% javascripts debug=false filter='jsmin' output='vendor/innovapath/editor.js'
         '@InnovaPathBundle/Resources/public/angularjs/Alert/Factory/AlertFactory.js'
         '@InnovaPathBundle/Resources/public/angularjs/Alert/Controller/AlertCtrl.js'
         '@InnovaPathBundle/Resources/public/angularjs/History/Factory/HistoryFactory.js'

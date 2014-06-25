@@ -1,6 +1,6 @@
 {% macro displayResourceButton(resource, step) %}
     <li rel="tooltip" data-original-title="{{ resource.resourceType.name | trans({}, 'resource') }}">
-        <a class="path-tab-btn resource-link lvl-{{ step.lvl + 1 }} resource-tab-btn" data-target="#resource{{ resource.id }}">
+        <a target="_blank" class="path-tab-btn resource-link lvl-{{ step.lvl + 1 }} resource-tab-btn" href="{{ path('claro_resource_open', {'node': resource.id, 'resourceType': resource.resourceType.name }) }}">
             <span class="resource-name">{{ resource.name }}</span>
         </a>
     </li>
@@ -8,19 +8,19 @@
 
 {% macro displayResourceFrame(resource, step) %}
     <div id="resource{{ resource.id }}" class="path-tab resource-tab">
-        <iframe style="border:none;padding:0;" id="{{ resource.id }}" seamless width="100%" class="resource-frame" src="{{ path('claro_resource_open', {'node': resource.id, 'resourceType': resource.resourceType.name }) }}"></iframe>
+        <iframe style="border:none; padding:0;" id="{{ resource.id }}" seamless width="100%" class="resource-frame" src="{{ path('claro_resource_open', {'node': resource.id, 'resourceType': resource.resourceType.name }) }}"></iframe>
     </div>
 {% endmacro %}
 
 {% macro displayTreeItem(item, parents, currentStep, path, workspace) %}
     {% import _self as macros %}
-    {% set class = "" %}
-    {% if item in parents or item == currentStep %}
-        {% set class = "parent" %}
-    {% endif %}
+
     <li>
-        <span class="lvl-{{ item.lvl + 1 }} lvl-indicator">&nbsp;</span>
-        <a class="{{ class }}" href="{{ path('innova_path_player_index', { workspaceId: workspace.id, pathId: path.id, stepId: item.id }) }}">{{ item.name }}</a>
+        <div class="tree-item{% if item == currentStep %} active-step{% endif %}">
+            <div class="lvl lvl-{{ item.lvl + 1 }}"></div>
+            <a class="step" href="{{ path('innova_path_player_index', { workspaceId: workspace.id, pathId: path.id, stepId: item.id }) }}">{{ item.name }}</a>
+        </div>
+
         {% if item.children is not empty %}
         <ul>
             {% for child in item.children %}
@@ -39,7 +39,6 @@
 {% endmacro %}
 
 {% macro breadcrumbItem(workspace, path, step) %}
-
     {% set isTerminalClass = "" %}
     {% if step.children is empty %}
         {% set isTerminalClass = "terminal" %}

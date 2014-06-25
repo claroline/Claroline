@@ -5,6 +5,8 @@
 
     {% stylesheets debug=false filter='cssmin'  output='vendor/innovapath/player.css'
         '@InnovaPathBundle/Resources/public/css/Player/*'
+        '@InnovaPathBundle/Resources/public/css/tree-view.css'
+        '@InnovaPathBundle/Resources/public/css/colors.css'
     %}
         <link rel="stylesheet" href="{{ asset_url }}" />
     {% endstylesheets %}
@@ -12,49 +14,56 @@
 {% endblock %}
 
 {% block content %}
-{% import 'InnovaPathBundle::Player/components/macros.html.twig' as macros %}
+    {% import 'InnovaPathBundle::Player/components/macros.html.twig' as macros %}
 
-<div id="path-main-container" class="path-player">
-    <div class="tree-browser">
-        {{ render(controller('innova_path.controller.path_player:displayTreeBrowserAction', { 'workspace': workspace, 'path': path, 'currentStep': currentStep } )) }}
-    </div>
+    <div id="path-main-container" class="path-player">
+        <div class="tree-browser">
+            {{ render(controller('innova_path.controller.path_player:displayTreeBrowserAction', { 'workspace': workspace, 'path': path, 'currentStep': currentStep } )) }}
+        </div>
 
-    <div class="row">
-        <div class="col-md-12">
-            <div class="pull-left nav-buttons btn-group">
-                {# Arborescence #}
-                <a class="tree-browser btn btn-default nav-button" href="#" data-toggle="modal" data-target="#full-tree" rel="tooltip" data-original-title="{{ 'full_tree' | trans({}, 'path_player') }}"> 
-                    <span class="fa fa-list"></span>  
-                </a>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="pull-left nav-buttons btn-group">
+                    {# Tree view #}
+                    <a class="tree-browser btn btn-default nav-button" href="#" data-toggle="modal" data-target="#full-tree" rel="tooltip" data-original-title="{{ 'full_tree' | trans({}, 'path_player') }}">
+                        <span class="fa fa-list"></span>
+                    </a>
+                </div>
+
+                {# Breadcrumb #}
+                <div class="breadcrumbs">
+                    {{ render(controller('innova_path.controller.path_player:displayBreadcrumbsAction', { 'workspace': workspace, 'path': path, 'currentStep': currentStep })) }}
+                </div>
             </div>
-            {# Fil d'ariane #}
-            <div class="breadcrumbs">
-                {{ render(controller('innova_path.controller.path_player:displayBreadcrumbsAction', { 'workspace': workspace, 'path': path, 'currentStep': currentStep })) }}
+        </div>
+
+        <div class="content row">
+            {# Resources #}
+            <div class="col-md-12">
+                {% include 'InnovaPathBundle::Player/components/resources.html.twig' %}
+            </div>
+
+            {# Step content #}
+            <div class="current-step col-md-12">
+                {{ render(controller('innova_path.controller.path_player:displayCurrentStepAction', { 'workspace': workspace, 'path': path, 'currentStep': currentStep, 'edit': edit } )) }}
             </div>
         </div>
     </div>
-    
-    <div class="content row">
-        {# resource #}
-        <div class="col-md-12">
-            {% include 'InnovaPathBundle::Player/components/resources.html.twig' %}
-        </div>
-        {# Contenu de l'étape #}
-        <div class="current-step col-md-12">
-            {{ render(controller('innova_path.controller.path_player:displayCurrentStepAction', { 'workspace': workspace, 'path': path, 'currentStep': currentStep, 'edit': edit } )) }}
-        </div>
-    </div>
-</div>
 {% endblock %}
 
 {% block javascripts %}
     {{ parent() }}
+
     <script type="text/javascript">
         var pathId = {{ path.id }};
         {% if currentStep == path.getRootStep %}
-        var isRoot = true;
+            var isRoot = true;
         {% endif %}
     </script>
-    <script type="text/javascript" src="{{ asset('bundles/innovapath/js/Player/player.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('bundles/innovapath/js/Player/frame.js') }}"></script>
+
+    {% javascripts debug=false filter='jsmin' output='vendor/innovapath/player.js'
+        '@InnovaPathBundle/Resources/public/js/Player/*'
+    %}
+        <script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
 {% endblock %}
