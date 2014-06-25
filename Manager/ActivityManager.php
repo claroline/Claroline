@@ -20,6 +20,7 @@ use Claroline\CoreBundle\Entity\Resource\Activity;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Resource\ResourceType;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Rule\Entity\Rule;
 use JMS\DiExtraBundle\Annotation\Inject;
@@ -31,6 +32,8 @@ use JMS\DiExtraBundle\Annotation\Service;
  */
 class ActivityManager
 {
+    private $activityParametersRepo;
+    private $activityRepo;
     private $activityRuleActionRepo;
     private $activityRuleRepo;
     private $evaluationRepo;
@@ -45,6 +48,8 @@ class ActivityManager
     public function __construct(ObjectManager $om)
     {
         $this->om = $om;
+        $this->activityParametersRepo = $om->getRepository('ClarolineCoreBundle:Activity\ActivityParameters');
+        $this->activityRepo = $om->getRepository('ClarolineCoreBundle:Resource\Activity');
         $this->activityRuleActionRepo = $om->getRepository('ClarolineCoreBundle:Activity\ActivityRuleAction');
         $this->activityRuleRepo = $om->getRepository('ClarolineCoreBundle:Activity\ActivityRule');
         $this->evaluationRepo = $om->getRepository('ClarolineCoreBundle:Activity\Evaluation');
@@ -432,6 +437,38 @@ class ActivityManager
     }
 
 
+    /*****************************************
+     *  Access to ActivityRepository methods *
+     *****************************************/
+
+    public function getActivityByWorkspace(
+        AbstractWorkspace $workspace,
+        $executeQuery = true
+    )
+    {
+        return $this->activityRepo->findActivityByWorkspace(
+            $workspace,
+            $executeQuery
+        );
+    }
+
+    public function getActivitiesByResourceNodeIds(
+        array $resourceNodeIds,
+        $executeQuery = true
+    )
+    {
+        if (count($resourceNodeIds) > 0) {
+
+            return $this->activityRepo->findActivitiesByResourceNodeIds(
+                $resourceNodeIds,
+                $executeQuery
+            );
+        }
+
+        return array();
+    }
+
+
     /*********************************************
      *  Access to ActivityRuleRepository methods *
      *********************************************/
@@ -507,6 +544,42 @@ class ActivityManager
             $activityParams,
             $executeQuery
         );
+    }
+
+    public function getEvaluationsByUserAndActivityParameters(
+        User $user,
+        array $activityParams,
+        $executeQuery = true
+    )
+    {
+        if (count($activityParams) > 0) {
+
+            return $this->evaluationRepo->findEvaluationsByUserAndActivityParameters(
+                $user,
+                $activityParams,
+                $executeQuery
+            );
+        }
+
+        return array();
+    }
+
+    public function getEvaluationsByUsersAndActivityParams(
+        array $users,
+        ActivityParameters $activityParams,
+        $executeQuery = true
+    )
+    {
+        if (count($users) > 0) {
+
+            return $this->evaluationRepo->findEvaluationsByUsersAndActivityParams(
+                $users,
+                $activityParams,
+                $executeQuery
+            );
+        }
+
+        return array();
     }
 
 

@@ -18,7 +18,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity()
+ * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\Activity\ActivityRepository")
  * @ORM\Table(name="claro_activity")
  */
 class Activity extends AbstractResource

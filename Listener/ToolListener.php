@@ -226,9 +226,13 @@ class ToolListener
 
     public function workspaceAnalytics($workspace)
     {
+        $datas = $this->container->get('claroline.manager.analytics_manager')
+            ->getWorkspaceAnalytics($workspace);
+        $datas['analyticsTab'] = 'analytics';
+
         return $this->templating->render(
             'ClarolineCoreBundle:Tool/workspace/analytics:analytics.html.twig',
-            $this->container->get('claroline.manager.analytics_manager')->getWorkspaceAnalytics($workspace)
+            $datas
         );
     }
 

@@ -1263,6 +1263,22 @@ class ResourceManager
     }
 
     /**
+     * @param AbstractWorkspace $workspace
+     *
+     * @return \Claroline\CoreBundle\Entity\Resource\ResourceNode[]
+     */
+    public function getByWorkspaceAndResourceType(
+        AbstractWorkspace $workspace,
+        ResourceType $resourceType
+    )
+    {
+        return $this->resourceNodeRepo->findBy(
+            array('workspace' => $workspace, 'resourceType' => $resourceType),
+            array('name' => 'ASC')
+        );
+    }
+
+    /**
      * @param integer[] $ids
      *
      * @return \Claroline\CoreBundle\Entity\Resource\ResourceNode[]

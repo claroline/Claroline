@@ -757,6 +757,7 @@ unavailable_role: The role %translationKey% is not available
 uncompress_file: Uncompress the file if possible
 under_min_length: 'This value is too short'
 unique connections: 'Nb unique Cnx.'
+unknown: Unknown
 unregister: Unregister
 unregister_from_a_workspace: 'Unregister from a workspace'
 unregistered: Unregistered
