@@ -5,7 +5,7 @@ function StepCtrl($scope, HistoryFactory, PathFactory, StepFactory, ResourceFact
     $scope.resourceIcons = EditorApp.resourceIcons;
     $scope.resourceZoom = 75;
 
-    // Resource Picker config
+    // Resource Picker base config
     $scope.resourcePickerConfig = {
         isPickerMultiSelectAllowed: true,
         isPickerOnly: true,
@@ -13,46 +13,68 @@ function StepCtrl($scope, HistoryFactory, PathFactory, StepFactory, ResourceFact
         webPath: EditorApp.webDir,
         appPath: EditorApp.appDir,
         directoryId: EditorApp.wsDirectoryId,
-        resourceTypes: EditorApp.resourceTypes,
-        pickerCallback: function (nodes) {
-            if (typeof nodes === 'object' && nodes.length !== 0) {
-                if (typeof $scope.previewStep.resources !== 'object') {
-                    $scope.previewStep.resources = [];
+        resourceTypes: EditorApp.resourceTypes
+    };
+
+    // Primary resource picker config
+    $scope.primaryResourcePicker = angular.copy($scope.resourcePickerConfig);
+    $scope.primaryResourcePicker.pickerCallback = function (nodes) {
+        if (typeof nodes === 'object' && nodes.length !== 0) {
+            // We need only one node, so only the last one will be kept
+            for (var nodeId in nodes) {
+                var node = nodes[nodeId];
+                $scope.previewStep.primaryResource = {
+                    resourceId: nodeId,
+                    name: node[0],
+                    type: node[2]
                 }
-
-                for (var nodeId in nodes) {
-                    var node = nodes[nodeId];
-
-                    // Check if resource has already been linked to the the step
-                    var resourceExists = false;
-                    for (var i = 0; i < $scope.previewStep.resources.length; i++) {
-                        var res = $scope.previewStep.resources[i];
-                        if (res.resourceId === nodeId) {
-                            resourceExists = true;
-                            break;
-                        }
-                    }
-
-                    if (!resourceExists) {
-                        // Resource need to be linked
-                        var resource = ResourceFactory.generateNewResource();
-                        resource.name = node[0];
-                        resource.type = node[2];
-                        resource.resourceId = nodeId;
-
-                        $scope.previewStep.resources.push(resource);
-                        $scope.$apply();
-                    }
-                }
-
-                // Update history
-                HistoryFactory.update($scope.path);
             }
 
-            // Remove checked nodes for next time
-            nodes = {};
+            $scope.$apply();
         }
     };
+
+    // Secondary resources picker config
+    /*$scope.secondaryResourcesPicker = angular.copy($scope.resourcePickerConfig);
+    $scope.secondaryResourcesPicker.pickerCallback = function (nodes) {
+        console.log('si je passe la, c\'est la merde');
+        if (typeof nodes === 'object' && nodes.length !== 0) {
+            if (typeof $scope.previewStep.resources !== 'object') {
+                $scope.previewStep.resources = [];
+            }
+
+            for (var nodeId in nodes) {
+                var node = nodes[nodeId];
+
+                // Check if resource has already been linked to the the step
+                var resourceExists = false;
+                for (var i = 0; i < $scope.previewStep.resources.length; i++) {
+                    var res = $scope.previewStep.resources[i];
+                    if (res.resourceId === nodeId) {
+                        resourceExists = true;
+                        break;
+                    }
+                }
+
+                if (!resourceExists) {
+                    // Resource need to be linked
+                    var resource = ResourceFactory.generateNewResource();
+                    resource.name = node[0];
+                    resource.type = node[2];
+                    resource.resourceId = nodeId;
+
+                    $scope.previewStep.resources.push(resource);
+                    $scope.$apply();
+                }
+            }
+
+            // Update history
+            HistoryFactory.update($scope.path);
+        }
+
+        // Remove checked nodes for next time
+        nodes = {};
+    };*/
 
     // Tiny MCE options
     $scope.tinymceOptions = {
@@ -215,5 +237,9 @@ function StepCtrl($scope, HistoryFactory, PathFactory, StepFactory, ResourceFact
 
         // Update history
         HistoryFactory.update($scope.path);
+    };
+
+    $scope.removePrimaryResource = function () {
+        $scope.previewStep.primaryResource = null;
     };
 }

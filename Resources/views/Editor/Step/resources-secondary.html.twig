@@ -5,20 +5,19 @@
             <a data-toggle="collapse" href="#panel-secondary-resources">
                 {{ 'secondary_resources'|trans({}, 'path_editor') }}
             </a>
-            <span class="badge pull-right">{% verbatim %}{{ inheritedResources.length + previewStep.resources.length }}{% endverbatim %}</span>
+            <span class="badge">{% verbatim %}{{ inheritedResources.length + previewStep.resources.length }}{% endverbatim %}</span>
+
+            <a href="#" ui-resource-picker="secondaryResourcesPicker" class="btn btn-sm btn-default">
+                <span class="fa fa-plus"></span> {{ 'resources_browse'|trans({}, 'path_editor') }}
+            </a>
         </h4>
     </div>
 
     <div id="panel-secondary-resources" class="panel-collapse collapse">
         <div class="panel-body">
-            <a href="#" ui-resource-picker="resourcePickerConfig" class="btn btn-sm btn-default">
-                <span class="fa fa-plus"></span> {{ 'resources_browse'|trans({}, 'path_editor') }}
-            </a>
-
             {# Herited resources #}
 
             {# Locale resources #}
-
             <ul class="step-resources nodes" ng-show="(null != inheritedResources && inheritedResources.length != 0) || (null != previewStep.resources && previewStep.resources.length != 0)">
                 <!-- Inherited resources from parents -->
                 <li ng-repeat="resource in inheritedResources" ng-class="{excluded: resource.isExcluded}" class="resource-inherited resource-lvl-{% verbatim %}{{ resource.parentStep.lvl }}{% endverbatim %} node-thumbnail node ui-state-default zoom{% verbatim %}{{ resourceZoom }}{% endverbatim %}">

@@ -321,7 +321,7 @@ class Step
 
     /**
      * Wrapper to access workspace of the Step
-     * @return \Claroline\CoreBundle\Entity\Resource\ResourceNode
+     * @return \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace
      */
     public function getWorkspace()
     {

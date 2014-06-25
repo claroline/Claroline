@@ -34,45 +34,18 @@ class StepManager
 
     /**
      * Class constructor
-     * @param \Doctrine\Common\Persistence\ObjectManager $om
+     * @param \Doctrine\Common\Persistence\ObjectManager                $om
      * @param \Symfony\Component\Security\Core\SecurityContextInterface $security
-     * @param \Claroline\CoreBundle\Manager\ResourceManager $resourceManager
+     * @param \Claroline\CoreBundle\Manager\ResourceManager             $resourceManager
      */
     public function __construct(
-        ObjectManager $om,
+        ObjectManager            $om,
         SecurityContextInterface $security,
-        ResourceManager     $resourceManager)
+        ResourceManager          $resourceManager)
     {
         $this->om              = $om;
         $this->security        = $security;
         $this->resourceManager = $resourceManager;
-    }
-
-    public function editResourceNodeRelation(Step $step, $resourceNodeId, $excluded, $propagated, $order = null)
-    {
-        $step2resourceNode = $this->om->getRepository('InnovaPathBundle:Step2ResourceNode')->findOneBy(array (
-            'step' => $step,
-            'resourceNode' => $resourceNodeId,
-            'excluded' => $excluded,
-        ));
-    
-        if (!$step2resourceNode) {
-            $step2resourceNode = new Step2ResourceNode();
-        }
-    
-        $step2resourceNode->setResourceNode($this->om->getRepository('ClarolineCoreBundle:Resource\ResourceNode')->findOneById($resourceNodeId));
-        $step2resourceNode->setStep($step);
-        $step2resourceNode->setExcluded($excluded);
-        $step2resourceNode->setPropagated($propagated);
-        
-        if (!empty($order)) {
-            $step2resourceNode->setResourceOrder($order);
-        }
-    
-        $this->om->persist($step2resourceNode);
-        $this->om->flush();
-    
-        return $step2resourceNode;
     }
     
     /**
@@ -108,13 +81,9 @@ class StepManager
         $step->setParent($parent);
         $step->setLvl($level);
         $step->setOrder($order);
-        
-        // Grab data from structure
-        $name = !empty($stepStructure->name) ? $stepStructure->name : Step::DEFAULT_NAME;
-        $step->setName($name);
-        
-        $this->updateActivity($step, $stepStructure);
+
         $this->updateParameters($step, $stepStructure);
+        $this->updateActivity($step, $stepStructure);
         
         // Save modifications
         $this->om->persist($step);
@@ -157,14 +126,14 @@ class StepManager
             // Create a default name
             $name = $step->getPath()->getName() . ' - ' . Step::DEFAULT_NAME . ' ' . $step->getOrder();
         }
-        $step->setName($name);
+        $activity->setName($name);
 
         $description = !empty($stepStructure->description) ? $stepStructure->description : null;
         $activity->setDescription($description);
 
         // Link resource if needed
         if (!empty($stepStructure->primaryResource) && !empty($stepStructure->primaryResource->resourceId)) {
-            $resource = $this->om->getRepository('ClarolineCoreBundle:Resource\ResourceNode')->findById($stepStructure->primaryResource->resourceId);
+            $resource = $this->om->getRepository('ClarolineCoreBundle:Resource\ResourceNode')->findOneById($stepStructure->primaryResource->resourceId);
             if (!empty($resource)) {
                 $activity->setPrimaryResource($resource);
             }
@@ -176,10 +145,15 @@ class StepManager
 
         // Generate Claroline resource node and rights
         if ($newActivity) {
-            $activityType = $this->om->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findByName('activity');
+            // It's a new Activity, so use Step parameters
+            $activity->setParameters($step->getParameters());
+
+            $activityType = $this->om->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findOneByName('activity');
             $currentUser = $this->security->getToken()->getUser();
             $workspace = $step->getWorkspace();
-            $activity = $this->resourceManager->create($activity, $activityType, $currentUser, $workspace);
+            $wsDirectory = $this->resourceManager->getWorkspaceRoot($workspace);
+
+            $activity = $this->resourceManager->create($activity, $activityType, $currentUser, $workspace, $wsDirectory);
         }
 
         // Update JSON structure
@@ -228,14 +202,22 @@ class StepManager
 
     public function updateSecondaryResources(ActivityParameters $parameters, \stdClass $stepStructure)
     {
+        // Store current resources to clean removed
         $existingResources = $parameters->getSecondaryResources();
         $existingResources = $existingResources->toArray();
 
+        // Publish new resources
         $publishedResources = array ();
         if (!empty($stepStructure->resources)) {
             foreach ($stepStructure->resources as $resource) {
-                $parameters->addSecondaryResource($resource);
-                $publishedResources[] = $resource;
+                $resourceNode = $this->om->getRepository('ClarolineCoreBundle:Resource\ResourceNode')->findOneById($resource->resourceId);
+                if (!empty($resourceNode)) {
+                    $parameters->addSecondaryResource($resourceNode);
+                    $publishedResources[] = $resourceNode;
+                }
+                else {
+                    throw new \LogicException('Unable to find ResourceNode referenced by ID : ' . $resource->resourceId);
+                }
             }
         }
 

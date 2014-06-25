@@ -194,50 +194,6 @@ class PublishingManager
     }
 
     /**
-     * Publish resources for a step
-     * @param  \Innova\PathBundle\Entity\Step $step Current step
-     * @param  array                          $stepResources
-     * @param  array                          $excludedResources List of resources (from parents) which must be exlcuded for the current step
-     * @return array
-     * @deprecated
-     */
-    protected function publishResources(Step $step, array $stepResources = array(), array $excludedResources = array())
-    {
-        $currentOrder = 0;
-        $processedResources = array ();
-    
-        // Process local resources of current step
-        foreach ($stepResources as $resource) {
-    
-            // Link step to resource node or update existing relation
-            $step2resourceNode = $this->stepManager->editResourceNodeRelation($step, $resource->resourceId, false, $resource->propagateToChildren, $currentOrder);
-    
-            // Store resource to know it doesn't have to be deleted when we will clean the step
-            $processedResources[$step2resourceNode->getId()] = $step2resourceNode;
-    
-            // Store all resource ids to manage inheritance and exclusion
-            $this->pathResources[$resource->id] = $resource->resourceId;
-            
-            $currentOrder++;
-        }
-    
-        // Exclude parent resources if needed
-        if (!empty($this->pathResources)) {
-            // If there is no resource in the path, we can't exclude it...
-            foreach ($excludedResources as $excludedResource) {
-                if (!empty($this->pathResources[$excludedResource])) {
-                    $step2resourceNode = $this->stepManager->editResourceNodeRelation($step, $this->pathResources[$excludedResource], true, false);
-    
-                    // Store resource to know it doesn't have to be deleted when we will clean the step
-                    $processedResources[$step2resourceNode->getId()] = $step2resourceNode;
-                }
-            }
-        }
-    
-        return $processedResources;
-    }
-
-    /**
      * Clean steps which no long exist in the current path
      * @param  array $neededSteps
      * @param  array $existingSteps
@@ -249,26 +205,6 @@ class PublishingManager
         foreach ($toRemove as $stepToRemove) {
             $this->path->removeStep($stepToRemove);
             $this->om->remove($stepToRemove);
-        }
-        
-        return $this;
-    }
-
-    /**
-     * Clean resources which no long exist in the current step
-     * @param  \Innova\PathBundle\Entity\Step $step
-     * @param  array                          $neededResources
-     * @param  array                          $existingResources
-     * @return \Innova\PathBundle\Manager\PublishingManager
-     * @deprecated
-     */
-    protected function cleanResources(Step $step, array $neededResources = array (), array $existingResources = array ())
-    {
-        // Clean resources to remove
-        $toRemove = array_diff_key($existingResources, $neededResources);
-        foreach ($toRemove as $resourceToRemove) {
-            $step->removeStep2ResourceNode($resourceToRemove);
-            $this->om->remove($resourceToRemove);
         }
         
         return $this;
