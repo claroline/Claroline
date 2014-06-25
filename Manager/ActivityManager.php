@@ -436,6 +436,35 @@ class ActivityManager
         }
     }
 
+    public function editEvaluation(Evaluation $evaluation)
+    {
+        $this->updatePastEvaluation($evaluation);
+        $this->om->persist($evaluation);
+        $this->om->flush();
+    }
+
+    private function updatePastEvaluation(Evaluation $evaluation)
+    {
+        $user = $evaluation->getUser();
+        $activityParams = $evaluation->getActivityParameters();
+        $log = $evaluation->getLog();
+
+        if (!is_null($log)) {
+            $pastEval  = $this->pastEvaluationRepo
+                ->findPastEvaluationsByUserAndActivityParamsAndLog(
+                    $user,
+                    $activityParams,
+                    $log
+                );
+
+            if (!is_null($pastEval)) {
+                $pastEval->setScore($evaluation->getScore());
+                $pastEval->setComment($evaluation->getComment());
+                $this->om->persist($pastEval);
+            }
+        }
+    }
+
 
     /*****************************************
      *  Access to ActivityRepository methods *
@@ -598,5 +627,21 @@ class ActivityManager
             $activityParams,
             $executeQuery
         );
+    }
+
+    public function getPastEvaluationsByUserAndActivityParamsAndLog(
+        User $user,
+        ActivityParameters $activityParams,
+        Log $log,
+        $executeQuery = true
+    )
+    {
+        return $this->pastEvaluationRepo
+            ->findPastEvaluationsByUserAndActivityParamsAndLog(
+                $user,
+                $activityParams,
+                $log,
+                $executeQuery
+            );
     }
 }

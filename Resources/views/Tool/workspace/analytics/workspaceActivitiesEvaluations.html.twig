@@ -28,6 +28,9 @@
                             {{ 'number_of_attempts'|trans({}, 'platform') }}
                         </th>
                         <th class="center-text">
+                            {{ 'evaluation'|trans({}, 'platform') }}
+                        </th>
+                        <th class="center-text">
                             {{ 'comments'|trans({}, 'platform') }}
                         </th>
                     </tr>
@@ -39,7 +42,11 @@
                         {% if evaluations[activity.getId()] is defined %}
                             {% set eval = evaluations[activity.getId()] %}
                             <td class="center-text">
-                                {{ eval.getStatus()|trans({}, 'platform') }}
+                                {% if eval.getStatus() is not empty %}
+                                    {{ eval.getStatus()|trans({}, 'platform') }}
+                                {% else %}
+                                    {{ 'not_attempted'|trans({}, 'platform') }}
+                                {% endif %}
                             </td>
                             <td class="center-text">
                                 {% if eval.getAttemptsDuration() is not empty %}
@@ -74,6 +81,13 @@
                                     {% else %}
                                         0
                                     {% endif %}
+                                {% else %}
+                                    -
+                                {% endif %}
+                            </td>
+                            <td class="center-text">
+                                {% if eval.getScore() is not empty %}
+                                    {{ eval.getScore() }}
                                 {% else %}
                                     -
                                 {% endif %}

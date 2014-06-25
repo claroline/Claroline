@@ -18,6 +18,16 @@
 
 {% block analytics %}
     <div id="activity-evaluations">
+        <a href="{{ path(
+            'claro_workspace_activities_evaluations_show',
+            {'workspaceId': workspace.getId()})
+        }}">
+            <i class="fa fa-arrow-left"></i>
+            {{ 'back_to_activities_list'|trans({}, 'platform') }}
+        </a>
+        <br>
+        <br>
+        
         <div class="well">
             <h3>{{ activity.getTitle() }}</h3>
             <br>
@@ -37,6 +47,7 @@
                     <th class="text-center">{{ 'best_score'|trans({}, 'platform') }}</th>
                     <th class="text-center">{{ 'number_of_attempts'|trans({}, 'platform') }}</th>
                     <th class="text-center">{{ 'last_attempt_date'|trans({}, 'platform') }}</th>
+                    <th class="text-center">{{ 'evaluation'|trans({}, 'platform') }}</th>
                     <th class="text-center">{{ 'comments'|trans({}, 'platform') }}</th>
                 </tr>
                 
@@ -47,12 +58,12 @@
                         {% endif %}
                         <tr>
                             <td>
-                                <i class="fa fa-edit evaluation-edit-button pointer-hand"
-                                    data-user-id="{{ user.getId() }}"
-                                    data-activity-parameters-id="{{ activityParams.getId() }}"
-                                    {% if evaluation is defined %}data-evaluation-id="{{ evaluation.getId() }}"{% endif %}
-                                >
-                                </i>
+                                {% if evaluation is defined %}
+                                    <i class="fa fa-edit evaluation-edit-button pointer-hand"
+                                        data-evaluation-id="{{ evaluation.getId() }}"
+                                    >
+                                    </i>
+                                {% endif %}
                             </td>
                             <td>{{ user.getFirstName() ~ ' ' ~ user.getLastName() }}</td>
                         
@@ -61,7 +72,7 @@
                                     {% if evaluation.getStatus() is not empty %}
                                         {{ evaluation.getStatus()|trans({}, 'platform') }}
                                     {% else %}
-                                        -
+                                        {{ 'not_attempted'|trans({}, 'platform') }}
                                     {% endif %}
                                 </td>
                                 <td class="text-center">
@@ -104,6 +115,13 @@
                                 <td class="text-center">
                                     {% if evaluation.getDate() is not empty %}
                                         {{ evaluation.getDate()|intl_date_format }}
+                                    {% else %}
+                                        -
+                                    {% endif %}
+                                </td>
+                                <td class="text-center">
+                                    {% if evaluation.getScore() is not empty %}
+                                        {{ evaluation.getScore() }}
                                     {% else %}
                                         -
                                     {% endif %}
@@ -156,6 +174,31 @@
                         class="btn btn-default"
                         data-dismiss="modal"
                         value="{{ 'close'|trans({}, 'platform') }}"
+                    />
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="activity-evaluation-edition-modal-box" class="modal fade" role="dialog" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h3 id="form-modal-title">{{ 'evaluation_edition' | trans({}, 'platform') }}</h3>
+                </div>
+                <div id="activity-evaluation-edition-modal-body" class="modal-body">
+                </div>
+                <div class="modal-footer">
+                    <input type="button"
+                        class="btn btn-default"
+                        data-dismiss="modal"
+                        value="{{ 'cancel'|trans({}, 'platform') }}"
+                    />
+                    <input id="activity-evaluation-edition-validate-btn"
+                        type="button"
+                        class="btn btn-primary"
+                        value="{{ 'ok'|trans({}, 'platform') }}"
                     />
                 </div>
             </div>

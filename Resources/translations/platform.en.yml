@@ -56,7 +56,14 @@ account_general_statistics: 'Account general statistics'
 action: Action
 actions: Actions
 active_widgets: 'Active widgets'
+activities_tracking: 'Activities tracking' 
 activity_already: This resource is already in the activity
+activity_evaluation_form_attemptsCount: 'Number of attempts'
+activity_evaluation_form_comment: Comment
+activity_evaluation_form_date: 'Last attempt'
+activity_evaluation_form_numScore: 'Score'
+activity_evaluation_form_score: 'Evaluation'
+activity_evaluation_form_status: 'Status'
 activity_form_instructions: Instructions
 activity_form_name: Name
 activity_parameters_form_evaluation_type: 'Evaluation type'
@@ -128,6 +135,7 @@ attempts: Attempts
 available_widgets: 'Available widgets'
 available_workspaces: 'Available workspaces'
 back: Back
+back_to_activities_list: 'Back to activities list'
 back_to_profile: 'Back to profile'
 bad_request: 'The request is incorrect. If you arrived at this page via an internal link, please report the problem to the platform administrator.'
 badges_management: 'Badges management'
@@ -279,11 +287,13 @@ email: 'Email adress'
 email_form_mail: 'Enter your email'
 email_found_at: 'The email %email% was found at lines: %lines%'
 empty_file: 'Empty file'
+end_date: 'End date'
 enter_tag_name_message: 'Please enter a tag name'
 entries_per_day: 'Entries per day'
 evaluation: Evaluation
 evaluation-automatic: Automatic
 evaluation-manual: Manual
+evaluation_edition: 'Evaluation'
 export: Export
 exportable: Exportable
 external_pdo_database: 'External database (PDO)'
@@ -376,6 +386,7 @@ jqplot_date_output_format: '%m/%d/%Y'
 keep_me_logged_in: 'Keep me logged in'
 lastName: 'Last name'
 last_30_days_activity: 'Activity over the last 30 days'
+last_attempt_date: 'Last attempt'
 last_name: 'Last name'
 layout: Layout
 leave_this_page: 'If you leave this page you may lose your changes.'
@@ -447,6 +458,7 @@ month.October: October
 month.September: September
 move: Move
 my_account: 'My account'
+my_activities_tracking: 'My activities tracking'
 my_agenda: 'My agenda'
 my_applications: 'My applications'
 my_badges: 'My badges'
@@ -683,6 +695,7 @@ show_as_admin: 'Show as admin'
 show_as_user: 'Show as user'
 show_profile: 'Show profile'
 simple: Simple
+start_date: 'Start date'
 status: Status
 steal_session: 'Steal the session'
 storage_type: 'Storage type'
@@ -712,6 +725,7 @@ the_workspace: Workspace
 this_page_requires_authentication: 'This page requires authentication. Please login.'
 time_col: 'Database time column'
 tinymce_all_buttons: All tools
+title: Title
 to: To
 to_anonymous: 'to anonymous users'
 to_everyone: 'to everyone'
@@ -816,6 +830,7 @@ will display the username: 'will display the username'
 workspace.create: 'Create a new workspace'
 workspace.name_not_blank: 'The workspace''s name is required.'
 workspace: Workspace
+workspace_activities_tracking: 'Workspace activities tracking'
 workspace_administration: Administration
 workspace_classification: 'Workspace classification'
 workspace_delete: 'Delete the workspace'

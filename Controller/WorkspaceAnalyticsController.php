@@ -146,7 +146,7 @@ class WorkspaceAnalyticsController extends Controller
                 $this->templating->render(
                     "ClarolineCoreBundle:Tool/workspace/analytics:workspaceManagerActivitiesEvaluations.html.twig",
                     array(
-                        'analyticsTab' => 'activties_evaluations',
+                        'analyticsTab' => 'activties_tracking',
                         'workspace' => $workspace,
                         'activities' => $activities
                     )
@@ -196,7 +196,7 @@ class WorkspaceAnalyticsController extends Controller
                 $this->templating->render(
                     "ClarolineCoreBundle:Tool/workspace/analytics:workspaceActivitiesEvaluations.html.twig",
                     array(
-                        'analyticsTab' => 'activties_evaluations',
+                        'analyticsTab' => 'activties_tracking',
                         'workspace' => $workspace,
                         'activities' => $activities,
                         'evaluations' => $evaluationsAssoc
@@ -266,7 +266,6 @@ class WorkspaceAnalyticsController extends Controller
 
         return array(
             'user' => $user,
-            'isWorkspaceManager' => $isWorkspaceManager,
             'activity' => $activity,
             'pastEvals' => $pastEvals,
             'displayType' => $displayType
@@ -325,8 +324,22 @@ class WorkspaceAnalyticsController extends Controller
             $evaluations[$user->getId()] = $evaluation;
         }
 
+        foreach ($users as $user) {
+
+            if (!isset($evaluations[$user->getId()])) {
+                $evaluation = $this->activityManager->createEvaluation(
+                    $user,
+                    $activityParams,
+                    null,
+                    null,
+                    'not_attempted'
+                );
+                $evaluations[$user->getId()] = $evaluation;
+            }
+        }
+
         return array(
-            'analyticsTab' => 'activties_evaluations',
+            'analyticsTab' => 'activties_tracking',
             'activity' => $activity,
             'activityParams' => $activityParams,
             'workspace' => $workspace,

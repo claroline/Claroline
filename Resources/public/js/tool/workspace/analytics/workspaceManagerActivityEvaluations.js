@@ -28,14 +28,46 @@
     });
     
     $('.evaluation-edit-button').on('click', function () {
-        var userId = $(this).data('user-id');
-        var activityParamsId = $(this).data('activity-parameters-id');
         var evaluationId = $(this).data('evaluation-id');
         
         if (typeof evaluationId === 'undefined' ) {
             console.log('undefined p-e');
         } else {
-            console.log(evaluationId);
+            $.ajax({
+                url: Routing.generate(
+                    'claro_activity_evaluation_edit',
+                    {'evaluationId': evaluationId}
+                ),
+                type: 'GET',
+                success: function (datas) {
+                    $('#activity-evaluation-edition-modal-body').empty();
+                    $('#activity-evaluation-edition-modal-body').html(datas);
+                }
+            });
+            $('#activity-evaluation-edition-modal-box').modal('show');
         }
+    });
+    
+    $('#activity-evaluation-edition-validate-btn').on('click', function () {
+        var form = document.getElementById('activity-evaluation-edit-form');
+        var action = form.getAttribute('action');
+        var formData = new FormData(form);
+        
+        $.ajax({
+            url: action,
+            data: formData,
+            type: 'POST',
+            processData: false,
+            contentType: false,
+            complete: function(jqXHR) {
+                switch (jqXHR.status) {
+                    case 201:
+                        window.location.reload();
+                        break;
+                    default:
+                        $('#activity-evaluation-edition-modal-body').html(jqXHR.responseText);
+                }
+            }
+        });
     });
 })();

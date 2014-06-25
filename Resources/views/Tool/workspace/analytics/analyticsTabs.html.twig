@@ -24,9 +24,9 @@
                     {{ 'analytics'|trans({}, 'platform') }}
                 </a>
             </li>
-            <li {% if analyticsTab == 'activties_evaluations' %}class="active"{% endif %}>
+            <li {% if analyticsTab == 'activties_tracking' %}class="active"{% endif %}>
                 <a href="{{ path('claro_workspace_activities_evaluations_show', {'workspaceId': workspace.getId()}) }}">
-                    {{ 'activities_evaluations'|trans({}, 'platform') }}
+                    {{ 'activities_tracking'|trans({}, 'platform') }}
                 </a>
             </li>
         </ul>
