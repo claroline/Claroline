@@ -2,6 +2,6 @@
 {% for skill in widget.skills %}
     <li>{{ skill.name }}</li>
 {% else %}
-    <li>no skills</li>
+    <li>{{ 'no_skills'|trans({}, 'icap_portfolio') }}</li>
 {% endfor %}
 </ul>

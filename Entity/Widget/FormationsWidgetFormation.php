@@ -7,10 +7,10 @@ use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * @ORM\Table(name="icap__portfolio_widget_skills_skill")
+ * @ORM\Table(name="icap__portfolio_widget_formations_formation")
  * @ORM\Entity
  */
-class SkillsWidgetSkill implements SubWidgetInterface
+class FormationsWidgetFormation implements SubWidgetInterface
 {
     /**
      * @var integer
@@ -29,7 +29,15 @@ class SkillsWidgetSkill implements SubWidgetInterface
     protected $name;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Icap\PortfolioBundle\Entity\Widget\SkillsWidget", inversedBy="skills")
+     * @var ResourceNode
+     *
+     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceNode")
+     * @ORM\JoinColumn(nullable=true)
+     */
+    protected $resource;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="Icap\PortfolioBundle\Entity\Widget\FormationsWidget", inversedBy="formations")
      * @ORM\JoinColumn(name="widget_id", referencedColumnName="id", nullable=false)
      */
     private $widget;
@@ -63,13 +71,33 @@ class SkillsWidgetSkill implements SubWidgetInterface
     }
 
     /**
-     * @param mixed $skillsWidget
+     * @param \Claroline\CoreBundle\Entity\Resource\ResourceNode $resource
+     *
+     * @return FormationsWidgetFormation
+     */
+    public function setResource($resource)
+    {
+        $this->resource = $resource;
+
+        return $this;
+    }
+
+    /**
+     * @return \Claroline\CoreBundle\Entity\Resource\ResourceNode
+     */
+    public function getResource()
+    {
+        return $this->resource;
+    }
+
+    /**
+     * @param mixed $widget
      *
      * @return SkillsWidgetSkill
      */
-    public function setWiidget($skillsWidget)
+    public function setWidget($widget)
     {
-        $this->widget = $skillsWidget;
+        $this->widget = $widget;
 
         return $this;
     }
@@ -77,7 +105,7 @@ class SkillsWidgetSkill implements SubWidgetInterface
     /**
      * @return mixed
      */
-    public function getSkillsWidget()
+    public function getWidget()
     {
         return $this->widget;
     }
@@ -88,7 +116,11 @@ class SkillsWidgetSkill implements SubWidgetInterface
     public function getData()
     {
         return array(
-            'name' => $this->getName()
+            'name'     => $this->getName(),
+            'resource' => array(
+                'id'   => $this->getResource()->getId(),
+                'name' => $this->getResource()->getName()
+            )
         );
     }
 }

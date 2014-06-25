@@ -1,6 +1,6 @@
 <?php
 
-namespace Icap\PortfolioBundle\Migrations\pdo_mysql;
+namespace Icap\PortfolioBundle\Migrations\mysqli;
 
 use Doctrine\DBAL\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
@@ -8,9 +8,9 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2014/06/18 04:27:50
+ * Generation date: 2014/06/25 02:50:36
  */
-class Version20140618162749 extends AbstractMigration
+class Version20140625145034 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
@@ -30,6 +30,7 @@ class Version20140618162749 extends AbstractMigration
                 id INT AUTO_INCREMENT NOT NULL, 
                 user_id INT NOT NULL, 
                 visibility INT NOT NULL, 
+                disposition INT NOT NULL, 
                 deletedAt DATETIME DEFAULT NULL, 
                 INDEX IDX_8B1895DA76ED395 (user_id), 
                 PRIMARY KEY(id)
@@ -50,10 +51,29 @@ class Version20140618162749 extends AbstractMigration
             CREATE TABLE icap__portfolio_abstract_widget (
                 id INT AUTO_INCREMENT NOT NULL, 
                 portfolio_id INT NOT NULL, 
+                col INT DEFAULT 1 NOT NULL, 
+                row INT DEFAULT 1 NOT NULL, 
                 createdAt DATETIME NOT NULL, 
                 updatedAt DATETIME NOT NULL, 
                 widget_type VARCHAR(255) NOT NULL, 
                 INDEX IDX_3E7AEFBBB96B5643 (portfolio_id), 
+                PRIMARY KEY(id)
+            ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
+        ");
+        $this->addSql("
+            CREATE TABLE icap__portfolio_widget_formations (
+                id INT NOT NULL, 
+                PRIMARY KEY(id)
+            ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
+        ");
+        $this->addSql("
+            CREATE TABLE icap__portfolio_widget_formations_formation (
+                id INT AUTO_INCREMENT NOT NULL, 
+                resource_id INT DEFAULT NULL, 
+                widget_id INT NOT NULL, 
+                name VARCHAR(255) NOT NULL, 
+                INDEX IDX_D1BBD5B189329D25 (resource_id), 
+                INDEX IDX_D1BBD5B1FBE885E2 (widget_id), 
                 PRIMARY KEY(id)
             ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
         ");
@@ -79,9 +99,9 @@ class Version20140618162749 extends AbstractMigration
         $this->addSql("
             CREATE TABLE icap__portfolio_widget_skills_skill (
                 id INT AUTO_INCREMENT NOT NULL, 
-                skills_widget_id INT NOT NULL, 
+                widget_id INT NOT NULL, 
                 name VARCHAR(255) NOT NULL, 
-                INDEX IDX_98EF40A32F7BE59D (skills_widget_id), 
+                INDEX IDX_98EF40A3FBE885E2 (widget_id), 
                 PRIMARY KEY(id)
             ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
         ");
@@ -137,6 +157,22 @@ class Version20140618162749 extends AbstractMigration
             ON DELETE CASCADE
         ");
         $this->addSql("
+            ALTER TABLE icap__portfolio_widget_formations 
+            ADD CONSTRAINT FK_88739997BF396750 FOREIGN KEY (id) 
+            REFERENCES icap__portfolio_abstract_widget (id) 
+            ON DELETE CASCADE
+        ");
+        $this->addSql("
+            ALTER TABLE icap__portfolio_widget_formations_formation 
+            ADD CONSTRAINT FK_D1BBD5B189329D25 FOREIGN KEY (resource_id) 
+            REFERENCES claro_resource_node (id)
+        ");
+        $this->addSql("
+            ALTER TABLE icap__portfolio_widget_formations_formation 
+            ADD CONSTRAINT FK_D1BBD5B1FBE885E2 FOREIGN KEY (widget_id) 
+            REFERENCES icap__portfolio_widget_formations (id)
+        ");
+        $this->addSql("
             ALTER TABLE icap__portfolio_widget_title 
             ADD CONSTRAINT FK_1431A01DBF396750 FOREIGN KEY (id) 
             REFERENCES icap__portfolio_abstract_widget (id) 
@@ -144,7 +180,7 @@ class Version20140618162749 extends AbstractMigration
         ");
         $this->addSql("
             ALTER TABLE icap__portfolio_widget_skills_skill 
-            ADD CONSTRAINT FK_98EF40A32F7BE59D FOREIGN KEY (skills_widget_id) 
+            ADD CONSTRAINT FK_98EF40A3FBE885E2 FOREIGN KEY (widget_id) 
             REFERENCES icap__portfolio_widget_skills (id)
         ");
         $this->addSql("
@@ -182,6 +218,10 @@ class Version20140618162749 extends AbstractMigration
             DROP FOREIGN KEY FK_3E7AEFBBB96B5643
         ");
         $this->addSql("
+            ALTER TABLE icap__portfolio_widget_formations 
+            DROP FOREIGN KEY FK_88739997BF396750
+        ");
+        $this->addSql("
             ALTER TABLE icap__portfolio_widget_title 
             DROP FOREIGN KEY FK_1431A01DBF396750
         ");
@@ -198,8 +238,12 @@ class Version20140618162749 extends AbstractMigration
             DROP FOREIGN KEY FK_F0DBA727BF396750
         ");
         $this->addSql("
+            ALTER TABLE icap__portfolio_widget_formations_formation 
+            DROP FOREIGN KEY FK_D1BBD5B1FBE885E2
+        ");
+        $this->addSql("
             ALTER TABLE icap__portfolio_widget_skills_skill 
-            DROP FOREIGN KEY FK_98EF40A32F7BE59D
+            DROP FOREIGN KEY FK_98EF40A3FBE885E2
         ");
         $this->addSql("
             DROP TABLE icap__portfolio_users
@@ -212,6 +256,12 @@ class Version20140618162749 extends AbstractMigration
         ");
         $this->addSql("
             DROP TABLE icap__portfolio_abstract_widget
+        ");
+        $this->addSql("
+            DROP TABLE icap__portfolio_widget_formations
+        ");
+        $this->addSql("
+            DROP TABLE icap__portfolio_widget_formations_formation
         ");
         $this->addSql("
             DROP TABLE icap__portfolio_widget_title

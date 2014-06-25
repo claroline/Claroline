@@ -20,10 +20,11 @@ class LoadRequiredFixturesData extends AbstractFixture
          *   - is_deletable
          */
         $widgetTypes = array(
-            array('title', true, false),
+            array('title',           true, false),
             array('userInformation', true, true),
-            array('skills', false, true),
-            array('presentation', true, true)
+            array('presentation',    true, true),
+            array('skills',          false, true),
+            array('formations',      false, true)
         );
 
         foreach ($widgetTypes as $widgetType) {

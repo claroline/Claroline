@@ -48,3 +48,5 @@ no_widget: 'You aren''t displaying any information on your portfolio. <br /> Use
 presentation_title: 'Presentation'
 presentation_form_title: 'Presentation'
 presentation_form_presentation: 'Presentation'
+formations_title: 'Formations'
+formations_form_title: 'Formations'

@@ -18,7 +18,7 @@ class SkillsWidget extends AbstractWidget
     /**
      * @var SkillsWidgetSkill[]|\Doctrine\ORM\PersistentCollection
      *
-     * @ORM\OneToMany(targetEntity="Icap\PortfolioBundle\Entity\Widget\SkillsWidgetSkill", mappedBy="skillsWidget", cascade={"persist", "remove"})
+     * @ORM\OneToMany(targetEntity="Icap\PortfolioBundle\Entity\Widget\SkillsWidgetSkill", mappedBy="widget", cascade={"persist", "remove"})
      */
     protected $skills;
 
@@ -35,7 +35,7 @@ class SkillsWidget extends AbstractWidget
     public function setSkills($skills)
     {
         foreach ($skills as $skill) {
-            $skill->setSkillsWidget($this);
+            $skill->setWiidget($this);
         }
 
         $this->skills = $skills;
@@ -56,16 +56,13 @@ class SkillsWidget extends AbstractWidget
      */
     public function getData()
     {
-        $skills = $this->getSkills();
         $data = array(
-            'id'     => $this->getId(),
+            'id'       => $this->getId(),
             'children' => array()
         );
 
-        foreach ($skills as $skill) {
-            $data['children'][] = array(
-                'name' => $skill->getName()
-            );
+        foreach ($this->getSkills() as $skill) {
+            $data['children'][] = $skill->getData();
         }
 
         return $data;

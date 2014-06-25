@@ -1,0 +1,14 @@
+<ul>
+{% for formation in widget.formations %}
+    <li>
+        <p>
+            {{ formation.name }}
+            {% if formation.resource is not null %}
+                <br />{{ formation.resource.pathForDisplay }}
+            {% endif %}
+        </p>
+    </li>
+{% else %}
+    <li>{{ 'no_formations'|trans({}, 'icap_portfolio') }}</li>
+{% endfor %}
+</ul>

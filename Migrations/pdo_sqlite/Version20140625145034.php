@@ -8,9 +8,9 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2014/06/18 04:27:50
+ * Generation date: 2014/06/25 02:50:35
  */
-class Version20140618162749 extends AbstractMigration
+class Version20140625145034 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
@@ -36,6 +36,7 @@ class Version20140618162749 extends AbstractMigration
                 id INTEGER NOT NULL, 
                 user_id INTEGER NOT NULL, 
                 visibility INTEGER NOT NULL, 
+                disposition INTEGER NOT NULL, 
                 deletedAt DATETIME DEFAULT NULL, 
                 PRIMARY KEY(id)
             )
@@ -64,6 +65,8 @@ class Version20140618162749 extends AbstractMigration
             CREATE TABLE icap__portfolio_abstract_widget (
                 id INTEGER NOT NULL, 
                 portfolio_id INTEGER NOT NULL, 
+                col INTEGER DEFAULT 1 NOT NULL, 
+                \"row\" INTEGER DEFAULT 1 NOT NULL, 
                 createdAt DATETIME NOT NULL, 
                 updatedAt DATETIME NOT NULL, 
                 widget_type VARCHAR(255) NOT NULL, 
@@ -72,6 +75,27 @@ class Version20140618162749 extends AbstractMigration
         ");
         $this->addSql("
             CREATE INDEX IDX_3E7AEFBBB96B5643 ON icap__portfolio_abstract_widget (portfolio_id)
+        ");
+        $this->addSql("
+            CREATE TABLE icap__portfolio_widget_formations (
+                id INTEGER NOT NULL, 
+                PRIMARY KEY(id)
+            )
+        ");
+        $this->addSql("
+            CREATE TABLE icap__portfolio_widget_formations_formation (
+                id INTEGER NOT NULL, 
+                resource_id INTEGER DEFAULT NULL, 
+                widget_id INTEGER NOT NULL, 
+                name VARCHAR(255) NOT NULL, 
+                PRIMARY KEY(id)
+            )
+        ");
+        $this->addSql("
+            CREATE INDEX IDX_D1BBD5B189329D25 ON icap__portfolio_widget_formations_formation (resource_id)
+        ");
+        $this->addSql("
+            CREATE INDEX IDX_D1BBD5B1FBE885E2 ON icap__portfolio_widget_formations_formation (widget_id)
         ");
         $this->addSql("
             CREATE TABLE icap__portfolio_widget_title (
@@ -99,13 +123,13 @@ class Version20140618162749 extends AbstractMigration
         $this->addSql("
             CREATE TABLE icap__portfolio_widget_skills_skill (
                 id INTEGER NOT NULL, 
-                skills_widget_id INTEGER NOT NULL, 
+                widget_id INTEGER NOT NULL, 
                 name VARCHAR(255) NOT NULL, 
                 PRIMARY KEY(id)
             )
         ");
         $this->addSql("
-            CREATE INDEX IDX_98EF40A32F7BE59D ON icap__portfolio_widget_skills_skill (skills_widget_id)
+            CREATE INDEX IDX_98EF40A3FBE885E2 ON icap__portfolio_widget_skills_skill (widget_id)
         ");
         $this->addSql("
             CREATE TABLE icap__portfolio_widget_user_information (
@@ -142,6 +166,12 @@ class Version20140618162749 extends AbstractMigration
         ");
         $this->addSql("
             DROP TABLE icap__portfolio_abstract_widget
+        ");
+        $this->addSql("
+            DROP TABLE icap__portfolio_widget_formations
+        ");
+        $this->addSql("
+            DROP TABLE icap__portfolio_widget_formations_formation
         ");
         $this->addSql("
             DROP TABLE icap__portfolio_widget_title
