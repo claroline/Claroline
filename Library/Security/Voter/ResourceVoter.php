@@ -178,7 +178,8 @@ class ResourceVoter implements VoterInterface
             }
         }
 
-        if ($timesCreator == count($nodes)) {
+        //but it only work if he's not usurpating a workspace role to see if everything is good
+        if ($timesCreator == count($nodes) && !$this->isUsurpatingWorkspaceRole($token)) {
             return array();
         }
 
@@ -324,5 +325,16 @@ class ResourceVoter implements VoterInterface
         $managerRoleName = 'ROLE_WS_MANAGER_' . $workspace->getGuid();
 
         return in_array($managerRoleName, $this->ut->getRoles($token)) ? true: false;
+    }
+
+    public function isUsurpatingWorkspaceRole(TokenInterface $token)
+    {
+        foreach ($token->getRoles() as $role) {
+            if ($role->getRole() === 'ROLE_USURPATE_WORKSPACE_ROLE') {
+                return true;
+            }
+        }
+
+        return false;
     }
 }
