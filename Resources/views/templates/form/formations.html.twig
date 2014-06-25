@@ -1,4 +1,4 @@
-<div data-collection-form="{'name': ''}" data-ng-model="editedWidget.children">
+<div data-collection-form="{'name': '', 'resource': ''}" data-ng-model="editedWidget.children">
     <ul class="list-unstyled">
         <li data-ng-repeat="formation in collection">
             <div data-ng-class="{'input-group': isAdded(formation)}">
@@ -8,7 +8,7 @@
                      data-ng-disabled="formation.toDelete" data-ng-keypress="addEmptyChild($index + 1)" data-ng-keyup="markEmpty(formation)" />
                 <input type="text" class="form-control" id="formation_{{ $index }}_resource"
                      name="icap_portfolio_widget_form_formations[formations][{{ $index }}][resource]" data-ng-model="formation.resource"
-                     data-ng-disabled="formation.toDelete" data-ng-keypress="addEmptyChild($index + 1)" data-ng-keyup="markEmpty(formation)" />
+                     data-ng-disabled="formation.toDelete" data-ng-keyup="addEmptyChild($index + 1)" data-ng-keypress="markEmpty(formation)" />
                 {% endverbatim %}
                 <span class="input-group-btn" data-ng-if="isAdded(formation)">
                     <button class="btn btn-danger" type="button" data-ng-if="!isEmpty(formation) && !formation.toDelete" data-ng-click="deleteChild(formation)">

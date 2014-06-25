@@ -32,7 +32,7 @@ portfolioApp
             };
 
             scope.addEmptyChild = function(index) {
-                if (index == scope.collection.length && !scope.isEmpty(scope.collection[index - 2])) {
+                if (index == scope.collection.length && !scope.isEmpty(scope.collection[index - 1])) {
                     scope.collection.push(angular.copy(scope.emptyChild));
                 }
             };
