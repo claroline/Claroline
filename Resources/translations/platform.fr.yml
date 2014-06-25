@@ -663,7 +663,6 @@ select_workspaces_for_registration: 'Choisissez les espaces d''activités pour l
 selected_workspaces_for_registration: 'Espaces d''activités sélectionnés pour l''inscription'
 selected_workspaces_will_be_put_in_it: 'Les espaces d''activités sélectionnés y seront disponibles'
 send: Envoyer
-send: envoyer
 send_mail: 'Envoyer un mail'
 send_mail_form_content: Message
 send_mail_form_object: Objet
@@ -893,5 +892,9 @@ role_limit_reached: La limite d'utilisateur de type %translationKey% a été att
 user_limit_reached: La limite de création d'utilisateur a été atteinte.
 user_limit_too_low: Il y a déjà %total% %role%(s). La limite %newMax% est trop faible.
 limit: Limite
+packages: Paquets
+core_packages: Paquets du noyau
+plugin_packages: Paquets des plugins
+no_package_description: Aucune description du paquet.
 yes: Oui
 no: Non

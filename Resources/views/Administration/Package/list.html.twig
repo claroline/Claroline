@@ -1,0 +1,61 @@
+{% extends "ClarolineCoreBundle:Administration:layout.html.twig" %}
+
+{% block title %}{{ parent() ~ ' - ' ~ 'packages' | trans({}, 'platform') | striptags | raw }}{% endblock %}
+
+{% block breadcrumb %}
+    {{
+        macros.breadcrumbs([
+            {
+                'icon': 'icon-cog',
+                'name': 'administration'|trans({}, 'platform'),
+                'href': path('claro_admin_index')
+            },
+            {
+                'name': 'packages'|trans({}, 'platform'),
+                'href': ''
+            }
+        ])
+    }}
+{% endblock %}
+
+{% block section_content %}
+    <div class="panel-heading">
+        <h3 class="panel-title">{{ 'packages'|trans({}, 'platform') }}</h3>
+    </div>
+    <div class="panel-body">
+        <div class="panel-group" id="core-accordion">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        <a data-toggle="collapse" data-parent="#core-accordion" href="#collapseCore">
+                            {{ 'core_packages'|trans({}, 'platform') }}
+                        </a>
+                    </h4>
+                </div>
+                <div id="collapseCore" class="panel-collapse collapse">
+                    <div class="panel-inner">
+                        {% for corePackage in corePackages %}
+                            {{ macros.renderPackageElement(corePackage) }}
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        <a data-toggle="collapse" data-parent="#plugins-accordion" href="#collapsPlugins">
+                            {{ 'plugin_packages'|trans({}, 'platform') }}
+                        </a>
+                    </h4>
+                </div>
+                <div id="collapsPlugins" class="panel-collapse collapse">
+                    <div class="panel-inner">
+                        {% for pluginPackage in pluginPackages %}
+                            {{ macros.renderPackageElement(pluginPackage) }}
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

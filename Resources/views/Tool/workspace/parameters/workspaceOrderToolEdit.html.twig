@@ -28,6 +28,7 @@
     <div class="panel-heading">
         <h3 class="panel-title">{{ 'rename_tool'|trans({}, 'platform') }} ({{ wot.getTool().getName()|trans({}, 'platform') }})</h3>
     </div>
+    {% form_theme form 'ClarolineCoreBundle::form_theme_translate_tools_value.html.twig' %}
     <form role="form" class="form-horizontal" action="{{ path('claro_workspace_order_tool_edit', {'workspaceId': workspace.getId(), 'workspaceOrderToolId': wot.getId()}) }}" method="post" {{ form_enctype(form) }}>
         <div class="panel-body">
             {{ form_widget(form) }}

@@ -35,6 +35,7 @@
                 </thead>
                 <tbody id="widget-table-body">
                     {% for key,value in tools  %}
+                        {% form_theme forms[key] 'ClarolineCoreBundle::form_theme_translate_tools_value.html.twig' %}
                         <tr class='row-tool-config' data-tool-id={{ tools[key].getId () }}>
                             <td>{{ tools[key].getName()|lower|trans({}, 'tools') }}</td>
                             <td>

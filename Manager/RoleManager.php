@@ -11,6 +11,7 @@
 
 namespace Claroline\CoreBundle\Manager;
 
+use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\AbstractRoleSubject;
@@ -187,7 +188,7 @@ class RoleManager
     public function associateRole(AbstractRoleSubject $ars, Role $role, $sendMail = false)
     {
         if (!$this->validateRoleInsert($ars, $role)) {
-            throw new Exception\AddRoleException();
+            throw new Exception\AddRoleException('Role cannot be added');
         }
 
         if (get_class($ars) === 'Claroline\CoreBundle\Entity\Group' && $role->getName() === 'ROLE_USER') {
@@ -712,16 +713,18 @@ class RoleManager
             return true;
         }
 
-        if (get_class($ars) === 'Claroline\CoreBundle\Entity\User') {
-            return ($total < $role->getMaxUsers()) ? true: false;
+        if ($ars instanceof User) {
+            return $total < $role->getMaxUsers();
         }
 
-        if (get_class($ars) === 'Claroline\CoreBundle\Entity\Group') {
-            $countUsers = $this->userRepo->countUsersOfGroup($ars);
-            $substractUsers = $this->userRepo->countUsersOfGroupByRole($ars, $role);
+        if ($ars instanceof Group) {
+            $userCount = $this->userRepo->countUsersOfGroup($ars);
+            $userWithRoleCount = $this->userRepo->countUsersOfGroupByRole($ars, $role);
 
-            return (($total + $countUsers - $substractUsers) < $role->getMaxUsers()) ? true: false;
+            return $total + $userCount - $userWithRoleCount < $role->getMaxUsers();
         }
+
+        return false;
     }
 
     /**
