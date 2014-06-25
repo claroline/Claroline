@@ -15,6 +15,7 @@ use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Claroline\CoreBundle\Entity\Competence\Competence;
 use Claroline\CoreBundle\Entity\Competence\CompetenceHierarchy;
 use Claroline\CoreBundle\Persistence\ObjectManager;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Claroline\CoreBundle\Repository\CompetenceRepository;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Config\Definition\Exception\Exception;
@@ -30,39 +31,60 @@ class CompetenceManager {
     private $om;
     private $security;
     private $rm;
+    private $router;
 
     /**
      * @DI\InjectParams({
      *     "om"           = @DI\Inject("claroline.persistence.object_manager"),
      *     "security"     = @DI\Inject("security.context"),
-     *     "rm"           = @DI\Inject("claroline.manager.role_manager")
+     *     "rm"           = @DI\Inject("claroline.manager.role_manager"),
+     *     "router"         = @DI\Inject("router")
      * })
      */
     public function __construct(
         ObjectManager $om,
         SecurityContextInterface $security,
-        RoleManager $rm
+        RoleManager $rm,
+        UrlGeneratorInterface $router
     )
     {
         $this->om = $om;
         $this->security = $security;
         $this->rm = $rm;
+        $this->router = $router;
     }
 
+    /**
+     * @return Get all the root competence whas no parent and no workspace
+     */
     public function getTransversalCompetences()
     {
-        if (!$this->security->isGranted('ROLE_ADMIN')) {
-            throw new AccessDeniedException();
-        }
-    	return ($this->om->getRepository('ClarolineCoreBundle:Competence\Competence')->getRoots());
+       $repo = $this->om->getRepository('ClarolineCoreBundle:Competence\CompetenceHierarchy');
+       return $repo->getRootCpt();
     }
 
-    public function getAllHierarchy()
+    public function getCompetenceHiearchy(CompetenceHierarchy $competence)
     {
-    	if (!$this->security->isGranted('ROLE_ADMIN')) {
-            throw new AccessDeniedException();
-        }
-    	return ($this->om->getRepository('ClarolineCoreBundle:Competence\CompetenceHierarchy')->getAllHierarchy());
+        $repo = $this->om->getRepository('ClarolineCoreBundle:Competence\CompetenceHierarchy');
+        $options = array(
+            'decorate' => true,
+            'rootOpen' => '<ul>',
+            'rootClose' => '</ul>',
+            'childOpen' => '<li>',
+            'childClose' => '</li>',
+            'nodeDecorator' => function($node) {
+                return '<a href='
+                .$this->router->generate('claro_admin_competence_add_sub',array('competenceId' => $node['id']))
+                .'">'.$node['id'].'</a>';
+            }
+        );
+        $htmlTree = $repo->childrenHierarchy(
+            $competence, /* starting from root nodes */
+            true, /* true: load all children, false: only direct */
+            $options,
+            true
+        );
+        return $htmlTree;
     }
 
     public function add(Competence $competence, $workspace = null)
@@ -74,34 +96,12 @@ class CompetenceManager {
         $competence->setIsplatform($isPlatform);
         $this->om->persist($competence);
         $this->om->flush();
-        return true;
-    }
-
-    /**
-     * Order in a tab all the competences beetween them ([root][parents][childs])
-     */
-    public function orderHierarchy()
-    {
-    	$cptHierarchy = $this->getAllHierarchy();
-    	$tab = array();
-    	foreach ($cptHierarchy as $c ) {
-    		$parentId = $c->getParent()->getId();
-    		$rootId = $c->getRoot()->getId();
-    		$cpt = $c->getCompetence();
-    		// initializing the tab , if it's the first time , we create the root node
-    		//if is a root node , we create an entry
-    		if( !isset($tab[$rootId]) ) {
-    			$tab[$rootId] = array();
-    		}
-    		// if the root node exist for this entry , we check if the parent entry exists
-    		// if not we create an parent entry 
-    		if (!isset($tab[$rootId][$parentId])) {
-    			$tab[$rootId][$parentId] = array();
-    		}
-    		// at the end the value of the array is the competence who belong to a parent and a root node
-    		$tab[$rootId][$parentId][] = $cpt;
-    	}
-    	return $tab;
+        $cptHierarchy = new CompetenceHierarchy();
+		$cptHierarchy->setCompetence($competence);
+		$cptHierarchy->setCptRoot($cptHierarchy);
+		$this->om->persist($cptHierarchy);
+		$this->om->flush();
+        return $cptHierarchy;
     }
 
     /**
@@ -111,37 +111,35 @@ class CompetenceManager {
      * @param null $workspace
      * @return bool
      */
-    public function addSub(Competence $competence,Competence $subCompetence,Competence $root, $workspace = null)
-    {    	
-    	if($this->add($subCompetence)) {    		
-    		$cptHierarchy = new CompetenceHierarchy();
-    		$cptHierarchy->setCompetence($subCompetence);
-    		$cptHierarchy->setParent($competence);
-    		$cptHierarchy->setRoot($root);
-    		$this->om->persist($cptHierarchy);
+    public function addSub(CompetenceHierarchy $competence,Competence $subCompetence, $workspace = null)
+    {    		
+    	if($c = $this->add($subCompetence)) {  
+    		$c->setParent($competence);
     		$this->om->flush();
     		return true;
     	}
     }
-    public function delete(Competence $competence)
+    public function delete(CompetenceHierarchy $competence)
     {
     	if (!$this->security->isGranted('ROLE_ADMIN')) {
             throw new AccessDeniedException();
         }
-        $this->om->remove($competence);
+        $c = $competence->getCompetence(); 
+        $repo = $this->om->getRepository('Claroline\CoreBundle\Entity\Competence\CompetenceHierarchy');
+        $repo->removeFromTree($competence);
+        $this->om->remove($c);
+        $this->om->clear();
         $this->om->flush();
         return true;
     }
 
-    public function link(array $competences, Competence $parent, Competence $root )
+    public function link(array $competences, CompetenceHierarchy $parent)
     {
     	$this->om->startFlushSuite();
     	foreach ($competences as $c) {
-	    	$cptHierarchy = $this->om->factory('Claroline\CoreBundle\Entity\Competence\CompetenceHierarchy');
-			$cptHierarchy->setCompetence($c);
-			$cptHierarchy->setParent($parent);
-			$cptHierarchy->setRoot($root);
-			$this->om->persist($cptHierarchy);
+	    	$repo = $this->om->getRepository('Claroline\CoreBundle\Entity\Competence\CompetenceHierarchy');
+	    	$repo->persistAsLastChildOf($c, $parent);
+			$this->om->flush();
     	}
     	$this->om->endFlushSuite();
 
@@ -153,10 +151,11 @@ class CompetenceManager {
     	return true;
     }
 
-    public function getExcludeHiearchy(Competence $competence)
+    public function getExcludeHiearchy(CompetenceHierarchy $competence)
     {
-    	return $this->om->getRepository('ClarolineCoreBundle:Competence\Competence')
-    		->getExcludeNodeCompetence($competence);
+        $repo = $this->om->getRepository('ClarolineCoreBundle:Competence\CompetenceHierarchy');
+        $exclude = $repo->excludeHierarchyNode($competence);
+        return $exclude;
     }
 
     private function checkUserIsAllowed($permission, AbstractWorkspace $workspace)

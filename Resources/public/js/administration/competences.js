@@ -21,13 +21,11 @@
                 i++;
             });
         	parameters.competences = competences;
-        	var rootId = $('#competences_link_form_root').val();
         	var parentId = $('#competences_link_form_parent').val();
-        	parameters.rootId = rootId;
         	parameters.parentId = parentId;
     	}
 
-    	var route = Routing.generate('claro_admin_competence_link',{'rootId': rootId, 'parentId': parentId});
+    	var route = Routing.generate('claro_admin_competence_link',{'parentId': parentId});
     	route += '?'+$.param(parameters);
         $.ajax({
             'url': route,
@@ -44,4 +42,32 @@
             }
         });
     });
+
+	$('#save').click(function () {
+            $('#save').attr('disabled', 'disabled');
+            var url = $('#myForm').attr('action');
+            var route;
+            $.ajax({
+                'url': url,
+                'type': 'POST',
+                'data':  new FormData($('#myForm')[0]),
+                'processData': false,
+                'contentType': false,
+                'success': function (data, textStatus, xhr) {
+                    if (xhr.status === 200) {
+                        $('#myModal').modal('hide');
+                        $('#save').removeAttr('disabled');
+                        route = Routing.generate('claro_admin_competence_add_sub',{'competenceId': data.id});
+                        $('#tree').append('<li class=""><a href="'+route+'">'+data.name+'</a></li>');
+                    }
+                },
+                'error': function ( xhr, textStatus) {
+                    if (xhr.status === 400) {//bad request
+                        alert(Translator.get('agenda' + ':' + 'date_invalid'));
+                        $('#save').removeAttr('disabled');
+                    } 
+                }
+            });
+        });
+	
 })();

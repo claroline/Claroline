@@ -71,11 +71,51 @@ class CompetenceController {
     public function competenceShowAction()
     {
     	$competences = $this->cptmanager->getTransversalCompetences();
-    	$tab = $this->cptmanager->orderHierarchy();
+    	$form = $this->formFactory->create(FormFactory::TYPE_COMPETENCE);
+
     	return array(
     		'cpt' => $competences,
-    		'cptHierarchy' => $tab
+    		'form' => $form->createView()
     	);
+    }
+
+    /**
+     * @EXT\Route("/show/referential/{competenceId}", name="claro_admin_competence_show_referential",options={"expose"=true})
+     * @EXT\Method({"GET","POST"})
+     * @EXT\ParamConverter(
+     *      "competence",
+     *      class="ClarolineCoreBundle:Competence\CompetenceHierarchy",
+     *      options={"id" = "competenceId", "strictId" = true}
+     * )
+     * @param Competence $competence
+     * @EXT\Template("ClarolineCoreBundle:Administration:competenceReferential.html.twig")
+     *
+     * Show all the hiearchy from a competence
+     *
+     */
+    public function competenceShowHierarchy($competence)
+    {
+    	$form = $this->formFactory->create(FormFactory::TYPE_COMPETENCE);
+        $form->handleRequest($this->request);
+        $competences = $this->cptmanager->getCompetenceHiearchy($competence);
+
+        if ($form->isValid()) {        	
+	        $subCpt = $form->getData();
+
+	        if($this->cptmanager->addSub($competence, $subCpt)) {
+        	    return new RedirectResponse(
+                $this->router->generate('claro_admin_competences')
+	         );
+        	} else {
+        		throw new Exception("no written", 1);
+        	}
+        }  
+           
+        return array(
+        	'form' => $form->createView(),
+        	'competences' => $competences,
+            'cpt' => $competence
+        );
     }
 
      /**
@@ -110,8 +150,17 @@ class CompetenceController {
 
         if ($form->isValid()) {
             $competence = $form->getData();
-            if($this->cptmanager->add($competence)) {
-            	return array('form' => $form->createView());
+            if($competence = $this->cptmanager->add($competence)) {
+            	return new Response(
+            	json_encode(
+            		array(
+            			'id' => $competence->getId(),
+            			 'name' => $competence->getCompetence()->getName()
+            			)
+            		),
+                	200,
+                	array('Content-Type' => 'application/json')
+                );
             } else {
             	throw new Exception("no written", 1);
             	
@@ -121,46 +170,38 @@ class CompetenceController {
     }
 
     /**
-     * @EXT\Route("/addsubcpt/{competenceId}/{rootId}", name="claro_admin_competence_add_sub")
+     * @EXT\Route("/addsubcpt/{competenceId}", name="claro_admin_competence_add_sub",options={"expose"=true})
      * @EXT\Method({"GET","POST"})
      * @EXT\ParamConverter(
      *      "competence",
-     *      class="ClarolineCoreBundle:Competence\Competence",
+     *      class="ClarolineCoreBundle:Competence\CompetenceHierarchy",
      *      options={"id" = "competenceId", "strictId" = true}
      * )
-     * @EXT\ParamConverter(
-     *      "root",
-     *      class="ClarolineCoreBundle:Competence\Competence",
-     *      options={"id" = "rootId", "strictId" = true}
-     * )
-     *
      * @param Competence $competence
      * @EXT\Template("ClarolineCoreBundle:Administration:competenceForm.html.twig")
      *
      * Add a sub competence
      *
-     * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function subCompetenceAction($competence, $root)
+    public function subCompetenceAction($competence)
     {
         $form = $this->formFactory->create(FormFactory::TYPE_COMPETENCE);
         $form->handleRequest($this->request);
 
         if ($form->isValid()) {        	
             $subCpt = $form->getData();
-            if($this->cptmanager->addSub($competence, $subCpt, $root)) {
+            if($this->cptmanager->addSub($competence, $subCpt)) {
             	    return new RedirectResponse(
                     $this->router->generate('claro_admin_competences')
                 );
             	} else {
             		throw new Exception("no written", 1);
             	}
-            }
-
+            }  
+           
         return array(
         	'form' => $form->createView(),
         	'cpt' => $competence,
-        	'root' => $root
         );
     }
 
@@ -169,7 +210,7 @@ class CompetenceController {
      * @EXT\Method("GET")
      * @EXT\ParamConverter(
      *      "competence",
-     *      class="ClarolineCoreBundle:Competence\Competence",
+     *      class="ClarolineCoreBundle:Competence\CompetenceHierarchy",
      *      options={"id" = "competenceId", "strictId" = true}
      * )
      *
@@ -191,65 +232,52 @@ class CompetenceController {
     }
 
     /**
-     * @EXT\Route("/link/{competenceId}/{rootId}", name="claro_admin_competence_link_form")
+     * @EXT\Route("/move/{competenceId}", name="claro_admin_competence_move_form")
      * @EXT\Method("GET")
      * @EXT\ParamConverter(
      *      "competence",
-     *      class="ClarolineCoreBundle:Competence\Competence",
+     *      class="ClarolineCoreBundle:Competence\CompetenceHierarchy",
      *      options={"id" = "competenceId", "strictId" = true}
      * )
-     * @EXT\ParamConverter(
-     *      "root",
-     *      class="ClarolineCoreBundle:Competence\Competence",
-     *      options={"id" = "rootId", "strictId" = true}
-     * )
-     * @EXT\Template("ClarolineCoreBundle:Administration:competenceLinkForm.html.twig")
+     * @EXT\Template("ClarolineCoreBundle:Administration:competenceMoveForm.html.twig")
      * @param Competence $competence
      *
-     * link a competence
+     * move a competence
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function linkCompetenceFormAction($competence, $root)
+    public function moveCompetenceFormAction($competence)
     {
     	$competences = $this->cptmanager->getExcludeHiearchy($competence);
-    	
         return array(
         	'cpt' => $competence,
-        	'root' => $root,
         	'competences' => $competences
         );
     }
 
     /**
-     * @EXT\Route("/link/{rootId}/{parentId}/add", name="claro_admin_competence_link",options={"expose"=true})
+     * @EXT\Route("/move/{parentId}/add", name="claro_admin_competence_move",options={"expose"=true})
      * @EXT\Method("POST")
      * @EXT\ParamConverter(
-     *      "root",
-     *      class="ClarolineCoreBundle:Competence\Competence",
-     *      options={"id" = "rootId", "strictId" = true}
-     * )
-     * @EXT\ParamConverter(
      *     "competences",
-     *      class="ClarolineCoreBundle:Competence\Competence",
+     *      class="ClarolineCoreBundle:Competence\CompetenceHierarchy",
      *      options={"multipleIds" = true, "name" = "competences"}
      * )
      * @EXT\ParamConverter(
      *      "parent",
-     *      class="ClarolineCoreBundle:Competence\Competence",
+     *      class="ClarolineCoreBundle:Competence\CompetenceHierarchy",
      *      options={"id" = "parentId", "strictId" = true}
      * )
-     * @EXT\Template("ClarolineCoreBundle:Administration:competenceLinkForm.html.twig")
+     * @EXT\Template("ClarolineCoreBundle:Administration:competenceMoveForm.html.twig")
      * @param Competence $competences
      *
-     * link a competence
+     * move a competence
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function linkCompetenceAction(array $competences, $parent, $root)
-    {
-    	
-    	if($this->cptmanager->link($competences,$parent, $root)) {
+    public function moveCompetenceAction(array $competences, $parent)
+    {	
+    	if($this->cptmanager->move($competences,$parent)) {
     	   return new Response(200);
      
         	} else {

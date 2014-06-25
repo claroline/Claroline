@@ -17,7 +17,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\CompetenceRepository")
  * @ORM\Table(name="claro_competence")
  */
-Class Competence {
+Class Competence  {
     
     /**
      * @ORM\Column(type="integer")
@@ -151,6 +151,5 @@ Class Competence {
     {
         return $this->isPlatform;
     }
-
     
 }

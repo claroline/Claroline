@@ -12,6 +12,7 @@
 namespace Claroline\CoreBundle\Entity\Competence;
 
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\CompetenceRepository")
@@ -19,10 +20,11 @@ use Doctrine\ORM\Mapping as ORM;
  *     uniqueConstraints={
  *         @ORM\UniqueConstraint(
  *             name="competence_hrch_unique",
- *             columns={"competence_id", "parent_id","root_id"}
+ *             columns={"competence_id", "parent_id"}
  *         )
  *     }
  * )
+ * @Gedmo\Tree(type="nested")
  */
 Class CompetenceHierarchy {
 
@@ -37,27 +39,44 @@ Class CompetenceHierarchy {
      * @ORM\ManyToOne(
      *     targetEntity="Claroline\CoreBundle\Entity\Competence\Competence"
      * )
+     * @ORM\OrderBy({"left" = "ASC"})
      * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
      */
     private $competence;
 
     /**
+     * @Gedmo\TreeParent
      * @ORM\ManyToOne(
-     *     targetEntity="Claroline\CoreBundle\Entity\Competence\Competence",
-     *     inversedBy="children"
+     *     targetEntity="Claroline\CoreBundle\Entity\Competence\CompetenceHierarchy"
      * )
-     * @ORM\JoinColumns({@ORM\JoinColumn(onDelete="CASCADE")})
+     * 
+     * @ORM\JoinColumn(nullable=true, onDelete="CASCADE")
      */
     protected $parent;
 
     /**
-     * @ORM\ManyToOne(
-     *     targetEntity="Claroline\CoreBundle\Entity\Competence\Competence",
-     *     inversedBy="children"
-     * )
-     * @ORM\JoinColumns({@ORM\JoinColumn(onDelete="CASCADE", nullable=true)})
+     * @Gedmo\TreeRoot
+     * @ORM\Column(name="root", type="integer", nullable=true)
      */
-    protected $root;
+    private $root;
+
+    /**
+     * @Gedmo\TreeLeft
+     * @ORM\Column(name="lft", type="integer")
+     */
+    private $lft;
+
+    /**
+     * @Gedmo\TreeLevel
+     * @ORM\Column(name="lvl", type="integer")
+     */
+    private $lvl;
+
+    /**
+     * @Gedmo\TreeRight
+     * @ORM\Column(name="rgt", type="integer")
+     */
+    private $rgt;
 
     /**
      * @param mixed $id
@@ -123,5 +142,73 @@ Class CompetenceHierarchy {
         return $this->root;
     }
 
+    /**
+     * @param mixed $cptRoot
+     */
+    public function setCptRoot($cptRoot)
+    {
+        $this->cptRoot = $cptRoot;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCptRoot()
+    {
+        return $this->cptRoot;
+    }
+
+    /**
+     * @param mixed $lft
+     */
+    public function setLft($lft)
+    {
+        $this->lft = $lft;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getLft()
+    {
+        return $this->lft;
+    }
+
+    /**
+     * @param mixed $lvl
+     */
+    public function setLvl($lvl)
+    {
+        $this->lvl = $lvl;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getLvl()
+    {
+        return $this->lvl;
+    }
+
+    /**
+     * @param mixed $rgt
+     */
+    public function setRgt($rgt)
+    {
+        $this->rgt = $rgt;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRgt()
+    {
+        return $this->rgt;
+    }
+
+    public function __toString()
+{
+    return $this->competence->getName();
+}
 
 }

@@ -1,29 +1,40 @@
 {% extends "ClarolineCoreBundle:Administration:layout.html.twig" %}
-
 {% block title %}{{ 'competence' | trans({}, 'platform') | striptags | raw }}{% endblock %}
-
+{% block breadcrumb %}
+    {{
+        macros.breadcrumbs([
+            {
+                'icon': 'icon-cog',
+                'name': 'administration'|trans({}, 'platform'),
+                'href': path('claro_admin_index')
+            },
+            {
+                'name': 'competence'|trans({}, 'platform'),
+                'href': path('claro_admin_competences')
+            }
+        ])
+    }}
+{% endblock %}
 {% block content %}
     <div class="panel panel-default">
         <div class="panel-heading">
             <h3 class="panel-title">{{ "competence" | trans({}, "platform" )}}</h3>
         </div>
-        {{cpt.getName() }}
+        {{cpt.getCompetence().getName() }}
         <form action="#" method="post" id="myForm" class="form-horizontal">
             <div class="panel-body">
             	{% for c in competences %}
-            	{{ c.getName() }}
-            		<input type="checkbox" class="checkbox" name="competences_link" />
+             	{{ c.name }}
+            		<input type="checkbox" class="checkbox" name="competences_link" value="{{c.id}}" />
             	{% endfor %}	
             </div>
             <div class="panel-footer">
-                <button type="button" class="btn btn-primary" id="link">{{ 'link'|trans({}, 'platform') }}</button>
+                <button type="button" class="btn btn-primary" id="link">{{ 'move'|trans({}, 'platform') }}</button>
                 
-                <button class="btn btn-primary" id="move">{{ 'move'|trans({}, 'platform') }}</button>
-
                 <button class="btn btn-primary" id="link_hierarchy">{{ 'link_hierarchy'|trans({}, 'platform') }}</button>
             </div>
+            <input type="hidden" name="competences_link_form_parent" id="competences_link_form_parent" value="{{cpt.getId()}}"
         </form>
-        <a href="{{path('claro_admin_competence_delete', {competenceId:cpt.getId()})}}" class="btn btn-primary">{{ 'delete'|trans({}, 'platform') }}</a>
     </div>
 {% endblock %}
 {% block javascripts %}

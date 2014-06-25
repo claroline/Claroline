@@ -8,8 +8,9 @@
             <h3 class="panel-title">{{ "competence" | trans({}, "platform" )}}</h3>
         </div>
        {% if cpt is defined %}
-        	{{ cpt.getName() }} 
-        	{% set route = path('claro_admin_competence_add_sub', {competenceId: cpt.getId(), rootId: root.getId() }) %}
+        	 {{ cpt.getCompetence().getName() }}  
+
+        	{% set route = path('claro_admin_competence_add_sub', {competenceId: cpt.getId() }) %}
        {% else %}
        		{% set route = path('claro_admin_competence_add') %}	
        {% endif %}
@@ -27,7 +28,10 @@
                 <button type="submit" class="btn btn-primary">{{ 'ok'|trans({}, 'platform') }}</button>
             </div>
         </form>
-        <a href="{{path('claro_admin_competence_delete', {competenceId:cpt.getId()})}}" class="btn btn-primary">{{ 'delete'|trans({}, 'platform') }}</a>
-        <a href="{{path('claro_admin_competence_link_form', {competenceId:cpt.getId(), rootId: root.getId()})}}" class="btn btn-primary">{{ 'link'|trans({}, 'platform') }}</a>
+        {% if cpt is defined %}
+            <a href="{{path('claro_admin_competence_delete', {competenceId:cpt.getId()})}}" class="btn btn-primary">{{ 'delete'|trans({}, 'platform') }}</a>
+            <a href="{{path('claro_admin_competence_move_form', {competenceId:cpt.getId()})}}" class="btn btn-primary">{{ 'link'|trans({}, 'platform') }}</a>
+        {% endif %}
+        <a href={{path('claro_admin_competences')}} class="btn btn-primary">{{ 'back'|trans({}, 'platform') }}</a>
     </div>
 {% endblock %}
