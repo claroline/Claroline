@@ -900,3 +900,9 @@ plugin_packages: Paquets des plugins
 no_package_description: Aucune description du paquet.
 yes: Oui
 no: Non
+profile_management: Gestion du profil
+visible_facet_form_explanation: Le champ "Visible" permet de spécifier si l'élément doit être visible ou non par l'utilisateur.
+editable_facet_form_explanation: Le champ "Modifiable" permet de spécifier si l'élément doit être modifiable ou non par l'utilisateur.
+roles_facet_form_explanation: Ce formulaire vous permet de spécifier quels rôles peuvent voir la facette dans le profil public de l'utilisateur.
+roles_fields_form_explanation: Ce formulaire vous permet de spécifier quels rôles peuvent voir et éditer le champ dans le profil public de l'utilisateur.
+general_tab_form_explanation: Ce formulaire vous permet de spécifier quels sont les informations vues par rôle dans le profile public.

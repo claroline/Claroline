@@ -824,3 +824,9 @@ plugin_packages: Plugin packages
 yes: Sí
 no: No
 show_profile_for_anonymous: Profil public access for anonymous.
+profile_management: Gestión de perfiles
+visible_facet_form_explanation: El campo "Visible" permite de especificar si el elemento debe ser visible o no por el usuario.
+editable_facet_form_explanation: El campo "Editable" permite de especificar si el elemento debe ser visible o no por el usuario.
+roles_facet_form_explanation: Este formulario permite especificar que roles pueden ver la faceta en el perfil público.
+roles_fields_form_explanation: Este formulario permite especificar que roles pueden ver y editar el campo en el perfil público.
+general_tab_form_explanation: Este formulario permite especificar que información se ve por rol en el perfil público.

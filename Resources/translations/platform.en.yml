@@ -893,3 +893,9 @@ plugin_packages: Plugin packages
 no_package_description: No package description.
 yes: Yes
 no: No
+profile_management: Profile Management
+visible_facet_form_explanation: The field "Visible" allows you to set the element as visible or not for the user.
+editable_facet_form_explanation: The field "Editable" allows you to set the element as visible or not for the user.
+roles_facet_form_explanation: This form allows you to set wich roles can see the facet in the public profile.
+roles_fields_form_explanation: This form allows you to set wich roles can see and edit the field in the public profile.
+general_tab_form_explanation: This form allows you to set wich datas are seen by role in the public profile.
