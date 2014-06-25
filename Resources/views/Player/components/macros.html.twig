@@ -1,14 +1,14 @@
 {% macro displayResourceButton(resource, step) %}
-    <li rel="tooltip" data-original-title="{{ resource.resourceNode.resourceType.name | trans({}, 'resource') }}">
-        <a class="path-tab-btn resource-link lvl-{{ step.lvl + 1 }} resource-tab-btn" data-target="#resource{{ resource.resourceNode.id }}">
-            <span class="resource-name">{{ resource.resourceNode.name }}</span>
+    <li rel="tooltip" data-original-title="{{ resource.resourceType.name | trans({}, 'resource') }}">
+        <a class="path-tab-btn resource-link lvl-{{ step.lvl + 1 }} resource-tab-btn" data-target="#resource{{ resource.id }}">
+            <span class="resource-name">{{ resource.name }}</span>
         </a>
     </li>
 {% endmacro %}
 
 {% macro displayResourceFrame(resource, step) %}
-    <div id="resource{{ resource.resourceNode.id }}" class="path-tab resource-tab">
-        <iframe style="border:none;padding:0;" id="{{ resource.resourceNode.id }}" seamless width="100%" class="resource-frame" data-resource-src="{{ path('claro_resource_open', {'node': resource.resourceNode.id, 'resourceType': resource.resourceNode.resourceType.name }) }}" src=""></iframe>
+    <div id="resource{{ resource.id }}" class="path-tab resource-tab">
+        <iframe style="border:none;padding:0;" id="{{ resource.id }}" seamless width="100%" class="resource-frame" src="{{ path('claro_resource_open', {'node': resource.id, 'resourceType': resource.resourceType.name }) }}"></iframe>
     </div>
 {% endmacro %}
 
@@ -31,11 +31,10 @@
     </li>
 {% endmacro %}
 
-
 {% macro displayCollecticiel(resource, step) %}
-    <a target="_blank" class="btn btn-default btn-xs" href="{{ path('claro_resource_open', {'node': resource.resourceNode.id, 'resourceType': resource.resourceNode.resourceType.name }) }}" > 
+    <a target="_blank" class="btn btn-default btn-xs" href="{{ path('claro_resource_open', {'node': resource.id, 'resourceType': resource.resourceType.name }) }}" >
         <span rel="tooltip" data-original-title="{{ step.name }}" class="lvl-{{ step.lvl + 1 }} lvl-indicator">&nbsp;</span>
-        {{ resource.resourceNode.name }}
+        {{ resource.name }}
     </a>
 {% endmacro %}
 

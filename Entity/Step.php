@@ -332,4 +332,32 @@ class Step
 
         return $workspace;
     }
+
+    /**
+     * Wrapper to access Activity name
+     * @return string
+     */
+    public function getName()
+    {
+        if (!empty($this->activity)) {
+            return $this->activity->getResourceNode()->getName();
+        }
+        else {
+            return '';
+        }
+    }
+
+    /**
+     * Wrapper to access Activity description
+     * @return string
+     */
+    public function getDescription()
+    {
+        if (!empty($this->activity)) {
+            return $this->activity->getDescription();
+        }
+        else {
+            return '';
+        }
+    }
 }
