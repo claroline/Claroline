@@ -295,7 +295,7 @@ Confirm the correction delete: 'Confirmer la suppression de la correction'
 See my copy: 'Voir ma copie'
 Unlock copy: 'Débloquer la copie'
 You need at least one correction on the copy to unlock it: "Il faut au moins une correction sur la copie pour pouvoir la débloquer."
-Allow student to see his copy whereas the copy didn't received the expected number of correction.: "Faire que l'étudiant puisse voir sa copie même si celle ci n'as pas reçue le nombre de correction requis."
+Allow student to see his copy whereas the copy didn't received the expected number of correction.: "Faire que l'étudiant puisse voir sa copie même si celle ci n'as pas reçue le nombre de correction requises."
 Drop have been unlocked: 'La copie a été débloquée'
 This copy has been unlocked by admin.(it did not received the expected number of correction):  "Cette copie à été débloquée par un administrateur. ( Elle n'a pas reçu le nombre de corrections attendues )."
 No copy waiting for correction: 'Aucune copie en attente de correction'
@@ -321,3 +321,8 @@ Reported copy : "Copie signalée"
 Your modifications will only affect new corrections. For older, do you want to apply modification and recalculate grades: "Vos modifications vont affecter seulement les nouvelles corrections. Voulez vous appliquer ces modifications aux corrections déjà créées  et recalculer les notes déjà données ?"
 Validate copies: "Valider les copies"
 Do nothing: "Ne rien faire pour ces copies"
+Help on peerReview mode: "Aide sur le mode d'évaluation par les pairs"
+PeerReview_helper_ideal_case: "Dans le cadre de l'évaluation par les pairs, les répondants se corrigeront de façon totalement <b>autonome seulement dans un cadre idéal </b> où le nombre de participant est égal au nombre de corrections attendues + 1 ou à un multiple de ce nombre."
+PeerReview_helper_ideal_case_example: "Exemple : si on a 2 corrections attendues, l'évaluation sera totalement autonome uniquement dans le cas ou on aura un nombre de participants multiple de 3. ( Eleve 1 corrige 2 et 3 , Eleve 2 corrige 1 et 3, Eleve 3 corrige 1 et 2)."
+PeerReview_helper_other_cases: "Dans les autres cas, <b>le gestionnaire de l'évaluation devra internvenir</b> afin de rajouter la/les corrections manquante lorsque l'évaluation est terminée."
+PeerReview_helper_unlock_tool: " Note: Un outil permet aussi au gestionnaire de 'débloquer' une copie si celle ci a déjà reçu au minimum 1 correction (qu'il peut ajouter lui même ). Cela permet d'éviter au gestionnaire, par exemple, de créer toutes les corrections attendues (ex 3 )  si une copie n'en a reçue aucune. Il lui suffira d'en créer une puis de débloquer la copie. Cet outil n'est disponible que lorsque l'évaluation est dans la phase 'terminée'."

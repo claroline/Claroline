@@ -40,22 +40,6 @@
 
         {% block dropzone_content_corrections %}
 
-            {#
-            <div class="btn-group pull-right">
-                {% block dropzone_content_drops_by_default %}
-                    <a href="{{ path('icap_dropzone_drops_by_default', {'resourceId': dropzone.id}) }}" class="btn btn-default btn-xs">{{ 'default sort'|trans({}, 'icap_dropzone') }}</a>
-                {% endblock %}
-                {% block dropzone_content_drops_by_user %}
-                    <a href="{{ path('icap_dropzone_drops_by_user', {'resourceId': dropzone.id}) }}" class="btn btn-default btn-xs">{{ 'Sort by user'|trans({}, 'icap_dropzone') }}</a>
-                {% endblock %}
-                {% block dropzone_content_drops_by_date %}
-                    <a href="{{ path('icap_dropzone_drops_by_date', {'resourceId': dropzone.id}) }}" class="btn btn-default btn-xs">{{ 'Sort by date'|trans({}, 'icap_dropzone') }}</a>
-                {% endblock %}
-                {% block dropzone_content_drops_by_reported %}
-                    <a href="{{ path('icap_dropzone_drops_by_report', {'resourceId': dropzone.id}) }}" class="btn btn-default btn-xs">{{ 'sort by reported'|trans({}, 'icap_dropzone') }}</a>
-                {% endblock %}
-            </div>
-            #}
             <h3>{% block dropzone_content_drops_by_list_title %}{{ 'Corrections'|trans({}, 'icap_dropzone') }}{% endblock %}</h3>
             <h5>{% block dropzone_content_drops_by_list_subtitle %}{% endblock %}</h5>
 
