@@ -201,12 +201,13 @@
 
     server.prototype.download = function (event) {
         var route = Routing.generate('claro_resource_download', {});
-        window.location = route + '?' + $.param({ ids: event.ids });
+        var ids = event.ids || [event.nodeId];
+        window.location = route + '?' + $.param({ ids: ids });
     };
 
     server.prototype.openTracking = function (event) {
         window.location = Routing.generate('claro_resource_logs', {
-            node: event.ids[0]
+            node: event.nodeId
         });
     };
 
