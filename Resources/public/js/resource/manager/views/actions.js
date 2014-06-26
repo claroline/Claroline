@@ -65,13 +65,11 @@
             if (type === 'resource_shortcut') {
                 this.dispatcher.trigger('open-picker-shortcutPicker');
             } else {
-                this.dispatcher.trigger('display-form', {
-                    route: 'claro_resource_creation_form',
-                    parameters: {
-                        'resourceType': event.currentTarget.getAttribute('id')
-                    },
-                    targetNodeId: this.currentDirectoryId,
-                    eventOnSuccess: 'created-nodes-' + this.parameters.viewName
+                this.dispatcher.trigger('create-form', {
+                    action: 'create-form',
+                    nodeId: this.currentDirectoryId,
+                    resourceType: event.currentTarget.getAttribute('id'),
+                    view: this.parameters.viewName
                 });
             }
         },

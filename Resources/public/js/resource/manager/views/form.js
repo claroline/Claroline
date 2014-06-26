@@ -21,6 +21,10 @@
             'submit form': 'submit'
         },
         knownActions: {
+            'create-form': {
+                route: 'claro_resource_creation_form',
+                onSuccess: 'created-nodes'
+            },
             'rename': {
                 route: 'claro_resource_rename_form',
                 onSuccess: 'renamed-node'
@@ -62,16 +66,16 @@
 
             if (!event.errorForm) {
                 var route = this.knownActions[event.action].route;
-                var parameters = {
-                    node: this.targetNodeId
-                };
+                var parameters = event.action === 'create-form' ?
+                    { resourceType: event.resourceType } :
+                    { node: event.nodeId };
                 Claroline.Modal.fromRoute(route, parameters, _.bind(function (element) {
                     this.setElement(element);
-                    this.replaceId(this.targetNodeId);
+                    this.replaceId(event.nodeId);
                 }, this));
             } else {
                 this.$el.html(event.errorForm);
-                this.replaceId(this.targetNodeId);
+                this.replaceId(event.nodeId);
             }
         }
     });
