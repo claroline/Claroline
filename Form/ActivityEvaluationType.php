@@ -15,73 +15,70 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
-class ActivityParametersType extends AbstractType
+class ActivityEvaluationType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add(
-            'withTutor',
+            'status',
             'choice',
             array(
-                'choices' => array (0 => 'no', 1 => 'yes'),
+                'choices' => array(
+                    'not_attempted' => 'not_attempted',
+                    'competed' => 'completed',
+                    'incomplete' => 'incomplete',
+                    'passed' => 'passed',
+                    'failed' => 'failed'
+                ),
+                'read_only' => true,
+                'disabled' => true,
                 'required' => false
             )
         );
         $builder->add(
-            'max_duration',
+            'numScore',
             'integer',
             array(
-                'attr' => array('min' => 1),
-                'required' => false
-            )
-        );
-	$builder->add(
-            'who',
-            'choice',
-            array(
-                'choices' => array(
-                    'individual' => 'individual',
-                    'collaborative' => 'collaborative',
-                    'mixed' => 'mixed'
-                ),
+                'read_only' => true,
                 'required' => false
             )
         );
         $builder->add(
-            'where',
-            'choice',
+            'date',
+            'datetime',
             array(
-                'choices' => array(
-                    'anywhere' => 'anywhere',
-                    'classroom' => 'classroom'
-                ),
-                'required' => false
+                'read_only' => true,
+                'required' => false,
+                'widget' => 'single_text',
+                'format' => 'yyyy-MM-dd H:m:s'
             )
         );
         $builder->add(
-            'max_attempts',
+            'attemptsCount',
             'integer',
             array(
-                'attr' => array('min' => 1),
+                'read_only' => true,
                 'required' => false
             )
         );
         $builder->add(
-            'evaluation_type',
-            'choice',
+            'score',
+            'text',
+            array('required' => false)
+        );
+        $builder->add(
+            'comment',
+            'textarea',
             array(
-                'choices' => array(
-                    'automatic' => 'evaluation-automatic',
-                    'manual' => 'evaluation-manual'
-                ),
-                'required' => true
+                'attr' => array('rows' => 5),
+                'required' => false
             )
         );
     }
 
     public function getName()
     {
-        return 'activity_parameters_form';
+        return 'activity_evaluation_form';
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)

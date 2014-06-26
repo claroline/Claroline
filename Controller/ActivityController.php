@@ -13,8 +13,11 @@ namespace Claroline\CoreBundle\Controller;
 
 use Claroline\CoreBundle\Entity\Activity\ActivityParameters;
 use Claroline\CoreBundle\Entity\Activity\ActivityRule;
+use Claroline\CoreBundle\Entity\Activity\Evaluation;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
+use Claroline\CoreBundle\Form\ActivityEvaluationType;
 use Claroline\CoreBundle\Form\ActivityParametersType;
 use Claroline\CoreBundle\Form\ActivityType;
 use Claroline\CoreBundle\Form\ActivityRuleType;
@@ -351,10 +354,74 @@ class ActivityController
         );
     }
 
+    /**
+     * @Route(
+     *     "edit/activity/evaluation/{evaluationId}",
+     *     name="claro_activity_evaluation_edit",
+     *     options={"expose"=true}
+     * )
+     * @ParamConverter("currentUser", options={"authenticatedUser" = true})
+     * @ParamConverter(
+     *      "evaluation",
+     *      class="ClarolineCoreBundle:Activity\Evaluation",
+     *      options={"id" = "evaluationId", "strictId" = true}
+     * )
+     * @Template()
+     */
+    public function editActivityEvaluationAction(
+        User $currentUser,
+        Evaluation $evaluation
+    )
+    {
+        $isWorkspaceManager = false;
+        $activityParams = $evaluation->getActivityParameters();
+        $activity = $activityParams->getActivity();
+
+        if (!is_null($activity)) {
+            $workspace = $activity->getResourceNode()->getWorkspace();
+            $roleNames = $currentUser->getRoles();
+            $isWorkspaceManager = $this->isWorkspaceManager($workspace, $roleNames);
+        }
+
+        if (!$isWorkspaceManager) {
+
+            throw new AccessDeniedException();
+        }
+
+        $form = $this->formFactory
+            ->create(new ActivityEvaluationType(), $evaluation);
+        $form->handleRequest($this->request);
+
+        if ($form->isValid()) {
+            $this->activityManager->editEvaluation($evaluation);
+
+            return new Response('success', 204);
+        }
+
+        return array(
+            'form' => $form->createView(),
+            'evaluation' => $evaluation
+        );
+    }
+
     private function checkAccess($permission, $resource)
     {
         if (!$this->securityContext->isGranted($permission, $resource)) {
             throw new AccessDeniedException();
         }
+    }
+
+    private function isWorkspaceManager(AbstractWorkspace $workspace, array $roleNames)
+    {
+        $isWorkspaceManager = false;
+        $managerRole = 'ROLE_WS_MANAGER_' . $workspace->getGuid();
+
+        if (in_array('ROLE_ADMIN', $roleNames) ||
+            in_array($managerRole, $roleNames)) {
+
+            $isWorkspaceManager = true;
+        }
+
+        return $isWorkspaceManager;
     }
 }

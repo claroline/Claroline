@@ -106,7 +106,10 @@ class ActivityListener
         if ($form->isValid()) {
             $activity = $form->getData();
             $activity->setName($activity->getTitle());
-            $activity->setParameters(new ActivityParameters());
+            $activityParameters = new ActivityParameters();
+            $activityParameters->setActivity($activity);
+            $activity->setParameters($activityParameters);
+
 
             $event->setResources(array($activity));
             $event->stopPropagation();

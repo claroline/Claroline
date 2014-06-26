@@ -1,0 +1,51 @@
+{% extends 'ClarolineCoreBundle:Tool/workspace/analytics:analyticsTabs.html.twig' %}
+
+{% block analytics %}
+    <div id="activities-evaluations">
+        <h2>{{ 'workspace_activities_tracking'|trans({}, 'platform') }}</h2>
+        <br>
+
+        {% if activities|length > 0 %}
+            <div class="table-responsive">
+                <table class="table">
+                    <tr>
+                        <th>{{ 'title'|trans({}, 'platform') }}</th>
+                        <th>{{ 'description'|trans({}, 'platform') }}</th>
+                        <th class="text-center">{{ 'start_date'|trans({}, 'platform') }}</th>
+                        <th class="text-center">{{ 'end_date'|trans({}, 'platform') }}</th>
+                    </tr>
+                    {% for activity in activities %}
+                    {% set resourceNode = activity.getResourceNode() %}
+                    <tr>
+                        <td>
+                            <a href="{{ path(
+                                'claro_workspace_manager_activity_evaluations_show',
+                                {'activityId': activity.getId()})
+                            }}">
+                                {{ activity.getTitle() }}
+                            </a>
+                        </td>
+                        <td>{{ activity.getDescription()|raw }}</td>
+                        <td class="text-center">
+                            {% if resourceNode.getAccessibleFrom() is not empty %}
+                                {{ resourceNode.getAccessibleFrom()|intl_date_format }}
+                            {% else %}
+                                -
+                            {% endif %}
+                        </td>
+                        <td class="text-center">
+                            {% if resourceNode.getAccessibleUntil() is not empty %}
+                                {{ resourceNode.getAccessibleUntil()|intl_date_format }}
+                            {% else %}
+                                -
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </table>
+            </div>
+        {% else %}
+            {{ 'no_activity'|trans({}, 'platform') }}
+        {% endif %}
+    </div>
+{% endblock %}
