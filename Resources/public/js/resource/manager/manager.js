@@ -137,9 +137,9 @@
                     _.keys(dispatcher._events[event]).length :
                     0;
                 console.debug(
-                    'Event "' + event + '" was triggered ['
-                    + listenerCount + ' listener(s) attached]'
+                    'Triggering "' + event + '" with ', args,  '[' + listenerCount + ' listener(s) attached]'
                 );
+
                 originalTrigger.apply(dispatcher, [event, args]);
             }
             areLogsActivated = true;
@@ -191,4 +191,10 @@
             callback();
         });
     }
+
+
+
+
+    manager.logEvents();
+
 })();
