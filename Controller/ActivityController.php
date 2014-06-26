@@ -395,7 +395,7 @@ class ActivityController
         if ($form->isValid()) {
             $this->activityManager->editEvaluation($evaluation);
 
-            return new Response('success', 201);
+            return new Response('success', 204);
         }
 
         return array(

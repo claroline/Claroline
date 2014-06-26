@@ -30,9 +30,7 @@
     $('.evaluation-edit-button').on('click', function () {
         var evaluationId = $(this).data('evaluation-id');
         
-        if (typeof evaluationId === 'undefined' ) {
-            console.log('undefined p-e');
-        } else {
+        if (typeof evaluationId !== 'undefined' ) {
             $.ajax({
                 url: Routing.generate(
                     'claro_activity_evaluation_edit',
@@ -61,7 +59,7 @@
             contentType: false,
             complete: function(jqXHR) {
                 switch (jqXHR.status) {
-                    case 201:
+                    case 204:
                         window.location.reload();
                         break;
                     default:
