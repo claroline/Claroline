@@ -75,7 +75,7 @@
     /**
      * Creates a named picker. Relevant parameters are:
      *
-     * - pickerCallback: the function to be called when nodes are selected
+     * - callback: the function to be called when nodes are selected
      *      (default to empty function)
      * - isMultiSelectAllowed: whether the selection of multiple nodes should be allowed
      *      (default to false)
@@ -170,7 +170,7 @@
             language: parameters.language || fetchedParameters.language || 'en',
             webPath: parameters.webPath || fetchedParameters.webPath || '',
             zoom: parameters.zoom || fetchedParameters.zoom || 'zoom100',
-            pickerCallback: parameters.pickerCallback || function () {},
+            pickerCallback: parameters.callback || function () {},
             isPickerMultiSelectAllowed: isDefault || parameters.isPickerMultiSelectAllowed || false
         };
 
