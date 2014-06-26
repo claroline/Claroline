@@ -823,3 +823,6 @@ core_packages: Core packages
 plugin_packages: Plugin packages
 yes: Sí
 no: No
+actualize: Actualizar
+upgrade: Modernización
+long_operation_warning: Por favor espere...

@@ -19,6 +19,8 @@ use JMS\DiExtraBundle\Annotation as DI;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Security\Core\SecurityContextInterface;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 class PackageController extends Controller
 {
@@ -67,10 +69,55 @@ class PackageController extends Controller
         $this->checkOpen();
         $corePackages = $this->dm->getInstalledByType(DependencyManager::CLAROLINE_CORE_TYPE);
         $pluginPackages = $this->dm->getInstalledByType(DependencyManager::CLAROLINE_PLUGIN_TYPE);
+        $upgradablePackages = $this->dm->getUpgradeablePackages();
 
         return array(
             'corePackages' => $corePackages,
-            'pluginPackages' => $pluginPackages
+            'pluginPackages' => $pluginPackages,
+            'upgradablePackages' => $upgradablePackages
+        );
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/update/all",
+     *     name="claro_admin_update_packages",
+     *     options={"expose"=true}
+     * )
+     * @EXT\Method("GET")
+     *
+     * Display the plugin list
+     *
+     * @return Response
+     */
+    public function updateAllAction()
+    {
+        $this->checkOpen();
+        $packages = $this->dm->updateLastTagCache();
+
+        return new Response('success', 204);
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/update/package/{ref}",
+     *     name="claro_admin_update_package",
+     *     options={"expose"=true}
+     * )
+     * @param $package
+     */
+    public function updatePackageAction($ref)
+    {
+        $this->checkOpen();
+        $package = $this->dm->getByDistReference($ref);
+        $tag = $this->dm->updatePackage($package);
+
+        return new JsonResponse(
+            array(
+                'tag' => $tag,
+                'prettyName' => $package->getPrettyName(),
+                'distRef' => $package->getDistReference()
+            )
         );
     }
 
@@ -82,4 +129,4 @@ class PackageController extends Controller
 
         throw new AccessDeniedException();
     }
-} 
+}

@@ -128,18 +128,29 @@
     </div>
 {% endmacro %}
 
-{% macro renderPackageElement(package) %}
+{% macro renderPackageElement(package, upgradablePackages) %}
     <div class="panel-group" id="accordion-{{ package.getDistReference() }}">
         <div class="panel panel-default">
             <div class="panel-heading">
-                <h5 class="panel-title>">
-                    <a class="panel-toggle"
+                <h5 class="panel-title">
+                    <a class="panel-toggle package-element"
                        data-toggle="collapse"
                        data-parent="#accordion-{{ package.getDistReference() }}"
                        href="#collapse-inner-{{ package.getDistReference() }}"
+                       data-package-dist-reference="{{ package.getDistReference() }}"
                     >
-                        {{ package.getPrettyName() }} ({{ package.getPrettyVersion() }})
+                        {% set version = package.getPrettyVersion() | replace({'v': ''})  %}
+                        {{ package.getPrettyName() }}
                     </a>
+                    <span class="badge">{{ version }}</span>
+
+                    {% for upgradablePackage in upgradablePackages %}
+                        {% if
+                            upgradablePackage['package'].getPrettyName() == package.getPrettyName()
+                        %}
+                            <span class="badge pull-right alert-danger badge-new-version"> {{ upgradablePackage['tag'] }} </span>
+                        {% endif %}
+                    {% endfor %}
                 </h5>
             </div>
             <div id="collapse-inner-{{ package.getDistReference() }}" class="panel panel-body collapse">
@@ -194,6 +205,7 @@
                         </div>
                     {% endif %}
                 {% endif %}
+                <hr>
             </div>
         </div>
     </div>

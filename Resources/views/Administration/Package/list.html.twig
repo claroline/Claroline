@@ -35,7 +35,7 @@
                 <div id="collapseCore" class="panel-collapse collapse">
                     <div class="panel-inner">
                         {% for corePackage in corePackages %}
-                            {{ macros.renderPackageElement(corePackage) }}
+                            {{ macros.renderPackageElement(corePackage, upgradablePackages) }}
                         {% endfor %}
                     </div>
                 </div>
@@ -51,11 +51,19 @@
                 <div id="collapsPlugins" class="panel-collapse collapse">
                     <div class="panel-inner">
                         {% for pluginPackage in pluginPackages %}
-                            {{ macros.renderPackageElement(pluginPackage) }}
+                            {{ macros.renderPackageElement(pluginPackage, upgradablePackages) }}
                         {% endfor %}
                     </div>
                 </div>
             </div>
         </div>
     </div>
+    <div class="panel-footer">
+        <button class="btn btn-primary" id="update-packages-btn">{{ 'actualize'|trans({}, 'platform') }}</button>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript" src="{{ asset('bundles/clarolinecore/js/administration/packages.js') }}"></script>
 {% endblock %}

@@ -890,3 +890,6 @@ plugin_packages: Plugin packages
 no_package_description: No package description.
 yes: Yes
 no: No
+actualize: Actualize
+upgrade: Upgrade
+long_operation_warning: Please wait. This operation may take a while...

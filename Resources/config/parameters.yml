@@ -9,3 +9,4 @@ parameters:
     claroline.param.templates_directory: "%kernel.root_dir%/../templates/"
     claroline.param.platform_config_handler_class: Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler
     claroline.param.platform_options_file: %kernel.root_dir%/config/platform_options.yml
+    claroline.packages_last_tags_file: "%kernel.root_dir%/cache/last_tags.cache.ini"

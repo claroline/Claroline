@@ -897,3 +897,6 @@ plugin_packages: Paquets des plugins
 no_package_description: Aucune description du paquet.
 yes: Oui
 no: Non
+actualize: Actualiser
+upgrade: Mettre à jour
+long_operation_warning: Veuillez patienter s'il vous plait. Cette opération peut durer quelques minutes...
