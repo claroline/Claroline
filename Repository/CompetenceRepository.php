@@ -47,12 +47,25 @@ class CompetenceRepository extends NestedTreeRepository {
     	SELECT c.name as name , ch.id as id 
         FROM Claroline\CoreBundle\Entity\Competence\Competence c,
         	 Claroline\CoreBundle\Entity\Competence\CompetenceHierarchy ch
-        WHERE 
+        WHERE
         	c.id = ch.competence
         	AND ch.parent IS NULL
         ";
     	$query = $this->_em->createQuery($dql);
 
     	return $query->getResult();
+    }
+
+    public function findHiearchyById(CompetenceHierarchy $competence)
+    {
+        $dql = "
+    	SELECT c.name as name , ch.id as id
+        FROM Claroline\CoreBundle\Entity\Competence\CompetenceHierarchy ch
+        join ch.competence c where ch.root = :root
+        ";
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('root',$competence->getRoot());
+
+        return $query->getResult();
     }
 } 

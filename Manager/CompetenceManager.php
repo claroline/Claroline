@@ -66,16 +66,23 @@ class CompetenceManager {
     public function getCompetenceHiearchy(CompetenceHierarchy $competence)
     {
         $repo = $this->om->getRepository('ClarolineCoreBundle:Competence\CompetenceHierarchy');
+        $listCompetences = $repo->findHiearchyById($competence);
+        $competences = array();
+
+        foreach ($listCompetences as $c) {
+        	$competences[$c['id']] = $c['name'];
+        }
+
         $options = array(
             'decorate' => true,
             'rootOpen' => '<ul>',
             'rootClose' => '</ul>',
             'childOpen' => '<li>',
             'childClose' => '</li>',
-            'nodeDecorator' => function($node) {
+            'nodeDecorator' => function($node) use (&$competences) {
                 return '<a href='
-                .$this->router->generate('claro_admin_competence_add_sub',array('competenceId' => $node['id']))
-                .'">'.$node['id'].'</a>';
+                .$this->router->generate('claro_admin_competence_modify',array('competenceId' => $node['id']))
+                .'">'.$competences[$node['id']].'</a>';
             }
         );
         $htmlTree = $repo->childrenHierarchy(
@@ -119,6 +126,7 @@ class CompetenceManager {
     		return true;
     	}
     }
+
     public function delete(CompetenceHierarchy $competence)
     {
     	if (!$this->security->isGranted('ROLE_ADMIN')) {
@@ -131,6 +139,12 @@ class CompetenceManager {
         $this->om->clear();
         $this->om->flush();
         return true;
+    }
+
+    public function updateCompetence(Competence $competence)
+    {
+    	$this->om->flush();
+    	return true;
     }
 
     public function link(array $competences, CompetenceHierarchy $parent)

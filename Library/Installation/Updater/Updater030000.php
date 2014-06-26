@@ -44,6 +44,11 @@ class Updater030000
 
     public function postUpdate()
     {
+        $this->updateActivityRuleAction();
+        $this->updateActivityIcon();
+        $this->updateTools();
+        $this->updateAdminPluginTool();
+        
         $this->log('Updating cache...');
         $this->container->get('claroline.manager.cache_manager')->refresh();
         $this->log('Removing old cache...');
@@ -82,10 +87,6 @@ class Updater030000
         if ($log = $this->logger) {
             $log('    ' . $message);
         }
-        $this->updateActivityRuleAction();
-        $this->updateActivityIcon();
-        $this->updateTools();
-        $this->updateAdminPluginTool();
     }
 
     private function updateActivityRuleAction()

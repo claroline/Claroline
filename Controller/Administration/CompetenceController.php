@@ -131,7 +131,10 @@ class CompetenceController {
     {
         $form = $this->formFactory->create(FormFactory::TYPE_COMPETENCE);
 
-        return array('form' => $form->createView());
+        return array(
+        	'form' => $form->createView(),
+        	'route' => 'claro_admin_competence_form'
+        );
     }
 
      /**
@@ -166,7 +169,10 @@ class CompetenceController {
             	
             }
         } 
-        return array('form' => $form->createView());
+        return array(
+        	'form' => $form->createView(),
+        	'route' => 'claro_admin_competence_add'
+        );
     }
 
     /**
@@ -202,6 +208,36 @@ class CompetenceController {
         return array(
         	'form' => $form->createView(),
         	'cpt' => $competence,
+        	'route' => 'claro_admin_competence_add_sub'
+        );
+    }
+
+    /**
+     * @EXT\Route("/modify/{competenceId}", name="claro_admin_competence_modify")
+     * @EXT\Method({"GET","POST"})
+     * @EXT\ParamConverter(
+     *      "competence",
+     *      class="ClarolineCoreBundle:Competence\Competence",
+     *      options={"id" = "competenceId", "strictId" = true}
+     * )
+     * @param Competence $competence
+     * @EXT\Template("ClarolineCoreBundle:Administration:competenceForm.html.twig")
+     *
+     * Add a sub competence
+     *
+     */
+    public function competenceModifyAction($competence)
+    {
+	 	$form = $this->formFactory->create(FormFactory::TYPE_COMPETENCE, array(), $competence->getCompetence());
+        $form->handleRequest($this->request);
+         if ($form->isValid()) {
+         	$this->cptmanager->updateCompetence($competence);
+         }
+
+         return array(
+        	'form' => $form->createView(),
+        	'cpt' => $competence,
+        	'route' => 'claro_admin_competence_modify'
         );
     }
 

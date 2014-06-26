@@ -10,12 +10,12 @@
        {% if cpt is defined %}
         	 {{ cpt.getCompetence().getName() }}  
 
-        	{% set route = path('claro_admin_competence_add_sub', {competenceId: cpt.getId() }) %}
+        	{% set road = path(route, {competenceId: cpt.getId() }) %}
        {% else %}
-       		{% set route = path('claro_admin_competence_add') %}	
+       		{% set road = path(route) %}	
        {% endif %}
         <form novalidate="novalidate"
-              action="{{ route }}"
+              action="{{ road }}"
               method="post" {{ form_enctype(form) }}
               id="generic-form"
               class="form-horizontal">
