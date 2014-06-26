@@ -137,11 +137,10 @@
                     _.keys(dispatcher._events[event]).length :
                     0;
                 console.debug(
-                    'Triggering "' + event + '" with ', args,  '[' + listenerCount + ' listener(s) attached]'
+                    'Triggering "' + event + '" with', args, '[' + listenerCount + ' listener(s) attached]'
                 );
-
                 originalTrigger.apply(dispatcher, [event, args]);
-            }
+            };
             areLogsActivated = true;
         }
     };
@@ -159,7 +158,7 @@
             viewName: viewName,
             isPickerMode: isPicker,
             isWorkspace: parameters.isWorkspace || false,
-            directoryId: isDefault ? '0' : parameters.directoryId || '0',
+            directoryId: isPicker && isDefault ? '0' : parameters.directoryId || '0',
             preFetchedDirectory: parameters.preFetchedDirectory || null,
             parentElement: parameters.parentElement || $('body'),
             breadcrumbElement: isPicker ? null : parameters.breadcrumbElement || null,
