@@ -49,9 +49,13 @@
         },
         addNodes: function (event) {
             _.each(event, function (node) {
-                var thumbnail = new views.Thumbnail(this.parameters, this.dispatcher, this.zoomValue);
-                thumbnail.render(node, this.directoryId !== '0');
-                this.$el.append(thumbnail.$el);
+                var isWhiteListed = this.parameters.resourceTypes[node.type] !== undefined;
+
+                if (isWhiteListed || node.type === 'directory') {
+                    var thumbnail = new views.Thumbnail(this.parameters, this.dispatcher, this.zoomValue);
+                    thumbnail.render(node, isWhiteListed && this.directoryId !== '0');
+                    this.$el.append(thumbnail.$el);
+                }
             }, this);
         },
         renameNode: function (event) {
@@ -113,9 +117,24 @@
                 isPickerMode: this.parameters.isPickerMode
             });
         },
-        addResultsPath: function (nodes) {
+        orderNodes: function (event, ui) {
+            var ids = this.$el.sortable('toArray');
+            var movedNodeId = ui.item.attr('id');
+            var movedNodeIndex = ids.indexOf(movedNodeId);
+            var nextId = movedNodeIndex + 1 < ids.length ? ids[movedNodeIndex + 1] : 0;
+            this.dispatcher.trigger('order-nodes', {
+                'nodeId': movedNodeId,
+                'nextId': nextId
+            });
+        },
+        prepareResults: function (nodes) {
+            // exclude blacklisted types
+            var displayableNodes = _.reject(nodes, function (node) {
+                return this.parameters.resourceTypes[node.type] === undefined;
+            }, this);
+
             // extract nodes id and name from materialized path data
-            return _.map(nodes, function (node) {
+            return _.map(displayableNodes, function (node) {
                 node.pathParts = node.path.split('`');
                 node.pathParts.pop();
                 node.pathParts.pop();
@@ -129,16 +148,6 @@
                 });
 
                 return node;
-            });
-        },
-        orderNodes: function (event, ui) {
-            var ids = this.$el.sortable('toArray');
-            var movedNodeId = ui.item.attr('id');
-            var movedNodeIndex = ids.indexOf(movedNodeId);
-            var nextId = movedNodeIndex + 1 < ids.length ? ids[movedNodeIndex + 1] : 0;
-            this.dispatcher.trigger('order-nodes', {
-                'nodeId': movedNodeId,
-                'nextId': nextId
             });
         },
         render: function (event) {
@@ -156,7 +165,7 @@
                 }
             } else {
                 this.$el.html(Twig.render(ResourceManagerResults, {
-                    'nodes': this.addResultsPath(event.nodes),
+                    'nodes': this.prepareResults(event.nodes),
                     'resourceTypes': this.parameters.resourceTypes
                 }));
             }

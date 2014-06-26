@@ -190,7 +190,7 @@
                 this.dispatcher.trigger(event.onSuccess, data);
             }
         });
-    }
+    };
 
     server.prototype.open = function (event) {
         window.location = Routing.generate('claro_resource_open', {

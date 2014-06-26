@@ -53,7 +53,7 @@
      * - zoom: a zoom value for thumbnails
      *      (defaults to "zoom100")
      *
-     * @param object parameters
+     * @param parameters object
      */
     manager.createFullManager = function (parameters) {
         initialize();
@@ -79,6 +79,10 @@
      *      (default to empty function)
      * - isMultiSelectAllowed: whether the selection of multiple nodes should be allowed
      *      (default to false)
+     * - typeWhiteList: an array of resource type names to accept
+     *      (defaults to null)
+     * - typeBlackList: an array of resource type names to exclude (ignored if a white list is given)
+     *      (defaults to null)
      * - parentElement: the jquery element in which the views will be rendered
      *      (defaults to "body" element)
      * - directoryId : the id of the directory to open at initialization
@@ -95,8 +99,8 @@
      * Note that if they're not provided, the manager will try to fetch the last five
      * parameters directly from the server before using their default values.
      *
-     * @param string name
-     * @param object parameters
+     * @param name          string
+     * @param parameters    object
      */
     manager.createPicker = function (name, parameters) {
         if (['main', 'defaultPicker', 'shortcutPicker'].indexOf(name) !== -1) {
@@ -113,8 +117,8 @@
     /**
      * Opens or closes a picker by its name.
      *
-     * @param string name
-     * @param string action (open|close)
+     * @param name      string
+     * @param action    string (open|close)
      */
     manager.picker = function (name, action) {
         if (!views.hasOwnProperty(name) || !views[name].parameters.isPickerMode) {
@@ -154,7 +158,7 @@
     }
 
     function buildParameters(viewName, parameters, isPicker, isDefault) {
-        return {
+        var builtParameters = {
             viewName: viewName,
             isPickerMode: isPicker,
             isWorkspace: parameters.isWorkspace || false,
@@ -169,6 +173,14 @@
             pickerCallback: parameters.pickerCallback || function () {},
             isPickerMultiSelectAllowed: isDefault || parameters.isPickerMultiSelectAllowed || false
         };
+
+        if (parameters.typeWhiteList) {
+            builtParameters.resourceTypes = _.pick(builtParameters.resourceTypes, parameters.typeWhiteList);
+        } else if (parameters.typeBlackList) {
+            builtParameters.resourceTypes = _.omit(builtParameters.resourceTypes, parameters.typeBlackList);
+        }
+
+        return builtParameters;
     }
 
     function fetchMissingParameters(givenParameters, callback) {
@@ -178,17 +190,17 @@
         });
 
         if (!hasMissingParameter || hasFetchedParameters) {
-            return callback();
-        }
-
-        server.fetchManagerParameters(function (data) {
-            fetchedParameters.resourceTypes = data.resourceTypes;
-            fetchedParameters.language = data.language;
-            fetchedParameters.webPath = data.webPath;
-            fetchedParameters.zoom = data.zoom;
-            hasFetchedParameters = true;
             callback();
-        });
+        } else {
+            server.fetchManagerParameters(function (data) {
+                fetchedParameters.resourceTypes = data.resourceTypes;
+                fetchedParameters.language = data.language;
+                fetchedParameters.webPath = data.webPath;
+                fetchedParameters.zoom = data.zoom;
+                hasFetchedParameters = true;
+                callback();
+            });
+        }
     }
 
 
