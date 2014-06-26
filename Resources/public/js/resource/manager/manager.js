@@ -36,6 +36,8 @@
      *
      * - directoryId : the id of the directory to open at initialization
      *      (defaults to "0", i.e. pseudo-root of all directories)
+     * - preFetchedDirectory: a json representation of the first directory to open
+     *      (defaults to null)
      * - isWorkspace: whether the manager is in a workspace (vs desktop) context
      *      (defaults to false)
      * - parentElement: the jquery element in which the views will be rendered
@@ -62,6 +64,11 @@
         views['defaultPicker'] = new manager.Views.Master(pickerParameters, dispatcher);
         views['shortcutPicker'] = new manager.Views.Master(shortcutParameters, dispatcher);
         router = new manager.Router(dispatcher, mainParameters.directoryId);
+
+        if (mainParameters.preFetchedDirectory) {
+            server.setPreFetchedDirectory(mainParameters.preFetchedDirectory);
+        }
+
         Backbone.history.start();
     };
 
@@ -153,6 +160,7 @@
             isPickerMode: isPicker,
             isWorkspace: parameters.isWorkspace || false,
             directoryId: isDefault ? '0' : parameters.directoryId || '0',
+            preFetchedDirectory: parameters.preFetchedDirectory || null,
             parentElement: parameters.parentElement || $('body'),
             breadcrumbElement: isPicker ? null : parameters.breadcrumbElement || null,
             resourceTypes: parameters.resourceTypes || fetchedParameters.resourceTypes || {},

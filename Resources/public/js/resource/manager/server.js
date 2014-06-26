@@ -17,6 +17,7 @@
 
     var server = Claroline.ResourceManager.Server = function (dispatcher) {
         this.dispatcher = dispatcher;
+        this.preFetchedDirectory = null;
         this.outerEvents = {
             'open-directory': 'openDirectory',
             'submit-form': 'submit',
@@ -42,16 +43,29 @@
         });
     };
 
+    server.prototype.setPreFetchedDirectory = function (directory) {
+        this.preFetchedDirectory = directory;
+    };
+
     server.prototype.openDirectory = function (event) {
-        $.ajax({
-            url: Routing.generate('claro_resource_directory', {
-                nodeId: event.nodeId
-            }),
-            success: function (data) {
-                data.isSearchMode = false;
-                this.dispatcher.trigger('directory-data-' + event.view, data);
-            }
-        });
+        var eventName = 'directory-data-' + event.view;
+
+        if (this.preFetchedDirectory && this.preFetchedDirectory.id === event.nodeId) {
+            this.preFetchedDirectory.isSearchMode = false;
+            this.dispatcher.trigger(eventName, this.preFetchedDirectory);
+        } else {
+            $.ajax({
+                url: Routing.generate('claro_resource_directory', {
+                    nodeId: event.nodeId
+                }),
+                success: function (data) {
+                    data.isSearchMode = false;
+                    this.dispatcher.trigger(eventName, data);
+                }
+            });
+        }
+
+        this.preFetchedDirectory = null;
     };
 
     server.prototype.submit = function (event) {

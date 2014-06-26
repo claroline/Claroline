@@ -30,7 +30,7 @@ View events (dom) vs dispatcher events ("outer" events, scoped if needed).
 Dom
 ---
 
-No access outside view element.
+No access outside view element. Access inside view only through cached/scoped element (-> this.$(selector)).
 
 Ajax
 ----
