@@ -1,46 +1,58 @@
-<div>
+<div id="activity-evaluation-display-element">
     <div class="table-responsive">
         <table class="table">
             <tr>
-                <th>{{ 'status' | trans({}, 'platform') }}</th>
-                <th>{{ 'total_time' | trans({}, 'platform') }}</th>
-                <th>{{ 'best_score' | trans({}, 'platform') }}</th>
-                <th>{{ 'number_of_attempts' | trans({}, 'platform') }}</th>
-                <th>{{ 'comments' | trans({}, 'platform') }}</th>
+                <th class="center-text">{{ 'status'|trans({}, 'platform') }}</th>
+                <th class="center-text">{{ 'total_time'|trans({}, 'platform') }}</th>
+                <th class="center-text">{{ 'best_score'|trans({}, 'platform') }}</th>
+                <th class="center-text">{{ 'number_of_attempts'|trans({}, 'platform') }}</th>
+                <th class="center-text">{{ 'evaluation'|trans({}, 'platform') }}</th>
+                <th class="center-text">{{ 'comments'|trans({}, 'platform') }}</th>
             </tr>
             <tr>
-                <td>{{ evaluation.getStatus() | trans({}, 'platform') }}</td>
-                <td>
+                <td class="center-text">
+                    {% if evaluation.getStatus() is not empty %}
+                        {{ evaluation.getStatus()|trans({}, 'platform') }}
+                    {% else %}
+                        {{ 'not_attempted'|trans({}, 'platform') }}
+                    {% endif %}
+                </td>
+                <td class="center-text">
                     {% if evaluation.getAttemptsDuration() is not empty %}
                         {{ evaluation.getAttemptsDuration() }}
                     {% else %}
                         -
                     {% endif %}
                 </td>
-                <td>
+                <td class="center-text">
                     {% if evaluation.getNumScore() is not empty %}
                         {{ evaluation.getNumScore() }}
                     {% else %}
                         -
                     {% endif %}
                 </td>
-                <td>
+                <td class="center-text">
                     {% if evaluation.getAttemptsCount() is not empty %}
                         {{ evaluation.getAttemptsCount() }}
                     {% else %}
                         -
                     {% endif %}
                 </td>
-                <td>
+                <td class="center-text">
+                    {% if evaluation.getScore() is not empty %}
+                        {{ evaluation.getScore() }}
+                    {% else %}
+                        -
+                    {% endif %}
+                </td>
+                <td class="center-text">
                     {% if evaluation.getComment() is not empty %}
                         <i class="fa fa-comment-o display-comment"
-                            data-container="#activity-evaluation-modal-body"
+                            data-container="#activity-evaluation-display-element"
                             data-toggle="tooltip"
                             data-placement="left"
-                            data-content="{{ evaluation.getComment() }}"
                             title="{{ evaluation.getComment() }}"
                         ></i>
-                            
                     {% else %}
                         -
                     {% endif %}
@@ -55,35 +67,43 @@
         <div class="table-responsive">
             <table class="table">
                 <tr>
-                    <th>{{ 'date' | trans({}, 'platform') }}</th>
-                    <th>{{ 'status' | trans({}, 'platform') }}</th>
-                    <th>{{ 'duration' | trans({}, 'platform') }}</th>
-                    <th>{{ 'score' | trans({}, 'platform') }}</th>
-                    <th>{{ 'comments' | trans({}, 'platform') }}</th>
+                    <th class="center-text">{{ 'date'|trans({}, 'platform') }}</th>
+                    <th class="center-text">{{ 'status'|trans({}, 'platform') }}</th>
+                    <th class="center-text">{{ 'duration'|trans({}, 'platform') }}</th>
+                    <th class="center-text">{{ 'score'|trans({}, 'platform') }}</th>
+                    <th class="center-text">{{ 'evaluation'|trans({}, 'platform') }}</th>
+                    <th class="center-text">{{ 'comments'|trans({}, 'platform') }}</th>
                 </tr>
                 
                 {% for eval in pastEvals %}
                     <tr>
-                        <td>{{ eval.getDate().format('Y-m-d H:i:s') }}</td>
-                        <td>{{ eval.getStatus() | trans({}, 'platform') }}</td>
-                        <td>
+                        <td class="center-text">{{ eval.getDate()|intl_date_format }}</td>
+                        <td class="center-text">{{ eval.getStatus()|trans({}, 'platform') }}</td>
+                        <td class="center-text">
                             {% if eval.getDuration() is not empty %}
                                 {{ eval.getDuration() }}
                             {% else %}
                                 -
                             {% endif %}
                         </td>
-                        <td>
+                        <td class="center-text">
                             {% if eval.getNumScore() is not empty %}
                                 {{ eval.getNumScore() }}
                             {% else %}
                                 -
                             {% endif %}
                         </td>
-                        <td>
+                        <td class="center-text">
+                            {% if eval.getScore() is not empty %}
+                                {{ eval.getScore() }}
+                            {% else %}
+                                -
+                            {% endif %}
+                        </td>
+                        <td class="center-text">
                             {% if eval.getComment() is not empty %}
                                 <i class="fa fa-comment-o display-comment"
-                                    data-container="#activity-evaluation-modal-body"
+                                    data-container="#activity-evaluation-display-element"
                                     data-toggle="tooltip"
                                     data-placement="left"
                                     data-content="{{ eval.getComment() }}"
@@ -100,17 +120,3 @@
     {% endif %}
     
 </div>
-
-{% block stylesheets %}
-    <style type="text/css">
-        td, th {
-            text-align: center;
-        }
-    </style>
-{% endblock %}
-    
-{% block javascripts %}
-    <script>
-        $('.display-comment').tooltip();
-    </script>
-{% endblock %}

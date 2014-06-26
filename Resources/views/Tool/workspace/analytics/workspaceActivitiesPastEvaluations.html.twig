@@ -1,0 +1,69 @@
+{% if displayType == 'activity' %}
+    <div class="well">
+        <h3>{{ activity.getTitle() }}</h3>
+        <br>
+        <p>
+            <b>{{ 'description'|trans({}, 'platform') }}</b>
+        </p>
+        {{ activity.getDescription()|raw }}
+    </div>
+{% elseif displayType == 'user' %}
+    <h3>{{ user.getFirstName() ~ ' ' ~  user.getLastName()}}</h3>
+    <br>
+{% endif %}
+
+{% if pastEvals|length > 0 %}
+<div id="workspace-activities-past-evaluations-element" class="table-responsive">
+    <table class="table">
+        <tr>
+            <th class="center-text">{{ 'date' | trans({}, 'platform') }}</th>
+            <th class="center-text">{{ 'status' | trans({}, 'platform') }}</th>
+            <th class="center-text">{{ 'duration' | trans({}, 'platform') }}</th>
+            <th class="center-text">{{ 'score' | trans({}, 'platform') }}</th>
+            <th class="center-text">{{ 'evaluation' | trans({}, 'platform') }}</th>
+            <th class="center-text">{{ 'comments' | trans({}, 'platform') }}</th>
+        </tr>
+
+        {% for eval in pastEvals %}
+        <tr>
+            <td class="center-text">{{ eval.getDate()|intl_date_format }}</td>
+            <td class="center-text">{{ eval.getStatus() | trans({}, 'platform') }}</td>
+            <td class="center-text">
+                {% if eval.getDuration() is not empty %}
+                    {{ eval.getDuration() }}
+                {% else %}
+                    -
+                {% endif %}
+            </td>
+            <td class="center-text">
+                {% if eval.getNumScore() is not empty %}
+                    {{ eval.getNumScore() }}
+                {% else %}
+                    -
+                {% endif %}
+            </td>
+            <td class="center-text">
+                {% if eval.getScore() is not empty %}
+                    {{ eval.getScore() }}
+                {% else %}
+                    -
+                {% endif %}
+            </td>
+            <td class="center-text">
+                {% if eval.getComment() is not empty %}
+                    <i class="fa fa-comment-o display-comment"
+                        data-container="#workspace-activities-past-evaluations-element"
+                        data-toggle="tooltip"
+                        data-placement="left"
+                        data-content="{{ eval.getComment() }}"
+                        title="{{ eval.getComment() }}"
+                    ></i>
+                {% else %}
+                    -
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+{% endif %}
