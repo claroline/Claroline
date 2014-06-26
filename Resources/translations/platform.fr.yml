@@ -51,14 +51,40 @@ You can use the following variables in your form: 'Vous pouvez utiliser les vari
 You can use the full screen version of the text editor to include HTML: 'Vous pouvez utiliser la version plein écran de l''éditeur afin d''y inclure du HTML'
 Your changes have been saved: 'Vos changements ont été sauvegardés'
 account_created: 'Compte créé'
+account_duration_label: Durée de vie des comptes (jours)
 account_general_statistics: 'Statistiques générales sur les comptes'
 action: Action
 actions: Actions
 active_widgets: 'Widgets actifs'
+activity_already: Cette ressource est déjà dans l'activité
 activity_form_instructions: Instructions
 activity_form_name: Nom
+activity_parameters_form_evaluation_type: 'Type d''évaluation'
+activity_parameters_form_max_attempts: 'Nombre de tentatives permises'
+activity_parameters_form_max_duration: 'Temps limite accordé (en seconde)'
+activity_parameters_form_max_duration: 'Temps limite accordé'
+activity_parameters_form_withTutor: Tutoré
+activity_parameters_form_where: Lieu d'apprentissage
+activity_parameters_form_who: Modalité de travail
+activity_remove_primary_resource: Enlever la resource primaire
+activity_resource_not_allowed: Vous ne pouvez pas ajouter une ressource de ce type
+activity_resource_remove: Êtes-vous sûr de vouloir enlever cette ressource de l'activite?
+activity_rule_action_none: Aucune
+activity_rule_configuration_for_auto_evaluation: 'Configuration de la règle pour l''évaluation automatique'
+activity_rule_form_action: Action
+activity_rule_form_activeFrom: 'A partir du'
+activity_rule_form_activeUntil: 'Jusqu''au'
+activity_rule_form_badge: Badge
+activity_rule_form_occurrence: Occurrence
+activity_rule_form_result: Résultat
+activity_where_anywhere: N'importe où
+activity_where_classroom: En classe
+activity_who_collaborative: Collaboratif
+activity_who_individual: Individuel
+activity_who_mixed: Mixte
 add: Ajouter
 add_category: 'Ajouter une catégorie'
+add_field_to_facet: Ajouter un champ à une facette
 add_group: 'Ajouter un groupe'
 add_group_s_confirm_message: 'groupe(s) ajouté(s)'
 add_groups: 'Ajouter des groupes'
@@ -99,6 +125,7 @@ answer: Répondre
 appearance: Apparence
 apply: Appliquer
 at_least_one_category_has_to_be_selected: 'Au moins une catégorie doit être selectionnée'
+attempts: Tentatives
 available_widgets: 'Widgets disponibles'
 available_workspaces: 'Espaces d''activités disponibles'
 back: Retour
@@ -106,6 +133,7 @@ back_to_profile: 'Retour au profil'
 bad_request: 'La requête est incorrecte. Si vous êtes arrivé sur cette page via un lien interne, veuillez signaler le problème à l''''administrateur de la plateforme.'
 badges_management: 'Gestion des badges'
 base_informations: 'Informations de base'
+best_score: 'Meilleur score'
 by: par
 by_workspace: 'Par espace'
 canCopy: 'Droit de copier'
@@ -130,10 +158,13 @@ choose_resource_form_type: 'Type de ressource'
 classify_my_workspaces: 'Classer mes espaces'
 classify_workspaces: 'Classer les espaces'
 close: Fermer
+closed_account: Compte clos
 code: Code
 collaborator: Collaborateur
+comments: Commentaires
 communication: Communication
 competence_referencial: Réferenciel de compétences
+completed: Terminé
 configuration: Configuration
 configure: Configurer
 connections: 'Nb Cnx.'
@@ -142,6 +173,8 @@ copiable: Copiable
 copy: Copier
 create: Créer
 create_category: 'Créer une catégorie'
+create_facet: Créer une facette
+create_field: Créer un champ
 create_group: 'Créer un groupe'
 create_new_admin_tag: 'Créer un nouveau Tag administrateur'
 create_new_home_tab: 'Créer un nouvel onglet'
@@ -169,6 +202,8 @@ data_col: 'Colonne des données'
 database: 'Base de données'
 database_connection_failed: 'La connexion à la base de données à échoué.'
 date: Date
+date_form_datepicker_format: dd-mm-yyyy
+date_form_datepicker_php: d-m-Y
 date_form_format: dd/MM/yyyy
 date_form_placeholder: jj/mm/aaaa
 date_format: d/m/Y
@@ -223,7 +258,10 @@ downloads: 'Nb tchgr.'
 drag_file_here: 'Déplacez le fichier ici'
 drop_file: 'Déposez le fichier'
 dsn: dsn
+duration: Durée
 edit: Modifier
+edit_facet: Editer une facette
+edit_field: Editer un champ
 edit_password: 'Modifier votre mot de passe'
 edit_password_error: 'Une erreur est survenue pendant la modification de votre mot de passe.'
 edit_password_error_current : Votre mot de passe actuel n'est pas correcte.
@@ -245,11 +283,18 @@ email_found_at: 'L''email %email% a été trouvé aux lignes: %lines%'
 empty_file: 'Fichier vide'
 enter_tag_name_message: 'Veuillez entrer un nom de Tag'
 entries_per_day: 'Nombre d''entrées par jour'
+evaluation: Evaluation
+evaluation-automatic: Automatique
+evaluation-manual: Manuelle
 export: Exporter
 exportable: Exportable
 external_pdo_database: 'Base de données externe (PDO)'
 facebook: Facebook
 facebook_application_validation_error: 'Les identifiants fournis ne sont pas valides.'
+facets: Facettes
+fail_add_user_group_message: Ces utilisateurs n'ont pas pu être ajouté au groupe (vérifiez la limite d'utilisateurs par rôle).
+fail_add_user_group_message: Ces utilisateurs n'ont pas pu être ajoutés au groupe (vérifiez la limite d'utilisateurs par rôle).
+failed: Echoué
 fast_answer: 'Réponse rapide'
 fb_client_id: 'Id de l''application'
 fb_client_secret: 'Secret de l''application'
@@ -316,6 +361,7 @@ import: Importer
 import_roles: 'Importer des roles'
 import_user_file_file: 'Importer depuis fichier csv'
 import_users: 'Importer des utilisateurs'
+incomplete: Incomplet
 informations: Informations
 inscription_mail: 'Mail d''inscription'
 instructions: Consignes
@@ -337,6 +383,7 @@ last_name: Nom
 layout: Layout
 leave_this_page: 'Si vous quittez cette page, vous risquez de perdre vos modifications.'
 left: Gauche
+limit: Limite
 line_number: 'Ligne %line%:'
 line_per_page: 'Résultats par page'
 link: Lien
@@ -435,11 +482,14 @@ no_user: 'Aucun utilisateur'
 no_workspace: 'Il n''y a aucun espace d''activités'
 none: Aucun
 not_allowed_message: 'Vous n''êtes pas autorisé(e) à effectuer cette action.'
+not_attempted: 'Pas tenté'
 not_blank_expected: 'Cette valeur ne peut pas être vide'
 note: Note
 notification_activated: 'Notifications activées.'
 notification_deactivated: 'Notifications désactivées.'
 notifications: 'Notifications'
+number: Nombre
+number_of_attempts: 'Nombre de tentatives'
 oauth: Oauth
 object: Objet
 ok: Ok
@@ -456,6 +506,7 @@ over_max_length: 'Cette valeur est trop longue'
 owner: Propriétaire
 owner_s: Propriétaire(s)
 parameters: Paramètres
+passed: Réussi
 password: 'Mot de passe'
 password_mismatch: 'Les mots de passe ne correspondent pas.'
 password_ok: 'Votre mot de passe a été modifié. Vous pouvez maintenant vous connecter.'
@@ -466,6 +517,8 @@ personal_workspace: 'Espace personnel - '
 phone: Téléphone
 picture_profile: 'Photo de profil'
 platform_appearance: 'Apparence de la plateforme'
+platform_expiration_date: Date d'expiration de la plateforme
+platform_init_date: Date d'activation de la plateforme
 platform_parameters: 'Paramètres de la plateforme'
 platform_parameters_form_auth_mode: 'Mode d''authentification'
 platform_parameters_form_content: Contenu
@@ -520,6 +573,11 @@ registered_groups: 'Groupes enregistrés'
 registered_users: 'Utilisateurs enregistrés'
 registration: Inscription
 registration_to_workspaces: 'Inscription à des espaces d''activités'
+remove: Enlever
+remove_facet: Supprimer une facette
+remove_facet_confirm: Etes-vous sur de vouloir supprimer la facette %name% ?
+remove_field: Supprimer une champ
+remove_field_confirm: Etes-vous sur de vouloir supprimer le champ %name% ?
 remove_group_confirm_message: 'Êtes-vous sûr de vouloir supprimer ce groupe ?'
 remove_group_s_confirm_message: 'Êtes-vous sûr de vouloir supprimer ces %count% groupes?'
 remove_message_confirm_message: 'Êtes-vous sûr de vouloir supprimer ce message ?'
@@ -576,12 +634,17 @@ rights_management: 'Gestion des droits'
 role: Rôle
 role_creation: 'Création d''un rôle'
 role_edition: 'Modification d''un rôle'
+role_limit_reached: La limite d'utilisateur de type %translationKey% a été atteinte.
+role_limit_reached: La limite d'utilisateurs de type %translationKey% a été atteinte.
+role_list: Liste des roles
+role_list: Liste des rôles
 role_name_type_form_translationKey: Nom
 roles: Rôles
 roles_management: 'Gestion des rôles'
 save: Sauvegarder
 save_as_template: 'Sauvegarder comme modèle'
 save_workspace_as_template: 'Sauvegarde de l''espace d''activités comme modèle'
+score: Score
 search: Rechercher
 search_group: 'Rechercher un groupe'
 search_user: 'Rechercher un utilisateur'
@@ -601,7 +664,6 @@ select_workspaces_for_registration: 'Choisissez les espaces d''activités pour l
 selected_workspaces_for_registration: 'Espaces d''activités sélectionnés pour l''inscription'
 selected_workspaces_will_be_put_in_it: 'Les espaces d''activités sélectionnés y seront disponibles'
 send: Envoyer
-send: envoyer
 send_mail: 'Envoyer un mail'
 send_mail_form_content: Message
 send_mail_form_object: Objet
@@ -628,6 +690,7 @@ show_as_admin: 'Voir comme admin'
 show_as_user: 'Voir comme utilisateur'
 show_profile: 'Voir le profile'
 simple: Simple
+status: Statut
 steal_session: 'Voler la session'
 storage_type: 'Type de stockage'
 subcategories: Sous-catégories
@@ -646,6 +709,7 @@ tags_list: 'Liste des Tags'
 tags_management: 'Gestion des Tags'
 tags_organization: 'Organisation des Tags'
 teacher: Professeur
+text: Texte
 text_form_content: Contenu
 text_form_name: Nom
 text_form_shareType: Redistribution
@@ -681,6 +745,7 @@ top_users_workspaces_owners: 'Top des utilisateurs ayant crée le plus de module
 top_workspaces_connections: 'Top des espaces d''activités les plus consultés'
 top_workspaces_resources: 'Top des espaces d''activités avec le plus des resources'
 total: Total
+total_time: 'Durée totale'
 trash: Corbeille
 tune: 'Personnaliser'
 tune_public_url_error: 'Une erreur s''est produite lors de la personnalisation de l''URL de votre profil public.'
@@ -694,6 +759,9 @@ unable_to_start_sendmail: 'La connexion avec Sendmail ou Postfix ne peut pas êt
 unable_to_start_smtp: 'La connexion avec le serveur SMTP ne peut pas être établie. Veuillez vérifier que les paramètres que vous avez renseignés sont corrects.'
 unable_to_start_transport: 'La connexion avec le serveur de mails ne peut pas être établie. Veuillez vérifier que les paramètres que vous avez renseignés sont corrects.'
 unauthorized: 'Vous n''êtes pas autorisé à consulter cette page.'
+unavailable_platform: La plateforme n'est pas disponible.
+unavailable_role: Le role %translationKey% n'est pas utilisable
+unavailable_role: Le rôle %translationKey% n'est pas utilisable
 uncompress_file: Décompresser le fichier si possible
 under_min_length: 'Cette valeur est trop courte'
 unique connections: 'Nb Cnx. uniques'
@@ -711,6 +779,9 @@ url_invalid: 'Le code n''est pas correct, n''essayez pas de changer l''adresse'
 user: Utilisateur
 user_accounts: 'Comptes utilisateur'
 user_creation: 'Création d''un utilisateur'
+user_limit_reached: La limite de création d'utilisateur a été atteinte.
+user_limit_reached: La limite de création d'utilisateurs a été atteinte.
+user_limit_too_low: Il y a déjà %total% %role%(s). La limite %newMax% est trop faible.
 user_parameters: 'Paramètres de l''utilisateur'
 user_picker: 'Outil pour choisir un utilisateur'
 user_profile: 'Profil utilisateur'
@@ -819,3 +890,11 @@ platform_init_date: Date d'activation de la plateforme
 platform_expiration_date: Date d'expiration de la plateforme
 role_limit_reached: La limite d'utilisateur de type %translationKey% a été atteinte.
 user_limit_reached: La limite de création d'utilisateur a été atteinte.
+user_limit_too_low: Il y a déjà %total% %role%(s). La limite %newMax% est trop faible.
+limit: Limite
+packages: Paquets
+core_packages: Paquets du noyau
+plugin_packages: Paquets des plugins
+no_package_description: Aucune description du paquet.
+yes: Oui
+no: Non

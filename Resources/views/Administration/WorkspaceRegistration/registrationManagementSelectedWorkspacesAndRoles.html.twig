@@ -6,7 +6,7 @@
                 <b>{{ 'selected_workspaces_for_registration'|trans({}, 'platform') }}</b>
                 {% if nbWorkspaces > 1 %}
                     <span id="remove-workspace-from-list" class="pointer-hand">
-                        <i class="icon-book pointer-hand"></i>
+                        <i class="fa fa-book pointer-hand"></i>
                     </span>
                 {% endif %}
             </label>
@@ -66,7 +66,7 @@
                 <ul>
                 {% for workspace in workspaces %}
                     <li class="workspace-element-for-removal" style="list-style-type: none">
-                        <i class="icon-trash pointer-hand remove-workspace-button"
+                        <i class="fa fa-trash-o pointer-hand remove-workspace-button"
                             workspace-id="{{ workspace.getId() }}"
                         ></i>
                         {{ workspace.getName() }}

@@ -13,7 +13,7 @@
     {{
         macros.breadcrumbs([
             {
-                'icon': 'icon-cog',
+                'icon': 'fa fa-cog',
                 'name': 'administration'|trans({}, 'platform'),
                 'href': path('claro_admin_index')
             },
@@ -33,7 +33,7 @@
         {% include 'ClarolineCoreBundle:Administration\\Analytics:analytics_navbar.html.twig'%}
 
         <div class="margin">
-            <h1>{{ wsCount }} <span class="small"><i class="icon-book"></i> {{'workspaces'|trans({}, 'platform')}}</span></h1>
+            <h1>{{ wsCount }} <span class="small"><i class="fa fa-book"></i> {{'workspaces'|trans({}, 'platform')}}</span></h1>
         </div>
         <div class="row">
             <div class="col-md-6">
@@ -42,7 +42,7 @@
             <div class="col-md-6">
                 <div id="analytics-resources-list" class="panel panel-default">
                     <div class="panel-heading">
-                        <i class="icon-list"></i>
+                        <i class="fa fa-list"></i>
                         {{'resources_usage_list'|trans({}, 'platform')}}
                     </div>
                     <div class="table-responsive">

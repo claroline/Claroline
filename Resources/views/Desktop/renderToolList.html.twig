@@ -4,7 +4,7 @@
     id="{{ tool.getName() }}-link"
     data-original-title="{{ tool.getName()|trans({}, 'tools') }}"
     >
-    <i class="{{ tool.getClass() }}"></i>
+    <i class="fa fa-{{ tool.getClass() }}"></i>
     <span>{{ tool.getDisplayName()|trans({}, 'tools') }}</span>
 </a>
 {% endfor %}

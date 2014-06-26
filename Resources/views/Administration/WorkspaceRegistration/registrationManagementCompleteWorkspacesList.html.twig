@@ -16,12 +16,12 @@
                         data-toggle="collapse"
                         href="#collapse-{{ currentIndex }}"
                     >
-                        <i class="icon-align-justify"></i>
+                        <i class="fa fa-align-justify"></i>
                         {{ tag.getName() }}
                         {% if workspace is not null %}
                             <span style="color:#B29EA1">
                                 [
-                                <i class="icon-book"></i>
+                                <i class="fa fa-book"></i>
                                 {{ workspaceName }}
                                 <small>({{ workspaceCode }})</small>
                                 ]
@@ -64,7 +64,7 @@
                     data-parent="#accordion-all"
                     href="#collapse-all"
                 >
-                    <i class="icon-align-justify"></i>
+                    <i class="fa fa-align-justify"></i>
                     {{ 'all_workspaces'|trans({}, 'platform') }}
                     <input
                         class="accordion-checkbox pull-right"

@@ -11,46 +11,70 @@
 
 namespace Claroline\CoreBundle\Library\Installation\Updater;
 
-use Claroline\CoreBundle\Persistence\ObjectManager;
-use Claroline\CoreBundle\Entity\Resource\ResourceIcon;
+use Claroline\CoreBundle\Entity\Widget\WidgetInstance;
+use Doctrine\ORM\EntityManager;
 
 class Updater021600
 {
     private $container;
     private $logger;
-    /** @var ObjectManager */
-    private $om;
+    /** @var EntityManager */
+    private $em;
 
     public function __construct($container)
     {
         $this->container = $container;
-        $this->om = $container->get('claroline.persistence.object_manager');
+        $this->em = $container->get('doctrine.orm.entity_manager');
     }
 
     public function postUpdate()
     {
-
-        $this->log('Updating tools for anonymous...');
-
-        $tool = $this->om->getRepository('ClarolineCoreBundle:Tool\Tool')->findOneByName('home');
-        $tool->setIsAnonymousExcluded(false);
-        $this->om->persist($tool);
-        $this->om->flush();
-
-        $tool = $this->om->getRepository('ClarolineCoreBundle:Tool\Tool')->findOneByName('resource_manager');
-        $tool->setIsAnonymousExcluded(false);
-        $this->om->persist($tool);
-        $this->om->flush();
-
-        $tool = $this->om->getRepository('ClarolineCoreBundle:Tool\Tool')->findOneByName('agenda');
-        $tool->setIsAnonymousExcluded(false);
-        $this->om->persist($tool);
-        $this->om->flush();
+        $this->changeAnonymousToolPermissions();
+        $this->repairWorkspaceWidgetInstances();
     }
 
     public function setLogger($logger)
     {
         $this->logger = $logger;
+    }
+
+    private function changeAnonymousToolPermissions()
+    {
+        $this->log('Updating tools for anonymous...');
+
+        foreach (array('home', 'resource_manager', 'agenda') as $toolName) {
+            $tool = $this->em->getRepository('ClarolineCoreBundle:Tool\Tool')->findOneByName($toolName);
+            $tool->setIsAnonymousExcluded(false);
+        }
+
+        $this->em->flush();
+    }
+
+    private function repairWorkspaceWidgetInstances()
+    {
+        $this->log('Repairing workspace widget instances...');
+
+        $dql = '
+            SELECT wic, wi FROM ClarolineCoreBundle:Widget\WidgetHomeTabConfig wic
+            JOIN wic.widgetInstance wi
+            WHERE wic.type = \'workspace\'
+            AND wi.workspace IS NULL
+        ';
+        $configs = $this->em->createQuery($dql)->getResult();
+
+        foreach ($configs as $config) {
+            $adminWidgetInstance = $config->getWidgetInstance();
+            $workspaceWidgetInstance = new WidgetInstance();
+            $workspaceWidgetInstance->setIsAdmin(false);
+            $workspaceWidgetInstance->setIsDesktop(false);
+            $workspaceWidgetInstance->setName($adminWidgetInstance->getName());
+            $workspaceWidgetInstance->setWidget($adminWidgetInstance->getWidget());
+            $workspaceWidgetInstance->setWorkspace($config->getWorkspace());
+            $this->em->persist($workspaceWidgetInstance);
+            $config->setWidgetInstance($workspaceWidgetInstance);
+        }
+
+        $this->em->flush();
     }
 
     private function log($message)

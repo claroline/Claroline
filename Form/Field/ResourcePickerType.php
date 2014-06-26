@@ -20,6 +20,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\Form\FormBuilderInterface;
 
 /**
  * @Service()
@@ -28,15 +29,18 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 class ResourcePickerType extends TextType
 {
     private $resourceManager;
+    private $transformer;
 
     /**
      * @InjectParams({
-     *     "resourceManager" = @Inject("claroline.manager.resource_manager")
+     *     "resourceManager" = @Inject("claroline.manager.resource_manager"),
+     *     "transformer" = @Inject("claroline.transformer.resource_picker")
      * })
      */
-    public function __construct($resourceManager)
+    public function __construct($resourceManager, $transformer)
     {
         $this->resourceManager = $resourceManager;
+        $this->transformer = $transformer;
     }
 
     public function getName()
@@ -47,6 +51,11 @@ class ResourcePickerType extends TextType
     public function getParent()
     {
         return 'text';
+    }
+
+    public function buildForm(FormBuilderInterface $builder, array $options)
+    {
+        $builder->addModelTransformer($this->transformer);
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)

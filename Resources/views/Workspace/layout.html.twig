@@ -17,7 +17,7 @@
             </div>
             {% if not is_path_mode  %}
                 <ul class="breadcrumb">
-                    <li><a href="{{ path('claro_workspace_list') }}"><i class="icon-book"></i> {{ 'workspaces'|trans({}, 'platform') }}</a></li>
+                    <li><a href="{{ path('claro_workspace_list') }}"><i class="fa fa-book"></i> {{ 'workspaces'|trans({}, 'platform') }}</a></li>
                     <li>
                         <a href="{{ path('claro_workspace_open_tool', {'toolName': 'home', 'workspaceId': _resource.getResourceNode().getWorkspace().getId() }) }}">
                             {{ _resource.getResourceNode().getWorkspace().getName() ~ ' (' ~ _resource.getResourceNode().getWorkspace().getCode() ~ ') ' }}

@@ -17,6 +17,8 @@ use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\Tool\Tool;
+use Claroline\CoreBundle\Entity\Tool\AdminTool;
+use Claroline\CoreBundle\Entity\Facet\FieldFacet;
 
 class RoleRepository extends EntityRepository
 {
@@ -305,6 +307,20 @@ class RoleRepository extends EntityRepository
         ";
 
         $query = $this->_em->createQuery($dql);
+
+        return $query->getResult();
+    }
+
+    public function findByAdminTool(AdminTool $adminTool)
+    {
+        $dql = "
+            SELECT r FROM Claroline\CoreBundle\Entity\Role r
+            JOIN r.adminTools t
+            WHERE t.id = :id
+        ";
+
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('id', $adminTool->getId());
 
         return $query->getResult();
     }

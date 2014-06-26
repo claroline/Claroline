@@ -17,30 +17,29 @@
     {% stylesheets debug=false filter='lessphp, cssmin'  output='vendor/fortawesome/font-awesome/css/font-awesome.css'
     '../vendor/fortawesome/font-awesome/less/font-awesome.less'
     %}
-        <link rel="stylesheet" href="{{ asset_url }}" screen="media" />
+        <link rel="stylesheet" href="{{ asset_url }}" />
     {% endstylesheets %}
 
-    {% image debug=false output='vendor/fortawesome/font-awesome/font/FontAwesome.otf'
-        '../vendor/fortawesome/font-awesome/font/FontAwesome.otf' %}
+    {% image debug=false output='vendor/fortawesome/font-awesome/fonts/FontAwesome.otf'
+        '../vendor/fortawesome/font-awesome/fonts/FontAwesome.otf' %}
     {% endimage %}
 
-    {% image debug=false output='vendor/fortawesome/font-awesome/font/fontawesome-webfont.eot'
-        '../vendor/fortawesome/font-awesome/font/fontawesome-webfont.eot' %}
+    {% image debug=false output='vendor/fortawesome/font-awesome/fonts/fontawesome-webfont.eot'
+        '../vendor/fortawesome/font-awesome/fonts/fontawesome-webfont.eot' %}
     {% endimage %}
 
-    {% image debug=false output='vendor/fortawesome/font-awesome/font/fontawesome-webfont.svg'
-        '../vendor/fortawesome/font-awesome/font/fontawesome-webfont.svg' %}
+    {% image debug=false output='vendor/fortawesome/font-awesome/fonts/fontawesome-webfont.svg'
+        '../vendor/fortawesome/font-awesome/fonts/fontawesome-webfont.svg' %}
     {% endimage %}
 
-    {% image debug=false output='vendor/fortawesome/font-awesome/font/fontawesome-webfont.ttf'
-        '../vendor/fortawesome/font-awesome/font/fontawesome-webfont.ttf' %}
+    {% image debug=false output='vendor/fortawesome/font-awesome/fonts/fontawesome-webfont.ttf'
+        '../vendor/fortawesome/font-awesome/fonts/fontawesome-webfont.ttf' %}
     {% endimage %}
 
-    {% image debug=false output='vendor/fortawesome/font-awesome/font/fontawesome-webfont.woff'
-        '../vendor/fortawesome/font-awesome/font/fontawesome-webfont.woff' %}
+    {% image debug=false output='vendor/fortawesome/font-awesome/fonts/fontawesome-webfont.woff'
+        '../vendor/fortawesome/font-awesome/fonts/fontawesome-webfont.woff' %}
     {% endimage %}
     <link rel='stylesheet' type='text/css' href='{{ asset('bundles/frontend/jquery/plugin/datepicker/css/datepicker3.css')}}'>
-    <link rel='stylesheet' type='text/css' href='{{ asset('bundles/clarolinecore/css/iframe/iframe.css')}}'>
 {% endblock %}
 
 {% block javascripts_header %}
@@ -167,6 +166,11 @@
         "@ClarolineCoreBundle/Resources/views/Tool/workspace/roles/roleGroupLabel.html.twigjs"
         "@ClarolineCoreBundle/Resources/views/ConfirmationMessage/removeWorkspacesConfirm.html.twigjs"
         "@ClarolineCoreBundle/Resources/views/ConfirmationMessage/noRoleSelected.html.twigjs"
+        "@ClarolineCoreBundle/Resources/views/Administration/Facet/facetTab.html.twigjs"
+        "@ClarolineCoreBundle/Resources/views/Administration/Facet/facetTabInnerHtml.html.twigjs"
+        "@ClarolineCoreBundle/Resources/views/Administration/Facet/facetPane.html.twigjs"
+        "@ClarolineCoreBundle/Resources/views/Administration/Facet/fieldElement.html.twigjs"
+        "@ClarolineCoreBundle/Resources/views/Administration/Facet/fieldElementInnerHtml.html.twigjs"
         %}<script type="text/javascript" src="{{ asset_url }}"></script>
     {% endjavascripts %}
     {% javascripts debug=false filter='jsmin' output='vendor/jquery/ui/jqueryui.js'

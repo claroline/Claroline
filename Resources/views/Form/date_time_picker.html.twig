@@ -26,11 +26,11 @@
         {% if component %}
             <div class="input-group  date col-md-4">
                 {{ form_widget(form.date, {'id' : id ~ '_date','attr':{'class':'input-small','placeholder': 'date_form_placeholder'|trans({},'platform')},}) }}
-                <span class="input-group-addon"><span class="icon-calendar"></span></span>
+                <span class="input-group-addon"><span class="fa fa-calendar"></span></span>
             </div>
             <div class="input-group   col-md-offset-1 col-sm-3 ">
                 {{ form_widget(form.time, {'id' : id ~ '_time','attr':{'class':'input-small','placeholder':'--:--','pattern':'[0-9]{2}:[0-9]{2}'} } ) }}
-                <span class="input-group-addon"><i class="icon-time"></i></span>
+                <span class="input-group-addon"><i class="fa fa-clock-o"></i></span>
             </div>
         {% else %}
             {{ form_widget(form.date, {'id' : id ~ '_date','attr':{'class':'input-small','placeholder': 'date_form_placeholder'|trans({},'platform')},}) }}

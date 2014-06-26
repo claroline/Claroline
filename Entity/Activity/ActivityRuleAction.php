@@ -14,7 +14,7 @@ namespace Claroline\CoreBundle\Entity\Activity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\Activity\ActivityRuleActionRepository")
  * @ORM\Table(name="claro_activity_rule_action")
  */
 class ActivityRuleAction
@@ -39,8 +39,33 @@ class ActivityRuleAction
      */
     protected $action;
 
-    /**
-     * @ORM\Column(name="rule_type", nullable=true)
-     */
-    protected $type;
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    public function setId($id)
+    {
+        $this->id = $id;
+    }
+
+    public function getResourceType()
+    {
+        return $this->resourceType;
+    }
+
+    public function setResourceType($resourceType)
+    {
+        $this->resourceType = $resourceType;
+    }
+
+    public function getAction()
+    {
+        return $this->action;
+    }
+
+    public function setAction($action)
+    {
+        $this->action = $action;
+    }
 }

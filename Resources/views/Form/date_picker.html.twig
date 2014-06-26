@@ -12,7 +12,7 @@
         {% if component %}
         <div class="input-group date" id="{{ id }}">
             <input type="text" class="input-sm form-control" {{ block('custom_widget_attributes') }}{% if value is not empty %} value="{{ value }}" {% endif %}>
-            <span class="input-group-addon"><span class="icon-calendar"></span></span>
+            <span class="input-group-addon"><span class="fa fa-calendar"></span></span>
         </div>
         {% else %}
         <input type="text" class="input-sm form-control" {{ block('widget_attributes') }} {% if value is not empty %}value="{{ value }}" {% endif %}/>

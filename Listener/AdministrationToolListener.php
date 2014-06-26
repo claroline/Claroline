@@ -99,14 +99,14 @@ class AdministrationToolListener
     }
 
     /**
-     * @DI\Observe("administration_tool_platform_plugins")
+     * @DI\Observe("administration_tool_platform_packages")
      *
      * @param OpenAdministrationToolEvent $event
      */
-    public function onOpenPlatformPlugins(OpenAdministrationToolEvent $event)
+    public function onOpenPlatformPackages(OpenAdministrationToolEvent $event)
     {
         $params = array();
-        $params['_controller'] = 'ClarolineCoreBundle:Administration\Plugins:pluginList';
+        $params['_controller'] = 'ClarolineCoreBundle:Administration\Package:list';
         $this->redirect($params, $event);
     }
 

@@ -14,6 +14,7 @@ namespace Claroline\CoreBundle\Listener;
 use Claroline\CoreBundle\Event\LogCreateEvent;
 use Claroline\CoreBundle\Manager\ActivityManager;
 use Claroline\CoreBundle\Rule\Validator;
+use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 use JMS\DiExtraBundle\Annotation as DI;
 
 /**
@@ -23,6 +24,7 @@ class ActivityRuleListener
 {
     private $activityManager;
     private $ruleValidator;
+    private $hasSucceded = false;
 
     /**
      * @DI\InjectParams({
@@ -47,37 +49,87 @@ class ActivityRuleListener
     public function onLog(LogCreateEvent $event)
     {
         $log = $event->getLog();
+        $dateLog = $log->getDateLog();
         $action = $log->getAction();
         $resourceNode = $log->getResourceNode();
+        $user =  $log->getDoer();
 
-        if (!is_null($resourceNode)) {
-            $activityRules = $this->activityManager
-                ->getActivityRuleByActionAndResource($action, $resourceNode);
+        if (!is_null($user)) {
+            $activityRules = is_null($resourceNode) ?
+                $this->activityManager
+                    ->getActivityRuleByActionWithNoResource($action) :
+                $this->activityManager
+                    ->getActivityRuleByActionAndResource($action, $resourceNode);
 
             if (count($activityRules) > 0) {
-                $user =  $log->getDoer();
 
                 foreach ($activityRules as $activityRule) {
                     $activityParams = $activityRule->getActivityParameters();
+                    $accessFrom = $activityRule->getActiveFrom();
+                    $accessUntil = $activityRule->getActiveUntil();
 
-                    $nbRules = is_null($activityParams->getRules()) ?
-                        0 :
-                        count($activityParams->getRules());
+                    if ((is_null($accessFrom) || $dateLog >= $accessFrom)
+                        && (is_null($accessUntil) || $dateLog <= $accessUntil)) {
 
-                    if (!is_null($user) && $nbRules > 0) {
-                        $resources = $this->ruleValidator->validate(
-                            $activityParams,
-                            $user
-                        );
+                        $nbRules = is_null($activityParams->getRules()) ?
+                            0 :
+                            count($activityParams->getRules());
 
-                        if(0 < $resources['validRules']
-                            && $resources['validRules'] >= $nbRules) {
+                        if ($nbRules > 0) {
+                            $rules = $activityParams->getRules();
+                            $ruleType = 'result';
 
-    //                        Mettre à jour l'évaluation
+                            foreach ($rules as $rule) {
+
+                                if (is_null($rule->getResult())) {
+                                    $ruleType = 'occurrence';
+                                    break;
+                                }
+                            }
+
+                            $activityStatus = 'unknown';
+                            $rulesLogs = $this->ruleValidator->validate(
+                                $activityParams,
+                                $user
+                            );
+
+                            if(isset($rulesLogs['validRules'])
+                                && $rulesLogs['validRules'] >= $nbRules) {
+
+                                $activityStatus = ($ruleType === 'occurrence') ?
+                                    'completed' :
+                                    'passed';
+                                $this->hasSucceded = true;
+                            } else {
+
+                                $activityStatus = ($ruleType === 'occurrence') ?
+                                    'incomplete' :
+                                    'failed';
+                            }
+
+                            $this->activityManager->manageEvaluation(
+                                $user,
+                                $activityParams,
+                                $log,
+                                $rulesLogs,
+                                $activityStatus
+                            );
                         }
                     }
                 }
             }
+        }
+    }
+
+    /**
+     * @DI\Observe("kernel.response")
+     */
+    public function onKernelResponse(FilterResponseEvent $event)
+    {
+        if ($this->hasSucceded) {
+            $content = $event->getResponse()->getContent();
+            $content = str_replace('</body>', '<script>console.log("succeeded");</script></body>', $content);
+            $event->getResponse()->setContent($content);
         }
     }
 }

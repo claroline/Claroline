@@ -14,7 +14,7 @@ namespace Claroline\CoreBundle\Entity\Activity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\Activity\PastEvaluationRepository")
  * @ORM\Table(name="claro_activity_past_evaluation")
  */
 class PastEvaluation
@@ -43,7 +43,7 @@ class PastEvaluation
     protected $activityParameters;
 
     /**
-     * @ORM\Column(name="last_date", type="datetime", nullable=true)
+     * @ORM\Column(name="evaluation_date", type="datetime", nullable=true)
      */
     protected $date;
 
@@ -91,6 +91,14 @@ class PastEvaluation
      * @ORM\Column(type="json_array", nullable=true)
      */
     protected $details;
+
+    /**
+     * @ORM\ManyToOne(
+     *     targetEntity="Claroline\CoreBundle\Entity\Log\Log"
+     * )
+     * @ORM\JoinColumn(name="log_id", onDelete="SET NULL", nullable=true)
+     */
+    protected $log;
 
     public function getId()
     {
@@ -220,5 +228,15 @@ class PastEvaluation
     public function setDetails($details)
     {
         $this->details = $details;
+    }
+
+    public function getLog()
+    {
+        return $this->log;
+    }
+
+    public function setLog($log)
+    {
+        $this->log = $log;
     }
 }

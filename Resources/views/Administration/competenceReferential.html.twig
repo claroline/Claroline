@@ -35,7 +35,7 @@
                     <h4 class="modal-title">Modal title</h4>
                 </div>
                 <div class="modal-body">
-                    <form action="{{ path('claro_admin_competence_add') }}" method="POST" {{ form_enctype(form) }} id="myForm" >
+                    <form action="{{ path('claro_admin_competence_add_sub', {competenceId: cpt.getId() }) }}" method="POST" {{ form_enctype(form) }} id="myForm" >
                         {{ form_widget(form) }}
                         {{ form_rest(form) }}
                         {{ form_errors(form) }}

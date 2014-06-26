@@ -22,20 +22,20 @@
                         <ul class="dropdown-menu" role="menu">
                             <li role="presentation" class="edit-tag-btn">
                                 <a role="menuitem" href="#">
-                                    <i class="icon-pencil"></i>
+                                    <i class="fa fa-pencil"></i>
                                     {{ 'rename_category'|trans({}, 'platform') }}
                                 </a>
                             </li>
                             <li role="presentation" class="divider"></li>
                             <li role="presentation" class="create-sub-tag-btn">
                                 <a role="menuitem" href="#">
-                                    <i class="icon-plus"></i>
+                                    <i class="fa fa-plus"></i>
                                     {{ 'create_subcategory'|trans({}, 'platform') }}
                                 </a>
                             </li>
                             <li role="presentation" class="add-tag-btn">
                                 <a role="menuitem" href="#">
-                                    <i class="icon-list-alt"></i>
+                                    <i class="fa fa-list-alt"></i>
                                     {{ 'add_subcategory'|trans({}, 'platform') }}
                                 </a>
                             </li>
@@ -43,14 +43,14 @@
                             {% if not isRoot %}
                                 <li role="presentation" class="remove-tag-btn">
                                     <a role="menuitem" href="#">
-                                        <i class="icon-remove"></i>
+                                        <i class="fa fa-times"></i>
                                         {{ 'remove_subcategory'|trans({}, 'platform') }}
                                     </a>
                                 </li>
                             {% endif %}
                             <li role="presentation" class="delete-tag-btn">
                                 <a role="menuitem" href="#">
-                                    <i class="icon-trash"></i>
+                                    <i class="fa fa-trash-o"></i>
                                     {{ 'delete_category'|trans({}, 'platform') }}
                                 </a>
                             </li>
@@ -78,7 +78,7 @@
     {{
         macros.breadcrumbs([
             {
-                'icon': 'icon-book',
+                'icon': 'fa fa-book',
                 'name': 'workspaces'|trans({}, 'platform'),
                 'href': path('claro_workspace_list')
             },
