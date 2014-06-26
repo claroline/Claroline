@@ -61,9 +61,9 @@ activity_already: Cette ressource est déjà dans l'activité
 activity_evaluation_form_attemptsCount: 'Nombre de tentatives'
 activity_evaluation_form_comment: Commentaire
 activity_evaluation_form_date: 'Date de la dernière tentative'
-activity_evaluation_form_numScore: 'Score'
-activity_evaluation_form_score: 'Evaluation'
-activity_evaluation_form_status: 'Statut'
+activity_evaluation_form_numScore: 'Meilleur score'
+activity_evaluation_form_score: Evaluation
+activity_evaluation_form_status: Statut
 activity_form_instructions: Instructions
 activity_form_name: Nom
 activity_parameters_form_evaluation_type: 'Type d''évaluation'
@@ -169,7 +169,7 @@ close: Fermer
 closed_account: Compte clos
 code: Code
 collaborator: Collaborateur
-comments: Commentaires
+comment: Commentaire
 communication: Communication
 completed: Terminé
 configuration: Configuration
@@ -294,7 +294,7 @@ entries_per_day: 'Nombre d''entrées par jour'
 evaluation: Evaluation
 evaluation-automatic: Automatique
 evaluation-manual: Manuelle
-evaluation_edition: 'Evaluation'
+evaluation_edition: Evaluation
 export: Exporter
 exportable: Exportable
 external_pdo_database: 'Base de données externe (PDO)'
