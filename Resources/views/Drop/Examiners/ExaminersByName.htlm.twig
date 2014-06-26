@@ -24,6 +24,10 @@
             </a>
         </li>
     </ul>
+
+{% endblock %}
+{% block dropzone_content_drops_by_beforeTitle %}
+    {% include 'IcapDropzoneBundle:Drop:peerReviewHelper.html.twig' %}
 {% endblock %}
 
 {% block dropzone_content_drops_by_default %}
@@ -43,6 +47,7 @@
 {% endblock %}
 
 {% block dropzone_content_drops_by_Listing %}
+
     {% include 'IcapDropzoneBundle:Drop:Listing/examinersListing.html.twig' %}
 {% endblock %}
 
