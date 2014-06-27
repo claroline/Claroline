@@ -347,6 +347,13 @@
 {% endblock %}
 
 {% block javascripts %}
+    
+    <script type="text/javascript">
+        //$(document).ready(function() {
+            $('#Qnumber option[value="' + {{ numQ }} + '"]').attr('selected', 'selected');
+        //});
+    </script>
+    
     {{ parent() }}
     
     <script type="text/javascript">
@@ -361,9 +368,4 @@
         <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/graphicdisplay.js') }}"></script>
     {% endif %}
 
-    <script type="text/javascript">
-        $(document).ready(function() {
-            $('#Qnumber option[value="' + {{ numQ }} + '"]').attr('selected', 'selected');
-        });
-    </script>
 {% endblock %}
