@@ -125,23 +125,10 @@
      */
     picker.open = function (callBack)
     {
-        if ($('#resourcePicker').get(0) === undefined) {
-            $('body').append('<div id="resourcePicker"></div>');
-            $.ajax(routing.generate('claro_resource_init'))
-                .done(function (data) {
-                    var resourceInit = JSON.parse(data);
-                    resourceInit.parentElement = $('#resourcePicker');
-                    resourceInit.isPickerMultiSelectAllowed = false;
-                    resourceInit.isPickerOnly = true;
-                    resourceInit.pickerCallback = callBack;
-                    manager.initialize(resourceInit);
-                    manager.picker('open');
-                })
-                .error(function () {
-                    modal.error();
-                });
+        if (!manager.hasPicker('tinyMcePicker')) {
+            manager.createPicker('tinyMcePicker', { callback: callBack }, true);
         } else {
-            manager.picker('open');
+            manager.picker('tinyMcePicker', 'open');
         }
     };
 

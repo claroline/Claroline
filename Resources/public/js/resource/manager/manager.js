@@ -56,7 +56,7 @@
      * - zoom: a zoom value for thumbnails
      *      (defaults to "zoom100")
      *
-     * @param parameters object
+     * @param parameters object Parameters of the manager
      */
     manager.createFullManager = function (parameters) {
         initialize();
@@ -103,10 +103,11 @@
      * Note that if they're not provided, the manager will try to fetch the last five
      * parameters directly from the server before using their default values.
      *
-     * @param name          string
-     * @param parameters    object
+     * @param name          string  Name of the picker
+     * @param parameters    object  Parameters of the picker
+     * @param open          boolean Whether the picker should be opened after creation (defaults to false)
      */
-    manager.createPicker = function (name, parameters) {
+    manager.createPicker = function (name, parameters, open) {
         if (views[name] !== undefined) {
             throw new Error('Picker name "' + name + '" is already in use');
         }
@@ -120,14 +121,25 @@
         fetchMissingParameters(parameters, function () {
             var pickerParameters = buildParameters(name, parameters, true);
             views[name] = new manager.Views.Master(pickerParameters, dispatcher);
+            open && dispatcher.trigger('open-picker-' + name);
         });
+    };
+
+    /**
+     * Checks if a picker is registered.
+     *
+     * @param name  string
+     * @returns boolean
+     */
+    manager.hasPicker = function (name) {
+        return views[name] !== undefined && views[name].parameters.isPickerMode;
     };
 
     /**
      * Opens or closes a picker by its name.
      *
-     * @param name      string
-     * @param action    string (open|close)
+     * @param name      string  Name of the picker
+     * @param action    string  Action to execute (open|close)
      */
     manager.picker = function (name, action) {
         if (!views.hasOwnProperty(name) || !views[name].parameters.isPickerMode) {
