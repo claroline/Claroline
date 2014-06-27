@@ -685,6 +685,8 @@ class RoleManager
         $role->setType(Role::PLATFORM_ROLE);
         $this->om->persist($role);
         $this->om->flush();
+
+        return $role;
     }
 
     /**
@@ -732,5 +734,29 @@ class RoleManager
     public function countUsersByRoleIncludingGroup(Role $role)
     {
         return $this->om->getRepository('ClarolineCoreBundle:User')->countUsersByRoleIncludingGroup($role);
+    }
+
+    /**
+     * This functions sets the role limit equal to the current number of users having that role
+     *
+     * @param Role $role
+     */
+    public function initializeLimit(Role $role)
+    {
+        $count = $this->countUsersByRoleIncludingGroup($role);
+        $role->setMaxUsers($count);
+        $this->om->persist($role);
+        $this->om->flush();
+    }
+
+    /**
+     * @param Role $role
+     * @param $limit
+     */
+    public function increaseRoleMaxUsers(Role $role, $limit)
+    {
+        $role->setMaxUsers($role->getMaxUsers() + $limit);
+        $this->om->persist($role);
+        $this->om->flush();
     }
 }
