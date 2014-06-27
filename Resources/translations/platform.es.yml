@@ -125,6 +125,7 @@ appearance: 'Apariencia'
 apply: 'Aplicar'
 at_least_one_category_has_to_be_selected: 'Debe seleccionar al menos una categoría'
 attempts: Intentos
+automatic: Automático
 available_widgets: 'Widgets disponibles'
 available_workspaces: 'Espacios de trabajo disponibles'
 back: 'Atrás'
@@ -270,6 +271,7 @@ evaluation: Evaluación
 evaluation-automatic: Automático
 evaluation-manual: Manual
 evaluation_edition: Evaluación
+evaluation_type: 'Tipo de evaluación'
 export: 'Exportar'
 exportable: 'Exportable'
 external_pdo_database: 'Base de datos externa (PDO)'
@@ -394,6 +396,7 @@ mail_sent: 'Un correo electrónico ha sido enviado, Por favor compruebe su bande
 manage_rights: 'Administrar los derechos'
 manage_tools: Gestión de las herramientas
 manager: 'Administrar'
+manual_evaluation_explanation: 'Evaluación manual del administrador del espacio de trabajo'
 max_size_is: 'El tamaño máximo es %size%'
 media_most_viewed: 'Recurso más visto'
 message_form_content: 'Contenido'
@@ -482,6 +485,7 @@ owner: 'Propietario'
 owner_s: 'Propietario(s)'
 parameters: 'Parámetros'
 passed: Logrado
+passing_score: 'Puntaje para aprobar'
 password: 'Contraseña'
 password_mismatch: 'Las contraseñas no coinciden'
 password_ok: 'Su contraseña ha cambiado, ahora pude conectarse'

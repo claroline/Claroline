@@ -76,12 +76,7 @@
                             <td>
                                 {% if evaluation is defined %}
                                     <i class="fa fa-edit evaluation-edit-button pointer-hand"
-                                        data-evaluation-id="{{ evaluation.getId() }}"
-                                        data-container="#activity-evaluations"
-                                        data-toggle="tooltip"
-                                        data-placement="top"
-                                        title="{{ 'manual_evaluation_explanation'|trans({}, 'platform') }}"
-                                    >
+                                        data-evaluation-id="{{ evaluation.getId() }}">
                                     </i>
                                 {% endif %}
                             </td>

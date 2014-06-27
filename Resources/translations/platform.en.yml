@@ -132,6 +132,7 @@ appearance: Appearance
 apply: Apply
 at_least_one_category_has_to_be_selected: 'At least one category has to be selected'
 attempts: Attempts
+automatic: Automatic
 available_widgets: 'Available widgets'
 available_workspaces: 'Available workspaces'
 back: Back
@@ -294,6 +295,7 @@ evaluation: Evaluation
 evaluation-automatic: Automatic
 evaluation-manual: Manual
 evaluation_edition: Evaluation
+evaluation_type: 'Evaluation type'
 export: Export
 exportable: Exportable
 external_pdo_database: 'External database (PDO)'
