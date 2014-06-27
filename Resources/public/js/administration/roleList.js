@@ -85,7 +85,7 @@
             url: url,
             type: 'POST',
             success: function(data) {
-                //changeNameCallback(data, row);
+                changeNameCallback(data);
             },
             error: function() {
                 //todo: error handling
@@ -129,13 +129,22 @@
         });
     }
 
+    function showSuccessAlert(text) {
+        var html = '<div class="alert alert-success alert-dismissible" role="alert">' +
+            '<button type="button" class="close" data-dismiss="alert">' +
+            '<span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>' +
+            text + '</div>';
+        $('.panel-body').prepend(html)
+    }
+
     //CALLBACKS
     var setRoleMaxUsers = function(data, row) {
         $(row.find('.td-role-limit')).html(data['limit']);
+        showSuccessAlert(Translator.get('platform:' + 'user_limit_success_update'));
     }
 
-    var changeNameCallback = function(data, row) {
-
+    var changeNameCallback = function(data) {
+        showSuccessAlert(Translator.get('platform:' + 'role_name_changed_success'));
     }
 
     var addRoleRow = function(data) {

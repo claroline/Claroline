@@ -457,7 +457,7 @@ platform_role: 'Roles de la plataforma'
 platform_widgets: 'Widgets de la plataforma'
 please_wait: 'Por favor espere...'
 position: 'posición'
-positive_number_expected: 'Este valor debería ser un numero positivo'
+positive_number_expected: 'Este valor debería ser un número positivo'
 private: 'Privado'
 properties: 'propiedades'
 public: 'Publico'
@@ -755,3 +755,5 @@ name_required: nombre obligatorio
 remove_role_confirm:  ¿Esta seguro que desea suprimir el rol %name%?
 remove_role: Eliminiar un rol.
 initialize: Inicializar
+user_limit_success_update: El número máximo de usuarios por rol ha sido actualizado con éxito.
+role_name_changed_success: El nombre del rola ha sido actualizado con éxito.
