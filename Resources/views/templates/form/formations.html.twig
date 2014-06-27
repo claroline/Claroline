@@ -9,6 +9,7 @@
                 <input type="text" class="form-control" id="formation_{{ $index }}_resource"
                      name="icap_portfolio_widget_form_formations[formations][{{ $index }}][resource]" data-ng-model="formation.resource"
                      data-ng-disabled="formation.toDelete" data-ng-keyup="addEmptyChild($index + 1)" data-ng-keypress="markEmpty(formation)" />
+                <button type="button" data-ui-resource-picker="resourcePickerConfig">Choisir ressource</button>
                 {% endverbatim %}
                 <span class="input-group-btn" data-ng-if="isAdded(formation)">
                     <button class="btn btn-danger" type="button" data-ng-if="!isEmpty(formation) && !formation.toDelete" data-ng-click="deleteChild(formation)">

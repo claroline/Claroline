@@ -157,8 +157,17 @@ class PortfolioController extends Controller
             $editMode = true;
         }
 
+        $resourceTypes = $this->get('claroline.manager.resource_manager')->getAllResourceTypes();
+
         $widgetsConfig       = $this->getWidgetsManager()->getWidgetsConfig();
-        $response            = new Response($this->renderView('IcapPortfolioBundle:Portfolio:view.html.twig', array('titleWidget' => $titleWidget, 'portfolio' => $portfolio, 'editMode' => $editMode, 'widgetsConfig' => $widgetsConfig)));
+        $responseParameters  = array(
+            'titleWidget'   => $titleWidget,
+            'portfolio'     => $portfolio,
+            'editMode'      => $editMode,
+            'widgetsConfig' => $widgetsConfig,
+            'resourceTypes' => $resourceTypes
+        );
+        $response            = new Response($this->renderView('IcapPortfolioBundle:Portfolio:view.html.twig', $responseParameters));
         $portfolioVisibility = $portfolio->getVisibility();
 
         if ($user !== $portfolio->getUser() && !$this->get('security.context')->isgranted('ROLE_ADMIN')) {

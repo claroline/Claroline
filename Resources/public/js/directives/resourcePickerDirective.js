@@ -1,17 +1,19 @@
 'use strict';
 
-angular.module('ui.resourcePicker', [])
-    .value('uiResourcePickerConfig', {})
+angular.value('uiResourcePickerConfig', {})
     .directive('uiResourcePicker', ['uiResourcePickerConfig', function (uiResourcePickerConfig) {
         uiResourcePickerConfig = uiResourcePickerConfig || {};
 
         // Set some default options
         var options = {
-            isPickerMultiSelectAllowed: true,
-            isPickerOnly: false,
-            isWorkspace: false,
-            resourceTypes: {},
+            isPickerMultiSelectAllowed: false,
+            isPickerOnly:               true,
+            isWorkspace:                true,
+            appPath:                    window.appPath,
+            webPath:                    window.webPath,
+            resourceTypes:              window.resourceTypes,
             pickerCallback: function (nodes) {
+                console.log(nodes);
                 return null;
             }
         };
