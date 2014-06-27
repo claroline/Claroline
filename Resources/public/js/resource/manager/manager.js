@@ -23,6 +23,7 @@
     var hasFetchedParameters = false;
     var fetchedParameters = {
         pickerDirectoryId: null,
+        preFetchedDirectory: null,
         resourceTypes: null,
         webPath: null,
         language: null,
@@ -69,10 +70,6 @@
         views['shortcutPicker'] = new manager.Views.Master(shortcutParameters, dispatcher);
         router = new manager.Router(dispatcher, mainParameters.directoryId);
 
-        if (mainParameters.preFetchedDirectory) {
-            server.setPreFetchedDirectory(mainParameters.preFetchedDirectory);
-        }
-
         Backbone.history.start();
     };
 
@@ -91,6 +88,8 @@
      *      (defaults to "body" element)
      * - directoryId : the id of the directory to open at initialization
      *      (defaults to "0", i.e. pseudo-root of all directories)
+     * - preFetchedDirectory: a json representation of the first directory to open
+     *      (defaults to null)
      * - resourceTypes: an object whose properties describe the available resource types
      *      (defaults to empty object)
      * - webPath: the base url of the web directory
@@ -100,7 +99,7 @@
      * - zoom: a zoom value for thumbnails
      *      (defaults to "zoom100")
      *
-     * Note that if they're not provided, the manager will try to fetch the last five
+     * Note that if they're not provided, the manager will try to fetch the last six
      * parameters directly from the server before using their default values.
      *
      * @param name          string  Name of the picker
@@ -108,7 +107,7 @@
      * @param open          boolean Whether the picker should be opened after creation (defaults to false)
      */
     manager.createPicker = function (name, parameters, open) {
-        if (views[name] !== undefined) {
+        if (manager.hasPicker(name)) {
             throw new Error('Picker name "' + name + '" is already in use');
         }
 
@@ -132,7 +131,7 @@
      * @returns boolean
      */
     manager.hasPicker = function (name) {
-        return views[name] !== undefined && views[name].parameters.isPickerMode;
+        return views.hasOwnProperty(name) && views[name].parameters.isPickerMode;
     };
 
     /**
@@ -142,7 +141,7 @@
      * @param action    string  Action to execute (open|close)
      */
     manager.picker = function (name, action) {
-        if (!views.hasOwnProperty(name) || !views[name].parameters.isPickerMode) {
+        if (!manager.hasPicker(name)) {
             throw new Error('Unknown picker "' + name + '"');
         }
 
@@ -179,12 +178,12 @@
     }
 
     function buildParameters(viewName, parameters, isPicker, isDefault) {
-        return {
+        var mergedParameters = {
             viewName: viewName,
             isPickerMode: isPicker,
             isWorkspace: parameters.isWorkspace || false,
             directoryId: resolveDirectoryId(parameters, isPicker, isDefault),
-            preFetchedDirectory: parameters.preFetchedDirectory || null,
+            preFetchedDirectory: parameters.preFetchedDirectory || fetchedParameters.preFetchedDirectory || null,
             parentElement: parameters.parentElement || $('body'),
             breadcrumbElement: isPicker ? null : parameters.breadcrumbElement || null,
             resourceTypes: resolveResourceTypes(parameters),
@@ -194,6 +193,12 @@
             pickerCallback: parameters.callback || function () {},
             isPickerMultiSelectAllowed: isDefault || parameters.isPickerMultiSelectAllowed || false
         };
+
+        if (mergedParameters.preFetchedDirectory) {
+            server.setPreFetchedDirectory(mergedParameters.preFetchedDirectory);
+        }
+
+        return mergedParameters;
     }
 
     function resolveDirectoryId(parameters, isPicker, isDefault) {
@@ -231,6 +236,7 @@
         } else {
             server.fetchManagerParameters(function (data) {
                 fetchedParameters.directoryId = data.pickerDirectoryId;
+                fetchedParameters.preFetchedDirectory = data.preFetchedDirectory;
                 fetchedParameters.resourceTypes = data.resourceTypes;
                 fetchedParameters.language = data.language;
                 fetchedParameters.webPath = data.webPath;

@@ -50,7 +50,7 @@
     server.prototype.openDirectory = function (event) {
         var eventName = 'directory-data-' + event.view;
 
-        if (this.preFetchedDirectory && this.preFetchedDirectory.id === event.nodeId) {
+        if (this.preFetchedDirectory && this.preFetchedDirectory.id == event.nodeId) {
             this.preFetchedDirectory.isSearchMode = false;
             this.dispatcher.trigger(eventName, this.preFetchedDirectory);
         } else {

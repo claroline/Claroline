@@ -30,7 +30,7 @@ Once initialized, pickers can be opened and closed using the `picker` method:
 
 Additionally, some new features have been introduced :
 
-- In full mode, the content of the initial directory can be loaded on server side using the
+- The content of the initial directory can now be loaded on server side using the
   "preFetchedDirectory" parameter.
 
 - In picker mode, most of the parameters can be omitted. If some important parameter is missing,
