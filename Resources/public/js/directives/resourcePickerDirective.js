@@ -1,6 +1,7 @@
 'use strict';
 
-angular.value('uiResourcePickerConfig', {})
+angular.module('ui.resourcePicker', [])
+    .value('uiResourcePickerConfig', {})
     .directive('uiResourcePicker', ['uiResourcePickerConfig', function (uiResourcePickerConfig) {
         uiResourcePickerConfig = uiResourcePickerConfig || {};
 
