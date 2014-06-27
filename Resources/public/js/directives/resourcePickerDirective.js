@@ -21,7 +21,7 @@ angular.module('ui.resourcePicker', [])
 
         return {
             restrict: "A",
-            link: function ($scope, el, attrs) {
+            link: function ($scope, element, attrs) {
                 if (attrs.uiResourcePicker) {
                     var expression = $scope.$eval(attrs.uiResourcePicker);
                 } else {
@@ -41,8 +41,8 @@ angular.module('ui.resourcePicker', [])
                     Claroline.ResourceManager.picker('close');
                 }
 
-                el[0].onclick = function(e){
-                    e.preventDefault();
+                element[0].onclick = function(event){
+                    event.preventDefault();
                     $scope.resourcePickerOpen();
                 };
             }
