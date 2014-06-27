@@ -754,3 +754,4 @@ limit: Límite
 name_required: nombre obligatorio
 remove_role_confirm:  ¿Esta seguro que desea suprimir el rol %name%?
 remove_role: Eliminiar un rol.
+initialize: Inicializar

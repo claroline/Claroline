@@ -819,3 +819,4 @@ limit: Limite
 name_required: Name required
 remove_role_confirm: Are you sure you want to remove the role %name% ?
 remove_role: Role suppression.
+initialize: Initialiser
