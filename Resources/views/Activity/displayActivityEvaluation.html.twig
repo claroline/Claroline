@@ -57,11 +57,11 @@
                 </td>
                 <td class="center-text">
                     {% if evaluation.getComment() is not empty %}
-                        <i class="fa fa-comment-o display-comment"
+                        <i class="fa fa-comment-o pointer-hand display-comment"
                             data-container="#activity-evaluation-display-element"
-                            data-toggle="tooltip"
+                            data-toggle="popover"
                             data-placement="left"
-                            title="{{ evaluation.getComment() }}"
+                            data-content="{{ evaluation.getComment() }}"
                         ></i>
                     {% else %}
                         -
@@ -122,11 +122,11 @@
                         </td>
                         <td class="center-text">
                             {% if eval.getComment() is not empty %}
-                                <i class="fa fa-comment-o display-comment"
+                                <i class="fa fa-comment-o pointer-hand display-comment"
                                     data-container="#activity-evaluation-display-element"
-                                    data-toggle="tooltip"
+                                    data-toggle="popover"
                                     data-placement="left"
-                                    title="{{ eval.getComment() }}"
+                                    data-content="{{ eval.getComment() }}"
                                 ></i>
                             {% else %}
                                 -
@@ -139,3 +139,9 @@
     {% endif %}
     
 </div>
+
+{% block javascripts %}
+    <script>
+        $('.display-comment').popover();
+    </script>
+{% endblock %}

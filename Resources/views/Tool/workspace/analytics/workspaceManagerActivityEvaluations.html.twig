@@ -77,6 +77,10 @@
                                 {% if evaluation is defined %}
                                     <i class="fa fa-edit evaluation-edit-button pointer-hand"
                                         data-evaluation-id="{{ evaluation.getId() }}"
+                                        data-container="#activity-evaluations"
+                                        data-toggle="tooltip"
+                                        data-placement="top"
+                                        title="{{ 'manual_evaluation_explanation'|trans({}, 'platform') }}"
                                     >
                                     </i>
                                 {% endif %}
@@ -147,11 +151,11 @@
                                 </td>
                                 <td class="text-center">
                                     {% if evaluation.getComment() is not empty %}
-                                        <i class="fa fa-comment-o display-comment"
+                                        <i class="fa fa-comment-o pointer-hand display-comment"
                                             data-container="#activity-evaluations"
-                                            data-toggle="tooltip"
+                                            data-toggle="popover"
                                             data-placement="left"
-                                            title="{{ evaluation.getComment() }}"
+                                            data-content="{{ evaluation.getComment() }}"
                                         ></i>
                                     {% else %}
                                         -

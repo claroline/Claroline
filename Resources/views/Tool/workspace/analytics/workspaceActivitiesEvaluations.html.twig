@@ -102,11 +102,11 @@
                             </td>
                             <td class="center-text">
                                 {% if eval.getComment() is not empty %}
-                                    <i class="fa fa-comment-o display-comment"
+                                    <i class="fa fa-comment-o pointer-hand display-comment"
                                         data-container="#activities-evaluations"
-                                        data-toggle="tooltip"
+                                        data-toggle="popover"
                                         data-placement="left"
-                                        title="{{ eval.getComment() }}"
+                                        data-content="{{ eval.getComment() }}"
                                     ></i>
                                 {% else %}
                                     -
