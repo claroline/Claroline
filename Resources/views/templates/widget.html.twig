@@ -11,7 +11,7 @@
                     <span class="icon-pencil"></span>
                 </button>
                 <div class="btn-group" data-ng-if="!widget.isEditing() && !widget.isNew()">
-                    <button class="btn btn-sm btn-default dropdown-toggle" type="button" id="columnMenu" data-toggle="dropdown">
+                    <button class="btn btn-sm btn-default dropdown-toggle" type="button" id="columnMenu" data-toggle="dropdown" data-ng-if="0 < portfolio.disposition">
                         <span class="icon-exchange"></span>
                     </button>
                     <ul class="dropdown-menu" role="menu" aria-labelledby="columnMenu">
