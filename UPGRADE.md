@@ -41,6 +41,9 @@ Additionally, some new features have been introduced :
 - Pickers now accept a white list or a black list of resource types through the *typeWhiteList* and
   *typeBlackList* parameters, allowing to filter the resources to display.
 
+- In picker mode, the current directory id is saved in session and shared amongst
+  all picker instances.
+
 
 Workspace entity
 ----------------
