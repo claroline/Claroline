@@ -23,7 +23,7 @@ class LogExerciseEvaluatedEvent extends AbstractLogResourceEvent {
                 'title' => $exercise->getTitle()
             ),
             'result'      => $grade['scorePaper'],
-            'maxExoScore' => $grade['maxExoScore']
+            'resultMax' => $grade['maxExoScore']
         );
 
         parent::__construct($exercise->getResourceNode(), $details);
