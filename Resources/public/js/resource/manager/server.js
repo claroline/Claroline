@@ -100,11 +100,11 @@
         $.ajax({
             url: Routing.generate('claro_resource_delete', {}),
             data: {
-                ids: event.ids
+                ids: event.ids || [event.nodeId]
             },
             success: function () {
                 this.dispatcher.trigger('deleted-nodes-' + event.view, {
-                    ids: event.ids
+                    ids: event.ids || [event.nodeId]
                 });
                 this.dispatcher.trigger('close-confirm');
             }

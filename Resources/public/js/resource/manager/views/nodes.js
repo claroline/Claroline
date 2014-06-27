@@ -74,8 +74,10 @@
             );
         },
         removeNodes: function (event) {
-            for (var i = 0; i < event.ids.length; ++i) {
-                this.$('#' + event.ids[i]).remove();
+            var ids = event.ids || [event.nodeId];
+
+            for (var i = 0; i < ids.length; ++i) {
+                this.$('#' + ids[i]).remove();
             }
         },
         zoom: function (event) {
