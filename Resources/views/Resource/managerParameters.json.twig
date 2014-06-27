@@ -2,6 +2,7 @@
     "webPath": "{{ asset('') }}",
     "language": "{{ app.request.locale }}",
     "zoom": "{{ app.session.get('zoom') }}",
+    "pickerDirectoryId": "{{ app.session.get('pickerDirectoryId', '0') }}",
     "resourceTypes": {
         {% for resourceType in resourceTypes %}
             "{{ resourceType.getName() }}": {

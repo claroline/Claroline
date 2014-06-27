@@ -46,7 +46,8 @@
             event.preventDefault()
             this.dispatcher.trigger('open-directory', {
                 nodeId: event.currentTarget.getAttribute('data-node-id'),
-                view: this.parameters.viewName
+                view: this.parameters.viewName,
+                fromPicker: this.parameters.isPickerMode
             });
         },
         render: function (event) {

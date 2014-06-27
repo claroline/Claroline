@@ -22,6 +22,7 @@
     var areLogsActivated = false;
     var hasFetchedParameters = false;
     var fetchedParameters = {
+        pickerDirectoryId: null,
         resourceTypes: null,
         webPath: null,
         language: null,
@@ -35,6 +36,8 @@
      * Relevant parameters are:
      *
      * - directoryId : the id of the directory to open at initialization
+     *      (defaults to "0", i.e. pseudo-root of all directories)
+     * - pickerDirectoryId : the id of the directory to open in picker mode
      *      (defaults to "0", i.e. pseudo-root of all directories)
      * - preFetchedDirectory: a json representation of the first directory to open
      *      (defaults to null)
@@ -57,6 +60,7 @@
      */
     manager.createFullManager = function (parameters) {
         initialize();
+        parameters = parameters || {};
         var mainParameters = buildParameters('main', parameters, false, true);
         var pickerParameters = buildParameters('defaultPicker', parameters, true, true);
         var shortcutParameters = buildParameters('shortcutPicker', parameters, true, true);
@@ -80,7 +84,7 @@
      * - isMultiSelectAllowed: whether the selection of multiple nodes should be allowed
      *      (default to false)
      * - typeWhiteList: an array of resource type names to accept
-     *      (defaults to null)
+     *      (defaults to null, i.e. all types are accepted)
      * - typeBlackList: an array of resource type names to exclude (ignored if a white list is given)
      *      (defaults to null)
      * - parentElement: the jquery element in which the views will be rendered
@@ -103,11 +107,16 @@
      * @param parameters    object
      */
     manager.createPicker = function (name, parameters) {
+        if (views[name] !== undefined) {
+            throw new Error('Picker name "' + name + '" is already in use');
+        }
+
         if (['main', 'defaultPicker', 'shortcutPicker'].indexOf(name) !== -1) {
             throw new Error('Invalid picker name "' + name + '" (reserved for internal use)');
         }
 
         initialize();
+        parameters = parameters || {};
         fetchMissingParameters(parameters, function () {
             var pickerParameters = buildParameters(name, parameters, true);
             views[name] = new manager.Views.Master(pickerParameters, dispatcher);
@@ -158,33 +167,49 @@
     }
 
     function buildParameters(viewName, parameters, isPicker, isDefault) {
-        var builtParameters = {
+        return {
             viewName: viewName,
             isPickerMode: isPicker,
             isWorkspace: parameters.isWorkspace || false,
-            directoryId: isPicker && isDefault ? '0' : parameters.directoryId || '0',
+            directoryId: resolveDirectoryId(parameters, isPicker, isDefault),
             preFetchedDirectory: parameters.preFetchedDirectory || null,
             parentElement: parameters.parentElement || $('body'),
             breadcrumbElement: isPicker ? null : parameters.breadcrumbElement || null,
-            resourceTypes: parameters.resourceTypes || fetchedParameters.resourceTypes || {},
+            resourceTypes: resolveResourceTypes(parameters),
             language: parameters.language || fetchedParameters.language || 'en',
             webPath: parameters.webPath || fetchedParameters.webPath || '',
             zoom: parameters.zoom || fetchedParameters.zoom || 'zoom100',
             pickerCallback: parameters.callback || function () {},
             isPickerMultiSelectAllowed: isDefault || parameters.isPickerMultiSelectAllowed || false
         };
+    }
 
-        if (parameters.typeWhiteList) {
-            builtParameters.resourceTypes = _.pick(builtParameters.resourceTypes, parameters.typeWhiteList);
-        } else if (parameters.typeBlackList) {
-            builtParameters.resourceTypes = _.omit(builtParameters.resourceTypes, parameters.typeBlackList);
+    function resolveDirectoryId(parameters, isPicker, isDefault) {
+        if (isPicker) {
+            if (isDefault) {
+                return parameters.pickerDirectoryId || '0';
+            }
+
+            return parameters.directoryId || fetchedParameters.directoryId || '0';
         }
 
-        return builtParameters;
+        return parameters.directoryId || '0';
+    }
+
+    function resolveResourceTypes(parameters) {
+        var types = parameters.resourceTypes || fetchedParameters.resourceTypes || {};
+
+        if (parameters.typeWhiteList) {
+            types = _.pick(types, parameters.typeWhiteList);
+        } else if (parameters.typeBlackList) {
+            types = _.omit(types, parameters.typeBlackList);
+        }
+
+        return types;
     }
 
     function fetchMissingParameters(givenParameters, callback) {
-        var expectedParameters = ['resourceTypes', 'webPath', 'language', 'zoom'];
+        var expectedParameters = ['resourceTypes', 'webPath', 'language', 'zoom', 'directoryId'];
         var hasMissingParameter = _.some(expectedParameters, function (parameter) {
             return !givenParameters.hasOwnProperty(parameter);
         });
@@ -193,6 +218,7 @@
             callback();
         } else {
             server.fetchManagerParameters(function (data) {
+                fetchedParameters.directoryId = data.pickerDirectoryId;
                 fetchedParameters.resourceTypes = data.resourceTypes;
                 fetchedParameters.language = data.language;
                 fetchedParameters.webPath = data.webPath;

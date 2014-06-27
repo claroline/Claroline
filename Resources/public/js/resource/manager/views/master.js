@@ -22,17 +22,21 @@
     views.Master = Backbone.View.extend({
         outerEvents: {
             'directory-data': 'render',
-            'open-picker': 'open',
-            'close-picker': 'close'
+            'open-picker': 'openAsPicker',
+            'close-picker': 'closeAsPicker'
         },
         initialize: function (parameters, dispatcher) {
             this.parameters = parameters;
             this.dispatcher = dispatcher;
             this.wrapper = null;
             this.isAppended = false;
+            this.pickerDirectoryId = null;
             this.buildElement();
             _.each(this.outerEvents, function (method, event) {
                 this.dispatcher.on(event + '-' + this.parameters.viewName, this[method], this);
+            }, this);
+            this.dispatcher.on('save-picker-directory', function (event) {
+                this.pickerDirectoryId = event.directoryId;
             }, this);
         },
         buildElement: function () {
@@ -59,13 +63,14 @@
                 this.subViews.confirm = new views.Confirm(this.dispatcher);
             }
         },
-        open: function () {
+        openAsPicker: function () {
             this.dispatcher.trigger('open-directory', {
-                nodeId: this.parameters.directoryId,
-                view: this.parameters.viewName
+                nodeId: this.pickerDirectoryId || this.parameters.directoryId,
+                view: this.parameters.viewName,
+                fromPicker: true
             });
         },
-        close: function () {
+        closeAsPicker: function () {
             if (this.parameters.isPickerMode && this.isAppended) {
                 this.$('.modal').modal('hide');
             }

@@ -91,7 +91,8 @@
             this.dispatcher.trigger(eventName , {
                 nodeId: event.currentTarget.getAttribute('data-id'),
                 resourceType: type,
-                view: this.parameters.viewName
+                view: this.parameters.viewName,
+                fromPicker: this.parameters.isPickerMode
             });
         },
         checkNode: function (event) {

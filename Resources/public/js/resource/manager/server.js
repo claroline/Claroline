@@ -54,10 +54,19 @@
             this.preFetchedDirectory.isSearchMode = false;
             this.dispatcher.trigger(eventName, this.preFetchedDirectory);
         } else {
+            var url = Routing.generate('claro_resource_directory', {
+                nodeId: event.nodeId
+            });
+
+            if (event.fromPicker) {
+                this.dispatcher.trigger('save-picker-directory', {
+                    directoryId: event.nodeId
+                });
+                url += '?keep-id';
+            }
+
             $.ajax({
-                url: Routing.generate('claro_resource_directory', {
-                    nodeId: event.nodeId
-                }),
+                url: url,
                 success: function (data) {
                     data.isSearchMode = false;
                     this.dispatcher.trigger(eventName, data);

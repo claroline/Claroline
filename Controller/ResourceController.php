@@ -484,9 +484,15 @@ class ResourceController
             $this->dispatcher->dispatch('log', 'Log\LogResourceRead', array($node));
         }
 
+        $directoryId = $node ? $node->getId() : '0';
+
+        if ($this->request->query->has('keep-id')) {
+            $this->request->getSession()->set('pickerDirectoryId', $directoryId);
+        }
+
         $jsonResponse = new JsonResponse(
             array(
-                'id' => $node ? $node->getId() : '0',
+                'id' => $directoryId,
                 'path' => $path,
                 'creatableTypes' => $creatableTypes,
                 'nodes' => $nodesWithCreatorPerms,
