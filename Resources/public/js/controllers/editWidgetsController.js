@@ -6,8 +6,6 @@ portfolioApp
 
         $scope.resourcePickerConfig = {
             isPickerMultiSelectAllowed: true,
-            isPickerOnly: true,
-            isWorkspace: true,
             pickerCallback: function (nodes) {
                 console.log(nodes);
             }
