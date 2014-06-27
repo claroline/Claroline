@@ -119,7 +119,7 @@ class FormationsWidgetFormation implements SubWidgetInterface
             'name'     => $this->getName(),
             'resource' => array(
                 'id'   => $this->getResource()->getId(),
-                'name' => $this->getResource()->getName()
+                'name' => $this->getResource()->getPathForDisplay()
             )
         );
     }
