@@ -271,6 +271,18 @@ class RolesController extends Controller
     public function increaseRoleMaxUsers(Role $role, $amount)
     {
         $this->checkOpen();
+
+        if ($amount < 0) {
+            return new JsonResponse(
+                array(
+                    'name' => $role->getName(),
+                    'limit' => $role->getMaxUsers(),
+                    'translationKey' => $role->getTranslationKey(),
+                    'error' => 'negative_amount_increased'
+                ),
+                500
+            );
+        }
         $this->roleManager->increaseRoleMaxUsers($role, $amount);
 
         return new JsonResponse(
@@ -296,10 +308,28 @@ class RolesController extends Controller
     public function editRoleNameAction(Role $role, $name)
     {
         $this->checkOpen();
+
+        if (ctype_space($name)) {
+            return new JsonResponse(
+                array(
+                    'name' => $role->getName(),
+                    'limit' => $role->getMaxUsers(),
+                    'translationKey' => $role->getTranslationKey()
+                ),
+                500
+            );
+        }
+
         $role->setTranslationKey($name);
         $this->roleManager->edit($role);
 
-        return new JsonResponse(array('name' => $role->getName(), 'limit' => $role->getMaxUsers()));
+        return new JsonResponse(
+            array(
+                'name' => $role->getName(),
+                'limit' => $role->getMaxUsers(),
+                'translationKey' => $role->getTranslationKey()
+            )
+        );
     }
 
     private function checkOpen()

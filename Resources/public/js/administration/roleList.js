@@ -70,25 +70,20 @@
             type: 'POST',
             success: function(data) {
                 setRoleMaxUsers(data, row);
-            },
-            error: function() {
-                //todo: error handling
             }
         });
     })
     .on('click', '.edit-role-name-btn', function(event) {
         var roleId = $(event.currentTarget).attr('data-role-id');
-        var newName = $($(event.currentTarget)[0].parentNode.parentNode).find('.change-name-field').val();
+        var row = $($(event.currentTarget)[0].parentNode.parentNode);
+        var newName = row.find('.change-name-field').val();
         var url = Routing.generate('platform_role_name_edit', {'role': roleId, 'name': newName});
 
         $.ajax({
             url: url,
             type: 'POST',
             success: function(data) {
-                changeNameCallback(data);
-            },
-            error: function() {
-                //todo: error handling
+                changeNameCallback(data, row);
             }
         });
     })
@@ -106,6 +101,18 @@
             }
         });
     })
+    .on('input', '.change-name-field', function(event) {
+            var btn = $($(event.currentTarget)[0].parentNode.parentNode).find('.edit-role-name-btn');
+            isBlank($(event.currentTarget).val()) ?
+                btn.attr('disabled', 'disabled'):
+                btn.removeAttr('disabled');
+    })
+    .on('input', '.increase-user-field', function(event) {
+        var btn = $($(event.currentTarget)[0].parentNode.parentNode).find('.increase-user-btn');
+        isNegative($(event.currentTarget).val()) || isBlank($(event.currentTarget).val()) ?
+            btn.attr('disabled', 'disabled'):
+            btn.removeAttr('disabled');
+    });
 
     //HELPER
     function submitForm(formId, successHandler) {
@@ -129,26 +136,38 @@
         });
     }
 
-    function showSuccessAlert(text) {
-        var html = '<div class="alert alert-success alert-dismissible" role="alert">' +
+    function showAlert(text, alertClass) {
+        var html = '<div class="alert ' + alertClass + ' alert-dismissible" role="alert">' +
             '<button type="button" class="close" data-dismiss="alert">' +
             '<span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>' +
             text + '</div>';
         $('.panel-body').prepend(html)
     }
 
+    function trans(domain, name) {
+        return Translator.get(domain + ':' + name) == domain + ':' + name ? name: Translator.get(domain + ':' + name)
+    }
+
+    function isBlank(str) {
+        return (!str || /^\s*$/.test(str));
+    }
+
+    function isNegative(str) {
+        return parseInt(str) < 0 ? true: false;
+    }
+
     //CALLBACKS
     var setRoleMaxUsers = function(data, row) {
         $(row.find('.td-role-limit')).html(data['limit']);
-        showSuccessAlert(Translator.get('platform:' + 'user_limit_success_update'));
+        showAlert(trans('platform', 'user_limit_success_update'), 'alert-success');
     }
 
-    var changeNameCallback = function(data) {
-        showSuccessAlert(Translator.get('platform:' + 'role_name_changed_success'));
+    var changeNameCallback = function(data, row) {
+        row.find('.change-name-field').val(trans('platform', data['translationKey']));
+        showAlert(trans('platform', 'role_name_changed_success'), 'alert-success');
     }
 
     var addRoleRow = function(data) {
-        console.debug({'role': data});
         $('#role-table-body').append(Twig.render(RowFormAdminRoleList, {'role': data, 'count': 0}));
     }
 })();
