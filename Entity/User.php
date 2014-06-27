@@ -26,6 +26,7 @@ use Claroline\CoreBundle\Entity\Role;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Validator\ExecutionContextInterface;
+use Claroline\CoreBundle\Entity\Facet\FieldFacetValue;
 
 /**
  * @ORM\Table(name="claro_user")
@@ -284,6 +285,22 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
      */
     protected $publicProfilePreferences;
 
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="expiration_date", type="datetime", nullable=true)
+     */
+    protected $expirationDate;
+
+    /**
+     * @ORM\OneToMany(
+     *     targetEntity="Claroline\CoreBundle\Entity\Facet\FieldFacetValue",
+     *     mappedBy="user",
+     *     cascade={"persist"}
+     * )
+     */
+    protected $fieldsFacetValue;
+
     public function __construct()
     {
         parent::__construct();
@@ -296,6 +313,7 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
         $this->userBadges        = new ArrayCollection();
         $this->issuedBadges      = new ArrayCollection();
         $this->badgeClaims       = new ArrayCollection();
+        $this->fieldsFacetValue  = new ArrayCollection();
     }
 
     /**
@@ -843,7 +861,16 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
 
     public function isAccountNonExpired()
     {
-        return true;
+        foreach ($this->getRoles() as $role) {
+            if ($role === 'ROLE_ADMIN') {
+                return true;
+            }
+        }
+
+        /** @var \DateTime */
+        $expDate = $this->getExpirationDate();
+
+        return ($this->getExpirationDate() >= new \DateTime()) ? true: false;
     }
 
     public function isAccountNonLocked()
@@ -954,5 +981,25 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
         if (preg_match("/\s/", $this->getPublicUrl())) {
             $context->addViolationAt('publicUrl', 'public_profile_url_not_valid', array(), null);
         }
+    }
+
+    public function setExpirationDate($expirationDate)
+    {
+        $this->expirationDate = $expirationDate;
+    }
+
+    public function getExpirationDate()
+    {
+        return $this->expirationDate !== null ? $this->expirationDate: new \DateTime(2100-01-01);
+    }
+
+    public function getFieldsFacetValue()
+    {
+        return $this->fieldsFacetValue;
+    }
+
+    public function addFieldFacet(FieldFacetValue $fieldFacetValue)
+    {
+        $this->fieldsFacetValue->add($fieldFacetValue);
     }
 }

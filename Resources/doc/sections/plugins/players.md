@@ -121,7 +121,7 @@ resource breadcrumbs.
     </div>
     <div class="panel-footer">
         <a class="btn btn-primary" href="{{ path('claro_resource_download') }}?ids[]={{video.getResourceNode().getResourceNode().getId()}}">
-            <i class="icon-download"></i> {{ 'download'|trans({}, 'platform') }}
+            <i class="fa fa-arrow-circle-o-down"></i> {{ 'download'|trans({}, 'platform') }}
         </a>
     </div>
 {% endblock %}

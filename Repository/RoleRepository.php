@@ -17,6 +17,9 @@ use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\Tool\Tool;
+use Claroline\CoreBundle\Entity\Tool\AdminTool;
+use Claroline\CoreBundle\Entity\Facet\FieldFacet;
+use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 
 class RoleRepository extends EntityRepository
 {
@@ -307,5 +310,42 @@ class RoleRepository extends EntityRepository
         $query = $this->_em->createQuery($dql);
 
         return $query->getResult();
+    }
+
+    public function findByAdminTool(AdminTool $adminTool)
+    {
+        $dql = "
+            SELECT r FROM Claroline\CoreBundle\Entity\Role r
+            JOIN r.adminTools t
+            WHERE t.id = :id
+        ";
+
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('id', $adminTool->getId());
+
+        return $query->getResult();
+    }
+
+    public function findRolesWithRightsByResourceNode(
+        ResourceNode $resourceNode,
+        $executeQuery = true
+    )
+    {
+        $dql = '
+            SELECT r
+            FROM Claroline\CoreBundle\Entity\Role r
+            WHERE EXISTS (
+                SELECT rr
+                FROM Claroline\CoreBundle\Entity\Resource\ResourceRights rr
+                WHERE rr.role = r
+                AND rr.resourceNode = :resourceNode
+                AND MOD(rr.mask, 2) = 1
+            )
+        ';
+
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('resourceNode', $resourceNode);
+
+        return $executeQuery ? $query->getResult(): $query;
     }
 }

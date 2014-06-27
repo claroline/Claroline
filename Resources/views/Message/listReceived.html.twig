@@ -27,8 +27,8 @@
 
 {% macro displayControls() %}
     {% if app.user %}
-        <button class="btn btn-default action-button" data-action="remove">
-            <i class="icon-trash"></i>
+        <button class="btn btn-default action-button table-control" data-action="remove">
+            <i class="fa fa-trash-o"></i>
             {{ 'delete'|trans({}, 'platform') }}
         </button>
     {% endif %}
@@ -51,7 +51,7 @@
                 <input class="form-control" type="text" id="search-items-txt" placeholder="{{ 'search'|trans({}, 'platform') }}" value={{search}}>
                 <span class="input-group-btn">
                     <button class="filter btn btn-default" type="button" id="search-button">
-                        <i class="icon-search"></i>
+                        <i class="fa fa-search"></i>
                     </button>
                 </span>
             </div>
@@ -99,9 +99,9 @@
                             <td> {{ userMessage.getMessage().getDate()|intl_date_format }} </td>
                             <td>
                                 {% if userMessage.isRead() %}
-                                    <div style="color: green" class="icon-ok-sign"></div>
+                                    <div style="color: green" class="fa fa-check-circle"></div>
                                 {% else %}
-                                    <a href="{{ path('claro_message_mark_as_read', {'message': userMessage.getMessage().getId()}) }}" class="mark-as-read"><i class="icon-envelope"></i></a>
+                                    <a href="{{ path('claro_message_mark_as_read', {'message': userMessage.getMessage().getId()}) }}" class="mark-as-read"><i class="fa fa-envelope"></i></a>
                                 {% endif %}
                             </td>
                         </tr>
@@ -137,7 +137,7 @@
 
         $('tr.pointer-hand').on('click', function(event) {
             var targetClass = event.target.className;
-            if (targetClass !== 'chk-item' && targetClass !== 'icon-envelope') {
+            if (targetClass !== 'chk-item' && targetClass !== 'fa fa-envelope') {
                 window.document.location = $(this).attr("data-route");
             }
         });
@@ -149,7 +149,7 @@
                 url: $(e.currentTarget).attr('href'),
                 success: function () {
                     $(e.target).css('color', 'green');
-                    $(e.target).attr('class', 'icon-ok-sign');
+                    $(e.target).attr('class', 'fa fa-check-circle');
                     var row = $(e.target)[0].parentElement.parentElement.parentElement;
                     $(row).addClass('active');
                 }

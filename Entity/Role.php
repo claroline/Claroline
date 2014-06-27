@@ -66,11 +66,43 @@ class Role implements RoleInterface
 
     /**
      * @ORM\ManyToMany(
+     *     targetEntity="Claroline\CoreBundle\Entity\Facet\Facet",
+     *     mappedBy="roles"
+     * )
+     */
+    protected $facets;
+
+    /**
+     * @ORM\OneToMany(
+     *     targetEntity="Claroline\CoreBundle\Entity\Facet\FieldFacetRole",
+     *     mappedBy="role"
+     * )
+     */
+    protected $fieldFacetsRole;
+
+    /**
+     * @ORM\OneToMany(
+     *     targetEntity="Claroline\CoreBundle\Entity\Facet\PublicProfilePreference",
+     *     mappedBy="role"
+     * )
+     */
+    protected $publicProfilePreference;
+
+    /**
+     * @ORM\ManyToMany(
      *     targetEntity="Claroline\CoreBundle\Entity\Tool\OrderedTool",
      *     mappedBy="roles"
      * )
      */
     protected $orderedTools;
+
+    /**
+     * @ORM\ManyToMany(
+     *     targetEntity="Claroline\CoreBundle\Entity\Tool\AdminTool",
+     *     mappedBy="roles"
+     * )
+     */
+    protected $adminTools;
 
     /**
      * @ORM\ManyToMany(
@@ -102,11 +134,18 @@ class Role implements RoleInterface
      */
     protected $workspace;
 
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    protected $maxUsers;
+
     public function __construct()
     {
-        $this->users           = new ArrayCollection();
-        $this->resourceContext = new ArrayCollection();
-        $this->groups          = new ArrayCollection();
+        $this->users            = new ArrayCollection();
+        $this->resourceContext  = new ArrayCollection();
+        $this->groups           = new ArrayCollection();
+        $this->facets           = new ArrayCollection();
+        $this->fieldFacetsRoles = new ArrayCollection();
     }
 
     public function getId()
@@ -234,5 +273,16 @@ class Role implements RoleInterface
     public function getWorkspace()
     {
         return $this->workspace;
+    }
+
+    public function setMaxUsers($maxUsers)
+    {
+        $this->maxUsers = $maxUsers;
+    }
+
+    public function getMaxUsers()
+    {
+        //2147483647 is the maximium integer in the database field.
+        return ($this->maxUsers === null) ? 2147483647: $this->maxUsers;
     }
 }

@@ -13,6 +13,7 @@ namespace Claroline\CoreBundle\Controller;
 
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\UserPublicProfilePreferences;
+use Claroline\CoreBundle\Entity\Facet\Facet;
 use Claroline\CoreBundle\Form\UserPublicProfilePreferencesType;
 use Claroline\CoreBundle\Event\StrictDispatcher;
 use Claroline\CoreBundle\Form\ProfileType;
@@ -21,6 +22,8 @@ use Claroline\CoreBundle\Form\UserPublicProfileUrlType;
 use Claroline\CoreBundle\Manager\LocaleManager;
 use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Manager\UserManager;
+use Claroline\CoreBundle\Manager\ToolManager;
+use Claroline\CoreBundle\Manager\FacetManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use JMS\SecurityExtraBundle\Annotation as SEC;
 use Pagerfanta\Adapter\DoctrineORMAdapter;
@@ -30,7 +33,6 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 use Symfony\Component\Security\Core\Encoder\EncoderFactory;
@@ -47,6 +49,8 @@ class ProfileController extends Controller
     private $request;
     private $localeManager;
     private $encoderFactory;
+    private $toolManager;
+    private $facetManager;
 
     /**
      * @DI\InjectParams({
@@ -56,7 +60,9 @@ class ProfileController extends Controller
      *     "security"        = @DI\Inject("security.context"),
      *     "request"         = @DI\Inject("request"),
      *     "localeManager"   = @DI\Inject("claroline.common.locale_manager"),
-     *     "encoderFactory" = @DI\Inject("security.encoder_factory")
+     *     "encoderFactory"  = @DI\Inject("security.encoder_factory"),
+     *     "toolManager"     = @DI\Inject("claroline.manager.tool_manager"),
+     *     "facetManager"    = @DI\Inject("claroline.manager.facet_manager")
      * })
      */
     public function __construct(
@@ -66,7 +72,9 @@ class ProfileController extends Controller
         SecurityContextInterface $security,
         Request $request,
         LocaleManager $localeManager,
-        EncoderFactory $encoderFactory
+        EncoderFactory $encoderFactory,
+        ToolManager $toolManager,
+        FacetManager $facetManager
     )
     {
         $this->userManager = $userManager;
@@ -76,6 +84,8 @@ class ProfileController extends Controller
         $this->request = $request;
         $this->localeManager = $localeManager;
         $this->encoderFactory = $encoderFactory;
+        $this->toolManager = $toolManager;
+        $this->facetManager = $facetManager;
     }
 
     private function isInRoles($role, $roles)
@@ -100,8 +110,15 @@ class ProfileController extends Controller
      */
     public function viewAction(User $loggedUser)
     {
+        $facets = $this->facetManager->getPrivateVisibleFacets();
+        $fieldFacetValues = $this->facetManager->getFieldValuesByUser($loggedUser);
+        $fieldFacets = $this->facetManager->getPrivateVisibleFields();
+
         return array(
-            'user'  => $loggedUser
+            'user'  => $loggedUser,
+            'facets' => $facets,
+            'fieldFacetValues' => $fieldFacetValues,
+            'fieldFacets' => $fieldFacets
         );
     }
 
@@ -116,7 +133,7 @@ class ProfileController extends Controller
      */
     public function editPublicProfilePreferencesAction(User $loggedUser)
     {
-        $form    = $this->createForm(new UserPublicProfilePreferencesType(), $loggedUser->getPublicProfilePreferences());
+        $form = $this->createForm(new UserPublicProfilePreferencesType(), $loggedUser->getPublicProfilePreferences());
 
         if ($this->request->isMethod('POST')) {
             $form->handleRequest($this->request);
@@ -177,16 +194,32 @@ class ProfileController extends Controller
             $userPublicProfilePreferences = $this->get('claroline.manager.user_manager')->getUserPublicProfilePreferencesForAdmin();
         }
 
-        $response = new Response($this->renderView('ClarolineCoreBundle:Profile:publicProfile.html.twig', array('user' => $user, 'publicProfilePreferences' => $userPublicProfilePreferences)));
+        $facets = $this->facetManager->getVisibleFacets($this->security->getToken());
+        $fieldFacetValues = $this->facetManager->getFieldValuesByUser($user);
+        $fieldFacets = $this->facetManager->getVisibleFieldFacets($this->security->getToken());
 
+        $response = new Response(
+            $this->renderView(
+                'ClarolineCoreBundle:Profile:publicProfile.html.twig',
+                array(
+                    'user' => $user,
+                    'publicProfilePreferences' => $userPublicProfilePreferences,
+                    'facets' => $facets,
+                    'fieldFacetValues' => $fieldFacetValues,
+                    'fieldFacets' => $fieldFacets
+                )
+            )
+        );
 
-        if(UserPublicProfilePreferences::SHARE_POLICY_NOBODY === $userPublicProfilePreferences->getSharePolicy()) {
+        /*
+        if (UserPublicProfilePreferences::SHARE_POLICY_NOBODY === $userPublicProfilePreferences->getSharePolicy()) {
             $response = new Response($this->renderView('ClarolineCoreBundle:Profile:publicProfile.404.html.twig', array('user' => $user, 'publicUrl' => $publicUrl)), 404);
         }
         else if (UserPublicProfilePreferences::SHARE_POLICY_PLATFORM_USER === $userPublicProfilePreferences->getSharePolicy()
                  && null === $this->getUser()) {
             $response = new Response($this->renderView('ClarolineCoreBundle:Profile:publicProfile.401.html.twig', array('user' => $user, 'publicUrl' => $publicUrl)), 401);
         }
+        */
 
         return $response;
     }
@@ -204,10 +237,10 @@ class ProfileController extends Controller
     public function editProfileAction(User $loggedUser, User $user = null)
     {
         $isAdmin = $this->get('security.context')->isGranted('ROLE_ADMIN');
-
+        $isGrantedUserAdmin = $this->get('security.context')->isGranted('OPEN', $this->toolManager->getAdminToolByName('user_management'));
         $editYourself = false;
 
-        if (null !== $user && !$isAdmin) {
+        if (null !== $user && !$isAdmin && !$isGrantedUserAdmin) {
             throw new AccessDeniedException();
         }
 
@@ -216,14 +249,33 @@ class ProfileController extends Controller
             $editYourself = true;
         }
 
-        $roles = $this->roleManager->getPlatformRoles($loggedUser);
+        $roles = $this->roleManager->getPlatformRoles($user);
+
         $form = $this->createForm(
-            new ProfileType(array($roles), $isAdmin, $this->localeManager->getAvailableLocales()), $user
+            new ProfileType($roles, $isAdmin, $isGrantedUserAdmin, $this->localeManager->getAvailableLocales()), $user
         );
 
         $form->handleRequest($this->request);
+        $unavailableRoles = [];
 
-        if ($form->isValid()) {
+        if ($this->get('request')->getMethod() === 'POST') {
+            $roles = ($isAdmin || $isGrantedUserAdmin) ?
+                $form->get('platformRoles')->getData():
+                array($this->roleManager->getRoleByName('ROLE_USER'));
+        } else {
+            $roles = ($isAdmin || $isGrantedUserAdmin) ?
+                $this->roleManager->getAllPlatformRoles():
+                array($this->roleManager->getRoleByName('ROLE_USER'));
+        }
+
+        foreach ($roles as $role) {
+            $isAvailable = $this->roleManager->validateRoleInsert($user, $role);
+            if (!$isAvailable) {
+                $unavailableRoles[] = $role;
+            }
+        }
+
+        if ($form->isValid() && count($unavailableRoles) === 0) {
             /** @var \Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface $sessionFlashBag */
             $sessionFlashBag = $this->get('session')->getFlashBag();
             /** @var \Symfony\Bundle\FrameworkBundle\Translation\Translator $translator */
@@ -251,6 +303,9 @@ class ProfileController extends Controller
             $newRoles  = array();
 
             if (isset($form['platformRoles'])) {
+                //verification:
+                //only the admin can grant the role admin
+                //simple users cannot change anything. Don't let them put whatever they want with a fake form.
                 $newRoles = $form['platformRoles']->getData();
                 $this->userManager->setPlatformRoles($user, $newRoles);
             }
@@ -288,9 +343,10 @@ class ProfileController extends Controller
         }
 
         return array(
-            'form'         => $form->createView(),
-            'user'         => $user,
-            'editYourself' => $editYourself
+            'form'             => $form->createView(),
+            'user'             => $user,
+            'editYourself'     => $editYourself,
+            'unavailableRoles' => $unavailableRoles
         );
     }
 
@@ -400,6 +456,34 @@ class ProfileController extends Controller
 
         $response = new JsonResponse($data);
         return $response;
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/user/{user}/facet/{facet}/edit",
+     *      name="claro_user_facet_edit"
+     * )
+     * @EXT\Method({"POST"})
+     */
+    public function editFacet(User $user, Facet $facet)
+    {
+        //do some validation
+        $data = $this->request->request;
+
+        foreach ($data as $key => $value) {
+            $fieldFacetId = (int) str_replace('field-', '', $key);
+            $fieldFacet = $this->facetManager->getFieldFacet($fieldFacetId);
+            $this->facetManager->setFieldValue($user, $fieldFacet, reset($value));
+        }
+
+        $fieldFacetValues = $this->facetManager->getFieldValuesByUser($user);
+        $data = array();
+
+        foreach ($fieldFacetValues as $fieldFacetValue) {
+            $data[$fieldFacetValue->getFieldFacet()->getId()] = $this->facetManager->getDisplayedValue($fieldFacetValue);
+        }
+
+        return new JsonResponse($data);
     }
 
     private function encodePassword(User $user)

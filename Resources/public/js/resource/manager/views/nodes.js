@@ -63,7 +63,7 @@
             this.$('#' + event.id + ' .node-name')
                 .html(displayableName + ' ')
                 .append($(document.createElement('i'))
-                .addClass('icon-caret-down'));
+                .addClass('fa fa-caret-down'));
             this.$('#' + event.id + ' .dropdown[rel=tooltip]').attr('title', event.name);
         },
         editNode: function (event) {

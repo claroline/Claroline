@@ -151,9 +151,13 @@ class ResourceController
                         $parent
                     );
 
-                    $nodesArray[] = $this->resourceManager->toArray($createdResource->getResourceNode(), $this->sc->getToken());
+                    $nodesArray[] = $this->resourceManager->toArray(
+                        $createdResource->getResourceNode(), $this->sc->getToken()
+                    );
                 } else {
-                    $nodesArray[] = $this->resourceManager->toArray($resource->getResourceNode(), $this->sc->getToken());
+                    $nodesArray[] = $this->resourceManager->toArray(
+                        $resource->getResourceNode(), $this->sc->getToken()
+                    );
                 }
             }
 
@@ -786,9 +790,9 @@ class ResourceController
 
     /**
      * Render the HTML of embed resource based in his mine type
-     * @EXT\Route("/embed/{node}/{type}/{extension}", name="claro_resource_embed")
+     * @EXT\Route("/embed/{node}/{type}/{extension}", name="claro_resource_embed", options={"expose"=true})
      */
-    public function embedResource(ResourceNode $node, $type, $extension, $view = 'default')
+    public function embedResourceAction(ResourceNode $node, $type, $extension, $view = 'default')
     {
         switch ($type) {
             case 'video':

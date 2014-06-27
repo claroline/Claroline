@@ -15,8 +15,8 @@
         var urlField         = $('#user_public_profile_url_form_public_url', urlForm);
         var currentPublicUrl = $('#current_public_profile_url').val();
         var loadingBlock     = $('.feedback .loading', urlForm);
-        var okBlock          = $('.feedback .icon-ok', urlForm);
-        var koBlock          = $('.feedback .icon-remove', urlForm);
+        var okBlock          = $('.feedback .fa-check', urlForm);
+        var koBlock          = $('.feedback .fa-times', urlForm);
         var tuneButton       = $('#tune_button');
         var timer;
 

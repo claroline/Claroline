@@ -1144,4 +1144,60 @@ class UserRepository extends EntityRepository implements UserProviderInterface
 
         return $query->getSingleResult();
     }
+
+    public function countUsersByRoleIncludingGroup(Role $role)
+    {
+        $dql = '
+            SELECT count(distinct u)
+            FROM Claroline\CoreBundle\Entity\User u
+            JOIN u.roles r1
+            LEFT JOIN  u.groups g
+            LEFT JOIN g.roles r2
+            WHERE r1.id = :roleId OR r2.id = :roleId
+        ';
+
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('roleId', $role->getId());
+
+        return $query->getSingleScalarResult();
+    }
+
+    public function countUsersOfGroup (Group $group)
+    {
+        $dql = '
+            SELECT count(u) FROM Claroline\CoreBundle\Entity\User u
+            JOIN u.groups g
+            WHERE g.name = :name
+        ';
+
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('name', $group->getName());
+
+        return $query->getSingleScalarResult();
+    }
+
+    public function countUsersOfGroupByRole(Group $group, Role $role)
+    {
+        $dql = '
+            SELECT count(u) FROM Claroline\CoreBundle\Entity\User u
+            JOIN u.groups g
+            WHERE g.name = :groupName
+            AND u.id in
+                (
+                    SELECT u2.id FROM Claroline\CoreBundle\Entity\User u2
+                    LEFT JOIN u2.roles r1
+                    LEFT JOIN u2.groups g2
+                    LEFT JOIN g2.roles r2
+                    WHERE r1.name = :roleName
+                    OR r2.name = :roleName
+                )
+
+        ';
+
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('roleName', $role->getName());
+        $query->setParameter('groupName', $group->getName());
+
+        return $query->getSingleScalarResult();
+    }
 }

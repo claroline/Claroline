@@ -16,6 +16,12 @@ same message when authentication has failed (no precise validation errors).
                 {{ 'login_failure'|trans({}, 'platform') }}
             </div>
         {% endif %}
+        {% if is_expired %}
+            <div class="alert alert-danger">
+                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                {{ 'closed_account'|trans({}, 'platform') }}
+            </div>
+        {% endif %}
         <div class='panel panel-default'>
             <div class="panel-heading">
                 <h3 class="panel-title">{{ 'login' | trans({}, "platform")}}</h3>
@@ -42,7 +48,7 @@ same message when authentication has failed (no precise validation errors).
                     <button type="submit" class="btn btn-primary" tabindex="3">{{ 'login'|trans({}, 'platform') }}</button>
                     {% if is_facebook_available() %}
                         <button class='btn btn-primary facebook-connect hide'>
-                        <i class="icon-facebook-sign"></i> {{ 'login'|trans({}, 'platform') }}
+                        <i class="fa fa-facebook-square"></i> {{ 'login'|trans({}, 'platform') }}
                         <div onlogin="fb_login();" class="fb-login-button" data-max-rows="1" data-size="xlarge"
                             data-show-faces="false" data-auto-logout-link="false">
                         </div>

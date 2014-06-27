@@ -46,6 +46,14 @@ class WorkspaceTag
      */
     protected $user;
 
+    /**
+     * @ORM\ManyToOne(
+     *     targetEntity="Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace"
+     * )
+     * @ORM\JoinColumn(nullable=true, onDelete="SET NULL")
+     */
+    protected $workspace;
+
     public function getId()
     {
         return $this->id;
@@ -74,5 +82,20 @@ class WorkspaceTag
     public function setUser($user)
     {
         $this->user = $user;
+    }
+
+    public function getWorkspace()
+    {
+        return $this->workspace;
+    }
+
+    public function setWorkspace($workspace)
+    {
+        $this->workspace = $workspace;
+    }
+
+    public function __toString()
+    {
+        return $this->id . '-' . $this->name;
     }
 }

@@ -76,7 +76,10 @@ class GeneralType extends AbstractType
                 )
             )
             ->add('formCaptcha', 'checkbox', array('label' => 'display_captcha', 'required' => false))
-            ->add('redirect_after_login', 'checkbox', array('label' => 'redirect_after_login', 'required' => false));
+            ->add('redirect_after_login', 'checkbox', array('label' => 'redirect_after_login', 'required' => false))
+            ->add('account_duration', 'integer', array('label' => 'account_duration_label', 'required' => false))
+            ->add('platform_init_date', 'date', array('input' => 'timestamp', 'label' => 'platform_init_date', 'required' => false))
+            ->add('platform_limit_date', 'date', array('input' => 'timestamp', 'label' => 'platform_expiration_date', 'required' => false));
    }
 
     public function getName()

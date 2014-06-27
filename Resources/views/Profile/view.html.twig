@@ -30,11 +30,11 @@
                             </a>
                         </li>
                         {% if false == user.hasTunedPublicUrl %}
-                        <li role="presentation" >
-                            <a role="menuitem" href="{{ path('claro_user_public_url_edit') }}">
-                                {{ 'tune_your_public_profile_url'|trans({}, 'platform') }}
-                            </a>
-                        </li>
+                            <li role="presentation" >
+                                <a role="menuitem" href="{{ path('claro_user_public_url_edit') }}">
+                                    {{ 'tune_your_public_profile_url'|trans({}, 'platform') }}
+                                </a>
+                            </li>
                         {% endif %}
                         <li role="presentation" >
                             <a role="menuitem" href="{{ path('claro_user_public_profile_preferences') }}">
@@ -49,48 +49,27 @@
             </h3>
         </div>
         <div class="panel-body">
-            <div class="row">
-                <aside class="col-md-2 profile_aside" role="complementary">
-                    <div class="avatar">
-                        {% if user.getPicture() != "" %}
-                            <img src="{{ asset('uploads/pictures/') ~  user.getPicture() }}" class="profile_picture" alt="{{ user.getLastName() ~ ' ' ~ user.getFirstName() }}">
-                        {% else %}
-                            <h1 class="profile_picture_placeholder"><i class="icon-user"></i></h1>
-                        {% endif %}
+            <ul class="nav nav-tabs">
+                <li class="active">
+                    <a href="#general-profile" data-toggle="tab">{{ 'general'|trans({}, 'platform') }}</a>
+                </li>
+                {% for facet in facets %}
+                    <li>
+                        <a href="#facet-{{ facet.id }}" data-toggle="tab">{{ facet.name }}</a>
+                    </li>
+                {% endfor %}
+            </ul>
+            <div id="facet-pane" class="tab-content">
+                <div class="tab-pane active" id="general-profile">
+                    <div class="panel-body">
+                        {% include "ClarolineCoreBundle:Profile:privateProfileGeneralTab.html.twig" with {'user': user} %}
                     </div>
-                    <div class="informations">
-                        <p class="text-center text-muted">
-                            {{ 'registered'|trans({}, 'platform') }} {{ user.getCreationDate()| timeAgo }}
-                        </p>
-                    </div>
-                    <ul class="nav nav-pills nav-stacked contact_methods">
-                        <li>
-                            <a href="{{path('claro_mail_form', {'userId':user.getId()})}}">
-                                <i class="icon-envelope"></i> {{ 'send_mail'|trans({}, 'platform') }}
-                            </a>
-                        </li>
-                        <li>
-                            <a href="{{path('claro_message_show', {'message': 0})}}?ids[]={{ user.getId() }}">
-                                <i class="icon-comment"></i> {{ 'send_message'|trans({}, 'platform') }}
-                            </a>
-                        </li>
-                    </ul>
-                </aside>
-                <div class="col-md-6 profile_informations">
-                    <h2>{{ user.getLastName() ~ ' ' ~ user.getFirstName() }}</h2>
-                    <p><span class="icon-envelope"> <a href="mailto:{{ user.getmail() }}" title="{{ user.getmail() }}">{{ user.getmail() }}</a></span></p>
-                    {% if user.getPhone() is not null %}
-                        <p><span class="icon-phone-sign"></span> {{ user.getPhone() }}</p>
-                    {% endif %}
-                    {% if '' != user.getDescription() %}
-                        <div class="description_block">
-                            <p class="lead">Description de {{ user.getLastName() ~ ' ' ~ user.getFirstName() }}</p>
-                            <div class="description">
-                                {{ user.getDescription() |raw }}
-                            </div>
-                        </div>
-                    {% endif %}
                 </div>
+                {% for facet in facets %}
+                    {% include "ClarolineCoreBundle:Profile:facetPane.html.twig"
+                    with {'facet': facet, 'fieldFacetValues': fieldFacetValues, 'fieldFacets': fieldFacets}
+                    %}
+                {% endfor %}
             </div>
         </div>
     </div>

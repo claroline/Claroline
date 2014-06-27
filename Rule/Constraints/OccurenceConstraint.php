@@ -44,6 +44,6 @@ class OccurenceConstraint extends AbstractConstraint
      */
     public function getQuery(QueryBuilder $queryBuilder)
     {
-        return $queryBuilder->setMaxResults($this->getRule()->getOccurrence());
+        return $queryBuilder;
     }
 }

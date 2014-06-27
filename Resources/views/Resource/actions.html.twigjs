@@ -4,7 +4,7 @@
         {% if resourceTypes|length > 0 %}
             <li class="dropdown">
                 <a class="dropdown-toggle{% if isCreateAllowed == false %} disabled{% endif %}" data-toggle="dropdown">
-                    <i class="icon-edit"></i>
+                    <i class="fa fa-pencil-square-o"></i>
                     {{ 'create'|trans({}, 'platform') }}
                     <span class="caret"></span>
                 </a>
@@ -17,38 +17,38 @@
         {% endif %}
         <li>
             <a class="{% if isAddAllowed == false %}disabled{% else %}open-picker{% endif %}">
-               <i class="icon-plus"></i>
+               <i class="fa fa-plus"></i>
                {{ 'add'|trans({}, 'platform') }}
            </a>
         </li>
         <li>
             <a class="cut disabled"  data-toggle="tooltip" data-placement="bottom" title="{{ 'cut'|trans({}, 'platform') }}">
-                <i class="icon-cut"></i>
+                <i class="fa fa-scissors"></i>
             </a>
         </li>
         <li>
             <a class="copy disabled" data-toggle="tooltip" data-placement="bottom" title="{{ 'copy'|trans({}, 'platform') }}">
-                <i class="icon-copy"></i>
+                <i class="fa fa-files-o"></i>
             </a>
         </li>
         <li>
            <a class="paste{% if isPasteAllowed == false %} disabled{% endif %}" data-toggle="tooltip" data-placement="bottom" title="{{ 'paste'|trans({}, 'platform') }}">
-                <i class="icon-paste"></i>
+                <i class="fa fa-clipboard"></i>
             </a>
         </li>
         <li>
             <a class="delete disabled" data-toggle="tooltip" data-placement="bottom" title="{{ 'delete'|trans({}, 'platform') }}">
-                <i class="icon-trash"></i>
+                <i class="fa fa-trash-o"></i>
             </a>
         </li>
         <li>
             <a class="download disabled" data-toggle="tooltip" data-placement="bottom" title="{{ 'download'|trans({}, 'platform') }}">
-                <i class="icon-download-alt"></i>
+                <i class="fa fa-download"></i>
             </a>
         </li>
         <li class="dropdown">
             <a class="dropdown-toggle zoom{% if isSearchMode == true %} disabled{% endif %}" data-toggle="dropdown">
-                <i class="icon-zoom-in"></i>
+                <i class="fa fa-search-plus"></i>
                 <span class="caret"></span>
             </a>
             <ul class="dropdown-menu zoom" role="menu">
@@ -65,7 +65,7 @@
     <ul class='nav navbar-nav' role="toolbar">
         <li>
             <a class="add {% if isAddAllowed == false or isPasteAllowed == false %}disabled{% endif %}">
-                <i class="icon-plus"></i>
+                <i class="fa fa-plus"></i>
                 {{ 'add'|trans({}, 'platform') }}
             </a>
         </li>
@@ -77,9 +77,9 @@
         <input class="name form-control" type="text" placeholder="{{ 'search'|trans({}, 'platform') }}" value="{{ searchedName }}">
         <span class="input-group-btn">
             <button class="filter btn btn-default" type="button">
-                <i class="icon-search"></i>
+                <i class="fa fa-search"></i>
             </button>
-            <button class="config-search-panel btn btn-default" type="button"><i class="icon-cog"></i></button>
+            <button class="config-search-panel btn btn-default" type="button"><i class="fa fa-cog"></i></button>
         </span>
    </div>
 </form>

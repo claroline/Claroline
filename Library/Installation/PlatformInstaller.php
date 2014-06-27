@@ -151,7 +151,9 @@ class PlatformInstaller
         $directories = array(
             $this->container->getParameter('claroline.param.thumbnails_directory'),
             $this->container->getParameter('claroline.param.uploads_directory'),
-            $this->container->getParameter('claroline.param.uploads_directory') . '/badges'
+            $this->container->getParameter('claroline.param.uploads_directory') . '/badges',
+            $this->container->getParameter('claroline.param.uploads_directory') . '/logos',
+            $this->container->getParameter('claroline.param.uploads_directory') . '/pictures'
         );
 
         foreach ($directories as $directory) {

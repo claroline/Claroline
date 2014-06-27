@@ -30,8 +30,6 @@ class Utilities
     /**
      * Constructor.
      *
-     * @param ContainerInterface $container
-     *
      * @DI\InjectParams({
      *     "em" = @DI\Inject("doctrine.orm.entity_manager")
      * })

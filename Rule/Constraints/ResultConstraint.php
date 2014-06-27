@@ -23,22 +23,19 @@ class ResultConstraint extends AbstractConstraint
     {
         $isValid               = true;
         $resultComparisonTypes = Rule::getResultComparisonTypes();
+        $nbOccurence           = $this->getRule()->getOccurrence();
+        $nbValidatedLogs       = 0;
 
-        if (0 === count($this->getAssociatedLogs())) {
-            $isValid = false;
-        } else {
-            foreach ($this->getAssociatedLogs() as $associatedLog) {
-                $associatedLogDetails = $associatedLog->getDetails();
+        foreach ($this->getAssociatedLogs() as $associatedLog) {
+            $associatedLogDetails = $associatedLog->getDetails();
 
-                if (isset($associatedLogDetails['result'])) {
-                    $isValid = $isValid && version_compare($associatedLogDetails['result'], $this->getRule()->getResult(), $resultComparisonTypes[$this->getRule()->getResultComparison()]);
-                } else {
-                    $isValid = false;
-                }
+            if (isset($associatedLogDetails['result']) &&
+                version_compare($associatedLogDetails['result'], $this->getRule()->getResult(), $resultComparisonTypes[$this->getRule()->getResultComparison()])) {
+                $nbValidatedLogs++;
             }
         }
 
-        return $isValid;
+        return $nbValidatedLogs >= $nbOccurence;
     }
 
     /**

@@ -29,6 +29,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Symfony\Component\Translation\Translator;
 
 //This class belongs to the Users admin tool.
 class GroupsController extends Controller
@@ -43,6 +44,7 @@ class GroupsController extends Controller
     private $toolManager;
     private $sc;
     private $userAdminTool;
+    private $translator;
 
     /**
      * @DI\InjectParams({
@@ -54,7 +56,8 @@ class GroupsController extends Controller
      *     "request"            = @DI\Inject("request"),
      *     "router"             = @DI\Inject("router"),
      *     "toolManager"        = @DI\Inject("claroline.manager.tool_manager"),
-     *     "sc"                 = @DI\Inject("security.context")
+     *     "sc"                 = @DI\Inject("security.context"),
+     *     "translator"         = @DI\Inject("translator")
      * })
      */
     public function __construct(
@@ -66,7 +69,8 @@ class GroupsController extends Controller
         Request $request,
         RouterInterface $router,
         SecurityContextInterface $sc,
-        ToolManager $toolManager
+        ToolManager $toolManager,
+        Translator $translator
     )
     {
         $this->userManager     = $userManager;
@@ -79,6 +83,7 @@ class GroupsController extends Controller
         $this->toolManager     = $toolManager;
         $this->userAdminTool   = $this->toolManager->getAdminToolByName('user_management');
         $this->sc              = $sc;
+        $this->translator      = $translator;
     }
 
     /**
@@ -151,10 +156,11 @@ class GroupsController extends Controller
      * Returns the platform group list.
      *
      * @param integer $page
-     * @param string  $search
+     * @param string $search
      * @param integer $max
-     * @param string  $order
+     * @param string $order
      *
+     * @param $direction
      * @return array
      */
     public function listAction($page, $search, $max, $order, $direction)
@@ -324,6 +330,11 @@ class GroupsController extends Controller
     public function addMembersAction(Group $group, array $users)
     {
         $this->checkOpen();
+
+        if (!$this->groupManager->validateAddUsersToGroup($users, $group)) {
+            return new Response($this->translator->trans('fail_add_user_group_message', array(), 'platform'), 500);
+        }
+
         $this->groupManager->addUsersToGroup($group, $users);
 
         foreach ($users as $user) {
@@ -394,11 +405,23 @@ class GroupsController extends Controller
     public function settingsFormAction(Group $group)
     {
         $this->checkOpen();
-        $form = $this->formFactory->create(FormFactory::TYPE_GROUP_SETTINGS, array(), $group);
+        $isAdmin = $this->sc->isGranted('ROLE_ADMIN');
+        $roles = $group->getPlatformRole();
+        $form = $this->formFactory->create(FormFactory::TYPE_GROUP_SETTINGS, array('isAdmin' => $isAdmin, 'roles' => $roles), $group);
+        $unavailableRoles = [];
+        $roles = $this->roleManager->getAllPlatformRoles();
+
+        foreach ($roles as $role) {
+            $isAvailable = $this->roleManager->validateRoleInsert($group, $role);
+            if (!$isAvailable) {
+                $unavailableRoles[] = $role;
+            }
+        }
 
         return array(
             'group' => $group,
-            'form_settings' => $form->createView()
+            'form_settings' => $form->createView(),
+            'unavailableRoles' => $unavailableRoles
         );
     }
 
@@ -420,20 +443,33 @@ class GroupsController extends Controller
     public function updateSettingsAction(Group $group)
     {
         $this->checkOpen();
-        $oldPlatformRoleTransactionKey = $group->getPlatformRole()->getTranslationKey();
-        $form = $this->formFactory->create(FormFactory::TYPE_GROUP_SETTINGS, array(), $group);
+        $oldRoles = $group->getPlatformRoles();
+        $isAdmin = $this->sc->isGranted('ROLE_ADMIN');
+        $form = $this->formFactory->create(FormFactory::TYPE_GROUP_SETTINGS, array('isAdmin' => $isAdmin, 'roles' => $oldRoles), $group);
         $form->handleRequest($this->request);
+        $unavailableRoles = [];
+        $roles = $form['platformRoles']->getData();
 
-        if ($form->isValid()) {
+        foreach ($roles as $role) {
+            $isAvailable = $this->roleManager->validateRoleInsert($group, $role);
+            if (!$isAvailable) {
+                $unavailableRoles[] = $role;
+            }
+        }
+
+        if ($form->isValid() && count($unavailableRoles) === 0) {
             $group = $form->getData();
-            $this->groupManager->updateGroup($group, $oldPlatformRoleTransactionKey);
+            $newRoles = $form['platformRoles']->getData();
+            $this->groupManager->setPlatformRoles($group, $newRoles);
+            $this->groupManager->updateGroup($group, $oldRoles);
 
             return $this->redirect($this->generateUrl('claro_admin_group_list'));
         }
 
         return array(
             'group' => $group,
-            'form_settings' => $form->createView()
+            'form_settings' => $form->createView(),
+            'unavailableRoles' => $unavailableRoles
         );
     }
 
@@ -488,7 +524,9 @@ class GroupsController extends Controller
                 $users[] = str_getcsv($line, ';');
             }
 
-            if ($validFile) {
+
+
+            if ($validFile && $this->groupManager->validateAddUsersToGroup($users, $group)) {
                 $this->userManager->importUsers($users);
                 $this->groupManager->importUsers($group, $users);
 
@@ -498,7 +536,7 @@ class GroupsController extends Controller
             }
         }
 
-        return array('form' => $form->createView(), 'group' => $group);
+        return array('form' => $form->createView(), 'group' => $group, 'error_import' => 'fail_add_user_group_message');
     }
 
     private function checkOpen()

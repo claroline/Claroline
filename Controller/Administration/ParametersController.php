@@ -183,6 +183,9 @@ class ParametersController extends Controller
                         'default_role' => $form['defaultRole']->getData()->getName(),
                         'redirect_after_login' => $form['redirect_after_login']->getData(),
                         'form_captcha' => $form['formCaptcha']->getData(),
+                        'platform_init_date' => $form['platform_init_date']->getData(),
+                        'platform_limit_date' => $form['platform_limit_date']->getData(),
+                        'account_duration' => $form['account_duration']->getData()
                     )
                 );
 

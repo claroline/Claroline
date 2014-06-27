@@ -135,13 +135,19 @@ class ResourcePropertiesController extends Controller
     public function propertiesFormAction(ResourceNode $node)
     {
         $username = $node->getCreator()->getUsername();
+        $isDir = $node->getResourceType()->getName() === 'directory';
+
         $form = $this->formFactory->create(
             FormFactory::TYPE_RESOURCE_PROPERTIES,
             array('creator' => $username),
             $node
         );
 
-        return array('form' => $form->createView(), 'nodeId' => $node->getId());
+        return array(
+            'form' => $form->createView(),
+            'nodeId' => $node->getId(),
+            'isDir' => $isDir
+        );
     }
 
     /**
@@ -176,6 +182,7 @@ class ResourcePropertiesController extends Controller
         if ($form->isValid()) {
             $name = $form->get('name')->getData();
             $file = $form->get('newIcon')->getData();
+            $isRecursive = $this->request->get('isRecursive');
 
             if ($file) {
                 $this->resourceManager->changeIcon($node, $file);
@@ -183,7 +190,15 @@ class ResourcePropertiesController extends Controller
 
             $this->resourceManager->rename($node, $name);
 
-            return new JsonResponse($this->resourceManager->toArray($node, $this->sc->getToken()));
+            if ($isRecursive) {
+                $accessibleFrom = $form->get('accessibleFrom')->getData();
+                $accessibleUntil = $form->get('accessibleUntil')->getData();
+
+                $this->resourceManager
+                    ->changeAccessibilityDate($node, $accessibleFrom, $accessibleUntil);
+            }
+
+            return new JsonResponse($nodesArray);
         }
 
         return array('form' => $form->createView(), 'nodeId' => $node->getId());

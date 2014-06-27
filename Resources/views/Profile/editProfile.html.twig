@@ -11,6 +11,9 @@
         {% set cancelUrl  = editYourself ? path('claro_profile_view') : path('claro_admin_user_list') %}
         <form role="form" class="form-horizontal" action="{{ actionForm }}" method="post" {{ form_enctype(form) }} id="profile_form">
             <div class="panel-body">
+                {% for role in unavailableRoles %}
+                    <div class="alert alert-warning"> {{ 'role_limit_reached'|trans({'%translationKey%': role.getTranslationKey()|trans({}, 'platform')}, 'platform') }}</div>
+                {% endfor %}
                 {{ form_widget(form) }}
             </div>
             <div class="panel-footer">
@@ -21,9 +24,11 @@
     </div>
 {% endblock %}
 {% block javascripts %}
-	{{ parent() }}
-	<script type='text/javascript'>
-	    $('#profile_form_platformRoles_1').attr('checked', true);
-	    $('#profile_form_platformRoles_3').attr('checked', true);
-	</script>
+    {{ parent() }}
+    //disable unavailable checkboxes.
+    <script>
+        {% for role in unavailableRoles %}
+            $('#profile_form_platformRoles_' + {{ role.getId() }}).attr('disabled', true);
+        {% endfor %}
+    </script>
 {% endblock %}

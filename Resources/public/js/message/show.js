@@ -15,7 +15,7 @@
             $('#message_form_to').offsetParent().html() +
             '<span class="input-group-btn">' +
                 '<button id="contacts-button" class="btn btn-primary" type="button">' +
-                    '<i class="icon-user"></i>' +
+                    '<i class="fa fa-user"></i>' +
                 '</button>' +
             '</span>' +
         '</div>'

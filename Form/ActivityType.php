@@ -20,8 +20,10 @@ class ActivityType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('name', 'text', array('constraints' => new NotBlank()));
-        $builder->add('instructions', 'tinymce');
+        $builder
+            ->add('title', 'text', array('label' => 'name', 'constraints' => new NotBlank()))
+            ->add('description', 'tinymce', array('required' => false, 'label' => 'description'))
+            ->add('primaryResource', 'resourcePicker', array('required' => false));
     }
 
     public function getName()
