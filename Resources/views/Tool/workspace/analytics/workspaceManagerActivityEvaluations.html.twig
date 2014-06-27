@@ -44,10 +44,26 @@
                     <th>{{ 'user'|trans({}, 'platform') }}</th>
                     <th class="text-center">{{ 'status'|trans({}, 'platform') }}</th>
                     <th class="text-center">{{ 'total_time'|trans({}, 'platform') }}</th>
-                    <th class="text-center">{{ 'best_score'|trans({}, 'platform') }}</th>
+                    <th class="text-center"
+                        {% if ruleScore is not empty %}
+                            data-container="#activity-evaluations"
+                            data-toggle="tooltip"
+                            data-placement="top"
+                            title="{{ 'passing_score'|trans({}, 'platform') ~ ' : ' ~ ruleScore }}"
+                        {% endif %}
+                    >
+                        {{ 'best_score'|trans({}, 'platform') }}
+                    </th>
                     <th class="text-center">{{ 'number_of_attempts'|trans({}, 'platform') }}</th>
                     <th class="text-center">{{ 'last_attempt_date'|trans({}, 'platform') }}</th>
-                    <th class="text-center">{{ 'evaluation'|trans({}, 'platform') }}</th>
+                    <th class="text-center"
+                        data-container="#activity-evaluations"
+                        data-toggle="tooltip"
+                        data-placement="top"
+                        title="{{ 'manual_evaluation_explanation'|trans({}, 'platform') }}"
+                    >
+                        {{ 'evaluation'|trans({}, 'platform') }}
+                    </th>
                     <th class="text-center">{{ 'comment'|trans({}, 'platform') }}</th>
                 </tr>
                 
@@ -85,6 +101,9 @@
                                 <td class="text-center">
                                     {% if evaluation.getNumScore() is not empty %}
                                         {{ evaluation.getNumScore() }}
+                                        {% if evaluation.getScoreMax() is not empty %}
+                                            / {{ evaluation.getScoreMax() }}
+                                        {% endif %}
                                     {% else %}
                                         -
                                     {% endif %}

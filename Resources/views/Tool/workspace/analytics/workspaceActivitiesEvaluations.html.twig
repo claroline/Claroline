@@ -27,7 +27,12 @@
                         <th class="center-text">
                             {{ 'number_of_attempts'|trans({}, 'platform') }}
                         </th>
-                        <th class="center-text">
+                        <th class="center-text"
+                            data-container="#activities-evaluations"
+                            data-toggle="tooltip"
+                            data-placement="top"
+                            title="{{ 'manual_evaluation_explanation'|trans({}, 'platform') }}"
+                        >
                             {{ 'evaluation'|trans({}, 'platform') }}
                         </th>
                         <th class="center-text">
@@ -58,6 +63,9 @@
                             <td class="center-text">
                                 {% if eval.getNumScore() is not empty %}
                                     {{ eval.getNumScore() }}
+                                    {% if eval.getScoreMax() is not empty %}
+                                        / {{ eval.getScoreMax() }}
+                                    {% endif %}
                                 {% else %}
                                     -
                                 {% endif %}

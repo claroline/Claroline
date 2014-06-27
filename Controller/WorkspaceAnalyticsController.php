@@ -257,6 +257,23 @@ class WorkspaceAnalyticsController extends Controller
             throw new AccessDeniedException();
         }
         $activity = $activityParameters->getActivity();
+        $ruleScore = null;
+
+        if ($activityParameters->getEvaluationType() === 'automatic' &&
+            count($activityParameters->getRules()) > 0) {
+
+            $rule = $activityParameters->getRules()->first();
+            $score = $rule->getResult();
+            $scoreMax = $rule->getResultMax();
+
+            if (!is_null($score)) {
+                $ruleScore = $score;
+
+                if (!is_null($scoreMax)) {
+                    $ruleScore .= ' / ' . $scoreMax;
+                }
+            }
+        }
 
         $pastEvals =
             $this->activityManager->getPastEvaluationsByUserAndActivityParams(
@@ -268,7 +285,9 @@ class WorkspaceAnalyticsController extends Controller
             'user' => $user,
             'activity' => $activity,
             'pastEvals' => $pastEvals,
-            'displayType' => $displayType
+            'displayType' => $displayType,
+            'isWorkspaceManager' => $isWorkspaceManager,
+            'ruleScore' => $ruleScore
         );
     }
 
@@ -338,13 +357,32 @@ class WorkspaceAnalyticsController extends Controller
             }
         }
 
+        $ruleScore = null;
+
+        if ($activityParams->getEvaluationType() === 'automatic' &&
+            count($activityParams->getRules()) > 0) {
+
+            $rule = $activityParams->getRules()->first();
+            $score = $rule->getResult();
+            $scoreMax = $rule->getResultMax();
+
+            if (!is_null($score)) {
+                $ruleScore = $score;
+
+                if (!is_null($scoreMax)) {
+                    $ruleScore .= ' / ' . $scoreMax;
+                }
+            }
+        }
+
         return array(
             'analyticsTab' => 'activties_tracking',
             'activity' => $activity,
             'activityParams' => $activityParams,
             'workspace' => $workspace,
             'users' => $usersPager,
-            'evaluations' => $evaluations
+            'evaluations' => $evaluations,
+            'ruleScore' => $ruleScore
         );
     }
 

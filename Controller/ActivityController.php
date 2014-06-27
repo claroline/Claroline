@@ -136,6 +136,7 @@ class ActivityController
                 $action = $formRule->get('action')->getData();
                 $occurrence = $formRule->get('occurrence')->getData();
                 $result = $formRule->get('result')->getData();
+                $resultMax = $formRule->get('resultMax')->getData();
                 $activeFrom = $formRule->get('activeFrom')->getData();
                 $activeUntil = $formRule->get('activeUntil')->getData();
 
@@ -145,6 +146,7 @@ class ActivityController
                         $action,
                         $occurrence,
                         $result,
+                        $resultMax,
                         $activeFrom,
                         $activeUntil,
                         $resourceNode
@@ -155,6 +157,7 @@ class ActivityController
                         $action,
                         $occurrence,
                         $result,
+                        $resultMax,
                         $activeFrom,
                         $activeUntil,
                         $resourceNode
