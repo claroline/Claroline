@@ -188,8 +188,28 @@ class WorkspaceAnalyticsController extends Controller
             $evaluationsAssoc = array();
 
             foreach ($evaluations as $evaluation) {
-                $resourceNodeId = $evaluation->getActivityParameters()->getActivity()->getId();
-                $evaluationsAssoc[$resourceNodeId] = $evaluation;
+                $activityId = $evaluation->getActivityParameters()->getActivity()->getId();
+                $evaluationsAssoc[$activityId] = $evaluation;
+            }
+
+            foreach ($activities as $activity) {
+
+                if (!isset($evaluationsAssoc[$activity->getId()])) {
+                    $params = $activity->getParameters();
+                    $evaluationType = $params->getEvaluationType();
+                    $status = ($evaluationType === 'automatic') ?
+                        'not_attempted' :
+                        null;
+
+                    $evaluation = $this->activityManager->createEvaluation(
+                        $currentUser,
+                        $params,
+                        null,
+                        null,
+                        $status
+                    );
+                    $evaluationsAssoc[$activity->getId()] = $evaluation;
+                }
             }
 
             return new Response(
@@ -346,12 +366,17 @@ class WorkspaceAnalyticsController extends Controller
         foreach ($users as $user) {
 
             if (!isset($evaluations[$user->getId()])) {
+                $evaluationType = $activityParams->getEvaluationType();
+                $status = ($evaluationType === 'automatic') ?
+                    'not_attempted' :
+                    null;
+
                 $evaluation = $this->activityManager->createEvaluation(
                     $user,
                     $activityParams,
                     null,
                     null,
-                    'not_attempted'
+                    $status
                 );
                 $evaluations[$user->getId()] = $evaluation;
             }

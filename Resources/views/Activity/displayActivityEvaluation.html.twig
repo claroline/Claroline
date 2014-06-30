@@ -20,8 +20,10 @@
                 <td class="center-text">
                     {% if evaluation.getStatus() is not empty %}
                         {{ evaluation.getStatus()|trans({}, 'platform') }}
-                    {% else %}
+                    {% elseif evaluation.getType() is not empty and evaluation.getType() == 'automatic' %}
                         {{ 'not_attempted'|trans({}, 'platform') }}
+                    {% else %}
+                        -
                     {% endif %}
                 </td>
                 <td class="center-text">
