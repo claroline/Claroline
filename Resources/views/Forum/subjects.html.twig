@@ -49,7 +49,7 @@
         <div class="navbar row">
             <div class="col-md-9">
                 <a class="btn btn-default" href="{{ path('claro_forum_categories', { 'forum': category.getForum().getId() }) }}">
-                    <i class="icon-chevron-left"></i> {{ 'back_to_categories'|trans({}, 'forum') }}
+                    <i class="icon-chevron-left"></i> {{ 'forum_back_to_categories'|trans({}, 'forum') }}
                 </a>
                 {% if canCreateSubject %}
                     <a class="btn btn-primary" href="{{ _path('claro_forum_form_subject_creation', {'category': category.getId()}) }}">

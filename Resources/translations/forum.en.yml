@@ -1,11 +1,13 @@
 author: Author
-back_to: Back to
-back_to_categories: Back to categories
+#back_to: Back to
+#back_to_categories: Back to categories
 category: Category
 category_form_name: Category
 edit_message: Edit a message
 field_content_required: Content field is required.
 forum: Forum
+forum_back_to_categories: Back to forums
+forum_back_to_subjects: Back to subjects
 forum_category_edit: 'Edit category'
 forum_form_name: Name
 forum_message_form_content: Content
