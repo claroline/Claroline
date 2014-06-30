@@ -137,6 +137,7 @@ class ActivityController
                 $occurrence = $formRule->get('occurrence')->getData();
                 $result = $formRule->get('result')->getData();
                 $resultMax = $formRule->get('resultMax')->getData();
+                $isResultVisible = $formRule->get('isResultVisible')->getData();
                 $activeFrom = $formRule->get('activeFrom')->getData();
                 $activeUntil = $formRule->get('activeUntil')->getData();
 
@@ -147,6 +148,7 @@ class ActivityController
                         $occurrence,
                         $result,
                         $resultMax,
+                        $isResultVisible,
                         $activeFrom,
                         $activeUntil,
                         $resourceNode
@@ -158,6 +160,7 @@ class ActivityController
                         $occurrence,
                         $result,
                         $resultMax,
+                        $isResultVisible,
                         $activeFrom,
                         $activeUntil,
                         $resourceNode
@@ -351,9 +354,46 @@ class ActivityController
         $pastEvals = $this->activityManager
             ->getPastEvaluationsByUserAndActivityParams($currentUser, $params);
 
+        if (is_null($evaluation)) {
+            $evaluationType = $params->getEvaluationType();
+            $status = ($evaluationType === 'automatic') ?
+                'not_attempted' :
+                null;
+
+            $evaluation = $this->activityManager->createEvaluation(
+                $currentUser,
+                $params,
+                null,
+                null,
+                $status
+            );
+        }
+        $ruleScore = null;
+        $isResultVisible = false;
+
+        if ($params->getEvaluationType() === 'automatic' &&
+            count($params->getRules()) > 0) {
+
+            $rule = $params->getRules()->first();
+            $score = $rule->getResult();
+            $scoreMax = $rule->getResultMax();
+
+            if (!is_null($score)) {
+                $ruleScore = $score;
+
+                if (!is_null($scoreMax)) {
+                    $ruleScore .= ' / ' . $scoreMax;
+                }
+                $isResultVisible = !empty($rule->getIsResultVisible());
+            }
+        }
+
         return array(
+            'activityParameters' => $params,
             'evaluation' => $evaluation,
-            'pastEvals' => $pastEvals
+            'pastEvals' => $pastEvals,
+            'ruleScore' => $ruleScore,
+            'isResultVisible' => $isResultVisible
         );
     }
 

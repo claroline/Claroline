@@ -49,7 +49,9 @@
                             <td class="center-text">
                                 {% if eval.getStatus() is not empty %}
                                     {{ eval.getStatus()|trans({}, 'platform') }}
-                                {% elseif eval.getType() is not empty and eval.getType() == 'automatic' %}
+                                {% elseif (activity.getParameters().getEvaluationType() is not empty) and
+                                    (activity.getParameters().getEvaluationType() == 'automatic')
+                                %}
                                     {{ 'not_attempted'|trans({}, 'platform') }}
                                 {% else %}
                                     -
@@ -62,7 +64,16 @@
                                     -
                                 {% endif %}
                             </td>
-                            <td class="center-text">
+                            <td class="center-text"
+                            
+                                {% if rulesScores[activity.getId()] is defined %}
+                                    {% set ruleScore = rulesScores[activity.getId()] %}
+                                    data-container="#activities-evaluations"
+                                    data-toggle="tooltip"
+                                    data-placement="top"
+                                    title="{{ 'passing_score'|trans({}, 'platform') ~ ' : ' ~ ruleScore }}"
+                                {% endif %}
+                            >
                                 {% if eval.getNumScore() is not empty %}
                                     {{ eval.getNumScore() }}
                                     {% if eval.getScoreMax() is not empty %}

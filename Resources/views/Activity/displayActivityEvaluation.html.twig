@@ -4,7 +4,16 @@
             <tr>
                 <th class="center-text">{{ 'status'|trans({}, 'platform') }}</th>
                 <th class="center-text">{{ 'total_time'|trans({}, 'platform') }}</th>
-                <th class="center-text">{{ 'best_score'|trans({}, 'platform') }}</th>
+                <th class="center-text"
+                    {% if (ruleScore is not empty) and isResultVisible %}
+                        data-container="#activity-evaluation-display-element"
+                        data-toggle="tooltip"
+                        data-placement="top"
+                        title="{{ 'passing_score'|trans({}, 'platform') ~ ' : ' ~ ruleScore }}"
+                    {% endif %}
+                >
+                    {{ 'best_score'|trans({}, 'platform') }}
+                </th>
                 <th class="center-text">{{ 'number_of_attempts'|trans({}, 'platform') }}</th>
                 <th class="center-text"
                     data-container="#activity-evaluation-display-element"
@@ -20,7 +29,9 @@
                 <td class="center-text">
                     {% if evaluation.getStatus() is not empty %}
                         {{ evaluation.getStatus()|trans({}, 'platform') }}
-                    {% elseif evaluation.getType() is not empty and evaluation.getType() == 'automatic' %}
+                    {% elseif (activityParameters.getEvaluationType() is not empty) and
+                        (activityParameters.getEvaluationType() == 'automatic')
+                    %}
                         {{ 'not_attempted'|trans({}, 'platform') }}
                     {% else %}
                         -
@@ -82,7 +93,16 @@
                     <th class="center-text">{{ 'date'|trans({}, 'platform') }}</th>
                     <th class="center-text">{{ 'status'|trans({}, 'platform') }}</th>
                     <th class="center-text">{{ 'duration'|trans({}, 'platform') }}</th>
-                    <th class="center-text">{{ 'score'|trans({}, 'platform') }}</th>
+                    <th class="center-text"
+                        {% if (ruleScore is not empty) and isResultVisible %}
+                            data-container="#activity-evaluation-display-element"
+                            data-toggle="tooltip"
+                            data-placement="top"
+                            title="{{ 'passing_score'|trans({}, 'platform') ~ ' : ' ~ ruleScore }}"
+                        {% endif %}
+                    >
+                        {{ 'score'|trans({}, 'platform') }}
+                    </th>
                     <th class="center-text"
                         data-container="#activity-evaluation-display-element"
                         data-toggle="tooltip"

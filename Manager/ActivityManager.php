@@ -333,6 +333,7 @@ class ActivityManager
         $occurrence,
         $result,
         $resultMax,
+        $isResultVisible,
         $activeFrom,
         $activeUntil,
         ResourceNode $resourceNode = null
@@ -344,6 +345,7 @@ class ActivityManager
         $rule->setOccurrence($occurrence);
         $rule->setResult($result);
         $rule->setResultMax($resultMax);
+        $rule->setIsResultVisible($isResultVisible);
         $rule->setActiveFrom($activeFrom);
         $rule->setActiveUntil($activeUntil);
         $rule->setResource($resourceNode);
@@ -360,6 +362,7 @@ class ActivityManager
         $occurrence,
         $result,
         $resultMax,
+        $isResultVisible,
         $activeFrom,
         $activeUntil,
         ResourceNode $resourceNode = null
@@ -369,6 +372,7 @@ class ActivityManager
         $rule->setOccurrence($occurrence);
         $rule->setResult($result);
         $rule->setResultMax($resultMax);
+        $rule->setIsResultVisible($isResultVisible);
         $rule->setActiveFrom($activeFrom);
         $rule->setActiveUntil($activeUntil);
         $rule->setResource($resourceNode);

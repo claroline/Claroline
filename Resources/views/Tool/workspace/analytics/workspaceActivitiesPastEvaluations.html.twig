@@ -20,7 +20,7 @@
             <th class="center-text">{{ 'status' | trans({}, 'platform') }}</th>
             <th class="center-text">{{ 'duration' | trans({}, 'platform') }}</th>
             <th class="center-text"
-                {% if isWorkspaceManager and (ruleScore is not empty) %}
+                {% if (ruleScore is not empty) and (isWorkspaceManager or isResultVisible) %}
                     data-container="#workspace-activities-past-evaluations-element"
                     data-toggle="tooltip"
                     data-placement="top"

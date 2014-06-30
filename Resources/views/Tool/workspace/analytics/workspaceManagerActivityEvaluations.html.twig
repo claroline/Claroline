@@ -86,7 +86,9 @@
                                 <td class="text-center">
                                     {% if evaluation.getStatus() is not empty %}
                                         {{ evaluation.getStatus()|trans({}, 'platform') }}
-                                    {% elseif evaluation.getType() is not empty and evaluation.getType() == 'automatic' %}
+                                    {% elseif (activity.getParameters().getEvaluationType() is not empty) and
+                                        (activity.getParameters().getEvaluationType() == 'automatic')
+                                    %}
                                         {{ 'not_attempted'|trans({}, 'platform') }}
                                     {% else %}
                                         -

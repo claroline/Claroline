@@ -88,6 +88,11 @@ class ActivityRuleType extends AbstractType
             )
         );
         $builder->add(
+            'isResultVisible',
+            'checkbox',
+            array('required' => false)
+        );
+        $builder->add(
             'activeFrom',
             'date',
             array(

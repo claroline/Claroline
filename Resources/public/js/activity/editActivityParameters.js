@@ -35,6 +35,7 @@
                 $('#activity_rule_form_occurrence').val(1);
                 $('#activity_rule_form_result').attr('disabled', 'disabled');
                 $('#activity_rule_form_resultMax').attr('disabled', 'disabled');
+                $('#activity_rule_form_isResultVisible').attr('disabled', 'disabled');
                 $('#activity_rule_form_badge').attr('disabled', 'disabled');
                 $('#activity_rule_form_badge').val('');
                 $('.activity-rule-option-date').attr('disabled', 'disabled');
@@ -46,11 +47,13 @@
                 $('#activity_rule_form_occurrence').val(1);
                 $('#activity_rule_form_result').attr('disabled', 'disabled');
                 $('#activity_rule_form_resultMax').attr('disabled', 'disabled');
+                $('#activity_rule_form_isResultVisible').attr('disabled', 'disabled');
                 break;
             default:
                 $('#activity_rule_form_occurrence').prop('readonly', false);
                 $('#activity_rule_form_result').attr('disabled', false);
                 $('#activity_rule_form_resultMax').attr('disabled', false);
+                $('#activity_rule_form_isResultVisible').attr('disabled', false);
                 $('.activity-rule-option-date').attr('disabled', false);
                 $('#activity_rule_form_badge').attr('disabled', 'disabled');
         }
