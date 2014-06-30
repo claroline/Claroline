@@ -1,11 +1,11 @@
 author: Auteur
-back_to: Retour à
-back_to_categories: Retour aux catégories
 category: Catégorie
 category_form_name: Catégorie
 edit_message: Éditer un message
 field_content_required: Le champ contenu est requis.
 forum: Forum
+forum_back_to_categories: Retour à la liste des forums
+forum_back_to_subjects: Retour aux sujets
 forum_category_edit: 'Modifier la catégorie'
 forum_settings: Paramètres du forum
 forum_subject_edit: 'Modifier le sujet'

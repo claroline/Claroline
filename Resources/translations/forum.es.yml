@@ -1,11 +1,11 @@
 author: Autor
-back_to: 'Volver a'
-back_to_categories: 'volver a las categorías'
 category: Categoría
 category_form_name: Categoría
 edit_message: 'Editar un mensaje'
 field_content_required: 'Se requiere campo Contenido.'
 forum: Foro
+forum_back_to_categories: Volver a los foros
+forum_back_to_subjects: Volver a las temas
 forum_category_edit: 'Editar una categoría'
 forum_form_name: Nombre
 forum_message_form_content: Cotenido
