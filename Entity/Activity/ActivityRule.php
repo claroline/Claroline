@@ -29,6 +29,11 @@ class ActivityRule extends Rule
      */
     protected $activityParameters;
 
+    /**
+     * @ORM\Column(name="result_visible", type="boolean", nullable=true)
+     */
+    protected $isResultVisible;
+
     public function __construct()
     {
         $this->occurrence = 1;
@@ -42,5 +47,15 @@ class ActivityRule extends Rule
     public function setActivityParameters($activityParameters)
     {
         $this->activityParameters = $activityParameters;
+    }
+
+    public function getIsResultVisible()
+    {
+        return $this->isResultVisible;
+    }
+
+    public function setIsResultVisible($isResultVisible)
+    {
+        $this->isResultVisible = $isResultVisible;
     }
 }

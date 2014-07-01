@@ -68,4 +68,6 @@
             }
         });
     });
+    
+    $('.display-comment').popover();
 })();

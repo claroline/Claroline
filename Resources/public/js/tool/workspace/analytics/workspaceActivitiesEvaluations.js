@@ -26,4 +26,6 @@
         });
         $('#activity-past-evaluations-modal-box').modal('show');
     });
+    
+    $('.display-comment').popover();
 })();

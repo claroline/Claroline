@@ -173,6 +173,16 @@ class ActivityManager
             ->findEvaluationByUserAndActivityParams($user, $activityParams);
         $isFirstEvaluation = is_null($evaluation);
         $evaluationType = $activityParams->getEvaluationType();
+        $ruleScore = null;
+        $ruleScoreMax = null;
+
+        if ($evaluationType === 'automatic' &&
+            count($activityParams->getRules()) > 0) {
+
+            $rule = $activityParams->getRules()->first();
+            $ruleScore = $rule->getResult();
+            $ruleScoreMax = $rule->getResultMax();
+        }
 
         if (!$isFirstEvaluation) {
             $pastEvals = $this->pastEvaluationRepo
@@ -222,11 +232,11 @@ class ActivityManager
                         $score = isset($logDetails['result']) ?
                             $logDetails['result'] :
                             null;
-                        $scoreMin = isset($logDetails['scoreMin']) ?
-                            $logDetails['scoreMin'] :
+                        $scoreMin = isset($logDetails['resultMin']) ?
+                            $logDetails['resultMin'] :
                             0;
-                        $scoreMax = isset($logDetails['scoreMax']) ?
-                            $logDetails['scoreMax'] :
+                        $scoreMax = isset($logDetails['resultMax']) ?
+                            $logDetails['resultMax'] :
                             null;
 
                         $pastEval = new PastEvaluation();
@@ -260,11 +270,11 @@ class ActivityManager
         $score = isset($logDetails['result']) ?
             $logDetails['result'] :
             null;
-        $scoreMin = isset($logDetails['scoreMin']) ?
-            $logDetails['scoreMin'] :
+        $scoreMin = isset($logDetails['resultMin']) ?
+            $logDetails['resultMin'] :
             null;
-        $scoreMax = isset($logDetails['scoreMax']) ?
-            $logDetails['scoreMax'] :
+        $scoreMax = isset($logDetails['resultMax']) ?
+            $logDetails['resultMax'] :
             null;
 
         $pastEval = new PastEvaluation();
@@ -277,7 +287,17 @@ class ActivityManager
         $pastEval->setScoreMin($scoreMin);
         $pastEval->setScoreMax($scoreMax);
         $pastEval->setDuration($duration);
-        $pastEval->setStatus($activityStatus);
+
+        if (($activityStatus === 'completed' || $activityStatus === 'passed') &&
+            !is_null($score) && !is_null($ruleScore)) {
+
+            $realStatus = $this->hasPassingScore($ruleScore, $ruleScoreMax, $score, $scoreMax) ?
+                $activityStatus :
+                'failed' ;
+            $pastEval->setStatus($realStatus);
+        } else {
+            $pastEval->setStatus($activityStatus);
+        }
 
         $nbAttempts++;
         $totalTime = $this->computeActivityTotalTime(
@@ -312,6 +332,8 @@ class ActivityManager
         $action,
         $occurrence,
         $result,
+        $resultMax,
+        $isResultVisible,
         $activeFrom,
         $activeUntil,
         ResourceNode $resourceNode = null
@@ -322,6 +344,8 @@ class ActivityManager
         $rule->setAction($action);
         $rule->setOccurrence($occurrence);
         $rule->setResult($result);
+        $rule->setResultMax($resultMax);
+        $rule->setIsResultVisible($isResultVisible);
         $rule->setActiveFrom($activeFrom);
         $rule->setActiveUntil($activeUntil);
         $rule->setResource($resourceNode);
@@ -337,6 +361,8 @@ class ActivityManager
         $action,
         $occurrence,
         $result,
+        $resultMax,
+        $isResultVisible,
         $activeFrom,
         $activeUntil,
         ResourceNode $resourceNode = null
@@ -345,6 +371,8 @@ class ActivityManager
         $rule->setAction($action);
         $rule->setOccurrence($occurrence);
         $rule->setResult($result);
+        $rule->setResultMax($resultMax);
+        $rule->setIsResultVisible($isResultVisible);
         $rule->setActiveFrom($activeFrom);
         $rule->setActiveUntil($activeUntil);
         $rule->setResource($resourceNode);
@@ -413,21 +441,28 @@ class ActivityManager
         $scoreMax
     )
     {
-        if (!is_null($score) && !is_null($scoreMax)) {
+        if (!is_null($score)) {
             $currentScore = $evaluation->getNumScore();
             $currentScoreMax = $evaluation->getScoreMax();
+            $updateScore = false;
 
-            if (!is_null($currentScore) && !is_null($currentScoreMax)) {
-                $currentRealScore = $currentScore / $currentScoreMax;
-                $realScore = $score / $scoreMax;
-
-                if ($realScore > $currentRealScore) {
-                    $evaluation->setNumScore($score);
-                    $evaluation->setScoreMin($scoreMin);
-                    $evaluation->setScoreMax($scoreMax);
-                    $this->om->persist($evaluation);
-                }
+            if (is_null($currentScore)) {
+                $updateScore = true;
+            } elseif (empty($currentScoreMax) || empty($scoreMax)) {
+                $updateScore = ($score > $currentScore);
             } else {
+                $realCurrentScore = number_format(
+                    round($currentScore / $currentScoreMax, 2),
+                    2
+                );
+                $realScore = number_format(
+                    round($score / $scoreMax, 2),
+                    2
+                );
+                $updateScore = ($realScore > $realCurrentScore);
+            }
+
+            if ($updateScore) {
                 $evaluation->setNumScore($score);
                 $evaluation->setScoreMin($scoreMin);
                 $evaluation->setScoreMax($scoreMax);
@@ -463,6 +498,37 @@ class ActivityManager
                 $this->om->persist($pastEval);
             }
         }
+    }
+
+    private function hasPassingScore(
+        $ruleScore,
+        $ruleScoreMax,
+        $score,
+        $scoreMax
+    )
+    {
+        $hasPassingScore = true;
+
+        if (!is_null($ruleScore) && !is_null($score)) {
+
+            if (empty($ruleScoreMax) || empty($scoreMax)) {
+                $hasPassingScore = ($score >= $ruleScore);
+            } else {
+                $realRuleScore = number_format(
+                    round($ruleScore / $ruleScoreMax, 2),
+                    2
+                );
+                $realScore = number_format(
+                    round($score / $scoreMax, 2),
+                    2
+                );
+                $hasPassingScore = ($realScore >= $realRuleScore);
+            }
+        } elseif (!is_null($ruleScore)) {
+            $hasPassingScore = false;
+        }
+
+        return $hasPassingScore;
     }
 
 

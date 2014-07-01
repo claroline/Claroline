@@ -19,9 +19,25 @@
             <th class="center-text">{{ 'date' | trans({}, 'platform') }}</th>
             <th class="center-text">{{ 'status' | trans({}, 'platform') }}</th>
             <th class="center-text">{{ 'duration' | trans({}, 'platform') }}</th>
-            <th class="center-text">{{ 'score' | trans({}, 'platform') }}</th>
-            <th class="center-text">{{ 'evaluation' | trans({}, 'platform') }}</th>
-            <th class="center-text">{{ 'comments' | trans({}, 'platform') }}</th>
+            <th class="center-text"
+                {% if (ruleScore is not empty) and (isWorkspaceManager or isResultVisible) %}
+                    data-container="#workspace-activities-past-evaluations-element"
+                    data-toggle="tooltip"
+                    data-placement="top"
+                    title="{{ 'passing_score'|trans({}, 'platform') ~ ' : ' ~ ruleScore }}"
+                {% endif %}
+            >
+                {{ 'score' | trans({}, 'platform') }}
+            </th>
+            <th class="center-text"
+                data-container="#workspace-activities-past-evaluations-element"
+                data-toggle="tooltip"
+                data-placement="top"
+                title="{{ 'manual_evaluation_explanation'|trans({}, 'platform') }}"
+            >
+                {{ 'evaluation' | trans({}, 'platform') }}
+            </th>
+            <th class="center-text">{{ 'comment' | trans({}, 'platform') }}</th>
         </tr>
 
         {% for eval in pastEvals %}
@@ -38,6 +54,9 @@
             <td class="center-text">
                 {% if eval.getNumScore() is not empty %}
                     {{ eval.getNumScore() }}
+                    {% if eval.getScoreMax() is not empty %}
+                        / {{ eval.getScoreMax() }}
+                    {% endif %}
                 {% else %}
                     -
                 {% endif %}
@@ -51,12 +70,11 @@
             </td>
             <td class="center-text">
                 {% if eval.getComment() is not empty %}
-                    <i class="fa fa-comment-o display-comment"
+                    <i class="fa fa-comment-o pointer-hand display-comment"
                         data-container="#workspace-activities-past-evaluations-element"
-                        data-toggle="tooltip"
+                        data-toggle="popover"
                         data-placement="left"
                         data-content="{{ eval.getComment() }}"
-                        title="{{ eval.getComment() }}"
                     ></i>
                 {% else %}
                     -
@@ -67,3 +85,9 @@
     </table>
 </div>
 {% endif %}
+    
+{% block javascripts %}
+    <script>
+        $('.display-comment').popover();
+    </script>
+{% endblock %}

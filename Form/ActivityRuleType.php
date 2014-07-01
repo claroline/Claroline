@@ -79,6 +79,20 @@ class ActivityRuleType extends AbstractType
             )
         );
         $builder->add(
+            'resultMax',
+            'integer',
+            array(
+                'label' => '/',
+                'attr' => array('min' => 1),
+                'required' => false
+            )
+        );
+        $builder->add(
+            'isResultVisible',
+            'checkbox',
+            array('required' => false)
+        );
+        $builder->add(
             'activeFrom',
             'date',
             array(

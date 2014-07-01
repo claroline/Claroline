@@ -2,7 +2,7 @@
 
 {% block analytics %}
     <div id="activities-evaluations">
-        <h2>{{ 'my_activities_tracking'|trans({}, 'platform') }}</h2>
+        <h2>{{ 'workspace_activities_tracking'|trans({}, 'platform') }}</h2>
         <br>
 
         {% if activities|length > 0 %}
@@ -27,11 +27,16 @@
                         <th class="center-text">
                             {{ 'number_of_attempts'|trans({}, 'platform') }}
                         </th>
-                        <th class="center-text">
+                        <th class="center-text"
+                            data-container="#activities-evaluations"
+                            data-toggle="tooltip"
+                            data-placement="top"
+                            title="{{ 'manual_evaluation_explanation'|trans({}, 'platform') }}"
+                        >
                             {{ 'evaluation'|trans({}, 'platform') }}
                         </th>
                         <th class="center-text">
-                            {{ 'comments'|trans({}, 'platform') }}
+                            {{ 'comment'|trans({}, 'platform') }}
                         </th>
                     </tr>
                     {% for activity in activities %}
@@ -44,8 +49,12 @@
                             <td class="center-text">
                                 {% if eval.getStatus() is not empty %}
                                     {{ eval.getStatus()|trans({}, 'platform') }}
-                                {% else %}
+                                {% elseif (activity.getParameters().getEvaluationType() is not empty) and
+                                    (activity.getParameters().getEvaluationType() == 'automatic')
+                                %}
                                     {{ 'not_attempted'|trans({}, 'platform') }}
+                                {% else %}
+                                    -
                                 {% endif %}
                             </td>
                             <td class="center-text">
@@ -55,9 +64,21 @@
                                     -
                                 {% endif %}
                             </td>
-                            <td class="center-text">
+                            <td class="center-text"
+                            
+                                {% if rulesScores[activity.getId()] is defined %}
+                                    {% set ruleScore = rulesScores[activity.getId()] %}
+                                    data-container="#activities-evaluations"
+                                    data-toggle="tooltip"
+                                    data-placement="top"
+                                    title="{{ 'passing_score'|trans({}, 'platform') ~ ' : ' ~ ruleScore }}"
+                                {% endif %}
+                            >
                                 {% if eval.getNumScore() is not empty %}
                                     {{ eval.getNumScore() }}
+                                    {% if eval.getScoreMax() is not empty %}
+                                        / {{ eval.getScoreMax() }}
+                                    {% endif %}
                                 {% else %}
                                     -
                                 {% endif %}
@@ -94,11 +115,11 @@
                             </td>
                             <td class="center-text">
                                 {% if eval.getComment() is not empty %}
-                                    <i class="fa fa-comment-o display-comment"
+                                    <i class="fa fa-comment-o pointer-hand display-comment"
                                         data-container="#activities-evaluations"
-                                        data-toggle="tooltip"
+                                        data-toggle="popover"
                                         data-placement="left"
-                                        title="{{ eval.getComment() }}"
+                                        data-content="{{ eval.getComment() }}"
                                     ></i>
                                 {% else %}
                                     -

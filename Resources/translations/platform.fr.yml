@@ -61,9 +61,9 @@ activity_already: Cette ressource est déjà dans l'activité
 activity_evaluation_form_attemptsCount: 'Nombre de tentatives'
 activity_evaluation_form_comment: Commentaire
 activity_evaluation_form_date: 'Date de la dernière tentative'
-activity_evaluation_form_numScore: 'Score'
-activity_evaluation_form_score: 'Evaluation'
-activity_evaluation_form_status: 'Statut'
+activity_evaluation_form_numScore: 'Meilleur score'
+activity_evaluation_form_score: Evaluation
+activity_evaluation_form_status: Statut
 activity_form_instructions: Instructions
 activity_form_name: Nom
 activity_parameters_form_evaluation_type: 'Type d''évaluation'
@@ -79,11 +79,19 @@ activity_resource_remove: Êtes-vous sûr de vouloir enlever cette ressource de 
 activity_rule_action_none: Aucune
 activity_rule_configuration_for_auto_evaluation: 'Configuration de la règle pour l''évaluation automatique'
 activity_rule_form_action: Action
-activity_rule_form_activeFrom: 'A partir du'
-activity_rule_form_activeUntil: 'Jusqu''au'
-activity_rule_form_badge: Badge
+activity_rule_form_action_explanation: 'L''évaluation automatique se base sur les actions effectuées par l''utilisateur.'
+activity_rule_form_activeFrom: 'Effectuée entre le'
+activity_rule_form_activeFrom_explanation: 'Seules les actions effectuées après cette date seront prises en compte. Toutes les anciennes actions seront traitées si cette date n''est pas définie.'
+activity_rule_form_activeUntil: 'et le'
+activity_rule_form_activeUntil_explanation: 'Seules les actions effectuées avant cette date seront prises en compte. Toutes les futures actions seront traitées si cette date n''est pas définie.'
+activity_rule_form_badge: 'Badge à obtenir'
+activity_rule_form_badge_explanation: 'Le badge à obtenir.'
+activity_rule_form_isResultVisible: 'Afficher le résultat' 
+activity_rule_form_isResultVisible_explanation: 'Permettre à l''utilisateur de connaître le résultat à obtenir.' 
 activity_rule_form_occurrence: Occurrence
-activity_rule_form_result: Résultat
+activity_rule_form_occurrence_explanation: 'Le nombre de fois que l''action doit être effectuée.'
+activity_rule_form_result: 'Résultat à obtenir'
+activity_rule_form_result_explanation: 'Le résultat à obtenir.'
 activity_where_anywhere: N'importe où
 activity_where_classroom: En classe
 activity_who_collaborative: Collaboratif
@@ -133,6 +141,7 @@ appearance: Apparence
 apply: Appliquer
 at_least_one_category_has_to_be_selected: 'Au moins une catégorie doit être selectionnée'
 attempts: Tentatives
+automatic: Automatique
 available_widgets: 'Widgets disponibles'
 available_workspaces: 'Espaces d''activités disponibles'
 back: Retour
@@ -169,7 +178,7 @@ close: Fermer
 closed_account: Compte clos
 code: Code
 collaborator: Collaborateur
-comments: Commentaires
+comment: Commentaire
 communication: Communication
 completed: Terminé
 configuration: Configuration
@@ -294,7 +303,8 @@ entries_per_day: 'Nombre d''entrées par jour'
 evaluation: Evaluation
 evaluation-automatic: Automatique
 evaluation-manual: Manuelle
-evaluation_edition: 'Evaluation'
+evaluation_edition: Evaluation
+evaluation_type: 'Type d''évaluation'
 export: Exporter
 exportable: Exportable
 external_pdo_database: 'Base de données externe (PDO)'
@@ -428,6 +438,8 @@ manage_public_profile_preferences: 'Gérer les préférences du profil public'
 manage_rights: 'Gérer les droits'
 manage_tools: Gérer les outils
 manager: Gestionnaire
+manual: Manuelle
+manual_evaluation_explanation: 'Evaluation manuelle par un gestionnaire de l''espace d''activités'
 max_size_is: 'La taille maximale est %size%'
 media_most_viewed: 'Media les plus consultés'
 message_form_content: Contenu
@@ -460,7 +472,6 @@ month.October: Octobre
 month.September: Septembre
 move: Déplacer
 my_account: 'Mon compte'
-my_activities_tracking: 'Suivi de mes activités'
 my_agenda: 'Mon agenda'
 my_applications: 'Mes applications'
 my_badges: 'Mes badges'
@@ -481,6 +492,7 @@ new_password: Nouveau mot de passe
 new_role_message: 'Vous venez de recevoir le role %name%'
 new_role_message_object: 'Vos permissions sur la plateforme ont changé'
 no: non
+no_activity: 'Il n''y a aucune activité'
 no_category: 'Il n''y a aucune catégorie'
 no_email: 'Ce mail ne correspond pas a un utilisateur inscrit'
 no_group: 'Aucun groupe'
@@ -518,6 +530,7 @@ owner: Propriétaire
 owner_s: Propriétaire(s)
 parameters: Paramètres
 passed: Réussi
+passing_score: 'Score pour réussir'
 password: 'Mot de passe'
 password_mismatch: 'Les mots de passe ne correspondent pas.'
 password_ok: 'Votre mot de passe a été modifié. Vous pouvez maintenant vous connecter.'

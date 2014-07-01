@@ -188,8 +188,52 @@ class WorkspaceAnalyticsController extends Controller
             $evaluationsAssoc = array();
 
             foreach ($evaluations as $evaluation) {
-                $resourceNodeId = $evaluation->getActivityParameters()->getActivity()->getId();
-                $evaluationsAssoc[$resourceNodeId] = $evaluation;
+                $activityId = $evaluation->getActivityParameters()->getActivity()->getId();
+                $evaluationsAssoc[$activityId] = $evaluation;
+            }
+
+            $rulesScores = array();
+
+            foreach ($activities as $activity) {
+                $params = $activity->getParameters();
+                $evaluationType = $params->getEvaluationType();
+
+                if (!isset($evaluationsAssoc[$activity->getId()])) {
+                    $status = ($evaluationType === 'automatic') ?
+                        'not_attempted' :
+                        null;
+
+                    $evaluation = $this->activityManager->createEvaluation(
+                        $currentUser,
+                        $params,
+                        null,
+                        null,
+                        $status
+                    );
+                    $evaluationsAssoc[$activity->getId()] = $evaluation;
+                }
+
+                if ($evaluationType === 'automatic' &&
+                    count($params->getRules()) > 0) {
+
+                    $rule = $params->getRules()->first();
+                    $isResultVisible = $rule->getIsResultVisible();
+
+                    if (!empty($isResultVisible)) {
+                        $score = $rule->getResult();
+                        $scoreMax = $rule->getResultMax();
+
+                        if (!is_null($score)) {
+                            $ruleScore = $score;
+
+                            if (!is_null($scoreMax)) {
+                                $ruleScore .= ' / ' . $scoreMax;
+                            }
+
+                            $rulesScores[$activity->getId()] = $ruleScore;
+                        }
+                    }
+                }
             }
 
             return new Response(
@@ -199,7 +243,8 @@ class WorkspaceAnalyticsController extends Controller
                         'analyticsTab' => 'activties_tracking',
                         'workspace' => $workspace,
                         'activities' => $activities,
-                        'evaluations' => $evaluationsAssoc
+                        'evaluations' => $evaluationsAssoc,
+                        'rulesScores' => $rulesScores
                     )
                 )
             );
@@ -257,6 +302,25 @@ class WorkspaceAnalyticsController extends Controller
             throw new AccessDeniedException();
         }
         $activity = $activityParameters->getActivity();
+        $ruleScore = null;
+        $isResultVisible = false;
+
+        if ($activityParameters->getEvaluationType() === 'automatic' &&
+            count($activityParameters->getRules()) > 0) {
+
+            $rule = $activityParameters->getRules()->first();
+            $score = $rule->getResult();
+            $scoreMax = $rule->getResultMax();
+
+            if (!is_null($score)) {
+                $ruleScore = $score;
+
+                if (!is_null($scoreMax)) {
+                    $ruleScore .= ' / ' . $scoreMax;
+                }
+                $isResultVisible = !empty($rule->getIsResultVisible());
+            }
+        }
 
         $pastEvals =
             $this->activityManager->getPastEvaluationsByUserAndActivityParams(
@@ -268,14 +332,18 @@ class WorkspaceAnalyticsController extends Controller
             'user' => $user,
             'activity' => $activity,
             'pastEvals' => $pastEvals,
-            'displayType' => $displayType
+            'displayType' => $displayType,
+            'isWorkspaceManager' => $isWorkspaceManager,
+            'ruleScore' => $ruleScore,
+            'isResultVisible' => $isResultVisible
         );
     }
 
     /**
      * @EXT\Route(
-     *     "/workspace/manager/activity/{activityId}/evaluations",
-     *     name="claro_workspace_manager_activity_evaluations_show"
+     *     "/workspace/manager/activity/{activityId}/evaluations/page/{page}",
+     *     name="claro_workspace_manager_activity_evaluations_show",
+     *     defaults={"page"=1}
      * )
      * @EXT\Method("GET")
      * @EXT\ParamConverter("currentUser", options={"authenticatedUser" = true})
@@ -294,7 +362,8 @@ class WorkspaceAnalyticsController extends Controller
      */
     public function workspaceManagerActivityEvaluationsShowAction(
         User $currentUser,
-        Activity $activity
+        Activity $activity,
+        $page
     )
     {
         $roleNames = $currentUser->getRoles();
@@ -309,7 +378,8 @@ class WorkspaceAnalyticsController extends Controller
         $activityParams = $activity->getParameters();
         $roles = $this->roleManager
             ->getRolesWithRightsByResourceNode($resourceNode);
-        $usersPager = $this->userManager->getByRolesIncludingGroups($roles);
+        $usersPager = $this->userManager
+            ->getUsersByRolesIncludingGroups($roles, $page);
         $users = array();
 
         foreach ($usersPager as $user) {
@@ -327,14 +397,37 @@ class WorkspaceAnalyticsController extends Controller
         foreach ($users as $user) {
 
             if (!isset($evaluations[$user->getId()])) {
+                $evaluationType = $activityParams->getEvaluationType();
+                $status = ($evaluationType === 'automatic') ?
+                    'not_attempted' :
+                    null;
+
                 $evaluation = $this->activityManager->createEvaluation(
                     $user,
                     $activityParams,
                     null,
                     null,
-                    'not_attempted'
+                    $status
                 );
                 $evaluations[$user->getId()] = $evaluation;
+            }
+        }
+
+        $ruleScore = null;
+
+        if ($activityParams->getEvaluationType() === 'automatic' &&
+            count($activityParams->getRules()) > 0) {
+
+            $rule = $activityParams->getRules()->first();
+            $score = $rule->getResult();
+            $scoreMax = $rule->getResultMax();
+
+            if (!is_null($score)) {
+                $ruleScore = $score;
+
+                if (!is_null($scoreMax)) {
+                    $ruleScore .= ' / ' . $scoreMax;
+                }
             }
         }
 
@@ -344,7 +437,9 @@ class WorkspaceAnalyticsController extends Controller
             'activityParams' => $activityParams,
             'workspace' => $workspace,
             'users' => $usersPager,
-            'evaluations' => $evaluations
+            'page' => $page,
+            'evaluations' => $evaluations,
+            'ruleScore' => $ruleScore
         );
     }
 
