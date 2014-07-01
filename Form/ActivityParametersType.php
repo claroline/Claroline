@@ -71,8 +71,8 @@ class ActivityParametersType extends AbstractType
             'choice',
             array(
                 'choices' => array(
-                    'automatic' => 'evaluation-automatic',
-                    'manual' => 'evaluation-manual'
+                    'manual' => 'evaluation-manual',
+                    'automatic' => 'evaluation-automatic'
                 ),
                 'required' => true
             )
