@@ -63,10 +63,16 @@ class CompetenceManager {
        return $repo->getRootCpt();
     }
 
-    public function getCompetenceHiearchy(CompetenceHierarchy $competence)
+    public function getHierarchyNameNoHtml(CompetenceHierarchy $competence)
+    {
+    	$repo = $this->om->getRepository('ClarolineCoreBundle:Competence\CompetenceHierarchy');
+        $listCompetences = $repo->findHiearchyNameById($competence);
+        return ($listCompetences);	
+    }
+    public function getHierarchyName(CompetenceHierarchy $competence)
     {
         $repo = $this->om->getRepository('ClarolineCoreBundle:Competence\CompetenceHierarchy');
-        $listCompetences = $repo->findHiearchyById($competence);
+        $listCompetences = $repo->findHiearchyNameById($competence);
         $competences = array();
 
         foreach ($listCompetences as $c) {
@@ -82,12 +88,12 @@ class CompetenceManager {
             'nodeDecorator' => function($node) use (&$competences) {
                 return '<a href='
                 .$this->router->generate('claro_admin_competence_modify',array('competenceId' => $node['id']))
-                .'">'.$competences[$node['id']].'</a>';
+                .'>'.$competences[$node['id']].'</a>';
             }
         );
         $htmlTree = $repo->childrenHierarchy(
             $competence, /* starting from root nodes */
-            true, /* true: load all children, false: only direct */
+            false, /* true: load all children, false: only direct */
             $options,
             true
         );
@@ -141,13 +147,13 @@ class CompetenceManager {
         return true;
     }
 
-    public function updateCompetence(Competence $competence)
+    public function updateCompetence(CompetenceHierarchy $competence)
     {
     	$this->om->flush();
     	return true;
     }
 
-    public function link(array $competences, CompetenceHierarchy $parent)
+    public function move(array $competences, CompetenceHierarchy $parent)
     {
     	$this->om->startFlushSuite();
     	foreach ($competences as $c) {
@@ -160,9 +166,38 @@ class CompetenceManager {
 		return true;
     }
 
-    public function getHierarchyCompetence (Competence $competence , Competence $root)
+    public function getHierarchy(CompetenceHierarchy $competence)
     {
-    	return true;
+    	$repo = $this->om->getRepository('ClarolineCoreBundle:Competence\CompetenceHierarchy');
+        $listCompetences = $repo->findHiearchyById($competence);
+        $competences = array();
+
+        foreach ($listCompetences as $c) {
+        	$competences[$c['id']]['name'] = $c['name'];
+        	$competences[$c['id']]['description'] = $c['description'];
+        	$competences[$c['id']]['score'] = $c['score'];
+        }
+
+        $options = array(
+            'decorate' => true,
+            'rootOpen' => '<ul>',
+            'rootClose' => '</ul>',
+            'childOpen' => '<li>',
+            'childClose' => '</li>',
+            'nodeDecorator' => function($node) use (&$competences) {
+                return $competences[$node['id']]['name']
+                .'('.$competences[$node['id']]['score'].')'
+                .'<div class="">'.
+                $competences[$node['id']]['description'].'</div>';
+            }
+        );
+        $htmlTree = $repo->childrenHierarchy(
+            $competence, /* starting from root nodes */
+            false, /* true: load all children, false: only direct */
+            $options,
+            true
+        );
+        return $htmlTree;
     }
 
     public function getExcludeHiearchy(CompetenceHierarchy $competence)

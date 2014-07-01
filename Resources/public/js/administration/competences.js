@@ -25,7 +25,7 @@
         	parameters.parentId = parentId;
     	}
 
-    	var route = Routing.generate('claro_admin_competence_link',{'parentId': parentId});
+    	var route = Routing.generate('claro_admin_competence_move',{'parentId': parentId});
     	route += '?'+$.param(parameters);
         $.ajax({
             'url': route,
@@ -44,30 +44,44 @@
     });
 
 	$('#save').click(function () {
-            $('#save').attr('disabled', 'disabled');
-            var url = $('#myForm').attr('action');
-            var route;
-            $.ajax({
-                'url': url,
-                'type': 'POST',
-                'data':  new FormData($('#myForm')[0]),
-                'processData': false,
-                'contentType': false,
-                'success': function (data, textStatus, xhr) {
-                    if (xhr.status === 200) {
-                        $('#myModal').modal('hide');
-                        $('#save').removeAttr('disabled');
-                        route = Routing.generate('claro_admin_competence_add_sub',{'competenceId': data.id});
-                        $('#tree').append('<li class=""><a href="'+route+'">'+data.name+'</a></li>');
-                    }
-                },
-                'error': function ( xhr, textStatus) {
-                    if (xhr.status === 400) {//bad request
-                        alert(Translator.get('agenda' + ':' + 'date_invalid'));
-                        $('#save').removeAttr('disabled');
-                    } 
+        $('#save').attr('disabled', 'disabled');
+        var url = $('#myForm').attr('action');
+        var route;
+        $.ajax({
+            'url': url,
+            'type': 'POST',
+            'data':  new FormData($('#myForm')[0]),
+            'processData': false,
+            'contentType': false,
+            'success': function (data, textStatus, xhr) {
+                if (xhr.status === 200) {
+                    $('#myModal').modal('hide');
+                    $('#save').removeAttr('disabled');
+                    route = Routing.generate('claro_admin_competence_add_sub',{'competenceId': data.id});
+                    $('#tree').append('<li class=""><a href="'+route+'">'+data.name+'</a></li>');
                 }
-            });
+            },
+            'error': function ( xhr, textStatus) {
+                if (xhr.status === 400) {//bad request
+                    alert(Translator.get('agenda' + ':' + 'date_invalid'));
+                    $('#save').removeAttr('disabled');
+                } 
+            }
         });
-	
+    });
+	$('#see').click(function () {
+		var parameters = {};
+		var id = $('#see').attr('data-id');
+		parameters.competenceId = id;
+		var route = Routing.generate('claro_admin_competence_full_hierarchy', {'competenceId':id });
+		
+		$.ajax( {
+			'url':route+'?'+$.param(parameters),
+			'type': 'POST',
+			'data': {'competenceId':id },
+			'success': function(data) {
+				$('#tree .panel-body').append(data.tree);
+			}
+		})
+	});
 })();

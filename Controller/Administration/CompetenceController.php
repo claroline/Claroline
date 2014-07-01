@@ -97,7 +97,7 @@ class CompetenceController {
     {
     	$form = $this->formFactory->create(FormFactory::TYPE_COMPETENCE);
         $form->handleRequest($this->request);
-        $competences = $this->cptmanager->getCompetenceHiearchy($competence);
+        $competences = $this->cptmanager->getHierarchyName($competence);
 
         if ($form->isValid()) {        	
 	        $subCpt = $form->getData();
@@ -105,7 +105,7 @@ class CompetenceController {
 	        if($this->cptmanager->addSub($competence, $subCpt)) {
         	    return new RedirectResponse(
                 $this->router->generate('claro_admin_competences')
-	         );
+	        	);
         	} else {
         		throw new Exception("no written", 1);
         	}
@@ -217,7 +217,7 @@ class CompetenceController {
      * @EXT\Method({"GET","POST"})
      * @EXT\ParamConverter(
      *      "competence",
-     *      class="ClarolineCoreBundle:Competence\Competence",
+     *      class="ClarolineCoreBundle:Competence\CompetenceHierarchy",
      *      options={"id" = "competenceId", "strictId" = true}
      * )
      * @param Competence $competence
@@ -230,11 +230,11 @@ class CompetenceController {
     {
 	 	$form = $this->formFactory->create(FormFactory::TYPE_COMPETENCE, array(), $competence->getCompetence());
         $form->handleRequest($this->request);
-         if ($form->isValid()) {
+        if ($form->isValid()) {
          	$this->cptmanager->updateCompetence($competence);
-         }
+        }
 
-         return array(
+        return array(
         	'form' => $form->createView(),
         	'cpt' => $competence,
         	'route' => 'claro_admin_competence_modify'
@@ -280,11 +280,10 @@ class CompetenceController {
      *
      * move a competence
      *
-     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function moveCompetenceFormAction($competence)
     {
-    	$competences = $this->cptmanager->getExcludeHiearchy($competence);
+    	$competences = $this->cptmanager->getHierarchyNameNoHtml($competence);
         return array(
         	'cpt' => $competence,
         	'competences' => $competences
@@ -319,5 +318,33 @@ class CompetenceController {
         	} else {
     		throw new \Exception("no written", 1);
     	}
+    }
+
+     /**
+     * @EXT\Route("/get/{competenceId}", name="claro_admin_competence_full_hierarchy",options={"expose"=true})
+     * @EXT\Method("POST")
+     * @EXT\ParamConverter(
+     *      "competence",
+     *      class="ClarolineCoreBundle:Competence\CompetenceHierarchy",
+     *      options={"id" = "competenceId", "strictId" = true}
+     * )
+     * @param Competence $competences
+     *
+     * get the html structure of the hole Learning outcome
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function getFullCompetenceHierarchyAction($competence)
+    {
+    	$tree = $this->cptmanager->getHierarchy($competence);
+    	return new Response(
+        	json_encode(
+        		array(
+        			'tree' => $tree
+        		)
+        	),
+        	200,
+        	array('Content-Type' => 'application/json')
+        );
     }
 } 

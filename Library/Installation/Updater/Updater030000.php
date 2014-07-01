@@ -48,6 +48,7 @@ class Updater030000
         $this->updateActivityIcon();
         $this->updateTools();
         $this->updateAdminPluginTool();
+        $this->updateCompetenceTools();
         
         $this->log('Updating cache...');
         $this->container->get('claroline.manager.cache_manager')->refresh();
@@ -56,22 +57,23 @@ class Updater030000
         if (file_exists($this->oldCachePath)) {
             unlink($this->oldCachePath);
         }
+    }
 
-        $this->log('Creating admin referential competence tools...');
-
-        $tools = array(
-            array('competence_referencial', 'icon-reorder'),
-        );
-
+    private function updateCompetenceTools()
+    {
+    	$this->log('Creating admin referential competence tools...');
         $existingTool = $this->objectManager->getRepository('ClarolineCoreBundle:Tool\AdminTool')->findByName('competence_referencial');
 
         if (count($existingTool) === 0) {
-            foreach ($tools as $tool) {
-                $entity = new AdminTool();
-                $entity->setName($tool[0]);
-                $entity->setClass($tool[1]);
-                $this->objectManager->persist($entity);
-            }
+            $competenceReferencial = new AdminTool();
+            $competenceReferencial->setName('competence_referencial');
+            $competenceReferencial->setClass('graduation-cap');
+
+            $competenceSubscription = new AdminTool();
+            $competenceSubscription->setName('competence_subscription');
+            $competenceSubscription->setClass('code-fork');
+            $this->objectManager->persist($competenceReferencial);
+            $this->objectManager->persist($competenceSubscription);
         }
 
         $this->objectManager->flush();
