@@ -481,6 +481,7 @@ new_password: New password
 new_role_message: 'You received the role %name%'
 new_role_message_object: 'Your permissions on the platform have changed'
 no: no
+no_activity: 'There is no activity'
 no_category: 'There is no category'
 no_email: 'No email found, check the spelling'
 no_group: 'No group'
