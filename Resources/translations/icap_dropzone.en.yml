@@ -145,6 +145,7 @@ Save criterion: 'Save criterion'
 Are you sure you want to delete the %number%: 'Are you sure you want to delete the #%number%'
 There are no evaluation criterion: 'There are no evaluation criterion'
 noCopyExpectedCorrection: 'one: No copy has received correction.|some: No copy has received the %count% correction expected.'
+noCorrectionExeption: "No correction available."
 No copy was made: 'No copy was made'
 Evaluation finished: 'Evaluation finished'
 Keep this correction scored zero: 'Keep this correction scored zero'

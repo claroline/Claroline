@@ -145,6 +145,7 @@ Save criterion: 'Sauvegarder le critère'
 Are you sure you want to delete the %number%: 'Êtes vous sûr de vouloir supprimer le critère #%number%'
 There are no evaluation criterion: 'Aucun critère d''évaluation'
 noCopyExpectedCorrection: "one: Aucune copie n'est evaluée.|some: Aucune copie n'a reçu les %count% corrections attendues."
+noCorrectionExeption: " Aucune correction disponible"
 No copy was made: "Aucune copie n'a été rendue"
 Evaluation finished: 'Evaluation terminée'
 Keep this correction scored zero: 'Conserver la correction notée zéro'
