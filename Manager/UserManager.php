@@ -115,14 +115,6 @@ class UserManager
             ->setPublicUrl($this->generatePublicUrl($user))
             ->setPublicProfilePreferences(new UserPublicProfilePreferences());
 
-        $accountDuration = $this->platformConfigHandler->getParameter('account_duration');
-        $expirationDate = new \DateTime();
-
-        ($accountDuration === null) ?
-            $expirationDate->setDate(2100, 1, 1):
-            $expirationDate->add(new \DateInterval('P' . $accountDuration . 'D'));
-
-        $user->setExpirationDate($expirationDate);
         $this->toolManager->addRequiredToolsToUser($user);
         $this->roleManager->setRoleToRoleSubject($user, PlatformRoles::USER);
         $this->objectManager->persist($user);
@@ -939,5 +931,20 @@ class UserManager
     public function countUsersOfGroup(Group $group)
     {
         return $this->userRepo->countUsersOfGroup($group);
+    }
+
+    public function setUserInitDate(User $user)
+    {
+        $accountDuration = $this->platformConfigHandler->getParameter('account_duration');
+        $expirationDate = new \DateTime();
+
+        ($accountDuration === null) ?
+            $expirationDate->setDate(2100, 1, 1):
+            $expirationDate->add(new \DateInterval('P' . $accountDuration . 'D'));
+
+        $user->setExpirationDate($expirationDate);
+        $user->setInitDate(new \DateTime());
+        $this->objectManager->persist($user);
+        $this->objectManager->flush();
     }
 }
