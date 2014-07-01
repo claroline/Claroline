@@ -19,7 +19,9 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\Form\FormError;
 use DateTime;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 class DropzoneController extends DropzoneBaseController
 {
@@ -316,11 +318,16 @@ class DropzoneController extends DropzoneBaseController
             ->countByDropzone($dropzone->getId());
 
         $form = $this->createForm(new DropzoneCriteriaType(), $dropzone);
-
+        $add_criteria_after = false;
         if ($this->getRequest()->isMethod('POST')) {
+
             $form->handleRequest($this->getRequest());
 
             if ($form->isValid()) {
+
+                $add_criteria_after = $this->getRequest()->request->get('addCriteria') == 'add-criterion' ? true : false;
+
+
                 $dropzone = $form->getData();
                 if ($dropzone->getEditionState() < 3) {
                     $dropzone->setEditionState(3);
@@ -333,6 +340,7 @@ class DropzoneController extends DropzoneBaseController
 
                 $em->persist($dropzone);
                 $em->flush();
+
 
                 if ($form->get('recalculateGrades')->getData() == 1) {
                     $this->get('icap.manager.dropzone_manager')->recalculateScoreByDropzone($dropzone);
@@ -351,6 +359,12 @@ class DropzoneController extends DropzoneBaseController
                         'warning',
                         $this->get('translator')->trans('Warning your peer review offers no criteria on which to base correct copies', array(), 'icap_dropzone')
                     );
+                }
+                if ($add_criteria_after) {
+
+                    return new JsonResponse(array('success' => true));
+                    //$this->generateUrl('icap_dropzone_edit_add_criterion',array('resourceId'=>$dropzone->getId(),'page'=>$page));
+
                 }
 
                 $goBack = $form->get('goBack')->getData();
@@ -379,6 +393,7 @@ class DropzoneController extends DropzoneBaseController
             'pager' => $pager,
             'form' => $form->createView(),
             'nbCorrection' => $nbCorrection,
+            'add_criteria_after' => $add_criteria_after
         );
     }
 
