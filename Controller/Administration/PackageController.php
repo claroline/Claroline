@@ -101,7 +101,7 @@ class PackageController extends Controller
     /**
      * @EXT\Route(
      *     "/update/package/{ref}",
-     *     name="claro_admin_update_package",
+     *     name="claro_admin_update_packages",
      *     options={"expose"=true}
      * )
      * @param $package
@@ -119,6 +119,21 @@ class PackageController extends Controller
                 'distRef' => $package->getDistReference()
             )
         );
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/upgrade/all",
+     *     name="claro_admin_upgrade_packages",
+     *     options={"expose"=true}
+     * )
+     */
+    public function upgradeAllAction()
+    {
+        $this->checkOpen();
+        $res = $this->dm->upgrade();
+
+        return new JsonResponse('yolo', 'loli');
     }
 
     private function checkOpen()

@@ -11,14 +11,19 @@
 
 namespace Claroline\CoreBundle\Manager;
 
+use Claroline\CoreBundle\Library\Composer\FileIO;
+use Composer\Composer;
 use JMS\DiExtraBundle\Annotation as DI;
 use Composer\Package\CompletePackageInterface;
 use Composer\Repository\Vcs\GitDriver;
 use Composer\IO\NullIO;
 use Composer\Config;
+use Composer\Installer;
+use Composer\Factory;
 use Composer\Util\RemoteFilesystem;
 use Composer\Repository\InstalledFilesystemRepository;
 use Composer\Json\JsonFile;
+use Symfony\Component\Console\Output\StreamOutput;
 
 /**
  * @DI\Service("claroline.manager.dependency_manager")
@@ -28,28 +33,33 @@ class DependencyManager {
     private $vendorDir;
     private $repo;
     private $jsonFile;
+    private $logFile;
     private $lastTagsFile;
     private $iniFileManager;
+    private $composerLogFile;
 
     const CLAROLINE_CORE_TYPE = 'claroline-core';
     const CLAROLINE_PLUGIN_TYPE = 'claroline-plugin';
 
     /**
      * @DI\InjectParams({
-     *      "vendorDir"      = @DI\Inject("%claroline.param.vendor_directory%"),
-     *      "lastTagsFile"   = @DI\Inject("%claroline.packages_last_tags_file%"),
-     *      "iniFileManager" = @DI\Inject("claroline.manager.ini_file_manager")
+     *      "vendorDir"       = @DI\Inject("%claroline.param.vendor_directory%"),
+     *      "lastTagsFile"    = @DI\Inject("%claroline.packages_last_tags_file%"),
+     *      "composerLogFile" = @DI\Inject("%claroline.composer_log_file%"),
+     *      "iniFileManager"  = @DI\Inject("claroline.manager.ini_file_manager")
      * })
      */
-    public function __construct($vendorDir, $lastTagsFile, $iniFileManager)
+    public function __construct($vendorDir, $lastTagsFile, $iniFileManager, $composerLogFile)
     {
         $this->vendorDir = $vendorDir;
         $ds = DIRECTORY_SEPARATOR;
         $this->jsonFile = "{$vendorDir}{$ds}composer{$ds}installed.json";
+        $this->logFile = "{$lastTagsFile}{$ds}..{$ds}composer.log";
         $installedFile = new JsonFile($this->jsonFile);
         $this->repo = new InstalledFilesystemRepository($installedFile);
         $this->lastTagsFile = $lastTagsFile;
         $this->iniFileManager = $iniFileManager;
+        $this->composerLogFile = $composerLogFile;
     }
 
     /**
@@ -240,5 +250,30 @@ class DependencyManager {
         }
 
         return $toUpgrade;
+    }
+
+    /**
+     * Upgrade all packages.
+     */
+    public function upgrade(array $packages = array())
+    {
+        //if dev mode => prefer source
+        //else => prefer dist
+
+        $factory = new Factory();
+        $io = new FileIO($this->composerLogFile);
+        $composer = $factory->createComposer($io, $this->jsonFile, false);
+        $install = Installer::create($io, $composer);
+
+        $install->setDryRun(true)
+            ->setVerbose(true)
+            ->setPreferSource(true)
+            ->setPreferDist(false)
+            ->setDevMode(false)
+            ->setRunScripts(true)
+            ->setOptimizeAutoloader($optimize)
+            ->setUpdate(true);
+
+        return $install->run();
     }
 }

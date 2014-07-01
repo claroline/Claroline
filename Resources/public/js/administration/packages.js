@@ -40,7 +40,7 @@
 
         packageElements.each(function(index, value) {
             var distRef = ($(this).attr('data-package-dist-reference'));
-            var route = Routing.generate('claro_admin_update_package', {'ref': distRef});
+            var route = Routing.generate('claro_admin_update_packages', {'ref': distRef});
 
             $.ajax({
                 url: route,

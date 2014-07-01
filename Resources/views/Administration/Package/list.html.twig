@@ -60,6 +60,10 @@
     </div>
     <div class="panel-footer">
         <button class="btn btn-primary" id="update-packages-btn">{{ 'actualize'|trans({}, 'platform') }}</button>
+        <a href="{{ path('claro_admin_upgrade_packages') }}" class="btn btn-primary">
+            {{ 'upgrade'|trans({}, 'platform') }}
+        </a>
+        <button class="btn btn-secondary" id="cancel-btn">{{ 'cancel'|trans({}, 'platform') }}</button>
     </div>
 {% endblock %}
 
