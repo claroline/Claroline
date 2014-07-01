@@ -8,15 +8,15 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2014/07/01 09:26:11
+ * Generation date: 2014/07/01 10:39:22
  */
-class Version20140701092610 extends AbstractMigration
+class Version20140701103921 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
         $this->addSql("
             ALTER TABLE claro_user 
-            ADD COLUMN initialisaton_date DATETIME DEFAULT NULL
+            ADD COLUMN initialization_date DATETIME DEFAULT NULL
         ");
     }
 

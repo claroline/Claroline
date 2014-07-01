@@ -181,7 +181,7 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="initialisaton_date", type="datetime", nullable=true)
+     * @ORM\Column(name="initialization_date", type="datetime", nullable=true)
      */
     protected $initDate;
 

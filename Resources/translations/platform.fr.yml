@@ -817,7 +817,7 @@ user_limit_reached: La limite de création d'utilisateur a été atteinte.
 user_limit_too_low: Il y a déjà %total% %role%(s). La limite %newMax% est trop faible.
 limit: Limite
 name_required: Nom requis
-remove_role_confirm: Êtes vous sur de vouloir supprimer le rôle %name% ?
+remove_role_confirm: Êtes-vous sûr de vouloir supprimer le rôle %name% ?
 remove_role: Supprimer un rôle.
 initialize: Initialiser
 user_limit_success_update: La limite d'utilisateur par rôle a été mise à jour avec succès.
