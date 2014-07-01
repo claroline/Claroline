@@ -12,18 +12,17 @@
 namespace Claroline\CoreBundle\Library\Composer;
 
 use Composer\IO\BaseIO;
+use Composer\IO\ConsoleIO;
 use Symfony\Component\Console\Output\StreamOutput;
 
-class FileIO implements BaseIO
+class FileIO extends ConsoleIO
 {
-    private $logFile;
-    private $output;
-    private $lastMessage;
+    protected $output;
+    protected $lastMessage;
 
     public function __construct($logFile)
     {
-        $this->logFile = $logFile;
-        $this->output = new StreamOutput();
+        $this->output = new StreamOutput(fopen($logFile, 'a'));
     }
 
     /**

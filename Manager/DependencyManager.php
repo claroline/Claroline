@@ -260,9 +260,11 @@ class DependencyManager {
         //if dev mode => prefer source
         //else => prefer dist
 
+        $ds = DIRECTORY_SEPARATOR;
         $factory = new Factory();
         $io = new FileIO($this->composerLogFile);
-        $composer = $factory->createComposer($io, $this->jsonFile, false);
+        putenv("COMPOSER_HOME={$this->vendorDir}{$ds}composer");
+        $composer = $factory->createComposer($io, "{$this->vendorDir}{$ds}..{$ds}composer.json", false);
         $install = Installer::create($io, $composer);
 
         $install->setDryRun(true)
@@ -271,7 +273,7 @@ class DependencyManager {
             ->setPreferDist(false)
             ->setDevMode(false)
             ->setRunScripts(true)
-            ->setOptimizeAutoloader($optimize)
+            ->setOptimizeAutoloader(true)
             ->setUpdate(true);
 
         return $install->run();
