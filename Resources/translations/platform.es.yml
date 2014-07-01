@@ -396,6 +396,7 @@ mail_sent: 'Un correo electrónico ha sido enviado, Por favor compruebe su bande
 manage_rights: 'Administrar los derechos'
 manage_tools: Gestión de las herramientas
 manager: 'Administrar'
+manual: Manual
 manual_evaluation_explanation: 'Evaluación manual del administrador del espacio de trabajo'
 max_size_is: 'El tamaño máximo es %size%'
 media_most_viewed: 'Recurso más visto'

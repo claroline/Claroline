@@ -438,6 +438,7 @@ manage_public_profile_preferences: 'Gérer les préférences du profil public'
 manage_rights: 'Gérer les droits'
 manage_tools: Gérer les outils
 manager: Gestionnaire
+manual: Manuelle
 manual_evaluation_explanation: 'Evaluation manuelle par un gestionnaire de l''espace d''activités'
 max_size_is: 'La taille maximale est %size%'
 media_most_viewed: 'Media les plus consultés'

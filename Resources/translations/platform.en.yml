@@ -436,6 +436,7 @@ manage_public_profile_preferences: 'Manage public profile preferences'
 manage_rights: 'Manage rights'
 manage_tools: Manage tools
 manager: Manager
+manual: Manual
 manual_evaluation_explanation: 'Manual evaluation by a workspace manager'
 max_size_is: 'The maximum size is %size%'
 media_most_viewed: 'Most viewed media'
