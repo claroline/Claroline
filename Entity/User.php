@@ -179,6 +179,13 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
     protected $created;
 
     /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="initialization_date", type="datetime", nullable=true)
+     */
+    protected $initDate;
+
+    /**
      * @var UserMessage[]|ArrayCollection
      *
      * @ORM\OneToMany(
@@ -980,5 +987,15 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
     public function getExpirationDate()
     {
         return $this->expirationDate !== null ? $this->expirationDate: new \DateTime(2100-01-01);
+    }
+
+    public function setInitDate($initDate)
+    {
+        $this->initDate = $initDate;
+    }
+
+    public function getInitDate()
+    {
+        return $this->initDate;
     }
 }

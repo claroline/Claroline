@@ -817,7 +817,9 @@ role_limit_reached: The limit of %translationKey% has been reached.
 user_limit_reached: The user limit has been reached.
 user_limit_too_low: There is already %total% %role%(s). The limit %newMax% is too low.
 limit: Limit
-name_required: Le nom est requis
-remove_role_confirm: Êtes-vous sûr de vouloir supprime le role %name% ?
-remove_role: Suppression de rôle.
+name_required: Name required
+remove_role_confirm: Do you really want to remove the role %name% ?
+remove_role: Role suppression.
 initialize: Initialize
+user_limit_success_update: The user limit by role has been successfully updated.
+role_name_changed_success: The role name has been successfully updated.
