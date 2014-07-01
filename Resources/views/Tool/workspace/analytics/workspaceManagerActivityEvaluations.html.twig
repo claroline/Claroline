@@ -1,6 +1,6 @@
 {% extends 'ClarolineCoreBundle:Tool/workspace/analytics:analyticsTabs.html.twig' %}
 
-{% macro renderPager(pager, activity) %}
+{% macro renderPager(pager, page, activity) %}
     {{
         pagerfanta(
             pager,
@@ -8,7 +8,7 @@
             {
                 'proximity' : 1,
                 'routeName': 'claro_workspace_manager_activity_evaluations_show',
-                'routeParams': {'activityId': activity.getId()}
+                'routeParams': {'activityId': activity.getId(), 'page': page}
             }
         )
     }}
@@ -177,7 +177,7 @@
             </table>
             
             {% if users.getNbPages() > 1 %}
-                {{ renderPager(users, activity) }}
+                {{ renderPager(users, page, activity) }}
             {% endif %}
         </div>
     </div>

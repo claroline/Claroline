@@ -341,8 +341,9 @@ class WorkspaceAnalyticsController extends Controller
 
     /**
      * @EXT\Route(
-     *     "/workspace/manager/activity/{activityId}/evaluations",
-     *     name="claro_workspace_manager_activity_evaluations_show"
+     *     "/workspace/manager/activity/{activityId}/evaluations/page/{page}",
+     *     name="claro_workspace_manager_activity_evaluations_show",
+     *     defaults={"page"=1}
      * )
      * @EXT\Method("GET")
      * @EXT\ParamConverter("currentUser", options={"authenticatedUser" = true})
@@ -361,7 +362,8 @@ class WorkspaceAnalyticsController extends Controller
      */
     public function workspaceManagerActivityEvaluationsShowAction(
         User $currentUser,
-        Activity $activity
+        Activity $activity,
+        $page
     )
     {
         $roleNames = $currentUser->getRoles();
@@ -376,7 +378,8 @@ class WorkspaceAnalyticsController extends Controller
         $activityParams = $activity->getParameters();
         $roles = $this->roleManager
             ->getRolesWithRightsByResourceNode($resourceNode);
-        $usersPager = $this->userManager->getByRolesIncludingGroups($roles);
+        $usersPager = $this->userManager
+            ->getUsersByRolesIncludingGroups($roles, $page);
         $users = array();
 
         foreach ($usersPager as $user) {
@@ -434,6 +437,7 @@ class WorkspaceAnalyticsController extends Controller
             'activityParams' => $activityParams,
             'workspace' => $workspace,
             'users' => $usersPager,
+            'page' => $page,
             'evaluations' => $evaluations,
             'ruleScore' => $ruleScore
         );
