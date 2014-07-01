@@ -78,11 +78,19 @@ activity_resource_remove: 'Are you sure you want to remove this resource from th
 activity_rule_action_none: None
 activity_rule_configuration_for_auto_evaluation: 'Rule configuration for automatic evaluation'
 activity_rule_form_action: Action
-activity_rule_form_activeFrom: From
-activity_rule_form_activeUntil: Until
-activity_rule_form_badge: Badge
+activity_rule_form_action_explanation: 'Automatic evaluation depends on actions performed by user.'
+activity_rule_form_activeFrom: 'Performed between'
+activity_rule_form_activeFrom_explanation: 'Only actions performed after this date will be processed. If not set all previous actions will be processed.'
+activity_rule_form_activeUntil: 'and'
+activity_rule_form_activeUntil_explanation: 'Only actions performed before this date will be processed. If not set all future actions will be processed.'
+activity_rule_form_badge: 'Required badge'
+activity_rule_form_badge_explanation: 'The badge that has to be obtained.'
+activity_rule_form_isResultVisible: 'Display result' 
+activity_rule_form_isResultVisible_explanation: 'Allows user to know the result that has to be obtained.' 
 activity_rule_form_occurrence: Occurrence
-activity_rule_form_result: Result
+activity_rule_form_occurrence_explanation: 'The number of time the action has to be performed.'
+activity_rule_form_result: 'Required result'
+activity_rule_form_result_explanation: 'The result that has to be obtained.'
 activity_where_anywhere: Anywhere
 activity_where_classroom: Classroom
 activity_who_collaborative: Collaborative

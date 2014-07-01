@@ -32,33 +32,80 @@
                 <h3>{{ 'activity_rule_configuration_for_auto_evaluation' | trans({}, 'platform') }}</h3>
                 <br>
                 <div class="form-group row">
-                    <span class="col-md-3">{{ form_label(formRule.action) }}</span>
+                    <span class="col-md-3 white-space"
+                        data-container="#activity-rule-form-div"
+                        data-toggle="tooltip"
+                        data-placement="top"
+                        title="{{ 'activity_rule_form_action_explanation'|trans({}, 'platform') }}"
+                    >
+                        {{ form_label(formRule.action) }}
+                    </span>
                     <span class="col-md-6">{{ form_widget(formRule.action) }}</span>
                 </div>
                 <div class="form-group row">
-                    <span class="col-md-3">{{ form_label(formRule.occurrence) }}</span>
+                    <span class="col-md-3 white-space"
+                        data-container="#activity-rule-form-div"
+                        data-toggle="tooltip"
+                        data-placement="top"
+                        title="{{ 'activity_rule_form_occurrence_explanation'|trans({}, 'platform') }}"
+                    >
+                        {{ form_label(formRule.occurrence) }}
+                    </span>
                     <span class="col-md-2">{{ form_widget(formRule.occurrence) }}</span>
                 </div>
                 <div class="form-group row">
-                    <span class="col-md-3">{{ form_label(formRule.badge) }}</span>
+                    <span class="col-md-3 white-space"
+                        data-container="#activity-rule-form-div"
+                        data-toggle="tooltip"
+                        data-placement="top"
+                        title="{{ 'activity_rule_form_badge_explanation'|trans({}, 'platform') }}"
+                    >
+                        {{ form_label(formRule.badge) }}
+                    </span>
                     <span class="col-md-6">{{ form_widget(formRule.badge) }}</span>
                 </div>
                 <div class="form-group row">
-                    <span class="col-md-3">{{ form_label(formRule.result) }}</span>
+                    <span class="col-md-3 white-space"
+                        data-container="#activity-rule-form-div"
+                        data-toggle="tooltip"
+                        data-placement="top"
+                        title="{{ 'activity_rule_form_result_explanation'|trans({}, 'platform') }}"
+                    >
+                        {{ form_label(formRule.result) }}
+                    </span>
                     <span class="col-md-2">{{ form_widget(formRule.result) }}</span>
                     <span class="col-md-1">{{ form_label(formRule.resultMax) }}</span>
                     <span class="col-md-2">{{ form_widget(formRule.resultMax) }}</span>
                 </div>
                 <div class="form-group row">
-                    <span class="col-md-3">{{ form_label(formRule.isResultVisible) }}</span>
+                    <span class="col-md-3 white-space"
+                        data-container="#activity-rule-form-div"
+                        data-toggle="tooltip"
+                        data-placement="top"
+                        title="{{ 'activity_rule_form_isResultVisible_explanation'|trans({}, 'platform') }}"
+                    >
+                        {{ form_label(formRule.isResultVisible) }}
+                    </span>
                     <span class="col-md-6">{{ form_widget(formRule.isResultVisible) }}</span>
                 </div>
                 <div class="form-group row">
-                    <span class="col-md-3" style="white-space: nowrap">{{ form_label(formRule.activeFrom) }}</span>
+                    <span class="col-md-3 white-space"
+                        data-container="#activity-rule-form-div"
+                        data-toggle="tooltip"
+                        data-placement="top"
+                        title="{{ 'activity_rule_form_activeFrom_explanation'|trans({}, 'platform') }}"
+                    >
+                        {{ form_label(formRule.activeFrom) }}
+                    </span>
                     <span class="col-md-3">{{ form_widget(formRule.activeFrom) }}</span>
-                </div>
-                <div class="form-group row">
-                    <span class="col-md-3">{{ form_label(formRule.activeUntil) }}</span>
+                    <span class="col-md-1 white-space"
+                        data-container="#activity-rule-form-div"
+                        data-toggle="tooltip"
+                        data-placement="top"
+                        title="{{ 'activity_rule_form_activeUntil_explanation'|trans({}, 'platform') }}"
+                    >
+                        {{ form_label(formRule.activeUntil) }}
+                    </span>
                     <span class="col-md-3">{{ form_widget(formRule.activeUntil) }}</span>
                 </div>
                 {{ form_widget(formRule) }}

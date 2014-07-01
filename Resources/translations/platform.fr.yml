@@ -79,11 +79,19 @@ activity_resource_remove: Êtes-vous sûr de vouloir enlever cette ressource de 
 activity_rule_action_none: Aucune
 activity_rule_configuration_for_auto_evaluation: 'Configuration de la règle pour l''évaluation automatique'
 activity_rule_form_action: Action
-activity_rule_form_activeFrom: 'A partir du'
-activity_rule_form_activeUntil: 'Jusqu''au'
-activity_rule_form_badge: Badge
+activity_rule_form_action_explanation: 'L''évaluation automatique se base sur les actions effectuées par l''utilisateur.'
+activity_rule_form_activeFrom: 'Effectuée entre le'
+activity_rule_form_activeFrom_explanation: 'Seules les actions effectuées après cette date seront prises en compte. Toutes les anciennes actions seront traitées si cette date n''est pas définie.'
+activity_rule_form_activeUntil: 'et le'
+activity_rule_form_activeUntil_explanation: 'Seules les actions effectuées avant cette date seront prises en compte. Toutes les futures actions seront traitées si cette date n''est pas définie.'
+activity_rule_form_badge: 'Badge à obtenir'
+activity_rule_form_badge_explanation: 'Le badge à obtenir.'
+activity_rule_form_isResultVisible: 'Afficher le résultat' 
+activity_rule_form_isResultVisible_explanation: 'Permettre à l''utilisateur de connaître le résultat à obtenir.' 
 activity_rule_form_occurrence: Occurrence
-activity_rule_form_result: Résultat
+activity_rule_form_occurrence_explanation: 'Le nombre de fois que l''action doit être effectuée.'
+activity_rule_form_result: 'Résultat à obtenir'
+activity_rule_form_result_explanation: 'Le résultat à obtenir.'
 activity_where_anywhere: N'importe où
 activity_where_classroom: En classe
 activity_who_collaborative: Collaboratif
