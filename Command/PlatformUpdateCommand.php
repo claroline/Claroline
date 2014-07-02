@@ -26,6 +26,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * composer execution.
  *
  * @Service("claroline.command.update_command")
+ *
  */
 class PlatformUpdateCommand extends ContainerAwareCommand
 {

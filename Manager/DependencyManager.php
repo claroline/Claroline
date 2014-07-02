@@ -28,6 +28,7 @@ use Composer\Json\JsonFile;
 use Symfony\Component\Console\Output\StreamOutput;
 use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\Console\Input\ArgvInput;
+use Symfony\Component\Console\Input\ArgvInput();
 
 /**
  * @DI\Service("claroline.manager.dependency_manager")
