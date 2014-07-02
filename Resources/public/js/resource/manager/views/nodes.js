@@ -90,12 +90,15 @@
             event.preventDefault();
             var type = event.currentTarget.getAttribute('data-type');
             var eventName = 'open-' + (type === 'directory' ? 'directory' : 'node');
-            this.dispatcher.trigger(eventName , {
-                nodeId: event.currentTarget.getAttribute('data-id'),
-                resourceType: type,
-                view: this.parameters.viewName,
-                fromPicker: this.parameters.isPickerMode
-            });
+
+            if (!this.parameters.isPickerMode || type === 'directory') {
+                this.dispatcher.trigger(eventName , {
+                    nodeId: event.currentTarget.getAttribute('data-id'),
+                    resourceType: type,
+                    view: this.parameters.viewName,
+                    fromPicker: this.parameters.isPickerMode
+                });
+            }
         },
         checkNode: function (event) {
             if (this.parameters.isPickerMode
