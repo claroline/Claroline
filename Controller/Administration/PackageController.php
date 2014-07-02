@@ -15,6 +15,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Claroline\CoreBundle\Event\StrictDispatcher;
 use Claroline\CoreBundle\Manager\ToolManager;
 use Claroline\CoreBundle\Manager\DependencyManager;
+use Claroline\CoreBundle\Manager\IPWhiteListManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
@@ -28,20 +29,23 @@ class PackageController extends Controller
     private $eventDispatcher;
     private $adminToolPlugin;
     private $sc;
+    private $ipwlm;
 
     /**
      * @DI\InjectParams({
      *      "eventDispatcher" = @DI\Inject("claroline.event.event_dispatcher"),
      *      "toolManager"     = @DI\Inject("claroline.manager.tool_manager"),
      *      "dm"              = @DI\Inject("claroline.manager.dependency_manager"),
-     *      "sc"              = @DI\Inject("security.context")
+     *      "sc"              = @DI\Inject("security.context"),
+     *      "ipwlm"           = @DI\Inject("claroline.manager.ip_white_list_manager")
      * })
      */
     public function __construct(
         StrictDispatcher         $eventDispatcher,
         ToolManager              $toolManager,
         SecurityContextInterface $sc,
-        DependencyManager        $dm
+        DependencyManager        $dm,
+        IPWhiteListManager       $ipwlm
     )
     {
         $this->eventDispatcher = $eventDispatcher;
@@ -49,6 +53,7 @@ class PackageController extends Controller
         $this->adminToolPlugin = $toolManager->getAdminToolByName('platform_packages');
         $this->sc              = $sc;
         $this->dm              = $dm;
+        $this->ipwlm           = $ipwlm;
     }
 
     /**
@@ -70,6 +75,9 @@ class PackageController extends Controller
         $corePackages = $this->dm->getInstalledByType(DependencyManager::CLAROLINE_CORE_TYPE);
         $pluginPackages = $this->dm->getInstalledByType(DependencyManager::CLAROLINE_PLUGIN_TYPE);
         $upgradablePackages = $this->dm->getUpgradeablePackages();
+
+        //the current ip must be whitelisted so it can access the upgrade.html.php script
+        $this->ipwlm->addIP($_SERVER['REMOTE_ADDR']);
 
         return array(
             'corePackages' => $corePackages,
@@ -133,7 +141,7 @@ class PackageController extends Controller
         $this->checkOpen();
         $res = $this->dm->upgrade();
 
-        return new JsonResponse('yolo', 'loli');
+        return new JsonResponse();
     }
 
     private function checkOpen()

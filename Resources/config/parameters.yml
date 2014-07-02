@@ -11,3 +11,4 @@ parameters:
     claroline.param.platform_options_file: %kernel.root_dir%/config/platform_options.yml
     claroline.packages_last_tags_file: "%kernel.root_dir%/cache/last_tags.cache.ini"
     claroline.composer_log_file: "%kernel.root_dir%/logs/composer.log"
+    claroline.ip_white_list_file: "%kernel.root_dir%/config/ips"

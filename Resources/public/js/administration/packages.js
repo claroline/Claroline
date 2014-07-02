@@ -50,6 +50,8 @@
                         addProgress += modulo;
                         //close the modal
                         $('#wait-modal').modal('hide');
+                        //show the upgrade button
+                        $('#upgrade-packages-btn').removeClass('hidden');
                     }
 
                     updateProgressBar(addProgress);
@@ -77,4 +79,11 @@
         var parent = $("#accordion-" + data['distRef'] + ' h5');
         parent.append(html);
     }
+
+    $('#upgrade-packages-btn').on('click', function (event) {
+        event.preventDefault();
+        var btn = $(event.currentTarget);
+        $.ajax({url: btn.attr('href')});
+        window.location = btn.attr('data-upgrade-page');
+    });
 })();

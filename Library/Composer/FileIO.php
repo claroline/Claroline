@@ -22,6 +22,10 @@ class FileIO extends ConsoleIO
 
     public function __construct($logFile)
     {
+        if (file_exists($logFile)) {
+            unlink($logFile);
+        }
+
         $this->output = new StreamOutput(fopen($logFile, 'a'));
     }
 

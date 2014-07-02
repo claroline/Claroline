@@ -257,9 +257,6 @@ class DependencyManager {
      */
     public function upgrade(array $packages = array())
     {
-        //if dev mode => prefer source
-        //else => prefer dist
-
         $ds = DIRECTORY_SEPARATOR;
         $factory = new Factory();
         $io = new FileIO($this->composerLogFile);

@@ -13,28 +13,72 @@ namespace Claroline\CoreBundle\Library\Installation\Updater;
 
 class WebUpdater
 {
-    private $files;
+    private $files = [];
+    private $directories = [];
+    private $webSrc;
+    private $webProd;
 
     public function __construct($rootDir)
     {
-        $baseMaintenance = "{$rootDir}/../vendor/claroline/core-bundle/Claroline/CoreBundle/Resources/views/Maintenance/maintenance.html";
-        $webMaintenance = "{$rootDir}/../web/maintenance.html";
-
-        $this->files = array(
-            $baseMaintenance => $webMaintenance,
-        );
-
+        $ds = DIRECTORY_SEPARATOR;
+        $this->webSrc = "{$rootDir}{$ds}..{$ds}vendor{$ds}claroline{$ds}core-bundle{$ds}Claroline{$ds}CoreBundle{$ds}Resources/web";
+        $this->webProd = "{$rootDir}{$ds}..{$ds}web";
+        $this->iterate($this->webSrc);
     }
 
     public function preUpdate()
     {
-        foreach ($this->files as $original => $web) {
+        $this->clean();
+        $this->copy();
+    }
 
-            if (file_exists($web)) {
-                unlink($web);
+    private function copy()
+    {
+        foreach ($this->directories as $newPath => $oldPath) {
+            if (!file_exists($newPath)) {
+                mkdir($newPath, 0777, true);
+            }
+        }
+
+        foreach ($this->files as $newPath => $oldPath) {
+            if (!file_exists($newPath)) {
+                copy($oldPath, $newPath);
+            }
+        }
+    }
+
+    private function clean()
+    {
+        foreach ($this->directories as $newPath => $oldPath) {
+            if (file_exists($newPath)) {
+                rmdir($newPath);
+            }
+        }
+
+        foreach ($this->files as $newPath => $oldPath) {
+            if (file_exists($newPath)) {
+                unlink($newPath);
+            }
+        }
+    }
+
+    private function iterate($path)
+    {
+        $ds = DIRECTORY_SEPARATOR;
+        $iterator = new \DirectoryIterator($path);
+
+        foreach ($iterator as $element) {
+
+            $newPath = $this->webProd . str_replace($this->webSrc, '', $element->getPathName());
+
+            if ($element->isDir() && !$element->isDot()) {
+                $this->directories[$newPath] = $element->getPathName();
+                $this->iterate($element->getPathName());
             }
 
-            copy($original, $web);
+            if ($element->isFile()) {
+                $this->files[$newPath] = $element->getPathName();
+            }
         }
     }
 } 
