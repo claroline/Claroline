@@ -136,6 +136,7 @@ analytics_resources: Resources
 analytics_top: Top
 anonymous: Anonymous
 answer: Answer
+anywhere: Anywhere
 appearance: Appearance
 apply: Apply
 at_least_one_category_has_to_be_selected: 'At least one category has to be selected'
@@ -173,9 +174,11 @@ change_view: 'Change the display'
 choose_resource_form_type: 'Resource type'
 classify_my_workspaces: 'Classify my workspaces'
 classify_workspaces: 'Classify workspaces'
+classroom: Classroom
 close: Close
 closed_account: Closed account
 code: Code
+collaborative: Collaborative
 collaborator: Collaborator
 comment: Comment
 communication: Communication
@@ -379,6 +382,7 @@ import_roles: 'Import roles'
 import_user_file_file: 'Import from a csv file'
 import_users: 'Import users'
 incomplete: Incomplete
+individual: Individual
 informations: Informations
 inscription_mail: 'Inscription mail'
 instructions: Instructions
@@ -456,6 +460,7 @@ misc: Miscellaneous
 missing_%content%: 'The variable %content% is missing for "%language%".'
 missing_%password%: 'The variable %password% is missing for "%language%".'
 missing_%username%: 'The variable %username% is missing for "%language%".'
+mixed: Mixed
 month.April: April
 month.August: August
 month.December: December
