@@ -15,11 +15,17 @@ use Claroline\CoreBundle\Library\Maintenance\MaintenanceHandler;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use JMS\DiExtraBundle\Annotation\Service;
+use JMS\DiExtraBundle\Annotation\Inject;
+use JMS\DiExtraBundle\Annotation\InjectParams;
 
 /**
  * Updates, installs or uninstalls the core and plugin bundles, following
  * the operation order logged in *app/config/operations.xml* during
  * composer execution.
+ *
+ * @Service("claroline.command.update_command")
+ *
  */
 class PlatformUpdateCommand extends ContainerAwareCommand
 {
@@ -47,6 +53,19 @@ class PlatformUpdateCommand extends ContainerAwareCommand
         $installer->installFromOperationFile();
         $refresher->dumpAssets($this->getContainer()->getParameter('kernel.environment'));
         $refresher->compileGeneratedThemes();
+
         MaintenanceHandler::disableMaintenance();
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @InjectParams({
+     *     "container" = @Inject("service_container")
+     * })
+     */
+    public function setContainer(ContainerInterface $container = null)
+    {
+        $this->container = $container;
     }
 }
