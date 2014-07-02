@@ -33,6 +33,7 @@ class Updater030000
         $this->updateActivityIcon();
         $this->updateTools();
         $this->updateAdminPluginTool();
+        $this->cleanWeb();
     }
 
     public function setLogger($logger)
@@ -143,6 +144,16 @@ class Updater030000
         $tool->setClass($class);
         $this->om->persist($tool);
         $this->om->flush();
+    }
+
+    private function cleanWeb()
+    {
+        $webDir = $this->container->getParameter('claroline.param.web_dir');
+
+        //remove the old maintenance file
+        if (file_exists($webDir . DIRECTORY_SEPARATOR . 'maintenance.html')) {
+            unlink($webDir . DIRECTORY_SEPARATOR . 'maintenance.html');
+        }
     }
 
     private function setIcons()

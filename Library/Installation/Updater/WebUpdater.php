@@ -14,7 +14,6 @@ namespace Claroline\CoreBundle\Library\Installation\Updater;
 class WebUpdater
 {
     private $files = [];
-    private $directories = [];
     private $webSrc;
     private $webProd;
 
@@ -34,31 +33,21 @@ class WebUpdater
 
     private function copy()
     {
-        foreach ($this->directories as $newPath => $oldPath) {
-            if (!file_exists($newPath)) {
-                mkdir($newPath, 0777, true);
-            }
-        }
-
         foreach ($this->files as $newPath => $oldPath) {
             if (!file_exists($newPath)) {
-                copy($oldPath, $newPath);
+                if (is_dir($oldPath)) {
+                    mkdir($newPath, 0777, true);
+                } else {
+                    copy($oldPath, $newPath);
+                }
             }
         }
     }
 
     private function clean()
     {
-        foreach ($this->directories as $newPath => $oldPath) {
-            if (file_exists($newPath)) {
-                rmdir($newPath);
-            }
-        }
-
         foreach ($this->files as $newPath => $oldPath) {
-            if (file_exists($newPath)) {
-                unlink($newPath);
-            }
+            $this->deleteDirectory($newPath);
         }
     }
 
@@ -71,14 +60,42 @@ class WebUpdater
 
             $newPath = $this->webProd . str_replace($this->webSrc, '', $element->getPathName());
 
-            if ($element->isDir() && !$element->isDot()) {
-                $this->directories[$newPath] = $element->getPathName();
-                $this->iterate($element->getPathName());
-            }
-
-            if ($element->isFile()) {
+            if (!$element->isDot()) {
                 $this->files[$newPath] = $element->getPathName();
+
+                if ($element->isDir()) {
+                    $this->iterate($element->getPathName());
+                }
             }
         }
+    }
+
+    /**
+     * http://stackoverflow.com/questions/1653771/how-do-i-remove-a-directory-that-is-not-empty
+     * @param $dir
+     * @return bool
+     */
+    private function deleteDirectory($dir)
+    {
+        if (!file_exists($dir)) {
+            return true;
+        }
+
+        if (!is_dir($dir)) {
+            return unlink($dir);
+        }
+
+        foreach (scandir($dir) as $item) {
+            if ($item == '.' || $item == '..') {
+                continue;
+            }
+
+            if (!$this->deleteDirectory($dir . DIRECTORY_SEPARATOR . $item)) {
+                return false;
+            }
+
+        }
+
+        return rmdir($dir);
     }
 } 

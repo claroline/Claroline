@@ -1,3 +1,22 @@
+<?php
+
+$maintenanceMode = file_exists(__DIR__ . '/../../app/config/.update');
+$authorized = false;
+
+if ($maintenanceMode) {
+    if (file_exists($file = __DIR__ . '/../../app/config/ips')) {
+        $authorizedIps = file($file, FILE_IGNORE_NEW_LINES);
+        $authorized = in_array($_SERVER['REMOTE_ADDR'], $authorizedIps);
+    }
+}
+
+if (!$authorized) {
+    $url = $_SERVER['HTTP_HOST'] . $_SERVER['SCRIPT_NAME'] . '/../../app.php';
+    header("Location: http://{$url}");
+}
+
+?>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -38,7 +57,6 @@
             <div class="panel panel-default">
                 <div class="panel-body">
                     <div id="log-container" class="row">
-                        <hr>
                         <pre id="log-content"
                              style="max-height: 300px; overflow: auto"
                              data-url="refresh.php">

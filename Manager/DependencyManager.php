@@ -12,6 +12,7 @@
 namespace Claroline\CoreBundle\Manager;
 
 use Claroline\CoreBundle\Library\Composer\FileIO;
+use Claroline\CoreBundle\Library\Maintenance\MaintenanceHandler;
 use Composer\Composer;
 use JMS\DiExtraBundle\Annotation as DI;
 use Composer\Package\CompletePackageInterface;
@@ -37,6 +38,8 @@ class DependencyManager {
     private $lastTagsFile;
     private $iniFileManager;
     private $composerLogFile;
+    private $cacheDir;
+    private $env;
 
     const CLAROLINE_CORE_TYPE = 'claroline-core';
     const CLAROLINE_PLUGIN_TYPE = 'claroline-plugin';
@@ -46,10 +49,19 @@ class DependencyManager {
      *      "vendorDir"       = @DI\Inject("%claroline.param.vendor_directory%"),
      *      "lastTagsFile"    = @DI\Inject("%claroline.packages_last_tags_file%"),
      *      "composerLogFile" = @DI\Inject("%claroline.composer_log_file%"),
-     *      "iniFileManager"  = @DI\Inject("claroline.manager.ini_file_manager")
+     *      "iniFileManager"  = @DI\Inject("claroline.manager.ini_file_manager"),
+     *      "cacheDir"        = @DI\Inject("%claroline.cache_dir%"),
+     *      "env"             = @DI\Inject("%kernel.environment%")
      * })
      */
-    public function __construct($vendorDir, $lastTagsFile, $iniFileManager, $composerLogFile)
+    public function __construct(
+        $vendorDir,
+        $lastTagsFile,
+        IniFileManager $iniFileManager,
+        $composerLogFile,
+        $cacheDir,
+        $env
+    )
     {
         $this->vendorDir = $vendorDir;
         $ds = DIRECTORY_SEPARATOR;
@@ -60,6 +72,8 @@ class DependencyManager {
         $this->lastTagsFile = $lastTagsFile;
         $this->iniFileManager = $iniFileManager;
         $this->composerLogFile = $composerLogFile;
+        $this->cacheDir = $cacheDir;
+        $this->env = $env;
     }
 
     /**
@@ -257,6 +271,8 @@ class DependencyManager {
      */
     public function upgrade(array $packages = array())
     {
+        //MaintenanceHandler::enableMaintenance();
+
         $ds = DIRECTORY_SEPARATOR;
         $factory = new Factory();
         $io = new FileIO($this->composerLogFile);
@@ -264,15 +280,22 @@ class DependencyManager {
         $composer = $factory->createComposer($io, "{$this->vendorDir}{$ds}..{$ds}composer.json", false);
         $install = Installer::create($io, $composer);
 
-        $install->setDryRun(true)
+        $dryRun = $this->env === 'dev' ? true: false;
+        $preferSource = $this->env === 'dev' ? true: false;
+        $preferDist = $this->env === 'dev' ? false: true;
+        $devMode = $this->env === 'dev' ? true: false;
+
+        $install->setDryRun($dryRun)
             ->setVerbose(true)
-            ->setPreferSource(true)
-            ->setPreferDist(false)
-            ->setDevMode(false)
+            ->setPreferSource($preferSource)
+            ->setPreferDist($preferDist)
+            ->setDevMode($devMode)
             ->setRunScripts(true)
             ->setOptimizeAutoloader(true)
             ->setUpdate(true);
 
-        return $install->run();
+        $install->run();
+
+        //MaintenanceHandler::disableMaintenance();
     }
 }
