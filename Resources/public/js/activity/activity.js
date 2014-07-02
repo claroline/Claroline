@@ -72,5 +72,4 @@
         });
         $('#activity-evaluation-modal-box').modal('show');
     });
-
 }());

@@ -13,6 +13,7 @@
                         <th>{{ 'description'|trans({}, 'platform') }}</th>
                         <th class="text-center">{{ 'start_date'|trans({}, 'platform') }}</th>
                         <th class="text-center">{{ 'end_date'|trans({}, 'platform') }}</th>
+                        <th class="text-center">{{ 'evaluation_type'|trans({}, 'platform') }}</th>
                     </tr>
                     {% for activity in activities %}
                     {% set resourceNode = activity.getResourceNode() %}
@@ -38,6 +39,15 @@
                                 {{ resourceNode.getAccessibleUntil()|intl_date_format }}
                             {% else %}
                                 -
+                            {% endif %}
+                        </td>
+                        <td class="text-center">
+                            {% if activity.getParameters() is not empty
+                                and activity.getParameters().getEvaluationType() is not empty %}
+                            
+                                {{ activity.getParameters().getEvaluationType()|trans({}, 'platform') }}
+                            {% else %}
+                                {{ 'evaluation-manual'|trans({}, 'platform') }}
                             {% endif %}
                         </td>
                     </tr>
