@@ -26,7 +26,7 @@ use Composer\Util\RemoteFilesystem;
 use Composer\Repository\InstalledFilesystemRepository;
 use Composer\Json\JsonFile;
 use Symfony\Component\Console\Output\StreamOutput;
-use Symfony\Component\Console\Output\ConsoleOutput;
+use Symfony\Component\Console\Output\NullOutput;
 use Symfony\Component\Console\Input\ArgvInput;
 
 /**
@@ -36,7 +36,7 @@ class DependencyManager {
 
     private $vendorDir;
     private $repo;
-    private $jsonFile;
+    private $installedJson;
     private $logFile;
     private $lastTagsFile;
     private $iniFileManager;
@@ -44,6 +44,7 @@ class DependencyManager {
     private $cacheDir;
     private $env;
     private $updater;
+    private $projectComposerJson;
 
     const CLAROLINE_CORE_TYPE = 'claroline-core';
     const CLAROLINE_PLUGIN_TYPE = 'claroline-plugin';
@@ -71,9 +72,10 @@ class DependencyManager {
     {
         $this->vendorDir = $vendorDir;
         $ds = DIRECTORY_SEPARATOR;
-        $this->jsonFile = "{$vendorDir}{$ds}composer{$ds}installed.json";
+        $this->installedJson = "{$vendorDir}{$ds}composer{$ds}installed.json";
         $this->logFile = "{$lastTagsFile}{$ds}..{$ds}composer.log";
-        $installedFile = new JsonFile($this->jsonFile);
+        $this->projectComposerJson = "{$vendorDir}{$ds}..{$ds}composer.json";
+        $installedFile = new JsonFile($this->installedJson);
         $this->repo = new InstalledFilesystemRepository($installedFile);
         $this->lastTagsFile = $lastTagsFile;
         $this->iniFileManager = $iniFileManager;
@@ -112,6 +114,24 @@ class DependencyManager {
         }
 
         return $packages;
+    }
+
+    /**
+     * Returns installed packages by composer by name.
+     *
+     * @param $name
+     *
+     * @return CompletePackageInterface
+     */
+    public function getInstalledByName($name)
+    {
+        foreach ($this->getAllInstalled() as $package) {
+            if ($package->getName() === $name || $package->getPrettyName() === $name) {
+               return $package;
+            }
+        }
+
+        return null;
     }
 
     /**
@@ -287,10 +307,13 @@ class DependencyManager {
         $composer = $factory->createComposer($io, "{$this->vendorDir}{$ds}..{$ds}composer.json", false);
         $install = Installer::create($io, $composer);
 
-        $dryRun = $this->env === 'dev' ? true: false;
-        $preferSource = $this->env === 'dev' ? true: false;
-        $preferDist = $this->env === 'dev' ? false: true;
-        $devMode = $this->env === 'dev' ? true: false;
+//        $dryRun = $this->env === 'dev' ? true: false;
+//        $preferSource = $this->env === 'dev' ? true: false;
+//        $preferDist = $this->env === 'dev' ? false: true;
+//        $devMode = $this->env === 'dev' ? true: false;
+
+        $dryRun = $preferSource = $devMode = true;
+        $preferDist = false;
 
         $install->setDryRun($dryRun)
             ->setVerbose(true)
@@ -304,6 +327,28 @@ class DependencyManager {
         $install->run();
 
         //this should disable the maintenance mode aswell
-        $updater->run(new ArgvInput(), new ConsoleOutput());
+        $updater->run(new ArgvInput(), new NullOutput());
+
+        $this->updateRequirements();
+    }
+
+    /**
+     * Update the main composer.json
+     */
+    public function updateRequirements()
+    {
+        $data = json_decode(file_get_contents($this->projectComposerJson));
+        $new = clone $data;
+
+        foreach ($data->require as $prettyName => $version) {
+            foreach ($this->getAllInstalled() as $package) {
+                if ($package->getPrettyName() === $prettyName) {
+                    $new->require->$prettyName = ">=" . $package->getPrettyVersion();
+                }
+            }
+        };
+
+        file_put_contents($this->projectComposerJson . '.old', json_encode($data, JSON_PRETTY_PRINT));
+        file_put_contents($this->projectComposerJson, json_encode($new, JSON_PRETTY_PRINT));
     }
 }

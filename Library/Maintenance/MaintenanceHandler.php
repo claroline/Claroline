@@ -15,7 +15,6 @@ class MaintenanceHandler
 {
     public static function enableMaintenance()
     {
-        throw new \Exception('gotcha');
         if (!file_exists($file = self::getFlagPath())) {
             touch($file);
         }
