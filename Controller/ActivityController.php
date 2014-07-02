@@ -384,7 +384,8 @@ class ActivityController
                 if (!is_null($scoreMax)) {
                     $ruleScore .= ' / ' . $scoreMax;
                 }
-                $isResultVisible = !empty($rule->getIsResultVisible());
+                $ruleResultVisible = $rule->getIsResultVisible();
+                $isResultVisible = !empty($ruleResultVisible);
             }
         }
 
