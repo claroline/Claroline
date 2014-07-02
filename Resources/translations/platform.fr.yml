@@ -518,6 +518,7 @@ notification_deactivated: 'Notifications désactivées.'
 notifications: 'Notifications'
 number: Nombre
 number_of_attempts: 'Nombre de tentatives'
+number_of_attempts_explanation: 'La signification du nombre de tentatives peut varier en fonction de l''activité. Il ne s''agit pas forcément du nombre de fois où l''activité a été exécutée.'
 oauth: Oauth
 object: Objet
 ok: Ok

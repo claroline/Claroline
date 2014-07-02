@@ -14,7 +14,14 @@
                 >
                     {{ 'best_score'|trans({}, 'platform') }}
                 </th>
-                <th class="center-text">{{ 'number_of_attempts'|trans({}, 'platform') }}</th>
+                <th class="center-text"
+                    data-container="#activity-evaluation-display-element"
+                    data-toggle="tooltip"
+                    data-placement="top"
+                    title="{{ 'number_of_attempts_explanation'|trans({}, 'platform') }}"
+                >
+                    {{ 'number_of_attempts'|trans({}, 'platform') }}
+                </th>
                 <th class="center-text"
                     data-container="#activity-evaluation-display-element"
                     data-toggle="tooltip"
