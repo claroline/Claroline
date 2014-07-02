@@ -129,6 +129,7 @@ analytics_resources: 'Recursos'
 analytics_top: 'Principal'
 anonymous: 'Anónimo'
 answer: 'Respuesta'
+anywhere: Dondequiera
 appearance: 'Apariencia'
 apply: 'Aplicar'
 at_least_one_category_has_to_be_selected: 'Debe seleccionar al menos una categoría'
@@ -163,9 +164,11 @@ change_view: 'Cambiar la visualización'
 choose_resource_form_type: 'Tipo de recurso'
 classify_my_workspaces: 'Clasificar mis espacios de trabajo'
 classify_workspaces: 'Clasificar espacios de trabajo'
+classroom: Aula
 close: 'Cerrar'
 closed_account: Cuenta cerrada.
 code: 'Código'
+collaborative: Colaboración
 collaborator: 'Colaborador'
 comments: Comentarios
 communication: 'Comunicación'
@@ -354,6 +357,7 @@ import_roles: 'Importar roles'
 import_user_file_file: 'importar de un archivo CSV'
 import_users: 'Importar usuarios'
 incomplete: Incompleto
+individual: Individual
 informations: 'Informaciones'
 inscription_mail: 'Inscripción de correo electrónico'
 instructions: 'Instrucciones'
@@ -424,6 +428,7 @@ misc: 'Diverso'
 missing_%content%: 'La variable %content% falta en la lengua "%language%".'
 missing_%password%: 'La variable %password% falta en la lengua "%language%".'
 missing_%username%: 'La variable %username% falta en la lengua "%language%".'
+mixed: Mezclado
 month.April: 'Abril'
 month.August: 'Agosto'
 month.December: 'Diciembre'
