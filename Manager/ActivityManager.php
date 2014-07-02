@@ -611,10 +611,10 @@ class ActivityManager
             ->findRuleActionsByResourceType($resourceType, $executeQuery);
     }
 
-    public function getRuleActionsWithNoResource($executeQuery = true)
+    public function getRuleActionsWithNoResourceType($executeQuery = true)
     {
         return $this->activityRuleActionRepo
-            ->findRuleActionsWithNoResource($executeQuery);
+            ->findRuleActionsWithNoResourceType($executeQuery);
     }
 
     public function getAllDistinctActivityRuleActions($executeQuery = true)

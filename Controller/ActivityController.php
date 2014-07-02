@@ -301,7 +301,7 @@ class ActivityController
     public function getRuleActionsFromResourceType($resourceTypeName = null)
     {
         if (is_null($resourceTypeName)) {
-            $ruleActions = $this->activityManager->getRuleActionsWithNoResource();
+            $ruleActions = $this->activityManager->getRuleActionsWithNoResourceType();
         } else {
             $resourceType = $this->resourceManager
                 ->getResourceTypeByName($resourceTypeName);
