@@ -13,6 +13,7 @@ namespace Claroline\CoreBundle\Manager;
 
 use Claroline\CoreBundle\Library\Composer\FileIO;
 use Claroline\CoreBundle\Library\Maintenance\MaintenanceHandler;
+use Claroline\CoreBundle\Command\PlatformUpdateCommand;
 use Composer\Composer;
 use JMS\DiExtraBundle\Annotation as DI;
 use Composer\Package\CompletePackageInterface;
@@ -25,6 +26,8 @@ use Composer\Util\RemoteFilesystem;
 use Composer\Repository\InstalledFilesystemRepository;
 use Composer\Json\JsonFile;
 use Symfony\Component\Console\Output\StreamOutput;
+use Symfony\Component\Console\Output\ConsoleOutput;
+use Symfony\Component\Console\Input\ArgvInput;
 
 /**
  * @DI\Service("claroline.manager.dependency_manager")
@@ -40,6 +43,7 @@ class DependencyManager {
     private $composerLogFile;
     private $cacheDir;
     private $env;
+    private $updater;
 
     const CLAROLINE_CORE_TYPE = 'claroline-core';
     const CLAROLINE_PLUGIN_TYPE = 'claroline-plugin';
@@ -51,7 +55,8 @@ class DependencyManager {
      *      "composerLogFile" = @DI\Inject("%claroline.composer_log_file%"),
      *      "iniFileManager"  = @DI\Inject("claroline.manager.ini_file_manager"),
      *      "cacheDir"        = @DI\Inject("%claroline.cache_dir%"),
-     *      "env"             = @DI\Inject("%kernel.environment%")
+     *      "env"             = @DI\Inject("%kernel.environment%"),
+     *      "updater"         = @DI\Inject("claroline.command.update_command")
      * })
      */
     public function __construct(
@@ -60,7 +65,8 @@ class DependencyManager {
         IniFileManager $iniFileManager,
         $composerLogFile,
         $cacheDir,
-        $env
+        $env,
+        PlatformUpdateCommand $updater
     )
     {
         $this->vendorDir = $vendorDir;
@@ -74,6 +80,7 @@ class DependencyManager {
         $this->composerLogFile = $composerLogFile;
         $this->cacheDir = $cacheDir;
         $this->env = $env;
+        $this->updater = $updater;
     }
 
     /**
@@ -271,7 +278,7 @@ class DependencyManager {
      */
     public function upgrade(array $packages = array())
     {
-        //MaintenanceHandler::enableMaintenance();
+        MaintenanceHandler::enableMaintenance();
 
         $ds = DIRECTORY_SEPARATOR;
         $factory = new Factory();
@@ -296,6 +303,7 @@ class DependencyManager {
 
         $install->run();
 
-        //MaintenanceHandler::disableMaintenance();
+        //this should disable the maintenance mode aswell
+        $updater->run(new ArgvInput(), new ConsoleOutput());
     }
 }
