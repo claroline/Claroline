@@ -72,11 +72,19 @@ activity_resource_remove: '¿Esta seguro que desea remover este recurso de la ac
 activity_rule_action_none: Ninguno
 activity_rule_configuration_for_auto_evaluation: 'Configuración de la regla para la evaluación automática'
 activity_rule_form_action: Acción
-activity_rule_form_activeFrom: De
-activity_rule_form_activeUntil: Hasta
-activity_rule_form_badge: Insignia
+activity_rule_form_action_explanation: 'La evaluación se basa en las acciones realizadas por el usuario. '
+activity_rule_form_activeFrom: 'Realizada  entre el'
+activity_rule_form_activeFrom_explanation: 'Sólo serán tratadas las acciones realizadas después de esta fecha. Todas las acciones anteriores serán tratadas si esta fecha no es definida.'
+activity_rule_form_activeUntil: 'y el'
+activity_rule_form_activeUntil_explanation: 'Sólo serán tratadas las acciones realizadas antes de esta fecha. Todas las acciones posteriores serán tratadas si esta fecha no es definida.'
+activity_rule_form_badge: 'Badge requerido'
+activity_rule_form_badge_explanation: 'El badge que debe ser conseguido para aprobar.'
+activity_rule_form_isResultVisible: 'Mostrar el resultado' 
+activity_rule_form_isResultVisible_explanation: 'Permitir al usuario conocer el resultado que debe ser obtenido.' 
 activity_rule_form_occurrence: Ocurrencia
-activity_rule_form_result: Resultado
+activity_rule_form_occurrence_explanation: 'El número de veces que la acción debe ser realizada para aprobar.'
+activity_rule_form_result: 'Resultado requerido'
+activity_rule_form_result_explanation: 'El resultado que debe ser obtenido para aprobar.'
 activity_where_anywhere: Dondequiera
 activity_where_classroom: Aula
 activity_who_collaborative: Colaboración

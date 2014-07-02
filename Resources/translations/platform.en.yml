@@ -84,13 +84,13 @@ activity_rule_form_activeFrom_explanation: 'Only actions performed after this da
 activity_rule_form_activeUntil: 'and'
 activity_rule_form_activeUntil_explanation: 'Only actions performed before this date will be processed. If not set all future actions will be processed.'
 activity_rule_form_badge: 'Required badge'
-activity_rule_form_badge_explanation: 'The badge that has to be obtained.'
+activity_rule_form_badge_explanation: 'The badge that has to be obtained to succeed.'
 activity_rule_form_isResultVisible: 'Display result' 
 activity_rule_form_isResultVisible_explanation: 'Allows user to know the result that has to be obtained.' 
 activity_rule_form_occurrence: Occurrence
-activity_rule_form_occurrence_explanation: 'The number of time the action has to be performed.'
+activity_rule_form_occurrence_explanation: 'The number of time the action has to be performed to succeed.'
 activity_rule_form_result: 'Required result'
-activity_rule_form_result_explanation: 'The result that has to be obtained.'
+activity_rule_form_result_explanation: 'The result that has to be obtained to succeed.'
 activity_where_anywhere: Anywhere
 activity_where_classroom: Classroom
 activity_who_collaborative: Collaborative

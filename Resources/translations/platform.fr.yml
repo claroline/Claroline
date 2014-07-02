@@ -85,13 +85,13 @@ activity_rule_form_activeFrom_explanation: 'Seules les actions effectuées aprè
 activity_rule_form_activeUntil: 'et le'
 activity_rule_form_activeUntil_explanation: 'Seules les actions effectuées avant cette date seront prises en compte. Toutes les futures actions seront traitées si cette date n''est pas définie.'
 activity_rule_form_badge: 'Badge à obtenir'
-activity_rule_form_badge_explanation: 'Le badge à obtenir.'
+activity_rule_form_badge_explanation: 'Le badge à obtenir pour réussir.'
 activity_rule_form_isResultVisible: 'Afficher le résultat' 
 activity_rule_form_isResultVisible_explanation: 'Permettre à l''utilisateur de connaître le résultat à obtenir.' 
 activity_rule_form_occurrence: Occurrence
-activity_rule_form_occurrence_explanation: 'Le nombre de fois que l''action doit être effectuée.'
+activity_rule_form_occurrence_explanation: 'Le nombre de fois que l''action doit être effectuée pour réussir.'
 activity_rule_form_result: 'Résultat à obtenir'
-activity_rule_form_result_explanation: 'Le résultat à obtenir.'
+activity_rule_form_result_explanation: 'Le résultat à obtenir pour réussir.'
 activity_where_anywhere: N'importe où
 activity_where_classroom: En classe
 activity_who_collaborative: Collaboratif
