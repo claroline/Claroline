@@ -14,7 +14,8 @@
 
 
     <form id="global_form" class="form-horizontal" method="POST"
-          action="{{ path('icap_dropzone_edit_criteria', {'resourceId': dropzone.id}) }}">
+          action="{{ path('icap_dropzone_edit_criteria', {'resourceId': dropzone.id}) }}"
+          class="disabled-during-edition">
         <input id="addCriteriaReRouting" type="hidden" name="addCriteria" value="default"/>
 
         <p>{{ 'criteria_explication'|trans({}, 'icap_dropzone')|raw }}</p>
@@ -115,7 +116,10 @@
                                 <div class="col-md-12">
                                     <div class="btn-group pull-right">
                                         <a href="{{ path('icap_dropzone_edit_add_criterion', {'resourceId': dropzone.id, 'page': pager.currentPage, 'criterionId': criterion.id}) }}" class="btn btn-default btn-sm edit-criterion-button disabled-during-edition" data-criterion="criterion-{{ criterion.id }}"><span class="glyphicon icon-edit"></span> {{ 'dropzone_edit'|trans({}, 'icap_dropzone') }}</a>
-                                        <a href="{{ path('icap_dropzone_edit_delete_criterion', {'resourceId': dropzone.id, 'page': pager.currentPage, 'criterionId': criterion.id, 'number': criterionNumber}) }}" class="btn btn-danger btn-sm launch-modal"><span class="glyphicon icon-trash"></span> {{ 'Delete'|trans({}, 'icap_dropzone') }}</a>
+                                        <a href="{{ path('icap_dropzone_edit_delete_criterion', {'resourceId': dropzone.id, 'page': pager.currentPage, 'criterionId': criterion.id, 'number': criterionNumber}) }}"
+                                           class="btn btn-danger disabled-during-edition btn-sm launch-modal"><span
+                                                    class="glyphicon icon-trash"></span> {{ 'Delete'|trans({}, 'icap_dropzone') }}
+                                        </a>
                                     </div>
                                 </div>
                             </div>
@@ -333,6 +337,8 @@
                 event.preventDefault();
 
                 $('.disabled-during-edition').attr('disabled', 'disabled');
+                tinyMCE.get('icap_dropzone_criteria_form_correctionInstruction').getBody().setAttribute('contenteditable', false);
+                //$('.icap_dropzone_criteria_form_correctionInstruction').attr('disabled','disabled');
                 $('.criteria-form-button').attr('disabled', 'disabled');
 
                 var criterionId = $(this).data('criterion');
@@ -390,9 +396,8 @@
                     type: $form.attr('method'),
                     data: $form.serialize(),
                     success: function () {
-                        alert('success');
-                        /*$.get($('.edit-criterion-button').attr('href'))
-                         .done(function (data) {
+                        $.get($('.edit-criterion-button').attr('href'))
+                                .done(function (data) {
                          resetTiny();
                          $('.new-criteria-zone').empty();
                          $('.criterion-row > .criterion-edit').empty();
@@ -414,7 +419,7 @@
                          setSaveListener();
                          })
                          ;
-                         */
+
                     }
                 });
 
@@ -465,6 +470,7 @@
 
                 $('.disabled-during-edition').attr('disabled', null);
                 $('.criteria-form-button').attr('disabled', null);
+                tinyMCE.get('icap_dropzone_criteria_form_correctionInstruction').getBody().setAttribute('contenteditable', true);
             });
         }
     </script>
