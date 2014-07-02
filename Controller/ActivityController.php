@@ -136,6 +136,8 @@ class ActivityController
                 $action = $formRule->get('action')->getData();
                 $occurrence = $formRule->get('occurrence')->getData();
                 $result = $formRule->get('result')->getData();
+                $resultMax = $formRule->get('resultMax')->getData();
+                $isResultVisible = $formRule->get('isResultVisible')->getData();
                 $activeFrom = $formRule->get('activeFrom')->getData();
                 $activeUntil = $formRule->get('activeUntil')->getData();
 
@@ -145,6 +147,8 @@ class ActivityController
                         $action,
                         $occurrence,
                         $result,
+                        $resultMax,
+                        $isResultVisible,
                         $activeFrom,
                         $activeUntil,
                         $resourceNode
@@ -155,6 +159,8 @@ class ActivityController
                         $action,
                         $occurrence,
                         $result,
+                        $resultMax,
+                        $isResultVisible,
                         $activeFrom,
                         $activeUntil,
                         $resourceNode
@@ -295,7 +301,7 @@ class ActivityController
     public function getRuleActionsFromResourceType($resourceTypeName = null)
     {
         if (is_null($resourceTypeName)) {
-            $ruleActions = $this->activityManager->getRuleActionsWithNoResource();
+            $ruleActions = $this->activityManager->getRuleActionsWithNoResourceType();
         } else {
             $resourceType = $this->resourceManager
                 ->getResourceTypeByName($resourceTypeName);
@@ -348,9 +354,46 @@ class ActivityController
         $pastEvals = $this->activityManager
             ->getPastEvaluationsByUserAndActivityParams($currentUser, $params);
 
+        if (is_null($evaluation)) {
+            $evaluationType = $params->getEvaluationType();
+            $status = ($evaluationType === 'automatic') ?
+                'not_attempted' :
+                null;
+
+            $evaluation = $this->activityManager->createEvaluation(
+                $currentUser,
+                $params,
+                null,
+                null,
+                $status
+            );
+        }
+        $ruleScore = null;
+        $isResultVisible = false;
+
+        if ($params->getEvaluationType() === 'automatic' &&
+            count($params->getRules()) > 0) {
+
+            $rule = $params->getRules()->first();
+            $score = $rule->getResult();
+            $scoreMax = $rule->getResultMax();
+
+            if (!is_null($score)) {
+                $ruleScore = $score;
+
+                if (!is_null($scoreMax)) {
+                    $ruleScore .= ' / ' . $scoreMax;
+                }
+                $isResultVisible = !empty($rule->getIsResultVisible());
+            }
+        }
+
         return array(
+            'activityParameters' => $params,
             'evaluation' => $evaluation,
-            'pastEvals' => $pastEvals
+            'pastEvals' => $pastEvals,
+            'ruleScore' => $ruleScore,
+            'isResultVisible' => $isResultVisible
         );
     }
 

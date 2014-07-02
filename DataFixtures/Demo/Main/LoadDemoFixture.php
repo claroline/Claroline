@@ -246,7 +246,7 @@ class LoadDemoFixture extends LoggableFixture implements ContainerAwareInterface
         $this->loadFixture(
             new LoadFileData(
                 'Jane Doe',
-                'Docs',
+                'Documents',
                 array(
                     $this->filepath.'lorem.pdf',
                     $this->filepath.'sample.pdf',
@@ -288,7 +288,7 @@ class LoadDemoFixture extends LoggableFixture implements ContainerAwareInterface
         $rightsManager->create(
             $permissions,
             $collaboratorRole,
-            $this->getReference('directory/Docs'),
+            $this->getReference('directory/Documents'),
             true
         );
         $rightsManager->create(

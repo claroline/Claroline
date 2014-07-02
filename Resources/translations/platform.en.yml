@@ -61,9 +61,9 @@ activity_already: This resource is already in the activity
 activity_evaluation_form_attemptsCount: 'Number of attempts'
 activity_evaluation_form_comment: Comment
 activity_evaluation_form_date: 'Last attempt'
-activity_evaluation_form_numScore: 'Score'
-activity_evaluation_form_score: 'Evaluation'
-activity_evaluation_form_status: 'Status'
+activity_evaluation_form_numScore: 'Best score'
+activity_evaluation_form_score: Evaluation
+activity_evaluation_form_status: Status
 activity_form_instructions: Instructions
 activity_form_name: Name
 activity_parameters_form_evaluation_type: 'Evaluation type'
@@ -78,11 +78,19 @@ activity_resource_remove: 'Are you sure you want to remove this resource from th
 activity_rule_action_none: None
 activity_rule_configuration_for_auto_evaluation: 'Rule configuration for automatic evaluation'
 activity_rule_form_action: Action
-activity_rule_form_activeFrom: From
-activity_rule_form_activeUntil: Until
-activity_rule_form_badge: Badge
+activity_rule_form_action_explanation: 'Automatic evaluation depends on actions performed by user.'
+activity_rule_form_activeFrom: 'Performed between'
+activity_rule_form_activeFrom_explanation: 'Only actions performed after this date will be processed. If not set all previous actions will be processed.'
+activity_rule_form_activeUntil: 'and'
+activity_rule_form_activeUntil_explanation: 'Only actions performed before this date will be processed. If not set all future actions will be processed.'
+activity_rule_form_badge: 'Required badge'
+activity_rule_form_badge_explanation: 'The badge that has to be obtained to succeed.'
+activity_rule_form_isResultVisible: 'Display result' 
+activity_rule_form_isResultVisible_explanation: 'Allows user to know the result that has to be obtained.' 
 activity_rule_form_occurrence: Occurrence
-activity_rule_form_result: Result
+activity_rule_form_occurrence_explanation: 'The number of time the action has to be performed to succeed.'
+activity_rule_form_result: 'Required result'
+activity_rule_form_result_explanation: 'The result that has to be obtained to succeed.'
 activity_where_anywhere: Anywhere
 activity_where_classroom: Classroom
 activity_who_collaborative: Collaborative
@@ -132,6 +140,7 @@ appearance: Appearance
 apply: Apply
 at_least_one_category_has_to_be_selected: 'At least one category has to be selected'
 attempts: Attempts
+automatic: Automatic
 available_widgets: 'Available widgets'
 available_workspaces: 'Available workspaces'
 back: Back
@@ -168,7 +177,7 @@ close: Close
 closed_account: Closed account
 code: Code
 collaborator: Collaborator
-comments: Comments
+comment: Comment
 communication: Communication
 completed: Completed
 configuration: Configuration
@@ -293,7 +302,8 @@ entries_per_day: 'Entries per day'
 evaluation: Evaluation
 evaluation-automatic: Automatic
 evaluation-manual: Manual
-evaluation_edition: 'Evaluation'
+evaluation_edition: Evaluation
+evaluation_type: 'Evaluation type'
 export: Export
 exportable: Exportable
 external_pdo_database: 'External database (PDO)'
@@ -426,6 +436,8 @@ manage_public_profile_preferences: 'Manage public profile preferences'
 manage_rights: 'Manage rights'
 manage_tools: Manage tools
 manager: Manager
+manual: Manual
+manual_evaluation_explanation: 'Manual evaluation by a workspace manager'
 max_size_is: 'The maximum size is %size%'
 media_most_viewed: 'Most viewed media'
 message_form_content: Content
@@ -458,7 +470,6 @@ month.October: October
 month.September: September
 move: Move
 my_account: 'My account'
-my_activities_tracking: 'My activities tracking'
 my_agenda: 'My agenda'
 my_applications: 'My applications'
 my_badges: 'My badges'
@@ -479,6 +490,7 @@ new_password: New password
 new_role_message: 'You received the role %name%'
 new_role_message_object: 'Your permissions on the platform have changed'
 no: no
+no_activity: 'There is no activity'
 no_category: 'There is no category'
 no_email: 'No email found, check the spelling'
 no_group: 'No group'
@@ -515,6 +527,7 @@ owner: Owner
 owner_s: Owner(s)
 parameters: Parameters
 passed: Passed
+passing_score: 'Passing score'
 password: Password
 password_mismatch: 'Passwords mismatch'
 password_ok: 'Your password has been changed, you can login now'

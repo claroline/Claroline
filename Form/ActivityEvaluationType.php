@@ -19,21 +19,32 @@ class ActivityEvaluationType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $evaluation = $builder->getData();
+        $activityParams = $evaluation->getActivityParameters();
+        $evaluationType = empty($activityParams->getEvaluationType()) ?
+            'manual' :
+            $activityParams->getEvaluationType();
+
+        $statusOptions = array(
+            'choices' => array(
+                'not_attempted' => 'not_attempted',
+                'completed' => 'completed',
+                'incomplete' => 'incomplete',
+                'passed' => 'passed',
+                'failed' => 'failed'
+            ),
+            'required' => false
+        );
+
+        if ($evaluationType === 'automatic') {
+            $statusOptions['read_only'] = true;
+            $statusOptions['disabled'] = true;
+        }
+
         $builder->add(
             'status',
             'choice',
-            array(
-                'choices' => array(
-                    'not_attempted' => 'not_attempted',
-                    'competed' => 'completed',
-                    'incomplete' => 'incomplete',
-                    'passed' => 'passed',
-                    'failed' => 'failed'
-                ),
-                'read_only' => true,
-                'disabled' => true,
-                'required' => false
-            )
+            $statusOptions
         );
         $builder->add(
             'numScore',

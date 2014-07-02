@@ -15,7 +15,12 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\Activity\ActivityRuleActionRepository")
- * @ORM\Table(name="claro_activity_rule_action")
+ * @ORM\Table(
+ *     name="claro_activity_rule_action",
+ *     uniqueConstraints={
+ *         @ORM\UniqueConstraint(name="activity_rule_unique_action_resource_type", columns={"log_action", "resource_type_id"})
+ *     }
+ * )
  */
 class ActivityRuleAction
 {

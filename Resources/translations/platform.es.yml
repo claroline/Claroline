@@ -50,7 +50,14 @@ account_general_statistics: 'Estadísticas generales de la cuenta'
 action: 'Acción'
 actions: 'Acciones'
 active_widgets: 'Widgets activos'
+activities_tracking: 'Seguimiento de las actividades' 
 activity_already: Este recurso ya está en la actividad
+activity_evaluation_form_attemptsCount: 'Número de intentos'
+activity_evaluation_form_comment: Comentario
+activity_evaluation_form_date: 'Fecha del último intento'
+activity_evaluation_form_numScore: 'Mejor puntaje'
+activity_evaluation_form_score: Evaluación
+activity_evaluation_form_status: Estado
 activity_form_instructions: 'Instrucciones'
 activity_form_name: 'Nombre'
 activity_parameters_form_evaluation_type: 'Tipo de evaluación'
@@ -65,11 +72,19 @@ activity_resource_remove: '¿Esta seguro que desea remover este recurso de la ac
 activity_rule_action_none: Ninguno
 activity_rule_configuration_for_auto_evaluation: 'Configuración de la regla para la evaluación automática'
 activity_rule_form_action: Acción
-activity_rule_form_activeFrom: De
-activity_rule_form_activeUntil: Hasta
-activity_rule_form_badge: Insignia
+activity_rule_form_action_explanation: 'La evaluación se basa en las acciones realizadas por el usuario. '
+activity_rule_form_activeFrom: 'Realizada  entre el'
+activity_rule_form_activeFrom_explanation: 'Sólo serán tratadas las acciones realizadas después de esta fecha. Todas las acciones anteriores serán tratadas si esta fecha no es definida.'
+activity_rule_form_activeUntil: 'y el'
+activity_rule_form_activeUntil_explanation: 'Sólo serán tratadas las acciones realizadas antes de esta fecha. Todas las acciones posteriores serán tratadas si esta fecha no es definida.'
+activity_rule_form_badge: 'Badge requerido'
+activity_rule_form_badge_explanation: 'El badge que debe ser conseguido para aprobar.'
+activity_rule_form_isResultVisible: 'Mostrar el resultado' 
+activity_rule_form_isResultVisible_explanation: 'Permitir al usuario conocer el resultado que debe ser obtenido.' 
 activity_rule_form_occurrence: Ocurrencia
-activity_rule_form_result: Resultado
+activity_rule_form_occurrence_explanation: 'El número de veces que la acción debe ser realizada para aprobar.'
+activity_rule_form_result: 'Resultado requerido'
+activity_rule_form_result_explanation: 'El resultado que debe ser obtenido para aprobar.'
 activity_where_anywhere: Dondequiera
 activity_where_classroom: Aula
 activity_who_collaborative: Colaboración
@@ -118,9 +133,11 @@ appearance: 'Apariencia'
 apply: 'Aplicar'
 at_least_one_category_has_to_be_selected: 'Debe seleccionar al menos una categoría'
 attempts: Intentos
+automatic: Automático
 available_widgets: 'Widgets disponibles'
 available_workspaces: 'Espacios de trabajo disponibles'
 back: 'Atrás'
+back_to_activities_list: 'Volver a la lista de actividades'
 bad_request: 'La solicitud no es correcta. Si usted llegó a esta página a través de un enlace interno, por favor informe del problema al administrador de la plataforma.'
 badges_management: 'Gestión de insignias'
 best_score: 'Mejor puntaje'
@@ -255,11 +272,14 @@ email: 'Correo electrónico'
 email_form_mail: 'Ingrese su correo electrónico'
 email_found_at: 'El coreo electrónico %email% fue encontrado en la linea: %lines%'
 empty_file: 'Archivo vacío'
+end_date: 'Fecha de cierre'
 enter_tag_name_message: 'Por favor ingrese el nombre de la etiqueta'
 entries_per_day: 'Entradas por día'
 evaluation: Evaluación
 evaluation-automatic: Automático
 evaluation-manual: Manual
+evaluation_edition: Evaluación
+evaluation_type: 'Tipo de evaluación'
 export: 'Exportar'
 exportable: 'Exportable'
 external_pdo_database: 'Base de datos externa (PDO)'
@@ -350,6 +370,7 @@ jqplot_date_output_format: '%m/%d/%Y'
 keep_me_logged_in: 'Mantenerme conectado'
 lastName: 'Apellido'
 last_30_days_activity: 'Actividad de los últimos 30 días'
+last_attempt_date: 'Fecha del último intento'
 last_name: 'Apellido'
 layout: 'disposición'
 leave_this_page: 'Si usted cierra esta página, usted puede perder los cambios.'
@@ -383,6 +404,8 @@ mail_sent: 'Un correo electrónico ha sido enviado, Por favor compruebe su bande
 manage_rights: 'Administrar los derechos'
 manage_tools: Gestión de las herramientas
 manager: 'Administrar'
+manual: Manual
+manual_evaluation_explanation: 'Evaluación manual del administrador del espacio de trabajo'
 max_size_is: 'El tamaño máximo es %size%'
 media_most_viewed: 'Recurso más visto'
 message_form_content: 'Contenido'
@@ -434,6 +457,7 @@ new_password: Nueva contraseña
 new_role_message: 'Usted a recivido el rol %name%'
 new_role_message_object: 'Sus derechos de acceso en la plataforma han cambiado'
 no: 'No'
+no_activity: 'No hay actividad'
 no_category: 'No hay categorías'
 no_email: 'No se ha encontrado el correo electrónico, comprube la ortografía'
 no_group: 'No hay grupos'
@@ -470,6 +494,7 @@ owner: 'Propietario'
 owner_s: 'Propietario(s)'
 parameters: 'Parámetros'
 passed: Logrado
+passing_score: 'Puntaje para aprobar'
 password: 'Contraseña'
 password_mismatch: 'Las contraseñas no coinciden'
 password_ok: 'Su contraseña ha cambiado, ahora pude conectarse'
@@ -637,6 +662,7 @@ show_as_admin: 'Mostrar como administrador'
 show_as_user: 'Mostrar como usuario'
 show_profile: 'Mostrar perfil'
 simple: 'Simple'
+start_date: 'Fecha de inicio'
 status: Estado
 storage_type: 'Tipo de almacenamiento'
 subcategories: 'subcategorías'
@@ -665,6 +691,7 @@ the_workspace: 'Espacio de trabajo'
 this_page_requires_authentication: 'Esta página requiere autenticación. Por favor, iniciar sesión.'
 time_col: 'Columna de tiempo en la base de datos'
 tinymce_all_buttons: Todas las herramientas
+title: Título
 to: 'A'
 to_anonymous: 'A usuarios anónimos'
 to_everyone: 'A todos'
@@ -759,6 +786,7 @@ will display the username: 'va a mostrar el nombre de usuario'
 workspace.create: 'Crear un espacio de trabajo'
 workspace.name_not_blank: 'El nombre del espacio de trabajo es obligatorio.'
 workspace: 'Espacio de trabajo'
+workspace_activities_tracking: 'Seguimiento de las actividades en el espacio de trabajo'
 workspace_administration: 'Administración'
 workspace_classification: 'Clasificación de espacio de trabajo'
 workspace_delete: 'Suprimir el espacio de trabajo'
