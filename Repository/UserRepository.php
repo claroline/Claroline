@@ -216,7 +216,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface
         if (!$executeQuery) {
             $order = $order === 'DESC' ? 'DESC' : 'ASC';
             $dql = "
-                SELECT u, pws, g, r , rws , up from Claroline\CoreBundle\Entity\User u
+                SELECT u, pws, g, r ,rws from Claroline\CoreBundle\Entity\User u
                 LEFT JOIN u.personalWorkspace pws
                 LEFT JOIN u.groups g
                 LEFT JOIN u.roles r
