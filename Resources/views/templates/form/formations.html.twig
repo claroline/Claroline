@@ -9,7 +9,7 @@
                 {% verbatim %}
                 <p>{{ formation.resource.name }}</p>
                 <input type="text" class="form-control" id="formation_{{ $index }}_resource"
-                     name="icap_portfolio_widget_form_formations[resources][{{ $index }}]" data-ng-model="resource.id"
+                     name="icap_portfolio_widget_form_formations[resources][{{ $index }}]" data-ng-model="resource.resource"
                      data-ng-disabled="resource.toDelete"  data-ng-keyup="modify(resource, $index)" />
                 <button type="button" data-ui-resource-picker="resourcePickerConfig">Choisir ressource</button>
                 {% endverbatim %}
