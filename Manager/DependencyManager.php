@@ -324,11 +324,10 @@ class DependencyManager {
             ->setOptimizeAutoloader(true)
             ->setUpdate(true);
 
-
         $install->run();
 
         //this should disable the maintenance mode aswell
-        $updater->run(new ArgvInput(), new StreamOutput(fopen($this->composerLogFile, 'a')));
+        $this->updater->run(new ArgvInput(array()), new StreamOutput(fopen($this->composerLogFile, 'a')));
 
         //remove the old cache file
         $this->iniFileManager->remove($this->lastTagsFile);

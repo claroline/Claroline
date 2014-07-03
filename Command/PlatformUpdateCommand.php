@@ -68,4 +68,9 @@ class PlatformUpdateCommand extends ContainerAwareCommand
     {
         $this->container = $container;
     }
+
+    public function getContainer()
+    {
+        return $this->container;
+    }
 }
