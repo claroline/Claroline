@@ -67,11 +67,15 @@ portfolioApp
                 };
                 widget.prototype.deleteChildren = function() {
                     if (this.children) {
+                        var childrenToDelete = [];
                         for (var i = 0;i < this.children.length; i++) {
                             var currentChild = this.children[i];
                             if (currentChild.toDelete || (undefined !== currentChild.added && !currentChild.added)) {
-                                this.children.remove(currentChild);
+                                childrenToDelete.push(currentChild);
                             }
+                        }
+                        for (var i = 0;i < childrenToDelete.length; i++) {
+                            this.children.remove(childrenToDelete[i]);
                         }
                     }
                 };
