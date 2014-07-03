@@ -37,6 +37,29 @@
             {{ activity.getDescription()|raw }}
         </div>
         
+        {% if users|length > 0 %}
+            <br>
+            <div class="col-md-12">
+                <b>{{ 'success_rate'|trans({}, 'platform') }} :</b>
+            </div>
+            <div class="col-md-4">
+                <div class="progress">
+                    <span class="progress-bar progress-bar-success"
+                        role="progressbar"
+                        aria-valuenow="{{ progress }}"
+                        aria-valuemin="0"
+                        aria-valuemax="100"
+                        style="width: {{ progress }}%;"
+                    >
+                        {{ progress }} %
+                    </span>
+                </div>
+            </div>
+            <br>
+            <br>
+            <br>
+        {% endif %}
+        
         <div class="table-responsive">
             <table class="table">
                 <tr>
@@ -179,7 +202,10 @@
                         </tr>
                     {% endfor %}
                 {% else %}
-                    <tr><td>{{ 'no_user' | trans({}, 'platform') }}</td></tr>
+                    <tr>
+                        <td></td>
+                        <td>{{ 'no_user' | trans({}, 'platform') }}</td>
+                    </tr>
                 {% endif %}
             </table>
             
@@ -235,4 +261,15 @@
     {{ parent() }}
     <script src="{{ asset('bundles/clarolinecore/js/tool/workspace/analytics/workspaceManagerActivityEvaluations.js') }}">
     </script>
+{% endblock %}
+    
+{% block stylesheets %}
+    {{ parent() }}
+    <style type="text/css">
+        .progress{
+            border-style: solid;
+            border-width: 1px;
+            border-color: #7A7A7A;
+        }
+    </style>
 {% endblock %}
