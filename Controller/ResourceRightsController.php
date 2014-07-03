@@ -154,7 +154,7 @@ class ResourceRightsController
             $this->rightsManager->editPerms($data['permissions'], $data['role'], $node, $isRecursive);
         }
 
-        return new Response("success");
+        return new Response('', 204, array('Content-Type' => 'application/json'));
     }
 
 
@@ -174,7 +174,7 @@ class ResourceRightsController
         $this->rightsManager->editPerms(1, $this->roleManager->getRoleByName('ROLE_USER'), $node, false);
         $this->rightsManager->editPerms(1, $this->roleManager->getRoleByName('ROLE_ANONYMOUS'), $node, false);
 
-        return new Response("success");
+        return new Response('', 204, array('Content-Type' => 'application/json'));
     }
 
     /**
@@ -238,7 +238,7 @@ class ResourceRightsController
             $this->om->findByIds('ClarolineCoreBundle:Resource\ResourceType', array_keys($ids));
         $this->rightsManager->editCreationRights($resourceTypes, $role, $node, $isRecursive);
 
-        return new Response("success");
+        return new Response('', 204, array('Content-Type' => 'application/json'));
     }
 
     public function getPermissionsFromRequest(ResourceType $type)

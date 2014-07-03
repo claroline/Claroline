@@ -269,7 +269,7 @@ class ResourceQueryBuilder
             for ($i = 0; $i < $count; $i++) {
                 $clause .= $i > 0 ? '    OR ' : '    ';
                 $clause .= "node.path LIKE :root_{$i}{$eol}";
-                $this->parameters[":root_{$i}"] = "{$roots[$i]}%";
+                $this->parameters[":root_{$i}"] = "{$roots[$i]}_%";
             }
 
             $this->addWhereClause($clause . ')');
@@ -508,6 +508,7 @@ class ResourceQueryBuilder
                 $otherRoles[] = $roleName;
             }
         }
+
         $eol = PHP_EOL;
         $currentDate = new \DateTime();
 
