@@ -17,13 +17,13 @@ use Claroline\CoreBundle\Command\PlatformUpdateCommand;
 use Composer\Composer;
 use JMS\DiExtraBundle\Annotation as DI;
 use Composer\Package\CompletePackageInterface;
-use Composer\Repository\Vcs\GitDriver;
 use Composer\IO\NullIO;
 use Composer\Config;
 use Composer\Installer;
 use Composer\Factory;
 use Composer\Util\RemoteFilesystem;
 use Composer\Repository\InstalledFilesystemRepository;
+use Composer\Repository\CompositeRepository;
 use Composer\Json\JsonFile;
 use Symfony\Component\Console\Output\StreamOutput;
 use Symfony\Component\Console\Output\NullOutput;
@@ -175,20 +175,16 @@ class DependencyManager {
      */
     public function getPackageTags(CompletePackageInterface $package)
     {
-        $config = new Config();
-        $config->merge(array('config' => array('home' => sys_get_temp_dir() . '/' . uniqid())));
-        $io = new NullIO();
+        $repos = Factory::createDefaultRepositories();
+        $compositeRepo = new CompositeRepository($repos);
+        $pkgs = $compositeRepo->findPackages($package->getPrettyName());
+        $tags = array();
 
-        $driver = new GitDriver(
-            array('url' => $package->getSourceUrl()),
-            $io,
-            $config,
-            null,
-            new RemoteFilesystem($io)
-        );
-        $driver->initialize();
+        foreach ($pkgs as $pkg) {
+            $tags[] = $pkg->getPrettyVersion();
+        }
 
-        return $driver->getTags();
+        return $tags;
     }
 
     /**
@@ -311,14 +307,14 @@ class DependencyManager {
         $composer = $factory->createComposer($io, "{$this->vendorDir}{$ds}..{$ds}composer.json", false);
         $install = Installer::create($io, $composer);
         $dryRun = $this->env === 'dev' ? true: false;
-        //$preferSource = $this->env === 'dev' ? true: false;
-        //$preferDist = $this->env === 'dev' ? false: true;
+        $preferSource = $this->env === 'dev' ? true: false;
+        $preferDist = $this->env === 'dev' ? false: true;
         $devMode = $this->env === 'dev' ? true: false;
 
         $install->setDryRun($dryRun)
             ->setVerbose(true)
-            ->setPreferSource(true)
-            ->setPreferDist(false)
+            ->setPreferSource($preferSource)
+            ->setPreferDist($preferDist)
             ->setDevMode($devMode)
             ->setRunScripts(true)
             ->setOptimizeAutoloader(true)
