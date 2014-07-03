@@ -311,14 +311,14 @@ class DependencyManager {
         $composer = $factory->createComposer($io, "{$this->vendorDir}{$ds}..{$ds}composer.json", false);
         $install = Installer::create($io, $composer);
         $dryRun = $this->env === 'dev' ? true: false;
-        $preferSource = $this->env === 'dev' ? true: false;
-        $preferDist = $this->env === 'dev' ? false: true;
+        //$preferSource = $this->env === 'dev' ? true: false;
+        //$preferDist = $this->env === 'dev' ? false: true;
         $devMode = $this->env === 'dev' ? true: false;
 
         $install->setDryRun($dryRun)
             ->setVerbose(true)
-            ->setPreferSource($preferSource)
-            ->setPreferDist($preferDist)
+            ->setPreferSource(true)
+            ->setPreferDist(false)
             ->setDevMode($devMode)
             ->setRunScripts(true)
             ->setOptimizeAutoloader(true)
@@ -328,7 +328,10 @@ class DependencyManager {
         $install->run();
 
         //this should disable the maintenance mode aswell
-        $updater->run(new ArgvInput(), new NullOutput());
+        $updater->run(new ArgvInput(), new StreamOutput(fopen($this->composerLogFile, 'a')));
+
+        //remove the old cache file
+        $this->iniFileManager->remove($this->lastTagsFile);
     }
 
     /**

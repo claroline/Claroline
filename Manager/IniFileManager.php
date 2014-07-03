@@ -37,9 +37,16 @@ class IniFileManager
         }
     }
 
+    public function remove($iniFile)
+    {
+        if (file_exists($iniFile)) {
+            unlink($iniFile);
+        }
+    }
+
     public function updateKey($key, $value, $iniFile)
     {
-        $values = $this->getValues();
+        $values = $this->getValues($iniFile);
         $values[$key] = $value;
 
         $this->writeIniFile($values, $iniFile);
