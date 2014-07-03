@@ -82,11 +82,11 @@ class Role implements RoleInterface
 
     /**
      * @ORM\OneToMany(
-     *     targetEntity="Claroline\CoreBundle\Entity\Facet\PublicProfilePreference",
+     *     targetEntity="Claroline\CoreBundle\Entity\Facet\GeneralFacetPreference",
      *     mappedBy="role"
      * )
      */
-    protected $publicProfilePreference;
+    protected $generalFacetPreference;
 
     /**
      * @ORM\ManyToMany(

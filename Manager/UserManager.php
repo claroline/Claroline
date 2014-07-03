@@ -14,7 +14,6 @@ namespace Claroline\CoreBundle\Manager;
 use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Entity\UserPublicProfilePreferences;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Claroline\CoreBundle\Event\StrictDispatcher;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
@@ -110,11 +109,7 @@ class UserManager
     {
         $this->objectManager->startFlushSuite();
         $this->setPersonalWorkspace($user);
-
-        $user
-            ->setPublicUrl($this->generatePublicUrl($user))
-            ->setPublicProfilePreferences(new UserPublicProfilePreferences());
-
+        $user->setPublicUrl($this->generatePublicUrl($user));
         $accountDuration = $this->platformConfigHandler->getParameter('account_duration');
         $expirationDate = new \DateTime();
 
@@ -933,22 +928,6 @@ class UserManager
         }
 
         return $publicUrl;
-    }
-
-    /**
-     * @return UserPublicProfilePreferences
-     */
-    public function getUserPublicProfilePreferencesForAdmin()
-    {
-        $userPublicProfilePreferences = new UserPublicProfilePreferences();
-        $userPublicProfilePreferences
-            ->setSharePolicy(UserPublicProfilePreferences::SHARE_POLICY_EVERYBODY)
-            ->setAllowMailSending(true)
-            ->setAllowMessageSending(true)
-            ->setDisplayEmail(true)
-            ->setDisplayPhoneNumber(true);
-
-        return $userPublicProfilePreferences;
     }
 
     public function countUsersByRoleIncludingGroup(Role $role)
