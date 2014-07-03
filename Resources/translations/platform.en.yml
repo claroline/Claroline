@@ -921,9 +921,18 @@ role_limit_reached: The limit of %translationKey% has been reached.
 user_limit_reached: The user limit has been reached.
 user_limit_too_low: There is already %total% %role%(s). The limit %newMax% is too low.
 limit: Limit
+yes: Yes
+no: No
+show_profile_for_anonymous: Profil public access for anonymous.
 packages: Packages
 core_packages: Core packages
 plugin_packages: Plugin packages
 no_package_description: No package description.
 yes: Yes
 no: No
+profile_management: Profile Management
+visible_facet_form_explanation: The field "Visible" allows you to set the element as visible or not for the user.
+editable_facet_form_explanation: The field "Editable" allows you to set the element as visible or not for the user.
+roles_facet_form_explanation: This form allows you to set wich roles can see the facet in the public profile.
+roles_fields_form_explanation: This form allows you to set wich roles can see and edit the field in the public profile.
+general_tab_form_explanation: This form allows you to set wich datas are seen by role in the public profile.

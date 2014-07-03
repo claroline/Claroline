@@ -49,6 +49,7 @@ class PlatformConfiguration
     private $platformLimitDate;
     private $platformInitDate;
     private $accountDuration;
+    private $anonymousPublicProfile;
 
     /**
      * @param mixed $sessionDbDataCol
@@ -482,5 +483,15 @@ class PlatformConfiguration
     public function getAccountDuration()
     {
         return $this->accountDuration;
+    }
+
+    public function setAnonymousPublicProfile($boolean)
+    {
+        $this->anonymousPublicProfile = $boolean;
+    }
+
+    public function getAnonymousPublicProfile()
+    {
+        return $this->anonymousPublicProfile;
     }
 }

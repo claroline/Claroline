@@ -16,10 +16,10 @@ use Claroline\CoreBundle\Entity\Role;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity
- * @ORM\Table(name="claro_public_profile_preference")
+ * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\GeneralFacetPreferenceRepository")
+ * @ORM\Table(name="claro_general_facet_preference")
  */
-class PublicProfilePreference
+class GeneralFacetPreference
 {
     /**
      * @ORM\Id
@@ -56,7 +56,7 @@ class PublicProfilePreference
     /**
      * @ORM\ManyToOne(
      *     targetEntity="Claroline\CoreBundle\Entity\Role",
-     *     inversedBy="publicProfilePreference"
+     *     inversedBy="generalFacetPreference"
      * )
      * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
      */

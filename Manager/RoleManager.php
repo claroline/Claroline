@@ -672,9 +672,9 @@ class RoleManager
         $this->messageManager->sendMessageToAbstractRoleSubject($ars, $content, $object, $sender);
     }
 
-    public function getPlatformNonAdminRoles()
+    public function getPlatformNonAdminRoles($includeAnonymous = false)
     {
-        return $this->roleRepo->findPlatformNonAdminRoles();
+        return $this->roleRepo->findPlatformNonAdminRoles($includeAnonymous);
     }
 
     public function createPlatformRoleAction($translationKey)
