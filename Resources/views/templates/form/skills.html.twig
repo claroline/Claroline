@@ -5,7 +5,7 @@
                 {% verbatim %}
                 <input type="text" class="form-control" id="skill_{{ $index }}_name"
                      name="icap_portfolio_widget_form_skills[skills][{{ $index }}][name]" data-ng-model="skill.name"
-                     data-ng-disabled="skill.toDelete" data-ng-keyup="keydown(skill)" />
+                     data-ng-disabled="skill.toDelete" data-ng-keyup="modify(skill)" />
                 {% endverbatim %}
                 <span class="input-group-btn" data-ng-if="isAdded(skill)">
                     <button class="btn btn-danger" type="button" data-ng-if="!isEmpty(skill) && !skill.toDelete" data-ng-click="deleteChild(skill)">

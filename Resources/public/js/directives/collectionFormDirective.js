@@ -43,7 +43,7 @@ portfolioApp
                 return isEmpty;
             }
 
-            scope.keydown = function(child) {
+            scope.modify = function(child) {
                 if (scope.isEmpty(child)) {
                     child.added = false;
                 }
