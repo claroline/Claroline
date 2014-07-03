@@ -589,6 +589,7 @@ resource_action_denied_message: 'La acción %action% no puede realizarse en ''%p
 resource_creation_denied: 'Usted no tiene el permiso de crear en la carpeta ''%path'': acceso denegado'
 resource_creation_wrong_type: 'Usted no tiene el permiso de crear un tipo %type% en la carpeta ''%path%'': acceso denegado'
 resource_delete: '¿Esta seguro que desea suprimir este recurso?'
+resource_picker: Selector de recursos
 resource_properties_form_sharable: 'Compartir este recurso'
 resource_properties_form_shareType: 'Compartir tipo'
 resource_properties_form_userIcon: 'Icono'

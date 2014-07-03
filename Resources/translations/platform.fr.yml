@@ -56,7 +56,7 @@ account_general_statistics: 'Statistiques générales sur les comptes'
 action: Action
 actions: Actions
 active_widgets: 'Widgets actifs'
-activities_tracking: 'Suivi des activités' 
+activities_tracking: 'Suivi des activités'
 activity_already: Cette ressource est déjà dans l'activité
 activity_evaluation_form_attemptsCount: 'Nombre de tentatives'
 activity_evaluation_form_comment: Commentaire
@@ -86,8 +86,8 @@ activity_rule_form_activeUntil: 'et le'
 activity_rule_form_activeUntil_explanation: 'Seules les actions effectuées avant cette date seront prises en compte. Toutes les futures actions seront traitées si cette date n''est pas définie.'
 activity_rule_form_badge: 'Badge à obtenir'
 activity_rule_form_badge_explanation: 'Le badge à obtenir pour réussir.'
-activity_rule_form_isResultVisible: 'Afficher le résultat' 
-activity_rule_form_isResultVisible_explanation: 'Permettre à l''utilisateur de connaître le résultat à obtenir.' 
+activity_rule_form_isResultVisible: 'Afficher le résultat'
+activity_rule_form_isResultVisible_explanation: 'Permettre à l''utilisateur de connaître le résultat à obtenir.'
 activity_rule_form_occurrence: Occurrence
 activity_rule_form_occurrence_explanation: 'Le nombre de fois que l''action doit être effectuée pour réussir.'
 activity_rule_form_result: 'Résultat à obtenir'
@@ -636,6 +636,7 @@ resource_action_denied_message: 'L''action %action% n''a pas pu être exécutée
 resource_creation_denied: 'Vous n''avez pas la permission de créer une ressource dans le répertoire ''%path'': accès refusé.'
 resource_creation_wrong_type: 'Vous n''avez pas la permission de créer un(e) %type% dans le répertoire ''%path%'': accès refusé.'
 resource_delete: 'Êtes-vous sûr de vouloir supprimer cette ressource ?'
+resource_picker: Sélecteur de ressources
 resource_properties_form_sharable: 'Partager cette ressource'
 resource_properties_form_shareType: 'Type de partage'
 resource_properties_form_userIcon: Icône
@@ -888,6 +889,8 @@ workspace_home_tab_edition: 'Edition de l''onglet pour les espaces d''activités
 workspace_home_tabs: 'Onglets pour les espaces d''activités'
 workspace_list: 'Liste des espaces d''activités'
 workspace_list: Liste des espaces d'activités
+workspace_management: L'espace d'activités a été crée le %creationDate%, par %creator%. Il y a %count% inscrit(s).
+workspace_management_date_null: Il y a %count% inscrit(s). La date de création de l'espace et son créateur ne sont pas connus.
 workspace_order_tool_edit_form_name: Nom
 workspace_registration_confirm_title: 'Voulez-vous vous inscrire à cet espace d''activités ?'
 workspace_registration_message: 'Vous avez été inscrit à l''espace d''activité %workspace_name%'
