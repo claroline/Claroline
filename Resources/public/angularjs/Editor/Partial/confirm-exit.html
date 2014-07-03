@@ -3,9 +3,9 @@
 </div>
 
 <div class="modal-body">
-    The path {{ path.name }} has been modified.
+    {{ 'path_modified' | trans:{}:'path_editor' }}
     <br/>
-    Do you want to save your changes ?
+    {{ 'save_path_changes' | trans:{}:'path_editor' }}
 </div>
 
 <div class="modal-footer">

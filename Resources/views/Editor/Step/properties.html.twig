@@ -23,7 +23,7 @@
 
             {# Who #}
             <div class="form-group">
-                <label class="control-label col-md-4" for="step-who">Modalité de travail</label>
+                <label class="control-label col-md-4" for="step-who">{{ 'step_who'|trans({}, 'path_editor') }}</label>
                 <div class="col-md-6">
                     <select class="form-control" id="step-who" name="step-who" data-ng-change="updateHistory()" data-ng-model="previewStep.who" data-ng-options="k as v for (k,v) in whoList">
                     </select>
@@ -32,7 +32,7 @@
 
             {# Where #}
             <div class="form-group">
-                <label class="control-label col-md-4" for="step-where">Lieu d'apprentissage</label>
+                <label class="control-label col-md-4" for="step-where">{{ 'step_where'|trans({}, 'path_editor') }}</label>
                 <div class="col-md-6">
                     <select class="form-control" id="step-where" name="step-where" data-ng-change="updateHistory()" data-ng-model="previewStep.where" data-ng-options="k as v for (k,v) in whereList">
                     </select>
@@ -41,7 +41,7 @@
 
             {# Duration #}
             <div class="form-group">
-                <label class="control-label col-md-4" for="duration">Durée prévue</label>
+                <label class="control-label col-md-4" for="duration">{{ 'step_duration'|trans({}, 'path_editor') }}</label>
                 <div class="col-md-8">
                     <div class="row">
                         <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">

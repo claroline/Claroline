@@ -61,9 +61,9 @@ step2: Path
 step3: Defining step properties
 selected_step: Selected step
 step_drag: Move item
-step_duration: Duration
-step_who: Who ?
-step_where: Where ?
+step_duration: Expected duration
+step_who: Working mode
+step_where: Learning place
 step_computer: With Computer ?
 step_tutor: With tutor ?
 step_no_resource: There is no resource linked to this step.
@@ -108,3 +108,8 @@ properties: Properties
 yes: Oui
 no: Non
 select_activity: Select an activity
+
+resources_replace: Replace
+no_primary_resource: There is no primary resource on this step.
+path_modified: The path has been modified.
+save_path_changes: Do you want to save your changes ?

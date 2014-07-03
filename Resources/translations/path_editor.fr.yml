@@ -63,9 +63,9 @@ step2: Parcours
 step3: Définition des informations de l'étape
 selected_step: Etape sélectionnée
 step_drag: Déplacer l'élément
-step_duration: Durée
-step_who: Qui ?
-step_where: Où ?
+step_duration: Durée prévue
+step_who: Modalité de travail
+step_where: Lieu d'apprentissage
 step_computer: Avec ordinateur ?
 step_tutor: Avec tuteur ?
 step_no_resource: Il n'y a aucune ressource rattachée à cette étape.
@@ -111,3 +111,8 @@ properties: Propriétés
 yes: Oui
 no: Non
 select_activity: Selectionner une activité
+
+resources_replace: Remplacer
+no_primary_resource: Il n'y a aucune ressource principale sur cette étape.
+path_modified: La parcours a été modifié.
+save_path_changes: Voulez-vous sauvegarder vos changements ?
