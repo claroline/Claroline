@@ -6,7 +6,7 @@
     var modal = window.Claroline.Modal;
     var common = window.Claroline.Common;
     var activity = window.Claroline.Activity;
-    var picker = window.Claroline.ResourcePicker;
+    var manager = window.Claroline.ResourceManager;
 
     /**
      * Add a dropdown menu for a new tab resource
@@ -137,21 +137,17 @@
     $('body').on('click', '.add-resource', function () {
         var activity = $(this).data('id');
 
-        picker.open(function (nodes) {
-            var nodeId = _.keys(nodes)[0];
-            var type = nodes[_.keys(nodes)][1];
-
-            if (nodeId && type !== 'activity') {
-                addResource(activity, nodeId);
-            } else if (type === 'activity') {
-                modal.simpleContainer(
-                    translator.get('platform:add_resource'),
-                    translator.get('platform:activity_resource_not_allowed')
-                );
-            } else {
-                modal.error();
-            }
-        });
+        if (!manager.hasPicker('activityResourcePicker')) {
+            manager.createPicker('activityResourcePicker', {
+                callback: function (nodes) {
+                    var nodeId = _.keys(nodes)[0];
+                    addResource(activity, nodeId);
+                },
+                typeBlackList: ['activity']
+            }, true);
+        } else {
+            manager.picker('activityResourcePicker', 'open');
+        }
     })
     .on('click', '.activity-tabs .activity-remove-resource', function () {
         var activity = $(this).data('activity');
