@@ -391,7 +391,7 @@ class ResourceController
 
         $response->headers->set('Content-Transfer-Encoding', 'octet-stream');
         $response->headers->set('Content-Type', 'application/force-download');
-        $response->headers->set('Content-Disposition', 'attachment; filename=' . $fileName);
+        $response->headers->set('Content-Disposition', 'attachment; filename=' . urlencode($fileName));
         $response->headers->set('Content-Type', $mimeType);
         $response->headers->set('Connection', 'close');
 
