@@ -6,8 +6,9 @@
                 <input type="text" class="form-control" id="formation_{{ $index }}_name"
                      name="icap_portfolio_widget_form_formations[formations][{{ $index }}][name]" data-ng-model="formation.name"
                      data-ng-disabled="formation.toDelete" data-ng-keypress="addEmptyChild($index + 1)" data-ng-keyup="markEmpty(formation)" />
+                <p>{{ formation.resource.name }}</p>
                 <input type="text" class="form-control" id="formation_{{ $index }}_resource"
-                     name="icap_portfolio_widget_form_formations[formations][{{ $index }}][resource]" data-ng-model="formation.resource.name"
+                     name="icap_portfolio_widget_form_formations[formations][{{ $index }}][resource]" data-ng-model="formation.resource"
                      data-ng-disabled="formation.toDelete" data-ng-keyup="addEmptyChild($index + 1)" data-ng-keypress="markEmpty(formation)" />
                 <button type="button" data-ui-resource-picker="resourcePickerConfig">Choisir ressource</button>
                 {% endverbatim %}
