@@ -180,6 +180,13 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
     protected $created;
 
     /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="initialization_date", type="datetime", nullable=true)
+     */
+    protected $initDate;
+
+    /**
      * @var UserMessage[]|ArrayCollection
      *
      * @ORM\OneToMany(
@@ -972,5 +979,15 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
     public function addFieldFacet(FieldFacetValue $fieldFacetValue)
     {
         $this->fieldsFacetValue->add($fieldFacetValue);
+    }
+
+    public function setInitDate($initDate)
+    {
+        $this->initDate = $initDate;
+    }
+
+    public function getInitDate()
+    {
+        return $this->initDate;
     }
 }
