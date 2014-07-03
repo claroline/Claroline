@@ -22,7 +22,7 @@ class WebUpdater
         $ds = DIRECTORY_SEPARATOR;
         $this->webSrc = "{$rootDir}{$ds}..{$ds}vendor{$ds}claroline{$ds}core-bundle{$ds}Claroline{$ds}CoreBundle{$ds}Resources/web";
         $this->webProd = "{$rootDir}{$ds}..{$ds}web";
-        $this->iterate($this->webSrc);
+        $this->listFiles($this->webSrc);
     }
 
     public function preUpdate()
@@ -51,7 +51,7 @@ class WebUpdater
         }
     }
 
-    private function iterate($path)
+    private function listFiles($path)
     {
         $ds = DIRECTORY_SEPARATOR;
         $iterator = new \DirectoryIterator($path);
@@ -64,7 +64,7 @@ class WebUpdater
                 $this->files[$newPath] = $element->getPathName();
 
                 if ($element->isDir()) {
-                    $this->iterate($element->getPathName());
+                    $this->listFiles($element->getPathName());
                 }
             }
         }
