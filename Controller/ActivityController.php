@@ -106,20 +106,23 @@ class ActivityController
         );
         $formRule->handleRequest($this->request);
 
+        $errors = $formParams->getErrors();
+        foreach ($errors as $error) {
+            echo $error->getMessage();
+        }
+
         if ($form->isValid()
             && $formParams->isValid()
             && ($formRule->get('action')->getData() === 'none' || $formRule->isValid())) {
 
             $this->activityManager->editActivity($form->getData());
 
-            $maxDuration = $formParams->get('max_duration')->getData();
-            $maxAttempts = $formParams->get('max_attempts')->getData();
             $evaluationType = $formParams->get('evaluation_type')->getData();
 
             $this->activityManager->updateParameters(
                 $params,
-                $maxDuration,
-                $maxAttempts,
+                null,
+                null,
                 $evaluationType
             );
 
