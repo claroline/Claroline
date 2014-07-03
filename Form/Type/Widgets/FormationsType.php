@@ -17,13 +17,14 @@ class FormationsType extends AbstractWidgetType
         parent::buildForm($builder, $options);
 
         $builder
+            ->add('name', 'text')
             ->add('children', 'collection',
                 array(
                     'type'          => 'icap_portfolio_widget_form_formations_formation',
                     'by_reference'  => false,
                     'allow_add'     => true,
                     'allow_delete'  => true,
-                    'property_path' => 'formations'
+                    'property_path' => 'resources'
                 )
             );
     }

@@ -15,7 +15,6 @@ class FormationsFormationType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('name', 'text')
             ->add('resource', 'entity', array(
                 'class'    => 'ClarolineCoreBundle:Resource\ResourceNode',
                 'property' => 'name',
@@ -32,7 +31,7 @@ class FormationsFormationType extends AbstractType
     {
         $resolver->setDefaults(
             array(
-                'data_class'         => 'Icap\PortfolioBundle\Entity\Widget\FormationsWidgetFormation',
+                'data_class'         => 'Icap\PortfolioBundle\Entity\Widget\FormationsWidgetResource',
                 'translation_domain' => 'icap_portfolio',
                 'csrf_protection'    => false,
             )

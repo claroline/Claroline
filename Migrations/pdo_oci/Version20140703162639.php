@@ -8,9 +8,9 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2014/06/25 02:50:36
+ * Generation date: 2014/07/03 04:26:40
  */
-class Version20140625145034 extends AbstractMigration
+class Version20140703162639 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
@@ -191,51 +191,9 @@ class Version20140625145034 extends AbstractMigration
         $this->addSql("
             CREATE TABLE icap__portfolio_widget_formations (
                 id NUMBER(10) NOT NULL, 
-                PRIMARY KEY(id)
-            )
-        ");
-        $this->addSql("
-            CREATE TABLE icap__portfolio_widget_formations_formation (
-                id NUMBER(10) NOT NULL, 
-                resource_id NUMBER(10) DEFAULT NULL, 
-                widget_id NUMBER(10) NOT NULL, 
                 name VARCHAR2(255) NOT NULL, 
                 PRIMARY KEY(id)
             )
-        ");
-        $this->addSql("
-            DECLARE constraints_Count NUMBER; BEGIN 
-            SELECT COUNT(CONSTRAINT_NAME) INTO constraints_Count 
-            FROM USER_CONSTRAINTS 
-            WHERE TABLE_NAME = 'ICAP__PORTFOLIO_WIDGET_FORMATIONS_FORMATION' 
-            AND CONSTRAINT_TYPE = 'P'; IF constraints_Count = 0 
-            OR constraints_Count = '' THEN EXECUTE IMMEDIATE 'ALTER TABLE ICAP__PORTFOLIO_WIDGET_FORMATIONS_FORMATION ADD CONSTRAINT ICAP__PORTFOLIO_WIDGET_FORMATIONS_FORMATION_AI_PK PRIMARY KEY (ID)'; END IF; END;
-        ");
-        $this->addSql("
-            CREATE SEQUENCE ICAP__PORTFOLIO_WIDGET_FORMATIONS_FORMATION_ID_SEQ START WITH 1 MINVALUE 1 INCREMENT BY 1
-        ");
-        $this->addSql("
-            CREATE TRIGGER ICAP__PORTFOLIO_WIDGET_FORMATIONS_FORMATION_AI_PK BEFORE INSERT ON ICAP__PORTFOLIO_WIDGET_FORMATIONS_FORMATION FOR EACH ROW DECLARE last_Sequence NUMBER; last_InsertID NUMBER; BEGIN 
-            SELECT ICAP__PORTFOLIO_WIDGET_FORMATIONS_FORMATION_ID_SEQ.NEXTVAL INTO : NEW.ID 
-            FROM DUAL; IF (
-                : NEW.ID IS NULL 
-                OR : NEW.ID = 0
-            ) THEN 
-            SELECT ICAP__PORTFOLIO_WIDGET_FORMATIONS_FORMATION_ID_SEQ.NEXTVAL INTO : NEW.ID 
-            FROM DUAL; ELSE 
-            SELECT NVL(Last_Number, 0) INTO last_Sequence 
-            FROM User_Sequences 
-            WHERE Sequence_Name = 'ICAP__PORTFOLIO_WIDGET_FORMATIONS_FORMATION_ID_SEQ'; 
-            SELECT : NEW.ID INTO last_InsertID 
-            FROM DUAL; WHILE (last_InsertID > last_Sequence) LOOP 
-            SELECT ICAP__PORTFOLIO_WIDGET_FORMATIONS_FORMATION_ID_SEQ.NEXTVAL INTO last_Sequence 
-            FROM DUAL; END LOOP; END IF; END;
-        ");
-        $this->addSql("
-            CREATE INDEX IDX_D1BBD5B189329D25 ON icap__portfolio_widget_formations_formation (resource_id)
-        ");
-        $this->addSql("
-            CREATE INDEX IDX_D1BBD5B1FBE885E2 ON icap__portfolio_widget_formations_formation (widget_id)
         ");
         $this->addSql("
             CREATE TABLE icap__portfolio_widget_title (
@@ -287,6 +245,48 @@ class Version20140625145034 extends AbstractMigration
         ");
         $this->addSql("
             CREATE UNIQUE INDEX UNIQ_3E00FC8F5E237E06 ON icap__portfolio_widget_type (name)
+        ");
+        $this->addSql("
+            CREATE TABLE icap__portfolio_widget_formations_resource (
+                id NUMBER(10) NOT NULL, 
+                resource_id NUMBER(10) DEFAULT NULL, 
+                widget_id NUMBER(10) NOT NULL, 
+                PRIMARY KEY(id)
+            )
+        ");
+        $this->addSql("
+            DECLARE constraints_Count NUMBER; BEGIN 
+            SELECT COUNT(CONSTRAINT_NAME) INTO constraints_Count 
+            FROM USER_CONSTRAINTS 
+            WHERE TABLE_NAME = 'ICAP__PORTFOLIO_WIDGET_FORMATIONS_RESOURCE' 
+            AND CONSTRAINT_TYPE = 'P'; IF constraints_Count = 0 
+            OR constraints_Count = '' THEN EXECUTE IMMEDIATE 'ALTER TABLE ICAP__PORTFOLIO_WIDGET_FORMATIONS_RESOURCE ADD CONSTRAINT ICAP__PORTFOLIO_WIDGET_FORMATIONS_RESOURCE_AI_PK PRIMARY KEY (ID)'; END IF; END;
+        ");
+        $this->addSql("
+            CREATE SEQUENCE ICAP__PORTFOLIO_WIDGET_FORMATIONS_RESOURCE_ID_SEQ START WITH 1 MINVALUE 1 INCREMENT BY 1
+        ");
+        $this->addSql("
+            CREATE TRIGGER ICAP__PORTFOLIO_WIDGET_FORMATIONS_RESOURCE_AI_PK BEFORE INSERT ON ICAP__PORTFOLIO_WIDGET_FORMATIONS_RESOURCE FOR EACH ROW DECLARE last_Sequence NUMBER; last_InsertID NUMBER; BEGIN 
+            SELECT ICAP__PORTFOLIO_WIDGET_FORMATIONS_RESOURCE_ID_SEQ.NEXTVAL INTO : NEW.ID 
+            FROM DUAL; IF (
+                : NEW.ID IS NULL 
+                OR : NEW.ID = 0
+            ) THEN 
+            SELECT ICAP__PORTFOLIO_WIDGET_FORMATIONS_RESOURCE_ID_SEQ.NEXTVAL INTO : NEW.ID 
+            FROM DUAL; ELSE 
+            SELECT NVL(Last_Number, 0) INTO last_Sequence 
+            FROM User_Sequences 
+            WHERE Sequence_Name = 'ICAP__PORTFOLIO_WIDGET_FORMATIONS_RESOURCE_ID_SEQ'; 
+            SELECT : NEW.ID INTO last_InsertID 
+            FROM DUAL; WHILE (last_InsertID > last_Sequence) LOOP 
+            SELECT ICAP__PORTFOLIO_WIDGET_FORMATIONS_RESOURCE_ID_SEQ.NEXTVAL INTO last_Sequence 
+            FROM DUAL; END LOOP; END IF; END;
+        ");
+        $this->addSql("
+            CREATE INDEX IDX_23096D5889329D25 ON icap__portfolio_widget_formations_resource (resource_id)
+        ");
+        $this->addSql("
+            CREATE INDEX IDX_23096D58FBE885E2 ON icap__portfolio_widget_formations_resource (widget_id)
         ");
         $this->addSql("
             CREATE TABLE icap__portfolio_widget_skills_skill (
@@ -385,20 +385,20 @@ class Version20140625145034 extends AbstractMigration
             ON DELETE CASCADE
         ");
         $this->addSql("
-            ALTER TABLE icap__portfolio_widget_formations_formation 
-            ADD CONSTRAINT FK_D1BBD5B189329D25 FOREIGN KEY (resource_id) 
-            REFERENCES claro_resource_node (id)
-        ");
-        $this->addSql("
-            ALTER TABLE icap__portfolio_widget_formations_formation 
-            ADD CONSTRAINT FK_D1BBD5B1FBE885E2 FOREIGN KEY (widget_id) 
-            REFERENCES icap__portfolio_widget_formations (id)
-        ");
-        $this->addSql("
             ALTER TABLE icap__portfolio_widget_title 
             ADD CONSTRAINT FK_1431A01DBF396750 FOREIGN KEY (id) 
             REFERENCES icap__portfolio_abstract_widget (id) 
             ON DELETE CASCADE
+        ");
+        $this->addSql("
+            ALTER TABLE icap__portfolio_widget_formations_resource 
+            ADD CONSTRAINT FK_23096D5889329D25 FOREIGN KEY (resource_id) 
+            REFERENCES claro_resource_node (id)
+        ");
+        $this->addSql("
+            ALTER TABLE icap__portfolio_widget_formations_resource 
+            ADD CONSTRAINT FK_23096D58FBE885E2 FOREIGN KEY (widget_id) 
+            REFERENCES icap__portfolio_widget_formations (id)
         ");
         $this->addSql("
             ALTER TABLE icap__portfolio_widget_skills_skill 
@@ -460,8 +460,8 @@ class Version20140625145034 extends AbstractMigration
             DROP CONSTRAINT FK_F0DBA727BF396750
         ");
         $this->addSql("
-            ALTER TABLE icap__portfolio_widget_formations_formation 
-            DROP CONSTRAINT FK_D1BBD5B1FBE885E2
+            ALTER TABLE icap__portfolio_widget_formations_resource 
+            DROP CONSTRAINT FK_23096D58FBE885E2
         ");
         $this->addSql("
             ALTER TABLE icap__portfolio_widget_skills_skill 
@@ -483,13 +483,13 @@ class Version20140625145034 extends AbstractMigration
             DROP TABLE icap__portfolio_widget_formations
         ");
         $this->addSql("
-            DROP TABLE icap__portfolio_widget_formations_formation
-        ");
-        $this->addSql("
             DROP TABLE icap__portfolio_widget_title
         ");
         $this->addSql("
             DROP TABLE icap__portfolio_widget_type
+        ");
+        $this->addSql("
+            DROP TABLE icap__portfolio_widget_formations_resource
         ");
         $this->addSql("
             DROP TABLE icap__portfolio_widget_skills_skill
