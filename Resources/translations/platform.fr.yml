@@ -945,3 +945,9 @@ editable_facet_form_explanation: Le champ "Modifiable" permet de spécifier si l
 roles_facet_form_explanation: Ce formulaire vous permet de spécifier quels rôles peuvent voir la facette dans le profil public de l'utilisateur.
 roles_fields_form_explanation: Ce formulaire vous permet de spécifier quels rôles peuvent voir et éditer le champ dans le profil public de l'utilisateur.
 general_tab_form_explanation: Ce formulaire vous permet de spécifier quels sont les informations vues par rôle dans le profile public.
+name_required: Nom requis
+remove_role_confirm: Êtes-vous sûr de vouloir supprimer le rôle %name% ?
+remove_role: Supprimer un rôle.
+initialize: Initialiser
+user_limit_success_update: La limite d'utilisateur par rôle a été mise à jour avec succès.
+role_name_changed_success: Le nom du rôle a été mis à jour avec succès.

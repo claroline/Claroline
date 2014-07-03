@@ -21,6 +21,7 @@ use Claroline\CoreBundle\Entity\Tool\AdminTool;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Claroline\CoreBundle\Form\Factory\FormFactory;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\SecurityContextInterface;
@@ -136,13 +137,17 @@ class RolesController extends Controller
     }
 
     /**
-     * @EXT\Route("/create/platform_role/form", name="create_platform_role_form")
+     * @EXT\Route(
+     *     "/create/platform_role/form",
+     *     name="claro_admin_create_platform_role_form",
+     *     options={"expose"=true}
+     * )
      * @EXT\Method("GET")
      * @EXT\Template()
      *
      * @return array
      */
-    public function createPlatformRoleFormAction()
+    public function createPlatformRoleModalFormAction()
     {
         $this->checkOpen();
         $form = $form = $this->formFactory->create(FormFactory::TYPE_ROLE_TRANSLATION);
@@ -151,9 +156,13 @@ class RolesController extends Controller
     }
 
     /**
-     * @EXT\Route("/create/platform_role", name="create_platform_role")
+     * @EXT\Route(
+     *     "/create/platform_role",
+     *     name="claro_admin_create_platform_role",
+     *     options={"expose"=true}
+     * )
      * @EXT\Method("POST")
-     * @EXT\Template("ClarolineCoreBundle:Administration/Roles:createPlatformRoleForm.html.twig")
+     * @EXT\Template("ClarolineCoreBundle:Administration/Roles:createPlatformRoleModalForm.html.twig")
      *
      * @return array
      */
@@ -166,9 +175,16 @@ class RolesController extends Controller
 
         if ($form->isValid()) {
             $translationKey = $form->get('translationKey')->getData();
-            $this->roleManager->createPlatformRoleAction($translationKey);
+            $role = $this->roleManager->createPlatformRoleAction($translationKey);
 
-            return $this->redirect($this->generateUrl('claro_admin_roles_index'));
+            return new JsonResponse(
+                array(
+                    'id' => $role->getId(),
+                    'maxUsers' => $role->getMaxUsers(),
+                    'translationKey' => $role->getTranslationKey(),
+                    'count' => 0
+                )
+            );
         }
 
         return array('form' => $form->createView());
@@ -182,61 +198,138 @@ class RolesController extends Controller
      */
     public function roleListAction()
     {
+        $this->checkOpen();
         $roles = $this->roleManager->getAllPlatformRoles();
+        $counts = [];
 
-        return array('roles' => $roles, 'errors' => array());
+        foreach ($roles as $role) {
+            $counts[$role->getName()] = $this->roleManager->countUsersByRoleIncludingGroup($role);
+        }
+
+        return array('roles' => $roles, 'counts' => $counts);
     }
 
     /**
-     * @EXT\Route("/roles/edit", name="platform_roles_edit")
-     * @EXT\Template("ClarolineCoreBundle:Administration/Roles:roleList.html.twig")
+     * @EXT\Route(
+     *      "/remove/{role}",
+     *      name="platform_roles_remove",
+     *      options={"expose"=true}
+     * )
+     *
+     * @param Role $role
      */
-    public function editRoles()
+    public function removeRoleAction(Role $role)
     {
-        $errors = $this->validateParameters();
+        $this->checkOpen();
+        $this->roleManager->remove($role);
 
-        if (count($errors) > 0) {
-            $roles = $this->roleManager->getAllPlatformRoles();
-
-            return array('roles' => $roles, 'errors' => $errors);
-        }
-
-        $roles = $this->roleManager->getAllPlatformRoles();
-
-        foreach ($this->request->request as $role => $value) {
-            $id = str_replace('max-user-', '', $role);
-
-            foreach ($roles as $entity) {
-                if ($entity->getId() === (int) $id) {
-                    $value = ($value === '') ? null: (int) $value;
-                    $entity->setMaxUsers($value);
-                }
-            }
-
-            $this->om->persist($entity);
-        }
-
-        $this->om->flush();
-
-        return $this->redirect($this->generateUrl('claro_admin_roles_index'));
+        return new JsonResponse(
+            array(
+                'name' => $role->getName(),
+                'limit' => $role->getMaxUsers(),
+                'translationKey' => $role->getTranslationKey()
+            )
+        );
     }
 
-    private function validateParameters()
+    /**
+     * @EXT\Route(
+     *      "/initialize/role/{role}",
+     *      name="platform_role_initialize",
+     *      options={"expose"=true}
+     * )
+     * @EXT\Method("POST")
+     *
+     * @param Role $role
+     * @return JsonResponse
+     */
+    public function initializeRoleLimitAction(Role $role)
     {
-        $errors = [];
+        $this->checkOpen();
+        $this->roleManager->initializeLimit($role);
 
-        foreach ($this->request->request as $key => $value) {
-            $id = str_replace('max-user-', '', $key);
-            $role = $this->roleManager->getRole($id);
-            $total = $this->roleManager->countUsersByRoleIncludingGroup($role);
-            $value = (int) $value;
+        return new JsonResponse(
+            array(
+                'name' => $role->getName(),
+                'limit' => $role->getMaxUsers(),
+                'translationKey' => $role->getTranslationKey()
+            )
+        );
+    }
 
-            if ($value < $total) {
-                $errors[$key] = array('user_limit_too_low', $value, $total);
-            }
+    /**
+     * @EXT\Route(
+     *      "/role/{role}/increase/{amount}",
+     *      name="platform_role_increase_limit",
+     *      options={"expose"=true}
+     * )
+     * @EXT\Method("POST")
+     *
+     * @param Role $role
+     * @return JsonResponse
+     */
+    public function increaseRoleMaxUsers(Role $role, $amount)
+    {
+        $this->checkOpen();
+
+        if ($amount < 0) {
+            return new JsonResponse(
+                array(
+                    'name' => $role->getName(),
+                    'limit' => $role->getMaxUsers(),
+                    'translationKey' => $role->getTranslationKey(),
+                    'error' => 'negative_amount_increased'
+                ),
+                500
+            );
+        }
+        $this->roleManager->increaseRoleMaxUsers($role, $amount);
+
+        return new JsonResponse(
+            array(
+                'name' => $role->getName(),
+                'limit' => $role->getMaxUsers(),
+                'translationKey' => $role->getTranslationKey()
+            )
+        );
+    }
+
+    /**
+     * @EXT\Route(
+     *     "role/{role}/edit/name/{name}",
+     *     name="platform_role_name_edit",
+     *     options={"expose"=true}
+     * )
+     * @EXT\Method("POST")
+     *
+     * @param Role $role
+     * @return JsonResponse
+     */
+    public function editRoleNameAction(Role $role, $name)
+    {
+        $this->checkOpen();
+
+        if (ctype_space($name)) {
+            return new JsonResponse(
+                array(
+                    'name' => $role->getName(),
+                    'limit' => $role->getMaxUsers(),
+                    'translationKey' => $role->getTranslationKey()
+                ),
+                500
+            );
         }
 
-        return $errors;
+        $role->setTranslationKey($name);
+        $this->roleManager->edit($role);
+
+        return new JsonResponse(
+            array(
+                'name' => $role->getName(),
+                'limit' => $role->getMaxUsers(),
+                'translationKey' => $role->getTranslationKey()
+            )
+        );
     }
 
     private function checkOpen()

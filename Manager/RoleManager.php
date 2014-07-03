@@ -367,7 +367,7 @@ class RoleManager
     public function remove(Role $role)
     {
         if ($role->isReadOnly()) {
-            throw new RoleReadOnlyException('This role cannot be modified nor removed');
+            throw new RoleReadOnlyException('This role cannot be removed');
         }
 
         $this->om->remove($role);
@@ -687,6 +687,8 @@ class RoleManager
         $role->setType(Role::PLATFORM_ROLE);
         $this->om->persist($role);
         $this->om->flush();
+
+        return $role;
     }
 
     /**
@@ -743,5 +745,29 @@ class RoleManager
     {
         return $this->roleRepo
             ->findRolesWithRightsByResourceNode($resourceNode, $executeQuery);
+    }
+
+    /**
+     * This functions sets the role limit equal to the current number of users having that role
+     *
+     * @param Role $role
+     */
+    public function initializeLimit(Role $role)
+    {
+        $count = $this->countUsersByRoleIncludingGroup($role);
+        $role->setMaxUsers($count);
+        $this->om->persist($role);
+        $this->om->flush();
+    }
+
+    /**
+     * @param Role $role
+     * @param $limit
+     */
+    public function increaseRoleMaxUsers(Role $role, $limit)
+    {
+        $role->setMaxUsers($role->getMaxUsers() + $limit);
+        $this->om->persist($role);
+        $this->om->flush();
     }
 }
