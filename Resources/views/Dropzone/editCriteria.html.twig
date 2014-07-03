@@ -117,7 +117,7 @@
                                     <div class="btn-group pull-right">
                                         <a href="{{ path('icap_dropzone_edit_add_criterion', {'resourceId': dropzone.id, 'page': pager.currentPage, 'criterionId': criterion.id}) }}" class="btn btn-default btn-sm edit-criterion-button disabled-during-edition" data-criterion="criterion-{{ criterion.id }}"><span class="glyphicon icon-edit"></span> {{ 'dropzone_edit'|trans({}, 'icap_dropzone') }}</a>
                                         <a href="{{ path('icap_dropzone_edit_delete_criterion', {'resourceId': dropzone.id, 'page': pager.currentPage, 'criterionId': criterion.id, 'number': criterionNumber}) }}"
-                                           class="btn btn-danger disabled-during-edition btn-sm launch-modal"><span
+                                           class="btn btn-danger disabled-during-edition btn-sm launch-modal delete-criteria-button"><span
                                                     class="glyphicon icon-trash"></span> {{ 'Delete'|trans({}, 'icap_dropzone') }}
                                         </a>
                                     </div>
@@ -381,6 +381,23 @@
                     }
                 });
             });
+
+            $('.delete-criteria-button').click(function (event) {
+                event.preventDefault();
+                var $form = $('#global_form');
+                $('#addCriteriaReRouting').val('add-criterion');
+                var $link = $(this);
+                $.ajax({
+                    url: $form.attr('action'),
+                    type: $form.attr('method'),
+                    data: $form.serialize(),
+                    success: function () {
+                        $.get($link.attr('href'));
+                    }
+                })
+                ;
+            });
+
             $('.edit-criterion-button').on('click', function (event) {
                 event.preventDefault();
 
