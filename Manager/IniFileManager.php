@@ -39,9 +39,19 @@ class IniFileManager
 
     public function updateKey($key, $value, $iniFile)
     {
-        $values = file_exists($iniFile) ? parse_ini_file($iniFile): [];
+        $values = $this->getValues();
         $values[$key] = $value;
 
         $this->writeIniFile($values, $iniFile);
+    }
+
+    public function getKeys($iniFile)
+    {
+        return array_keys($this->getValues($iniFile));
+    }
+
+    public function getValues($iniFile)
+    {
+        return file_exists($iniFile) ? parse_ini_file($iniFile): [];
     }
 }

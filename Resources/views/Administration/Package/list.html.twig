@@ -23,6 +23,9 @@
         <h3 class="panel-title">{{ 'packages'|trans({}, 'platform') }}</h3>
     </div>
     <div class="panel-body">
+        <div class="alert alert-warning">
+            {{ 'packages_upgrade_info_message'|trans({}, 'platform') }}
+        </div>
         <div class="panel-group" id="core-accordion">
             <div class="panel panel-default">
                 <div class="panel-heading">
@@ -60,13 +63,13 @@
     </div>
     <div class="panel-footer">
         <button class="btn btn-primary" id="update-packages-btn">{{ 'actualize'|trans({}, 'platform') }}</button>
-        <a href="{{ path('claro_admin_upgrade_packages') }}"
-           class="btn btn-primary hidden"
+        <button href="{{ path('claro_admin_upgrade_packages') }}"
+           class="btn btn-primary"
            id="upgrade-packages-btn"
            data-upgrade-page="../../../upgrade/upgrade.html.php"
         >
             {{ 'upgrade'|trans({}, 'platform') }}
-        </a>
+        </button>
         <button class="btn btn-secondary" id="cancel-btn">{{ 'cancel'|trans({}, 'platform') }}</button>
     </div>
 {% endblock %}

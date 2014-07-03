@@ -142,13 +142,18 @@
                         {% set version = package.getPrettyVersion() | replace({'v': ''})  %}
                         {{ package.getPrettyName() }}
                     </a>
-                    <span class="badge">{{ version }}</span>
+                    <span class="badge alert-info">{{ version }}</span>
 
                     {% for upgradablePackage in upgradablePackages %}
                         {% if
                             upgradablePackage['package'].getPrettyName() == package.getPrettyName()
                         %}
-                            <span class="badge pull-right alert-danger badge-new-version"> {{ upgradablePackage['tag'] }} </span>
+                            {% if version_compare(version, upgradablePackage['tag'], '<') %}
+                                <span class="badge pull-right alert-danger badge-new-version">
+                                    {#{{ upgradablePackage['tag'] }}#}
+                                    {{ 'new'|trans({}, 'platform') }}
+                                </span>
+                            {% endif %}
                         {% endif %}
                     {% endfor %}
                 </h5>

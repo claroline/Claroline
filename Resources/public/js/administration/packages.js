@@ -51,7 +51,7 @@
                         //close the modal
                         $('#wait-modal').modal('hide');
                         //show the upgrade button
-                        $('#upgrade-packages-btn').removeClass('hidden');
+                        //$('#upgrade-packages-btn').removeClass('hidden');
                     }
 
                     updateProgressBar(addProgress);
@@ -75,15 +75,27 @@
     var actualizePackage = function (data) {
         var oldSpan = $("#accordion-" + data['distRef'] + ' .alert-danger');
         oldSpan.remove();
-        var html = "<span class='badge pull-right alert-danger badge-new-version'>" + data['tag'] + "</span>";
-        var parent = $("#accordion-" + data['distRef'] + ' h5');
-        parent.append(html);
+        var currentVersion = $("#accordion-" + data['distRef'] + ' .alert-info').html();
+
+        if (window.Claroline.Utilities.versionCompare(currentVersion, data['tag'], '<')) {
+            var html = "<span class='badge pull-right alert-danger badge-new-version'>"
+                + Translator.get('platform:new')
+                + "</span>";
+            var parent = $("#accordion-" + data['distRef'] + ' h5');
+            parent.append(html);
+        }
     }
 
     $('#upgrade-packages-btn').on('click', function (event) {
         event.preventDefault();
         var btn = $(event.currentTarget);
-        $.ajax({url: btn.attr('href')});
-        window.location = btn.attr('data-upgrade-page');
+
+        window.Claroline.Modal.simpleContainer(
+            Translator.get('platform:upgrade'),
+            '<div class="alert alert-warning">' + Translator.get('platform:package_upgrade_all_warning') + '</div>'
+        ).on('click', 'button.btn', function(event) {
+            $.ajax({url: btn.attr('href')});
+            window.location = btn.attr('data-upgrade-page');
+        });
     });
 })();

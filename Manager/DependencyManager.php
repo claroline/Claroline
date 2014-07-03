@@ -294,11 +294,15 @@ class DependencyManager {
     }
 
     /**
-     * Upgrade all packages.
+     * Upgrade claroline packages.
      */
-    public function upgrade(array $packages = array())
+    public function upgrade()
     {
         MaintenanceHandler::enableMaintenance();
+
+        //get the list of upgradable packages from the cache
+        $pkgList = $this->getUpgradableFromCache();
+        $this->updateRequirements('>=', $pkgList);
 
         $ds = DIRECTORY_SEPARATOR;
         $factory = new Factory();
@@ -306,14 +310,10 @@ class DependencyManager {
         putenv("COMPOSER_HOME={$this->vendorDir}{$ds}composer");
         $composer = $factory->createComposer($io, "{$this->vendorDir}{$ds}..{$ds}composer.json", false);
         $install = Installer::create($io, $composer);
-
-//        $dryRun = $this->env === 'dev' ? true: false;
-//        $preferSource = $this->env === 'dev' ? true: false;
-//        $preferDist = $this->env === 'dev' ? false: true;
-//        $devMode = $this->env === 'dev' ? true: false;
-
-        $dryRun = $preferSource = $devMode = true;
-        $preferDist = false;
+        $dryRun = $this->env === 'dev' ? true: false;
+        $preferSource = $this->env === 'dev' ? true: false;
+        $preferDist = $this->env === 'dev' ? false: true;
+        $devMode = $this->env === 'dev' ? true: false;
 
         $install->setDryRun($dryRun)
             ->setVerbose(true)
@@ -324,31 +324,57 @@ class DependencyManager {
             ->setOptimizeAutoloader(true)
             ->setUpdate(true);
 
+
         $install->run();
 
         //this should disable the maintenance mode aswell
         $updater->run(new ArgvInput(), new NullOutput());
-
-        $this->updateRequirements();
     }
 
     /**
      * Update the main composer.json
+     *
+     * @param string $operator a comparison operator ('>=', '=', '>')
+     * @param array $toUpdate an array of prettyName of packages
      */
-    public function updateRequirements()
+    public function updateRequirements($operator, array $toUpdate)
     {
         $data = json_decode(file_get_contents($this->projectComposerJson));
         $new = clone $data;
 
         foreach ($data->require as $prettyName => $version) {
             foreach ($this->getAllInstalled() as $package) {
-                if ($package->getPrettyName() === $prettyName) {
-                    $new->require->$prettyName = ">=" . $package->getPrettyVersion();
+                foreach ($toUpdate as $ppn) {
+                    if ($package->getPrettyName() === $prettyName && $prettyName == $ppn) {
+                        $new->require->$prettyName = $operator . $package->getPrettyVersion();
+                    }
                 }
             }
         };
 
         file_put_contents($this->projectComposerJson . '.old', json_encode($data, JSON_PRETTY_PRINT));
         file_put_contents($this->projectComposerJson, json_encode($new, JSON_PRETTY_PRINT));
+    }
+
+    /**
+     * Get the a list of upgradable packages from the cache.
+     *
+     * @return array
+     */
+    public function getUpgradableFromCache()
+    {
+        $datas = $this->iniFileManager->getValues($this->lastTagsFile);
+        $installed = $this->getAllClaroPackages();
+        $toUpdate = [];
+
+        foreach ($datas as $prettyName => $version) {
+            foreach ($installed as $pkg) {
+                if ($pkg->getPrettyName() === $prettyName && version_compare($pkg->getPrettyVersion(), $version, '<')) {
+                    $toUpdate[] = $pkg->getPrettyName();
+                }
+            }
+        }
+
+        return $toUpdate;
     }
 }
