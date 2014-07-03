@@ -1,7 +1,11 @@
+{% set directoryId = app.session.get('pickerDirectoryId', '0') %}
+
 {
-    "appPath": "{{ app.request.getBaseUrl }}",
     "webPath": "{{ asset('') }}",
     "language": "{{ app.request.locale }}",
+    "zoom": "{{ app.session.get('zoom') }}",
+    "pickerDirectoryId": "{{ directoryId }}",
+    "preFetchedDirectory": {{ render(controller('ClarolineCoreBundle:Resource:openDirectory', { 'nodeId': directoryId}))|raw }},
     "resourceTypes": {
         {% for resourceType in resourceTypes %}
             "{{ resourceType.getName() }}": {

@@ -25,7 +25,13 @@
         <div class="panel-body">
             {{ form_widget(form) }}
             <hr>
-            {{ form_widget(formParams) }}
+{#            {{ form_widget(formParams) }}#}
+            <div class="form-group row">
+                {{ form_label(formParams.evaluation_type) }}
+                <span class="col-md-3">
+                    {{ form_widget(formParams.evaluation_type) }}
+                </span>
+            </div>
             
             <div id="activity-rule-form-div" data-rule-default-starting-date="{{ defaultRuleStartingDate }}">
                 <hr>

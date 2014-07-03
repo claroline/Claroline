@@ -72,7 +72,7 @@ activity_resource_remove: '¿Esta seguro que desea remover este recurso de la ac
 activity_rule_action_none: Ninguno
 activity_rule_configuration_for_auto_evaluation: 'Configuración de la regla para la evaluación automática'
 activity_rule_form_action: Acción
-activity_rule_form_action_explanation: 'La evaluación se basa en las acciones realizadas por el usuario. '
+activity_rule_form_action_explanation: 'La evaluación automática se basa en las acciones realizadas en el recurso asociado.'
 activity_rule_form_activeFrom: 'Realizada  entre el'
 activity_rule_form_activeFrom_explanation: 'Sólo serán tratadas las acciones realizadas después de esta fecha. Todas las acciones anteriores serán tratadas si esta fecha no es definida.'
 activity_rule_form_activeUntil: 'y el'
@@ -129,6 +129,7 @@ analytics_resources: 'Recursos'
 analytics_top: 'Principal'
 anonymous: 'Anónimo'
 answer: 'Respuesta'
+anywhere: Dondequiera
 appearance: 'Apariencia'
 apply: 'Aplicar'
 at_least_one_category_has_to_be_selected: 'Debe seleccionar al menos una categoría'
@@ -163,9 +164,11 @@ change_view: 'Cambiar la visualización'
 choose_resource_form_type: 'Tipo de recurso'
 classify_my_workspaces: 'Clasificar mis espacios de trabajo'
 classify_workspaces: 'Clasificar espacios de trabajo'
+classroom: Aula
 close: 'Cerrar'
 closed_account: Cuenta cerrada.
 code: 'Código'
+collaborative: Colaboración
 collaborator: 'Colaborador'
 comments: Comentarios
 communication: 'Comunicación'
@@ -354,6 +357,7 @@ import_roles: 'Importar roles'
 import_user_file_file: 'importar de un archivo CSV'
 import_users: 'Importar usuarios'
 incomplete: Incompleto
+individual: Individual
 informations: 'Informaciones'
 inscription_mail: 'Inscripción de correo electrónico'
 instructions: 'Instrucciones'
@@ -424,6 +428,7 @@ misc: 'Diverso'
 missing_%content%: 'La variable %content% falta en la lengua "%language%".'
 missing_%password%: 'La variable %password% falta en la lengua "%language%".'
 missing_%username%: 'La variable %username% falta en la lengua "%language%".'
+mixed: Mezclado
 month.April: 'Abril'
 month.August: 'Agosto'
 month.December: 'Diciembre'
@@ -477,6 +482,7 @@ notification_deactivated: 'Notificaciones desacivadas.'
 notifications: 'Notificaciones'
 number: Numero
 number_of_attempts: 'Número de intentos'
+number_of_attempts_explanation: 'El significado del número de intentos puede variar dependiendo de la actividad. No se trata necesariamente del número de veces que la actividad ha sido realizada.'
 oauth: 'OAuth'
 object: 'Asunto'
 ok: 'Ok'
@@ -583,6 +589,7 @@ resource_action_denied_message: 'La acción %action% no puede realizarse en ''%p
 resource_creation_denied: 'Usted no tiene el permiso de crear en la carpeta ''%path'': acceso denegado'
 resource_creation_wrong_type: 'Usted no tiene el permiso de crear un tipo %type% en la carpeta ''%path%'': acceso denegado'
 resource_delete: '¿Esta seguro que desea suprimir este recurso?'
+resource_picker: Selector de recursos
 resource_properties_form_sharable: 'Compartir este recurso'
 resource_properties_form_shareType: 'Compartir tipo'
 resource_properties_form_userIcon: 'Icono'
@@ -670,6 +677,7 @@ subscribe_groups: 'Inscribir grupos'
 subscribe_selected_groups: 'Inscribir los grupos seleccionados'
 subscribe_selected_users: 'Inscribir los usuarios seleccionados'
 subscribe_users: 'Inscribir usuarios'
+success_rate: 'Tasa de aprobación'
 support_email: 'Correo electrónico de soporte'
 switch: 'Switch'
 tag: 'Etiqueta'
