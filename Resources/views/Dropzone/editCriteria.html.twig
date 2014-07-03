@@ -13,8 +13,12 @@
 {% block drop_zone_content_edit %}
 
 
-    <form class="form-horizontal" method="POST" action="{{ path('icap_dropzone_edit_criteria', {'resourceId': dropzone.id}) }}">
-    <p>{{ 'criteria_explication'|trans({}, 'icap_dropzone')|raw }}</p>
+    <form id="global_form" class="form-horizontal" method="POST"
+          action="{{ path('icap_dropzone_edit_criteria', {'resourceId': dropzone.id}) }}"
+          class="disabled-during-edition">
+        <input id="addCriteriaReRouting" type="hidden" name="addCriteria" value="default"/>
+
+        <p>{{ 'criteria_explication'|trans({}, 'icap_dropzone')|raw }}</p>
 
     <div class='container col-md-12'>
         <div class='row '>
@@ -112,7 +116,10 @@
                                 <div class="col-md-12">
                                     <div class="btn-group pull-right">
                                         <a href="{{ path('icap_dropzone_edit_add_criterion', {'resourceId': dropzone.id, 'page': pager.currentPage, 'criterionId': criterion.id}) }}" class="btn btn-default btn-sm edit-criterion-button disabled-during-edition" data-criterion="criterion-{{ criterion.id }}"><span class="glyphicon icon-edit"></span> {{ 'dropzone_edit'|trans({}, 'icap_dropzone') }}</a>
-                                        <a href="{{ path('icap_dropzone_edit_delete_criterion', {'resourceId': dropzone.id, 'page': pager.currentPage, 'criterionId': criterion.id, 'number': criterionNumber}) }}" class="btn btn-danger btn-sm launch-modal"><span class="glyphicon icon-trash"></span> {{ 'Delete'|trans({}, 'icap_dropzone') }}</a>
+                                        <a href="{{ path('icap_dropzone_edit_delete_criterion', {'resourceId': dropzone.id, 'page': pager.currentPage, 'criterionId': criterion.id, 'number': criterionNumber}) }}"
+                                           class="btn btn-danger disabled-during-edition btn-sm launch-modal delete-criteria-button"><span
+                                                    class="glyphicon icon-trash"></span> {{ 'Delete'|trans({}, 'icap_dropzone') }}
+                                        </a>
                                     </div>
                                 </div>
                             </div>
@@ -121,6 +128,10 @@
                     </div>
                 {% endfor %}
             {% endif %}
+
+            <div id="new-criteria" class="new-criteria well" style="display: none;">
+                <div class="new-criteria-zone"></div>
+            </div>
 
             {% if pager.haveToPaginate %}
                 <div class="row">
@@ -148,9 +159,6 @@
                 </div>
             </div>
 
-            <div id="new-criteria" class="new-criteria well" style="display: none;">
-                <div class="new-criteria-zone"></div>
-            </div>
 
             <div class="template" style="display: none;">
                 <div class="template-criteria-zone" style="display: none;">
@@ -329,36 +337,67 @@
                 event.preventDefault();
 
                 $('.disabled-during-edition').attr('disabled', 'disabled');
+                tinyMCE.get('icap_dropzone_criteria_form_correctionInstruction').getBody().setAttribute('contenteditable', false);
+                //$('.icap_dropzone_criteria_form_correctionInstruction').attr('disabled','disabled');
                 $('.criteria-form-button').attr('disabled', 'disabled');
 
-                $.get($(this).attr('href'))
-                    .done(function (data) {
-                        resetTiny();
-                        $('.new-criteria-zone').empty();
-                        $('.criterion-row > .criterion-edit').empty();
+                var criterionId = $(this).data('criterion');
+                var $form = $('#global_form');
+                $('#addCriteriaReRouting').val('add-criterion');
+                $.ajax({
+                    url: $form.attr('action'),
+                    type: $form.attr('method'),
+                    data: $form.serialize(),
+                    success: function (data) {
+                        console.log(data);
+                        $.get($('.add-criterion-button').attr('href'))
+                                .done(function (data) {
+                                    resetTiny();
+                                    $('.new-criteria-zone').empty();
+                                    $('.criterion-row > .criterion-edit').empty();
 
-                        $('.template > .template-criteria-zone').clone().appendTo('.new-criteria-zone');
-                        $('.new-criteria-zone .new-criteria-form').append(data);
+                                    $('.template > .template-criteria-zone').clone().appendTo('.new-criteria-zone');
+                                    $('.new-criteria-zone .new-criteria-form').append(data);
 
-                        $('.column-input input').val(totalColumn);
-                        $('.comment-input input').val(comment);
+                                    $('.column-input input').val(totalColumn);
+                                    $('.comment-input input').val(comment);
 
-                        $('.add-criteria-zone').hide();
-                        $('.new-criteria').show();
-                        $('.new-criteria-zone > .template-criteria-zone').show();
+                                    $('.add-criteria-zone').hide();
+                                    $('.new-criteria').show();
+                                    $('.new-criteria-zone > .template-criteria-zone').show();
 
-                        $('.new-criteria-zone > .template-criteria-zone .form-buttons').hide();
+                                    $('.new-criteria-zone > .template-criteria-zone .form-buttons').hide();
 
-                        $('.add-remove-column').show();
-                        initTinyMCE(stfalcon_tinymce_config);
+                                    $('.add-remove-column').show();
+                                    initTinyMCE(stfalcon_tinymce_config);
 
-                        var top = $('#new-criteria').offset().top;
-                        top = top - 50;
-                        $('body,html').scrollTop(top);
-                        setSaveListener();
-                    })
+                                    var top = $('#new-criteria').offset().top;
+                                    top = top - 50;
+                                    $('body,html').scrollTop(top);
+                                    setSaveListener();
+                                })
+                        ;
+
+                    }
+                });
+            });
+
+            $('.delete-criteria-button').click(function (event) {
+                event.preventDefault();
+                var $form = $('#global_form');
+                $('#addCriteriaReRouting').val('add-criterion');
+                var $link = $(this);
+                $.ajax({
+                    url: $form.attr('action'),
+                    type: $form.attr('method'),
+                    data: $form.serialize(),
+                    success: function () {
+                        $.get($link.attr('href'));
+                    }
+                })
                 ;
             });
+
             $('.edit-criterion-button').on('click', function (event) {
                 event.preventDefault();
 
@@ -366,30 +405,42 @@
                 $('.criteria-form-button').attr('disabled', 'disabled');
 
                 var criterionId = $(this).data('criterion');
+                var $form = $('#global_form');
+                $('#addCriteriaReRouting').val('add-criterion');
 
-                $.get($(this).attr('href'))
-                    .done(function (data) {
-                        resetTiny();
-                        $('.new-criteria-zone').empty();
-                        $('.criterion-row > .criterion-edit').empty();
+                $.ajax({
+                    url: $form.attr('action'),
+                    type: $form.attr('method'),
+                    data: $form.serialize(),
+                    success: function () {
+                        $.get($('.edit-criterion-button').attr('href'))
+                                .done(function (data) {
+                         resetTiny();
+                         $('.new-criteria-zone').empty();
+                         $('.criterion-row > .criterion-edit').empty();
 
-                        $('.template > .template-criteria-zone').clone().appendTo('#'+criterionId+' > .criterion-edit');
-                        $('#'+criterionId+' > .criterion-edit .new-criteria-form').append(data);
+                         $('.template > .template-criteria-zone').clone().appendTo('#'+criterionId+' > .criterion-edit');
+                         $('#'+criterionId+' > .criterion-edit .new-criteria-form').append(data);
 
-                        $('#'+criterionId+' > .criterion-edit .form-cancel').data('criterion', criterionId);
-                        $('.column-input input').val(totalColumn);
-                        $('.comment-input input').val(comment);
+                         $('#'+criterionId+' > .criterion-edit .form-cancel').data('criterion', criterionId);
+                         $('.column-input input').val(totalColumn);
+                         $('.comment-input input').val(comment);
 
-                        $('#'+criterionId+' > .criterion-show').hide();
-                        $('#'+criterionId+' > .criterion-edit').show();
-                        $('#'+criterionId+' > .criterion-edit > .template-criteria-zone').show();
+                         $('#'+criterionId+' > .criterion-show').hide();
+                         $('#'+criterionId+' > .criterion-edit').show();
+                         $('#'+criterionId+' > .criterion-edit > .template-criteria-zone').show();
 
-                        $('#'+criterionId+' > .criterion-edit > .template-criteria-zone .form-buttons').hide();
+                         $('#'+criterionId+' > .criterion-edit > .template-criteria-zone .form-buttons').hide();
 
-                        initTinyMCE(stfalcon_tinymce_config);
-                        setSaveListener();
-                    })
-                ;
+                         initTinyMCE(stfalcon_tinymce_config);
+                         setSaveListener();
+                         })
+                         ;
+
+                    }
+                });
+
+
             });
 
             $('form').submit(function (e) {
@@ -436,6 +487,7 @@
 
                 $('.disabled-during-edition').attr('disabled', null);
                 $('.criteria-form-button').attr('disabled', null);
+                tinyMCE.get('icap_dropzone_criteria_form_correctionInstruction').getBody().setAttribute('contenteditable', true);
             });
         }
     </script>
