@@ -56,7 +56,14 @@ account_general_statistics: 'Statistiques générales sur les comptes'
 action: Action
 actions: Actions
 active_widgets: 'Widgets actifs'
+activities_tracking: 'Suivi des activités'
 activity_already: Cette ressource est déjà dans l'activité
+activity_evaluation_form_attemptsCount: 'Nombre de tentatives'
+activity_evaluation_form_comment: Commentaire
+activity_evaluation_form_date: 'Date de la dernière tentative'
+activity_evaluation_form_numScore: 'Meilleur score'
+activity_evaluation_form_score: Evaluation
+activity_evaluation_form_status: Statut
 activity_form_instructions: Instructions
 activity_form_name: Nom
 activity_parameters_form_evaluation_type: 'Type d''évaluation'
@@ -72,11 +79,19 @@ activity_resource_remove: Êtes-vous sûr de vouloir enlever cette ressource de 
 activity_rule_action_none: Aucune
 activity_rule_configuration_for_auto_evaluation: 'Configuration de la règle pour l''évaluation automatique'
 activity_rule_form_action: Action
-activity_rule_form_activeFrom: 'A partir du'
-activity_rule_form_activeUntil: 'Jusqu''au'
-activity_rule_form_badge: Badge
+activity_rule_form_action_explanation: 'L''évaluation automatique se base sur les actions effectuées sur la ressource associée.'
+activity_rule_form_activeFrom: 'Effectuée entre le'
+activity_rule_form_activeFrom_explanation: 'Seules les actions effectuées après cette date seront prises en compte. Toutes les anciennes actions seront traitées si cette date n''est pas définie.'
+activity_rule_form_activeUntil: 'et le'
+activity_rule_form_activeUntil_explanation: 'Seules les actions effectuées avant cette date seront prises en compte. Toutes les futures actions seront traitées si cette date n''est pas définie.'
+activity_rule_form_badge: 'Badge à obtenir'
+activity_rule_form_badge_explanation: 'Le badge à obtenir pour réussir.'
+activity_rule_form_isResultVisible: 'Afficher le résultat'
+activity_rule_form_isResultVisible_explanation: 'Permettre à l''utilisateur de connaître le résultat à obtenir.'
 activity_rule_form_occurrence: Occurrence
-activity_rule_form_result: Résultat
+activity_rule_form_occurrence_explanation: 'Le nombre de fois que l''action doit être effectuée pour réussir.'
+activity_rule_form_result: 'Résultat à obtenir'
+activity_rule_form_result_explanation: 'Le résultat à obtenir pour réussir.'
 activity_where_anywhere: N'importe où
 activity_where_classroom: En classe
 activity_who_collaborative: Collaboratif
@@ -122,13 +137,16 @@ analytics_resources: 'Contenu plateforme'
 analytics_top: 'Top des activités'
 anonymous: Anonyme
 answer: Répondre
+anywhere: 'N''importe où'
 appearance: Apparence
 apply: Appliquer
 at_least_one_category_has_to_be_selected: 'Au moins une catégorie doit être selectionnée'
 attempts: Tentatives
+automatic: Automatique
 available_widgets: 'Widgets disponibles'
 available_workspaces: 'Espaces d''activités disponibles'
 back: Retour
+back_to_activities_list: 'Retour à la liste des activités'
 back_to_profile: 'Retour au profil'
 bad_request: 'La requête est incorrecte. Si vous êtes arrivé sur cette page via un lien interne, veuillez signaler le problème à l''''administrateur de la plateforme.'
 badges_management: 'Gestion des badges'
@@ -157,11 +175,13 @@ change_view: 'Changer l''affichage'
 choose_resource_form_type: 'Type de ressource'
 classify_my_workspaces: 'Classer mes espaces'
 classify_workspaces: 'Classer les espaces'
+classroom: 'En classe'
 close: Fermer
 closed_account: Compte clos
 code: Code
+collaborative: Collaboratif
 collaborator: Collaborateur
-comments: Commentaires
+comment: Commentaire
 communication: Communication
 completed: Terminé
 configuration: Configuration
@@ -280,11 +300,14 @@ email: 'Adresse email'
 email_form_mail: 'Entrez votre adresse email'
 email_found_at: 'L''email %email% a été trouvé aux lignes: %lines%'
 empty_file: 'Fichier vide'
+end_date: 'Date de fin'
 enter_tag_name_message: 'Veuillez entrer un nom de Tag'
 entries_per_day: 'Nombre d''entrées par jour'
 evaluation: Evaluation
 evaluation-automatic: Automatique
 evaluation-manual: Manuelle
+evaluation_edition: Evaluation
+evaluation_type: 'Type d''évaluation'
 export: Exporter
 exportable: Exportable
 external_pdo_database: 'Base de données externe (PDO)'
@@ -361,6 +384,7 @@ import_roles: 'Importer des roles'
 import_user_file_file: 'Importer depuis fichier csv'
 import_users: 'Importer des utilisateurs'
 incomplete: Incomplet
+individual: Individuel
 informations: Informations
 inscription_mail: 'Mail d''inscription'
 instructions: Consignes
@@ -378,6 +402,7 @@ jqplot_date_output_format: '%d-%m-%Y'
 keep_me_logged_in: 'Se souvenir de moi'
 lastName: Nom
 last_30_days_activity: 'Activités des 30 derniers jours'
+last_attempt_date: 'Date de la dernière tentative'
 last_name: Nom
 layout: Layout
 leave_this_page: 'Si vous quittez cette page, vous risquez de perdre vos modifications.'
@@ -417,6 +442,8 @@ manage_public_profile_preferences: 'Gérer les préférences du profil public'
 manage_rights: 'Gérer les droits'
 manage_tools: Gérer les outils
 manager: Gestionnaire
+manual: Manuelle
+manual_evaluation_explanation: 'Evaluation manuelle par un gestionnaire de l''espace d''activités'
 max_size_is: 'La taille maximale est %size%'
 media_most_viewed: 'Media les plus consultés'
 message_form_content: Contenu
@@ -435,6 +462,7 @@ misc: Divers
 missing_%content%: 'La variable %content% est manquante pour la langue "%language%".'
 missing_%password%: 'La variable %password% est manquante pour la langue "%language%".'
 missing_%username%: 'La variable %username% est manquante pour la langue "%language%".'
+mixed: Mixte
 month.April: Avril
 month.August: Août
 month.December: Décembre
@@ -469,6 +497,7 @@ new_password: Nouveau mot de passe
 new_role_message: 'Vous venez de recevoir le role %name%'
 new_role_message_object: 'Vos permissions sur la plateforme ont changé'
 no: non
+no_activity: 'Il n''y a aucune activité'
 no_category: 'Il n''y a aucune catégorie'
 no_email: 'Ce mail ne correspond pas a un utilisateur inscrit'
 no_group: 'Aucun groupe'
@@ -489,6 +518,7 @@ notification_deactivated: 'Notifications désactivées.'
 notifications: 'Notifications'
 number: Nombre
 number_of_attempts: 'Nombre de tentatives'
+number_of_attempts_explanation: 'La signification du nombre de tentatives peut varier en fonction de l''activité. Il ne s''agit pas forcément du nombre de fois où l''activité a été exécutée.'
 oauth: Oauth
 object: Objet
 ok: Ok
@@ -506,6 +536,7 @@ owner: Propriétaire
 owner_s: Propriétaire(s)
 parameters: Paramètres
 passed: Réussi
+passing_score: 'Score pour réussir'
 password: 'Mot de passe'
 password_mismatch: 'Les mots de passe ne correspondent pas.'
 password_ok: 'Votre mot de passe a été modifié. Vous pouvez maintenant vous connecter.'
@@ -605,6 +636,7 @@ resource_action_denied_message: 'L''action %action% n''a pas pu être exécutée
 resource_creation_denied: 'Vous n''avez pas la permission de créer une ressource dans le répertoire ''%path'': accès refusé.'
 resource_creation_wrong_type: 'Vous n''avez pas la permission de créer un(e) %type% dans le répertoire ''%path%'': accès refusé.'
 resource_delete: 'Êtes-vous sûr de vouloir supprimer cette ressource ?'
+resource_picker: Sélecteur de ressources
 resource_properties_form_sharable: 'Partager cette ressource'
 resource_properties_form_shareType: 'Type de partage'
 resource_properties_form_userIcon: Icône
@@ -689,6 +721,7 @@ show_as_admin: 'Voir comme admin'
 show_as_user: 'Voir comme utilisateur'
 show_profile: 'Voir le profile'
 simple: Simple
+start_date: 'Date de début'
 status: Statut
 steal_session: 'Voler la session'
 storage_type: 'Type de stockage'
@@ -697,6 +730,7 @@ subscribe_groups: 'Inscrire des groupes'
 subscribe_selected_groups: 'Inscrire les groupes sélectionnés'
 subscribe_selected_users: 'Inscrire les utilisateurs sélectionnés'
 subscribe_users: 'Inscrire des utilisateurs'
+success_rate: 'Taux de réussite'
 support_email: 'Email du support'
 switch: Echanger
 tag: Tag
@@ -718,6 +752,7 @@ the_workspace: 'L''espace d''activités'
 this_page_requires_authentication: 'Cette page requiert une authentification. Veuillez vous identifier.'
 time_col: 'Colonne des durées'
 tinymce_all_buttons: Tous les outils
+title: Titre
 to: Jusque
 to_anonymous: 'aux utilisateurs anonymes'
 to_everyone: 'à tout le monde'
@@ -764,6 +799,7 @@ unavailable_role: Le rôle %translationKey% n'est pas utilisable
 uncompress_file: Décompresser le fichier si possible
 under_min_length: 'Cette valeur est trop courte'
 unique connections: 'Nb Cnx. uniques'
+unknown: Inconnu
 unregister: Désinscription
 unregister_from_a_workspace: 'Me désinscrire d''un espace d''activités'
 unregistered: 'Non inscrit'
@@ -824,6 +860,7 @@ will display the username: 'qui affichera le nom de l''utilisateur'
 workspace.create: 'Créer un nouvel espace d''activités'
 workspace.name_not_blank: 'Veuillez spécifier un nom pour ce workspace.'
 workspace: 'Espace d''activités'
+workspace_activities_tracking: 'Suivi des activités de l''espace d''activités'
 workspace_administration: Administration
 workspace_classification: 'Classification des espaces d''activités'
 workspace_delete: 'Supprimer l''espace d''activités'
@@ -852,6 +889,8 @@ workspace_home_tab_edition: 'Edition de l''onglet pour les espaces d''activités
 workspace_home_tabs: 'Onglets pour les espaces d''activités'
 workspace_list: 'Liste des espaces d''activités'
 workspace_list: Liste des espaces d'activités
+workspace_management: L'espace d'activités a été crée le %creationDate%, par %creator%. Il y a %count% inscrit(s).
+workspace_management_date_null: Il y a %count% inscrit(s). La date de création de l'espace et son créateur ne sont pas connus.
 workspace_order_tool_edit_form_name: Nom
 workspace_registration_confirm_title: 'Voulez-vous vous inscrire à cet espace d''activités ?'
 workspace_registration_message: 'Vous avez été inscrit à l''espace d''activité %workspace_name%'

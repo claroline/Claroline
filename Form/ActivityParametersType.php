@@ -27,7 +27,6 @@ class ActivityParametersType extends AbstractType
                 'required' => false
             )
         );
-
         $builder->add(
             'max_duration',
             'integer',
@@ -36,8 +35,7 @@ class ActivityParametersType extends AbstractType
                 'required' => false
             )
         );
-
-		$builder->add(
+	$builder->add(
             'who',
             'choice',
             array(
@@ -49,7 +47,6 @@ class ActivityParametersType extends AbstractType
                 'required' => false
             )
         );
-
         $builder->add(
             'where',
             'choice',
@@ -61,7 +58,6 @@ class ActivityParametersType extends AbstractType
                 'required' => false
             )
         );
-
         $builder->add(
             'max_attempts',
             'integer',
@@ -75,8 +71,8 @@ class ActivityParametersType extends AbstractType
             'choice',
             array(
                 'choices' => array(
-                    'automatic' => 'evaluation-automatic',
-                    'manual' => 'evaluation-manual'
+                    'manual' => 'evaluation-manual',
+                    'automatic' => 'evaluation-automatic'
                 ),
                 'required' => true
             )

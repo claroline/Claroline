@@ -735,6 +735,26 @@ class UserManager
 
     /**
      * @param Role[]  $roles
+     * @param integer $page
+     * @param integer $max
+     *
+     * @return \Pagerfanta\Pagerfanta
+     */
+    public function getUsersByRolesIncludingGroups(
+        array $roles,
+        $page = 1,
+        $max = 20,
+        $executeQuery = true
+    )
+    {
+        $users = $this->userRepo
+            ->findUsersByRolesIncludingGroups($roles, $executeQuery);
+
+        return $this->pagerFactory->createPagerFromArray($users, $page, $max);
+    }
+
+    /**
+     * @param Role[]  $roles
      * @param string  $search
      * @param integer $page
      * @param integer $max

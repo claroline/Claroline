@@ -143,6 +143,11 @@ claro_workspace_roles:
     prefix: workspaces/tools/roles/
     type: annotation
 
+claro_workspace_analytics:
+    prefix: workspace/analytics
+    resource: "@ClarolineCoreBundle/Controller/WorkspaceAnalyticsController.php"
+    type: annotation
+    
 claro_admin:
     resource: "@ClarolineCoreBundle/Controller/AdministrationController.php"
     prefix: admin

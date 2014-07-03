@@ -27,7 +27,7 @@ Overview of recent activities in %workspaceName%: 'Overview of recent activities
 Overview of recent activities of your workspaces: 'Overview of recent activities of your workspaces'
 Paste here the meta tag provides by Google Webmaster: 'Paste here the meta tag provides by Google Webmaster'
 See all: 'See all'
-Select a Language: 'Select a Language'
+Select a Language: 'Select a language'
 Show actions: 'Show actions'
 Show the name of the platform in the top bar: 'Show the name of the platform in the top bar'
 Show: Show
@@ -56,7 +56,14 @@ account_general_statistics: 'Account general statistics'
 action: Action
 actions: Actions
 active_widgets: 'Active widgets'
+activities_tracking: 'Activities tracking'
 activity_already: This resource is already in the activity
+activity_evaluation_form_attemptsCount: 'Number of attempts'
+activity_evaluation_form_comment: Comment
+activity_evaluation_form_date: 'Last attempt'
+activity_evaluation_form_numScore: 'Best score'
+activity_evaluation_form_score: Evaluation
+activity_evaluation_form_status: Status
 activity_form_instructions: Instructions
 activity_form_name: Name
 activity_parameters_form_evaluation_type: 'Evaluation type'
@@ -71,11 +78,19 @@ activity_resource_remove: 'Are you sure you want to remove this resource from th
 activity_rule_action_none: None
 activity_rule_configuration_for_auto_evaluation: 'Rule configuration for automatic evaluation'
 activity_rule_form_action: Action
-activity_rule_form_activeFrom: From
-activity_rule_form_activeUntil: Until
-activity_rule_form_badge: Badge
+activity_rule_form_action_explanation: 'Automatic evaluation depends on actions performed on the associated resource.'
+activity_rule_form_activeFrom: 'Performed between'
+activity_rule_form_activeFrom_explanation: 'Only actions performed after this date will be processed. If not set all previous actions will be processed.'
+activity_rule_form_activeUntil: 'and'
+activity_rule_form_activeUntil_explanation: 'Only actions performed before this date will be processed. If not set all future actions will be processed.'
+activity_rule_form_badge: 'Required badge'
+activity_rule_form_badge_explanation: 'The badge that has to be obtained to succeed.'
+activity_rule_form_isResultVisible: 'Display result' 
+activity_rule_form_isResultVisible_explanation: 'Allows user to know the result that has to be obtained.' 
 activity_rule_form_occurrence: Occurrence
-activity_rule_form_result: Result
+activity_rule_form_occurrence_explanation: 'The number of time the action has to be performed to succeed.'
+activity_rule_form_result: 'Required result'
+activity_rule_form_result_explanation: 'The result that has to be obtained to succeed.'
 activity_where_anywhere: Anywhere
 activity_where_classroom: Classroom
 activity_who_collaborative: Collaborative
@@ -121,13 +136,16 @@ analytics_resources: Resources
 analytics_top: Top
 anonymous: Anonymous
 answer: Answer
+anywhere: Anywhere
 appearance: Appearance
 apply: Apply
 at_least_one_category_has_to_be_selected: 'At least one category has to be selected'
 attempts: Attempts
+automatic: Automatic
 available_widgets: 'Available widgets'
 available_workspaces: 'Available workspaces'
 back: Back
+back_to_activities_list: 'Back to activities list'
 back_to_profile: 'Back to profile'
 bad_request: 'The request is incorrect. If you arrived at this page via an internal link, please report the problem to the platform administrator.'
 badges_management: 'Badges management'
@@ -156,11 +174,13 @@ change_view: 'Change the display'
 choose_resource_form_type: 'Resource type'
 classify_my_workspaces: 'Classify my workspaces'
 classify_workspaces: 'Classify workspaces'
+classroom: Classroom
 close: Close
 closed_account: Closed account
 code: Code
+collaborative: Collaborative
 collaborator: Collaborator
-comments: Comments
+comment: Comment
 communication: Communication
 completed: Completed
 configuration: Configuration
@@ -279,11 +299,14 @@ email: 'Email adress'
 email_form_mail: 'Enter your email'
 email_found_at: 'The email %email% was found at lines: %lines%'
 empty_file: 'Empty file'
+end_date: 'End date'
 enter_tag_name_message: 'Please enter a tag name'
 entries_per_day: 'Entries per day'
 evaluation: Evaluation
 evaluation-automatic: Automatic
 evaluation-manual: Manual
+evaluation_edition: Evaluation
+evaluation_type: 'Evaluation type'
 export: Export
 exportable: Exportable
 external_pdo_database: 'External database (PDO)'
@@ -359,6 +382,7 @@ import_roles: 'Import roles'
 import_user_file_file: 'Import from a csv file'
 import_users: 'Import users'
 incomplete: Incomplete
+individual: Individual
 informations: Informations
 inscription_mail: 'Inscription mail'
 instructions: Instructions
@@ -376,6 +400,7 @@ jqplot_date_output_format: '%m/%d/%Y'
 keep_me_logged_in: 'Keep me logged in'
 lastName: 'Last name'
 last_30_days_activity: 'Activity over the last 30 days'
+last_attempt_date: 'Last attempt'
 last_name: 'Last name'
 layout: Layout
 leave_this_page: 'If you leave this page you may lose your changes.'
@@ -415,6 +440,8 @@ manage_public_profile_preferences: 'Manage public profile preferences'
 manage_rights: 'Manage rights'
 manage_tools: Manage tools
 manager: Manager
+manual: Manual
+manual_evaluation_explanation: 'Manual evaluation by a workspace manager'
 max_size_is: 'The maximum size is %size%'
 media_most_viewed: 'Most viewed media'
 message_form_content: Content
@@ -433,6 +460,7 @@ misc: Miscellaneous
 missing_%content%: 'The variable %content% is missing for "%language%".'
 missing_%password%: 'The variable %password% is missing for "%language%".'
 missing_%username%: 'The variable %username% is missing for "%language%".'
+mixed: Mixed
 month.April: April
 month.August: August
 month.December: December
@@ -467,6 +495,7 @@ new_password: New password
 new_role_message: 'You received the role %name%'
 new_role_message_object: 'Your permissions on the platform have changed'
 no: no
+no_activity: 'There is no activity'
 no_category: 'There is no category'
 no_email: 'No email found, check the spelling'
 no_group: 'No group'
@@ -486,6 +515,7 @@ notification_activated: 'Notifications activated.'
 notification_deactivated: 'Notifications deactivated.'
 number: Number
 number_of_attempts: 'Number of attempts'
+number_of_attempts_explanation: 'The meaning of the number of attempts can vary depending on the activity. It is not necessarily the number of times the activity has been performed.'
 oauth: Oauth
 object: Object
 ok: Ok
@@ -503,6 +533,7 @@ owner: Owner
 owner_s: Owner(s)
 parameters: Parameters
 passed: Passed
+passing_score: 'Passing score'
 password: Password
 password_mismatch: 'Passwords mismatch'
 password_ok: 'Your password has been changed, you can login now'
@@ -601,7 +632,8 @@ resource: Resource
 resource_action_denied_message: 'The action %action% couldn''t be done on ''%path%'': access denied.'
 resource_creation_denied: 'You don''t have the permission to create in the directory ''%path'': access denied'
 resource_creation_wrong_type: 'You don''t have the permission to create a(n) %type% in the directory ''%path%'': access denied'
-resource_delete: 'Are you sure you want to delete this resource?'
+resource_delete: 'Are you sure you want to delete this resource ?'
+resource_picker: Resource picker
 resource_properties_form_sharable: 'Share this resource'
 resource_properties_form_shareType: 'Share type'
 resource_properties_form_userIcon: Icon
@@ -683,6 +715,7 @@ show_as_admin: 'Show as admin'
 show_as_user: 'Show as user'
 show_profile: 'Show profile'
 simple: Simple
+start_date: 'Start date'
 status: Status
 steal_session: 'Steal the session'
 storage_type: 'Storage type'
@@ -691,6 +724,7 @@ subscribe_groups: 'Subscribe groups'
 subscribe_selected_groups: 'Subscribe selected groups'
 subscribe_selected_users: 'Subscribe selected users'
 subscribe_users: 'Subscribe users'
+success_rate: 'Success rate'
 support_email: 'Support email'
 switch: Switch
 tag: Tag
@@ -712,6 +746,7 @@ the_workspace: Workspace
 this_page_requires_authentication: 'This page requires authentication. Please login.'
 time_col: 'Database time column'
 tinymce_all_buttons: All tools
+title: Title
 to: To
 to_anonymous: 'to anonymous users'
 to_everyone: 'to everyone'
@@ -757,6 +792,7 @@ unavailable_role: The role %translationKey% is not available
 uncompress_file: Uncompress the file if possible
 under_min_length: 'This value is too short'
 unique connections: 'Nb unique Cnx.'
+unknown: Unknown
 unregister: Unregister
 unregister_from_a_workspace: 'Unregister from a workspace'
 unregistered: Unregistered
@@ -815,6 +851,7 @@ will display the username: 'will display the username'
 workspace.create: 'Create a new workspace'
 workspace.name_not_blank: 'The workspace''s name is required.'
 workspace: Workspace
+workspace_activities_tracking: 'Workspace activities tracking'
 workspace_administration: Administration
 workspace_classification: 'Workspace classification'
 workspace_delete: 'Delete the workspace'

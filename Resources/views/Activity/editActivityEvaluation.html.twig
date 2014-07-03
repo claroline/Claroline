@@ -1,0 +1,21 @@
+<form id="activity-evaluation-edit-form"
+    role="form"
+    action="{{ path(
+        'claro_activity_evaluation_edit',
+        {'evaluationId': evaluation.getId() })
+    }}"
+    method="POST"
+>
+    <div class="panel-heading">
+        {% set user = evaluation.getUser() %}
+        <h3>
+            {{ 'evaluation_edition' | trans({}, 'platform') }}
+            [ {{ user.getFirstName() }}
+            {{ user.getLastName() }} ]
+        </h3>
+    </div>
+    <hr>
+    <div class="panel-body">
+        {{ form_widget(form) }}
+    </div>
+</form>

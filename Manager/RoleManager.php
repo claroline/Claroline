@@ -17,6 +17,7 @@ use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\AbstractRoleSubject;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Claroline\CoreBundle\Entity\Tool\Tool;
+use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Facet\FieldFacet;
 use Claroline\CoreBundle\Manager\Exception\LastManagerDeleteException;
 use Claroline\CoreBundle\Manager\Exception\RoleReadOnlyException;
@@ -733,5 +734,14 @@ class RoleManager
     public function countUsersByRoleIncludingGroup(Role $role)
     {
         return $this->om->getRepository('ClarolineCoreBundle:User')->countUsersByRoleIncludingGroup($role);
+    }
+
+    public function getRolesWithRightsByResourceNode(
+        ResourceNode $resourceNode,
+        $executeQuery = true
+    )
+    {
+        return $this->roleRepo
+            ->findRolesWithRightsByResourceNode($resourceNode, $executeQuery);
     }
 }

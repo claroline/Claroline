@@ -36,4 +36,44 @@ class EvaluationRepository extends EntityRepository
 
         return $executeQuery ? $query->getOneOrNullResult(): $query;
     }
+
+    public function findEvaluationsByUserAndActivityParameters(
+        User $user,
+        array $activityParams,
+        $executeQuery = true
+    )
+    {
+        $dql = '
+            SELECT e
+            FROM Claroline\CoreBundle\Entity\Activity\Evaluation e
+            WHERE e.user = :user
+            AND e.activityParameters IN (:activityParameters)
+        ';
+
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('user', $user);
+        $query->setParameter('activityParameters', $activityParams);
+
+        return $executeQuery ? $query->getResult(): $query;
+    }
+
+    public function findEvaluationsByUsersAndActivityParams(
+        array $users,
+        ActivityParameters $activityParams,
+        $executeQuery = true
+    )
+    {
+        $dql = '
+            SELECT e
+            FROM Claroline\CoreBundle\Entity\Activity\Evaluation e
+            WHERE e.activityParameters = :activityParameters
+            AND e.user IN (:users)
+        ';
+
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('activityParameters', $activityParams);
+        $query->setParameter('users', $users);
+
+        return $executeQuery ? $query->getResult(): $query;
+    }
 }

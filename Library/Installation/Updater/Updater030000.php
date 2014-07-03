@@ -60,19 +60,35 @@ class Updater030000
             ->getRepository('ClarolineCoreBundle:Resource\ResourceType')
             ->findOneByName('text');
 
-        $fileAction = new ActivityRuleAction();
-        $fileAction->setAction('resource-read');
-        $fileAction->setResourceType($fileType);
-        $this->om->persist($fileAction);
+        $fileAction = $this->om
+            ->getRepository('ClarolineCoreBundle:Activity\ActivityRuleAction')
+            ->findRuleActionByActionAndResourceType('resource-read', $fileType);
+        $textAction = $this->om
+            ->getRepository('ClarolineCoreBundle:Activity\ActivityRuleAction')
+            ->findRuleActionByActionAndResourceType('resource-read', $textType);
+        $badgeAwardAction = $this->om
+            ->getRepository('ClarolineCoreBundle:Activity\ActivityRuleAction')
+            ->findRuleActionByActionWithNoResourceType('badge-awarding');
 
-        $textAction = new ActivityRuleAction();
-        $textAction->setAction('resource-read');
-        $textAction->setResourceType($textType);
-        $this->om->persist($textAction);
+        if (is_null($fileAction)) {
+            $fileAction = new ActivityRuleAction();
+            $fileAction->setAction('resource-read');
+            $fileAction->setResourceType($fileType);
+            $this->om->persist($fileAction);
+        }
 
-        $badgeAwardAction = new ActivityRuleAction();
-        $badgeAwardAction->setAction('badge-awarding');
-        $this->om->persist($badgeAwardAction);
+        if (is_null($textAction)) {
+            $textAction = new ActivityRuleAction();
+            $textAction->setAction('resource-read');
+            $textAction->setResourceType($textType);
+            $this->om->persist($textAction);
+        }
+
+        if (is_null($badgeAwardAction)) {
+            $badgeAwardAction = new ActivityRuleAction();
+            $badgeAwardAction->setAction('badge-awarding');
+            $this->om->persist($badgeAwardAction);
+        }
 
         $this->om->flush();
     }

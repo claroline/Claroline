@@ -52,12 +52,12 @@
                 <span class="caret"></span>
             </a>
             <ul class="dropdown-menu zoom" role="menu">
-                <li role="presentation" {% if resourceZoom == 'zoom50' %} class="active"{% endif %}><a role="menuitem" id='zoom50'>50%</a></li>
-                <li role="presentation" {% if resourceZoom == 'zoom75' %} class="active"{% endif %}><a role="menuitem" id='zoom75'>75%</a></li>
-                <li role="presentation" {% if resourceZoom == 'zoom100' %} class="active"{% endif %}><a role="menuitem" id='zoom100'>100%</a></li>
-                <li role="presentation" {% if resourceZoom == 'zoom125' %} class="active"{% endif %}><a role="menuitem" id='zoom125'>125%</a></li>
-                <li role="presentation" {% if resourceZoom == 'zoom150' %} class="active"{% endif %}><a role="menuitem" id='zoom150'>150%</a></li>
-                <li role="presentation" {% if resourceZoom == 'zoom200' %} class="active"{% endif %}><a role="menuitem" id='zoom200'>200%</a></li>
+                <li role="presentation" {% if zoom == 'zoom50' %} class="active"{% endif %}><a role="menuitem" id='zoom50'>50%</a></li>
+                <li role="presentation" {% if zoom == 'zoom75' %} class="active"{% endif %}><a role="menuitem" id='zoom75'>75%</a></li>
+                <li role="presentation" {% if zoom == 'zoom100' %} class="active"{% endif %}><a role="menuitem" id='zoom100'>100%</a></li>
+                <li role="presentation" {% if zoom == 'zoom125' %} class="active"{% endif %}><a role="menuitem" id='zoom125'>125%</a></li>
+                <li role="presentation" {% if zoom == 'zoom150' %} class="active"{% endif %}><a role="menuitem" id='zoom150'>150%</a></li>
+                <li role="presentation" {% if zoom == 'zoom200' %} class="active"{% endif %}><a role="menuitem" id='zoom200'>200%</a></li>
             </ul>
         </li>
     </ul>

@@ -1,22 +1,25 @@
 {% twig_js name="ResourceManagerBreadcrumbs" %}
 
-{% for node in nodes %}
+{% for element in rootBreadcrumbs %}
+    {{ element|raw }}
+{% endfor %}
 
-    {% if loop.first %}
-        {% if loop.length == 1 %}
-            <li class="active">
-               {{ 'resources'|trans({}, 'platform') }}
-            </li>
-        {% else %}
-            <li>
-                <a href="#" data-node-id="{{ node.id }}">
-                    {{ 'resources'|trans({}, 'platform') }}
-                </a>
-            </li>
-        {% endif %}
-    {% elseif not loop.last %}
+{% if nodes|length == 0 %}
+    <li class="active">
+       {{ 'resources'|trans({}, 'platform') }}
+    </li>
+{% else %}
+    <li>
+        <a href="#" class="node" data-node-id="{{ rootNodeId }}">
+            {{ 'resources'|trans({}, 'platform') }}
+        </a>
+    </li>
+{% endif %}
+
+{% for node in nodes %}
+    {% if loop.length > 1 and not loop.last %}
         <li>
-            <a href="#" data-node-id="{{ node.id }}">
+            <a href="#" class="node" data-node-id="{{ node.id }}">
                 {{ node.name }}
             </a>
         </li>

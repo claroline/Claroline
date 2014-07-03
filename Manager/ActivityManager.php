@@ -20,6 +20,7 @@ use Claroline\CoreBundle\Entity\Resource\Activity;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Resource\ResourceType;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Rule\Entity\Rule;
 use JMS\DiExtraBundle\Annotation\Inject;
@@ -31,6 +32,8 @@ use JMS\DiExtraBundle\Annotation\Service;
  */
 class ActivityManager
 {
+    private $activityParametersRepo;
+    private $activityRepo;
     private $activityRuleActionRepo;
     private $activityRuleRepo;
     private $evaluationRepo;
@@ -45,6 +48,8 @@ class ActivityManager
     public function __construct(ObjectManager $om)
     {
         $this->om = $om;
+        $this->activityParametersRepo = $om->getRepository('ClarolineCoreBundle:Activity\ActivityParameters');
+        $this->activityRepo = $om->getRepository('ClarolineCoreBundle:Resource\Activity');
         $this->activityRuleActionRepo = $om->getRepository('ClarolineCoreBundle:Activity\ActivityRuleAction');
         $this->activityRuleRepo = $om->getRepository('ClarolineCoreBundle:Activity\ActivityRule');
         $this->evaluationRepo = $om->getRepository('ClarolineCoreBundle:Activity\Evaluation');
@@ -168,6 +173,16 @@ class ActivityManager
             ->findEvaluationByUserAndActivityParams($user, $activityParams);
         $isFirstEvaluation = is_null($evaluation);
         $evaluationType = $activityParams->getEvaluationType();
+        $ruleScore = null;
+        $ruleScoreMax = null;
+
+        if ($evaluationType === 'automatic' &&
+            count($activityParams->getRules()) > 0) {
+
+            $rule = $activityParams->getRules()->first();
+            $ruleScore = $rule->getResult();
+            $ruleScoreMax = $rule->getResultMax();
+        }
 
         if (!$isFirstEvaluation) {
             $pastEvals = $this->pastEvaluationRepo
@@ -217,11 +232,11 @@ class ActivityManager
                         $score = isset($logDetails['result']) ?
                             $logDetails['result'] :
                             null;
-                        $scoreMin = isset($logDetails['scoreMin']) ?
-                            $logDetails['scoreMin'] :
+                        $scoreMin = isset($logDetails['resultMin']) ?
+                            $logDetails['resultMin'] :
                             0;
-                        $scoreMax = isset($logDetails['scoreMax']) ?
-                            $logDetails['scoreMax'] :
+                        $scoreMax = isset($logDetails['resultMax']) ?
+                            $logDetails['resultMax'] :
                             null;
 
                         $pastEval = new PastEvaluation();
@@ -255,11 +270,11 @@ class ActivityManager
         $score = isset($logDetails['result']) ?
             $logDetails['result'] :
             null;
-        $scoreMin = isset($logDetails['scoreMin']) ?
-            $logDetails['scoreMin'] :
+        $scoreMin = isset($logDetails['resultMin']) ?
+            $logDetails['resultMin'] :
             null;
-        $scoreMax = isset($logDetails['scoreMax']) ?
-            $logDetails['scoreMax'] :
+        $scoreMax = isset($logDetails['resultMax']) ?
+            $logDetails['resultMax'] :
             null;
 
         $pastEval = new PastEvaluation();
@@ -272,7 +287,17 @@ class ActivityManager
         $pastEval->setScoreMin($scoreMin);
         $pastEval->setScoreMax($scoreMax);
         $pastEval->setDuration($duration);
-        $pastEval->setStatus($activityStatus);
+
+        if (($activityStatus === 'completed' || $activityStatus === 'passed') &&
+            !is_null($score) && !is_null($ruleScore)) {
+
+            $realStatus = $this->hasPassingScore($ruleScore, $ruleScoreMax, $score, $scoreMax) ?
+                $activityStatus :
+                'failed' ;
+            $pastEval->setStatus($realStatus);
+        } else {
+            $pastEval->setStatus($activityStatus);
+        }
 
         $nbAttempts++;
         $totalTime = $this->computeActivityTotalTime(
@@ -307,6 +332,8 @@ class ActivityManager
         $action,
         $occurrence,
         $result,
+        $resultMax,
+        $isResultVisible,
         $activeFrom,
         $activeUntil,
         ResourceNode $resourceNode = null
@@ -317,6 +344,8 @@ class ActivityManager
         $rule->setAction($action);
         $rule->setOccurrence($occurrence);
         $rule->setResult($result);
+        $rule->setResultMax($resultMax);
+        $rule->setIsResultVisible($isResultVisible);
         $rule->setActiveFrom($activeFrom);
         $rule->setActiveUntil($activeUntil);
         $rule->setResource($resourceNode);
@@ -332,6 +361,8 @@ class ActivityManager
         $action,
         $occurrence,
         $result,
+        $resultMax,
+        $isResultVisible,
         $activeFrom,
         $activeUntil,
         ResourceNode $resourceNode = null
@@ -340,6 +371,8 @@ class ActivityManager
         $rule->setAction($action);
         $rule->setOccurrence($occurrence);
         $rule->setResult($result);
+        $rule->setResultMax($resultMax);
+        $rule->setIsResultVisible($isResultVisible);
         $rule->setActiveFrom($activeFrom);
         $rule->setActiveUntil($activeUntil);
         $rule->setResource($resourceNode);
@@ -408,27 +441,126 @@ class ActivityManager
         $scoreMax
     )
     {
-        if (!is_null($score) && !is_null($scoreMax)) {
+        if (!is_null($score)) {
             $currentScore = $evaluation->getNumScore();
             $currentScoreMax = $evaluation->getScoreMax();
+            $updateScore = false;
 
-            if (!is_null($currentScore) && !is_null($currentScoreMax)) {
-                $currentRealScore = $currentScore / $currentScoreMax;
-                $realScore = $score / $scoreMax;
-
-                if ($realScore > $currentRealScore) {
-                    $evaluation->setNumScore($score);
-                    $evaluation->setScoreMin($scoreMin);
-                    $evaluation->setScoreMax($scoreMax);
-                    $this->om->persist($evaluation);
-                }
+            if (is_null($currentScore)) {
+                $updateScore = true;
+            } elseif (empty($currentScoreMax) || empty($scoreMax)) {
+                $updateScore = ($score > $currentScore);
             } else {
+                $realCurrentScore = number_format(
+                    round($currentScore / $currentScoreMax, 2),
+                    2
+                );
+                $realScore = number_format(
+                    round($score / $scoreMax, 2),
+                    2
+                );
+                $updateScore = ($realScore > $realCurrentScore);
+            }
+
+            if ($updateScore) {
                 $evaluation->setNumScore($score);
                 $evaluation->setScoreMin($scoreMin);
                 $evaluation->setScoreMax($scoreMax);
                 $this->om->persist($evaluation);
             }
         }
+    }
+
+    public function editEvaluation(Evaluation $evaluation)
+    {
+        $this->updatePastEvaluation($evaluation);
+        $this->om->persist($evaluation);
+        $this->om->flush();
+    }
+
+    private function updatePastEvaluation(Evaluation $evaluation)
+    {
+        $user = $evaluation->getUser();
+        $activityParams = $evaluation->getActivityParameters();
+        $log = $evaluation->getLog();
+
+        if (!is_null($log)) {
+            $pastEval  = $this->pastEvaluationRepo
+                ->findPastEvaluationsByUserAndActivityParamsAndLog(
+                    $user,
+                    $activityParams,
+                    $log
+                );
+
+            if (!is_null($pastEval)) {
+                $pastEval->setScore($evaluation->getScore());
+                $pastEval->setComment($evaluation->getComment());
+                $this->om->persist($pastEval);
+            }
+        }
+    }
+
+    private function hasPassingScore(
+        $ruleScore,
+        $ruleScoreMax,
+        $score,
+        $scoreMax
+    )
+    {
+        $hasPassingScore = true;
+
+        if (!is_null($ruleScore) && !is_null($score)) {
+
+            if (empty($ruleScoreMax) || empty($scoreMax)) {
+                $hasPassingScore = ($score >= $ruleScore);
+            } else {
+                $realRuleScore = number_format(
+                    round($ruleScore / $ruleScoreMax, 2),
+                    2
+                );
+                $realScore = number_format(
+                    round($score / $scoreMax, 2),
+                    2
+                );
+                $hasPassingScore = ($realScore >= $realRuleScore);
+            }
+        } elseif (!is_null($ruleScore)) {
+            $hasPassingScore = false;
+        }
+
+        return $hasPassingScore;
+    }
+
+
+    /*****************************************
+     *  Access to ActivityRepository methods *
+     *****************************************/
+
+    public function getActivityByWorkspace(
+        AbstractWorkspace $workspace,
+        $executeQuery = true
+    )
+    {
+        return $this->activityRepo->findActivityByWorkspace(
+            $workspace,
+            $executeQuery
+        );
+    }
+
+    public function getActivitiesByResourceNodeIds(
+        array $resourceNodeIds,
+        $executeQuery = true
+    )
+    {
+        if (count($resourceNodeIds) > 0) {
+
+            return $this->activityRepo->findActivitiesByResourceNodeIds(
+                $resourceNodeIds,
+                $executeQuery
+            );
+        }
+
+        return array();
     }
 
 
@@ -479,10 +611,10 @@ class ActivityManager
             ->findRuleActionsByResourceType($resourceType, $executeQuery);
     }
 
-    public function getRuleActionsWithNoResource($executeQuery = true)
+    public function getRuleActionsWithNoResourceType($executeQuery = true)
     {
         return $this->activityRuleActionRepo
-            ->findRuleActionsWithNoResource($executeQuery);
+            ->findRuleActionsWithNoResourceType($executeQuery);
     }
 
     public function getAllDistinctActivityRuleActions($executeQuery = true)
@@ -509,6 +641,42 @@ class ActivityManager
         );
     }
 
+    public function getEvaluationsByUserAndActivityParameters(
+        User $user,
+        array $activityParams,
+        $executeQuery = true
+    )
+    {
+        if (count($activityParams) > 0) {
+
+            return $this->evaluationRepo->findEvaluationsByUserAndActivityParameters(
+                $user,
+                $activityParams,
+                $executeQuery
+            );
+        }
+
+        return array();
+    }
+
+    public function getEvaluationsByUsersAndActivityParams(
+        array $users,
+        ActivityParameters $activityParams,
+        $executeQuery = true
+    )
+    {
+        if (count($users) > 0) {
+
+            return $this->evaluationRepo->findEvaluationsByUsersAndActivityParams(
+                $users,
+                $activityParams,
+                $executeQuery
+            );
+        }
+
+        return array();
+    }
+
 
     /******************************************
      * Access to PastEvaluationRepository methods *
@@ -525,5 +693,21 @@ class ActivityManager
             $activityParams,
             $executeQuery
         );
+    }
+
+    public function getPastEvaluationsByUserAndActivityParamsAndLog(
+        User $user,
+        ActivityParameters $activityParams,
+        Log $log,
+        $executeQuery = true
+    )
+    {
+        return $this->pastEvaluationRepo
+            ->findPastEvaluationsByUserAndActivityParamsAndLog(
+                $user,
+                $activityParams,
+                $log,
+                $executeQuery
+            );
     }
 }
