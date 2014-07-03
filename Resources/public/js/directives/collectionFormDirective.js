@@ -43,12 +43,12 @@ portfolioApp
                 return isEmpty;
             }
 
-            scope.modify = function(child) {
+            scope.modify = function(child, index) {
                 if (scope.isEmpty(child)) {
                     child.added = false;
                 }
                 else {
-                    if (false == child.added) {
+                    if (false == child.added && (index + 1) === scope.collection.length) {
                         scope.collection.push(angular.copy(scope.emptyChild));
                         delete child.added;
                     }
