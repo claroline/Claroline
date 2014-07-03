@@ -44,6 +44,9 @@ Additionally, some new features have been introduced :
 - In picker mode, the current directory id is saved in session and shared amongst
   all picker instances.
 
+- A "resourcePicker" form field has been added (currently supporting only "data-blacklist"
+  attributes).
+
 
 Workspace entity
 ----------------
