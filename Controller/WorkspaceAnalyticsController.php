@@ -193,6 +193,7 @@ class WorkspaceAnalyticsController extends Controller
             }
 
             $rulesScores = array();
+            $nbSuccess = 0;
 
             foreach ($activities as $activity) {
                 $params = $activity->getParameters();
@@ -234,7 +235,17 @@ class WorkspaceAnalyticsController extends Controller
                         }
                     }
                 }
+
+                if ($evaluationsAssoc[$activity->getId()]->getStatus() === 'completed' ||
+                    $evaluationsAssoc[$activity->getId()]->getStatus() === 'passed') {
+
+                    $nbSuccess++;
+                }
             }
+
+            $progress = count($activities) > 0 ?
+                round($nbSuccess / count($activities), 2) * 100 :
+                0;
 
             return new Response(
                 $this->templating->render(
@@ -244,7 +255,8 @@ class WorkspaceAnalyticsController extends Controller
                         'workspace' => $workspace,
                         'activities' => $activities,
                         'evaluations' => $evaluationsAssoc,
-                        'rulesScores' => $rulesScores
+                        'rulesScores' => $rulesScores,
+                        'progress' => $progress
                     )
                 )
             );
@@ -395,6 +407,8 @@ class WorkspaceAnalyticsController extends Controller
             $evaluations[$user->getId()] = $evaluation;
         }
 
+        $nbSuccess = 0;
+
         foreach ($users as $user) {
 
             if (!isset($evaluations[$user->getId()])) {
@@ -412,7 +426,16 @@ class WorkspaceAnalyticsController extends Controller
                 );
                 $evaluations[$user->getId()] = $evaluation;
             }
+
+            if ($evaluations[$user->getId()]->getStatus() === 'completed' ||
+                $evaluations[$user->getId()]->getStatus() === 'passed') {
+
+                $nbSuccess++;
+            }
         }
+        $progress = count($users) > 0 ?
+            round($nbSuccess / count($users), 2) * 100 :
+            0;
 
         $ruleScore = null;
 
@@ -440,7 +463,8 @@ class WorkspaceAnalyticsController extends Controller
             'users' => $usersPager,
             'page' => $page,
             'evaluations' => $evaluations,
-            'ruleScore' => $ruleScore
+            'ruleScore' => $ruleScore,
+            'progress' => $progress
         );
     }
 

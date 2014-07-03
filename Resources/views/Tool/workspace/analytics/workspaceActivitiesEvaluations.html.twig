@@ -6,6 +6,26 @@
         <br>
 
         {% if activities|length > 0 %}
+            <div class="col-md-12">
+                <b>{{ 'success_rate'|trans({}, 'platform') }} :</b>
+            </div>
+            <div class="col-md-4">
+                <div class="progress">
+                    <span class="progress-bar progress-bar-success"
+                        role="progressbar"
+                        aria-valuenow="{{ progress }}"
+                        aria-valuemin="0"
+                        aria-valuemax="100"
+                        style="width: {{ progress }}%;"
+                    >
+                        {{ progress }} %
+                    </span>
+                </div>
+            </div>
+            <br>
+            <br>
+            <br>
+        
             <div class="table-responsive">
                 <table class="table">
                     <tr>
@@ -24,7 +44,12 @@
                         <th class="center-text">
                             {{ 'best_score'|trans({}, 'platform') }}
                         </th>
-                        <th class="center-text">
+                        <th class="center-text"
+                            data-container="#activities-evaluations"
+                            data-toggle="tooltip"
+                            data-placement="top"
+                            title="{{ 'number_of_attempts_explanation'|trans({}, 'platform') }}"
+                        >
                             {{ 'number_of_attempts'|trans({}, 'platform') }}
                         </th>
                         <th class="center-text"
@@ -168,4 +193,15 @@
     {{ parent() }}
     <script src="{{ asset('bundles/clarolinecore/js/tool/workspace/analytics/workspaceActivitiesEvaluations.js') }}">
     </script>
+{% endblock %}
+    
+{% block stylesheets %}
+    {{ parent() }}
+    <style type="text/css">
+        .progress{
+            border-style: solid;
+            border-width: 1px;
+            border-color: #7A7A7A;
+        }
+    </style>
 {% endblock %}

@@ -78,7 +78,7 @@ activity_resource_remove: 'Are you sure you want to remove this resource from th
 activity_rule_action_none: None
 activity_rule_configuration_for_auto_evaluation: 'Rule configuration for automatic evaluation'
 activity_rule_form_action: Action
-activity_rule_form_action_explanation: 'Automatic evaluation depends on actions performed by user.'
+activity_rule_form_action_explanation: 'Automatic evaluation depends on actions performed on the associated resource.'
 activity_rule_form_activeFrom: 'Performed between'
 activity_rule_form_activeFrom_explanation: 'Only actions performed after this date will be processed. If not set all previous actions will be processed.'
 activity_rule_form_activeUntil: 'and'
@@ -515,6 +515,7 @@ notification_activated: 'Notifications activated.'
 notification_deactivated: 'Notifications deactivated.'
 number: Number
 number_of_attempts: 'Number of attempts'
+number_of_attempts_explanation: 'The meaning of the number of attempts can vary depending on the activity. It is not necessarily the number of times the activity has been performed.'
 oauth: Oauth
 object: Object
 ok: Ok
@@ -723,6 +724,7 @@ subscribe_groups: 'Subscribe groups'
 subscribe_selected_groups: 'Subscribe selected groups'
 subscribe_selected_users: 'Subscribe selected users'
 subscribe_users: 'Subscribe users'
+success_rate: 'Success rate'
 support_email: 'Support email'
 switch: Switch
 tag: Tag

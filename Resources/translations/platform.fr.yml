@@ -79,7 +79,7 @@ activity_resource_remove: Êtes-vous sûr de vouloir enlever cette ressource de 
 activity_rule_action_none: Aucune
 activity_rule_configuration_for_auto_evaluation: 'Configuration de la règle pour l''évaluation automatique'
 activity_rule_form_action: Action
-activity_rule_form_action_explanation: 'L''évaluation automatique se base sur les actions effectuées par l''utilisateur.'
+activity_rule_form_action_explanation: 'L''évaluation automatique se base sur les actions effectuées sur la ressource associée.'
 activity_rule_form_activeFrom: 'Effectuée entre le'
 activity_rule_form_activeFrom_explanation: 'Seules les actions effectuées après cette date seront prises en compte. Toutes les anciennes actions seront traitées si cette date n''est pas définie.'
 activity_rule_form_activeUntil: 'et le'
@@ -518,6 +518,7 @@ notification_deactivated: 'Notifications désactivées.'
 notifications: 'Notifications'
 number: Nombre
 number_of_attempts: 'Nombre de tentatives'
+number_of_attempts_explanation: 'La signification du nombre de tentatives peut varier en fonction de l''activité. Il ne s''agit pas forcément du nombre de fois où l''activité a été exécutée.'
 oauth: Oauth
 object: Objet
 ok: Ok
@@ -729,6 +730,7 @@ subscribe_groups: 'Inscrire des groupes'
 subscribe_selected_groups: 'Inscrire les groupes sélectionnés'
 subscribe_selected_users: 'Inscrire les utilisateurs sélectionnés'
 subscribe_users: 'Inscrire des utilisateurs'
+success_rate: 'Taux de réussite'
 support_email: 'Email du support'
 switch: Echanger
 tag: Tag
