@@ -49,8 +49,8 @@ portfolioApp
                 }
                 else {
                     if (false == child.added) {
-                        child.added = true;
                         scope.collection.push(angular.copy(scope.emptyChild));
+                        delete child.added;
                     }
                 }
             };
