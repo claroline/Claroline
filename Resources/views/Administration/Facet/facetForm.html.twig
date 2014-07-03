@@ -3,6 +3,11 @@
 {% block header %}
     {{ 'create_facet'|trans({}, 'platform') }}
 {% endblock %}
+{% block explanation %}
+    <div class="well">
+        {{ 'visible_facet_form_explanation'|trans({}, 'platform') }}
+    </div>
+{% endblock %}
 {% block form %}
 <form
     role="form"

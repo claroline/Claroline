@@ -279,13 +279,6 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
     protected $hasTunedPublicUrl = false;
 
     /**
-     * @var UserPublicProfilePreferences
-     *
-     * @ORM\OneToOne(targetEntity="UserPublicProfilePreferences", mappedBy="user", cascade={"all"})
-     */
-    protected $publicProfilePreferences;
-
-    /**
      * @var \DateTime
      *
      * @ORM\Column(name="expiration_date", type="datetime", nullable=true)
@@ -951,28 +944,6 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
     public function hasTunedPublicUrl()
     {
         return $this->hasTunedPublicUrl;
-    }
-
-    /**
-     * @return \Claroline\CoreBundle\Entity\UserPublicProfilePreferences
-     */
-    public function getPublicProfilePreferences()
-    {
-        return $this->publicProfilePreferences;
-    }
-
-    /**
-     * @param \Claroline\CoreBundle\Entity\UserPublicProfilePreferences $publicProfilPreferences
-     *
-     * @return User
-     */
-    public function setPublicProfilePreferences(UserPublicProfilePreferences $publicProfilPreferences)
-    {
-        $publicProfilPreferences->setUser($this);
-
-        $this->publicProfilePreferences = $publicProfilPreferences;
-
-        return $this;
     }
 
     public function isPublicUrlValid(ExecutionContextInterface $context)

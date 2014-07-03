@@ -185,7 +185,8 @@ class ParametersController extends Controller
                         'form_captcha' => $form['formCaptcha']->getData(),
                         'platform_init_date' => $form['platform_init_date']->getData(),
                         'platform_limit_date' => $form['platform_limit_date']->getData(),
-                        'account_duration' => $form['account_duration']->getData()
+                        'account_duration' => $form['account_duration']->getData(),
+                        'anonymous_public_profile' => $form['anonymous_public_profile']->getData(),
                     )
                 );
 
