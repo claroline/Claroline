@@ -8,7 +8,7 @@ portfolioApp
             }
 
             scope.emptyChild = jQuery.parseJSON(attrs.collectionForm.replace(/'/g, '"'));
-            scope.emptyChild.notAdded = true;
+            scope.emptyChild.added = false;
 
             ngModel.$render = function() {
                 var collection = ngModel.$viewValue || [];
@@ -31,12 +31,6 @@ portfolioApp
                 delete child.toDelete;
             };
 
-            scope.addEmptyChild = function(index) {
-                if (index == scope.collection.length && !scope.isEmpty(scope.collection[index - 1])) {
-                    scope.collection.push(angular.copy(scope.emptyChild));
-                }
-            };
-
             scope.isEmpty = function(child) {
                 var isEmpty = false;
 
@@ -49,12 +43,15 @@ portfolioApp
                 return isEmpty;
             }
 
-            scope.markEmpty = function(child) {
+            scope.keydown = function(child) {
                 if (scope.isEmpty(child)) {
-                    child.notAdded = true;
+                    child.added = false;
                 }
                 else {
-                    delete child.notAdded;
+                    if (false == child.added) {
+                        child.added = true;
+                        scope.collection.push(angular.copy(scope.emptyChild));
+                    }
                 }
             };
 

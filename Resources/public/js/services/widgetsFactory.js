@@ -69,7 +69,7 @@ portfolioApp
                     if (this.children) {
                         for (var i = 0;i < this.children.length; i++) {
                             var currentChild = this.children[i];
-                            if (currentChild.toDelete || currentChild.notAdded) {
+                            if (currentChild.toDelete || !currentChild.added) {
                                 this.children.remove(currentChild);
                             }
                         }
