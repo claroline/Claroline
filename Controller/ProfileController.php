@@ -35,6 +35,7 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 use Symfony\Component\Security\Core\Encoder\EncoderFactory;
+use Doctrine\ORM\NoResultException;
 
 /**
  * Controller of the user profile.
@@ -174,7 +175,7 @@ class ProfileController extends Controller
             /** @var \Claroline\CoreBundle\Entity\User $user */
             $user = $this->getDoctrine()->getRepository('ClarolineCoreBundle:User')->findOneByIdOrPublicUrl($publicUrl);
         }
-        catch(\Exception $e) {
+        catch (NoResultException $e) {
             throw new NotFoundHttpException("Page not found");
         }
 
