@@ -1,0 +1,23 @@
+{
+    "name": "icap/website-bundle",
+    "description": "Claroline website plugin from ICAP",
+    "keywords": ["Claroline", "Plugin", "Website", "ICAP"],
+    "homepage": "http://www.claroline.net",
+    "type": "claroline-plugin",
+    "license": "",
+    "authors": [
+        {
+            "name": "ICAP development team",
+            "homepage": "https://github.com/iCAPLyon1"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.0",
+        "claroline/core-bundle": ">=2.0.5,<3.0"
+    },
+    "autoload": {
+        "psr-0": { "Icap\\WebsiteBundle": "" }
+    },
+    "target-dir": "Icap/WebsiteBundle"
+}
+
