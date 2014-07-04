@@ -32,8 +32,10 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 use Symfony\Component\Security\Core\Encoder\EncoderFactory;
+use Doctrine\ORM\NoResultException;
 
 /**
  * Controller of the user profile.
@@ -167,11 +169,14 @@ class ProfileController extends Controller
      */
     public function publicProfileAction($publicUrl)
     {
-        /** @var \Claroline\CoreBundle\Entity\User $user */
-        $user = $this->getDoctrine()->getRepository('ClarolineCoreBundle:User')->findOneByIdOrPublicUrl($publicUrl);
 
-        if (null === $user) {
-            throw $this->createNotFoundException("Unknown user.");
+
+        try {
+            /** @var \Claroline\CoreBundle\Entity\User $user */
+            $user = $this->getDoctrine()->getRepository('ClarolineCoreBundle:User')->findOneByIdOrPublicUrl($publicUrl);
+        }
+        catch (NoResultException $e) {
+            throw new NotFoundHttpException("Page not found");
         }
 
         $userPublicProfilePreferences = $user->getPublicProfilePreferences();
@@ -187,6 +192,7 @@ class ProfileController extends Controller
         if(UserPublicProfilePreferences::SHARE_POLICY_NOBODY === $userPublicProfilePreferences->getSharePolicy()) {
             $response = new Response($this->renderView('ClarolineCoreBundle:Profile:publicProfile.404.html.twig', array('user' => $user, 'publicUrl' => $publicUrl)), 404);
         }
+
         else if (UserPublicProfilePreferences::SHARE_POLICY_PLATFORM_USER === $userPublicProfilePreferences->getSharePolicy()
                  && null === $this->getUser()) {
             $response = new Response($this->renderView('ClarolineCoreBundle:Profile:publicProfile.401.html.twig', array('user' => $user, 'publicUrl' => $publicUrl)), 401);
