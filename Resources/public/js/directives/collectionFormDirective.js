@@ -61,9 +61,9 @@ portfolioApp
         };
 
         return {
-            scope: true,
-            require: '?ngModel', // get a hold of NgModelController
+            scope:    true,
+            require:  '?ngModel', // get a hold of NgModelController
             restrict: 'A',
-            link: link
+            link:     link
         };
     });
