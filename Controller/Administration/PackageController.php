@@ -144,24 +144,6 @@ class PackageController extends Controller
         return new JsonResponse();
     }
 
-//    /**
-//     * @EXT\Route(
-//     *     "/upgrade/packages",
-//     *     name="claro_admin_upgrade_package",
-//     *     options={"expose"=true}
-//     * )
-//     * @param $distRef
-//     */
-//    public function upgradePackages()
-//    {
-//        //find packages from the querystring.
-//        $this->checkOpen();
-//        $package = $this->dm->getByDistReference($distRef);
-//        $this->dm->upgrade($package);
-//
-//        return new JsonResponse();
-//    }
-
     private function checkOpen()
     {
         if ($this->sc->isGranted('OPEN', $this->adminToolPlugin)) {
