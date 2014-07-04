@@ -109,15 +109,26 @@ class Group extends AbstractRoleSubject implements OrderableInterface
         return $userIds;
     }
 
+    /**
+     * alias for getPlateformeRole
+     */
+    public function getPlatformRoles()
+    {
+        return $this->getPlatformRole();
+    }
+
     public function getPlatformRole()
     {
         $roles = $this->getEntityRoles();
+        $return = array();
 
         foreach ($roles as $role) {
             if ($role->getType() != Role::WS_ROLE) {
-                return $role;
+                $return[] = $role;
             }
         }
+
+        return $return;
     }
 
     public function setPlatformRole($platformRole)
@@ -135,6 +146,31 @@ class Group extends AbstractRoleSubject implements OrderableInterface
         }
 
         $this->roles->add($platformRole);
+    }
+
+    /**
+     * Replace the old platform roles of a user by a new array.
+     *
+     * @param $platformRoles
+     */
+    public function setPlatformRoles($platformRoles)
+    {
+        $roles = $this->getEntityRoles();
+        $removedRoles = array();
+
+        foreach ($roles as $role) {
+            if ($role->getType() != Role::WS_ROLE) {
+                $removedRoles[] = $role;
+            }
+        }
+
+        foreach ($removedRoles as $removedRole) {
+            $this->roles->removeElement($removedRole);
+        }
+
+        foreach ($platformRoles as $platformRole) {
+            $this->roles->add($platformRole);
+        }
     }
 
     public function containsUser(User $user)

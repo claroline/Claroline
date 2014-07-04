@@ -143,6 +143,11 @@ claro_workspace_roles:
     prefix: workspaces/tools/roles/
     type: annotation
 
+claro_workspace_analytics:
+    prefix: workspace/analytics
+    resource: "@ClarolineCoreBundle/Controller/WorkspaceAnalyticsController.php"
+    type: annotation
+    
 claro_admin:
     resource: "@ClarolineCoreBundle/Controller/AdministrationController.php"
     prefix: admin
@@ -204,8 +209,15 @@ claro_message:
 
 claro_activity:
     resource: "@ClarolineCoreBundle/Controller/ActivityController.php"
-    prefix: activity
+    prefix: activity/
     type: annotation
+
+claro_activity_remove_resource_confirm:
+    pattern: /activity/remove
+    options: { expose: true }
+    defaults:
+        _controller: FrameworkBundle:Template:template
+        template: 'ClarolineCoreBundle:Activity:remove.html.twig'
 
 fos_js_routing:
     resource: "@FOSJsRoutingBundle/Resources/config/routing/routing.xml"
@@ -274,9 +286,14 @@ claro_admin_workspace_registration:
     resource: "@ClarolineCoreBundle/Controller/Administration/WorkspaceRegistrationController.php"
     type: annotation
 
-claro_admin_plugins:
-    resource: "@ClarolineCoreBundle/Controller/Administration/PluginsController.php"
-    prefix: admin/plugins
+claro_admin_package:
+    resource: "@ClarolineCoreBundle/Controller/Administration/PackageController.php"
+    prefix: admin/package
+    type: annotation
+
+claro_admin_facet:
+    resource: "@ClarolineCoreBundle/Controller/Administration/FacetController.php"
+    prefix: admin/facet
     type: annotation
 
 claro_badge:

@@ -24,12 +24,13 @@
         $(function() {
             Claroline.ResourceManager.createFullManager({
                 "parentElement": $('div.section-content .panel'),
-                "isPickerMultiSelectAllowed": true,
+                "breadcrumbElement": $('ul.breadcrumb'),
                 "isWorkspace": false,
-                "appPath": "{{ app.request.getBaseUrl }}",
                 "webPath": "{{ asset('') }}",
                 "language": "{{ app.request.locale }}",
-                "resourceZoom": "{{ resourceZoom }}",
+                "zoom": "{{ resourceZoom }}",
+                "pickerDirectoryId": "{{ app.session.get('pickerDirectoryId', '0') }}",
+                "preFetchedDirectory": {{ render(controller('ClarolineCoreBundle:Resource:openDirectory'))|raw }},
                 "resourceTypes": {
                     {% for resourceType in resourceTypes %}
                         "{{ resourceType.getName() }}": {

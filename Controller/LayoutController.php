@@ -17,6 +17,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Translation\Translator;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
+use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Library\Security\Utilities;
 use Claroline\CoreBundle\Manager\MessageManager;
@@ -119,7 +120,14 @@ class LayoutController extends Controller
      */
     public function topBarAction(Workspace $workspace = null)
     {
-        $canAdministrate = false;
+        if ($token = $this->security->getToken()) {
+            $tools = $this->toolManager->getAdminToolsByRoles($token->getRoles());
+        } else {
+            $tools = array();
+        }
+
+        $canAdministrate = count($tools) > 0;
+        $isLogged = false;
         $countUnreadMessages = 0;
         $registerTarget = null;
         $loginTarget = null;
@@ -127,9 +135,12 @@ class LayoutController extends Controller
         $personalWs = null;
         $countUnviewedNotifications = 0;
 
-        $token = $this->security->getToken();
-        $user = $token->getUser();
-        $roles = $this->utils->getRoles($token);
+        if ($token) {
+            $user = $token->getUser();
+            $roles = $this->utils->getRoles($token);
+        } else {
+            $roles = array('ROLE_ANONYMOUS');
+        }
 
         if ($isLogged = !in_array('ROLE_ANONYMOUS', $roles)) {
             $tools = $this->toolManager->getAdminToolsByRoles($token->getRoles());
@@ -142,7 +153,12 @@ class LayoutController extends Controller
         } else {
             $workspaces = $this->workspaceManager->getWorkspacesByAnonymous();
 
-            if (true === $this->configHandler->getParameter('allow_self_registration')) {
+            if (true === $this->configHandler->getParameter('allow_self_registration') &&
+                $this->roleManager->validateRoleInsert(
+                    new User(),
+                    $this->roleManager->getRoleByName('ROLE_USER')
+                )
+            ) {
                 $registerTarget = 'claro_registration_user_registration_form';
             }
 
@@ -217,9 +233,11 @@ class LayoutController extends Controller
 
     private function isImpersonated()
     {
-        foreach ($this->security->getToken()->getRoles() as $role) {
-            if ($role instanceof \Symfony\Component\Security\Core\Role\SwitchUserRole) {
-                return true;
+        if ($token = $this->security->getToken()) {
+            foreach ($token->getRoles() as $role) {
+                if ($role instanceof \Symfony\Component\Security\Core\Role\SwitchUserRole) {
+                    return true;
+                }
             }
         }
 

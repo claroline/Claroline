@@ -46,6 +46,10 @@ class PlatformConfiguration
     private $facebookClientSecret;
     private $facebookClientActive;
     private $formCaptcha;
+    private $platformLimitDate;
+    private $platformInitDate;
+    private $accountDuration;
+    private $anonymousPublicProfile;
 
     /**
      * @param mixed $sessionDbDataCol
@@ -449,5 +453,45 @@ class PlatformConfiguration
     public function getFormCaptcha()
     {
         return $this->formCaptcha;
+    }
+
+    public function setPlatformLimitDate($platformLimitDate)
+    {
+        $this->platformLimitDate = $platformLimitDate;
+    }
+
+    public function getPlatformLimitDate()
+    {
+        return $this->platformLimitDate;
+    }
+
+    public function setPlatformInitDate($platformInitDate)
+    {
+        $this->platformInitDate = $platformInitDate;
+    }
+
+    public function getPlatformInitDate()
+    {
+        return $this->platformInitDate;
+    }
+
+    public function setAccountDuration($accountDuration)
+    {
+        $this->accountDuration = $accountDuration;
+    }
+
+    public function getAccountDuration()
+    {
+        return $this->accountDuration;
+    }
+
+    public function setAnonymousPublicProfile($boolean)
+    {
+        $this->anonymousPublicProfile = $boolean;
+    }
+
+    public function getAnonymousPublicProfile()
+    {
+        return $this->anonymousPublicProfile;
     }
 }

@@ -249,4 +249,9 @@ class ObjectManager extends ObjectManagerDecorator
             );
         }
     }
+
+    public function getConnection()
+    {
+
+    }
 }

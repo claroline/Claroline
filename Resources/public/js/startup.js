@@ -83,7 +83,7 @@
 
     // Required for variables translations (the language can't be known at the compile time)
     Twig.setFilter('trans', function (name, parameters, domain) {
-        return translator.get(domain + ':' + name);
+        return translator.get(domain + ':' + name) == domain + ':' + name ? name: translator.get(domain + ':' + name);
     });
 
     // Without the next lines, the fixed top bar overlays content

@@ -1,0 +1,5 @@
+{% twig_js name="FacetTab" %}
+
+<li id="tab-facet-{{ facet.id }}">
+    {% include "ClarolineCoreBundle:Administration\\Facet:facetTabInnerHtml.html.twigjs" with {'facet': facet} %}
+</li>

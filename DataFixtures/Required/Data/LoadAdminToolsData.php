@@ -15,22 +15,22 @@ use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Tool\AdminTool;
 use Claroline\CoreBundle\DataFixtures\Required\RequiredFixture;
 
-class LoadAdminTools implements RequiredFixture
+class LoadAdminToolsData implements RequiredFixture
 {
     public function load(ObjectManager $manager)
     {
         $tools = array(
-            array('platform_parameters', 'icon-cog'),
-            array('user_management', 'icon-user'),
-            array('workspace_management', 'icon-book'),
-            array('badges_management', 'icon-trophy'),
-            array('registration_to_workspace', 'icon-book'),
-            array('platform_plugins', 'icon-wrench'),
-            array('home_tabs', 'icon-th-large'),
-            array('desktop_tools', 'icon-pencil'),
-            array('platform_logs', 'icon-reorder'),
-            array('platform_analytics', 'icon-bar-chart'),
-            array('roles_management', 'icon-group')
+            array('platform_parameters', 'cog'),
+            array('user_management', 'user'),
+            array('workspace_management', 'book'),
+            array('badges_management', 'trophy'),
+            array('registration_to_workspace', 'book'),
+            array('platform_packages', 'wrench'),
+            array('home_tabs', 'th-large'),
+            array('desktop_tools', 'pencil'),
+            array('platform_logs', 'bars'),
+            array('platform_analytics', 'bar-chart-o'),
+            array('roles_management', 'users')
         );
 
         foreach ($tools as $tool) {

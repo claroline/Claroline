@@ -99,6 +99,16 @@ class WorkspaceTagManager
         $this->om->flush();
     }
 
+    public function linkWorkspace(
+        WorkspaceTag $tag,
+        AbstractWorkspace $workspace = null
+    )
+    {
+        $tag->setWorkspace($workspace);
+        $this->om->persist($tag);
+        $this->om->flush();
+    }
+
     public function createTagRelation(WorkspaceTag $tag, Workspace $workspace)
     {
         $relWorkspaceTag = $this->om->factory('Claroline\CoreBundle\Entity\Workspace\RelWorkspaceTag');
@@ -441,7 +451,7 @@ class WorkspaceTagManager
 
         foreach ($allAdminTags as $adminTag) {
             $adminTagId = $adminTag->getId();
-            $displayable[$adminTagId] = $this->isTagDisplayable($adminTagId, $tagWorkspaces, $hierarchy);
+            $displayable[$adminTagId] = $this->isTagDisplayable($adminTag, $tagWorkspaces, $hierarchy);
         }
 
         $workspaceRoles = array();
@@ -452,8 +462,31 @@ class WorkspaceTagManager
             foreach ($roles as $role) {
                 $code = $role->getWorkspace()->getCode();
 
+<<<<<<< HEAD
                 if (!isset($workspaceRoles[$code])) {
                     $workspaceRoles[$code] = array();
+||||||| merged common ancestors
+                if (!is_null($wsRole)) {
+                    $code = $wsRole->getCode();
+
+                    if (!isset($workspaceRoles[$code])) {
+                        $workspaceRoles[$code] = array();
+                    }
+
+                    $workspaceRoles[$code][] = $role;
+=======
+                if (!is_null($wsRole)) {
+                    $code = $wsRole->getCode();
+
+                    if (!isset($workspaceRoles[$code])) {
+                        $workspaceRoles[$code] = array();
+                    }
+//        $tagsWithWorkspace = $this->getAdminTagsWithWorkspace();
+//        $tags = array_merge($nonEmptyTags, $tagsWithWorkspace);
+//        array_unique($tags);
+
+                    $workspaceRoles[$code][] = $role;
+>>>>>>> ws-inheritance-merge
                 }
 
                 $workspaceRoles[$code][] = $role;
@@ -516,7 +549,7 @@ class WorkspaceTagManager
 
         foreach ($allTags as $oneTag) {
             $oneTagId = $oneTag->getId();
-            $displayable[$oneTagId] = $this->isTagDisplayable($oneTagId, $tagWorkspaces, $hierarchy);
+            $displayable[$oneTagId] = $this->isTagDisplayable($oneTag, $tagWorkspaces, $hierarchy);
         }
 
         $tagWorkspacePager = array();
@@ -587,7 +620,7 @@ class WorkspaceTagManager
 
         foreach ($allAdminTags as $adminTag) {
             $adminTagId = $adminTag->getId();
-            $displayable[$adminTagId] = $this->isTagDisplayable($adminTagId, $tagWorkspaces, $hierarchy);
+            $displayable[$adminTagId] = $this->isTagDisplayable($adminTag, $tagWorkspaces, $hierarchy);
         }
 
         $tagWorkspacePager = array();
@@ -615,11 +648,14 @@ class WorkspaceTagManager
      * @param  array   $hierarchy
      * @return boolean
      */
-    private function isTagDisplayable($tagId, array $tagWorkspaces, array $hierarchy)
+    private function isTagDisplayable(WorkspaceTag $tag, array $tagWorkspaces, array $hierarchy)
     {
         $displayable = false;
+        $tagId = $tag->getId();
 
-        if (isset($tagWorkspaces[$tagId]) && count($tagWorkspaces[$tagId]) > 0) {
+        if ((isset($tagWorkspaces[$tagId]) && count($tagWorkspaces[$tagId]) > 0)
+            || !is_null($tag->getWorkspace())) {
+
             $displayable = true;
         } else {
 
@@ -628,7 +664,7 @@ class WorkspaceTagManager
 
                 foreach ($children as $child) {
 
-                    $displayable = $this->isTagDisplayable($child->getId(), $tagWorkspaces, $hierarchy);
+                    $displayable = $this->isTagDisplayable($child, $tagWorkspaces, $hierarchy);
 
                     if ($displayable) {
                         break;

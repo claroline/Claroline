@@ -8,6 +8,7 @@
  */
 
 /* global Twig */
+/* global Translator */
 /* global ResourceManagerActions */
 
 (function () {
@@ -16,254 +17,217 @@
     window.Claroline = window.Claroline || {};
     window.Claroline.ResourceManager = window.Claroline.ResourceManager || {};
     window.Claroline.ResourceManager.Views = window.Claroline.ResourceManager.Views || {};
+    var views = Claroline.ResourceManager.Views;
 
-    Claroline.ResourceManager.Views.Actions = Backbone.View.extend({
+    views.Actions = Backbone.View.extend({
         className: 'navbar navbar-default navbar-static-top',
         events: {
-            'keypress input.name': function (event) {
-                if (event.keyCode !== 13) {
-                    return;
-                }
-
-                event.preventDefault();
-
-                this.filter();
-            },
+            'click ul.create li a': 'create',
+            'click a.delete': 'delete',
+            'click a.download': 'download',
+            'click a.copy': 'copy',
+            'click a.cut': 'cut',
+            'click a.paste': 'paste',
+            'click button.config-search-panel': 'toggleFilters',
             'click button.filter': 'filter',
-            'click ul.create li a': function (event) {
-                event.preventDefault();
-                this.dispatcher.trigger('display-form', {
-                    type: 'create',
-                    node: {
-                        type: event.currentTarget.getAttribute('id'),
-                        id: this.currentDirectory.id
-                    }
-                });
-            },
-            'click ul.zoom li a': function (event) {
-                event.preventDefault();
-
-                if ($('.node-thumbnail').get(0) !== undefined) {
-                    var zoom = event.currentTarget.getAttribute('id');
-                    var currentZoom = $('.node-thumbnail').get(0).className.match(/\bzoom\d+/g);
-                    this.parameters.zoom = zoom;
-
-                    $.ajax({
-                        url: routing.generate('claro_resource_change_zoom', {'zoom': zoom}),
-                        type: 'GET',
-                        success: function () {
-                            $('.dropdown-menu.zoom li').removeClass('active');
-                            $(event.currentTarget).parent().addClass('active');
-                            $('.node-thumbnail').each(function () {
-                                for (var i in currentZoom) {
-                                    if (currentZoom.hasOwnProperty(i)) {
-                                        $(this).removeClass(currentZoom[i]);
-                                    }
-                                }
-                                $(this).addClass(zoom);
-                            });
-                        }
-                    });
-                }
-            },
-            'click a.delete': function () {
-                if (!(this.$('a.delete').hasClass('disabled'))) {
-                    this.dispatcher.trigger('delete', {ids: _.keys(this.checkedNodes.nodes)});
-                }
-            },
-            'click a.download': function () {
-                if (!(this.$('a.download').hasClass('disabled'))) {
-                    this.dispatcher.trigger('download', {ids: _.keys(this.checkedNodes.nodes)});
-                }
-            },
-            'click a.copy': function () {
-
-                if (!(this.$('a.copy').hasClass('disabled')) && _.size(this.checkedNodes.nodes) > 0) {
-                    this.setPasteBinState(true, false);
-                }
-            },
-            'click a.cut': function () {
-
-                if (!(this.$('a.cut').hasClass('disabled')) && _.size(this.checkedNodes.nodes) > 0) {
-                    this.setPasteBinState(true, true);
-                }
-            },
-            'click a.paste': function () {
-                if (!(this.$('a.paste').hasClass('disabled'))) {
-                    this.dispatcher.trigger('paste', {
-                        ids:  _.keys(this.checkedNodes.nodes),
-                        isCutMode: this.isCutMode,
-                        directoryId: this.currentDirectory.id,
-                        sourceDirectoryId: this.checkedNodes.directoryId
-                    });
-                }
-            },
-            'click a.open-picker': function () {
-                this.dispatcher.trigger('picker-action', {
-                    name: 'defaultPicker',
-                    action: 'open'
-                });
-            },
-            'click button.config-search-panel': function () {
-                if (!this.filters) {
-                    this.filters = new manager.Views.Filters(
-                        this.parameters,
-                        this.dispatcher,
-                        this.currentDirectory
-                    );
-                    this.filters.render(this.resourceTypes);
-                    $(this.el).after(this.filters.el);
-                }
-
-                this.filters.toggle();
-            },
-            'click a.add': function (event) {
-                if (/disabled/.test(event.currentTarget.className)) {
-                    return;
-                }
-
-                console.log(this.parameters)
-
-                if (this.parameters.pickerCallback) {
-
-                    this.parameters.pickerCallback(this.checkedNodes.nodes, this.currentDirectory.id);
-                } else {
-
-                    console.log('NO picker cb')
-
-                    this.dispatcher.trigger('paste', {
-                        ids: _.keys(this.checkedNodes.nodes),
-                        directoryId: this.targetDirectoryId,
-                        isCutMode: false
-                    });
-                }
-
-//                    if (this.parameters.isPickerOnly) {
-//                        this.parameters.pickerCallback(this.checkedNodes.nodes, this.currentDirectory.id);
-//                    } else {
-//                        if (this.callback) {
-//                            this.callback(_.keys(this.checkedNodes.nodes), this.targetDirectoryId);
-//                        } else {
-//                            this.dispatcher.trigger('paste', {
-//                                ids: _.keys(this.checkedNodes.nodes),
-//                                directoryId: this.targetDirectoryId,
-//                                isCutMode: false
-//                            });
-//                        }
-//                    }
-
-                this.dispatcher.trigger('picker', {action: 'close'});
-            }
-        },
-        filter: function () {
-            var searchParameters = {};
-            var name = this.$('.name').val().trim();
-            var dateFrom = $('input.date-from').first().val();
-            var dateTo = $('input.date-to').first().val();
-            var types = $('select.node-types').val();
-
-            if (name) {
-                searchParameters.name = name;
-            }
-
-            if (dateFrom) {
-                searchParameters.dateFrom = dateFrom + ' 00:00:00';
-            }
-
-            if (dateTo) {
-                searchParameters.dateTo = dateTo + ' 23:59:59';
-            }
-
-            if (types) {
-                searchParameters.types = types;
-            }
-
-            if (this.currentDirectory.id !== '0') {
-                searchParameters.roots = [this.currentDirectory.path];
-            }
-
-            this.dispatcher.trigger('filter', {
-                isPickerMode: this.parameters.isPickerMode,
-                directoryId: this.currentDirectory.id,
-                parameters: searchParameters
-            });
+            'keypress input.name': 'filter',
+            'click ul.zoom li a': 'zoom',
+            'click a.open-picker': 'openPicker',
+            'click a.add': 'add'
         },
         initialize: function (parameters, dispatcher) {
             this.parameters = parameters;
             this.dispatcher = dispatcher;
+            this.filters = null;
+            this.isReadyToPaste = false;
+            this.isCutMode = false;
             this.isSearchMode = false;
-            this.currentDirectory = {id: parameters.directoryId};
+            this.lastSearchedName = null;
+            this.zoomValue = parameters.zoom;
+            this.currentDirectoryId = parameters.directoryId;
             // destination directory for picker "add" action
-            this.targetDirectoryId = this.currentDirectory.id;
+            this.targetDirectoryId = this.currentDirectoryId;
             // selection of nodes checked by the user
             this.checkedNodes = {
                 nodes: {},
-                directoryId: parameters.directoryId,
-                isSearchMode: false
+                directoryId: this.currentDirectoryId,
+                isSearchMode: this.isSearchMode
             };
             this.setPasteBinState(false, false);
-            // if a node has been (un-)checked
-            this.dispatcher.on('node-check-status', function (event) {
-                // if the node belongs to this view instance
-                if (event.isPickerMode === this.parameters.isPickerMode) {
-                    // cancel any previous paste bin state
-                    if (this.isReadyToPaste) {
-                        this.setPasteBinState(false, false);
-                    }
-                    // cancel any previous selection made in another directory
-                    // or in a previous search results list
-                    // or in this directory if we're in picker 'mono-select' mode
-                    if (this.checkedNodes.directoryId !== this.currentDirectory.id ||
-                        (this.checkedNodes.isSearchMode && !this.isSearchMode) ||
-                        (this.parameters.isPickerMode &&
-                            !this.parameters.isPickerMultiSelectAllowed &&
-                            event.isChecked)) {
-                        this.checkedNodes.directoryId = this.currentDirectory.id;
-                        this.checkedNodes.nodes = {};
-                        this.setPasteBinState(false, false);
-                    }
-                    // add the node to the selection or remove it if already present
-                    if (this.checkedNodes.nodes.hasOwnProperty(event.node.id) && !event.isChecked) {
-                        delete this.checkedNodes.nodes[event.node.id];
-                    } else {
-                        this.checkedNodes.nodes[event.node.id] = [
-                            event.node.name,
-                            event.node.type,
-                            event.node.mimeType
-                        ];
-                    }
+            this.dispatcher.on('open-directory', this.setTargetDirectory, this);
+            this.dispatcher.on('directory-data-' + this.parameters.viewName, this.render, this);
+            this.dispatcher.on('node-check-status-' + this.parameters.viewName, this.handleSelection, this);
+            this.dispatcher.on('deleted-nodes-' + this.parameters.viewName, this.setInitialState, this);
+        },
+        create: function (event) {
+            var type = event.currentTarget.getAttribute('id');
 
-                    this.checkedNodes.directoryId = this.currentDirectory.id;
-                    this.checkedNodes.isSearchMode = this.isSearchMode;
-                    this.setActionsEnabledState(event.isPickerMode);
-                }
-            }, this);
-        },
-        setButtonEnabledState: function (jqButton, isEnabled) {
-            return isEnabled ? jqButton.removeClass('disabled') : jqButton.addClass('disabled');
-        },
-        setActionsEnabledState: function (isPickerMode) {
-            var isSelectionNotEmpty = _.size(this.checkedNodes.nodes) > 0;
-            // enable picker "add" button on non-root directories if selection is not empty
-            if (isPickerMode && (this.currentDirectory.id !== '0' || this.isSearchMode)) {
-                this.setButtonEnabledState(this.$('a.add'), isSelectionNotEmpty);
+            if (type === 'resource_shortcut') {
+                this.dispatcher.trigger('open-picker-shortcutPicker');
             } else {
-                // enable download if selection is not empty
-                this.setButtonEnabledState(this.$('a.download'), isSelectionNotEmpty);
-                // other actions are only available on non-root directories
-                // (so they are available in search mode too, as roots are not displayed in that mode)
-                if (this.currentDirectory.id !== '0' || this.isSearchMode) {
-                    this.setButtonEnabledState(this.$('a.cut'), isSelectionNotEmpty);
-                    this.setButtonEnabledState(this.$('a.copy'), isSelectionNotEmpty);
-                    this.setButtonEnabledState(this.$('a.delete'), isSelectionNotEmpty);
-                }
-
+                this.dispatcher.trigger('create-form', {
+                    action: 'create-form',
+                    nodeId: this.currentDirectoryId,
+                    resourceType: event.currentTarget.getAttribute('id'),
+                    view: this.parameters.viewName
+                });
             }
+        },
+        'delete': function (event) {
+            if (!this.$(event.currentTarget).hasClass('disabled')) {
+                var trans = _.keys(this.checkedNodes.nodes).length > 1 ?
+                    'resources_delete' :
+                    'resource_delete';
+                this.dispatcher.trigger('confirm', {
+                    header: Translator.get('platform:delete'),
+                    body: Translator.get('platform:' + trans),
+                    callback: _.bind(function () {
+                        this.dispatcher.trigger('delete', {
+                            ids: _.keys(this.checkedNodes.nodes),
+                            view: this.parameters.viewName
+                        });
+                    }, this)
+                });
+            }
+        },
+        'download': function (event) {
+            if (!this.$(event.currentTarget).hasClass('disabled')) {
+                this.dispatcher.trigger('download', {
+                    ids: _.keys(this.checkedNodes.nodes)
+                });
+            }
+        },
+        'copy': function (event) {
+            if (!this.$(event.currentTarget).hasClass('disabled') && _.size(this.checkedNodes.nodes) > 0) {
+                this.setPasteBinState(true, false);
+            }
+        },
+        'cut': function (event) {
+            if (!this.$(event.currentTarget).hasClass('disabled') && _.size(this.checkedNodes.nodes) > 0) {
+                this.setPasteBinState(true, true);
+            }
+        },
+        'paste': function (event) {
+            if (!this.$(event.currentTarget).hasClass('disabled')) {
+                var event = this.isCutMode ? 'move-nodes' : 'copy-nodes';
+                this.dispatcher.trigger(event, {
+                    ids:  _.keys(this.checkedNodes.nodes),
+                    directoryId: this.currentDirectoryId,
+                    sourceDirectoryId: this.checkedNodes.directoryId,
+                    view: this.parameters.viewName
+                });
+            }
+        },
+        'toggleFilters': function () {
+            this.initFilters();
+            this.filters.toggle();
+        },
+        filter: function (event) {
+            if (event.type === 'keypress' && event.keyCode !== 13) {
+                return;
+            }
+
+            event.preventDefault();
+            this.initFilters();
+            var parameters = this.filters.getParameters();
+            var name = this.$('.name').val().trim();
+
+            if (name) {
+                parameters.name = name;
+                this.lastSearchedName = name;
+            }
+
+            this.dispatcher.trigger('filter', {
+                nodeId: this.currentDirectoryId,
+                parameters: parameters,
+                view: this.parameters.viewName
+            });
+        },
+        zoom: function (event) {
+            this.zoomValue = event.currentTarget.getAttribute('id');
+            this.dispatcher.trigger('change-zoom', {
+                value: this.zoomValue
+            });
+            this.$('.dropdown-menu.zoom li').removeClass('active');
+            this.$(event.currentTarget).parent().addClass('active');
+        },
+        openPicker: function () {
+            this.dispatcher.trigger('open-picker-defaultPicker');
+        },
+        add: function (event) {
+            if (this.$(event.currentTarget).hasClass('disabled')) {
+                return;
+            }
+
+            if (this.parameters.viewName === 'defaultPicker') {
+                this.dispatcher.trigger('copy-nodes', {
+                    ids: _.keys(this.checkedNodes.nodes),
+                    directoryId: this.targetDirectoryId,
+                    view: 'main'
+                });
+            } else if (this.parameters.viewName === 'shortcutPicker') {
+                this.dispatcher.trigger('create-shortcuts', {
+                    ids: _.keys(this.checkedNodes.nodes),
+                    directoryId: this.targetDirectoryId,
+                    view: 'main'
+                });
+            } else {
+                this.parameters.pickerCallback(this.checkedNodes.nodes, this.currentDirectoryId);
+            }
+
+            this.dispatcher.trigger('close-picker-' + this.parameters.viewName);
+        },
+        'initFilters': function () {
+            if (!this.filters) {
+                this.filters = new views.Filters(this.parameters);
+                this.filters.render(this.resourceTypes);
+                this.$el.after(this.filters.el);
+            }
+        },
+        setTargetDirectory: function (event) {
+            if (event.view === 'main' && this.parameters.isPickerMode) {
+                this.targetDirectoryId = event.nodeId;
+            }
+        },
+        handleSelection: function (event) {
+            // cancel any previous paste bin state
+            if (this.isReadyToPaste) {
+                this.setPasteBinState(false, false);
+            }
+            // cancel any previous selection made in another directory
+            // or in a previous search results list
+            // or in this directory if we're in picker 'mono-select' mode
+            if (this.checkedNodes.directoryId !== this.currentDirectoryId ||
+                (this.checkedNodes.isSearchMode && !this.isSearchMode) ||
+                (this.parameters.isPickerMode &&
+                    !this.parameters.isPickerMultiSelectAllowed &&
+                    event.isChecked)) {
+                this.checkedNodes.directoryId = this.currentDirectoryId;
+                this.checkedNodes.nodes = {};
+                this.setPasteBinState(false, false);
+            }
+            // add the node to the selection or remove it if already present
+            if (this.checkedNodes.nodes.hasOwnProperty(event.node.id) && !event.isChecked) {
+                delete this.checkedNodes.nodes[event.node.id];
+            } else {
+                this.checkedNodes.nodes[event.node.id] = [
+                    event.node.name,
+                    event.node.type,
+                    event.node.mimeType
+                ];
+            }
+
+            this.checkedNodes.directoryId = this.currentDirectoryId;
+            this.checkedNodes.isSearchMode = this.isSearchMode;
+            this.setActionsEnabledState(event.isPickerMode);
         },
         setPasteBinState: function (isReadyToPaste, isCutMode) {
             this.isReadyToPaste = isReadyToPaste;
             this.isCutMode = isCutMode;
-            this.setButtonEnabledState(this.$('a.paste'), isReadyToPaste && !this.isSearchMode);
+            this.setButtonEnabledState(
+                this.$('a.paste'),
+                isReadyToPaste && (!this.isCutMode || this.checkedNodes.directoryId !== this.currentDirectoryId)
+            );
         },
         setInitialState: function () {
             this.checkedNodes.nodes = {};
@@ -275,31 +239,58 @@
             this.setButtonEnabledState(this.$('a.delete'), false);
             this.setButtonEnabledState(this.$('a.download'), false);
         },
-        render: function (directory, creatableTypes, isSearchMode, searchParameters, zoom) {
-            this.currentDirectory = directory;
-
-            if (isSearchMode && !this.isSearchMode) {
+        setButtonEnabledState: function (jqButton, isEnabled) {
+            return isEnabled ? jqButton.removeClass('disabled') : jqButton.addClass('disabled');
+        },
+        setActionsEnabledState: function (isPickerMode) {
+            var isSelectionNotEmpty = _.size(this.checkedNodes.nodes) > 0;
+            // enable picker "add" button on non-root directories if selection is not empty
+            if (isPickerMode && (this.currentDirectoryId !== '0' || this.isSearchMode)) {
+                this.setButtonEnabledState(this.$('a.add'), isSelectionNotEmpty);
+            } else {
+                // enable download if selection is not empty
+                this.setButtonEnabledState(this.$('a.download'), isSelectionNotEmpty);
+                // other actions are only available on non-root directories
+                // (so they are available in search mode too, as roots are not displayed in that mode)
+                if (this.currentDirectoryId !== '0' || this.isSearchMode) {
+                    this.setButtonEnabledState(this.$('a.cut'), isSelectionNotEmpty);
+                    this.setButtonEnabledState(this.$('a.copy'), isSelectionNotEmpty);
+                    this.setButtonEnabledState(this.$('a.delete'), isSelectionNotEmpty);
+                }
+            }
+        },
+        render: function (event) {
+            if (event.isSearchMode && !this.isSearchMode) {
                 this.checkedNodes.nodes = {};
                 this.checkedNodes.isSearchMode = true;
+            } else if (!event.isSearchMode && this.isSearchMode) {
+                this.lastSearchedName = null;
+                this.filters && this.filters.close();
             }
 
-            this.isSearchMode = isSearchMode;
+            this.currentDirectoryId = event.id;
+            this.isSearchMode = event.isSearchMode;
 
-            if (this.filters) {
-                this.filters.currentDirectory = directory;
-            }
+            var creatableTypes = event.creatableTypes || [];
+            var isCreationAllowed = this.currentDirectoryId !== '0'
+                && !this.parameters.isPickerMode
+                && !this.isSearchMode;
+            var isCreateAllowed = isCreationAllowed && _.size(creatableTypes) > 0;
+            var isPasteAllowed = isCreationAllowed
+                && this.isReadyToPaste
+                && (!this.isCutMode || this.checkedNodes.directoryId !== event.id);
 
-
-            var parameters = _.extend({}, this.parameters);
-            parameters.searchedName = searchParameters ? searchParameters.name : null;
-            parameters.creatableTypes = creatableTypes;
-            parameters.isPasteAllowed = this.isReadyToPaste && !this.isSearchMode && directory.id !== '0';
-            parameters.isSearchMode = this.isSearchMode;
-            parameters.zoom = this.parameters.zoom;
-            parameters.isCreateAllowed = parameters.isAddAllowed = directory.id !== 0
-                && _.size(creatableTypes) > 0
-                && (this.parameters.isPickerMode || !this.isSearchMode);
-            $(this.el).html(Twig.render(ResourceManagerActions, parameters));
+            $(this.el).html(Twig.render(ResourceManagerActions, {
+                resourceTypes: this.parameters.resourceTypes,
+                searchedName: this.lastSearchedName,
+                isPickerMode: this.parameters.isPickerMode,
+                isSearchMode: this.isSearchMode,
+                isAddAllowed: isCreateAllowed,
+                isPasteAllowed: isPasteAllowed,
+                isCreateAllowed: isCreateAllowed,
+                creatableTypes: creatableTypes,
+                zoom: this.zoomValue
+            }));
         }
     });
 })();

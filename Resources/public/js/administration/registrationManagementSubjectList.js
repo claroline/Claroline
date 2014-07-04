@@ -212,7 +212,7 @@
         });
 
         $('#search-button').click(function () {
-            var search = $('#search-txt').attr('value');
+            var search = $('#search-txt').val();
             var subjectType = $('#registration-list-div').attr('subject-type');
             var route;
 
@@ -251,5 +251,25 @@
         });
     }
 
+    // When clicking on the Book icon show the modal with the list of selected workspace
+    $('body').on('click', '#remove-workspace-from-list', function () {
+        $('#remove-workspace-modal-box').modal('show');
+    });
+    
+    // When clicking on the Trash icon in the list of selected workspace 
+    $('body').on('click', '.remove-workspace-button', function () {
+        var workspaceId = $(this).attr('workspace-id');
+        $(this).parent('.workspace-element-for-removal').remove();
+        $('#option-workspace-' + workspaceId).remove();
+        
+        var remainingWorkspaces = $('.workspace-element-for-removal');
+        
+        // If there is only one workspace left hide the modal and remove the Book icon
+        if (remainingWorkspaces.length <= 1) {
+            $('#remove-workspace-modal-box').modal('hide');
+            $('#remove-workspace-from-list').remove();
+        }
+    });
+    
     initEvents();
 })();

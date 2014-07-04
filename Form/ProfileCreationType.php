@@ -21,14 +21,16 @@ class ProfileCreationType extends AbstractType
 {
     private $platformRoles;
     private $langs;
+    private $isAdmin;
 
      /**
       * Constructor.
       *
       * @param Role[]  $platformRoles
       * @param array   $langs
+      * @param boolean $isAdmin
       */
-    public function __construct(array $platformRoles, array $langs)
+    public function __construct(array $platformRoles, array $langs, $isAdmin = false)
     {
         $this->platformRoles = new ArrayCollection($platformRoles);
 
@@ -37,11 +39,15 @@ class ProfileCreationType extends AbstractType
         } else {
             $this->langs = array('en' => 'en', 'fr' => 'fr');
         }
+
+        $this->isAdmin = $isAdmin;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         parent::buildForm($builder, $options);
+
+        $isAdmin = $this->isAdmin;
 
             $builder->add('firstName', 'text', array('label' => 'First name'))
                 ->add('lastName', 'text', array('label' => 'Last name'))
@@ -76,10 +82,16 @@ class ProfileCreationType extends AbstractType
                         'expanded' => true,
                         'multiple' => true,
                         'property' => 'translationKey',
-                        'query_builder' => function (\Doctrine\ORM\EntityRepository $er) {
-                            return $er->createQueryBuilder('r')
+                        'query_builder' => function (\Doctrine\ORM\EntityRepository $er) use ($isAdmin) {
+                            $query = $er->createQueryBuilder('r')
                                     ->where("r.type != " . Role::WS_ROLE)
+                                    ->andWhere("r.name != 'ROLE_USER'")
                                     ->andWhere("r.name != 'ROLE_ANONYMOUS'");
+                            if (!$isAdmin) {
+                                $query->andWhere("r.name != 'ROLE_ADMIN'");
+                            }
+
+                            return $query;
                         }
                     )
                 );

@@ -75,6 +75,15 @@ class Content implements Translatable
     private $locale;
 
     /**
+     * Constructor.
+     */
+    public function __construct()
+    {
+        $this->created = new \Datetime();
+        $this->modified = new \Datetime();
+    }
+
+    /**
      * Get id
      *
      * @return integer
@@ -82,15 +91,6 @@ class Content implements Translatable
     public function getId()
     {
         return $this->id;
-    }
-
-    /**
-     * Constructor.
-     */
-    public function __construct()
-    {
-        $this->created = new \Datetime();
-        $this->modified = new \Datetime();
     }
 
     /**
@@ -159,7 +159,7 @@ class Content implements Translatable
     }
 
     /**
-     * Get title
+     * Get type
      *
      * @return string
      */

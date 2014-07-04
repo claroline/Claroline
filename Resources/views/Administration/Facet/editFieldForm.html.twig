@@ -1,0 +1,24 @@
+{% extends "ClarolineCoreBundle:Administration\\Facet:facetModalForm.html.twig" %}
+
+{% block header %}
+    {{ 'edit_field'|trans({}, 'platform') }}
+{% endblock %}
+
+{% block explanation %}
+    <div class="well">
+        <p>{{ 'visible_facet_form_explanation'|trans({}, 'platform') }}</p>
+        <p>{{ 'editable_facet_form_explanation'|trans({}, 'platform') }}</p>
+    </div>
+{% endblock %}
+
+{% block form %}
+    <form role="form" class="form-horizontal" action="{{ path('claro_admin_field_facet_edit', {'fieldFacet': fieldFacet.getId()}) }}" method="post" {{ form_enctype(form) }} id="form_field_edit">
+        <div class="modal-body">
+            {{ form_widget(form) }}
+        </div>
+        <div class="modal-footer">
+            <button id="edit-field-creation-form" class="btn btn-primary" aria-hidden="true">{{ 'edit'|trans({}, 'platform') }}</button>
+            <div class="btn btn-default" data-dismiss="modal" aria-hidden="true">{{ 'cancel'|trans({}, 'platform') }}</div>
+        </div>
+    </form>
+{% endblock %}

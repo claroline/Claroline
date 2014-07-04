@@ -11,335 +11,461 @@
 
 namespace Claroline\CoreBundle\Controller;
 
-use Symfony\Component\Translation\Translator;
+use Claroline\CoreBundle\Entity\Activity\ActivityParameters;
+use Claroline\CoreBundle\Entity\Activity\ActivityRule;
+use Claroline\CoreBundle\Entity\Activity\Evaluation;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
-use Claroline\CoreBundle\Entity\Resource\ResourceActivity;
-use Claroline\CoreBundle\Entity\Resource\Activity;
+use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
+use Claroline\CoreBundle\Form\ActivityEvaluationType;
+use Claroline\CoreBundle\Form\ActivityParametersType;
+use Claroline\CoreBundle\Form\ActivityType;
+use Claroline\CoreBundle\Form\ActivityRuleType;
+use Claroline\CoreBundle\Manager\ActivityManager;
 use Claroline\CoreBundle\Manager\ResourceManager;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Request;
+use JMS\DiExtraBundle\Annotation\Inject;
+use JMS\DiExtraBundle\Annotation\InjectParams;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\Form\FormFactoryInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
-use Claroline\CoreBundle\Library\Resource\ResourceCollection;
-use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Security\Core\SecurityContextInterface;
+use Symfony\Component\Translation\TranslatorInterface;
 
-/**
- * Controller of the user's desktop.
- */
-class ActivityController extends Controller
+class ActivityController
 {
-    private $resourceManager;
+    private $securityContext;
+    private $formFactory;
     private $request;
+    private $activityManager;
+    private $resourceManager;
     private $translator;
-    private $sc;
 
     /**
-     * @DI\InjectParams({
-     *     "resourceManager" = @DI\Inject("claroline.manager.resource_manager"),
-     *     "request"         = @DI\Inject("request"),
-     *     "translator"      = @DI\Inject("translator"),
-     *     "sc"              = @DI\Inject("security.context")
+     * @InjectParams({
+     *     "securityContext"    = @Inject("security.context"),
+     *     "formFactory"        = @Inject("form.factory"),
+     *     "request"            = @Inject("request_stack"),
+     *     "activityManager"    = @Inject("claroline.manager.activity_manager"),
+     *     "resourceManager"    = @Inject("claroline.manager.resource_manager"),
+     *     "translator"         = @Inject("translator")
      * })
      */
     public function __construct(
+        SecurityContextInterface $securityContext,
+        FormFactoryInterface $formFactory,
+        RequestStack $request,
+        ActivityManager $activityManager,
         ResourceManager $resourceManager,
-        Request $request,
-        Translator $translator,
-        SecurityContextInterface $sc
+        TranslatorInterface $translator
     )
     {
+        $this->securityContext = $securityContext;
+        $this->formFactory = $formFactory;
+        $this->request = $request->getMasterRequest();
+        $this->activityManager = $activityManager;
         $this->resourceManager = $resourceManager;
-        $this->request = $request;
         $this->translator = $translator;
-        $this->sc = $sc;
     }
 
     /**
-     * @EXT\Route(
-     *    "/{activityId}/add/resource/{nodeId}",
-     *    name="claro_activity_add_resource",
-          options={"expose"=true}
-     * )
-     * @EXT\ParamConverter(
-     *      "node",
-     *      class="ClarolineCoreBundle:Resource\ResourceNode",
-     *      options={"id" = "nodeId", "strictId" = true}
-     * )
-     * @EXT\ParamConverter(
-     *      "activity",
-     *      class="ClarolineCoreBundle:Resource\Activity",
-     *      options={"id" = "activityId", "strictId" = true}
-     * )
-     *
-     * Adds a resource to an activity.
-     *
-     * @param ResourceNode $node
-     * @param Activity     $activity
-     *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @Route("edit/{resource}", name="claro_activity_edit")
+     * @ParamConverter("resource", class = "ClarolineCoreBundle:Resource\Activity", options = {"id" = "resource"})
+     * @Template()
      */
-    public function addResourceAction(ResourceNode $node, Activity $activity)
+    public function editAction($resource)
     {
-        $collection = new ResourceCollection(array($node));
-        $this->checkAccess('COMPOSE', $collection);
+        $this->checkAccess('edit', $resource);
 
-        if ($node->getResourceType()->getName() === 'activity') {
-            return new Response($this->translator->trans('recursivity_not_supported', array(), 'error'), 422);
+        $params = $resource->getParameters();
+        $rules = $params->getRules();
+        $hasRule = false;
+
+        if (count($rules) > 0) {
+            $hasRule = true;
+            $rule = $rules->first();
+        } else {
+            $rule = new ActivityRule();
         }
 
-        $em = $this->getDoctrine()->getManager();
-        $link = new ResourceActivity();
-        $link->setActivity($activity);
-        $link->setResourceNode($node);
-        $resourceActivities = $em->getRepository('ClarolineCoreBundle:Resource\ResourceActivity')
-            ->findBy(array('activity' => $activity->getId()));
-        $order = count($resourceActivities);
-        $link->setSequenceOrder($order);
-        $em->persist($link);
-        $em->flush();
+        $form = $this->formFactory->create(new ActivityType, $resource);
+        $form->handleRequest($this->request);
 
-        return new JsonResponse(array($this->resourceManager->toArray($node, $this->sc->getToken())));
-    }
+        $formParams = $this->formFactory->create(
+            new ActivityParametersType(),
+            $params
+        );
+        $formParams->handleRequest($this->request);
 
-    /**
-     * @EXT\Route(
-     *     "/{activityId}/remove/resource/{nodeId}",
-     *     name="claro_activity_remove_resource",
-     *     options={"expose"=true}
-     * )
-     *
-     * @EXT\ParamConverter(
-     *      "node",
-     *      class="ClarolineCoreBundle:Resource\ResourceNode",
-     *      options={"id" = "nodeId", "strictId" = true}
-     * )
-     * Remove a resource from an activity.
-     *
-     * @param ResourceNode $node       the node id
-     * @param integer      $activityId the activity id
-     *
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function removeResourceAction(ResourceNode $node, $activityId)
-    {
-        $collection = new ResourceCollection(array($node));
-        $this->checkAccess('COMPOSE', $collection);
+        $formRule = $this->formFactory->create(
+            new ActivityRuleType($this->activityManager, $this->translator),
+            $rule
+        );
+        $formRule->handleRequest($this->request);
 
-        $em = $this->getDoctrine()->getManager();
-        $repo = $em->getRepository('ClarolineCoreBundle:Resource\ResourceActivity');
-        $resourceActivity = $repo->findOneBy(array('resourceNode' => $node->getId(), 'activity' => $activityId));
-        $em->remove($resourceActivity);
-        $em->flush();
+        if ($form->isValid()
+            && $formParams->isValid()
+            && ($formRule->get('action')->getData() === 'none' || $formRule->isValid())) {
 
-        return new Response('success', 204);
-    }
+            $this->activityManager->editActivity($form->getData());
 
-    /**
-     * @EXT\Route(
-     *     "/{activityId}/set/sequence",
-     *     name="claro_activity_set_sequence",
-     *     options={"expose"=true}
-     * )
-     * @EXT\ParamConverter(
-     *      "activity",
-     *      class="ClarolineCoreBundle:Resource\Activity",
-     *      options={"id" = "activityId", "strictId" = true}
-     * )
-     * Sets the order of the resource in an activity.
-     * It takes an array of resourceIds as parameter (querystring: ids[]=1&ids[]=2 ...)
-     *
-     * @param Activity $activity the activity
-     *
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function setSequenceOrderAction(Activity $activity)
-    {
-        $collection = new ResourceCollection(array($activity->getResourceNode()));
-        $this->checkAccess('COMPOSE', $collection);
-        $em = $this->getDoctrine()->getManager();
-        $resourceActivities = $em->getRepository('ClarolineCoreBundle:Resource\ResourceActivity')
-            ->findBy(array('activity' => $activity->getId()));
-        $params = $this->request->query->all();
+            $maxDuration = $formParams->get('max_duration')->getData();
+            $maxAttempts = $formParams->get('max_attempts')->getData();
+            $evaluationType = $formParams->get('evaluation_type')->getData();
 
-        foreach ($resourceActivities as $resourceActivity) {
-            foreach ($params['ids'] as $key => $id) {
-                if ($id == $resourceActivity->getResourceNode()->getId()) {
-                    $resourceActivity->setSequenceOrder($key);
-                    $em->persist($resourceActivity);
+            $this->activityManager->updateParameters(
+                $params,
+                $maxDuration,
+                $maxAttempts,
+                $evaluationType
+            );
+
+            if ($formRule->get('action')->getData() === 'none') {
+
+                if ($hasRule) {
+                    $this->activityManager->deleteActivityRule($rule);
+                }
+            } else {
+                $primaryResource = $form->get('primaryResource')->getData();
+                $resourceNode = !is_null($primaryResource) ?
+                    $primaryResource :
+                    null;
+                $action = $formRule->get('action')->getData();
+                $occurrence = $formRule->get('occurrence')->getData();
+                $result = $formRule->get('result')->getData();
+                $resultMax = $formRule->get('resultMax')->getData();
+                $isResultVisible = $formRule->get('isResultVisible')->getData();
+                $activeFrom = $formRule->get('activeFrom')->getData();
+                $activeUntil = $formRule->get('activeUntil')->getData();
+
+                if ($hasRule) {
+                    $this->activityManager->updateActivityRule(
+                        $rule,
+                        $action,
+                        $occurrence,
+                        $result,
+                        $resultMax,
+                        $isResultVisible,
+                        $activeFrom,
+                        $activeUntil,
+                        $resourceNode
+                    );
+                } else {
+                    $this->activityManager->createActivityRule(
+                        $params,
+                        $action,
+                        $occurrence,
+                        $result,
+                        $resultMax,
+                        $isResultVisible,
+                        $activeFrom,
+                        $activeUntil,
+                        $resourceNode
+                    );
                 }
             }
         }
 
-        $em->flush();
-
-        return new Response('success');
+        return array(
+            '_resource' => $resource,
+            'form' => $form->createView(),
+            'formParams' => $formParams->createView(),
+            'params' => $params,
+            'formRule' => $formRule->createView(),
+            'defaultRuleStartingDate' => $resource->getResourceNode()->getCreationDate()->format('Y-m-d')
+        );
     }
 
     /**
-     * @EXT\Route(
-     *    "/leftmenu/{activity}",
-     *    name="claro_activity_left_menu",
-     *    options={"expose"=true}
+     * @Route("add/{activity}/{resource}", name="claro_activity_add", options = {"expose": true})
+     * @ParamConverter("activity", class = "ClarolineCoreBundle:Resource\Activity", options = {"id" = "activity"})
+     * @ParamConverter("resource", class = "ClarolineCoreBundle:Resource\ResourceNode", options = {"id" = "resource"})
+     */
+    public function addAction($activity, $resource)
+    {
+        $this->checkAccess('edit', $resource);
+
+        if ($this->activityManager->addResource($activity, $resource)) {
+            return new Response(
+                json_encode(
+                    array(
+                        'id' => $resource->getId(),
+                        'name' => $resource->getName(),
+                        'type' => $resource->getResourceType()->getName(),
+                        'mimeType' => $resource->getMimeType()
+                    )
+                )
+            );
+        }
+
+        return new Response('false');
+    }
+
+    /**
+     * @Route("removeprimary/{activity}", name="claro_activity_remove_primary_resource", options = {"expose": true})
+     * @ParamConverter("activity", class = "ClarolineCoreBundle:Resource\Activity", options = {"id" = "activity"})
+     */
+    public function removePrimaryResourceAction($activity)
+    {
+        $this->checkAccess('edit', $activity);
+
+        $this->activityManager->removePrimaryResource($activity);
+
+        return new Response('true');
+    }
+
+    /**
+     * @Route("remove/{activity}/{resource}", name="claro_activity_remove_resource", options = {"expose": true})
+     * @ParamConverter("activity", class = "ClarolineCoreBundle:Resource\Activity", options = {"id" = "activity"})
+     * @ParamConverter("resource", class = "ClarolineCoreBundle:Resource\ResourceNode", options = {"id" = "resource"})
+     */
+    public function removeAction($activity, $resource)
+    {
+        $this->checkAccess('edit', $activity);
+
+        if ($this->activityManager->removeResource($activity, $resource)) {
+            return new Response('true');
+        }
+
+        return new Response('false');
+    }
+
+    /**
+     * @Route(
+     *     "activity/add/rule/{activityParamsId}/{action}/{occurrence}/{result}/{activeFrom}/{activeUntil}/{resourceNodeId}",
+     *     name="claro_add_rule_to_activity",
+     *     options={"expose"=true}
+     * )
+     * @Method("POST")
+     * @ParamConverter(
+     *      "actvityParams",
+     *      class="ClarolineCoreBundle:Activity\ActivityParameters",
+     *      options={"id" = "activityParamsId", "strictId" = true}
+     * )
+     * @ParamConverter(
+     *      "resourceNode",
+     *      class="ClarolineCoreBundle:Resource\ResourceNode",
+     *      options={"id" = "resourceNodeId", "strictId" = true}
      * )
      *
-     * @EXT\Template("ClarolineCoreBundle:Activity/player:leftMenu.html.twig")
+     * Creates a rule and associates it to the activity
      *
-     * Renders the left menu of the activity player.
-     * Called from an iframe.
+     * @param ActivityParameters $activityParams
+     * @param string $action
+     * @param int $occurrence
+     * @param string $result
+     * @param datetime $activeFrom
+     * @param datetime $activeUntil
+     * @param ResourceNode $resourceNode
      *
-     * @param Activity $activity
-     *
-     * @return Response
+     * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function renderLeftMenuAction(Activity $activity)
+    public function addRuleToActivity(
+        ActivityParameters $activityParams,
+        $action,
+        $occurrence,
+        $result,
+        $activeFrom,
+        $activeUntil,
+        ResourceNode $resourceNode = null
+    )
     {
-        $em = $this->getDoctrine()->getManager();
-        $resourceActivities = $em->getRepository('ClarolineCoreBundle:Resource\ResourceActivity')
-            ->findResourceActivities($activity);
-        $totalSteps = $this->countSteps($activity, 0);
-        $totalItems = $this->countItems($activity, 0);
-        $totalItems++;
-        $items = array('resource' => $activity, 'step' => 1, 'resources' => $this->getItems($activity));
-
-        return array(
-            'resourceActivities' => $resourceActivities,
-            'activity' => $activity,
-            'items' => $items,
-            'totalSteps' => $totalSteps,
-            'totalItems' => $totalItems
+        $this->activityManager->createActivityRule(
+            $activityParams,
+            $action,
+            $occurrence,
+            $result,
+            $activeFrom,
+            $activeUntil,
+            $resourceNode
         );
     }
 
     /**
-     * @EXT\Route ("/player/{activity}", name="claro_activity_show_player")
-     * @EXT\Template("ClarolineCoreBundle:Activity/player:activity.html.twig")
+     * @Route(
+     *     "activity/rule/actions/resource/type/{resourceTypeName}",
+     *     name="claro_get_rule_actions_from_resource_type",
+     *     options={"expose"=true}
+     * )
+     * @Method("GET")
      *
-     * Shows the player layout.
+     * Get rule action names associated to a resource type
      *
-     * @param Activity $activity
+     * @param string $type
      *
-     * @return Response
+     * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function showPlayerAction(Activity $activity)
+    public function getRuleActionsFromResourceType($resourceTypeName = null)
     {
-        $em = $this->getDoctrine()->getManager();
-        $resourceActivities = $em->getRepository('ClarolineCoreBundle:Resource\ResourceActivity')
-            ->findResourceActivities($activity);
-        $resource = isset($resourceActivities[0]) ? $resourceActivities[0]->getResourceNode(): null;
+        if (is_null($resourceTypeName)) {
+            $ruleActions = $this->activityManager->getRuleActionsWithNoResourceType();
+        } else {
+            $resourceType = $this->resourceManager
+                ->getResourceTypeByName($resourceTypeName);
+            $ruleActions = $this->activityManager
+                ->getRuleActionsByResourceType($resourceType);
+        }
+
+        if (count($ruleActions) > 0) {
+            $actions = array();
+
+            foreach ($ruleActions as $ruleAction) {
+                $actions[] = $ruleAction->getAction();
+            }
+
+            return new Response(json_encode($actions));
+        }
+
+        return new Response('false');
+    }
+
+    /**
+     * @Route(
+     *     "activity/display/evaluation/parameters/{paramsId}",
+     *     name="claro_display_activity_evaluation",
+     *     options={"expose"=true}
+     * )
+     * @Method("GET")
+     * @ParamConverter("currentUser", options={"authenticatedUser" = true})
+     * @ParamConverter(
+     *      "params",
+     *      class="ClarolineCoreBundle:Activity\ActivityParameters",
+     *      options={"id" = "paramsId", "strictId" = true}
+     * )
+     * @Template()
+     *
+     * Display evaluations of the activity for the current user
+     *
+     * @param User $currentUser
+     * @param ActivityParameters $params
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function displayActivityEvaluationAction(
+        User $currentUser,
+        ActivityParameters $params
+    )
+    {
+        $evaluation = $this->activityManager
+            ->getEvaluationByUserAndActivityParams($currentUser, $params);
+        $pastEvals = $this->activityManager
+            ->getPastEvaluationsByUserAndActivityParams($currentUser, $params);
+
+        if (is_null($evaluation)) {
+            $evaluationType = $params->getEvaluationType();
+            $status = ($evaluationType === 'automatic') ?
+                'not_attempted' :
+                null;
+
+            $evaluation = $this->activityManager->createEvaluation(
+                $currentUser,
+                $params,
+                null,
+                null,
+                $status
+            );
+        }
+        $ruleScore = null;
+        $isResultVisible = false;
+
+        if ($params->getEvaluationType() === 'automatic' &&
+            count($params->getRules()) > 0) {
+
+            $rule = $params->getRules()->first();
+            $score = $rule->getResult();
+            $scoreMax = $rule->getResultMax();
+
+            if (!is_null($score)) {
+                $ruleScore = $score;
+
+                if (!is_null($scoreMax)) {
+                    $ruleScore .= ' / ' . $scoreMax;
+                }
+                $ruleResultVisible = $rule->getIsResultVisible();
+                $isResultVisible = !empty($ruleResultVisible);
+            }
+        }
 
         return array(
-            'activity' => $activity,
-            'resource' => $resource
+            'activityParameters' => $params,
+            'evaluation' => $evaluation,
+            'pastEvals' => $pastEvals,
+            'ruleScore' => $ruleScore,
+            'isResultVisible' => $isResultVisible
         );
     }
 
     /**
-     * @EXT\Route("/instructions/{activity}", name="claro_activity_show_instructions")
-     * @EXT\Template("ClarolineCoreBundle:Activity/player:instructions.html.twig")
-     *
-     * Show the instructions of an activity.
-     *
-     * @param Activity $activity
-     *
-     * @return Response
+     * @Route(
+     *     "edit/activity/evaluation/{evaluationId}",
+     *     name="claro_activity_evaluation_edit",
+     *     options={"expose"=true}
+     * )
+     * @ParamConverter("currentUser", options={"authenticatedUser" = true})
+     * @ParamConverter(
+     *      "evaluation",
+     *      class="ClarolineCoreBundle:Activity\Evaluation",
+     *      options={"id" = "evaluationId", "strictId" = true}
+     * )
+     * @Template()
      */
-    public function showInstructionsAction(Activity $activity)
+    public function editActivityEvaluationAction(
+        User $currentUser,
+        Evaluation $evaluation
+    )
     {
-        return array('instructions' => $activity);
-    }
+        $isWorkspaceManager = false;
+        $activityParams = $evaluation->getActivityParameters();
+        $activity = $activityParams->getActivity();
 
-    /**
-     * Count the number of steps in an activity.
-     * Each step is a resource.
-     *
-     * @param Activity $activity
-     * @param integer  $countSteps
-     *
-     * @return integer
-     */
-    private function countSteps(Activity $activity, $countSteps)
-    {
-        foreach ($activity->getResourceActivities() as $resourceActivity) {
-            if ($resourceActivity->getResourceNode()->getResourceType()->getName() !== 'activity') {
-                $countSteps++;
-            } else {
-                $countSteps = $this->countSteps(
-                    $this->resourceManager->getResourceFromNode($resourceActivity->getResourceNode()),
-                    $countSteps
-                );
-            }
+        if (!is_null($activity)) {
+            $workspace = $activity->getResourceNode()->getWorkspace();
+            $roleNames = $currentUser->getRoles();
+            $isWorkspaceManager = $this->isWorkspaceManager($workspace, $roleNames);
         }
 
-        return $countSteps;
-    }
+        if (!$isWorkspaceManager) {
 
-    /**
-     * Count the number of items in an activity.
-     * An item is either an activity (instruction) or a resource.
-     *
-     * @param Activity $activity
-     * @param integer  $countItems
-     *
-     * @return integer
-     */
-    private function countItems(Activity $activity, $countItems)
-    {
-        foreach ($activity->getResourceActivities() as $resourceActivity) {
-            $countItems++;
-
-            if ($resourceActivity->getResourceNode()->getResourceType()->getName() == 'activity') {
-                $countItems = $this->countItems(
-                    $this->resourceManager->getResourceFromNode($resourceActivity->getResourceNode()),
-                    $countItems
-                );
-            }
+            throw new AccessDeniedException();
         }
 
-        return $countItems;
-    }
+        $form = $this->formFactory
+            ->create(new ActivityEvaluationType(), $evaluation);
+        $form->handleRequest($this->request);
 
-    /**
-     * Returns an array containing activities & resources.
-     * This will be used to create the left menus href where each activity in an activity can
-     * be considered as a chapter.
-     *
-     * @param Activity $activity
-     * @param integer $step
-     * @param array $items the current items (recursive function)
-     *
-     * @return array
-     */
-    private function getItems(Activity $activity, &$step = 1, $items = array())
-    {
-        foreach ($activity->getResourceActivities() as $resourceActivity) {
-            $step++;
+        if ($form->isValid()) {
+            $this->activityManager->editEvaluation($evaluation);
 
-            if ($resourceActivity->getResourceNode()->getResourceType()->getName() == 'activity') {
-                $items[] = array(
-                    'resource' => $this->resourceManager->getResourceFromNode($resourceActivity->getResourceNode()),
-                    'step' => $step,
-                    'resources' => $this->getItems(
-                        $this->resourceManager->getResourceFromNode($resourceActivity->getResourceNode()),
-                        $step
-                    )
-                );
-            } else {
-                $items[] = array(
-                    'resource' => $this->resourceManager->getResourceFromNode($resourceActivity->getResourceNode()),
-                    'step' => $step
-                );
-            }
+            return new Response('success', 204);
         }
 
-        return $items;
+        return array(
+            'form' => $form->createView(),
+            'evaluation' => $evaluation
+        );
     }
 
-    public function checkAccess($permission, ResourceCollection $collection)
+    private function checkAccess($permission, $resource)
     {
-        if (!$this->get('security.context')->isGranted($permission, $collection)) {
-            throw new AccessDeniedException($collection->getErrorsForDisplay());
+        if (!$this->securityContext->isGranted($permission, $resource)) {
+            throw new AccessDeniedException();
         }
+    }
+
+    private function isWorkspaceManager(AbstractWorkspace $workspace, array $roleNames)
+    {
+        $isWorkspaceManager = false;
+        $managerRole = 'ROLE_WS_MANAGER_' . $workspace->getGuid();
+
+        if (in_array('ROLE_ADMIN', $roleNames) ||
+            in_array($managerRole, $roleNames)) {
+
+            $isWorkspaceManager = true;
+        }
+
+        return $isWorkspaceManager;
     }
 }

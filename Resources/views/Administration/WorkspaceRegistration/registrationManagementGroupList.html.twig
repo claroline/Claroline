@@ -6,7 +6,7 @@
     {{
         macros.breadcrumbs([
             {
-                'icon': 'icon-cog',
+                'icon': 'fa fa-cog',
                 'name': 'administration'|trans({}, 'platform'),
                 'href': path('claro_admin_index')
             },
@@ -40,13 +40,13 @@
         <h3>{{ 'select_groups_for_registration_to_workspace'|trans({}, 'platform') }}</h3>
         <br>
 
-        {% include 'ClarolineCoreBundle:WorkspaceRegistration\\Administration:registrationManagementSelectedWorkspacesAndRoles.html.twig' %}
+        {% include 'ClarolineCoreBundle:Administration\\WorkspaceRegistration:registrationManagementSelectedWorkspacesAndRoles.html.twig' %}
 
         <br>
         <div class="search-bar row">
             <div class="col-md-6">
                 <button class="btn btn-default subscribe-subjects-button" disabled="disabled">
-                    <i class="icon-pencil"></i>
+                    <i class="fa fa-pencil"></i>
                     {{ 'subscribe_selected_groups'|trans({}, 'platform') }}
                 </button>
             </div>
@@ -55,7 +55,7 @@
                     <input class="form-control" type="text" id="search-txt" placeholder="{{ 'search_group'|trans({}, 'platform') }}">
                     <span class="input-group-btn">
                         <button class="filter btn btn-default" type="button" id="search-button">
-                            <i class="icon-search"></i>
+                            <i class="fa fa-search"></i>
                         </button>
                     </span>
                 </div>
@@ -68,7 +68,7 @@
             </div>
         </div>
         <button class="btn btn-default subscribe-subjects-button" disabled="disabled">
-            <i class="icon-pencil"></i>
+            <i class="fa fa-pencil"></i>
             {{ 'subscribe_selected_groups'|trans({}, 'platform') }}
         </button>
     </div>

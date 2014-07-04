@@ -98,9 +98,9 @@ class UserRepository extends EntityRepository implements UserProviderInterface
             $order = $order === 'DESC' ? 'DESC' : 'ASC';
             $dql = "
                 SELECT u, up, r, g from Claroline\CoreBundle\Entity\User u
-                JOIN u.publicProfilePreferences up
                 JOIN u.roles r
                 LEFT JOIN u.groups g
+                LEFT JOIN r.workspace rws
                 WHERE u.isEnabled = true
                 AND r.type = 1
                 ORDER BY u.{$orderedBy} {$order}
@@ -580,15 +580,72 @@ class UserRepository extends EntityRepository implements UserProviderInterface
             SELECT u, r1, g, r2, ws, up From Claroline\CoreBundle\Entity\User u
             LEFT JOIN u.roles r1
             LEFT JOIN u.personalWorkspace ws
+            LEFT JOIN u.groups g
+            LEFT JOIN g.roles r2
+            WHERE r1 in (:roles)
+            AND u.isEnabled = true
+            OR r2 in (:roles)
+            ORDER BY u.{$orderedBy} ".
+            $order;
+
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('roles', $roles);
+
+        return ($getQuery) ? $query: $query->getResult();
+    }
+
+    /**
+     * @param Role[]  $roles
+     * @param boolean $getQuery
+     * @param string  $orderedBy
+     *
+     * @return Query|User[]
+     */
+    public function findUsersByRolesIncludingGroups(
+        array $roles,
+        $executeQuery = true
+    )
+    {
+        $dql = "
+            SELECT u, r1, g, r2, ws, up
+            From Claroline\CoreBundle\Entity\User u
+            LEFT JOIN u.roles r1
+            LEFT JOIN u.personalWorkspace ws
             JOIN u.publicProfilePreferences up
             LEFT JOIN u.groups g
-            LEFT JOIN g.roles gr
-            WHERE u.isEnabled = true
-            AND (
-              ur in (:roles) OR gr in (:roles)
-            )
-            ORDER BY u.{$orderedBy} {$order}
-        ";
+            LEFT JOIN g.roles r2
+            WHERE r1 in (:roles)
+            AND u.isEnabled = true
+            OR r2 in (:roles)
+            ORDER BY u.lastName, u.firstName ASC";
+
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('roles', $roles);
+
+        return ($executeQuery) ? $query->getResult() : $query;
+    }
+
+    /**
+     * @param Role[]  $roles
+     * @param string  $name
+     * @param boolean $getQuery
+     *
+     * @return Query|User[]
+     */
+    public function findByRolesAndName(array $roles, $name, $getQuery = false)
+    {
+        $search = strtoupper($name);
+        $dql = "
+            SELECT u FROM Claroline\CoreBundle\Entity\User u
+            JOIN u.roles r WHERE r IN (:roles)
+            AND (UPPER(u.username) LIKE :search
+            OR UPPER(u.lastName) LIKE :search
+            OR UPPER(u.firstName) LIKE :search)
+            AND u.isEnabled = true
+            ORDER BY u.lastName
+            ";
+
+>>>>>>> ws-inheritance-merge
         $query = $this->_em->createQuery($dql);
         $query->setParameter('roles', $roles);
 
@@ -774,19 +831,6 @@ class UserRepository extends EntityRepository implements UserProviderInterface
     }
 
     /**
-     * @param bool $executeQuery
-     *
-     * @return array|Query
-     */
-    public function findWithPublicProfilePreferences($executeQuery = true)
-    {
-        $queryBuilder = $this->createQueryBuilder('user')
-            ->leftJoin('user.publicProfilePreferences', 'uppf');
-
-        return $executeQuery ? $queryBuilder->getQuery()->getResult(): $queryBuilder->getQuery();
-    }
-
-    /**
      * @param string $data
      *
      * @return User
@@ -806,5 +850,61 @@ class UserRepository extends EntityRepository implements UserProviderInterface
         $query->setParameter('publicUrl', $data);
 
         return $query->getSingleResult();
+    }
+
+    public function countUsersByRoleIncludingGroup(Role $role)
+    {
+        $dql = '
+            SELECT count(distinct u)
+            FROM Claroline\CoreBundle\Entity\User u
+            JOIN u.roles r1
+            LEFT JOIN  u.groups g
+            LEFT JOIN g.roles r2
+            WHERE r1.id = :roleId OR r2.id = :roleId
+        ';
+
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('roleId', $role->getId());
+
+        return $query->getSingleScalarResult();
+    }
+
+    public function countUsersOfGroup (Group $group)
+    {
+        $dql = '
+            SELECT count(u) FROM Claroline\CoreBundle\Entity\User u
+            JOIN u.groups g
+            WHERE g.name = :name
+        ';
+
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('name', $group->getName());
+
+        return $query->getSingleScalarResult();
+    }
+
+    public function countUsersOfGroupByRole(Group $group, Role $role)
+    {
+        $dql = '
+            SELECT count(u) FROM Claroline\CoreBundle\Entity\User u
+            JOIN u.groups g
+            WHERE g.name = :groupName
+            AND u.id in
+                (
+                    SELECT u2.id FROM Claroline\CoreBundle\Entity\User u2
+                    LEFT JOIN u2.roles r1
+                    LEFT JOIN u2.groups g2
+                    LEFT JOIN g2.roles r2
+                    WHERE r1.name = :roleName
+                    OR r2.name = :roleName
+                )
+
+        ';
+
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('roleName', $role->getName());
+        $query->setParameter('groupName', $group->getName());
+
+        return $query->getSingleScalarResult();
     }
 }

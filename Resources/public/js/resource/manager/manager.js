@@ -14,13 +14,160 @@
     window.Claroline.ResourceManager = window.Claroline.ResourceManager || {};
 
     var manager = window.Claroline.ResourceManager;
-    var isInitialized = false;
-    var isDebug = false;
     var dispatcher = null;
     var server = null;
     var router = null;
     var views = {};
-    var pickers = [];
+    var isInitialized = false;
+    var areLogsActivated = false;
+    var hasFetchedParameters = false;
+    var fetchedParameters = {
+        pickerDirectoryId: null,
+        preFetchedDirectory: null,
+        resourceTypes: null,
+        webPath: null,
+        language: null,
+        zoom: null
+    };
+
+    /**
+     * Creates a full manager, i.e. a plain view of desktop or workspace resources,
+     * with all the utilities included (pickers, forms, etc.).
+     *
+     * Relevant parameters are:
+     *
+     * - directoryId : the id of the directory to open at initialization
+     *      (defaults to "0", i.e. pseudo-root of all directories)
+     * - pickerDirectoryId : the id of the directory to open in picker mode
+     *      (defaults to "0", i.e. pseudo-root of all directories)
+     * - preFetchedDirectory: a json representation of the first directory to open
+     *      (defaults to null)
+     * - isWorkspace: whether the manager is in a workspace (vs desktop) context
+     *      (defaults to false)
+     * - parentElement: the jquery element in which the views will be rendered
+     *      (defaults to "body" element)
+     * - breadcrumbElement: an existing jquery element to reuse for breadcrumbs
+     *      (defaults to null)
+     * - resourceTypes: an object whose properties describe the available resource types
+     *      (defaults to empty object)
+     * - webPath: the base url of the web directory
+     *      (defaults to empty string)
+     * - language: the locale to use when needed
+     *      (defaults to "en")
+     * - zoom: a zoom value for thumbnails
+     *      (defaults to "zoom100")
+     *
+     * @param parameters object Parameters of the manager
+     */
+    manager.createFullManager = function (parameters) {
+        initialize();
+        parameters = parameters || {};
+        var mainParameters = buildParameters('main', parameters, false, true);
+        var pickerParameters = buildParameters('defaultPicker', parameters, true, true);
+        var shortcutParameters = buildParameters('shortcutPicker', parameters, true, true);
+        views['main'] = new manager.Views.Master(mainParameters, dispatcher);
+        views['defaultPicker'] = new manager.Views.Master(pickerParameters, dispatcher);
+        views['shortcutPicker'] = new manager.Views.Master(shortcutParameters, dispatcher);
+        router = new manager.Router(dispatcher, mainParameters.directoryId);
+
+        Backbone.history.start();
+    };
+
+    /**
+     * Creates a named picker. Relevant parameters are:
+     *
+     * - callback: the function to be called when nodes are selected
+     *      (default to empty function)
+     * - isMultiSelectAllowed: whether the selection of multiple nodes should be allowed
+     *      (default to false)
+     * - typeWhiteList: an array of resource type names to accept
+     *      (defaults to null, i.e. all types are accepted)
+     * - typeBlackList: an array of resource type names to exclude (ignored if a white list is given)
+     *      (defaults to null)
+     * - parentElement: the jquery element in which the views will be rendered
+     *      (defaults to "body" element)
+     * - directoryId : the id of the directory to open at initialization
+     *      (defaults to "0", i.e. pseudo-root of all directories)
+     * - preFetchedDirectory: a json representation of the first directory to open
+     *      (defaults to null)
+     * - resourceTypes: an object whose properties describe the available resource types
+     *      (defaults to empty object)
+     * - webPath: the base url of the web directory
+     *      (defaults to empty string)
+     * - language: the locale to use when needed
+     *      (defaults to "en")
+     * - zoom: a zoom value for thumbnails
+     *      (defaults to "zoom100")
+     *
+     * Note that if they're not provided, the manager will try to fetch the last six
+     * parameters directly from the server before using their default values.
+     *
+     * @param name          string  Name of the picker
+     * @param parameters    object  Parameters of the picker
+     * @param open          boolean Whether the picker should be opened after creation (defaults to false)
+     */
+    manager.createPicker = function (name, parameters, open) {
+        if (manager.hasPicker(name)) {
+            throw new Error('Picker name "' + name + '" is already in use');
+        }
+
+        if (['main', 'defaultPicker', 'shortcutPicker'].indexOf(name) !== -1) {
+            throw new Error('Invalid picker name "' + name + '" (reserved for internal use)');
+        }
+
+        initialize();
+        parameters = parameters || {};
+        fetchMissingParameters(parameters, function () {
+            var pickerParameters = buildParameters(name, parameters, true);
+            views[name] = new manager.Views.Master(pickerParameters, dispatcher);
+            open && dispatcher.trigger('open-picker-' + name);
+        });
+    };
+
+    /**
+     * Checks if a picker is registered.
+     *
+     * @param name  string
+     * @returns boolean
+     */
+    manager.hasPicker = function (name) {
+        return views.hasOwnProperty(name) && views[name].parameters.isPickerMode;
+    };
+
+    /**
+     * Opens or closes a picker by its name.
+     *
+     * @param name      string  Name of the picker
+     * @param action    string  Action to execute (open|close)
+     */
+    manager.picker = function (name, action) {
+        if (!manager.hasPicker(name)) {
+            throw new Error('Unknown picker "' + name + '"');
+        }
+
+        action = action === 'close' ? 'close' : 'open';
+        dispatcher.trigger(action + '-picker-' + name);
+    };
+
+    /**
+     * Activates event dispatcher logging (debug utility).
+     */
+    manager.logEvents = function () {
+        if (!areLogsActivated) {
+            initialize();
+            var originalTrigger = dispatcher.trigger;
+            dispatcher.trigger = function (event, args) {
+                var listenerCount = _.keys(dispatcher._events).indexOf(event) !== -1 ?
+                    _.keys(dispatcher._events[event]).length :
+                    0;
+                console.debug(
+                    'Triggering "' + event + '" with', args, '[' + listenerCount + ' listener(s) attached]'
+                );
+                originalTrigger.apply(dispatcher, [event, args]);
+            };
+            areLogsActivated = true;
+        }
+    };
 
     function initialize() {
         if (!isInitialized) {
@@ -30,153 +177,73 @@
         }
     }
 
-    function mergeParameters(viewName, parameters, isPicker) {
-        var mergedParameters = _.extend({}, parameters);
-        mergedParameters.viewName = viewName;
-        mergedParameters.directoryId = parameters.directoryId || '0';
-        mergedParameters.directoryHistory = parameters.directoryHistory || [];
-        mergedParameters.parentElement = parameters.parentElement || $('body');
-        mergedParameters.resourceTypes = parameters.resourceTypes || {};
-        mergedParameters.appPath = parameters.appPath || '';
-        mergedParameters.webPath = parameters.webPath || '';
-        mergedParameters.filterState = parameters.filterState || 'none';
-        mergedParameters.zoom = parameters.zoom || 'zoom100';
-        mergedParameters.isPickerMode = isPicker;
+    function buildParameters(viewName, parameters, isPicker, isDefault) {
+        var mergedParameters = {
+            viewName: viewName,
+            isPickerMode: isPicker,
+            isWorkspace: parameters.isWorkspace || false,
+            directoryId: resolveDirectoryId(parameters, isPicker, isDefault),
+            preFetchedDirectory: parameters.preFetchedDirectory || fetchedParameters.preFetchedDirectory || null,
+            parentElement: parameters.parentElement || $('body'),
+            breadcrumbElement: isPicker ? null : parameters.breadcrumbElement || null,
+            resourceTypes: resolveResourceTypes(parameters),
+            language: parameters.language || fetchedParameters.language || 'en',
+            webPath: parameters.webPath || fetchedParameters.webPath || '',
+            zoom: parameters.zoom || fetchedParameters.zoom || 'zoom100',
+            pickerCallback: parameters.callback || function () {},
+            isPickerMultiSelectAllowed: isDefault || parameters.isPickerMultiSelectAllowed || false
+        };
+
+        if (mergedParameters.preFetchedDirectory) {
+            server.setPreFetchedDirectory(mergedParameters.preFetchedDirectory);
+        }
 
         return mergedParameters;
     }
 
-    function createPicker(name, parameters) {
-        var pickerParameters = mergeParameters(name, parameters, true);
-        views[name] = new manager.Views.Master(pickerParameters, dispatcher);
-        pickers.push(name);
-        dispatcher.on('picker-action', function (event) {
-            manager.picker(event.name, event.action);
-        });
-    };
-
-    manager.createFullManager = function (parameters) {
-        initialize();
-        createPicker('defaultPicker', parameters);
-        var mainParameters = mergeParameters('main', parameters, false);
-        views['main'] = new manager.Views.Master(mainParameters, dispatcher);
-        router = new manager.Router(dispatcher, parameters.directoryId);
-        Backbone.history.start();
-    };
-
-    manager.createPicker = function (name, parameters) {
-        if (name === 'main' || name === 'defaultPicker') {
-            throw new Error('Cannot use "' + name + '" for picker (internal use)');
-        }
-
-        initialize();
-        createPicker(name, parameters);
-    };
-
-    manager.picker = function (name, action) {
-        if (pickers.indexOf(name) === -1) {
-            throw new Error('Unknown picker "' + name + '"');
-        }
-
-        action = ['open', 'close'].indexOf(action) !== -1 ? action : 'open';
-
-
-        dispatcher.trigger(action + '-picker-' + name);
-    };
-
-    manager.setDebugMode = function () {
-        if (!isDebug) {
-            initialize();
-            dispatcher.on('all', function (eventName) {
-                var listenerCount = (_.keys(dispatcher._events)).indexOf(eventName) !== -1 ?
-                    _.keys(dispatcher._events[eventName]).length :
-                    0;
-                console.debug(
-                    'Event "' + eventName + '" was triggered ['
-                     + listenerCount + ' listener(s) attached]'
-                );
-            });
-        }
-    };
-
-
-
-    manager.setDebugMode();
-
-
-    /**
-     * Initializes the resource manager with a set of options :
-     * - appPath: the base url of the application
-     *      (default to empty string)
-     * - webPath: the base url of the web directory
-     *      (default to empty string)
-     * - directoryId : the id of the directory to open in main (vs picker) mode
-     *      (default to "0", i.e. pseudo-root of all directories)
-     * - parentElement: the jquery element in which the views will be rendered
-     *      (default to "body" element)
-     * - resourceTypes: an object whose properties describe the available resource types
-     *      (default to empty object)
-     * - isPickerOnly: whether the manager must initialize a main view and a picker view, or just the picker one
-     *      (default to false)
-     * - isMultiSelectAllowed: whether the selection of multiple nodes in picker mode should be allowed or not
-     *      (default to false)
-     * - pickerCallback: the function to be called when nodes are selected in picker mode
-     *      (default to  empty function)
-     *
-     * @param object parameters The parameters of the manager
-     */
-    manager.initialize = function (parameters) {
-        parameters = parameters || {};
-        parameters.language = parameters.language || 'en';
-        parameters.directoryId = parameters.directoryId || '0';
-        parameters.directoryHistory = parameters.directoryHistory || [];
-        parameters.parentElement = parameters.parentElement || $('body');
-        parameters.resourceTypes = parameters.resourceTypes || {};
-        parameters.isPickerOnly = parameters.isPickerOnly || false;
-        parameters.isPickerMultiSelectAllowed = parameters.isPickerMultiSelectAllowed || false;
-        parameters.pickerCallback = parameters.pickerCallback || function () {};
-        parameters.appPath = parameters.appPath || '';
-        parameters.webPath = parameters.webPath || '';
-        parameters.filterState = parameters.filterState || 'none';
-        parameters.zoom = parameters.zoom || 'zoom100';
-        manager.Controller.initialize(parameters);
-    };
-
-
-    manager.create = function (parameters) {
-        parameters = parameters || {};
-        parameters.type = parameters.type || 'full';
-        parameters.directoryId = parameters.directoryId || '0';
-        parameters.appPath = parameters.appPath || '';
-        parameters.webPath = parameters.webPath || '';
-        parameters.parentElement = parameters.parentElement || $('body');
-        parameters.resourceTypes = parameters.resourceTypes || {};
-        parameters.zoom = parameters.zoom || 'zoom100';
-
-        // ???
-        parameters.directoryHistory = parameters.directoryHistory || [];
-
-        if (parameters.type === 'picker') {
-            if (!parameters.pickerName) {
-                throw new Error('Missing "name" parameter for picker');
+    function resolveDirectoryId(parameters, isPicker, isDefault) {
+        if (isPicker) {
+            if (isDefault) {
+                return parameters.pickerDirectoryId || '0';
             }
 
-            parameters.pickerName = parameters.pickerName;
-            parameters.pickerCallback = parameters.pickerCallback || function () {};
-            parameters.isPickerMultiSelectAllowed = parameters.isPickerMultiSelectAllowed || false;
+            return parameters.directoryId || fetchedParameters.directoryId || '0';
         }
 
-        manager.Controller.createView(parameters);
-    };
+        return parameters.directoryId || '0';
+    }
 
+    function resolveResourceTypes(parameters) {
+        var types = parameters.resourceTypes || fetchedParameters.resourceTypes || {};
 
-//
-//    /**
-//     * Opens or closes the resource picker, depending on the "action" parameter.
-//     *
-//     * @param string action The action to be taken, i.e. "open" or "close" (default to "open")
-//     */
-//    manager.picker = function (action, pickerName) {
-//        manager.Controller.picker(action === 'open' ? action : 'close', null, pickerName);
-//    };
+        if (parameters.typeWhiteList) {
+            types = _.pick(types, parameters.typeWhiteList);
+        } else if (parameters.typeBlackList) {
+            types = _.omit(types, parameters.typeBlackList);
+        }
+
+        return types;
+    }
+
+    function fetchMissingParameters(givenParameters, callback) {
+        var expectedParameters = ['resourceTypes', 'webPath', 'language', 'zoom', 'directoryId'];
+        var hasMissingParameter = _.some(expectedParameters, function (parameter) {
+            return !givenParameters.hasOwnProperty(parameter);
+        });
+
+        if (!hasMissingParameter || hasFetchedParameters) {
+            callback();
+        } else {
+            server.fetchManagerParameters(function (data) {
+                fetchedParameters.directoryId = data.pickerDirectoryId;
+                fetchedParameters.preFetchedDirectory = data.preFetchedDirectory;
+                fetchedParameters.resourceTypes = data.resourceTypes;
+                fetchedParameters.language = data.language;
+                fetchedParameters.webPath = data.webPath;
+                fetchedParameters.zoom = data.zoom;
+                hasFetchedParameters = true;
+                callback();
+            });
+        }
+    }
 })();
