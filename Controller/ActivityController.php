@@ -14,11 +14,13 @@ namespace Claroline\CoreBundle\Controller;
 use Claroline\CoreBundle\Entity\Activity\ActivityParameters;
 use Claroline\CoreBundle\Entity\Activity\ActivityRule;
 use Claroline\CoreBundle\Entity\Activity\Evaluation;
+use Claroline\CoreBundle\Entity\Activity\PastEvaluation;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Claroline\CoreBundle\Form\ActivityEvaluationType;
 use Claroline\CoreBundle\Form\ActivityParametersType;
+use Claroline\CoreBundle\Form\ActivityPastEvaluationType;
 use Claroline\CoreBundle\Form\ActivityType;
 use Claroline\CoreBundle\Form\ActivityRuleType;
 use Claroline\CoreBundle\Manager\ActivityManager;
@@ -448,6 +450,56 @@ class ActivityController
         return array(
             'form' => $form->createView(),
             'evaluation' => $evaluation
+        );
+    }
+
+    /**
+     * @Route(
+     *     "edit/activity/past/evaluation/{pastEvaluationId}",
+     *     name="claro_activity_past_evaluation_edit",
+     *     options={"expose"=true}
+     * )
+     * @ParamConverter("currentUser", options={"authenticatedUser" = true})
+     * @ParamConverter(
+     *      "pastEvaluation",
+     *      class="ClarolineCoreBundle:Activity\PastEvaluation",
+     *      options={"id" = "pastEvaluationId", "strictId" = true}
+     * )
+     * @Template()
+     */
+    public function editActivityPastEvaluationAction(
+        User $currentUser,
+        PastEvaluation $pastEvaluation
+    )
+    {
+        $isWorkspaceManager = false;
+        $activityParams = $pastEvaluation->getActivityParameters();
+        $activity = $activityParams->getActivity();
+
+        if (!is_null($activity)) {
+            $workspace = $activity->getResourceNode()->getWorkspace();
+            $roleNames = $currentUser->getRoles();
+            $isWorkspaceManager = $this->isWorkspaceManager($workspace, $roleNames);
+        }
+
+        if (!$isWorkspaceManager) {
+
+            throw new AccessDeniedException();
+        }
+
+        $form = $this->formFactory
+            ->create(new ActivityPastEvaluationType(), $pastEvaluation);
+        $form->handleRequest($this->request);
+
+        if ($form->isValid()) {
+            $this->activityManager->editPastEvaluation($pastEvaluation);
+
+            return new Response('success', 204);
+        }
+
+        return array(
+            'form' => $form->createView(),
+            'pastEvaluation' => $pastEvaluation
         );
     }
 

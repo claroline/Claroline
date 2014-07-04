@@ -478,6 +478,12 @@ class ActivityManager
         $this->om->flush();
     }
 
+    public function editPastEvaluation(PastEvaluation $pastEvaluation)
+    {
+        $this->om->persist($pastEvaluation);
+        $this->om->flush();
+    }
+
     private function updatePastEvaluation(Evaluation $evaluation)
     {
         $user = $evaluation->getUser();

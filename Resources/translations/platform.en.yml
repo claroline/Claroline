@@ -72,6 +72,11 @@ activity_parameters_form_max_duration: 'Allowed time limit (in second)'
 activity_parameters_form_withTutor: Tutored
 activity_parameters_form_where: Learning place
 activity_parameters_form_who: Working mode
+activity_past_evaluation_form_comment: Comment
+activity_past_evaluation_form_date: Date
+activity_past_evaluation_form_numScore: Score
+activity_past_evaluation_form_score: Evaluation
+activity_past_evaluation_form_status: Status
 activity_remove_primary_resource: Remove the primary resource
 activity_resource_not_allowed: You cannot add a resource of this type
 activity_resource_remove: 'Are you sure you want to remove this resource from the activity?'
@@ -140,6 +145,7 @@ anywhere: Anywhere
 appearance: Appearance
 apply: Apply
 at_least_one_category_has_to_be_selected: 'At least one category has to be selected'
+attempt: Attempt
 attempts: Attempts
 automatic: Automatic
 available_widgets: 'Available widgets'
