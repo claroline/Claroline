@@ -198,9 +198,10 @@ class AgendaManager
     }
 
     /**
-     * Import ical files type
+     * Imports ical files.
+     *
      * @param  UploadedFile $file
-     * @param  AbstractWorkspace $workspace
+     * @param  Workspace $workspace
      * @return int number of events saved
      */
     public function importEvents(UploadedFile $file, $workspace)

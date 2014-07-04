@@ -161,10 +161,10 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
     protected $resourceNodes;
 
     /**
-     * @var Workspace\AbstractWorkspace
+     * @var Workspace\Workspace
      *
      * @ORM\OneToOne(
-     *     targetEntity="Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace"
+     *     targetEntity="Claroline\CoreBundle\Entity\Workspace\Workspace"
      * )
      * @ORM\JoinColumn(name="workspace_id", onDelete="SET NULL")
      */
@@ -448,9 +448,9 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
     }
 
     /**
-     * Returns the user's roles (including role's ancestors) as an array
-     * of string values (needed for Symfony security checks). The roles
-     * owned by groups which the user belong can also be included.
+     * Returns the user's roles as an array of string values (needed for
+     * Symfony security checks). The roles owned by groups the user is a
+     * member are included by default.
      *
      * @param boolean $areGroupsIncluded
      *
@@ -467,6 +467,31 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
         }
 
         return $roleNames;
+    }
+
+    /**
+     * Returns the user's roles as an array of entities. The roles
+     * owned by groups the user is a member are included by default.
+     *
+     * @param bool $areGroupsIncluded
+     *
+     * @return array[Role]
+     */
+    public function getEntityRoles($areGroupsIncluded = true)
+    {
+        $roles = $this->roles->toArray();
+
+        if ($areGroupsIncluded) {
+            foreach ($this->getGroups() as $group) {
+                foreach ($group->getEntityRoles() as $role) {
+                    if (!in_array($role, $roles)) {
+                        $roles[] = $role;
+                    }
+                }
+            }
+        }
+
+        return $roles;
     }
 
     public function eraseCredentials()
@@ -584,7 +609,7 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
     }
 
     /**
-     * @param Workspace\AbstractWorkspace $workspace
+     * @param Workspace\Workspace $workspace
      *
      * @return User
      */
@@ -596,7 +621,7 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
     }
 
     /**
-     * @return Workspace\AbstractWorkspace
+     * @return Workspace\Workspace
      */
     public function getPersonalWorkspace()
     {

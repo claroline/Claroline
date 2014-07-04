@@ -16,7 +16,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Translation\Translator;
 use Symfony\Component\Security\Core\SecurityContextInterface;
-use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Library\Security\Utilities;
 use Claroline\CoreBundle\Manager\MessageManager;
@@ -105,7 +105,7 @@ class LayoutController extends Controller
     /**
      * @EXT\ParamConverter(
      *      "workspace",
-     *      class="ClarolineCoreBundle:Workspace\AbstractWorkspace",
+     *      class="ClarolineCoreBundle:Workspace\Workspace",
      *      options={"id" = "workspaceId", "strictId" = true}
      * )
      * @EXT\Template()
@@ -114,40 +114,31 @@ class LayoutController extends Controller
      * (anonymous/logged, profile, etc.) and the platform options (e.g. self-
      * registration allowed/prohibited).
      *
+     * @param \Claroline\CoreBundle\Entity\Workspace\Workspace $workspace
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function topBarAction(AbstractWorkspace $workspace = null)
+    public function topBarAction(Workspace $workspace = null)
     {
-        $tools = $this->toolManager->getAdminToolsByRoles($this->security->getToken()->getRoles());
-        $canAdministrate = count($tools) > 0 ? true: false;
-        $isLogged = false;
+        $canAdministrate = false;
         $countUnreadMessages = 0;
         $registerTarget = null;
         $loginTarget = null;
         $workspaces = null;
         $personalWs = null;
-        $isInAWorkspace = false;
         $countUnviewedNotifications = 0;
 
         $token = $this->security->getToken();
         $user = $token->getUser();
         $roles = $this->utils->getRoles($token);
 
-        if (!is_null($workspace)) {
-            $isInAWorkspace = true;
-        }
-
-        if (!in_array('ROLE_ANONYMOUS', $roles)) {
-            $isLogged = true;
-        }
-
-        if ($isLogged) {
-            $isLogged = true;
+        if ($isLogged = !in_array('ROLE_ANONYMOUS', $roles)) {
+            $tools = $this->toolManager->getAdminToolsByRoles($token->getRoles());
+            $canAdministrate = count($tools) > 0;
             $countUnreadMessages = $this->messageManager->getNbUnreadMessages($user);
             $personalWs = $user->getPersonalWorkspace();
             $workspaces = $this->findWorkspacesFromLogs();
-            $countUnviewedNotifications = $this->get('icap.notification.manager')->
-                countUnviewedNotifications($user->getId());
+            $countUnviewedNotifications = $this->get('icap.notification.manager')
+                ->countUnviewedNotifications($user->getId());
         } else {
             $workspaces = $this->workspaceManager->getWorkspacesByAnonymous();
 
@@ -166,7 +157,7 @@ class LayoutController extends Controller
             'workspaces' => $workspaces,
             'personalWs' => $personalWs,
             "isImpersonated" => $this->isImpersonated(),
-            'isInAWorkspace' => $isInAWorkspace,
+            'isInAWorkspace' => $workspace !== null,
             'currentWorkspace' => $workspace,
             'countUnviewedNotifications' => $countUnviewedNotifications,
             'canAdministrate' => $canAdministrate

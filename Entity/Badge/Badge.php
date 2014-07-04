@@ -12,7 +12,7 @@
 namespace Claroline\CoreBundle\Entity\Badge;
 
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Rule\Rulable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Persistence\ObjectManager;
@@ -149,9 +149,9 @@ class Badge extends Rulable
     protected $badgeRules;
 
     /**
-     * @var AbstractWorkspace
+     * @var Workspace
      *
-     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace")
+     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Workspace\Workspace")
      * @ORM\JoinColumn(name="workspace_id", referencedColumnName="id")
      */
     protected $workspace;
@@ -558,11 +558,11 @@ class Badge extends Rulable
     }
 
     /**
-     * @param AbstractWorkspace $workspace
+     * @param Workspace $workspace
      *
      * @return Badge
      */
-    public function setWorkspace(AbstractWorkspace $workspace)
+    public function setWorkspace(Workspace $workspace)
     {
         $this->workspace = $workspace;
 
@@ -570,7 +570,7 @@ class Badge extends Rulable
     }
 
     /**
-     * @return AbstractWorkspace
+     * @return Workspace
      */
     public function getWorkspace()
     {

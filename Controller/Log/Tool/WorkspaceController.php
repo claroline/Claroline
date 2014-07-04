@@ -11,7 +11,7 @@
 
 namespace Claroline\CoreBundle\Controller\Log\Tool;
 
-use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 
@@ -38,7 +38,7 @@ class WorkspaceController extends Controller
      *
      * @EXT\ParamConverter(
      *      "workspace",
-     *      class="ClarolineCoreBundle:Workspace\AbstractWorkspace",
+     *      class="ClarolineCoreBundle:Workspace\Workspace",
      *      options={"id" = "workspaceId", "strictId" = true}
      * )
      *
@@ -52,7 +52,7 @@ class WorkspaceController extends Controller
      *
      * @throws \Exception
      */
-    public function logListAction(AbstractWorkspace $workspace, $page)
+    public function logListAction(Workspace $workspace, $page)
     {
         return $this->get('claroline.log.manager')->getWorkspaceList($workspace, $page);
     }

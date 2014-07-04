@@ -15,7 +15,7 @@
                 <li class="{% if 'claro_message_list_removed' == app.request.get('_route') %}active{% endif %}">
                     <a href="{{ path('claro_message_list_removed')}}" id="link_message_removed_layout"><i class="icon-trash"></i> {{ 'trash'|trans({}, 'platform') }}</a>
                 </li>
-                <li class="{% if 'claro_message_show' == app.request.get('_route') and '/message/show/0' | compareRoute(true) %}active{% endif %}">
+                <li class="{% if 'claro_message_show' == app.request.get('_route') and '/message/show' | compareRoute(true) %}active{% endif %}">
                     <a href="{{ path('claro_message_show', {'message': 0})}}" id="link_message_removed_layout"><i class="icon-plus"></i> {{ 'new'|trans({}, 'platform') }}</a>
                 </li>
             </ul>

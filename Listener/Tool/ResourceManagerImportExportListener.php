@@ -11,7 +11,7 @@
 
 namespace Claroline\CoreBundle\Listener\Tool;
 
-use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Event\ExportToolEvent;
 use Claroline\CoreBundle\Event\ImportToolEvent;
 use Claroline\CoreBundle\Manager\RoleManager;
@@ -272,7 +272,7 @@ class ResourceManagerImportExportListener
         $createdResources,
         $root,
         $user,
-        AbstractWorkspace $workspace,
+        Workspace $workspace,
         array $roles
     )
     {
@@ -301,7 +301,7 @@ class ResourceManagerImportExportListener
         $requiredFiles,
         $root,
         $user,
-        AbstractWorkspace $workspace,
+        Workspace $workspace,
         array $roles
     )
     {

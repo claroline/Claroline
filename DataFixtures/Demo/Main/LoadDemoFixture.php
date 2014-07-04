@@ -15,7 +15,7 @@ use Claroline\CoreBundle\DataFixtures\Demo\LoadContentData;
 use Claroline\CoreBundle\DataFixtures\Demo\LoadRegionData;
 use Claroline\CoreBundle\DataFixtures\Demo\LoadTypeData;
 use Claroline\CoreBundle\Library\Fixtures\LoggableFixture;
-use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\DataFixtures\Optional\LoadUserData;
 use Claroline\CoreBundle\DataFixtures\Optional\LoadGroupData;
@@ -182,7 +182,7 @@ class LoadDemoFixture extends LoggableFixture implements ContainerAwareInterface
         $this->addUsersToWorkspace($this->getReference('workspace/Cours 4'), $jane);
     }
 
-    private function addUsersToWorkspace(AbstractWorkspace $workspace, User $excludedUser)
+    private function addUsersToWorkspace(Workspace $workspace, User $excludedUser)
     {
         $roleManager = $this->container->get('claroline.manager.role_manager');
         $users = $this->manager->getRepository('ClarolineCoreBundle:User')->findAllExcept($excludedUser);

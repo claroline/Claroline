@@ -37,7 +37,7 @@ class WorkspaceUniqueCodeValidator extends ConstraintValidator
     {
         $code = trim($value);
         $workspace = $this->em
-                        ->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')
+                        ->getRepository('ClarolineCoreBundle:Workspace\Workspace')
                         ->findOneBy(array('code' => $code));
 
         if ($workspace) {
