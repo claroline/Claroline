@@ -1,7 +1,7 @@
 'use strict';
 
 portfolioApp
-    .controller("widgetsController", ["$scope", "$attrs", "widgetsManager", function($scope, $attrs, widgetsManager) {
+    .controller("widgetsController", ["$scope", "widgetsManager", function($scope, widgetsManager) {
         $scope.edit = function(widget) {
             widgetsManager.edit(widget);
         };
