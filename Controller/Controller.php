@@ -8,7 +8,8 @@
 
 namespace Icap\WebsiteBundle\Controller;
 
+use Symfony\Bundle\FrameworkBundle\Controller\Controller as BaseController;
 
-class Controller {
+class Controller extends BaseController{
 
 } 
