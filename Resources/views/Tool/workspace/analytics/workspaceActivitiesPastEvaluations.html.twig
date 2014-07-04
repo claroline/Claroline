@@ -16,6 +16,7 @@
 <div id="workspace-activities-past-evaluations-element" class="table-responsive">
     <table class="table">
         <tr>
+            <th></th>
             <th class="center-text">{{ 'date' | trans({}, 'platform') }}</th>
             <th class="center-text">{{ 'status' | trans({}, 'platform') }}</th>
             <th class="center-text">{{ 'duration' | trans({}, 'platform') }}</th>
@@ -42,6 +43,11 @@
 
         {% for eval in pastEvals %}
         <tr>
+            <td>
+                <i class="fa fa-edit past-evaluation-edit-button pointer-hand"
+                    data-past-evaluation-id="{{ eval.getId() }}">
+                </i>
+            </td>
             <td class="center-text">{{ eval.getDate()|intl_date_format }}</td>
             <td class="center-text">{{ eval.getStatus() | trans({}, 'platform') }}</td>
             <td class="center-text">
