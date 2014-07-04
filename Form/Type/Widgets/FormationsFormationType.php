@@ -15,6 +15,14 @@ class FormationsFormationType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
+            ->add('id', 'integer', array(
+                'required' => false,
+                'mapped'   => false
+            ))
+            ->add('name', 'text', array(
+                'required' => false,
+                'mapped'   => false
+            ))
             ->add('resource', 'entity', array(
                 'class'    => 'ClarolineCoreBundle:Resource\ResourceNode',
                 'property' => 'name',

@@ -28,11 +28,9 @@ angular.module('ui.resourcePicker', [])
                     var expression = {};
                 }
 
-                // Merge default config with user config
                 angular.extend(options, uiResourcePickerConfig, expression);
 
                 $scope.resourcePickerOpen = function () {
-                    // Initialize resource picker object
                     Claroline.ResourceManager.initialize(options);
                     Claroline.ResourceManager.picker('open');
                 }

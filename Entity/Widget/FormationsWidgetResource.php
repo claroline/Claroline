@@ -88,9 +88,12 @@ class FormationsWidgetResource implements SubWidgetInterface
      */
     public function getData()
     {
+        $resource = $this->getResource();
+
         return array(
-            'id'   => $this->getResource()->getId(),
-            'name' => $this->getResource()->getPathForDisplay()
+            'resource' => $resource->getId(),
+            'id'       => $resource->getId(),
+            'name'     => $resource->getPathForDisplay()
         );
     }
 }
