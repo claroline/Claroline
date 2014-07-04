@@ -189,7 +189,7 @@ class ActivityManager
                 ->findPastEvaluationsByUserAndActivityParams($user, $activityParams);
         }
         $nbAttempts = $isFirstEvaluation ? 0 : count($pastEvals);
-        $totalTime = $isFirstEvaluation ? 0 : $evaluation->getAttemptsDuration();
+        $totalTime = $evaluation->getAttemptsDuration();
         $pastStatus = ($activityStatus === 'incomplete' || $activityStatus === 'failed') ?
             $activityStatus :
             'unknown';
@@ -234,7 +234,7 @@ class ActivityManager
                             null;
                         $scoreMin = isset($logDetails['resultMin']) ?
                             $logDetails['resultMin'] :
-                            0;
+                            null;
                         $scoreMax = isset($logDetails['resultMax']) ?
                             $logDetails['resultMax'] :
                             null;
@@ -428,10 +428,15 @@ class ActivityManager
 
     private function computeActivityTotalTime($totalTime, $sessionTime)
     {
-        $total = is_null($totalTime) ? 0 : $totalTime;
-        $session = is_null($sessionTime) ? 0 : $sessionTime;
+        if (!is_null($totalTime) && !is_null($sessionTime)) {
+            $result = $totalTime + $sessionTime;
+        } elseif (!is_null($totalTime)) {
+            $result = $totalTime;
+        } else {
+            $result = $sessionTime;
+        }
 
-        return $total + $session;
+        return $result;
     }
 
     private function persistBestScore(
