@@ -130,7 +130,7 @@
                         }
 
                         currentValue += datas;
-                        $('#message_form_to').attr('value', currentValue);
+                        $('#message_form_to').val(currentValue);
                     }
                 },
                 type: 'GET',

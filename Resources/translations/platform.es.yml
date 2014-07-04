@@ -50,7 +50,7 @@ account_general_statistics: 'Estadísticas generales de la cuenta'
 action: 'Acción'
 actions: 'Acciones'
 active_widgets: 'Widgets activos'
-activities_tracking: 'Seguimiento de las actividades' 
+activities_tracking: 'Seguimiento de las actividades'
 activity_already: Este recurso ya está en la actividad
 activity_evaluation_form_attemptsCount: 'Número de intentos'
 activity_evaluation_form_comment: Comentario
@@ -79,8 +79,8 @@ activity_rule_form_activeUntil: 'y el'
 activity_rule_form_activeUntil_explanation: 'Sólo serán tratadas las acciones realizadas antes de esta fecha. Todas las acciones posteriores serán tratadas si esta fecha no es definida.'
 activity_rule_form_badge: 'Badge requerido'
 activity_rule_form_badge_explanation: 'El badge que debe ser conseguido para aprobar.'
-activity_rule_form_isResultVisible: 'Mostrar el resultado' 
-activity_rule_form_isResultVisible_explanation: 'Permitir al usuario conocer el resultado que debe ser obtenido.' 
+activity_rule_form_isResultVisible: 'Mostrar el resultado'
+activity_rule_form_isResultVisible_explanation: 'Permitir al usuario conocer el resultado que debe ser obtenido.'
 activity_rule_form_occurrence: Ocurrencia
 activity_rule_form_occurrence_explanation: 'El número de veces que la acción debe ser realizada para aprobar.'
 activity_rule_form_result: 'Resultado requerido'
@@ -540,7 +540,7 @@ platform_role: 'Roles de la plataforma'
 platform_widgets: 'Widgets de la plataforma'
 please_wait: 'Por favor espere...'
 position: 'posición'
-positive_number_expected: 'Este valor debería ser un numero positivo'
+positive_number_expected: 'Este valor debería ser un número positivo'
 private: 'Privado'
 properties: 'propiedades'
 public: 'Publico'
@@ -869,3 +869,9 @@ editable_facet_form_explanation: El campo "Editable" permite de especificar si e
 roles_facet_form_explanation: Este formulario permite especificar que roles pueden ver la faceta en el perfil público.
 roles_fields_form_explanation: Este formulario permite especificar que roles pueden ver y editar el campo en el perfil público.
 general_tab_form_explanation: Este formulario permite especificar que información se ve por rol en el perfil público.
+name_required: nombre obligatorio
+remove_role_confirm:  ¿Esta seguro que desea suprimir el rol %name%?
+remove_role: Eliminiar un rol.
+initialize: Inicializar
+user_limit_success_update: El número máximo de usuarios por rol ha sido actualizado con éxito.
+role_name_changed_success: El nombre del rola ha sido actualizado con éxito.
