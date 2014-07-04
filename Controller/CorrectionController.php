@@ -1600,6 +1600,7 @@ class CorrectionController extends DropzoneBaseController
 
         $this->recalculateScoreForCorrections($dropzone, $corrections);
 
+
         return $this->redirect(
             $this->generateUrl(
                 'icap_dropzone_drops_detail',
