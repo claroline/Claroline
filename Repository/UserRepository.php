@@ -62,8 +62,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface
         }
 
         $dql = '
-            SELECT u, up, ur, g, gr FROM Claroline\CoreBundle\Entity\User u
-            JOIN u.publicProfilePreferences up
+            SELECT u, ur, g, gr FROM Claroline\CoreBundle\Entity\User u
             JOIN u.roles ur
             LEFT JOIN u.groups g
             LEFT JOIN g.roles gr
@@ -97,7 +96,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface
         if (!$executeQuery) {
             $order = $order === 'DESC' ? 'DESC' : 'ASC';
             $dql = "
-                SELECT u, up, r, g from Claroline\CoreBundle\Entity\User u
+                SELECT u, r, g from Claroline\CoreBundle\Entity\User u
                 JOIN u.roles r
                 LEFT JOIN u.groups g
                 LEFT JOIN r.workspace rws
@@ -158,8 +157,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface
         $upperSearch = trim($upperSearch);
         $upperSearch = preg_replace('/\s+/', ' ', $upperSearch);
         $dql = "
-            SELECT u, up, r, g FROM Claroline\CoreBundle\Entity\User u
-            JOIN u.publicProfilePreferences up
+            SELECT u, r, g FROM Claroline\CoreBundle\Entity\User u
             JOIN u.roles r
             LEFT JOIN u.groups g
             WHERE UPPER(u.lastName) LIKE :search
@@ -361,8 +359,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface
     public function findGroupOutsiders(Group $group, $executeQuery = true, $orderedBy = 'id')
     {
         $dql = "
-            SELECT DISTINCT u, up FROM Claroline\CoreBundle\Entity\User u
-            JOIN u.publicProfilePreferences up
+            SELECT DISTINCT u FROM Claroline\CoreBundle\Entity\User u
             WHERE u NOT IN (
                 SELECT us FROM Claroline\CoreBundle\Entity\User us
                 JOIN us.groups gs
@@ -393,8 +390,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface
     public function findGroupOutsidersByName(Group $group, $search, $executeQuery = true, $orderedBy = 'id')
     {
         $dql = "
-            SELECT DISTINCT u, up FROM Claroline\CoreBundle\Entity\User u
-            JOIN u.publicProfilePreferences up
+            SELECT DISTINCT u FROM Claroline\CoreBundle\Entity\User u
             WHERE (
                 UPPER(u.lastName) LIKE :search
                 OR UPPER(u.firstName) LIKE :search
@@ -577,7 +573,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface
     {
         $order = $order === 'DESC' ? 'DESC' : 'ASC';
         $dql = "
-            SELECT u, r1, g, r2, ws, up From Claroline\CoreBundle\Entity\User u
+            SELECT u, r1, g, r2, ws From Claroline\CoreBundle\Entity\User u
             LEFT JOIN u.roles r1
             LEFT JOIN u.personalWorkspace ws
             LEFT JOIN u.groups g
@@ -607,11 +603,10 @@ class UserRepository extends EntityRepository implements UserProviderInterface
     )
     {
         $dql = "
-            SELECT u, r1, g, r2, ws, up
+            SELECT u, r1, g, r2, ws
             From Claroline\CoreBundle\Entity\User u
             LEFT JOIN u.roles r1
             LEFT JOIN u.personalWorkspace ws
-            JOIN u.publicProfilePreferences up
             LEFT JOIN u.groups g
             LEFT JOIN g.roles r2
             WHERE r1 in (:roles)
@@ -664,8 +659,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface
         $order = $order === 'DESC' ? 'DESC' : 'ASC';
         $search = strtoupper($name);
         $dql = "
-            SELECT u, up, ur, g, gr FROM Claroline\CoreBundle\Entity\User u
-            JOIN u.publicProfilePreferences up
+            SELECT u, ur, g, gr FROM Claroline\CoreBundle\Entity\User u
             JOIN u.roles ur
             LEFT JOIN u.groups g
             LEFT JOIN g.roles gr
