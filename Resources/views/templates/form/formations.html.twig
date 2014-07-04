@@ -11,7 +11,7 @@
         <li data-ng-repeat="resource in collection">
             <div data-ng-class="{'input-group': isAdded(resource)}">
                 {% verbatim %}
-                <p data-ng-if="resource.name">{{ resource.name }}</p>
+                <p class="form-control-static" data-ng-if="resource.name">{{ resource.name }}</p>
                 <input type="hidden" class="form-control" id="formation_{{ $index }}_resource"
                      name="icap_portfolio_widget_form_formations[resources][{{ $index }}]" data-ng-model="resource.resource"
                      data-ng-disabled="resource.toDelete"  data-ng-keyup="modify(resource, $index)" />
