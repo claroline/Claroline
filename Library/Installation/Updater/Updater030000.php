@@ -162,13 +162,16 @@ class Updater030000
     {
         $conn = $this->om->getConnection();
         $sm = $conn->getSchemaManager();
-        $fromSchema = $sm->createSchema();
-        $toSchema = clone $fromSchema;
-        $toSchema->dropTable('claro_user_public_profile_preferences');
-        $sql = $fromSchema->getMigrateToSql($toSchema, $conn->getDatabasePlatform());
-        $stmt = $conn->prepare($sql[0]);
-        $stmt->execute();
-        $stmt->closeCursor();
+
+        if ($sm->tablesExist(array('claro_user_public_profile_preferences')) == true) {
+            $fromSchema = $sm->createSchema();
+            $toSchema = clone $fromSchema;
+            $toSchema->dropTable('claro_user_public_profile_preferences');
+            $sql = $fromSchema->getMigrateToSql($toSchema, $conn->getDatabasePlatform());
+            $stmt = $conn->prepare($sql[0]);
+            $stmt->execute();
+            $stmt->closeCursor();
+        }
     }
 
     private function setIcons()

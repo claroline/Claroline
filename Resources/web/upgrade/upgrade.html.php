@@ -76,7 +76,7 @@ if (!$authorized) {
         var pollStatus = function (url) {
             $.ajax(url).done(function (data) {
                 logElement.html(data);
-                //logElement.animate({ scrollTop: logElement[0].scrollHeight });
+                logElement.animate({ scrollTop: logElement[0].scrollHeight });
             });
         };
         pollStatus(url);
