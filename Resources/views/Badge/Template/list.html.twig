@@ -26,13 +26,13 @@
                                     <td>
                                         {% if (badgeClaim.badge.hasRules) %}
                                             {% if false == badgeRuleChecker.validate(badgeClaim.badge, badgeClaim.user) %}
-                                            <span class="icon-exclamation-sign" data-toggle="tooltip" title="{{ 'badge_rules_not_respected'|trans({}, 'badge') }}"></span>
+                                            <span class="fa fa-exclamation-circle" data-toggle="tooltip" title="{{ 'badge_rules_not_respected'|trans({}, 'badge') }}"></span>
                                             {% else %}
-                                            <span class="icon-ok-sign" data-toggle="tooltip" title="{{ 'badge_rules_respected'|trans({}, 'badge') }}"></span>
+                                            <span class="fa fa-check-circle" data-toggle="tooltip" title="{{ 'badge_rules_respected'|trans({}, 'badge') }}"></span>
                                             {% endif %}
                                             (<span class="text-muted" data-toggle="tooltip" title="{{ 'badge_rules_respected_state'|trans({}, 'badge') }}">détails</span>)
                                         {% else %}
-                                        <span class="icon-warning-sign" data-toggle="tooltip" title="{{ 'badge_no_rules_check_manually'|trans({}, 'badge') }}"></span>
+                                        <span class="fa fa-exclamation-triangle" data-toggle="tooltip" title="{{ 'badge_no_rules_check_manually'|trans({}, 'badge') }}"></span>
                                         {% endif %}
                                     </td>
                                     <td>
@@ -55,9 +55,9 @@
                         </table>
                     </div>
                     <ul class="list-inline pull-right">
-                        <li class="text-muted"><small><span class="icon-exclamation-sign"></span> {{ 'badge_rules_not_respected'|trans({}, 'badge') }}</small></li>
-                        <li class="text-muted"><small><span class="icon-ok-sign"></span> {{ 'badge_rules_respected'|trans({}, 'badge') }}</small></li>
-                        <li class="text-muted"><small><span class="icon-warning-sign"></span> {{ 'badge_no_rules_check_manually'|trans({}, 'badge') }}</small></li>
+                        <li class="text-muted"><small><span class="fa fa-exclamation-circle"></span> {{ 'badge_rules_not_respected'|trans({}, 'badge') }}</small></li>
+                        <li class="text-muted"><small><span class="fa fa-check-circle"></span> {{ 'badge_rules_respected'|trans({}, 'badge') }}</small></li>
+                        <li class="text-muted"><small><span class="fa fa-exclamation-triangle"></span> {{ 'badge_no_rules_check_manually'|trans({}, 'badge') }}</small></li>
                     </ul>
                     {% if claimPager.haveToPaginate %}
                     <div>
@@ -88,7 +88,7 @@
             </a>
             <div class="dropdown">
                 <a href="#" class="dropdown-toggle dropdown-thumbnail badge_menu_link" role="button" data-toggle="dropdown" >
-                    <div class="node-name">{{ badge.name }} <i class="icon-caret-down"></i></div>
+                    <div class="node-name">{{ badge.name }} <i class="fa fa-caret-down"></i></div>
                 </a>
                 <ul class="dropdown-menu" role="menu">
                     <li role="presentation">

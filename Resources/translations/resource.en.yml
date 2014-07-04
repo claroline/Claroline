@@ -1,4 +1,5 @@
 activity: Activity
+update_file: Update file
 compose: 'Draw up'
 copy: Copy
 delete: Delete
@@ -13,6 +14,8 @@ open: Open
 open-tracking: 'View tracking'
 rename: Rename
 resource_name_form_name: 'Resource name'
+resource_properties_form_accessibleFrom: 'Accessible from'
+resource_properties_form_accessibleUntil: 'Accessible until'
 resource_properties_form_copiable: Copy
 resource_properties_form_creationDate: 'Creation Date'
 resource_properties_form_creator: Creator

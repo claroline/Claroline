@@ -61,9 +61,9 @@ class WorkspaceManager
     private $resourceTypeRepo;
     /** @var RoleRepository */
     private $roleRepo;
-    /** @var WorkspaceRepository */
-    private $userRepo;
     /** @var UserRepository */
+    private $userRepo;
+    /** @var WorkspaceRepository */
     private $workspaceRepo;
     /** @var ToolManager */
     private $toolManager;
@@ -570,7 +570,7 @@ class WorkspaceManager
     public function getWorkspacesByRoleNamesPager(array $roleNames, $page)
     {
         if (count($roleNames) > 0) {
-            $workspaces = $this->workspaceRepo->findByRoleNames($roleNames);
+            $workspaces = $this->workspaceRepo->findMyWorkspacesByRoleNames($roleNames);
         } else {
             $workspaces = array();
         }

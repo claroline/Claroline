@@ -1,0 +1,3 @@
+{% twig_js name="ErrorFooter" %}
+
+<input type="button" id="modal-valid-button" class="btn btn-primary" data-dismiss="modal" value="{{ 'ok'|trans({}, 'platform') }}"/>

@@ -32,8 +32,6 @@ use Claroline\CoreBundle\Entity\Resource\ResourceRights;
 use Claroline\CoreBundle\Entity\Resource\Directory;
 use Claroline\CoreBundle\Entity\Resource\File;
 use Claroline\CoreBundle\Entity\Resource\ResourceShortcut;
-use Claroline\CoreBundle\Entity\Resource\Activity;
-use Claroline\CoreBundle\Entity\Resource\ResourceActivity;
 use Claroline\CoreBundle\Entity\Resource\Text;
 use Claroline\CoreBundle\Entity\Resource\Revision;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
@@ -299,43 +297,6 @@ abstract class RepositoryTestCase extends WebTestCase
         );
         $shortcut->setTarget($target->getResourceNode());
         self::create($name, $shortcut);
-    }
-
-    protected static function createActivity(
-        $name,
-        ResourceType $type,
-        User $creator,
-        array $resources,
-        Directory $parent
-    )
-    {
-        $activity = self::prepareResource(
-            new Activity(),
-            $type,
-            $creator,
-            $parent->getResourceNode()->getWorkspace(),
-            $name,
-            'mime/activity',
-            $parent->getResourceNode()
-        );
-        $activity->setName($name);
-        $activity->setInstructions('Some instructions...');
-        self::$om->startFlushSuite();
-
-        for ($i = 0, $count = count($resources); $i < $count; ++$i) {
-            $activityResource = new ResourceActivity();
-            $activityResource->setActivity($activity);
-            $activityResource->setResourceNode($resources[$i]->getResourceNode());
-            $activityResource->setSequenceOrder($i);
-            self::create(
-                'activityResource/' . $name . '-' . $resources[$i]->getName(),
-                $activityResource
-            );
-            $activity->addResourceActivity($activityResource);
-        }
-
-        self::create($name, $activity);
-        self::$om->endFlushSuite();
     }
 
     protected static function createResourceRights(

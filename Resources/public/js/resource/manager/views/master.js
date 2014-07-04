@@ -8,6 +8,7 @@
  */
 
 /* global Twig */
+/* global Translator */
 /* global ModalWindow */
 
 (function () {
@@ -19,18 +20,26 @@
     var views = Claroline.ResourceManager.Views;
 
     views.Master = Backbone.View.extend({
+        outerEvents: {
+            'directory-data': 'render',
+            'open-picker': 'openAsPicker',
+            'close-picker': 'closeAsPicker'
+        },
         initialize: function (parameters, dispatcher) {
             this.parameters = parameters;
             this.dispatcher = dispatcher;
+            this.wrapper = null;
             this.isAppended = false;
-
-            this.currentDirectory = {id: parameters.directoryId};
-
-            this.build();
-            this.dispatcher.on('directory-data-' + parameters.viewName, _.bind(this.render, this));
-            this.dispatcher.on('open-picker-' + parameters.viewName,    _.bind(this.open, this));
+            this.pickerDirectoryId = null;
+            this.buildElement();
+            _.each(this.outerEvents, function (method, event) {
+                this.dispatcher.on(event + '-' + this.parameters.viewName, this[method], this);
+            }, this);
+            this.dispatcher.on('save-picker-directory', function (event) {
+                this.pickerDirectoryId = event.directoryId;
+            }, this);
         },
-        build: function () {
+        buildElement: function () {
             this.el.className = 'main resource-manager';
             this.wrapper = this.$el;
             this.subViews = {
@@ -44,106 +53,51 @@
                 this.el.id = 'picker-' + this.parameters.viewName;
                 this.$el.html(Twig.render(ModalWindow, {
                     'modalId': 'picker-' + this.parameters.viewName,
-                    'header' : 'Resource Picker',
+                    'header' : Translator.get('platform:resource_picker'),
                     'body': ''
                 }));
-                this.wrapper = this.$el.find('.modal-body');
+                this.wrapper = this.$('.modal-body');
+            } else {
+                this.subViews.form = new views.Form(this.dispatcher);
+                this.subViews.rights = new views.Rights(this.dispatcher);
+                this.subViews.confirm = new views.Confirm(this.dispatcher);
             }
         },
-        open: function () {
+        openAsPicker: function () {
             this.dispatcher.trigger('open-directory', {
-                directoryId: this.parameters.directoryId,
-                view: this.parameters.viewName
+                nodeId: this.pickerDirectoryId || this.parameters.directoryId,
+                view: this.parameters.viewName,
+                fromPicker: true
             });
         },
-        render: function (event) {
-            var nodes = event.data.nodes;
-            var path = event.data.path.length > 0 ? event.data.path : ['0']
-            var creatableTypes = event.data.creatableTypes;
-            var isSearchMode = false;
-            var searchParameters = [];
-
-//            this.currentDirectory = _.last(path);
-//
-//            // if directoryHistory is empty
-//            if (this.parameters.directoryHistory.length === 0) {
-//                this.parameters.directoryHistory = path;
-//            } else {
-//                var index = -1;
-//
-//                for (var i = 0; i < this.parameters.directoryHistory.length; i++) {
-//                    if (this.parameters.directoryHistory[i].id === this.currentDirectory.id) {
-//                        index = i;
-//                    }
-//                }
-//
-//                var directoriesToAdd = path.length - this.parameters.directoryHistory.length;
-//                // compare path & directoryHistory
-//                if (directoriesToAdd > 1) {
-//                    // if path > directoryHistory, it mush come from the search
-//                    //add the missing directories to the breadcrumbs
-//                    var pathLength = path.length;
-//                    var missingDirectories = directoriesToAdd;
-//
-//                    while (missingDirectories > 0) {
-//                        this.parameters.directoryHistory.push(path[pathLength - missingDirectories]);
-//                        missingDirectories--;
-//                    }
-//
-//                } else {
-//                    if (index === -1) {
-//                        //if the directory isn't in the breadcrumbs yet'
-//                        this.parameters.directoryHistory.push(this.currentDirectory);
-//                    } else {
-//                        this.parameters.directoryHistory.splice(index + 1);
-//                    }
-//                }
-//            }
-
+        closeAsPicker: function () {
+            if (this.parameters.isPickerMode && this.isAppended) {
+                this.$('.modal').modal('hide');
+            }
+        },
+        render: function () {
             if (!this.isAppended) {
                 this.parameters.parentElement.append(this.$el);
-                this.wrapper.append(
-                    this.subViews.breadcrumbs.el,
-                    this.subViews.actions.el,
-                    this.subViews.nodes.el
-                );
+
+                if (!this.parameters.breadcrumbElement) {
+                    this.wrapper.append(this.subViews.breadcrumbs.el);
+                }
+
+                this.wrapper.append(this.subViews.actions.el);
+                this.wrapper.append(this.subViews.nodes.el);
+
+                if (!this.parameters.isPickerMode) {
+                    this.wrapper.append(this.subViews.form.el);
+                    this.wrapper.append(this.subViews.rights.el);
+                    this.wrapper.append(this.subViews.confirm.el);
+                }
+
                 this.isAppended = true;
             }
 
-            this.subViews.breadcrumbs.render(this.parameters.directoryHistory);
-            this.subViews.actions.render(this.currentDirectory, creatableTypes, isSearchMode, searchParameters);
-            this.subViews.nodes.render(
-                nodes,
-                isSearchMode,
-                this.currentDirectory.id,
-                this.directoryHistory
-            );
-
             if (this.parameters.isPickerMode) {
-                this.$el.find('.modal').modal('show');
+                this.$('.modal').modal('show');
             }
-
-//            if (!this.subViews.areAppended) {
-//                this.wrapper.append(
-//                    this.subViews.breadcrumbs.el,
-//                    this.subViews.actions.el,
-//                    this.subViews.nodes.el
-//                );
-//                this.subViews.areAppended = true;
-//            }
-
-
-//            if (!this.isAppended) {
-//                this.parameters.parentElement.append(this.el);
-//                this.isAppended = true;
-//            }
-
-//            if (this.parameters.isPickerMode) {
-//                alert('Opened picker ' + this.parameters.viewName);
-//
-//                console.log('#' + this.el.id)
-//                this.wrapper.modal('show');
-//            }
         }
     });
 })();

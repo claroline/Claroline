@@ -8,7 +8,7 @@
     {{
         macros.breadcrumbs([
             {
-                'icon': 'icon-cog',
+                'icon': 'fa fa-cog',
                 'name': 'administration'|trans({}, 'platform'),
                 'href': path('claro_admin_index')
             },
@@ -23,7 +23,7 @@
 {% block section_title %}
     {{ 'badges_platform_list'|trans({}, 'badge') }}
     <a href="{{ path(parameters.add_link) }}" title="{{ 'add_badge'|trans({}, 'badge') }}" class="btn btn-default btn-sm" role="button">
-        <span class="icon-plus"></span> {{ 'add_badge'|trans({}, 'badge') }}
+        <span class="fa fa-plus"></span> {{ 'add_badge'|trans({}, 'badge') }}
     </a>
 {% endblock %}
 

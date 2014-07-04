@@ -14,18 +14,17 @@ namespace Claroline\CoreBundle\Manager;
 use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Entity\UserPublicProfilePreferences;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Claroline\CoreBundle\Event\StrictDispatcher;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Library\Security\PlatformRoles;
 use Claroline\CoreBundle\Library\Workspace\Configuration;
-use Claroline\CoreBundle\Manager\MailManager;
 use Claroline\CoreBundle\Pager\PagerFactory;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\DiExtraBundle\Annotation as DI;
+use Claroline\CoreBundle\Manager\Exception\AddRoleException;
 use Symfony\Component\Security\Core\SecurityContext;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Translation\Translator;
@@ -110,11 +109,7 @@ class UserManager
     {
         $this->objectManager->startFlushSuite();
         $this->setPersonalWorkspace($user);
-
-        $user
-            ->setPublicUrl($this->generatePublicUrl($user))
-            ->setPublicProfilePreferences(new UserPublicProfilePreferences());
-
+        $user->setPublicUrl($this->generatePublicUrl($user));
         $this->toolManager->addRequiredToolsToUser($user);
         $this->roleManager->setRoleToRoleSubject($user, PlatformRoles::USER);
         $this->objectManager->persist($user);
@@ -212,13 +207,21 @@ class UserManager
      * This user will have the additional roles $roles.
      * These roles must already exists.
      *
-     * @param \Claroline\CoreBundle\Entity\User            $user
+     * @param \Claroline\CoreBundle\Entity\User $user
      * @param \Doctrine\Common\Collections\ArrayCollection $roles
      */
     public function insertUserWithRoles(User $user, ArrayCollection $roles)
     {
         $this->objectManager->startFlushSuite();
         $this->createUser($user);
+        foreach ($roles as $role) {
+            $validated = $this->roleManager->validateRoleInsert($user, $role);
+
+            if (!$validated) {
+                throw new Exception\AddRoleException();
+            }
+        }
+
         $this->roleManager->associateRoles($user, $roles);
         $this->objectManager->endFlushSuite();
     }
@@ -240,6 +243,14 @@ class UserManager
      */
     public function importUsers(array $users)
     {
+        $roleUser = $this->roleManager->getRoleByName('ROLE_USER');
+        $max = $roleUser->getMaxUsers();
+        $total = $this->countUsersByRoleIncludingGroup($roleUser);
+
+        if ($total + count($users) > $max) {
+            throw new AddRoleException();
+        }
+
         $lg = $this->platformConfigHandler->getParameter('locale_language');
         $this->objectManager->startFlushSuite();
 
@@ -293,11 +304,10 @@ class UserManager
      * @param \Claroline\CoreBundle\Entity\User $user
      * @param ArrayCollection                   $roles
      */
-    public function setPlatformRoles(User $user, ArrayCollection $roles)
+    public function setPlatformRoles(User $user, $roles)
     {
-        $user->setPlatformRoles($roles);
-        $this->objectManager->persist($user);
-        $this->objectManager->flush();
+        $this->roleManager->resetRoles($user);
+        $this->roleManager->associateRoles($user, $roles);
     }
 
     /**
@@ -717,6 +727,26 @@ class UserManager
 
     /**
      * @param Role[]  $roles
+     * @param integer $page
+     * @param integer $max
+     *
+     * @return \Pagerfanta\Pagerfanta
+     */
+    public function getUsersByRolesIncludingGroups(
+        array $roles,
+        $page = 1,
+        $max = 20,
+        $executeQuery = true
+    )
+    {
+        $users = $this->userRepo
+            ->findUsersByRolesIncludingGroups($roles, $executeQuery);
+
+        return $this->pagerFactory->createPagerFromArray($users, $page, $max);
+    }
+
+    /**
+     * @param Role[]  $roles
      * @param string  $search
      * @param integer $page
      * @param integer $max
@@ -849,7 +879,7 @@ class UserManager
         $this->objectManager->persist($user);
         $this->objectManager->flush();
     }
-    
+
     public function toArrayForPicker($users)
     {
         $resultArray = array();
@@ -877,7 +907,8 @@ class UserManager
      */
     public function generatePublicUrl(User $user, $try = 0)
     {
-        $publicUrl = strtolower(sprintf('%s.%s', $user->getFirstName(), $user->getLastName()));
+        $publicUrl = $user->getFirstName() . '.' . $user->getLastName();
+        $publicUrl = strtolower(str_replace(' ', '-', $publicUrl));
 
         if (0 < $try) {
             $publicUrl .= $try;
@@ -891,19 +922,28 @@ class UserManager
         return $publicUrl;
     }
 
-    /**
-     * @return UserPublicProfilePreferences
-     */
-    public function getUserPublicProfilePreferencesForAdmin()
+    public function countUsersByRoleIncludingGroup(Role $role)
     {
-        $userPublicProfilePreferences = new UserPublicProfilePreferences();
-        $userPublicProfilePreferences
-            ->setSharePolicy(UserPublicProfilePreferences::SHARE_POLICY_EVERYBODY)
-            ->setAllowMailSending(true)
-            ->setAllowMessageSending(true)
-            ->setDisplayEmail(true)
-            ->setDisplayPhoneNumber(true);
+        return $this->objectManager->getRepository('ClarolineCoreBundle:User')->countUsersByRoleIncludingGroup($role);
+    }
 
-        return $userPublicProfilePreferences;
+    public function countUsersOfGroup(Group $group)
+    {
+        return $this->userRepo->countUsersOfGroup($group);
+    }
+
+    public function setUserInitDate(User $user)
+    {
+        $accountDuration = $this->platformConfigHandler->getParameter('account_duration');
+        $expirationDate = new \DateTime();
+
+        ($accountDuration === null) ?
+            $expirationDate->setDate(2100, 1, 1):
+            $expirationDate->add(new \DateInterval('P' . $accountDuration . 'D'));
+
+        $user->setExpirationDate($expirationDate);
+        $user->setInitDate(new \DateTime());
+        $this->objectManager->persist($user);
+        $this->objectManager->flush();
     }
 }

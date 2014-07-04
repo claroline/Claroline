@@ -11,6 +11,7 @@
 
 namespace Claroline\CoreBundle\Controller;
 
+use Claroline\CoreBundle\Form\FileType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\StreamedResponse;
@@ -19,7 +20,7 @@ use Claroline\CoreBundle\Entity\Resource\File;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Resource\ResourceCollection;
-use Claroline\CoreBundle\Form\FileType;
+use Claroline\CoreBundle\Form\UpdateFileType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 
 class FileController extends Controller
@@ -107,7 +108,6 @@ class FileController extends Controller
      * @EXT\Route("uploadmodal", name="claro_upload_modal", options = {"expose" = true})
      *
      * @EXT\Template("ClarolineCoreBundle:Resource:uploadModal.html.twig")
-     *
      */
     public function uploadModalAction()
     {
@@ -116,6 +116,61 @@ class FileController extends Controller
             'workspace' => $this->get('claroline.manager.resource_manager')->getWorkspaceRoot(
                 $this->getCurrentUser()->getPersonalWorkspace()
             )->getId()
+        );
+    }
+
+    /**
+     * @EXT\Route("/update/{file}/form", name="update_file_form", options = {"expose" = true})
+     *
+     * @EXT\Template()
+     */
+    public function updateFileFormAction(File $file)
+    {
+        $form = $this->get('form.factory')->create(new UpdateFileType(), new File());
+
+        return array(
+            'form' => $form->createView(),
+            'resourceType' => 'file',
+            'file' => $file,
+            '_resource' => $file
+        );
+    }
+
+    /**
+     * @EXT\Route("/update/{file}", name="update_file", options = {"expose" = true})
+     *
+     * @EXT\Template("ClarolineCoreBundle:File:updateFileForm.html.twig")
+     */
+    public function updateFileAction(File $file)
+    {
+        $request = $this->get('request');
+        $form = $this->get('form.factory')->create(new UpdateFileType(), new File());
+        $form->handleRequest($request);
+
+        if ($form->isValid()) {
+            $tmpFile = $form->get('file')->getData();
+            $this->get('claroline.manager.file_manager')->changeFile($file, $tmpFile);
+
+            if ($this->get('claroline.twig.home_extension')->isDesktop()) {
+                $url = $this->generateUrl('claro_desktop_open_tool', array('toolName'=> 'resource_manager'));
+            } else{
+                $url = $this->generateUrl(
+                    'claro_workspace_open_tool',
+                    array(
+                        'toolName'=> 'resource_manager',
+                        'workspaceId' => $file->getResourceNode()->getWorkspace()->getId()
+                    )
+                );
+            }
+
+            return $this->redirect($url);
+        }
+
+        return array(
+            'form' => $form->createView(),
+            'resourceType' => 'file',
+            'file' => $file,
+            '_resource' => $file
         );
     }
 

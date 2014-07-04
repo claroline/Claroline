@@ -11,11 +11,14 @@
 
 namespace Claroline\CoreBundle\Manager;
 
+use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\AbstractRoleSubject;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Claroline\CoreBundle\Entity\Tool\Tool;
+use Claroline\CoreBundle\Entity\Resource\ResourceNode;
+use Claroline\CoreBundle\Entity\Facet\FieldFacet;
 use Claroline\CoreBundle\Manager\Exception\LastManagerDeleteException;
 use Claroline\CoreBundle\Manager\Exception\RoleReadOnlyException;
 use Claroline\CoreBundle\Repository\RoleRepository;
@@ -142,11 +145,21 @@ class RoleManager
 
     /**
      * @param \Claroline\CoreBundle\Entity\AbstractRoleSubject $ars
-     * @param string                                           $roleName
+     * @param string $roleName
+     * @throws \Exception
      */
     public function setRoleToRoleSubject(AbstractRoleSubject $ars, $roleName)
     {
         $role = $this->roleRepo->findOneBy(array('name' => $roleName));
+        $validated = $this->validateRoleInsert($ars, $role);
+
+        if (!$validated) {
+            throw new Exception\AddRoleException();
+        }
+
+        if (get_class($ars) === 'Claroline\CoreBundle\Entity\Group' && $role->getName() === 'ROLE_USER') {
+            throw new Exception\AddRoleException('ROLE_USER cannot be added to groups');
+        }
 
         if (!is_null($role)) {
             $ars->addRole($role);
@@ -167,12 +180,23 @@ class RoleManager
 
     /**
      * @param \Claroline\CoreBundle\Entity\AbstractRoleSubject $ars
-     * @param \Claroline\CoreBundle\Entity\Role                $role
-     * @param boolean                                          $sendMail
+     * @param \Claroline\CoreBundle\Entity\Role $role
+     * @param boolean $sendMail
+     *
+     * @throws Exception\AddRoleException
      */
     public function associateRole(AbstractRoleSubject $ars, Role $role, $sendMail = false)
     {
+        if (!$this->validateRoleInsert($ars, $role)) {
+            throw new Exception\AddRoleException('Role cannot be added');
+        }
+
+        if (get_class($ars) === 'Claroline\CoreBundle\Entity\Group' && $role->getName() === 'ROLE_USER') {
+            throw new Exception\AddRoleException('ROLE_USER cannot be added to groups');
+        }
+
         if (!$ars->hasRole($role->getName())) {
+
             $ars->addRole($role);
             $this->om->startFlushSuite();
 
@@ -213,10 +237,10 @@ class RoleManager
 
     /**
      * @param \Claroline\CoreBundle\Entity\AbstractRoleSubject $ars
-     * @param \Doctrine\Common\Collections\ArrayCollection     $roles
+     * @param array     $roles
      * @param boolean                                          $sendMail
      */
-    public function associateRoles(AbstractRoleSubject $ars, ArrayCollection $roles, $sendMail = false)
+    public function associateRoles(AbstractRoleSubject $ars, $roles, $sendMail = false)
     {
         foreach ($roles as $role) {
             $this->associateRole($ars, $role, $sendMail);
@@ -225,6 +249,7 @@ class RoleManager
         $this->om->flush();
     }
 
+
     /**
      * @param \Claroline\CoreBundle\Entity\AbstractRoleSubject[]
      * @param \Claroline\CoreBundle\Entity\Role $role
@@ -232,10 +257,8 @@ class RoleManager
     public function associateRoleToMultipleSubjects(array $subjects, Role $role)
     {
         foreach ($subjects as $subject) {
-            $subject->addRole($role);
-            $this->om->persist($subject);
+            $this->associateRole($subject, $role);
         }
-        $this->om->flush();
     }
 
     /**
@@ -344,7 +367,7 @@ class RoleManager
     public function remove(Role $role)
     {
         if ($role->isReadOnly()) {
-            throw new RoleReadOnlyException('This role cannot be modified nor removed');
+            throw new RoleReadOnlyException('This role cannot be removed');
         }
 
         $this->om->remove($role);
@@ -649,9 +672,9 @@ class RoleManager
         $this->messageManager->sendMessageToAbstractRoleSubject($ars, $content, $object, $sender);
     }
 
-    public function getPlatformNonAdminRoles()
+    public function getPlatformNonAdminRoles($includeAnonymous = false)
     {
-        return $this->roleRepo->findPlatformNonAdminRoles();
+        return $this->roleRepo->findPlatformNonAdminRoles($includeAnonymous);
     }
 
     public function createPlatformRoleAction($translationKey)
@@ -662,6 +685,88 @@ class RoleManager
         $role->setTranslationKey($translationKey);
         $role->setReadOnly(false);
         $role->setType(Role::PLATFORM_ROLE);
+        $this->om->persist($role);
+        $this->om->flush();
+
+        return $role;
+    }
+
+    /**
+     * Returns if a role can be added to a RoleSubject.
+     *
+     * @param AbstractRoleSubject $ars
+     * @param Role $role
+     * @return bool
+     */
+    public function validateRoleInsert(AbstractRoleSubject $ars, Role $role)
+    {
+        $total = $this->countUsersByRoleIncludingGroup($role);
+
+        //cli always win!
+        if ($role->getName() === 'ROLE_ADMIN' && php_sapi_name() === 'cli' ) {
+            return true;
+        }
+
+        if ($role->getName() === 'ROLE_ADMIN' && !$this->container->get('security.context')->isGranted('ROLE_ADMIN')) {
+            return false;
+        }
+
+        if ($ars->hasRole($role->getName())) {
+            return true;
+        }
+
+        if ($ars instanceof User) {
+            return $total < $role->getMaxUsers();
+        }
+
+        if ($ars instanceof Group) {
+            $userCount = $this->userRepo->countUsersOfGroup($ars);
+            $userWithRoleCount = $this->userRepo->countUsersOfGroupByRole($ars, $role);
+
+            return $total + $userCount - $userWithRoleCount < $role->getMaxUsers();
+        }
+
+        return false;
+    }
+
+    /**
+     * @param Role $role
+     * @return bool
+     */
+    public function countUsersByRoleIncludingGroup(Role $role)
+    {
+        return $this->om->getRepository('ClarolineCoreBundle:User')->countUsersByRoleIncludingGroup($role);
+    }
+
+    public function getRolesWithRightsByResourceNode(
+        ResourceNode $resourceNode,
+        $executeQuery = true
+    )
+    {
+        return $this->roleRepo
+            ->findRolesWithRightsByResourceNode($resourceNode, $executeQuery);
+    }
+
+    /**
+     * This functions sets the role limit equal to the current number of users having that role
+     *
+     * @param Role $role
+     */
+    public function initializeLimit(Role $role)
+    {
+        $count = $this->countUsersByRoleIncludingGroup($role);
+        $role->setMaxUsers($count);
+        $this->om->persist($role);
+        $this->om->flush();
+    }
+
+    /**
+     * @param Role $role
+     * @param $limit
+     */
+    public function increaseRoleMaxUsers(Role $role, $limit)
+    {
+        $role->setMaxUsers($role->getMaxUsers() + $limit);
         $this->om->persist($role);
         $this->om->flush();
     }

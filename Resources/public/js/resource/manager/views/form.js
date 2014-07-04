@@ -8,7 +8,6 @@
  */
 
 /* global Twig */
-/* global ResourceManagerFilters */
 
 (function () {
     'use strict';
@@ -19,156 +18,65 @@
 
     Claroline.ResourceManager.Views.Form = Backbone.View.extend({
         events: {
-            'change #simple input': function (event) {
-                var element = event.target;
-
-                switch ($(element).attr('id')) {
-                    case 'everyone':
-                        simpleRights.everyone(element);
-                        break;
-                    case 'anonymous':
-                        simpleRights.anonymous(element);
-                        break;
-                    case 'workspace':
-                        simpleRights.workspace(element);
-                        break;
-                    case 'platform':
-                        simpleRights.platform(element);
-                        break;
-                    case 'recursive-option':
-                        simpleRights.recursive(element)
-                        break;
-                }
+            'submit form': 'submit'
+        },
+        knownActions: {
+            'create-form': {
+                route: 'claro_resource_creation_form',
+                onSuccess: 'created-nodes'
             },
-            'change #general input': function (event) {
-                simpleRights.checkAll(event.target);
+            'rename': {
+                route: 'claro_resource_rename_form',
+                onSuccess: 'renamed-node'
             },
-            'click #submit-default-rights-form-button': function (event) {
-                event.preventDefault();
-                var form = $(this.el).find('form')[0];
-                this.dispatcher.trigger(this.eventOnSubmit, {
-                    action: form.getAttribute('action'),
-                    data: new FormData(form),
-                    nodeId: this.targetNodeId
-                });
-            },
-            'click .res-creation-options': function (event) {
-                event.preventDefault();
-                this.render(
-                    event.currentTarget.getAttribute('href'),
-                    event.currentTarget.getAttribute('data-node-id'),
-                    'edit-rights-creation'
-                );
-            },
-            'click .search-role-btn': function (event) {
-                event.preventDefault();
-                var search = $('#role-search-text').val();
-                $.ajax({
-                    url: routing.generate('claro_resource_find_role_by_code', {'code': search}),
-                    type: 'GET',
-                    context: this,
-                    processData: false,
-                    contentType: false,
-                    success: function (workspaces) {
-                        $('#form-right-wrapper').empty();
-                        $('#role-list').empty();
-                        $('#role-list').append(Twig.render(resourceRightsRoles,
-                            {'workspaces': workspaces, 'nodeId': this.targetNodeId})
-                        );
-                        $('#role-search-text').val(search);
-                    }
-                });
-            },
-            'click .role-item': function (event) {
-                event.preventDefault();
-                $.ajax({
-                    context: this,
-                    url: event.currentTarget.getAttribute('href'),
-                    type: 'POST',
-                    processData: false,
-                    contentType: false,
-                    success: function (form) {
-                        $('#role-list').empty();
-                        $('#form-right-wrapper').append(form);
-                    }
-                });
-            },
-            'click .workspace-role-item': function (event) {
-                event.preventDefault();
-                $.ajax({
-                    context: this,
-                    url: event.currentTarget.getAttribute('href'),
-                    type: 'POST',
-                    processData: false,
-                    contentType: false,
-                    success: function (form) {
-                        $('#form-rights-tag-wrapper').empty();
-                        $('#form-rights-tag-wrapper').append(form);
-                    }
-                });
-            },
-            'click .modal-close': function () {
-                $('#modal-check-role').empty();
-                $('#rights-form-resource-tab-content').css('display', 'block');
-                $('#rights-form-resource-nav-tabs').css('display', 'block');
-            },
-            'click #submit-right-form-button': function (event) {
-                event.preventDefault();
-                var form = $(this.el).find('form')[1];
-                var data = new FormData(form);
-                $.ajax({
-                    url: form.getAttribute('action'),
-                    context: this,
-                    data: data,
-                    type: 'POST',
-                    processData: false,
-                    contentType: false,
-                    success: function (newrow) {
-                        $('#form-right-wrapper').empty();
-                        $('#perms-table').append(newrow);
-                        $('#modal-check-role').empty();
-                        $('#modal-check-node-right-box .modal').modal('hide');
-                        $('#rights-form-node-tab-content').css('display', 'block');
-                        $('#rights-form-node-nav-tabs').css('display', 'block');
-                    }
-                });
-            },
-            'submit form': function (event) {
-                event.preventDefault();
-                var form = this.$el.find('form');
-                this.dispatcher.trigger(this.eventOnSubmit, {
-                    action: form.attr('action'),
-                    data: new FormData(form[0]),
-                    nodeId: this.targetNodeId
-                });
+            'edit-properties': {
+                route: 'claro_resource_form_properties',
+                onSuccess: 'edited-node'
             }
         },
         initialize: function (dispatcher) {
             this.dispatcher = dispatcher;
             this.targetNodeId = null;
-            this.eventOnSubmit = '';
-            this.on('close', this.close, this);
+            this.eventOnSuccess = null;
+            _.each(_.keys(this.knownActions), function (eventName) {
+                this.dispatcher.on(eventName, this.render, this);
+            }, this);
+            this.dispatcher.on('error-form', this.render, this);
+            this.dispatcher.on('submit-success', function () {
+                this.$el.modal('hide');
+            }, this);
         },
-        close: function () {
-            this.$el.modal('hide');
-        },
-        replace: function (content) {
-            this.$el.html(content);
+        submit: function (event) {
+            event.preventDefault();
+            var form = this.$('form');
+            this.dispatcher.trigger('submit-form', {
+                formAction: form.attr('action'),
+                formData: new FormData(form[0]),
+                targetNodeId: this.targetNodeId,
+                eventOnSuccess: this.eventOnSuccess
+            });
         },
         replaceId: function (id) {
-            $('form', this.$el).attr('action', $('form', this.$el).attr('action').replace('_nodeId', id));
+            var action = this.$('form').attr('action').replace('_nodeId', id);
+            this.$('form').attr('action', action);
         },
-        render: function (url, targetNodeId, eventOnSubmit) {
-            this.targetNodeId = targetNodeId;
-            this.eventOnSubmit = eventOnSubmit;
-            var that = this;
-            modal.fromUrl(url, function (element) {
-                that.$el = element;
-                that.el = element.get();
-                that.replaceId(targetNodeId);
-                that.delegateEvents(that.events);
-                simpleRights.checkAll($('#general input', that.el).first());
-            });
+        render: function (event) {
+            this.targetNodeId = event.nodeId;
+            this.eventOnSuccess = this.knownActions[event.action].onSuccess + '-' + event.view;
+
+            if (!event.errorForm) {
+                var route = this.knownActions[event.action].route;
+                var parameters = event.action === 'create-form' ?
+                    { resourceType: event.resourceType } :
+                    { node: event.nodeId };
+                Claroline.Modal.fromRoute(route, parameters, _.bind(function (element) {
+                    this.setElement(element);
+                    this.replaceId(event.nodeId);
+                }, this));
+            } else {
+                this.$el.html(event.errorForm);
+                this.replaceId(event.nodeId);
+            }
         }
     });
 })();

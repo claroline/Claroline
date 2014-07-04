@@ -16,74 +16,94 @@
     window.Claroline = window.Claroline || {};
     window.Claroline.ResourceManager = window.Claroline.ResourceManager || {};
     window.Claroline.ResourceManager.Views = window.Claroline.ResourceManager.Views || {};
+    var views = window.Claroline.ResourceManager.Views;
 
     Claroline.ResourceManager.Views.Nodes = Backbone.View.extend({
         className: 'nodes',
         tagName: 'ul',
         attributes: {'id': 'sortable'},
         events: {
-            'click .node-thumbnail .node-element': 'dispatchOpen',
-            'click .node-thumbnail input[type=checkbox]': 'dispatchCheck',
-            'click .results table a.node-link': 'dispatchOpen',
-            'click .results table input[type=checkbox]': 'dispatchCheck'
+            'click .node-thumbnail .node-element': 'openNode',
+            'click .results table a.result-path': 'openNode',
+            'click .node-thumbnail input[type=checkbox]': 'checkNode',
+            'click .results table input[type=checkbox]': 'checkNode'
+        },
+        outerEvents: {
+            'directory-data': 'render',
+            'created-nodes': 'addNodes',
+            'deleted-nodes': 'removeNodes',
+            'renamed-node': 'renameNode',
+            'edited-node': 'editNode'
         },
         initialize: function (parameters, dispatcher) {
             this.parameters = parameters;
             this.dispatcher = dispatcher;
-            this.directoryId = parameters.directoryId;
-        },
-        addThumbnails: function (nodes, successHandler) {
-            _.each(nodes, function (node) {
-                var thumbnail = new manager.Views.Thumbnail(this.parameters, this.dispatcher);
-                thumbnail.render(node, this.directoryId !== '0' && !this.parameters.isPickerMode, true);
-                this.$el.append(thumbnail.$el);
+            this.directoryId = '0';
+            this.zoomValue = this.parameters.zoom;
+            this.dispatcher.on('change-zoom', this.zoom, this);
+            _.each(this.outerEvents, function (method, event) {
+                this.dispatcher.on(
+                    event + '-' + this.parameters.viewName, this[method], this
+                );
             }, this);
-
-            if (successHandler) {
-                successHandler();
-            }
         },
-        renameThumbnail: function (nodeId, newName, successHandler) {
-            var displayableName = Claroline.Utilities.formatText(newName, 20, 2);
-            this.$('#' + nodeId + ' .node-name')
-                .html(displayableName + ' ').append($(document.createElement('i')).addClass('icon-caret-down'));
-            this.$('#' + nodeId + ' .dropdown[rel=tooltip]').attr('title', newName);
+        addNodes: function (event) {
+            _.each(event, function (node) {
+                var isWhiteListed = this.parameters.resourceTypes[node.type] !== undefined;
 
-            if (successHandler) {
-                successHandler();
-            }
+                if (isWhiteListed || node.type === 'directory') {
+                    var thumbnail = new views.Thumbnail(this.parameters, this.dispatcher, this.zoomValue);
+                    thumbnail.render(node, isWhiteListed && this.directoryId !== '0');
+                    this.$el.append(thumbnail.$el);
+                }
+            }, this);
         },
-        changeThumbnailIcon: function (nodeId, newIconPath, successHandler) {
-            this.$('#node-element-' + nodeId).attr(
-                'style', 'background-image:url("' + this.parameters.webPath + newIconPath + '");'
+        renameNode: function (event) {
+            var displayableName = Claroline.Utilities.formatText(event.name, 20, 2);
+            this.$('#' + event.id + ' .node-name')
+                .html(displayableName + ' ')
+                .append($(document.createElement('i'))
+                .addClass('fa fa-caret-down'));
+            this.$('#' + event.id + ' .dropdown[rel=tooltip]').attr('title', event.name);
+        },
+        editNode: function (event) {
+            this.renameNode(event);
+            this.$('#node-element-' + event.id).attr(
+                'style',
+                'background-image:url("' + this.parameters.webPath + event.large_icon + '");'
             );
-            //console.debug(this.parameters.webPath + newIconPath);
-            if (successHandler) {
-                successHandler();
+        },
+        removeNodes: function (event) {
+            var ids = event.ids || [event.nodeId];
+
+            for (var i = 0; i < ids.length; ++i) {
+                this.$('#' + ids[i]).remove();
             }
         },
-        removeResources: function (nodeIds) {
-            // same logic for both thumbnails and search results
-            for (var i = 0; i < nodeIds.length; ++i) {
-                this.$('#' + nodeIds[i]).remove();
-            }
+        zoom: function (event) {
+            this.zoomValue = event.value;
+            _.each(this.$('.node-thumbnail'), function (node) {
+                node.className = node.className.replace(/\bzoom\d+/g, event.value);
+            });
         },
-        dispatchOpen: function (event) {
+        openNode: function (event) {
             event.preventDefault();
             var type = event.currentTarget.getAttribute('data-type');
             var eventName = 'open-' + (type === 'directory' ? 'directory' : 'node');
-            this.dispatcher.trigger(eventName , {
-                nodeId: event.currentTarget.getAttribute('data-id'),
-                resourceType: type,
-                isPickerMode: this.parameters.isPickerMode,
-                directoryHistory: this.parameters.directoryHistory,
-                view: this.parameters.viewName
-            });
+
+            if (!this.parameters.isPickerMode || type === 'directory') {
+                this.dispatcher.trigger(eventName , {
+                    nodeId: event.currentTarget.getAttribute('data-id'),
+                    resourceType: type,
+                    view: this.parameters.viewName,
+                    fromPicker: this.parameters.isPickerMode
+                });
+            }
         },
-        dispatchCheck: function (event) {
-            if (this.parameters.isPickerMode &&
-                !this.parameters.isPickerMultiSelectAllowed &&
-                event.currentTarget.checked) {
+        checkNode: function (event) {
+            if (this.parameters.isPickerMode
+                && !this.parameters.isPickerMultiSelectAllowed
+                && event.currentTarget.checked) {
                 _.each(this.$('input[type=checkbox]'), function (checkbox) {
                     if (checkbox !== event.currentTarget) {
                         checkbox.checked = false;
@@ -91,7 +111,7 @@
                 });
             }
 
-            this.dispatcher.trigger('node-check-status', {
+            this.dispatcher.trigger('node-check-status-' + this.parameters.viewName, {
                 node: {
                     id: event.currentTarget.getAttribute('value'),
                     name: event.currentTarget.getAttribute('data-node-name'),
@@ -103,31 +123,58 @@
                 isPickerMode: this.parameters.isPickerMode
             });
         },
-        render: function (nodes, isSearchMode, directoryId) {
-            this.directoryId = directoryId;
-            this.$el.empty();
+        orderNodes: function (event, ui) {
+            var ids = this.$el.sortable('toArray');
+            var movedNodeId = ui.item.attr('id');
+            var movedNodeIndex = ids.indexOf(movedNodeId);
+            var nextId = movedNodeIndex + 1 < ids.length ? ids[movedNodeIndex + 1] : 0;
+            this.dispatcher.trigger('order-nodes', {
+                'nodeId': movedNodeId,
+                'nextId': nextId
+            });
+        },
+        prepareResults: function (nodes) {
+            // exclude blacklisted types
+            var displayableNodes = _.reject(nodes, function (node) {
+                return this.parameters.resourceTypes[node.type] === undefined;
+            }, this);
 
-            if (isSearchMode) {
-                $(this.el).html(Twig.render(ResourceManagerResults, {
-                    'nodes': nodes,
+            // extract nodes id and name from materialized path data
+            return _.map(displayableNodes, function (node) {
+                node.pathParts = node.path.split('`');
+                node.pathParts.pop();
+                node.pathParts.pop();
+                node.pathParts = _.map(node.pathParts, function (part) {
+                    var matches = part.match(/(.+)\-([0-9]+)$/);
+
+                    return {
+                        name: matches[1],
+                        id: matches[2]
+                    }
+                });
+
+                return node;
+            });
+        },
+        render: function (event) {
+            this.directoryId = event.id;
+
+            if (!event.isSearchMode) {
+                this.$el.empty();
+                this.addNodes(event.nodes);
+                this.$el.sortable({
+                    update: _.bind(this.orderNodes, this)
+                });
+
+                if (!event.canChangePosition || this.parameters.isPickerMode) {
+                    this.$el.sortable('disable');
+                }
+            } else {
+                this.$el.html(Twig.render(ResourceManagerResults, {
+                    'nodes': this.prepareResults(event.nodes),
                     'resourceTypes': this.parameters.resourceTypes
                 }));
-            } else {
-                _.each(nodes, function (node) {
-                    var thumbnail = new Claroline.ResourceManager.Views.Thumbnail(this.parameters, this.dispatcher);
-                    thumbnail.render(
-                        node,
-                        directoryId !== '0' || !this.parameters.isPickerMode,
-                        directoryId !== '0' && !this.parameters.isPickerMode
-                    );
-                    $(this.el).append(thumbnail.$el);
-                }, this);
             }
-        },
-        uncheckAll: function () {
-            _.each(this.$('input[type=checkbox]'), function (checkbox) {
-                checkbox.checked = false;
-            });
         }
     });
 })();

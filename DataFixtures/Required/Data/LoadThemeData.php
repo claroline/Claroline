@@ -11,7 +11,7 @@
 
 namespace Claroline\CoreBundle\DataFixtures\Required\Data;
 
-use Claroline\CoreBundle\Persistence\ObjectManager;;
+use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Theme\Theme;
 use Claroline\CoreBundle\DataFixtures\Required\RequiredFixture;
 

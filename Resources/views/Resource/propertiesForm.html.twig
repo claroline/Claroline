@@ -15,7 +15,12 @@
             {{ form_row(form.creationDate) }}
             {{ form_row(form.resourceType) }}
             {{ form_row(form.creator) }}
+            <hr>
             {{ form_rest(form) }}
+
+            {% if isDir %}
+                <input id="recursive-option" name="isRecursive" type="checkbox"/> {{ 'recursive_dir_action'|trans({}, 'platform')}}
+            {% endif %}
         </div>
         <div class="modal-footer">
             <button type="button" class="btn btn-default" data-dismiss="modal">{{ 'cancel'|trans({}, 'platform') }}</button>

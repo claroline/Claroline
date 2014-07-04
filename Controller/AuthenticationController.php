@@ -98,17 +98,29 @@ class AuthenticationController
      */
     public function loginAction()
     {
+        $lastUsername = $this->request->getSession()->get(SecurityContext::LAST_USERNAME);
+        $user = $this->userManager->getUserByUsername($lastUsername);
+
+        if ($user) {
+            if (!$user->isAccountNonExpired()) {
+                return array(
+                    'last_username' => $lastUsername,
+                    'error' => false,
+                    'is_expired' => true
+                );
+            }
+        }
+
         if ($this->request->attributes->has(SecurityContext::AUTHENTICATION_ERROR)) {
             $error = $this->request->attributes->get(SecurityContext::AUTHENTICATION_ERROR);
         } else {
             $error = $this->request->getSession()->get(SecurityContext::AUTHENTICATION_ERROR);
         }
 
-        $lastUsername = $this->request->getSession()->get(SecurityContext::LAST_USERNAME);
-
         return array(
             'last_username' => $lastUsername,
-            'error' => $error
+            'error' => $error,
+            'is_expired' => false
         );
     }
 

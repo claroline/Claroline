@@ -1,0 +1,10 @@
+<div id="facet-modal" class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h4>{% block header %}{% endblock %}</h4>
+        </div>
+        {% block explanation %} {% endblock %}
+        {% block form %}{% endblock %}
+    </div>
+</div>

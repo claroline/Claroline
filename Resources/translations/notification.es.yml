@@ -1,3 +1,5 @@
-workspace-role-change_right: 'Ha accedido al recurso ''%resource%'' del espacio de trabajo ''%workspace%'''
-workspace-role-subscribe_group: 'Se ha inscrito al rol ''%role%'' del espacio de trabajo ''%workspace%'''
-workspace-role-subscribe_user: 'Se ha inscrito al rol ''%role%'' del espacio de trabajo ''%workspace%'''
+workspace-role-change_right: 'Ha accedido al recurso %resource% del espacio de trabajo %workspace%'
+workspace-role-subscribe_group: 'Se ha inscrito al rol ''%role%'' del espacio de trabajo %workspace%'
+workspace-role-subscribe_user: 'Se ha inscrito al rol ''%role%'' del espacio de trabajo %workspace%'
+role-subscribe_group: 'Se ha inscrito al rol ''%role%'''
+role-subscribe_user: 'Se ha inscrito al rol ''%role%'''

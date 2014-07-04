@@ -17,110 +17,67 @@
 
     var server = Claroline.ResourceManager.Server = function (dispatcher) {
         this.dispatcher = dispatcher;
-        this.dispatcher.on('create-node',           _.bind(this.create, this));
-        this.dispatcher.on('order-node',            _.bind(this.order, this));
-        this.dispatcher.on('rename-node',           _.bind(this.rename, this));
-        this.dispatcher.on('open-node',             _.bind(this.open, this));
-        this.dispatcher.on('open-node-tracking',    _.bind(this.openTracking, this));
-        this.dispatcher.on('open-directory',        _.bind(this.openDirectory, this));
-        this.dispatcher.on('edit-properties',       _.bind(this.editProperties, this));
-        this.dispatcher.on('edit-rights',           _.bind(this.editRights, this));
-        this.dispatcher.on('edit-creation-rights',  _.bind(this.editCreationRights, this));
-        this.dispatcher.on('custom-node-action',    _.bind(this.customAction, this));
-        this.dispatcher.on('remove-nodes',          _.bind(this.remove, this));
-        this.dispatcher.on('copy-nodes',            _.bind(this.copy, this));
-        this.dispatcher.on('move-nodes',            _.bind(this.move, this));
-        this.dispatcher.on('download-nodes',        _.bind(this.download, this));
-        this.dispatcher.on('create-shortcuts',      _.bind(this.createShortcuts, this));
-
+        this.preFetchedDirectory = null;
+        this.outerEvents = {
+            'open-directory': 'openDirectory',
+            'submit-form': 'submit',
+            'download': 'download',
+            'open-tracking': 'openTracking',
+            'delete': 'delete',
+            'open-node': 'open',
+            'copy-nodes': 'copy',
+            'move-nodes': 'move',
+            'order-nodes': 'order',
+            'filter': 'filter',
+            'change-zoom': 'zoom',
+            'custom-action': 'customAction',
+            'create-shortcuts': 'createShortcuts',
+            'get-url': 'get'
+        };
+        _.each(this.outerEvents, function (method, event) {
+            this.dispatcher.on(event, this[method], this);
+        }, this);
         $.ajaxSetup({
             headers: {'X_Requested_With': 'XMLHttpRequest'},
             context: this
         });
     };
 
-    server.prototype.create = function (event) {
-        $.ajax({
-            url: event.formAction,
-            data: event.formData,
-            type: 'POST',
-            processData: false,
-            contentType: false,
-            success: function (data, textStatus, jqXHR) {
-                if (jqXHR.getResponseHeader('Content-Type') === 'application/json') {
-                    this.dispatcher.trigger('created-nodes', {
-                        nodes: data
-                    });
-                } else {
-                    this.dispatcher.trigger('node-creation-error', {
-                        errorForm: data,
-                        parentDirectoryId: event.parentDirectoryId
-                    });
-                }
-            }
-        });
-    };
-
-    server.prototype.order = function (event) {
-        $.ajax({
-            url: Routing.generate('claro_resource_insert_before', {
-                'node': event.movedNode,
-                'nextId': event.nextId
-            })
-        });
-    };
-
-    server.prototype.rename = function (event) {
-        $.ajax({
-            url: event.formAction,
-            data: event.formData,
-            type: 'POST',
-            processData: false,
-            contentType: false,
-            success: function (data, textStatus, jqXHR) {
-                if (jqXHR.getResponseHeader('Content-Type') === 'application/json') {
-                    this.dispatcher.trigger('renamed-node', {
-                        nodeId: event.nodeId,
-                        nodeName: data[0]
-                    });
-                } else {
-                    this.dispatcher.trigger('node-renaming-error', {
-                        errorForm: data,
-                        nodeId: event.nodeId
-                    });
-                }
-            }
-        });
-    };
-
-    server.prototype.open = function (event) {
-        var route = Routing.generate('claro_resource_open', {
-            resourceType: event.resourceType,
-            node: event.nodeId
-        });
-        window.location = route + '?' + event.breadcrumbQuery;
-    };
-
-    server.prototype.openTracking = function (event) {
-        window.location = Routing.generate('claro_resource_logs', {
-            node: event.nodeId
-        });
+    server.prototype.setPreFetchedDirectory = function (directory) {
+        this.preFetchedDirectory = directory;
     };
 
     server.prototype.openDirectory = function (event) {
-        $.ajax({
-            url: Routing.generate('claro_resource_directory', {
+        var eventName = 'directory-data-' + event.view;
+
+        if (this.preFetchedDirectory && this.preFetchedDirectory.id == event.nodeId) {
+            this.preFetchedDirectory.isSearchMode = false;
+            this.dispatcher.trigger(eventName, this.preFetchedDirectory);
+        } else {
+            var url = Routing.generate('claro_resource_directory', {
                 nodeId: event.nodeId
-            }),
-            success: function (response) {
-                this.dispatcher.trigger('directory-data-' + event.view, {
-                    data: response
+            });
+
+            if (event.fromPicker) {
+                this.dispatcher.trigger('save-picker-directory', {
+                    directoryId: event.nodeId
                 });
+                url += '?keep-id';
             }
-        });
+
+            $.ajax({
+                url: url,
+                success: function (data) {
+                    data.isSearchMode = false;
+                    this.dispatcher.trigger(eventName, data);
+                }
+            });
+        }
+
+        this.preFetchedDirectory = null;
     };
 
-    server.prototype.editProperties = function (event) {
+    server.prototype.submit = function (event) {
         $.ajax({
             url: event.formAction,
             data: event.formData,
@@ -129,72 +86,27 @@
             contentType: false,
             success: function (data, textStatus, jqXHR) {
                 if (jqXHR.getResponseHeader('Content-Type') === 'application/json') {
-                    if (data[0].name) {
-                        this.dispatcher.trigger('renamed-node', {
-                            nodeId: event.nodeId,
-                            nodeName: data[0].name
-                        });
-                    }
-
-                    if (data[0].large_icon) {
-                        this.dispatcher.trigger('changed-node-icon', {
-                            nodeId: event.nodeId,
-                            nodeIcon: data[0].large_icon
-                        });
-                    }
+                    this.dispatcher.trigger(event.eventOnSuccess, data);
+                    this.dispatcher.trigger('submit-success');
                 } else {
-                    this.dispatcher.trigger('node-properties-error', {
-                        errorForm: data,
-                        nodeId: event.nodeId
-                    });
+                    event.errorForm = data;
+                    this.dispatcher.trigger('error-form', event);
                 }
             }
         });
     };
 
-    server.prototype.editRights = function (event) {
-        $.ajax({
-            url: event.formAction,
-            data: event.formData,
-            type: 'POST',
-            processData: false,
-            contentType: false,
-            success: function () {
-                this.dispatcher.trigger('edited-rights', {});
-            }
-        });
-    };
-
-    server.prototype.editCreationRights = function (event) {
-        $.ajax({
-            url: event.formAction,
-            data: event.formData,
-            type: 'POST',
-            processData: false,
-            contentType: false,
-            success: function () {
-                this.dispatcher.trigger('edited-creation-rights', {});
-            }
-        });
-    };
-
-    server.prototype.customAction = function (event) {
-        window.location = Routing.generate('claro_resource_action', {
-            action: event.action,
-            node: event.nodeId
-        });
-    };
-
-    server.prototype.remove = function (event) {
+    server.prototype.delete = function (event) {
         $.ajax({
             url: Routing.generate('claro_resource_delete', {}),
             data: {
-                ids: event.nodeIds
+                ids: event.ids || [event.nodeId]
             },
             success: function () {
-                this.dispatcher.trigger('deleted-nodes', {
-                   nodes: event.nodeIds
+                this.dispatcher.trigger('deleted-nodes-' + event.view, {
+                    ids: event.ids || [event.nodeId]
                 });
+                this.dispatcher.trigger('close-confirm');
             }
         });
     };
@@ -202,16 +114,14 @@
     server.prototype.copy = function (event) {
         $.ajax({
             url: Routing.generate('claro_resource_copy', {
-               parent: event.directoryId
+                parent: event.directoryId
             }),
             data: {
-                ids: event.nodeIds
+                ids: event.ids
             },
             success: function (data, textStatus, jqXHR) {
                 if (jqXHR.getResponseHeader('Content-Type') === 'application/json') {
-                    this.dispatcher.trigger('created-nodes', {
-                        nodes: data
-                    });
+                    this.dispatcher.trigger('created-nodes-' + event.view, data);
                 }
             }
         });
@@ -220,37 +130,100 @@
     server.prototype.move = function (event) {
         $.ajax({
             url: Routing.generate('claro_resource_move', {
-                newParent: event.newParentDirectoryId
+                newParent: event.directoryId
             }),
             data: {
-                ids: event.nodeIds
+                ids: event.ids
             },
             success: function (data) {
-                this.dispatcher.trigger('created-nodes', {
-                    nodes: data
-                });
+                this.dispatcher.trigger('created-nodes-' + event.view, data);
             }
         });
     };
 
-    server.prototype.download = function (event) {
-        var route = Routing.generate('claro_resource_download', {});
-        window.location = route + '?' + $.param({ ids: event.nodeIds });
+    server.prototype.filter = function (event) {
+        $.ajax({
+            url: Routing.generate('claro_resource_filter', {
+                nodeId: event.nodeId
+            }),
+            data: event.parameters,
+            success: function (data) {
+                data.isSearchMode = true;
+                this.dispatcher.trigger('directory-data-' + event.view, data);
+            }
+        });
+    };
+
+    server.prototype.order = function (event) {
+        $.ajax({
+            url: Routing.generate('claro_resource_insert_before', {
+                'node': event.nodeId,
+                'nextId': event.nextId
+            })
+        });
+    };
+
+    server.prototype.zoom = function (event) {
+        $.ajax({
+            url: Routing.generate('claro_resource_change_zoom', {
+                'zoom': event.value
+            })
+        });
+    };
+
+    server.prototype.fetchManagerParameters = function (callback) {
+        $.ajax({
+            url: Routing.generate('claro_resource_manager_parameters'),
+            success: callback
+        });
     };
 
     server.prototype.createShortcuts = function (event) {
         $.ajax({
             url: Routing.generate('claro_resource_create_shortcut', {
-                parent: event.parentId
+                parent: event.directoryId
             }),
             data: {
-                ids: event.nodeIds
+                ids: event.ids
             },
             success: function (data) {
-                this.dispatcher.trigger('created-nodes', {
-                    nodes: data
-                });
+                this.dispatcher.trigger('created-nodes-' + event.view, data);
             }
+        });
+    };
+
+    server.prototype.get = function (event) {
+        $.ajax({
+            url: event.url,
+            success: function (data) {
+                this.dispatcher.trigger(event.onSuccess, data);
+            }
+        });
+    };
+
+    server.prototype.open = function (event) {
+        window.location = Routing.generate('claro_resource_open', {
+            resourceType: event.resourceType,
+            node: event.nodeId
+        });
+    };
+
+    server.prototype.download = function (event) {
+        var route = Routing.generate('claro_resource_download', {});
+        var ids = event.ids || [event.nodeId];
+        window.location = route + '?' + $.param({ ids: ids });
+    };
+
+    server.prototype.openTracking = function (event) {
+        window.location = Routing.generate('claro_resource_logs', {
+            node: event.nodeId
+        });
+    };
+
+    server.prototype.customAction = function (event) {
+        window.location = Routing.generate('claro_resource_action', {
+            action: event.action,
+            node: event.nodeId
         });
     };
 })();

@@ -14,6 +14,7 @@ namespace Claroline\CoreBundle\Manager;
 use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Claroline\CoreBundle\Event\StrictDispatcher;
+use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Repository\GroupRepository;
 use Claroline\CoreBundle\Repository\UserRepository;
 use Claroline\CoreBundle\Pager\PagerFactory;
@@ -34,6 +35,7 @@ class GroupManager
     private $pagerFactory;
     private $translator;
     private $eventDispatcher;
+    private $roleManager;
 
     /**
      * Constructor.
@@ -42,14 +44,16 @@ class GroupManager
      *     "om"              = @DI\Inject("claroline.persistence.object_manager"),
      *     "pagerFactory"    = @DI\Inject("claroline.pager.pager_factory"),
      *     "translator"      = @DI\Inject("translator"),
-     *     "eventDispatcher" = @DI\Inject("claroline.event.event_dispatcher")
+     *     "eventDispatcher" = @DI\Inject("claroline.event.event_dispatcher"),
+     *     "roleManager"     = @DI\Inject("claroline.manager.role_manager")
      * })
      */
     public function __construct(
         ObjectManager $om,
         PagerFactory $pagerFactory,
         Translator $translator,
-        StrictDispatcher $eventDispatcher
+        StrictDispatcher $eventDispatcher,
+        RoleManager $roleManager
     )
     {
         $this->om = $om;
@@ -58,6 +62,7 @@ class GroupManager
         $this->pagerFactory = $pagerFactory;
         $this->translator = $translator;
         $this->eventDispatcher = $eventDispatcher;
+        $this->roleManager = $roleManager;
     }
 
     /**
@@ -86,18 +91,27 @@ class GroupManager
      * @todo what does this method do ?
      *
      * @param \Claroline\CoreBundle\Entity\Group $group
-     * @param string                             $oldPlatformRoleTransactionKey
+     * @param Role[] $oldRoles
      */
-    public function updateGroup(Group $group, $oldPlatformRoleTransactionKey)
+    public function updateGroup(Group $group, array $oldRoles)
     {
         $unitOfWork = $this->om->getUnitOfWork();
         $unitOfWork->computeChangeSets();
         $changeSet = $unitOfWork->getEntityChangeSet($group);
-        $newPlatformRoleTransactionKey = $group->getPlatformRole()->getTranslationKey();
+        $newRoles = $group->getPlatformRoles();
+        $oldRolesTranslationKeys = array();
 
-        if ($oldPlatformRoleTransactionKey !== $newPlatformRoleTransactionKey) {
-            $changeSet['platformRole'] = array($oldPlatformRoleTransactionKey, $newPlatformRoleTransactionKey);
+        foreach ($oldRoles as $oldRole) {
+            $oldRolesTranslationKeys[] = $oldRole->getTranslationKey();
         }
+
+        $newRolesTransactionKey = array();
+
+        foreach ($newRoles as $newRole) {
+            $newRolesTransactionKeys[] = $newRole->getTranslationKey();
+        }
+
+        $changeSet['platformRole'] = array($oldRolesTranslationKeys, $newRolesTransactionKey);
         $this->eventDispatcher->dispatch('log', 'Log\LogGroupUpdate', array($group, $changeSet));
 
         $this->om->persist($group);
@@ -112,6 +126,10 @@ class GroupManager
      */
     public function addUsersToGroup(Group $group, array $users)
     {
+        if(!$this->validateAddUsersToGroup($users, $group)) {
+            throw new Exception\AddRoleException();
+        }
+
         foreach ($users as $user) {
             if (!$group->containsUser($user)) {
                 $group->addUser($user);
@@ -217,7 +235,8 @@ class GroupManager
 
     /**
      * @param \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace $workspace
-     * @param integer                                                  $page
+     * @param integer $page
+     * @param int $max
      *
      * @return \PagerFanta\PagerFanta
      */
@@ -230,8 +249,9 @@ class GroupManager
 
     /**
      * @param \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace $workspace
-     * @param string                                                   $search
-     * @param integer                                                  $page
+     * @param string $search
+     * @param integer $page
+     * @param int $max
      *
      * @return \PagerFanta\PagerFanta
      */
@@ -244,7 +264,8 @@ class GroupManager
 
     /**
      * @param \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace $workspace
-     * @param integer                                                  $page
+     * @param integer $page
+     * @param int $max
      *
      * @return \PagerFanta\PagerFanta
      */
@@ -281,8 +302,9 @@ class GroupManager
 
     /**
      * @param \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace $workspace
-     * @param string                                                   $search
-     * @param integer                                                  $page
+     * @param string $search
+     * @param integer $page
+     * @param int $max
      *
      * @return \PagerFanta\PagerFanta
      */
@@ -326,7 +348,10 @@ class GroupManager
 
     /**
      * @param \Claroline\CoreBundle\Entity\Role[] $roles
-     * @param integer                             $page
+     * @param integer $page
+     * @param int $max
+     * @param string $orderedBy
+     * @param null $order
      *
      * @return \PagerFanta\PagerFanta
      */
@@ -338,9 +363,10 @@ class GroupManager
     }
 
     /**
-     * @param \Claroline\CoreBundle\Entity\Role[]                      $roles
+     * @param \Claroline\CoreBundle\Entity\Role[] $roles
      * @param \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace $workspace
-     * @param integer                                                  $page
+     * @param integer $page
+     * @param int $max
      *
      * @return \PagerFanta\PagerFanta
      */
@@ -353,8 +379,10 @@ class GroupManager
 
     /**
      * @param \Claroline\CoreBundle\Entity\Role[] $roles
-     * @param string                              $name
-     * @param integer                             $page
+     * @param string $name
+     * @param integer $page
+     * @param int $max
+     * @param string $orderedBy
      *
      * @return \PagerFanta\PagerFanta
      */
@@ -366,10 +394,11 @@ class GroupManager
     }
 
     /**
-     * @param \Claroline\CoreBundle\Entity\Role[]                      $roles
-     * @param string                                                   $name
+     * @param \Claroline\CoreBundle\Entity\Role[] $roles
+     * @param string $name
      * @param \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace $workspace
-     * @param integer                                                  $page
+     * @param integer $page
+     * @param int $max
      *
      * @return \PagerFanta\PagerFanta
      */
@@ -388,6 +417,7 @@ class GroupManager
 
     /**
      * @param integer $page
+     * @param int $max
      *
      * @return \PagerFanta\PagerFanta
      */
@@ -400,7 +430,8 @@ class GroupManager
 
     /**
      * @param integer $page
-     * @param string  $search
+     * @param string $search
+     * @param int $max
      *
      * @return \PagerFanta\PagerFanta
      */
@@ -423,5 +454,39 @@ class GroupManager
         }
 
         return array();
+    }
+
+    /**
+     * Sets an array of platform role to a group.
+     *
+     * @param \Claroline\CoreBundle\Entity\Group $group
+     * @param array                              $roles
+     */
+    public function setPlatformRoles(Group $group, $roles)
+    {
+        foreach ($group->getPlatformRoles() as $role) {
+            $group->removeRole($role);
+        }
+
+        $this->om->persist($group);
+        $this->roleManager->associateRoles($group, $roles);
+        $this->om->flush();
+    }
+
+    public function validateAddUsersToGroup(array $users, Group $group)
+    {
+        $countToRegister = count($users);
+        $roles = $group->getPlatformRoles();
+
+        foreach ($roles as $role) {
+            $max = $role->getMaxUsers();
+            $countRegistered = $this->om->getRepository('ClarolineCoreBundle:User')->countUsersByRoleIncludingGroup($role);
+
+            if ($max < $countRegistered + $countToRegister) {
+                return false;
+            }
+        }
+
+        return true;
     }
 }

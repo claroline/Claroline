@@ -6,7 +6,7 @@
     {{
         macros.breadcrumbs([
             {
-                'icon': 'icon-cog',
+                'icon': 'fa fa-cog',
                 'name': 'administration'|trans({}, 'platform'),
                 'href': path('claro_admin_index')
             },
@@ -52,15 +52,15 @@
                                 {'homeTabId': homeTabId}
                             )
                         }}">
-                            <i class="hometab-reorder-left-btn pointer-hand icon-arrow-left"></i>
+                            <i class="hometab-reorder-left-btn pointer-hand fa fa-arrow-left"></i>
                             {{ homeTab.getName() }}
                             <span class="hometab-buttons" id="hometab-buttons-{{ homeTabId }}">
-                                <i class="hometab-rename-btn pointer-hand icon-edit"></i>
+                                <i class="hometab-rename-btn pointer-hand fa fa-pencil-square-o"></i>
                                 <i class="hometab-visibility-btn pointer-hand
                                     {% if homeTabConfig.isVisible() %}
-                                        icon-eye-open
+                                        fa fa-eye
                                     {% else %}
-                                        icon-eye-close
+                                        fa fa-eye-slash
                                     {% endif %}"
                                     visiblility-value="
                                         {% if homeTabConfig.isVisible() %}
@@ -69,15 +69,15 @@
                                             invisible
                                         {% endif %}"
                                 ></i>
-                                <i class="hometab-delete-btn icon-trash pointer-hand"></i>
+                                <i class="hometab-delete-btn fa fa-trash-o pointer-hand"></i>
                             </span>
-                            <i class="hometab-reorder-right-btn pointer-hand icon-arrow-right"></i>
+                            <i class="hometab-reorder-right-btn pointer-hand fa fa-arrow-right"></i>
                         </a>
                     </li>
                 {% endfor %}
                 <li id="add-hometab-btn">
                     <a href="">
-                        <i id="add-hometab-button" class="icon-plus"></i>
+                        <i id="add-hometab-button" class="fa fa-plus"></i>
                     </a>
                 </li>
             </ul>
@@ -102,23 +102,23 @@
                                 [{{ widget.getName()|trans({}, 'widget') }}]
                             </small>
                             <span class="widget-instance-btns">
-                                <i class="icon-pencil widget-instance-rename pointer-hand"></i>
-                                <i class="icon-cog widget-instance-config pointer-hand"></i>
+                                <i class="fa fa-pencil widget-instance-rename pointer-hand"></i>
+                                <i class="fa fa-cog widget-instance-config pointer-hand"></i>
                             </span>
                             <span class="widget-hometab-config-btns pull-right">
                                 <span class="widget-order-btn-group">
                                     {% if widgetHomeTabConfig.getWidgetOrder() > 1 %}
-                                        <i class="icon-arrow-up widget-order-up pointer-hand"></i>
+                                        <i class="fa fa-arrow-up widget-order-up pointer-hand"></i>
                                     {% endif %}
                                     {% if widgetHomeTabConfig.getWidgetOrder() < lastWidgetOrder %}
-                                        <i class="icon-arrow-down widget-order-down pointer-hand"></i>
+                                        <i class="fa fa-arrow-down widget-order-down pointer-hand"></i>
                                     {% endif %}
                                 </span>
                                 <i class="widget-visibility-btn pointer-hand
                                     {% if widgetHomeTabConfig.isVisible() %}
-                                        icon-eye-open
+                                        fa fa-eye
                                     {% else %}
-                                        icon-eye-close
+                                        fa fa-eye-slash
                                     {% endif %}"
                                     visiblility-value="
                                         {% if widgetHomeTabConfig.isVisible() %}
@@ -127,7 +127,7 @@
                                             invisible
                                         {% endif %}"
                                 ></i>
-                                <i class="widget-delete-btn icon-trash pointer-hand"></i>
+                                <i class="widget-delete-btn fa fa-trash-o pointer-hand"></i>
                             </span>
                         </div>
                         <div class="panel-body widget-instance-edition-element hide">
@@ -139,7 +139,7 @@
             {% if homeTabConfigs|length > 0 %}
             <div class="panel panel-default add-widget-instance">
                 <div class="panel-heading pointer-hand text-center">
-                    <i class="icon-plus-sign">
+                    <i class="fa fa-plus-circle">
                         {{ 'add_widget_to_home_tab'|trans({}, 'platform') }}
                     </i>
                 </div>

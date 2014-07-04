@@ -127,6 +127,11 @@ class MailController extends Controller
             );
         }
 
-        return new RedirectResponse($this->router->generate('claro_profile_view', array('userId' => $user->getId())));
+        return new RedirectResponse(
+            $this->router->generate(
+                'claro_public_profile_view',
+                array('publicUrl' => $user->getPublicUrl())
+           )
+        );
     }
 }

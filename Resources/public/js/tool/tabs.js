@@ -126,8 +126,8 @@
                     );
                     $('.hometab-link', tabs.currentElement.get(0)).removeClass('strike');
                     visibilityBtn.attr('visiblility-value', 'visible');
-                    visibilityBtn.removeClass('icon-eye-open');
-                    visibilityBtn.addClass('icon-eye-close');
+                    visibilityBtn.removeClass('fa-eye');
+                    visibilityBtn.addClass('fa-eye-slash');
                     tabs.currentElement.removeClass('toggle-visible');
                 } else {
                     $('.hometab-link .hometab-visibility-btn', tabs.currentElement.get(0)).html(
@@ -135,8 +135,8 @@
                     );
                     $('.hometab-link', tabs.currentElement.get(0)).addClass('strike');
                     visibilityBtn.attr('visiblility-value', 'invisible');
-                    visibilityBtn.removeClass('icon-eye-close');
-                    visibilityBtn.addClass('icon-eye-open');
+                    visibilityBtn.removeClass('fa-eye-slash');
+                    visibilityBtn.addClass('fa-eye');
                     tabs.currentElement.addClass('toggle-visible');
                 }
                 $('.dropdown', tabs.currentElement).removeClass('open');
