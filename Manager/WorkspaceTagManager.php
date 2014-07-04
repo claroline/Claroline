@@ -101,7 +101,7 @@ class WorkspaceTagManager
 
     public function linkWorkspace(
         WorkspaceTag $tag,
-        AbstractWorkspace $workspace = null
+        Workspace $workspace = null
     )
     {
         $tag->setWorkspace($workspace);

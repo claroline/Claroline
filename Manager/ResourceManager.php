@@ -1267,12 +1267,12 @@ class ResourceManager
     }
 
     /**
-     * @param AbstractWorkspace $workspace
+     * @param Workspace $workspace
      *
      * @return \Claroline\CoreBundle\Entity\Resource\ResourceNode[]
      */
     public function getByWorkspaceAndResourceType(
-        AbstractWorkspace $workspace,
+        Workspace $workspace,
         ResourceType $resourceType
     )
     {

@@ -1278,7 +1278,7 @@ class WorkspaceTagController extends Controller
      * )
      * @EXT\ParamConverter(
      *     "workspace",
-     *     class="ClarolineCoreBundle:Workspace\AbstractWorkspace",
+     *     class="ClarolineCoreBundle:Workspace\Workspace",
      *     options={"id" = "workspaceId", "strictId" = true}
      * )
      *
@@ -1288,7 +1288,7 @@ class WorkspaceTagController extends Controller
      */
     public function adminWorkspaceTagLinkWorkspaceAction(
         WorkspaceTag $workspaceTag,
-        AbstractWorkspace $workspace = NULL
+        Workspace $workspace = NULL
     )
     {
         if (!$this->securityContext->isGranted('ROLE_ADMIN')) {

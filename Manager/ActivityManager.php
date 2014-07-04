@@ -20,7 +20,7 @@ use Claroline\CoreBundle\Entity\Resource\Activity;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Resource\ResourceType;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Rule\Entity\Rule;
 use JMS\DiExtraBundle\Annotation\Inject;
@@ -537,7 +537,7 @@ class ActivityManager
      *****************************************/
 
     public function getActivityByWorkspace(
-        AbstractWorkspace $workspace,
+        Workspace $workspace,
         $executeQuery = true
     )
     {

@@ -12,7 +12,7 @@
 namespace Claroline\CoreBundle\Manager;
 
 use Claroline\CoreBundle\Entity\Event;
-use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Config\Definition\Exception\Exception;
@@ -241,7 +241,7 @@ class AgendaManager
         return true;
     }
 
-    public function displayEvents(AbstractWorkspace $workspace)
+    public function displayEvents(Workspace $workspace)
     {
         $this->checkUserIsAllowed('agenda', $workspace);
         $listEvents = $this->om->getRepository('ClarolineCoreBundle:Event')
@@ -307,7 +307,7 @@ class AgendaManager
         return $data;
     }
 
-    private function checkUserIsAllowedtoWrite(AbstractWorkspace $workspace, Event $event = null)
+    private function checkUserIsAllowedtoWrite(Workspace $workspace, Event $event = null)
     {
         $usr = $this->security->getToken()->getUser();
         $rm = $this->rm->getManagerRole($workspace);
@@ -328,7 +328,7 @@ class AgendaManager
         }
     }
 
-    private function checkUserIsAllowed($permission, AbstractWorkspace $workspace)
+    private function checkUserIsAllowed($permission, Workspace $workspace)
     {
         if (!$this->security->isGranted($permission, $workspace)) {
             throw new AccessDeniedException();

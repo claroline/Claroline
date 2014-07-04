@@ -14,7 +14,7 @@ namespace Claroline\CoreBundle\Controller;
 use Claroline\CoreBundle\Entity\Activity\ActivityParameters;
 use Claroline\CoreBundle\Entity\Resource\Activity;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Library\Security\Utilities;
 use Claroline\CoreBundle\Manager\ActivityManager;
 use Claroline\CoreBundle\Manager\AnalyticsManager;
@@ -81,7 +81,7 @@ class WorkspaceAnalyticsController extends Controller
      * @EXT\Method("GET")
      * @EXT\ParamConverter(
      *      "workspace",
-     *      class="ClarolineCoreBundle:Workspace\AbstractWorkspace",
+     *      class="ClarolineCoreBundle:Workspace\Workspace",
      *      options={"id" = "workspaceId", "strictId" = true}
      * )
      * @EXT\Template("ClarolineCoreBundle:Tool/workspace/analytics:analytics.html.twig")
@@ -92,7 +92,7 @@ class WorkspaceAnalyticsController extends Controller
      *
      * @throws \Exception
      */
-    public function analyticsShowAction(AbstractWorkspace $workspace)
+    public function analyticsShowAction(Workspace $workspace)
     {
         $datas = $this->container->get('claroline.manager.analytics_manager')
             ->getWorkspaceAnalytics($workspace);
@@ -110,7 +110,7 @@ class WorkspaceAnalyticsController extends Controller
      * @EXT\ParamConverter("currentUser", options={"authenticatedUser" = true})
      * @EXT\ParamConverter(
      *      "workspace",
-     *      class="ClarolineCoreBundle:Workspace\AbstractWorkspace",
+     *      class="ClarolineCoreBundle:Workspace\Workspace",
      *      options={"id" = "workspaceId", "strictId" = true}
      * )
      *
@@ -122,7 +122,7 @@ class WorkspaceAnalyticsController extends Controller
      */
     public function workspaceActivitiesEvaluationsShowAction(
         User $currentUser,
-        AbstractWorkspace $workspace
+        Workspace $workspace
     )
     {
         if (!$this->securityContext->isGranted('analytics', $workspace)) {
@@ -278,7 +278,7 @@ class WorkspaceAnalyticsController extends Controller
      * )
      * @EXT\ParamConverter(
      *      "workspace",
-     *      class="ClarolineCoreBundle:Workspace\AbstractWorkspace",
+     *      class="ClarolineCoreBundle:Workspace\Workspace",
      *      options={"id" = "workspaceId", "strictId" = true}
      * )
      * @EXT\ParamConverter(
@@ -297,7 +297,7 @@ class WorkspaceAnalyticsController extends Controller
     public function workspaceActivitiesPastEvaluationsShowAction(
         User $currentUser,
         User $user,
-        AbstractWorkspace $workspace,
+        Workspace $workspace,
         ActivityParameters $activityParameters,
         $displayType
     )
@@ -468,7 +468,7 @@ class WorkspaceAnalyticsController extends Controller
         );
     }
 
-    private function isWorkspaceManager(AbstractWorkspace $workspace, array $roleNames)
+    private function isWorkspaceManager(Workspace $workspace, array $roleNames)
     {
         $isWorkspaceManager = false;
         $managerRole = 'ROLE_WS_MANAGER_' . $workspace->getGuid();

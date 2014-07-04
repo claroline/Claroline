@@ -607,17 +607,17 @@ class WorkspaceRepository extends EntityRepository
      *
      * @param array[string] $roleNames
      *
-     * @return array[AbstractWorkspace]
+     * @return array[Workspace]
      */
     public function findMyWorkspacesByRoleNames(array $roleNames)
     {
         $dql = '
             SELECT DISTINCT w
-            FROM Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace w
+            FROM Claroline\CoreBundle\Entity\Workspace\Workspace w
             WHERE w IN (
                 SELECT rw.id
                 FROM Claroline\CoreBundle\Entity\Role r
-                JOIN Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace rw
+                JOIN Claroline\CoreBundle\Entity\Workspace\Workspace rw
                 WHERE r.name IN (:roleNames)
             )
             ORDER BY w.name ASC
