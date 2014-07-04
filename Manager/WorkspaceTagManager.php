@@ -460,12 +460,8 @@ class WorkspaceTagManager
             $roles = $this->roleManager->getAllWhereWorkspaceIsDisplayable();
 
             foreach ($roles as $role) {
-                $code = $role->getWorkspace()->getCode();
+                $wsRole = $role->getWorkspace();
 
-<<<<<<< HEAD
-                if (!isset($workspaceRoles[$code])) {
-                    $workspaceRoles[$code] = array();
-||||||| merged common ancestors
                 if (!is_null($wsRole)) {
                     $code = $wsRole->getCode();
 
@@ -474,22 +470,7 @@ class WorkspaceTagManager
                     }
 
                     $workspaceRoles[$code][] = $role;
-=======
-                if (!is_null($wsRole)) {
-                    $code = $wsRole->getCode();
-
-                    if (!isset($workspaceRoles[$code])) {
-                        $workspaceRoles[$code] = array();
-                    }
-//        $tagsWithWorkspace = $this->getAdminTagsWithWorkspace();
-//        $tags = array_merge($nonEmptyTags, $tagsWithWorkspace);
-//        array_unique($tags);
-
-                    $workspaceRoles[$code][] = $role;
->>>>>>> ws-inheritance-merge
                 }
-
-                $workspaceRoles[$code][] = $role;
             }
         }
 

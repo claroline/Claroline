@@ -635,7 +635,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface
     public function findByRolesAndName(array $roles, $name, $getQuery = false)
     {
         $search = strtoupper($name);
-        $dql = "
+        $dql = '
             SELECT u FROM Claroline\CoreBundle\Entity\User u
             JOIN u.roles r WHERE r IN (:roles)
             AND (UPPER(u.username) LIKE :search
@@ -643,9 +643,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface
             OR UPPER(u.firstName) LIKE :search)
             AND u.isEnabled = true
             ORDER BY u.lastName
-            ";
-
->>>>>>> ws-inheritance-merge
+        ';
         $query = $this->_em->createQuery($dql);
         $query->setParameter('roles', $roles);
 
