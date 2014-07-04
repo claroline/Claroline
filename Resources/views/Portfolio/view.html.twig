@@ -151,7 +151,6 @@
             '@IcapPortfolioBundle/Resources/public/js/vendor/angular.min.js'
             '@IcapPortfolioBundle/Resources/public/js/vendor/angular-resource.min.js'
             '@IcapPortfolioBundle/Resources/public/js/vendor/angular-sanitize.min.js'
-            '@IcapPortfolioBundle/Resources/public/js/vendor/angular-resource-picker-directive.js'
         %}
             <script type="text/javascript" src="{{ asset_url }}"></script>
         {% endjavascripts %}
@@ -166,6 +165,7 @@
         <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/controllers/widgetController.js') }}"></script>
         <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/controllers/editWidgetsController.js') }}"></script>
         <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/controllers/designController.js') }}"></script>
+        <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/controllers/collectionFormController.js') }}"></script>
         <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/services/portfolio.js') }}"></script>
         <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/services/portfolioManager.js') }}"></script>
         <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/services/widgetsManager.js') }}"></script>
@@ -180,12 +180,22 @@
         <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/directives/confirmClickDirective.js') }}"></script>
         <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/directives/collectionFormDirective.js') }}"></script>
         <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/directives/designDirective.js') }}"></script>
+        <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/directives/resourcePickerDirective.js') }}"></script>
         <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/filters/trustAsHtml.js') }}"></script>
         <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/filters/trans.js') }}"></script>
         <script type="text/javascript">
             'use strict';
             (function() {
                 window.widgetsConfig = '{{ widgetsConfig|json_encode()|raw }}';
+                window.appPath       = "{{ app.request.getBaseUrl }}";
+                window.webPath       = "{{ asset('') }}";
+                window.resourceTypes = {
+                    {% for resourceType in resourceTypes %}
+                        "{{ resourceType.getName() }}": {
+                            "name": "{{ resourceType.getName()|trans({}, 'resource') }}"
+                        }{% if loop.last != true %},{% endif %}
+                    {% endfor %}
+                };
             })();
         </script>
     {% endif %}

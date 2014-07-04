@@ -7,29 +7,30 @@ angular.module('ui.resourcePicker', [])
 
         // Set some default options
         var options = {
-            isPickerMultiSelectAllowed: true,
-            isPickerOnly: false,
-            isWorkspace: false,
-            resourceTypes: {},
+            isPickerMultiSelectAllowed: false,
+            isPickerOnly:               true,
+            isWorkspace:                true,
+            appPath:                    window.appPath,
+            webPath:                    window.webPath,
+            resourceTypes:              window.resourceTypes,
             pickerCallback: function (nodes) {
+                console.log(nodes);
                 return null;
             }
         };
 
         return {
             restrict: "A",
-            link: function ($scope, el, attrs) {
+            link: function ($scope, element, attrs) {
                 if (attrs.uiResourcePicker) {
                     var expression = $scope.$eval(attrs.uiResourcePicker);
                 } else {
                     var expression = {};
                 }
 
-                // Merge default config with user config
                 angular.extend(options, uiResourcePickerConfig, expression);
 
                 $scope.resourcePickerOpen = function () {
-                    // Initialize resource picker object
                     Claroline.ResourceManager.initialize(options);
                     Claroline.ResourceManager.picker('open');
                 }
@@ -38,8 +39,8 @@ angular.module('ui.resourcePicker', [])
                     Claroline.ResourceManager.picker('close');
                 }
 
-                el[0].onclick = function(e){
-                    e.preventDefault();
+                element[0].onclick = function(event){
+                    event.preventDefault();
                     $scope.resourcePickerOpen();
                 };
             }

@@ -7,10 +7,10 @@ use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * @ORM\Table(name="icap__portfolio_widget_formations_formation")
+ * @ORM\Table(name="icap__portfolio_widget_formations_resource")
  * @ORM\Entity
  */
-class FormationsWidgetFormation implements SubWidgetInterface
+class FormationsWidgetResource implements SubWidgetInterface
 {
     /**
      * @var integer
@@ -22,13 +22,6 @@ class FormationsWidgetFormation implements SubWidgetInterface
     protected $id;
 
     /**
-     * @var string
-     *
-     * @ORM\Column(type="string", nullable=false)
-     */
-    protected $name;
-
-    /**
      * @var ResourceNode
      *
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceNode")
@@ -37,7 +30,7 @@ class FormationsWidgetFormation implements SubWidgetInterface
     protected $resource;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Icap\PortfolioBundle\Entity\Widget\FormationsWidget", inversedBy="formations")
+     * @ORM\ManyToOne(targetEntity="Icap\PortfolioBundle\Entity\Widget\FormationsWidget", inversedBy="resources")
      * @ORM\JoinColumn(name="widget_id", referencedColumnName="id", nullable=false)
      */
     private $widget;
@@ -48,26 +41,6 @@ class FormationsWidgetFormation implements SubWidgetInterface
     public function getId()
     {
         return $this->id;
-    }
-
-    /**
-     * @param string $name
-     *
-     * @return SkillsWidgetSkill
-     */
-    public function setName($name)
-    {
-        $this->name = $name;
-
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getName()
-    {
-        return $this->name;
     }
 
     /**
@@ -115,12 +88,12 @@ class FormationsWidgetFormation implements SubWidgetInterface
      */
     public function getData()
     {
+        $resource = $this->getResource();
+
         return array(
-            'name'     => $this->getName(),
-            'resource' => array(
-                'id'   => $this->getResource()->getId(),
-                'name' => $this->getResource()->getName()
-            )
+            'resource' => $resource->getId(),
+            'id'       => $resource->getId(),
+            'name'     => $resource->getPathForDisplay()
         );
     }
 }
