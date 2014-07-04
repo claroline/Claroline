@@ -175,7 +175,9 @@ class DependencyManager {
      */
     public function getPackageTags(CompletePackageInterface $package)
     {
-        $repos = Factory::createDefaultRepositories();
+        $ds = DIRECTORY_SEPARATOR;
+        putenv("COMPOSER_HOME={$this->vendorDir}{$ds}composer");
+        $repos = Factory::createDefaultRepositories(new NullIO());
         $compositeRepo = new CompositeRepository($repos);
         $pkgs = $compositeRepo->findPackages($package->getPrettyName());
         $tags = array();
@@ -200,7 +202,7 @@ class DependencyManager {
         $lastTag = 0;
         $toReturn = 0;
 
-        foreach ($tags as $tag => $commit) {
+        foreach ($tags as $tag) {
 
             //remove the "v" from the version tags. It's hard to compare otherwise.
             $tag = str_replace('v', '', $tag);
