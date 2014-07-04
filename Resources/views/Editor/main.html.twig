@@ -136,6 +136,7 @@
         EditorApp.appDir        = "{{ app.request.getBaseUrl }}";
         EditorApp.webDir        = "{{ asset('') }}";
         EditorApp.wsDirectoryId = {{ wsDirectoryId }};
+        EditorApp.locale        = "{{ app.request.locale ~ '_' ~ app.request.locale|upper }}";
 
         EditorApp.resourceIcons = {
             {% for resourceIcon in resourceIcons %}

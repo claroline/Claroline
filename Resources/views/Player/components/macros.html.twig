@@ -44,8 +44,8 @@
         {% set isTerminalClass = "terminal" %}
     {% endif %}
 
-    <li class="lvl-{{ step.lvl + 1 }} {{ isTerminalClass }}">
-        <a rel="tooltip" data-original-title="{{ step.name }}" class="step" href="{{ path('innova_path_player_index', { workspaceId: workspace.id, pathId: path.id, stepId: step.id }) }}">
+    <li class="lvl-{{ step.lvl }} {{ isTerminalClass }}">
+        <a class="step" href="{{ path('innova_path_player_index', { workspaceId: workspace.id, pathId: path.id, stepId: step.id }) }}">
         {{ step.name }}
         </a>
     </li>
@@ -59,7 +59,7 @@
         {% set isTerminalClass = "terminal" %}
     {% endif %}
 
-    <li class="dropdown lvl-{{ step.lvl + 1 }} {{ isTerminalClass }} {{ class }}">
+    <li class="dropdown lvl-{{ step.lvl }} {{ isTerminalClass }} {{ class }}">
         <a class="dropdown-label" href="{{ path('innova_path_player_index', { workspaceId: workspace.id, pathId: path.id, stepId: step.id }) }}">
             {{ step.name }}
         </a>

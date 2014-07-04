@@ -7,18 +7,34 @@ function StepCtrl($scope, HistoryFactory, PathFactory, StepFactory, ResourceFact
 
     // Resource Picker base config
     $scope.resourcePickerConfig = {
-        isPickerMultiSelectAllowed: true,
-        isPickerOnly: true,
-        isWorkspace: true,
+        isPickerMultiSelectAllowed: false,
         webPath: EditorApp.webDir,
         appPath: EditorApp.appDir,
         directoryId: EditorApp.wsDirectoryId,
         resourceTypes: EditorApp.resourceTypes
     };
 
+    // Activity resource picker config
+    $scope.activityResourcePicker = {
+        name: 'picker-activity',
+        parameters: angular.copy($scope.resourcePickerConfig)
+    };
+
+    // Adapt default config for Activity picker
+    $scope.activityResourcePicker.parameters.typeWhiteList = [];
+    $scope.activityResourcePicker.parameters.callback = function (nodes) {
+
+    };
+
     // Primary resource picker config
-    $scope.primaryResourcePicker = angular.copy($scope.resourcePickerConfig);
-    $scope.primaryResourcePicker.pickerCallback = function (nodes) {
+    $scope.primaryResourcePicker = {
+        name: 'picker-primary-resource',
+        parameters: angular.copy($scope.resourcePickerConfig)
+    };
+
+    // Adapt default config for Primary resource picker
+    $scope.primaryResourcePicker.parameters.typeBlackList = ['innova_path', 'activity'];
+    $scope.primaryResourcePicker.parameters.callback = function (nodes) {
         if (typeof nodes === 'object' && nodes.length !== 0) {
             // We need only one node, so only the last one will be kept
             for (var nodeId in nodes) {
@@ -35,9 +51,14 @@ function StepCtrl($scope, HistoryFactory, PathFactory, StepFactory, ResourceFact
     };
 
     // Secondary resources picker config
-    /*$scope.secondaryResourcesPicker = angular.copy($scope.resourcePickerConfig);
-    $scope.secondaryResourcesPicker.pickerCallback = function (nodes) {
-        console.log('si je passe la, c\'est la merde');
+    $scope.secondaryResourcesPicker = {
+        name: 'picker-secondary-resources',
+        parameters: angular.copy($scope.resourcePickerConfig)
+    };
+
+    // Adapt default config for Secondary resources picker
+    $scope.secondaryResourcesPicker.parameters.isPickerMultiSelectAllowed = true;
+    $scope.secondaryResourcesPicker.parameters.callback = function (nodes) {
         if (typeof nodes === 'object' && nodes.length !== 0) {
             if (typeof $scope.previewStep.resources !== 'object') {
                 $scope.previewStep.resources = [];
@@ -74,17 +95,17 @@ function StepCtrl($scope, HistoryFactory, PathFactory, StepFactory, ResourceFact
 
         // Remove checked nodes for next time
         nodes = {};
-    };*/
+    };
 
     // Tiny MCE options
     $scope.tinymceOptions = {
         relative_urls: false,
         theme: 'modern',
-        language: window.Claroline.Home.locale.trim(),
+        language: EditorApp.locale,
         browser_spellcheck : true,
         autoresize_min_height: 100,
         autoresize_max_height: 500,
-        content_css: window.Claroline.Home.asset + 'bundles/clarolinecore/css/tinymce/tinymce.css',
+        content_css: EditorApp.webDir + 'bundles/clarolinecore/css/tinymce/tinymce.css',
         plugins: [
             'autoresize advlist autolink lists link image charmap print preview hr anchor pagebreak',
             'searchreplace wordcount visualblocks visualchars fullscreen',
@@ -211,7 +232,7 @@ function StepCtrl($scope, HistoryFactory, PathFactory, StepFactory, ResourceFact
     };
 
     /**
-     * Exclude a resource herited from parents
+     * Exclude a resource inherited from parents
      */
     $scope.excludeParentResource= function(resource) {
         resource.isExcluded = true;
@@ -222,7 +243,7 @@ function StepCtrl($scope, HistoryFactory, PathFactory, StepFactory, ResourceFact
     };
 
     /**
-     * Include a resource herited from parents which has been excluded
+     * Include a resource inherited from parents which has been excluded
      */
     $scope.includeParentResource= function(resource) {
         resource.isExcluded = false;
