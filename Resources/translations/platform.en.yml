@@ -944,3 +944,6 @@ remove_role: Role suppression.
 initialize: Initialize
 user_limit_success_update: The user limit by role has been successfully updated.
 role_name_changed_success: The role name has been successfully updated.
+packages_upgrade_info_message: Warning: this page allows you to update the platform
+package_upgrade_all_warning: Warning, this will update all packages on the platform. This operation can not be canceled. It is recommended to make a backup of the files and the database before performing this operation.
+

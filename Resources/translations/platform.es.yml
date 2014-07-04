@@ -875,3 +875,5 @@ remove_role: Eliminiar un rol.
 initialize: Inicializar
 user_limit_success_update: El número máximo de usuarios por rol ha sido actualizado con éxito.
 role_name_changed_success: El nombre del rola ha sido actualizado con éxito.
+packages_upgrade_info_message: Warning: this page allows you to update the platform
+package_upgrade_all_warning: Warning, this will update all packages on the platform. This operation can not be canceled. It is recommended to make a backup of the files and the database before performing this operation.
