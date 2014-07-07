@@ -1,9 +1,8 @@
 <?php
 
-
 namespace Innova\PathBundle\Controller;
 
-use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -18,7 +17,7 @@ class WidgetController extends Controller
 
     /**
      * Renders all paths from a workspace
-     * @param AbstractWorkspace $workspace
+     * @param Workspace $workspace
      * @return array
      *
      * @Route(
@@ -29,12 +28,12 @@ class WidgetController extends Controller
      * @Method("GET")
      * @ParamConverter(
      *      "workspace",
-     *      class="ClarolineCoreBundle:Workspace\AbstractWorkspace",
+     *      class="ClarolineCoreBundle:Workspace\Workspace",
      *      options={"id" = "workspaceId", "strictId" = true}
      * )
      * @Template("InnovaPathBundle::Widget/listWidget.html.twig")
      */
-    public function pathsWorkspaceWidgetAction(AbstractWorkspace $workspace)
+    public function pathsWorkspaceWidgetAction(Workspace $workspace)
     {
         $paths = $this->container->get('innova_path.manager.path')->findAllFromWorkspaceUnsorted($workspace);
 

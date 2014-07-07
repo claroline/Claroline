@@ -113,3 +113,6 @@ resources_replace: Replace
 no_primary_resource: There is no primary resource on this step.
 path_modified: The path has been modified.
 save_path_changes: Do you want to save your changes ?
+select_activity: Select existing activity
+see_activity: See activity
+delete_activity: Delete activity link

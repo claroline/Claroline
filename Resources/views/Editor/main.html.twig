@@ -131,6 +131,7 @@
     
     {# Set some vars needed by Angular parts #}
     <script type="text/javascript">
+        EditorApp.workspaceId   = {{ workspace.id }};
         EditorApp.formName      = "{{ form.vars.name }}";
         EditorApp.currentPath   = {{ form.vars.value.structure | raw }};
         EditorApp.appDir        = "{{ app.request.getBaseUrl }}";

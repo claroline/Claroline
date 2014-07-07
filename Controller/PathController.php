@@ -48,7 +48,7 @@ use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 use Innova\PathBundle\Manager\PathManager;
 use Innova\PathBundle\Manager\PublishingManager;
-use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Innova\PathBundle\Entity\Path\Path;
 
 /**
@@ -68,7 +68,7 @@ use Innova\PathBundle\Entity\Path\Path;
  *      name    = "innova_path",
  *      service = "innova_path.controller.path"
  * )
- * @ParamConverter("workspace", class="ClarolineCoreBundle:Workspace\AbstractWorkspace", options={"mapping": {"workspaceId": "id"}})
+ * @ParamConverter("workspace", class="ClarolineCoreBundle:Workspace\Workspace", options={"mapping": {"workspaceId": "id"}})
  */
 class PathController
 {
@@ -127,7 +127,7 @@ class PathController
     
     /**
      * Delete path from database
-     * @param \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace $workspace
+     * @param \Claroline\CoreBundle\Entity\Workspace\Workspace $workspace
      * @param \Innova\PathBundle\Entity\Path\Path $path
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
      *
@@ -139,7 +139,7 @@ class PathController
      * )
      * @Method("DELETE")
      */
-    public function deleteAction(AbstractWorkspace $workspace, Path $path)
+    public function deleteAction(Workspace $workspace, Path $path)
     {
         try {
             $this->pathManager->delete($path);
@@ -178,7 +178,7 @@ class PathController
      * )
      * @Method("GET")
      */
-    public function publishAction(AbstractWorkspace $workspace, Path $path)
+    public function publishAction(Workspace $workspace, Path $path)
     {
         try {
             $this->publishingManager->publish($path);

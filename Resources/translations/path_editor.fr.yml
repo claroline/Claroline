@@ -116,3 +116,6 @@ resources_replace: Remplacer
 no_primary_resource: Il n'y a aucune ressource principale sur cette étape.
 path_modified: La parcours a été modifié.
 save_path_changes: Voulez-vous sauvegarder vos changements ?
+select_activity: Sélectionner une activité existante
+see_activity: Voir l'activité
+delete_activity: Supprimer le lien avec l'activité

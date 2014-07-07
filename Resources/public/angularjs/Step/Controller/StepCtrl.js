@@ -1,6 +1,6 @@
 'use strict';
 
-function StepCtrl($scope, HistoryFactory, PathFactory, StepFactory, ResourceFactory) {
+function StepCtrl($scope, $http, HistoryFactory, PathFactory, StepFactory, ResourceFactory) {
     // Store resource icons
     $scope.resourceIcons = EditorApp.resourceIcons;
     $scope.resourceZoom = 75;
@@ -21,9 +21,53 @@ function StepCtrl($scope, HistoryFactory, PathFactory, StepFactory, ResourceFact
     };
 
     // Adapt default config for Activity picker
-    $scope.activityResourcePicker.parameters.typeWhiteList = [];
+    $scope.activityResourcePicker.parameters.typeWhiteList = ['activity'];
     $scope.activityResourcePicker.parameters.callback = function (nodes) {
+        if (typeof nodes === 'object' && nodes.length !== 0) {
+            // We need only one node, so only the last one will be kept
+            for (var nodeId in nodes) {
+                // Load activity properties to populate step
+                $http.get(Routing.generate('innova_path_load_activity', { workspaceId: EditorApp.workspaceId, nodeId: nodeId}))
+                    .success(function (data) {
+                        if (typeof data !== 'undefined' && data !== null && data.length !== 0) {
+                            // Populate step
+                            $scope.previewStep.activityId  = data['id'];
+                            $scope.previewStep.name        = data['name'];
+                            $scope.previewStep.description = data['description'];
 
+                            // Primary resources
+                            $scope.previewStep.primaryResource = data['primaryResource'];
+
+                            // Secondary resources
+                            if (null !== data['resources']) {
+                                for (var i = 0; i < data['resources'].length; i++) {
+                                    var resource = data['resources'][i];
+                                    var resourceExists = StepFactory.hasResource($scope.previewStep, resource.resourceId);
+                                    if (!resourceExists) {
+                                        // Generate new local ID
+                                        resource['id'] = PathFactory.getNextResourceId();
+
+                                        // Add to secondary resources
+                                        $scope.previewStep.resources.push(resource);
+                                    }
+                                }
+                            }
+
+                            // Parameters
+                            $scope.previewStep.withTutor       = data['withTutor'];
+                            $scope.previewStep.who             = data['who'];
+                            $scope.previewStep.where           = data['where'];
+                            $scope.previewStep.durationHours   = data['durationHours'];
+                            $scope.previewStep.durationMinutes = data['durationMinutes'];
+                        }
+                    });
+            }
+
+            $scope.$apply();
+
+            // Update history
+            HistoryFactory.update($scope.path);
+        }
     };
 
     // Primary resource picker config
@@ -47,6 +91,10 @@ function StepCtrl($scope, HistoryFactory, PathFactory, StepFactory, ResourceFact
             }
 
             $scope.$apply();
+
+            // Update history
+            HistoryFactory.update($scope.path);
+
         }
     };
 
@@ -68,15 +116,7 @@ function StepCtrl($scope, HistoryFactory, PathFactory, StepFactory, ResourceFact
                 var node = nodes[nodeId];
 
                 // Check if resource has already been linked to the the step
-                var resourceExists = false;
-                for (var i = 0; i < $scope.previewStep.resources.length; i++) {
-                    var res = $scope.previewStep.resources[i];
-                    if (res.resourceId === nodeId) {
-                        resourceExists = true;
-                        break;
-                    }
-                }
-
+                var resourceExists = StepFactory.hasResource($scope.previewStep, nodeId);
                 if (!resourceExists) {
                     // Resource need to be linked
                     var resource = ResourceFactory.generateNewResource();
@@ -148,7 +188,7 @@ function StepCtrl($scope, HistoryFactory, PathFactory, StepFactory, ResourceFact
         HistoryFactory.update($scope.path);
     };
 
-    $scope.decrementDuration = function(type) {
+    $scope.decrementDuration = function (type) {
         if ('hour' === type) {
             if (typeof $scope.previewStep.durationHours === 'undefined' || null === $scope.previewStep.durationHours || $scope.previewStep.durationHours.length === 0) {
                 $scope.previewStep.durationHours = 0;
@@ -172,7 +212,7 @@ function StepCtrl($scope, HistoryFactory, PathFactory, StepFactory, ResourceFact
         HistoryFactory.update($scope.path);
     };
 
-    $scope.correctDuration = function(type) {
+    $scope.correctDuration = function (type) {
         // Don't allow negative value, so always return absolute value
         if ('hour' === type) {
             if (typeof $scope.previewStep.durationHours === 'undefined' || null === $scope.previewStep.durationHours || $scope.previewStep.durationHours.length === 0) {
@@ -207,7 +247,7 @@ function StepCtrl($scope, HistoryFactory, PathFactory, StepFactory, ResourceFact
     /**
      * Delete selected resource from path
      */
-    $scope.removeResource = function(resource) {
+    $scope.removeResource = function (resource) {
         StepFactory.removeResource($scope.previewStep, resource.id);
 
         // Loop through path to remove reference to resource
@@ -234,7 +274,7 @@ function StepCtrl($scope, HistoryFactory, PathFactory, StepFactory, ResourceFact
     /**
      * Exclude a resource inherited from parents
      */
-    $scope.excludeParentResource= function(resource) {
+    $scope.excludeParentResource= function (resource) {
         resource.isExcluded = true;
         $scope.previewStep.excludedResources.push(resource.id);
 
@@ -245,7 +285,7 @@ function StepCtrl($scope, HistoryFactory, PathFactory, StepFactory, ResourceFact
     /**
      * Include a resource inherited from parents which has been excluded
      */
-    $scope.includeParentResource= function(resource) {
+    $scope.includeParentResource= function (resource) {
         resource.isExcluded = false;
         
         if (typeof $scope.previewStep.excludedResources !== 'undefined' && null !== $scope.previewStep.excludedResources) {
@@ -262,5 +302,24 @@ function StepCtrl($scope, HistoryFactory, PathFactory, StepFactory, ResourceFact
 
     $scope.removePrimaryResource = function () {
         $scope.previewStep.primaryResource = null;
+
+        // Update history
+        HistoryFactory.update($scope.path);
+    };
+
+    $scope.showActivity = function () {
+        var activityRoute = Routing.generate('innova_path_show_activity', {
+            workspaceId: EditorApp.workspaceId,
+            activityId: $scope.previewStep.activityId
+        });
+
+        window.open(activityRoute, '_blank');
+    };
+
+    $scope.deleteActivity = function () {
+        $scope.previewStep.activityId = null;
+
+        // Update history
+        HistoryFactory.update($scope.path);
     };
 }

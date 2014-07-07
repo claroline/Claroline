@@ -18,7 +18,7 @@ use Symfony\Component\DependencyInjection\ContainerAware;
 use Innova\PathBundle\Form\Handler\StepHandler;
 use Innova\PathBundle\Entity\Path\Path;
 use Innova\PathBundle\Entity\Step;
-use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
 
 /**
  * ContextualEditorController controller
@@ -104,7 +104,7 @@ class ContextualEditorController extends ContainerAware
 
     /**
      * Display path player
-     * @param \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace $workspace
+     * @param \Claroline\CoreBundle\Entity\Workspace\Workspace $workspace
      * @param \Innova\PathBundle\Entity\Path\Path                      $path
      * @param \Innova\PathBundle\Entity\Step                           $currentStep
      * @return array
@@ -114,13 +114,13 @@ class ContextualEditorController extends ContainerAware
      *      name="innova_path_contextual_editor",
      *      options={"expose" = true}
      * )
-     * @ParamConverter("workspace", class="ClarolineCoreBundle:Workspace\AbstractWorkspace", options={"mapping": {"workspaceId": "id"}})
+     * @ParamConverter("workspace", class="ClarolineCoreBundle:Workspace\Workspace", options={"mapping": {"workspaceId": "id"}})
      * @ParamConverter("path", class="InnovaPathBundle:Path", options={"mapping": {"pathId": "id"}})
      * @ParamConverter("currentStep", class="InnovaPathBundle:Step", options={"mapping": {"stepId": "id"}})
      * @Method("GET")
      * @Template("InnovaPathBundle:Player:main.html.twig")
      */
-    public function displayAction(AbstractWorkspace $workspace, Path $path, Step $currentStep)
+    public function displayAction(Workspace $workspace, Path $path, Step $currentStep)
     {
         $pathCreator = $path->getResourceNode()->getCreator();
             
@@ -147,12 +147,12 @@ class ContextualEditorController extends ContainerAware
      *      name="innova_path_save_current_step",
      *      options={"expose" = true}
      * )
-     * @ParamConverter("workspace", class="ClarolineCoreBundle:Workspace\AbstractWorkspace", options={"mapping": {"workspaceId": "id"}})
+     * @ParamConverter("workspace", class="ClarolineCoreBundle:Workspace\Workspace", options={"mapping": {"workspaceId": "id"}})
      * @ParamConverter("path", class="InnovaPathBundle:Path", options={"mapping": {"pathId": "id"}})
      * @ParamConverter("currentStep", class="InnovaPathBundle:Step", options={"mapping": {"stepId": "id"}})
      * @Method("POST")
      */
-    public function editStepAction(AbstractWorkspace $workspace, Path $path, Step $currentStep)
+    public function editStepAction(Workspace $workspace, Path $path, Step $currentStep)
     {
 
         $form = $this->container->get('form.factory')->create('innova_step', $currentStep);

@@ -30,7 +30,7 @@ function StepFactory(PathFactory) {
         /**
          * Generate a new empty step
          * 
-         * @param step
+         * @param   object step
          * @returns object
          */
         generateNewStep: function (step) {
@@ -50,7 +50,7 @@ function StepFactory(PathFactory) {
         /**
          * Store step in factory
          * 
-         * @param data - The step to store
+         * @param   object data - The step to store
          * @returns StepFactory
          */
         setStep: function (data) {
@@ -71,7 +71,7 @@ function StepFactory(PathFactory) {
         /**
          * Search resource in path and replace it by a new one
          * 
-         * @param newResource
+         * @param   object newResource
          * @returns StepFactory
          */
         replaceResource: function (newResource) {
@@ -90,8 +90,8 @@ function StepFactory(PathFactory) {
         /**
          * Update resource properties
          * 
-         * @param oldResource
-         * @param newResource
+         * @param   object oldResource
+         * @param   object newResource
          * @returns StepFactory
          */
         updateResource: function (oldResource, newResource) {
@@ -105,8 +105,8 @@ function StepFactory(PathFactory) {
         /**
          * Remove selected resource from step
          * 
-         * @param step          current step
-         * @param resourceId    resource to remove
+         * @param   object step          current step
+         * @param   string resourceId    resource to remove
          * @returns StepFactory
          */
         removeResource: function (step, resourceId) {
@@ -120,6 +120,24 @@ function StepFactory(PathFactory) {
             }
             
             return this;
+        },
+
+        /**
+         * Check if a step contains a resource a not
+         * @param object step
+         * @param integer resourceId
+         */
+        hasResource: function (step, resourceId) {
+            var resourceExists = false;
+            for (var i = 0; i < step.resources.length; i++) {
+                var res = step.resources[i];
+                if (res.resourceId === resourceId) {
+                    resourceExists = true;
+                    break;
+                }
+            }
+
+            return resourceExists;
         }
     };
 }

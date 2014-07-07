@@ -32,7 +32,7 @@ class PublishingManager
     
     /**
      * Current workspace of the path
-     * @var \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace
+     * @var \Claroline\CoreBundle\Entity\Workspace\Workspace
      */
     protected $workspace;
     

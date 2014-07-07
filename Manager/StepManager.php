@@ -105,7 +105,7 @@ class StepManager
         if (empty($activity)) {
             if (!empty($stepStructure->activityId)) {
                 // Load activity from DB
-                $activity = $this->om->getRepository('ClarolineCoreBundle:Resource\Activity')->findById($stepStructure->activityId);
+                $activity = $this->om->getRepository('ClarolineCoreBundle:Resource\Activity')->findOneById($stepStructure->activityId);
                 if (empty($activity)) {
                     // Can't find Activity
                     throw new \LogicException('Unable to find Activity referenced by ID : ' . $stepStructure->activityId);
@@ -127,6 +127,7 @@ class StepManager
             $name = $step->getPath()->getName() . ' - ' . Step::DEFAULT_NAME . ' ' . $step->getOrder();
         }
         $activity->setName($name);
+        $activity->setTitle($name);
 
         $description = !empty($stepStructure->description) ? $stepStructure->description : null;
         $activity->setDescription($description);
@@ -153,7 +154,7 @@ class StepManager
             $workspace = $step->getWorkspace();
 
             // Store Activity in same directory than parent Path
-            $parent = $step->getPath()->getResourceNode()->getWorkspace();
+            $parent = $step->getPath()->getResourceNode()->getParent();
             if (empty($parent)) {
                 $parent = $this->resourceManager->getWorkspaceRoot($workspace);
             }

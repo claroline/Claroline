@@ -266,7 +266,7 @@ class Path extends AbstractResource implements PathInterface
 
     /**
      * Wrapper to access workspace of the Path
-     * @return \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace
+     * @return \Claroline\CoreBundle\Entity\Workspace\Workspace
      */
     public function getWorkspace()
     {

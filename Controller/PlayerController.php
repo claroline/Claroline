@@ -15,7 +15,7 @@ use Symfony\Component\HttpFoundation\Request;
 
 use Innova\PathBundle\Entity\Path\Path;
 use Innova\PathBundle\Entity\Step;
-use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
 
 /**
  * Player controller
@@ -56,7 +56,7 @@ class PlayerController extends ContainerAware
 
     /**
      * Display path player
-     * @param \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace $workspace
+     * @param \Claroline\CoreBundle\Entity\Workspace\Workspace $workspace
      * @param \Innova\PathBundle\Entity\Path\Path                      $path
      * @param \Innova\PathBundle\Entity\Step                           $currentStep
      * @return array
@@ -66,13 +66,13 @@ class PlayerController extends ContainerAware
      *      name="innova_path_player_index",
      *      options={"expose" = true}
      * )
-     * @ParamConverter("workspace", class="ClarolineCoreBundle:Workspace\AbstractWorkspace", options={"mapping": {"workspaceId": "id"}})
+     * @ParamConverter("workspace", class="ClarolineCoreBundle:Workspace\Workspace", options={"mapping": {"workspaceId": "id"}})
      * @ParamConverter("path", class="InnovaPathBundle:Path\Path", options={"mapping": {"pathId": "id"}})
      * @ParamConverter("currentStep", class="InnovaPathBundle:Step", options={"mapping": {"stepId": "id"}})
      * @Method("GET")
      * @Template("InnovaPathBundle:Player:main.html.twig")
      */
-    public function displayAction(AbstractWorkspace $workspace, Path $path, Step $currentStep)
+    public function displayAction(Workspace $workspace, Path $path, Step $currentStep)
     {
         return array (
             'workspace' => $workspace,
@@ -86,7 +86,7 @@ class PlayerController extends ContainerAware
      * @Method("GET")
      * @Template("InnovaPathBundle:Player:components/breadcrumbs.html.twig")
      */
-    public function displayBreadcrumbsAction(AbstractWorkspace $workspace, Path $path, Step $currentStep)
+    public function displayBreadcrumbsAction(Workspace $workspace, Path $path, Step $currentStep)
     {
         $ghost = array ();
         $session = $this->container->get('request')->getSession();
@@ -134,7 +134,7 @@ class PlayerController extends ContainerAware
      * @Method("GET")
      * @Template("InnovaPathBundle:Player:components/tree-browser.html.twig")
      */
-    public function displayTreeBrowserAction(AbstractWorkspace $workspace, Path $path, Step $currentStep)
+    public function displayTreeBrowserAction(Workspace $workspace, Path $path, Step $currentStep)
     {
         return array (
             'workspace' => $workspace,
@@ -147,7 +147,7 @@ class PlayerController extends ContainerAware
      * @Method("GET")
      * @Template("InnovaPathBundle:Player:components/current-step.html.twig")
      */
-    public function displayCurrentStepAction(AbstractWorkspace $workspace, Path $path, Step $currentStep, $edit)
+    public function displayCurrentStepAction(Workspace $workspace, Path $path, Step $currentStep, $edit)
     {
         $form = $this->container->get('form.factory')->create('innova_step', $currentStep, array ('method' => 'POST', 'action' => $this->container->get('router')->generate('innova_path_save_current_step', array( 'stepId' => $currentStep->getId(),'workspaceId' => $workspace->getId(),'pathId' => $path->getId()))));
         
