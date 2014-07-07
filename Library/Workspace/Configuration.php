@@ -17,10 +17,6 @@ use Claroline\CoreBundle\Library\Workspace\Exception\BaseRoleException;
 
 class Configuration
 {
-    const TYPE_SIMPLE = 'Claroline\CoreBundle\Entity\Workspace\SimpleWorkspace';
-    const TYPE_AGGREGATOR = 'Claroline\CoreBundle\Entity\Workspace\AggregatorWorkspace';
-
-    private $workspaceType;
     private $workspaceName;
     private $workspaceCode;
     private $workspaceDescription;
@@ -34,7 +30,6 @@ class Configuration
      */
     private $roles;
     private $toolsPermissions;
-    private $creatorRole;
     private $toolsConfig;
     private $permsRootConfig;
     private $templateFile;
@@ -43,7 +38,6 @@ class Configuration
     {
         if ($full) {
             $this->templateFile = $template;
-            $this->workspaceType = self::TYPE_SIMPLE;
             $archive = new \ZipArchive();
 
             if (true === $code = $archive->open($template)) {
@@ -69,16 +63,6 @@ class Configuration
         return new self($templateFile);
     }
 
-    public function setWorkspaceType($type)
-    {
-        $this->workspaceType = $type;
-    }
-
-    public function getWorkspaceType()
-    {
-        return $this->workspaceType;
-    }
-
     public function setWorkspaceName($name)
     {
         $this->workspaceName = $name;
@@ -89,14 +73,8 @@ class Configuration
         return $this->workspaceName;
     }
 
-
-
     public function check()
     {
-        if ($this->workspaceType != self::TYPE_SIMPLE && $this->workspaceType != self::TYPE_AGGREGATOR) {
-            throw new RuntimeException("Unknown workspace type '{$this->workspaceType}'");
-        }
-
         if (!is_string($this->workspaceName) || 0 === strlen($this->workspaceName)) {
             throw new RuntimeException('Workspace name must be a non empty string');
         }
@@ -111,8 +89,8 @@ class Configuration
     {
         return $this->workspaceCode;
     }
-    
-    
+
+
     public function setWorkspaceDescription($workspaceDescription)
     {
         $this->workspaceDescription = $workspaceDescription;

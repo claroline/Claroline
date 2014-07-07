@@ -16,7 +16,7 @@
     Claroline.ResourceManager.Router = Backbone.Router.extend({
         initialize: function (dispatcher, defaultDirectoryId) {
             this.dispatcher = dispatcher;
-            this.defaultDirectoryId= defaultDirectoryId;
+            this.defaultDirectoryId = defaultDirectoryId;
             this.dispatcher.on('open-directory', this.recordRoute, this);
             this.dispatcher.on('filter', this.recordRoute, this);
             this.route(/^$/, 'default', this.openDefault, this);

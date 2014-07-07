@@ -198,7 +198,9 @@ class ResourcePropertiesController extends Controller
                     ->changeAccessibilityDate($node, $accessibleFrom, $accessibleUntil);
             }
 
-            return new JsonResponse($nodesArray);
+            $arrayNode = $this->resourceManager->toArray($node, $this->sc->getToken());
+
+            return new JsonResponse($arrayNode);
         }
 
         return array('form' => $form->createView(), 'nodeId' => $node->getId());

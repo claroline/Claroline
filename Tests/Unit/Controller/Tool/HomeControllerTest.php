@@ -49,7 +49,7 @@ class HomeControllerTest extends MockeryTestCase
     public function testWorkspaceWidgetsPropertiesAction()
     {
         $controller = $this->getController(array('getHomeTool'));
-        $workspace = $this->mock('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace');
+        $workspace = $this->mock('Claroline\CoreBundle\Entity\Workspace\Workspace');
         $configs = array('config_a', 'config_b');
 
         $this->securityContext
@@ -81,7 +81,7 @@ class HomeControllerTest extends MockeryTestCase
 
     public function testWorkspaceInvertVisibleWidgetAction()
     {
-        $workspace = $this->mock('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace');
+        $workspace = $this->mock('Claroline\CoreBundle\Entity\Workspace\Workspace');
         $widget = new Widget();
         $adminConfig = $this->mock('Claroline\CoreBundle\Entity\Widget\DisplayConfig');
         $displayConfigRepo = $this->mock('Claroline\CoreBundle\Repository\DisplayConfigRepository');
@@ -128,7 +128,7 @@ class HomeControllerTest extends MockeryTestCase
     public function testWorkspaceConfigureWidgetActionXml()
     {
         $controller = $this->getController(array('getHomeTool', 'render'));
-        $workspace = $this->mock('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace');
+        $workspace = $this->mock('Claroline\CoreBundle\Entity\Workspace\Workspace');
         $widget = $this->mock('Claroline\CoreBundle\Entity\Widget\Widget');
         $event = $this->mock('Claroline\CoreBundle\Event\ConfigureWidgetWorkspaceEvent');
 
@@ -176,7 +176,7 @@ class HomeControllerTest extends MockeryTestCase
     public function testWorkspaceConfigureWidgetActionNotXml()
     {
         $controller = $this->getController(array('getHomeTool', 'render'));
-        $workspace = $this->mock('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace');
+        $workspace = $this->mock('Claroline\CoreBundle\Entity\Workspace\Workspace');
         $widget = $this->mock('Claroline\CoreBundle\Entity\Widget\Widget');
         $event = $this->mock('Claroline\CoreBundle\Event\ConfigureWidgetWorkspaceEvent');
 
@@ -789,7 +789,7 @@ class HomeControllerTest extends MockeryTestCase
         $controller = $this->getController(
             array('checkWorkspaceAccess', 'getHomeTool')
         );
-        $workspace = $this->mock('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace');
+        $workspace = $this->mock('Claroline\CoreBundle\Entity\Workspace\Workspace');
         $adminConfigA = $this->mock('Claroline\CoreBundle\Entity\Home\HomeTabConfig');
         $adminConfigB = $this->mock('Claroline\CoreBundle\Entity\Home\HomeTabConfig');
         $configC = $this->mock('Claroline\CoreBundle\Entity\Home\HomeTabConfig');

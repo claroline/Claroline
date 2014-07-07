@@ -13,7 +13,7 @@ namespace Claroline\CoreBundle\Repository;
 
 use Doctrine\ORM\EntityRepository;
 use Claroline\CoreBundle\Entity\Role;
-use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\Tool\Tool;
@@ -26,11 +26,11 @@ class RoleRepository extends EntityRepository
     /**
      * Returns the roles associated to a workspace.
      *
-     * @param AbstractWorkspace $workspace
+     * @param Workspace $workspace
      *
-     * @return array[AbstractWorkspace]
+     * @return array[Workspace]
      */
-    public function findByWorkspace(AbstractWorkspace $workspace)
+    public function findByWorkspace(Workspace $workspace)
     {
         $dql = "
             SELECT r FROM Claroline\CoreBundle\Entity\Role r
@@ -46,11 +46,11 @@ class RoleRepository extends EntityRepository
     /**
      * Returns the visitor role of a workspace.
      *
-     * @param AbstractWorkspace $workspace
+     * @param Workspace $workspace
      *
      * @return Role
      */
-    public function findVisitorRole(AbstractWorkspace $workspace)
+    public function findVisitorRole(Workspace $workspace)
     {
         return $this->findBaseWorkspaceRole('VISITOR', $workspace);
     }
@@ -58,11 +58,11 @@ class RoleRepository extends EntityRepository
     /**
      * Returns the collaborator role of a workspace.
      *
-     * @param AbstractWorkspace $workspace
+     * @param Workspace $workspace
      *
      * @return Role
      */
-    public function findCollaboratorRole(AbstractWorkspace $workspace)
+    public function findCollaboratorRole(Workspace $workspace)
     {
         return $this->findBaseWorkspaceRole('COLLABORATOR', $workspace);
     }
@@ -70,11 +70,11 @@ class RoleRepository extends EntityRepository
     /**
      * Returns the manager role of a workspace.
      *
-     * @param AbstractWorkspace $workspace
+     * @param Workspace $workspace
      *
      * @return Role
      */
-    public function findManagerRole(AbstractWorkspace $workspace)
+    public function findManagerRole(Workspace $workspace)
     {
         return $this->findBaseWorkspaceRole('MANAGER', $workspace);
     }
@@ -115,7 +115,7 @@ class RoleRepository extends EntityRepository
         return $query->getResult();
     }
 
-    public function findByUserAndWorkspace(User $user, AbstractWorkspace $workspace)
+    public function findByUserAndWorkspace(User $user, Workspace $workspace)
     {
         $dql = "
             SELECT r FROM Claroline\CoreBundle\Entity\Role r
@@ -131,7 +131,7 @@ class RoleRepository extends EntityRepository
         return $query->getResult();
     }
 
-    public function findByGroupAndWorkspace(Group $group, AbstractWorkspace $workspace)
+    public function findByGroupAndWorkspace(Group $group, Workspace $workspace)
     {
         $dql = "
             SELECT r FROM Claroline\CoreBundle\Entity\Role r
@@ -151,11 +151,11 @@ class RoleRepository extends EntityRepository
      * Returns the roles of a user in a workspace.
      *
      * @param User              $user      The subject of the role
-     * @param AbstractWorkspace $workspace The workspace the role should be bound to
+     * @param Workspace $workspace The workspace the role should be bound to
      *
      * @return null|Role
      */
-    public function findWorkspaceRolesForUser(User $user, AbstractWorkspace $workspace)
+    public function findWorkspaceRolesForUser(User $user, Workspace $workspace)
     {
         $dql = "
             SELECT r FROM Claroline\CoreBundle\Entity\Role r
@@ -174,10 +174,10 @@ class RoleRepository extends EntityRepository
     /**
      * Returns the roles which have access to a workspace tool.
      *
-     * @param \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace $workspace
+     * @param \Claroline\CoreBundle\Entity\Workspace\Workspace $workspace
      * @param \Claroline\CoreBundle\Entity\Tool\Tool                   $tool
      */
-    public function findByWorkspaceAndTool(AbstractWorkspace $workspace, Tool $tool)
+    public function findByWorkspaceAndTool(Workspace $workspace, Tool $tool)
     {
         $dql = "
             SELECT DISTINCT r FROM Claroline\CoreBundle\Entity\Role r
@@ -197,7 +197,7 @@ class RoleRepository extends EntityRepository
     }
 
     public function findRolesByWorkspaceAndRoleNames(
-        AbstractWorkspace $workspace,
+        Workspace $workspace,
         array $roles
     )
     {
@@ -243,7 +243,7 @@ class RoleRepository extends EntityRepository
         return $query->getResult();
     }
 
-    private function findBaseWorkspaceRole($roleType, AbstractWorkspace $workspace)
+    private function findBaseWorkspaceRole($roleType, Workspace $workspace)
     {
         $dql = "
             SELECT r FROM Claroline\CoreBundle\Entity\Role r
@@ -305,7 +305,7 @@ class RoleRepository extends EntityRepository
         $dql = "
             SELECT r, w
             FROM Claroline\CoreBundle\Entity\Role r
-            LEFT JOIN r.workspace w
+            JOIN r.workspace w
             WHERE w.displayable = true
         ";
 

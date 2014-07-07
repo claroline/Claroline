@@ -27,7 +27,7 @@ class WidgetInstance
     protected $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace")
+     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Workspace\Workspace")
      * @ORM\JoinColumn(onDelete="CASCADE")
      */
     protected $workspace;

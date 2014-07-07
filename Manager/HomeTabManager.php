@@ -16,7 +16,7 @@ use Claroline\CoreBundle\Entity\Home\HomeTabConfig;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Widget\WidgetInstance;
 use Claroline\CoreBundle\Entity\Widget\WidgetHomeTabConfig;
-use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use JMS\DiExtraBundle\Annotation as DI;
 
@@ -179,7 +179,7 @@ class HomeTabManager
 
     public function createWorkspaceVersion(
         HomeTabConfig $homeTabConfig,
-        AbstractWorkspace $workspace
+        Workspace $workspace
     )
     {
         $newHomeTabConfig = new HomeTabConfig();
@@ -352,7 +352,7 @@ class HomeTabManager
 
     public function checkHomeTabVisibilityByWorkspace(
         HomeTab $homeTab,
-        AbstractWorkspace $workspace
+        Workspace $workspace
     )
     {
         $homeTabConfig = $this->homeTabConfigRepo->findOneBy(
@@ -499,7 +499,7 @@ class HomeTabManager
     }
 
     public function generateCopyOfAdminWorkspaceHomeTabs(
-        AbstractWorkspace $workspace
+        Workspace $workspace
     )
     {
         $adminHomeTabConfigs = $this->homeTabConfigRepo
@@ -570,7 +570,7 @@ class HomeTabManager
 
     public function getHomeTabByIdAndWorkspace(
         $homeTabId,
-        AbstractWorkspace $workspace
+        Workspace $workspace
     )
     {
         return $this->homeTabRepo->findOneBy(
@@ -607,7 +607,7 @@ class HomeTabManager
     }
 
     public function getWorkspaceHomeTabConfigsByWorkspace(
-        AbstractWorkspace $workspace
+        Workspace $workspace
     )
     {
         return $this->homeTabConfigRepo
@@ -633,7 +633,7 @@ class HomeTabManager
     }
 
     public function getVisibleWorkspaceHomeTabConfigsByWorkspace(
-        AbstractWorkspace $workspace
+        Workspace $workspace
     )
     {
         return $this->homeTabConfigRepo
@@ -647,7 +647,7 @@ class HomeTabManager
     }
 
     public function getOrderOfLastWorkspaceHomeTabConfigByWorkspace(
-        AbstractWorkspace $workspace
+        Workspace $workspace
     )
     {
         return $this->homeTabConfigRepo
@@ -666,7 +666,7 @@ class HomeTabManager
 
     public function getHomeTabConfigByHomeTabAndWorkspace(
         HomeTab $homeTab,
-        AbstractWorkspace $workspace
+        Workspace $workspace
     )
     {
         return $this->homeTabConfigRepo->findOneBy(
@@ -709,7 +709,7 @@ class HomeTabManager
 
     public function getWidgetConfigsByWorkspace(
         HomeTab $homeTab,
-        AbstractWorkspace $workspace
+        Workspace $workspace
     )
     {
         return $this->widgetHomeTabConfigRepo
@@ -718,7 +718,7 @@ class HomeTabManager
 
     public function getVisibleWidgetConfigsByWorkspace(
         HomeTab $homeTab,
-        AbstractWorkspace $workspace
+        Workspace $workspace
     )
     {
         return $this->widgetHomeTabConfigRepo
@@ -742,7 +742,7 @@ class HomeTabManager
 
     public function getOrderOfLastWidgetInHomeTabByWorkspace(
         HomeTab $homeTab,
-        AbstractWorkspace $workspace
+        Workspace $workspace
     )
     {
         return $this->widgetHomeTabConfigRepo

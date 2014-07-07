@@ -17,7 +17,7 @@ use Claroline\CoreBundle\Entity\Activity\Evaluation;
 use Claroline\CoreBundle\Entity\Activity\PastEvaluation;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Form\ActivityEvaluationType;
 use Claroline\CoreBundle\Form\ActivityParametersType;
 use Claroline\CoreBundle\Form\ActivityPastEvaluationType;
@@ -511,7 +511,7 @@ class ActivityController
         }
     }
 
-    private function isWorkspaceManager(AbstractWorkspace $workspace, array $roleNames)
+    private function isWorkspaceManager(Workspace $workspace, array $roleNames)
     {
         $isWorkspaceManager = false;
         $managerRole = 'ROLE_WS_MANAGER_' . $workspace->getGuid();

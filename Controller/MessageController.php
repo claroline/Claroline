@@ -24,7 +24,7 @@ use JMS\SecurityExtraBundle\Annotation as SEC;
 use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\Message;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Form\Factory\FormFactory;
 use Claroline\CoreBundle\Library\Security\Utilities;
 use Claroline\CoreBundle\Manager\GroupManager;
@@ -122,11 +122,11 @@ class MessageController
      *
      * Displays the message form with the "to" field filled with users of a workspace.
      *
-     * @param AbstractWorkspace $workspace
+     * @param Workspace $workspace
      *
      * @return Response
      */
-    public function formForWorkspaceAction(AbstractWorkspace $workspace)
+    public function formForWorkspaceAction(Workspace $workspace)
     {
         $url = $this->router->generate('claro_message_show', array('message' => 0))
             . '?wsIds[]=' . $workspace->getId();
@@ -297,7 +297,7 @@ class MessageController
      * )
      * @EXT\ParamConverter(
      *      "workspaces",
-     *      class="ClarolineCoreBundle:Workspace\AbstractWorkspace",
+     *      class="ClarolineCoreBundle:Workspace\Workspace",
      *      options={"multipleIds" = true, "name"="wsIds"}
      * )
      * @EXT\ParamConverter(
@@ -583,6 +583,7 @@ class MessageController
                     );
                 }
             }
+
             // get groups in which user is subscribed
             $userGroups = $user->getGroups();
             $userGroupsFinal = array();
@@ -600,6 +601,7 @@ class MessageController
                     }
                 }
             }
+
             // merge the 2 groups array
             foreach ($userGroupsFinal as $userGroupFinal) {
                 if (!in_array($userGroupFinal, $groups)) {
@@ -607,7 +609,7 @@ class MessageController
                 }
             }
 
-            $this->pagerFactory->createPagerFromArray($groups, $page);
+            $groups = $this->pagerFactory->createPagerFromArray($groups, $page);
         }
 
         return array('groups' => $groups, 'search' => $search);

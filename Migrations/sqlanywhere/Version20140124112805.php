@@ -15,24 +15,14 @@ class Version20140124112805 extends AbstractMigration
     public function up(Schema $schema)
     {
         $this->addSql("
-            ALTER TABLE claro_badge_rule 
-            ADD associated_badge INT NOT NULL, 
-            ADD userType SMALLINT NOT NULL, 
-            ALTER badge_id INT DEFAULT NULL
-        ");
-        $this->addSql("
-            ALTER TABLE claro_badge_rule 
-            DROP FOREIGN KEY FK_805FCB8FF7A2C2FC
-        ");
-        $this->addSql("
-            ALTER TABLE claro_badge_rule 
-            ADD CONSTRAINT FK_805FCB8F16F956BA FOREIGN KEY (associated_badge) 
-            REFERENCES claro_badge (id) 
+            ALTER TABLE claro_badge_rule
+            ADD CONSTRAINT FK_805FCB8F16F956BA FOREIGN KEY (associated_badge)
+            REFERENCES claro_badge (id)
             ON DELETE CASCADE
         ");
         $this->addSql("
-            ALTER TABLE claro_badge_rule 
-            ADD CONSTRAINT FK_805FCB8FF7A2C2FC FOREIGN KEY (badge_id) 
+            ALTER TABLE claro_badge_rule
+            ADD CONSTRAINT FK_805FCB8FF7A2C2FC FOREIGN KEY (badge_id)
             REFERENCES claro_badge (id)
         ");
         $this->addSql("
@@ -43,26 +33,16 @@ class Version20140124112805 extends AbstractMigration
     public function down(Schema $schema)
     {
         $this->addSql("
-            ALTER TABLE claro_badge_rule 
-            DROP associated_badge, 
-            DROP userType, 
-            ALTER badge_id INT NOT NULL
-        ");
-        $this->addSql("
-            ALTER TABLE claro_badge_rule 
-            DROP FOREIGN KEY FK_805FCB8F16F956BA
-        ");
-        $this->addSql("
-            ALTER TABLE claro_badge_rule 
+            ALTER TABLE claro_badge_rule
             DROP FOREIGN KEY FK_805FCB8FF7A2C2FC
         ");
         $this->addSql("
             DROP INDEX claro_badge_rule.IDX_805FCB8F16F956BA
         ");
         $this->addSql("
-            ALTER TABLE claro_badge_rule 
-            ADD CONSTRAINT FK_805FCB8FF7A2C2FC FOREIGN KEY (badge_id) 
-            REFERENCES claro_badge (id) 
+            ALTER TABLE claro_badge_rule
+            ADD CONSTRAINT FK_805FCB8FF7A2C2FC FOREIGN KEY (badge_id)
+            REFERENCES claro_badge (id)
             ON DELETE CASCADE
         ");
     }

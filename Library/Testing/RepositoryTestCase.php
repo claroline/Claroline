@@ -21,8 +21,7 @@ use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\Widget\WidgetInstance;
 use Claroline\CoreBundle\Entity\Widget\Widget;
 use Claroline\CoreBundle\Entity\Widget\WidgetHomeTabConfig;
-use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
-use Claroline\CoreBundle\Entity\Workspace\SimpleWorkspace;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Entity\Workspace\WorkspaceTag;
 use Claroline\CoreBundle\Entity\Workspace\RelWorkspaceTag;
 use Claroline\CoreBundle\Entity\Workspace\WorkspaceTagHierarchy;
@@ -128,7 +127,7 @@ abstract class RepositoryTestCase extends WebTestCase
         self::$time->add(new \DateInterval("PT{$seconds}S"));
     }
 
-    protected static function createUser($name, array $roles = array(), AbstractWorkspace $personalWorkspace = null)
+    protected static function createUser($name, array $roles = array(), Workspace $personalWorkspace = null)
     {
         $user = new User();
         $user->setFirstName($name . 'FirstName');
@@ -165,7 +164,7 @@ abstract class RepositoryTestCase extends WebTestCase
         self::create($name, $group);
     }
 
-    protected static function createRole($name, AbstractWorkspace $workspace = null)
+    protected static function createRole($name, Workspace $workspace = null)
     {
         $role = new Role();
         $role->setName($name);
@@ -182,7 +181,7 @@ abstract class RepositoryTestCase extends WebTestCase
 
     protected static function createWorkspace($name)
     {
-        $workspace = new SimpleWorkspace();
+        $workspace = new Workspace();
         $workspace->setName($name);
         $workspace->setCode($name . 'Code');
         $workspace->setGuid(self::$client->getContainer()->get('claroline.utilities.misc')->generateGuid());
@@ -191,7 +190,7 @@ abstract class RepositoryTestCase extends WebTestCase
 
     protected static function createDisplayableWorkspace($name, $selfRegistration)
     {
-        $workspace = new SimpleWorkspace();
+        $workspace = new Workspace();
         $workspace->setName($name);
         $workspace->setCode($name . 'Code');
         $workspace->setDisplayable(true);
@@ -217,7 +216,7 @@ abstract class RepositoryTestCase extends WebTestCase
         $name,
         ResourceType $type,
         User $creator,
-        AbstractWorkspace $workspace,
+        Workspace $workspace,
         Directory $parent = null
     )
     {
@@ -329,7 +328,7 @@ abstract class RepositoryTestCase extends WebTestCase
 
     protected static function createWorkspaceTool(
         Tool $tool,
-        AbstractWorkspace $workspace,
+        Workspace $workspace,
         array $roles,
         $position
     )
@@ -417,7 +416,7 @@ abstract class RepositoryTestCase extends WebTestCase
         self::create($vendor . $bundle, $plugin);
     }
 
-    protected static function createLog(User $doer, $action, AbstractWorkspace $workspace = null)
+    protected static function createLog(User $doer, $action, Workspace $workspace = null)
     {
         $log = new Log();
         $log->setDoer($doer);
@@ -442,7 +441,7 @@ abstract class RepositoryTestCase extends WebTestCase
         self::create($name, $tag);
     }
 
-    protected static function createWorkspaceTagRelation(WorkspaceTag $tag, AbstractWorkspace $workspace)
+    protected static function createWorkspaceTagRelation(WorkspaceTag $tag, Workspace $workspace)
     {
         $tagRelation = new RelWorkspaceTag();
         $tagRelation->setTag($tag);
@@ -492,7 +491,7 @@ abstract class RepositoryTestCase extends WebTestCase
 
     protected static function createWorkspaceHomeTab(
         $name,
-        AbstractWorkspace $workspace
+        Workspace $workspace
     )
     {
         $homeTab = new HomeTab();
@@ -549,7 +548,7 @@ abstract class RepositoryTestCase extends WebTestCase
     protected static function createWorkspaceHomeTabConfig(
         $name,
         HomeTab $homeTab,
-        AbstractWorkspace $workspace,
+        Workspace $workspace,
         $type,
         $visible,
         $locked,
@@ -617,7 +616,7 @@ abstract class RepositoryTestCase extends WebTestCase
         $name,
         Widget $widget,
         HomeTab $homeTab,
-        AbstractWorkspace $workspace,
+        Workspace $workspace,
         $visible,
         $locked,
         $widgetOrder
@@ -650,7 +649,7 @@ abstract class RepositoryTestCase extends WebTestCase
 
     protected static function createWidgetInstance(
         Widget $widget,
-        AbstractWorkspace $workspace,
+        Workspace $workspace,
         $name,
         $workspace,
         $widget,
@@ -675,7 +674,7 @@ abstract class RepositoryTestCase extends WebTestCase
      * @param AbstractResource  $resource
      * @param ResourceType      $type
      * @param User              $creator
-     * @param AbstractWorkspace $workspace
+     * @param Workspace $workspace
      * @param ResourceNode      $parent
      *
      * @return AbstractResource
@@ -684,7 +683,7 @@ abstract class RepositoryTestCase extends WebTestCase
         AbstractResource $resource,
         ResourceType $type,
         User $creator,
-        AbstractWorkspace $workspace,
+        Workspace $workspace,
         $name,
         $mimeType,
         $parent = null
