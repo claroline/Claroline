@@ -15,6 +15,36 @@
     var routing = window.Routing;
     var common = window.Claroline.Common;
     var modal = window.Claroline.Modal = {};
+    var modalStack = [];
+
+    /**
+     * Handles nested modals.
+     */
+    $('body').on({
+        'show.bs.modal': function () {
+            var stackLength = modalStack.length;
+
+            if (stackLength > 0) {
+                var previousModal = modalStack[stackLength - 1];
+
+                if (previousModal.get(0) === $(this).get(0)) {
+                    return;
+                }
+
+                previousModal.addClass('parent-hide');
+            }
+
+            modalStack.push($(this));
+        },
+        'hide.bs.modal': function () {
+            modalStack.pop();
+            var stackLength = modalStack.length;
+
+            if (stackLength > 0) {
+                modalStack[stackLength - 1].removeClass('parent-hide');
+            }
+        }
+    }, '.modal');
 
     /**
      * Hide all open modals.
@@ -25,50 +55,17 @@
     };
 
     /**
-     * Hide parent modal when nested modals.
-     */
-    modal.parentHide = function () {
-        if (typeof(modal.parentModals) === 'undefined') {
-            modal.parentModals = [];
-        }
-
-        $('.modal.in:not(.parent-hide, .fullscreen), .modal-backdrop:not(.parent-hide, .fullscreen)')
-        .each(function () {
-            $(this).addClass('parent-hide');
-            modal.parentModals.push(this);
-        });
-    };
-
-    /**
-     * Show parent modal when close nested modals.
-     */
-    modal.parentShow = function ()
-    {
-        if (typeof(modal.parentModals) !== 'undefined') {
-            for (var object in modal.parentModals) {
-                if (modal.parentModals.hasOwnProperty(object)) {
-                    $(modal.parentModals[object]).removeClass('parent-hide');
-                }
-            }
-            modal.parentModals = [];
-        }
-    };
-
-    /**
      * Create a new modal that destroys itself when close.
      *
      * @param content The content to put inside this modal (this modal does not contain modal-digalog element)
      */
     modal.create = function (content)
     {
-        modal.parentHide();
-
         return common.createElement('div', 'modal fade')
             .html(content)
             .appendTo('body')
             .modal('show')
             .on('hidden.bs.modal', function () {
-                modal.parentShow();
                 $(this).remove();
             });
     };
