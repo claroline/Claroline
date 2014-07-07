@@ -59,6 +59,10 @@
                 };
             }
 
+            if ($(this).data('restrict-for-owner')) {
+                customParameters['restrictForOwner'] = $(this).data('restrict-for-owner');
+            }
+
             var element = createInput(this.parentNode, pickerName, customParameters);
             var name = $(this).data('name');
 

@@ -52,6 +52,11 @@
                 var isWhiteListed = this.parameters.resourceTypes[node.type] !== undefined;
 
                 if (isWhiteListed || node.type === 'directory') {
+                    //1023 is the "I can do everything" mask.
+                    if (this.parameters.restrictForOwner == 1 && node.mask != 1023 && node.type !== 'directory') {
+                        return;
+                    }
+
                     var thumbnail = new views.Thumbnail(this.parameters, this.dispatcher, this.zoomValue);
                     thumbnail.render(node, isWhiteListed && this.directoryId !== '0');
                     this.$el.append(thumbnail.$el);

@@ -84,6 +84,8 @@
      *      (defaults to null, i.e. all types are accepted)
      * - typeBlackList: an array of resource type names to exclude (ignored if a white list is given)
      *      (defaults to null)
+     * - restrictForOwner: a boolean. The only resources shown are those whose the current user is either
+     *      the creator or a workspace manager.
      * - parentElement: the jquery element in which the views will be rendered
      *      (defaults to "body" element)
      * - directoryId : the id of the directory to open at initialization
@@ -181,6 +183,7 @@
         var mergedParameters = {
             viewName: viewName,
             isPickerMode: isPicker,
+            restrictForOwner: parameters.restrictForOwner || false,
             isWorkspace: parameters.isWorkspace || false,
             directoryId: resolveDirectoryId(parameters, isPicker, isDefault),
             preFetchedDirectory: parameters.preFetchedDirectory || fetchedParameters.preFetchedDirectory || null,

@@ -28,7 +28,10 @@ class ActivityType extends AbstractType
                 'resourcePicker',
                 array(
                     'required' => false,
-                    'attr' => array('data-blacklist' => 'activity')
+                    'attr' => array(
+                        'data-blacklist' => 'activity',
+                        'data-restrict-for-owner' => 1
+                    )
                 )
             );
     }
