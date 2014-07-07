@@ -45,4 +45,6 @@ unstick: Désépingler
 unsubscribe_mail_list: Ne plus recevoir les notifications
 yes: Oui
 no: Non
-notifications_activated_message: Les notifications du forum sont activées
+notifications_explanation: L'activation des notifications globales entraîne l'envoi d'un mail aux utilisateurs ayant accès au forum lors de l'ajout d'un message.
+activate_global_notifications: Activer les notifications globales
+disable_global_notifications: Annuler les notifications globales

@@ -948,4 +948,50 @@ class ForumController extends Controller
             '_resource' => $forum
         );
     }
+
+    /**
+     * @Route(
+     *     "/{forum}/notifications/activate",
+     *     name="claro_forum_activate_global_notifications"
+     * )
+     *
+     * @param Forum $forum
+     */
+    public function activateGlobalNotificationsAction(Forum $forum)
+    {
+        $collection = new ResourceCollection(array($forum->getResourceNode()));
+
+        if (!$this->get('security.context')->isGranted('MODERATE', $collection)) {
+            throw new AccessDeniedHttpException($collection->getErrorsForDisplay());
+        }
+
+        $this->manager->activateGlobalNotifications($forum);
+
+        return new RedirectResponse(
+            $this->generateUrl('claro_forum_categories', array('forum' => $forum->getId()))
+        );
+    }
+
+    /**
+     * @Route(
+     *     "/{forum}/notifications/disable",
+     *     name="claro_forum_disable_global_notifications"
+     * )
+     *
+     * @param Forum $forum
+     */
+    public function disableGlobalNotificationsAction(Forum $forum)
+    {
+        $collection = new ResourceCollection(array($forum->getResourceNode()));
+
+        if (!$this->get('security.context')->isGranted('MODERATE', $collection)) {
+            throw new AccessDeniedHttpException($collection->getErrorsForDisplay());
+        }
+
+        $this->manager->disableGlobalNotifications($forum);
+
+        return new RedirectResponse(
+            $this->generateUrl('claro_forum_categories', array('forum' => $forum->getId()))
+        );
+    }
 }

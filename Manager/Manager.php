@@ -574,4 +574,18 @@ class Manager
         );
         $this->createMessage($message, $oldMessage->getSubject());
     }
+
+    public function activateGlobalNotifications(Forum $forum)
+    {
+        $forum->setActivateNotifications(true);
+        $this->om->persist($forum);
+        $this->om->flush();
+    }
+
+    public function disableGlobalNotifications(Forum $forum)
+    {
+        $forum->setActivateNotifications(false);
+        $this->om->persist($forum);
+        $this->om->flush();
+    }
 }
