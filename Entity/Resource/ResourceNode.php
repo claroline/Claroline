@@ -468,6 +468,11 @@ class ResourceNode
         return $this->rights;
     }
 
+    public function addRight(ResourceRights $right)
+    {
+        $this->rights->add($right);
+    }
+
     public function setNext(ResourceNode $next = null, $setPrev = false)
     {
         $this->next = $next;

@@ -26,6 +26,7 @@ use Claroline\CoreBundle\Rule\Entity\Rule;
 use JMS\DiExtraBundle\Annotation\Inject;
 use JMS\DiExtraBundle\Annotation\InjectParams;
 use JMS\DiExtraBundle\Annotation\Service;
+use Symfony\Component\Security\Core\SecurityContextInterface;
 
 /**
  * @Service("claroline.manager.activity_manager")
@@ -38,22 +39,34 @@ class ActivityManager
     private $activityRuleRepo;
     private $evaluationRepo;
     private $pastEvaluationRepo;
+    private $roleRepo;
     private $om;
+    private $rightsManager;
+    private $sc;
 
     /**
      * @InjectParams({
-     *     "om" = @Inject("claroline.persistence.object_manager")
+     *     "om"            = @Inject("claroline.persistence.object_manager"),
+     *     "rightsManager" = @Inject("claroline.manager.rights_manager"),
+     *     "sc"            = @Inject("security.context")
      * })
      */
-    public function __construct(ObjectManager $om)
+    public function __construct(
+        ObjectManager            $om,
+        RightsManager            $rightsManager,
+        SecurityContextInterface $sc
+    )
     {
-        $this->om = $om;
+        $this->om                     = $om;
         $this->activityParametersRepo = $om->getRepository('ClarolineCoreBundle:Activity\ActivityParameters');
-        $this->activityRepo = $om->getRepository('ClarolineCoreBundle:Resource\Activity');
+        $this->activityRepo           = $om->getRepository('ClarolineCoreBundle:Resource\Activity');
         $this->activityRuleActionRepo = $om->getRepository('ClarolineCoreBundle:Activity\ActivityRuleAction');
-        $this->activityRuleRepo = $om->getRepository('ClarolineCoreBundle:Activity\ActivityRule');
-        $this->evaluationRepo = $om->getRepository('ClarolineCoreBundle:Activity\Evaluation');
-        $this->pastEvaluationRepo = $om->getRepository('ClarolineCoreBundle:Activity\PastEvaluation');
+        $this->activityRuleRepo       = $om->getRepository('ClarolineCoreBundle:Activity\ActivityRule');
+        $this->evaluationRepo         = $om->getRepository('ClarolineCoreBundle:Activity\Evaluation');
+        $this->pastEvaluationRepo     = $om->getRepository('ClarolineCoreBundle:Activity\PastEvaluation');
+        $this->roleRepo               = $om->getRepository('ClarolineCoreBundle:Role');
+        $this->rightsManager          = $rightsManager;
+        $this->sc                     = $sc;
     }
 
     /**
@@ -63,6 +76,7 @@ class ActivityManager
     {
         $this->om->persist($activity);
         $this->om->flush();
+        $this->initializePermissions($activity);
 
         return $activity;
     }
@@ -83,6 +97,7 @@ class ActivityManager
     {
         if (!$activity->getParameters()->getSecondaryResources()->contains($resource)) {
             $activity->getParameters()->getSecondaryResources()->add($resource);
+            $this->initializePermissions($activity);
             $this->om->persist($activity);
             $this->om->flush();
 
@@ -689,9 +704,9 @@ class ActivityManager
     }
 
 
-    /******************************************
+    /**********************************************
      * Access to PastEvaluationRepository methods *
-     ******************************************/
+     **********************************************/
 
     public function getPastEvaluationsByUserAndActivityParams(
         User $user,
@@ -720,5 +735,56 @@ class ActivityManager
                 $log,
                 $executeQuery
             );
+    }
+
+    /**
+     * Initialize the resource permissions of an activity
+     *
+     * @param Activity $activity
+     */
+    public function initializePermissions(Activity $activity)
+    {
+        $primary = $activity->getPrimaryResource();
+        $secondaries = [];
+        $nodes = [];
+        $user = $this->sc->getToken()->getUser();
+
+        if ($primary) {
+            $nodes[] = $primary;
+        }
+
+        foreach ($activity->getParameters()->getSecondaryResources() as $res) {
+            $secondaries[] = $res;
+        }
+
+        $nodes = array_merge($nodes, $secondaries);
+        $nodesInitialized = [];
+
+        foreach ($nodes as $node) {
+            $isNodeCreator = $node->getCreator() === $user;
+            $ws = $node->getWorkspace();
+            $roleWsManager = $this->roleRepo->findManagerRole($ws);
+            $isWsManager = $user->hasRole($roleWsManager);
+
+            if ($isNodeCreator || $isWsManager) {
+                $nodesInitialized[] = $node;
+            }
+        }
+
+        $rolesInitialized = [];
+        $rights = $activity->getResourceNode()->getRights();
+
+        foreach ($rights as $right) {
+            $role = $right->getRole();
+
+            if (!strpos('_' . $role->getName(), 'ROLE_WS_MANAGER')
+                //the open value is always 1
+                && $right->getMask() & 1
+            ) {
+                $rolesInitialized[] = $role;
+            }
+        }
+
+        $this->rightsManager->initializePermissions($nodesInitialized, $rolesInitialized);
     }
 }

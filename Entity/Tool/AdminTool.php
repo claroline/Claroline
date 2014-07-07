@@ -35,7 +35,7 @@ class AdminTool
     /**
      * @ORM\ManyToMany(
      *     targetEntity="Claroline\CoreBundle\Entity\Role",
-     *     inversedBy="orderedTools"
+     *     inversedBy="adminTools"
      * )
      * @ORM\JoinTable(name="claro_admin_tool_role")
      */

@@ -37,6 +37,7 @@ use Claroline\CoreBundle\Library\Security\Utilities;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * @DI\Service("claroline.manager.resource_manager")
@@ -67,23 +68,26 @@ class ResourceManager
     private $ut;
     /** @var Utilities */
     private $secut;
+    private $container;
 
     /**
      * Constructor.
      *
      * @DI\InjectParams({
-     *     "roleManager"   = @DI\Inject("claroline.manager.role_manager"),
-     *     "iconManager"   = @DI\Inject("claroline.manager.icon_manager"),
-     *     "rightsManager" = @DI\Inject("claroline.manager.rights_manager"),
-     *     "dispatcher"    = @DI\Inject("claroline.event.event_dispatcher"),
-     *     "om"            = @DI\Inject("claroline.persistence.object_manager"),
-     *     "ut"            = @DI\Inject("claroline.utilities.misc"),
-     *     "secut"         = @DI\Inject("claroline.security.utilities")
+     *     "roleManager"     = @DI\Inject("claroline.manager.role_manager"),
+     *     "iconManager"     = @DI\Inject("claroline.manager.icon_manager"),
+     *     "container"       = @DI\Inject("service_container"),
+     *     "rightsManager"   = @DI\Inject("claroline.manager.rights_manager"),
+     *     "dispatcher"      = @DI\Inject("claroline.event.event_dispatcher"),
+     *     "om"              = @DI\Inject("claroline.persistence.object_manager"),
+     *     "ut"              = @DI\Inject("claroline.utilities.misc"),
+     *     "secut"           = @DI\Inject("claroline.security.utilities")
      * })
      */
     public function __construct (
         RoleManager $roleManager,
         IconManager $iconManager,
+        ContainerInterface $container,
         RightsManager $rightsManager,
         StrictDispatcher $dispatcher,
         ObjectManager $om,
@@ -103,6 +107,7 @@ class ResourceManager
         $this->om = $om;
         $this->ut = $ut;
         $this->secut = $secut;
+        $this->container = $container;
     }
 
     /**
@@ -181,6 +186,12 @@ class ResourceManager
 
         $node->setPathForCreationLog($parentPath . $name);
         $node->setIcon($icon);
+
+        //if it's an activity, initialize the permissions for its linked resources;
+        if ($resourceType->getName() === 'activity') {
+            $this->container->get('claroline.manager.activity_manager')->initializePermissions($resource);
+        }
+
         $this->dispatcher->dispatch('log', 'Log\LogResourceCreate', array($node));
         $this->om->endFlushSuite();
 
@@ -388,13 +399,15 @@ class ResourceManager
     )
     {
         if (count($rights) === 0 && $parent !== null) {
-            $this->rightsManager->copy($parent, $node);
+            $node = $this->rightsManager->copy($parent, $node);
         } else {
             if (count($rights) === 0) {
                 throw new RightsException('Rights must be specified if there is no parent');
             }
             $this->createRights($node, $rights);
         }
+
+        return $node;
     }
 
     /**
