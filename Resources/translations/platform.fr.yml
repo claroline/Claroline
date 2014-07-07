@@ -939,6 +939,10 @@ plugin_packages: Paquets des plugins
 no_package_description: Aucune description du paquet.
 yes: Oui
 no: Non
+actualize: Actualiser
+upgrade: Mettre à jour
+packages_upgrade_info_message: Attention, ceci est la page de gestion de mises à jour.
+package_upgrade_all_warning: Attention, ceci mettra à jour tous les paquets de la plateforme. Cette opération ne peut-être annulée. Il est conseillé d'effectuer une sauvegarde des fichiers ainsi que de la base de données avant d'effectuer cette opération.
 profile_management: Gestion du profil
 visible_facet_form_explanation: Le champ "Visible" permet de spécifier si l'élément doit être visible ou non par l'utilisateur.
 editable_facet_form_explanation: Le champ "Modifiable" permet de spécifier si l'élément doit être modifiable ou non par l'utilisateur.

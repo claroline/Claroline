@@ -860,6 +860,8 @@ core_packages: Core packages
 plugin_packages: Plugin packages
 yes: Sí
 no: No
+actualize: Actualizar
+upgrade: Modernización
 show_profile_for_anonymous: Profil public access for anonymous.
 profile_management: Gestión de perfiles
 visible_facet_form_explanation: El campo "Visible" permite de especificar si el elemento debe ser visible o no por el usuario.
@@ -873,3 +875,5 @@ remove_role: Eliminiar un rol.
 initialize: Inicializar
 user_limit_success_update: El número máximo de usuarios por rol ha sido actualizado con éxito.
 role_name_changed_success: El nombre del rola ha sido actualizado con éxito.
+packages_upgrade_info_message: Advertencia, esta es la página de administración de las actualizaciones.
+package_upgrade_all_warning: Advertencia, esto actualizará todos los paquetes de la plataforma. Esta operación no puede ser cancelada. Se recomienda  hacer una copia de seguridad de los archivos y de la base de datos antes de realizar esta operación.
