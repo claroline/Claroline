@@ -109,8 +109,6 @@ class ActivityListener
             $activityParameters = new ActivityParameters();
             $activityParameters->setActivity($activity);
             $activity->setParameters($activityParameters);
-
-
             $event->setResources(array($activity));
             $event->stopPropagation();
 

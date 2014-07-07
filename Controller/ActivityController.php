@@ -109,65 +109,67 @@ class ActivityController
         if ($form->isValid()
             && $formParams->isValid()
             && ($formRule->get('action')->getData() === 'none' || $formRule->isValid())) {
+                $this->activityManager->editActivity($form->getData());
 
-            $this->activityManager->editActivity($form->getData());
+                $maxDuration = $formParams->get('max_duration')->getData();
+                $maxAttempts = $formParams->get('max_attempts')->getData();
+                $evaluationType = $formParams->get('evaluation_type')->getData();
 
-            $maxDuration = $formParams->get('max_duration')->getData();
-            $maxAttempts = $formParams->get('max_attempts')->getData();
-            $evaluationType = $formParams->get('evaluation_type')->getData();
+                $this->activityManager->updateParameters(
+                    $params,
+                    $maxDuration,
+                    $maxAttempts,
+                    $evaluationType
+                );
 
-            $this->activityManager->updateParameters(
-                $params,
-                $maxDuration,
-                $maxAttempts,
-                $evaluationType
-            );
+                if ($formRule->get('action')->getData() === 'none') {
 
-            if ($formRule->get('action')->getData() === 'none') {
-
-                if ($hasRule) {
-                    $this->activityManager->deleteActivityRule($rule);
-                }
-            } else {
-                $primaryResource = $form->get('primaryResource')->getData();
-                $resourceNode = !is_null($primaryResource) ?
-                    $primaryResource :
-                    null;
-                $action = $formRule->get('action')->getData();
-                $occurrence = $formRule->get('occurrence')->getData();
-                $result = $formRule->get('result')->getData();
-                $resultMax = $formRule->get('resultMax')->getData();
-                $isResultVisible = $formRule->get('isResultVisible')->getData();
-                $activeFrom = $formRule->get('activeFrom')->getData();
-                $activeUntil = $formRule->get('activeUntil')->getData();
-
-                if ($hasRule) {
-                    $this->activityManager->updateActivityRule(
-                        $rule,
-                        $action,
-                        $occurrence,
-                        $result,
-                        $resultMax,
-                        $isResultVisible,
-                        $activeFrom,
-                        $activeUntil,
-                        $resourceNode
-                    );
+                    if ($hasRule) {
+                        $this->activityManager->deleteActivityRule($rule);
+                    }
                 } else {
-                    $this->activityManager->createActivityRule(
-                        $params,
-                        $action,
-                        $occurrence,
-                        $result,
-                        $resultMax,
-                        $isResultVisible,
-                        $activeFrom,
-                        $activeUntil,
-                        $resourceNode
-                    );
+                    $primaryResource = $form->get('primaryResource')->getData();
+                    $resourceNode = !is_null($primaryResource) ?
+                        $primaryResource :
+                        null;
+                    $action = $formRule->get('action')->getData();
+                    $occurrence = $formRule->get('occurrence')->getData();
+                    $result = $formRule->get('result')->getData();
+                    $resultMax = $formRule->get('resultMax')->getData();
+                    $isResultVisible = $formRule->get('isResultVisible')->getData();
+                    $activeFrom = $formRule->get('activeFrom')->getData();
+                    $activeUntil = $formRule->get('activeUntil')->getData();
+
+                    if ($hasRule) {
+                        $this->activityManager->updateActivityRule(
+                            $rule,
+                            $action,
+                            $occurrence,
+                            $result,
+                            $resultMax,
+                            $isResultVisible,
+                            $activeFrom,
+                            $activeUntil,
+                            $resourceNode
+                        );
+                    } else {
+                        $this->activityManager->createActivityRule(
+                            $params,
+                            $action,
+                            $occurrence,
+                            $result,
+                            $resultMax,
+                            $isResultVisible,
+                            $activeFrom,
+                            $activeUntil,
+                            $resourceNode
+                        );
+                    }
                 }
             }
-        }
+
+            //set the permissions for each resources
+            $this->activityManager->initializePermissions($resource);
 
         return array(
             '_resource' => $resource,
