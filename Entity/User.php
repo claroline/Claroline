@@ -265,7 +265,7 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
     /**
      * @ORM\Column(name="is_mail_notified", type="boolean")
      */
-    protected $isMailNotified = false;
+    protected $isMailNotified = true;
 
     /**
      * @ORM\Column(name="last_uri", length=255, nullable=true)
