@@ -72,6 +72,11 @@ activity_parameters_form_max_duration: 'Allowed time limit (in second)'
 activity_parameters_form_withTutor: Tutored
 activity_parameters_form_where: Learning place
 activity_parameters_form_who: Working mode
+activity_past_evaluation_form_comment: Comment
+activity_past_evaluation_form_date: Date
+activity_past_evaluation_form_numScore: Score
+activity_past_evaluation_form_score: Evaluation
+activity_past_evaluation_form_status: Status
 activity_remove_primary_resource: Remove the primary resource
 activity_resource_not_allowed: You cannot add a resource of this type
 activity_resource_remove: 'Are you sure you want to remove this resource from the activity?'
@@ -140,6 +145,7 @@ anywhere: Anywhere
 appearance: Appearance
 apply: Apply
 at_least_one_category_has_to_be_selected: 'At least one category has to be selected'
+attempt: Attempt
 attempts: Attempts
 automatic: Automatic
 available_widgets: 'Available widgets'
@@ -736,6 +742,7 @@ tags_list: 'Tags list'
 tags_management: 'Tags management'
 tags_organization: 'Tags organization'
 teacher: Teacher
+terms_enabled_but_empty: Terms of service can only be enabled if the text is provided in at least one language.
 text: Text
 text_form_content: Content
 text_form_name: Name
@@ -930,6 +937,8 @@ plugin_packages: Plugin packages
 no_package_description: No package description.
 yes: Yes
 no: No
+actualize: Actualize
+upgrade: Upgrade
 profile_management: Profile Management
 visible_facet_form_explanation: The field "Visible" allows you to set the element as visible or not for the user.
 editable_facet_form_explanation: The field "Editable" allows you to set the element as visible or not for the user.
@@ -942,3 +951,6 @@ remove_role: Role suppression.
 initialize: Initialize
 user_limit_success_update: The user limit by role has been successfully updated.
 role_name_changed_success: The role name has been successfully updated.
+packages_upgrade_info_message: Warning: this page allows you to update the platform.
+package_upgrade_all_warning: Warning, this will update all packages on the platform. This operation can not be canceled. It is recommended to make a backup of the files and the database before performing this operation.
+

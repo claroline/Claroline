@@ -61,8 +61,9 @@
             this.$('form').attr('action', action);
         },
         render: function (event) {
-            this.targetNodeId = event.nodeId;
-            this.eventOnSuccess = this.knownActions[event.action].onSuccess + '-' + event.view;
+            this.targetNodeId = event.nodeId || this.targetNodeId;
+            this.eventOnSuccess = event.eventOnSuccess
+                || this.knownActions[event.action].onSuccess + '-' + event.view;
 
             if (!event.errorForm) {
                 var route = this.knownActions[event.action].route;
@@ -75,7 +76,7 @@
                 }, this));
             } else {
                 this.$el.html(event.errorForm);
-                this.replaceId(event.nodeId);
+                this.replaceId(this.targetNodeId);
             }
         }
     });

@@ -14,11 +14,13 @@ namespace Claroline\CoreBundle\Controller;
 use Claroline\CoreBundle\Entity\Activity\ActivityParameters;
 use Claroline\CoreBundle\Entity\Activity\ActivityRule;
 use Claroline\CoreBundle\Entity\Activity\Evaluation;
+use Claroline\CoreBundle\Entity\Activity\PastEvaluation;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Form\ActivityEvaluationType;
 use Claroline\CoreBundle\Form\ActivityParametersType;
+use Claroline\CoreBundle\Form\ActivityPastEvaluationType;
 use Claroline\CoreBundle\Form\ActivityType;
 use Claroline\CoreBundle\Form\ActivityRuleType;
 use Claroline\CoreBundle\Manager\ActivityManager;
@@ -106,23 +108,26 @@ class ActivityController
         );
         $formRule->handleRequest($this->request);
 
+        $errors = $formParams->getErrors();
+        foreach ($errors as $error) {
+            echo $error->getMessage();
+        }
+
         if ($form->isValid()
             && $formParams->isValid()
             && ($formRule->get('action')->getData() === 'none' || $formRule->isValid())) {
-                $this->activityManager->editActivity($form->getData());
 
-                $maxDuration = $formParams->get('max_duration')->getData();
-                $maxAttempts = $formParams->get('max_attempts')->getData();
-                $evaluationType = $formParams->get('evaluation_type')->getData();
+            $this->activityManager->editActivity($form->getData());
+            $evaluationType = $formParams->get('evaluation_type')->getData();
 
-                $this->activityManager->updateParameters(
-                    $params,
-                    $maxDuration,
-                    $maxAttempts,
-                    $evaluationType
-                );
+            $this->activityManager->updateParameters(
+                $params,
+                null,
+                null,
+                $evaluationType
+            );
 
-                if ($formRule->get('action')->getData() === 'none') {
+            if ($formRule->get('action')->getData() === 'none') {
 
                     if ($hasRule) {
                         $this->activityManager->deleteActivityRule($rule);
@@ -386,6 +391,7 @@ class ActivityController
                 if (!is_null($scoreMax)) {
                     $ruleScore .= ' / ' . $scoreMax;
                 }
+
                 $ruleResultVisible = $rule->getIsResultVisible();
                 $isResultVisible = !empty($ruleResultVisible);
             }
@@ -450,6 +456,56 @@ class ActivityController
         );
     }
 
+    /**
+     * @Route(
+     *     "edit/activity/past/evaluation/{pastEvaluationId}",
+     *     name="claro_activity_past_evaluation_edit",
+     *     options={"expose"=true}
+     * )
+     * @ParamConverter("currentUser", options={"authenticatedUser" = true})
+     * @ParamConverter(
+     *      "pastEvaluation",
+     *      class="ClarolineCoreBundle:Activity\PastEvaluation",
+     *      options={"id" = "pastEvaluationId", "strictId" = true}
+     * )
+     * @Template()
+     */
+    public function editActivityPastEvaluationAction(
+        User $currentUser,
+        PastEvaluation $pastEvaluation
+    )
+    {
+        $isWorkspaceManager = false;
+        $activityParams = $pastEvaluation->getActivityParameters();
+        $activity = $activityParams->getActivity();
+
+        if (!is_null($activity)) {
+            $workspace = $activity->getResourceNode()->getWorkspace();
+            $roleNames = $currentUser->getRoles();
+            $isWorkspaceManager = $this->isWorkspaceManager($workspace, $roleNames);
+        }
+
+        if (!$isWorkspaceManager) {
+
+            throw new AccessDeniedException();
+        }
+
+        $form = $this->formFactory
+            ->create(new ActivityPastEvaluationType(), $pastEvaluation);
+        $form->handleRequest($this->request);
+
+        if ($form->isValid()) {
+            $this->activityManager->editPastEvaluation($pastEvaluation);
+
+            return new Response('success', 204);
+        }
+
+        return array(
+            'form' => $form->createView(),
+            'pastEvaluation' => $pastEvaluation
+        );
+    }
+
     private function checkAccess($permission, $resource)
     {
         if (!$this->securityContext->isGranted($permission, $resource)) {
@@ -457,7 +513,7 @@ class ActivityController
         }
     }
 
-    private function isWorkspaceManager(AbstractWorkspace $workspace, array $roleNames)
+    private function isWorkspaceManager(Workspace $workspace, array $roleNames)
     {
         $isWorkspaceManager = false;
         $managerRole = 'ROLE_WS_MANAGER_' . $workspace->getGuid();

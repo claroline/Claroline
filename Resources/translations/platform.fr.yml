@@ -73,6 +73,11 @@ activity_parameters_form_max_duration: 'Temps limite accordé'
 activity_parameters_form_withTutor: Tutoré
 activity_parameters_form_where: Lieu d'apprentissage
 activity_parameters_form_who: Modalité de travail
+activity_past_evaluation_form_comment: Commentaire
+activity_past_evaluation_form_date: Date
+activity_past_evaluation_form_numScore: Score
+activity_past_evaluation_form_score: Evaluation
+activity_past_evaluation_form_status: Statut
 activity_remove_primary_resource: Enlever la resource primaire
 activity_resource_not_allowed: Vous ne pouvez pas ajouter une ressource de ce type
 activity_resource_remove: Êtes-vous sûr de vouloir enlever cette ressource de l'activite?
@@ -141,6 +146,7 @@ anywhere: 'N''importe où'
 appearance: Apparence
 apply: Appliquer
 at_least_one_category_has_to_be_selected: 'Au moins une catégorie doit être selectionnée'
+attempt: Tentative
 attempts: Tentatives
 automatic: Automatique
 available_widgets: 'Widgets disponibles'
@@ -742,6 +748,7 @@ tags_list: 'Liste des Tags'
 tags_management: 'Gestion des Tags'
 tags_organization: 'Organisation des Tags'
 teacher: Professeur
+terms_enabled_but_empty: Les conditions d'utilisation ne peuvent être activées que si le texte est fourni dans au moins une langue.
 text: Texte
 text_form_content: Contenu
 text_form_name: Nom
@@ -939,6 +946,10 @@ plugin_packages: Paquets des plugins
 no_package_description: Aucune description du paquet.
 yes: Oui
 no: Non
+actualize: Actualiser
+upgrade: Mettre à jour
+packages_upgrade_info_message: Attention, ceci est la page de gestion de mises à jour.
+package_upgrade_all_warning: Attention, ceci mettra à jour tous les paquets de la plateforme. Cette opération ne peut-être annulée. Il est conseillé d'effectuer une sauvegarde des fichiers ainsi que de la base de données avant d'effectuer cette opération.
 profile_management: Gestion du profil
 visible_facet_form_explanation: Le champ "Visible" permet de spécifier si l'élément doit être visible ou non par l'utilisateur.
 editable_facet_form_explanation: Le champ "Modifiable" permet de spécifier si l'élément doit être modifiable ou non par l'utilisateur.

@@ -37,7 +37,7 @@ class Activity extends AbstractResource
 
     /**
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceNode")
-     * @ORM\JoinColumn(nullable=true)
+     * @ORM\JoinColumn(onDelete="SET NULL", nullable=true)
      */
     protected $primaryResource;
 

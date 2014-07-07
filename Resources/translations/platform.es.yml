@@ -66,6 +66,11 @@ activity_parameters_form_max_duration: 'Tiempo limite establecido (en segundo)'
 activity_parameters_form_withTutor: Tutelado
 activity_parameters_form_where: Lugar de aprendizaje
 activity_parameters_form_who: Modo de trabajo
+activity_past_evaluation_form_comment: Comentario
+activity_past_evaluation_form_date: Fecha
+activity_past_evaluation_form_numScore: Puntaje
+activity_past_evaluation_form_score: Evaluación
+activity_past_evaluation_form_status: Estado
 activity_remove_primary_resource: Retirar el recurso principal
 activity_resource_not_allowed: No puede agregar un recurso de este tipo
 activity_resource_remove: '¿Esta seguro que desea remover este recurso de la actividad?'
@@ -133,6 +138,7 @@ anywhere: Dondequiera
 appearance: 'Apariencia'
 apply: 'Aplicar'
 at_least_one_category_has_to_be_selected: 'Debe seleccionar al menos una categoría'
+attempt: Intento
 attempts: Intentos
 automatic: Automático
 available_widgets: 'Widgets disponibles'
@@ -689,6 +695,7 @@ tags_list: 'Lista de etiquetas'
 tags_management: 'Gestión de etiquetas'
 tags_organization: 'Organización de las etiquetas'
 teacher: 'Profesor'
+terms_enabled_but_empty: Las condiciones de servicio sólo se pueden habilitar si el texto está proporcionado al menos una lengua.
 text: Texto
 text_form_content: 'Contenido'
 text_form_name: 'Nombre'
@@ -860,6 +867,8 @@ core_packages: Core packages
 plugin_packages: Plugin packages
 yes: Sí
 no: No
+actualize: Actualizar
+upgrade: Modernización
 show_profile_for_anonymous: Profil public access for anonymous.
 profile_management: Gestión de perfiles
 visible_facet_form_explanation: El campo "Visible" permite de especificar si el elemento debe ser visible o no por el usuario.
@@ -873,3 +882,5 @@ remove_role: Eliminiar un rol.
 initialize: Inicializar
 user_limit_success_update: El número máximo de usuarios por rol ha sido actualizado con éxito.
 role_name_changed_success: El nombre del rola ha sido actualizado con éxito.
+packages_upgrade_info_message: Advertencia, esta es la página de administración de las actualizaciones.
+package_upgrade_all_warning: Advertencia, esto actualizará todos los paquetes de la plataforma. Esta operación no puede ser cancelada. Se recomienda  hacer una copia de seguridad de los archivos y de la base de datos antes de realizar esta operación.

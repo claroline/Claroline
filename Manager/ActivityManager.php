@@ -20,7 +20,7 @@ use Claroline\CoreBundle\Entity\Resource\Activity;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Resource\ResourceType;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Rule\Entity\Rule;
 use JMS\DiExtraBundle\Annotation\Inject;
@@ -204,7 +204,7 @@ class ActivityManager
                 ->findPastEvaluationsByUserAndActivityParams($user, $activityParams);
         }
         $nbAttempts = $isFirstEvaluation ? 0 : count($pastEvals);
-        $totalTime = $isFirstEvaluation ? 0 : $evaluation->getAttemptsDuration();
+        $totalTime = $evaluation->getAttemptsDuration();
         $pastStatus = ($activityStatus === 'incomplete' || $activityStatus === 'failed') ?
             $activityStatus :
             'unknown';
@@ -249,7 +249,7 @@ class ActivityManager
                             null;
                         $scoreMin = isset($logDetails['resultMin']) ?
                             $logDetails['resultMin'] :
-                            0;
+                            null;
                         $scoreMax = isset($logDetails['resultMax']) ?
                             $logDetails['resultMax'] :
                             null;
@@ -443,10 +443,15 @@ class ActivityManager
 
     private function computeActivityTotalTime($totalTime, $sessionTime)
     {
-        $total = is_null($totalTime) ? 0 : $totalTime;
-        $session = is_null($sessionTime) ? 0 : $sessionTime;
+        if (!is_null($totalTime) && !is_null($sessionTime)) {
+            $result = $totalTime + $sessionTime;
+        } elseif (!is_null($totalTime)) {
+            $result = $totalTime;
+        } else {
+            $result = $sessionTime;
+        }
 
-        return $total + $session;
+        return $result;
     }
 
     private function persistBestScore(
@@ -490,6 +495,12 @@ class ActivityManager
     {
         $this->updatePastEvaluation($evaluation);
         $this->om->persist($evaluation);
+        $this->om->flush();
+    }
+
+    public function editPastEvaluation(PastEvaluation $pastEvaluation)
+    {
+        $this->om->persist($pastEvaluation);
         $this->om->flush();
     }
 
@@ -552,7 +563,7 @@ class ActivityManager
      *****************************************/
 
     public function getActivityByWorkspace(
-        AbstractWorkspace $workspace,
+        Workspace $workspace,
         $executeQuery = true
     )
     {

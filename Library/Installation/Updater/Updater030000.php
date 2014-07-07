@@ -35,6 +35,7 @@ class Updater030000
         $this->updateTools();
         $this->removePublicProfilePreference();
         $this->updateAdminPluginTool();
+        $this->cleanWeb();
     }
 
     public function setLogger($logger)
@@ -147,17 +148,30 @@ class Updater030000
         $this->om->flush();
     }
 
+    private function cleanWeb()
+    {
+        $webDir = $this->container->getParameter('claroline.param.web_dir');
+
+        //remove the old maintenance file
+        if (file_exists($webDir . DIRECTORY_SEPARATOR . 'maintenance.html')) {
+            unlink($webDir . DIRECTORY_SEPARATOR . 'maintenance.html');
+        }
+    }
+
     private function removePublicProfilePreference()
     {
         $conn = $this->om->getConnection();
         $sm = $conn->getSchemaManager();
-        $fromSchema = $sm->createSchema();
-        $toSchema = clone $fromSchema;
-        $toSchema->dropTable('claro_user_public_profile_preferences');
-        $sql = $fromSchema->getMigrateToSql($toSchema, $conn->getDatabasePlatform());
-        $stmt = $conn->prepare($sql[0]);
-        $stmt->execute();
-        $stmt->closeCursor();
+
+        if ($sm->tablesExist(array('claro_user_public_profile_preferences')) == true) {
+            $fromSchema = $sm->createSchema();
+            $toSchema = clone $fromSchema;
+            $toSchema->dropTable('claro_user_public_profile_preferences');
+            $sql = $fromSchema->getMigrateToSql($toSchema, $conn->getDatabasePlatform());
+            $stmt = $conn->prepare($sql[0]);
+            $stmt->execute();
+            $stmt->closeCursor();
+        }
     }
 
     private function setIcons()

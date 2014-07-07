@@ -13,7 +13,7 @@ namespace Claroline\CoreBundle\Library\Security\Voter;
 
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
-use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Symfony\Component\Translation\Translator;
 use Claroline\CoreBundle\Manager\MaskManager;
 use Claroline\CoreBundle\Library\Security\Utilities;
@@ -224,7 +224,7 @@ class ResourceVoter implements VoterInterface
      * @param $type
      * @param ResourceNode $node
      * @param TokenInterface $token
-     * @param \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace $workspace
+     * @param \Claroline\CoreBundle\Entity\Workspace\Workspace $workspace
      *
      * @return array
      */
@@ -232,7 +232,7 @@ class ResourceVoter implements VoterInterface
         $type,
         ResourceNode $node,
         TokenInterface $token,
-        AbstractWorkspace $workspace
+        Workspace $workspace
     )
     {
         $errors = array();
@@ -330,7 +330,7 @@ class ResourceVoter implements VoterInterface
             );
     }
 
-    public function isWorkspaceManager(AbstractWorkspace $workspace, TokenInterface $token)
+    public function isWorkspaceManager(Workspace $workspace, TokenInterface $token)
     {
         $managerRoleName = 'ROLE_WS_MANAGER_' . $workspace->getGuid();
 

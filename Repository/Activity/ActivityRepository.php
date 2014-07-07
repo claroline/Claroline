@@ -11,13 +11,13 @@
 
 namespace Claroline\CoreBundle\Repository\Activity;
 
-use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Doctrine\ORM\EntityRepository;
 
 class ActivityRepository extends EntityRepository
 {
     public function findActivityByWorkspace(
-        AbstractWorkspace $workspace,
+        Workspace $workspace,
         $executeQuery = true
     )
     {

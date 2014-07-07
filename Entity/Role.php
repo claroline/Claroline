@@ -19,7 +19,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Claroline\CoreBundle\Library\Security\PlatformRoles;
 use Claroline\CoreBundle\Entity\Resource\ResourceRights;
-use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
 
 /**
  * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\RoleRepository")
@@ -128,7 +128,7 @@ class Role implements RoleInterface
 
     /**
      * @ORM\ManyToOne(
-     *     targetEntity="Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace",
+     *     targetEntity="Claroline\CoreBundle\Entity\Workspace\Workspace",
      *     inversedBy="roles"
      * )
      * @ORM\JoinColumn(onDelete="CASCADE")
@@ -266,7 +266,7 @@ class Role implements RoleInterface
         return $this->resourceRights;
     }
 
-    public function setWorkspace(AbstractWorkspace $ws = null)
+    public function setWorkspace(Workspace $ws = null)
     {
         $this->workspace = $ws;
     }

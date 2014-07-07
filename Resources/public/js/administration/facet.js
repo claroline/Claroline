@@ -109,7 +109,7 @@
             url: url,
             success: function(data, textStatus, jqXHR) {
                 window.Claroline.Modal.hide();
-                window.Claroline.Modal.create(data).on('click', 'button.btn', function(event) {
+                window.Claroline.Modal.simpleContainer('title', 'content').on('click', 'button.btn', function(event) {
                     event.preventDefault();
                     submitForm(formId, successHandler);
                 });

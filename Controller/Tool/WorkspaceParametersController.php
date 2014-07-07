@@ -21,7 +21,7 @@ use Symfony\Component\Security\Core\SecurityContextInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
-use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Entity\Tool\Tool;
 use Claroline\CoreBundle\Form\Factory\FormFactory;
 use Claroline\CoreBundle\Manager\WorkspaceManager;
@@ -96,11 +96,11 @@ class WorkspaceParametersController extends Controller
      *
      * @EXT\Template("ClarolineCoreBundle:Tool\workspace\parameters:template.html.twig")
      *
-     * @param AbstractWorkspace $workspace
+     * @param Workspace $workspace
      *
      * @return Response
      */
-    public function workspaceExportFormAction(AbstractWorkspace $workspace)
+    public function workspaceExportFormAction(Workspace $workspace)
     {
         $this->checkAccess($workspace);
         $form = $this->formFactory->create(FormFactory::TYPE_WORKSPACE_TEMPLATE);
@@ -120,11 +120,11 @@ class WorkspaceParametersController extends Controller
      *
      * @EXT\Template("ClarolineCoreBundle:Tool\workspace\parameters:template.html.twig")
      *
-     * @param AbstractWorkspace $workspace
+     * @param Workspace $workspace
      *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
-    public function workspaceExportAction(AbstractWorkspace $workspace)
+    public function workspaceExportAction(Workspace $workspace)
     {
         $this->checkAccess($workspace);
         $form = $this->formFactory->create(FormFactory::TYPE_WORKSPACE_TEMPLATE);
@@ -156,21 +156,21 @@ class WorkspaceParametersController extends Controller
      *
      * @EXT\Template("ClarolineCoreBundle:Tool\workspace\parameters:workspaceEdit.html.twig")
      *
-     * @param AbstractWorkspace $workspace
+     * @param Workspace $workspace
      *
      * @return Response
      */
-    public function workspaceEditFormAction(AbstractWorkspace $workspace)
+    public function workspaceEditFormAction(Workspace $workspace)
     {
         $user = $this->security->getToken()->getUser();
         $this->checkAccess($workspace);
-        $username = is_null( $workspace->getCreator()) ? '' : $workspace->getCreator()->getUsername(); 
+        $username = is_null( $workspace->getCreator()) ? '' : $workspace->getCreator()->getUsername();
         $creationDate = is_null(
-                            $workspace->getCreationDate()) ? 
+                            $workspace->getCreationDate()) ?
                             null : $this->utilities->intlDateFormat($workspace->getCreationDate());
         $count = $this->workspaceManager->countUsers($workspace->getId());
         $form = $this->formFactory->create(FormFactory::TYPE_WORKSPACE_EDIT, array($username, $creationDate, $count), $workspace);
-        
+
         if ($workspace->getSelfRegistration()) {
             $url = $this->router->generate(
                 'claro_workspace_subscription_url_generate',
@@ -199,11 +199,11 @@ class WorkspaceParametersController extends Controller
      *
      * @EXT\Template("ClarolineCoreBundle:Tool\workspace\parameters:workspaceEdit.html.twig")
      *
-     * @param AbstractWorkspace $workspace
+     * @param Workspace $workspace
      *
      * @return Response
      */
-    public function workspaceEditAction(AbstractWorkspace $workspace)
+    public function workspaceEditAction(Workspace $workspace)
     {
         if (!$this->security->isGranted('parameters', $workspace)) {
             throw new AccessDeniedException();
@@ -250,12 +250,12 @@ class WorkspaceParametersController extends Controller
      *     name="claro_workspace_tool_config"
      * )
      *
-     * @param AbstractWorkspace $workspace
+     * @param Workspace $workspace
      * @param Tool              $tool
      *
      * @return Response
      */
-    public function openWorkspaceToolConfig(AbstractWorkspace $workspace, Tool $tool)
+    public function openWorkspaceToolConfig(Workspace $workspace, Tool $tool)
     {
         $this->checkAccess($workspace);
         $event = $this->eventDispatcher->dispatch(
@@ -276,11 +276,11 @@ class WorkspaceParametersController extends Controller
      *
      * @EXT\Template("ClarolineCoreBundle:Tool\workspace\parameters:generate_url_subscription.html.twig")
      *
-     * @param AbstractWorkspace $workspace
+     * @param Workspace $workspace
      *
      * @return Response
      */
-    public function urlSubscriptionGenerateAction(AbstractWorkspace $workspace)
+    public function urlSubscriptionGenerateAction(Workspace $workspace)
     {
         $user = $this->security->getToken()->getUser();
 
@@ -312,12 +312,12 @@ class WorkspaceParametersController extends Controller
      *
      * @EXT\Template("ClarolineCoreBundle:Tool\workspace\parameters:generate_url_subscription_anonymous.html.twig")
      *
-     * @param AbstractWorkspace $workspace
+     * @param Workspace $workspace
      *
      * @throws \Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException
      * @return Response
      */
-    public function anonymousSubscriptionAction(AbstractWorkspace $workspace)
+    public function anonymousSubscriptionAction(Workspace $workspace)
     {
         if (!$workspace->getSelfRegistration()) {
             throw new AccessDeniedHttpException();
@@ -342,7 +342,7 @@ class WorkspaceParametersController extends Controller
         );
     }
 
-    private function checkAccess(AbstractWorkspace $workspace)
+    private function checkAccess(Workspace $workspace)
     {
         if (!$this->security->isGranted('parameters', $workspace)) {
             throw new AccessDeniedException();

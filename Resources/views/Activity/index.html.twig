@@ -14,16 +14,19 @@
 
             {% if evaluation.getStatus() == 'completed' or evaluation.getStatus() == 'passed' %}
                 {% set buttonType = 'btn-success' %}
+                {% set status = 'success' %}
             {% elseif evaluation.getStatus() == 'incomplete' or evaluation.getStatus() == 'failed' %}
                 {% set buttonType = 'btn-danger' %}
+                {% set status = 'failed' %}
             {% else %}
                 {% set buttonType = 'btn-default' %}
+                {% set status = 'undefined' %}
             {% endif %}
 
             <div id="display-activity-evaluation-btn"
-                class="btn {{ buttonType }}"
+                class="btn {{ buttonType }} {% if status == 'undefined' %}disabled{% endif %}"
                 data-activity-params-id="{{ activityParams.getId() }}"
-                {% if evaluation.getStatus() is not empty %}
+                {% if status == 'success' or status == 'failed' %}
                     data-container="#activity-btn-group"
                     data-toggle="tooltip"
                     data-placement="left"

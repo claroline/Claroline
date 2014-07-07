@@ -55,7 +55,7 @@ class WorkspaceManagerTest extends MockeryTestCase
         $this->workspaceFavouriteRepo = $this->mock('ClarolineCoreBundle\Repository\WorkspaceFavouriteRepository');
         $this->userRepo = $this->mock('Claroline\CoreBundle\Repository\UserRepository');
         $this->roleRepo = $this->mock('Claroline\CoreBundle\Repository\RoleRepository');
-        $this->workspaceRepo = $this->mock('Claroline\CoreBundle\Repository\AbstractWorkspaceRepository');
+        $this->workspaceRepo = $this->mock('Claroline\CoreBundle\Repository\WorkspaceRepository');
         $this->rightsRepo = $this->mock('Claroline\CoreBundle\Repository\ResourceRightsRepository');
         $this->strictDispatcher = $this->mock('Claroline\CoreBundle\Event\StrictDispatcher');
         $this->om = $this->mock('Claroline\CoreBundle\Persistence\ObjectManager');
@@ -104,7 +104,7 @@ class WorkspaceManagerTest extends MockeryTestCase
         $config->shouldReceive('getSelfUnregistration')->once()->andReturn(true);
         $this->ut->shouldReceive('generateGuid')->once()->andReturn('guid');
         $manager = $this->mock('Claroline\CoreBundle\Entity\User');
-        $workspace = $this->mock('Claroline\CoreBundle\Entity\Workspace\SimpleWorkspace');
+        $workspace = $this->mock('Claroline\CoreBundle\Entity\Workspace\Workspace');
         $workspace->shouldReceive('setName')->once()->with('wsname');
         $workspace->shouldReceive('setPublic')->once()->with(true);
         $workspace->shouldReceive('setCode')->once()->with('wscode');
@@ -131,7 +131,7 @@ class WorkspaceManagerTest extends MockeryTestCase
 
         $this->om->shouldReceive('startFlushSuite')->once();
         $this->om->shouldReceive('factory')->once()
-            ->with('Claroline\CoreBundle\Entity\Workspace\SimpleWorkspace')
+            ->with('Claroline\CoreBundle\Entity\Workspace\Workspace')
             ->andReturn($workspace);
         $this->roleManager->shouldReceive('initWorkspaceBaseRole')->once()
             ->with(array('ROLE_WS_MANAGER', 'ROLE_WS_VISITOR'), $workspace)->andReturn($baseRoles);
@@ -162,7 +162,7 @@ class WorkspaceManagerTest extends MockeryTestCase
 
     public function testCreateWorkspace()
     {
-        $workspace = $this->mock('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace');
+        $workspace = $this->mock('Claroline\CoreBundle\Entity\Workspace\Workspace');
         $this->om->shouldReceive('persist')->once()->with($workspace);
         $this->om->shouldReceive('flush')->once();
 
@@ -172,7 +172,7 @@ class WorkspaceManagerTest extends MockeryTestCase
     public function testDeleteWorkspace()
     {
         $root = new ResourceNode();
-        $workspace = $this->mock('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace');
+        $workspace = $this->mock('Claroline\CoreBundle\Entity\Workspace\Workspace');
         $this->resourceManager->shouldReceive('getWorkspaceRoot')->andReturn($root);
         $this->resourceManager->shouldReceive('delete')->with($root)->once();
         $this->om->shouldReceive('remove')->once()->with($workspace);
@@ -192,7 +192,7 @@ class WorkspaceManagerTest extends MockeryTestCase
             )
         );
 
-        $workspace = new \Claroline\CoreBundle\Entity\Workspace\SimpleWorkspace;
+        $workspace = new \Claroline\CoreBundle\Entity\Workspace\Workspace;
         $configName = 'configname';
         $archive = $this->mock('ZipArchive');
 
@@ -231,7 +231,7 @@ class WorkspaceManagerTest extends MockeryTestCase
         $expectedResult['roles']['ROLE_WS_TEST1'] = 'translationrole1';
         $expectedResult['roles']['ROLE_WS_TEST2'] = 'translationrole2';
 
-        $workspace = new \Claroline\CoreBundle\Entity\Workspace\SimpleWorkspace();
+        $workspace = new \Claroline\CoreBundle\Entity\Workspace\Workspace();
         $roleA = $this->mock('Claroline\CoreBundle\Entity\Role');
         $roleA->shouldReceive('getName')->once()->andReturn('ROLE_WS_TEST1_AAA');
         $roleA->shouldReceive('getTranslationKey')->once()->andReturn('translationrole1');
@@ -283,7 +283,7 @@ class WorkspaceManagerTest extends MockeryTestCase
                 )
         );
 
-        $workspace = new \Claroline\CoreBundle\Entity\Workspace\SimpleWorkspace();
+        $workspace = new \Claroline\CoreBundle\Entity\Workspace\Workspace();
         $resourceType = new \Claroline\CoreBundle\Entity\Resource\ResourceType();
         $root = $this->mock('Claroline\CoreBundle\Entity\Resource\ResourceNode');
         $root->shouldReceive('getResourceType')->andReturn($resourceType);
@@ -328,7 +328,7 @@ class WorkspaceManagerTest extends MockeryTestCase
                 )
         );
 
-        $workspace = new \Claroline\CoreBundle\Entity\Workspace\SimpleWorkspace();
+        $workspace = new \Claroline\CoreBundle\Entity\Workspace\Workspace();
         $wotA = $this->mock('Claroline\CoreBundle\Entity\Tool\OrderedTool');
         $wotB = $this->mock('Claroline\CoreBundle\Entity\Tool\OrderedTool');
         $toolA = $this->mock('Claroline\CoreBundle\Entity\Tool\Tool');
@@ -370,7 +370,7 @@ class WorkspaceManagerTest extends MockeryTestCase
             )
         );
 
-        $workspace = new \Claroline\CoreBundle\Entity\Workspace\SimpleWorkspace();
+        $workspace = new \Claroline\CoreBundle\Entity\Workspace\Workspace();
         $archive = $this->mock('ZipArchive');
 
         $wotA = $this->mock('Claroline\CoreBundle\Entity\Tool\OrderedTool');
@@ -629,8 +629,8 @@ class WorkspaceManagerTest extends MockeryTestCase
 
     public function testGetDisplayableWorkspacesBySearchPager()
     {
-        $workspaceA = $this->mock('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace');
-        $workspaceB = $this->mock('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace');
+        $workspaceA = $this->mock('Claroline\CoreBundle\Entity\Workspace\Workspace');
+        $workspaceB = $this->mock('Claroline\CoreBundle\Entity\Workspace\Workspace');
         $workspaces = array($workspaceA, $workspaceB);
 
         m::getConfiguration()->allowMockingNonExistentMethods(true);
@@ -655,7 +655,7 @@ class WorkspaceManagerTest extends MockeryTestCase
     public function testAddUserAction()
     {
         $user = new User();
-        $workspace = $this->mock('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace');
+        $workspace = $this->mock('Claroline\CoreBundle\Entity\Workspace\Workspace');
         $role = new Role();
         $userManager = $this->mock('Claroline\CoreBundle\Manager\UserManager');
 
@@ -708,7 +708,7 @@ class WorkspaceManagerTest extends MockeryTestCase
             ->andReturn($this->roleRepo);
         $this->om->shouldReceive('getRepository')->with('ClarolineCoreBundle:Resource\ResourceRights')
             ->andReturn($this->resourceRightsRepo);
-        $this->om->shouldReceive('getRepository')->with('ClarolineCoreBundle:Workspace\AbstractWorkspace')
+        $this->om->shouldReceive('getRepository')->with('ClarolineCoreBundle:Workspace\Workspace')
             ->andReturn($this->workspaceRepo);
         $this->om->shouldReceive('getRepository')->with('ClarolineCoreBundle:User')
             ->andReturn($this->userRepo);
