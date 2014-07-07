@@ -5,3 +5,5 @@ plugin:
     - class: Claroline\ScormBundle\Entity\Scorm12Resource
       name: claroline_scorm_12
       icon: scorm_12_icon.png
+      activity_rules:
+        - action: resource-scorm_12-sco_result

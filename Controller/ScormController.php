@@ -349,21 +349,16 @@ class ScormController extends Controller
         $details['totalTime'] = $totalTimeInHundredth;
         $details['bestScore'] = $bestScore;
         $details['bestStatus'] = $bestStatus;
+        $details['result'] = $scoreRaw;
+        $details['resultMax'] = $scoreRaw;
 
-        $log = new LogScorm12ResultEvent(
-            "resource_scorm_12_sco_result",
-            $details,
-            null,
-            null,
-            $scormResource->getResourceNode(),
-            null,
-            $scormResource->getResourceNode()->getWorkspace(),
+
+        $event = new LogScorm12ResultEvent(
+            $scormResource,
             $user,
-            null,
-            null,
-            null
+            $details
         );
-        $this->eventDispatcher->dispatch('log', $log);
+        $this->eventDispatcher->dispatch('log', $event);
     }
 
     /**
