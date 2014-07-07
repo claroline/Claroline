@@ -68,3 +68,47 @@ Before:
 After:
 
     <icon class="fa fa-plus"/>
+
+
+Activity auto-evaluation
+------------------------
+
+It is possible to auto-evaluate an activity.
+For that, the badge rule system has been used.
+It has been simplified to only allow a defined list of actions depending on the primary resource of the activity.
+This list is determined via entity `ActivityRuleAction` that maps a `ResourceType` entity and an action.
+Action is the value of the `action` string field of entity `Log`.
+This list is defined by the developpers of the resource.
+A `activity_rules` option has to be added in the definition of a resource type in the `config.yml` file of a plugin
+if you want to allow auto-evaluation rules for this resource type.
+Plugin update will be necessary.
+
+
+See below an example of the `config.yml` of the `ClarolineForumBundle` plugin :
+ _________________________________________________________________
+|                                                                 |
+|    plugin:                                                      |
+|      has_options: false                                         |
+|      icon: res_forum.png                                        |
+|                                                                 |
+|      resources:                                                 |
+|        - class: Claroline\ForumBundle\Entity\Forum              |
+|          name: claroline_forum                                  |
+|          is_exportable: true                                    |
+|          icon: res_forum.png                                    |
+|          actions:                                               |
+|            - name: post                                         |
+|            - name: moderate                                     |
+|          default_rights:                                        |
+|            - name: open                                         |
+|            - name: post                                         |
+|-----------------------------------------------------------------|
+|          activity_rules:                                        |
+|            - action: resource-read                              |
+|            - action: resource-claroline_forum-create_message    |
+|-----------------------------------------------------------------|
+|      widgets:                                                   |
+|         - name: claroline_forum_widget                          |
+|           is_configurable: false                                |
+|_________________________________________________________________|
+
