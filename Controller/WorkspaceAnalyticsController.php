@@ -330,6 +330,7 @@ class WorkspaceAnalyticsController extends Controller
                 if (!is_null($scoreMax)) {
                     $ruleScore .= ' / ' . $scoreMax;
                 }
+
                 $ruleResultVisible = $rule->getIsResultVisible();
                 $isResultVisible = !empty($ruleResultVisible);
             }

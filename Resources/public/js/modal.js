@@ -90,7 +90,7 @@
      */
     modal.simpleContainer = function (title, content)
     {
-        modal.create(
+        return modal.create(
             common.createElement('div', 'modal-dialog').html(
                 common.createElement('div', 'modal-content').append(
                     common.createElement('div', 'modal-header')

@@ -22,7 +22,6 @@ use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\Group;
 use Doctrine\ORM\Query;
-use Claroline\CoreBundle\Persistence\MissingObjectException;
 
 class UserRepository extends EntityRepository implements UserProviderInterface
 {
@@ -96,8 +95,8 @@ class UserRepository extends EntityRepository implements UserProviderInterface
         if (!$executeQuery) {
             $order = $order === 'DESC' ? 'DESC' : 'ASC';
             $dql = "
-                SELECT u, r, g from Claroline\CoreBundle\Entity\User u
-                JOIN u.roles r
+                SELECT u, pws, g, r, rws from Claroline\CoreBundle\Entity\User u
+                LEFT JOIN u.personalWorkspace pws
                 LEFT JOIN u.groups g
                 LEFT JOIN r.workspace rws
                 WHERE u.isEnabled = true
@@ -438,22 +437,21 @@ class UserRepository extends EntityRepository implements UserProviderInterface
      * @param array $usernames
      *
      * @return User[]
-     *
-     * @throws MissingObjectException if one or more users cannot be found
      */
     public function findByUsernames(array $usernames)
     {
-        $dql = '
-            SELECT u FROM Claroline\CoreBundle\Entity\User u
-            WHERE u.username IN (:usernames)
-            AND u.isEnabled = true
-        ';
-        $query = $this->_em->createQuery($dql);
-        $query->setParameter('usernames', $usernames);
-        $result = $query->getResult();
+        if (count($usernames) > 0) {
+            $dql = '
+                SELECT u FROM Claroline\CoreBundle\Entity\User u
+                WHERE u.isEnabled = true
+                AND u.username IN (:usernames)
+            ';
 
-        if (($userCount = count($result)) !== ($usernameCount = count($usernames))) {
-            throw new MissingObjectException("{$userCount} out of {$usernameCount} users were found");
+            $query = $this->_em->createQuery($dql);
+            $query->setParameter('usernames', $usernames);
+            $result = $query->getResult();
+        } else {
+            $result = array();
         }
 
         return $result;
