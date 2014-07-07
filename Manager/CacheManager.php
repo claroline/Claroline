@@ -62,6 +62,18 @@ class CacheManager {
         return $return ? $return: false;
     }
 
+    public function getParameters()
+    {
+        return $this->cacheExists() ? parse_ini_file($this->cachePath): [];
+    }
+
+    public function edit($parameter, $value)
+    {
+        $values = $this->getParameters();
+        $values['is_mailer_available'] = $value;
+        $this->writeCache($values);
+    }
+
     /**
      * Refresh the claroline cache
      */
@@ -69,7 +81,7 @@ class CacheManager {
     {
         $this->removeCache();
         $event = $this->eventManager->dispatch('refresh_cache', 'RefreshCache');
-        $this->writeIniFile($event->getParameters(), $this->cachePath);
+        $this->writeCache($event->getParameters());
     }
 
     /**
@@ -96,7 +108,7 @@ class CacheManager {
      *
      * @throws \Exception
      */
-    private function writeIniFile(array $parameters, $iniFile)
+    public function writeCache(array $parameters)
     {
         $content = '';
 
@@ -104,9 +116,8 @@ class CacheManager {
             $content .= "{$key} = {$value}\n";
         }
 
-        if (!file_put_contents($iniFile, $content)) {
+        if (!file_put_contents($this->cachePath, $content)) {
             throw new \Exception("The claroline cache couldn't be created");
         }
-
     }
 } 
