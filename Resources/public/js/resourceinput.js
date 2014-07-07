@@ -60,6 +60,7 @@
             }
 
             if ($(this).data('restrict-for-owner')) {
+                customParameters = customParameters || {};
                 customParameters['restrictForOwner'] = $(this).data('restrict-for-owner');
             }
 
