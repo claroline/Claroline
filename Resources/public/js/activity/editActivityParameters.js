@@ -16,6 +16,7 @@
         
         if (evaluationType === 'automatic') {
             $('#activity-rule-form-div').show('slow', function () {
+                $(this).removeClass('hidden')
             });
         } else {
             $('#activity-rule-form-div').hide('slow', function () {

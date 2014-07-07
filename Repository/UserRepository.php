@@ -22,7 +22,6 @@ use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\Group;
 use Doctrine\ORM\Query;
-use Claroline\CoreBundle\Persistence\MissingObjectException;
 
 class UserRepository extends EntityRepository implements UserProviderInterface
 {
@@ -216,7 +215,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface
         if (!$executeQuery) {
             $order = $order === 'DESC' ? 'DESC' : 'ASC';
             $dql = "
-                SELECT u, pws, g, r , rws , up from Claroline\CoreBundle\Entity\User u
+                SELECT u, pws, g, r ,rws from Claroline\CoreBundle\Entity\User u
                 LEFT JOIN u.personalWorkspace pws
                 LEFT JOIN u.groups g
                 LEFT JOIN u.roles r
@@ -644,34 +643,21 @@ class UserRepository extends EntityRepository implements UserProviderInterface
      * @param array $usernames
      *
      * @return User[]
-     *
-     * @throws MissingObjectException if one or more users cannot be found
      */
     public function findByUsernames(array $usernames)
     {
-        $usernameCount = count($usernames);
-        $firstUsername = array_pop($usernames);
-        $dql = '
-            SELECT u FROM Claroline\CoreBundle\Entity\User u
-            WHERE u.username = :user_first
-            AND u.isEnabled = true
-        ';
+        if (count($usernames) > 0) {
+            $dql = '
+                SELECT u FROM Claroline\CoreBundle\Entity\User u
+                WHERE u.isEnabled = true
+                AND u.username IN (:usernames)
+            ';
 
-        foreach ($usernames as $key => $username) {
-            $dql .= " OR u.username = :user_{$key}" . PHP_EOL;
-        }
-
-        $query = $this->_em->createQuery($dql);
-        $query->setParameter('user_first', $firstUsername);
-
-        foreach ($usernames as $key => $username) {
-            $query->setParameter('user_' . $key, $username);
-        }
-
-        $result = $query->getResult();
-
-        if (($userCount = count($result)) !== $usernameCount) {
-            throw new MissingObjectException("{$userCount} out of {$usernameCount} users were found");
+            $query = $this->_em->createQuery($dql);
+            $query->setParameter('usernames', $usernames);
+            $result = $query->getResult();
+        } else {
+            $result = array();
         }
 
         return $result;
@@ -801,10 +787,9 @@ class UserRepository extends EntityRepository implements UserProviderInterface
     {
         $order = $order === 'DESC' ? 'DESC' : 'ASC';
         $dql = "
-            SELECT u, r1, g, r2, ws, up From Claroline\CoreBundle\Entity\User u
+            SELECT u, r1, g, r2, ws From Claroline\CoreBundle\Entity\User u
             LEFT JOIN u.roles r1
             LEFT JOIN u.personalWorkspace ws
-            JOIN u.publicProfilePreferences up
             LEFT JOIN u.groups g
             LEFT JOIN g.roles r2
             WHERE r1 in (:roles)
@@ -832,11 +817,10 @@ class UserRepository extends EntityRepository implements UserProviderInterface
     )
     {
         $dql = "
-            SELECT u, r1, g, r2, ws, up
+            SELECT u, r1, g, r2, ws
             From Claroline\CoreBundle\Entity\User u
             LEFT JOIN u.roles r1
             LEFT JOIN u.personalWorkspace ws
-            JOIN u.publicProfilePreferences up
             LEFT JOIN u.groups g
             LEFT JOIN g.roles r2
             WHERE r1 in (:roles)

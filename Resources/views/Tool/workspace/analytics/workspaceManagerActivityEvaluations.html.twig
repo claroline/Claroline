@@ -17,7 +17,10 @@
 {% from _self import renderPager %}
 
 {% block analytics %}
-    <div id="activity-evaluations">
+    <div id="activity-evaluations"
+        data-workspace-id="{{ workspace.getId() }}"
+        data-activity-parameters-id="{{ activityParams.getId() }}"
+    >
         <a href="{{ path(
             'claro_workspace_activities_evaluations_show',
             {'workspaceId': workspace.getId()})
@@ -247,6 +250,27 @@
                         value="{{ 'cancel'|trans({}, 'platform') }}"
                     />
                     <input id="activity-evaluation-edition-validate-btn"
+                        type="button"
+                        class="btn btn-primary"
+                        value="{{ 'ok'|trans({}, 'platform') }}"
+                    />
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="activity-past-evaluation-edition-modal-box" class="modal fade" role="dialog" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div id="activity-past-evaluation-edition-modal-body" class="modal-body">
+                </div>
+                <div class="modal-footer">
+                    <input id="activity-past-evaluation-edition-cancel-btn"
+                        type="button"
+                        class="btn btn-default"
+                        value="{{ 'cancel'|trans({}, 'platform') }}"
+                    />
+                    <input id="activity-past-evaluation-edition-validate-btn"
                         type="button"
                         class="btn btn-primary"
                         value="{{ 'ok'|trans({}, 'platform') }}"
