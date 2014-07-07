@@ -1,11 +1,11 @@
 author: Author
-back_to: Back to
-back_to_categories: Back to categories
 category: Category
 category_form_name: Category
 edit_message: Edit a message
 field_content_required: Content field is required.
 forum: Forum
+forum_back_to_categories: Back to forums
+forum_back_to_subjects: Back to subjects
 forum_category_edit: 'Edit category'
 forum_form_name: Name
 forum_message_form_content: Content
@@ -20,19 +20,21 @@ forum_subject_form_message: Message
 forum_subject_form_message_content: Content
 forum_subject_title_form_title: Title
 last_message: Last post
-messages: Messages
-messages_per_page: Messages per page
-move_message: Move a message
+messages: Posts
+messages_per_page: Posts per page
+move_message: Move a post
 move_subject: Move a subject
 move_to: Move to
 new_category: New category
-new_message: Answer
+new_message: New post
 new_subject: New topic
 notifications: Notifications
+posts: Posts
 remove_category_confirm_message: Are you sure you want to delete this category ?
 remove_subject_confirm_message: Are you sure you want to delete this post ?
 remove_subjects_confirm_message: Are you sure you want to delete these %count% topic(s) ?
-responses: Answers
+reply: Reply
+reply_message: Reply to a post
 started_by: Initiated by
 stick: Stick
 stuck: Stuck
@@ -43,3 +45,4 @@ unstick: Unstick
 unsubscribe_mail_list: Unsubscribe from notifications
 yes: Yes
 no: No
+notifications_activated_message: The forum notifications are activated

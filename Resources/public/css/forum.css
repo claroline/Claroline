@@ -1,8 +1,13 @@
 ul.move-subject-dropdown {
-    max-height: 200px; 
+    max-height: 200px;
     overflow: auto;
 }
 
 #subjects-table-container {
     overflow: visible;
+}
+
+.original-poster {
+    font-style: italic;
+    margin-bottom: 16px;
 }

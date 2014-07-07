@@ -23,14 +23,20 @@
                 </a>
                 {% endif %}
                 {% if is_mailer_available() %}
-                    {% if hasSubscribed %}
-                        <a class="btn btn-primary" href="{{ _path('claro_forum_unsubscribe', {'forum': _resource.getId()}) }}">
-                            {{ 'unsubscribe_mail_list'|trans({}, 'forum') }}
-                        </a>
+                    {% if _resource.getActivateNotifications() %}
+                        <span class="alert alert-warning">
+                            {{ 'notifications_activated_message'|trans({}, 'forum') }}
+                        </span>
                     {% else %}
-                        <a class="btn btn-primary" href="{{ _path('claro_forum_subscribe', {'forum': _resource.getId()}) }}">
-                            {{ 'subscribe_mail_list'|trans({}, 'forum') }}
-                        </a>
+                        {% if hasSubscribed %}
+                            <a class="btn btn-primary" href="{{ _path('claro_forum_unsubscribe', {'forum': _resource.getId()}) }}">
+                                {{ 'unsubscribe_mail_list'|trans({}, 'forum') }}
+                            </a>
+                        {% else %}
+                            <a class="btn btn-primary" href="{{ _path('claro_forum_subscribe', {'forum': _resource.getId()}) }}">
+                                {{ 'subscribe_mail_list'|trans({}, 'forum') }}
+                            </a>
+                        {% endif %}
                     {% endif %}
                 {% endif %}
             </div>

@@ -1,11 +1,11 @@
 author: Auteur
-back_to: Retour à
-back_to_categories: Retour aux catégories
 category: Catégorie
 category_form_name: Catégorie
 edit_message: Éditer un message
 field_content_required: Le champ contenu est requis.
 forum: Forum
+forum_back_to_categories: Retour à la liste des forums
+forum_back_to_subjects: Retour aux sujets
 forum_category_edit: 'Modifier la catégorie'
 forum_settings: Paramètres du forum
 forum_subject_edit: 'Modifier le sujet'
@@ -27,12 +27,14 @@ move_subject: Déplacer un sujet
 move_to: Déplacer vers
 notifications: Notifications
 new_category: Ajouter une catégorie
-new_message: Répondre
+new_message: Nouveau message
 new_subject: Ajouter un sujet
+posts: Messages
 remove_category_confirm_message: Êtes vous sûr de vouloir supprimer cette catégorie ?
 remove_subject_confirm_message: Êtes vous sûr de vouloir supprimer ce sujet ?
 remove_subjects_confirm_message: Êtes vous sûr de vouloir supprimer ces %count% sujet(s) ?
-responses: Réponses
+reply: Répondre
+reply_message: Répondre à un message
 started_by: Initié par
 stick: Épingler
 stuck: Épinglé
@@ -43,3 +45,4 @@ unstick: Désépingler
 unsubscribe_mail_list: Ne plus recevoir les notifications
 yes: Oui
 no: Non
+notifications_activated_message: Les notifications du forum sont activées

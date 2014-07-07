@@ -38,7 +38,7 @@
 
 {% block stylesheets %}
     {{ parent() }}
-    <link rel='stylesheet' type='text/css' href='{{ asset('bundles/clarolineforum/css/subjects.css')}}'>
+    <link rel='stylesheet' type='text/css' href='{{ asset('bundles/clarolineforum/css/forum.css')}}'>
 {% endblock %}
 
 {% block section_content %}
@@ -49,7 +49,7 @@
         <div class="navbar row">
             <div class="col-md-9">
                 <a class="btn btn-default" href="{{ path('claro_forum_categories', { 'forum': category.getForum().getId() }) }}">
-                    <i class="icon-chevron-left"></i> {{ 'back_to_categories'|trans({}, 'forum') }}
+                    <i class="icon-chevron-left"></i> {{ 'forum_back_to_categories'|trans({}, 'forum') }}
                 </a>
                 {% if canCreateSubject %}
                     <a class="btn btn-primary" href="{{ _path('claro_forum_form_subject_creation', {'category': category.getId()}) }}">
@@ -96,11 +96,11 @@
                                 {% endif %}
                                 {% if subject['is_closed'] == true %}
 									<a href="{{ path('claro_subject_open', {'subject': subject['id']}) }}">
-                                        <i class="icon-eye-close"></i> {{ 'close' | trans({}, 'platform') }}
+                                        <i class="icon-eye-close"></i> {{ 'open' | trans({}, 'platform') }}
                                     </a>
                                 {% else %}
                                     <a href="{{ path('claro_subject_close', {'subject': subject['id']}) }}">
-                                        <i class="icon-eye-open"></i> {{ 'open' | trans({}, 'platform') }}
+                                        <i class="icon-eye-open"></i> {{ 'close' | trans({}, 'platform') }}
                                     </a>
                                 {% endif %}
                             {% else %}

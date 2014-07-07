@@ -59,6 +59,7 @@ class Manager
     private $subjectRepo;
     private $messageRepo;
     private $forumRepo;
+    private $userRepo;
     private $messageManager;
     private $translator;
     private $router;
@@ -99,6 +100,7 @@ class Manager
         $this->subjectRepo = $om->getRepository('ClarolineForumBundle:Subject');
         $this->messageRepo = $om->getRepository('ClarolineForumBundle:Message');
         $this->forumRepo = $om->getRepository('ClarolineForumBundle:Forum');
+        $this->userRepo = $om->getRepository('ClarolineCoreBundle:User');
         $this->dispatcher = $dispatcher;
         $this->messageManager = $messageManager;
         $this->translator = $translator;
@@ -185,6 +187,8 @@ class Manager
     /**
      * @param \Claroline\ForumBundle\Entity\Message $message
      *
+     * @param \Claroline\ForumBundle\Entity\Subject $subject
+     * @throws \Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException
      * @return \Claroline\ForumBundle\Entity\Message
      */
     public function createMessage(Message $message, Subject $subject)
@@ -265,11 +269,26 @@ class Manager
     public function sendMessageNotification(Message $message, User $user)
     {
         $forum = $message->getSubject()->getCategory()->getForum();
-        $notifications = $this->notificationRepo->findBy(array('forum' => $forum));
-        $users = array();
 
-        foreach ($notifications as $notification) {
-            $users[] = $notification->getUser();
+        if ($forum->getActivateNotifications()) {
+            $relevantRoles = [];
+            $rights = $forum->getResourceNode()->getRights();
+
+            foreach ($rights as $right) {
+                //can open
+                if ($right->getMask() & 1) {
+                    $relevantRoles[] = $right->getRole();
+                }
+            }
+
+            $users = $this->userRepo->findByRoles($relevantRoles);
+        } else {
+            $notifications = $this->notificationRepo->findBy(array('forum' => $forum));
+            $users = array();
+
+            foreach ($notifications as $notification) {
+                $users[] = $notification->getUser();
+            }
         }
 
         $title = $this->translator->trans(
@@ -538,11 +557,21 @@ class Manager
         return $newForum;
     }
 
-    public function replyMessage(Message $message,Message $oldMessage)
+    public function replyMessage(Message $message, Message $oldMessage)
     {
-    	$html = '<div class="well">'.$oldMessage->getContent().'</div>'.$message->getContent();
-        $message = new Message();
-        $message->setContent($html);
+        // todo: this should be in a template...
+        $mask = '<div class="well"><div class="original-poster">%s :</div>%s</div>%s';
+        $oldAuthor = $oldMessage->getCreator()->getFirstName()
+            . ' '
+            . $oldMessage->getCreator()->getLastName();
+        $message->setContent(
+            sprintf(
+                $mask,
+                $oldAuthor,
+                $oldMessage->getContent(),
+                $message->getContent()
+            )
+        );
         $this->createMessage($message, $oldMessage->getSubject());
     }
 }

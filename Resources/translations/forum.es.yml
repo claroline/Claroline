@@ -1,11 +1,11 @@
 author: Autor
-back_to: 'Volver a'
-back_to_categories: 'volver a las categorías'
 category: Categoría
 category_form_name: Categoría
 edit_message: 'Editar un mensaje'
 field_content_required: 'Se requiere campo Contenido.'
 forum: Foro
+forum_back_to_categories: Volver a los foros
+forum_back_to_subjects: Volver a las temas
 forum_category_edit: 'Editar una categoría'
 forum_form_name: Nombre
 forum_message_form_content: Cotenido
@@ -25,13 +25,15 @@ move_message: 'Mover un mensaje'
 move_subject: 'Mover un tema'
 move_to: 'Mover a'
 new_category: 'Nueva categoría'
-new_message: Responder
+new_message: Nuevo mensaje
 new_subject: 'Nuevo tema'
 notifications: Notificaciones
+posts: Respuestas
 remove_category_confirm_message: '¿Está seguro de que desea eliminar esta categoría?'
 remove_subject_confirm_message: '¿Está seguro que quiere borrar este mensaje?'
 remove_subjects_confirm_message: '¿Está seguro que desea eliminar %count% tema(s)?'
-responses: Respuestas
+reply: Responder
+reply_message: Responder al mensaje
 started_by: 'Iniciado por'
 stick: Anclar
 stuck: Anclado
@@ -42,3 +44,4 @@ unstick: Desanclar
 unsubscribe_mail_list: 'Desinscribirse a las notificaciones'
 yes: sí
 no: no
+notifications_activated_message: Las notificaciones del foro están activadas
