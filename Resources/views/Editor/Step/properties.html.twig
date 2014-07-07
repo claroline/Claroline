@@ -24,8 +24,12 @@
             {# Who #}
             <div class="form-group">
                 <label class="control-label col-md-4" for="step-who">{{ 'step_who'|trans({}, 'path_editor') }}</label>
-                <div class="col-md-6">
-                    <select class="form-control" id="step-who" name="step-who" data-ng-change="updateHistory()" data-ng-model="previewStep.who" data-ng-options="k as v for (k,v) in whoList">
+                <div class="col-md-8">
+                    <select class="form-control" id="step-who" name="step-who" data-ng-change="updateHistory()" data-ng-model="previewStep.who">
+                        <option value=""></option>
+                        <option value="individual">{{ 'individual'|trans({}, 'platform') }}</option>
+                        <option value="collaborative">{{ 'collaborative'|trans({}, 'platform') }}</option>
+                        <option value="mixed">{{ 'mixed'|trans({}, 'platform') }}</option>
                     </select>
                 </div>
             </div>
@@ -33,8 +37,11 @@
             {# Where #}
             <div class="form-group">
                 <label class="control-label col-md-4" for="step-where">{{ 'step_where'|trans({}, 'path_editor') }}</label>
-                <div class="col-md-6">
-                    <select class="form-control" id="step-where" name="step-where" data-ng-change="updateHistory()" data-ng-model="previewStep.where" data-ng-options="k as v for (k,v) in whereList">
+                <div class="col-md-8">
+                    <select class="form-control" id="step-where" name="step-where" data-ng-change="updateHistory()" data-ng-model="previewStep.where">
+                        <option value=""></option>
+                        <option value="classroom">{{ 'classroom'|trans({}, 'platform') }}</option>
+                        <option value="anywhere">{{ 'anywhere'|trans({}, 'platform') }}</option>
                     </select>
                 </div>
             </div>
