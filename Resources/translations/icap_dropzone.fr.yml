@@ -319,7 +319,7 @@ You will be abble to do it later if you want: "note : Vous avez la possibilité 
 copy: "copie"
 Report reason: "Raison"
 Reported copy : "Copie signalée"
-Your modifications will only affect new corrections. For older, do you want to apply modification and recalculate grades: "Vos modifications vont affecter seulement les nouvelles corrections. Voulez vous appliquer ces modifications aux corrections déjà créées  et recalculer les notes déjà données ?"
+Your modifications will only affect new corrections. For older, do you want to apply modification and recalculate grades: "Vos modifications vont affecter seulement les nouvelles corrections. Voulez vous appliquer ces modifications aux corrections déjà créées  et recalculer les notes déjà données ? Cette opération peut prendre du temps."
 Validate copies: "Valider les copies"
 Do nothing: "Ne rien faire pour ces copies"
 Help on peerReview mode: "Aide sur le mode d'évaluation par les pairs"
