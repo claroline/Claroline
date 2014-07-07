@@ -6,6 +6,7 @@ use Claroline\CoreBundle\Manager\MaskManager;
 use Claroline\CoreBundle\Entity\User;
 use Icap\DropzoneBundle\Entity\Correction;
 use Icap\DropzoneBundle\Entity\Dropzone;
+use Icap\DropzoneBundle\Event\Log\LogCorrectionUpdateEvent;
 use JMS\DiExtraBundle\Annotation as DI;
 
 /**
@@ -77,7 +78,7 @@ class CorrectionManager
             $currentDrop = $correction->getDrop();
             if ($currentDrop != null && $oldTotalGrade != $totalGrade) {
                 $event = new LogCorrectionUpdateEvent($dropzone, $currentDrop, $correction);
-                $this->get('event_dispatcher')->dispatch('log', $event);
+                $this->container->get('event_dispatcher')->dispatch('log', $event);
             }
         }
     }
