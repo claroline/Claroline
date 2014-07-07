@@ -25,6 +25,7 @@ messages_per_page: Messages par page
 move_message: Déplacer un message
 move_subject: Déplacer un sujet
 move_to: Déplacer vers
+notifications: Notifications
 new_category: Ajouter une catégorie
 new_message: Répondre
 new_subject: Ajouter un sujet
@@ -40,3 +41,5 @@ subjets_per_page: Sujets par page
 subscribe_mail_list: Recevoir les notifications
 unstick: Désépingler
 unsubscribe_mail_list: Ne plus recevoir les notifications
+yes: Oui
+no: Non

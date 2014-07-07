@@ -27,6 +27,7 @@ move_to: 'Mover a'
 new_category: 'Nueva categoría'
 new_message: Responder
 new_subject: 'Nuevo tema'
+notifications: Notificaciones
 remove_category_confirm_message: '¿Está seguro de que desea eliminar esta categoría?'
 remove_subject_confirm_message: '¿Está seguro que quiere borrar este mensaje?'
 remove_subjects_confirm_message: '¿Está seguro que desea eliminar %count% tema(s)?'
@@ -39,3 +40,5 @@ subjets_per_page: 'Temas por pagina'
 subscribe_mail_list: 'Suscríbase a las notificaciones'
 unstick: Desanclar
 unsubscribe_mail_list: 'Desinscribirse a las notificaciones'
+yes: sí
+no: no
