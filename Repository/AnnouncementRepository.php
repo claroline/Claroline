@@ -12,12 +12,12 @@
 namespace Claroline\AnnouncementBundle\Repository;
 
 use Claroline\AnnouncementBundle\Entity\AnnouncementAggregate;
-use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Doctrine\ORM\EntityRepository;
 
 class AnnouncementRepository extends EntityRepository
 {
-    public function findVisibleByWorkspace(AbstractWorkspace $workspace)
+    public function findVisibleByWorkspace(Workspace $workspace)
     {
         $dql = '
             SELECT a AS announcement
@@ -40,7 +40,7 @@ class AnnouncementRepository extends EntityRepository
         return $query->getResult();
     }
 
-    public function findVisibleByWorkspaceAndRoles(AbstractWorkspace $workspace, array $roles)
+    public function findVisibleByWorkspaceAndRoles(Workspace $workspace, array $roles)
     {
         $dql = '
             SELECT a AS announcement
