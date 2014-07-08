@@ -148,9 +148,9 @@
 
         {# Angular #}
         {% javascripts debug=true filter='jsmin' output='js/portfolio/angular.js'
-            '@IcapPortfolioBundle/Resources/public/js/vendor/angular.min.js'
-            '@IcapPortfolioBundle/Resources/public/js/vendor/angular-resource.min.js'
-            '@IcapPortfolioBundle/Resources/public/js/vendor/angular-sanitize.min.js'
+            '@IcapPortfolioBundle/Resources/public/js/vendor/angular/angular.min.js'
+            '@IcapPortfolioBundle/Resources/public/js/vendor/angular/angular-resource.min.js'
+            '@IcapPortfolioBundle/Resources/public/js/vendor/angular/angular-sanitize.min.js'
         %}
             <script type="text/javascript" src="{{ asset_url }}"></script>
         {% endjavascripts %}
