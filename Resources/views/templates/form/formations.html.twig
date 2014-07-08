@@ -4,11 +4,12 @@
         <input type="text" class="form-control" id="formation_name"
          name="icap_portfolio_widget_form_formations[formations][name]" data-ng-model="editedWidget.name" />
     </p>
-    <div class="input-daterange input-group" data-b-datepicker="{{ 'date_form_format'|trans({}, 'platform') }}" id="datepicker">
+    <p class="input-daterange input-group" data-b-datepicker="{{ 'datepicker_date_format'|trans({}, 'icap_portfolio') }}" id="datepicker">
+        <span class="input-group-addon">{{ 'date_range_from'|trans({}, 'icap_portfolio') }}</span>
         <input type="text" class="input-sm form-control" name="start" data-ng-model="editedWidget.startDate" />
-        <span class="input-group-addon">to</span>
+        <span class="input-group-addon">{{ 'date_range_to'|trans({}, 'icap_portfolio') }}</span>
         <input type="text" class="input-sm form-control" name="end" data-ng-model="editedWidget.endDate" />
-    </div>
+    </p>
     <p>
         <button type="button" data-ui-resource-picker="resourcePickerConfig">{{ 'formation_add_resource'|trans({}, 'icap_portfolio') }}</button>
     </p>

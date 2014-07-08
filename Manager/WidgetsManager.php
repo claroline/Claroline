@@ -167,6 +167,13 @@ class WidgetsManager
 
             return $data;
         }
+        echo "<pre>";
+        var_dump($form->getErrors());
+        echo "</pre>" . PHP_EOL;
+        echo "<pre>";
+        var_dump($form->getErrorsAsString());
+        echo "</pre>" . PHP_EOL;
+        die("FFFFFUUUUUCCCCCKKKKK" . PHP_EOL);
 
         throw new \InvalidArgumentException();
     }

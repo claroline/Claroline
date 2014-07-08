@@ -1,3 +1,4 @@
+datepicker_date_format: mm/dd/yyyy
 no_portfolios_create_one: 'You don''t have any portfolio yet.<br>You can <a href="%newPortfolioUrl%" title="Add a portfolio">create some</a> to show your skills.'
 updated_on: 'Updated on %date%'
 portfolio_deletion_confirm_title: 'Deletion of a portfolio'
@@ -54,3 +55,5 @@ formation_title: 'Title of the formation'
 formation_delete_resource: 'Delete the ressource'
 formation_cancel_deletion_resource: 'Cancel the deletion of the resource'
 formation_add_resource: 'Add some resources'
+date_range_from: 'From'
+date_range_to: 'to'
