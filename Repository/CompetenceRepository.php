@@ -81,4 +81,21 @@ class CompetenceRepository extends NestedTreeRepository {
 
         return $query->getResult();
     }
+
+    public function findFullHiearchyById(array $roots)
+    {
+        $dql = "
+        SELECT DISTINCT c
+        FROM Claroline\CoreBundle\Entity\Competence\Competence c
+        WHERE EXISTS
+            (
+                SELECT ch FROM Claroline\CoreBundle\Entity\Competence\CompetenceHierarchy ch
+                WHERE ch.root IN (:roots) AND ch.competence = c 
+            )
+        ";
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('roots', $roots);
+
+        return $query->getResult();
+    }
 } 

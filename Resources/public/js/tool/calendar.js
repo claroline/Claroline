@@ -147,7 +147,6 @@
                                     'type': 'GET',
                                     'success': function (data, textStatus, xhr) {
                                         $("#tasks").html(data);
-
                                     }
                                 });
                             }

@@ -229,6 +229,7 @@ class CompetenceController {
     public function competenceModifyAction($competence)
     {
 	 	$form = $this->formFactory->create(FormFactory::TYPE_COMPETENCE, array(), $competence->getCompetence());
+        $addForm = $this->formFactory->create(FormFactory::TYPE_COMPETENCE, array());
         $form->handleRequest($this->request);
         if ($form->isValid()) {
          	$this->cptmanager->updateCompetence($competence);
@@ -237,7 +238,8 @@ class CompetenceController {
         return array(
         	'form' => $form->createView(),
         	'cpt' => $competence,
-        	'route' => 'claro_admin_competence_modify'
+        	'route' => 'claro_admin_competence_modify',
+            'addForm' => $addForm->createView()
         );
     }
 

@@ -11,35 +11,21 @@
 
 namespace Claroline\CoreBundle\Library\Installation\Updater;
 
-use Claroline\CoreBundle\Persistence\ObjectManager;
-use Claroline\CoreBundle\Entity\Tool\AdminTool;
 use Claroline\CoreBundle\Entity\Activity\ActivityRuleAction;
+use Claroline\CoreBundle\Entity\Tool\AdminTool;
 
 class Updater030000
 {
     private $container;
-    private $logger;
-    private $oldCachePath;
-    private $newCachePath;
     private $icons;
+    private $logger;
     private $om;
-    /**
-     * @var ObjectManager
-     */
-    private $objectManager;
 
     public function __construct($container)
     {
-        $this->container     = $container;
-        $this->objectManager = $container->get('claroline.persistence.object_manager');
-        $ds = DIRECTORY_SEPARATOR;
-        $this->oldCachePath = $container
-                ->getParameter('kernel.root_dir') . $ds . 'cache' . $ds . 'claroline.cache.php';
-        $this->newCachePath = $container
-                ->getParameter('kernel.root_dir') . $ds . 'cache' . $ds . 'claroline.cache.ini';
+        $this->container = $container;
         $this->icons = $this->setIcons();
         $this->om = $container->get('claroline.persistence.object_manager');
-
     }
 
     public function postUpdate()
@@ -49,34 +35,6 @@ class Updater030000
         $this->updateTools();
         $this->updateAdminPluginTool();
         $this->updateCompetenceTools();
-        
-        $this->log('Updating cache...');
-        $this->container->get('claroline.manager.cache_manager')->refresh();
-        $this->log('Removing old cache...');
-
-        if (file_exists($this->oldCachePath)) {
-            unlink($this->oldCachePath);
-        }
-    }
-
-    private function updateCompetenceTools()
-    {
-    	$this->log('Creating admin referential competence tools...');
-        $existingTool = $this->objectManager->getRepository('ClarolineCoreBundle:Tool\AdminTool')->findByName('competence_referencial');
-
-        if (count($existingTool) === 0) {
-            $competenceReferencial = new AdminTool();
-            $competenceReferencial->setName('competence_referencial');
-            $competenceReferencial->setClass('graduation-cap');
-
-            $competenceSubscription = new AdminTool();
-            $competenceSubscription->setName('competence_subscription');
-            $competenceSubscription->setClass('code-fork');
-            $this->objectManager->persist($competenceReferencial);
-            $this->objectManager->persist($competenceSubscription);
-        }
-
-        $this->objectManager->flush();
     }
 
     public function setLogger($logger)
@@ -171,6 +129,31 @@ class Updater030000
         $tool->setClass($class);
         $this->om->persist($tool);
         $this->om->flush();
+    }
+
+    private function updateCompetenceTools()
+    {
+    	$this->log('Creating admin referential competence tools...');
+        $existingTool = $this->om->getRepository('ClarolineCoreBundle:Tool\AdminTool')->findByName('competence_referencial');
+
+        if (count($existingTool) === 0) {
+            $competenceReferencial = new AdminTool();
+            $competenceReferencial->setName('competence_referencial');
+            $competenceReferencial->setClass('graduation-cap');
+            $this->om->persist($competenceReferencial);
+        }
+
+        $existingTool = $this->om->getRepository('ClarolineCoreBundle:Tool\AdminTool')->findByName('competence_subscription');
+        if (count($existingTool) === 0) {    
+            $competenceSubscription = new AdminTool();
+            $competenceSubscription->setName('competence_subscription');
+            $competenceSubscription->setClass('code-fork');
+            $this->om->persist($competenceSubscription);
+        }
+        
+        $this->om->flush();
+        $this->log('competence tools created ...');
+        
     }
 
     private function setIcons()

@@ -24,7 +24,7 @@
         	<div id="tree">
 	        	<ul class="nav nav-pills nav-stacked">
 				{% for c in cpt %}
-				  <li class="">
+				  <li class="roots">
 				    <a href="{{path('claro_admin_competence_show_referential',{'competenceId':c.id})}}">
 				     {{c.name}}
 				    </a>
@@ -38,14 +38,13 @@
         </div>
     </div>
   
-
   <!-- Modal -->
   <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-          <h4 class="modal-title">Modal title</h4>
+          <h4 class="modal-title">{{'competence_add'|trans({},'competence')}} </h4>
         </div>
         <div class="modal-body">
 	         <form action="{{ path('claro_admin_competence_add') }}" method="POST" {{ form_enctype(form) }} id="myForm" > 
@@ -55,8 +54,8 @@
         	</form>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-          <button type="button" id='save' class="btn btn-primary">Save changes</button>
+          <button type="button" class="btn btn-default" data-dismiss="modal">{{'close'|trans({},'platform')}} </button>
+          <button type="button" id='save' class="btn btn-primary">{{'add'|trans({},'platform')}}</button>
         </div>
       </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->

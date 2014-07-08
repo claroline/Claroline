@@ -9,12 +9,12 @@
  * file that was distributed with this source code.
  */
 
-namespace Claroline\CoreBundle\Entity;
+namespace Claroline\CoreBundle\Entity\Competence;
 
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\CompetenceRepository")
+ * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\UserCompetenceRepository")
  * @ORM\Table(name="claro_competence_users",
  *     uniqueConstraints={
  *         @ORM\UniqueConstraint(
@@ -86,7 +86,6 @@ class UserCompetence {
         return $this->competence;
     }
 
-
     /**
      * @param mixed $user
      */
@@ -101,6 +100,22 @@ class UserCompetence {
     public function getUser()
     {
         return $this->user;
+    }
+
+    /**
+     * @param mixed $score
+     */
+    public function setScore($score)
+    {
+        $this->score = $score;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getScore()
+    {
+        return $this->score;
     }
 
 

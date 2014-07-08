@@ -22,6 +22,7 @@ class CompetenceType extends AbstractType
     {
         $builder
         	->add('name', 'text', array('constraints' => new NotBlank()))
+            ->add('code','text', array('constraints' => new NotBlank()))
             ->add('description', 'tinymce')
             ->add('score', 'text');
     }
@@ -33,6 +34,6 @@ class CompetenceType extends AbstractType
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
-        $resolver->setDefaults(array('translation_domain' => 'platform'));
+        $resolver->setDefaults(array('translation_domain' => 'competence'));
     }
 } 

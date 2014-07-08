@@ -14,6 +14,7 @@ namespace Claroline\CoreBundle\Manager;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Claroline\CoreBundle\Entity\Competence\Competence;
 use Claroline\CoreBundle\Entity\Competence\CompetenceHierarchy;
+use Claroline\CoreBundle\Entity\Competence\UserCompetence;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Claroline\CoreBundle\Repository\CompetenceRepository;
@@ -205,6 +206,58 @@ class CompetenceManager {
         $repo = $this->om->getRepository('ClarolineCoreBundle:Competence\CompetenceHierarchy');
         $exclude = $repo->excludeHierarchyNode($competence);
         return $exclude;
+    }
+    /**
+     * [subscribeUserToCompetences description]
+     * @param  $users       
+     * @param  $competences
+     * @return boolean             
+     */
+    public function subscribeUserToCompetences($users, $competences)
+    {
+        $this->om->startFlushSuite();
+        $tab = $this->subscribeUsersToChildren($competences);
+        foreach ($users as $u) {
+
+            foreach ($tab as $cpt) {
+                $cptUser = new UserCompetence();
+                $cptUser->setCompetence($cpt);
+                $cptUser->setUser($u);
+                $cptUser->setScore(0);
+                $this->om->persist($cptUser);
+            }
+        }
+        $this->om->endFlushSuite();
+        return true;
+    }
+
+    public function unsubscribeUserToCompetences($users , $competences)
+    {
+        
+    }
+
+    public function getCompetencesAssociateUsers()
+    {
+        $list = $this->om->getRepository('ClarolineCoreBundle:Competence\UserCompetence')->findAll(false, 'competence','asc');
+        $orderedList = array();
+        
+        foreach ($list as $cu ) {
+            if (!isset($orderedList[$cu->getCompetence()->getName()])) {  
+                $orderedList[$cu->getCompetence()->getName()] = array();  
+            }
+            $orderedList[$cu->getCompetence()->getName()][] = $cu->getUser()->getuserName();
+        }
+        return $orderedList;
+    }
+
+    private function subscribeUsersToChildren( array $roots)
+    {
+        $repo = $this->om->getRepository('ClarolineCoreBundle:Competence\CompetenceHierarchy');
+        $listCompetences = $repo->findFullHiearchyById($roots);
+        if(count($listCompetences) > 0) {
+            return $listCompetences;
+        }
+        return array();
     }
 
     private function checkUserIsAllowed($permission, AbstractWorkspace $workspace)

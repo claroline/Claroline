@@ -57,32 +57,25 @@ Class Competence  {
 	private $isPlatform;
 
     /**
-     * @param mixed $id
+     * @ORM\Column(type="string")
      */
+    private $code;
+
     public function setId($id)
     {
         $this->id = $id;
     }
 
-    /**
-     * @return mixed
-     */
     public function getId()
     {
         return $this->id;
     }
 
-    /**
-     * @param mixed $name
-     */
     public function setName($name)
     {
         $this->name = $name;
     }
 
-    /**
-     * @return mixed
-     */
     public function getName()
     {
         return $this->name;
@@ -128,28 +121,28 @@ Class Competence  {
         $this->workspace = $workspace;
     }
 
-    /**
-     * @return mixed
-     */
     public function getWorkspace()
     {
         return $this->workspace;
     }
 
-    /**
-     * @param mixed $isPlatform
-     */
     public function setIsPlatform($isPlatform)
     {
         $this->isPlatform = $isPlatform;
     }
 
-    /**
-     * @return mixed
-     */
     public function getIsPlatform()
     {
         return $this->isPlatform;
     }
-    
+
+    public function setCode($code) 
+    {
+        $this->code = $code;
+    }
+
+    public function getCode()
+    {
+        return $this->code;
+    }
 }

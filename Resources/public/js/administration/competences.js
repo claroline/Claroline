@@ -57,8 +57,8 @@
                 if (xhr.status === 200) {
                     $('#myModal').modal('hide');
                     $('#save').removeAttr('disabled');
-                    route = Routing.generate('claro_admin_competence_add_sub',{'competenceId': data.id});
-                    $('#tree').append('<li class=""><a href="'+route+'">'+data.name+'</a></li>');
+                    route = Routing.generate('claro_admin_competence_show_referential',{'competenceId': data.id});
+                    $('.nav-stacked').append('<li class=""><a href="'+route+'">'+data.name+'</a></li>');;
                 }
             },
             'error': function ( xhr, textStatus) {
@@ -80,8 +80,99 @@
 			'type': 'POST',
 			'data': {'competenceId':id },
 			'success': function(data) {
-				$('#tree .panel-body').append(data.tree);
+			   if($('#tree .panel-body').empty())
+			   {
+					$('#tree .panel-body').append(data.tree);
+			   }
 			}
-		})
+		});
 	});
+	/***************************** competences subscription **************************************/
+
+    $('#chkAll').click(function(event) {  //on click 
+        if(this.checked) { // check select status
+            $('.cpt').each(function() { //loop through each checkbox
+                this.checked = true;  //select all checkboxes with class "cpt"               
+            });
+            $('.cpt-button').removeAttr('disabled');
+        } else {
+            $('.cpt').each(function() { //loop through each checkbox
+                this.checked = false; //deselect all checkboxes with class "cpt"                       
+            });         
+        }
+    });
+
+    $('.cpt-button').click(function(){
+    	var parameters = {};
+    	var nbcpt = $('.cpt:checked').length;
+    	var competences = [];
+    	if (nbcpt > 0) {
+            $('.cpt:checked').each(function (i, element) {
+                competences[i] = element.value;
+                i++;
+        	});
+        	parameters.competences = competences;
+	    	var route  = Routing.generate('claro_admin_competence_subcription_users_form');
+	    	document.location.href = route+'?'+$.param(parameters);
+        } else {
+        	alert('no checkboxes selected');
+        }
+    });
+
+    $('.cpt').click(function(){
+        if ($('.cpt:checked').prop('checked')) {
+            $('.cpt-button').removeAttr('disabled');
+        } else {
+            $('.cpt-button').attr('disabled', 'disabled');
+        }
+    });
+
+	$('.subscribe-subjects-button').click(function () {
+        var parameters = {};
+        var route;
+        var i = 0;
+        var j = 0;
+        var k = 0;
+        var subjects = [];
+        var subjectType = $('#registration-list-div').attr('subject-type');
+        var nbSubjects = $('.chk-subject:checked').length;
+        var competences = [];
+
+        $('.cpt-users').each(function(i,element){
+            competences[i] = element.value;
+        });
+        parameters.competences = competences;
+        if (nbSubjects > 0) {
+            $('.chk-subject:checked').each(function (index, element) {
+                subjects[i] = element.value;
+                i++;
+            });
+            parameters.subjectIds = subjects;
+
+            if (subjectType === 'user') {
+                route = Routing.generate(
+                    'claro_admin_competence_subcription_users'
+                );
+            }
+            else {
+                route = Routing.generate(
+                    'claro_admin_subscribe_groups_to_one_workspace'
+                );
+            }
+            route += '?' + $.param(parameters);
+
+            $.ajax({
+                url: route,
+                statusCode: {
+                    200: function (data) {
+                        alert('ok');
+                    },
+                    type: 'POST'
+                }
+            });
+
+        }
+    });
+
+
 })();
