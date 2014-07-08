@@ -8,9 +8,9 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2014/07/04 08:52:48
+ * Generation date: 2014/07/08 11:18:14
  */
-class Version20140704085245 extends AbstractMigration
+class Version20140708111810 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
@@ -58,6 +58,19 @@ class Version20140704085245 extends AbstractMigration
         ");
         $this->addSql("
             CREATE INDEX IDX_35307C0A9F9239AF ON claro_field_facet_value (fieldFacet_id)
+        ");
+        $this->addSql("
+            CREATE TABLE claro_event_event_category (
+                event_id NUMBER(10) NOT NULL, 
+                eventcategory_id NUMBER(10) NOT NULL, 
+                PRIMARY KEY(event_id, eventcategory_id)
+            )
+        ");
+        $this->addSql("
+            CREATE INDEX IDX_858F0D4C71F7E88B ON claro_event_event_category (event_id)
+        ");
+        $this->addSql("
+            CREATE INDEX IDX_858F0D4C29E3B4B5 ON claro_event_event_category (eventcategory_id)
         ");
         $this->addSql("
             CREATE TABLE claro_facet (
@@ -522,6 +535,44 @@ class Version20140704085245 extends AbstractMigration
             CREATE INDEX IDX_6824A65EF7A2C2FC ON claro_activity_rule (badge_id)
         ");
         $this->addSql("
+            CREATE TABLE claro_event_category (
+                id NUMBER(10) NOT NULL, 
+                name VARCHAR2(255) NOT NULL, 
+                PRIMARY KEY(id)
+            )
+        ");
+        $this->addSql("
+            DECLARE constraints_Count NUMBER; BEGIN 
+            SELECT COUNT(CONSTRAINT_NAME) INTO constraints_Count 
+            FROM USER_CONSTRAINTS 
+            WHERE TABLE_NAME = 'CLARO_EVENT_CATEGORY' 
+            AND CONSTRAINT_TYPE = 'P'; IF constraints_Count = 0 
+            OR constraints_Count = '' THEN EXECUTE IMMEDIATE 'ALTER TABLE CLARO_EVENT_CATEGORY ADD CONSTRAINT CLARO_EVENT_CATEGORY_AI_PK PRIMARY KEY (ID)'; END IF; END;
+        ");
+        $this->addSql("
+            CREATE SEQUENCE CLARO_EVENT_CATEGORY_ID_SEQ START WITH 1 MINVALUE 1 INCREMENT BY 1
+        ");
+        $this->addSql("
+            CREATE TRIGGER CLARO_EVENT_CATEGORY_AI_PK BEFORE INSERT ON CLARO_EVENT_CATEGORY FOR EACH ROW DECLARE last_Sequence NUMBER; last_InsertID NUMBER; BEGIN 
+            SELECT CLARO_EVENT_CATEGORY_ID_SEQ.NEXTVAL INTO : NEW.ID 
+            FROM DUAL; IF (
+                : NEW.ID IS NULL 
+                OR : NEW.ID = 0
+            ) THEN 
+            SELECT CLARO_EVENT_CATEGORY_ID_SEQ.NEXTVAL INTO : NEW.ID 
+            FROM DUAL; ELSE 
+            SELECT NVL(Last_Number, 0) INTO last_Sequence 
+            FROM User_Sequences 
+            WHERE Sequence_Name = 'CLARO_EVENT_CATEGORY_ID_SEQ'; 
+            SELECT : NEW.ID INTO last_InsertID 
+            FROM DUAL; WHILE (last_InsertID > last_Sequence) LOOP 
+            SELECT CLARO_EVENT_CATEGORY_ID_SEQ.NEXTVAL INTO last_Sequence 
+            FROM DUAL; END LOOP; END IF; END;
+        ");
+        $this->addSql("
+            CREATE UNIQUE INDEX UNIQ_408DC8C05E237E06 ON claro_event_category (name)
+        ");
+        $this->addSql("
             ALTER TABLE claro_field_facet_value 
             ADD CONSTRAINT FK_35307C0AA76ED395 FOREIGN KEY (user_id) 
             REFERENCES claro_user (id) 
@@ -531,6 +582,18 @@ class Version20140704085245 extends AbstractMigration
             ALTER TABLE claro_field_facet_value 
             ADD CONSTRAINT FK_35307C0A9F9239AF FOREIGN KEY (fieldFacet_id) 
             REFERENCES claro_field_facet (id) 
+            ON DELETE CASCADE
+        ");
+        $this->addSql("
+            ALTER TABLE claro_event_event_category 
+            ADD CONSTRAINT FK_858F0D4C71F7E88B FOREIGN KEY (event_id) 
+            REFERENCES claro_event (id) 
+            ON DELETE CASCADE
+        ");
+        $this->addSql("
+            ALTER TABLE claro_event_event_category 
+            ADD CONSTRAINT FK_858F0D4C29E3B4B5 FOREIGN KEY (eventcategory_id) 
+            REFERENCES claro_event_category (id) 
             ON DELETE CASCADE
         ");
         $this->addSql("
@@ -638,7 +701,8 @@ class Version20140704085245 extends AbstractMigration
         $this->addSql("
             ALTER TABLE claro_activity_rule 
             ADD CONSTRAINT FK_6824A65E89329D25 FOREIGN KEY (resource_id) 
-            REFERENCES claro_resource_node (id)
+            REFERENCES claro_resource_node (id) 
+            ON DELETE CASCADE
         ");
         $this->addSql("
             ALTER TABLE claro_activity_rule 
@@ -651,6 +715,19 @@ class Version20140704085245 extends AbstractMigration
                 accessible_from TIMESTAMP(0) DEFAULT NULL, 
                 accessible_until TIMESTAMP(0) DEFAULT NULL
             )
+        ");
+        $this->addSql("
+            ALTER TABLE claro_workspace 
+            DROP (
+                parent_id, discr, lft, lvl, rgt, root
+            )
+        ");
+        $this->addSql("
+            ALTER TABLE claro_workspace 
+            DROP CONSTRAINT FK_D9028545727ACA70
+        ");
+        $this->addSql("
+            DROP INDEX IDX_D9028545727ACA70
         ");
         $this->addSql("
             ALTER TABLE claro_workspace_tag 
@@ -676,6 +753,16 @@ class Version20140704085245 extends AbstractMigration
             )
         ");
         $this->addSql("
+            ALTER TABLE claro_badge_rule 
+            DROP CONSTRAINT FK_805FCB8F89329D25
+        ");
+        $this->addSql("
+            ALTER TABLE claro_badge_rule 
+            ADD CONSTRAINT FK_805FCB8F89329D25 FOREIGN KEY (resource_id) 
+            REFERENCES claro_resource_node (id) 
+            ON DELETE CASCADE
+        ");
+        $this->addSql("
             ALTER TABLE claro_activity 
             ADD (
                 parameters_id NUMBER(10) DEFAULT NULL, 
@@ -693,7 +780,8 @@ class Version20140704085245 extends AbstractMigration
         $this->addSql("
             ALTER TABLE claro_activity 
             ADD CONSTRAINT FK_E4A67CAC52410EEC FOREIGN KEY (primaryResource_id) 
-            REFERENCES claro_resource_node (id)
+            REFERENCES claro_resource_node (id) 
+            ON DELETE SET NULL
         ");
         $this->addSql("
             ALTER TABLE claro_activity 
@@ -748,7 +836,14 @@ class Version20140704085245 extends AbstractMigration
             DROP CONSTRAINT FK_6824A65E896F55DB
         ");
         $this->addSql("
+            ALTER TABLE claro_event_event_category 
+            DROP CONSTRAINT FK_858F0D4C29E3B4B5
+        ");
+        $this->addSql("
             DROP TABLE claro_field_facet_value
+        ");
+        $this->addSql("
+            DROP TABLE claro_event_event_category
         ");
         $this->addSql("
             DROP TABLE claro_facet
@@ -784,6 +879,9 @@ class Version20140704085245 extends AbstractMigration
             DROP TABLE claro_activity_rule
         ");
         $this->addSql("
+            DROP TABLE claro_event_category
+        ");
+        $this->addSql("
             ALTER TABLE claro_activity 
             ADD (
                 start_date TIMESTAMP(0) DEFAULT NULL, 
@@ -812,10 +910,39 @@ class Version20140704085245 extends AbstractMigration
             )
         ");
         $this->addSql("
+            ALTER TABLE claro_badge_rule 
+            DROP CONSTRAINT FK_805FCB8F89329D25
+        ");
+        $this->addSql("
+            ALTER TABLE claro_badge_rule 
+            ADD CONSTRAINT FK_805FCB8F89329D25 FOREIGN KEY (resource_id) 
+            REFERENCES claro_resource_node (id)
+        ");
+        $this->addSql("
             ALTER TABLE claro_resource_node 
             DROP (
                 accessible_from, accessible_until
             )
+        ");
+        $this->addSql("
+            ALTER TABLE claro_workspace 
+            ADD (
+                parent_id NUMBER(10) DEFAULT NULL, 
+                discr VARCHAR2(255) NOT NULL, 
+                lft NUMBER(10) DEFAULT NULL, 
+                lvl NUMBER(10) DEFAULT NULL, 
+                rgt NUMBER(10) DEFAULT NULL, 
+                root NUMBER(10) DEFAULT NULL
+            )
+        ");
+        $this->addSql("
+            ALTER TABLE claro_workspace 
+            ADD CONSTRAINT FK_D9028545727ACA70 FOREIGN KEY (parent_id) 
+            REFERENCES claro_workspace (id) 
+            ON DELETE SET NULL
+        ");
+        $this->addSql("
+            CREATE INDEX IDX_D9028545727ACA70 ON claro_workspace (parent_id)
         ");
         $this->addSql("
             ALTER TABLE claro_workspace_tag 
