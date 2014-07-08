@@ -1,6 +1,6 @@
 <?php
 
-namespace Claroline\CoreBundle\Migrations\pdo_pgsql;
+namespace Claroline\CoreBundle\Migrations\pdo_mysql;
 
 use Doctrine\DBAL\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
@@ -8,107 +8,98 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2014/07/04 08:52:48
+ * Generation date: 2014/07/08 11:18:13
  */
-class Version20140704085245 extends AbstractMigration
+class Version20140708111810 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
         $this->addSql("
             CREATE TABLE claro_field_facet_value (
-                id SERIAL NOT NULL, 
+                id INT AUTO_INCREMENT NOT NULL, 
                 user_id INT NOT NULL, 
                 stringValue VARCHAR(255) DEFAULT NULL, 
                 floatValue DOUBLE PRECISION DEFAULT NULL, 
-                dateValue TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL, 
+                dateValue DATETIME DEFAULT NULL, 
                 fieldFacet_id INT NOT NULL, 
+                INDEX IDX_35307C0AA76ED395 (user_id), 
+                INDEX IDX_35307C0A9F9239AF (fieldFacet_id), 
                 PRIMARY KEY(id)
-            )
+            ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
         ");
         $this->addSql("
-            CREATE INDEX IDX_35307C0AA76ED395 ON claro_field_facet_value (user_id)
-        ");
-        $this->addSql("
-            CREATE INDEX IDX_35307C0A9F9239AF ON claro_field_facet_value (fieldFacet_id)
+            CREATE TABLE claro_event_event_category (
+                event_id INT NOT NULL, 
+                eventcategory_id INT NOT NULL, 
+                INDEX IDX_858F0D4C71F7E88B (event_id), 
+                INDEX IDX_858F0D4C29E3B4B5 (eventcategory_id), 
+                PRIMARY KEY(event_id, eventcategory_id)
+            ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
         ");
         $this->addSql("
             CREATE TABLE claro_facet (
-                id SERIAL NOT NULL, 
+                id INT AUTO_INCREMENT NOT NULL, 
                 name VARCHAR(255) NOT NULL, 
                 position INT NOT NULL, 
-                isVisibleByOwner BOOLEAN NOT NULL, 
+                isVisibleByOwner TINYINT(1) NOT NULL, 
+                UNIQUE INDEX UNIQ_DCBA6D3A5E237E06 (name), 
                 PRIMARY KEY(id)
-            )
-        ");
-        $this->addSql("
-            CREATE UNIQUE INDEX UNIQ_DCBA6D3A5E237E06 ON claro_facet (name)
+            ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
         ");
         $this->addSql("
             CREATE TABLE claro_facet_role (
                 facet_id INT NOT NULL, 
                 role_id INT NOT NULL, 
+                INDEX IDX_CDD5845DFC889F24 (facet_id), 
+                INDEX IDX_CDD5845DD60322AC (role_id), 
                 PRIMARY KEY(facet_id, role_id)
-            )
-        ");
-        $this->addSql("
-            CREATE INDEX IDX_CDD5845DFC889F24 ON claro_facet_role (facet_id)
-        ");
-        $this->addSql("
-            CREATE INDEX IDX_CDD5845DD60322AC ON claro_facet_role (role_id)
+            ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
         ");
         $this->addSql("
             CREATE TABLE claro_field_facet_role (
-                id SERIAL NOT NULL, 
+                id INT AUTO_INCREMENT NOT NULL, 
                 role_id INT NOT NULL, 
-                canOpen BOOLEAN NOT NULL, 
-                canEdit BOOLEAN NOT NULL, 
+                canOpen TINYINT(1) NOT NULL, 
+                canEdit TINYINT(1) NOT NULL, 
                 fieldFacet_id INT NOT NULL, 
+                INDEX IDX_12F52A52D60322AC (role_id), 
+                INDEX IDX_12F52A529F9239AF (fieldFacet_id), 
                 PRIMARY KEY(id)
-            )
-        ");
-        $this->addSql("
-            CREATE INDEX IDX_12F52A52D60322AC ON claro_field_facet_role (role_id)
-        ");
-        $this->addSql("
-            CREATE INDEX IDX_12F52A529F9239AF ON claro_field_facet_role (fieldFacet_id)
+            ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
         ");
         $this->addSql("
             CREATE TABLE claro_general_facet_preference (
-                id SERIAL NOT NULL, 
+                id INT AUTO_INCREMENT NOT NULL, 
                 role_id INT NOT NULL, 
-                baseData BOOLEAN NOT NULL, 
-                mail BOOLEAN NOT NULL, 
-                phone BOOLEAN NOT NULL, 
-                sendMail BOOLEAN NOT NULL, 
-                sendMessage BOOLEAN NOT NULL, 
+                baseData TINYINT(1) NOT NULL, 
+                mail TINYINT(1) NOT NULL, 
+                phone TINYINT(1) NOT NULL, 
+                sendMail TINYINT(1) NOT NULL, 
+                sendMessage TINYINT(1) NOT NULL, 
+                INDEX IDX_38AACF88D60322AC (role_id), 
                 PRIMARY KEY(id)
-            )
-        ");
-        $this->addSql("
-            CREATE INDEX IDX_38AACF88D60322AC ON claro_general_facet_preference (role_id)
+            ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
         ");
         $this->addSql("
             CREATE TABLE claro_field_facet (
-                id SERIAL NOT NULL, 
+                id INT AUTO_INCREMENT NOT NULL, 
                 facet_id INT NOT NULL, 
                 name VARCHAR(255) NOT NULL, 
                 type INT NOT NULL, 
                 position INT NOT NULL, 
-                isVisibleByOwner BOOLEAN NOT NULL, 
-                isEditableByOwner BOOLEAN NOT NULL, 
+                isVisibleByOwner TINYINT(1) NOT NULL, 
+                isEditableByOwner TINYINT(1) NOT NULL, 
+                INDEX IDX_F6C21DB2FC889F24 (facet_id), 
                 PRIMARY KEY(id)
-            )
-        ");
-        $this->addSql("
-            CREATE INDEX IDX_F6C21DB2FC889F24 ON claro_field_facet (facet_id)
+            ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
         ");
         $this->addSql("
             CREATE TABLE claro_activity_past_evaluation (
-                id SERIAL NOT NULL, 
+                id INT AUTO_INCREMENT NOT NULL, 
                 user_id INT DEFAULT NULL, 
                 activity_parameters_id INT DEFAULT NULL, 
                 log_id INT DEFAULT NULL, 
-                evaluation_date TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL, 
+                evaluation_date DATETIME DEFAULT NULL, 
                 evaluation_type VARCHAR(255) DEFAULT NULL, 
                 evaluation_status VARCHAR(255) DEFAULT NULL, 
                 duration INT DEFAULT NULL, 
@@ -117,60 +108,45 @@ class Version20140704085245 extends AbstractMigration
                 score_min INT DEFAULT NULL, 
                 score_max INT DEFAULT NULL, 
                 evaluation_comment VARCHAR(255) DEFAULT NULL, 
-                details TEXT DEFAULT NULL, 
+                details LONGTEXT DEFAULT NULL COMMENT '(DC2Type:json_array)', 
+                INDEX IDX_F1A76182A76ED395 (user_id), 
+                INDEX IDX_F1A76182896F55DB (activity_parameters_id), 
+                INDEX IDX_F1A76182EA675D86 (log_id), 
                 PRIMARY KEY(id)
-            )
-        ");
-        $this->addSql("
-            CREATE INDEX IDX_F1A76182A76ED395 ON claro_activity_past_evaluation (user_id)
-        ");
-        $this->addSql("
-            CREATE INDEX IDX_F1A76182896F55DB ON claro_activity_past_evaluation (activity_parameters_id)
-        ");
-        $this->addSql("
-            CREATE INDEX IDX_F1A76182EA675D86 ON claro_activity_past_evaluation (log_id)
-        ");
-        $this->addSql("
-            COMMENT ON COLUMN claro_activity_past_evaluation.details IS '(DC2Type:json_array)'
+            ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
         ");
         $this->addSql("
             CREATE TABLE claro_activity_parameters (
-                id SERIAL NOT NULL, 
+                id INT AUTO_INCREMENT NOT NULL, 
                 activity_id INT DEFAULT NULL, 
                 max_duration INT DEFAULT NULL, 
                 max_attempts INT DEFAULT NULL, 
                 who VARCHAR(255) DEFAULT NULL, 
                 activity_where VARCHAR(255) DEFAULT NULL, 
-                with_tutor BOOLEAN DEFAULT NULL, 
+                with_tutor TINYINT(1) DEFAULT NULL, 
                 evaluation_type VARCHAR(255) DEFAULT NULL, 
+                UNIQUE INDEX UNIQ_E2EE25E281C06096 (activity_id), 
                 PRIMARY KEY(id)
-            )
-        ");
-        $this->addSql("
-            CREATE UNIQUE INDEX UNIQ_E2EE25E281C06096 ON claro_activity_parameters (activity_id)
+            ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
         ");
         $this->addSql("
             CREATE TABLE claro_activity_secondary_resources (
                 activityparameters_id INT NOT NULL, 
                 resourcenode_id INT NOT NULL, 
+                INDEX IDX_713242A7DB5E3CF7 (activityparameters_id), 
+                INDEX IDX_713242A777C292AE (resourcenode_id), 
                 PRIMARY KEY(
                     activityparameters_id, resourcenode_id
                 )
-            )
-        ");
-        $this->addSql("
-            CREATE INDEX IDX_713242A7DB5E3CF7 ON claro_activity_secondary_resources (activityparameters_id)
-        ");
-        $this->addSql("
-            CREATE INDEX IDX_713242A777C292AE ON claro_activity_secondary_resources (resourcenode_id)
+            ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
         ");
         $this->addSql("
             CREATE TABLE claro_activity_evaluation (
-                id SERIAL NOT NULL, 
+                id INT AUTO_INCREMENT NOT NULL, 
                 user_id INT NOT NULL, 
                 activity_parameters_id INT NOT NULL, 
                 log_id INT DEFAULT NULL, 
-                lastest_evaluation_date TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL, 
+                lastest_evaluation_date DATETIME DEFAULT NULL, 
                 evaluation_type VARCHAR(255) DEFAULT NULL, 
                 evaluation_status VARCHAR(255) DEFAULT NULL, 
                 duration INT DEFAULT NULL, 
@@ -179,199 +155,212 @@ class Version20140704085245 extends AbstractMigration
                 score_min INT DEFAULT NULL, 
                 score_max INT DEFAULT NULL, 
                 evaluation_comment VARCHAR(255) DEFAULT NULL, 
-                details TEXT DEFAULT NULL, 
+                details LONGTEXT DEFAULT NULL COMMENT '(DC2Type:json_array)', 
                 total_duration INT DEFAULT NULL, 
                 attempts_count INT DEFAULT NULL, 
+                INDEX IDX_F75EC869A76ED395 (user_id), 
+                INDEX IDX_F75EC869896F55DB (activity_parameters_id), 
+                INDEX IDX_F75EC869EA675D86 (log_id), 
+                UNIQUE INDEX user_activity_unique_evaluation (user_id, activity_parameters_id), 
                 PRIMARY KEY(id)
-            )
-        ");
-        $this->addSql("
-            CREATE INDEX IDX_F75EC869A76ED395 ON claro_activity_evaluation (user_id)
-        ");
-        $this->addSql("
-            CREATE INDEX IDX_F75EC869896F55DB ON claro_activity_evaluation (activity_parameters_id)
-        ");
-        $this->addSql("
-            CREATE INDEX IDX_F75EC869EA675D86 ON claro_activity_evaluation (log_id)
-        ");
-        $this->addSql("
-            CREATE UNIQUE INDEX user_activity_unique_evaluation ON claro_activity_evaluation (user_id, activity_parameters_id)
-        ");
-        $this->addSql("
-            COMMENT ON COLUMN claro_activity_evaluation.details IS '(DC2Type:json_array)'
+            ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
         ");
         $this->addSql("
             CREATE TABLE claro_activity_rule_action (
-                id SERIAL NOT NULL, 
+                id INT AUTO_INCREMENT NOT NULL, 
                 resource_type_id INT DEFAULT NULL, 
                 log_action VARCHAR(255) NOT NULL, 
+                INDEX IDX_C8835D2098EC6B7B (resource_type_id), 
+                UNIQUE INDEX activity_rule_unique_action_resource_type (log_action, resource_type_id), 
                 PRIMARY KEY(id)
-            )
-        ");
-        $this->addSql("
-            CREATE INDEX IDX_C8835D2098EC6B7B ON claro_activity_rule_action (resource_type_id)
-        ");
-        $this->addSql("
-            CREATE UNIQUE INDEX activity_rule_unique_action_resource_type ON claro_activity_rule_action (log_action, resource_type_id)
+            ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
         ");
         $this->addSql("
             CREATE TABLE claro_activity_rule (
-                id SERIAL NOT NULL, 
+                id INT AUTO_INCREMENT NOT NULL, 
                 activity_parameters_id INT NOT NULL, 
                 resource_id INT DEFAULT NULL, 
                 badge_id INT DEFAULT NULL, 
-                result_visible BOOLEAN DEFAULT NULL, 
+                result_visible TINYINT(1) DEFAULT NULL, 
                 occurrence SMALLINT NOT NULL, 
                 action VARCHAR(255) NOT NULL, 
                 result VARCHAR(255) DEFAULT NULL, 
                 resultMax VARCHAR(255) DEFAULT NULL, 
                 resultComparison SMALLINT DEFAULT NULL, 
                 userType SMALLINT NOT NULL, 
-                active_from TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL, 
-                active_until TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL, 
+                active_from DATETIME DEFAULT NULL, 
+                active_until DATETIME DEFAULT NULL, 
+                INDEX IDX_6824A65E896F55DB (activity_parameters_id), 
+                INDEX IDX_6824A65E89329D25 (resource_id), 
+                INDEX IDX_6824A65EF7A2C2FC (badge_id), 
                 PRIMARY KEY(id)
-            )
+            ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
         ");
         $this->addSql("
-            CREATE INDEX IDX_6824A65E896F55DB ON claro_activity_rule (activity_parameters_id)
-        ");
-        $this->addSql("
-            CREATE INDEX IDX_6824A65E89329D25 ON claro_activity_rule (resource_id)
-        ");
-        $this->addSql("
-            CREATE INDEX IDX_6824A65EF7A2C2FC ON claro_activity_rule (badge_id)
+            CREATE TABLE claro_event_category (
+                id INT AUTO_INCREMENT NOT NULL, 
+                name VARCHAR(255) NOT NULL, 
+                UNIQUE INDEX UNIQ_408DC8C05E237E06 (name), 
+                PRIMARY KEY(id)
+            ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
         ");
         $this->addSql("
             ALTER TABLE claro_field_facet_value 
             ADD CONSTRAINT FK_35307C0AA76ED395 FOREIGN KEY (user_id) 
             REFERENCES claro_user (id) 
-            ON DELETE CASCADE NOT DEFERRABLE INITIALLY IMMEDIATE
+            ON DELETE CASCADE
         ");
         $this->addSql("
             ALTER TABLE claro_field_facet_value 
             ADD CONSTRAINT FK_35307C0A9F9239AF FOREIGN KEY (fieldFacet_id) 
             REFERENCES claro_field_facet (id) 
-            ON DELETE CASCADE NOT DEFERRABLE INITIALLY IMMEDIATE
+            ON DELETE CASCADE
+        ");
+        $this->addSql("
+            ALTER TABLE claro_event_event_category 
+            ADD CONSTRAINT FK_858F0D4C71F7E88B FOREIGN KEY (event_id) 
+            REFERENCES claro_event (id) 
+            ON DELETE CASCADE
+        ");
+        $this->addSql("
+            ALTER TABLE claro_event_event_category 
+            ADD CONSTRAINT FK_858F0D4C29E3B4B5 FOREIGN KEY (eventcategory_id) 
+            REFERENCES claro_event_category (id) 
+            ON DELETE CASCADE
         ");
         $this->addSql("
             ALTER TABLE claro_facet_role 
             ADD CONSTRAINT FK_CDD5845DFC889F24 FOREIGN KEY (facet_id) 
             REFERENCES claro_facet (id) 
-            ON DELETE CASCADE NOT DEFERRABLE INITIALLY IMMEDIATE
+            ON DELETE CASCADE
         ");
         $this->addSql("
             ALTER TABLE claro_facet_role 
             ADD CONSTRAINT FK_CDD5845DD60322AC FOREIGN KEY (role_id) 
             REFERENCES claro_role (id) 
-            ON DELETE CASCADE NOT DEFERRABLE INITIALLY IMMEDIATE
+            ON DELETE CASCADE
         ");
         $this->addSql("
             ALTER TABLE claro_field_facet_role 
             ADD CONSTRAINT FK_12F52A52D60322AC FOREIGN KEY (role_id) 
             REFERENCES claro_role (id) 
-            ON DELETE CASCADE NOT DEFERRABLE INITIALLY IMMEDIATE
+            ON DELETE CASCADE
         ");
         $this->addSql("
             ALTER TABLE claro_field_facet_role 
             ADD CONSTRAINT FK_12F52A529F9239AF FOREIGN KEY (fieldFacet_id) 
             REFERENCES claro_field_facet (id) 
-            ON DELETE CASCADE NOT DEFERRABLE INITIALLY IMMEDIATE
+            ON DELETE CASCADE
         ");
         $this->addSql("
             ALTER TABLE claro_general_facet_preference 
             ADD CONSTRAINT FK_38AACF88D60322AC FOREIGN KEY (role_id) 
             REFERENCES claro_role (id) 
-            ON DELETE CASCADE NOT DEFERRABLE INITIALLY IMMEDIATE
+            ON DELETE CASCADE
         ");
         $this->addSql("
             ALTER TABLE claro_field_facet 
             ADD CONSTRAINT FK_F6C21DB2FC889F24 FOREIGN KEY (facet_id) 
             REFERENCES claro_facet (id) 
-            ON DELETE CASCADE NOT DEFERRABLE INITIALLY IMMEDIATE
+            ON DELETE CASCADE
         ");
         $this->addSql("
             ALTER TABLE claro_activity_past_evaluation 
             ADD CONSTRAINT FK_F1A76182A76ED395 FOREIGN KEY (user_id) 
             REFERENCES claro_user (id) 
-            ON DELETE SET NULL NOT DEFERRABLE INITIALLY IMMEDIATE
+            ON DELETE SET NULL
         ");
         $this->addSql("
             ALTER TABLE claro_activity_past_evaluation 
             ADD CONSTRAINT FK_F1A76182896F55DB FOREIGN KEY (activity_parameters_id) 
             REFERENCES claro_activity_parameters (id) 
-            ON DELETE SET NULL NOT DEFERRABLE INITIALLY IMMEDIATE
+            ON DELETE SET NULL
         ");
         $this->addSql("
             ALTER TABLE claro_activity_past_evaluation 
             ADD CONSTRAINT FK_F1A76182EA675D86 FOREIGN KEY (log_id) 
             REFERENCES claro_log (id) 
-            ON DELETE SET NULL NOT DEFERRABLE INITIALLY IMMEDIATE
+            ON DELETE SET NULL
         ");
         $this->addSql("
             ALTER TABLE claro_activity_parameters 
             ADD CONSTRAINT FK_E2EE25E281C06096 FOREIGN KEY (activity_id) 
             REFERENCES claro_activity (id) 
-            ON DELETE CASCADE NOT DEFERRABLE INITIALLY IMMEDIATE
+            ON DELETE CASCADE
         ");
         $this->addSql("
             ALTER TABLE claro_activity_secondary_resources 
             ADD CONSTRAINT FK_713242A7DB5E3CF7 FOREIGN KEY (activityparameters_id) 
             REFERENCES claro_activity_parameters (id) 
-            ON DELETE CASCADE NOT DEFERRABLE INITIALLY IMMEDIATE
+            ON DELETE CASCADE
         ");
         $this->addSql("
             ALTER TABLE claro_activity_secondary_resources 
             ADD CONSTRAINT FK_713242A777C292AE FOREIGN KEY (resourcenode_id) 
             REFERENCES claro_resource_node (id) 
-            ON DELETE CASCADE NOT DEFERRABLE INITIALLY IMMEDIATE
+            ON DELETE CASCADE
         ");
         $this->addSql("
             ALTER TABLE claro_activity_evaluation 
             ADD CONSTRAINT FK_F75EC869A76ED395 FOREIGN KEY (user_id) 
             REFERENCES claro_user (id) 
-            ON DELETE CASCADE NOT DEFERRABLE INITIALLY IMMEDIATE
+            ON DELETE CASCADE
         ");
         $this->addSql("
             ALTER TABLE claro_activity_evaluation 
             ADD CONSTRAINT FK_F75EC869896F55DB FOREIGN KEY (activity_parameters_id) 
             REFERENCES claro_activity_parameters (id) 
-            ON DELETE CASCADE NOT DEFERRABLE INITIALLY IMMEDIATE
+            ON DELETE CASCADE
         ");
         $this->addSql("
             ALTER TABLE claro_activity_evaluation 
             ADD CONSTRAINT FK_F75EC869EA675D86 FOREIGN KEY (log_id) 
             REFERENCES claro_log (id) 
-            ON DELETE SET NULL NOT DEFERRABLE INITIALLY IMMEDIATE
+            ON DELETE SET NULL
         ");
         $this->addSql("
             ALTER TABLE claro_activity_rule_action 
             ADD CONSTRAINT FK_C8835D2098EC6B7B FOREIGN KEY (resource_type_id) 
             REFERENCES claro_resource_type (id) 
-            ON DELETE CASCADE NOT DEFERRABLE INITIALLY IMMEDIATE
+            ON DELETE CASCADE
         ");
         $this->addSql("
             ALTER TABLE claro_activity_rule 
             ADD CONSTRAINT FK_6824A65E896F55DB FOREIGN KEY (activity_parameters_id) 
             REFERENCES claro_activity_parameters (id) 
-            ON DELETE CASCADE NOT DEFERRABLE INITIALLY IMMEDIATE
+            ON DELETE CASCADE
         ");
         $this->addSql("
             ALTER TABLE claro_activity_rule 
             ADD CONSTRAINT FK_6824A65E89329D25 FOREIGN KEY (resource_id) 
-            REFERENCES claro_resource_node (id) NOT DEFERRABLE INITIALLY IMMEDIATE
+            REFERENCES claro_resource_node (id) 
+            ON DELETE CASCADE
         ");
         $this->addSql("
             ALTER TABLE claro_activity_rule 
             ADD CONSTRAINT FK_6824A65EF7A2C2FC FOREIGN KEY (badge_id) 
-            REFERENCES claro_badge (id) NOT DEFERRABLE INITIALLY IMMEDIATE
+            REFERENCES claro_badge (id)
         ");
         $this->addSql("
             ALTER TABLE claro_resource_node 
-            ADD accessible_from TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL
+            ADD accessible_from DATETIME DEFAULT NULL, 
+            ADD accessible_until DATETIME DEFAULT NULL
         ");
         $this->addSql("
-            ALTER TABLE claro_resource_node 
-            ADD accessible_until TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL
+            ALTER TABLE claro_workspace 
+            DROP FOREIGN KEY FK_D9028545727ACA70
+        ");
+        $this->addSql("
+            DROP INDEX IDX_D9028545727ACA70 ON claro_workspace
+        ");
+        $this->addSql("
+            ALTER TABLE claro_workspace 
+            DROP parent_id, 
+            DROP discr, 
+            DROP lft, 
+            DROP lvl, 
+            DROP rgt, 
+            DROP root
         ");
         $this->addSql("
             ALTER TABLE claro_workspace_tag 
@@ -381,56 +370,47 @@ class Version20140704085245 extends AbstractMigration
             ALTER TABLE claro_workspace_tag 
             ADD CONSTRAINT FK_C8EFD7EF82D40A1F FOREIGN KEY (workspace_id) 
             REFERENCES claro_workspace (id) 
-            ON DELETE SET NULL NOT DEFERRABLE INITIALLY IMMEDIATE
+            ON DELETE SET NULL
         ");
         $this->addSql("
             CREATE INDEX IDX_C8EFD7EF82D40A1F ON claro_workspace_tag (workspace_id)
         ");
         $this->addSql("
             ALTER TABLE claro_badge_rule 
-            ADD resultMax VARCHAR(255) DEFAULT NULL
+            DROP FOREIGN KEY FK_805FCB8F89329D25
         ");
         $this->addSql("
             ALTER TABLE claro_badge_rule 
-            ADD active_from TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL
+            ADD resultMax VARCHAR(255) DEFAULT NULL, 
+            ADD active_from DATETIME DEFAULT NULL, 
+            ADD active_until DATETIME DEFAULT NULL
         ");
         $this->addSql("
             ALTER TABLE claro_badge_rule 
-            ADD active_until TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL
+            ADD CONSTRAINT FK_805FCB8F89329D25 FOREIGN KEY (resource_id) 
+            REFERENCES claro_resource_node (id) 
+            ON DELETE CASCADE
         ");
         $this->addSql("
             ALTER TABLE claro_activity 
-            ADD parameters_id INT DEFAULT NULL
-        ");
-        $this->addSql("
-            ALTER TABLE claro_activity 
-            ADD title VARCHAR(255) DEFAULT NULL
-        ");
-        $this->addSql("
-            ALTER TABLE claro_activity 
-            ADD primaryResource_id INT DEFAULT NULL
-        ");
-        $this->addSql("
-            ALTER TABLE claro_activity 
-            DROP start_date
-        ");
-        $this->addSql("
-            ALTER TABLE claro_activity 
-            DROP end_date
-        ");
-        $this->addSql("
-            ALTER TABLE claro_activity RENAME COLUMN instruction TO description
+            ADD parameters_id INT DEFAULT NULL, 
+            ADD title VARCHAR(255) DEFAULT NULL, 
+            ADD primaryResource_id INT DEFAULT NULL, 
+            DROP start_date, 
+            DROP end_date, 
+            CHANGE instruction description VARCHAR(255) NOT NULL
         ");
         $this->addSql("
             ALTER TABLE claro_activity 
             ADD CONSTRAINT FK_E4A67CAC52410EEC FOREIGN KEY (primaryResource_id) 
-            REFERENCES claro_resource_node (id) NOT DEFERRABLE INITIALLY IMMEDIATE
+            REFERENCES claro_resource_node (id) 
+            ON DELETE SET NULL
         ");
         $this->addSql("
             ALTER TABLE claro_activity 
             ADD CONSTRAINT FK_E4A67CAC88BD9C1F FOREIGN KEY (parameters_id) 
             REFERENCES claro_activity_parameters (id) 
-            ON DELETE CASCADE NOT DEFERRABLE INITIALLY IMMEDIATE
+            ON DELETE CASCADE
         ");
         $this->addSql("
             CREATE INDEX IDX_E4A67CAC52410EEC ON claro_activity (primaryResource_id)
@@ -444,42 +424,49 @@ class Version20140704085245 extends AbstractMigration
     {
         $this->addSql("
             ALTER TABLE claro_facet_role 
-            DROP CONSTRAINT FK_CDD5845DFC889F24
+            DROP FOREIGN KEY FK_CDD5845DFC889F24
         ");
         $this->addSql("
             ALTER TABLE claro_field_facet 
-            DROP CONSTRAINT FK_F6C21DB2FC889F24
+            DROP FOREIGN KEY FK_F6C21DB2FC889F24
         ");
         $this->addSql("
             ALTER TABLE claro_field_facet_value 
-            DROP CONSTRAINT FK_35307C0A9F9239AF
+            DROP FOREIGN KEY FK_35307C0A9F9239AF
         ");
         $this->addSql("
             ALTER TABLE claro_field_facet_role 
-            DROP CONSTRAINT FK_12F52A529F9239AF
+            DROP FOREIGN KEY FK_12F52A529F9239AF
         ");
         $this->addSql("
             ALTER TABLE claro_activity 
-            DROP CONSTRAINT FK_E4A67CAC88BD9C1F
+            DROP FOREIGN KEY FK_E4A67CAC88BD9C1F
         ");
         $this->addSql("
             ALTER TABLE claro_activity_past_evaluation 
-            DROP CONSTRAINT FK_F1A76182896F55DB
+            DROP FOREIGN KEY FK_F1A76182896F55DB
         ");
         $this->addSql("
             ALTER TABLE claro_activity_secondary_resources 
-            DROP CONSTRAINT FK_713242A7DB5E3CF7
+            DROP FOREIGN KEY FK_713242A7DB5E3CF7
         ");
         $this->addSql("
             ALTER TABLE claro_activity_evaluation 
-            DROP CONSTRAINT FK_F75EC869896F55DB
+            DROP FOREIGN KEY FK_F75EC869896F55DB
         ");
         $this->addSql("
             ALTER TABLE claro_activity_rule 
-            DROP CONSTRAINT FK_6824A65E896F55DB
+            DROP FOREIGN KEY FK_6824A65E896F55DB
+        ");
+        $this->addSql("
+            ALTER TABLE claro_event_event_category 
+            DROP FOREIGN KEY FK_858F0D4C29E3B4B5
         ");
         $this->addSql("
             DROP TABLE claro_field_facet_value
+        ");
+        $this->addSql("
+            DROP TABLE claro_event_event_category
         ");
         $this->addSql("
             DROP TABLE claro_facet
@@ -515,60 +502,67 @@ class Version20140704085245 extends AbstractMigration
             DROP TABLE claro_activity_rule
         ");
         $this->addSql("
-            DROP INDEX IDX_E4A67CAC52410EEC
+            DROP TABLE claro_event_category
         ");
         $this->addSql("
-            DROP INDEX UNIQ_E4A67CAC88BD9C1F
+            DROP INDEX IDX_E4A67CAC52410EEC ON claro_activity
         ");
         $this->addSql("
-            ALTER TABLE claro_activity 
-            ADD start_date TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL
-        ");
-        $this->addSql("
-            ALTER TABLE claro_activity 
-            ADD end_date TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL
+            DROP INDEX UNIQ_E4A67CAC88BD9C1F ON claro_activity
         ");
         $this->addSql("
             ALTER TABLE claro_activity 
-            DROP parameters_id
-        ");
-        $this->addSql("
-            ALTER TABLE claro_activity 
-            DROP title
-        ");
-        $this->addSql("
-            ALTER TABLE claro_activity 
-            DROP primaryResource_id
-        ");
-        $this->addSql("
-            ALTER TABLE claro_activity RENAME COLUMN description TO instruction
+            ADD start_date DATETIME DEFAULT NULL, 
+            ADD end_date DATETIME DEFAULT NULL, 
+            DROP parameters_id, 
+            DROP title, 
+            DROP primaryResource_id, 
+            CHANGE description instruction VARCHAR(255) NOT NULL
         ");
         $this->addSql("
             ALTER TABLE claro_badge_rule 
-            DROP resultMax
+            DROP FOREIGN KEY FK_805FCB8F89329D25
         ");
         $this->addSql("
             ALTER TABLE claro_badge_rule 
-            DROP active_from
-        ");
-        $this->addSql("
-            ALTER TABLE claro_badge_rule 
+            DROP resultMax, 
+            DROP active_from, 
             DROP active_until
         ");
         $this->addSql("
-            ALTER TABLE claro_resource_node 
-            DROP accessible_from
+            ALTER TABLE claro_badge_rule 
+            ADD CONSTRAINT FK_805FCB8F89329D25 FOREIGN KEY (resource_id) 
+            REFERENCES claro_resource_node (id)
         ");
         $this->addSql("
             ALTER TABLE claro_resource_node 
+            DROP accessible_from, 
             DROP accessible_until
         ");
         $this->addSql("
-            ALTER TABLE claro_workspace_tag 
-            DROP CONSTRAINT FK_C8EFD7EF82D40A1F
+            ALTER TABLE claro_workspace 
+            ADD parent_id INT DEFAULT NULL, 
+            ADD discr VARCHAR(255) NOT NULL, 
+            ADD lft INT DEFAULT NULL, 
+            ADD lvl INT DEFAULT NULL, 
+            ADD rgt INT DEFAULT NULL, 
+            ADD root INT DEFAULT NULL
         ");
         $this->addSql("
-            DROP INDEX IDX_C8EFD7EF82D40A1F
+            ALTER TABLE claro_workspace 
+            ADD CONSTRAINT FK_D9028545727ACA70 FOREIGN KEY (parent_id) 
+            REFERENCES claro_workspace (id) 
+            ON DELETE SET NULL
+        ");
+        $this->addSql("
+            CREATE INDEX IDX_D9028545727ACA70 ON claro_workspace (parent_id)
+        ");
+        $this->addSql("
+            ALTER TABLE claro_workspace_tag 
+            DROP FOREIGN KEY FK_C8EFD7EF82D40A1F
+        ");
+        $this->addSql("
+            DROP INDEX IDX_C8EFD7EF82D40A1F ON claro_workspace_tag
         ");
         $this->addSql("
             ALTER TABLE claro_workspace_tag 
