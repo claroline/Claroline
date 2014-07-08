@@ -396,9 +396,37 @@ class ParametersController extends Controller
                 'mailer_port' => $data['port']
             )
         );
-        $this->cacheManager->refresh();
+
+        $this->cacheManager->edit('is_mailer_available', true);
 
         return $this->redirect($this->generateUrl('claro_admin_index'));
+    }
+
+    /**
+     * @EXT\Route("/mail/server/reset", name="claro_admin_reset_mail_server")
+     *
+     * Reset the mail settings.
+     *
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     */
+    public function resetMailServerAction()
+    {
+        $this->checkOpen();
+
+        $data = array(
+            'mailer_transport'  => 'smtp',
+            'mailer_host'       => null,
+            'mailer_username'   => null,
+            'mailer_password'   => null,
+            'mailer_auth_mode'  => null,
+            'mailer_encryption' => null,
+            'mailer_port'       => null
+        );
+
+        $this->configHandler->setParameters($data);
+        $this->cacheManager->setParameter('is_mailer_available', false);
+
+        return $this->redirect($this->generateUrl('claro_admin_parameters_mail_server'));
     }
 
     /**
