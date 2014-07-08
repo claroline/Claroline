@@ -19,7 +19,7 @@ use Claroline\ForumBundle\Form\SubjectType;
 use Claroline\ForumBundle\Form\CategoryType;
 use Claroline\ForumBundle\Form\EditTitleType;
 use Claroline\CoreBundle\Library\Resource\ResourceCollection;
-use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\ForumBundle\Manager\Manager;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -674,7 +674,7 @@ class ForumController extends Controller
      * @EXT\Method("GET")
      * @EXT\ParamConverter(
      *      "workspace",
-     *      class="ClarolineCoreBundle:Workspace\AbstractWorkspace",
+     *      class="ClarolineCoreBundle:Workspace\Workspace",
      *      options={"id" = "workspaceId", "strictId" = true}
      * )
      *
@@ -682,9 +682,10 @@ class ForumController extends Controller
      *
      * Renders last messages from the forums' workspace
      *
-     * @param AbstractWorkspace $workspace
+     * @param Workspace $workspace
+     * @return array
      */
-    public function forumsWorkspaceWidgetAction(AbstractWorkspace $workspace)
+    public function forumsWorkspaceWidgetAction(Workspace $workspace)
     {
         $sc = $this->get('security.context');
         $user = $sc->getToken()->getUser();
