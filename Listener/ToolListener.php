@@ -226,14 +226,15 @@ class ToolListener
 
     public function workspaceAnalytics($workspace)
     {
-        $datas = $this->container->get('claroline.manager.analytics_manager')
-            ->getWorkspaceAnalytics($workspace);
-        $datas['analyticsTab'] = 'analytics';
-
-        return $this->templating->render(
-            'ClarolineCoreBundle:Tool/workspace/analytics:analytics.html.twig',
-            $datas
+        $params = array(
+            '_controller' => 'ClarolineCoreBundle:WorkspaceAnalytics:showResources',
+            'workspaceId' => $workspace->getId()
         );
+
+        $subRequest = $this->container->get('request')->duplicate(array(), null, $params);
+        $response = $this->httpKernel->handle($subRequest, HttpKernelInterface::SUB_REQUEST);
+
+        return $response->getContent();
     }
 
     public function desktopAgenda()

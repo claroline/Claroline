@@ -25,15 +25,12 @@
             <br>
             <br>
             <br>
-        
+
             <div class="table-responsive">
                 <table class="table">
                     <tr>
                         <th>
                             {{ 'title'|trans({}, 'platform') }}
-                        </th>
-                        <th>
-                            {{ 'description'|trans({}, 'platform') }}
                         </th>
                         <th class="center-text">
                             {{ 'status'|trans({}, 'platform') }}
@@ -67,8 +64,7 @@
                     {% for activity in activities %}
                     <tr>
                         <td>{{ activity.getTitle() }}</td>
-                        <td>{{ activity.getDescription()|raw }}</td>
-                        
+
                         {% if evaluations[activity.getId()] is defined %}
                             {% set eval = evaluations[activity.getId()] %}
                             <td class="center-text">
@@ -90,7 +86,7 @@
                                 {% endif %}
                             </td>
                             <td class="center-text"
-                            
+
                                 {% if rulesScores[activity.getId()] is defined %}
                                     {% set ruleScore = rulesScores[activity.getId()] %}
                                     data-container="#activities-evaluations"
@@ -167,7 +163,7 @@
             {{ 'no_activity'|trans({}, 'platform') }}
         {% endif %}
     </div>
-    
+
     <div id="activity-past-evaluations-modal-box" class="modal fade" role="dialog" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -194,7 +190,7 @@
     <script src="{{ asset('bundles/clarolinecore/js/tool/workspace/analytics/workspaceActivitiesEvaluations.js') }}">
     </script>
 {% endblock %}
-    
+
 {% block stylesheets %}
     {{ parent() }}
     <style type="text/css">

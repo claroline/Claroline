@@ -10,7 +10,6 @@
                 <table class="table">
                     <tr>
                         <th>{{ 'title'|trans({}, 'platform') }}</th>
-                        <th>{{ 'description'|trans({}, 'platform') }}</th>
                         <th class="text-center">{{ 'start_date'|trans({}, 'platform') }}</th>
                         <th class="text-center">{{ 'end_date'|trans({}, 'platform') }}</th>
                         <th class="text-center">{{ 'evaluation_type'|trans({}, 'platform') }}</th>
@@ -26,7 +25,6 @@
                                 {{ activity.getTitle() }}
                             </a>
                         </td>
-                        <td>{{ activity.getDescription()|raw }}</td>
                         <td class="text-center">
                             {% if resourceNode.getAccessibleFrom() is not empty %}
                                 {{ resourceNode.getAccessibleFrom()|intl_date_format }}
@@ -44,7 +42,7 @@
                         <td class="text-center">
                             {% if activity.getParameters() is not empty
                                 and activity.getParameters().getEvaluationType() is not empty %}
-                            
+
                                 {{ activity.getParameters().getEvaluationType()|trans({}, 'platform') }}
                             {% else %}
                                 {{ 'evaluation-manual'|trans({}, 'platform') }}
