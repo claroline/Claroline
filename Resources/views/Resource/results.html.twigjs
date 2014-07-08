@@ -30,7 +30,16 @@
                                     {% endif %}
                                 {% endfor %}
                             </td>
-                            <td>{{ node.path_for_display }}</td>
+                            <td>
+                                {% for pathPart in node.pathParts %}
+                                    <span class="result-breadcrumb">
+                                        <a href="#"
+                                           class="result-path"
+                                           data-type="directory"
+                                           data-id="{{ pathPart.id }}">{{ pathPart.name }}</a>
+                                    </span>
+                                {% endfor %}
+                            </td>
                         </tr>
                     {% endif %}
                 {% endfor %}

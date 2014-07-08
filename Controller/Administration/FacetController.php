@@ -79,7 +79,7 @@ class FacetController extends Controller
     {
         $this->checkOpen();
         $facets = $this->facetManager->getFacets();
-        $platformRoles = $this->roleManager->getPlatformNonAdminRoles();
+        $platformRoles = $this->roleManager->getPlatformNonAdminRoles(true);
         $profilePreferences = $this->facetManager->getProfilePreferences();
 
         return array(
@@ -134,7 +134,6 @@ class FacetController extends Controller
     public function createFacetAction()
     {
         $this->checkOpen();
-
         $form = $this->formFactory->create(new FacetType(), new Facet());
         $form->handleRequest($this->request);
 
@@ -163,7 +162,6 @@ class FacetController extends Controller
     public function createFieldAction(Facet $facet)
     {
         $this->checkOpen();
-
         $form = $this->formFactory->create(new FieldFacetType(), new FieldFacet());
         $form->handleRequest($this->request);
 
@@ -386,7 +384,7 @@ class FacetController extends Controller
     {
         $this->checkOpen();
         $roles = $facet->getRoles();
-        $platformRoles = $this->roleManager->getPlatformNonAdminRoles();
+        $platformRoles = $this->roleManager->getPlatformNonAdminRoles(true);
 
         return array('roles' => $roles, 'facet' => $facet, 'platformRoles' => $platformRoles);
     }
@@ -420,7 +418,7 @@ class FacetController extends Controller
     {
         $this->checkOpen();
         $fieldFacetsRole = $field->getFieldFacetsRole();
-        $platformRoles = $this->roleManager->getPlatformNonAdminRoles();
+        $platformRoles = $this->roleManager->getPlatformNonAdminRoles(true);
 
         return array('fieldFacetsRole' => $fieldFacetsRole, 'field' => $field, 'platformRoles' => $platformRoles);
     }

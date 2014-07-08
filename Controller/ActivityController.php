@@ -13,9 +13,14 @@ namespace Claroline\CoreBundle\Controller;
 
 use Claroline\CoreBundle\Entity\Activity\ActivityParameters;
 use Claroline\CoreBundle\Entity\Activity\ActivityRule;
+use Claroline\CoreBundle\Entity\Activity\Evaluation;
+use Claroline\CoreBundle\Entity\Activity\PastEvaluation;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
+use Claroline\CoreBundle\Form\ActivityEvaluationType;
 use Claroline\CoreBundle\Form\ActivityParametersType;
+use Claroline\CoreBundle\Form\ActivityPastEvaluationType;
 use Claroline\CoreBundle\Form\ActivityType;
 use Claroline\CoreBundle\Form\ActivityRuleType;
 use Claroline\CoreBundle\Manager\ActivityManager;
@@ -103,62 +108,73 @@ class ActivityController
         );
         $formRule->handleRequest($this->request);
 
+        $errors = $formParams->getErrors();
+        foreach ($errors as $error) {
+            echo $error->getMessage();
+        }
+
         if ($form->isValid()
             && $formParams->isValid()
             && ($formRule->get('action')->getData() === 'none' || $formRule->isValid())) {
 
             $this->activityManager->editActivity($form->getData());
-
-            $maxDuration = $formParams->get('max_duration')->getData();
-            $maxAttempts = $formParams->get('max_attempts')->getData();
             $evaluationType = $formParams->get('evaluation_type')->getData();
 
             $this->activityManager->updateParameters(
                 $params,
-                $maxDuration,
-                $maxAttempts,
+                null,
+                null,
                 $evaluationType
             );
 
             if ($formRule->get('action')->getData() === 'none') {
 
-                if ($hasRule) {
-                    $this->activityManager->deleteActivityRule($rule);
-                }
-            } else {
-                $primaryResource = $form->get('primaryResource')->getData();
-                $resourceNode = !is_null($primaryResource) ?
-                    $primaryResource :
-                    null;
-                $action = $formRule->get('action')->getData();
-                $occurrence = $formRule->get('occurrence')->getData();
-                $result = $formRule->get('result')->getData();
-                $activeFrom = $formRule->get('activeFrom')->getData();
-                $activeUntil = $formRule->get('activeUntil')->getData();
-
-                if ($hasRule) {
-                    $this->activityManager->updateActivityRule(
-                        $rule,
-                        $action,
-                        $occurrence,
-                        $result,
-                        $activeFrom,
-                        $activeUntil,
-                        $resourceNode
-                    );
+                    if ($hasRule) {
+                        $this->activityManager->deleteActivityRule($rule);
+                    }
                 } else {
-                    $this->activityManager->createActivityRule(
-                        $params,
-                        $action,
-                        $occurrence,
-                        $result,
-                        $activeFrom,
-                        $activeUntil,
-                        $resourceNode
-                    );
+                    $primaryResource = $form->get('primaryResource')->getData();
+                    $resourceNode = !is_null($primaryResource) ?
+                        $primaryResource :
+                        null;
+                    $action = $formRule->get('action')->getData();
+                    $occurrence = $formRule->get('occurrence')->getData();
+                    $result = $formRule->get('result')->getData();
+                    $resultMax = $formRule->get('resultMax')->getData();
+                    $isResultVisible = $formRule->get('isResultVisible')->getData();
+                    $activeFrom = $formRule->get('activeFrom')->getData();
+                    $activeUntil = $formRule->get('activeUntil')->getData();
+
+                    if ($hasRule) {
+                        $this->activityManager->updateActivityRule(
+                            $rule,
+                            $action,
+                            $occurrence,
+                            $result,
+                            $resultMax,
+                            $isResultVisible,
+                            $activeFrom,
+                            $activeUntil,
+                            $resourceNode
+                        );
+                    } else {
+                        $this->activityManager->createActivityRule(
+                            $params,
+                            $action,
+                            $occurrence,
+                            $result,
+                            $resultMax,
+                            $isResultVisible,
+                            $activeFrom,
+                            $activeUntil,
+                            $resourceNode
+                        );
+                    }
                 }
             }
-        }
+
+            //set the permissions for each resources
+            $this->activityManager->initializePermissions($resource);
 
         return array(
             '_resource' => $resource,
@@ -292,7 +308,7 @@ class ActivityController
     public function getRuleActionsFromResourceType($resourceTypeName = null)
     {
         if (is_null($resourceTypeName)) {
-            $ruleActions = $this->activityManager->getRuleActionsWithNoResource();
+            $ruleActions = $this->activityManager->getRuleActionsWithNoResourceType();
         } else {
             $resourceType = $this->resourceManager
                 ->getResourceTypeByName($resourceTypeName);
@@ -345,9 +361,148 @@ class ActivityController
         $pastEvals = $this->activityManager
             ->getPastEvaluationsByUserAndActivityParams($currentUser, $params);
 
+        if (is_null($evaluation)) {
+            $evaluationType = $params->getEvaluationType();
+            $status = ($evaluationType === 'automatic') ?
+                'not_attempted' :
+                null;
+
+            $evaluation = $this->activityManager->createEvaluation(
+                $currentUser,
+                $params,
+                null,
+                null,
+                $status
+            );
+        }
+        $ruleScore = null;
+        $isResultVisible = false;
+
+        if ($params->getEvaluationType() === 'automatic' &&
+            count($params->getRules()) > 0) {
+
+            $rule = $params->getRules()->first();
+            $score = $rule->getResult();
+            $scoreMax = $rule->getResultMax();
+
+            if (!is_null($score)) {
+                $ruleScore = $score;
+
+                if (!is_null($scoreMax)) {
+                    $ruleScore .= ' / ' . $scoreMax;
+                }
+
+                $ruleResultVisible = $rule->getIsResultVisible();
+                $isResultVisible = !empty($ruleResultVisible);
+            }
+        }
+
         return array(
+            'activityParameters' => $params,
             'evaluation' => $evaluation,
-            'pastEvals' => $pastEvals
+            'pastEvals' => $pastEvals,
+            'ruleScore' => $ruleScore,
+            'isResultVisible' => $isResultVisible
+        );
+    }
+
+    /**
+     * @Route(
+     *     "edit/activity/evaluation/{evaluationId}",
+     *     name="claro_activity_evaluation_edit",
+     *     options={"expose"=true}
+     * )
+     * @ParamConverter("currentUser", options={"authenticatedUser" = true})
+     * @ParamConverter(
+     *      "evaluation",
+     *      class="ClarolineCoreBundle:Activity\Evaluation",
+     *      options={"id" = "evaluationId", "strictId" = true}
+     * )
+     * @Template()
+     */
+    public function editActivityEvaluationAction(
+        User $currentUser,
+        Evaluation $evaluation
+    )
+    {
+        $isWorkspaceManager = false;
+        $activityParams = $evaluation->getActivityParameters();
+        $activity = $activityParams->getActivity();
+
+        if (!is_null($activity)) {
+            $workspace = $activity->getResourceNode()->getWorkspace();
+            $roleNames = $currentUser->getRoles();
+            $isWorkspaceManager = $this->isWorkspaceManager($workspace, $roleNames);
+        }
+
+        if (!$isWorkspaceManager) {
+
+            throw new AccessDeniedException();
+        }
+
+        $form = $this->formFactory
+            ->create(new ActivityEvaluationType(), $evaluation);
+        $form->handleRequest($this->request);
+
+        if ($form->isValid()) {
+            $this->activityManager->editEvaluation($evaluation);
+
+            return new Response('success', 204);
+        }
+
+        return array(
+            'form' => $form->createView(),
+            'evaluation' => $evaluation
+        );
+    }
+
+    /**
+     * @Route(
+     *     "edit/activity/past/evaluation/{pastEvaluationId}",
+     *     name="claro_activity_past_evaluation_edit",
+     *     options={"expose"=true}
+     * )
+     * @ParamConverter("currentUser", options={"authenticatedUser" = true})
+     * @ParamConverter(
+     *      "pastEvaluation",
+     *      class="ClarolineCoreBundle:Activity\PastEvaluation",
+     *      options={"id" = "pastEvaluationId", "strictId" = true}
+     * )
+     * @Template()
+     */
+    public function editActivityPastEvaluationAction(
+        User $currentUser,
+        PastEvaluation $pastEvaluation
+    )
+    {
+        $isWorkspaceManager = false;
+        $activityParams = $pastEvaluation->getActivityParameters();
+        $activity = $activityParams->getActivity();
+
+        if (!is_null($activity)) {
+            $workspace = $activity->getResourceNode()->getWorkspace();
+            $roleNames = $currentUser->getRoles();
+            $isWorkspaceManager = $this->isWorkspaceManager($workspace, $roleNames);
+        }
+
+        if (!$isWorkspaceManager) {
+
+            throw new AccessDeniedException();
+        }
+
+        $form = $this->formFactory
+            ->create(new ActivityPastEvaluationType(), $pastEvaluation);
+        $form->handleRequest($this->request);
+
+        if ($form->isValid()) {
+            $this->activityManager->editPastEvaluation($pastEvaluation);
+
+            return new Response('success', 204);
+        }
+
+        return array(
+            'form' => $form->createView(),
+            'pastEvaluation' => $pastEvaluation
         );
     }
 
@@ -356,5 +511,19 @@ class ActivityController
         if (!$this->securityContext->isGranted($permission, $resource)) {
             throw new AccessDeniedException();
         }
+    }
+
+    private function isWorkspaceManager(Workspace $workspace, array $roleNames)
+    {
+        $isWorkspaceManager = false;
+        $managerRole = 'ROLE_WS_MANAGER_' . $workspace->getGuid();
+
+        if (in_array('ROLE_ADMIN', $roleNames) ||
+            in_array($managerRole, $roleNames)) {
+
+            $isWorkspaceManager = true;
+        }
+
+        return $isWorkspaceManager;
     }
 }

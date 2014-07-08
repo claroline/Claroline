@@ -118,6 +118,8 @@ class RegistrationController extends Controller
             );
             $msg = $this->get('translator')->trans('account_created', array(), 'platform');
             $this->get('request')->getSession()->getFlashBag()->add('success', $msg);
+
+            return $this->redirect($this->generateUrl('claro_security_login'));
         }
 
         return array('form' => $form->createView());

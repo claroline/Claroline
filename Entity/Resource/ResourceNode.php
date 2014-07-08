@@ -16,7 +16,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\License;
-use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
@@ -133,7 +133,7 @@ class ResourceNode
 
     /**
      * @ORM\ManyToOne(
-     *      targetEntity="Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace",
+     *      targetEntity="Claroline\CoreBundle\Entity\Workspace\Workspace",
      *      inversedBy="resources"
      * )
      * @ORM\JoinColumn(onDelete="CASCADE", nullable=false)
@@ -335,9 +335,9 @@ class ResourceNode
     /**
      * Sets the workspace containing the resource instance.
      *
-     * @param \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace $workspace
+     * @param \Claroline\CoreBundle\Entity\Workspace\Workspace $workspace
      */
-    public function setWorkspace(AbstractWorkspace $workspace)
+    public function setWorkspace(Workspace $workspace)
     {
         $this->workspace = $workspace;
     }
@@ -345,7 +345,7 @@ class ResourceNode
     /**
      * Returns the workspace containing the resource instance.
      *
-     * @return \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace
+     * @return \Claroline\CoreBundle\Entity\Workspace\Workspace
      */
     public function getWorkspace()
     {
@@ -466,6 +466,11 @@ class ResourceNode
     public function getRights()
     {
         return $this->rights;
+    }
+
+    public function addRight(ResourceRights $right)
+    {
+        $this->rights->add($right);
     }
 
     public function setNext(ResourceNode $next = null, $setPrev = false)

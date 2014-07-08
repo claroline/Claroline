@@ -1,0 +1,9 @@
+competence_add: Ajouter une compétence
+competence_select: Selection des utilisateurs
+competence_form_name: 'Nom'
+competence_form_description: 'Description'
+competence_code: code
+competence_form_score: 'Point'
+select_competence_for_registration: 'Sélectionner des réferentiels'
+select_users_for_registration_to_workspace: Sélectionner des utilisateurs à inscrire.
+users_competences: 'Voir les utilisateurs associés aux réferentiels'

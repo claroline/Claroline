@@ -87,7 +87,7 @@ abstract class Rule
      * @var ResourceNode
      *
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceNode")
-     * @ORM\JoinColumn(nullable=true)
+     * @ORM\JoinColumn(onDelete="CASCADE", nullable=true)
      * @Expose
      */
     protected $resource;

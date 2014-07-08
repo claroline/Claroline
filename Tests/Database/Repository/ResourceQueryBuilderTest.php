@@ -106,7 +106,7 @@ class ResourceQueryBuilderTest extends MockeryTestCase
     {
         $qb = new ResourceQueryBuilder();
 
-        $mockedWorkspace = $this->mock('Claroline\CoreBundle\Entity\Workspace\SimpleWorkspace');
+        $mockedWorkspace = $this->mock('Claroline\CoreBundle\Entity\Workspace\Workspace');
         $mockedWorkspace->shouldReceive('getId')->once()->andReturn(123);
         $mockedParent = $this->mock('Claroline\CoreBundle\Entity\Resource\ResourceNode');
         $mockedParent->shouldReceive('getId')->once()->andReturn(456);
@@ -155,7 +155,7 @@ class ResourceQueryBuilderTest extends MockeryTestCase
             "AND BIT_AND(rights.mask, 1) = 1{$eol}" .
             "AND node.workspace IN{$eol}" .
             "({$eol}" .
-            "    SELECT aw FROM Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace aw{$eol}" .
+            "    SELECT aw FROM Claroline\CoreBundle\Entity\Workspace\Workspace aw{$eol}" .
             "    JOIN aw.roles r{$eol}" .
             "    WHERE r IN (SELECT r2 FROM Claroline\CoreBundle\Entity\Role r2 {$eol}".
             "       LEFT JOIN r2.users u {$eol}" .

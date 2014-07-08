@@ -105,7 +105,7 @@ class FormFactory
         ),
         self::TYPE_WORKSPACE_EDIT => array(
             'formType' => 'Claroline\CoreBundle\Form\WorkspaceEditType',
-            'entity' => 'Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace'
+            'entity' => 'Claroline\CoreBundle\Entity\Workspace\Workspace'
         ),
         self::TYPE_WORKSPACE_TEMPLATE => array(
             'formType' => 'Claroline\CoreBundle\Form\WorkspaceTemplateType'

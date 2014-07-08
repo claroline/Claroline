@@ -12,18 +12,18 @@
 namespace Claroline\CoreBundle\Controller;
 
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Entity\UserPublicProfilePreferences;
 use Claroline\CoreBundle\Entity\Facet\Facet;
-use Claroline\CoreBundle\Form\UserPublicProfilePreferencesType;
 use Claroline\CoreBundle\Event\StrictDispatcher;
 use Claroline\CoreBundle\Form\ProfileType;
 use Claroline\CoreBundle\Form\ResetPasswordType;
 use Claroline\CoreBundle\Form\UserPublicProfileUrlType;
+use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Manager\LocaleManager;
 use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Manager\UserManager;
 use Claroline\CoreBundle\Manager\ToolManager;
 use Claroline\CoreBundle\Manager\FacetManager;
+use Doctrine\ORM\NoResultException;
 use JMS\DiExtraBundle\Annotation as DI;
 use JMS\SecurityExtraBundle\Annotation as SEC;
 use Pagerfanta\Adapter\DoctrineORMAdapter;
@@ -34,6 +34,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 use Symfony\Component\Security\Core\Encoder\EncoderFactory;
 
@@ -51,6 +52,7 @@ class ProfileController extends Controller
     private $encoderFactory;
     private $toolManager;
     private $facetManager;
+    private $ch;
 
     /**
      * @DI\InjectParams({
@@ -62,7 +64,8 @@ class ProfileController extends Controller
      *     "localeManager"   = @DI\Inject("claroline.common.locale_manager"),
      *     "encoderFactory"  = @DI\Inject("security.encoder_factory"),
      *     "toolManager"     = @DI\Inject("claroline.manager.tool_manager"),
-     *     "facetManager"    = @DI\Inject("claroline.manager.facet_manager")
+     *     "facetManager"    = @DI\Inject("claroline.manager.facet_manager"),
+     *     "ch"              = @DI\Inject("claroline.config.platform_config_handler")
      * })
      */
     public function __construct(
@@ -74,7 +77,8 @@ class ProfileController extends Controller
         LocaleManager $localeManager,
         EncoderFactory $encoderFactory,
         ToolManager $toolManager,
-        FacetManager $facetManager
+        FacetManager $facetManager,
+        PlatformConfigurationHandler $ch
     )
     {
         $this->userManager = $userManager;
@@ -86,6 +90,7 @@ class ProfileController extends Controller
         $this->encoderFactory = $encoderFactory;
         $this->toolManager = $toolManager;
         $this->facetManager = $facetManager;
+        $this->ch = $ch;
     }
 
     private function isInRoles($role, $roles)
@@ -124,55 +129,6 @@ class ProfileController extends Controller
 
     /**
      * @EXT\Route(
-     *     "/preferences",
-     *      name="claro_user_public_profile_preferences"
-     * )
-     * @SEC\Secure(roles="ROLE_USER")
-     * @EXT\Template()
-     * @EXT\ParamConverter("loggedUser", options={"authenticatedUser" = true})
-     */
-    public function editPublicProfilePreferencesAction(User $loggedUser)
-    {
-        $form = $this->createForm(new UserPublicProfilePreferencesType(), $loggedUser->getPublicProfilePreferences());
-
-        if ($this->request->isMethod('POST')) {
-            $form->handleRequest($this->request);
-
-            if ($form->isValid()) {
-                /** @var \Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface $sessionFlashBag */
-                $sessionFlashBag = $this->get('session')->getFlashBag();
-                /** @var \Symfony\Bundle\FrameworkBundle\Translation\Translator $translator */
-                $translator = $this->get('translator');
-
-                try {
-                    /** @var \Claroline\CoreBundle\Entity\UserPublicProfilePreferences $userPublicProfilePreferences */
-                    $userPublicProfilePreferences = $form->getData();
-
-                    if ($userPublicProfilePreferences !== $loggedUser->getPublicProfilePreferences()) {
-                        throw new \Exception();
-                    }
-
-                    $entityManager = $this->get('doctrine.orm.entity_manager');
-                    $entityManager->persist($userPublicProfilePreferences);
-                    $entityManager->flush();
-
-                    $sessionFlashBag->add('success', $translator->trans('edit_public_profile_preferences_success', array(), 'platform'));
-                } catch(\Exception $exception){
-                    $sessionFlashBag->add('error', $translator->trans('edit_public_profile_preferences_error', array(), 'platform'));
-                }
-
-                return $this->redirect($this->generateUrl('claro_user_public_profile_preferences'));
-            }
-        }
-
-        return array(
-            'form' => $form->createView(),
-            'user' => $loggedUser
-        );
-    }
-
-    /**
-     * @EXT\Route(
      *     "/{publicUrl}",
      *      name="claro_public_profile_view",
      *      options={"expose"=true}
@@ -180,22 +136,26 @@ class ProfileController extends Controller
      */
     public function publicProfileAction($publicUrl)
     {
+        $isAccessibleForAnon = $this->ch->getParameter('anonymous_public_profile');
+
+        if (!$isAccessibleForAnon && $this->security->getToken()->getUser() === 'anon.') {
+            throw new AccessDeniedException();
+        }
+
         /** @var \Claroline\CoreBundle\Entity\User $user */
         $user = $this->getDoctrine()->getRepository('ClarolineCoreBundle:User')->findOneByIdOrPublicUrl($publicUrl);
 
-        if (null === $user) {
-            throw $this->createNotFoundException("Unknown user.");
+        try {
+            /** @var \Claroline\CoreBundle\Entity\User $user */
+            $user = $this->getDoctrine()->getRepository('ClarolineCoreBundle:User')->findOneByIdOrPublicUrl($publicUrl);
         }
-
-        $userPublicProfilePreferences = $user->getPublicProfilePreferences();
-        $publicProfileVisible         = false;
-
-        if ($this->get('security.context')->isGranted('ROLE_ADMIN')) {
-            $userPublicProfilePreferences = $this->get('claroline.manager.user_manager')->getUserPublicProfilePreferencesForAdmin();
+        catch (NoResultException $e) {
+            throw new NotFoundHttpException("Page not found");
         }
 
         $facets = $this->facetManager->getVisibleFacets($this->security->getToken());
         $fieldFacetValues = $this->facetManager->getFieldValuesByUser($user);
+        $publicProfilePreferences = $this->facetManager->getVisibleAdminPublicPreference();
         $fieldFacets = $this->facetManager->getVisibleFieldFacets($this->security->getToken());
 
         $response = new Response(
@@ -203,23 +163,13 @@ class ProfileController extends Controller
                 'ClarolineCoreBundle:Profile:publicProfile.html.twig',
                 array(
                     'user' => $user,
-                    'publicProfilePreferences' => $userPublicProfilePreferences,
+                    'publicProfilePreferences' => $publicProfilePreferences,
                     'facets' => $facets,
                     'fieldFacetValues' => $fieldFacetValues,
                     'fieldFacets' => $fieldFacets
                 )
             )
         );
-
-        /*
-        if (UserPublicProfilePreferences::SHARE_POLICY_NOBODY === $userPublicProfilePreferences->getSharePolicy()) {
-            $response = new Response($this->renderView('ClarolineCoreBundle:Profile:publicProfile.404.html.twig', array('user' => $user, 'publicUrl' => $publicUrl)), 404);
-        }
-        else if (UserPublicProfilePreferences::SHARE_POLICY_PLATFORM_USER === $userPublicProfilePreferences->getSharePolicy()
-                 && null === $this->getUser()) {
-            $response = new Response($this->renderView('ClarolineCoreBundle:Profile:publicProfile.401.html.twig', array('user' => $user, 'publicUrl' => $publicUrl)), 401);
-        }
-        */
 
         return $response;
     }
@@ -326,7 +276,7 @@ class ProfileController extends Controller
             if (count($rolesChangeSet) > 0) {
                 $changeSet['roles'] = $rolesChangeSet;
             }
-            
+
             if ($this->userManager->uploadAvatar($user) === false ) {
                 $sessionFlashBag->add('error', $errorRight);
             }
@@ -369,11 +319,11 @@ class ProfileController extends Controller
             $sessionFlashBag = $this->get('session')->getFlashBag();
             /** @var \Symfony\Bundle\FrameworkBundle\Translation\Translator $translator */
             $translator = $this->get('translator');
-            $loggedUser->setPlainPassword($form['password']->getData()); 
+            $loggedUser->setPlainPassword($form['password']->getData());
 
-            if ($this->encodePassword($loggedUser) === $oldPassword) {   
-                $loggedUser->setPlainPassword($form['plainPassword']->getData()); 
-                $loggedUser->setPassword($this->encodePassword($loggedUser));              
+            if ($this->encodePassword($loggedUser) === $oldPassword) {
+                $loggedUser->setPlainPassword($form['plainPassword']->getData());
+                $loggedUser->setPassword($this->encodePassword($loggedUser));
                 $entityManager = $this->get('doctrine.orm.entity_manager');
                 $entityManager->persist($loggedUser);
                 $entityManager->flush();

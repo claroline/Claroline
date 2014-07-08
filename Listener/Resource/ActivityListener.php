@@ -106,8 +106,9 @@ class ActivityListener
         if ($form->isValid()) {
             $activity = $form->getData();
             $activity->setName($activity->getTitle());
-            $activity->setParameters(new ActivityParameters());
-
+            $activityParameters = new ActivityParameters();
+            $activityParameters->setActivity($activity);
+            $activity->setParameters($activityParameters);
             $event->setResources(array($activity));
             $event->stopPropagation();
 
@@ -166,13 +167,21 @@ class ActivityListener
             ->getEvaluationByUserAndActivityParams($user, $params);
 
         if (is_null($evaluation)) {
+            $evaluationType = $params->getEvaluationType();
+            $status = ($evaluationType === 'automatic') ?
+                'not_attempted' :
+                null;
+            $nbAttempts = ($evaluationType === 'automatic') ?
+                0 :
+                null;
+
             $evaluation = $this->activityManager->createEvaluation(
                 $user,
                 $params,
-                $params->getEvaluationType(),
+                $evaluationType,
                 null,
-                'not_attempted',
-                0
+                $status,
+                $nbAttempts
             );
         }
 

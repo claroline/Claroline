@@ -14,7 +14,7 @@
     var common = window.Claroline.Common;
     var home = window.Claroline.Home;
     var modal = window.Claroline.Modal;
-    var picker = window.Claroline.ResourcePicker;
+    var resourceManager = window.Claroline.ResourceManager;
     var translator = window.Translator;
     var routing =  window.Routing;
 
@@ -154,9 +154,13 @@
      */
     tinymce.claroline.resourcePickerOpen = function ()
     {
-        picker.open(function (nodes) {
-            tinymce.claroline.callBack(nodes);
-        });
+        if (!resourceManager.hasPicker('tinyMcePicker')) {
+            resourceManager.createPicker('tinyMcePicker', {
+                callback: tinymce.claroline.callBack
+            }, true);
+        } else {
+            resourceManager.picker('tinyMcePicker', 'open');
+        }
     };
 
     /**

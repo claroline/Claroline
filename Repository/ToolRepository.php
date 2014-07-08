@@ -12,7 +12,7 @@
 namespace Claroline\CoreBundle\Repository;
 
 use Doctrine\ORM\EntityRepository;
-use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Entity\User;
 
 class ToolRepository extends EntityRepository
@@ -21,13 +21,13 @@ class ToolRepository extends EntityRepository
      * Returns the workspace tools visible by a set of roles.
      *
      * @param string[]          $roles
-     * @param AbstractWorkspace $workspace
+     * @param Workspace $workspace
      *
      * @return Tool[]
      *
      * @throws \RuntimeException
      */
-    public function findDisplayedByRolesAndWorkspace(array $roles, AbstractWorkspace $workspace)
+    public function findDisplayedByRolesAndWorkspace(array $roles, Workspace $workspace)
     {
         $isAdmin = false;
 
@@ -125,11 +125,11 @@ class ToolRepository extends EntityRepository
     /**
      * Returns the non-visible tools in a workspace.
      *
-     * @param AbstractWorkspace $workspace
+     * @param Workspace $workspace
      *
      * @return array[Tool]
      */
-    public function findUndisplayedToolsByWorkspace(AbstractWorkspace $workspace)
+    public function findUndisplayedToolsByWorkspace(Workspace $workspace)
     {
         $dql = "
             SELECT tool
@@ -150,20 +150,21 @@ class ToolRepository extends EntityRepository
     /**
      * Returns the visible tools in a workspace.
      *
-     * @param AbstractWorkspace $workspace
+     * @param Workspace $workspace
      *
      * @return array[Tool]
      */
-    public function findDisplayedToolsByWorkspace(AbstractWorkspace $workspace)
+    public function findDisplayedToolsByWorkspace(Workspace $workspace)
     {
-        $dql = "
+        $dql = '
             SELECT tool
             FROM Claroline\CoreBundle\Entity\Tool\Tool tool
             JOIN tool.orderedTools ot
             JOIN ot.workspace ws
-            WHERE ws.id = {$workspace->getId()}
-        ";
+            WHERE ws = :workspace
+        ';
         $query = $this->_em->createQuery($dql);
+        $query->setParameter('workspace', $workspace);
 
         return $query->getResult();
     }
@@ -171,11 +172,11 @@ class ToolRepository extends EntityRepository
     /**
      * Returns the number of tools visible in a workspace.
      *
-     * @param AbstractWorkspace $workspace
+     * @param Workspace $workspace
      *
      * @return integer
      */
-    public function countDisplayedToolsByWorkspace(AbstractWorkspace $workspace)
+    public function countDisplayedToolsByWorkspace(Workspace $workspace)
     {
         $dql = "
             SELECT count(tool)

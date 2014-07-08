@@ -23,7 +23,17 @@ class ActivityType extends AbstractType
         $builder
             ->add('title', 'text', array('label' => 'name', 'constraints' => new NotBlank()))
             ->add('description', 'tinymce', array('required' => false, 'label' => 'description'))
-            ->add('primaryResource', 'resourcePicker', array('required' => false));
+            ->add(
+                'primaryResource',
+                'resourcePicker',
+                array(
+                    'required' => false,
+                    'attr' => array(
+                        'data-blacklist' => 'activity',
+                        'data-restrict-for-owner' => 1
+                    )
+                )
+            );
     }
 
     public function getName()

@@ -135,7 +135,7 @@ class WorkspaceRegistrationController extends Controller
      * @EXT\Method("GET")
      * @EXT\ParamConverter(
      *     "workspaces",
-     *      class="ClarolineCoreBundle:Workspace\AbstractWorkspace",
+     *      class="ClarolineCoreBundle:Workspace\Workspace",
      *      options={"multipleIds" = true}
      * )
      *
@@ -162,7 +162,7 @@ class WorkspaceRegistrationController extends Controller
      * @EXT\Method("GET")
      * @EXT\ParamConverter(
      *     "workspaces",
-     *      class="ClarolineCoreBundle:Workspace\AbstractWorkspace",
+     *      class="ClarolineCoreBundle:Workspace\Workspace",
      *      options={"multipleIds" = true}
      * )
      *
@@ -257,7 +257,7 @@ class WorkspaceRegistrationController extends Controller
      * @EXT\Method("POST")
      * @EXT\ParamConverter(
      *     "workspaces",
-     *      class="ClarolineCoreBundle:Workspace\AbstractWorkspace",
+     *      class="ClarolineCoreBundle:Workspace\Workspace",
      *      options={"multipleIds" = true, "name" = "workspaceIds"}
      * )
      * @EXT\ParamConverter(
@@ -318,7 +318,7 @@ class WorkspaceRegistrationController extends Controller
      * @EXT\Method("POST")
      * @EXT\ParamConverter(
      *     "workspaces",
-     *      class="ClarolineCoreBundle:Workspace\AbstractWorkspace",
+     *      class="ClarolineCoreBundle:Workspace\Workspace",
      *      options={"multipleIds" = true, "name" = "workspaceIds"}
      * )
      * @EXT\ParamConverter(
@@ -484,4 +484,4 @@ class WorkspaceRegistrationController extends Controller
 
         throw new AccessDeniedException();
     }
-} 
+}

@@ -15,7 +15,7 @@ use Symfony\Component\Security\Core\Role\RoleInterface;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
-use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Repository\Exception\MissingSelectClauseException;
 
 /**
@@ -110,11 +110,11 @@ class ResourceQueryBuilder
     /**
      * Filters nodes belonging to a given workspace.
      *
-     * @param AbstractWorkspace $workspace
+     * @param Workspace $workspace
      *
      * @return ResourceQueryBuilder
      */
-    public function whereInWorkspace(AbstractWorkspace $workspace)
+    public function whereInWorkspace(Workspace $workspace)
     {
         $this->addWhereClause('node.workspace = :workspace_id');
         $this->parameters[':workspace_id'] = $workspace->getId();
@@ -211,7 +211,7 @@ class ResourceQueryBuilder
         $clause =
             "node.workspace IN{$eol}" .
             "({$eol}" .
-            "    SELECT aw FROM Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace aw{$eol}" .
+            "    SELECT aw FROM Claroline\CoreBundle\Entity\Workspace\Workspace aw{$eol}" .
             "    JOIN aw.roles r{$eol}" .
             "    WHERE r IN (SELECT r2 FROM Claroline\CoreBundle\Entity\Role r2 {$eol}".
             "       LEFT JOIN r2.users u {$eol}" .
@@ -269,7 +269,7 @@ class ResourceQueryBuilder
             for ($i = 0; $i < $count; $i++) {
                 $clause .= $i > 0 ? '    OR ' : '    ';
                 $clause .= "node.path LIKE :root_{$i}{$eol}";
-                $this->parameters[":root_{$i}"] = "{$roots[$i]}%";
+                $this->parameters[":root_{$i}"] = "{$roots[$i]}_%";
             }
 
             $this->addWhereClause($clause . ')');
@@ -508,6 +508,7 @@ class ResourceQueryBuilder
                 $otherRoles[] = $roleName;
             }
         }
+
         $eol = PHP_EOL;
         $currentDate = new \DateTime();
 

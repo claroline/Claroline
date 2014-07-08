@@ -4,9 +4,13 @@
     {{ 'roles_management'|trans({}, 'platform') }}
 {% endblock %}
 
+{% block explanation %}
+    <div class="well">
+        {{ 'roles_facet_form_explanation'|trans({}, 'platform') }}
+    </div>
+{% endblock %}
+
 {% block form %}
-    {#<div class="modal-body well">#}
-    {#</div>#}
     <form
         role="form"
         class="form-horizontal"

@@ -33,7 +33,7 @@ class ActivityRuleActionRepository extends EntityRepository
         return $executeQuery ? $query->getResult(): $query;
     }
 
-    public function findRuleActionsWithNoResource($executeQuery = true)
+    public function findRuleActionsWithNoResourceType($executeQuery = true)
     {
         $dql = '
             SELECT ara
@@ -57,5 +57,43 @@ class ActivityRuleActionRepository extends EntityRepository
         $query = $this->_em->createQuery($dql);
 
         return $executeQuery ? $query->getResult(): $query;
+    }
+
+    public function findRuleActionByActionAndResourceType(
+        $action,
+        ResourceType $resourceType,
+        $executeQuery = true
+    )
+    {
+        $dql = '
+            SELECT ara
+            FROM Claroline\CoreBundle\Entity\Activity\ActivityRuleAction ara
+            WHERE ara.action = :action
+            AND ara.resourceType = :resourceType
+        ';
+
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('action', $action);
+        $query->setParameter('resourceType', $resourceType);
+
+        return $executeQuery ? $query->getOneOrNullResult(): $query;
+    }
+
+    public function findRuleActionByActionWithNoResourceType(
+        $action,
+        $executeQuery = true
+    )
+    {
+        $dql = '
+            SELECT ara
+            FROM Claroline\CoreBundle\Entity\Activity\ActivityRuleAction ara
+            WHERE ara.action = :action
+            AND ara.resourceType IS NULL
+        ';
+
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('action', $action);
+
+        return $executeQuery ? $query->getOneOrNullResult(): $query;
     }
 }

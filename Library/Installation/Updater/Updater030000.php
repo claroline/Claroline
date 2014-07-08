@@ -12,7 +12,11 @@
 namespace Claroline\CoreBundle\Library\Installation\Updater;
 
 use Claroline\CoreBundle\Entity\Activity\ActivityRuleAction;
+<<<<<<< HEAD
 use Claroline\CoreBundle\Entity\Tool\AdminTool;
+=======
+use Claroline\CoreBundle\Persistence\ObjectManager;
+>>>>>>> 9a38860e11c96871cd5b784b8031cf524b4dda85
 
 class Updater030000
 {
@@ -25,7 +29,7 @@ class Updater030000
     {
         $this->container = $container;
         $this->icons = $this->setIcons();
-        $this->om = $container->get('claroline.persistence.object_manager');
+        $this->om = $container->get('doctrine.orm.entity_manager');
     }
 
     public function postUpdate()
@@ -33,8 +37,13 @@ class Updater030000
         $this->updateActivityRuleAction();
         $this->updateActivityIcon();
         $this->updateTools();
+        $this->removePublicProfilePreference();
         $this->updateAdminPluginTool();
+<<<<<<< HEAD
         $this->updateCompetenceTools();
+=======
+        $this->cleanWeb();
+>>>>>>> 9a38860e11c96871cd5b784b8031cf524b4dda85
     }
 
     public function setLogger($logger)
@@ -60,19 +69,35 @@ class Updater030000
             ->getRepository('ClarolineCoreBundle:Resource\ResourceType')
             ->findOneByName('text');
 
-        $fileAction = new ActivityRuleAction();
-        $fileAction->setAction('resource-read');
-        $fileAction->setResourceType($fileType);
-        $this->om->persist($fileAction);
+        $fileAction = $this->om
+            ->getRepository('ClarolineCoreBundle:Activity\ActivityRuleAction')
+            ->findRuleActionByActionAndResourceType('resource-read', $fileType);
+        $textAction = $this->om
+            ->getRepository('ClarolineCoreBundle:Activity\ActivityRuleAction')
+            ->findRuleActionByActionAndResourceType('resource-read', $textType);
+        $badgeAwardAction = $this->om
+            ->getRepository('ClarolineCoreBundle:Activity\ActivityRuleAction')
+            ->findRuleActionByActionWithNoResourceType('badge-awarding');
 
-        $textAction = new ActivityRuleAction();
-        $textAction->setAction('resource-read');
-        $textAction->setResourceType($textType);
-        $this->om->persist($textAction);
+        if (is_null($fileAction)) {
+            $fileAction = new ActivityRuleAction();
+            $fileAction->setAction('resource-read');
+            $fileAction->setResourceType($fileType);
+            $this->om->persist($fileAction);
+        }
 
-        $badgeAwardAction = new ActivityRuleAction();
-        $badgeAwardAction->setAction('badge-awarding');
-        $this->om->persist($badgeAwardAction);
+        if (is_null($textAction)) {
+            $textAction = new ActivityRuleAction();
+            $textAction->setAction('resource-read');
+            $textAction->setResourceType($textType);
+            $this->om->persist($textAction);
+        }
+
+        if (is_null($badgeAwardAction)) {
+            $badgeAwardAction = new ActivityRuleAction();
+            $badgeAwardAction->setAction('badge-awarding');
+            $this->om->persist($badgeAwardAction);
+        }
 
         $this->om->flush();
     }
@@ -131,6 +156,7 @@ class Updater030000
         $this->om->flush();
     }
 
+<<<<<<< HEAD
     private function updateCompetenceTools()
     {
     	$this->log('Creating admin referential competence tools...');
@@ -154,6 +180,32 @@ class Updater030000
         $this->om->flush();
         $this->log('competence tools created ...');
         
+=======
+    private function cleanWeb()
+    {
+        $webDir = $this->container->getParameter('claroline.param.web_dir');
+
+        //remove the old maintenance file
+        if (file_exists($webDir . DIRECTORY_SEPARATOR . 'maintenance.html')) {
+            unlink($webDir . DIRECTORY_SEPARATOR . 'maintenance.html');
+        }
+    }
+
+    private function removePublicProfilePreference()
+    {
+        $conn = $this->om->getConnection();
+        $sm = $conn->getSchemaManager();
+
+        if ($sm->tablesExist(array('claro_user_public_profile_preferences')) == true) {
+            $fromSchema = $sm->createSchema();
+            $toSchema = clone $fromSchema;
+            $toSchema->dropTable('claro_user_public_profile_preferences');
+            $sql = $fromSchema->getMigrateToSql($toSchema, $conn->getDatabasePlatform());
+            $stmt = $conn->prepare($sql[0]);
+            $stmt->execute();
+            $stmt->closeCursor();
+        }
+>>>>>>> 9a38860e11c96871cd5b784b8031cf524b4dda85
     }
 
     private function setIcons()

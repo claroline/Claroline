@@ -12,14 +12,14 @@
 namespace Claroline\CoreBundle\Event;
 
 use Symfony\Component\EventDispatcher\Event;
-use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
 
 class ImportWidgetConfigEvent extends Event
 {
     private $config;
     private $workspace;
 
-    public function __construct(array $config, AbstractWorkspace $workspace)
+    public function __construct(array $config, Workspace $workspace)
     {
         $this->config = $config;
         $this->workspace = $workspace;
