@@ -13,7 +13,7 @@ namespace Claroline\CoreBundle\Event;
 
 use Symfony\Component\EventDispatcher\Event;
 use Claroline\CoreBundle\Event\DataConveyorEventInterface;
-use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
 
 class DisplayToolEvent extends Event implements DataConveyorEventInterface
 {
@@ -21,7 +21,7 @@ class DisplayToolEvent extends Event implements DataConveyorEventInterface
     protected $content;
     protected $isPopulated = false;
 
-    public function __construct(AbstractWorkspace $workspace = null)
+    public function __construct(Workspace $workspace = null)
     {
         $this->workspace = $workspace;
     }

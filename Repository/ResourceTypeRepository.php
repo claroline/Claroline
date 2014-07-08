@@ -48,7 +48,7 @@ class ResourceTypeRepository extends EntityRepository
             ->orderBy('total', 'DESC');
 
         if (!empty($workspace)) {
-            $qb->leftJoin('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace', 'ws', 'WITH', 'ws = rs.workspace')
+            $qb->leftJoin('Claroline\CoreBundle\Entity\Workspace\Workspace', 'ws', 'WITH', 'ws = rs.workspace')
                 ->andWhere('ws = :workspace')
                 ->setParameter('workspace', $workspace);
         }

@@ -12,7 +12,7 @@
 namespace Claroline\CoreBundle\Manager;
 
 use Claroline\CoreBundle\Entity\Group;
-use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Event\StrictDispatcher;
 use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Repository\GroupRepository;
@@ -234,13 +234,13 @@ class GroupManager
     }
 
     /**
-     * @param \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace $workspace
+     * @param \Claroline\CoreBundle\Entity\Workspace\Workspace $workspace
      * @param integer $page
-     * @param int $max
+     * @param integer $max
      *
      * @return \PagerFanta\PagerFanta
      */
-    public function getWorkspaceOutsiders(AbstractWorkspace $workspace, $page, $max = 50)
+    public function getWorkspaceOutsiders(Workspace $workspace, $page, $max = 50)
     {
         $query = $this->groupRepo->findWorkspaceOutsiders($workspace, false);
 
@@ -248,14 +248,14 @@ class GroupManager
     }
 
     /**
-     * @param \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace $workspace
+     * @param \Claroline\CoreBundle\Entity\Workspace\Workspace $workspace
      * @param string $search
      * @param integer $page
      * @param int $max
      *
      * @return \PagerFanta\PagerFanta
      */
-    public function getWorkspaceOutsidersByName(AbstractWorkspace $workspace, $search, $page, $max = 50)
+    public function getWorkspaceOutsidersByName(Workspace $workspace, $search, $page, $max = 50)
     {
         $query = $this->groupRepo->findWorkspaceOutsidersByName($workspace, $search, false);
 
@@ -263,13 +263,13 @@ class GroupManager
     }
 
     /**
-     * @param \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace $workspace
+     * @param \Claroline\CoreBundle\Entity\Workspace\Workspace $workspace
      * @param integer $page
      * @param int $max
      *
      * @return \PagerFanta\PagerFanta
      */
-    public function getGroupsByWorkspace(AbstractWorkspace $workspace, $page, $max = 50)
+    public function getGroupsByWorkspace(Workspace $workspace, $page, $max = 50)
     {
         $query = $this->groupRepo->findByWorkspace($workspace, false);
 
@@ -277,7 +277,7 @@ class GroupManager
     }
 
     /**
-     * @param \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace[] $workspaces
+     * @param \Claroline\CoreBundle\Entity\Workspace\Workspace[] $workspaces
      *
      * @return Group[]
      */
@@ -287,7 +287,7 @@ class GroupManager
     }
 
     /**
-     * @param \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace[] $workspaces
+     * @param \Claroline\CoreBundle\Entity\Workspace\Workspace[] $workspaces
      * @param string                                                     $search
      *
      * @return Group[]
@@ -301,14 +301,14 @@ class GroupManager
     }
 
     /**
-     * @param \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace $workspace
+     * @param \Claroline\CoreBundle\Entity\Workspace\Workspace $workspace
      * @param string $search
      * @param integer $page
      * @param int $max
      *
      * @return \PagerFanta\PagerFanta
      */
-    public function getGroupsByWorkspaceAndName(AbstractWorkspace $workspace, $search, $page, $max = 50)
+    public function getGroupsByWorkspaceAndName(Workspace $workspace, $search, $page, $max = 50)
     {
         $query = $this->groupRepo->findByWorkspaceAndName($workspace, $search, false);
 
@@ -363,14 +363,14 @@ class GroupManager
     }
 
     /**
-     * @param \Claroline\CoreBundle\Entity\Role[] $roles
-     * @param \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace $workspace
+     * @param \Claroline\CoreBundle\Entity\Role[]                      $roles
+     * @param \Claroline\CoreBundle\Entity\Workspace\Workspace $workspace
      * @param integer $page
      * @param int $max
      *
      * @return \PagerFanta\PagerFanta
      */
-    public function getOutsidersByWorkspaceRoles(array $roles, AbstractWorkspace $workspace, $page = 1, $max = 50)
+    public function getOutsidersByWorkspaceRoles(array $roles, Workspace $workspace, $page = 1, $max = 50)
     {
         $query = $this->groupRepo->findOutsidersByWorkspaceRoles($roles, $workspace, true);
 
@@ -394,9 +394,9 @@ class GroupManager
     }
 
     /**
-     * @param \Claroline\CoreBundle\Entity\Role[] $roles
-     * @param string $name
-     * @param \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace $workspace
+     * @param \Claroline\CoreBundle\Entity\Role[]                      $roles
+     * @param string                                                   $name
+     * @param \Claroline\CoreBundle\Entity\Workspace\Workspace $workspace
      * @param integer $page
      * @param int $max
      *
@@ -405,7 +405,7 @@ class GroupManager
     public function getOutsidersByWorkspaceRolesAndName(
         array $roles,
         $name,
-        AbstractWorkspace $workspace,
+        Workspace $workspace,
         $page = 1,
         $max = 50
     )

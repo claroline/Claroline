@@ -17,7 +17,7 @@ use Claroline\CoreBundle\Entity\Resource\ResourceShortcut;
 use Claroline\CoreBundle\Entity\Resource\ResourceIcon;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Repository\ResourceTypeRepository;
 use Claroline\CoreBundle\Repository\ResourceNodeRepository;
 use Claroline\CoreBundle\Repository\ResourceRightsRepository;
@@ -37,6 +37,7 @@ use Claroline\CoreBundle\Library\Security\Utilities;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * @DI\Service("claroline.manager.resource_manager")
@@ -67,23 +68,26 @@ class ResourceManager
     private $ut;
     /** @var Utilities */
     private $secut;
+    private $container;
 
     /**
      * Constructor.
      *
      * @DI\InjectParams({
-     *     "roleManager"   = @DI\Inject("claroline.manager.role_manager"),
-     *     "iconManager"   = @DI\Inject("claroline.manager.icon_manager"),
-     *     "rightsManager" = @DI\Inject("claroline.manager.rights_manager"),
-     *     "dispatcher"    = @DI\Inject("claroline.event.event_dispatcher"),
-     *     "om"            = @DI\Inject("claroline.persistence.object_manager"),
-     *     "ut"            = @DI\Inject("claroline.utilities.misc"),
-     *     "secut"         = @DI\Inject("claroline.security.utilities")
+     *     "roleManager"     = @DI\Inject("claroline.manager.role_manager"),
+     *     "iconManager"     = @DI\Inject("claroline.manager.icon_manager"),
+     *     "container"       = @DI\Inject("service_container"),
+     *     "rightsManager"   = @DI\Inject("claroline.manager.rights_manager"),
+     *     "dispatcher"      = @DI\Inject("claroline.event.event_dispatcher"),
+     *     "om"              = @DI\Inject("claroline.persistence.object_manager"),
+     *     "ut"              = @DI\Inject("claroline.utilities.misc"),
+     *     "secut"           = @DI\Inject("claroline.security.utilities")
      * })
      */
     public function __construct (
         RoleManager $roleManager,
         IconManager $iconManager,
+        ContainerInterface $container,
         RightsManager $rightsManager,
         StrictDispatcher $dispatcher,
         ObjectManager $om,
@@ -103,6 +107,7 @@ class ResourceManager
         $this->om = $om;
         $this->ut = $ut;
         $this->secut = $secut;
+        $this->container = $container;
     }
 
     /**
@@ -115,7 +120,7 @@ class ResourceManager
      * @param \Claroline\CoreBundle\Entity\Resource\AbstractResource   $resource
      * @param \Claroline\CoreBundle\Entity\Resource\ResourceType       $resourceType
      * @param \Claroline\CoreBundle\Entity\User                        $creator
-     * @param \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace $workspace
+     * @param \Claroline\CoreBundle\Entity\Workspace\Workspace $workspace
      * @param \Claroline\CoreBundle\Entity\Resource\ResourceNode       $parent
      * @param \Claroline\CoreBundle\Entity\Resource\ResourceIcon       $icon
      * @param array                                                    $rights
@@ -126,7 +131,7 @@ class ResourceManager
         AbstractResource $resource,
         ResourceType $resourceType,
         User $creator,
-        AbstractWorkspace $workspace,
+        Workspace $workspace,
         ResourceNode $parent = null,
         ResourceIcon $icon = null,
         array $rights = array()
@@ -159,6 +164,11 @@ class ResourceManager
         $node->setName($name);
         $node->setPrevious($previous);
         $node->setClass(get_class($resource));
+
+        if (!is_null($parent)) {
+            $node->setAccessibleFrom($parent->getAccessibleFrom());
+            $node->setAccessibleUntil($parent->getAccessibleUntil());
+        }
         $resource->setResourceNode($node);
         $this->setRights($node, $parent, $rights);
         $this->om->persist($node);
@@ -176,6 +186,12 @@ class ResourceManager
 
         $node->setPathForCreationLog($parentPath . $name);
         $node->setIcon($icon);
+
+        //if it's an activity, initialize the permissions for its linked resources;
+        if ($resourceType->getName() === 'activity') {
+            $this->container->get('claroline.manager.activity_manager')->initializePermissions($resource);
+        }
+
         $this->dispatcher->dispatch('log', 'Log\LogResourceCreate', array($node));
         $this->om->endFlushSuite();
 
@@ -184,15 +200,15 @@ class ResourceManager
 
     /**
      * Gets a unique name for a resource in a folder.
-     * If the name of the resource already exists here, ~*indice* will be happended
-     * to its name
+     * If the name of the resource already exists here, ~*indice* will be appended
+     * to its name.
      *
      * @param \Claroline\CoreBundle\Entity\Resource\ResourceNode $node
      * @param \Claroline\CoreBundle\Entity\Resource\ResourceNode $parent
-     *
+     * @param bool $isCopy
      * @return string
      */
-    public function getUniqueName(ResourceNode $node, ResourceNode $parent = null)
+    public function getUniqueName(ResourceNode $node, ResourceNode $parent = null, $isCopy = false)
     {
         $candidateName = $node->getName();
         $parent = $parent ?: $node->getParent();
@@ -202,9 +218,13 @@ class ResourceManager
         $siblingNames = array();
 
         foreach ($sameLevelNodes as $levelNode) {
-            if ($levelNode !== $node) {
-                $siblingNames[] = $levelNode->getName();
+            if (!$isCopy && $levelNode === $node) {
+                // without that condition, a node which is "renamed" with the
+                // same name is also incremented
+                continue;
             }
+
+            $siblingNames[] = $levelNode->getName();
         }
 
         if (!in_array($candidateName, $siblingNames)) {
@@ -379,13 +399,15 @@ class ResourceManager
     )
     {
         if (count($rights) === 0 && $parent !== null) {
-            $this->rightsManager->copy($parent, $node);
+            $node = $this->rightsManager->copy($parent, $node);
         } else {
             if (count($rights) === 0) {
                 throw new RightsException('Rights must be specified if there is no parent');
             }
             $this->createRights($node, $rights);
         }
+
+        return $node;
     }
 
     /**
@@ -709,7 +731,7 @@ class ResourceManager
     public function buildSearchArray($queryParameters)
     {
         $allowedStringCriteria = array('name', 'dateFrom', 'dateTo');
-        $allowedArrayCriteria = array('roots', 'types');
+        $allowedArrayCriteria = array('types');
         $criteria = array();
 
         foreach ($queryParameters as $parameter => $value) {
@@ -737,7 +759,7 @@ class ResourceManager
         $last = $this->resourceNodeRepo->findOneBy(array('parent' => $parent, 'next' => null));
         $resource = $this->getResourceFromNode($node);
 
-        if ($resource instanceof \Claroline\CoreBundle\Entity\Resource\ResourceShortcut) {
+        if ($resource instanceof ResourceShortcut) {
             $copy = $this->om->factory('Claroline\CoreBundle\Entity\Resource\ResourceShortcut');
             $copy->setTarget($resource->getTarget());
             $newNode = $this->copyNode($node, $parent, $user, $last);
@@ -775,11 +797,11 @@ class ResourceManager
     }
 
     /**
-     * Convert a ressource into an array (mainly used to be serialized and sent to the manager.js as
+     * Convert a resource into an array (mainly used to be serialized and sent to the manager.js as
      * a json response)
      *
      * @param \Claroline\CoreBundle\Entity\Resource\ResourceNode $node
-     *
+     * @param \Symfony\Component\Security\Core\Authentication\Token\TokenInterface $token
      * @return array
      */
     public function toArray(ResourceNode $node, TokenInterface $token)
@@ -881,7 +903,7 @@ class ResourceManager
         if ($node->getIcon()) {
             $this->iconManager->delete($node->getIcon());
         }
-        
+
         $this->om->remove($node);
         $this->om->endFlushSuite();
     }
@@ -1126,11 +1148,11 @@ class ResourceManager
     }
 
     /**
-     * @param \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace $workspace
+     * @param \Claroline\CoreBundle\Entity\Workspace\Workspace $workspace
      *
      * @return array
      */
-    public function getWorkspaceRoot(AbstractWorkspace $workspace)
+    public function getWorkspaceRoot(Workspace $workspace)
     {
         return $this->resourceNodeRepo->findWorkspaceRoot($workspace);
     }
@@ -1248,13 +1270,29 @@ class ResourceManager
     }
 
     /**
-     * @param AbstractWorkspace $workspace
+     * @param Workspace $workspace
      *
      * @return \Claroline\CoreBundle\Entity\Resource\ResourceNode[]
      */
-    public function getByWorkspace(AbstractWorkspace $workspace)
+    public function getByWorkspace(Workspace $workspace)
     {
         return $this->resourceNodeRepo->findBy(array('workspace' => $workspace));
+    }
+
+    /**
+     * @param Workspace $workspace
+     *
+     * @return \Claroline\CoreBundle\Entity\Resource\ResourceNode[]
+     */
+    public function getByWorkspaceAndResourceType(
+        Workspace $workspace,
+        ResourceType $resourceType
+    )
+    {
+        return $this->resourceNodeRepo->findBy(
+            array('workspace' => $workspace, 'resourceType' => $resourceType),
+            array('name' => 'ASC')
+        );
     }
 
     /**
@@ -1268,6 +1306,14 @@ class ResourceManager
             'Claroline\CoreBundle\Entity\Resource\ResourceNode',
             $ids
         );
+    }
+
+    /**
+     * @return \Claroline\CoreBundle\Entity\Resource\ResourceNode
+     */
+    public function getById($id)
+    {
+        return $this->resourceNodeRepo->findOneby(array('id' => $id));
     }
 
     /**
@@ -1299,7 +1345,7 @@ class ResourceManager
         $newNode->setCreator($user);
         $newNode->setWorkspace($newParent->getWorkspace());
         $newNode->setParent($newParent);
-        $newNode->setName($this->getUniqueName($node, $newParent));
+        $newNode->setName($this->getUniqueName($node, $newParent, true));
         $newNode->setPrevious($last);
         $newNode->setNext(null);
         $newNode->setIcon($node->getIcon());
@@ -1425,5 +1471,31 @@ class ResourceManager
         $icon = $this->iconManager->getIcon($this->getResourceFromNode($node));
         $node->setIcon($icon);
         $this->om->endFlushSuite();
+    }
+
+    /**
+     * Retrieves all descendants of given ResourceNode and updates their
+     * accessibility dates.
+     *
+     * @param ResourceNode $node A directory
+     * @param datetime $accessibleFrom
+     * @param datetime $accessibleUntil
+     */
+    public function changeAccessibilityDate(
+        ResourceNode $node,
+        $accessibleFrom,
+        $accessibleUntil
+    )
+    {
+        if ($node->getResourceType()->getName() === 'directory') {
+            $descendants = $this->resourceNodeRepo->findDescendants($node);
+
+            foreach ($descendants as $descendant) {
+                $descendant->setAccessibleFrom($accessibleFrom);
+                $descendant->setAccessibleUntil($accessibleUntil);
+                $this->om->persist($descendant);
+            }
+            $this->om->flush();
+        }
     }
 }

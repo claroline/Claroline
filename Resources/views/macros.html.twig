@@ -64,7 +64,7 @@
     {% import _self as self %}
 
     {% set myDesktop = [{
-            'icon': 'icon-briefcase',
+            'icon': 'fa fa-briefcase',
             'name': 'desktop'|trans({}, 'platform'),
             'href': path('claro_desktop_open')
         }]
@@ -80,7 +80,7 @@
     {% set workspaceElements =
         [
             {
-                'icon': 'icon-book',
+                'icon': 'fa fa-book',
                 'name': 'my_workspaces'|trans({}, 'platform'),
                 'href': path('claro_workspace_by_user')
             },
@@ -125,5 +125,93 @@
         {% else %}
             <span class="input-group-addon">{{ 'line_per_page'|trans({}, 'platform') }}</span>
         {% endif %}
+    </div>
+{% endmacro %}
+
+{% macro renderPackageElement(package, upgradablePackages) %}
+    <div class="panel-group" id="accordion-{{ package.getDistReference() }}">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h5 class="panel-title">
+                    <a class="panel-toggle package-element"
+                       data-toggle="collapse"
+                       data-parent="#accordion-{{ package.getDistReference() }}"
+                       href="#collapse-inner-{{ package.getDistReference() }}"
+                       data-package-dist-reference="{{ package.getDistReference() }}"
+                    >
+                        {% set version = package.getPrettyVersion() | replace({'v': ''})  %}
+                        {{ package.getPrettyName() }}
+                    </a>
+                    <span class="badge alert-info">{{ version }}</span>
+
+                    {% for upgradablePackage in upgradablePackages %}
+                        {% if
+                            upgradablePackage['package'].getPrettyName() == package.getPrettyName()
+                        %}
+                            {% if version_compare(version, upgradablePackage['tag'], '<') %}
+                                <span class="badge pull-right alert-danger badge-new-version">
+                                    {#{{ upgradablePackage['tag'] }}#}
+                                    {{ 'new'|trans({}, 'platform') }}
+                                </span>
+                            {% endif %}
+                        {% endif %}
+                    {% endfor %}
+                </h5>
+            </div>
+            <div id="collapse-inner-{{ package.getDistReference() }}" class="panel panel-body collapse">
+                {% if
+                    not package.getDescription()
+                    and not package.getAuthors() | length > 0
+                    and not package.getLicense()
+                    and not package.getHomePage()
+                %}
+                    {{ 'no_package_description'|trans({}, 'platform') }}
+                {% else %}
+                    {% if package.getDescription() %}
+                        <div>
+                            {{ package.getDescription() }}
+                        </div>
+                    {% endif %}
+                    {% if package.getAuthors() | length > 0 %}
+                        <div>
+                            <ul>
+                            {% for author in package.getAuthors() %}
+                                <li>
+                                    {% if author['name'] is defined %}
+                                        {{ author['name'] }}
+                                    {% endif %}
+                                    <ul>
+                                        {% if author['email'] is defined %}
+                                            <li>
+                                                {{ author['email'] }}
+                                            </li>
+                                        {% endif %}
+                                        {% if author['homepage'] is defined %}
+                                            <li>
+                                                <a href="{{ author['homepage'] }}">
+                                                    {{ author['homepage'] }}
+                                                </a>
+                                            </li>
+                                        {% endif %}
+                                    </ul>
+                                </li>
+                            {% endfor %}
+                            </ul>
+                        </div>
+                    {% endif %}
+                    {% if package.getLicense() %}
+                        <div>
+                            {{ package.getLicense()[0] }}
+                        </div>
+                    {% endif %}
+                    {% if package.getHomePage() %}
+                        <div>
+                            <a href="{{ package.getHomePage() }}"> {{ package.getHomePage() }}</a>
+                        </div>
+                    {% endif %}
+                {% endif %}
+                <hr>
+            </div>
+        </div>
     </div>
 {% endmacro %}

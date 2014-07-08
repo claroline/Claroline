@@ -241,7 +241,7 @@ class FileListener implements ContainerAwareInterface
     /**
      * @DI\Observe("update_file_file")
      *
-     * @param OpenResourceEvent $event
+     * @param CustomActionResourceEvent $event
      */
     public function onUpdateFile(CustomActionResourceEvent $event)
     {

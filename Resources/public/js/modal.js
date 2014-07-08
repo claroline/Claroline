@@ -13,7 +13,38 @@
     window.Claroline = window.Claroline || {};
     var translator = window.Translator;
     var routing = window.Routing;
+    var common = window.Claroline.Common;
     var modal = window.Claroline.Modal = {};
+    var modalStack = [];
+
+    /**
+     * Handles nested modals.
+     */
+    $('body').on({
+        'show.bs.modal': function () {
+            var stackLength = modalStack.length;
+
+            if (stackLength > 0) {
+                var previousModal = modalStack[stackLength - 1];
+
+                if (previousModal.get(0) === $(this).get(0)) {
+                    return;
+                }
+
+                previousModal.addClass('parent-hide');
+            }
+
+            modalStack.push($(this));
+        },
+        'hide.bs.modal': function () {
+            modalStack.pop();
+            var stackLength = modalStack.length;
+
+            if (stackLength > 0) {
+                modalStack[stackLength - 1].removeClass('parent-hide');
+            }
+        }
+    }, '.modal');
 
     /**
      * Hide all open modals.
@@ -24,50 +55,17 @@
     };
 
     /**
-     * Hide parent modal when nested modals.
-     */
-    modal.parentHide = function () {
-        if (typeof(modal.parentModals) === 'undefined') {
-            modal.parentModals = [];
-        }
-
-        $('.modal.in:not(.parent-hide, .fullscreen), .modal-backdrop:not(.parent-hide, .fullscreen)')
-        .each(function () {
-            $(this).addClass('parent-hide');
-            modal.parentModals.push(this);
-        });
-    };
-
-    /**
-     * Show parent modal when close nested modals.
-     */
-    modal.parentShow = function ()
-    {
-        if (typeof(modal.parentModals) !== 'undefined') {
-            for (var object in modal.parentModals) {
-                if (modal.parentModals.hasOwnProperty(object)) {
-                    $(modal.parentModals[object]).removeClass('parent-hide');
-                }
-            }
-            modal.parentModals = [];
-        }
-    };
-
-    /**
      * Create a new modal that destroys itself when close.
      *
      * @param content The content to put inside this modal (this modal does not contain modal-digalog element)
      */
     modal.create = function (content)
     {
-        modal.parentHide();
-
-        return modal.createElement('div', 'modal fade')
+        return common.createElement('div', 'modal fade')
             .html(content)
             .appendTo('body')
             .modal('show')
             .on('hidden.bs.modal', function () {
-                modal.parentShow();
                 $(this).remove();
             });
     };
@@ -85,17 +83,6 @@
     };
 
     /**
-     * This function creates a new element in the document with a given class name.
-     *
-     * @param tag The tag name of the new element.
-     * @param className The class name of the new element.
-     */
-    modal.createElement = function (tag, className)
-    {
-        return $(document.createElement(tag)).addClass(className);
-    };
-
-    /**
      * This function show a complete modal with given title and content.
      *
      * @param title The title of the modal.
@@ -103,16 +90,16 @@
      */
     modal.simpleContainer = function (title, content)
     {
-        modal.create(
-            modal.createElement('div', 'modal-dialog').html(
-                modal.createElement('div', 'modal-content').append(
-                    modal.createElement('div', 'modal-header')
-                    .append(modal.createElement('button', 'close').html('&times;').attr('data-dismiss', 'modal'))
-                    .append(modal.createElement('h4', 'modal-title').html(title))
+        return modal.create(
+            common.createElement('div', 'modal-dialog').html(
+                common.createElement('div', 'modal-content').append(
+                    common.createElement('div', 'modal-header')
+                    .append(common.createElement('button', 'close').html('&times;').attr('data-dismiss', 'modal'))
+                    .append(common.createElement('h4', 'modal-title').html(title))
                 )
-                .append(modal.createElement('div', 'modal-body').html(content))
-                .append(modal.createElement('div', 'modal-footer').html(
-                    modal.createElement('button', 'btn btn-primary')
+                .append(common.createElement('div', 'modal-body').html(content))
+                .append(common.createElement('div', 'modal-footer').html(
+                    common.createElement('button', 'btn btn-primary')
                     .html(translator.get('home:Ok'))
                     .attr('data-dismiss', 'modal')
                     )

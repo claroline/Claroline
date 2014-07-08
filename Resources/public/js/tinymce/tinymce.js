@@ -11,8 +11,10 @@
     'use strict';
 
     var tinymce = window.tinymce;
+    var common = window.Claroline.Common;
     var home = window.Claroline.Home;
     var modal = window.Claroline.Modal;
+    var resourceManager = window.Claroline.ResourceManager;
     var translator = window.Translator;
     var routing =  window.Routing;
 
@@ -147,69 +149,17 @@
     };
 
     /**
-     * Upload a file and add it in a TinyMCE editor.
-     *
-     * @param form A HTML form element.
-     * @param element A HTML modal element.
-     *
-     */
-    tinymce.claroline.uploadfile = function (form, element) {
-        var workspace = $(form).data('workspace');
-        $(form).upload(
-            home.path + 'resource/create/file/' + workspace,
-            function (done) {
-                if (done.getResponseHeader('Content-Type')  === 'application/json') {
-                    var resource = $.parseJSON(done.responseText)[0];
-                    var nodes = {};
-                    var mimeType = 'mime_type'; //camel case fix in order to have 0 jshint errors
-                    nodes[resource.id] = new Array(resource.name, resource.type, resource[mimeType]);
-                    $(element).modal('hide');
-                    tinymce.claroline.callBack(nodes);
-                    $.ajax(
-                        routing.generate('claro_resource_open_perms', {'node': resource.id})
-                    );
-                } else {
-                    $('.progress', element).addClass('hide');
-                    $('.alert', element).removeClass('hide');
-                    $('.progress-bar', element).attr('aria-valuenow', 0).css('width', '0%').find('sr-only').text('0%');
-                }
-            },
-            function (progress) {
-                var percent = Math.round((progress.loaded * 100) / progress.totalSize);
-
-                $('.progress', element).removeClass('hide');
-                $('.alert', element).addClass('hide');
-                $('.progress-bar', element)
-                    .attr('aria-valuenow', percent)
-                    .css('width', percent + '%')
-                    .find('sr-only').text(percent + '%');
-            }
-        );
-    };
-
-    /**
      * Open a resource picker from a TinyMCE editor.
      *
      */
     tinymce.claroline.resourcePickerOpen = function ()
     {
-        if ($('#resourcePicker').get(0) === undefined) {
-            $('body').append('<div id="resourcePicker"></div>');
-            $.ajax(home.path + 'resource/init')
-                .done(function (data) {
-                    var resourceInit = JSON.parse(data);
-                    resourceInit.parentElement = $('#resourcePicker');
-                    resourceInit.isPickerMultiSelectAllowed = false;
-                    resourceInit.isPickerOnly = true;
-                    resourceInit.pickerCallback = function (nodes) { tinymce.claroline.callBack(nodes); };
-                    Claroline.ResourceManager.initialize(resourceInit);
-                    Claroline.ResourceManager.picker('open');
-                })
-                .error(function () {
-                    modal.error();
-                });
+        if (!resourceManager.hasPicker('tinyMcePicker')) {
+            resourceManager.createPicker('tinyMcePicker', {
+                callback: tinymce.claroline.callBack
+            }, true);
         } else {
-            Claroline.ResourceManager.picker('open');
+            resourceManager.picker('tinyMcePicker', 'open');
         }
     };
 
@@ -223,7 +173,7 @@
     {
         if ($(editor.getElement()).data('resource-picker') !== 'off') {
             editor.addButton('resourcePicker', {
-                'icon': 'none icon-folder-open',
+                'icon': 'none fa fa-folder-open',
                 'classes': 'widget btn',
                 'tooltip': translator.get('platform:resources'),
                 'onclick': function () {
@@ -232,7 +182,7 @@
                 }
             });
             editor.addButton('fileUpload', {
-                'icon': 'none icon-file',
+                'icon': 'none fa fa-file',
                 'classes': 'widget btn',
                 'tooltip': translator.get('platform:upload'),
                 'onclick': function () {
@@ -241,12 +191,12 @@
                         element.on('click', '.resourcePicker', function () {
                             tinymce.claroline.resourcePickerOpen();
                         })
-                            .on('click', '.filePicker', function () {
-                                $('#file_form_file').click();
-                            })
-                            .on('change', '#file_form_file', function () {
-                                tinymce.claroline.uploadfile(this, element);
-                            });
+                        .on('click', '.filePicker', function () {
+                            $('#file_form_file').click();
+                        })
+                        .on('change', '#file_form_file', function () {
+                            common.uploadfile(this, element, tinymce.claroline.callBack);
+                        });
                     });
                 }
             });
@@ -279,7 +229,7 @@
 
         // Add a button that toggles toolbar 1+ on/off
         editor.addButton('displayAllButtons', {
-            'icon': 'none icon-chevron-down',
+            'icon': 'none fa fa-chevron-down',
             'classes': 'widget btn',
             'tooltip': translator.get('platform:tinymce_all_buttons'),
             onclick: function () {
@@ -327,7 +277,7 @@
      */
     tinymce.claroline.mentionsItem = function (item)
     {
-        var avatar = '<i class="icon-user"></i>';
+        var avatar = '<i class="fa fa-user"></i>';
         if (item.avatar !== null) {
             avatar = '<img src="' + home.asset + 'uploads/pictures/' + item.avatar + '" alt="' + item.name +
                      '" class="img-responsive">';

@@ -33,9 +33,7 @@ abstract class AbstractRoleSubject
      */
     public function addRole(Role $role)
     {
-        $roles = $this->getEntityRoles();
-
-        if (!$roles->contains($role)) {
+        if (!$this->roles->contains($role)) {
             $this->roles->add($role);
         }
     }

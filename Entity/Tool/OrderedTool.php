@@ -13,7 +13,7 @@ namespace Claroline\CoreBundle\Entity\Tool;
 
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Role;
-use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;
@@ -46,7 +46,7 @@ class OrderedTool
 
     /**
      * @ORM\ManyToOne(
-     *     targetEntity="Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace",
+     *     targetEntity="Claroline\CoreBundle\Entity\Workspace\Workspace",
      *     cascade={"persist"},
      *     inversedBy="orderedTools"
      * )
@@ -103,7 +103,7 @@ class OrderedTool
         return $this->id;
     }
 
-    public function setWorkspace(AbstractWorkspace $ws = null)
+    public function setWorkspace(Workspace $ws = null)
     {
         $this->workspace = $ws;
     }

@@ -107,7 +107,12 @@ class ResourcePropertiesController extends Controller
         if ($form->isValid()) {
             $this->resourceManager->rename($node, $form->get('name')->getData());
 
-            return new JsonResponse(array($node->getName()));
+            return new JsonResponse(
+                array(
+                    'id' => $node->getId(),
+                    'name' => $node->getName()
+                )
+            );
         }
 
         return array('form' => $form->createView(), 'nodeId' => $node->getId());
@@ -130,13 +135,19 @@ class ResourcePropertiesController extends Controller
     public function propertiesFormAction(ResourceNode $node)
     {
         $username = $node->getCreator()->getUsername();
+        $isDir = $node->getResourceType()->getName() === 'directory';
+
         $form = $this->formFactory->create(
             FormFactory::TYPE_RESOURCE_PROPERTIES,
             array('creator' => $username),
             $node
         );
 
-        return array('form' => $form->createView(), 'nodeId' => $node->getId());
+        return array(
+            'form' => $form->createView(),
+            'nodeId' => $node->getId(),
+            'isDir' => $isDir
+        );
     }
 
     /**
@@ -151,13 +162,14 @@ class ResourcePropertiesController extends Controller
      * Changes the resource properties.
      *
      * @param ResourceNode $node
-     *
-     * @return StreamedResponse
+     * @param \Claroline\CoreBundle\Entity\User $user
+     * @throws \Symfony\Component\Security\Core\Exception\AccessDeniedException
+     * @return SResponse
      */
     public function changePropertiesAction(ResourceNode $node, User $user)
     {
         if (!$user === $node->getCreator()) {
-             throw new AccessDeniedException("You're not the owner of this resource");
+             throw new AccessDeniedException();
         }
 
         $creatorUsername = $node->getCreator()->getUsername();
@@ -170,15 +182,25 @@ class ResourcePropertiesController extends Controller
         if ($form->isValid()) {
             $name = $form->get('name')->getData();
             $file = $form->get('newIcon')->getData();
+            $isRecursive = $this->request->get('isRecursive');
 
             if ($file) {
                 $this->resourceManager->changeIcon($node, $file);
             }
 
             $this->resourceManager->rename($node, $name);
-            $nodesArray[] = $this->resourceManager->toArray($node, $this->sc->getToken());
 
-            return new JsonResponse($nodesArray);
+            if ($isRecursive) {
+                $accessibleFrom = $form->get('accessibleFrom')->getData();
+                $accessibleUntil = $form->get('accessibleUntil')->getData();
+
+                $this->resourceManager
+                    ->changeAccessibilityDate($node, $accessibleFrom, $accessibleUntil);
+            }
+
+            $arrayNode = $this->resourceManager->toArray($node, $this->sc->getToken());
+
+            return new JsonResponse($arrayNode);
         }
 
         return array('form' => $form->createView(), 'nodeId' => $node->getId());

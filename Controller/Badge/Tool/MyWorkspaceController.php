@@ -13,7 +13,7 @@ namespace Claroline\CoreBundle\Controller\Badge\Tool;
 
 use Claroline\CoreBundle\Entity\Badge\Badge;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Event\Badge\BadgeCreateValidationLinkEvent;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -36,12 +36,12 @@ class MyWorkspaceController extends Controller
      * @ParamConverter("loggedUser", options={"authenticatedUser" = true})
      * @ParamConverter(
      *     "workspace",
-     *     class="ClarolineCoreBundle:Workspace\AbstractWorkspace",
+     *     class="ClarolineCoreBundle:Workspace\Workspace",
      *     options={"id" = "workspaceId"}
      * )
      * @Template
      */
-    public function listAction(AbstractWorkspace $workspace, User $loggedUser, $badgePage)
+    public function listAction(Workspace $workspace, User $loggedUser, $badgePage)
     {
         $this->checkUserIsAllowed($workspace);
 
@@ -56,14 +56,14 @@ class MyWorkspaceController extends Controller
      * @Route("/my_badge/{slug}", name="claro_workspace_tool_view_my_badge")
      * @ParamConverter(
      *     "workspace",
-     *     class="ClarolineCoreBundle:Workspace\AbstractWorkspace",
+     *     class="ClarolineCoreBundle:Workspace\Workspace",
      *     options={"id" = "workspaceId"}
      * )
      * @ParamConverter("user", options={"authenticatedUser" = true})
      * @ParamConverter("badge", converter="badge_converter", options={"check_deleted" = false})
      * @Template()
      */
-    public function viewAction(AbstractWorkspace $workspace, Badge $badge, User $user)
+    public function viewAction(Workspace $workspace, Badge $badge, User $user)
     {
         $this->checkUserIsAllowed($workspace);
 
@@ -114,7 +114,7 @@ class MyWorkspaceController extends Controller
         );
     }
 
-    private function checkUserIsAllowed(AbstractWorkspace $workspace)
+    private function checkUserIsAllowed(Workspace $workspace)
     {
         if (!$this->get('security.context')->isGranted('my_badges', $workspace)) {
             throw new AccessDeniedException();

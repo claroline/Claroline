@@ -51,6 +51,7 @@ class PlatformConfiguration
     private $accountDuration;
     private $usernameRegex;
     private $usernameErrorMessage;
+    private $anonymousPublicProfile;
 
     /**
      * @param mixed $sessionDbDataCol
@@ -494,5 +495,15 @@ class PlatformConfiguration
     public function getUsernameRegex()
     {
         return $this->regex;
+    }
+
+    public function setAnonymousPublicProfile($boolean)
+    {
+        $this->anonymousPublicProfile = $boolean;
+    }
+
+    public function getAnonymousPublicProfile()
+    {
+        return $this->anonymousPublicProfile;
     }
 }

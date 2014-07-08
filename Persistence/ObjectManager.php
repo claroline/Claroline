@@ -111,6 +111,14 @@ class ObjectManager extends ObjectManagerDecorator
     }
 
     /**
+     * Forces a flush.
+     */
+    public function forceFlush()
+    {
+        parent::flush();
+    }
+
+    /**
      * Starts a transaction.
      *
      * @throws UnsupportedMethodException if the method is not supported by

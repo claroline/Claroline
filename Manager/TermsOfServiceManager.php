@@ -14,44 +14,35 @@ namespace Claroline\CoreBundle\Manager;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Manager\ContentManager;
 use Claroline\CoreBundle\Entity\Content;
-use JMS\DiExtraBundle\Annotation\Inject;
-use JMS\DiExtraBundle\Annotation\InjectParams;
-use JMS\DiExtraBundle\Annotation\Service;
-use Symfony\Component\Finder\Finder;
-use Symfony\Component\HttpFoundation\RequestStack;
+use JMS\DiExtraBundle\Annotation as DI;
 
 /**
- * @Service("claroline.common.terms_of_service_manager")
+ * @DI\Service("claroline.common.terms_of_service_manager")
  */
 class TermsOfServiceManager
 {
     private $isActive;
-    private $finder;
-    private $termsOfService;
-    private $content;
-    private $request;
+    private $contentManager;
 
     /**
-     * @InjectParams({
-     *     "configHandler"  = @Inject("claroline.config.platform_config_handler"),
-     *     "content"        = @Inject("claroline.manager.content_manager"),
-     *     "requestStack"   = @Inject("request_stack")
+     * @DI\InjectParams({
+     *     "configHandler"  = @DI\Inject("claroline.config.platform_config_handler"),
+     *     "contentManager" = @DI\Inject("claroline.manager.content_manager")
      * })
      */
     public function __construct(
         PlatformConfigurationHandler $configHandler,
-        ContentManager $content,
-        RequestStack $requestStack
+        ContentManager $contentManager
     )
     {
-        $this->content = $content;
+        $this->contentManager = $contentManager;
         $this->isActive = $configHandler->getParameter('terms_of_service');
-        $this->finder = new Finder();
-        $this->request = $requestStack->getCurrentRequest();
     }
 
     /**
-     * Check if the terms of service functionality is active
+     * Checks if terms of service functionality is active.
+     *
+     * @return bool
      */
     public function isActive()
     {
@@ -61,29 +52,54 @@ class TermsOfServiceManager
     public function getTermsOfService($translations = true)
     {
         if ($translations) {
-            return $this->content->getTranslatedContent(array('type' => 'termsOfService'));
+            return $this->contentManager->getTranslatedContent(array('type' => 'termsOfService'));
         }
 
-        return $this->content->getContent(array('type' => 'termsOfService'));
+        return $this->contentManager->getContent(array('type' => 'termsOfService'));
     }
 
-    public function setTermsOfService($translatedContent)
+    /**
+     * Checks if terms are available in at least one language in a set of translated terms.
+     *
+     * @param array $translatedTerms    An associative array in which each key is a language code
+     *                                  and each value an associative array with a "content" key.
+     *
+     * @return bool
+     */
+    public function areTermsEmpty(array $translatedTerms)
     {
-        $termsOfService = $this->content->getContent(array('type' => 'termsOfService'));
+        foreach ($translatedTerms as $term) {
+            if (!empty($term['content'])) {
+                return false;
+            }
+        }
 
-        if ($termsOfService instanceof Content) {
-            $this->content->updateContent($termsOfService, $translatedContent);
+        return true;
+    }
+
+    /**
+     * Persists (creates/updates) terms of service in the database.
+     *
+     * @param array $translatedTerms    An associative array in which each key is a language code
+     *                                  and each value an associative array with a "content" key.
+     */
+    public function setTermsOfService(array $translatedTerms)
+    {
+        $terms = $this->contentManager->getContent(array('type' => 'termsOfService'));
+
+        if ($terms instanceof Content) {
+            $this->contentManager->updateContent($terms, $translatedTerms);
         } else {
-            $this->content->createContent($translatedContent, 'termsOfService');
+            $this->contentManager->createContent($translatedTerms, 'termsOfService');
         }
     }
 
     public function deleteTermsOfService($locale)
     {
-        $termsOfService = $this->content->getContent(array('type' => 'termsOfService'));
+        $termsOfService = $this->contentManager->getContent(array('type' => 'termsOfService'));
 
         if ($termsOfService instanceof Content) {
-            $this->content->deleteTranslation($locale, $termsOfService->getId());
+            $this->contentManager->deleteTranslation($locale, $termsOfService->getId());
         }
     }
 }

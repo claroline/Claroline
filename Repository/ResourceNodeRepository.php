@@ -17,7 +17,7 @@ use Gedmo\Tree\Entity\Repository\MaterializedPathRepository;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Entity\Resource\ResourceType;
 use Claroline\CoreBundle\Repository\Exception\UnknownFilterException;
 
@@ -30,11 +30,11 @@ class ResourceNodeRepository extends MaterializedPathRepository
     /**
      * Returns the root directory of a workspace.
      *
-     * @param AbstractWorkspace $workspace
+     * @param Workspace $workspace
      *
      * @return ResourceNode
      */
-    public function findWorkspaceRoot(AbstractWorkspace $workspace)
+    public function findWorkspaceRoot(Workspace $workspace)
     {
         $builder = new ResourceQueryBuilder();
         $builder->selectAsEntity()
@@ -235,15 +235,15 @@ class ResourceNodeRepository extends MaterializedPathRepository
 
         if ($isRecursive) {
             $shortcuts = $this->findRecursiveDirectoryShortcuts($criteria, $roles);
-            $additionnalRoots = array();
+            $additionalRoots = array();
 
             foreach ($shortcuts as $shortcut) {
-                $additionnalRoots[] = $shortcut['target_path'];
+                $additionalRoots[] = $shortcut['target_path'];
             }
 
             $baseRoots = (count($criteria['roots']) > 0) ?
                 $criteria['roots']: array();
-            $finalRoots = array_merge($additionnalRoots, $baseRoots);
+            $finalRoots = array_merge($additionalRoots, $baseRoots);
             $criteria['roots'] = $finalRoots;
         }
 
@@ -364,7 +364,7 @@ class ResourceNodeRepository extends MaterializedPathRepository
         return $resources;
     }
 
-    public function findByWorkspaceAndResourceType(AbstractWorkspace $workspace, ResourceType $resourceType)
+    public function findByWorkspaceAndResourceType(Workspace $workspace, ResourceType $resourceType)
     {
         $qb = $this->createQueryBuilder('resourceNode');
         $qb->select('resourceNode')

@@ -800,8 +800,8 @@ class AdministrationControllerTest extends MockeryTestCase
 
     public function testSubscribeMultipleUsersToMultipleWorkspacesAction()
     {
-        $workspaceA = $this->mock('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace');
-        $workspaceB = $this->mock('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace');
+        $workspaceA = $this->mock('Claroline\CoreBundle\Entity\Workspace\Workspace');
+        $workspaceB = $this->mock('Claroline\CoreBundle\Entity\Workspace\Workspace');
         $workspaces = array($workspaceA, $workspaceB);
         $userA = $this->mock('Claroline\CoreBundle\Entity\User');
         $userB = $this->mock('Claroline\CoreBundle\Entity\User');
@@ -873,8 +873,8 @@ class AdministrationControllerTest extends MockeryTestCase
 
     public function testSubscribeMultipleGroupsToMultipleWorkspacesAction()
     {
-        $workspaceA = $this->mock('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace');
-        $workspaceB = $this->mock('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace');
+        $workspaceA = $this->mock('Claroline\CoreBundle\Entity\Workspace\Workspace');
+        $workspaceB = $this->mock('Claroline\CoreBundle\Entity\Workspace\Workspace');
         $workspaces = array($workspaceA, $workspaceB);
         $groupA = $this->mock('Claroline\CoreBundle\Entity\Group');
         $groupB = $this->mock('Claroline\CoreBundle\Entity\Group');

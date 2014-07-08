@@ -39,7 +39,7 @@
             <div class="col-md-2 file_upload text-center{% if not form.file.vars.valid %} has-error{% endif %}">
                 <p class="text-center">
                     <a href="#" class="thumbnail upload_image_placeholder">
-                        <span class="icon-picture"></span><br />
+                        <span class="fa fa-picture-o"></span><br />
                         {{ 'badge_form_choose_image'|trans }}
                     </a>
                 </p>
@@ -101,7 +101,7 @@
                                 {{ form_widget(form.is_expiring) }}{{ 'badge_form_is_expiring'|trans }}
                             </label>
                             <button type="button" class="btn btn-default btn-xs help" data-container="body" data-toggle="popover" data-placement="right" data-content="{{ 'badge_expiration_date_explanation'|trans }}">
-                                <span class="icon-question"></span>
+                                <span class="fa fa-question"></span>
                             </button>
                         </div>
                     </div>

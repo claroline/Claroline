@@ -6,7 +6,7 @@
     {{
         macros.breadcrumbs([
             {
-                'icon': 'icon-cog',
+                'icon': 'fa fa-cog',
                 'name': 'administration'|trans({}, 'platform'),
                 'href': path('claro_admin_index')
             },
@@ -38,6 +38,9 @@
         </a>
         <a class="list-group-item" href="{{ path('claro_admin_group_list') }}" id="link_group_list">
             {{ 'list_groups'|trans({}, 'platform') }}
+        </a>
+        <a class="list-group-item" href="{{ path('claro_admin_facet_index') }}" id="link_group_list">
+            {{ 'profile_management'|trans({}, 'platform') }}
         </a>
     </div>
 {% endblock %}
