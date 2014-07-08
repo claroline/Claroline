@@ -23,9 +23,12 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Claroline\CoreBundle\Entity\AbstractRoleSubject;
 use Claroline\CoreBundle\Entity\Role;
+use Claroline\CoreBundle\Validator\Constraints as ClaroAssert;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Validator\ExecutionContextInterface;
+use Symfony\Component\Validator\Mapping\ClassMetadata;
+
 
 /**
  * @ORM\Table(name="claro_user")
@@ -68,10 +71,7 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
      * @ORM\Column(unique=true)
      * @Assert\NotBlank()
      * @Assert\Length(min="3")
-     * @Assert\Regex(
-     *     pattern="/^[\w\.]*$/",
-     *     message="special_char_not_allowed"
-     * )
+     * @ClaroAssert\Username()
      */
     protected $username;
 

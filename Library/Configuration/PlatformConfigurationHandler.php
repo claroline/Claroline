@@ -60,7 +60,8 @@ class PlatformConfigurationHandler
         'form_captcha' => true,
         'platform_limit_date' => 1559350861,//1 june 2019
         'platform_init_date' => 1388534461, //1 june 2014
-        'account_duration' => null
+        'account_duration' => null,
+        'username_regex' => '/^[\w\.]*$/'
     );
 
     /**
@@ -151,6 +152,7 @@ class PlatformConfigurationHandler
         $config->setAccountDuration($this->parameters['account_duration']); //days
         $config->setPlatformLimitDate($this->parameters['platform_limit_date']);
         $config->setPlatformInitDate($this->parameters['platform_init_date']);
+        $config->setUsernameRegex($this->parameters['username_regex']);
 
         return $config;
     }

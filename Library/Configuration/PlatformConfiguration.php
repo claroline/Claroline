@@ -49,6 +49,8 @@ class PlatformConfiguration
     private $platformLimitDate;
     private $platformInitDate;
     private $accountDuration;
+    private $usernameRegex;
+    private $usernameErrorMessage;
 
     /**
      * @param mixed $sessionDbDataCol
@@ -482,5 +484,15 @@ class PlatformConfiguration
     public function getAccountDuration()
     {
         return $this->accountDuration;
+    }
+
+    public function setUsernameRegex($regex)
+    {
+        $this->regex = $regex;
+    }
+
+    public function getUsernameRegex()
+    {
+        return $this->regex;
     }
 }
