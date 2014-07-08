@@ -18,13 +18,13 @@
                 <div class="col-md-6 col-md-offset-3">
                     <div class="input-group">
                         <span class="input-group-btn">
-                            <button class="btn btn-primary" onclick="goPrevious()"><i class="icon-backward"></i></button>
-                            <button class="btn btn-primary" onclick="goNext()"><i class="icon-forward"></i></button>
+                            <button class="btn btn-primary" onclick="goPrevious()"><i class="fa fa-backward"></i></button>
+                            <button class="btn btn-primary" onclick="goNext()"><i class="fa fa-forward"></i></button>
                         </span>
                         <span class="text-center form-control input-group-btn">{{ 'Page' | trans({}, 'widget')}}: <span class="page_num"></span> / <span class="page_count"></span></span>
                         <span class="input-group-btn">
-                            <button class="btn btn-primary" onclick="zoomIn()"><i class="icon-zoom-in"></i></button>
-                            <button class="btn btn-primary" onclick="zoomOut()"><i class="icon-zoom-out"></i></button>
+                            <button class="btn btn-primary" onclick="zoomIn()"><i class="fa fa-search-plus"></i></button>
+                            <button class="btn btn-primary" onclick="zoomOut()"><i class="fa fa-search-minus"></i></button>
                         </span>
                     </div>
                 </div>
@@ -39,7 +39,7 @@
     </div>
     <div class="panel-footer">
         <a class="btn btn-primary" href="{{ path('claro_resource_download') }}?ids[]={{pdf.getResourceNode().getId()}}">
-            <i class="icon-download"></i> {{ 'download'|trans({}, 'platform') }}
+            <i class="fa fa-download"></i> {{ 'download'|trans({}, 'platform') }}
         </a>
     </div>
 {% endblock %}
