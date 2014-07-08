@@ -27,6 +27,7 @@ move_to: 'Mover a'
 new_category: 'Nueva categoría'
 new_message: Nuevo mensaje
 new_subject: 'Nuevo tema'
+notifications: Notificaciones
 posts: Respuestas
 remove_category_confirm_message: '¿Está seguro de que desea eliminar esta categoría?'
 remove_subject_confirm_message: '¿Está seguro que quiere borrar este mensaje?'
@@ -41,3 +42,8 @@ subjets_per_page: 'Temas por pagina'
 subscribe_mail_list: 'Suscríbase a las notificaciones'
 unstick: Desanclar
 unsubscribe_mail_list: 'Desinscribirse a las notificaciones'
+yes: sí
+no: no
+notifications_explanation: Cuando se agrega un mensaje, la activación de las notificaciones globales conlleva el envío de un mail a los usuarios que tienen acceso al foro.
+activate_global_notifications: Activar las notificaciones globales
+disable_global_notifications: Anular las notificaciones globales

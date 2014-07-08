@@ -59,6 +59,7 @@ class Manager
     private $subjectRepo;
     private $messageRepo;
     private $forumRepo;
+    private $userRepo;
     private $messageManager;
     private $translator;
     private $router;
@@ -99,6 +100,7 @@ class Manager
         $this->subjectRepo = $om->getRepository('ClarolineForumBundle:Subject');
         $this->messageRepo = $om->getRepository('ClarolineForumBundle:Message');
         $this->forumRepo = $om->getRepository('ClarolineForumBundle:Forum');
+        $this->userRepo = $om->getRepository('ClarolineCoreBundle:User');
         $this->dispatcher = $dispatcher;
         $this->messageManager = $messageManager;
         $this->translator = $translator;
@@ -267,11 +269,26 @@ class Manager
     public function sendMessageNotification(Message $message, User $user)
     {
         $forum = $message->getSubject()->getCategory()->getForum();
-        $notifications = $this->notificationRepo->findBy(array('forum' => $forum));
-        $users = array();
 
-        foreach ($notifications as $notification) {
-            $users[] = $notification->getUser();
+        if ($forum->getActivateNotifications()) {
+            $relevantRoles = [];
+            $rights = $forum->getResourceNode()->getRights();
+
+            foreach ($rights as $right) {
+                //can open
+                if ($right->getMask() & 1) {
+                    $relevantRoles[] = $right->getRole();
+                }
+            }
+
+            $users = $this->userRepo->findByRoles($relevantRoles);
+        } else {
+            $notifications = $this->notificationRepo->findBy(array('forum' => $forum));
+            $users = array();
+
+            foreach ($notifications as $notification) {
+                $users[] = $notification->getUser();
+            }
         }
 
         $title = $this->translator->trans(
@@ -556,5 +573,19 @@ class Manager
             )
         );
         $this->createMessage($message, $oldMessage->getSubject());
+    }
+
+    public function activateGlobalNotifications(Forum $forum)
+    {
+        $forum->setActivateNotifications(true);
+        $this->om->persist($forum);
+        $this->om->flush();
+    }
+
+    public function disableGlobalNotifications(Forum $forum)
+    {
+        $forum->setActivateNotifications(false);
+        $this->om->persist($forum);
+        $this->om->flush();
     }
 }
