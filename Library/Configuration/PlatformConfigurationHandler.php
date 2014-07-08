@@ -61,7 +61,7 @@ class PlatformConfigurationHandler
         'platform_limit_date' => 1559350861,//1 june 2019
         'platform_init_date' => 1388534461, //1 june 2014
         'account_duration' => null,
-        'username_regex' => '/^[\w\.]*$/'
+        'username_regex' => '/^[\w\.]*$/',
         'anonymous_public_profile' => false
     );
 
