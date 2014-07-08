@@ -44,7 +44,7 @@
                 <input class="form-control" type="text" id="search-items-txt" placeholder="{{ 'search'|trans({}, 'platform') }}" value="{{ search }}">
                 <span class="input-group-btn">
                     <button class="filter btn btn-default" type="button" id="search-button">
-                        <i class="icon-search"></i>
+                        <i class="fa fa-search"></i>
                     </button>
                 </span>
             </div>
@@ -67,7 +67,7 @@
                                 {% if message.getCreator().getPicture() != "" %}
                                  <img src="{{ asset('uploads/pictures/') ~ message.getCreator().getPicture() }}" class="col-md-12">
                             {% else %}
-                                    <h1><i class="icon-user col-md-12"></i><h1>
+                                    <h1><i class="fa fa-user col-md-12"></i><h1>
                             {% endif %}
                             </div>
                             <div>
