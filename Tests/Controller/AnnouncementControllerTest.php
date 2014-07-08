@@ -235,7 +235,7 @@ class AnnouncementControllerTest extends MockeryTestCase
     public function testAnnouncementsWorkspaceWidgetPagerAction()
     {
         $controller = $this->getController(array('checkAccess'));
-        $workspace = $this->mock('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace');
+        $workspace = $this->mock('Claroline\CoreBundle\Entity\Workspace\Workspace');
         $token = $this->mock('Symfony\Component\Security\Core\Authentication\Token\TokenInterface');
         $roleA = new Role();
         $roleB = new Role();
@@ -284,8 +284,8 @@ class AnnouncementControllerTest extends MockeryTestCase
     public function testAnnouncementsDesktopWidgetPagerAction()
     {
         $controller = $this->getController(array('checkAccess'));
-        $workspaceA = $this->mock('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace');
-        $workspaceB = $this->mock('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace');
+        $workspaceA = $this->mock('Claroline\CoreBundle\Entity\Workspace\Workspace');
+        $workspaceB = $this->mock('Claroline\CoreBundle\Entity\Workspace\Workspace');
         $workspaces = array($workspaceA, $workspaceB);
         $token = $this->mock('Symfony\Component\Security\Core\Authentication\Token\TokenInterface');
         $roleA = new Role();

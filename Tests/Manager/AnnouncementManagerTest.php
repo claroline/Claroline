@@ -55,7 +55,7 @@ class AnnouncementManagerTest extends MockeryTestCase
 
     public function testGetVisibleAnnouncementsByWorkspace()
     {
-        $workspace = $this->mock('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace');
+        $workspace = $this->mock('Claroline\CoreBundle\Entity\Workspace\Workspace');
         $roleA = new Role();
         $roleB = new Role();
         $roles = array($roleA, $roleB);
@@ -75,8 +75,8 @@ class AnnouncementManagerTest extends MockeryTestCase
 
     public function testGetVisibleAnnouncementsByWorkspaces()
     {
-        $workspaceA = $this->mock('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace');
-        $workspaceB = $this->mock('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace');
+        $workspaceA = $this->mock('Claroline\CoreBundle\Entity\Workspace\Workspace');
+        $workspaceB = $this->mock('Claroline\CoreBundle\Entity\Workspace\Workspace');
         $workspaces = array($workspaceA, $workspaceB);
         $roleA = new Role();
         $roleB = new Role();
