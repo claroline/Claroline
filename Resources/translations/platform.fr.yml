@@ -962,3 +962,5 @@ remove_role: Supprimer un rôle.
 initialize: Initialiser
 user_limit_success_update: La limite d'utilisateur par rôle a été mise à jour avec succès.
 role_name_changed_success: Le nom du rôle a été mis à jour avec succès.
+no_group: Il n'y a aucun groupe.
+successfull_workspace_creation: L'espace d'activité %name% a été créé avec succès.

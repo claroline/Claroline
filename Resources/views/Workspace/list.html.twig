@@ -75,6 +75,7 @@
     <div class="panel-heading">
         <h3 class="panel-title">{{ 'workspaces'|trans({}, 'platform') }}</h3>
     </div>
+    {{ macros.flashBox() }}
     <div id="workspace-list-div" class="panel-body">
         {% if is_granted('ROLE_ADMIN') %}
             <a href="{{ path('claro_manage_admin_workspace_tag') }}" class="btn btn-default" role="button">

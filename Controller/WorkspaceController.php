@@ -302,6 +302,11 @@ class WorkspaceController extends Controller
             $this->workspaceManager->create($config, $user);
             $this->tokenUpdater->update($this->security->getToken());
             $route = $this->router->generate('claro_workspace_list');
+            $msg = $this->get('translator')->trans(
+                'successfull_workspace_creation',
+                array('%name%' => $form->get('name')->getData()), 'platform'
+            );
+            $this->get('request')->getSession()->getFlashBag()->add('success', $msg);
 
             return new RedirectResponse($route);
         }
