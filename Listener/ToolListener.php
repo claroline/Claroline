@@ -12,7 +12,7 @@
 namespace Claroline\ActivityToolBundle\Listener;
 
 use Claroline\CoreBundle\Event\DisplayToolEvent;
-use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Library\Security\Utilities;
 use Claroline\CoreBundle\Manager\ResourceManager;
 use Doctrine\ORM\EntityManager;
@@ -27,6 +27,7 @@ class ToolListener
 {
     private $em;
     private $activityRepo;
+    private $evaluationRepo;
     private $resourceManager;
     private $securityContext;
     private $templating;
@@ -57,6 +58,7 @@ class ToolListener
         $this->templating = $templating;
         $this->utils = $utils;
         $this->activityRepo = $em->getRepository('ClarolineCoreBundle:Resource\Activity');
+        $this->evaluationRepo = $em->getRepository('ClarolineCoreBundle:Activity\Evaluation');
     }
 
     /**
@@ -66,14 +68,14 @@ class ToolListener
      */
     public function onDesktopOpen(DisplayToolEvent $event)
     {
-        $datas = $this->fetchActivitiesDatas(true);
+        $data = $this->fetchActivitiesData(true);
 
         $content = $this->templating->render(
             'ClarolineActivityToolBundle::desktopActivityList.html.twig',
             array(
-                'resourceInfos' => $datas['resourceInfos'],
-                'activityInfos' => $datas['activityInfos'],
-                'workspaceInfos' => $datas['workspaceInfos']
+                'resourceInfos' => $data['resourceInfos'],
+                'activityInfos' => $data['activityInfos'],
+                'workspaceInfos' => $data['workspaceInfos']
             )
         );
         $event->setContent($content);
@@ -88,21 +90,20 @@ class ToolListener
     public function onWorkspaceOpen(DisplayToolEvent $event)
     {
         $workspace = $event->getWorkspace();
-        $datas = $this->fetchActivitiesDatas(false, $workspace);
-
+        $data = $this->fetchActivitiesData(false, $workspace);
         $content = $this->templating->render(
             'ClarolineActivityToolBundle::workspaceActivityList.html.twig',
             array(
                 'workspace' => $workspace,
-                'resourceInfos' => $datas['resourceInfos'],
-                'activityInfos' => $datas['activityInfos']
+                'resourceInfos' => $data['resourceInfos'],
+                'activityInfos' => $data['activityInfos']
             )
         );
         $event->setContent($content);
         $event->stopPropagation();
     }
 
-    public function fetchActivitiesDatas($isDesktopTool, AbstractWorkspace $workspace = null)
+    public function fetchActivitiesData($isDesktopTool, Workspace $workspace = null)
     {
         $token = $this->securityContext->getToken();
         $userRoles = $this->utils->getRoles($token);
@@ -114,22 +115,23 @@ class ToolListener
             $root = $this->resourceManager->getWorkspaceRoot($workspace);
             $criteria['roots'][] = $root->getPath();
         }
+
         $criteria['types'] = array('activity');
         $nodes = $this->resourceManager->getByCriteria($criteria, $userRoles, true);
 
-        $activitiesDatas = array();
-        $nodeInfos = array();
+        $activitiesData = array();
+        $nodeInfo = array();
         $activityNodesId = array();
-        $activityInfos = array();
+        $activityInfo = array();
 
         if ($isDesktopTool) {
-            $workspaceInfos = array();
+            $workspaceInfo = array();
         }
 
         foreach ($nodes as $node) {
             $nodeId = $node['id'];
             $activityNodesId[] = $nodeId;
-            $nodeInfos[$nodeId] = $node;
+            $nodeInfo[$nodeId] = $node;
         }
 
         if (count($activityNodesId) > 0) {
@@ -140,37 +142,51 @@ class ToolListener
                 foreach ($nodeWorkspaces as $nodeWs) {
                     $code = $nodeWs['code'];
 
-                    if (!isset($workspaceInfos[$code])) {
-                        $workspaceInfos[$code] = array();
-                        $workspaceInfos[$code]['code'] = $code;
-                        $workspaceInfos[$code]['name'] = $nodeWs['name'];
-                        $workspaceInfos[$code]['nodes'] = array();
+                    if (!isset($workspaceInfo[$code])) {
+                        $workspaceInfo[$code] = array();
+                        $workspaceInfo[$code]['code'] = $code;
+                        $workspaceInfo[$code]['name'] = $nodeWs['name'];
+                        $workspaceInfo[$code]['nodes'] = array();
                     }
-                    $workspaceInfos[$code]['nodes'][] = $nodeWs['id'];
+                    $workspaceInfo[$code]['nodes'][] = $nodeWs['id'];
                 }
             }
 
             $activities = $this->activityRepo
-                ->findActivitiesByNodeIds($activityNodesId);
+                ->findActivitiesByResourceNodeIds($activityNodesId);
 
             foreach ($activities as $activity) {
-                $actNodeId = $activity['nodeId'];
-                $activityInfos[$actNodeId] = array();
-                $activityInfos[$actNodeId]['instructions'] = $activity['instructions'];
-                $activityInfos[$actNodeId]['startDate'] = ($activity['startDate'] instanceof \DateTime) ?
-                    $activity['startDate']->format('Y-m-d H:i:s') : '-';
-                $activityInfos[$actNodeId]['endDate'] = ($activity['endDate'] instanceof \DateTime) ?
-                    $activity['endDate']->format('Y-m-d H:i:s') : '-';
+                $node = $activity->getResourceNode();
+                $actNodeId = $node->getId();
+                $activityInfo[$actNodeId] = array();
+                $activityInfo[$actNodeId]['startDate'] = $node->getAccessibleFrom() instanceof \DateTime ?
+                    $node->getAccessibleFrom()->format('Y-m-d H:i:s') :
+                    '-';
+                $activityInfo[$actNodeId]['endDate'] = $node->getAccessibleUntil() instanceof \DateTime ?
+                    $node->getAccessibleUntil()->format('Y-m-d H:i:s') :
+                    '-';
+                $activityInfo[$actNodeId]['status'] = '-';
+
+                if ($user = $token->getUser()) {
+                    $evaluation = $this->evaluationRepo->findEvaluationByUserAndActivityParams(
+                        $user,
+                        $activity->getParameters()
+                    );
+
+                    if ($evaluation && $evaluation->getStatus()) {
+                        $activityInfo[$actNodeId]['status'] = $evaluation->getStatus();
+                    }
+                }
             }
         }
 
-        $activitiesDatas['resourceInfos'] = $nodeInfos;
-        $activitiesDatas['activityInfos'] = $activityInfos;
+        $activitiesData['resourceInfos'] = $nodeInfo;
+        $activitiesData['activityInfos'] = $activityInfo;
 
         if ($isDesktopTool) {
-            $activitiesDatas['workspaceInfos'] = $workspaceInfos;
+            $activitiesData['workspaceInfos'] = $workspaceInfo;
         }
 
-        return $activitiesDatas;
+        return $activitiesData;
     }
 }

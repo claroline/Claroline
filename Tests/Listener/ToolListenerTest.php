@@ -151,7 +151,7 @@ class ToolListenerTest extends MockeryTestCase
     public function testFetchActivitiesDatasForWorkspaceTool()
     {
         $token = $this->mock('Symfony\Component\Security\Core\Authentication\Token\TokenInterface');
-        $workspace = $this->mock('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace');
+        $workspace = $this->mock('Claroline\CoreBundle\Entity\Workspace\Workspace');
         $root = $this->mock('Claroline\CoreBundle\Entity\Resource\ResourceNode');
         $startDate = $this->mock('\DateTime');
 
