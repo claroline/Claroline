@@ -13,6 +13,7 @@ namespace Claroline\CoreBundle\Entity;
 
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Entity\User;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -69,6 +70,16 @@ class Event
      */
     private $allDay;
 
+    /**
+     *
+     * @ORM\ManyToMany(
+     *      targetEntity="Claroline\CoreBundle\Entity\EventCategory",
+     *      inversedBy="events"
+     * )
+     * @ORM\JoinTable(name="claro_event_event_category")
+     */
+    private $eventCategories;
+
      /**
      * @ORM\Column(nullable=true)
      */
@@ -76,6 +87,11 @@ class Event
     private $recurring;
     private $startHours;
     private $endHours;
+
+    public function __construct()
+    {
+        $this->eventCategories = new ArrayCollection();
+    }
 
     public function getId()
     {
@@ -172,6 +188,25 @@ class Event
     public function setAllDay($allDay)
     {
         $this->allDay = (bool) $allDay;
+    }
+
+    /**
+     * @param mixed $category
+     */
+    public function addeventCategory($category)
+    {
+        $this->eventCategories->add($category);
+    }
+
+    /**
+     * @param bool $nameOnly
+     * @return mixed
+     */
+    public function geteventCategories($nameOnly = false)
+    {
+        return $nameOnly ?
+            $this->extractNames($this->eventCategories) :
+            $this->eventCategories;
     }
 
     public function getPriority()
