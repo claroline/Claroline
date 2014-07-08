@@ -16,6 +16,9 @@ plugin:
       default_rights:
         - name: open
         - name: post
+      activity_rules:
+        - action: resource-read
+        - action: resource-claroline_forum-create_message
 
   widgets:
      - name: claroline_forum_widget
