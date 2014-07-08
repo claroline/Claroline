@@ -424,7 +424,7 @@ class ParametersController extends Controller
         );
 
         $this->configHandler->setParameters($data);
-        $this->cacheManager->edit('is_mailer_available', false);
+        $this->cacheManager->setParameter('is_mailer_available', false);
 
         return $this->redirect($this->generateUrl('claro_admin_parameters_mail_server'));
     }

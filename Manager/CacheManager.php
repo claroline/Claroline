@@ -67,10 +67,10 @@ class CacheManager {
         return $this->cacheExists() ? parse_ini_file($this->cachePath): [];
     }
 
-    public function edit($parameter, $value)
+    public function setParameter($parameter, $value)
     {
         $values = $this->getParameters();
-        $values['is_mailer_available'] = $value;
+        $values[$parameter] = $value;
         $this->writeCache($values);
     }
 
