@@ -75,6 +75,18 @@ class CacheManager {
         return $return ? $return: false;
     }
 
+    public function getParameters()
+    {
+        return $this->cacheExists() ? parse_ini_file($this->cachePath): [];
+    }
+
+    public function setParameter($parameter, $value)
+    {
+        $values = $this->getParameters();
+        $values[$parameter] = $value;
+        $this->writeCache($values);
+    }
+
     /**
      * Refresh the claroline cache
      */
@@ -82,7 +94,7 @@ class CacheManager {
     {
         $this->removeCache();
         $event = $this->eventManager->dispatch('refresh_cache', 'RefreshCache');
-        $this->writeIniFile($event->getParameters(), $this->cachePath);
+        $this->writeCache($event->getParameters());
     }
 
     /**
@@ -105,12 +117,9 @@ class CacheManager {
 
     /**
      * @param array $parameters
-     * @param string $iniFile
-     *
-     * @throws \Exception
      */
-    private function writeIniFile(array $parameters, $iniFile)
+    public function writeCache(array $parameters)
     {
-        $this->iniFileManager->writeIniFile($parameters, $iniFile);
+        $this->iniFileManager->writeIniFile($parameters, $this->cachePath);
     }
-} 
+}
