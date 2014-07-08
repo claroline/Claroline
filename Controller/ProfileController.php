@@ -17,11 +17,13 @@ use Claroline\CoreBundle\Event\StrictDispatcher;
 use Claroline\CoreBundle\Form\ProfileType;
 use Claroline\CoreBundle\Form\ResetPasswordType;
 use Claroline\CoreBundle\Form\UserPublicProfileUrlType;
+use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Manager\LocaleManager;
 use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Manager\UserManager;
 use Claroline\CoreBundle\Manager\ToolManager;
 use Claroline\CoreBundle\Manager\FacetManager;
+use Doctrine\ORM\NoResultException;
 use JMS\DiExtraBundle\Annotation as DI;
 use JMS\SecurityExtraBundle\Annotation as SEC;
 use Pagerfanta\Adapter\DoctrineORMAdapter;
@@ -32,9 +34,9 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 use Symfony\Component\Security\Core\Encoder\EncoderFactory;
-use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 
 /**
  * Controller of the user profile.
@@ -143,8 +145,12 @@ class ProfileController extends Controller
         /** @var \Claroline\CoreBundle\Entity\User $user */
         $user = $this->getDoctrine()->getRepository('ClarolineCoreBundle:User')->findOneByIdOrPublicUrl($publicUrl);
 
-        if (null === $user) {
-            throw $this->createNotFoundException("Unknown user.");
+        try {
+            /** @var \Claroline\CoreBundle\Entity\User $user */
+            $user = $this->getDoctrine()->getRepository('ClarolineCoreBundle:User')->findOneByIdOrPublicUrl($publicUrl);
+        }
+        catch (NoResultException $e) {
+            throw new NotFoundHttpException("Page not found");
         }
 
         $facets = $this->facetManager->getVisibleFacets($this->security->getToken());
@@ -270,7 +276,7 @@ class ProfileController extends Controller
             if (count($rolesChangeSet) > 0) {
                 $changeSet['roles'] = $rolesChangeSet;
             }
-            
+
             if ($this->userManager->uploadAvatar($user) === false ) {
                 $sessionFlashBag->add('error', $errorRight);
             }
@@ -313,11 +319,11 @@ class ProfileController extends Controller
             $sessionFlashBag = $this->get('session')->getFlashBag();
             /** @var \Symfony\Bundle\FrameworkBundle\Translation\Translator $translator */
             $translator = $this->get('translator');
-            $loggedUser->setPlainPassword($form['password']->getData()); 
+            $loggedUser->setPlainPassword($form['password']->getData());
 
-            if ($this->encodePassword($loggedUser) === $oldPassword) {   
-                $loggedUser->setPlainPassword($form['plainPassword']->getData()); 
-                $loggedUser->setPassword($this->encodePassword($loggedUser));              
+            if ($this->encodePassword($loggedUser) === $oldPassword) {
+                $loggedUser->setPlainPassword($form['plainPassword']->getData());
+                $loggedUser->setPassword($this->encodePassword($loggedUser));
                 $entityManager = $this->get('doctrine.orm.entity_manager');
                 $entityManager->persist($loggedUser);
                 $entityManager->flush();
