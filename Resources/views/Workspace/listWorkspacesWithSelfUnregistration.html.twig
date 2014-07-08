@@ -22,7 +22,7 @@
     {{
         macros.breadcrumbs([
             {
-                'icon': 'icon-book',
+                'icon': 'fa fa-book',
                 'name': 'workspaces'|trans({}, 'platform'),
                 'href': path('claro_workspace_list')
             },
@@ -72,7 +72,7 @@
                         data-workspace-name="{{ workspace.getName() }}"
                         data-workspace-code="{{ workspace.getCode() }}"
                     >
-                        <i class="icon-remove-sign"></i>
+                        <i class="fa fa-times-circle"></i>
                         {{ 'unregister'|trans({}, 'platform') }}
                     </span>
                 </div>

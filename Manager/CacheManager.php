@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of the Claroline Connect package.
+ *
+ * (c) Claroline Consortium <consortium@claroline.net>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace Claroline\CoreBundle\Manager;
 
 use JMS\DiExtraBundle\Annotation as DI;
@@ -11,18 +20,22 @@ use Claroline\CoreBundle\Event\StrictDispatcher;
 class CacheManager {
 
     private $eventManager;
+    private $cachePath;
+    private $iniFileManager;
 
     /**
      * @DI\InjectParams({
-     *      "rootDir" = @DI\Inject("%kernel.root_dir%"),
-     *      "eventManager" = @DI\Inject("claroline.event.event_dispatcher")
+     *      "rootDir"        = @DI\Inject("%kernel.root_dir%"),
+     *      "eventManager"   = @DI\Inject("claroline.event.event_dispatcher"),
+     *      "iniFileManager" = @DI\Inject("claroline.manager.ini_file_manager")
      * })
      */
-    public function __construct(StrictDispatcher $eventManager, $rootDir)
+    public function __construct(StrictDispatcher $eventManager, $rootDir, IniFileManager $iniFileManager)
     {
         $ds = DIRECTORY_SEPARATOR;
         $this->cachePath = $rootDir . $ds . 'cache' . $ds . 'claroline.cache.ini';
         $this->eventManager = $eventManager;
+        $this->iniFileManager = $iniFileManager;
     }
 
     /**
@@ -104,20 +117,9 @@ class CacheManager {
 
     /**
      * @param array $parameters
-     * @param string $iniFile
-     *
-     * @throws \Exception
      */
     public function writeCache(array $parameters)
     {
-        $content = '';
-
-        foreach ($parameters as $key => $value) {
-            $content .= "{$key} = {$value}\n";
-        }
-
-        if (!file_put_contents($this->cachePath, $content)) {
-            throw new \Exception("The claroline cache couldn't be created");
-        }
+        $this->iniFileManager->writeIniFile($parameters, $this->cachePath);
     }
-} 
+}

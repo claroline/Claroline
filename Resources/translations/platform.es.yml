@@ -45,14 +45,59 @@ You can use the following variables in your form: 'Usted puede usar las siguient
 You can use the full screen version of the text editor to include HTML: 'Usted puede usar la versión de pantalla completa del editor de texto para incluir HTML'
 Your changes have been saved: 'Sus cambios han sido guardados'
 account_created: 'Cuenta creada.'
+account_duration_label: Duración de la vida de una cuentas (días)
 account_general_statistics: 'Estadísticas generales de la cuenta'
 action: 'Acción'
 actions: 'Acciones'
 active_widgets: 'Widgets activos'
+activities_tracking: 'Seguimiento de las actividades'
+activity_already: Este recurso ya está en la actividad
+activity_evaluation_form_attemptsCount: 'Número de intentos'
+activity_evaluation_form_comment: Comentario
+activity_evaluation_form_date: 'Fecha del último intento'
+activity_evaluation_form_numScore: 'Mejor puntaje'
+activity_evaluation_form_score: Evaluación
+activity_evaluation_form_status: Estado
 activity_form_instructions: 'Instrucciones'
 activity_form_name: 'Nombre'
+activity_parameters_form_evaluation_type: 'Tipo de evaluación'
+activity_parameters_form_max_attempts: 'Numero de intentos permitidos'
+activity_parameters_form_max_duration: 'Tiempo limite establecido (en segundo)'
+activity_parameters_form_withTutor: Tutelado
+activity_parameters_form_where: Lugar de aprendizaje
+activity_parameters_form_who: Modo de trabajo
+activity_past_evaluation_form_comment: Comentario
+activity_past_evaluation_form_date: Fecha
+activity_past_evaluation_form_numScore: Puntaje
+activity_past_evaluation_form_score: Evaluación
+activity_past_evaluation_form_status: Estado
+activity_remove_primary_resource: Retirar el recurso principal
+activity_resource_not_allowed: No puede agregar un recurso de este tipo
+activity_resource_remove: '¿Esta seguro que desea remover este recurso de la actividad?'
+activity_rule_action_none: Ninguno
+activity_rule_configuration_for_auto_evaluation: 'Configuración de la regla para la evaluación automática'
+activity_rule_form_action: Acción
+activity_rule_form_action_explanation: 'La evaluación automática se basa en las acciones realizadas en el recurso asociado.'
+activity_rule_form_activeFrom: 'Realizada  entre el'
+activity_rule_form_activeFrom_explanation: 'Sólo serán tratadas las acciones realizadas después de esta fecha. Todas las acciones anteriores serán tratadas si esta fecha no es definida.'
+activity_rule_form_activeUntil: 'y el'
+activity_rule_form_activeUntil_explanation: 'Sólo serán tratadas las acciones realizadas antes de esta fecha. Todas las acciones posteriores serán tratadas si esta fecha no es definida.'
+activity_rule_form_badge: 'Badge requerido'
+activity_rule_form_badge_explanation: 'El badge que debe ser conseguido para aprobar.'
+activity_rule_form_isResultVisible: 'Mostrar el resultado'
+activity_rule_form_isResultVisible_explanation: 'Permitir al usuario conocer el resultado que debe ser obtenido.'
+activity_rule_form_occurrence: Ocurrencia
+activity_rule_form_occurrence_explanation: 'El número de veces que la acción debe ser realizada para aprobar.'
+activity_rule_form_result: 'Resultado requerido'
+activity_rule_form_result_explanation: 'El resultado que debe ser obtenido para aprobar.'
+activity_where_anywhere: Dondequiera
+activity_where_classroom: Aula
+activity_who_collaborative: Colaboración
+activity_who_individual: Individual
+activity_who_mixed: Mezclado
 add: 'Agregar'
 add_category: 'Agregar categoría'
+add_field_to_facet: Agregar un campo a una faceta
 add_group: 'Agregar grupo'
 add_group_s_confirm_message: 'Grupos agregados'
 add_groups: 'Agregar grupos'
@@ -89,14 +134,20 @@ analytics_resources: 'Recursos'
 analytics_top: 'Principal'
 anonymous: 'Anónimo'
 answer: 'Respuesta'
+anywhere: Dondequiera
 appearance: 'Apariencia'
 apply: 'Aplicar'
 at_least_one_category_has_to_be_selected: 'Debe seleccionar al menos una categoría'
+attempt: Intento
+attempts: Intentos
+automatic: Automático
 available_widgets: 'Widgets disponibles'
 available_workspaces: 'Espacios de trabajo disponibles'
 back: 'Atrás'
+back_to_activities_list: 'Volver a la lista de actividades'
 bad_request: 'La solicitud no es correcta. Si usted llegó a esta página a través de un enlace interno, por favor informe del problema al administrador de la plataforma.'
 badges_management: 'Gestión de insignias'
+best_score: 'Mejor puntaje'
 by: 'Por'
 by_workspace: 'Por espacio de trabajo'
 canCopy: 'Derecho a copiar'
@@ -119,10 +170,15 @@ change_view: 'Cambiar la visualización'
 choose_resource_form_type: 'Tipo de recurso'
 classify_my_workspaces: 'Clasificar mis espacios de trabajo'
 classify_workspaces: 'Clasificar espacios de trabajo'
+classroom: Aula
 close: 'Cerrar'
+closed_account: Cuenta cerrada.
 code: 'Código'
+collaborative: Colaboración
 collaborator: 'Colaborador'
+comments: Comentarios
 communication: 'Comunicación'
+completed: Completado
 configuration: 'Configuración'
 configure: 'Configurar'
 connections: 'Conexiones'
@@ -131,6 +187,8 @@ copiable: 'Copiable'
 copy: 'Copiar'
 create: 'Crear'
 create_category: 'Crear una categoría'
+create_facet: Crear una faceta
+create_field: Crear un campo
 create_group: 'Crear un grupo'
 create_new_admin_tag: 'Crear una etiqueta de administrador'
 create_new_home_tab: 'Crear una pestaña'
@@ -158,6 +216,8 @@ data_col: 'Identificador de la columna en la base de datos'
 database: 'Base de datos'
 database_connection_failed: 'Error en la conexión a la base de datos.'
 date: 'Fecha'
+date_form_datepicker_format: dd-mm-yyyy
+date_form_datepicker_php: m-d-Y
 date_form_format: 'dd/MM/yyyy'
 date_form_placeholder: dd/mm/aaaa
 date_format: 'd/m/Y'
@@ -212,19 +272,31 @@ downloads: 'Descargas'
 drag_file_here: 'Arrastre el archivo aquí'
 drop_file: 'Arrastre el archivo'
 dsn: dsn
+duration: Duración
 edit: 'Editar'
+edit_facet: Editar faceta
+edit_field: Editar campo
 editable: 'Editable'
 email: 'Correo electrónico'
 email_form_mail: 'Ingrese su correo electrónico'
 email_found_at: 'El coreo electrónico %email% fue encontrado en la linea: %lines%'
 empty_file: 'Archivo vacío'
+end_date: 'Fecha de cierre'
 enter_tag_name_message: 'Por favor ingrese el nombre de la etiqueta'
 entries_per_day: 'Entradas por día'
+evaluation: Evaluación
+evaluation-automatic: Automático
+evaluation-manual: Manual
+evaluation_edition: Evaluación
+evaluation_type: 'Tipo de evaluación'
 export: 'Exportar'
 exportable: 'Exportable'
 external_pdo_database: 'Base de datos externa (PDO)'
 facebook: Facebook
 facebook_application_validation_error: 'Las credenciales proporcionadas no son válidos.'
+facets: Facetas
+fail_add_user_group_message: Estos usuarios no han podido ser agregados al grupo (control del límite usuarios por función).
+failed: Fallido
 fast_answer: 'Respuesta rápida'
 fb_client_id: 'Id de la aplicación'
 fb_client_secret: 'secret de la aplicación'
@@ -290,6 +362,8 @@ import: 'Importar'
 import_roles: 'Importar roles'
 import_user_file_file: 'importar de un archivo CSV'
 import_users: 'Importar usuarios'
+incomplete: Incompleto
+individual: Individual
 informations: 'Informaciones'
 inscription_mail: 'Inscripción de correo electrónico'
 instructions: 'Instrucciones'
@@ -306,6 +380,7 @@ jqplot_date_output_format: '%m/%d/%Y'
 keep_me_logged_in: 'Mantenerme conectado'
 lastName: 'Apellido'
 last_30_days_activity: 'Actividad de los últimos 30 días'
+last_attempt_date: 'Fecha del último intento'
 last_name: 'Apellido'
 layout: 'disposición'
 leave_this_page: 'Si usted cierra esta página, usted puede perder los cambios.'
@@ -314,7 +389,9 @@ line_number: 'Linea %line%:'
 line_per_page: 'Resultados por página'
 link: 'Enlace'
 link_outdated: 'Este enlace ya no es valido'
+link_workspace: 'Vincular el espacio de trabajo'
 list_groups: 'Lista de grupos'
+list_role: Lista de roles
 list_users: 'Lista de usuarios'
 list_workspaces: 'Lista de espacios de trabajo'
 lock: 'Desactivar'
@@ -337,6 +414,8 @@ mail_sent: 'Un correo electrónico ha sido enviado, Por favor compruebe su bande
 manage_rights: 'Administrar los derechos'
 manage_tools: Gestión de las herramientas
 manager: 'Administrar'
+manual: Manual
+manual_evaluation_explanation: 'Evaluación manual del administrador del espacio de trabajo'
 max_size_is: 'El tamaño máximo es %size%'
 media_most_viewed: 'Recurso más visto'
 message_form_content: 'Contenido'
@@ -355,6 +434,7 @@ misc: 'Diverso'
 missing_%content%: 'La variable %content% falta en la lengua "%language%".'
 missing_%password%: 'La variable %password% falta en la lengua "%language%".'
 missing_%username%: 'La variable %username% falta en la lengua "%language%".'
+mixed: Mezclado
 month.April: 'Abril'
 month.August: 'Agosto'
 month.December: 'Diciembre'
@@ -388,6 +468,7 @@ new_password: Nueva contraseña
 new_role_message: 'Usted a recivido el rol %name%'
 new_role_message_object: 'Sus derechos de acceso en la plataforma han cambiado'
 no: 'No'
+no_activity: 'No hay actividad'
 no_category: 'No hay categorías'
 no_email: 'No se ha encontrado el correo electrónico, comprube la ortografía'
 no_group: 'No hay grupos'
@@ -399,11 +480,15 @@ no_user: 'No hay usuarios'
 no_workspace: 'No hay espacio de trabajo'
 none: 'Ninguno'
 not_allowed_message: 'Usted no puede realizar esta acción.'
+not_attempted: 'No intentado'
 not_blank_expected: 'Este valor no debe estar vacío'
 note: Note
 notification_activated: 'Notificaciones activas.'
 notification_deactivated: 'Notificaciones desacivadas.'
 notifications: 'Notificaciones'
+number: Numero
+number_of_attempts: 'Número de intentos'
+number_of_attempts_explanation: 'El significado del número de intentos puede variar dependiendo de la actividad. No se trata necesariamente del número de veces que la actividad ha sido realizada.'
 oauth: 'OAuth'
 object: 'Asunto'
 ok: 'Ok'
@@ -420,6 +505,8 @@ over_max_length: 'Este valor es muy largo'
 owner: 'Propietario'
 owner_s: 'Propietario(s)'
 parameters: 'Parámetros'
+passed: Logrado
+passing_score: 'Puntaje para aprobar'
 password: 'Contraseña'
 password_mismatch: 'Las contraseñas no coinciden'
 password_ok: 'Su contraseña ha cambiado, ahora pude conectarse'
@@ -430,6 +517,8 @@ personal_workspace: 'Espacio de trabajo personal - '
 phone: 'Teléfono'
 picture_profile: 'Foto de perfil'
 platform_appearance: 'Apariencia de la plataforma'
+platform_expiration_date: Fecha de vencimiento de la plataforma
+platform_init_date: Fecha de activación de la plataforma
 platform_parameters: 'Parámetros de la plataforma'
 platform_parameters_form_auth_mode: 'Modo de autenticación'
 platform_parameters_form_content: 'Contenido'
@@ -474,6 +563,11 @@ registered_groups: 'Grupos inscritos'
 registered_users: 'Usuarios inscritos'
 registration: 'Inscripción'
 registration_to_workspaces: 'Inscripción a un espacio de trabajo'
+remove: Retirar
+remove_facet: Eliminar una faceta
+remove_facet_confirm: ¿Esta seguro que desea suprimir la faceta %name%?
+remove_field: Eliminar una campo
+remove_field_confirm: ¿Esta seguro que desea suprimir el campo %name%?
 remove_group_confirm_message: '¿Esta seguro que desea suprimir este grupo?'
 remove_group_s_confirm_message: '¿Esta seguro que desea suprimir estos %count% grupos?'
 remove_message_confirm_message: '¿Esta seguro que desea suprimir este mensaje?'
@@ -484,6 +578,7 @@ remove_user_s_confirm_message: '¿Esta seguro que desea suprimir estos %count% u
 remove_workspace_confirm_workspace: '¿Esta seguro que desea suprimir este espacio de trabajo?'
 remove_workspace_from_category_confirm_message: '¿Esta seguro que desea retirar este espacio de trabajo de la categoría?'
 remove_workspace_from_category_confirm_title: 'Suprimir espacio de trabajo de una categoría'
+remove_workspace_from_selection: 'eliminar espacio de trabajo de la selección'
 remove_workspaces_confirm_workspaces: '¿Esta seguro que desea suprimir estos %count% espacios de trabajo?'
 rename: 'Renombrar'
 rename_category: 'Renombrar categoría'
@@ -495,11 +590,12 @@ reset_password: Reinicializar contraseña
 reset_password_message: ¿Esta seguro que desea reinicializar su contraseña?
 reset_password_txt: Usted pidió la reinicialización de su contraseña. Si usted no la pidió, por favor ignore este mensaje.
 resetting_your_password: Reinicialización de su contraseña
-resource: 'recurso'
+resource: 'Recurso'
 resource_action_denied_message: 'La acción %action% no puede realizarse en ''%path%'': acceso denegado.'
 resource_creation_denied: 'Usted no tiene el permiso de crear en la carpeta ''%path'': acceso denegado'
 resource_creation_wrong_type: 'Usted no tiene el permiso de crear un tipo %type% en la carpeta ''%path%'': acceso denegado'
 resource_delete: '¿Esta seguro que desea suprimir este recurso?'
+resource_picker: Selector de recursos
 resource_properties_form_sharable: 'Compartir este recurso'
 resource_properties_form_shareType: 'Compartir tipo'
 resource_properties_form_userIcon: 'Icono'
@@ -528,12 +624,14 @@ rights_management: 'Gestión de derechos de acceso'
 role: 'Rol'
 role_creation: 'Rol de creación'
 role_edition: 'Rol de edición'
+role_limit_reached: Ha llegado al limite de usuarios de tipo %translationKey%.
 role_name_type_form_translationKey: 'Nombre'
 roles: 'Roles'
 roles_management: 'Gestión de roles'
 save: 'Guardar'
 save_as_template: 'Guardar como una plantilla'
 save_workspace_as_template: 'Guardar el espacio de trabajo como una plantilla'
+score: Puntaje
 search: 'Buscar'
 search_group: 'Buscar un grupo'
 search_user: 'Buscar un usuario'
@@ -547,6 +645,7 @@ select_contacts_title: 'Seleccionar receptores'
 select_groups_for_registration_to_workspace: 'Seleccionar grupos a inscribir'
 select_roles_to_assign: 'Seleccionar roles a asignar'
 select_users_for_registration_to_workspace: 'Seleccionar usuario a inscribir'
+select_workspace_to_link: 'Seleccione una espacio de trabajo a vincular'
 select_workspaces_for_registration: 'Seleccionar espacio de trabajo a inscribir'
 selected_workspaces_for_registration: 'Espacio de trabajo seleccionado para la inscripción'
 selected_workspaces_will_be_put_in_it: 'Los espacios de trabajo seleccionados serán puestos allí'
@@ -576,12 +675,15 @@ show_as_admin: 'Mostrar como administrador'
 show_as_user: 'Mostrar como usuario'
 show_profile: 'Mostrar perfil'
 simple: 'Simple'
+start_date: 'Fecha de inicio'
+status: Estado
 storage_type: 'Tipo de almacenamiento'
 subcategories: 'subcategorías'
 subscribe_groups: 'Inscribir grupos'
 subscribe_selected_groups: 'Inscribir los grupos seleccionados'
 subscribe_selected_users: 'Inscribir los usuarios seleccionados'
 subscribe_users: 'Inscribir usuarios'
+success_rate: 'Tasa de aprobación'
 support_email: 'Correo electrónico de soporte'
 switch: 'Switch'
 tag: 'Etiqueta'
@@ -593,6 +695,8 @@ tags_list: 'Lista de etiquetas'
 tags_management: 'Gestión de etiquetas'
 tags_organization: 'Organización de las etiquetas'
 teacher: 'Profesor'
+terms_enabled_but_empty: Las condiciones de servicio sólo se pueden habilitar si el texto está proporcionado al menos una lengua.
+text: Texto
 text_form_content: 'Contenido'
 text_form_name: 'Nombre'
 text_form_shareType: 'Compartible'
@@ -602,6 +706,7 @@ the_workspace: 'Espacio de trabajo'
 this_page_requires_authentication: 'Esta página requiere autenticación. Por favor, iniciar sesión.'
 time_col: 'Columna de tiempo en la base de datos'
 tinymce_all_buttons: Todas las herramientas
+title: Título
 to: 'A'
 to_anonymous: 'A usuarios anónimos'
 to_everyone: 'A todos'
@@ -627,6 +732,7 @@ top_users_workspaces_owners: 'Principales usuarios que mas poseen un espacio de 
 top_workspaces_connections: 'Espacio de trabajo más visitado'
 top_workspaces_resources: 'Principales espacios de trabajo que más tienen recursos'
 total: 'Total'
+total_time: 'Tempo total'
 trash: 'Basura'
 type: 'Tipo'
 type_s: 'Tipo(s)'
@@ -635,9 +741,12 @@ unable_to_start_sendmail: 'Sendmail o Postfix no se han podido iniciar. Por favo
 unable_to_start_smtp: 'La conexión con el servidor SMTP no puede ser establecida. Por favor, compruebe que los parámetros que ha proporcionado son correctos.'
 unable_to_start_transport: 'El transporte de correo no se puede iniciar. Por favor, compruebe que los parámetros que ha proporcionado son correctos.'
 unauthorized: 'Usted no esta autorizado a ver esta página.'
+unavailable_platform: La plataforma no está disponible.
+unavailable_role: El rol %translationKey% no es utilizable
 uncompress_file: Descomprimir el archivo si es posible
 under_min_length: 'Este valor es muy corto'
 unique connections: 'Nb único Cnx.'
+unknown: Desconocido
 unregister: 'Desinscribir'
 unregister_from_a_workspace: 'Desinscribir de un espacio de trabajo'
 unregistered: 'No inscritos'
@@ -652,6 +761,7 @@ url_invalid: 'El código no es correcto, no intente cambiar la URL'
 user: 'Usuario'
 user_accounts: 'Cuentas de usuario'
 user_creation: 'Creación de un usuario'
+user_limit_reached: Ha llegado al limite de creación de usuarios.
 user_parameters: 'Parámetros del usuario'
 user_removed: 'Usuario suprimido'
 username: 'Nombre de usuario'
@@ -691,6 +801,7 @@ will display the username: 'va a mostrar el nombre de usuario'
 workspace.create: 'Crear un espacio de trabajo'
 workspace.name_not_blank: 'El nombre del espacio de trabajo es obligatorio.'
 workspace: 'Espacio de trabajo'
+workspace_activities_tracking: 'Seguimiento de las actividades en el espacio de trabajo'
 workspace_administration: 'Administración'
 workspace_classification: 'Clasificación de espacio de trabajo'
 workspace_delete: 'Suprimir el espacio de trabajo'
@@ -751,9 +862,25 @@ role_limit_reached: Ha llegado al limite de usuarios de tipo %translationKey%.
 user_limit_reached: Ha llegado al limite de creación de usuarios.
 user_limit_too_low: Ya hay %total% %role%(s). El limite %newMax% es muy bajo.
 limit: Límite
+packages: Packages
+core_packages: Core packages
+plugin_packages: Plugin packages
+yes: Sí
+no: No
+actualize: Actualizar
+upgrade: Modernización
+show_profile_for_anonymous: Profil public access for anonymous.
+profile_management: Gestión de perfiles
+visible_facet_form_explanation: El campo "Visible" permite de especificar si el elemento debe ser visible o no por el usuario.
+editable_facet_form_explanation: El campo "Editable" permite de especificar si el elemento debe ser visible o no por el usuario.
+roles_facet_form_explanation: Este formulario permite especificar que roles pueden ver la faceta en el perfil público.
+roles_fields_form_explanation: Este formulario permite especificar que roles pueden ver y editar el campo en el perfil público.
+general_tab_form_explanation: Este formulario permite especificar que información se ve por rol en el perfil público.
 name_required: nombre obligatorio
 remove_role_confirm:  ¿Esta seguro que desea suprimir el rol %name%?
 remove_role: Eliminiar un rol.
 initialize: Inicializar
 user_limit_success_update: El número máximo de usuarios por rol ha sido actualizado con éxito.
 role_name_changed_success: El nombre del rola ha sido actualizado con éxito.
+packages_upgrade_info_message: Advertencia, esta es la página de administración de las actualizaciones.
+package_upgrade_all_warning: Advertencia, esto actualizará todos los paquetes de la plataforma. Esta operación no puede ser cancelada. Se recomienda  hacer una copia de seguridad de los archivos y de la base de datos antes de realizar esta operación.

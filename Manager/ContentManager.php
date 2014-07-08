@@ -15,7 +15,6 @@ use Claroline\CoreBundle\Entity\Content;
 use Claroline\CoreBundle\Entity\ContentTranslation;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use Doctrine\Bundle\DoctrineBundle\Registry;
-use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Query;
 use JMS\DiExtraBundle\Annotation\Inject;
 use JMS\DiExtraBundle\Annotation\InjectParams;
@@ -29,27 +28,23 @@ class ContentManager
 {
     private $manager;
     private $request;
-    private $entityManager;
     private $content;
 
     /**
      * @InjectParams({
      *     "manager"        = @Inject("doctrine"),
      *     "requestStack"   = @Inject("request_stack"),
-     *     "entityManager"  = @Inject("doctrine.orm.entity_manager"),
      *     "persistence"    = @Inject("claroline.persistence.object_manager")
      * })
      */
     public function __construct(
         Registry $manager,
         RequestStack $requestStack,
-        EntityManager $entityManager,
         ObjectManager $persistence
     )
     {
         $this->manager = $persistence;
         $this->request = $requestStack->getCurrentRequest();
-        $this->entityManager = $entityManager;
         $this->content = $manager->getRepository('ClarolineCoreBundle:Content');
         $this->translations = $manager->getRepository('ClarolineCoreBundle:ContentTranslation');
     }

@@ -17,7 +17,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 use Claroline\CoreBundle\Entity\Event;
-use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
+use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Manager\AgendaManager;
 use Claroline\CoreBundle\Form\Factory\FormFactory;
 use Claroline\CoreBundle\Persistence\ObjectManager;
@@ -74,16 +75,16 @@ class WorkspaceAgendaController extends Controller
      * @EXT\Method("POST")
      * @EXT\ParamConverter(
      *      "workspace",
-     *      class="ClarolineCoreBundle:Workspace\AbstractWorkspace",
+     *      class="ClarolineCoreBundle:Workspace\Workspace",
      *      options={"id" = "workspaceId", "strictId" = true}
      * )
      *
-     * @param AbstractWorkspace $workspace
+     * @param Workspace $workspace
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function addEventAction(AbstractWorkspace $workspace)
-    { 
+    public function addEventAction(Workspace $workspace)
+    {
         $form = $this->formFactory->create(FormFactory::TYPE_AGENDA);
         $form->handleRequest($this->request);
         if ($form->isValid()) {
@@ -108,15 +109,15 @@ class WorkspaceAgendaController extends Controller
      * @EXT\Method("POST")
      * @EXT\ParamConverter(
      *      "workspace",
-     *      class="ClarolineCoreBundle:Workspace\AbstractWorkspace",
+     *      class="ClarolineCoreBundle:Workspace\Workspace",
      *      options={"id" = "workspaceId", "strictId" = true}
      * )
      *
-     * @param AbstractWorkspace $workspace
+     * @param Workspace $workspace
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function updateAction(AbstractWorkspace $workspace)
+    public function updateAction(Workspace $workspace)
     {
         $postData = $this->request->request->all();
         $event = $this->om->getRepository('ClarolineCoreBundle:Event')->find($postData['id']);
@@ -146,19 +147,19 @@ class WorkspaceAgendaController extends Controller
      * @EXT\Method("POST")
      * @EXT\ParamConverter(
      *      "workspace",
-     *      class="ClarolineCoreBundle:Workspace\AbstractWorkspace",
+     *      class="ClarolineCoreBundle:Workspace\Workspace",
      *      options={"id" = "workspaceId", "strictId" = true}
      * )
      *
-     * @param AbstractWorkspace $workspace
+     * @param Workspace $workspace
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function deleteAction(AbstractWorkspace $workspace)
+    public function deleteAction(Workspace $workspace)
     {
         $postData = $this->request->request->all();
         if ($this->agendaManager->deleteEvent($postData['id']))
-        {    
+        {
             return new Response(
                 json_encode(array('greeting' => 'delete')),
                 200,
@@ -181,15 +182,15 @@ class WorkspaceAgendaController extends Controller
      * @EXT\Method({"GET","POST"})
      * @EXT\ParamConverter(
      *      "workspace",
-     *      class="ClarolineCoreBundle:Workspace\AbstractWorkspace",
+     *      class="ClarolineCoreBundle:Workspace\Workspace",
      *      options={"id" = "workspaceId", "strictId" = true}
      * )
      *
-     * @param AbstractWorkspace $workspace
+     * @param Workspace $workspace
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function showAction(AbstractWorkspace $workspace)
+    public function showAction(Workspace $workspace)
     {
         $data = $this->agendaManager->displayEvents($workspace);
 
@@ -212,10 +213,10 @@ class WorkspaceAgendaController extends Controller
     {
         $postData = $this->request->request->all();
         $data = $this->agendaManager->moveEvent($postData['id'], $postData['dayDelta'], $postData['minuteDelta']);
-        
+
         return new Response(
             json_encode(
-                $data  
+                $data
             ),
             200,
             array('Content-Type' => 'application/json')
@@ -230,14 +231,14 @@ class WorkspaceAgendaController extends Controller
      * @EXT\Method({"GET","POST"})
      * @EXT\ParamConverter(
      *      "workspace",
-     *      class="ClarolineCoreBundle:Workspace\AbstractWorkspace",
+     *      class="ClarolineCoreBundle:Workspace\Workspace",
      *      options={"id" = "workspaceId", "strictId" = true}
      * )
-     * @param AbstractWorkspace $workspace
+     * @param Workspace $workspace
      *
      * @EXT\Template("ClarolineCoreBundle:Tool\\desktop\\agenda:tasks.html.twig")
      */
-    public function tasksAction(AbstractWorkspace $workspaceId)
+    public function tasksAction(Workspace $workspaceId)
     {
         $listEvents = $this->om->getRepository('ClarolineCoreBundle:Event')->findByWorkspaceId($workspaceId, true);
 
@@ -252,13 +253,13 @@ class WorkspaceAgendaController extends Controller
      * @EXT\Method({"GET","POST"})
      * @EXT\ParamConverter(
      *      "workspace",
-     *      class="ClarolineCoreBundle:Workspace\AbstractWorkspace",
+     *      class="ClarolineCoreBundle:Workspace\Workspace",
      *      options={"id" = "workspaceId", "strictId" = true}
      * )
-     * @param AbstractWorkspace $workspace
+     * @param Workspace $workspace
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function exportsEventIcsAction(AbstractWorkspace $workspaceId)
+    public function exportsEventIcsAction(Workspace $workspaceId)
     {
         $file =  $this->agendaManager->export($workspaceId);
         $response = new StreamedResponse();
@@ -286,13 +287,13 @@ class WorkspaceAgendaController extends Controller
      * @EXT\Method({"GET","POST"})
      * @EXT\ParamConverter(
      *      "workspace",
-     *      class="ClarolineCoreBundle:Workspace\AbstractWorkspace",
+     *      class="ClarolineCoreBundle:Workspace\Workspace",
      *      options={"id" = "workspaceId", "strictId" = true}
      * )
-     * @param AbstractWorkspace $workspace
+     * @param Workspace $workspace
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function importsEventsIcsAction(AbstractWorkspace $workspace)
+    public function importsEventsIcsAction(Workspace $workspace)
     {
         $form = $this->formFactory->create(FormFactory::TYPE_AGENDA_IMPORTER);
         $form->handleRequest($this->request);

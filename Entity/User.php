@@ -26,6 +26,7 @@ use Claroline\CoreBundle\Entity\Role;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Validator\ExecutionContextInterface;
+use Claroline\CoreBundle\Entity\Facet\FieldFacetValue;
 
 /**
  * @ORM\Table(name="claro_user")
@@ -161,10 +162,10 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
     protected $resourceNodes;
 
     /**
-     * @var Workspace\AbstractWorkspace
+     * @var Workspace\Workspace
      *
      * @ORM\OneToOne(
-     *     targetEntity="Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace"
+     *     targetEntity="Claroline\CoreBundle\Entity\Workspace\Workspace"
      * )
      * @ORM\JoinColumn(name="workspace_id", onDelete="SET NULL")
      */
@@ -285,18 +286,20 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
     protected $hasTunedPublicUrl = false;
 
     /**
-     * @var UserPublicProfilePreferences
-     *
-     * @ORM\OneToOne(targetEntity="UserPublicProfilePreferences", mappedBy="user", cascade={"all"})
-     */
-    protected $publicProfilePreferences;
-
-    /**
      * @var \DateTime
      *
      * @ORM\Column(name="expiration_date", type="datetime", nullable=true)
      */
     protected $expirationDate;
+
+    /**
+     * @ORM\OneToMany(
+     *     targetEntity="Claroline\CoreBundle\Entity\Facet\FieldFacetValue",
+     *     mappedBy="user",
+     *     cascade={"persist"}
+     * )
+     */
+    protected $fieldsFacetValue;
 
     public function __construct()
     {
@@ -310,6 +313,7 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
         $this->userBadges        = new ArrayCollection();
         $this->issuedBadges      = new ArrayCollection();
         $this->badgeClaims       = new ArrayCollection();
+        $this->fieldsFacetValue  = new ArrayCollection();
     }
 
     /**
@@ -462,9 +466,9 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
     }
 
     /**
-     * Returns the user's roles (including role's ancestors) as an array
-     * of string values (needed for Symfony security checks). The roles
-     * owned by groups which the user belong can also be included.
+     * Returns the user's roles as an array of string values (needed for
+     * Symfony security checks). The roles owned by groups the user is a
+     * member are included by default.
      *
      * @param boolean $areGroupsIncluded
      *
@@ -481,6 +485,31 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
         }
 
         return $roleNames;
+    }
+
+    /**
+     * Returns the user's roles as an array of entities. The roles
+     * owned by groups the user is a member are included by default.
+     *
+     * @param bool $areGroupsIncluded
+     *
+     * @return array[Role]
+     */
+    public function getEntityRoles($areGroupsIncluded = true)
+    {
+        $roles = $this->roles->toArray();
+
+        if ($areGroupsIncluded) {
+            foreach ($this->getGroups() as $group) {
+                foreach ($group->getEntityRoles() as $role) {
+                    if (!in_array($role, $roles)) {
+                        $roles[] = $role;
+                    }
+                }
+            }
+        }
+
+        return $roles;
     }
 
     public function eraseCredentials()
@@ -598,7 +627,7 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
     }
 
     /**
-     * @param Workspace\AbstractWorkspace $workspace
+     * @param Workspace\Workspace $workspace
      *
      * @return User
      */
@@ -610,7 +639,7 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
     }
 
     /**
-     * @return Workspace\AbstractWorkspace
+     * @return Workspace\Workspace
      */
     public function getPersonalWorkspace()
     {
@@ -949,28 +978,6 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
         return $this->hasTunedPublicUrl;
     }
 
-    /**
-     * @return \Claroline\CoreBundle\Entity\UserPublicProfilePreferences
-     */
-    public function getPublicProfilePreferences()
-    {
-        return $this->publicProfilePreferences;
-    }
-
-    /**
-     * @param \Claroline\CoreBundle\Entity\UserPublicProfilePreferences $publicProfilPreferences
-     *
-     * @return User
-     */
-    public function setPublicProfilePreferences(UserPublicProfilePreferences $publicProfilPreferences)
-    {
-        $publicProfilPreferences->setUser($this);
-
-        $this->publicProfilePreferences = $publicProfilPreferences;
-
-        return $this;
-    }
-
     public function isPublicUrlValid(ExecutionContextInterface $context)
     {
         // Search for whitespaces
@@ -987,6 +994,16 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
     public function getExpirationDate()
     {
         return $this->expirationDate !== null ? $this->expirationDate: new \DateTime(2100-01-01);
+    }
+
+    public function getFieldsFacetValue()
+    {
+        return $this->fieldsFacetValue;
+    }
+
+    public function addFieldFacet(FieldFacetValue $fieldFacetValue)
+    {
+        $this->fieldsFacetValue->add($fieldFacetValue);
     }
 
     public function setInitDate($initDate)

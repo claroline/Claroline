@@ -38,7 +38,7 @@
             $('.list-group-item.disabled', sidebar).children().each(function () {
                 // Search in sidebar header if dev has defined an icon for his bar
                 var className = $(this).prop('class');
-                if (className.match(/^icon-/) !== null) {
+                if (className.match(/^fa-/) !== null) {
                     hasIcon = true;
                     return;
                 }
@@ -46,14 +46,16 @@
 
             if (!hasIcon) {
                 // Add little arrow to header
-                var header = '<i class="icon-caret-' + side + '"></i>' + $('.list-group-item.disabled', sidebar).html();
+                var icon = (side === 'left') ? 'right' : 'left';
+                var header = '<i class="fa fa-caret-' + icon + '"></i>' +
+                             $('.list-group-item.disabled', sidebar).html();
                 $('.list-group-item.disabled', sidebar).html(header);
             }
 
             sidebar.append('<div class="scroll-up hide" aria-hidden="true">' +
-                            '<i class="icon-double-angle-up"></i></div>' +
+                            '<i class="fa fa-angle-double-up"></i></div>' +
                             '<div class="scroll-down hide" aria-hidden="true">' +
-                            '<i class="icon-double-angle-down"></i></div>'
+                            '<i class="fa fa-angle-double-down"></i></div>'
             );
 
             $('body').addClass(side + '-bar-push');

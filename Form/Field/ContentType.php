@@ -11,19 +11,19 @@
 
 namespace Claroline\CoreBundle\Form\Field;
 
-use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\Options;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
-use Symfony\Component\Form\FormInterface;
-use Symfony\Component\Form\FormView;
-use JMS\DiExtraBundle\Annotation\Service;
+use Claroline\CoreBundle\Entity\Content;
+use Claroline\CoreBundle\Manager\ContentManager;
+use Claroline\CoreBundle\Manager\LocaleManager;
 use JMS\DiExtraBundle\Annotation\FormType;
 use JMS\DiExtraBundle\Annotation\Inject;
 use JMS\DiExtraBundle\Annotation\InjectParams;
-use Claroline\CoreBundle\Manager\LocaleManager;
-use Claroline\CoreBundle\Manager\ContentManager;
-use Claroline\CoreBundle\Entity\Content;
+use JMS\DiExtraBundle\Annotation\Service;
+use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormInterface;
+use Symfony\Component\Form\FormView;
+use Symfony\Component\OptionsResolver\Options;
+use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 /**
  * @Service("claroline.form.content")

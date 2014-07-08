@@ -16,7 +16,7 @@ use Claroline\CoreBundle\Entity\Home\HomeTabConfig;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Widget\WidgetInstance;
 use Claroline\CoreBundle\Entity\Widget\WidgetHomeTabConfig;
-use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Event\StrictDispatcher;
 use Claroline\CoreBundle\Form\Factory\FormFactory;
 use Claroline\CoreBundle\Manager\HomeTabManager;
@@ -123,20 +123,20 @@ class HomeController extends Controller
      * @EXT\Method("GET")
      * @EXT\ParamConverter(
      *      "workspace",
-     *      class="ClarolineCoreBundle:Workspace\AbstractWorkspace",
+     *      class="ClarolineCoreBundle:Workspace\Workspace",
      *      options={"id" = "workspaceId", "strictId" = true}
      * )
      *
      * Asks a widget to render its configuration page for a workspace.
      *
      * @param WidgetInstance $widgetInstance
-     * @param AbstractWorkspace $workspace
+     * @param Workspace $workspace
      *
      * @return Response
      */
     public function getWorkspaceWidgetFormConfigurationAction(
         WidgetInstance $widgetInstance,
-        AbstractWorkspace $workspace
+        Workspace $workspace
     )
     {
         $this->checkWorkspaceAccess($workspace);
@@ -259,18 +259,18 @@ class HomeController extends Controller
      * @EXT\Method("GET")
      * @EXT\ParamConverter(
      *      "workspace",
-     *      class="ClarolineCoreBundle:Workspace\AbstractWorkspace",
+     *      class="ClarolineCoreBundle:Workspace\Workspace",
      *      options={"id" = "workspaceId", "strictId" = true}
      * )
      * @EXT\Template("ClarolineCoreBundle:Tool\workspace\home:workspaceWidgetInstanceCreateForm.html.twig")
      *
      * Displays the widget instance form.
      *
-     * @param AbstractWorkspace $workspace
+     * @param Workspace $workspace
      *
      * @return Response
      */
-    public function workspaceWidgetInstanceCreateFormAction(AbstractWorkspace $workspace)
+    public function workspaceWidgetInstanceCreateFormAction(Workspace $workspace)
     {
         $this->checkWorkspaceAccess($workspace);
 
@@ -296,18 +296,18 @@ class HomeController extends Controller
      * @EXT\Method("POST")
      * @EXT\ParamConverter(
      *      "workspace",
-     *      class="ClarolineCoreBundle:Workspace\AbstractWorkspace",
+     *      class="ClarolineCoreBundle:Workspace\Workspace",
      *      options={"id" = "workspaceId", "strictId" = true}
      * )
      * @EXT\Template("ClarolineCoreBundle:Tool\workspace\home:workspaceWidgetInstanceCreateForm.html.twig")
      *
      * Creates a widget instance.
      *
-     * @param AbstractWorkspace $workspace
+     * @param Workspace $workspace
      *
      * @return Response
      */
-    public function workspaceWidgetInstanceCreateAction(AbstractWorkspace $workspace)
+    public function workspaceWidgetInstanceCreateAction(Workspace $workspace)
     {
         $this->checkWorkspaceAccess($workspace);
 
@@ -664,7 +664,7 @@ class HomeController extends Controller
      * @EXT\Method("GET")
      * @EXT\ParamConverter(
      *      "workspace",
-     *      class="ClarolineCoreBundle:Workspace\AbstractWorkspace",
+     *      class="ClarolineCoreBundle:Workspace\Workspace",
      *      options={"id" = "workspaceId", "strictId" = true}
      * )
      * @EXT\Template("ClarolineCoreBundle:Tool\workspace\home:workspaceHomeTabCreateForm.html.twig")
@@ -673,7 +673,7 @@ class HomeController extends Controller
      *
      * @return Response
      */
-    public function workspaceHomeTabCreateFormAction(AbstractWorkspace $workspace)
+    public function workspaceHomeTabCreateFormAction(Workspace $workspace)
     {
         $this->checkWorkspaceAccess($workspace);
 
@@ -696,7 +696,7 @@ class HomeController extends Controller
      * @EXT\Method("POST")
      * @EXT\ParamConverter(
      *      "workspace",
-     *      class="ClarolineCoreBundle:Workspace\AbstractWorkspace",
+     *      class="ClarolineCoreBundle:Workspace\Workspace",
      *      options={"id" = "workspaceId", "strictId" = true}
      * )
      * @EXT\Template("ClarolineCoreBundle:Tool\workspace\home:workspaceHomeTabCreateForm.html.twig")
@@ -705,7 +705,7 @@ class HomeController extends Controller
      *
      * @return Response
      */
-    public function workspaceHomeTabCreateAction(AbstractWorkspace $workspace)
+    public function workspaceHomeTabCreateAction(Workspace $workspace)
     {
         $this->checkWorkspaceAccess($workspace);
 
@@ -754,7 +754,7 @@ class HomeController extends Controller
      * @EXT\Method("GET")
      * @EXT\ParamConverter(
      *      "workspace",
-     *      class="ClarolineCoreBundle:Workspace\AbstractWorkspace",
+     *      class="ClarolineCoreBundle:Workspace\Workspace",
      *      options={"id" = "workspaceId", "strictId" = true}
      * )
      * @EXT\ParamConverter(
@@ -769,7 +769,7 @@ class HomeController extends Controller
      * @return Response
      */
     public function workspaceHomeTabEditFormAction(
-        AbstractWorkspace $workspace,
+        Workspace $workspace,
         HomeTab $homeTab
     )
     {
@@ -793,7 +793,7 @@ class HomeController extends Controller
      * @EXT\Method("POST")
      * @EXT\ParamConverter(
      *      "workspace",
-     *      class="ClarolineCoreBundle:Workspace\AbstractWorkspace",
+     *      class="ClarolineCoreBundle:Workspace\Workspace",
      *      options={"id" = "workspaceId", "strictId" = true}
      * )
      * @EXT\ParamConverter(
@@ -808,7 +808,7 @@ class HomeController extends Controller
      * @return Response
      */
     public function workspaceHomeTabEditAction(
-        AbstractWorkspace $workspace,
+        Workspace $workspace,
         HomeTab $homeTab
     )
     {
@@ -840,7 +840,7 @@ class HomeController extends Controller
      * @EXT\Method("DELETE")
      * @EXT\ParamConverter(
      *      "workspace",
-     *      class="ClarolineCoreBundle:Workspace\AbstractWorkspace",
+     *      class="ClarolineCoreBundle:Workspace\Workspace",
      *      options={"id" = "workspaceId", "strictId" = true}
      * )
      * @EXT\ParamConverter(
@@ -854,7 +854,7 @@ class HomeController extends Controller
      * @return Response
      */
     public function workspaceHomeTabDeleteAction(
-        AbstractWorkspace $workspace,
+        Workspace $workspace,
         HomeTab $homeTab,
         $tabOrder
     )
@@ -1017,7 +1017,7 @@ class HomeController extends Controller
      * )
      * @EXT\ParamConverter(
      *      "workspace",
-     *      class="ClarolineCoreBundle:Workspace\AbstractWorkspace",
+     *      class="ClarolineCoreBundle:Workspace\Workspace",
      *      options={"id" = "workspaceId", "strictId" = true}
      * )
      *
@@ -1028,7 +1028,7 @@ class HomeController extends Controller
     public function associateWorkspaceWidgetToHomeTabAction(
         HomeTab $homeTab,
         WidgetInstance $widgetInstance,
-        AbstractWorkspace $workspace
+        Workspace $workspace
     )
     {
         $this->checkWorkspaceAccess($workspace);
@@ -1101,7 +1101,7 @@ class HomeController extends Controller
      * )
      * @EXT\ParamConverter(
      *      "workspace",
-     *      class="ClarolineCoreBundle:Workspace\AbstractWorkspace",
+     *      class="ClarolineCoreBundle:Workspace\Workspace",
      *      options={"id" = "workspaceId", "strictId" = true}
      * )
      *
@@ -1111,7 +1111,7 @@ class HomeController extends Controller
      */
     public function workspaceWidgetHomeTabConfigChangeVisibilityAction(
         WidgetHomeTabConfig $widgetHomeTabConfig,
-        AbstractWorkspace $workspace
+        Workspace $workspace
     )
     {
         $this->checkWorkspaceAccess($workspace);
@@ -1178,7 +1178,7 @@ class HomeController extends Controller
      * )
      * @EXT\ParamConverter(
      *      "workspace",
-     *      class="ClarolineCoreBundle:Workspace\AbstractWorkspace",
+     *      class="ClarolineCoreBundle:Workspace\Workspace",
      *      options={"id" = "workspaceId", "strictId" = true}
      * )
      *
@@ -1188,7 +1188,7 @@ class HomeController extends Controller
      */
     public function workspaceWidgetHomeTabConfigDeleteAction(
         WidgetHomeTabConfig $widgetHomeTabConfig,
-        AbstractWorkspace $workspace
+        Workspace $workspace
     )
     {
         $this->checkWorkspaceAccess($workspace);
@@ -1257,7 +1257,7 @@ class HomeController extends Controller
      * )
      * @EXT\ParamConverter(
      *      "workspace",
-     *      class="ClarolineCoreBundle:Workspace\AbstractWorkspace",
+     *      class="ClarolineCoreBundle:Workspace\Workspace",
      *      options={"id" = "workspaceId", "strictId" = true}
      * )
      *
@@ -1267,7 +1267,7 @@ class HomeController extends Controller
      */
     public function workspaceWidgetHomeTabConfigChangeOrderAction(
         WidgetHomeTabConfig $widgetHomeTabConfig,
-        AbstractWorkspace $workspace,
+        Workspace $workspace,
         $direction
     )
     {
@@ -1377,7 +1377,7 @@ class HomeController extends Controller
      * )
      * @EXT\ParamConverter(
      *      "workspace",
-     *      class="ClarolineCoreBundle:Workspace\AbstractWorkspace",
+     *      class="ClarolineCoreBundle:Workspace\Workspace",
      *      options={"id" = "workspaceId", "strictId" = true}
      * )
      * @EXT\Template("ClarolineCoreBundle:Tool\workspace\home:workspaceWidgetNameEditForm.html.twig")
@@ -1386,7 +1386,7 @@ class HomeController extends Controller
      */
     public function editWorkspaceWidgetNameFormAction(
         WidgetInstance $widgetInstance,
-        AbstractWorkspace $workspace
+        Workspace $workspace
     )
     {
         $this->checkWorkspaceAccess($workspace);
@@ -1418,7 +1418,7 @@ class HomeController extends Controller
      * )
      * @EXT\ParamConverter(
      *      "workspace",
-     *      class="ClarolineCoreBundle:Workspace\AbstractWorkspace",
+     *      class="ClarolineCoreBundle:Workspace\Workspace",
      *      options={"id" = "workspaceId", "strictId" = true}
      * )
      * @EXT\Template("ClarolineCoreBundle:Tool\workspace\home:workspaceWidgetNameEditForm.html.twig")
@@ -1427,7 +1427,7 @@ class HomeController extends Controller
      */
     public function editWorkspaceWidgetNameAction(
         WidgetInstance $widgetInstance,
-        AbstractWorkspace $workspace
+        Workspace $workspace
     )
     {
         $this->checkWorkspaceAccess($workspace);
@@ -1460,7 +1460,7 @@ class HomeController extends Controller
         }
     }
 
-    private function checkWorkspaceAccess(AbstractWorkspace $workspace)
+    private function checkWorkspaceAccess(Workspace $workspace)
     {
         $role = $this->roleManager->getManagerRole($workspace);
 
@@ -1502,7 +1502,7 @@ class HomeController extends Controller
 
     private function checkWorkspaceAccessForHomeTab(
         HomeTab $homeTab,
-        AbstractWorkspace $workspace
+        Workspace $workspace
     )
     {
         $homeTabWorkspace = $homeTab->getWorkspace();
@@ -1514,7 +1514,7 @@ class HomeController extends Controller
 
     private function checkWorkspaceAccessForAdminHomeTab(
         HomeTab $homeTab,
-        AbstractWorkspace $workspace
+        Workspace $workspace
     )
     {
         $homeTabWorkspace = $homeTab->getWorkspace();
@@ -1547,7 +1547,7 @@ class HomeController extends Controller
 
     private function checkWorkspaceAccessForWidgetHomeTabConfig(
         WidgetHomeTabConfig $widgetHomeTabConfig,
-        AbstractWorkspace $workspace
+        Workspace $workspace
     )
     {
         $widgetHomeTabConfigWorkspace = $widgetHomeTabConfig->getWorkspace();
@@ -1574,7 +1574,7 @@ class HomeController extends Controller
 
     private function checkWorkspaceAccessForWidgetInstance(
         WidgetInstance $widgetInstance,
-        AbstractWorkspace $workspace
+        Workspace $workspace
     )
     {
         $widgetWorkspace = $widgetInstance->getWorkspace();
@@ -1600,7 +1600,7 @@ class HomeController extends Controller
 
     private function hasWorkspaceAccessToWidgetInstance(
         WidgetInstance $widgetInstance,
-        AbstractWorkspace $workspace
+        Workspace $workspace
     )
     {
         $widgetWorkspace = $widgetInstance->getWorkspace();

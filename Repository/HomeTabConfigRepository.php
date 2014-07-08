@@ -13,7 +13,7 @@ namespace Claroline\CoreBundle\Repository;
 
 use Claroline\CoreBundle\Entity\Home\HomeTab;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Doctrine\ORM\EntityRepository;
 
 class HomeTabConfigRepository extends EntityRepository
@@ -77,7 +77,7 @@ class HomeTabConfigRepository extends EntityRepository
         return $query->getResult();
     }
 
-    public function findWorkspaceHomeTabConfigsByWorkspace(AbstractWorkspace $workspace)
+    public function findWorkspaceHomeTabConfigsByWorkspace(Workspace $workspace)
     {
         $dql = "
             SELECT htc
@@ -141,7 +141,7 @@ class HomeTabConfigRepository extends EntityRepository
         return $query->getResult();
     }
 
-    public function findVisibleWorkspaceHomeTabConfigsByWorkspace(AbstractWorkspace $workspace)
+    public function findVisibleWorkspaceHomeTabConfigsByWorkspace(Workspace $workspace)
     {
         $dql = "
             SELECT htc, ht
@@ -185,7 +185,7 @@ class HomeTabConfigRepository extends EntityRepository
         return $query->getSingleResult();
     }
 
-    public function findOrderOfLastWorkspaceHomeTabByWorkspace(AbstractWorkspace $workspace)
+    public function findOrderOfLastWorkspaceHomeTabByWorkspace(Workspace $workspace)
     {
         $dql = "
             SELECT MAX(htc.tabOrder) AS order_max
@@ -269,7 +269,7 @@ class HomeTabConfigRepository extends EntityRepository
     }
 
     public function updateHomeTabOrderByWorkspace(
-        AbstractWorkspace $workspace,
+        Workspace $workspace,
         $homeTabOrder,
         $newHomeTabOrder
     )
@@ -335,7 +335,7 @@ class HomeTabConfigRepository extends EntityRepository
         return $query->execute();
     }
 
-    public function updateWorkspaceOrder(AbstractWorkspace $workspace, $tabOrder)
+    public function updateWorkspaceOrder(Workspace $workspace, $tabOrder)
     {
         $dql = "
             UPDATE Claroline\CoreBundle\Entity\Home\HomeTabConfig htc

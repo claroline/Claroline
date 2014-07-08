@@ -12,19 +12,19 @@
 namespace Claroline\CoreBundle\Repository;
 
 use Doctrine\ORM\EntityRepository;
-use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
 
 class OrderedToolRepository extends EntityRepository
 {
     /**
      * Returns the workspace ordered tools accessible to some given roles.
      *
-     * @param AbstractWorkspace $workspace
+     * @param Workspace $workspace
      * @param array             $roles
      *
      * @return array[OrderedTool]
      */
-    public function findByWorkspaceAndRoles(AbstractWorkspace $workspace, array $roles)
+    public function findByWorkspaceAndRoles(Workspace $workspace, array $roles)
     {
         $rolesRestriction = '';
         $first = true;

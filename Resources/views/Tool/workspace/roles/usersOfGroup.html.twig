@@ -48,7 +48,7 @@
     {{
         macros.breadcrumbs([
             {
-                'icon': 'icon-book',
+                'icon': 'fa fa-book',
                 'name': 'workspaces'|trans({}, 'platform'),
                 'href': path('claro_workspace_list')
             },
@@ -84,7 +84,7 @@
                 <div class="col-md-8">
                     <div class="btn-group margin-md">
                         <a href="{{ path('claro_workspace_unregistered_user_list', {'workspace': workspace.getId()}) }}" class="btn btn-default dropdown-toggle" role="button">
-                            <i class="icon-plus"></i> {{ 'add_users'|trans({}, 'platform') }}
+                            <i class="fa fa-plus"></i> {{ 'add_users'|trans({}, 'platform') }}
                         </a>
                     </div>
                 </div>
@@ -93,7 +93,7 @@
                         <input class="form-control" type="text" id="search-items-txt"  placeholder="{{ 'search'|trans({}, 'platform') }}" value="{{ search }}">
                         <span class="input-group-btn">
                             <button class="filter btn btn-default" type="button" id="search-button">
-                                <i class="icon-search"></i>
+                                <i class="fa fa-search"></i>
                             </button>
                         </span>
                     </div>

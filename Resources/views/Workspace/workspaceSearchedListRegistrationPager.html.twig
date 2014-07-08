@@ -15,7 +15,7 @@
 {% from _self import renderPager %}
 
 <div id="search-workspaces-div">
-{% if pager.getNbPages() > 1 %}
+{% if workspaces.getNbPages() > 1 %}
     {{ renderPager(workspaces, search) }}
 {% endif %}
 <div class="panel panel-default">
@@ -44,7 +44,7 @@
         </table>
     </div>
 </div>
-{% if pager.getNbPages() > 1 %}
+{% if workspaces.getNbPages() > 1 %}
     {{ renderPager(workspaces, search) }}
 {% endif %}
 </div>

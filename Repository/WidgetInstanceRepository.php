@@ -12,7 +12,7 @@
 namespace Claroline\CoreBundle\Repository;
 
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Doctrine\ORM\EntityRepository;
 
 class WidgetInstanceRepository extends EntityRepository
@@ -68,7 +68,7 @@ class WidgetInstanceRepository extends EntityRepository
     }
 
     public function findWorkspaceWidgetInstance(
-        AbstractWorkspace $workspace,
+        Workspace $workspace,
         array $excludedWidgetInstances
     )
     {

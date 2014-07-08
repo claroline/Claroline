@@ -70,6 +70,14 @@ abstract class Rule
     /**
      * @var string
      *
+     * @ORM\Column(type="string", nullable=true)
+     * @Expose
+     */
+    protected $resultMax;
+
+    /**
+     * @var string
+     *
      * @ORM\Column(type="smallint", nullable=true)
      * @Expose
      */
@@ -79,7 +87,7 @@ abstract class Rule
      * @var ResourceNode
      *
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceNode")
-     * @ORM\JoinColumn(nullable=true)
+     * @ORM\JoinColumn(onDelete="CASCADE", nullable=true)
      * @Expose
      */
     protected $resource;
@@ -104,6 +112,20 @@ abstract class Rule
      * @var \Claroline\CoreBundle\Entity\User
      */
     protected $user;
+
+    /**
+     * @var datetime
+     *
+     * @ORM\Column(name="active_from", type="datetime", nullable=true)
+     */
+    protected $activeFrom;
+
+    /**
+     * @var datetime
+     *
+     * @ORM\Column(name="active_until", type="datetime", nullable=true)
+     */
+    protected $activeUntil;
 
     /**
      * @return int
@@ -183,6 +205,26 @@ abstract class Rule
     public function getResult()
     {
         return $this->result;
+    }
+
+    /**
+     * @param string $resultMax
+     *
+     * @return Rule
+     */
+    public function setResultMax($resultMax)
+    {
+        $this->resultMax = $resultMax;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getResultMax()
+    {
+        return $this->resultMax;
     }
 
     /**
@@ -351,5 +393,45 @@ abstract class Rule
     public function getBadge()
     {
         return $this->badge;
+    }
+
+    /**
+     * @param datetime $activeFrom
+     *
+     * @return Rule
+     */
+    public function setActiveFrom($activeFrom)
+    {
+        $this->activeFrom = $activeFrom;
+
+        return $this;
+    }
+
+    /**
+     * @return datetime
+     */
+    public function getActiveFrom()
+    {
+        return $this->activeFrom;
+    }
+
+    /**
+     * @param datetime $activeUntil
+     *
+     * @return Rule
+     */
+    public function setActiveUntil($activeUntil)
+    {
+        $this->activeUntil = $activeUntil;
+
+        return $this;
+    }
+
+    /**
+     * @return datetime
+     */
+    public function getActiveUntil()
+    {
+        return $this->activeUntil;
     }
 }

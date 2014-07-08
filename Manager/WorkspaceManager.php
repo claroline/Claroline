@@ -12,8 +12,9 @@
 namespace Claroline\CoreBundle\Manager;
 
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Entity\Workspace\WorkspaceFavourite;
+use Claroline\CoreBundle\Library\Security\Utilities;
 use Claroline\CoreBundle\Manager\HomeTabManager;
 use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Manager\ResourceManager;
@@ -31,6 +32,7 @@ use Claroline\CoreBundle\Pager\PagerFactory;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Library\Utilities\ClaroUtilities;
 use Claroline\CoreBundle\Manager\Exception\UnknownToolException;
+use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Yaml\Yaml;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Security\Core\SecurityContextInterface;
@@ -61,9 +63,9 @@ class WorkspaceManager
     private $resourceTypeRepo;
     /** @var RoleRepository */
     private $roleRepo;
-    /** @var WorkspaceRepository */
-    private $userRepo;
     /** @var UserRepository */
+    private $userRepo;
+    /** @var WorkspaceRepository */
     private $workspaceRepo;
     /** @var ToolManager */
     private $toolManager;
@@ -73,6 +75,7 @@ class WorkspaceManager
     private $om;
     /** @var ClaroUtilities */
     private $ut;
+    private $sut;
     /** @var string */
     private $templateDir;
     /** @var PagerFactory */
@@ -92,6 +95,7 @@ class WorkspaceManager
      *     "dispatcher"      = @DI\Inject("claroline.event.event_dispatcher"),
      *     "om"              = @DI\Inject("claroline.persistence.object_manager"),
      *     "ut"              = @DI\Inject("claroline.utilities.misc"),
+     *     "sut"             = @DI\Inject("claroline.security.utilities"),
      *     "templateDir"     = @DI\Inject("%claroline.param.templates_directory%"),
      *     "pagerFactory"    = @DI\Inject("claroline.pager.pager_factory"),
      *     "container"       = @DI\Inject("service_container")
@@ -106,6 +110,7 @@ class WorkspaceManager
         StrictDispatcher $dispatcher,
         ObjectManager $om,
         ClaroUtilities $ut,
+        Utilities $sut,
         $templateDir,
         PagerFactory $pagerFactory,
         ContainerInterface $container
@@ -117,6 +122,7 @@ class WorkspaceManager
         $this->resourceManager = $resourceManager;
         $this->toolManager = $toolManager;
         $this->ut = $ut;
+        $this->sut = $sut;
         $this->om = $om;
         $this->dispatcher = $dispatcher;
         $this->templateDir = $templateDir;
@@ -127,7 +133,7 @@ class WorkspaceManager
         $this->resourceRightsRepo = $om->getRepository('ClarolineCoreBundle:Resource\ResourceRights');
         $this->roleRepo = $om->getRepository('ClarolineCoreBundle:Role');
         $this->userRepo = $om->getRepository('ClarolineCoreBundle:User');
-        $this->workspaceRepo = $om->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace');
+        $this->workspaceRepo = $om->getRepository('ClarolineCoreBundle:Workspace\Workspace');
         $this->workspaceFavouriteRepo = $om->getRepository('ClarolineCoreBundle:Workspace\WorkspaceFavourite');
         $this->pagerFactory = $pagerFactory;
         $this->container = $container;
@@ -136,10 +142,10 @@ class WorkspaceManager
     /**
      * Rename a workspace.
      *
-     * @param \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace $workspace
+     * @param \Claroline\CoreBundle\Entity\Workspace\Workspace $workspace
      * @param string                                                   $name
      */
-    public function rename(AbstractWorkspace $workspace, $name)
+    public function rename(Workspace $workspace, $name)
     {
         $workspace->setName($name);
         $root = $this->resourceManager->getWorkspaceRoot($workspace);
@@ -155,7 +161,7 @@ class WorkspaceManager
      * @param \Claroline\CoreBundle\Library\Workspace\Configuration $config
      * @param \Claroline\CoreBundle\Entity\User                     $manager
      *
-     * @return \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace
+     * @return \Claroline\CoreBundle\Entity\Workspace\Workspace
      *
      * @throws UnknownToolException
      */
@@ -163,7 +169,7 @@ class WorkspaceManager
     {
         $config->check();
         $this->om->startFlushSuite();
-        $workspace = $this->om->factory('Claroline\CoreBundle\Entity\Workspace\SimpleWorkspace');
+        $workspace = $this->om->factory('Claroline\CoreBundle\Entity\Workspace\Workspace');
         $workspace->setCreator($manager);
         $workspace->setName($config->getWorkspaceName());
         $workspace->setCode($config->getWorkspaceCode());
@@ -238,9 +244,9 @@ class WorkspaceManager
     /**
      * Perist and flush a workspace.
      *
-     * @param \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace $workspace
+     * @param \Claroline\CoreBundle\Entity\Workspace\Workspace $workspace
      */
-    public function createWorkspace(AbstractWorkspace $workspace)
+    public function createWorkspace(Workspace $workspace)
     {
         $this->om->persist($workspace);
         $this->om->flush();
@@ -249,9 +255,9 @@ class WorkspaceManager
     /**
      * Delete a workspace.
      *
-     * @param \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace $workspace
+     * @param \Claroline\CoreBundle\Entity\Workspace\Workspace $workspace
      */
-    public function deleteWorkspace(AbstractWorkspace $workspace)
+    public function deleteWorkspace(Workspace $workspace)
     {
         $root = $this->resourceManager->getWorkspaceRoot($workspace);
         $children = $root->getChildren();
@@ -290,12 +296,12 @@ class WorkspaceManager
     /**
      * Creates a workspace template.
      *
-     * @param \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace $workspace
+     * @param \Claroline\CoreBundle\Entity\Workspace\Workspace $workspace
      * @param string                                                   $configName
      *
      * @throws \Exception
      */
-    public function export(AbstractWorkspace $workspace, $configName)
+    public function export(Workspace $workspace, $configName)
     {
         if (!is_writable($this->templateDir)) {
             throw new \Exception("{$this->templateDir} is not writable");
@@ -319,11 +325,11 @@ class WorkspaceManager
     /**
      * Generate the array concerning roles for a workspace template config.
      *
-     * @param \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace $workspace
+     * @param \Claroline\CoreBundle\Entity\Workspace\Workspace $workspace
      *
      * @return array
      */
-    public function exportRolesSection(AbstractWorkspace $workspace)
+    public function exportRolesSection(Workspace $workspace)
     {
         $description = array();
 
@@ -342,11 +348,11 @@ class WorkspaceManager
     /**
      * Generate the array concerning the root permissions for a workspace template config.
      *
-     * @param \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace $workspace
+     * @param \Claroline\CoreBundle\Entity\Workspace\Workspace $workspace
      *
      * @return array
      */
-    public function exportRootPermsSection(AbstractWorkspace $workspace)
+    public function exportRootPermsSection(Workspace $workspace)
     {
         $description = array();
         $root = $this->resourceRepo->findWorkspaceRoot($workspace);
@@ -368,11 +374,11 @@ class WorkspaceManager
     /**
      * Generate the array concerning the tool permissions for a workspace template config.
      *
-     * @param \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace $workspace
+     * @param \Claroline\CoreBundle\Entity\Workspace\Workspace $workspace
      *
      * @return array
      */
-    public function exportToolsInfosSection(AbstractWorkspace $workspace)
+    public function exportToolsInfosSection(Workspace $workspace)
     {
         $arTools = array();
         $description = array();
@@ -401,12 +407,12 @@ class WorkspaceManager
     /**
      * Generate the array concerning the tool content for a workspace template config.
      *
-     * @param \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace $workspace
+     * @param \Claroline\CoreBundle\Entity\Workspace\Workspace $workspace
      * @param \ZipArchive                                              $archive
      *
      * @return array
      */
-    public function exportToolsSection(AbstractWorkspace $workspace, \ZipArchive $archive)
+    public function exportToolsSection(Workspace $workspace, \ZipArchive $archive)
     {
         $description = array();
         $workspaceTools = $this->orderedToolRepo->findBy(array('workspace' => $workspace), array('order' => 'ASC'));
@@ -456,10 +462,10 @@ class WorkspaceManager
     /**
      * Adds a favourite workspace.
      *
-     * @param \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace $workspace
+     * @param \Claroline\CoreBundle\Entity\Workspace\Workspace $workspace
      * @param \Claroline\CoreBundle\Entity\User                        $user
      */
-    public function addFavourite(AbstractWorkspace $workspace, User $user)
+    public function addFavourite(Workspace $workspace, User $user)
     {
         $favourite = new WorkspaceFavourite();
         $favourite->setWorkspace($workspace);
@@ -483,7 +489,7 @@ class WorkspaceManager
     /**
      * @param \Claroline\CoreBundle\Entity\User $user
      *
-     * @return \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace[]
+     * @return \Claroline\CoreBundle\Entity\Workspace\Workspace[]
      */
     public function getWorkspacesByUser(User $user)
     {
@@ -491,7 +497,7 @@ class WorkspaceManager
     }
 
     /**
-     * @return \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace
+     * @return \Claroline\CoreBundle\Entity\Workspace\Workspace
      */
     public function getNonPersonalWorkspaces()
     {
@@ -499,7 +505,7 @@ class WorkspaceManager
     }
 
     /**
-     * @return \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace[]
+     * @return \Claroline\CoreBundle\Entity\Workspace\Workspace[]
      */
     public function getWorkspacesByAnonymous()
     {
@@ -522,7 +528,7 @@ class WorkspaceManager
     /**
      * @param string[] $roles
      *
-     * @return \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace[]
+     * @return \Claroline\CoreBundle\Entity\Workspace\Workspace[]
      */
     public function getOpenableWorkspacesByRoles(array $roles)
     {
@@ -548,6 +554,60 @@ class WorkspaceManager
     }
 
     /**
+     * Returns the accesses rights of a given token for a set of workspaces.
+     * If a tool name is passed in, the check will be limited to that tool,
+     * otherwise workspaces with at least one accessible tool will be
+     * considered open. Access to any tool is always granted to platform
+     * administrators and workspace managers.
+     *
+     * The returned value is an associative array in which
+     * keys are workspace ids and values are boolean indicating if the
+     * workspace is open.
+     *
+     * @param TokenInterface    $token
+     * @param array[Workspace]  $workspaces
+     * @param string|null       $toolName
+     * @return array[boolean]
+     */
+    public function getAccesses(TokenInterface $token, array $workspaces, $toolName = null)
+    {
+        $userRoleNames = $this->sut->getRoles($token);
+        $accesses = array();
+
+        if (in_array('ROLE_ADMIN', $userRoleNames)) {
+            foreach ($workspaces as $workspace) {
+                $accesses[$workspace->getId()] = true;
+            }
+
+            return $accesses;
+        }
+
+        $hasAllAccesses = true;
+        $workspacesWithoutManagerRole = array();
+
+        foreach ($workspaces as $workspace) {
+            if (in_array('ROLE_WS_MANAGER_' . $workspace->getCode(), $userRoleNames)) {
+                $accesses[$workspace->getId()] = true;
+            } else {
+                $accesses[$workspace->getId()] = $hasAllAccesses = false;
+                $workspacesWithoutManagerRole[] = $workspace;
+            }
+        }
+
+        if (!$hasAllAccesses) {
+            $em = $this->container->get('doctrine.orm.entity_manager');
+            $openWsIds = $em->getRepository('ClarolineCoreBundle:Workspace\Workspace')
+                ->findOpenWorkspaceIds($userRoleNames, $workspacesWithoutManagerRole, $toolName);
+
+            foreach ($openWsIds as $idRow) {
+                $accesses[$idRow['id']] = true;
+            }
+        }
+
+        return $accesses;
+    }
+
+    /**
      * @param string[] $roles
      * @param integer $page
      * @param integer $max
@@ -570,7 +630,7 @@ class WorkspaceManager
     public function getWorkspacesByRoleNamesPager(array $roleNames, $page)
     {
         if (count($roleNames) > 0) {
-            $workspaces = $this->workspaceRepo->findByRoleNames($roleNames);
+            $workspaces = $this->workspaceRepo->findMyWorkspacesByRoleNames($roleNames);
         } else {
             $workspaces = array();
         }
@@ -616,7 +676,7 @@ class WorkspaceManager
      * @param \Claroline\CoreBundle\Entity\User $user
      * @param string[]                          $roleNames
      *
-     * @return \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace[]
+     * @return \Claroline\CoreBundle\Entity\Workspace\Workspace[]
      */
     public function getWorkspacesByUserAndRoleNames(User $user, array $roleNames)
     {
@@ -628,7 +688,7 @@ class WorkspaceManager
      * @param string[]                          $roleNames
      * @param integer[]                         $restrictionIds
      *
-     * @return \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace[]
+     * @return \Claroline\CoreBundle\Entity\Workspace\Workspace[]
      */
     public function getWorkspacesByUserAndRoleNamesNotIn(
         User $user,
@@ -656,7 +716,7 @@ class WorkspaceManager
     /**
      * @param integer $max
      *
-     * @return \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace[]
+     * @return \Claroline\CoreBundle\Entity\Workspace\Workspace[]
      */
     public function getWorkspacesWithMostResources($max)
     {
@@ -666,7 +726,7 @@ class WorkspaceManager
     /**
      * @param integer $workspaceId
      *
-     * @return \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace
+     * @return \Claroline\CoreBundle\Entity\Workspace\Workspace
      */
     public function getWorkspaceById($workspaceId)
     {
@@ -676,7 +736,7 @@ class WorkspaceManager
     /**
      * @param string $guid
      *
-     * @return \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace
+     * @return \Claroline\CoreBundle\Entity\Workspace\Workspace
      */
     public function getOneByGuid($guid)
     {
@@ -684,7 +744,7 @@ class WorkspaceManager
     }
 
     /**
-     * @return \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace[]
+     * @return \Claroline\CoreBundle\Entity\Workspace\Workspace[]
      */
     public function getDisplayableWorkspaces()
     {
@@ -706,7 +766,7 @@ class WorkspaceManager
     /**
      * @param string $search
      *
-     * @return \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace[]
+     * @return \Claroline\CoreBundle\Entity\Workspace\Workspace[]
      */
     public function getDisplayableWorkspacesBySearch($search)
     {
@@ -742,13 +802,13 @@ class WorkspaceManager
     }
 
     /**
-     * @param \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace $workspace
+     * @param \Claroline\CoreBundle\Entity\Workspace\Workspace $workspace
      * @param \Claroline\CoreBundle\Entity\Role[]                      $roles
      *
-     * @return \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace[]
+     * @return \Claroline\CoreBundle\Entity\Workspace\Workspace[]
      */
     public function getWorkspaceByWorkspaceAndRoles(
-        AbstractWorkspace $workspace,
+        Workspace $workspace,
         array $roles
     )
     {
@@ -761,7 +821,7 @@ class WorkspaceManager
     /**
      * @param \Claroline\CoreBundle\Entity\User $user
      *
-     * @return \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace[]
+     * @return \Claroline\CoreBundle\Entity\Workspace\Workspace[]
      */
     public function getFavouriteWorkspacesByUser(User $user)
     {
@@ -778,13 +838,13 @@ class WorkspaceManager
     }
 
     /**
-     * @param \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace $workspace
+     * @param \Claroline\CoreBundle\Entity\Workspace\Workspace $workspace
      * @param \Claroline\CoreBundle\Entity\User                        $user
      *
      * @return \Claroline\CoreBundle\Entity\Workspace\WorkspaceFavourite
      */
     public function getFavouriteByWorkspaceAndUser(
-        AbstractWorkspace $workspace,
+        Workspace $workspace,
         User $user
     )
     {
@@ -793,11 +853,11 @@ class WorkspaceManager
     }
 
     /**
-     * @param \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace $workspace
+     * @param \Claroline\CoreBundle\Entity\Workspace\Workspace $workspace
      *
      * @return \Claroline\CoreBundle\Entity\User|null
      */
-    public function findPersonalUser(AbstractWorkspace $workspace)
+    public function findPersonalUser(Workspace $workspace)
     {
         $user = $this->userRepo->findBy(array('personalWorkspace' => $workspace));
 
@@ -805,12 +865,12 @@ class WorkspaceManager
     }
 
     /**
-     * @param \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace $workspace
+     * @param \Claroline\CoreBundle\Entity\Workspace\Workspace $workspace
      * @param \Claroline\CoreBundle\Entity\User $user
      *
      * @return \Claroline\CoreBundle\Entity\User
      */
-    public function addUserAction(AbstractWorkspace $workspace, User $user)
+    public function addUserAction(Workspace $workspace, User $user)
     {
         $role = $this->roleManager->getCollaboratorRole($workspace);
         $userRoles = $this->roleManager->getWorkspaceRolesForUser($user, $workspace);
