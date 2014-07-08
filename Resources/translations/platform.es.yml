@@ -50,6 +50,7 @@ account_general_statistics: 'Estadísticas generales de la cuenta'
 action: 'Acción'
 actions: 'Acciones'
 active_widgets: 'Widgets activos'
+activities: Actividades
 activities_tracking: 'Seguimiento de las actividades'
 activity_already: Este recurso ya está en la actividad
 activity_evaluation_form_attemptsCount: 'Número de intentos'
@@ -733,6 +734,7 @@ top_workspaces_connections: 'Espacio de trabajo más visitado'
 top_workspaces_resources: 'Principales espacios de trabajo que más tienen recursos'
 total: 'Total'
 total_time: 'Tempo total'
+traffic: Frecuentación
 trash: 'Basura'
 type: 'Tipo'
 type_s: 'Tipo(s)'

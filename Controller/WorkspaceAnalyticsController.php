@@ -75,8 +75,8 @@ class WorkspaceAnalyticsController extends Controller
 
     /**
      * @EXT\Route(
-     *     "/{workspaceId}/analytics/",
-     *     name="claro_workspace_analytics_show"
+     *     "/{workspaceId}/resources",
+     *     name="claro_workspace_analytics_resources"
      * )
      * @EXT\Method("GET")
      * @EXT\ParamConverter(
@@ -84,21 +84,61 @@ class WorkspaceAnalyticsController extends Controller
      *      class="ClarolineCoreBundle:Workspace\Workspace",
      *      options={"id" = "workspaceId", "strictId" = true}
      * )
-     * @EXT\Template("ClarolineCoreBundle:Tool/workspace/analytics:analytics.html.twig")
+     * @EXT\Template("ClarolineCoreBundle:Tool/workspace/analytics:resources.html.twig")
      *
-     * Displays workspace analytics home page
+     * Displays workspace analytics resource page.
      *
+     * @param \Claroline\CoreBundle\Entity\Workspace\Workspace $workspace
      * @return Response
-     *
-     * @throws \Exception
      */
-    public function analyticsShowAction(Workspace $workspace)
+    public function showResourcesAction(Workspace $workspace)
     {
-        $datas = $this->container->get('claroline.manager.analytics_manager')
-            ->getWorkspaceAnalytics($workspace);
-        $datas['analyticsTab'] = 'analytics';
+        $typeCount = $this->analyticsManager->getWorkspaceResourceTypesCount($workspace);
 
-        return $datas;
+        return array(
+            'analyticsTab' => 'resources',
+            'workspace' => $workspace,
+            'resourceCount' => $typeCount
+        );
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/{workspaceId}/traffic",
+     *     name="claro_workspace_analytics_traffic"
+     * )
+     * @EXT\Method("GET")
+     * @EXT\ParamConverter(
+     *      "workspace",
+     *      class="ClarolineCoreBundle:Workspace\Workspace",
+     *      options={"id" = "workspaceId", "strictId" = true}
+     * )
+     * @EXT\Template("ClarolineCoreBundle:Tool/workspace/analytics:traffic.html.twig")
+     *
+     * Displays activities evaluations home tab of analytics tool
+     *
+     * @param \Claroline\CoreBundle\Entity\Workspace\Workspace $workspace
+     * @throws \Symfony\Component\Security\Core\Exception\AccessDeniedException
+     * @return Response
+     */
+    public function showTrafficAction(Workspace $workspace)
+    {
+        if (!$this->securityContext->isGranted('analytics', $workspace)) {
+            throw new AccessDeniedException();
+        }
+
+        $chartData = $this->analyticsManager->getDailyActionNumberForDateRange(
+            $this->analyticsManager->getDefaultRange(),
+            'workspace-enter',
+            false,
+            array($workspace->getId())
+        );
+
+        return array(
+            'analyticsTab' => 'traffic',
+            'workspace' => $workspace,
+            'chartData' => $chartData
+        );
     }
 
     /**
@@ -146,7 +186,7 @@ class WorkspaceAnalyticsController extends Controller
                 $this->templating->render(
                     "ClarolineCoreBundle:Tool/workspace/analytics:workspaceManagerActivitiesEvaluations.html.twig",
                     array(
-                        'analyticsTab' => 'activties_tracking',
+                        'analyticsTab' => 'activities',
                         'workspace' => $workspace,
                         'activities' => $activities
                     )
@@ -251,7 +291,7 @@ class WorkspaceAnalyticsController extends Controller
                 $this->templating->render(
                     "ClarolineCoreBundle:Tool/workspace/analytics:workspaceActivitiesEvaluations.html.twig",
                     array(
-                        'analyticsTab' => 'activties_tracking',
+                        'analyticsTab' => 'activities',
                         'workspace' => $workspace,
                         'activities' => $activities,
                         'evaluations' => $evaluationsAssoc,
@@ -457,7 +497,7 @@ class WorkspaceAnalyticsController extends Controller
         }
 
         return array(
-            'analyticsTab' => 'activties_tracking',
+            'analyticsTab' => 'activities',
             'activity' => $activity,
             'activityParams' => $activityParams,
             'workspace' => $workspace,

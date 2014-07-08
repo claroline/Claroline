@@ -56,6 +56,7 @@ account_general_statistics: 'Account general statistics'
 action: Action
 actions: Actions
 active_widgets: 'Active widgets'
+activities: Activities
 activities_tracking: 'Activities tracking'
 activity_already: This resource is already in the activity
 activity_evaluation_form_attemptsCount: 'Number of attempts'
@@ -781,6 +782,7 @@ top_workspaces_connections: 'Top most visited workspaces'
 top_workspaces_resources: 'Top workspaces having the most resources'
 total: Total
 total_time: 'Total time'
+traffic: Traffic
 trash: Trash
 tune: 'Tune'
 tune_public_url_error: 'An error occured while tuning your public profile URL.'
