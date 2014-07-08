@@ -132,6 +132,7 @@
     {% stylesheets debug=false filter='lessphp, cssmin'  output='css/icapportfolio/style_view.css'
       "@IcapPortfolioBundle/Resources/views/less/portfolio.less"
       "@IcapPortfolioBundle/Resources/views/less/interface.less"
+      "bundles/frontend/jquery/plugin/datepicker/css/datepicker.css"
     %}
         <link rel="stylesheet" href="{{ asset_url }}" screen="media" />
     {% endstylesheets %}
@@ -145,8 +146,8 @@
         <script type="text/javascript" src="{{ asset('bundles/stfalcontinymce/vendor/tinymce/jquery.tinymce.min.js') }}"></script>
         <script type="text/javascript" src="{{ asset('bundles/clarolinecore/js/tinymce/tinymce.js') }}"></script>
         <script type='text/javascript' src='{{ asset('bundles/frontend/jquery/plugin/confirm-bootstrap/confirm-bootstrap.js') }}'></script>
+        <script type="text/javascript" src="{{ asset('bundles/frontend/jquery/plugin/datepicker/js/bootstrap-datepicker.js') }}"></script>
 
-        {# Angular #}
         {% javascripts debug=true filter='jsmin' output='js/portfolio/angular.js'
             '@IcapPortfolioBundle/Resources/public/js/vendor/angular/angular.min.js'
             '@IcapPortfolioBundle/Resources/public/js/vendor/angular/angular-resource.min.js'
@@ -181,6 +182,7 @@
         <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/directives/collectionFormDirective.js') }}"></script>
         <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/directives/designDirective.js') }}"></script>
         <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/directives/resourcePickerDirective.js') }}"></script>
+        <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/directives/datepickerDirective.js') }}"></script>
         <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/filters/trustAsHtml.js') }}"></script>
         <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/filters/trans.js') }}"></script>
         <script type="text/javascript">

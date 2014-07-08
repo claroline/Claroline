@@ -1,6 +1,6 @@
 'use strict';
 
-var portfolioApp = angular.module('portfolioApp', ['ngResource', 'ngSanitize', 'ui.tinymce', 'ui.resourcePicker']);
+var portfolioApp = angular.module('portfolioApp', ['ngResource', 'ngSanitize', 'ui.tinymce', 'ui.resourcePicker', 'b.datepicker']);
 
 portfolioApp.config(["$httpProvider", "$locationProvider", function($http) {
     var elementToRemove = ['views', 'editing', 'new', 'id', 'type'];
