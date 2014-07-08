@@ -28,6 +28,11 @@ class Updater030000
         $this->om = $container->get('doctrine.orm.entity_manager');
     }
 
+    public function preUpdate()
+    {
+        $this->removeActivities();
+    }
+
     public function postUpdate()
     {
         $this->updateActivityRuleAction();
@@ -47,6 +52,31 @@ class Updater030000
     {
         if ($log = $this->logger) {
             $log('    ' . $message);
+        }
+    }
+
+    private function removeActivities()
+    {
+        //First we need to check we're still using the old activity definition. If yes, then we remove them.
+        $conn = $this->om->getConnection();
+        $sm = $conn->getSchemaManager();
+        $columns = $sm->listTableColumns('claro_activity');
+
+        //if there is no primary resource, then we are using the old activities
+        if (!array_key_exists('primaryresource_id', $columns)) {
+            $resourceType = $this->om->getRepository('ClarolineCoreBundle:Resource\ResourceType')
+                ->findOneByName('activity');
+            $this->log('removing old activities...');
+            //find old nodes
+            $rows = $conn->query("SELECT id from claro_resource_type rt WHERE rt.name = 'activity'");
+
+            foreach ($rows as $row) {
+                $id = $row['id'];
+            }
+
+            $conn->query("DELETE FROM claro_resource_node WHERE resource_type_id = {$id}");
+            $conn->query("DELETE FROM claro_activity");
+            $this->om->flush();
         }
     }
 
