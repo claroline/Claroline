@@ -328,3 +328,4 @@ PeerReview_helper_ideal_case: "In PeerReview mode, people will correct themselve
 PeerReview_helper_ideal_case_example: "Example: if we have 2 expected corrections, the evaluation will be totally autonomous only in the specific case where we will have a number of participant equal to a multiple of 3. ( E1 correct E2 and E3, E2 correct E1 and E3, E3 correct E2 and E1)."
 PeerReview_helper_other_cases: "In the other cases, the evaluation administrator will have to add some correction in order to finish the process."
 PeerReview_helper_unlock_tool: "Note: an unlock tool is available in order to avoid the admin to have to add many correction if a copy need more than one correction. This tool is only available if the dropzone is in peerReview mode and the evaluation status is set to closed."
+Made by: "Made by"
