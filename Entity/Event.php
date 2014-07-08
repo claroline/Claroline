@@ -191,22 +191,19 @@ class Event
     }
 
     /**
-     * @param mixed $category
+     * @param EventCategory $category
      */
-    public function addeventCategory($category)
+    public function addEventCategory(EventCategory $category)
     {
         $this->eventCategories->add($category);
     }
 
     /**
-     * @param bool $nameOnly
-     * @return mixed
+     * @return ArrayCollection
      */
-    public function geteventCategories($nameOnly = false)
+    public function getEventCategories()
     {
-        return $nameOnly ?
-            $this->extractNames($this->eventCategories) :
-            $this->eventCategories;
+        return $this->eventCategories;
     }
 
     public function getPriority()
