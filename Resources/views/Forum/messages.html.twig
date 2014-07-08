@@ -50,7 +50,7 @@
         <div class="row">
             <div class="col-md-12">
                 <a title="{{ 'forum_back_to_subjects'|trans({}, 'forum') }}" class="btn btn-default" href="{{ path('claro_forum_subjects', { 'category': category.getId() }) }}">
-                    <i class="icon-chevron-left"></i>{{ 'forum_back_to_subjects'|trans({}, 'forum') }}
+                    <i class="fa fa-chevron-left"></i>{{ 'forum_back_to_subjects'|trans({}, 'forum') }}
                 </a>
             </div>
             <div class="col-md-9">
@@ -80,7 +80,7 @@
                             {% if message.getCreator().getPicture() != "" %}
                              <img src="{{ asset('uploads/pictures/') ~ message.getCreator().getPicture() }}" class="col-md-12">
                         {% else %}
-                                <h1><i class="icon-user col-md-12"></i><h1>
+                                <h1><i class="fa fa-user col-md-12"></i><h1>
                         {% endif %}
                         </div>
                         <div>
@@ -99,20 +99,20 @@
                         <div class="pull-right clearfix">
                             {% if canAnswer and not subject.isClosed() %}
                                 <a class="btn btn-default" href="{{ path('claro_forum_reply_message_form', {'message': message.getId()}) }}">
-                                    <i class="icon-pencil"></i> {{ 'reply'|trans({}, 'forum') }}
+                                    <i class="fa fa-pencil"></i> {{ 'reply'|trans({}, 'forum') }}
                                 </a>
                             {% endif %}
                             {% if isModerator or app.security.token.user == message.getCreator() %}
                                 <a class="btn btn-default" href="{{ path('claro_forum_edit_message_form', {'message': message.getId()}) }}">
-                                    <i class="icon-pencil"></i> {{ 'edit'|trans({}, 'platform') }}
+                                    <i class="fa fa-pencil"></i> {{ 'edit'|trans({}, 'platform') }}
                                 </a>
                             {% endif %}
                             {% if isModerator %}
                                 <a id="move-message" class="btn btn-default" href="{{ path('claro_message_move_form', {'message': message.getId()}) }}">
-                                    <i class="icon-arrow-right"></i> {{ 'move'|trans({}, 'platform') }}
+                                    <i class="fa fa-arrow-right"></i> {{ 'move'|trans({}, 'platform') }}
                                 </a>
                                 <a id="delete-message" class="btn btn-default" href="{{ path('claro_forum_delete_message', {'message': message.getId()}) }}">
-                                    <i class="icon-remove"></i> {{ 'delete'|trans({}, 'platform') }}
+                                    <i class="fa fa-trash-o"></i> {{ 'delete'|trans({}, 'platform') }}
                                 </a>
                             {% endif %}
                         </div>
@@ -125,7 +125,7 @@
             {{ renderPager(subject.getId(), pager, max) }}
         </div>
         {% if canAnswer %}
-            <h4><i class="icon-reply"></i> {{ 'new_message' | trans({}, 'forum') }}</h4>
+            <h4><i class="fa fa-reply"></i> {{ 'new_message' | trans({}, 'forum') }}</h4>
             <div>
             {% if not subject.isClosed() %}
                 <textarea class="forum-answer claroline-tiny-mce hide"></textarea>
@@ -142,7 +142,7 @@
 	            </a>
 	            {% if canAnswer %}
 	                <a class="btn btn-primary">
-	                    <i class="icon-reply"></i> {{ 'send' | trans({}, 'platform') }}
+	                    <i class="fa fa-reply"></i> {{ 'send' | trans({}, 'platform') }}
 	                </a>
 	            {% endif %}
          {% endif %}
