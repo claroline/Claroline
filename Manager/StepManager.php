@@ -161,6 +161,10 @@ class StepManager
 
             $activity = $this->resourceManager->create($activity, $activityType, $currentUser, $workspace, $parent);
         }
+        else {
+            // Activity already exists => update ResourceNode
+            $activity->getResourceNode()->setName($activity->getTitle());
+        }
 
         // Update JSON structure
         $stepStructure->activityId = $activity->getId();

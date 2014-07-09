@@ -4,6 +4,7 @@ namespace Innova\PathBundle\Manager;
 
 use Doctrine\Common\Persistence\ObjectManager;
 
+use Innova\PathBundle\Entity\InheritedResource;
 use Innova\PathBundle\Entity\Path\Path;
 use Innova\PathBundle\Entity\Step;
 
@@ -150,9 +151,10 @@ class PublishingManager
      * @param  integer                        $level
      * @param  \Innova\PathBundle\Entity\Step $parent
      * @param  array                          $steps
+     * @param  array                          $propagatedResources
      * @return array
      */
-    protected function publishSteps($level = 0, Step $parent = null, array $steps = array ())
+    protected function publishSteps($level = 0, Step $parent = null, array $steps = array (), $propagatedResources = array ())
     {
         $currentOrder = 0;
         $processedSteps = array();
@@ -172,16 +174,33 @@ class PublishingManager
                 $step = $existingSteps->get($stepStructure->resourceId);
                 $step = $this->stepManager->edit($this->path, $level, $parent, $currentOrder, $stepStructure, $step);
             }
-    
-            // TODO : manage resources inheritance
-            
+
+            // Manage resources inheritance
+            $excludedResources = !empty($stepStructure->excludedResources) ? $stepStructure->excludedResources : array ();
+            $this->publishPropagatedResources($step, $propagatedResources, $excludedResources);
+
             // Store step to know it doesn't have to be deleted when we will clean the path
             $processedSteps[$step->getId()] = $step;
     
             // Process children of current step
             if (!empty($stepStructure->children)) {
+                // Add propagated resources of current step for children
+                $currentPropagatedResources = array ();
+                if (!empty($stepStructure->resources)) {
+                    foreach ($stepStructure->resources as $resource) {
+                        if ($resource->propagateToChildren) {
+                            // Resource is propagated
+                            $currentPropagatedResources[] = array (
+                                'id'         => $resource->id,
+                                'resourceId' => $resource->resourceId,
+                                'lvl'        => $level,
+                            );
+                        }
+                    }
+                }
+
                 $childrenLevel = $level + 1;
-                $childrenSteps = $this->publishSteps($childrenLevel, $step, $stepStructure->children);
+                $childrenSteps = $this->publishSteps($childrenLevel, $step, $stepStructure->children, $propagatedResources + $currentPropagatedResources);
     
                 // Store children steps
                 $processedSteps = $processedSteps + $childrenSteps;
@@ -191,6 +210,51 @@ class PublishingManager
         }
     
         return $processedSteps;
+    }
+
+    protected function publishPropagatedResources(Step $step, array $propagatedResources = array (), array $excludedResources = array ())
+    {
+        $inheritedResources = array ();
+        $currentInherited = $step->getInheritedResources();
+
+        if (!empty($propagatedResources)) {
+            foreach ($propagatedResources as $resource) {
+                if (!in_array($resource['id'], $excludedResources)) {
+                    // Resource is not excluded => link it to step
+
+                    // Retrieve resource node
+                    $resourceNode = $this->om->getRepository('ClarolineCoreBundle:Resource\ResourceNode')->findOneById($resource['resourceId']);
+
+                    if (!$inherited = $step->hasInheritedResource($resourceNode->getId())) {
+                        // Inherited resource doesn't exist => Create inherited resource
+                        $inherited = new InheritedResource();
+                    }
+
+                    // Update inherited resource properties
+                    $inherited->setResource($resourceNode);
+                    $inherited->setLvl($resource['lvl']);
+
+                    // Add inherited resource to Step
+                    $step->addInheritedResource($inherited);
+
+                    $this->om->persist($inherited);
+
+                    // Store resource ID to clean step
+                    $inheritedResources[] = $resourceNode->getId();
+                }
+            }
+        }
+
+        // Clean inherited resources which no long exists
+        foreach ($currentInherited as $inherited) {
+            $resourceId = $inherited->getResource()->getId();
+            if (!in_array($resourceId, $inheritedResources)) {
+                $step->removeInheritedResource($inherited);
+                $this->om->remove($inherited);
+            }
+        }
+
+        return $this;
     }
 
     /**

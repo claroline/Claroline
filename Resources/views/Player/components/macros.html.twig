@@ -1,6 +1,6 @@
-{% macro displayResourceButton(resource, step) %}
+{% macro displayResourceButton(resource, lvl) %}
     <li rel="tooltip" data-original-title="{{ resource.resourceType.name | trans({}, 'resource') }}">
-        <a target="_blank" class="path-tab-btn resource-link lvl-{{ step.lvl + 1 }} resource-tab-btn" href="{{ path('claro_resource_open', {'node': resource.id, 'resourceType': resource.resourceType.name }) }}">
+        <a target="_blank" class="path-tab-btn resource-link lvl-{{ lvl }} resource-tab-btn" href="{{ path('claro_resource_open', {'node': resource.id, 'resourceType': resource.resourceType.name }) }}">
             <span class="resource-name">{{ resource.name }}</span>
         </a>
     </li>
@@ -17,7 +17,7 @@
 
     <li>
         <div class="tree-item{% if item == currentStep %} active-step{% endif %}">
-            <div class="lvl lvl-{{ item.lvl + 1 }}"></div>
+            <div class="lvl lvl-{{ item.lvl }}"></div>
             <a class="step" href="{{ path('innova_path_player_index', { workspaceId: workspace.id, pathId: path.id, stepId: item.id }) }}">{{ item.name }}</a>
         </div>
 
@@ -31,13 +31,6 @@
     </li>
 {% endmacro %}
 
-{% macro displayCollecticiel(resource, step) %}
-    <a target="_blank" class="btn btn-default btn-xs" href="{{ path('claro_resource_open', {'node': resource.id, 'resourceType': resource.resourceType.name }) }}" >
-        <span rel="tooltip" data-original-title="{{ step.name }}" class="lvl-{{ step.lvl + 1 }} lvl-indicator">&nbsp;</span>
-        {{ resource.name }}
-    </a>
-{% endmacro %}
-
 {% macro breadcrumbItem(workspace, path, step) %}
     {% set isTerminalClass = "" %}
     {% if step.children is empty %}
@@ -45,7 +38,7 @@
     {% endif %}
 
     <li class="lvl-{{ step.lvl }} {{ isTerminalClass }}">
-        <a class="step" href="{{ path('innova_path_player_index', { workspaceId: workspace.id, pathId: path.id, stepId: step.id }) }}">
+        <a {#class="step"#} href="{{ path('innova_path_player_index', { workspaceId: workspace.id, pathId: path.id, stepId: step.id }) }}">
         {{ step.name }}
         </a>
     </li>

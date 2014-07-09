@@ -3,10 +3,13 @@
 <div id="resources-btn">
     <ul class="nav nav-tabs">
         {# Display inherited resources from parents #}
+        {% for inherited in currentStep.inheritedResources %}
+            {{ macros.displayResourceButton(inherited.resource, inherited.lvl) }}
+        {% endfor %}
 
         {# Display secondary resources of the Step #}
         {% for resource in currentStep.parameters.secondaryResources %}
-            {{ macros.displayResourceButton(resource, currentStep) }}
+            {{ macros.displayResourceButton(resource, currentStep.lvl) }}
         {% endfor %}
     </ul>
 </div>

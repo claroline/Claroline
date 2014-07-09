@@ -277,7 +277,7 @@ class EditorController
                     if (!empty($duration)) {
                         $duration = $duration / 60; // Duration in minutes
 
-                        $activity['durationHours']   = (int) $duration / 60;
+                        $activity['durationHours']   = (int) ($duration / 60);
                         $activity['durationMinutes'] = $duration % 60;
                     }
                 }

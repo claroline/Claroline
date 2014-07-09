@@ -84,11 +84,21 @@ class Step
     protected $path;
 
     /**
+     * Inherited resources
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="Innova\PathBundle\Entity\InheritedResource", mappedBy="step", indexBy="id")
+     * @ORM\OrderBy({"lvl" = "ASC"})
+     */
+    protected $inheritedResources;
+
+    /**
      * Class constructor
      */
     public function __construct()
     {
-        $this->children = new ArrayCollection();
+        $this->children           = new ArrayCollection();
+        $this->inheritedResources = new ArrayCollection();
     }
     
     /**
@@ -359,5 +369,68 @@ class Step
         else {
             return '';
         }
+    }
+
+    /**
+     * Get inherited resources
+     * @return ArrayCollection
+     */
+    public function getInheritedResources()
+    {
+        return $this->inheritedResources;
+    }
+
+    /**
+     * Add an inherited resource
+     * @param InheritedResource $inheritedResource
+     * @return $this
+     */
+    public function addInheritedResource(InheritedResource $inheritedResource)
+    {
+        if (!$this->inheritedResources->contains($inheritedResource)) {
+            $this->inheritedResources->add($inheritedResource);
+        }
+
+        $inheritedResource->setStep($this);
+
+        return $this;
+    }
+
+    /**
+     * Remove an inherited resource
+     * @param InheritedResource $inheritedResource
+     * @return $this
+     */
+    public function removeInheritedResource(InheritedResource $inheritedResource)
+    {
+        if ($this->inheritedResources->contains($inheritedResource)) {
+            $this->inheritedResources->removeElement($inheritedResource);
+        }
+
+        $inheritedResource->setStep(null);
+
+        return $this;
+    }
+
+    /**
+     * Check if the step is already link to resource
+     * @param integer $resourceId
+     * @return boolean
+     */
+    public function hasInheritedResource($resourceId)
+    {
+        $result = false;
+
+        if (!empty($this->inheritedResources)) {
+            foreach ($this->inheritedResources as $inherited) {
+                $resource = $inherited->getResource();
+                if ($resource->getId() === $resourceId) {
+                    $result = $inherited;
+                    break;
+                }
+            }
+        }
+
+        return $result;
     }
 }
