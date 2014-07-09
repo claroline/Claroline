@@ -49,7 +49,7 @@ class LoadDemoFixture extends LoggableFixture implements ContainerAwareInterface
     public function __construct()
     {
         $ds = DIRECTORY_SEPARATOR;
-        $this->filepath = __DIR__. "{$ds}files{$ds}";
+        $this->filepath = __DIR__ . "{$ds}..{$ds}files{$ds}";
     }
 
     public function setContainer(ContainerInterface $container = null)
