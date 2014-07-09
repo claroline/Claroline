@@ -275,6 +275,10 @@ class DatabaseWriter
         $resourceType->setExportable($resource['is_exportable']);
         $this->em->persist($resourceType);
 
+        if (!$this->mm->hasMenuAction($resourceType)) {
+            $this->mm->addDefaultPerms($resourceType);
+        }
+
         $this->updateCustomAction($resource['actions'], $resourceType);
 
         $this->updateIcons($resource, $resourceType, $plugin);

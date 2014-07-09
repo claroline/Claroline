@@ -85,30 +85,29 @@ Plugin update will be necessary.
 
 
 See below an example of the `config.yml` of the `ClarolineForumBundle` plugin :
- _________________________________________________________________
-|                                                                 |
-|    plugin:                                                      |
-|      has_options: false                                         |
-|      icon: res_forum.png                                        |
-|                                                                 |
-|      resources:                                                 |
-|        - class: Claroline\ForumBundle\Entity\Forum              |
-|          name: claroline_forum                                  |
-|          is_exportable: true                                    |
-|          icon: res_forum.png                                    |
-|          actions:                                               |
-|            - name: post                                         |
-|            - name: moderate                                     |
-|          default_rights:                                        |
-|            - name: open                                         |
-|            - name: post                                         |
-|-----------------------------------------------------------------|
-|          activity_rules:                                        |
-|            - action: resource-read                              |
-|            - action: resource-claroline_forum-create_message    |
-|-----------------------------------------------------------------|
-|      widgets:                                                   |
-|         - name: claroline_forum_widget                          |
-|           is_configurable: false                                |
-|_________________________________________________________________|
 
+```yaml
+plugin:
+  has_options: false
+  icon: res_forum.png
+
+  resources:
+    - class: Claroline\ForumBundle\Entity\Forum
+      name: claroline_forum
+      is_exportable: true
+      icon: res_forum.png
+      actions:
+        - name: post
+        - name: moderate
+      default_rights:
+        - name: open
+        - name: post
+
+      activity_rules:
+        - action: resource-read
+        - action: resource-claroline_forum-create_message
+
+  widgets:
+    - name: claroline_forum_widget
+      is_configurable: false
+```

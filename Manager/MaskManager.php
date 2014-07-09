@@ -175,4 +175,18 @@ class MaskManager
 
         $this->om->flush();
     }
+
+    /**
+     * Checks if a resource type has any menu actions.
+     *
+     * @param \Claroline\CoreBundle\Entity\Resource\ResourceType $type
+     */
+    public function hasMenuAction(ResourceType $type)
+    {
+        $menuActions = $this->menuRepo->findBy(
+            array('resourceType' => $type)
+        );
+
+        return count($menuActions) > 0;
+    }
 }

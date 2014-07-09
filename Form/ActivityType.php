@@ -29,7 +29,7 @@ class ActivityType extends AbstractType
                 array(
                     'required' => false,
                     'attr' => array(
-                        'data-blacklist' => 'activity',
+                        'data-blacklist' => 'activity,directory',
                         'data-restrict-for-owner' => 1
                     )
                 )
