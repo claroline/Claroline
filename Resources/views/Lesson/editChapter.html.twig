@@ -4,7 +4,3 @@
         {% include "IcapLessonBundle:Lesson:editChapterForm.html.twig"%}
     </div>
 {% endblock %}
-{% block javascripts %}
-    {{ parent() }}
-    {% render controller('ClarolineCoreBundle:ResourceType:initPicker') %}
-{% endblock %}

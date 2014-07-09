@@ -12,8 +12,8 @@
             {% else %}
                 <div class='menu-item' id = 'menu_item_{{ child.id }}'>
             {% endif %}
-            <i class='icon-caret-down collapsor {% if child.__children|length == 0%}empty{% endif %}' id='collapsor_icon_{{ child.id }}' data-collapsor = '{{ child.id }}'></i>
-            {#<i data-handle = '{{ child.id }}' class="icon-file-text-alt handle_sortable lesson_tooltip" data-original-title='{{ 'dragndrop_button'|trans({}, 'icap_lesson') }}'></i>#}
+            <i class='fa fa-caret-down collapsor {% if child.__children|length == 0%}empty{% endif %}' id='collapsor_icon_{{ child.id }}' data-collapsor = '{{ child.id }}'></i>
+            {#<i data-handle = '{{ child.id }}' class="fa fa-file-text-alt handle_sortable lesson_tooltip" data-original-title='{{ 'dragndrop_button'|trans({}, 'icap_lesson') }}'></i>#}
             <a href="{{ path('icap_lesson_chapter', { 'resourceId': lesson.id, 'chapterId': child.slug }) }}">{{ child.title }}</a>
             </div>
             {{ _self.recursiveChapter(child, chapter, lesson, false) }}
@@ -29,11 +29,11 @@
         <div class="navbar navbar-default navbar-static-top">
             <ul class='nav navbar-nav pull-right'>
                 {% if is_granted('EDIT', node) %}
-                     <li class='lesson_tooltip menu_lesson_button' data-original-title='{{ 'create_root'|trans({}, 'icap_lesson') }}'><a data-chapter = '{{ chapter.id }}' href="{{ path('icap_lesson_new_chapter', { 'resourceId': _resource.id, 'parentChapterId': tree.id })}}" class='icon_link createchapter btn'><span class="icon-plus"  ></span><span class='chapter_menu_labels'>{{ 'new_chapter'|trans({}, 'icap_lesson') }}</span></a></li>
-                    <li class='lesson_tooltip menu_lesson_button' data-original-title='{{ 'enabled_move'|trans({}, 'icap_lesson') }}'><a  id='enable_move' data-status = 'enable' class='icon_link'><span class="icon-move" ></span><span class='chapter_menu_labels'>{{ 'reorganize'|trans({}, 'icap_lesson') }}</span></a></li>
+                     <li class='lesson_tooltip menu_lesson_button' data-original-title='{{ 'create_root'|trans({}, 'icap_lesson') }}'><a data-chapter = '{{ chapter.id }}' href="{{ path('icap_lesson_new_chapter', { 'resourceId': _resource.id, 'parentChapterId': tree.id })}}" class='icon_link createchapter btn'><span class="fa fa-plus"  ></span><span class='chapter_menu_labels'>{{ 'new_chapter'|trans({}, 'icap_lesson') }}</span></a></li>
+                    <li class='lesson_tooltip menu_lesson_button' data-original-title='{{ 'enabled_move'|trans({}, 'icap_lesson') }}'><a  id='enable_move' data-status = 'enable' class='icon_link'><span class="fa fa-arrows" ></span><span class='chapter_menu_labels'>{{ 'reorganize'|trans({}, 'icap_lesson') }}</span></a></li>
                 {%  endif  %}
-                <li class='lesson_tooltip menu_lesson_button' data-original-title='{{ 'collapse_all'|trans({}, 'icap_lesson') }}'><a href='#' id='collapse_all' class='icon_link btn'> <span class="icon-long-arrow-up" ></span><span class="icon-minus"></span></a></li>
-                <li class='lesson_tooltip menu_lesson_button' data-original-title='{{ 'expand_all'|trans({}, 'icap_lesson') }}'><a href='#' id='expand_all' class='icon_link btn'><span class="icon-long-arrow-down"></span><span class="icon-reorder"></span></a></li>
+                <li class='lesson_tooltip menu_lesson_button' data-original-title='{{ 'collapse_all'|trans({}, 'icap_lesson') }}'><a href='#' id='collapse_all' class='icon_link btn'> <span class="fa fa-long-arrow-up" ></span><span class="fa fa-minus"></span></a></li>
+                <li class='lesson_tooltip menu_lesson_button' data-original-title='{{ 'expand_all'|trans({}, 'icap_lesson') }}'><a href='#' id='expand_all' class='icon_link btn'><span class="fa fa-long-arrow-down"></span><span class="fa fa-reorder"></span></a></li>
             </ul>
         </div>
         <div class='chapter_list_header'>{{ 'chapter_list_header'|trans({}, 'icap_lesson') }}</div>

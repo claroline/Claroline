@@ -267,7 +267,7 @@ ul.jquery-sortable-list li .menu-item{
     font-size: 0.9em;
 }
 
-ul.jquery-sortable-list li .menu-item .icon-move{
+ul.jquery-sortable-list li .menu-item .fa-arrows{
     color:#2a6496;
     margin-right:5px;
 }
@@ -310,7 +310,7 @@ ul.jquery-sortable-list li.placeholder:before {
     border-right: none;
 }
 
-.icon-move{
+.fa-arrows{
     cursor: pointer;
 }
 
