@@ -16,7 +16,7 @@
         {% if not path is empty %}
             <div class="text-right">
                 <a class="btn btn-primary pointer-hand" onClick="javascript:enterFullScreen()">
-                    <i class="icon-resize-full"></i>
+                    <i class="fa fa-expand"></i>
                 </a>
             </div>
             <div class="full-size">
@@ -35,7 +35,7 @@
     <div class="panel-footer">
         <a class="btn btn-primary"
            href="{{ path('claro_resource_download') }}?ids[]={{ _resource.getResourceNode().getId() }}">
-            <i class="icon-download"></i> {{ 'download'|trans({}, 'platform') }}
+            <i class="fa fa-arrow-circle-o-down"></i> {{ 'download'|trans({}, 'platform') }}
         </a>
     </div>
     <style>
