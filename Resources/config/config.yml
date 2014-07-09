@@ -7,3 +7,5 @@ plugin:
       name: claroline_web_resource
       is_exportable: false
       icon: res_web.png
+      activity_rules:
+        - action: resource-read
