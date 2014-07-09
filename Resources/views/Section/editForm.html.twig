@@ -1,7 +1,7 @@
 {% if section.getIsWikiAdmin() is sameas(true) and section.isRoot() is sameas(false) %}
     <div class="pull-right wiki-header-buttons">
         <a href="{{ path('icap_wiki_delete_section', { 'wikiId': _resource.id, 'sectionId' : section.id }) }}" class="delete-section btn btn-danger" data-section="{{section.id}}" >
-            <i class="icon-trash"></i> {{ 'delete_section'|trans({}, 'icap_wiki') }}
+            <i class="fa fa-trash-o"></i> {{ 'delete_section'|trans({}, 'icap_wiki') }}
         </a>
     </div>
     <div class="clearfix"></div>
