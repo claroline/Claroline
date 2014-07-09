@@ -29,11 +29,11 @@
                 <i class="icon-chevron-down" id="downI" style="display: none;"></i>
                 {{ 'question' | trans }}
             </th>
-            {% if (questionsList == 'share')%}
+            {% if (questionsList == 'share' or questionsList == 'exoList' ) %}
                 <th class="classic">{{ 'shared by' | trans }}</th>
             {% endif %}
             <th class="classic">{{ 'actions' | trans }}</th>
-            {% if (questionsList == 'my')%}
+            {% if (questionsList == 'my' or questionsList == 'exoList') %}
                 <th class="classic"><i class="icon-share-alt"></th>
             {% endif %}
         </tr>
@@ -45,13 +45,15 @@
             <td class="classic"><a href="{{ path('ujm_question_show', { 'id': interaction.question.id }) }}">{{ interaction.question.title }}</a></td>
             <td class="classic">{{ interaction.type|trans }}</td>
             <td class="classic">{{ interaction.invite|raw }}</td>
-            {% if (questionsList == 'share')%}
+            {% if (questionsList == 'share' or (questionsList == 'exoList') and actionQ[interaction.question.id] == 2) %}
                 <td class="classic">
                     {{ interaction.question.user.firstName }} {{ interaction.question.user.lastName }}
                 </td>
+            {% elseif (questionsList == 'exoList') %}
+                <td class="classic">-</td>
             {% endif %}
             <td class="classic">
-                {% if (questionsList == 'my')%}
+                {% if (questionsList == 'my') %}
                     <a class="btn btn-default" data-toggle="tooltip" title="{{ 'share' | trans }}" href="{{ path('ujm_question_share', { 'questionID': interaction.question.id }) }}">
                         <i class="icon-share-alt"></i>
                     </a>
@@ -59,15 +61,25 @@
                 <a class="btn btn-default" data-toggle="tooltip" title="{{ 'duplicate' | trans }}" href="{{ path('ujm_question_duplicate', { 'interID': interaction.id }) }}">
                     <i class="icon-repeat"></i>
                 </a>
-                {% if (questionsList == 'my' ) or ( (shareRight[interaction.id] is defined) and (shareRight[interaction.id]) )%}
-                    {% if(questionWithResponse[interaction.id] == 0) %}
+                <!-- if my question or if shared question with edit right or if search by exercise and the question is mind -->
+                {% if (questionsList == 'my' )
+                      or ( (shareRight[interaction.id] is defined) and (shareRight[interaction.id]) )
+                      or ( (questionsList == 'exoList') and (actionQ[interaction.question.id] == 1) ) %}
+
+                    {% if (questionWithResponse[interaction.id] == 0) %}
                         <a class="btn btn-default" data-toggle="tooltip" title="{{ 'edit' | trans }}" href="{{ path('ujm_question_edit', { 'id': interaction.question.id }) }}">
                             <i class="icon-pencil"></i>
                         </a>
-                        {% if (questionsList == 'my')%}
+                        {% if (questionsList == 'my') %}
                             <a class="btn btn-default" data-toggle="tooltip" title="{{ 'delete' | trans }}" id="delete-question" href="{{ path('ujm_question_delete', {
                             'id': interaction.question.id, 'pageNow': pagerMy.getCurrentPage, 'maxPage': pagerMy.maxPerPage,
                             'nbItem': pagerMy.getNbResults, 'lastPage': pagerMy.getNbPages }) }}">
+                                <i class="icon-trash"></i>
+                            </a>
+                        {% endif %}
+                        {% if ( (questionsList == 'exoList') and (actionQ[interaction.question.id] == 1) ) %}
+                            <a class="btn btn-default" data-toggle="tooltip" title="{{ 'delete' | trans }}" href="{{ path('ujm_question_delete', {
+                            'id': interaction.question.id }) }}" id="delete-question">
                                 <i class="icon-trash"></i>
                             </a>
                         {% endif %}
@@ -80,7 +92,7 @@
                     {% endif %}
                 {% endif %}
                 <!--Delete question shared-->
-                {% if (questionsList == 'share')%}
+                {% if (questionsList == 'share') %}
                     <a class="btn btn-default" data-toggle="tooltip" title="{{ 'delete of my bank' | trans }}" id="delete-question"
                        href="{{ path('ujm_delete_shared_question', { 'qid': interaction.question.id,
                             'uid': app.user.id,
@@ -89,9 +101,15 @@
                         <i class="icon-trash"></i>
                     </a>
                 {% endif %}
+                {% if (questionsList == 'exoList') and  (actionQ[interaction.question.id] == 2) %}
+                    <a class="btn btn-default" data-toggle="tooltip" title="{{ 'delete of my bank' | trans }}"
+                       href="{{ path('ujm_delete_shared_question', { 'qid': interaction.question.id, 'uid': app.user.id, }) }}" id="delete-question">
+                        <i class="icon-trash"></i>
+                    </a>
+                {% endif %}
             </td>
-            {% if (questionsList == 'my')%}
-                {% if(alreadyShared[interaction.question.id] == 1) %}
+            {% if (questionsList == 'my' or questionsList == 'exoList') %}
+                {% if ( (alreadyShared[interaction.question.id] is defined) and (alreadyShared[interaction.question.id] == 1) ) %}
                     <td class="classic">
                         <a class="btn btn-default" data-toggle="tooltip" title="{{ 'show'|trans }}"
                            href="{{ path('ujm_see_shared', { 'id': interaction.question.id }) }}">
@@ -99,7 +117,7 @@
                         </a>
                     </td>
                 {% else %}
-                    <td></td>
+                    <td class="classic">-</td>
                 {% endif %}
             {% endif %}
         </tr>
