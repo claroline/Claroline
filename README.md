@@ -68,7 +68,10 @@ Project setup
     - `$ composer require composer/composer dev-master`
     - `$ composer require claroline/bundle-recorder "~3.0"`
     - `$ cp composer.json.dist composer.json`
-    - `$ composer update --prefer-source`
+    - `$ composer update --prefer-source` 
+       (at this point, you can ignore the following error: 
+       *Class Claroline\CoreBundle\Library\Maintenance\MaintenanceHandler is 
+       not autoloadable, can not call pre-update-cmd script*)
     - `$ php app/console claroline:update`
 
 You can then create a first admin user with:
