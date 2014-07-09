@@ -69,3 +69,8 @@
         </div>
     </div>
 {% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript" src="{{ asset('bundles/clarolinecore/js/profile/profile.js') }}"></script>
+{% endblock %}
