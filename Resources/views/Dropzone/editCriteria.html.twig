@@ -398,9 +398,10 @@
                 ;
             });
 
+            var temp_edit_criteria_url = null;
             $('.edit-criterion-button').on('click', function (event) {
                 event.preventDefault();
-
+                temp_edit_criteria_url = $(this).attr('href');
                 $('.disabled-during-edition').attr('disabled', 'disabled');
                 $('.criteria-form-button').attr('disabled', 'disabled');
 
@@ -413,9 +414,10 @@
                     type: $form.attr('method'),
                     data: $form.serialize(),
                     success: function () {
-                        $.get($('.edit-criterion-button').attr('href'))
+                        $.get(temp_edit_criteria_url)
                                 .done(function (data) {
-                         resetTiny();
+                                    temp_edit_criteria_url = null;
+                                    resetTiny();
                          $('.new-criteria-zone').empty();
                          $('.criterion-row > .criterion-edit').empty();
 
