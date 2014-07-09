@@ -1,0 +1,17 @@
+<div class="panel panel-default">
+    <div class="panel-heading relative">
+        <h3 class="panel-title">{{ 'step2'|trans({}, 'path_editor') }}</h3>
+
+        <a class="btn btn-sm btn-default float-right-top" data-pageslide="left" data-ps-speed="0.5" href="#templates-sidebar">
+            <span class="fa fa-download"></span> {{ 'open_templates'|trans({}, 'path_editor') }}
+        </a>
+    </div>
+
+    <div class="panel-body">
+        <div ui-tree="treeOptions">
+            <ul class="tree" ui-tree-nodes ng-model="path.steps[0].children" data-nodrop>
+                <li ui-tree-node data-ng-repeat="step in path.steps" data-ng-include="'{{ asset('bundles/innovapath/angularjs/Step/Partial/tree.html') }}'" onload="isRootNode = ($index == 0)"></li>
+            </ul>
+        </div>
+    </div>
+</div>

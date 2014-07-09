@@ -1,0 +1,34 @@
+{# Primary resource #}
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h4 class="panel-title">
+            <a data-toggle="collapse" href="#panel-primary-resource">
+                {{ 'primary_resource'|trans({}, 'path_editor') }}
+            </a>
+            <span class="badge">{% verbatim %}{{ previewStep.primaryResource != null ? 1 : 0 }}{% endverbatim %}</span>
+
+            <a href="#" data-ui-resource-picker="primaryResourcePicker" class="btn btn-sm btn-default">
+                <span class="fa fa-plus"></span>
+                <span data-ng-show="null == previewStep.primaryResource">{{ 'resources_browse'|trans({}, 'path_editor') }}</span>
+                <span data-ng-show="null != previewStep.primaryResource">{{ 'resources_replace'|trans({}, 'path_editor') }}</span>
+            </a>
+        </h4>
+    </div>
+
+    <div id="panel-primary-resource" class="panel-collapse collapse in">
+        <div class="panel-body">
+            <em data-ng-show="null == previewStep.primaryResource">{{ 'no_primary_resource'|trans({}, 'path_editor') }}</em>
+            <div data-ng-show="null != previewStep.primaryResource" class="row">
+                <div class="col-md-2 col-sm-2 text-right">
+                    <img height="60" src="{% verbatim %}{{ resourceIcons[previewStep.primaryResource.type] || resourceIcons['custom/default'] }}{% endverbatim %}" alt="{% verbatim %}{{ previewStep.primaryResource.type }}{% endverbatim %}" />
+                </div>
+                <div class="col-md-10 col-sm-10">
+                    <p class="h4">{% verbatim %}{{ previewStep.primaryResource.name }}{% endverbatim %}</p>
+                    <a href="#" class="btn btn-xs btn-danger" data-ng-click="removePrimaryResource()">
+                        <span class="fa fa-trash-o"></span> {{ 'resource_delete'|trans({}, 'path_editor') }}
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

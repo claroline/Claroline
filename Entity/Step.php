@@ -2,7 +2,6 @@
 
 namespace Innova\PathBundle\Entity;
 
-use Innova\PathBundle\Entity\Step2ResourceNode;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 
@@ -14,8 +13,6 @@ use Doctrine\Common\Collections\ArrayCollection;
  */
 class Step
 {
-    const DEFAULT_NAME = 'Step';
-    
     /**
      * Unique identifier of the step
      * @var integer
@@ -27,12 +24,22 @@ class Step
     protected $id;
 
     /**
-     * Name of the step
-     * @var string
+     * Activity of this step
+     * @var \Claroline\CoreBundle\Entity\Resource\Activity
      *
-     * @ORM\Column(name="name", type="string", length=255)
+     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Resource\Activity", cascade={"persist"})
+     * @ORM\JoinColumn(name="activity_id", referencedColumnName="id")
      */
-    protected $name;
+    protected $activity;
+
+    /**
+     * Parameters for this step
+     * @var \Claroline\CoreBundle\Entity\Activity\ActivityParameters
+     *
+     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Activity\ActivityParameters", cascade={"persist"})
+     * @ORM\JoinColumn(name="parameters_id", referencedColumnName="id")
+     */
+    protected $parameters;
 
     /**
      * Depth of the step in the Path
@@ -68,44 +75,8 @@ class Step
     protected $children;
 
     /**
-     * @var string
-     *
-     * @ORM\Column(name="description", type="text", nullable=true)
-     */
-    protected $description = null;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="image", type="string", length=255, nullable=true)
-     */
-    protected $image;
-
-    /**
-     * @var boolean
-     *
-     * @ORM\Column(name="withTutor", type="boolean")
-     */
-    protected $withTutor;
-
-    /**
-     * @var boolean
-     *
-     * @ORM\Column(name="withComputer", type="boolean")
-     */
-    protected $withComputer;
-
-    /**
-     * Step duration
-     * @var \DateTime
-     *
-     * @ORM\Column(name="duration", type="datetime", nullable=true)
-     */
-    protected $duration;
-
-    /**
      * Path
-     * @var Innova\PathBundle\Entity\Path\Path
+     * @var \Innova\PathBundle\Entity\Path\Path
      * 
      * @ORM\ManyToOne(targetEntity="Innova\PathBundle\Entity\Path\Path", inversedBy="steps")
      * @ORM\JoinColumn(onDelete="CASCADE")
@@ -113,34 +84,22 @@ class Step
     protected $path;
 
     /**
-     * @ORM\ManyToOne(targetEntity="StepWho", inversedBy="steps")
-     * @ORM\JoinColumn(name="stepWho_id", referencedColumnName="id", nullable=true)
+     * Inherited resources
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="Innova\PathBundle\Entity\InheritedResource", mappedBy="step", indexBy="id")
+     * @ORM\OrderBy({"lvl" = "ASC"})
      */
-    protected $stepWho;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="StepWhere", inversedBy="steps")
-     * @ORM\JoinColumn(name="stepWhere_id", referencedColumnName="id", nullable=true)
-     */
-    protected $stepWhere;
-
-    /**
-     * @ORM\OneToMany(targetEntity="Step2ResourceNode", mappedBy="step", indexBy="id")
-     */
-    protected $step2ResourceNodes;
+    protected $inheritedResources;
 
     /**
      * Class constructor
      */
     public function __construct()
     {
-        $this->withTutor = false;
-        $this->withComputer = true;
-        
-        $this->children = new ArrayCollection();
-        $this->step2ResourceNodes = new ArrayCollection();
+        $this->children           = new ArrayCollection();
+        $this->inheritedResources = new ArrayCollection();
     }
-    
     
     /**
      * Get id
@@ -150,28 +109,48 @@ class Step
     {
         return $this->id;
     }
-    
+
     /**
-     * Set name
-     * @param string $name
+     * Get activity
+     * @return \Claroline\CoreBundle\Entity\Resource\Activity
+     */
+    public function getActivity()
+    {
+        return $this->activity;
+    }
+
+    /**
+     * Set activity
+     * @param \Claroline\CoreBundle\Entity\Resource\Activity $activity
      * @return \Innova\PathBundle\Entity\Step
      */
-    public function setName($name)
+    public function setActivity(\Claroline\CoreBundle\Entity\Resource\Activity $activity)
     {
-        $this->name = $name;
-    
+        $this->activity = $activity;
+
         return $this;
     }
-    
+
     /**
-     * Get name
-     * @return string
+     * Get activity parameters
+     * @return \Claroline\CoreBundle\Entity\Activity\ActivityParameters
      */
-    public function getName()
+    public function getParameters()
     {
-        return $this->name;
+        return $this->parameters;
     }
-    
+
+    /**
+     * @param \Claroline\CoreBundle\Entity\Activity\ActivityParameters $parameters
+     * @return \Innova\PathBundle\Entity\Step
+     */
+    public function setParameters(\Claroline\CoreBundle\Entity\Activity\ActivityParameters $parameters)
+    {
+        $this->parameters = $parameters;
+
+        return $this;
+    }
+
     /**
      * Set lvl
      * @param integer $lvl
@@ -191,111 +170,6 @@ class Step
     public function getLvl()
     {
         return $this->lvl;
-    }
-
-    /**
-     * Set description
-     * @param  string $description
-     * @return \Innova\PathBundle\Entity\Step
-     */
-    public function setDescription($description)
-    {
-        $this->description = $description;
-
-        return $this;
-    }
-
-    /**
-     * Get description
-     * @return string
-     */
-    public function getDescription()
-    {
-        return $this->description;
-    }
-
-    /**
-     * Set image
-     * @param  string $image
-     * @return \Innova\PathBundle\Entity\Step
-     */
-    public function setImage($image)
-    {
-        $this->image= $image;
-    
-        return $this;
-    }
-    
-    /**
-     * Get image
-     * @return string
-     */
-    public function getImage()
-    {
-        return $this->image;
-    }
-
-    /**
-     * Set withTutor
-     * @param  boolean $withTutor
-     * @return \Innova\PathBundle\Entity\Step
-     */
-    public function setWithTutor($withTutor)
-    {
-        $this->withTutor = $withTutor;
-
-        return $this;
-    }
-
-    /**
-     * Get withTutor
-     * @return boolean
-     */
-    public function isWithTutor()
-    {
-        return $this->withTutor;
-    }
-
-    /**
-     * Set withComputer
-     * @param  boolean $withComputer
-     * @return \Innova\PathBundle\Entity\Step
-     */
-    public function setWithComputer($withComputer)
-    {
-        $this->withComputer = $withComputer;
-
-        return $this;
-    }
-
-    /**
-     * Get withComputer
-     * @return boolean
-     */
-    public function isWithComputer()
-    {
-        return $this->withComputer;
-    }
-
-    /**
-     * Set duration
-     * @param  \DateTime $duration
-     * @return \Innova\PathBundle\Entity\Step
-     */
-    public function setDuration($duration)
-    {
-        $this->duration = $duration;
-
-        return $this;
-    }
-
-    /**
-     * Get duration
-     * @return \DateTime
-     */
-    public function getDuration()
-    {
-        return $this->duration;
     }
 
     /**
@@ -320,53 +194,11 @@ class Step
     }
 
     /**
-     * Set stepWho
-     * @param  \Innova\PathBundle\Entity\StepWho $stepWho
-     * @return \Innova\PathBundle\Entity\Step
-     */
-    public function setStepWho(\Innova\PathBundle\Entity\StepWho $stepWho = null)
-    {
-        $this->stepWho = $stepWho;
-
-        return $this;
-    }
-
-    /**
-     * Get stepWho
-     * @return \Innova\PathBundle\Entity\StepWho
-     */
-    public function getStepWho()
-    {
-        return $this->stepWho;
-    }
-
-    /**
-     * Set stepWhere
-     * @param  \Innova\PathBundle\Entity\StepWhere $stepWhere
-     * @return \Innova\PathBundle\Entity\Step
-     */
-    public function setStepWhere(\Innova\PathBundle\Entity\StepWhere $stepWhere = null)
-    {
-        $this->stepWhere = $stepWhere;
-
-        return $this;
-    }
-
-    /**
-     * Get stepWhere
-     * @return \Innova\PathBundle\Entity\StepWhere
-     */
-    public function getStepWhere()
-    {
-        return $this->stepWhere;
-    }
-
-    /**
      * Set path
      * @param  \Innova\PathBundle\Entity\Path\Path $path
      * @return \Innova\PathBundle\Entity\
      */
-    public function setPath(\Innova\PathBundle\Entity\Path\Path $path = null)
+    public function setPath(Path\Path $path = null)
     {
         $this->path = $path;
 
@@ -439,40 +271,6 @@ class Step
     }
     
     /**
-     * Add step2ResourceNodes
-     * @param \Innova\PathBundle\Entity\Step2ResourceNode $step2ResourceNodes
-     * @return \Innova\PathBundle\Entity\Step
-     */
-    public function addStep2ResourceNode(Step2ResourceNode $step2ResourceNodes)
-    {
-        $this->step2ResourceNodes->set($step2ResourceNodes->getId(), $step2ResourceNodes);
-        $step2ResourceNodes->setStep($this);
-        
-        return $this;
-    }
-
-    /**
-     * Remove step2ResourceNodes
-     * @param \Innova\PathBundle\Entity\Step2ResourceNode $step2ResourceNodes
-     */
-    public function removeStep2ResourceNode(Step2ResourceNode $step2ResourceNodes)
-    {
-        $this->step2ResourceNodes->removeElement($step2ResourceNodes);
-        $step2ResourceNodes->setStep(null);
-        
-        return $this;
-    }
-
-    /**
-     * Get step2ResourceNodes
-     * @return \Doctrine\Common\Collections\Collection 
-     */
-    public function getStep2ResourceNodes()
-    {
-        return $this->step2ResourceNodes;
-    }
-    
-    /**
      * Get all siblings of the steps
      * @throws \Exception
      * @return array
@@ -529,5 +327,110 @@ class Step
         }
         
         return $parents;
+    }
+
+    /**
+     * Wrapper to access workspace of the Step
+     * @return \Claroline\CoreBundle\Entity\Workspace\Workspace
+     */
+    public function getWorkspace()
+    {
+        $workspace = null;
+        if (!empty($this->path)) {
+            $workspace = $this->path->getWorkspace();
+        }
+
+        return $workspace;
+    }
+
+    /**
+     * Wrapper to access Activity name
+     * @return string
+     */
+    public function getName()
+    {
+        if (!empty($this->activity)) {
+            return $this->activity->getResourceNode()->getName();
+        }
+        else {
+            return '';
+        }
+    }
+
+    /**
+     * Wrapper to access Activity description
+     * @return string
+     */
+    public function getDescription()
+    {
+        if (!empty($this->activity)) {
+            return $this->activity->getDescription();
+        }
+        else {
+            return '';
+        }
+    }
+
+    /**
+     * Get inherited resources
+     * @return ArrayCollection
+     */
+    public function getInheritedResources()
+    {
+        return $this->inheritedResources;
+    }
+
+    /**
+     * Add an inherited resource
+     * @param InheritedResource $inheritedResource
+     * @return $this
+     */
+    public function addInheritedResource(InheritedResource $inheritedResource)
+    {
+        if (!$this->inheritedResources->contains($inheritedResource)) {
+            $this->inheritedResources->add($inheritedResource);
+        }
+
+        $inheritedResource->setStep($this);
+
+        return $this;
+    }
+
+    /**
+     * Remove an inherited resource
+     * @param InheritedResource $inheritedResource
+     * @return $this
+     */
+    public function removeInheritedResource(InheritedResource $inheritedResource)
+    {
+        if ($this->inheritedResources->contains($inheritedResource)) {
+            $this->inheritedResources->removeElement($inheritedResource);
+        }
+
+        $inheritedResource->setStep(null);
+
+        return $this;
+    }
+
+    /**
+     * Check if the step is already link to resource
+     * @param integer $resourceId
+     * @return boolean
+     */
+    public function hasInheritedResource($resourceId)
+    {
+        $result = false;
+
+        if (!empty($this->inheritedResources)) {
+            foreach ($this->inheritedResources as $inherited) {
+                $resource = $inherited->getResource();
+                if ($resource->getId() === $resourceId) {
+                    $result = $inherited;
+                    break;
+                }
+            }
+        }
+
+        return $result;
     }
 }

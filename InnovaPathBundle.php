@@ -26,11 +26,6 @@ class InnovaPathBundle extends PluginBundle implements AutoConfigurableInterface
         return $config->addRoutingResource(__DIR__ . '/Resources/config/routing.yml', null, 'innova_path');
     }
 
-    public function getRequiredFixturesDirectory($environment)
-    {
-        return 'DataFixtures/Required';
-    }
-
     public function suggestConfigurationFor(Bundle $bundle, $environment)
     {
         

@@ -1,0 +1,75 @@
+<div class="panel panel-default">
+    {# Preview header #}
+    <div class="panel-heading">
+        {# Step level #}
+        <div class="preview-lvl lvl-{% verbatim %}{{ previewStep.lvl }}{% endverbatim %}"></div>
+
+        {# Step name #}
+        <h3 class="panel-title" data-ng-if="previewStep.lvl == 0" >
+            <strong data-ng-bind="previewStep.name" style="margin-left: 8px;"></strong>
+        </h3>
+
+        <div class="btn-group float-right-top" data-ng-if="previewStep.lvl == 0">
+            <button data-ng-click="showActivity()" class="btn btn-sm btn-default" type="button" data-ng-if="previewStep.activityId" data-toggle="tooltip" data-container="body" title="{{ 'see_activity'|trans({}, 'path_editor') }}">
+                <span class="fa fa-eye"></span>
+                <span class="sr-only">{{ 'see_activity'|trans({}, 'path_editor') }}</span>
+            </button>
+
+            <button class="btn btn-sm btn-default" type="button" data-ui-resource-picker="activityResourcePicker" data-toggle="tooltip" data-container="body" title="{{ 'select_activity'|trans({}, 'path_editor') }}">
+                <span class="fa fa-folder-open"></span>
+                <span class="sr-only">{{ 'select_activity'|trans({}, 'path_editor') }}</span>
+            </button>
+
+            <button data-ng-click="deleteActivity()" class="btn btn-sm btn-danger" type="button" data-ng-if="previewStep.activityId" data-toggle="tooltip" data-container="body" title="{{ 'delete_activity'|trans({}, 'path_editor') }}">
+                <span class="fa fa-trash-o"></span>
+                <span class="sr-only">{{ 'delete_activity'|trans({}, 'path_editor') }}</span>
+            </button>
+        </div>
+
+        {# Edit step name #}
+        <div style="margin-left: 8px;" class="input-group" data-ng-if="previewStep.lvl != 0" >
+            <input type="text" class="form-control" name="step-name" data-ng-model="previewStep.name" />
+            <div class="input-group-btn">
+                <button data-ng-click="showActivity()" class="btn btn-default" type="button" data-ng-if="previewStep.activityId" data-toggle="tooltip" data-container="body" title="{{ 'see_activity' |trans({}, 'path_editor') }}">
+                    <span class="fa fa-eye"></span>
+                    <span class="sr-only">{{ 'see_activity'|trans({}, 'path_editor') }}</span>
+                </button>
+
+                <button class="btn btn-default" type="button" data-ui-resource-picker="activityResourcePicker" data-toggle="tooltip" data-container="body" title="{{ 'select_activity'|trans({}, 'path_editor') }}">
+                    <span class="fa fa-folder-open"></span>
+                    <span class="sr-only">{{ 'select_activity'|trans({}, 'path_editor') }}</span>
+                </button>
+
+                <button data-ng-click="deleteActivity()" class="btn btn-danger" type="button" data-ng-if="previewStep.activityId" data-toggle="tooltip" data-container="body" title="{{ 'delete_activity'|trans({}, 'path_editor') }}">
+                    <span class="fa fa-trash-o"></span>
+                    <span class="sr-only">{{ 'delete_activity'|trans({}, 'path_editor') }}</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="panel-group" id="accordion">
+        {# Description #}
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    <a data-toggle="collapse" href="#panel-description">Description</a>
+                </h4>
+            </div>
+            <div id="panel-description" class="panel-collapse collapse in">
+                <div class="panel-body">
+                    <textarea data-ui-tinymce="tinymceOptions" class="form-control" name="step-description" data-ng-change="updateHistory()" data-ng-model="previewStep.description"></textarea>
+                </div>
+            </div>
+        </div>
+
+        {# Primary resource #}
+        {% include 'InnovaPathBundle:Editor:Step/resources-primary.html.twig' %}
+
+        {# Secondary resources #}
+        {% include 'InnovaPathBundle:Editor:Step/resources-secondary.html.twig' %}
+
+        {# Properties #}
+        {% include 'InnovaPathBundle:Editor:Step/properties.html.twig' %}
+    </div>
+</div>

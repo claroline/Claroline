@@ -15,12 +15,10 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\DependencyInjection\ContainerAware;
 
-
 use Innova\PathBundle\Form\Handler\StepHandler;
 use Innova\PathBundle\Entity\Path\Path;
 use Innova\PathBundle\Entity\Step;
-use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
-
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
 
 /**
  * ContextualEditorController controller
@@ -66,7 +64,7 @@ class ContextualEditorController extends ContainerAware
 
     /**
      * Authenticated user
-     * @var \Claroline\CoreBundle\Entity\User\User $user
+     * @var \Claroline\CoreBundle\Entity\User $user
      */
     protected $user;
 
@@ -75,12 +73,15 @@ class ContextualEditorController extends ContainerAware
      * @var \Symfony\Component\Security\Core\SecurityContext $security
      */
     protected $security;
-    
+
     /**
      * Class constructor
-     * @param \Symfony\Component\Routing\RouterInterface   $router
-     * @param \Symfony\Component\Form\FormFactoryInterface $formFactory
-     * @param \Innova\PathBundle\Form\Handler\StepHandler  $stepHandler
+     * @param \Symfony\Component\Security\Core\SecurityContext           $securityContext
+     * @param \Symfony\Component\Routing\RouterInterface                 $router
+     * @param \Symfony\Component\Form\FormFactoryInterface               $formFactory
+     * @param \Symfony\Component\HttpFoundation\Session\SessionInterface $session
+     * @param \Symfony\Component\Translation\TranslatorInterface         $translator
+     * @param \Innova\PathBundle\Form\Handler\StepHandler                $stepHandler
      */
     public function __construct(
         securityContext      $securityContext, 
@@ -103,21 +104,23 @@ class ContextualEditorController extends ContainerAware
 
     /**
      * Display path player
-     * @param  Path $path
+     * @param \Claroline\CoreBundle\Entity\Workspace\Workspace $workspace
+     * @param \Innova\PathBundle\Entity\Path\Path                      $path
+     * @param \Innova\PathBundle\Entity\Step                           $currentStep
      * @return array
-     * 
+     *
      * @Route(
      *      "workspace/{workspaceId}/path/{pathId}/step/{stepId}/edit/",
      *      name="innova_path_contextual_editor",
      *      options={"expose" = true}
      * )
-     * @ParamConverter("workspace", class="ClarolineCoreBundle:Workspace\AbstractWorkspace", options={"mapping": {"workspaceId": "id"}})
+     * @ParamConverter("workspace", class="ClarolineCoreBundle:Workspace\Workspace", options={"mapping": {"workspaceId": "id"}})
      * @ParamConverter("path", class="InnovaPathBundle:Path", options={"mapping": {"pathId": "id"}})
      * @ParamConverter("currentStep", class="InnovaPathBundle:Step", options={"mapping": {"stepId": "id"}})
      * @Method("GET")
      * @Template("InnovaPathBundle:Player:main.html.twig")
      */
-    public function displayAction(AbstractWorkspace $workspace, Path $path, Step $currentStep)
+    public function displayAction(Workspace $workspace, Path $path, Step $currentStep)
     {
         $pathCreator = $path->getResourceNode()->getCreator();
             
@@ -144,12 +147,12 @@ class ContextualEditorController extends ContainerAware
      *      name="innova_path_save_current_step",
      *      options={"expose" = true}
      * )
-     * @ParamConverter("workspace", class="ClarolineCoreBundle:Workspace\AbstractWorkspace", options={"mapping": {"workspaceId": "id"}})
+     * @ParamConverter("workspace", class="ClarolineCoreBundle:Workspace\Workspace", options={"mapping": {"workspaceId": "id"}})
      * @ParamConverter("path", class="InnovaPathBundle:Path", options={"mapping": {"pathId": "id"}})
      * @ParamConverter("currentStep", class="InnovaPathBundle:Step", options={"mapping": {"stepId": "id"}})
      * @Method("POST")
      */
-    public function editStepAction(AbstractWorkspace $workspace, Path $path, Step $currentStep)
+    public function editStepAction(Workspace $workspace, Path $path, Step $currentStep)
     {
 
         $form = $this->container->get('form.factory')->create('innova_step', $currentStep);
@@ -172,7 +175,7 @@ class ContextualEditorController extends ContainerAware
         return new RedirectResponse($url);
     }
 
-    public function addflashMessage($class, $message){
+    protected function addflashMessage($class, $message){
 
         return $this->session->getFlashBag()->add('alert alert-'.$class, $message);
     }

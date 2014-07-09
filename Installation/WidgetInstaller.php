@@ -3,12 +3,11 @@
 namespace Innova\PathBundle\Installation;
 
 use Claroline\CoreBundle\Entity\Widget\Widget;
-use Doctrine\DBAL\Connection;
 
 class WidgetInstaller
 {
-
     private $container;
+
     private $logger;
 
     public function __construct($container)
@@ -18,15 +17,17 @@ class WidgetInstaller
 
     public function postUpdate()
     {
-        
         $this->createWidget("innova_path_widget", false, true);
         $this->createWidget("innova_my_paths_widget", true, false);
-    }
 
+        return $this;
+    }
 
     public function setLogger($logger)
     {
         $this->logger = $logger;
+
+        return $this;
     }
 
     private function log($message)
@@ -34,6 +35,8 @@ class WidgetInstaller
         if ($log = $this->logger) {
             $log('    ' . $message);
         }
+
+        return $this;
     }
 
     private function createWidget($name, $desktop, $workspace)
@@ -59,7 +62,8 @@ class WidgetInstaller
             $plugin->setHasOptions(true);
             $em->persist($widget);
             $em->flush();
-        } else {
+        }
+        else {
             $this->log($name.' widget already added');
         }
     }

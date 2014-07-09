@@ -129,7 +129,8 @@ class PathListener extends ContainerAware
 
     /**
      * Fired when a ResourceNode of type Path is duplicated
-     * @param \Claroline\CoreBundle\Event\DeleteResourceEvent $event
+     * @param \Claroline\CoreBundle\Event\CopyResourceEvent $event
+     * @throws \Exception
      */
     public function onPathCopy(CopyResourceEvent $event)
     {

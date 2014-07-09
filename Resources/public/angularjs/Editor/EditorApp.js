@@ -6,10 +6,10 @@ var EditorApp = angular.module('EditorApp', [
     'ngSanitize',
     'ui.bootstrap', 
     'ui.pageslide', 
-    'ui.sortable', 
     'ui.tinymce',
     'ui.translation',
-    'ui.resourcePicker'
+    'ui.resourcePicker',
+    'ui.tree'
 ]);
 
 // History
@@ -31,17 +31,15 @@ EditorApp.controller('MainCtrl', MainCtrl);
 EditorApp.factory('PathFactory', PathFactory);
 EditorApp.controller('GlobalCtrl', GlobalCtrl);
 EditorApp.controller('ScenarioCtrl', ScenarioCtrl);
-EditorApp.controller('PreviewStepCtrl', PreviewStepCtrl);
+EditorApp.controller('StepCtrl', StepCtrl);
 EditorApp.controller('ConfirmExitModalCtrl', ConfirmExitModalCtrl);
 EditorApp.filter('path_to_json', PathToJsonFilter);
 
 // Steps
 EditorApp.factory('StepFactory', StepFactory);
-EditorApp.controller('SelectImageModalCtrl', SelectImageModalCtrl);
 
 // Resources
 EditorApp.factory('ResourceFactory', ResourceFactory);
-EditorApp.controller('ResourceModalCtrl', ResourceModalCtrl);
 
 // Templates
 EditorApp.factory('TemplateFactory', TemplateFactory);

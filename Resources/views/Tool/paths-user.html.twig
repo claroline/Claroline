@@ -39,19 +39,19 @@
                 </td>
                 <td class="text-right">
                     <a href="{{ path('innova_path_editor_edit', {workspaceId: workspace.id, id: path.id}) }}" class="btn btn-xs btn-default">
-                        <span class="icon-pencil"></span>
+                        <span class="fa fa-pencil"></span>
                         {{ 'edit' | trans({}, 'innova_tools') }}
                     </a>
                 {% if path.modified or not path.published %}
                     <a href="{{ path('innova_path_publish', {workspaceId: workspace.id, id: path.id}) }}" class="btn btn-xs btn-success">
-                        <span class="icon-share"></span>
+                        <span class="fa fa-share-square-o"></span>
                         {{ 'publish' | trans({}, 'innova_tools') }}
                     </a>
                {% endif %}
                     <form action="{{ path('innova_path_delete', {workspaceId: workspace.id, id: path.id}) }}" method="post" style="display: inline-block">
                         <input type="hidden" value="DELETE" name="_method" />
                         <a href="#" class="btn btn-xs btn-danger path-delete" id="path-delete-{{ count }}">
-                            <span class="icon-trash"></span>
+                            <span class="fa fa-trash-o"></span>
                             {{ 'delete' | trans({}, 'innova_tools') }}
                         </a>
                     </form>

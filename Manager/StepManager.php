@@ -2,12 +2,15 @@
 
 namespace Innova\PathBundle\Manager;
 
+use Claroline\CoreBundle\Entity\Activity\ActivityParameters;
+use Claroline\CoreBundle\Entity\Resource\Activity;
 use Doctrine\Common\Persistence\ObjectManager;
-use Symfony\Component\Translation\TranslatorInterface;
+use Claroline\CoreBundle\Manager\ResourceManager;
 
 use Innova\PathBundle\Entity\Step;
 use Innova\PathBundle\Entity\Path\Path;
 use Innova\PathBundle\Entity\Step2ResourceNode;
+use Symfony\Component\Security\Core\SecurityContextInterface;
 
 class StepManager
 {
@@ -18,89 +21,31 @@ class StepManager
     protected $om;
 
     /**
-     * Translator engine
-     * @var \Symfony\Component\Translation\TranslatorInterface
+     * Security Context
+     * @var \Symfony\Component\Security\Core\SecurityContextInterface
      */
-    protected $translator;
+    protected $security;
+
+    /**
+     * Resource Manager
+     * @var \Claroline\CoreBundle\Manager\ResourceManager
+     */
+    protected $resourceManager;
 
     /**
      * Class constructor
-     * @param \Doctrine\Common\Persistence\ObjectManager         $om
-     * @param \Symfony\Component\Translation\TranslatorInterface $translator
+     * @param \Doctrine\Common\Persistence\ObjectManager                $om
+     * @param \Symfony\Component\Security\Core\SecurityContextInterface $security
+     * @param \Claroline\CoreBundle\Manager\ResourceManager             $resourceManager
      */
     public function __construct(
-        ObjectManager $om,
-        TranslatorInterface $translator)
+        ObjectManager            $om,
+        SecurityContextInterface $security,
+        ResourceManager          $resourceManager)
     {
-        $this->om = $om;
-        $this->translator = $translator;
-    }
-
-    /**
-     * Get all resource nodes linked to the step
-     * @param \Innova\PathBundle\Entity\Step $step
-     * @return array
-     */
-    public function getStepResourceNodes(Step $step)
-    {
-        $resourceNodes = array();
-        $step2ResourceNodes = $this->om->getRepository('InnovaPathBundle:Step2ResourceNode')->findBy(array('step' => $step, 'excluded' => false));
-
-        $nonDigitalRepo = $this->om->getRepository('InnovaPathBundle:NonDigitalResource');
-        foreach ($step2ResourceNodes as $step2ResourceNode) {
-            if ($step2ResourceNode->getResourceNode()->getClass() == "Innova\PathBundle\Entity\NonDigitalResource") {
-                $resourceNodes["nonDigital"][] = $nonDigitalRepo->findOneByResourceNode($step2ResourceNode->getResourceNode());
-            }
-            else {
-                $resourceNodes["digital"][] = $step2ResourceNode->getResourceNode();
-            }
-        }
-        return $resourceNodes;
-    }
-
-    public function getStepPropagatedResourceNodes(Step $step)
-    {
-        $resourceNodes = array();
-        $step2ResourceNodes = $this->om->getRepository('InnovaPathBundle:Step2ResourceNode')->findBy(array('step' => $step, 'propagated' => true));
-
-        $nonDigitalRepo = $this->om->getRepository('InnovaPathBundle:NonDigitalResource');
-        foreach ($step2ResourceNodes as $step2ResourceNode) {
-            if ($step2ResourceNode->getResourceNode()->getClass() == "Innova\PathBundle\Entity\NonDigitalResource") {
-                $resourceNodes["nonDigital"][] = $nonDigitalRepo->getRepository('InnovaPathBundle:NonDigitalResource')->findOneByResourceNode($step2ResourceNode->getResourceNode());
-            }
-            else {
-                $resourceNodes["digital"][] = $step2ResourceNode->getResourceNode();
-            }
-        }
-
-        return $resourceNodes;
-    }
-
-    public function editResourceNodeRelation(Step $step, $resourceNodeId, $excluded, $propagated, $order = null)
-    {
-        $step2ressourceNode = $this->om->getRepository('InnovaPathBundle:Step2ResourceNode')->findOneBy(array (
-            'step' => $step,
-            'resourceNode' => $resourceNodeId,
-            'excluded' => $excluded,
-        ));
-    
-        if (!$step2ressourceNode) {
-            $step2ressourceNode = new Step2ResourceNode();
-        }
-    
-        $step2ressourceNode->setResourceNode($this->om->getRepository('ClarolineCoreBundle:Resource\ResourceNode')->findOneById($resourceNodeId));
-        $step2ressourceNode->setStep($step);
-        $step2ressourceNode->setExcluded($excluded);
-        $step2ressourceNode->setPropagated($propagated);
-        
-        if (!empty($order)) {
-            $step2ressourceNode->setResourceOrder($order);
-        }
-    
-        $this->om->persist($step2ressourceNode);
-        $this->om->flush();
-    
-        return $step2ressourceNode;
+        $this->om              = $om;
+        $this->security        = $security;
+        $this->resourceManager = $resourceManager;
     }
     
     /**
@@ -136,38 +81,9 @@ class StepManager
         $step->setParent($parent);
         $step->setLvl($level);
         $step->setOrder($order);
-        
-        // Grab data from structure
-        $name = !empty($stepStructure->name) ? $stepStructure->name : Step::DEFAULT_NAME;
-        $step->setName($name);
-        
-        $image = !empty($stepStructure->image) ? $stepStructure->image : null;
-        $step->setImage($image);
-        
-        $description = !empty($stepStructure->description) ? $stepStructure->description : null;
-        $step->setDescription($description);
-        
-        $withTutor = !empty($stepStructure->withTutor) ? $stepStructure->withTutor : false;
-        $step->setWithTutor($withTutor);
-        
-        $withComputer = !empty($stepStructure->withComputer) ? $stepStructure->withComputer : false;
-        $step->setWithComputer($withComputer);
-        
-        $durationHours = !empty($stepStructure->durationHours) ? intval($stepStructure->durationHours) : 0;
-        $durationMinutes = !empty($jsonStep->durationMinutes) ? intval($stepStructure->durationMinutes) : 0;
-        $step->setDuration(new \DateTime('00-00-00 ' . $durationHours . ':' . $durationMinutes . ':00'));
-        
-        $stepWho = null;
-        if (!empty($stepStructure->who)) {
-            $stepWho = $this->om->getRepository('InnovaPathBundle:StepWho')->findOneById($stepStructure->who);
-        }
-        $step->setStepWho($stepWho);
-        
-        $stepWhere = null;
-        if (!empty($stepStructure->where)) {
-            $stepWhere = $this->om->getRepository('InnovaPathBundle:StepWhere')->findOneById($stepStructure->where);
-        }
-        $step->setStepWhere($stepWhere);
+
+        $this->updateParameters($step, $stepStructure);
+        $this->updateActivity($step, $stepStructure);
         
         // Save modifications
         $this->om->persist($step);
@@ -175,52 +91,157 @@ class StepManager
         
         return $step;
     }
-    
-    public function getWho()
+
+    /**
+     * @param \Innova\PathBundle\Entity\Step $step
+     * @param  \stdClass                     $stepStructure
+     * @return \Innova\PathBundle\Manager\PublishingManager
+     * @throws \LogicException
+     */
+    public function updateActivity(Step $step, \stdClass $stepStructure)
     {
-        $results = $this->om->getRepository('InnovaPathBundle:StepWho')->findAll();
-        
-        $stepWhos = array();
-        foreach ($results as $result) {
-            $stepWhos[$result->getId()] = $this->translator->trans($result->getName(), array(), 'innova_tools');
+        $newActivity = false;
+        $activity = $step->getActivity();
+        if (empty($activity)) {
+            if (!empty($stepStructure->activityId)) {
+                // Load activity from DB
+                $activity = $this->om->getRepository('ClarolineCoreBundle:Resource\Activity')->findOneById($stepStructure->activityId);
+                if (empty($activity)) {
+                    // Can't find Activity
+                    throw new \LogicException('Unable to find Activity referenced by ID : ' . $stepStructure->activityId);
+                }
+            }
+            else {
+                // Create new activity
+                $newActivity = true;
+                $activity = new Activity();
+            }
         }
-        
-        return $stepWhos;
-    }
-    
-    public function getWhoDefault()
-    {
-        $default = $this->om->getRepository('InnovaPathBundle:StepWho')->findOneBy(array('default' => true));
 
-        return array(
-            'id'   => $default->getId(),
-            'name' => $this->translator->trans($default->getName(), array(), 'innova_tools'),
-        );        
-    }
-
-    public function getWhere()
-    {
-        $results = $this->om->getRepository('InnovaPathBundle:StepWhere')->findAll();
-        
-        $stepWheres = array();
-        foreach ($results as $result) {
-            $stepWheres[$result->getId()] = $this->translator->trans($result->getName(), array(), 'innova_tools');
+        // Update activity properties
+        if (!empty($stepStructure->name)) {
+            $name = $stepStructure->name;
         }
-        
-        return $stepWheres;
+        else {
+            // Create a default name
+            $name = $step->getPath()->getName() . ' - ' . Step::DEFAULT_NAME . ' ' . $step->getOrder();
+        }
+        $activity->setName($name);
+        $activity->setTitle($name);
+
+        $description = !empty($stepStructure->description) ? $stepStructure->description : null;
+        $activity->setDescription($description);
+
+        // Link resource if needed
+        if (!empty($stepStructure->primaryResource) && !empty($stepStructure->primaryResource->resourceId)) {
+            $resource = $this->om->getRepository('ClarolineCoreBundle:Resource\ResourceNode')->findOneById($stepStructure->primaryResource->resourceId);
+            if (!empty($resource)) {
+                $activity->setPrimaryResource($resource);
+            }
+            else {
+                // Resource not found
+                throw new \LogicException('Unable to find ResourceNode referenced by ID : ' . $stepStructure->primaryResource->resourceId);
+            }
+        }
+
+        // Generate Claroline resource node and rights
+        if ($newActivity) {
+            // It's a new Activity, so use Step parameters
+            $activity->setParameters($step->getParameters());
+
+            $activityType = $this->om->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findOneByName('activity');
+            $currentUser = $this->security->getToken()->getUser();
+            $workspace = $step->getWorkspace();
+
+            // Store Activity in same directory than parent Path
+            $parent = $step->getPath()->getResourceNode()->getParent();
+            if (empty($parent)) {
+                $parent = $this->resourceManager->getWorkspaceRoot($workspace);
+            }
+
+            $activity = $this->resourceManager->create($activity, $activityType, $currentUser, $workspace, $parent);
+        }
+        else {
+            // Activity already exists => update ResourceNode
+            $activity->getResourceNode()->setName($activity->getTitle());
+        }
+
+        // Update JSON structure
+        $stepStructure->activityId = $activity->getId();
+
+        // Store Activity in Step
+        $step->setActivity($activity);
+
+        return $this;
     }
 
-    public function getWhereDefault()
+    public function updateParameters(Step $step, \stdClass $stepStructure)
     {
-        $default = $this->om->getRepository('InnovaPathBundle:StepWhere')->findOneBy(array('default' => true));
+        $parameters = $step->getParameters();
+        if (empty($parameters)) {
+            $parameters = new ActivityParameters();
+        }
 
-        return array(
-            'id'   => $default->getId(),
-            'name' => $this->translator->trans($default->getName(), array(), 'innova_tools'),
-        );       
+        // Update parameters properties
+        $withTutor = !empty($stepStructure->withTutor) ? $stepStructure->withTutor : false;
+        $parameters->setWithTutor($withTutor);
+
+        $durationHours = !empty($stepStructure->durationHours) ? intval($stepStructure->durationHours) : 0;
+        $durationMinutes = !empty($stepStructure->durationMinutes) ? intval($stepStructure->durationMinutes) : 0;
+        $seconds = $durationHours * 3600 + $durationMinutes * 60;
+        $parameters->setMaxDuration($seconds);
+
+        $who = !empty($stepStructure->who) ? $stepStructure->who : null;
+        $parameters->setWho($who);
+
+        $where = !empty($stepStructure->where) ? $stepStructure->where : null;
+        $parameters->setWhere($where);
+
+        // Set resources
+        $this->updateSecondaryResources($parameters, $stepStructure);
+
+        // Persist parameters to generate ID
+        $this->om->persist($parameters);
+        $this->om->flush();
+
+        // Store parameters in Step
+        $step->setParameters($parameters);
+
+        return $this;
     }
 
-	public function contextualUpdate($step)
+    public function updateSecondaryResources(ActivityParameters $parameters, \stdClass $stepStructure)
+    {
+        // Store current resources to clean removed
+        $existingResources = $parameters->getSecondaryResources();
+        $existingResources = $existingResources->toArray();
+
+        // Publish new resources
+        $publishedResources = array ();
+        if (!empty($stepStructure->resources)) {
+            foreach ($stepStructure->resources as $resource) {
+                $resourceNode = $this->om->getRepository('ClarolineCoreBundle:Resource\ResourceNode')->findOneById($resource->resourceId);
+                if (!empty($resourceNode)) {
+                    $parameters->addSecondaryResource($resourceNode);
+                    $publishedResources[] = $resourceNode;
+                }
+                else {
+                    throw new \LogicException('Unable to find ResourceNode referenced by ID : ' . $resource->resourceId);
+                }
+            }
+        }
+
+        // Clean removed resources
+        foreach ($existingResources as $existingResource) {
+            if (!in_array($existingResource, $publishedResources)) {
+                $parameters->removeSecondaryResource($existingResource);
+            }
+        }
+
+        return $this;
+    }
+
+    public function contextualUpdate($step)
     {
         $path = $step->getPath();
         $json = json_decode($path->getStructure());
@@ -236,13 +257,14 @@ class StepManager
         $this->om->flush();
     }
 
-    public function findAndUpdateJsonStep($jsonSteps, $step){
+    public function findAndUpdateJsonStep($jsonSteps, $step)
+    {
         foreach($jsonSteps as $jsonStep){
             echo $jsonStep->resourceId;
-            if($jsonStep->resourceId == $step->getId()){
+            if ($jsonStep->resourceId == $step->getId()){
                 $jsonStep->description = $step->getDescription();
             }
-            elseif(!empty($jsonStep->children)) {
+            else if (!empty($jsonStep->children)) {
                 $this->findAndUpdateJsonStep($jsonStep->children, $step);
             }
         }

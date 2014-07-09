@@ -2,7 +2,7 @@
 
 namespace Innova\PathBundle\Form\Handler;
 
-use Symfony\Component\Form\Form;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -51,10 +51,10 @@ abstract class AbstractHandler
     
     /**
      * Set current form
-     * @param  \Symfony\Component\Form\Form $form
+     * @param  \Symfony\Component\Form\FormInterface $form
      * @return \Innova\PathBundle\Form\Handler\PathHandler
      */
-    public function setForm(Form $form)
+    public function setForm(FormInterface $form)
     {
         $this->form = $form;
     

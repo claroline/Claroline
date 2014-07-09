@@ -7,7 +7,7 @@ use Symfony\Component\Security\Core\SecurityContext;
 use Claroline\CoreBundle\Manager\ResourceManager;
 
 use Symfony\Component\Security\Core\User\UserInterface;
-use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Innova\PathBundle\Entity\Path\Path;
 
 /**
@@ -72,19 +72,19 @@ class PathManager
     /**
      * Get a workspace from id
      * @param  integer $workspaceId
-     * @return \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace
+     * @return \Claroline\CoreBundle\Entity\Workspace\Workspace
      */
     public function getWorkspace($workspaceId)
     {
-        return $this->om->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->find($workspaceId);
+        return $this->om->getRepository('ClarolineCoreBundle:Workspace\Workspace')->find($workspaceId);
     }
     
     /**
      * Find all paths for a workspace
-     * @param  \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace $workspace
+     * @param  \Claroline\CoreBundle\Entity\Workspace\Workspace $workspace
      * @return array
      */
-    public function findAllFromWorkspace(AbstractWorkspace $workspace)
+    public function findAllFromWorkspace(Workspace $workspace)
     {
         $paths = array();
         if (!empty($this->user) && $this->user instanceof UserInterface) {
@@ -102,20 +102,18 @@ class PathManager
 
     /**
      * Find all paths for a workspace
-     * @param  \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace $workspace
+     * @param  \Claroline\CoreBundle\Entity\Workspace\Workspace $workspace
      * @return array
      */
-    public function findAllFromWorkspaceUnsorted(AbstractWorkspace $workspace)
+    public function findAllFromWorkspaceUnsorted(Workspace $workspace)
     {
        
         return $this->om->getRepository('InnovaPathBundle:Path\Path')->findAllByWorkspace($workspace);
     }
 
-
-
-
     /**
      * Find all paths for a user
+     * @param \Symfony\Component\Security\Core\User\UserInterface $user
      * @return array
      */
     public function findAllByUser(UserInterface $user)
@@ -127,10 +125,10 @@ class PathManager
     /**
      * Create a new path
      * @param  \Innova\PathBundle\Entity\Path\Path $path
-     * @param  \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace $workspace
+     * @param  \Claroline\CoreBundle\Entity\Workspace\Workspace $workspace
      * @return \Innova\PathBundle\Entity\Path\Path
      */
-    public function create(Path $path, AbstractWorkspace $workspace)
+    public function create(Path $path, Workspace $workspace)
     {
         // Check if JSON structure is built
         $structure = $path->getStructure();
@@ -164,7 +162,7 @@ class PathManager
             $path->initializeStructure();
         }
 
-        // Set path as modified (= need publishment to be able to play path with new modifs)
+        // Set path as modified (= need publishing to be able to play path with new modifs)
         $path->setModified(true);
         $this->om->persist($path);
         

@@ -25,16 +25,15 @@
         "MIT"
     ],
     "require" : {
-        "claroline/core-bundle" : ">=2.0.5,<3.0",
+        "claroline/core-bundle" : "dev-3.0-dev",
         "doctrine/doctrine-fixtures-bundle" : "2.2.0",
         "innova/angular-js-bundle" : ">=1.0",
         "innova/angular-ui-bootstrap-bundle" : ">=1.0",
         "innova/angular-ui-tinymce-bundle" : ">=1.0",
         "innova/angular-ui-pageslide-bundle" : ">=1.0",
-        "innova/angular-ui-sortable-bundle" : ">=1.0",
+        "innova/angular-ui-tree-bundle" : ">=1.0",
         "innova/angular-ui-translation-bundle" : ">=2.0",
-        "innova/angular-ui-resource-picker-bundle" : ">=1.0,<2.0",
-        "innova/favorite-bundle" : "dev-master"
+        "innova/angular-ui-resource-picker-bundle" : ">=2.0,<3.0"
     },
     "autoload" : {
         "psr-0" : {

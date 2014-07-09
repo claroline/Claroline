@@ -19,13 +19,6 @@ services:
         parent: innova_path.form.handler.abstract
         arguments: [@innova_path.manager.path_template]
         scope: request
-
-    # NonDigitalResource handler
-    innova_path.form.handler.non_digital_resource:
-        class: %innova_path.form.handler.non_digital_resource.class%
-        calls:
-            - [setRequest, [@request]]
-        scope: request
         
     # Step handler
     innova_path.form.handler.step:

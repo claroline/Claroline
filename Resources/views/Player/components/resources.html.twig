@@ -1,23 +1,15 @@
 {% import 'InnovaPathBundle::Player/components/macros.html.twig' as macros %}
 
-{% set allParents = currentStep.getParents() %}
-
 <div id="resources-btn">
     <ul class="nav nav-tabs">
-        {% for parent in allParents %}
-            {% for resource in parent.step2ResourceNodes if resource.propagated == true %}
-                {% set thisResourceIsExcluded = false %}
-                {% for resourceCurrentStep in currentStep.step2ResourceNodes if resourceCurrentStep.excluded == true and resourceCurrentStep.resourceNode == resource.resourceNode %}
-                        {% set thisResourceIsExcluded = true %}
-                {% endfor %}
-                {% if thisResourceIsExcluded == false %}
-                    {{ macros.displayResourceButton(resource, parent) }}
-                {% endif %}
-            {% endfor %}
+        {# Display inherited resources from parents #}
+        {% for inherited in currentStep.inheritedResources %}
+            {{ macros.displayResourceButton(inherited.resource, inherited.lvl) }}
         {% endfor %}
 
-        {% for resource in currentStep.step2ResourceNodes if resource.excluded == false %}
-            {{ macros.displayResourceButton(resource, currentStep) }}
+        {# Display secondary resources of the Step #}
+        {% for resource in currentStep.parameters.secondaryResources %}
+            {{ macros.displayResourceButton(resource, currentStep.lvl) }}
         {% endfor %}
     </ul>
 </div>

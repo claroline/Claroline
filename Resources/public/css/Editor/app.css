@@ -15,6 +15,10 @@
     margin-left: 40px;
 }
 
+.action-bar {
+    margin-bottom: 20px;
+}
+
 .modal-backdrop {
     z-index: 1;
 }

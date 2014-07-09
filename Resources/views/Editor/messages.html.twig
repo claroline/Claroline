@@ -1,0 +1,10 @@
+{# Symfony messages #}
+{{ macros.flashBox() }}
+
+{# AngularJS messages #}
+<div data-ng-repeat="alert in alerts" class="alert alert-{% verbatim %}{{ alert.type }}{% endverbatim %}">
+    <a class="close" data-dismiss="alert" aria-hidden="true" data-ng-click="closeAlert($index)">&times;</a>
+    <ul>
+        <li data-ng-bind="alert.msg"></li>
+    </ul>
+</div>

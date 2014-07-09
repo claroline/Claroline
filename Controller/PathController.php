@@ -40,7 +40,6 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 
 // Controller dependencies
@@ -48,8 +47,8 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 use Innova\PathBundle\Manager\PathManager;
-use Innova\PathBundle\Manager\PublishmentManager;
-use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
+use Innova\PathBundle\Manager\PublishingManager;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Innova\PathBundle\Entity\Path\Path;
 
 /**
@@ -69,7 +68,7 @@ use Innova\PathBundle\Entity\Path\Path;
  *      name    = "innova_path",
  *      service = "innova_path.controller.path"
  * )
- * @ParamConverter("workspace", class="ClarolineCoreBundle:Workspace\AbstractWorkspace", options={"mapping": {"workspaceId": "id"}})
+ * @ParamConverter("workspace", class="ClarolineCoreBundle:Workspace\Workspace", options={"mapping": {"workspaceId": "id"}})
  */
 class PathController
 {
@@ -98,10 +97,10 @@ class PathController
     protected $pathManager;
     
     /**
-     * Current publishment manager
-     * @var \Innova\PathBundle\Manager\PublishmentManager
+     * Publishing manager
+     * @var \Innova\PathBundle\Manager\PublishingManager
      */
-    protected $publishmentManager;
+    protected $publishingManager;
     
     /**
      * Class constructor
@@ -110,25 +109,27 @@ class PathController
      * @param RouterInterface          $router
      * @param TranslatorInterface      $translator
      * @param PathManager              $pathManager
-     * @param PublishmentManager       $publishmentManager
+     * @param PublishingManager        $publishingManager
      */
     public function __construct(
         SessionInterface         $session,
         RouterInterface          $router,
         TranslatorInterface      $translator,
         PathManager              $pathManager,
-        PublishmentManager       $publishmentManager)
+        PublishingManager        $publishingManager)
     {
-        $this->session     = $session;
-        $this->router      = $router;
-        $this->translator  = $translator;
-        $this->pathManager = $pathManager;
-        $this->publishmentManager = $publishmentManager;
+        $this->session           = $session;
+        $this->router            = $router;
+        $this->translator        = $translator;
+        $this->pathManager       = $pathManager;
+        $this->publishingManager = $publishingManager;
     }
     
     /**
      * Delete path from database
-     * @return RedirectResponse
+     * @param \Claroline\CoreBundle\Entity\Workspace\Workspace $workspace
+     * @param \Innova\PathBundle\Entity\Path\Path $path
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
      *
      * @Route(
      *     "/delete/{id}",
@@ -138,7 +139,7 @@ class PathController
      * )
      * @Method("DELETE")
      */
-    public function deleteAction(AbstractWorkspace $workspace, Path $path)
+    public function deleteAction(Workspace $workspace, Path $path)
     {
         try {
             $this->pathManager->delete($path);
@@ -177,10 +178,10 @@ class PathController
      * )
      * @Method("GET")
      */
-    public function publishAction(AbstractWorkspace $workspace, Path $path)
+    public function publishAction(Workspace $workspace, Path $path)
     {
         try {
-            $this->publishmentManager->publish($path);
+            $this->publishingManager->publish($path);
         
             // Publish success
             $this->session->getFlashBag()->add(

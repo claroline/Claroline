@@ -1,0 +1,73 @@
+.tree {
+    padding: 0;
+    margin: 0;
+}
+
+.tree li {
+    list-style: none;
+}
+
+.tree a:hover,
+.tree a:focus,
+.tree a:active {
+    text-decoration: none;
+    color: #333333;
+}
+
+.tree-item {
+    cursor: pointer;
+    line-height: 24px;
+    position: relative;
+    background-color: #FFF;
+    margin: 5px 0;
+}
+
+.tree-item:hover {
+    background-color: rgb(240, 240, 240);
+}
+
+.lvl {
+    width: 32px;
+    display: block;
+    height: 100%;
+    position: absolute;
+    left: 0;
+    top: 0;
+    border-radius: 3px 0 0 3px;
+    float: left;
+}
+
+.step {
+    padding: 2px 8px;
+    padding-left: 42px;
+    border: 1px solid #CCC;
+    border-left: none;
+    border-radius: 3px;
+    display: block;
+    color: #333333;
+}
+
+.active-step {
+    background-color: rgb(240, 240, 240) !important;
+}
+
+.active-step .lvl {
+    border-right: none;
+    width: 32px;
+}
+
+.active-step .step {
+    padding-left: 54px;
+    font-weight: bold;
+}
+
+.active-step .lvl:after {
+    content: "";
+    border-top: 15px solid rgba(0,0,0,0);
+    border-bottom: 15px solid rgba(0,0,0,0);
+    border-left: 15px solid #ddd;
+    position: absolute;
+    right: -15px;
+    top: 0;
+    z-index: 1;
+}

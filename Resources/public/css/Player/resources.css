@@ -2,9 +2,9 @@
     margin-left:15px;
 }
 
-.resource-tab {
+/*.resource-tab {
     display:none;
-}
+}*/
 
 .path-tab-btn {
     cursor:pointer;
@@ -29,7 +29,6 @@
     border-top: 1px solid black;
     border-right: 1px solid black;
     border-left: 1px solid black;
-
 }
 
 .nav.nav-tabs li:not(.active) a.lvl-0 {

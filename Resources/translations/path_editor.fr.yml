@@ -48,7 +48,7 @@ resource_edit_title: Ressource
 resource_save: Sauvegarder la ressource
 resource_name: Nom
 resource_description: Description
-resources_browse: Sélectionner
+resources_browse: Ajouter
 resource_propagate_to_children: Rendre cette ressource disponible dans les étapes enfants
 resource_hide_parent: Masquer dans cette étape
 resource_show_parent: Afficher dans cette étape
@@ -59,12 +59,13 @@ resource_no_propagate : Rendre indisponible dans les étapes enfants
 save: Sauvegarder
 save_and_close: Sauvegarder et quitter l'éditeur
 step1: Informations globales
-step2: Scénario
+step2: Parcours
 step3: Définition des informations de l'étape
 selected_step: Etape sélectionnée
-step_duration: Durée
-step_who: Qui ?
-step_where: Où ?
+step_drag: Déplacer l'élément
+step_duration: Durée prévue
+step_who: Modalité de travail
+step_where: Lieu d'apprentissage
 step_computer: Avec ordinateur ?
 step_tutor: Avec tuteur ?
 step_no_resource: Il n'y a aucune ressource rattachée à cette étape.
@@ -75,8 +76,8 @@ step_delete_confirm: Êtes-vous sur de vouloir supprimer cette étape ?
 step_delete_children_confirm: Êtes-vous sur de vouloir supprimer ces étapes ?
 step_delete: Supprimer l'étape
 step_delete_children: Supprimer les enfants
-step_delete_title: <span class="icon-trash"></span> Suppression de l'étape : <strong>&lt;%stepName%&gt;</strong>
-step_delete_children_title: <span class="icon-trash"></span> Suppression des enfants de l'étape : <strong>&lt;%stepName%&gt;</strong>
+step_delete_title: <span class="trash-o"></span> Suppression de l'étape : <strong>&lt;%stepName%&gt;</strong>
+step_delete_children_title: <span class="trash-o"></span> Suppression des enfants de l'étape : <strong>&lt;%stepName%&gt;</strong>
 select_image_title: Sélectionner une image pour l'étape
 step_edit: Modifier l'étape
 step_add_child: Ajouter un enfant
@@ -100,23 +101,21 @@ template_save_resources: Conserver les ressources liées
 # u
 undo: Annuler
 
-# v
-validate: Valider les modifications
-
 # w
-with_computer: Avec ordinateur
-with_tutor: Avec tuteur
-without_computer: Sans ordinateur
-without_tutor: Sans tuteur
+with_tutor: Tutoré
 
-text: Texte
-sound: Son
-picture: Image
-video: Vidéo
-simulation: Simulation
-test: Test
-chat: Chat
-forum: Forum
-deposit_files: Dépôt de fichier
-other: Autre
-indifferent: Indifférent
+primary_resource: Ressource principale
+secondary_resources: Ressources complémentaires
+properties: Propriétés
+
+yes: Oui
+no: Non
+select_activity: Selectionner une activité
+
+resources_replace: Remplacer
+no_primary_resource: Il n'y a aucune ressource principale sur cette étape.
+path_modified: La parcours a été modifié.
+save_path_changes: Voulez-vous sauvegarder vos changements ?
+select_activity: Sélectionner une activité existante
+see_activity: Voir l'activité
+delete_activity: Supprimer le lien avec l'activité
