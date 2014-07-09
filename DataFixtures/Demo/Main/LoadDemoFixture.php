@@ -17,6 +17,8 @@ use Claroline\CoreBundle\DataFixtures\Demo\LoadTypeData;
 use Claroline\CoreBundle\Library\Fixtures\LoggableFixture;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Entity\Role;
+use Claroline\CoreBundle\DataFixtures\Optional\LoadActivityData;
 use Claroline\CoreBundle\DataFixtures\Optional\LoadUserData;
 use Claroline\CoreBundle\DataFixtures\Optional\LoadGroupData;
 use Claroline\CoreBundle\DataFixtures\Optional\LoadDirectoryData;
@@ -60,7 +62,7 @@ class LoadDemoFixture extends LoggableFixture implements ContainerAwareInterface
         $start = time();
 
         $this->initialize($manager);
-
+        $this->createDemoAdminRole();
         $this->createUsers();
         $this->createGroups();
         $this->createWorkspaces();
@@ -68,7 +70,7 @@ class LoadDemoFixture extends LoggableFixture implements ContainerAwareInterface
         $this->createShortcuts();
         $this->createMessages();
         $this->createHomepage();
-
+        $this->createActivities();
         $this->loadPluginFixtures();
 
         $end = time();
@@ -107,7 +109,7 @@ class LoadDemoFixture extends LoggableFixture implements ContainerAwareInterface
     {
         // main users
         $this->loadFixture(
-            new LoadUserData(array('John Doe' => 'admin', 'Jane Doe' => 'ws_creator'))
+            new LoadUserData(array('John Doe' => 'admin_demo', 'Jane Doe' => 'ws_creator'))
         );
 
         // random users
@@ -322,6 +324,51 @@ class LoadDemoFixture extends LoggableFixture implements ContainerAwareInterface
         $this->loadFixture(new LoadTypeData());
         $this->loadFixture(new LoadContentData());
         $this->loadFixture(new LoadRegionData());
+    }
+
+    private function createDemoAdminRole()
+    {
+        $allowedAdminTools = array(
+            'user_management',
+            'workspace_management',
+            'badges_management',
+            'registration_to_workspace',
+            'home_tabs',
+            'desktop_tools',
+            'platform_logs',
+            'platform_analytics'
+        );
+
+        $roleDemo = new Role();
+        $roleDemo->setName('ROLE_ADMIN_DEMO');
+        $roleDemo->setTranslationKey('admin_demo');
+
+        foreach ($allowedAdminTools as $name) {
+            $tool = $this->manager->getRepository('ClarolineCoreBundle:Tool\AdminTool')->findOneByName($name);
+            $tool->addRole($roleDemo);
+            $this->manager->persist($roleDemo);
+        }
+
+        $this->manager->persist($roleDemo);
+        $this->addReference('role/admin_demo', $roleDemo);
+        $this->manager->flush();
+    }
+
+    private function createActivities()
+    {
+        $this->loadFixture(
+            new LoadActivityData(
+                'Activité 1',
+                "Description de l'activité",
+                array(
+                    'file/wallpaper.jpg',
+                    'file/video.mp4'
+                ),
+                'Jane Doe',
+                'Premier semestre',
+                'file/lorem.pdf'
+            )
+        );
     }
 
     private function loadPluginFixtures()
