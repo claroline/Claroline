@@ -3,7 +3,7 @@
 
 {% block notificationText %}
     {% if notification.userId is not empty and notification.details.doer is defined %}
-        <a href="{{ path('claro_public_profile_view', {'userId' : notification.userId}) }}"><strong>{{ notification.details.doer.firstName ~ ' ' ~ notification.details.doer.lastName }}</strong></a>
+        <a href="{{ path('claro_public_profile_view', {'publicUrl' : notification.userId}) }}"><strong>{{ notification.details.doer.firstName ~ ' ' ~ notification.details.doer.lastName }}</strong></a>
     {% else %}
         <strong>{{ systemName }}</strong>
     {% endif %}
