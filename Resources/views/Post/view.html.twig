@@ -38,18 +38,18 @@
                             {% endif %}
                             {% if user is defined and user is not empty and comment.author is not empty and comment.author.id == user.id %}
                             <a data-id="{{ comment.id }}" href="{{ path('icap_blog_comment_edit', {'blogId': _resource.id, 'postSlug': post.slug, 'commentId': comment.id}) }}" class="edit-comment-btn btn btn-primary btn-xs">
-                                <span class="icon-edit"></span>
+                                <span class="fa fa-edit"></span>
                                 {{ 'modifier'|trans }}
                             </a>
                             {% endif %}
                             <a href="{{ path('icap_blog_comment_delete', {'blogId': _resource.id, 'postSlug': post.slug, 'commentId': comment.id}) }}" class="btn btn-xs btn-danger delete" data-confirm-title="{{ 'comment_deletion_confirm_title'|trans }}" data-confirm-message="{{ 'comment_deletion_confirm_message'|trans }}" data-confirm-ok="{{ 'delete'|trans({}, 'platform') }}" data-confirm-cancel="{{ 'cancel'|trans({}, 'platform') }}" data-toggle="tooltip" title="{{ 'delete'|trans({}, 'platform') }}" data-placement="top" data-original-title="{{ 'delete'|trans({}, 'platform') }}">
-                                <i class="icon-trash"></i>
+                                <i class="fa fa-trash-o"></i>
                             </a>
                         </div>
                         {% elseif user is defined and user is not empty and comment.author is not empty and comment.author.id == user.id %}
                         <div class="btn-group pull-right options">
                             <a href="{{ path('icap_blog_comment_edit', {'blogId': _resource.id, 'postSlug': post.slug, 'commentId': comment.id}) }}" class="btn btn-primary btn-xs">
-                                <span class="icon-edit"></span>
+                                <span class="fa fa-edit"></span>
                                 {{ 'modifier'|trans }}
                             </a>
                         </div>
@@ -59,8 +59,8 @@
                             {% set authorPicture = (null == comment.author) ? null : comment.author.picture %}
                             {% set author = (null == comment.author) ? 'anonymous'|trans({}, 'platform') : comment.author.firstname ~ ' ' ~ comment.author.lastname %}
                             {% set dateText = (null == comment.updateDate)? comment.publicationDate|date('date_format'|trans({}, 'platform')) : 'modified_at'|trans({},'icap_blog') ~ ' ' ~ comment.updateDate|date('date_format'|trans({}, 'platform')) %}
-                            <li>{% if authorPicture is null %}<span class="icon-user"></span>{% else %}<img src="{{ asset('uploads/pictures/') ~ authorPicture }}" alt="{{ author }}" class="img-rounded user_picture">{% endif %}&nbsp;{% if null == comment.author %}{{ author }}{% else %}<a href="{{ path('claro_profile_view', {'userId': comment.author.id}) }}" title="{{ author }}">{{ author }}</a>{% endif %}</li>
-                            {% if isPublished %}<li><span class="icon-calendar"></span>  <small><time>{{ dateText }}</time></small></li>{% endif %}
+                            <li>{% if authorPicture is null %}<span class="fa fa-user"></span>{% else %}<img src="{{ asset('uploads/pictures/') ~ authorPicture }}" alt="{{ author }}" class="img-rounded user_picture">{% endif %}&nbsp;{% if null == comment.author %}{{ author }}{% else %}<a href="{{ path('claro_profile_view', {'userId': comment.author.id}) }}" title="{{ author }}">{{ author }}</a>{% endif %}</li>
+                            {% if isPublished %}<li><span class="fa fa-calendar"></span>  <small><time>{{ dateText }}</time></small></li>{% endif %}
                             <a name="comment-{{ comment.id }}"></a>
                         </ul>
                     </div>
@@ -105,7 +105,6 @@
 
 {% block javascripts %}
 {{ parent() }}
-{% render controller('ClarolineCoreBundle:ResourceType:initPicker') %}
 {{ tinymce_init() }}
 <script type="text/javascript">
     $(document).ready(function() {

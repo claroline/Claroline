@@ -33,7 +33,7 @@
                                 {{ form_label(bannerForm.banner_background_color) }}
                                 <div class="input-group banner_background_color col-md-5" data-color="{{ blogOptions.bannerBackgroundColor }}" data-color-format="hex">
                                     {{ form_widget(bannerForm.banner_background_color) }}
-                                    <span class="input-group-addon" style="background-color: {{ blogOptions.bannerBackgroundColor }}"><span class="icon-tint"></span></span>
+                                    <span class="input-group-addon" style="background-color: {{ blogOptions.bannerBackgroundColor }}"><span class="fa fa-tint"></span></span>
                                 </div>
                             </div>
                             <div class="col-md-4">
@@ -103,17 +103,17 @@
             <div class="col-md-12">
                 {% if is_granted('EDIT', _resource) or is_granted('POST', _resource) %}
                     <a href="{{ _path('icap_blog_post_new', {'blogId': _resource.id}) }}" title="{{ 'new_post'|trans({}, 'icap_blog') }}" class="btn btn-default">
-                        <span class="icon-plus"></span> {{ 'new_post'|trans({}, 'icap_blog') }}
+                        <span class="fa fa-plus"></span> {{ 'new_post'|trans({}, 'icap_blog') }}
                     </a>
                 {% endif %}
                 {% if is_granted('EDIT', _resource) %}
                     <a href="{{ path('icap_blog_configure', {"blogId": _resource.id}) }}" title="{{ 'options'|trans({}, 'platform') }}" class="btn btn-default">
-                        <i class="icon-wrench"></i> {{ 'options'|trans({}, 'platform') }}
+                        <i class="fa fa-wrench"></i> {{ 'options'|trans({}, 'platform') }}
                     </a>
                 {% endif %}
                 {% if is_granted('ROLE_ADMIN') %}
                     <div class="btn-group">
-                        <button class="btn btn-default dropdown-toggle" data-toggle="dropdown"><span class="icon-eye-open"></span>{{ 'show_as'|trans({}, 'platform') }} <span class="caret"></span></button>
+                        <button class="btn btn-default dropdown-toggle" data-toggle="dropdown"><span class="fa fa-eye"></span>{{ 'show_as'|trans({}, 'platform') }} <span class="caret"></span></button>
                         <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
                             {% if has_role_access_to_workspace('ROLE_ANONYMOUS', _resource.resourceNode.workspace.id) %}
                                 <li>
@@ -149,7 +149,7 @@
                             <div class="input-group">
                                 <input type="search" class="form-control" name="search" id="search_query" placeholder="{{ 'search'|trans({}, 'icap_blog') }}..." {% if search is defined %}value="{{ search }}" {% endif %}/>
                                 <span class="input-group-btn">
-                                    <button class="btn btn-default" type="submit"><span class="icon-search"></span></button>
+                                    <button class="btn btn-default" type="submit"><span class="fa fa-search"></span></button>
                                 </span>
                             </div>
                             <p class="help-block"><small>{{ 'search_in_title_and_content'|trans({}, 'icap_blog') }}</small></p>
@@ -163,7 +163,7 @@
                             {{ 'info_bar'|trans({}, 'icap_blog') }}
                             {% if is_granted('EDIT', _resource) %}
                             <a href="{{ path('icap_blog_edit_infos', {'blogId': _resource.id}) }}" title="{{ 'edit_blog_infos'|trans({}, 'icap_blog') }}" class="btn btn-primary btn-xs pull-right white">
-                                <span class="icon-edit"></span>
+                                <span class="fa fa-edit"></span>
                             </a>
                             {% endif %}
                         </h3>
@@ -177,7 +177,7 @@
                     <div class="panel-heading">
                         <h3 class="panel-title">
                             {{ 'blog_rss_feed'|trans({}, 'icap_blog') }}
-                            <a href="{{ path('icap_blog_rss', {'blogId': _resource.id}) }}" title="{{ 'blog_rss_feed'|trans({}, 'icap_blog') }}" class="label label-warning pull-right white"><span class="icon-rss-sign"></span> {{ 'rss_feed'|trans({}, 'icap_blog') }}</a>
+                            <a href="{{ path('icap_blog_rss', {'blogId': _resource.id}) }}" title="{{ 'blog_rss_feed'|trans({}, 'icap_blog') }}" class="label label-warning pull-right white"><span class="fa fa-rss"></span> {{ 'rss_feed'|trans({}, 'icap_blog') }}</a>
                         </h3>
                     </div>
                 </div>
