@@ -171,7 +171,7 @@ class Post extends Statusable
      */
     public function getShortContent($url, $text)
     {
-        $readMoreText = sprintf('... <a href="%s" class="read_more">%s <span class="icon-long-arrow-right"></span></a>', $url, $text);
+        $readMoreText = sprintf('... <a href="%s" class="read_more">%s <span class="fa fa-long-arrow-right"></span></a>', $url, $text);
         return String::resumeHtml($this->content, 400, $readMoreText);
     }
 
