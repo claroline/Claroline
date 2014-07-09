@@ -214,7 +214,7 @@ class DropRepository extends EntityRepository
             ->join('drop.user', 'user')
             ->leftJoin('drop.documents', 'document')
             ->join('drop.corrections', 'correction')
-            ->orderBy('drop.dropDate')
+            ->orderBy('drop.dropDate', 'desc')
             ->setParameter('dropIds', $dropIds)
             ->setParameter('dropzone', $dropzone)
             ->getQuery();
@@ -237,7 +237,7 @@ class DropRepository extends EntityRepository
             ->join('drop.user', 'user')
             ->leftJoin('drop.documents', 'document')
             ->join('drop.corrections', 'correction')
-            ->orderBy('drop.reported desc, drop.dropDate')
+            ->add('orderBy', 'drop.reported DESC, drop.dropDate DESC')
             ->setParameter('dropIds', $dropIds)
             ->setParameter('dropzone', $dropzone)
             ->getQuery();
