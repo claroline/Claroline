@@ -19,7 +19,6 @@
         "claroline/bundle-recorder": "~3.0",
         "claroline/kernel-bundle": "~1.0",
         "claroline/installation-bundle": "~3.1"
-        
     },
     "autoload": {
         "psr-0": { "Icap\\NotificationBundle": "" }

@@ -9,7 +9,7 @@
     {% endfor %}
     </ul>
     <div class="see-notifications-button active">
-        <a href="{{ path('icap_notification_view') }}"><i class="icon-align-justify"></i> {{ 'see_more'|trans({}, 'notification') }}</a>
+        <a href="{{ path('icap_notification_view') }}"><i class="fa fa-align-justify"></i> {{ 'see_more'|trans({}, 'notification') }}</a>
     </div>
 {% else %}
     <div class="zero-notifications-found">{{ 'zero_notifications'|trans({},'notification') }}</div>
