@@ -59,16 +59,18 @@
                 <a class="btn btn-default" data-toggle="tooltip" title="{{ 'duplicate' | trans }}" href="{{ path('ujm_question_duplicate', { 'interID': interaction.id }) }}">
                     <i class="icon-repeat"></i>
                 </a>
-                {% if (questionsList == 'my' ) or shareRight[interaction.id]%}
+                {% if (questionsList == 'my' ) or ( (shareRight[interaction.id] is defined) and (shareRight[interaction.id]) )%}
                     {% if(questionWithResponse[interaction.id] == 0) %}
                         <a class="btn btn-default" data-toggle="tooltip" title="{{ 'edit' | trans }}" href="{{ path('ujm_question_edit', { 'id': interaction.question.id }) }}">
                             <i class="icon-pencil"></i>
                         </a>
-                        <a class="btn btn-default" data-toggle="tooltip" title="{{ 'delete' | trans }}" id="delete-question" href="{{ path('ujm_question_delete', {
-                        'id': interaction.question.id, 'pageNow': pagerMy.getCurrentPage, 'maxPage': pagerMy.maxPerPage,
-                        'nbItem': pagerMy.getNbResults, 'lastPage': pagerMy.getNbPages }) }}">
-                            <i class="icon-trash"></i>
-                        </a>
+                        {% if (questionsList == 'my')%}
+                            <a class="btn btn-default" data-toggle="tooltip" title="{{ 'delete' | trans }}" id="delete-question" href="{{ path('ujm_question_delete', {
+                            'id': interaction.question.id, 'pageNow': pagerMy.getCurrentPage, 'maxPage': pagerMy.maxPerPage,
+                            'nbItem': pagerMy.getNbResults, 'lastPage': pagerMy.getNbPages }) }}">
+                                <i class="icon-trash"></i>
+                            </a>
+                        {% endif %}
                     {% else %}
                         <a class="btn btn-default" data-toggle="tooltip" title="{{ 'edit' | trans }}"
                            href="{{ path('ujm_question_edit', { 'id': interaction.question.id }) }}"
@@ -76,6 +78,16 @@
                             <i class="icon-pencil"></i>
                         </a>
                     {% endif %}
+                {% endif %}
+                <!--Delete question shared-->
+                {% if (questionsList == 'share')%}
+                    <a class="btn btn-default" data-toggle="tooltip" title="{{ 'delete of my bank' | trans }}" id="delete-question"
+                       href="{{ path('ujm_delete_shared_question', { 'qid': interaction.question.id,
+                            'uid': app.user.id,
+                            'pageNow': pagerShared.currentPage, 'maxPage': pagerShared.maxPerPage,
+                            'nbItem': pagerShared.getNbResults, 'lastPage': pagerShared.getNbPages }) }}">
+                        <i class="icon-trash"></i>
+                    </a>
                 {% endif %}
             </td>
             {% if (questionsList == 'my')%}
