@@ -533,7 +533,7 @@ class WorkspaceManager
     public function getOpenableWorkspacesByRoles(array $roles)
     {
         $workspaces = $this->workspaceRepo->findByRoles($roles);
-        
+
         foreach ($roles as $role) {
 
             if (strpos('_' . $role, 'ROLE_WS_MANAGER')) {
@@ -586,7 +586,7 @@ class WorkspaceManager
         $workspacesWithoutManagerRole = array();
 
         foreach ($workspaces as $workspace) {
-            if (in_array('ROLE_WS_MANAGER_' . $workspace->getCode(), $userRoleNames)) {
+            if (in_array('ROLE_WS_MANAGER_' . $workspace->getGuid(), $userRoleNames)) {
                 $accesses[$workspace->getId()] = true;
             } else {
                 $accesses[$workspace->getId()] = $hasAllAccesses = false;
