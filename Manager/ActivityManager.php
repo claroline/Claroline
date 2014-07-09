@@ -747,7 +747,8 @@ class ActivityManager
         $primary = $activity->getPrimaryResource();
         $secondaries = [];
         $nodes = [];
-        $user = $this->sc->getToken()->getUser();
+        $token = $this->sc->getToken();
+        $user = $token === null ? $activity->getResourceNode()->getCreator(): $token->getUser();
 
         if ($primary) {
             $nodes[] = $primary;
