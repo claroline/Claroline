@@ -398,7 +398,7 @@ class ParametersController extends Controller
             )
         );
 
-        $this->cacheManager->edit('is_mailer_available', true);
+        $this->cacheManager->setParameter('is_mailer_available', true);
 
         return $this->redirect($this->generateUrl('claro_admin_index'));
     }
