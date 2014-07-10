@@ -15,3 +15,5 @@ plugin:
               menu_name: edit_dropzone
             - name: edit
               menu_name: list_dropzone
+          activity_rules:
+            - action: resource-icap_dropzone-drop_evaluate
