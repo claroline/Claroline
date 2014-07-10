@@ -14,7 +14,7 @@ namespace Claroline\AnnouncementBundle\Manager;
 use Claroline\AnnouncementBundle\Entity\Announcement;
 use Claroline\AnnouncementBundle\Entity\AnnouncementAggregate;
 use Claroline\AnnouncementBundle\Repository\AnnouncementRepository;
-use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Manager\UserManager;
 use Claroline\CoreBundle\Manager\MailManager;
@@ -73,7 +73,7 @@ class AnnouncementManager
         $this->om->flush();
     }
 
-    public function getVisibleAnnouncementsByWorkspace(AbstractWorkspace $workspace, array $roles)
+    public function getVisibleAnnouncementsByWorkspace(Workspace $workspace, array $roles)
     {
         if (in_array('ROLE_ADMIN', $roles)
             || in_array("ROLE_WS_MANAGER_{$workspace->getGuid()}", $roles)) {

@@ -19,7 +19,7 @@ use Claroline\AnnouncementBundle\Event\Log\LogAnnouncementEditEvent;
 use Claroline\AnnouncementBundle\Form\AnnouncementType;
 use Claroline\AnnouncementBundle\Manager\AnnouncementManager;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
-use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Library\Resource\ResourceCollection;
 use Claroline\CoreBundle\Library\Security\Utilities;
 use Claroline\CoreBundle\Manager\WorkspaceManager;
@@ -396,7 +396,7 @@ class AnnouncementController extends Controller
      * @EXT\Method("GET")
      * @EXT\ParamConverter(
      *      "workspace",
-     *      class="ClarolineCoreBundle:Workspace\AbstractWorkspace",
+     *      class="ClarolineCoreBundle:Workspace\Workspace",
      *      options={"id" = "workspaceId", "strictId" = true}
      * )
      *
@@ -404,12 +404,12 @@ class AnnouncementController extends Controller
      *
      * Renders announcements in a pager.
      *
-     * @param \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace $workspace
+     * @param \Claroline\CoreBundle\Entity\Workspace\Workspace $workspace
      * @param $page
      *
      * @return Response
      */
-    public function announcementsWorkspaceWidgetPagerAction(AbstractWorkspace $workspace, $page)
+    public function announcementsWorkspaceWidgetPagerAction(Workspace $workspace, $page)
     {
         $token = $this->securityContext->getToken();
         $roles = $this->utils->getRoles($token);
