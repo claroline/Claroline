@@ -239,7 +239,7 @@ class DatabaseWriter
         }
 
         foreach ($processedConfiguration['tools'] as $tool) {
-            $this->persistTool($tool, $pluginEntity);
+            $this->createTool($tool, $pluginEntity);
         }
 
         foreach ($processedConfiguration['themes'] as $theme) {
@@ -255,6 +255,10 @@ class DatabaseWriter
     {
         foreach ($processedConfiguration['resources'] as $resource) {
             $this->updateResourceTypes($resource, $pluginEntity, $plugin);
+        }
+
+        foreach ($processedConfiguration['tools'] as $tool) {
+            $this->updateTool($tool, $pluginEntity);
         }
     }
 
@@ -290,6 +294,18 @@ class DatabaseWriter
         }
 
         return $resourceType;
+    }
+
+    private function updateTool($tool, $pluginEntity)
+    {
+        $toolEntity = $this->em->getRepository('ClarolineCoreBundle:Tool\Tool')
+            ->findOneByName($tool['name']);
+
+        if ($toolEntity === null) {
+            $toolEntity = new Tool();
+        }
+
+        $this->persistTool($tool, $pluginEntity, $toolEntity);
     }
 
     private function persistIcons(array $resource, ResourceType $resourceType, PluginBundle $plugin)
@@ -507,9 +523,18 @@ class DatabaseWriter
         }
     }
 
-    private function persistTool($tool, $pluginEntity)
+    private function createTool($tool, $pluginEntity)
     {
         $toolEntity = new Tool();
+        $this->persistTool($tool, $pluginEntity, $toolEntity);
+
+        if ($tool['is_displayable_in_workspace'] && $this->modifyTemplate) {
+            $this->templateBuilder->addTool($tool['name'], $tool['name']);
+        }
+    }
+
+    private function persistTool($tool, $pluginEntity, $toolEntity)
+    {
         $toolEntity->setName($tool['name']);
         $toolEntity->setDisplayableInDesktop($tool['is_displayable_in_desktop']);
         $toolEntity->setDisplayableInWorkspace($tool['is_displayable_in_workspace']);
@@ -529,10 +554,6 @@ class DatabaseWriter
         }
 
         $this->em->persist($toolEntity);
-
-        if ($tool['is_displayable_in_workspace'] && $this->modifyTemplate) {
-            $this->templateBuilder->addTool($tool['name'], $tool['name']);
-        }
     }
 
     private function persistTheme($theme, $pluginEntity)
