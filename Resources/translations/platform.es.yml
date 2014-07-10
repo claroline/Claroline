@@ -888,3 +888,4 @@ packages_upgrade_info_message: Advertencia, esta es la página de administració
 package_upgrade_all_warning: Advertencia, esto actualizará todos los paquetes de la plataforma. Esta operación no puede ser cancelada. Se recomienda  hacer una copia de seguridad de los archivos y de la base de datos antes de realizar esta operación.
 no_group: No hay grupo.
 successfull_workspace_creation: El espacio de trabajo %nombre% ha sido creado con éxito.
+no_action_found: No hay acciones.

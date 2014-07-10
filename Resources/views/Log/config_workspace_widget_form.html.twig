@@ -27,9 +27,7 @@
     {{ form_enctype(form) }}>
 
     <div class="panel-body">
-        {% if not isDefault %}
-            <legend>{{ 'Choose visible actions in the widget'|trans({}, 'platform') }}</legend>
-        {% endif %}
+        <legend>{{ 'Choose visible actions in the widget'|trans({}, 'platform') }}</legend>
 
         {{ form_widget(form._token) }}
         {{ form_widget(form) }}

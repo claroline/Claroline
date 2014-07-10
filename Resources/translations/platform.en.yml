@@ -957,3 +957,4 @@ packages_upgrade_info_message: Warning: this page allows you to update the platf
 package_upgrade_all_warning: Warning, this will update all packages on the platform. This operation can not be canceled. It is recommended to make a backup of the files and the database before performing this operation.
 no_group: There is no group.
 successfull_workspace_creation: The workspace %name% has been created successfully
+no_action_found: No action found.

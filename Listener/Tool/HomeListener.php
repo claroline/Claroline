@@ -78,28 +78,6 @@ class HomeListener
     }
 
     /**
-     * @DI\Observe("tool_home_from_template")
-     *
-     * @param ImportToolEvent $event
-     */
-    public function onImportHome(ImportToolEvent $event)
-    {
-        //no implementation yet
-    }
-
-    /**
-     * @DI\Observe("tool_home_to_template")
-     *
-     * @param ExportToolEvent $event
-     */
-    public function onExportHome(ExportToolEvent $event)
-    {
-        //no implementation yet
-        $home = array();
-        $event->setConfig($home);
-    }
-
-    /**
      * Renders the home page with its layout.
      *
      * @param integer $workspaceId

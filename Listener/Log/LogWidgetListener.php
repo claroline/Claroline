@@ -78,8 +78,8 @@ class LogWidgetListener
         $params = ($instance->isDesktop()) ?
             $this->logManager->getDesktopWidgetList($instance):
             $this->logManager->getWorkspaceWidgetList($instance);
+        $view = $this->twig->render('ClarolineCoreBundle:Log:no_action_found.html.twig', array());
 
-        $view = null;
         if ($params && count($params['logs']) > 0) {
             $view = $this->twig->render(
                 'ClarolineCoreBundle:Log:view_short_list.html.twig',
