@@ -3,7 +3,7 @@
 namespace Innova\PathBundle\Controller;
 
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Innova\PathBundle\Manager\PathManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -11,9 +11,28 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 
 /**
  * WidgetController
+ *
+ * @Route(
+ *      "",
+ *      name    = "innova_path_widget",
+ *      service = "innova_path.listener.path_widget"
+ * )
  */
-class WidgetController extends Controller
+class WidgetController
 {
+    /**
+     * Path manager
+     * @var \Innova\PathBundle\Manager\PathManager
+     */
+    private $pathManager;
+
+    /**
+     * @param \Innova\PathBundle\Manager\PathManager $pathManager
+     */
+    public function __construct(PathManager $pathManager)
+    {
+        $this->pathManager = $pathManager;
+    }
 
     /**
      * Renders all paths from a workspace
@@ -35,12 +54,12 @@ class WidgetController extends Controller
      */
     public function pathsWorkspaceWidgetAction(Workspace $workspace)
     {
-        $paths = $this->container->get('innova_path.manager.path')->findAllFromWorkspaceUnsorted($workspace);
+        $paths = $this->pathManager->findAccessibleByUser($workspace);
 
         return array (
             'widgetType' => 'workspace',
-            'workspace' => $workspace,
-            'paths' => $paths
+            'workspace'  => $workspace,
+            'paths'      => $paths,
         );
     }
 
@@ -56,12 +75,11 @@ class WidgetController extends Controller
      */
     public function myPathsWidgetAction()
     {
-        $user = $this->get('security.context')->getToken()->getUser();
-        $paths = $this->container->get('innova_path.manager.path')->findAllByUser($user);
-          
+        $paths = $this->pathManager->findAccessibleByUser();
+
         return array (
             'widgetType' => 'desktop',
-            'paths' => $paths
+            'paths'      => $paths,
         );
     }
 }

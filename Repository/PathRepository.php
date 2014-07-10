@@ -6,71 +6,30 @@ use Doctrine\ORM\EntityRepository;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Symfony\Component\Security\Core\User\UserInterface;
 
+use Claroline\CoreBundle\Repository\ResourceQueryBuilder;
+
 class PathRepository extends EntityRepository
 {
-    public function findAllByWorkspaceByUser(Workspace $workspace, UserInterface $user)
+    public function findAccessibleByUser(array $roots = array (), array $userRoles)
     {
-        $dql  = 'SELECT p ';
-        $dql .= 'FROM Innova\PathBundle\Entity\Path\Path p ';
-        $dql .= 'LEFT JOIN p.resourceNode rn ';
-        $dql .= 'WHERE rn.workspace = :workspace ';
-        $dql .= '  AND rn.creator = :user ';
-        $dql .= 'ORDER BY rn.name ASC ';
-        
+        $builder = new ResourceQueryBuilder();
+
+        $builder->selectAsEntity(false, 'Innova\PathBundle\Entity\Path\Path');
+
+        if (!empty($roots)) {
+            $builder->whereRootIn($roots);
+        }
+
+        $builder->whereTypeIn(array ('innova_path'));
+        $builder->whereRoleIn($userRoles);
+        $builder->orderByPath();
+
+        $dql = $builder->getDql();
         $query = $this->_em->createQuery($dql);
-        
-        $query->setParameter('workspace', $workspace);
-        $query->setParameter('user', $user);
+        $query->setParameters($builder->getParameters());
 
-        return $query->getResult();
-    }
+        $resources = $query->getResult();
 
-    public function findAllByWorkspaceByNotUser(Workspace $workspace, UserInterface $user)
-    {
-        $dql  = 'SELECT p ';
-        $dql .= 'FROM Innova\PathBundle\Entity\Path\Path p ';
-        $dql .= 'LEFT JOIN p.resourceNode rn ';
-        $dql .= 'WHERE rn.workspace = :workspace ';
-        $dql .= '  AND rn.creator != :user ';
-        $dql .= 'ORDER BY rn.name ASC';
-        
-        $query = $this->_em->createQuery($dql);
-        
-        $query->setParameter('workspace', $workspace);
-        $query->setParameter('user', $user);
-
-        return $query->getResult();
-    }
-
-    public function findAllByWorkspace(Workspace $workspace)
-    {
-        $dql  = 'SELECT p ';
-        $dql .= 'FROM Innova\PathBundle\Entity\Path\Path p ';
-        $dql .= 'LEFT JOIN p.resourceNode rn ';
-        $dql .= 'WHERE rn.workspace = :workspace ';
-        $dql .= 'ORDER BY rn.name ASC';
-        
-        $query = $this->_em->createQuery($dql);
-        
-        $query->setParameter('workspace', $workspace);
-
-        return $query->getResult();
-    }
-
-    public function findAllByUser(UserInterface $user)
-    {
-        $dql  = 'SELECT p ';
-        $dql .= 'FROM Innova\PathBundle\Entity\Path\Path p ';
-        $dql .= 'JOIN p.resourceNode rn ';
-        $dql .= 'JOIN rn.workspace ws ';
-        $dql .= 'JOIN ws.roles r ';
-        $dql .= 'JOIN r.users u ';
-        $dql .= 'WHERE u.id = :user ';
-        
-        $query = $this->_em->createQuery($dql);
-        
-        $query->setParameter('user', $user->getId());
-
-        return $query->getResult();
+        return $resources;
     }
 }

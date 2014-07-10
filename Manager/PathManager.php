@@ -2,9 +2,11 @@
 
 namespace Innova\PathBundle\Manager;
 
+use Claroline\CoreBundle\Library\Resource\ResourceCollection;
 use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\Security\Core\SecurityContext;
 use Claroline\CoreBundle\Manager\ResourceManager;
+use Claroline\CoreBundle\Library\Security\Utilities;
 
 use Symfony\Component\Security\Core\User\UserInterface;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
@@ -40,26 +42,37 @@ class PathManager
      * @var \Claroline\CoreBundle\Entity\User\User $user
      */
     protected $user;
-    
+
     /**
      * Class constructor - Inject required services
      * @param \Doctrine\Common\Persistence\ObjectManager       $objectManager
      * @param \Symfony\Component\Security\Core\SecurityContext $securityContext
      * @param \Claroline\CoreBundle\Manager\ResourceManager    $resourceManager
+     * @param \Claroline\CoreBundle\Library\Security\Utilities $utils
      */
     public function __construct(
         ObjectManager   $objectManager, 
         SecurityContext $securityContext, 
-        ResourceManager $resourceManager)
+        ResourceManager $resourceManager,
+        Utilities       $utils)
     {
         $this->om = $objectManager;
         $this->security = $securityContext;
         $this->resourceManager = $resourceManager;
-        
+        $this->utils = $utils;
+
         // Retrieve current user
         $this->user = $this->security->getToken()->getUser();
     }
-    
+
+    public function isAllow(Path $path, $actionName)
+    {
+        $collection = new ResourceCollection(array ($path->getResourceNode()));
+        if (false === $this->security->isGranted($actionName, $collection)) {
+            throw new AccessDeniedException();
+        }
+    }
+
     /**
      * Get path resource type entity
      * @return \Claroline\CoreBundle\Entity\Resource\ResourceType
@@ -78,48 +91,24 @@ class PathManager
     {
         return $this->om->getRepository('ClarolineCoreBundle:Workspace\Workspace')->find($workspaceId);
     }
-    
+
     /**
-     * Find all paths for a workspace
-     * @param  \Claroline\CoreBundle\Entity\Workspace\Workspace $workspace
+     * Find accessible Paths
+     * @param Workspace $workspace
      * @return array
      */
-    public function findAllFromWorkspace(Workspace $workspace)
+    public function findAccessibleByUser(Workspace $workspace = null)
     {
-        $paths = array();
-        if (!empty($this->user) && $this->user instanceof UserInterface) {
-            // User is logged => get his paths
-            $paths['me'] = $this->om->getRepository('InnovaPathBundle:Path\Path')->findAllByWorkspaceByUser($workspace, $this->user);
-            $paths['others'] = $this->om->getRepository('InnovaPathBundle:Path\Path')->findAllByWorkspaceByNotUser($workspace, $this->user);
+        $roots = array ();
+        if (!empty($workspace)) {
+            $root = $this->resourceManager->getWorkspaceRoot($workspace);
+            $roots[] = $root->getPath();
         }
-        else {
-            $paths['me'] = array();
-            $paths['others'] = $this->om->getRepository('InnovaPathBundle:Path\Path')->findAllByWorkspace($workspace);
-        }
-    
-        return $paths;
-    }
 
-    /**
-     * Find all paths for a workspace
-     * @param  \Claroline\CoreBundle\Entity\Workspace\Workspace $workspace
-     * @return array
-     */
-    public function findAllFromWorkspaceUnsorted(Workspace $workspace)
-    {
-       
-        return $this->om->getRepository('InnovaPathBundle:Path\Path')->findAllByWorkspace($workspace);
-    }
+        $token = $this->security->getToken();
+        $userRoles = $this->utils->getRoles($token);
 
-    /**
-     * Find all paths for a user
-     * @param \Symfony\Component\Security\Core\User\UserInterface $user
-     * @return array
-     */
-    public function findAllByUser(UserInterface $user)
-    {
-
-        return $this->om->getRepository('InnovaPathBundle:Path\Path')->findAllByUser($user);
+        return $this->om->getRepository('InnovaPathBundle:Path\Path')->findAccessibleByUser($roots, $userRoles);
     }
     
     /**

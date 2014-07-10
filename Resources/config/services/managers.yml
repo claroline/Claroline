@@ -6,6 +6,7 @@ services:
             objectManager:   @doctrine.orm.entity_manager
             securityContext: @security.context
             resourceManager: @claroline.manager.resource_manager
+            utils:           @claroline.security.utilities
 
     # Publishing manager
     innova_path.manager.publishing:
