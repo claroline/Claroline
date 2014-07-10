@@ -9,10 +9,10 @@
                 {% endverbatim %}
                 <span class="input-group-btn" data-ng-if="isAdded(skill)">
                     <button class="btn btn-danger" type="button" data-ng-if="!isEmpty(skill) && !skill.toDelete" data-ng-click="deleteChild(skill)">
-                        <span class="icon-trash"></span>
+                        <span class="fa fa-trash-o"></span>
                     </button>
                     <button class="btn btn-default" type="button" data-ng-if="skill.toDelete" data-ng-click="cancelDeletionOfChild(skill)">
-                        <span class="icon-undo"></span>
+                        <span class="fa fa-undo"></span>
                     </button>
                 </span>
             </div>

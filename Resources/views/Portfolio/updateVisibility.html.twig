@@ -10,12 +10,12 @@
     {{
         macros.breadcrumbs([
             {
-                'icon': 'icon-list-alt',
+                'icon': 'fa fa-list-alt',
                 'name': 'my_portfolios'|trans({}, 'platform'),
                 'href': path('icap_portfolio_list')
             },
             {
-                'icon': 'icon-list-alt',
+                'icon': 'fa fa-list-alt',
                 'name': 'update_portfolio_visibility'|trans({}, 'icap_portfolio'),
                 'href': ''
             }
@@ -40,7 +40,7 @@
                             {{ user.firstname ~ ' ' ~ user.lastname }}
                             <a class="remove" aria-hidden="true" href="#" data-toggle="tooltip"
                                 title="{{ 'revoke_access'|trans({}, 'icap_portfolio') }}"data-confirm-title="{{ 'revoke_access'|trans({}, 'icap_portfolio') }}">
-                                 <span class="icon-remove"></span>
+                                 <span class="fa fa-times"></span>
                             </a>
                         </span>
                     {% endfor %}
@@ -69,7 +69,7 @@
                             {{ group.name }}
                             <a class="remove" aria-hidden="true" href="#" data-toggle="tooltip"
                                 title="{{ 'revoke_access'|trans({}, 'icap_portfolio') }}"data-confirm-title="{{ 'revoke_access'|trans({}, 'icap_portfolio') }}">
-                                 <span class="icon-remove"></span>
+                                 <span class="fa fa-times"></span>
                             </a>
                         </span>
                     {% endfor %}
@@ -98,7 +98,7 @@
                     __value__
                     <a class="remove" aria-hidden="true" href="#" data-toggle="tooltip"
                         title="{{ 'revoke_access'|trans({}, 'icap_portfolio') }}"data-confirm-title="{{ 'revoke_access'|trans({}, 'icap_portfolio') }}">
-                         <span class="icon-remove"></span>
+                         <span class="fa fa-times"></span>
                     </a>
                 </span>
             {% endfor %}

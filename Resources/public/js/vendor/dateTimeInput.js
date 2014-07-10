@@ -38,7 +38,9 @@ angular.module('ui.dateTimeInput', []).directive('dateTimeInput',
                         return result;
                     };
                     var formatFn = function(modelValue) {
-                        modelValue = modelValue.substr(0, 10);
+                        if (modelValue) {
+                            modelValue = modelValue.substr(0, 10);
+                        }
                         var result = modelValue;
                         if (modelValue && moment(modelValue).isValid()) {
                             result = moment(modelValue, 'YYYY/MM/DD').format(attrs.dateTimeInput);

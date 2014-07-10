@@ -14,21 +14,16 @@ use Symfony\Bundle\FrameworkBundle\Translation\Translator;
  */
 class FormationsType extends AbstractWidgetType
 {
-    /** @var \Symfony\Bundle\FrameworkBundle\Translation\Translator */
-    private $translator;
-
     /** @var \Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler  */
     private $platformConfigHandler;
 
     /**
      * @DI\InjectParams({
-     *     "translator"            = @DI\Inject("translator"),
      *     "platformConfigHandler" = @DI\Inject("claroline.config.platform_config_handler")
      * })
      */
-    public function __construct(Translator $translator, PlatformConfigurationHandler $platformConfigHandler)
+    public function __construct(PlatformConfigurationHandler $platformConfigHandler)
     {
-        $this->translator            = $translator;
         $this->platformConfigHandler = $platformConfigHandler;
     }
 
@@ -36,7 +31,7 @@ class FormationsType extends AbstractWidgetType
     {
         parent::buildForm($builder, $options);
 
-        $language   = $this->platformConfigHandler->getParameter('locale_language');
+        $language = $this->platformConfigHandler->getParameter('locale_language');
 
         $builder
             ->add('name', 'text')

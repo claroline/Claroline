@@ -1,6 +1,9 @@
 <div class="form-group">
     <label for="birthDate" class="required">{{ 'user_information_form_birth_date'|trans({}, 'icap_portfolio') }}</label>
-    <input type="text" class="input-sm form-control" name="userInformation[birthDatebirthDate]" data-b-datepicker="{{ 'datepicker_date_format'|trans({}, 'icap_portfolio') }}" data-ng-model="editedWidget.birthDate" />
+    <div class="input-group">
+        <span class="input-group-addon"><span class="fa fa-calendar"></span></span>
+        <input type="text" data-date-time-input="{{ 'date_field_format'|trans({}, 'icap_portfolio') }}" class="input-sm form-control" name="userInformation[birthDatebirthDate]" data-b-datepicker="{{ 'datepicker_date_format'|trans({}, 'icap_portfolio') }}" data-ng-model="editedWidget.birthDate" />
+    </div>
 </div>
 <div class="form-group">
     <label for="city" class="required">{{ 'user_information_form_city'|trans({}, 'icap_portfolio') }}</label>

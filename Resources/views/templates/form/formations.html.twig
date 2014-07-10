@@ -24,10 +24,10 @@
                 {% endverbatim %}
                 <span class="input-group-btn" data-ng-if="isAdded(resource)">
                     <button aria-label="{{ 'formation_delete_resource'|trans({}, 'icap_portfolio') }}" class="btn btn-danger" type="button" data-ng-if="!isEmpty(resource) && !resource.toDelete" data-ng-click="deleteChild(resource)">
-                        <span class="icon-trash"></span>
+                        <span class="fa fa-trash-o"></span>
                     </button>
                     <button aria-label="{{ 'formation_cancel_deletion_resource'|trans({}, 'icap_portfolio') }}" class="btn btn-default" type="button" data-ng-if="resource.toDelete" data-ng-click="cancelDeletionOfChild(resource)">
-                        <span class="icon-undo"></span>
+                        <span class="fa fa-undo"></span>
                     </button>
                 </span>
             </div>

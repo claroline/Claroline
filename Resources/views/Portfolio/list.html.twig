@@ -8,7 +8,7 @@
     {{
         macros.breadcrumbs([
             {
-                'icon': 'icon-list-alt',
+                'icon': 'fa fa-list-alt',
                 'name': 'my_portfolios'|trans({}, 'platform'),
                 'href': path('icap_portfolio_list')
             }
@@ -57,12 +57,12 @@
                                 <ul class="dropdown-menu" role="menu">
                                     <li>
                                         <a href="{{ path('icap_portfolio_rename', {'id': portfolio.id}) }}" title="{{ 'rename'|trans({}, 'icap_portfolio') }}">
-                                            <span class=icon-pencil></span> {{ 'rename'|trans({}, 'icap_portfolio') }}
+                                            <span class="fa fa-pencil"></span> {{ 'rename'|trans({}, 'icap_portfolio') }}
                                         </a>
                                     </li>
                                     <li>
                                         <a href="{{ path('icap_portfolio_update_visibility', {'id': portfolio.id}) }}" title="{{ 'update_visibility'|trans({}, 'icap_portfolio') }}">
-                                            <span class=icon-cogs></span> {{ 'update_visibility'|trans({}, 'icap_portfolio') }}
+                                            <span class="fa fa-cogs"></span> {{ 'update_visibility'|trans({}, 'icap_portfolio') }}
                                         </a>
                                     </li>
                                     <li class="divider"></li>
@@ -74,7 +74,7 @@
                                                  data-confirm-cancel="{{ 'cancel'|trans({}, 'platform') }}" data-toggle="tooltip"
                                                  data-container="body" title="{{ 'delete'|trans({}, 'platform') }}" data-placement="top"
                                                  data-original-title="{{ 'delete'|trans({}, 'platform') }}">
-                                            <span class=icon-trash></span> {{ 'delete'|trans({}, 'platform') }}
+                                            <span class="fa fa-trash-o"></span> {{ 'delete'|trans({}, 'platform') }}
                                         </a>
                                     </li>
                                 </ul>
