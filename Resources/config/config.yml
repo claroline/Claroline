@@ -10,4 +10,9 @@ plugin:
           actions:
             - name: post
             - name: edit
-              menu_name: configure_blog
+              menu_name:
+          activity_rules:
+            - action: resource-read
+            - action: resource-icap_blog-post_create
+            - action: resource-icap_blog-post_read
+            - action: resource-icap_blog-comment_create
