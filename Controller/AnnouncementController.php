@@ -212,6 +212,14 @@ class AnnouncementController extends Controller
             $announcement->setCreator($user);
             $this->announcementManager->insertAnnouncement($announcement);
 
+            if ($form->get('send_message')->getData()) {
+               $this->announcementManager->sendMessage($announcement);
+            }
+
+            if ($form->get('send_mail')->getData()) {
+                $this->announcementManager->sendMail($announcement);
+            }
+
             $this->eventDispatcher->dispatch(
                 'log',
                 new LogAnnouncementCreateEvent($aggregate, $announcement)

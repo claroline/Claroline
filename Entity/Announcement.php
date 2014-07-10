@@ -33,7 +33,7 @@ class Announcement
     protected $title;
 
     /**
-     * @ORM\Column(length=1023, nullable=false)
+     * @ORM\Column(type="text")
      * @Assert\NotBlank()
      */
     protected $content;

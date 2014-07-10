@@ -58,6 +58,20 @@ class AnnouncementType extends AbstractType
                 'input' => 'datetime'
             )
         );
+        $builder->add(
+            'send_mail', 'checkbox', array(
+                'label' => 'send_mail',
+                'required' => false,
+                'mapped' => false
+            )
+        );
+        $builder->add(
+            'send_message', 'checkbox', array(
+                'label' => 'send_message',
+                'required' => false,
+                'mapped' => false
+            )
+        );
     }
 
     public function getName()
