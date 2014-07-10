@@ -256,6 +256,10 @@ class DatabaseWriter
         foreach ($processedConfiguration['resources'] as $resource) {
             $this->updateResourceTypes($resource, $pluginEntity, $plugin);
         }
+
+        foreach ($processedConfiguration['tools'] as $tool) {
+            $this->updateTool($tool, $pluginEntity);
+        }
     }
 
     private function updateResourceTypes($resource, $pluginEntity, $plugin)
@@ -290,6 +294,38 @@ class DatabaseWriter
         }
 
         return $resourceType;
+    }
+
+    private function updateTool($tool, $pluginEntity)
+    {
+        $toolEntity = $this->em->getRepository('ClarolineCoreBundle:Tool\Tool')
+            ->findOneByName($tool['name']);
+
+        if ($toolEntity === null) {
+            $toolEntity = new Tool();
+            $toolEntity->setName($tool['name']);
+            $toolEntity->setPlugin($pluginEntity);
+        }
+
+        $toolEntity->setName($tool['name']);
+        $toolEntity->setDisplayableInDesktop($tool['is_displayable_in_desktop']);
+        $toolEntity->setDisplayableInWorkspace($tool['is_displayable_in_workspace']);
+        $toolEntity->setIsDesktopRequired(false);
+        $toolEntity->setIsWorkspaceRequired(false);
+        $toolEntity->setPlugin($pluginEntity);
+        $toolEntity->setExportable($tool['is_exportable']);
+        $toolEntity->setIsConfigurableInWorkspace($tool['is_configurable_in_workspace']);
+        $toolEntity->setIsConfigurableInDesktop($tool['is_configurable_in_desktop']);
+        $toolEntity->setIsLockedForAdmin($tool['is_locked_for_admin']);
+        $toolEntity->setIsAnonymousExcluded($tool['is_anonymous_excluded']);
+
+        if (isset($tool['class'])) {
+            $toolEntity->setClass("{$tool['class']}");
+        } else {
+            $toolEntity->setClass("wrench");
+        }
+
+        $this->em->persist($toolEntity);
     }
 
     private function persistIcons(array $resource, ResourceType $resourceType, PluginBundle $plugin)
