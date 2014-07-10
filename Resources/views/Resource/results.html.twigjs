@@ -20,7 +20,9 @@
                             <td class="checkbox-column">
                                 <input type="checkbox"
                                     value="{{ node.id }}"
-                                    data-node-name="{{ node.name }}"/>
+                                    data-node-name="{{ node.name }}"
+                                    data-type="{{ node.type }}"
+                                    data-mime-type="{{ node.mime_type }}"/>
                             </td>
                             <td><a href="#" class="node-link" data-id="{{ node.id }}" data-type="{{ node.type }}">{{ node.name }}</a></td>
                             <td>
