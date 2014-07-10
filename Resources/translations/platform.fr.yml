@@ -705,8 +705,8 @@ send_mail: 'Envoyer un mail'
 send_mail_form_content: Message
 send_mail_form_object: Objet
 send_message: 'Envoyer un message'
-send_message_to_workspace: 'Envoyer un message aux utilisateurs de l''espace'
 send_message_to_workspace: Envoyer un message aux utilisateurs de l'espace
+send_message_to_workspace_info: Cette liste reprend les espaces d'activités dont vous êtes le gestionnaire.
 server: Serveur
 session: Session
 session_db_cannot_perform_operations: 'L''écriture et/ou la lecture d''enregistrements dans la table renseignée est impossible. Veuillez vérifier que l''utilisateur de la base de données dispose de droits suffisants et qu''aucune contrainte particulière n''a été affectée à cette table.'
