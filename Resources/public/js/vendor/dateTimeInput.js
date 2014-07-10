@@ -17,9 +17,11 @@ angular.module('ui.dateTimeInput', []).directive('dateTimeInput',
         function() {
             "use strict";
             return {
-                require: 'ngModel',
+                require: '?ngModel',
                 restrict: 'A',
                 link: function(scope, element, attrs, ngModel) {
+                    if(!ngModel) return;
+
                     if (!attrs.dateTimeInput) {
                         throw ("dateTimeInput must specify a date format");
                     }
