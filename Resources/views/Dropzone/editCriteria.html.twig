@@ -5,7 +5,7 @@
 
 {% block resourceBreadcrumb %}
     <li><a href="{{ path('icap_dropzone_edit_common',{'resourceId':dropzone.id}) }}"><span
-                    class="glyphicon icon-list"></span>  {{ dropzone.resourceNode.name }}</a></li>
+                    class=" fa fa-bars"></span>  {{ dropzone.resourceNode.name }}</a></li>
     <li class="active"> {{ 'Evaluation criterions'|trans({}, 'icap_dropzone') }}</li>
 {% endblock %}
 
@@ -40,7 +40,9 @@
         <div class="container">
             <div class="row">
                 <div class="col-md-9">
-                    <a href="{{ path('icap_dropzone_edit_add_criterion', {'resourceId': dropzone.id, 'page': pager.currentPage}) }}" class="btn btn-primary add-criterion-button disabled-during-edition"><span class="glyphicon icon-plus"> {{ 'Add a criterion'|trans({}, 'icap_dropzone') }}</span></a>
+                    <a href="{{ path('icap_dropzone_edit_add_criterion', {'resourceId': dropzone.id, 'page': pager.currentPage}) }}"
+                       class="btn btn-primary add-criterion-button disabled-during-edition"><span
+                                class="fa fa-plus "> {{ 'Add a criterion'|trans({}, 'icap_dropzone') }}</span></a>
                     {# <a href="{{ path('icap_dropzone_recalculate_dropzone_grades', {'dropzone': dropzone.id}) }}"
                         class="btn btn-default disabled-during-edition" data-toggle="tooltip" data-placement="left"
                         data-container="body"
@@ -57,8 +59,8 @@
                         <label class="col-md-12 control-label pull-right" style="text-align: center;">
                             <div>{{ 'Change scale'|trans({}, 'icap_dropzone') }}</div>
                             <span>
-                                <a href="#" class="remove-column"><span class="glyphicon icon-minus-sign-alt"></span> </a>
-                                <a href="#" class="add-column"><span class="glyphicon icon-plus-sign-alt"></span> </a>
+                                <a href="#" class="remove-column"><span class="fa fa-minus"></span> </a>
+                                <a href="#" class="add-column"><span class="fa fa-plus"></span> </a>
                             </span>
 
                         </label>
@@ -115,10 +117,14 @@
                             <div class="row">
                                 <div class="col-md-12">
                                     <div class="btn-group pull-right">
-                                        <a href="{{ path('icap_dropzone_edit_add_criterion', {'resourceId': dropzone.id, 'page': pager.currentPage, 'criterionId': criterion.id}) }}" class="btn btn-default btn-sm edit-criterion-button disabled-during-edition" data-criterion="criterion-{{ criterion.id }}"><span class="glyphicon icon-edit"></span> {{ 'dropzone_edit'|trans({}, 'icap_dropzone') }}</a>
+                                        <a href="{{ path('icap_dropzone_edit_add_criterion', {'resourceId': dropzone.id, 'page': pager.currentPage, 'criterionId': criterion.id}) }}"
+                                           class="btn btn-default btn-sm edit-criterion-button disabled-during-edition"
+                                           data-criterion="criterion-{{ criterion.id }}"><span
+                                                    class="fa fa-edit"></span> {{ 'dropzone_edit'|trans({}, 'icap_dropzone') }}
+                                        </a>
                                         <a href="{{ path('icap_dropzone_edit_delete_criterion', {'resourceId': dropzone.id, 'page': pager.currentPage, 'criterionId': criterion.id, 'number': criterionNumber}) }}"
                                            class="btn btn-danger disabled-during-edition btn-sm launch-modal delete-criteria-button"><span
-                                                    class="glyphicon icon-trash"></span> {{ 'Delete'|trans({}, 'icap_dropzone') }}
+                                                    class="fa fa-trash-o"></span> {{ 'Delete'|trans({}, 'icap_dropzone') }}
                                         </a>
                                     </div>
                                 </div>
@@ -268,7 +274,6 @@
 {% block javascripts %}
     {{ parent() }}
     <script src="{{ asset('bundles/icapdropzone/js/popup.js') }}"></script>
-    {% render controller('ClarolineCoreBundle:ResourceType:initPicker') %}
     {{ tinymce_init() }}
 
 
