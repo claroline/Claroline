@@ -147,6 +147,9 @@
         <script type="text/javascript" src="{{ asset('bundles/clarolinecore/js/tinymce/tinymce.js') }}"></script>
         <script type='text/javascript' src='{{ asset('bundles/frontend/jquery/plugin/confirm-bootstrap/confirm-bootstrap.js') }}'></script>
         <script type="text/javascript" src="{{ asset('bundles/frontend/jquery/plugin/datepicker/js/bootstrap-datepicker.js') }}"></script>
+        {% if 'en' != app.request.locale %}
+            <script type="text/javascript" src="{{ asset('bundles/frontend/jquery/plugin/datepicker/js/locales/bootstrap-datepicker.' ~ app.request.locale ~ '.js') }}"></script>
+        {% endif %}
 
         {% javascripts debug=true filter='jsmin' output='js/portfolio/angular.js'
             '@IcapPortfolioBundle/Resources/public/js/vendor/angular/angular.min.js'
@@ -157,6 +160,8 @@
         {% endjavascripts %}
 
         <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/vendor/angular-ui/ui-tinymce/tinymce.js') }}"></script>
+        <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/vendor/moment.min.js') }}"></script>
+        <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/vendor/dateTimeInput.js') }}"></script>
 
         <script type="text/javascript" src="{{ url('bazinga_exposetranslation_js', { 'domain_name': 'icap_portfolio' }) }}"></script>
 

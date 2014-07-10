@@ -1,10 +1,10 @@
-angular.module('b.datepicker', []).
+angular.module('ui.datepicker', []).
     directive('bDatepicker', function() {
         return {
             require: '?ngModel',
             restrict: 'A',
             link: function($scope, element, attrs, ngModel) {
-                var updateModel, onblur;
+                var updateModel;
 
                 updateModel = function(event) {
                     element.datepicker('hide');

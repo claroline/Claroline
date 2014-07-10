@@ -6,9 +6,9 @@
     </p>
     <p class="input-daterange input-group" data-b-datepicker="{{ 'datepicker_date_format'|trans({}, 'icap_portfolio') }}" id="datepicker">
         <span class="input-group-addon">{{ 'date_range_from'|trans({}, 'icap_portfolio') }}</span>
-        <input type="text" class="input-sm form-control" name="start" data-ng-model="editedWidget.startDate" />
+        <input type="text" data-date-time-input="{{ 'date_field_format'|trans({}, 'icap_portfolio') }}" class="input-sm form-control" name="startDate" data-ng-model="editedWidget.startDate" />
         <span class="input-group-addon">{{ 'date_range_to'|trans({}, 'icap_portfolio') }}</span>
-        <input type="text" class="input-sm form-control" name="end" data-ng-model="editedWidget.endDate" />
+        <input type="text" data-date-time-input="{{ 'date_field_format'|trans({}, 'icap_portfolio') }}" class="input-sm form-control" name="endDate" data-ng-model="editedWidget.endDate" />
     </p>
     <p>
         <button type="button" data-ui-resource-picker="resourcePickerConfig">{{ 'formation_add_resource'|trans({}, 'icap_portfolio') }}</button>

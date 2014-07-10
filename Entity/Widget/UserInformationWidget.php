@@ -19,6 +19,12 @@ class UserInformationWidget extends AbstractWidget
      */
     protected $city;
 
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    protected $birthDate;
 
     /**
      * @param string $city
@@ -41,12 +47,33 @@ class UserInformationWidget extends AbstractWidget
     }
 
     /**
+     * @param \DateTime $birthDate
+     *
+     * @return UserInformationWidget
+     */
+    public function setBirthDate($birthDate)
+    {
+        $this->birthDate = $birthDate;
+
+        return $this;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getBirthDate()
+    {
+        return $this->birthDate;
+    }
+
+    /**
      * @return array
      */
     public function getData()
     {
         return array(
-            'city' => $this->getCity()
+            'city'      => $this->getCity(),
+            'birthDate' => $this->getBirthDate()
         );
     }
 
@@ -56,7 +83,8 @@ class UserInformationWidget extends AbstractWidget
     public function getEmpty()
     {
         return array(
-            'city' => null
+            'city'      => null,
+            'birthDate' => null
         );
     }
 }

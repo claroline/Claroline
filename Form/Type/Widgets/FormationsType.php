@@ -37,7 +37,6 @@ class FormationsType extends AbstractWidgetType
         parent::buildForm($builder, $options);
 
         $language   = $this->platformConfigHandler->getParameter('locale_language');
-        $dateFormat = $this->translator->trans('datepicker_date_format', array(), 'icap_portfolio');
 
         $builder
             ->add('name', 'text')
@@ -45,14 +44,14 @@ class FormationsType extends AbstractWidgetType
                 array(
                     'required' => false,
                     'language' => $language,
-                    'format'   => $dateFormat
+                    'format'   => 'Y-M-d'
                )
             )
             ->add('endDate', 'datepicker',
                 array(
                     'required' => false,
                     'language' => $language,
-                    'format'   => $dateFormat
+                    'format'   => 'Y-M-d'
                )
             )
             ->add('children', 'collection',
