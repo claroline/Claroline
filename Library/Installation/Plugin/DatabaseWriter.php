@@ -239,7 +239,7 @@ class DatabaseWriter
         }
 
         foreach ($processedConfiguration['tools'] as $tool) {
-            $this->persistTool($tool, $pluginEntity);
+            $this->createTool($tool, $pluginEntity);
         }
 
         foreach ($processedConfiguration['themes'] as $theme) {
@@ -303,29 +303,9 @@ class DatabaseWriter
 
         if ($toolEntity === null) {
             $toolEntity = new Tool();
-            $toolEntity->setName($tool['name']);
-            $toolEntity->setPlugin($pluginEntity);
         }
 
-        $toolEntity->setName($tool['name']);
-        $toolEntity->setDisplayableInDesktop($tool['is_displayable_in_desktop']);
-        $toolEntity->setDisplayableInWorkspace($tool['is_displayable_in_workspace']);
-        $toolEntity->setIsDesktopRequired(false);
-        $toolEntity->setIsWorkspaceRequired(false);
-        $toolEntity->setPlugin($pluginEntity);
-        $toolEntity->setExportable($tool['is_exportable']);
-        $toolEntity->setIsConfigurableInWorkspace($tool['is_configurable_in_workspace']);
-        $toolEntity->setIsConfigurableInDesktop($tool['is_configurable_in_desktop']);
-        $toolEntity->setIsLockedForAdmin($tool['is_locked_for_admin']);
-        $toolEntity->setIsAnonymousExcluded($tool['is_anonymous_excluded']);
-
-        if (isset($tool['class'])) {
-            $toolEntity->setClass("{$tool['class']}");
-        } else {
-            $toolEntity->setClass("wrench");
-        }
-
-        $this->em->persist($toolEntity);
+        $this->persistTool($tool, $pluginEntity, $toolEntity);
     }
 
     private function persistIcons(array $resource, ResourceType $resourceType, PluginBundle $plugin)
@@ -543,9 +523,18 @@ class DatabaseWriter
         }
     }
 
-    private function persistTool($tool, $pluginEntity)
+    private function createTool($tool, $pluginEntity)
     {
         $toolEntity = new Tool();
+        $this->persistTool($tool, $pluginEntity, $toolEntity);
+
+        if ($tool['is_displayable_in_workspace'] && $this->modifyTemplate) {
+            $this->templateBuilder->addTool($tool['name'], $tool['name']);
+        }
+    }
+
+    private function persistTool($tool, $pluginEntity, $toolEntity)
+    {
         $toolEntity->setName($tool['name']);
         $toolEntity->setDisplayableInDesktop($tool['is_displayable_in_desktop']);
         $toolEntity->setDisplayableInWorkspace($tool['is_displayable_in_workspace']);
@@ -565,10 +554,6 @@ class DatabaseWriter
         }
 
         $this->em->persist($toolEntity);
-
-        if ($tool['is_displayable_in_workspace'] && $this->modifyTemplate) {
-            $this->templateBuilder->addTool($tool['name'], $tool['name']);
-        }
     }
 
     private function persistTheme($theme, $pluginEntity)
