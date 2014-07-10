@@ -12,11 +12,8 @@
 namespace Claroline\CoreBundle\Library\Installation\Updater;
 
 use Claroline\CoreBundle\Entity\Activity\ActivityRuleAction;
-<<<<<<< HEAD
 use Claroline\CoreBundle\Entity\Tool\AdminTool;
-=======
 use Claroline\CoreBundle\Persistence\ObjectManager;
->>>>>>> 9a38860e11c96871cd5b784b8031cf524b4dda85
 
 class Updater030000
 {
@@ -44,11 +41,8 @@ class Updater030000
         $this->updateTools();
         $this->removePublicProfilePreference();
         $this->updateAdminPluginTool();
-<<<<<<< HEAD
         $this->updateCompetenceTools();
-=======
         $this->cleanWeb();
->>>>>>> 9a38860e11c96871cd5b784b8031cf524b4dda85
     }
 
     public function setLogger($logger)
@@ -186,7 +180,6 @@ class Updater030000
         $this->om->flush();
     }
 
-<<<<<<< HEAD
     private function updateCompetenceTools()
     {
     	$this->log('Creating admin referential competence tools...');
@@ -209,8 +202,8 @@ class Updater030000
         
         $this->om->flush();
         $this->log('competence tools created ...');
-        
-=======
+    }
+
     private function cleanWeb()
     {
         $webDir = $this->container->getParameter('claroline.param.web_dir');
@@ -235,7 +228,6 @@ class Updater030000
             $stmt->execute();
             $stmt->closeCursor();
         }
->>>>>>> 9a38860e11c96871cd5b784b8031cf524b4dda85
     }
 
     private function setIcons()
