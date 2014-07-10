@@ -19,7 +19,7 @@ angular.module('ui.dateTimeInput', []).directive('dateTimeInput',
             return {
                 require: 'ngModel',
                 restrict: 'A',
-                link: function(scope, element, attrs, controller) {
+                link: function(scope, element, attrs, ngModel) {
                     if (!attrs.dateTimeInput) {
                         throw ("dateTimeInput must specify a date format");
                     }
@@ -28,11 +28,11 @@ angular.module('ui.dateTimeInput', []).directive('dateTimeInput',
                         if (viewValue) {
                             var momentValue = moment(viewValue, attrs.dateTimeInput);
                             if (momentValue.isValid()) {
-                                controller.$setValidity(attrs.ngModel, true);
+                                ngModel.$setValidity(attrs.ngModel, true);
                                 result = momentValue.format();
                             }
                             else {
-                                controller.$setValidity(attrs.ngModel, false);
+                                ngModel.$setValidity(attrs.ngModel, false);
                             }
                         }
                         return result;
@@ -47,15 +47,15 @@ angular.module('ui.dateTimeInput', []).directive('dateTimeInput',
                         }
                         return result;
                     };
-                    controller.$parsers.unshift(validateFn);
-                    controller.$formatters.push(formatFn);
+                    ngModel.$parsers.unshift(validateFn);
+                    ngModel.$formatters.push(formatFn);
                     element.bind('blur', function() {
-                        var viewValue = controller.$modelValue;
-                        angular.forEach(controller.$formatters, function(formatter) {
+                        var viewValue = ngModel.$modelValue;
+                        angular.forEach(ngModel.$formatters, function(formatter) {
                             viewValue = formatter(viewValue);
                         });
-                        controller.$viewValue = viewValue;
-                        controller.$render();
+                        ngModel.$viewValue = viewValue;
+                        ngModel.$render();
                     });
                 }
             };
