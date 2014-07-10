@@ -15,6 +15,7 @@ use Claroline\AnnouncementBundle\Entity\Announcement;
 use Claroline\AnnouncementBundle\Entity\AnnouncementAggregate;
 use Claroline\AnnouncementBundle\Repository\AnnouncementRepository;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
+use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Manager\UserManager;
 use Claroline\CoreBundle\Manager\MailManager;
@@ -28,8 +29,9 @@ class AnnouncementManager
 {
     /** @var AnnouncementRepository */
     private $announcementRepo;
+    private $roleRepo;
     private $om;
-    private $userManager;
+    private $userRepo;
     private $mailManager;
     private $messageManager;
     private $sc;
@@ -39,7 +41,6 @@ class AnnouncementManager
      *
      * @DI\InjectParams({
      *     "om"             = @DI\Inject("claroline.persistence.object_manager"),
-     *     "userManager"    = @DI\Inject("claroline.manager.user_manager"),
      *     "mailManager"    = @DI\Inject("claroline.manager.mail_manager"),
      *     "messageManager" = @DI\Inject("claroline.manager.message_manager"),
      *     "sc"             = @DI\Inject("security.context")
@@ -47,7 +48,6 @@ class AnnouncementManager
      */
     public function __construct(
         ObjectManager $om,
-        UserManager $userManager,
         MessageManager $messageManager,
         MailManager $mailManager,
         $sc
@@ -55,10 +55,11 @@ class AnnouncementManager
     {
         $this->announcementRepo = $om->getRepository('ClarolineAnnouncementBundle:Announcement');
         $this->om               = $om;
-        $this->userManager      = $userManager;
         $this->messageManager   = $messageManager;
         $this->mailManager      = $mailManager;
         $this->sc               = $sc;
+        $this->userRepo         = $om->getRepository('ClarolineCoreBundle:User');
+        $this->roleRepo         = $om->getRepository('ClarolineCoreBundle:Role');
     }
 
     public function insertAnnouncement(Announcement $announcement)
@@ -149,6 +150,9 @@ class AnnouncementManager
             }
         }
 
-        return $this->userManager->getByRolesIncludingGroups($roles);
+        $roles[] = $this->roleRepo->findOneByName('ROLE_WS_MANAGER_' . $node->getWorkspace()->getGuid());
+        //we must also add the ROLE_WS_MANAGER_{ws_guid}
+
+        return $this->userRepo->findByRolesIncludingGroups($roles, false, 'id', 'ASC');
     }
 }

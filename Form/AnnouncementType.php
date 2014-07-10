@@ -59,15 +59,8 @@ class AnnouncementType extends AbstractType
             )
         );
         $builder->add(
-            'send_mail', 'checkbox', array(
-                'label' => 'send_mail',
-                'required' => false,
-                'mapped' => false
-            )
-        );
-        $builder->add(
-            'send_message', 'checkbox', array(
-                'label' => 'send_message',
+            'notify_user', 'checkbox', array(
+                'label' => 'notify_user',
                 'required' => false,
                 'mapped' => false
             )

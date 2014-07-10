@@ -212,12 +212,8 @@ class AnnouncementController extends Controller
             $announcement->setCreator($user);
             $this->announcementManager->insertAnnouncement($announcement);
 
-            if ($form->get('send_message')->getData()) {
+            if ($form->get('notify_user')->getData()) {
                $this->announcementManager->sendMessage($announcement);
-            }
-
-            if ($form->get('send_mail')->getData()) {
-                $this->announcementManager->sendMail($announcement);
             }
 
             $this->eventDispatcher->dispatch(
@@ -330,6 +326,10 @@ class AnnouncementController extends Controller
                 }
             }
             $this->announcementManager->insertAnnouncement($announcement);
+
+            if ($form->get('notify_user')->getData()) {
+                $this->announcementManager->sendMessage($announcement);
+            }
 
             $this->eventDispatcher->dispatch(
                 'log',

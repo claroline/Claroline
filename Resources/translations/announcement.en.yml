@@ -15,3 +15,4 @@ created_on: 'Created on'
 create_new_announcement: 'Add new announcement'
 published_on: 'Published on'
 visible_from_until_condition: '"To" date must be after "From" date'
+notify_user: "Notify the user"
