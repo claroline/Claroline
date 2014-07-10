@@ -58,6 +58,13 @@ class AnnouncementType extends AbstractType
                 'input' => 'datetime'
             )
         );
+        $builder->add(
+            'notify_user', 'checkbox', array(
+                'label' => 'notify_user',
+                'required' => false,
+                'mapped' => false
+            )
+        );
     }
 
     public function getName()

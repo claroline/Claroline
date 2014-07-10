@@ -15,3 +15,4 @@ created_on: 'Creado en'
 create_new_announcement: 'Agregar nuevo anuncio'
 published_on: 'Publicado el'
 visible_from_until_condition: 'La fecha de inicio debe ser anterior a la fecha de finalización'
+notify_user: "Notificar al usuario"

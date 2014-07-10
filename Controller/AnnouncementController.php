@@ -212,6 +212,10 @@ class AnnouncementController extends Controller
             $announcement->setCreator($user);
             $this->announcementManager->insertAnnouncement($announcement);
 
+            if ($form->get('notify_user')->getData()) {
+               $this->announcementManager->sendMessage($announcement);
+            }
+
             $this->eventDispatcher->dispatch(
                 'log',
                 new LogAnnouncementCreateEvent($aggregate, $announcement)
@@ -322,6 +326,10 @@ class AnnouncementController extends Controller
                 }
             }
             $this->announcementManager->insertAnnouncement($announcement);
+
+            if ($form->get('notify_user')->getData()) {
+                $this->announcementManager->sendMessage($announcement);
+            }
 
             $this->eventDispatcher->dispatch(
                 'log',

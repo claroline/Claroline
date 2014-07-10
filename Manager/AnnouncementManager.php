@@ -15,7 +15,11 @@ use Claroline\AnnouncementBundle\Entity\Announcement;
 use Claroline\AnnouncementBundle\Entity\AnnouncementAggregate;
 use Claroline\AnnouncementBundle\Repository\AnnouncementRepository;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
+use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Persistence\ObjectManager;
+use Claroline\CoreBundle\Manager\UserManager;
+use Claroline\CoreBundle\Manager\MailManager;
+use Claroline\CoreBundle\Manager\MessageManager;
 use JMS\DiExtraBundle\Annotation as DI;
 
 /**
@@ -25,19 +29,37 @@ class AnnouncementManager
 {
     /** @var AnnouncementRepository */
     private $announcementRepo;
+    private $roleRepo;
     private $om;
+    private $userRepo;
+    private $mailManager;
+    private $messageManager;
+    private $sc;
 
     /**
      * Constructor.
      *
      * @DI\InjectParams({
-     *     "om" = @DI\Inject("claroline.persistence.object_manager")
+     *     "om"             = @DI\Inject("claroline.persistence.object_manager"),
+     *     "mailManager"    = @DI\Inject("claroline.manager.mail_manager"),
+     *     "messageManager" = @DI\Inject("claroline.manager.message_manager"),
+     *     "sc"             = @DI\Inject("security.context")
      * })
      */
-    public function __construct(ObjectManager $om)
+    public function __construct(
+        ObjectManager $om,
+        MessageManager $messageManager,
+        MailManager $mailManager,
+        $sc
+    )
     {
         $this->announcementRepo = $om->getRepository('ClarolineAnnouncementBundle:Announcement');
-        $this->om = $om;
+        $this->om               = $om;
+        $this->messageManager   = $messageManager;
+        $this->mailManager      = $mailManager;
+        $this->sc               = $sc;
+        $this->userRepo         = $om->getRepository('ClarolineCoreBundle:User');
+        $this->roleRepo         = $om->getRepository('ClarolineCoreBundle:Role');
     }
 
     public function insertAnnouncement(Announcement $announcement)
@@ -90,5 +112,47 @@ class AnnouncementManager
     public function getVisibleAnnouncementsByAggregate(AnnouncementAggregate $aggregate)
     {
         return $this->announcementRepo->findVisibleAnnouncementsByAggregate($aggregate);
+    }
+
+    public function sendMessage(Announcement $announcement)
+    {
+        $targets = $this->getUsersByResource($announcement->getAggregate()->getResourceNode(), 1);
+        $message = $this->messageManager->create(
+            $announcement->getContent(),
+            $announcement->getTitle(),
+            $targets,
+            $announcement->getCreator()
+        );
+        $this->messageManager->send($message);
+    }
+
+    public function sendMail(Announcement $announcement)
+    {
+        $targets = $this->getUsersByResource($announcement->getAggregate()->getResourceNode(), 1);
+        $this->mailManager->send(
+            $announcement->getTitle(),
+            $announcement->getContent(),
+            $targets,
+            $announcement->getCreator()
+        );
+    }
+
+    //@todo make a dql request to retrieve the users (it may be a difficult one to do)
+    public function getUsersByResource(ResourceNode $node, $mask)
+    {
+        $rights = $node->getRights();
+        $roles = [];
+
+        foreach ($rights as $right) {
+            //1 is the default "open" mask
+            if ($right->getMask() & 1) {
+                $roles[] = $right->getRole();
+            }
+        }
+
+        $roles[] = $this->roleRepo->findOneByName('ROLE_WS_MANAGER_' . $node->getWorkspace()->getGuid());
+        //we must also add the ROLE_WS_MANAGER_{ws_guid}
+
+        return $this->userRepo->findByRolesIncludingGroups($roles, false, 'id', 'ASC');
     }
 }
