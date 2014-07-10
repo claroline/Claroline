@@ -32,16 +32,16 @@
 
                     {% if not correction.valid %}
 
-                        <span class=" glyphicon icon-minus-sign" data-toggle="tooltip"
+                        <span class=" fa fa-minus" data-toggle="tooltip"
                               data-original-title="{{ 'Invalidated'|trans({}, 'icap_dropzone') }}"></span>
                     {% else %}
                         {% set validCorrections = validCorrections+1 %}
                         {% if correction.reporter %}
-                            <span class="text-danger glyphicon icon-warning-sign" data-toggle="tooltip"
+                            <span class="text-danger fa fa-exclamation-triangle" data-toggle="tooltip"
                                   data-original-title="{{ 'Reported'|trans({}, 'icap_dropzone') }}"></span>
                         {% endif %}
                         {% if correction.correctionDenied %}
-                            <span class="text-warning glyphicon icon-exclamation-sign" data-toggle="tooltip"
+                            <span class="text-warning fa fa-exclamation-triangle" data-toggle="tooltip"
                                   data-original-title="{{ 'Correction denied'|trans({}, 'icap_dropzone') }}"></span>
                         {% endif %}
                     {% endif %}
@@ -71,7 +71,7 @@
                     {% else %}
                         {% set backPage = 'default' %}
                         {% if correction.editable and byUserMod == 0 %}
-                            <span class="text-muted glyphicon icon-group" data-toggle="tooltip"
+                            <span class="text-muted fa fa-users" data-toggle="tooltip"
                                   data-original-title="{{ 'created by a manager'|trans({}, 'icap_dropzone') }}">
                             </span>
                         {% endif %}
@@ -144,12 +144,12 @@
                                 {% if backUserId is defined %}
                                     <a href="{{ path('icap_dropzone_drops_detail_delete_correction', {'resourceId': dropzone.id, 'correctionId': correction.id,'backUserId': backUserId }) }}"
                                        class="btn btn-danger btn-xs launch-modal"><span
-                                                class="glyphicon icon-trash "></span>{{ 'Delete'|trans({}, 'icap_dropzone') }}
+                                                class="fa fa-trash-o "></span>{{ 'Delete'|trans({}, 'icap_dropzone') }}
                                     </a>
                                 {% else %}
                                     <a href="{{ path('icap_dropzone_drops_detail_delete_correction', {'resourceId': dropzone.id, 'correctionId': correction.id}) }}"
                                        class="btn btn-danger btn-xs launch-modal"><span
-                                                class="glyphicon icon-trash "></span>{{ 'Delete'|trans({}, 'icap_dropzone') }}
+                                                class="fa fa-trash-o "></span>{{ 'Delete'|trans({}, 'icap_dropzone') }}
                                     </a>
                                 {% endif %}
                             {% else %}
@@ -162,7 +162,7 @@
                                 <a href="#" class="btn btn-default btn-xs disabled" disabled="disabled"
                                    data-toggle="tooltip"
                                    title="{{ 'Need to be the author'|trans({}, 'icap_dropzone') }}"
-                                   data-container="body"><span class="glyphicon icon-trash"></span>
+                                   data-container="body"><span class="fa fa-trash-o"></span>
                                     {{ 'Delete'|trans({}, 'icap_dropzone') }}
                                 </a>
                             {% endif %}

@@ -2,7 +2,7 @@
 {% block resourceBreadcrumb %}
     <li>
         <a href="{{ path('icap_dropzone_edit_common',{'resourceId':dropzone.id}) }}"><span
-                    class="glyphicon icon-list"></span>  {{ dropzone.resourceNode.name }}</a>
+                    class="fa fa-list"></span>  {{ dropzone.resourceNode.name }}</a>
     </li>
     <li>
         <a href="{{ path('icap_dropzone_examiners', {'resourceId': dropzone.id}) }}"> {{ 'Examiners'|trans({}, 'icap_dropzone') }}</a>
@@ -18,7 +18,7 @@
         <h2>
             {{ 'List of corrections made by %user%'|trans({'%user%':user.firstName|capitalize ~' '~ user.lastName|upper}, 'icap_dropzone') }}
             <a class=" btn btn-default pull-right" href="{{ path('icap_dropzone_edit', {'resourceId': dropzone.id}) }}"><span
-                        class="glyphicon icon-edit"></span> {{ 'Edit evaluation'|trans({}, 'icap_dropzone') }}</a>
+                        class="fa fa-pencil-square-o"></span> {{ 'Edit evaluation'|trans({}, 'icap_dropzone') }}</a>
         </h2>
 
         <div class="row">
@@ -26,11 +26,11 @@
                 <div class="btn-group">
                     <a class="btn btn-default btn-sm"
                        href="{{ path('icap_dropzone_examiners', {'resourceId': dropzone.id }) }}"><span
-                                class="glyphicon "></span> {{ 'List of examiners'|trans({}, 'icap_dropzone') }}
+                                class="fa "></span> {{ 'List of examiners'|trans({}, 'icap_dropzone') }}
                     </a>
                     <a class="btn btn-default btn-sm"
                        href="{{ path('icap_dropzone_drops', {'resourceId': dropzone.id}) }}"><span
-                                class="glyphicon "></span> {{ 'List of copies'|trans({}, 'icap_dropzone') }}
+                                class="fa "></span> {{ 'List of copies'|trans({}, 'icap_dropzone') }}
                     </a>
                 </div>
             </div>

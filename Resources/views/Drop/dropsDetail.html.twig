@@ -7,12 +7,12 @@
     {% if byUserMod == 1 %}
         <li>
             <a href="{{ path('icap_dropzone_open', {'resourceId': dropzone.id}) }}"><span
-                        class="glyphicon icon-list"></span> {{ dropzone.resourceNode.name }}</a>
+                        class="fa fa-list"></span> {{ dropzone.resourceNode.name }}</a>
         </li>
     {% else %}
         <li>
             <a href="{{ path('icap_dropzone_edit_common',{'resourceId':dropzone.id}) }}"><span
-                        class="glyphicon icon-list"></span>  {{ dropzone.resourceNode.name }}</a>
+                        class="fa fa-list"></span>  {{ dropzone.resourceNode.name }}</a>
         </li>
         <li>
             <a href="{{ path('icap_dropzone_drops', {'resourceId': dropzone.id}) }}"> {{ 'List of copies'|trans({}, 'icap_dropzone') }}</a>
@@ -47,7 +47,7 @@
                 <div class="col-md-12">
                     <a class="btn btn-default btn-sm"
                        href="{{ path('icap_dropzone_drops', {'resourceId': dropzone.id}) }}"><span
-                                class="glyphicon icon-angle-left"></span> {{ 'Return to copies'|trans({}, 'icap_dropzone') }}
+                                class="fa fa-angle-left"></span> {{ 'Return to copies'|trans({}, 'icap_dropzone') }}
                     </a>
                 </div>
             </div>
@@ -59,7 +59,7 @@
             {% if drop.reported %}
                 <div class="row text-danger">
                     <div class="col-md-12">
-                        <span class="glyphicon icon-warning-sign"></span>
+                        <span class="fa fa-exclamation-triangle"></span>
                         {{ 'This copy has been reported'|trans({}, 'icap_dropzone') }}
                     </div>
                 </div>
@@ -81,7 +81,7 @@
                 {% include 'IcapDropzoneBundle:Drop:dropsNbCorrections.html.twig' %}
                 {% if drop.unlockedDrop %}
                     {% if drop.unlockedDrop %}
-                        <span class="text-warning glyphicon icon-info-sign" data-toggle="tooltip" title=""
+                        <span class="text-warning fa fa-info-circle" data-toggle="tooltip" title=""
                               data-original-title="{{ 'This copy has been unlocked by admin.(it did not received the expected number of correction)'|trans({}, 'icap_dropzone') }}"></span>
                     {% endif %}
 

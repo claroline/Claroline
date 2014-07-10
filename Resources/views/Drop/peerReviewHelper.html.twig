@@ -5,8 +5,8 @@
                 <a class="accordion-toggle" data-toggle="collapse" data-parent="#show-peerReview-help"
                    href="#show-peerReview-help">
                     <h4 class="panel-title">
-                        <span class="glyphicon icon-angle-down"></span>
-                        <span class="glyphicon icon-angle-right" style="display: none;"></span>
+                        <span class="fa fa-angle-down"></span>
+                        <span class="fa fa-angle-right" style="display: none;"></span>
                         {{ "Help on peerReview mode"|trans({}, 'icap_dropzone') }}
                     </h4>
                 </a>
@@ -32,12 +32,12 @@
         <script>
             $(document).on('ready', function () {
                 $('#peerReview-helper-accordion').on('hide.bs.collapse', function () {
-                    $('#accordion .icon-angle-down').show();
-                    $('#accordion .icon-angle-right').hide();
+                    $('#accordion .fa-angle-down').show();
+                    $('#accordion .fa-angle-right').hide();
                 });
                 $('#peerReview-helper-accordion').on('show.bs.collapse', function () {
-                    $('#accordion .icon-angle-right').show();
-                    $('#accordion .icon-angle-down').hide();
+                    $('#accordion .fa-angle-right').show();
+                    $('#accordion .fa-angle-down').hide();
                 });
             });
         </script>

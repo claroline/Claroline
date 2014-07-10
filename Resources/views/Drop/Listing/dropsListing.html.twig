@@ -18,11 +18,11 @@
                        title="{{ 'See copy'|trans({}, 'icap_dropzone') }}">
                         {{ drop.dropDate|date('formatDatetime'|trans({}, 'icap_dropzone')) }}
                         {% if drop.reported %}
-                            <span class="text-danger glyphicon icon-warning-sign" data-toggle="tooltip" title=""
+                            <span class="text-danger fa fa-exclamation-triangle" data-toggle="tooltip" title=""
                                   data-original-title="{{ 'This copy has been reported'|trans({}, 'icap_dropzone') }}"></span>
                         {% endif %}
                         {% if drop.unlockedDrop %}
-                            <span class="text-warning glyphicon icon-info-sign" data-toggle="tooltip" title=""
+                            <span class="text-warning fa fa-info-circle" data-toggle="tooltip" title=""
                                   data-original-title="{{ 'This copy has been unlocked by admin.(it did not received the expected number of correction)'|trans({}, 'icap_dropzone') }}"></span>
                         {% endif %}
                     </a>
@@ -33,7 +33,7 @@
                 <td>
                     {% include 'IcapDropzoneBundle:Drop:dropsLastCorrectionDate.html.twig' %}
                     {% if drop.getHasDeniedCorrection %}
-                        <span class="glyphicon icon-warning-sign" data-toggle="tooltip" title=""
+                        <span class="fa fa-exclamation-triangle" data-toggle="tooltip" title=""
                               data-original-title="{{ 'This copy contain a denied correction'|trans({}, 'icap_dropzone') }}"></span>
                     {% endif %}
                 </td>
@@ -76,7 +76,7 @@
                         {% endif %}
                         <a href="{{ path('icap_dropzone_drops_delete', {'resourceId': dropzone.id, 'dropId': drop.id, 'tab': 0, 'page': pager.currentPage}) }}"
                            class="btn btn-danger btn-xs launch-modal"><span
-                                    class="glyphicon icon-trash"></span> {{ 'Delete copy'|trans({}, 'icap_dropzone') }}
+                                    class="fa fa-trash-o"></span> {{ 'Delete copy'|trans({}, 'icap_dropzone') }}
                         </a>
                     </div>
 
