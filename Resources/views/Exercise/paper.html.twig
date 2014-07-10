@@ -285,7 +285,7 @@
 
             {% if numQ == indexMax and numQ == 1 %}
                 <li>
-                    <input type="button" value="{{ "finish" | trans }}" onClick="finish('{{ interactionType }}', '{{ 'alert ending' | trans }}');"
+                    <input type="button" value="{{ "finish" | trans }}" onClick="finish('{{ interactionType }});"
                         class="btn btn-primary"/>
                 </li>
             {% else %}
@@ -308,7 +308,7 @@
                     <li class="disabled"><a href="#" onclick="event.preventDefault();">{{ 'next' | trans }} &nbsp; <i class="icon-chevron-right"></i></a></li>
                     <li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</li>
                     <li>
-                        <input type="button" value="{{ "finish" | trans }}" onClick="finish('{{ interactionType }}', '{{ 'alert ending' | trans }}');"
+                        <input type="button" value="{{ "finish" | trans }}" onClick="finish('{{ interactionType }}');"
                             class="btn btn-primary"/>
                     </li>
                 {% endif %}
@@ -347,25 +347,27 @@
 {% endblock %}
 
 {% block javascripts %}
-    
+
     <script type="text/javascript">
         //$(document).ready(function() {
             $('#Qnumber option[value="' + {{ numQ }} + '"]').attr('selected', 'selected');
         //});
     </script>
-    
+
     {{ parent() }}
-    
+
     <script type="text/javascript">
         var mssg             = "{{ "exercise alert break" | trans }}";
         var allowToInterrupt = "{{ dispButtonInterrupt }}";
         var interType        = "{{ interactionType }}";
-    </script>    
-    
+    </script>
+
     {% if interactionType == 'InteractionGraphic' %}
         <script type="text/javascript" src="{{ asset('bundles/frontend/jquery/jquery-ui-1.9.2/jquery-ui-1.9.2.js') }}"></script>
         <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/ext/jquery-ui-touch-punch.js') }}"></script>
         <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/graphicdisplay.js') }}"></script>
     {% endif %}
+
+    {% include "UJMExoBundle:Partial:modal/confirmFinishExercise.html.twig" %}
 
 {% endblock %}
