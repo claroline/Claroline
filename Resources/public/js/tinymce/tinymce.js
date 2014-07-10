@@ -128,9 +128,10 @@
     };
 
     /**
-     * This method is fired when a resource is addesd to a TinyMCE editor (through a ResourcePicker).
+     * This method is fired when one or more resources are added to the editor
+     * with a resource picker.
      *
-     * @param nodes A node reource in json.
+     * @param nodes An array of resource nodes.
      *
      */
     tinymce.claroline.callBack = function (nodes)
