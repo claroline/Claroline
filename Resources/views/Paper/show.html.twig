@@ -59,14 +59,14 @@
     </div>
     <div class="panel-body">
         <a class="btn btn-primary" href="{{ path('ujm_exercise_open', { 'exerciseId':  exoId }) }}">
-            <i class="icon-arrow-left"></i> {{ 'home exercise' | trans }}
+            <i class="fa fa-arrow-left"></i> {{ 'home exercise' | trans }}
         </a>
         <a href="{{ path('ujm_paper_list', { 'exoID': exoId }) }}" class="btn btn-primary">
-            <i class="icon-list"></i> {{ 'paper list' | trans }}
+            <i class="fa fa-list"></i> {{ 'paper list' | trans }}
         </a>
         {% if retryButton %}
             <a class="btn btn-primary" href="{{ path('ujm_exercise_paper', { 'id': exoId }) }}">
-                <i class="icon-check"></i> {{ 'start again' | trans }}
+                <i class="fa fa-check-square-o"></i> {{ 'start again' | trans }}
             </a>
         {% endif %}
 
@@ -283,20 +283,20 @@
                 {% if p != 0 %}
                     <li>
                         <a href="{{ path('ujm_paper_show', { 'id': paperID, 'p': 0 }) }}">
-                            <i class="icon-chevron-left"></i><i class="icon-chevron-left"></i>
+                            <i class="fa fa-chevron-left"></i><i class="fa fa-chevron-left"></i>
                         </a>
                     </li>
 
                     {% if p != -1 and p != -2 %}
                         <li>
                             <a href="{{ path('ujm_paper_show', { 'id': paperID, 'p': p - 1 }) }}">
-                                <i class="icon-chevron-left"></i>
+                                <i class="fa fa-chevron-left"></i>
                             </a>
                         </li>
                     {% endif %}
                 {% else %}
-                    <li class="disabled"><a href="#"><i class="icon-chevron-left"></i><i class="icon-chevron-left"></i></a></li>
-                    <li class="disabled"><a href="#"><i class="icon-chevron-left"></i></a></li>
+                    <li class="disabled"><a href="#"><i class="fa fa-chevron-left"></i><i class="fa fa-chevron-left"></i></a></li>
+                    <li class="disabled"><a href="#"><i class="fa fa-chevron-left"></i></a></li>
                 {% endif %}
 
                 {% for interaction in interactions %}
@@ -325,18 +325,18 @@
                     {% if p != -1 and p != -2 %}
                         <li>
                             <a href="{{ path('ujm_paper_show', { 'id': paperID, 'p': p + 1 }) }}">
-                                <i class="icon-chevron-right"></i>
+                                <i class="fa fa-chevron-right"></i>
                             </a>
                         </li>
                     {% endif %}
                     <li>
                         <a href="{{ path('ujm_paper_show', { 'id': paperID, 'p': nbMaxQuestion - 1 }) }}">
-                            <i class="icon-chevron-right"></i><i class="icon-chevron-right"></i>
+                            <i class="fa fa-chevron-right"></i><i class="fa fa-chevron-right"></i>
                         </a>
                     </li>
                 {% else %}
-                    <li class="disabled"><a href="#"><i class="icon-chevron-right"></i></a></li>
-                    <li class="disabled"><a href="#"><i class="icon-chevron-right"></i><i class="icon-chevron-right"></i></a></li>
+                    <li class="disabled"><a href="#"><i class="fa fa-chevron-right"></i></a></li>
+                    <li class="disabled"><a href="#"><i class="fa fa-chevron-right"></i><i class="fa fa-chevron-right"></i></a></li>
                 {% endif %}
             {% endif %}
 
@@ -372,28 +372,28 @@
 
                 {% if (display == 'all') %}
                     {% if p == 0 %}
-                        <li class="disabled"><a href="#" onclick="event.preventDefault();"><i class="icon-chevron-left"></i> &nbsp; {{ 'previous' | trans }}</a></li>
+                        <li class="disabled"><a href="#" onclick="event.preventDefault();"><i class="fa fa-chevron-left"></i> &nbsp; {{ 'previous' | trans }}</a></li>
                             <li>
                                 <a href="{{ path('ujm_paper_show', { 'id': paperID, 'p': p + 1 }) }}">
-                                    {{ 'next' | trans }} &nbsp; <i class="icon-chevron-right"></i>
+                                    {{ 'next' | trans }} &nbsp; <i class="fa fa-chevron-right"></i>
                                 </a>
                         </li>
                     {% elseif p == indexMax - 1 %}
                         <li>
                             <a href="{{ path('ujm_paper_show', { 'id': paperID, 'p': p - 1 }) }}">
-                                <i class="icon-chevron-left"></i> &nbsp; {{ 'previous' | trans }}
+                                <i class="fa fa-chevron-left"></i> &nbsp; {{ 'previous' | trans }}
                             </a>
                         </li>
-                        <li class="disabled"><a href="#" onclick="event.preventDefault();">{{ 'next' | trans }} &nbsp; <i class="icon-chevron-right"></i></a></li>
+                        <li class="disabled"><a href="#" onclick="event.preventDefault();">{{ 'next' | trans }} &nbsp; <i class="fa fa-chevron-right"></i></a></li>
                     {% else %}
                         <li>
                             <a href="{{ path('ujm_paper_show', { 'id': paperID, 'p': p - 1 }) }}">
-                                <i class="icon-chevron-left"></i> &nbsp; {{ 'previous' | trans }}
+                                <i class="fa fa-chevron-left"></i> &nbsp; {{ 'previous' | trans }}
                             </a>
                         </li>
                         <li>
                             <a href="{{ path('ujm_paper_show', { 'id': paperID, 'p': p + 1 }) }}">
-                                {{ 'next' | trans }} &nbsp; <i class="icon-chevron-right"></i>
+                                {{ 'next' | trans }} &nbsp; <i class="fa fa-chevron-right"></i>
                             </a>
                         </li>
                     {% endif %}
