@@ -204,7 +204,7 @@ class ActivityManager
                 ->findPastEvaluationsByUserAndActivityParams($user, $activityParams);
         }
         $nbAttempts = $isFirstEvaluation ? 0 : count($pastEvals);
-        $totalTime = $evaluation->getAttemptsDuration();
+        $totalTime = $isFirstEvaluation ? null : $evaluation->getAttemptsDuration();
         $pastStatus = ($activityStatus === 'incomplete' || $activityStatus === 'failed') ?
             $activityStatus :
             'unknown';
