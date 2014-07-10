@@ -43,7 +43,7 @@ Class Competence  {
 
     /**
      * @ORM\ManyToOne(
-     *     targetEntity="Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace",
+     *     targetEntity="Claroline\CoreBundle\Entity\Workspace\Workspace",
      *     inversedBy="competences",
      *     cascade={"persist"}
      * )

@@ -947,8 +947,6 @@ plugin_packages: Paquets des plugins
 no_package_description: Aucune description du paquet.
 yes: Oui
 no: Non
-<<<<<<< HEAD
-=======
 actualize: Actualiser
 upgrade: Mettre à jour
 packages_upgrade_info_message: Attention, ceci est la page de gestion de mises à jour.
@@ -965,4 +963,3 @@ remove_role: Supprimer un rôle.
 initialize: Initialiser
 user_limit_success_update: La limite d'utilisateur par rôle a été mise à jour avec succès.
 role_name_changed_success: Le nom du rôle a été mis à jour avec succès.
->>>>>>> 9a38860e11c96871cd5b784b8031cf524b4dda85
