@@ -47,12 +47,12 @@
         $.ajax({url: route, type: 'POST'});
     });
 
-    $('.fa fa-arrow-circle-up').on('click', function (e) {
+    $('.fa-arrow-circle-up').on('click', function (e) {
         var rowIndex = e.target.parentElement.parentElement.rowIndex;
         moveRowUp(rowIndex);
     });
 
-    $('.fa fa-arrow-circle-down').on('click', function (e) {
+    $('.fa-arrow-circle-down').on('click', function (e) {
         var rowIndex = e.target.parentElement.parentElement.rowIndex;
         moveRowDown(rowIndex);
     });
