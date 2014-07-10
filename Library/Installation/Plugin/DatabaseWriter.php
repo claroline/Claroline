@@ -525,7 +525,7 @@ class DatabaseWriter
         if (isset($tool['class'])) {
             $toolEntity->setClass("{$tool['class']}");
         } else {
-            $toolEntity->setClass("icon-wrench");
+            $toolEntity->setClass("wrench");
         }
 
         $this->em->persist($toolEntity);
