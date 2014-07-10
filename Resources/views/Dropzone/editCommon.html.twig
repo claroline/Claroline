@@ -201,8 +201,6 @@
 
 {% block javascripts %}
     {{ parent() }}
-    {% render controller('ClarolineCoreBundle:ResourceType:initPicker') %}
-    {{ tinymce_init() }}
     <script>
         $('document').ready(function() {
 
@@ -236,7 +234,7 @@
             {
                 manageSuccessFailMessagesVisibility($(this));
             });
-            
+
 
             var enablePeerReviewOptions = function (peerReviewEnabled) {
                 if (peerReviewEnabled) {
@@ -311,14 +309,14 @@
         {
             // Set manageCorrectionDeny dependencies
             // show option only if peerReview and CorrectionVisibility are Activated, set to false and desactivate if they are  not.
-            if($('#icap_dropzone_common_form_peerReview_1:checked').length == 1 
+            if($('#icap_dropzone_common_form_peerReview_1:checked').length == 1
                 && $('#icap_dropzone_common_form_diplayCorrectionsToLearners').prop('checked')) {
                 $('#allow-correction-deny').parent().show();
             } else {
                 $('#icap_dropzone_common_form_allowCorrectionDeny').prop('checked',false);
                 $('#allow-correction-deny').parent().hide();
-            } 
-  
+            }
+
         }
 
         function manageCorrectionVisibility(peerReviewEnabled)
