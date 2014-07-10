@@ -50,8 +50,8 @@
 
             <div class="col-sm-offset-3 col-lg-9 peer-review-options">
             <div id="expected-total-correction-explication" class="col-lg-8 control-label" style="text-align: left;" data-toggle="popover" data-placement="bottom" data-content="{{ 'expected_total_correction'|trans({}, 'icap_dropzone')|raw }}">
-                    <span class="glyphicon icon-question-sign"></span> {{ 'Expected total correction'|trans({}, 'icap_dropzone') }}
-                </div>
+                <span class="fa fa-info-circle"></span> {{ 'Expected total correction'|trans({}, 'icap_dropzone') }}
+            </div>
                 {{ form_row(form.expectedTotalCorrection, {'input_col_size': 'col-lg-4', 'label_col_size': '', 'attr': {'style': 'width: 60px;'}, 'label_attr': {'style': 'display: none;'}}) }}
             </div>
             <div class="col-sm-offset-3 peer-review-options">
@@ -181,7 +181,7 @@
 
                     <div class="panel panel-default">
                         <div class="panel-body"><p class="text-muted">
-                                <span class="glyphicon icon-info-sign"></span> {{ 'dropzone_startedNotValidatedYet_infos'|trans({},'icap_dropzone') }}
+                                <span class="fa fa-info-circle"></span> {{ 'dropzone_startedNotValidatedYet_infos'|trans({},'icap_dropzone') }}
                             </p>
                         </div>
                     </div>
