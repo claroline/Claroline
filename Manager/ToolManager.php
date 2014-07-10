@@ -25,7 +25,6 @@ use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Library\Utilities\ClaroUtilities;
 use Claroline\CoreBundle\Manager\Exception\ToolPositionAlreadyOccupiedException;
 use Claroline\CoreBundle\Manager\Exception\UnremovableToolException;
-use Symfony\Component\Translation\Translator;
 use Claroline\CoreBundle\Event\StrictDispatcher;
 use JMS\DiExtraBundle\Annotation as DI;
 
@@ -46,8 +45,6 @@ class ToolManager
     private $ed;
     /** @var ClaroUtilities */
     private $utilities;
-    /** @var Translator */
-    private $translator;
     /** @var ObjectManager */
     private $om;
     /** @var RoleManager */
@@ -59,7 +56,6 @@ class ToolManager
      * @DI\InjectParams({
      *     "ed"          = @DI\Inject("claroline.event.event_dispatcher"),
      *     "utilities"   = @DI\Inject("claroline.utilities.misc"),
-     *     "translator"  = @DI\Inject("translator"),
      *     "om"          = @DI\Inject("claroline.persistence.object_manager"),
      *     "roleManager" = @DI\Inject("claroline.manager.role_manager")
      * })
@@ -67,7 +63,6 @@ class ToolManager
     public function __construct(
         StrictDispatcher $ed,
         ClaroUtilities $utilities,
-        Translator $translator,
         ObjectManager $om,
         RoleManager $roleManager
     )
@@ -78,7 +73,6 @@ class ToolManager
         $this->adminToolRepo = $om->getRepository('ClarolineCoreBundle:Tool\AdminTool');
         $this->ed = $ed;
         $this->utilities = $utilities;
-        $this->translator = $translator;
         $this->om = $om;
         $this->roleManager = $roleManager;
     }
@@ -345,7 +339,7 @@ class ToolManager
                     $this->addWorkspaceTool(
                         $undisplayedTool,
                         $initPos,
-                        $this->translator->trans($undisplayedTool->getName(), array(), 'tools'),
+                        $undisplayedTool->getName(),
                         $workspace
                     );
                 } else {
@@ -432,7 +426,6 @@ class ToolManager
          $movingTool->setOrder(intval($position));
          $this->om->persist($switchTool);
          $this->om->persist($movingTool);
-         $this->om->flush();
     }
 
     /**
