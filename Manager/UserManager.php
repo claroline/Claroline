@@ -29,6 +29,7 @@ use Symfony\Component\Security\Core\SecurityContext;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Translation\Translator;
 use Symfony\Component\Validator\ValidatorInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * @DI\Service("claroline.manager.user_manager")
@@ -48,6 +49,7 @@ class UserManager
     private $validator;
     private $workspaceManager;
     private $uploadsDirectory;
+    private $container;
 
     /**
      * Constructor.
@@ -64,7 +66,8 @@ class UserManager
      *     "translator"             = @DI\Inject("translator"),
      *     "validator"              = @DI\Inject("validator"),
      *     "workspaceManager"       = @DI\Inject("claroline.manager.workspace_manager"),
-     *     "uploadsDirectory"       = @DI\Inject("%claroline.param.uploads_directory%")
+     *     "uploadsDirectory"       = @DI\Inject("%claroline.param.uploads_directory%"),
+     *     "container"              = @DI\Inject("service_container")
      * })
      */
     public function __construct(
@@ -79,7 +82,8 @@ class UserManager
         Translator $translator,
         ValidatorInterface $validator,
         WorkspaceManager $workspaceManager,
-        $uploadsDirectory
+        $uploadsDirectory,
+        ContainerInterface $container
     )
     {
         $this->userRepo               = $objectManager->getRepository('ClarolineCoreBundle:User');
@@ -95,6 +99,7 @@ class UserManager
         $this->mailManager            = $mailManager;
         $this->validator              = $validator;
         $this->uploadsDirectory       = $uploadsDirectory;
+        $this->container              = $container;
     }
 
     /**
@@ -153,6 +158,10 @@ class UserManager
      */
     public function deleteUser(User $user)
     {
+        if ($this->container->get('security.context')->getToken()->getUser()->getId() === $user->getId()) {
+            throw new \Exception('A user cannot delete himself');
+        }
+
         //soft delete~
         $user->setMail('mail#' . $user->getId());
         $user->setFirstName('firstname#' . $user->getId());
@@ -168,7 +177,6 @@ class UserManager
 
         if ($ws) {
             $ws->setCode($ws->getCode() . '#deleted_user#' . $user->getId());
-            $ws->setPublic(false);
             $ws->setDisplayable(false);
             $this->objectManager->persist($ws);
         }

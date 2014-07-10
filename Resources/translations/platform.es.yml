@@ -50,6 +50,7 @@ account_general_statistics: 'Estadísticas generales de la cuenta'
 action: 'Acción'
 actions: 'Acciones'
 active_widgets: 'Widgets activos'
+activities: Actividades
 activities_tracking: 'Seguimiento de las actividades'
 activity_already: Este recurso ya está en la actividad
 activity_evaluation_form_attemptsCount: 'Número de intentos'
@@ -733,6 +734,7 @@ top_workspaces_connections: 'Espacio de trabajo más visitado'
 top_workspaces_resources: 'Principales espacios de trabajo que más tienen recursos'
 total: 'Total'
 total_time: 'Tempo total'
+traffic: Frecuentación
 trash: 'Basura'
 type: 'Tipo'
 type_s: 'Tipo(s)'
@@ -884,3 +886,5 @@ user_limit_success_update: El número máximo de usuarios por rol ha sido actual
 role_name_changed_success: El nombre del rola ha sido actualizado con éxito.
 packages_upgrade_info_message: Advertencia, esta es la página de administración de las actualizaciones.
 package_upgrade_all_warning: Advertencia, esto actualizará todos los paquetes de la plataforma. Esta operación no puede ser cancelada. Se recomienda  hacer una copia de seguridad de los archivos y de la base de datos antes de realizar esta operación.
+no_group: No hay grupo.
+successfull_workspace_creation: El espacio de trabajo %nombre% ha sido creado con éxito.

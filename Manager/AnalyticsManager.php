@@ -223,6 +223,11 @@ class AnalyticsManager
         return $resultData;
     }
 
+    public function getWorkspaceResourceTypesCount(Workspace $workspace)
+    {
+        return $this->resourceTypeRepo->countResourcesByType($workspace);
+    }
+
     /**
      * Retrieve analytics for workspace: chartData and resource statistics
      */

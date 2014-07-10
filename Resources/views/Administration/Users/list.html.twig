@@ -127,7 +127,8 @@
                         <tr id="{{ user.getId() }}" class="row-user">
                             <td>
                                 <input type="checkbox" value="{{ user.id }}" class="chk-item" align="center"
-                                    {% if not is_granted('ROLE_ADMIN') and user.hasRole('ROLE_ADMIN') %}
+                                    {% if (not is_granted('ROLE_ADMIN') and user.hasRole('ROLE_ADMIN'))
+                                        or user.getId() == app.user.getId( )%}
                                         disabled
                                     {% endif %}
                                 />
