@@ -325,41 +325,44 @@ class ToolManager
     public function addMissingWorkspaceTools(Workspace $workspace)
     {
         $undisplayedTools = $this->toolRepo->findUndisplayedToolsByWorkspace($workspace);
+
+        if (count($undisplayedTools) === 0) {
+            return;
+        }
+
         $initPos = $this->toolRepo->countDisplayedToolsByWorkspace($workspace);
         $initPos++;
         $missingTools = array();
         $wsRoles = $this->roleManager->getWorkspaceConfigurableRoles($workspace);
 
         foreach ($undisplayedTools as $undisplayedTool) {
-            if ($undisplayedTool->isDisplayableInWorkspace()) {
-                $wot = $this->orderedToolRepo->findOneBy(array('workspace' => $workspace, 'tool' => $undisplayedTool));
+            $wot = $this->orderedToolRepo->findOneBy(array('workspace' => $workspace, 'tool' => $undisplayedTool));
 
-                //create a WorkspaceOrderedTool for each Tool that hasn't already one
-                if ($wot === null) {
-                    $this->addWorkspaceTool(
-                        $undisplayedTool,
-                        $initPos,
-                        $undisplayedTool->getName(),
-                        $workspace
-                    );
-                } else {
-                    continue;
-                }
-
-                foreach ($wsRoles as $role) {
-                    $roleVisibility[$role->getId()] = false;
-                }
-
-                $missingTools[] = array(
-                    'tool' => $undisplayedTool,
-                    'workspace' => $workspace,
-                    'position' => $initPos,
-                    'visibility' => $roleVisibility,
-                    'displayedName' => $undisplayedTool->getName()
+            //create a WorkspaceOrderedTool for each Tool that hasn't already one
+            if ($wot === null) {
+                $this->addWorkspaceTool(
+                    $undisplayedTool,
+                    $initPos,
+                    $undisplayedTool->getName(),
+                    $workspace
                 );
-
-                $initPos++;
+            } else {
+                continue;
             }
+
+            foreach ($wsRoles as $role) {
+                $roleVisibility[$role->getId()] = false;
+            }
+
+            $missingTools[] = array(
+                'tool' => $undisplayedTool,
+                'workspace' => $workspace,
+                'position' => $initPos,
+                'visibility' => $roleVisibility,
+                'displayedName' => $undisplayedTool->getName()
+            );
+
+            $initPos++;
         }
 
         return $missingTools;
