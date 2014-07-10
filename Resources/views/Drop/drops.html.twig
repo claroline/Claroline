@@ -1,7 +1,7 @@
 {% extends "IcapDropzoneBundle::layout.html.twig" %}
 {% block resourceBreadcrumb %}
     <li><a href="{{ path('icap_dropzone_edit_common',{'resourceId':dropzone.id}) }}"><span
-                    class="glyphicon icon-list"></span>  {{ dropzone.resourceNode.name }}</a></li>
+                    class="fa fa-list"></span>  {{ dropzone.resourceNode.name }}</a></li>
     <li class="active"> {{ 'List of copies'|trans({}, 'icap_dropzone') }}</li>
 {% endblock %}
 
@@ -9,7 +9,8 @@
     <div class="container container-dropzone">
         <h2>
             {{ 'List of copies'|trans({}, 'icap_dropzone') }}
-            <a class=" btn btn-default pull-right" href="{{ path('icap_dropzone_edit', {'resourceId': dropzone.id}) }}"><span class="glyphicon icon-edit"></span> {{ 'Edit evaluation'|trans({}, 'icap_dropzone') }}</a>
+            <a class=" btn btn-default pull-right" href="{{ path('icap_dropzone_edit', {'resourceId': dropzone.id}) }}"><span
+                        class="fa fa-pencil-square-o"></span> {{ 'Edit evaluation'|trans({}, 'icap_dropzone') }}</a>
         </h2>
 
         {% if unterminated_drops is defined %}
@@ -17,7 +18,7 @@
                 {% if unterminated_drops > 0 and (dropzone.manualState ==  'finished' or dropzone.manualState == 'peerReview' ) %}
                     <a href="{{ path('icap_dropzone_auto_close_drops_confirmation',{'resourceId':dropzone.id}) }}"
                        class="btn btn-default btn-xs launch-modal"><span
-                                class="glyphicon icon-check"></span> {{ 'Close unterminated drops'|trans({},'icap_dropzone' ) }}
+                                class="fa fa-check"></span> {{ 'Close unterminated drops'|trans({},'icap_dropzone' ) }}
                     </a>
                 {% endif %}
             </p>

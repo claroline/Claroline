@@ -1,21 +1,23 @@
 {% extends "IcapDropzoneBundle:Drop:dropsByBase.html.twig" %}
 {% block resourceBreadcrumb %}
     <li><a href="{{ path('icap_dropzone_edit_common',{'resourceId':dropzone.id}) }}"><span
-                    class="glyphicon icon-list"></span>  {{ dropzone.resourceNode.name }}</a></li>
+                    class="fa fa-list"></span>  {{ dropzone.resourceNode.name }}</a></li>
     <li class="active">
         {{ 'Examiners'|trans({}, 'icap_dropzone') }}
     </li>
 {% endblock %}
 {% block dropzone_content_drops_by_navbar %}
     <ul class="nav navbar-nav">
-        <li >
+        <li>
             <a href="{{ path('icap_dropzone_drops_by_default', {'resourceId': dropzone.id}) }}">
-                {{ 'Copies evaluation finished'|trans({}, 'icap_dropzone') }} <span class="badge">{{ nbDropCorrected }}</span>
+                {{ 'Copies evaluation finished'|trans({}, 'icap_dropzone') }} <span
+                        class="badge">{{ nbDropCorrected }}</span>
             </a>
         </li>
         <li>
             <a href="{{ path('icap_dropzone_drops_awaiting', {'resourceId': dropzone.id}) }}">
-                {{ 'Copies being evaluated'|trans({}, 'icap_dropzone') }} <span class="badge">{{ nbDrop - nbDropCorrected }}</span>
+                {{ 'Copies being evaluated'|trans({}, 'icap_dropzone') }} <span
+                        class="badge">{{ nbDrop - nbDropCorrected }}</span>
             </a>
         </li>
         <li class="active">
@@ -34,9 +36,9 @@
 {% endblock %}
 {% block dropzone_content_drops_by_user %}
 {% endblock %}
-{% block dropzone_content_drops_by_date %}  
+{% block dropzone_content_drops_by_date %}
 {% endblock %}
-{% block dropzone_content_drops_by_reported %}  
+{% block dropzone_content_drops_by_reported %}
 {% endblock %}
 
 {% block dropzone_content_drops_by_list_title %}
@@ -52,20 +54,18 @@
 {% endblock %}
 
 {% block dropzone_content_drops_by_pager %}
-        {% if pager.haveToPaginate %}
-            {{
-            pagerfanta(
-            pager,
-            'twitter_bootstrap_translated',
-            {
-            'proximity' : 1,
-            'routeName': 'icap_dropzone_examiners_paginated',
-            'routeParams': {'resourceId': dropzone.id}
-            }
-            )
-            }}
-        {% endif %}
-        
+    {% if pager.haveToPaginate %}
+        {{ pagerfanta(
+        pager,
+        'twitter_bootstrap_translated',
+        {
+        'proximity' : 1,
+        'routeName': 'icap_dropzone_examiners_paginated',
+        'routeParams': {'resourceId': dropzone.id}
+        }
+        ) }}
+    {% endif %}
+
 {% endblock %}
 
 {% block javascripts %}
