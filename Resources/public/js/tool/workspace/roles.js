@@ -15,8 +15,6 @@
         event.preventDefault();
 
         if (!$(event.target).hasClass('disabled')) {
-            var body = 'this is my body';
-            var header = 'this is my header';
             //show alert modal
             var html = Twig.render(
                 ModalWindow,
