@@ -77,6 +77,7 @@
                 { 'toolId': toolId, 'position': index, 'workspaceId': wsId }
             );
             $.ajax({url: route, type: 'POST'});
+            setOrderingIconsState();
         }
 	}
 
@@ -105,7 +106,21 @@
                 { 'toolId': toolId, 'position': index, 'workspaceId': wsId }
             );
             $.ajax({url: route, type: 'POST'});
+            setOrderingIconsState();
         }
+    }
+
+    function setOrderingIconsState() {
+        var upIcons = $('#tool-table span.ordering-icon.up');
+        var downIcons = $('#tool-table span.ordering-icon.down');
+        var downLength = downIcons.length;
+
+        upIcons.each(function (index, icon) {
+            $(icon)[(index === 0 ? 'addClass' : 'removeClass')]('disabled');
+        });
+        downIcons.each(function (index, icon) {
+            $(icon)[index === downLength - 1 ? 'addClass' : 'removeClass']('disabled');
+        });
     }
 })();
 
