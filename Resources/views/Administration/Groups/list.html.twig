@@ -80,11 +80,8 @@
         {% if pager.currentPageResults|length == 0 and  pager.getNbPages() == 1 %}
             <div style="text-align: center;">
                 <p>{{ 'no_group'|trans({}, 'platform') }}</p>
-                <p>
-                    <a class="btn btn-primary" href="{{ path('claro_admin_group_creation_form') }}">
-                        {{ 'create_group'|trans({}, 'platform') }}
-                    </a>
-                </p>
+                <p> <a class="btn btn-primary" href="{{ path('claro_admin_group_creation_form') }}">
+                        {{ 'create_group'|trans({}, 'platform') }} </a> </p>
             </div>
         {% else %}
             <div class="search-bar row">

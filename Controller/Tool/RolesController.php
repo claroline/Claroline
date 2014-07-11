@@ -12,8 +12,10 @@
 namespace Claroline\CoreBundle\Controller\Tool;
 
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
@@ -29,6 +31,7 @@ use Claroline\CoreBundle\Manager\UserManager;
 use Claroline\CoreBundle\Manager\GroupManager;
 use Claroline\CoreBundle\Manager\ResourceManager;
 use Claroline\CoreBundle\Manager\RightsManager;
+use Claroline\CoreBundle\Manager\Exception\LastManagerDeleteException;
 use JMS\DiExtraBundle\Annotation as DI;
 
 class RolesController extends Controller
@@ -42,6 +45,7 @@ class RolesController extends Controller
     private $formFactory;
     private $router;
     private $request;
+    private $translator;
 
     /**
      * @DI\InjectParams({
@@ -53,7 +57,8 @@ class RolesController extends Controller
      *     "security"         = @DI\Inject("security.context"),
      *     "formFactory"      = @DI\Inject("claroline.form.factory"),
      *     "router"           = @DI\Inject("router"),
-     *     "request"          = @DI\Inject("request")
+     *     "request"          = @DI\Inject("request"),
+     *     "translator"       = @DI\Inject("translator")
      * })
      */
     public function __construct(
@@ -65,7 +70,8 @@ class RolesController extends Controller
         SecurityContextInterface $security,
         FormFactory $formFactory,
         UrlGeneratorInterface $router,
-        Request $request
+        Request $request,
+        TranslatorInterface $translator
     )
     {
         $this->roleManager = $roleManager;
@@ -77,6 +83,7 @@ class RolesController extends Controller
         $this->formFactory = $formFactory;
         $this->router = $router;
         $this->request = $request;
+        $this->translator = $translator;
     }
     /**
      * @EXT\Route(
@@ -263,9 +270,16 @@ class RolesController extends Controller
     public function removeUserFromRoleAction(User $user, Role $role, Workspace $workspace)
     {
         $this->checkAccess($workspace);
-        $this->roleManager->dissociateWorkspaceRole($user, $workspace, $role);
 
-        return new Response('success');
+        try {
+            $this->roleManager->dissociateWorkspaceRole($user, $workspace, $role);
+        } catch (LastManagerDeleteException $e) {
+            return new JsonResponse(array(
+                'message' => $this->translator->trans('last_manager_error_message', array(), 'platform')
+            ), 500);
+        }
+
+        return new JsonResponse(array(), 200);
     }
 
     /**
@@ -398,9 +412,16 @@ class RolesController extends Controller
     public function removeGroupFromRoleAction(Group $group, Role $role, Workspace $workspace)
     {
         $this->checkAccess($workspace);
-        $this->roleManager->dissociateWorkspaceRole($group, $workspace, $role);
 
-        return new Response('success');
+        try{
+            $this->roleManager->dissociateWorkspaceRole($group, $workspace, $role);
+        } catch (LastManagerDeleteException $e) {
+            return new JsonResponse(array(
+                'message' => $this->translator->trans('last_manager_error_message', array(), 'platform')
+            ), 500);
+        }
+
+        return new JsonResponse(array(), 200);
     }
 
     /**
