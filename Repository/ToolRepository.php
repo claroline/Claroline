@@ -32,7 +32,7 @@ class ToolRepository extends EntityRepository
         $isAdmin = false;
 
         foreach ($roles as $role) {
-            if ($role === 'ROLE_ADMIN') {
+            if ($role === 'ROLE_ADMIN' || $role === 'ROLE_WS_MANAGER_' . $workspace->getGuid()) {
                 $isAdmin = true;
             }
         }
