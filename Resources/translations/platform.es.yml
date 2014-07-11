@@ -892,3 +892,4 @@ successfull_workspace_creation: El espacio de trabajo %nombre% ha sido creado co
 no_action_found: No hay acciones.
 error: Error
 last_manager_error_message: No es posible eliminar todos los administradores.
+remove_workspace_role_warning: '¿Esta seguro que desea suprimir este rol?'

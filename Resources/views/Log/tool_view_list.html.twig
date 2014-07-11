@@ -8,11 +8,12 @@
 <div class="panel-body logs-container">
     <div>
         {% if 0 < pager.nbResults %}
-
-        {% include 'ClarolineCoreBundle:Log:count_by_day_chart.html.twig' %}
-
-        <br/><br/>
-
+            {% include 'ClarolineCoreBundle:Log:count_by_day_chart.html.twig' %}
+            <br/><br/>
+        {% else %}
+            <div style="text-align:center;">
+               <h3>{{ 'log_no_actions_found'|trans({}, 'log') }}.</h3>
+            </div>
         {% endif %}
 
         <legend>
@@ -55,25 +56,22 @@
         <br/><br/>
     </div>
     {% if 0 < pager.nbResults %}
+        <legend>
+            {{ 'Action List'|trans({}, 'platform') }}
+        </legend>
 
-    <legend>
-        {{ 'Action List'|trans({}, 'platform') }}
-    </legend>
+        <div class="text-center">
+            {% if pager.haveToPaginate %}
+                {{ pagination }}
+            {% endif %}
+        </div>
 
-    <div class="text-center">
-        {% if pager.haveToPaginate %}
-            {{ pagination }}
-        {% endif %}
-    </div>
+        {% include 'ClarolineCoreBundle:Log:view_list.html.twig' with {'logs': pager.currentPageResults, 'isDesktop': isDesktop} %}
 
-    {% include 'ClarolineCoreBundle:Log:view_list.html.twig' with {'logs': pager.currentPageResults, 'isDesktop': isDesktop} %}
-
-    <div class="text-center">
-        {% if pager.haveToPaginate %}
-            {{ pagination }}
-        {% endif %}
-    </div>
-    {% else %}
-        {{ 'log_no_actions_found'|trans({}, 'log') }}.
+        <div class="text-center">
+            {% if pager.haveToPaginate %}
+                {{ pagination }}
+            {% endif %}
+        </div>
     {% endif %}
 </div>

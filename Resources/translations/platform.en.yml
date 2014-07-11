@@ -961,3 +961,4 @@ successfull_workspace_creation: The workspace %name% has been created successful
 no_action_found: No action found.
 error: Error
 last_manager_error_message: You can't remove every manager.
+remove_workspace_role_warning: Do you really want to remove this role ? If the role is still associated to users, these users will lose their permissions granted by this role.
