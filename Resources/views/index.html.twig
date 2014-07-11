@@ -26,10 +26,12 @@
             {{ 'paths' | trans({}, 'innova_tools') }}
         </h3>
 
+        {% if canCreate %}
         <a href="{{ path('innova_path_editor_new', {workspaceId: workspace.id}) }}" class="btn btn-sm btn-default float-right-top">
             <span class="fa fa-plus"></span>
             {{ 'create_path' | trans({}, 'innova_tools') }}
         </a>
+        {% endif %}
     </div>
 
     <div>{{ macros.flashBox() }}</div>
@@ -52,8 +54,8 @@
             {% for count, path in paths %}
                 <tr>
                     <td>
-                        {% if path.published %}
-                            {% if not path.modified %}
+                        {% if path.entity.published %}
+                            {% if not path.entity.modified %}
                                 <span class="text-success">{{ 'published' | trans({}, 'innova_tools') }}</span>
                             {% else %}
                                 <span class="text-warning">{{ 'published' | trans({}, 'innova_tools') }} {{ 'modified' | trans({}, 'innova_tools') }}</span>
@@ -64,36 +66,40 @@
                     </td>
                     <td>
                         <strong>
-                            {% if path.published %}
-                                <a href="{{ path('innova_path_player_index', {workspaceId: workspace.id, pathId: path.id, stepId: path.getRootStep().id}) }}" />
-                                {{ path.resourceNode.name }}
+                            {% if path.entity.published %}
+                                <a href="{{ path('innova_path_player_index', {workspaceId: workspace.id, pathId: path.entity.id, stepId: path.entity.getRootStep().id}) }}" />
+                                {{ path.entity.resourceNode.name }}
                                 </a>
                             {% else %}
-                                {{ path.resourceNode.name }}
+                                {{ path.entity.resourceNode.name }}
                             {% endif %}
                         </strong>
                     </td>
                     <td>
-                        <em>{{ path.description | striptags | truncate(40, true, ' [...]') }}</em>
+                        <em>{{ path.entity.description | striptags | truncate(40, true, ' [...]') }}</em>
                     </td>
                     <td class="text-right">
-                        <a href="{{ path('innova_path_editor_edit', {workspaceId: workspace.id, id: path.id}) }}" class="btn btn-xs btn-default">
+                        <a href="{{ path('innova_path_editor_edit', {workspaceId: workspace.id, id: path.entity.id}) }}" class="btn btn-xs btn-default">
                             <span class="fa fa-pencil"></span>
                             {{ 'edit' | trans({}, 'innova_tools') }}
                         </a>
-                        {% if path.modified or not path.published %}
-                            <a href="{{ path('innova_path_publish', {workspaceId: workspace.id, id: path.id}) }}" class="btn btn-xs btn-success">
+
+                        {% if (path.entity.modified or not path.entity.published) and path.canEdit %}
+                            <a href="{{ path('innova_path_publish', {workspaceId: workspace.id, id: path.entity.id}) }}" class="btn btn-xs btn-success">
                                 <span class="fa fa-share-square-o"></span>
                                 {{ 'publish' | trans({}, 'innova_tools') }}
                             </a>
                         {% endif %}
-                        <form action="{{ path('innova_path_delete', {workspaceId: workspace.id, id: path.id}) }}" method="post" style="display: inline-block">
+
+                        {% if path.canDelete %}
+                        <form action="{{ path('innova_path_delete', {workspaceId: workspace.id, id: path.entity.id}) }}" method="post" style="display: inline-block">
                             <input type="hidden" value="DELETE" name="_method" />
                             <a href="#" class="btn btn-xs btn-danger path-delete" id="path-delete-{{ count }}">
                                 <span class="fa fa-trash-o"></span>
                                 {{ 'delete' | trans({}, 'innova_tools') }}
                             </a>
                         </form>
+                        {% endif %}
                     </td>
                 </tr>
             {% endfor %}

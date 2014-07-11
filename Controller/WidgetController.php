@@ -15,7 +15,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
  * @Route(
  *      "",
  *      name    = "innova_path_widget",
- *      service = "innova_path.listener.path_widget"
+ *      service = "innova_path.controller.path_widget"
  * )
  */
 class WidgetController

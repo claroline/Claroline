@@ -2,6 +2,7 @@
 
 namespace Innova\PathBundle\Listener;
 
+use Innova\PathBundle\Entity\Path\Path;
 use Innova\PathBundle\Manager\PathManager;
 use Symfony\Bundle\TwigBundle\TwigEngine;
 
@@ -47,7 +48,8 @@ class ToolListener
         // Build response content
         $content = $this->templating->render(
             'InnovaPathBundle::index.html.twig',
-            array(
+            array (
+                'canCreate' => $this->pathManager->isAllow('CREATE', new Path()),
                 'workspace' => $event->getWorkspace(),
                 'paths' => $paths,
             )

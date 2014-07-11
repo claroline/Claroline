@@ -17,8 +17,3 @@ services:
             - { name: kernel.event_listener, event: create_innova_path, method: onPathCreate }
             - { name: kernel.event_listener, event: delete_innova_path, method: onPathDelete }
             - { name: kernel.event_listener, event: copy_innova_path, method: onPathCopy }
-
-    innova_path.listener.path_widget:
-        class: %innova_path.listener.path_widget.class%
-        arguments:
-            pathManager: @innova_path.manager.path

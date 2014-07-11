@@ -39,7 +39,7 @@ class PathManager
     
     /**
      * Authenticated user
-     * @var \Claroline\CoreBundle\Entity\User\User $user
+     * @var \Claroline\CoreBundle\Entity\User $user
      */
     protected $user;
 
@@ -65,12 +65,18 @@ class PathManager
         $this->user = $this->security->getToken()->getUser();
     }
 
-    public function isAllow(Path $path, $actionName)
+    public function checkAccess($actionName, Path $path)
     {
-        $collection = new ResourceCollection(array ($path->getResourceNode()));
-        if (false === $this->security->isGranted($actionName, $collection)) {
+        if (false === $this->isAllow($actionName, $path)) {
             throw new AccessDeniedException();
         }
+    }
+
+    public function isAllow($actionName, Path $path)
+    {
+        $collection = new ResourceCollection(array ($path->getResourceNode()));
+
+        return $this->security->isGranted($actionName, $collection);
     }
 
     /**
@@ -108,7 +114,19 @@ class PathManager
         $token = $this->security->getToken();
         $userRoles = $this->utils->getRoles($token);
 
-        return $this->om->getRepository('InnovaPathBundle:Path\Path')->findAccessibleByUser($roots, $userRoles);
+        $entities = $this->om->getRepository('InnovaPathBundle:Path\Path')->findAccessibleByUser($roots, $userRoles);
+
+        // Check edit and delete acces for paths
+        $paths = array ();
+        foreach ($entities as $entity) {
+            $paths[] = array (
+                'entity'    => $entity,
+                'canEdit'   => $this->isAllow('EDIT', $entity),
+                'canDelete' => $this->isAllow('DELETE', $entity),
+            );
+        }
+
+        return $paths;
     }
     
     /**
@@ -176,18 +194,9 @@ class PathManager
      */
     public function delete(Path $path)
     {
-        $pathCreator = $path->getResourceNode()->getCreator();
-        
-        // Check if current user can delete this path
-        if ($pathCreator == $this->user) {
-            // User can delete current path
-            $this->om->remove($path->getResourceNode());
-            $this->om->flush();
-        }
-        else {
-            // User can't delete path from other users
-            throw new \Exception('You can delete only your own paths.');
-        }
+        // User can delete current path
+        $this->om->remove($path->getResourceNode());
+        $this->om->flush();
         
         return $this;
     }
