@@ -31,25 +31,9 @@
             <section>
                 {% if editMode %}
                 <div class="col-md-2 widget-menu-container" data-design-container>
-                    <h2 data-toggle="collapse" data-target="#dispositions" role="button">Disposition</h2>
-                    <ul id="dispositions" class="dispositions collapse">
-                        <li class="disposition" data-ng-class="{'selected': portfolio.disposition == 0, 'idle': !changing, 'loading': changing}" data-ng-click="changeDisposition(0)">
-                            <div>
-                                <div class="col-md-12 border">1</div>
-                            </div>
-                        </li>
-                        <li class="disposition" data-ng-class="{'selected': portfolio.disposition == 1, 'idle': !changing, 'loading': changing}" data-ng-click="changeDisposition(1)">
-                            <div>
-                                <div class="col-md-6 border">1</div>
-                                <div class="col-md-6 border">2</div>
-                            </div></li>
-                        <li class="disposition" data-ng-class="{'selected': portfolio.disposition == 2, 'idle': !changing, 'loading': changing}" data-ng-click="changeDisposition(2)">
-                            <div>
-                                <div class="col-md-4 border">1</div>
-                                <div class="col-md-4 border">2</div>
-                                <div class="col-md-4 border">3</div>
-                            </div></li>
-                    </ul>
+                    <button type="button" class="btn btn-lg btn-default" data-template="templates/disposition.tpl.html" data-placement="right" data-animation="am-fade-and-slide-left" data-bs-popover>
+                        Disposition
+                    </button>
                     <h2 data-toggle="collapse" data-target="#contents" role="button">Contenu</h2>
                     <div id="contents" class="collapse in">
                         <div class="btn-group-vertical contents" role="buttongroup">
@@ -136,6 +120,8 @@
     %}
         <link rel="stylesheet" href="{{ asset_url }}" screen="media" />
     {% endstylesheets %}
+
+    <link rel="stylesheet" href="//rawgithub.com/mgcrea/angular-motion/master/dist/angular-motion.min.css">
 {% endblock %}
 
 {% block javascripts %}
@@ -155,6 +141,7 @@
             '@IcapPortfolioBundle/Resources/public/js/vendor/angular/angular.min.js'
             '@IcapPortfolioBundle/Resources/public/js/vendor/angular/angular-resource.min.js'
             '@IcapPortfolioBundle/Resources/public/js/vendor/angular/angular-sanitize.min.js'
+            '@IcapPortfolioBundle/Resources/public/js/vendor/angular/angular-animate.min.js'
         %}
             <script type="text/javascript" src="{{ asset_url }}"></script>
         {% endjavascripts %}
@@ -162,6 +149,16 @@
         <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/vendor/angular-ui/ui-tinymce/tinymce.js') }}"></script>
         <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/vendor/moment.min.js') }}"></script>
         <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/vendor/dateTimeInput.js') }}"></script>
+
+        {% javascripts debug=true filter='jsmin' output='js/portfolio/angular-strap.js'
+            '@IcapPortfolioBundle/Resources/public/js/vendor/angular-strap/dimensions.min.js'
+            '@IcapPortfolioBundle/Resources/public/js/vendor/angular-strap/tooltip.min.js'
+            '@IcapPortfolioBundle/Resources/public/js/vendor/angular-strap/tooltip.tpl.min.js'
+            '@IcapPortfolioBundle/Resources/public/js/vendor/angular-strap/popover.min.js'
+            '@IcapPortfolioBundle/Resources/public/js/vendor/angular-strap/popover.tpl.min.js'
+        %}
+            <script type="text/javascript" src="{{ asset_url }}"></script>
+        {% endjavascripts %}
 
         <script type="text/javascript" src="{{ url('bazinga_exposetranslation_js', { 'domain_name': 'icap_portfolio' }) }}"></script>
 
@@ -190,6 +187,7 @@
         <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/directives/datepickerDirective.js') }}"></script>
         <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/filters/trustAsHtml.js') }}"></script>
         <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/filters/trans.js') }}"></script>
+        <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/templates/disposition.tpl.js') }}"></script>
         <script type="text/javascript">
             'use strict';
             (function() {
