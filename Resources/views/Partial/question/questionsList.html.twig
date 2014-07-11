@@ -59,7 +59,7 @@
             <td class="classic"><a href="{{ path('ujm_question_show', { 'id': interaction.question.id }) }}">{{ interaction.question.title }}</a></td>
             <td class="classic">{{ interaction.type|trans }}</td>
             <td class="classic">{{ interaction.invite|raw }}</td>
-            {% if (questionsList == 'share' or (questionsList == 'exoList') and actionQ[interaction.question.id] == 2) %}
+            {% if rights['dispSharedBy'] %}
                 <td class="classic">
                     {{ interaction.question.user.firstName }} {{ interaction.question.user.lastName }}
                 </td>
@@ -67,30 +67,25 @@
                 <td class="classic">-</td>
             {% endif %}
             <td class="classic">
-                <!-- I can share if my question or if search by exercise and the question is mine -->
-                {% if (questionsList == 'my') or ( (questionsList == 'exoList') and (actionQ[interaction.question.id] == 1) ) %}
+                {% if rights['allowShareQuestion'] %}
                     <a class="btn btn-default" data-toggle="tooltip" title="{{ 'share' | trans }}" href="{{ path('ujm_question_share', { 'questionID': interaction.question.id }) }}">
                         <i class="icon-share-alt"></i>
                     </a>
                 {% endif %}
-                <!-- I can duplicate if my question or if the question is shared with me or if search by exercise and the question is mine or is shared with me -->
-                {% if (questionsList == 'my') or (questionsList == 'share') or actionQ[interaction.question.id] <= 2 %}
+                {% if rights['allowDuplicateQuestion'] %}
                 <a class="btn btn-default" data-toggle="tooltip" title="{{ 'duplicate' | trans }}" href="{{ path('ujm_question_duplicate', { 'interID': interaction.id }) }}">
                     <i class="icon-repeat"></i>
                 </a>
                 {% else %}
                     {{ 'noRights' | trans }}
                 {% endif %}
-                <!-- I can edit and delete if my question or if shared question with edit right or if search by exercise and the question is mine -->
-                {% if (questionsList == 'my' )
-                      or ( (shareRight[interaction.id] is defined) and (shareRight[interaction.id]) )
-                      or ( (questionsList == 'exoList') and (actionQ[interaction.question.id] == 1) ) %}
+                {% if rights['allowEditQuestion'] %}
 
                     {% if (questionWithResponse[interaction.id] == 0) %}
                         <a class="btn btn-default" data-toggle="tooltip" title="{{ 'edit' | trans }}" href="{{ path('ujm_question_edit', { 'id': interaction.question.id }) }}">
                             <i class="icon-pencil"></i>
                         </a>
-                        {% if (questionsList == 'my') %}
+                        {% if rights['allowDeleteQuestion'] %}
                             <a class="btn btn-default" data-toggle="tooltip" title="{{ 'delete' | trans }}" id="delete-question" href="{{ path('ujm_question_delete', {
                             'id': interaction.question.id, 'pageNow': pagerMy.getCurrentPage, 'maxPage': pagerMy.maxPerPage,
                             'nbItem': pagerMy.getNbResults, 'lastPage': pagerMy.getNbPages }) }}">
@@ -111,8 +106,7 @@
                         </a>
                     {% endif %}
                 {% endif %}
-                <!--Delete of my bank the questions shared-->
-                {% if (questionsList == 'share') %}
+                {% if rights['allowDeleteQuestionOfMyBank'] and questionsList == 'share'%}
                     <a class="btn btn-default" data-toggle="tooltip" title="{{ 'delete of my bank' | trans }}" id="delete-question"
                        href="{{ path('ujm_delete_shared_question', { 'qid': interaction.question.id,
                             'uid': app.user.id,
@@ -121,14 +115,14 @@
                         <i class="icon-trash"></i>
                     </a>
                 {% endif %}
-                {% if (questionsList == 'exoList') and  (actionQ[interaction.question.id] == 2) %}
+                {% if rights['allowDeleteQuestionOfMyBank'] and  (actionQ[interaction.question.id] == 2) %}
                     <a class="btn btn-default" data-toggle="tooltip" title="{{ 'delete of my bank' | trans }}"
                        href="{{ path('ujm_delete_shared_question', { 'qid': interaction.question.id, 'uid': app.user.id, }) }}" id="delete-question">
                         <i class="icon-trash"></i>
                     </a>
                 {% endif %}
             </td>
-            {% if (questionsList == 'my' or questionsList == 'exoList') %}
+            {% if rights['allowShareQuestion'] %}
                 {% if ( (alreadyShared[interaction.question.id] is defined) and (alreadyShared[interaction.question.id] == 1) ) %}
                     <td class="classic">
                         <a class="btn btn-default" data-toggle="tooltip" title="{{ 'show'|trans }}"
@@ -139,6 +133,8 @@
                 {% else %}
                     <td class="classic">-</td>
                 {% endif %}
+            {% else %}
+                <td class="classic">-</td>
             {% endif %}
         </tr>
     {% endfor %}
