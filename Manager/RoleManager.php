@@ -703,7 +703,9 @@ class RoleManager
         $total = $this->countUsersByRoleIncludingGroup($role);
 
         //cli always win!
-        if ($role->getName() === 'ROLE_ADMIN' && php_sapi_name() === 'cli' ) {
+        if ($role->getName() === 'ROLE_ADMIN' && php_sapi_name() === 'cli' ||
+            //web installer too
+            $this->container->get('security.context')->getToken() === null) {
             return true;
         }
 
