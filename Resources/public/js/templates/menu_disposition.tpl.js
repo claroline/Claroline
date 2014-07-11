@@ -3,7 +3,7 @@
 angular.module('portfolioApp').run([
     '$templateCache',
     function($templateCache) {
-        $templateCache.put('templates/disposition.tpl.html',
+        $templateCache.put('templates/menu_disposition.tpl.html',
             '<div class="popover" id="disposition_popover">' +
                 '<div class="arrow"></div>' +
                 '<div class="popover-content">' +

@@ -30,20 +30,18 @@
 
             <section>
                 {% if editMode %}
-                <div class="col-md-2 widget-menu-container" data-design-container>
-                    <button type="button" class="btn btn-lg btn-default" data-template="templates/disposition.tpl.html" data-placement="right" data-animation="am-fade-and-slide-left" data-bs-popover>
-                        Disposition
-                    </button>
-                    <h2 data-toggle="collapse" data-target="#contents" role="button">Contenu</h2>
-                    <div id="contents" class="collapse in">
-                        <div class="btn-group-vertical contents" role="buttongroup">
-                            <button type="button" class="btn btn-default" data-ng-repeat="widgetType in widgetTypes" data-ng-click="createWidget(widgetType)">
-                                <span class="fa fa-plus"></span>
-                                {% verbatim %}{{ widgetType + '_title' | trans }}{% endverbatim %}
-                            </button>
-                        </div>
-                    </div>
-                </div>
+                <ul class="col-md-2 widget-menu-container list-unstyled" data-design-container>
+                    <li>
+                        <button type="button" class="widget-menu-item btn btn-lg btn-default" data-template="templates/menu_disposition.tpl.html" data-placement="right" data-animation="am-fade-and-slide-left" data-bs-popover>
+                            Disposition
+                        </button>
+                    </li>
+                    <li>
+                        <button type="button" class="widget-menu-item btn btn-lg btn-default" data-template="templates/menu_widget-type.tpl.html" data-placement="right" data-animation="am-fade-and-slide-left" data-bs-popover>
+                            Contenu
+                        </button>
+                    </li>
+                </ul>
                 {% endif %}
                 <div class="main-content col-md-8{% if false == editMode %} col-md-offset-2{% endif %}">
                 {% if editMode %}
@@ -163,12 +161,15 @@
         <script type="text/javascript" src="{{ url('bazinga_exposetranslation_js', { 'domain_name': 'icap_portfolio' }) }}"></script>
 
         <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/utils/Array.js') }}"></script>
+
         <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/app.js') }}"></script>
+
         <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/controllers/portfolioController.js') }}"></script>
         <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/controllers/widgetController.js') }}"></script>
         <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/controllers/editWidgetsController.js') }}"></script>
         <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/controllers/designController.js') }}"></script>
         <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/controllers/collectionFormController.js') }}"></script>
+
         <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/services/portfolio.js') }}"></script>
         <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/services/portfolioManager.js') }}"></script>
         <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/services/widgetsManager.js') }}"></script>
@@ -176,6 +177,7 @@
         <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/services/widgetsFactory.js') }}"></script>
         <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/services/urlInterpolator.js') }}"></script>
         <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/services/translation.js') }}"></script>
+
         <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/directives/widgetsDirective.js') }}"></script>
         <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/directives/portfolioDirective.js') }}"></script>
         <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/directives/bindHtmlDirective.js') }}"></script>
@@ -185,9 +187,12 @@
         <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/directives/designDirective.js') }}"></script>
         <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/directives/resourcePickerDirective.js') }}"></script>
         <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/directives/datepickerDirective.js') }}"></script>
+
         <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/filters/trustAsHtml.js') }}"></script>
         <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/filters/trans.js') }}"></script>
-        <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/templates/disposition.tpl.js') }}"></script>
+
+        <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/templates/menu_disposition.tpl.js') }}"></script>
+        <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/templates/menu_widget-type.tpl.js') }}"></script>
         <script type="text/javascript">
             'use strict';
             (function() {
