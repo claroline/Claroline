@@ -503,13 +503,14 @@ new_password: Nouveau mot de passe
 new_role_message: 'Vous venez de recevoir le role %name%'
 new_role_message_object: 'Vos permissions sur la plateforme ont changé'
 no: non
-no_activity: 'Il n''y a aucune activité'
+no_activity_in_workspace: Cet espace ne contient actuellement aucune activité.
 no_category: 'Il n''y a aucune catégorie'
 no_email: 'Ce mail ne correspond pas a un utilisateur inscrit'
 no_group: 'Aucun groupe'
 no_home_tab: 'Il n''y a aucun onglet'
 no_message: 'Aucun message'
 no_role_selected_message: 'Aucun role sélectionné.'
+no_resources_in_workspace: Cet espace ne contient actuellement aucune ressource.
 no_search_results: 'Votre recherche n''a retourné aucun résultat.'
 no_tag: 'Il n''y a aucun Tag'
 no_user: 'Aucun utilisateur'
@@ -868,7 +869,6 @@ will display the username: 'qui affichera le nom de l''utilisateur'
 workspace.create: 'Créer un nouvel espace d''activités'
 workspace.name_not_blank: 'Veuillez spécifier un nom pour ce workspace.'
 workspace: 'Espace d''activités'
-workspace_activities_tracking: 'Suivi des activités de l''espace d''activités'
 workspace_administration: Administration
 workspace_classification: 'Classification des espaces d''activités'
 workspace_delete: 'Supprimer l''espace d''activités'

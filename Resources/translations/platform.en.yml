@@ -502,12 +502,13 @@ new_password: New password
 new_role_message: 'You received the role %name%'
 new_role_message_object: 'Your permissions on the platform have changed'
 no: no
-no_activity: 'There is no activity'
+no_activity_in_workspace: There are currently no activities in this workspace.
 no_category: 'There is no category'
 no_email: 'No email found, check the spelling'
 no_group: 'No group'
 no_home_tab: 'There is no Home tab'
 no_message: 'No message'
+no_resources_in_workspace: There are currently no resources in this workspace.
 no_role_selected_message: 'No role selected.'
 no_search_results: 'Your search hasn''t returned any result.'
 no_tag: 'There is no tag'
@@ -861,7 +862,6 @@ will display the username: 'will display the username'
 workspace.create: 'Create a new workspace'
 workspace.name_not_blank: 'The workspace''s name is required.'
 workspace: Workspace
-workspace_activities_tracking: 'Workspace activities tracking'
 workspace_administration: Administration
 workspace_classification: 'Workspace classification'
 workspace_delete: 'Delete the workspace'
