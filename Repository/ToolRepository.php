@@ -89,6 +89,7 @@ class ToolRepository extends EntityRepository
             JOIN tool.orderedTools ot
             JOIN ot.user user
             WHERE user.id = {$user->getId()}
+            AND ot.isVisibleInDesktop = true
             ORDER BY ot.order
         ";
         $query = $this->_em->createQuery($dql);
@@ -134,7 +135,8 @@ class ToolRepository extends EntityRepository
         $dql = "
             SELECT tool
             FROM Claroline\CoreBundle\Entity\Tool\Tool tool
-            WHERE tool NOT IN (
+            WHERE tool.isDisplayableInWorkspace = true
+            AND tool NOT IN (
                 SELECT tool_2 FROM Claroline\CoreBundle\Entity\Tool\Tool tool_2
                 JOIN tool_2.orderedTools ot
                 JOIN ot.workspace ws

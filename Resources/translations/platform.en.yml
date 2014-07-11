@@ -703,6 +703,7 @@ send_mail_form_object: Object
 send_message: 'Send a message'
 send_message_to_workspace: 'Send a message to the users of the workspace.'
 send_message_to_workspace: Send a message to the users of the workspace.
+send_message_to_workspace_info: This list shows the workspaces of which you are the manager.
 server: Server
 session: Session
 session_db_cannot_perform_operations: 'Cannot read or write in the specified table. Please check that the database user has sufficient permissions and that there isn''t any special constraint on this table.'
@@ -958,3 +959,7 @@ packages_upgrade_info_message: Warning: this page allows you to update the platf
 package_upgrade_all_warning: Warning, this will update all packages on the platform. This operation can not be canceled. It is recommended to make a backup of the files and the database before performing this operation.
 no_group: There is no group.
 successfull_workspace_creation: The workspace %name% has been created successfully
+no_action_found: No action found.
+error: Error
+last_manager_error_message: You can't remove every manager.
+remove_workspace_role_warning: Do you really want to remove this role ? If the role is still associated to users, these users will lose their permissions granted by this role.

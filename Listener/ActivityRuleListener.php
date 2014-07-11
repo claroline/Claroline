@@ -120,16 +120,4 @@ class ActivityRuleListener
             }
         }
     }
-
-    /**
-     * @DI\Observe("kernel.response")
-     */
-    public function onKernelResponse(FilterResponseEvent $event)
-    {
-        if ($this->hasSucceded) {
-            $content = $event->getResponse()->getContent();
-            $content = str_replace('</body>', '<script>console.log("succeeded");</script></body>', $content);
-            $event->getResponse()->setContent($content);
-        }
-    }
 }

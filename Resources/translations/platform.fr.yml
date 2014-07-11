@@ -706,8 +706,8 @@ send_mail: 'Envoyer un mail'
 send_mail_form_content: Message
 send_mail_form_object: Objet
 send_message: 'Envoyer un message'
-send_message_to_workspace: 'Envoyer un message aux utilisateurs de l''espace'
 send_message_to_workspace: Envoyer un message aux utilisateurs de l'espace
+send_message_to_workspace_info: Cette liste reprend les espaces d'activités dont vous êtes le gestionnaire.
 server: Serveur
 session: Session
 session_db_cannot_perform_operations: 'L''écriture et/ou la lecture d''enregistrements dans la table renseignée est impossible. Veuillez vérifier que l''utilisateur de la base de données dispose de droits suffisants et qu''aucune contrainte particulière n''a été affectée à cette table.'
@@ -966,3 +966,7 @@ user_limit_success_update: La limite d'utilisateur par rôle a été mise à jou
 role_name_changed_success: Le nom du rôle a été mis à jour avec succès.
 no_group: Il n'y a aucun groupe.
 successfull_workspace_creation: L'espace d'activité %name% a été créé avec succès.
+no_action_found: Aucune action trouvée.
+error: Erreur
+last_manager_error_message: Vous ne pouvez pas retirer tout les gestionnaires.
+remove_workspace_role_warning: Êtes-vous sûr de vouloir supprimer ce rôle ? Si ce rôle est associé à des utilisateurs, ces utilisateurs perdront leurs droits d'accès fournit par ce rôle.
