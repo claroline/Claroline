@@ -40,6 +40,20 @@
     </thead>
     <tbody>
     {% for interaction in interactions %}
+
+        {% if shareRight[interaction.id] is defined %}
+            {% set qshareRight = shareRight[interaction.id] %}
+        {% else %}
+            {% set qshareRight = FALSE %}
+        {% endif %}
+
+        {% if actionQ[interaction.question.id] is defined %}
+            {% set qaction = actionQ[interaction.question.id] %}
+        {% else %}
+            {% set qaction = -1 %}
+        {% endif %}
+
+        {% set rights = getQuestionRights(questionsList, qshareRight, qaction) %}
         <tr>
             <td class="classic">{{ interaction.question.category.value }}</td>
             <td class="classic"><a href="{{ path('ujm_question_show', { 'id': interaction.question.id }) }}">{{ interaction.question.title }}</a></td>

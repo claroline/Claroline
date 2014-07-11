@@ -71,6 +71,7 @@ class TwigExtensions extends \Twig_Extension
             'getInterTwig'         => new \Twig_Function_Method($this, 'getInterTwig'),
             'getCoordsGraphTwig'   => new \Twig_Function_Method($this, 'getCoordsGraphTwig'),
             'roundUpOrDown'        => new \Twig_Function_Method($this, 'roundUpOrDown'),
+            'getQuestionRights'    => new \Twig_Function_Method($this, 'getQuestionRights'),
         );
 
     }
@@ -140,6 +141,61 @@ class TwigExtensions extends \Twig_Extension
     public function roundUpOrDown($markToBeAdjusted)
     {
         return $this->exerciseSer->roundUpDown($markToBeAdjusted);
+    }
+
+    public function getQuestionRights($questionsList, $shareRight, $actionQ)
+    {
+
+        $questionRights = array();
+        $questionRights['dispSharedBy'] = FALSE;
+        $questionRights['allowShareQuestion'] = FALSE;
+        $questionRights['allowDuplicateQuestion'] = FALSE;
+        $questionRights['allowEditQuestion'] = FALSE;
+        $questionRights['allowDeleteQuestion'] = FALSE;
+        $questionRights['allowDeleteQuestionOfMyBank'] = FALSE;
+
+        //display shared by
+        if ( ($questionsList == 'share') || ( ($questionsList == 'exoList')
+                && $actionQ == 2) ) {
+
+            $questionRights['dispSharedBy'] = TRUE;
+        }
+
+        //allow to share a question
+        if ( ($questionsList == 'my') || ( ($questionsList == 'exoList')
+                && ($actionQ == 1) ) ) {
+
+            $questionRights['allowShareQuestion'] = TRUE;
+        }
+
+        //allow to duplicate a question
+        if ( ($questionsList == 'my') || ($questionsList == 'share') || ($actionQ <= 2) ) {
+
+            $questionRights['allowDuplicateQuestion'] = TRUE;
+        }
+
+        //allow to edit a question
+        if ( ($questionsList == 'my' ) || ($shareRight == true)
+                || ( ($questionsList == 'exoList') && ($actionQ == 1) ) ){
+
+            $questionRights['allowEditQuestion'] = TRUE;
+        }
+
+        //allow to delete a question
+        if ($questionsList == 'my') {
+
+            $questionRights['allowDeleteQuestion'] = TRUE;
+        }
+
+        //allow to delete a question of my bank
+        if ( ($questionsList == 'share') || (($questionsList == 'exoList')
+                && ($actionQ <= 2)) ) {
+
+            $questionRights['allowDeleteQuestionOfMyBank'] = TRUE;
+        }
+
+        return $questionRights;
+
     }
 
     private function getQCMScoreMax($interQCM)
