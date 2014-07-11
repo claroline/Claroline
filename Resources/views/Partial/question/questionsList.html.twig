@@ -53,15 +53,21 @@
                 <td class="classic">-</td>
             {% endif %}
             <td class="classic">
-                {% if (questionsList == 'my') %}
+                <!-- I can share if my question or if search by exercise and the question is mine -->
+                {% if (questionsList == 'my') or ( (questionsList == 'exoList') and (actionQ[interaction.question.id] == 1) ) %}
                     <a class="btn btn-default" data-toggle="tooltip" title="{{ 'share' | trans }}" href="{{ path('ujm_question_share', { 'questionID': interaction.question.id }) }}">
                         <i class="icon-share-alt"></i>
                     </a>
                 {% endif %}
+                <!-- I can duplicate if my question or if the question is shared with me or if search by exercise and the question is mine or is shared with me -->
+                {% if (questionsList == 'my') or (questionsList == 'share') or actionQ[interaction.question.id] <= 2 %}
                 <a class="btn btn-default" data-toggle="tooltip" title="{{ 'duplicate' | trans }}" href="{{ path('ujm_question_duplicate', { 'interID': interaction.id }) }}">
                     <i class="icon-repeat"></i>
                 </a>
-                <!-- if my question or if shared question with edit right or if search by exercise and the question is mind -->
+                {% else %}
+                    {{ 'noRights' | trans }}
+                {% endif %}
+                <!-- I can edit and delete if my question or if shared question with edit right or if search by exercise and the question is mine -->
                 {% if (questionsList == 'my' )
                       or ( (shareRight[interaction.id] is defined) and (shareRight[interaction.id]) )
                       or ( (questionsList == 'exoList') and (actionQ[interaction.question.id] == 1) ) %}
@@ -91,7 +97,7 @@
                         </a>
                     {% endif %}
                 {% endif %}
-                <!--Delete question shared-->
+                <!--Delete of my bank the questions shared-->
                 {% if (questionsList == 'share') %}
                     <a class="btn btn-default" data-toggle="tooltip" title="{{ 'delete of my bank' | trans }}" id="delete-question"
                        href="{{ path('ujm_delete_shared_question', { 'qid': interaction.question.id,
