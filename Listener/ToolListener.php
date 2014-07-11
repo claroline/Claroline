@@ -152,7 +152,6 @@ class ToolListener
             array('isConfigurableInDesktop' => true, 'isDisplayableInDesktop' => true)
         );
 
-
         if (count($tools) > 1) {
             return $this->templating->render(
                 'ClarolineCoreBundle:Tool\desktop\parameters:parameters.html.twig',

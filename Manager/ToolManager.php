@@ -229,7 +229,7 @@ class ToolManager
 
         foreach ($desktopTools as $desktopTool) {
             //this field isn't mapped
-            $desktopTool->getTool()->setVisible(true);
+            $desktopTool->getTool()->setVisible($desktopTool->isVisibleInDesktop());
             $orderedToolList[$desktopTool->getOrder()] = $desktopTool->getTool();
         }
 
@@ -239,6 +239,8 @@ class ToolManager
             //this field isn't mapped
             $tool->setVisible(false);
         }
+
+        $this->addMissingDesktopTools($user, $undisplayedTools, count($desktopTools));
 
         return $this->utilities->arrayFill($orderedToolList, $undisplayedTools);
     }
@@ -381,7 +383,7 @@ class ToolManager
         }
 
         $orderedTool = $this->orderedToolRepo->findOneBy(array('user' => $user, 'tool' => $tool));
-        $this->om->remove($orderedTool);
+        $orderedTool->setVisibleInDesktop(false);
         $this->om->flush();
     }
 
@@ -397,17 +399,21 @@ class ToolManager
     {
         $switchTool = $this->orderedToolRepo->findOneBy(array('user' => $user, 'order' => $position));
 
-        if ($switchTool != null) {
+        if (!$switchTool) {
+            $desktopTool = $this->om->factory('Claroline\CoreBundle\Entity\Tool\OrderedTool');
+            $desktopTool->setUser($user);
+            $desktopTool->setTool($tool);
+            $desktopTool->setOrder($position);
+            $desktopTool->setName($name);
+            $desktopTool->setVisibleInDesktop(true);
+            $this->om->persist($desktopTool);
+            $this->om->flush();
+        } elseif ($switchTool->getTool() === $tool) {
+            $switchTool->setVisibleInDesktop(true);
+            $this->om->flush();
+        } else {
             throw new ToolPositionAlreadyOccupiedException('A tool already exists at this position');
         }
-
-        $desktopTool = $this->om->factory('Claroline\CoreBundle\Entity\Tool\OrderedTool');
-        $desktopTool->setUser($user);
-        $desktopTool->setTool($tool);
-        $desktopTool->setOrder($position);
-        $desktopTool->setName($name);
-        $this->om->persist($desktopTool);
-        $this->om->flush();
     }
 
     /**
@@ -429,6 +435,7 @@ class ToolManager
          $movingTool->setOrder(intval($position));
          $this->om->persist($switchTool);
          $this->om->persist($movingTool);
+         $this->om->flush();
     }
 
     /**
@@ -607,5 +614,26 @@ class ToolManager
     public function getAdminToolsByRoles(array $roles)
     {
         return $this->om->getRepository('Claroline\CoreBundle\Entity\Tool\AdminTool')->findByRoles($roles);
+    }
+
+    private function addMissingDesktopTools(User $user, array $missingTools, $startPosition)
+    {
+        foreach ($missingTools as $tool) {
+            $wot = $this->orderedToolRepo->findOneBy(array('user' => $user, 'tool' => $tool));
+
+            if (!$wot) {
+                $orderedTool = new OrderedTool();
+                $orderedTool->setUser($user);
+                $orderedTool->setName($tool->getName());
+                $orderedTool->setOrder($startPosition);
+                $orderedTool->setTool($tool);
+                $orderedTool->setVisibleInDesktop(false);
+                $this->om->persist($orderedTool);
+            }
+
+            $startPosition++;
+        }
+
+        $this->om->flush();
     }
 }

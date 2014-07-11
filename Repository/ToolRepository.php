@@ -89,6 +89,7 @@ class ToolRepository extends EntityRepository
             JOIN tool.orderedTools ot
             JOIN ot.user user
             WHERE user.id = {$user->getId()}
+            AND ot.isVisibleInDesktop = true
             ORDER BY ot.order
         ";
         $query = $this->_em->createQuery($dql);
