@@ -661,31 +661,34 @@ class MessageController
         $names = explode(';', $receiverString);
         $usernames = array();
         $groupNames = array();
+        $workspaceCodes = array();
 
         foreach ($names as $name) {
             if (substr($name, 0, 1) === '{') {
                 $groupNames[] = trim($name, '{}');
+            } elseif (substr($name, 0, 1) === '[') {
+                $workspaceCodes[] = trim($name, '[]');
             } else {
                 $usernames[] = $name;
             }
         }
 
-        $groups = $this->groupManager->getGroupsByNames($groupNames);
-
-        foreach ($groups as $group) {
-            $users = $this->userManager->getUsersByGroupWithoutPager($group);
-
-            foreach ($users as $user) {
-                $usernames[] = $user->getUsername();
-            }
+        if (in_array($user->getUsername(), $usernames)) {
+            return true;
         }
 
-        foreach ($usernames as $username) {
-            if (strtolower($user->getUsername()) === strtolower($username)) {
+        foreach ($user->getGroups() as $group) {
+            if (in_array($group->getName(), $groupNames)) {
                 return true;
             }
         }
 
-        throw new AccessDeniedException("This isn't your message");
+        foreach ($this->workspaceManager->getWorkspacesByUser($user) as $workspace) {
+            if (in_array($workspace->getCode(), $workspaceCodes)) {
+                return true;
+            }
+        }
+
+        throw new AccessDeniedException();
     }
 }

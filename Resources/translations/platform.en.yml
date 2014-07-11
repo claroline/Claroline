@@ -702,6 +702,7 @@ send_mail_form_object: Object
 send_message: 'Send a message'
 send_message_to_workspace: 'Send a message to the users of the workspace.'
 send_message_to_workspace: Send a message to the users of the workspace.
+send_message_to_workspace_info: This list shows the workspaces of which you are the manager.
 server: Server
 session: Session
 session_db_cannot_perform_operations: 'Cannot read or write in the specified table. Please check that the database user has sufficient permissions and that there isn''t any special constraint on this table.'

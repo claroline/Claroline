@@ -83,7 +83,7 @@
         });
     }
 
-    function displayPager(type, normalRoute, searchRoute)
+    function displayPager(type, normalRoute, searchRoute, callback)
     {
         currentType = type;
         var toList = $('#message_form_to').val();
@@ -106,6 +106,10 @@
                 $('#contacts-list').empty();
                 $('#contacts-list').append(datas);
                 displayCheckBoxStatus();
+
+                if (callback) {
+                    callback();
+                }
             }
         });
     }
@@ -155,12 +159,15 @@
 
     $('#contacts-button').click(function () {
         initTempTab();
+        setActiveTab('#users-nav-tab');
         displayPager(
             'user',
             'claro_message_contactable_users',
-            'claro_message_contactable_users_search'
+            'claro_message_contactable_users_search',
+            function () {
+                $('#contacts-box').modal('show');
+            }
         );
-        $('#contacts-box').modal('show');
     });
 
     $('#users-nav-tab').on('click', function () {

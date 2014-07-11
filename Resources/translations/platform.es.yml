@@ -656,6 +656,7 @@ send_mail_form_content: 'Mensaje'
 send_mail_form_object: 'Asunto'
 send_message: 'Enviar un mensaje'
 send_message_to_workspace: 'Enviar un mensaje a los usuarios de un espacio de trabajo.'
+send_message_to_workspace: Esta lista de los espacio de trabajo en las que usted es el gerente.
 server: 'Servidor'
 session: 'Sesión'
 session_db_cannot_perform_operations: 'Error en la lectura o escritura de la tabla especificada. Por favor, compruebe que el usuario de base de datos tiene permisos suficientes y que no hay ninguna restricción especial en esta tabla.'

@@ -39,6 +39,9 @@
             {{ renderPager(search, workspaces) }}
         {% endif %}
         <div class="table-responsive">
+            <div class="alert alert-info" role="alert">
+                {{ 'send_message_to_workspace_info'|trans({}, 'platform') }}
+            </div>
             <table class="table table-bordered">
                 <tr>
                     <th>{{ 'name'|trans({}, 'platform') }}</th>
