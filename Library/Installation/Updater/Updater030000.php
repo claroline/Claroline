@@ -12,7 +12,6 @@
 namespace Claroline\CoreBundle\Library\Installation\Updater;
 
 use Claroline\CoreBundle\Entity\Activity\ActivityRuleAction;
-use Claroline\CoreBundle\Entity\Tool\AdminTool;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 
 class Updater030000
@@ -38,10 +37,8 @@ class Updater030000
     {
         $this->updateActivityRuleAction();
         $this->updateActivityIcon();
-        $this->updateTools();
         $this->removePublicProfilePreference();
         $this->updateAdminPluginTool();
-        $this->updateCompetenceTools();
         $this->cleanWeb();
     }
 
@@ -178,30 +175,6 @@ class Updater030000
         $tool->setClass($class);
         $this->om->persist($tool);
         $this->om->flush();
-    }
-
-    private function updateCompetenceTools()
-    {
-    	$this->log('Creating admin referential competence tools...');
-        $existingTool = $this->om->getRepository('ClarolineCoreBundle:Tool\AdminTool')->findByName('competence_referencial');
-
-        if (count($existingTool) === 0) {
-            $competenceReferencial = new AdminTool();
-            $competenceReferencial->setName('competence_referencial');
-            $competenceReferencial->setClass('graduation-cap');
-            $this->om->persist($competenceReferencial);
-        }
-
-        $existingTool = $this->om->getRepository('ClarolineCoreBundle:Tool\AdminTool')->findByName('competence_subscription');
-        if (count($existingTool) === 0) {    
-            $competenceSubscription = new AdminTool();
-            $competenceSubscription->setName('competence_subscription');
-            $competenceSubscription->setClass('code-fork');
-            $this->om->persist($competenceSubscription);
-        }
-        
-        $this->om->flush();
-        $this->log('competence tools created ...');
     }
 
     private function cleanWeb()
