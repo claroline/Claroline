@@ -95,6 +95,10 @@
             <br/><br/>
 
             {% if interactions is not empty %}
+            
+                {% set questionsList = 'exercise' %}
+                {% include "UJMExoBundle:Partial:question/questionsList.html.twig" %}
+            
                 <table class="table table-striped table-bordered table-condensed" id="QuestionArray">
                     <thead>
                         <tr style="background-color: lightsteelblue;">
