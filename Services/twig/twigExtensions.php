@@ -143,7 +143,7 @@ class TwigExtensions extends \Twig_Extension
         return $this->exerciseSer->roundUpDown($markToBeAdjusted);
     }
 
-    public function getQuestionRights($questionsList, $shareRight, $actionQ)
+    public function getQuestionRights($questionsList, $shareRight, $actionQ, $qexoEdit)
     {
 
         $questionRights = array();
@@ -153,10 +153,11 @@ class TwigExtensions extends \Twig_Extension
         $questionRights['allowEditQuestion'] = FALSE;
         $questionRights['allowDeleteQuestion'] = FALSE;
         $questionRights['allowDeleteQuestionOfMyBank'] = FALSE;
+        $questionRights['allowDeleteQuestionOfExercise'] = FALSE;
 
         //display shared by
-        if ( ($questionsList == 'share') || ( ($questionsList == 'exoList')
-                && $actionQ == 2) ) {
+        if ( ($questionsList == 'share') || ($questionsList == 'importShare')
+                || ( ($questionsList == 'exoList') && $actionQ == 2) ) {
 
             $questionRights['dispSharedBy'] = TRUE;
         }
@@ -175,7 +176,7 @@ class TwigExtensions extends \Twig_Extension
         }
 
         //allow to edit a question
-        if ( ($questionsList == 'my' ) || ($shareRight == true)
+        if ( ($questionsList == 'my' ) || ($shareRight === TRUE) || ($qexoEdit == 1)
                 || ( ($questionsList == 'exoList') && ($actionQ == 1) ) ){
 
             $questionRights['allowEditQuestion'] = TRUE;
@@ -192,6 +193,12 @@ class TwigExtensions extends \Twig_Extension
                 && ($actionQ <= 2)) ) {
 
             $questionRights['allowDeleteQuestionOfMyBank'] = TRUE;
+        }
+
+        //allow to delete a question of an exercise
+        if ($questionsList == 'exercise') {
+
+            $questionRights['allowDeleteQuestionOfExercise'] = TRUE;
         }
 
         return $questionRights;
