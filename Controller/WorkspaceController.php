@@ -611,43 +611,23 @@ class WorkspaceController extends Controller
     public function openAction(Workspace $workspace)
     {
         if ($this->security->isGranted('OPEN', $workspace)) {
+            $roles = $this->utils->getRoles($this->security->getToken());
+            $tools = $this->toolManager->getDisplayedByRolesAndWorkspace($roles, $workspace);
 
-            //get every roles of the user in the current $workspace
-            $foundRoles = array();
-            $roles = $this->roleManager->getRolesByWorkspace($workspace);
+            if (count($tools) > 0) {
+                $route = $this->router->generate(
+                    'claro_workspace_open_tool',
+                    array(
+                        'workspaceId' => $workspace->getId(),
+                        'toolName' => $tools[0]->getName()
+                    )
+                );
 
-            foreach ($roles as $wsRole) {
-                foreach ($this->security->getToken()->getRoles() as $userRole) {
-                    if ($userRole->getRole() === $wsRole->getName()) {
-                        $foundRoles[] = $wsRole;
-                    }
-                }
+                return new RedirectResponse($route);
             }
-
-            if (count($foundRoles) > 0) {
-                $openableTools = $this->toolManager->getDisplayedByRolesAndWorkspace($foundRoles, $workspace);
-
-                if (count($openableTools) > 0) {
-                    $openedTool = $openableTools[0];
-                } else {
-                    $openedTool = $this->toolManager->getOneToolByName('home');
-                }
-
-            } else {
-                //this should be the 1st tool of the workspace tool list.
-                //@todo see the above comment
-                $openedTool = $this->toolManager->getOneToolByName('home');
-            }
-
-            $route = $this->router->generate(
-                'claro_workspace_open_tool',
-                array('workspaceId' => $workspace->getId(), 'toolName' => $openedTool->getName())
-            );
-
-            return new RedirectResponse($route);
         }
 
-        throw new AccessDeniedException("Access denied");
+        throw new AccessDeniedException();
     }
 
     /**
