@@ -1,3 +1,4 @@
+log_resource-claroline_forum-close_subject_filter: Fermeture de sujet
 log_resource-claroline_forum-create_category_shortname: Création de catégorie
 log_resource-claroline_forum-create_category_filter: Création de catégorie
 log_resource-claroline_forum-create_category_sentence: a créé une catégorie dans le forum %resource%
@@ -31,6 +32,7 @@ log_resource-claroline_forum-move_message_sentence: a déplacé un message dans 
 log_resource-claroline_forum-move_subject_shortname: Déplacement de sujet
 log_resource-claroline_forum-move_subject_filter: Déplacement de sujet
 log_resource-claroline_forum-move_subject_sentence: a déplacé un sujet dans le forum %resource%
+log_resource-claroline_forum-open_subject_filter: Ouverture de sujet
 log_resource-claroline_forum-stick_subject_shortname: Épinglement de sujet
 log_resource-claroline_forum-stick_subject_filter: Épinglement de sujet
 log_resource-claroline_forum-stick_subject_sentence: a épinglé un sujet dans le forum %resource%
