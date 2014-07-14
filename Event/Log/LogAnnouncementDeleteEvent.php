@@ -8,7 +8,7 @@ use Claroline\AnnouncementBundle\Entity\AnnouncementAggregate;
 
 class LogAnnouncementDeleteEvent extends AbstractLogResourceEvent
 {
-    const ACTION = 'claroline-announcement-resource_announcement_delete';
+    const ACTION = 'resource-claroline_announcement_aggregate-delete';
 
     /**
      * @param AnnouncementAggregate $aggregate

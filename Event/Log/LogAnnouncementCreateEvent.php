@@ -8,7 +8,7 @@ use Claroline\AnnouncementBundle\Entity\AnnouncementAggregate;
 
 class LogAnnouncementCreateEvent extends AbstractLogResourceEvent
 {
-    const ACTION = 'claroline-announcement-resource_announcement_create';
+    const ACTION = 'resource-claroline_announcement_aggregate-create';
 
     /**
      * @param AnnouncementAggregate $aggregate
