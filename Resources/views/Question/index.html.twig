@@ -172,9 +172,8 @@
                         <div class="alert alert-info">{{ 'noQuestionFound'|trans }} ...</div>
                     {% endif %}
             {% else %}
-                {% if listQExo is not empty %}
+                {% if interactions is not empty %}
                     {% set questionsList = 'exoList' %}
-                    {% set interactions = listQExo %}
                     {% include "UJMExoBundle:Partial:question/questionsList.html.twig" %}
                 {% else %}
                     <div class="alert alert-info">{{ 'noQuestionFound'|trans }} ...</div>

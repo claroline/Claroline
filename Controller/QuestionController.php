@@ -245,7 +245,7 @@ class QuestionController extends Controller
                         ->getRepository('UJMExoBundle:Exercise')
                         ->getExerciseAdmin($uid);
 
-        $vars['listQExo']             = $listQExo;
+        $vars['interactions']         = $listQExo;
         $vars['actionQ']              = $actionQ;
         $vars['questionWithResponse'] = $questionWithResponse;
         $vars['alreadyShared']        = $alreadyShared;
@@ -1944,7 +1944,7 @@ class QuestionController extends Controller
                     ->getRepository('UJMExoBundle:Exercise')
                     ->getExerciseAdmin($user->getId());
 
-        $vars['listQExo']             = $listInteractions;
+        $vars['interactions']         = $listInteractions;
         $vars['actionQ']              = $actionQ;
         $vars['questionWithResponse'] = $questionWithResponse;
         $vars['alreadyShared']        = $alreadyShared;
