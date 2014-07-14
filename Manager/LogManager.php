@@ -291,7 +291,7 @@ class LogManager
     )
     {
         $request = $this->container->get('request');
-        $data = $request->query->all();
+        $data = $request->request->all();
 
         $action = null;
         $range = null;
@@ -342,6 +342,7 @@ class LogManager
             $actionString = preg_replace('/\[\[([^\]]+)\]\]/', '', $action);
             $actionString = trim($actionString);
         }
+
         $query = $repository->findFilteredLogsQuery(
             $actionString,
             $range,
