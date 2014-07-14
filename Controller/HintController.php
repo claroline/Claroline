@@ -51,26 +51,13 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class HintController extends Controller
 {
-    /**
-     * Lists all Hint entities.
-     *
-     */
-    public function indexAction()
-    {
-        $em = $this->getDoctrine()->getManager();
-
-        $entities = $em->getRepository('UJMExoBundle:Hint')->findAll();
-
-        return $this->render(
-            'UJMExoBundle:Hint:index.html.twig', array(
-            'entities' => $entities
-            )
-        );
-    }
 
     /**
      * Finds and displays a Hint entity.
      *
+     * @access public
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function showAction()
     {
@@ -85,7 +72,6 @@ class HintController extends Controller
             if (!$entity) {
                 throw $this->createNotFoundException('Unable to find Hint entity.');
             }
-            $deleteForm = $this->createDeleteForm($id);
 
             if (!$session->get('penalties')) {
                 $penalties = array();
@@ -108,152 +94,11 @@ class HintController extends Controller
             return $this->container->get('templating')->renderResponse(
                 'UJMExoBundle:Hint:show.html.twig', array(
                 'entity'      => $entity,
-                'delete_form' => $deleteForm->createView(),
                 )
             );
         } else {
 
             return 0;
         }
-    }
-
-    /**
-     * Displays a form to create a new Hint entity.
-     *
-     */
-    public function newAction()
-    {
-        $entity = new Hint();
-        $form   = $this->createForm(new HintType(), $entity);
-
-        return $this->render(
-            'UJMExoBundle:Hint:new.html.twig', array(
-            'entity' => $entity,
-            'form'   => $form->createView()
-            )
-        );
-    }
-
-    /**
-     * Creates a new Hint entity.
-     *
-     */
-    public function createAction()
-    {
-        $entity  = new Hint();
-        $request = $this->getRequest();
-        $form    = $this->createForm(new HintType(), $entity);
-        $form->handleRequest($request);
-
-        if ($form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($entity);
-            $em->flush();
-
-            return $this->redirect($this->generateUrl('hint_show', array('id' => $entity->getId())));
-        }
-
-        return $this->render(
-            'UJMExoBundle:Hint:new.html.twig', array(
-            'entity' => $entity,
-            'form'   => $form->createView()
-            )
-        );
-    }
-
-    /**
-     * Displays a form to edit an existing Hint entity.
-     *
-     */
-    public function editAction($id)
-    {
-        $em = $this->getDoctrine()->getManager();
-
-        $entity = $em->getRepository('UJMExoBundle:Hint')->find($id);
-
-        if (!$entity) {
-            throw $this->createNotFoundException('Unable to find Hint entity.');
-        }
-
-        $editForm = $this->createForm(new HintType(), $entity);
-        $deleteForm = $this->createDeleteForm($id);
-
-        return $this->render(
-            'UJMExoBundle:Hint:edit.html.twig', array(
-            'entity'      => $entity,
-            'edit_form'   => $editForm->createView(),
-            'delete_form' => $deleteForm->createView(),
-            )
-        );
-    }
-
-    /**
-     * Edits an existing Hint entity.
-     *
-     */
-    public function updateAction($id)
-    {
-        $em = $this->getDoctrine()->getManager();
-
-        $entity = $em->getRepository('UJMExoBundle:Hint')->find($id);
-
-        if (!$entity) {
-            throw $this->createNotFoundException('Unable to find Hint entity.');
-        }
-
-        $editForm   = $this->createForm(new HintType(), $entity);
-        $deleteForm = $this->createDeleteForm($id);
-
-        $request = $this->getRequest();
-
-        $editForm->handleRequest($request);
-
-        if ($editForm->isValid()) {
-            $em->persist($entity);
-            $em->flush();
-
-            return $this->redirect($this->generateUrl('hint_edit', array('id' => $id)));
-        }
-
-        return $this->render(
-            'UJMExoBundle:Hint:edit.html.twig', array(
-            'entity'      => $entity,
-            'edit_form'   => $editForm->createView(),
-            'delete_form' => $deleteForm->createView(),
-            )
-        );
-    }
-
-    /**
-     * Deletes a Hint entity.
-     *
-     */
-    public function deleteAction($id)
-    {
-        $form = $this->createDeleteForm($id);
-        $request = $this->getRequest();
-
-        $form->handleRequest($request);
-
-        if ($form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-            $entity = $em->getRepository('UJMExoBundle:Hint')->find($id);
-
-            if (!$entity) {
-                throw $this->createNotFoundException('Unable to find Hint entity.');
-            }
-
-            $em->remove($entity);
-            $em->flush();
-        }
-
-        return $this->redirect($this->generateUrl('hint'));
-    }
-
-    private function createDeleteForm($id)
-    {
-        return $this->createFormBuilder(array('id' => $id))
-            ->add('id', 'hidden')
-            ->getForm();
     }
 }
