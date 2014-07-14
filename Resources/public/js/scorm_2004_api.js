@@ -7,42 +7,34 @@ scoData['cmi.comments_from_learner._children'] = 'comment,location,timestamp';
 //scoData['cmi.comments_from_learner.n.comment'];
 //scoData['cmi.comments_from_learner.n.location'];
 //scoData['cmi.comments_from_learner.n.timestamp'];
-
 scoData['cmi.comments_from_lms'] = [];
 scoData['cmi.comments_from_lms._children'] = 'comment,location,timestamp';
 //scoData['cmi.comments_from_lms._count'];
 //scoData['cmi.comments_from_lms.n.comment'];
 //scoData['cmi.comments_from_lms.n.location'];
 //scoData['cmi.comments_from_lms.n.timestamp'];
-
-scoData['cmi.completion_status'];
-scoData['cmi.completion_threshold'];
+scoData['cmi.completion_status'] = 'unknown';
+scoData['cmi.completion_threshold'] = '<adlcp:completionThreshold>';
 scoData['cmi.credit'] = 'credit';
-scoData['cmi.entry'];
-scoData['cmi.exit'];
-
+//scoData['cmi.entry'];
+//scoData['cmi.exit'];
 scoData['cmi.interactions'] = [];
 scoData['cmi.interactions._children'] = 'id,type,objectives,timestamp,correct_responses,weighting,learner_response,result,latency,description';
 //scoData['cmi.interactions._count'];
 //scoData['cmi.interactions.n.id'];
 //scoData['cmi.interactions.n.type'];
-//
 //scoData['cmi.interactions.n.objectives'] = [];
 //scoData['cmi.interactions.n.objectives._count'];
 //scoData['cmi.interactions.n.objectives.n.id'];
-//
 //scoData['cmi.interactions.n.timestamp'];
-//
 //scoData['cmi.interactions.n.correct_responses'] = [];
 //scoData['cmi.interactions.n.correct_responses._count'];
 //scoData['cmi.interactions.n.correct_responses.n.pattern'];
-//
 //scoData['cmi.interactions.n.weighting'];
 //scoData['cmi.interactions.n.learner_response'];
 //scoData['cmi.interactions.n.result'];
 //scoData['cmi.interactions.n.latency'];
 //scoData['cmi.interactions.n.description'];
-
 scoData['cmi.launch_data'] = scormDataElement.getAttribute('launch-data');
 scoData['cmi.learner_id'] = scormDataElement.getAttribute('learner-id');
 scoData['cmi.learner_name'] = scormDataElement.getAttribute('learner-name');
@@ -52,11 +44,9 @@ scoData['cmi.learner_preference._children'] = 'audio_level,language,delivery_spe
 //scoData['cmi.learner_preference.language'];
 //scoData['cmi.learner_preference.delivery_speed'];
 //scoData['cmi.learner_preference.audio_captioning'];
-
 scoData['cmi.location'] = '';
-scoData['cmi.max_time_allowed'];
+scoData['cmi.max_time_allowed'] = '<imsss:attemptAbsoluteDurationLimit>';
 scoData['cmi.mode'] = 'normal';
-
 scoData['cmi.objectives'] = [];
 scoData['cmi.objectives._children'] = 'id,score,success_status,completion_status,progress_measure,description';
 //scoData['cmi.objectives._count'];
@@ -71,22 +61,19 @@ scoData['cmi.objectives._children'] = 'id,score,success_status,completion_status
 //scoData['cmi.objectives.n.completion_status'];
 //scoData['cmi.objectives.n.progress_measure'];
 //scoData['cmi.objectives.n.description'];
-
-scoData['cmi.progress_measure'];
-scoData['cmi.scaled_passing_score'];
-
+//scoData['cmi.progress_measure'];
+scoData['cmi.scaled_passing_score'] = '<imsss:minNormalizedMeasure>';
 scoData['cmi.score'] = [];
 scoData['cmi.score._children'] = 'scaled,raw,min,max';
 //scoData['cmi.score.scaled'];
 //scoData['cmi.score.raw'];
 //scoData['cmi.score.max'];
 //scoData['cmi.score.min'];
-
-scoData['cmi.session_time'];
-scoData['cmi.success_status'];
-scoData['cmi.suspend_data'];
-scoData['cmi.time_limit_action'];
-scoData['cmi.total_time'];
+//scoData['cmi.session_time'];
+//scoData['cmi.success_status'];
+//scoData['cmi.suspend_data'];
+scoData['cmi.time_limit_action'] = '<adlcp:timeLimitAction> or "continue,no message"';
+scoData['cmi.total_time'] = 'total time';
 
 var errorString = [];
 errorString['0'] = 'No error';
@@ -248,6 +235,7 @@ function GetValue(arg)
             
         case 'cmi.comments_from_learner._children':
         case 'cmi.comments_from_lms._children':
+        case 'cmi.completion_status':
         case 'cmi.completion_threshold':
         case 'cmi.credit':
         case 'cmi.entry':
@@ -268,7 +256,6 @@ function GetValue(arg)
 
             return scoData[arg];
             
-        case 'cmi.completion_status':
         case 'cmi.learner_preference.audio_level':
         case 'cmi.learner_preference.language':
         case 'cmi.learner_preference.delivery_speed':
@@ -1330,26 +1317,3 @@ function APIClass()
 
 var API_1484_11 = new APIClass();
 var api_1484_11 = new APIClass();
-
-//var chameau = ['crabe', 'huitre'];
-//var tab = 'cmi.interactions. 001 .objectives.1._count'.split('.');
-//
-//console.log(typeof tab[2]);
-//
-//if (tab[2].trim() && chameau.length > tab[2]) {
-//    var index = parseInt(tab[2]);
-//    console.log('chameaux2=' + chameau[index]);
-//}
-
-var real2 = '66555.6';
-//var real2 = parseFloat(real);
-
-console.log('real:' + typeof real2 + '-->  ' + real2);
-
-var param = '' + real2;
-
-if (regex.test(param)) {
-    console.log('yet');
-} else {
-    console.log(param);
-}
