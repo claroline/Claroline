@@ -1,3 +1,4 @@
+log_resource-claroline_forum-close_subject_filter: Subject closing
 log_resource-claroline_forum-create_category_shortname: Category creation
 log_resource-claroline_forum-create_category_filter: Category creation
 log_resource-claroline_forum-create_category_sentence: has created a category in the forum %resource%
@@ -31,6 +32,7 @@ log_resource-claroline_forum-move_message_sentence: has moved a message in the f
 log_resource-claroline_forum-move_subject_shortname: Subject move
 log_resource-claroline_forum-move_subject_filter: Subject move
 log_resource-claroline_forum-move_subject_sentence: has moved a subject in the forum %resource%
+log_resource-claroline_forum-open_subject_filter: Subject opening
 log_resource-claroline_forum-stick_subject_shortname: Subject sticking
 log_resource-claroline_forum-stick_subject_filter: Subject sticking
 log_resource-claroline_forum-stick_subject_sentence: has sticked a subject in the forum %resource%
