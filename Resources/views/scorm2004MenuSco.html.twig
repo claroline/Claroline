@@ -12,7 +12,7 @@
                 
         {% else %}
             <li sco-id="{{sco.getId()}}">
-                <a href="{{ path('claro_render_scorm_12_sco', {'scoId': sco.getId()}) }}"
+                <a href="{{ path('claro_render_scorm_2004_sco', {'scoId': sco.getId()}) }}"
                    class="sco-menu-link">
                     {{ sco.getTitle() }}
                 </a>
@@ -33,7 +33,7 @@
 {% extends layout %}
 
 {% block javascripts %}
-    <script src="{{ asset('bundles/clarolinescorm/js/scorm_12_api.js') }}" type="text/javascript"></script>
+    <script src="{{ asset('bundles/clarolinescorm/js/scorm_2004_api.js') }}" type="text/javascript"></script>
     {{ parent() }}
     <script type="text/javascript">
         function runPrefixedMethod(obj, method) {
@@ -87,7 +87,7 @@
                     {{ renderMenu(scos) }}
                     <br>
                     <div class="center-text">
-                        <a href="{{ path('claro_render_scorm_12_resource', {'scormId': resource.getId()}) }}"
+                        <a href="{{ path('claro_render_scorm_2004_resource', {'scormId': resource.getId()}) }}"
                            class="btn btn-default">
                             {{ 'quit'|trans({}, 'resource') }}
                         </a>
@@ -98,9 +98,9 @@
             <div class="col-md-9">
                 <div class="full-size">
                     <div id="twig-scorm-data"
-                         student-id="{{scoTracking.getUser().getId()}}"
+                         learner-id="{{scoTracking.getUser().getId()}}"
                          sco-id="{{scoTracking.getSco().getId()}}"
-                         student-name="{{scoTracking.getUser().getFirstName()}}, {{scoTracking.getUser().getLastName()}}"
+                         learner-name="{{scoTracking.getUser().getFirstName()}}, {{scoTracking.getUser().getLastName()}}"
                          score-raw="{% if scoTracking.getScoreRaw() > -1 %}{{scoTracking.getScoreRaw()}}{% endif %}"
                          score-min="{% if scoTracking.getScoreMin() > -1 %}{{scoTracking.getScoreMin()}}{% endif %}"
                          score-max="{% if scoTracking.getScoreMax() > -1 %}{{scoTracking.getScoreMax()}}{% endif %}"

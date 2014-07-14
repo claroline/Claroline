@@ -135,38 +135,37 @@ function LMSGetValue(arg)
     if (apiInitialized) {
 
         switch (arg) {
+            case 'cmi.core._children' :
+            case 'cmi.core.student_id' :
+            case 'cmi.core.student_name' :
+            case 'cmi.core.lesson_location' :
+            case 'cmi.core.credit' :
+            case 'cmi.core.lesson_status' :
+            case 'cmi.core.entry' :
+            case 'cmi.core.score._children' :
+            case 'cmi.core.score.raw' :
+            case 'cmi.core.score.min' :
+            case 'cmi.core.score.max' :
+            case 'cmi.core.total_time' :
+            case 'cmi.suspend_data' :
+            case 'cmi.launch_data' :
+            case 'cmi.core.lesson_mode' :
+            case 'cmi.student_data._children' :
+            case 'cmi.student_data.mastery_score' :
+            case 'cmi.student_data.max_time_allowed' :
+            case 'cmi.student_data.time_limit_action' :
+                apiLastError = '0';
 
-        case 'cmi.core._children' :
-        case 'cmi.core.student_id' :
-        case 'cmi.core.student_name' :
-        case 'cmi.core.lesson_location' :
-        case 'cmi.core.credit' :
-        case 'cmi.core.lesson_status' :
-        case 'cmi.core.entry' :
-        case 'cmi.core.score._children' :
-        case 'cmi.core.score.raw' :
-        case 'cmi.core.score.min' :
-        case 'cmi.core.score.max' :
-        case 'cmi.core.total_time' :
-        case 'cmi.suspend_data' :
-        case 'cmi.launch_data' :
-        case 'cmi.core.lesson_mode' :
-        case 'cmi.student_data._children' :
-        case 'cmi.student_data.mastery_score' :
-        case 'cmi.student_data.max_time_allowed' :
-        case 'cmi.student_data.time_limit_action' :
-            apiLastError = '0';
+                return scoData[arg];
+            case 'cmi.core.exit' :
+            case 'cmi.core.session_time' :
+                apiLastError = '404'; // write only
 
-            return scoData[arg];
-        case 'cmi.core.exit' :
-        case 'cmi.core.session_time' :
-            apiLastError = '404'; // write only
+                return '';
+            default :
+                apiLastError = '401';
 
-            return '';
-        default :
-            apiLastError = '401';
-
-            return '';
+                return '';
         }
     } else {
         // not initialized error
@@ -185,119 +184,118 @@ function LMSSetValue(argName, argValue)
     if (apiInitialized) {
 
         switch (argName) {
-
-        case 'cmi.core._children' :
-        case 'cmi.core.score._children' :
-        case 'cmi.student_data._children' :
-            apiLastError = '402'; // invalid set value, element is a keyword
-
-            return 'false';
-        case 'cmi.core.student_id' :
-        case 'cmi.core.student_name' :
-        case 'cmi.core.credit' :
-        case 'cmi.core.entry' :
-        case 'cmi.core.total_time' :
-        case 'cmi.launch_data' :
-        case 'cmi.core.lesson_mode' :
-        case 'cmi.student_data.mastery_score' :
-        case 'cmi.student_data.max_time_allowed' :
-        case 'cmi.student_data.time_limit_action' :
-            apiLastError = '403'; // read only
-
-            return 'false';
-        case 'cmi.core.lesson_location' :
-
-            if (argValue.length > 255) {
-                apiLastError = '405';
+            case 'cmi.core._children' :
+            case 'cmi.core.score._children' :
+            case 'cmi.student_data._children' :
+                apiLastError = '402'; // invalid set value, element is a keyword
 
                 return 'false';
-            }
-            scoData[argName] = argValue;
-            apiLastError = '0';
-
-            return 'true';
-        case 'cmi.core.lesson_status' :
-            var upperCaseLessonStatus = argValue.toUpperCase();
-
-            if (upperCaseLessonStatus !== 'PASSED' &&
-                upperCaseLessonStatus !== 'FAILED' &&
-                upperCaseLessonStatus !== 'COMPLETED' &&
-                upperCaseLessonStatus !== 'INCOMPLETE' &&
-                upperCaseLessonStatus !== 'BROWSED' &&
-                upperCaseLessonStatus !== 'NOT ATTEMPTED') {
-
-                apiLastError = '405';
+            case 'cmi.core.student_id' :
+            case 'cmi.core.student_name' :
+            case 'cmi.core.credit' :
+            case 'cmi.core.entry' :
+            case 'cmi.core.total_time' :
+            case 'cmi.launch_data' :
+            case 'cmi.core.lesson_mode' :
+            case 'cmi.student_data.mastery_score' :
+            case 'cmi.student_data.max_time_allowed' :
+            case 'cmi.student_data.time_limit_action' :
+                apiLastError = '403'; // read only
 
                 return 'false';
-            }
-            scoData[argName] = argValue;
-            apiLastError = '0';
+            case 'cmi.core.lesson_location' :
 
-            return 'true';
-        case 'cmi.core.score.raw' :
-        case 'cmi.core.score.min' :
-        case 'cmi.core.score.max' :
+                if (argValue.length > 255) {
+                    apiLastError = '405';
 
-            if (isNaN(parseInt(argValue)) || (argValue < 0) || (argValue > 100)) {
-                apiLastError = '405';
+                    return 'false';
+                }
+                scoData[argName] = argValue;
+                apiLastError = '0';
+
+                return 'true';
+            case 'cmi.core.lesson_status' :
+                var upperCaseLessonStatus = argValue.toUpperCase();
+
+                if (upperCaseLessonStatus !== 'PASSED' &&
+                    upperCaseLessonStatus !== 'FAILED' &&
+                    upperCaseLessonStatus !== 'COMPLETED' &&
+                    upperCaseLessonStatus !== 'INCOMPLETE' &&
+                    upperCaseLessonStatus !== 'BROWSED' &&
+                    upperCaseLessonStatus !== 'NOT ATTEMPTED') {
+
+                    apiLastError = '405';
+
+                    return 'false';
+                }
+                scoData[argName] = argValue;
+                apiLastError = '0';
+
+                return 'true';
+            case 'cmi.core.score.raw' :
+            case 'cmi.core.score.min' :
+            case 'cmi.core.score.max' :
+
+                if (isNaN(parseInt(argValue)) || (argValue < 0) || (argValue > 100)) {
+                    apiLastError = '405';
+                    return 'false';
+                }
+                scoData[argName] = argValue;
+                apiLastError = '0';
+
+                return 'true';
+            case 'cmi.core.exit' :
+                var upperCaseExit = argValue.toUpperCase();
+
+                if (upperCaseExit !== 'TIME-OUT' &&
+                    upperCaseExit !== 'SUSPEND' &&
+                    upperCaseExit !== 'LOGOUT' &&
+                    upperCaseExit !== '') {
+
+                    apiLastError = '405';
+
+                    return 'false';
+                }
+                scoData[argName] = argValue;
+                apiLastError = '0';
+
+                return 'true';
+            case 'cmi.core.session_time' :
+                // regex to check format
+                // hhhh:mm:ss.ss
+                var re = /^[0-9]{2,4}:[0-9]{2}:[0-9]{2}(.[0-9]{1,2})?$/;
+
+                if (!re.test(argValue)) {
+                    apiLastError = '405';
+
+                    return 'false';
+                }
+                // check that minute and second are 0 <= x < 60
+                var timeArray = argValue.split(':');
+
+                if (timeArray[1] < 0 || timeArray[1] >= 60 || timeArray[2] < 0 || timeArray[2] >= 60) {
+                    apiLastError = '405';
+
+                    return 'false';
+                }
+
+                scoData[argName] = argValue;
+                apiLastError = '0';
+
+                return 'true';
+            case 'cmi.suspend_data' :
+                if (argValue.length > 4096) {
+                    apiLastError = '405';
+                    return 'false';
+                }
+                scoData[argName] = argValue;
+                apiLastError = '0';
+
+                return 'true';
+            default :
+                apiLastError = '401';
+
                 return 'false';
-            }
-            scoData[argName] = argValue;
-            apiLastError = '0';
-
-            return 'true';
-        case 'cmi.core.exit' :
-            var upperCaseExit = argValue.toUpperCase();
-
-            if (upperCaseExit !== 'TIME-OUT' &&
-                upperCaseExit !== 'SUSPEND' &&
-                upperCaseExit !== 'LOGOUT' &&
-                upperCaseExit !== '') {
-
-                apiLastError = '405';
-
-                return 'false';
-            }
-            scoData[argName] = argValue;
-            apiLastError = '0';
-
-            return 'true';
-        case 'cmi.core.session_time' :
-            // regex to check format
-            // hhhh:mm:ss.ss
-            var re = /^[0-9]{2,4}:[0-9]{2}:[0-9]{2}(.[0-9]{1,2})?$/;
-
-            if (!re.test(argValue)) {
-                apiLastError = '405';
-
-                return 'false';
-            }
-            // check that minute and second are 0 <= x < 60
-            var timeArray = argValue.split(':');
-
-            if (timeArray[1] < 0 || timeArray[1] >= 60 || timeArray[2] < 0 || timeArray[2] >= 60) {
-                apiLastError = '405';
-
-                return 'false';
-            }
-
-            scoData[argName] = argValue;
-            apiLastError = '0';
-
-            return 'true';
-        case 'cmi.suspend_data' :
-            if (argValue.length > 4096) {
-                apiLastError = '405';
-                return 'false';
-            }
-            scoData[argName] = argValue;
-            apiLastError = '0';
-
-            return 'true';
-        default :
-            apiLastError = '401';
-
-            return 'false';
         }
     } else {
         // not initialized error
@@ -323,23 +321,22 @@ function LMSGetErrorString(errorCode)
     console.log('*** LMSGetErrorString:: [' + errorCode + '] ***');
 
     switch (errorCode) {
+        case '0' :
+        case '101' :
+        case '201' :
+        case '202' :
+        case '203' :
+        case '301' :
+        case '401' :
+        case '402' :
+        case '403' :
+        case '404' :
+        case '405' :
 
-    case '0' :
-    case '101' :
-    case '201' :
-    case '202' :
-    case '203' :
-    case '301' :
-    case '401' :
-    case '402' :
-    case '403' :
-    case '404' :
-    case '405' :
+            return errorString[errorCode];
+        default :
 
-        return errorString[errorCode];
-    default :
-
-        return 'Unknown Error';
+            return 'Unknown Error';
     }
 }
 
@@ -355,23 +352,22 @@ function LMSGetDiagnostic(errorCode)
     console.log('*** LMSGetDiagnostic:: [' + index + '] ***');
 
     switch (index) {
+        case '0' :
+        case '101' :
+        case '201' :
+        case '202' :
+        case '203' :
+        case '301' :
+        case '401' :
+        case '402' :
+        case '403' :
+        case '404' :
+        case '405' :
 
-    case '0' :
-    case '101' :
-    case '201' :
-    case '202' :
-    case '203' :
-    case '301' :
-    case '401' :
-    case '402' :
-    case '403' :
-    case '404' :
-    case '405' :
+            return errorString[index];
+        default :
 
-        return errorString[index];
-    default :
-
-        return 'Unknown Error';
+            return 'Unknown Error';
     }
 }
 

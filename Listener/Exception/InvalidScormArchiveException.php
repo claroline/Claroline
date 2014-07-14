@@ -14,6 +14,6 @@ namespace Claroline\ScormBundle\Listener\Exception;
 /**
  * Class for exceptions thrown when no selection has been made with the ResourceQueryBuilder.
  */
-class InvalidScorm12ArchiveException extends \Exception
+class InvalidScormArchiveException extends \Exception
 {
 }

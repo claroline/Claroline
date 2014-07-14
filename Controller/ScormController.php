@@ -17,6 +17,9 @@ use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\ScormBundle\Entity\Scorm12Resource;
 use Claroline\ScormBundle\Entity\Scorm12Sco;
 use Claroline\ScormBundle\Entity\Scorm12ScoTracking;
+use Claroline\ScormBundle\Entity\Scorm2004Resource;
+use Claroline\ScormBundle\Entity\Scorm2004Sco;
+use Claroline\ScormBundle\Entity\Scorm2004ScoTracking;
 use Claroline\ScormBundle\Event\Log\LogScorm12ResultEvent;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -51,6 +54,7 @@ class ScormController extends Controller
         $this->om = $om;
         $this->securityContext = $securityContext;
         $this->scorm12ScoTrackingRepo = $om->getRepository('ClarolineScormBundle:Scorm12ScoTracking');
+        $this->scorm2004ScoTrackingRepo = $om->getRepository('ClarolineScormBundle:Scorm2004ScoTracking');
         $this->userRepo = $om->getRepository('ClarolineCoreBundle:User');
     }
 
@@ -362,6 +366,141 @@ class ScormController extends Controller
     }
 
     /**
+     * @EXT\Route(
+     *     "/render/scorm/2004/{scormId}",
+     *     name = "claro_render_scorm_2004_resource"
+     * )
+     * @EXT\Method("GET")
+     * @EXT\ParamConverter(
+     *      "scorm",
+     *      class="ClarolineScormBundle:Scorm2004Resource",
+     *      options={"id" = "scormId", "strictId" = true}
+     * )
+     * @EXT\Template("ClarolineScormBundle::scorm2004.html.twig")
+     *
+     * @param Scorm2004Resource $scorm
+     *
+     * @return Response
+     */
+    public function renderScorm2004ResourceAction(Scorm2004Resource $scorm)
+    {
+        $this->checkScorm2004ResourceAccess('OPEN', $scorm);
+        $user = $this->securityContext->getToken()->getUser();
+
+        $scos = $scorm->getScos();
+        $rootScos = array();
+
+        $checkTracking = true;
+        $createTracking = false;
+
+        foreach ($scos as $sco) {
+            if (is_null($sco->getScoParent())) {
+                $rootScos[] = $sco;
+            }
+
+            if ($checkTracking) {
+                $scoTracking = $this->scorm2004ScoTrackingRepo->findOneBy(
+                    array('user' => $user->getId(), 'sco' => $sco->getId())
+                );
+                $checkTracking = false;
+
+                if (is_null($scoTracking)) {
+                    $createTracking = true;
+                }
+            }
+
+            if ($createTracking) {
+                $scoTracking = new Scorm2004ScoTracking();
+                $scoTracking->setUser($user);
+                $scoTracking->setSco($sco);
+                $scoTracking->setScoreRaw(-1);
+                $scoTracking->setScoreMax(-1);
+                $scoTracking->setScoreMin(-1);
+                $scoTracking->setLessonStatus('not attempted');
+                $scoTracking->setSuspendData('');
+                $scoTracking->setEntry('ab-initio');
+                $scoTracking->setLessonLocation('');
+                $scoTracking->setCredit('no-credit');
+                $scoTracking->setTotalTime(0);
+                $scoTracking->setSessionTime(0);
+                $scoTracking->setLessonMode('normal');
+                $scoTracking->setExitMode('');
+                $scoTracking->setBestLessonStatus('not attempted');
+
+                $this->om->persist($scoTracking);
+            }
+        }
+
+        if ($createTracking) {
+            $this->om->flush();
+        }
+
+        return array(
+            'resource' => $scorm,
+            '_resource' => $scorm,
+            'scos' => $rootScos,
+            'workspace' => $scorm->getResourceNode()->getWorkspace()
+        );
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/scorm/2004/render/sco/{scoId}",
+     *     name = "claro_render_scorm_2004_sco"
+     * )
+     * @EXT\Method("GET")
+     * @EXT\ParamConverter(
+     *      "scorm2004Sco",
+     *      class="ClarolineScormBundle:Scorm2004Sco",
+     *      options={"id" = "scoId", "strictId" = true}
+     * )
+     * @EXT\Template("ClarolineScormBundle::scorm2004MenuSco.html.twig")
+     *
+     * @param Scorm2004Sco $scorm2004Sco
+     *
+     * @return Response
+     */
+    public function renderScorm2004ScoAction(Scorm2004Sco $scorm2004Sco)
+    {
+        $user = $this->securityContext->getToken()->getUser();
+        $scorm = $scorm2004Sco->getScormResource();
+        $this->checkScorm2004ResourceAccess('OPEN', $scorm);
+
+        $scos = $scorm->getScos();
+        $entryUrl = $scorm2004Sco->getEntryUrl();
+
+        if (is_string($entryUrl) && preg_match('/^http/', $entryUrl)) {
+            $scormPath = $entryUrl . $scorm2004Sco->getParameters();
+        } else {
+            $scormPath = 'uploads/scormresources/'
+                . $scorm->getHashName()
+                . DIRECTORY_SEPARATOR
+                . $scorm2004Sco->getEntryUrl()
+                . $scorm2004Sco->getParameters();
+        }
+        $rootScos = array();
+
+        foreach ($scos as $sco) {
+            if (is_null($sco->getScoParent())) {
+                $rootScos[] = $sco;
+            }
+        }
+        $scoTracking = $this->scorm2004ScoTrackingRepo->findOneBy(
+            array('user' => $user->getId(), 'sco' => $scorm2004Sco->getId())
+        );
+
+        return array(
+            'resource' => $scorm,
+            '_resource' => $scorm,
+            'currentSco' => $scorm2004Sco,
+            'scos' => $rootScos,
+            'scoTracking' => $scoTracking,
+            'scormUrl' => $scormPath,
+            'workspace' => $scorm->getResourceNode()->getWorkspace()
+        );
+    }
+
+    /**
      * Convert time (HHHH:MM:SS.hh) to integer (hundredth of second)
      *
      * @param string $time
@@ -394,6 +533,23 @@ class ScormController extends Controller
      * @throws AccessDeniedException
      */
     private function checkAccess($permission, Scorm12Resource $resource)
+    {
+        $collection = new ResourceCollection(array($resource->getResourceNode()));
+
+        if (!$this->securityContext->isGranted($permission, $collection)) {
+            throw new AccessDeniedException($collection->getErrorsForDisplay());
+        }
+    }
+
+    /**
+     * Checks if the current user has the right to perform an action on a Scorm2004Resource.
+     *
+     * @param string $permission
+     * @param Scorm2004Resource $resource
+     *
+     * @throws AccessDeniedException
+     */
+    private function checkScorm2004ResourceAccess($permission, Scorm2004Resource $resource)
     {
         $collection = new ResourceCollection(array($resource->getResourceNode()));
 
