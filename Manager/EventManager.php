@@ -11,6 +11,7 @@
 
 namespace Claroline\CoreBundle\Manager;
 
+use Claroline\CoreBundle\Event\Log\LogGenericEvent;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Finder\Finder;
 
@@ -139,27 +140,24 @@ class EventManager
      */
     protected function getActionConstantsForClass($classNamespace, $restriction)
     {
-        $constants       = array();
+        $constants = array();
         /** @var \Claroline\CoreBundle\Event\Log\LogGenericEvent $reflectionClass */
         $reflectionClass = new \ReflectionClass($classNamespace);
-        if (!$reflectionClass->isAbstract()) {
-            if (null !== $restriction) {
-                $restrictions = $classNamespace::getRestriction();
 
-                if (in_array($restriction, $restrictions)) {
-                    $classConstants  = $reflectionClass->getConstants();
-                    foreach ($classConstants as $key => $classConstant) {
-                        if (preg_match('/^ACTION/', $key)) {
-                            $constants[] = $classConstant;
-                        }
-                    }
-                }
-            } else {
-                $classConstants  = $reflectionClass->getConstants();
-                foreach ($classConstants as $key => $classConstant) {
-                    if (preg_match('/^ACTION/', $key)) {
-                        $constants[] = $classConstant;
-                    }
+        if (!$reflectionClass->isAbstract()) {
+            if ($restriction
+                && ($restrictions = $classNamespace::getRestriction())
+                && count($restrictions) === 1
+                && $restrictions[0] === LogGenericEvent::DISPLAYED_ADMIN
+                && $restriction !== $restrictions[0]) {
+                return $constants; // event is admin only
+            }
+
+            $classConstants  = $reflectionClass->getConstants();
+
+            foreach ($classConstants as $key => $classConstant) {
+                if (preg_match('/^ACTION/', $key)) {
+                    $constants[] = $classConstant;
                 }
             }
         }

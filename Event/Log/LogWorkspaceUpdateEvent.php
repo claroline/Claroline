@@ -40,6 +40,6 @@ class LogWorkspaceUpdateEvent extends LogGenericEvent
      */
     public static function getRestriction()
     {
-        return array(self::DISPLAYED_ADMIN, self::DISPLAYED_WORKSPACE);
+        return null;
     }
 }
