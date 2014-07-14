@@ -147,17 +147,19 @@ class TwigExtensions extends \Twig_Extension
     {
 
         $questionRights = array();
-        $questionRights['dispSharedBy'] = FALSE;
-        $questionRights['allowShareQuestion'] = FALSE;
-        $questionRights['allowDuplicateQuestion'] = FALSE;
-        $questionRights['allowEditQuestion'] = FALSE;
-        $questionRights['allowDeleteQuestion'] = FALSE;
-        $questionRights['allowDeleteQuestionOfMyBank'] = FALSE;
+        $questionRights['dispSharedBy']                  = FALSE;
+        $questionRights['allowShareQuestion']            = FALSE;
+        $questionRights['allowDuplicateQuestion']        = FALSE;
+        $questionRights['allowEditQuestion']             = FALSE;
+        $questionRights['allowDeleteQuestion']           = FALSE;
+        $questionRights['allowDeleteQuestionOfMyBank']   = FALSE;
         $questionRights['allowDeleteQuestionOfExercise'] = FALSE;
+        $questionRights['allowImportQuestion']           = FALSE;
 
         //display shared by
         if ( ($questionsList == 'share') || ($questionsList == 'importShare')
-                || ( ($questionsList == 'exoList') && $actionQ == 2) ) {
+                || ( ($questionsList == 'exoList') && $actionQ == 2)
+                || ( ($questionsList == 'importExoList') && ($actionQ == 2) ) ) {
 
             $questionRights['dispSharedBy'] = TRUE;
         }
@@ -176,8 +178,9 @@ class TwigExtensions extends \Twig_Extension
         }
 
         //allow to edit a question
-        if ( ($questionsList == 'my' ) || ($shareRight === TRUE) || ($qexoEdit == 1)
-                || ( ($questionsList == 'exoList') && ($actionQ == 1) ) ){
+        if ( (($questionsList == 'my' ) || ($shareRight === TRUE) || ($qexoEdit == 1)
+                || ( ($questionsList == 'exoList') && ($actionQ == 1) ))
+             && ($questionsList != 'importExoList') ){
 
             $questionRights['allowEditQuestion'] = TRUE;
         }
@@ -199,6 +202,13 @@ class TwigExtensions extends \Twig_Extension
         if ($questionsList == 'exercise') {
 
             $questionRights['allowDeleteQuestionOfExercise'] = TRUE;
+        }
+
+        //allow to import question in an exercise
+        if ($questionsList == 'importMy' || $questionsList == 'importShare'
+                || $questionsList == 'importExoList') {
+
+            $questionRights['allowImportQuestion'] = TRUE;
         }
 
         return $questionRights;

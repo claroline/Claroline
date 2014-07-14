@@ -86,10 +86,11 @@
                 {{ 'question' | trans }}
             </th>
             {% if (questionsList == 'share' or questionsList == 'importShare'
-                    or questionsList == 'exoList' ) %}
+                    or questionsList == 'exoList' or questionsList == 'importExoList') %}
                 <th class="classic">{{ 'shared by' | trans }}</th>
             {% endif %}
-            {% if (questionsList == 'importMy' or questionsList == 'importShare' ) %}
+            {% if (questionsList == 'importMy' or questionsList == 'importShare' 
+                    or questionsList == 'importExoList') %}
                 <th class="classic">{{ 'import' | trans }}</th>
             {% endif %}
             <th class="classic">{{ 'actions' | trans }}</th>
@@ -135,10 +136,10 @@
                 <td class="classic">
                     {{ interaction.question.user.firstName }} {{ interaction.question.user.lastName }}
                 </td>
-            {% elseif (questionsList == 'exoList') %}
+            {% elseif (questionsList == 'exoList' or questionsList == 'importExoList') %}
                 <td class="classic">-</td>
             {% endif %}
-            {% if (questionsList == 'importMy' or questionsList == 'importShare' ) %}
+            {% if rights['allowImportQuestion'] %}
                 <td class="classic">
                     <ul class="list-unstyled">
                         <li>

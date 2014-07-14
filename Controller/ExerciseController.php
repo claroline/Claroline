@@ -535,9 +535,9 @@ class ExerciseController extends Controller
                 $vars['sharedWithMe'] = $sharedWithMePager;
                 $vars['pageToGo']     = $pageGoNow;
             } else {
-                $vars['listQExo'] = $listQExo;
-                $vars['actionQ']  = $actionQ;
-                $vars['pageToGo'] = 1;
+                $vars['interactions'] = $listQExo;
+                $vars['actionQ']      = $actionQ;
+                $vars['pageToGo']     = 1;
             }
             $vars['questionWithResponse'] = $questionWithResponse;
             $vars['alreadyShared']        = $alreadyShared;
