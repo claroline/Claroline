@@ -51,6 +51,6 @@ class LogResourceCreateEvent extends LogGenericEvent
      */
     public static function getRestriction()
     {
-        return array(self::DISPLAYED_WORKSPACE);
+        return array(self::DISPLAYED_WORKSPACE, self::DISPLAYED_ADMIN);
     }
 }
