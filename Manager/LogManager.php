@@ -291,7 +291,7 @@ class LogManager
     )
     {
         $request = $this->container->get('request');
-        $data = $request->request->all();
+        $data = $request->query->all();
 
         $action = null;
         $range = null;
