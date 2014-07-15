@@ -68,7 +68,7 @@ class Event
     /**
      * @ORM\Column(name="allday", type="boolean", nullable=true)
      */
-    private $allDay;
+    private $allDay = false;
 
     /**
      *
@@ -125,6 +125,8 @@ class Event
         if (!is_null($start)) {
             if ($start instanceof \Datetime) {
                 $this->start = $start->getTimestamp();
+            } else {
+                $this->start = $start;
             }
         }
     }
@@ -146,6 +148,8 @@ class Event
         if (!is_null($end)) {
             if ($end instanceof \Datetime) {
                 $this->end = $end-> getTimestamp();
+            } else {
+                $this->end = $end;
             }
         }
     }

@@ -301,7 +301,7 @@ class WorkspaceAgendaController extends Controller
 
         if ($form->isValid()) {
             $file = $form->get('file')->getData();
-            $this->agendaManager->importsEvents($file, $workspace);
+            $this->agendaManager->importEvents($file, $workspace);
             return new RedirectResponse(
                 $this->router->generate(
                     'claro_workspace_open_tool',

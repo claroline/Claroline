@@ -114,17 +114,17 @@
     <div id="import-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
-                <div class="modal-body">
-                    <form method="post" action="{{ path('claro_workspace_agenda_import', {workspaceId: workspace.getId()}) }}"  {{ form_enctype(file) }} class="form-inline" role="form">
+                <form method="post" action="{{ path('claro_workspace_agenda_import', {workspaceId: workspace.getId()}) }}"  {{ form_enctype(file) }} class="form-inline" role="form">
+                    <div class="modal-body">
                         <div class="form-group">
                         {{ form_widget(file) }}
                         </div>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="submit" class="btn btn-primary">OK</button>
-                    <button class="btn btn-default" data-dismiss="modal">{{'cancel'|trans({}, 'agenda') }}</button>
-                </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">OK</button>
+                        <button class="btn btn-default" data-dismiss="modal">{{'cancel'|trans({}, 'agenda') }}</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>

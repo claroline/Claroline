@@ -206,16 +206,13 @@ class AgendaManager
      */
     public function importEvents(UploadedFile $file, $workspace)
     {
-        $path = $this->rootDir.'/../web/uploads';
-        $ds = DIRECTORY_SEPARATOR;
-        $file->move($path);
-        $ical = new \ICal($path . $ds . $file->getClientOriginalName());
+        $ical = new \ICal($file->getPathname());
         $events = $ical->events();
-        $this->om->startFlushSuite();
+//        $this->om->startFlushSuite();
         $count = 0;
 
         foreach ($events as $i => $event) {
-            $e = $this->om->factory('Claroline\CoreBundle\Entity\Event');
+            $e = new Event();
             $e->setTitle($event['SUMMARY']);
             $e->setStart($ical->iCalDateToUnixTimestamp($event['DTSTART']));
             $e->setEnd($ical->iCalDateToUnixTimestamp($event['DTEND']));
@@ -223,8 +220,10 @@ class AgendaManager
             $e->setWorkspace($workspace);
             $e->setUser($this->security->getToken()->getUser());
             $e->setPriority('#01A9DB');
+            $this->om->persist($e);
+            $this->om->flush();
         }
-        $this->om->endFlushSuite();
+//        $this->om->endFlushSuite();
 
         return $i;
     }
@@ -248,6 +247,7 @@ class AgendaManager
             ->findbyWorkspaceId($workspace->getId(), false);
         $role = $this->checkUserIsAllowedtoWrite($workspace);
         $data = array();
+
         foreach ($listEvents as $key => $object) {
             $data[$key]['id'] = $object->getId();
             $data[$key]['title'] = $object->getTitle();
