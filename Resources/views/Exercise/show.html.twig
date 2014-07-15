@@ -69,7 +69,7 @@
     </div>
 
     <div id='divPublish' class="alert alert-info" style='display:none'>
-        {% if exoAdmin == 1 %}
+        {% if is_granted('EDIT', _resource) %}
             {{ 'infoExerciseNoPuplished'|trans }} : 
             <a id="btPublish" class="btn btn-primary" onclick="publish('{{ path('ujm_exercise_publish') }}', {{ entity.id }})">
                 <i class="fa fa-check"></i> {{ 'publish' | trans }}
@@ -118,7 +118,7 @@
                         </tr>
                     {% endif %}
 
-                    {% if exoAdmin == 1 %}
+                    {% if is_granted('EDIT', _resource) %}
                         <tr class="hiddencells">
                             <th class="classic">{{ 'random order of questions' | trans }}</th>
                             <td class="classic">
@@ -230,7 +230,7 @@
                     {% endif %}
                 </tbody>
             </table>
-            {% if exoAdmin == 1 %}
+            {% if is_granted('EDIT', _resource) %}
                 <button type="button" id="more" class="btn btn-primary" onclick="moreInformation();">
                     <i class="fa fa-plus"></i> {{ 'moreInformation' | trans }}
                 </button>
@@ -251,7 +251,7 @@
                     </a>
                 {% endif %}
             {% endif %}
-            {% if exoAdmin == 1 %}
+            {% if is_granted('EDIT', _resource) %}
                 <a class="btn btn-primary" href="{{ path('ujm_exercise_edit', { 'id': entity.id }) }}">
                     <i class="fa fa-pencil"></i> {{ 'edit' | trans }}
                 </a>
