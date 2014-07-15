@@ -54,7 +54,7 @@ class WorkspacesController
         $this->eventDispatcher    = $eventDispatcher;
         $this->sc                 = $sc;
         $this->toolManager        = $toolManager;
-        $this->workspaceAdminTool = $this->toolManager->getAdminToolByName('platform_parameters');
+        $this->workspaceAdminTool = $this->toolManager->getAdminToolByName('workspace_management');
     }
 
     /**
