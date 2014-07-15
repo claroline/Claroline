@@ -141,9 +141,11 @@ class PathController
      */
     public function deleteAction(Workspace $workspace, Path $path)
     {
+        $this->pathManager->checkAccess('DELETE', $path);
+
         try {
             $this->pathManager->delete($path);
-            
+
             // Delete success
             $this->session->getFlashBag()->add(
                 'success',
@@ -156,7 +158,7 @@ class PathController
                 $e->getMessage()
             );
         }
-    
+
         // Redirect to path list
         $url = $this->router->generate('claro_workspace_open_tool', array (
             'workspaceId' => $workspace->getId(), 
@@ -180,9 +182,11 @@ class PathController
      */
     public function publishAction(Workspace $workspace, Path $path)
     {
+        $this->pathManager->checkAccess('EDIT', $path);
+
         try {
             $this->publishingManager->publish($path);
-        
+
             // Publish success
             $this->session->getFlashBag()->add(
                 'success',
@@ -195,7 +199,7 @@ class PathController
                 $e->getMessage()
             );
         }
-        
+
         // Redirect to path list
         $url = $this->router->generate('claro_workspace_open_tool', array (
             'workspaceId' => $workspace->getId(), 

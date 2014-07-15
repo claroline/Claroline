@@ -6,13 +6,16 @@ services:
             objectManager:   @doctrine.orm.entity_manager
             securityContext: @security.context
             resourceManager: @claroline.manager.resource_manager
+            utils:           @claroline.security.utilities
 
     # Publishing manager
     innova_path.manager.publishing:
         class: %innova_path.manager.publishing.class%
         arguments:
             objectManager: @doctrine.orm.entity_manager
+            security:      @security.context
             stepManager:   @innova_path.manager.step
+            rightsManager: @claroline.manager.rights_manager
 
     # Path template manager
     innova_path.manager.path_template:

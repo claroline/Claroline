@@ -2,11 +2,13 @@
 
 namespace Innova\PathBundle\Manager;
 
+use Claroline\CoreBundle\Manager\RightsManager;
 use Doctrine\Common\Persistence\ObjectManager;
 
 use Innova\PathBundle\Entity\InheritedResource;
 use Innova\PathBundle\Entity\Path\Path;
 use Innova\PathBundle\Entity\Step;
+use Symfony\Component\Security\Core\SecurityContextInterface;
 
 /**
  * Manage Publishing of the paths
@@ -20,6 +22,12 @@ class PublishingManager
     protected $om;
 
     /**
+     * Security Context
+     * @var \Symfony\Component\Security\Core\SecurityContextInterface
+     */
+    protected $security;
+
+    /**
      * Resource Manager
      * @var \Claroline\CoreBundle\Manager\ResourceManager
      */
@@ -30,13 +38,13 @@ class PublishingManager
      * @var \Innova\PathBundle\Manager\StepManager
      */
     protected $stepManager;
-    
+
     /**
-     * Current workspace of the path
-     * @var \Claroline\CoreBundle\Entity\Workspace\Workspace
+     * Rights Manager
+     * @var \Claroline\CoreBundle\Manager\RightsManager
      */
-    protected $workspace;
-    
+    protected $rightsManager;
+
     /**
      * Path to publish
      * @var \Innova\PathBundle\Entity\Path\Path
@@ -48,24 +56,24 @@ class PublishingManager
      * @var \stdClass
      */
     protected $pathStructure;
-    
-    /**
-     * List of all resources linked to the current path
-     * @var array
-     */
-    protected $pathResources = array ();
-    
+
     /**
      * Class constructor
-     * @param \Doctrine\Common\Persistence\ObjectManager $objectManager
-     * @param \Innova\PathBundle\Manager\StepManager     $stepManager
+     * @param \Doctrine\Common\Persistence\ObjectManager                $objectManager
+     * @param \Symfony\Component\Security\Core\SecurityContextInterface $security
+     * @param \Innova\PathBundle\Manager\StepManager                    $stepManager
+     * @param \Claroline\CoreBundle\Manager\RightsManager               $rightsManager
      */
     public function __construct(
-        ObjectManager $objectManager,
-        StepManager   $stepManager)
+        ObjectManager            $objectManager,
+        SecurityContextInterface $security,
+        StepManager              $stepManager,
+        RightsManager            $rightsManager)
     {
-        $this->om          = $objectManager;
-        $this->stepManager = $stepManager;
+        $this->om            = $objectManager;
+        $this->security      = $security;
+        $this->stepManager   = $stepManager;
+        $this->rightsManager = $rightsManager;
     }
 
     /**
@@ -86,7 +94,6 @@ class PublishingManager
         $this->pathStructure = json_decode($pathStructure);
         
         $this->path = $path;
-        $this->workspace = $path->getResourceNode()->getWorkspace();
         
         return $this;
     }
@@ -98,10 +105,8 @@ class PublishingManager
      */
     protected function end()
     {
-        $this->workspace     = null;
         $this->path          = null;
         $this->pathStructure = null;
-        $this->pathResources = array ();
         
         return $this;
     }
@@ -135,7 +140,10 @@ class PublishingManager
         // Mark Path as published
         $this->path->setPublished(true);
         $this->path->setModified(false);
-    
+
+        // Manage rigths
+        $this->manageRights();
+
         // Persist data
         $this->om->persist($this->path);
         $this->om->flush();
@@ -212,6 +220,13 @@ class PublishingManager
         return $processedSteps;
     }
 
+    /**
+     * Manage resource inheritance
+     * @param  \Innova\PathBundle\Entity\Step $step
+     * @param  array $propagatedResources
+     * @param  array $excludedResources
+     * @return \Innova\PathBundle\Manager\PublishingManager
+     */
     protected function publishPropagatedResources(Step $step, array $propagatedResources = array (), array $excludedResources = array ())
     {
         $inheritedResources = array ();
@@ -272,5 +287,95 @@ class PublishingManager
         }
         
         return $this;
+    }
+
+    /**
+     * Check that all Activities and Resources as at least same rights than the Path
+     * @return \Innova\PathBundle\Manager\PublishingManager
+     */
+    protected function manageRights()
+    {
+        // Grab Resources and Activities
+        $nodes = $this->retrieveAllNodes($this->path->getSteps()->toArray());
+
+        if (!empty($nodes)) {
+            $pathRights = $this->path->getResourceNode()->getRights();
+            $user = $this->security->getToken()->getUser();
+
+            // This piece of code is copied from ActivityManager
+            $nodesInitialized = array ();
+            foreach ($nodes as $node) {
+                $isNodeCreator = $node->getCreator() === $user;
+                $ws = $node->getWorkspace();
+                $roleWsManager = $this->om->getRepository('ClarolineCoreBundle:Role')->findManagerRole($ws);
+                $isWsManager = $user->hasRole($roleWsManager);
+
+                if ($isNodeCreator || $isWsManager) {
+                    $nodesInitialized[] = $node;
+                }
+            }
+
+            $rolesInitialized = array ();
+            foreach ($pathRights as $right) {
+                $role = $right->getRole();
+
+                if (!strpos('_' . $role->getName(), 'ROLE_WS_MANAGER') && $right->getMask() & 1) {
+                    $rolesInitialized[] = $role;
+                }
+            }
+
+            $this->rightsManager->initializePermissions($nodesInitialized, $rolesInitialized);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Retrieve all ResourceNodes of a Path
+     * @param  array $steps
+     * @return array
+     */
+    protected function retrieveAllNodes(array $steps)
+    {
+        $nodes = array ();
+
+        foreach ($steps as $step) {
+            $activity = $step->getActivity();
+            if (!empty($activity)) {
+                // Get Activity Node
+                $nodes[] = $activity->getResourceNode();
+
+                // Get Activity primary Resource Node)
+                $primaryResource = $activity->getPrimaryResource();
+                if (!empty($primaryResource)) {
+                    $nodes[] = $primaryResource;
+                }
+
+                // Get Activity secondary Resources Nodes
+                $parameters = $activity->getParameters();
+                if (!empty($parameters)) {
+                    $secondaryResources = $parameters->getSecondaryResources();
+                    if (!empty($secondaryResources)) {
+                        $nodes = array_merge($nodes, $secondaryResources->toArray());
+                    }
+                }
+            }
+
+            // Get Inherited Resources Nodes
+            $inheritedResources = $step->getInheritedResources;
+            if (!empty($inheritedResources)) {
+                foreach ($inheritedResources as $inherited) {
+                    $nodes[] = $inherited->getResourceNode();
+                }
+            }
+
+            $children = $step->getChildren();
+            if (!empty($children)) {
+                $childrenNodes = $this->retrieveAllNodes($children->toArray());
+                $nodes = array_merge($nodes, $childrenNodes);
+            }
+        }
+
+        return $nodes;
     }
 }

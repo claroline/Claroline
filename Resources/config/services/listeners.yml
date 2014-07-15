@@ -1,18 +1,19 @@
 services:
-  innova_path.listener.path_tool:
-    class: %innova_path.listener.path_tool.class%
-    calls:
-      - [setContainer, ["@service_container"]]
-    tags:
-      - { name: kernel.event_listener, event: open_tool_workspace_innova_path, method: onWorkspaceOpen }
+    innova_path.listener.path_tool:
+        class: %innova_path.listener.path_tool.class%
+        arguments:
+            templating:  @templating
+            pathManager: @innova_path.manager.path
+        tags:
+            - { name: kernel.event_listener, event: open_tool_workspace_innova_path, method: onWorkspaceOpen }
 
-  innova_path.listener.path:
-    class: %innova_path.listener.path.class%
-    calls:
-      - [setContainer, ["@service_container"]]
-    tags:
-      - { name: kernel.event_listener, event: open_innova_path, method: onPathOpen }
-      - { name: kernel.event_listener, event: create_form_innova_path, method: onPathCreateForm }
-      - { name: kernel.event_listener, event: create_innova_path, method: onPathCreate }
-      - { name: kernel.event_listener, event: delete_innova_path, method: onPathDelete }
-      - { name: kernel.event_listener, event: copy_innova_path, method: onPathCopy }
+    innova_path.listener.path:
+        class: %innova_path.listener.path.class%
+        calls:
+            - [setContainer, ["@service_container"]]
+        tags:
+            - { name: kernel.event_listener, event: open_innova_path, method: onPathOpen }
+            - { name: kernel.event_listener, event: create_form_innova_path, method: onPathCreateForm }
+            - { name: kernel.event_listener, event: create_innova_path, method: onPathCreate }
+            - { name: kernel.event_listener, event: delete_innova_path, method: onPathDelete }
+            - { name: kernel.event_listener, event: copy_innova_path, method: onPathCopy }

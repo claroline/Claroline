@@ -2,6 +2,7 @@
 
 namespace Innova\PathBundle\Controller;
 
+use Innova\PathBundle\Manager\PathManager;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -80,6 +81,12 @@ class EditorController
     protected $pathHandler;
 
     /**
+     * Path manager
+     * @var \Innova\PathBundle\Manager\PathManager
+     */
+    protected $pathManager;
+
+    /**
      * Resource manager
      * @var \Claroline\CoreBundle\Manager\ResourceManager
      */
@@ -93,6 +100,7 @@ class EditorController
      * @param \Symfony\Component\HttpFoundation\Session\SessionInterface $session
      * @param \Symfony\Component\Translation\TranslatorInterface $translator
      * @param \Innova\PathBundle\Form\Handler\PathHandler $pathHandler
+     * @param \Innova\PathBundle\Manager\PathManager $pathManager
      * @param \Claroline\CoreBundle\Manager\ResourceManager $resourceManager
      */
     public function __construct(
@@ -102,6 +110,7 @@ class EditorController
         SessionInterface     $session,
         TranslatorInterface  $translator,
         PathHandler          $pathHandler,
+        PathManager          $pathManager,
         ResourceManager      $resourceManager)
     {
         $this->om              = $objectManager;
@@ -110,6 +119,7 @@ class EditorController
         $this->session         = $session;
         $this->translator      = $translator;
         $this->pathHandler     = $pathHandler;
+        $this->pathManager     = $pathManager;
         $this->resourceManager = $resourceManager;
     }
 
@@ -126,6 +136,7 @@ class EditorController
     public function newAction(Workspace $workspace)
     {
         $path = Path::initialize();
+        $this->pathManager->checkAccess('CREATE', $path);
 
         return $this->renderEditor($workspace, $path);
     }
@@ -143,6 +154,8 @@ class EditorController
      */
     public function editAction(Workspace $workspace, Path $path)
     {
+        $this->pathManager->checkAccess('EDIT', $path);
+
         return $this->renderEditor($workspace, $path, 'PUT');
     }
 

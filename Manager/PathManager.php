@@ -2,9 +2,11 @@
 
 namespace Innova\PathBundle\Manager;
 
+use Claroline\CoreBundle\Library\Resource\ResourceCollection;
 use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\Security\Core\SecurityContext;
 use Claroline\CoreBundle\Manager\ResourceManager;
+use Claroline\CoreBundle\Library\Security\Utilities;
 
 use Symfony\Component\Security\Core\User\UserInterface;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
@@ -37,29 +39,46 @@ class PathManager
     
     /**
      * Authenticated user
-     * @var \Claroline\CoreBundle\Entity\User\User $user
+     * @var \Claroline\CoreBundle\Entity\User $user
      */
     protected $user;
-    
+
     /**
      * Class constructor - Inject required services
      * @param \Doctrine\Common\Persistence\ObjectManager       $objectManager
      * @param \Symfony\Component\Security\Core\SecurityContext $securityContext
      * @param \Claroline\CoreBundle\Manager\ResourceManager    $resourceManager
+     * @param \Claroline\CoreBundle\Library\Security\Utilities $utils
      */
     public function __construct(
         ObjectManager   $objectManager, 
         SecurityContext $securityContext, 
-        ResourceManager $resourceManager)
+        ResourceManager $resourceManager,
+        Utilities       $utils)
     {
         $this->om = $objectManager;
         $this->security = $securityContext;
         $this->resourceManager = $resourceManager;
-        
+        $this->utils = $utils;
+
         // Retrieve current user
         $this->user = $this->security->getToken()->getUser();
     }
-    
+
+    public function checkAccess($actionName, Path $path)
+    {
+        if (false === $this->isAllow($actionName, $path)) {
+            throw new AccessDeniedException();
+        }
+    }
+
+    public function isAllow($actionName, Path $path)
+    {
+        $collection = new ResourceCollection(array ($path->getResourceNode()));
+
+        return $this->security->isGranted($actionName, $collection);
+    }
+
     /**
      * Get path resource type entity
      * @return \Claroline\CoreBundle\Entity\Resource\ResourceType
@@ -78,48 +97,36 @@ class PathManager
     {
         return $this->om->getRepository('ClarolineCoreBundle:Workspace\Workspace')->find($workspaceId);
     }
-    
+
     /**
-     * Find all paths for a workspace
-     * @param  \Claroline\CoreBundle\Entity\Workspace\Workspace $workspace
+     * Find accessible Paths
+     * @param Workspace $workspace
      * @return array
      */
-    public function findAllFromWorkspace(Workspace $workspace)
+    public function findAccessibleByUser(Workspace $workspace = null)
     {
-        $paths = array();
-        if (!empty($this->user) && $this->user instanceof UserInterface) {
-            // User is logged => get his paths
-            $paths['me'] = $this->om->getRepository('InnovaPathBundle:Path\Path')->findAllByWorkspaceByUser($workspace, $this->user);
-            $paths['others'] = $this->om->getRepository('InnovaPathBundle:Path\Path')->findAllByWorkspaceByNotUser($workspace, $this->user);
+        $roots = array ();
+        if (!empty($workspace)) {
+            $root = $this->resourceManager->getWorkspaceRoot($workspace);
+            $roots[] = $root->getPath();
         }
-        else {
-            $paths['me'] = array();
-            $paths['others'] = $this->om->getRepository('InnovaPathBundle:Path\Path')->findAllByWorkspace($workspace);
+
+        $token = $this->security->getToken();
+        $userRoles = $this->utils->getRoles($token);
+
+        $entities = $this->om->getRepository('InnovaPathBundle:Path\Path')->findAccessibleByUser($roots, $userRoles);
+
+        // Check edit and delete acces for paths
+        $paths = array ();
+        foreach ($entities as $entity) {
+            $paths[] = array (
+                'entity'    => $entity,
+                'canEdit'   => $this->isAllow('EDIT', $entity),
+                'canDelete' => $this->isAllow('DELETE', $entity),
+            );
         }
-    
+
         return $paths;
-    }
-
-    /**
-     * Find all paths for a workspace
-     * @param  \Claroline\CoreBundle\Entity\Workspace\Workspace $workspace
-     * @return array
-     */
-    public function findAllFromWorkspaceUnsorted(Workspace $workspace)
-    {
-       
-        return $this->om->getRepository('InnovaPathBundle:Path\Path')->findAllByWorkspace($workspace);
-    }
-
-    /**
-     * Find all paths for a user
-     * @param \Symfony\Component\Security\Core\User\UserInterface $user
-     * @return array
-     */
-    public function findAllByUser(UserInterface $user)
-    {
-
-        return $this->om->getRepository('InnovaPathBundle:Path\Path')->findAllByUser($user);
     }
     
     /**
@@ -187,18 +194,9 @@ class PathManager
      */
     public function delete(Path $path)
     {
-        $pathCreator = $path->getResourceNode()->getCreator();
-        
-        // Check if current user can delete this path
-        if ($pathCreator == $this->user) {
-            // User can delete current path
-            $this->om->remove($path->getResourceNode());
-            $this->om->flush();
-        }
-        else {
-            // User can't delete path from other users
-            throw new \Exception('You can delete only your own paths.');
-        }
+        // User can delete current path
+        $this->om->remove($path->getResourceNode());
+        $this->om->flush();
         
         return $this;
     }
