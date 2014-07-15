@@ -12,30 +12,36 @@
 namespace Claroline\CoreBundle\Manager;
 
 use Claroline\CoreBundle\Event\Log\LogGenericEvent;
+use Claroline\CoreBundle\Persistence\ObjectManager;
 use JMS\DiExtraBundle\Annotation as DI;
+use Symfony\Bundle\FrameworkBundle\Translation\Translator;
 use Symfony\Component\Finder\Finder;
+use Symfony\Component\HttpKernel\KernelInterface;
 
 /**
  * @DI\Service("claroline.event.manager")
  */
 class EventManager
 {
-    /**
-     * @var \AppKernel
-     */
     private $kernel;
-
+    private $om;
     private $translator;
 
     /**
      * @DI\InjectParams({
-     *      "kernel" = @DI\Inject("kernel"),
-     *      "translator" = @DI\Inject("translator")
+     *      "kernel"        = @DI\Inject("kernel"),
+     *      "om"            = @DI\Inject("claroline.persistence.object_manager"),
+     *      "translator"    = @DI\Inject("translator")
      * })
      */
-    public function __construct($kernel, $translator)
+    public function __construct(
+        KernelInterface $kernel,
+        ObjectManager $om,
+        Translator $translator
+    )
     {
         $this->kernel = $kernel;
+        $this->om = $om;
         $this->translator = $translator;
     }
 
@@ -213,10 +219,19 @@ class EventManager
 
         $resourceTrans = $this->translator->trans('resource', array(), 'platform');
 
+        // adding resource types that don't define specific event classes
+        $remainingTypes = $this->om
+            ->getRepository('ClarolineCoreBundle:Resource\ResourceType')
+            ->findTypeNamesNotIn(array_keys($tempResourceEvents));
+
+        foreach ($remainingTypes as $type) {
+            $tempResourceEvents[$type['name']] = array();
+        }
+
         foreach ($tempResourceEvents as $sortedKey => $sortedEvent) {
             $keyTrans = $this->translator->trans($sortedKey, array(), 'resource');
 
-            foreach ($genericResourceEvents as $genericKey => $genericEvent) {
+            foreach ($genericResourceEvents as $genericEvent) {
                 $logTrans = $this->translator->trans(
                     $genericEvent === 'all' ? $genericEvent : 'log_' . $genericEvent . '_filter',
                         array(),
