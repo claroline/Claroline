@@ -150,6 +150,14 @@ class Dropzone extends AbstractResource
     protected $allowCommentInCorrection = false;
 
     /**
+     * Rendre le champ de commentaire dans la correction obligatoire.
+     * @var bool
+     *
+     * @ORM\Column(name="force_comment_in_correction",type="boolean",nullable=false)
+     */
+    protected $forceCommentInCorrection = false;
+
+    /**
      * Defini si oui ou non les corrections faites par les pairs sont visibles par le possesseur de la copie corrigé.
      * les corrections devront cependant rester anonyme.
      *
@@ -287,7 +295,34 @@ class Dropzone extends AbstractResource
     public function setAllowCommentInCorrection($allowCommentInCorrection)
     {
         $this->allowCommentInCorrection = $allowCommentInCorrection;
+
+        // when there is no comment allowed, the comment can't be mandatory
+        if ($this->getForceCommentInCorrection()) {
+            $this->setForceCommentInCorrection(false);
+        }
     }
+
+    /**
+     * when there is no comment allowed, the comment can't be mandatory
+     * @param boolean $forceCommentInCorrection
+     */
+    public function setForceCommentInCorrection($forceCommentInCorrection)
+    {
+        if ($this->getAllowCommentInCorrection() == true) {
+            $this->forceCommentInCorrection = $$forceCommentInCorrection;
+        } else {
+            $this->forceCommentInCorrection = false;
+        }
+    }
+
+    /**
+     * @return boolean
+     */
+    public function getForceCommentInCorrection()
+    {
+        return $this->forceCommentInCorrection;
+    }
+
 
     /**
      * @return mixed
