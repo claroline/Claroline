@@ -103,7 +103,7 @@
                     <div class="panel-body" data-ng-show="editedWidget.views.form" data-bind-html="editedWidget.views.form"></div>
                     <div class="panel-footer">
                         <button type="submit" class="btn btn-primary">{{ 'save'|trans({}, 'platform') }}</button>
-                        <button class="btn btn-default" data-ng-click="cancel(editedWidget)">{{ 'cancel'|trans({}, 'platform') }}</button>
+                        <button type="button" class="btn btn-default" data-ng-click="cancel(editedWidget)">{{ 'cancel'|trans({}, 'platform') }}</button>
                     </div>
                 </div>
             </form>
