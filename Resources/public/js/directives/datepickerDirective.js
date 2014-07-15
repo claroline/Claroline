@@ -6,14 +6,15 @@ angular.module('ui.datepicker', []).
             link: function($scope, element, attrs, ngModel) {
                 return attrs.$observe('bDatepicker', function(format) {
                     var options = {format: format};
+                    var onShow = {};
 
                     if (ngModel) {
                         options.autoclose = true;
-                    }
 
-                    var onShow = function () {
-                        element.datepicker('setDate', ngModel.$viewValue);
-                    };
+                        onShow = function () {
+                            element.datepicker('setDate', ngModel.$viewValue);
+                        };
+                    }
 
                     return element.datepicker(options).on('show', onShow);
                 });
