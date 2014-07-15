@@ -31,7 +31,7 @@ class LogsController extends Controller
      *     defaults={"page" = 1}
      * )
      *
-     * @EXT\Method("POST")
+     * @EXT\Method("GET")
      *
      * @EXT\Template()
      *

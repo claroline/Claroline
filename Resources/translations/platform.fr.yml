@@ -879,9 +879,9 @@ workspace_edit_form_code: Code
 workspace_edit_form_creationDate : 'Date de création'
 workspace_edit_form_creator : 'Créateur de l''espace'
 workspace_edit_form_description: Description
-workspace_edit_form_displayable: Visible
+workspace_edit_form_displayable: Visible dans la liste des espaces
 workspace_edit_form_name: Nom
-workspace_edit_form_number : Nombre de personnes inscrit à l''espace
+workspace_edit_form_number : Nombre de personnes inscrites
 workspace_edit_form_selfRegistration: 'Inscription publique'
 workspace_edit_form_selfUnregistration: 'Désinscription publique'
 workspace_form_code: Code

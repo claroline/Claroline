@@ -73,7 +73,7 @@ class LogRoleSubscribeEvent extends LogGenericEvent implements NotifiableInterfa
      */
     public static function getRestriction()
     {
-        return array(self::DISPLAYED_WORKSPACE);
+        return null;
     }
 
     /**
