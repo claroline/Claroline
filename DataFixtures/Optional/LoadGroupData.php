@@ -51,20 +51,16 @@ class LoadGroupData extends AbstractFixture implements ContainerAwareInterface
      */
     public function load(ObjectManager $manager)
     {
-        $roleManager = $this->container->get('claroline.manager.role_manager');
-
         foreach ($this->groups as $name => $users) {
-            $role = $roleManager->createCustomRole('ROLE_' . $name, $name);
             $group = new Group();
             $group->setName($name);
-            $roleManager->associateRole($group, $role);
 
             foreach ($users as $username) {
                 $user = $this->getReference('user/'.$username);
                 $group->addUser($user);
             }
 
-            $this->addReference('role/'.$name, $role);
+            $manager->persist($group);
             $this->addReference('group/'.$name, $group);
         }
 
