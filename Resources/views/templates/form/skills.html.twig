@@ -3,15 +3,15 @@
         <li data-ng-repeat="skill in collection">
             <div data-ng-class="{'input-group': isAdded(skill)}">
                 {% verbatim %}
-                <input type="text" class="form-control" id="skill_{{ $index }}_name"
+                <input type="text" class="input-sm form-control" id="skill_{{ $index }}_name"
                      name="icap_portfolio_widget_form_skills[skills][{{ $index }}][name]" data-ng-model="skill.name"
                      data-ng-disabled="skill.toDelete" data-ng-keyup="modify(skill, $index)" />
                 {% endverbatim %}
                 <span class="input-group-btn" data-ng-if="isAdded(skill)">
-                    <button class="btn btn-danger" type="button" data-ng-if="!isEmpty(skill) && !skill.toDelete" data-ng-click="deleteChild(skill)">
+                    <button class="btn btn-sm btn-danger" type="button" data-ng-if="!isEmpty(skill) && !skill.toDelete" data-ng-click="deleteChild(skill)">
                         <span class="fa fa-trash-o"></span>
                     </button>
-                    <button class="btn btn-default" type="button" data-ng-if="skill.toDelete" data-ng-click="cancelDeletionOfChild(skill)">
+                    <button class="btn btn-sm btn-default" type="button" data-ng-if="skill.toDelete" data-ng-click="cancelDeletionOfChild(skill)">
                         <span class="fa fa-undo"></span>
                     </button>
                 </span>
