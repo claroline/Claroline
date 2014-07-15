@@ -94,7 +94,9 @@ class BadgeListener
         /** @var \Claroline\CoreBundle\Repository\Badge\BadgeRuleRepository $badgeRuleRepository */
         $badgeRuleRepository = $this->entityManager->getRepository('ClarolineCoreBundle:Badge\BadgeRule');
         /** @var \Claroline\CoreBundle\Entity\badge\Badge[] $badges */
-        $badges              = $badgeRuleRepository->findBadgeAutomaticallyAwardedFromAction($event->getLog()->getAction());
+
+
+        $badges              = $badgeRuleRepository->findBadgeAutomaticallyAwardedFromAction($event->getLog());
 
         if (0 < count($badges)) {
 
