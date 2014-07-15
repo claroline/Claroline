@@ -138,8 +138,9 @@
     {
         var nodeId = _.keys(nodes)[0];
         var mimeType = nodes[_.keys(nodes)][2] !== '' ? nodes[_.keys(nodes)][2] : 'unknown/mimetype';
+        var openInNewTab = tinymce.activeEditor.getParam('picker').openResourcesInNewTab ? '1' : '0';
 
-        $.ajax(home.path + 'resource/embed/' + nodeId + '/' + mimeType)
+        $.ajax(home.path + 'resource/embed/' + nodeId + '/' + mimeType + '/' + openInNewTab)
             .done(function (data) {
                 tinymce.activeEditor.insertContent(data);
                 tinymce.claroline.editorChange(tinymce.activeEditor);
@@ -330,6 +331,9 @@
             'render': tinymce.claroline.mentionsRender,
             'insert': tinymce.claroline.mentionsInsert,
             'delay': 200
+        },
+        'picker': {
+            'openResourcesInNewTab': false
         }
     };
 
@@ -339,11 +343,19 @@
     tinymce.claroline.initialization = function ()
     {
         $('textarea.claroline-tiny-mce:not(.tiny-mce-done)').each(function () {
-            var element = this;
+            var element = $(this);
+            var config = null;
 
-            $(element).tinymce(tinymce.claroline.configuration)
+            if (element.data('newTab') === 'yes') {
+                config = _.extend({}, tinymce.claroline.configuration);
+                config.picker.openResourcesInNewTab = true;
+            } else {
+                config = tinymce.claroline.configuration;
+            }
+
+            element.tinymce(config)
                 .on('remove', function () {
-                    var editor = tinymce.get($(element).attr('id'));
+                    var editor = tinymce.get(element.attr('id'));
                     if (editor) {
                         editor.destroy();
                     }
