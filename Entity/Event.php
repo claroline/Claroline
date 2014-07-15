@@ -13,6 +13,7 @@ namespace Claroline\CoreBundle\Entity;
 
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Entity\User;
+use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -31,6 +32,7 @@ class Event
 
     /**
      * @ORM\Column(length=50)
+     * @Assert\NotBlank()
      */
     private $title;
 
@@ -68,7 +70,7 @@ class Event
     /**
      * @ORM\Column(name="allday", type="boolean", nullable=true)
      */
-    private $allDay;
+    private $allDay = false;
 
     /**
      *
@@ -125,6 +127,10 @@ class Event
         if (!is_null($start)) {
             if ($start instanceof \Datetime) {
                 $this->start = $start->getTimestamp();
+            } elseif (is_int($start)) {
+                $this->start = $start;
+            } else {
+                throw new \Exception('Not an integer or date.');
             }
         }
     }
@@ -146,6 +152,10 @@ class Event
         if (!is_null($end)) {
             if ($end instanceof \Datetime) {
                 $this->end = $end-> getTimestamp();
+            } elseif (is_int($end)) {
+                $this->end = $end;
+            } else {
+                throw new \Exception('Not an integer or date.');
             }
         }
     }

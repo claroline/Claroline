@@ -37,10 +37,11 @@ class AgendaType extends AbstractType
                 'start',
                 'datepicker',
                 array(
-                    'required'      => false,
-                    'widget'        => 'single_text',
-                    'format'        => 'dd-MM-yyyy HH:mm',
-                    'attr'          => $attr,
+                    'required'  => false,
+                    'widget'    => 'single_text',
+                    'format'    => 'dd-MM-yyyy',
+                    'attr'      => $attr,
+                    'autoclose' => true
                 )
             )
             ->add(
@@ -52,10 +53,11 @@ class AgendaType extends AbstractType
                 'end',
                 'datepicker',
                 array(
-                    'required'      => false,
-                    'widget'        => 'single_text',
-                    'format'        => 'dd-MM-yyyy HH:mm',
-                    'attr'          => $attr,
+                    'required'  => false,
+                    'widget'    => 'single_text',
+                    'format'    => 'dd-MM-yyyy',
+                    'attr'      => $attr,
+                    'autoclose' => true
                )
             )
             ->add(

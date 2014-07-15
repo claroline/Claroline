@@ -221,6 +221,7 @@ date_form_datepicker_format: dd-mm-yyyy
 date_form_datepicker_php: m-d-Y
 date_form_format: 'dd/MM/yyyy'
 date_form_placeholder: dd/mm/aaaa
+date_agenda_display_format: MM-dd-yyyy
 date_format: 'd/m/Y'
 date_range.apply: 'Aplicar'
 date_range.clear: 'Reinicializar'

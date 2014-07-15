@@ -58,67 +58,37 @@ class AgendaManager
 
     public function addEvent(Event $event, $workspace = null)
     {
-        if(!is_null($workspace)) {
-            $this->checkUserIsAllowed('agenda', $workspace);
-        }
-        // the end date has to be bigger
-        if ($event->getStart() <= $event->getEnd()) {
-            if(! is_null($workspace)) {
-                $event->setWorkspace($workspace);
-            }
+        $event->setWorkspace($workspace);
+        $event->setUser($this->security->getToken()->getUser());
+        $this->om->persist($event);
 
-            $event->setUser($this->security->getToken()->getUser());
-            $this->om->persist($event);
-            if ($event->getRecurring() > 0) {
-                $this->calculRecurrency($event);
-            }
-            $this->om->flush();
-            $start = is_null($event->getStart())? null : $event->getStart()->getTimestamp();
-            $end = is_null($event->getEnd())? null : $event->getEnd()->getTimestamp();
-            $data = array(
-                'id' => $event->getId(),
-                'title' => $event->getTitle(),
-                'start' => $start,
-                'end' => $end,
-                'color' => $event->getPriority(),
-                'allDay' => $event->getAllDay()
-            );
-            return array(
-                'code' => 200,
-                'message' => $data
-                );
+        if ($event->getRecurring() > 0) {
+            $this->calculRecurrency($event);
         }
-        return array(
-                'code' => 400,
-                'message' => 'Start date has to be bigger'
-                );
+
+        $this->om->flush();
+
+        return $this->toArray($event);
     }
 
     /**
-     * @param  int $id
+     * @param  Event $event
      * @return boolean
      */
-    public function deleteEvent($id, $workspace = null)
+    public function deleteEvent(Event $event)
     {
-        if(!is_null($workspace)) {
-            $this->checkUserIsAllowed('agenda', $workspace);
-            if (!$this->checkUserIsAllowedtoWrite($workspace, $event)) {
-                throw new AccessDeniedException();
-            }
-        }
-        $repository = $this->om->getRepository('ClarolineCoreBundle:Event');
-        $event = $repository->find($id);
+        $removed = $this->toArray($event);
         $this->om->remove($event);
         $this->om->flush();
 
-        return true;
+        return $removed;
     }
 
     public function desktopEvents(){
         $usr = $this->security->getToken()->getUser();
         $listEvents = $this->om->getRepository('ClarolineCoreBundle:Event')->findByUser($usr, 0);
         $desktopEvents = $this->om->getRepository('ClarolineCoreBundle:Event')->findDesktop($usr, 0);
-        $data = array_merge($this->convertEventoArray($listEvents), $this->convertEventoArray($desktopEvents));
+        $data = array_merge($this->convertEventsToArray($listEvents), $this->convertEventsToArray($desktopEvents));
 
         return $data;
     }
@@ -130,6 +100,7 @@ class AgendaManager
     public function export($workspaceId = null)
     {
         $repo = $this->om->getRepository('ClarolineCoreBundle:Event');
+
         if (isset($workspaceId)) {
             $listEvents = $repo->findByWorkspaceId($workspaceId, false);
         } else {
@@ -206,13 +177,10 @@ class AgendaManager
      */
     public function importEvents(UploadedFile $file, $workspace)
     {
-        $path = $this->rootDir.'/../web/uploads';
-        $ds = DIRECTORY_SEPARATOR;
-        $file->move($path);
-        $ical = new \ICal($path . $ds . $file->getClientOriginalName());
+        $ical = new \ICal($file->getPathName());
         $events = $ical->events();
-        $this->om->startFlushSuite();
-        $count = 0;
+        //$this->om->startFlushSuite();
+        $tabs = [];
 
         foreach ($events as $i => $event) {
             $e = $this->om->factory('Claroline\CoreBundle\Entity\Event');
@@ -223,31 +191,30 @@ class AgendaManager
             $e->setWorkspace($workspace);
             $e->setUser($this->security->getToken()->getUser());
             $e->setPriority('#01A9DB');
+            $this->om->persist($e);
+            //the flush is required to generate an id
+            $this->om->flush();
+            $tabs[] = $this->toArray($e);
         }
-        $this->om->endFlushSuite();
+        //$this->om->endFlushSuite();
 
-        return $i;
+        return $tabs;
     }
 
-    public function updateEvent($event, $allDay, $workspace)
+    public function updateEvent(Event $event)
     {
-        $this->checkUserIsAllowed('agenda', $workspace);
-        if (!$this->checkUserIsAllowedtoWrite($workspace, $event)) {
-            throw new AccessDeniedException();
-        }
-        $event->setAllDay($allDay);
+        $this->om->persist($event);
         $this->om->flush();
 
-        return true;
+        return $this->toArray($event);
     }
 
     public function displayEvents(Workspace $workspace)
     {
-        $this->checkUserIsAllowed('agenda', $workspace);
         $listEvents = $this->om->getRepository('ClarolineCoreBundle:Event')
             ->findbyWorkspaceId($workspace->getId(), false);
-        $role = $this->checkUserIsAllowedtoWrite($workspace);
         $data = array();
+
         foreach ($listEvents as $key => $object) {
             $data[$key]['id'] = $object->getId();
             $data[$key]['title'] = $object->getTitle();
@@ -257,6 +224,7 @@ class AgendaManager
             $data[$key]['color'] = $object->getPriority();
             $data[$key]['description'] = $object->getDescription();
             $data[$key]['owner'] = $object->getUser()->getUsername();
+
             if ($data[$key]['owner'] === $this->security->getToken()->getUser()->getUsername()) {
                 $data[$key]['editable'] = true;
             } else {
@@ -335,34 +303,22 @@ class AgendaManager
         }
     }
 
-    private function convertEventoArray($listEvents)
+    private function convertEventsToArray($listEvents)
     {
         $data = array();
 
-        foreach ($listEvents as $key => $object) {
-            $data[$key]['id'] = $object->getId();
-            $workspace = $object->getWorkspace();
-            $data[$key]['title'] = !is_null($workspace) ?
-                $workspace->getName() :
-                $this->translator->trans('desktop', array(), 'platform');
-            $data[$key]['title'] .= ' : ' . $object->getTitle();
-            $data[$key]['allDay'] = $object->getAllDay();
-            $data[$key]['start'] = $object->getStart()->getTimestamp();
-            $data[$key]['end'] = $object->getEnd()->getTimestamp();
-            $data[$key]['color'] = $object->getPriority();
-            $data[$key]['visible'] = true;
-            // To display the name of the user who created this event.
-            $data[$key]['owner'] = $object->getUser()->getUsername();
+        foreach ($listEvents as $event) {
+            $data[] = $this->toArray($event);
         }
 
-        return($data);
+        return $data;
     }
 
     private function calculRecurrency(Event $event)
     {
         $listEvents = array();
 
-        // it calculs by day for now
+        // it calculs by weeks for now
         for ($i = 1; $i <= $event->getRecurring(); $i++) {
             $temp = clone $event;
             $newStartDate = $temp->getStart()->getTimestamp() + (3600 * 24 * $i);
@@ -374,5 +330,27 @@ class AgendaManager
 
             return $listEvents;
         }
+    }
+
+    /**
+     * @param Event $event
+     * @return array
+     */
+    private function toArray(Event $event)
+    {
+        $start = is_null($event->getStart())? null : $event->getStart()->getTimestamp();
+        $end = is_null($event->getEnd())? null : $event->getEnd()->getTimestamp();
+
+        return array(
+            'id' => $event->getId(),
+            'title' => $event->getTitle(),
+            'start' => $start,
+            'end' => $end,
+            'color' => $event->getPriority(),
+            'allDay' => $event->getAllDay(),
+            'owner' => $event->getUser()->getUsername(),
+            'description' => $event->getDescription(),
+            'editable' => true //for now, only true
+        );
     }
 }
