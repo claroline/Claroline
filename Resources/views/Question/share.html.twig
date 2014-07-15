@@ -51,7 +51,7 @@
 
     <div class="panel-body">
         <a href="{{ path('ujm_question_index') }}" class="btn btn-primary">
-            <i class="icon-arrow-left"></i> {{ 'back' | trans }}
+            <i class="fa fa-arrow-left"></i> {{ 'back' | trans }}
         </a>
     </div>
 
@@ -71,7 +71,7 @@
                                 onkeydown="if (event.keyCode == 13) { search_user_ajax('{{ path('ujm_question_share_search_user') }}', 1);return false; }">
                             <span class="input-group-btn">
                                 <button class="btn btn-default" type="button" id="search-user-button" onClick="search_user_ajax('{{ path('ujm_question_share_search_user') }}', 1)">
-                                    <i class="icon-search"></i>
+                                    <i class="fa fa-search"></i>
                                 </button>
                             </span>
                         </div>

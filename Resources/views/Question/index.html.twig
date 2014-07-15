@@ -41,7 +41,7 @@
         {{
             macros.breadcrumbs([
                 {
-                    'icon': 'icon-briefcase',
+                    'icon': 'fa fa-briefcase',
                     'name': 'desktop'|trans({}, 'platform'),
                     'href': path('claro_desktop_open')
                 },
@@ -71,23 +71,23 @@
     </div>
     <div class="panel-body">
         <a class="btn btn-primary" href="{{ path('ujm_question_new') }}">
-            <i class="icon-plus"></i> {{ 'create a new entry' | trans }}
+            <i class="fa fa-plus"></i> {{ 'create a new entry' | trans }}
         </a>
         <a class="btn btn-primary" href="{{ path('ujm_question_manage_doc') }}">
-            <i class="icon-file"></i> {{ 'manageImg' | trans }}
+            <i class="fa fa-file"></i> {{ 'manageImg' | trans }}
         </a>
         <a class="btn btn-primary" href="{{ path('ujm_question_search_question') }}">
-            <i class="icon-question"></i> {{ 'searchQuestion' | trans }}
+            <i class="fa fa-question"></i> {{ 'searchQuestion' | trans }}
         </a>
 
         {% if QuestionsExo == 'false' %}
             {% if (pagerMy.getNbResults > pagerMy.maxPerPage or pagerShared.getNbResults > pagerShared.maxPerPage) and displayAll == 0 %}
                 <a class="btn btn-primary" href="{{ path('ujm_question_index', { 'displayAll': 1 }) }} ">
-                    <i class="icon-plus-sign"></i> {{ 'display all on this page' | trans }}
+                    <i class="fa fa-plus-circle"></i> {{ 'display all on this page' | trans }}
                 </a>
             {% elseif displayAll == 1 %}
                 <a class="btn btn-primary" href="{{ path('ujm_question_index') }}">
-                    <i class="icon-minus-sign"></i> {{ 'display pagination' | trans }}
+                    <i class="fa fa-minus-circle"></i> {{ 'display pagination' | trans }}
                 </a>
             {% endif %}
         {% endif %}
@@ -111,10 +111,10 @@
                 <span class="input-group-btn">
                     <button class="btn btn-default" type="button" id="SubmitBriefSearch"
                         onClick="briefSearchSubmit();">
-                    <i class="icon-search"></i></button>
+                    <i class="fa fa-search"></i></button>
                     <a class="btn btn-default" data-toggle="tooltip" title="Recherche par type"
                        accesskey=""href="#" onclick="showInfos();event.preventDefault();">
-                        <i class="icon-question"></i>
+                        <i class="fa fa-question"></i>
                     </a>
                 </span>
             </div>
@@ -146,33 +146,33 @@
                                 <th class="classic" onclick="SortQuestions('Category', 'QuestionArrayMy');"
                                     onmouseover="this.style.color = '#0099FF'; body.style.cursor = 'pointer';"
                                     onmouseout="this.style.color = 'black'; body.style.cursor = 'default';">
-                                    <i class="icon-chevron-up" id="upC"  style="display: none;"></i>
-                                    <i class="icon-chevron-down" id="downC"  style="display: none;"></i>
+                                    <i class="fa fa-chevron-up" id="upC"  style="display: none;"></i>
+                                    <i class="fa fa-chevron-down" id="downC"  style="display: none;"></i>
                                     {{ 'category' | trans }}
                                 </th>
                                 <th class="classic" onclick="SortQuestions('Title', 'QuestionArrayMy');"
                                     onmouseover="this.style.color = '#0099FF'; body.style.cursor = 'pointer';"
                                     onmouseout="this.style.color = 'black'; body.style.cursor = 'default';">
-                                    <i class="icon-chevron-up" id="upTi" style="display: none;"></i>
-                                    <i class="icon-chevron-down" id="downTi" style="display: none;"></i>
+                                    <i class="fa fa-chevron-up" id="upTi" style="display: none;"></i>
+                                    <i class="fa fa-chevron-down" id="downTi" style="display: none;"></i>
                                     {{ 'title' | trans }}
                                 </th>
                                 <th class="classic" onclick="SortQuestions('Type', 'QuestionArrayMy');"
                                     onmouseover="this.style.color = '#0099FF'; body.style.cursor = 'pointer';"
                                     onmouseout="this.style.color = 'black'; body.style.cursor = 'default';">
-                                    <i class="icon-chevron-up" id="upTy" style="display: none;"></i>
-                                    <i class="icon-chevron-down" id="downTy" style="display: none;"></i>
+                                    <i class="fa fa-chevron-up" id="upTy" style="display: none;"></i>
+                                    <i class="fa fa-chevron-down" id="downTy" style="display: none;"></i>
                                     {{ 'type' | trans }}
                                 </th>
                                 <th class="classic" onclick="SortQuestions('Invite', 'QuestionArrayMy');"
                                     onmouseover="this.style.color = '#0099FF'; body.style.cursor = 'pointer';"
                                     onmouseout="this.style.color = 'black'; body.style.cursor = 'default';">
-                                    <i class="icon-chevron-up" id="upI" style="display: none;"></i>
-                                    <i class="icon-chevron-down" id="downI" style="display: none;"></i>
+                                    <i class="fa fa-chevron-up" id="upI" style="display: none;"></i>
+                                    <i class="fa fa-chevron-down" id="downI" style="display: none;"></i>
                                     {{ 'question' | trans }}
                                 </th>
                                 <th class="classic">{{ 'actions' | trans }}</th>
-                                <th class="classic"><i class="icon-share-alt"></th>
+                                <th class="classic"><i class="fa fa-share"></th>
                             </tr>
                         </thead>
                         <tbody>
@@ -184,25 +184,25 @@
                                 <td class="classic">{{ interaction.invite|raw }}</td>
                                 <td class="classic">
                                     <a class="btn btn-default" data-toggle="tooltip" title="{{ 'share' | trans }}" href="{{ path('ujm_question_share', { 'questionID': interaction.question.id }) }}">
-                                        <i class="icon-share-alt"></i>
+                                        <i class="fa fa-share"></i>
                                     </a>
                                     <a class="btn btn-default" data-toggle="tooltip" title="{{ 'duplicate' | trans }}" href="{{ path('ujm_question_duplicate', { 'interID': interaction.id }) }}">
-                                        <i class="icon-repeat"></i>
+                                        <i class="fa fa-repeat"></i>
                                     </a>
                                     {% if(questionWithResponse[interaction.id] == 0) %}
                                         <a class="btn btn-default" data-toggle="tooltip" title="{{ 'edit' | trans }}" href="{{ path('ujm_question_edit', { 'id': interaction.question.id }) }}">
-                                            <i class="icon-pencil"></i>
+                                            <i class="fa fa-pencil"></i>
                                         </a>
                                         <a class="btn btn-default" data-toggle="tooltip" title="{{ 'delete' | trans }}" id="delete-question" href="{{ path('ujm_question_delete', {
                                         'id': interaction.question.id, 'pageNow': pagerMy.getCurrentPage, 'maxPage': pagerMy.maxPerPage,
                                         'nbItem': pagerMy.getNbResults, 'lastPage': pagerMy.getNbPages }) }}">
-                                            <i class="icon-trash"></i>
+                                            <i class="fa fa-trash-o"></i>
                                         </a>
                                     {% else %}
                                         <a class="btn btn-default" data-toggle="tooltip" title="{{ 'edit' | trans }}"
                                            href="{{ path('ujm_question_edit', { 'id': interaction.question.id }) }}"
                                            style="color: red;">
-                                            <i class="icon-pencil"></i>
+                                            <i class="fa fa-pencil"></i>
                                         </a>
                                     {% endif %}
                                 </td>
@@ -210,7 +210,7 @@
                                     <td class="classic">
                                         <a class="btn btn-default" data-toggle="tooltip" title="{{ 'show'|trans }}"
                                            href="{{ path('ujm_see_shared', { 'id': interaction.question.id }) }}">
-                                            <i class="icon-eye-open"></i>
+                                            <i class="fa fa-eye"></i>
                                         </a>
                                     </td>
                                 {% else %}
@@ -239,29 +239,29 @@
                                     <th class="classic" onclick="SortQuestions('Category', 'QuestionArrayShared');"
                                         onmouseover="this.style.color = '#0099FF'; body.style.cursor = 'pointer';"
                                         onmouseout="this.style.color = 'black'; body.style.cursor = 'default';">
-                                        <i class="icon-chevron-up" id="upCs"  style="display: none;"></i>
-                                        <i class="icon-chevron-down" id="downCs"  style="display: none;"></i>
+                                        <i class="fa fa-chevron-up" id="upCs"  style="display: none;"></i>
+                                        <i class="fa fa-chevron-down" id="downCs"  style="display: none;"></i>
                                         {{ 'category' | trans }}
                                     </th>
                                     <th class="classic" onclick="SortQuestions('Title', 'QuestionArrayShared');"
                                         onmouseover="this.style.color = '#0099FF'; body.style.cursor = 'pointer';"
                                         onmouseout="this.style.color = 'black'; body.style.cursor = 'default';">
-                                        <i class="icon-chevron-up" id="upTis"  style="display: none;"></i>
-                                        <i class="icon-chevron-down" id="downTis"  style="display: none;"></i>
+                                        <i class="fa fa-chevron-up" id="upTis"  style="display: none;"></i>
+                                        <i class="fa fa-chevron-down" id="downTis"  style="display: none;"></i>
                                         {{ 'title' | trans }}
                                     </th>
                                     <th class="classic" onclick="SortQuestions('Type', 'QuestionArrayShared');"
                                         onmouseover="this.style.color = '#0099FF'; body.style.cursor = 'pointer';"
                                         onmouseout="this.style.color = 'black'; body.style.cursor = 'default';">
-                                        <i class="icon-chevron-up" id="upTys"  style="display: none;"></i>
-                                        <i class="icon-chevron-down" id="downTys"  style="display: none;"></i>
+                                        <i class="fa fa-chevron-up" id="upTys"  style="display: none;"></i>
+                                        <i class="fa fa-chevron-down" id="downTys"  style="display: none;"></i>
                                         {{ 'Type' | trans }}
                                     </th>
                                     <th class="classic" onclick="SortQuestions('Invite', 'QuestionArrayShared');"
                                         onmouseover="this.style.color = '#0099FF'; body.style.cursor = 'pointer';"
                                         onmouseout="this.style.color = 'black'; body.style.cursor = 'default';">
-                                        <i class="icon-chevron-up" id="upIs"  style="display: none;"></i>
-                                        <i class="icon-chevron-down" id="downIs"  style="display: none;"></i>
+                                        <i class="fa fa-chevron-up" id="upIs"  style="display: none;"></i>
+                                        <i class="fa fa-chevron-down" id="downIs"  style="display: none;"></i>
                                         {{ 'question' | trans }}
                                     </th>
                                     <th class="classic">{{ 'shared by' | trans }}</th>
@@ -283,25 +283,25 @@
                                             {% if(questionWithResponse[myQShare.id] == 0) %}
                                                 <a class="btn btn-default" data-toggle="tooltip" title="{{ 'edit' | trans }}"
                                                    href="{{ path('ujm_question_edit', { 'id': myQShare.question.id }) }}">
-                                                    <i class="icon-pencil"></i>
+                                                    <i class="fa fa-pencil"></i>
                                                 </a>
                                             {% else %}
                                                 <a class="btn btn-default" data-toggle="tooltip" title="{{ 'edit' | trans }}"
                                                    href="{{ path('ujm_question_edit', { 'id': myQShare.question.id }) }}"
                                                    style="color: red;">
-                                                    <i class="icon-pencil"></i>
+                                                    <i class="fa fa-pencil"></i>
                                                 </a>
                                             {% endif %}
                                         {% endif %}
                                         <a class="btn btn-default" data-toggle="tooltip" title="{{ 'duplicate' | trans }}" href="{{ path('ujm_question_duplicate', { 'interID': myQShare.id }) }}">
-                                            <i class="icon-repeat"></i>
+                                            <i class="fa fa-repeat"></i>
                                         </a>
                                         <a class="btn btn-default" data-toggle="tooltip" title="{{ 'delete of my bank' | trans }}" id="delete-question"
                                            href="{{ path('ujm_delete_shared_question', { 'qid': myQShare.question.id,
                                                 'uid': app.user.id,
                                                 'pageNow': pagerShared.currentPage, 'maxPage': pagerShared.maxPerPage,
                                                 'nbItem': pagerShared.getNbResults, 'lastPage': pagerShared.getNbPages }) }}">
-                                            <i class="icon-trash"></i>
+                                            <i class="fa fa-trash-o"></i>
                                         </a>
                                     </td>
                                 </tr>
@@ -326,33 +326,33 @@
                                 <th class="classic" onclick="SortQuestions('Category', 'QuestionArray');"
                                     onmouseover="this.style.color = '#0099FF'; body.style.cursor = 'pointer';"
                                     onmouseout="this.style.color = 'black'; body.style.cursor = 'default';">
-                                    <i class="icon-chevron-up" id="upC"  style="display: none;"></i>
-                                    <i class="icon-chevron-down" id="downC"  style="display: none;"></i>
+                                    <i class="fa fa-chevron-up" id="upC"  style="display: none;"></i>
+                                    <i class="fa fa-chevron-down" id="downC"  style="display: none;"></i>
                                     {{ 'category' | trans }}
                                 </th>
                                 <th class="classic" onclick="SortQuestions('Title', 'QuestionArray');"
                                     onmouseover="this.style.color = '#0099FF'; body.style.cursor = 'pointer';"
                                     onmouseout="this.style.color = 'black'; body.style.cursor = 'default';">
-                                    <i class="icon-chevron-up" id="upTi"  style="display: none;"></i>
-                                    <i class="icon-chevron-down" id="downTi"  style="display: none;"></i>
+                                    <i class="fa fa-chevron-up" id="upTi"  style="display: none;"></i>
+                                    <i class="fa fa-chevron-down" id="downTi"  style="display: none;"></i>
                                     {{ 'title' | trans }}
                                 </th>
                                 <th class="classic" onclick="SortQuestions('Type', 'QuestionArray');"
                                     onmouseover="this.style.color = '#0099FF'; body.style.cursor = 'pointer';"
                                     onmouseout="this.style.color = 'black'; body.style.cursor = 'default';">
-                                    <i class="icon-chevron-up" id="upTy"  style="display: none;"></i>
-                                    <i class="icon-chevron-down" id="downTy"  style="display: none;"></i>
+                                    <i class="fa fa-chevron-up" id="upTy"  style="display: none;"></i>
+                                    <i class="fa fa-chevron-down" id="downTy"  style="display: none;"></i>
                                     {{ 'type' | trans }}
                                 </th>
                                 <th class="classic" onclick="SortQuestions('Invite', 'QuestionArray')"
                                     onmouseover="this.style.color = '#0099FF'; body.style.cursor = 'pointer';"
                                     onmouseout="this.style.color = 'black'; body.style.cursor = 'default';">
-                                    <i class="icon-chevron-up" id="upI"  style="display: none;"></i>
-                                    <i class="icon-chevron-down" id="downI"  style="display: none;"></i>
+                                    <i class="fa fa-chevron-up" id="upI"  style="display: none;"></i>
+                                    <i class="fa fa-chevron-down" id="downI"  style="display: none;"></i>
                                     {{ 'question' | trans }}
                                 </th>
                                 <th class="classic">{{ "actions" | trans }}</th>
-                                <th class="classic"><i class="icon-share-alt"></th>
+                                <th class="classic"><i class="fa fa-share"></th>
                                 <th class="classic">{{ 'shared by' | trans }}</th>
                             </tr>
                         </thead>
@@ -367,24 +367,24 @@
                                 {% if actionQ[interactionExo.question.id] == 1 %} <!-- my question -->
                                     <td class="classic">
                                         <a class="btn btn-default" data-toggle="tooltip" title="{{ 'share' | trans }}" href="{{ path('ujm_question_share', { 'questionID': interactionExo.question.id }) }}">
-                                            <i class="icon-share-alt"></i>
+                                            <i class="fa fa-share"></i>
                                         </a>
                                         <a class="btn btn-default" data-toggle="tooltip" title="{{ 'duplicate' | trans }}" href="{{ path('ujm_question_duplicate', { 'interID': interactionExo.id }) }}">
-                                            <i class="icon-repeat"></i>
+                                            <i class="fa fa-repeat"></i>
                                         </a>
                                         {% if(questionWithResponse[interactionExo.id] == 0) %}
                                             <a class="btn btn-default" data-toggle="tooltip" title="{{ 'edit' | trans }}" href="{{ path('ujm_question_edit', { 'id': interactionExo.question.id }) }}">
-                                                <i class="icon-pencil"></i>
+                                                <i class="fa fa-pencil"></i>
                                             </a>
                                             <a class="btn btn-default" data-toggle="tooltip" title="{{ 'delete' | trans }}" href="{{ path('ujm_question_delete', {
                                             'id': interactionExo.question.id }) }}" id="delete-question">
-                                                <i class="icon-trash"></i>
+                                                <i class="fa fa-trash-o"></i>
                                             </a>
                                         {% else %}
                                             <a class="btn btn-default" data-toggle="tooltip" title="{{ 'edit' | trans }}"
                                                href="{{ path('ujm_question_edit', { 'id': interactionExo.question.id }) }}"
                                                style="color: red;">
-                                                <i class="icon-pencil"></i>
+                                                <i class="fa fa-pencil"></i>
                                             </a>
                                         {% endif %}
                                     </td>
@@ -392,7 +392,7 @@
                                         <td class="classic">
                                             <a class="btn btn-default" data-toggle="tooltip" title="{{ 'show'|trans }}"
                                                href="{{ path('ujm_see_shared', { 'id': interactionExo.question.id }) }}">
-                                                <i class="icon-eye-open"></i>
+                                                <i class="fa fa-eye"></i>
                                             </a>
                                         </td>
                                     {% else %}
@@ -406,19 +406,19 @@
                                             {% if(questionWithResponse[interactionExo.id] == 0) %}
                                                 <a class="btn btn-default" data-toggle="tooltip" title="{{ 'edit' | trans }}"
                                                    href="{{ path('ujm_question_edit', { 'id': interactionExo.question.id }) }}">
-                                                    <i class="icon-pencil"></i>
+                                                    <i class="fa fa-pencil"></i>
                                                 </a>
                                             {% else %}
                                                 <a class="btn btn-default" data-toggle="tooltip" title="{{ 'edit' | trans }}"
                                                    href="{{ path('ujm_question_edit', { 'id': interactionExo.question.id }) }}"
                                                    style="color: red;">
-                                                    <i class="icon-pencil"></i>
+                                                    <i class="fa fa-pencil"></i>
                                                 </a>
                                             {% endif %}
                                         {% endif %}
                                         <a class="btn btn-default" data-toggle="tooltip" title="{{ 'delete of my bank' | trans }}"
                                            href="{{ path('ujm_delete_shared_question', { 'qid': interactionExo.question.id, 'uid': app.user.id, }) }}" id="delete-question">
-                                            <i class="icon-trash"></i>
+                                            <i class="fa fa-trash-o"></i>
                                         </a>
                                     </td>
                                     <td style="text-align: center;">-</td>

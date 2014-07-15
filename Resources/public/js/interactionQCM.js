@@ -386,7 +386,7 @@ function tableChoicesCreation(expectedAnswer, response, point, comment, position
         tableChoices.append('<table id="newTable" class="table table-striped table-bordered table-condensed"><thead><tr style="background-color: lightsteelblue;"><th class="classic">'+expectedAnswer+'</th><th class="classic">'+response+'</th><th class="classic">'+point+'</th><th class="classic">'+comment+'</th><th class="classic">'+positionForce+'</th><th class="classic">-----</th></tr></thead><tbody><tr></tr></tbody></table>');
 
         // create the button to add a choice
-        var add = $('<a href="#" id="add_choice" class="btn btn-primary"><i class="icon-plus"></i>&nbsp;'+addchoice+'</a>');
+        var add = $('<a href="#" id="add_choice" class="btn btn-primary"><i class="fa fa-plus"></i>&nbsp;'+addchoice+'</a>');
 
         // Add the button after the table
         tableChoices.append(add);

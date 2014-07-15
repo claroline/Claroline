@@ -56,7 +56,7 @@
 
     <div class="panel-body">
         <h4>
-            <mark style="color: red;"><i class="icon-warning-sign"></i> {{ 'linkedDoc' | trans }} !</mark>
+            <mark style="color: red;"><i class="fa fa-exclamation-triangle"></i> {{ 'linkedDoc' | trans }} !</mark>
         </h4>
 
         <div class="panel panel-default">
@@ -66,10 +66,10 @@
             <div class="panel-body">
                 {{ 'whichAction' | trans }} ?
                 <ul class="list-unstyled">
-                    <li><a href="{{ path('ujm_question_manage_doc') }}"><i class="icon-arrow-left"></i>&nbsp;&nbsp;{{ 'doNothing' | trans }} ...</a></li>
-                    <li><a href="#" onclick="DisplayQuestions();event.preventDefault();"><i class="icon-eye-open"></i>&nbsp;&nbsp;{{ 'seeDoc' | trans }}</a></li>
+                    <li><a href="{{ path('ujm_question_manage_doc') }}"><i class="fa fa-arrow-left"></i>&nbsp;&nbsp;{{ 'doNothing' | trans }} ...</a></li>
+                    <li><a href="#" onclick="DisplayQuestions();event.preventDefault();"><i class="fa fa-eye"></i>&nbsp;&nbsp;{{ 'seeDoc' | trans }}</a></li>
                     {% if(dontdisplay == 0) %}
-                        <li><a href="{{ path('ujm_document_del_linked', { 'label': label }) }}"><i class="icon-remove"></i>&nbsp;&nbsp;{{ 'delDocQuestion' | trans }} !</a></li>
+                        <li><a href="{{ path('ujm_document_del_linked', { 'label': label }) }}"><i class="fa fa-times"></i>&nbsp;&nbsp;{{ 'delDocQuestion' | trans }} !</a></li>
                     {% endif %}
                 </ul>
             </div>
@@ -93,43 +93,43 @@
                                     <th class="classic" onclick="SortQuestions('dateL', 'linkDocArray');"
                                         onmouseover="this.style.color = '#0099FF'; body.style.cursor = 'pointer';"
                                         onmouseout="this.style.color = 'black'; body.style.cursor = 'default';">
-                                        <i class="icon-chevron-up" id="upDl"  style="display: none;"></i>
-                                        <i class="icon-chevron-down" id="downDl"  style="display: none;"></i>
+                                        <i class="fa fa-chevron-up" id="upDl"  style="display: none;"></i>
+                                        <i class="fa fa-chevron-down" id="downDl"  style="display: none;"></i>
                                         {{ 'creationDate' | trans }}
                                     </th>
                                     <th class="classic" onclick="SortQuestions('titleL', 'linkDocArray');"
                                         onmouseover="this.style.color = '#0099FF'; body.style.cursor = 'pointer';"
                                         onmouseout="this.style.color = 'black'; body.style.cursor = 'default';">
-                                        <i class="icon-chevron-up" id="upTl"  style="display: none;"></i>
-                                        <i class="icon-chevron-down" id="downTl"  style="display: none;"></i>
+                                        <i class="fa fa-chevron-up" id="upTl"  style="display: none;"></i>
+                                        <i class="fa fa-chevron-down" id="downTl"  style="display: none;"></i>
                                         {{ 'title' | trans }}
                                     </th>
                                     <th class="classic" onclick="SortQuestions('QuestionL', 'linkDocArray');"
                                         onmouseover="this.style.color = '#0099FF'; body.style.cursor = 'pointer';"
                                         onmouseout="this.style.color = 'black'; body.style.cursor = 'default';">
-                                        <i class="icon-chevron-up" id="upQl"  style="display: none;"></i>
-                                        <i class="icon-chevron-down" id="downQl"  style="display: none;"></i>
+                                        <i class="fa fa-chevron-up" id="upQl"  style="display: none;"></i>
+                                        <i class="fa fa-chevron-down" id="downQl"  style="display: none;"></i>
                                         {{ 'question' | trans }}
                                     </th>
                                     <th class="classic" onclick="SortQuestions('CategoryL', 'linkDocArray');"
                                         onmouseover="this.style.color = '#0099FF'; body.style.cursor = 'pointer';"
                                         onmouseout="this.style.color = 'black'; body.style.cursor = 'default';">
-                                        <i class="icon-chevron-up" id="upCl"  style="display: none;"></i>
-                                        <i class="icon-chevron-down" id="downCl"  style="display: none;"></i>
+                                        <i class="fa fa-chevron-up" id="upCl"  style="display: none;"></i>
+                                        <i class="fa fa-chevron-down" id="downCl"  style="display: none;"></i>
                                         {{ 'category' | trans }}
                                     </th>
                                     <th class="classic" onclick="SortQuestions('paperL', 'linkDocArray');"
                                         onmouseover="this.style.color = '#0099FF'; body.style.cursor = 'pointer';"
                                         onmouseout="this.style.color = 'black'; body.style.cursor = 'default';">
-                                        <i class="icon-chevron-up" id="upPl"  style="display: none;"></i>
-                                        <i class="icon-chevron-down" id="downPl"  style="display: none;"></i>
+                                        <i class="fa fa-chevron-up" id="upPl"  style="display: none;"></i>
+                                        <i class="fa fa-chevron-down" id="downPl"  style="display: none;"></i>
                                         {{ 'linkpaper' | trans }} ?
                                     </th>
                                     <th class="classic" onclick="SortQuestions('responseL', 'linkDocArray');"
                                         onmouseover="this.style.color = '#0099FF'; body.style.cursor = 'pointer';"
                                         onmouseout="this.style.color = 'black'; body.style.cursor = 'default';">
-                                        <i class="icon-chevron-up" id="upRl"  style="display: none;"></i>
-                                        <i class="icon-chevron-down" id="downRl"  style="display: none;"></i>
+                                        <i class="fa fa-chevron-up" id="upRl"  style="display: none;"></i>
+                                        <i class="fa fa-chevron-down" id="downRl"  style="display: none;"></i>
                                         {{ 'withResponse' | trans }} ?
                                     </th>
                                 </tr>

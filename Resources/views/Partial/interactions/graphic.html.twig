@@ -17,23 +17,23 @@
     {% if src == 'edit' %}
         {% if app.user.id == entity.interaction.question.user.id %}
             <a class="btn btn-primary" onClick="addPicture('{{ path('ujm_interactiongraphic_SavePic') }}');">
-                <i class="icon-picture"></i> {{ "add a new picture" | trans }}
+                <i class="fa fa-picture-o"></i> {{ "add a new picture" | trans }}
             </a>
         {% else %}
             {{ "only owner graphic" | trans }}
         {% endif %}
     {% else %}
         <a class="btn btn-primary" onClick="addPicture('{{ path('ujm_interactiongraphic_SavePic') }}');">
-            <i class="icon-picture"></i> {{ "add a new picture" | trans }}
+            <i class="fa fa-picture-o"></i> {{ "add a new picture" | trans }}
         </a>
     {% endif %}
 
     <a class="btn btn-default" onclick="DisplayInstruction();" id="showInstruct">
-        <i class="icon-question"></i> {{ 'show Instructions' | trans }}
+        <i class="fa fa-question"></i> {{ 'show Instructions' | trans }}
     </a>
 
     <a class="btn btn-default" onclick="HideInstruction();" id="hideInstruct">
-        <i class="icon-question"></i> {{ 'hide Instructions' | trans }}
+        <i class="fa fa-question"></i> {{ 'hide Instructions' | trans }}
     </a>
 </div>
 
@@ -69,7 +69,7 @@
 
         {% for p in position %}
             <div id="dragContainer{{ i }}">
-                <i class="icon-move" style="cursor: move; position: absolute; left: -10px; top: -15px;"></i>
+                <i class="fa fa-arrows" style="cursor: move; position: absolute; left: -10px; top: -15px;"></i>
                 <img src="{{ asset('bundles/ujmexo/images/graphic/circlew.png') }}" alt="AnswerZone{{ i }}" id="img{{ i }}"/>
             </div>
 

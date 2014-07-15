@@ -108,7 +108,7 @@ $(function () {
             if($('#AnswerImage').length){
 
                 $('#Answer').append('<div id="dragContainer' + grade +
-                    '"><i class="icon-move" style="cursor: move; position: absolute; left: -10px; top: -15px;"></i>'
+                    '"><i class="fa fa-arrows" style="cursor: move; position: absolute; left: -10px; top: -15px;"></i>'
                     + '<p id="num' + parseInt(grade + 1) +'" style="position: absolute; left: 5px; top: -20px;">'
                     + parseInt(grade + 1) + '</p></div>');
 
@@ -399,7 +399,7 @@ document.addEventListener('click', function (e) {
     if (pressS === true) {
 
         for (j = 0 ; j < grade ; j++) {
-            if ($(e.target).hasClass('icon-move')) {
+            if ($(e.target).hasClass('fa fa-arrows')) {
                 $(e.target).parent('div').remove();
 
                 var containerID = $(e.target).parent('div').attr('id');

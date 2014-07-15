@@ -56,7 +56,7 @@
 
     <div class="panel-body">
         <a href="{{ path('ujm_question_index') }}" class="btn btn-primary">
-            <i class="icon-arrow-left"></i> {{ 'back' | trans }}
+            <i class="fa fa-arrow-left"></i> {{ 'back' | trans }}
         </a>
     </div>
 
@@ -75,7 +75,7 @@
 
                     <div class="panel-body">
                         <p><a href="#" onclick="AddDocument();event.preventDefault();" class="btn btn-primary">
-                            <i class="icon-plus" id="icon"></i> {{ 'addDoc' | trans }} ...
+                            <i class="fa fa-plus" id="icon"></i> {{ 'addDoc' | trans }} ...
                         </a></p>
 
                         <div id="AddDocuments" style="display: none;">
@@ -101,7 +101,7 @@
 
                     <div class="panel-body">
                         <p><a href="#" onclick="searchDocuments();event.preventDefault();" class="btn btn-primary">
-                            <i class="icon-search"></i> {{ 'search' | trans }}
+                            <i class="fa fa-search"></i> {{ 'search' | trans }}
                         </a></p>
 
                         <div id="searchDocuments" style="display: none;">
@@ -112,7 +112,7 @@
                                 <span class="input-group-btn">
                                     <button class="btn btn-default" type="button" id="searchDocbutton"
                                         onClick="searchDoc('{{ path('ujm_question_searchDocuments') }}', 1);">
-                                <i class="icon-search"></i></button>
+                                <i class="fa fa-search"></i></button>
                                 </span>
                             </div>
                         </div>
@@ -126,34 +126,34 @@
 
                     <div class="panel-body">
                         <p><a href="#" onclick="sortDoc();event.preventDefault();" class="btn btn-primary">
-                            <i class="icon-filter"></i> {{ 'sort' | trans }}
+                            <i class="fa fa-filter"></i> {{ 'sort' | trans }}
                         </a></p>
 
                         <div id="sortDocuments" style="display: none;">
                             {{ 'chooseType' | trans }} :&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                             <a href="#" onclick="sortDocument('image', '{{ path('ujm_question_sortDocuments') }}', 1);
                                 event.preventDefault();">
-                                <i class="icon-picture"></i>
+                                <i class="fa fa-picture-o"></i>
                             </a>
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                             <a href="#" onclick="sortDocument('music', '{{ path('ujm_question_sortDocuments') }}', 1);
                                 event.preventDefault();">
-                                <i class="icon-music"></i>
+                                <i class="fa fa-music"></i>
                             </a>
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                             <a href="#" onclick="sortDocument('video', '{{ path('ujm_question_sortDocuments') }}', 1);
                                 event.preventDefault();">
-                                <i class="icon-film"></i>
+                                <i class="fa fa-film"></i>
                             </a>
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                             <a href="#" onclick="sortDocument('file', '{{ path('ujm_question_sortDocuments') }}', 1);
                                 event.preventDefault();">
-                                <i class="icon-file"></i>
+                                <i class="fa fa-file"></i>
                             </a>
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                             <a href="#" onclick="sortDocument('all', '{{ path('ujm_question_sortDocuments') }}', 1);
                                 event.preventDefault();">
-                                <i class="icon-list-alt"></i>
+                                <i class="fa fa-list-alt"></i>
                             </a>
                         </div>
                     </div>
@@ -185,16 +185,16 @@
                                     <th class="classic" onclick="SortQuestions('kind', 'table');"
                                         onmouseover="this.style.color = '#0099FF'; body.style.cursor = 'pointer';"
                                         onmouseout="this.style.color = 'black'; body.style.cursor = 'default';">
-                                        <i class="icon-chevron-up" id="upT" style="display: none;"></i>
-                                        <i class="icon-chevron-down" id="downT" style="display: none;"></i>
+                                        <i class="fa fa-chevron-up" id="upT" style="display: none;"></i>
+                                        <i class="fa fa-chevron-down" id="downT" style="display: none;"></i>
                                         {{ 'type' | trans }}
                                     </th>
                                     <th class="classic">{{ "preview" | trans }}</th>
                                     <th class="classic" onclick="SortQuestions('Label', 'table');"
                                         onmouseover="this.style.color = '#0099FF'; body.style.cursor = 'pointer';"
                                         onmouseout="this.style.color = 'black'; body.style.cursor = 'default';">
-                                        <i class="icon-chevron-up" id="upL" style="display: none;"></i>
-                                        <i class="icon-chevron-down" id="downL" style="display: none;"></i>
+                                        <i class="fa fa-chevron-up" id="upL" style="display: none;"></i>
+                                        <i class="fa fa-chevron-down" id="downL" style="display: none;"></i>
                                         {{ 'label' | trans }}
                                     </th>
                                     <th class="classic">{{ 'actions' | trans }}</th>
@@ -207,14 +207,14 @@
                                         <td class="classic">
                                             {% if myDoc.type == ".png" or myDoc.type == ".jpeg"
                                                 or myDoc.type == ".jpg" or myDoc.type == ".gif" or myDoc.type == ".bmp" %}
-                                                <i class="icon-picture"></i>
+                                                <i class="fa fa-picture-o"></i>
                                             {% elseif myDoc.type == ".mp3" or myDoc.type == ".wav" %}
-                                                <i class="icon-music"></i>
+                                                <i class="fa fa-music"></i>
                                             {% elseif myDoc.type == ".avi" or myDoc.type == ".mpeg"
                                                 or myDoc.type == ".wmv" or myDoc.type == ".flv" or myDoc.type == ".mov" %}
-                                                <i class="icon-film"></i>
+                                                <i class="fa fa-film"></i>
                                             {% else %}
-                                                <i class="icon-file"></i>
+                                                <i class="fa fa-file"></i>
                                             {% endif %}
                                         </td>
 
@@ -227,18 +227,18 @@
                                                    href="{{ asset(myDoc.url) }}" onclick="window.open(this.href, 'ListenSong',
                                                     'height=200, width=300, toolbar=no, menubar=no, location=no, resizable=yes, scrollbars=no, status=no');
                                                     return false;">
-                                                    <i class="icon-play"></i>
+                                                    <i class="fa fa-play"></i>
                                                 </a>
                                             {% elseif myDoc.type == ".avi" or myDoc.type == ".mpeg"
                                                 or myDoc.type == ".wmv" or myDoc.type == ".flv" or myDoc.type == ".mov" %}
                                                 <a class="btn btn-default" data-toggle="tooltip" title="{{ 'play' | trans }}"
                                                    href="{{ asset(myDoc.url) }}">
-                                                    <i class="icon-play"></i>
+                                                    <i class="fa fa-play"></i>
                                                 </a>
                                             {% else %}
                                                 <a class="btn btn-default" data-toggle="tooltip" title="{{ 'download' | trans }}"
                                                    href="{{ asset(myDoc.url) }}">
-                                                    <i class="icon-download-alt"></i>
+                                                    <i class="fa fa-download"></i>
                                                 </a>
                                             {% endif %}
                                         </td>
@@ -250,7 +250,7 @@
                                         <td class="classic">
                                             <a class="btn btn-default" data-toggle="tooltip" title="{{ 'edit' | trans }}"
                                                 onclick="ChangeName('{{ path('ujm_document_change_name') }}', '{{ i }}');">
-                                                <i class="icon-pencil"></i>
+                                                <i class="fa fa-pencil"></i>
                                             </a>
 
                                             <a class="btn btn-default" data-toggle="tooltip" title="{{ 'delete' | trans }}"
@@ -258,7 +258,7 @@
                                                     'pageNow': pagerDoc.currentPage, 'maxPage': pagerDoc.maxPerPage,
                                                     'nbItem': pagerDoc.getNbResults, 'lastPage': pagerDoc.getNbPages }) }}"
                                                onclick="return confirm('{{ 'warning' | trans }} ?');">
-                                                <i class="icon-trash"></i>
+                                                <i class="fa fa-trash-o"></i>
                                             </a>
                                         </td>
                                     </tr>

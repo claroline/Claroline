@@ -48,16 +48,16 @@
             {{ form_errors(form.interaction.question.category) }}
         </div>
     </div>
-    <a class="btn btn-primary" onclick="openCat('{{ path('ujm_category_new_pop', {'edit': 1} ) }}');"><i class="icon-pencil"></i> {{ 'alter category' | trans }}</a>
-    <a class="btn btn-primary" onclick="openCat('{{ path('ujm_category_new_pop') }}');"><i class="icon-plus"></i> {{ 'create a new category' | trans }}</a>
-    <a id="linkedCategory" style="display: none;" class="btn btn-primary" id="lien_category_drop" onclick="dropCategory();"><i class="icon-trash"></i> {{ 'drop category' | trans }}</a>
+    <a class="btn btn-primary" onclick="openCat('{{ path('ujm_category_new_pop', {'edit': 1} ) }}');"><i class="fa fa-pencil"></i> {{ 'alter category' | trans }}</a>
+    <a class="btn btn-primary" onclick="openCat('{{ path('ujm_category_new_pop') }}');"><i class="fa fa-plus"></i> {{ 'create a new category' | trans }}</a>
+    <a id="linkedCategory" style="display: none;" class="btn btn-primary" id="lien_category_drop" onclick="dropCategory();"><i class="fa fa-trash-o"></i> {{ 'drop category' | trans }}</a>
 </div>
 
 <br><hr><br>
 
 <div>
     <a class="btn btn-primary" data-toggle="collapse" data-target="#collepsedescription">
-        <i class="icon-pencil"></i> {{ 'Question.description' | trans }}
+        <i class="fa fa-pencil"></i> {{ 'Question.description' | trans }}
     </a>
     <div id="collepsedescription" class="list-group collapse">
         <div class="list-group-item">{{ form_widget(form.interaction.question.description) }}</div>
@@ -76,7 +76,7 @@
 
 <div>
     <a class="btn btn-primary" data-toggle="collapse" data-target="#collepseinteraction">
-        <i class="icon-pencil"></i> {{ 'Interaction.feedback' | trans }}
+        <i class="fa fa-pencil"></i> {{ 'Interaction.feedback' | trans }}
     </a>
     <div id="collepseinteraction" class="list-group collapse">
         <div class="list-group-item">{{ form_widget(form.interaction.feedBack) }}</div>
