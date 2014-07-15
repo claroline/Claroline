@@ -11,16 +11,16 @@
         <input type="text" data-date-time-input="{{ 'date_field_format'|trans({}, 'icap_portfolio') }}" class="input-sm form-control" name="endDate" data-ng-model="editedWidget.endDate" />
     </p>
     <p>
-        <button type="button" data-ui-resource-picker="resourcePickerConfig">{{ 'formation_add_resource'|trans({}, 'icap_portfolio') }}</button>
+        <button type="button" class="btn btn-sm btn-success" data-ui-resource-picker="resourcePickerConfig">{{ 'formation_add_resource'|trans({}, 'icap_portfolio') }}</button>
     </p>
     <ul class="list-unstyled">
         <li data-ng-repeat="resource in collection">
             <div data-ng-class="{'input-group': isAdded(resource)}">
                 {% verbatim %}
-                <input type="text" readonly="readonly" class="input-sm form-control" name="resource" value="{{ resource.name }}" />
+                <input type="text" readonly="readonly" data-ng-disabled="resource.toDelete" class="input-sm form-control"
+                       name="resource" value="{{ resource.name }}" />
                 <input type="hidden" class="form-control" id="formation_{{ $index }}_resource"
-                     name="icap_portfolio_widget_form_formations[resources][{{ $index }}]" data-ng-model="resource.resource"
-                     data-ng-disabled="resource.toDelete" data-ng-keyup="modify(resource, $index)" />
+                     name="icap_portfolio_widget_form_formations[resources][{{ $index }}]" data-ng-model="resource.resource" data-ng-keyup="modify(resource, $index)" />
                 {% endverbatim %}
                 <span class="input-group-btn" data-ng-if="isAdded(resource)">
                     <button aria-label="{{ 'formation_delete_resource'|trans({}, 'icap_portfolio') }}" class="btn btn-sm btn-danger" type="button" data-ng-if="!isEmpty(resource) && !resource.toDelete" data-ng-click="deleteChild(resource)">
