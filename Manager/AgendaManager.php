@@ -208,7 +208,7 @@ class AgendaManager
     {
         $ical = new \ICal($file->getPathname());
         $events = $ical->events();
-//        $this->om->startFlushSuite();
+        $this->om->startFlushSuite();
         $count = 0;
 
         foreach ($events as $i => $event) {
@@ -221,9 +221,9 @@ class AgendaManager
             $e->setUser($this->security->getToken()->getUser());
             $e->setPriority('#01A9DB');
             $this->om->persist($e);
-            $this->om->flush();
         }
-//        $this->om->endFlushSuite();
+        
+        $this->om->endFlushSuite();
 
         return $i;
     }
