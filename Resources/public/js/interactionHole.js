@@ -61,7 +61,7 @@ function addFormHoleEdit(add, response, point, size, orthography, del, selector,
         //******For Key words********
         var addwr = '';
         if (nbResponses == 0) {
-            addwr = '<a href="#" id="add_keyword_' + index + '" class="btn btn-primary"><i class="icon-plus"></i>&nbsp;' + langKeyWord + '</a>';
+            addwr = '<a href="#" id="add_keyword_' + index + '" class="btn btn-primary"><i class="fa fa-plus"></i>&nbsp;' + langKeyWord + '</a>';
         }
 
         $('#newTable').find('.trHole:last').find('td:last')
@@ -229,7 +229,7 @@ function addHole(indexBlank, valHole) {
     // Remove the useless fields form
     container.remove();
 
-    var addwr = '<a href="#" id="add_keyword_' + index + '" class="btn btn-primary"><i class="icon-plus"></i>&nbsp;' + langKeyWord + '</a>';
+    var addwr = '<a href="#" id="add_keyword_' + index + '" class="btn btn-primary"><i class="fa fa-plus"></i>&nbsp;' + langKeyWord + '</a>';
     $('#newTable').find('tr:last').append('<td class="classic"><table id="tabWR_' + index + '"><tbody></tbody></table>' + addwr + '</td>');
 
     addWR(index, index);

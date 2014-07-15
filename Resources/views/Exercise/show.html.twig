@@ -56,15 +56,15 @@
     <div class="panel-body">
         {% if isDesktop() %}
             <a class="btn btn-primary" href="{{ path('claro_desktop_open_tool', { 'toolName': 'resource_manager', 'workspaceId': workspace.getId() }) ~ "#resources/" ~ _resource.getResourceNode().getParent().getId() }}">
-                <i class="icon-arrow-left"></i> {{ 'back' | trans }}
+                <i class="fa fa-arrow-left"></i> {{ 'back' | trans }}
             </a>
         {% else %}
             <a class="btn btn-primary" href="{{ path('claro_workspace_open_tool', { 'toolName': 'resource_manager', 'workspaceId': workspace.getId() }) ~ "#resources/" ~ _resource.getResourceNode().getParent().getId() }}">
-                <i class="icon-arrow-left"></i> {{ 'back' | trans }}
+                <i class="fa fa-arrow-left"></i> {{ 'back' | trans }}
             </a>
         {% endif %}
         <a class="btn btn-primary" href="{{ path('ujm_question_index', {'resourceId': entity.id}) }}">
-            <i class="icon-question"></i> {{ 'access my question bank' | trans }}
+            <i class="fa fa-question"></i> {{ 'access my question bank' | trans }}
         </a>
     </div>
 
@@ -72,7 +72,7 @@
         {% if exoAdmin == 1 %}
             {{ 'infoExerciseNoPuplished'|trans }} : 
             <a id="btPublish" class="btn btn-primary" onclick="publish('{{ path('ujm_exercise_publish') }}', {{ entity.id }})">
-                <i class="icon-ok"></i> {{ 'publish' | trans }}
+                <i class="fa fa-check"></i> {{ 'publish' | trans }}
             </a>
         {% else %}
             {{ 'infoExerciseNoPuplished2'|trans }}
@@ -105,9 +105,9 @@
                         <th class="classic">{{ 'use date of end' | trans }}</th>
                         <td class="classic">
                             {% if entity.useDateEnd == 0 %}
-                                <i class="icon-remove-sign"></i>
+                                <i class="fa fa-times-circle"></i>
                             {% else %}
-                                <i class="icon-ok-sign"></i>
+                                <i class="fa fa-check-circle"></i>
                             {% endif %}
                         </td>
                     </tr>
@@ -123,9 +123,9 @@
                             <th class="classic">{{ 'random order of questions' | trans }}</th>
                             <td class="classic">
                                 {% if entity.shuffle == 0 %}
-                                    <i class="icon-remove-sign"></i>
+                                    <i class="fa fa-times-circle"></i>
                                 {% else %}
-                                    <i class="icon-ok-sign"></i>
+                                    <i class="fa fa-check-circle"></i>
                                 {% endif %}
                             </td>
                         </tr>
@@ -143,9 +143,9 @@
                             <th class="classic">{{ 'Exercise.keepSameQuestion' | trans }}</th>
                             <td class="classic">
                                 {% if entity.keepSameQuestion == 0 %}
-                                    <i class="icon-remove-sign"></i>
+                                    <i class="fa fa-times-circle"></i>
                                 {% else %}
-                                    <i class="icon-ok-sign"></i>
+                                    <i class="fa fa-check-circle"></i>
                                 {% endif %}
                             </td>
                         </tr>
@@ -167,9 +167,9 @@
                             <th class="classic">{{ 'print paper' | trans }}</th>
                             <td class="classic">
                                 {% if entity.doprint == 0 %}
-                                    <i class="icon-remove-sign"></i>
+                                    <i class="fa fa-times-circle"></i>
                                 {% else %}
-                                    <i class="icon-ok-sign"></i>
+                                    <i class="fa fa-check-circle"></i>
                                 {% endif %}
                             </td>
                         </tr>
@@ -211,9 +211,9 @@
                             <th class="classic">{{ 'test exit' | trans }}</th>
                             <td class="classic">
                                 {% if  entity.dispButtonInterrupt == 0 %}
-                                    <i class="icon-remove-sign"></i>
+                                    <i class="fa fa-times-circle"></i>
                                 {% else %}
-                                    <i class="icon-ok-sign"></i>
+                                    <i class="fa fa-check-circle"></i>
                                 {% endif %}
                             </td>
                         </tr>
@@ -221,9 +221,9 @@
                             <th class="classic">{{ 'lock attempt' | trans }}</th>
                             <td class="classic">
                                 {% if  entity.lockAttempt == 0 %}
-                                    <i class="icon-remove-sign"></i>
+                                    <i class="fa fa-times-circle"></i>
                                 {% else %}
-                                    <i class="icon-ok-sign"></i>
+                                    <i class="fa fa-check-circle"></i>
                                 {% endif %}
                             </td>
                         </tr>
@@ -232,10 +232,10 @@
             </table>
             {% if exoAdmin == 1 %}
                 <button type="button" id="more" class="btn btn-primary" onclick="moreInformation();">
-                    <i class="icon-plus"></i> {{ 'moreInformation' | trans }}
+                    <i class="fa fa-plus"></i> {{ 'moreInformation' | trans }}
                 </button>
                 <button type="button" id="less" class="btn btn-primary" onclick="lessInformation();">
-                    <i class="icon-minus"></i> {{ 'lessInformation' | trans }}
+                    <i class="fa fa-minus"></i> {{ 'lessInformation' | trans }}
                 </button>
             {% endif %}
         </div>
@@ -243,27 +243,27 @@
             {% if allowToCompose == 1 and nbQuestion > 0 %}
                 {% if nbUserPaper == 0 %}
                     <a class="btn btn-primary" href="{{ path('ujm_exercise_paper', { 'id': entity.id }) }}">
-                        <i class="icon-check"></i> {{ 'compose' | trans }}
+                        <i class="fa fa-check-square-o"></i> {{ 'compose' | trans }}
                     </a>
                 {% else %}
                     <a class="btn btn-primary" href="{{ path('ujm_paper_list', { 'exoID': entity.id }) }}">
-                        <i class="icon-check"></i> {{ 'compose' | trans }}
+                        <i class="fa fa-check-square-o"></i> {{ 'compose' | trans }}
                     </a>
                 {% endif %}
             {% endif %}
             {% if exoAdmin == 1 %}
                 <a class="btn btn-primary" href="{{ path('ujm_exercise_edit', { 'id': entity.id }) }}">
-                    <i class="icon-pencil"></i> {{ 'edit' | trans }}
+                    <i class="fa fa-pencil"></i> {{ 'edit' | trans }}
                 </a>
                 <a class="btn btn-primary" href="{{ path('ujm_exercise_questions', { 'id': entity.id }) }} " >
-                    <i class="icon-question"></i> {{ 'list of question' | trans }}
+                    <i class="fa fa-question"></i> {{ 'list of question' | trans }}
                 </a>
                 <span id='spanUnpublish' style='display:none'><a id="btUnpublish" class="btn btn-primary" onclick="unpublish('{{ path('ujm_exercise_unpublish') }}', {{ entity.id }})">
-                    <i class="icon-remove"></i> {{ 'unpublish' | trans }}
+                    <i class="fa fa-times"></i> {{ 'unpublish' | trans }}
                     </a></span>
             {% endif %}
             <a class="btn btn-primary" href="{{ path('ujm_paper_list', { 'exoID': entity.id }) }}">
-                <i class="icon-list"></i> {{ 'result' | trans }}
+                <i class="fa fa-list"></i> {{ 'result' | trans }}
             </a>
         </div>
     </div>

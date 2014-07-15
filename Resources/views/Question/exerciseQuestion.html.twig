@@ -59,14 +59,14 @@
     </div>
     <div class="panel-body">
         <a class="btn btn-primary" href="{{ path('ujm_exercise_open', { 'exerciseId':  exerciseID }) }}">
-            <i class="icon-arrow-left"></i> {{ 'back' | trans }}
+            <i class="fa fa-arrow-left"></i> {{ 'back' | trans }}
         </a>
         <a class="btn btn-primary" href="{{ path('ujm_exercise_import_question', { 'exoID':  exerciseID, 'pageGoNow': pagerQuestion.getNbPages,
             'maxPage': pagerQuestion.maxPerPage, 'nbItem': pagerQuestion.getNbResults }) }}">
-            <i class="icon-download-alt"></i> {{ 'import questions' | trans }}
+            <i class="fa fa-download"></i> {{ 'import questions' | trans }}
         </a>
         <a class="btn btn-primary" href="{{ path('ujm_question_new', { 'exoID': exerciseID }) }}">
-            <i class="icon-plus"></i> {{ 'create a new entry' | trans }}
+            <i class="fa fa-plus"></i> {{ 'create a new entry' | trans }}
         </a>
     </div>
 
@@ -76,11 +76,11 @@
                 <p>{{ 'changeOrder' | trans }}.</p>
                 {% if pagerQuestion.getNbResults > pagerQuestion.maxPerPage and displayAll == 0 %}
                     <a class="btn btn-primary" href="{{ path('ujm_exercise_questions', { 'id': exerciseID, 'displayAll': 1 }) }} ">
-                        <i class="icon-plus-sign"></i> {{ 'display all on this page' | trans }}
+                        <i class="fa fa-plus-circle"></i> {{ 'display all on this page' | trans }}
                     </a>
                 {% elseif displayAll == 1 %}
                     <a class="btn btn-primary" href="{{ path('ujm_exercise_questions', { 'id': exerciseID }) }} ">
-                        <i class="icon-minus-sign"></i> {{ 'display pagination' | trans }}
+                        <i class="fa fa-minus-circle"></i> {{ 'display pagination' | trans }}
                     </a>
                 {% endif %}
             {% endif %}
@@ -116,18 +116,18 @@
                             <td class="classic">{{ interaction.invite|raw }}</td>
                             <td class="classic">
                                 <a class="btn btn-default" data-toggle="tooltip" title="{{ 'duplicate' | trans }}" href="{{ path('ujm_question_duplicate', { 'interID': interaction.id, 'exoID': exerciseID }) }}">
-                                    <i class="icon-repeat"></i>
+                                    <i class="fa fa-repeat"></i>
                                 </a>
                                 {% if allowEdit[interaction.id] == 1 %}
                                     {% if (questionWithResponse[interaction.id] == 0) %}
                                         <a class="btn btn-default" title="{{ 'edit' | trans }}"
                                            href="{{ path('ujm_question_edit', { 'id': interaction.question.id, 'exoID': exerciseID }) }}">
-                                            <i class="icon-pencil"></i>
+                                            <i class="fa fa-pencil"></i>
                                         </a>
                                     {% else %}
                                         <a class="btn btn-default" title="{{ 'edit' | trans }}" style="color: red;"
                                            href="{{ path('ujm_question_edit', { 'id': interaction.question.id, 'exoID': exerciseID }) }}">
-                                            <i class="icon-pencil"></i>
+                                            <i class="fa fa-pencil"></i>
                                         </a>
                                     {% endif %}
                                 {% endif %}
@@ -136,7 +136,7 @@
                                         'exoID': exerciseID, 'qid': interaction.question.id, 'pageNow': pagerQuestion.getCurrentPage,
                                         'maxPage': pagerQuestion.maxPerPage, 'nbItem': pagerQuestion.getNbResults,
                                         'lastPage': pagerQuestion.getNbPages }) }}">
-                                    <i class="icon-trash"></i>
+                                    <i class="fa fa-trash-o"></i>
                                 </a>
                             </td>
                             <td style="display: none;" id="qid{{i}}">

@@ -219,17 +219,17 @@
             {% if numQ != 1 %}
                 <li>
                     <a href="#" onClick="submitForm(1, '{{ interactionType }}');">
-                        <i class="icon-chevron-left"></i><i class="icon-chevron-left"></i>
+                        <i class="fa fa-chevron-left"></i><i class="fa fa-chevron-left"></i>
                     </a>
                 </li>
                 <li>
                     <a href="#" onClick="submitForm({{ numQ-1 }}, '{{ interactionType }}');">
-                        <i class="icon-chevron-left"></i>
+                        <i class="fa fa-chevron-left"></i>
                     </a>
                 </li>
             {% else %}
-                <li class="disabled"><a href="#"><i class="icon-chevron-left"></i><i class="icon-chevron-left"></i></a></li>
-                <li class="disabled"><a href="#"><i class="icon-chevron-left"></i></a></li>
+                <li class="disabled"><a href="#"><i class="fa fa-chevron-left"></i><i class="fa fa-chevron-left"></i></a></li>
+                <li class="disabled"><a href="#"><i class="fa fa-chevron-left"></i></a></li>
             {% endif %}
 
             {% for interactionID in tabOrderInter %}
@@ -245,17 +245,17 @@
             {% if numQ != indexMax %}
                 <li>
                     <a href="#" onClick="submitForm({{ numQ+1 }}, '{{ interactionType }}');">
-                        <i class="icon-chevron-right"></i>
+                        <i class="fa fa-chevron-right"></i>
                     </a>
                 </li>
                 <li>
                     <a href="#" onClick="submitForm({{ indexMax }}, '{{ interactionType }}');">
-                        <i class="icon-chevron-right"></i><i class="icon-chevron-right"></i>
+                        <i class="fa fa-chevron-right"></i><i class="fa fa-chevron-right"></i>
                     </a>
                 </li>
             {% else %}
-                <li class="disabled"><a href="#"><i class="icon-chevron-right"></i></a></li>
-                <li class="disabled"><a href="#"><i class="icon-chevron-right"></i><i class="icon-chevron-right"></i></a></li>
+                <li class="disabled"><a href="#"><i class="fa fa-chevron-right"></i></a></li>
+                <li class="disabled"><a href="#"><i class="fa fa-chevron-right"></i><i class="fa fa-chevron-right"></i></a></li>
             {% endif %}
 
             {% if dispButtonInterrupt %}
@@ -291,10 +291,10 @@
             {% else %}
 
                 {% if numQ == 1 %}
-                    <li class="disabled"><a href="#" onclick="event.preventDefault();"><i class="icon-chevron-left"></i> &nbsp; {{ 'previous' | trans }}</a></li>
+                    <li class="disabled"><a href="#" onclick="event.preventDefault();"><i class="fa fa-chevron-left"></i> &nbsp; {{ 'previous' | trans }}</a></li>
                     <li>
                         <a href="#" onClick="submitForm({{ numQ+1 }}, '{{ interactionType }}');">
-                            {{ 'next' | trans }} &nbsp; <i class="icon-chevron-right"></i>
+                            {{ 'next' | trans }} &nbsp; <i class="fa fa-chevron-right"></i>
                         </a>
                     </li>
                 {% endif %}
@@ -302,10 +302,10 @@
                 {% if numQ == indexMax %}
                     <li>
                         <a href="#" onClick="submitForm({{ numQ-1 }}, '{{ interactionType }}');">
-                            <i class="icon-chevron-left"></i> &nbsp; {{ 'previous' | trans }}
+                            <i class="fa fa-chevron-left"></i> &nbsp; {{ 'previous' | trans }}
                         </a>
                     </li>
-                    <li class="disabled"><a href="#" onclick="event.preventDefault();">{{ 'next' | trans }} &nbsp; <i class="icon-chevron-right"></i></a></li>
+                    <li class="disabled"><a href="#" onclick="event.preventDefault();">{{ 'next' | trans }} &nbsp; <i class="fa fa-chevron-right"></i></a></li>
                     <li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</li>
                     <li>
                         <input type="button" value="{{ "finish" | trans }}" onClick="finish('{{ interactionType }}');"
@@ -316,12 +316,12 @@
                 {% if numQ != indexMax and numQ != 1 %}
                     <li>
                         <a href="#" onClick="submitForm({{ numQ-1 }}, '{{ interactionType }}');">
-                            <i class="icon-chevron-left"></i> &nbsp; {{ 'previous' | trans }}
+                            <i class="fa fa-chevron-left"></i> &nbsp; {{ 'previous' | trans }}
                         </a>
                     </li>
                     <li>
                         <a href="#" onClick="submitForm({{ numQ+1 }}, '{{ interactionType }}');">
-                            {{ 'next' | trans }} &nbsp; <i class="icon-chevron-right"></i>
+                            {{ 'next' | trans }} &nbsp; <i class="fa fa-chevron-right"></i>
                         </a>
                     </li>
                 {% endif %}

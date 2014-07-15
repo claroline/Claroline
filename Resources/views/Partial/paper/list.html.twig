@@ -4,29 +4,29 @@
             <th class="classic" onclick="SortQuestions('user', 'UserArray');"
                 onmouseover="this.style.color = '#0099FF'; body.style.cursor = 'pointer';"
                 onmouseout="this.style.color = 'black'; body.style.cursor = 'default';">
-                <i class="icon-chevron-up" id="upU"  style="display: none;"></i>
-                <i class="icon-chevron-down" id="downU"  style="display: none;"></i>
+                <i class="fa fa-chevron-up" id="upU"  style="display: none;"></i>
+                <i class="fa fa-chevron-down" id="downU"  style="display: none;"></i>
                 {{ 'user' | trans }}
             </th>
             <th class="classic" onclick="SortQuestions('numPaper', 'UserArray');"
                 onmouseover="this.style.color = '#0099FF'; body.style.cursor = 'pointer';"
                 onmouseout="this.style.color = 'black'; body.style.cursor = 'default';">
-                <i class="icon-chevron-up" id="upN"  style="display: none;"></i>
-                <i class="icon-chevron-down" id="downN"  style="display: none;"></i>
+                <i class="fa fa-chevron-up" id="upN"  style="display: none;"></i>
+                <i class="fa fa-chevron-down" id="downN"  style="display: none;"></i>
                 {{ 'num_paper' | trans }}
             </th>
             <th class="classic" onclick="SortQuestions('startDate', 'UserArray');"
                 onmouseover="this.style.color = '#0099FF'; body.style.cursor = 'pointer';"
                 onmouseout="this.style.color = 'black'; body.style.cursor = 'default';">
-                <i class="icon-chevron-up" id="upS"  style="display: none;"></i>
-                <i class="icon-chevron-down" id="downS"  style="display: none;"></i>
+                <i class="fa fa-chevron-up" id="upS"  style="display: none;"></i>
+                <i class="fa fa-chevron-down" id="downS"  style="display: none;"></i>
                 {{ 'start date' | trans }}
             </th>
             <th class="classic" onclick="SortQuestions('endDate', 'UserArray');"
                 onmouseover="this.style.color = '#0099FF'; body.style.cursor = 'pointer';"
                 onmouseout="this.style.color = 'black'; body.style.cursor = 'default';">
-                <i class="icon-chevron-up" id="upE"  style="display: none;"></i>
-                <i class="icon-chevron-down" id="downE"  style="display: none;"></i>
+                <i class="fa fa-chevron-up" id="upE"  style="display: none;"></i>
+                <i class="fa fa-chevron-down" id="downE"  style="display: none;"></i>
                 {{ 'end date' | trans }}
             </th>
             <th class="classic">{{ 'isInterupt' | trans }}</th>
@@ -36,8 +36,8 @@
             <th class="classic" onclick="SortQuestions('mark', 'UserArray');"
                 onmouseover="this.style.color = '#0099FF'; body.style.cursor = 'pointer';"
                 onmouseout="this.style.color = 'black'; body.style.cursor = 'default';">
-                <i class="icon-chevron-up" id="upM"  style="display: none;"></i>
-                <i class="icon-chevron-down" id="downM"  style="display: none;"></i>
+                <i class="fa fa-chevron-up" id="upM"  style="display: none;"></i>
+                <i class="fa fa-chevron-down" id="downM"  style="display: none;"></i>
                 {{ 'mark' | trans }}
             </th>
             {% endif %}
@@ -74,7 +74,7 @@
                         <li>
                             {% if ((paper.end) or (isAdmin == 1)) %}
                                 <a class="btn btn-default" data-toggle="tooltip" title="{{ 'show'|trans }}" href="{{ path('ujm_paper_show', { 'id': paper.id }) }}">
-                                    <i class="icon-eye-open"></i>
+                                    <i class="fa fa-eye"></i>
                                  </a>
                             {% endif %}
                         </li>

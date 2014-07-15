@@ -6,8 +6,11 @@ plugin:
           name: ujm_exercise
           is_browsable: false
           icon: res_exo.png
-         
+          activity_rules:
+            - action: resource-ujm_exercise-exercise_evaluated
+
     tools:
         - name: ujm_questions
           is_displayable_in_workspace: false
           is_displayable_in_desktop: true
+          class: question-circle
