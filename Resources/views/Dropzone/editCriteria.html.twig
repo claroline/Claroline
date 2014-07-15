@@ -1,5 +1,4 @@
 {% extends "IcapDropzoneBundle:Dropzone:edit.html.twig" %}
-
 {% form_theme form "IcapDropzoneBundle::form_theme_bootstrap3.html.twig" %}
 
 
@@ -204,8 +203,12 @@
             </div>
 
             <div class="row">
-                <div class="pull-right">
-                    {{ form_row(form.allowCommentInCorrection, {'input_col_size': ' '}) }}
+                <div>
+                {{ form_row(form.allowCommentInCorrection, {'input_col_size': ' '}) }}
+                </div>
+                <div>
+                    {{ form_row(form.forceCommentInCorrection, {'input_col_size': ' '}) }}
+
                 </div>
             </div>
 
