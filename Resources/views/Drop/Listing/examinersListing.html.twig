@@ -22,9 +22,7 @@
                 <td>
                     <a href="{{ path('icap_dropzone_examiner_corrections',{'resourceId':dropzone.id,'userId':user.id}) }}"> {{ user.lastName|upper }} {{ user.firstName|capitalize }}</a>
                 </td>
-{#                 <td>
-                    {{ attribute(usersAndCorrectionCount, user.id).userDropCount }}
-                </td> #}
+
                 <td class="{% if attribute(usersAndCorrectionCount, user.id).correction_count <   dropzone.expectedTotalCorrection %}warning{% endif %}">
                 {{ attribute(usersAndCorrectionCount, user.id).correction_count }}
                 </td>

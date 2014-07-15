@@ -18,6 +18,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Cocur\Slugify\Slugify;
 
 class DocumentController extends DropzoneBaseController
 {
@@ -68,7 +69,15 @@ class DocumentController extends DropzoneBaseController
 
         if ($hiddenDropDirectory == null) {
             $hiddenDropDirectory = new Directory();
+            // slugify user name
+            $slugify = new Slugify();
+
+            $user = $drop->getUser();
+            $str = $user->getFirstName() . "-" . $user->getLastName();
+            $str = $slugify->slugify($str, ' ');
+
             $name = $this->get('translator')->trans('Copy n°%number%', array('%number%' => $drop->getNumber()), 'icap_dropzone');
+            $name .= " - " . $str;
             $hiddenDropDirectory->setName($name);
 
             $parent = $this->getDropZoneHiddenDirectory($dropzone);
