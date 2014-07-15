@@ -62,8 +62,7 @@ portfolioApp
         $scope.isAdded = function(child) {
             return (!$scope.isEmpty(child) && !child.toDelete) || child.toDelete;
         };
-
-        if (!$scope.isEmpty($scope.collection[$scope.collection.length - 1])) {
+        if (!$scope.isEmpty($scope.collection[$scope.collection.length - 1]) && !$attrs.editable) {
             $scope.collection.push(angular.copy($scope.emptyChild));
         }
     }]);
