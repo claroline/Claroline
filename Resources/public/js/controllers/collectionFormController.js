@@ -10,7 +10,7 @@ portfolioApp
 
         $scope.resourcePickerConfig = {
             isPickerMultiSelectAllowed: true,
-            pickerCallback: function (nodes) {
+            callback: function (nodes) {
                 angular.forEach(nodes, function (element, index) {
                     var newChild = angular.copy($scope.emptyChild);
                     newChild.resource = index;

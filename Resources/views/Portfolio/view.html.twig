@@ -199,8 +199,6 @@
             'use strict';
             (function() {
                 window.widgetsConfig = '{{ widgetsConfig|json_encode()|raw }}';
-                window.appPath       = "{{ app.request.getBaseUrl }}";
-                window.webPath       = "{{ asset('') }}";
                 window.resourceTypes = {
                     {% for resourceType in resourceTypes %}
                         "{{ resourceType.getName() }}": {
